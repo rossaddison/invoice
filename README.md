@@ -1,4 +1,6 @@
-# yii3-i
+(place the contents of this download into yii3-i's invoice folder or run as a separate repository)
+
+# yii3-i's invoice folder 
 Yii3 Invoice
 
 **Features**
@@ -20,19 +22,14 @@ Yii3 Invoice
 **Installing npm_modules folder containing bootstrap as mentioned in package.json**
 * Step 1: Download node.js at https://nodejs.org/en/download
 * Step 2: Ensure C:\ProgramFiles\nodejs is in environment variable path. Search ... edit the system environment variables
-* Step 3: Run ````npm i```` in ````c:\wamp64\yii3-i\invoice```` folder.
+* Step 3: Run ````npm i```` in ````c:\wamp64\invoice```` folder.
 
-Adjust c:\wamp64\yii3-i\invoice\config\common\params.php file line approx. 193 to **MODE_WRITE_ONLY** for installation.
+Adjust c:\wamp64\yii3-i\config\common\params.php file line approx. 193 to **MODE_WRITE_ONLY** for installation.
 This will automatically build up the tables under database yii3-i.
 
 ````'mode' => PhpFileSchemaProvider::MODE_WRITE_ONLY,````
 
 After installing, ensure mode is on **MODE_READ_AND_WRITE** for faster performance.
-
-**Installing the bootstrap node_modules folder**
-* Step 1: Download node.js from https://nodejs.org/en/download 
-* Step 2: Include c:\ProgramFiles\nodejs in your Windows Environment Variables ie. Search ... edit the system environment variables
-* Goto your c:\wamp64\www\yii3-i\invoice folder and type ````npm i```` 
 
 Signup your first user using **Create User Account**
 
