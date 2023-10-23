@@ -1,0 +1,10 @@
+{
+    "name": "yii3-i",
+    "version": "1.0.0",
+    "description": "Yii3 Invoice",
+    "dependencies": {
+        "bootstrap": "^5.3.1"
+    },
+    "devDependencies": {},
+    "license": "BSD-3-Clause"
+}

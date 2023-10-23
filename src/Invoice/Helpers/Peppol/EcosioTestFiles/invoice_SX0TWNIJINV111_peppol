@@ -1,0 +1,205 @@
+<?xml version="1.0"?>
+<Invoice xmlns="urn:oasis:names:specification:ubl:schema:xsd:Invoice-2" xmlns:cbc="urn:oasis:names:specification:ubl:schema:xsd:CommonBasicComponents-2" xmlns:cac="urn:oasis:names:specification:ubl:schema:xsd:CommonAggregateComponents-2">
+ <cbc:UBLVersionID>2.1</cbc:UBLVersionID>
+ <cbc:CustomizationID>urn:cen.eu:en16931:2017#compliant#urn:fdc:peppol.eu:2017:poacc:billing:3.0</cbc:CustomizationID>
+ <cbc:ProfileID>urn:fdc:peppol.eu:2017:poacc:billing:01:1.0</cbc:ProfileID>
+ <cbc:ID>47</cbc:ID>
+ <cbc:IssueDate>2023-08-16</cbc:IssueDate>
+ <cbc:DueDate>2023-09-15</cbc:DueDate>
+ <cbc:InvoiceTypeCode>380</cbc:InvoiceTypeCode>
+ <cbc:Note>asdfasdf</cbc:Note>
+ <cbc:TaxPointDate>2023-08-16</cbc:TaxPointDate>
+ <cbc:DocumentCurrencyCode>GBP</cbc:DocumentCurrencyCode>
+ <cbc:BuyerReference>poq36</cbc:BuyerReference>
+ <cac:InvoicePeriod>
+  <cbc:StartDate>2023-08-01</cbc:StartDate>
+  <cbc:EndDate>2023-08-31</cbc:EndDate>
+ </cac:InvoicePeriod>
+ <cac:OrderReference>
+  <cbc:ID>POq38</cbc:ID>
+  <cbc:SalesOrderID>16</cbc:SalesOrderID>
+ </cac:OrderReference>
+ <cac:ContractDocumentReference>
+  <cbc:ID>sdfasdf</cbc:ID>
+ </cac:ContractDocumentReference>
+ <cac:AdditionalDocumentReference>
+  <cbc:ID>INV111</cbc:ID>
+  <cbc:DocumentDescription>dddd</cbc:DocumentDescription>
+ </cac:AdditionalDocumentReference>
+ <cac:AccountingSupplierParty>
+  <cac:Party>
+   <cbc:EndpointID schemeID="0088">7300010000001</cbc:EndpointID>
+   <cac:PartyIdentification>
+    <cbc:ID schemeID="0088">5060012349998</cbc:ID>
+   </cac:PartyIdentification>
+   <cac:PartyName>
+    <cbc:Name>MyCompanyName</cbc:Name>
+   </cac:PartyName>
+   <cac:PostalAddress>
+    <cbc:StreetName>Main Street 1</cbc:StreetName>
+    <cbc:AdditionalStreetName>Po Box 351</cbc:AdditionalStreetName>
+    <cbc:CityName>London</cbc:CityName>
+    <cbc:PostalZone>W1G 8LZ</cbc:PostalZone>
+    <cbc:CountrySubentity>Region A</cbc:CountrySubentity>
+    <cac:Country>
+     <cbc:IdentificationCode>GB</cbc:IdentificationCode>
+    </cac:Country>
+   </cac:PostalAddress>
+   <cac:PartyTaxScheme>
+    <cbc:CompanyID>GB999888777</cbc:CompanyID>
+    <cac:TaxScheme>
+     <cbc:ID>VAT</cbc:ID>
+    </cac:TaxScheme>
+   </cac:PartyTaxScheme>
+   <cac:PartyLegalEntity>
+    <cbc:RegistrationName>Full Formal Seller Name LTD.</cbc:RegistrationName>
+    <cbc:CompanyID schemeID="0002">987654321</cbc:CompanyID>
+   </cac:PartyLegalEntity>
+   <cac:Contact>
+    <cbc:Name>Joe Bloggs</cbc:Name>
+    <cbc:Telephone>801 801 801</cbc:Telephone>
+    <cbc:ElectronicMail>test.name@foo.bar</cbc:ElectronicMail>
+   </cac:Contact>
+  </cac:Party>
+ </cac:AccountingSupplierParty>
+ <cac:AccountingCustomerParty>
+  <cac:Party>
+   <cbc:EndpointID schemeID="0002">FR23342</cbc:EndpointID>
+   <cac:PartyIdentification>
+    <cbc:ID schemeID="0002">FR23342</cbc:ID>
+   </cac:PartyIdentification>
+   <cac:PartyName>
+    <cbc:Name>Foreign Client</cbc:Name>
+   </cac:PartyName>
+   <cac:PostalAddress>
+    <cbc:StreetName>1 AB STREET</cbc:StreetName>
+    <cbc:AdditionalStreetName>TARTY</cbc:AdditionalStreetName>
+    <cbc:CityName>LONDON</cbc:CityName>
+    <cbc:PostalZone>L01 1ZZ</cbc:PostalZone>
+    <cbc:CountrySubentity>State</cbc:CountrySubentity>
+    <cac:Country>
+     <cbc:IdentificationCode>GB</cbc:IdentificationCode>
+    </cac:Country>
+   </cac:PostalAddress>
+   <cac:PartyTaxScheme>
+    <cbc:CompanyID>bobscleaning.co.uk</cbc:CompanyID>
+    <cac:TaxScheme>
+     <cbc:ID>13</cbc:ID>
+    </cac:TaxScheme>
+   </cac:PartyTaxScheme>
+   <cac:PartyLegalEntity>
+    <cbc:RegistrationName>Buyer Full Name AS</cbc:RegistrationName>
+    <cbc:CompanyID schemeID="0013">0007</cbc:CompanyID>
+   </cac:PartyLegalEntity>
+   <cac:Contact>
+    <cbc:Name>Foreign</cbc:Name>
+    <cbc:Telephone>07777777777</cbc:Telephone>
+    <cbc:ElectronicMail>bob.twiggs@outlook.com</cbc:ElectronicMail>
+   </cac:Contact>
+  </cac:Party>
+ </cac:AccountingCustomerParty>
+ <cac:Delivery>
+  <cbc:ActualDeliveryDate>2023-08-16</cbc:ActualDeliveryDate>
+  <cac:DeliveryLocation>
+   <cbc:ID schemeID="0088">566777</cbc:ID>
+   <cac:Address>
+    <cbc:StreetName>1 AB STREET</cbc:StreetName>
+    <cbc:AdditionalStreetName>TARTY</cbc:AdditionalStreetName>
+    <cbc:CityName>LONDON</cbc:CityName>
+    <cbc:PostalZone>L01 1ZZ</cbc:PostalZone>
+    <cbc:CountrySubentity>State</cbc:CountrySubentity>
+    <cac:Country>
+     <cbc:IdentificationCode>GB</cbc:IdentificationCode>
+    </cac:Country>
+   </cac:Address>
+  </cac:DeliveryLocation>
+ </cac:Delivery>
+ <cac:PaymentMeans>
+  <cbc:PaymentMeansCode name="Credit Transfer">30</cbc:PaymentMeansCode>
+  <cbc:PaymentID>peppolINV1112023-08-19</cbc:PaymentID>
+  <cac:PayeeFinancialAccount>
+   <cbc:ID>IBAN number</cbc:ID>
+   <cbc:Name>FF</cbc:Name>
+   <cac:FinancialInstitutionBranch>
+    <cbc:ID>9999</cbc:ID>
+   </cac:FinancialInstitutionBranch>
+  </cac:PayeeFinancialAccount>
+ </cac:PaymentMeans>
+ <cac:PaymentTerms>
+  <cbc:Note>Payment Terms</cbc:Note>
+ </cac:PaymentTerms>
+ <cac:TaxTotal>
+  <cbc:TaxAmount currencyID="GBP">2.70</cbc:TaxAmount>
+  <cac:TaxSubtotal>
+   <cbc:TaxableAmount currencyID="GBP">10.00</cbc:TaxableAmount>
+   <cbc:TaxAmount currencyID="GBP">2.70</cbc:TaxAmount>
+   <cac:TaxCategory>
+    <cbc:ID>S</cbc:ID>
+    <cbc:Percent>27</cbc:Percent>
+    <cac:TaxScheme>
+     <cbc:ID>VAT</cbc:ID>
+    </cac:TaxScheme>
+   </cac:TaxCategory>
+  </cac:TaxSubtotal>
+ </cac:TaxTotal>
+ <cac:LegalMonetaryTotal>
+  <cbc:LineExtensionAmount currencyID="GBP">10.00</cbc:LineExtensionAmount>
+  <cbc:TaxExclusiveAmount currencyID="GBP">10.00</cbc:TaxExclusiveAmount>
+  <cbc:TaxInclusiveAmount currencyID="GBP">12.70</cbc:TaxInclusiveAmount>
+  <cbc:AllowanceTotalAmount currencyID="GBP">0.00</cbc:AllowanceTotalAmount>
+  <cbc:PayableAmount currencyID="GBP">12.70</cbc:PayableAmount>
+ </cac:LegalMonetaryTotal>
+ <cac:InvoiceLine>
+  <cbc:ID>146</cbc:ID>
+  <cbc:Note>asdfasdfasdf</cbc:Note>
+  <cbc:InvoicedQuantity unitCode="33">1</cbc:InvoicedQuantity>
+  <cbc:LineExtensionAmount currencyID="GBP">10.00</cbc:LineExtensionAmount>
+  <cbc:AccountingCost>4217:2323:2323</cbc:AccountingCost>
+  <cac:InvoicePeriod>
+   <cbc:StartDate>2023-08-01</cbc:StartDate>
+   <cbc:EndDate>2023-08-31</cbc:EndDate>
+  </cac:InvoicePeriod>
+  <cac:OrderLineReference>
+   <cbc:LineID>4</cbc:LineID>
+  </cac:OrderLineReference>
+  <cac:DocumentReference>
+   <cbc:ID>INV111</cbc:ID>
+   <cbc:DocumentTypeCode>130</cbc:DocumentTypeCode>
+  </cac:DocumentReference>
+  <cac:Item>
+   <cbc:Description>asdfasdfasdf</cbc:Description>
+   <cbc:Name>Product Name 1</cbc:Name>
+   <cac:BuyersItemIdentification>
+    <cbc:ID>ty56</cbc:ID>
+   </cac:BuyersItemIdentification>
+   <cac:SellersItemIdentification>
+    <cbc:ID>2345234523452</cbc:ID>
+   </cac:SellersItemIdentification>
+   <cac:StandardItemIdentification>
+    <cbc:ID schemeID="0007">012345678910111</cbc:ID>
+   </cac:StandardItemIdentification>
+   <cac:OriginCountry>
+    <cbc:IdentificationCode>AM</cbc:IdentificationCode>
+   </cac:OriginCountry>
+   <cac:CommodityClassification>
+    <cbc:ItemClassificationCode listID="AE" listVersionID="12341234">412341234123412</cbc:ItemClassificationCode>
+   </cac:CommodityClassification>
+   <cac:ClassifiedTaxCategory>
+    <cbc:ID>S</cbc:ID>
+    <cbc:Percent>27</cbc:Percent>
+    <cac:TaxScheme>
+     <cbc:ID>VAT</cbc:ID>
+    </cac:TaxScheme>
+   </cac:ClassifiedTaxCategory>
+  </cac:Item>
+  <cac:Price>
+   <cbc:PriceAmount currencyID="GBP">10.00</cbc:PriceAmount>
+   <cbc:BaseQuantity unitCode="33">1</cbc:BaseQuantity>
+   <cac:AllowanceCharge>
+    <cbc:ChargeIndicator>false</cbc:ChargeIndicator>
+    <cbc:Amount currencyID="GBP">0.00</cbc:Amount>
+    <cbc:BaseAmount currencyID="GBP">10.00</cbc:BaseAmount>
+   </cac:AllowanceCharge>
+  </cac:Price>
+ </cac:InvoiceLine>
+</Invoice>

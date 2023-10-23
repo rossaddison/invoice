@@ -1,0 +1,4894 @@
+{
+  "@context": {
+    "uncefact": "https://service.unece.org/trade/uncefact/vocabulary/uncefact#",
+    "uncl2005": "https://service.unece.org/trade/uncefact/vocabulary/uncl2005#",
+    "rdf": "http://www.w3.org/1999/02/22-rdf-syntax-ns#",
+    "rdfs": "http://www.w3.org/2000/01/rdf-schema#"
+  },
+  "@graph": [
+    {
+      "@id": "uncl2005:360/28-31",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "212",
+      "rdfs:comment": "Calculation is based on year of 360 days, month of 28-31 days."
+    },
+    {
+      "@id": "uncl2005:360/30",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "211",
+      "rdfs:comment": "Calculation is based on year of 360 days, month of 30 days."
+    },
+    {
+      "@id": "uncl2005:365-6/28-31",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "214",
+      "rdfs:comment": "Calculation is based on year of 365-6 days, month of 28- 31 days."
+    },
+    {
+      "@id": "uncl2005:365-6/30",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "213",
+      "rdfs:comment": "Calculation is based on year of 365-6 days, month of 30 days."
+    },
+    {
+      "@id": "uncl2005:365/28-31",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "215",
+      "rdfs:comment": "Calculation is based on year of 365 days, month of 28-31 days."
+    },
+    {
+      "@id": "uncl2005:365/30",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "216",
+      "rdfs:comment": "Calculation is based on year of 365 days, month of 30 days."
+    },
+    {
+      "@id": "uncl2005:Acceptance_date_of_document",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "154",
+      "rdfs:comment": "[2097] The date on which a document was accepted."
+    },
+    {
+      "@id": "uncl2005:Accident_benefit_age_limit",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "712",
+      "rdfs:comment": "To identify the age to which benefits are provided to the insured in the event of an accident."
+    },
+    {
+      "@id": "uncl2005:Accident_benefit_period",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "711",
+      "rdfs:comment": "To identify the period of time for which benefits are provided in the event of an accident."
+    },
+    {
+      "@id": "uncl2005:Accident_date_and_or_time",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "513",
+      "rdfs:comment": "Date and or time when an accident occurred."
+    },
+    {
+      "@id": "uncl2005:Accident_insurance_elimination_period",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "717",
+      "rdfs:comment": "To identify the period of time the insured must be disabled in the event of an accident for benefits to be payable by the ceding company."
+    },
+    {
+      "@id": "uncl2005:Accident_lifetime_benefit_qualification_age",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "713",
+      "rdfs:comment": "To identify the qualification age for lifetime benefits provided to the insured in the event of an accident."
+    },
+    {
+      "@id": "uncl2005:Account_closed_date",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "574",
+      "rdfs:comment": "Date when account was closed."
+    },
+    {
+      "@id": "uncl2005:Accountant's_opinion_date",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "588",
+      "rdfs:comment": "Date of an accountant's opinion."
+    },
+    {
+      "@id": "uncl2005:Accounting_methodology_change_date",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "616",
+      "rdfs:comment": "Date when accounting methodology was changed."
+    },
+    {
+      "@id": "uncl2005:Accounting_period",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "322",
+      "rdfs:comment": "A period of time for the recording of financial transactions for accounting."
+    },
+    {
+      "@id": "uncl2005:Accounting_period_end_date",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "156",
+      "rdfs:comment": "The last date of an accounting period."
+    },
+    {
+      "@id": "uncl2005:Accounting_period_start_date",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "155",
+      "rdfs:comment": "The first date of an accounting period."
+    },
+    {
+      "@id": "uncl2005:Accounting_transaction_date",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "353",
+      "rdfs:comment": "Date to which an accounting transaction refers."
+    },
+    {
+      "@id": "uncl2005:Accounting_value_date",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "454",
+      "rdfs:comment": "Date against which the entry has to be legally allocated."
+    },
+    {
+      "@id": "uncl2005:Accounting_year",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "246",
+      "rdfs:comment": "Year considered for accounting of the treaty or portion of the treaty."
+    },
+    {
+      "@id": "uncl2005:Action_date",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "587",
+      "rdfs:comment": "Date of action."
+    },
+    {
+      "@id": "uncl2005:Activity_period_date_range",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "354",
+      "rdfs:comment": "A specific date range associated with an activity."
+    },
+    {
+      "@id": "uncl2005:Activity_reporting_date",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "415",
+      "rdfs:comment": "The date applicable to the activity being reported."
+    },
+    {
+      "@id": "uncl2005:Acute_manifestation_date",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "724",
+      "rdfs:comment": "The date the symptoms manifested themselves in an acute form."
+    },
+    {
+      "@id": "uncl2005:Additional_date",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "70",
+      "rdfs:comment": "Date added to a period of time."
+    },
+    {
+      "@id": "uncl2005:Additional_period",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "68",
+      "rdfs:comment": "An interval of time added to a period of time."
+    },
+    {
+      "@id": "uncl2005:Adjournment",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "659",
+      "rdfs:comment": "The period of time over which an adjournment is in effect."
+    },
+    {
+      "@id": "uncl2005:Adjusted_age",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "427",
+      "rdfs:comment": "The adjusted age used for purposes of calculation."
+    },
+    {
+      "@id": "uncl2005:Administrator_ordered_date",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "579",
+      "rdfs:comment": "Date when an administrator is ordered for a company."
+    },
+    {
+      "@id": "uncl2005:Admission_date_and/or_time_expected",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "709",
+      "rdfs:comment": "Expected date and/or time of admission."
+    },
+    {
+      "@id": "uncl2005:Adoption_date_actual",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "514",
+      "rdfs:comment": "Actual date when adoption occurs."
+    },
+    {
+      "@id": "uncl2005:Advise_after_date/time",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "174",
+      "rdfs:comment": "The information must be advised after the date/time indicated."
+    },
+    {
+      "@id": "uncl2005:Advise_before_date/time",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "175",
+      "rdfs:comment": "The information must be advised before the date/time indicated."
+    },
+    {
+      "@id": "uncl2005:Advise_completed_date/time",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "176",
+      "rdfs:comment": "The advise has been completed at the date indicated."
+    },
+    {
+      "@id": "uncl2005:Advise_on_date/time",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "177",
+      "rdfs:comment": "The information must be advised on the date/time indicated."
+    },
+    {
+      "@id": "uncl2005:Advising_date",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "691",
+      "rdfs:comment": "Date of advice."
+    },
+    {
+      "@id": "uncl2005:After_date",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "751",
+      "rdfs:comment": "The specified after date."
+    },
+    {
+      "@id": "uncl2005:Age",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "656",
+      "rdfs:comment": "Length of time that a person or animal has lived or a thing has existed."
+    },
+    {
+      "@id": "uncl2005:Agreement_to_pay_date",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "315",
+      "rdfs:comment": "Date on which the debtor agreed to pay."
+    },
+    {
+      "@id": "uncl2005:Allowed_renewal_duration_period",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "734",
+      "rdfs:comment": "The period of time a company can renew its duration period."
+    },
+    {
+      "@id": "uncl2005:Animal_birth_date/time",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "808",
+      "rdfs:comment": "Date/time when an animal was born."
+    },
+    {
+      "@id": "uncl2005:Annual_report_delinquent_on_date",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "615",
+      "rdfs:comment": "Date when annual report was considered delinquent."
+    },
+    {
+      "@id": "uncl2005:Annual_report_due_date",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "611",
+      "rdfs:comment": "Date when annual report is due."
+    },
+    {
+      "@id": "uncl2005:Annual_report_filing_date",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "614",
+      "rdfs:comment": "Date when the annual report was filed."
+    },
+    {
+      "@id": "uncl2005:Annual_report_mailing_date",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "613",
+      "rdfs:comment": "Date when the annual report was mailed."
+    },
+    {
+      "@id": "uncl2005:Appointment_expiry_date",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "736",
+      "rdfs:comment": "Date when an appointment will expire."
+    },
+    {
+      "@id": "uncl2005:Approval_date",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "444",
+      "rdfs:comment": "Date of approval."
+    },
+    {
+      "@id": "uncl2005:Arrival_date/time_at_initial_port",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "252",
+      "rdfs:comment": "Date/time that the conveyance arrives at the initial port in the country of destination."
+    },
+    {
+      "@id": "uncl2005:Arrival_date/time_at_initial_port_with_the_intent_to_unload",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "777",
+      "rdfs:comment": "Date/ time that the conveyance arrives at the initial port in the country of destination."
+    },
+    {
+      "@id": "uncl2005:Arrival_date/time_of_transport_lead_time",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "283",
+      "rdfs:comment": "Lead time is referenced to the date a transport will arrive or has arrived."
+    },
+    {
+      "@id": "uncl2005:Asset_and_liability_schedule_date",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "612",
+      "rdfs:comment": "Date of the asset and liability schedule."
+    },
+    {
+      "@id": "uncl2005:Assigned_date",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "545",
+      "rdfs:comment": "Date when assigned."
+    },
+    {
+      "@id": "uncl2005:Attendance_date_and_or_time_and_or_period",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "512",
+      "rdfs:comment": "Date and or time and or period of attendance."
+    },
+    {
+      "@id": "uncl2005:Authentication/validation_date/time",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "218",
+      "rdfs:comment": "The date/time of authentication and/or validation."
+    },
+    {
+      "@id": "uncl2005:Authentication_date/time_of_document",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "187",
+      "rdfs:comment": "Date/time when the document is signed or otherwise authenticated."
+    },
+    {
+      "@id": "uncl2005:Authorization_date",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "160",
+      "rdfs:comment": "Date when an authorization was given."
+    },
+    {
+      "@id": "uncl2005:Availability",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "44",
+      "rdfs:comment": "Date/time when received item is available."
+    },
+    {
+      "@id": "uncl2005:Availability_due_date",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "255",
+      "rdfs:comment": "Date when ordered items should be available at a specified location."
+    },
+    {
+      "@id": "uncl2005:Average_delivery_delay",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "532",
+      "rdfs:comment": "The average delay between deliveries."
+    },
+    {
+      "@id": "uncl2005:Average_payment_period",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "662",
+      "rdfs:comment": "The average period of time over which money has been paid."
+    },
+    {
+      "@id": "uncl2005:Back_order_delivery_date/time/period",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "506",
+      "rdfs:comment": "The date/time/period during which the delivery of a back order will take, or has taken, place."
+    },
+    {
+      "@id": "uncl2005:Balance_date/time/period",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "492",
+      "rdfs:comment": "The date/time/period of a balance."
+    },
+    {
+      "@id": "uncl2005:Balance_sheet_date_latest",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "543",
+      "rdfs:comment": "Date of the latest balance sheet."
+    },
+    {
+      "@id": "uncl2005:Bankruptcy_filed_date",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "565",
+      "rdfs:comment": "Date when bankruptcy was filed."
+    },
+    {
+      "@id": "uncl2005:Banks'_value_date",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "309",
+      "rdfs:comment": "Date on which the funds are at the disposal of the receiving bank or cease to be at the disposal of the sending bank."
+    },
+    {
+      "@id": "uncl2005:Before_date",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "750",
+      "rdfs:comment": "The specified before date."
+    },
+    {
+      "@id": "uncl2005:Before_inventory_is_replenished_based_on_stock_check_lead_time",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "284",
+      "rdfs:comment": "Lead time is the defined timespan."
+    },
+    {
+      "@id": "uncl2005:Beneficiary's_banks_due_date",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "227",
+      "rdfs:comment": "Date on which funds should be made available to the beneficiary's bank."
+    },
+    {
+      "@id": "uncl2005:Benefit_change_date/time",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "338",
+      "rdfs:comment": "Date/time when a benefit provided by a service provider is changed."
+    },
+    {
+      "@id": "uncl2005:Benefit_payments_termination_date",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "493",
+      "rdfs:comment": "To identify the date on which benefit payments have ceased."
+    },
+    {
+      "@id": "uncl2005:Benefit_period",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "437",
+      "rdfs:comment": "The period of time for which benefits are provided."
+    },
+    {
+      "@id": "uncl2005:Benefit_period_end_date",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "489",
+      "rdfs:comment": "Date when a period of benefit ends."
+    },
+    {
+      "@id": "uncl2005:Benefit_period_start_date",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "488",
+      "rdfs:comment": "Date when a period of benefit begins."
+    },
+    {
+      "@id": "uncl2005:Benefit_release_authorization_date",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "722",
+      "rdfs:comment": "Date when a benefit is authorized for release."
+    },
+    {
+      "@id": "uncl2005:Biannual_terminal_inspection_date",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "376",
+      "rdfs:comment": "The date on which a biannual inspection of a terminal has taken or will take place."
+    },
+    {
+      "@id": "uncl2005:Bill_of_lading_date",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "95",
+      "rdfs:comment": "Date as specified on the bill of lading."
+    },
+    {
+      "@id": "uncl2005:Board_of_directors_not_authorised_as_of_given_date",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "599",
+      "rdfs:comment": "As of this date the board of directors is not authorised."
+    },
+    {
+      "@id": "uncl2005:Board_of_directors_not_complete_as_of_given_date",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "600",
+      "rdfs:comment": "As of this date the board of directors is not fully filled."
+    },
+    {
+      "@id": "uncl2005:Board_of_directors_registration_date",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "605",
+      "rdfs:comment": "Date when the board of directors was registered."
+    },
+    {
+      "@id": "uncl2005:Booking_date/time",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "179",
+      "rdfs:comment": "Date at which the booking was made."
+    },
+    {
+      "@id": "uncl2005:Budget_line_application_date",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "533",
+      "rdfs:comment": "The date on which something has been applied to a budget line."
+    },
+    {
+      "@id": "uncl2005:Business_control_change_date",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "609",
+      "rdfs:comment": "Date when a new authority took control."
+    },
+    {
+      "@id": "uncl2005:Business_opened_date",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "546",
+      "rdfs:comment": "Date opened for business."
+    },
+    {
+      "@id": "uncl2005:Business_termination_date",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "561",
+      "rdfs:comment": "Date the business terminates."
+    },
+    {
+      "@id": "uncl2005:Buyer's_local_time",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "53",
+      "rdfs:comment": "Time at the buyer's location."
+    },
+    {
+      "@id": "uncl2005:Calculation_date_time",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "257",
+      "rdfs:comment": "[2253] Date on which the calculation was made."
+    },
+    {
+      "@id": "uncl2005:Cancel_if_not_delivered_by_this_date",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "61",
+      "rdfs:comment": "The date on which cancellation should take place, if delivery has not occurred."
+    },
+    {
+      "@id": "uncl2005:Cancel_if_not_published_by_this_date",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "357",
+      "rdfs:comment": "Cancel if not published by this date."
+    },
+    {
+      "@id": "uncl2005:Cancel_if_not_shipped_by_this_date",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "383",
+      "rdfs:comment": "Cancel the order if goods not shipped by this date."
+    },
+    {
+      "@id": "uncl2005:Cancellation_date",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "46",
+      "rdfs:comment": "[2095] Date on which a document or message has been cancelled."
+    },
+    {
+      "@id": "uncl2005:Cancellation_date/time_latest",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "153",
+      "rdfs:comment": "The latest date/time on which cancellation of the payment order may be requested."
+    },
+    {
+      "@id": "uncl2005:Capitalisation_date",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "604",
+      "rdfs:comment": "Date of capitalisation."
+    },
+    {
+      "@id": "uncl2005:Cargo_booking_confirmed_date/time",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "118",
+      "rdfs:comment": "Date/time at which the cargo booking has been accepted by the carrier."
+    },
+    {
+      "@id": "uncl2005:Cargo_pick-up_date_/_time",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "200",
+      "rdfs:comment": "Date/time at which the cargo is picked up. Synonym: collected."
+    },
+    {
+      "@id": "uncl2005:Cargo_release_date/time_ultimate",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "400",
+      "rdfs:comment": "Ultimate date/time at which goods or equipment should be released."
+    },
+    {
+      "@id": "uncl2005:Cash_call_date",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "249",
+      "rdfs:comment": "Date on which a cash call was made for a loss suffered and covered."
+    },
+    {
+      "@id": "uncl2005:Catch_date/time",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "796",
+      "rdfs:comment": "Date/time of catch."
+    },
+    {
+      "@id": "uncl2005:Category_change_date/time",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "339",
+      "rdfs:comment": "Date/time when a change of category is made."
+    },
+    {
+      "@id": "uncl2005:Certification_of_weight_date/time",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "225",
+      "rdfs:comment": "Date/time at which the carrier proceeds to the weighting of the goods."
+    },
+    {
+      "@id": "uncl2005:Change_date/time_latest",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "767",
+      "rdfs:comment": "Most recent date and/or time that the information has been changed."
+    },
+    {
+      "@id": "uncl2005:Changed_date",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "558",
+      "rdfs:comment": "Date change takes place."
+    },
+    {
+      "@id": "uncl2005:Charge_back_date/time",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "21",
+      "rdfs:comment": "The date/time of the charge back."
+    },
+    {
+      "@id": "uncl2005:Charge_period",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "326",
+      "rdfs:comment": "Period a specified charge is valid for."
+    },
+    {
+      "@id": "uncl2005:Charge_period_end_date",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "168",
+      "rdfs:comment": "The charge period's last date."
+    },
+    {
+      "@id": "uncl2005:Charge_period_start_date",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "167",
+      "rdfs:comment": "The charge period's first date."
+    },
+    {
+      "@id": "uncl2005:Chart_of_account_period",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "456",
+      "rdfs:comment": "Period covered by the chart of account."
+    },
+    {
+      "@id": "uncl2005:Checked_date",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "571",
+      "rdfs:comment": "Date when checked."
+    },
+    {
+      "@id": "uncl2005:Cheque_date/time",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "20",
+      "rdfs:comment": "Date/time when cheque is issued."
+    },
+    {
+      "@id": "uncl2005:Childbirth_date_and_or_time_actual",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "522",
+      "rdfs:comment": "Actual date and or time of childbirth."
+    },
+    {
+      "@id": "uncl2005:Childbirth_date_estimated",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "527",
+      "rdfs:comment": "Estimated date of childbirth."
+    },
+    {
+      "@id": "uncl2005:Citizenship_change_date",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "602",
+      "rdfs:comment": "Date of citizenship change."
+    },
+    {
+      "@id": "uncl2005:Claim_incurred_date",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "668",
+      "rdfs:comment": "The date that the claim was incurred."
+    },
+    {
+      "@id": "uncl2005:Claim_made_date",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "670",
+      "rdfs:comment": "The date on which a claim was made."
+    },
+    {
+      "@id": "uncl2005:Clearance_date_(Customs)",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "58",
+      "rdfs:comment": "Date on which Customs formalities necessary to allow goods to be exported, to enter home use, or to be placed under another Customs procedure has been accomplished (CCC)."
+    },
+    {
+      "@id": "uncl2005:Clinical_examination_date_and_or_time",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "525",
+      "rdfs:comment": "Date and or time of clinical examination."
+    },
+    {
+      "@id": "uncl2005:Clinical_information_issue_date_and/or_time",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "40",
+      "rdfs:comment": "Date and/or time when clinical information is issued."
+    },
+    {
+      "@id": "uncl2005:Closed_until_date",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "617",
+      "rdfs:comment": "Date when again open."
+    },
+    {
+      "@id": "uncl2005:Closing_date/time",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "180",
+      "rdfs:comment": "Final date for delivering cargo to a liner ship."
+    },
+    {
+      "@id": "uncl2005:Closing_date/time_for_breakbulk_STORO",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "103",
+      "rdfs:comment": "Date/time on which delivering period for breakbulk STORO cargo ends (STORO = Stowing on Roll on-Roll off vessel)."
+    },
+    {
+      "@id": "uncl2005:Closing_date/time_for_container_RO-RO",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "104",
+      "rdfs:comment": "Date/time on which delivering period for container Roll on-Roll off (RO-RO) cargo ends."
+    },
+    {
+      "@id": "uncl2005:Closure_date/time/period",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "262",
+      "rdfs:comment": "Date/time/period when an enterprise is closed."
+    },
+    {
+      "@id": "uncl2005:Collection_date/time_earliest",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "234",
+      "rdfs:comment": "The transport order may be issued before the goods are ready for picking up. This date/time indicates from when on the carrier can have access to the consignment."
+    },
+    {
+      "@id": "uncl2005:Collection_date/time_latest",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "235",
+      "rdfs:comment": "In relation with the arrangements agreed between buyer and seller or between sender and main transport it may be necessary to specify the latest collection date/time."
+    },
+    {
+      "@id": "uncl2005:Commenced_pumping_ballast_date/time",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "207",
+      "rdfs:comment": "Date/time on which the intake of materials to be carried to improve the trim and the stability of the means of transport, was commenced."
+    },
+    {
+      "@id": "uncl2005:Commenced_tank_cleaning_date/time",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "185",
+      "rdfs:comment": "The date/and or time tank cleaning was started."
+    },
+    {
+      "@id": "uncl2005:Community_visibility_date/time",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "795",
+      "rdfs:comment": "The date/time from which information becomes visible to the target community."
+    },
+    {
+      "@id": "uncl2005:Comparison_period",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "658",
+      "rdfs:comment": "The time period covered in a comparison."
+    },
+    {
+      "@id": "uncl2005:Compilation_date_and_time",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "45",
+      "rdfs:comment": "Date and time of the compilation."
+    },
+    {
+      "@id": "uncl2005:Completed_pumping_ballast_date/time",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "236",
+      "rdfs:comment": "Date/time at which the intake of materials, to be carried to improve the trim and the stability of the means of transport, was completed."
+    },
+    {
+      "@id": "uncl2005:Completed_tank_cleaning_date/time",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "237",
+      "rdfs:comment": "The date and/or time tank cleaning was completed."
+    },
+    {
+      "@id": "uncl2005:Completion_date",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "549",
+      "rdfs:comment": "Date of completion."
+    },
+    {
+      "@id": "uncl2005:Completion_date_or_time_estimated",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "477",
+      "rdfs:comment": "The estimated date or time for completion."
+    },
+    {
+      "@id": "uncl2005:Completion_date_or_time_not_after",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "483",
+      "rdfs:comment": "The not after date or time for completion."
+    },
+    {
+      "@id": "uncl2005:Completion_date_or_time_not_before",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "482",
+      "rdfs:comment": "The not before date or time for completion."
+    },
+    {
+      "@id": "uncl2005:Completion_date_or_time_scheduled",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "479",
+      "rdfs:comment": "The scheduled date or time for completion."
+    },
+    {
+      "@id": "uncl2005:Condition_initial_treatment_date",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "720",
+      "rdfs:comment": "Date when initially treated for this condition."
+    },
+    {
+      "@id": "uncl2005:Confirmation_date_lead_time",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "282",
+      "rdfs:comment": "Lead time is referenced to the date of confirmation."
+    },
+    {
+      "@id": "uncl2005:Confirmed_date/time",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "55",
+      "rdfs:comment": "Date/time which has been confirmed."
+    },
+    {
+      "@id": "uncl2005:Consignment_acceptance_date_time_actual",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "143",
+      "rdfs:comment": "[2127] Actual date and optionally time when a consignment of goods is taken over by the carrier at the place of acceptance."
+    },
+    {
+      "@id": "uncl2005:Consignment_loading_date_time",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "342",
+      "rdfs:comment": "[2347] Date and optionally time when a consignment is to be or has been loaded onto a means of transport."
+    },
+    {
+      "@id": "uncl2005:Consolidation_date",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "598",
+      "rdfs:comment": "Date when consolidation occurred."
+    },
+    {
+      "@id": "uncl2005:Construction_date_actual",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "575",
+      "rdfs:comment": "Date of actual construction."
+    },
+    {
+      "@id": "uncl2005:Construction_date_estimated",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "621",
+      "rdfs:comment": "Estimated date of construction."
+    },
+    {
+      "@id": "uncl2005:Container_Safety_Convention_(CSC)_inspection_date",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "378",
+      "rdfs:comment": "The date on which container equipment is to be or has been inspected as per the Container Safety Convention (CSC)."
+    },
+    {
+      "@id": "uncl2005:Container_Safety_Convention_(CSC)_plate_expiration_date",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "401",
+      "rdfs:comment": "Date on which the validity of a Container Safety Convention (CSC) plate expires."
+    },
+    {
+      "@id": "uncl2005:Container_stripping_date/time_ultimate",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "412",
+      "rdfs:comment": "Date/time on which the container stripping should be completed at the latest."
+    },
+    {
+      "@id": "uncl2005:Container_stuffing_date/time_ultimate",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "411",
+      "rdfs:comment": "Date/time on which the container stuffing should be completed at the latest."
+    },
+    {
+      "@id": "uncl2005:Contract_award_date/time",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "287",
+      "rdfs:comment": "Date/time on which the contract is awarded to a tenderer."
+    },
+    {
+      "@id": "uncl2005:Contract_completion_date",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "122",
+      "rdfs:comment": "The date a contract is completed."
+    },
+    {
+      "@id": "uncl2005:Contract_document_issue_date_time",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "126",
+      "rdfs:comment": "[2327] Date on which a contract is issued."
+    },
+    {
+      "@id": "uncl2005:Contract_effective_date",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "92",
+      "rdfs:comment": "Date when a contract becomes valid."
+    },
+    {
+      "@id": "uncl2005:Contract_expiry_date",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "93",
+      "rdfs:comment": "Date when a contract expires."
+    },
+    {
+      "@id": "uncl2005:Contractual_delivery_date",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "355",
+      "rdfs:comment": "The date of delivery contractually agreed between parties."
+    },
+    {
+      "@id": "uncl2005:Contractual_start_date/time",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "290",
+      "rdfs:comment": "Date/time on which activities stated in the contract must start."
+    },
+    {
+      "@id": "uncl2005:Contribution_period_end_date/time",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "332",
+      "rdfs:comment": "Date/time when a contribution period ends."
+    },
+    {
+      "@id": "uncl2005:Contribution_period_start_date/time",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "335",
+      "rdfs:comment": "Date/time when a contribution period commences."
+    },
+    {
+      "@id": "uncl2005:Contributions_ceasing_date/time",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "331",
+      "rdfs:comment": "Date/time when contributions cease."
+    },
+    {
+      "@id": "uncl2005:Conversion_into_holding_company_date",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "618",
+      "rdfs:comment": "Date business was converted into a holding company."
+    },
+    {
+      "@id": "uncl2005:Conveyance_port_activity_date/_time",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "778",
+      "rdfs:comment": "The date and time of conveyance activity, including cargo loading or unloading, fuelling etc."
+    },
+    {
+      "@id": "uncl2005:Conveyance_registration_date",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "259",
+      "rdfs:comment": "[2063] Date when a vessel, vehicle or other means of transport was registered by a competent authority."
+    },
+    {
+      "@id": "uncl2005:Convicted_date",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "581",
+      "rdfs:comment": "Date when convicted."
+    },
+    {
+      "@id": "uncl2005:Cost_accounting_value_date",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "747",
+      "rdfs:comment": "Code identifying the value date of cost accounting. Value date is the date at which the entry is to effect a balance of the account."
+    },
+    {
+      "@id": "uncl2005:Court_dismissal_date",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "660",
+      "rdfs:comment": "The date on which a court refused further hearing of a case."
+    },
+    {
+      "@id": "uncl2005:Court_registration_date",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "610",
+      "rdfs:comment": "Date of registration in the court."
+    },
+    {
+      "@id": "uncl2005:Coverage_duration",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "429",
+      "rdfs:comment": "The period coverage has been in force."
+    },
+    {
+      "@id": "uncl2005:Coverage_issue_date",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "430",
+      "rdfs:comment": "Date from which the anniversary coverage is measured."
+    },
+    {
+      "@id": "uncl2005:Covered_income_period",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "494",
+      "rdfs:comment": "To identify the period over which covered income is measured."
+    },
+    {
+      "@id": "uncl2005:Creditor's_requested_value_date",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "447",
+      "rdfs:comment": "Date on which the creditor requests to be credited."
+    },
+    {
+      "@id": "uncl2005:Criminal_sentence_duration",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "655",
+      "rdfs:comment": "The period of time over which a criminal sentence applies."
+    },
+    {
+      "@id": "uncl2005:Crop_year",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "786",
+      "rdfs:comment": "The year that the crops were grown."
+    },
+    {
+      "@id": "uncl2005:Crossborder_date/time",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "219",
+      "rdfs:comment": "Date/time at which goods are transferred across a country border."
+    },
+    {
+      "@id": "uncl2005:Cumulative_quantity_end_date",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "52",
+      "rdfs:comment": "Last Date for accumulation of delivery quantities."
+    },
+    {
+      "@id": "uncl2005:Cumulative_quantity_start_date",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "51",
+      "rdfs:comment": "First Date for accumulation of delivery quantities."
+    },
+    {
+      "@id": "uncl2005:Cure_time",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "389",
+      "rdfs:comment": "Specifies the length of time that an article was or should be cured."
+    },
+    {
+      "@id": "uncl2005:Current_authority_control_start_date",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "636",
+      "rdfs:comment": "Date when current authority took control."
+    },
+    {
+      "@id": "uncl2005:Current_income_period",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "495",
+      "rdfs:comment": "To identify the period over which current income is measured."
+    },
+    {
+      "@id": "uncl2005:Current_legal_structure_effective_date",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "638",
+      "rdfs:comment": "Date when current legal structure became effective."
+    },
+    {
+      "@id": "uncl2005:Current_name_effective_date",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "634",
+      "rdfs:comment": "Date when current name became effective."
+    },
+    {
+      "@id": "uncl2005:Current_report_date",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "130",
+      "rdfs:comment": "Date of the current report."
+    },
+    {
+      "@id": "uncl2005:Customer_value_date",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "319",
+      "rdfs:comment": "Date at which funds are taken into account for interest calculation (in debit or credit)."
+    },
+    {
+      "@id": "uncl2005:Customs_declaration_document_lodgement_date_time",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "141",
+      "rdfs:comment": "[2033] Presentation date of a declaration to customs."
+    },
+    {
+      "@id": "uncl2005:Dangerous_goods_acceptance_cut-off_date/time",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "811",
+      "rdfs:comment": "Latest date/time after which no more Dangerous Goods cargo deliveries will be accepted at this location for loading on a particular booked means of transport."
+    },
+    {
+      "@id": "uncl2005:Data_release_date",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "771",
+      "rdfs:comment": "The date at which the data is released."
+    },
+    {
+      "@id": "uncl2005:Date/time_of_discount_termination",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "343",
+      "rdfs:comment": "Date/time when the deduction from an amount comes to an end."
+    },
+    {
+      "@id": "uncl2005:Date/time_of_interest_due",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "344",
+      "rdfs:comment": "Date/time when the interest has to be paid."
+    },
+    {
+      "@id": "uncl2005:Date/time_of_latest_accounts_filing_at_public_registry",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "696",
+      "rdfs:comment": "The latest date/time when financial accounts were filed at public registry."
+    },
+    {
+      "@id": "uncl2005:Date_and_or_time_of_handling_estimated",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "369",
+      "rdfs:comment": "The date and or time when the handling action is estimated to take place."
+    },
+    {
+      "@id": "uncl2005:Date_and_time_of_importation_into_port_limits",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "779",
+      "rdfs:comment": "Date and time on which the conveyance transporting the goods from the foreign country arrived within the limits of the port of destination."
+    },
+    {
+      "@id": "uncl2005:Date_as_at",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "183",
+      "rdfs:comment": "Date related to a given context."
+    },
+    {
+      "@id": "uncl2005:Date_for_the_last_update",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "449",
+      "rdfs:comment": "Date for the last update."
+    },
+    {
+      "@id": "uncl2005:Date_of_birth_estimated",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "592",
+      "rdfs:comment": "The estimated date of birth."
+    },
+    {
+      "@id": "uncl2005:Date_of_divorce",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "458",
+      "rdfs:comment": "Date when two married persons are officially divorced."
+    },
+    {
+      "@id": "uncl2005:Date_of_first_registration",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "375",
+      "rdfs:comment": "Date of first registration."
+    },
+    {
+      "@id": "uncl2005:Date_of_marriage",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "459",
+      "rdfs:comment": "Date when two persons are married."
+    },
+    {
+      "@id": "uncl2005:Date_of_order_lead_time",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "281",
+      "rdfs:comment": "Lead time is referenced to the date of order."
+    },
+    {
+      "@id": "uncl2005:Date_of_original_manufacture",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "787",
+      "rdfs:comment": "Date that the item was originally manufactured."
+    },
+    {
+      "@id": "uncl2005:Date_of_product_failure",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "535",
+      "rdfs:comment": "The date the product failed."
+    },
+    {
+      "@id": "uncl2005:Date_of_repair_or_service",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "534",
+      "rdfs:comment": "The date of a repair or service."
+    },
+    {
+      "@id": "uncl2005:Date_of_separation",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "457",
+      "rdfs:comment": "Date of marital separation."
+    },
+    {
+      "@id": "uncl2005:Date_of_source_document",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "453",
+      "rdfs:comment": "The date of the source document."
+    },
+    {
+      "@id": "uncl2005:Date_placed_in_disfavour",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "697",
+      "rdfs:comment": "Date when placed in a disfavoured category or status."
+    },
+    {
+      "@id": "uncl2005:Date_ready_for_collection",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "687",
+      "rdfs:comment": "A date on which an object is ready for collection."
+    },
+    {
+      "@id": "uncl2005:Date_when_container_equipment_becomes_domestic",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "370",
+      "rdfs:comment": "The date on which foreign-built container equipment has entered into the commerce of another country and has become domestic equipment."
+    },
+    {
+      "@id": "uncl2005:Days_of_operation",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "345",
+      "rdfs:comment": "Week days of operation."
+    },
+    {
+      "@id": "uncl2005:Death_date_and_or_time",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "526",
+      "rdfs:comment": "Date and or time of death."
+    },
+    {
+      "@id": "uncl2005:Debit_value_date_requested",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "228",
+      "rdfs:comment": "Date on which the account owner wants the debit value to his account."
+    },
+    {
+      "@id": "uncl2005:Decease_date",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "487",
+      "rdfs:comment": "Date when a person died."
+    },
+    {
+      "@id": "uncl2005:Declaration/presentation_date",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "150",
+      "rdfs:comment": "Date when item has been or has to be declared/presented."
+    },
+    {
+      "@id": "uncl2005:Declaration_reference_period",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "320",
+      "rdfs:comment": "Reference period of a set of items reported on the same declaration."
+    },
+    {
+      "@id": "uncl2005:Deed_not_available_as_of_given_date",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "619",
+      "rdfs:comment": "Date when deed was not available."
+    },
+    {
+      "@id": "uncl2005:Deferred_Period",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "439",
+      "rdfs:comment": "The period of time for which an activity has been postponed."
+    },
+    {
+      "@id": "uncl2005:Definition_of_disability_duration",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "497",
+      "rdfs:comment": "To identify the period for which the definition of disability applies."
+    },
+    {
+      "@id": "uncl2005:Deletion_date",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "684",
+      "rdfs:comment": "The date on which deletion occurs."
+    },
+    {
+      "@id": "uncl2005:Deliver_not_before_and_not_after_dates",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "49",
+      "rdfs:comment": "Deliver not before and not after a specific date range."
+    },
+    {
+      "@id": "uncl2005:Delivery_date/time_1st_schedule",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "65",
+      "rdfs:comment": "The first scheduled date/time for delivery."
+    },
+    {
+      "@id": "uncl2005:Delivery_date/time_actual",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "35",
+      "rdfs:comment": "Date/time on which goods or consignment are delivered at their destination."
+    },
+    {
+      "@id": "uncl2005:Delivery_date/time_current_schedule",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "67",
+      "rdfs:comment": "Delivery Date deriving from actual schedule."
+    },
+    {
+      "@id": "uncl2005:Delivery_date/time_deferred",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "223",
+      "rdfs:comment": "New date and time of delivery calculated on basis of a consignee's requirement (chargeable)."
+    },
+    {
+      "@id": "uncl2005:Delivery_date/time_earliest",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "64",
+      "rdfs:comment": "[2091] Date identifying a point in time before which the goods shall not be delivered."
+    },
+    {
+      "@id": "uncl2005:Delivery_date/time_estimated",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "17",
+      "rdfs:comment": "(2109) Date and/or time when the shipper of the goods expects delivery will take place."
+    },
+    {
+      "@id": "uncl2005:Delivery_date/time_expected",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "191",
+      "rdfs:comment": "Date/time on which goods are expected to be delivered."
+    },
+    {
+      "@id": "uncl2005:Delivery_date/time_first",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "117",
+      "rdfs:comment": "First possible date/time for delivery."
+    },
+    {
+      "@id": "uncl2005:Delivery_date/time_last",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "128",
+      "rdfs:comment": "Date when the last delivery should be or has been accomplished."
+    },
+    {
+      "@id": "uncl2005:Delivery_date/time_promised_for_(after_and_including)",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "72",
+      "rdfs:comment": "Delivery might take place earliest at given date."
+    },
+    {
+      "@id": "uncl2005:Delivery_date/time_promised_for_(prior_to_and_including)",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "75",
+      "rdfs:comment": "Delivery might take place latest at given date."
+    },
+    {
+      "@id": "uncl2005:Delivery_date/time_requested",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "2",
+      "rdfs:comment": "(2105) Date on which buyer requests goods to be delivered."
+    },
+    {
+      "@id": "uncl2005:Delivery_date/time_requested_for_(after_and_including)",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "71",
+      "rdfs:comment": "Delivery is requested to happen after or on given date."
+    },
+    {
+      "@id": "uncl2005:Delivery_date/time_requested_for_(prior_to_and_including)",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "74",
+      "rdfs:comment": "Delivery is requested to happen prior to or including the given date."
+    },
+    {
+      "@id": "uncl2005:Delivery_date/time_scheduled_for",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "76",
+      "rdfs:comment": "The date/time for which delivery is scheduled."
+    },
+    {
+      "@id": "uncl2005:Delivery_date_time_last",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "63",
+      "rdfs:comment": "[2025] Last date, and optionally time of a delivery."
+    },
+    {
+      "@id": "uncl2005:Delivery_date_time_promised_before",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "69",
+      "rdfs:comment": "[2139] Date and optionally time by which the merchandise should be delivered to the buyer, as agreed between the seller and the buyer (generic term)."
+    },
+    {
+      "@id": "uncl2005:Delivery_place_booking_date/time",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "822",
+      "rdfs:comment": "Date/time at which a booking was made at the delivery place."
+    },
+    {
+      "@id": "uncl2005:Department_admission_date_and_or_time",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "520",
+      "rdfs:comment": "Date and or time of admission to a department."
+    },
+    {
+      "@id": "uncl2005:Department_discharge_date_and_or_time",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "521",
+      "rdfs:comment": "Date and or time of discharge from a department."
+    },
+    {
+      "@id": "uncl2005:Departure_date/time_from_last_port_of_call",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "253",
+      "rdfs:comment": "Date/time that conveyance departed from the last foreign port of call."
+    },
+    {
+      "@id": "uncl2005:Departure_date/time_from_place_of_loading",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "757",
+      "rdfs:comment": "Date/time of the departure of the goods from the place of loading."
+    },
+    {
+      "@id": "uncl2005:Deposit_date/time",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "107",
+      "rdfs:comment": "The date/time on which a deposit was made."
+    },
+    {
+      "@id": "uncl2005:Despatch_date_and_or_time",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "11",
+      "rdfs:comment": "[2171] Date/time on which the goods are or are expected to be despatched or shipped."
+    },
+    {
+      "@id": "uncl2005:Despatch_note_document_issue_date_time",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "124",
+      "rdfs:comment": "[2219] Issue date of a despatch note."
+    },
+    {
+      "@id": "uncl2005:Detrimental_information_receipt_date",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "620",
+      "rdfs:comment": "Date when detrimental information was received."
+    },
+    {
+      "@id": "uncl2005:Direct_interchange_date",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "443",
+      "rdfs:comment": "Date the item was directly interchanged."
+    },
+    {
+      "@id": "uncl2005:Disability_wait_period",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "438",
+      "rdfs:comment": "The period of time the insured must be disabled before reinsurance coverage becomes effective."
+    },
+    {
+      "@id": "uncl2005:Discharge_and_loading_completed_date/time",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "413",
+      "rdfs:comment": "Date/time when all discharge and loading operations on the transport means have been completed."
+    },
+    {
+      "@id": "uncl2005:Discharge_date/time",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "96",
+      "rdfs:comment": "Date/time when goods should, might or have been discharged from the means of transport."
+    },
+    {
+      "@id": "uncl2005:Discharge_date/time_actual",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "403",
+      "rdfs:comment": "Date/time when the specified goods or transport equipment has or have been discharged from the means of transport."
+    },
+    {
+      "@id": "uncl2005:Discharge_date/time_started",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "269",
+      "rdfs:comment": "Date/time when discharge operations were started."
+    },
+    {
+      "@id": "uncl2005:Discrepancy_date/time",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "226",
+      "rdfs:comment": "Date/time at which a discrepancy has been found."
+    },
+    {
+      "@id": "uncl2005:Disembarkation_date_and_time",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "465",
+      "rdfs:comment": "Date and time at which crew and/or passengers disembark."
+    },
+    {
+      "@id": "uncl2005:Dispensing_interval_minimum",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "83",
+      "rdfs:comment": "The shortest interval allowed between one dispensing of an item and the next dispensing of the same item."
+    },
+    {
+      "@id": "uncl2005:Document/message_rejection_date/time",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "784",
+      "rdfs:comment": "Date/time at which the document/message was rejected."
+    },
+    {
+      "@id": "uncl2005:Document_issue_date_time",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "137",
+      "rdfs:comment": "[2007] Date that a document was issued and when appropriate, signed or otherwise authenticated."
+    },
+    {
+      "@id": "uncl2005:Document_received_date/time",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "402",
+      "rdfs:comment": "Date/time on which the document was actually received."
+    },
+    {
+      "@id": "uncl2005:Document_requested_date/time",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "407",
+      "rdfs:comment": "Date/time on which the document is requested by a party."
+    },
+    {
+      "@id": "uncl2005:Documentary_credit_amendment_date",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "440",
+      "rdfs:comment": "Date of amendment of a documentary credit."
+    },
+    {
+      "@id": "uncl2005:Documentary_credit_expiry_date/time",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "123",
+      "rdfs:comment": "(2211) The latest date/time for presentation of the documents to the bank where the credit expires."
+    },
+    {
+      "@id": "uncl2005:Documentary_credit_issue_date",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "422",
+      "rdfs:comment": "The date the documentary credit has been issued."
+    },
+    {
+      "@id": "uncl2005:Documentary_credit_presentation_period",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "272",
+      "rdfs:comment": "[2060] The specification of the period of time, expressed in number of days, after the date of issuance of the transport document(s) within which the documents must be presented."
+    },
+    {
+      "@id": "uncl2005:Drawing_revision_date",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "380",
+      "rdfs:comment": "Date the drawing revision has been allocated to a design."
+    },
+    {
+      "@id": "uncl2005:Due_date",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "265",
+      "rdfs:comment": "The date on which some action should occur."
+    },
+    {
+      "@id": "uncl2005:Duration",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "48",
+      "rdfs:comment": "Duration."
+    },
+    {
+      "@id": "uncl2005:Earliest_filing_period",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "737",
+      "rdfs:comment": "Earliest period for which a filing is made."
+    },
+    {
+      "@id": "uncl2005:Earliest_sale_date",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "382",
+      "rdfs:comment": "The earliest date on which the product may be made available for sale."
+    },
+    {
+      "@id": "uncl2005:Education_end_date",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "740",
+      "rdfs:comment": "Date education is completed at an educational institution."
+    },
+    {
+      "@id": "uncl2005:Education_start_date",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "739",
+      "rdfs:comment": "Date education begins at an educational institution."
+    },
+    {
+      "@id": "uncl2005:Effective_from_date/time",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "7",
+      "rdfs:comment": "(2069) Date and/or time at which specified event or document becomes effective."
+    },
+    {
+      "@id": "uncl2005:Embarkation_date_and_time",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "464",
+      "rdfs:comment": "Date and time at which crew and/or passengers board."
+    },
+    {
+      "@id": "uncl2005:Employee_temporary_laid-off_period_end_date",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "652",
+      "rdfs:comment": "The ending date of a period in which employees were temporarily placed out of work."
+    },
+    {
+      "@id": "uncl2005:Employee_temporary_laid-off_period_start_date",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "665",
+      "rdfs:comment": "The start date of a period in which employees were temporarily placed out of work."
+    },
+    {
+      "@id": "uncl2005:Employment_position_start_date",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "573",
+      "rdfs:comment": "The start date of employment in a particular position."
+    },
+    {
+      "@id": "uncl2005:Employment_position_start_date_estimated",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "698",
+      "rdfs:comment": "Estimated start date of employment in a particular position."
+    },
+    {
+      "@id": "uncl2005:Employment_profession_start_date",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "576",
+      "rdfs:comment": "Start date of employment in a particular profession."
+    },
+    {
+      "@id": "uncl2005:Empty_equipment_required_date/time/period",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "803",
+      "rdfs:comment": "Date/time/period on which empty equipment is required."
+    },
+    {
+      "@id": "uncl2005:End_availability_date",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "362",
+      "rdfs:comment": "The end date of availability."
+    },
+    {
+      "@id": "uncl2005:End_dat/time_minimum_buying_quantity",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "769",
+      "rdfs:comment": "The date and/or time until which the minimum buying quantity may be purchased."
+    },
+    {
+      "@id": "uncl2005:End_date/time",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "206",
+      "rdfs:comment": "Date/time on which a period (from - to) ends."
+    },
+    {
+      "@id": "uncl2005:End_date/time_maximum_buying_quantity",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "768",
+      "rdfs:comment": "The date and/or time until which the maximum buying quantity may be purchased."
+    },
+    {
+      "@id": "uncl2005:End_date/time_of_exclusivity",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "770",
+      "rdfs:comment": "The date and/or time until which a product is exclusive."
+    },
+    {
+      "@id": "uncl2005:End_date_scheduled",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "566",
+      "rdfs:comment": "Date when activity is scheduled to end."
+    },
+    {
+      "@id": "uncl2005:Endorsed_certificate_issue_date",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "707",
+      "rdfs:comment": "Date on which a certificate, endorsed by signature or other agreed means, is issued."
+    },
+    {
+      "@id": "uncl2005:Engineering_change_level_date",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "60",
+      "rdfs:comment": "Date the engineering level of goods is changed."
+    },
+    {
+      "@id": "uncl2005:Entry_date",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "121",
+      "rdfs:comment": "Date of entry."
+    },
+    {
+      "@id": "uncl2005:Entry_date_elected",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "776",
+      "rdfs:comment": "Date used at the discretion of the filer for duty calculation of non-quota goods when there is no immediate transport entry date (related to immediate delivery)."
+    },
+    {
+      "@id": "uncl2005:Entry_date_estimated_(Customs)",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "146",
+      "rdfs:comment": "Date on which the official date of Customs entry is anticipated."
+    },
+    {
+      "@id": "uncl2005:Equipment_pick-up_date_/_time",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "201",
+      "rdfs:comment": "Date/time at which the equipment is picked up."
+    },
+    {
+      "@id": "uncl2005:Equipment_pick-up_date_/_time_actual",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "405",
+      "rdfs:comment": "[2123] Date/time on which the equipment was actually collected."
+    },
+    {
+      "@id": "uncl2005:Equipment_pick-up_date_/_time_earliest",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "392",
+      "rdfs:comment": "[2125] Earliest date/time at which the equipment can be picked up."
+    },
+    {
+      "@id": "uncl2005:Equipment_pick-up_date_/_time_planned",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "393",
+      "rdfs:comment": "Date/time at which equipment can be picked up, either full or empty, according to a plan."
+    },
+    {
+      "@id": "uncl2005:Equipment_positioning_date/time_actual",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "394",
+      "rdfs:comment": "Date/time on which equipment was actually positioned (delivered)."
+    },
+    {
+      "@id": "uncl2005:Equipment_positioning_date/time_estimated",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "395",
+      "rdfs:comment": "Date/time on which equipment is estimated to be positioned (delivered)."
+    },
+    {
+      "@id": "uncl2005:Equipment_positioning_date/time_requested",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "396",
+      "rdfs:comment": "Date/time on which equipment is requested to be positioned (delivered)."
+    },
+    {
+      "@id": "uncl2005:Equipment_positioning_date/time_ultimate",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "397",
+      "rdfs:comment": "Date/time on which equipment should be positioned (delivered) at the latest."
+    },
+    {
+      "@id": "uncl2005:Equipment_pre-trip_date",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "372",
+      "rdfs:comment": "The date on which equipment is pre-tripped."
+    },
+    {
+      "@id": "uncl2005:Equipment_reconditioning_date/time_actual",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "23",
+      "rdfs:comment": "Actual date/time of the reconditioning of a piece of equipment."
+    },
+    {
+      "@id": "uncl2005:Equipment_repair_ready_date/time_ultimate",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "410",
+      "rdfs:comment": "Ultimate date/time on which a piece of equipment must be repaired."
+    },
+    {
+      "@id": "uncl2005:Equipment_return_period_expected",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "116",
+      "rdfs:comment": "Period until which equipment is expected to be hired."
+    },
+    {
+      "@id": "uncl2005:Equipment_stock_check_date/time",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "414",
+      "rdfs:comment": "Date/time on which equipment has been ascertained as being in stock."
+    },
+    {
+      "@id": "uncl2005:Escalation_date",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "303",
+      "rdfs:comment": "Value date of indexes appearing as numerators in an escalation formula."
+    },
+    {
+      "@id": "uncl2005:Established_date",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "693",
+      "rdfs:comment": "Date when an entity was established or created."
+    },
+    {
+      "@id": "uncl2005:Estimated_acceptance_date",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "421",
+      "rdfs:comment": "To estimate the date of acceptance."
+    },
+    {
+      "@id": "uncl2005:Evaluation_date",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "560",
+      "rdfs:comment": "Date evaluation takes place."
+    },
+    {
+      "@id": "uncl2005:Event_date",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "145",
+      "rdfs:comment": "A date specifying an event."
+    },
+    {
+      "@id": "uncl2005:Event_date/time/period_actual",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "78",
+      "rdfs:comment": "[2193] The actual date/time/period an event occurred."
+    },
+    {
+      "@id": "uncl2005:Event_duration_expected",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "41",
+      "rdfs:comment": "The expected duration of an event."
+    },
+    {
+      "@id": "uncl2005:Event_duration_intended",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "43",
+      "rdfs:comment": "The intended duration of an event."
+    },
+    {
+      "@id": "uncl2005:Excluded_date",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "62",
+      "rdfs:comment": "Date excluded from a period of time."
+    },
+    {
+      "@id": "uncl2005:Excluded_period",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "66",
+      "rdfs:comment": "An interval of time excluded from a period of time."
+    },
+    {
+      "@id": "uncl2005:Execution_date",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "193",
+      "rdfs:comment": "The date when ordered bank initiated the transaction."
+    },
+    {
+      "@id": "uncl2005:Execution_date/time_requested",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "203",
+      "rdfs:comment": "The date/time on which the ordered bank is requested to initiate the payment order, as specified by the originator (e.g. the date of the debit)."
+    },
+    {
+      "@id": "uncl2005:Expected_container_hire_from_date/time",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "408",
+      "rdfs:comment": "Estimated date and time when the containers are expected to go on-hire."
+    },
+    {
+      "@id": "uncl2005:Expected_problem_resolution_date",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "586",
+      "rdfs:comment": "Date when problem is expected to be resolved."
+    },
+    {
+      "@id": "uncl2005:Expected_value_date",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "455",
+      "rdfs:comment": "Date on which the funds are expected to be at the disposal of the beneficiary."
+    },
+    {
+      "@id": "uncl2005:Expiration_date/time_of_customs_document",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "192",
+      "rdfs:comment": "Date on which validity of a customs document expires."
+    },
+    {
+      "@id": "uncl2005:Expiry_date",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "36",
+      "rdfs:comment": "Date of expiry of the validity of a referenced document, price information or any other referenced data element with a limited validity period."
+    },
+    {
+      "@id": "uncl2005:Export_permit_effective_end_date_time",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "147",
+      "rdfs:comment": "[2079] Date on which an export licence expires."
+    },
+    {
+      "@id": "uncl2005:Exportation_date",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "129",
+      "rdfs:comment": "[2043] Date when the imported vessel/merchandise last left the country of export for the country of import."
+    },
+    {
+      "@id": "uncl2005:Exportation_date_for_textiles",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "152",
+      "rdfs:comment": "Date when imported textiles last left the country of origin for the country of importation."
+    },
+    {
+      "@id": "uncl2005:Federal_HighWay_Administration_(FHWA)_inspection_date",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "377",
+      "rdfs:comment": "The date on which container equipment is to be or has been inspected in accordance with the requirements of the U.S. Federal Highway Administration."
+    },
+    {
+      "@id": "uncl2005:File_generation_date_and/or_time",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "706",
+      "rdfs:comment": "Date and, or time of file generation."
+    },
+    {
+      "@id": "uncl2005:Filed_date",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "554",
+      "rdfs:comment": "Date when filed."
+    },
+    {
+      "@id": "uncl2005:Financial_coverage_period",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "669",
+      "rdfs:comment": "The period of time for which financial coverage applies."
+    },
+    {
+      "@id": "uncl2005:Financial_information_date",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "622",
+      "rdfs:comment": "Date of the financial information."
+    },
+    {
+      "@id": "uncl2005:Financial_information_submission_date/time",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "742",
+      "rdfs:comment": "Date/time when financial information is submitted."
+    },
+    {
+      "@id": "uncl2005:Finish_date_or_time_earliest",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "471",
+      "rdfs:comment": "The earliest date or time for finishing."
+    },
+    {
+      "@id": "uncl2005:Finish_date_or_time_latest",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "472",
+      "rdfs:comment": "The latest date or time for finishing."
+    },
+    {
+      "@id": "uncl2005:Finish_date_or_time_mandatory",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "474",
+      "rdfs:comment": "The mandatory date or time for finishing."
+    },
+    {
+      "@id": "uncl2005:First_crane_lift",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "791",
+      "rdfs:comment": "Date and time of the first crane lift."
+    },
+    {
+      "@id": "uncl2005:First_date_of_ordering",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "423",
+      "rdfs:comment": "The first date on which ordering may take place."
+    },
+    {
+      "@id": "uncl2005:First_freezing_date",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "797",
+      "rdfs:comment": "Date on which a product was first frozen."
+    },
+    {
+      "@id": "uncl2005:First_interest-bearing_date",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "112",
+      "rdfs:comment": "The first date from which interest is borne."
+    },
+    {
+      "@id": "uncl2005:First_published_date",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "541",
+      "rdfs:comment": "Date when material was first published."
+    },
+    {
+      "@id": "uncl2005:First_returnable_date/time",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "794",
+      "rdfs:comment": "The first date/time on or after which items can be returned."
+    },
+    {
+      "@id": "uncl2005:First_sale_date_and/or_time_and/or_period",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "685",
+      "rdfs:comment": "The first date, and/or time, and/or period a product was sold."
+    },
+    {
+      "@id": "uncl2005:Flat_extra_period",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "431",
+      "rdfs:comment": "Period for charging the additional extra."
+    },
+    {
+      "@id": "uncl2005:Forecast_period",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "419",
+      "rdfs:comment": "A period for which a forecast applies."
+    },
+    {
+      "@id": "uncl2005:Forecast_period_end_date",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "674",
+      "rdfs:comment": "The ending date of a forecast period."
+    },
+    {
+      "@id": "uncl2005:Forecast_period_start",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "663",
+      "rdfs:comment": "The beginning of a forecast period."
+    },
+    {
+      "@id": "uncl2005:Free_trade_zone_commodity_status_assignment_date",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "780",
+      "rdfs:comment": "The filing date that corresponds to the current status of the commodity in the free trade zone."
+    },
+    {
+      "@id": "uncl2005:Freight_bill_date/time",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "22",
+      "rdfs:comment": "Date/time when freight bill is issued."
+    },
+    {
+      "@id": "uncl2005:From_date_of_award_to_completion",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "256",
+      "rdfs:comment": "Lead time to determine the completion date of an effort based on the date an award is made."
+    },
+    {
+      "@id": "uncl2005:From_date_of_award_to_delivery",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "390",
+      "rdfs:comment": "Lead time to determine the delivery date based on the date an award is made."
+    },
+    {
+      "@id": "uncl2005:From_date_of_award_to_earliest_delivery",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "241",
+      "rdfs:comment": "Lead time to determine the earliest date a delivery can be made based on the date an award is made."
+    },
+    {
+      "@id": "uncl2005:From_date_of_award_to_latest_delivery",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "217",
+      "rdfs:comment": "Lead time to determine the latest date a delivery can be made based on the date an award is made."
+    },
+    {
+      "@id": "uncl2005:From_date_of_notice_to_proceed_to_commencement_of_performance",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "703",
+      "rdfs:comment": "Period of time from notice to proceed until performance commencement."
+    },
+    {
+      "@id": "uncl2005:From_date_of_notice_to_proceed_to_completion",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "704",
+      "rdfs:comment": "Period of time from date of notice to proceed until completion."
+    },
+    {
+      "@id": "uncl2005:From_date_of_order_receipt_to_delivery",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "279",
+      "rdfs:comment": "Lead time is the defined timespan."
+    },
+    {
+      "@id": "uncl2005:From_date_of_order_receipt_to_sample_ready",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "274",
+      "rdfs:comment": "Lead time is the defined timespan."
+    },
+    {
+      "@id": "uncl2005:From_date_of_order_receipt_to_shipment",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "278",
+      "rdfs:comment": "Lead time is the defined timespan."
+    },
+    {
+      "@id": "uncl2005:From_date_of_receipt_of_item_to_approval",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "391",
+      "rdfs:comment": "Lead time to determine the date an item will be approved based on the date the item was received."
+    },
+    {
+      "@id": "uncl2005:From_date_of_receipt_of_tooling_aids_to_sample_ready",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "276",
+      "rdfs:comment": "Lead time is the defined timespan."
+    },
+    {
+      "@id": "uncl2005:From_date_of_sample_approval_to_first_product_shipment",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "277",
+      "rdfs:comment": "Lead time is the defined timespan."
+    },
+    {
+      "@id": "uncl2005:From_date_of_tooling_authorization_to_sample_ready",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "275",
+      "rdfs:comment": "Lead time is the defined timespan."
+    },
+    {
+      "@id": "uncl2005:From_last_booked_order_to_delivery",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "280",
+      "rdfs:comment": "Lead time is the defined timespan."
+    },
+    {
+      "@id": "uncl2005:Fumigation_date_and/or_time",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "530",
+      "rdfs:comment": "The date/or time on which fumigation is to occur or has taken place."
+    },
+    {
+      "@id": "uncl2005:Future_period",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "584",
+      "rdfs:comment": "Period in the future."
+    },
+    {
+      "@id": "uncl2005:Goods_collection_or_pick-up_date/time_planned",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "398",
+      "rdfs:comment": "Date/time at which goods can be picked up, according to a planning."
+    },
+    {
+      "@id": "uncl2005:Goods_declaration_document_acceptance_date_time",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "148",
+      "rdfs:comment": "[2037] Date on which a Goods declaration has been or will be accepted by Customs in accordance with Customs legislation."
+    },
+    {
+      "@id": "uncl2005:Goods_pick-up_date_/_time_planned",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "298",
+      "rdfs:comment": "Date/time at which goods can be picked up, according to a plan."
+    },
+    {
+      "@id": "uncl2005:Goods_pickup_lead_time",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "766",
+      "rdfs:comment": "Minimum time required between order entry and goods release for pick-up."
+    },
+    {
+      "@id": "uncl2005:Goods_positioning_date/time_expected",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "399",
+      "rdfs:comment": "Date/time on which goods are expected to be positioned."
+    },
+    {
+      "@id": "uncl2005:Goods_positioning_date/time_planned",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "406",
+      "rdfs:comment": "The date/time on which the goods will be positioned according to a planning."
+    },
+    {
+      "@id": "uncl2005:Goods_receipt_date/time",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "50",
+      "rdfs:comment": "Date/time upon which the goods were received by a given party."
+    },
+    {
+      "@id": "uncl2005:Government_service_date/time_requested",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "785",
+      "rdfs:comment": "The date/time at which the government service is requested to be executed."
+    },
+    {
+      "@id": "uncl2005:Graduation_date",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "623",
+      "rdfs:comment": "Date when graduation occurs."
+    },
+    {
+      "@id": "uncl2005:Guarantee_date",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "258",
+      "rdfs:comment": "Date when a guarantee is placed."
+    },
+    {
+      "@id": "uncl2005:Guarantee_period",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "73",
+      "rdfs:comment": "The period for which the guarantee is or will be granted."
+    },
+    {
+      "@id": "uncl2005:Hand_over_date/time_actual",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "295",
+      "rdfs:comment": "Date/time on which hand over (i.e. the transfer of responsibility for an object or activity such as documentation, system etc. from one party to another) actually takes place."
+    },
+    {
+      "@id": "uncl2005:Hand_over_date/time_planned",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "294",
+      "rdfs:comment": "Date/time on which hand over (i.e. the transfer of responsibility for an object or activity such as documentation, system etc. from one party to another) is planned to take place."
+    },
+    {
+      "@id": "uncl2005:Handling_end_date_and/or_time_actual",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "774",
+      "rdfs:comment": "The actual date and/or time when the end of the handling action takes place."
+    },
+    {
+      "@id": "uncl2005:Handling_end_date_and/or_time_estimated",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "773",
+      "rdfs:comment": "The date and/or time when the end of the handling action is estimated to take place."
+    },
+    {
+      "@id": "uncl2005:Handling_start_date_and/or_time_actual",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "772",
+      "rdfs:comment": "The actual date and/or time when the start of the handling action takes place."
+    },
+    {
+      "@id": "uncl2005:Health_problem_period",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "102",
+      "rdfs:comment": "Period of time of health problem."
+    },
+    {
+      "@id": "uncl2005:Hired_from_date",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "172",
+      "rdfs:comment": "Date from which an item has been or will be hired."
+    },
+    {
+      "@id": "uncl2005:Hired_until_date",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "173",
+      "rdfs:comment": "Date until which an item has been or will be hired."
+    },
+    {
+      "@id": "uncl2005:Holiday",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "467",
+      "rdfs:comment": "A date or period that is a break from work."
+    },
+    {
+      "@id": "uncl2005:Horizon_end_date",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "159",
+      "rdfs:comment": "The last date of a period forming a horizon."
+    },
+    {
+      "@id": "uncl2005:Horizon_period",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "323",
+      "rdfs:comment": "Period forming a (planning) horizon."
+    },
+    {
+      "@id": "uncl2005:Horizon_start_date",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "158",
+      "rdfs:comment": "The first date of a period forming a horizon."
+    },
+    {
+      "@id": "uncl2005:Hoses_connected_date/time",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "229",
+      "rdfs:comment": "The date and/or time hoses were connected."
+    },
+    {
+      "@id": "uncl2005:Hoses_disconnected_date/time",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "230",
+      "rdfs:comment": "The date and/or time hoses were disconnected."
+    },
+    {
+      "@id": "uncl2005:Hospital_admission_date_and_or_time",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "516",
+      "rdfs:comment": "Date and or time of admission to a hospital."
+    },
+    {
+      "@id": "uncl2005:Hospital_discharge_date_and_or_time",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "517",
+      "rdfs:comment": "Date and or time of discharge from a hospital."
+    },
+    {
+      "@id": "uncl2005:Hydrotest_date",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "371",
+      "rdfs:comment": "The date equipment has been hydrotested."
+    },
+    {
+      "@id": "uncl2005:Illness_recovery_date_expected",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "484",
+      "rdfs:comment": "Date when a person is expected to recover from illness."
+    },
+    {
+      "@id": "uncl2005:Implementation_date/time/period",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "681",
+      "rdfs:comment": "A date/time/period within which an implementation is to take place."
+    },
+    {
+      "@id": "uncl2005:Import_permit_effective_end_date_time",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "195",
+      "rdfs:comment": "[2273] Date on which the validity of an import licence expires."
+    },
+    {
+      "@id": "uncl2005:Import_permit_issue_date_time",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "125",
+      "rdfs:comment": "[2293] Date of issue of an import licence."
+    },
+    {
+      "@id": "uncl2005:Importation_date",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "151",
+      "rdfs:comment": "Date on which goods are imported, as determined by the governing Customs administration."
+    },
+    {
+      "@id": "uncl2005:In_service_survey_date",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "501",
+      "rdfs:comment": "Date of survey of equipment while in use."
+    },
+    {
+      "@id": "uncl2005:Inactivity_end_date",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "626",
+      "rdfs:comment": "Date when inactivity ends."
+    },
+    {
+      "@id": "uncl2005:Inbound_movement_authorization_date",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "59",
+      "rdfs:comment": "Inland movement authorization date."
+    },
+    {
+      "@id": "uncl2005:Income_period",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "654",
+      "rdfs:comment": "The period of time in which income is earned."
+    },
+    {
+      "@id": "uncl2005:Incorporation_date",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "625",
+      "rdfs:comment": "Date of incorporation."
+    },
+    {
+      "@id": "uncl2005:Information_release_authorization_date",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "721",
+      "rdfs:comment": "Date when the information was authorized to be released."
+    },
+    {
+      "@id": "uncl2005:Initial_financial_accounts_filed_date",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "547",
+      "rdfs:comment": "Date when the initial financial accounts were filed."
+    },
+    {
+      "@id": "uncl2005:Initial_request_date",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "679",
+      "rdfs:comment": "Date of an initial request."
+    },
+    {
+      "@id": "uncl2005:Inquiry_date",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "89",
+      "rdfs:comment": "The date on which an inquiry is made."
+    },
+    {
+      "@id": "uncl2005:Insolvency_discharge_granted_date",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "624",
+      "rdfs:comment": "Date when insolvency discharge was granted."
+    },
+    {
+      "@id": "uncl2005:Inspection_date",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "351",
+      "rdfs:comment": "Date of inspection."
+    },
+    {
+      "@id": "uncl2005:Inspection_end_date/time",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "783",
+      "rdfs:comment": "Date/time at which an inspection is completed."
+    },
+    {
+      "@id": "uncl2005:Inspection_start_date/time",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "782",
+      "rdfs:comment": "Date/time at which an inspection begins."
+    },
+    {
+      "@id": "uncl2005:Installation_date/time/period",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "18",
+      "rdfs:comment": "The date/time/period of the act, or an instance of installing something or someone."
+    },
+    {
+      "@id": "uncl2005:Instalment_payment_due_date",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "327",
+      "rdfs:comment": "Date on which an instalment payment is due."
+    },
+    {
+      "@id": "uncl2005:Instruction's_original_execution_date",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "540",
+      "rdfs:comment": "Original execution date for the instruction."
+    },
+    {
+      "@id": "uncl2005:Insufficient_assets_judgement_date",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "661",
+      "rdfs:comment": "The date on which assets were judged to be insufficient."
+    },
+    {
+      "@id": "uncl2005:Interest_period",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "221",
+      "rdfs:comment": "Number of days used for the calculation of interests."
+    },
+    {
+      "@id": "uncl2005:Interest_rate_validity_period",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "289",
+      "rdfs:comment": "Validity period of the interest rate."
+    },
+    {
+      "@id": "uncl2005:International_assessment_approval_for_publication_date",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "538",
+      "rdfs:comment": "Date the Data Maintenance Request (DMR) was approved for publication after completing international review."
+    },
+    {
+      "@id": "uncl2005:International_review_cycle_start_date",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "537",
+      "rdfs:comment": "Date the international review cycle starts."
+    },
+    {
+      "@id": "uncl2005:Interviewed_date",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "582",
+      "rdfs:comment": "Date of an interview."
+    },
+    {
+      "@id": "uncl2005:Inventory_report_date",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "366",
+      "rdfs:comment": "Date on which a inventory report is made."
+    },
+    {
+      "@id": "uncl2005:Investigation_end_date",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "651",
+      "rdfs:comment": "The date when an investigation ended."
+    },
+    {
+      "@id": "uncl2005:Investigation_start_date",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "653",
+      "rdfs:comment": "The date when an investigation began."
+    },
+    {
+      "@id": "uncl2005:Investment_number_allocation_date",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "744",
+      "rdfs:comment": "The date that an investment number was allocated."
+    },
+    {
+      "@id": "uncl2005:Invitation_to_tender_date/time",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "285",
+      "rdfs:comment": "Date/time on which the invitation to tender has been made available to relevant parties."
+    },
+    {
+      "@id": "uncl2005:Invoice_date_required",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "149",
+      "rdfs:comment": "Date required for invoice issue."
+    },
+    {
+      "@id": "uncl2005:Invoice_document_issue_date_time",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "3",
+      "rdfs:comment": "[2377] Date of issue of an invoice."
+    },
+    {
+      "@id": "uncl2005:Invoicing_period",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "263",
+      "rdfs:comment": "Period for which an invoice is issued."
+    },
+    {
+      "@id": "uncl2005:Issue_date",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "182",
+      "rdfs:comment": "Date when a document/message has been or will be issued."
+    },
+    {
+      "@id": "uncl2005:Joined_employer_date",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "330",
+      "rdfs:comment": "Date when a person joins an employer."
+    },
+    {
+      "@id": "uncl2005:Joined_fund_date/time",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "340",
+      "rdfs:comment": "Date/time when a person joins a fund."
+    },
+    {
+      "@id": "uncl2005:Judgement_date",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "675",
+      "rdfs:comment": "The date on which a decision from a court of law was rendered."
+    },
+    {
+      "@id": "uncl2005:Jurisdiction_entry_date/time_actual",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "781",
+      "rdfs:comment": "Actual date/time at which the conveyance or goods enter an agency's jurisdiction."
+    },
+    {
+      "@id": "uncl2005:Labour_wage_determination_date",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "142",
+      "rdfs:comment": "The date a labour wage is determined."
+    },
+    {
+      "@id": "uncl2005:Laden_transport_equipment_acceptance_cut-off_date/time",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "814",
+      "rdfs:comment": "Latest date/time after which no more laden transport equipment, such as FCL container, deliveries will be accepted at this location for loading on a booked means of transport."
+    },
+    {
+      "@id": "uncl2005:Last_X-ray_date",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "726",
+      "rdfs:comment": "The date the last X-ray was taken."
+    },
+    {
+      "@id": "uncl2005:Last_activity_date",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "589",
+      "rdfs:comment": "Date of last activity."
+    },
+    {
+      "@id": "uncl2005:Last_annual_report_date",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "593",
+      "rdfs:comment": "Date of the last annual report."
+    },
+    {
+      "@id": "uncl2005:Last_capital_change_date",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "628",
+      "rdfs:comment": "Date of last capital change."
+    },
+    {
+      "@id": "uncl2005:Last_check_for_balance_sheet_update_date",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "627",
+      "rdfs:comment": "Date balance sheet was last checked to determine if update had taken place."
+    },
+    {
+      "@id": "uncl2005:Last_crane_lift",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "792",
+      "rdfs:comment": "Date and time of the last crane lift."
+    },
+    {
+      "@id": "uncl2005:Last_date_of_accounts_filed_at_public_register",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "733",
+      "rdfs:comment": "Date on which accounts were last filed at the public register."
+    },
+    {
+      "@id": "uncl2005:Last_date_of_ordering",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "424",
+      "rdfs:comment": "The last date on which ordering may take place."
+    },
+    {
+      "@id": "uncl2005:Last_date_to_file_a_claim",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "580",
+      "rdfs:comment": "Date after which no claim can be filed."
+    },
+    {
+      "@id": "uncl2005:Last_interest-bearing_date",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "120",
+      "rdfs:comment": "The last date from which interest is borne."
+    },
+    {
+      "@id": "uncl2005:Last_menstrual_cycle_start_date",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "528",
+      "rdfs:comment": "Date when the last menstrual cycle started."
+    },
+    {
+      "@id": "uncl2005:Last_off_hire_date",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "442",
+      "rdfs:comment": "Date the item was last returned from hire."
+    },
+    {
+      "@id": "uncl2005:Last_on_hire_date",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "441",
+      "rdfs:comment": "Date the item was last placed on hire."
+    },
+    {
+      "@id": "uncl2005:Last_published_date",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "542",
+      "rdfs:comment": "Date when material was last published."
+    },
+    {
+      "@id": "uncl2005:Last_sale_date_and/or_time_and/or_period",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "686",
+      "rdfs:comment": "The last date, and/or time, and/or period a product was sold."
+    },
+    {
+      "@id": "uncl2005:Last_seen_date",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "723",
+      "rdfs:comment": "The date when last seen."
+    },
+    {
+      "@id": "uncl2005:Last_visit_date",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "583",
+      "rdfs:comment": "Date of last visit."
+    },
+    {
+      "@id": "uncl2005:Latest_check-in_time",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "346",
+      "rdfs:comment": "Latest time of check-in."
+    },
+    {
+      "@id": "uncl2005:Latest_filing_period",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "694",
+      "rdfs:comment": "Latest period for which a filing may be made."
+    },
+    {
+      "@id": "uncl2005:Latest_price_adjustment_date",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "305",
+      "rdfs:comment": "Date on which the latest price adjustment took place."
+    },
+    {
+      "@id": "uncl2005:Lay-time_first_day",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "197",
+      "rdfs:comment": "First of a number of days allowed in a charter party of the loading and discharging of cargo."
+    },
+    {
+      "@id": "uncl2005:Lay-time_last_day",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "198",
+      "rdfs:comment": "Last of a number of days allowed in a charter party for the loading and discharging of cargo."
+    },
+    {
+      "@id": "uncl2005:Lead_time",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "169",
+      "rdfs:comment": "Time required between order entry till earliest goods delivery."
+    },
+    {
+      "@id": "uncl2005:Lease_period",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "673",
+      "rdfs:comment": "The period associated with a lease."
+    },
+    {
+      "@id": "uncl2005:Lease_term_end_date",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "551",
+      "rdfs:comment": "End date of the lease term."
+    },
+    {
+      "@id": "uncl2005:Lease_term_start_date",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "550",
+      "rdfs:comment": "Start date of the lease term."
+    },
+    {
+      "@id": "uncl2005:Left_employer_date",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "337",
+      "rdfs:comment": "Date when a person leaves an employer."
+    },
+    {
+      "@id": "uncl2005:Legal_action_closed_date",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "642",
+      "rdfs:comment": "Date when the legal action was closed."
+    },
+    {
+      "@id": "uncl2005:Legal_settlement_terms_met_date",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "608",
+      "rdfs:comment": "Date when terms specified in the legal settlement were met."
+    },
+    {
+      "@id": "uncl2005:Legal_structure_change_date",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "633",
+      "rdfs:comment": "Date when legal structure was changed."
+    },
+    {
+      "@id": "uncl2005:Letter_of_agreement_date",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "629",
+      "rdfs:comment": "Date of a letter of agreement."
+    },
+    {
+      "@id": "uncl2005:Letter_of_liability_date",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "630",
+      "rdfs:comment": "Date of a letter of liability."
+    },
+    {
+      "@id": "uncl2005:Liquidation_date",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "631",
+      "rdfs:comment": "Date of liquidation."
+    },
+    {
+      "@id": "uncl2005:Loss",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "248",
+      "rdfs:comment": "Date, time, period on which a referenced loss occurred."
+    },
+    {
+      "@id": "uncl2005:Lowest_activity_period",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "632",
+      "rdfs:comment": "Period of lowest activity."
+    },
+    {
+      "@id": "uncl2005:Mail_receipt_date",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "643",
+      "rdfs:comment": "Date mail was received."
+    },
+    {
+      "@id": "uncl2005:Mailing_date",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "695",
+      "rdfs:comment": "Date when an item may be mailed."
+    },
+    {
+      "@id": "uncl2005:Management_available_date",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "666",
+      "rdfs:comment": "Date when management is available."
+    },
+    {
+      "@id": "uncl2005:Manager_not_registered_as_of_given_date",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "601",
+      "rdfs:comment": "As of this date the manager is not registered."
+    },
+    {
+      "@id": "uncl2005:Manifest/ship_notice_date",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "111",
+      "rdfs:comment": "The date of issuance of a manifest or ship notice."
+    },
+    {
+      "@id": "uncl2005:Marketing_campaign_end_date/time_suggested",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "762",
+      "rdfs:comment": "The date and or time suggested for the marketing campaign to end."
+    },
+    {
+      "@id": "uncl2005:Marketing_campaign_start_date/time_suggested",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "763",
+      "rdfs:comment": "The date and or time suggested for the marketing campaign to start."
+    },
+    {
+      "@id": "uncl2005:Maturity_date",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "434",
+      "rdfs:comment": "Date at which maturity occurs."
+    },
+    {
+      "@id": "uncl2005:Maturity_date_optimal",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "753",
+      "rdfs:comment": "Date at which optimal maturity occurs."
+    },
+    {
+      "@id": "uncl2005:Maximum_credit_granted_date",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "732",
+      "rdfs:comment": "Date on which the highest credit was granted."
+    },
+    {
+      "@id": "uncl2005:Means_of_transport_ready_for_cargo_operations_date/time",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "818",
+      "rdfs:comment": "Date/time when the means of transport is, or will be, ready for cargo operations."
+    },
+    {
+      "@id": "uncl2005:Means_of_transport_ready_for_departure_date/time",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "819",
+      "rdfs:comment": "Date/time when the means of transport is, or will be, ready for departure."
+    },
+    {
+      "@id": "uncl2005:Meat_ageing_period",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "19",
+      "rdfs:comment": "Period of time between slaughter and delivery during which meat is ageing."
+    },
+    {
+      "@id": "uncl2005:Medication_date/time_start",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "86",
+      "rdfs:comment": "Date and/or time when medication was started."
+    },
+    {
+      "@id": "uncl2005:Medicine_administration_time",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "82",
+      "rdfs:comment": "Designated time of day for the administration of medicine."
+    },
+    {
+      "@id": "uncl2005:Meeting_date",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "578",
+      "rdfs:comment": "Date of the meeting."
+    },
+    {
+      "@id": "uncl2005:Meter_reading_date_latest",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "368",
+      "rdfs:comment": "Date on which the latest reading of a meter took place."
+    },
+    {
+      "@id": "uncl2005:Meter_reading_date_next_scheduled",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "752",
+      "rdfs:comment": "Date on which the next reading of a meter is scheduled to take place."
+    },
+    {
+      "@id": "uncl2005:Meter_reading_date_previous",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "367",
+      "rdfs:comment": "Date on which the previous reading of a meter took place."
+    },
+    {
+      "@id": "uncl2005:Minimum_product_lifespan_for_consumer",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "775",
+      "rdfs:comment": "The minimum life span of the product remaining after selling it to the consumer, i.e. between the \"sell by date\" and the \"use by date\" of the product."
+    },
+    {
+      "@id": "uncl2005:Minimum_shelf_life_remaining_at_time_of_despatch_period",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "364",
+      "rdfs:comment": "Period indicating the minimum shelf life remaining for a product at the time of leaving the supplier."
+    },
+    {
+      "@id": "uncl2005:Minimum_shelf_life_remaining_at_time_of_receipt",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "418",
+      "rdfs:comment": "The minimum shelf life remaining at the time of receipt."
+    },
+    {
+      "@id": "uncl2005:Model_year",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "788",
+      "rdfs:comment": "The model year of the item."
+    },
+    {
+      "@id": "uncl2005:Mooring_date_and_time",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "373",
+      "rdfs:comment": "Date and time of mooring."
+    },
+    {
+      "@id": "uncl2005:Moved_from_location_date",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "6",
+      "rdfs:comment": "The date an entity moved from a location."
+    },
+    {
+      "@id": "uncl2005:Mutually_defined",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "ZZZ",
+      "rdfs:comment": "A code assigned within a code list to be used on an interim basis and as defined among trading partners until a precise code can be assigned to the code list."
+    },
+    {
+      "@id": "uncl2005:Negotiations_start_date",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "507",
+      "rdfs:comment": "The date on which negotiations started."
+    },
+    {
+      "@id": "uncl2005:Net_worth_date",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "594",
+      "rdfs:comment": "Date of net worth."
+    },
+    {
+      "@id": "uncl2005:Next_review_date",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "577",
+      "rdfs:comment": "Date of next review."
+    },
+    {
+      "@id": "uncl2005:Next_status_report_date",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "800",
+      "rdfs:comment": "Date of the next status report."
+    },
+    {
+      "@id": "uncl2005:Non_working",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "468",
+      "rdfs:comment": "To specify a non working date or period."
+    },
+    {
+      "@id": "uncl2005:Not_registered_as_of_given_date",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "635",
+      "rdfs:comment": "Date when not yet registered."
+    },
+    {
+      "@id": "uncl2005:Note:",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "",
+      "rdfs:comment": "1. This period is not the same as \"reinsurance current account period\"."
+    },
+    {
+      "@id": "uncl2005:Notification_date/time",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "184",
+      "rdfs:comment": "Date/time of notification."
+    },
+    {
+      "@id": "uncl2005:Notification_time_limit",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "510",
+      "rdfs:comment": "The time limit which has been set for a notification to take place."
+    },
+    {
+      "@id": "uncl2005:Off-hire_survey_date",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "500",
+      "rdfs:comment": "Date on which the equipment was surveyed at the end of the current leasing period."
+    },
+    {
+      "@id": "uncl2005:Offset_from_Coordinated_Universal_Time_(UTC)",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "735",
+      "rdfs:comment": "Number of hour's offset from Coordinated Universal Time (UTC)."
+    },
+    {
+      "@id": "uncl2005:On",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "311",
+      "rdfs:comment": "Fixed maturity day for deferred payment or time draft(s)."
+    },
+    {
+      "@id": "uncl2005:On_hire_survey_date",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "502",
+      "rdfs:comment": "Date on which the equipment was surveyed at the beginning of the current leasing period."
+    },
+    {
+      "@id": "uncl2005:Open_period",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "748",
+      "rdfs:comment": "Code identifying the period during which something is, was or will be open."
+    },
+    {
+      "@id": "uncl2005:Opened_trade_item_life_span",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "789",
+      "rdfs:comment": "The number of days the trade item that has been opened can remain on the shelf before it must be removed."
+    },
+    {
+      "@id": "uncl2005:Opening_date",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "450",
+      "rdfs:comment": "Date of opening."
+    },
+    {
+      "@id": "uncl2005:Operations_ceased_date",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "606",
+      "rdfs:comment": "Date when operations ceased."
+    },
+    {
+      "@id": "uncl2005:Order_amendment_binding_date",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "388",
+      "rdfs:comment": "The date when an order amendment becomes binding for both parties."
+    },
+    {
+      "@id": "uncl2005:Order_completion_date/time_ultimate",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "409",
+      "rdfs:comment": "Date/time on which the order should be completed at the latest."
+    },
+    {
+      "@id": "uncl2005:Order_document_issue_date_time",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "4",
+      "rdfs:comment": "[2011] Date of order."
+    },
+    {
+      "@id": "uncl2005:Order_received_date/time",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "8",
+      "rdfs:comment": "Date/time when the purchase order is received by the seller."
+    },
+    {
+      "@id": "uncl2005:Order_to_proceed_date",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "313",
+      "rdfs:comment": "Issue date of an instruction to start work."
+    },
+    {
+      "@id": "uncl2005:Ordered_labour_team_end_time",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "817",
+      "rdfs:comment": "The date/time until which a party has ordered a labour team to be ready, e.g. for loading/unloading operations."
+    },
+    {
+      "@id": "uncl2005:Ordered_labour_team_start_time",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "816",
+      "rdfs:comment": "The date/time at which a party has ordered a labour team to be ready, e.g. for loading/unloading operations."
+    },
+    {
+      "@id": "uncl2005:Original_authorisation_date_and/or_time",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "56",
+      "rdfs:comment": "Date and/or time when original authorisation was issued."
+    },
+    {
+      "@id": "uncl2005:Original_duration",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "701",
+      "rdfs:comment": "Original length of time."
+    },
+    {
+      "@id": "uncl2005:Original_estimate_date",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "445",
+      "rdfs:comment": "The date of the original estimate."
+    },
+    {
+      "@id": "uncl2005:Original_issue_age",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "428",
+      "rdfs:comment": "The original issue age."
+    },
+    {
+      "@id": "uncl2005:Original_name_change_date",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "738",
+      "rdfs:comment": "Date when the original name was changed."
+    },
+    {
+      "@id": "uncl2005:Original_posting_date",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "425",
+      "rdfs:comment": "Date when the entry was originally posted."
+    },
+    {
+      "@id": "uncl2005:Orthodontic_treatment_period_remaining",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "730",
+      "rdfs:comment": "The period of time that the orthodontic treatment has remaining."
+    },
+    {
+      "@id": "uncl2005:Orthodontic_treatment_period_total",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "731",
+      "rdfs:comment": "The period of orthodontic treatment from beginning to end."
+    },
+    {
+      "@id": "uncl2005:Out_of_gauge_or_break_bulk_acceptance_cut-off_date/time",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "812",
+      "rdfs:comment": "Latest date/time after which no more Break Bulk cargo or Out Of Gauge transport equipment deliveries will be accepted at this location for loading on a booked means of transport."
+    },
+    {
+      "@id": "uncl2005:Overtime_end_date",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "505",
+      "rdfs:comment": "Date when a period of overtime ends."
+    },
+    {
+      "@id": "uncl2005:Overtime_start_date",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "504",
+      "rdfs:comment": "Date when a period of overtime begins."
+    },
+    {
+      "@id": "uncl2005:Ownership_change_date",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "700",
+      "rdfs:comment": "Date when ownership changes."
+    },
+    {
+      "@id": "uncl2005:Packaging_date",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "365",
+      "rdfs:comment": "The date on which the packaging of a product took place."
+    },
+    {
+      "@id": "uncl2005:Packing_end_date",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "349",
+      "rdfs:comment": "Date on which packing completed."
+    },
+    {
+      "@id": "uncl2005:Packing_start_date",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "348",
+      "rdfs:comment": "Date on which packing commenced."
+    },
+    {
+      "@id": "uncl2005:Paid_to_date",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "432",
+      "rdfs:comment": "Date to which payments have been paid."
+    },
+    {
+      "@id": "uncl2005:Part-time_working_change_date/time",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "333",
+      "rdfs:comment": "Date/time when the proportion of part-time work changes."
+    },
+    {
+      "@id": "uncl2005:Participation_date",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "603",
+      "rdfs:comment": "Date of participation."
+    },
+    {
+      "@id": "uncl2005:Patient_first_visit_for_condition",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "708",
+      "rdfs:comment": "The date of the first visit by a patient to a healthcare provider for this condition."
+    },
+    {
+      "@id": "uncl2005:Payment_availability_date_time",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "138",
+      "rdfs:comment": "[2035] Date that an amount due becomes available to a creditor under the terms of payment."
+    },
+    {
+      "@id": "uncl2005:Payment_cancellation_rejected",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "595",
+      "rdfs:comment": "Date/time when a cancellation of a payment is rejected due to the fact that the payment is already done."
+    },
+    {
+      "@id": "uncl2005:Payment_cancelled_due_to_administrative_error",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "386",
+      "rdfs:comment": "Date/time when a payment is cancelled due to an administrative error."
+    },
+    {
+      "@id": "uncl2005:Payment_cancelled_violation_of_agreement",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "385",
+      "rdfs:comment": "Date/time when a payment is cancelled due to the fact that the transaction does not comply with the agreement."
+    },
+    {
+      "@id": "uncl2005:Payment_date/time_deferred",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "14",
+      "rdfs:comment": "Date/time when instalments are due."
+    },
+    {
+      "@id": "uncl2005:Payment_due_date",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "140",
+      "rdfs:comment": "[2481] Date/time at which funds should be made available."
+    },
+    {
+      "@id": "uncl2005:Payment_impossible",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "745",
+      "rdfs:comment": "Date/time when a payment is recorded as being impossible."
+    },
+    {
+      "@id": "uncl2005:Payment_instruction_date/time",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "307",
+      "rdfs:comment": "Date/time on which a payment instruction was given."
+    },
+    {
+      "@id": "uncl2005:Payment_period",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "531",
+      "rdfs:comment": "A period of time in which a payment has been or will be made."
+    },
+    {
+      "@id": "uncl2005:Payment_valuation_presentation_date/time",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "308",
+      "rdfs:comment": "Date/time on which the payment valuation is presented."
+    },
+    {
+      "@id": "uncl2005:Payroll_deduction_date/time",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "328",
+      "rdfs:comment": "Date/time of a monetary deduction made from the salary of a person on a payroll."
+    },
+    {
+      "@id": "uncl2005:Peak_activity_period",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "639",
+      "rdfs:comment": "Period of peak activity."
+    },
+    {
+      "@id": "uncl2005:Period_an_event_is_late_due_to_customer",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "705",
+      "rdfs:comment": "The period of time an event is late due to the actions of a customer."
+    },
+    {
+      "@id": "uncl2005:Period_assigned",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "672",
+      "rdfs:comment": "The period assigned."
+    },
+    {
+      "@id": "uncl2005:Period_between_changes",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "702",
+      "rdfs:comment": "The period of time between changes."
+    },
+    {
+      "@id": "uncl2005:Period_between_issue_date_and_maturity_date",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "749",
+      "rdfs:comment": "Interval of time between the date when the transaction was initiated and the date when the funds need to be collected."
+    },
+    {
+      "@id": "uncl2005:Period_extended",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "664",
+      "rdfs:comment": "Number of time units added to the original end date/time/period."
+    },
+    {
+      "@id": "uncl2005:Period_of_care_end_date_and_or_time",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "519",
+      "rdfs:comment": "Date and or time when a period of care ends."
+    },
+    {
+      "@id": "uncl2005:Period_of_care_start_date_and_or_time",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "518",
+      "rdfs:comment": "Date and or time when a period of care starts."
+    },
+    {
+      "@id": "uncl2005:Period_of_illness_end_date",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "486",
+      "rdfs:comment": "Date when a period of illness ends."
+    },
+    {
+      "@id": "uncl2005:Period_of_illness_start_date",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "485",
+      "rdfs:comment": "Date when a period of illness began."
+    },
+    {
+      "@id": "uncl2005:Period_overdue",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "680",
+      "rdfs:comment": "The period by which an event is overdue."
+    },
+    {
+      "@id": "uncl2005:Period_worked_for_the_company",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "676",
+      "rdfs:comment": "Period of time that was worked for the company."
+    },
+    {
+      "@id": "uncl2005:Periodic_inspection_date",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "379",
+      "rdfs:comment": "The date on which a periodic inspection has to take place."
+    },
+    {
+      "@id": "uncl2005:Permit_to_admit_date",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "224",
+      "rdfs:comment": "Date on which permission was granted to move merchandise into a bonded warehouse or free trade zone."
+    },
+    {
+      "@id": "uncl2005:Person_birth_date_time",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "329",
+      "rdfs:comment": "[2491] (2051) Date on which an individual is or was born."
+    },
+    {
+      "@id": "uncl2005:Pickup_place_booking_date/time",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "823",
+      "rdfs:comment": "Date/time at which a booking was made at the pickup place."
+    },
+    {
+      "@id": "uncl2005:Placement_date",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "728",
+      "rdfs:comment": "The date something is placed."
+    },
+    {
+      "@id": "uncl2005:Placement_date_initial",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "563",
+      "rdfs:comment": "Date of initial placement."
+    },
+    {
+      "@id": "uncl2005:Placement_date_previous",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "727",
+      "rdfs:comment": "The date something was previously placed."
+    },
+    {
+      "@id": "uncl2005:Planned_duration_of_works",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "314",
+      "rdfs:comment": "The period of time planned for the completion of building or repair operations."
+    },
+    {
+      "@id": "uncl2005:Planning_end_date_and/or_time_actual",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "80",
+      "rdfs:comment": "The actual date and/or time the planning ended."
+    },
+    {
+      "@id": "uncl2005:Positioning_date/time_of_equipment",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "181",
+      "rdfs:comment": "Date/time when equipment is positioned."
+    },
+    {
+      "@id": "uncl2005:Positioning_date/time_of_goods",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "199",
+      "rdfs:comment": "The date and/or time the goods have to be or have been positioned."
+    },
+    {
+      "@id": "uncl2005:Posting_date",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "202",
+      "rdfs:comment": "The date when an entry is posted to an account."
+    },
+    {
+      "@id": "uncl2005:Postmark_date/time",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "108",
+      "rdfs:comment": "An official mark stamped on a letter identifying date/time of dispatch or arrival."
+    },
+    {
+      "@id": "uncl2005:Precaution_relevant_period",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "57",
+      "rdfs:comment": "The period when a precaution is relevant."
+    },
+    {
+      "@id": "uncl2005:Preceding_period",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "585",
+      "rdfs:comment": "Period preceding current period."
+    },
+    {
+      "@id": "uncl2005:Pregnancy_duration_actual",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "529",
+      "rdfs:comment": "Actual duration of pregnancy."
+    },
+    {
+      "@id": "uncl2005:Premium_change_period",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "499",
+      "rdfs:comment": "To identify the period of the premium change."
+    },
+    {
+      "@id": "uncl2005:Preparation_date/time_of_document",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "242",
+      "rdfs:comment": "Date and/or time that the document was prepared."
+    },
+    {
+      "@id": "uncl2005:Prescription_dispensing_date_and_or_time",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "524",
+      "rdfs:comment": "Date and or time when a prescription was dispensed."
+    },
+    {
+      "@id": "uncl2005:Prescription_issue_date_and_or_time",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "523",
+      "rdfs:comment": "Date and or time when a prescription was issued."
+    },
+    {
+      "@id": "uncl2005:Present_residence_start_date",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "572",
+      "rdfs:comment": "The beginning date of residence at present location."
+    },
+    {
+      "@id": "uncl2005:Presentation_date_latest",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "222",
+      "rdfs:comment": "Latest date for presentation of a document."
+    },
+    {
+      "@id": "uncl2005:Presentation_to_bankruptcy_receivers_date",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "640",
+      "rdfs:comment": "Date when presented to the bankruptcy receivers."
+    },
+    {
+      "@id": "uncl2005:Previous_booking_date/time",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "417",
+      "rdfs:comment": "Date/time at which the previous booking was made."
+    },
+    {
+      "@id": "uncl2005:Previous_current_account_date",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "188",
+      "rdfs:comment": "Date of the previous current account."
+    },
+    {
+      "@id": "uncl2005:Previous_invoice_date",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "384",
+      "rdfs:comment": "Indicates the date which was allocated to a previous invoice."
+    },
+    {
+      "@id": "uncl2005:Previous_report_date",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "127",
+      "rdfs:comment": "Date of the previous report."
+    },
+    {
+      "@id": "uncl2005:Previous_termination_date",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "498",
+      "rdfs:comment": "Identifies the date of the previous termination."
+    },
+    {
+      "@id": "uncl2005:Price_adjustment_date",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "304",
+      "rdfs:comment": "Value date of indexes appearing as numerators in a price adjustment formula."
+    },
+    {
+      "@id": "uncl2005:Price_adjustment_limit_date",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "300",
+      "rdfs:comment": "Limit value date of indexes used as numerators in a price adjustment formula."
+    },
+    {
+      "@id": "uncl2005:Price_adjustment_start_date",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "299",
+      "rdfs:comment": "Value date of the indexes appearing as denominators in a price adjustment formula."
+    },
+    {
+      "@id": "uncl2005:Price_base_date/time",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "288",
+      "rdfs:comment": "Base date/time of prices."
+    },
+    {
+      "@id": "uncl2005:Privilege_details_verification_date",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "637",
+      "rdfs:comment": "Date when privilege details were verified."
+    },
+    {
+      "@id": "uncl2005:Processing_date/period",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "324",
+      "rdfs:comment": "Date/period a specific process happened/will happen."
+    },
+    {
+      "@id": "uncl2005:Processing_date/time",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "9",
+      "rdfs:comment": "Date/time of processing."
+    },
+    {
+      "@id": "uncl2005:Processing_end_date/time",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "164",
+      "rdfs:comment": "Date/Time when a specific process ends."
+    },
+    {
+      "@id": "uncl2005:Processing_start_date/time",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "163",
+      "rdfs:comment": "Date/Time when a specific process starts."
+    },
+    {
+      "@id": "uncl2005:Product_ageing_duration_maximum",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "754",
+      "rdfs:comment": "Maximum period of time during which the product is ageing."
+    },
+    {
+      "@id": "uncl2005:Product_ageing_duration_minimum",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "755",
+      "rdfs:comment": "Minimum period of time during which the product is ageing."
+    },
+    {
+      "@id": "uncl2005:Product_ageing_period_before_delivery",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "100",
+      "rdfs:comment": "Period of time before delivery during which the product is ageing."
+    },
+    {
+      "@id": "uncl2005:Product_best_before_date_time",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "361",
+      "rdfs:comment": "[2497] Indication that freshness of goods is limited in time to the date shown."
+    },
+    {
+      "@id": "uncl2005:Product_lifespan_at_time_of_production",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "381",
+      "rdfs:comment": "The total lifespan of a product at the time of its production."
+    },
+    {
+      "@id": "uncl2005:Product_sterilisation_date",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "804",
+      "rdfs:comment": "Date on which a product was sterilised."
+    },
+    {
+      "@id": "uncl2005:Production/manufacture_date",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "94",
+      "rdfs:comment": "Date on which goods are produced."
+    },
+    {
+      "@id": "uncl2005:Production_date_no_schedule_established_as_of",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "101",
+      "rdfs:comment": "Date as of there is no valid production schedule."
+    },
+    {
+      "@id": "uncl2005:Production_inspection_date",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "503",
+      "rdfs:comment": "Date of production inspection."
+    },
+    {
+      "@id": "uncl2005:Profit_period",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "596",
+      "rdfs:comment": "Period over which profit was earned."
+    },
+    {
+      "@id": "uncl2005:Project_over_target_baseline_date",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "692",
+      "rdfs:comment": "The date an over target baseline was implemented for a project."
+    },
+    {
+      "@id": "uncl2005:Promotion_date/period",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "321",
+      "rdfs:comment": "Date/period relevant for specific promotion activities."
+    },
+    {
+      "@id": "uncl2005:Promotion_end_date/time",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "16",
+      "rdfs:comment": "Date/time when promotion activities end."
+    },
+    {
+      "@id": "uncl2005:Promotion_start_date/time",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "15",
+      "rdfs:comment": "Date/time when promotion activities begin."
+    },
+    {
+      "@id": "uncl2005:Property_mortgage_date_start",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "139",
+      "rdfs:comment": "The date the mortgage on a piece of property begins."
+    },
+    {
+      "@id": "uncl2005:Property_mortgage_scheduled_date_end",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "220",
+      "rdfs:comment": "The date the mortgage on a piece of property is scheduled to end."
+    },
+    {
+      "@id": "uncl2005:Provider_signature_date",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "719",
+      "rdfs:comment": "Date when the provider signed."
+    },
+    {
+      "@id": "uncl2005:Publication_date",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "302",
+      "rdfs:comment": "The date of the act of making something publicly known."
+    },
+    {
+      "@id": "uncl2005:Purchase_order_latest_possible_change_date",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "743",
+      "rdfs:comment": "Date identifying a point of time after which a purchase order cannot be changed."
+    },
+    {
+      "@id": "uncl2005:Purchased_date",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "556",
+      "rdfs:comment": "Date of purchase."
+    },
+    {
+      "@id": "uncl2005:Quota_date",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "144",
+      "rdfs:comment": "Date that the quota applies to."
+    },
+    {
+      "@id": "uncl2005:Quotation_opening_date",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "99",
+      "rdfs:comment": "The date on which the quotation has been or may be opened."
+    },
+    {
+      "@id": "uncl2005:Rate/price_date/time",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "267",
+      "rdfs:comment": "Date/time on which a rate/price is determined."
+    },
+    {
+      "@id": "uncl2005:Rate_of_exchange_date/time",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "134",
+      "rdfs:comment": "Date/time on which the exchange rate was fixed."
+    },
+    {
+      "@id": "uncl2005:Re-exportation_date",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "250",
+      "rdfs:comment": "Date of re-exportation."
+    },
+    {
+      "@id": "uncl2005:Re-importation_date",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "251",
+      "rdfs:comment": "Date of re-importation."
+    },
+    {
+      "@id": "uncl2005:Receivables_collection_period",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "657",
+      "rdfs:comment": "The period of time over which receivable accounts are collected."
+    },
+    {
+      "@id": "uncl2005:Receive_at_lockbox_date",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "109",
+      "rdfs:comment": "The date on which a financial institution, serving as collection agency for a company located in another part of the country, collects an amount of money on behalf of that company."
+    },
+    {
+      "@id": "uncl2005:Received_date/time",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "310",
+      "rdfs:comment": "Date/time of receipt."
+    },
+    {
+      "@id": "uncl2005:Receivership_period",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "741",
+      "rdfs:comment": "Period of time a receivership lasts."
+    },
+    {
+      "@id": "uncl2005:Receivership_result_date",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "650",
+      "rdfs:comment": "Date when the result of the receivership occurs."
+    },
+    {
+      "@id": "uncl2005:Record_extraction_period",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "746",
+      "rdfs:comment": "The period for extraction of records."
+    },
+    {
+      "@id": "uncl2005:Recorded_date",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "591",
+      "rdfs:comment": "Date when recorded."
+    },
+    {
+      "@id": "uncl2005:Reefer_acceptance_cut-off_date/time",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "813",
+      "rdfs:comment": "Latest date/time after which no more Temperature Controlled cargo deliveries will be accepted at this location for loading on a booked means of transport."
+    },
+    {
+      "@id": "uncl2005:Reference_date/time",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "171",
+      "rdfs:comment": "Date/time on which the reference was issued."
+    },
+    {
+      "@id": "uncl2005:Referenced_item_creation_date",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "448",
+      "rdfs:comment": "Creation date of referenced item."
+    },
+    {
+      "@id": "uncl2005:Refusal_period",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "682",
+      "rdfs:comment": "The period within which a refusal can be made."
+    },
+    {
+      "@id": "uncl2005:Registered_contractor_number_assignment_date_original",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "699",
+      "rdfs:comment": "Date when a registered contractor number was originally assigned."
+    },
+    {
+      "@id": "uncl2005:Registration_date",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "597",
+      "rdfs:comment": "Date when registered."
+    },
+    {
+      "@id": "uncl2005:Registration_date_of_previous_Customs_declaration",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "254",
+      "rdfs:comment": "Registration date of the Customs declaration for the previous Customs procedure either in the same or another country."
+    },
+    {
+      "@id": "uncl2005:Reimbursement_claim_issue_date_and_or_time",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "515",
+      "rdfs:comment": "Date and or time when a reimbursement claim is issued."
+    },
+    {
+      "@id": "uncl2005:Reinstatement_date",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "496",
+      "rdfs:comment": "Identifies the date of reinstatement."
+    },
+    {
+      "@id": "uncl2005:Reinsurance_accounting_period",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "240",
+      "rdfs:comment": "To identify a reinsurance account period via start and end dates."
+    },
+    {
+      "@id": "uncl2005:Reinsurance_coverage_duration",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "433",
+      "rdfs:comment": "The period for which reinsurance coverage has been in force."
+    },
+    {
+      "@id": "uncl2005:Reinsurance_current_account_period",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "210",
+      "rdfs:comment": "The date of the current reinsurance account."
+    },
+    {
+      "@id": "uncl2005:Reinsurance_issue_age",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "435",
+      "rdfs:comment": "The actual or equivalent age at time of issue."
+    },
+    {
+      "@id": "uncl2005:Reinsurance_paid-up_date",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "436",
+      "rdfs:comment": "The date up to which the reinsurance has been paid."
+    },
+    {
+      "@id": "uncl2005:Reinsurance_payment_frequency",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "426",
+      "rdfs:comment": "The frequency of payments of reinsurance premiums."
+    },
+    {
+      "@id": "uncl2005:Release_date/time",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "261",
+      "rdfs:comment": "Date/time assigned to identify the release of a set of rules, conditions, conventions, productions, etc."
+    },
+    {
+      "@id": "uncl2005:Release_date_(Customs)",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "204",
+      "rdfs:comment": "(2135) Date on which Customs releases merchandise to the carrier or importer."
+    },
+    {
+      "@id": "uncl2005:Release_date_of_customer",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "161",
+      "rdfs:comment": "Date the customer authorised the goods' release."
+    },
+    {
+      "@id": "uncl2005:Release_date_of_supplier",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "162",
+      "rdfs:comment": "Date when the supplier released goods."
+    },
+    {
+      "@id": "uncl2005:Release_frequency",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "264",
+      "rdfs:comment": "Frequency of a release."
+    },
+    {
+      "@id": "uncl2005:Release_from_bankruptcy_date",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "562",
+      "rdfs:comment": "Date when an entity is released from bankruptcy status."
+    },
+    {
+      "@id": "uncl2005:Renewal_date",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "569",
+      "rdfs:comment": "Date of renewal."
+    },
+    {
+      "@id": "uncl2005:Repair_turnaround_time",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "387",
+      "rdfs:comment": "Provides the period of time necessary to turnaround a given repair."
+    },
+    {
+      "@id": "uncl2005:Reply_date",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "317",
+      "rdfs:comment": "The date to answer or to respond in word or action."
+    },
+    {
+      "@id": "uncl2005:Report_end_date",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "91",
+      "rdfs:comment": "The date on which a report is to end."
+    },
+    {
+      "@id": "uncl2005:Report_period",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "567",
+      "rdfs:comment": "Period covered by the report."
+    },
+    {
+      "@id": "uncl2005:Report_start_date",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "90",
+      "rdfs:comment": "The date on which a report is to begin."
+    },
+    {
+      "@id": "uncl2005:Reported_date",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "570",
+      "rdfs:comment": "Date when reported."
+    },
+    {
+      "@id": "uncl2005:Reprocessing_date/time",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "793",
+      "rdfs:comment": "Date/time on which goods previously produced are re- processed."
+    },
+    {
+      "@id": "uncl2005:Request_date",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "318",
+      "rdfs:comment": "The date on which something was asked for."
+    },
+    {
+      "@id": "uncl2005:Resignation_date",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "641",
+      "rdfs:comment": "Date of resignation."
+    },
+    {
+      "@id": "uncl2005:Resolved_date",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "590",
+      "rdfs:comment": "Date when resolved."
+    },
+    {
+      "@id": "uncl2005:Retention_release_date/time",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "296",
+      "rdfs:comment": "Date/time on which the retention is released."
+    },
+    {
+      "@id": "uncl2005:Retention_release_date/time_partial",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "297",
+      "rdfs:comment": "Date/time on which the retention is partially released."
+    },
+    {
+      "@id": "uncl2005:Return_to_work_date",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "555",
+      "rdfs:comment": "Date of return to work."
+    },
+    {
+      "@id": "uncl2005:Returned_date",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "557",
+      "rdfs:comment": "Date return takes place."
+    },
+    {
+      "@id": "uncl2005:Review_date",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "536",
+      "rdfs:comment": "Date the item was or will be reviewed."
+    },
+    {
+      "@id": "uncl2005:Revised_estimate_date",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "446",
+      "rdfs:comment": "The date the estimate was revised."
+    },
+    {
+      "@id": "uncl2005:Road_fund_tax_expiry_date",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "374",
+      "rdfs:comment": "The date of expiry of the road fund tax."
+    },
+    {
+      "@id": "uncl2005:Salary_change_effective_date",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "336",
+      "rdfs:comment": "Date when a change in salary becomes effective."
+    },
+    {
+      "@id": "uncl2005:Saleable_stock_demand_cover_period_expected",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "5",
+      "rdfs:comment": "A period of time when saleable stocks are expected to cover demand for a product."
+    },
+    {
+      "@id": "uncl2005:Sales_date_and_or_time_and_or_period",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "356",
+      "rdfs:comment": "The date, and or time, and or period on which a sale took place."
+    },
+    {
+      "@id": "uncl2005:Sample_available_date",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "115",
+      "rdfs:comment": "Date as of a sample will be available seller defined."
+    },
+    {
+      "@id": "uncl2005:Sample_required_date",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "113",
+      "rdfs:comment": "Date as of a sample has to be available customer defined."
+    },
+    {
+      "@id": "uncl2005:Satisfaction_date",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "607",
+      "rdfs:comment": "Date when satisfaction was obtained."
+    },
+    {
+      "@id": "uncl2005:Scheduled_for_delivery_on_or_after",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "358",
+      "rdfs:comment": "Scheduled for delivery on or after the specified date, and or time."
+    },
+    {
+      "@id": "uncl2005:Scheduled_for_delivery_on_or_before",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "359",
+      "rdfs:comment": "Scheduled for delivery on or before specified date and or time."
+    },
+    {
+      "@id": "uncl2005:Seasonal_availability_end_date",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "809",
+      "rdfs:comment": "Indicates the end date of the trade item's seasonal availability."
+    },
+    {
+      "@id": "uncl2005:Seasonal_availabilty_calendar_year",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "765",
+      "rdfs:comment": "The calendar year of the season in which the trade item is available."
+    },
+    {
+      "@id": "uncl2005:Security_share_price_as_of_given_date",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "544",
+      "rdfs:comment": "Date of the security share price."
+    },
+    {
+      "@id": "uncl2005:Selection_period_end_date",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "491",
+      "rdfs:comment": "Date when a period of selection ends."
+    },
+    {
+      "@id": "uncl2005:Selection_period_start_date",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "490",
+      "rdfs:comment": "Date when a period of selection begins."
+    },
+    {
+      "@id": "uncl2005:Sell_by_date",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "360",
+      "rdfs:comment": "The date by which a product should be sold."
+    },
+    {
+      "@id": "uncl2005:Seller's_local_time",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "54",
+      "rdfs:comment": "Time at the seller's location."
+    },
+    {
+      "@id": "uncl2005:Service_completion_date/time_actual",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "1",
+      "rdfs:comment": "Actual date/time on which the service was completed."
+    },
+    {
+      "@id": "uncl2005:Service_connection_date/time_actual",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "801",
+      "rdfs:comment": "The date/time on which a service was connected, e.g. telephone, water, etc."
+    },
+    {
+      "@id": "uncl2005:Service_disconnection_date/time_actual",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "802",
+      "rdfs:comment": "The date/time on which a service was disconnected, e.g. telephone, water, etc."
+    },
+    {
+      "@id": "uncl2005:Settlement_date",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "205",
+      "rdfs:comment": "Date for settlement of financial transaction e.g. foreign exchange securities."
+    },
+    {
+      "@id": "uncl2005:Settlement_date_planned",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "244",
+      "rdfs:comment": "The date for which settlement is planned."
+    },
+    {
+      "@id": "uncl2005:Settlement_due_date",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "170",
+      "rdfs:comment": "More generic than 'payment due date' and therefore more apt for reinsurance/insurance business."
+    },
+    {
+      "@id": "uncl2005:Ship_date_originally_scheduled",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "110",
+      "rdfs:comment": "The date on which the shipment of goods was originally scheduled."
+    },
+    {
+      "@id": "uncl2005:Ship_during_date",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "270",
+      "rdfs:comment": "The date identifying the period during or in which the goods should be shipped."
+    },
+    {
+      "@id": "uncl2005:Ship_not_before_and_not_after_date/time",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "312",
+      "rdfs:comment": "Shipment(s) of goods is/are to be made not before the first specified date/time and not after the second specified date/time."
+    },
+    {
+      "@id": "uncl2005:Ship_not_before_date/time",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "37",
+      "rdfs:comment": "Goods should not be shipped before given date/time."
+    },
+    {
+      "@id": "uncl2005:Ship_not_later_than_date/time",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "38",
+      "rdfs:comment": "Date/time by which the goods should have been shipped."
+    },
+    {
+      "@id": "uncl2005:Ship_on_or_about_date",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "271",
+      "rdfs:comment": "Date on or about which goods should be shipped."
+    },
+    {
+      "@id": "uncl2005:Ship_week_of_date",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "39",
+      "rdfs:comment": "Date identifying the week during which goods should be shipped."
+    },
+    {
+      "@id": "uncl2005:Shipment_date/time_expected",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "806",
+      "rdfs:comment": "Date and/or time when shipment is expected."
+    },
+    {
+      "@id": "uncl2005:Shipment_date/time_promised_for",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "79",
+      "rdfs:comment": "Shipment might happen at given date/time."
+    },
+    {
+      "@id": "uncl2005:Shipment_date/time_promised_for_(prior_to_and_including)",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "85",
+      "rdfs:comment": "Shipment might take place latest at given date."
+    },
+    {
+      "@id": "uncl2005:Shipment_date/time_requested",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "10",
+      "rdfs:comment": "Date on which goods should be shipped or despatched by the supplier."
+    },
+    {
+      "@id": "uncl2005:Shipment_date/time_requested_for_(after_and_including)",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "81",
+      "rdfs:comment": "Shipment should happen earliest at given date."
+    },
+    {
+      "@id": "uncl2005:Shipment_date/time_requested_for_(prior_to_and_including)",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "84",
+      "rdfs:comment": "Shipment should take place latest at given date."
+    },
+    {
+      "@id": "uncl2005:Shipping_date_and/or_time_current_schedule",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "689",
+      "rdfs:comment": "Shipping date and/or time as currently scheduled."
+    },
+    {
+      "@id": "uncl2005:Shipping_date_no_schedule_established_as_of",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "688",
+      "rdfs:comment": "As at this date no valid shipping schedule has been established."
+    },
+    {
+      "@id": "uncl2005:Sickness_benefit_age_limit",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "715",
+      "rdfs:comment": "To identify the age to which benefits are provided to the insured in the event of sickness."
+    },
+    {
+      "@id": "uncl2005:Sickness_benefit_period",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "714",
+      "rdfs:comment": "To identify the period of time for which benefits are provided in the event of sickness."
+    },
+    {
+      "@id": "uncl2005:Sickness_insurance_elimination_period",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "718",
+      "rdfs:comment": "The period of time the insured must be disabled in the event of sickness for benefits to be payable by the ceding company."
+    },
+    {
+      "@id": "uncl2005:Sickness_lifetime_benefit_qualification_age",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "716",
+      "rdfs:comment": "To identify the qualification age for lifetime benefits provided to the insured in the event of sickness."
+    },
+    {
+      "@id": "uncl2005:Signature_date",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "564",
+      "rdfs:comment": "Date of signature."
+    },
+    {
+      "@id": "uncl2005:Similar_illness_onset_date",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "725",
+      "rdfs:comment": "The date of the onset of an illness similar to the illness currently being treated."
+    },
+    {
+      "@id": "uncl2005:Slaughtering_date/time",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "807",
+      "rdfs:comment": "Date/time of slaughtering."
+    },
+    {
+      "@id": "uncl2005:Slaughtering_end_date",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "352",
+      "rdfs:comment": "Date on which slaughtering completed."
+    },
+    {
+      "@id": "uncl2005:Slaughtering_start_date",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "347",
+      "rdfs:comment": "Date on which slaughtering commenced."
+    },
+    {
+      "@id": "uncl2005:Social_security_claims_verification_date",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "644",
+      "rdfs:comment": "Date when social security claims were verified."
+    },
+    {
+      "@id": "uncl2005:Sole_directorship_registration_date",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "645",
+      "rdfs:comment": "Date when sole directorship was registered."
+    },
+    {
+      "@id": "uncl2005:Source_document_capture_date",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "451",
+      "rdfs:comment": "Date source document data is entered into a business application."
+    },
+    {
+      "@id": "uncl2005:Specification_revision_date",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "77",
+      "rdfs:comment": "Date of revision to a specification."
+    },
+    {
+      "@id": "uncl2005:Start_availability_date",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "764",
+      "rdfs:comment": "The start date of availability."
+    },
+    {
+      "@id": "uncl2005:Start_date/time",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "194",
+      "rdfs:comment": "Date/time on which a period starts."
+    },
+    {
+      "@id": "uncl2005:Start_date/time_maximum_buying_quantity",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "760",
+      "rdfs:comment": "The date/time from which the maximum buying quantity may be purchased."
+    },
+    {
+      "@id": "uncl2005:Start_date/time_minimum_buying_quantity",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "761",
+      "rdfs:comment": "The date/time from which the minimum buying quantity may be purchased."
+    },
+    {
+      "@id": "uncl2005:Start_date/time_planned",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "291",
+      "rdfs:comment": "The date/time for which something is planned to begin or commence."
+    },
+    {
+      "@id": "uncl2005:Start_date_actual",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "552",
+      "rdfs:comment": "Actual date of start."
+    },
+    {
+      "@id": "uncl2005:Start_date_estimated",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "553",
+      "rdfs:comment": "Date of estimated start."
+    },
+    {
+      "@id": "uncl2005:Start_date_or_time_actual",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "475",
+      "rdfs:comment": "The actual date or time for starting."
+    },
+    {
+      "@id": "uncl2005:Start_date_or_time_earliest",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "469",
+      "rdfs:comment": "The earliest date or time for starting."
+    },
+    {
+      "@id": "uncl2005:Start_date_or_time_estimated",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "476",
+      "rdfs:comment": "The estimated date or time for starting."
+    },
+    {
+      "@id": "uncl2005:Start_date_or_time_latest",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "470",
+      "rdfs:comment": "The latest date or time for starting."
+    },
+    {
+      "@id": "uncl2005:Start_date_or_time_mandatory",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "473",
+      "rdfs:comment": "The mandatory date or time for starting."
+    },
+    {
+      "@id": "uncl2005:Start_date_or_time_not_after",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "481",
+      "rdfs:comment": "The not after date or time for starting."
+    },
+    {
+      "@id": "uncl2005:Start_date_or_time_not_before",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "480",
+      "rdfs:comment": "The not before date or time for starting."
+    },
+    {
+      "@id": "uncl2005:Start_date_or_time_scheduled",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "478",
+      "rdfs:comment": "The scheduled date or time for starting."
+    },
+    {
+      "@id": "uncl2005:Starting_date/time_for_breakbulk_STORO",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "105",
+      "rdfs:comment": "Date/time on which delivering period for breakbulk STORO cargo starts (STORO = Stowing on Roll on-Roll off vessel)."
+    },
+    {
+      "@id": "uncl2005:Starting_date/time_for_container_RO-RO",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "106",
+      "rdfs:comment": "Date/time on which delivering period for container Roll on-Roll off (RO-RO) cargo starts."
+    },
+    {
+      "@id": "uncl2005:Statistical_time_series_date",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "47",
+      "rdfs:comment": "Date for statistical time series purposes."
+    },
+    {
+      "@id": "uncl2005:Status_assignment_date",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "539",
+      "rdfs:comment": "Date a status was assigned."
+    },
+    {
+      "@id": "uncl2005:Status_change_date/time",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "334",
+      "rdfs:comment": "Date/time when a status changes."
+    },
+    {
+      "@id": "uncl2005:Stock_demand_cover_period_expected",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "805",
+      "rdfs:comment": "A period of time when all stocks are expected to cover demand for a product."
+    },
+    {
+      "@id": "uncl2005:Stop_distribution_date",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "671",
+      "rdfs:comment": "The date on which distribution is to stop."
+    },
+    {
+      "@id": "uncl2005:Stop_work_as_of_given_date",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "548",
+      "rdfs:comment": "Date work stopped or will stop."
+    },
+    {
+      "@id": "uncl2005:Submission_date",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "416",
+      "rdfs:comment": "The date of a submission."
+    },
+    {
+      "@id": "uncl2005:Summer_time_start",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "88",
+      "rdfs:comment": "Date/time at which the summer time starts."
+    },
+    {
+      "@id": "uncl2005:Superseded_date/time",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "42",
+      "rdfs:comment": "Date/time being overlaid by a date given elsewhere."
+    },
+    {
+      "@id": "uncl2005:Suppliers'_average_credit_period",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "690",
+      "rdfs:comment": "The average period of time that credit is extended by suppliers."
+    },
+    {
+      "@id": "uncl2005:Suspended_date",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "568",
+      "rdfs:comment": "Date of suspension."
+    },
+    {
+      "@id": "uncl2005:Suspension_period",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "683",
+      "rdfs:comment": "The period for which something is suspended."
+    },
+    {
+      "@id": "uncl2005:Symptoms_onset_patient_alleged",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "710",
+      "rdfs:comment": "Date and/or time of onset of symptoms according to the patient."
+    },
+    {
+      "@id": "uncl2005:Tanks_accepted_date/time",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "238",
+      "rdfs:comment": "The date and/or time the tanks are to be or have been accepted."
+    },
+    {
+      "@id": "uncl2005:Tanks_inspected_date/time",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "239",
+      "rdfs:comment": "The date and/or time the tanks are to be or have been inspected."
+    },
+    {
+      "@id": "uncl2005:Tax_period",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "325",
+      "rdfs:comment": "Period a tax rate/tax amount etc. is applicable."
+    },
+    {
+      "@id": "uncl2005:Tax_period_end_date",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "166",
+      "rdfs:comment": "Date when a tax period ends."
+    },
+    {
+      "@id": "uncl2005:Tax_period_start_date",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "165",
+      "rdfs:comment": "Date when a tax period begins."
+    },
+    {
+      "@id": "uncl2005:Tax_point_date_time",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "131",
+      "rdfs:comment": "[2221] Date on which tax is due or calculated."
+    },
+    {
+      "@id": "uncl2005:Telex_date",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "135",
+      "rdfs:comment": "Date identifying when a telex message was sent."
+    },
+    {
+      "@id": "uncl2005:Temporary_prosthesis_date",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "729",
+      "rdfs:comment": "The date a temporary prosthetic device was provided."
+    },
+    {
+      "@id": "uncl2005:Tender_submission_date/time",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "286",
+      "rdfs:comment": "Date/time on which the tender was submitted."
+    },
+    {
+      "@id": "uncl2005:Terminated_date",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "559",
+      "rdfs:comment": "Date termination takes place."
+    },
+    {
+      "@id": "uncl2005:Terms_discount_due_date/time",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "12",
+      "rdfs:comment": "Date by which payment should be made if discount terms are to apply."
+    },
+    {
+      "@id": "uncl2005:Terms_net_due_date",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "13",
+      "rdfs:comment": "Date by which payment must be made."
+    },
+    {
+      "@id": "uncl2005:Test_completion_date",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "119",
+      "rdfs:comment": "Date when a test has been completed."
+    },
+    {
+      "@id": "uncl2005:Test_start_date",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "350",
+      "rdfs:comment": "Date when a test has been started."
+    },
+    {
+      "@id": "uncl2005:Time_limit",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "511",
+      "rdfs:comment": "The time limit in which an event must take place."
+    },
+    {
+      "@id": "uncl2005:Time_now_date",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "466",
+      "rdfs:comment": "A time now date used for planning and scheduling purposes."
+    },
+    {
+      "@id": "uncl2005:Tooling_required_date",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "114",
+      "rdfs:comment": "Date as of a tool has to be available customer defined."
+    },
+    {
+      "@id": "uncl2005:Total_shelf_life_period",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "363",
+      "rdfs:comment": "A period indicating the total shelf life of a product."
+    },
+    {
+      "@id": "uncl2005:Trade_item_ship_date/time_earliest_possible",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "758",
+      "rdfs:comment": "The earliest date/time that the trade item can be shipped."
+    },
+    {
+      "@id": "uncl2005:Trade_item_ship_date/time_latest_possible",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "759",
+      "rdfs:comment": "The latest date/time that the trade item can be shipped."
+    },
+    {
+      "@id": "uncl2005:Trade_style_registration_date",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "646",
+      "rdfs:comment": "Date when trade style was registered."
+    },
+    {
+      "@id": "uncl2005:Transaction_creation_date",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "97",
+      "rdfs:comment": "The date on which a transaction was originated or brought into being."
+    },
+    {
+      "@id": "uncl2005:Transfer_note_acceptance_date_and_time",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "24",
+      "rdfs:comment": "Date and time when a transfer note (transfer document for transport exclusively using containers as equipment) is recognised as being valid by the carrier."
+    },
+    {
+      "@id": "uncl2005:Transhipment_date/time",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "190",
+      "rdfs:comment": "Date and time of the transfer of the goods from one means of transport to another."
+    },
+    {
+      "@id": "uncl2005:Transit_time/limits",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "268",
+      "rdfs:comment": "The time to go over a distance."
+    },
+    {
+      "@id": "uncl2005:Transmission_date/time_of_document",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "243",
+      "rdfs:comment": "The date/time at which a document was transmitted."
+    },
+    {
+      "@id": "uncl2005:Transport_equipment_stripping_date_and/or_time",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "678",
+      "rdfs:comment": "The date and/or time on which the stripping of a transport equipment is to or has taken place."
+    },
+    {
+      "@id": "uncl2005:Transport_equipment_stuffing_date_and/or_time",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "677",
+      "rdfs:comment": "(2045) The date and/or time on which the stuffing of transport equipment is to or has taken place."
+    },
+    {
+      "@id": "uncl2005:Transport_means_arrival_date/time_earliest",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "231",
+      "rdfs:comment": "Date/time of earliest arrival of means of transport."
+    },
+    {
+      "@id": "uncl2005:Transport_means_arrival_date/time_scheduled",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "232",
+      "rdfs:comment": "Date (and time) of scheduled arrival of means of transport."
+    },
+    {
+      "@id": "uncl2005:Transport_means_arrival_date/time_ultimate",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "233",
+      "rdfs:comment": "Date (and time) of ultimate arrival of means of transport."
+    },
+    {
+      "@id": "uncl2005:Transport_means_arrival_date_time_actual",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "178",
+      "rdfs:comment": "[2107] Date and or time of the arrival of means of transport."
+    },
+    {
+      "@id": "uncl2005:Transport_means_arrival_date_time_estimated",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "132",
+      "rdfs:comment": "[2349] Date and or time of the estimated arrival of means of transport."
+    },
+    {
+      "@id": "uncl2005:Transport_means_departure_date/time_actual",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "186",
+      "rdfs:comment": "(2280) Date (and time) of departure of means of transport."
+    },
+    {
+      "@id": "uncl2005:Transport_means_departure_date/time_earliest",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "196",
+      "rdfs:comment": "Date/time of earliest departure of means of transport."
+    },
+    {
+      "@id": "uncl2005:Transport_means_departure_date/time_estimated",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "133",
+      "rdfs:comment": "(2195) Date/time when carrier estimates that a means of transport should depart at the place of departure."
+    },
+    {
+      "@id": "uncl2005:Transport_means_departure_date/time_scheduled",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "189",
+      "rdfs:comment": "Date (and time) of scheduled departure of means of transport."
+    },
+    {
+      "@id": "uncl2005:Transport_means_departure_date/time_ultimate",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "208",
+      "rdfs:comment": "Date/time at which a means of transport has to depart ultimately."
+    },
+    {
+      "@id": "uncl2005:Transport_means_departure_date_time_actual",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "136",
+      "rdfs:comment": "[2281] Date and or time of the departure of a means of transport."
+    },
+    {
+      "@id": "uncl2005:Transport_means_loading_date/time_actual",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "404",
+      "rdfs:comment": "Date/time when the specified goods or transport equipment has or have been loaded in or on the means of transport."
+    },
+    {
+      "@id": "uncl2005:Transshipment_booking_acceptance_cut-off_date/time",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "815",
+      "rdfs:comment": "Date/time after which no more bookings for transshipment cargo will be accepted at this location for re-loading on a particular means of transport."
+    },
+    {
+      "@id": "uncl2005:Travel_service_connection_time",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "87",
+      "rdfs:comment": "Time elapsing between the arrival of a travel service and the departure of a connecting travel service."
+    },
+    {
+      "@id": "uncl2005:Trial_balance_period",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "452",
+      "rdfs:comment": "Period covered by the trial balance."
+    },
+    {
+      "@id": "uncl2005:Trial_start_date_actual",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "648",
+      "rdfs:comment": "Date when the trial actually started."
+    },
+    {
+      "@id": "uncl2005:Trial_start_date_scheduled",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "647",
+      "rdfs:comment": "Date when a trial is scheduled to begin."
+    },
+    {
+      "@id": "uncl2005:Ultimate_documentation_date/time_for_24-hour_rule_regulation_of_CBP_(United_States_Customs_and_Border",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "756",
+      "rdfs:comment": "tection) Ultimate date/time by which the documentation must be submitted in compliance with the 4-hour rule of United States Custom of Border Protection."
+    },
+    {
+      "@id": "uncl2005:Underwriting_year",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "245",
+      "rdfs:comment": "Year in which the treaty was commenced."
+    },
+    {
+      "@id": "uncl2005:Unloaded_date_and_time",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "420",
+      "rdfs:comment": "To report the date and time that an unloading action occurred."
+    },
+    {
+      "@id": "uncl2005:Unmooring_date_and_time",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "790",
+      "rdfs:comment": "Date and time of unmooring."
+    },
+    {
+      "@id": "uncl2005:Validation_date",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "266",
+      "rdfs:comment": "The date on which something was made valid, ratified or confirmed."
+    },
+    {
+      "@id": "uncl2005:Validity_end_date",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "799",
+      "rdfs:comment": "The last date of a period for which something is valid."
+    },
+    {
+      "@id": "uncl2005:Validity_period",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "273",
+      "rdfs:comment": "Dates (from/to)/period referenced documents are valid."
+    },
+    {
+      "@id": "uncl2005:Validity_start_date",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "157",
+      "rdfs:comment": "The first date of a period for which something is valid."
+    },
+    {
+      "@id": "uncl2005:Valuation_date/time",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "316",
+      "rdfs:comment": "Date/time of valuation."
+    },
+    {
+      "@id": "uncl2005:Valuation_date_(Customs)",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "260",
+      "rdfs:comment": "Date when Customs valuation was made."
+    },
+    {
+      "@id": "uncl2005:Value_Added_Tax_(VAT)_claims_verification_date",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "649",
+      "rdfs:comment": "Date when the Value Added Tax (VAT) claims were verified."
+    },
+    {
+      "@id": "uncl2005:Value_date",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "209",
+      "rdfs:comment": "Date on which the funds are at the disposal of the beneficiary or cease to be at the disposal of the ordering customer."
+    },
+    {
+      "@id": "uncl2005:Value_date_of_index",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "301",
+      "rdfs:comment": "Date of validity of index values."
+    },
+    {
+      "@id": "uncl2005:Verified_gross_mass_cut-off_date/time",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "810",
+      "rdfs:comment": "Latest date/time by which the verified gross mass (such as VGM as per SOLAS) details must be provided to the carrier or to the terminal operator in order to enable loading of the transport equipment on the booked means of transport."
+    },
+    {
+      "@id": "uncl2005:Verified_gross_mass_determination_date/time",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "798",
+      "rdfs:comment": "Date/Time when a gross mass (weight) of a packed container was obtained according to SOLAS Chapter VI, Regulation 2, paragraphs 4-6."
+    },
+    {
+      "@id": "uncl2005:Vessel_arrival_at_pilot_area_date/time_actual",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "821",
+      "rdfs:comment": "Actual date/time of vessel arrival at the pilot area."
+    },
+    {
+      "@id": "uncl2005:Vessel_arrival_at_pilot_area_date/time_estimated",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "820",
+      "rdfs:comment": "Estimated date/time of vessel arrival at the pilot area."
+    },
+    {
+      "@id": "uncl2005:Wage_period_end_date",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "461",
+      "rdfs:comment": "Date when a period of wage ends."
+    },
+    {
+      "@id": "uncl2005:Wage_period_start_date",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "460",
+      "rdfs:comment": "Date when a period of wage begins."
+    },
+    {
+      "@id": "uncl2005:Waiting_time",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "341",
+      "rdfs:comment": "The period of time between the moment at which one wants an activity to begin and the moment at which this activity can actually begin."
+    },
+    {
+      "@id": "uncl2005:Winter_time_start",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "98",
+      "rdfs:comment": "Date/time at which the winter time starts."
+    },
+    {
+      "@id": "uncl2005:Withdrawn_date",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "667",
+      "rdfs:comment": "The date when something was retracted."
+    },
+    {
+      "@id": "uncl2005:Work_effective_start_date",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "508",
+      "rdfs:comment": "The date on which work will effectively start."
+    },
+    {
+      "@id": "uncl2005:Work_period",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "306",
+      "rdfs:comment": "Period of execution of works."
+    },
+    {
+      "@id": "uncl2005:Working_period_end_date",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "463",
+      "rdfs:comment": "Date when a period of work ends."
+    },
+    {
+      "@id": "uncl2005:Working_period_start_date",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "462",
+      "rdfs:comment": "Date when a period of work begins."
+    },
+    {
+      "@id": "uncl2005:Works_completion_date/time_actual",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "293",
+      "rdfs:comment": "The actual date/time for the completion of building or repair operations."
+    },
+    {
+      "@id": "uncl2005:Works_completion_date/time_planned",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "292",
+      "rdfs:comment": "The date/time for the completion of building or repair operations is planned."
+    },
+    {
+      "@id": "uncl2005:Year_of_occurrence",
+      "@type": "uncefact:UNCL2005Code",
+      "rdf:value": "247",
+      "rdfs:comment": "Year in which a specific event (e.g. a loss) took place."
+    }
+  ]
+}
