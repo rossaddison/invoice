@@ -7,11 +7,11 @@
         "app",
         "invoice"
     ],
-    "homepage": "https://github.com/rossaddison/yii3-i-invoice",
+    "homepage": "https://github.com/rossaddison/invoice",
     "license": "BSD-3-Clause",
     "support": {
-        "source": "https://github.com/rossaddison/yii3-i-invoice",
-        "issues": "https://github.com/rossaddison/yii3-i-invoice/issues",
+        "source": "https://github.com/rossaddison/invoice",
+        "issues": "https://github.com/rossaddison/invoice/issues",
         "forum": "https://www.yiiframework.com/forum/"
     },
     "minimum-stability": "dev",
