@@ -30,8 +30,6 @@ name: invoice dependency checker
 jobs:
   mutation:
     name: PHP ${{ matrix.php }}-${{ matrix.os }}
-    
-    env:
         
     runs-on: ${{ matrix.os }}
 

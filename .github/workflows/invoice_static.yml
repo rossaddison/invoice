@@ -29,8 +29,6 @@ name: invoice static analysis
 jobs:
   mutation:
     name: PHP ${{ matrix.php }}-${{ matrix.os }}
-    
-    env:
 
     runs-on: ${{ matrix.os }}
 
