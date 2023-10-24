@@ -161,6 +161,7 @@ Class MailerHelper
                 is_array($bcc) && $email!=='' ? array_unshift($bcc, $email) : '';
             }
         }
+              
         $email = $this->mailer
             ->compose(
                 'contact-email',
@@ -172,13 +173,13 @@ Class MailerHelper
             ->withSubject($subject)
             ->withDate(new \DateTimeImmutable('now'))
             ->withFrom([$from_email=>$from_name])
-            ->withTo($to);
+            ->withTo($to)
+            ->withHtmlBody($html_body);    
         /** @var array<array-key, string>|string $cc */
         is_array($cc) && !empty($cc) ? $email->withCC($cc) : '';
         /** @var array<array-key, string>|string $bcc */
         is_array($bcc) && !empty($bcc) ? $email->withBcc($bcc) : '';
-        !empty($html_body) ? $email->withHtmlBody($html_body) : '';
-        !empty($html_body) ? $email->withTextBody(strip_tags($html_body)) : '';
+        
         /** @var array $attachFile */
         foreach ($attachFiles as $attachFile) {
             /** 

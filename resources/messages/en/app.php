@@ -116,6 +116,7 @@ return [
   'invoice.email.template.from.source.admin.email' => 'Adminstrator\'s Email Address (config/common/params)',
   'invoice.email.template.from.source.sender.email' => 'Sender\'s Email Address (config/common/params)',
   'invoice.email.template.from.source.froms.email' => 'From Table Default (settings...From Email Dropdown Email Addressess)',
+  'invoice.email.template.not.configured' => 'Email templates not configured. Settings...Invoices...Invoice Templates...Default Email Template',  
   'invoice.email.template.successfully.added' => 'Email Template Successfully Added',
   'invoice.email.template.successfully.deleted' => 'Email Template Successfully Deleted',
   'invoice.email.template.successfully.edited' => 'Email Template Successfully Edited',

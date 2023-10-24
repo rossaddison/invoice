@@ -1034,7 +1034,7 @@ final class InvController {
                     $custom_fields[$table] = $cfR->repoTablequery($table);
                 }
                 if ($template_helper->select_email_invoice_template($invoice) == '') {
-                    $this->flash_message('warning', 'Email templates not configured. Settings...Invoices...Invoice Templates...Default Email Template');
+                    $this->flash_message('warning', $this->translator->translate('invoice.email.template.not.configured'));
                     return $this->web_service->getRedirectResponse('setting/tab_index');
                 }
                 $setting_status_email_template = $etR->repoEmailTemplatequery($template_helper->select_email_invoice_template($invoice)) ?: null;
@@ -1280,12 +1280,6 @@ final class InvController {
                 $subject = (string) $body['MailerInvForm']['subject'] ?: '';
                 /**  @var string $email_body */
                 $email_body = $body['MailerInvForm']['body'] ?? '';
-
-                if (strlen($email_body) !== strlen(strip_tags($email_body))) {
-                    $email_body = htmlspecialchars_decode($email_body);
-                } else {
-                    $email_body = htmlspecialchars_decode(nl2br($email_body));
-                }
 
                 /**  @var string $cc */
                 $cc = $body['MailerInvForm']['cc'] ?? '';

@@ -231,7 +231,7 @@ use Yiisoft\Html\Tag\Input;
                         ->hideLabel()
                     ?>                   
                     <div>
-                    <div class="form-group">3
+                    <div class="form-group">
                         
                         <div class="input-group">
                         <?=

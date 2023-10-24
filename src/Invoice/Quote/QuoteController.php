@@ -1131,13 +1131,7 @@ final class QuoteController
                  */
                 $subject = $body['MailerQuoteForm']['subject'] ?? '';
                   /**  @var string $body */
-                $email_body = (string)$body['MailerQuoteForm']['body'];
-
-                if (strlen($email_body) !== strlen(strip_tags($email_body))) {
-                    $email_body = htmlspecialchars_decode($email_body); 
-                } else {
-                    $email_body = htmlspecialchars_decode(nl2br($email_body));
-                }
+                $email_body = (string)$body['MailerQuoteForm']['body'];                
                 
                 /**  
                  * @var string $cc 

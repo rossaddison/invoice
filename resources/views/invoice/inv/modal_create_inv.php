@@ -27,7 +27,7 @@ use Yiisoft\Html\Html;
             <select name="create_inv_client_id" id="create_inv_client_id" class="form-control">
                 <?php foreach ($clients as $client) { ?>
                     <option value="<?= $client->getClient_id(); ?>">
-                        <?= Html::encode($client->getClient_name()); ?>
+                        <?= Html::encode($client->getClient_name() . str_repeat(' ', 3)). $client->getClient_surname(); ?>
                     </option>
                 <?php } ?>
             </select>
