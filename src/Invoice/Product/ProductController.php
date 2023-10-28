@@ -518,11 +518,10 @@ class ProductController
     /**
      * @see ...\invoice\src\Invoice\Asset\rebuild-1.13\js\product.js $(document).on('click', '#product_filters_submit', function () 
      * @see ...\product\index.php 
-     * @param pR $pR
      * @param Request $request
      * @return \Yiisoft\DataResponse\DataResponse
      */
-    public function search(pR $pR, Request $request): \Yiisoft\DataResponse\DataResponse
+    public function search(Request $request): \Yiisoft\DataResponse\DataResponse
     {
         $query_params = $request->getQueryParams();
         $product_sku = (string)$query_params['product_sku'];
