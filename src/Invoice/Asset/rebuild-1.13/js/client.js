@@ -17,7 +17,7 @@ $(function () {
             data: {
                 client_name: $('#client_name').val(),
                 client_surname: $('#client_surname').val(),
-                client_email: $('#client_email').val(),
+                client_email: $('#client_email').val()
             },                
             url: url,
             cache: false,

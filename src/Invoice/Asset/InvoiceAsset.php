@@ -49,6 +49,7 @@ class InvoiceAsset extends AssetBundle
         'rebuild-1.13/js/inv.js',
         'rebuild-1.13/js/salesorder.js',
         'rebuild-1.13/js/client.js',
+        'rebuild-1.13/js/product.js',
         'rebuild-1.13/js/setting.js',
         'rebuild-1.13/js/emailtemplate.js',
         'rebuild-1.13/js/scripts.js',

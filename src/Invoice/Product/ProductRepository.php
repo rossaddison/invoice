@@ -8,6 +8,8 @@ use App\Invoice\Entity\Product;
 use Cycle\ORM\Select;
 use Throwable;
 use Cycle\Database\Injection\Parameter;
+use Yiisoft\Data\Reader\Filter\All;
+use Yiisoft\Data\Reader\Filter\Like;
 use Yiisoft\Data\Reader\Sort;
 use Yiisoft\Yii\Cycle\Data\Reader\EntityReader;
 use Yiisoft\Yii\Cycle\Data\Writer\EntityWriter;
@@ -58,7 +60,25 @@ final class ProductRepository extends Select\Repository
     {
         return Sort::only(['id'])->withOrder(['id' => 'desc']);
     }
-
+    
+    public function withFiltering(?string $product_sku) : EntityReader
+    {    
+        if (!empty($product_sku)) {
+            return (new EntityReader($this->select))
+                ->withFilter($this->getFilter($product_sku));
+        } else {
+            return $this->prepareDataReader($this->select());
+        }
+    }
+    
+    private function getFilter(string $product_sku): All
+    {
+        $filter = new All(
+            new Like('product_sku', $product_sku)
+        );
+        return $filter;
+    }
+    
     /**
      * @see Reader/ReadableDataInterface|InvalidArgumentException
      * @param array|Product|null $product
@@ -76,7 +96,7 @@ final class ProductRepository extends Select\Repository
      * @throws Throwable 
      * @return void
      */
-    public function delete(array|Product|null $product): void
+    public function delete(array|\Product|null $product): void
     {
         $this->entityWriter->delete([$product]);
     }
@@ -91,6 +111,19 @@ final class ProductRepository extends Select\Repository
                             ])
         );
     }
+    
+    public function filters(string $product_sku): EntityReader
+    {
+        $query = $this->select();
+        
+        if (empty($product_sku)) {}
+        
+        if (!empty($product_sku)) {
+            $query = $query->where(['product_sku' => ltrim(rtrim($product_sku))]);
+        }
+            
+        return $this->prepareDataReader($query); 
+    }    
     
     /**
      * @param null|string $product_id
@@ -124,7 +157,7 @@ final class ProductRepository extends Select\Repository
     }
     
     /**
-     * Get products with filter
+     * Get products with filter using views/invoice/product/modal_product_lookups_inv or ...quote
      *
      * @psalm-return EntityReader
      */

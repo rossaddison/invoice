@@ -48,6 +48,17 @@ use Yiisoft\Router\CurrentRoute;
         ->href($urlGenerator->generate($currentRoute->getName()))
         ->id('btn-reset')
         ->render();
+    
+    // Trigger $(document).on('click', '#product_filters_submit', function () located in C:\wamp64\www\invoice\src\Invoice\Asset\rebuild-1.13\js\product.js
+    // which in turn runs the ProductController.php index_filters function which returns the index view with the productReppositories search
+    $toolbarFilter = A::tag()
+        ->addAttributes(['type' => 'reset'])
+        ->addClass('product_filters_submit')    
+        ->addClass('btn btn-info me-1')
+        ->content(I::tag()->addClass('bi bi-bootstrap-reboot'))
+        ->href('#product_filters_submit')
+        ->id('product_filters_submit')
+        ->render();
 
     $toolbar = Div::tag();
 ?>
@@ -76,17 +87,24 @@ use Yiisoft\Router\CurrentRoute;
             DataColumn::create()
                 ->label($s->trans('family'))                
                 ->attribute('family_id')     
-                ->value(static fn ($model): string => Html::encode($model->getFamily()->getFamily_name())                        
+                ->value(static fn ($model): string => Html::encode($model->getFamily()->getFamily_name())                  
             ),
             DataColumn::create()
-                ->label($s->trans('product_sku'))                
-                ->attribute('product_sku')     
-                ->value(static fn ($model): string => Html::encode($model->getProduct_sku())                        
+                ->attribute('product_sku')
+                ->filterAttribute('product_sku')
+                /**
+                 * @see \src\Invoice\Asset\rebuild-1.13\js\product.js line 47 product_sku: $('#filter_product_sku').val()
+                 */
+                ->filterInputAttributes(['id'=>'filter_product_sku'])
+                ->filterType('text')
+                ->label($s->trans('product_sku'))
+                ->withSorting(true)
+                ->value(static fn ($model): string => Html::encode($model->getProduct_sku())
             ),
             DataColumn::create()
                 ->label($s->trans('product_description'))                
                 ->attribute('product_description')     
-                ->value(static fn ($model): string => Html::encode(ucfirst($model->getProduct_description()))                        
+                ->value(static fn ($model): string => Html::encode(ucfirst($model->getProduct_description())) 
             ),
             DataColumn::create()
                 ->label($s->trans('product_price'))                
@@ -151,6 +169,7 @@ use Yiisoft\Router\CurrentRoute;
         ->headerRowAttributes(['class'=>'card-header bg-info text-black'])
         ->filterPosition('header')
         ->filterModelName('product')
+        ->urlQueryParameters(['product_sku'])            
         ->header($header)
         ->id('w4-grid')
         ->paginator($paginator)
@@ -169,6 +188,7 @@ use Yiisoft\Router\CurrentRoute;
         ->tableAttributes(['class' => 'table table-striped text-center h-75','id'=>'table-product'])
         ->toolbar(
             Form::tag()->post($urlGenerator->generate('product/index'))->csrf($csrf)->open() .
+            Div::tag()->addClass('float-end m-3')->content($toolbarFilter)->encode(false)->render() .    
             Div::tag()->addClass('float-end m-3')->content($toolbarReset)->encode(false)->render() .
             Form::tag()->close()
         );

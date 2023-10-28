@@ -515,6 +515,32 @@ class ProductController
         return $this->viewRenderer->render('index', $parameters);
     }
     
+    /**
+     * @see ...\invoice\src\Invoice\Asset\rebuild-1.13\js\product.js $(document).on('click', '#product_filters_submit', function () 
+     * @see ...\product\index.php 
+     * @param pR $pR
+     * @param Request $request
+     * @return \Yiisoft\DataResponse\DataResponse
+     */
+    public function search(pR $pR, Request $request): \Yiisoft\DataResponse\DataResponse
+    {
+        $query_params = $request->getQueryParams();
+        $product_sku = (string)$query_params['product_sku'] ?? '';
+        $products = $pR->withFiltering($product_sku);
+        if ($products) {
+            $parameters = [
+                'success' => 1,
+                'message' => $this->translator->translate('invoice.product.found')
+            ];
+        } else {
+            $parameters = [
+                'success' => 0,
+                'messeage' => $this->translator->translate('invoice.product.not.found')
+            ];
+        }    
+        return $this->responseFactory->createResponse(Json::encode($parameters));
+    }
+    
     // queryparams coming from modal_product_lookups.js ---> line 165 filter_button_inv
     
     /**

@@ -1299,6 +1299,11 @@ return [
       ->middleware(Authentication::class)
       ->action([ProductController::class, 'index'])
       ->name('product/index'),
+      Route::get('/product/search')
+      ->middleware(fn(AccessChecker $checker) => $checker->withPermission('editInv'))
+      ->middleware(Authentication::class)
+      ->action([ProductController::class, 'search'])
+      ->name('product/search'),      
       Route::methods([Method::GET, Method::POST], '/product/test')
       ->middleware(fn(AccessChecker $checker) => $checker->withPermission('editInv'))
       ->middleware(Authentication::class)
