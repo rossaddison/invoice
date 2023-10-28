@@ -525,9 +525,8 @@ class ProductController
     public function search(pR $pR, Request $request): \Yiisoft\DataResponse\DataResponse
     {
         $query_params = $request->getQueryParams();
-        $product_sku = (string)$query_params['product_sku'] ?? '';
-        $products = $pR->withFiltering($product_sku);
-        if ($products) {
+        $product_sku = (string)$query_params['product_sku'];
+        if ($product_sku) {
             $parameters = [
                 'success' => 1,
                 'message' => $this->translator->translate('invoice.product.found')

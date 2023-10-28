@@ -96,7 +96,7 @@ final class ProductRepository extends Select\Repository
      * @throws Throwable 
      * @return void
      */
-    public function delete(array|\Product|null $product): void
+    public function delete(array|Product|null $product): void
     {
         $this->entityWriter->delete([$product]);
     }
