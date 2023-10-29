@@ -103,7 +103,7 @@ $pagination = OffsetPagination::widget()
             <td><?= Html::encode(($client->getClient_birthdate())->format($datehelper->style())); ?></td>
             <td><?= Html::encode($client->getClient_email()); ?></td>
             <td><?= Html::encode($client->getClient_phone() ? $client->getClient_phone() : ($client->getClient_mobile() ? $client->getClient_mobile() : '')); ?></td>
-            <td class="amount"><?= $s->format_currency($iR->with_total($client->getClient_id(), $iaR)); ?></td>
+            <td class="amount"><?= $s->format_currency($iR->with_total_balance($client->getClient_id(), $iaR)); ?></td>
               <td>
                     <div class="options btn-group">
                         <a class="btn btn-default dropdown-toggle" data-toggle="dropdown" href="#" style="text-decoration:none">

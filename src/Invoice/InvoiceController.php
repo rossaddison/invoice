@@ -761,7 +761,7 @@ final class InvoiceController
      * @return Flash
      */
     private function flash_message(string $level, string $message): Flash {
-     $this->flash->removeAll(); 
+     //$this->flash->removeAll(); 
      $this->flash->add($level, $message, true);
       return $this->flash;
     }

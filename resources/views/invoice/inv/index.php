@@ -155,7 +155,7 @@ $toolbar = Div::tag();
                 DataColumn::create()
                 ->label($s->trans('client'))
                 ->attribute('client_id')
-                ->value(static fn($model): string => $model->getClient()->getClient_name()
+                ->value(static fn($model): string => $model->getClient()->getClient_name() . str_repeat(' ', 2).$model->getClient()->getClient_surname()
                 ),
                 DataColumn::create()
                 ->label($translator->translate('invoice.delivery.location.global.location.number'))
