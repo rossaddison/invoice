@@ -266,11 +266,8 @@
                                     </a>
                                 </td>
                                 <td class="amount">
-                                    <?php $inv_amounts = $iaR->findAllPreloaded(); 
-                                            foreach ($inv_amounts as $inv_amount) {
-                                                echo ($inv_amount->getInv_id() == $invoice->getId() ? $s->format_currency($inv_amount->getBalance()) : '');
-                                            }
-                                    ?>
+                                    <?php $inv_amount = (($iaR->repoInvAmountCount((int)$invoice->getId()) > 0) ? $iaR->repoInvquery((int)$invoice->getId()) : null) ?>
+                                    <?= $s->format_currency(null!==$inv_amount ? $inv_amount->getBalance() : 0.00) ?> 
                                     <?php //= $s->format_currency($iaR->repoInvQuery((int)$invoice->getId())->getBalance() * $iaR->repoInvQuery((int)$invoice->getId())->getSign()); ?>
                                 </td>                               
                                 <td style="text-align: center;">
@@ -295,92 +292,7 @@
 
         </div>
         
-        <div class="col-xs-12 col-md-6">
-
-            <div id="panel-recent-salesorders" class="panel panel-default">
-
-                <div class="panel-heading">
-                    <b><i class="fa fa-history fa-margin"></i> <?= $translator->translate('invoice.salesorder.recent'); ?></b>
-                </div>
-
-                <div class="table-responsive">
-                    <table class="table table-hover table-striped table-condensed no-margin">
-                        <thead>
-                        <tr>
-                            <th><?= $s->trans('status'); ?></th>
-                            <th style="min-width: 15%;"><?= $s->trans('due_date'); ?></th>
-                            <th style="min-width: 15%;"><?= $s->trans('invoice'); ?></th>
-                            <th style="min-width: 35%;"><?= $s->trans('client'); ?></th>
-                            <th style="text-align: right;"><?= $s->trans('balance'); ?></th>
-                            <th style="text-align: right;"><?= $s->trans('custom_fields'); ?></th>
-                            <th></th>
-                        </tr>
-                        </thead>
-                        <tbody>
-
-                        <?php foreach ($invoices as $invoice) {
-                            if ($s->get_setting('disable_read_only') === true) {
-                                $invoice->setIs_read_only(false);
-                            } ?>
-                            <tr>
-                                <td>
-                                    <span class="label <?= $invoice_statuses[$invoice->getStatus_id()]['class']; ?>">
-                                        <?= $invoice_statuses[$invoice->getStatus_id()]['label'];
-                                        if (null!==$iaR->repoCreditInvoicequery((string)$invoice->getId())) { ?>
-                                            &nbsp;<i class="fa fa-credit-invoice" title="<?= $s->trans('credit_invoice') ?>"></i>
-                                        <?php } ?>
-                                        <?php if ($invoice->getIs_read_only()) { ?>
-                                            &nbsp;<i class="fa fa-read-only" title="<?= $s->trans('read_only') ?>"></i>
-                                        <?php } ?>
-                                        <?php if (($irR->repoCount((string)$invoice->getId()) > 0)) { ?>
-                                            &nbsp;<i class="fa fa-refresh" title="<? $s->trans('recurring') ?>"></i>
-                                        <?php } ?>
-                                    </span>
-                                </td>
-                                <td>
-                                    <span class="<?= $invoice->isOverdue() ? font-overdue : ''; ?>">
-                                        <?= $datehelper->date_from_mysql($invoice->getDate_due()); ?>
-                                    </span>
-                                </td>
-                                <td>
-                                    <a href="<?= $urlGenerator->generate('inv/view',['id'=>$invoice->getId()]); ?>" class="btn btn-default" style="text-decoration:none">
-                                        <?= ($invoice->getNumber() ?: $invoice->getId()) ;?>
-                                    </a>                
-                                </td>
-                                <td>
-                                    <a href="<?= $urlGenerator->generate('client/view',['id'=>$invoice->getClient_id()]); ?>" class="btn btn-default" style="text-decoration:none">
-                                        <?= (Html::encode($clienthelper->format_client($invoice->getClient()))); ?>
-                                    </a>
-                                </td>
-                                <td class="amount">
-                                    <?php $inv_amounts = $iaR->findAllPreloaded(); 
-                                            foreach ($inv_amounts as $inv_amount) {
-                                                echo ($inv_amount->getInv_id() == $invoice->getId() ? $s->format_currency($inv_amount->getBalance()) : '');
-                                            }
-                                    ?>
-                                    <?php //= $s->format_currency($iaR->repoInvQuery((int)$invoice->getId())->getBalance() * $iaR->repoInvQuery((int)$invoice->getId())->getSign()); ?>
-                                </td>                               
-                                <td style="text-align: center;">
-                                    <a href="<?= $urlGenerator->generate('inv/pdf_dashboard_include_cf',['id'=>$invoice->getId()]); ?>"
-                                       title="<?= $s->trans('download_pdf'); ?>" class="btn btn-default" style="text-decoration:none">
-                                        <i class="fa fa-file-pdf-o"></i>
-                                    </a>
-                                </td>
-                                <td style="text-align: center;">
-                                    <a href="<?= $urlGenerator->generate('quote/pdf_dashboard_exclude_cf',['id'=>$invoice->getId()]); ?>"
-                                       title="<?= $s->trans('download_pdf'); ?>" class="btn btn-default" style="text-decoration:none">
-                                        <i class="fa fa-file-pdf-o"></i>
-                                    </a>
-                                </td>
-                            </tr>
-                        <?php } ?>
-                        </tbody>
-                    </table>
-
-                </div>
-            </div>
-
-        </div>
+        
     </div>
 <?php 
     // Projects 
