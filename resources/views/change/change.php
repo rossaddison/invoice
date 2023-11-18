@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-use App\Auth\Form\ResetForm;
+use App\Auth\Form\ChangeForm;
 use Yiisoft\Form\Field;
 use Yiisoft\Html\Html;
 use Yiisoft\Html\Tag\Form;
@@ -15,9 +15,9 @@ use Yiisoft\View\WebView;
  * @var TranslatorInterface   $translator
  * @var UrlGeneratorInterface $urlGenerator
  * @var string                $csrf
- * @var ResetForm             $formModel
+ * @var ChangeForm             $formModel
  */
-$this->setTitle($translator->translate('reset'));
+$this->setTitle($translator->translate('change'));
 ?>
 
 <div class="container py-5 h-100">
@@ -29,20 +29,20 @@ $this->setTitle($translator->translate('reset'));
                 </div>
                 <div class="card-body p-5 text-center">
                     <?= Form::tag()
-                        // note: the reset function actually appears in the ResetController
-                        ->post($urlGenerator->generate('auth/reset'))
+                        // note: the chagne function actually appears in the ChangeController
+                        ->post($urlGenerator->generate('auth/change'))
                         ->csrf($csrf)
-                        ->id('resetForm')
+                        ->id('changeForm')
                         ->open() ?>
 
                     <?= Field::text($formModel, 'login')->addInputAttributes(['value'=> $login ?? '', 'readonly'=>'readonly']) ?>
                     <?= Field::password($formModel, 'password') ?>
-                    <?= Field::password($formModel, 'password_verify') ?>
-                    <?= Field::password($formModel, 'new_password') ?>
-                    <?= Field::password($formModel, 'new_password_verify') ?>
+                    <?= Field::password($formModel, 'passwordVerify') ?>
+                    <?= Field::password($formModel, 'newPassword') ?>
+                    <?= Field::password($formModel, 'newPasswordVerify') ?>
                     <?= Field::submitButton()
-                        ->buttonId('reset-button')
-                        ->name('reset-button')
+                        ->buttonId('change-button')
+                        ->name('change-button')
                         ->content($translator->translate('layout.submit'))
                     ?>
                     <?= Form::tag()->close() ?>

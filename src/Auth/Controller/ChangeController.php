@@ -7,7 +7,7 @@ namespace App\Auth\Controller;
 use App\Auth\AuthService;
 use App\Auth\Identity;
 use App\Auth\IdentityRepository;
-use App\Auth\Form\ResetForm;
+use App\Auth\Form\ChangeForm;
 use App\Service\WebControllerService;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
@@ -19,7 +19,7 @@ use Yiisoft\Translator\TranslatorInterface as Translator;
 use Yiisoft\User\CurrentUser;
 use Yiisoft\Yii\View\ViewRenderer;
 
-final class ResetController
+final class ChangeController
 {
     public function __construct(
       private Session $session,
@@ -34,16 +34,16 @@ final class ResetController
       $this->session = $session;      
       $this->flash = new Flash($session);
       $this->translator = $translator;
-      $this->viewRenderer = $viewRenderer->withControllerName('reset');
+      $this->viewRenderer = $viewRenderer->withControllerName('change');
     }
     
-    public function reset(
+    public function change(
       AuthService $authService,
       Identity $identity,
       IdentityRepository $identityRepository,
       ServerRequestInterface $request,
       FormHydrator $formHydrator,
-      ResetForm $resetForm
+      ChangeForm $changeForm
     ): ResponseInterface {
       // permit an authenticated user, ie. not a guest, only and null!== current user
       if (!$authService->isGuest()) {
@@ -56,8 +56,8 @@ final class ResetController
               // Identity and User are in a HasOne relationship so no null value
               $login = $identity->getUser()?->getLogin();
               if ($request->getMethod() === Method::POST
-                && $formHydrator->populate($resetForm, $request->getParsedBody())
-                && $resetForm->reset() 
+                && $formHydrator->populate($changeForm, $request->getParsedBody())
+                && $changeForm->change() 
               ) {
                 // Identity implements CookieLoginIdentityInterface: ensure the regeneration of the cookie auth key by means of $authService->logout();
                 // @see vendor\yiisoft\user\src\Login\Cookie\CookieLoginIdentityInterface 
@@ -66,10 +66,10 @@ final class ResetController
                 // PASSWORD CHANGE and other scenarios, that require forceful access revocation for old sessions.
                 // The authService logout function will regenerate the auth key here => overwriting any auth key
                 $authService->logout();
-                $this->flash_message('success', $this->translator->translate('validator.password.reset'));
+                $this->flash_message('success', $this->translator->translate('validator.password.change'));
                 return $this->redirectToMain();
               }
-              return $this->viewRenderer->render('reset', ['formModel' => $resetForm, 'login' => $login]);
+              return $this->viewRenderer->render('change', ['formModel' => $changeForm, 'login' => $login]);
             } // identity
           } // identity_id 
         } // current user

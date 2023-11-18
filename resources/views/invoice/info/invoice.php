@@ -43,6 +43,12 @@
 <p>Introducing Paypal.</p>
 <p>Introducing India's PayTm payment gateway's QR code method of payment and comparing this with Stripe's method.</p>
 <p>A General Sales Tax (GST) Tax System will have to be implemented first for this purpose.</p>
+<p><b>What's next?</b></p>
+<p>Upskilling on Docker.</p>
+<p><b>18 November 2023</b></p>
+<p>Do not use 'Reset' word in the context of changing a password. Use 'Change' instead. <a href=https://github.com/yiisoft/demo/pull/602>Pull request 602 under development.</a></p>
+<p>So reset switched to change on all files</p>
+<p>The reset password aspect of yii3 is still being developed</p>
 <p><b>25 September 2023</b></p>
 <p>Bugfix $ucR variable undefined. Retain within controller rather than view.</p>
 <p>Testing on yii3i.co.uk</p>

@@ -101,8 +101,7 @@
                                 <?= $s->trans('mark_invoices_sent_pdf'); ?>
                             </label>
                             <?php $body['settings[mark_invoices_sent_pdf]'] = $s->get_setting('mark_invoices_sent_pdf');?>
-                            <select name="settings[mark_invoices_sent_pdf]" id="settings[mark_invoices_sent_pdf]"
-                                class="form-control" >
+                            <select name="settings[mark_invoices_sent_pdf]" id="settings[mark_invoices_sent_pdf]" class="form-control" >
                                 <option value="0">
                                     <?= $s->trans('no'); ?>
                                 </option>

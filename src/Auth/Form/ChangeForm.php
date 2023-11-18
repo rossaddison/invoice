@@ -15,13 +15,13 @@ use Yiisoft\Validator\Rule\Required;
 use Yiisoft\Validator\ValidatorInterface;
 use Yiisoft\Validator\RulesProviderInterface;
 
-final class ResetForm extends FormModel implements RulesProviderInterface
+final class ChangeForm extends FormModel implements RulesProviderInterface
 {
     private string $login = '';
     private string $password = '';
-    private string $password_verify = '';
-    private string $new_password = '';
-    private string $new_password_verify = '';
+    private string $passwordVerify = '';
+    private string $newPassword = '';
+    private string $newPasswordVerify = '';
     
     public function __construct(
         private AuthService $authService,
@@ -31,7 +31,7 @@ final class ResetForm extends FormModel implements RulesProviderInterface
     ) {
     }
     
-    public function reset(): bool
+    public function change(): bool
     {
         if ($this->validator->validate($this)->isValid()) {
             $user = $this->userRepository->findByLogin($this->getLogin());
@@ -49,27 +49,27 @@ final class ResetForm extends FormModel implements RulesProviderInterface
     /**
      * @return string[]
      *
-     * @psalm-return array{login: string, password: string, password_verify: string, new_password: string, new_password_verify: string}
+     * @psalm-return array{login: string, password: string, passwordVerify: string, newPassword: string, newPasswordVerify: string}
      */
     public function getAttributeLabels(): array
     {
         return [
             'login' => $this->translator->translate('layout.login'),
             'password' => $this->translator->translate('layout.password'),
-            'password_verify' => $this->translator->translate('layout.password-verify'),
-            'new_password' => $this->translator->translate('layout.password.new'),
-            'new_password_verify' => $this->translator->translate('layout.password-verify.new'),
+            'passwordVerify' => $this->translator->translate('layout.password-verify'),
+            'newPassword' => $this->translator->translate('layout.password.new'),
+            'newPasswordVerify' => $this->translator->translate('layout.password-verify.new'),
         ];
     }
 
     /**
      * @return string
      *
-     * @psalm-return 'Reset'
+     * @psalm-return 'Change'
      */
     public function getFormName(): string
     {
-        return 'Reset';
+        return 'Change';
     }
     
     public function getLogin(): string
@@ -84,17 +84,17 @@ final class ResetForm extends FormModel implements RulesProviderInterface
     
     public function getPasswordVerify(): string
     {  
-        return $this->password_verify;
+        return $this->passwordVerify;
     }
     
     public function getNewPassword(): string
     {  
-        return $this->new_password;
+        return $this->newPassword;
     }
     
     public function getNewPasswordVerify() : string
     {
-        return $this->new_password_verify;
+        return $this->newPasswordVerify;
     }
     
     public function getRules(): array
@@ -112,12 +112,12 @@ final class ResetForm extends FormModel implements RulesProviderInterface
                 },
             ],
             'password' => $this->PasswordRules(),
-            'password_verify' => $this->PasswordVerifyRules(),
-            'new_password' => [
+            'passwordVerify' => $this->PasswordVerifyRules(),
+            'newPassword' => [
                 new Required(),
                 new Length(min: 8),
             ], 
-            'new_password_verify' => $this->NewPasswordVerifyRules()
+            'newPasswordVerify' => $this->NewPasswordVerifyRules()
         ];
     }
     
@@ -146,7 +146,7 @@ final class ResetForm extends FormModel implements RulesProviderInterface
             new Callback(
                 callback: function (): Result {
                     $result = new Result();
-                    if (!($this->password === $this->password_verify)) {
+                    if (!($this->password === $this->passwordVerify)) {
                         $result->addError($this->translator->translate('validator.password.not.match'));
                     }
                     return $result;
@@ -163,7 +163,7 @@ final class ResetForm extends FormModel implements RulesProviderInterface
             new Callback(
                 callback: function (): Result {
                     $result = new Result();
-                    if (!($this->new_password === $this->new_password_verify)) {
+                    if (!($this->newPassword === $this->newPasswordVerify)) {
                       $result->addError($this->translator->translate('validator.password.not.match.new'));
                     }
                     return $result;
