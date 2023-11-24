@@ -151,7 +151,7 @@ final class ClientForm extends FormModel
     {
         $datehelper = new DateHelper($s);         
         $datetime = new \DateTime();
-        $datetime->setTimezone(new \DateTimeZone($s->get_setting('time_zone') ? $s->get_setting('time_zone') : 'Europe/London')); 
+        $datetime->setTimezone(new \DateTimeZone($s->get_setting('time_zone') ?: 'Europe/London')); 
         $datetime->format($datehelper->style());
         if (!empty($this->client_birthdate)) { 
             $date = $datehelper->date_to_mysql($this->client_birthdate);

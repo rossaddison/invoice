@@ -259,7 +259,7 @@ Class DateHelper {
      */
     public function datetime_zone_style(string $string_date): DateTime|false {
         $datetime = new \DateTime();
-        $datetime->setTimezone(new \DateTimeZone($this->s->get_setting('time_zone') ? $this->s->get_setting('time_zone') : 'Europe/London'));
+        $datetime->setTimezone(new \DateTimeZone($this->s->get_setting('time_zone') ?: 'Europe/London'));
         $datetime->format($this->style());
         $date = $this->date_to_mysql($string_date);
         // Prevent Failed to parse time string at position 0 error

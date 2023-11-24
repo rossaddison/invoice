@@ -80,7 +80,7 @@ final class MerchantService
     {
         $datehelper = new DateHelper($sR);         
         $datetime = new \DateTime();
-        $datetime->setTimezone(new \DateTimeZone($sR->get_setting('time_zone') ? $sR->get_setting('time_zone') : 'Europe/London')); 
+        $datetime->setTimezone(new \DateTimeZone($sR->get_setting('time_zone') ?: 'Europe/London')); 
         $datetime->format($datehelper->style());
         $str_replace = str_replace($datehelper->separator(), '-', $date);
         $datetime->modify($str_replace);

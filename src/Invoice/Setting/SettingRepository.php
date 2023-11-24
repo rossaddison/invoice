@@ -1998,4 +1998,4 @@ final class SettingRepository extends Select\Repository
         }
         return '';
     }
- }
+}
