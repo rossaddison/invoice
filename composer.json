@@ -86,7 +86,9 @@
         "yiisoft/config": "^1.0",
         "yiisoft/cookies": "^1.2",
         "yiisoft/csrf": "^2.0",
-        "yiisoft/data":"^1.0",
+        
+        "yiisoft/data":"dev-master",
+        
         "yiisoft/data-response": "^2.0",
         "yiisoft/definitions": "^3.0",
         "yiisoft/di": "^1.2",
@@ -122,7 +124,9 @@
         "yiisoft/yii-bootstrap5": "^3.0@dev",
         "yiisoft/yii-bulma": "*",
         "yiisoft/yii-console": "^2.0",
-        "yiisoft/yii-cycle":"dev-master",
+        
+        "rossaddison/yii-cycle":"dev-master",
+        
         "yiisoft/yii-dataview": "^3.0@dev",
         
         "yiisoft/yii-debug": "*",
@@ -137,7 +141,8 @@
         "yiisoft/yii-runner-http": "^2.0",
         "yiisoft/yii-sentry": "dev-master",               
         "yiisoft/yii-swagger": "^2.0",               
-        "yiisoft/yii-view": "^6.0"
+        "yiisoft/yii-view": "^6.0",
+        "kartik-v/yii2-bootstrap4-dropdown": "*"
     },
     
     "require-dev": {
