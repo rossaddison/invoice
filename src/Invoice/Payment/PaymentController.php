@@ -569,7 +569,10 @@ final class PaymentController
                           UserClientRepository $ucR,
                           UserInvRepository $uiR) : \Yiisoft\DataResponse\DataResponse|Response {
         $query_params = $request->getQueryParams();
-        $page = (int)$currentRoute->getArgument('page','1');
+        /**
+         * @var string $query_params['page']
+         */
+        $page = $query_params['page'] ?? $currentRoute->getArgument('page','1');
         // Clicking on the gridview's Inv_id column hyperlink generates 
         // the query_param called 'sort' 
         // Clicking on the paginator does not generate the query_param 'sort'
@@ -601,8 +604,8 @@ final class PaymentController
             $payments = $this->payments_with_sort_guest($paymentRepository, $client_id_array, $sort_by); 
             $paginator = (new OffsetPaginator($payments))
              ->withPageSize((int)$settingRepository->get_setting('default_list_limit'))
-             ->withCurrentPage($page)
-             ->withNextPageToken((string) $page);
+             ->withCurrentPage((int)$page)
+             ->withNextPageToken($page);
             $canEdit = $this->userService->hasPermission('editPayment');
             $canView = $this->userService->hasPermission('viewPayment');
             $parameters = [

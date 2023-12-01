@@ -58,105 +58,107 @@ $toolbar = Div::tag();
     </div>
 <?php } ?>
 <br>
+<?php 
+    $columns = [
+        new DataColumn(
+            'id',
+            header:  $s->trans('id'),                
+            content: static fn ($model): string => $model->getId()                        
+        ),    
+        new DataColumn(
+            'payment_date',
+            header:  $s->trans('payment_date'),                
+            content: static fn ($model): string => ($model->getPayment_date())->format($datehelper->style())                        
+        ),
+        new DataColumn(
+            'amount',
+            header:  $s->trans('amount'),
+            content: static function ($model) use ($s): string|null {                        
+                return $s->format_currency($model->getAmount() ?: 0.00);
+            }
+        ),
+        new DataColumn(
+            'note',
+            header:  $s->trans('note'),                
+            content: static fn ($model): string => $model->getNote()                        
+        ),       
+        new DataColumn(
+            'inv_id',    
+            header:  $s->trans('invoice'),
+            content: static function ($model) use ($urlGenerator): string {
+               return Html::a($model->getInv()?->getNumber() ?? '', $urlGenerator->generate('inv/view',['id'=>$model->getInv_id()]),['style'=>'text-decoration:none'])->render();
+           }                       
+        ), 
+        new DataColumn(
+            'inv_id',
+            header:  $s->trans('total'),                
+            content: static function ($model) use ($s, $iaR) : string|null {
+               $inv_amount = (($iaR->repoInvAmountCount((int)$model->getInv_id()) > 0) ? $iaR->repoInvquery((int)$model->getInv_id()) : null);
+               return $s->format_currency(null!==$inv_amount ? $inv_amount->getTotal() : 0.00);
+            }                        
+        ),
+        new DataColumn(
+            header:  $s->trans('paid'),
+            content: static function ($model) use ($s, $iaR) : string|null {
+               $inv_amount = (($iaR->repoInvAmountCount((int)$model->getInv_id()) > 0) ? $iaR->repoInvquery((int)$model->getInv_id()) : null);
+               return $s->format_currency(null!==$inv_amount ? $inv_amount->getPaid() : 0.00);
+            }                        
+        ),
+        new DataColumn(
+            'id',    
+            header:  $s->trans('balance'),
+            content: static function ($model) use ($s, $iaR) : string|null {
+               $inv_amount = (($iaR->repoInvAmountCount((int)$model->getInv_id()) > 0) ? $iaR->repoInvquery((int)$model->getInv_id()) : null);
+               return $s->format_currency(null!==$inv_amount ? $inv_amount->getBalance() : 0.00);
+            }                        
+        ),
+        new DataColumn(
+            'payment_method_id',
+            header:  $s->trans('payment_method'),
+            content: static function ($model) : string|null {
+               return $model->getPaymentMethod()->getId() ? $model->getPaymentMethod()->getName() : '';
+            }                        
+        ),        
+        new DataColumn(
+            header:  $s->trans('view'),
+            visible: $canView,
+            content: static function ($model) use ($urlGenerator): string {
+               return Html::a(Html::tag('i','',['class'=>'fa fa-eye fa-margin']), $urlGenerator->generate('inv/view',['id'=>$model->getInv_id()]),[])->render();
+            }                        
+        ),
+        new DataColumn(
+            header:  $s->trans('edit'), 
+            visible: $canEdit,
+            content: static function ($model) use ($s, $urlGenerator): string {
+               return $model->getInv()?->getIs_read_only() === false && $s->get_setting('disable_read_only') === (string)0 ? Html::a(Html::tag('i','',['class'=>'fa fa-edit fa-margin']), $urlGenerator->generate('inv/edit',['id'=>$model->getInv_id()]),[])->render() : '';
+            }                        
+        ),
+        new DataColumn(
+            header:  $s->trans('delete'),
+            visible: $canEdit,
+            content: static function ($model) use ($s, $urlGenerator): string {
+                return $model->getInv()?->getIs_read_only() === false && $s->get_setting('disable_read_only') === (string)0 ? Html::a( Html::tag('button',
+                    Html::tag('i','',['class'=>'fa fa-trash fa-margin']),
+                    [
+                        'type'=>'submit', 
+                        'class'=>'dropdown-button',
+                        'onclick'=>"return confirm("."'".$s->trans('delete_record_warning')."');"
+                    ]
+                    ),
+                    $urlGenerator->generate('inv/delete',['id'=>$model->getInv_id()]),[]                                         
+                )->render() : '';
+            }                        
+        ),
+    ]
+?>
 <?= GridView::widget()
-        ->columns(
-            DataColumn::create()
-                ->label($s->trans('id'))                
-                ->attribute('id')     
-                ->value(static fn ($model): string => $model->getId()                        
-            ),    
-            DataColumn::create()
-                ->label($s->trans('payment_date'))                
-                ->attribute('payment_date')     
-                ->value(static fn ($model): string => ($model->getPayment_date())->format($datehelper->style())                        
-            ),
-            DataColumn::create()
-                ->label($s->trans('amount'))                
-                ->attribute('amount')     
-                ->value(static function ($model) use ($s): string|null {                        
-                    return $s->format_currency($model->getAmount() ?: 0.00);
-                }
-            ),
-            DataColumn::create()
-                ->label($s->trans('note'))                
-                ->attribute('note')     
-                ->value(static fn ($model): string => $model->getNote()                        
-            ),       
-            DataColumn::create()
-                ->label($s->trans('invoice'))
-                ->attribute('inv_id')
-                ->value(static function ($model) use ($urlGenerator): string {
-                   return Html::a($model->getInv()?->getNumber() ?? '', $urlGenerator->generate('inv/view',['id'=>$model->getInv_id()]),['style'=>'text-decoration:none'])->render();
-               }                       
-            ), 
-            DataColumn::create()
-                ->label($s->trans('total'))                
-                ->attribute('inv_id')     
-                ->value(static function ($model) use ($s, $iaR) : string|null {
-                   $inv_amount = (($iaR->repoInvAmountCount((int)$model->getInv_id()) > 0) ? $iaR->repoInvquery((int)$model->getInv_id()) : null);
-                   return $s->format_currency(null!==$inv_amount ? $inv_amount->getTotal() : 0.00);
-                }                        
-            ),
-            DataColumn::create()
-                ->label($s->trans('paid'))                
-                ->attribute('inv_id')     
-                ->value(static function ($model) use ($s, $iaR) : string|null {
-                   $inv_amount = (($iaR->repoInvAmountCount((int)$model->getInv_id()) > 0) ? $iaR->repoInvquery((int)$model->getInv_id()) : null);
-                   return $s->format_currency(null!==$inv_amount ? $inv_amount->getPaid() : 0.00);
-                }                        
-            ),
-            DataColumn::create()
-                ->label($s->trans('balance'))                
-                ->attribute('id')     
-                ->value(static function ($model) use ($s, $iaR) : string|null {
-                   $inv_amount = (($iaR->repoInvAmountCount((int)$model->getInv_id()) > 0) ? $iaR->repoInvquery((int)$model->getInv_id()) : null);
-                   return $s->format_currency(null!==$inv_amount ? $inv_amount->getBalance() : 0.00);
-                }                        
-            ),
-            DataColumn::create()
-                ->label($s->trans('payment_method'))                
-                ->attribute('payment_method_id')     
-                ->value(static function ($model) : string|null {
-                   return $model->getPaymentMethod()->getId() ? $model->getPaymentMethod()->getName() : '';
-                }                        
-            ),        
-            DataColumn::create()
-                ->label($s->trans('view')) 
-                ->visible($canView)
-                ->value(static function ($model) use ($urlGenerator): string {
-                   return Html::a(Html::tag('i','',['class'=>'fa fa-eye fa-margin']), $urlGenerator->generate('inv/view',['id'=>$model->getInv_id()]),[])->render();
-                }                        
-            ),
-            DataColumn::create()
-                ->label($s->trans('edit')) 
-                ->visible($canEdit)
-                ->value(static function ($model) use ($s, $urlGenerator): string {
-                   return $model->getInv()?->getIs_read_only() === false && $s->get_setting('disable_read_only') === (string)0 ? Html::a(Html::tag('i','',['class'=>'fa fa-edit fa-margin']), $urlGenerator->generate('inv/edit',['id'=>$model->getInv_id()]),[])->render() : '';
-                }                        
-            ),
-            DataColumn::create()
-                ->label($s->trans('delete'))
-                ->visible($canEdit)
-                ->value(static function ($model) use ($s, $urlGenerator): string {
-                    return $model->getInv()?->getIs_read_only() === false && $s->get_setting('disable_read_only') === (string)0 ? Html::a( Html::tag('button',
-                        Html::tag('i','',['class'=>'fa fa-trash fa-margin']),
-                        [
-                            'type'=>'submit', 
-                            'class'=>'dropdown-button',
-                            'onclick'=>"return confirm("."'".$s->trans('delete_record_warning')."');"
-                        ]
-                        ),
-                        $urlGenerator->generate('inv/delete',['id'=>$model->getInv_id()]),[]                                         
-                    )->render() : '';
-                }                        
-            ),                                 
-        )
+        ->columns(...$columns)
+        ->dataReader($paginator)
         ->headerRowAttributes(['class'=>'card-header bg-info text-black'])
         ->filterPosition('header')
         ->filterModelName('payment')
         ->header($header)
         ->id('w3-grid')
-        ->paginator($paginator)
         ->pagination(
         OffsetPagination::widget()
              ->menuClass('pagination justify-content-center')

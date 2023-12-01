@@ -155,7 +155,10 @@ final class SalesOrderController
     public function guest(Request $request, SOAR $soaR, CurrentRoute $currentRoute,
                           SOR $soR, UCR $ucR, UIR $uiR) : \Yiisoft\DataResponse\DataResponse|Response {
         $query_params = $request->getQueryParams();
-        $pageNum = (int)$currentRoute->getArgument('page', '1');
+        /**
+         * @var string $query_params['page']
+         */
+        $pageNum = $query_params['page'] ?? $currentRoute->getArgument('page', '1');
          //status 0 => 'all';
         $status = (int)$currentRoute->getArgument('status', '0');
         /** @psalm-suppress MixedAssignment $sort_string */
@@ -185,7 +188,7 @@ final class SalesOrderController
                 $salesorders = $this->salesorders_status_with_sort_guest($soR, $status, $user_clients, $sort);
                 $paginator = (new OffsetPaginator($salesorders))
                 ->withPageSize((int)$this->sR->get_setting('default_list_limit'))
-                ->withCurrentPage($pageNum);
+                ->withCurrentPage((int)$pageNum);
                 /**
                  * @var array $so_statuses
                  */
@@ -261,7 +264,6 @@ final class SalesOrderController
          */
         $so_label = $so_statuses[$status]['label'];
         $parameters = [
-            'page' => $page,
             'status' => $status,
             'paginator' => $paginator,
             'sortOrder' => $query_params['sort'] ?? '',

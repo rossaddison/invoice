@@ -96,59 +96,62 @@ $toolbar = Div::tag();
 <br>
 <?= $alert; ?>   
 </div>
-<?= GridView::widget()
-    ->columns(
-        DataColumn::create()
-        ->attribute('id')
-        ->label($s->trans('id'))
-        ->value(static fn (object $model) => $model->getId()),        
-        DataColumn::create()
-            ->attribute('status_id')
-            ->label($s->trans('status'))
-            ->value(static function ($model) use ($so_statuses): Yiisoft\Html\Tag\CustomTag { 
+<?php $columns = [
+        new DataColumn(
+            'id',
+            header: $s->trans('id'),
+            content:static fn (object $model) => $model->getId()
+        ),        
+        new DataColumn(
+            'status_id',
+            header: $s->trans('status'),
+            content: static function ($model) use ($so_statuses): Yiisoft\Html\Tag\CustomTag { 
                 $span = $so_statuses[(string)$model->getStatus_id()]['label'];
                 return Html::tag('span', $span,['id'=>'#so-to-invoice','class'=>'label '. $so_statuses[(string)$model->getStatus_id()]['class']]);
             }       
         ),
-        DataColumn::create()
-            ->attribute('quote_id')
-            ->label($translator->translate('invoice.quote.number'))
-            ->value(static function ($model) use ($urlGenerator): string {
+        new DataColumn(
+            'quote_id',
+            header: $translator->translate('invoice.quote.number'),
+            content:static function ($model) use ($urlGenerator): string {
                return Html::a($model->getNumber(), $urlGenerator->generate('quote/view',['id'=>$model->getQuote_id()]),['style'=>'text-decoration:none'])->render();
             }        
         ),
-        DataColumn::create()
-            ->label($s->trans('date_created'))
-            ->attribute('date_created')
-            ->value(static fn ($model): string => ($model->getDate_created())->format($datehelper->style())                        
+        new DataColumn(
+            'date_created',
+            header: $s->trans('date_created'),
+            content:static fn ($model): string => ($model->getDate_created())->format($datehelper->style())                        
         ),
-        DataColumn::create()
-            ->label($s->trans('client'))                
-            ->attribute('client_id')     
-            ->value(static fn ($model): string => $model->getClient()->getClient_name()                        
+        new DataColumn(
+            'client_id',
+            header: $s->trans('client'),                
+            content:static fn ($model): string => $model->getClient()->getClient_name()                        
         ),
-        DataColumn::create()
-            ->label($s->trans('total'))    
-            ->attribute('id')
-            ->value(function ($model) use ($s, $soaR) : string|null {
+        new DataColumn(
+            'id',
+            header: $s->trans('total'),    
+            content: function ($model) use ($s, $soaR) : string|null {
                $so_id = $model->getId(); 
                $so_amount = (($soaR->repoSalesOrderAmountCount((string)$so_id) > 0) ? $soaR->repoSalesOrderquery((string)$so_id) : null);
                return $s->format_currency(null!==$so_amount ? $so_amount->getTotal() : 0.00);
             }
         ),
-        DataColumn::create()
-            ->label($s->trans('view')) 
-            ->value(static function ($model) use ($urlGenerator): string {
+        new DataColumn(
+            header: $s->trans('view'), 
+            content:static function ($model) use ($urlGenerator): string {
                return Html::a(Html::tag('i','',['class'=>'fa fa-eye fa-margin']), $urlGenerator->generate('salesorder/view',['id'=>$model->getId()]),[])->render();
             }                        
         ),    
-    )
+];
+?>
+<?= GridView::widget()
+    ->dataReader($paginator)    
+    ->columns(...$columns)
     ->headerRowAttributes(['class'=>'card-header bg-info text-black'])
     ->filterPosition('header')
     ->filterModelName('salesorder')
     ->header($header)
     ->id('w12-grid')
-    ->paginator($paginator)
     ->pagination(
     OffsetPagination::widget()
          ->menuClass('pagination justify-content-center')

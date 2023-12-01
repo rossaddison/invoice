@@ -10,10 +10,11 @@ use Yiisoft\Html\Tag\Div;
 use Yiisoft\Html\Tag\Form;
 use Yiisoft\Html\Tag\H5;
 use Yiisoft\Html\Tag\I;
-use Yiisoft\Yii\DataView\Column\DataColumn;
 use Yiisoft\Yii\DataView\GridView;
-use Yiisoft\Yii\DataView\OffsetPagination;
 use Yiisoft\Router\CurrentRoute;
+use Yiisoft\Yii\DataView\Column\DataColumn;
+use Yiisoft\Yii\DataView\Column\ColumnInterface;
+use Yiisoft\Yii\DataView\OffsetPagination;
 
 /**
  * @var \App\Invoice\Entity\Inv $inv
@@ -96,169 +97,175 @@ $toolbar = Div::tag();
     </div>
     <br>
 </div>
-<?=
-        GridView::widget()
-        ->columns(
-                DataColumn::create()
-                ->attribute('id')
-                ->label($s->trans('id'))
-                ->value(static fn(object $model) => $model->getId()),
-                DataColumn::create()
-                ->attribute('status_id')
-                ->label($s->trans('status'))
-                ->value(static function ($model) use ($s, $irR, $inv_statuses): Yiisoft\Html\Tag\CustomTag {
-                    $span = $inv_statuses[(string) $model->getStatus_id()]['label'];
-                    if ($model->getCreditinvoice_parent_id() > 0) {
-                        $span = Html::tag('i', str_repeat(' ', 2) . $s->trans('credit_invoice'), ['class' => 'fa fa-credit-invoice']);
-                    }
-                    if (($model->getIs_read_only()) && $s->get_setting('disable_read_only') === (string) 0) {
-                        $span = Html::tag('i', str_repeat(' ', 2) . $s->trans('paid'), ['class' => 'fa fa-read-only']);
-                    }
-                    if ($irR->repoCount((string) $model->getId()) > 0) {
-                        $span = Html::tag('i', str_repeat(' ', 2) . $s->trans('recurring'), ['class' => 'fa fa-refresh']);
-                    }
-                    return Html::tag('span', $span, ['class' => 'label ' . $inv_statuses[(string) $model->getStatus_id()]['class']]);
+
+<?php
+    /**
+     * @var ColumnInterface[] $columns
+     */
+    $columns = [
+        new DataColumn(
+            'id',
+            header: $s->trans('id'),
+            content: static fn(object $any) => $any->getId()    
+        ),
+        new DataColumn(
+            'status_id',
+            header: $s->trans('status'),
+            content: static function ($model) use ($s, $irR, $inv_statuses): Yiisoft\Html\Tag\CustomTag {
+                $span = $inv_statuses[(string) $model->getStatus_id()]['label'];
+                if ($model->getCreditinvoice_parent_id() > 0) {
+                    $span = Html::tag('i', str_repeat(' ', 2) . $s->trans('credit_invoice'), ['class' => 'fa fa-credit-invoice']);
                 }
-                ),
-                DataColumn::create()
-                ->attribute('number')
-                ->value(static function ($model) use ($urlGenerator): string {
-                    return Html::a($model->getNumber(), $urlGenerator->generate('inv/view', ['id' => $model->getId()]), ['style' => 'text-decoration:none'])->render();
+                if (($model->getIs_read_only()) && $s->get_setting('disable_read_only') === (string) 0) {
+                    $span = Html::tag('i', str_repeat(' ', 2) . $s->trans('paid'), ['class' => 'fa fa-read-only']);
                 }
-                ),
-                DataColumn::create()
-                ->label($translator->translate('invoice.quote.number.status'))
-                ->attribute('quote_id')
-                ->value(static function ($model) use ($s, $urlGenerator, $qR): string {
-                    $quote_id = $model->getQuote_id();
-                    $quote = $qR->repoQuoteUnloadedquery($quote_id);
-                    if ($quote) {
-                        return (string) Html::a($quote->getNumber() . ' ' . (string) $qR->getStatuses($s)[$quote->getStatus_id()]['label'], $urlGenerator->generate('quote/view', ['id' => $quote_id]), ['style' => 'text-decoration:none', 'class' => 'label ' . (string) $qR->getStatuses($s)[$quote->getStatus_id()]['class']]);
-                    } else {
-                        return '';
-                    }
+                if ($irR->repoCount((string) $model->getId()) > 0) {
+                    $span = Html::tag('i', str_repeat(' ', 2) . $s->trans('recurring'), ['class' => 'fa fa-refresh']);
                 }
-                ),
-                DataColumn::create()
-                ->label($translator->translate('invoice.salesorder.number.status'))
-                ->attribute('so_id')
-                ->value(static function ($model) use ($s, $urlGenerator, $soR): string {
-                    $so_id = $model->getSo_id();
-                    $so = $soR->repoSalesOrderUnloadedquery($so_id);
-                    if ($so) {
-                        return (string) Html::a($so->getNumber() . ' ' . (string) $soR->getStatuses($s)[$so->getStatus_id()]['label'], $urlGenerator->generate('salesorder/view', ['id' => $so_id]), ['style' => 'text-decoration:none', 'class' => 'label ' . (string) $soR->getStatuses($s)[$so->getStatus_id()]['class']]);
-                    } else {
-                        return '';
-                    }
+                return Html::tag('span', $span, ['class' => 'label ' . $inv_statuses[(string) $model->getStatus_id()]['class']]);
+            }    
+        ),
+        new DataColumn(
+            'number',
+            content: static function ($model) use ($urlGenerator): string {
+                return Html::a($model->getNumber(), $urlGenerator->generate('inv/view', ['id' => $model->getId()]), ['style' => 'text-decoration:none'])->render();
+            }     
+        ),        
+        new DataColumn(
+            'quote_id',
+            header: $translator->translate('invoice.quote.number.status'),
+            content: static function ($model) use ($s, $urlGenerator, $qR): string {
+                $quote_id = $model->getQuote_id();
+                $quote = $qR->repoQuoteUnloadedquery($quote_id);
+                if ($quote) {
+                    return (string) Html::a($quote->getNumber() . ' ' . (string) $qR->getStatuses($s)[$quote->getStatus_id()]['label'], $urlGenerator->generate('quote/view', ['id' => $quote_id]), ['style' => 'text-decoration:none', 'class' => 'label ' . (string) $qR->getStatuses($s)[$quote->getStatus_id()]['class']]);
+                } else {
+                    return '';
                 }
-                ),
-                DataColumn::create()
-                ->label($s->trans('client'))
-                ->attribute('client_id')
-                ->value(static fn($model): string => $model->getClient()->getClient_name() . str_repeat(' ', 2).$model->getClient()->getClient_surname()
-                ),
-                DataColumn::create()
-                ->label($translator->translate('invoice.delivery.location.global.location.number'))
-                ->attribute('delivery_location_id')
-                ->value(static function ($model) use ($dlR): string|null {
-                    $delivery_location_id = $model->getDelivery_location_id();
-                    $delivery_location = (($dlR->repoCount($delivery_location_id) > 0) ? $dlR->repoDeliveryLocationquery($delivery_location_id) : null);
-                    return null !== $delivery_location ? $delivery_location->getGlobal_location_number() : '';
+            }    
+        ),
+        new DataColumn(
+            'so_id',
+            header: $translator->translate('invoice.salesorder.number.status'),
+            content: static function ($model) use ($s, $urlGenerator, $soR): string {
+                $so_id = $model->getSo_id();
+                $so = $soR->repoSalesOrderUnloadedquery($so_id);
+                if ($so) {
+                    return (string) Html::a($so->getNumber() . ' ' . (string) $soR->getStatuses($s)[$so->getStatus_id()]['label'], $urlGenerator->generate('salesorder/view', ['id' => $so_id]), ['style' => 'text-decoration:none', 'class' => 'label ' . (string) $soR->getStatuses($s)[$so->getStatus_id()]['class']]);
+                } else {
+                    return '';
                 }
-                ),
-                DataColumn::create()
-                ->label($s->trans('date_created'))
-                ->attribute('date_created')
-                ->value(static fn($model): string => ($model->getDate_created())->format($datehelper->style())
-                ),
-                DataColumn::create()
-                ->attribute('date_due')
-                ->value(static fn($model): string => ($model->getDate_due())->format($datehelper->style())
-                ),
-                DataColumn::create()
-                ->label($s->trans('total'))
-                ->attribute('id')
-                ->value(static function ($model) use ($s, $iaR): string|null {
-                    $inv_id = $model->getId();
-                    $inv_amount = (($iaR->repoInvAmountCount((int) $inv_id) > 0) ? $iaR->repoInvquery((int) $inv_id) : null);
-                    return $s->format_currency(null !== $inv_amount ? $inv_amount->getTotal() : 0.00);
-                }
-                ),
-                DataColumn::create()
-                ->label($s->trans('paid'))
-                ->attribute('id')
-                ->value(static function ($model) use ($s, $iaR): string|null {
-                    $inv_id = $model->getId();
-                    $inv_amount = (($iaR->repoInvAmountCount((int) $inv_id) > 0) ? $iaR->repoInvquery((int) $inv_id) : null);
-                    return $s->format_currency(null !== $inv_amount ? $inv_amount->getPaid() : 0.00);
-                }
-                ),
-                DataColumn::create()
-                ->label($s->trans('balance'))
-                ->attribute('id')
-                ->value(static function ($model) use ($s, $iaR): string|null {
-                    $inv_id = $model->getId();
-                    $inv_amount = (($iaR->repoInvAmountCount((int) $inv_id) > 0) ? $iaR->repoInvquery((int) $inv_id) : null);
-                    return $s->format_currency(null !== $inv_amount ? $inv_amount->getBalance() : 0.00);
-                }
-                ),
-                DataColumn::create()
-                ->label($translator->translate('invoice.delivery.location.add'))
-                ->value(static function ($model) use ($urlGenerator): string {
-                    return Html::a(Html::tag('i', '', ['class' => 'fa fa-plus fa-margin']), $urlGenerator->generate('del/add', ['client_id' => $model->getClient_id()]), [])->render();
-                }
-                ),
-                DataColumn::create()
-                ->label($s->trans('view'))
-                ->value(static function ($model) use ($urlGenerator): string {
-                    return Html::a(Html::tag('i', '', ['class' => 'fa fa-eye fa-margin']), $urlGenerator->generate('inv/view', ['id' => $model->getId()]), [])->render();
-                }
-                ),
-                DataColumn::create()
-                ->label($s->trans('edit'))
-                ->value(static function ($model) use ($s, $urlGenerator): string {
-                    return $model->getIs_read_only() === false && $s->get_setting('disable_read_only') === (string) 0 ? Html::a(Html::tag('i', '', ['class' => 'fa fa-edit fa-margin']), $urlGenerator->generate('inv/edit', ['id' => $model->getId()]), [])->render() : '';
-                }
-                ),
-                DataColumn::create()
-                ->label($s->trans('delete'))
-                ->value(static function ($model) use ($s, $urlGenerator): string {
-                    return $model->getIs_read_only() === false && $s->get_setting('disable_read_only') === (string) 0 && $model->getSo_id() === '0' && $model->getQuote_id() === '0' ? Html::a(Html::tag('button',
-                            Html::tag('i', '', ['class' => 'fa fa-trash fa-margin']),
-                            [
-                                'type' => 'submit',
-                                'class' => 'dropdown-button',
-                                'onclick' => "return confirm(" . "'" . $s->trans('delete_record_warning') . "');"
-                            ]
-                            ),
-                            $urlGenerator->generate('inv/delete', ['id' => $model->getId()]), []
-                    )->render() : '';
-                }
-                ),
-        )
-        ->headerRowAttributes(['class' => 'card-header bg-info text-black'])
-        ->filterPosition('header')
-        ->filterModelName('invoice')
-        ->header($header)
-        ->id('w3-grid')
+            }     
+        ),        
+        new DataColumn(
+            'client_id',
+            header: $s->trans('client'),
+            content: static fn($model): string => $model->getClient()->getClient_name() . str_repeat(' ', 2).$model->getClient()->getClient_surname()
+        ),
+        new DataColumn(
+            'delivery_location_id',
+            header: $translator->translate('invoice.delivery.location.global.location.number'),
+            content: static function ($model) use ($dlR): string|null {
+                $delivery_location_id = $model->getDelivery_location_id();
+                $delivery_location = (($dlR->repoCount($delivery_location_id) > 0) ? $dlR->repoDeliveryLocationquery($delivery_location_id) : null);
+                return null !== $delivery_location ? $delivery_location->getGlobal_location_number() : '';
+            } 
+        ),        
+        new DataColumn(
+            'date_created',
+            header: $s->trans('date_created'),
+            content: static fn($model): string => ($model->getDate_created())->format($datehelper->style())
+        ),
+        new DataColumn(
+            'date_due',
+            content: static fn($model): string => ($model->getDate_due())->format($datehelper->style())
+        ),        
+        new DataColumn(
+            'id',
+            header: $s->trans('total'),
+            content: static function ($model) use ($s, $iaR): string|null {
+                $inv_id = $model->getId();
+                $inv_amount = (($iaR->repoInvAmountCount((int) $inv_id) > 0) ? $iaR->repoInvquery((int) $inv_id) : null);
+                return $s->format_currency(null !== $inv_amount ? $inv_amount->getTotal() : 0.00);
+            }     
+        ),        
+        new DataColumn(
+            'id',
+            header: $s->trans('paid'),
+            content: static function ($model) use ($s, $iaR): string|null {
+                $inv_id = $model->getId();
+                $inv_amount = (($iaR->repoInvAmountCount((int) $inv_id) > 0) ? $iaR->repoInvquery((int) $inv_id) : null);
+                return $s->format_currency(null !== $inv_amount ? $inv_amount->getPaid() : 0.00);
+            }     
+        ),        
+        new DataColumn(
+            'id',
+            header: $s->trans('balance'),
+            content: static function ($model) use ($s, $iaR): string|null {
+                $inv_id = $model->getId();
+                $inv_amount = (($iaR->repoInvAmountCount((int) $inv_id) > 0) ? $iaR->repoInvquery((int) $inv_id) : null);
+                return $s->format_currency(null !== $inv_amount ? $inv_amount->getBalance() : 0.00);
+            }     
+        ),
+        new DataColumn(
+            header: $translator->translate('invoice.delivery.location.add'),
+            content: static function ($model) use ($urlGenerator): string {
+                return Html::a(Html::tag('i', '', ['class' => 'fa fa-plus fa-margin']), $urlGenerator->generate('del/add', ['client_id' => $model->getClient_id()]), [])->render();
+            }     
+        ),        
+        new DataColumn(
+            header: $s->trans('view'), 
+            content: static function ($model) use ($urlGenerator): string {
+                return Html::a(Html::tag('i', '', ['class' => 'fa fa-eye fa-margin']), $urlGenerator->generate('inv/view', ['id' => $model->getId()]), [])->render();
+            }  
+        ),        
+        new DataColumn(
+            header: $s->trans('edit'),
+            content: static function ($model) use ($s, $urlGenerator): string {
+                return $model->getIs_read_only() === false && $s->get_setting('disable_read_only') === (string) 0 ? Html::a(Html::tag('i', '', ['class' => 'fa fa-edit fa-margin']), $urlGenerator->generate('inv/edit', ['id' => $model->getId()]), [])->render() : '';
+            }     
+        ),
+        new DataColumn(
+            header: $s->trans('delete'),
+            content: static function ($model) use ($s, $urlGenerator): string {
+                return $model->getIs_read_only() === false && $s->get_setting('disable_read_only') === (string) 0 && $model->getSo_id() === '0' && $model->getQuote_id() === '0' ? Html::a(Html::tag('button',
+                        Html::tag('i', '', ['class' => 'fa fa-trash fa-margin']),
+                        [
+                            'type' => 'submit',
+                            'class' => 'dropdown-button',
+                            'onclick' => "return confirm(" . "'" . $s->trans('delete_record_warning') . "');"
+                        ]
+                        ),
+                        $urlGenerator->generate('inv/delete', ['id' => $model->getId()]), []
+                )->render() : '';
+            }     
+        )   
+    ];
+?>
+<?php  echo GridView::widget()
+    // unpack the contents within the array using the three dot splat operator    
+    ->columns(...$columns)
+    ->dataReader($paginator)
+    ->filterModelName('invoice')
+    ->filterPosition('header')
+    ->header($header)
+    ->headerRowAttributes(['class' => 'card-header bg-info text-black'])    
+    ->id('w3-grid') 
+    ->pagination(
+        OffsetPagination::widget()
         ->paginator($paginator)
-        ->pagination(
-          OffsetPagination::widget()
-          ->menuClass('pagination justify-content-center')
-          ->paginator($paginator)
-          // No need to use page argument since built-in. Use status bar value passed from urlGenerator to inv/guest
-          ->urlArguments(['status' => $status])
-          ->render(),
-        )
-        ->rowAttributes(['class' => 'align-middle'])
-        ->summaryAttributes(['class' => 'mt-3 me-3 summary text-end'])
-        ->summary($grid_summary)
-        ->emptyTextAttributes(['class' => 'card-header bg-warning text-black'])
-        ->emptyText((string) $translator->translate('invoice.invoice.no.records'))
-        ->tableAttributes(['class' => 'table table-striped text-center h-75', 'id' => 'table-invoice'])
-        ->toolbar(
+        ->urlArguments(['status'=>$status])    
+        ->render()
+    )    
+    ->rowAttributes(['class' => 'align-middle'])
+    ->summaryAttributes(['class' => 'mt-3 me-3 summary text-end'])
+    ->summary($grid_summary)
+    ->emptyTextAttributes(['class' => 'card-header bg-warning text-black'])
+    ->emptyText((string) $translator->translate('invoice.invoice.no.records'))
+    ->tableAttributes(['class' => 'table table-striped text-center h-75', 'id' => 'table-invoice'])
+    ->toolbar(
           Form::tag()->post($urlGenerator->generate('quote/index'))->csrf($csrf)->open() .
           Div::tag()->addClass('float-end m-3')->content($toolbarReset)->encode(false)->render() .
-          Form::tag()->close()
-);
+          Form::tag()->close()    
+    )    
 ?>

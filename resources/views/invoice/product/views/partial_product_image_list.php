@@ -15,63 +15,68 @@ use Yiisoft\Yii\DataView\Column\DataColumn;
 ?>
 
 <div>
+    <?php
+        $columns = [
+            new DataColumn(
+                'file_name_original',
+                header:  $s->trans('name'),
+                content: static fn($model): string => ($model->getFile_name_original())
+            ),
+            new DataColumn(
+                'uploaded_date',
+                header:  $s->trans('date'),
+                content: static fn($model): string => ($model->getUploaded_date())->format($datehelper->style())
+            ),
+            new DataColumn(
+                header:  $s->trans('download'),
+                content: static function ($model) use ($urlGenerator): string {
+                return Html::a(Html::tag('button',
+                          Html::tag('i', '', ['class' => 'fa fa-download fa-margin']),
+                          [
+                              'type' => 'submit',
+                              'class' => 'dropdown-button'
+                          ]
+                        ),
+                        // route action => product/download_image_file
+                        // route name => /image
+                        $urlGenerator->generate('product/download_image_file', ['product_image_id' => $model->getId(), '_language' => 'en']), []
+                )->render();
+            }),
+            new DataColumn(
+                visible: $invEdit,
+                header:  $s->trans('edit'),
+                content: static function ($model) use ($urlGenerator): string {
+                return Html::a(Html::tag('button',
+                                Html::tag('i', '', ['class' => 'fa fa-pencil fa-margin']),
+                                [
+                                    'type' => 'submit',
+                                    'class' => 'dropdown-button'
+                                ]
+                        ),
+                        $urlGenerator->generate('productimage/edit', ['id' => $model->getId(), '_language' => 'en']), []
+                )->render();
+            }),
+            new DataColumn(
+                visible($invEdit),
+                header:  $s->trans('delete'),
+                content: static function ($model) use ($s, $urlGenerator): string {
+                return Html::a(Html::tag('button',
+                                Html::tag('i', '', ['class' => 'fa fa-trash fa-margin']),
+                                [
+                                    'type' => 'submit',
+                                    'class' => 'dropdown-button',
+                                    'onclick' => "return confirm(" . "'" . $s->trans('delete_record_warning') . "');"
+                                ]
+                        ),
+                        $urlGenerator->generate('productimage/delete', ['id' => $model->getId(), '_language' => 'en']), []
+                )->render();
+            }),
+        ]            
+    ?>
     <?=
       GridView::widget()
-      ->columns(
-        DataColumn::create()
-        ->attribute('file_name_original')
-        ->label($s->trans('name'))
-        ->value(static fn($model): string => ($model->getFile_name_original())),
-        DataColumn::create()
-        ->attribute('uploaded_date')
-        ->label($s->trans('date'))
-        ->value(static fn($model): string => ($model->getUploaded_date())->format($datehelper->style())),
-        DataColumn::create()
-        ->label($s->trans('download'))
-        ->value(static function ($model) use ($urlGenerator): string {
-            return Html::a(Html::tag('button',
-                      Html::tag('i', '', ['class' => 'fa fa-download fa-margin']),
-                      [
-                          'type' => 'submit',
-                          'class' => 'dropdown-button'
-                      ]
-                    ),
-                    // route action => product/download_image_file
-                    // route name => /image
-                    $urlGenerator->generate('product/download_image_file', ['product_image_id' => $model->getId(), '_language' => 'en']), []
-            )->render();
-        }),
-        DataColumn::create()
-        ->visible($invEdit)
-        ->label($s->trans('edit'))
-        ->value(static function ($model) use ($urlGenerator): string {
-            return Html::a(Html::tag('button',
-                            Html::tag('i', '', ['class' => 'fa fa-pencil fa-margin']),
-                            [
-                                'type' => 'submit',
-                                'class' => 'dropdown-button'
-                            ]
-                    ),
-                    $urlGenerator->generate('productimage/edit', ['id' => $model->getId(), '_language' => 'en']), []
-            )->render();
-        }),
-        DataColumn::create()
-        ->visible($invEdit)
-        ->label($s->trans('delete'))
-        ->value(static function ($model) use ($s, $urlGenerator): string {
-            return Html::a(Html::tag('button',
-                            Html::tag('i', '', ['class' => 'fa fa-trash fa-margin']),
-                            [
-                                'type' => 'submit',
-                                'class' => 'dropdown-button',
-                                'onclick' => "return confirm(" . "'" . $s->trans('delete_record_warning') . "');"
-                            ]
-                    ),
-                    $urlGenerator->generate('productimage/delete', ['id' => $model->getId(), '_language' => 'en']), []
-            )->render();
-        }),
-      )
-      ->paginator($paginator)
+      ->columns(...$columns)
+      ->dataReader($paginator)
       ->rowAttributes(['class' => 'align-middle'])
       ->summaryAttributes(['class' => 'mt-3 me-3 summary text-end'])
       ->summary($grid_summary)

@@ -149,12 +149,12 @@ final class PostalAddressController
      */
     public function index(CurrentRoute $currentRoute, PostalAddressRepository $postaladdressRepository, SettingRepository $settingRepository, ClientRepository $cR): Response
     {      
-        $page = (int)$currentRoute->getArgument('page', '1');
+        $page = $currentRoute->getArgument('page', '1');
         $postaladdresses = $this->postaladdresses($postaladdressRepository); 
         $paginator = (new OffsetPaginator($postaladdresses))
         ->withPageSize((int)$settingRepository->get_setting('default_list_limit'))
-        ->withCurrentPage($page)        
-        ->withNextPageToken((string) $page); 
+        ->withCurrentPage((int)$page)        
+        ->withNextPageToken($page); 
       $parameters = [
         'canEdit' => ($this->userService->hasPermission('viewInv') && $this->userService->hasPermission('editInv')) ? true : false,  
         's'=>$settingRepository,

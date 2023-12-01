@@ -83,39 +83,38 @@ $toolbar = Div::tag();
         <?= Html::a('API Users List Data', $urlGenerator->generate('api/user/index'), ['class' => 'btn btn-link'])?>
     </div>
 </div>
-
-<?= GridView::widget()
-    ->columns(
-        DataColumn::create()
-            ->attribute('id')
-            ->value(static fn (object $data) => $data->getId()),
-        DataColumn::create()
-            ->attribute('login')
-            ->label($translator->translate('gridview.login'))
-            ->value(static fn (object $data) => $data->getLogin()),
-        
-        DataColumn::create()
-            ->attribute('create_at')
-            ->label($translator->translate('gridview.create.at'))
-            ->value(static fn (object $data) => $data->getCreatedAt()->format('r')),
-        DataColumn::create()
-            ->attribute('api')
-            ->label($translator->translate('gridview.api'))
-            ->value(
-                static function (object $data) use ($urlGenerator): string {
+<?php
+    $columns = [
+        new DataColumn(
+            'id',
+            content: static fn (object $data) => $data->getId()
+        ),
+        new DataColumn(
+            'login',
+            header:  $translator->translate('gridview.login'),
+            content: static fn (object $data) => $data->getLogin()
+        ),
+        new DataColumn(
+            'create_at',
+            header:  $translator->translate('gridview.create.at'),
+            content: static fn (object $data) => $data->getCreatedAt()->format('r')
+        ),
+        new DataColumn(
+            'api',
+            header:  $translator->translate('gridview.api'),
+            content: static function (object $data) use ($urlGenerator): string {
                     return Html::a(
                         'API User Data',
                         $urlGenerator->generate('api/user/profile',
                         ['login' => $data->getLogin()]),
                         ['target' => '_blank'],
                     )->render();
-                },
-            ),
-        DataColumn::create()
-            ->attribute('profile')
-            ->label($translator->translate('gridview.profile'))
-            ->value(
-                static function (object $data) use ($urlGenerator): string {
+            },
+        ),
+        new DataColumn(
+            'profile',
+            header:  $translator->translate('gridview.profile'),
+            content: static function (object $data) use ($urlGenerator): string {
                     return Html::a(
                         Html::tag('i', '', [
                             'class' => 'bi bi-person-fill ms-1',
@@ -124,12 +123,15 @@ $toolbar = Div::tag();
                         $urlGenerator->generate('user/profile', ['login' => $data->getLogin()]),
                         ['class' => 'btn btn-link'],
                     )->render();
-                },
-            ),
-    )
+            },
+        ),
+    ];
+?>
+<?= GridView::widget()
+    ->dataReader($paginator)    
+    ->columns(...$columns)
     ->header($header)
     ->id('w1-grid')
-    ->paginator($paginator)
     ->pagination(
         OffsetPagination::widget()
             ->menuClass('pagination justify-content-center')
@@ -146,3 +148,4 @@ $toolbar = Div::tag();
         Div::tag()->addClass('float-end m-3')->content($toolbarApplyChange . $toolbarReset)->encode(false)->render() .
         Form::tag()->close()
     );
+?>

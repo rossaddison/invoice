@@ -1351,7 +1351,11 @@ final class InvController {
     public function guest(Request $request, IAR $iaR, IRR $irR, CurrentRoute $currentRoute,
             IR $iR, UCR $ucR, UIR $uiR): \Yiisoft\DataResponse\DataResponse|Response {
         $query_params = $request->getQueryParams();
-        $pageNum = (int) $currentRoute->getArgument('page', '1');
+        /**
+         * @var string $query_params['page']
+         */
+        $pageNum = $query_params['page'] ?? $currentRoute->getArgument('page', '1');
+        
         //status 0 => 'all';
         $status = (int) $currentRoute->getArgument('status', '0');
         /**
@@ -1485,7 +1489,13 @@ final class InvController {
         if ($active_clients) {
             $clients = $clientRepo->repoUserClient($active_clients);
             $query_params = $request->getQueryParams();
-            $page = (int) $currentRoute->getArgument('page', '1');
+            // All, Draft, Sent ... filter governed by routes eg. invoice.myhost/invoice/inv/page/1/status/1 => $currentRoute->getArgument
+            // Paginator ... governed by query params format eg. invoice.myhost/invoice/inv?page=1&pagesize=1 => $query_params
+            
+            /**
+             * @var string $query_params['page']
+             */
+            $page = $query_params['page'] ?? $currentRoute->getArgument('page', '1');
             //status 0 => 'all';
             $status = (int) $currentRoute->getArgument('status', '0');
             /**
@@ -1499,14 +1509,13 @@ final class InvController {
                     ->withOrderString($sort_string);
             $invs = $this->invs_status_with_sort($invRepo, $status, $sort);
             $paginator = (new OffsetPaginator($invs))
-                    ->withPageSize((int) $this->sR->get_setting('default_list_limit'))
-                    ->withCurrentPage($page)
-                    ->withNextPageToken((string) $page);
+                ->withPageSize((int) $this->sR->get_setting('default_list_limit'))
+                ->withCurrentPage((int)$page)
+                ->withNextPageToken($page);
             $inv_statuses = $invRepo->getStatuses($this->sR);
             $label = $invRepo->getSpecificStatusArrayLabel((string) $status);
             $this->draft_flash($currentRoute);
             $parameters = [
-                'page' => $page,
                 'paginator' => $paginator,
                 's' => $this->sR,
                 'sortOrder' => $query_params['sort'] ?? '',
@@ -1546,11 +1555,11 @@ final class InvController {
      * @param int $status
      * @param Sort $sort
      *
-     * @return \Yiisoft\Data\Reader\SortableDataInterface&\Yiisoft\Data\Reader\DataReaderInterface
+     * @return \Yiisoft\Data\Reader\DataReaderInterface
      *
-     * @psalm-return \Yiisoft\Data\Reader\SortableDataInterface&\Yiisoft\Data\Reader\DataReaderInterface<int, Inv>
+     * @psalm-return \Yiisoft\Data\Reader\DataReaderInterface<int, Inv>
      */
-    private function invs_status_with_sort(IR $iR, int $status, Sort $sort): \Yiisoft\Data\Reader\SortableDataInterface {
+    private function invs_status_with_sort(IR $iR, int $status, Sort $sort): \Yiisoft\Data\Reader\DataReaderInterface {
         $invs = $iR->findAllWithStatus($status)
                 ->withSort($sort);
         return $invs;
@@ -3142,7 +3151,7 @@ final class InvController {
      */
     private function view_partial_inv_attachments(CurrentRoute $currentRoute, string $url_key, int $client_id, UPR $upR): string {
         $uploads = $upR->repoUploadUrlClientquery($url_key, $client_id);
-        $paginator = new OffsetPaginator($uploads);
+        $dataReader = new OffsetPaginator($uploads);
         $invEdit = $this->user_service->hasPermission('editPayment');
         $invView = $this->user_service->hasPermission('viewPayment');
         return $this->view_renderer->renderPartialAsString('/invoice/inv/partial_inv_attachments', [
@@ -3150,8 +3159,8 @@ final class InvController {
           'invEdit' => $invEdit,
           'invView' => $invView,
           'partial_inv_attachments_list' => $this->view_renderer->renderPartialAsString('/invoice/inv/partial_inv_attachments_list', [
-            'grid_summary' => $this->sR->grid_summary($paginator, $this->translator, (int) $this->sR->get_setting('default_list_limit'), $this->translator->translate('invoice.invoice.attachment.list'), ''),
-            'paginator' => $paginator,
+            'grid_summary' => $this->sR->grid_summary($dataReader, $this->translator, (int) $this->sR->get_setting('default_list_limit'), $this->translator->translate('invoice.invoice.attachment.list'), ''),
+            'dataReader' => $dataReader,
             'invEdit' => $invEdit
           ]),
           'action' => ['inv/attachment', ['id' => $this->session->get('inv_id'), '_language' => $currentRoute->getArgument('_language')]]

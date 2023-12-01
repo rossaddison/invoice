@@ -493,8 +493,13 @@ class ProductController
         $canEdit = $this->rbac();
         $this->flash_message('info', $this->translator->translate('invoice.productimage.view'));
         $query_params = $request->getQueryParams();
+        
+        /**
+         * @var string $query_params['page']
+         */
+        $page = $query_params['page'] ?? $currentRoute->getArgument('page', '1');
+        
         /** @var string $query_params['sort'] */
-        $page = (int)$currentRoute->getArgument('page', '1');
         $sort = Sort::only(['id','family_id','unit_id','tax_rate_id','product_name','product_sku'])
                     // (@see vendor\yiisoft\data\src\Reader\Sort
                     // - => 'desc'  so -id => default descending on id
@@ -503,8 +508,8 @@ class ProductController
         $products = $this->products_with_sort($pR, $sort); 
         $paginator = (new OffsetPaginator($products))
         ->withPageSize((int)$sR->get_setting('default_list_limit'))
-        ->withCurrentPage($page)
-        ->withNextPageToken((string) $page); 
+        ->withCurrentPage((int)$page)
+        ->withNextPageToken($page); 
         $parameters = [
             'alert' => $this->alert(),
             'paginator'=>$paginator,

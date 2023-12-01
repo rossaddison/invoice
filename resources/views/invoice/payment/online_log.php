@@ -51,51 +51,56 @@ $toolbarReset = A::tag()
 $toolbar = Div::tag();
 ?>
 
+<?php
+$columns = [    
+    new DataColumn(
+        'id',
+        header:  $s->trans('id'),
+        content: static fn (object $model) => $model->getId()
+    ),        
+    new DataColumn(
+        'inv_id',
+        content: static function ($model) use ($urlGenerator): string {
+           return Html::a($model->getInv()->getNumber(), $urlGenerator->generate('inv/view',['id'=>$model->getInv_id()]),['style'=>'text-decoration:none'])->render();
+       }                       
+    ),
+    new DataColumn(
+        'successful',    
+        header:  $s->trans('transaction_successful'),                
+        content: static function ($model) use ($s) : Yiisoft\Html\Tag\CustomTag {
+            return $model->getSuccessful() ? Html::tag('Label',$s->trans('yes'),['class'=>'btn btn-success']) : Html::tag('Label',$s->trans('no'),['class'=>'btn btn-danger']);
+        }
+    ),            
+    new DataColumn(
+        'date',
+        header:  $s->trans('payment_date'),                
+        content: static fn ($model): string => ($model->getDate())->format($datehelper->style())                        
+    ),
+    new DataColumn(
+        'driver',    
+        header:  $s->trans('payment_provider'),
+        content: static fn ($model): string => ($model->getDriver())                        
+    ),
+    new DataColumn(
+        'response',    
+        header:  $s->trans('provider_response'),                
+        content: static fn ($model): string => ($model->getResponse())                        
+    ),
+    new DataColumn(
+        'reference',    
+        header:  $s->trans('transaction_reference'),                
+        content: static fn ($model): string => ($model->getReference())                        
+    ),
+];            
+?>
 <?= GridView::widget()
-        ->columns(
-            DataColumn::create()
-            ->attribute('id')
-            ->label($s->trans('id'))
-            ->value(static fn (object $model) => $model->getId()),        
-            DataColumn::create()
-                ->attribute('inv_id')
-                ->value(static function ($model) use ($urlGenerator): string {
-                   return Html::a($model->getInv()->getNumber(), $urlGenerator->generate('inv/view',['id'=>$model->getInv_id()]),['style'=>'text-decoration:none'])->render();
-               }                       
-            ),
-            DataColumn::create()
-                ->label($s->trans('transaction_successful'))                
-                ->attribute('successful')     
-                ->value(static function ($model) use ($s) : Yiisoft\Html\Tag\CustomTag {
-                    return $model->getSuccessful() ? Html::tag('Label',$s->trans('yes'),['class'=>'btn btn-success']) : Html::tag('Label',$s->trans('no'),['class'=>'btn btn-danger']);
-                }
-            ),            
-            DataColumn::create()
-                ->label($s->trans('payment_date'))                
-                ->attribute('date')     
-                ->value(static fn ($model): string => ($model->getDate())->format($datehelper->style())                        
-            ),
-            DataColumn::create()
-                ->label($s->trans('payment_provider'))                
-                ->attribute('driver')     
-                ->value(static fn ($model): string => ($model->getDriver())                        
-            ),
-            DataColumn::create()
-                ->label($s->trans('provider_response'))                
-                ->attribute('response')     
-                ->value(static fn ($model): string => ($model->getResponse())                        
-            ),
-            DataColumn::create()
-                ->label($s->trans('transaction_reference'))                
-                ->attribute('reference')     
-                ->value(static fn ($model): string => ($model->getReference())                        
-            ),                        
-        )
+        ->columns(...$columns)
+        ->dataReader($paginator)
         ->headerRowAttributes(['class'=>'card-header bg-info text-black'])
         ->filterPosition('header')
         ->filterModelName('payment_online_log')
         ->header($header)
-        ->id('w3-grid')
+         ->id('w3-grid')
         ->paginator($paginator)
         ->pagination(
         OffsetPagination::widget()

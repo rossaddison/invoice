@@ -81,7 +81,6 @@ use Yiisoft\Html\Tag\Form;
     ->addInputAttributes(['value' => Html::encode($body['product_sku'] ?? '')])
     ->hint($translator->translate('invoice.hint.this.field.is.required')); ?>
 
-<?= Html::a(); ?>                    
 <?= Field::select($form, 'unit_peppol_id')
     ->label($translator->translate('invoice.product.peppol.unit'))        
     ->addInputAttributes(['value' => Html::encode($body['unit_peppol_id'] ?? '')])

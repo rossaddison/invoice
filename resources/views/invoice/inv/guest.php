@@ -77,84 +77,87 @@ $toolbar = Div::tag();
             </div>
     </div>
 </div>
+<?php
+    $columns = [
+        new DataColumn(
+            'id',
+            header: $s->trans('id'),
+            content: static fn (object $model) => $model->getId(),
+        ),
+        new DataColumn(
+            'status_id',
+            $s->trans('status'),
+            content: static function ($model) use ($s, $irR, $inv_statuses): Yiisoft\Html\Tag\CustomTag { 
+                $span = $inv_statuses[(string)$model->getStatus_id()]['label'];
+                if ($model->getCreditinvoice_parent_id()>0) { 
+                    $span = Html::tag('i', str_repeat(' ',2).$s->trans('credit_invoice'),['class'=>'fa fa-credit-invoice']);
+                }
+                if (($model->getIs_read_only()) && $s->get_setting('disable_read_only') === (string)0){ 
+                    $span = Html::tag('i', str_repeat(' ',2).$s->trans('paid'), ['class'=>'fa fa-read-only']);
+                }
+                if ($irR->repoCount((string)$model->getId())>0) { 
+                    $span = Html::tag('i',str_repeat(' ',2).$s->trans('recurring'),['class'=>'fa fa-refresh']);
+                }
+                return Html::tag('span', $span, ['class'=>'label '. $inv_statuses[(string)$model->getStatus_id()]['class']]);
+            }       
+        ),
+        new DataColumn(
+            'number',
+            header: '#',
+            content: static function ($model) use ($urlGenerator): string {
+               return Html::a($model->getNumber(), $urlGenerator->generate('inv/view',['id'=>$model->getId()]),['style'=>'text-decoration:none'])->render();
+           }                       
+        ),
+        new DataColumn(
+            'client_id',                
+            content: static fn ($model): string => $model->getClient()->getClient_name()                        
+        ),
+        new DataColumn(                
+            'date_created',
+            header: $s->trans('date_created'),    
+            content: static fn ($model): string => ($model->getDate_created())->format($datehelper->style())                        
+        ),
+        new DataColumn(              
+            'date_due',     
+            content: static fn ($model): string => ($model->getDate_due())->format($datehelper->style())                        
+        ),
+        new DataColumn(
+            'id',     
+            header: $s->trans('total'),                
+            content: static function ($model) use ($s, $iaR) : string|null {
+               $inv_id = $model->getId(); 
+               $inv_amount = (($iaR->repoInvAmountCount((int)$inv_id) > 0) ? $iaR->repoInvquery((int)$inv_id) : null);
+               return $s->format_currency(null!==$inv_amount ? $inv_amount->getTotal() : 0.00);
+            }                        
+        ),
+        new DataColumn(
+            'id',
+            header: $s->trans('paid'),                
+            content: static function ($model) use ($s, $iaR) : string|null {
+               $inv_id = $model->getId(); 
+               $inv_amount = (($iaR->repoInvAmountCount((int)$inv_id) > 0) ? $iaR->repoInvquery((int)$inv_id) : null);
+               return $s->format_currency(null!==$inv_amount ? $inv_amount->getPaid() : 0.00);
+            }                        
+        ),
+        new DataColumn(
+            'id',    
+            header: $s->trans('balance'),                
+            content: static function ($model) use ($s, $iaR) : string|null {
+               $inv_id = $model->getId(); 
+               $inv_amount = (($iaR->repoInvAmountCount((int)$inv_id) > 0) ? $iaR->repoInvquery((int)$inv_id) : null);
+               return $s->format_currency(null!==$inv_amount ? $inv_amount->getBalance() : 0.00);
+            }                        
+        ),
+    ]            
+?>
 <?= GridView::widget()
-        ->columns(
-            DataColumn::create()
-            ->attribute('id')
-            ->label($s->trans('id'))
-            ->value(static fn (object $model) => $model->getId()),        
-            DataColumn::create()
-                ->attribute('status_id')
-                ->label($s->trans('status'))
-                ->value(static function ($model) use ($s, $irR, $inv_statuses): Yiisoft\Html\Tag\CustomTag { 
-                    $span = $inv_statuses[(string)$model->getStatus_id()]['label'];
-                    if ($model->getCreditinvoice_parent_id()>0) { 
-                        $span = Html::tag('i', str_repeat(' ',2).$s->trans('credit_invoice'),['class'=>'fa fa-credit-invoice']);
-                    }
-                    if (($model->getIs_read_only()) && $s->get_setting('disable_read_only') === (string)0){ 
-                        $span = Html::tag('i', str_repeat(' ',2).$s->trans('paid'), ['class'=>'fa fa-read-only']);
-                    }
-                    if ($irR->repoCount((string)$model->getId())>0) { 
-                        $span = Html::tag('i',str_repeat(' ',2).$s->trans('recurring'),['class'=>'fa fa-refresh']);
-                    }
-                    return Html::tag('span', $span, ['class'=>'label '. $inv_statuses[(string)$model->getStatus_id()]['class']]);
-                }       
-            ),
-            DataColumn::create()
-                ->attribute('number')
-                ->label('#')
-                ->value(static function ($model) use ($urlGenerator): string {
-                   return Html::a($model->getNumber(), $urlGenerator->generate('inv/view',['id'=>$model->getId()]),['style'=>'text-decoration:none'])->render();
-               }                       
-            ),
-            DataColumn::create()
-                ->label($s->trans('client'))                
-                ->attribute('client_id')     
-                ->value(static fn ($model): string => $model->getClient()->getClient_name()                        
-            ),
-            DataColumn::create()
-                ->label($s->trans('date_created'))                
-                ->attribute('date_created')     
-                ->value(static fn ($model): string => ($model->getDate_created())->format($datehelper->style())                        
-            ),
-            DataColumn::create()              
-                ->attribute('date_due')     
-                ->value(static fn ($model): string => ($model->getDate_due())->format($datehelper->style())                        
-            ),
-            DataColumn::create()
-                ->label($s->trans('total'))                
-                ->attribute('id')     
-                ->value(static function ($model) use ($s, $iaR) : string|null {
-                   $inv_id = $model->getId(); 
-                   $inv_amount = (($iaR->repoInvAmountCount((int)$inv_id) > 0) ? $iaR->repoInvquery((int)$inv_id) : null);
-                   return $s->format_currency(null!==$inv_amount ? $inv_amount->getTotal() : 0.00);
-                }                        
-            ),
-            DataColumn::create()
-                ->label($s->trans('paid'))                
-                ->attribute('id')     
-                ->value(static function ($model) use ($s, $iaR) : string|null {
-                   $inv_id = $model->getId(); 
-                   $inv_amount = (($iaR->repoInvAmountCount((int)$inv_id) > 0) ? $iaR->repoInvquery((int)$inv_id) : null);
-                   return $s->format_currency(null!==$inv_amount ? $inv_amount->getPaid() : 0.00);
-                }                        
-            ),
-            DataColumn::create()
-                ->label($s->trans('balance'))                
-                ->attribute('id')     
-                ->value(static function ($model) use ($s, $iaR) : string|null {
-                   $inv_id = $model->getId(); 
-                   $inv_amount = (($iaR->repoInvAmountCount((int)$inv_id) > 0) ? $iaR->repoInvquery((int)$inv_id) : null);
-                   return $s->format_currency(null!==$inv_amount ? $inv_amount->getBalance() : 0.00);
-                }                        
-            ),            
-        )
+        ->dataReader($paginator)                    
+        ->columns(...$columns)
         ->headerRowAttributes(['class'=>'card-header bg-info text-black'])
         ->filterPosition('header')
         ->filterModelName('invoice_guest')
         ->header($header)
         ->id('w8-grid')
-        ->paginator($paginator)
         ->pagination(
         OffsetPagination::widget()
              ->menuClass('pagination justify-content-center')

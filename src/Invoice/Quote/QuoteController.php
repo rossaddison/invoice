@@ -115,7 +115,6 @@ use Yiisoft\Router\CurrentRoute;
 use Yiisoft\Session\SessionInterface as Session;
 use Yiisoft\Session\Flash\Flash;
 use Yiisoft\Form\FormHydrator;
-use Yiisoft\Form\Helper\HtmlFormErrors;
 use Yiisoft\Yii\View\ViewRenderer;
 use Yiisoft\Translator\TranslatorInterface as Translator;
 use Yiisoft\User\CurrentUser;
@@ -1280,7 +1279,10 @@ final class QuoteController
         $active_clients = $ucR->getClients_with_user_accounts();
         $clients = $clientRepo->repoUserClient($active_clients);
         $query_params = $request->getQueryParams();
-        $page = (int)$currentRoute->getArgument('page','1');
+        /**
+         * @var string $query_params['page']
+         */
+        $page = $query_params['page'] ?? $currentRoute->getArgument('page', '1');
         //status 0 => 'all';
         $status = (int)$currentRoute->getArgument('status','0');
         /** @psalm-suppress MixedAssignment $sort_string */
@@ -1294,11 +1296,10 @@ final class QuoteController
         $quotes = $this->quotes_status_with_sort($quoteRepo, $status, $sort); 
         $paginator = (new OffsetPaginator($quotes))
         ->withPageSize((int)$this->sR->get_setting('default_list_limit'))
-        ->withCurrentPage($page)
-        ->withNextPageToken((string) $page);    
+        ->withCurrentPage((int)$page)
+        ->withNextPageToken($page);    
         $quote_statuses = $quoteRepo->getStatuses($this->sR);
         $parameters = [
-            'page' => $page,
             'status' => $status,
             'paginator' => $paginator,
             'sortOrder' => $query_params['sort'] ?? '', 

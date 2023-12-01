@@ -103,78 +103,82 @@ $toolbar = Div::tag();
     </div>
 </div>
 <br>
-<?= GridView::widget()
-    ->columns(
-        DataColumn::create()
-        ->attribute('id')
-        ->label($s->trans('id'))
-        ->value(static fn (object $model) => $model->getId()),        
-        DataColumn::create()
-            ->attribute('status_id')
-            ->label($s->trans('status'))
-            ->value(static function ($model) use ($so_statuses): Yiisoft\Html\Tag\CustomTag { 
+<?php 
+    $columns = [        
+        new DataColumn(
+            'id',
+            header: $s->trans('id'),
+            content: static fn (object $model) => $model->getId()
+        ),        
+        new DataColumn(
+            'status_id',
+            header: $s->trans('status'),
+            content: static function ($model) use ($so_statuses): Yiisoft\Html\Tag\CustomTag { 
                 $span = $so_statuses[(string)$model->getStatus_id()]['label'];
                 return Html::tag('span', $span,['class'=>'label '. $so_statuses[(string)$model->getStatus_id()]['class']]);
             }       
         ),
-        DataColumn::create()
-            ->attribute('number')
-            ->value(static function ($model) use ($urlGenerator): string {
+        new DataColumn(
+            'number',
+            content: static function ($model) use ($urlGenerator): string {
                return Html::a($model->getNumber(), $urlGenerator->generate('salesorder/view',['id'=>$model->getId()]),['style'=>'text-decoration:none'])->render();
             }                       
         ),
-        DataColumn::create()
-            ->attribute('quote_id')
-            ->value(static function ($model) use ($urlGenerator): string {
+        new DataColumn(
+            'quote_id',
+            content: static function ($model) use ($urlGenerator): string {
                 return (null!==$model->getQuote_id() ?
                 Html::a($model->getQuote_id(), $urlGenerator->generate('quote/view',['id'=>$model->getQuote_id()]),['style'=>'text-decoration:none'])->render() : '');
             }        
         ),
-        DataColumn::create()
-            ->attribute('inv_id')
-            ->value(static function ($model) use ($urlGenerator): string {
+        new DataColumn(
+            'inv_id',
+            content: static function ($model) use ($urlGenerator): string {
                return (null!==$model->getInv_id() ? 
                Html::a($model->getInv_id(), $urlGenerator->generate('inv/view',['id'=>$model->getInv_id()]),['style'=>'text-decoration:none'])->render() : '');
             }        
         ),
-        DataColumn::create()
-            ->label($s->trans('date_created'))
-            ->attribute('date_created')
-            ->value(static fn ($model): string => ($model->getDate_created())->format($datehelper->style())                        
+        new DataColumn(
+            'date_created',    
+            header: $s->trans('date_created'),
+            content: static fn ($model): string => ($model->getDate_created())->format($datehelper->style())                        
         ),
-        DataColumn::create()
-            ->label($s->trans('client'))                
-            ->attribute('client_id')     
-            ->value(static fn ($model): string => $model->getClient()->getClient_name()                        
+        new DataColumn(
+            'client_id',    
+            header: $s->trans('client'),                
+            content: static fn ($model): string => $model->getClient()->getClient_name()                        
         ),
-        DataColumn::create()
-            ->label($s->trans('total'))    
-            ->attribute('id')
-            ->value(function ($model) use ($s, $soaR) : string|null {
+        new DataColumn(
+            'id',    
+            header: $s->trans('total'),    
+            content: function ($model) use ($s, $soaR) : string|null {
                $so_id = $model->getId(); 
                $so_amount = (($soaR->repoSalesOrderAmountCount((string)$so_id) > 0) ? $soaR->repoSalesOrderquery((string)$so_id) : null);
                return $s->format_currency(null!==$so_amount ? $so_amount->getTotal() : 0.00);
             }
         ),
-        DataColumn::create()
-            ->label($s->trans('view')) 
-            ->value(static function ($model) use ($urlGenerator): string {
+        new DataColumn(
+            header: $s->trans('view'), 
+            content: static function ($model) use ($urlGenerator): string {
                return Html::a(Html::tag('i','',['class'=>'fa fa-eye fa-margin']), $urlGenerator->generate('salesorder/view',['id'=>$model->getId()]),[])->render();
             }                        
         ),
-        DataColumn::create()
-            ->label($s->trans('edit')) 
-            ->value(static function ($model) use ($urlGenerator): string {
+        new DataColumn(
+            header: $s->trans('edit'), 
+            content: static function ($model) use ($urlGenerator): string {
                return Html::a(Html::tag('i','',['class'=>'fa fa-edit fa-margin']), $urlGenerator->generate('salesorder/edit',['id'=>$model->getId()]),[])->render();
             }                        
-        ),      
-    )
+        ),    
+    ];
+?>
+<?= GridView::widget()
+    ->columns(...$columns)
+    ->dataReader($paginator)    
     ->headerRowAttributes(['class'=>'card-header bg-info text-black'])
     ->filterPosition('header')
     ->filterModelName('salesorder')
     ->header($header)
     ->id('w12-grid')
-    ->paginator($paginator)
     ->pagination(
     OffsetPagination::widget()
          ->menuClass('pagination justify-content-center')

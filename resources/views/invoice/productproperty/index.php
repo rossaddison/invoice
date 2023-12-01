@@ -48,49 +48,55 @@ echo $alert;
       ->render();
 
     $toolbar = Div::tag();
-       
-    echo GridView::widget()
-      ->columns(
-        DataColumn::create()
-        ->attribute('id')
-        ->label($s->trans('id'))
-        ->value(static fn($model) => $model->getProperty_id()),
-        DataColumn::create()
-        ->attribute('name')
-        ->label($translator->translate('invoice.product.property.name'))
-        ->value(static fn($model) => $model->getName()),
-        DataColumn::create()
-        ->attribute('value')
-        ->label($translator->translate('invoice.product.property.value'))
-        ->value(static fn($model) => $model->getValue()),
-        DataColumn::create()
-        ->label($s->trans('view'))
-        ->value(static function ($model) use ($urlGenerator): string {
-          return Html::a(Html::tag('i', '', ['class' => 'fa fa-eye fa-margin']), $urlGenerator->generate('productproperty/view', ['id' => $model->getProperty_id()]), [])->render();
-        }
+    
+    $columns = [
+        new DataColumn(
+            'id',
+            header:  $s->trans('id'),
+            content: static fn($model) => $model->getProperty_id()
         ),
-        DataColumn::create()
-        ->label($s->trans('edit'))
-        ->value(static function ($model) use ($urlGenerator): string {
-          return Html::a(Html::tag('i', '', ['class' => 'fa fa-pencil fa-margin']), $urlGenerator->generate('productproperty/edit', ['id' => $model->getProperty_id()]), [])->render();
-        }
+        new DataColumn(
+            'name',
+            header:  $translator->translate('invoice.product.property.name'),
+            content: static fn($model) => $model->getName()
         ),
-        DataColumn::create()
-        ->label($s->trans('delete'))
-        ->value(static function ($model) use ($s, $urlGenerator): string {
-          return Html::a(Html::tag('button',
-              Html::tag('i', '', ['class' => 'fa fa-trash fa-margin']),
-              [
-                'type' => 'submit',
-                'class' => 'dropdown-button',
-                'onclick' => "return confirm(" . "'" . $s->trans('delete_record_warning') . "');"
-              ]
+        new DataColumn(
+            'value',
+            header:  $translator->translate('invoice.product.property.value'),
+            content: static fn($model) => $model->getValue()
+        ),
+        new DataColumn(
+            header:  $s->trans('view'),
+            content: static function ($model) use ($urlGenerator): string {
+                return Html::a(Html::tag('i', '', ['class' => 'fa fa-eye fa-margin']), $urlGenerator->generate('productproperty/view', ['id' => $model->getProperty_id()]), [])->render();
+            }
+        ),
+        new DataColumn(
+            header:  $s->trans('edit'),
+            content: static function ($model) use ($urlGenerator): string {
+                return Html::a(Html::tag('i', '', ['class' => 'fa fa-pencil fa-margin']), $urlGenerator->generate('productproperty/edit', ['id' => $model->getProperty_id()]), [])->render();
+            }
+        ),
+        new DataColumn(
+            header:  $s->trans('delete'),
+            content: static function ($model) use ($s, $urlGenerator): string {
+            return Html::a(Html::tag('button',
+                Html::tag('i', '', ['class' => 'fa fa-trash fa-margin']),
+                [
+                    'type' => 'submit',
+                    'class' => 'dropdown-button',
+                    'onclick' => "return confirm(" . "'" . $s->trans('delete_record_warning') . "');"
+                ]
             ),
             $urlGenerator->generate('productproperty/delete', ['id' => $model->getProperty_id()]), []
-          )->render();
+            )->render();
         }
         ),
-      )
+    ];
+    
+    echo GridView::widget()
+      ->columns(...$columns)
+      ->dataReader($paginator)      
       ->headerRowAttributes(['class' => 'card-header bg-info text-black'])
       ->filterPosition('header')
       ->filterModelName('productproperty')

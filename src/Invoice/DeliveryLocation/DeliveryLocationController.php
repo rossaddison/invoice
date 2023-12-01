@@ -69,12 +69,12 @@ final class DeliveryLocationController {
   }
 
   public function index(CurrentRoute $currentRoute, DeliveryLocationRepository $delRepository, SettingRepository $sR, CR $cR, IR $iR): Response {
-    $page = (int) $currentRoute->getArgument('page', '1');
+    $page = $currentRoute->getArgument('page', '1');
     $dels = $delRepository->findAllPreloaded();
     $paginator = (new OffsetPaginator($dels))
       ->withPageSize((int) $sR->get_setting('default_list_limit'))
-      ->withCurrentPage($page)
-      ->withNextPageToken((string) $page);
+      ->withCurrentPage((int)$page)
+      ->withNextPageToken($page);
     $this->add_in_invoice_flash();
     $parameters = [
       'dels' => $this->dels($delRepository),

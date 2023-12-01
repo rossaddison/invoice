@@ -79,9 +79,12 @@ final class ProductImageController {
      * @return \Yiisoft\DataResponse\DataResponse
      */
     public function index(Request $request, CurrentRoute $currentRoute, ProductImageRepository $productimageRepository): \Yiisoft\DataResponse\DataResponse {
-        /** @var string $query_params['sort'] */
-        $page = (int) $currentRoute->getArgument('page', '1');
         $query_params = $request->getQueryParams();
+        /**
+         * @var string $query_params['page'];
+         */
+        $page = $query_params['page'] ?? $currentRoute->getArgument('page', '1');
+        /** @var string $query_params['sort'] */
         $sort = Sort::only(['id', 'product_id', 'file_name_original'])
                 // (@see vendor\yiisoft\data\src\Reader\Sort
                 // - => 'desc'  so -id => default descending on id
@@ -90,9 +93,8 @@ final class ProductImageController {
         $productimages = $this->productimages_with_sort($productimageRepository, $sort);
         $paginator = (new OffsetPaginator($productimages))
                 ->withPageSize((int) $this->s->get_setting('default_list_limit'))
-                ->withCurrentPage($page)
-                ->withNextPageToken((string) $page);
-
+                ->withCurrentPage((int)$page)
+                ->withNextPageToken($page);
         $parameters = [
             'paginator' => $paginator,
             'grid_summary' => $this->s->grid_summary($paginator, $this->translator, (int) $this->s->get_setting('default_list_limit'), $this->translator->translate('invoice.productimage.plural'), ''),

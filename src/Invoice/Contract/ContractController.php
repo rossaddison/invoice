@@ -75,19 +75,22 @@ final class ContractController
     {
         $canEdit = $this->rbac(); 
         $query_params = $request->getQueryParams();
+        /**
+         * @var string $query_params['page']
+         */
+        $page = $query_params['page'] ?? $currentRoute->getArgument('page', '1');
         /** @var string $query_params['sort'] */
-        $page = (int)$currentRoute->getArgument('page', '1');
         $sort = Sort::only(['id', 'client_id', 'name', 'reference'])
-                    // (@see vendor\yiisoft\data\src\Reader\Sort
-                    // - => 'desc'  so -id => default descending on id
-                    // Show the latest quotes first => -id
-                    ->withOrderString($query_params['sort'] ?? '-id');
+            // (@see vendor\yiisoft\data\src\Reader\Sort
+            // - => 'desc'  so -id => default descending on id
+            // Show the latest quotes first => -id
+            ->withOrderString($query_params['sort'] ?? '-id');
         $contracts = $this->contracts_with_sort($contractR, $sort); 
         $this->flash_message('info',$this->translator->translate('invoice.invoice.contract.create'));
         $paginator = (new OffsetPaginator($contracts))
         ->withPageSize((int)$sR->get_setting('default_list_limit'))
-        ->withCurrentPage($page)
-        ->withNextPageToken((string) $page); 
+        ->withCurrentPage((int)$page)
+        ->withNextPageToken($page); 
         $parameters = [
             'alert' => $this->alert(),
             'paginator'=>$paginator,

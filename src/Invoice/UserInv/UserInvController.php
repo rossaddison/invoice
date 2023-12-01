@@ -120,19 +120,22 @@ final class UserInvController
     {      
         $canEdit = $this->rbac();
         $query_params = $request->getQueryParams();
-        $page = (int)$currentRoute->getArgument('page', '1');        
+        /**
+         * @var string $query_params['page'] 
+         */
+        $page = $query_params['page'] ?? $currentRoute->getArgument('page', '1');        
         $active = (int)$currentRoute->getArgument('active', '2');         
         /** @var string $query_params['sort'] */
         $sort = Sort::only(['user_id', 'name', 'email'])          
-                     ->withOrderString($query_params['sort'] ?? '-user_id');
+            ->withOrderString($query_params['sort'] ?? '-user_id');
         $repo = $this->userinvs_active_with_sort($uiR,$active,$sort); 
         /**
          * @psalm-suppress PossiblyInvalidArgument
          */
         $paginator = (new OffsetPaginator($repo))        
         ->withPageSize((int)$sR->get_setting('default_list_limit'))
-        ->withCurrentPage($page)               
-        ->withNextPageToken((string) $page);   
+        ->withCurrentPage((int)$page)               
+        ->withNextPageToken($page);   
         $parameters = [
           'uiR'=>$uiR,
           'active'=>$active,   

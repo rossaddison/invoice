@@ -61,53 +61,53 @@ use Yiisoft\Router\CurrentRoute;
     </div>
 </div>
 <br>
-    <?= GridView::widget()
-        ->columns(
-            DataColumn::create()
-                ->attribute('id')
-                ->label($s->trans('id'))
-                ->value(static fn (object $model) => Html::encode($model->getId())
+    <?php
+        $columns = [
+            new DataColumn(
+                'id',
+                header: $s->trans('id'),
+                content: static fn (object $model) => Html::encode($model->getId())
             ),
-            DataColumn::create()
-                ->label($s->trans('unit_name'))    
-                ->attribute('unit_id')
-                ->value(static fn (object $model) => Html::encode($model->getUnit()->getUnit_name())
+            new DataColumn(
+                'unit_id',
+                header:  $s->trans('unit_name'),
+                content: static fn (object $model) => Html::encode($model->getUnit()->getUnit_name())
             ),
-            DataColumn::create()
-                ->label($s->trans('unit_name_plrl'))    
-                ->attribute('unit_id')
-                ->value(static fn (object $model) => Html::encode($model->getUnit()->getUnit_name_plrl())
+            new DataColumn(
+                'unit_id',
+                header:  $s->trans('unit_name_plrl'),    
+                content: static fn (object $model) => Html::encode($model->getUnit()->getUnit_name_plrl())
             ),
-            DataColumn::create()
-                ->attribute('code')
-                ->label($s->trans('code'))
-                ->value(static fn (object $model) => Html::encode($model->getCode())
+            new DataColumn(
+                'code',
+                header:  $s->trans('code'),
+                content: static fn (object $model) => Html::encode($model->getCode())
             ),
-            DataColumn::create()
-                ->attribute('name')
-                ->label($s->trans('name'))
-                ->value(static fn (object $model) => Html::encode($model->getName())
+            new DataColumn(
+                'name',
+                header:  $s->trans('name'),
+                content: static fn (object $model) => Html::encode($model->getName())
             ),
-            DataColumn::create()
-                ->attribute('description')
-                ->label($s->trans('description'))
-                ->value(static fn (object $model) => Html::encode($model->getDescription())
+            new DataColumn(
+                'description',
+                header:  $s->trans('description'),
+                content: static fn (object $model) => Html::encode($model->getDescription())
             ),
-            DataColumn::create()
-                ->label($s->trans('view'))    
-                ->value(static function ($model) use ($urlGenerator): string {
+            new DataColumn(
+                header:  $s->trans('view'),    
+                content: static function ($model) use ($urlGenerator): string {
                    return Html::a(Html::tag('i','',['class'=>'fa fa-eye fa-margin']), $urlGenerator->generate('unitpeppol/view',['id'=>$model->getId()]),[])->render();
                 }
             ),
-            DataColumn::create()
-                ->label($s->trans('edit'))    
-                ->value(static function ($model) use ($urlGenerator): string {
+            new DataColumn(
+                header:  $s->trans('edit'),    
+                content: static function ($model) use ($urlGenerator): string {
                    return Html::a(Html::tag('i','',['class'=>'fa fa-edit fa-margin']), $urlGenerator->generate('unitpeppol/edit',['id'=>$model->getId()]),[])->render();
                 }
             ),
-            DataColumn::create()
-                ->label($s->trans('delete'))    
-                ->value(static function ($model) use ($s, $urlGenerator): string {
+            new DataColumn(
+                header:  $s->trans('delete'),    
+                content: static function ($model) use ($s, $urlGenerator): string {
                    return Html::a( Html::tag('button',
                             Html::tag('i','',['class'=>'fa fa-trash fa-margin']),
                             [
@@ -119,14 +119,17 @@ use Yiisoft\Router\CurrentRoute;
                             $urlGenerator->generate('unitpeppol/delete',['id'=>$model->getId()]),[]                                         
                         )->render();
                 }
-            ),          
-        )
+            ),
+        ];
+    ?>
+    <?= GridView::widget()
+        ->columns(...$columns)
+        ->dataReader($paginator)    
         ->headerRowAttributes(['class'=>'card-header bg-info text-black'])
         ->filterPosition('header')
         ->filterModelName('unitpeppol')
         ->header($header)
         ->id('w44-grid')
-        ->paginator($paginator)
         ->pagination(
         OffsetPagination::widget()
              ->menuClass('pagination justify-content-center')

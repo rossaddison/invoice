@@ -83,60 +83,65 @@ $toolbar = Div::tag();
     </div>
 </div>
 <br>
+<?php
+    $columns = [
+        new DataColumn(
+            'id',
+            $s->trans('id'),
+            content: static fn (object $model) => $model->getId()
+        ),        
+        new DataColumn(
+            'status_id',
+            header: $s->trans('status'),
+            content: static function ($model) use ($quote_statuses): Yiisoft\Html\Tag\CustomTag { 
+                $span = $quote_statuses[(string)$model->getStatus_id()]['label'];
+                return Html::tag('span', $span, ['class'=>'label '. $quote_statuses[(string)$model->getStatus_id()]['class']]);
+            }       
+        ),
+        new DataColumn(
+            'number',
+            header: '#',
+            content: static function ($model) use ($urlGenerator): string {
+               return Html::a($model->getNumber(), $urlGenerator->generate('quote/view',['id'=>$model->getId()]),['style'=>'text-decoration:none'])->render();
+               }
+        ),
+        new DataColumn(
+            'client_id',
+            header: $s->trans('id'),
+            content: static fn ($model): string => $model->getClient()->getClient_name()
+        ),        
+        new DataColumn(
+            'date_created',
+            header: $s->trans('date_created'),
+            content: static fn ($model): string => ($model->getDate_created())->format($datehelper->style())
+        ),                    
+        new DataColumn(
+            'date_expires',
+            content: static fn ($model): string => ($model->getDate_expires())->format($datehelper->style())
+        ),
+        new DataColumn(
+            'date_required',
+            content: static fn ($model): string => ($model->getDate_required())->format($datehelper->style())
+        ), 
+        DataColumn(
+            'id',
+            header: $s->trans('total'),
+            content: static function ($model) use ($s, $qaR) : string|null {
+               $quote_id = $model->getId(); 
+               $quote_amount = (($qaR->repoQuoteAmountCount($quote_id) > 0) ? $qaR->repoQuotequery($quote_id) : null);
+               return $s->format_currency(null!==$quote_amount ? $quote_amount->getTotal() : 0.00);
+            }
+        ),
+    ];                
+?>
 <?= GridView::widget()
-        ->columns(
-            DataColumn::create()
-            ->attribute('id')
-            ->label($s->trans('id'))
-            ->value(static fn (object $model) => $model->getId()),   
-            DataColumn::create()
-                ->attribute('status_id')
-                ->label($s->trans('status'))
-                ->value(static function ($model) use ($quote_statuses): Yiisoft\Html\Tag\CustomTag { 
-                    $span = $quote_statuses[(string)$model->getStatus_id()]['label'];
-                    return Html::tag('span', $span, ['class'=>'label '. $quote_statuses[(string)$model->getStatus_id()]['class']]);
-                }       
-            ),    
-            DataColumn::create()
-                ->attribute('number')
-                ->label('#')
-                ->value(static function ($model) use ($urlGenerator): string {
-                   return Html::a($model->getNumber(), $urlGenerator->generate('quote/view',['id'=>$model->getId()]),['style'=>'text-decoration:none'])->render();
-            }),
-            DataColumn::create()
-                ->attribute('client_id')
-                ->label($s->trans('id'))
-                ->value(static fn ($model): string => $model->getClient()->getClient_name()
-            ),        
-            DataColumn::create()
-                ->attribute('date_created')
-                ->label($s->trans('date_created'))
-                ->value(static fn ($model): string => ($model->getDate_created())->format($datehelper->style())
-            ),                    
-            DataColumn::create()
-                ->attribute('date_expires')
-                ->value(static fn ($model): string => ($model->getDate_expires())->format($datehelper->style())
-            ),
-            DataColumn::create()
-                ->attribute('date_required')
-                ->value(static fn ($model): string => ($model->getDate_required())->format($datehelper->style())
-            ), 
-            DataColumn::create()
-                ->attribute('id')
-                ->label($s->trans('total'))
-                ->value(static function ($model) use ($s, $qaR) : string|null {
-                   $quote_id = $model->getId(); 
-                   $quote_amount = (($qaR->repoQuoteAmountCount($quote_id) > 0) ? $qaR->repoQuotequery($quote_id) : null);
-                   return $s->format_currency(null!==$quote_amount ? $quote_amount->getTotal() : 0.00);
-                }
-            ),                  
-        )   
+        ->columns(...$columns) 
+        ->dataHeader($paginator)            
         ->headerRowAttributes(['class'=>'card-header bg-info text-black'])
         ->filterPosition('header')
         ->filterModelName('quote_guest')
         ->header($header)
         ->id('w7-grid')
-        ->paginator($paginator)
         ->pagination(
         OffsetPagination::widget()
              ->menuClass('pagination justify-content-center')

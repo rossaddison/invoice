@@ -1,5 +1,4 @@
 <?php
-
 declare(strict_types=1);
 
 use App\Invoice\Entity\Inv;
@@ -46,26 +45,24 @@ use Yiisoft\Yii\DataView\OffsetPagination;
         ->href($urlGenerator->generate($currentRoute->getName()))
         ->id('btn-reset')
         ->render();
-
     $toolbar = Div::tag();
 ?>
-
 
 <div>
     <h5><?= $translator->translate('invoice.invoice.contract.contracts'); ?></h5>
 </div>
-<br>    
-    <?= GridView::widget()
-        ->columns(
-            DataColumn::create()
-                ->attribute('id')
-                ->label($s->trans('id'))
-                ->value(static fn (object $model) => Html::encode($model->getId())
+<br>
+    <?php
+        $columns = [
+            new DataColumn(
+                'id',
+                header: $s->trans('id'),
+                content: static fn (object $model) => Html::encode($model->getId())
             ),
-            DataColumn::create()
-                ->attribute('id')
-                ->label($translator->translate('invoice.invoice.contract.index.button.list'))
-                ->value(static function ($model) use ($urlGenerator, $iR) : string {
+            new DataColumn(
+                'id',
+                header: $translator->translate('invoice.invoice.contract.index.button.list'),
+                content: static function ($model) use ($urlGenerator, $iR) : string {
                     $invoices = $iR->findAllWithContract($model->getId());
                     $buttons = '';
                     $button = '';
@@ -83,68 +80,71 @@ use Yiisoft\Yii\DataView\OffsetPagination;
                     return $buttons;
                 }
             ),
-            DataColumn::create()
-                ->label($s->trans('client'))                
-                ->attribute('client_id')     
-                ->value(static function ($model) use ($cR) : string {
+            new DataColumn(
+                'client_id',    
+                header: $s->trans('client'),                
+                content: static function ($model) use ($cR) : string {
                     $client = ($cR->repoClientCount($model->getClient_id()) > 0 ? ($cR->repoClientquery($model->getClient_id()))->getClient_name() : '');
                     return (string)$client;
                 } 
             ),
-            DataColumn::create()
-                ->label($translator->translate('invoice.invoice.contract.name'))                
-                ->attribute('name')     
-                ->value(static fn ($model): string => Html::encode($model->getName())                        
+            new DataColumn(
+                'name',    
+                header: $translator->translate('invoice.invoice.contract.name'),                
+                content: static fn ($model): string => Html::encode($model->getName())                        
             ),
-            DataColumn::create()
-                ->label($translator->translate('invoice.invoice.contract.reference'))                
-                ->attribute('reference')     
-                ->value(static fn ($model): string => Html::encode($model->getReference())                        
+            new DataColumn(
+                'reference',    
+                header: $translator->translate('invoice.invoice.contract.reference'),                
+                content: static fn ($model): string => Html::encode($model->getReference())                        
             ),
-            DataColumn::create()
-                ->label($translator->translate('invoice.invoice.contract.period.start'))                
-                ->attribute('period_start')     
-                ->value(static fn ($model): string => ($model->getPeriod_start())->format($datehelper->style())                        
+            new DataColumn(
+                'period_start',
+                header: $translator->translate('invoice.invoice.contract.period.start'),                
+                content: static fn ($model): string => ($model->getPeriod_start())->format($datehelper->style())                        
             ),
-            DataColumn::create()
-                ->label($translator->translate('invoice.invoice.contract.period.end'))                
-                ->attribute('period_end')     
-                ->value(static fn ($model): string => ($model->getPeriod_end())->format($datehelper->style())                        
+            new DataColumn(
+                'period_end',    
+                header: $translator->translate('invoice.invoice.contract.period.end'),                
+                content: static fn ($model): string => ($model->getPeriod_end())->format($datehelper->style())                        
             ),
-            DataColumn::create()
-                ->label($s->trans('view'))    
-                ->value(static function ($model) use ($urlGenerator): string {
+            new DataColumn(
+                header: $s->trans('view'),    
+                content: static function ($model) use ($urlGenerator): string {
                    return Html::a(Html::tag('i','',['class'=>'fa fa-eye fa-margin']), $urlGenerator->generate('contract/view',['id'=>$model->getId()]),[])->render();
                 }
             ),
-            DataColumn::create()
-                ->label($s->trans('edit'))    
-                ->value(static function ($model) use ($urlGenerator): string {
+            new DataColumn(
+                header: $s->trans('edit'),    
+                content: static function ($model) use ($urlGenerator): string {
                    return Html::a(Html::tag('i','',['class'=>'fa fa-edit fa-margin']), $urlGenerator->generate('contract/edit',['id'=>$model->getId()]),[])->render();
                 }
             ),
-            DataColumn::create()
-                ->label($s->trans('delete'))    
-                ->value(static function ($model) use ($s, $urlGenerator): string {
+            new DataColumn(
+                header: $s->trans('delete'),    
+                content: static function ($model) use ($s, $urlGenerator): string {
                    return Html::a( Html::tag('button',
-                            Html::tag('i','',['class'=>'fa fa-trash fa-margin']),
-                            [
-                                'type'=>'submit', 
-                                'class'=>'dropdown-button',
-                                'onclick'=>"return confirm("."'".$s->trans('delete_record_warning')."');"
-                            ]
-                            ),
-                            $urlGenerator->generate('contract/delete',['id'=>$model->getId()]),[]                                         
-                        )->render();
+                        Html::tag('i','',['class'=>'fa fa-trash fa-margin']),
+                        [
+                            'type'=>'submit', 
+                            'class'=>'dropdown-button',
+                            'onclick'=>"return confirm("."'".$s->trans('delete_record_warning')."');"
+                        ]
+                        ),
+                        $urlGenerator->generate('contract/delete',['id'=>$model->getId()]),[]                                         
+                    )->render();
                 }
             ),          
-        )
+        ];
+    ?>
+    <?= GridView::widget()    
+        ->columns($columns)
+        ->dataReader($paginator)    
         ->headerRowAttributes(['class'=>'card-header bg-info text-black'])
         ->filterPosition('header')
         ->filterModelName('contract')
         ->header($header)
         ->id('w11-grid')
-        ->paginator($paginator)
         ->pagination(
         OffsetPagination::widget()
              ->menuClass('pagination justify-content-center')
@@ -175,5 +175,3 @@ use Yiisoft\Yii\DataView\OffsetPagination;
             echo Html::p($translator->translate('invoice.records.no'));
         }
     ?>
-    </div>
-</div>

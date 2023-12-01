@@ -79,9 +79,12 @@ final class UploadController {
      * @return \Yiisoft\DataResponse\DataResponse
      */
     public function index(Request $request, CurrentRoute $currentRoute, UploadRepository $uploadRepository): \Yiisoft\DataResponse\DataResponse {
-        /** @var string $query_params['sort'] */
-        $page = (int) $currentRoute->getArgument('page', '1');
         $query_params = $request->getQueryParams();
+        /**
+         * @var string $query_params['page']
+         */
+        $page = $query_params['page'] ?? $currentRoute->getArgument('page', '1');
+        /** @var string $query_params['sort'] */
         $sort = Sort::only(['id', 'client_id', 'file_name_original'])
                 // (@see vendor\yiisoft\data\src\Reader\Sort
                 // - => 'desc'  so -id => default descending on id
@@ -90,8 +93,8 @@ final class UploadController {
         $uploads = $this->uploads_with_sort($uploadRepository, $sort);
         $paginator = (new OffsetPaginator($uploads))
                 ->withPageSize((int) $this->s->get_setting('default_list_limit'))
-                ->withCurrentPage($page)
-                ->withNextPageToken((string) $page);
+                ->withCurrentPage((int)$page)
+                ->withNextPageToken($page);
 
         $parameters = [
             'paginator' => $paginator,

@@ -102,24 +102,26 @@ $toolbar = Div::tag();
     </div>
 </div>
 <br>
-<?= GridView::widget()
-    ->columns(
-        DataColumn::create()
-        ->attribute('id')
-        ->label($s->trans('id'))
-        ->value(static fn (object $model) => $model->getId()),        
-        DataColumn::create()
-            ->attribute('status_id')
-            ->label($s->trans('status'))
-            ->value(static function ($model) use ($quote_statuses): Yiisoft\Html\Tag\CustomTag { 
+
+<?php 
+    $columns = [
+        new DataColumn(
+            'id',
+            header: $s->trans('id'),
+            content: static fn (object $model) => $model->getId()
+        ),        
+        new DataColumn(
+            'status_id',
+            header: $s->trans('status'),
+            content: static function ($model) use ($quote_statuses): Yiisoft\Html\Tag\CustomTag { 
                 $span = $quote_statuses[(string)$model->getStatus_id()]['label'];
                 return Html::tag('span', $span,['class'=>'label '. $quote_statuses[(string)$model->getStatus_id()]['class']]);
             }       
         ),
-        DataColumn::create()
-            ->label($translator->translate('invoice.salesorder.number.status'))                
-            ->attribute('so_id')     
-            ->value(static function ($model) use ($s, $urlGenerator, $soR, $quote_statuses) : string {
+        new DataColumn(
+            'so_id',
+            header: $translator->translate('invoice.salesorder.number.status'),               
+            content: static function ($model) use ($s, $urlGenerator, $soR, $quote_statuses) : string {
                 $so_id = $model->getSo_id();
                 $so = $soR->repoSalesOrderUnloadedquery($so_id);
                 if ($so) {
@@ -131,54 +133,54 @@ $toolbar = Div::tag();
                 return '';
             }            
         ),
-        DataColumn::create()
-            ->attribute('number')
-            ->value(static function ($model) use ($urlGenerator): string {
+        new DataColumn(
+            'number',
+            content: static function ($model) use ($urlGenerator): string {
                return Html::a($model->getNumber(), $urlGenerator->generate('quote/view',['id'=>$model->getId()]),['style'=>'text-decoration:none'])->render();
             }                       
         ),
-        DataColumn::create()
-            ->label($s->trans('date_created'))
-            ->attribute('date_created')
-            ->value(static fn ($model): string => ($model->getDate_created())->format($datehelper->style())                        
+        new DataColumn(
+            'date_created',    
+            header: $s->trans('date_created'),
+            content: static fn ($model): string => ($model->getDate_created())->format($datehelper->style())                        
         ),
-        DataColumn::create()
-            ->attribute('date_expires')   
-            ->value(static fn ($model): string => ($model->getDate_expires())->format($datehelper->style())                        
-        ),        
-        DataColumn::create()
-            ->attribute('date_required')
-            ->value(static fn ($model): string => ($model->getDate_required())->format($datehelper->style())
-        ), 
-        DataColumn::create()
-            ->label($s->trans('client'))                
-            ->attribute('client_id')     
-            ->value(static fn ($model): string => $model->getClient()->getClient_name()                        
+        new DataColumn(
+            'date_expires',
+            content: static fn ($model): string => ($model->getDate_expires())->format($datehelper->style())                        
         ),
-        DataColumn::create()
-            ->label($s->trans('total'))    
-            ->attribute('id')
-            ->value(function ($model) use ($s, $qaR) : string|null {
+        new DataColumn(
+            'date_required',
+            content: static fn ($model): string => ($model->getDate_required())->format($datehelper->style())
+        ),
+        new DataColumn(
+            'client_id',    
+            header: $s->trans('client'),                
+            content: static fn ($model): string => $model->getClient()->getClient_name()                        
+        ),
+        new DataColumn(
+            'id',
+            header: $s->trans('total'),
+            content: function ($model) use ($s, $qaR) : string|null {
                $quote_id = $model->getId(); 
                $quote_amount = (($qaR->repoQuoteAmountCount((string)$quote_id) > 0) ? $qaR->repoQuotequery((string)$quote_id) : null);
                return $s->format_currency(null!==$quote_amount ? $quote_amount->getTotal() : 0.00);
             }
         ),
-        DataColumn::create()
-            ->label($s->trans('view'))    
-            ->value(static function ($model) use ($urlGenerator): string {
+        new DataColumn(
+            header: $s->trans('view'),
+            content: static function ($model) use ($urlGenerator): string {
                return Html::a(Html::tag('i','',['class'=>'fa fa-eye fa-margin']), $urlGenerator->generate('quote/view',['id'=>$model->getId()]),[])->render();
             }
         ),
-        DataColumn::create()
-            ->label($s->trans('edit'))    
-            ->value(static function ($model) use ($urlGenerator): string {
+        new DataColumn(
+            header: $s->trans('edit'),
+            content: static function ($model) use ($urlGenerator): string {
                return Html::a(Html::tag('i','',['class'=>'fa fa-edit fa-margin']), $urlGenerator->generate('quote/edit',['id'=>$model->getId()]),[])->render();
             }
         ),
-        DataColumn::create()
-            ->label($s->trans('delete'))    
-            ->value(static function ($model) use ($s, $urlGenerator): string {
+        new DataColumn(
+            header: $s->trans('delete'), 
+            content: static function ($model) use ($s, $urlGenerator): string {
                 if ($model->getStatus_id() == '1') {
                     return Html::a( Html::tag('button',
                                                         Html::tag('i','',['class'=>'fa fa-trash fa-margin']),
@@ -192,14 +194,18 @@ $toolbar = Div::tag();
                     )->render();
                 } else { return ''; }
             }
-        ),          
-    )
+        )
+    ];
+?>
+<?=     
+    GridView::widget()
+    ->columns(...$columns)
+    ->dataReader($paginator)
     ->headerRowAttributes(['class'=>'card-header bg-info text-black'])
     ->filterPosition('header')
     ->filterModelName('quote')
     ->header($header)
     ->id('w2-grid')
-    ->paginator($paginator)
     ->pagination(
     OffsetPagination::widget()
          ->menuClass('pagination justify-content-center')

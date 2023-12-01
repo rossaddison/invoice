@@ -50,68 +50,69 @@ echo $alert;
 
     $toolbar = Div::tag();
 ?>
-
-<?= GridView::widget()
-    ->columns(
-        DataColumn::create()
-            ->attribute('id')
-            ->label($s->trans('id'))
-            ->value(static fn (object $model) => Html::encode($model->getId())
+<?php
+    $columns = [ 
+        new DataColumn(
+            'id',
+            header:  $s->trans('id'),
+            content: static fn (object $model) => Html::encode($model->getId())
         ),
-        DataColumn::create()
-                ->label($s->trans('client'))                
-                ->attribute('client_id')     
-                ->value(static fn ($model): string => Html::encode($model->getClient()->getClient_name())                        
+        new DataColumn(
+            'client_id',
+            header:  $s->trans('client'),
+            content: static fn ($model): string => Html::encode($model->getClient()->getClient_name())                        
         ),
-        DataColumn::create()
-                ->label($translator->translate('invoice.upload.filename.original'))                
-                ->attribute('file_name_original')     
-                ->value(static fn ($model): string => Html::encode($model->getFile_name_original())                        
+        new DataColumn(
+            'file_name_original',
+            header:  $translator->translate('invoice.upload.filename.original'),                
+            content: static fn ($model): string => Html::encode($model->getFile_name_original())                        
         ),
-        DataColumn::create()
-                ->label($translator->translate('invoice.upload.filename.new'))                
-                ->attribute('file_name_new')     
-                ->value(static fn ($model): string => Html::encode($model->getFile_name_new())                        
+        new DataColumn(
+            'file_name_new',
+            header:  $translator->translate('invoice.upload.filename.new'),                
+            content: static fn ($model): string => Html::encode($model->getFile_name_new())                        
         ),
-        DataColumn::create()
-                ->label($translator->translate('invoice.upload.filename.description'))                
-                ->attribute('description')     
-                ->value(static fn ($model): string => Html::encode($model->getDescription())                        
+        new DataColumn(
+            'description',
+            header:  $translator->translate('invoice.upload.filename.description'),                
+            content: static fn ($model): string => Html::encode($model->getDescription())                        
         ),    
-        DataColumn::create()
-            ->label($s->trans('view'))    
-            ->value(static function ($model) use ($urlGenerator): string {
+        new DataColumn(
+            header:  $s->trans('view'),    
+            content: static function ($model) use ($urlGenerator): string {
                return Html::a(Html::tag('i','',['class'=>'fa fa-eye fa-margin']), $urlGenerator->generate('upload/view',['id'=>$model->getId()]),[])->render();
             }
         ),
-        DataColumn::create()
-            ->label($s->trans('edit'))    
-            ->value(static function ($model) use ($urlGenerator): string {
+        new DataColumn(
+            header:  $s->trans('edit'),    
+            content: static function ($model) use ($urlGenerator): string {
                return Html::a(Html::tag('i','',['class'=>'fa fa-edit fa-margin']), $urlGenerator->generate('upload/edit',['id'=>$model->getId()]),[])->render();
             }
         ),
-        DataColumn::create()
-            ->label($s->trans('delete'))    
-            ->value(static function ($model) use ($s, $urlGenerator): string {
+        new DataColumn(
+            header:  $s->trans('delete'),    
+            content: static function ($model) use ($s, $urlGenerator): string {
                return Html::a( Html::tag('button',
-                        Html::tag('i','',['class'=>'fa fa-trash fa-margin']),
-                        [
-                            'type'=>'submit', 
-                            'class'=>'dropdown-button',
-                            'onclick'=>"return confirm("."'".$s->trans('delete_record_warning')."');"
-                        ]
-                        ),
-                        $urlGenerator->generate('upload/delete',['id'=>$model->getId()]),[]                                         
-                    )->render();
+                    Html::tag('i','',['class'=>'fa fa-trash fa-margin']),
+                    [
+                        'type'=>'submit', 
+                        'class'=>'dropdown-button',
+                        'onclick'=>"return confirm("."'".$s->trans('delete_record_warning')."');"
+                    ]
+                    ),
+                    $urlGenerator->generate('upload/delete',['id'=>$model->getId()]),[]                                         
+                )->render();
             }
         ),    
-            
-    )
+    ]        
+?>
+<?= GridView::widget()
+    ->columns(...$columns)    
+    ->dataReader($paginator)            
     ->headerRowAttributes(['class'=>'card-header bg-info text-black'])
     ->filterPosition('header')
     ->filterModelName('upload')
     ->id('w4-grid')
-    ->paginator($paginator)
     ->pagination(
         OffsetPagination::widget()
              ->menuClass('pagination justify-content-center')

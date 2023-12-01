@@ -134,12 +134,12 @@ final class PaymentPeppolController
      */
     public function index(CurrentRoute $currentRoute, PaymentPeppolRepository $paymentpeppolRepository, SettingRepository $settingRepository): Response
     {      
-      $page = (int) $currentRoute->getArgument('page', '1');
+      $page = $currentRoute->getArgument('page', '1');
       $paymentpeppols = $paymentpeppolRepository->findAllPreloaded();
       $paginator = (new OffsetPaginator($paymentpeppols))
       ->withPageSize((int) $settingRepository->get_setting('default_list_limit'))
-      ->withCurrentPage($page)
-      ->withNextPageToken((string) $page);
+      ->withCurrentPage((int)$page)
+      ->withNextPageToken($page);
       $parameters = [
       'paymentpeppols' => $this->paymentpeppols($paymentpeppolRepository),
       'paginator' => $paginator,

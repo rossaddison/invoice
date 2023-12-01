@@ -68,48 +68,53 @@ $toolbar = Div::tag();
 <div>
 <br>    
 </div>
+<?php
+    $columns = [    
+        new DataColumn(
+            'id',
+            header: $s->trans('id'),
+            content:static fn (object $model) => $model->getId()
+        ),        
+        new DataColumn(
+            header: $s->trans('view'), 
+            content: static function ($model) use ($urlGenerator): string {
+               return Html::a(Html::tag('i','',['class'=>'fa fa-eye fa-margin']), $urlGenerator->generate('allowancecharge/view',['id'=>$model->getId()]),[])->render();
+            }                        
+        ),
+        new DataColumn(
+            'identifier',     
+            header: $translator->translate('invoice.invoice.allowance.or.charge.edit.allowance'), 
+            content:static function ($model) use ($urlGenerator): string {
+               return !$model->getIdentifier() ? Html::a(Html::tag('i','',['class'=>'fa fa-edit fa-margin']), $urlGenerator->generate('allowancecharge/edit_allowance',['id'=>$model->getId()]),[])->render() : ''; 
+            }                        
+        ),
+        new DataColumn(
+            'identifier',    
+            header: $translator->translate('invoice.invoice.allowance.or.charge.edit.charge'), 
+            content:static function ($model) use ($urlGenerator): string {
+               return $model->getIdentifier() ? Html::a(Html::tag('i','',['class'=>'fa fa-edit fa-margin']), $urlGenerator->generate('allowancecharge/edit_charge',['id'=>$model->getId()]),[])->render() : ''; 
+            }                        
+        ),        
+        new DataColumn(
+            header: $s->trans('delete'), 
+            content:static function ($model) use ($s, $urlGenerator): string {
+                return Html::a( Html::tag('button',
+                    Html::tag('i','',['class'=>'fa fa-trash fa-margin']),
+                    [
+                        'type'=>'submit', 
+                        'class'=>'dropdown-button',
+                        'onclick'=>"return confirm("."'".$s->trans('delete_record_warning')."');"
+                    ]
+                    ),
+                    $urlGenerator->generate('allowancecharge/delete',['id'=>$model->getId()]),[]                                         
+                )->render();
+            }                        
+        ),
+    ]                
+?>
 <?= GridView::widget()
-        ->columns(
-            DataColumn::create()
-            ->attribute('id')
-            ->label($s->trans('id'))
-            ->value(static fn (object $model) => $model->getId()),        
-            DataColumn::create()
-                ->label($s->trans('view')) 
-                ->value(static function ($model) use ($urlGenerator): string {
-                   return Html::a(Html::tag('i','',['class'=>'fa fa-eye fa-margin']), $urlGenerator->generate('allowancecharge/view',['id'=>$model->getId()]),[])->render();
-                }                        
-            ),
-            DataColumn::create()
-                ->attribute('identifier')     
-                ->label($translator->translate('invoice.invoice.allowance.or.charge.edit.allowance')) 
-                ->value(static function ($model) use ($urlGenerator): string {
-                   return !$model->getIdentifier() ? Html::a(Html::tag('i','',['class'=>'fa fa-edit fa-margin']), $urlGenerator->generate('allowancecharge/edit_allowance',['id'=>$model->getId()]),[])->render() : ''; 
-                }                        
-            ),
-            DataColumn::create()
-                ->attribute('identifier')    
-                ->label($translator->translate('invoice.invoice.allowance.or.charge.edit.charge')) 
-                ->value(static function ($model) use ($urlGenerator): string {
-                   return $model->getIdentifier() ? Html::a(Html::tag('i','',['class'=>'fa fa-edit fa-margin']), $urlGenerator->generate('allowancecharge/edit_charge',['id'=>$model->getId()]),[])->render() : ''; 
-                }                        
-            ),        
-            DataColumn::create()
-                ->label($s->trans('delete')) 
-                ->value(static function ($model) use ($s, $urlGenerator): string {
-                    return Html::a( Html::tag('button',
-                        Html::tag('i','',['class'=>'fa fa-trash fa-margin']),
-                        [
-                            'type'=>'submit', 
-                            'class'=>'dropdown-button',
-                            'onclick'=>"return confirm("."'".$s->trans('delete_record_warning')."');"
-                        ]
-                        ),
-                        $urlGenerator->generate('allowancecharge/delete',['id'=>$model->getId()]),[]                                         
-                    )->render();
-                }                        
-            ),                       
-        )
+        ->columns(...$columns)
+        ->dataReader($kpaginator)        
         ->headerRowAttributes(['class'=>'card-header bg-info text-black'])
         ->filterPosition('header')
         ->filterModelName('allowancecharge')

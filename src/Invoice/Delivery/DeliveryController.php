@@ -158,8 +158,11 @@ final class DeliveryController {
      */
     public function index(CurrentRoute $currentRoute, DeliveryRepository $dR, SettingRepository $sR, Request $request): Response {
         $query_params = $request->getQueryParams();
+        /**
+         * @var string $query_params['page']
+         */
+        $page = $query_params['page'] ?? $currentRoute->getArgument('page', '1');
         /** @var string $query_params['sort'] */
-        $page = (int) $currentRoute->getArgument('page', '1');
         $sort = Sort::only(['id', 'delivery_location_id'])
                 // (@see vendor\yiisoft\data\src\Reader\Sort
                 // - => 'desc'  so -id => default descending on id
@@ -168,8 +171,8 @@ final class DeliveryController {
         $deliveries = $this->deliveries_with_sort($dR, $sort);
         $paginator = (new OffsetPaginator($deliveries))
                 ->withPageSize((int) $sR->get_setting('default_list_limit'))
-                ->withCurrentPage($page)
-                ->withNextPageToken((string) $page);
+                ->withCurrentPage((int)$page)
+                ->withNextPageToken($page);
         $parameters = [
             'alert' => $this->alert(),
             'paginator' => $paginator,

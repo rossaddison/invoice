@@ -152,12 +152,12 @@ final class <?= $generator->getCamelcase_capital_name(); ?>Controller
         
     public function index(CurrentRoute $currentRoute, <?= $generator->getCamelcase_capital_name(); ?>Repository $<?= $generator->getSmall_singular_name(); ?>Repository, SettingRepository $settingRepository): Response
     {      
-      $page = (int) $currentRoute->getArgument('page', '1');
+      $page = $currentRoute->getArgument('page', '1');
       $<?= $generator->getSmall_singular_name(); ?> = $<?= $generator->getSmall_singular_name(); ?>Repository->findAllPreloaded();
       $paginator = (new OffsetPaginator($<?= $generator->getSmall_singular_name(); ?>))
       ->withPageSize((int) $settingRepository->get_setting('default_list_limit'))
-      ->withCurrentPage($page)
-      ->withNextPageToken((string) $page);
+      ->withCurrentPage((int)$page)
+      ->withNextPageToken($page);
       $parameters = [
       '<?= $generator->getSmall_singular_name(); ?>s' => $this-><?= $generator->getSmall_singular_name(); ?>s($<?= $generator->getSmall_singular_name(); ?>Repository),
       'paginator' => $paginator,
