@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace App\Invoice\Merchant;
 
 use App\Invoice\Helpers\DateHelper;
-use Yiisoft\Form\FormModel;
+use Yiisoft\Form\YiisoftFormModel\FormModel;
 use Yiisoft\Validator\Rule\Required;
 
 final class MerchantForm extends FormModel

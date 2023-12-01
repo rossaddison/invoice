@@ -20,7 +20,7 @@ use Yiisoft\Router\CurrentRoute;
 use Yiisoft\Session\Flash\Flash;
 use Yiisoft\Session\SessionInterface as Session;
 use Yiisoft\Translator\TranslatorInterface as Translator; 
-use Yiisoft\Form\FormHydrator;
+use Yiisoft\Form\YiisoftFormModel\FormHydrator;
 use Yiisoft\Form\Helper\HtmlFormErrors;
 use Yiisoft\Yii\View\ViewRenderer;
 

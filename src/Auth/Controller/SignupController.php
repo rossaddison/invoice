@@ -9,7 +9,7 @@ use App\Auth\Form\SignupForm;
 use App\Service\WebControllerService;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
-use Yiisoft\Form\FormHydrator;
+use Yiisoft\Form\YiisoftFormModel\FormHydrator;
 use Yiisoft\Http\Method;
 use Yiisoft\Yii\View\ViewRenderer;
 

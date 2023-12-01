@@ -6,7 +6,7 @@ namespace App\Auth\Form;
 
 use App\User\UserRepository;
 use App\Auth\AuthService;
-use Yiisoft\Form\FormModel;
+use Yiisoft\Form\YiisoftFormModel\FormModel;
 use Yiisoft\Translator\TranslatorInterface;
 use Yiisoft\Validator\Result;
 use Yiisoft\Validator\Rule\Callback;

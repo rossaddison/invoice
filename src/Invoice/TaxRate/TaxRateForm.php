@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Invoice\TaxRate;
 
-use Yiisoft\Form\FormModel;
+use Yiisoft\Form\YiisoftFormModel\FormModel;
 
 final class TaxRateForm extends FormModel
 {

@@ -12,7 +12,7 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
 use Throwable;
-use Yiisoft\Form\FormHydrator;
+use Yiisoft\Form\YiisoftFormModel\FormHydrator;
 use Yiisoft\Form\Helper\HtmlFormErrors;
 use Yiisoft\Rbac\Manager;
 use Yiisoft\Yii\Console\ExitCode;

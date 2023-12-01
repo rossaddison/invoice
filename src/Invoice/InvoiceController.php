@@ -43,7 +43,7 @@ use App\User\UserService;
 use Psr\Http\Message\ResponseInterface as Response;
 
 // Yiisoft
-use Yiisoft\Form\FormHydrator;
+use Yiisoft\Form\YiisoftFormModel\FormHydrator;
 use Yiisoft\Router\CurrentRoute;
 use Yiisoft\Security\Random;
 use Yiisoft\Session\SessionInterface;

@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Invoice\Product;
 
-use Yiisoft\Form\FormModel;
+use Yiisoft\Form\YiisoftFormModel\FormModel;
 
 final class ImageAttachForm extends FormModel
 {

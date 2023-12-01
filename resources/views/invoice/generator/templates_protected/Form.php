@@ -9,7 +9,7 @@ declare(strict_types=1);
 
 namespace <?= $generator->getNamespace_path().DIRECTORY_SEPARATOR.$generator->getCamelcase_capital_name(); ?>;
 
-use Yiisoft\Form\FormModel;
+use Yiisoft\Form\YiisoftFormModel\FormModel;
 use Yiisoft\Validator\Rule\Required;
 <?php
    foreach ($orm_schema->getColumns() as $column) {

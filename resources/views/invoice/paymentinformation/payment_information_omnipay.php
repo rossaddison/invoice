@@ -5,7 +5,7 @@ declare(strict_types=1);
 use App\Invoice\Helpers\NumberHelper;
 use App\Invoice\Helpers\ClientHelper;
 
-use Yiisoft\Form\Field;
+use Yiisoft\Form\YiisoftFormModel\Field;
 use Yiisoft\Html\Html;
 use Yiisoft\Html\Tag\Form;
 

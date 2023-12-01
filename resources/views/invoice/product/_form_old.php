@@ -3,7 +3,7 @@ declare(strict_types=1);
 
 use Yiisoft\Html\Html;
 use Yiisoft\Yii\Bootstrap5\Alert;
-use Yiisoft\Form\Field;
+use Yiisoft\Form\YiisoftFormModel\Field;
 
 /**
  * @var \Yiisoft\View\View $this

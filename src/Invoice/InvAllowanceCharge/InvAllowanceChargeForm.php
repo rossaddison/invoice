@@ -3,7 +3,7 @@ declare(strict_types=1);
 
 namespace App\Invoice\InvAllowanceCharge;
 
-use Yiisoft\Form\FormModel;
+use Yiisoft\Form\YiisoftFormModel\FormModel;
 
 final class InvAllowanceChargeForm extends FormModel
 {    

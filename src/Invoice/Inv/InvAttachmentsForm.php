@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Invoice\Inv;
 
-use Yiisoft\Form\FormModel;
+use Yiisoft\Form\YiisoftFormModel\FormModel;
 
 final class InvAttachmentsForm extends FormModel
 {

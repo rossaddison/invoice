@@ -14,7 +14,7 @@ use Yiisoft\Router\CurrentRoute;
 use Yiisoft\Translator\TranslatorInterface;
 use Yiisoft\User\Login\Cookie\CookieLogin;
 use Yiisoft\User\Login\Cookie\CookieLoginIdentityInterface;
-use Yiisoft\Form\FormHydrator;
+use Yiisoft\Form\YiisoftFormModel\FormHydrator;
 use Yiisoft\Yii\View\ViewRenderer;
 
 final class AuthController
@@ -49,7 +49,7 @@ final class AuthController
         ) {
             $identity = $this->authService->getIdentity();
 
-            if ($identity instanceof CookieLoginIdentityInterface && $loginForm->getAttributeValue('rememberMe')) {
+            if ($identity instanceof CookieLoginIdentityInterface && $loginForm->getPropertyValue('rememberMe')) {
                 return $cookieLogin->addCookie($identity, $this->redirectToInvoiceIndex($this->currentRoute));
             }
             

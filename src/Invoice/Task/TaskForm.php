@@ -6,7 +6,7 @@ namespace App\Invoice\Task;
 
 use App\Invoice\Helpers\DateHelper;
 
-use Yiisoft\Form\FormModel;
+use Yiisoft\Form\YiisoftFormModel\FormModel;
 use Yiisoft\Validator\Rule\Required;
 
 final class TaskForm extends FormModel

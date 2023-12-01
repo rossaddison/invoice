@@ -7,11 +7,12 @@ namespace App\Contact;
 use Exception;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Log\LoggerInterface;
-use Yiisoft\Form\FormModelInterface;
+use Yiisoft\Form\YiisoftFormModel\FormModelInterface;
 use Yiisoft\Mailer\File;
 use Yiisoft\Mailer\MailerInterface;
 use Yiisoft\Mailer\MessageBodyTemplate;
-use Yiisoft\Session\Flash\FlashInterface;
+use Yiisoft\Session\SessionInterface as Session;
+use Yiisoft\Session\Flash\Flash;
 
 /**
  * ContactMailer sends an email from the contact form.
@@ -19,12 +20,15 @@ use Yiisoft\Session\Flash\FlashInterface;
 final class ContactMailer
 {
     public function __construct(
-        private FlashInterface $flash,
+        private Session $session,
+        private Flash $flash,
         private LoggerInterface $logger,
         private MailerInterface $mailer,
         private string $sender,
         private string $to
     ) {
+        $this->flash = New Flash($session);
+        $this->session = $session;
         $this->mailer = $this->mailer->withTemplate(new MessageBodyTemplate(__DIR__ . '/mail/'));
     }
 
@@ -34,7 +38,7 @@ final class ContactMailer
             ->compose(
                 'contact-email',
                 [
-                    'content' => $form->getAttributeValue('body'),
+                    'content' => $form->getPropertyValue('body'),
                 ]
             )
             ->withSubject((string)$form->getAttributeValue('subject'))
@@ -62,13 +66,23 @@ final class ContactMailer
                 }
             }
         }
-
         try {
             $this->mailer->send($message);
             $flashMsg = 'Thank you for contacting us, we\'ll get in touch with you as soon as possible.';
+            $this->flash_message('info', $flashMsg);
         } catch (Exception $e) {
             $flashMsg = $e->getMessage();
             $this->logger->error($flashMsg);
         } 
+    }
+    
+    /**
+     * @param string $level
+     * @param string $message
+     * @return Flash
+     */
+    private function flash_message(string $level, string $message): Flash {
+      $this->flash->add($level, $message, true);
+      return $this->flash;
     }
 }

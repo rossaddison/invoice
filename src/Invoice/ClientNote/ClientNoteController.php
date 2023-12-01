@@ -11,7 +11,7 @@ use App\Invoice\Setting\SettingRepository;
 use App\Invoice\Client\ClientRepository;
 use App\Invoice\Helpers\DateHelper;
 use App\User\UserService;
-use Yiisoft\Form\FormHydrator;
+use Yiisoft\Form\YiisoftFormModel\FormHydrator;
 use Yiisoft\Form\Helper\HtmlFormErrors;
 use App\Service\WebControllerService;
 use Psr\Http\Message\ResponseInterface as Response;

@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Invoice\PaymentInformation;
 
-use Yiisoft\Form\FormModel;
+use Yiisoft\Form\YiisoftFormModel\FormModel;
 use Yiisoft\Validator\Rule\Required;
 
 final class PaymentInformationForm extends FormModel

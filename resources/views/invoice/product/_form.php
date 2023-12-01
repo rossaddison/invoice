@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 
-use Yiisoft\Form\Field;
+use Yiisoft\Form\YiisoftFormModel\Field;
 use Yiisoft\Html\Html;
 use Yiisoft\Html\Tag\Form;
 
@@ -36,7 +36,7 @@ use Yiisoft\Html\Tag\Form;
                     
 <?= Field::errorSummary($form, $errors)
     ->header('this is a header')
-    ->onlyAttributes(...['product_sku','tax_rate_id','product_price'])    
+    ->onlyProperties(...['product_sku','tax_rate_id','product_price'])    
     ->showAllErrors()
     ->footer('this is a footer'); ?>                    
      
