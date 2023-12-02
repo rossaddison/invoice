@@ -34,10 +34,11 @@ use Yiisoft\Html\Tag\Form;
     $alert; 
 ?>
                     
-<?= Field::errorSummary($form, $errors)
+<?= Field::errorSummary($form)
+    ->validationResult($form->getValidationResult()?->getErrors())
     ->header('this is a header')
     ->onlyProperties(...['product_sku','tax_rate_id','product_price'])    
-    ->showAllErrors()
+    ->showAllErrors(true)
     ->footer('this is a footer'); ?>                    
      
 <?= Field::text($form, 'product_name')

@@ -30,8 +30,7 @@ use Yiisoft\Rbac\RuleFactoryInterface as Rule;
 use Yiisoft\Router\CurrentRoute;
 use Yiisoft\Session\SessionInterface as Session;
 use Yiisoft\Session\Flash\Flash;
-use Yiisoft\Translator\TranslatorInterface;
-use Yiisoft\Form\YiisoftFormModel\FormHydrator;
+use Yiisoft\Translator\TranslatorInterface;use Yiisoft\FormModel\FormHydrator;
 use Yiisoft\Form\Helper\HtmlFormErrors;
 use Yiisoft\Yii\View\ViewRenderer;
 
@@ -198,7 +197,7 @@ final class UserInvController
                             return $this->webService->getRedirectResponse('invoice/index');
                         }
                         $parameters['body'] = $body;
-                        $parameters['errors'] = HtmlFormErrors::getFirstErrors($form);
+                        $parameters['form'] = $form;
                     }
                     return $this->viewRenderer->render('_form_guest', $parameters);
                 }
@@ -272,7 +271,7 @@ final class UserInvController
                 $this->flash_message('info', $this->translator->translate('invoice.user.inv.role.all.new'));
                 return $this->webService->getRedirectResponse('userinv/index');
             }
-            $parameters['errors'] = HtmlFormErrors::getFirstErrors($form);
+            $parameters['form'] = $form;
         }
         return $this->viewRenderer->render('_form', $parameters);
     }
@@ -348,7 +347,7 @@ final class UserInvController
                     return $this->webService->getRedirectResponse('userinv/index');
                 }
                 $parameters['body'] = $body;
-                $parameters['errors'] = HtmlFormErrors::getFirstErrors($form);
+                $parameters['form'] = $form;
             }
             return $this->viewRenderer->render('_form', $parameters);
         }

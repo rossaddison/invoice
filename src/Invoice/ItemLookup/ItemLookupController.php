@@ -17,8 +17,7 @@ use Yiisoft\Http\Method;
 use Yiisoft\Router\CurrentRoute;
 use Yiisoft\Session\SessionInterface as Session;
 use Yiisoft\Session\Flash\Flash;
-use Yiisoft\Translator\TranslatorInterface;
-use Yiisoft\Form\YiisoftFormModel\FormHydrator;
+use Yiisoft\Translator\TranslatorInterface;use Yiisoft\FormModel\FormHydrator;
 use Yiisoft\Form\Helper\HtmlFormErrors;
 use Yiisoft\Yii\View\ViewRenderer;
 
@@ -99,7 +98,7 @@ final class ItemLookupController
                 $this->itemlookupService->saveItemLookup(new ItemLookup(),$form);
                 return $this->webService->getRedirectResponse('itemlookup/index');
             }
-            $parameters['errors'] = HtmlFormErrors::getFirstErrors($form);
+            $parameters['form'] = $form;
         }
         return $this->viewRenderer->render('_form', $parameters);
     }
@@ -137,7 +136,7 @@ final class ItemLookupController
                     return $this->webService->getRedirectResponse('itemlookup/index');
                 }
                 $parameters['body'] = $body;
-                $parameters['errors'] = HtmlFormErrors::getFirstErrors($form);
+                $parameters['form'] = $form;
             }
             return $this->viewRenderer->render('_form', $parameters);
         }

@@ -21,8 +21,7 @@ use Yiisoft\Json\Json;
 use Yiisoft\Router\CurrentRoute;
 use Yiisoft\Session\SessionInterface;
 use Yiisoft\Session\Flash\Flash;
-use Yiisoft\Translator\TranslatorInterface;
-use Yiisoft\Form\YiisoftFormModel\FormHydrator;
+use Yiisoft\Translator\TranslatorInterface;use Yiisoft\FormModel\FormHydrator;
 use Yiisoft\Form\Helper\HtmlFormErrors;
 use Yiisoft\Yii\View\ViewRenderer;
 
@@ -121,7 +120,7 @@ final class CustomFieldController
                 $this->customfieldService->saveCustomField(new CustomField(),$form);
                 return $this->webService->getRedirectResponse('customfield/index');
             }
-            $parameters['errors'] = HtmlFormErrors::getFirstErrors($form);
+            $parameters['form'] = $form;
         }
         return $this->viewRenderer->render('_form', $parameters);
     }
@@ -169,7 +168,7 @@ final class CustomFieldController
                     return $this->webService->getRedirectResponse('customfield/index');
                 }
                 $parameters['body'] = $body;
-                $parameters['errors'] = HtmlFormErrors::getFirstErrors($form);
+                $parameters['form'] = $form;
             }
             return $this->viewRenderer->render('_form', $parameters);
         }

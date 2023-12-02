@@ -20,8 +20,7 @@ use Yiisoft\Http\Method;
 use Yiisoft\Router\CurrentRoute;
 use Yiisoft\Session\SessionInterface;
 use Yiisoft\Session\Flash\Flash;
-use Yiisoft\Translator\TranslatorInterface;
-use Yiisoft\Form\YiisoftFormModel\FormHydrator;
+use Yiisoft\Translator\TranslatorInterface;use Yiisoft\FormModel\FormHydrator;
 use Yiisoft\Form\Helper\HtmlFormErrors;
 use Yiisoft\Yii\View\ViewRenderer;
 
@@ -87,7 +86,7 @@ final class PaymentPeppolController
                 $this->paymentpeppolService->savePaymentPeppol(new PaymentPeppol(),$form);
                 return $this->webService->getRedirectResponse('paymentpeppol/index');
             }
-            $parameters['errors'] = HtmlFormErrors::getFirstErrors($form);
+            $parameters['form'] = $form;
         }
         return $this->viewRenderer->render('_form', $parameters);
     }
@@ -207,7 +206,7 @@ final class PaymentPeppolController
                     return $this->webService->getRedirectResponse('paymentpeppol/index');
                 }
                 $parameters['body'] = $body;
-                $parameters['errors'] = HtmlFormErrors::getFirstErrors($form);
+                $parameters['form'] = $form;
             }
             return $this->viewRenderer->render('_form', $parameters);
         }

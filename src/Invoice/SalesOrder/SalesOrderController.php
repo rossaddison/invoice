@@ -78,8 +78,7 @@ use Yiisoft\Router\CurrentRoute;
 use Yiisoft\Session\SessionInterface as Session;
 use Yiisoft\Session\Flash\Flash;
 use Yiisoft\Translator\TranslatorInterface;
-use Yiisoft\User\CurrentUser;
-use Yiisoft\Form\YiisoftFormModel\FormHydrator;
+use Yiisoft\User\CurrentUser;use Yiisoft\FormModel\FormHydrator;
 use Yiisoft\Form\Helper\HtmlFormErrors;
 use Yiisoft\Yii\View\ViewRenderer;
 
@@ -305,7 +304,7 @@ final class SalesOrderController
                 $this->salesorderService->addSo($this->userService->getUser(), new SalesOrder(),$form);
                 return $this->webService->getRedirectResponse('salesorder/index');
             }
-            $parameters['errors'] = HtmlFormErrors::getFirstErrors($form);
+            $parameters['form'] = $form;
         }
         return $this->viewRenderer->render('_form', $parameters);
     }
@@ -476,7 +475,7 @@ final class SalesOrderController
                     $this->salesorderService->saveSo($so, $form, $settingRepository, $gR);
                     return $this->webService->getRedirectResponse('salesorder/index');
                 }
-                $parameters['errors'] = HtmlFormErrors::getFirstErrors($form);
+                $parameters['form'] = $form;
                 $parameters['body'] = $body;
             }
             return $this->viewRenderer->render('_form', $parameters);

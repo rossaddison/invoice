@@ -10,6 +10,7 @@ return [
   'invoice.breadcrumb.product.property.index' => 'Product Property Index',
   'invoice.cancel' => 'Cancel',
   'invoice.client.add' => 'Client Add',
+  'invoice.client.age' => 'Age',  
   'invoice.client.building.number' => 'Client Building Number',
   'invoice.client.custom.add' => 'Client Custom Add',
   'invoice.client.note.add' => 'Client Note Add',

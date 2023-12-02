@@ -7,7 +7,6 @@ namespace App\Contact;
 use Exception;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Log\LoggerInterface;
-use Yiisoft\Form\YiisoftFormModel\FormModelInterface;
 use Yiisoft\Mailer\File;
 use Yiisoft\Mailer\MailerInterface;
 use Yiisoft\Mailer\MessageBodyTemplate;
@@ -41,8 +40,8 @@ final class ContactMailer
                     'content' => $form->getPropertyValue('body'),
                 ]
             )
-            ->withSubject((string)$form->getAttributeValue('subject'))
-            ->withFrom((string)$form->getAttributeValue('email'))
+            ->withSubject((string)$form->getPropertyValue('subject'))
+            ->withFrom((string)$form->getPropertyValue('email'))
             ->withSender($this->sender)
             ->withTo($this->to);
                 

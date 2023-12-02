@@ -14,7 +14,7 @@ use Yiisoft\Yii\Bootstrap5\Alert;
  * @var string $action
  * @var string $title
  */
-
+$errors = $form->getValidationResult()?->getErrors();
 if (!empty($errors)) {
     foreach ($errors as $field => $error) {
         echo Alert::widget()->options(['class' => 'alert-danger'])->body(Html::encode($field . ':' . $error));

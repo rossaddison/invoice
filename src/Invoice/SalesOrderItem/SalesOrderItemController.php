@@ -29,8 +29,7 @@ use Yiisoft\Http\Method;
 use Yiisoft\Router\CurrentRoute;
 use Yiisoft\Session\SessionInterface;
 use Yiisoft\Session\Flash\Flash;
-use Yiisoft\Translator\TranslatorInterface;
-use Yiisoft\Form\YiisoftFormModel\FormHydrator;
+use Yiisoft\Translator\TranslatorInterface;use Yiisoft\FormModel\FormHydrator;
 use Yiisoft\Form\Helper\HtmlFormErrors;
 use Yiisoft\Yii\View\ViewRenderer;
 
@@ -145,7 +144,7 @@ final class SalesOrderItemController
                     ['heading'=> $this->translator->translate('invoice.successful'), 'message'=>$sR->trans('record_successfully_updated'),'url'=>'salesorder/view','id'=>$so_item->getSales_order_id()])); 
                 }
                 $parameters['body'] = $body;
-                $parameters['errors'] = HtmlFormErrors::getFirstErrors($form);
+                $parameters['form'] = $form;
             } 
             return $this->viewRenderer->render('_item_edit_form', $parameters);
         } //so_item

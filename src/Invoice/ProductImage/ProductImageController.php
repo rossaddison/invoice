@@ -21,8 +21,7 @@ use Yiisoft\Http\Method;
 use Yiisoft\Router\CurrentRoute;
 use Yiisoft\Session\SessionInterface;
 use Yiisoft\Session\Flash\Flash;
-use Yiisoft\Translator\TranslatorInterface;
-use Yiisoft\Form\YiisoftFormModel\FormHydrator;
+use Yiisoft\Translator\TranslatorInterface;use Yiisoft\FormModel\FormHydrator;
 use Yiisoft\Form\Helper\HtmlFormErrors;
 use Yiisoft\Yii\View\ViewRenderer;
 use \Exception;
@@ -80,10 +79,6 @@ final class ProductImageController {
      */
     public function index(Request $request, CurrentRoute $currentRoute, ProductImageRepository $productimageRepository): \Yiisoft\DataResponse\DataResponse {
         $query_params = $request->getQueryParams();
-        /**
-         * @var string $query_params['page'];
-         */
-        $page = $query_params['page'] ?? $currentRoute->getArgument('page', '1');
         /** @var string $query_params['sort'] */
         $sort = Sort::only(['id', 'product_id', 'file_name_original'])
                 // (@see vendor\yiisoft\data\src\Reader\Sort
@@ -92,9 +87,8 @@ final class ProductImageController {
                 ->withOrderString($query_params['sort'] ?? '-id');
         $productimages = $this->productimages_with_sort($productimageRepository, $sort);
         $paginator = (new OffsetPaginator($productimages))
-                ->withPageSize((int) $this->s->get_setting('default_list_limit'))
-                ->withCurrentPage((int)$page)
-                ->withNextPageToken($page);
+                ->withPageSize((int) $this->s->get_setting('default_list_limit'));
+        
         $parameters = [
             'paginator' => $paginator,
             'grid_summary' => $this->s->grid_summary($paginator, $this->translator, (int) $this->s->get_setting('default_list_limit'), $this->translator->translate('invoice.productimage.plural'), ''),
@@ -131,7 +125,7 @@ final class ProductImageController {
                 $this->productimageService->saveProductImage($productimage, $form);
                 return $this->webService->getRedirectResponse('productimage/index');
             }
-            $parameters['errors'] = HtmlFormErrors::getFirstErrors($form);
+            $parameters['form'] = $form;
         }
         return $this->viewRenderer->render('_form', $parameters);
     }
@@ -218,7 +212,7 @@ final class ProductImageController {
                     return $this->webService->getRedirectResponse('productimage/index');
                 }
                 $parameters['body'] = $body;
-                $parameters['errors'] = HtmlFormErrors::getFirstErrors($form);
+                $parameters['form'] = $form;
             }
             return $this->viewRenderer->render('_form', $parameters);
         }

@@ -21,8 +21,7 @@ use Yiisoft\Http\Method;
 use Yiisoft\Router\CurrentRoute;
 use Yiisoft\Session\SessionInterface;
 use Yiisoft\Session\Flash\Flash;
-use Yiisoft\Translator\TranslatorInterface;
-use Yiisoft\Form\YiisoftFormModel\FormHydrator;
+use Yiisoft\Translator\TranslatorInterface;use Yiisoft\FormModel\FormHydrator;
 use Yiisoft\Form\Helper\HtmlFormErrors;
 use Yiisoft\Yii\View\ViewRenderer;
 use \Exception;
@@ -84,7 +83,6 @@ final class ClientPeppolController {
       $parameters = [
         'title' => $this->translator->translate('invoice.add'),
         'action' => ['clientpeppol/add', ['client_id' => $client_id]],
-        'errors' => [],
         'body' => $request->getParsedBody(),
         'pep' => $this->pep(),
         'setting' => $settingRepository->get_setting('enable_client_peppol_defaults'),
@@ -104,7 +102,7 @@ final class ClientPeppolController {
                 ['url' => $this->userService->hasPermission('editClientPeppol') && $this->userService->hasPermission('viewInv') && !$this->userService->hasPermission('editInv') ? 'client/guest' : 'client/index',
                   'heading' => $this->translator->translate('invoice.client.peppol'), 'message' => $settingRepository->trans('record_successfully_updated')]));
         }
-        $parameters['errors'] = HtmlFormErrors::getFirstErrors($form);
+        $parameters['form'] = $form;
       } // if
       return $this->viewRenderer->render('/invoice/clientpeppol/_form', $parameters);
     } // null !== $client
@@ -294,7 +292,7 @@ final class ClientPeppolController {
           }
         }
         $parameters['body'] = $body;
-        $parameters['errors'] = HtmlFormErrors::getFirstErrors($form);
+        $parameters['form'] = $form;
       }
       return $this->viewRenderer->render('_form', $parameters);
     }

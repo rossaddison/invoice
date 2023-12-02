@@ -15,8 +15,7 @@ use App\Service\WebControllerService;
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
 
-use Yiisoft\Data\Paginator\OffsetPaginator;
-use Yiisoft\Form\YiisoftFormModel\FormHydrator;
+use Yiisoft\Data\Paginator\OffsetPaginator;use Yiisoft\FormModel\FormHydrator;
 use Yiisoft\Form\Helper\HtmlFormErrors;
 use Yiisoft\Http\Method;
 use Yiisoft\Router\CurrentRoute;
@@ -75,7 +74,6 @@ final class AllowanceChargeController
         $parameters = [
             'title' => $this->translator->translate('invoice.invoice.allowance.or.charge.add'),
             'action' => ['allowancecharge/add_allowance'],
-            'errors' => [],
             'allowances' => $allowances,
             'body' => $request->getParsedBody(),
             's'=>$settingRepository,
@@ -113,7 +111,7 @@ final class AllowanceChargeController
                 $this->allowancechargeService->saveAllowanceCharge(new AllowanceCharge(),$form);
                 return $this->webService->getRedirectResponse('allowancecharge/index');
             }
-            $parameters['errors'] = HtmlFormErrors::getFirstErrors($form);
+            $parameters['form'] = $form;
         }
         return $this->viewRenderer->render('_form_allowance', $parameters);
     }
@@ -130,7 +128,6 @@ final class AllowanceChargeController
         $parameters = [
             'title' => $this->translator->translate('invoice.invoice.allowance.or.charge.add'),
             'action' => ['allowancecharge/add_charge'],
-            'errors' => [],
             'charges' => $charges,
             's'=>$settingRepository,            
             'tax_rates'=>$tR->findAllPreloaded(),
@@ -167,7 +164,7 @@ final class AllowanceChargeController
                 $this->allowancechargeService->saveAllowanceCharge(new AllowanceCharge(),$form);
                 return $this->webService->getRedirectResponse('allowancecharge/index');
             }
-            $parameters['errors'] = HtmlFormErrors::getFirstErrors($form);
+            $parameters['form'] = $form;
         }
         return $this->viewRenderer->render('_form_charge', $parameters);
     }
@@ -268,7 +265,7 @@ final class AllowanceChargeController
                     return $this->webService->getRedirectResponse('allowancecharge/index');
                 }
                 $parameters['body'] = $body;
-                $parameters['errors'] = HtmlFormErrors::getFirstErrors($form);
+                $parameters['form'] = $form;
             }
             return $this->viewRenderer->render('_form_allowance', $parameters);
         }
@@ -289,7 +286,6 @@ final class AllowanceChargeController
             $parameters = [
                 'title' => $this->translator->translate('invoice.invoice.allowance.or.charge.edit.charge'),
                 'action' => ['allowancecharge/edit_allowance', ['id' => $allowancecharge->getId()]],
-                'errors' => [],
                 'body' => $this->body($allowancecharge),
                 'head'=>$head,
                 's'=>$settingRepository,
@@ -304,7 +300,7 @@ final class AllowanceChargeController
                     return $this->webService->getRedirectResponse('allowancecharge/index');
                 }
                 $parameters['body'] = $body;
-                $parameters['errors'] = HtmlFormErrors::getFirstErrors($form);
+                $parameters['form'] = $form;
             }
             return $this->viewRenderer->render('_form_charge', $parameters);
         }
@@ -363,7 +359,6 @@ final class AllowanceChargeController
             $parameters = [
                 'title' => $settingRepository->trans('view'),
                 'action' => ['allowancecharge/view', ['id' => $allowancecharge->getId()]],
-                'errors' => [],
                 'body' => $this->body($allowancecharge),
                 'allowancecharge'=>$allowancecharge,
             ];        

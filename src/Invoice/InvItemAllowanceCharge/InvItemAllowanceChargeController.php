@@ -23,8 +23,7 @@ use Yiisoft\Http\Method;
 use Yiisoft\Router\CurrentRoute;
 use Yiisoft\Session\SessionInterface;
 use Yiisoft\Session\Flash\Flash;
-use Yiisoft\Translator\TranslatorInterface;
-use Yiisoft\Form\YiisoftFormModel\FormHydrator;
+use Yiisoft\Translator\TranslatorInterface;use Yiisoft\FormModel\FormHydrator;
 use Yiisoft\Form\Helper\HtmlFormErrors;
 use Yiisoft\Yii\View\ViewRenderer;
 
@@ -156,7 +155,7 @@ final class InvItemAllowanceChargeController
                     }
                 } //allowance_charge
 
-                $parameters['errors'] = HtmlFormErrors::getFirstErrors($form);
+                $parameters['form'] = $form;
                 
                 return $this->webService->getNotFoundResponse();
             }   // request 
@@ -349,7 +348,7 @@ final class InvItemAllowanceChargeController
                     } //allowance_charge
                     return $this->webService->getNotFoundResponse();                        
                 } // allowance_charge_id
-                $parameters['errors'] = HtmlFormErrors::getFirstErrors($form);
+                $parameters['form'] = $form;
             } // request
             return $this->viewRenderer->render('/invoice/invitemallowancecharge/_form_edit', $parameters);
         } // if acii

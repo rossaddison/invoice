@@ -91,17 +91,16 @@ $toolbar = Div::tag();
         ),
         new DataColumn(
             'login',
-            header:  $translator->translate('gridview.login'),
-            content: static fn (object $data) => $data->getLogin()
+            content: static fn (object $data) => $data->getLogin(),    
+            header:  $translator->translate('gridview.login')
         ),
         new DataColumn(
             'create_at',
-            header:  $translator->translate('gridview.create.at'),
-            content: static fn (object $data) => $data->getCreatedAt()->format('r')
+            content: static fn (object $data) => $data->getCreatedAt()->format('r'),    
+            header:  $translator->translate('gridview.create.at')
         ),
         new DataColumn(
             'api',
-            header:  $translator->translate('gridview.api'),
             content: static function (object $data) use ($urlGenerator): string {
                     return Html::a(
                         'API User Data',
@@ -110,10 +109,10 @@ $toolbar = Div::tag();
                         ['target' => '_blank'],
                     )->render();
             },
+            header:  $translator->translate('gridview.api')
         ),
         new DataColumn(
             'profile',
-            header:  $translator->translate('gridview.profile'),
             content: static function (object $data) use ($urlGenerator): string {
                     return Html::a(
                         Html::tag('i', '', [
@@ -124,6 +123,7 @@ $toolbar = Div::tag();
                         ['class' => 'btn btn-link'],
                     )->render();
             },
+            header:  $translator->translate('gridview.profile'),        
         ),
     ];
 ?>

@@ -19,8 +19,7 @@ use Yiisoft\Http\Method;
 use Yiisoft\Router\CurrentRoute;
 use Yiisoft\Session\Flash\Flash;
 use Yiisoft\Session\SessionInterface as Session;
-use Yiisoft\Translator\TranslatorInterface as Translator; 
-use Yiisoft\Form\YiisoftFormModel\FormHydrator;
+use Yiisoft\Translator\TranslatorInterface as Translator; use Yiisoft\FormModel\FormHydrator;
 use Yiisoft\Form\Helper\HtmlFormErrors;
 use Yiisoft\Yii\View\ViewRenderer;
 
@@ -103,7 +102,7 @@ final class TaxRateController
               $this->flash_message('success', $settingRepository->trans('record_successfully_created'));
               return $this->webService->getRedirectResponse('taxrate/index');
             }
-            $parameters['errors'] = HtmlFormErrors::getFirstErrors($form);
+            $parameters['form'] = $form;
         }
         return $this->viewRenderer->render('__form', $parameters);
     }
@@ -150,7 +149,7 @@ final class TaxRateController
                     return $this->webService->getRedirectResponse('taxrate/index');
                 }
                 $parameters['body'] = $body;
-                $parameters['errors'] = HtmlFormErrors::getFirstErrors($form);
+                $parameters['form'] = $form;
             }
             return $this->viewRenderer->render('__form', $parameters);
         }

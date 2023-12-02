@@ -25,8 +25,7 @@ use Yiisoft\Json\Json;
 use Yiisoft\Router\CurrentRoute;
 use Yiisoft\Session\SessionInterface;
 use Yiisoft\Session\Flash\Flash;
-use Yiisoft\Translator\TranslatorInterface;
-use Yiisoft\Form\YiisoftFormModel\FormHydrator;
+use Yiisoft\Translator\TranslatorInterface;use Yiisoft\FormModel\FormHydrator;
 use Yiisoft\Form\Helper\HtmlFormErrors;
 use Yiisoft\Yii\View\ViewRenderer;
 
@@ -134,7 +133,7 @@ final class EmailTemplateController
                 $this->flash_message('info', $this->translator->translate('invoice.email.template.successfully.added'));
                 return $this->webService->getRedirectResponse('emailtemplate/index');
             }
-            $parameters['errors'] = HtmlFormErrors::getFirstErrors($form);
+            $parameters['form'] = $form;
         }
         return $this->viewRenderer->render('__form', $parameters, );
     }
@@ -221,7 +220,7 @@ final class EmailTemplateController
                     return $this->webService->getRedirectResponse('emailtemplate/index');
                 }
                 $parameters['body'] = $body;
-                $parameters['errors'] = HtmlFormErrors::getFirstErrors($form);
+                $parameters['form'] = $form;
             }
             return $this->viewRenderer->render('__form', $parameters);
         }

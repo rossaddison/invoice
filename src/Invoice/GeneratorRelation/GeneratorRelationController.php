@@ -14,8 +14,7 @@ use Yiisoft\Http\Method;
 use Yiisoft\Router\CurrentRoute;
 use Yiisoft\Session\SessionInterface as Session;
 use Yiisoft\Session\Flash\Flash;
-use Yiisoft\Translator\TranslatorInterface;
-use Yiisoft\Form\YiisoftFormModel\FormHydrator;
+use Yiisoft\Translator\TranslatorInterface;use Yiisoft\FormModel\FormHydrator;
 use Yiisoft\Form\Helper\HtmlFormErrors;
 use Yiisoft\Yii\View\ViewRenderer;
 
@@ -94,7 +93,7 @@ final class GeneratorRelationController
                 $this->generatorrelationService->saveGeneratorRelation(new GentorRelation(), $form);
                 return $this->webService->getRedirectResponse('generatorrelation/index');
             }
-            $parameters['errors'] = HtmlFormErrors::getFirstErrors($form);
+            $parameters['form'] = $form;
         }
         return $this->viewRenderer->render('__form', $parameters);
     }
@@ -136,7 +135,7 @@ final class GeneratorRelationController
                     return $this->webService->getRedirectResponse('generatorrelation/index');
                 }
                 $parameters['body'] = $body;
-                $parameters['errors'] = HtmlFormErrors::getFirstErrors($form);
+                $parameters['form'] = $form;
             }
             return $this->viewRenderer->render('__form', $parameters);
         }

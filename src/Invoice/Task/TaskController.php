@@ -41,8 +41,7 @@ use Yiisoft\Router\CurrentRoute;
 use Yiisoft\Session\SessionInterface as Session;
 use Yiisoft\Session\Flash\Flash;
 use Yiisoft\Translator\TranslatorInterface;
-use Yiisoft\Yii\View\ViewRenderer;
-use Yiisoft\Form\YiisoftFormModel\FormHydrator;
+use Yiisoft\Yii\View\ViewRenderer;use Yiisoft\FormModel\FormHydrator;
 use Yiisoft\Form\Helper\HtmlFormErrors;
 
 final class TaskController
@@ -143,7 +142,7 @@ final class TaskController
                 $this->taskService->saveTask(new Task(), $form, $sR);
                 $this->flash_message('info', $sR->trans('record_successfully_created'));
             }
-            $parameters['errors'] = HtmlFormErrors::getFirstErrors($form);
+            $parameters['form'] = $form;
         }
         return $this->viewRenderer->render('_form', $parameters);
     }
@@ -192,7 +191,7 @@ final class TaskController
                     return $this->webService->getRedirectResponse('task/index');
                 }
                 $parameters['body'] = $body;
-                $parameters['errors'] = HtmlFormErrors::getFirstErrors($form);
+                $parameters['form'] = $form;
             }
             return $this->viewRenderer->render('_form', $parameters);
         }    

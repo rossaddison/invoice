@@ -14,6 +14,7 @@ use Yiisoft\Arrays\ArrayHelper;
  * @var string $action
  * @var string $title
  */
+$errors = $form->getValidationResult()?->getErrors();
 if (!empty($errors)) {
     foreach ($errors as $field => $error) {
         echo Alert::widget()->options(['class' => 'alert-danger'])->body(Html::encode($field . ':' . $error));
@@ -268,6 +269,10 @@ if (!empty($errors)) {
                     <i class="fa fa-calendar fa-fw"></i>
                 </span>
             </div>
+        </div>
+        <div class="mb-3 form-group">
+            <label for="client_age" class="form-label"><?= $translator->translate('invoice.client.age'); ?></label>
+            <input type="text" class="form-control" name="client_age" id="client_age" placeholder="<?= $translator->translate('invoice.client.age'); ?>" value="<?= Html::encode($body['client_age'] ?? '') ?>">
         </div>
         <div class="mb-3 form-group">
             <label for="client_avs" class="form-label"><?= $s->trans('sumex_ssn'); ?></label>

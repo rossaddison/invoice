@@ -30,8 +30,7 @@ use Yiisoft\Router\CurrentRoute;
 use Yiisoft\Router\FastRoute\UrlGenerator;
 use Yiisoft\Session\Flash\Flash;
 use Yiisoft\Session\SessionInterface as Session;
-use Yiisoft\Translator\TranslatorInterface;
-use Yiisoft\Form\YiisoftFormModel\FormHydrator;
+use Yiisoft\Translator\TranslatorInterface;use Yiisoft\FormModel\FormHydrator;
 use Yiisoft\Form\Helper\HtmlFormErrors;
 use Yiisoft\Yii\View\ViewRenderer;
 
@@ -133,7 +132,7 @@ final class QuoteItemController
                return $this->factory->createResponse($this->viewRenderer->renderPartialAsString('/invoice/setting/quote_successful',
                        ['heading'=>'Successful','message'=>$sR->trans('record_successfully_created'),'url'=>'quote/view','id'=>$quote_id]));  
            }    
-           $parameters['errors'] = HtmlFormErrors::getFirstErrors($form);
+           $parameters['form'] = $form;
         }
         return $this->viewRenderer->render('_item_form', $parameters);
     }
@@ -212,7 +211,7 @@ final class QuoteItemController
                 }
               }
               $parameters['body'] = $body;
-              $parameters['errors'] = HtmlFormErrors::getFirstErrors($form);
+              $parameters['form'] = $form;
           } 
           return $this->viewRenderer->render('_item_edit_form', $parameters);
           //quote_item

@@ -33,8 +33,7 @@ use Yiisoft\Router\CurrentRoute;
 use Yiisoft\Security\Random;
 use Yiisoft\Session\SessionInterface as Session;
 use Yiisoft\Session\Flash\Flash;
-use Yiisoft\Translator\TranslatorInterface as Translator;
-use Yiisoft\Form\YiisoftFormModel\FormHydrator;
+use Yiisoft\Translator\TranslatorInterface as Translator;use Yiisoft\FormModel\FormHydrator;
 use Yiisoft\Form\Helper\HtmlFormErrors;
 use Yiisoft\Yii\View\ViewRenderer;
 // Psr
@@ -387,7 +386,7 @@ final class SettingController
                 $this->flash_message('info', $this->s->trans('record_successfully_updated'));
                 return $this->webService->getRedirectResponse('setting/debug_index');
             }
-            $parameters['errors'] = HtmlFormErrors::getFirstErrors($form);
+            $parameters['form'] = $form;
         }
         return $this->viewRenderer->render('__form', $parameters);
     }
@@ -448,7 +447,7 @@ final class SettingController
                     return $this->webService->getRedirectResponse('setting/debug_index');
                 }
                 $parameters['body'] = $body;
-                $parameters['errors'] = HtmlFormErrors::getFirstErrors($form);
+                $parameters['form'] = $form;
             }
             return $this->viewRenderer->render('__form', $parameters);
         }
@@ -524,7 +523,7 @@ final class SettingController
                     return $this->webService->getRedirectResponse('setting/index');
                 }
                 $parameters['body'] = $body;
-                $parameters['errors'] = HtmlFormErrors::getFirstErrors($form);
+                $parameters['form'] = $form;
             }
             return $this->viewRenderer->render('__form', $parameters);
         }

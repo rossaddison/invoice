@@ -54,8 +54,7 @@ use Yiisoft\Router\CurrentRoute;
 use Yiisoft\Session\SessionInterface;
 use Yiisoft\Session\Flash\Flash;
 use Yiisoft\Translator\TranslatorInterface;
-use Yiisoft\User\CurrentUser;
-use Yiisoft\Form\YiisoftFormModel\FormHydrator;
+use Yiisoft\User\CurrentUser;use Yiisoft\FormModel\FormHydrator;
 use Yiisoft\Form\Helper\HtmlFormErrors;
 use Yiisoft\Yii\View\ViewRenderer;
 // Miscellaneous
@@ -350,6 +349,7 @@ final class ClientController
     public function edit(Request $request, cR $cR, ccR $ccR, cfR $cfR, cvR $cvR, 
            FormHydrator $formHydrator, paR $paR, sR $sR, CurrentRoute $currentRoute
     ): Response {
+     $form = new ClientForm();   
      $client = null!==$this->client($currentRoute, $cR) ? $this->client($currentRoute, $cR) : null;
      if ($client) {
         $selected_country =  $client->getClient_country(); 
@@ -361,11 +361,11 @@ final class ClientController
             $parameters = [
                 'title' => $sR->trans('edit'),
                 'action' => ['client/edit', ['id' => $client_id]],
-                'errors' => [],
                 'buttons' => $this->viewRenderer->renderPartialAsString('/invoice/layout/header_buttons',['s'=>$sR, 'hide_submit_button'=>false ,'hide_cancel_button'=>false]), 
                 'datehelper'=> new DateHelper($sR),
                 'client'=> $client,
                 'body' => $this->body($client),
+                'form' => $form,
                 'aliases'=> new Aliases(['@invoice' => dirname(__DIR__), '@language' => dirname(__DIR__). DIRECTORY_SEPARATOR.'Language']),
                 'selected_country' => $selected_country ?: $sR->get_setting('default_country'),            
                 'selected_language' => $selected_language ?: $sR->get_setting('default_language'),
@@ -381,9 +381,12 @@ final class ClientController
             if ($request->getMethod() === Method::POST) {            
                 $body = $request->getParsedBody();
                 if (is_array($body)) {
-                    $returned_form = $this->edit_save_form_fields($body, $client, $formHydrator, $sR);
+                    $returned_form = $this->edit_save_form_fields($body, $form, $client, $formHydrator, $sR);
                     $parameters['body'] = $body;
-                    $parameters['errors']= HtmlFormErrors::getFirstErrors($returned_form); 
+                    if (!$returned_form->isValid()) {
+                        $parameters['form'] = $returned_form;
+                        return $this->viewRenderer->render('__form', $parameters);
+                    }  
                     // Only save custom fields if they exist
                     if ($cfR->repoTableCountquery('client_custom') > 0) { 
                       $this->edit_save_custom_fields($body, $formHydrator, $ccR, (string)$client_id); 
@@ -401,14 +404,14 @@ final class ClientController
     /**
      * 
      * @param array $body
+     * @param ClientForm $form
      * @param Client $client
      * @param FormHydrator $formHydrator
      * @param sR $sR
      * @return ClientForm
      */
-    public function edit_save_form_fields(array $body, Client $client, FormHydrator $formHydrator, sR $sR) : ClientForm {
-        $form = new ClientForm();
-        if ($formHydrator->populate($form, $body) && $form->isValid()) {
+    public function edit_save_form_fields(array $body, ClientForm $form, Client $client, FormHydrator $formHydrator, sR $sR) : ClientForm {
+        if ($formHydrator->populate($form, $body)) {
            $this->clientService->saveClient($client, $form, $sR);
         }
         return $form;
@@ -713,7 +716,7 @@ final class ClientController
         } else {
             $parameters = [
                 'success' => 0,
-                'validation_errors' => HtmlFormErrors::getFirstErrors($content)
+                'validation_errors' => $content->getValidationResult()?->getErrors()
             ];
         }        
         return $this->factory->createResponse(Json::encode($parameters));          

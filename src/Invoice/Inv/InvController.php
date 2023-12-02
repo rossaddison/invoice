@@ -112,8 +112,7 @@ use Yiisoft\Security\Random;
 use Yiisoft\Session\SessionInterface;
 use Yiisoft\Session\Flash\Flash;
 use Yiisoft\Translator\TranslatorInterface;
-use Yiisoft\User\CurrentUser;
-use Yiisoft\Form\YiisoftFormModel\FormHydrator;
+use Yiisoft\User\CurrentUser;use Yiisoft\FormModel\FormHydrator;
 use Yiisoft\Form\Helper\HtmlFormErrors;
 use Yiisoft\Yii\View\ViewRenderer;
 // Psr\Http
@@ -877,7 +876,9 @@ final class InvController {
                     $returned_form = $this->edit_save_form_fields($body, $currentRoute, $formHydrator, $invRepo, $groupRepo, $userRepo, $ucR, $uiR);
                     $parameters['body'] = $body;
                     if ($returned_form instanceof InvForm) {
-                        $parameters['errors'] = HtmlFormErrors::getFirstErrors($returned_form);
+                        if (!$returned_form->isValid()) {
+                            $parameters['form'] = $returned_form;
+                        }
                         $this->edit_save_custom_fields($body, $formHydrator, $icR, $inv_id);
                         return $this->factory->createResponse($this->view_renderer->renderPartialAsString('/invoice/setting/inv_message',
                                                 ['heading' => '', 'message' =>
@@ -1383,8 +1384,8 @@ final class InvController {
                 $user_clients = $ucR->get_assigned_to_user($user_id);
                 $invs = $this->invs_status_with_sort_guest($iR, $status, $user_clients, $sort);
                 $paginator = (new OffsetPaginator($invs))
-                        ->withPageSize((int) $this->sR->get_setting('default_list_limit'))
-                        ->withCurrentPage($pageNum);
+                    ->withPageSize((int) $this->sR->get_setting('default_list_limit'))
+                    ->withCurrentPage((int)$pageNum);
                 $inv_statuses = $iR->getStatuses($this->sR);
                 $label = $iR->getSpecificStatusArrayLabel((string) $status);
                 $parameters = [
@@ -1557,7 +1558,7 @@ final class InvController {
      *
      * @return \Yiisoft\Data\Reader\DataReaderInterface
      *
-     * @psalm-return \Yiisoft\Data\Reader\DataReaderInterface<int, Inv>
+     * @psalm-return \Yiisoft\Yii\Cycle\Data\Reader\EntityReader<array-key, array<array-key, mixed>|object>
      */
     private function invs_status_with_sort(IR $iR, int $status, Sort $sort): \Yiisoft\Data\Reader\DataReaderInterface {
         $invs = $iR->findAllWithStatus($status)
@@ -2163,9 +2164,7 @@ final class InvController {
                 } else {
                     $this->inv_item_service->addInvItem_task($model, $form, $copy_id, $taskR, $trR, $iiaS, $iiaR, $this->sR);
                 }
-            } else {
-                HtmlFormErrors::getFirstErrors($form);
-            }
+            } 
         } // foreach
     }
 

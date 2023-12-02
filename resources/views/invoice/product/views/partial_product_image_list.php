@@ -57,7 +57,7 @@ use Yiisoft\Yii\DataView\Column\DataColumn;
                 )->render();
             }),
             new DataColumn(
-                visible($invEdit),
+                visible: $invEdit,
                 header:  $s->trans('delete'),
                 content: static function ($model) use ($s, $urlGenerator): string {
                 return Html::a(Html::tag('button',

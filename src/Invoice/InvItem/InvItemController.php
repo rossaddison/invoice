@@ -34,8 +34,7 @@ use Yiisoft\Router\CurrentRoute;
 use Yiisoft\Router\FastRoute\UrlGenerator;
 use Yiisoft\Session\Flash\Flash;
 use Yiisoft\Session\SessionInterface as Session;
-use Yiisoft\Translator\TranslatorInterface;
-use Yiisoft\Form\YiisoftFormModel\FormHydrator;
+use Yiisoft\Translator\TranslatorInterface;use Yiisoft\FormModel\FormHydrator;
 use Yiisoft\Form\Helper\HtmlFormErrors;
 use Yiisoft\Yii\Cycle\Data\Reader\EntityReader;
 use Yiisoft\Yii\View\ViewRenderer;
@@ -118,7 +117,7 @@ final class InvItemController
               return $this->factory->createResponse($this->viewRenderer->renderPartialAsString('/invoice/setting/inv_message',
                      ['heading'=>'', 'message'=>$sR->trans('record_successfully_created'),'url'=>'inv/view','id'=>$inv_id]));  
             }
-            $parameters['errors'] = HtmlFormErrors::getFirstErrors($form);
+            $parameters['form'] = $form;
         }
         return $this->viewRenderer->render('_item_form_product', $parameters);
     }
@@ -166,7 +165,7 @@ final class InvItemController
                   return $this->factory->createResponse($this->viewRenderer->renderPartialAsString('/invoice/setting/inv_message',
                          ['heading'=>'','message'=>$sR->trans('record_successfully_created'),'url'=>'inv/view','id'=>$inv_id]));  
             }
-            $parameters['errors'] = HtmlFormErrors::getFirstErrors($form);
+            $parameters['form'] = $form;
         }        
         return $this->viewRenderer->renderPartial('_item_form_task', $parameters);
     }
@@ -325,7 +324,7 @@ final class InvItemController
                     $this->webService->getRedirectResponse('inv/view',['id'=>$inv_id]);
                     }
                 $parameters['body'] = $body;
-                $parameters['errors'] = HtmlFormErrors::getFirstErrors($form);
+                $parameters['form'] = $form;
             } 
             return $this->viewRenderer->render('_item_edit_product', $parameters);
         }
@@ -453,7 +452,7 @@ final class InvItemController
                 }
             }
             $parameters['body'] = $body;
-            $parameters['errors'] = HtmlFormErrors::getFirstErrors($form);
+            $parameters['form'] = $form;
         } 
         return $this->viewRenderer->render('_item_edit_task', $parameters);        
     }           

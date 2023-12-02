@@ -34,6 +34,7 @@ final class ClientForm extends FormModel
     private ?string $client_insurednumber='';
     private ?string $client_veka='';    
     private ?string $client_birthdate='';
+    private ?int $client_age = 0;
     private ?int $client_gender=0;
     private ?int $postaladdress_id=null;
     
@@ -161,6 +162,11 @@ final class ClientForm extends FormModel
         }
         return null;
     }
+    
+    public function getClient_age(): int
+    {
+        return $this->client_age;
+    }    
 
     public function getClient_gender() : int|null
     {

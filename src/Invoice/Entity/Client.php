@@ -100,6 +100,9 @@ class Client
     #[Column(type:'date', nullable: true)]
     private mixed $client_birthdate;
     
+    #[Column(type:'integer', nullable: false, default: 0)]
+    private ?int $client_age;
+    
     #[Column(type: 'tinyInteger(4)', nullable: false, default: 0)]
     private ?int $client_gender = null;
         
@@ -133,7 +136,8 @@ class Client
             string $client_avs='', 
             string $client_insurednumber='',
             string $client_veka='', 
-            mixed $client_birthdate = '', 
+            mixed $client_birthdate = '',
+            int $client_age = 0,
             int $client_gender=0, 
             int $postaladdress_id = null)
     {
@@ -160,6 +164,7 @@ class Client
         $this->client_insurednumber = $client_insurednumber;
         $this->client_veka = $client_veka;
         $this->client_birthdate = $client_birthdate;
+        $this->client_age = $client_age;
         $this->client_gender = $client_gender;
         $this->client_date_created = new \DateTimeImmutable();
         $this->client_date_modified = new \DateTimeImmutable();
@@ -408,6 +413,16 @@ class Client
     {
         $this->client_birthdate = $client_birthdate;
     }
+    
+    public function getClient_age() : ?int
+    {
+        return $this->client_age;
+    }
+    
+    public function setClient_age(int $client_age) : void
+    {
+        $this->client_age = $client_age;
+    }        
     
     public function getClient_number() : ?string 
     {

@@ -31,8 +31,7 @@ use Yiisoft\Router\CurrentRoute;
 use Yiisoft\Session\Flash\Flash;
 use Yiisoft\Session\SessionInterface as Session;
 use Yiisoft\Translator\TranslatorInterface;
-use Yiisoft\User\CurrentUser;
-use Yiisoft\Form\YiisoftFormModel\FormHydrator;
+use Yiisoft\User\CurrentUser;use Yiisoft\FormModel\FormHydrator;
 use Yiisoft\Form\Helper\HtmlFormErrors;
 use Yiisoft\View\View;
 use Yiisoft\Yii\View\ViewRenderer;
@@ -130,7 +129,7 @@ final class GeneratorController
                 $this->generatorService->saveGenerator(new Gentor(), $form);
                 return $this->webService->getRedirectResponse('generator/index');
             }
-            $parameters['errors'] = HtmlFormErrors::getFirstErrors($form);
+            $parameters['form'] = $form;
         }
         return $this->viewRenderer->render('__form', $parameters);
     }
@@ -167,7 +166,7 @@ final class GeneratorController
                     return $this->webService->getRedirectResponse('generator/index');
                 }
                 $parameters['body'] = $body;
-                $parameters['errors'] = HtmlFormErrors::getFirstErrors($form);
+                $parameters['form'] = $form;
             }
             return $this->viewRenderer->render('__form', $parameters);
         } else {

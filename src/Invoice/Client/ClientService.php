@@ -49,6 +49,7 @@ final class ClientService
         null!==$form->getClient_insurednumber() ? $model->setClient_insurednumber($form->getClient_insurednumber()): '';
         null!==$form->getClient_veka() ? $model->setClient_veka($form->getClient_veka()): '';
         null!==$form->getClient_birthdate($s) ? $model->setClient_birthdate($form->getClient_birthdate($s)) : '';
+        null!==$form->getClient_age() ? $model->setClient_age($form->getClient_age()) : '';
         null!==$form->getClient_gender() ? $model->setClient_gender($form->getClient_gender()): '';
         null!==$form->getClient_postaladdress_id() ? $model->setPostaladdress_id($form->getClient_postaladdress_id()): '';
         if ($model->isNewRecord()) {

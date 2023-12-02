@@ -21,8 +21,7 @@ use Yiisoft\Http\Method;
 use Yiisoft\Router\CurrentRoute;
 use Yiisoft\Session\SessionInterface;
 use Yiisoft\Session\Flash\Flash;
-use Yiisoft\Translator\TranslatorInterface;
-use Yiisoft\Form\YiisoftFormModel\FormHydrator;
+use Yiisoft\Translator\TranslatorInterface;use Yiisoft\FormModel\FormHydrator;
 use Yiisoft\Form\Helper\HtmlFormErrors;
 use Yiisoft\Yii\View\ViewRenderer;
 use \Exception;
@@ -119,7 +118,7 @@ final class DeliveryLocationController {
         return $this->factory->createResponse($this->viewRenderer->renderPartialAsString('/invoice/setting/inv_message',
               ['heading' => 'Successful', 'message' => $settingRepository->trans('record_successfully_created'), 'url' => 'client/view', 'id' => $client_id]));
       }
-      $parameters['errors'] = HtmlFormErrors::getFirstErrors($form);
+      $parameters['form'] = $form;
     }
     return $this->viewRenderer->render('/invoice/del/_form', $parameters);
   }
@@ -156,7 +155,7 @@ final class DeliveryLocationController {
           return $this->webService->getRedirectResponse('del/index');
         }
         $parameters['body'] = $body;
-        $parameters['errors'] = HtmlFormErrors::getFirstErrors($form);
+        $parameters['form'] = $form;
       }
       return $this->viewRenderer->render('/invoice/del/_form', $parameters);
     }

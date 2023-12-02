@@ -47,8 +47,7 @@ use Yiisoft\Json\Json;
 use Yiisoft\Router\CurrentRoute;
 use Yiisoft\Session\SessionInterface as Session;
 use Yiisoft\Session\Flash\Flash;
-use Yiisoft\Translator\TranslatorInterface;
-use Yiisoft\Form\YiisoftFormModel\FormHydrator;
+use Yiisoft\Translator\TranslatorInterface;use Yiisoft\FormModel\FormHydrator;
 use Yiisoft\Form\Helper\HtmlFormErrors;
 use Yiisoft\Yii\View\ViewRenderer;
 
@@ -263,7 +262,7 @@ final class PaymentController
                         }
                     }
                     return $this->webService->getRedirectResponse('payment/index');
-                    //$parameters['errors'] = HtmlFormErrors::getFirstErrors($form);
+                    //$parameters['form'] = $form;
                 }
             return $this->viewRenderer->render('_form', $parameters); 
             } // is_array body

@@ -11,9 +11,7 @@ use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
-use Throwable;
-use Yiisoft\Form\YiisoftFormModel\FormHydrator;
-use Yiisoft\Form\Helper\HtmlFormErrors;
+use Throwable;use Yiisoft\FormModel\FormHydrator;
 use Yiisoft\Rbac\Manager;
 use Yiisoft\Yii\Console\ExitCode;
 
@@ -51,13 +49,12 @@ final class CreateCommand extends Command
         $io = new SymfonyStyle($input, $output);
 
         /**
-         * @var string $input->getArgument('login')
+         * @psalm-suppress MixedAssignment
          */
-        
         $login = $input->getArgument('login');
         
         /**
-         * @var string $input->getArgument('password')
+         * @psalm-suppress MixedAssignment
          */
         $password = $input->getArgument('password');
         $isAdmin = (bool) $input->getArgument('isAdmin');
@@ -77,9 +74,10 @@ final class CreateCommand extends Command
         }
 
         if ($user === false) {
-            $errors = HtmlFormErrors::getFirstErrors($this->signupForm);
-            array_walk($errors, fn (string $error, string $attribute) : mixed => $io->error("$attribute: $error"));
-
+            $errors = $this->signupForm->getValidationResult()?->getErrors();
+            if (null!==$errors) {
+                array_walk($errors, fn (string $error, string $attribute) : mixed => $io->error("$attribute: $error"));
+            }
             return ExitCode::DATAERR;
         }
 

@@ -20,8 +20,7 @@ use Yiisoft\Router\CurrentRoute;
 use Yiisoft\Session\SessionInterface as Session;
 use Yiisoft\Session\Flash\Flash;
 use Yiisoft\Translator\TranslatorInterface;
-use Yiisoft\Yii\View\ViewRenderer;
-use Yiisoft\Form\YiisoftFormModel\FormHydrator;
+use Yiisoft\Yii\View\ViewRenderer;use Yiisoft\FormModel\FormHydrator;
 use Yiisoft\Form\Helper\HtmlFormErrors;
 
 final class SumexController
@@ -131,7 +130,7 @@ final class SumexController
                 $this->sumexService->saveSumex($model, $form, $settingRepository);
                 return $this->webService->getRedirectResponse('sumex/index');
             }
-            $parameters['errors'] = HtmlFormErrors::getFirstErrors($form);
+            $parameters['form'] = $form;
         }
         return $this->viewRenderer->render('_form', $parameters);
     }
@@ -176,7 +175,7 @@ final class SumexController
                     'url'=>'inv/view','id'=>$body['invoice']]));
                 }
                 $parameters['body'] = $body;
-                $parameters['errors'] = HtmlFormErrors::getFirstErrors($form);
+                $parameters['form'] = $form;
             }
             return $this->viewRenderer->render('_form', $parameters);
         }

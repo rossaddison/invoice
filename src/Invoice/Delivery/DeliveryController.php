@@ -22,8 +22,7 @@ use Yiisoft\Http\Method;
 use Yiisoft\Router\CurrentRoute;
 use Yiisoft\Session\SessionInterface;
 use Yiisoft\Session\Flash\Flash;
-use Yiisoft\Translator\TranslatorInterface;
-use Yiisoft\Form\YiisoftFormModel\FormHydrator;
+use Yiisoft\Translator\TranslatorInterface;use Yiisoft\FormModel\FormHydrator;
 use Yiisoft\Form\Helper\HtmlFormErrors;
 use Yiisoft\Yii\View\ViewRenderer;
 use \Exception;
@@ -101,7 +100,7 @@ final class DeliveryController {
                     $this->deliveryService->saveDelivery(new Delivery(), $form, $settingRepository);
                     return $this->webService->getRedirectResponse('inv/edit', ['id' => $inv_id]);
                 }
-                $parameters['errors'] = HtmlFormErrors::getFirstErrors($form);
+                $parameters['form'] = $form;
             }
             return $this->viewRenderer->render('/invoice/delivery/_form', $parameters);
         }
@@ -263,7 +262,7 @@ final class DeliveryController {
                     return $this->webService->getRedirectResponse('delivery/index');
                 }
                 $parameters['body'] = $body;
-                $parameters['errors'] = HtmlFormErrors::getFirstErrors($form);
+                $parameters['form'] = $form;
             }
             return $this->viewRenderer->render('/invoice/delivery/_form', $parameters);
           } // null!==$inv  

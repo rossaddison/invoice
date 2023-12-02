@@ -10,8 +10,7 @@ use App\Invoice\ClientNote\ClientNoteRepository;
 use App\Invoice\Setting\SettingRepository;
 use App\Invoice\Client\ClientRepository;
 use App\Invoice\Helpers\DateHelper;
-use App\User\UserService;
-use Yiisoft\Form\YiisoftFormModel\FormHydrator;
+use App\User\UserService;use Yiisoft\FormModel\FormHydrator;
 use Yiisoft\Form\Helper\HtmlFormErrors;
 use App\Service\WebControllerService;
 use Psr\Http\Message\ResponseInterface as Response;
@@ -108,7 +107,7 @@ final class ClientNoteController
                 $this->clientnoteService->addClientNote(new ClientNote(),$form, $settingRepository);
                 return $this->webService->getRedirectResponse('clientnote/index');
             }
-            $parameters['errors'] = HtmlFormErrors::getFirstErrors($form);
+            $parameters['form'] = $form;
         }
         return $this->viewRenderer->render('_form', $parameters);
     }
@@ -153,7 +152,7 @@ final class ClientNoteController
                     return $this->webService->getRedirectResponse('clientnote/index');
                 }
                 $parameters['body'] = $body;
-                $parameters['errors'] = HtmlFormErrors::getFirstErrors($form);
+                $parameters['form'] = $form;
             }
             return $this->viewRenderer->render('_form', $parameters);
         } //client note
