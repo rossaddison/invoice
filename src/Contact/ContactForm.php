@@ -4,11 +4,12 @@ declare(strict_types=1);
 
 namespace App\Contact;
 
-use Yiisoft\Form\YiisoftFormModel\FormModel;
+use Yiisoft\FormModel\FormModel;
 use Yiisoft\Validator\Rule\Email;
 use Yiisoft\Validator\Rule\Required;
+use Yiisoft\Validator\RulesProviderInterface;
 
-final class ContactForm extends FormModel
+final class ContactForm extends FormModel implements RulesProviderInterface 
 {
     private string $name = '';
     private string $email = '';

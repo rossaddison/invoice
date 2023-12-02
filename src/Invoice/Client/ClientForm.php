@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace App\Invoice\Client;
 
 use App\Invoice\Helpers\DateHelper;
-use Yiisoft\Form\YiisoftFormModel\FormModel;
+use Yiisoft\FormModel\FormModel;
 use Yiisoft\Validator\Rule\Required;
 use Yiisoft\Validator\Rule\Email;
 
@@ -163,7 +163,7 @@ final class ClientForm extends FormModel
         return null;
     }
     
-    public function getClient_age(): int
+    public function getClient_age(): int|null
     {
         return $this->client_age;
     }    

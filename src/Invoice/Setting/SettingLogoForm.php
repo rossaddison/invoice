@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Invoice\Setting;
 
-use Yiisoft\Form\YiisoftFormModel\FormModel;
+use Yiisoft\FormModel\FormModel;
 
 final class SettingLogoForm extends FormModel
 {

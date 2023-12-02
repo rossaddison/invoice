@@ -167,8 +167,8 @@ echo Nav::widget()
                       'label' => $translator->translate('invoice.view'),
                       'url'=>$urlGenerator->generate('userinv/guest')],
                      ['options' => ['class' => 'nav fs-4'], 
-                      'label' => $translator->translate('reset'), 
-                      'url' => $urlGenerator->generate('auth/reset')],
+                      'label' => $translator->translate('change'), 
+                      'url' => $urlGenerator->generate('auth/change')],
                     ],
          ],
                  

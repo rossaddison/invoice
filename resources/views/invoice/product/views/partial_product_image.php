@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-use Yiisoft\Form\YiisoftFormModel\Field;
+use Yiisoft\FormModel\Field;
 use Yiisoft\Html\Html;
 use Yiisoft\Html\Tag\Form;
 use Yiisoft\View\WebView;

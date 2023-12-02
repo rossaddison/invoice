@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Invoice\Quote;
 
-use Yiisoft\Form\YiisoftFormModel\FormModel;
+use Yiisoft\FormModel\FormModel;
 use Yiisoft\Validator\Rule\Email;
 use Yiisoft\Validator\Rule\Required;
 
