@@ -39,16 +39,15 @@ final class ClientForm extends FormModel
     private ?int $postaladdress_id=null;
     
     /**
-     * @return (Email|Required)[][]
-     *
-     * @psalm-return array{client_name: list{Required}, client_email: list{Required, Email}}
+     * 
+     * @return array
      */
     public function getRules(): array    {
         return [
             'client_name' => [new Required()],
             'client_surname' => [new Required()],
             'client_email' => [new Required(),new Email()],
-            'client_age' => [new Required(), 'min' => 16]  
+            'client_age' => [new Required()]  
         ];
     }
     

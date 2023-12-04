@@ -331,7 +331,7 @@ class ProductController
                 ['heading'=>'','message'=>$sR->trans('record_successfully_updated'),'url'=>'product/view',
                  'id'=>$product_id]));
             } else {
-                $parameters['errors'] = $errors->getValidationResult()?->getErrorMessagesIndexedByAttribute() ?? [];
+                $parameters['errors'] = $form->getValidationResult()?->getErrorMessagesIndexedByAttribute() ?? [];
             }    
         }
         return $this->viewRenderer->render('_form', $parameters);
