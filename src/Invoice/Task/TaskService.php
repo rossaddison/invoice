@@ -33,7 +33,7 @@ final class TaskService
        $form->getPrice() ? $model->setPrice($form->getPrice()) : $model->setPrice(0.00);
        $form->getStatus() ? $model->setStatus($form->getStatus()) : '';
        $form->getTax_rate_id() ? $model->setTax_rate_id($form->getTax_rate_id()) : '';
-       $model->setFinish_date($form->getFinish_date($sR));
+       null!==$form->getFinish_date($sR) ? $model->setFinish_date($form->getFinish_date($sR)) : '';
        $this->repository->save($model);
     }
     

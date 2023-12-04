@@ -51,6 +51,7 @@ class Task
         string $name = '',
         string $description = '',
         float $price = null,
+        mixed $finish_date = '',
         int $status = null,
         int $tax_rate_id = null
     )
@@ -60,6 +61,7 @@ class Task
         $this->name=$name;
         $this->description=$description;
         $this->price=$price;
+        $this->finish_date=$finish_date;
         $this->status=$status;
         $this->tax_rate_id=$tax_rate_id;
     }
@@ -124,13 +126,13 @@ class Task
       $this->price =  $price;
     }
     
-    public function getFinish_date(): DateTimeImmutable
+    public function getFinish_date(): ?DateTimeImmutable
     {
       /** @var DateTimeImmutable $this->finish_date */ 
       return $this->finish_date;
     }
     
-    public function setFinish_date(DateTime $finish_date) : void
+    public function setFinish_date(?DateTime $finish_date) : void
     {
       $this->finish_date =  $finish_date;
     }

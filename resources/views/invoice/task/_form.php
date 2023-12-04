@@ -2,8 +2,6 @@
     declare(strict_types=1);
     
     use Yiisoft\Html\Html;
-    use App\Invoice\Helpers\DateHelper;
-    use DateTimeImmutable;
     
     /**
     * @var \Yiisoft\View\View $this
@@ -13,6 +11,7 @@
     * @var string $title
     */
     
+    echo $alert;
 ?>
 
 <form method="post" id="task-form">
@@ -82,26 +81,19 @@
                         
                         <div class="mb-3 form-group has-feedback">        
                             <?php
-                                $fdate = $body['finish_date'] ?? new DateTimeImmutable('now');
-                                $datehelper = new DateHelper($s);
-                                if ($fdate && $fdate !== "0000-00-00") {
-                                    //use the DateHelper
-                                    $fdate = $datehelper->date_from_mysql($fdate);
-                                } else {
-                                    $fdate = null;
-                                }
+                                $fdate = $datehelper->get_or_set_with_style($body['finish_date'] ?? new \DateTimeImmutable('now'));
                             ?>
                             <label form-label for="finish_date"><?= $s->trans('task_finish_date') .' ('.$datehelper->display().')'; ?></label>
                             <div class="input-group">
                                 <input type="text" name="finish_date" id="finish_date" placeholder="<?= ' ('.$datehelper->display().')';?>"
                                        class="form-control input-sm datepicker" readonly
-                                       value="<?php if ($fdate <> null) {echo Html::encode($fdate);} ?>" role="presentation" autocomplete="off">
+                                       value="<?php if ($fdate <> null) {echo Html::encode($fdate instanceof \DateTime ? $fdate->format($datehelper->style()) : $fdate);} ?>" role="presentation" autocomplete="off">
                                 <span class="input-group-text">
                                 <i class="fa fa-calendar fa-fw"></i>
                             </span>
                             </div>        
-                        </div>  
-
+                        </div>
+                        
                         <div class="form-group">
                             <label for="status"><?= $s->trans('status'); ?></label>
                             <select name="status" id="status" 

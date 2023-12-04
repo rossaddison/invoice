@@ -126,6 +126,7 @@ final class TaskController
         $parameters = [
             'title' => $this->translator->translate('invoice.add'),
             'action' => ['task/add'],
+            'alert' => $this->alert(),
             'body' => $request->getParsedBody(),
             'errors' => [],
             'numberhelper'=>new NumberHelper($sR),
@@ -141,6 +142,7 @@ final class TaskController
             if ($formHydrator->populate($form, $parameters['body']) && $form->isValid()) {
                 $this->taskService->saveTask(new Task(), $form, $sR);
                 $this->flash_message('info', $sR->trans('record_successfully_created'));
+                return $this->webService->getRedirectResponse('task/index');
             }
             $parameters['form'] = $form;
         }
@@ -172,6 +174,7 @@ final class TaskController
             $parameters = [
                 'title' => $sR->trans('edit'),
                 'action' => ['task/edit', ['id' => $task->getId()]],
+                'alert' => $this->alert(),
                 'body' => $this->body($task),
                 'errors'=>[],
                 'numberhelper'=>new NumberHelper($sR),
