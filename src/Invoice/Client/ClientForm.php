@@ -38,6 +38,20 @@ final class ClientForm extends FormModel
     private ?int $client_gender=0;
     private ?int $postaladdress_id=null;
     
+    /**
+     * @return (Email|Required)[][]
+     *
+     * @psalm-return array{client_name: list{Required}, client_email: list{Required, Email}}
+     */
+    public function getRules(): array    {
+        return [
+            'client_name' => [new Required()],
+            'client_surname' => [new Required()],
+            'client_email' => [new Required(),new Email()],
+            'client_age' => [new Required(), 'min' => 16]  
+        ];
+    }
+    
     public function getClient_name() : string|null
     {
       return $this->client_name;
@@ -187,16 +201,4 @@ final class ClientForm extends FormModel
     {
       return '';
     }
-
-    /**
-     * @return (Email|Required)[][]
-     *
-     * @psalm-return array{client_name: list{Required}, client_email: list{Required, Email}}
-     */
-    public function getRules(): array    {
-      return [
-        'client_name' => [new Required()],
-        'client_email' => [new Required(),new Email()],
-    ];
-}
 }

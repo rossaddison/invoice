@@ -63,7 +63,6 @@ use Psr\Http\Message\ServerRequestInterface as Request;
 use Yiisoft\Data\Reader\Sort;
 use Yiisoft\DataResponse\DataResponseFactoryInterface;
 use Yiisoft\Data\Paginator\OffsetPaginator;use Yiisoft\FormModel\FormHydrator;
-use Yiisoft\Form\Helper\HtmlFormErrors;
 use Yiisoft\Http\Method;
 use Yiisoft\Json\Json;
 use Yiisoft\Router\CurrentRoute;
@@ -145,6 +144,7 @@ class ProductController
             'countries'=>$countries->get_country_list((string)$this->session->get('_language')),
             'alert' => $this->alert(),
             'form' => $form,
+            'errors' => [],
             'body' => $request->getParsedBody() ?? '',
             's'=>$sR,
             'head'=>$head,
@@ -169,6 +169,7 @@ class ProductController
                     if ($product_id) {
                       $count = $cfR->repoTableCountquery('product_custom');
                       $parameters['body'] = $body;
+                      
                       // Only save custom fields if they exist
                       if (($count > 0) && !($product_id instanceof Response)) { 
                         $this->edit_save_custom_fields($body, $formHydrator, $pcR, $product_id); 
@@ -179,8 +180,7 @@ class ProductController
                     } 
                 }
             } else {
-                // on the _form.php use $form->getValidationResult()?->getErrors() to retrieve the errors
-                $parameters['form'] = $form;   
+                $parameters['errors'] = $form->getValidationResult()?->getErrorMessagesIndexedByAttribute() ?? [];
             }
         }
         return $this->viewRenderer->render('_form', $parameters);                
@@ -300,6 +300,7 @@ class ProductController
             'alert' => $this->alert(),
             'countries'=>$countries->get_country_list((string)$this->session->get('_language')),
             'form' => $form,
+            'errors' => [],
             'body' => $this->body($product),            
             's'=>$sR,
             'head'=>$head,
@@ -330,8 +331,7 @@ class ProductController
                 ['heading'=>'','message'=>$sR->trans('record_successfully_updated'),'url'=>'product/view',
                  'id'=>$product_id]));
             } else {
-                // $form->getValidationResult()?->getErrors()
-                $parameters['form'] = $form;
+                $parameters['errors'] = $errors->getValidationResult()?->getErrorMessagesIndexedByAttribute() ?? [];
             }    
         }
         return $this->viewRenderer->render('_form', $parameters);

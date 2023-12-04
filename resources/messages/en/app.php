@@ -10,7 +10,9 @@ return [
   'invoice.breadcrumb.product.property.index' => 'Product Property Index',
   'invoice.cancel' => 'Cancel',
   'invoice.client.add' => 'Client Add',
-  'invoice.client.age' => 'Age',  
+  'invoice.client.age' => 'Age',
+  'invoice.client.age.hint' => 'This field is required and the client should legally be at least 16 years of age',  
+  'invoice.client.birthdate.hint' => 'If the birthdate is not known, enter 01/01/1901',
   'invoice.client.building.number' => 'Client Building Number',
   'invoice.client.custom.add' => 'Client Custom Add',
   'invoice.client.note.add' => 'Client Note Add',
@@ -21,6 +23,7 @@ return [
   'invoice.client.custom' => 'Client Custom',
   'invoice.client.delete.history.exits.no' => 'Cannot delete. Client History exists.',
   'invoice.client.detail.changes' => 'Please send us an email if this detail changes.',
+  'invoice.client.error.summary' => 'Error Summary',
   'invoice.client.has.user.account' => 'User Account',
   'invoice.client.has.not.user.account' => 'This client does not have a user account. '."\r\n"
     .' 1. Ensure Client is Signed up. '."\r\n"
@@ -385,6 +388,7 @@ return [
   'invoice.product.add' => 'Product Add',
   'invoice.product.country.of.origin.code' => 'Peppol Country of Origin Code using ISO-3166-1:Alpha2 Country Codes',
   'invoice.product.custom.fields' => 'Product Custom Fields (eg. Peppol: AdditionalItemProperty multiple choice field colour value black)',
+  'invoice.product.error.summary' => 'Product Error Summary',
   'invoice.product.edit' => 'Edit Product',
   'invoice.product.found' => 'Product found',  
   'invoice.product.history' =>  'Cannot delete. This product is on an invoice or quote.',

@@ -1,9 +1,9 @@
 <?php
 declare(strict_types=1);
 
+use Yiisoft\FormModel\Field;
 use Yiisoft\Html\Html;
 use Yiisoft\Html\Tag\Form;
-use Yiisoft\Yii\Bootstrap5\Alert;
 use Yiisoft\Arrays\ArrayHelper;
 
 /**
@@ -14,123 +14,213 @@ use Yiisoft\Arrays\ArrayHelper;
  * @var string $action
  * @var string $title
  */
-$errors = $form->getValidationResult()?->getErrors();
-if (!empty($errors)) {
-    foreach ($errors as $field => $error) {
-        echo Alert::widget()->options(['class' => 'alert-danger'])->body(Html::encode($field . ':' . $error));
-    }
-}
 ?>
 <h1><?= Html::encode($title) ?></h1>
-
+<?= Html::openTag('div',['class'=>'container py-5 h-100']); ?>
+<?= Html::openTag('div',['class'=>'row d-flex justify-content-center align-items-center h-100']); ?>
+<?= Html::openTag('div',['class'=>'col-12 col-md-8 col-lg-6 col-xl-8']); ?>
+<?= Html::openTag('div',['class'=>'card border border-dark shadow-2-strong rounded-3']); ?>
+<?= Html::openTag('div',['class'=>'card-header']); ?>
+<?= Html::openTag('h1',['class'=>'fw-normal h3 text-center']); ?>
+<?= $s->trans('clients_form'); ?>
+<?= Html::closeTag('h1'); ?>
 <?=
-        Form::tag()
-        ->post($urlGenerator->generate(...$action))
-        ->enctypeMultipartFormData()
-        ->csrf($csrf)
-        ->id('clientForm')
-        ->open()
+    Form::tag()
+    ->post($urlGenerator->generate(...$action))
+    ->enctypeMultipartFormData()
+    ->csrf($csrf)
+    ->id('ClientForm')
+    ->open()
 ?>
+<?= Field::buttonGroup()
+    ->addContainerClass('btn-group btn-toolbar float-end')
+    ->buttonsData([
+        [
+            $translator->translate('invoice.cancel'),
+            'type' => 'reset',
+            'class' => 'btn btn-sm btn-danger',
+            'name'=> 'btn_cancel'
+        ],
+        [
+            $translator->translate('invoice.submit'),
+            'type' => 'submit',
+            'class' => 'btn btn-sm btn-primary',
+            'name' => 'btn_send'
+        ],
+]) ?>
+<?= 
+    $alert; 
+?>
+<?= Field::errorSummary($form)
+    ->errors($errors)
+    ->header($translator->translate('invoice.client.error.summary'))
+    ->onlyProperties(...['client_name', 'client_surname', 'client_email', 'client_age'])    
+    ->onlyCommonErrors()
+?>
+<?= 
+    Html::openTag('div', ['class'=> 'card']),
+        Html::openTag('div', ['class'=>'card-header d-flex justify-content-between']), 
+            $s->trans('personal_information'),
+            Html::openTag('div', ['class' => 'p-2']), 
+                Field::checkbox($form, 'client_active')
+                ->inputValue(!$body['client_active']),
+            Html::closeTag('div'),
+        Html::closeTag('div'),
+    Html::closeTag('div')    
+?>
+    
+<?= Field::text($form, 'client_name')
+    ->label($s->trans('client_name'))
+    ->addInputAttributes([
+        'value' => Html::encode($body['client_name'] ?? ''),
+        'placeholder' => $s->trans('client_name'),
+        'class' => 'form-control'
+    ])
+    ->required(true)    
+    ->hint($translator->translate('invoice.hint.this.field.is.required')); 
+?>
+<?= Field::text($form, 'client_surname')
+    ->label($s->trans('client_surname'))
+    ->addInputAttributes([
+        'value' => Html::encode($body['client_surname'] ?? ''), 
+        'placeholder' => $s->trans('client_surname'),
+        'class' => 'form-control'
+    ])
+    ->required(true)        
+    ->hint($translator->translate('invoice.hint.this.field.is.required'));
+?>
+<?= Field::text($form, 'client_number')
+    ->label($translator->translate('invoice.client.number'))
+    ->addInputAttributes([
+        'value' => Html::encode($body['client_number'] ?? ''), 
+        'placeholder' => $s->trans('client_number'),
+        'class' => 'form-control'  
+    ])
+    ->required(false)    
+    ->hint($translator->translate('invoice.hint.this.field.is.not.required'));
+?>  
+    
+<?php
+    $options = [];
+    foreach (ArrayHelper::map($s->expandDirectoriesMatrix($aliases->get('@language'), 0), 'name', 'name') as $language) { 
+        $options[$language] = ucfirst($language);                    
+    }
+    echo Field::select($form, 'client_language')
+    ->label($s->trans('language'),['control-label'])
+    ->addInputAttributes([
+        'value' => '0',
+        'class' => 'form-control',
+        'id' => 'client_language'
+    ])    
+    ->addInputAttributes(['selected' => $s->check_select(Html::encode($body['client_language'] ?? ''), $language)])
+    ->optionsData($options)        
+    ->required(true)    
+    ->hint($translator->translate('invoice.hint.this.field.is.required')); 
+?>  
 
-<div id="headerbar">
-    <h1 class="headerbar-title"><?= $s->trans('clients_form'); ?></h1>
-    <?php
-    echo $buttons;
-    ?>
-    <div class="mb-3 form-group btn-group-sm">
-    </div>
-</div>
-<div class="card">
-    <div class="card-header d-flex justify-content-between">
-        <?= $s->trans('personal_information'); ?>
-        <div  class="p-2">
-            <label for="client_active" class="control-label ">
-                <?= $s->trans('active_client'); ?>
-                <input id="client_active" name="client_active" type="checkbox" value="1"
-                       <?php $s->check_select(Html::encode($body['client_active'] ?? ''), 1, '==', true) ?>>
-            </label>
-        </div>
-    </div>
-    <div class="row">
-        <div class="mb-3 form-group">
-            <label for="client_name" class="form-label"><?= $s->trans('client_name'); ?><span style="color:red">*</span></label>
-            <input type="text" class="form-control" name="client_name" id="client_name"
-                   placeholder="<?= $s->trans('client_name'); ?>" value="<?= Html::encode($body['client_name'] ?? '') ?>" required>
-        </div>
-        <div class="mb-3 form-group">
-            <label for="client_surname" class="form-label"><?= $s->trans('client_surname'); ?></label>
-            <input type="text" class="form-control" name="client_surname" id="client_surname" placeholder="<?= $s->trans('client_surname'); ?>" value="<?= Html::encode($body['client_surname'] ?? '') ?>">
-        </div>
-        <div class="mb-3 form-group">
-            <label for="client_number" class="form-label"><?= $translator->translate('invoice.client.number'); ?></label>
-            <input type="text" class="form-control" name="client_number" id="client_number" placeholder="<?= $translator->translate('invoice.client.number'); ?>" value="<?= Html::encode($body['client_number'] ?? '') ?>">
-        </div>
-        <div class="mb-3 form-group no-margin">
-            <label for="client_language" class="form-label">
-                <?php echo $s->trans('language'); ?>
-            </label>
-            <select name="client_language" id="client_language" class="form-control" required>
-                <option><?php Html::encode($body['client_language'] ?? ''); ?></option>
-                <?php foreach (ArrayHelper::map($s->expandDirectoriesMatrix($aliases->get('@language'), 0), 'name', 'name') as $language) { ?>
-                    <option value="<?= $language; ?>"
-                            <?php $s->check_select(Html::encode($body['client_language'] ?? ''), $language) ?>>
-                            <?= ucfirst($language); ?>
-                    </option>
-                <?php } ?>
-            </select>
-        </div>
-    </div>
-
-</div>
 <br>
-<div class="card">
-    <div class="card-header">
+<?= Html::openTag('div',['class' => 'card']); ?>
+    <?= Html::openTag('div',['class' => 'card-header']); ?>
         <?= $s->trans('address'); ?>
-    </div>
-    <div class="row">
-        <div class="mb-3 form-group">
-            <label for="client_address_1" class="form-label"><?= $s->trans('street_address'); ?></label>
-            <input type="text" class="form-control" name="client_address_1" id="client_address_1" placeholder="<?= $s->trans('street_address'); ?>" value="<?= Html::encode($body['client_address_1'] ?? '') ?>">
-        </div>
-
-        <div class="mb-3 form-group">
-            <label for="client_address_2" class="form-label"><?= $s->trans('street_address_2'); ?></label>
-            <input type="text" class="form-control" name="client_address_2" id="client_address_2" placeholder="<?= $s->trans('street_address_2'); ?>" value="<?= Html::encode($body['client_address_2'] ?? '') ?>">
-        </div>
-
-        <div class="mb-3 form-group">
-            <label for="client_building_number" class="form-label"><?= $translator->translate('invoice.client.building.number'); ?></label>
-            <input type="text" class="form-control" name="client_building_number" id="client_building_number" placeholder="<?= $translator->translate('invoice.client.building.number'); ?>" value="<?= Html::encode($body['client_building_number'] ?? '') ?>">
-        </div>
-
-        <div class="mb-3 form-group">
-            <label for="client_city" class="form-label"><?= $s->trans('city'); ?></label>
-            <input type="text" class="form-control" name="client_city" id="client_city" placeholder="<?= $s->trans('city'); ?>" value="<?= Html::encode($body['client_city'] ?? '') ?>">
-        </div>
-
-        <div class="mb-3 form-group">
-            <label for="client_state" class="form-label"><?= $s->trans('state'); ?></label>
-            <input type="text" class="form-control" name="client_state" id="client_state" placeholder="<?= $s->trans('state'); ?>" value="<?= Html::encode($body['client_state'] ?? '') ?>">
-        </div>
-
-        <div class="mb-3 form-group">
-            <label for="client_zip" class="form-label"><?= $s->trans('zip'); ?></label>
-            <input type="text" class="form-control" name="client_zip" id="client_zip" placeholder="<?= $s->trans('zip'); ?>" value="<?= Html::encode($body['client_zip'] ?? '') ?>">
-        </div>
-
-        <div class="mb-3 form-group">
-            <label for="client_country" class="form-label"><?= $s->trans('country'); ?></label>
-            <div class="controls">
-                <select name="client_country" id="client_country" class="form-control">
-                    <?php foreach ($countries as $cldr => $country) { ?>
-                        <option value="<?= $country; ?>"
-                        <?php $s->check_select(($body['client_country'] ?? $client->getClient_country()), $country); ?>
-                                ><?php echo $country ?></option>
-                            <?php } ?>
-                </select>
-            </div>
-        </div>
-        <div class="mb-3 form-group">
+    <?= Html::closeTag('div'); ?>
+    <?= Html::openTag('div', ['class' => 'row']); ?>
+        <?= Html::openTag('div',['class' => 'mb-3 form-group']); ?>
+            <?= Field::text($form, 'client_address_1')
+                ->label($s->trans('street_address'), ['form-label'])
+                ->addInputAttributes([
+                    'placeholder' => $s->trans('street_address'),
+                    'value' => Html::encode($body['client_address_1'] ?? ''),
+                    'class' => 'form-control',
+                    'id' => 'client_address_1',
+                ])
+                ->required(true)    
+                ->hint($translator->translate('invoice.hint.this.field.is.required')); 
+            ?>
+        <?= Html::closeTag('div'); ?>
+        <?= Html::tag('br'); ?>
+        <?= Html::openTag('div',['class' => 'mb-3 form-group']); ?>
+            <?= Field::text($form, 'client_address_2')
+                ->label($s->trans('street_address_2'), ['form-label'])
+                ->addInputAttributes([
+                    'placeholder' => $s->trans('street_address_2'),
+                    'value' => Html::encode($body['client_address_2'] ?? ''),
+                    'class' => 'form-control',
+                    'id' => 'client_address_2'
+                ])
+                ->required(true)    
+                ->hint($translator->translate('invoice.hint.this.field.is.required')); 
+            ?>
+        <?= Html::closeTag('div'); ?>
+        <?= Html::openTag('div',['class' => 'mb-3 form-group']); ?>
+            <?= Field::text($form, 'client_building_number')
+                ->label($translator->translate('invoice.client.building.number'), ['form-label'])
+                ->addInputAttributes([ 
+                    'placeholder' => $translator->translate('invoice.client.building.number'),
+                    'value' => Html::encode($body['client_building_number'] ?? ''),
+                    'class' => 'form-control',                
+                    'id' => 'client_building_number',
+                ])
+                ->required(false)    
+                ->hint($translator->translate('invoice.hint.this.field.is.not.required')); 
+            ?>
+        <?= Html::closeTag('div'); ?>
+        <?= Html::openTag('div',['class' => 'mb-3 form-group']); ?>
+            <?= Field::text($form, 'client_city')
+                ->label($s->trans('city'), ['form-label'])
+                ->addInputAttributes([
+                    'placeholder' => $s->trans('city'),                
+                    'value' => Html::encode($body['client_city'] ?? ''),
+                    'class' => 'form-control',
+                    'id' => 'client_city', 
+                ])
+                ->required(true)            
+                ->hint($translator->translate('invoice.hint.this.field.is.required')); 
+            ?>
+        <?= Html::closeTag('div'); ?>
+        <?= Html::openTag('div',['class' => 'mb-3 form-group']); ?>
+            <?= Field::text($form, 'client_state')
+                ->label($s->trans('state'), ['form-label'])
+                ->addInputAttributes([
+                    'placeholder' => $s->trans('state'),
+                    'value' => Html::encode($body['client_state'] ?? ''),
+                    'class' => 'form-control',
+                    'id' => 'client_state',    
+                ])
+                ->required(true)    
+                ->hint($translator->translate('invoice.hint.this.field.is.required')); 
+            ?>
+        <?= Html::closeTag('div'); ?>
+        <?= Html::openTag('div',['class' => 'mb-3 form-group']); ?>
+            <?= Field::text($form, 'client_zip')
+                ->label($s->trans('zip'), ['form-label'])
+                ->addInputAttributes([
+                    'placeholder' => $s->trans('zip'),
+                    'value' => Html::encode($body['client_zip'] ?? ''),
+                    'class' => 'form-control',
+                    'id' => 'client_zip', 
+                ])
+                ->required(true)
+                ->hint($translator->translate('invoice.hint.this.field.is.required')); 
+            ?>
+        <?= Html::closeTag('div'); ?>
+        <?= Html::openTag('div',['class' => 'mb-3 form-group']); ?>
+            <?php 
+                foreach ($countries as $cldr => $country) { 
+                    $options[$country] = ucfirst($country);                    
+                }
+                echo Field::select($form, 'client_country')
+                ->label($s->trans('country'),['control-label'])
+                ->addInputAttributes([
+                    'id' => 'client_country', 
+                    'class' => 'form-control',
+                    'selected' => $s->check_select(($body['client_country'] ?? $client->getClient_country()), $country)
+                ])    
+                ->optionsData($options)
+                ->required(true)
+                ->hint($translator->translate('invoice.hint.this.field.is.required')); 
+            ?>
+        <?= Html::closeTag('div'); ?>
+        <?= Html::openTag('div',['class' => 'mb-3 form-group']); ?>
             <?php foreach ($custom_fields as $custom_field): ?>
                 <?php
                 if ($custom_field->getLocation() !== 1) {
@@ -149,65 +239,96 @@ if (!empty($errors)) {
                         // Label class similar to above
                         'control-label');
                 ?>
-<?php endforeach; ?>
-        </div>
-    </div>
-</div>
+            <?php endforeach; ?>
+        <?= Html::closeTag('div'); ?>    
+    <?= Html::closeTag('div'); ?>
+<?= Html::closeTag('div'); ?>
 <br>
-<div class="card">
-    <div class="card-header">
-<?= $s->trans('contact_information'); ?>
-    </div>
-    <div class="row">
-        <div class="mb-3 form-group">
-            <label for="client_phone" class="form-label"><?= $s->trans('phone'); ?></label>
-            <input type="text" class="form-control" name="client_phone" id="client_phone" placeholder="<?= $s->trans('phone'); ?>" value="<?= Html::encode($body['client_phone'] ?? '') ?>">
-        </div>
-
-        <div class="mb-3 form-group">
-            <label for="client_fax" class="form-label"><?= $s->trans('fax'); ?></label>
-            <input type="text" class="form-control" name="client_fax" id="client_fax" placeholder="<?= $s->trans('fax'); ?>" value="<?= Html::encode($body['client_fax'] ?? '') ?>">
-        </div>
-
-        <div class="mb-3 form-group">
-            <label for="client_mobile" class="form-label"><?= $s->trans('mobile'); ?></label>
-            <input type="text" class="form-control" name="client_mobile" id="client_mobile" placeholder="<?= $s->trans('mobile'); ?>" value="<?= Html::encode($body['client_mobile'] ?? '') ?>">
-        </div>
-
-        <div class="mb-3 form-group">
-            <label for="client_email" class="form-label"><?= $s->trans('email'); ?><span style="color:red">*</span></label>
-            <input type="text" class="form-control" name="client_email" id="client_email" placeholder="<?= $s->trans('email'); ?>" value="<?= Html::encode($body['client_email'] ?? '') ?>" required>
-        </div>
-
-        <div class="mb-3 form-group">
-            <label for="client_web" class="form-label"><?= $s->trans('web'); ?></label>
-            <input type="text" class="form-control" name="client_web" id="client_web" placeholder="<?= $s->trans('web'); ?>" value="<?= Html::encode($body['client_web'] ?? '') ?>">
-        </div>
-        <div class="mb-3 form-group">
-            <div>
+<?= Html::openTag('div',['class' => 'card']); ?>
+    <?= Html::openTag('div',['class' => 'card-header']); ?>
+        <?= $s->trans('contact_information'); ?>
+    <?= Html::closeTag('div'); ?>
+    <?= Html::openTag('div', ['class' => 'row']); ?>
+        <?= Html::openTag('div',['class' => 'mb-3 form-group']); ?>
+            <?= Field::telephone($form, 'client_phone')
+                ->label($s->trans('phone'), ['form-label'])
+                ->addInputAttributes([
+                    'placeholder' => $s->trans('phone'),
+                    'value' => Html::encode($body['client_phone'] ?? ''),
+                    'class' => 'form-control',
+                    'id' => 'client_phone'
+                ])
+                ->required(false)
+                ->hint($translator->translate('invoice.hint.this.field.is.not.required')); 
+            ?>
+            <?= Field::telephone($form, 'client_fax')
+                ->label($s->trans('fax'), ['form-label'])
+                ->addInputAttributes([
+                    'placeholder' => $s->trans('phone'),
+                    'value' => Html::encode($body['client_fax'] ?? ''),
+                    'class' => 'form-control', 
+                    'id' => 'client_fax', 
+                ])
+                ->required(false)    
+                ->hint($translator->translate('invoice.hint.this.field.is.not.required')); 
+            ?>
+            <?= Field::telephone($form, 'client_mobile')
+                ->label($s->trans('fax'), ['class' => 'form-label'])
+                ->addInputAttributes([
+                    'placeholder' => $s->trans('mobile'),
+                    'value' => Html::encode($body['client_mobile'] ?? ''),
+                    'class' => 'form-control', 
+                    'id' => 'client_mobile'
+                ])
+                ->required(true)    
+                ->hint($translator->translate('invoice.hint.this.field.is.required')); 
+            ?>
+            <?= Field::email($form, 'client_email')
+                ->label($s->trans('email'), ['class' => 'form-label'])
+                ->addInputAttributes([
+                    'placeholder' => $s->trans('email'),
+                    'value' =>  Html::encode($body['client_email'] ?? ''),
+                    'class' => 'form-control',
+                    'id' => 'client_email'
+                ])
+                ->required(true)    
+                ->hint($translator->translate('invoice.hint.this.field.is.required')); 
+            ?>
+            <?= Field::text($form, 'client_web')
+                ->label($s->trans('web'), ['class' => 'form-label'])
+                ->addInputAttributes([
+                    'placeholder' => $s->trans('web'),
+                    'value' => Html::encode($body['client_web'] ?? ''),
+                    'class' => 'form-control',
+                    'id' => 'client_web',
+                ])
+                ->required(false)
+                ->hint($translator->translate('invoice.hint.this.field.is.not.required')); 
+            ?>
+        <?= Html::closeTag('div'); ?>
+        <?= Html::openTag('div',['class' => 'mb-3 form-group']); ?>
+           <?= Html::openTag('div'); ?>
                 <label for="postaladdress_id"><?= $translator->translate('invoice.client.postaladdress.available'); ?>: </label>
-            </div>
-            <div>
-                <div class="input-group">
-                                <?php if ($postal_address_count > 0) { ?>
-                        <select name="postaladdress_id" id="postaladdress_id"
-                                class="form-control">
-                                    <?php foreach ($postaladdresses as $postaladdress) { ?>
-                                <option value="<?php echo $postaladdress->getId(); ?>"
-                                <?php echo $s->check_select(Html::encode($body['client_postaladdress_id'] ?? $postaladdress->getId()), $postaladdress->getId()); ?>>
-                                <?php echo $postaladdress->getStreet_name() . ', ' . $postaladdress->getAdditional_street_name() . ', ' . $postaladdress->getBuilding_number() . ', ' . $postaladdress->getCity_name(); ?>
-                                </option>
-                        <?php } ?>
-                        </select>
-                    <?php
-                    } else {
-                        echo Html::a($translator->translate('invoice.client.postaladdress.add'), $urlGenerator->generate('postaladdress/add', ['client_id' => $client->getClient_id()]), ['class' => 'btn btn-warning btn-lg mt-3']);
-                    }
-                    ?>
-                </div>
-            </div>
-        </div>
-        <div class="mb-3 form-group">
+            <?= Html::closeTag('div'); ?>           
+            <?= Html::openTag('div',['class' => 'input-group']); ?>
+                            <?php if ($postal_address_count > 0) { ?>
+                    <select name="postaladdress_id" id="postaladdress_id"
+                            class="form-control">
+                                <?php foreach ($postaladdresses as $postaladdress) { ?>
+                            <option value="<?php echo $postaladdress->getId(); ?>"
+                            <?php echo $s->check_select(Html::encode($body['client_postaladdress_id'] ?? $postaladdress->getId()), $postaladdress->getId()); ?>>
+                            <?php echo $postaladdress->getStreet_name() . ', ' . $postaladdress->getAdditional_street_name() . ', ' . $postaladdress->getBuilding_number() . ', ' . $postaladdress->getCity_name(); ?>
+                            </option>
+                    <?php } ?>
+                    </select>
+                <?php
+                } else {
+                    echo Html::a($translator->translate('invoice.client.postaladdress.add'), $urlGenerator->generate('postaladdress/add', ['client_id' => $client->getClient_id()]), ['class' => 'btn btn-warning btn-lg mt-3']);
+                }
+                ?>
+            <?= Html::closeTag('div'); ?>            
+        <?= Html::closeTag('div'); ?>
+        <?= Html::openTag('div', ['class' => 'mb-3 form-group']); ?>
             <?php foreach ($custom_fields as $custom_field): ?>
                 <?php
                 if ($custom_field->getLocation() !== 2) {
@@ -227,18 +348,18 @@ if (!empty($errors)) {
                         'control-label');
                 ?>
         <?php endforeach; ?>
-        </div>
-    </div>
-</div>
+        <?= Html::closeTag('div'); ?>
+    <?= Html::closeTag('div'); ?>
+<?= Html::closeTag('div'); ?>
 <br>
-<div class="card">
-    <div class="card-header">
-<?= $s->trans('personal_information'); ?>
-    </div>
-    <div class="row">
-        <div class="mb-3 form-group">
+<?= Html::openTag('div',['class' => 'card']); ?>
+    <?= Html::openTag('div',['class' => 'card-header']); ?>
+        <?= $s->trans('personal_information'); ?>
+    <?= Html::closeTag('div'); ?>
+    <?= Html::openTag('div', ['class' => 'row']); ?>
+        <?= Html::openTag('div',['class' => 'mb-3 form-group']); ?>
             <label for="client_gender"  class="form-label"><?= $s->trans('gender'); ?></label>
-            <div class="controls">
+            <?= Html::openTag('div',['class' => 'controls']); ?>
                 <select name="client_gender" id="client_gender"
                         class="form-control" data-minimum-results-for-search="Infinity">
                             <?php
@@ -254,49 +375,82 @@ if (!empty($errors)) {
                         </option>
             <?php } ?>
                 </select>
-            </div>
-        </div>
-        <div class="mb-3 form-group has-feedback">
-        <?php
-        $bdate = $datehelper->get_or_set_with_style($body['client_birthdate']);
-        ?>
-            <label form-label for="client_birthdate"><?= $s->trans('birthdate') . ' (' . $datehelper->display() . ')'; ?></label>
-            <div class="input-group">
-                <input type="text" name="client_birthdate" id="client_birthdate" placeholder="<?= ' (' . $datehelper->display() . ')'; ?>"
-                       class="form-control input-sm datepicker" readonly
-                       value="<?= null !== $bdate ? Html::encode($bdate instanceof \DateTimeImmutable ? $bdate->format($datehelper->style()) : $bdate) : null; ?>" role="presentation" autocomplete="off">
-                <span class="input-group-text">
-                    <i class="fa fa-calendar fa-fw"></i>
-                </span>
-            </div>
-        </div>
-        <div class="mb-3 form-group">
-            <label for="client_age" class="form-label"><?= $translator->translate('invoice.client.age'); ?></label>
-            <input type="text" class="form-control" name="client_age" id="client_age" placeholder="<?= $translator->translate('invoice.client.age'); ?>" value="<?= Html::encode($body['client_age'] ?? '') ?>">
-        </div>
-        <div class="mb-3 form-group">
-            <label for="client_avs" class="form-label"><?= $s->trans('sumex_ssn'); ?></label>
-            <input type="text" class="form-control" name="client_avs" id="client_avs" placeholder="<?= $s->trans('sumex_ssn'); ?>" value="<?= Html::encode($body['client_avs'] ?? '') ?>">
-        </div>
-
-        <div class="mb-3 form-group">
-            <label for="client_insurednumber" class="form-label"><?= $s->trans('sumex_insurednumber'); ?></label>
-            <input type="text" class="form-control" name="client_insurednumber" id="client_insurednumber" placeholder="<?= $s->trans('sumex_insurednumber'); ?>" value="<?= Html::encode($body['client_insurednumber'] ?? '') ?>">
-        </div>
-
-        <div class="mb-3 form-group">
-            <label for="client_veka" class="form-label"><?= $s->trans('sumex_veka'); ?></label>
-            <input type="text" class="form-control" name="client_veka" id="client_veka" placeholder="<?= $s->trans('sumex_veka'); ?>" value="<?= Html::encode($body['client_veka'] ?? '') ?>">
-        </div>
-        <div class="mb-3 form-group">
-            <?php foreach ($custom_fields as $custom_field): ?>
-                <?php
-                if ($custom_field->getLocation() !== 3) {
-                    continue;
-                }
-                ?>
-                <?=
-                $cvH->print_field_for_form($client_custom_values,
+            <?= Html::closeTag('div'); ?>
+        <?= Html::closeTag('div'); ?>
+        <?= Html::openTag('div',['class' => 'mb-3 form-group has-feedback']); ?>
+            <?php
+                $bdate = $datehelper->get_or_set_with_style($body['client_birthdate']);
+                echo Field::text($form, 'client_birthdate')
+                ->label($s->trans('birthdate'), ['class' => 'form-label'])
+                ->addInputAttributes([
+                    'placeholder' => $s->trans('birthdate'),
+                    'value' => null !== $bdate ? Html::encode($bdate instanceof \DateTimeImmutable ? $bdate->format($datehelper->style()) : $bdate) : null,
+                    'class' => 'form-control input-sm datepicker',
+                    'id' => 'client_birthdate',
+                    'role' => 'presentation',
+                    'autocomplete' => 'off'
+                ])
+                ->required(false)
+                ->readonly(true)        
+                ->hint($translator->translate('invoice.hint.this.field.is.not.required')); 
+            ?>    
+            <?= Field::number($form, 'client_age')
+                ->label($translator->translate('invoice.client.age'), ['form-label'])
+                ->addInputAttributes([
+                    'placeholder' => $translator->translate('invoice.client.age'),
+                    'value' => Html::encode($body['client_age'] ?? ''),
+                    'class' => 'form-control',
+                    'id' => 'client_age'
+                ])
+                ->required(true)
+                ->min(16)
+                ->step(1)
+                ->hint($translator->translate('invoice.client.age.hint'))
+            ?>
+            <?= Field::text($form, 'client_avs')
+                ->label($s->trans('sumex_ssn'), ['class' => 'form-label'])
+                ->addInputAttributes([
+                    'placeholder' => $s->trans('sumx_ssn'),
+                    'value' =>  Html::encode($body['client_avs'] ?? ''),
+                    'class' => 'form-control',
+                    'id' => 'client_avs'
+                ])
+                ->required(false)    
+                ->hint($translator->translate('invoice.hint.this.field.is.not.required')); 
+            ?>
+            <?= Field::text($form, 'client_insurednumber')
+                ->label($s->trans('sumex_insuredumber'), ['class' => 'form-label'])
+                ->addInputAttributes([
+                    'placeholder' => $s->trans('sumex_insurednumber'),
+                    'value' =>  Html::encode($body['client_insurednumber'] ?? ''),
+                    'class' => 'form-control',
+                    'id' => 'client_insurednumber'
+                ])
+                ->required(false)    
+                ->hint($translator->translate('invoice.hint.this.field.is.not.required')); 
+            ?>
+            <?= Field::text($form, 'client_veka')
+                ->label($s->trans('sumex_veka'), ['class' => 'form-label'])
+                ->addInputAttributes([
+                    'placeholder' => $s->trans('sumex_veka'),
+                    'value' =>  Html::encode($body['client_veka'] ?? ''),
+                    'class' => 'form-control',
+                    'id' => 'client_veka'
+                ])
+                ->required(false)    
+                ->hint($translator->translate('invoice.hint.this.field.is.not.required')); 
+            ?>
+            <?= Html::closeTag('div'); ?>    
+            <?= Html::openTag('div',['class' => 'mb-3 form-group']); ?>
+                <?php foreach ($custom_fields as $custom_field): ?>
+                    <?php
+                    if ($custom_field->getLocation() !== 3) {
+                        continue;
+                    }
+                    ?>
+                    <?=
+                    $cvH->print_field_for_form(
+                        $client_custom_values,
                         $custom_field,
                         // Custom values to fill drop down list if a dropdown box has been created
                         $custom_values,
@@ -306,82 +460,105 @@ if (!empty($errors)) {
                         'form-group',
                         // Label class similar to above
                         'control-label');
-                ?>
-<?php endforeach; ?>
-        </div>
+                    ?>
+                <?php endforeach; ?>
+            <?= Html::closeTag('div'); ?>    
+        <?= Html::closeTag('div'); ?>
+    <?= Html::closeTag('div'); ?>
+<?= Html::closeTag('div'); ?>
 
-    </div>
-</div>
-
-<div class="card">
-    <div class="card-header">
-<?= $s->trans('tax_information'); ?>
-    </div>
-    <div class="row">
-        <div class="mb-3 form-group">
-            <label for="client_vat_id" class="form-label"><?= $s->trans('vat_id'); ?></label>
-            <input type="text" class="form-control" name="client_vat_id" id="client_vat_id" placeholder="<?= $s->trans('vat_id'); ?>" value="<?= Html::encode($body['client_vat_id'] ?? '') ?>">
-        </div>
-
-        <div class="mb-3 form-group">
-            <label for="client_tax_code" class="form-label"><?= $s->trans('tax_code'); ?></label>
-            <input type="text" class="form-control" name="client_tax_code" id="client_tax_code" placeholder="<?= $s->trans('tax_code'); ?>" value="<?= Html::encode($body['client_tax_code'] ?? '') ?>">
-        </div>
-        <div class="mb-3 form-group">
+<?= Html::openTag('div',['class' => 'card']); ?>
+    <?= Html::openTag('div',['class' => 'card-header']); ?>
+        <?= $s->trans('tax_information'); ?>
+    <?= Html::closeTag('div'); ?>
+    <?= Html::openTag('div',['class' => 'row']); ?>
+        <?= Field::text($form, 'client_vat_id')
+            ->label($s->trans('vat_id'), ['class' => 'form-label'])
+            ->addInputAttributes([
+                'placeholder' => $s->trans('vat_id'),
+                'value' =>  Html::encode($body['client_vat_id'] ?? ''),
+                'class' => 'form-control',
+                'id' => 'client_vat_id'
+            ])
+            ->required(false)    
+            ->hint($translator->translate('invoice.hint.this.field.is.not.required')); 
+        ?>
+        <?= Field::text($form, 'client_tax_code')
+            ->label($s->trans('tax_code'), ['class' => 'form-label'])
+            ->addInputAttributes([
+                'placeholder' => $s->trans('tax_code'),
+                'value' =>  Html::encode($body['client_tax_code'] ?? ''),
+                'class' => 'form-control',
+                'id' => 'client_tax_code'
+            ])
+            ->required(true)    
+            ->hint($translator->translate('invoice.hint.this.field.is.required')); 
+        ?>
+        <?= Html::openTag('div',['class' => 'mb-3 form-group']); ?>
             <?php foreach ($custom_fields as $custom_field): ?>
                 <?php
                 if ($custom_field->getLocation() !== 4) {
                     continue;
                 }
                 ?>
-    <?=
-    $cvH->print_field_for_form($client_custom_values,
-            $custom_field,
-            // Custom values to fill drop down list if a dropdown box has been created
-            $custom_values,
-            // Class for div surrounding input
-            'col-xs-12 col-sm-6',
-            // Class surrounding above div
-            'form-group',
-            // Label class similar to above
-            'control-label');
-    ?>
+                <?=
+                $cvH->print_field_for_form($client_custom_values,
+                    $custom_field,
+                    // Custom values to fill drop down list if a dropdown box has been created
+                    $custom_values,
+                    // Class for div surrounding input
+                    'col-xs-12 col-sm-6',
+                    // Class surrounding above div
+                    'form-group',
+                    // Label class similar to above
+                    'control-label');
+                ?>
+            <?php endforeach; ?>
+        <?= Html::closeTag('div'); ?>
+        <?= Html::openTag('div',['class' => 'form-group']); ?>
+            <?php if ($custom_fields): ?>
+            <div class="row">
+                <div class="col-xs-12 col-md-6">
+                    <div class="panel panel-default">
+                        <div class="panel-heading">
+                            <?= $s->trans('custom_fields'); ?>
+                        </div>
+                        <div class="panel-body">
+                            <?php foreach ($custom_fields as $custom_field): ?>
+                                <?php
+                                if ($custom_field->getLocation() !== 0) {
+                                    continue;
+                                }
+                                ?>
+                                <?=
+                                $cvH->print_field_for_form($client_custom_values,
+                                    $custom_field,
+                                    // Custom values to fill drop down list if a dropdown box has been created
+                                    $custom_values,
+                                    // Class for div surrounding input
+                                    'col-xs-12 col-sm-6',
+                                    // Class surrounding above div
+                                    'form-group',
+                                    // Label class similar to above
+                                    'control-label');
+                                ?>
                             <?php endforeach; ?>
-        </div>
-        <div class="form-group">
-                            <?php if ($custom_fields): ?>
-                <div class="row">
-                    <div class="col-xs-12 col-md-6">
-                        <div class="panel panel-default">
-                            <div class="panel-heading">
-                                <?= $s->trans('custom_fields'); ?>
-                            </div>
-                            <div class="panel-body">
-                                <?php foreach ($custom_fields as $custom_field): ?>
-                                    <?php
-                                    if ($custom_field->getLocation() !== 0) {
-                                        continue;
-                                    }
-                                    ?>
-        <?=
-        $cvH->print_field_for_form($client_custom_values,
-                $custom_field,
-                // Custom values to fill drop down list if a dropdown box has been created
-                $custom_values,
-                // Class for div surrounding input
-                'col-xs-12 col-sm-6',
-                // Class surrounding above div
-                'form-group',
-                // Label class similar to above
-                'control-label');
-        ?>
-    <?php endforeach; ?>
-                            </div>
                         </div>
                     </div>
                 </div>
-<?php endif; ?>
-        </div>
-    </div>
-</div>
+            </div>
+            <?php endif; ?>
+        <?= Html::closeTag('div'); ?>
+    <?= Html::closeTag('div'); ?>
+<?= Html::closeTag('div'); ?>
 <?= Form::tag()->close() ?>
+<?= Form::tag()->close(); ?>
+<?= Html::closeTag('div'); ?>
+<?= Html::closeTag('div'); ?>
+<?= Html::closeTag('div'); ?>
+<?= Html::closeTag('div'); ?>
+<?= Html::closeTag('div'); ?>
+
+<?php            
+    echo "This is the dump: " .\Yiisoft\VarDumper\VarDumper::dump($body['client_active']);
+?>

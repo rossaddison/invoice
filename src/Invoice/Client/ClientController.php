@@ -150,6 +150,7 @@ final class ClientController
             'client_insurednumber'=>$client->getClient_insurednumber(),
             'client_veka'=>$client->getClient_veka(),
             'client_birthdate'=>$client->getClient_birthdate(),
+            'client_age'=>$client->getClient_age(),
             'client_gender'=>$client->getClient_gender(),
             'client_postaladdress_id'=>$client->getPostaladdress_id()
         ];
@@ -361,6 +362,8 @@ final class ClientController
             $parameters = [
                 'title' => $sR->trans('edit'),
                 'action' => ['client/edit', ['id' => $client_id]],
+                'alert' => $this->alert(),
+                'errors' => [],
                 'buttons' => $this->viewRenderer->renderPartialAsString('/invoice/layout/header_buttons',['s'=>$sR, 'hide_submit_button'=>false ,'hide_cancel_button'=>false]), 
                 'datehelper'=> new DateHelper($sR),
                 'client'=> $client,
@@ -385,11 +388,12 @@ final class ClientController
                     $parameters['body'] = $body;
                     if (!$returned_form->isValid()) {
                         $parameters['form'] = $returned_form;
+                        $parameters['errors'] = $returned_form->getValidationResult()?->getErrorMessagesIndexedByAttribute() ?? [];
                         return $this->viewRenderer->render('__form', $parameters);
                     }  
                     // Only save custom fields if they exist
                     if ($cfR->repoTableCountquery('client_custom') > 0) { 
-                      $this->edit_save_custom_fields($body, $formHydrator, $ccR, (string)$client_id); 
+                        $this->edit_save_custom_fields($body, $formHydrator, $ccR, (string)$client_id); 
                     }
                 }    
                 $this->flash_message('info', $sR->trans('record_successfully_updated'));

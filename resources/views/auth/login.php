@@ -32,21 +32,25 @@ $error = $error ?? null;
                 <div class="card-body p-5 text-center">
                     <?= Form::tag()
                         ->post($urlGenerator->generate('auth/login'))
+                        ->class('form-floating')
                         ->csrf($csrf)
                         ->id('loginForm')
                         ->open() ?>
-
-                    <?= Field::text($formModel, 'login')->autofocus() ?>
-                    <?= Field::password($formModel, 'password') ?>
+                    <?= Field::text($formModel, 'login')
+                        ->inputClass('form-control')
+                        ->autofocus() ?>
+                    <?= Field::password($formModel, 'password')
+                        ->inputClass('form-control')
+                    ?>
                     <?= Field::checkbox($formModel, 'rememberMe')
                         ->containerClass('form-check form-switch text-start mt-2')
-                        ->inputClass('form-check-input')
+                        ->inputClass('form-check-input form-control')
                         ->inputLabelClass('form-check-label') ?>
                     <?= Field::submitButton()
                         ->buttonId('login-button')
+                        ->buttonClass('btn btn-primary')
                         ->name('login-button')
                         ->content($translator->translate('layout.submit')) ?>
-
                     <?= Form::tag()->close() ?>
                 </div>
             </div>
