@@ -46,7 +46,7 @@
 
                         <div class="form-group">
                             <label for="name"><?= $s->trans('task_name'); ?></label>
-                            <input type="text" name="name" id="name" class="form-control has-feedback" required
+                            <input type="text" name="name" id="name" class="form-control has-feedback" autocomplete="on" required
                                    value="<?= $body['name'] ?? ''; ?>">
                         </div>
 

@@ -390,6 +390,8 @@ return [
   'invoice.product.custom.fields' => 'Product Custom Fields (eg. Peppol: AdditionalItemProperty multiple choice field colour value black)',
   'invoice.product.error.summary' => 'Product Error Summary',
   'invoice.product.edit' => 'Edit Product',
+  'invoice.product.form.tab.required' => 'Required Fields',
+  'invoice.product.form.tab.not.required' => 'Not Required Fields',
   'invoice.product.found' => 'Product found',  
   'invoice.product.history' =>  'Cannot delete. This product is on an invoice or quote.',
   'invoice.product.id' => 'Product Id',

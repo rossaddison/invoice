@@ -163,7 +163,7 @@ class ProductController
         if ($request->getMethod() === Method::POST) {            
             $body = $request->getParsedBody();
             $product = new Product();
-            if ($form->isValid()) {
+            if (empty($form->getValidationResult()?->getErrorMessagesIndexedByAttribute())) {
                 if (is_array($body)) {
                     $product_id = $this->add_form_fields_return_id($body, $form, $product, $formHydrator);
                     if ($product_id) {

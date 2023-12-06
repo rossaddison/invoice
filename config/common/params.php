@@ -43,8 +43,8 @@ return [
     ],
   ],
   'yiisoft/form' => [
-    'configs' => [
-      'default' => [
+    'themes' => [
+       'default' => [
         'containerClass' => 'form-floating mb-3',
         'inputClass' => 'form-control',
         'invalidClass' => 'is-invalid',
@@ -52,15 +52,17 @@ return [
         'template' => '{input}{label}{hint}{error}',
         'labelClass' => 'floatingInput',
         'errorClass' => 'fw-bold fst-italic',
-        'hintClass' => 'form-text',
+        'hintClass' => 'text-danger',
         'fieldConfigs' => [
           SubmitButton::class => [
             'buttonClass()' => ['btn btn-primary btn-lg mt-3'],
             'containerClass()' => ['d-grid gap-2 form-floating'],
           ],
-        ],
-      ],
+        ],  
+       ],
     ],
+    'defaultTheme' => 'default',
+    'validationRulesEnricher' => null,
   ],
   'yiisoft/rbac-rules-container' => [
     'rules' => require __DIR__ . '/rbac-rules.php',
