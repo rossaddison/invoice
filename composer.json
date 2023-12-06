@@ -126,7 +126,7 @@
         "yiisoft/yii-bulma": "*",
         "yiisoft/yii-console": "^2.0",
         
-        "rossaddison/yii-cycle":"dev-master",
+        "yiisoft/yii-cycle":"dev-master",
         
         "yiisoft/yii-dataview": "^3.0",
         
