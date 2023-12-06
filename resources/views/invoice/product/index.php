@@ -11,6 +11,7 @@ use Yiisoft\Html\Tag\Form;
 use Yiisoft\Html\Tag\H5;
 use Yiisoft\Html\Tag\I;
 use Yiisoft\Yii\DataView\Column\DataColumn;
+use Yiisoft\Yii\DataView\Column\ActionColumn;
 use Yiisoft\Yii\DataView\GridView;
 use Yiisoft\Yii\DataView\OffsetPagination;
 use Yiisoft\Router\CurrentRoute;
@@ -141,35 +142,41 @@ use Yiisoft\Router\CurrentRoute;
             header: $translator->translate('invoice.product.property.add'),    
             content: static function ($model) use ($urlGenerator): string {
                return Html::a(
-                       Html::tag('i','',['class'=>'fa fa-plus fa-margin']), 
+                       Html::tag('i','',['class'=>'fa fa-plus fa-margin dropdown-button text-decoration-none']), 
                        $urlGenerator->generate('productproperty/add',['product_id'=>$model->getProduct_id()]),[])->render();
             },
         ),
-        new DataColumn(
-            header: $s->trans('view'),    
-            content: static function ($model) use ($urlGenerator): string {
-               return Html::a(Html::tag('i','',['class'=>'fa fa-eye fa-margin']), $urlGenerator->generate('product/view',['id'=>$model->getProduct_id()]),[])->render();
-            }
+        new ActionColumn(
+            content: static fn($model): string => 
+            Html::a()
+            ->addAttributes(['class' => 'dropdown-button text-decoration-none', 'title' => $s->trans('view')])
+            ->content('🔎')
+            ->encode(false)
+            ->href('/invoice/product/view/'. $model->getProduct_id())
+            ->render(),
         ),
-        new DataColumn(
-            header: $s->trans('edit'),    
-            content: static function ($model) use ($urlGenerator): string {
-               return Html::a(Html::tag('i','',['class'=>'fa fa-edit fa-margin']), $urlGenerator->generate('product/edit',['id'=>$model->getProduct_id()]),[])->render();
-            }
+        new ActionColumn(
+            content: static fn($model): string => 
+            Html::a()
+            ->addAttributes(['class' => 'dropdown-button text-decoration-none', 'title' => $s->trans('edit')])
+            ->content('✎')
+            ->encode(false)
+            ->href('/invoice/product/edit/'. $model->getProduct_id())
+            ->render(),
         ),
-        new DataColumn(
-            header: $s->trans('delete'),    
-            content: static function ($model) use ($s, $urlGenerator): string {
-                return Html::a( Html::tag('button',
-                    Html::tag('i','',['class'=>'fa fa-trash fa-margin']),
-                    [
-                        'type'=>'submit', 
-                        'class'=>'dropdown-button',
-                        'onclick'=>"return confirm("."'".$s->trans('delete_record_warning')."');"
-                    ]
-                    ),
-                    $urlGenerator->generate('product/delete',['id'=>$model->getProduct_id()]),[])->render();
-            }    
+        new ActionColumn(
+            content: static fn($model): string => 
+            Html::a()
+            ->addAttributes([
+                'class'=>'dropdown-button text-decoration-none', 
+                'title' => $s->trans('delete'),
+                'type'=>'submit', 
+                'onclick'=>"return confirm("."'".$s->trans('delete_record_warning')."');"
+            ])
+            ->content('❌')
+            ->encode(false)
+            ->href('/invoice/product/delete/'. $model->getProduct_id())
+            ->render(),
         )
     ];       
 ?>
