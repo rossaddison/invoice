@@ -385,7 +385,6 @@ final class ClientController
             if ($request->getMethod() === Method::POST) {            
                 if (is_array($body)) {
                     $returned_form = $this->edit_save_form_fields($body, $form, $client, $formHydrator, $sR);
-                    echo \Yiisoft\VarDumper\VarDumper::dump($returned_form);
                     $parameters['body'] = $body;
                     if (!empty($returned_form->getValidationResult()?->getErrorMessagesIndexedByAttribute())) {
                         $parameters['form'] = $returned_form;
