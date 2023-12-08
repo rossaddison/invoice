@@ -8,6 +8,7 @@ use App\ViewInjection\MetaTagsViewInjection;
 use Yiisoft\Assets\AssetManager;
 use Yiisoft\Definitions\Reference;
 use Yiisoft\Form\Field\SubmitButton;
+use Yiisoft\Form\Field\Checkbox;
 use Yiisoft\Router\CurrentRoute;
 use Yiisoft\Router\UrlGeneratorInterface;
 use Yiisoft\Translator\TranslatorInterface;
@@ -55,9 +56,15 @@ return [
         'hintClass' => 'text-danger',
         'fieldConfigs' => [
           SubmitButton::class => [
-            'buttonClass()' => ['btn btn-primary btn-lg mt-3'],
+            'buttonClass()' => ['btn btn-primary btn-sm mt-3'],
             'containerClass()' => ['d-grid gap-2 form-floating'],
           ],
+          // if this class is not used the checkbox ends up floating 
+          // because of the default containerClass above;
+          // refer to client form with active client checkbox  
+          Checkbox::class => [
+            'containerClass()' => ['form-group']    
+          ]  
         ],  
        ],
     ],

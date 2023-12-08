@@ -8,6 +8,8 @@ use App\Invoice\Helpers\DateHelper;
 use Yiisoft\FormModel\FormModel;
 use Yiisoft\Validator\Rule\Required;
 use Yiisoft\Validator\Rule\Email;
+use Yiisoft\Validator\Rule\Length;
+use Yiisoft\Validator\Rule\GreaterThan;
 
 final class ClientForm extends FormModel
 {
@@ -38,16 +40,118 @@ final class ClientForm extends FormModel
     private ?int $client_gender=0;
     private ?int $postaladdress_id=null;
     
+    public function __construct(array|object $client) {
+        /**
+         * @var string $client['client_name']
+         */
+        $this->client_name = $client['client_name'] ?? '';
+        /**
+         * @var string $client['client_surname']
+         */
+        $this->client_surname = $client['client_surname'] ?? '';
+        /**
+         * @var string $client['client_number']
+         */
+        $this->client_number = $client['client_number'] ?? '';
+        /**
+         * @var string $client['client_address_1']
+         */
+        $this->client_address_1 = $client['client_address_1'] ?? '';
+        /**
+         * @var string $client['client_address_2']
+         */
+        $this->client_address_2 = $client['client_address_2'] ?? '';
+        /**
+         * @var string $client['client_building_number']
+         */
+        $this->client_building_number = $client['client_building_number'] ?? '';
+        /**
+         * @var string $client['client_city']
+         */
+        $this->client_city = $client['client_city'] ?? '';
+        /**
+         * @var string $client['client_state']
+         */
+        $this->client_state = $client['client_state'] ?? '';
+        /**
+         * @var string $client['client_zip']
+         */
+        $this->client_zip = $client['client_zip'] ?? '';
+        /**
+         * @var string $client['client_country']
+         */
+        $this->client_country = $client['client_country'] ?? '';
+        /**
+         * @var string $client['client_phone']
+         */
+        $this->client_phone = $client['client_phone'] ?? '';
+        /**
+         * @var string $client['client_fax']
+         */
+        $this->client_fax = $client['client_fax'] ?? '';
+        /**
+         * @var string $client['client_mobile']
+         */
+        $this->client_mobile = $client['client_mobile'] ?? '';
+        /**
+         * @var string $client['client_email']
+         */
+        $this->client_email = $client['client_email'] ?? '';
+        /**
+         * @var string $client['client_web']
+         */
+        $this->client_web = $client['client_web'] ?? '';
+        /**
+         * @var string $client['client_vat_id']
+         */
+        $this->client_vat_id = $client['client_vat_id'] ?? '';
+        /**
+         * @var string $client['client_tax_code']
+         */
+        $this->client_tax_code = $client['client_tax_code'] ?? '';
+        /**
+         * @var string $client['client_language']
+         */
+        $this->client_language = $client['client_language'] ?? '';
+        /**
+         * @psalm-suppress DocblockTypeContradiction $client['client_active']
+         */
+        $this->client_active = (($client['client_active'] ?? false) === '0' ? false : true);
+        /**
+         * @var string $client['client_avs']
+         */
+        $this->client_avs = $client['client_avs'] ?? '';
+        /**
+         * @var string $client['client_insurednumber']
+         */
+        $this->client_insurednumber = $client['client_insurednumber'] ?? '';
+        /**
+         * @var string $client['client_veka']
+         */
+        $this->client_veka = $client['client_veka'] ?? '';
+        /**
+         * @var string $client['client_birthdate']
+         */
+        $this->client_birthdate = $client['client_birthdate'] ?? '';
+        
+        $this->client_age = (int)($client['client_age'] ?? 16);
+        
+        $this->client_gender = (int)($client['client_gender'] ?? 0);
+        
+        $this->postaladdress_id = (int)($client['postaladdress_id'] ?? 0);
+    }
+    
     /**
      * 
      * @return array
      */
     public function getRules(): array    {
         return [
-            'client_name' => [new Required()],
+            'client_name' => [new Required(), new Length(10)],
             'client_surname' => [new Required()],
             'client_email' => [new Required(),new Email()],
-            'client_age' => [new Required()]  
+            'client_age' => [new Required(), new GreaterThan(16)],
+            'client_avs' => [new Required(), new Length(16)]
         ];
     }
     

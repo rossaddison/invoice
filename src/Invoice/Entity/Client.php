@@ -451,6 +451,10 @@ class Client
     public function getPostaladdress_id() : int|null {
         return $this->postaladdress_id;
     }
+    
+    public function getDelivery_locations() : ArrayCollection {
+        return $this->delivery_locations;
+    }
         
     public function isNewRecord(): bool
     {

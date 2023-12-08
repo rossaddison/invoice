@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Invoice\Client;
 
 use App\Invoice\Entity\Client;
+use App\Invoice\Client\ClientForm;
 
 use App\Invoice\Setting\SettingRepository;
 

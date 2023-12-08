@@ -63,8 +63,12 @@ use Yiisoft\Arrays\ArrayHelper;
             $s->trans('personal_information'),
             Html::openTag('div', ['class' => 'p-2']), 
                 Field::checkbox($form, 'client_active')
-                ->inputValue(!$body['client_active']),
-            Html::closeTag('div'),
+                ->inputLabelAttributes(['class' => 'form-check-label'])    
+                ->enclosedByLabel(true)
+                ->inputClass('form-check-input')
+                ->ariaDescribedBy($s->trans('client_active'))
+                ->inputValue($body['client_active']),    
+               Html::closeTag('div'),
         Html::closeTag('div'),
     Html::closeTag('div')    
 ?>
@@ -273,7 +277,7 @@ use Yiisoft\Arrays\ArrayHelper;
                 ->hint($translator->translate('invoice.hint.this.field.is.not.required')); 
             ?>
             <?= Field::telephone($form, 'client_mobile')
-                ->label($s->trans('fax'), ['class' => 'form-label'])
+                ->label($s->trans('mobile'), ['class' => 'form-label'])
                 ->addInputAttributes([
                     'placeholder' => $s->trans('mobile'),
                     'value' => Html::encode($body['client_mobile'] ?? ''),
@@ -415,8 +419,8 @@ use Yiisoft\Arrays\ArrayHelper;
                     'class' => 'form-control',
                     'id' => 'client_avs'
                 ])
-                ->required(false)    
-                ->hint($translator->translate('invoice.hint.this.field.is.not.required')); 
+                ->required(true)    
+                ->hint($translator->translate('invoice.hint.this.field.is.required')); 
             ?>
             <?= Field::text($form, 'client_insurednumber')
                 ->label($s->trans('sumex_insuredumber'), ['class' => 'form-label'])
@@ -559,6 +563,6 @@ use Yiisoft\Arrays\ArrayHelper;
 <?= Html::closeTag('div'); ?>
 <?= Html::closeTag('div'); ?>
 
-<?php            
-    echo "This is the dump: " .\Yiisoft\VarDumper\VarDumper::dump($body['client_active']);
-?>
+
+
+            

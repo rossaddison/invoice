@@ -54,8 +54,8 @@ use Yiisoft\Router\CurrentRoute;
 use Yiisoft\Session\SessionInterface;
 use Yiisoft\Session\Flash\Flash;
 use Yiisoft\Translator\TranslatorInterface;
-use Yiisoft\User\CurrentUser;use Yiisoft\FormModel\FormHydrator;
-use Yiisoft\Form\Helper\HtmlFormErrors;
+use Yiisoft\User\CurrentUser;
+use Yiisoft\FormModel\FormHydrator;
 use Yiisoft\Yii\View\ViewRenderer;
 // Miscellaneous
 
@@ -123,7 +123,7 @@ final class ClientController
      * @param Client $client
      * @return array
      */
-    private function body(Client $client): array {        
+    private function body(Client $client): array { 
         $body = [
             'client_date_created'=>$client->getClient_date_created(),
             'client_date_modified'=>$client->getClient_date_modified(),
@@ -232,7 +232,7 @@ final class ClientController
             // Default gender is 'other'
             'client_gender'=>2
         ];
-        $ajax_content = new ClientForm();
+        $ajax_content = new ClientForm($ajax_body);
         if ($formHydrator->populate($ajax_content, $ajax_body) && $ajax_content->isValid()) {  
             $newclient = new Client();
             $this->clientService->saveClient($newclient, $ajax_content, $sR);
@@ -350,7 +350,8 @@ final class ClientController
     public function edit(Request $request, cR $cR, ccR $ccR, cfR $cfR, cvR $cvR, 
            FormHydrator $formHydrator, paR $paR, sR $sR, CurrentRoute $currentRoute
     ): Response {
-     $form = new ClientForm();   
+     $body = $request->getParsedBody() ?? [];   
+     $form = new ClientForm($body);   
      $client = null!==$this->client($currentRoute, $cR) ? $this->client($currentRoute, $cR) : null;
      if ($client) {
         $selected_country =  $client->getClient_country(); 
@@ -382,11 +383,11 @@ final class ClientController
                 'client_custom_values'=> $this->client_custom_values((string)$client_id, $ccR),                
             ];
             if ($request->getMethod() === Method::POST) {            
-                $body = $request->getParsedBody();
                 if (is_array($body)) {
                     $returned_form = $this->edit_save_form_fields($body, $form, $client, $formHydrator, $sR);
+                    echo \Yiisoft\VarDumper\VarDumper::dump($returned_form);
                     $parameters['body'] = $body;
-                    if (!$returned_form->isValid()) {
+                    if (!empty($returned_form->getValidationResult()?->getErrorMessagesIndexedByAttribute())) {
                         $parameters['form'] = $returned_form;
                         $parameters['errors'] = $returned_form->getValidationResult()?->getErrorMessagesIndexedByAttribute() ?? [];
                         return $this->viewRenderer->render('__form', $parameters);
