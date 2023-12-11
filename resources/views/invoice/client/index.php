@@ -32,7 +32,7 @@ $pagination = OffsetPagination::widget()
 <div>
     <h5><?= Html::encode($this->getTitle()); ?></h5>
     <div class="btn-group">
-        <a href="#create-client" class="btn btn-success" data-toggle="modal"  style="text-decoration:none"><i class="fa fa-plus"></i> <?= $s->trans('new'); ?></a>
+        <a href="<?= $urlGenerator->generate('client/add');?>" class="btn btn-success" style="text-decoration:none"><i class="fa fa-plus"></i> <?= $s->trans('new'); ?></a>
     </div>
     <br>
     <br>

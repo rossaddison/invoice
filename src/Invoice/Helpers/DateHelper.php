@@ -37,7 +37,7 @@ Class DateHelper {
         $this->s->load_settings();
         $format = $this->s->get_setting('date_format');
         $formats = $this->date_formats();
-        return $formats[$format]['datepicker-dateFormat'];
+        return $formats[$format]['datepicker-dateFormat'] ?? 'd-m-Y';
     }
 
     /**
@@ -47,7 +47,7 @@ Class DateHelper {
         $this->s->load_settings();
         $format = $this->s->get_setting('date_format');
         $formats = $this->date_formats();
-        return $formats[$format]['datepicker-firstDay'];
+        return $formats[$format]['datepicker-firstDay'] ?? 'monday';
     }
 
     /**
@@ -57,7 +57,7 @@ Class DateHelper {
         $this->s->load_settings();
         $format = $this->s->get_setting('date_format');
         $formats = $this->date_formats();
-        return $formats[$format]['display'];
+        return $formats[$format]['display'] ?? 'dd/mm/yyyy';
     }
 
     /**

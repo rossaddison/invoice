@@ -30,6 +30,7 @@ $lang = [
     .' 3. Assign this client to the user account' ."\r\n"
     .' 4. Invoices and Quotes will not be able to be created for this Client',
   'invoice.client.note' => 'Client Note',
+  'invoice.client.note.date' => 'Client Note Date',
   'invoice.client.number' => 'Client Number',
   'invoice.client.purchase.order.number' => 'Client Purchase Order Number',
   'invoice.client.peppol.accounting_cost' => 'Client Accounting Cost Code for Bookkeeping',
@@ -508,6 +509,8 @@ $lang = [
   'invoice.setting.company.profile' => 'Changing Profile eg. mobile and email address',
   'invoice.setting.error.on.the.public.assets.folder' => ' error on the public assets folder.',
   'invoice.setting.section' => 'Section',
+  'invoice.setting.key' => 'Setting Key',
+  'invoice.setting.value' => 'Setting Value',  
   'invoice.setting.subsection' => 'Subsection',
   'invoice.setting.translator.key' => 'Translator Key',
   'invoice.setting.you.have.cleared.the.cache' => 'You have cleared the cache.',

@@ -9,6 +9,7 @@ use Yiisoft\Assets\AssetManager;
 use Yiisoft\Definitions\Reference;
 use Yiisoft\Form\Field\SubmitButton;
 use Yiisoft\Form\Field\Checkbox;
+use Yiisoft\FormModel\ValidationRulesEnricher;
 use Yiisoft\Router\CurrentRoute;
 use Yiisoft\Router\UrlGeneratorInterface;
 use Yiisoft\Translator\TranslatorInterface;
@@ -45,7 +46,9 @@ return [
   ],
   'yiisoft/form' => [
     'themes' => [
-       'default' => [
+        'defaultTheme' => 'bootstrap5-vertical',
+        'validationRulesEnricher' => new ValidationRulesEnricher(),
+        'default' => [
         'containerClass' => 'form-floating mb-3',
         'inputClass' => 'form-control',
         'invalidClass' => 'is-invalid',
@@ -67,9 +70,49 @@ return [
           ]  
         ],  
        ],
+       'bootstrap5-vertical' => [
+            'template' => "{label}\n{input}\n{hint}\n{error}",
+            'containerClass' => 'mb-3',
+            'labelClass' => 'form-label',
+            'inputClass' => 'form-control',
+            'hintClass' => 'form-text',
+            'errorClass' => 'invalid-feedback',
+            'inputValidClass' => 'is-valid',
+            'inputInvalidClass' => 'is-invalid',
+            'fieldConfigs' => [
+                ErrorSummary::class => [
+                    'containerClass()' => ['alert alert-danger'],
+                    'listAttributes()' => [['class' => 'mb-0']],
+                    'header()' => [''],
+                ],
+                SubmitButton::class => [
+                    'buttonClass()' => ['btn btn-primary']
+                ],
+            ],
+            'enrichFromValidationRules' => true,
+        ],
+        'bootstrap5-horizontal' => [
+            'template' => "{label}\n<div class=\"col-sm-10\">{input}\n{hint}\n{error}</div>",
+            'containerClass' => 'row mb-3',
+            'labelClass' => 'col-sm-2 col-form-label',
+            'inputClass' => 'form-control',
+            'hintClass' => 'form-text',
+            'errorClass' => 'invalid-feedback',
+            'inputValidClass' => 'is-valid',
+            'inputInvalidClass' => 'is-invalid',
+            'fieldConfigs' => [
+                SubmitButton::class => [
+                    'buttonClass()' => ['btn btn-primary']
+                ],
+                ErrorSummary::class => [
+                    'containerClass()' => ['alert alert-danger'],
+                    'listClass()' => ['mb-0'],
+                    'header()' => [''],
+                ],
+            ],
+            'enrichFromValidationRules' => true,
+        ],
     ],
-    'defaultTheme' => 'default',
-    'validationRulesEnricher' => null,
   ],
   'yiisoft/rbac-rules-container' => [
     'rules' => require __DIR__ . '/rbac-rules.php',

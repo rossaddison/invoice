@@ -67,7 +67,7 @@ use Yiisoft\Arrays\ArrayHelper;
                 ->enclosedByLabel(true)
                 ->inputClass('form-check-input')
                 ->ariaDescribedBy($s->trans('client_active'))
-                ->inputValue($body['client_active']),    
+                ->inputValue($form->getClient_active() ?? ''),    
                Html::closeTag('div'),
         Html::closeTag('div'),
     Html::closeTag('div')    
@@ -76,7 +76,7 @@ use Yiisoft\Arrays\ArrayHelper;
 <?= Field::text($form, 'client_name')
     ->label($s->trans('client_name'))
     ->addInputAttributes([
-        'value' => Html::encode($body['client_name'] ?? ''),
+        'value' => Html::encode($form->getClient_name() ?? ''),
         'placeholder' => $s->trans('client_name'),
         'class' => 'form-control'
     ])
@@ -86,7 +86,7 @@ use Yiisoft\Arrays\ArrayHelper;
 <?= Field::text($form, 'client_surname')
     ->label($s->trans('client_surname'))
     ->addInputAttributes([
-        'value' => Html::encode($body['client_surname'] ?? ''), 
+        'value' => Html::encode($form->getClient_surname() ?? ''), 
         'placeholder' => $s->trans('client_surname'),
         'class' => 'form-control'
     ])
@@ -96,7 +96,7 @@ use Yiisoft\Arrays\ArrayHelper;
 <?= Field::text($form, 'client_number')
     ->label($translator->translate('invoice.client.number'))
     ->addInputAttributes([
-        'value' => Html::encode($body['client_number'] ?? ''), 
+        'value' => Html::encode($form->getClient_number() ?? ''), 
         'placeholder' => $s->trans('client_number'),
         'class' => 'form-control'  
     ])
@@ -116,7 +116,7 @@ use Yiisoft\Arrays\ArrayHelper;
         'class' => 'form-control',
         'id' => 'client_language'
     ])    
-    ->addInputAttributes(['selected' => $s->check_select(Html::encode($body['client_language'] ?? ''), $language)])
+    ->addInputAttributes(['selected' => $s->check_select(Html::encode($form->getClient_language() ?? ''), $language)])
     ->optionsData($options)        
     ->required(true)    
     ->hint($translator->translate('invoice.hint.this.field.is.required')); 
@@ -133,7 +133,7 @@ use Yiisoft\Arrays\ArrayHelper;
                 ->label($s->trans('street_address'), ['form-label'])
                 ->addInputAttributes([
                     'placeholder' => $s->trans('street_address'),
-                    'value' => Html::encode($body['client_address_1'] ?? ''),
+                    'value' => Html::encode($form->getClient_address_1() ?? ''),
                     'class' => 'form-control',
                     'id' => 'client_address_1',
                 ])
@@ -147,7 +147,7 @@ use Yiisoft\Arrays\ArrayHelper;
                 ->label($s->trans('street_address_2'), ['form-label'])
                 ->addInputAttributes([
                     'placeholder' => $s->trans('street_address_2'),
-                    'value' => Html::encode($body['client_address_2'] ?? ''),
+                    'value' => Html::encode($form->getClient_address_2() ?? ''),
                     'class' => 'form-control',
                     'id' => 'client_address_2'
                 ])
@@ -160,7 +160,7 @@ use Yiisoft\Arrays\ArrayHelper;
                 ->label($translator->translate('invoice.client.building.number'), ['form-label'])
                 ->addInputAttributes([ 
                     'placeholder' => $translator->translate('invoice.client.building.number'),
-                    'value' => Html::encode($body['client_building_number'] ?? ''),
+                    'value' => Html::encode($form->getClient_building_number() ?? ''),
                     'class' => 'form-control',                
                     'id' => 'client_building_number',
                 ])
@@ -173,7 +173,7 @@ use Yiisoft\Arrays\ArrayHelper;
                 ->label($s->trans('city'), ['form-label'])
                 ->addInputAttributes([
                     'placeholder' => $s->trans('city'),                
-                    'value' => Html::encode($body['client_city'] ?? ''),
+                    'value' => Html::encode($form->getClient_city() ?? ''),
                     'class' => 'form-control',
                     'id' => 'client_city', 
                 ])
@@ -186,7 +186,7 @@ use Yiisoft\Arrays\ArrayHelper;
                 ->label($s->trans('state'), ['form-label'])
                 ->addInputAttributes([
                     'placeholder' => $s->trans('state'),
-                    'value' => Html::encode($body['client_state'] ?? ''),
+                    'value' => Html::encode($form->getClient_state() ?? ''),
                     'class' => 'form-control',
                     'id' => 'client_state',    
                 ])
@@ -199,7 +199,7 @@ use Yiisoft\Arrays\ArrayHelper;
                 ->label($s->trans('zip'), ['form-label'])
                 ->addInputAttributes([
                     'placeholder' => $s->trans('zip'),
-                    'value' => Html::encode($body['client_zip'] ?? ''),
+                    'value' => Html::encode($form->getClient_zip() ?? ''),
                     'class' => 'form-control',
                     'id' => 'client_zip', 
                 ])
@@ -217,7 +217,7 @@ use Yiisoft\Arrays\ArrayHelper;
                 ->addInputAttributes([
                     'id' => 'client_country', 
                     'class' => 'form-control',
-                    'selected' => $s->check_select(($body['client_country'] ?? $client->getClient_country()), $country)
+                    'selected' => $s->check_select(($form->getClient_country() ?? $client->getClient_country()), $country)
                 ])    
                 ->optionsData($options)
                 ->required(true)
@@ -258,7 +258,7 @@ use Yiisoft\Arrays\ArrayHelper;
                 ->label($s->trans('phone'), ['form-label'])
                 ->addInputAttributes([
                     'placeholder' => $s->trans('phone'),
-                    'value' => Html::encode($body['client_phone'] ?? ''),
+                    'value' => Html::encode($form->getClient_phone() ?? ''),
                     'class' => 'form-control',
                     'id' => 'client_phone'
                 ])
@@ -269,7 +269,7 @@ use Yiisoft\Arrays\ArrayHelper;
                 ->label($s->trans('fax'), ['form-label'])
                 ->addInputAttributes([
                     'placeholder' => $s->trans('phone'),
-                    'value' => Html::encode($body['client_fax'] ?? ''),
+                    'value' => Html::encode($form->getClient_fax() ?? ''),
                     'class' => 'form-control', 
                     'id' => 'client_fax', 
                 ])
@@ -280,7 +280,7 @@ use Yiisoft\Arrays\ArrayHelper;
                 ->label($s->trans('mobile'), ['class' => 'form-label'])
                 ->addInputAttributes([
                     'placeholder' => $s->trans('mobile'),
-                    'value' => Html::encode($body['client_mobile'] ?? ''),
+                    'value' => Html::encode($form->getClient_mobile() ?? ''),
                     'class' => 'form-control', 
                     'id' => 'client_mobile'
                 ])
@@ -291,7 +291,7 @@ use Yiisoft\Arrays\ArrayHelper;
                 ->label($s->trans('email'), ['class' => 'form-label'])
                 ->addInputAttributes([
                     'placeholder' => $s->trans('email'),
-                    'value' =>  Html::encode($body['client_email'] ?? ''),
+                    'value' =>  Html::encode($form->getClient_email() ?? ''),
                     'class' => 'form-control',
                     'id' => 'client_email'
                 ])
@@ -302,7 +302,7 @@ use Yiisoft\Arrays\ArrayHelper;
                 ->label($s->trans('web'), ['class' => 'form-label'])
                 ->addInputAttributes([
                     'placeholder' => $s->trans('web'),
-                    'value' => Html::encode($body['client_web'] ?? ''),
+                    'value' => Html::encode($form->getClient_web() ?? ''),
                     'class' => 'form-control',
                     'id' => 'client_web',
                 ])
@@ -315,23 +315,26 @@ use Yiisoft\Arrays\ArrayHelper;
                 <label for="postaladdress_id"><?= $translator->translate('invoice.client.postaladdress.available'); ?>: </label>
             <?= Html::closeTag('div'); ?>           
             <?= Html::openTag('div',['class' => 'input-group']); ?>
-                            <?php if ($postal_address_count > 0) { ?>
-                    <select name="postaladdress_id" id="postaladdress_id"
-                            class="form-control">
-                                <?php foreach ($postaladdresses as $postaladdress) { ?>
-                            <option value="<?php echo $postaladdress->getId(); ?>"
-                            <?php echo $s->check_select(Html::encode($body['client_postaladdress_id'] ?? $postaladdress->getId()), $postaladdress->getId()); ?>>
-                            <?php echo $postaladdress->getStreet_name() . ', ' . $postaladdress->getAdditional_street_name() . ', ' . $postaladdress->getBuilding_number() . ', ' . $postaladdress->getCity_name(); ?>
-                            </option>
-                    <?php } ?>
-                    </select>
+                <?php if ($postal_address_count > 0) { ?>
+                    <?= Field::select($form, 'postaladdress_id')
+                        ->label($translator->translate('invoice.client.postaladdress.available'))    
+                        ->required(true)
+                        ->addInputAttributes([
+                            'value' => Html::encode($form->getPostaladdress_id() ?? ''),
+                            'class' => 'form-control  alert alert-warning'
+                        ])
+                        ->optionsData($postaladdresses)
+                        ->hint($translator->translate('invoice.hint.this.field.is.required'));    
+                    ?>
                 <?php
                 } else {
+                    // hide the field but maintain the postaladdress_id that will appear in the $request->bodyParams array
                     echo Html::a($translator->translate('invoice.client.postaladdress.add'), $urlGenerator->generate('postaladdress/add', ['client_id' => $client->getClient_id()]), ['class' => 'btn btn-warning btn-lg mt-3']);
                 }
                 ?>
             <?= Html::closeTag('div'); ?>            
-        <?= Html::closeTag('div'); ?>
+        <?= Html::closeTag('div'); ?>        
+                
         <?= Html::openTag('div', ['class' => 'mb-3 form-group']); ?>
             <?php foreach ($custom_fields as $custom_field): ?>
                 <?php
@@ -374,26 +377,26 @@ use Yiisoft\Arrays\ArrayHelper;
                             ];
                             foreach ($genders as $key => $val) {
                                 ?>
-                        <option value=" <?php echo $key; ?>" <?php $s->check_select(Html::encode($body['client_gender'] ?? 0 ), $key) ?>>
+                        <option value=" <?php echo $key; ?>" <?php $s->check_select(Html::encode($form->getClient_gender() ?? 0 ), $key) ?>>
                 <?php echo $val; ?>
                         </option>
-            <?php } ?>
+                            <?php } ?>
                 </select>
             <?= Html::closeTag('div'); ?>
         <?= Html::closeTag('div'); ?>
         <?= Html::openTag('div',['class' => 'mb-3 form-group has-feedback']); ?>
             <?php
-                $bdate = $datehelper->get_or_set_with_style($body['client_birthdate']);
+                $bdate = $datehelper->get_or_set_with_style($form->getClient_birthdate() ?? new \DateTimeImmutable('now'));
                 echo Field::text($form, 'client_birthdate')
                 ->label($s->trans('birthdate'), ['class' => 'form-label'])
                 ->addInputAttributes([
                     'placeholder' => $s->trans('birthdate'),
-                    'value' => null !== $bdate ? Html::encode($bdate instanceof \DateTimeImmutable ? $bdate->format($datehelper->style()) : $bdate) : null,
                     'class' => 'form-control input-sm datepicker',
                     'id' => 'client_birthdate',
                     'role' => 'presentation',
                     'autocomplete' => 'off'
                 ])
+                ->value($bdate)        
                 ->required(false)
                 ->readonly(true)        
                 ->hint($translator->translate('invoice.hint.this.field.is.not.required')); 
@@ -402,12 +405,12 @@ use Yiisoft\Arrays\ArrayHelper;
                 ->label($translator->translate('invoice.client.age'), ['form-label'])
                 ->addInputAttributes([
                     'placeholder' => $translator->translate('invoice.client.age'),
-                    'value' => Html::encode($body['client_age'] ?? ''),
+                    'value' => Html::encode($form->getClient_age() ?? ''),
                     'class' => 'form-control',
                     'id' => 'client_age'
                 ])
                 ->required(true)
-                ->min(16)
+                //->min(16)
                 ->step(1)
                 ->hint($translator->translate('invoice.client.age.hint'))
             ?>
@@ -415,7 +418,7 @@ use Yiisoft\Arrays\ArrayHelper;
                 ->label($s->trans('sumex_ssn'), ['class' => 'form-label'])
                 ->addInputAttributes([
                     'placeholder' => $s->trans('sumx_ssn'),
-                    'value' =>  Html::encode($body['client_avs'] ?? ''),
+                    'value' =>  Html::encode($form->getClient_avs() ?? ''),
                     'class' => 'form-control',
                     'id' => 'client_avs'
                 ])
@@ -423,10 +426,10 @@ use Yiisoft\Arrays\ArrayHelper;
                 ->hint($translator->translate('invoice.hint.this.field.is.required')); 
             ?>
             <?= Field::text($form, 'client_insurednumber')
-                ->label($s->trans('sumex_insuredumber'), ['class' => 'form-label'])
+                ->label($s->trans('sumex_insurednumber'), ['class' => 'form-label'])
                 ->addInputAttributes([
                     'placeholder' => $s->trans('sumex_insurednumber'),
-                    'value' =>  Html::encode($body['client_insurednumber'] ?? ''),
+                    'value' =>  Html::encode($form->getClient_insurednumber() ?? ''),
                     'class' => 'form-control',
                     'id' => 'client_insurednumber'
                 ])
@@ -437,7 +440,7 @@ use Yiisoft\Arrays\ArrayHelper;
                 ->label($s->trans('sumex_veka'), ['class' => 'form-label'])
                 ->addInputAttributes([
                     'placeholder' => $s->trans('sumex_veka'),
-                    'value' =>  Html::encode($body['client_veka'] ?? ''),
+                    'value' =>  Html::encode($form->getClient_veka() ?? ''),
                     'class' => 'form-control',
                     'id' => 'client_veka'
                 ])
@@ -480,7 +483,7 @@ use Yiisoft\Arrays\ArrayHelper;
             ->label($s->trans('vat_id'), ['class' => 'form-label'])
             ->addInputAttributes([
                 'placeholder' => $s->trans('vat_id'),
-                'value' =>  Html::encode($body['client_vat_id'] ?? ''),
+                'value' =>  Html::encode($form->getClient_vat_id() ?? ''),
                 'class' => 'form-control',
                 'id' => 'client_vat_id'
             ])
@@ -491,7 +494,7 @@ use Yiisoft\Arrays\ArrayHelper;
             ->label($s->trans('tax_code'), ['class' => 'form-label'])
             ->addInputAttributes([
                 'placeholder' => $s->trans('tax_code'),
-                'value' =>  Html::encode($body['client_tax_code'] ?? ''),
+                'value' =>  Html::encode($form->getClient_tax_code() ?? ''),
                 'class' => 'form-control',
                 'id' => 'client_tax_code'
             ])
@@ -555,7 +558,6 @@ use Yiisoft\Arrays\ArrayHelper;
         <?= Html::closeTag('div'); ?>
     <?= Html::closeTag('div'); ?>
 <?= Html::closeTag('div'); ?>
-<?= Form::tag()->close() ?>
 <?= Form::tag()->close(); ?>
 <?= Html::closeTag('div'); ?>
 <?= Html::closeTag('div'); ?>

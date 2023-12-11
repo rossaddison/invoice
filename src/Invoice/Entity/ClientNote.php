@@ -71,10 +71,12 @@ use \DateTimeImmutable;
       $this->client_id =  $client_id;
     }
     
-    public function getDate(): DateTimeImmutable
+    public function getDate(): string|DateTimeImmutable
     { 
-      /** @var DateTimeImmutable $this->date */  
-      return $this->date ;
+      /**
+       * @var string|DateTimeImmutable $this->date
+       */
+      return $this->date;
     }
     
     public function setDate(DateTime $date) : void

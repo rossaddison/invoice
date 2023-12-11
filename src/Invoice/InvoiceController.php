@@ -958,14 +958,10 @@ final class InvoiceController
          * @var string $value
          */
         foreach ($default_settings as $key => $value) {
-            $form = new SettingForm();
-            $array = [
-                'setting_key'=>$key,
-                'setting_value'=>$value,
-            ];
-            if ($this->formHydrator->populate($form, $array)) {
-                $this->settingService->saveSetting(new Setting(), $form);
-            }
+            $setting = new Setting();
+            $setting->setSetting_key($key);
+            $setting->setSetting_value($value);
+            $sR->save($setting);
         }    
     }
     

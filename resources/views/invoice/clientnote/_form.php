@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 use Yiisoft\Html\Html;
 use Yiisoft\Html\Tag\Form;
-use Yiisoft\Yii\Bootstrap5\Alert;
 
 /**
  * @var \Yiisoft\View\View $this
@@ -14,12 +13,7 @@ use Yiisoft\Yii\Bootstrap5\Alert;
  * @var string $action
  * @var string $title
  */
-$errors = $form->getValidationResult()?->getErrors();
-if (!empty($errors)) {
-    foreach ($errors as $field => $error) {
-        echo Alert::widget()->options(['class' => 'alert-danger'])->body(Html::encode($field . ':' . $error));
-    }
-}
+
 
 ?>
 <h1><?= Html::encode($title) ?></h1>
@@ -42,18 +36,18 @@ if (!empty($errors)) {
         <option value=""><?= $s->trans('client'); ?></option>
          <?php foreach ($clients as $client) { ?>
           <option value="<?= $client->getClient_id(); ?>"
-           <?php $s->check_select(Html::encode($body['client_id'] ?? ''), $client->getClient_id()) ?>
-           ><?= $client->getClient_name(); ?></option>
+           <?php $s->check_select(Html::encode($form->getClient_id() ?? ''), $client->getClient_id()) ?>
+           ><?= $client->getClient_name() . ' '. $client->getClient_surname(); ?></option>
          <?php } ?>
     </select>
  </div>
  <div class="mb3 form-group">
    <input type="hidden" name="id" id="id" class="form-control"
- value="<?= Html::encode($body['id'] ??  ''); ?>">
+ value="<?= Html::encode($form->getClient_id() ??  ''); ?>">
  </div>
  <div class="mb-3 form-group has-feedback"> 
  <?php
-    $date = $datehelper->get_or_set_with_style($body['date'] ?? new \DateTimeImmutable('now'));
+    $date = $datehelper->get_or_set_with_style($form->getDate() ?? new \DateTimeImmutable('now'));
  ?>  
 <label form-label for="date" required><?= $s->trans('date') ." (".  $datehelper->display().") "; ?></label><div class="mb3 input-group"> 
 <input type="text" name="date" id="date" placeholder="<?= $datehelper->display(); ?>" 
@@ -67,7 +61,7 @@ if (!empty($errors)) {
 <div class="mb3 form-group">
    <label for="note" required><?= $s->trans('note'); ?></label>
    <input type="text" name="note" id="note" class="form-control" required
- value="<?= Html::encode($body['note'] ??  ''); ?>">
+ value="<?= Html::encode($form->getNote() ?? ''); ?>">
  </div>
 
 </div>

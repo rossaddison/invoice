@@ -6,6 +6,7 @@ namespace App\Invoice\Setting;
 // App
 use App\Invoice\Entity\Setting;
 use App\Invoice\Setting\SettingRepository;
+use App\Invoice\Setting\SettingForm;
 use App\Invoice\EmailTemplate\EmailTemplateRepository as ER;
 use App\Invoice\Group\GroupRepository as GR;
 use App\Invoice\Libraries\Crypt;
@@ -33,8 +34,8 @@ use Yiisoft\Router\CurrentRoute;
 use Yiisoft\Security\Random;
 use Yiisoft\Session\SessionInterface as Session;
 use Yiisoft\Session\Flash\Flash;
-use Yiisoft\Translator\TranslatorInterface as Translator;use Yiisoft\FormModel\FormHydrator;
-use Yiisoft\Form\Helper\HtmlFormErrors;
+use Yiisoft\Translator\TranslatorInterface as Translator;
+use Yiisoft\FormModel\FormHydrator;
 use Yiisoft\Yii\View\ViewRenderer;
 // Psr
 use Psr\Http\Message\ResponseInterface as Response;
@@ -116,7 +117,6 @@ final class SettingController
     // The tab_index is the index of settings showing in non debug mode
     
     /**
-     * 
      * @param Request $request
      * @param FormHydrator $formHydrator
      * @param ViewRenderer $head
@@ -148,14 +148,15 @@ final class SettingController
         /**
          * @psalm-suppress PossiblyInvalidArgument $matrix
          */
-        $languages = ArrayHelper::map($matrix,'name','name');      
+        $languages = ArrayHelper::map($matrix,'name','name'); 
+        $body = $request->getParsedBody();
         $parameters = [
             'defat'=> $sR->withKey('default_language'),
             'action'=>['setting/tab_index'],
             'alert' => $this->alert(),
             's'=> $this->s,
             'head' => $head,
-            'body'=> $request->getParsedBody(),
+            'body'=> $body,
             'general'=>$this->viewRenderer->renderPartialAsString('/invoice/setting/views/partial_settings_general',[
                 's'=>$this->s,
                 /**
@@ -242,8 +243,7 @@ final class SettingController
                 's'=>$this->s,
             ]),
         ];
-        if ($request->getMethod() === Method::POST) {
-            $body = $parameters['body'];
+        if ($request->getMethod() === Method::POST) {            
             if (is_array($body)) {
                 $settings = (array)$body['settings'];
                 /** 
@@ -284,7 +284,7 @@ final class SettingController
                        // The settings 'decimal_point' and 'thousands_separator' which are derived from number_format array
                        // and were installed on the first run in InvoiceController 
                        // will be derived automatically => their repoCount will be greater than zero and will not cause this to run
-                       $this->tab_index_debug_mode_ensure_all_settings_included(true, $key, $value, $formHydrator);
+                       $this->tab_index_debug_mode_ensure_all_settings_included(true, $key, $value);
                     }                
                 }
                 $this->flash_message('info', $this->s->trans('settings_successfully_saved'));
@@ -330,12 +330,12 @@ final class SettingController
         $number_formats = $sR->number_formats();
         if ($sR->repoCount('decimal_point') > 0) {
             $this->tab_index_settings_save('decimal_point',
-                                            $number_formats[$value]['decimal_point'], 
+                                            $number_formats[$value]['decimal_point'] ?? '.', 
                                             $sR);
         }
         if ($sR->repoCount('thousands_separator') > 0) {      
             $this->tab_index_settings_save('thousands_separator',
-                                            $number_formats[$value]['thousands_separator'], 
+                                            $number_formats[$value]['thousands_separator'] ?? ',', 
                                             $sR);
         }     
     }
@@ -346,21 +346,16 @@ final class SettingController
      * @param bool $bool
      * @param string $key
      * @param string $value
-     * @param FormHydrator $formHydrator
      * @return void
      */
-    public function tab_index_debug_mode_ensure_all_settings_included(bool $bool, string $key, string $value, FormHydrator $formHydrator): void {
+    public function tab_index_debug_mode_ensure_all_settings_included(bool $bool, string $key, string $value): void {
         // The setting does not exist because repoCount is not greater than 0;
         if ($bool) {
             // Make sure the setting is available to be set in the database if there is no such like setting in the database
-            $form = new SettingForm();
-            $array = [
-                'setting_key'=>$key,
-                'setting_value'=>$value,
-            ];
-            if ($formHydrator->populate($form, $array) && $form->isValid()) {
-                $this->settingService->saveSetting(new Setting(), $form);
-            }
+            $setting = new Setting();
+            $setting->setSetting_key($key);
+            $setting->setSetting_value($value);
+            $this->s->save($setting);
         }
     }
     
@@ -372,21 +367,30 @@ final class SettingController
      */
     public function add(Request $request, FormHydrator $formHydrator): Response
     {
+        $setting = new Setting();
+        $form = new SettingForm($setting);
         $parameters = [
             'title' => $this->s->trans('add'),
             'action' => ['setting/add'],
+            'alert' => $this->alert(),
             'errors' => [],
-            'body' => $request->getParsedBody(),
+            'form' => $form ,
             's'=>$this->s
         ];
         if ($request->getMethod() === Method::POST) {
-            $form = new SettingForm();
-            if ($formHydrator->populate($form, $parameters['body']) && $form->isValid()) {
-                $this->settingService->saveSetting(new Setting(), $form);
+            /**
+             * @psalm-suppress PossiblyInvalidArgument
+             */
+            if ($formHydrator->populate($form, $request->getParsedBody()) && $form->isValid()) {
+            /**
+             * @psalm-suppress PossiblyInvalidArgument
+             */
+                $this->settingService->saveSetting($setting, $request->getParsedBody());
                 $this->flash_message('info', $this->s->trans('record_successfully_updated'));
                 return $this->webService->getRedirectResponse('setting/debug_index');
             }
             $parameters['form'] = $form;
+            $parameters['error'] = $form->getValidationResult()?->getErrorMessagesIndexedByAttribute();
         }
         return $this->viewRenderer->render('__form', $parameters);
     }
@@ -428,26 +432,29 @@ final class SettingController
     {
         $setting = $this->setting($currentRoute, $this->s);
         if ($setting) {
+            $form = new SettingForm($setting);
             $parameters = [
                 'title' => $this->s->trans('edit'),
                 'action' => ['setting/edit', ['setting_id' => $setting->getSetting_id()]],
+                'alert' => $this->alert(),
+                'form' => $form, 
                 'errors' => [],
-                'body' => [
-                    'setting_key' => $setting->getSetting_key(),
-                    'setting_value' => $setting->getSetting_value(),                
-                ],
                 's'=>$this->s,
             ];
             if ($request->getMethod() === Method::POST) {
-                $form = new SettingForm();
-                $body = $request->getParsedBody();
-                if ($formHydrator->populate($form, $body) && $form->isValid()) {
-                    $this->settingService->saveSetting($setting, $form);
+                /**
+                 * @psalm-suppress PossiblyInvalidArgument
+                 */
+                if ($formHydrator->populate($form, $request->getParsedBody()) && $form->isValid()) {
+                    /**
+                     * @psalm-suppress PossiblyInvalidArgument
+                     */
+                    $this->settingService->saveSetting($setting, $request->getParsedBody());
                     $this->flash_message('info', $this->s->trans('record_successfully_updated'));
                     return $this->webService->getRedirectResponse('setting/debug_index');
                 }
-                $parameters['body'] = $body;
                 $parameters['form'] = $form;
+                $parameters['error'] = $form->getValidationResult()?->getErrorMessagesIndexedByAttribute();
             }
             return $this->viewRenderer->render('__form', $parameters);
         }
@@ -504,26 +511,31 @@ final class SettingController
              FormHydrator $formHydrator): Response 
     {
         $setting = $this->setting($currentRoute, $this->s);
+        /**
+         * @psalm-suppress PossiblyInvalidArgument
+         */
+        $body = $request->getParsedBody() ?? [];
         if ($setting) {
             $parameters = [
                 'title' => $this->s->trans('edit'),
                 'action' => ['setting/edit', ['setting_id' => $setting->getSetting_id()]],
                 'errors' => [],
-                'body' => [
-                    'setting_key' => $setting->getSetting_key(),
-                    'setting_value' => $setting->getSetting_value(),
-                ],
                 's'=>$this->s,
             ];
             if ($request->getMethod() === Method::POST) {
-                $form = new SettingForm();
-                $body = $request->getParsedBody();
+                $form = new SettingForm($setting);
+                /**
+                 * @psalm-suppress PossiblyInvalidArgument
+                 */
                 if ($formHydrator->populate($form, $body) && $form->isValid()) {
-                    $this->settingService->saveSetting($setting, $form);
+                    /**
+                     * @psalm-suppress PossiblyInvalidArgument
+                     */
+                    $this->settingService->saveSetting($setting, $body);
                     return $this->webService->getRedirectResponse('setting/index');
                 }
-                $parameters['body'] = $body;
                 $parameters['form'] = $form;
+                $parameters['error'] = $form->getValidationResult()?->getErrorMessagesIndexedByAttribute();
             }
             return $this->viewRenderer->render('__form', $parameters);
         }

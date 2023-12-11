@@ -4,34 +4,38 @@ declare(strict_types=1);
 
 namespace App\Invoice\ClientNote;
 
-
+use App\Invoice\Entity\ClientNote;
 use App\Invoice\Helpers\DateHelper;
 use Yiisoft\FormModel\FormModel;
 use Yiisoft\Validator\Rule\Required;
+use DateTimeImmutable;
 
 final class ClientNoteForm extends FormModel
 {   
     private ?int $client_id=null;
-    private ?string $date='';
+    private mixed $date;
     private ?string $note='';
+    
+    public function __construct(ClientNote $clientNote) 
+    {
+        $this->client_id = (int)$clientNote->getClient_id();
+        $this->date = $clientNote->getDate();
+        $this->note = $clientNote->getNote();
+    }
 
     public function getClient_id() : int|null
     {
       return $this->client_id;
     }
     
-    public function getDate(\App\Invoice\Setting\SettingRepository $s) : \DateTime
+    public function getDate() : string|DateTimeImmutable
     {
-        $datehelper = new DateHelper($s);         
-        $datetime = new \DateTime();
-        $datetime->setTimezone(new \DateTimeZone($s->get_setting('time_zone') ?: 'Europe/London')); 
-        $datetime->format($datehelper->style());
-        $date = $datehelper->date_to_mysql(null!==$this->date ? $this->date : date('Y-m-d'));
-        $str_replace = str_replace($datehelper->separator(), '-', $date);
-        $datetime->modify($str_replace);
-        return $datetime;
-    }
-
+      /**
+       * @var string|DateTimeImmutable $this->date 
+       */
+      return $this->date;
+    }    
+    
     public function getNote() : string|null
     {
       return $this->note;

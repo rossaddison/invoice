@@ -284,3 +284,4 @@ use Yiisoft\Html\Tag\Form;
 <?= Html::closeTag('div'); ?>
 <?= Html::closeTag('div'); ?>
 <?= Html::closeTag('div'); ?>
+<?php \Yiisoft\VarDumper\VarDumper::dump($tax_rates); ?>

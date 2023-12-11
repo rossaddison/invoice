@@ -4,12 +4,14 @@ declare(strict_types=1);
 
 namespace App\Invoice\Client;
 
-use App\Invoice\Helpers\DateHelper;
+use App\Invoice\Entity\Client;
 use Yiisoft\FormModel\FormModel;
 use Yiisoft\Validator\Rule\Required;
 use Yiisoft\Validator\Rule\Email;
+use Yiisoft\Validator\Rule\Integer;
 use Yiisoft\Validator\Rule\Length;
 use Yiisoft\Validator\Rule\GreaterThan;
+use \DateTimeImmutable;
 
 final class ClientForm extends FormModel
 {
@@ -34,127 +36,45 @@ final class ClientForm extends FormModel
     private ?string $client_surname='';
     private ?string $client_avs='';
     private ?string $client_insurednumber='';
-    private ?string $client_veka='';    
-    private ?string $client_birthdate='';
-    private ?int $client_age = 0;
-    private ?int $client_gender=0;
+    private ?string $client_veka='';
+    private mixed $client_birthdate;
+    
+    #[Integer(min: 16)]
+    #[Required]
+    private ?int $client_age = null;
+    
+    private ?int $client_gender=null;
     private ?int $postaladdress_id=null;
     
-    public function __construct(array|object $client) {
-        /**
-         * @var string $client['client_name']
-         */
-        $this->client_name = $client['client_name'] ?? '';
-        /**
-         * @var string $client['client_surname']
-         */
-        $this->client_surname = $client['client_surname'] ?? '';
-        /**
-         * @var string $client['client_number']
-         */
-        $this->client_number = $client['client_number'] ?? '';
-        /**
-         * @var string $client['client_address_1']
-         */
-        $this->client_address_1 = $client['client_address_1'] ?? '';
-        /**
-         * @var string $client['client_address_2']
-         */
-        $this->client_address_2 = $client['client_address_2'] ?? '';
-        /**
-         * @var string $client['client_building_number']
-         */
-        $this->client_building_number = $client['client_building_number'] ?? '';
-        /**
-         * @var string $client['client_city']
-         */
-        $this->client_city = $client['client_city'] ?? '';
-        /**
-         * @var string $client['client_state']
-         */
-        $this->client_state = $client['client_state'] ?? '';
-        /**
-         * @var string $client['client_zip']
-         */
-        $this->client_zip = $client['client_zip'] ?? '';
-        /**
-         * @var string $client['client_country']
-         */
-        $this->client_country = $client['client_country'] ?? '';
-        /**
-         * @var string $client['client_phone']
-         */
-        $this->client_phone = $client['client_phone'] ?? '';
-        /**
-         * @var string $client['client_fax']
-         */
-        $this->client_fax = $client['client_fax'] ?? '';
-        /**
-         * @var string $client['client_mobile']
-         */
-        $this->client_mobile = $client['client_mobile'] ?? '';
-        /**
-         * @var string $client['client_email']
-         */
-        $this->client_email = $client['client_email'] ?? '';
-        /**
-         * @var string $client['client_web']
-         */
-        $this->client_web = $client['client_web'] ?? '';
-        /**
-         * @var string $client['client_vat_id']
-         */
-        $this->client_vat_id = $client['client_vat_id'] ?? '';
-        /**
-         * @var string $client['client_tax_code']
-         */
-        $this->client_tax_code = $client['client_tax_code'] ?? '';
-        /**
-         * @var string $client['client_language']
-         */
-        $this->client_language = $client['client_language'] ?? '';
-        /**
-         * @psalm-suppress DocblockTypeContradiction $client['client_active']
-         */
-        $this->client_active = (($client['client_active'] ?? false) === '0' ? false : true);
-        /**
-         * @var string $client['client_avs']
-         */
-        $this->client_avs = $client['client_avs'] ?? '';
-        /**
-         * @var string $client['client_insurednumber']
-         */
-        $this->client_insurednumber = $client['client_insurednumber'] ?? '';
-        /**
-         * @var string $client['client_veka']
-         */
-        $this->client_veka = $client['client_veka'] ?? '';
-        /**
-         * @var string $client['client_birthdate']
-         */
-        $this->client_birthdate = $client['client_birthdate'] ?? '';
-        
-        $this->client_age = (int)($client['client_age'] ?? 16);
-        
-        $this->client_gender = (int)($client['client_gender'] ?? 0);
-        
-        $this->postaladdress_id = (int)($client['postaladdress_id'] ?? 0);
+    public function __construct(Client $client) { 
+        $this->client_name = $client->getClient_name();
+        $this->client_number = $client->getClient_number();
+        $this->client_address_1 = $client->getClient_address_1();
+        $this->client_address_2 = $client->getClient_address_2();
+        $this->client_building_number = $client->getClient_building_number();
+        $this->client_city = $client->getClient_city();
+        $this->client_state = $client->getClient_state();
+        $this->client_zip = $client->getClient_zip();
+        $this->client_country = $client->getClient_country();
+        $this->client_phone = $client->getClient_phone();
+        $this->client_fax = $client->getClient_fax();
+        $this->client_mobile = $client->getClient_mobile();
+        $this->client_email = $client->getClient_email();
+        $this->client_web = $client->getClient_web();
+        $this->client_vat_id = $client->getClient_vat_id();
+        $this->client_tax_code = $client->getClient_tax_code();
+        $this->client_language = $client->getClient_language();
+        $this->client_active = $client->getClient_active();
+        $this->client_surname = $client->getClient_surname();
+        $this->client_avs = $client->getClient_avs();
+        $this->client_insurednumber = $client->getClient_insurednumber();
+        $this->client_veka = $client->getClient_veka();
+        $this->client_birthdate = $client->getClient_birthdate();
+        $this->client_age = $client->getClient_age();
+        $this->client_gender = $client->getClient_gender();
+        //$this->postaladdress_id = $client->getPostaladdress_id();
     }
-    
-    /**
-     * 
-     * @return array
-     */
-    public function getRules(): array    {
-        return [
-            'client_name' => [new Required(), new Length(10)],
-            'client_surname' => [new Required()],
-            'client_email' => [new Required(),new Email()],
-            'client_age' => [new Required(), new GreaterThan(16)],
-            'client_avs' => [new Required(), new Length(16)]
-        ];
-    }
-    
+        
     public function getClient_name() : string|null
     {
       return $this->client_name;
@@ -264,20 +184,13 @@ final class ClientForm extends FormModel
     {
       return $this->client_veka;
     }
-    
-    public function getClient_birthdate(\App\Invoice\Setting\SettingRepository $s) : \DateTime|null
+        
+    public function getClient_birthdate() : string|null|DateTimeImmutable
     {
-        $datehelper = new DateHelper($s);         
-        $datetime = new \DateTime();
-        $datetime->setTimezone(new \DateTimeZone($s->get_setting('time_zone') ?: 'Europe/London')); 
-        $datetime->format($datehelper->style());
-        if (!empty($this->client_birthdate)) { 
-            $date = $datehelper->date_to_mysql($this->client_birthdate);
-            $str_replace = str_replace($datehelper->separator(), '-', $date);
-            $datetime->modify($str_replace);
-            return $datetime;        
-        }
-        return null;
+        /**
+         * @var string|null|DateTimeImmutable $this->client_birthdate
+         */
+        return $this->client_birthdate;
     }
     
     public function getClient_age(): int|null
@@ -290,7 +203,7 @@ final class ClientForm extends FormModel
       return $this->client_gender;
     }
     
-    public function getClient_postaladdress_id() : int|null
+    public function getPostaladdress_id() : int|null
     {
       return $this->postaladdress_id;
     }

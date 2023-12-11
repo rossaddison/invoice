@@ -136,7 +136,7 @@ class Client
             string $client_avs='', 
             string $client_insurednumber='',
             string $client_veka='', 
-            mixed $client_birthdate = '',
+            mixed $client_birthdate=null,
             int $client_age = 0,
             int $client_gender=0, 
             int $postaladdress_id = null)
@@ -179,11 +179,13 @@ class Client
     
     public function getClient_date_created(): DateTimeImmutable
     {
+        /** @var DateTimeImmutable $this->client_date_created */
         return $this->client_date_created;
     }
 
     public function getClient_date_modified(): DateTimeImmutable
     {
+        /** @var DateTimeImmutable $this->client_date_created */
         return $this->client_date_modified;
     }
     
@@ -403,9 +405,9 @@ class Client
     } 
     
     //cycle 
-    public function getClient_birthdate() : ?DateTimeImmutable  
+    public function getClient_birthdate() : DateTimeImmutable|string|null  
     {
-        /** @var DateTimeImmutable $this->client_birthdate */
+        /** @var DateTimeImmutable|string|null $this->client_birthdate */
         return $this->client_birthdate;
     }    
     

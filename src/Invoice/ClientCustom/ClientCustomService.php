@@ -18,14 +18,14 @@ final class ClientCustomService
     /**
      * 
      * @param ClientCustom $model
-     * @param ClientCustomForm $form
+     * @param array $array
      * @return void
      */
-    public function saveClientCustom(ClientCustom $model, ClientCustomForm $form): void
+    public function saveClientCustom(ClientCustom $model, array $array): void
     {
-       null!==$form->getClient_id() ? $model->setClient_id($form->getClient_id()) : '';
-       null!==$form->getCustom_field_id() ? $model->setCustom_field_id($form->getCustom_field_id()) : '';
-       null!==$form->getValue() ? $model->setValue($form->getValue()) : '';       
+       null!==$array['client_id'] ? $model->setClient_id((int)$array['client_id']) : '';
+       null!==$array['custom_field_id'] ? $model->setCustom_field_id((int)$array['custom_field_id']) : '';
+       null!==$array['value'] ? $model->setValue((string)$array['value']) : '';       
        $this->repository->save($model);
     }
     

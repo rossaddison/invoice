@@ -16,25 +16,24 @@ final class SettingService
     }
 
     /**
-     * 
-     * @param Setting $model
-     * @param SettingForm $form
+     * @param Setting $setting
+     * @param array $body
      * @return void
      */
-    public function saveSetting(Setting $model, SettingForm $form): void
+    public function saveSetting(Setting $setting, array $body): void
     {
-        $form->getSetting_key() ? $model->setSetting_key($form->getSetting_key()) : '';
-        null!==$form->getSetting_value() ? $model->setSetting_value($form->getSetting_value()) : '';
-        $this->repository->save($model);
+        $body['setting_key'] ? $setting->setSetting_key((string)$body['setting_key']) : '';
+        null!==$body['setting_value'] ? $setting->setSetting_value((string)$body['setting_value']) : '';
+        $this->repository->save($setting);
     }
     
     /**
      * 
-     * @param Setting $model
+     * @param Setting $setting
      * @return void
      */
-    public function deleteSetting(Setting $model): void
+    public function deleteSetting(Setting $setting): void
     {
-        $this->repository->delete($model);
+        $this->repository->delete($setting);
     }
 }

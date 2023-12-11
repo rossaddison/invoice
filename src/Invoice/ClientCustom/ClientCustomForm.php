@@ -6,6 +6,7 @@ namespace App\Invoice\ClientCustom;
 
 use Yiisoft\FormModel\FormModel;
 use Yiisoft\Validator\Rule\Required;
+use App\Invoice\Entity\ClientCustom;
 
 final class ClientCustomForm extends FormModel
 {    
@@ -13,6 +14,12 @@ final class ClientCustomForm extends FormModel
     private ?int $client_id=null;
     private ?int $custom_field_id=null;
     private ?string $value='';
+    
+    public function __construct(ClientCustom $clientCustom) {
+        $this->client_id = (int)$clientCustom->getClient_id();
+        $this->custom_field_id = (int)$clientCustom->getCustom_field_id();
+        $this->value = (string)$clientCustom->getValue();
+    }
 
     public function getClient_id() : int|null
     {

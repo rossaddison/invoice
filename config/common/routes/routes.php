@@ -277,6 +277,11 @@ return [
       ->middleware(Authentication::class)
       ->action([ClientController::class, 'index'])
       ->name('client/index'),
+      Route::methods([Method::GET, Method::POST], '/client/add')
+      ->middleware(fn(AccessChecker $checker) => $checker->withPermission('editInv'))
+      ->middleware(Authentication::class)
+      ->action([ClientController::class, 'add'])
+      ->name('client/add'),      
       Route::methods([Method::GET, Method::POST], '/client/create_confirm')
       ->middleware(fn(AccessChecker $checker) => $checker->withPermission('editInv'))
       ->middleware(Authentication::class)

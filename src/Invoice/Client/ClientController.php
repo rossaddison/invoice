@@ -55,6 +55,7 @@ use Yiisoft\Session\SessionInterface;
 use Yiisoft\Session\Flash\Flash;
 use Yiisoft\Translator\TranslatorInterface;
 use Yiisoft\User\CurrentUser;
+use Yiisoft\Validator\Validator;
 use Yiisoft\FormModel\FormHydrator;
 use Yiisoft\Yii\View\ViewRenderer;
 // Miscellaneous
@@ -99,11 +100,11 @@ final class ClientController
         $this->userService = $userService;
         if ($this->userService->hasPermission('viewInv') && !$this->userService->hasPermission('editInv')) {
             $this->viewRenderer = $viewRenderer->withControllerName('invoice/client')
-                                                 ->withLayout('@views/layout/guest.php');
+                                               ->withLayout('@views/layout/guest.php');
         }
         if ($this->userService->hasPermission('viewInv') && $this->userService->hasPermission('editInv')) {
             $this->viewRenderer = $viewRenderer->withControllerName('invoice/client')
-                                                 ->withLayout('@views/layout/invoice.php');
+                                               ->withLayout('@views/layout/invoice.php');
         }
         $this->translator = $translator;
     }
@@ -119,44 +120,6 @@ final class ClientController
         ]);
     }
     
-    /**
-     * @param Client $client
-     * @return array
-     */
-    private function body(Client $client): array { 
-        $body = [
-            'client_date_created'=>$client->getClient_date_created(),
-            'client_date_modified'=>$client->getClient_date_modified(),
-            'client_name' => $client->getClient_name(),
-            'client_number' => $client->getClient_number(),
-            'client_address_1' => $client->getClient_address_1(),
-            'client_address_2' => $client->getClient_address_2(),
-            'client_building_number' =>$client->getClient_building_number(),
-            'client_city' => $client->getClient_city(),
-            'client_state' => $client->getClient_state(),
-            'client_zip' => $client->getClient_zip(),
-            'client_country' => $client->getClient_country(),
-            'client_phone' => $client->getClient_phone(),
-            'client_fax' => $client->getClient_fax(),
-            'client_mobile' => $client->getClient_mobile(),
-            'client_email' => $client->getClient_email(),
-            'client_web' => $client->getClient_web(),
-            'client_vat_id' => $client->getClient_vat_id(),
-            'client_tax_code' => $client->getClient_tax_code(),
-            'client_language' => $client->getClient_language(),
-            'client_active'=>$client->getClient_active(),
-            'client_surname'=>$client->getClient_surname(),
-            'client_avs' => $client->getClient_avs(),
-            'client_insurednumber'=>$client->getClient_insurednumber(),
-            'client_veka'=>$client->getClient_veka(),
-            'client_birthdate'=>$client->getClient_birthdate(),
-            'client_age'=>$client->getClient_age(),
-            'client_gender'=>$client->getClient_gender(),
-            'client_postaladdress_id'=>$client->getPostaladdress_id()
-        ];
-        return $body;
-    }
-
     /**
      * 
      * @param string $generated_dir_path
@@ -219,51 +182,72 @@ final class ClientController
         return $custom_field_form_values;
     }
     
-    // Data fed from client.js->$(document).on('click', '#client_create_confirm', function () {
-    public function create_confirm(Request $request, FormHydrator $formHydrator, cfR $cfR, sR $sR) : \Yiisoft\DataResponse\DataResponse
+    public function add(
+        Request $request, 
+        FormHydrator $formHydrator, 
+        cfR $cfR, 
+        cvR $cvR, 
+        sR $sR,
+        Validator $validator    
+    ) : Response 
     {
-        $body = $request->getQueryParams();
-        $datehelper = new DateHelper($sR);
-        $ajax_body = [             
-            'client_name'=>$body['client_name'] ?? 'clientnameismissing',
-            'client_email'=>$body['client_email'] ?? 'email@email.com',
-            'client_surname'=>$body['client_surname'] ?? 'clientsurnameismissing',
-            'client_birthdate'=> $datehelper->date_from_mysql(new \DateTimeImmutable('now')),
-            // Default gender is 'other'
-            'client_gender'=>2
+        /**
+         * @psalm-suppress PossiblyInvalidArgument
+         */
+        $body = $request->getParsedBody() ?? [];
+        $countries = new CountryHelper();
+        $new_client = New Client();
+        $form = new ClientForm($new_client);
+        $parameters = [
+            'title' => $sR->trans('add'),
+            'alert' => $this->alert(),
+            'action' => ['client/add'],
+            'errors' => [],
+            'client' => $new_client,
+            'buttons' => $this->viewRenderer->renderPartialAsString('/invoice/layout/header_buttons',[
+                's'=>$sR, 'hide_submit_button'=>false ,'hide_cancel_button'=>false
+            ]), 
+            'datehelper'=> new DateHelper($sR),
+            'form' => $form,
+            'aliases'=> new Aliases(['@invoice' => dirname(__DIR__), '@language' => dirname(__DIR__). DIRECTORY_SEPARATOR.'Language']),
+            'selected_country' => $sR->get_setting('default_country'),            
+            'selected_language' => $sR->get_setting('default_language'),
+            'datepicker_dropdown_locale_cldr' => $this->session->get('_language') ?? 'en',
+            'postal_address_count' => 0,
+            'postaladdresses' => null,
+            'countries'=> $countries->get_country_list($sR->get_setting('cldr')),
+            'custom_fields'=> $cfR->repoTablequery('client_custom'),
+            'custom_values'=> $cvR->attach_hard_coded_custom_field_values_to_custom_field($cfR->repoTablequery('client_custom')),
+            'cvH'=> new CVH($sR),
+            'client_custom_values'=> null,
         ];
-        $ajax_content = new ClientForm($ajax_body);
-        if ($formHydrator->populate($ajax_content, $ajax_body) && $ajax_content->isValid()) {  
-            $newclient = new Client();
-            $this->clientService->saveClient($newclient, $ajax_content, $sR);
-                $client_id = $newclient->getClient_id();
+        /**
+         * @psalm-suppress PossiblyInvalidArgument
+         */
+        if ($request->getMethod() === Method::POST && $formHydrator->populate($form, $body) && $validator->validate($form)->isValid()) {
+            $client_id = $this->clientService->saveClient($new_client, $body, $sR);
+            if ($client_id) {
                 // Get the custom fields that are mandatory for a client and initialise the first client with an empty value for each custom field
                 $custom_fields = $cfR->repoTablequery('client_custom');
-                /** @var CustomField $custom_field */
+                /** @var CustomField $custom_field 
+                 */
                 foreach($custom_fields as $custom_field){
-                    $init_client_custom = new ClientCustomForm();
+                    $form = new ClientCustomForm(new ClientCustom);
                     $client_custom = [];
                     $client_custom['client_id'] = $client_id;
                     $client_custom['custom_field_id'] = $custom_field->getId();                    
                     // Note: There are no Required rules for value under ClientCustomForm
                     $client_custom['value'] = '';                    
-                    if ($formHydrator->populate($init_client_custom, $client_custom) && $init_client_custom->isValid()) {
-                      $this->clientCustomService->saveClientCustom(new ClientCustom(), $init_client_custom);
+                    if ($formHydrator->populate($form, $client_custom) && $form->isValid()) {
+                      $this->clientCustomService->saveClientCustom(new ClientCustom(), $client_custom);
                     }
                 }
-                $parameters = [
-                   'success'=>1,                
-                ];
-            
-           //return response to client.js to reload page at location
-            return $this->factory->createResponse(Json::encode($parameters));          
-        } else {
-            $parameters = [
-               'success'=>0,
-            ];
-            //return response to client.js to reload page at location (DOM debugging)
-            return $this->factory->createResponse(Json::encode($parameters));          
-        } 
+                $this->flash_message('info', $sR->trans('record_successfully_created'));
+                return $this->webService->getRedirectResponse('client/index');  
+            }
+        }
+        $parameters['errors'] = $form->getValidationResult()?->getErrorMessagesIndexedByAttribute() ?? [];
+        return $this->viewRenderer->render('__form', $parameters);
     }
     
     /**
@@ -308,16 +292,16 @@ final class ClientController
                 }
             }
             
-            foreach ($db_array as $key => $value){
-                $ajax_custom = new ClientCustomForm();
+            foreach ($db_array as $key => $value){                
                 $client_custom = [];
                 $client_custom['client_id']=$client_id;
                 $client_custom['custom_field_id']=$key;
                 $client_custom['value']=$value; 
                 $model = ($ccR->repoClientCustomCount($client_id,$key) == 1 ? $ccR->repoFormValuequery($client_id,$key) : new ClientCustom());
                 if ($model instanceof ClientCustom) {
-                   if ($formHydrator->populate($ajax_custom, $client_custom) && $ajax_custom->isValid()) { 
-                        $this->clientCustomService->saveClientCustom($model, $ajax_custom);
+                   $form = new ClientCustomForm($model); 
+                   if ($formHydrator->populate($form, $client_custom) && $form->isValid()) { 
+                        $this->clientCustomService->saveClientCustom($model, $client_custom);
                    }     
                 }
             }
@@ -348,12 +332,12 @@ final class ClientController
     } 
     
     public function edit(Request $request, cR $cR, ccR $ccR, cfR $cfR, cvR $cvR, 
-           FormHydrator $formHydrator, paR $paR, sR $sR, CurrentRoute $currentRoute
+        FormHydrator $formHydrator, paR $paR, sR $sR, CurrentRoute $currentRoute, Validator $validator
     ): Response {
-     $body = $request->getParsedBody() ?? [];   
-     $form = new ClientForm($body);   
-     $client = null!==$this->client($currentRoute, $cR) ? $this->client($currentRoute, $cR) : null;
-     if ($client) {
+    $body = $request->getParsedBody() ?? [];   
+    $client = null!==$this->client($currentRoute, $cR) ? $this->client($currentRoute, $cR) : null;
+    if (null!==$client) {
+        $form = new ClientForm($client);   
         $selected_country =  $client->getClient_country(); 
         $selected_language = $client->getClient_language();
         $countries = new CountryHelper();
@@ -361,47 +345,46 @@ final class ClientController
         if (null!==$client_id) {
             $postaladdresses = $paR->repoClientAll((string)$client_id); 
             $parameters = [
-                'title' => $sR->trans('edit'),
-                'action' => ['client/edit', ['id' => $client_id]],
-                'alert' => $this->alert(),
-                'errors' => [],
-                'buttons' => $this->viewRenderer->renderPartialAsString('/invoice/layout/header_buttons',['s'=>$sR, 'hide_submit_button'=>false ,'hide_cancel_button'=>false]), 
-                'datehelper'=> new DateHelper($sR),
-                'client'=> $client,
-                'body' => $this->body($client),
-                'form' => $form,
-                'aliases'=> new Aliases(['@invoice' => dirname(__DIR__), '@language' => dirname(__DIR__). DIRECTORY_SEPARATOR.'Language']),
-                'selected_country' => $selected_country ?: $sR->get_setting('default_country'),            
-                'selected_language' => $selected_language ?: $sR->get_setting('default_language'),
-                'datepicker_dropdown_locale_cldr' => $this->session->get('_language') ?? 'en',
-                'postal_address_count' => $paR->repoClientCount((string)$client_id),
-                'postaladdresses' => $postaladdresses,
-                'countries'=> $countries->get_country_list($sR->get_setting('cldr')),
-                'custom_fields'=> $cfR->repoTablequery('client_custom'),
-                'custom_values'=> $cvR->attach_hard_coded_custom_field_values_to_custom_field($cfR->repoTablequery('client_custom')),
-                'cvH'=> new CVH($sR),
-                'client_custom_values'=> $this->client_custom_values((string)$client_id, $ccR),                
+               'title' => $sR->trans('edit'),
+               'action' => ['client/edit', ['id' => $client_id]],
+               'alert' => $this->alert(),
+               'errors' => [],
+               'buttons' => $this->viewRenderer->renderPartialAsString('/invoice/layout/header_buttons',['s'=>$sR, 'hide_submit_button'=>false ,'hide_cancel_button'=>false]), 
+               'datehelper'=> new DateHelper($sR),
+               'client'=> $client,
+               'form' => $form,
+               'aliases'=> new Aliases(['@invoice' => dirname(__DIR__), '@language' => dirname(__DIR__). DIRECTORY_SEPARATOR.'Language']),
+               'selected_country' => $selected_country ?: $sR->get_setting('default_country'),            
+               'selected_language' => $selected_language ?: $sR->get_setting('default_language'),
+               'datepicker_dropdown_locale_cldr' => $this->session->get('_language') ?? 'en',
+               'postal_address_count' => $paR->repoClientCount((string)$client_id),
+               'postaladdresses' => $postaladdresses,
+               'countries'=> $countries->get_country_list($sR->get_setting('cldr')),
+               'custom_fields'=> $cfR->repoTablequery('client_custom'),
+               'custom_values'=> $cvR->attach_hard_coded_custom_field_values_to_custom_field($cfR->repoTablequery('client_custom')),
+               'cvH'=> new CVH($sR),
+               'client_custom_values'=> $this->client_custom_values((string)$client_id, $ccR),                
             ];
             if ($request->getMethod() === Method::POST) {            
-                if (is_array($body)) {
-                    $returned_form = $this->edit_save_form_fields($body, $form, $client, $formHydrator, $sR);
-                    $parameters['body'] = $body;
-                    if (!empty($returned_form->getValidationResult()?->getErrorMessagesIndexedByAttribute())) {
-                        $parameters['form'] = $returned_form;
-                        $parameters['errors'] = $returned_form->getValidationResult()?->getErrorMessagesIndexedByAttribute() ?? [];
-                        return $this->viewRenderer->render('__form', $parameters);
-                    }  
-                    // Only save custom fields if they exist
-                    if ($cfR->repoTableCountquery('client_custom') > 0) { 
-                        $this->edit_save_custom_fields($body, $formHydrator, $ccR, (string)$client_id); 
-                    }
-                }    
-                $this->flash_message('info', $sR->trans('record_successfully_updated'));
-                return $this->webService->getRedirectResponse('client/index');
-            }
-            return $this->viewRenderer->render('__form', $parameters);
+               if (is_array($body)) {
+                   $returned_form = $this->edit_save_form_fields($body, $form, $client, $formHydrator, $sR, $validator);
+                   $parameters['body'] = $body;
+                   if (!empty($returned_form->getValidationResult()?->getErrorMessagesIndexedByAttribute())) {
+                       $parameters['form'] = $returned_form;
+                       $parameters['errors'] = $returned_form->getValidationResult()?->getErrorMessagesIndexedByAttribute() ?? [];
+                       return $this->viewRenderer->render('__form', $parameters);
+                   }  
+                   // Only save custom fields if they exist
+                   if ($cfR->repoTableCountquery('client_custom') > 0) { 
+                       $this->edit_save_custom_fields($body, $formHydrator, $ccR, (string)$client_id); 
+                   }
+               }    
+               $this->flash_message('info', $sR->trans('record_successfully_updated'));
+               return $this->webService->getRedirectResponse('client/index');
+           }
+           return $this->viewRenderer->render('__form', $parameters);
         } // null!==client_id
-    } // $client
+    } //client    
     return $this->webService->getRedirectResponse('client/index');   
 }
     
@@ -412,11 +395,12 @@ final class ClientController
      * @param Client $client
      * @param FormHydrator $formHydrator
      * @param sR $sR
+     * @param Validator $validator
      * @return ClientForm
      */
-    public function edit_save_form_fields(array $body, ClientForm $form, Client $client, FormHydrator $formHydrator, sR $sR) : ClientForm {
-        if ($formHydrator->populate($form, $body)) {
-           $this->clientService->saveClient($client, $form, $sR);
+    public function edit_save_form_fields(array $body, ClientForm $form, Client $client, FormHydrator $formHydrator, sR $sR, Validator $validator) : ClientForm {
+        if ($formHydrator->populate($form, $body) && $validator->validate($form)->isValid()) {
+           $this->clientService->saveClient($client, $body, $sR);
         }
         return $form;
     }
@@ -440,10 +424,10 @@ final class ClientController
                   'custom_field_id'=>(int)$custom_field_id,
                   'value'=>$value
               ];
-              $form = new ClientCustomForm();
+              $form = new ClientCustomForm($client_custom);
               if ($formHydrator->populate($form, $client_custom_input) && $form->isValid())
               {
-                  $this->clientCustomService->saveClientCustom($client_custom, $form);     
+                  $this->clientCustomService->saveClientCustom($client_custom, $client_custom_input);     
               }
           } else {
             $client_custom = new ClientCustom();
@@ -593,15 +577,17 @@ final class ClientController
              * @var string $value
              */
             foreach ($db_array as $key => $value){
-                $ajax_custom = new ClientCustomForm();
                 $client_custom = [];
                 $client_custom['client_id']=$client_id;
                 $client_custom['custom_field_id']=$key;
                 $client_custom['value']=$value; 
                 $model = ($ccR->repoClientCustomCount($client_id,$key) == 1 ? $ccR->repoFormValuequery($client_id, $key) : new ClientCustom());
-                if (null!==$model && $formHydrator->populate($ajax_custom, $client_custom) && $ajax_custom->isValid()) {
-                    $this->clientCustomService->saveClientCustom($model, $ajax_custom);
-                }           
+                if (null!==$model) {
+                    $form = new ClientCustomForm($model);
+                    if ($formHydrator->populate($form, $client_custom) && $form->isValid()) {
+                        $this->clientCustomService->saveClientCustom($model, $client_custom);
+                    }
+                }    
             }
             $parameters = [
                 'success'=>1,
@@ -659,7 +645,7 @@ final class ClientController
                 }
             }            
             foreach ($db_array as $key => $value){
-                $ajax_custom = new ClientCustomForm();
+                $form = new ClientCustomForm(new ClientCustom());
                 $client_custom = [];
                 $client_custom['client_id']=$client_id;
                 $client_custom['custom_field_id']=$key;
@@ -668,9 +654,11 @@ final class ClientController
                  */
                 $client_custom['value']=$value; 
                 $model = ($ccR->repoClientCustomCount($client_id, $key) == 1 ? $ccR->repoFormValuequery($client_id, $key) : new ClientCustom());
-                if (null!==$model && $formHydrator->populate($ajax_custom, $client_custom) && $ajax_custom->isValid()) {
-                  $this->clientCustomService->saveClientCustom($model, $ajax_custom);                
-                }
+                if (null!==$model) {
+                    if ($formHydrator->populate($form, $client_custom) && $form->isValid()) {
+                        $this->clientCustomService->saveClientCustom($model, $client_custom);                
+                    }
+                }    
             }
             $parameters = [
                 'success'=>1,                
@@ -711,16 +699,16 @@ final class ClientController
             'date'=> $date->format($datehelper->style()),
             'note'=>$note,
         ];
-        $content = new ClientNoteForm();        
-        if ($formHydrator->populate($content, $data) && $content->isValid()) {    
-            $cnS->addClientNote(new ClientNote(), $content, $sR);
+        $form = new ClientNoteForm(new ClientNote());        
+        if ($formHydrator->populate($form, $data) && $form->isValid()) {    
+            $cnS->addClientNote(new ClientNote(), $data, $sR);
             $parameters = [
                 'success' => 1,
             ];
         } else {
             $parameters = [
                 'success' => 0,
-                'validation_errors' => $content->getValidationResult()?->getErrors()
+                'validation_errors' => $form->getValidationResult()?->getErrorMessagesIndexedByAttribute() ?? []
             ];
         }        
         return $this->factory->createResponse(Json::encode($parameters));          

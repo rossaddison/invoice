@@ -45,6 +45,10 @@
 <p>A General Sales Tax (GST) Tax System will have to be implemented first for this purpose.</p>
 <p><b>What's next?</b></p>
 <p>Upskilling on Docker.</p>
+<p>Further integration of the entity into the form constructs for the rest of the entities.</p>
+<p><b>11 December 2023</b></p>
+<p>https://github.com/yiisoft/form/issues/298</p>
+<p>Form Hydration, Form Model for Client, ClientNote, and Setting have been completed.</p>
 <p><b>18 November 2023</b></p>
 <p>Do not use 'Reset' word in the context of changing a password. Use 'Change' instead. <a href=https://github.com/yiisoft/demo/pull/602>Pull request 602 under development.</a></p>
 <p>So reset switched to change on all files</p>

@@ -62,7 +62,8 @@ use Psr\Http\Message\ServerRequestInterface as Request;
 // Yiisoft
 use Yiisoft\Data\Reader\Sort;
 use Yiisoft\DataResponse\DataResponseFactoryInterface;
-use Yiisoft\Data\Paginator\OffsetPaginator;use Yiisoft\FormModel\FormHydrator;
+use Yiisoft\Data\Paginator\OffsetPaginator;
+use Yiisoft\FormModel\FormHydrator;
 use Yiisoft\Http\Method;
 use Yiisoft\Json\Json;
 use Yiisoft\Router\CurrentRoute;
@@ -137,7 +138,8 @@ class ProductController
     {
         $countries = new CountryHelper();
         $peppolarrays = new PeppolArrays();
-        $form = new ProductForm();
+        $body = $request->getParsedBody() ?? [];
+        $form = new ProductForm($body);
         $parameters = [
             'title' => $sR->trans('add'),
             'action' => ['product/add'],
@@ -161,7 +163,6 @@ class ProductController
         ];
         
         if ($request->getMethod() === Method::POST) {            
-            $body = $request->getParsedBody();
             $product = new Product();
             if (empty($form->getValidationResult()?->getErrorMessagesIndexedByAttribute())) {
                 if (is_array($body)) {
@@ -291,9 +292,10 @@ class ProductController
         $countries = new CountryHelper();
         $peppolarrays = new PeppolArrays();
         $product = $this->product($currentRoute, $pR);
+        $body = $request->getParsedBody() ?? [];
         if ($product) {
         $product_id = $product->getProduct_id();
-        $form = new ProductForm();
+        $form = new ProductForm($body);
         $parameters = [
             'title' => $sR->trans('edit'),
             'action' => ['product/edit', ['id' => $product_id]],
@@ -316,8 +318,7 @@ class ProductController
             'product_custom_values'=> $this->product_custom_values($product_id, $pcR), 
         ];
         if ($request->getMethod() === Method::POST) {            
-            $body = $request->getParsedBody();
-            if ($form->isValid()) {
+            if (empty($form->getValidationResult()?->getErrorMessagesIndexedByAttribute())) {
                 if (is_array($body)) {
                     $this->edit_save_form_fields($body, $form, $product, $formHydrator);
                     $parameters['body'] = $body;
