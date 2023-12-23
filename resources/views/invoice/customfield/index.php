@@ -49,7 +49,7 @@ echo $alert;
 <?php foreach ($paginator->read() as $customfield) { ?>
      <?php $alpha = str_replace("-", "_", strtolower($customfield->getType())); ?>
      <tr>                
-      <td><?= $s->lang($custom_tables[$customfield->getTable()]); ?></td>
+      <td><?= $s->lang($custom_tables[$customfield->getTable()] ?? ''); ?></td>
       <td><?= Html::encode($customfield->getLabel()); ?></td>
       <td><?= $s->trans($alpha); ?></td>
       <td><?= Html::encode($customfield->getOrder()); ?></td>

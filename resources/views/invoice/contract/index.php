@@ -47,10 +47,11 @@ use Yiisoft\Yii\DataView\OffsetPagination;
         ->render();
     $toolbar = Div::tag();
 ?>
-
-<div>
-    <h5><?= $translator->translate('invoice.invoice.contract.contracts'); ?></h5>
-</div>
+<?= Html::openTag('div'); ?>
+    <?= Html::openTag('h5'); ?>
+        <?= $translator->translate('invoice.invoice.contract.contracts'); ?>
+    <?= Html::closeTag('h5'); ?>    
+<?= Html::closeTag('div'); ?>
 <br>
     <?php
         $columns = [
@@ -138,7 +139,7 @@ use Yiisoft\Yii\DataView\OffsetPagination;
         ];
     ?>
     <?= GridView::widget()    
-        ->columns($columns)
+        ->columns(...$columns)
         ->dataReader($paginator)    
         ->headerRowAttributes(['class'=>'card-header bg-info text-black'])
         ->filterPosition('header')
@@ -163,15 +164,4 @@ use Yiisoft\Yii\DataView\OffsetPagination;
             Div::tag()->addClass('float-end m-3')->content($toolbarReset)->encode(false)->render() .
             Form::tag()->close()
         );
-    ?>
-    <?php
-        $pageSize = $paginator->getCurrentPageSize();
-        if ($pageSize > 0) {
-            echo Html::p(
-                sprintf($translator->translate('invoice.index.footer.showing').' contracts', $pageSize, $paginator->getTotalItems()),
-                ['class' => 'text-muted']
-            );
-        } else {
-            echo Html::p($translator->translate('invoice.records.no'));
-        }
     ?>

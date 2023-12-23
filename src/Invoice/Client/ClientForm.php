@@ -7,10 +7,7 @@ namespace App\Invoice\Client;
 use App\Invoice\Entity\Client;
 use Yiisoft\FormModel\FormModel;
 use Yiisoft\Validator\Rule\Required;
-use Yiisoft\Validator\Rule\Email;
 use Yiisoft\Validator\Rule\Integer;
-use Yiisoft\Validator\Rule\Length;
-use Yiisoft\Validator\Rule\GreaterThan;
 use \DateTimeImmutable;
 
 final class ClientForm extends FormModel
@@ -75,6 +72,17 @@ final class ClientForm extends FormModel
         //$this->postaladdress_id = $client->getPostaladdress_id();
     }
         
+    public function getClient_active() : bool|null
+    {
+      return $this->client_active;
+    }
+    
+    public function getClient_age(): int|null
+    {
+        return $this->client_age;
+    }    
+
+    
     public function getClient_name() : string|null
     {
       return $this->client_name;
@@ -160,11 +168,6 @@ final class ClientForm extends FormModel
       return $this->client_language;
     }
 
-    public function getClient_active() : bool|null
-    {
-      return $this->client_active;
-    }
-
     public function getClient_surname() : string|null
     {
       return $this->client_surname;
@@ -193,11 +196,6 @@ final class ClientForm extends FormModel
         return $this->client_birthdate;
     }
     
-    public function getClient_age(): int|null
-    {
-        return $this->client_age;
-    }    
-
     public function getClient_gender() : int|null
     {
       return $this->client_gender;

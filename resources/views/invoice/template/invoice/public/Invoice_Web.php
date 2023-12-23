@@ -80,7 +80,7 @@ $vat = $s->get_setting('enable_vat_registration');
 
             <?php if ($logo) {echo $logo . '<br><br>'; } ?>
 
-            <div class="row">
+            <?= Html::openTag('div', ['class' => 'row']); ?>
                 <div class="col-xs-12 col-md-6 col-lg-5">
 
                     <h4><?= Html::encode($userinv->getName()); ?></h4>
@@ -284,7 +284,7 @@ $vat = $s->get_setting('enable_vat_registration');
 
             <hr>
 
-            <div class="row">
+            <?= Html::openTag('div', ['class' => 'row']); ?>
 
                 <?php if ($inv->getTerms()) { ?>
                     <div class="col-xs-12 col-md-6">

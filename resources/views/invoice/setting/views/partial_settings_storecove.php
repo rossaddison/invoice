@@ -3,14 +3,14 @@ declare(strict_types=1);
 
 use Yiisoft\Html\Html;
 ?>
-<div class="row">
+<?= Html::openTag('div', ['class' => 'row']); ?>
     <div class="col-xs-12 col-md-8 col-md-offset-2">
         <div class="panel panel-default">
             <div class="panel-heading">
                 <?= $translator->translate('invoice.invoice.storecove'); ?>
             </div>
             <div class="panel-body">
-                <div class="row">
+                <?= Html::openTag('div', ['class' => 'row']); ?>
                     <div class="col-xs-12 col-md-6">
                         <div class="form-group">
                             <label for="settings[storecove_country]" <?= $s->where('storecove_country'); ?>>

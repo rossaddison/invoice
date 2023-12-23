@@ -8,7 +8,6 @@ use App\Invoice\Entity\ClientPeppol;
 
 final class ClientPeppolService
 {
-
     private ClientPeppolRepository $repository;
 
     public function __construct(ClientPeppolRepository $repository)
@@ -16,24 +15,24 @@ final class ClientPeppolService
         $this->repository = $repository;
     }
 
-    public function saveClientPeppol(ClientPeppol $model, ClientPeppolForm $form): void
+    public function saveClientPeppol(ClientPeppol $model, array $array): void
     {
-        null!==$form->getId() ? $model->setId($form->getId()) : '';
-        null!==$form->getClient_id() ? $model->setClient_id($form->getClient_id()) : '';
-        null!==$form->getAccounting_cost() ? $model->setAccountingCost($form->getAccounting_cost()) : '';
-        null!==$form->getBuyer_reference() ? $model->setBuyerReference($form->getBuyer_reference()) : '';
-        null!==$form->getEndpointid() ? $model->setEndpointid($form->getEndpointid()) : '';
-        null!==$form->getEndpointid_schemeid() ? $model->setEndpointid_schemeid($form->getEndpointid_schemeid()) : '';
-        null!==$form->getFinancial_institution_branchid() ? $model->setFinancial_institution_branchid($form->getFinancial_institution_branchid()) : '';
-        null!==$form->getIdentificationid() ? $model->setIdentificationid($form->getIdentificationid()) : '';
-        null!==$form->getIdentificationid_schemeid() ? $model->setIdentificationid_schemeid($form->getIdentificationid_schemeid()) : '';
-        null!==$form->getLegal_entity_companyid() ? $model->setLegal_entity_companyid($form->getLegal_entity_companyid()) : '';
-        null!==$form->getLegal_entity_companyid_schemeid() ? $model->setLegal_entity_companyid_schemeid($form->getLegal_entity_companyid_schemeid()) : '';
-        null!==$form->getLegal_entity_company_legal_form() ? $model->setLegal_entity_company_legal_form($form->getLegal_entity_company_legal_form()) : '';
-        null!==$form->getLegal_entity_registration_name() ? $model->setLegal_entity_registration_name($form->getLegal_entity_registration_name()) : '';
-        null!==$form->getSupplierAssignedAccountId() ? $model->setSupplierAssignedAccountId($form->getSupplierAssignedAccountId()) : '';
-        null!==$form->getTaxschemecompanyid() ? $model->setTaxschemecompanyid($form->getTaxschemecompanyid()) : '';
-        null!==$form->getTaxschemeid() ? $model->setTaxschemeid($form->getTaxschemeid()) : '';
+        isset($array['id']) ? $model->setId((int)$array['id']) : '';
+        isset($array['client_id']) ? $model->setClient_id((int)$array['client_id']) : '';
+        isset($array['accounting_cost']) ? $model->setAccountingCost((string)$array['accounting_cost']) : '';
+        isset($array['buyer_reference']) ? $model->setBuyerReference((string)$array['buyer_reference']) : '';
+        isset($array['endpointid']) ? $model->setEndpointid((string)$array['endpointid']) : '';
+        isset($array['endpointid_schemeid']) ? $model->setEndpointid_schemeid((string)$array['endpointid_schemeid']) : '';
+        isset($array['financial_institution_branchid']) ? $model->setFinancial_institution_branchid((string)$array['financial_institution_branchid']) : '';
+        isset($array['identificationid']) ? $model->setIdentificationid((string)$array['identificationid']) : '';
+        isset($array['identificationid_schemeid']) ? $model->setIdentificationid_schemeid((string)$array['identificationid_schemeid']) : '';
+        isset($array['legal_entity_companyid']) ? $model->setLegal_entity_companyid((string)$array['legal_entity_companyid']) : '';
+        isset($array['legal_entity_companyid_schemeid']) ? $model->setLegal_entity_companyid_schemeid((string)$array['legal_entity_companyid_schemeid']) : '';
+        isset($array['legal_entity_company_legal_form']) ? $model->setLegal_entity_company_legal_form((string)$array['legal_entity_company_legal_form']) : '';
+        isset($array['legal_entity_registration_name']) ? $model->setLegal_entity_registration_name((string)$array['legal_entity_registration_name']) : '';
+        isset($array['supplierassignedaccountid']) ? $model->setSupplierAssignedAccountId((string)$array['legal_entity_registration_name']) : '';
+        isset($array['taxschemecompanyid']) ? $model->setTaxschemecompanyid((string)$array['taxschemecompanyid']) : '';
+        isset($array['taxschemeid']) ? $model->setTaxschemeid((string)$array['taxschemeid']) : '';
         $this->repository->save($model);
     }
     

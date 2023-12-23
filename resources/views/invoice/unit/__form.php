@@ -21,11 +21,11 @@ if (!empty($errors)) {
 }
 ?>
 
-<h1><?= Html::encode($title) ?></h1>
+<?= Html::openTag('h1'); ?><?= Html::encode($title) ?><?= Html::closeTag('h1'); ?>
 
 <form id="settingForm" method="POST" action="<?= $urlGenerator->generate(...$action) ?>" enctype="multipart/form-data">
 <input type="hidden" name="_csrf" value="<?= $csrf ?>">
-  <div class="row">
+  <?= Html::openTag('div', ['class' => 'row']); ?>
     <div class="mb-3 form-group">
         <label for="unit_name">
             <?= $s->trans('unit_name'); ?>

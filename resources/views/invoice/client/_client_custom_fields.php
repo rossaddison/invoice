@@ -2,6 +2,8 @@
 
 declare(strict_types=1);
 
+use Yiisoft\Html\Html;
+
 /**
  * @var \Yiisoft\Router\UrlGeneratorInterface $urlGenerator 
  */

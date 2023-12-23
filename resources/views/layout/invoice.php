@@ -220,7 +220,7 @@ $this->beginPage();
               ],
               ['label' => $s->trans('product'),
                 'items' => [
-                  ['options' => ['class' => 'nav fs-4'], 'label' => $s->trans('create'), 'url' => $urlGenerator->generate('product/add')],
+                  ['options' => ['class' => 'nav fs-4'], 'label' => $s->trans('add_product'), 'url' => $urlGenerator->generate('product/add')],
                   ['options' => ['class' => 'nav fs-4 ajax-loader'], 'label' => $s->trans('view'), 'url' => $urlGenerator->generate('product/index')],
                   ['options' => ['class' => 'nav fs-4'], 'label' => $s->trans('family'), 'url' => $urlGenerator->generate('family/index')],
                   ['options' => ['class' => 'nav fs-4'], 'label' => $s->trans('unit'), 'url' => $urlGenerator->generate('unit/index')],

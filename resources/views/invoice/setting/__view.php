@@ -14,8 +14,8 @@ use Yiisoft\Html\Html;
  */
 ?>
 
-<h1><?= Html::encode($title) ?></h1>
-  <div class="row">
+<?= Html::openTag('h1'); ?><?= Html::encode($title) ?><?= Html::closeTag('h1'); ?>
+  <?= Html::openTag('div', ['class' => 'row']); ?>
     <div class="mb-3 form-group">
         <label for="setting_id" class="form-label" style="background:lightblue">Setting Id</label>
         <?= Html::encode($body['setting_id'] ?? '') ?>

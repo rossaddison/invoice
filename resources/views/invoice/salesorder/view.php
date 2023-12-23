@@ -88,7 +88,7 @@ $vat = $s->get_setting('enable_vat_registration');
     <?= $alert; ?>  
     <div id="salesorder_form">
         <div class="salesorder">
-            <div class="row">
+            <?= Html::openTag('div', ['class' => 'row']); ?>
                 <div class="col-xs-12 col-sm-6 col-md-5">
                     <h3>
                         <a href="<?= $urlGenerator->generate('client/view',['id' => $so->getClient()->getClient_id()]); ?>">
@@ -139,7 +139,7 @@ $vat = $s->get_setting('enable_vat_registration');
 
                 <div class="col-xs-12 col-sm-6 col-md-7">
                     <div class="details-box">
-                        <div class="row">
+                        <?= Html::openTag('div', ['class' => 'row']); ?>
 
                             <div class="col-xs-12 col-md-6">
 
@@ -248,7 +248,7 @@ $vat = $s->get_setting('enable_vat_registration');
     ?>     
    </div>
     
-   <div class="row">
+   <?= Html::openTag('div', ['class' => 'row']); ?>
             <div class="col-xs-12 col-md-6">
                 <div class="panel panel-default no-margin">
                     <div class="panel-heading">

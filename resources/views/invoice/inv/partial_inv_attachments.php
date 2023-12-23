@@ -25,7 +25,7 @@ use Yiisoft\View\WebView;
     <div class="panel-body clearfix">
         <div class="container">
             <?php if ($invView && $invEdit) { ?> 
-            <div class="row">
+            <?= Html::openTag('div', ['class' => 'row']); ?>
                 <div>
                     <div>
                         <h5><?= Html::encode($this->getTitle()) ?></h5>
@@ -65,7 +65,7 @@ use Yiisoft\View\WebView;
             </div>
             <?php } ?>
             <?php if ($invView) { ?>
-            <div class="row">
+            <?= Html::openTag('div', ['class' => 'row']); ?>
                 <?= $partial_inv_attachments_list; ?>
             </div>
             <?php } ?>

@@ -20,14 +20,14 @@ if (!empty($errors)) {
 }
 
 ?>
-<h1><?= Html::encode($title) ?></h1>
+<?= Html::openTag('h1'); ?><?= Html::encode($title) ?><?= Html::closeTag('h1'); ?>
 <form id="InvAllowanceChargeForm" method="POST" action="<?= $urlGenerator->generate(...$action) ?>" enctype="multipart/form-data">
 <input type="hidden" name="_csrf" value="<?= $csrf ?>">
 <div id="headerbar">
 <h1 class="headerbar-title"><?= $translator->translate('invoice.invoice.allowance.or.charge'); ?></h1>
 <?php $response = $head->renderPartial('invoice/layout/header_buttons',['s'=>$s, 'hide_submit_button'=>false ,'hide_cancel_button'=>false]); ?>        
 <?php echo (string)$response->getBody(); ?><div id="content">
-<div class="row">
+<?= Html::openTag('div', ['class' => 'row']); ?>
  <div class="mb3 form-group" hidden>
     <label for="allowance_charge_id">Allowance charge</label>
     <select name="allowance_charge_id" id="allowance_charge_id" class="form-control">

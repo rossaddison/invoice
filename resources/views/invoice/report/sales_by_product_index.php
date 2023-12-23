@@ -19,7 +19,7 @@
 
 <div id="content">
 
-    <div class="row">
+    <?= Html::openTag('div', ['class' => 'row']); ?>
         <div class="col-xs-12 col-md-6 col-md-offset-3">
 
             <div id="report_options" class="panel panel-default">

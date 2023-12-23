@@ -9,13 +9,14 @@ use Yiisoft\Arrays\ArrayHelper;
 /**
  * @var \Yiisoft\View\View $this
  * @var \Yiisoft\Router\UrlGeneratorInterface $urlGenerator
- * @var array $body
  * @var string $csrf
  * @var string $action
  * @var string $title
  */
 ?>
-<h1><?= Html::encode($title) ?></h1>
+<?= Html::openTag('h1');?>
+    <?= Html::encode($title); ?>
+<?=Html::closeTag('h1'); ?>
 <?= Html::openTag('div',['class'=>'container py-5 h-100']); ?>
 <?= Html::openTag('div',['class'=>'row d-flex justify-content-center align-items-center h-100']); ?>
 <?= Html::openTag('div',['class'=>'col-12 col-md-8 col-lg-6 col-xl-8']); ?>
@@ -66,9 +67,8 @@ use Yiisoft\Arrays\ArrayHelper;
                 ->inputLabelAttributes(['class' => 'form-check-label'])    
                 ->enclosedByLabel(true)
                 ->inputClass('form-check-input')
-                ->ariaDescribedBy($s->trans('client_active'))
-                ->inputValue($form->getClient_active() ?? ''),    
-               Html::closeTag('div'),
+                ->ariaDescribedBy($s->trans('client_active')),
+            Html::closeTag('div'),
         Html::closeTag('div'),
     Html::closeTag('div')    
 ?>
@@ -122,7 +122,7 @@ use Yiisoft\Arrays\ArrayHelper;
     ->hint($translator->translate('invoice.hint.this.field.is.required')); 
 ?>  
 
-<br>
+<?= Html::Tag('br'); ?>
 <?= Html::openTag('div',['class' => 'card']); ?>
     <?= Html::openTag('div',['class' => 'card-header']); ?>
         <?= $s->trans('address'); ?>
@@ -247,7 +247,7 @@ use Yiisoft\Arrays\ArrayHelper;
         <?= Html::closeTag('div'); ?>    
     <?= Html::closeTag('div'); ?>
 <?= Html::closeTag('div'); ?>
-<br>
+<?= Html::Tag('br'); ?>
 <?= Html::openTag('div',['class' => 'card']); ?>
     <?= Html::openTag('div',['class' => 'card-header']); ?>
         <?= $s->trans('contact_information'); ?>
@@ -358,30 +358,20 @@ use Yiisoft\Arrays\ArrayHelper;
         <?= Html::closeTag('div'); ?>
     <?= Html::closeTag('div'); ?>
 <?= Html::closeTag('div'); ?>
-<br>
+<?= Html::Tag('br'); ?>
 <?= Html::openTag('div',['class' => 'card']); ?>
     <?= Html::openTag('div',['class' => 'card-header']); ?>
         <?= $s->trans('personal_information'); ?>
     <?= Html::closeTag('div'); ?>
     <?= Html::openTag('div', ['class' => 'row']); ?>
         <?= Html::openTag('div',['class' => 'mb-3 form-group']); ?>
-            <label for="client_gender"  class="form-label"><?= $s->trans('gender'); ?></label>
             <?= Html::openTag('div',['class' => 'controls']); ?>
-                <select name="client_gender" id="client_gender"
-                        class="form-control" data-minimum-results-for-search="Infinity">
-                            <?php
-                            $genders = [
-                                $s->trans('gender_male'),
-                                $s->trans('gender_female'),
-                                $s->trans('gender_other'),
-                            ];
-                            foreach ($genders as $key => $val) {
-                                ?>
-                        <option value=" <?php echo $key; ?>" <?php $s->check_select(Html::encode($form->getClient_gender() ?? 0 ), $key) ?>>
-                <?php echo $val; ?>
-                        </option>
-                            <?php } ?>
-                </select>
+                <?= Field::select($form, 'client_gender')
+                    ->label($s->trans('gender'),['class' => 'form-label'])    
+                    ->addInputAttributes(['class' => 'form-control'])
+                    ->optionsData($optionsDataGender)
+                    ->value(Html::encode($form->getClient_gender() ?? 0 ));
+                ?> 
             <?= Html::closeTag('div'); ?>
         <?= Html::closeTag('div'); ?>
         <?= Html::openTag('div',['class' => 'mb-3 form-group has-feedback']); ?>
@@ -410,7 +400,10 @@ use Yiisoft\Arrays\ArrayHelper;
                     'id' => 'client_age'
                 ])
                 ->required(true)
-                //->min(16)
+                //->min(16) not necessary @see ClientForm
+                // #[Integer(min: 16)]
+                // #[Required]
+                // private ?int $client_age = null;
                 ->step(1)
                 ->hint($translator->translate('invoice.client.age.hint'))
             ?>
@@ -524,13 +517,13 @@ use Yiisoft\Arrays\ArrayHelper;
         <?= Html::closeTag('div'); ?>
         <?= Html::openTag('div',['class' => 'form-group']); ?>
             <?php if ($custom_fields): ?>
-            <div class="row">
-                <div class="col-xs-12 col-md-6">
-                    <div class="panel panel-default">
-                        <div class="panel-heading">
+            <?= Html::openTag('div',['class' => 'row']); ?>
+                <?= Html::openTag('div',['class' => 'col-xs-12 col-md-6']); ?>
+                    <?= Html::openTag('div',['class' => 'panel panel-default']); ?>
+                        <?= Html::openTag('div',['class' => 'panel-heading']); ?>
                             <?= $s->trans('custom_fields'); ?>
-                        </div>
-                        <div class="panel-body">
+                        <?= Html::closeTag('div'); ?>
+                        <?= Html::openTag('div', ['class' => 'panel-body']); ?>
                             <?php foreach ($custom_fields as $custom_field): ?>
                                 <?php
                                 if ($custom_field->getLocation() !== 0) {
@@ -550,10 +543,10 @@ use Yiisoft\Arrays\ArrayHelper;
                                     'control-label');
                                 ?>
                             <?php endforeach; ?>
-                        </div>
-                    </div>
-                </div>
-            </div>
+                        <?= Html::closeTag('div'); ?>
+                    <?= Html::closeTag('div'); ?>
+                <?= Html::closeTag('div'); ?>
+            <?= Html::closeTag('div'); ?>
             <?php endif; ?>
         <?= Html::closeTag('div'); ?>
     <?= Html::closeTag('div'); ?>

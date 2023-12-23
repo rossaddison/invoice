@@ -19,8 +19,8 @@ if (!empty($errors)) {
   }
 }
 ?>
-<h1><?= Html::encode($title) ?></h1>
-<div class="row">
+<?= Html::openTag('h1'); ?><?= Html::encode($title) ?><?= Html::closeTag('h1'); ?>
+<?= Html::openTag('div', ['class' => 'row']); ?>
     <div class="row mb3 form-group">
         <label for="date_created" class="text-bg col-sm-2 col-form-label" style="background:lightblue"><?= $s->trans('date_created'); ?></label>
         <label class="text-bg col-sm-10 col-form-label"><?= Html::encode(($body['date_created'])->format($datehelper->style()) ?? ''); ?></label>

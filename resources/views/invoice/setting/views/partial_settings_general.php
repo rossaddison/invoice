@@ -1,14 +1,14 @@
 <?php
     declare(strict_types=1);
 ?>
-<div class="row">
+<?= Html::openTag('div', ['class' => 'row']); ?>
     <div class="col-xs-12 col-md-8 col-md-offset-2">
         <div class="panel panel-default">
             <div class="panel-heading">
                 <?= $s->trans('general'); ?>
             </div>
             <div class="panel-body">
-                <div class="row">
+                <?= Html::openTag('div', ['class' => 'row']); ?>
                     <div class="col-xs-12 col-md-6">
                         <div class="form-group">
                             <label for="settings[install_test_data]" <?= $s->where('install_test_data'); ?>>
@@ -82,7 +82,7 @@
                     </div>
                 </div>
 
-                <div class="row">
+                <?= Html::openTag('div', ['class' => 'row']); ?>
                     <div class="col-xs-12 col-md-6">
                         <div class="form-group">
                             <label for="settings[first_day_of_week]" <?= $s->where('first_day_of_week'); ?>>
@@ -123,7 +123,7 @@
                         </div>
                     </div>
                 </div>
-                <div class="row">
+                <?= Html::openTag('div', ['class' => 'row']); ?>
                     <div class="col-xs-12 col-md-6">
                         <div class="form-group">
                             <label for="settings[default_country]" <?= $s->where('default_country'); ?>>
@@ -168,7 +168,7 @@
             </div>
             <div class="panel-body">
 
-                <div class="row">
+                <?= Html::openTag('div', ['class' => 'row']); ?>
                     <div class="col-xs-12 col-md-6">
                         <div class="form-group">
                             <label for="settings[currency_symbol]" <?= $s->where('currency_symbol'); ?>>
@@ -208,7 +208,7 @@
                     </div>
                 </div>
 
-                <div class="row">
+                <?= Html::openTag('div', ['class' => 'row']); ?>
                     <div class="col-xs-12 col-md-6">
                         <div class="form-group">
                             <label for="settings[currency_code]" <?= $s->where('currency_code'); ?>>
@@ -256,7 +256,7 @@
                     </div>
                 </div>
 
-                <div class="row">
+                <?= Html::openTag('div', ['class' => 'row']); ?>
                     <div class="col-xs-12 col-md-6">
                         <div class="form-group">
                             <label for="settings[number_format]" <?= $s->where('number_format'); ?>>
@@ -289,7 +289,7 @@
             </div>
             <div class="panel-body">
 
-                <div class="row">
+                <?= Html::openTag('div', ['class' => 'row']); ?>
                     <div class="col-xs-12 col-md-6">
                         <div class="form-group">
                             <label for="settings[quote_overview_period]" <?= $s->where('quote_overview_period'); ?>>
@@ -352,7 +352,7 @@
                         </div>
                     </div>
                 </div>
-                <div class="row">
+                <?= Html::openTag('div', ['class' => 'row']); ?>
                     <div class="col-xs-12 col-md-6">
                         <div class="form-group">
                             <label for="disable_quickactions" <?= $s->where('disable_quickactions'); ?>>
@@ -382,7 +382,7 @@
             </div>
             <div class="panel-body">
 
-                <div class="row">
+                <?= Html::openTag('div', ['class' => 'row']); ?>
                     <div class="col-xs-12 col-md-6">
                         <div class="form-group">
                             <label for="disable_sidebar" <?= $s->where('disable_sidebar'); ?>>
@@ -415,7 +415,7 @@
                     </div>
                 </div>
 
-                <div class="row">
+                <?= Html::openTag('div', ['class' => 'row']); ?>
                     <div class="col-xs-12 col-md-6">
                         <div class="form-group">
                             <label for="monospace_amounts" <?= $s->where('monospace_amounts'); ?>>
@@ -457,7 +457,7 @@
                 <?= $s->trans('system_settings'); ?>
             </div>
             <div class="panel-body">
-                <div class="row">
+                <?= Html::openTag('div', ['class' => 'row']); ?>
                     <div class="col-xs-12 col-md-6">
                         <div class="form-group">
                             <label for="settings[bcc_mails_to_admin]" <?= $s->where('bcc_mails_to_admin'); ?>>

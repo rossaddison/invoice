@@ -28,7 +28,7 @@ if (!empty($errors)) {
 <h1 class="headerbar-title"><?= $s->trans('quoteitems_form'); ?></h1>
 <?php $response = $head->renderPartial('invoice/layout/header_buttons',['s'=>$s, 'hide_submit_button'=>false ,'hide_cancel_button'=>true]); ?>        
 <?php echo (string)$response->getBody(); ?><div id="content">
-<div class="row">
+<?= Html::openTag('div', ['class' => 'row']); ?>
  <div class="mb3 form-group" hidden>
     <label for="quote_tax_rate_id">Tax rate</label>
     <select name="quote_tax_rate_id" id="quote_tax_rate_id" class="form-control">

@@ -8,7 +8,7 @@
                                     <i tooltip="data-toggle" title="<?= $s->isDebugMode(4)?>"><?= $s->trans('custom_fields'); ?></i>
                                 </div>
                                 <div>
-                                    <div class="row">
+                                    <?= Html::openTag('div', ['class' => 'row']); ?>
                                         <div class="form-group">
                                             <?php $i = 0; ?>
                                             <?php foreach ($custom_fields as $custom_field): ?>

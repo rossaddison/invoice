@@ -16,7 +16,7 @@ use Yiisoft\Html\Tag\Form;
  */
 ?>
 
-<h1><?= Html::encode($title) ?></h1>
+<?= Html::openTag('h1'); ?><?= Html::encode($title) ?><?= Html::closeTag('h1'); ?>
 <?= Html::openTag('div',['class'=>'container py-5 h-100']); ?>
 <?= Html::openTag('div',['class'=>'row d-flex justify-content-center align-items-center h-100']); ?>
 <?= Html::openTag('div',['class'=>'col-12 col-md-8 col-lg-6 col-xl-8']); ?>

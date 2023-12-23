@@ -2,56 +2,99 @@
 
 declare(strict_types=1); 
 
+use Yiisoft\FormModel\Field;
 use Yiisoft\Html\Html;
-use Yiisoft\Yii\Bootstrap5\Alert;
 
 /**
  * @var \Yiisoft\View\View $this
- * @var array $body
  * @var string $csrf
- * @var string $action
- * @var string $title
  */
 ?>
-<form method="post">
-
-    <input type="hidden" name="_csrf" value="<?= $csrf; ?>">
-
-    <div id="headerbar">
-        <h1 class="headerbar-title"><?= $s->trans('custom_values_edit'); ?></h1>
+<?= Html::openTag('form', ['method' => 'post']); ?>
+    <?= Html::tag('input','',['type' => 'hidden', 'name' => '_csrf', 'value' => $csrf]); ?>
+    
+    <?= Html::openTag('div',['id' => 'headerbar']); ?>
+        <?= Html::openTag('h1',['class' => 'headerbar-title']); ?>
+            <?= $s->trans('custom_values_new'); ?>
+        <?= Html::closeTag('h1'); ?>
         <?= $header_buttons; ?>
-    </div>
+    <?= Html::closeTag('div'); ?>
 
-    <div id="content">
+    <?= Html::openTag('div',['id' => 'content']); ?>
 
-        <div class="row">
-            <div class="col-xs-12 col-md-6 col-md-offset-3">
-                <?php 
-                    if (!empty($errors)) {
-                        foreach ($errors as $field => $error) {
-                            echo Alert::widget()->options(['class' => 'alert-danger'])->body(Html::encode($field . ':' . $error));
-                        }
-                    } 
+        <?= Html::openTag('div',['class' => 'row']); ?>
+            <?= Html::openTag('div',['class' => 'col-xs-12 col-md-6 col-md-offset-3']); ?>
+                <?= 
+                    Field::errorSummary($form)
+                    ->errors($errors)
+                    ->header($translator->translate('invoice.custom.value.error.summary'))
+                    // if the value is left blank the 'Value cannot be blank' message will appear
+                    ->onlyProperties(...['value'])    
+                    ->onlyCommonErrors()   
                 ?>
-                
-                <?php $alpha = str_replace("-", "_", strtolower($custom_field->type)); ?>
-                
-                <div class="mb3 form-group">
-                    <input hidden type="hidden" name="custom_field_id" id="custom_field_id" class="form-control"  value="<?= Html::encode($body['custom_field_id']); ?>">
-                </div>
-                
-                <div class="form-group">
-                    <label for="type"><?= $s->trans('type'); ?></label>
-                    <input type="text" class="form-control" id="type" value="<?= Html::encode($s->trans($alpha)); ?>" disabled="disabled"/>
-                </div>
 
-                <div class="form-group">
-                    <label for="value"><?= $s->trans('label'); ?></label>
-                    <input type="text" name="value" id="value" class="form-control" value="<?= Html::encode($body['value'] ??  ''); ?>">
-                </div>
-            </div>
-        </div>
+                <?php $alpha = str_replace("-", "_", strtolower($custom_field->getType())); ?>
+                <?php  // Type eg. Boolean, Single Choice, Multiple Choice and Label eg. My new Field, 
+                       //belong to the Field Entity?> 
+                <?= Html::openTag('div', ['class' => 'form-group']); ?>
+                    <?= Html::openTag('label', ['for' => 'label']); ?>
+                        <?= $s->trans('field'); ?>
+                    <?= Html::closeTag('label'); ?>
+                    <?= Html::openTag('input', [
+                        'class' => 'form-control', 
+                        'disabled' => 'disabled', 
+                        'id' => 'label',
+                        'value' => Html::encode($custom_field->getLabel() ?? '')
+                        ]);
+                    ?>
+                <?= Html::closeTag('div'); ?>
+    
+                <?= Html::openTag('div',['class' => 'form-group']); ?>
+                    <?= Html::openTag('label', ['for' => 'label']); ?>
+                        <?= $s->trans('type'); ?>
+                    <?= Html::closeTag('label'); ?>
+                    <?= Html::openTag('input', [
+                        'class' => 'form-control', 
+                        'disabled' => 'disabled', 
+                        'id' => 'type',
+                        'value' => Html::encode($s->trans($alpha) ?? '') 
+                        ]);
+                    ?>
+                <?= Html::closeTag('div'); ?>
+    
+                <?php // Custom Value Form: (1) The two hidden fields
+                      //                    (2) The value field where new data will be entered ?>
+                <?= Html::openTag('div',['class' => 'form-group']); ?>
+                    <?= Field::hidden($form, 'custom_field_id')
+                        ->addInputAttributes([
+                            'class' => 'form-control',
+                            'id' => 'custom_field_id'])
+                        ->value($custom_field->getId())
+                        ->hideLabel(); 
+                    ?>  
+                <?= Html::closeTag('div'); ?>
+    
+                <?php   // The id here is generated by the new CustomValueForm(new CustomValue); function
+                        // the id from the new CustomValue entity that is generated ?>
+                <?= Html::openTag('div',['class' => 'form-group']); ?>
+                    <?= Field::hidden($form, 'id')
+                        ->addInputAttributes([
+                            'class' => 'form-control',
+                            'id' => 'id'])
+                        ->value(Html::encode($form->getId() ??  ''))
+                        ->hideLabel(); 
+                    ?>    
+                <?= Html::closeTag('div'); ?>
 
-    </div>
-
-</form>
+                <?= Html::openTag('div',['class' => 'form-group']); ?>
+                    <?= Field::text($form, 'value')
+                        ->addInputAttributes([
+                            'class' => 'form-control',
+                            'id' => 'value'])
+                        ->value(Html::encode($form->getValue() ??  '')); 
+                    ?>
+                <?= Html::closeTag('div'); ?>
+            <?= Html::closeTag('div'); ?>
+        <?= Html::closeTag('div'); ?>
+    <?= Html::closeTag('div'); ?>
+<?= Html::closeTag('form'); ?>

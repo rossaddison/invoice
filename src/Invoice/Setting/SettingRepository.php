@@ -949,7 +949,10 @@ final class SettingRepository extends Select\Repository
     public function get_company_private_logos_folder_aliases(): Aliases {
         $aliases = new Aliases(['@base' => dirname(dirname(dirname(__DIR__))), 
                                 '@company_private_logos' => '@base/src/Invoice/Uploads'.$this->getCompanyPrivateLogosRelativefolderUrl(),
-                                '@public' => '@base/public'
+                                '@public' => '@base/public',
+            
+                                // Web accessible external folder normally used  
+                                '@public_logo' => '@public/logo'
         ]);
         return $aliases;
     }

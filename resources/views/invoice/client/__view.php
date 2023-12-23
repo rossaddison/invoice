@@ -15,9 +15,9 @@ use App\Invoice\Helpers\DateHelper;
 $datehelper = new DateHelper($s);
 ?>
 
-<h1><?= Html::encode($title) ?></h1>
+<?= Html::openTag('h1'); ?><?= Html::encode($title) ?><?= Html::closeTag('h1'); ?>
 
-  <div class="row">
+  <?= Html::openTag('div', ['class' => 'row']); ?>
     <div class="mb-3 form-group">
         <label for="client_active" class="control-label" style="background:lightblue"><?= $s->trans('active_client'); ?> </label>
                                 
@@ -43,7 +43,7 @@ $datehelper = new DateHelper($s);
         <?= Html::encode($client->getClient_language()); ?>         
     </div>  
   </div>
-  <div class="row">
+  <?= Html::openTag('div', ['class' => 'row']); ?>
     <div class="mb-3 form-group">
         <label for="client_address_1" class="form-label" style="background:lightblue"><?= $s->trans('street_address'); ?></label>
         <?= Html::encode($client->getClient_address_1()); ?>
@@ -69,7 +69,7 @@ $datehelper = new DateHelper($s);
         <?= Html::encode($client->getClient_country()); ?>            
     </div>
   </div>
-  <div class="row">
+  <?= Html::openTag('div', ['class' => 'row']); ?>
     <div class="mb-3 form-group">
         <label for="client_zip" class="form-label" style="background:lightblue"><?= $s->trans('phone'); ?></label>        
         <?= Html::encode($client->getClient_phone()); ?>
@@ -91,7 +91,7 @@ $datehelper = new DateHelper($s);
         <?= Html::encode($client->getClient_web()); ?>
     </div>
   </div>    
-  <div class="row">     
+  <?= Html::openTag('div', ['class' => 'row']); ?>     
     <div class="mb-3 form-group">
         <label for="client_vat_id" class="form-label" style="background:lightblue"><?= $s->trans('vat_id'); ?></label>
         <?= Html::encode($client->getClient_vat_id()); ?>
@@ -101,7 +101,7 @@ $datehelper = new DateHelper($s);
         <?= Html::encode($client->getClient_tax_code()); ?>
     </div>
   </div>
-  <div class="row">
+  <?= Html::openTag('div', ['class' => 'row']); ?>
     <div class="mb-3 form-group">
         <label for="client_gender"  class="form-label" style="background:lightblue"><?= $s->trans('gender'); ?></label>
         <?php                

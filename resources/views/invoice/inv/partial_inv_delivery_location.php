@@ -8,7 +8,7 @@
     </div>
     <div class="panel-body clearfix">
         <div class="container">
-          <div class="row">
+          <?= Html::openTag('div', ['class' => 'row']); ?>
               <div class="row mb3 form-group">
                   <div style="background:lightblue"><span id="building_number"><?= $translator->translate('invoice.client.postaladdress.building.number').' '.Html::encode($building_number ?? ''); ?></span></div>
               </div>

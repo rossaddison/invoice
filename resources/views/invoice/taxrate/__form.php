@@ -31,7 +31,7 @@ if (!empty($errors)) {
         <div class="mb-3 form-group btn-group-sm">
         </div>
 </div>
-  <div class="row">
+  <?= Html::openTag('div', ['class' => 'row']); ?>
     <label for="tax_rate_name"><?= $translator->translate('invoice.tax.rate.name'); ?></label> 
     <div class="mb-3 form-group">
         <input type="text" class="form-control" name="tax_rate_name" id="tax_rate_name" placeholder="Tax Rate Name" value="<?= Html::encode($body['tax_rate_name'] ?? ''); ?>" required>

@@ -18,25 +18,24 @@ final class CompanyService
     }
     
     /**
-     * 
      * @param Company $model
-     * @param CompanyForm $form
+     * @param array $array
      * @return void
      */
-    public function saveCompany(Company $model, CompanyForm $form): void
+    public function saveCompany(Company $model, array $array): void
     {
-       null!==$form->getCurrent() ? $model->setCurrent($form->getCurrent()) : '';
-       null!==$form->getName() ? $model->setName($form->getName()) : '';
-       null!==$form->getAddress_1() ? $model->setAddress_1($form->getAddress_1()) : '';
-       null!==$form->getAddress_2() ? $model->setAddress_2($form->getAddress_2()) : '';
-       null!==$form->getCity() ? $model->setCity($form->getCity()) : '';
-       null!==$form->getState() ? $model->setState($form->getState()) : '';
-       null!==$form->getZip() ? $model->setZip($form->getZip()) : '';
-       null!==$form->getCountry() ? $model->setCountry($form->getCountry()) : '';
-       null!==$form->getPhone() ? $model->setPhone($form->getPhone()) : '';
-       null!==$form->getFax() ? $model->setFax($form->getFax()) : '';
-       null!==$form->getEmail() ? $model->setEmail($form->getEmail()) : '';
-       null!==$form->getWeb() ? $model->setWeb($form->getWeb()) : '';       
+       $model->setCurrent($array['current'] === '1' ? 1 : 0);
+       isset($array['name']) ? $model->setName((string)$array['name']) : '';
+       isset($array['address_1']) ? $model->setAddress_1((string)$array['address_1']) : '';
+       isset($array['address_2']) ? $model->setAddress_2((string)$array['address_2']) : '';
+       isset($array['city']) ? $model->setCity((string)$array['city']) : '';
+       isset($array['state']) ? $model->setState((string)$array['state']) : '';
+       isset($array['zip']) ? $model->setZip((string)$array['zip']) : '';
+       isset($array['country']) ? $model->setCountry((string)$array['country']) : '';
+       isset($array['phone']) ? $model->setPhone((string)$array['phone']) : '';
+       isset($array['fax']) ? $model->setFax((string)$array['fax']) : '';
+       isset($array['email']) ? $model->setEmail((string)$array['email']) : '';
+       isset($array['web']) ? $model->setWeb((string)$array['web']) : '';       
        $this->repository->save($model);
     }
     

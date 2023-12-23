@@ -22,8 +22,8 @@ if (!empty($errors)) {
 }
 
 ?>
-<h1><?= Html::encode($title) ?></h1>
-<div class="row">
+<?= Html::openTag('h1'); ?><?= Html::encode($title) ?><?= Html::closeTag('h1'); ?>
+<?= Html::openTag('div', ['class' => 'row']); ?>
  <div class="mb3 form-group">
 <label for="url_key" class="form-label" style="background:lightblue"><?= $translator->translate('invoice.upload.url.key'); ?></label>
    <?= Html::encode($body['url_key'] ?? ''); ?>

@@ -14,9 +14,9 @@ use Yiisoft\Html\Html;
  */
 ?>
 
-<h1><?= Html::encode($title) ?></h1>
+<?= Html::openTag('h1'); ?><?= Html::encode($title) ?><?= Html::closeTag('h1'); ?>
 
-  <div class="row">
+  <?= Html::openTag('div', ['class' => 'row']); ?>
     <div class="mb-3 form-group">
         <label for="lowercasename" class="form-label" style="background:lightblue">Relation Lowercase Name</label>
         <?= Html::encode($body['lowercasename'] ?? '') ?>

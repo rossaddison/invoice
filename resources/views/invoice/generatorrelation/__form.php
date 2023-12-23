@@ -21,11 +21,11 @@ if (!empty($errors)) {
 }
 ?>
 
-<h1><?= Html::encode($title) ?></h1>
+<?= Html::openTag('h1'); ?><?= Html::encode($title) ?><?= Html::closeTag('h1'); ?>
 
 <form id="generatorrelationForm" method="POST" action="<?= $urlGenerator->generate(...$action) ?>" enctype="multipart/form-data">
 <input type="hidden" name="_csrf" value="<?= $csrf ?>">
-  <div class="row">
+  <?= Html::openTag('div', ['class' => 'row']); ?>
     <div class="mb-3 form-group">
      <label for="gentor_id">Entity Generator<span style="color:red">*</span></label>   
      <select name="gentor_id" id="generator_id" class="form-control" required>

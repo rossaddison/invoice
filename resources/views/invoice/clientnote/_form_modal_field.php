@@ -23,7 +23,7 @@ if (!empty($errors)) {
 
 ?>
 <div id="content">
-<div class="row">
+<?= Html::openTag('div', ['class' => 'row']); ?>
  <div class="mb3 form-group">
     <label for="client_id">Client</label>
     <select name="client_id" id="client_id" class="form-control simple-select">

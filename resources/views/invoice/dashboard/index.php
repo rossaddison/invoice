@@ -65,7 +65,7 @@
 <?php 
     // Quote Overview 
 ?>
-    <div class="row">
+    <?= Html::openTag('div', ['class' => 'row']); ?>
         <div class="col-xs-12 col-md-6">
             <div id="panel-quote-overview" class="panel panel-default overview">
                 <div class="panel-heading">
@@ -144,7 +144,7 @@
         </div>
     </div>
 
-    <div class="row">
+    <?= Html::openTag('div', ['class' => 'row']); ?>
         <div class="col-xs-12 col-md-6">
             <div id="panel-recent-quotes" class="panel panel-default">
                 <div class="panel-heading">
@@ -298,7 +298,7 @@
     // Projects 
 ?>
     <?php if ($s->get_setting('projects_enabled') == 1) : ?>
-        <div class="row">
+        <?= Html::openTag('div', ['class' => 'row']); ?>
             <div class="col-xs-12 col-md-6">
 
                 <div id="panel-projects" class="panel panel-default">

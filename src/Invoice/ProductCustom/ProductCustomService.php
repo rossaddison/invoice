@@ -18,14 +18,14 @@ final class ProductCustomService
     /**
      * 
      * @param ProductCustom $model
-     * @param ProductCustomForm $form
+     * @param array $array
      * @return void
      */
-    public function saveProductCustom(ProductCustom $model, ProductCustomForm $form): void
+    public function saveProductCustom(ProductCustom $model, array $array): void
     { 
-       $form->getProduct_id() ? $model->setProduct_id($form->getProduct_id()) : '';
-       $form->getCustom_field_id() ? $model->setCustom_field_id($form->getCustom_field_id()) : '';
-       $form->getValue() ? $model->setValue($form->getValue()) : '';
+       $array['product_id'] ? $model->setProduct_id((int)$array['product_id']) : '';
+       $array['custom_field_id'] ? $model->setCustom_field_id((int)$array['custom_field_id']) : '';
+       $array['value'] ? $model->setValue((string)$array['value']) : '';
        $this->repository->save($model);
     }
     

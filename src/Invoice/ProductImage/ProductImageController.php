@@ -21,8 +21,8 @@ use Yiisoft\Http\Method;
 use Yiisoft\Router\CurrentRoute;
 use Yiisoft\Session\SessionInterface;
 use Yiisoft\Session\Flash\Flash;
-use Yiisoft\Translator\TranslatorInterface;use Yiisoft\FormModel\FormHydrator;
-use Yiisoft\Form\Helper\HtmlFormErrors;
+use Yiisoft\Translator\TranslatorInterface;
+use Yiisoft\FormModel\FormHydrator;
 use Yiisoft\Yii\View\ViewRenderer;
 use \Exception;
 
@@ -71,13 +71,11 @@ final class ProductImageController {
      */
 
     /**
-     *
      * @param Request $request
-     * @param CurrentRoute $currentRoute
      * @param ProductImageRepository $productimageRepository
      * @return \Yiisoft\DataResponse\DataResponse
      */
-    public function index(Request $request, CurrentRoute $currentRoute, ProductImageRepository $productimageRepository): \Yiisoft\DataResponse\DataResponse {
+    public function index(Request $request, ProductImageRepository $productimageRepository): \Yiisoft\DataResponse\DataResponse {
         $query_params = $request->getQueryParams();
         /** @var string $query_params['sort'] */
         $sort = Sort::only(['id', 'product_id', 'file_name_original'])

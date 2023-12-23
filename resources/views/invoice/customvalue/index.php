@@ -42,7 +42,7 @@ use App\Invoice\Entity\CustomField;
                     } 
         ?>
         <?php if (null!==$custom_field && $custom_field instanceof CustomField) { ?>
-        <div class="row">
+        <?= Html::openTag('div', ['class' => 'row']); ?>
             <div class="col-xs-12 col-md-6 col-md-offset-3">
 
                 <div class="form-group">

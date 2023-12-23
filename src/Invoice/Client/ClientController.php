@@ -208,18 +208,18 @@ final class ClientController
                 's'=>$sR, 'hide_submit_button'=>false ,'hide_cancel_button'=>false
             ]), 
             'datehelper'=> new DateHelper($sR),
-            'form' => $form,
             'aliases'=> new Aliases(['@invoice' => dirname(__DIR__), '@language' => dirname(__DIR__). DIRECTORY_SEPARATOR.'Language']),
             'selected_country' => $sR->get_setting('default_country'),            
             'selected_language' => $sR->get_setting('default_language'),
             'datepicker_dropdown_locale_cldr' => $this->session->get('_language') ?? 'en',
+            'optionsDataGender' => $this->optionsDataGender(),
             'postal_address_count' => 0,
             'postaladdresses' => null,
             'countries'=> $countries->get_country_list($sR->get_setting('cldr')),
             'custom_fields'=> $cfR->repoTablequery('client_custom'),
             'custom_values'=> $cvR->attach_hard_coded_custom_field_values_to_custom_field($cfR->repoTablequery('client_custom')),
             'cvH'=> new CVH($sR),
-            'client_custom_values'=> null,
+            'client_custom_values'=> [],
         ];
         /**
          * @psalm-suppress PossiblyInvalidArgument
@@ -247,6 +247,7 @@ final class ClientController
             }
         }
         $parameters['errors'] = $form->getValidationResult()?->getErrorMessagesIndexedByAttribute() ?? [];
+        $parameters['form'] = $form;
         return $this->viewRenderer->render('__form', $parameters);
     }
     
@@ -353,6 +354,7 @@ final class ClientController
                'datehelper'=> new DateHelper($sR),
                'client'=> $client,
                'form' => $form,
+               'optionsDataGender' => $this->optionsDataGender(), 
                'aliases'=> new Aliases(['@invoice' => dirname(__DIR__), '@language' => dirname(__DIR__). DIRECTORY_SEPARATOR.'Language']),
                'selected_country' => $selected_country ?: $sR->get_setting('default_country'),            
                'selected_language' => $selected_language ?: $sR->get_setting('default_language'),
@@ -712,6 +714,23 @@ final class ClientController
             ];
         }        
         return $this->factory->createResponse(Json::encode($parameters));          
+    }
+    
+    /**
+     * @return array
+     */
+    private function optionsDataGender() : array
+    {
+        $optionsDataGender = [];
+        $genders_array = [
+            $this->translator->translate('invoice.gender.male'),
+            $this->translator->translate('invoice.gender.female'),
+            $this->translator->translate('invoice.gender.other'),
+        ];
+        foreach ($genders_array as $key => $val) {
+            $optionsDataGender[(string)$key] = $val;
+        }
+        return $optionsDataGender;
     }
     
     /**

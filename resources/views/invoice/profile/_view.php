@@ -21,8 +21,8 @@ if (!empty($errors)) {
 }
 
 ?>
-<h1><?= Html::encode($title) ?></h1>
-<div class="row">
+<?= Html::openTag('h1'); ?><?= Html::encode($title) ?><?= Html::closeTag('h1'); ?>
+<?= Html::openTag('div', ['class' => 'row']); ?>
  <div class="mb3 form-group">   
  <div  class="form-check form-switch">
     <label for="current" class="form-check-label ">

@@ -19,11 +19,13 @@ final class ClientNoteService
     
     public function addClientNote(ClientNote $model, array $array, SettingRepository $s): void
     {
+       isset($array['client_id']) ? $model->setClient_id((int)$array['client_id']) : '';
+       
        $datehelper = new DateHelper($s);
-       null!==$array['client_id'] ? $model->setClient_id((int)$array['client_id']) : '';
        $datetime = new \DateTime();
        $model->setDate($datetime::createFromFormat($datehelper->style(),(string)$array['date']));
-       null!==$array['note'] ? $model->setNote((string)$array['note']) : '';
+       
+       isset($array['note']) ? $model->setNote((string)$array['note']) : '';
        $this->repository->save($model);
     }
     
@@ -36,15 +38,16 @@ final class ClientNoteService
     public function saveClientNote(ClientNote $model, array $array, SettingRepository $s): void
     {
        $datehelper = new DateHelper($s);
-       null!==$array['client_id'] 
+       isset($array['client_id']) 
        && $model->getClient()?->getClient_id() == $array['client_id']
        ? $model->setClient($model->getClient()) : $model->setClient(null);
        
-       null!==$array['client_id'] ? $model->setClient_id((int)$array['client_id']) : '';
+       isset($array['client_id']) ? $model->setClient_id((int)$array['client_id']) : '';
        
        $datetime = new \DateTime();
        $model->setDate($datetime::createFromFormat($datehelper->style(),(string)$array['date']));
-       null!==$array['note'] ? $model->setNote((string)$array['note']) : '';
+       
+       isset($array['note']) ? $model->setNote((string)$array['note']) : '';
        $this->repository->save($model);
     }
     

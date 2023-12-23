@@ -16,20 +16,18 @@ final class CustomValueService
     }
 
     /**
-     * 
      * @param CustomValue $model
-     * @param CustomValueForm $form
+     * @param array $array
      * @return void
      */
-    public function saveCustomValue(CustomValue $model, CustomValueForm $form): void
+    public function saveCustomValue(CustomValue $model, array $array): void
     { 
-       null!== $form->getCustom_field_id() ? $model->setCustom_field_id($form->getCustom_field_id()) : '';
-       null!== $form->getValue() ? $model->setValue($form->getValue()) : '';
+       isset($array['custom_field_id']) ? $model->setCustom_field_id((int)$array['custom_field_id']) : '';
+       isset($array['value']) ? $model->setValue((string)$array['value']) : '';
        $this->repository->save($model);
     }
     
     /**
-     * 
      * @param array|CustomValue|null $model
      * @return void
      */

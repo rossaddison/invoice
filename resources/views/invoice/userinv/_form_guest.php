@@ -22,7 +22,7 @@ if (!empty($errors)) {
 }
 
 ?>
-<h1><?= Html::encode($title) ?></h1>
+<?= Html::openTag('h1'); ?><?= Html::encode($title) ?><?= Html::closeTag('h1'); ?>
 
 <?= Form::tag()
     ->post($urlGenerator->generate(...$action))
@@ -35,7 +35,7 @@ if (!empty($errors)) {
 <h1 class="headerbar-title"><?= $s->trans('userinvs_form'); ?></h1>
 <?php $response = $head->renderPartial('invoice/layout/header_buttons',['s'=>$s, 'hide_submit_button'=>false ,'hide_cancel_button'=>false]); ?>        
 <?php echo (string)$response->getBody(); ?><div id="content">
-<div class="row">
+<?= Html::openTag('div', ['class' => 'row']); ?>
  <div class="mb3 form-group">
  <input type="hidden" name="id" id="id" class="form-control"
  value="<?= Html::encode($body['id'] ??  ''); ?>">

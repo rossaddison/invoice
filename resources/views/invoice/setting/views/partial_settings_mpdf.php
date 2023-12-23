@@ -1,7 +1,7 @@
 <?php
     declare(strict_types=1);
 ?>
-<div class="row">
+<?= Html::openTag('div', ['class' => 'row']); ?>
     <div class="col-xs-12 col-md-8 col-md-offset-2">
 
         <div class="panel panel-default">
@@ -10,7 +10,7 @@
             </div>
             <div class="panel-body">
 
-                <div class="row">
+                <?= Html::openTag('div', ['class' => 'row']); ?>
                     <div class="col-xs-12 col-md-6">
                         <div class="form-group">
                             <label for="settings[mpdf_ltr]" <?= $s->where('mpdf_ltr'); ?>>

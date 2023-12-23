@@ -22,14 +22,14 @@ if (!empty($errors)) {
 }
 
 ?>
-<h1><?= Html::encode($title) ?></h1>
+<?= Html::openTag('h1'); ?><?= Html::encode($title) ?><?= Html::closeTag('h1'); ?>
 <form id="QuoteItemForm" method="POST" action="<?= $urlGenerator->generate(...$action) ?>" enctype="multipart/form-data">
 <input type="hidden" name="_csrf" value="<?= $csrf ?>">
 <div id="headerbar">
 <h1 class="headerbar-title"><?= $s->trans('quoteitems_form'); ?></h1>
 <?php $response = $head->renderPartial('invoice/layout/header_buttons',['s'=>$s, 'hide_submit_button'=>false ,'hide_cancel_button'=>false]); ?>        
 <?php echo (string)$response->getBody(); ?><div id="content">
-<div class="row">
+<?= Html::openTag('div', ['class' => 'row']); ?>
  <div class="mb3 form-group">
     <label for="tax_rate_id">Tax rate</label>
     <select name="tax_rate_id" id="tax_rate_id" class="form-control">

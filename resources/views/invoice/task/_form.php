@@ -31,7 +31,7 @@
             <div class="alert alert-warning small"><?= $s->trans('info_task_readonly') ?></div>
         <?php endif ?>
 
-        <div class="row">
+        <?= Html::openTag('div', ['class' => 'row']); ?>
             <div class="col-xs-12 col-sm-6">
                 <div class="panel panel-default">
                     <div class="panel-heading">

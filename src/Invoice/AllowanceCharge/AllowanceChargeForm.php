@@ -3,18 +3,40 @@ declare(strict_types=1);
 
 namespace App\Invoice\AllowanceCharge;
 
+use App\Invoice\Entity\AllowanceCharge;
 use Yiisoft\FormModel\FormModel;
 use Yiisoft\Validator\Rule\Required;
+use Yiisoft\Validator\Rule\Integer;
 
 final class AllowanceChargeForm extends FormModel
 {   
+    private string $id;
+    #[Required]
     private ?bool $identifier=false;
+    #[Required]
     private ?string $reason_code='';
+    #[Required]
     private ?string $reason='';
+    #[Required]
     private ?int $multiplier_factor_numeric=null;
+    #[Required]
     private ?int $amount=null;
+    #[Required]
     private ?int $base_amount=null;
+    #[Integer(min:1)]
     private ?int $tax_rate_id=null;
+    
+    public function __construct(AllowanceCharge $allowance_charge) 
+    {
+        $this->id = $allowance_charge->getId();
+        $this->identifier = $allowance_charge->getIdentifier();
+        $this->reason_code = $allowance_charge->getReason_code();
+        $this->reason = $allowance_charge->getReason();
+        $this->multiplier_factor_numeric = $allowance_charge->getMultiplier_factor_numeric();
+        $this->amount = $allowance_charge->getAmount();
+        $this->base_amount = $allowance_charge->getBase_amount();
+        $this->tax_rate_id = (int)$allowance_charge->getTax_rate_id();
+    }        
 
     public function getIdentifier() : bool|null
     {
@@ -50,6 +72,11 @@ final class AllowanceChargeForm extends FormModel
     {
       return $this->tax_rate_id;
     }
+    
+    public function getId() : string
+    {
+      return $this->id;
+    }    
 
     /**
      * @return string
@@ -58,13 +85,5 @@ final class AllowanceChargeForm extends FormModel
     public function getFormName(): string
     {
       return '';
-    }
-
-    public function getRules(): array    {
-      return [
-        'identifier' => [new Required()],  
-        'reason_code' => [new Required()],
-        'reason' => [new Required()],
-        'multiplier_factor_numeric' => [new Required()],        'amount' => [new Required()],        'base_amount' => [new Required()],    ];
     }
 }

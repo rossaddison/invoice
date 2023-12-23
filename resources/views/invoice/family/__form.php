@@ -21,11 +21,11 @@ if (!empty($errors)) {
 }
 ?>
 
-<h1><?= Html::encode($title) ?></h1>
+<?= Html::openTag('h1'); ?><?= Html::encode($title) ?><?= Html::closeTag('h1'); ?>
 
 <form id="familyForm" method="POST" action="<?= $urlGenerator->generate(...$action) ?>" enctype="multipart/form-data">
 <input type="hidden" name="_csrf" value="<?= $csrf ?>">
-  <div class="row">
+  <?= Html::openTag('div', ['class' => 'row']); ?>
     <div class="mb-3 form-group">
         <input type="text" class="form-control" name="family_name" id="family_name" placeholder="Family Name" required
                <?= in_array($body['family_name'] ?? '', ['Product','Service']) ? 'disabled' : '' ?> 

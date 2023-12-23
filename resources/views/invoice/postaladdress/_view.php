@@ -21,8 +21,8 @@ if (!empty($errors)) {
 }
 
 ?>
-<h1><?= Html::encode($title) ?></h1>
-<div class="row">
+<?= Html::openTag('h1'); ?><?= Html::encode($title) ?><?= Html::closeTag('h1'); ?>
+<?= Html::openTag('div', ['class' => 'row']); ?>
  <div class="row mb3 form-group">
 <label for="street_name" class="text-bg col-sm-2 col-form-label" style="background:lightblue"><?= $translator->translate('invoice.client.postaladdress.street.name'); ?></label>
    <?= Html::encode($body['street_name'] ?? ''); ?>

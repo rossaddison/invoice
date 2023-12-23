@@ -3,14 +3,14 @@
     
     use Yiisoft\Html\Html;
 ?>
-<div class="row">
+<?= Html::openTag('div', ['class' => 'row']); ?>
     <div class="col-xs-12 col-md-8 col-md-offset-2">
         <div class="panel panel-default">
             <div class="panel-heading">
                 <?= $s->trans('email'); ?>
             </div>
             <div class="panel-body">
-                <div class="row">
+                <?= Html::openTag('div', ['class' => 'row']); ?>
                     <div class="col-xs-12 col-md-6">
                         <div class="form-group">
                             <label for="settings[email_pdf_attachment]" <?= $s->where('email_pdf_attachment'); ?>>
@@ -44,7 +44,7 @@
                 </select>
             </div>            
             <div class="panel-body">
-                <div class="row">
+                <?= Html::openTag('div', ['class' => 'row']); ?>
                     <div class="col-xs-12 col-md-6">
                         <div class="form-group">
                             <div class="form-group"><?= Html::tag('label', 'eSMTP Host: '.$s->config_params()['esmtp_host']); ?></div>    

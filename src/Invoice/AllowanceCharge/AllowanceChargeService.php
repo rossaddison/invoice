@@ -14,15 +14,15 @@ final class AllowanceChargeService
         $this->repository = $repository;
     }
 
-    public function saveAllowanceCharge(AllowanceCharge $model, AllowanceChargeForm $form): void
+    public function saveAllowanceCharge(AllowanceCharge $model, array $array): void
     {
-        null!==$form->getIdentifier() ? $model->setIdentifier($form->getIdentifier()) : '';
-        null!==$form->getReason_code() ? $model->setReason_code($form->getReason_code()) : '';
-        null!==$form->getReason() ? $model->setReason($form->getReason()) : '';
-        null!==$form->getMultiplier_factor_numeric() ? $model->setMultiplier_factor_numeric($form->getMultiplier_factor_numeric()) : '';
-        null!==$form->getAmount() ? $model->setAmount($form->getAmount()) : '';
-        null!==$form->getBase_amount() ? $model->setBase_amount($form->getBase_amount()) : '';
-        null!==$form->getTax_rate_id() ? $model->setTax_rate_id($form->getTax_rate_id()) : '';
+        isset($array['identifier']) ? $model->setIdentifier((bool)$array['identifier']) : '';
+        isset($array['reason_code']) ? $model->setReason_code((string)$array['reason_code']) : '';
+        isset($array['reason']) ? $model->setReason((string)$array['reason']) : '';
+        isset($array['multiplier_factor_numeric']) ? $model->setMultiplier_factor_numeric((int)$array['multiplier_factor_numeric']) : '';
+        isset($array['amount']) ? $model->setAmount((int)$array['amount']) : '';
+        isset($array['base_amount']) ? $model->setBase_amount((int)$array['base_amount']) : '';
+        isset($array['tax_rate_id']) ? $model->setTax_rate_id((int)$array['tax_rate_id']) : '';
         $this->repository->save($model);
     }
     

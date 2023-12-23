@@ -24,7 +24,7 @@
         ?>
     </div>
 
-    <div class="row">
+    <?= Html::openTag('div', ['class' => 'row']); ?>
         <div class="mb3 form-group">            
                 <div class="col-xs-12 col-sm-2 text-right text-left-xs">
                     <label for="inv_id" class="control-label" required><?= $s->trans('invoice') ." - ". ($body['inv_id'] ?? ''); ?></label>

@@ -101,7 +101,7 @@
 
             <?= $alert; ?>
 
-            <div class="row">
+            <?= Html::openTag('div', ['class' => 'row']); ?>
                 <div class="col-xs-12 col-sm-6 col-md-6">
 
                     <h3><?= Html::encode($clienthelper->format_client($client)); ?></h3>
@@ -152,7 +152,7 @@
 
             <hr>
             
-            <div class="row">
+            <?= Html::openTag('div', ['class' => 'row']); ?>
                 <div class="col-xs-12 col-md-6">
                     <div class="panel panel-default no-margin">
                         <div class="panel-heading"><?= $translator->translate('invoice.invoice.delivery.location.client'); ?></div>
@@ -165,7 +165,7 @@
             
             <hr>
 
-            <div class="row">
+            <?= Html::openTag('div', ['class' => 'row']); ?>
                 <div class="col-xs-12 col-md-6">
                     <div class="panel panel-default no-margin">
                         <div class="panel-heading"><?= $s->trans('contact_information'); ?></div>
@@ -261,7 +261,7 @@
             <?php if ($client->getClient_surname() !== ""): ?>
                 <hr>
 
-                <div class="row">
+                <?= Html::openTag('div', ['class' => 'row']); ?>
                     <div class="col-xs-12 col-md-6">
 
                         <div class="panel panel-default">
@@ -326,7 +326,7 @@
             if ($custom_fields) : ?>
                 <hr>
 
-                <div class="row">
+                <?= Html::openTag('div', ['class' => 'row']); ?>
                     <div class="col-xs-12 col-md-6">
                         <div class="panel panel-default no-margin">
 
@@ -358,7 +358,7 @@
 
             <hr>
 
-            <div class="row">
+            <?= Html::openTag('div', ['class' => 'row']); ?>
                 <div class="col-xs-12 col-md-6">
 
                     <div class="panel panel-default no-margin">

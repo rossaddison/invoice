@@ -1,14 +1,14 @@
 <?php
     declare(strict_types=1);
 ?>
-<div class="row">
+<?= Html::openTag('div', ['class' => 'row']); ?>
     <div class="col-xs-12 col-md-8 col-md-offset-2">
         <div class="panel panel-default">
             <div class="panel-heading">
                 <?= $translator->translate('invoice.salesorders'); ?>
             </div>
             <div class="panel-body">
-                <div class="row">
+                <?= Html::openTag('div', ['class' => 'row']); ?>
                     <div class="col-xs-12 col-md-6">
                         <div class="form-group">
                             <label for="settings[default_client_purchase_order_group]" <?= $s->where('default_invoice_group'); ?>>

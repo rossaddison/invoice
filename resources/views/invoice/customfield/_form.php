@@ -1,116 +1,155 @@
 <?php
-
 declare(strict_types=1); 
 
-use Yiisoft\Arrays\ArrayHelper;
+use Yiisoft\FormModel\Field;
 use Yiisoft\Html\Html;
-use Yiisoft\Yii\Bootstrap5\Alert;
+use Yiisoft\Html\Tag\Form;
 
 /**
  * @var \Yiisoft\View\View $this
  * @var \Yiisoft\Router\UrlGeneratorInterface $urlGenerator
- * @var array $body
  * @var string $csrf
  */
-
-if (!empty($errors)) {
-    foreach ($errors as $field => $error) {
-        echo Alert::widget()->options(['class' => 'alert-danger'])->body(Html::encode($field . ':' . $error));
-    }
-}
 ?>
 
-<form method="post">
+<?=
+    Form::tag()
+    ->post($urlGenerator->generate(...$action))
+    ->enctypeMultipartFormData()
+    ->csrf($csrf)
+    ->id('CustomFieldForm')
+    ->open()
+    ?>
 
-    <input type="hidden" name="_csrf" value="<?= $csrf ?>">
+    <?= Html::openTag('div'); ?>
+    <?= Html::openTag('h1');?>
+    <?= Html::encode($title); ?>
+    <?=Html::closeTag('h1'); ?>
+    <?= Html::openTag('div',['class'=>'container py-5 h-100']); ?>
+    <?= Html::openTag('div',['class'=>'row d-flex justify-content-center align-items-center h-100']); ?>
+    <?= Html::openTag('div',['class'=>'col-12 col-md-8 col-lg-6 col-xl-8']); ?>
+    <?= Html::openTag('div',['class'=>'card border border-dark shadow-2-strong rounded-3']); ?>
+    <?= Html::openTag('div',['class'=>'card-header']); ?>
+    <?= Html::openTag('h1',['class'=>'fw-normal h3 text-center']); ?>
+    <?= $s->trans('custom_field_form'); ?>
+    <?= Html::closeTag('h1'); ?>
+    <?= $layout_header_buttons; ?>
+    <?= Html::closeTag('div'); ?>
 
-    <div id="headerbar">
-        <h1 class="headerbar-title"><?= $s->trans('custom_field_form'); ?></h1>
-        <?php echo $layout_header_buttons; ?>
-    </div>
+    <?= Html::Tag('br'); ?>
+    <?= Html::Tag('br'); ?>
+    <?= Html::openTag('div'); ?>    
+        <?= Html::openTag('div' ,['class' => 'col-xs-12 col-md-6 col-md-offset-3']); ?>    
+            <?= Html::openTag('div',['class' => 'form-group']); ?>
+                <?=
+                    Field::errorSummary($form)
+                    ->errors($errors)
+                    ->header($translator->translate('invoice.custom.field.error.summary'))
+                    ->onlyProperties(...['table', 'label', 'location', 'type'])    
+                    ->onlyCommonErrors()   
+                ?>
+            <?= Html::closeTag('div'); ?>
+            <?= Html::openTag('div',['class' => 'form-group']); ?>
+                <?= Field::select($form, 'table')
+                        ->label($s->trans('table'))
+                        ->addInputAttributes([
+                            'class' => 'form-control',
+                            'id' => 'table'
+                        ])
+                        ->value(Html::encode($form->getTable() ?? ''))    
+                        ->optionsData($tables);    
+                ?>
+            <?= Html::closeTag('div'); ?>
 
-    <div id="content" class="row">
+            <?= Html::openTag('div',['class' => 'form-group']); ?>
+                <?= Field::text($form, 'label')
+                    ->label($s->trans('label'), ['class' => 'form-label'])
+                    ->addInputAttributes([
+                        'placeholder' => $s->trans('label') ?? 'Label',
+                        'class' => 'form-control',
+                        'id' => 'label',
+                    ])
+                    ->value(Html::encode($form->getLabel() ?? ''))
+                ?>
+            <?= Html::closeTag('div'); ?>
 
-        <div class="col-xs-12 col-md-6 col-md-offset-3">
+            <?php
+                $arrays = [$user_input_types, $custom_value_fields];
+                $types = array_merge(...$arrays);
+                $optionsDataType = [];
+                foreach ($types as $type) { 
+                        $alpha = str_replace("-", "_", strtolower($type)); 
+                        $optionsDataType[$type] = (!empty($s->trans($alpha)) ? $s->trans($alpha) : $translator->translate('invoice.custom.field.number'));
+                }        
+            ?>    
+            <?= Html::openTag('div',['class' => 'form-group']); ?>
+                <?= Field::select($form, 'type')
+                        ->label($s->trans('type') , ['class' => 'form-label'])
+                        ->addInputAttributes([
+                            'placeholder' => $s->trans('type'),
+                            'class' => 'form-control',
+                            'id' => 'type'
+                        ])
+                        ->value(Html::encode($form->getType() ?? ''))    
+                        ->optionsData($optionsDataType);    
+                ?>
+            <?= Html::closeTag('div'); ?>    
 
-            <div class="form-group">
-                <label for="table"><?= $s->trans('table'); ?></label>
-                <select name="table" id="table" class="form-control">
-                    <?php foreach ($tables as $table => $label) { ?>
-                        <option value="<?= $table; ?>"
-                            <?php $s->check_select(Html::encode($body['table'] ??  ''), $table); ?>>
-                            <?= $s->lang($label); ?>
-                        </option>
-                    <?php } ?>
-                </select>
-            </div>
+            <?= Html::openTag('div',['class' => 'form-group']); ?>
+                <?= Field::range($form, 'order')
+                    ->label($s->trans('order'))
+                    ->addInputAttributes([
+                        'type' => 'range',
+                        'min' => 1,
+                        'max' => 20,
+                        'value' => Html::encode($form->getOrder() ?? ''),
+                        'class' => 'form-control form-range',
+                        'id' => 'order',    
+                    ]) 
+                ?>
+            <?= Html::closeTag('div'); ?>
 
-            <div class="form-group">
-                <label for="label"><?= $s->trans('label'); ?></label>
-                <input type="text" name="label" id="label" class="form-control"
-                       value="<?= Html::encode($body['label'] ??  ''); ?>">
-            </div>
-
-            <div class="form-group">
-                <label for="type"><?= $s->trans('type'); ?></label>
-                <select name="type" id="type" class="form-control">
-                    <?php
-                        $helper = new ArrayHelper();
-                        $arrays = [$user_input_types, $custom_value_fields];
-                        $types = $helper->merge(...$arrays);
-                        foreach ($types as $type) { ?>
-                        <?php $alpha = str_replace("-", "_", strtolower($type)); ?>
-                        <option value="<?= $type; ?>"
-                            <?php $s->check_select(Html::encode($body['type'] ??  ''),$type); ?>>
-                            <!-- the 'number' input field has been added to the type of custom fields that can be added -->
-                            <?= null!== $s->trans($alpha) ? $s->trans($alpha) : $translator->translate('invoice.custom.field.number'); ?>
-                        </option>
-                    <?php } ?>
-                </select>
-            </div>
-
-            <div class="form-group">
-                <label for="order" class="form-label"><?= $s->trans('order'); ?></label>
-                <input type="range" min= "1" max="20" class="form-range" name="order" id="order" class="form-control" value="<?= Html::encode($body['order'] ??  ''); ?>">
-            </div>
-
-            <div class="form-group">
+            <?= Html::openTag('div',['class' => 'form-group']); ?>
                 <label for="location"><?= $s->trans('position'); ?></label> 
-                <?php $valueSelected = Html::encode($body['location'] ??  ''); ?>
+                <?php $valueSelected = Html::encode($form->getLocation() ??  ''); ?>
                 <select name="location" id="location" class="form-control"></select>
-            </div>
+            <?= Html::closeTag('div'); ?>
 
-        </div>
+        <?= Html::closeTag('div'); ?>
 
-    </div>
-    <?php
-    // double dropdown box
-    $js2 = "$(function () {"."\n".
-           "var jsonPositions ='".$positions."';"."\n".
-           "jsonPositions = JSON.parse(jsonPositions);"."\n". 
-           "function updatePositions(index, selKey) {"."\n".
-                '$("#location option").remove();'."\n".
-                "var pos = 0;"."\n".
-                "var key = Object".'.'.'keys(jsonPositions)[index];'."\n".
-                'for (pos in jsonPositions[key]) {'."\n".
-                   'var opt = $("<'."option".'>");'."\n".
-                   'opt.attr("value", pos);'."\n".
-                   'opt.text(jsonPositions[key][pos]);'."\n".
-                   'if (selKey == pos) {'."\n".
-                      'opt.attr("selected", "selected");'."\n".
-                   "}"."\n".
-                   '$("#location").append(opt);'."\n".
-                '}'."\n".
-            "}"."\n".
-            'var optionIndex = $("#table option:selected").index();'."\n".
-            '$("#table").on("change", function () {'."\n".
-            'optionIndex = $("#table option:selected").index();'."\n".
-            'updatePositions(optionIndex);'."\n".
-            '});'."\n".
-            'updatePositions(optionIndex,'. $valueSelected. ');'.
-            '});';
-    echo Html::script($js2)->type('module');
-?> 
-
-</form>
+        <?= Html::closeTag('div'); ?>
+        <?php
+        // double dropdown box
+        $js2 = "$(function () {"."\n".
+               "var jsonPositions ='".$positions."';"."\n".
+               "jsonPositions = JSON.parse(jsonPositions);"."\n". 
+               "function updatePositions(index, selKey) {"."\n".
+                    '$("#location option").remove();'."\n".
+                    "var pos = 0;"."\n".
+                    "var key = Object".'.'.'keys(jsonPositions)[index];'."\n".
+                    'for (pos in jsonPositions[key]) {'."\n".
+                       'var opt = $("<'."option".'>");'."\n".
+                       'opt.attr("value", pos);'."\n".
+                       'opt.text(jsonPositions[key][pos]);'."\n".
+                       'if (selKey == pos) {'."\n".
+                          'opt.attr("selected", "selected");'."\n".
+                       "}"."\n".
+                       '$("#location").append(opt);'."\n".
+                    '}'."\n".
+                "}"."\n".
+                'var optionIndex = $("#table option:selected").index();'."\n".
+                '$("#table").on("change", function () {'."\n".
+                'optionIndex = $("#table option:selected").index();'."\n".
+                'updatePositions(optionIndex);'."\n".
+                '});'."\n".
+                'updatePositions(optionIndex,'. $valueSelected. ');'.
+                '});';
+        echo Html::script($js2)->type('module');
+    ?> 
+<?= Html::closeTag('div'); ?>
+<?= Html::closeTag('div'); ?>
+<?= Html::closeTag('div'); ?>
+<?= Html::closeTag('div'); ?>
+<?= Html::closeTag('div'); ?>                
+<?= Form::tag()->close(); ?>
 

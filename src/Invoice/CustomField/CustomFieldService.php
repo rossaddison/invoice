@@ -18,18 +18,17 @@ final class CustomFieldService
     }
     
     /**
-     * 
      * @param CustomField $model
-     * @param CustomFieldForm $form
+     * @param array $array
      * @return void
      */
-    public function saveCustomField(CustomField $model, CustomFieldForm $form): void
+    public function saveCustomField(CustomField $model, array $array): void
     {
-       null!==$form->getTable() ? $model->setTable($form->getTable()) : '';
-       null!==$form->getLabel() ? $model->setLabel($form->getLabel()) : '';
-       null!==$form->getType() ? $model->setType($form->getType()) : '';
-       null!==$form->getLocation() ? $model->setLocation($form->getLocation()) : '';
-       null!==$form->getOrder() ? $model->setOrder($form->getOrder()) : '';
+       isset($array['table']) ? $model->setTable((string)$array['table']) : '';
+       isset($array['label']) ? $model->setLabel((string)$array['label']) : '';
+       isset($array['type']) ? $model->setType((string)$array['type']) : '';
+       isset($array['location']) ? $model->setLocation((int)$array['location']) : '';
+       isset($array['order']) ? $model->setOrder((int)$array['order']) : '';
        $this->repository->save($model);
     }
     

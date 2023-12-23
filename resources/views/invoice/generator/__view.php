@@ -13,7 +13,7 @@ use Yiisoft\Html\Html;
  */
 ?>
 
-<h1><?= Html::encode($title) ?></h1>
+<?= Html::openTag('h1'); ?><?= Html::encode($title) ?><?= Html::closeTag('h1'); ?>
 
 <div class="form-group">
     <div class="row mb-3 form-group">

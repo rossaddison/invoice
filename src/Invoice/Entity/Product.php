@@ -92,8 +92,8 @@ class Product
     #[Column(type: 'integer(11)', nullable: true)]
     private ?int $unit_peppol_id = null;
     
-    #[Column(type: 'integer(11)', nullable: true)]
-    private ?int $product_tariff = null;
+    #[Column(type: 'decimal(20,2)', nullable: true)]
+    private ?float $product_tariff = null;
     
     public function __construct(
         string $product_sku = '',
@@ -109,7 +109,7 @@ class Product
         float $purchase_price = 0.00,
         float $product_price_base_quantity = 1.00,
         string $provider_name = '',
-        int $product_tariff = null,
+        float $product_tariff = 0.00,
         string $product_additional_item_property_name = '',
         string $product_additional_item_property_value = '',
         int $tax_rate_id = null,
@@ -404,18 +404,19 @@ class Product
         return (string)$this->unit_peppol_id;
     }   
     
-    public function getProduct_tariff(): int|null
+    public function getProduct_tariff(): float|null
     {
         return $this->product_tariff;
     }
 
-    public function setProduct_tariff(int $product_tariff): void
+    public function setProduct_tariff(float $product_tariff): void
     {
         $this->product_tariff = $product_tariff;
     }
     
     /**
-     * Make sure the sequence of parameters is correct 
+     * Make sure the sequence of parameters is correct
+     * @see https://github.com/yiisoft/demo/issues/462 
      * @param int $tax_rate_id
      * @param int $unit_id
      * @param int $family_id
@@ -430,32 +431,6 @@ class Product
         }
         if ($this->family_id <> $family_id) {
            $this->family = null;
-        }
-    }
-    
-    /**
-     * @see https://github.com/yiisoft/demo/issues/462
-     * Used in ProductService
-     * @param int $tax_rate_id
-     * @param int $unit_id
-     * @param int $family_id
-     * @return void
-     */
-    public function nullifyRelationOnChange_old_version(int $tax_rate_id, int $unit_id, int $family_id) : void {
-        if (($this->getTaxrate()?->getTax_rate_id() == $tax_rate_id) && (!empty($tax_rate_id))) {
-           $this->setTaxrate($this->getTaxrate());
-        } else {
-           $this->setTaxrate(null); 
-        }       
-        if (($this->getUnit()?->getUnit_id() == $unit_id) && (!empty($unit_id))) {
-           $this->setUnit($this->getUnit()); 
-        } else {
-           $this->setUnit(null); 
-        }
-        if (($this->getFamily()?->getFamily_id() == $family_id) && (!empty($family_id))) {
-           $this->setFamily($this->getFamily());
-        } else {
-           $this->setFamily(null); 
         }
     }
 }

@@ -70,6 +70,7 @@ use Yiisoft\Router\CurrentRoute;
 use Yiisoft\Session\SessionInterface;
 use Yiisoft\Session\Flash\Flash;
 use Yiisoft\Translator\TranslatorInterface;
+use Yiisoft\Validator\Validator;
 use Yiisoft\Yii\Cycle\Data\Reader\EntityReader;
 use Yiisoft\Yii\View\ViewRenderer;
 
@@ -139,7 +140,8 @@ class ProductController
         $countries = new CountryHelper();
         $peppolarrays = new PeppolArrays();
         $body = $request->getParsedBody() ?? [];
-        $form = new ProductForm($body);
+        $product = new Product();
+        $form = new ProductForm($product);
         $parameters = [
             'title' => $sR->trans('add'),
             'action' => ['product/add'],
@@ -147,7 +149,6 @@ class ProductController
             'alert' => $this->alert(),
             'form' => $form,
             'errors' => [],
-            'body' => $request->getParsedBody() ?? '',
             's'=>$sR,
             'head'=>$head,
             'standard_item_identification_schemeids'=>$peppolarrays->getIso_6523_icd(),
@@ -163,25 +164,24 @@ class ProductController
         ];
         
         if ($request->getMethod() === Method::POST) {            
-            $product = new Product();
             if (empty($form->getValidationResult()?->getErrorMessagesIndexedByAttribute())) {
+                //echo \Yiisoft\VarDumper\VarDumper::dump($request->getParsedBody());
                 if (is_array($body)) {
                     $product_id = $this->add_form_fields_return_id($body, $form, $product, $formHydrator);
                     if ($product_id) {
                       $count = $cfR->repoTableCountquery('product_custom');
-                      $parameters['body'] = $body;
-                      
                       // Only save custom fields if they exist
                       if (($count > 0) && !($product_id instanceof Response)) { 
                         $this->edit_save_custom_fields($body, $formHydrator, $pcR, $product_id); 
                       }
-                      return $this->responseFactory->createResponse($this->viewRenderer->renderPartialAsString('/invoice/setting/inv_message',
-                      ['heading'=>'','message'=>$this->translator->translate('invoice.product.record.successfully.added'),'url'=>'product/view',
-                      'id'=>$product_id]));                       
+                      $this->flash_message('info', $sR->trans('record_successfully_created'));
+                      return $this->webService->getRedirectResponse('product/index');                       
                     } 
                 }
             } else {
                 $parameters['errors'] = $form->getValidationResult()?->getErrorMessagesIndexedByAttribute() ?? [];
+                $parameters['form'] = $form;
+                
             }
         }
         return $this->viewRenderer->render('_form', $parameters);                
@@ -284,10 +284,11 @@ class ProductController
      * @param cvR $cvR
      * @param cfR $cfR
      * @param upR $upR
+     * @param Validator $validator
      * @return Response
      */
     public function edit(ViewRenderer $head, Request $request, CurrentRoute $currentRoute, FormHydrator $formHydrator,
-                    pR $pR, sR $sR, fR $fR, uR $uR, trR $trR, cvR $cvR, cfR $cfR, pcR $pcR, upR $upR 
+                    pR $pR, sR $sR, fR $fR, uR $uR, trR $trR, cvR $cvR, cfR $cfR, pcR $pcR, upR $upR, Validator $validator 
     ): Response {
         $countries = new CountryHelper();
         $peppolarrays = new PeppolArrays();
@@ -295,15 +296,14 @@ class ProductController
         $body = $request->getParsedBody() ?? [];
         if ($product) {
         $product_id = $product->getProduct_id();
-        $form = new ProductForm($body);
+        $form = new ProductForm($product);
         $parameters = [
             'title' => $sR->trans('edit'),
             'action' => ['product/edit', ['id' => $product_id]],
             'alert' => $this->alert(),
             'countries'=>$countries->get_country_list((string)$this->session->get('_language')),
             'form' => $form,
-            'errors' => [],
-            'body' => $this->body($product),            
+            'errors' => [],            
             's'=>$sR,
             'head'=>$head,
             'standard_item_identification_schemeids'=>$peppolarrays->getIso_6523_icd(),
@@ -320,17 +320,21 @@ class ProductController
         if ($request->getMethod() === Method::POST) {            
             if (empty($form->getValidationResult()?->getErrorMessagesIndexedByAttribute())) {
                 if (is_array($body)) {
-                    $this->edit_save_form_fields($body, $form, $product, $formHydrator);
+                    $returned_form = $this->edit_save_form_fields($body, $form, $product, $formHydrator, $validator);
                     $parameters['body'] = $body;
+                    if (!empty($returned_form->getValidationResult()?->getErrorMessagesIndexedByAttribute())) {
+                        $parameters['form'] = $returned_form;
+                        $parameters['errors'] = $returned_form->getValidationResult()?->getErrorMessagesIndexedByAttribute() ?? [];
+                        return $this->viewRenderer->render('_form', $parameters);
+                   } 
                     $product_id = $product->getProduct_id(); 
                     // Only save custom fields if they exist
                     if ($cfR->repoTableCountquery('product_custom') > 0) { 
-                      $this->edit_save_custom_fields($body, $formHydrator, $pcR, $product_id); 
+                        $this->edit_save_custom_fields($body, $formHydrator, $pcR, $product_id); 
                     }
-                }    
-                return $this->responseFactory->createResponse($this->viewRenderer->renderPartialAsString('/invoice/setting/inv_message',
-                ['heading'=>'','message'=>$sR->trans('record_successfully_updated'),'url'=>'product/view',
-                 'id'=>$product_id]));
+                }
+                $this->flash_message('info', $sR->trans('record_successfully_updated'));
+                return $this->webService->getRedirectResponse('product/index');
             } else {
                 $parameters['errors'] = $form->getValidationResult()?->getErrorMessagesIndexedByAttribute() ?? [];
             }    
@@ -423,11 +427,12 @@ class ProductController
      * @param ProductForm $form
      * @param Product $product
      * @param FormHydrator $formHydrator
-     * @return ProductForm
+     * @param Validator $validator
+     * @reclsturn ProductForm
      */
-    public function edit_save_form_fields(array $body, ProductForm $form, Product $product, FormHydrator $formHydrator) : ProductForm {
+    public function edit_save_form_fields(array $body, ProductForm $form, Product $product, FormHydrator $formHydrator, Validator $validator) : ProductForm {
         if ($formHydrator->populate($form, $body) && $form->isValid()) {
-          $this->productService->saveProduct($product, $form);
+          $this->productService->saveProduct($product, $body);
         } 
         return $form;
     }
@@ -443,7 +448,7 @@ class ProductController
     public function add_form_fields_return_id(array $body, ProductForm $form, Product $product, FormHydrator $formHydrator) : string|Response {
         $product_id = '';
         if ($formHydrator->populate($form, $body) && $form->isValid()) {
-           $product_id = $this->productService->saveProduct($product, $form);
+           $product_id = $this->productService->saveProduct($product, $body);
            $this->flash_message('info', $this->translator->translate('invoice.product.record.successfully.added'));
         }
         return $product_id;
@@ -457,6 +462,7 @@ class ProductController
      * @return void
      */
     public function edit_save_custom_fields(array $body, FormHydrator $formHydrator, pcR $pcR, string $product_id): void {
+      
       $custom = (array)$body['custom'];
       /** @var string $value */
       foreach ($custom as $custom_field_id => $value) {
@@ -467,10 +473,10 @@ class ProductController
               'custom_field_id'=>(int)$custom_field_id,
               'value'=>$value
           ];
-          $form = new ProductCustomForm();
+          $form = new ProductCustomForm($product_custom);
           if ($formHydrator->populate($form, $product_custom_input) && $form->isValid())
           {
-              $this->productCustomService->saveProductCustom($product_custom, $form);     
+              $this->productCustomService->saveProductCustom($product_custom, $product_custom_input);     
           }
         } else {
             $product_custom = new ProductCustom();

@@ -23,7 +23,7 @@ if (!empty($errors)) {
     }
 }
 ?>
-<h1><?= Html::encode($title) ?></h1>
+<?= Html::openTag('h1'); ?><?= Html::encode($title) ?><?= Html::closeTag('h1'); ?>
 
 <?=
         Form::tag()
@@ -53,7 +53,7 @@ if (!empty($errors)) {
             </label>
         </div>
     </div>
-    <div class="row">
+    <?= Html::openTag('div', ['class' => 'row']); ?>
         <div class="mb-3 form-group">
             <?php 
             $InputDataName = new PureInputData(
@@ -103,7 +103,7 @@ if (!empty($errors)) {
     <div class="card-header">
         <?= $s->trans('address'); ?>
     </div>
-    <div class="row">
+    <?= Html::openTag('div', ['class' => 'row']); ?>
         <div class="mb-3 form-group">
             <label for="client_address_1" class="form-label"><?= $s->trans('street_address'); ?></label>
             <input type="text" class="form-control" name="client_address_1" id="client_address_1" placeholder="<?= $s->trans('street_address'); ?>" value="<?= Html::encode($body['client_address_1'] ?? '') ?>">
@@ -174,7 +174,7 @@ if (!empty($errors)) {
     <div class="card-header">
 <?= $s->trans('contact_information'); ?>
     </div>
-    <div class="row">
+    <?= Html::openTag('div', ['class' => 'row']); ?>
         <div class="mb-3 form-group">
             <label for="client_phone" class="form-label"><?= $s->trans('phone'); ?></label>
             <input type="text" class="form-control" name="client_phone" id="client_phone" placeholder="<?= $s->trans('phone'); ?>" value="<?= Html::encode($body['client_phone'] ?? '') ?>">
@@ -251,7 +251,7 @@ if (!empty($errors)) {
     <div class="card-header">
 <?= $s->trans('personal_information'); ?>
     </div>
-    <div class="row">
+    <?= Html::openTag('div', ['class' => 'row']); ?>
         <div class="mb-3 form-group">
             <label for="client_gender"  class="form-label"><?= $s->trans('gender'); ?></label>
             <div class="controls">
@@ -342,7 +342,7 @@ if (!empty($errors)) {
     <div class="card-header">
 <?= $s->trans('tax_information'); ?>
     </div>
-    <div class="row">
+    <?= Html::openTag('div', ['class' => 'row']); ?>
         <div class="mb-3 form-group">
             <label for="client_vat_id" class="form-label"><?= $s->trans('vat_id'); ?></label>
             <input type="text" class="form-control" name="client_vat_id" id="client_vat_id" placeholder="<?= $s->trans('vat_id'); ?>" value="<?= Html::encode($body['client_vat_id'] ?? '') ?>">
@@ -375,7 +375,7 @@ if (!empty($errors)) {
         </div>
         <div class="form-group">
                             <?php if ($custom_fields): ?>
-                <div class="row">
+                <?= Html::openTag('div', ['class' => 'row']); ?>
                     <div class="col-xs-12 col-md-6">
                         <div class="panel panel-default">
                             <div class="panel-heading">

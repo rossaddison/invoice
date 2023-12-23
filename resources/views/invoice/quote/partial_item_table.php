@@ -249,7 +249,7 @@ $vat = $s->get_setting('enable_vat_registration');
     </div>
      <br>
      
-    <div class="row">
+    <?= Html::openTag('div', ['class' => 'row']); ?>
         <div class="col-xs-12 col-md-4" quote_tax_rates="<?php $quote_tax_rates; ?>">
            
         </div>

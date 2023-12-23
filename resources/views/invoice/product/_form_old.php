@@ -21,7 +21,7 @@ if (!empty($errors)) {
 }
 ?>
 
-<h1><?= Html::encode($title) ?></h1>
+<?= Html::openTag('h1'); ?><?= Html::encode($title) ?><?= Html::closeTag('h1'); ?>
 
 <form id="productForm" method="POST" action="<?= $urlGenerator->generate(...$action) ?>" enctype="multipart/form-data" >
 
@@ -38,7 +38,7 @@ if (!empty($errors)) {
 
     <div id="content">
 
-        <div class="row">
+        <?= Html::openTag('div', ['class' => 'row']); ?>
             <div class="mb-3 form-group btn-group-sm">
 
                 <div class="panel panel-default">

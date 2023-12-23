@@ -21,7 +21,7 @@ use Yiisoft\View\WebView;
   <div class="panel-body clearfix">
     <div class="container">
         <?php if ($invView && $invEdit) { ?> 
-          <div class="row">
+          <?= Html::openTag('div', ['class' => 'row']); ?>
             <?php foreach ($product_images as $productimage) { ?>
                 <a data-toggle="lightbox" data-gallery="example-gallery" class="col-sm-4">
                     <img src="<?= '/products/'. $productimage->getFile_name_original(); ?>"   class="img-fluid">

@@ -54,8 +54,8 @@ echo Alert::widget()->options(['class' => 'alert-danger'])->body(Html::encode($f
 }
 
 ?>
-<h1><?= Html::encode($title) ?></h1>
-<div class="row">
+<?= Html::openTag('h1'); ?><?= Html::encode($title) ?><?= Html::closeTag('h1'); ?>
+<?= Html::openTag('div', ['class' => 'row']); ?>
  <div class="row mb3 form-group">
 <label for="name" class="text-bg col-sm-2 col-form-label " style="background:lightblue"><?= $s->trans('name'); ?></label>
 <label class="text-bg col-sm-10 col-form-label"><?= Html::encode($body['name'] ?? ''); ?></label>

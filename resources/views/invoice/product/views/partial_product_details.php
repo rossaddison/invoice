@@ -10,7 +10,7 @@ use Yiisoft\Html\Html;
 
 ?>
 
-<div class="row">
+<?= Html::openTag('div', ['class' => 'row']); ?>
     <div class="row mb-3 form-group">
         <label for="product_sku" class="text-bg col-sm-8 col-form-label" style="background:lightblue"><?= $s->trans('product_sku'); ?></label>
         <?= str_repeat("&nbsp;", 2).Html::encode($body['product_sku'] ?? '') ?>
@@ -44,7 +44,7 @@ use Yiisoft\Html\Html;
         <?= str_repeat("&nbsp;", 2).Html::encode($body['product_description'] ?? '') ?>         
     </div>  
   </div>
-  <div class="row">
+  <?= Html::openTag('div', ['class' => 'row']); ?>
     <div class="row mb-3 form-group">
         <label for="product_price" class="text-bg col-sm-8 col-form-label" style="background:lightblue"><?= $s->trans('product_price'); ?></label>
         <?= str_repeat("&nbsp;", 2).Html::encode($body['product_price'] ?? '') ?>

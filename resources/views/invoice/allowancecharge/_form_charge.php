@@ -2,76 +2,151 @@
 
 declare(strict_types=1); 
 
+use Yiisoft\FormModel\Field;
 use Yiisoft\Html\Html;
-use Yiisoft\Yii\Bootstrap5\Alert;
+use Yiisoft\Html\Tag\Form;
 
 /**
  * @var \Yiisoft\View\View $this
  * @var \Yiisoft\Router\UrlGeneratorInterface $urlGenerator
- * @var array $body
  * @var string $csrf
  * @var string $action
  * @var string $title
  */
 
-$errors = $form->getValidationResult()?->getErrors();
-if (!empty($errors)) {
-    foreach ($errors as $field => $error) {
-        echo Alert::widget()->options(['class' => 'alert-danger'])->body(Html::encode($field . ':' . $error));
-    }
-}
-
 ?>
-<h1><?= Html::encode($title) ?></h1>
-<form id="AllowanceChargeForm" method="POST" action="<?= $urlGenerator->generate(...$action) ?>" enctype="multipart/form-data">
-<input type="hidden" name="_csrf" value="<?= $csrf ?>">
-<div id="headerbar">
-<h1 class="headerbar-title"><?= $s->trans('allowancecharges_form'); ?></h1>
-<?php $response = $head->renderPartial('invoice/layout/header_buttons',['s'=>$s, 'hide_submit_button'=>false ,'hide_cancel_button'=>false]); ?>        
-<?php echo (string)$response->getBody(); ?><div id="content">
-<div class="row">
- <div class="mb3 form-group">
-   <input type="hidden" name="id" id="id" class="form-control"
- value="<?= Html::encode($body['id'] ??  ''); ?>">
- </div>
- <div class="mb3 form-group">
-   <label for="reason"><?= $translator->translate('invoice.invoice.allowance.or.charge.reason'); ?></label>
-   <select name="reason" id="reason" class="form-control">
-        <option value="0"><?= $s->trans('none'); ?></option>
-        <?php foreach ($charges as $key => $value) { ?>
-            <option value="<?= $value[0]; ?>" <?php $s->check_select($body['reason'] ?? '', $value[0]) ?>>
-                <?= ucfirst((string)$key).' '.$value[0]; ?>
-            </option>
-        <?php } ?>
-    </select>
- </div>
- <div class="mb3 form-group">
-   <label for="multiplier_factor_numeric"><?= $translator->translate('invoice.invoice.allowance.or.charge.multiplier.factor.numeric'); ?></label>
-   <input type="text" name="multiplier_factor_numeric" id="multiplier_factor_numeric" class="form-control"
- value="<?= Html::encode($body['multiplier_factor_numeric'] ??  '20'); ?>">
- </div>
- <div class="mb3 form-group">
-   <label for="amount"><?= $translator->translate('invoice.invoice.allowance.or.charge.amount'); ?></label>
-   <input type="text" name="amount" id="amount" class="form-control"
- value="<?= Html::encode($body['amount'] ??  ''); ?>">
- </div>
- <div class="mb3 form-group">
-   <label for="base_amount"><?= $translator->translate('invoice.invoice.allowance.or.charge.base.amount'); ?></label>
-   <input type="text" name="base_amount" id="base_amount" class="form-control"
- value="<?= Html::encode($body['base_amount'] ??  '1000'); ?>">
- </div>
- <div class="mb3 form-group">
-    <label for="tax_rate_id"><?= $translator->translate('invoice.invoice.tax.rate'); ?></label>
-    <select name="tax_rate_id" id="tax_rate_id" class="form-control">
-       <option value="0"></option>
-         <?php foreach ($tax_rates as $tax_rate) { ?>
-          <option value="<?= $tax_rate->getTax_rate_id(); ?>"
-           <?php $s->check_select(Html::encode($body['tax_rate_id'] ?? ''), $tax_rate->getTax_rate_id()) ?>
-           ><?= $tax_rate->getTax_rate_name(). ' '. $tax_rate->getTax_rate_percent(); ?></option>
-         <?php } ?>
-    </select>
- </div>      
-</div>
-</div>
-</div>
-</form>
+<?= Html::openTag('h1'); ?>
+    <?= (Html::a($title,'https://docs.peppol.eu/poacc/billing/3.0/syntax/ubl-invoice/cac-AllowanceCharge/',['class'=>'btn btn-primary'])); ?>
+<?= Html::closeTag('h1'); ?>
+
+<?= Form::tag()
+    ->post($urlGenerator->generate(...$action))
+    ->enctypeMultipartFormData()
+    ->csrf($csrf)
+    ->id('AllowanceChargeForm')
+    ->open() ?>
+
+    <?= Html::openTag('div', ['id' => 'headerbar']); ?>    
+        <?= Html::openTag('h1',['class' => 'headerbar-title']); ?>
+            <?= $s->trans('allowancecharges_form'); ?>
+        <?= Html::closeTag('h1'); ?>
+    <?= Html::closeTag('div'); ?>
+    <?= Html::openTag('div'); ?>
+        <?= Field::buttonGroup()
+            ->addContainerClass('btn-group btn-toolbar float-end')
+            ->buttonsData([
+                [
+                    $translator->translate('invoice.cancel'),
+                    'type' => 'reset',
+                    'class' => 'btn btn-sm btn-danger',
+                    'name'=> 'btn_cancel'
+                ],
+                [
+                    $translator->translate('invoice.submit'),
+                    'type' => 'submit',
+                    'class' => 'btn btn-sm btn-primary',
+                    'name' => 'btn_send'
+                ],
+        ]) ?>
+        
+        <?= Field::errorSummary($form)
+            ->errors($errors)
+            ->header($translator->translate('invoice.error.summary'))
+            //->onlyProperties(...[])     
+            ->onlyCommonErrors()
+        ?>    
+        <?= Html::openTag('div',['class' => 'row']); ?>
+        <?= Html::openTag('div',['class' => 'mb3 form-group']); ?>
+            <?= Field::hidden($form, 'id')
+                ->addInputAttributes([
+                    'class' => 'form-control'
+                ])
+                ->label('') 
+                ->value(Html::encode($form->getId() ?? '')); 
+            ?>
+        <?= Html::closeTag('div'); ?>
+        <?= Html::openTag('div',['class' => 'mb3 form-group']); ?>
+            <?php
+                $optionsDataReason = [];
+                foreach ($charges as $key => $value) {
+                    $optionsDataReason[$value[0]] = ucfirst((string)$key).' '.$value[0];
+                }
+            ?>
+            <?= Field::select($form, 'reason')
+                ->label($translator->translate('invoice.invoice.allowance.or.charge.reason'))    
+                ->addInputAttributes([
+                    'class' => 'form-control',
+                    'id' => 'reason'
+                ])
+                ->value($form->getReason() ?? '')
+                ->optionsData($optionsDataReason, true)
+                ->prompt($s->trans('none'))
+                ->hint($translator->translate('invoice.hint.this.field.is.required'));    
+            ?>
+        <?= Html::closeTag('div'); ?>
+        <?= Html::openTag('div',['class' => 'mb3 form-group']); ?>
+            <?=
+                Field::text($form, 'multiplier_factor_numeric')
+                ->label($translator->translate('invoice.invoice.allowance.or.charge.multiplier.factor.numeric'), ['class' => 'form-label'])
+                ->addInputAttributes([
+                    'placeholder' => $translator->translate('invoice.invoice.allowance.or.charge.multiplier.factor.numeric'),
+                    'class' => 'form-control',
+                    'id' => 'multiplier_factor_numeric',
+                ])
+                ->value(Html::encode($form->getMultiplier_factor_numeric() ??  '20')) 
+                // ->required(true) not necessary ... @see #[Required] in AllowanceChargeForm
+                ->hint($translator->translate('invoice.hint.this.field.is.required')); 
+            ?>   
+        <?= Html::closeTag('div'); ?>
+        <?= Html::openTag('div',['class' => 'mb3 form-group']); ?>
+            <?=
+                Field::text($form, 'amount')
+                ->label($translator->translate('invoice.invoice.allowance.or.charge.amount'), ['class' => 'form-label'])
+                ->addInputAttributes([
+                    'placeholder' => $translator->translate('invoice.invoice.allowance.or.charge.amount'),
+                    'class' => 'form-control',
+                    'id' => 'amount',
+                ])
+                ->value(Html::encode($form->getAmount() ??  '')) 
+                // ->required(true) not necessary ... @see #[Required] in AllowanceChargeForm
+                ->hint($translator->translate('invoice.hint.this.field.is.required')); 
+            ?>
+        <?= Html::closeTag('div'); ?>
+        <?= Html::openTag('div',['class' => 'mb3 form-group']); ?>
+            <?=
+                Field::text($form, 'base_amount')
+                ->label($translator->translate('invoice.invoice.allowance.or.charge.base.amount'), ['class' => 'form-label'])
+                ->addInputAttributes([
+                    'placeholder' => $translator->translate('invoice.invoice.allowance.or.charge.base.amount'),
+                    'class' => 'form-control',
+                    'id' => 'base_amount',
+                ])
+                ->value(Html::encode($form->getBase_amount() ??  '1000')) 
+                // ->required(true) not necessary ... @see #[Required] in AllowanceChargeForm
+                ->hint($translator->translate('invoice.hint.this.field.is.required')); 
+            ?>
+        <?= Html::closeTag('div'); ?>
+        <?= Html::openTag('div',['class' => 'mb3 form-group']); ?>
+            <?php
+                $optionsDataTax = [];
+                foreach ($tax_rates as $tax_rate) {
+                    $optionsDataTax[$tax_rate->getTax_rate_id()] = $tax_rate->getTax_rate_id().':  '
+                                                                   . $tax_rate->getTax_rate_name()
+                                                                   . ' '
+                                                                   . $tax_rate->getTax_rate_percent();
+                }
+            ?>
+            <?= Field::select($form, 'tax_rate_id')
+                ->label($translator->translate('invoice.invoice.tax.rate'))    
+                ->addInputAttributes([
+                    'class' => 'form-control',
+                    'id' => 'tax_rate_id'
+                ])
+                ->value($form->getTax_rate_id() ?? '')
+                ->optionsData($optionsDataTax, true)
+                ->prompt($s->trans('none'))
+                ->hint($translator->translate('invoice.hint.this.field.is.required'));    
+            ?>
+        <?= Html::closeTag('div'); ?>
+    <?= Html::closeTag('div'); ?>
+<?= Form::tag()->close() ?>

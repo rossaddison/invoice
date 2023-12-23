@@ -23,8 +23,8 @@ if (!empty($errors)) {
 
 $datehelper = new DateHelper($s); 
 ?>
-<h1><?= Html::encode($title) ?></h1>
-<div class="row">
+<?= Html::openTag('h1'); ?><?= Html::encode($title) ?><?= Html::closeTag('h1'); ?>
+<?= Html::openTag('div', ['class' => 'row']); ?>
 <div class="mb3 form-group">
   <label for="date_created" class="form-label" style="background:lightblue"><?= $s->trans('date_created'); ?>  </label>
 <?php $date = $body['date_created']; if ($date && $date != "0000-00-00") { $date = $datehelper->date_from_mysql($date);} else {  $date = null;}?><?= Html::encode($date); ?></div>

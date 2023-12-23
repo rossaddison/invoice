@@ -20,10 +20,10 @@ use Yiisoft\Yii\Bootstrap5\Alert;
 echo "?>";
 ?>
 
-<?php echo '<h1><?= Html::encode($title) ?></h1>'; ?>
+<?php echo '<?= Html::openTag('h1'); ?><?= Html::encode($title) ?><?= Html::closeTag('h1'); ?>'; ?>
 
 <?php
-echo '<div class="row">' . "\n";
+echo '<?= Html::openTag('div', ['class' => 'row']); ?>' . "\n";
 foreach ($orm_schema->getColumns() as $column) {
   //if the column is not a relation column
   if ((substr($column, -3) <> '_id') && ($column->getName() <> 'id')) {

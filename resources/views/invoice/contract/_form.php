@@ -2,74 +2,89 @@
 
 declare(strict_types=1); 
 
+use Yiisoft\FormModel\Field;
 use Yiisoft\Html\Html;
-use Yiisoft\Yii\Bootstrap5\Alert;
+use Yiisoft\Html\Tag\Form;
 
 /**
  * @var \Yiisoft\View\View $this
  * @var \Yiisoft\Router\UrlGeneratorInterface $urlGenerator
- * @var array $body
  * @var string $csrf
  * @var string $action
  * @var string $title
  */
-
-if (!empty($errors)) {
-    foreach ($errors as $field => $error) {
-        echo Alert::widget()->options(['class' => 'alert-danger'])->body(Html::encode($field . ':' . $error));
-    }
-}
-
 ?>
-<form id="ContractForm" method="POST" action="<?= $urlGenerator->generate(...$action) ?>" enctype="multipart/form-data">
-<input type="hidden" name="_csrf" value="<?= $csrf ?>">
-<div id="headerbar">
+<?=
+    Form::tag()
+    ->post($urlGenerator->generate(...$action))
+    ->enctypeMultipartFormData()
+    ->csrf($csrf)
+    ->id('ContractForm')
+    ->open()
+?>
+<?= Html::openTag('div',['id' => 'headerbar']); ?>
 <h1 class="headerbar-title"><?= $translator->translate('invoice.invoice.contract.add'); ?></h1>
 <?php $response = $head->renderPartial('invoice/layout/header_buttons',['s'=>$s, 'hide_submit_button'=>false ,'hide_cancel_button'=>false]); ?>        
-<?php echo (string)$response->getBody(); ?><div id="content">
-<div class="row">
- <div class="mb3 form-group">
-   <input type="hidden" name="id" id="id" class="form-control"
- value="<?= Html::encode($body['id'] ??  ''); ?>">
- </div>
- <div class="mb3 form-group">
-   <input type="hidden" name="client_id" id="client_id" class="form-control"
- value="<?= Html::encode($body['client_id'] ??  $client_id); ?>">
- </div>
- <div class="mb3 form-group">
-   <label for="reference"><?= $translator->translate('invoice.invoice.contract.reference'); ?></label>
-   <input type="text" name="reference" id="reference" class="form-control"
- value="<?= Html::encode($body['reference'] ??  ''); ?>">
- </div>
- <div class="mb3 form-group">
-   <label for="name"><?= $translator->translate('invoice.invoice.contract.name'); ?></label>
-   <input type="text" name="name" id="name" class="form-control"
- value="<?= Html::encode($body['name'] ??  ''); ?>">
-</div>
-<div class="mb-3 form-group has-feedback"> 
-    <label form-label for="period_start"><?= $translator->translate('invoice.invoice.contract.period.start') ." (".  $datehelper->display().") "; ?></label><div class="mb3 input-group"> 
-<input type="text" name="period_start" id="period_start" placeholder="<?= $datehelper->display(); ?>" 
-       class="form-control input-sm datepicker" 
-       value="<?= Html::encode($datehelper->date_from_mysql($body['period_start'] ?? new DateTimeImmutable('now'))); ?>"> 
-<span class="input-group-text"> 
-<i class="fa fa-calendar fa-fw"></i> 
- </span> 
-</div>
-</div>
-<div class="mb-3 form-group has-feedback">
-    <label form-label for="period_end"><?= $translator->translate('invoice.invoice.contract.period.end') ." (".  $datehelper->display().") "; ?></label><div class="mb3 input-group"> 
-    <input type="text" name="period_end" id="period_end" placeholder="<?= $datehelper->display(); ?>" 
-           class="form-control input-sm datepicker" 
-           value="<?= Html::encode($datehelper->date_from_mysql($body['period_end'] ?? new DateTimeImmutable('now'))); ?>"> 
-<span class="input-group-text"> 
-<i class="fa fa-calendar fa-fw"></i> 
- </span> 
-</div>
-</div> 
+<?php echo (string)$response->getBody(); ?>
+    <?= Field::errorSummary($form)
+        ->errors($errors)
+        ->header($translator->translate('invoice.client.error.summary'))
+        ->onlyCommonErrors()
+    ?>
+    <?= Field::text($form, 'client_id')
+        ->addInputAttributes([ 
+             'class' => 'form-control',
+             'id' => 'client_id',
+        ])
+        ->readonly(true)
+        ->required(true)
+        ->value(Html::encode($form->getClient_id() ?? $client_id))
+    ?>    
+    <?= Field::text($form, 'reference')
+       ->label($translator->translate('invoice.invoice.contract.reference'))
+       ->addInputAttributes([
+           'value' => Html::encode($form->getReference() ?? ''),
+           'class' => 'form-control',
+           'id' => 'reference',    
+       ])
+       ->required(true)
+       ->hint($translator->translate('invoice.hint.this.field.is.required')); 
+    ?>
+    <?= Field::text($form, 'name')
+        ->label($translator->translate('invoice.invoice.contract.name'))
+        ->addInputAttributes([
+            'value' => Html::encode($form->getName() ?? ''),
+            'class' => 'form-control',
+            'id' => 'name',    
+        ])
+        ->required(true)
+        ->hint($translator->translate('invoice.hint.this.field.is.required')); 
+    ?>
+    <?= Field::text($form, 'period_start')
+        ->label($translator->translate('invoice.invoice.contract.period.start'))
+        ->addInputAttributes([
+            'class' => 'form-control input-dm datepicker',
+            'id' => 'period_start',
+            'role' => 'presentation',
+            'autocomplete' => 'off',
+            'placeholder' => $datehelper->display()
+        ])
+        ->value(Html::encode(Html::encode( $datehelper->get_or_set_with_style($form->getPeriod_start() ?? new DateTimeImmutable('now')))))
+        ->required(true)            
+        ->hint($translator->translate('invoice.hint.this.field.is.required')); 
+    ?>
+    <?= Field::text($form, 'period_end')
+        ->label($translator->translate('invoice.invoice.contract.period.end'))
+        ->addInputAttributes([
+            'class' => 'form-control input-dm datepicker',
+            'id' => 'period_end',
+            'role' => 'presentation',
+            'autocomplete' => 'off',
+            'placeholder' => $datehelper->display()
+        ])
+        ->value(Html::encode(Html::encode( $datehelper->get_or_set_with_style($form->getPeriod_end() ?? new DateTimeImmutable('now')))))
+        ->required(true)
+        ->hint($translator->translate('invoice.hint.this.field.is.required')); 
+    ?>
+<?= Form::tag()->close(); ?>
 
-</div>
-
-</div>
-
-</div>
-</form>

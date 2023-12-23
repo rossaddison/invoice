@@ -21,7 +21,7 @@ if (!empty($errors)) {
 }
 
 ?>
-<h1><?= Html::encode($title) ?></h1>
+<?= Html::openTag('h1'); ?><?= Html::encode($title) ?><?= Html::closeTag('h1'); ?>
 
 <!-- class customTable at C:\wamp64\www\yii3-i-4\src\Invoice\Asset\invoice\css\yii3i.css -->
 <table class="customTable">

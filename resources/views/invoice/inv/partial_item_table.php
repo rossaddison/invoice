@@ -326,7 +326,7 @@ $vat = $s->get_setting('enable_vat_registration');
         /*   Totals start here */
         /***********************/
     ?> 
-    <div class="row">
+    <?= Html::openTag('div', ['class' => 'row']); ?>
         <div class="col-xs-12 col-md-4" inv_tax_rates="<?php $inv_tax_rates; ?>"></div>
         <div class="col-xs-12 visible-xs visible-sm"><br></div>
         <div class="col-xs-12 col-md-6 col-md-offset-2 col-lg-4 col-lg-offset-4">

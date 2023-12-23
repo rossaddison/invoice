@@ -5,6 +5,7 @@ namespace App\Invoice\Company;
 
 use App\Invoice\Company\CompanyService;
 use App\Invoice\Company\CompanyRepository;
+use App\Invoice\Company\CompanyForm;
 use App\Invoice\Entity\Company;
 use App\Invoice\Setting\SettingRepository;
 use App\Service\WebControllerService;
@@ -16,8 +17,8 @@ use Yiisoft\Http\Method;
 use Yiisoft\Router\CurrentRoute;
 use Yiisoft\Session\SessionInterface;
 use Yiisoft\Session\Flash\Flash;
-use Yiisoft\Translator\TranslatorInterface;use Yiisoft\FormModel\FormHydrator;
-use Yiisoft\Form\Helper\HtmlFormErrors;
+use Yiisoft\Translator\TranslatorInterface;
+use Yiisoft\FormModel\FormHydrator;
 use Yiisoft\Yii\View\ViewRenderer;
 
 final class CompanyController
@@ -82,24 +83,31 @@ final class CompanyController
                         SettingRepository $settingRepository,                   
     ): Response
     {
+        $body = $request->getParsedBody() ?? [];
+        $form = new CompanyForm(new Company());
         $parameters = [
             'title' => $this->translator->translate('invoice.add'),
             'action' => ['company/add'],
             'errors' => [],
-            'body' => $request->getParsedBody(),
+            'form' => $form,
             's'=>$settingRepository,
             'company_public'=>$this->translator->translate('invoice.company.public'),
-            'head'=>$head,
-            
+            'head'=>$head
         ];
         
         if ($request->getMethod() === Method::POST) {
-            $form = new CompanyForm();
-            if ($formHydrator->populate($form, $parameters['body']) && $form->isValid()) {
-                $this->companyService->saveCompany(new Company(),$form);
+            /**
+             * @psalm-suppress PossiblyInvalidArgument $body
+             */
+            if ($formHydrator->populate($form, $body) && $form->isValid()) {
+                /**
+                 * @psalm-suppress PossiblyInvalidArgument $body
+                 */
+                $this->companyService->saveCompany(new Company(), $body);
                 return $this->webService->getRedirectResponse('company/index');
             }
             $parameters['form'] = $form;
+            $parameters['errors'] = $form->getValidationResult()?->getErrorMessagesIndexedByAttribute() ?? [];
         }
         return $this->viewRenderer->render('_form', $parameters);
     }
@@ -123,23 +131,29 @@ final class CompanyController
     ): Response {
         $company = $this->company($currentRoute, $companyRepository);
         if ($company) {
+            $form = new CompanyForm($company);
             $parameters = [
                 'title' => $settingRepository->trans('edit'),
                 'action' => ['company/edit', ['id' => $company->getId()]],
                 'errors' => [],
-                'body' => $this->body($company),
+                'form' => $form,
                 'head'=>$head,
                 'company_public'=>$this->translator->translate('invoice.company.public'),
                 's'=>$settingRepository,
             ];
             if ($request->getMethod() === Method::POST) {
-                $form = new CompanyForm();
                 $body = $request->getParsedBody();
+                /**
+                 * @psalm-suppress PossiblyInvalidArgument $body
+                 */
                 if ($formHydrator->populate($form, $body) && $form->isValid()) {
-                    $this->companyService->saveCompany($company, $form);
+                    /**
+                     * @psalm-suppress PossiblyInvalidArgument $body
+                     */
+                    $this->companyService->saveCompany($company, $body);
                     return $this->webService->getRedirectResponse('company/index');
                 }
-                $parameters['body'] = $body;
+                $parameters['errors'] = $form->getValidationResult()?->getErrorMessagesIndexedByAttribute() ?? [];
                 $parameters['form'] = $form;
             }
             return $this->viewRenderer->render('_form', $parameters);
@@ -158,9 +172,7 @@ final class CompanyController
         if ($company) {
             if ($this->companyService->deleteCompany($company)) {               
                 $this->flash_message('info', $this->translator->translate('invoice.company.deleted')); 
-            } else {
-                $this->flash_message('warning', $this->translator->translate('invoice.company.not.deleted'));
-            } 
+            }
         }
         return $this->webService->getRedirectResponse('company/index');
     }
@@ -237,24 +249,23 @@ final class CompanyController
      * @return array
      */
     private function body(Company $company): array {
-        $body = [
-                
-          'id'=>$company->getId(),
-          'current'=>$company->getCurrent(),
-          'name'=>$company->getName(),
-          'address_1'=>$company->getAddress_1(),
-          'address_2'=>$company->getAddress_2(),
-          'city'=>$company->getCity(),
-          'state'=>$company->getState(),
-          'zip'=>$company->getZip(),
-          'country'=>$company->getCountry(),
-          'phone'=>$company->getPhone(),
-          'fax'=>$company->getFax(),
-          'email'=>$company->getEmail(),
-          'web'=>$company->getWeb(),
-          'date_created'=>$company->getDate_created(),
-          'date_modified'=>$company->getDate_modified()
-                ];
+        $body = [                
+            'id'=>$company->getId(),
+            'current'=>$company->getCurrent(),
+            'name'=>$company->getName(),
+            'address_1'=>$company->getAddress_1(),
+            'address_2'=>$company->getAddress_2(),
+            'city'=>$company->getCity(),
+            'state'=>$company->getState(),
+            'zip'=>$company->getZip(),
+            'country'=>$company->getCountry(),
+            'phone'=>$company->getPhone(),
+            'fax'=>$company->getFax(),
+            'email'=>$company->getEmail(),
+            'web'=>$company->getWeb(),
+            'date_created'=>$company->getDate_created(),
+            'date_modified'=>$company->getDate_modified()
+        ];
         return $body;
     }
     

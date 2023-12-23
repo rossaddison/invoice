@@ -14,15 +14,16 @@ use App\Invoice\Helpers\Peppol\PeppolArrays;
 use App\Invoice\Helpers\StoreCove\StoreCoveArrays;
 use App\User\UserService;
 use App\Service\WebControllerService;
+// Psr
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
+// Yiisoft
 use Yiisoft\DataResponse\DataResponseFactoryInterface;
 use Yiisoft\Http\Method;
 use Yiisoft\Router\CurrentRoute;
 use Yiisoft\Session\SessionInterface;
 use Yiisoft\Session\Flash\Flash;
 use Yiisoft\Translator\TranslatorInterface;use Yiisoft\FormModel\FormHydrator;
-use Yiisoft\Form\Helper\HtmlFormErrors;
 use Yiisoft\Yii\View\ViewRenderer;
 use \Exception;
 
@@ -77,13 +78,16 @@ final class ClientPeppolController {
     SettingRepository $settingRepository
   ): Response {
     $client_id = $currentRoute->getArgument('client_id');
+    $client_peppol = new ClientPeppol();
+    $body = $request->getParsedBody() ?? [];
+    $form = new ClientPeppolForm($client_peppol);
     $electronic_address_scheme = PeppolArrays::electronic_address_scheme();
     $peppolarrays = new PeppolArrays();
     if (null !== $client_id) {
       $parameters = [
         'title' => $this->translator->translate('invoice.add'),
         'action' => ['clientpeppol/add', ['client_id' => $client_id]],
-        'body' => $request->getParsedBody(),
+        'form' => $form,  
         'pep' => $this->pep(),
         'setting' => $settingRepository->get_setting('enable_client_peppol_defaults'),
         'defaults' => $settingRepository->get_setting('enable_client_peppol_defaults') == '1' ? true : false,
@@ -95,43 +99,24 @@ final class ClientPeppolController {
         'iso_6523_array' => $peppolarrays->getIso_6523_icd()
       ];
       if ($request->getMethod() === Method::POST) {
-        $form = new ClientPeppolForm();
-        if ($formHydrator->populate($form, $parameters['body']) && $form->isValid()) {
-          $this->clientpeppolService->saveClientPeppol(new ClientPeppol(), $form);
+        /**
+         * @psalm-suppress PossiblyInvalidArgument $body
+         */  
+        if ($formHydrator->populate($form, $body) && $form->isValid()) {
+         /**
+          * @psalm-suppress PossiblyInvalidArgument $body
+          */  
+          $this->clientpeppolService->saveClientPeppol($client_peppol, $body);
           return $this->factory->createResponse($this->viewRenderer->renderPartialAsString('/invoice/setting/clientpeppol_successful_guest',
                 ['url' => $this->userService->hasPermission('editClientPeppol') && $this->userService->hasPermission('viewInv') && !$this->userService->hasPermission('editInv') ? 'client/guest' : 'client/index',
                   'heading' => $this->translator->translate('invoice.client.peppol'), 'message' => $settingRepository->trans('record_successfully_updated')]));
         }
+        $parameters['errors'] = $form->getValidationResult()?->getErrorMessagesIndexedByAttribute() ?? [];
         $parameters['form'] = $form;
       } // if
       return $this->viewRenderer->render('/invoice/clientpeppol/_form', $parameters);
     } // null !== $client
     return $this->webService->getNotFoundResponse();
-  }
-
-  /**
-   * @param ClientPeppol $clientpeppol
-   * @return array
-   */
-  private function body(ClientPeppol $clientpeppol): array {
-    $body = [
-      'id' => $clientpeppol->getId(),
-      'client_id' => $clientpeppol->getClient_id(),
-      'endpointid' => $clientpeppol->getEndpointid(),
-      'endpointid_schemeid' => $clientpeppol->getEndpointid_schemeid(),
-      'identificationid' => $clientpeppol->getIdentificationid(),
-      'identificationid_schemeid' => $clientpeppol->getIdentificationid_schemeid(),
-      'taxschemecompanyid' => $clientpeppol->getTaxschemecompanyid(),
-      'taxschemeid' => $clientpeppol->getTaxschemeid(),
-      'legal_entity_registration_name' => $clientpeppol->getLegal_entity_registration_name(),
-      'legal_entity_companyid' => $clientpeppol->getLegal_entity_companyid(),
-      'legal_entity_companyid_schemeid' => $clientpeppol->getLegal_entity_companyid_schemeid(),
-      'legal_entity_company_legal_form' => $clientpeppol->getLegal_entity_company_legal_form(),
-      'accounting_cost' => $clientpeppol->getAccountingCost(),
-      'buyer_reference' => $clientpeppol->getBuyerReference(),
-      'supplier_assigned_accountid' => $clientpeppol->getSupplierAssignedAccountId()
-    ];
-    return $body;
   }
 
   /**
@@ -257,14 +242,16 @@ final class ClientPeppolController {
     ClientRepository $clientRepository
   ): Response {
     $clientpeppol = $this->clientpeppol($currentRoute, $clientpeppolRepository);
+    $body = $request->getParsedBody() ?? [];
     if ($clientpeppol) {
       $peppolarrays = new PeppolArrays();
+      $form = new ClientPeppolForm($clientpeppol);
       $parameters = [
         'title' => $settingRepository->trans('edit'),
         'action' => ['clientpeppol/edit', ['client_id' => $clientpeppol->getClient_id()]],
         'buttons' => $this->viewRenderer->renderPartialAsString('/invoice/layout/header_buttons', ['s' => $settingRepository, 'hide_submit_button' => false, 'hide_cancel_button' => false]),
         'errors' => [],
-        'body' => $this->body($clientpeppol),
+        'form' => $form,  
         'head' => $head,
         'pep' => $this->pep(),
         'setting' => $settingRepository->get_setting('enable_client_peppol_defaults'),
@@ -277,10 +264,14 @@ final class ClientPeppolController {
         'iso_6523_array' => $peppolarrays->getIso_6523_icd()
       ];
       if ($request->getMethod() === Method::POST) {
-        $form = new ClientPeppolForm();
-        $body = $request->getParsedBody();
-        if ($formHydrator->populate($form, $parameters['body']) && $form->isValid()) {
-          $this->clientpeppolService->saveClientPeppol($clientpeppol, $form);
+        /**
+         * @psalm-suppress PossiblyInvalidArgument $body
+         */  
+        if ($formHydrator->populate($form, $body) && $form->isValid()) {
+         /**
+          * @psalm-suppress PossiblyInvalidArgument $body
+          */  
+          $this->clientpeppolService->saveClientPeppol($clientpeppol, $body);
           // Guest user's return url to see user's clients
           if ($this->userService->hasPermission('editClientPeppol') && $this->userService->hasPermission('viewInv') && !$this->userService->hasPermission('editInv')) {
             return $this->factory->createResponse($this->viewRenderer->renderPartialAsString('/invoice/setting/clientpeppol_successful_guest',
@@ -291,7 +282,7 @@ final class ClientPeppolController {
             return $this->webService->getRedirectResponse('client/index');
           }
         }
-        $parameters['body'] = $body;
+        $parameters['errors'] = $form->getValidationResult()?->getErrorMessagesIndexedByAttribute() ?? [];
         $parameters['form'] = $form;
       }
       return $this->viewRenderer->render('_form', $parameters);
@@ -357,11 +348,12 @@ final class ClientPeppolController {
   ): \Yiisoft\DataResponse\DataResponse|Response {
     $clientpeppol = $this->clientpeppol($currentRoute, $clientpeppolRepository);
     if ($clientpeppol) {
+      $form = new ClientPeppolForm($clientpeppol);  
       $parameters = [
         'title' => $settingRepository->trans('view'),
         'action' => ['clientpeppol/view', ['id' => $clientpeppol->getId()]],
         'errors' => [],
-        'body' => $this->body($clientpeppol),
+        'form' => $form,
         'clientpeppol' => $clientpeppol,
       ];
       return $this->viewRenderer->render('_view', $parameters);

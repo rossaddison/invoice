@@ -21,8 +21,8 @@ use Yiisoft\Json\Json;
 use Yiisoft\Router\CurrentRoute;
 use Yiisoft\Session\SessionInterface;
 use Yiisoft\Session\Flash\Flash;
-use Yiisoft\Translator\TranslatorInterface;use Yiisoft\FormModel\FormHydrator;
-use Yiisoft\Form\Helper\HtmlFormErrors;
+use Yiisoft\Translator\TranslatorInterface;
+use Yiisoft\FormModel\FormHydrator;
 use Yiisoft\Yii\View\ViewRenderer;
 
 final class CustomFieldController
@@ -68,8 +68,7 @@ final class CustomFieldController
         $canEdit = $this->rbac();
         $this->flash_message('info' , $this->viewRenderer->renderPartialAsString('/invoice/info/custom_field'));
         $parameters = [
-              'paginator' => $paginator,  
-              's'=>$settingRepository,
+              'paginator' => $paginator, 
               'canEdit' => $canEdit,
               'max'=>$settingRepository->get_setting('default_list_limit'),
               'customfields' => $this->customfields($customfieldRepository),
@@ -78,7 +77,6 @@ final class CustomFieldController
               'alert'=> $this->alert(),
        ];    
        return $this->viewRenderer->render('index', $parameters);
-  
     }
     
     /**
@@ -93,34 +91,37 @@ final class CustomFieldController
                         SettingRepository $settingRepository
     ): Response
     {
+        $body = $request->getParsedBody() ?? [];
+        $custom_field = new CustomField();
+        $form = new CustomFieldForm($custom_field);
         $parameters = [
             'title' => $this->translator->translate('invoice.add'),
             'action' => ['customfield/add'],
             'errors' => [],
-            'body' => $request->getParsedBody(),
-            's'=>$settingRepository,
+            'form' => $form,
             'head'=>$head,
             'tables' => $this->custom_tables(),
             'user_input_types'=>['NUMBER','TEXT','DATE','BOOLEAN'],
             'custom_value_fields'=>['SINGLE-CHOICE','MULTIPLE-CHOICE'],
-            'layout_header_buttons'=>$this->viewRenderer->renderPartialAsString('/invoice/layout/header_buttons',
-            [
-              'hide_submit_button'=>false,
-              'hide_cancel_button'=>false,
-              's'=>$settingRepository   
-            ]),
+            'layout_header_buttons'=>$this->viewRenderer->renderPartialAsString('/invoice/layout/header_buttons'),
             // Create an array for "moduled" ES6 jquery script. The script is "moduled" and therefore deferred by default to avoid
             // the $ undefined reference error in the DOM.
             'positions'=>$this->positions($settingRepository)
         ];
         
-        if ($request->getMethod() === Method::POST) {            
-            $form = new CustomFieldForm();
-            if ($formHydrator->populate($form, $parameters['body']) && $form->isValid()) {
-                $this->customfieldService->saveCustomField(new CustomField(),$form);
+        if ($request->getMethod() === Method::POST) {
+            /**
+             * @psalm-suppress PossiblyInvalidArgument $body
+             */
+            if ($formHydrator->populate($form, $body) && $form->isValid()) {
+                /**
+                 * @psalm-suppress PossiblyInvalidArgument $body
+                 */
+                $this->customfieldService->saveCustomField($custom_field, $body);
                 return $this->webService->getRedirectResponse('customfield/index');
             }
             $parameters['form'] = $form;
+            $parameters['errors'] = $form->getValidationResult()?->getErrorMessagesIndexedByAttribute() ?? [];
         }
         return $this->viewRenderer->render('_form', $parameters);
     }
@@ -142,33 +143,33 @@ final class CustomFieldController
     ): Response {
         $custom_field = $this->customfield($currentRoute, $customfieldRepository);
         if ($custom_field) {
+            $form = new CustomFieldForm($custom_field);
             $parameters = [
-                'title' => 'Edit',
+                'title' => $this->translator->translate('invoice.edit'),
                 'action' => ['customfield/edit', ['id' => $custom_field->getId()]],
                 'errors' => [],
-                'body' => $this->body($custom_field),
-                's'=>$settingRepository,
+                'form' => $form,
                 'head'=>$head,
                 'tables' => $this->custom_tables(),
                 'user_input_types'=>['NUMBER','TEXT','DATE','BOOLEAN'],
                 'custom_value_fields'=>['SINGLE-CHOICE','MULTIPLE-CHOICE'],
-                'layout_header_buttons'=>$this->viewRenderer->renderPartialAsString('/invoice/layout/header_buttons',
-                [
-                  'hide_submit_button'=>false,
-                  'hide_cancel_button'=>false,
-                  's'=>$settingRepository   
-                ]),
+                'layout_header_buttons'=>$this->viewRenderer->renderPartialAsString('/invoice/layout/header_buttons'),
                 'positions'=>$this->positions($settingRepository)    
             ];
             if ($request->getMethod() === Method::POST) {
-                $form = new CustomFieldForm();
-                $body = $request->getParsedBody();
+                $body = $request->getParsedBody() ?? [];
+                /**
+                 * @psalm-suppress PossiblyInvalidArgument $body
+                 */
                 if ($formHydrator->populate($form, $body) && $form->isValid()) {
-                    $this->customfieldService->saveCustomField($custom_field, $form);
+                    /**
+                     * @psalm-suppress PossiblyInvalidArgument $body
+                     */
+                    $this->customfieldService->saveCustomField($custom_field, $body);
                     return $this->webService->getRedirectResponse('customfield/index');
                 }
-                $parameters['body'] = $body;
                 $parameters['form'] = $form;
+                $parameters['errors'] = $form->getValidationResult()?->getErrorMessagesIndexedByAttribute() ?? [];
             }
             return $this->viewRenderer->render('_form', $parameters);
         }
@@ -205,12 +206,12 @@ final class CustomFieldController
         ): Response {
         $custom_field = $this->customfield($currentRoute, $customfieldRepository);
         if ($custom_field) {
+            $form = new CustomFieldForm($custom_field);
             $parameters = [
                 'title' => $settingRepository->trans('view'),
                 'action' => ['customfield/edit', ['id' => $custom_field->getId()]],
                 'errors' => [],
-                'body' => $this->body($custom_field),
-                's'=>$settingRepository,             
+                'form' => $form,
                 'customfield'=>$custom_field->getId(),
             ];
             return $this->viewRenderer->render('_view', $parameters);
@@ -257,24 +258,8 @@ final class CustomFieldController
         $customfields = $customfieldRepository->findAllPreloaded();        
         return $customfields;
     }
-    
-    /**
-     * 
-     * @param CustomField $customfield
-     * @return array
-     */
-    private function body(CustomField $customfield): array {
-        $body = [
-          'table' => $customfield->getTable(),
-          'label' => $customfield->getLabel(),
-          'type' => $customfield->getType(),
-          'location' => $customfield->getLocation(),
-          'order' => $customfield->getOrder()
-        ];
-        return $body;
-    }
-    
-    /**
+        
+ /**
   * @return string
   */
    private function alert(): string {

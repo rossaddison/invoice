@@ -8,7 +8,6 @@ use App\Widget\LabelSwitch;
 /**
  * @var \Yiisoft\View\View $this
  * @var \Yiisoft\Router\UrlGeneratorInterface $urlGenerator
- * @var array $body
  * @var string $csrf
  * @var string $action
  * @var string $title
@@ -21,7 +20,7 @@ if (!empty($errors)) {
 }
 ?>
 
-<h1><?= Html::encode($title) ?></h1>
+<?= Html::openTag('h1'); ?><?= Html::encode($title) ?><?= Html::closeTag('h1'); ?>
 <form id="ClientPeppolForm" method="POST" action="<?= $urlGenerator->generate(...$action) ?>" enctype="multipart/form-data">
     <input type="hidden" name="_csrf" value="<?= $csrf ?>">
     <div id="headerbar">
@@ -37,19 +36,19 @@ if (!empty($errors)) {
           '16'
         );
         ?>
-            <div class="row">
+            <?= Html::openTag('div', ['class' => 'row']); ?>
                 <div class="mb3 form-group">
                     <input type="text" name="client_id" id="client_id" class="form-control" hidden
-                           value="<?= Html::encode($body['client_id'] ?? $client_id); ?>">
+                           value="<?= Html::encode($form->getClient_id() ?? $client_id); ?>">
                 </div>
                 <div class="mb3 form-group">
                     <input type="text" name="id" id="id" class="form-control" hidden
-                           value="<?= Html::encode($body['id'] ?? ''); ?>">
+                           value="<?= Html::encode($form->getId() ?? ''); ?>">
                 </div>
                 <div class="mb3 form-group">
                     <label for="endpointid"><?= $translator->translate('invoice.client.peppol.endpointid'); ?></label>
                     <input type="text" name="endpointid" id="endpointid" class="form-control" required
-                           value="<?= Html::encode($body['endpointid'] ?? ($defaults ? $pep['endpointid']['eg'] : '')); ?>">
+                           value="<?= Html::encode($form->getEndpointid() ?? ($defaults ? $pep['endpointid']['eg'] : '')); ?>">
                 </div>
                 <div class="mb3 form-group">
                     <label for="endpointid_schemeid"><?= $translator->translate('invoice.client.peppol.endpointid_schemeid') . $translator->translate('invoice.peppol.optional'); ?></label>
@@ -64,7 +63,7 @@ if (!empty($errors)) {
                          */
                         foreach ($electronic_address_scheme as $key => $value) {
                           ?>
-                          <option value="<?= $value['code']; ?>" <?php $s->check_select($body['endpointid_schemeid'] ?? ($defaults ? $pep['endpointid_schemeid']['eg'] : '0088'), $value['code']) ?>>
+                          <option value="<?= $value['code']; ?>" <?php $s->check_select($form->getEndpointid_schemeid()) ?? ($defaults ? $pep['endpointid_schemeid']['eg'] : '0088'), $value['code']) ?>>
                               <?= $value['code'] . str_repeat("-", 10) . $value['description'] ?>
                           </option>
                         <?php } ?>
@@ -73,17 +72,17 @@ if (!empty($errors)) {
                 <div class="mb3 form-group">
                     <label for="identificationid"><?= $translator->translate('invoice.client.peppol.identificationid'); ?></label>
                     <input type="text" name="identificationid" id="identificationid" class="form-control" required
-                           value="<?= Html::encode($body['identificationid'] ?? ($defaults ? $pep['identificationid']['eg'] : '')); ?>">
+                           value="<?= Html::encode($form->getIdentificationid() ?? ($defaults ? $pep['identificationid']['eg'] : '')); ?>">
                 </div>
                 <div class="mb3 form-group">
                     <label for="identificationid_schemeid"><?= $translator->translate('invoice.client.peppol.identificationid_schemeid') . $translator->translate('invoice.peppol.optional'); ?></label>
                     <input type="text" name="identificationid_schemeid" id="identificationid_schemeid" class="form-control" required
-                           value="<?= Html::encode($body['identificationid_schemeid'] ?? ($defaults ? $pep['identificationid_schemeid']['eg'] : '')); ?>">
+                           value="<?= Html::encode($form->getIdentificationid_schemeid() ?? ($defaults ? $pep['identificationid_schemeid']['eg'] : '')); ?>">
                 </div>
                 <div class="mb3 form-group">
                     <label for="taxschemecompanyid"><?= $translator->translate('invoice.client.peppol.taxschemecompanyid'); ?></label>
                     <input type="text" name="taxschemecompanyid" id="taxschemecompanyid" class="form-control" required
-                           value="<?= Html::encode($body['taxschemecompanyid'] ?? ($defaults ? $pep['taxschemecompanyid']['eg'] : '')); ?>">
+                           value="<?= Html::encode($form->getTaxschemecompanyid() ?? ($defaults ? $pep['taxschemecompanyid']['eg'] : '')); ?>">
                 </div>
                 <div class="mb3 form-group">
                     <label for="taxschemeid"><?= $translator->translate('invoice.client.peppol.taxschemeid'); ?>
@@ -97,7 +96,7 @@ if (!empty($errors)) {
                         foreach ($receiver_identifier_array as $key => $value) {
                           ?>
 
-                          <option value="<?= $key; ?>" <?php $s->check_select($body['taxschemeid'] ?? ($defaults ? $pep['taxschemeid']['eg'] : ''), $key) ?>>
+                          <option value="<?= $key; ?>" <?php $s->check_select($form->getTaxschemeid() ?? ($defaults ? $pep['taxschemeid']['eg'] : ''), $key) ?>>
                               <?=
                               ucfirst($value['region']
                                 . str_repeat("&nbsp;", 2)
@@ -117,7 +116,7 @@ if (!empty($errors)) {
                 <div class="mb3 form-group">
                     <label for="legal_entity_registration_name"><?= $translator->translate('invoice.client.peppol.legal_entity_registration_name'); ?></label>
                     <input type="text" name="legal_entity_registration_name" id="legal_entity_registration_name" class="form-control" required
-                           value="<?= Html::encode($body['legal_entity_registration_name'] ?? ($defaults ? $pep['legal_entity_registration_name']['eg'] : '')); ?>">
+                           value="<?= Html::encode($form->getLegal_entity_registration_name() ?? ($defaults ? $pep['legal_entity_registration_name']['eg'] : '')); ?>">
                 </div>
                 <div class="mb3 form-group">
                     <label for="legal_entity_companyid"><?= $translator->translate('invoice.client.peppol.legal_entity_companyid'); ?></label>
@@ -129,7 +128,7 @@ if (!empty($errors)) {
                          */
                         foreach ($iso_6523_array as $key => $value) {
                           ?>
-                          <option value="<?= $value['Id']; ?>" <?php $s->check_select($body['legal_entity_companyid'] ?? '', $value['Id']) ?>>
+                          <option value="<?= $value['Id']; ?>" <?php $s->check_select($form->getLegal_entity_companyid() ?? '', $value['Id']) ?>>
                               <?=
                               ucfirst($value['Id']
                                 . str_repeat("&nbsp;", 2)
@@ -156,7 +155,7 @@ if (!empty($errors)) {
                          */
                         foreach ($iso_6523_array as $key => $value) {
                           ?>
-                          <option value="<?= $value['Id']; ?>" <?php $s->check_select($body['legal_entity_companyid_schemeid'] ?? '', $value['Id']) ?>>
+                          <option value="<?= $value['Id']; ?>" <?php $s->check_select($form->getLegal_entity_companyid_schemeid() ?? '', $value['Id']) ?>>
                               <?=
                               ucfirst($value['Id']
                                 . str_repeat("&nbsp;", 2)
@@ -176,27 +175,27 @@ if (!empty($errors)) {
                 <div class="mb3 form-group">
                     <label for="legal_entity_company_legal_form"><?= $translator->translate('invoice.client.peppol.legal_entity_company_legal_form'); ?></label>
                     <input type="text" name="legal_entity_company_legal_form" id="legal_entity_company_legal_form" class="form-control" required
-                           value="<?= Html::encode($body['legal_entity_company_legal_form'] ?? ($defaults ? $pep['legal_entity_company_legal_form']['eg'] : '')); ?>">
+                           value="<?= Html::encode($form->getLegal_entity_company_legal_form() ?? ($defaults ? $pep['legal_entity_company_legal_form']['eg'] : '')); ?>">
                 </div>
                 <div class="mb3 form-group">
                     <label for="financial_institution_branchid"><?= $translator->translate('invoice.client.peppol.financial_institution_branchid'); ?></label>
                     <input type="text" name="financial_institution_branchid" id="financial_institution_branchid" class="form-control" required
-                           value="<?= Html::encode($body['financial_institution_branchid'] ?? ($defaults ? $pep['financial_institution_branchid']['eg'] : '')); ?>">
+                           value="<?= Html::encode($form->getFinancial_institution_branchid() ?? ($defaults ? $pep['financial_institution_branchid']['eg'] : '')); ?>">
                 </div>
                 <div class="mb3 form-group">
                     <label for="accounting_cost"><?= $translator->translate('invoice.client.peppol.accounting_cost'); ?></label>
                     <input type="text" name="accounting_cost" id="accounting_cost" class="form-control" required
-                           value="<?= Html::encode($body['accounting_cost'] ?? ($defaults ? $pep['accounting_cost']['eg'] : '')); ?>">
+                           value="<?= Html::encode($form->getAccounting_cost() ?? ($defaults ? $pep['accounting_cost']['eg'] : '')); ?>">
                 </div>
                 <div class="mb3 form-group">
                     <label for="buyer_reference"><?= $translator->translate('invoice.client.peppol.buyer_reference.default') . ' ' . $translator->translate('invoice.client.peppol.buyer_reference.example'); ?></label>
                     <input type="text" name="buyer_reference" id="buyer_reference" class="form-control" required
-                           value="<?= Html::encode($body['buyer_reference'] ?? ($defaults ? $pep['buyer_reference']['eg'] : '')); ?>">
+                           value="<?= Html::encode($form->getBuyer_reference() ?? ($defaults ? $pep['buyer_reference']['eg'] : '')); ?>">
                 </div>
                 <div class="mb3 form-group">
                     <label for="supplier_assigned_accountid"><?= $translator->translate('invoice.client.peppol.supplier.assigned.account.id') . ' ' . $translator->translate('invoice.client.peppol.buyer_reference.example'); ?></label>
                     <input type="text" name="supplier_assigned_accountid" id="supplier_assigned_accountid" class="form-control" required
-                           value="<?= Html::encode($body['supplier_assigned_accountid'] ?? ''); ?>">
+                           value="<?= Html::encode($form->getSupplier_assigned_accountid() ?? ''); ?>">
                 </div>
             </div>
         </div>

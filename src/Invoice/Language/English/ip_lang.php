@@ -336,6 +336,7 @@ $lang = array(
     'note'                                         => 'Note',
     'notes'                                        => 'Notes',
     'not_set'                                      => 'Not set yet',
+    'number'                                       => 'Number', 
     'number_format'                                => 'Number Format',
     'number_format_us_uk'                          => '1,000,000.00 (US/UK format)',
     'number_format_european'                       => '1.000.000,00 (European format)',

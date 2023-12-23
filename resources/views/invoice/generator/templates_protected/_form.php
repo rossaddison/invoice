@@ -27,7 +27,7 @@ if (!empty($errors)) {
      echo "?>";             
 ?>
 
-<?php echo '<h1><?= Html::encode($title) ?></h1>'; ?>
+<?php echo '<?= Html::openTag('h1'); ?><?= Html::encode($title) ?><?= Html::closeTag('h1'); ?>'; ?>
 
 <?php echo '<form id="'.$generator->getCamelcase_capital_name().'Form" method="POST" action="<?= $urlGenerator->generate(...$action) ?>" enctype="multipart/form-data">';?>
 
@@ -38,7 +38,7 @@ if (!empty($errors)) {
 <?php echo '<?php $response = $head->renderPartial('."'invoice/layout/header_buttons',['s'=>".'$s, '."'hide_submit_button'=>false ,'hide_cancel_button'=>false]); ?>"; ?>        
 <?php echo '<?php echo (string)$response->getBody(); ?>'; ?>
 <?php echo '<div id="content">'."\n";
-      echo '<div class="row">'."\n";
+      echo '<?= Html::openTag('div', ['class' => 'row']); ?>'."\n";
       foreach ($relations as $relation){
           echo ' <div class="mb3 form-group">'."\n";
           echo '    <label for="'.$relation->getLowercase_name().'_id">';

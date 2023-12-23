@@ -4,27 +4,60 @@ declare(strict_types=1);
 
 namespace App\Invoice\CompanyPrivate;
 
+use App\Invoice\Entity\CompanyPrivate;
 use Yiisoft\FormModel\FormModel;
 use Yiisoft\Validator\Rule\Required;
-use App\Invoice\Helpers\DateHelper;
+use Yiisoft\Validator\Rule\Length;
+use \DateTimeImmutable;
 
 final class CompanyPrivateForm extends FormModel
 {        
+    private ?int $id=null;
+    
+    #[Required]
     private ?int $company_id=null;
+    
+    // use the cycle company relation to get the name of the company
+    private ?string $company_public_name = '';
+    
     private ?string $vat_id='';
     private ?string $tax_code='';
     private ?string $iban='';
-    private ?int $gln=null;
-    private ?string $rcc='';    
+    private ?string $gln='';
+    private ?string $rcc=''; 
+    
+    #[Required, Length(exactly: null, min: 1, max:150)]
     private ?string $logo_filename='';
-    private ?string $start_date='';
-    private ?string $end_date='';
+    
+    // start_date mixed to accomodate null|string|DateTimeImmutable
+    private mixed $start_date='';
+    private mixed $end_date='';
+    
+    public function __construct(CompanyPrivate $company_private)
+    {
+        $this->id = $company_private->getId();
+        $this->company_id = (int)$company_private->getCompany_id();
+        $this->company_public_name = $company_private->getCompany()?->getName();
+        $this->vat_id = $company_private->getVat_id();
+        $this->tax_code = $company_private->getTax_code();
+        $this->iban = $company_private->getIban();
+        $this->gln = $company_private->getGln();
+        $this->rcc = $company_private->getRcc();
+        $this->logo_filename = $company_private->getLogo_filename();
+        $this->start_date = $company_private->getStart_date();
+        $this->end_date = $company_private->getEnd_date();
+    }
         
+    public function getId() : int|null
+    {
+       return $this->id;
+    }
+    
     public function getCompany_id() : int|null
     {
-      return $this->company_id;
+       return $this->company_id;
     }
-
+    
     public function getVat_id() : string|null
     {
       return $this->vat_id;
@@ -40,7 +73,7 @@ final class CompanyPrivateForm extends FormModel
       return $this->iban;
     }
 
-    public function getGln() : int|null
+    public function getGln() : string|null
     {
       return $this->gln;
     }
@@ -55,30 +88,22 @@ final class CompanyPrivateForm extends FormModel
       return $this->rcc;
     }
 
-    public function getStart_date(\App\Invoice\Setting\SettingRepository $s) : \DateTime
+    public function getStart_date() : string|null|DateTimeImmutable
     {
-        $datehelper = new DateHelper($s);         
-        $datetime = new \DateTime();
-        $datetime->setTimezone(new \DateTimeZone($s->get_setting('time_zone') ?: 'Europe/London')); 
-        $datetime->format($datehelper->style());
-        $date = $datehelper->date_to_mysql(null!==$this->start_date ? $this->start_date : date('Y-m-d'));
-        $str_replace = str_replace($datehelper->separator(), '-', $date);
-        $datetime->modify($str_replace);
-        return $datetime;
-    }
-    
-    public function getEnd_date(\App\Invoice\Setting\SettingRepository $s) : \DateTime
-    {
-        $datehelper = new DateHelper($s);         
-        $datetime = new \DateTime();
-        $datetime->setTimezone(new \DateTimeZone($s->get_setting('time_zone') ?: 'Europe/London')); 
-        $datetime->format($datehelper->style());
-        $date = $datehelper->date_to_mysql(null!==$this->end_date ? $this->end_date : date('Y-m-d'));
-        $str_replace = str_replace($datehelper->separator(), '-', $date);
-        $datetime->modify($str_replace);
-        return $datetime;
+      /**
+       * @var string|null|DateTimeImmutable $this->start_date 
+       */
+      return $this->start_date;
     }
 
+    public function getEnd_date() : string|null|DateTimeImmutable
+    {
+      /**
+       * @var string|null|DateTimeImmutable $this->end_date 
+       */
+      return $this->end_date;
+    }
+    
     /**
      * @return string
      *
@@ -88,16 +113,4 @@ final class CompanyPrivateForm extends FormModel
     {
       return '';
     }
-
-    /**
-     * @return Required[][]
-     *
-     * @psalm-return array{company_id: list{Required}}
-     */
-    public function getRules(): array 
-    {
-      return [ 
-        'company_id' => [new Required()],
-      ];
-}
 }

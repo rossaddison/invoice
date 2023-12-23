@@ -47,27 +47,29 @@ $toolbarReset = A::tag()
 
 $toolbar = Div::tag();
 ?>
-<div>
-    <h5><?= $translator->translate('invoice.invoice.allowance.or.charge'); ?></h5>
-    <div class="btn-group">
+<?= Html::openTag('div');?>
+    <?= Html::openTag('h5'); ?>
+        <?= $translator->translate('invoice.invoice.allowance.or.charge'); ?>
+    <?= Html::closeTag('h5'); ?>
+    <?= Html::openTag('div',['class' => 'btn-group']);?>
     <?php     
         if ($canEdit) {
         echo Html::a('Add Allowance',
         $urlGenerator->generate('allowancecharge/add_allowance'),
             ['class' => 'btn btn-outline-secondary btn-md-12 mb-3']
-     );
+        );
         echo Html::a('Add Charge',
         $urlGenerator->generate('allowancecharge/add_charge'),
             ['class' => 'btn btn-outline-secondary btn-md-12 mb-3']
-     );
+        );
     } ?>    
-    </div>
-    <br>
-    <br>
-</div>
-<div>
-<br>    
-</div>
+    <?= Html::closeTag('div');?>
+    <?= Html::Tag('br'); ?>
+    <?= Html::Tag('br'); ?>
+<?= Html::closeTag('div');?>
+<?= Html::openTag('div');?>
+    <?= Html::Tag('br'); ?>    
+<?= Html::closeTag('div');?>
 <?php
     $columns = [    
         new DataColumn(
@@ -112,15 +114,15 @@ $toolbar = Div::tag();
         ),
     ]                
 ?>
+<?= $alert; ?>
 <?= GridView::widget()
         ->columns(...$columns)
-        ->dataReader($kpaginator)        
+        ->dataReader($paginator)        
         ->headerRowAttributes(['class'=>'card-header bg-info text-black'])
         ->filterPosition('header')
         ->filterModelName('allowancecharge')
         ->header($header)
         ->id('w3-grid')
-        ->paginator($paginator)
         ->pagination(
         OffsetPagination::widget()
              ->menuClass('pagination justify-content-center')

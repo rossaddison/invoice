@@ -5,15 +5,24 @@ declare(strict_types=1);
 namespace App\Invoice\ClientNote;
 
 use App\Invoice\Entity\ClientNote;
-use App\Invoice\Helpers\DateHelper;
 use Yiisoft\FormModel\FormModel;
+use Yiisoft\Validator\Rule\Integer;
 use Yiisoft\Validator\Rule\Required;
+use Yiisoft\Validator\Rule\StringValue;
+
 use DateTimeImmutable;
 
 final class ClientNoteForm extends FormModel
 {   
+    #[Integer]
+    #[Required]
     private ?int $client_id=null;
+    
+    #[Required]
     private mixed $date;
+    
+    #[StringValue]
+    #[Required]
     private ?string $note='';
     
     public function __construct(ClientNote $clientNote) 
@@ -50,17 +59,4 @@ final class ClientNoteForm extends FormModel
     {
       return '';
     }
-
-    /**
-     * @return Required[][]
-     *
-     * @psalm-return array{client_id: list{Required}, date: list{Required}, note: list{Required}}
-     */
-    public function getRules(): array    {
-      return [
-        'client_id' => [new Required()],  
-        'date' => [new Required()],
-        'note' => [new Required()],
-    ];
-}
 }

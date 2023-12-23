@@ -4,13 +4,16 @@ declare(strict_types=1);
 
 namespace App\Invoice\Company;
 
+use App\Invoice\Entity\Company;
 use Yiisoft\FormModel\FormModel;
 use Yiisoft\Validator\Rule\Required;
-use Yiisoft\Validator\Rule\Email;
 
 final class CompanyForm extends FormModel
 {  
+    private ?int $id=null;
     private ?int $current=0;
+    
+    #[Required]
     private ?string $name='';
     private ?string $address_1='';
     private ?string $address_2='';
@@ -20,8 +23,31 @@ final class CompanyForm extends FormModel
     private ?string $country='';
     private ?string $phone='';
     private ?string $fax='';
+    #[Required]
     private ?string $email='';
     private ?string $web='';
+    
+    public function __construct(Company $company) 
+    {
+        $this->id = $company->getId();
+        $this->current = $company->getCurrent();
+        $this->name = $company->getName();
+        $this->address_1 = $company->getAddress_1();
+        $this->address_2 = $company->getAddress_2();
+        $this->city = $company->getCity();
+        $this->state = $company->getState();
+        $this->zip = $company->getZip();
+        $this->country = $company->getCountry();
+        $this->phone = $company->getPhone();
+        $this->fax = $company->getFax();
+        $this->email = $company->getEmail();
+        $this->web = $company->getWeb();
+    }
+    
+    public function getId() :int|null
+    {
+        return $this->id;
+    }        
 
     public function getCurrent() : int|null
     {
@@ -93,15 +119,4 @@ final class CompanyForm extends FormModel
       return '';
     }
 
-    /**
-     * @return (Email|Required)[][]
-     *
-     * @psalm-return array{name: list{Required}, email: list{Required, Email}}
-     */
-    public function getRules(): array    {
-      return [
-        'name' => [new Required()],       
-        'email' => [new Required(), new Email()],
-    ];
-}
 }

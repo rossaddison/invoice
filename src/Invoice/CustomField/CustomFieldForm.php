@@ -4,17 +4,31 @@ declare(strict_types=1);
 
 namespace App\Invoice\CustomField;
 
+use App\Invoice\Entity\CustomField;
 use Yiisoft\FormModel\FormModel;
 use Yiisoft\Validator\Rule\Required;
 
 final class CustomFieldForm extends FormModel
 {    
-    
+    #[Required]
     private ?string $table='';
+    #[Required]
     private ?string $label='';
+    #[Required]
     private ?string $type='';
+    #[Required]
     private ?int $location=null;
+    #[Required]
     private ?int $order=null;
+    
+    public function __construct(CustomField $custom_field)
+    {
+        $this->table = $custom_field->getTable();
+        $this->label = $custom_field->getLabel();
+        $this->type = $custom_field->getType();
+        $this->location = $custom_field->getLocation();
+        $this->order = $custom_field->getOrder();
+    }
 
     public function getTable() : string|null
     {
@@ -50,19 +64,4 @@ final class CustomFieldForm extends FormModel
     {
       return '';
     }
-
-    /**
-     * @return Required[][]
-     *
-     * @psalm-return array{table: list{Required}, label: list{Required}, type: list{Required}, location: list{Required}, order: list{Required}}
-     */
-    public function getRules(): array    {
-      return [
-        'table' => [new Required()],
-        'label' => [new Required()],
-        'type' => [new Required()],
-        'location' => [new Required()],
-        'order' => [new Required()],
-    ];
-}
 }

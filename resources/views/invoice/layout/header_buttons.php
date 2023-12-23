@@ -1,17 +1,33 @@
 <?php
     declare(strict_types=1);
+    
+    use Yiisoft\FormModel\Field;
+    use Yiisoft\Html\Html;
 ?>
-<div class="headerbar-item pull-right">
-    <div class="btn-group btn-group-sm">
-        <?php if (!$hide_submit_button) : ?>
-            <button id="btn-submit" name="btn_submit" class="btn btn-success ajax-loader" value="1">
-                <i class="fa fa-check"></i> <?= $s->trans('save'); ?>
-            </button>
-        <?php endif; ?>
-        <?php if (!$hide_cancel_button) : ?>
-            <button type="button" onclick="window.history.back()" id="btn-cancel" name="btn_cancel" class="btn btn-danger" value="1">
-                <i class="fa fa-arrow-left"></i> <?= $s->trans('back'); ?>
-            </button>
-        <?php endif; ?>
-    </div>
-</div>
+<?= Html::openTag('div', ['class' => 'headerbar-item pull-right']); ?>
+    <?= Html::openTag('div', ['class' => 'headerbar-item pull-right']); ?>
+    <?php $buttonsDataArray = [
+        [
+            $s->trans('back'), 
+            'type' => 'reset', 
+            'onclick' => 'window.history.back()',
+            'class' => 'btn btn-danger',
+            'id' => 'btn-cancel',
+            'name' => 'btn_cancel',
+            'value' => '1'
+        ],
+        [
+            $s->trans('save'), 
+            'type' => 'submit', 
+            'class' => 'btn btn-success',
+            'id' => 'btn-submit',
+            'name' => 'btn_submit',
+            'value' => '1'
+        ],
+    ]
+    ?>
+    <?=   
+        Field::buttongroup()
+        ->buttonsData($buttonsDataArray);
+    ?>
+<?= Html::closeTag('div'); ?>

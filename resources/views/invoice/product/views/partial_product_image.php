@@ -26,7 +26,7 @@ use Yiisoft\View\WebView;
         <div class="container">
             <?php if ($invView && $invEdit) { ?> 
             <?php echo $partial_product_image_info; ?>
-            <div class="row">
+            <?= Html::openTag('div', ['class' => 'row']); ?>
                 <div>
                     <div>
                         <h5><?= Html::encode($this->getTitle()) ?></h5>
@@ -66,7 +66,7 @@ use Yiisoft\View\WebView;
             </div>
             <?php } ?>
             <?php if ($invView) { ?>
-            <div class="row">
+            <?= Html::openTag('div', ['class' => 'row']); ?>
                 <?= $partial_product_image_list; ?>
             </div>
             <?php } ?>

@@ -32,13 +32,13 @@ use App\Invoice\Entity\Company;
     #[Column(type: 'string(34)', nullable: true)]
     private ?string $iban =  '';
      
-    #[Column(type: 'bigInteger(20)', nullable: true)]
-    private ?int $gln =  null;
+    #[Column(type: 'string(14)', nullable: true)]
+    private ?string $gln =  null;
      
     #[Column(type: 'string(7)', nullable: true)]
     private ?string $rcc =  '';
     
-    #[Column(type: 'string(34)', nullable: true)]
+    #[Column(type: 'string(150)', nullable: true)]
     private ?string $logo_filename =  '';
      
     #[Column(type: 'datetime')]
@@ -59,11 +59,11 @@ use App\Invoice\Entity\Company;
          string $vat_id = '',
          string $tax_code = '',
          string $iban = '',
-         int $gln = null,
+         string $gln = '',
          string $rcc = '',
          string $logo_filename = '', 
-         mixed $start_date = '',
-         mixed $end_date = '',
+         mixed $start_date = null,
+         mixed $end_date = null,
      )
      {
          $this->id=$id;
@@ -142,12 +142,12 @@ use App\Invoice\Entity\Company;
       $this->iban =  $iban;
     }
     
-    public function getGln(): int|null
+    public function getGln(): string|null
     {
        return $this->gln;
     }
     
-    public function setGln(int $gln) : void
+    public function setGln(string $gln) : void
     {
       $this->gln =  $gln;
     }
@@ -183,9 +183,9 @@ use App\Invoice\Entity\Company;
     }
     
      //cycle 
-    public function getStart_date() : ?DateTimeImmutable  
+    public function getStart_date() : DateTimeImmutable|string|null  
     {
-        /** @var DateTimeImmutable $this->start_date */
+        /** @var DateTimeImmutable|string|null $this->start_date */
         return $this->start_date;
     }    
     
@@ -195,15 +195,21 @@ use App\Invoice\Entity\Company;
     }
     
      //cycle 
-    public function getEnd_date() : ?DateTimeImmutable  
+    public function getEnd_date() : DateTimeImmutable|string|null  
     {
-        /** @var DateTimeImmutable $this->end_date */
+        /** @var DateTimeImmutable|string|null $this->end_date */
         return $this->end_date;
     }    
     
     public function setEnd_date(?DateTime $end_date): void
     {
         $this->end_date = $end_date;
+    }
+    
+    public function nullifyRelationOnChange(int $company_id) : void {
+        if ($this->company_id <> $company_id) {
+           $this->company = null;
+        }
     }
     
     public function isNewRecord(): bool

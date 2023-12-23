@@ -22,8 +22,8 @@ use Yiisoft\Http\Method;
 use Yiisoft\Router\CurrentRoute;
 use Yiisoft\Session\SessionInterface;
 use Yiisoft\Session\Flash\Flash;
-use Yiisoft\Translator\TranslatorInterface;use Yiisoft\FormModel\FormHydrator;
-use Yiisoft\Form\Helper\HtmlFormErrors;
+use Yiisoft\Translator\TranslatorInterface;
+use Yiisoft\FormModel\FormHydrator;
 use Yiisoft\Yii\View\ViewRenderer;
 
 use \Exception;
@@ -120,23 +120,36 @@ final class ContractController
                        sR $settingRepository
     ) : Response
     {   
+        $contract = New Contract();
+        $form = new ContractForm($contract);
         $parameters = [
             'title' => $this->translator->translate('invoice.invoice.contract.add'),
             'action' => ['contract/add',['client_id'=> $currentRoute->getArgument('client_id')]],
             'errors' => [],
-            'body' => $request->getParsedBody(),
+            'form' => $form,
             's'=> $settingRepository,
             'head'=>$head,
             'client_id'=> $currentRoute->getArgument('client_id')
         ];
         
         if ($request->getMethod() === Method::POST) {
-            $form = new ContractForm();
-            if ($formHydrator->populate($form, $parameters['body']) && $form->isValid()) {
-                $this->contractService->bothContract(new Contract(),$form, $settingRepository);
+            $body = $request->getParsedBody();
+            /**
+             * @psalm-suppress PossiblyInvalidArrayAssignment $body['client_id']
+             */
+            $body['client_id'] = $currentRoute->getArgument('client_id');
+            /**
+             * @psalm-suppress PossiblyInvalidArgument $body
+             */
+            if ($formHydrator->populate($form, $body) && $form->isValid()) {
+                /**
+                 * @psalm-suppress PossiblyInvalidArgument $body
+                 */
+                $this->contractService->saveContract($contract, $body, $settingRepository);
                 return $this->webService->getRedirectResponse('contract/index');
             }
             $parameters['form'] = $form;
+            $parameters['errors'] = $form->getValidationResult()?->getErrorMessagesIndexedByAttribute() ?? [];
         }
         return $this->viewRenderer->render('_form', $parameters);
     }
@@ -157,24 +170,30 @@ final class ContractController
                          sR $settingRepository
     ): Response {
         $contract = $this->contract($currentRoute, $contractRepository);
-        if ($contract){
+        if ($contract) {
+            $form = new ContractForm($contract);
             $parameters = [
                 'title' => $settingRepository->trans('edit'),
                 'action' => ['contract/edit', ['id' => $contract->getId()]],
                 'errors' => [],
-                'body' => $this->body($contract),
+                'form' => $form, 
                 'head'=>$head,
                 's'=>$settingRepository
             ];
             if ($request->getMethod() === Method::POST) {
-                $form = new ContractForm();
-                $body = $request->getParsedBody();
+                /**
+                 * @psalm-suppress PossiblyInvalidArgument $body
+                 */
+                $body = $request->getParsedBody() ?? [];
                 if ($formHydrator->populate($form, $body) && $form->isValid()) {
-                    $this->contractService->bothContract($contract, $form, $settingRepository);
+                    /**
+                     * @psalm-suppress PossiblyInvalidArgument $body
+                     */
+                    $this->contractService->saveContract($contract, $body, $settingRepository);
                     return $this->webService->getRedirectResponse('contract/index');
                 }
-                $parameters['body'] = $body;
                 $parameters['form'] = $form;
+                $parameters['errors'] = $form->getValidationResult()?->getErrorMessagesIndexedByAttribute() ?? [];
             }
             return $this->viewRenderer->render('_form', $parameters);
         }
@@ -225,13 +244,14 @@ final class ContractController
     public function view(CurrentRoute $currentRoute, contractR $contractRepository,
         sR $settingRepository,
         ): \Yiisoft\DataResponse\DataResponse|Response {
-        $contract = $this->contract($currentRoute, $contractRepository); 
+        $contract = $this->contract($currentRoute, $contractRepository);
         if ($contract) {
+            $form = new ContractForm($contract);
             $parameters = [
                 'title' => $settingRepository->trans('view'),
                 'action' => ['contract/view', ['id' => $contract->getId()]],
                 'errors' => [],
-                'body' => $this->body($contract),
+                'form' => $form,
                 'contract'=>$contract,
             ];        
         return $this->viewRenderer->render('_view', $parameters);

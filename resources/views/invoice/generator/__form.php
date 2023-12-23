@@ -22,12 +22,12 @@ if (!empty($errors)) {
 }
 ?>
 
-<h1><?= Html::encode($title) ?></h1>
+<?= Html::openTag('h1'); ?><?= Html::encode($title) ?><?= Html::closeTag('h1'); ?>
 
 <form id="generatorForm" method="POST" action="<?= $urlGenerator->generate(...$action) ?>" enctype="multipart/form-data">
   <input type="hidden" name="_csrf" value="<?= $csrf ?>">
   <div class="container">
-    <div class="row">
+    <?= Html::openTag('div', ['class' => 'row']); ?>
       <div class="col card mb3">
           <div class="card-header"><h5>Table</h5></div>  
           <label for="pre_entity_table" class="form-label">Table used to generate Entity, Controller Add Edit Delete View, Repository, Service, Mapper</label> 
