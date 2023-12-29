@@ -27,7 +27,7 @@ if (!empty($errors)) {
  <div class="mb3 form-group">
     <label for="client_id">Client</label>
     <select name="client_id" id="client_id" class="form-control simple-select">
-       <option value=""><?= $s->trans('client'); ?></option>
+       <option value=""><?= $translator->translate('i.client'); ?></option>
          <?php foreach ($clients as $client) { ?>
           <option value="<?= $client->getId(); ?>"
            <?php $s->check_select(Html::encode($body['client_id'] ?? ''), $client->getId()) ?>
@@ -47,7 +47,7 @@ if ($date && $date !== "0000-00-00") {
     $date = null; 
 } 
    ?>  
-<label form-label for="date"><?= $s->trans('date') ." (".  $datehelper->display().") "; ?></label><div class="mb3 input-group"> 
+<label form-label for="date"><?= $translator->translate('i.date') ." (".  $datehelper->display().") "; ?></label><div class="mb3 input-group"> 
 <input type="text" name="date" id="date" placeholder="<?= $datehelper->display(); ?>" 
        class="form-control data-datepicker" 
        value="<?php if ($date <> null) {echo Html::encode($date);} ?>"> 
@@ -56,7 +56,7 @@ if ($date && $date !== "0000-00-00") {
  </span> 
 </div>
 </div>   <div class="mb3 form-group">
-   <label for="note"><?= $s->trans('note'); ?></label>
+   <label for="note"><?= $translator->translate('i.note'); ?></label>
    <input type="text" name="note" id="note" class="form-control"
  value="<?= Html::encode($body['note'] ??  ''); ?>">
  </div>

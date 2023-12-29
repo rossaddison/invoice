@@ -3,7 +3,7 @@
 ?> 
 
 <div id="headerbar">
-    <h1 class="headerbar-title"><?= $s->trans('invoice_aging'); ?></h1>
+    <h1 class="headerbar-title"><?= $translator->translate('i.invoice_aging'); ?></h1>
 </div>
 
 <div id="content">
@@ -17,7 +17,7 @@
 
                 <div class="panel-heading">
                     <i class="fa fa-print"></i>
-                    <?= $s->trans('report_options'); ?>
+                    <?= $translator->translate('i.report_options'); ?>
                 </div>
 
                 <div class="panel-body">
@@ -27,7 +27,7 @@
                         <input type="hidden" name="_csrf" value="<?= $csrf ?>">
 
                         <input type="submit" class="btn btn-success"
-                               name="btn_submit" value="<?= $s->trans('run_report'); ?>">
+                               name="btn_submit" value="<?= $translator->translate('i.run_report'); ?>">
 
                     </form>
                 </div>

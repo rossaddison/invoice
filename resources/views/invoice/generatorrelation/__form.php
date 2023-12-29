@@ -46,5 +46,5 @@ if (!empty($errors)) {
         <input type="text" class="form-control" name="view_field_name" id="view_field_name" placeholder="Table View Field Name that will be used in Generator's Table's _form dropdown box and _view eg. id, name" value="<?= Html::encode($body['view_field_name'] ?? '') ?>" required>
     </div>     
   </div>    
-  <button type="submit" class="btn btn-primary"><?= $s->trans('submit'); ?></button>
+  <button type="submit" class="btn btn-primary"><?= $translator->translate('i.submit'); ?></button>
 </form>

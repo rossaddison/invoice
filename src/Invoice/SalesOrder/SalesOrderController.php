@@ -78,8 +78,8 @@ use Yiisoft\Router\CurrentRoute;
 use Yiisoft\Session\SessionInterface as Session;
 use Yiisoft\Session\Flash\Flash;
 use Yiisoft\Translator\TranslatorInterface;
-use Yiisoft\User\CurrentUser;use Yiisoft\FormModel\FormHydrator;
-use Yiisoft\Form\Helper\HtmlFormErrors;
+use Yiisoft\User\CurrentUser;
+use Yiisoft\FormModel\FormHydrator;
 use Yiisoft\Yii\View\ViewRenderer;
 
 use \Exception;
@@ -191,7 +191,7 @@ final class SalesOrderController
                 /**
                  * @var array $so_statuses
                  */
-                $so_statuses = $soR->getStatuses($this->sR);
+                $so_statuses = $soR->getStatuses($this->translator);
                 /**
                  *  @var array $so_statuses[$status]
                  *  @var string $so_label 
@@ -256,7 +256,7 @@ final class SalesOrderController
         /**
          * @var array $so_statuses
          */
-        $so_statuses = $soR->getStatuses($sR);
+        $so_statuses = $soR->getStatuses($this->translator);
         /**
          *  @var array $so_statuses[$status]
          *  @var string $so_label 
@@ -327,7 +327,7 @@ final class SalesOrderController
                     /**
                      * @var array $so_statuses
                      */
-                    $so_statuses = $soR->getStatuses($this->sR);
+                    $so_statuses = $soR->getStatuses($this->translator);
                     /*  @var string $status_id */
                     $status_id = $so->getStatus_id();
                     /**
@@ -465,8 +465,7 @@ final class SalesOrderController
                 'alert'=>$this->alert(),
                 'so'=> $so,
                 'so_custom_values' => null!==$so_id ? $this->salesorder_custom_values($so_id, $socR) : null,
-                'so_statuses'=> $soR->getStatuses($settingRepository),            
-                's'=>$settingRepository,
+                'so_statuses'=> $soR->getStatuses($this->translator)
             ];
             $body = $request->getParsedBody();
             if ($request->getMethod() === Method::POST) {
@@ -619,7 +618,7 @@ final class SalesOrderController
                         'custom_values'=>$cvR->attach_hard_coded_custom_field_values_to_custom_field($cfR->repoTablequery('salesorder_custom')),
                         'cvH'=> new CVH($settingRepository),
                         'terms_and_conditions' => $settingRepository->getTermsAndConditions(),
-                        'so_statuses'=> $soR->getStatuses($settingRepository),  
+                        'so_statuses'=> $soR->getStatuses($this->translator),  
                         'salesorder_custom_values' => $salesorder_custom_values,
                         'partial_item_table'=>$this->viewRenderer->renderPartialAsString('/invoice/salesorder/partial_item_table',[
                             'invEdit' => $this->userService->hasPermission('editInv') ? true : false,    

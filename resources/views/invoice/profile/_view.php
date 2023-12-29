@@ -26,22 +26,22 @@ if (!empty($errors)) {
  <div class="mb3 form-group">   
  <div  class="form-check form-switch">
     <label for="current" class="form-check-label ">
-      <?= $s->trans('active'); ?>
+      <?= $translator->translate('i.active'); ?>
       <input class="form-check-input" id="current" name="current" type="checkbox" value="1" disabled
       <?php $s->check_select(Html::encode($body['current'] ?? ''), 1, '==', true) ?>>
     </label>   
  </div>
  </div> 
  <div class="mb3 form-group">
-<label for="mobile" class="form-label" style="background:lightblue"><?= $s->trans('mobile'); ?></label>
+<label for="mobile" class="form-label" style="background:lightblue"><?= $translator->translate('i.mobile'); ?></label>
    <?= Html::encode($body['mobile'] ?? ''); ?>
  </div>
  <div class="mb3 form-group">
-<label for="email" class="form-label" style="background:lightblue"><?= $s->trans('email'); ?></label>
+<label for="email" class="form-label" style="background:lightblue"><?= $translator->translate('i.email'); ?></label>
    <?= Html::encode($body['email'] ?? ''); ?>
  </div>
  <div class="mb3 form-group">
-   <label for="company_id" class="form-label" style="background:lightblue"><?= $s->trans('name'); ?></label>
+   <label for="company_id" class="form-label" style="background:lightblue"><?= $translator->translate('i.name'); ?></label>
    <?= Html::encode($profile->getCompany()->name); ?>
  </div>
 </div>

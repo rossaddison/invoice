@@ -16,20 +16,20 @@ final class DeliveryLocationService {
 
   /**
    * @param DeliveryLocation $model
-   * @param DeliveryLocationForm $form
+   * @param array $array
    * @return void
    */
-  public function saveDeliveryLocation(DeliveryLocation $model, DeliveryLocationForm $form): void {
-    null !== $form->getClient_id() ? $model->setClient_id((int) $form->getClient_id()) : '';
-    null !== $form->getName() ? $model->setName($form->getName()) : '';
-    null !== $form->getAddress_1() ? $model->setAddress_1($form->getAddress_1()) : '';
-    null !== $form->getAddress_2() ? $model->setAddress_2($form->getAddress_2()) : '';
-    null !== $form->getCity() ? $model->setCity($form->getCity()) : '';
-    null !== $form->getState() ? $model->setState($form->getState()) : '';
-    null !== $form->getZip() ? $model->setZip($form->getZip()) : '';
-    null !== $form->getCountry() ? $model->setCountry($form->getCountry()) : '';
-    null !== $form->getGlobal_location_number() ? $model->setGlobal_location_number($form->getGlobal_location_number()) : '';
-    null !== $form->getElectronic_address_scheme() ? $model->setElectronic_address_scheme($form->getElectronic_address_scheme()) : '';
+  public function saveDeliveryLocation(DeliveryLocation $model, array $array): void {
+    isset($array['client_id']) ? $model->setClient_id((int) $array['client_id']) : '';
+    isset($array['name']) ? $model->setName((string)$array['name']) : '';
+    isset($array['address_1']) ? $model->setAddress_1((string)$array['address_1']) : '';
+    isset($array['address_2']) ? $model->setAddress_2((string)$array['address_2']) : '';
+    isset($array['city']) ? $model->setCity((string)$array['city']) : '';
+    isset($array['state']) ? $model->setState((string)$array['state']) : '';
+    isset($array['zip']) ? $model->setZip((string)$array['zip']) : '';
+    isset($array['country']) ? $model->setCountry((string)$array['country']) : '';
+    isset($array['global_location_number']) ? $model->setGlobal_location_number((string)$array['global_location_number']) : '';
+    isset($array['electronic_address_scheme']) ? $model->setElectronic_address_scheme((string)$array['electronic_address_scheme']) : '';
     $this->repository->save($model);
   }
 

@@ -35,7 +35,7 @@ $header = Div::tag()
         H5::tag()
             ->addClass('bg-primary text-white p-3 rounded-top')
             ->content(
-                I::tag()->addClass('bi bi-receipt')->content(' ' . $s->trans('payment_logs'))
+                I::tag()->addClass('bi bi-receipt')->content(' ' . $translator->translate('i.payment_logs'))
             )
     )
     ->render();
@@ -55,7 +55,7 @@ $toolbar = Div::tag();
 $columns = [    
     new DataColumn(
         'id',
-        header:  $s->trans('id'),
+        header:  $translator->translate('i.id'),
         content: static fn (object $model) => $model->getId()
     ),        
     new DataColumn(
@@ -66,29 +66,29 @@ $columns = [
     ),
     new DataColumn(
         'successful',    
-        header:  $s->trans('transaction_successful'),                
+        header:  $translator->translate('i.transaction_successful'),                
         content: static function ($model) use ($s) : Yiisoft\Html\Tag\CustomTag {
-            return $model->getSuccessful() ? Html::tag('Label',$s->trans('yes'),['class'=>'btn btn-success']) : Html::tag('Label',$s->trans('no'),['class'=>'btn btn-danger']);
+            return $model->getSuccessful() ? Html::tag('Label',$translator->translate('i.yes'),['class'=>'btn btn-success']) : Html::tag('Label',$translator->translate('i.no'),['class'=>'btn btn-danger']);
         }
     ),            
     new DataColumn(
         'date',
-        header:  $s->trans('payment_date'),                
+        header:  $translator->translate('i.payment_date'),                
         content: static fn ($model): string => ($model->getDate())->format($datehelper->style())                        
     ),
     new DataColumn(
         'driver',    
-        header:  $s->trans('payment_provider'),
+        header:  $translator->translate('i.payment_provider'),
         content: static fn ($model): string => ($model->getDriver())                        
     ),
     new DataColumn(
         'response',    
-        header:  $s->trans('provider_response'),                
+        header:  $translator->translate('i.provider_response'),                
         content: static fn ($model): string => ($model->getResponse())                        
     ),
     new DataColumn(
         'reference',    
-        header:  $s->trans('transaction_reference'),                
+        header:  $translator->translate('i.transaction_reference'),                
         content: static fn ($model): string => ($model->getReference())                        
     ),
 ];            

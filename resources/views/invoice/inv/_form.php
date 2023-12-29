@@ -29,7 +29,7 @@ echo $note_on_tax_point;
 <form class="row" id="InvForm" method="POST" action="<?= $urlGenerator->generate(...$action) ?>" enctype="multipart/form-data">
     <input type="hidden" name="_csrf" value="<?= $csrf ?>">
     <div id="headerbar">
-        <h1 class="headerbar-title"><?= $s->trans('invoices_form'); ?></h1>
+        <h1 class="headerbar-title"><?= $translator->translate('i.invoices_form'); ?></h1>
         <?php
         $response = $head->renderPartial('invoice/layout/header_buttons', ['s' => $s, 'hide_submit_button' => false, 'hide_cancel_button' => false]);
         echo (string) $response->getBody();
@@ -37,7 +37,7 @@ echo $note_on_tax_point;
     </div>
     <div class="form-group">
         <div class="col-xs-12 col-sm-2 text-right text-left-xs">
-            <label for="number"><?= $s->trans('invoice'); ?></label>
+            <label for="number"><?= $translator->translate('i.invoice'); ?></label>
         </div>
         <div class="col-xs-12 col-sm-6">
             <div class="input-group">
@@ -47,12 +47,12 @@ echo $note_on_tax_point;
     </div>
     <div class="form-group">
         <div class="col-xs-12 col-sm-2 text-right text-left-xs">
-            <label for="client_id"><?= $s->trans('client'); ?></label>
+            <label for="client_id"><?= $translator->translate('i.client'); ?></label>
         </div>
         <div class="col-xs-12 col-sm-6">
             <div class="input-group">
                 <select name="client_id" id="client_id" class="form-control" required>
-                    <option value=""><?= $s->trans('client'); ?></option>
+                    <option value=""><?= $translator->translate('i.client'); ?></option>
                     <?php foreach ($clients as $client) { ?>
                         <option value="<?= $client->getClient_id(); ?>"
                         <?php $s->check_select(Html::encode($body['client_id'] ?? ''), $client->getClient_id()) ?>
@@ -64,7 +64,7 @@ echo $note_on_tax_point;
     </div>
     <div class="form-group">
         <div class="col-xs-12 col-sm-2 text-right text-left-xs">
-            <label for="group_id"><?= $s->trans('invoice_group'); ?>: </label>
+            <label for="group_id"><?= $translator->translate('i.invoice_group'); ?>: </label>
         </div>
         <div class="col-xs-12 col-sm-6">
             <div class="input-group">
@@ -258,7 +258,7 @@ echo $note_on_tax_point;
 
     <div class="form-group">
         <div class="col-xs-12 col-sm-2 text-right text-left-xs">
-            <label for="password"><?= $s->trans('password'); ?></label>
+            <label for="password"><?= $translator->translate('i.password'); ?></label>
         </div>
         <div class="col-xs-12 col-sm-6">
             <div class="input-group">
@@ -269,7 +269,7 @@ echo $note_on_tax_point;
     <div class="form-group">
         <div class="col-xs-12 col-sm-2 text-right text-left-xs">
             <label for="status_id">
-                <?php echo $s->trans('status'); ?>
+                <?php echo $translator->translate('i.status'); ?>
             </label>
         </div>
         <div class="col-xs-12 col-sm-6">
@@ -288,7 +288,7 @@ echo $note_on_tax_point;
     <div class="form-group">
         <div class="col-xs-12 col-sm-2 text-right text-left-xs">
             <label for="payment_method">
-                <?php echo $s->trans('payment_method'); ?>
+                <?php echo $translator->translate('i.payment_method'); ?>
             </label>
         </div>
         <div class="col-xs-12 col-sm-6">
@@ -317,7 +317,7 @@ echo $note_on_tax_point;
     <div class="form-group">
         <div class="col-xs-12 col-sm-2 text-right text-left-xs">
             <label for="url_key">
-<?= ($body['status_id'] ?? 1) > 1 ? $s->trans('guest_url') : ''; ?>
+<?= ($body['status_id'] ?? 1) > 1 ? $translator->translate('i.guest_url') : ''; ?>
             </label>
         </div>
         <div class="col-xs-12 col-sm-6">
@@ -329,7 +329,7 @@ echo $note_on_tax_point;
 <?php if ($vat === false) { ?>
         <div class="form-group">
             <div class="col-xs-12 col-sm-2 text-right text-left-xs">
-                <label for="discount_amount"><?= $s->trans('discount'); ?></label>
+                <label for="discount_amount"><?= $translator->translate('i.discount'); ?></label>
             </div>
             <div class="col-xs-12 col-sm-6">
                 <div class="input-group">
@@ -342,7 +342,7 @@ echo $note_on_tax_point;
 
         <div class="form-group">
             <div class="col-xs-12 col-sm-2 text-right text-left-xs">
-                <label for="discount_percent"><?= $s->trans('discount'); ?></label>
+                <label for="discount_percent"><?= $translator->translate('i.discount'); ?></label>
             </div>
             <div class="col-xs-12 col-sm-6">
                 <div class="input-group">
@@ -355,7 +355,7 @@ echo $note_on_tax_point;
 <?php } ?>
     <div class="form-group">
         <div class="col-xs-12 col-sm-2 text-right text-left-xs">
-            <label for="terms"><?= $s->trans('terms'); ?></label>
+            <label for="terms"><?= $translator->translate('i.terms'); ?></label>
         </div>
         <div class="col-xs-12 col-sm-6">
             <div class="input-group">

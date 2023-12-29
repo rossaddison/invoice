@@ -12,9 +12,9 @@ use App\Widget\OffsetPagination;
  echo $alert;
 ?>
 <div>
- <h1 class="headerbar-title"><?= $s->trans('recurring_invoices'); ?></h1>
+ <h1 class="headerbar-title"><?= $translator->translate('i.recurring_invoices'); ?></h1>
  <a class="btn btn-success" href="<?= $urlGenerator->generate('inv/index'); ?>">
-      <i class="fa fa-arrow-left"></i> <?= $s->trans('invoices'); ?> </a></div>
+      <i class="fa fa-arrow-left"></i> <?= $translator->translate('i.invoices'); ?> </a></div>
 
 <?php
 $pagination = OffsetPagination::widget()
@@ -30,14 +30,14 @@ $pagination = OffsetPagination::widget()
 <table class="table table-hover table-striped">
    <thead>
     <tr>
-        <th><?= $s->trans('status'); ?></th>
-        <th><?= $s->trans('base_invoice'); ?></th>
-        <th><?= $s->trans('client'); ?></th>
-        <th><?= $s->trans('start_date'); ?></th>
-        <th><?= $s->trans('end_date'); ?></th>
-        <th><?= $s->trans('every'); ?></th>
-        <th><?= $s->trans('next_date'); ?></th>
-        <th><?= $s->trans('options'); ?></th>
+        <th><?= $translator->translate('i.status'); ?></th>
+        <th><?= $translator->translate('i.base_invoice'); ?></th>
+        <th><?= $translator->translate('i.client'); ?></th>
+        <th><?= $translator->translate('i.start_date'); ?></th>
+        <th><?= $translator->translate('i.end_date'); ?></th>
+        <th><?= $translator->translate('i.every'); ?></th>
+        <th><?= $translator->translate('i.next_date'); ?></th>
+        <th><?= $translator->translate('i.options'); ?></th>
     </tr>
    </thead>
 <tbody>
@@ -54,10 +54,10 @@ $pagination = OffsetPagination::widget()
                         } else {
                             echo 'label-success';
                         } ?>">
-                            <?= $no_next ? $s->trans('inactive') : $s->trans('active') ?>
+                            <?= $no_next ? $translator->translate('i.inactive') : $translator->translate('i.active') ?>
             </span>
       </td>      
-      <td><a href="<?= $urlGenerator->generate('inv/view',['id'=>$invrecurring->getInv_id()]); ?>"  title="<?= $s->trans('edit'); ?>" style="text-decoration:none"><?php echo($invrecurring->getInv()->getNumber() ? $invrecurring->getInv()->getNumber() : $invrecurring->getInv_id()); ?></a></td>   
+      <td><a href="<?= $urlGenerator->generate('inv/view',['id'=>$invrecurring->getInv_id()]); ?>"  title="<?= $translator->translate('i.edit'); ?>" style="text-decoration:none"><?php echo($invrecurring->getInv()->getNumber() ? $invrecurring->getInv()->getNumber() : $invrecurring->getInv_id()); ?></a></td>   
       <td><?= Html::a($invrecurring->getInv()->getClient()->getClient_name(),$urlGenerator->generate('client/view',['id'=>$invrecurring->getInv()->getClient()->getClient_id()])); ?></td>         
       <td><?= Html::encode(($invrecurring->getStart())->format($datehelper->style())); ?></td>
       <td><?= Html::encode(($invrecurring->getEnd())->format($datehelper->style())); ?></td>
@@ -68,20 +68,20 @@ $pagination = OffsetPagination::widget()
           <div class="options btn-group">
           <a class="btn btn-default btn-sm dropdown-toggle" data-toggle="dropdown" href="#">
                 <i class="fa fa-cog"></i>
-                <?= $s->trans('options'); ?>
+                <?= $translator->translate('i.options'); ?>
           </a>
           <ul class="dropdown-menu">
               <li>
                 <?php if (!$no_next) { ?>  
                   <a href="<?= $urlGenerator->generate('invrecurring/stop',['id'=>$invrecurring->getId()]); ?>" style="text-decoration:none"                    
                   ><i class="fa fa-edit fa-margin"></i>
-                       <?= $s->trans('stop'); ?>
+                       <?= $translator->translate('i.stop'); ?>
                   </a>
                 <?php } ?>  
               </li>
               <li>
                   <a href="<?= $urlGenerator->generate('invrecurring/delete',['id'=>$invrecurring->getId()]); ?>" style="text-decoration:none">                       <i class="fa fa-trash fa-margin"></i>
-                       <?= $s->trans('delete'); ?>
+                       <?= $translator->translate('i.delete'); ?>
                   </a>
               </li>
           </ul>

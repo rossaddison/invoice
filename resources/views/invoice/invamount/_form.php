@@ -27,7 +27,7 @@ if (!empty($errors)) {
 <input type="hidden" name="_csrf" value="<?= $csrf ?>">
 
 <div id="headerbar">    
-<h1 class="headerbar-title"><?= $s->trans('amounts_form'); ?></h1>
+<h1 class="headerbar-title"><?= $translator->translate('i.amounts_form'); ?></h1>
 
 <?php $response = $head->renderPartial('invoice/layout/header_buttons',['s'=>$s, 'hide_submit_button'=>false ,'hide_cancel_button'=>false]); ?>
 
@@ -51,7 +51,7 @@ if (!empty($errors)) {
  value="<?= Html::encode($body['sign'] ??  ''); ?>">
  </div>
 <div class="form-group">
-  <label for="item_sub_total"><?= $s->trans('subtotal'); ?></label>
+  <label for="item_sub_total"><?= $translator->translate('i.subtotal'); ?></label>
       <div class="input-group has-feedback">
           <input type="text" name="item_sub_total" id="item_sub_total" class="form-control"
               value="<?= $s->format_amount($body['item_sub_total'] ?? ''); ?>">
@@ -59,7 +59,7 @@ if (!empty($errors)) {
       </div>
 </div>
 <div class="form-group">
-  <label for="item_tax_total"><?= $s->trans('tax'); ?></label>
+  <label for="item_tax_total"><?= $translator->translate('i.tax'); ?></label>
       <div class="input-group has-feedback">
           <input type="text" name="item_tax_total" id="item_tax_total" class="form-control"
               value="<?= $s->format_amount($body['item_tax_total'] ?? ''); ?>">
@@ -75,7 +75,7 @@ if (!empty($errors)) {
       </div>
 </div>
 <div class="form-group">
-  <label for="invoice_total"><?= $s->trans('total'); ?></label>
+  <label for="invoice_total"><?= $translator->translate('i.total'); ?></label>
       <div class="input-group has-feedback">
           <input type="text" name="invoice_total" id="invoice_total" class="form-control"
               value="<?= $s->format_amount($body['invoice_total'] ?? ''); ?>">
@@ -83,7 +83,7 @@ if (!empty($errors)) {
       </div>
 </div>
 <div class="form-group">
-  <label for="invoice_paid"><?= $s->trans('total_paid'); ?></label>
+  <label for="invoice_paid"><?= $translator->translate('i.total_paid'); ?></label>
       <div class="input-group has-feedback">
           <input type="text" name="invoice_paid" id="invoice_paid" class="form-control"
               value="<?= $s->format_amount($body['invoice_paid'] ?? ''); ?>">
@@ -91,7 +91,7 @@ if (!empty($errors)) {
       </div>
 </div>
 <div class="form-group">
-  <label for="invoice_balance"><?= $s->trans('total_balance'); ?></label>
+  <label for="invoice_balance"><?= $translator->translate('i.total_balance'); ?></label>
       <div class="input-group has-feedback">
           <input type="text" name="invoice_balance" id="invoice_balance" class="form-control"
               value="<?= $s->format_amount($body['invoice_balance'] ?? ''); ?>">

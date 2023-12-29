@@ -35,6 +35,7 @@ use App\Invoice\CustomField\CustomFieldController;
 use App\Invoice\CustomValue\CustomValueController;
 use App\Invoice\Delivery\DeliveryController;
 use App\Invoice\DeliveryLocation\DeliveryLocationController;
+use App\Invoice\DeliveryParty\DeliveryPartyController;
 use App\Invoice\EmailTemplate\EmailTemplateController;
 use App\Invoice\Family\FamilyController;
 use App\Invoice\FromDropDown\FromDropDownController;
@@ -583,6 +584,31 @@ return [
       ->middleware(fn(AccessChecker $checker) => $checker->withPermission('editInv'))
       ->middleware(Authentication::class)
       ->action([DeliveryController::class, 'view']),
+      Route::get('/deliveryparty')
+      ->middleware(Authentication::class)
+      ->action([DeliveryPartyController::class, 'index'])
+      ->name('deliveryparty/index'),
+      // Add
+      Route::methods([Method::GET, Method::POST], '/deliveryparty/add')
+      ->middleware(Authentication::class)
+      ->action([DeliveryPartyController::class, 'add'])
+      ->name('deliveryparty/add'),
+      // Edit
+      Route::methods([Method::GET, Method::POST], '/deliveryparty/edit/{id}')
+      ->name('deliveryparty/edit')
+      ->middleware(fn(AccessChecker $checker) => $checker->withPermission('editInv'))
+      ->middleware(Authentication::class)
+      ->action([DeliveryPartyController::class, 'edit']),
+      Route::methods([Method::GET, Method::POST], '/deliveryparty/delete/{id}')
+      ->name('deliveryparty/delete')
+      ->middleware(fn(AccessChecker $checker) => $checker->withPermission('editInv'))
+      ->middleware(Authentication::class)
+      ->action([DeliveryPartyController::class, 'delete']),
+      Route::methods([Method::GET, Method::POST], '/deliveryparty/view/{id}')
+      ->name('deliveryparty/view')
+      ->middleware(fn(AccessChecker $checker) => $checker->withPermission('editInv'))
+      ->middleware(Authentication::class)
+      ->action([DeliveryPartyController::class, 'view']),
       Route::get('/emailtemplate')
       ->middleware(fn(AccessChecker $checker) => $checker->withPermission('editInv'))
       ->middleware(Authentication::class)

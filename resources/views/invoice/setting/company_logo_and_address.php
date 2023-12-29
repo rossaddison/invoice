@@ -34,18 +34,18 @@ use Yiisoft\Html\Html;
                     echo '<div><b>'.Html::encode($company['name']).'</b></div>';
                     echo '<div><br></div>';
                     echo '<div>' . $translator->translate('invoice.invoice.vat.reg.no'). ': ' . Html::encode($company['vat_id']) . '</div>';
-                    echo '<div>' . $s->trans('tax_code_short') . ': ' . Html::encode($company['tax_code']) . '</div>';
+                    echo '<div>' . $translator->translate('i.tax_code_short') . ': ' . Html::encode($company['tax_code']) . '</div>';
                     echo '<div><br></div>';
-                    echo '<div>' . Html::encode($company['address_1'] ? $s->trans('street_address') .': '. $company['address_1'] : ''). '</div>';
-                    echo '<div>' . Html::encode($company['address_2'] ? $s->trans('street_address_2') .': '. $company['address_2'] : ''). '</div>';
-                    echo '<div>' . Html::encode($company['city'] ? $s->trans('city') .': '. $company['city'] : ''). '</div>';
-                    echo '<div>' . Html::encode($company['state'] ? $s->trans('state') .': '. $company['state'] : ''). '</div>';
-                    echo '<div>' . Html::encode($company['zip'] ? $s->trans('zip') .': '. $company['zip'] : ''). '</div>';
+                    echo '<div>' . Html::encode($company['address_1'] ? $translator->translate('i.street_address') .': '. $company['address_1'] : ''). '</div>';
+                    echo '<div>' . Html::encode($company['address_2'] ? $translator->translate('i.street_address_2') .': '. $company['address_2'] : ''). '</div>';
+                    echo '<div>' . Html::encode($company['city'] ? $translator->translate('i.city') .': '. $company['city'] : ''). '</div>';
+                    echo '<div>' . Html::encode($company['state'] ? $translator->translate('i.state') .': '. $company['state'] : ''). '</div>';
+                    echo '<div>' . Html::encode($company['zip'] ? $translator->translate('i.zip') .': '. $company['zip'] : ''). '</div>';
                     echo '</div>';
-                    echo '<div>' . $countryhelper->get_country_name($s->trans('cldr'), $company['country'] ?? 'United Kingdom') . '</div>';
+                    echo '<div>' . $countryhelper->get_country_name($translator->translate('i.cldr'), $company['country'] ?? 'United Kingdom') . '</div>';
                     echo '<br/>';
-                    echo '<div>' .$s->trans('phone_abbr') . ': ' . Html::encode($company['phone'] ?? '') . '</div>';
-                    echo '<div>' .$s->trans('fax_abbr') . ': ' . Html::encode($company['fax'] ?? '') . '</div>';
+                    echo '<div>' .$translator->translate('i.phone_abbr') . ': ' . Html::encode($company['phone'] ?? '') . '</div>';
+                    echo '<div>' .$translator->translate('i.fax_abbr') . ': ' . Html::encode($company['fax'] ?? '') . '</div>';
                 ?>
             </td>
         </tr>

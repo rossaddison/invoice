@@ -24,7 +24,7 @@ if (!empty($errors)) {
 <?= Html::openTag('h1'); ?><?= Html::encode($title) ?><?= Html::closeTag('h1'); ?>
 <?= Html::openTag('div', ['class' => 'row']); ?>
  <div class="mb3 form-group">
-   <label for="id" class="form-label" style="background:lightblue"><?= $s->trans('id'); ?></label>
+   <label for="id" class="form-label" style="background:lightblue"><?= $translator->translate('i.id'); ?></label>
    <?= Html::encode($body['id'] ?? ''); ?>
  </div>
  <div class="mb3 form-group">

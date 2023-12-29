@@ -16,9 +16,9 @@ echo $alert;
 
 ?>
 <div>
- <h5><?= $s->trans('settings'); ?></h5>
+ <h5><?= $translator->translate('i.settings'); ?></h5>
  <a class="btn btn-success" href="<?= $urlGenerator->generate('setting/add'); ?>">
-      <i class="fa fa-plus"></i> <?= $s->trans('new'); ?> </a>
+      <i class="fa fa-plus"></i> <?= $translator->translate('i.new'); ?> </a>
 </div>
 
 <?php
@@ -40,11 +40,11 @@ $pagination = OffsetPagination::widget()
     <tr>
                 
         <th><?= 'Key'; ?></th>
-        <th><?= $s->trans('value'); ?></th>        
+        <th><?= $translator->translate('i.value'); ?></th>        
         <th><?= $trans; ?></th>        
         <th><?= $section; ?></th>
         <th><?= $subsection; ?></th>        
-        <th><?= $s->trans('options'); ?></th>
+        <th><?= $translator->translate('i.options'); ?></th>
     </tr>
    </thead>
 <tbody>
@@ -61,17 +61,17 @@ $pagination = OffsetPagination::widget()
           <div class="options btn-group">
           <a class="btn btn-default btn-sm dropdown-toggle" data-toggle="dropdown" href="#">
                 <i class="fa fa-cog"></i>
-                <?= $s->trans('options'); ?>
+                <?= $translator->translate('i.options'); ?>
           </a>
           <ul class="dropdown-menu">
               <li>
                   <a href="<?= $urlGenerator->generate('setting/edit',['setting_id'=>$setting->getSetting_id()]); ?>"><i class="fa fa-edit fa-margin"></i>
-                       <?= $s->trans('edit'); ?>
+                       <?= $translator->translate('i.edit'); ?>
                   </a>
               </li>
               <li>
-                  <a href="<?= $urlGenerator->generate('setting/delete',['setting_id'=>$setting->getSetting_id()]); ?>" style="text-decoration:none" onclick="return confirm('<?= $s->trans('delete_client_warning'); ?>');">
-                        <i class="fa fa-trash fa-margin"></i><?= $s->trans('delete'); ?>                                    
+                  <a href="<?= $urlGenerator->generate('setting/delete',['setting_id'=>$setting->getSetting_id()]); ?>" style="text-decoration:none" onclick="return confirm('<?= $translator->translate('i.delete_client_warning'); ?>');">
+                        <i class="fa fa-trash fa-margin"></i><?= $translator->translate('i.delete'); ?>                                    
                   </a>
               </li>
           </ul>

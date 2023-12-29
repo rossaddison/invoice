@@ -36,7 +36,7 @@ use Yiisoft\Router\CurrentRoute;
                 ->addClass('bg-primary text-white p-3 rounded-top')
                 ->content(
                     I::tag()->addClass('bi bi-receipt')
-                            ->content(' ' . Html::encode($s->trans('product')))
+                            ->content(' ' . Html::encode($translator->translate('i.product')))
                 )
         )
         ->render();
@@ -64,10 +64,10 @@ use Yiisoft\Router\CurrentRoute;
 ?>
 
 <div>
-    <h5><?= $s->trans('products'); ?></h5>
+    <h5><?= $translator->translate('i.products'); ?></h5>
     <div class="btn-group">
         <a class="btn btn-success" href="<?= $urlGenerator->generate('product/add'); ?>">
-            <i class="fa fa-plus"></i> <?= Html::encode($s->trans('new')); ?>
+            <i class="fa fa-plus"></i> <?= Html::encode($translator->translate('i.new')); ?>
         </a>
     </div>
 </div>
@@ -80,12 +80,12 @@ use Yiisoft\Router\CurrentRoute;
     $columns = [
         new DataColumn(
             'id',
-            header: $s->trans('id'),
+            header: $translator->translate('i.id'),
             content: static fn (object $model) => Html::encode($model->getProduct_id())
         ),        
         new DataColumn(
             'family_id',
-            header: $s->trans('family'),                
+            header: $translator->translate('i.family'),                
             content: static fn ($model): string => Html::encode($model->getFamily()->getFamily_name())                  
         ),
         new DataColumn(
@@ -103,18 +103,18 @@ use Yiisoft\Router\CurrentRoute;
             /**
              * @see \src\Invoice\Asset\rebuild-1.13\js\product.js line 47 product_sku: $('#filter_product_sku').val()
              */
-            header: $s->trans('product_sku'),
+            header: $translator->translate('i.product_sku'),
             withSorting: true,
             content: static fn ($model): string => Html::encode($model->getProduct_sku())
         ),
         new DataColumn(
             'product_description',    
-            header: $s->trans('product_description'),                
+            header: $translator->translate('i.product_description'),                
             content: static fn ($model): string => Html::encode(ucfirst($model->getProduct_description())) 
         ),
         new DataColumn(
             'product_price',
-            header: $s->trans('product_price'),   
+            header: $translator->translate('i.product_price'),   
             content: static fn ($model): string => Html::encode($s->format_currency($model->getProduct_price()))                        
         ),
         new DataColumn(
@@ -124,18 +124,18 @@ use Yiisoft\Router\CurrentRoute;
         ),
         new DataColumn(
             'product_unit',     
-            header: $s->trans('product_unit'),                
+            header: $translator->translate('i.product_unit'),                
             content: static fn ($model): string => Html::encode((ucfirst($model->getUnit()->getUnit_name())))                        
         ),
         new DataColumn(
             'tax_rate_id',    
-            header: $s->trans('tax_rate'),
-            content: static fn ($model): string => ($model->getTaxrate()->getTax_rate_id()) ? Html::encode($model->getTaxrate()->getTax_rate_name()) : $s->trans('none')                       
+            header: $translator->translate('i.tax_rate'),
+            content: static fn ($model): string => ($model->getTaxrate()->getTax_rate_id()) ? Html::encode($model->getTaxrate()->getTax_rate_name()) : $translator->translate('i.none')                       
         ),
         new DataColumn(
             'product_tariff',                    
-            header: $s->get_setting('sumex') ? $s->trans('product_tariff') : '',                
-            content: static fn ($model): string => ($s->get_setting('sumex') ? Html::encode($model->getProduct_tariff()) : Html::encode($s->trans('none'))),                       
+            header: $s->get_setting('sumex') ? $translator->translate('i.product_tariff') : '',                
+            content: static fn ($model): string => ($s->get_setting('sumex') ? Html::encode($model->getProduct_tariff()) : Html::encode($translator->translate('i.none'))),                       
             visible: $s->get_setting('sumex') ? true : false
         ),
         new DataColumn(
@@ -149,7 +149,7 @@ use Yiisoft\Router\CurrentRoute;
         new ActionColumn(
             content: static fn($model): string => 
             Html::a()
-            ->addAttributes(['class' => 'dropdown-button text-decoration-none', 'title' => $s->trans('view')])
+            ->addAttributes(['class' => 'dropdown-button text-decoration-none', 'title' => $translator->translate('i.view')])
             ->content('🔎')
             ->encode(false)
             ->href('/invoice/product/view/'. $model->getProduct_id())
@@ -158,7 +158,7 @@ use Yiisoft\Router\CurrentRoute;
         new ActionColumn(
             content: static fn($model): string => 
             Html::a()
-            ->addAttributes(['class' => 'dropdown-button text-decoration-none', 'title' => $s->trans('edit')])
+            ->addAttributes(['class' => 'dropdown-button text-decoration-none', 'title' => $translator->translate('i.edit')])
             ->content('✎')
             ->encode(false)
             ->href('/invoice/product/edit/'. $model->getProduct_id())
@@ -169,9 +169,9 @@ use Yiisoft\Router\CurrentRoute;
             Html::a()
             ->addAttributes([
                 'class'=>'dropdown-button text-decoration-none', 
-                'title' => $s->trans('delete'),
+                'title' => $translator->translate('i.delete'),
                 'type'=>'submit', 
-                'onclick'=>"return confirm("."'".$s->trans('delete_record_warning')."');"
+                'onclick'=>"return confirm("."'".$translator->translate('i.delete_record_warning')."');"
             ])
             ->content('❌')
             ->encode(false)

@@ -31,18 +31,18 @@ echo $alert;
       echo Html::br();
       $label = $company->getId() . " ";
       echo Html::label($label);
-      echo Html::a($s->trans('edit'),
+      echo Html::a($translator->translate('i.edit'),
       $urlGenerator->generate('company/edit', ['id' => $company->getId()]),
             ['class' => 'btn btn-info btn-sm ms-2']
           );
-      echo Html::a($s->trans('view'),
+      echo Html::a($translator->translate('i.view'),
       $urlGenerator->generate('company/view', ['id' => $company->getId()]),
       ['class' => 'btn btn-warning btn-sm ms-2']
              );
-      echo Html::a($s->trans('delete'),
+      echo Html::a($translator->translate('i.delete'),
       $urlGenerator->generate('company/delete', ['id' => $company->getId()]),
       ['class' => 'btn btn-danger btn-sm ms-2', 
-       'onclick'=>"return confirm('". $s->trans('delete_record_warning'). "')"
+       'onclick'=>"return confirm('". $translator->translate('i.delete_record_warning'). "')"
       ]
       );
     }

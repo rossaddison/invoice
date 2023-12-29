@@ -6,12 +6,12 @@ use Yiisoft\Html\Html;
     <table class="table table-hover table-bordered table-striped">
         <tr>
             <th>&nbsp;</th>
-            <th><?= $s->trans('item'); ?></th>
-            <th><?= $s->trans('product_sku'); ?></th>            
-            <th><?= $s->trans('product_name'); ?></th>
-            <th><?= $s->trans('product_description'); ?></th>
-            <th class="text-right"><?= $s->trans('product_price'); ?></th>
-            <th class="text-right"><?= $s->trans('quantity'); ?></th>
+            <th><?= $translator->translate('i.item'); ?></th>
+            <th><?= $translator->translate('i.product_sku'); ?></th>            
+            <th><?= $translator->translate('i.product_name'); ?></th>
+            <th><?= $translator->translate('i.product_description'); ?></th>
+            <th class="text-right"><?= $translator->translate('i.product_price'); ?></th>
+            <th class="text-right"><?= $translator->translate('i.quantity'); ?></th>
         </tr>
         <?php foreach ($invitems as $invitem) { ?>
             <tr class="product">

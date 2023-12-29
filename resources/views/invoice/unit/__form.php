@@ -28,17 +28,17 @@ if (!empty($errors)) {
   <?= Html::openTag('div', ['class' => 'row']); ?>
     <div class="mb-3 form-group">
         <label for="unit_name">
-            <?= $s->trans('unit_name'); ?>
+            <?= $translator->translate('i.unit_name'); ?>
         </label>
         <input type="text" class="form-control" name="unit_name" id="unit_name" placeholder="Unit Name" required <?= in_array($body['unit_name'] ?? '', ['unit','service']) ? 'disabled' : '' ?>             
                value="<?= Html::encode($body['unit_name'] ?? '') ?>">
     </div>
     <div class="mb-3 form-group">
         <label for="unit_name_plrl">
-            <?= $s->trans('unit_name_plrl'); ?>
+            <?= $translator->translate('i.unit_name_plrl'); ?>
         </label>
         <input type="text" class="form-control" name="unit_name_plrl" id="unit_name" placeholder="Unit Name Plural" value="<?= Html::encode($body['unit_name_plrl'] ?? '') ?>" required>
     </div>      
   </div>    
-  <button type="submit" class="btn btn-primary"><?= $s->trans('submit'); ?></button>
+  <button type="submit" class="btn btn-primary"><?= $translator->translate('i.submit'); ?></button>
 </form>

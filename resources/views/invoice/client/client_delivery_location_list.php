@@ -18,7 +18,7 @@
         <?=($delivery_location->getZip() ? Html::encode($delivery_location->getZip()) : ''); ?>
     </span>
     <span class="client-adress-country-line">
-        <?=($delivery_location->getCountry() ? '<br>' . $countryhelper->get_country_name($s->trans('cldr'), $delivery_location->getCountry()) : ''); ?>
+        <?=($delivery_location->getCountry() ? '<br>' . $countryhelper->get_country_name($translator->translate('i.cldr'), $delivery_location->getCountry()) : ''); ?>
     </span>
     <br>
     <br>

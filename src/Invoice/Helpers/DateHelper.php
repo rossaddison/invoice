@@ -225,7 +225,7 @@ Class DateHelper {
         return (new \DateTimeImmutable())->setDate($year, $month, $day);
     }
 
-// Used in ReportController/sales_by_year_index
+    // Used in ReportController/sales_by_year_index
 
     /**
      * @return \DateTimeImmutable
@@ -235,6 +235,16 @@ Class DateHelper {
         $month = $this->s->get_setting('this_tax_year_from_date_month') ?: (new \DateTimeImmutable('now'))->format('m');
         $day = $this->s->get_setting('this_tax_year_from_date_day') ?: (new \DateTimeImmutable('now'))->format('d');
         return (new \DateTimeImmutable())->setDate((int) $year, (int) $month, (int) $day);
+    }
+    
+    public function now_01() : \DateTimeImmutable
+    {
+        return new \DateTimeImmutable(\Date('Y-m-01'));
+    }
+    
+    public function now_t() : \DateTimeImmutable
+    {
+        return new \DateTimeImmutable(\Date('Y-m-01'));
     }
 
     /**

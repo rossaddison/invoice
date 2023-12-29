@@ -5,7 +5,8 @@ declare(strict_types=1);
 Namespace App\Invoice\Helpers;
 
 use App\Invoice\Entity\Client;
-use App\Invoice\Setting\SettingRepository; 
+use App\Invoice\Setting\SettingRepository;
+use Yiisoft\Translator\TranslatorInterface as Translator;
 
 Class ClientHelper 
 {
@@ -27,16 +28,16 @@ Class ClientHelper
         return '';
     }
 
-    public function format_gender(int $gender, SettingRepository $s): string
+    public function format_gender(int $gender, Translator $t): string
     {
         if ($gender == 0) {
-            return $s->trans('gender_male');
+            return $t->translate('i.gender_male');
         }
 
         if ($gender == 1) {
-            return $s->trans('gender_female');
+            return $t->translate('i.gender_female');
         }
 
-        return $s->trans('gender_other');
+        return $t->translate('i.gender_other');
     }
 }

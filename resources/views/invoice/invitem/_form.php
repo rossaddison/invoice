@@ -26,12 +26,12 @@ if (!empty($errors)) {
 <form id="ItemForm" method="POST" action="<?= $urlGenerator->generate(...$action) ?>" enctype="multipart/form-data">
 <input type="hidden" name="_csrf" value="<?= $csrf ?>">
 <div id="headerbar">
-<h1 class="headerbar-title"><?= $s->trans('items_form'); ?></h1>
+<h1 class="headerbar-title"><?= $translator->translate('i.items_form'); ?></h1>
 <?php $response = $head->renderPartial('invoice/layout/header_buttons',['s'=>$s, 'hide_submit_button'=>false ,'hide_cancel_button'=>false]); ?>        
 <?php echo (string)$response->getBody(); ?><div id="content">
 <?= Html::openTag('div', ['class' => 'row']); ?>
  <div class="mb3 form-group">
-    <label for="inv_id"><?= $s->trans('invoices'); ?></label>
+    <label for="inv_id"><?= $translator->translate('i.invoices'); ?></label>
     <select name="inv_id" id="inv_id" class="form-control simple-select">
        <option value="0">Inv</option>
          <?php foreach ($invs as $inv) { ?>
@@ -42,7 +42,7 @@ if (!empty($errors)) {
     </select>
  </div>
  <div class="mb3 form-group">
-    <label for="tax_rate_id"><?= $s->trans('tax_rates'); ?></label>
+    <label for="tax_rate_id"><?= $translator->translate('i.tax_rates'); ?></label>
     <select name="tax_rate_id" id="tax_rate_id" class="form-control simple-select">
        <option value="0">Tax rate</option>
          <?php foreach ($tax_rates as $tax_rate) { ?>
@@ -53,7 +53,7 @@ if (!empty($errors)) {
     </select>
  </div>
  <div class="mb3 form-group">
-    <label for="product_id"><?= $s->trans('products'); ?></label>
+    <label for="product_id"><?= $translator->translate('i.products'); ?></label>
     <select name="product_id" id="product_id" class="form-control simple-select">
        <option value="0">Product</option>
          <?php foreach ($products as $product) { ?>
@@ -64,7 +64,7 @@ if (!empty($errors)) {
     </select>
  </div>
  <div class="mb3 form-group">
-    <label for="unit_id"><?= $s->trans('units'); ?></label>
+    <label for="unit_id"><?= $translator->translate('i.units'); ?></label>
     <select name="unit_id" id="unit_id" class="form-control simple-select">
        <option value="0">Unit</option>
          <?php foreach ($units as $unit) { ?>
@@ -75,7 +75,7 @@ if (!empty($errors)) {
     </select>
  </div>
  <div class="mb3 form-group">
-    <label for="task_id"><?= $s->trans('tasks'); ?></label>
+    <label for="task_id"><?= $translator->translate('i.tasks'); ?></label>
     <select name="task_id" id="task_id" class="form-control simple-select">
        <option value="0">Task</option>
          <?php foreach ($tasks as $task) { ?>
@@ -85,7 +85,7 @@ if (!empty($errors)) {
          <?php } ?>
     </select>
  </div> 
- <div class="mb-3 form-group has-feedback"> <label form-label for="date_added"><?= $s->trans('date_created'); ?></label>
+ <div class="mb-3 form-group has-feedback"> <label form-label for="date_added"><?= $translator->translate('i.date_created'); ?></label>
 <?php  $date_add = $body['date_added'] ?? null; 
 $datehelper = new DateHelper($s); 
 if ($date_add && $date_add !== "0000-00-00") { 
@@ -102,16 +102,16 @@ if ($date_add && $date_add !== "0000-00-00") {
      
 </div>   
 <div class="mb3 form-group">
-   <label for="name"><?= $s->trans('item_name'); ?></label>
+   <label for="name"><?= $translator->translate('i.item_name'); ?></label>
    <input type="text" name="name" id="name" class="form-control" value="<?= Html::encode($body['name'] ??  ''); ?>">
 </div>
 <div class="mb3 form-group">
-   <label for="description"><?= $s->trans('description'); ?></label>
+   <label for="description"><?= $translator->translate('i.description'); ?></label>
    <input type="text" name="description" id="description" class="form-control"
  value="<?= Html::encode($body['description'] ??  ''); ?>">
  </div>
 <div class="input-group">
-  <label for="quantity"><?= $s->trans('quantity'); ?></label>
+  <label for="quantity"><?= $translator->translate('i.quantity'); ?></label>
       <div class="input-group has-feedback">
           <input type="text" name="quantity" id="quantity" class="form-control"
               value="<?= $s->format_amount($body['quantity'] ?? ''); ?>">
@@ -119,7 +119,7 @@ if ($date_add && $date_add !== "0000-00-00") {
       </div>
 </div>
 <div class="input-group">
-  <label for="price"><?= $s->trans('price'); ?></label>
+  <label for="price"><?= $translator->translate('i.price'); ?></label>
       <div class="input-group has-feedback">
           <input type="text" name="price" id="price" class="form-control"
               value="<?= $s->format_amount($body['price'] ?? ''); ?>">
@@ -127,7 +127,7 @@ if ($date_add && $date_add !== "0000-00-00") {
       </div>
 </div>
 <div class="input-group">
-  <label for="discount_amount"><?= $s->trans('item_discount'); ?></label>
+  <label for="discount_amount"><?= $translator->translate('i.item_discount'); ?></label>
       <div class="input-group has-feedback">
           <input type="text" name="discount_amount" id="discount_amount" class="form-control"
               value="<?= $s->format_amount($body['discount_amount'] ?? ''); ?>">
@@ -143,16 +143,16 @@ if ($date_add && $date_add !== "0000-00-00") {
       </div>
 </div>    
  <div class="mb3 form-group">
-   <label for="order"><?= $s->trans('order'); ?></label>
+   <label for="order"><?= $translator->translate('i.order'); ?></label>
    <input type="text" name="order" id="order" class="form-control"
  value="<?= Html::encode($body['order'] ??  ''); ?>">
  </div>
  <div class="mb3 form-group">
-   <label for="product_unit"><?= $s->trans('units'); ?></label>
+   <label for="product_unit"><?= $translator->translate('i.units'); ?></label>
    <input type="text" name="product_unit" id="unit" class="form-control"
  value="<?= Html::encode($body['product_unit'] ??  ''); ?>">
  </div>
- <div class="mb-3 form-group has-feedback"> <label form-label for="date"><?= $s->trans('date'); ?></label><?php  $ddate = $body['date'] ?? null; 
+ <div class="mb-3 form-group has-feedback"> <label form-label for="date"><?= $translator->translate('i.date'); ?></label><?php  $ddate = $body['date'] ?? null; 
 $datehelper = new DateHelper($s); 
 if ($ddate && $ddate !== "0000-00-00") { 
     $ddate = $datehelper->date_from_mysql($ddate); 

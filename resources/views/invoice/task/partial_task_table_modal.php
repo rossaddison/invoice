@@ -8,12 +8,12 @@ use Yiisoft\Html\Html;
     <table id="tasks_table" class="table table-hover table-bordered table-striped no-margin">
         <tr>
             <th>&nbsp;</th>
-            <th><?= $s->trans('project_name'); ?></th>
-            <th><?= $s->trans('task_name'); ?></th>
-            <th><?= $s->trans('task_finish_date'); ?></th>
-            <th><?= $s->trans('task_description'); ?></th>
+            <th><?= $translator->translate('i.project_name'); ?></th>
+            <th><?= $translator->translate('i.task_name'); ?></th>
+            <th><?= $translator->translate('i.task_finish_date'); ?></th>
+            <th><?= $translator->translate('i.task_description'); ?></th>
             <th class="text-right">
-                <?= $s->trans('task_price'); ?></th>
+                <?= $translator->translate('i.task_price'); ?></th>
         </tr>
 
         <?php foreach ($tasks as $task) { ?>

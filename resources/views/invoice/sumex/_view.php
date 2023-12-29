@@ -25,23 +25,23 @@ if (!empty($errors)) {
 <?= Html::openTag('h1'); ?><?= Html::encode($title) ?><?= Html::closeTag('h1'); ?>
 <?= Html::openTag('div', ['class' => 'row']); ?>
  <div class="mb3 form-group">
-   <label for="invoice" class="form-label" style="background:lightblue"><?= $s->trans('invoice'); ?></label>
+   <label for="invoice" class="form-label" style="background:lightblue"><?= $translator->translate('i.invoice'); ?></label>
    <?= Html::encode($body['invoice'] ?? ''); ?>
  </div>
  <div class="mb3 form-group">
-   <label for="reason" class="form-label" style="background:lightblue"><?= $s->trans('reason'); ?></label>
+   <label for="reason" class="form-label" style="background:lightblue"><?= $translator->translate('i.reason'); ?></label>
    <?= Html::encode($body['reason'] ?? ''); ?>
  </div>
  <div class="mb3 form-group">
-   <label for="diagnosis" class="form-label" style="background:lightblue"><?= $s->trans('invoice_sumex_diagnosis'); ?></label>
+   <label for="diagnosis" class="form-label" style="background:lightblue"><?= $translator->translate('i.invoice_sumex_diagnosis'); ?></label>
    <?= Html::encode($body['diagnosis'] ?? ''); ?>
  </div>
  <div class="mb3 form-group">
-   <label for="observations" class="form-label" style="background:lightblue"><?= $s->trans('sumex_observations'); ?></label>
+   <label for="observations" class="form-label" style="background:lightblue"><?= $translator->translate('i.sumex_observations'); ?></label>
    <?= Html::encode($body['observations'] ?? ''); ?>
  </div>
  <div class="mb3 form-group">
-   <label for="treatmentstart" class="form-label" style="background:lightblue"><?= $s->trans('treatment_start'); ?></label>
+   <label for="treatmentstart" class="form-label" style="background:lightblue"><?= $translator->translate('i.treatment_start'); ?></label>
    <?php
         $tdate = $body['treatmentstart'];
         if ($tdate && $tdate != "0000-00-00") {
@@ -55,7 +55,7 @@ if (!empty($errors)) {
     <?= Html::encode($tdate); ?>
  </div>
  <div class="mb3 form-group">
-   <label for="treatmentend" class="form-label" style="background:lightblue"><?= $s->trans('treatment_end'); ?></label>
+   <label for="treatmentend" class="form-label" style="background:lightblue"><?= $translator->translate('i.treatment_end'); ?></label>
    <?php
         $edate = $body['treatmentend'];
         if ($edate && $edate != "0000-00-00") {
@@ -69,7 +69,7 @@ if (!empty($errors)) {
     <?= Html::encode($edate); ?>
  </div>
  <div class="mb3 form-group">
-   <label for="casedate" class="form-label" style="background:lightblue"><?= $s->trans('case_date'); ?></label>
+   <label for="casedate" class="form-label" style="background:lightblue"><?= $translator->translate('i.case_date'); ?></label>
    <?php
         $cdate = $body['casedate'];
         if ($cdate && $cdate != "0000-00-00") {
@@ -83,7 +83,7 @@ if (!empty($errors)) {
     <?= Html::encode($cdate); ?>
  </div>
  <div class="mb3 form-group">
-   <label for="casenumber" class="form-label" style="background:lightblue"><?= $s->trans('case_number'); ?></label>
+   <label for="casenumber" class="form-label" style="background:lightblue"><?= $translator->translate('i.case_number'); ?></label>
    <?= Html::encode($body['casenumber'] ?? ''); ?>
  </div>
 </div>

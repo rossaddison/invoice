@@ -130,7 +130,7 @@ final class TaskController
             'errors' => [],
             'numberhelper'=>new NumberHelper($sR),
             'datehelper'=>new DateHelper($sR),
-            'statuses'=>$this->getStatuses($sR),
+            'statuses'=>$this->getStatuses($this->translator),
             's'=>$sR,
             'head'=>$head,            
             'projects'=>$projectRepository->findAllPreloaded(),
@@ -178,7 +178,7 @@ final class TaskController
                 'errors'=>[],
                 'numberhelper'=>new NumberHelper($sR),
                 'datehelper'=>new DateHelper($sR),
-                'statuses'=>$this->getStatuses($sR),
+                'statuses'=>$this->getStatuses($this->translator),
                 's'=>$sR,
                 'head'=>$head,            
                 'projects'=>$projectRepository->findAllPreloaded(),
@@ -220,23 +220,23 @@ final class TaskController
      *
      * @psalm-return array{1: array{label: string, class: 'draft'}, 2: array{label: string, class: 'viewed'}, 3: array{label: string, class: 'sent'}, 4: array{label: string, class: 'paid'}}
      */
-    public function getStatuses(sR $s): array
+    public function getStatuses(TranslatorInterface $translator): array
     {
         return [
             1 => [
-                'label' => $s->trans('not_started'),
+                'label' => $translator->translate('i.not_started'),
                 'class' => 'draft'
             ],
             2 => [
-                'label' => $s->trans('in_progress'),
+                'label' => $translator->translate('i.in_progress'),
                 'class' => 'viewed'
             ],
             3 => [
-                'label' => $s->trans('complete'),
+                'label' => $translator->translate('i.complete'),
                 'class' => 'sent'
             ],
             4 => [
-                'label' => $s->trans('invoiced'),
+                'label' => $translator->translate('i.invoiced'),
                 'class' => 'paid'
             ]
         ];

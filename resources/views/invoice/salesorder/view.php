@@ -47,7 +47,7 @@ $vat = $s->get_setting('enable_vat_registration');
         <div class="headerbar-item pull-right">
         <div class="options btn-group">
             <a class="btn btn-default" data-toggle="dropdown" href="#">
-                <i class="fa fa-chevron-down"></i><?= $s->trans('options'); ?>
+                <i class="fa fa-chevron-down"></i><?= $translator->translate('i.options'); ?>
             </a>
             <ul class="dropdown-menu dropdown-menu-right">
                 <?php
@@ -55,14 +55,14 @@ $vat = $s->get_setting('enable_vat_registration');
                 <li>
                     <a href="<?= $urlGenerator->generate('salesorder/edit',['id'=>$so->getId()]) ?>" style="text-decoration:none">
                         <i class="fa fa-edit fa-margin"></i>
-                        <?= $s->trans('edit'); ?>
+                        <?= $translator->translate('i.edit'); ?>
                     </a>
                 </li>
                 <?php } ?>
                 <li>
                     <a href="#so-to-pdf"  data-toggle="modal" style="text-decoration:none">
                         <i class="fa fa-print fa-margin"></i>
-                        <?= $s->trans('download_pdf'); ?>
+                        <?= $translator->translate('i.download_pdf'); ?>
                     </a>
                 </li>
                 <?php 
@@ -110,25 +110,25 @@ $vat = $s->get_setting('enable_vat_registration');
                             <?php echo($so->getClient()->getClient_zip() ? Html::encode($so->getClient()->getClient_zip()) : ''); ?>
                         </span>
                         <span class="client-address-country-line">
-                            <?php echo($so->getClient()->getClient_country() ? '<br>' . $countryhelper->get_country_name($s->trans('cldr'), $so->getClient()->getClient_country()) : ''); ?>
+                            <?php echo($so->getClient()->getClient_country() ? '<br>' . $countryhelper->get_country_name($translator->translate('i.cldr'), $so->getClient()->getClient_country()) : ''); ?>
                         </span>
                     </div>
                     <hr>
                     <?php if ($so->getClient()->getClient_phone()): ?>
                         <div class="client-phone">
-                            <?= $s->trans('phone'); ?>:&nbsp;
+                            <?= $translator->translate('i.phone'); ?>:&nbsp;
                             <?= Html::encode($so->getClient()->getClient_phone()); ?>
                         </div>
                     <?php endif; ?>
                     <?php if ($so->getClient()->getClient_mobile()): ?>
                         <div class="client-mobile">
-                            <?= $s->trans('mobile'); ?>:&nbsp;
+                            <?= $translator->translate('i.mobile'); ?>:&nbsp;
                             <?= Html::encode($so->getClient()->getClient_mobile()); ?>
                         </div>
                     <?php endif; ?>
                     <?php if ($so->getClient()->getClient_email()): ?>
                         <div class='client-email'>
-                            <?= $s->trans('email'); ?>:&nbsp;
+                            <?= $translator->translate('i.email'); ?>:&nbsp;
                             <?php echo $so->getClient()->getClient_email(); ?>
                         </div>
                     <?php endif; ?>
@@ -149,7 +149,7 @@ $vat = $s->get_setting('enable_vat_registration');
                                     </label>
                                     <input type="text" id="salesorder_number" class="form-control input-sm" readonly
                                         <?php if ($so->getNumber()) : ?> value="<?= $so->getNumber(); ?>"
-                                        <?php else : ?> placeholder="<?= $s->trans('not_set'); ?>"
+                                        <?php else : ?> placeholder="<?= $translator->translate('i.not_set'); ?>"
                                         <?php endif; ?>>
                                 </div>
                                 <div has-feedback">
@@ -193,7 +193,7 @@ $vat = $s->get_setting('enable_vat_registration');
 
                                 <div>
                                     <label for="status_id">
-                                        <?= $s->trans('status'); ?>
+                                        <?= $translator->translate('i.status'); ?>
                                     </label>
                                     <select name="status_id" id="status_id" disabled
                                             class="form-control">
@@ -252,7 +252,7 @@ $vat = $s->get_setting('enable_vat_registration');
             <div class="col-xs-12 col-md-6">
                 <div class="panel panel-default no-margin">
                     <div class="panel-heading">
-                        <?= $s->trans('notes'); ?>
+                        <?= $translator->translate('i.notes'); ?>
                     </div>
                     <div class="panel-body">
                         <textarea name="notes" id="notes" rows="3" disabled

@@ -34,7 +34,6 @@ use App\Invoice\Unit\UnitRepository;
 use App\Invoice\Helpers\ClientHelper;
 use App\Invoice\Helpers\DateHelper;
 // Services and forms
-use App\Invoice\Setting\SettingForm;
 use App\Invoice\Setting\SettingService;
 use App\Service\WebControllerService;
 use App\User\UserService;
@@ -673,6 +672,7 @@ final class InvoiceController
      * @param SettingRepository $sR
      * @param TaskRepository $taskR
      * @param ProjectRepository $prjctR
+     * @param TranslatorInterface $translator
      */
     public function dashboard (
                                ClientRepository $cR,
@@ -684,7 +684,8 @@ final class InvoiceController
                                QuoteAmountRepository $qaR,
                                SettingRepository $sR,
                                TaskRepository $taskR,
-                               ProjectRepository $prjctR
+                               ProjectRepository $prjctR,
+                               TranslatorInterface $translator
                               ) : \Yiisoft\DataResponse\DataResponse {
         $data = [
             'alerts'=>$this->alert(),
@@ -699,14 +700,14 @@ final class InvoiceController
             'quotes'=>$qR->findAllPreloaded(),
             
             // Totals for status eg. draft, sent, viewed...
-            'invoice_status_totals'=>$iaR->get_status_totals($iR, $sR, $sR->get_setting('invoice_overview_period') ?: 'this-month'),
-            'quote_status_totals'=>$qaR->get_status_totals($qR, $sR, $sR->get_setting('quote_status_period') ?: 'this-month'),
+            'invoice_status_totals'=>$iaR->get_status_totals($iR, $sR, $translator, $sR->get_setting('invoice_overview_period') ?: 'this-month'),
+            'quote_status_totals'=>$qaR->get_status_totals($qR, $sR, $translator, $sR->get_setting('quote_status_period') ?: 'this-month'),
             
             // Array of statuses: draft, sent, viewed, paid, cancelled
-            'invoice_statuses'=>$iR->getStatuses($sR),
+            'invoice_statuses'=>$iR->getStatuses($this->translator),
             
             // Array of statuses: draft, sent, viewed, approved, rejected, cancelled
-            'quote_statuses'=>$qR->getStatuses($sR),
+            'quote_statuses'=>$qR->getStatuses($this->translator),
             
             // this-month, last-month, this-quarter, lsat-quarter, this-year, last-year
             'invoice_status_period'=>str_replace('-', '_', $sR->get_setting('invoice_overview_period')),

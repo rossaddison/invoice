@@ -2,6 +2,7 @@
 
 declare(strict_types=1);
 
+use App\Widget\Button;
 use Yiisoft\FormModel\Field;
 use Yiisoft\Html\Html;
 use Yiisoft\Html\Tag\Form;
@@ -23,7 +24,7 @@ use Yiisoft\Html\Tag\Form;
 <?= Html::openTag('div',['class'=>'card border border-dark shadow-2-strong rounded-3']); ?>
 <?= Html::openTag('div',['class'=>'card-header']); ?>
 <?= Html::openTag('h1',['class'=>'fw-normal h3 text-center']); ?>
-<?= $s->trans('settings_form'); ?>
+<?= $translator->translate('invoice.setting.form'); ?>
 <?= Html::closeTag('h1'); ?>
 <?=
     Form::tag()
@@ -33,22 +34,7 @@ use Yiisoft\Html\Tag\Form;
     ->id('SettingForm')
     ->open()
 ?>
-<?= Field::buttonGroup()
-    ->addContainerClass('btn-group btn-toolbar float-end')
-    ->buttonsData([
-        [
-            $translator->translate('invoice.cancel'),
-            'type' => 'reset',
-            'class' => 'btn btn-sm btn-danger',
-            'name'=> 'btn_cancel'
-        ],
-        [
-            $translator->translate('invoice.submit'),
-            'type' => 'submit',
-            'class' => 'btn btn-sm btn-primary',
-            'name' => 'btn_send'
-        ],
-]) ?>
+<?= Button::back_save($translator); ?>
 <?= 
     $alert; 
 ?>

@@ -233,72 +233,72 @@ final class SalesOrderRepository extends Select\Repository
         
     /**
      * @see Invoice\Entity\SalesOrder getStatus_id in_array
-     * @param SR $s
+     * @param Translator $translator
      * @return array
      */
-    public function getStatuses(SR $s): array
+    public function getStatuses(Translator $translator): array
     {
         return array(
             '0' => array(
-                'label' => $s->trans('all'),
+                'label' => $translator->translate('i.all'),
                 'class' => 'all',
                 'href' => 0
             ),
             '1' => array(
-                'label' => $s->trans('draft'),
+                'label' => $translator->translate('i.draft'),
                 'class' => 'draft',
                 'href' => 1
             ),
             '2' => array(
                 // Terms Agreement required
-                'label' => $this->translator->translate('invoice.salesorder.sent.to.customer'), 
+                'label' => $translator->translate('invoice.salesorder.sent.to.customer'), 
                 'class' => 'sent',
                 'href' => 2
             ),
             '3' => array(
                 // Client Confirmed Terms
-                'label' => $this->translator->translate('invoice.salesorder.client.confirmed.terms'), 
+                'label' => $translator->translate('invoice.salesorder.client.confirmed.terms'), 
                 'class' => 'viewed',
                 'href' => 3
             ),
             '4' => array(
                 // Assembled/Packaged/Prepared
-                'label' => $this->translator->translate('invoice.salesorder.assembled.packaged.prepared'), 
+                'label' => $translator->translate('invoice.salesorder.assembled.packaged.prepared'), 
                 'class' => 'assembled',
                 'href' => 4
             ),
             '5' => array(
                 // Goods/Services Delivered
-                'label' => $this->translator->translate('invoice.salesorder.goods.services.delivered'),
+                'label' => $translator->translate('invoice.salesorder.goods.services.delivered'),
                 'class' => 'approved',
                 'href' => 5
             ),
             '6' => array(
                 // Customer Confirmed Delivery
-                'label' => $this->translator->translate('invoice.salesorder.goods.services.confirmed'),
+                'label' => $translator->translate('invoice.salesorder.goods.services.confirmed'),
                 // '@see App(src)/Invoice/Asset/invoice/css/yii3i.css
                 'class' => 'confirmed',
                 'href' => 6
             ),
             '7' => array(
-                'label' => $this->translator->translate('invoice.salesorder.invoice.generate'),
+                'label' => $translator->translate('invoice.salesorder.invoice.generate'),
                  // '@see App(src)/Invoice/Asset/invoice/css/yii3i.css
                 'class' => 'generate',
                 'href' => 7
             ),
             '8' => array(
-                'label' => $this->translator->translate('invoice.salesorder.invoice.generated'),
+                'label' => $translator->translate('invoice.salesorder.invoice.generated'),
                 // '@see App(src)/Invoice/Asset/invoice/css/yii3i.css
                 'class' => 'generated',
                 'href' => 8
             ),
             '9' => array(
-                'label' => $s->trans('rejected'),
+                'label' => $translator->translate('i.rejected'),
                 'class' => 'rejected',
                 'href' => 9
             ),
             '10' => array(
-                'label' => $s->trans('canceled'),
+                'label' => $translator->translate('i.canceled'),
                 'class' => 'canceled',
                 'href' => 10
             )
@@ -307,7 +307,7 @@ final class SalesOrderRepository extends Select\Repository
     
     public function getSpecificStatusArrayLabel(string $key) : string
     {
-        $statuses_array = $this->getStatuses($this->sR);
+        $statuses_array = $this->getStatuses($this->translator);
         /**
          * @var array $statuses_array[$key]
          * @var string $statuses_array[$key]['label']

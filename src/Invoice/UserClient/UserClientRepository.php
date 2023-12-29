@@ -170,7 +170,7 @@ final class UserClientRepository extends Select\Repository
         // Get all clients assigned to this user
         $count_user_clients = $this->repoClientCountquery($user_id);   
         $assigned_client_ids = [];
-        if ($count_user_clients> 0) {
+        if ($count_user_clients > 0) {
             $user_clients = $this->repoClientquery($user_id);        
             /** @var UserClient $user_client */
             foreach ($user_clients as $user_client) {
@@ -250,10 +250,10 @@ final class UserClientRepository extends Select\Repository
                    $user_client = [
                         'user_id' => $user_id,
                         'client_id' => $value,
-                    ]; 
-                    $form = new UserClientForm();
+                    ];
                     $model = new UserClient();
-                    ($formHydrator->populate($form, $user_client) && $form->isValid()) ? $ucS->saveUserClient($model, $form) : '';
+                    $form = new UserClientForm($model);
+                    ($formHydrator->populate($form, $user_client) && $form->isValid()) ? $ucS->saveUserClient($model, $user_client) : '';
         }
     }
     

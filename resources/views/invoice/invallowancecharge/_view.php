@@ -25,7 +25,7 @@ if (!empty($errors)) {
 <?= Html::openTag('h1'); ?><?= Html::encode($title) ?><?= Html::closeTag('h1'); ?>
 <?= Html::openTag('div', ['class' => 'row']); ?>
  <div class="mb3 form-group">
-   <label for="allowance_charge_id" class="form-label" style="background:lightblue"><?= $s->trans('allowance_charge'); ?></label>
+   <label for="allowance_charge_id" class="form-label" style="background:lightblue"><?= $translator->translate('i.allowance_charge'); ?></label>
    <?= $invallowancecharge->getAllowanceCharge()->id;?>
  </div>
 </div>

@@ -2,145 +2,159 @@
 
 declare(strict_types=1); 
 
+use App\Widget\Button;
+use Yiisoft\FormModel\Field;
 use Yiisoft\Html\Html;
-use Yiisoft\Yii\Bootstrap5\Alert;
-use \DateTimeImmutable;
-use Yiisoft\VarDumper\VarDumper;
+use Yiisoft\Html\Tag\Form;
 
 /**
  * @var \Yiisoft\View\View $this
  * @var \Yiisoft\Router\UrlGeneratorInterface $urlGenerator
- * @var array $body
  * @var string $csrf
  * @var string $action
  * @var string $title
  */
 
-if (!empty($errors)) {
-    foreach ($errors as $field => $error) {
-        echo Alert::widget()->options(['class' => 'alert-danger'])->body(Html::encode($field . ':' . $error));
-    }
-}
-
 ?>
-<?= Html::openTag('h1'); ?><?= Html::encode($title) ?><?= Html::closeTag('h1'); ?>
-<form id="DeliveryForm" method="POST" action="<?= $urlGenerator->generate(...$action) ?>" enctype="multipart/form-data">
-<input type="hidden" name="_csrf" value="<?= $csrf ?>">
-<div id="headerbar">
-<h1 class="headerbar-title"><?= $s->trans('deliveries_form'); ?></h1>
-<?php $response = $head->renderPartial('invoice/layout/header_buttons',['s'=>$s, 'hide_submit_button'=>false ,'hide_cancel_button'=>false]); ?>        
-<?php echo (string)$response->getBody(); ?><div id="content">
-<?= Html::openTag('div', ['class' => 'row']); ?>
-<div class="mb-3 form-group has-feedback">
-  <?php
-  //echo VarDumper::dump($body['date_created']);
-  $date = $datehelper->get_or_set_with_style($body['date_created'] ?? new \DateTimeImmutable('now')) ;
-  ?>
-  <label form-label for="date_created"><?= $translator->translate('invoice.invoice.delivery.date.created') . ' (' . $datehelper->display() . ')'; ?></label>
-  <div class="input-group">
-      <input type="text" name="date_created" id="date_created" placeholder="<?= ' (' . $datehelper->display() . ')'; ?>"
-              class="form-control input-sm datepicker" 
-              value="<?= null !== $date ? Html::encode($date instanceof \DateTimeImmutable ? $date->format($datehelper->style()) : $date) : null; ?>" role="presentation" autocomplete="off">
-       <span class="input-group-text">
-          <i class="fa fa-calendar fa-fw"></i>
-      </span>
-  </div>
-</div>    
-    
-<div class="mb-3 form-group has-feedback">
-  <?php
-  $datem = $datehelper->get_or_set_with_style($body['date_modified'] ?? new \DateTimeImmutable('now'));
-  ?>
-  <label form-label for="date_modified"><?= $translator->translate('invoice.invoice.delivery.date.modified') . ' (' . $datehelper->display() . ')'; ?></label>
-  <div class="input-group">
-      <input type="text" name="date_modified" id="date_modified" placeholder="<?= ' (' . $datehelper->display() . ')'; ?>"
-              class="form-control input-sm datepicker" 
-              value="<?= null !== $datem ? Html::encode($datem instanceof \DateTimeImmutable ? $datem->format($datehelper->style()) : $datem) : null; ?>" role="presentation" autocomplete="off">
-       <span class="input-group-text">
-          <i class="fa fa-calendar fa-fw"></i>
-      </span>
-  </div>
-</div>
- <div class="form-group">
-   <input type="hidden" name="id" id="id" class="form-control"
- value="<?= Html::encode($body['id'] ??  ''); ?>">
- </div>
- <div class="mb3 form-group">
-   <input type="hidden" name="inv_id" id="inv_id" class="form-control"
- value="<?= $body['inv_id'] ?? $inv_id; ?>">
- </div>
- 
-<div class="mb-3 form-group has-feedback">
-  <?php
-  $adate = $datehelper->get_or_set_with_style($body['actual_delivery_date'] ?? new \DateTimeImmutable('now'));
-  ?>
-  <label form-label for="actual_delivery_date"><?= $translator->translate('invoice.invoice.delivery.actual.delivery.date') . ' (' . $datehelper->display() . ')'; ?></label>
-  <div class="input-group">
-      <input type="text" name="actual_delivery_date" id="actual_delivery_date" placeholder="<?= ' (' . $datehelper->display() . ')'; ?>"
-              class="form-control input-sm datepicker" 
-              value="<?= null !== $adate ? Html::encode($adate instanceof \DateTimeImmutable ? $adate->format($datehelper->style()) : $adate) : null; ?>" role="presentation" autocomplete="off">
-       <span class="input-group-text">
-          <i class="fa fa-calendar fa-fw"></i>
-      </span>
-  </div>
-</div>
-    
-<div class="mb-3 form-group has-feedback">
-  <?php
-  $sdate = $datehelper->get_or_set_with_style($body['start_date'] ?? new \DateTimeImmutable('now'));
-  ?>
-  <label form-label for="start_date"><?= $translator->translate('invoice.invoice.delivery.start.date') . ' (' . $datehelper->display() . ')'; ?></label>
-  <div class="input-group">
-      <input type="text" name="start_date" id="start_date" placeholder="<?= ' (' . $datehelper->display() . ')'; ?>"
-              class="form-control input-sm datepicker" 
-              value="<?= null !== $sdate ? Html::encode($sdate instanceof \DateTimeImmutable ? $sdate->format($datehelper->style()) : $sdate) : null; ?>" role="presentation" autocomplete="off">
-       <span class="input-group-text">
-          <i class="fa fa-calendar fa-fw"></i>
-      </span>
-  </div>
-</div> 
 
-<div class="mb-3 form-group has-feedback">
-  <?php
-  $edate = $datehelper->get_or_set_with_style($body['end_date'] ?? new \DateTimeImmutable('now'));
-  ?>
-  <label form-label for="end_date"><?= $translator->translate('invoice.invoice.delivery.end.date') . ' (' . $datehelper->display() . ')'; ?></label>
-  <div class="input-group">
-      <input type="text" name="end_date" id="end_date" placeholder="<?= ' (' . $datehelper->display() . ')'; ?>"
-              class="form-control input-sm datepicker" 
-              value="<?= null !== $edate ? Html::encode($edate instanceof \DateTimeImmutable ? $edate->format($datehelper->style()) : $edate) : null; ?>" role="presentation" autocomplete="off">
-       <span class="input-group-text">
-          <i class="fa fa-calendar fa-fw"></i>
-      </span>
-  </div>
-</div>
-     
-</div>
-<div class="form-group">
-        <div>
-            <label for="delivery_location_id"><?= $translator->translate('invoice.invoice.delivery.location'); ?>: </label>
-        </div>        
-        <div class="col-xs-12 col-sm-6">
-            <div class="input-group">
-                <?php if ($del_count > 0) { ?>
-                <select name="delivery_location_id" id="delivery_location_id"
-                        class="form-control">
-                    <?php foreach ($dels as $del) { ?>
-                        <option value="<?php echo $del->getId(); ?>"
-                            <?php echo $s->check_select(Html::encode($body['delivery_location_id'] ?? $del->getId()), $del->getId()); ?>>
-                            <?php echo $del->getAddress_1(). ', '.$del->getAddress_2() .', '. $del->getCity() .', '. $del->getZip() ; ?>
-                        </option>
-                    <?php } ?>
-                </select>
-                <?php } else {
+<?= Html::openTag('div',['class'=>'container py-5 h-100']); ?>
+<?= Html::openTag('div',['class'=>'row d-flex justify-content-center align-items-center h-100']); ?>
+<?= Html::openTag('div',['class'=>'col-12 col-md-8 col-lg-6 col-xl-8']); ?>
+<?= Html::openTag('div',['class'=>'card border border-dark shadow-2-strong rounded-3']); ?>
+<?= Html::openTag('div',['class'=>'card-header']); ?>
+
+<?= Html::openTag('h1',['class'=>'fw-normal h3 text-center']); ?>
+<?= $translator->translate('i.delivery_form'); ?>
+<?= Html::closeTag('h1'); ?>
+
+<?= Form::tag()
+    ->post($urlGenerator->generate(...$action))
+    ->enctypeMultipartFormData()
+    ->csrf($csrf)
+    ->id('DeliveryForm')
+    ->open()
+    ?> 
+    <?= Html::openTag('div', ['class' => 'headerbar']); ?>
+        <?= Html::openTag('h1', ['class' => 'headerbar-title']); ?>
+            <?= Html::encode($title) ?>
+        <?= Html::closeTag('h1'); ?>
+        <?= Button::back_save($translator); ?>
+    <?= Html::closeTag('div'); ?>
+    <?= Html::openTag('div', ['id' => 'content']); ?>
+        <?= Html::openTag('div', ['class' => 'mb-3 form-group has-feedback']); ?>
+            <?= Field::errorSummary($form)
+                ->errors($errors)
+                ->header($translator->translate('invoice.error.summary'))
+                ->onlyProperties(...['date_created', 'date_modified'])    
+                ->onlyCommonErrors()
+            ?>
+            <?=
+                $date = $datehelper->get_or_set_with_style($form->getDate_created() ?? new \DateTimeImmutable('now'));
+                Field::datetime($form, 'date_created')
+                ->label($translator->translate('invoice.invoice.delivery.date.created') . ' (' . $datehelper->display() . ')')
+                ->addInputAttributes([
+                    'placeholder' => $translator->translate('invoice.invoice.delivery.date.created') . ' (' . $datehelper->display() . ')',
+                    'class' => 'form-control input-sm datepicker',
+                    'id' => 'date_created',
+                    'role' => 'presentation',
+                    'autocomplete' => 'off'
+                ])
+                ->value($date)
+                ->readonly(true)        
+                ->hint($translator->translate('invoice.hint.this.field.is.not.required'));   
+            ?>
+            <?=
+                $datem = $datehelper->get_or_set_with_style($form->getDate_modified() ?? new \DateTimeImmutable('now'));
+                Field::datetime($form, 'date_modified')
+                ->label($translator->translate('invoice.invoice.delivery.date.modified') . ' (' . $datehelper->display() . ')')
+                ->addInputAttributes([
+                    'placeholder' => $translator->translate('invoice.invoice.delivery.date.modified') . ' (' . $datehelper->display() . ')',
+                    'class' => 'form-control input-sm datepicker',
+                    'id' => 'date_modified',
+                    'role' => 'presentation',
+                    'autocomplete' => 'off'
+                ])
+                ->value($datem)
+                ->readonly(true)        
+                ->hint($translator->translate('invoice.hint.this.field.is.not.required'));   
+            ?>
+            <?=
+                $sdate = $datehelper->get_or_set_with_style($form->getEnd_date() ?? new \DateTimeImmutable('now'));
+                Field::datetime($form, 'start_date')
+                ->label($translator->translate('invoice.invoice.delivery.start.date') . ' (' . $datehelper->display() . ')')
+                ->addInputAttributes([
+                     'placeholder' => $translator->translate('invoice.invoice.delivery.start.date') . ' (' . $datehelper->display() . ')',
+                     'class' => 'form-control input-sm datepicker',
+                     'id' => 'start_date',
+                     'role' => 'presentation',
+                     'autocomplete' => 'off'
+                ])
+                ->value($sdate)
+                ->readonly(true)        
+                ->hint($translator->translate('invoice.hint.this.field.is.not.required'));   
+            ?>
+            <?=
+                $datea = $datehelper->get_or_set_with_style($form->getActual_delivery_datae() ?? new \DateTimeImmutable('now'));
+                Field::datetime($form, 'actual_delivery_date')
+                ->label($translator->translate('invoice.invoice.delivery.actual.delivery.date') . ' (' . $datehelper->display() . ')')
+                ->addInputAttributes([
+                    'placeholder' => $translator->translate('invoice.invoice.delivery.actual.delivery.date') . ' (' . $datehelper->display() . ')',
+                    'class' => 'form-control input-sm datepicker',
+                    'id' => 'actual_delivery_date',
+                    'role' => 'presentation',
+                    'autocomplete' => 'off'
+                ])
+                ->value($datea)
+                ->readonly(true)        
+                ->hint($translator->translate('invoice.hint.this.field.is.not.required'));   
+            ?>
+            <?=
+                $edate = $datehelper->get_or_set_with_style($form->getEnd_date() ?? new \DateTimeImmutable('now'));
+                Field::datetime($form, 'end_date')
+                ->label($translator->translate('invoice.invoice.delivery.end.date') . ' (' . $datehelper->display() . ')')
+                ->addInputAttributes([
+                     'placeholder' => $translator->translate('invoice.invoice.delivery.end.date') . ' (' . $datehelper->display() . ')',
+                     'class' => 'form-control input-sm datepicker',
+                     'id' => 'end_date',
+                     'role' => 'presentation',
+                     'autocomplete' => 'off'
+                ])
+                ->value($edate)
+                ->readonly(true)        
+                ->hint($translator->translate('invoice.hint.this.field.is.not.required'));   
+            ?>
+            <?= Field::hidden($form, 'id')
+                ->addInputAttributes([
+                    'form-control',
+                    'id' => 'id'
+                ])
+                ->value(Html::encode($form->getId()))
+            ?>
+            <?= Field::hidden($form, 'inv_id')
+                ->addInputAttributes([
+                    'form-control',
+                    'id' => 'inv_id'
+                ])
+                ->value(Html::encode($form->getInv_id()))
+            ?>
+            <?php 
+                if ($del_count > 0) { 
+                    $optionsDataDel = [];
+                    foreach ($dels as $del) {
+                        $optionsDataDel[$del->getId()] = $del->getAddress_1(). ', '.$del->getAddress_2() .', '. $del->getCity() .', '. $del->getZip();
+                    }
+                    echo Field::select($form, 'delivery_location_id')
+                    ->label($translator->translate('invoice.invoice.delivery.location'),['class' => 'form-label'])    
+                    ->addInputAttributes([
+                        'class' => 'form-control',
+                        'id' => 'delivery_location_id'
+                    ])
+                    ->optionsData($optionsDataDel)
+                    ->value(Html::encode($form->getDelivery_location_id()));
+                } else {
                     echo Html::a($translator->translate('invoice.invoice.delivery.location.add'), $urlGenerator->generate('del/add',['client_id'=>$inv->getClient_id()]),['class'=>'btn btn-danger btn-lg mt-3']);
-                }
-                ?>
-            </div>
-        </div>    
-    </div>     
-
-</div>
-
-</div>
-</form>
+                }    
+            ?>
+        <?= Html::closeTag('div'); ?>
+    <?= Html::closeTag('div'); ?>
+<?= Html::closeTag('form'); ?>

@@ -61,7 +61,7 @@ echo $alert;
                           [
                               'type'=>'submit', 
                               'class'=>'dropdown-button',
-                              'onclick'=>"return confirm("."'".$s->trans('delete_record_warning')."');"
+                              'onclick'=>"return confirm("."'".$translator->translate('i.delete_record_warning')."');"
                           ]
                           ),
                           $urlGenerator->generate('generator/delete',['id'=>$generator->getGentor_id()]),

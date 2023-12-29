@@ -10,7 +10,7 @@
                 <button type="button" class="close" data-dismiss="modal"><i class="fa fa-close"></i></button>
             </div>
             <div class="modal-header">               
-                <h4 class="col-12 modal-title text-center"><?= $s->trans('create_credit_invoice'); ?></h4>
+                <h4 class="col-12 modal-title text-center"><?= $translator->translate('i.create_credit_invoice'); ?></h4>
                 <br>
             </div>  
         </div>    
@@ -28,7 +28,7 @@
                    value="<?= $credit_date = $datehelper->date_from_mysql(new DateTimeImmutable('now')); echo $credit_date; ?>">
 
             <div class="form-group">
-                <label for="inv_password"><?= $s->trans('invoice_password'); ?></label>
+                <label for="inv_password"><?= $translator->translate('i.invoice_password'); ?></label>
                 <input type="text" name="inv_password" id="inv_password" class="form-control"
                        value="<?= $s->get_setting('invoice_pre_password') == '' ? '' : $s->get_setting('invoice_pre_password'); ?>"
                        style="margin: 0 auto;" autocomplete="off">
@@ -51,16 +51,16 @@
                 </select>
             </div>
 
-            <p><strong><?= $s->trans('credit_invoice_details'); ?></strong></p>
+            <p><strong><?= $translator->translate('i.credit_invoice_details'); ?></strong></p>
 
             <ul>
-                <li><?= $s->trans('client') . ': ' . Html::encode($inv->getClient()->getClient_name()); ?></li>
-                <li><?= $s->trans('credit_invoice_date') . ': ' . $credit_date; ?></li>
-                <li><?= $s->trans('invoice_group') . ': ' . (null!== $credit_invoice_group ? $credit_invoice_group : ''); ?></li>
+                <li><?= $translator->translate('i.client') . ': ' . Html::encode($inv->getClient()->getClient_name()); ?></li>
+                <li><?= $translator->translate('i.credit_invoice_date') . ': ' . $credit_date; ?></li>
+                <li><?= $translator->translate('i.invoice_group') . ': ' . (null!== $credit_invoice_group ? $credit_invoice_group : ''); ?></li>
             </ul>
 
             <div class="alert alert-danger no-margin">
-                <?= $s->trans('create_credit_invoice_alert'); ?>
+                <?= $translator->translate('i.create_credit_invoice_alert'); ?>
             </div>
 
         </div>
@@ -68,10 +68,10 @@
         <div class="modal-footer">
             <div class="btn-group">
                 <button class="create-credit-confirm btn btn-success" id="create-credit-confirm" type="button">
-                    <i class="fa fa-check"></i> <?= $s->trans('confirm'); ?>
+                    <i class="fa fa-check"></i> <?= $translator->translate('i.confirm'); ?>
                 </button>
                 <button class="btn btn-danger" type="button" data-dismiss="modal">
-                    <i class="fa fa-times"></i> <?= $s->trans('cancel'); ?>
+                    <i class="fa fa-times"></i> <?= $translator->translate('i.cancel'); ?>
                 </button>
             </div>
         </div>

@@ -34,7 +34,7 @@ $header = Div::tag()
         H5::tag()
             ->addClass('bg-primary text-white p-3 rounded-top')
             ->content(
-                I::tag()->addClass('bi bi-receipt')->content(' ' . $s->trans('payment'))
+                I::tag()->addClass('bi bi-receipt')->content(' ' . $translator->translate('i.payment'))
             )
     )
     ->render();
@@ -52,9 +52,9 @@ $toolbar = Div::tag();
 
 <?php if ($canEdit && $canView) { ?>
     <div>
-     <h5><?= $s->trans('payment'); ?></h5>
+     <h5><?= $translator->translate('i.payment'); ?></h5>
      <a class="btn btn-success" href="<?= $urlGenerator->generate('payment/add'); ?>">
-          <i class="fa fa-plus"></i> <?= $s->trans('new'); ?> </a>
+          <i class="fa fa-plus"></i> <?= $translator->translate('i.new'); ?> </a>
     </div>
 <?php } ?>
 <br>
@@ -62,43 +62,43 @@ $toolbar = Div::tag();
     $columns = [
         new DataColumn(
             'id',
-            header:  $s->trans('id'),                
+            header:  $translator->translate('i.id'),                
             content: static fn ($model): string => $model->getId()                        
         ),    
         new DataColumn(
             'payment_date',
-            header:  $s->trans('payment_date'),                
+            header:  $translator->translate('i.payment_date'),                
             content: static fn ($model): string => ($model->getPayment_date())->format($datehelper->style())                        
         ),
         new DataColumn(
             'amount',
-            header:  $s->trans('amount'),
+            header:  $translator->translate('i.amount'),
             content: static function ($model) use ($s): string|null {                        
                 return $s->format_currency($model->getAmount() ?: 0.00);
             }
         ),
         new DataColumn(
             'note',
-            header:  $s->trans('note'),                
+            header:  $translator->translate('i.note'),                
             content: static fn ($model): string => $model->getNote()                        
         ),       
         new DataColumn(
             'inv_id',    
-            header:  $s->trans('invoice'),
+            header:  $translator->translate('i.invoice'),
             content: static function ($model) use ($urlGenerator): string {
                return Html::a($model->getInv()?->getNumber() ?? '', $urlGenerator->generate('inv/view',['id'=>$model->getInv_id()]),['style'=>'text-decoration:none'])->render();
            }                       
         ), 
         new DataColumn(
             'inv_id',
-            header:  $s->trans('total'),                
+            header:  $translator->translate('i.total'),                
             content: static function ($model) use ($s, $iaR) : string|null {
                $inv_amount = (($iaR->repoInvAmountCount((int)$model->getInv_id()) > 0) ? $iaR->repoInvquery((int)$model->getInv_id()) : null);
                return $s->format_currency(null!==$inv_amount ? $inv_amount->getTotal() : 0.00);
             }                        
         ),
         new DataColumn(
-            header:  $s->trans('paid'),
+            header:  $translator->translate('i.paid'),
             content: static function ($model) use ($s, $iaR) : string|null {
                $inv_amount = (($iaR->repoInvAmountCount((int)$model->getInv_id()) > 0) ? $iaR->repoInvquery((int)$model->getInv_id()) : null);
                return $s->format_currency(null!==$inv_amount ? $inv_amount->getPaid() : 0.00);
@@ -106,7 +106,7 @@ $toolbar = Div::tag();
         ),
         new DataColumn(
             'id',    
-            header:  $s->trans('balance'),
+            header:  $translator->translate('i.balance'),
             content: static function ($model) use ($s, $iaR) : string|null {
                $inv_amount = (($iaR->repoInvAmountCount((int)$model->getInv_id()) > 0) ? $iaR->repoInvquery((int)$model->getInv_id()) : null);
                return $s->format_currency(null!==$inv_amount ? $inv_amount->getBalance() : 0.00);
@@ -114,27 +114,27 @@ $toolbar = Div::tag();
         ),
         new DataColumn(
             'payment_method_id',
-            header:  $s->trans('payment_method'),
+            header:  $translator->translate('i.payment_method'),
             content: static function ($model) : string|null {
                return $model->getPaymentMethod()->getId() ? $model->getPaymentMethod()->getName() : '';
             }                        
         ),        
         new DataColumn(
-            header:  $s->trans('view'),
+            header:  $translator->translate('i.view'),
             visible: $canView,
             content: static function ($model) use ($urlGenerator): string {
                return Html::a(Html::tag('i','',['class'=>'fa fa-eye fa-margin']), $urlGenerator->generate('inv/view',['id'=>$model->getInv_id()]),[])->render();
             }                        
         ),
         new DataColumn(
-            header:  $s->trans('edit'), 
+            header:  $translator->translate('i.edit'), 
             visible: $canEdit,
             content: static function ($model) use ($s, $urlGenerator): string {
                return $model->getInv()?->getIs_read_only() === false && $s->get_setting('disable_read_only') === (string)0 ? Html::a(Html::tag('i','',['class'=>'fa fa-edit fa-margin']), $urlGenerator->generate('inv/edit',['id'=>$model->getInv_id()]),[])->render() : '';
             }                        
         ),
         new DataColumn(
-            header:  $s->trans('delete'),
+            header:  $translator->translate('i.delete'),
             visible: $canEdit,
             content: static function ($model) use ($s, $urlGenerator): string {
                 return $model->getInv()?->getIs_read_only() === false && $s->get_setting('disable_read_only') === (string)0 ? Html::a( Html::tag('button',
@@ -142,7 +142,7 @@ $toolbar = Div::tag();
                     [
                         'type'=>'submit', 
                         'class'=>'dropdown-button',
-                        'onclick'=>"return confirm("."'".$s->trans('delete_record_warning')."');"
+                        'onclick'=>"return confirm("."'".$translator->translate('i.delete_record_warning')."');"
                     ]
                     ),
                     $urlGenerator->generate('inv/delete',['id'=>$model->getInv_id()]),[]                                         

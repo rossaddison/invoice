@@ -16,33 +16,28 @@ final class DeliveryService
         $this->repository = $repository;
     }
 
-    public function saveDelivery(Delivery $model, DeliveryForm $form, SettingRepository $s): void
+    public function saveDelivery(Delivery $model, array $array, SettingRepository $s): void
     {
         $datehelper = new DateHelper($s);
-        $datetime_created = $datehelper->get_or_set_with_style(null!==$form->getDate_created()? $form->getDate_created() : new \DateTime());
-        $datetimeimmutable_created = new \DateTimeImmutable($datetime_created instanceof \DateTime ? $datetime_created->format('Y-m-d H:i:s') : 'now');
-        $model->setDate_created($datetimeimmutable_created);
+        $dim_created = new \DateTimeImmutable();
+        $dim_modified = new \DateTimeImmutable();
+        $dim_start_date = new \DateTimeImmutable();
+        $dim_actual_delivery_date = new \DateTimeImmutable();
+        $dim_end_date = new \DateTimeImmutable();
+        $model->setDate_created($dim_created::createFromFormat($datehelper->style(),(string)$array['date_created']));
      
-        $datetime_modified = $datehelper->get_or_set_with_style(null!==$form->getDate_modified()? $form->getDate_modified() : new \DateTime());
-        $datetimeimmutable_modified = new \DateTimeImmutable($datetime_modified instanceof \DateTime ? $datetime_modified->format('Y-m-d H:i:s') : 'now');
-        $model->setDate_modified($datetimeimmutable_modified);
+        $model->setDate_modified($dim_modified::createFromFormat($datehelper->style(),(string)$array['date_modified']));
         
-        $datetime_start = $datehelper->get_or_set_with_style(null!==$form->getStart_date()? $form->getStart_date() : new \DateTime());
-        $datetimeimmutable_start = new \DateTimeImmutable($datetime_start instanceof \DateTime ? $datetime_start->format('Y-m-d H:i:s') : 'now');
-        $model->setStart_date($datetimeimmutable_start);
-                
-        $datetime_actual = $datehelper->get_or_set_with_style(null!==$form->getActual_delivery_date()? $form->getActual_delivery_date() : new \DateTime());
-        $datetimeimmutable_actual = new \DateTimeImmutable($datetime_actual instanceof \DateTime ? $datetime_actual->format('Y-m-d H:i:s') : 'now');
-        $model->setActual_delivery_date($datetimeimmutable_actual);
+        $model->setStart_date($dim_start_date::createFromFormat($datehelper->style(),(string)$array['start_date']));
         
-        $datetime_end = $datehelper->get_or_set_with_style(null!==$form->getEnd_date()? $form->getEnd_date() : new \DateTime());
-        $datetimeimmutable_end = new \DateTimeImmutable($datetime_end instanceof \DateTime ? $datetime_end->format('Y-m-d H:i:s') : 'now');
-        $model->setEnd_date($datetimeimmutable_end);
+        $model->setActual_delivery_date($dim_actual_delivery_date::createFromFormat($datehelper->style(),(string)$array['actual_delivery_date']));
         
-        null!==$form->getDelivery_location_id() ? $model->setDelivery_location_id($form->getDelivery_location_id()) : '';
-        null!==$form->getDelivery_party_id() ? $model->setDelivery_party_id($form->getDelivery_party_id()) : '';
-        null!==$form->getInv_id() ? $model->setInv_id($form->getInv_id()) : '';
-        null!==$form->getInv_item_id() ? $model->setInv_item_id($form->getInv_item_id()) : '';
+        $model->setEnd_Date($dim_end_date::createFromFormat($datehelper->style(),(string)$array['end_date']));
+        
+        isset($array['delivery_location_id']) ? $model->setDelivery_location_id((int)$array['delivery_location_id']) : '';
+        isset($array['delivery_party_id']) ? $model->setDelivery_party_id((int)$array['delivery_party_id']) : '';
+        isset($array['inv_id']) ? $model->setInv_id((int)$array['inv_id']) : '';
+        isset($array['inv_item_id']) ? $model->setInv_item_id((int)$array['inv_item_id']) : '';
  
         $this->repository->save($model);
     }

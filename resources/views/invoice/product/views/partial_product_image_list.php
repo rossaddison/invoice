@@ -19,16 +19,16 @@ use Yiisoft\Yii\DataView\Column\DataColumn;
         $columns = [
             new DataColumn(
                 'file_name_original',
-                header:  $s->trans('name'),
+                header:  $translator->translate('i.name'),
                 content: static fn($model): string => ($model->getFile_name_original())
             ),
             new DataColumn(
                 'uploaded_date',
-                header:  $s->trans('date'),
+                header:  $translator->translate('i.date'),
                 content: static fn($model): string => ($model->getUploaded_date())->format($datehelper->style())
             ),
             new DataColumn(
-                header:  $s->trans('download'),
+                header:  $translator->translate('i.download'),
                 content: static function ($model) use ($urlGenerator): string {
                 return Html::a(Html::tag('button',
                           Html::tag('i', '', ['class' => 'fa fa-download fa-margin']),
@@ -44,7 +44,7 @@ use Yiisoft\Yii\DataView\Column\DataColumn;
             }),
             new DataColumn(
                 visible: $invEdit,
-                header:  $s->trans('edit'),
+                header:  $translator->translate('i.edit'),
                 content: static function ($model) use ($urlGenerator): string {
                 return Html::a(Html::tag('button',
                                 Html::tag('i', '', ['class' => 'fa fa-pencil fa-margin']),
@@ -58,14 +58,14 @@ use Yiisoft\Yii\DataView\Column\DataColumn;
             }),
             new DataColumn(
                 visible: $invEdit,
-                header:  $s->trans('delete'),
+                header:  $translator->translate('i.delete'),
                 content: static function ($model) use ($s, $urlGenerator): string {
                 return Html::a(Html::tag('button',
                                 Html::tag('i', '', ['class' => 'fa fa-trash fa-margin']),
                                 [
                                     'type' => 'submit',
                                     'class' => 'dropdown-button',
-                                    'onclick' => "return confirm(" . "'" . $s->trans('delete_record_warning') . "');"
+                                    'onclick' => "return confirm(" . "'" . $translator->translate('i.delete_record_warning') . "');"
                                 ]
                         ),
                         $urlGenerator->generate('productimage/delete', ['id' => $model->getId(), '_language' => 'en']), []

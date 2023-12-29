@@ -25,7 +25,7 @@ if (!empty($errors)) {
 <form id="InvTaxRateForm" method="POST" action="<?= $urlGenerator->generate(...$action) ?>" enctype="multipart/form-data">
 <input type="hidden" name="_csrf" value="<?= $csrf ?>">
 <div id="headerbar">
-<h1 class="headerbar-title"><?= $s->trans('invtaxrates_form'); ?></h1>
+<h1 class="headerbar-title"><?= $translator->translate('i.invtaxrates_form'); ?></h1>
 <?php $response = $head->renderPartial('invoice/layout/header_buttons',['s'=>$s, 'hide_submit_button'=>false ,'hide_cancel_button'=>false]); ?>        
 <?php echo (string)$response->getBody(); ?><div id="content">
 <?= Html::openTag('div', ['class' => 'row']); ?>
@@ -41,9 +41,9 @@ if (!empty($errors)) {
     </select>
  </div>
  <div class="mb3 form-group">
-    <label for="tax_rate_id"><?php $s->trans('tax_rate'); ?></label>
+    <label for="tax_rate_id"><?php $translator->translate('i.tax_rate'); ?></label>
     <select name="tax_rate_id" id="tax_rate_id" class="form-control simple-select">
-       <option value="0"><?php $s->trans('tax_rate'); ?></option>
+       <option value="0"><?php $translator->translate('i.tax_rate'); ?></option>
          <?php foreach ($tax_rates as $tax_rate) { ?>
           <option value="<?= $tax_rate->getId(); ?>"
            <?php $s->check_select(Html::encode($body['tax_rate_id'] ?? ''), $tax_rate->getId()) ?>
@@ -61,7 +61,7 @@ if (!empty($errors)) {
  value="<?= Html::encode($body['include_item_tax'] ??  ''); ?>">
  </div>
 <div class="form-group">
-  <label for="amount"><?= $s->trans('amount'); ?></label>
+  <label for="amount"><?= $translator->translate('i.amount'); ?></label>
       <div class="input-group has-feedback">
           <input type="text" name="amount" id="amount" class="form-control"
               value="<?= $s->format_amount($body['amount'] ?? ''); ?>">

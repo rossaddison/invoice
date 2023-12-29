@@ -11,6 +11,7 @@ use App\Invoice\Setting\SettingRepository as SR;
 use Cycle\ORM\Select;
 use Throwable;
 use Yiisoft\Data\Reader\Sort;
+use Yiisoft\Translator\TranslatorInterface as Translator;
 use Yiisoft\Yii\Cycle\Data\Reader\EntityReader;
 use Yiisoft\Yii\Cycle\Data\Writer\EntityWriter;
 
@@ -180,13 +181,13 @@ private EntityWriter $entityWriter;
     }
     
     /**
-     * 
      * @param SOR $soR
      * @param SR $sR
+     * @param Translator $translator
      * @param string $period
      * @return array
      */
-    public function get_status_totals(SOR $soR, SR $sR, string $period) : array
+    public function get_status_totals(SOR $soR, SR $sR, Translator $translator, string $period) : array
     {
         $return = [];
         // $period eg. this-month, last-month derived from $sR->get_setting('invoice or so_overview_period') 
@@ -195,7 +196,7 @@ private EntityWriter $entityWriter;
          * @var int $key
          * @var array $status 
          */
-        foreach ($soR->getStatuses($sR) as $key => $status) {
+        foreach ($soR->getStatuses($translator) as $key => $status) {
             $status_specific_sos = $this->repoStatusTotals($key, $range, $sR);
             /** @var float $total */
             $total = 0.00;

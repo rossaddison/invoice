@@ -25,11 +25,11 @@ echo Alert::widget()->options(['class' => 'alert-danger'])->body(Html::encode($f
 <?= Html::openTag('h1'); ?><?= Html::encode($title) ?><?= Html::closeTag('h1'); ?>
 <?= Html::openTag('div', ['class' => 'row']); ?>
  <div class="row mb3 form-group">
-<label for="auto_reference" class="text-bg col-sm-2 col-form-label " style="background:lightblue"><?= $s->trans('auto_reference'); ?></label>
+<label for="auto_reference" class="text-bg col-sm-2 col-form-label " style="background:lightblue"><?= $translator->translate('i.auto_reference'); ?></label>
 <label class="text-bg col-sm-10 col-form-label"><?= Html::encode($body['auto_reference'] ?? ''); ?><\label>
  </div>
  <div class="row mb3 form-group">
-<label for="provider" class="text-bg col-sm-2 col-form-label " style="background:lightblue"><?= $s->trans('provider'); ?></label>
+<label for="provider" class="text-bg col-sm-2 col-form-label " style="background:lightblue"><?= $translator->translate('i.provider'); ?></label>
 <label class="text-bg col-sm-10 col-form-label"><?= Html::encode($body['provider'] ?? ''); ?><\label>
  </div>
 </div>

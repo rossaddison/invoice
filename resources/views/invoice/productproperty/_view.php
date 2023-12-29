@@ -57,11 +57,11 @@ echo Alert::widget()->options(['class' => 'alert-danger'])->body(Html::encode($f
 <?= Html::openTag('h1'); ?><?= Html::encode($title) ?><?= Html::closeTag('h1'); ?>
 <?= Html::openTag('div', ['class' => 'row']); ?>
  <div class="row mb3 form-group">
-<label for="name" class="text-bg col-sm-2 col-form-label " style="background:lightblue"><?= $s->trans('name'); ?></label>
+<label for="name" class="text-bg col-sm-2 col-form-label " style="background:lightblue"><?= $translator->translate('i.name'); ?></label>
 <label class="text-bg col-sm-10 col-form-label"><?= Html::encode($body['name'] ?? ''); ?></label>
  </div>
  <div class="row mb3 form-group">
-<label for="value" class="text-bg col-sm-2 col-form-label " style="background:lightblue"><?= $s->trans('value'); ?></label>
+<label for="value" class="text-bg col-sm-2 col-form-label " style="background:lightblue"><?= $translator->translate('i.value'); ?></label>
 <label class="text-bg col-sm-10 col-form-label"><?= Html::encode($body['value'] ?? ''); ?></label>
  </div>
  <div class="row mb3 form-group">
@@ -69,7 +69,7 @@ echo Alert::widget()->options(['class' => 'alert-danger'])->body(Html::encode($f
  <label class="text-bg col-sm-10 col-form-label"><?= Html::a($productproperty->getProduct()->getProduct_id(), $urlGenerator->generate('product/view',['id'=>$productproperty->getProduct()->getProduct_id()]));?></label>
  </div>
  <div class="row mb3 form-group">
- <label for="product_id" class="text-bg col-sm-2 col-form-label" style="background:lightblue"><?= $s->trans('product'); ?></label>
+ <label for="product_id" class="text-bg col-sm-2 col-form-label" style="background:lightblue"><?= $translator->translate('i.product'); ?></label>
  <label class="text-bg col-sm-10 col-form-label"><?= $productproperty->getProduct()?->getProduct_name();?></label>
  </div>   
 </div>

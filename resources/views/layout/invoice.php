@@ -151,7 +151,7 @@ $this->beginPage();
     </head>
     <body>
         <?php
-        Html::tag('Noscript', Html::tag('Div', $s->trans('please_enable_js'), ['class' => 'alert alert-danger no-margin']));
+        Html::tag('Noscript', Html::tag('Div', $translator->translate('i.please_enable_js'), ['class' => 'alert alert-danger no-margin']));
         ?>
         <?php
         $this->beginBody();
@@ -177,7 +177,7 @@ $this->beginPage();
           ->items(
             $isGuest ? [] :
               [
-              ['label' => $s->trans('dashboard'), 'url' => $urlGenerator->generate('invoice/dashboard')],
+              ['label' => $translator->translate('i.dashboard'), 'url' => $urlGenerator->generate('invoice/dashboard')],
               ['label' => $translator->translate('invoice.peppol.abbreviation'),
                 'items' => [
                   ['options' => ['class' => 'nav fs-4'], 'label' => $translator->translate('invoice.invoice.allowance.or.charge.add'), 'url' => $urlGenerator->generate('allowancecharge/index')],
@@ -187,85 +187,85 @@ $this->beginPage();
                   ['options' => ['class' => 'nav fs-4'], 'label' => $translator->translate('invoice.peppol.store.cove.1.1.4'), 'url' => $urlGenerator->generate('invoice/store_cove_send_test_json_invoice')],
                 ],
               ],
-              ['label' => $s->trans('client'),
+              ['label' => $translator->translate('i.client'),
                 'items' => [
                   ['options' => ['class' => 'nav fs-4 ajax-loader'], 'label' => $translator->translate('invoice.client.add'), 'url' => $urlGenerator->generate('client/add')],
-                  ['options' => ['class' => 'nav fs-4 ajax-loader'], 'label' => $s->trans('view'), 'url' => $urlGenerator->generate('client/index')],
+                  ['options' => ['class' => 'nav fs-4 ajax-loader'], 'label' => $translator->translate('i.view'), 'url' => $urlGenerator->generate('client/index')],
                   ['options' => ['class' => 'nav fs-4'], 'label' => $translator->translate('invoice.client.note.add'), 'url' => $urlGenerator->generate('clientnote/add')],
                   ['options' => ['class' => 'nav fs-4'], 'label' => $translator->translate('invoice.invoice.delivery.location'), 'url' => $urlGenerator->generate('del/index')],
                 ],
               ],
-              ['label' => $s->trans('quote'),
+              ['label' => $translator->translate('i.quote'),
                 'items' => [
-                  ['options' => ['class' => 'nav fs-4 ajax-loader'], 'label' => $s->trans('view'), 'url' => $urlGenerator->generate('quote/index')],
+                  ['options' => ['class' => 'nav fs-4 ajax-loader'], 'label' => $translator->translate('i.view'), 'url' => $urlGenerator->generate('quote/index')],
                 ],
               ],
               ['label' => $translator->translate('invoice.salesorder'),
                 'items' => [
-                  ['options' => ['class' => 'nav fs-4 ajax-loader'], 'label' => $s->trans('view'), 'url' => $urlGenerator->generate('salesorder/index')],
+                  ['options' => ['class' => 'nav fs-4 ajax-loader'], 'label' => $translator->translate('i.view'), 'url' => $urlGenerator->generate('salesorder/index')],
                 ],
               ],
-              ['label' => $s->trans('invoice'),
+              ['label' => $translator->translate('i.invoice'),
                 'items' => [
-                  ['options' => ['class' => 'nav fs-4 ajax-loader'], 'label' => $s->trans('view'), 'url' => $urlGenerator->generate('inv/index')],
-                  ['options' => ['class' => 'nav fs-4'], 'label' => $s->trans('recurring'), 'url' => $urlGenerator->generate('invrecurring/index')],
+                  ['options' => ['class' => 'nav fs-4 ajax-loader'], 'label' => $translator->translate('i.view'), 'url' => $urlGenerator->generate('inv/index')],
+                  ['options' => ['class' => 'nav fs-4'], 'label' => $translator->translate('i.recurring'), 'url' => $urlGenerator->generate('invrecurring/index')],
                 ],
               ],
-              ['label' => $s->trans('payment'),
+              ['label' => $translator->translate('i.payment'),
                 'items' => [
-                  ['options' => ['class' => 'nav fs-4'], 'label' => $s->trans('enter_payment'), 'url' => $urlGenerator->generate('payment/add')],
-                  ['options' => ['class' => 'nav fs-4 ajax-loader'], 'label' => $s->trans('view'), 'url' => $urlGenerator->generate('payment/index')],
-                  ['options' => ['class' => 'nav fs-4'], 'label' => $s->trans('payment_logs'), 'url' => $urlGenerator->generate('payment/online_log')]
+                  ['options' => ['class' => 'nav fs-4'], 'label' => $translator->translate('i.enter_payment'), 'url' => $urlGenerator->generate('payment/add')],
+                  ['options' => ['class' => 'nav fs-4 ajax-loader'], 'label' => $translator->translate('i.view'), 'url' => $urlGenerator->generate('payment/index')],
+                  ['options' => ['class' => 'nav fs-4'], 'label' => $translator->translate('i.payment_logs'), 'url' => $urlGenerator->generate('payment/online_log')]
                 ],
               ],
-              ['label' => $s->trans('product'),
+              ['label' => $translator->translate('i.product'),
                 'items' => [
-                  ['options' => ['class' => 'nav fs-4'], 'label' => $s->trans('add_product'), 'url' => $urlGenerator->generate('product/add')],
-                  ['options' => ['class' => 'nav fs-4 ajax-loader'], 'label' => $s->trans('view'), 'url' => $urlGenerator->generate('product/index')],
-                  ['options' => ['class' => 'nav fs-4'], 'label' => $s->trans('family'), 'url' => $urlGenerator->generate('family/index')],
-                  ['options' => ['class' => 'nav fs-4'], 'label' => $s->trans('unit'), 'url' => $urlGenerator->generate('unit/index')],
+                  ['options' => ['class' => 'nav fs-4'], 'label' => $translator->translate('i.add_product'), 'url' => $urlGenerator->generate('product/add')],
+                  ['options' => ['class' => 'nav fs-4 ajax-loader'], 'label' => $translator->translate('i.view'), 'url' => $urlGenerator->generate('product/index')],
+                  ['options' => ['class' => 'nav fs-4'], 'label' => $translator->translate('i.family'), 'url' => $urlGenerator->generate('family/index')],
+                  ['options' => ['class' => 'nav fs-4'], 'label' => $translator->translate('i.unit'), 'url' => $urlGenerator->generate('unit/index')],
                   ['options' => ['class' => 'nav fs-4'], 'label' => $translator->translate('invoice.peppol.unit'), 'url' => $urlGenerator->generate('unitpeppol/index')],
                   
                 ],
               ],
-              ['label' => $s->trans('tasks'),
+              ['label' => $translator->translate('i.tasks'),
                 'items' => [
-                  ['options' => ['class' => 'nav fs-4'], 'label' => $s->trans('create'), 'url' => $urlGenerator->generate('task/add')],
-                  ['options' => ['class' => 'nav fs-4 ajax-loader'], 'label' => $s->trans('view'), 'url' => $urlGenerator->generate('task/index')],
+                  ['options' => ['class' => 'nav fs-4'], 'label' => $translator->translate('i.create'), 'url' => $urlGenerator->generate('task/add')],
+                  ['options' => ['class' => 'nav fs-4 ajax-loader'], 'label' => $translator->translate('i.view'), 'url' => $urlGenerator->generate('task/index')],
                 ],
               ],
-              ['label' => $s->trans('projects'),
+              ['label' => $translator->translate('i.projects'),
                 'items' => [
-                  ['options' => ['class' => 'nav fs-4'], 'label' => $s->trans('create'), 'url' => $urlGenerator->generate('project/add')],
-                  ['options' => ['class' => 'nav fs-4 ajax-loader'], 'label' => $s->trans('view'), 'url' => $urlGenerator->generate('project/index')],
+                  ['options' => ['class' => 'nav fs-4'], 'label' => $translator->translate('i.create'), 'url' => $urlGenerator->generate('project/add')],
+                  ['options' => ['class' => 'nav fs-4 ajax-loader'], 'label' => $translator->translate('i.view'), 'url' => $urlGenerator->generate('project/index')],
                 ],
               ],
-              ['label' => $s->trans('reports'),
+              ['label' => $translator->translate('i.reports'),
                 'items' => [
-                  ['options' => ['class' => 'nav fs-4'], 'label' => $s->trans('sales_by_client'), 'url' => $urlGenerator->generate('report/sales_by_client_index')],
+                  ['options' => ['class' => 'nav fs-4'], 'label' => $translator->translate('i.sales_by_client'), 'url' => $urlGenerator->generate('report/sales_by_client_index')],
                   ['options' => ['class' => 'nav fs-4'], 'label' => $translator->translate('invoice.report.sales.by.product'), 'url' => $urlGenerator->generate('report/sales_by_product_index')],
                   ['options' => ['class' => 'nav fs-4'], 'label' => $translator->translate('invoice.report.sales.by.task'), 'url' => $urlGenerator->generate('report/sales_by_task_index')],
-                  ['options' => ['class' => 'nav fs-4'], 'label' => $s->trans('sales_by_date'), 'url' => $urlGenerator->generate('report/sales_by_year_index')],
-                  ['options' => ['class' => 'nav fs-4'], 'label' => $s->trans('payment_history'), 'url' => $urlGenerator->generate('report/payment_history_index')],
-                  ['options' => ['class' => 'nav fs-4'], 'label' => $s->trans('invoice_aging'), 'url' => $urlGenerator->generate('report/invoice_aging_index')],
+                  ['options' => ['class' => 'nav fs-4'], 'label' => $translator->translate('i.sales_by_date'), 'url' => $urlGenerator->generate('report/sales_by_year_index')],
+                  ['options' => ['class' => 'nav fs-4'], 'label' => $translator->translate('i.payment_history'), 'url' => $urlGenerator->generate('report/payment_history_index')],
+                  ['options' => ['class' => 'nav fs-4'], 'label' => $translator->translate('i.invoice_aging'), 'url' => $urlGenerator->generate('report/invoice_aging_index')],
                 ],
               ],
-              ['label' => $s->trans('settings'),
-                'items' => [['options' => ['class' => 'nav fs-4 ajax-loader'], 'label' => $s->trans('view'), 'options' => ['style' => 'background-color: #ffcccb'], 'url' => $urlGenerator->generate('setting/debug_index'), 'visible' => $debug_mode],
-                  ['options' => ['class' => 'nav fs-4'], 'label' => $s->trans('add'), 'options' => ['style' => 'background-color: #ffcccb'], 'url' => $urlGenerator->generate('setting/add'), 'visible' => $debug_mode],
-                  ['options' => ['class' => 'nav fs-4 ajax-loader'], 'label' => $s->trans('view'), 'url' => $urlGenerator->generate('setting/tab_index')],
+              ['label' => $translator->translate('i.settings'),
+                'items' => [['options' => ['class' => 'nav fs-4 ajax-loader'], 'label' => $translator->translate('i.view'), 'options' => ['style' => 'background-color: #ffcccb'], 'url' => $urlGenerator->generate('setting/debug_index'), 'visible' => $debug_mode],
+                  ['options' => ['class' => 'nav fs-4'], 'label' => $translator->translate('invoice.setting.add'), 'options' => ['style' => 'background-color: #ffcccb'], 'url' => $urlGenerator->generate('setting/add'), 'visible' => $debug_mode],
+                  ['options' => ['class' => 'nav fs-4 ajax-loader'], 'label' => $translator->translate('i.view'), 'url' => $urlGenerator->generate('setting/tab_index')],
                   ['options' => ['class' => 'nav fs-4'], 'label' => $translator->translate((($s->get_setting('install_test_data') == '1') && ($s->get_setting('use_test_data') == '1')) 
                                                                    ? 'invoice.install.test.data' : 'invoice.install.test.data.goto.tab.index'), 
                                                           'url' =>  (($s->get_setting('install_test_data') == '1' && $s->get_setting('use_test_data') == '1') 
                                                                    ? $urlGenerator->generate('invoice/index') : $urlGenerator->generate('setting/tab_index')),
                                                           'visible' => ($s->get_setting('install_test_data') == '1' && $s->get_setting('use_test_data') == '1')],         
-                  ['options' => ['class' => 'nav fs-4'], 'label' => $s->trans('email_template'), 'url' => $urlGenerator->generate('emailtemplate/index')],
+                  ['options' => ['class' => 'nav fs-4'], 'label' => $translator->translate('i.email_template'), 'url' => $urlGenerator->generate('emailtemplate/index')],
                   ['options' => ['class' => 'nav fs-4'], 'label' => $translator->translate('invoice.email.from.dropdown'), 'url' => $urlGenerator->generate('from/index')],
-                  ['options' => ['class' => 'nav fs-4'], 'label' => $s->trans('custom_fields'), 'url' => $urlGenerator->generate('customfield/index')],
-                  ['options' => ['class' => 'nav fs-4'], 'label' => $s->trans('invoice_group'), 'url' => $urlGenerator->generate('group/index')],
-                  ['options' => ['class' => 'nav fs-4'], 'label' => $s->trans('invoice_archive'), 'url' => $urlGenerator->generate('inv/archive')],
-                  ['options' => ['class' => 'nav fs-4'], 'label' => $s->trans('payment_method'), 'url' => $urlGenerator->generate('paymentmethod/index')],
-                  ['options' => ['class' => 'nav fs-4'], 'label' => $s->trans('invoice_tax_rate'), 'url' => $urlGenerator->generate('taxrate/index')],
+                  ['options' => ['class' => 'nav fs-4'], 'label' => $translator->translate('i.custom_fields'), 'url' => $urlGenerator->generate('customfield/index')],
+                  ['options' => ['class' => 'nav fs-4'], 'label' => $translator->translate('i.invoice_group'), 'url' => $urlGenerator->generate('group/index')],
+                  ['options' => ['class' => 'nav fs-4'], 'label' => $translator->translate('i.invoice_archive'), 'url' => $urlGenerator->generate('inv/archive')],
+                  ['options' => ['class' => 'nav fs-4'], 'label' => $translator->translate('i.payment_method'), 'url' => $urlGenerator->generate('paymentmethod/index')],
+                  ['options' => ['class' => 'nav fs-4'], 'label' => $translator->translate('i.invoice_tax_rate'), 'url' => $urlGenerator->generate('taxrate/index')],
                   ['options' => ['class' => 'nav fs-4'], 'label' => $translator->translate('invoice.invoice.contract'), 'url' => $urlGenerator->generate('contract/index')],
                   ['options' => ['class' => 'nav fs-4'], 'label' => $translator->translate('invoice.user.account'), 'url' => $urlGenerator->generate('userinv/index')],
                   ['options' => ['class' => 'nav fs-4'], 'label' => $translator->translate('password.change'), 'url' => $urlGenerator->generate('auth/change')],
@@ -422,7 +422,7 @@ $this->beginPage();
           ->items(
             [
               [
-                'label' => $s->trans('language'),
+                'label' => $translator->translate('i.language'),
                 'url' => '#',
                 //'visible' => $isGuest,
                 'items' => [
@@ -493,12 +493,12 @@ $this->beginPage();
                 ],
               ],
               [
-                'label' => $s->trans('login'),
+                'label' => $translator->translate('i.login'),
                 'url' => $urlGenerator->generate('auth/login'),
                 'visible' => $isGuest,
               ],
               [
-                'label' => $s->trans('enter_user_account'),
+                'label' => $translator->translate('i.enter_user_account'),
                 'url' => $urlGenerator->generate('auth/signup'),
                 'visible' => $isGuest,
               ],
@@ -541,8 +541,8 @@ $this->beginPage();
                     </div>
                 </div>
                 <div class="text-right">
-                    <button type="button" class="fullpage-loader-close btn btn-link tip" aria-label="<?php $s->trans('close'); ?>"
-                            title="<?= $s->trans('close'); ?>" data-placement="left">
+                    <button type="button" class="fullpage-loader-close btn btn-link tip" aria-label="<?php $translator->translate('i.close'); ?>"
+                            title="<?= $translator->translate('i.close'); ?>" data-placement="left">
                         <span aria-hidden="true"><i class="fa fa-close"></i></span>
                     </button>
                 </div>

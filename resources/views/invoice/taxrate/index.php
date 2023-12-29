@@ -12,9 +12,9 @@ use App\Widget\OffsetPagination;
  echo $alert;
 ?>
 <div>
- <h5><?= $s->trans('tax_rate');?></h5>
+ <h5><?= $translator->translate('i.tax_rate');?></h5>
  <a class="btn btn-success" href="<?= $urlGenerator->generate('taxrate/add'); ?>">
-      <i class="fa fa-plus"></i> <?= $s->trans('new'); ?> </a></div>
+      <i class="fa fa-plus"></i> <?= $translator->translate('i.new'); ?> </a></div>
 
 <?php
     $pagination = OffsetPagination::widget()
@@ -32,12 +32,12 @@ use App\Widget\OffsetPagination;
 <table class="table table-hover table-striped">
    <thead>
     <tr>
-        <th><?= $s->trans('tax_rate_name'); ?></th>
-        <th><?= $s->trans('tax_rate_percent'); ?></th>
+        <th><?= $translator->translate('i.tax_rate_name'); ?></th>
+        <th><?= $translator->translate('i.tax_rate_percent'); ?></th>
         <th><?= $translator->translate('invoice.peppol.tax.rate.code'); ?></th>
         <th><?= $translator->translate('invoice.storecove.tax.rate.code'); ?></th>
         <th><?= $translator->translate('invoice.default'); ?></th>
-        <th><?= $s->trans('options'); ?></th>
+        <th><?= $translator->translate('i.options'); ?></th>
     </tr>
    </thead>
 <tbody>
@@ -49,28 +49,28 @@ use App\Widget\OffsetPagination;
       <td><?= Html::encode($taxrate->getTax_rate_percent()); ?></td>
       <td><?= Html::encode($taxrate->getPeppol_tax_rate_code()); ?></td>
       <td><?= Html::encode(ucfirst(str_replace('_', ' ', $taxrate->getStorecove_tax_type()))); ?></td>
-      <td><?= ($taxrate->getTax_rate_default()) ? '<span class="label active">' . $s->trans('yes') . '</span>' : '<span class="label inactive">' . $s->trans('no') . '</span>'; ?></td>          
+      <td><?= ($taxrate->getTax_rate_default()) ? '<span class="label active">' . $translator->translate('i.yes') . '</span>' : '<span class="label inactive">' . $translator->translate('i.no') . '</span>'; ?></td>          
 
         <td>
           <div class="options btn-group">
           <a class="btn btn-default btn-sm dropdown-toggle" data-toggle="dropdown" href="#">
                 <i class="fa fa-cog"></i>
-                <?= $s->trans('options'); ?>
+                <?= $translator->translate('i.options'); ?>
           </a>
           <ul class="dropdown-menu">
               <li>
                   <a href="<?= $urlGenerator->generate('taxrate/edit',['tax_rate_id'=>$taxrate->getTax_rate_id()]); ?>" style="text-decoration:none"><i class="fa fa-edit fa-margin"></i>
-                       <?= $s->trans('edit'); ?>
+                       <?= $translator->translate('i.edit'); ?>
                   </a>
               </li>
               <li>
                   <a href="<?= $urlGenerator->generate('taxrate/view',['tax_rate_id'=>$taxrate->getTax_rate_id()]); ?>" style="text-decoration:none"><i class="fa fa-eye fa-margin"></i>
-                       <?= $s->trans('view'); ?>
+                       <?= $translator->translate('i.view'); ?>
                   </a>
               </li>
               <li>
                   <a href="<?= $urlGenerator->generate('taxrate/delete',['tax_rate_id'=>$taxrate->getTax_rate_id()]); ?>" style="text-decoration:none"><i class="fa fa-trash fa-margin"></i>
-                       <?= $s->trans('delete'); ?>
+                       <?= $translator->translate('i.delete'); ?>
                   </a>
               </li>
           </ul>

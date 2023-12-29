@@ -26,7 +26,7 @@ if (!empty($errors)) {
 <form id="QuoteItemForm" method="POST" action="<?= $urlGenerator->generate(...$action) ?>" enctype="multipart/form-data">
 <input type="hidden" name="_csrf" value="<?= $csrf ?>">
 <div id="headerbar">
-<h1 class="headerbar-title"><?= $s->trans('quoteitems_form'); ?></h1>
+<h1 class="headerbar-title"><?= $translator->translate('i.quoteitems_form'); ?></h1>
 <?php $response = $head->renderPartial('invoice/layout/header_buttons',['s'=>$s, 'hide_submit_button'=>false ,'hide_cancel_button'=>false]); ?>        
 <?php echo (string)$response->getBody(); ?><div id="content">
 <?= Html::openTag('div', ['class' => 'row']); ?>
@@ -91,17 +91,17 @@ if (!empty($errors)) {
 </div>
 </div>
  <div class="mb3 form-group">
-   <label for="name"><?= $s->trans('name'); ?></label>
+   <label for="name"><?= $translator->translate('i.name'); ?></label>
    <input type="text" name="name" id="name" class="form-control"
  value="<?= Html::encode($body['name'] ??  ''); ?>">
  </div>
  <div class="mb3 form-group">
-   <label for="description"><?= $s->trans('description'); ?></label>
+   <label for="description"><?= $translator->translate('i.description'); ?></label>
    <input type="text" name="description" id="description" class="form-control"
  value="<?= Html::encode($body['description'] ??  ''); ?>">
  </div>
 <div class="form-group">
-  <label for="quantity"><?= $s->trans('quantity'); ?></label>
+  <label for="quantity"><?= $translator->translate('i.quantity'); ?></label>
       <div class="input-group has-feedback">
           <input type="text" name="quantity" id="quantity" class="form-control"
               value="<?= $s->format_amount($body['quantity'] ?? ''); ?>">
@@ -109,7 +109,7 @@ if (!empty($errors)) {
       </div>
 </div>
 <div class="form-group">
-  <label for="price"><?= $s->trans('price'); ?></label>
+  <label for="price"><?= $translator->translate('i.price'); ?></label>
       <div class="input-group has-feedback">
           <input type="text" name="price" id="price" class="form-control"
               value="<?= $s->format_amount($body['price'] ?? ''); ?>">
@@ -125,12 +125,12 @@ if (!empty($errors)) {
       </div>
 </div>
  <div class="mb3 form-group">
-   <label for="order"><?= $s->trans('order'); ?></label>
+   <label for="order"><?= $translator->translate('i.order'); ?></label>
    <input type="text" name="order" id="order" class="form-control"
  value="<?= Html::encode($body['order'] ??  ''); ?>">
  </div>
  <div class="mb3 form-group">
-   <label for="product_unit"><?= $s->trans('product_unit'); ?></label>
+   <label for="product_unit"><?= $translator->translate('i.product_unit'); ?></label>
    <input type="text" name="product_unit" id="product_unit" class="form-control"
  value="<?= Html::encode($body['product_unit'] ??  ''); ?>">
  </div>

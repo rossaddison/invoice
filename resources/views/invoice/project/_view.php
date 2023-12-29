@@ -25,11 +25,11 @@ if (!empty($errors)) {
 <?= Html::openTag('h1'); ?><?= Html::encode($title) ?><?= Html::closeTag('h1'); ?>
 <?= Html::openTag('div', ['class' => 'row']); ?>
  <div class="mb3 form-group">
-<label for="name" class="form-label" style="background:lightblue"><?= $s->trans('name'); ?></label>
+<label for="name" class="form-label" style="background:lightblue"><?= $translator->translate('i.name'); ?></label>
    <?= Html::encode($body['name'] ?? ''); ?>
  </div>
  <div class="mb3 form-group">
-   <label for="client_id" class="form-label" style="background:lightblue"><?= $s->trans('client'); ?></label>
+   <label for="client_id" class="form-label" style="background:lightblue"><?= $translator->translate('i.client'); ?></label>
    <?= $project->getClient()->client_name;?>
  </div>
 </div>

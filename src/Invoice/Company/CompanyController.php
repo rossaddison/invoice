@@ -92,7 +92,6 @@ final class CompanyController
             'form' => $form,
             's'=>$settingRepository,
             'company_public'=>$this->translator->translate('invoice.company.public'),
-            'head'=>$head
         ];
         
         if ($request->getMethod() === Method::POST) {
@@ -137,7 +136,6 @@ final class CompanyController
                 'action' => ['company/edit', ['id' => $company->getId()]],
                 'errors' => [],
                 'form' => $form,
-                'head'=>$head,
                 'company_public'=>$this->translator->translate('invoice.company.public'),
                 's'=>$settingRepository,
             ];

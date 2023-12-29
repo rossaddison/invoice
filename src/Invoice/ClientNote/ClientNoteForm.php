@@ -6,29 +6,25 @@ namespace App\Invoice\ClientNote;
 
 use App\Invoice\Entity\ClientNote;
 use Yiisoft\FormModel\FormModel;
-use Yiisoft\Validator\Rule\Integer;
 use Yiisoft\Validator\Rule\Required;
-use Yiisoft\Validator\Rule\StringValue;
 
 use DateTimeImmutable;
 
 final class ClientNoteForm extends FormModel
 {   
-    #[Integer]
     #[Required]
     private ?int $client_id=null;
     
-    #[Required]
-    private mixed $date;
+    // Bugfix: Could not enter #[Required] here instead of ->required(true)
+    private mixed $date_note='';
     
-    #[StringValue]
     #[Required]
     private ?string $note='';
     
     public function __construct(ClientNote $clientNote) 
     {
         $this->client_id = (int)$clientNote->getClient_id();
-        $this->date = $clientNote->getDate();
+        $this->date_note = $clientNote->getDate_note();
         $this->note = $clientNote->getNote();
     }
 
@@ -37,12 +33,12 @@ final class ClientNoteForm extends FormModel
       return $this->client_id;
     }
     
-    public function getDate() : string|DateTimeImmutable
+    public function getDate_note() : string|DateTimeImmutable
     {
       /**
-       * @var string|DateTimeImmutable $this->date 
+       * @var string|DateTimeImmutable $this->date_note 
        */
-      return $this->date;
+      return $this->date_note;
     }    
     
     public function getNote() : string|null

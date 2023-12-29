@@ -87,7 +87,6 @@ final class AllowanceChargeController
             'allowances' => $allowances,
             'errors' => [],
             'form' => $form,
-            's'=>$settingRepository,
             'tax_rates'=>$tR->findAllPreloaded(),
             'head'=>$head,
         ];
@@ -249,8 +248,6 @@ final class AllowanceChargeController
     }
        
     /**
-     * 
-     * @param ViewRenderer $head
      * @param Request $request
      * @param CurrentRoute $currentRoute
      * @param FormHydrator $formHydrator
@@ -259,7 +256,7 @@ final class AllowanceChargeController
      * @param TaxRateRepository $tR
      * @return Response
      */
-    public function edit_allowance(ViewRenderer $head, Request $request, CurrentRoute $currentRoute, 
+    public function edit_allowance(Request $request, CurrentRoute $currentRoute, 
         FormHydrator $formHydrator,
         AllowanceChargeRepository $allowancechargeRepository, 
         SettingRepository $settingRepository, 
@@ -277,8 +274,6 @@ final class AllowanceChargeController
                 'action' => ['allowancecharge/edit_allowance', ['id' => $allowancecharge->getId()]],
                 'errors' => [],
                 'form' => $form,
-                'head'=> $head,
-                's'=> $settingRepository,
                 'tax_rates'=> $tR->findAllPreloaded(),
                 'allowances'=> $allowances,
             ];
@@ -303,7 +298,6 @@ final class AllowanceChargeController
     }
     
     /**
-     * @param ViewRenderer $head
      * @param Request $request
      * @param CurrentRoute $currentRoute
      * @param FormHydrator $formHydrator
@@ -312,7 +306,7 @@ final class AllowanceChargeController
      * @param TaxRateRepository $tR
      * @return Response
      */
-    public function edit_charge(ViewRenderer $head, Request $request, CurrentRoute $currentRoute, 
+    public function edit_charge(Request $request, CurrentRoute $currentRoute, 
                         FormHydrator $formHydrator,
                         AllowanceChargeRepository $allowancechargeRepository, 
                         SettingRepository $settingRepository, 
@@ -330,8 +324,6 @@ final class AllowanceChargeController
                 'action' => ['allowancecharge/edit_allowance', ['id' => $allowancecharge->getId()]],
                 'errors' => [],
                 'form' => $form,
-                'head'=>$head,
-                's'=>$settingRepository,
                 'tax_rates'=>$tR->findAllPreloaded(),
                 'charges'=>$charges,
             ];
@@ -407,7 +399,7 @@ final class AllowanceChargeController
         if ($allowancecharge) {
             $form = new AllowanceChargeForm($allowancecharge);
             $parameters = [
-                'title' => $settingRepository->trans('view'),
+                'title' => $this->translator->translate('i.view'),
                 'action' => ['allowancecharge/view', ['id' => $allowancecharge->getId()]],
                 'form' => $form,
                 'allowancecharge'=>$allowancecharge,

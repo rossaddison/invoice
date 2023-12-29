@@ -28,7 +28,7 @@ use Yiisoft\Html\Tag\Form;
 
     <?= Html::openTag('div', ['id' => 'headerbar']); ?>    
         <?= Html::openTag('h1',['class' => 'headerbar-title']); ?>
-            <?= $s->trans('allowancecharges_form'); ?>
+            <?= $title; ?>
         <?= Html::closeTag('h1'); ?>
     <?= Html::closeTag('div'); ?>
     <?= Html::openTag('div'); ?>
@@ -80,7 +80,7 @@ use Yiisoft\Html\Tag\Form;
                 ])
                 ->value($form->getReason() ?? '')
                 ->optionsData($optionsDataReason, true)
-                ->prompt($s->trans('none'))
+                ->prompt($translator->translate('i.none'))
                 ->hint($translator->translate('invoice.hint.this.field.is.required'));    
             ?>
         <?= Html::closeTag('div'); ?>
@@ -144,7 +144,7 @@ use Yiisoft\Html\Tag\Form;
                 ])
                 ->value($form->getTax_rate_id() ?? '')
                 ->optionsData($optionsDataTax, true)
-                ->prompt($s->trans('none'))
+                ->prompt($translator->translate('i.none'))
                 ->hint($translator->translate('invoice.hint.this.field.is.required'));    
             ?>
         <?= Html::closeTag('div'); ?>

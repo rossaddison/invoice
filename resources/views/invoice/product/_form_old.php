@@ -28,7 +28,7 @@ if (!empty($errors)) {
     <input type="hidden" name="_csrf" value="<?= $csrf ?>">
 
     <div id="headerbar">
-        <h1 class="headerbar-title"><?= $s->trans('products_form'); ?></h1>
+        <h1 class="headerbar-title"><?= $translator->translate('i.products_form'); ?></h1>
         <?php
             $response = $head->renderPartial('invoice/layout/header_buttons',['s'=>$s, 'hide_submit_button'=>false ,'hide_cancel_button'=>false]);
             echo (string)$response->getBody();
@@ -48,7 +48,7 @@ if (!empty($errors)) {
                             #<?php echo Html::encode($body['id'] ?? ''); ?>&nbsp;
                             <?php echo Html::encode($body['product_name'] ?? ''); ?>
                         <?php else : ?>
-                            <?= $s->trans('new_product'); ?>
+                            <?= $translator->translate('i.new_product'); ?>
                         <?php endif; ?>
 
                     </div>
@@ -56,10 +56,10 @@ if (!empty($errors)) {
                     <div class="panel-body">                       
                         <div class="form-group">
                             <label for="family_id">
-                                <?= $s->trans('family'); ?>
+                                <?= $translator->translate('i.family'); ?>
                             </label>
                             <select name="family_id" id="family_id" class="form-control" required>
-                                <option value=""><?= $s->trans('select_family'); ?></option>
+                                <option value=""><?= $translator->translate('i.select_family'); ?></option>
                                 <?php foreach ($families as $family) { ?>
                                     <option value="<?= $family->getFamily_id(); ?>"
                                         <?php $s->check_select(($body['family_id'] ?? $family->getFamily_id()), $family->getFamily_id()); ?>
@@ -70,10 +70,10 @@ if (!empty($errors)) {
                         
                          <div class="form-group">
                             <label for="unit_id">
-                                <?= $s->trans('product_unit'); ?>
+                                <?= $translator->translate('i.product_unit'); ?>
                             </label>
                             <select name="unit_id" id="unit_id" class="form-control" required>
-                                <option value=""><?= $s->trans('select_unit'); ?></option>
+                                <option value=""><?= $translator->translate('i.select_unit'); ?></option>
                                 <?php foreach ($units as $unit) { ?>
                                     <option value="<?= $unit->getUnit_id(); ?>"
                                         <?php $s->check_select(($body['unit_id'] ?? $unit->getUnit_id()), $unit->getUnit_id()); ?>
@@ -90,7 +90,7 @@ if (!empty($errors)) {
                                 <a href="<?= $urlGenerator->generate('unitpeppol/index'); ?>"><i class="fa fa-pencil fa-fw"></i></a>
                             </span> 
                             <select name="unit_peppol_id" id="unit_peppol_id" class="form-control">
-                                <option value=""><?= $s->trans('select_unit'); ?></option>
+                                <option value=""><?= $translator->translate('i.select_unit'); ?></option>
                                 <?php foreach ($unit_peppols as $unit_peppol) { ?>
                                     <option value="<?= $unit_peppol->getId(); ?>"
                                         <?php $s->check_select(($body['unit_peppol_id'] ?? $unit_peppol->getId()), $unit_peppol->getId()); ?>
@@ -102,10 +102,10 @@ if (!empty($errors)) {
 
                         <div class="form-group">
                             <label for="tax_rate_id" required>
-                                <?= $s->trans('tax_rate'); ?>  (Tip: Create a zero tax rate <a href="<?= $urlGenerator->generate('taxrate/add');?>">here</a>)
+                                <?= $translator->translate('i.tax_rate'); ?>  (Tip: Create a zero tax rate <a href="<?= $urlGenerator->generate('taxrate/add');?>">here</a>)
                             </label>
                             <select name="tax_rate_id" id="tax_rate_id" class="form-control" required>
-                                <option value=""> <?= $s->trans('tax_rate'); ?></option>
+                                <option value=""> <?= $translator->translate('i.tax_rate'); ?></option>
                                 <?php foreach ($tax_rates as $tax_rate) { ?>
                                     <option value="<?= $tax_rate->getTax_rate_id(); ?>"
                                         <?php $s->check_select(($body['tax_rate_id'] ?? $tax_rate->getTax_rate_id()), $tax_rate->getTax_rate_id()); ?>>
@@ -117,7 +117,7 @@ if (!empty($errors)) {
                         </div>
                         <div class="form-group">
                             <label for="product_sku">
-                                <?= $s->trans('product_sku'); ?>
+                                <?= $translator->translate('i.product_sku'); ?>
                             </label>
 
                             <input type="text" name="product_sku" id="product_sku" class="form-control"
@@ -130,7 +130,7 @@ if (!empty($errors)) {
                             </label>
                             <select name="product_sii_schemeid" id="product_sii_schemeid"
                                 class="form-control">
-                                <option value=""><?= $s->trans('none'); ?></option>
+                                <option value=""><?= $translator->translate('i.none'); ?></option>
                                 <?php foreach ($standard_item_identification_schemeids as $key => $value) { ?>
                                     <option value="<?= $value['Id']; ?>" 
                                         <?php
@@ -155,7 +155,7 @@ if (!empty($errors)) {
                             </label>
                             <select name="product_icc_listid" id="product_icc_listid"
                                 class="form-control">
-                                <option value=""><?= $s->trans('none'); ?></option>
+                                <option value=""><?= $translator->translate('i.none'); ?></option>
                                 <?php foreach ($item_classification_code_listids as $key => $value) { ?>
                                     <option value="<?= $value['Id']; ?>" 
                                         <?php
@@ -188,7 +188,7 @@ if (!empty($errors)) {
                             </label>
                             <select name="product_country_of_origin_code" id="product_country_of_origin_code"
                                 class="form-control">                               
-                                <option value=""><?= $s->trans('none'); ?></option>
+                                <option value=""><?= $translator->translate('i.none'); ?></option>
                                 <?php foreach ($countries as $cldr => $country) { ?>
                                     <option value="<?= $cldr; ?>" 
                                         <?php
@@ -201,7 +201,7 @@ if (!empty($errors)) {
 
                         <div class="form-group">
                             <label for="product_name">
-                                <?= $s->trans('product_name'); ?>
+                                <?= $translator->translate('i.product_name'); ?>
                             </label>
                             <input type="text" name="product_name" id="product_name" class="form-control" 
                                    value="<?= Html::encode($body['product_name'] ?? ''); ?>">
@@ -209,7 +209,7 @@ if (!empty($errors)) {
 
                         <div class="form-group">
                             <label for="product_description">
-                                <?= $s->trans('product_description'); ?>
+                                <?= $translator->translate('i.product_description'); ?>
                             </label>
 
                             <textarea name="product_description" id="product_description" class="form-control"
@@ -234,7 +234,7 @@ if (!empty($errors)) {
 
                         <div class="form-group">
                             <label for="product_price">
-                                <?= $s->trans('product_price'); ?>
+                                <?= $translator->translate('i.product_price'); ?>
                             </label>
 
                             <div class="input-group has-feedback">
@@ -263,13 +263,13 @@ if (!empty($errors)) {
 
                 <div class="panel panel-default">
                     <div class="panel-heading">
-                        <?= $s->trans('extra_information'); ?>
+                        <?= $translator->translate('i.extra_information'); ?>
                     </div>
                     <div class="panel-body">
 
                         <div class="form-group">
                             <label for="provider_name">
-                                <?= $s->trans('provider_name'); ?>
+                                <?= $translator->translate('i.provider_name'); ?>
                             </label>
 
                             <input type="text" name="provider_name" id="provider_name" class="form-control"
@@ -278,7 +278,7 @@ if (!empty($errors)) {
 
                         <div class="form-group">
                             <label for="purchase_price">
-                                <?= $s->trans('purchase_price'); ?>
+                                <?= $translator->translate('i.purchase_price'); ?>
                             </label>
 
                             <div class="input-group has-feedback">
@@ -293,13 +293,13 @@ if (!empty($errors)) {
 
                 <div class="panel panel-default">
                     <div class="panel-heading">
-                        <?= $s->trans('invoice_sumex'); ?>
+                        <?= $translator->translate('i.invoice_sumex'); ?>
                     </div>
                     <div class="panel-body">
 
                         <div class="form-group">
                             <label for="product_tariff">
-                                <?= $s->trans('product_tariff'); ?>
+                                <?= $translator->translate('i.product_tariff'); ?>
                             </label>
 
                             <input type="text" name="product_tariff" id="product_tariff" class="form-control"

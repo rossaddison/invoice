@@ -24,23 +24,23 @@ if (!empty($errors)) {
 <?= Html::openTag('h1'); ?><?= Html::encode($title) ?><?= Html::closeTag('h1'); ?>
 <?= Html::openTag('div', ['class' => 'row']); ?>
  <div class="mb3 form-group">
-   <label for="id" class="form-label" style="background:lightblue"><?= $s->trans('id'); ?></label>
+   <label for="id" class="form-label" style="background:lightblue"><?= $translator->translate('i.id'); ?></label>
    <?= Html::encode($body['id'] ?? ''); ?>
  </div>
  <div class="mb3 form-group">
-   <label for="name" class="form-label" style="background:lightblue"><?= $s->trans('name'); ?></label>
+   <label for="name" class="form-label" style="background:lightblue"><?= $translator->translate('i.name'); ?></label>
    <?= Html::encode($body['name'] ?? ''); ?>
  </div>
  <div class="mb3 form-group">
-   <label for="identifier_format" class="form-label" style="background:lightblue"><?= $s->trans('identifier_format'); ?></label>
+   <label for="identifier_format" class="form-label" style="background:lightblue"><?= $translator->translate('i.identifier_format'); ?></label>
    <?= Html::encode($body['identifier_format'] ?? ''); ?>
  </div>
  <div class="mb3 form-group">
-   <label for="left_pad" class="form-label" style="background:lightblue"><?= $s->trans('left_pad'); ?></label>
+   <label for="left_pad" class="form-label" style="background:lightblue"><?= $translator->translate('i.left_pad'); ?></label>
    <?= Html::encode($body['left_pad'] ?? ''); ?>
  </div>
   <div class="mb3 form-group">
-   <label for="next_id" class="form-label" style="background:lightblue"><?= $s->trans('next_id'); ?></label>
+   <label for="next_id" class="form-label" style="background:lightblue"><?= $translator->translate('i.next_id'); ?></label>
    <?= Html::encode($body['next_id'] ??  ''); ?>
  </div>   
 </div>

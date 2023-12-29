@@ -25,12 +25,12 @@ if (!empty($errors)) {
 <form id="UnitPeppolForm" method="POST" action="<?= $urlGenerator->generate(...$action) ?>" enctype="multipart/form-data">
 <input type="hidden" name="_csrf" value="<?= $csrf ?>">
 <div id="headerbar">
-<h1 class="headerbar-title"><?= $s->trans('unitpeppols_form'); ?></h1>
+<h1 class="headerbar-title"><?= $translator->translate('i.unitpeppols_form'); ?></h1>
 <?php $response = $head->renderPartial('invoice/layout/header_buttons',['s'=>$s, 'hide_submit_button'=>false ,'hide_cancel_button'=>false]); ?>        
 <?php echo (string)$response->getBody(); ?><div id="content">
 <?= Html::openTag('div', ['class' => 'row']); ?>
  <div class="mb3 form-group">
-    <label for="unit_id"><?= $s->trans('unit');?></label>
+    <label for="unit_id"><?= $translator->translate('i.unit');?></label>
     <select name="unit_id" id="unit_id" class="form-control" required>
           <?php foreach ($units as $unit) { ?>
           <option value="<?= $unit->getUnit_id(); ?>"
@@ -56,12 +56,12 @@ if (!empty($errors)) {
     </select>
  </div>
  <div class="mb3 form-group" hidden>
-   <label for="name"><?= $s->trans('name'); ?></label>
+   <label for="name"><?= $translator->translate('i.name'); ?></label>
    <input type="text" name="name" id="name" class="form-control"
  value="<?= Html::encode($body['name'] ??  ''); ?>">
  </div>
  <div class="mb3 form-group" hidden>
-   <label for="description"><?= $s->trans('description'); ?></label>
+   <label for="description"><?= $translator->translate('i.description'); ?></label>
    <input type="text" name="description" id="description" class="form-control"
  value="<?= Html::encode($body['description'] ??  ''); ?>">
  </div>
@@ -72,9 +72,9 @@ class styled-table found at C:\wamp64\www\yii3-i\src\Invoice\Asset\invoice\css\y
 <table class="styled-table">
   <thead>
     <tr>
-      <th><?php $s->trans('id'); ?></th>
-      <th><?php $s->trans('name'); ?></th>
-      <th><?php $s->trans('description'); ?></th>
+      <th><?php $translator->translate('i.id'); ?></th>
+      <th><?php $translator->translate('i.name'); ?></th>
+      <th><?php $translator->translate('i.description'); ?></th>
     </tr>
    </thead>
    <tbody>

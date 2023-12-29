@@ -34,7 +34,7 @@ $header = Div::tag()
         H5::tag()
             ->addClass('bg-primary text-white p-3 rounded-top')
             ->content(
-                I::tag()->addClass('bi bi-receipt')->content(' ' . $s->trans('invoice'))
+                I::tag()->addClass('bi bi-receipt')->content(' ' . $translator->translate('i.invoice'))
             )
     )
     ->render();
@@ -50,29 +50,29 @@ $toolbarReset = A::tag()
 $toolbar = Div::tag();
 ?>
 <div>
-    <h5><?= $s->trans('invoice'); ?></h5>
+    <h5><?= $translator->translate('i.invoice'); ?></h5>
     <br>
     <div class="submenu-row">
             <div class="btn-group index-options">
                 <a href="<?= $urlGenerator->generate('inv/guest',['page'=>1,'status'=>0]); ?>"
                    class="btn <?= $status == 0 ? 'btn-primary' : 'btn-default' ?>">
-                    <?= $s->trans('all'); ?>
+                    <?= $translator->translate('i.all'); ?>
                 </a>
                 <a href="<?= $urlGenerator->generate('inv/guest',['page'=>1,'status'=>2]); ?>" style="text-decoration:none"
                    class="btn  <?= $status == 2 ? 'btn-primary' : 'btn-default' ?>">
-                    <?= $s->trans('sent'); ?>
+                    <?= $translator->translate('i.sent'); ?>
                 </a>
                 <a href="<?= $urlGenerator->generate('inv/guest',['page'=>1,'status'=>3]); ?>" style="text-decoration:none"
                    class="btn  <?= $status == 3 ? 'btn-primary' : 'btn-default'  ?>">
-                    <?= $s->trans('viewed'); ?>
+                    <?= $translator->translate('i.viewed'); ?>
                 </a>
                 <a href="<?= $urlGenerator->generate('inv/guest',['page'=>1,'status'=>4]); ?>" style="text-decoration:none"
                    class="btn  <?= $status == 4 ? 'btn-primary' : 'btn-default' ?>">
-                    <?= $s->trans('paid'); ?>
+                    <?= $translator->translate('i.paid'); ?>
                 </a>
                 <a href="<?= $urlGenerator->generate('inv/guest',['page'=>1,'status'=>5]); ?>" style="text-decoration:none"
                    class="btn  <?= $status == 5 ? 'btn-primary' : 'btn-default'  ?>">
-                    <?= $s->trans('overdue'); ?>
+                    <?= $translator->translate('i.overdue'); ?>
                 </a>
             </div>
     </div>
@@ -81,22 +81,22 @@ $toolbar = Div::tag();
     $columns = [
         new DataColumn(
             'id',
-            header: $s->trans('id'),
+            header: $translator->translate('i.id'),
             content: static fn (object $model) => $model->getId(),
         ),
         new DataColumn(
             'status_id',
-            $s->trans('status'),
+            $translator->translate('i.status'),
             content: static function ($model) use ($s, $irR, $inv_statuses): Yiisoft\Html\Tag\CustomTag { 
                 $span = $inv_statuses[(string)$model->getStatus_id()]['label'];
                 if ($model->getCreditinvoice_parent_id()>0) { 
-                    $span = Html::tag('i', str_repeat(' ',2).$s->trans('credit_invoice'),['class'=>'fa fa-credit-invoice']);
+                    $span = Html::tag('i', str_repeat(' ',2).$translator->translate('i.credit_invoice'),['class'=>'fa fa-credit-invoice']);
                 }
                 if (($model->getIs_read_only()) && $s->get_setting('disable_read_only') === (string)0){ 
-                    $span = Html::tag('i', str_repeat(' ',2).$s->trans('paid'), ['class'=>'fa fa-read-only']);
+                    $span = Html::tag('i', str_repeat(' ',2).$translator->translate('i.paid'), ['class'=>'fa fa-read-only']);
                 }
                 if ($irR->repoCount((string)$model->getId())>0) { 
-                    $span = Html::tag('i',str_repeat(' ',2).$s->trans('recurring'),['class'=>'fa fa-refresh']);
+                    $span = Html::tag('i',str_repeat(' ',2).$translator->translate('i.recurring'),['class'=>'fa fa-refresh']);
                 }
                 return Html::tag('span', $span, ['class'=>'label '. $inv_statuses[(string)$model->getStatus_id()]['class']]);
             }       
@@ -114,7 +114,7 @@ $toolbar = Div::tag();
         ),
         new DataColumn(                
             'date_created',
-            header: $s->trans('date_created'),    
+            header: $translator->translate('i.date_created'),    
             content: static fn ($model): string => ($model->getDate_created())->format($datehelper->style())                        
         ),
         new DataColumn(              
@@ -123,7 +123,7 @@ $toolbar = Div::tag();
         ),
         new DataColumn(
             'id',     
-            header: $s->trans('total'),                
+            header: $translator->translate('i.total'),                
             content: static function ($model) use ($s, $iaR) : string|null {
                $inv_id = $model->getId(); 
                $inv_amount = (($iaR->repoInvAmountCount((int)$inv_id) > 0) ? $iaR->repoInvquery((int)$inv_id) : null);
@@ -132,7 +132,7 @@ $toolbar = Div::tag();
         ),
         new DataColumn(
             'id',
-            header: $s->trans('paid'),                
+            header: $translator->translate('i.paid'),                
             content: static function ($model) use ($s, $iaR) : string|null {
                $inv_id = $model->getId(); 
                $inv_amount = (($iaR->repoInvAmountCount((int)$inv_id) > 0) ? $iaR->repoInvquery((int)$inv_id) : null);
@@ -141,7 +141,7 @@ $toolbar = Div::tag();
         ),
         new DataColumn(
             'id',    
-            header: $s->trans('balance'),                
+            header: $translator->translate('i.balance'),                
             content: static function ($model) use ($s, $iaR) : string|null {
                $inv_id = $model->getId(); 
                $inv_amount = (($iaR->repoInvAmountCount((int)$inv_id) > 0) ? $iaR->repoInvquery((int)$inv_id) : null);

@@ -9,16 +9,16 @@ echo $alert;
 ?> 
 
 <div id="headerbar">
-    <h1 class="headerbar-title"><?= $s->trans('invoice_archive'); ?></h1>
+    <h1 class="headerbar-title"><?= $translator->translate('i.invoice_archive'); ?></h1>
     <div class="headerbar-item pull-right">
        <!-- No Url Generator here. Just post -->
        <form method="post">
             <input type="hidden" name="_csrf" value="<?= $csrf; ?>">
             <div class="input-group" hidden>
-                <label for="invoice_number"><?= $s->trans('invoice_number'); ?></label>
+                <label for="invoice_number"><?= $translator->translate('i.invoice_number'); ?></label>
                 <input name="invoice_number" id="invoice_number" type="text" class="form-control input-sm" value="<?= $body['invoice_number'] ?? ''; ?>">
                 <span class="input-group-btn">
-                    <button class="btn btn-primary btn-sm" type="submit"><?= $s->trans('filter_invoices'); ?></button>
+                    <button class="btn btn-primary btn-sm" type="submit"><?= $translator->translate('i.filter_invoices'); ?></button>
                 </span>
             </div>
         </form>

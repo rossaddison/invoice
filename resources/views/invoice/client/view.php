@@ -35,11 +35,11 @@
                 ?>
                 <a href="#create-quote" class="btn btn-primary" data-toggle="modal"
                    data-client-id="<?= $client->getClient_id(); ?>" style="text-decoration:none">
-                   <i class="fa fa-file-text"></i><?= $s->trans('create_quote'); ?>
+                   <i class="fa fa-file-text"></i><?= $translator->translate('i.create_quote'); ?>
                 </a>
                 <a href="#create-inv" class="btn btn-success" data-toggle="modal"
                    data-client-id="<?= $client->getClient_id(); ?>" style="text-decoration:none">
-                   <i class="fa fa-file-text"></i><?= $s->trans('create_invoice'); ?>
+                   <i class="fa fa-file-text"></i><?= $translator->translate('i.create_invoice'); ?>
                 </a>
                 <?php if ($cpR->repoClientCount((string)$client->getClient_id()) === 0 ) { ?>
                 <a href="<?= $urlGenerator->generate('clientpeppol/add', ['client_id' => $client->getClient_id()]); ?>" 
@@ -55,7 +55,7 @@
                 <?php } ?>
                 <a href="<?= $urlGenerator->generate('client/edit', ['id' => $client->getClient_id()]); ?>"
                    class="btn btn-danger" style="text-decoration:none">
-                    <i class="fa fa-edit"></i><?= $s->trans('edit'); ?>
+                    <i class="fa fa-edit"></i><?= $translator->translate('i.edit'); ?>
                 </a>
                 <a href="<?= $urlGenerator->generate('postaladdress/add', ['client_id' => $client->getClient_id()]); ?>"
                    class="btn btn-primary" style="text-decoration:none">
@@ -67,8 +67,8 @@
                 </a>
                 <a class="btn btn-danger"
                    href="<?= $urlGenerator->generate('client/delete', ['id'=>$client->getClient_id()]); ?>"
-                   onclick="return confirm('<?= $s->trans('delete_client_warning'); ?>');" style="text-decoration:none">
-                   <i class="fa fa-trash-o fa-margin"></i> <?= $s->trans('delete'); ?>
+                   onclick="return confirm('<?= $translator->translate('i.delete_client_warning'); ?>');" style="text-decoration:none">
+                   <i class="fa fa-trash-o fa-margin"></i> <?= $translator->translate('i.delete'); ?>
                 </a>
         </div>
     </div>
@@ -77,21 +77,21 @@
 
 <ul id="submenu" class="nav nav-tabs nav-tabs-noborder">
     <li class="active">
-        <a data-toggle="tab" href="#clientDetails"  style="text-decoration:none"><?= $s->trans('details'); ?></a>
+        <a data-toggle="tab" href="#clientDetails"  style="text-decoration:none"><?= $translator->translate('i.details'); ?></a>
     </li>
-    <li><a data-toggle="tab" href="#clientQuotes" style="text-decoration:none;background-color: lightgreen"><?= $s->trans('quotes'); ?></a></li>
-    <li><a data-toggle="tab" href="#clientQuotesDraft" style="text-decoration:none"><?= $s->trans('draft'); ?></a></li>
-    <li><a data-toggle="tab" href="#clientQuotesSent" style="text-decoration:none"><?= $s->trans('sent'); ?></a></li>
-    <li><a data-toggle="tab" href="#clientQuotesViewed" style="text-decoration:none"><?= $s->trans('viewed'); ?></a></li>
-    <li><a data-toggle="tab" href="#clientQuotesApproved" style="text-decoration:none"><?= $s->trans('approved'); ?></a></li>
-    <li><a data-toggle="tab" href="#clientQuotesCancelled" style="text-decoration:none"><?= $s->trans('canceled'); ?></a></li>
-    <li><a data-toggle="tab" href="#clientQuotesRejected" style="text-decoration:none"><?= $s->trans('rejected'); ?></a></li>
-    <li><a data-toggle="tab" href="#clientInvoices" style="text-decoration:none;background-color: lightpink"><?= $s->trans('invoices'); ?></a></li>
-    <li><a data-toggle="tab" href="#clientInvoicesDraft" style="text-decoration:none"><?= $s->trans('draft'); ?></a></li>
-    <li><a data-toggle="tab" href="#clientInvoicesSent" style="text-decoration:none"><?= $s->trans('sent'); ?></a></li>
-    <li><a data-toggle="tab" href="#clientInvoicesViewed" style="text-decoration:none"><?= $s->trans('viewed'); ?></a></li>
-    <li><a data-toggle="tab" href="#clientInvoicesPaid" style="text-decoration:none"><?= $s->trans('paid'); ?></a></li>
-    <li><a data-toggle="tab" href="#clientPayments" style="text-decoration:none;background-color: lightblue"><?= $s->trans('payments'); ?></a></li>
+    <li><a data-toggle="tab" href="#clientQuotes" style="text-decoration:none;background-color: lightgreen"><?= $translator->translate('i.quotes'); ?></a></li>
+    <li><a data-toggle="tab" href="#clientQuotesDraft" style="text-decoration:none"><?= $translator->translate('i.draft'); ?></a></li>
+    <li><a data-toggle="tab" href="#clientQuotesSent" style="text-decoration:none"><?= $translator->translate('i.sent'); ?></a></li>
+    <li><a data-toggle="tab" href="#clientQuotesViewed" style="text-decoration:none"><?= $translator->translate('i.viewed'); ?></a></li>
+    <li><a data-toggle="tab" href="#clientQuotesApproved" style="text-decoration:none"><?= $translator->translate('i.approved'); ?></a></li>
+    <li><a data-toggle="tab" href="#clientQuotesCancelled" style="text-decoration:none"><?= $translator->translate('i.canceled'); ?></a></li>
+    <li><a data-toggle="tab" href="#clientQuotesRejected" style="text-decoration:none"><?= $translator->translate('i.rejected'); ?></a></li>
+    <li><a data-toggle="tab" href="#clientInvoices" style="text-decoration:none;background-color: lightpink"><?= $translator->translate('i.invoices'); ?></a></li>
+    <li><a data-toggle="tab" href="#clientInvoicesDraft" style="text-decoration:none"><?= $translator->translate('i.draft'); ?></a></li>
+    <li><a data-toggle="tab" href="#clientInvoicesSent" style="text-decoration:none"><?= $translator->translate('i.sent'); ?></a></li>
+    <li><a data-toggle="tab" href="#clientInvoicesViewed" style="text-decoration:none"><?= $translator->translate('i.viewed'); ?></a></li>
+    <li><a data-toggle="tab" href="#clientInvoicesPaid" style="text-decoration:none"><?= $translator->translate('i.paid'); ?></a></li>
+    <li><a data-toggle="tab" href="#clientPayments" style="text-decoration:none;background-color: lightblue"><?= $translator->translate('i.payments'); ?></a></li>
 </ul>
 
 <div id="content" class="tabbable tabs-below no-padding">
@@ -115,7 +115,7 @@
                     <table class="table table-bordered no-margin">
                         <tr>
                             <th>
-                                <?= $s->trans('language'); ?>
+                                <?= $translator->translate('i.language'); ?>
                             </th>
                             <td class="td-amount">
                                 <?= ucfirst($client->getClient_language()); ?>
@@ -123,7 +123,7 @@
                         </tr>
                         <tr>
                             <th>
-                                <?= $s->trans('total_billed'); ?>
+                                <?= $translator->translate('i.total_billed'); ?>
                             </th>
                             <td class="td-amount">
                                 <?= $s->format_currency($iR->with_total($client->getClient_id(), $iaR)); ?>
@@ -131,7 +131,7 @@
                         </tr>
                         <tr>
                             <th>
-                                <?= $s->trans('total_paid'); ?>
+                                <?= $translator->translate('i.total_paid'); ?>
                             </th>
                             <th class="td-amount">
                                 <?= $s->format_currency($iR->with_total_paid($client->getClient_id(), $iaR)); ?>
@@ -139,7 +139,7 @@
                         </tr>
                         <tr>
                             <th>
-                                <?= $s->trans('total_balance'); ?>
+                                <?= $translator->translate('i.total_balance'); ?>
                             </th>
                             <td class="td-amount">
                                 <?= $s->format_currency($iR->with_total_balance($client->getClient_id(), $iaR)); ?>
@@ -168,36 +168,36 @@
             <?= Html::openTag('div', ['class' => 'row']); ?>
                 <div class="col-xs-12 col-md-6">
                     <div class="panel panel-default no-margin">
-                        <div class="panel-heading"><?= $s->trans('contact_information'); ?></div>
+                        <div class="panel-heading"><?= $translator->translate('i.contact_information'); ?></div>
                         <div class="panel-body table-content">
                             <table class="table no-margin">
                                 <?php if ($client->getClient_email()) : ?>
                                     <tr>
-                                        <th><?= $s->trans('email'); ?></th>
+                                        <th><?= $translator->translate('i.email'); ?></th>
                                         <td><?= Html::mailto($client->getClient_email()); ?></td>
                                     </tr>
                                 <?php endif; ?>
                                 <?php if ($client->getClient_phone()) : ?>
                                     <tr>
-                                        <th><?= $s->trans('phone'); ?></th>
+                                        <th><?= $translator->translate('i.phone'); ?></th>
                                         <td><?= Html::encode($client->getClient_phone()); ?></td>
                                     </tr>
                                 <?php endif; ?>
                                 <?php if ($client->getClient_mobile()) : ?>
                                     <tr>
-                                        <th><?= $s->trans('mobile'); ?></th>
+                                        <th><?= $translator->translate('i.mobile'); ?></th>
                                         <td><?= Html::encode($client->getClient_mobile()); ?></td>
                                     </tr>
                                 <?php endif; ?>
                                 <?php if ($client->getClient_fax()) : ?>
                                     <tr>
-                                        <th><?= $s->trans('fax'); ?></th>
+                                        <th><?= $translator->translate('i.fax'); ?></th>
                                         <td><?= Html::encode($client->getClient_fax()); ?></td>
                                     </tr>
                                 <?php endif; ?>
                                 <?php if ($client->getClient_web()) : ?>
                                     <tr>
-                                        <th><?= $s->trans('web'); ?></th>
+                                        <th><?= $translator->translate('i.web'); ?></th>
                                         <td><?= Html::link($client->getClient_web()); ?></td>
                                     </tr>
                                 <?php endif; ?>
@@ -222,18 +222,18 @@
                 <div class="col-xs-12 col-md-6">
                     <div class="panel panel-default no-margin">
 
-                        <div class="panel-heading"><?= $s->trans('tax_information'); ?></div>
+                        <div class="panel-heading"><?= $translator->translate('i.tax_information'); ?></div>
                         <div class="panel-body table-content">
                             <table class="table no-margin">
                                 <?php if ($client->getClient_vat_id()) : ?>
                                     <tr>
-                                        <th><?= $s->trans('vat_id'); ?></th>
+                                        <th><?= $translator->translate('i.vat_id'); ?></th>
                                         <td><?= Html::encode($client->getClient_vat_id()); ?></td>
                                     </tr>
                                 <?php endif; ?>
                                 <?php if ($client->getClient_tax_code()) : ?>
                                     <tr>
-                                        <th><?= $s->trans('tax_code'); ?></th>
+                                        <th><?= $translator->translate('i.tax_code'); ?></th>
                                         <td><?= Html::encode($client->getClient_tax_code()); ?></td>
                                     </tr>
                                 <?php endif; ?>
@@ -266,13 +266,13 @@
 
                         <div class="panel panel-default">
                             <div class="panel-heading">
-                                <?= $s->trans('personal_information'); ?>
+                                <?= $translator->translate('i.personal_information'); ?>
                             </div>
 
                             <div class="panel-body table-content">
                                 <table class="table no-margin">                                     
                                     <tr>
-                                        <th><?= $s->trans('birthdate'); ?></th>
+                                        <th><?= $translator->translate('i.birthdate'); ?></th>
                                         
                                         <td><?=
                                                 // A dummy date in mysql date field ie. '0000-00-00' is presented as -0001-11-30 in cycle which if var_dumped represents the current date
@@ -283,20 +283,20 @@
                                             ?></td>
                                     </tr>
                                     <tr>
-                                        <th><?= $s->trans('gender'); ?></th>
-                                        <td><?= $clienthelper->format_gender($client->getClient_gender(),$s); ?></td>
+                                        <th><?= $translator->translate('i.gender'); ?></th>
+                                        <td><?= $clienthelper->format_gender($client->getClient_gender(), $translator); ?></td>
                                     </tr>
                                     <?php if ($s->get_setting('sumex') == '1'): ?>
                                         <tr>
-                                            <th><?= $s->trans('sumex_ssn'); ?></th>
+                                            <th><?= $translator->translate('i.sumex_ssn'); ?></th>
                                             <td><?= $cvH->format_avs($client->getClient_avs()); ?></td>
                                         </tr>
                                         <tr>
-                                            <th><?= $s->trans('sumex_insurednumber'); ?></th>
+                                            <th><?= $translator->translate('i.sumex_insurednumber'); ?></th>
                                             <td><?= Html::encode($client->getClient_insurednumber()) ?></td>
                                         </tr>
                                         <tr>
-                                            <th><?= $s->trans('sumex_veka'); ?></th>
+                                            <th><?= $translator->translate('i.sumex_veka'); ?></th>
                                             <td><?= Html::encode($client->getClient_veka()) ?></td>
                                         </tr>
                                     <?php endif; ?>
@@ -331,7 +331,7 @@
                         <div class="panel panel-default no-margin">
 
                             <div class="panel-heading">
-                                <?= $s->trans('custom_fields'); ?>
+                                <?= $translator->translate('i.custom_fields'); ?>
                             </div>
                             <div class="panel-body table-content">
                                 <table class="table no-margin">
@@ -363,7 +363,7 @@
 
                     <div class="panel panel-default no-margin">
                         <div class="panel-heading">
-                            <?= $s->trans('notes'); ?>
+                            <?= $translator->translate('i.notes'); ?>
                         </div>
                         <div class="panel-body">
                             <div id="notes_list">
@@ -374,7 +374,7 @@
                             <div class="input-group">
                                 <textarea id="client_note" class="form-control" rows="2" style="resize:none"></textarea>
                                 <span id="save_client_note_new" class="input-text-addon btn btn-info">
-                                    <?= $s->trans('add_note'); ?>
+                                    <?= $translator->translate('i.add_note'); ?>
                                 </span>
                             </div>
                         </div>

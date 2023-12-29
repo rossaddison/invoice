@@ -62,7 +62,6 @@ final class CompanyPrivateController
           $canEdit = $this->rbac();
           $paginator = new OffsetPaginator($this->companyprivates($companyprivateRepository));
           $parameters = [
-            's'=>$settingRepository,
             'canEdit' => $canEdit,
             'companyprivates' => $this->companyprivates($companyprivateRepository),
             'company_private'=>$this->translator->translate('invoice.setting.company.private'),
@@ -226,7 +225,7 @@ final class CompanyPrivateController
         if ($company_private) {
             $form = new CompanyPrivateForm($company_private);
             $parameters = [
-                'title' => $settingRepository->trans('edit'),
+                'title' => $this->translator->translate('i.edit'),
                 'action' => ['companyprivate/edit', ['id' => $company_private->getId()]],
                 'errors' => [],
                 'form' => $form,

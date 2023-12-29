@@ -6,7 +6,6 @@ namespace App\Invoice\UserClient;
 use App\Invoice\Entity\UserClient;
 use App\Invoice\Entity\UserInv;
 use App\Invoice\Client\ClientRepository;
-use App\Invoice\Setting\SettingRepository;
 use App\Invoice\UserClient\UserClientService;
 use App\Invoice\UserClient\UserClientRepository;
 use App\Invoice\UserClient\UserClientForm;
@@ -22,8 +21,8 @@ use Yiisoft\Http\Method;
 use Yiisoft\Router\CurrentRoute;
 use Yiisoft\Session\SessionInterface as Session;
 use Yiisoft\Session\Flash\Flash;
-use Yiisoft\Translator\TranslatorInterface;use Yiisoft\FormModel\FormHydrator;
-use Yiisoft\Form\Helper\HtmlFormErrors;
+use Yiisoft\Translator\TranslatorInterface;
+use Yiisoft\FormModel\FormHydrator;
 use Yiisoft\Yii\View\ViewRenderer;
 
 final class UserClientController
@@ -60,14 +59,10 @@ final class UserClientController
     
     /**
      * @param UserClientRepository $userclientRepository
-     * @param SettingRepository $settingRepository
-     * @param Request $request
-     * @param UserClientService $service
      */
-    public function index(UserClientRepository $userclientRepository, SettingRepository $settingRepository, Request $request, UserClientService $service): \Yiisoft\DataResponse\DataResponse
+    public function index(UserClientRepository $userclientRepository) : \Yiisoft\DataResponse\DataResponse
     {      
         $canEdit = $this->rbac();$parameters = [
-          's'=>$settingRepository,
           'canEdit' => $canEdit,
           'userclients' => $this->userclients($userclientRepository),
           'alert'=> $this->alert(),
@@ -76,48 +71,45 @@ final class UserClientController
     }
     
     /**
-     * 
-     * @param ViewRenderer $head
      * @param Request $request
      * @param FormHydrator $formHydrator
-     * @param SettingRepository $settingRepository
      * @return Response
      */
-    public function add(ViewRenderer $head, Request $request, 
-                        FormHydrator $formHydrator,
-                        SettingRepository $settingRepository,                        
-
-    ) : Response
+    public function add(Request $request, FormHydrator $formHydrator) : Response
     {
+        $user_client = new UserClient();
+        $form = new UserClientForm($user_client);
         $parameters = [
-            'title' => $this->translator->translate('invoice.add'),
+            'title' => $this->translator->translate('i.add'),
             'action' => ['userclient/add'],
             'errors' => [],
-            'body' => $request->getParsedBody(),
-            's'=>$settingRepository,
-            'head'=>$head,            
+            'form' => $form
         ];
         if ($request->getMethod() === Method::POST) {
-            $form = new UserClientForm();
-            $user_client = new UserClient();
-            if ($formHydrator->populate($form, $parameters['body']) && $form->isValid()) {
-                $this->userclientService->saveUserClient($user_client, $form);
+            $body = $request->getParsedBody();
+            /**
+             * @psalm-suppress PossiblyInvalidArgument $body
+             */
+            if ($formHydrator->populate($form, $body) && $form->isValid()) {
+                /**
+                 * @psalm-suppress PossiblyInvalidArgument $body
+                 */
+                $this->userclientService->saveUserClient($user_client, $body);
                 return $this->webService->getRedirectResponse('userclient/index');
             }
             $parameters['form'] = $form;
+            $parameters['errors'] = $form->getValidationResult()?->getErrorMessagesIndexedByAttribute() ?? [];
         }
         return $this->viewRenderer->render('_form', $parameters);
     }
     
     /**
      * @param CurrentRoute $currentRoute
-     * @param SettingRepository $sR
      * @param UserClientRepository $userclientRepository
      * @param UIR $uiR
      * @return \Yiisoft\DataResponse\DataResponse|Response
      */
-    public function delete(CurrentRoute $currentRoute,
-                           SettingRepository $sR, UserClientRepository $userclientRepository, UIR $uiR
+    public function delete(CurrentRoute $currentRoute, UserClientRepository $userclientRepository, UIR $uiR
     ): \Yiisoft\DataResponse\DataResponse|Response {
         $user_client = $this->userclient($currentRoute, $userclientRepository);
         if (null!==$user_client) {
@@ -125,8 +117,14 @@ final class UserClientController
             $this->userclientService->deleteUserClient($user_client);               
             $user_inv = $uiR->repoUserInvUserIdquery($user_id);
             if (null!==$user_inv) {
-                return $this->factory->createResponse($this->viewRenderer->renderPartialAsString('/invoice/setting/userclient_successful',
-                ['heading'=>$sR->trans('client'),'message'=>$sR->trans('record_successfully_deleted'),'url'=>'userinv/client','id'=>$user_inv->getId()]));  
+                $this->flash_message('info', $this->translator->translate('i.record_successfully_deleted'));
+                return $this->factory->createResponse(
+                        $this->viewRenderer->renderPartialAsString('/invoice/setting/userclient_successful',
+                        [
+                            'heading'=>$this->translator->translate('i.client'),
+                            'message'=> $this->translator->translate('i.record_successfully_deleted'),
+                            'url'=>'userinv/client','id'=>$user_inv->getId()
+                        ]));
             }
             return $this->webService->getRedirectResponse('userclient/index');
         }
@@ -134,41 +132,38 @@ final class UserClientController
     }
     
     /**
-     * 
-     * @param ViewRenderer $head
      * @param Request $request
      * @param CurrentRoute $currentRoute
      * @param FormHydrator $formHydrator
      * @param UserClientRepository $userclientRepository
-     * @param SettingRepository $settingRepository
      * @return Response
      */
-    public function edit(ViewRenderer $head, Request $request, CurrentRoute $currentRoute, 
+    public function edit(Request $request, CurrentRoute $currentRoute, 
                         FormHydrator $formHydrator,
-                        UserClientRepository $userclientRepository, 
-                        SettingRepository $settingRepository,                        
-
-    ): Response {
+                        UserClientRepository $userclientRepository): Response {
     $user_client = $this->userclient($currentRoute, $userclientRepository);
-    if ($user_client) {    
+    if ($user_client) {
+            $form = new UserClientForm($user_client);
             $parameters = [
-                'title' => $settingRepository->trans('edit'),
+                'title' => $this->translator->translate('i.edit'),
                 'action' => ['userclient/edit', ['id' => $user_client->getId()]],
                 'errors' => [],
-                'body' => $this->body($user_client),
-                'head'=>$head,
-                's'=>$settingRepository,
+                'form' => $form,
             ];
             if ($request->getMethod() === Method::POST) {
-                $form = new UserClientForm();
                 $body = $request->getParsedBody();
-                $user_client = new UserClient();
+                /**
+                 * @psalm-suppress PossiblyInvalidArgument $body
+                 */
                 if ($formHydrator->populate($form, $body) && $form->isValid()) {
-                    $this->userclientService->saveUserClient($user_client, $form);
+                    /**
+                     * @psalm-suppress PossiblyInvalidArgument $body
+                     */
+                    $this->userclientService->saveUserClient($user_client, $body);
                     return $this->webService->getRedirectResponse('userclient/index');
                 }
-                $parameters['body'] = $body;
                 $parameters['form'] = $form;
+                $parameters['errors'] = $form->getValidationResult()?->getErrorMessagesIndexedByAttribute() ?? [];
             }
             return $this->viewRenderer->render('_form', $parameters);
         }
@@ -182,32 +177,29 @@ final class UserClientController
     /**
      * @param Request $request
      * @param FormHydrator $formHydrator
-     * @param ViewRenderer $head
      * @param CurrentRoute $currentRoute
      * @param ClientRepository $cR
-     * @param SettingRepository $sR
      * @param UserClientRepository $ucR
      * @param UserClientService $ucS
      * @param UIR $uiR
      * @return Response
      */
-    public function new(Request $request, FormHydrator $formHydrator, ViewRenderer $head, CurrentRoute $currentRoute, 
-                        ClientRepository $cR, SettingRepository $sR, UserClientRepository $ucR, UserClientService $ucS, UIR $uiR): Response {
+    public function new(Request $request, FormHydrator $formHydrator, CurrentRoute $currentRoute, 
+                        ClientRepository $cR, UserClientRepository $ucR, UserClientService $ucS, UIR $uiR): Response {
         
         $user_id = $currentRoute->getArgument('user_id');
         if (null!==$user_id) {
             // Get possible client ids as an array that can be presented to this user
-            $available_client_id_list = $ucR->get_not_assigned_to_user($user_id, $cR) ;
+            $available_client_id_list = $ucR->get_not_assigned_to_user($user_id, $cR);
+            $user_client = new UserClient();
+            $form = new UserClientForm($user_client);
             $parameters = [
-                'head'=>$head,
-                's'=>$sR,
+                'errors' => [],
                 'userinv'=>$this->user($currentRoute, $uiR),
                 // Only provide clients NOT already included ie. available
                 'clients'=>!empty($available_client_id_list) ? $cR->repoUserClient($available_client_id_list) : [],
-                'alert'=>$this->alert(),
                 // Initialize the checkbox to zero so that both 'all_clients' and dropdownbox is presented on userclient/new.php
-                'user_all_clients'=>'0',            
-                'body'=>$request->getParsedBody()
+                'form' => $form
             ];
 
             if ($request->getMethod() === Method::POST) {
@@ -228,18 +220,20 @@ final class UserClientController
                                 'user_id'=>$user_id,    
                                 'client_id'=>$value
                             ];
-                            $form = new UserClientForm();
                             if ($formHydrator->populate($form, $form_array) && $form->isValid()
                                 // Check that the user client does not exist    
                                                          && !$ucR->repoUserClientqueryCount($user_id, $value) > 0){
-                                $this->userclientService->saveUserClient(new UserClient(),$form);
-                                $this->flash_message('info' , $sR->trans('record_successfully_updated'));
+                                $this->userclientService->saveUserClient($user_client, $form_array);
+                                $this->flash_message('info' , $this->translator->translate('i.record_successfully_updated'));
                                 return $this->webService->getRedirectResponse('userinv/index');
                             }
+                            
                             if ($ucR->repoUserClientqueryCount($user_id, $value) > 0) {
-                                $this->flash_message('info' , $sR->trans('client_already_exists'));
+                                $this->flash_message('info' , $this->translator->translate('i.client_already_exists'));
                                 return $this->webService->getRedirectResponse('userinv/index');
                             }
+                            $parameters['errors'] = $form->getValidationResult()?->getErrorMessagesIndexedByAttribute() ?? [];
+                            $parameters['form'] = $form;
                         }
                     }
                 }    
@@ -252,19 +246,17 @@ final class UserClientController
     /**
      * @param CurrentRoute $currentRoute
      * @param UserClientRepository $userclientRepository
-     * @param SettingRepository $settingRepository
      */
-    public function view(CurrentRoute $currentRoute, UserClientRepository $userclientRepository,
-                         SettingRepository $settingRepository,
-        ): \Yiisoft\DataResponse\DataResponse|Response {
+    public function view(CurrentRoute $currentRoute, UserClientRepository $userclientRepository) : 
+        \Yiisoft\DataResponse\DataResponse|Response {
         $user_client = $this->userclient($currentRoute, $userclientRepository);
         if ($user_client) {
+            $form = new UserClientForm($user_client);
             $parameters = [
-                'title' => $settingRepository->trans('view'),
+                'title' => $this->translator->translate('i.view'),
                 'action' => ['userclient/view', ['id' => $user_client->getId()]],
                 'errors' => [],
-                'body' => $this->body($user_client),
-                's'=>$settingRepository,             
+                'form' => $form, 
                 'userclient'=>$userclientRepository->repoUserClientquery($user_client->getId()),
             ];
             return $this->viewRenderer->render('_view', $parameters);
@@ -326,20 +318,7 @@ final class UserClientController
         $userclients = $userclientRepository->findAllPreloaded();        
         return $userclients;
     }
-    
-    /**
-     * @param UserClient $userclient
-     * @return array
-     */
-    private function body(UserClient $userclient): array {
-        $body = [
-          'id'=>$userclient->getId(),
-          'user_id'=>$userclient->getUser_id(),
-          'client_id'=>$userclient->getClient_id()
-        ];
-        return $body;
-    }
-    
+        
     /**
      * @return string
      */

@@ -12,14 +12,14 @@ use Yiisoft\Html\Html;
 <div id="headerbar">
     <h1 class="headerbar-title">
         <a href="<?= $urlGenerator->generate('customfield/index',['_language'=>'en']); ?>">
-              <?= $s->trans('custom_fields'); ?>
+              <?= $translator->translate('i.custom_fields'); ?>
         </a>
     </h1>    
     <div class="headerbar-item pull-right">
     <div class="btn-group btn-group-sm">      
-            <a href="" class="btn btn-success ajax-loader" Id="btn_save_client_custom_fields"><i class="fa fa-check"></i><?= $s->trans('save'); ?></a>
+            <a href="" class="btn btn-success ajax-loader" Id="btn_save_client_custom_fields"><i class="fa fa-check"></i><?= $translator->translate('i.save'); ?></a>
             <button type="button" onclick="window.history.back()" id="btn-cancel" name="btn_cancel" class="btn btn-danger" value="1">
-                <i class="fa fa-arrow-left"></i> <?= $s->trans('back'); ?>
+                <i class="fa fa-arrow-left"></i> <?= $translator->translate('i.back'); ?>
             </button>
     </div>
 </div>

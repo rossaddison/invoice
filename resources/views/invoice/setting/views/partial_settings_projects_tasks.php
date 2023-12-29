@@ -1,12 +1,14 @@
 <?php
     declare(strict_types=1);
+    
+    use Yiisoft\Html\Html;
 ?>
 <?= Html::openTag('div', ['class' => 'row']); ?>
     <div class="col-xs-12 col-md-8 col-md-offset-2">
 
         <div class="panel panel-default">
             <div class="panel-heading">
-                <?= $s->trans('projects'); ?>
+                <?= $translator->translate('i.projects'); ?>
             </div>
             <div class="panel-body">
 
@@ -15,15 +17,15 @@
 
                         <div class="form-group">
                             <label for="settings[projects_enabled]">
-                                <?= $s->trans('enable_projects'); ?>
+                                <?= $translator->translate('i.enable_projects'); ?>
                             </label>
                             <?php $body['settings[projects_enabled]'] = $s->get_setting('projects_enabled');?>
                             <select name="settings[projects_enabled]" class="form-control" id="settings[projects_enabled]">
                                 <option value="0">
-                                    <?= $s->trans('no'); ?>
+                                    <?= $translator->translate('i.no'); ?>
                                 </option>
                                 <option value="1" <?php $s->check_select($body['settings[projects_enabled]'], '1'); ?>>
-                                    <?= $s->trans('yes'); ?>
+                                    <?= $translator->translate('i.yes'); ?>
                                 </option>
                             </select>
                         </div>
@@ -33,7 +35,7 @@
 
                         <div class="form-group">
                             <label for="settings[default_hourly_rate]">
-                                <?= $s->trans('default_hourly_rate'); ?>
+                                <?= $translator->translate('i.default_hourly_rate'); ?>
                             </label>
                             <?php $body['settings[default_hourly_rate]'] = $s->get_setting('default_hourly_rate');?>
                             <div class="input-group">

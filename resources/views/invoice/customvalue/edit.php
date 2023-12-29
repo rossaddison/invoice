@@ -15,7 +15,7 @@ use Yiisoft\Html\Html;
     
     <?= Html::openTag('div',['id' => 'headerbar']); ?>
         <?= Html::openTag('h1',['class' => 'headerbar-title']); ?>
-            <?= $s->trans('custom_values_new'); ?>
+            <?= $translator->translate('i.custom_values_new'); ?>
         <?= Html::closeTag('h1'); ?>
         <?= $header_buttons; ?>
     <?= Html::closeTag('div'); ?>
@@ -38,7 +38,7 @@ use Yiisoft\Html\Html;
                        //belong to the Field Entity?> 
                 <?= Html::openTag('div', ['class' => 'form-group']); ?>
                     <?= Html::openTag('label', ['for' => 'label']); ?>
-                        <?= $s->trans('field'); ?>
+                        <?= $translator->translate('i.field'); ?>
                     <?= Html::closeTag('label'); ?>
                     <?= Html::openTag('input', [
                         'class' => 'form-control', 
@@ -51,7 +51,7 @@ use Yiisoft\Html\Html;
     
                 <?= Html::openTag('div',['class' => 'form-group']); ?>
                     <?= Html::openTag('label', ['for' => 'label']); ?>
-                        <?= $s->trans('type'); ?>
+                        <?= $translator->translate('i.type'); ?>
                     <?= Html::closeTag('label'); ?>
                     <?= Html::openTag('input', [
                         'class' => 'form-control', 

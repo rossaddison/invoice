@@ -68,7 +68,7 @@ $this->beginPage();
             ->items(
                 [
                     [
-                        'label' => $s->trans('language'),
+                        'label' => $translator->translate('i.language'),
                         'url' => '#',
                         'items' => [
                             [
@@ -138,12 +138,12 @@ $this->beginPage();
                         ],
                     ],
                     [
-                        'label' => $s->trans('login'),
+                        'label' => $translator->translate('i.login'),
                         'url' => $urlGenerator->generate('auth/login'),
                         'visible' => $isGuest,
                     ],
                     [
-                        'label' => $s->trans('setup_create_user'),
+                        'label' => $translator->translate('i.setup_create_user'),
                         'url' => $urlGenerator->generate('auth/signup'),
                         'visible' => $isGuest,
                     ],
@@ -153,7 +153,7 @@ $this->beginPage();
                             ->open()
                         . '<div class="mb-1">'
                         . Button::submit(
-                            $s->trans('logout', ['login' => Html::encode($user->getLogin())])
+                            $translator->translate('i.logout', ['login' => Html::encode($user->getLogin())])
                         )
                             ->class('btn btn-primary')
                         . '</div>'

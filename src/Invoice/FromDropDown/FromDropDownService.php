@@ -15,12 +15,11 @@ final class FromDropDownService
         $this->repository = $repository;
     }
 
-    public function saveFromDropDown(FromDropDown $model, FromDropDownForm $form): void
+    public function saveFromDropDown(FromDropDown $model, array $array): void
     {
-      null!==$form->getId() ? $model->setId($form->getId()) : '';
-      null!==$form->getEmail() ? $model->setEmail($form->getEmail()) : '';
-      null!==$form->getInclude() ? $model->setInclude($form->getInclude()) : '';
-      null!==$form->getDefault_email() ? $model->setDefault_email($form->getDefault_email()) : '';
+      isset($array['email']) ? $model->setEmail((string)$array['email']) : '';
+      $model->setInclude($array['include'] === '1' ? true : false);
+      $model->setDefault_email($array['default_email'] === '1' ? true : false);
       $this->repository->save($model);
     }
     

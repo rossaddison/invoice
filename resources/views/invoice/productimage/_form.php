@@ -29,7 +29,7 @@ if (!empty($errors)) {
                 <div class="mb3 form-group">
                     <label for="product_id">Product</label>
                     <select name="product_id" id="product_id" readonly class="form-control">
-                        <option value=""><?= $s->trans('product'); ?></option>
+                        <option value=""><?= $translator->translate('i.product'); ?></option>
                         <?php foreach ($products as $product) { ?>
                             <option value="<?= $product->getProduct_id(); ?>"
                             <?php $s->check_select(Html::encode($body['product_id'] ?? ''), $product->getProduct_id()) ?>

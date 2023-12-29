@@ -1,9 +1,11 @@
 <?php
-declare(strict_types=1);  
+declare(strict_types=1);
+
+use App\Widget\Button;
+use Yiisoft\Html\Html;
 
  /**
  * @var \Yiisoft\Router\UrlGeneratorInterface $urlGenerator
- * @var App\Invoice\Setting\SettingRepository $s
  * @var string $csrf
  */
 
@@ -11,37 +13,36 @@ echo $alert;
 ?>
 
 <div id="headerbar">
-    <h1 class="headerbar-title"><?= $s->trans('settings'); ?></h1>
+    <h1 class="headerbar-title"><?= $translator->translate('i.settings'); ?></h1>
     <?php
-        $response = $head->renderPartial('invoice/layout/header_buttons',['s'=>$s, 'hide_submit_button'=>false ,'hide_cancel_button'=>false]);
-        echo (string)$response->getBody();
+        echo Button::back_save($translator);
     ?>
 </div>
 
 <ul id="settings-tabs" class="nav nav-tabs nav-tabs-noborder">
     <li class="active">
-        <a data-toggle="tab" href="#settings-general" style="text-decoration: none"><?= $s->trans('general'); ?> </a>
+        <a data-toggle="tab" href="#settings-general" style="text-decoration: none"><?= $translator->translate('i.general'); ?> </a>
     </li>
     <li>
-        <a data-toggle="tab" href="#settings-invoices" style="text-decoration: none"><?= $s->trans('invoices'); ?></a>
+        <a data-toggle="tab" href="#settings-invoices" style="text-decoration: none"><?= $translator->translate('i.invoices'); ?></a>
     </li>
     <li>
-        <a data-toggle="tab" href="#settings-quotes" style="text-decoration: none"><?= $s->trans('quotes'); ?></a>
+        <a data-toggle="tab" href="#settings-quotes" style="text-decoration: none"><?= $translator->translate('i.quotes'); ?></a>
     </li>
     <li>
         <a data-toggle="tab" href="#settings-client-purchase-orders" style="text-decoration: none"><?= $translator->translate('invoice.salesorders'); ?></a>
     </li>
     <li>
-        <a data-toggle="tab" href="#settings-taxes" style="text-decoration: none"><?= $s->trans('taxes'); ?></a>
+        <a data-toggle="tab" href="#settings-taxes" style="text-decoration: none"><?= $translator->translate('i.taxes'); ?></a>
     </li>
     <li>
-        <a data-toggle="tab" href="#settings-email" style="text-decoration: none"><?= $s->trans('email'); ?></a>
+        <a data-toggle="tab" href="#settings-email" style="text-decoration: none"><?= $translator->translate('i.email'); ?></a>
     </li>
     <li>
-        <a data-toggle="tab" href="#settings-online-payment" style="text-decoration: none"><?= $s->trans('online_payment'); ?></a>
+        <a data-toggle="tab" href="#settings-online-payment" style="text-decoration: none"><?= $translator->translate('g.online_payment'); ?></a>
     </li>
     <li>
-        <a data-toggle="tab" href="#settings-projects-tasks" style="text-decoration: none"><?= $s->trans('projects'); ?></a>
+        <a data-toggle="tab" href="#settings-projects-tasks" style="text-decoration: none"><?= $translator->translate('i.projects'); ?></a>
     </li>
     <li>
         <a data-toggle="tab" href="#settings-google-translate" style="text-decoration: none"><?= 'Google Translate' ?></a>

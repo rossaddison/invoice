@@ -25,19 +25,19 @@ if (!empty($errors)) {
 <?= Html::openTag('h1'); ?><?= Html::encode($title) ?><?= Html::closeTag('h1'); ?>
 <?= Html::openTag('div', ['class' => 'row']); ?>
  <div class="mb3 form-group">
-<label for="start" class="form-label" style="background:lightblue"><?= $s->trans('start'); ?></label>
+<label for="start" class="form-label" style="background:lightblue"><?= $translator->translate('i.start'); ?></label>
    <?= Html::encode($body['start'] ?? ''); ?>
  </div>
  <div class="mb3 form-group">
-<label for="end" class="form-label" style="background:lightblue"><?= $s->trans('end'); ?></label>
+<label for="end" class="form-label" style="background:lightblue"><?= $translator->translate('i.end'); ?></label>
    <?= Html::encode($body['end'] ?? ''); ?>
  </div>
  <div class="mb3 form-group">
-<label for="frequency" class="form-label" style="background:lightblue"><?= $s->trans('frequency'); ?></label>
+<label for="frequency" class="form-label" style="background:lightblue"><?= $translator->translate('i.frequency'); ?></label>
    <?= Html::encode($body['frequency'] ?? ''); ?>
  </div>
  <div class="mb3 form-group">
-<label for="next" class="form-label" style="background:lightblue"><?= $s->trans('next'); ?></label>
+<label for="next" class="form-label" style="background:lightblue"><?= $translator->translate('i.next'); ?></label>
    <?= Html::encode($body['next'] ?? ''); ?>
  </div>
 </div>

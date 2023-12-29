@@ -16,9 +16,6 @@ use Yiisoft\Html\Tag\Form;
  */
 
 ?>
-<?= Html::openTag('h1');?>
-    <?= Html::encode($title); ?>
-<?=Html::closeTag('h1'); ?>
 <?= Html::openTag('div',['class'=>'container py-5 h-100']); ?>
 <?= Html::openTag('div',['class'=>'row d-flex justify-content-center align-items-center h-100']); ?>
 <?= Html::openTag('div',['class'=>'col-12 col-md-8 col-lg-6 col-xl-8']); ?>
@@ -37,7 +34,7 @@ use Yiisoft\Html\Tag\Form;
 
     <?= Html::openTag('div',['id' => 'headerbar']); ?>
         <?= Html::openTag('h1', ['class' => 'headerbar-title']); ?>
-            <?= $s->trans('companyprivates_form'); ?>
+            <?= $title; ?>
         <?= Html::closeTag('h1'); ?>
         <?php $response = $head->renderPartial('invoice/layout/header_buttons',['s'=>$s, 'hide_submit_button'=>false ,'hide_cancel_button'=>false]); ?>        
         <?= (string)$response->getBody(); ?>
@@ -78,25 +75,25 @@ use Yiisoft\Html\Tag\Form;
                 <?= Html::openTag('div', ['class' => 'mb3 form-group']); ?>
                     <?= Field::text($form, 'tax_code')
                         ->addInputAttributes(['class' => 'form-control'])
-                        ->label($s->trans('tax_code'))
+                        ->label($translator->translate('i.tax_code'))
                         ->value(Html::encode($form->getTax_code() ??  '')); ?>
                 <?= Html::closeTag('div'); ?>
                 <?= Html::openTag('div', ['class' => 'mb3 form-group']); ?>
                     <?= Field::text($form, 'iban')
                         ->addInputAttributes(['class' => 'form-control'])
-                        ->label($s->trans('user_iban'))
+                        ->label($translator->translate('i.user_iban'))
                         ->value(Html::encode($form->getIban() ??  '')); ?>
                 <?= Html::closeTag('div'); ?>
                 <?= Html::openTag('div', ['class' => 'mb3 form-group']); ?>
                     <?= Field::text($form, 'gln')
                         ->addInputAttributes(['class' => 'form-control'])
-                        ->label($s->trans('gln'))
+                        ->label($translator->translate('i.gln'))
                         ->value(Html::encode($form->getGln() ??  '')); ?>
                 <?= Html::closeTag('div'); ?>
                 <?= Html::openTag('div', ['class' => 'mb3 form-group']); ?>
                     <?= Field::text($form, 'rcc')
                         ->addInputAttributes(['class' => 'form-control'])
-                        ->label($s->trans('sumex_rcc'))
+                        ->label($translator->translate('i.sumex_rcc'))
                         ->value(Html::encode($form->getRcc() ??  '')); ?>
                 <?= Html::closeTag('div'); ?>
                 <?= Html::openTag('div', ['class' => 'mb3 form-group']); ?> 

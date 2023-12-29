@@ -1,5 +1,7 @@
 <?php
     declare(strict_types=1);
+    
+    use Yiisoft\Html\Html;
 ?>
 <?= Html::openTag('div', ['class' => 'row']); ?>
     <div class="col-xs-12 col-md-8 col-md-offset-2">
@@ -19,8 +21,8 @@
                             <?php $body['settings[mpdf_ltr]'] = $s->get_setting('mpdf_ltr');?>
                             <select name="settings[mpdf_ltr]" id="settings[mpdf_ltr]"
                                 class="form-control">
-                                <option value="0" <?php $s->check_select($body['settings[mpdf_ltr]'], '0'); ?>><?= $s->trans('no'); ?></option>
-                                <option value="1" <?php $s->check_select($body['settings[mpdf_ltr]'], '1'); ?>><?= $s->trans('yes'); ?></option>
+                                <option value="0" <?php $s->check_select($body['settings[mpdf_ltr]'], '0'); ?>><?= $translator->translate('i.no'); ?></option>
+                                <option value="1" <?php $s->check_select($body['settings[mpdf_ltr]'], '1'); ?>><?= $translator->translate('i.yes'); ?></option>
                             </select>
                         </div>
                         <div class="form-group">
@@ -30,8 +32,8 @@
                             <?php $body['settings[mpdf_cjk]'] = $s->get_setting('mpdf_cjk');?>
                             <select name="settings[mpdf_cjk]" id="settings[mpdf_cjk]"
                                 class="form-control">
-                                <option value="0" <?php $s->check_select($body['settings[mpdf_cjk]'], '0'); ?>><?= $s->trans('no'); ?></option>
-                                <option value="1" <?php $s->check_select($body['settings[mpdf_cjk]'], '1'); ?>><?= $s->trans('yes'); ?></option>
+                                <option value="0" <?php $s->check_select($body['settings[mpdf_cjk]'], '0'); ?>><?= $translator->translate('i.no'); ?></option>
+                                <option value="1" <?php $s->check_select($body['settings[mpdf_cjk]'], '1'); ?>><?= $translator->translate('i.yes'); ?></option>
                             </select>
                         </div>
                         <div class="form-group">
@@ -41,8 +43,8 @@
                             <?php $body['settings[mpdf_auto_script_to_lang]'] = $s->get_setting('mpdf_auto_script_to_lang');?>
                             <select name="settings[mpdf_auto_script_to_lang]" id="settings[mpdf_auto_script_to_lang]"
                                 class="form-control">
-                                <option value="0" <?php $s->check_select($body['settings[mpdf_auto_script_to_lang]'], '0'); ?>><?= $s->trans('no'); ?></option>
-                                <option value="1" <?php $s->check_select($body['settings[mpdf_auto_script_to_lang]'], '1'); ?>><?= $s->trans('yes'); ?></option>
+                                <option value="0" <?php $s->check_select($body['settings[mpdf_auto_script_to_lang]'], '0'); ?>><?= $translator->translate('i.no'); ?></option>
+                                <option value="1" <?php $s->check_select($body['settings[mpdf_auto_script_to_lang]'], '1'); ?>><?= $translator->translate('i.yes'); ?></option>
                             </select>
                         </div>
                         <div class="form-group">
@@ -52,8 +54,8 @@
                             <?php $body['settings[mpdf_auto_vietnamese]'] = $s->get_setting('mpdf_auto_vietnamese');?>
                             <select name="settings[mpdf_auto_vietnamese]" id="settings[mpdf_auto_vietnamese]"
                                 class="form-control">
-                                <option value="0" <?php $s->check_select($body['settings[mpdf_auto_vietnamese]'], '0'); ?>><?= $s->trans('no'); ?></option>
-                                <option value="1" <?php $s->check_select($body['settings[mpdf_auto_vietnamese]'], '1'); ?>><?= $s->trans('yes'); ?></option>
+                                <option value="0" <?php $s->check_select($body['settings[mpdf_auto_vietnamese]'], '0'); ?>><?= $translator->translate('i.no'); ?></option>
+                                <option value="1" <?php $s->check_select($body['settings[mpdf_auto_vietnamese]'], '1'); ?>><?= $translator->translate('i.yes'); ?></option>
                             </select>
                         </div>
                         <div class="form-group">
@@ -63,8 +65,8 @@
                             <?php $body['settings[mpdf_allow_charset_conversion]'] = $s->get_setting('mpdf_allow_charset_conversion');?>
                             <select name="settings[mpdf_allow_charset_conversion]" id="settings[mpdf_allow_charset_conversion]"
                                 class="form-control">
-                                <option value="0" <?php $s->check_select($body['settings[mpdf_allow_charset_conversion]'], '0'); ?>><?= $s->trans('no'); ?></option>
-                                <option value="1" <?php $s->check_select($body['settings[mpdf_allow_charset_conversion]'], '1'); ?>><?= $s->trans('yes'); ?></option>
+                                <option value="0" <?php $s->check_select($body['settings[mpdf_allow_charset_conversion]'], '0'); ?>><?= $translator->translate('i.no'); ?></option>
+                                <option value="1" <?php $s->check_select($body['settings[mpdf_allow_charset_conversion]'], '1'); ?>><?= $translator->translate('i.yes'); ?></option>
                             </select>
                         </div>
                         <div class="form-group">
@@ -74,8 +76,8 @@
                             <?php $body['settings[mpdf_auto_arabic]'] = $s->get_setting('mpdf_auto_arabic');?>
                             <select name="settings[mpdf_auto_arabic]" id="settings[mpdf_auto_arabic]"
                                 class="form-control">
-                                <option value="0" <?php $s->check_select($body['settings[mpdf_auto_arabic]'], '0'); ?>><?= $s->trans('no'); ?></option>
-                                <option value="1" <?php $s->check_select($body['settings[mpdf_auto_arabic]'], '1'); ?>><?= $s->trans('yes'); ?></option>
+                                <option value="0" <?php $s->check_select($body['settings[mpdf_auto_arabic]'], '0'); ?>><?= $translator->translate('i.no'); ?></option>
+                                <option value="1" <?php $s->check_select($body['settings[mpdf_auto_arabic]'], '1'); ?>><?= $translator->translate('i.yes'); ?></option>
                             </select>
                         </div>
                         <div class="form-group">
@@ -85,8 +87,8 @@
                             <?php $body['settings[mpdf_auto_language_to_font]'] = $s->get_setting('mpdf_auto_language_to_font');?>
                             <select name="settings[mpdf_auto_language_to_font]" id="settings[mpdf_auto_language_to_font]"
                                 class="form-control">
-                                <option value="0" <?php $s->check_select($body['settings[mpdf_auto_language_to_font]'], '0'); ?>><?= $s->trans('no'); ?></option>
-                                <option value="1" <?php $s->check_select($body['settings[mpdf_auto_language_to_font]'], '1'); ?>><?= $s->trans('yes'); ?></option>
+                                <option value="0" <?php $s->check_select($body['settings[mpdf_auto_language_to_font]'], '0'); ?>><?= $translator->translate('i.no'); ?></option>
+                                <option value="1" <?php $s->check_select($body['settings[mpdf_auto_language_to_font]'], '1'); ?>><?= $translator->translate('i.yes'); ?></option>
                             </select>
                         </div>
                         <div class="form-group">
@@ -96,8 +98,8 @@
                             <?php $body['settings[mpdf_show_image_errors]'] = $s->get_setting('mpdf_show_image_errors');?>
                             <select name="settings[mpdf_show_image_errors]" id="settings[mpdf_show_image_errors]"
                                 class="form-control">
-                                <option value="0" <?php $s->check_select($body['settings[mpdf_show_image_errors]'], '0'); ?>><?= $s->trans('no'); ?></option>
-                                <option value="1" <?php $s->check_select($body['settings[mpdf_show_image_errors]'], '1'); ?>><?= $s->trans('yes'); ?></option>
+                                <option value="0" <?php $s->check_select($body['settings[mpdf_show_image_errors]'], '0'); ?>><?= $translator->translate('i.no'); ?></option>
+                                <option value="1" <?php $s->check_select($body['settings[mpdf_show_image_errors]'], '1'); ?>><?= $translator->translate('i.yes'); ?></option>
                             </select>
                         </div>
                     </div>

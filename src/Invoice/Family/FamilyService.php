@@ -18,12 +18,12 @@ final class FamilyService
     /**
      * 
      * @param Family $model
-     * @param FamilyForm $form
+     * @param array $array
      * @return void
      */
-    public function saveFamily(Family $model, FamilyForm $form): void
+    public function saveFamily(Family $model, array $array) : void
     {
-        $model->setFamily_name($form->getFamily_name());
+        isset($array['family_name']) ? $model->setFamily_name((string)$array['family_name']) : '';
         $this->repository->save($model);
     }
     

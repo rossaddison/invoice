@@ -9,7 +9,7 @@ declare(strict_types=1);
                 <button type="button" class="close" data-dismiss="modal"><i class="fa fa-times-circle"></i></button>
             </div>       
             <div class="modal-header">
-                <h5 class="col-12 modal-title text-center"><?= $s->trans('delete')." ".$s->trans('item'); ?></h5>
+                <h5 class="col-12 modal-title text-center"><?= $translator->translate('i.delete')." ".$translator->translate('i.item'); ?></h5>
                 <br>
             </div>    
         </div>           
@@ -17,10 +17,10 @@ declare(strict_types=1);
             <div class="btn-group">
                 <!--quote.js delete-items-confirm-inv function  -->
                 <button class="delete-items-confirm-inv btn btn-success" id="delete-items-confirm-inv" type="button">
-                            <i class="fa fa-check"></i><?= $s->trans('yes'); ?>
+                            <i class="fa fa-check"></i><?= $translator->translate('i.yes'); ?>
                 </button>                
                 <button class="btn btn-danger" type="button" data-dismiss="modal">
-                    <i class="fa fa-times"></i> <?= $s->trans('cancel'); ?>
+                    <i class="fa fa-times"></i> <?= $translator->translate('i.cancel'); ?>
                 </button>
             </div>
         </div>

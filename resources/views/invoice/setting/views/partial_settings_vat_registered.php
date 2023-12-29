@@ -1,5 +1,7 @@
 <?php
     declare(strict_types=1);
+    
+    use Yiisoft\Html\Html;
 ?>
 <?= Html::openTag('div', ['class' => 'row']); ?>
     <div class="col-xs-12 col-md-8 col-md-offset-2">

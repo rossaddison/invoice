@@ -25,15 +25,15 @@ if (!empty($errors)) {
 <?= Html::openTag('h1'); ?><?= Html::encode($title) ?><?= Html::closeTag('h1'); ?>
 <?= Html::openTag('div', ['class' => 'row']); ?>
  <div class="mb3 form-group">
-<label for="name" class="form-label" style="background:lightblue"><?= $s->trans('name'); ?></label>
+<label for="name" class="form-label" style="background:lightblue"><?= $translator->translate('i.name'); ?></label>
    <?= Html::encode($body['name'] ?? ''); ?>
  </div>
  <div class="mb3 form-group">
-<label for="description" class="form-label" style="background:lightblue"><?= $s->trans('description'); ?></label>
+<label for="description" class="form-label" style="background:lightblue"><?= $translator->translate('i.description'); ?></label>
    <?= Html::encode($body['description'] ?? ''); ?>
  </div>
  <div class="mb3 form-group">
-<label for="price" class="form-label" style="background:lightblue"><?= $s->trans('price'); ?></label>
+<label for="price" class="form-label" style="background:lightblue"><?= $translator->translate('i.price'); ?></label>
    <?= Html::encode($body['price'] ?? ''); ?>
  </div>
 </div>

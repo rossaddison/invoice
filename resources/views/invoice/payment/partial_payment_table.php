@@ -14,14 +14,14 @@
 
         <thead>
         <tr>
-            <th><?= $s->trans('payment_date'); ?></th>
-            <th><?= $s->trans('invoice_date'); ?></th>
-            <th><?= $s->trans('invoice'); ?></th>
-            <th><?= $s->trans('client'); ?></th>
-            <th><?= $s->trans('amount'); ?></th>
-            <th><?= $s->trans('payment_method'); ?></th>
-            <th><?= $s->trans('note'); ?></th>
-            <th><?= $s->trans('options'); ?></th>
+            <th><?= $translator->translate('i.payment_date'); ?></th>
+            <th><?= $translator->translate('i.invoice_date'); ?></th>
+            <th><?= $translator->translate('i.invoice'); ?></th>
+            <th><?= $translator->translate('i.client'); ?></th>
+            <th><?= $translator->translate('i.amount'); ?></th>
+            <th><?= $translator->translate('i.payment_method'); ?></th>
+            <th><?= $translator->translate('i.note'); ?></th>
+            <th><?= $translator->translate('i.options'); ?></th>
         </tr>
         </thead>
 
@@ -38,7 +38,7 @@
                 </td>
                 <td>
                     <a href="<?=  $urlGenerator->generate('client/view',['id'=>$payment->getInv()->getClient_id()]); ?>"
-                       title="<?= $s->trans('view_client'); ?>">
+                       title="<?= $translator->translate('i.view_client'); ?>">
                        <?= Html::encode($clienthelper->format_client($payment->getInv()->getClient())); ?>
                     </a>
                 </td>
@@ -48,25 +48,25 @@
                 <td>
                     <div class="options btn-group">
                         <a class="btn btn-default btn-sm dropdown-toggle" data-toggle="dropdown" href="#">
-                            <i class="fa fa-cog"></i> <?= $s->trans('options'); ?>
+                            <i class="fa fa-cog"></i> <?= $translator->translate('i.options'); ?>
                         </a>
                         <ul class="dropdown-menu">
                             <li>
                                 <a href="<?=  $urlGenerator->generate('client/view',['id'=>$payment->getInv()->getClient_id()]); ?>"
-                                    title="<?= $s->trans('view_client'); ?>">
+                                    title="<?= $translator->translate('i.view_client'); ?>">
                                     <?= Html::encode($clienthelper->format_client($payment->getInv()->getClient())); ?>
                                 </a>
                                 <a href="<?=  $urlGenerator->generate('payment/edit',['id'=>$payment->getId()]); ?>">
                                     <i class="fa fa-edit fa-margin"></i>
-                                    <?= $s->trans('edit'); ?>
+                                    <?= $translator->translate('i.edit'); ?>
                                 </a>
                             </li>
                             <li>
                                 <form action="<?= $urlGenerator->generate('payment/delete',['id'=> $payment->getId()]); ?>" method="POST">
                                     <input type="hidden" id="_csrf" name="_csrf" value="<?= $csrf ?>"> 
                                     <button type="submit" class="dropdown-button"
-                                            onclick="return confirm('<?= $s->trans('delete_record_warning'); ?>');">
-                                        <i class="fa fa-trash-o fa-margin"></i> <?= $s->trans('delete'); ?>
+                                            onclick="return confirm('<?= $translator->translate('i.delete_record_warning'); ?>');">
+                                        <i class="fa fa-trash-o fa-margin"></i> <?= $translator->translate('i.delete'); ?>
                                     </button>
                                 </form>
                             </li>

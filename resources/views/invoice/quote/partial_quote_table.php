@@ -14,13 +14,13 @@
 
         <thead>
         <tr>
-            <th><?= $s->trans('status'); ?></th>
-            <th><?= $s->trans('quote'); ?></th>
-            <th><?= $s->trans('created'); ?></th>
-            <th><?= $s->trans('due_date'); ?></th>
-            <th><?= $s->trans('client_name'); ?></th>
-            <th style="text-align: right; padding-right: 25px;"><?= $s->trans('amount'); ?></th>
-            <th><?= $s->trans('options'); ?></th>
+            <th><?= $translator->translate('i.status'); ?></th>
+            <th><?= $translator->translate('i.quote'); ?></th>
+            <th><?= $translator->translate('i.created'); ?></th>
+            <th><?= $translator->translate('i.due_date'); ?></th>
+            <th><?= $translator->translate('i.client_name'); ?></th>
+            <th style="text-align: right; padding-right: 25px;"><?= $translator->translate('i.amount'); ?></th>
+            <th><?= $translator->translate('i.options'); ?></th>
         </tr>
         </thead>
 
@@ -41,7 +41,7 @@
                 </td>
                 <td>
                     <a href="<?= $urlGenerator->generate('quote/view', ['_language' =>$session->get('_language'), 'id' =>$quote->getId()]); ?>"
-                       title="<?= $s->trans('edit'); ?>" style="text-decoration:none">
+                       title="<?= $translator->translate('i.edit'); ?>" style="text-decoration:none">
                         <?=($quote->getNumber() ? $quote->getNumber() : $quote->getId()); ?>
                     </a>
                 </td>
@@ -53,7 +53,7 @@
                 </td>
                 <td>
                     <a href="<?= $urlGenerator->generate('client/view', ['_language' =>$session->get('_language'), 'id'=>$quote->getClient_id()]); ?>"
-                       title="<?= $s->trans('view_client'); ?>" style="text-decoration:none">
+                       title="<?= $translator->translate('i.view_client'); ?>" style="text-decoration:none">
                         <?= Html::encode($clienthelper->format_client($quote->getClient())); ?>
                     </a>
                 </td>
@@ -65,31 +65,31 @@
                     <div class="options btn-group<?= $dropup ? ' dropup' : ''; ?>">
                         <a class="btn btn-sm btn-default dropdown-toggle" data-toggle="dropdown"
                            href="#" style="text-decoration:none">
-                            <i class="fa fa-cog"></i> <?= $s->trans('options'); ?>
+                            <i class="fa fa-cog"></i> <?= $translator->translate('i.options'); ?>
                         </a>
                         <ul class="dropdown-menu">
                             <li>
                                 <a href="<?= $urlGenerator->generate('quote/view', ['_language' =>$session->get('_language'), 'id'=>$quote->getId()]); ?>" style="text-decoration:none">
-                                    <i class="fa fa-edit fa-margin"></i> <?= $s->trans('edit'); ?>
+                                    <i class="fa fa-edit fa-margin"></i> <?= $translator->translate('i.edit'); ?>
                                 </a>
                             </li>
                             <li>
                                 <a href="<?= $urlGenerator->generate('quote/pdf', ['_language' =>$session->get('_language'), 'include'=> true]); ?>"
                                    target="_blank" style="text-decoration:none">
-                                    <i class="fa fa-print fa-margin"></i> <?= $s->trans('download_pdf'); ?>
+                                    <i class="fa fa-print fa-margin"></i> <?= $translator->translate('i.download_pdf'); ?>
                                 </a>
                             </li>
                             <li>
                                 <a href="<?= $urlGenerator->generate('quote/email_stage_0',['_language' =>$session->get('_language'), 'id'=> $quote->getId()]); ?>" style="text-decoration:none">
-                                    <i class="fa fa-send fa-margin"></i> <?= $s->trans('send_email'); ?>
+                                    <i class="fa fa-send fa-margin"></i> <?= $translator->translate('i.send_email'); ?>
                                 </a>
                             </li>
                             <li>
                                 <form action="<?= $urlGenerator->generate('quote/delete',['_language' =>$session->get('_language'), 'id'=> $quote->getId()]); ?>" method="POST">
                                     <input type="hidden" id="_csrf" name="_csrf" value="<?= $csrf ?>"> 
                                     <button type="submit" class="dropdown-button"
-                                            onclick="return confirm('<?= $s->trans('delete_quote_warning'); ?>');">
-                                        <i class="fa fa-trash-o fa-margin"></i> <?= $s->trans('delete'); ?>
+                                            onclick="return confirm('<?= $translator->translate('i.delete_quote_warning'); ?>');">
+                                        <i class="fa fa-trash-o fa-margin"></i> <?= $translator->translate('i.delete'); ?>
                                     </button>
                                 </form>
                             </li>

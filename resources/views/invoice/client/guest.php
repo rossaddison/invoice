@@ -16,7 +16,7 @@ use Yiisoft\Html\Html;
 
 echo $alert;
 
-$this->setTitle($s->trans('clients'));
+$this->setTitle($translator->translate('i.clients'));
 
 $pagination = OffsetPagination::widget()
   ->paginator($paginator)
@@ -36,15 +36,15 @@ $pagination = OffsetPagination::widget()
             <div class="btn-group index-options">
                 <a href="<?= $urlGenerator->generate('client/index',['page'=>1, 'active'=>2]); ?>"
                    class="btn <?= $active == 2 ? 'btn-primary' : 'btn-default' ?>">
-                    <?= $s->trans('all'); ?>
+                    <?= $translator->translate('i.all'); ?>
                 </a>
                 <a href="<?= $urlGenerator->generate('client/index',['page'=>1, 'active'=>1]); ?>" style="text-decoration:none"
                    class="btn  <?= $active == 1 ? 'btn-primary' : 'btn-default' ?>">
-                    <?= $s->trans('active'); ?>
+                    <?= $translator->translate('i.active'); ?>
                 </a>
                 <a href="<?= $urlGenerator->generate('client/index',['page'=>1, 'active'=>0]); ?>" style="text-decoration:none"
                    class="btn  <?= $active == 0 ? 'btn-primary' : 'btn-default' ?>">
-                    <?= $s->trans('inactive'); ?>
+                    <?= $translator->translate('i.inactive'); ?>
                 </a>    
             </div>
     </div>
@@ -59,23 +59,23 @@ $pagination = OffsetPagination::widget()
         <table class="table table-hover table-striped">
         <thead>
         <tr>
-        <th><?= $s->trans('active'); ?></th>
+        <th><?= $translator->translate('i.active'); ?></th>
         <th>Peppol</th>
-        <th><?= $s->trans('client_name'); ?></th>
-        <th data-bs-toggle="tooltip" title="<?= $translator->translate('invoice.client.detail.changes'); ?>"><?= $s->trans('email_address'); ?></th>
-        <th data-bs-toggle="tooltip" title="<?= $translator->translate('invoice.client.detail.changes'); ?>"><?= $s->trans('phone_number'); ?></th>
-        <th class="amount"><?= $s->trans('balance'); ?></th>
-        <th><?= $s->trans('options'); ?></th>
+        <th><?= $translator->translate('i.client_name'); ?></th>
+        <th data-bs-toggle="tooltip" title="<?= $translator->translate('invoice.client.detail.changes'); ?>"><?= $translator->translate('i.email_address'); ?></th>
+        <th data-bs-toggle="tooltip" title="<?= $translator->translate('invoice.client.detail.changes'); ?>"><?= $translator->translate('i.phone_number'); ?></th>
+        <th class="amount"><?= $translator->translate('i.balance'); ?></th>
+        <th><?= $translator->translate('i.options'); ?></th>
         </tr>
         </thead>
         <tbody>
             <?php foreach ($paginator->read() as $client) { ?>
             <tr>
 		<td>
-		    <?= ($client->getClient_active()) ? '<span class="label active">' . $s->trans('yes') . '</span>' : '<span class="label inactive">' . $s->trans('no') . '</span>'; ?>
+		    <?= ($client->getClient_active()) ? '<span class="label active">' . $translator->translate('i.yes') . '</span>' : '<span class="label inactive">' . $translator->translate('i.no') . '</span>'; ?>
 		</td>
                 <td>
-		    <?= ($cpR->repoClientCount((string)$client->getClient_id()) !== 0 ) ? '<span class="label active">' . $s->trans('yes') . '</span>' : '<span class="label inactive">' . $s->trans('no') . '</span>'; ?>
+		    <?= ($cpR->repoClientCount((string)$client->getClient_id()) !== 0 ) ? '<span class="label active">' . $translator->translate('i.yes') . '</span>' : '<span class="label inactive">' . $translator->translate('i.no') . '</span>'; ?>
 		</td>
                 <td><?= Html::a($client->getClient_name()." ".$client->getClient_surname(),$urlGenerator->generate('client/view',['id' => $client->getClient_id()]),['class' => 'btn btn-warning ms-2']);?></td>
                 <td><?= Html::encode($client->getClient_email()); ?></td>
@@ -84,18 +84,18 @@ $pagination = OffsetPagination::widget()
                 <td>
                     <div class="options btn-group">
                         <a class="btn btn-default dropdown-toggle" data-toggle="dropdown" href="#" style="text-decoration:none">
-                            <i class="fa fa-cog"></i> <?= $s->trans('options'); ?>
+                            <i class="fa fa-cog"></i> <?= $translator->translate('i.options'); ?>
                         </a>
                         <ul class="dropdown-menu">
                             <?php if ($editInv) { ?>
                             <li>
                                 <a href="<?= $urlGenerator->generate('client/view',['id' => $client->getClient_id()]); ?>" style="text-decoration:none">
-                                    <i class="fa fa-eye fa-margin"></i> <?= $s->trans('view'); ?>
+                                    <i class="fa fa-eye fa-margin"></i> <?= $translator->translate('i.view'); ?>
                                 </a>
                             </li>
                             <li>
                                 <a href="<?= $urlGenerator->generate('client/edit', ['id' => $client->getClient_id()]); ?>" style="text-decoration:none">
-                                    <i class="fa fa-edit fa-margin"></i> <?= $s->trans('edit'); ?>
+                                    <i class="fa fa-edit fa-margin"></i> <?= $translator->translate('i.edit'); ?>
                                 </a>
                             </li>
                             <?php } ?>
@@ -115,8 +115,8 @@ $pagination = OffsetPagination::widget()
                             <?php } ?>
                             <?php if ($editInv) { ?>
                             <li>
-                                <a href="<?= $urlGenerator->generate('client/delete',['id' => $client->getClient_id()]); ?>" style="text-decoration:none" onclick="return confirm('<?= $s->trans('delete_client_warning').'?'; ?>');">
-                                    <i class="fa fa-trash fa-margin"></i><?= $s->trans('delete'); ?>                                    
+                                <a href="<?= $urlGenerator->generate('client/delete',['id' => $client->getClient_id()]); ?>" style="text-decoration:none" onclick="return confirm('<?= $translator->translate('i.delete_client_warning').'?'; ?>');">
+                                    <i class="fa fa-trash fa-margin"></i><?= $translator->translate('i.delete'); ?>                                    
                                 </a>
                             </li>
                             <?php } ?>

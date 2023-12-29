@@ -16,14 +16,14 @@ $vat = $s->get_setting('enable_vat_registration');
 ?>
 
 <!DOCTYPE html>
-<html lang="<?= $s->trans('cldr'); ?>">
+<html lang="<?= $translator->translate('i.cldr'); ?>">
 <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
 
     <title>
         <?= $s->get_setting('custom_title', 'yii-invoice', true); ?>
-        - <?= $s->trans('quote'); ?> <?= $quote->getNumber(); ?>
+        - <?= $translator->translate('i.quote'); ?> <?= $quote->getNumber(); ?>
     </title>
 
     <meta name="viewport" content="width=device-width,initial-scale=1">
@@ -33,7 +33,7 @@ $vat = $s->get_setting('enable_vat_registration');
 <div class="container">
     <div id="content">
         <div class="webpreview-header">
-            <h2><?= $s->trans('quote'); ?>&nbsp;<?= $quote->getNumber(); ?></h2>
+            <h2><?= $translator->translate('i.quote'); ?>&nbsp;<?= $quote->getNumber(); ?></h2>
             <div class="btn-group">
                 <?php 
                     if (in_array($quote->getStatus_id(), array(2, 3, 5)) && $quote->getSo_id() === '0') : ?>
@@ -54,17 +54,17 @@ $vat = $s->get_setting('enable_vat_registration');
                 <?php 
                     // Show an approved message if the quote is approved
                     if ($quote->getStatus_id()  === 4) :  ?>
-                    <label class="btn btn-success" disabled><?= $s->trans('approved'); ?></label>
+                    <label class="btn btn-success" disabled><?= $translator->translate('i.approved'); ?></label>
                 <?php endif; ?>
                 <?php 
                     // Show a rejected message if the quote has been rejected by the client. A new quote will have to be issued
                     if ($quote->getStatus_id() === 5) :  ?>
-                    <label class="btn btn-danger" disabled><?= $s->trans('rejected'); ?></label>
+                    <label class="btn btn-danger" disabled><?= $translator->translate('i.rejected'); ?></label>
                 <?php endif; ?>
                 <?php 
                     // Show a canceled message if the quote has been canceled by the company
                     if ($quote->getStatus_id() === 6) :  ?>
-                    <label class="btn btn-danger" disabled><?= $s->trans('canceled'); ?></label>
+                    <label class="btn btn-danger" disabled><?= $translator->translate('i.canceled'); ?></label>
                 <?php endif; ?>    
             </div>
 
@@ -103,9 +103,9 @@ $vat = $s->get_setting('enable_vat_registration');
                         <?php if ($userinv->getZip()) {
                             echo Html::encode($userinv->getZip()) . '<br>';
                         } ?>
-                        <?php if ($userinv->getPhone()) { ?><?= $s->trans('phone_abbr'); ?>: <?= Html::encode($userinv->getPhone()); ?>
+                        <?php if ($userinv->getPhone()) { ?><?= $translator->translate('i.phone_abbr'); ?>: <?= Html::encode($userinv->getPhone()); ?>
                             <br><?php } ?>
-                        <?php if ($userinv->getFax()) { ?><?= $s->trans('fax_abbr'); ?>: <?= Html::encode($userinv->getFax()); ?><?php } ?>
+                        <?php if ($userinv->getFax()) { ?><?= $translator->translate('i.fax_abbr'); ?>: <?= Html::encode($userinv->getFax()); ?><?php } ?>
                     </p>
 
                 </div>
@@ -135,7 +135,7 @@ $vat = $s->get_setting('enable_vat_registration');
                             echo Html::encode($client->getClient_zip()) . '<br>';
                         } ?>
                         <?php if ($client->getClient_phone()) {
-                            echo $s->trans('phone_abbr') . ': ' . Html::encode($client->getClient_phone()); ?>
+                            echo $translator->translate('i.phone_abbr') . ': ' . Html::encode($client->getClient_phone()); ?>
                             <br>
                         <?php } ?>
                     </p>
@@ -144,11 +144,11 @@ $vat = $s->get_setting('enable_vat_registration');
                     <table class="table table-condensed">
                         <tbody>
                         <tr>
-                            <td><?= $vat == '1' ? $translator->translate('invoice.invoice.date.issued') : $s->trans('quote_date'); ?></td>
+                            <td><?= $vat == '1' ? $translator->translate('invoice.invoice.date.issued') : $translator->translate('i.quote_date'); ?></td>
                             <td style="text-align:right;"><?= $datehelper->date_from_mysql($quote->getDate_created()); ?></td>
                         </tr>
                         <tr class="<?= ($has_expired ? 'overdue' : '') ?>">
-                            <td><?= $s->trans('expires'); ?></td>
+                            <td><?= $translator->translate('i.expires'); ?></td>
                             <td class="text-right">
                                 <?= $datehelper->date_from_mysql($quote->getDate_expires()); ?>
                             </td>
@@ -166,12 +166,12 @@ $vat = $s->get_setting('enable_vat_registration');
                     <table class="table table-striped table-bordered">
                         <thead>
                         <tr>
-                            <th><?= $s->trans('item'); ?></th>
-                            <th><?= $s->trans('description'); ?></th>
-                            <th class="text-right"><?= $s->trans('qty'); ?></th>
-                            <th class="text-right"><?= $s->trans('price'); ?></th>
-                            <th class="text-right"><?= $s->trans('discount'); ?></th>
-                            <th class="text-right"><?= $s->trans('total'); ?></th>
+                            <th><?= $translator->translate('i.item'); ?></th>
+                            <th><?= $translator->translate('i.description'); ?></th>
+                            <th class="text-right"><?= $translator->translate('i.qty'); ?></th>
+                            <th class="text-right"><?= $translator->translate('i.price'); ?></th>
+                            <th class="text-right"><?= $translator->translate('i.discount'); ?></th>
+                            <th class="text-right"><?= $translator->translate('i.total'); ?></th>
                         </tr>
                         </thead>
                         <tbody>
@@ -193,13 +193,13 @@ $vat = $s->get_setting('enable_vat_registration');
                         <?php endforeach ?>
                         <tr>
                             <td colspan="4"></td>
-                            <td class="text-right"><?= $s->trans('subtotal'); ?>:</td>
+                            <td class="text-right"><?= $translator->translate('i.subtotal'); ?>:</td>
                             <td class="amount"><?= $numberhelper->format_currency($quote_amount->getItem_subtotal()); ?></td>
                         </tr>
                         <?php if ($quote_amount->getItem_tax_total() > 0) { ?>
                             <tr>
                                 <td class="no-bottom-border" colspan="4"></td>
-                                <td class="text-right"><?= $vat === '1' ? $translator->translate('invoice.invoice.vat.break.down') : $s->trans('item_tax'); ?></td>
+                                <td class="text-right"><?= $vat === '1' ? $translator->translate('invoice.invoice.vat.break.down') : $translator->translate('i.item_tax'); ?></td>
                                 <td class="amount"><?= $numberhelper->format_currency($quote_amount->getItem_tax_total()); ?></td>
                             </tr>
                         <?php } ?>
@@ -218,7 +218,7 @@ $vat = $s->get_setting('enable_vat_registration');
                         <?php if ($vat === '0') { ?>          
                         <tr>
                             <td class="no-bottom-border" colspan="4"></td>
-                            <td class="text-right"><?= $s->trans('discount'); ?>:</td>
+                            <td class="text-right"><?= $translator->translate('i.discount'); ?>:</td>
                             <td class="amount">
                                 <?php
                                 if ($quote->getDiscount_percent() > 0) {
@@ -232,7 +232,7 @@ $vat = $s->get_setting('enable_vat_registration');
                         <?php } ?>
                         <tr>
                             <td class="no-bottom-border" colspan="4"></td>
-                            <td class="text-right"><?= $s->trans('total'); ?>:</td>
+                            <td class="text-right"><?= $translator->translate('i.total'); ?>:</td>
                             <td class="amount"><?= $numberhelper->format_currency($quote_amount->getTotal()); ?></td>
                         </tr>
                         </tbody>
@@ -245,7 +245,7 @@ $vat = $s->get_setting('enable_vat_registration');
             <?= Html::openTag('div', ['class' => 'row']); ?>
                 <?php if ($quote->getNotes()) { ?>
                     <div class="col-xs-12 col-md-6">
-                        <h4><?= $s->trans('notes'); ?></h4>
+                        <h4><?= $translator->translate('i.notes'); ?></h4>
                         <p><?= nl2br(Html::encode($quote->getNotes())); ?></p>
                     </div>
                 <?php } ?>

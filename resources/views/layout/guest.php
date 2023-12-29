@@ -110,7 +110,7 @@ $this->beginPage();
 </head>
 <body>
 <?php
-    Html::tag('Noscript',Html::tag('Div',$s->trans('please_enable_js'),['class'=>'alert alert-danger no-margin']));
+    Html::tag('Noscript',Html::tag('Div',$translator->translate('i.please_enable_js'),['class'=>'alert alert-danger no-margin']));
 ?>
 <?php
 $this->beginBody();
@@ -302,8 +302,8 @@ echo NavBar::end();
                 </div>
             </div>
             <div class="text-right">
-                <button type="button" class="fullpage-loader-close btn btn-link tip" aria-label="<?php $s->trans('close'); ?>"
-                        title="<?= $s->trans('close'); ?>" data-placement="left">
+                <button type="button" class="fullpage-loader-close btn btn-link tip" aria-label="<?php $translator->translate('i.close'); ?>"
+                        title="<?= $translator->translate('i.close'); ?>" data-placement="left">
                     <span aria-hidden="true"><i class="fa fa-close"></i></span>
                 </button>
             </div>

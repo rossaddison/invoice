@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Invoice\DeliveryLocation;
 
 use App\Invoice\Entity\DeliveryLocation;
+use App\Invoice\DeliveryLocation\DeliveryLocationForm;
 use App\Invoice\DeliveryLocation\DeliveryLocationService;
 use App\Invoice\DeliveryLocation\DeliveryLocationRepository;
 use App\Invoice\Client\ClientRepository as CR;
@@ -21,8 +22,8 @@ use Yiisoft\Http\Method;
 use Yiisoft\Router\CurrentRoute;
 use Yiisoft\Session\SessionInterface;
 use Yiisoft\Session\Flash\Flash;
-use Yiisoft\Translator\TranslatorInterface;use Yiisoft\FormModel\FormHydrator;
-use Yiisoft\Form\Helper\HtmlFormErrors;
+use Yiisoft\Translator\TranslatorInterface;
+use Yiisoft\FormModel\FormHydrator;
 use Yiisoft\Yii\View\ViewRenderer;
 use \Exception;
 
@@ -99,25 +100,33 @@ final class DeliveryLocationController {
     SettingRepository $settingRepository,
   ): Response {
     $client_id = $currentRoute->getArgument('client_id');
+    $delivery_location = new DeliveryLocation();
+    $form = new DeliveryLocationForm($delivery_location);
     $parameters = [
       'title' => $this->translator->translate('invoice.invoice.delivery.location.add'),
       'action' => ['del/add', ['client_id' => $client_id]],
       'errors' => [],
       'client_id' => $client_id,
-      'body' => $request->getParsedBody(),
-      's' => $settingRepository,
+      'form' => $form,
       'head' => $head,
       'session' => $this->session,
       'electronic_address_scheme' => PeppolArrays::electronic_address_scheme()
     ];
 
     if ($request->getMethod() === Method::POST) {
-      $form = new DeliveryLocationForm();
-      if ($formHydrator->populate($form, $parameters['body']) && $form->isValid()) {
-        $this->delService->saveDeliveryLocation(new DeliveryLocation(), $form);
+      $body = $request->getParsedBody();
+      /**
+       * @psalm-suppress PossiblyInvalidArgument $body
+       */
+      if ($formHydrator->populate($form, $body) && $form->isValid()) {
+        /**
+         * @psalm-suppress PossiblyInvalidArgument $body
+         */  
+        $this->delService->saveDeliveryLocation($delivery_location, $body);
         return $this->factory->createResponse($this->viewRenderer->renderPartialAsString('/invoice/setting/inv_message',
               ['heading' => 'Successful', 'message' => $settingRepository->trans('record_successfully_created'), 'url' => 'client/view', 'id' => $client_id]));
       }
+      $parameters['errors'] = $form->getValidationResult()?->getErrorMessagesIndexedByAttribute() ?? [];
       $parameters['form'] = $form;
     }
     return $this->viewRenderer->render('/invoice/del/_form', $parameters);
@@ -138,23 +147,24 @@ final class DeliveryLocationController {
   ): Response {
     $del = $this->del($currentRoute, $delRepository);
     if ($del) {
+      $form = new DeliveryLocationForm($del);  
       $parameters = [
         'title' => $settingRepository->trans('edit'),
         'action' => ['del/edit', ['id' => $del->getId()]],
         'errors' => [],
-        'body' => $this->body($del),
         'head' => $this->viewRenderer,
-        's' => $settingRepository,
         'electronic_address_scheme' => PeppolArrays::electronic_address_scheme()
       ];
       if ($request->getMethod() === Method::POST) {
-        $form = new DeliveryLocationForm();
         $body = $request->getParsedBody();
+        /**
+         * @psalm-suppress PossiblyInvalidArgument $body
+         */
         if ($formHydrator->populate($form, $body) && $form->isValid()) {
-          $this->delService->saveDeliveryLocation($del, $form);
+          $this->delService->saveDeliveryLocation($del, $body);
           return $this->webService->getRedirectResponse('del/index');
         }
-        $parameters['body'] = $body;
+        $parameters['errors'] = $form->getValidationResult()?->getErrorMessagesIndexedByAttribute() ?? [];
         $parameters['form'] = $form;
       }
       return $this->viewRenderer->render('/invoice/del/_form', $parameters);
@@ -197,11 +207,12 @@ final class DeliveryLocationController {
   ): \Yiisoft\DataResponse\DataResponse|Response {
     $del = $this->del($currentRoute, $delRepository);
     if ($del) {
+      $form = new DeliveryLocationForm($del);  
       $parameters = [
         'title' => $settingRepository->trans('view'),
         'action' => ['del/view', ['id' => $del->getId()]],
         'errors' => [],
-        'body' => $this->body($del),
+        'form' => $form,
         'del' => $delRepository->repoDeliveryLocationquery((string) $del->getId()),
       ];
       return $this->viewRenderer->render('del/_view', $parameters);
@@ -233,31 +244,6 @@ final class DeliveryLocationController {
   private function dels(DeliveryLocationRepository $delRepository): \Yiisoft\Yii\Cycle\Data\Reader\EntityReader {
     $dels = $delRepository->findAllPreloaded();
     return $dels;
-  }
-
-  /**
-   * @param DeliveryLocation $del
-   * @return array
-   */
-  private function body(DeliveryLocation $del): array {
-    $body = [
-      'date_created' => $del->getDate_created(),
-      'date_modified' => $del->getDate_modified(),
-      'id' => $del->getId(),
-      'client_id' => $del->getClient_id(),
-      'name' => $del->getName(),
-      'address_1' => $del->getAddress_1(),
-      'address_2' => $del->getAddress_2(),
-      'city' => $del->getCity(),
-      'state' => $del->getState(),
-      'zip' => $del->getZip(),
-      'country' => $del->getCountry(),
-      // 13 digit code
-      'global_location_number' => $del->getGlobal_location_number(),
-      // the key of the array is saved
-      'electronic_address_scheme' => $del->getElectronic_address_scheme()
-    ];
-    return $body;
   }
 
   /**

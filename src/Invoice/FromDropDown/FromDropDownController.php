@@ -20,8 +20,8 @@ use Yiisoft\Http\Method;
 use Yiisoft\Router\CurrentRoute;
 use Yiisoft\Session\SessionInterface as Session;
 use Yiisoft\Session\Flash\Flash;
-use Yiisoft\Translator\TranslatorInterface;use Yiisoft\FormModel\FormHydrator;
-use Yiisoft\Form\Helper\HtmlFormErrors;
+use Yiisoft\Translator\TranslatorInterface;
+use Yiisoft\FormModel\FormHydrator;
 use Yiisoft\Yii\View\ViewRenderer;
 
 use \Exception;
@@ -56,31 +56,35 @@ final class FromDropDownController
         $this->translator = $translator;
     }
     
-    
-    
-    public function add(ViewRenderer $head, Request $request, 
-                        FormHydrator $formHydrator,
-                        SettingRepository $settingRepository,                        
-
-    ) : Response
+    /**
+     * @param Request $request
+     * @param FormHydrator $formHydrator
+     * @return Response
+     */
+    public function add(Request $request, FormHydrator $formHydrator) : Response
     {
+        $entity = new FromDropDown();
+        $form = new FromDropDownForm($entity);
         $parameters = [
-            'title' => $this->translator->translate('invoice.add'),
+            'title' => $this->translator->translate('i.add'),
             'action' => ['from/add'],
             'errors' => [],
-            'body' => $request->getParsedBody(),
-            's'=>$settingRepository,
-            'head'=>$head,
-            
+            'form' => $form
         ];
         
         if ($request->getMethod() === Method::POST) {
-            
-            $form = new FromDropDownForm();
-            if ($formHydrator->populate($form, $parameters['body']) && $form->isValid()) {
-                $this->fromService->saveFromDropDown(new FromDropDown(),$form);
+            $body = $request->getParsedBody();
+            /**
+             * @psalm-suppress PossiblyInvalidArgument $body
+             */
+            if ($formHydrator->populate($form, $body) && $form->isValid()) {
+                /**
+                 * @psalm-suppress PossiblyInvalidArgument $body
+                 */
+                $this->fromService->saveFromDropDown($entity, $body);
                 return $this->webService->getRedirectResponse('from/index');
             }
+            $parameters['errors'] = $form->getValidationResult()?->getErrorMessagesIndexedByAttribute() ?? [];
             $parameters['form'] = $form;
         }
         return $this->viewRenderer->render('_form', $parameters);
@@ -95,20 +99,6 @@ final class FromDropDownController
             'flash'=>$this->flash,
             'errors' => [],
         ]);
-    }
-    
-    /**
-     * @param FromDropDown $from     * @return array
-     */
-    private function body(FromDropDown $from) : array {
-        $body = [
-                
-          'id'=>$from->getId(),
-          'email'=>$from->getEmail(),
-          'include'=>$from->getInclude(),
-          'default_email'=>$from->getDefault_email()
-                ];
-        return $body;
     }
         
     public function index(CurrentRoute $currentRoute, FromDropDownRepository $fromRepository, SettingRepository $settingRepository): Response
@@ -130,19 +120,17 @@ final class FromDropDownController
     }
     
     /**
-     * 
-     * @param SettingRepository $settingRepository
      * @param CurrentRoute $currentRoute
      * @param FromDropDownRepository $fromRepository
      * @return Response
      */
-    public function delete(SettingRepository $settingRepository, CurrentRoute $currentRoute,FromDropDownRepository $fromRepository 
+    public function delete(CurrentRoute $currentRoute,FromDropDownRepository $fromRepository 
     ): Response {
         try {
             $from = $this->from($currentRoute, $fromRepository);
             if ($from) {
                 $this->fromService->deleteFromDropDown($from);               
-                $this->flash_message('info', $settingRepository->trans('record_successfully_deleted'));
+                $this->flash_message('info', $this->translator->translate('i.record_successfully_deleted'));
                 return $this->webService->getRedirectResponse('from/index'); 
             }
             return $this->webService->getRedirectResponse('from/index'); 
@@ -151,32 +139,40 @@ final class FromDropDownController
             return $this->webService->getRedirectResponse('from/index'); 
         }
     }
-        
-    public function edit(ViewRenderer $head, Request $request, CurrentRoute $currentRoute, 
+    
+    /**
+     * @param Request $request
+     * @param CurrentRoute $currentRoute
+     * @param FormHydrator $formHydrator
+     * @param FromDropDownRepository $fromRepository
+     * @return Response
+     */
+    public function edit(Request $request, CurrentRoute $currentRoute, 
                        FormHydrator $formHydrator,
-                        FromDropDownRepository $fromRepository, 
-                        SettingRepository $settingRepository,                        
-
-    ): Response {
+                        FromDropDownRepository $fromRepository) : Response 
+    {
         $from = $this->from($currentRoute, $fromRepository);
         if ($from){
+            $form = new FromDropDownForm($from);
             $parameters = [
                 'title' => $this->translator->translate('invoice.edit'),
                 'action' => ['from/edit', ['id' => $from->getId()]],
                 'errors' => [],
-                'body' => $this->body($from),
-                'head'=>$head,
-                's'=>$settingRepository,
-                
+                'form' => $form
             ];
             if ($request->getMethod() === Method::POST) {
-                $form = new FromDropDownForm();
                 $body = $request->getParsedBody();
+                /**
+                 * @psalm-suppress PossiblyInvalidArgument $body
+                 */
                 if ($formHydrator->populate($form, $body) && $form->isValid()) {
-                    $this->fromService->saveFromDropDown($from,$form);
+                    /**
+                     * @psalm-suppress PossiblyInvalidArgument $body
+                     */
+                    $this->fromService->saveFromDropDown($from,$body);
                     return $this->webService->getRedirectResponse('from/index');
                 }
-                $parameters['body'] = $body;
+                $parameters['errors'] = $form->getValidationResult()?->getErrorMessagesIndexedByAttribute() ?? [];
                 $parameters['form'] = $form;
             }
             return $this->viewRenderer->render('_form', $parameters);
@@ -225,22 +221,20 @@ final class FromDropDownController
     /**
      * @param CurrentRoute $currentRoute
      * @param FromDropDownRepository $fromRepository
-     * @param SettingRepository $settingRepository
      * @return \Yiisoft\DataResponse\DataResponse|Response
      */
-    public function view(CurrentRoute $currentRoute,FromDropDownRepository $fromRepository,
-        SettingRepository $settingRepository,
-        ): \Yiisoft\DataResponse\DataResponse|Response {
+    public function view(CurrentRoute $currentRoute,FromDropDownRepository $fromRepository) : \Yiisoft\DataResponse\DataResponse|Response {
         $from = $this->from($currentRoute, $fromRepository); 
         if ($from) {
+            $form = new FromDropDownForm($from);
             $parameters = [
-                'title' => $settingRepository->trans('view'),
+                'title' => $this->translator->translate('i.view'),
                 'action' => ['from/view', ['id' => $from->getId()]],
                 'errors' => [],
-                'body' => $this->body($from),
-                'from'=>$from,
+                'form' => $form,
+                'from'=>$from
             ];        
-        return $this->viewRenderer->render('_view', $parameters);
+            return $this->viewRenderer->render('_view', $parameters);
         }
         return $this->webService->getRedirectResponse('from/index');
     }

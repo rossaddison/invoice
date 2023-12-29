@@ -10,9 +10,9 @@
 
             <input type="hidden" name="_csrf" value="<?= $csrf ?>">
 
-            <legend><?= $s->trans('setup_choose_language'); ?></legend>
+            <legend><?= $translator->translate('i.setup_choose_language'); ?></legend>
 
-            <p><?= $s->trans('setup_choose_language_message'); ?></p>
+            <p><?= $translator->translate('i.setup_choose_language_message'); ?></p>
 
             <select name="lang" class="form-control simple-select">
                 <?php foreach ($languages as $language) { ?>
@@ -25,7 +25,7 @@
 
             <br/>
 
-            <input class="btn btn-success" type="submit" name="btn_continue" value="<?= $s->trans('continue'); ?>">
+            <input class="btn btn-success" type="submit" name="btn_continue" value="<?= $translator->translate('i.continue'); ?>">
 
         </form>
 

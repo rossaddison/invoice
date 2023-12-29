@@ -40,7 +40,7 @@ if (!empty($errors)) {
     </select>
  </div>
  <div class="mb3 form-group" hidden>
-   <label for="id"><?= $s->trans('id'); ?></label>
+   <label for="id"><?= $translator->translate('i.id'); ?></label>
    <input type="text" name="id" id="id" class="form-control"
  value="<?= Html::encode($body['id'] ??  ''); ?>">
  </div>

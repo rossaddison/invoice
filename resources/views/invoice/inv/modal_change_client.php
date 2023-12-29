@@ -9,13 +9,13 @@ declare(strict_types=1);
             <button type="button" class="close" data-dismiss="modal"><i class="fa fa-times-circle"></i></button>
         </div>
         <div class="modal-header">
-            <h4 class="panel-title"><?= $s->trans('change_client'); ?></h4>
+            <h4 class="panel-title"><?= $translator->translate('i.change_client'); ?></h4>
         </div>
         <div class="modal-body">
             <div class="form-group">
-                <label for="change_client_id"><?= $s->trans('client'); ?></label>
+                <label for="change_client_id"><?= $translator->translate('i.client'); ?></label>
                 <select name="change_client_id" id="change_client_id" class="form-control">
-                    <option value="0"><?= $s->trans('none'); ?></option>
+                    <option value="0"><?= $translator->translate('i.none'); ?></option>
                         <?php foreach ($clients as $client) { ?>
                             <option value="<?= $client->getClient_id(); ?>">
                                 <?= $client->getClient_name(); ?>
@@ -28,7 +28,7 @@ declare(strict_types=1);
         <div class="modal-header">
             <div class="btn-group">
                 <button class="client_change_confirm btn btn-success" id="client_change_confirm" type="button">
-                    <i class="fa fa-check"></i> <?= $s->trans('submit'); ?>
+                    <i class="fa fa-check"></i> <?= $translator->translate('i.submit'); ?>
                 </button>
             </div>
         </div>

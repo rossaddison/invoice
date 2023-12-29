@@ -9,7 +9,7 @@ use App\Invoice\Inv\InvRepository as IR;
 use App\Invoice\Setting\SettingRepository as SR;
 use Cycle\ORM\Select;
 use Yiisoft\Data\Reader\Sort;
-
+use Yiisoft\Translator\TranslatorInterface as Translator;
 use Yiisoft\Yii\Cycle\Data\Reader\EntityReader;
 use Yiisoft\Yii\Cycle\Data\Writer\EntityWriter;
 
@@ -220,10 +220,11 @@ private EntityWriter $entityWriter;
      * 
      * @param IR $iR
      * @param SR $sR
+     * @param Translator $translator
      * @param string $period
      * @return array
      */
-    public function get_status_totals(IR $iR, SR $sR, string $period) : array
+    public function get_status_totals(IR $iR, SR $sR, Translator $translator, string $period) : array
     {
         $return = [];
         $range = $sR->range($period);          
@@ -233,7 +234,7 @@ private EntityWriter $entityWriter;
         // 4 => class: 'paid', href: 4}}
         
         /** @var array $status */
-        foreach ($iR->getStatuses($sR) as $key => $status) {
+        foreach ($iR->getStatuses($translator) as $key => $status) {
             $status_specific_invoices = $this->repoStatusTotals((int)$key, $range, $sR);
             $total = 0.00;
              /** @var InvAmount $inv_amount */

@@ -25,7 +25,7 @@
                 </label>
                 <div>
                     <select name="inv_allowance_charge_id" id="inv_allowance_charge_id" class="form-control" required>
-                        <option value="0"><?= $s->trans('none'); ?></option>
+                        <option value="0"><?= $translator->translate('i.none'); ?></option>
                         <?php foreach ($allowance_charges as $ac) { ?>
                             <option value="<?= $ac->getId(); ?>">
                                 <?= 
@@ -53,10 +53,10 @@
             <div class="btn-group">
                 <!-- see src/Invoice/Asset/rebuild-1.13/js/inv.js $(document).on('click', '#allowance_charge_submit', function -->
                 <button class="allowance_charge_submit btn btn-success" id="allowance_charge_submit" type="button">
-                    <i class="fa fa-check"></i><?= $s->trans('submit'); ?>
+                    <i class="fa fa-check"></i><?= $translator->translate('i.submit'); ?>
                 </button>
                 <button class="btn btn-danger" type="button" data-dismiss="modal">
-                    <i class="fa fa-times"></i> <?= $s->trans('cancel'); ?>
+                    <i class="fa fa-times"></i> <?= $translator->translate('i.cancel'); ?>
                 </button>
             </div>
         </div>

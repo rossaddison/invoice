@@ -25,7 +25,7 @@ if (!empty($errors)) {
 <form id="QuoteItemForm" method="POST" action="<?= $urlGenerator->generate(...$action) ?>" enctype="multipart/form-data">
 <input type="hidden" name="_csrf" value="<?= $csrf ?>">
 <div id="headerbar">
-<h1 class="headerbar-title"><?= $s->trans('quoteitems_form'); ?></h1>
+<h1 class="headerbar-title"><?= $translator->translate('i.quoteitems_form'); ?></h1>
 <?php $response = $head->renderPartial('invoice/layout/header_buttons',['s'=>$s, 'hide_submit_button'=>false ,'hide_cancel_button'=>true]); ?>        
 <?php echo (string)$response->getBody(); ?><div id="content">
 <?= Html::openTag('div', ['class' => 'row']); ?>
@@ -53,7 +53,7 @@ if (!empty($errors)) {
  </div>
  
  <div class="mb3 form-group" hidden>
-    <label for="product_unit_id"><?= $s->trans('item_product_unit');?></label>
+    <label for="product_unit_id"><?= $translator->translate('i.item_product_unit');?></label>
     <select name="product_unit_id" id="unit_id" class="form-control">
        <option value="0">Unit</option>
          <?php foreach ($units as $unit) { ?>
@@ -77,12 +77,12 @@ if (!empty($errors)) {
  value="<?= Html::encode($body['name'] ??  ''); ?>">
 </div>
 <div class="mb3 form-group" hidden>
-   <label for="description"><?= $s->trans('description'); ?></label>
+   <label for="description"><?= $translator->translate('i.description'); ?></label>
    <input type="text" name="description" id="description" class="form-control"
  value="<?= Html::encode($body['description'] ??  ''); ?>">
 </div>
 <div class="form-group" hidden>
-  <label for="quantity"><?= $s->trans('quantity'); ?></label>
+  <label for="quantity"><?= $translator->translate('i.quantity'); ?></label>
       <div class="input-group has-feedback">
           <input type="text" name="quantity" id="quantity" class="form-control"
               value="<?= $s->format_amount($body['quantity'] ?? ''); ?>">
@@ -90,7 +90,7 @@ if (!empty($errors)) {
       </div>
 </div>
 <div class="form-group" hidden>
-  <label for="price"><?= $s->trans('price'); ?></label>
+  <label for="price"><?= $translator->translate('i.price'); ?></label>
       <div class="input-group has-feedback">
           <input type="text" name="price" id="price" class="form-control"
               value="<?= $s->format_amount($body['price'] ?? ''); ?>">
@@ -98,7 +98,7 @@ if (!empty($errors)) {
       </div>
 </div>
 <div class="form-group" hidden>
-      <label for="discount_amount"><?= $s->trans('price'); ?></label>
+      <label for="discount_amount"><?= $translator->translate('i.price'); ?></label>
       <div class="input-group has-feedback">
           <input type="text" name="discount_amount" id="discount_amount" class="form-control"
               value="<?= $s->format_amount($body['discount_amount'] ?? ''); ?>">
@@ -106,12 +106,12 @@ if (!empty($errors)) {
       </div>
 </div>
  <div class="mb3 form-group" hidden>
-   <label for="order"><?= $s->trans('order'); ?></label>
+   <label for="order"><?= $translator->translate('i.order'); ?></label>
    <input type="text" name="order" id="order" class="form-control"
  value="<?= Html::encode($body['order'] ??  ''); ?>">
  </div>
  <div class="mb3 form-group" hidden>
-   <label for="product_unit"><?= $s->trans('product_unit'); ?></label>
+   <label for="product_unit"><?= $translator->translate('i.product_unit'); ?></label>
    <input type="text" name="product_unit" id="product_unit" class="form-control"
  value="<?= Html::encode($body['product_unit'] ??  ''); ?>">
  </div>
@@ -143,7 +143,7 @@ if (!empty($errors)) {
                     <td rowspan="2" class="td-icon"><i class="fa fa-arrow-right"></i></td>
                     <td class="td-text">
                         <div class="input-group">
-                            <span class="input-group-text"><?= $s->trans('item'); ?></span>
+                            <span class="input-group-text"><?= $translator->translate('i.item'); ?></span>
                             <select name="product_id" id="product_id" class="form-control">
                                <option value="0">Product</option>
                                  <?php foreach ($products as $product) { ?>
@@ -157,7 +157,7 @@ if (!empty($errors)) {
                     <td class="td-amount td-quantity">
                         <div class="input-group">
                             <div class="input-group has-feedback">                                
-                                <span class="input-group-text"><?= $s->trans('quantity'); ?></span>
+                                <span class="input-group-text"><?= $translator->translate('i.quantity'); ?></span>
                                 <input type="text" name="quantity" id="quantity" class="form-control"
                                     value="<?= $s->format_amount($body['quantity'] ?? ''); ?>">                                
                             </div>
@@ -166,7 +166,7 @@ if (!empty($errors)) {
                     <td class="td-amount">
                         <div class="input-group">
                              <div class="input-group has-feedback">
-                                 <span class="input-group-text"><?= $s->trans('price'); ?></span>     
+                                 <span class="input-group-text"><?= $translator->translate('i.price'); ?></span>     
                                  <input type="text" name="price" id="price" class="form-control"
                                     value="<?= $s->format_amount($body['price'] ?? ''); ?>">
                                  <span class="input-group-text"><?= $s->get_setting('currency_symbol'); ?></span>
@@ -176,7 +176,7 @@ if (!empty($errors)) {
                     <td class="td-amount ">
                         <div class="input-group">                            
                                 <div class="input-group has-feedback">
-                                    <span class="input-group-text"><?= $s->trans('item_discount'); ?></span>
+                                    <span class="input-group-text"><?= $translator->translate('i.item_discount'); ?></span>
                                     <input type="text" name="discount_amount" id="discount_amount" class="form-control"
                                         value="<?= $s->format_amount($body['discount_amount'] ?? ''); ?>">
                                         <span class="input-group-text"><?= $s->get_setting('currency_symbol'); ?></span>
@@ -185,9 +185,9 @@ if (!empty($errors)) {
                     </td>
                     <td>
                         <div class="input-group">                            
-                            <span class="input-group-text"><?= $s->trans('tax_rate'); ?></span>
+                            <span class="input-group-text"><?= $translator->translate('i.tax_rate'); ?></span>
                              <select name="quote_tax_rate_id" id="quote_tax_rate_id" class="form-control">
-                                <option value="0"><?= $s->trans('tax_rate'); ?></option>
+                                <option value="0"><?= $translator->translate('i.tax_rate'); ?></option>
                                   <?php foreach ($quote_tax_rates as $quote_tax_rate) { ?>
                                    <option value="<?= $quote_tax_rate->getId(); ?>"
                                     <?php $s->check_select(Html::encode($body['quote_tax_rate_id'] ?? ''), $quote_tax_rate->getId()) ?>
@@ -206,14 +206,14 @@ if (!empty($errors)) {
                 <tr>
                     <td class="td-textarea">
                         <div class="input-group">
-                            <span class="input-group-text"><label for="description"><?= $s->trans('description'); ?></label></span>
+                            <span class="input-group-text"><label for="description"><?= $translator->translate('i.description'); ?></label></span>
                             <textarea name="description" class="input-sm form-control"
                             ><?= Html::encode($body['description'] ??  ''); ?></textarea>
                         </div>
                     </td>
                     <td class="td-amount">
                         <div class="input-group">
-                            <span class="input-group-text"><?= $s->trans('product_unit'); ?></span>
+                            <span class="input-group-text"><?= $translator->translate('i.product_unit'); ?></span>
                             <select name="product_unit_id" id="unit_id" class="form-control">
                                <option value="0">Unit</option>
                                  <?php foreach ($units as $unit) { ?>
@@ -225,19 +225,19 @@ if (!empty($errors)) {
                         </div>
                     </td>
                     <td class="td-amount td-vert-middle">
-                        <span><?= $s->trans('subtotal'); ?></span><br/>                        
+                        <span><?= $translator->translate('i.subtotal'); ?></span><br/>                        
                         <span name="subtotal" class="amount"></span>
                     </td>
                     <td class="td-amount td-vert-middle">
-                        <span><?= $s->trans('discount'); ?></span><br/>
+                        <span><?= $translator->translate('i.discount'); ?></span><br/>
                         <span name="item_discount_total" class="amount"></span>
                     </td>
                     <td class="td-amount td-vert-middle">
-                        <span><?= $s->trans('tax'); ?></span><br/>
+                        <span><?= $translator->translate('i.tax'); ?></span><br/>
                         <span name="item_tax_total" class="amount"></span>
                     </td>
                     <td class="td-amount td-vert-middle">
-                        <span><?= $s->trans('total'); ?></span><br/>
+                        <span><?= $translator->translate('i.total'); ?></span><br/>
                         <span name="item_total" class="amount"></span>
                     </td>
                 </tr>

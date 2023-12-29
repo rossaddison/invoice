@@ -2,41 +2,41 @@
     declare(strict_types=1);
 ?>
         <div class="form-group">
-            <label for="tags_quote"><?= $s->trans('quotes'); ?></label>
+            <label for="tags_quote"><?= $translator->translate('i.quotes'); ?></label>
             <select id="tags_quote" class="taginv-select form-control">
                 <option value="{{{quote_number}}}">
-                    <?= $s->trans('id'); ?>
+                    <?= $translator->translate('i.id'); ?>
                 </option>
-                <optgroup label="<?= $s->trans('quote_dates'); ?>">
+                <optgroup label="<?= $translator->translate('i.quote_dates'); ?>">
                     <option value="{{{quote_date_created}}}">
-                        <?= $s->trans('quote_date'); ?>
+                        <?= $translator->translate('i.quote_date'); ?>
                     </option>
                     <option value="{{{quote_date_expires}}}">
-                        <?= $s->trans('expires'); ?>
+                        <?= $translator->translate('i.expires'); ?>
                     </option>
                 </optgroup>
-                <optgroup label="<?= $s->trans('quote_amounts'); ?>">
+                <optgroup label="<?= $translator->translate('i.quote_amounts'); ?>">
                     <option value="{{{quote_item_subtotal}}}">
-                        <?= $s->trans('subtotal'); ?>
+                        <?= $translator->translate('i.subtotal'); ?>
                     </option>
                     <option value="{{{quote_tax_total}}}">
-                        <?= $s->trans('quote_tax'); ?>
+                        <?= $translator->translate('i.quote_tax'); ?>
                     </option>
                     <option value="{{{quote_item_discount}}}">
-                        <?= $s->trans('discount'); ?>
+                        <?= $translator->translate('i.discount'); ?>
                     </option>
                     <option value="{{{quote_total}}}">
-                        <?= $s->trans('total'); ?>
+                        <?= $translator->translate('i.total'); ?>
                     </option>
                 </optgroup>
 
-                <optgroup label="<?= $s->trans('extra_information'); ?>">
+                <optgroup label="<?= $translator->translate('i.extra_information'); ?>">
                     <option value="{{{quote_guest_url}}}">
-                        <?= $s->trans('guest_url'); ?>
+                        <?= $translator->translate('i.guest_url'); ?>
                     </option>
                 </optgroup>
 
-                <optgroup label="<?= $s->trans('custom_fields'); ?>">
+                <optgroup label="<?= $translator->translate('i.custom_fields'); ?>">
                     <?php foreach ($custom_fields_quote_custom as $custom) { ?>
                         <option value="{{{<?= 'cf_' . $custom->getId(); ?>}}}">
                             <?= $custom->getLabel() . ' (ID ' . $custom->getId() . ')'; ?>

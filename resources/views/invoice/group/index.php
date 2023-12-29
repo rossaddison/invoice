@@ -15,7 +15,7 @@ echo $alert;
 <div>
  <h5>Group</h5>
  <a class="btn btn-success" href="<?= $urlGenerator->generate('group/add'); ?>">
-      <i class="fa fa-plus"></i> <?= $s->trans('new'); ?> </a></div>
+      <i class="fa fa-plus"></i> <?= $translator->translate('i.new'); ?> </a></div>
 
 <?php
 $pagination = OffsetPagination::widget()
@@ -33,11 +33,11 @@ $pagination = OffsetPagination::widget()
 <table class="table table-hover table-striped">
    <thead>
     <tr>       
-        <th><?= $s->trans('name'); ?></th>
-        <th><?= $s->trans('identifier_format'); ?></th>
-        <th><?= $s->trans('left_pad'); ?></th>
-        <th><?= $s->trans('next_id'); ?></th>
-        <th><?= $s->trans('options'); ?></th>
+        <th><?= $translator->translate('i.name'); ?></th>
+        <th><?= $translator->translate('i.identifier_format'); ?></th>
+        <th><?= $translator->translate('i.left_pad'); ?></th>
+        <th><?= $translator->translate('i.next_id'); ?></th>
+        <th><?= $translator->translate('i.options'); ?></th>
     </tr>
    </thead>
 <tbody>
@@ -55,22 +55,22 @@ $pagination = OffsetPagination::widget()
           <div class="options btn-group">
           <a class="btn btn-default btn-sm dropdown-toggle" data-toggle="dropdown" href="#">
                 <i class="fa fa-cog"></i>
-                <?= $s->trans('options'); ?>
+                <?= $translator->translate('i.options'); ?>
           </a>
           <ul class="dropdown-menu">
               <li>
                   <a href="<?= $urlGenerator->generate('group/edit',['id'=>$group->getId()]); ?>" style="text-decoration:none">                       <i class="fa fa-edit fa-margin"></i>
-                       <?= $s->trans('edit'); ?>
+                       <?= $translator->translate('i.edit'); ?>
                   </a>
               </li>
               <li>
                   <a href="<?= $urlGenerator->generate('group/view',['id'=>$group->getId()]); ?>" style="text-decoration:none">                       <i class="fa fa-eye fa-margin"></i>
-                       <?= $s->trans('view'); ?>
+                       <?= $translator->translate('i.view'); ?>
                   </a>
               </li>
               <li>
                   <a href="<?= $urlGenerator->generate('group/delete',['id'=>$group->getId()]); ?>" style="text-decoration:none">                       <i class="fa fa-trash fa-margin"></i>
-                       <?= $s->trans('delete'); ?>
+                       <?= $translator->translate('i.delete'); ?>
                   </a>
               </li>
           </ul>

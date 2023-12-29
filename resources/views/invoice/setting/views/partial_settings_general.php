@@ -1,11 +1,13 @@
 <?php
     declare(strict_types=1);
+    
+    use Yiisoft\Html\Html;
 ?>
 <?= Html::openTag('div', ['class' => 'row']); ?>
     <div class="col-xs-12 col-md-8 col-md-offset-2">
         <div class="panel panel-default">
             <div class="panel-heading">
-                <?= $s->trans('general'); ?>
+                <?= $translator->translate('i.general'); ?>
             </div>
             <div class="panel-body">
                 <?= Html::openTag('div', ['class' => 'row']); ?>
@@ -17,13 +19,13 @@
                             <?php $body['settings[install_test_data]'] = $s->get_setting('install_test_data'); ?>
                             <select name="settings[install_test_data]" id="settings[install_test_data]" class="form-control">
                                 <option value="0">
-                                    <?= $s->trans('no'); ?>
+                                    <?= $translator->translate('i.no'); ?>
                                 </option>
                                 <option value="1" 
                                     <?php
                                         $s->check_select($body['settings[install_test_data]'], '1'); 
                                     ?>>
-                                    <?= $s->trans('yes'); ?>
+                                    <?= $translator->translate('i.yes'); ?>
                                 </option>
                             </select>
                         </div>
@@ -36,13 +38,13 @@
                             <?php $body['settings[use_test_data]'] = $s->get_setting('use_test_data'); ?>
                             <select name="settings[use_test_data]" id="settings[use_test_data]" class="form-control">
                                 <option value="0">
-                                    <?= $s->trans('no'); ?>
+                                    <?= $translator->translate('i.no'); ?>
                                 </option>
                                 <option value="1" 
                                     <?php
                                         $s->check_select($body['settings[use_test_data]'], '1'); 
                                     ?>>
-                                    <?= $s->trans('yes'); ?>
+                                    <?= $translator->translate('i.yes'); ?>
                                 </option>
                             </select>
                         </div>
@@ -50,11 +52,11 @@
                     <div class="col-xs-12 col-md-6">
                         <div class="form-group">
                             <label for="settings[default_language]" <?= $s->where('default_language'); ?> >
-                                <?= $s->trans('language'); ?>
+                                <?= $translator->translate('i.language'); ?>
                             </label>
                             <?php $body['settings[default_language]'] = $s->get_setting('default_language'); ?>
                             <select name="settings[default_language]" id="settings[default_language]" class="form-control">
-                                <option value="0"><?= $s->trans('none'); ?></option>
+                                <option value="0"><?= $translator->translate('i.none'); ?></option>
                                 <?php foreach ($languages as $language) { ?>
                                     <option value="<?= $language; ?>" <?php $s->check_select($body['settings[default_language]'], $language) ?>>
                                         <?= ucfirst($language); ?>
@@ -70,7 +72,7 @@
                             </label>
                             <?php   $body['settings[time_zone]'] = $s->get_setting('time_zone'); ?>
                             <select name="settings[time_zone]" id="settings[time_zone]" class="form-control">
-                                 <option value="0"><?= $s->trans('none'); ?></option>
+                                 <option value="0"><?= $translator->translate('i.none'); ?></option>
                                 <?php foreach ($time_zones as $key => $value) { ?>
                                     <option value="<?=  $value; ?>"
                                         <?php  $s->check_select($body['settings[time_zone]'], $value); ?>>
@@ -86,12 +88,12 @@
                     <div class="col-xs-12 col-md-6">
                         <div class="form-group">
                             <label for="settings[first_day_of_week]" <?= $s->where('first_day_of_week'); ?>>
-                                <?= $s->trans('first_day_of_week'); ?>
+                                <?= $translator->translate('i.first_day_of_week'); ?>
                             </label>
                             <?php $body['settings[first_day_of_week]'] = $s->get_setting('first_day_of_week'); ?>
                             <select name="settings[first_day_of_week]" id="settings[first_day_of_week]"
                                 class="form-control">
-                                <option value="0"><?= $s->trans('none'); ?></option>
+                                <option value="0"><?= $translator->translate('i.none'); ?></option>
                                 <?php foreach ($first_days_of_weeks as $first_day_of_week_id => $first_day_of_week_name) { ?>
                                     <option value="<?= $first_day_of_week_id; ?>"
                                         <?php
@@ -106,12 +108,12 @@
                     <div class="col-xs-12 col-md-6">
                         <div class="form-group">
                             <label for="settings[date_format]" <?= $s->where('date_format'); ?>>
-                                <?= $s->trans('date_format'); ?>
+                                <?= $translator->translate('i.date_format'); ?>
                             </label>
                             <?php   $body['settings[date_format]'] = $s->get_setting('date_format'); ?>
                             <select name="settings[date_format]" id="settings[date_format]"
                                 class="form-control">
-                                <option value="0"><?= $s->trans('none'); ?></option>
+                                <option value="0"><?= $translator->translate('i.none'); ?></option>
                                 <?php foreach ($date_formats as $date_format) { ?>
                                     <option value="<?= $date_format['setting']; ?>"
                                         <?php  $s->check_select($body['settings[date_format]'], $date_format['setting']); ?>>
@@ -127,13 +129,13 @@
                     <div class="col-xs-12 col-md-6">
                         <div class="form-group">
                             <label for="settings[default_country]" <?= $s->where('default_country'); ?>>
-                                <?= $s->trans('default_country'); ?>
+                                <?= $translator->translate('i.default_country'); ?>
                             </label>
                             <?php   $body['settings[default_country]'] = $s->get_setting('default_country'); ?>
                             <select name="settings[default_country]" id="settings[default_country]"
                                 class="form-control">
-                                <option value="0"><?= $s->trans('none'); ?></option>
-                                <option value=""><?= $s->trans('none'); ?></option>
+                                <option value="0"><?= $translator->translate('i.none'); ?></option>
+                                <option value=""><?= $translator->translate('i.none'); ?></option>
                                 <?php foreach ($countries as $cldr => $country) { ?>
                                     <option value="<?= $cldr; ?>" 
                                         <?php
@@ -148,7 +150,7 @@
                     <div class="col-xs-12 col-md-6">
                         <div class="form-group">
                             <label for="default_list_limit" <?= $s->where('default_list_limit'); ?>>
-                                <?= $s->trans('default_list_limit'); ?>
+                                <?= $translator->translate('i.default_list_limit'); ?>
                             </label>
                             <?php $body['settings[default_list_limit]'] = $s->get_setting('default_list_limit'); ?>
                             <input type="number" name="settings[default_list_limit]" id="default_list_limit"
@@ -164,7 +166,7 @@
 
         <div class="panel panel-default">
             <div class="panel-heading">
-                <?= $s->trans('amount_settings'); ?>
+                <?= $translator->translate('i.amount_settings'); ?>
             </div>
             <div class="panel-body">
 
@@ -172,7 +174,7 @@
                     <div class="col-xs-12 col-md-6">
                         <div class="form-group">
                             <label for="settings[currency_symbol]" <?= $s->where('currency_symbol'); ?>>
-                                <?= $s->trans('currency_symbol'); ?>
+                                <?= $translator->translate('i.currency_symbol'); ?>
                             </label>
                             <?php 
                                 $body['settings[currency_symbol]'] = $s->get_setting('currency_symbol', '', true);
@@ -186,7 +188,7 @@
                     <div class="col-xs-12 col-md-6">
                         <div class="form-group">
                             <label for="settings[currency_symbol_placement]" <?= $s->where('currency_symbol_placement'); ?>>
-                                <?= $s->trans('currency_symbol_placement'); ?>
+                                <?= $translator->translate('i.currency_symbol_placement'); ?>
                             </label>
                             <?php   $body['settings[currency_symbol_placement]'] = $s->get_setting('currency_symbol_placement'); ?>
                             <select name="settings[currency_symbol_placement]" id="settings[currency_symbol_placement]"
@@ -195,13 +197,13 @@
                                     <?php   
                                         $s->check_select($body['settings[currency_symbol_placement]'], 'before'); 
                                     ?>>
-                                    <?= $s->trans('before_amount'); ?>
+                                    <?= $translator->translate('i.before_amount'); ?>
                                 </option>
                                 <option value="after" <?php $s->check_select($body['settings[currency_symbol_placement]'], 'after'); ?>>
-                                    <?= $s->trans('after_amount'); ?>
+                                    <?= $translator->translate('i.after_amount'); ?>
                                 </option>
                                 <option value="afterspace" <?php $s->check_select($body['settings[currency_symbol_placement]'], 'afterspace'); ?>>
-                                    <?= $s->trans('after_amount_space'); ?>
+                                    <?= $translator->translate('i.after_amount_space'); ?>
                                 </option>
                             </select>
                         </div>
@@ -212,13 +214,13 @@
                     <div class="col-xs-12 col-md-6">
                         <div class="form-group">
                             <label for="settings[currency_code]" <?= $s->where('currency_code'); ?>>
-                                <?= $s->trans('currency_code'); ?>
+                                <?= $translator->translate('i.currency_code'); ?>
                             </label>
                             <?php $body['settings[currency_code]'] = $s->get_setting('currency_code', '', true); ?>
                             <select name="settings[currency_code]"
                                 id="settings[currency_code]"
                                 class="input-sm form-control">
-                                <option value="0"><?= $s->trans('none'); ?></option>
+                                <option value="0"><?= $translator->translate('i.none'); ?></option>
                                 <?php foreach ($gateway_currency_codes as $val => $key) { ?>
                                     <option value="<?= $val; ?>"
                                         <?php
@@ -234,11 +236,11 @@
                     <div class="col-xs-12 col-md-6">
                         <div class="form-group">
                             <label for="tax_rate_decimal_places" <?= $s->where('tax_rate_decimal_places'); ?>>
-                                <?= $s->trans('tax_rate_decimal_places'); ?>
+                                <?= $translator->translate('i.tax_rate_decimal_places'); ?>
                             </label>
                             <?php   $body['settings[tax_rate_decimal_places]'] = $s->get_setting('tax_rate_decimal_places'); ?>
                             <select name="settings[tax_rate_decimal_places]" class="form-control">
-                                <option value="0"><?= $s->trans('none'); ?></option>
+                                <option value="0"><?= $translator->translate('i.none'); ?></option>
                                 <option value="2" 
                                     <?php 
                                         $s->check_select($body['settings[tax_rate_decimal_places]'], '2'); 
@@ -260,18 +262,18 @@
                     <div class="col-xs-12 col-md-6">
                         <div class="form-group">
                             <label for="settings[number_format]" <?= $s->where('number_format'); ?>>
-                                <?= $s->trans('number_format'); ?>
+                                <?= $translator->translate('i.number_format'); ?>
                             </label>
                             <?php   $body['settings[number_format]'] = $s->get_setting('number_format'); ?>                            
                             <select name="settings[number_format]" id="settings[number_format]" 
                                 class="form-control">
-                                <option value="0"><?= $s->trans('none'); ?></option>
+                                <option value="0"><?= $translator->translate('i.none'); ?></option>
                                 <?php foreach ($number_formats as $key => $value) { ?>
                                     <option value="<?php print($key); ?>"
                                         <?php
                                             $s->check_select($body['settings[number_format]'], $value['label']); 
                                         ?>>
-                                        <?= $s->trans($value['label']); ?>
+                                        <?= $translator->translate($value['label']); ?>
                                     </option>
                                 <?php } ?>
                             </select>
@@ -285,7 +287,7 @@
 
         <div class="panel panel-default">
             <div class="panel-heading">
-                <?= $s->trans('dashboard'); ?>
+                <?= $translator->translate('i.dashboard'); ?>
             </div>
             <div class="panel-body">
 
@@ -293,29 +295,29 @@
                     <div class="col-xs-12 col-md-6">
                         <div class="form-group">
                             <label for="settings[quote_overview_period]" <?= $s->where('quote_overview_period'); ?>>
-                                <?= $s->trans('quote_overview_period'); ?>
+                                <?= $translator->translate('i.quote_overview_period'); ?>
                             </label>
                             <?php $body['settings[quote_overview_period]'] = $s->get_setting('quote_overview_period'); ?>
                             <select name="settings[quote_overview_period]" id="settings[quote_overview_period]"
                                 class="form-control" data-minimum-results-for-search="Infinity">
-                                <option value="0"><?= $s->trans('none'); ?></option>
+                                <option value="0"><?= $translator->translate('i.none'); ?></option>
                                 <option value="this-month" <?php $s->check_select($body['settings[quote_overview_period]'], 'this-month'); ?>>
-                                    <?= $s->trans('this_month'); ?>
+                                    <?= $translator->translate('i.this_month'); ?>
                                 </option>
                                 <option value="last-month" <?php $s->check_select($body['settings[quote_overview_period]'], 'last-month'); ?>>
-                                    <?= $s->trans('last_month'); ?>
+                                    <?= $translator->translate('i.last_month'); ?>
                                 </option>
                                 <option value="this-quarter" <?php $s->check_select($body['settings[quote_overview_period]'], 'this-quarter'); ?>>
-                                    <?= $s->trans('this_quarter'); ?>
+                                    <?= $translator->translate('i.this_quarter'); ?>
                                 </option>
                                 <option value="last-quarter" <?php $s->check_select($body['settings[quote_overview_period]'], 'last-quarter'); ?>>
-                                    <?= $s->trans('last_quarter'); ?>
+                                    <?= $translator->translate('i.last_quarter'); ?>
                                 </option>
                                 <option value="this-year" <?php $s->check_select($body['settings[quote_overview_period]'], 'this-year'); ?>>
-                                    <?= $s->trans('this_year'); ?>
+                                    <?= $translator->translate('i.this_year'); ?>
                                 </option>
                                 <option value="last-year" <?php $s->check_select($body['settings[quote_overview_period]'], 'last-year'); ?>>
-                                    <?= $s->trans('last_year'); ?>
+                                    <?= $translator->translate('i.last_year'); ?>
                                 </option>
                             </select>
                         </div>
@@ -324,29 +326,29 @@
                     <div class="col-xs-12 col-md-6">
                         <div class="form-group">
                             <label for="settings[invoice_overview_period]" <?= $s->where('invoice_overview_period'); ?>>
-                                <?= $s->trans('invoice_overview_period'); ?>
+                                <?= $translator->translate('i.invoice_overview_period'); ?>
                             </label>
                             <?php $body['settings[invoice_overview_period]'] = $s->get_setting('invoice_overview_period'); ?>
                             <select name="settings[invoice_overview_period]" id="settings[invoice_overview_period]"
                                 class="form-control" data-minimum-results-for-search="Infinity">
-                                <option value="0"><?= $s->trans('none'); ?></option>
+                                <option value="0"><?= $translator->translate('i.none'); ?></option>
                                 <option value="this-month" <?php $s->check_select($body['settings[invoice_overview_period]'], 'this-month'); ?>>
-                                    <?= $s->trans('this_month'); ?>
+                                    <?= $translator->translate('i.this_month'); ?>
                                 </option>
                                 <option value="last-month" <?php $s->check_select($body['settings[invoice_overview_period]'], 'last-month'); ?>>
-                                    <?= $s->trans('last_month'); ?>
+                                    <?= $translator->translate('i.last_month'); ?>
                                 </option>
                                 <option value="this-quarter" <?php $s->check_select($body['settings[invoice_overview_period]'], 'this-quarter'); ?>>
-                                    <?= $s->trans('this_quarter'); ?>
+                                    <?= $translator->translate('i.this_quarter'); ?>
                                 </option>
                                 <option value="last-quarter" <?php $s->check_select($body['settings[invoice_overview_period]'], 'last-quarter'); ?>>
-                                    <?= $s->trans('last_quarter'); ?>
+                                    <?= $translator->translate('i.last_quarter'); ?>
                                 </option>
                                 <option value="this-year" <?php $s->check_select($body['settings[invoice_overview_period]'], 'this-year'); ?>>
-                                    <?= $s->trans('this_year'); ?>
+                                    <?= $translator->translate('i.this_year'); ?>
                                 </option>
                                 <option value="last-year" <?php $s->check_select($body['settings[invoice_overview_period]'], 'last-year'); ?>>
-                                    <?= $s->trans('last_year'); ?>
+                                    <?= $translator->translate('i.last_year'); ?>
                                 </option>
                             </select>
                         </div>
@@ -356,19 +358,19 @@
                     <div class="col-xs-12 col-md-6">
                         <div class="form-group">
                             <label for="disable_quickactions" <?= $s->where('disable_quickactions'); ?>>
-                                <?= $s->trans('disable_quickactions'); ?>
+                                <?= $translator->translate('i.disable_quickactions'); ?>
                             </label>
                             <?php   $body['settings[disable_quickactions]'] = $s->get_setting('disable_quickactions'); ?>
                             <select name="settings[disable_quickactions]" class="form-control"
                                 id="disable_quickactions" data-minimum-results-for-search="Infinity">
                                 <option value="0">
-                                    <?= $s->trans('no'); ?>
+                                    <?= $translator->translate('i.no'); ?>
                                 </option>
                                 <option value="1" 
                                 <?php
                                     $s->check_select($body['settings[disable_quickactions]'], '1'); 
                                 ?>>
-                                <?= $s->trans('yes'); ?>
+                                <?= $translator->translate('i.yes'); ?>
                                 </option>
                             </select>
                         </div>
@@ -378,7 +380,7 @@
         </div>
         <div class="panel panel-default">
             <div class="panel-heading">
-                <?= $s->trans('interface'); ?>
+                <?= $translator->translate('i.interface'); ?>
             </div>
             <div class="panel-body">
 
@@ -386,18 +388,18 @@
                     <div class="col-xs-12 col-md-6">
                         <div class="form-group">
                             <label for="disable_sidebar" <?= $s->where('disable_sidebar'); ?>>
-                                <?= $s->trans('disable_sidebar'); ?>
+                                <?= $translator->translate('i.disable_sidebar'); ?>
                             </label>
                             <?php   $body['settings[disable_sidebar]'] = $s->get_setting('disable_sidebar'); ?>
                             <select name="settings[disable_sidebar]" class="form-control">
                                 <option value="0">
-                                    <?= $s->trans('no'); ?>
+                                    <?= $translator->translate('i.no'); ?>
                                 </option>
                                 <option value="1" 
                                     <?php
                                         $s->check_select($body['settings[disable_sidebar]'], '1'); 
                                     ?>>
-                                    <?= $s->trans('yes'); ?>
+                                    <?= $translator->translate('i.yes'); ?>
                                 </option>                                  
                             </select>
                         </div>
@@ -405,7 +407,7 @@
                     <div class="col-xs-12 col-md-6">
                         <div class="form-group">
                             <label for="settings[custom_title]" <?= $s->where('custom_title'); ?>>
-                                <?= $s->trans('custom_title'); ?>
+                                <?= $translator->translate('i.custom_title'); ?>
                             </label>
                             <?php $body['settings[custom_title]'] = $s->get_setting('custom_title'); ?>
                             <input type="text" name="settings[custom_title]" id="settings[custom_title]"
@@ -419,17 +421,17 @@
                     <div class="col-xs-12 col-md-6">
                         <div class="form-group">
                             <label for="monospace_amounts" <?= $s->where('monospace_amounts'); ?>>
-                                <?= $s->trans('monospaced_font_for_amounts'); ?>
+                                <?= $translator->translate('i.monospaced_font_for_amounts'); ?>
                             </label>
                             <?php   $body['settings[monospace_amounts]'] = $s->get_setting('monospace_amounts'); ?>
                             <select name="settings[monospace_amounts]" class="form-control" id="monospace_amounts">
-                                <option value="0"><?= $s->trans('no'); ?></option>
+                                <option value="0"><?= $translator->translate('i.no'); ?></option>
                                 <option value="1" <?php $s->check_select($body['settings[monospace_amounts]'], '1'); ?>>
-                                    <?= $s->trans('yes'); ?>
+                                    <?= $translator->translate('i.yes'); ?>
                                 </option>
                             </select>
                             <p class="help-block">
-                                <?= $s->trans('example'); ?>:
+                                <?= $translator->translate('i.example'); ?>:
                                 <span style="font-family: Monaco, Lucida Console, monospace"><?= $s->format_currency(123456.78); ?></span>
                             </p>
                         </div>
@@ -437,13 +439,13 @@
                     <div class="col-xs-12 col-md-6">
                         <div class="form-group">
                             <label for="settings[open_reports_in_new_tab]" <?= $s->where('open_reports_in_new_tab'); ?>>
-                                <?= $s->trans('open_reports_in_new_tab'); ?>
+                                <?= $translator->translate('i.open_reports_in_new_tab'); ?>
                             </label>
                             <?php  $body['settings[open_reports_in_new_tab]'] = $s->get_setting('open_reports_in_new_tab'); ?>
                             <select name="settings[open_reports_in_new_tab]" id="settings[open_reports_in_new_tab]" class="form-control">
-                                <option value="0"><?= $s->trans('no'); ?></option>
+                                <option value="0"><?= $translator->translate('i.no'); ?></option>
                                 <option value="1" <?= $s->check_select($body['settings[open_reports_in_new_tab]'], '1'); ?>>
-                                    <?= $s->trans('yes'); ?>
+                                    <?= $translator->translate('i.yes'); ?>
                                 </option>
                             </select>
                         </div>
@@ -454,31 +456,31 @@
 
         <div class="panel panel-default">
             <div class="panel-heading">
-                <?= $s->trans('system_settings'); ?>
+                <?= $translator->translate('i.system_settings'); ?>
             </div>
             <div class="panel-body">
                 <?= Html::openTag('div', ['class' => 'row']); ?>
                     <div class="col-xs-12 col-md-6">
                         <div class="form-group">
                             <label for="settings[bcc_mails_to_admin]" <?= $s->where('bcc_mails_to_admin'); ?>>
-                                <?= $s->trans('bcc_mails_to_admin'); ?>
+                                <?= $translator->translate('i.bcc_mails_to_admin'); ?>
                             </label>
                             <?php   $body['settings[bcc_mails_to_admin]'] = $s->get_setting('bcc_mails_to_admin'); ?>
                             <select name="settings[bcc_mails_to_admin]" id="settings[bcc_mails_to_admin]"
                                 class="form-control">
-                                <option value="0"><?= $s->trans('no'); ?></option>
+                                <option value="0"><?= $translator->translate('i.no'); ?></option>
                                 <option value="1" <?php $s->check_select($body['settings[bcc_mails_to_admin]'], '1'); ?>>
-                                    <?= $s->trans('yes'); ?>
+                                    <?= $translator->translate('i.yes'); ?>
                                 </option>
                             </select>
-                            <p class="help-block"><?= $s->trans('bcc_mails_to_admin_hint'); ?></p>
+                            <p class="help-block"><?= $translator->translate('i.bcc_mails_to_admin_hint'); ?></p>
                         </div>
                     </div>
                     <div class="col-xs-12 col-md-6">
 
                         <div class="form-group">
                             <label for="settings[cron_key]" <?= $s->where('cron_key'); ?>>
-                                <?= $s->trans('cron_key'); ?>
+                                <?= $translator->translate('i.cron_key'); ?>
                             </label>
                             <div class="input-group">
                                 <input type="text" name="settings[cron_key]" id="settings[cron_key]" class="cron_key form-control" 

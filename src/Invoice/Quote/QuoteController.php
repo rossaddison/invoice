@@ -739,7 +739,7 @@ final class QuoteController
                 'dels'=>$dels,
                 'groups'=>$groupRepo->findAllPreloaded(),
                 'numberhelper' => new NumberHelper($this->sR),
-                'quote_statuses'=> $quoteRepo->getStatuses($this->sR),            
+                'quote_statuses'=> $quoteRepo->getStatuses($this->translator),            
                 'cvH'=> new CVH($this->sR),
                 'custom_fields'=>$cfR->repoTablequery('quote_custom'),
                 // Applicable to normally building up permanent selection lists eg. dropdowns
@@ -1230,7 +1230,7 @@ final class QuoteController
                 $paginator = (new OffsetPaginator($quotes))
                 ->withPageSize((int)$this->sR->get_setting('default_list_limit'))
                 ->withCurrentPage($pageNum);
-                $quote_statuses = $qR->getStatuses($this->sR);
+                $quote_statuses = $qR->getStatuses($this->translator);
                 $parameters = [            
                     'alert'=> $this->alert(),
                     'qaR'=> $qaR,
@@ -1297,7 +1297,7 @@ final class QuoteController
         ->withPageSize((int)$this->sR->get_setting('default_list_limit'))
         ->withCurrentPage((int)$page)
         ->withNextPageToken($page);    
-        $quote_statuses = $quoteRepo->getStatuses($this->sR);
+        $quote_statuses = $quoteRepo->getStatuses($this->translator);
         $parameters = [
             'status' => $status,
             'paginator' => $paginator,
@@ -2572,7 +2572,7 @@ final class QuoteController
                         'custom_values'=>$cvR->attach_hard_coded_custom_field_values_to_custom_field($cfR->repoTablequery('quote_custom')),
                         'cvH'=> new CVH($this->sR),
                         'quote_custom_values' => $quote_custom_values,
-                        'quote_statuses'=> $qR->getStatuses($this->sR),  
+                        'quote_statuses'=> $qR->getStatuses($this->translator),  
                         'quote'=>$qR->repoQuoteLoadedquery((string)$this->session->get('quote_id')),   
                         'partial_item_table'=>$this->view_renderer->renderPartialAsString('/invoice/quote/partial_item_table',[
                             'invEdit' => $this->user_service->hasPermission('editInv') ? true : false,    

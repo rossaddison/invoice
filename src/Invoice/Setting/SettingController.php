@@ -158,12 +158,11 @@ final class SettingController
             'head' => $head,
             'body'=> $body,
             'general'=>$this->viewRenderer->renderPartialAsString('/invoice/setting/views/partial_settings_general',[
-                's'=>$this->s,
                 /**
                  * @psalm-suppress PossiblyInvalidArgument
                  */
                 'languages'=> $languages,
-                'first_days_of_weeks'=>['0' => $this->s->lang('sunday'), '1' => $this->s->lang('monday')],
+                'first_days_of_weeks'=>['0' => $this->s->lang('i.sunday'), '1' => $this->s->lang('i.monday')],
                 'date_formats'=>$datehelper->date_formats(),
                 // Used in ClientForm
                 'time_zones'=> DateTimeZone::listIdentifiers(),
@@ -174,7 +173,6 @@ final class SettingController
                 'icon'=>$aliases->get('@icon')
             ]),
             'invoices'=>$this->viewRenderer->renderPartialAsString('/invoice/setting/views/partial_settings_invoices',[
-                's'=>$this->s,
                 'invoice_groups'=>$gR->findAllPreloaded(),
                 'payment_methods'=>$pm->findAllPreloaded(),
                 'public_invoice_templates'=>$this->s->get_invoice_templates('public'),
@@ -185,46 +183,32 @@ final class SettingController
                 'cantons' => Sumex::CANTONS,
             ]),
             'quotes'=>$this->viewRenderer->renderPartialAsString('/invoice/setting/views/partial_settings_quotes',[
-                's'=>$this->s,
                 'invoice_groups'=>$gR->findAllPreloaded(),
                 'public_quote_templates'=>$this->s->get_quote_templates('public'),
                 'pdf_quote_templates'=>$this->s->get_quote_templates('pdf'),
                 'email_templates_quote'=>$eR->repoEmailTemplateType('quote'),
             ]),
             'salesorders'=>$this->viewRenderer->renderPartialAsString('/invoice/setting/views/partial_settings_client_purchase_orders',[
-                's'=>$this->s,
                 'invoice_groups'=>$gR->findAllPreloaded(),
             ]),
             'taxes'=>$this->viewRenderer->renderPartialAsString('/invoice/setting/views/partial_settings_taxes',[
-                's'=>$this->s,
                 'tax_rates'=>$tR->findAllPreloaded(),
             ]),
-            'email'=>$this->viewRenderer->renderPartialAsString('/invoice/setting/views/partial_settings_email',[
-                's'=>$this->s,
-            ]),
+            'email'=>$this->viewRenderer->renderPartialAsString('/invoice/setting/views/partial_settings_email'),
             'google_translate'=>$this->viewRenderer->renderPartialAsString('/invoice/setting/views/partial_settings_google_translate',[
                 'locales'=>$this->s->locales(),
-                's'=>$this->s,
             ]),
             'online_payment'=>$this->viewRenderer->renderPartialAsString('/invoice/setting/views/partial_settings_online_payment',[
-                's'=>$this->s,
                 'gateway_drivers'=>$this->s->payment_gateways(),
                 'gateway_currency_codes'=>CurrencyHelper::all(),
                 'gateway_regions' => $this->s->amazon_regions(),
                 'payment_methods'=>$pm->findAllPreloaded(),                
                 'crypt'=> $crypt
             ]),
-            'mpdf' => $this->viewRenderer->renderPartialAsString('/invoice/setting/views/partial_settings_mpdf',[
-                's'=>$this->s,
-            ]),            
-            'projects_tasks'=>$this->viewRenderer->renderPartialAsString('/invoice/setting/views/partial_settings_projects_tasks',[
-                's'=>$this->s,
-            ]),            
-            'vat_registered'=>$this->viewRenderer->renderPartialAsString('/invoice/setting/views/partial_settings_vat_registered',[
-                's'=>$this->s,
-            ]),
+            'mpdf' => $this->viewRenderer->renderPartialAsString('/invoice/setting/views/partial_settings_mpdf'),            
+            'projects_tasks'=>$this->viewRenderer->renderPartialAsString('/invoice/setting/views/partial_settings_projects_tasks'),            
+            'vat_registered'=>$this->viewRenderer->renderPartialAsString('/invoice/setting/views/partial_settings_vat_registered'),
             'peppol_electronic_invoicing'=>$this->viewRenderer->renderPartialAsString('/invoice/setting/views/partial_settings_peppol',[
-                's'=>$this->s,
                 'config_tax_currency' => $this->s->get_config_peppol()['TaxCurrencyCode'] ?: $this->s->get_config_company_details()['tax_currency'],
                 'gateway_currency_codes'=>CurrencyHelper::all(),
                 // if delivery/invoice periods are used, a tax point date cannot be determined
@@ -240,7 +224,6 @@ final class SettingController
             'storecove'=>$this->viewRenderer->renderPartialAsString('/invoice/setting/views/partial_settings_storecove',[
                 'countries'=>$countries->get_country_list((string)$this->session->get('_language')),
                 'sender_identifier_array'=>StoreCoveArrays::store_cove_sender_identifier_array(),
-                's'=>$this->s,
             ]),
         ];
         if ($request->getMethod() === Method::POST) {            

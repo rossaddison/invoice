@@ -44,7 +44,7 @@ if (!empty($errors)) {
   <label for="uploaded_date" class="form-label" style="background:lightblue"><?= $translator->translate('invoice.upload.date'); ?></label>
 <?php $date = $body['uploaded_date']; if ($date && $date != "0000-00-00") {    $datehelper = new DateHelper($s);  $date = $datehelper->date_from_mysql($date);} else {  $date = null;}?><?= Html::encode($date); ?></div>
  <div class="mb3 form-group">
-   <label for="client_id" class="form-label" style="background:lightblue"><?= $s->trans('client'); ?></label>
+   <label for="client_id" class="form-label" style="background:lightblue"><?= $translator->translate('i.client'); ?></label>
    <?= $upload->getClient()->id;?>
  </div>
 </div>

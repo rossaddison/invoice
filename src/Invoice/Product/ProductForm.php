@@ -7,7 +7,6 @@ namespace App\Invoice\Product;
 use App\Invoice\Entity\Product;
 use Yiisoft\FormModel\FormModel;
 use Yiisoft\Validator\Rule\Required;
-use Yiisoft\Validator\Rule\StringValue;
 
 final class ProductForm extends FormModel
 {
@@ -22,11 +21,15 @@ final class ProductForm extends FormModel
     public ?string $product_description = null;
     public ?string $product_additional_item_property_name = null;
     public ?string $product_additional_item_property_value = null;
+    
     #[Required]
     public ?float  $product_price = 0.00;
+    
     public float   $product_price_base_quantity = 1.00;
+    
     #[Required]
     public ?float  $purchase_price = 0.00;
+    
     public ?string $provider_name = null;
     
     #[Required]  
@@ -38,7 +41,6 @@ final class ProductForm extends FormModel
     #[Required]
     public ?string $unit_id = '';
     
-    #[StringValue]
     public ?string $unit_peppol_id = '';
     
     public ?float $product_tariff = 0.00;

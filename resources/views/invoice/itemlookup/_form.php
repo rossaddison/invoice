@@ -26,7 +26,7 @@ if (!empty($errors)) {
 <form id="ItemLookupForm" method="POST" action="<?= $urlGenerator->generate(...$action) ?>" enctype="multipart/form-data">
 <input type="hidden" name="_csrf" value="<?= $csrf ?>">
 <div id="headerbar">
-<h1 class="headerbar-title"><?= $s->trans('itemlookups_form'); ?></h1>
+<h1 class="headerbar-title"><?= $translator->translate('i.itemlookups_form'); ?></h1>
 <?php $response = $head->renderPartial('invoice/layout/header_buttons',['s'=>$s, 'hide_submit_button'=>false ,'hide_cancel_button'=>false]); ?>        
 <?php echo (string)$response->getBody(); ?><div id="content">
 <?= Html::openTag('div', ['class' => 'row']); ?>
@@ -35,17 +35,17 @@ if (!empty($errors)) {
  value="<?= Html::encode($body['id'] ??  ''); ?>">
  </div>
  <div class="mb3 form-group">
-   <label for="name"><?= $s->trans('name'); ?></label>
+   <label for="name"><?= $translator->translate('i.name'); ?></label>
    <input type="text" name="name" id="name" class="form-control"
  value="<?= Html::encode($body['name'] ??  ''); ?>">
  </div>
  <div class="mb3 form-group">
-   <label for="description"><?= $s->trans('description'); ?></label>
+   <label for="description"><?= $translator->translate('i.description'); ?></label>
    <input type="text" name="description" id="description" class="form-control"
  value="<?= Html::encode($body['description'] ??  ''); ?>">
  </div>
 <div class="form-group">
-  <label for="price"><?= $s->trans('price'); ?></label>
+  <label for="price"><?= $translator->translate('i.price'); ?></label>
       <div class="input-group has-feedback">
           <input type="text" name="price" id="price" class="form-control"
               value="<?= $s->format_amount($body['price'] ?? ''); ?>">

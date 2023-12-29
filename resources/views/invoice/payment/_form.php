@@ -17,7 +17,7 @@
     ->open() ?>  
 
     <div id="headerbar">
-        <h1 class="headerbar-title"><?= $s->trans('payment_form'); ?></h1>
+        <h1 class="headerbar-title"><?= $translator->translate('i.payment_form'); ?></h1>
         <?php
             $response = $head->renderPartial('invoice/layout/header_buttons',['s'=>$s, 'hide_submit_button'=>false ,'hide_cancel_button'=>false]);
             echo (string)$response->getBody();
@@ -27,7 +27,7 @@
     <?= Html::openTag('div', ['class' => 'row']); ?>
         <div class="mb3 form-group">            
                 <div class="col-xs-12 col-sm-2 text-right text-left-xs">
-                    <label for="inv_id" class="control-label" required><?= $s->trans('invoice') ." - ". ($body['inv_id'] ?? ''); ?></label>
+                    <label for="inv_id" class="control-label" required><?= $translator->translate('i.invoice') ." - ". ($body['inv_id'] ?? ''); ?></label>
                 </div>
                 <div class="col-xs-12 col-sm-6">
                     <?php if ($open_invs_count > 0) { ?>
@@ -47,7 +47,7 @@
                         </select>
                     <?php } else { ?>
                         <select name="inv_id" id="inv_id" class="form-control">
-                                        <option value="0"><?= $s->trans('none'); ?></option> 
+                                        <option value="0"><?= $translator->translate('i.none'); ?></option> 
                         </select>
                     <?php } ?>
                 </div>
@@ -59,7 +59,7 @@
                 $pdate = $datehelper->get_or_set_with_style($body['payment_date'] ?? new DateTimeImmutable('now'));                                
             ?>
             <div class="col-xs-12 col-sm-2 text-right text-left-xs">
-                <label for="payment_date" class="control-label" required><?= $s->trans('date'); ?></label>
+                <label for="payment_date" class="control-label" required><?= $translator->translate('i.date'); ?></label>
             </div>
             <div class="col-xs-12 col-sm-6">
                 <div class="input-group">
@@ -75,7 +75,7 @@
 
         <div class="mb3 form-group">
             <div class="col-xs-12 col-sm-2 text-right text-left-xs">
-                <label for="amount" class="control-label" required><?= $s->trans('amount'); ?></label>
+                <label for="amount" class="control-label" required><?= $translator->translate('i.amount'); ?></label>
             </div>
             <div class="col-xs-12 col-sm-6">               
                 <input type="number" name="amount" id="amount" class="form-control" min="0" step=".01" value="<?= ($body['amount'] ?? 0.001); ?>" required>
@@ -85,7 +85,7 @@
         <div class="mb3 form-group">
             <div class="col-xs-12 col-sm-2 text-right text-left-xs">
                 <label for="payment_method_id" class="control-label" required>
-                    <?= $s->trans('payment_method'); ?>
+                    <?= $translator->translate('i.payment_method'); ?>
                 </label>
             </div>
             <div class="col-xs-12 col-sm-6 payment-method-wrapper">
@@ -100,14 +100,14 @@
                     </select>
                 <?php } else { ?>
                     <select name="payment_method_id" id="inv_id" class="form-control">>
-                        <option value="0"><?= $s->trans('none'); ?></option> 
+                        <option value="0"><?= $translator->translate('i.none'); ?></option> 
                     </select>
                 <?php } ?>
             </div>
         </div>
         <div class="mb3 form-group">
             <div class="col-xs-12 col-sm-2 text-right text-left-xs">
-                <label for="note" class="control-label" required><?= $s->trans('note'); ?></label>
+                <label for="note" class="control-label" required><?= $translator->translate('i.note'); ?></label>
             </div>
             <div class="col-xs-12 col-sm-6">
                 <textarea name="note" class="form-control" required><?=  $body['note'] ?? ''; ?></textarea>

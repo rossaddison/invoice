@@ -37,7 +37,7 @@ use Yiisoft\Html\Tag\Form;
 
     <?= Html::openTag('div',['id' => 'headerbar']); ?>
         <?= Html::openTag('h1', ['class' => 'headerbar-title']); ?>
-            <?= $s->trans('companyprivates_form'); ?>
+            <?= $translator->translate('i.view'); ?>
         <?= Html::closeTag('h1'); ?>
         <?= Html::openTag('div', ['id' => 'content']); ?>
             <?= Html::openTag('div', ['class' => 'row']); ?>
@@ -57,7 +57,7 @@ use Yiisoft\Html\Tag\Form;
                 <?= Html::openTag('div', ['class' => 'mb3 form-group']); ?>
                     <?= Field::text($form, 'gln')
                         ->addInputAttributes(['class' => 'form-control'])
-                        ->label($s->trans('gln'))
+                        ->label($translator->translate('i.gln'))
                         ->readonly(true)
                         ->value(Html::encode($form->getGln() ??  '')); ?>
                 <?= Html::closeTag('div'); ?>

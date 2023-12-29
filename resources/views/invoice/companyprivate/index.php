@@ -70,7 +70,7 @@ echo $alert;
             content: static fn (object $model) => Html::encode($model->getLogo_filename())
         ),
         new DataColumn(
-            header: $s->trans('view'),    
+            header: $translator->translate('i.view'),    
             content: static function ($model) use ($urlGenerator): string {
                return Html::a(
                        Html::tag('i','',['class'=>'fa fa-eye fa-margin']),
@@ -79,7 +79,7 @@ echo $alert;
             }
         ),
         new DataColumn(
-            header: $s->trans('edit'),    
+            header: $translator->translate('i.edit'),    
             content: static function ($model) use ($urlGenerator): string {
                return Html::a(
                        Html::tag('i','',['class'=>'fa fa-edit fa-margin']),
@@ -88,7 +88,7 @@ echo $alert;
             }
         ),
         new DataColumn(
-            header: $s->trans('delete'),    
+            header: $translator->translate('i.delete'),    
             content: static function ($model) use ($translator, $urlGenerator): string {
                return Html::a( Html::tag('button',
                     Html::tag('i','',['class'=>'fa fa-trash fa-margin']),

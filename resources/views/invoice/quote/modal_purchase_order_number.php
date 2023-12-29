@@ -38,7 +38,7 @@ declare(strict_types=1);
             <div class="btn-group">
                 <button class="quote_with_purchase_order_number_confirm btn btn-success" id="quote_with_purchase_order_number_confirm" type="button">
                     <i class="fa fa-check"></i>
-                    <?= $s->trans('submit'); ?>
+                    <?= $translator->translate('i.submit'); ?>
                 </button>
             </div>
         </div>

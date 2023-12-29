@@ -19,8 +19,8 @@ use Yiisoft\Http\Method;
 use Yiisoft\Router\CurrentRoute;
 use Yiisoft\Session\SessionInterface as Session;
 use Yiisoft\Session\Flash\Flash;
-use Yiisoft\Translator\TranslatorInterface;use Yiisoft\FormModel\FormHydrator;
-use Yiisoft\Form\Helper\HtmlFormErrors;
+use Yiisoft\Translator\TranslatorInterface;
+use Yiisoft\FormModel\FormHydrator;
 use Yiisoft\Yii\View\ViewRenderer;
 
 final class FamilyController
@@ -68,7 +68,6 @@ final class FamilyController
         $parameters = [
             'alert'=>$this->alert(),      
             'paginator'=> $paginator,
-            's'=> $settingRepository,
             'familys' => $familys, 
         ]; 
         return $this->viewRenderer->render('index', $parameters);
@@ -76,28 +75,35 @@ final class FamilyController
     
     /**
      * @param Request $request
-     * @param SettingRepository $settingRepository
      * @param FormHydrator $formHydrator
      * @return Response
      */
-    public function add(Request $request, SettingRepository $settingRepository, FormHydrator $formHydrator): Response
+    public function add(Request $request, FormHydrator $formHydrator): Response
     {
+        $family = new Family();
+        $form = new FamilyForm($family);
         $parameters = [
-            'title' => 'Add Family',
+            'title' => $this->translator->translate('i.add_family'),
             'action' => ['family/add'],
             'errors' => [],
-            'body' => $request->getParsedBody(),
-            's'=>$settingRepository
+            'form' => $form
         ];        
         if ($request->getMethod() === Method::POST) {
-            $form = new FamilyForm();
-            if ($formHydrator->populate($form, $parameters['body']) && $form->isValid()) {
-                $this->familyService->saveFamily(new Family(), $form);
+            $body = $request->getParsedBody();
+            /**
+             * @psalm-suppress PossiblyInvalidArgument $body 
+             */
+            if ($formHydrator->populate($form, $body) && $form->isValid()) {
+                /**
+                 * @psalm-suppress PossiblyInvalidArgument $body 
+                 */
+                $this->familyService->saveFamily($family, $body);
                 return $this->webService->getRedirectResponse('family/index');  
             } 
+            $parameters['errors'] = $form->getValidationResult()?->getErrorMessagesIndexedByAttribute() ?? [];
             $parameters['form'] = $form;
         }
-        return $this->viewRenderer->render('__form', $parameters);
+        return $this->viewRenderer->render('_form', $parameters);
     }
     
     /**
@@ -113,26 +119,29 @@ final class FamilyController
     {
         $family = $this->family($currentRoute, $familyRepository);
         if ($family) {
+            $form = new FamilyForm($family);
             $parameters = [
-                'title' => $settingRepository->trans('edit'),
+                'title' => $this->translator->translate('i.edit'),
                 'action' => ['family/edit', ['id' => $family->getFamily_id()]],
                 'errors' => [],
-                'body' => [
-                    'family_name' => $family->getFamily_name(),
-                ],
-                's'=>$settingRepository,
+                'form' => $form
             ];
             if ($request->getMethod() === Method::POST) {
-                $form = new FamilyForm();
                 $body = $request->getParsedBody();
+                /**
+                 * @psalm-suppress PossiblyInvalidArgument $body 
+                 */
                 if ($formHydrator->populate($form, $body) && $form->isValid()) {
-                    $this->familyService->saveFamily($family, $form);
+                    /**
+                     * @psalm-suppress PossiblyInvalidArgument $body 
+                     */
+                    $this->familyService->saveFamily($family, $body);
                     return $this->webService->getRedirectResponse('family/index');
                 }
-                $parameters['body'] = $body;
+                $parameters['errors'] = $form->getValidationResult()?->getErrorMessagesIndexedByAttribute() ?? [];
                 $parameters['form'] = $form;
             }
-            return $this->viewRenderer->render('__form', $parameters);
+            return $this->viewRenderer->render('_form', $parameters);
         } else {
             return $this->webService->getRedirectResponse('family/index');
         }
@@ -168,19 +177,15 @@ final class FamilyController
     public function view(CurrentRoute $currentRoute, FamilyRepository $familyRepository,SettingRepository $settingRepository): Response {
         $family = $this->family($currentRoute, $familyRepository);
         if ($family) {
+            $form = new FamilyForm($family);
             $parameters = [
                 'title' => 'View',
                 'action' => ['family/view', ['id' => $family->getFamily_id()]],
                 'errors' => [],
                 'family'=>$family,
-                's'=>$settingRepository,     
-                'body' => [
-                    'title' => 'View',
-                    'id'=>$family->getFamily_id(),
-                    'family_name'=>$family->getFamily_name(),
-                ],            
+                'form'=>$form,
             ];
-            return $this->viewRenderer->render('__view', $parameters);
+            return $this->viewRenderer->render('_view', $parameters);
         }
         return $this->webService->getRedirectResponse('family/index');  
     }

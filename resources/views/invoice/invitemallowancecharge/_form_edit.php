@@ -25,7 +25,7 @@ if (!empty($errors)) {
 <form id="InvItemAllowanceChargeForm" method="POST" action="<?= $urlGenerator->generate(...$action) ?>" enctype="multipart/form-data">
 <input type="hidden" name="_csrf" value="<?= $csrf ?>">
 <div id="headerbar">
-<h1 class="headerbar-title"><?= $s->trans('aciis_form'); ?></h1>
+<h1 class="headerbar-title"><?= $translator->translate('i.aciis_form'); ?></h1>
 <?php $response = $head->renderPartial('invoice/layout/header_buttons',['s'=>$s, 'hide_submit_button'=>false ,'hide_cancel_button'=>false]); ?>        
 <?php echo (string)$response->getBody(); ?><div id="content">
 <?= Html::openTag('div', ['class' => 'row']); ?>
@@ -56,7 +56,7 @@ if (!empty($errors)) {
     </select>
  </div>    
 <div class="form-group">
-  <label for="amount"><?= $s->trans('amount'); ?></label>
+  <label for="amount"><?= $translator->translate('i.amount'); ?></label>
       <div class="input-group has-feedback">
           <input type="text" name="amount" id="amount" class="form-control"
               value="<?= $s->format_amount((float)($body['amount'] ?? $acii->getAmount())); ?>">

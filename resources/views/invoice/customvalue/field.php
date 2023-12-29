@@ -23,7 +23,7 @@ use Yiisoft\FormModel\Field;
         <?= Html::openTag('div',['class'=>'card-header']); ?>
 
         <?= Html::openTag('h1',['class' => 'headerbar-title']); ?>
-            <?= $s->trans('custom_values'); ?>
+            <?= $translator->translate('i.custom_values'); ?>
         <?= Html::closeTag('h1'); ?>
 
         <?= Html::openTag('div',['class' => 'headerbar-item pull-right']); ?>
@@ -32,13 +32,13 @@ use Yiisoft\FormModel\Field;
                         'class' => 'btn btn-default', 
                         'href' => $urlGenerator->generate('customfield/index')]); ?>
                         <?= Html::openTag('i', ['class' => 'fa fa-arrow-left']);?>
-                        <?= Html::closeTag('i'); ?><?= $s->trans('back'); ?>    
+                        <?= Html::closeTag('i'); ?><?= $translator->translate('i.back'); ?>    
                 <?= Html::closeTag('a'); ?>
                 <?= Html::openTag('a',[
                         'class' => 'btn btn-primary', 
                         'href' => $urlGenerator->generate('customvalue/new',['id'=>$custom_field->getId()])]); ?>
                         <?= Html::openTag('i', ['class' => 'fa fa-plus']);?>
-                        <?= Html::closeTag('i'); ?><?= $s->trans('new'); ?>    
+                        <?= Html::closeTag('i'); ?><?= $translator->translate('i.new'); ?>    
                 <?= Html::closeTag('a'); ?>
             <?= Html::closeTag('div'); ?>
         <?= Html::closeTag('div'); ?>
@@ -50,7 +50,7 @@ use Yiisoft\FormModel\Field;
                 <?= Html::openTag('div',['class' => 'col-xs-12 col-md-6 col-md-offset-3']); ?>
                     <?= Html::openTag('div',['class' => 'form-group']); ?>
                         <?= Field::text($field_form, 'label')
-                            ->label($s->trans('field'))    
+                            ->label($translator->translate('i.field'))    
                             ->addInputAttributes([
                                 'class' => 'form-control',
                                 'disabled' => 'disabled',
@@ -69,7 +69,7 @@ use Yiisoft\FormModel\Field;
                     <?= Html::openTag('div',['class' => 'form-group']); ?>    
                         <?=
                             Field::select($field_form, 'type')
-                            ->label($s->trans('type'),['control-label'])
+                            ->label($translator->translate('i.type'),['control-label'])
                             ->addInputAttributes([
                                 'class' => 'form-control',
                                 'id' => 'type',
@@ -83,9 +83,9 @@ use Yiisoft\FormModel\Field;
                         <?= Html::openTag('table', ['class' => 'table table-bordered']); ?>
                             <?= Html::openTag('thead'); ?>
                             <?= Html::openTag('tr'); ?>
-                                <?= Html::openTag('th'); ?><?= $s->trans('id'); ?><?= Html::closeTag('th'); ?>
-                                <?= Html::openTag('th'); ?><?= $s->trans('label'); ?><?= Html::closeTag('th'); ?>
-                                <?= Html::openTag('th'); ?><?= $s->trans('options'); ?><?= Html::closeTag('th'); ?>
+                                <?= Html::openTag('th'); ?><?= $translator->translate('i.id'); ?><?= Html::closeTag('th'); ?>
+                                <?= Html::openTag('th'); ?><?= $translator->translate('i.label'); ?><?= Html::closeTag('th'); ?>
+                                <?= Html::openTag('th'); ?><?= $translator->translate('i.options'); ?><?= Html::closeTag('th'); ?>
                             <?= Html::closeTag('tr'); ?> 
                             <?= Html::closeTag('thead'); ?>
 
@@ -100,7 +100,7 @@ use Yiisoft\FormModel\Field;
                                                 'class'=> 'btn btn-default btn-sm dropdown-toggle', 
                                                 'data-toggle' => 'dropdown',
                                                 'href' => '#']); ?>
-                                                <i class="fa fa-cog"></i> <?= $s->trans('options'); ?>
+                                                <i class="fa fa-cog"></i> <?= $translator->translate('i.options'); ?>
                                             <?= Html::closeTag('a'); ?>
                                             <?= Html::openTag('ul', ['class' => 'dropdown-menu']); ?>
                                                 <?= Html::openTag('li'); ?>
@@ -111,7 +111,7 @@ use Yiisoft\FormModel\Field;
                                                                             ]
                                                                     ); ?>
                                                         <?= Html::openTag('p', ['style' =>'font-size:10px']); ?>            
-                                                            <i class="fa fa-edit fa-margin"></i><?= $s->trans('edit'); ?>
+                                                            <i class="fa fa-edit fa-margin"></i><?= $translator->translate('i.edit'); ?>
                                                         <?= Html::closeTag('p'); ?>
                                                     <?= Html::closeTag('a'); ?>
                                                 <?= Html::closeTag('li'); ?>
@@ -120,11 +120,11 @@ use Yiisoft\FormModel\Field;
                                                                                 'href' => $urlGenerator->generate('customvalue/delete',['id'=>$custom_value->getId()]),
                                                                                 'style' => 'text-decoration:none',
                                                                                 'class' => 'btn',
-                                                                                'onclick' => 'return confirm('."'".$s->trans('delete_record_warning')."')"
+                                                                                'onclick' => 'return confirm('."'".$translator->translate('i.delete_record_warning')."')"
                                                                             ]
                                                                     ); ?>
                                                         <?= Html::openTag('p', ['style' =>'font-size:10px']); ?>            
-                                                            <i class="fa fa-trash fa-margin"></i><?= $s->trans('delete'); ?>
+                                                            <i class="fa fa-trash fa-margin"></i><?= $translator->translate('i.delete'); ?>
                                                         <?= Html::closeTag('p'); ?>
                                                     <?= Html::closeTag('a'); ?>
                                                     <?= Html::closeTag('form'); ?>

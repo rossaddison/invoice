@@ -34,7 +34,7 @@ $header = Div::tag()
         H5::tag()
             ->addClass('bg-primary text-white p-3 rounded-top')
             ->content(
-                I::tag()->addClass('bi bi-receipt')->content(' ' . $s->trans('quote'))
+                I::tag()->addClass('bi bi-receipt')->content(' ' . $translator->translate('i.quote'))
             )
     )
     ->render();
@@ -51,18 +51,18 @@ $toolbar = Div::tag();
 ?>
 
 <div>
-    <h5><?= $s->trans('quote'); ?></h5>
+    <h5><?= $translator->translate('i.quote'); ?></h5>
     <div class="btn-group">
         <?php
             echo $modal_create_quote;
         ?>
         <?php if ($client_count === 0) { ?>
-        <a href="#create-quote" class="btn btn-success" data-toggle="modal" disabled data-bs-toggle = "tooltip" title="<?= $s->trans('add_client'); ?>">
-            <i class="fa fa-plus"></i><?= $s->trans('new'); ?>
+        <a href="#create-quote" class="btn btn-success" data-toggle="modal" disabled data-bs-toggle = "tooltip" title="<?= $translator->translate('i.add_client'); ?>">
+            <i class="fa fa-plus"></i><?= $translator->translate('i.new'); ?>
         </a>
         <?php } else { ?>
         <a href="#create-quote" class="btn btn-success" data-toggle="modal">
-            <i class="fa fa-plus"></i><?= $s->trans('new'); ?>
+            <i class="fa fa-plus"></i><?= $translator->translate('i.new'); ?>
         </a>
         <?php } ?>
     </div>
@@ -72,31 +72,31 @@ $toolbar = Div::tag();
             <div class="btn-group index-options">
                 <a href="<?= $urlGenerator->generate('quote/index',['page'=>1,'status'=>0]); ?>"
                    class="btn <?php echo $status == 0 ? 'btn-primary' : 'btn-default' ?>">
-                    <?= $s->trans('all'); ?>
+                    <?= $translator->translate('i.all'); ?>
                 </a>
                 <a href="<?= $urlGenerator->generate('quote/index',['page'=>1,'status'=>1]); ?>" style="text-decoration:none"
                    class="btn  <?php echo $status == 1 ? 'btn-primary' : 'btn-default' ?>">
-                    <?= $s->trans('draft'); ?>
+                    <?= $translator->translate('i.draft'); ?>
                 </a>
                 <a href="<?= $urlGenerator->generate('quote/index',['page'=>1,'status'=>2]); ?>" style="text-decoration:none"
                    class="btn  <?php echo $status == 2 ? 'btn-primary' : 'btn-default' ?>">
-                    <?= $s->trans('sent'); ?>
+                    <?= $translator->translate('i.sent'); ?>
                 </a>
                 <a href="<?= $urlGenerator->generate('quote/index',['page'=>1,'status'=>3]); ?>" style="text-decoration:none"
                    class="btn  <?php echo $status == 3 ? 'btn-primary' : 'btn-default'  ?>">
-                    <?= $s->trans('viewed'); ?>
+                    <?= $translator->translate('i.viewed'); ?>
                 </a>
                 <a href="<?= $urlGenerator->generate('quote/index',['page'=>1,'status'=>4]); ?>" style="text-decoration:none"
                    class="btn  <?php echo $status == 4 ? 'btn-primary' : 'btn-default' ?>">
-                    <?= $s->trans('approved'); ?>
+                    <?= $translator->translate('i.approved'); ?>
                 </a>
                 <a href="<?= $urlGenerator->generate('quote/index',['page'=>1,'status'=>5]); ?>" style="text-decoration:none"
                    class="btn  <?php echo $status == 5 ? 'btn-primary' : 'btn-default'  ?>">
-                    <?= $s->trans('rejected'); ?>
+                    <?= $translator->translate('i.rejected'); ?>
                 </a>
                 <a href="<?= $urlGenerator->generate('quote/index',['page'=>1,'status'=>6]); ?>" style="text-decoration:none"
                    class="btn  <?php echo $status == 6 ? 'btn-primary' : 'btn-default'  ?>">
-                    <?= $s->trans('canceled'); ?>
+                    <?= $translator->translate('i.canceled'); ?>
                 </a>
             </div>
     </div>
@@ -107,12 +107,12 @@ $toolbar = Div::tag();
     $columns = [
         new DataColumn(
             'id',
-            header: $s->trans('id'),
+            header: $translator->translate('i.id'),
             content: static fn (object $model) => $model->getId()
         ),        
         new DataColumn(
             'status_id',
-            header: $s->trans('status'),
+            header: $translator->translate('i.status'),
             content: static function ($model) use ($quote_statuses): Yiisoft\Html\Tag\CustomTag { 
                 $span = $quote_statuses[(string)$model->getStatus_id()]['label'];
                 return Html::tag('span', $span,['class'=>'label '. $quote_statuses[(string)$model->getStatus_id()]['class']]);
@@ -141,7 +141,7 @@ $toolbar = Div::tag();
         ),
         new DataColumn(
             'date_created',    
-            header: $s->trans('date_created'),
+            header: $translator->translate('i.date_created'),
             content: static fn ($model): string => ($model->getDate_created())->format($datehelper->style())                        
         ),
         new DataColumn(
@@ -154,12 +154,12 @@ $toolbar = Div::tag();
         ),
         new DataColumn(
             'client_id',    
-            header: $s->trans('client'),                
+            header: $translator->translate('i.client'),                
             content: static fn ($model): string => $model->getClient()->getClient_name()                        
         ),
         new DataColumn(
             'id',
-            header: $s->trans('total'),
+            header: $translator->translate('i.total'),
             content: function ($model) use ($s, $qaR) : string|null {
                $quote_id = $model->getId(); 
                $quote_amount = (($qaR->repoQuoteAmountCount((string)$quote_id) > 0) ? $qaR->repoQuotequery((string)$quote_id) : null);
@@ -167,19 +167,19 @@ $toolbar = Div::tag();
             }
         ),
         new DataColumn(
-            header: $s->trans('view'),
+            header: $translator->translate('i.view'),
             content: static function ($model) use ($urlGenerator): string {
                return Html::a(Html::tag('i','',['class'=>'fa fa-eye fa-margin']), $urlGenerator->generate('quote/view',['id'=>$model->getId()]),[])->render();
             }
         ),
         new DataColumn(
-            header: $s->trans('edit'),
+            header: $translator->translate('i.edit'),
             content: static function ($model) use ($urlGenerator): string {
                return Html::a(Html::tag('i','',['class'=>'fa fa-edit fa-margin']), $urlGenerator->generate('quote/edit',['id'=>$model->getId()]),[])->render();
             }
         ),
         new DataColumn(
-            header: $s->trans('delete'), 
+            header: $translator->translate('i.delete'), 
             content: static function ($model) use ($s, $urlGenerator): string {
                 if ($model->getStatus_id() == '1') {
                     return Html::a( Html::tag('button',
@@ -187,7 +187,7 @@ $toolbar = Div::tag();
                                                         [
                                                             'type'=>'submit', 
                                                             'class'=>'dropdown-button',
-                                                            'onclick'=>"return confirm("."'".$s->trans('delete_record_warning')."');"
+                                                            'onclick'=>"return confirm("."'".$translator->translate('i.delete_record_warning')."');"
                                                         ]
                                                         ),
                         $urlGenerator->generate('quote/delete',['id'=>$model->getId()]),[]                                         

@@ -4,17 +4,26 @@ declare(strict_types=1);
 
 namespace App\Invoice\UserInv;
 
+use App\Invoice\Entity\UserInv;
 use Yiisoft\FormModel\FormModel;
 use Yiisoft\Validator\Rule\Required;
-use \DateTimeImmutable;
 
 final class UserInvForm extends FormModel
 {       
+    #[Required]
     private ?int $user_id=null;
+    
+    #[Required]
     private ?int $type=null;
+    
     private ?bool $active=false;
+    
+    #[Required]
     private ?string $language='';
+    
+    #[Required]
     private ?string $name='';
+    
     private ?string $company='';
     private ?string $address_1='';
     private ?string $address_2='';
@@ -37,10 +46,41 @@ final class UserInvForm extends FormModel
     private ?string $iban='';
     private ?int $gln=null;
     private ?string $rcc='';
-
-    public function getUser_id() : int
+    
+    public function __construct(UserInv $userinv)
     {
-      return (int)$this->user_id;
+        $this->user_id = (int)$userinv->getUser_id();
+        $this->type = $userinv->getType();
+        $this->active = $userinv->getActive();
+        $this->language = $userinv->getLanguage();
+        $this->name = $userinv->getName();
+        $this->company = $userinv->getCompany();
+        $this->address_1 = $userinv->getAddress_1();
+        $this->address_2 = $userinv->getAddress_2();
+        $this->city = $userinv->getCity();
+        $this->state = $userinv->getState();
+        $this->zip = $userinv->getZip();
+        $this->country = $userinv->getCountry();
+        $this->phone = $userinv->getPhone();
+        $this->fax = $userinv->getFax();
+        $this->mobile = $userinv->getMobile();
+        $this->email = $userinv->getEmail();
+        $this->password = $userinv->getPassword();
+        $this->web = $userinv->getWeb();
+        $this->vat_id = $userinv->getVat_id();
+        $this->tax_code = $userinv->getTax_code();
+        $this->all_clients = $userinv->getAll_clients();
+        $this->salt = $userinv->getSalt();
+        $this->passwordreset_token = $userinv->getPasswordreset_token();
+        $this->subscribernumber = $userinv->getSubscribernumber();
+        $this->iban = $userinv->getIban();
+        $this->gln = $userinv->getGln();
+        $this->rcc = $userinv->getRcc();
+    }        
+    
+    public function getUser_id() : int|null
+    {
+      return $this->user_id;
     }
 
     public function getType() : int|null
@@ -181,19 +221,5 @@ final class UserInvForm extends FormModel
     public function getFormName(): string
     {
       return '';
-    }
-
-    /**
-     * @return Required[][]
-     *
-     * @psalm-return array{user_id: list{Required}, type: list{Required}, language: list{Required}, name: list{Required}}
-     */
-    public function getRules(): array  {
-        return [
-            'user_id' => [new Required()],
-            'type' => [new Required()],
-            'language' => [new Required()],
-            'name' => [new Required()],
-        ];
     }
 }

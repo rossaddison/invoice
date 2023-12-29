@@ -47,7 +47,7 @@ use App\Widget\OffsetPagination;
   echo '<div>'."\n";
   echo ' <h5>'.$inf->toSentence($generator->getPre_entity_table(),'UTF-8').'</h5>'."\n";
   echo ' <a class="btn btn-success" href="<?= $urlGenerator->generate('."'".$generator->getSmall_singular_name()."/add'); ?>".'">'."\n";
-  echo '      <i class="fa fa-plus"></i> <?= $s->trans('."'new'".'); ?>';
+  echo '      <i class="fa fa-plus"></i> <?= $translator->translate('i.."'new'".'); ?>';
   echo ' </a>';
   echo '</div>'."\n";
 ?>
@@ -107,18 +107,18 @@ use App\Widget\OffsetPagination;
                 
 <?php foreach ($orm_schema->getColumns() as $column) { 
         if ((substr($column, -3) <> '_id') && ($column->getName() <> 'id')) {
-          echo '        <th><?= $s->trans('."'".$column->getName()."'); ?>".'</th>'."\n";
+          echo '        <th><?= $translator->translate('i.."'".$column->getName()."'); ?>".'</th>'."\n";
         }
 }  
 ?>
                 
 <?php foreach ($relations as $relation){
-        echo '        <th><?= $s->trans('."'".$relation->getLowercase_name()."'); ?>".'</th>'."\n"; 
+        echo '        <th><?= $translator->translate('i.."'".$relation->getLowercase_name()."'); ?>".'</th>'."\n"; 
 }
 ?>
 
 <?php 
-        echo '        <th><?= $s->trans('."'options'); ?></th>"."\n"; 
+        echo '        <th><?= $translator->translate('i.."'options'); ?></th>"."\n"; 
         echo '    </tr>'."\n";
         echo '   </thead>'."\n";
         echo '<tbody>'."\n";
@@ -145,25 +145,25 @@ use App\Widget\OffsetPagination;
             echo '          <div class="options btn-group">'."\n";
             echo '          <a class="btn btn-default btn-sm dropdown-toggle" data-toggle="dropdown" href="#">'."\n";
             echo '                <i class="fa fa-cog"></i>'."\n";
-            echo '                <?= $s->trans('."'".'options'."'".'); ?>'."\n";
+            echo '                <?= $translator->translate('i.."'".'options'."'".'); ?>'."\n";
             echo '          </a>'."\n";
             echo '          <ul class="dropdown-menu">'."\n";
             echo '              <li>'."\n";
             echo '                  <a href="<?= $urlGenerator->generate('."'".$generator->getSmall_singular_name()."/edit'".',['."'".'id'."'".'=>$'.$generator->getSmall_singular_name().'->getId()]); ?>" style="text-decoration:none">';
             echo '                       <i class="fa fa-edit fa-margin"></i>'."\n";
-            echo '                       <?= $s->trans('."'edit'".'); ?>'."\n";
+            echo '                       <?= $translator->translate('i.."'edit'".'); ?>'."\n";
             echo '                  </a>'."\n";
             echo '              </li>'."\n";
             echo '              <li>'."\n";
             echo '                  <a href="<?= $urlGenerator->generate('."'".$generator->getSmall_singular_name()."/view'".',['."'".'id'."'".'=>$'.$generator->getSmall_singular_name().'->getId()]); ?>" style="text-decoration:none">';
             echo '                       <i class="fa fa-eye fa-margin"></i>'."\n";
-            echo '                       <?= $s->trans('."'view'".'); ?>'."\n";
+            echo '                       <?= $translator->translate('i.."'view'".'); ?>'."\n";
             echo '                  </a>'."\n";
             echo '              </li>'."\n";       
             echo '              <li>'."\n";
             echo '                  <a href="<?= $urlGenerator->generate('."'".$generator->getSmall_singular_name()."/delete'".',['."'".'id'."'".'=>$'.$generator->getSmall_singular_name().'->getId()]); ?>" style="text-decoration:none">';
             echo '                       <i class="fa fa-trash fa-margin"></i>'."\n";
-            echo '                       <?= $s->trans('."'delete'".'); ?>'."\n";
+            echo '                       <?= $translator->translate('i.."'delete'".'); ?>'."\n";
             echo '                  </a>'."\n";
             echo '              </li>'."\n";   
             echo '          </ul>'."\n";

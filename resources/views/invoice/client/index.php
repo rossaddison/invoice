@@ -16,7 +16,7 @@ use Yiisoft\Html\Html;
 
 echo $alert;
 
-$this->setTitle($s->trans('clients'));
+$this->setTitle($translator->translate('i.clients'));
 
 $pagination = OffsetPagination::widget()
   ->paginator($paginator)
@@ -32,7 +32,7 @@ $pagination = OffsetPagination::widget()
 <div>
     <h5><?= Html::encode($this->getTitle()); ?></h5>
     <div class="btn-group">
-        <a href="<?= $urlGenerator->generate('client/add');?>" class="btn btn-success" style="text-decoration:none"><i class="fa fa-plus"></i> <?= $s->trans('new'); ?></a>
+        <a href="<?= $urlGenerator->generate('client/add');?>" class="btn btn-success" style="text-decoration:none"><i class="fa fa-plus"></i> <?= $translator->translate('i.new'); ?></a>
     </div>
     <br>
     <br>
@@ -40,15 +40,15 @@ $pagination = OffsetPagination::widget()
             <div class="btn-group index-options">
                 <a href="<?= $urlGenerator->generate('client/index',['page'=>1, 'active'=>2]); ?>"
                    class="btn <?= $active == 2 ? 'btn-primary' : 'btn-default' ?>">
-                    <?= $s->trans('all'); ?>
+                    <?= $translator->translate('i.all'); ?>
                 </a>
                 <a href="<?= $urlGenerator->generate('client/index',['page'=>1, 'active'=>1]); ?>" style="text-decoration:none"
                    class="btn  <?= $active == 1 ? 'btn-primary' : 'btn-default' ?>">
-                    <?= $s->trans('active'); ?>
+                    <?= $translator->translate('i.active'); ?>
                 </a>
                 <a href="<?= $urlGenerator->generate('client/index',['page'=>1, 'active'=>0]); ?>" style="text-decoration:none"
                    class="btn  <?= $active == 0 ? 'btn-primary' : 'btn-default' ?>">
-                    <?= $s->trans('inactive'); ?>
+                    <?= $translator->translate('i.inactive'); ?>
                 </a>    
             </div>
     </div>
@@ -63,31 +63,31 @@ $pagination = OffsetPagination::widget()
         <table class="table table-hover table-striped">
         <thead>
         <tr>
-        <th><?= $s->trans('active'); ?></th>
+        <th><?= $translator->translate('i.active'); ?></th>
         <th>Peppol</th>
         <th><?= $translator->translate('invoice.client.has.user.account'); ?></th>
-        <th><?= $s->trans('client_name'); ?></th>
-         <th><?= $s->trans('birthdate'); ?></th>
-        <th><?= $s->trans('email_address'); ?></th>
-        <th><?= $s->trans('phone_number'); ?></th>
-        <th class="amount"><?= $s->trans('balance'); ?></th>
-        <th><?= $s->trans('options'); ?></th>
+        <th><?= $translator->translate('i.client_name'); ?></th>
+         <th><?= $translator->translate('i.birthdate'); ?></th>
+        <th><?= $translator->translate('i.email_address'); ?></th>
+        <th><?= $translator->translate('i.phone_number'); ?></th>
+        <th class="amount"><?= $translator->translate('i.balance'); ?></th>
+        <th><?= $translator->translate('i.options'); ?></th>
         </tr>
         </thead>
         <tbody>
             <?php foreach ($paginator->read() as $client) { ?>
             <tr>
             <td>
-                <?= ($client->getClient_active()) ? '<span class="label active">' . $s->trans('yes') . '</span>' : '<span class="label inactive">' . $s->trans('no') . '</span>'; ?>
+                <?= ($client->getClient_active()) ? '<span class="label active">' . $translator->translate('i.yes') . '</span>' : '<span class="label inactive">' . $translator->translate('i.no') . '</span>'; ?>
             </td>
             <td>
-		    <?= ($cpR->repoClientCount((string)$client->getClient_id()) !== 0 ) ? '<span class="label active">' . $s->trans('yes') . '</span>' : '<span class="label inactive">' . $s->trans('no') . '</span>'; ?>
+		    <?= ($cpR->repoClientCount((string)$client->getClient_id()) !== 0 ) ? '<span class="label active">' . $translator->translate('i.yes') . '</span>' : '<span class="label inactive">' . $translator->translate('i.no') . '</span>'; ?>
             </td>
             <td>
             <?= ($ucR->repoUserqueryCount((string)$client->getClient_id()) !== 0 
                  && $canEdit) 
              ? '<span class="label active">' . 
-                  $s->trans('yes') . 
+                  $translator->translate('i.yes') . 
                '</span>' 
              : '<span class="label inactive">' .  
                   Html::a('', $urlGenerator->generate('userinv/add'),
@@ -107,17 +107,17 @@ $pagination = OffsetPagination::widget()
               <td>
                     <div class="options btn-group">
                         <a class="btn btn-default dropdown-toggle" data-toggle="dropdown" href="#" style="text-decoration:none">
-                            <i class="fa fa-cog"></i> <?= $s->trans('options'); ?>
+                            <i class="fa fa-cog"></i> <?= $translator->translate('i.options'); ?>
                         </a>
                         <ul class="dropdown-menu">
                             <li>
                                 <a href="<?= $urlGenerator->generate('client/view',['id' => $client->getClient_id()]); ?>" style="text-decoration:none">
-                                    <i class="fa fa-eye fa-margin"></i> <?= $s->trans('view'); ?>
+                                    <i class="fa fa-eye fa-margin"></i> <?= $translator->translate('i.view'); ?>
                                 </a>
                             </li>
                             <li>
                                 <a href="<?= $urlGenerator->generate('client/edit', ['id' => $client->getClient_id()]); ?>" style="text-decoration:none">
-                                    <i class="fa fa-edit fa-margin"></i> <?= $s->trans('edit'); ?>
+                                    <i class="fa fa-edit fa-margin"></i> <?= $translator->translate('i.edit'); ?>
                                 </a>
                             </li>
                             <?php if ($cpR->repoClientCount((string)$client->getClient_id()) === 0 ) { ?>
@@ -135,8 +135,8 @@ $pagination = OffsetPagination::widget()
                             </li>
                             <?php } ?>
                             <li>
-                                <a href="<?= $urlGenerator->generate('client/delete',['id' => $client->getClient_id()]); ?>" style="text-decoration:none" onclick="return confirm('<?= $s->trans('delete_client_warning').'?'; ?>');">
-                                    <i class="fa fa-trash fa-margin"></i><?= $s->trans('delete'); ?>                                    
+                                <a href="<?= $urlGenerator->generate('client/delete',['id' => $client->getClient_id()]); ?>" style="text-decoration:none" onclick="return confirm('<?= $translator->translate('i.delete_client_warning').'?'; ?>');">
+                                    <i class="fa fa-trash fa-margin"></i><?= $translator->translate('i.delete'); ?>                                    
                                 </a>
                             </li>
                         </ul>

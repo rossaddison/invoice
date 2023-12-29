@@ -4,20 +4,23 @@ declare(strict_types=1);
 
 namespace App\Invoice\FromDropDown;
 
+use App\Invoice\Entity\FromDropDown;
 use Yiisoft\FormModel\FormModel;
 use Yiisoft\Validator\Rule\Required;
 
 final class FromDropDownForm extends FormModel
 {    
-    
-    private ?int $id=null;
+    #[Required]
     private ?string $email='';
+    #[Required]
     private ?bool $include=false;
+    #[Required] 
     private ?bool $default_email=false;
-
-    public function getId() : int|null
-    {
-      return $this->id;
+    
+    public function __construct(FromDropDown $from) {
+        $this->email = $from->getEmail();
+        $this->include = $from->getInclude();
+        $this->default_email = $from->getDefault_email();
     }
 
     public function getEmail() : string|null
@@ -43,12 +46,4 @@ final class FromDropDownForm extends FormModel
     {
       return '';
     }
-
-    public function getRules(): array    {
-      return [
-        'email' => [new Required()],
-        'include' => [new Required()],
-        'default_email' => [new Required()],
-      ];
-}
 }

@@ -18,38 +18,38 @@ final class UserInvService
     /**
      * 
      * @param UserInv $model
-     * @param UserInvForm $form
+     * @param array $array
      * @return void
      */
-    public function saveUserInv(UserInv $model, UserInvForm $form): void
+    public function saveUserInv(UserInv $model, array $array): void
     {        
-       $model->setUser_id($form->getUser_id());
-       null!==$form->getType() ? $model->setType($form->getType()) : '';
-       null!==$form->getActive() ? $model->setActive($form->getActive()) : '';
-       null!==$form->getLanguage() ? $model->setLanguage($form->getLanguage()) : '';
-       null!==$form->getAll_clients() ? $model->setAll_clients($form->getAll_clients()) : '';
-       null!==$form->getName() ? $model->setName($form->getName()) : '';
-       null!==$form->getCompany() ? $model->setCompany($form->getCompany()) : '';
-       null!==$form->getAddress_1() ? $model->setAddress_1($form->getAddress_1()) : '';
-       null!==$form->getAddress_2 () ? $model->setAddress_2($form->getAddress_2()) : '';
-       null!==$form->getCity() ? $model->setCity($form->getCity()) : '';
-       null!==$form->getState() ? $model->setState($form->getState()) : '';
-       null!==$form->getZip() ? $model->setZip($form->getZip()) : '';
-       null!==$form->getCountry() ? $model->setCountry($form->getCountry()) : '';
-       null!==$form->getPhone() ? $model->setPhone($form->getPhone()) : '';
-       null!==$form->getFax() ? $model->setFax($form->getFax()) : '';
-       null!==$form->getMobile() ? $model->setMobile($form->getMobile()) : '';
-       null!==$form->getEmail() ? $model->setEmail($form->getEmail()) : '';
-       null!==$form->getPassword() ? $model->setPassword($form->getPassword()) : '';
-       null!==$form->getWeb() ? $model->setWeb($form->getWeb()) : '';
-       null!==$form->getVat_id() ? $model->setVat_id($form->getVat_id()) : '';
-       null!==$form->getTax_code() ? $model->setTax_code($form->getTax_code()) : '';
-       null!==$form->getSalt() ? $model->setSalt($form->getSalt()) : '';
-       null!==$form->getPasswordreset_token() ? $model->setPasswordreset_token($form->getPasswordreset_token()) : '';
-       null!==$form->getSubscribernumber() ? $model->setSubscribernumber($form->getSubscribernumber()) : '';
-       null!==$form->getIban() ? $model->setIban($form->getIban()) : '';
-       null!==$form->getGln() ? $model->setGln($form->getGln()) : '';
-       null!==$form->getRcc() ? $model->setRcc($form->getRcc()) : '';
+       $model->setUser_id((int)$array['user_id']);
+       isset($array['type']) ? $model->setType((int)$array['type']) : '';
+       $model->setActive($array['active'] === '1') ? true : false;
+       isset($array['language']) ? $model->setLanguage((string)$array['language']) : '';
+       $model->setAll_clients($array['all_clients'] === '1') ? true : false;
+       isset($array['name']) ? $model->setName((string)$array['name']) : '';
+       isset($array['company']) ? $model->setCompany((string)$array['company']) : '';
+       isset($array['address_1']) ? $model->setAddress_1((string)$array['address_1']) : '';
+       isset($array['address_2 ']) ? $model->setAddress_2((string)$array['address_2']) : '';
+       isset($array['city']) ? $model->setCity((string)$array['city']) : '';
+       isset($array['state']) ? $model->setState((string)$array['state']) : '';
+       isset($array['zip']) ? $model->setZip((string)$array['zip']) : '';
+       isset($array['country']) ? $model->setCountry((string)$array['country']) : '';
+       isset($array['phone']) ? $model->setPhone((string)$array['phone']) : '';
+       isset($array['fax']) ? $model->setFax((string)$array['fax']) : '';
+       isset($array['mobile']) ? $model->setMobile((string)$array['mobile']) : '';
+       isset($array['email']) ? $model->setEmail((string)$array['email']) : '';
+       isset($array['password']) ? $model->setPassword((string)$array['password']) : '';
+       isset($array['web']) ? $model->setWeb((string)$array['web']) : '';
+       isset($array['vat_id']) ? $model->setVat_id((string)$array['vat_id']) : '';
+       isset($array['tax_code']) ? $model->setTax_code((string)$array['tax_code']) : '';
+       isset($array['salt']) ? $model->setSalt((string)$array['salt']) : '';
+       isset($array['passwordreset_token']) ? $model->setPasswordreset_token((string)$array['passwordreset_token']) : '';
+       isset($array['subscribernumber']) ? $model->setSubscribernumber((string)$array['subscribernumber']) : '';
+       isset($array['iban']) ? $model->setIban((string)$array['iban']) : '';
+       isset($array['gln']) ? $model->setGln((int)$array['gln']) : '';
+       isset($array['rcc']) ? $model->setRcc((string)$array['rcc']) : '';
        $this->repository->save($model);
     }
     

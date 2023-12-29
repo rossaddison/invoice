@@ -54,35 +54,35 @@ use Yiisoft\Yii\DataView\OffsetPagination;
     $columns = [
         new DataColumn(
             'id',
-            header:  $s->trans('id'),
+            header:  $translator->translate('i.id'),
             content: static fn($model) => $model->getId()
         ),
         new DataColumn(
             'default_email',
             header:  $translator->translate('invoice.email.default'),
-            content: static fn($model) => $model->getDefault_email() == 'true' ? $s->trans('yes') : $s->trans('no')
+            content: static fn($model) => $model->getDefault_email() == 'true' ? $translator->translate('i.yes') : $translator->translate('i.no')
         ),
         new DataColumn(
-            header:  $s->trans('view'),
+            header:  $translator->translate('i.view'),
             content: static function ($model) use ($urlGenerator): string {
                 return Html::a(Html::tag('i', '', ['class' => 'fa fa-eye fa-margin']), $urlGenerator->generate('from/view', ['id' => $model->getId()]), [])->render();
             }
         ),
         new DataColumn(
-            header:  $s->trans('edit'),
+            header:  $translator->translate('i.edit'),
             content: static function ($model) use ($urlGenerator): string {
             return Html::a(Html::tag('i', '', ['class' => 'fa fa-pencil fa-margin']), $urlGenerator->generate('from/edit', ['id' => $model->getId()]), [])->render();
         }
         ),
         new DataColumn(
-            header:  $s->trans('delete'),
-            content: static function ($model) use ($s, $urlGenerator): string {
+            header:  $translator->translate('i.delete'),
+            content: static function ($model) use ($translator, $urlGenerator): string {
             return Html::a(Html::tag('button',
                   Html::tag('i', '', ['class' => 'fa fa-trash fa-margin']),
                   [
                     'type' => 'submit',
                     'class' => 'dropdown-button',
-                    'onclick' => "return confirm(" . "'" . $s->trans('delete_record_warning') . "');"
+                    'onclick' => "return confirm(" . "'" . $translator->translate('i.delete_record_warning') . "');"
                   ]
                 ),
                 $urlGenerator->generate('from/delete', ['id' => $model->getId()]), []

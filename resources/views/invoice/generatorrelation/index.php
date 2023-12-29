@@ -31,11 +31,11 @@ echo $alert;
                 $label = $generatorrelation->getRelation_id();
                 echo Html::label($label); 
                // echo Html::a($generatorrelation->getLowercase_name().str_repeat('&nbsp;',2).$generator->camelcase_capital_name,$urlGenerator->generate('generatorrelation/view',['id' => $generatorrelation->getRelation_id()]),['class' => 'btn btn-success btn-sm ms-2']);
-                echo Html::a($s->trans('edit'),
+                echo Html::a($translator->translate('i.edit'),
                 $urlGenerator->generate('generatorrelation/edit', ['id' => $generatorrelation->getRelation_id()]),
                 ['class' => 'btn btn-info btn-sm ms-2']
                 );                
-                echo Html::a($s->trans('view'),
+                echo Html::a($translator->translate('i.view'),
                 $urlGenerator->generate('generatorrelation/view',['id' => $generatorrelation->getRelation_id()]),
                 ['class' => 'btn btn-warning btn-sm ms-2']
                 );
@@ -68,7 +68,7 @@ echo $alert;
                 ->withoutCloseButton()
                 ->toggleButton([
                                 'class' => ['btn btn-danger btn-sm ms-2'],
-                                'label' => $s->trans('delete'),
+                                'label' => $translator->translate('i.delete'),
                             ])
                 ->begin();
                 echo '<p>Are you sure you want to delete this record? </p>';

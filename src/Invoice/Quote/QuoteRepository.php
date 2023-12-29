@@ -5,12 +5,12 @@ declare(strict_types=1);
 namespace App\Invoice\Quote;
 
 use App\Invoice\Entity\Quote;
-use App\Invoice\Setting\SettingRepository as SR;
 use App\Invoice\Group\GroupRepository as GR;
 use Cycle\ORM\Select;
 use Throwable;
 use Cycle\Database\Injection\Parameter;
 use Yiisoft\Data\Reader\Sort;
+use Yiisoft\Translator\TranslatorInterface as Translator;
 use Yiisoft\Yii\Cycle\Data\Reader\EntityReader;
 use Yiisoft\Yii\Cycle\Data\Writer\EntityWriter;
 
@@ -21,18 +21,17 @@ use Yiisoft\Yii\Cycle\Data\Writer\EntityWriter;
 final class QuoteRepository extends Select\Repository
 {
     private EntityWriter $entityWriter;
-    private SR $sR;
+    private Translator $translator;
     
     /**
      * @param Select<TEntity> $select     
      * @param EntityWriter $entityWriter
-     * @param SR $sR
      * 
      */
-    public function __construct(Select $select, EntityWriter $entityWriter, SR $sR)
+    public function __construct(Select $select, EntityWriter $entityWriter, Translator $translator)
     {
         $this->entityWriter = $entityWriter;
-        $this->sR = $sR;
+        $this->translator = $translator;
         parent::__construct($select);
     }
     
@@ -226,44 +225,44 @@ final class QuoteRepository extends Select\Repository
         
     /**
      * 
-     * @param SR $s
+     * 
      * @return array
      */
-    public function getStatuses(SR $s): array
+    public function getStatuses(Translator $translator): array
     {
         return array(
             '0' => array(
-                'label' => $s->trans('all'),
+                'label' => $translator->translate('i.all'),
                 'class' => 'all',
                 'href' => 0
             ),
             '1' => array(
-                'label' => $s->trans('draft'),
+                'label' => $translator->translate('i.draft'),
                 'class' => 'draft',
                 'href' => 1
             ),
             '2' => array(
-                'label' => $s->trans('sent'),
+                'label' => $translator->translate('i.sent'),
                 'class' => 'sent',
                 'href' => 2
             ),
             '3' => array(
-                'label' => $s->trans('viewed'),
+                'label' => $translator->translate('i.viewed'),
                 'class' => 'viewed',
                 'href' => 3
             ),
             '4' => array(
-                'label' => $s->trans('approved'),
+                'label' => $translator->translate('i.approved'),
                 'class' => 'approved',
                 'href' => 4
             ),
             '5' => array(
-                'label' => $s->trans('rejected'),
+                'label' => $translator->translate('i.rejected'),
                 'class' => 'rejected',
                 'href' => 5
             ),
             '6' => array(
-                'label' => $s->trans('canceled'),
+                'label' => $translator->translate('i.canceled'),
                 'class' => 'canceled',
                 'href' => 6
             )
@@ -272,7 +271,7 @@ final class QuoteRepository extends Select\Repository
     
     public function getSpecificStatusArrayLabel(string $key) : string
     {
-        $statuses_array = $this->getStatuses($this->sR);
+        $statuses_array = $this->getStatuses($this->translator);
         /**
          * @var array $statuses_array[$key]
          * @var string $statuses_array[$key]['label']

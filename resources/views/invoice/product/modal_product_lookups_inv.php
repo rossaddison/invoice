@@ -11,10 +11,10 @@
         </div>
         <div class="modal-body">
             <div class="form-group">
-                <label for="filter_family_inv"><?= $s->trans('any_family'); ?></label>
+                <label for="filter_family_inv"><?= $translator->translate('i.any_family'); ?></label>
                 <div class="form-group">
                     <select name="filter_family_inv" id="filter_family_inv" class="form-control">
-                        <option value="0"><?= $s->trans('any_family'); ?></option>
+                        <option value="0"><?= $translator->translate('i.any_family'); ?></option>
                         <?php foreach ($families as $family) { ?>
                             <option value="<?= $family->getFamily_id(); ?>"
                                 <?php if (isset($filter_family) && $family->getFamily_id() == $filter_family) {
@@ -26,12 +26,12 @@
                     </select>
                 </div>
                 <div class="form-group panel panel-primary">
-                    <label for="filter_product_inv"><?= $s->trans('product_name'); ?></label>
+                    <label for="filter_product_inv"><?= $translator->translate('i.product_name'); ?></label>
                     <input type="text" class="form-control" name="filter_product_inv" id="filter_product_inv"
-                           placeholder="<?= $s->trans('product_name'); ?>"
+                           placeholder="<?= $translator->translate('i.product_name'); ?>"
                            value="<?= $filter_product ?>">                
-                    <button type="button" id="filter-button-inv" class="btn btn-info"><?= $s->trans('search_product'); ?></button>
-                    <button type="button" id="product-reset-button-inv" class="btn btn-danger"><?= $s->trans('reset'); ?></button>
+                    <button type="button" id="filter-button-inv" class="btn btn-info"><?= $translator->translate('i.search_product'); ?></button>
+                    <button type="button" id="product-reset-button-inv" class="btn btn-danger"><?= $translator->translate('i.reset'); ?></button>
                 </div>
             </div>
 
@@ -41,7 +41,7 @@
                     <!-- see src\Invoice\Asset\rebuild-1.13\js\modal-product-lookups.js line 64 -->
                     <button class="select-items-confirm-inv btn btn-success alignment:center" type="button" disabled>
                         <i class="fa fa-check"></i>
-                        <?= $s->trans('submit'); ?>
+                        <?= $translator->translate('i.submit'); ?>
                     </button>            
             </div>
             <div id="product-lookup-table">

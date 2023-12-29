@@ -1,5 +1,7 @@
 <?php
     declare(strict_types=1);
+    
+    use Yiisoft\Html\Html;
 ?>
 <?= Html::openTag('div', ['class' => 'row']); ?>
     <div class="col-xs-12 col-md-8 col-md-offset-2">
@@ -17,7 +19,7 @@
                             <?php $body['settings[default_client_purchase_order_group]'] = $s->get_setting('default_client_purchase_order_group');?>
                             <select name="settings[default_client_purchase_order_group]" id="settings[default_client_purchase_order_group]"
                                 class="form-control" >
-                                <option value=""><?= $s->trans('none'); ?></option>
+                                <option value=""><?= $translator->translate('i.none'); ?></option>
                                 <?php foreach ($invoice_groups as $invoice_group) { ?>
                                     <option value="<?= $invoice_group->getId(); ?>"
                                         <?php $s->check_select($body['settings[default_client_purchase_order_group]'], $invoice_group->getId()); ?>>

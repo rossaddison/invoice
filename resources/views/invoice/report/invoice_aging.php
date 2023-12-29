@@ -15,20 +15,20 @@ $assetManager->register(ReportAsset::class);
 $this->beginPage();
 ?>
 <!DOCTYPE html>
-<html lang="<?= $s->trans('cldr'); ?>">
+<html lang="<?= $translator->translate('i.cldr'); ?>">
 <head>
-    <title><?= Html::encode($s->trans('invoice_aging')); ?></title>
+    <title><?= Html::encode($translator->translate('i.invoice_aging')); ?></title>
 </head>
 <body>
 <?php $this->beginBody() ?>
-<h3 class="report_title"><?= Html::encode($s->trans('invoice_aging')); ?></h3>
+<h3 class="report_title"><?= Html::encode($translator->translate('i.invoice_aging')); ?></h3>
 <table>
     <tr>
-        <th><?= Html::encode($s->trans('client')); ?></th>
-        <th class="amount"><?= Html::encode($s->trans('invoice_aging_1_15')); ?></th>
-        <th class="amount"><?= Html::encode($s->trans('invoice_aging_16_30')); ?></th>
-        <th class="amount"><?= Html::encode($s->trans('invoice_aging_above_30')); ?></th>
-        <th class="amount"><?= Html::encode($s->trans('total')); ?></th>
+        <th><?= Html::encode($translator->translate('i.client')); ?></th>
+        <th class="amount"><?= Html::encode($translator->translate('i.invoice_aging_1_15')); ?></th>
+        <th class="amount"><?= Html::encode($translator->translate('i.invoice_aging_16_30')); ?></th>
+        <th class="amount"><?= Html::encode($translator->translate('i.invoice_aging_above_30')); ?></th>
+        <th class="amount"><?= Html::encode($translator->translate('i.total')); ?></th>
     </tr>
     <?php foreach ($results as $result) { ?>
     <tr>

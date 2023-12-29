@@ -29,7 +29,7 @@ if (!empty($errors)) {
 <form class="row" class="form-horizontal" id="QuoteForm" method="POST" action="<?= $urlGenerator->generate(...$action) ?>" enctype="multipart/form-data">
 <input type="hidden" name="_csrf" value="<?= $csrf ?>">
     <div id="headerbar">
-        <h1 class="headerbar-title"><?= $s->trans('quotes_form'); ?></h1>    
+        <h1 class="headerbar-title"><?= $translator->translate('i.quotes_form'); ?></h1>    
         <?php
             $response = $head->renderPartial('invoice/layout/header_buttons',['s'=>$s, 'hide_submit_button'=>false ,'hide_cancel_button'=>false]);
             echo (string)$response->getBody();
@@ -57,11 +57,11 @@ if (!empty($errors)) {
     </div>
     <div class="form-group">
       <div class="col-xs-12 col-sm-2 text-right text-left-xs">
-        <label for="client_id" class="control-label"><?= $s->trans('client'); ?></label>
+        <label for="client_id" class="control-label"><?= $translator->translate('i.client'); ?></label>
       </div>
       <div class="col-xs-12 col-sm-6">  
         <select name="client_id" id="client_id" class="form-control" required>
-           <option value=""><?= $s->trans('client'); ?></option>
+           <option value=""><?= $translator->translate('i.client'); ?></option>
              <?php foreach ($clients as $client) { ?>
               <option value="<?= $client->getClient_id(); ?>"
                <?php $s->check_select(Html::encode($body['client_id'] ?? ''), $client->getClient_id()) ?>
@@ -73,7 +73,7 @@ if (!empty($errors)) {
 
     <div class="form-group">
       <div class="col-xs-12 col-sm-2 text-right text-left-xs">  
-        <label for="group_id" class="control-label"><?= $s->trans('quote_group'); ?>: </label>
+        <label for="group_id" class="control-label"><?= $translator->translate('i.quote_group'); ?>: </label>
       </div>
       <div class="col-xs-12 col-sm-6">
           <select name="group_id" id="group_id" class="form-control">         
@@ -116,7 +116,7 @@ if (!empty($errors)) {
 
     <div class="form-group">
       <div class="col-xs-12 col-sm-2 text-right text-left-xs">  
-        <label form-label for="date_created" class="control-label"><?= $s->trans('created') ." (".  $datehelper->display().") "; ?></label>
+        <label form-label for="date_created" class="control-label"><?= $translator->translate('i.created') ." (".  $datehelper->display().") "; ?></label>
       </div>
       <div class="col-xs-12 col-sm-6">  
             <div class="input-group"> 
@@ -131,7 +131,7 @@ if (!empty($errors)) {
     </div>
     <div class="form-group">
       <div class="col-xs-12 col-sm-2 text-right text-left-xs">  
-        <label for="password" class="control-label"><?= $s->trans('quote_pre_password'); ?></label>
+        <label for="password" class="control-label"><?= $translator->translate('i.quote_pre_password'); ?></label>
       </div>
       <div class="col-xs-12 col-sm-6">  
            <div class="input-group">  
@@ -141,7 +141,7 @@ if (!empty($errors)) {
     </div> 
     <div class="form-group">
         <div class="col-xs-12 col-sm-2 text-right text-left-xs">
-            <label for="status_id" class="control-label"><?php echo $s->trans('status'); ?></label>
+            <label for="status_id" class="control-label"><?php echo $translator->translate('i.status'); ?></label>
         </div>
         <div class="col-xs-12 col-sm-6">
             <select name="status_id" id="status_id" class="form-control">
@@ -156,14 +156,14 @@ if (!empty($errors)) {
     </div>
     <div class="form-group">
         <div class="col-xs-12 col-sm-2 text-right text-left-xs">
-            <label for="url_key" class="control-label"><?= ($body['status_id'] ?? 1) > 1 ? $s->trans('guest_url') : ''; ?></label>
+            <label for="url_key" class="control-label"><?= ($body['status_id'] ?? 1) > 1 ? $translator->translate('i.guest_url') : ''; ?></label>
         </div>
         <!-- If the status is draft ie. 1 => hide the url key -->
         <input type="text" name="url_key" id="url_key" class="form-control" readonly value="<?= Html::encode($body['url_key'] ??  ''); ?>" <?= ($body['status_id'] ?? 1) == 1 ? 'hidden' : ''; ?>>
     </div>
     <div class="form-group">
       <div class="col-xs-12 col-sm-2 text-right text-left-xs">  
-        <label for="discount_amount" class="control-label"><?= $s->trans('discount'); ?></label>
+        <label for="discount_amount" class="control-label"><?= $translator->translate('i.discount'); ?></label>
       </div>
       <div class="col-xs-12 col-sm-6">
         <div class="input-group">  
@@ -174,7 +174,7 @@ if (!empty($errors)) {
     </div>
     <div class="form-group">
         <div class="col-xs-12 col-sm-2 text-right text-left-xs">
-            <label for="discount_percent" class="control-label"><?= $s->trans('discount'); ?></label>
+            <label for="discount_percent" class="control-label"><?= $translator->translate('i.discount'); ?></label>
         </div>
         <div class="col-xs-12 col-sm-6">
             <div class="input-group">
@@ -186,7 +186,7 @@ if (!empty($errors)) {
     </div>
     <div class="form-group">
         <div class="col-xs-12 col-sm-2 text-right text-left-xs">   
-            <label for="notes" class="control-label"><?= $s->trans('notes'); ?></label>
+            <label for="notes" class="control-label"><?= $translator->translate('i.notes'); ?></label>
         </div>
         <div class="col-xs-12 col-sm-6">
             <div class="input-group">

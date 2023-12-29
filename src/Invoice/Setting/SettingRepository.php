@@ -608,11 +608,11 @@ final class SettingRepository extends Select\Repository
     {   
         $folder_language = $this->get_folder_language();           
         $lang = new Lang();
-        $lang->load('ip',$folder_language);
+        //$lang->load('ip',$folder_language);
         $lang->load('gateway',$folder_language);
-        $lang->load('custom',$folder_language);
-        $lang->load('merchant',$folder_language);
-        $lang->load('form_validation',$folder_language);
+        //$lang->load('custom',$folder_language);
+        //$lang->load('merchant',$folder_language);
+        //$lang->load('form_validation',$folder_language);
         $languages = $lang->_language;
         return $languages;
     }  
@@ -1327,20 +1327,13 @@ final class SettingRepository extends Select\Repository
         return $sandbox_array;
     }
     
-     /**
-     * Lang
-     *
-     * Fetches a language variable
-     *
-     * @param string $in_line The language line
-     *
+    /**
+     * @param string $in_line
      * @return string
-     *
-     * @psalm-param ''|'monday'|'sunday' $in_line
      */
-    public function lang(string $in_line = '') 
+    public function lang(string $in_line = '') : string 
     {
-           $line = $this->trans($in_line);
+           $line = $this->translator->translate($in_line);
            return $line;
     }
     
@@ -1695,7 +1688,7 @@ final class SettingRepository extends Select\Repository
     /**
      * @return string[][]
      *
-     * @psalm-return array{number_format_us_uk: array{label: 'number_format_us_uk', decimal_point: '.', thousands_separator: ','}, number_format_european: array{label: 'number_format_european', decimal_point: ',', thousands_separator: '.'}, number_format_iso80k1_point: array{label: 'number_format_iso80k1_point', decimal_point: '.', thousands_separator: ' '}, number_format_iso80k1_comma: array{label: 'number_format_iso80k1_comma', decimal_point: ',', thousands_separator: ' '}, number_format_compact_point: array{label: 'number_format_compact_point', decimal_point: '.', thousands_separator: ''}, number_format_compact_comma: array{label: 'number_format_compact_comma', decimal_point: ',', thousands_separator: ''}}
+     * @psalm-return array{number_format_us_uk: array{label: 'i.number_format_us_uk', decimal_point: '.', thousands_separator: ','}, number_format_european: array{label: 'i.number_format_european', decimal_point: ',', thousands_separator: '.'}, number_format_iso80k1_point: array{label: 'i.number_format_iso80k1_point', decimal_point: '.', thousands_separator: ' '}, number_format_iso80k1_comma: array{label: 'i.number_format_iso80k1_comma', decimal_point: ',', thousands_separator: ' '}, number_format_compact_point: array{label: 'i.number_format_compact_point', decimal_point: '.', thousands_separator: ''}, number_format_compact_comma: array{label: 'i.number_format_compact_comma', decimal_point: ',', thousands_separator: ''}}
      */
     public function number_formats() : array {
            /*
@@ -1717,37 +1710,37 @@ final class SettingRepository extends Select\Repository
             $number_formats = [            
             'number_format_us_uk' =>
                 [
-                    'label' => 'number_format_us_uk',
+                    'label' => 'i.number_format_us_uk',
                     'decimal_point' => '.',
                     'thousands_separator' => ',',
                 ],
             'number_format_european' =>
                 [
-                    'label' => 'number_format_european',
+                    'label' => 'i.number_format_european',
                     'decimal_point' => ',',
                     'thousands_separator' => '.',
                 ],
             'number_format_iso80k1_point' =>
                 [
-                    'label' => 'number_format_iso80k1_point',
+                    'label' => 'i.number_format_iso80k1_point',
                     'decimal_point' => '.',
                     'thousands_separator' => ' ',
                 ],
             'number_format_iso80k1_comma' =>
                 [
-                    'label' => 'number_format_iso80k1_comma',
+                    'label' => 'i.number_format_iso80k1_comma',
                     'decimal_point' => ',',
                     'thousands_separator' => ' ',
                 ],
             'number_format_compact_point' =>
                 [
-                    'label' => 'number_format_compact_point',
+                    'label' => 'i.number_format_compact_point',
                     'decimal_point' => '.',
                     'thousands_separator' => '',
                 ],
             'number_format_compact_comma' =>
                 [
-                    'label' => 'number_format_compact_comma',
+                    'label' => 'i.number_format_compact_comma',
                     'decimal_point' => ',',
                     'thousands_separator' => '',
                 ],
@@ -1757,10 +1750,7 @@ final class SettingRepository extends Select\Repository
     
     /**
      * @param string $period
-     *
-     * @return (\DateTimeImmutable|mixed)[]
-     *
-     * @psalm-return array{upper: \DateTimeImmutable, lower: \DateTimeImmutable,...}
+     * @return array
      */
     public function range(string $period) : array {
         $range = [];

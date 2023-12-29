@@ -13,11 +13,11 @@ echo $alert;
 
 ?>
 <div id="headerbar">
-    <h1 class="headerbar-title"><?= $s->trans('custom_fields'); ?></h1>
+    <h1 class="headerbar-title"><?= $translator->translate('i.custom_fields'); ?></h1>
 
     <div class="headerbar-item pull-right">
         <a class="btn btn-sm btn-primary" href="<?= $urlGenerator->generate('customfield/add'); ?>">
-            <i class="fa fa-plus"></i><?= $s->trans('new'); ?>
+            <i class="fa fa-plus"></i><?= $translator->translate('i.new'); ?>
         </a>
     </div>
     <div class="headerbar-item pull-right">
@@ -37,11 +37,11 @@ echo $alert;
 <table class="table table-hover table-striped">
    <thead>
     <tr>
-        <th><?= $s->trans('table'); ?></th>
-        <th><?= $s->trans('label'); ?></th>
-        <th><?= $s->trans('type'); ?></th>
-        <th><?= $s->trans('order'); ?></th>
-        <th><?= $s->trans('options'); ?></th>
+        <th><?= $translator->translate('i.table'); ?></th>
+        <th><?= $translator->translate('i.label'); ?></th>
+        <th><?= $translator->translate('i.type'); ?></th>
+        <th><?= $translator->translate('i.order'); ?></th>
+        <th><?= $translator->translate('i.options'); ?></th>
     </tr>
    </thead>
 <tbody>
@@ -57,15 +57,15 @@ echo $alert;
             <div class="options btn-group btn-group-sm">
                 <?php if (in_array($customfield->getType(), $custom_value_fields)) { ?>
                         <a href="<?= $urlGenerator->generate('customvalue/field',['id'=>$customfield->getId()]) ?>" class="btn btn-default" style="text-decoration:none">
-                        <i class="fa fa-list fa-margin"></i><?= $s->trans('values'); ?></a>
+                        <i class="fa fa-list fa-margin"></i><?= $translator->translate('i.values'); ?></a>
                 <?php } ?>
                 <a class="btn btn-default dropdown-toggle" data-toggle="dropdown" href="#">
-                    <i class="fa fa-cog"></i><?= $s->trans('options'); ?>
+                    <i class="fa fa-cog"></i><?= $translator->translate('i.options'); ?>
                 </a>
                 <ul class="dropdown-menu">
                     <li>
                         <a href="<?= $urlGenerator->generate('customfield/edit',['id'=>$customfield->getId()]); ?>" style="text-decoration:none">
-                            <p style="font-size:16px;"><i class="fa fa-edit fa-margin"></i><?= $s->trans('edit'); ?></p>    
+                            <p style="font-size:16px;"><i class="fa fa-edit fa-margin"></i><?= $translator->translate('i.edit'); ?></p>    
                         </a>
                     </li>
                     <li>
@@ -73,8 +73,8 @@ echo $alert;
                               method="POST">
                             <input type="hidden" name="_csrf" value="<?= $csrf; ?>">
                             <button type="submit" class="dropdown-button" style="text-decoration:none"
-                                    onclick="return confirm('<?= $s->trans('delete_record_warning'); ?>');">
-                                <i class="fa fa-trash fa-margin"></i> <?= $s->trans('delete'); ?>
+                                    onclick="return confirm('<?= $translator->translate('i.delete_record_warning'); ?>');">
+                                <i class="fa fa-trash fa-margin"></i> <?= $translator->translate('i.delete'); ?>
                             </button>
                         </form>
                     </li>

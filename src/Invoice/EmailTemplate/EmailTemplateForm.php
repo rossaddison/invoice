@@ -1,23 +1,45 @@
 <?php
-
 declare(strict_types=1);
 
 namespace App\Invoice\EmailTemplate;
 
+use App\Invoice\Entity\EmailTemplate;
 use Yiisoft\FormModel\FormModel;
 use Yiisoft\Validator\Rule\Required;
 
 final class EmailTemplateForm extends FormModel
 {
+    #[Required]
     private ?string $email_template_title = null;
+    #[Required]
     private ?string $email_template_type = null;
+    #[Required]
     private ?string $email_template_body = null;
+    #[Required]
     private ?string $email_template_subject = null;
+    #[Required]
     private ?string $email_template_from_name = null;
+    #[Required]
     private ?string $email_template_from_email = null;
+    #[Required]
     private ?string $email_template_cc = null;
+    #[Required]
     private ?string $email_template_bcc = null;
+    #[Required]
     private ?string $email_template_pdf_template = null;
+    
+    public function __construct(EmailTemplate $emailtemplate)
+    {
+        $this->email_template_title = $emailtemplate->getEmail_template_title();
+        $this->email_template_type = $emailtemplate->getEmail_template_type();
+        $this->email_template_body = $emailtemplate->getEmail_template_body();
+        $this->email_template_subject = $emailtemplate->getEmail_template_subject();
+        $this->email_template_from_name = $emailtemplate->getEmail_template_from_name();
+        $this->email_template_from_email = $emailtemplate->getEmail_template_from_email();
+        $this->email_template_cc = $emailtemplate->getEmail_template_cc();
+        $this->email_template_bcc = $emailtemplate->getEmail_template_bcc();
+        $this->email_template_pdf_template = $emailtemplate->getEmail_template_pdf_template();
+    }
                    
     public function getEmail_template_title(): string|null
     {
@@ -72,22 +94,5 @@ final class EmailTemplateForm extends FormModel
     public function getFormName(): string
     {
         return '';
-    }
-    
-    /**
-     * @return Required[][]
-     *
-     * @psalm-return array{email_template_title: list{Required}, email_template_type: list{Required}, email_template_body: list{Required}, email_template_subject: list{Required}, email_template_from_name: list{Required}, email_template_from_email: list{Required}}
-     */
-    public function getRules(): array
-    {
-        return [
-            'email_template_title' => [new Required()],
-            'email_template_type' => [new Required()],
-            'email_template_body' => [new Required()],
-            'email_template_subject' => [new Required()],
-            'email_template_from_name' => [new Required()],
-            'email_template_from_email' =>[new Required()],
-        ];
-    }
+    }    
 }

@@ -14,9 +14,9 @@ final class DeliveryPartyService
         $this->repository = $repository;
     }
 
-    public function saveDeliveryParty(DeliveryParty $model, DeliveryPartyForm $form): void
+    public function saveDeliveryParty(DeliveryParty $model, array $array): void
     {
-        null!==$form->getParty_name() ? $model->setPartyName($form->getParty_name()) : '';
+        isset($array['party_name']) ? $model->setPartyName((string)$array['party_name']) : '';
         $this->repository->save($model);
     }
     

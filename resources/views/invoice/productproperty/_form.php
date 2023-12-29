@@ -25,7 +25,7 @@ if (!empty($errors)) {
 <form id="ProductPropertyForm" method="POST" action="<?= $urlGenerator->generate(...$action) ?>" enctype="multipart/form-data">
 <input type="hidden" name="_csrf" value="<?= $csrf ?>">
 <div id="headerbar">
-<h1 class="headerbar-title"><?= $s->trans('productproperties_form'); ?></h1>
+<h1 class="headerbar-title"><?= $translator->translate('i.productproperties_form'); ?></h1>
 <?php $response = $head->renderPartial('invoice/layout/header_buttons',['s'=>$s, 'hide_submit_button'=>false ,'hide_cancel_button'=>false]); ?>        
 <?php echo (string)$response->getBody(); ?><div id="content">
 <?= Html::openTag('div', ['class' => 'row']); ?>
@@ -39,12 +39,12 @@ if (!empty($errors)) {
  value="<?= Html::encode($body['id'] ??  ''); ?>">
  </div>
  <div class="row mb3 form-group">
-   <label for="name"><?= $s->trans('name'); ?></label>
+   <label for="name"><?= $translator->translate('i.name'); ?></label>
    <input type="text" name="name" id="name" class="form-control"
  value="<?= Html::encode($body['name'] ??  ''); ?>">
  </div>
  <div class="row mb3 form-group">
-   <label for="value"><?= $s->trans('value'); ?></label>
+   <label for="value"><?= $translator->translate('i.value'); ?></label>
    <input type="text" name="value" id="value" class="form-control"
  value="<?= Html::encode($body['value'] ??  ''); ?>">
  </div>

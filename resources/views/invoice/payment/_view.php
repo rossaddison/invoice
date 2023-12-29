@@ -25,14 +25,14 @@ if (!empty($errors)) {
 <?= Html::openTag('h1'); ?><?= Html::encode($title) ?><?= Html::closeTag('h1'); ?>
 <?= Html::openTag('div', ['class' => 'row']); ?>
 <div class="mb3 form-group">
-  <label for="date" class="form-label" style="background:lightblue"><?= $s->trans('date'); ?>  </label>
+  <label for="date" class="form-label" style="background:lightblue"><?= $translator->translate('i.date'); ?>  </label>
 <?php $date = $body['date']; if ($date && $date != "0000-00-00") {    $datehelper = new DateHelper($s);  $date = $datehelper->date_from_mysql($date);} else {  $date = null;}?><?= Html::encode($date); ?></div>
  <div class="mb3 form-group">
-<label for="amount" class="form-label" style="background:lightblue"><?= $s->trans('amount'); ?></label>
+<label for="amount" class="form-label" style="background:lightblue"><?= $translator->translate('i.amount'); ?></label>
    <?= Html::encode($body['amount'] ?? ''); ?>
  </div>
  <div class="mb3 form-group">
-<label for="note" class="form-label" style="background:lightblue"><?= $s->trans('note'); ?></label>
+<label for="note" class="form-label" style="background:lightblue"><?= $translator->translate('i.note'); ?></label>
    <?= Html::encode($body['note'] ?? ''); ?>
  </div>
  <div class="mb3 form-group">
@@ -40,7 +40,7 @@ if (!empty($errors)) {
    <?= $payment->getInv()->getId();?>
  </div>
  <div class="mb3 form-group">
-   <label for="payment_method_id" class="form-label" style="background:lightblue"><?= $s->trans('payment_method'); ?></label>
+   <label for="payment_method_id" class="form-label" style="background:lightblue"><?= $translator->translate('i.payment_method'); ?></label>
    <?= $payment->getPaymentMethod()->getId();?>
  </div>
 </div>

@@ -14,7 +14,7 @@ use Yiisoft\View\WebView;
  * @var \Yiisoft\Translator\TranslatorInterface $translator
  */
  if ($invEdit && $invView) { 
-    $this->setTitle($s->trans('add_files'));
+    $this->setTitle($translator->translate('i.add_files'));
  }
  ?>
 

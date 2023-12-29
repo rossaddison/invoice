@@ -16,11 +16,11 @@
         </div>
         <div class="modal-body">
             <div class="mb3 form-group">
-                <h6><?= $s->trans('add_quote_tax'); ?></h6>
+                <h6><?= $translator->translate('i.add_quote_tax'); ?></h6>
             </div>
             <div class="mb3 form-group">
                 <label for="tax_rate_id">
-                    <?= $s->trans('tax_rate'); ?>
+                    <?= $translator->translate('i.tax_rate'); ?>
                 </label>
                 <div>
                     <select name="tax_rate_id" id="tax_rate_id" class="form-control" required>
@@ -35,16 +35,16 @@
 
             <div class="mb3 form-group">
                 <label for="include_item_tax">
-                    <?= $s->trans('tax_rate_placement'); ?>
+                    <?= $translator->translate('i.tax_rate_placement'); ?>
                 </label>
 
                 <div>
                     <select name="include_item_tax" id="include_item_tax" class="form-control">
                         <option value="0">
-                            <?php echo $s->trans('apply_before_item_tax'); ?>
+                            <?php echo $translator->translate('i.apply_before_item_tax'); ?>
                         </option>
                         <option value="1">
-                            <?php echo $s->trans('apply_after_item_tax'); ?>
+                            <?php echo $translator->translate('i.apply_after_item_tax'); ?>
                         </option>
                     </select>
                 </div>
@@ -54,10 +54,10 @@
         <div class="modal-footer">
             <div class="btn-group">
                 <button class="quote_tax_submit btn btn-success" id="quote_tax_submit" type="button">
-                    <i class="fa fa-check"></i><?= $s->trans('submit'); ?>
+                    <i class="fa fa-check"></i><?= $translator->translate('i.submit'); ?>
                 </button>
                 <button class="btn btn-danger" type="button" data-dismiss="modal">
-                    <i class="fa fa-times"></i> <?= $s->trans('cancel'); ?>
+                    <i class="fa fa-times"></i> <?= $translator->translate('i.cancel'); ?>
                 </button>
             </div>
         </div>

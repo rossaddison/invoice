@@ -847,7 +847,7 @@ final class InvController {
                 'users' => $userRepo->findAllUsers(),
                 'numberhelper' => $this->number_helper,
                 'invs' => $invRepo->findAllPreloaded(),
-                'inv_statuses' => $invRepo->getStatuses($this->sR),
+                'inv_statuses' => $invRepo->getStatuses($this->translator),
                 'cvH' => new CVH($this->sR),
                 'custom_fields' => $cfR->repoTablequery('inv_custom'),
                 // Applicable to normally building up permanent selection lists eg. dropdowns
@@ -1386,7 +1386,7 @@ final class InvController {
                 $paginator = (new OffsetPaginator($invs))
                     ->withPageSize((int) $this->sR->get_setting('default_list_limit'))
                     ->withCurrentPage((int)$pageNum);
-                $inv_statuses = $iR->getStatuses($this->sR);
+                $inv_statuses = $iR->getStatuses($this->translator);
                 $label = $iR->getSpecificStatusArrayLabel((string) $status);
                 $parameters = [
                     'alert' => $this->alert(),
@@ -1513,7 +1513,7 @@ final class InvController {
                 ->withPageSize((int) $this->sR->get_setting('default_list_limit'))
                 ->withCurrentPage((int)$page)
                 ->withNextPageToken($page);
-            $inv_statuses = $invRepo->getStatuses($this->sR);
+            $inv_statuses = $invRepo->getStatuses($this->translator);
             $label = $invRepo->getSpecificStatusArrayLabel((string) $status);
             $this->draft_flash($currentRoute);
             $parameters = [
@@ -2991,7 +2991,7 @@ final class InvController {
                     'custom_values' => $cvR->attach_hard_coded_custom_field_values_to_custom_field($cfR->repoTablequery('inv_custom')),
                     'cvH' => new CVH($this->sR),
                     'inv_custom_values' => $inv_custom_values,
-                    'inv_statuses' => $iR->getStatuses($this->sR),
+                    'inv_statuses' => $iR->getStatuses($this->translator),
                     'modal_choose_items' => $this->view_renderer->renderPartialAsString('/invoice/product/modal_product_lookups_inv',
                     [
                         'families' => $fR->findAllPreloaded(),

@@ -11,7 +11,7 @@
 ?>
 
 <div id="headerbar">
-    <h1 class="headerbar-title"><?= Html::encode($s->trans('sales_by_client')); ?></h1>
+    <h1 class="headerbar-title"><?= Html::encode($translator->translate('i.sales_by_client')); ?></h1>
 </div>
 
 <div id="content">
@@ -25,7 +25,7 @@
 
                 <div class="panel-heading">
                     <i class="fa fa-print"></i>
-                    <?= $s->trans('report_options'); ?>
+                    <?= $translator->translate('i.report_options'); ?>
                 </div>
 
                 <div class="panel-body">
@@ -40,7 +40,7 @@
                             <?php
                                 $from_date = $datehelper->get_or_set_with_style($body['from_date'] ?? $start_tax_year);                                
                             ?>
-                            <label for="from_date"><?= $s->trans('from_date') .' ('.$datehelper->display().')'; ?></label>
+                            <label for="from_date"><?= $translator->translate('i.from_date') .' ('.$datehelper->display().')'; ?></label>
                             <div class="input-group">
                                 <input type="text" name="from_date" id="from_date" placeholder="<?= ' ('.$datehelper->display().')';?>"
                                        class="form-control input-sm datepicker" readonly                   
@@ -55,7 +55,7 @@
                             <?php
                                $to_date = $datehelper->get_or_set_with_style($body['to_date'] ?? new \DateTimeImmutable('now'));
                             ?>
-                            <label for="to_date"><?= $s->trans('to_date') .' ('.$datehelper->display().')'; ?></label>
+                            <label for="to_date"><?= $translator->translate('i.to_date') .' ('.$datehelper->display().')'; ?></label>
                             <div class="input-group">
                                 <input type="text" name="to_date" id="to_date" placeholder="<?= ' ('.$datehelper->display().')';?>"
                                        class="form-control input-sm datepicker" readonly                   
@@ -66,7 +66,7 @@
                             </div>        
                         </div>
                         <input type="submit" class="btn btn-success" name="btn_submit"
-                               value="<?= $s->trans('run_report'); ?>">
+                               value="<?= $translator->translate('i.run_report'); ?>">
                     </form>
 
                 </div>

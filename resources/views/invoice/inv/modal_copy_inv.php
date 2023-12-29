@@ -12,12 +12,12 @@ use Yiisoft\Html\Html;
                 <button type="button" class="close" data-dismiss="modal"><i class="fa fa-times-circle"></i></button>
             </div>       
             <div class="modal-header">
-                <h5 class="col-12 modal-title text-center"><?php echo $s->trans('copy_inv'); ?></h5>
+                <h5 class="col-12 modal-title text-center"><?php echo $translator->translate('i.copy_inv'); ?></h5>
                 <br>
             </div> 
             <input type="hidden" name="user_id" id="user_id" value="<?= $inv->getUser_id(); ?>">
             <div class="form-group">
-                <label for="create_inv_client_id"><?= $s->trans('client'); ?></label>
+                <label for="create_inv_client_id"><?= $translator->translate('i.client'); ?></label>
                 <select name="create_inv_client_id" id="create_inv_client_id" class="form-control">
                     <option value="<?= $inv->getClient()->getClient_id(); ?>"><?= $inv->getClient()->getClient_name(); ?></option>
                         <?php foreach ($clients as $client) { ?>
@@ -31,10 +31,10 @@ use Yiisoft\Html\Html;
         <div class="modal-footer">
             <div class="btn-group">
                 <button class="inv_to_inv_confirm btn btn-success" id="inv_to_inv_confirm" type="button">
-                    <i class="fa fa-check"></i> <?= $s->trans('submit'); ?>
+                    <i class="fa fa-check"></i> <?= $translator->translate('i.submit'); ?>
                 </button>
                 <button class="btn btn-danger" type="button" data-dismiss="modal">
-                    <i class="fa fa-times"></i> <?= $s->trans('cancel'); ?>
+                    <i class="fa fa-times"></i> <?= $translator->translate('i.cancel'); ?>
                 </button>
             </div>
         </div>

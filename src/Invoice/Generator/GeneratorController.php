@@ -31,8 +31,8 @@ use Yiisoft\Router\CurrentRoute;
 use Yiisoft\Session\Flash\Flash;
 use Yiisoft\Session\SessionInterface as Session;
 use Yiisoft\Translator\TranslatorInterface;
-use Yiisoft\User\CurrentUser;use Yiisoft\FormModel\FormHydrator;
-use Yiisoft\Form\Helper\HtmlFormErrors;
+use Yiisoft\User\CurrentUser;
+use Yiisoft\FormModel\FormHydrator;
 use Yiisoft\View\View;
 use Yiisoft\Yii\View\ViewRenderer;
 use Yiisoft\Json\Json;
@@ -149,7 +149,7 @@ final class GeneratorController
         $generator = $this->generator($currentRoute, $generatorRepository);
         if ($generator) {
             $parameters = [
-                'title' => $s->trans('edit'),
+                'title' => $this->translator->translate('i.edit'),
                 'action' => ['generator/edit', ['id' => $generator->getGentor_id()]],
                 'errors' => [],
                 'body' => $this->body($generator),
@@ -162,7 +162,7 @@ final class GeneratorController
                 $body = $request->getParsedBody();
                 if ($formHydrator->populate($form, $body) && $form->isValid()) {
                     $this->generatorService->saveGenerator($generator, $form);
-                    $this->flash_message('warning', $s->trans('record_successfully_updated'));
+                    $this->flash_message('warning', $this->translator->translate('i.record_successfully_updated'));
                     return $this->webService->getRedirectResponse('generator/index');
                 }
                 $parameters['body'] = $body;
@@ -186,7 +186,7 @@ final class GeneratorController
         try {
             $generator = $this->generator($currentRoute, $generatorRepository);
             if ($generator) {
-                $this->flash_message('danger', $s->trans('record_successfully_deleted'));
+                $this->flash_message('danger', $this->translator->translate('i.record_successfully_deleted'));
                 $this->generatorService->deleteGenerator($generator);
                 return $this->webService->getRedirectResponse('generator/index');  
             }           

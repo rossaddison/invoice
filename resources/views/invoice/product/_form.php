@@ -20,7 +20,7 @@ use Yiisoft\Html\Tag\Form;
 <?= Html::openTag('div',['class'=>'card border border-dark shadow-2-strong rounded-3']); ?>
 <?= Html::openTag('div',['class'=>'card-header']); ?>
 <?= Html::openTag('h1',['class'=>'fw-normal h3 text-center']); ?>
-<?= $s->trans('products_form'); ?>
+<?= $translator->translate('i.products_form'); ?>
 <?= Html::closeTag('h1'); ?>
 <?= Form::tag()
     ->post($urlGenerator->generate(...$action))
@@ -56,85 +56,85 @@ use Yiisoft\Html\Tag\Form;
 
         <div id="product-required" class="tab-pane active">
             <?= Field::text($form, 'product_name')
-                ->label($s->trans('product_name'))
+                ->label($translator->translate('i.product_name'))
                 ->required(true)    
                 ->addInputAttributes([
                     'class' => 'form-control  alert alert-warning'
                 ])
                 ->value(Html::encode($form->getProduct_name()))
-                ->placeholder($s->trans('product_name'))
+                ->placeholder($translator->translate('i.product_name'))
                 ->hint($translator->translate('invoice.hint.this.field.is.required')); ?>
             <?= Html::tag('br'); ?>
             <?= Field::text($form, 'product_description')
-                ->label($s->trans('product_description'))
+                ->label($translator->translate('i.product_description'))
                 ->required(true)        
                 ->addInputAttributes([
                     'class' => 'form-control  alert alert-warning'
                 ])
                 ->value(Html::encode($form->getProduct_description()))    
-                ->placeholder($s->trans('product_description'))    
+                ->placeholder($translator->translate('i.product_description'))    
                 ->hint($translator->translate('invoice.hint.this.field.is.required')); ?>                    
             <?= Html::tag('br'); ?>
             <?= Field::select($form, 'family_id')
-                ->label($s->trans('family'))         
+                ->label($translator->translate('i.family'))         
                 ->addInputAttributes([
                     'class' => 'form-control  alert alert-warning'
                 ])    
                 ->value($form->getFamily_id())                
-                ->prompt($s->trans('none'))    
+                ->prompt($translator->translate('i.none'))    
                 ->optionsData($families)
                 ->hint($translator->translate('invoice.hint.this.field.is.required'));        
             ?>
             <?= Html::tag('br'); ?>
             <?= Field::select($form, 'unit_id')
-                ->label($s->trans('unit'))
+                ->label($translator->translate('i.unit'))
                 ->addInputAttributes([
                     'class' => 'form-control  alert alert-warning'
                 ])
                 ->value($form->getUnit_id())                
-                ->prompt($s->trans('none'))    
+                ->prompt($translator->translate('i.none'))    
                 ->optionsData($units)
                 ->hint($translator->translate('invoice.hint.this.field.is.required'));    
             ?>
             <?= Html::tag('br'); ?>
             <?= Field::select($form, 'tax_rate_id')
-                ->label($s->trans('tax_rate'))    
+                ->label($translator->translate('i.tax_rate'))    
                 ->addInputAttributes([
                     'class' => 'form-control  alert alert-warning'
                 ])
                 ->optionsData($tax_rates)
                 ->value($form->getTax_rate_id())                
-                ->prompt($s->trans('none'))    
+                ->prompt($translator->translate('i.none'))    
                 ->hint($translator->translate('invoice.hint.this.field.is.required'));    
             ?>
             <?= Html::tag('br'); ?>
             <?= Field::text($form, 'product_sku')
-                ->label($s->trans('product_sku'))    
+                ->label($translator->translate('i.product_sku'))    
                 ->required(true)    
                 ->addInputAttributes([
                     'class' => 'form-control  alert alert-warning'
                 ])
                 ->value(Html::encode($form->getProduct_sku()))    
-                ->placeholder($s->trans('product_sku'))    
+                ->placeholder($translator->translate('i.product_sku'))    
                 ->hint($translator->translate('invoice.hint.this.field.is.required')); ?>
             <?= Html::tag('br'); ?>
             <?= Field::text($form, 'purchase_price')
-                ->label($s->trans('purchase_price'))
+                ->label($translator->translate('i.purchase_price'))
                 ->addInputAttributes([
                     'class' => 'form-control  alert alert-warning'
                 ])
                 ->value($s->format_amount((float)($form->getPurchase_price() ?? 0.00)))    
-                ->placeholder($s->trans('purchase_price'))    
+                ->placeholder($translator->translate('i.purchase_price'))    
                 ->hint($translator->translate('invoice.hint.this.field.is.required')); ?>         
             <?= Html::tag('br'); ?>
             <?= Field::text($form, 'product_price')
-                ->label($s->trans('product_price'))
+                ->label($translator->translate('i.product_price'))
                 ->required(true)
                 ->addInputAttributes([
                     'class' => 'form-control  alert alert-warning'
                 ])
                 ->value($s->format_amount((float)($form->getProduct_price()  ?? 0.00)))    
-                ->placeholder($s->trans('product_price'))    
+                ->placeholder($translator->translate('i.product_price'))    
                 ->hint($translator->translate('invoice.hint.this.field.is.required')); ?>         
             <?= Html::tag('br'); ?>
             <?= Field::number($form, 'product_price_base_quantity')
@@ -144,17 +144,17 @@ use Yiisoft\Html\Tag\Form;
                     'class' => 'form-control  alert alert-warning'
                 ])
                 ->value($s->format_amount((float)($form->getProduct_price_base_quantity()  ?? 0.00)))        
-                ->placeholder($s->trans('product_price_base_quantity'))    
+                ->placeholder($translator->translate('i.product_price_base_quantity'))    
                 ->hint($translator->translate('invoice.hint.this.field.is.required')); ?>
             <?= Html::tag('br'); ?>
             <?= Field::text($form, 'product_tariff')
-                ->label($s->trans('product_tariff'))
+                ->label($translator->translate('i.product_tariff'))
                 ->required(true)
                 ->addInputAttributes([
                     'class' => 'form-control  alert alert-warning'
                 ])
                 ->value($s->format_amount((float)($form->getProduct_tariff() ?? 0.00)))    
-                ->placeholder($s->trans('product_tariff'))    
+                ->placeholder($translator->translate('i.product_tariff'))    
                 ->hint($translator->translate('invoice.hint.this.field.is.required')); ?>
         </div>
 
@@ -164,7 +164,7 @@ use Yiisoft\Html\Tag\Form;
                 ->addInputAttributes([
                     'class' => 'form-control  alert alert-success'
                 ])
-                ->prompt($s->trans('none'))        
+                ->prompt($translator->translate('i.none'))        
                 ->optionsData($unit_peppols)
                 ->value(Html::encode($form->getUnit_peppol_id()))        
                 ->hint($translator->translate('invoice.hint.this.field.is.not.required')); ?> 
@@ -242,12 +242,12 @@ use Yiisoft\Html\Tag\Form;
                 ->hint($translator->translate('invoice.hint.this.field.is.not.required')); ?>         
             <?= Html::tag('br'); ?>
             <?= Field::text($form, 'provider_name')
-                ->label($s->trans('provider_name'))        
+                ->label($translator->translate('i.provider_name'))        
                 ->addInputAttributes([
                     'class' => 'form-control  alert alert-success'
                 ])
                 ->value(Html::encode($form->getProvider_name()))    
-                ->placeholder($s->trans('provider_name'))    
+                ->placeholder($translator->translate('i.provider_name'))    
                 ->hint($translator->translate('invoice.hint.this.field.is.not.required')); ?>             
         </div>
     </div>

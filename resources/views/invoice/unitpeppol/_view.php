@@ -28,10 +28,10 @@ if (!empty($errors)) {
   <thead>
     <tr>
       <th><?= $translator->translate('invoice.unit.peppol.code'); ?></th>
-      <th><?= $s->trans('name'); ?></th>
-      <th><?= $s->trans('description'); ?></th>
-      <th><?= $s->trans('unit_name'); ?></th>
-      <th><?= $s->trans('unit_name_plrl'); ?></th>
+      <th><?= $translator->translate('i.name'); ?></th>
+      <th><?= $translator->translate('i.description'); ?></th>
+      <th><?= $translator->translate('i.unit_name'); ?></th>
+      <th><?= $translator->translate('i.unit_name_plrl'); ?></th>
     </tr>
   </thead>
   <tbody>

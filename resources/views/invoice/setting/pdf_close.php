@@ -55,7 +55,7 @@
 <body>   
 <h1><?php echo $heading; ?></h1>
     <?php echo $message; ?><br>
-<button onclick="window.close()"><i class="fa fa-close"><?= $s->trans('close'); ?></i></button>
+<button onclick="window.close()"><i class="fa fa-close"><?= $translator->translate('i.close'); ?></i></button>
 </body>
 </html>
 

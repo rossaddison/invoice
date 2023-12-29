@@ -18,14 +18,14 @@ use Yiisoft\Html\Html;
             <input type="hidden" name="so_id" id="so_id" value="<?= $so->getId(); ?>">
             <input type="hidden" name="user_id" id="user_id" value="<?= $so->getUser_id(); ?>">
             <div class="form-group">
-                <label for="password"><?= $s->trans('invoice_password'); ?></label>
+                <label for="password"><?= $translator->translate('i.invoice_password'); ?></label>
                 <input type="text" name="password" id="invoice_password" class="form-control"
                        value="<?= $s->get_setting('invoice_pre_password') == '' ? '' : $s->get_setting('invoice_pre_password') ?>"
                        autocomplete="off">
             </div>
             <div class="form-group">
                 <label for="group_id">
-                    <?= $s->trans('invoice_group'); ?>
+                    <?= $translator->translate('i.invoice_group'); ?>
                 </label>
                 <select name="group_id" id="group_id" class="form-control">
                     <?php foreach ($groups as $group) { ?>
@@ -39,10 +39,10 @@ use Yiisoft\Html\Html;
         <div class="modal-footer">
             <div class="btn-group">
                 <button class="so_to_invoice_confirm btn btn-success" id="so_to_invoice_confirm" type="button">
-                    <i class="fa fa-check"></i> <?= $s->trans('submit'); ?>
+                    <i class="fa fa-check"></i> <?= $translator->translate('i.submit'); ?>
                 </button>
                 <button class="btn btn-danger" type="button" data-dismiss="modal">
-                    <i class="fa fa-times"></i> <?= $s->trans('cancel'); ?>
+                    <i class="fa fa-times"></i> <?= $translator->translate('i.cancel'); ?>
                 </button>
             </div>
         </div>

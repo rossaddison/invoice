@@ -8,7 +8,7 @@
     <?= Html::openTag('div', ['class' => 'headerbar-item pull-right']); ?>
     <?php $buttonsDataArray = [
         [
-            $s->trans('back'), 
+            $translator->translate('i.back'), 
             'type' => 'reset', 
             'onclick' => 'window.history.back()',
             'class' => 'btn btn-danger',
@@ -17,7 +17,7 @@
             'value' => '1'
         ],
         [
-            $s->trans('save'), 
+            $translator->translate('i.save'), 
             'type' => 'submit', 
             'class' => 'btn btn-success',
             'id' => 'btn-submit',

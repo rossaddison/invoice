@@ -25,43 +25,43 @@ if (!empty($errors)) {
 <?= Html::openTag('h1'); ?><?= Html::encode($title) ?><?= Html::closeTag('h1'); ?>
 <?= Html::openTag('div', ['class' => 'row']); ?>
 <div class="mb3 form-group">
-<label for="name" class="form-label" style="background:lightblue"><?= $s->trans('name'); ?></label>
+<label for="name" class="form-label" style="background:lightblue"><?= $translator->translate('i.name'); ?></label>
    <?= Html::encode($body['name'] ?? ''); ?>
  </div>
  <div class="mb3 form-group">
-<label for="description" class="form-label" style="background:lightblue"><?= $s->trans('description'); ?></label>
+<label for="description" class="form-label" style="background:lightblue"><?= $translator->translate('i.description'); ?></label>
    <?= Html::encode($body['description'] ?? ''); ?>
  </div>
  <div class="mb3 form-group">
-<label for="quantity" class="form-label" style="background:lightblue"><?= $s->trans('quantity'); ?></label>
+<label for="quantity" class="form-label" style="background:lightblue"><?= $translator->translate('i.quantity'); ?></label>
    <?= Html::encode($body['quantity'] ?? ''); ?>
  </div>
  <div class="mb3 form-group">
-<label for="price" class="form-label" style="background:lightblue"><?= $s->trans('price'); ?></label>
+<label for="price" class="form-label" style="background:lightblue"><?= $translator->translate('i.price'); ?></label>
    <?= Html::encode($body['price'] ?? ''); ?>
  </div>
  <div class="mb3 form-group">
-<label for="discount_amount" class="form-label" style="background:lightblue"><?= $s->trans('discount'); ?></label>
+<label for="discount_amount" class="form-label" style="background:lightblue"><?= $translator->translate('i.discount'); ?></label>
    <?= Html::encode($body['discount_amount'] ?? ''); ?>
  </div>
  <div class="mb3 form-group">
-<label for="order" class="form-label" style="background:lightblue"><?= $s->trans('order'); ?></label>
+<label for="order" class="form-label" style="background:lightblue"><?= $translator->translate('i.order'); ?></label>
    <?= Html::encode($body['order'] ?? ''); ?>
  </div>
  <div class="mb3 form-group">
-<label for="product_unit" class="form-label" style="background:lightblue"><?= $s->trans('product_unit'); ?></label>
+<label for="product_unit" class="form-label" style="background:lightblue"><?= $translator->translate('i.product_unit'); ?></label>
    <?= Html::encode($body['product_unit'] ?? ''); ?>
  </div>
  <div class="mb3 form-group">
-   <label for="tax_rate_id" class="form-label" style="background:lightblue"><?= $s->trans('tax_rate'); ?></label>
+   <label for="tax_rate_id" class="form-label" style="background:lightblue"><?= $translator->translate('i.tax_rate'); ?></label>
    <?= $quoteitem->getTaxRate()->getId();?>
  </div>
  <div class="mb3 form-group">
-   <label for="product_id" class="form-label" style="background:lightblue"><?= $s->trans('product'); ?></label>
+   <label for="product_id" class="form-label" style="background:lightblue"><?= $translator->translate('i.product'); ?></label>
    <?= $quoteitem->getProduct()->product_name;?>
  </div>
  <div class="mb3 form-group">
-   <label for="quote_id" class="form-label" style="background:lightblue"><?= $s->trans('quote'); ?></label>
+   <label for="quote_id" class="form-label" style="background:lightblue"><?= $translator->translate('i.quote'); ?></label>
    <?= $quoteitem->getQuote()->getId();?>
  </div>
 </div>

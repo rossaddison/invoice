@@ -16,20 +16,18 @@ final class UserClientService
     }
     
     /**
-     * 
      * @param UserClient $model
-     * @param UserClientForm $form
+     * @param array $array
      * @return void
      */
-    public function saveUserClient(UserClient $model, UserClientForm $form): void
+    public function saveUserClient(UserClient $model, array $array): void
     {        
-       $form->getUser_id() ? $model->setUser_id($form->getUser_id()) : '';
-       $form->getClient_id() ? $model->setClient_id($form->getClient_id()) : '';
+       isset($array['user_id']) ? $model->setUser_id((int)$array['user_id']) : '';
+       isset($array['client_id']) ? $model->setClient_id((int)$array['client_id']) : '';
        $this->repository->save($model);
     }
     
     /**
-     * 
      * @param UserClient $model
      * @return void
      */

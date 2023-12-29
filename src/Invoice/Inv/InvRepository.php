@@ -15,9 +15,10 @@ use Cycle\ORM\Select;
 use Cycle\Database\Injection\Parameter;
 
 use Yiisoft\Data\Reader\Sort;
+use Yiisoft\Translator\TranslatorInterface as Translator;
+use Yiisoft\Security\Random;
 use Yiisoft\Yii\Cycle\Data\Reader\EntityReader;
 use Yiisoft\Yii\Cycle\Data\Writer\EntityWriter;
-use Yiisoft\Security\Random;
 
 /**
  * @template TEntity of Inv
@@ -26,17 +27,17 @@ use Yiisoft\Security\Random;
 final class InvRepository extends Select\Repository
 {
     private EntityWriter $entityWriter;
-    private SR $sR;
+    private Translator $translator;
 
     /**
      * @param Select<TEntity> $select
      * @param EntityWriter $entityWriter
-     * @param SR $sR
+     * @param Translator $translator
      */
-    public function __construct(Select $select, EntityWriter $entityWriter, SR $sR)
+    public function __construct(Select $select, EntityWriter $entityWriter, Translator $translator)
     {
         $this->entityWriter = $entityWriter;
-        $this->sR = $sR;
+        $this->translator = $translator;
         parent::__construct($select);
     }
     
@@ -392,40 +393,39 @@ final class InvRepository extends Select\Repository
     }
     
     /**
-     * 
-     * @param SR $s
+     * @param Translator $translator
      * @return array
      */
-    public function getStatuses(SR $s): array
+    public function getStatuses(Translator $translator): array
     {
         return array(
             '0' => array(
-                'label' => $s->trans('all'),
+                'label' => $translator->translate('i.all'),
                 'class' => 'all',
                 'href' => 0
             ),
             '1' => array(
-                'label' => $s->trans('draft'),
+                'label' => $translator->translate('i.draft'),
                 'class' => 'draft',
                 'href' => 1
             ),
             '2' => array(
-                'label' => $s->trans('sent'),
+                'label' => $translator->translate('i.sent'),
                 'class' => 'sent',
                 'href' => 2
             ),
             '3' => array(
-                'label' => $s->trans('viewed'),
+                'label' => $translator->translate('i.viewed'),
                 'class' => 'viewed',
                 'href' => 3
             ),
             '4' => array(
-                'label' => $s->trans('paid'),
+                'label' => $translator->translate('i.paid'),
                 'class' => 'paid',
                 'href' => 4
             ),
             '5' => array(
-                'label' => $s->trans('overdue'),
+                'label' => $translator->translate('i.overdue'),
                 'class' => 'overdue',
                 'href' => 5
             )
@@ -439,7 +439,7 @@ final class InvRepository extends Select\Repository
      */
     public function getSpecificStatusArrayLabel(string $key) : string
     {
-        $statuses_array = $this->getStatuses($this->sR);
+        $statuses_array = $this->getStatuses($this->translator);
         /**
          * @var array $statuses_array[$key]
          * @var string $statuses_array[$key]['label']
@@ -449,9 +449,10 @@ final class InvRepository extends Select\Repository
     
     /**
      * @param string $invoice_date_created
+     * @param SR $sR
      * @return string
      */
-    public function get_date_due($invoice_date_created, SR $sR)
+    public function get_date_due(string $invoice_date_created, SR $sR) : string
     {
         $invoice_date_due = new \DateTime($invoice_date_created);
         $invoice_date_due->add(new \DateInterval('P' . $sR->get_setting('invoices_due_after') . 'D'));

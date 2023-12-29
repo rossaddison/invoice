@@ -24,18 +24,20 @@ use \DateTimeImmutable;
     private ?int $client_id =  null;
     
     #[Column(type: 'date', nullable: false)]
-    private mixed $date =  '';
+    private mixed $date_note;
     
     #[Column(type: 'longText', nullable:false)]
     private string $note =  '';
      
     public function __construct(
          int $client_id = null,
-         string $note = ''
+         string $note = '',
+         mixed $date_note = '',   
     )
     {
          $this->client_id=$client_id;
          $this->note=$note;
+         $this->date_note=$date_note;
     }
     
     public function getClient() : ?Client
@@ -71,17 +73,17 @@ use \DateTimeImmutable;
       $this->client_id =  $client_id;
     }
     
-    public function getDate(): string|DateTimeImmutable
+    public function getDate_note(): string|DateTimeImmutable
     { 
       /**
-       * @var string|DateTimeImmutable $this->date
+       * @var string|DateTimeImmutable $this->date_note
        */
-      return $this->date;
+      return $this->date_note;
     }
     
-    public function setDate(DateTime $date) : void
+    public function setDate_note(DateTime $date_note) : void
     {
-      $this->date =  $date;
+      $this->date_note =  $date_note;
     }
     
     public function getNote(): string

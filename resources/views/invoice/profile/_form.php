@@ -32,7 +32,7 @@ if (!empty($errors)) {
  <div class="mb3 form-group">   
  <div  class="form-check form-switch">
       <label for="current" class="form-check-label ">
-            <?= $s->trans('active'); ?>
+            <?= $translator->translate('i.active'); ?>
             <input class="form-check-input" id="current" name="current" type="checkbox" value="1"
             <?php $s->check_select(Html::encode($body['current'] ?? ''), 1, '==', true) ?>>
       </label>   
@@ -50,17 +50,17 @@ if (!empty($errors)) {
     </select>
  </div>
  <div class="mb3 form-group">
-   <label for="mobile"><?= $s->trans('mobile'); ?></label>
+   <label for="mobile"><?= $translator->translate('i.mobile'); ?></label>
    <input type="text" name="mobile" id="mobile" class="form-control"
  value="<?= Html::encode($body['mobile'] ??  ''); ?>">
  </div>
  <div class="mb3 form-group">
-   <label for="email"><?= $s->trans('email'); ?></label>
+   <label for="email"><?= $translator->translate('i.email'); ?></label>
    <input type="email" class="form-control" id="email" name="email" aria-describedby="emailHelp" placeholder="Enter email"
  value="<?= Html::encode($body['email'] ??  ''); ?>">
  </div>
  <div class="mb3 form-group">
-   <label for="description"><?= $s->trans('description'); ?></label>
+   <label for="description"><?= $translator->translate('i.description'); ?></label>
    <input type="text" class="form-control" id="description" name="description" aria-describedby="" placeholder="Description"
  value="<?= Html::encode($body['email'] ??  ''); ?>">
  </div>

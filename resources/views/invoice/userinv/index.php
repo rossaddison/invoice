@@ -17,7 +17,7 @@ use Yiisoft\Yii\DataView\GridView;
  * @var CurrentRoute $currentRoute 
  * @var OffsetPaginator $paginator
  * @var \Yiisoft\Router\UrlGeneratorInterface $urlGenerator 
- * @var TranslatorInterface $translator
+ * @var \Yiisoft\Translator\TranslatorInterface $translator
  * @var WebView $this
  */ 
 
@@ -31,7 +31,7 @@ echo $alert;
                 ->addClass('bg-primary text-white p-3 rounded-top')
                 ->content(
                     I::tag()->addClass('bi bi-people')
-                            ->content(' ' . Html::encode($s->trans('users')))
+                            ->content(' ' . Html::encode($translator->translate('i.users')))
                 )
         )
         ->render();
@@ -48,19 +48,19 @@ echo $alert;
 ?>
 <br>
 <div>
-    <h5><?= $s->trans('users'); ?></h5>
+    <h5><?= $translator->translate('i.users'); ?></h5>
     <div class="btn-group index-options">
         <a href="<?= $urlGenerator->generate('userinv/index',['page'=>1, 'active'=>2]); ?>"
            class="btn <?php echo $active == 2 ? 'btn-primary' : 'btn-default' ?>">
-            <?= $s->trans('all'); ?>
+            <?= $translator->translate('i.all'); ?>
         </a>
         <a href="<?= $urlGenerator->generate('userinv/index',['page'=>1, 'active'=>1]); ?>" style="text-decoration:none"
            class="btn  <?php echo $active == 1 ? 'btn-primary' : 'btn-default' ?>">
-            <?= $s->trans('active'); ?>
+            <?= $translator->translate('i.active'); ?>
         </a>
         <a href="<?= $urlGenerator->generate('userinv/index',['page'=>1, 'active'=>0]); ?>" style="text-decoration:none"
            class="btn  <?php echo $active == 0 ? 'btn-primary' : 'btn-default' ?>">
-            <?= $s->trans('inactive'); ?>
+            <?= $translator->translate('i.inactive'); ?>
         </a>
         <?= 
         Html::a(
@@ -80,17 +80,17 @@ echo $alert;
     $columns = [
         new DataColumn(
             'active',
-            content: static function ($model) use($s): string {
-                        return $model->getActive() ? Html::tag('span',$s->trans('yes'),['class'=>'label active'])->render() 
-                                                   : Html::tag('span',$s->trans('no'),['class'=>'label inactive'])->render();
+            content: static function ($model) use($translator): string {
+                        return $model->getActive() ? Html::tag('span',$translator->translate('i.yes'),['class'=>'label active'])->render() 
+                                                   : Html::tag('span',$translator->translate('i.no'),['class'=>'label inactive'])->render();
             }
         ),
         new DataColumn(
             'all_clients',
-            header:  $s->trans('user_all_clients'),        
-            content: static function ($model) use($s): string {
-                        return $model->getAll_clients() ? Html::tag('span',$s->trans('yes'),['class'=>'label active'])->render()
-                                                        : Html::tag('span',$s->trans('no'),['class'=>'label inactive'])->render();
+            header:  $translator->translate('i.user_all_clients'),        
+            content: static function ($model) use($translator): string {
+                        return $model->getAll_clients() ? Html::tag('span',$translator->translate('i.yes'),['class'=>'label active'])->render()
+                                                        : Html::tag('span',$translator->translate('i.no'),['class'=>'label inactive'])->render();
             }
         ),
         new DataColumn(
@@ -106,11 +106,11 @@ echo $alert;
         ),
         new DataColumn(
             'type',    
-            header:  $s->trans('user_type'),        
-            content: static function ($model) use ($s): string {
+            header:  $translator->translate('i.user_type'),        
+            content: static function ($model) use ($translator): string {
             $user_types = [
-                0 => $s->trans('administrator'),
-                1 => $s->trans('guest_read_only'),
+                0 => $translator->translate('i.administrator'),
+                1 => $translator->translate('i.guest_read_only'),
             ];  
             return $user_types[$model->getType()];
         }),
@@ -160,49 +160,26 @@ echo $alert;
             }
         ),
         new DataColumn(
-            'user_id',
-            header:  $translator->translate('invoice.user.inv.role.observer'),
-            content: static function ($model) use ($manager, $translator, $urlGenerator): string {
-            if ($manager->getPermissionsByUserId($model->getUser_id()) 
-                === $manager->getPermissionsByRoleName('observer')) { 
-                return  Html::tag('span', $translator->translate('invoice.general.yes'),['class'=>'label active'])->render(); 
-            } else {
-                return $model->getUser_id() !== '1' ? Html::a(
-                    Html::tag('button',
-                    Html::tag('span', $translator->translate('invoice.general.no'),['class'=>'label inactive'])
-                    ,[
-                       'type'=>'submit', 
-                       'class'=>'dropdown-button',
-                       'onclick'=>"return confirm("."'".$translator->translate('invoice.user.inv.role.warning.role') ."');"
-                    ]),
-                    $urlGenerator->generate('userinv/observer',['user_id'=>$model->getUser_id()],[]),
-                   )->render() : '';
-            }
-        }), 
-        new DataColumn(
             'email',
             content: static function ($model): string {
-                        return $model->getEmail();
+                return $model->getEmail();
         }),         
         new DataColumn(
             'type',
-            header:  $s->trans('assigned_clients'),                
-            content: static function ($model) use ($urlGenerator): string {
-                        // The administrator has access to all clients so assigning clients is only applicable to guest user accounts
-                        // Display the button only if the user has a guest account setup not to be confused with Yii's isGuest.
-                        // Admin => 0, Guest => 1   not to be confused with admin User Table id which is 1 and UserInv Table user_id is 1.
-                        return $model->getType() !== 0 ? Html::a(
-                                    Html::tag('i','',['class'=>'fa fa-list fa-margin']),
-                                    // UserInv is an extension of table user
-                                    // The user_id will be retrieved in the controller not here 
-                                    // Just pass the primary key of UserInv here below
-                                        $urlGenerator->generate('userinv/client',['id'=>$model->getId()]),
-                                        ['class'=>'btn btn-default']            
-                                    )->render() : '';
-        }),                        
+            header:  $translator->translate('i.assigned_clients'),                
+            content: static function ($model) use ($urlGenerator, $ucR): string { 
+                return Html::a(
+                                Html::tag('i', str_repeat(' ',1).(string)count($ucR->get_assigned_to_user($model->getUser_id())),
+                                ['class'=>'fa fa-list fa-margin']),
+                                $urlGenerator->generate('userinv/client',['id'=>$model->getId()]),
+                                ['class'=> count($ucR->get_assigned_to_user($model->getUser_id())) > 0 
+                                        ? 'btn btn-success' 
+                                        : 'btn btn-danger']            
+                            )->render();
+        }),      
         new DataColumn(            
             'type',
-            header:  $s->trans('edit'),                
+            header:  $translator->translate('i.edit'),                
             content: static function ($model) use ($urlGenerator, $canEdit): string {
                         return $canEdit ? Html::a(
                                                             Html::tag('i','',['class'=>'fa fa-edit fa-margin']),
@@ -213,14 +190,14 @@ echo $alert;
         }),
         new DataColumn(            
             'type',
-            header:  $s->trans('delete'),                
-            content: static function ($model) use ($s, $urlGenerator): string {
+            header:  $translator->translate('i.delete'),                
+            content: static function ($model) use ($translator, $urlGenerator): string {
                         return $model->getType() == 1 ? Html::a( Html::tag('button',
                                                             Html::tag('i','',['class'=>'fa fa-trash fa-margin']),
                                                             [
                                                                 'type'=>'submit', 
                                                                 'class'=>'dropdown-button',
-                                                                'onclick'=>"return confirm("."'".$s->trans('delete_record_warning')."');"
+                                                                'onclick'=>"return confirm("."'".$translator->translate('i.delete_record_warning')."');"
                                                             ]
                                                             ),
                                                         $urlGenerator->generate('userinv/delete',['id'=>$model->getId()]),[]                                         

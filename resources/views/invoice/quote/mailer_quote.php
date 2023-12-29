@@ -96,7 +96,7 @@ use Yiisoft\Html\Tag\Form;
         <div class="col-12 col-md-8 col-lg-6 col-xl-8">
             <div class="card border border-dark shadow-2-strong rounded-3">
                 <div class="card-header bg-dark text-white">
-                    <h1 class="fw-normal h3 text-center"><?= $s->trans('email_quote'). ' #'. $quote->getNumber(). ' => '.$quote->getClient()->getClient_email() ?></h1>
+                    <h1 class="fw-normal h3 text-center"><?= $translator->translate('i.email_quote'). ' #'. $quote->getNumber(). ' => '.$quote->getClient()->getClient_email() ?></h1>
                 </div>
                 <div class="card-body p-5 text-center">
                     <?= Form::tag()
@@ -111,7 +111,7 @@ use Yiisoft\Html\Tag\Form;
                         // The below panel is hidden but necessary for the emailtemplate.js to work with the quote dropdown 
                     ?>
                     <div class="panel panel-default" hidden>
-                        <?= Html::tag('Label',$s->trans('type'),['for'=>'email_template_type', 'class'=>'control-label']) ?>
+                        <?= Html::tag('Label',$translator->translate('i.type'),['for'=>'email_template_type', 'class'=>'control-label']) ?>
                         <?= Html::tag('Div', 
                                 Html::tag('Label',
                                 Input::radio('email_template_type', 'invoice')
@@ -125,47 +125,47 @@ use Yiisoft\Html\Tag\Form;
                                         ->id('email_template_type_quote')
                                         ->attribute('checked','checked')),['class'=>'radio']); ?>
                     </div>
-                    <?= Html::tag('Label',$s->trans('to_email')) ?>
+                    <?= Html::tag('Label',$translator->translate('i.to_email')) ?>
                     <?= Field::email($form, 'to_email')->addInputAttributes(['value'=> Html::encode($quote->getClient()->getClient_email())])
                                                        ->hideLabel() ?> 
                     
-                    <?= Html::tag('Label',$s->trans('email_template')) ?>                        
+                    <?= Html::tag('Label',$translator->translate('i.email_template')) ?>                        
                     <?= Field::select($form, 'email_template')->optionsData($dropdown_titles_of_email_templates, true,[],[])
                                                               ->disabled(empty($dropdown_titles_of_email_templates) ? true : false)   
                                                               ->hideLabel() ?>
                     
-                    <?= Html::tag('Label',$s->trans('from_name')) ?>
+                    <?= Html::tag('Label',$translator->translate('i.from_name')) ?>
                     <?= Field::text($form, 'from_name')->addInputAttributes(['class'=>'email-template-from-name form-control']) 
                                                        ->addInputAttributes(['value'=> $auto_template['from_name'] ?? '' ?: (null!==$userinv ? Html::encode($userinv->getName()) : '')])->hideLabel()?>
                     
-                    <?= Html::tag('Label',$s->trans('from_email')). str_repeat("&nbsp;", 2). ($auto_template['from_email'] ? $translator->translate('invoice.email.source.email.template') : $translator->translate('invoice.email.source.user.account')) ?>
+                    <?= Html::tag('Label',$translator->translate('i.from_email')). str_repeat("&nbsp;", 2). ($auto_template['from_email'] ? $translator->translate('invoice.email.source.email.template') : $translator->translate('invoice.email.source.user.account')) ?>
                     <?= Field::email($form, 'from_email')->addInputAttributes(['value'=> $auto_template['from_email'] ?? '' ?: (null!==$userinv ? Html::encode($userinv->getEmail()) : '')  ])->hideLabel()
                                                          ->addInputAttributes(['class'=>'email-template-from-email form-control']) ?>                            
                     
-                    <?= Html::tag('Label',$s->trans('cc')) ?>
+                    <?= Html::tag('Label',$translator->translate('i.cc')) ?>
                     <?= Field::text($form, 'cc')->addInputAttributes(['class'=>'email-template-cc form-control'])  
                                                 ->addInputAttributes(['value'=>$auto_template['cc'] ?? '' ])
                                                 ->hideLabel()?>
                     
-                    <?= Html::tag('Label',$s->trans('bcc')) ?>
+                    <?= Html::tag('Label',$translator->translate('i.bcc')) ?>
                     <?= Field::email($form, 'bcc')->addInputAttributes(['class'=>'email-template-bcc form-control'])
                                                   ->addInputAttributes(['value'=>$auto_template['bcc'] ?? '' ])
                                                   ->hideLabel()?>
                                         
-                    <?= Html::tag('Label',$s->trans('subject')) ?>
+                    <?= Html::tag('Label',$translator->translate('i.subject')) ?>
                     <?= Field::text($form, 'subject')->addInputAttributes(['id'=>'mailerquoteform-subject'])
                                                      ->addInputAttributes(['class'=>'email-template-subject form-control'])
-                                                     ->addInputAttributes(['value'=>$auto_template['subject'] ?? '' ?: $s->trans('quote'). '#'. $quote->getNumber() ])
+                                                     ->addInputAttributes(['value'=>$auto_template['subject'] ?? '' ?: $translator->translate('i.quote'). '#'. $quote->getNumber() ])
                                                      ->hideLabel() ?>
                     
-                    <?= Html::tag('Label',$s->trans('pdf_template')) ?>
+                    <?= Html::tag('Label',$translator->translate('i.pdf_template')) ?>
                     <?= Field::select($form, 'pdf_template')->optionsData($pdf_templates, true,[],[])
                                                             ->disabled(empty($pdf_templates) ? true : false)
                                                             ->addInputAttributes(['class'=>'email-template-pdf-template form-control'])
                                                             ->addInputAttributes(['value'=> $setting_status_pdf_template ?: ucfirst('invoice')])
                                                             ->hideLabel()?>
                     
-                    <?= Html::tag('Label',$s->trans('body')) ?>
+                    <?= Html::tag('Label',$translator->translate('i.body')) ?>
                     
                     <?= Field::textarea($form, 'body')->addInputAttributes(['id'=>'mailerquoteform-body'])
                                                   ->addInputAttributes(['class'=>'email-template-body form-control taggable'])
@@ -210,7 +210,7 @@ use Yiisoft\Html\Tag\Form;
                     
                     <div class="panel panel-default">
                         <div class="panel-heading">
-                            <?= $s->trans('preview'); ?>
+                            <?= $translator->translate('i.preview'); ?>
                             <div id="email-template-preview-reload" class="pull-right cursor-pointer">
                                 <i class="fa fa-refresh"></i>
                             </div>
@@ -230,7 +230,7 @@ use Yiisoft\Html\Tag\Form;
                         ->hideLabel()
                     ?>                   
                     <div>
-                    <div class="form-group"><?= Html::tag('Label',$s->trans('guest_url'),['for'=>'quote-guest-url']); ?></label>
+                    <div class="form-group"><?= Html::tag('Label',$translator->translate('i.guest_url'),['for'=>'quote-guest-url']); ?></label>
                         <div class="input-group">
                         <?=
                             Field::text($form,'guest_url')->readonly(true)
@@ -249,13 +249,13 @@ use Yiisoft\Html\Tag\Form;
                         ->addContainerClass('btn-group btn-toolbar float-end')
                         ->buttonsData([
                             [
-                                $s->trans('cancel'),
+                                $translator->translate('i.cancel'),
                                 'type' => 'reset',
                                 'class' => 'btn btn-lg btn-danger',
                                 'name'=> 'btn_cancel'
                             ],
                             [
-                                $s->trans('send'),
+                                $translator->translate('i.send'),
                                 'type' => 'submit',
                                 'class' => 'btn btn-lg btn-primary',
                                 'name' => 'btn_send'

@@ -27,54 +27,54 @@ if (!empty($errors)) {
  <div class="mb3 form-group">   
  <div  class="form-check form-switch">
     <label for="current" class="form-check-label ">
-      <?= $s->trans('active'); ?>
+      <?= $translator->translate('i.active'); ?>
       <input class="form-check-input" id="current" name="current" type="checkbox" value="1" disabled
       <?php $s->check_select(Html::encode($body['current'] ?? ''), 1, '==', true) ?>>
     </label>   
  </div>
  </div>    
  <div class="mb3 form-group">
-<label for="name" class="form-label" style="background:lightblue"><?= $s->trans('name'); ?></label>
+<label for="name" class="form-label" style="background:lightblue"><?= $translator->translate('i.name'); ?></label>
    <?= Html::encode($body['name'] ?? ''); ?>
  </div>
  <div class="mb3 form-group">
-<label for="address_1" class="form-label" style="background:lightblue"><?= $s->trans('street_address'); ?></label>
+<label for="address_1" class="form-label" style="background:lightblue"><?= $translator->translate('i.street_address'); ?></label>
    <?= Html::encode($body['address_1'] ?? ''); ?>
  </div>
  <div class="mb3 form-group">
-<label for="address_2" class="form-label" style="background:lightblue"><?= $s->trans('street_address_2'); ?></label>
+<label for="address_2" class="form-label" style="background:lightblue"><?= $translator->translate('i.street_address_2'); ?></label>
    <?= Html::encode($body['address_2'] ?? ''); ?>
  </div>
  <div class="mb3 form-group">
-<label for="city" class="form-label" style="background:lightblue"><?= $s->trans('city'); ?></label>
+<label for="city" class="form-label" style="background:lightblue"><?= $translator->translate('i.city'); ?></label>
    <?= Html::encode($body['city'] ?? ''); ?>
  </div>
  <div class="mb3 form-group">
-<label for="state" class="form-label" style="background:lightblue"><?= $s->trans('state'); ?></label>
+<label for="state" class="form-label" style="background:lightblue"><?= $translator->translate('i.state'); ?></label>
    <?= Html::encode($body['state'] ?? ''); ?>
  </div>
  <div class="mb3 form-group">
-<label for="zip" class="form-label" style="background:lightblue"><?= $s->trans('zip'); ?></label>
+<label for="zip" class="form-label" style="background:lightblue"><?= $translator->translate('i.zip'); ?></label>
    <?= Html::encode($body['zip'] ?? ''); ?>
  </div>
  <div class="mb3 form-group">
-<label for="country" class="form-label" style="background:lightblue"><?= $s->trans('country'); ?></label>
+<label for="country" class="form-label" style="background:lightblue"><?= $translator->translate('i.country'); ?></label>
    <?= Html::encode($body['country'] ?? ''); ?>
  </div>
  <div class="mb3 form-group">
-<label for="phone" class="form-label" style="background:lightblue"><?= $s->trans('phone'); ?></label>
+<label for="phone" class="form-label" style="background:lightblue"><?= $translator->translate('i.phone'); ?></label>
    <?= Html::encode($body['phone'] ?? ''); ?>
  </div>
  <div class="mb3 form-group">
-<label for="fax" class="form-label" style="background:lightblue"><?= $s->trans('fax'); ?></label>
+<label for="fax" class="form-label" style="background:lightblue"><?= $translator->translate('i.fax'); ?></label>
    <?= Html::encode($body['fax'] ?? ''); ?>
  </div>
  <div class="mb3 form-group">
-<label for="email" class="form-label" style="background:lightblue"><?= $s->trans('email'); ?></label>
+<label for="email" class="form-label" style="background:lightblue"><?= $translator->translate('i.email'); ?></label>
    <?= Html::encode($body['email'] ?? ''); ?>
  </div>
  <div class="mb3 form-group">
-<label for="web" class="form-label" style="background:lightblue"><?= $s->trans('web'); ?></label>
+<label for="web" class="form-label" style="background:lightblue"><?= $translator->translate('i.web'); ?></label>
    <?= Html::encode($body['web'] ?? ''); ?>
  </div>
 </div>

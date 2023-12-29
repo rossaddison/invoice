@@ -31,7 +31,7 @@ use Yiisoft\Html\Tag\Form;
     <?= Html::openTag('div',['class'=>'card border border-dark shadow-2-strong rounded-3']); ?>
     <?= Html::openTag('div',['class'=>'card-header']); ?>
     <?= Html::openTag('h1',['class'=>'fw-normal h3 text-center']); ?>
-    <?= $s->trans('custom_field_form'); ?>
+    <?= $translator->translate('i.custom_field_form'); ?>
     <?= Html::closeTag('h1'); ?>
     <?= $layout_header_buttons; ?>
     <?= Html::closeTag('div'); ?>
@@ -51,7 +51,7 @@ use Yiisoft\Html\Tag\Form;
             <?= Html::closeTag('div'); ?>
             <?= Html::openTag('div',['class' => 'form-group']); ?>
                 <?= Field::select($form, 'table')
-                        ->label($s->trans('table'))
+                        ->label($translator->translate('i.table'))
                         ->addInputAttributes([
                             'class' => 'form-control',
                             'id' => 'table'
@@ -63,9 +63,9 @@ use Yiisoft\Html\Tag\Form;
 
             <?= Html::openTag('div',['class' => 'form-group']); ?>
                 <?= Field::text($form, 'label')
-                    ->label($s->trans('label'), ['class' => 'form-label'])
+                    ->label($translator->translate('i.label'), ['class' => 'form-label'])
                     ->addInputAttributes([
-                        'placeholder' => $s->trans('label') ?? 'Label',
+                        'placeholder' => $translator->translate('i.label') ?? 'Label',
                         'class' => 'form-control',
                         'id' => 'label',
                     ])
@@ -84,9 +84,9 @@ use Yiisoft\Html\Tag\Form;
             ?>    
             <?= Html::openTag('div',['class' => 'form-group']); ?>
                 <?= Field::select($form, 'type')
-                        ->label($s->trans('type') , ['class' => 'form-label'])
+                        ->label($translator->translate('i.type') , ['class' => 'form-label'])
                         ->addInputAttributes([
-                            'placeholder' => $s->trans('type'),
+                            'placeholder' => $translator->translate('i.type'),
                             'class' => 'form-control',
                             'id' => 'type'
                         ])
@@ -97,7 +97,7 @@ use Yiisoft\Html\Tag\Form;
 
             <?= Html::openTag('div',['class' => 'form-group']); ?>
                 <?= Field::range($form, 'order')
-                    ->label($s->trans('order'))
+                    ->label($translator->translate('i.order'))
                     ->addInputAttributes([
                         'type' => 'range',
                         'min' => 1,
@@ -110,7 +110,7 @@ use Yiisoft\Html\Tag\Form;
             <?= Html::closeTag('div'); ?>
 
             <?= Html::openTag('div',['class' => 'form-group']); ?>
-                <label for="location"><?= $s->trans('position'); ?></label> 
+                <label for="location"><?= $translator->translate('i.position'); ?></label> 
                 <?php $valueSelected = Html::encode($form->getLocation() ??  ''); ?>
                 <select name="location" id="location" class="form-control"></select>
             <?= Html::closeTag('div'); ?>

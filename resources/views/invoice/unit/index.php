@@ -17,11 +17,11 @@ echo $alert;
 ?>
 
 <div id="headerbar">
-    <h1 class="headerbar-title"><?= $s->trans('units'); ?></h1>
+    <h1 class="headerbar-title"><?= $translator->translate('i.units'); ?></h1>
 
     <div class="headerbar-item pull-right">
         <a class="btn btn-sm btn-primary" href="<?= $urlGenerator->generate('unit/add'); ?>">
-            <i class="fa fa-plus"></i> <?= $s->trans('new'); ?>
+            <i class="fa fa-plus"></i> <?= $translator->translate('i.new'); ?>
         </a>
     </div>
 
@@ -44,9 +44,9 @@ echo $alert;
 
             <thead>
             <tr>
-                <th><?= $s->trans('unit_name'); ?></th>
-                <th><?= $s->trans('unit_name_plrl'); ?></th>
-                <th><?= $s->trans('options'); ?></th>
+                <th><?= $translator->translate('i.unit_name'); ?></th>
+                <th><?= $translator->translate('i.unit_name_plrl'); ?></th>
+                <th><?= $translator->translate('i.options'); ?></th>
             </tr>
             </thead>
 
@@ -59,12 +59,12 @@ echo $alert;
                         <div class="options btn-group">
                             <a class="btn btn-default btn-sm dropdown-toggle"
                                data-toggle="dropdown" href="#">
-                                <i class="fa fa-cog"></i> <?= $s->trans('options'); ?>
+                                <i class="fa fa-cog"></i> <?= $translator->translate('i.options'); ?>
                             </a>
                             <ul class="dropdown-menu">
                                 <li>
                                     <a href="<?= $urlGenerator->generate('unit/edit', ['id' => $unit->getUnit_id()]); ?>" style="text-decoration:none">
-                                        <i class="fa fa-edit fa-margin"></i> <?= $s->trans('edit'); ?>
+                                        <i class="fa fa-edit fa-margin"></i> <?= $translator->translate('i.edit'); ?>
                                     </a>
                                 </li>
                                 <?php if ($upR->repoUnitCount((string)$unit->getUnit_id()) === 0 ) { ?>
@@ -86,8 +86,8 @@ echo $alert;
                                           method="POST">
                                         <input type="hidden" name="_csrf" value="<?= $csrf; ?>">
                                         <button type="submit" class="dropdown-button"
-                                                onclick="return confirm('<?= $s->trans('delete_record_warning'); ?>');">
-                                            <i class="fa fa-trash-o fa-margin"></i> <?= $s->trans('delete'); ?>
+                                                onclick="return confirm('<?= $translator->translate('i.delete_record_warning'); ?>');">
+                                            <i class="fa fa-trash-o fa-margin"></i> <?= $translator->translate('i.delete'); ?>
                                         </button>
                                     </form>
                                 </li>

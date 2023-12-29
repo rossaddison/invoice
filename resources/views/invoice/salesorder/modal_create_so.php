@@ -23,7 +23,7 @@ use Yiisoft\Html\Html;
             <br>
         </div>        
         <div>
-            <label for="create_so_client_id"><?= $s->trans('client'); ?></label>
+            <label for="create_so_client_id"><?= $translator->translate('i.client'); ?></label>
             <select name="create_so_client_id" id="create_so_client_id" class="form-control">
                 <?php foreach ($clients as $client) { ?>
                   <!-- Ensure that only clients with user accounts are selected -->
@@ -36,7 +36,7 @@ use Yiisoft\Html\Html;
             </select>
         </div>
         <div>
-            <label for="so_password"><?= $s->trans('password'); ?></label>
+            <label for="so_password"><?= $translator->translate('i.password'); ?></label>
             <input type="text" name="so_password" id="so_password" class="form-control"
                    value="<?php echo $translator->translate('invoice.salesorder.pre.password') ? '' : $translator->translate('invoice.salesorder.pre.password') ?>"
                    autocomplete="off">
@@ -59,7 +59,7 @@ use Yiisoft\Html\Html;
             <div class="btn-group">
                 <button class="so_create_confirm btn btn-success" id="so_create_confirm" type="button">
                     <i class="fa fa-check"></i>
-                    <?= $s->trans('submit'); ?>
+                    <?= $translator->translate('i.submit'); ?>
                 </button>
             </div>
         </div>

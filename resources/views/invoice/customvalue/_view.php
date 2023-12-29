@@ -25,7 +25,7 @@ use Yiisoft\Html\Html;
         <?= Html::closeTag('div'); ?>
         <?= Html::openTag('div',['class' => 'mb3 form-group']); ?>
                 <?= Field::text($form, 'value')
-                    ->label($s->trans('value'))    
+                    ->label($translator->translate('i.value'))    
                     ->addInputAttributes([
                         'class' => 'form-control',
                         'style' => 'background:lightblue',
@@ -37,7 +37,7 @@ use Yiisoft\Html\Html;
         <?= Html::closeTag('div'); ?>
         <?= Html::openTag('div',['class' => 'mb3 form-group']); ?>
                 <?= Field::text($form, 'custom_field_id')
-                    ->label($s->trans('custom_field'))    
+                    ->label($translator->translate('i.custom_field'))    
                     ->addInputAttributes([
                         'class' => 'form-control',
                         'style' => 'background:lightblue',

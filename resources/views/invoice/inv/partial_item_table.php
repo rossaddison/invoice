@@ -19,15 +19,15 @@ $vat = $s->get_setting('enable_vat_registration');
             <tr><i class="fa fa-info-circle" data-bs-toggle="tooltip" title="<?= $s->isDebugMode(7); ?>"></i></tr>    
             <tr>
                 <th></th>
-                <th><?= $s->trans('item'); ?></th>
-                <th><?= $s->trans('description'); ?></th>
+                <th><?= $translator->translate('i.item'); ?></th>
+                <th><?= $translator->translate('i.description'); ?></th>
                 <th><?= $translator->translate('invoice.invoice.note'); ?></th>
-                <th><?= $s->trans('quantity'); ?></th>
-                <th><?= $s->trans('price'); ?></th>
-                <th><?= $s->trans('tax_rate'); ?></th>
-                <th><?= $s->trans('subtotal'); ?></th>
-                <th><?= $s->trans('tax'); ?></th>
-                <th><?= $s->trans('total'); ?></th>
+                <th><?= $translator->translate('i.quantity'); ?></th>
+                <th><?= $translator->translate('i.price'); ?></th>
+                <th><?= $translator->translate('i.tax_rate'); ?></th>
+                <th><?= $translator->translate('i.subtotal'); ?></th>
+                <th><?= $translator->translate('i.tax'); ?></th>
+                <th><?= $translator->translate('i.total'); ?></th>
                 <th></th>
             </tr>
             </thead>
@@ -47,35 +47,35 @@ $vat = $s->get_setting('enable_vat_registration');
                     <input type="hidden" name="item_product_id" maxlength="7" size="7" value="">
 
                     <div class="input-group">
-                        <span class="input-group-text"><?= $s->trans('item'); ?></span>
+                        <span class="input-group-text"><?= $translator->translate('i.item'); ?></span>
                         <input type="text" name="item_name" class="input-sm form-control" value="" disabled>
                     </div>
                 </td>
                 <td class="td-amount td-quantity">
                     <div class="input-group">
-                        <span class="input-group-text"><?= $s->trans('quantity'); ?></span>
+                        <span class="input-group-text"><?= $translator->translate('i.quantity'); ?></span>
                         <input type="text" name="item_quantity" class="input-sm form-control amount" value="1.00">
                     </div>
                 </td>
                 <td class="td-amount">
                     <div class="input-group">
-                        <span class="input-group-text"><?= $s->trans('price'); ?></span>
+                        <span class="input-group-text"><?= $translator->translate('i.price'); ?></span>
                         <input type="text" name="item_price" class="input-sm form-control amount" value="0.00">
                     </div>
                 </td>
                 <td class="td-amount td-vert-middle">
                     <div class="input-group">
-                        <span class="input-group-text"><?= $s->trans('item_discount'); ?></span>
+                        <span class="input-group-text"><?= $translator->translate('i.item_discount'); ?></span>
                         <input type="text" name="item_discount_amount" class="input-sm form-control amount"
                                data-bs-toggle = "tooltip" data-placement="bottom"
-                               title="<?= $s->get_setting('currency_symbol') . ' ' . $s->trans('per_item'); ?>" value="0.00">
+                               title="<?= $s->get_setting('currency_symbol') . ' ' . $translator->translate('i.per_item'); ?>" value="0.00">
                     </div>
                 </td>
                 <td td-vert-middle>
                     <div class="input-group">
-                        <span class="input-group-text"><?= $s->trans('tax_rate'); ?></span>
+                        <span class="input-group-text"><?= $translator->translate('i.tax_rate'); ?></span>
                         <select name="item_tax_rate_id" class="form-control">
-                            <option value="0"><?= $s->trans('none'); ?></option>
+                            <option value="0"><?= $translator->translate('i.none'); ?></option>
                             <?php foreach ($tax_rates as $tax_rate) { ?>
                                 <option value="<?php echo $tax_rate->getTax_rate_id(); ?>">
                                     <?php echo $numberhelper->format_amount($tax_rate->getTax_rate_percent()) . '% - ' . $tax_rate->getTax_rate_name(); ?>
@@ -87,7 +87,7 @@ $vat = $s->get_setting('enable_vat_registration');
                 <td class="td-icon text-right td-vert-middle">
                     <form method="POST" class="form-inline">
                             <input type="hidden" name="_csrf" value="<?= $csrf ?>">
-                            <button type="submit" class="btn_delete_item btn-xl btn-primary" onclick="return confirm('<?= $s->trans('delete_record_warning'); ?>');">
+                            <button type="submit" class="btn_delete_item btn-xl btn-primary" onclick="return confirm('<?= $translator->translate('i.delete_record_warning'); ?>');">
                                 <i class="fa fa-trash"></i>
                             </button>
                     </form>
@@ -96,7 +96,7 @@ $vat = $s->get_setting('enable_vat_registration');
             <tr>
                 <td class="td-textarea">
                     <div class="input-group">
-                        <span class="input-group-text"><?= $s->trans('description'); ?></span>
+                        <span class="input-group-text"><?= $translator->translate('i.description'); ?></span>
                         <textarea name="item_description" class="form-control"></textarea>
                     </div>
                     <div class="input-group">
@@ -106,9 +106,9 @@ $vat = $s->get_setting('enable_vat_registration');
                 </td>
                 <td class="td-amount">
                     <div class="input-group">
-                            <span class="input-group-text"><?= $s->trans('product_unit'); ?></span>
+                            <span class="input-group-text"><?= $translator->translate('i.product_unit'); ?></span>
                             <select name="item_product_unit_id" class="form-control" disabled>
-                                <option value="0"><?= $s->trans('none'); ?></option>
+                                <option value="0"><?= $translator->translate('i.none'); ?></option>
                                 <?php foreach ($units as $unit) { ?>
                                     <option value="<?= $unit->getUnit_id(); ?>">
                                         <?= Html::encode($unit->getUnit_name()) . "/" . Html::encode($unit->getUnit_name_plrl()); ?>
@@ -118,19 +118,19 @@ $vat = $s->get_setting('enable_vat_registration');
                     </div>
                 </td>                
                 <td class="td-amount td-vert-middle">
-                    <span><?= $s->trans('subtotal'); ?></span><br/>
+                    <span><?= $translator->translate('i.subtotal'); ?></span><br/>
                     <span name="subtotal" class="amount"></span>
                 </td>
                 <td class="td-amount td-vert-middle">
-                    <span><?= $s->trans('discount'); ?></span><br/>
+                    <span><?= $translator->translate('i.discount'); ?></span><br/>
                     <span name="item_discount_total" class="amount"></span>
                 </td>
                 <td class="td-amount td-vert-middle">
-                    <span><?= $s->trans('tax'); ?></span><br/>
+                    <span><?= $translator->translate('i.tax'); ?></span><br/>
                     <span name="item_tax_total" class="amount"></span>
                 </td>
                 <td class="td-amount td-vert-middle">
-                    <span><?= $s->trans('total'); ?></span><br/>
+                    <span><?= $translator->translate('i.total'); ?></span><br/>
                     <span name="item_total" class="amount"></span>
                 </td>
             </tr>
@@ -156,10 +156,10 @@ $vat = $s->get_setting('enable_vat_registration');
                             <input type="text" disabled="true" maxlength="1" size="1" name="item_task_id" value="<?= $item->getTask_id() ? $item->getTask_id() : '0' ?>" data-bs-toggle = "tooltip" title="inv_item->task_id">
                         </div>    
                         <div class="input-group">
-                            <span class="input-group-text"><?= $item->getProduct_id() ? $s->trans('item') : $s->trans('tasks') ; ?></span>
+                            <span class="input-group-text"><?= $item->getProduct_id() ? $translator->translate('i.item') : $translator->translate('i.tasks') ; ?></span>
                             <select name="item_name" class="form-control" disabled>
                             <?php if  ($item->getProduct_id()) { ?>    
-                                <option value="0"><?= $s->trans('none'); ?></option>
+                                <option value="0"><?= $translator->translate('i.none'); ?></option>
                                 <?php foreach ($products as $product) { ?>
                                     <option value="<?php echo $product->getProduct_id(); ?>"
                                             <?php if ($item->getProduct_id() == $product->getProduct_id()) { ?>selected="selected"<?php } ?>>
@@ -168,7 +168,7 @@ $vat = $s->get_setting('enable_vat_registration');
                                 <?php } ?>
                             <?php } ?>
                             <?php if  ($item->getTask_id()) { ?>    
-                                <option value="0"><?= $s->trans('none'); ?></option>
+                                <option value="0"><?= $translator->translate('i.none'); ?></option>
                                 <?php foreach ($tasks as $task) { ?>
                                     <option value="<?php echo $task->getId(); ?>"
                                             <?php if ($item->getTask_id() == $task->getId()) { ?>selected="selected"<?php } ?>>
@@ -181,25 +181,25 @@ $vat = $s->get_setting('enable_vat_registration');
                     </td>
                     <td class="td-amount td-quantity">
                         <div class="input-group">
-                            <span class="input-group-text"><?= $s->trans('quantity'); ?></span>
+                            <span class="input-group-text"><?= $translator->translate('i.quantity'); ?></span>
                             <input disabled type="text" name="item_quantity" class="input-sm form-control amount" data-bs-toggle = "tooltip" title="inv_item->quantity"
                                    value="<?= $numberhelper->format_amount($item->getQuantity()); ?>">
                         </div>
                     </td>
                     <td class="td-amount">
                       <div class="input-group">
-                          <span class="input-group-text"><?= $s->trans('price'); ?></span>
+                          <span class="input-group-text"><?= $translator->translate('i.price'); ?></span>
                           <input disabled type="text" name="item_price" class="input-sm form-control amount" data-bs-toggle = "tooltip" title="inv_item->price"
                                  value="<?= $numberhelper->format_amount($item->getPrice()); ?>">
                       </div>
                     </td>
                     <td class="td-amount ">
                         <div class="input-group">
-                            <span class="input-group-text"><?= $vat === '0' ? $s->trans('item_discount') : $translator->translate('invoice.invoice.cash.discount'); ?></span>
+                            <span class="input-group-text"><?= $vat === '0' ? $translator->translate('i.item_discount') : $translator->translate('invoice.invoice.cash.discount'); ?></span>
                             <input disabled type="text" name="item_discount_amount" class="input-sm form-control amount" data-bs-toggle = "tooltip" title="inv_item->discount_amount"
                                    value="<?= $numberhelper->format_amount($item->getDiscount_amount()); ?>"
                                    data-bs-toggle = "tooltip" data-placement="bottom"
-                                   title="<?= $s->get_setting('currency_symbol') . ' ' . $s->trans('per_item'); ?>">
+                                   title="<?= $s->get_setting('currency_symbol') . ' ' . $translator->translate('i.per_item'); ?>">
                         </div>
                     </td>
                     
@@ -213,9 +213,9 @@ $vat = $s->get_setting('enable_vat_registration');
                     }?>
                     <td>
                         <div class="input-group">
-                            <span class="input-group-text"><?= $vat === '0' ? $s->trans('tax_rate') : $translator->translate('invoice.invoice.vat.rate') ?></span>
+                            <span class="input-group-text"><?= $vat === '0' ? $translator->translate('i.tax_rate') : $translator->translate('invoice.invoice.vat.rate') ?></span>
                             <select disabled name="item_tax_rate_id" class="form-control" data-bs-toggle = "tooltip" title="inv_item->tax_rate_id">
-                                <option value="0"><?= $s->trans('none'); ?></option>
+                                <option value="0"><?= $translator->translate('i.none'); ?></option>
                                 <?php foreach ($tax_rates as $tax_rate) { ?>
                                     <option value="<?php echo $tax_rate->getTax_rate_id(); ?>"
                                             <?php if ($item->getTax_rate_id() == $tax_rate->getTax_rate_id()) { ?>selected="selected"<?php } ?>>
@@ -250,7 +250,7 @@ $vat = $s->get_setting('enable_vat_registration');
                                 </div> 
                              </div>
                              <a href="<?= $urlGenerator->generate('acii/index', ['inv_item_id'=> $item->getId(), '_language'=>$currentRoute->getArgument('_language')]) ?>" class="btn btn-primary btn" data-bs-toggle = "tooltip" title="<?= $translator->translate('invoice.invoice.allowance.or.charge.index'); ?>"><i class="<?= $aciiR->repoInvItemCount((string)$item->getId()) > 0 ? 'fa fa-list' : 'fa fa-plus'; ?>"></i></a>
-                             <a href="<?= $urlGenerator->generate('inv/delete_inv_item',['id'=>$item->getId(),'_language'=>$currentRoute->getArgument('_language')]) ?>" class="btn btn-danger btn" onclick="return confirm('<?= $s->trans('delete_record_warning'); ?>');"><i class="fa fa-trash"></i></a>
+                             <a href="<?= $urlGenerator->generate('inv/delete_inv_item',['id'=>$item->getId(),'_language'=>$currentRoute->getArgument('_language')]) ?>" class="btn btn-danger btn" onclick="return confirm('<?= $translator->translate('i.delete_record_warning'); ?>');"><i class="fa fa-trash"></i></a>
                              <?php if  ($item->getTask_id()) { ?>    
                               <a href="<?= $urlGenerator->generate('invitem/edit_task',['id'=>$item->getId(), '_language'=>$currentRoute->getArgument('_language')]) ?>" class="btn btn-success btn"><i class="fa fa-pencil"></i></a>
                             <?php } ?>
@@ -264,7 +264,7 @@ $vat = $s->get_setting('enable_vat_registration');
                 <tr>
                     <td class="td-textarea">
                         <div class="input-group">
-                            <span class="input-group-text" data-bs-toggle = "tooltip" title="inv_item->description"><?= $s->trans('description'); ?></span>
+                            <span class="input-group-text" data-bs-toggle = "tooltip" title="inv_item->description"><?= $translator->translate('i.description'); ?></span>
                             <textarea disabled name="item_description" class="form-control" ><?= Html::encode($item->getDescription()); ?></textarea>
                         </div>
                         <div class="input-group">
@@ -275,7 +275,7 @@ $vat = $s->get_setting('enable_vat_registration');
                     <td class="td-amount">
                         <div class="input-group">
                         <?php if  ($item->getProduct_id()) { ?>        
-                            <span class="input-group-text"><?= $s->trans('product_unit');?></span>
+                            <span class="input-group-text"><?= $translator->translate('i.product_unit');?></span>
                             <span class="input-group-text" name="item_product_unit"><?= $item->getProduct_unit();?></span>
                         <?php } ?>
                         <?php if  ($item->getTask_id()) { ?>        
@@ -285,7 +285,7 @@ $vat = $s->get_setting('enable_vat_registration');
                         </div>
                     </td>
                     <td class="td-amount td-vert-middle">
-                        <span><?= $s->trans('subtotal'); ?></span><br/>
+                        <span><?= $translator->translate('i.subtotal'); ?></span><br/>
                         
                         <span name="subtotal" class="amount" data-bs-toggle = "tooltip" title="inv_item_amount->subtotal using InvItemController/edit_product->saveInvItemAmount">
                             <!-- This subtotal is worked out in InvItemController/edit_product->saveInvItemAmount function -->
@@ -293,19 +293,19 @@ $vat = $s->get_setting('enable_vat_registration');
                         </span>
                     </td>
                     <td class="td-amount td-vert-middle">
-                        <span><?= $vat === '0' ? $s->trans('discount') : $translator->translate('invoice.invoice.early.settlement.cash.discount') ?></span><br/>
+                        <span><?= $vat === '0' ? $translator->translate('i.discount') : $translator->translate('invoice.invoice.early.settlement.cash.discount') ?></span><br/>
                         <span name="item_discount_total" class="amount" data-bs-toggle = "tooltip" title="inv_item_amount->discount">
                             <?= $numberhelper->format_currency($inv_item_amount->repoInvItemAmountquery((string)$item->getId())?->getDiscount()); ?>
                         </span>
                     </td>
                     <td class="td-amount td-vert-middle">
-                        <span><?= $vat === '0' ? $s->trans('tax') : $translator->translate('invoice.invoice.vat.abbreviation') ?></span><br/>
+                        <span><?= $vat === '0' ? $translator->translate('i.tax') : $translator->translate('invoice.invoice.vat.abbreviation') ?></span><br/>
                         <span name="item_tax_total" class="amount" data-bs-toggle = "tooltip" title="inv_item_amount->tax_total">
                             <?= $numberhelper->format_currency($inv_item_amount->repoInvItemAmountquery((string)$item->getId())?->getTax_total()); ?>
                         </span>
                     </td>
                     <td class="td-amount td-vert-middle">
-                        <span><?= $s->trans('total'); ?></span><br/>
+                        <span><?= $translator->translate('i.total'); ?></span><br/>
                         <span name="item_total" class="amount" data-bs-toggle = "tooltip" title="inv_item_amount->total">
                             <?= $numberhelper->format_currency($inv_item_amount->repoInvItemAmountquery((string)$item->getId())?->getTotal()); ?>
                         </span>
@@ -333,7 +333,7 @@ $vat = $s->get_setting('enable_vat_registration');
             <table class="table table-bordered text-right">
                 <tr><i class="fa fa-info-circle" data-bs-toggle="tooltip" title="<?= $s->isDebugMode(7); ?>"></i></tr>
                 <tr>
-                    <td style="width: 40%;"><?= $s->trans('subtotal'); ?></td>
+                    <td style="width: 40%;"><?= $translator->translate('i.subtotal'); ?></td>
                     <td style="width: 60%;" class="amount" id="amount_subtotal" data-bs-toggle = "tooltip" title="inv_amount->item_subtotal =  inv_item(s)->subtotal - inv_item(s)->discount + inv_item(s)->charge"><?php echo $numberhelper->format_currency($inv_amount->getItem_subtotal() ?? 0.00); ?></td>
                 </tr>                
                 <?php if ($vat === '0') { ?>
@@ -342,14 +342,14 @@ $vat = $s->get_setting('enable_vat_registration');
                         <?php if ($show_buttons === true && $user_can_edit === true) { ?>
                             <a href="#add-inv-tax" data-toggle="modal" class="btn-xs"> <i class="fa fa-plus-circle"></i></a>
                         <?php } ?>
-                        <?= $s->trans('invoice_tax'); ?>
+                        <?= $translator->translate('i.invoice_tax'); ?>
                     </td>
                     <td>
                         <?php if ($inv_tax_rates) {
                             foreach ($inv_tax_rates as $inv_tax_rate) { ?>
                                     <input type="hidden" name="_csrf" value="<?= $csrf ?>">
                                     <?php if ($show_buttons === true && $user_can_edit === true) { ?>
-                                    <span  class="btn btn-xs btn-link" onclick="return confirm('<?= $s->trans('delete_tax_warning'); ?>');">
+                                    <span  class="btn btn-xs btn-link" onclick="return confirm('<?= $translator->translate('i.delete_tax_warning'); ?>');">
                                         <a href="<?= $urlGenerator->generate('inv/delete_inv_tax_rate',['_language'=>$currentRoute->getArgument('_language'), 'id'=>$inv_tax_rate->getId()]) ?>"><i class="fa fa-trash"></i></a>
                                     </span>
                                     <?php } ?>
@@ -369,7 +369,7 @@ $vat = $s->get_setting('enable_vat_registration');
                 <?php } ?>
                 <?php if ($vat === '0') { ?>
                 <tr>
-                    <td class="td-vert-middle"><?= $s->trans('discount'); ?></td>
+                    <td class="td-vert-middle"><?= $translator->translate('i.discount'); ?></td>
                     <td class="clearfix">
                         <div class="discount-field">
                             <div class="input-group input-group-sm">
@@ -408,13 +408,13 @@ $vat = $s->get_setting('enable_vat_registration');
                 <?php } ?>
                 <tr>
                     <td>
-                    <span><?= $vat === '1' ? $translator->translate('invoice.invoice.vat.break.down') : $s->trans('item_tax'); ?>
+                    <span><?= $vat === '1' ? $translator->translate('invoice.invoice.vat.break.down') : $translator->translate('i.item_tax'); ?>
                     </span>    
                     </td>
                     <td class="amount" data-bs-toggle = "tooltip" id="amount_item_tax_total" title="inv_amount->item_tax_total"><?php echo $numberhelper->format_currency($inv_amount->getItem_tax_total()  ?? 0.00); ?></td>
                 </tr>  
                 <tr>
-                    <td><b><?= $s->trans('total'); ?></b></td>
+                    <td><b><?= $translator->translate('i.total'); ?></b></td>
                     <td class="amount" id="amount_inv_total" data-bs-toggle = "tooltip" title="inv_amount->total"><b><?php echo $numberhelper->format_currency($inv_amount->getTotal() ?? 0.00); ?></b></td>
                 </tr>
             </table>

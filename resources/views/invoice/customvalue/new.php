@@ -20,7 +20,7 @@ use Yiisoft\Html\Html;
     <?= Html::openTag('div',['class'=>'card border border-dark shadow-2-strong rounded-3']); ?>
     <?= Html::openTag('div',['class'=>'card-header']); ?>
     <?= Html::openTag('h1',['class'=>'fw-normal h3 text-center']); ?>
-    <?= $s->trans('custom_values_new'); ?>
+    <?= $translator->translate('i.custom_values_new'); ?>
     <?= Html::closeTag('h1'); ?>
     <?= $header_buttons; ?>
     <?= Html::closeTag('div'); ?>
@@ -43,7 +43,7 @@ use Yiisoft\Html\Html;
                        //belong to the Field Entity?> 
                 <?= Html::openTag('div', ['class' => 'form-group']); ?>
                     <?= Html::openTag('label', ['for' => 'label']); ?>
-                        <?= $s->trans('field'); ?>
+                        <?= $translator->translate('i.field'); ?>
                     <?= Html::closeTag('label'); ?>
                     <?= Html::openTag('input', [
                         'class' => 'form-control', 
@@ -56,7 +56,7 @@ use Yiisoft\Html\Html;
     
                 <?= Html::openTag('div',['class' => 'form-group']); ?>
                     <?= Html::openTag('label', ['for' => 'label']); ?>
-                        <?= $s->trans('type'); ?>
+                        <?= $translator->translate('i.type'); ?>
                     <?= Html::closeTag('label'); ?>
                     <?= Html::openTag('input', [
                         'class' => 'form-control', 

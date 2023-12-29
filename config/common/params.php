@@ -20,6 +20,7 @@ use Yiisoft\Yii\View\CsrfViewInjection;
 // yii3-i
 use App\Invoice\Helpers\DateHelper;
 use App\Invoice\Setting\SettingRepository;
+use App\Widget\Button;
 use Yiisoft\Session\SessionInterface;
 
 return [
@@ -62,7 +63,7 @@ return [
             'buttonClass()' => ['btn btn-primary btn-sm mt-3'],
             'containerClass()' => ['d-grid gap-2 form-floating'],
           ],
-          // if this class is not used the checkbox ends up floating 
+          // if this class is not used then the checkbox ends up floating 
           // because of the default containerClass above;
           // refer to client form with active client checkbox  
           Checkbox::class => [
@@ -137,6 +138,7 @@ return [
       'translator' => Reference::to(TranslatorInterface::class),
       // yii-invoice - Below parameters are specifically used in views/layout/invoice
       's' => Reference::to(SettingRepository::class),
+      'button' => Reference::to(Button::class), 
       'session' => Reference::to(SessionInterface::class),
       'datehelper' => Reference::to(DateHelper::class),
     ],
@@ -222,7 +224,7 @@ return [
       // Store generated Schema in the file
       PhpFileSchemaProvider::class => [
         // >>>>>>>>>>  To update a table structure and related schema use MODE_WRITE_ONLY ...then revert back to MODE_READ_AND_WRITE
-        //'mode' => PhpFileSchemaProvider::MODE_WRITE_ONLY,
+       //'mode' => PhpFileSchemaProvider::MODE_WRITE_ONLY,
         // yii-invoice
         // For faster performance use MODE_READ_AND_WRITE => 0
         'mode' => PhpFileSchemaProvider::MODE_READ_AND_WRITE,

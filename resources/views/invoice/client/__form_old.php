@@ -35,7 +35,7 @@ if (!empty($errors)) {
 ?>
 
 <div id="headerbar">
-    <h1 class="headerbar-title"><?= $s->trans('clients_form'); ?></h1>
+    <h1 class="headerbar-title"><?= $translator->translate('i.clients_form'); ?></h1>
     <?php
     echo $buttons;
     ?>
@@ -44,10 +44,10 @@ if (!empty($errors)) {
 </div>
 <div class="card">
     <div class="card-header d-flex justify-content-between">
-        <?= $s->trans('personal_information'); ?>
+        <?= $translator->translate('i.personal_information'); ?>
         <div  class="p-2">
             <label for="client_active" class="control-label ">
-                <?= $s->trans('active_client'); ?>
+                <?= $translator->translate('i.active_client'); ?>
                 <input id="client_active" name="client_active" type="checkbox" value="1"
                        <?php $s->check_select(Html::encode($body['client_active'] ?? ''), 1, '==', true) ?>>
             </label>
@@ -59,10 +59,10 @@ if (!empty($errors)) {
             $InputDataName = new PureInputData(
                 name: 'client_name',
                 value: Html::encode($body['client_name'] ?? ''),
-                label: $s->trans('client_name'),
+                label: $translator->translate('i.client_name'),
                 hint: 'This field is required',
                 id: 'client_name',
-                placeholder: $s->trans('client_name')
+                placeholder: $translator->translate('i.client_name')
             );
             echo Html::openTag('div',['class'=>'input-group']);
             echo Text::widget()
@@ -74,8 +74,8 @@ if (!empty($errors)) {
         </div>
         
         <div class="mb-3 form-group">
-            <label for="client_surname" class="form-label"><?= $s->trans('client_surname'); ?></label>
-            <input type="text" class="form-control" name="client_surname" id="client_surname" placeholder="<?= $s->trans('client_surname'); ?>" value="<?= Html::encode($body['client_surname'] ?? '') ?>">
+            <label for="client_surname" class="form-label"><?= $translator->translate('i.client_surname'); ?></label>
+            <input type="text" class="form-control" name="client_surname" id="client_surname" placeholder="<?= $translator->translate('i.client_surname'); ?>" value="<?= Html::encode($body['client_surname'] ?? '') ?>">
         </div>
         <div class="mb-3 form-group">
             <label for="client_number" class="form-label"><?= $translator->translate('invoice.client.number'); ?></label>
@@ -83,7 +83,7 @@ if (!empty($errors)) {
         </div>
         <div class="mb-3 form-group no-margin">
             <label for="client_language" class="form-label">
-                <?php echo $s->trans('language'); ?>
+                <?php echo $translator->translate('i.language'); ?>
             </label>
             <select name="client_language" id="client_language" class="form-control" required>
                 <option><?php Html::encode($body['client_language'] ?? ''); ?></option>
@@ -101,17 +101,17 @@ if (!empty($errors)) {
 <br>
 <div class="card">
     <div class="card-header">
-        <?= $s->trans('address'); ?>
+        <?= $translator->translate('i.address'); ?>
     </div>
     <?= Html::openTag('div', ['class' => 'row']); ?>
         <div class="mb-3 form-group">
-            <label for="client_address_1" class="form-label"><?= $s->trans('street_address'); ?></label>
-            <input type="text" class="form-control" name="client_address_1" id="client_address_1" placeholder="<?= $s->trans('street_address'); ?>" value="<?= Html::encode($body['client_address_1'] ?? '') ?>">
+            <label for="client_address_1" class="form-label"><?= $translator->translate('i.street_address'); ?></label>
+            <input type="text" class="form-control" name="client_address_1" id="client_address_1" placeholder="<?= $translator->translate('i.street_address'); ?>" value="<?= Html::encode($body['client_address_1'] ?? '') ?>">
         </div>
 
         <div class="mb-3 form-group">
-            <label for="client_address_2" class="form-label"><?= $s->trans('street_address_2'); ?></label>
-            <input type="text" class="form-control" name="client_address_2" id="client_address_2" placeholder="<?= $s->trans('street_address_2'); ?>" value="<?= Html::encode($body['client_address_2'] ?? '') ?>">
+            <label for="client_address_2" class="form-label"><?= $translator->translate('i.street_address_2'); ?></label>
+            <input type="text" class="form-control" name="client_address_2" id="client_address_2" placeholder="<?= $translator->translate('i.street_address_2'); ?>" value="<?= Html::encode($body['client_address_2'] ?? '') ?>">
         </div>
 
         <div class="mb-3 form-group">
@@ -120,22 +120,22 @@ if (!empty($errors)) {
         </div>
 
         <div class="mb-3 form-group">
-            <label for="client_city" class="form-label"><?= $s->trans('city'); ?></label>
-            <input type="text" class="form-control" name="client_city" id="client_city" placeholder="<?= $s->trans('city'); ?>" value="<?= Html::encode($body['client_city'] ?? '') ?>">
+            <label for="client_city" class="form-label"><?= $translator->translate('i.city'); ?></label>
+            <input type="text" class="form-control" name="client_city" id="client_city" placeholder="<?= $translator->translate('i.city'); ?>" value="<?= Html::encode($body['client_city'] ?? '') ?>">
         </div>
 
         <div class="mb-3 form-group">
-            <label for="client_state" class="form-label"><?= $s->trans('state'); ?></label>
-            <input type="text" class="form-control" name="client_state" id="client_state" placeholder="<?= $s->trans('state'); ?>" value="<?= Html::encode($body['client_state'] ?? '') ?>">
+            <label for="client_state" class="form-label"><?= $translator->translate('i.state'); ?></label>
+            <input type="text" class="form-control" name="client_state" id="client_state" placeholder="<?= $translator->translate('i.state'); ?>" value="<?= Html::encode($body['client_state'] ?? '') ?>">
         </div>
 
         <div class="mb-3 form-group">
-            <label for="client_zip" class="form-label"><?= $s->trans('zip'); ?></label>
-            <input type="text" class="form-control" name="client_zip" id="client_zip" placeholder="<?= $s->trans('zip'); ?>" value="<?= Html::encode($body['client_zip'] ?? '') ?>">
+            <label for="client_zip" class="form-label"><?= $translator->translate('i.zip'); ?></label>
+            <input type="text" class="form-control" name="client_zip" id="client_zip" placeholder="<?= $translator->translate('i.zip'); ?>" value="<?= Html::encode($body['client_zip'] ?? '') ?>">
         </div>
 
         <div class="mb-3 form-group">
-            <label for="client_country" class="form-label"><?= $s->trans('country'); ?></label>
+            <label for="client_country" class="form-label"><?= $translator->translate('i.country'); ?></label>
             <div class="controls">
                 <select name="client_country" id="client_country" class="form-control">
                     <?php foreach ($countries as $cldr => $country) { ?>
@@ -172,32 +172,32 @@ if (!empty($errors)) {
 <br>
 <div class="card">
     <div class="card-header">
-<?= $s->trans('contact_information'); ?>
+<?= $translator->translate('i.contact_information'); ?>
     </div>
     <?= Html::openTag('div', ['class' => 'row']); ?>
         <div class="mb-3 form-group">
-            <label for="client_phone" class="form-label"><?= $s->trans('phone'); ?></label>
-            <input type="text" class="form-control" name="client_phone" id="client_phone" placeholder="<?= $s->trans('phone'); ?>" value="<?= Html::encode($body['client_phone'] ?? '') ?>">
+            <label for="client_phone" class="form-label"><?= $translator->translate('i.phone'); ?></label>
+            <input type="text" class="form-control" name="client_phone" id="client_phone" placeholder="<?= $translator->translate('i.phone'); ?>" value="<?= Html::encode($body['client_phone'] ?? '') ?>">
         </div>
 
         <div class="mb-3 form-group">
-            <label for="client_fax" class="form-label"><?= $s->trans('fax'); ?></label>
-            <input type="text" class="form-control" name="client_fax" id="client_fax" placeholder="<?= $s->trans('fax'); ?>" value="<?= Html::encode($body['client_fax'] ?? '') ?>">
+            <label for="client_fax" class="form-label"><?= $translator->translate('i.fax'); ?></label>
+            <input type="text" class="form-control" name="client_fax" id="client_fax" placeholder="<?= $translator->translate('i.fax'); ?>" value="<?= Html::encode($body['client_fax'] ?? '') ?>">
         </div>
 
         <div class="mb-3 form-group">
-            <label for="client_mobile" class="form-label"><?= $s->trans('mobile'); ?></label>
-            <input type="text" class="form-control" name="client_mobile" id="client_mobile" placeholder="<?= $s->trans('mobile'); ?>" value="<?= Html::encode($body['client_mobile'] ?? '') ?>">
+            <label for="client_mobile" class="form-label"><?= $translator->translate('i.mobile'); ?></label>
+            <input type="text" class="form-control" name="client_mobile" id="client_mobile" placeholder="<?= $translator->translate('i.mobile'); ?>" value="<?= Html::encode($body['client_mobile'] ?? '') ?>">
         </div>
 
         <div class="mb-3 form-group">
-            <label for="client_email" class="form-label"><?= $s->trans('email'); ?><span style="color:red">*</span></label>
-            <input type="text" class="form-control" name="client_email" id="client_email" placeholder="<?= $s->trans('email'); ?>" value="<?= Html::encode($body['client_email'] ?? '') ?>" required>
+            <label for="client_email" class="form-label"><?= $translator->translate('i.email'); ?><span style="color:red">*</span></label>
+            <input type="text" class="form-control" name="client_email" id="client_email" placeholder="<?= $translator->translate('i.email'); ?>" value="<?= Html::encode($body['client_email'] ?? '') ?>" required>
         </div>
 
         <div class="mb-3 form-group">
-            <label for="client_web" class="form-label"><?= $s->trans('web'); ?></label>
-            <input type="text" class="form-control" name="client_web" id="client_web" placeholder="<?= $s->trans('web'); ?>" value="<?= Html::encode($body['client_web'] ?? '') ?>">
+            <label for="client_web" class="form-label"><?= $translator->translate('i.web'); ?></label>
+            <input type="text" class="form-control" name="client_web" id="client_web" placeholder="<?= $translator->translate('i.web'); ?>" value="<?= Html::encode($body['client_web'] ?? '') ?>">
         </div>
         <div class="mb-3 form-group">
             <div>
@@ -249,19 +249,19 @@ if (!empty($errors)) {
 <br>
 <div class="card">
     <div class="card-header">
-<?= $s->trans('personal_information'); ?>
+<?= $translator->translate('i.personal_information'); ?>
     </div>
     <?= Html::openTag('div', ['class' => 'row']); ?>
         <div class="mb-3 form-group">
-            <label for="client_gender"  class="form-label"><?= $s->trans('gender'); ?></label>
+            <label for="client_gender"  class="form-label"><?= $translator->translate('i.gender'); ?></label>
             <div class="controls">
                 <select name="client_gender" id="client_gender"
                         class="form-control" data-minimum-results-for-search="Infinity">
                             <?php
                             $genders = [
-                                $s->trans('gender_male'),
-                                $s->trans('gender_female'),
-                                $s->trans('gender_other'),
+                                $translator->translate('i.gender_male'),
+                                $translator->translate('i.gender_female'),
+                                $translator->translate('i.gender_other'),
                             ];
                             foreach ($genders as $key => $val) {
                                 ?>
@@ -278,7 +278,7 @@ if (!empty($errors)) {
             $InputDataBirthDate = new PureInputData(
                 name: 'client_birthdate',
                 value: null !== $bdate ? Html::encode($bdate instanceof \DateTimeImmutable ? $bdate->format($datehelper->style()) : $bdate) : null,
-                label: $s->trans('birthdate') . ' (' . $datehelper->display() . ')',
+                label: $translator->translate('i.birthdate') . ' (' . $datehelper->display() . ')',
                 hint: $translator->translate('invoice.client.birthdate.hint'),
                 id: 'client_birthdate'  
             );
@@ -300,18 +300,18 @@ if (!empty($errors)) {
             <input type="text" class="form-control" name="client_age" id="client_age" placeholder="<?= $translator->translate('invoice.client.age'); ?>" value="<?= Html::encode($body['client_age'] ?? '') ?>">
         </div>
         <div class="mb-3 form-group">
-            <label for="client_avs" class="form-label"><?= $s->trans('sumex_ssn'); ?></label>
-            <input type="text" class="form-control" name="client_avs" id="client_avs" placeholder="<?= $s->trans('sumex_ssn'); ?>" value="<?= Html::encode($body['client_avs'] ?? '') ?>">
+            <label for="client_avs" class="form-label"><?= $translator->translate('i.sumex_ssn'); ?></label>
+            <input type="text" class="form-control" name="client_avs" id="client_avs" placeholder="<?= $translator->translate('i.sumex_ssn'); ?>" value="<?= Html::encode($body['client_avs'] ?? '') ?>">
         </div>
 
         <div class="mb-3 form-group">            
-            <label for="client_insurednumber" class="form-label"><?= $s->trans('sumex_insurednumber'); ?></label>
-            <input type="text" class="form-control" name="client_insurednumber" id="client_insurednumber" placeholder="<?= $s->trans('sumex_insurednumber'); ?>" value="<?= Html::encode($body['client_insurednumber'] ?? '') ?>">
+            <label for="client_insurednumber" class="form-label"><?= $translator->translate('i.sumex_insurednumber'); ?></label>
+            <input type="text" class="form-control" name="client_insurednumber" id="client_insurednumber" placeholder="<?= $translator->translate('i.sumex_insurednumber'); ?>" value="<?= Html::encode($body['client_insurednumber'] ?? '') ?>">
         </div>
 
         <div class="mb-3 form-group">
-            <label for="client_veka" class="form-label"><?= $s->trans('sumex_veka'); ?></label>
-            <input type="text" class="form-control" name="client_veka" id="client_veka" placeholder="<?= $s->trans('sumex_veka'); ?>" value="<?= Html::encode($body['client_veka'] ?? '') ?>">
+            <label for="client_veka" class="form-label"><?= $translator->translate('i.sumex_veka'); ?></label>
+            <input type="text" class="form-control" name="client_veka" id="client_veka" placeholder="<?= $translator->translate('i.sumex_veka'); ?>" value="<?= Html::encode($body['client_veka'] ?? '') ?>">
         </div>
         <div class="mb-3 form-group">
             <?php foreach ($custom_fields as $custom_field): ?>
@@ -340,17 +340,17 @@ if (!empty($errors)) {
 
 <div class="card">
     <div class="card-header">
-<?= $s->trans('tax_information'); ?>
+<?= $translator->translate('i.tax_information'); ?>
     </div>
     <?= Html::openTag('div', ['class' => 'row']); ?>
         <div class="mb-3 form-group">
-            <label for="client_vat_id" class="form-label"><?= $s->trans('vat_id'); ?></label>
-            <input type="text" class="form-control" name="client_vat_id" id="client_vat_id" placeholder="<?= $s->trans('vat_id'); ?>" value="<?= Html::encode($body['client_vat_id'] ?? '') ?>">
+            <label for="client_vat_id" class="form-label"><?= $translator->translate('i.vat_id'); ?></label>
+            <input type="text" class="form-control" name="client_vat_id" id="client_vat_id" placeholder="<?= $translator->translate('i.vat_id'); ?>" value="<?= Html::encode($body['client_vat_id'] ?? '') ?>">
         </div>
 
         <div class="mb-3 form-group">
-            <label for="client_tax_code" class="form-label"><?= $s->trans('tax_code'); ?></label>
-            <input type="text" class="form-control" name="client_tax_code" id="client_tax_code" placeholder="<?= $s->trans('tax_code'); ?>" value="<?= Html::encode($body['client_tax_code'] ?? '') ?>">
+            <label for="client_tax_code" class="form-label"><?= $translator->translate('i.tax_code'); ?></label>
+            <input type="text" class="form-control" name="client_tax_code" id="client_tax_code" placeholder="<?= $translator->translate('i.tax_code'); ?>" value="<?= Html::encode($body['client_tax_code'] ?? '') ?>">
         </div>
         <div class="mb-3 form-group">
             <?php foreach ($custom_fields as $custom_field): ?>
@@ -379,7 +379,7 @@ if (!empty($errors)) {
                     <div class="col-xs-12 col-md-6">
                         <div class="panel panel-default">
                             <div class="panel-heading">
-                                <?= $s->trans('custom_fields'); ?>
+                                <?= $translator->translate('i.custom_fields'); ?>
                             </div>
                             <div class="panel-body">
                                 <?php foreach ($custom_fields as $custom_field): ?>

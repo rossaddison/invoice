@@ -1,5 +1,7 @@
 <?php
     declare(strict_types=1);
+    
+    use Yiisoft\Html\Html;
 ?>
 <?= Html::openTag('div', ['class' => 'row']); ?>
     <div class="col-xs-12 col-md-8 col-md-offset-2">
@@ -26,7 +28,7 @@
                             <?php $body['settings[google_translate_locale]'] = $s->get_setting('google_translate_locale');?>
                             <select name="settings[google_translate_locale]" id="settings[google_translate_locale]"
                                 class="form-control">
-                                <option value=""><?= $s->trans('none'); ?></option>
+                                <option value=""><?= $translator->translate('i.none'); ?></option>
                                 <?php foreach ($locales as $key => $value) { ?>
                                     <option value="<?= $value; ?>"
                                         <?php $s->check_select($body['settings[google_translate_locale]'], $value); ?>>

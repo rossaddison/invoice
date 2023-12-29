@@ -16,25 +16,25 @@ $assetManager->register(ReportAsset::class);
 $this->beginPage();
 ?>
 <!DOCTYPE html>
-<html lang="<?= $s->trans('cldr'); ?>">
+<html lang="<?= $translator->translate('i.cldr'); ?>">
 <head>
-    <title><?= Html::encode($s->trans('payment_history')); ?></title>
+    <title><?= Html::encode($translator->translate('i.payment_history')); ?></title>
 </head>
 <body>
 <?php $this->beginBody() ?> 
 <h3 class="report_title">
-    <?= Html::encode($s->trans('payment_history')); ?><br/>
+    <?= Html::encode($translator->translate('i.payment_history')); ?><br/>
     <small><?= $from_date . ' - ' . $to_date ?></small>
 </h3>
 
 <table>
     <tr>
-        <th><?= $s->trans('date'); ?></th>
-        <th><?= $s->trans('invoice'); ?></th>
-        <th><?= $s->trans('client'); ?></th>
-        <th><?= $s->trans('payment_method'); ?></th>
-        <th><?= $s->trans('note'); ?></th>
-        <th class="amount"><?= $s->trans('amount'); ?></th>
+        <th><?= $translator->translate('i.date'); ?></th>
+        <th><?= $translator->translate('i.invoice'); ?></th>
+        <th><?= $translator->translate('i.client'); ?></th>
+        <th><?= $translator->translate('i.payment_method'); ?></th>
+        <th><?= $translator->translate('i.note'); ?></th>
+        <th class="amount"><?= $translator->translate('i.amount'); ?></th>
     </tr>
     <?php
     $sum = 0.00;
@@ -56,7 +56,7 @@ $this->beginPage();
     if (!empty($results)) {
         ?>
         <tr>
-            <td colspan=5><?= $s->trans('total'); ?></td>
+            <td colspan=5><?= $translator->translate('i.total'); ?></td>
             <td style="width:15%;text-align:right;border-bottom: 0px solid black;"><?= $numberhelper->format_currency($sum); ?></td>
         </tr>
     <?php } ?>

@@ -4,14 +4,21 @@ declare(strict_types=1);
 
 namespace App\Invoice\Family;
 
+use App\Invoice\Entity\Family;
 use Yiisoft\FormModel\FormModel;
 use Yiisoft\Validator\Rule\Required;
 
 final class FamilyForm extends FormModel
 {
-    private string $family_name = '';
+    #[Required]
+    private ?string $family_name = '';
     
-    public function getFamily_name(): string
+    public function __construct(Family $family)
+    {
+        $this->family_name = $family->getFamily_name();
+    }        
+    
+    public function getFamily_name(): ?string
     {
         return $this->family_name;
     }
@@ -24,17 +31,5 @@ final class FamilyForm extends FormModel
     public function getFormName(): string
     {
         return '';
-    }
-    
-    /**
-     * @return Required[][]
-     *
-     * @psalm-return array{family_name: list{Required}}
-     */
-    public function getRules(): array
-    {
-        return [
-            'family_name' => [new Required()],
-        ];
     }
 }

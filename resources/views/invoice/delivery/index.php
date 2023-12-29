@@ -52,22 +52,22 @@ $toolbar = Div::tag();
     $columns = [
         new DataColumn(
             'id',
-            header:  $s->trans('id'),
+            header:  $translator->translate('i.id'),
             content: static fn(object $model) => Html::encode($model->getId())
         ),
         new DataColumn(
             'start_date',
-            header:  $s->trans('start_date'),
+            header:  $translator->translate('i.start_date'),
             content: static fn(object $model) => Html::encode(($model->getStart_date())->format($datehelper->style()))
         ),
         new DataColumn(
             'actual_delivery_date',
-            header:  $s->trans('actual_delivery_date'),
+            header:  $translator->translate('i.actual_delivery_date'),
             content: static fn(object $model) => Html::encode(($model->getActual_delivery_date())->format($datehelper->style()))
         ),
         new DataColumn(
             'end_date',
-            header:  $s->trans('end_date'),
+            header:  $translator->translate('i.end_date'),
             content: static fn(object $model) => Html::encode(($model->getEnd_date())->format($datehelper->style()))
         ),
         new DataColumn( 

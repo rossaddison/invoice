@@ -25,19 +25,19 @@ if (!empty($errors)) {
 <?= Html::openTag('h1'); ?><?= Html::encode($title) ?><?= Html::closeTag('h1'); ?>
 <?= Html::openTag('div', ['class' => 'row']); ?>
  <div class="mb3 form-group">
-<label for="include_item_tax" class="form-label" style="background:lightblue"><?= $s->trans('include_item_tax'); ?></label>
+<label for="include_item_tax" class="form-label" style="background:lightblue"><?= $translator->translate('i.include_item_tax'); ?></label>
    <?= Html::encode($body['include_item_tax'] ?? ''); ?>
  </div>
  <div class="mb3 form-group">
-<label for="amount" class="form-label" style="background:lightblue"><?= $s->trans('amount'); ?></label>
+<label for="amount" class="form-label" style="background:lightblue"><?= $translator->translate('i.amount'); ?></label>
    <?= Html::encode($body['amount'] ?? ''); ?>
  </div>
  <div class="mb3 form-group">
-   <label for="inv_id" class="form-label" style="background:lightblue"><?= $s->trans('inv'); ?></label>
+   <label for="inv_id" class="form-label" style="background:lightblue"><?= $translator->translate('i.inv'); ?></label>
    <?= $invtaxrate->getInv()->getId();?>
  </div>
  <div class="mb3 form-group">
-   <label for="tax_rate_id" class="form-label" style="background:lightblue"><?= $s->trans('tax_rate'); ?></label>
+   <label for="tax_rate_id" class="form-label" style="background:lightblue"><?= $translator->translate('i.tax_rate'); ?></label>
    <?= $invtaxrate->getTaxRate()->getId();?>
  </div>
 </div>

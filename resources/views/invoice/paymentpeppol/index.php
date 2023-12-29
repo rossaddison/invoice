@@ -29,30 +29,30 @@ echo $alert;
     $columns = [
         new DataColumn(
             'id',
-            header:  $s->trans('id'),
+            header:  $translator->translate('i.id'),
             content: static fn($model) => $model->getId()
         ),
         new DataColumn(
-            header:  $s->trans('view'),
+            header:  $translator->translate('i.view'),
             content: static function ($model) use ($urlGenerator): string {
               return Html::a(Html::tag('i', '', ['class' => 'fa fa-eye fa-margin']), $urlGenerator->generate('paymentpeppol/view', ['id' => $model->getId()]), [])->render();
             }
         ),
         new DataColumn(
-            header:  $s->trans('edit'),
+            header:  $translator->translate('i.edit'),
             content: static function ($model) use ($urlGenerator): string {
               return Html::a(Html::tag('i', '', ['class' => 'fa fa-pencil fa-margin']), $urlGenerator->generate('paymentpeppol/edit', ['id' => $model->getId()]), [])->render();
             }
         ),
         new DataColumn(
-            header:  $s->trans('delete'),
+            header:  $translator->translate('i.delete'),
             content: static function ($model) use ($s, $urlGenerator): string {
             return Html::a(Html::tag('button',
                 Html::tag('i', '', ['class' => 'fa fa-trash fa-margin']),
                 [
                   'type' => 'submit',
                   'class' => 'dropdown-button',
-                  'onclick' => "return confirm(" . "'" . $s->trans('delete_record_warning') . "');"
+                  'onclick' => "return confirm(" . "'" . $translator->translate('i.delete_record_warning') . "');"
                 ]
               ),
               $urlGenerator->generate('paymentpeppol/delete', ['id' => $model->getId()]), []

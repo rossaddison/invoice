@@ -14,13 +14,13 @@ use Yiisoft\View\WebView;
  * @var \Yiisoft\Translator\TranslatorInterface $translator
  */
  if ($invEdit && $invView) { 
-    $this->setTitle($s->trans('add_files'));
+    $this->setTitle($translator->translate('i.add_files'));
  }
  ?>
 
 <div class="panel panel-default no-margin">
     <div class="panel-heading">
-        <i tooltip="data-bs-toggle" title="<?= $s->isDebugMode(5);?>"><?= $s->trans('attachments'); ?></i>
+        <i tooltip="data-bs-toggle" title="<?= $s->isDebugMode(5);?>"><?= $translator->translate('i.attachments'); ?></i>
     </div>
     <div class="panel-body clearfix">
         <div class="container">

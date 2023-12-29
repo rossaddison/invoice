@@ -46,7 +46,7 @@
                         <select name="settings[currency_code_from]" disabled
                             id="settings[currency_code_from]"
                             class="input-sm form-control">
-                            <option value="0"><?= $s->trans('none'); ?></option>
+                            <option value="0"><?= $translator->translate('i.none'); ?></option>
                             <?php foreach ($gateway_currency_codes as $val => $key) { ?>
                                 <option value="<?= $val; ?>"
                                     <?php
@@ -65,7 +65,7 @@
                         <select name="settings[currency_code_to]"
                             id="settings[currency_code_to]"
                             class="input-sm form-control">
-                            <option value="0"><?= $s->trans('none'); ?></option>
+                            <option value="0"><?= $translator->translate('i.none'); ?></option>
                             <?php foreach ($gateway_currency_codes as $val => $key) { ?>
                                 <option value="<?= $val; ?>"
                                     <?php
@@ -141,13 +141,13 @@
                         <?php $body['settings[peppol_xml_stream]'] = $s->get_setting('peppol_xml_stream'); ?>
                         <select name="settings[peppol_xml_stream]" id="settings[peppol_xml_stream]" class="form-control">
                             <option value="0">
-                                <?= $s->trans('no'); ?>
+                                <?= $translator->translate('i.no'); ?>
                             </option>
                             <option value="1" 
                                 <?php
                                     $s->check_select($body['settings[peppol_xml_stream]'], '1'); 
                                 ?>>
-                                <?= $s->trans('yes'); ?>
+                                <?= $translator->translate('i.yes'); ?>
                             </option>
                         </select>
                     </div>

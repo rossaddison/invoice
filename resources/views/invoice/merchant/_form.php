@@ -26,7 +26,7 @@ if (!empty($errors)) {
 <form id="MerchantForm" method="POST" action="<?= $urlGenerator->generate(...$action) ?>" enctype="multipart/form-data">
 <input type="hidden" name="_csrf" value="<?= $csrf ?>">
 <div id="headerbar">
-<h1 class="headerbar-title"><?= $s->trans('merchants_form'); ?></h1>
+<h1 class="headerbar-title"><?= $translator->translate('i.merchants_form'); ?></h1>
 <?php $response = $head->renderPartial('invoice/layout/header_buttons',['s'=>$s, 'hide_submit_button'=>false ,'hide_cancel_button'=>false]); ?>        
 <?php echo (string)$response->getBody(); ?><div id="content">
 <?= Html::openTag('div', ['class' => 'row']); ?>
@@ -42,7 +42,7 @@ if (!empty($errors)) {
     </select>
  </div>
  <div class="mb3 form-group">
-   <label for="successful" class="form-label"><?= $s->trans('successful'); ?></label>
+   <label for="successful" class="form-label"><?= $translator->translate('i.successful'); ?></label>
    <input type="hidden" name="successful" value="0">
    <input type="checkbox" name="successful" id="successful" value="1" <?php $s->check_select(Html::encode($body['successful'] ??'' ), 1, '==', true) ?>>
  </div>
@@ -54,7 +54,7 @@ if ($date && $date !== "0000-00-00") {
     $date = null; 
 } 
    ?>  
-<label form-label for="date"><?= $s->trans('date') ." (". $datehelper->display().") "; ?></label><div class="mb3 input-group"> 
+<label form-label for="date"><?= $translator->translate('i.date') ." (". $datehelper->display().") "; ?></label><div class="mb3 input-group"> 
 <input type="text" name="date" id="date" placeholder="<?= $datehelper->display(); ?>" 
        class="form-control data-datepicker" 
        value="<?php if ($date <> null) {echo Html::encode($date);} ?>"> 

@@ -26,7 +26,7 @@ $datehelper = new DateHelper($s);
 <?= Html::openTag('h1'); ?><?= Html::encode($title) ?><?= Html::closeTag('h1'); ?>
 <?= Html::openTag('div', ['class' => 'row']); ?>
 <div class="mb3 form-group">
-  <label for="date_created" class="form-label" style="background:lightblue"><?= $s->trans('date_created'); ?>  </label>
+  <label for="date_created" class="form-label" style="background:lightblue"><?= $translator->translate('i.date_created'); ?>  </label>
 <?php $date = $body['date_created']; if ($date && $date != "0000-00-00") { $date = $datehelper->date_from_mysql($date);} else {  $date = null;}?><?= Html::encode($date); ?></div>
  <div class="mb3 form-group">
 <label for="date_modified" class="form-label" style="background:lightblue">Date Modified</label>
@@ -52,14 +52,14 @@ $datehelper = new DateHelper($s);
    <?= Html::encode($body['url_key'] ?? ''); ?>
  </div>
  <div class="mb3 form-group">
-<label for="password" class="form-label" style="background:lightblue"><?= $s->trans('password'); ?></label>
+<label for="password" class="form-label" style="background:lightblue"><?= $translator->translate('i.password'); ?></label>
    <?= Html::encode($body['password'] ?? ''); ?>
  </div>
-<label for="payment_method" class="form-label" style="background:lightblue"><?= $s->trans('payment_method'); ?></label>
+<label for="payment_method" class="form-label" style="background:lightblue"><?= $translator->translate('i.payment_method'); ?></label>
    <?= Html::encode($body['payment_method'] ?? ''); ?>
  </div>
  <div class="mb3 form-group">
-<label for="terms" class="form-label" style="background:lightblue"><?= $s->trans('terms'); ?></label>
+<label for="terms" class="form-label" style="background:lightblue"><?= $translator->translate('i.terms'); ?></label>
    <?= Html::encode($body['terms'] ?? ''); ?>
  </div>
  <div class="mb3 form-group">
@@ -67,7 +67,7 @@ $datehelper = new DateHelper($s);
   <?= Html::encode($body['inv_id'] ?? ''); ?>
  </div>
  <div class="mb3 form-group">
-   <label for="client_id" class="form-label" style="background:lightblue"><?= $s->trans('client'); ?></label>
+   <label for="client_id" class="form-label" style="background:lightblue"><?= $translator->translate('i.client'); ?></label>
    <?= $quote->getClient()->client_name; ?>
  </div>
  <div class="mb3 form-group">

@@ -65,10 +65,10 @@ class Delivery {
     $this->delivery_location_id = $delivery_location_id;
     $this->delivery_party_id = $delivery_party_id;
     $this->actual_delivery_date = new \DateTimeImmutable();
-    $this->date_created = new \DateTimeImmutable();
-    $this->date_modified = new \DateTimeImmutable();
-    $this->start_date = new \DateTimeImmutable();
-    $this->end_date = new \DateTimeImmutable();
+    $this->date_created = new \DateTimeImmutable('now');
+    $this->date_modified = new \DateTimeImmutable('now');
+    $this->start_date = new \DateTimeImmutable(\Date('Y-m-01'));
+    $this->end_date = new \DateTimeImmutable(\Date('Y-m-t'));
   }
 
   public function getId(): int|null {
@@ -103,9 +103,17 @@ class Delivery {
     /** @var DateTimeImmutable $this->start_date */
     return $this->start_date;
   }
-
-  public function setStart_date(DateTimeImmutable $start_date): void {
-    $this->start_date = $start_date;
+  
+  /**
+   * @see DateTimeImmutable::createFromFormat can return false
+   * @param DateTimeImmutable|false $start_date
+   * @return void
+   */
+  public function setStart_date(DateTimeImmutable|false $start_date): void {
+    $this->start_date = ($start_date instanceof DateTimeImmutable 
+                      ? $start_date
+                      // set the start date to the beginning of the current date by default
+                      : new \DateTimeImmutable(\Date('Y-m-01')));
   }
 
   public function getActual_delivery_date(): ?DateTimeImmutable {
@@ -113,8 +121,10 @@ class Delivery {
     return $this->actual_delivery_date;
   }
 
-  public function setActual_delivery_date(?DateTimeImmutable $actual_delivery_date): void {
-    $this->actual_delivery_date = $actual_delivery_date;
+  public function setActual_delivery_date(DateTimeImmutable|false|null $actual_delivery_date): void {
+    $this->actual_delivery_date = ($actual_delivery_date instanceof DateTimeImmutable 
+                                ? $actual_delivery_date 
+                                : null);
   }
 
   public function getEnd_date(): DateTimeImmutable {
@@ -122,24 +132,31 @@ class Delivery {
     return $this->end_date;
   }
 
-  public function setEnd_date(DateTimeImmutable $end_date): void {
-    $this->end_date = $end_date;
+  public function setEnd_date(DateTimeImmutable|false $end_date): void {
+    $this->end_date = ($end_date instanceof DateTimeImmutable 
+                      ? $end_date
+                      // set the end date to the end of the current date
+                      : new \DateTimeImmutable(\Date('Y-m-t')));
   }
 
   public function getDate_created(): DateTimeImmutable {
     return $this->date_created;
   }
 
-  public function setDate_created(DateTimeImmutable $date_created): void {
-    $this->date_created = $date_created;
+  public function setDate_created(DateTimeImmutable|false $date_created): void {
+    $this->date_created = ($date_created instanceof DateTimeImmutable 
+                      ? $date_created
+                      : new \DateTimeImmutable('now'));
   }
 
   public function getDate_modified(): DateTimeImmutable {
     return $this->date_modified;
   }
 
-  public function setDate_modified(DateTimeImmutable $date_modified): void {
-    $this->date_modified = $date_modified;
+  public function setDate_modified(DateTimeImmutable|false $date_modified): void {
+    $this->date_modified = ($date_modified instanceof DateTimeImmutable 
+                      ? $date_modified
+                      : new \DateTimeImmutable('now'));
   }
 
   public function getDelivery_location_id(): string {

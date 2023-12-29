@@ -22,14 +22,14 @@ if (!empty($errors)) {
 <form id="UploadForm" method="POST" action="<?= $urlGenerator->generate(...$action) ?>" enctype="multipart/form-data">
     <input type="hidden" name="_csrf" value="<?= $csrf ?>">
     <div id="headerbar">
-        <h1 class="headerbar-title"><?= $s->trans('uploads_form'); ?></h1>
+        <h1 class="headerbar-title"><?= $translator->translate('i.uploads_form'); ?></h1>
         <?php $response = $head->renderPartial('invoice/layout/header_buttons', ['s' => $s, 'hide_submit_button' => false, 'hide_cancel_button' => false]); ?>
         <?php echo (string) $response->getBody(); ?><div id="content">
             <?= Html::openTag('div', ['class' => 'row']); ?>
                 <div class="mb3 form-group">
                     <label for="client_id">Client</label>
                     <select name="client_id" id="client_id" readonly class="form-control">
-                        <option value=""><?= $s->trans('client'); ?></option>
+                        <option value=""><?= $translator->translate('i.client'); ?></option>
                         <?php foreach ($clients as $client) { ?>
                             <option value="<?= $client->getClient_id(); ?>"
                             <?php $s->check_select(Html::encode($body['client_id'] ?? ''), $client->getClient_id()) ?>

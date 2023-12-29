@@ -34,7 +34,7 @@ if (!empty($errors)) {
 <?php echo '<input type="hidden" name="_csrf" value="<?= $csrf ?>">'; ?>
 
 <?php echo '<div id="headerbar">'."\n"; ?>
-<?php echo '<h1 class="headerbar-title"><?= $s->trans('."'".$generator->getSmall_plural_name().'_form'."'); ?>".'</h1>'."\n"; ?>
+<?php echo '<h1 class="headerbar-title"><?= $translator->translate('i.."'".$generator->getSmall_plural_name().'_form'."'); ?>".'</h1>'."\n"; ?>
 <?php echo '<?php $response = $head->renderPartial('."'invoice/layout/header_buttons',['s'=>".'$s, '."'hide_submit_button'=>false ,'hide_cancel_button'=>false]); ?>"; ?>        
 <?php echo '<?php echo (string)$response->getBody(); ?>'; ?>
 <?php echo '<div id="content">'."\n";
@@ -58,7 +58,7 @@ if (!empty($errors)) {
         if (substr($column, -3) <> '_id') { 
          if (($column->getType() === 'bool')) {  
           echo ' <div class="mb3 form-group">'."\n";
-          echo '   <label for="'.$column->getName().'" class="form-label"><?= $s->trans('."'".$column->getName()."'". '); ?>';
+          echo '   <label for="'.$column->getName().'" class="form-label"><?= $translator->translate('i.."'".$column->getName()."'". '); ?>';
           echo '</label>'."\n";
           echo '   <input type="hidden" name="'.$column->getName().'" value="0">'."\n";
           echo '   <input type="checkbox" name="'.$column->getName().'" id="'.$column->getName().'" value="1"';
@@ -78,7 +78,7 @@ if (!empty($errors)) {
             echo '    $date = null; '."\n";
             echo '} '."\n";
             echo '   ?>  '."\n";            
-            echo '<label form-label for='.'"'.$column->getName().'"'.'><?= $s->trans('."'".$column->getName()."'".') ." (".  $datehelper->display().") "; ?></label>';
+            echo '<label form-label for='.'"'.$column->getName().'"'.'><?= $translator->translate('i.."'".$column->getName()."'".') ." (".  $datehelper->display().") "; ?></label>';
             echo '<div class="mb3 input-group"> '."\n";
             echo '<input type="text" name="'.$column->getName().'" id="'.$column->getName().'" placeholder="<?= $datehelper->display(); ?>" '."\n";
             echo '       class="form-control data-datepicker" '."\n";
@@ -92,7 +92,7 @@ if (!empty($errors)) {
          
          if (($column->getType() === 'float') && ($column->getAbstractType() === 'decimal' )) {
             echo '<div class="row mb3 form-group">'."\n";
-            echo '  <label for="'.$column->getName().'"><?= $s->trans('."'".$column->getName()."'".'); ?></label>'."\n";
+            echo '  <label for="'.$column->getName().'"><?= $translator->translate('i.."'".$column->getName()."'".'); ?></label>'."\n";
             echo '      <div class="input-group has-feedback">'."\n";
             echo '          <input type="text" name="'.$column->getName().'" id="'.$column->getName().'" class="form-control"'."\n";
             echo '              value="<?= $s->format_amount($body['."'".$column->getName()."'"."] ?? ''); ?>".'">'."\n";
@@ -103,7 +103,7 @@ if (!empty($errors)) {
           
           if (($column->getType() === 'string') && ($column->getAbstractType() <> 'date' )) {
             echo ' <div class="row mb3 form-group">'."\n";
-            echo '   <label for="'.$column->getName().'"><?= $s->trans('."'".$column->getName()."'". '); ?>';
+            echo '   <label for="'.$column->getName().'"><?= $translator->translate('i.."'".$column->getName()."'". '); ?>';
             echo '</label>'."\n";
             echo '   <input type="text" name="'.$column->getName().'" id="'.$column->getName().'" class="form-control"'."\n";
             echo ' value="<?= Html::encode($body['."'".$column->getName()."'".'] ?? '. " ''". '); ?>'.'"'.'>'."\n";
@@ -112,7 +112,7 @@ if (!empty($errors)) {
           
           if (($column->getType() === 'int') && ($column->getAbstractType() <> 'date' ) && ($column->getAbstractType() <> 'primary' )) {
             echo ' <div class="row mb3 form-group">'."\n";
-            echo '   <label for="'.$column->getName().'"><?= $s->trans('."'".$column->getName()."'". '); ?>';
+            echo '   <label for="'.$column->getName().'"><?= $translator->translate('i.."'".$column->getName()."'". '); ?>';
             echo '</label>'."\n";
             echo '   <input type="text" name="'.$column->getName().'" id="'.$column->getName().'" class="form-control"'."\n";
             echo ' value="<?= Html::encode($body['."'".$column->getName()."'".'] ?? '. " ''". '); ?>'.'"'.'>'."\n";

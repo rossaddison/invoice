@@ -16,11 +16,11 @@ declare(strict_types=1);
             <div class="btn-group">
                 <button id="task-modal-submit" class="select-items-confirm-task btn btn-success" type="button">
                     <i class="fa fa-check"></i>
-                    <?= $s->trans('submit'); ?>
+                    <?= $translator->translate('i.submit'); ?>
                 </button>
                 <button class="btn btn-danger" type="button" data-dismiss="modal">
                     <i class="fa fa-times"></i>
-                    <?= $s->trans('cancel'); ?>
+                    <?= $translator->translate('i.cancel'); ?>
                 </button>
             </div>
         </div>

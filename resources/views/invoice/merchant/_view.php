@@ -21,7 +21,7 @@ use Yiisoft\Html\Html;
    <?= Html::encode($body['successful'] ?? ''); ?>
  </div>
  <div class="mb3 form-group">
-   <label for="date" class="form-label" style="background:lightblue"><?= $s->trans('date'); ?></label>
+   <label for="date" class="form-label" style="background:lightblue"><?= $translator->translate('i.date'); ?></label>
    <?php
         $date = $body['date'];
         if ($date && $date != "0000-00-00") {

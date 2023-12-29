@@ -12,7 +12,7 @@ use Yiisoft\Html\Html;
 
 <?= Html::openTag('div', ['class' => 'row']); ?>
     <div class="row mb-3 form-group">
-        <label for="product_sku" class="text-bg col-sm-8 col-form-label" style="background:lightblue"><?= $s->trans('product_sku'); ?></label>
+        <label for="product_sku" class="text-bg col-sm-8 col-form-label" style="background:lightblue"><?= $translator->translate('i.product_sku'); ?></label>
         <?= str_repeat("&nbsp;", 2).Html::encode($body['product_sku'] ?? '') ?>
     </div>
     <div class="row mb-3 form-group">
@@ -36,17 +36,17 @@ use Yiisoft\Html\Html;
         <?= str_repeat("&nbsp;", 2).Html::encode($body['product_country_of_origin_code'] ?? '') ?>
     </div>  
     <div class="row mb-3 form-group">
-        <label for="product_name" class="text-bg col-sm-8 col-form-label" style="background:lightblue"><?= $s->trans('product_name'); ?></label>
+        <label for="product_name" class="text-bg col-sm-8 col-form-label" style="background:lightblue"><?= $translator->translate('i.product_name'); ?></label>
         <?= str_repeat("&nbsp;", 2).Html::encode($body['product_name'] ?? '') ?>
     </div>
     <div class="row mb-3 form-group">
-        <label for="product_description" class="text-bg col-sm-8 col-form-label" style="background:lightblue"><?php echo $s->trans('product_description'); ?></label>
+        <label for="product_description" class="text-bg col-sm-8 col-form-label" style="background:lightblue"><?php echo $translator->translate('i.product_description'); ?></label>
         <?= str_repeat("&nbsp;", 2).Html::encode($body['product_description'] ?? '') ?>         
     </div>  
   </div>
   <?= Html::openTag('div', ['class' => 'row']); ?>
     <div class="row mb-3 form-group">
-        <label for="product_price" class="text-bg col-sm-8 col-form-label" style="background:lightblue"><?= $s->trans('product_price'); ?></label>
+        <label for="product_price" class="text-bg col-sm-8 col-form-label" style="background:lightblue"><?= $translator->translate('i.product_price'); ?></label>
         <?= str_repeat("&nbsp;", 2).Html::encode($body['product_price'] ?? '') ?>
     </div>
     <div class="row mb-3 form-group">
@@ -54,11 +54,11 @@ use Yiisoft\Html\Html;
         <?= str_repeat("&nbsp;", 2).Html::encode($body['product_price_base_quantity'] ?? '') ?>
     </div>      
     <div class="row mb-3 form-group">
-        <label for="purchase_price" class="text-bg col-sm-8 col-form-label" style="background:lightblue"><?= $s->trans('purchase_price'); ?></label>
+        <label for="purchase_price" class="text-bg col-sm-8 col-form-label" style="background:lightblue"><?= $translator->translate('i.purchase_price'); ?></label>
         <?= str_repeat("&nbsp;", 2).Html::encode($body['purchase_price'] ?? '') ?>
     </div>    
     <div class="row mb-3 form-group">
-        <label for="provider_name" class="text-bg col-sm-8 col-form-label" style="background:lightblue"><?= $s->trans('provider_name'); ?></label>
+        <label for="provider_name" class="text-bg col-sm-8 col-form-label" style="background:lightblue"><?= $translator->translate('i.provider_name'); ?></label>
         <?= str_repeat("&nbsp;", 2).Html::encode($body['provider_name'] ?? '') ?>
     </div>
     <div class="row mb-3 form-group">
@@ -70,11 +70,11 @@ use Yiisoft\Html\Html;
         <?= str_repeat("&nbsp;", 2).Html::encode($body['product_additional_item_property_value'] ?? '') ?>
     </div>  
     <div class="row mb-3 form-group">
-        <label for="tax_rate_id" class="text-bg col-sm-8 col-form-label" style="background:lightblue"><?= $s->trans('tax_rate'); ?></label>
+        <label for="tax_rate_id" class="text-bg col-sm-8 col-form-label" style="background:lightblue"><?= $translator->translate('i.tax_rate'); ?></label>
         <?= $product->getTaxrate()->getTax_rate_name();?>
     </div>    
     <div class="row mb-3 form-group">
-        <label for="unit_id" class="text-bg col-sm-8 col-form-label" style="background:lightblue"><?= $s->trans('unit'); ?></label>
+        <label for="unit_id" class="text-bg col-sm-8 col-form-label" style="background:lightblue"><?= $translator->translate('i.unit'); ?></label>
         <?= $product->getUnit()->getUnit_name();?>
     </div>
     <div class="row mb-3 form-group">
@@ -88,11 +88,11 @@ use Yiisoft\Html\Html;
         ?>
     </div>  
     <div class="row mb-3 form-group">
-        <label for="family_id" class="text-bg col-sm-8 col-form-label" style="background:lightblue"><?= $s->trans('family'); ?></label>
+        <label for="family_id" class="text-bg col-sm-8 col-form-label" style="background:lightblue"><?= $translator->translate('i.family'); ?></label>
         <?= $product->getFamily()->getFamily_name();?>
     </div>        
     <div class="row mb-3 form-group">
-        <label for="product_tariff" class="text-bg col-sm-8 col-form-label" style="background:lightblue"><?= $s->trans('product_tariff'); ?></label>
+        <label for="product_tariff" class="text-bg col-sm-8 col-form-label" style="background:lightblue"><?= $translator->translate('i.product_tariff'); ?></label>
         <?= str_repeat("&nbsp;", 2).Html::encode($body['product_tariff'] ?? '') ?>            
     </div>   
   </div>

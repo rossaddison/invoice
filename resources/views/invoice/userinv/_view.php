@@ -2,134 +2,327 @@
 
 declare(strict_types=1); 
 
+use App\Widget\Button;
+use Yiisoft\Arrays\ArrayHelper;
+use Yiisoft\FormModel\Field;
 use Yiisoft\Html\Html;
-use Yiisoft\Yii\Bootstrap5\Alert;
-use App\Invoice\Helpers\DateHelper;
+use Yiisoft\Html\Tag\Form;
 
 /**
  * @var \Yiisoft\View\View $this
  * @var \Yiisoft\Router\UrlGeneratorInterface $urlGenerator
- * @var array $body
  * @var string $csrf
  * @var string $action
  * @var string $title
  */
 
-if (!empty($errors)) {
-    foreach ($errors as $field => $error) {
-        echo Alert::widget()->options(['class' => 'alert-danger'])->body(Html::encode($field . ':' . $error));
-    }
-}
-
 ?>
-<?= Html::openTag('h1'); ?><?= Html::encode($title) ?><?= Html::closeTag('h1'); ?>
-<?= Html::openTag('div', ['class' => 'row']); ?>
- <div class="mb3 form-group">
-<label for="type" class="form-label" style="background:lightblue"><?= $s->trans('type'); ?></label>
-   <?= Html::encode($body['type'] ?? ''); ?>
- </div>
- <div class="mb3 form-group">
-<label for="active" class="form-label" style="background:lightblue"><?= $s->trans('active'); ?></label>
-   <?= Html::encode($body['active'] ?? ''); ?>
- </div>
- <div class="mb3 form-group">
-<label for="date_created" class="form-label" style="background:lightblue"><?= $s->trans('date_created'); ?></label>
-   <?= Html::encode($body['date_created'] ?? ''); ?>
- </div>
- <div class="mb3 form-group">
-<label for="date_modified" class="form-label" style="background:lightblue"><?= $s->trans('date_modified'); ?></label>
-   <?= Html::encode($body['date_modified'] ?? ''); ?>
- </div>
- <div class="mb3 form-group">
-<label for="language" class="form-label" style="background:lightblue"><?= $s->trans('language'); ?></label>
-   <?= Html::encode($body['language'] ?? ''); ?>
- </div>
- <div class="mb3 form-group">
-<label for="name" class="form-label" style="background:lightblue"><?= $s->trans('name'); ?></label>
-   <?= Html::encode($body['name'] ?? ''); ?>
- </div>
- <div class="mb3 form-group">
-<label for="company" class="form-label" style="background:lightblue"><?= $s->trans('company'); ?></label>
-   <?= Html::encode($body['company'] ?? ''); ?>
- </div>
- <div class="mb3 form-group">
-<label for="address_1" class="form-label" style="background:lightblue"><?= $s->trans('address_1'); ?></label>
-   <?= Html::encode($body['address_1'] ?? ''); ?>
- </div>
- <div class="mb3 form-group">
-<label for="address_2" class="form-label" style="background:lightblue"><?= $s->trans('address_2'); ?></label>
-   <?= Html::encode($body['address_2'] ?? ''); ?>
- </div>
- <div class="mb3 form-group">
-<label for="city" class="form-label" style="background:lightblue"><?= $s->trans('city'); ?></label>
-   <?= Html::encode($body['city'] ?? ''); ?>
- </div>
- <div class="mb3 form-group">
-<label for="state" class="form-label" style="background:lightblue"><?= $s->trans('state'); ?></label>
-   <?= Html::encode($body['state'] ?? ''); ?>
- </div>
- <div class="mb3 form-group">
-<label for="zip" class="form-label" style="background:lightblue"><?= $s->trans('zip'); ?></label>
-   <?= Html::encode($body['zip'] ?? ''); ?>
- </div>
- <div class="mb3 form-group">
-<label for="country" class="form-label" style="background:lightblue"><?= $s->trans('country'); ?></label>
-   <?= Html::encode($body['country'] ?? ''); ?>
- </div>
- <div class="mb3 form-group">
-<label for="phone" class="form-label" style="background:lightblue"><?= $s->trans('phone'); ?></label>
-   <?= Html::encode($body['phone'] ?? ''); ?>
- </div>
- <div class="mb3 form-group">
-<label for="fax" class="form-label" style="background:lightblue"><?= $s->trans('fax'); ?></label>
-   <?= Html::encode($body['fax'] ?? ''); ?>
- </div>
- <div class="mb3 form-group">
-<label for="mobile" class="form-label" style="background:lightblue"><?= $s->trans('mobile'); ?></label>
-   <?= Html::encode($body['mobile'] ?? ''); ?>
- </div>
- <div class="mb3 form-group">
-<label for="email" class="form-label" style="background:lightblue"><?= $s->trans('email'); ?></label>
-   <?= Html::encode($body['email'] ?? ''); ?>
- </div>
- <div class="mb3 form-group">
-<label for="password" class="form-label" style="background:lightblue"><?= $s->trans('password'); ?></label>
-   <?= Html::encode($body['password'] ?? ''); ?>
- </div>
- <div class="mb3 form-group">
-<label for="web" class="form-label" style="background:lightblue"><?= $s->trans('web'); ?></label>
-   <?= Html::encode($body['web'] ?? ''); ?>
- </div>
- <div class="mb3 form-group">
-<label for="tax_code" class="form-label" style="background:lightblue"><?= $s->trans('tax_code'); ?></label>
-   <?= Html::encode($body['tax_code'] ?? ''); ?>
- </div>
- <div class="mb3 form-group">
-<label for="all_clients" class="form-label" style="background:lightblue"><?= $s->trans('all_clients'); ?></label>
-   <?= Html::encode($body['all_clients'] ?? ''); ?>
- </div>
- <div class="mb3 form-group">
-<label for="salt" class="form-label" style="background:lightblue"><?= $s->trans('salt'); ?></label>
-   <?= Html::encode($body['salt'] ?? ''); ?>
- </div>
- <div class="mb3 form-group">
-<label for="passwordreset_token" class="form-label" style="background:lightblue"><?= $s->trans('passwordreset_token'); ?></label>
-   <?= Html::encode($body['passwordreset_token'] ?? ''); ?>
- </div>
- <div class="mb3 form-group">
-<label for="subscribernumber" class="form-label" style="background:lightblue"><?= $s->trans('subscribernumber'); ?></label>
-   <?= Html::encode($body['subscribernumber'] ?? ''); ?>
- </div>
- <div class="mb3 form-group">
-<label for="iban" class="form-label" style="background:lightblue"><?= $s->trans('iban'); ?></label>
-   <?= Html::encode($body['iban'] ?? ''); ?>
- </div>
- <div class="mb3 form-group">
-<label for="gln" class="form-label" style="background:lightblue"><?= $s->trans('gln'); ?></label>
-   <?= Html::encode($body['gln'] ?? ''); ?>
- </div>
- <div class="mb3 form-group">
-<label for="rcc" class="form-label" style="background:lightblue"><?= $s->trans('rcc'); ?></label>
-   <?= Html::encode($body['rcc'] ?? ''); ?>
- </div>
-</div>
+
+<?= Html::openTag('div',['class'=>'container py-5 h-100']); ?>
+<?= Html::openTag('div',['class'=>'row d-flex justify-content-center align-items-center h-100']); ?>
+<?= Html::openTag('div',['class'=>'col-12 col-md-8 col-lg-6 col-xl-8']); ?>
+<?= Html::openTag('div',['class'=>'card border border-dark shadow-2-strong rounded-3']); ?>
+<?= Html::openTag('div',['class'=>'card-header']); ?>
+
+<?= Form::tag()
+    ->post($urlGenerator->generate(...$action))
+    ->enctypeMultipartFormData()
+    ->csrf($csrf)
+    ->id('UserInvForm')
+    ->open() ?>
+
+<?= Html::openTag('div', ['class' => 'headerbar']); ?>
+        <?= Html::openTag('h1', ['class' => 'headerbar-title']); ?>
+            <?= Html::encode($title) ?>
+        <?= Html::closeTag('h1'); ?>
+        <?= Button::back($translator); ?>
+<?= Html::closeTag('div'); ?>
+<?= Html::openTag('div', ['id' => 'content']); ?>
+    <?= Html::openTag('div', ['class' => 'row']); ?>        
+        <?= Html::openTag('div', ['class' => 'mb-3 form-group no-margin']); ?>
+            <?php 
+                $optionsDataUser = [];
+                foreach ($users as $user) {
+                    $optionsDataUser[$user->getId()] = ucfirst($user->getLogin());
+                }
+                echo Field::select($form, 'user_id')
+                ->label($translator->translate('i.users'))    
+                ->addInputAttributes([
+                    'class' => 'form-control',
+                    'id' => 'user_id',
+                    'readonly' => 'readonly'
+                ])
+                ->optionsData($optionsDataUser)
+                ->value(Html::encode($form->getUser_id() ?? ''))
+            ?>
+        <?= Html::closeTag('div'); ?>
+        <?= Html::openTag('div', ['class' => 'mb-3 form-group']); ?>
+            <?php 
+              $types = [
+                  0 => $translator->translate('i.administrator'),
+                  1 => $translator->translate('i.guest_read_only'),
+              ]  
+            ?>
+            <?php 
+                $optionsDataType = [];
+                foreach ($types as $key => $value) {
+                    $optionsDataType[$key] = $value;
+                }
+                echo Field::select($form, 'type')
+                ->label($translator->translate('i.type'))    
+                ->addInputAttributes([
+                    'class' => 'form-control',
+                    'id' => 'type',
+                    'readonly' => 'readonly'
+                ])
+                ->optionsData($optionsDataType)
+                ->value(Html::encode($form->getType()))        
+            ?>
+        <?= Html::closeTag('div'); ?>
+        <?= Html::openTag('div', ['class' => 'mb-3 form-group']); ?>
+            <?= Html::openTag('div', ['class' => 'p-2']); ?> 
+                <?= Field::checkbox($form, 'active')
+                    ->inputLabelAttributes(['class' => 'form-check-label'])    
+                    ->enclosedByLabel(true)
+                    ->inputClass('form-check-input')
+                    ->ariaDescribedBy($translator->translate('i.active'))
+                ?>
+            <?= Html::closeTag('div'); ?>
+        <?= Html::closeTag('div'); ?><?= Html::closeTag('div'); ?>
+        <?= Html::openTag('div', ['class' => 'mb-3 form-group']); ?>
+            <?= Field::checkbox($form, 'all_clients')
+                    ->inputLabelAttributes(['class' => 'form-check-label'])    
+                    ->enclosedByLabel(true)
+                    ->inputClass('form-check-input')
+                    ->ariaDescribedBy($translator->translate('i.user_all_clients'));
+            ?>
+        <?= Html::closeTag('div'); ?>
+        <?= Html::openTag('div', ['class' => 'mb-3 form-group no-margin']); ?>
+            <?php 
+                $optionsDataLanguage = [];
+                foreach (ArrayHelper::map($s->expandDirectoriesMatrix($aliases->get('@language'), 0),'name','name') as $language)  {
+                    $optionsDataLanguage[$language] = ucfirst($language);
+                }
+                echo Field::select($form, 'language')
+                ->label($translator->translate('i.language'))    
+                ->addInputAttributes([
+                    'class' => 'form-control',
+                    'id' => 'language',
+                    'readonly' => 'readonly'
+                ])
+                ->optionsData($optionsDataLanguage)
+                ->value(Html::encode($form->getLanguage()))
+            ?>
+        <?= Html::closeTag('div'); ?>   
+        <?= Html::openTag('div',['class' => 'mb-3 form-group']); ?>
+            <?= Field::text($form, 'name')
+                ->label($translator->translate('i.name'))
+                ->addInputAttributes([
+                    'class' => 'form-control',
+                    'id' => 'name',
+                    'readonly' => 'readonly'
+                ])
+                ->value(Html::encode($form->getName() ?? ''))
+            ?>
+        <?= Html::closeTag('div'); ?>
+        <?= Html::openTag('div',['class' => 'mb-3 form-group']); ?>
+            <?= Field::text($form, 'company')
+                ->label($translator->translate('i.company'))
+                ->addInputAttributes([
+                    'class' => 'form-control',
+                    'id' => 'company',
+                    'readonly' => 'readonly'
+                ])
+                ->value(Html::encode($form->getCompany() ?? ''))
+            ?>
+        <?= Html::closeTag('div'); ?>   
+        <?= Html::openTag('div',['class' => 'mb-3 form-group']); ?>
+            <?= Field::text($form, 'address_1')
+                ->label($translator->translate('i.street_address'))
+                ->addInputAttributes([
+                    'class' => 'form-control',
+                    'id' => 'address_1',
+                    'readonly' => 'readonly'
+                ])
+                ->value(Html::encode($form->getAddress_1() ?? ''))
+            ?>
+        <?= Html::closeTag('div'); ?>
+        <?= Html::openTag('div',['class' => 'mb-3 form-group']); ?>
+            <?= Field::text($form, 'address_2')
+                ->label($translator->translate('i.street_address_2'))
+                ->addInputAttributes([
+                    'class' => 'form-control',
+                    'id' => 'address_2',
+                    'readonly' => 'readonly'
+                ])
+                ->value(Html::encode($form->getAddress_2() ?? ''))
+            ?>
+        <?= Html::closeTag('div'); ?>
+        <?= Html::openTag('div',['class' => 'mb-3 form-group']); ?>
+            <?= Field::text($form, 'city')
+                ->label($translator->translate('i.city'))
+                ->addInputAttributes([
+                    'class' => 'form-control',
+                    'id' => 'city',
+                    'readonly' => 'readonly'
+                ])
+                ->value(Html::encode($form->getCity() ?? ''))
+            ?>
+        <?= Html::closeTag('div'); ?>
+        <?= Html::openTag('div',['class' => 'mb-3 form-group']); ?>
+            <?= Field::text($form, 'state')
+                ->label($translator->translate('i.state'))
+                ->addInputAttributes([
+                    'class' => 'form-control',
+                    'id' => 'state',
+                    'readonly' => 'readonly'
+                ])
+                ->value(Html::encode($form->getState() ?? ''))
+            ?>
+        <?= Html::closeTag('div'); ?>
+        <?= Html::openTag('div',['class' => 'mb-3 form-group']); ?>
+            <?= Field::text($form, 'zip')
+                ->label($translator->translate('i.zip'))
+                ->addInputAttributes([
+                    'class' => 'form-control',
+                    'id' => 'zip',                    
+                    'readonly' => 'readonly'
+                ])
+                ->value(Html::encode($form->getZip() ?? ''))
+            ?>
+        <?= Html::closeTag('div'); ?>
+        <?= Html::openTag('div',['class' => 'mb-3 form-group']); ?>
+            <?= Field::text($form, 'country')
+                ->label($translator->translate('i.country'))
+                ->addInputAttributes([
+                    'class' => 'form-control',
+                    'id' => 'country',
+                    'readonly' => 'readonly'
+                ])
+                ->value(Html::encode($form->getCountry() ?? ''))
+            ?>
+        <?= Html::closeTag('div'); ?>
+        <?= Html::openTag('div',['class' => 'mb-3 form-group']); ?>
+            <?= Field::telephone($form, 'phone')
+                ->label($translator->translate('i.phone'))
+                ->addInputAttributes([
+                    'class' => 'form-control',
+                    'id' => 'phone',
+                    'readonly' => 'readonly'
+                ])
+                ->value(Html::encode($form->getPhone() ?? ''))
+            ?>
+        <?= Html::closeTag('div'); ?>
+        <?= Html::openTag('div',['class' => 'mb-3 form-group']); ?>
+            <?= Field::telephone($form, 'fax')
+                ->label($translator->translate('i.fax'))
+                ->addInputAttributes([
+                    'class' => 'form-control',
+                    'readonly' => 'readonly'
+                ])
+                ->value(Html::encode($form->getFax() ?? ''))
+            ?>
+        <?= Html::closeTag('div'); ?>
+        <?= Html::openTag('div',['class' => 'mb-3 form-group']); ?>
+           <?= Field::telephone($form, 'mobile')
+                ->label($translator->translate('i.mobile'))
+                ->addInputAttributes([
+                    'class' => 'form-control',
+                    'readonly' => 'readonly'
+                ])
+                ->value(Html::encode($form->getMobile() ?? ''))
+            ?>
+        <?= Html::closeTag('div'); ?>
+        <?= Html::openTag('div',['class' => 'mb-3 form-group']); ?>
+            <?= Field::email($form, 'email')
+                ->label($translator->translate('i.email') . str_repeat(' ', 2). $translator->translate('invoice.email.template.user.account.leave.blank'))
+                ->addInputAttributes([
+                    'class' => 'form-control',
+                    'id' => 'email',                    
+                    'readonly' => 'readonly'
+                ])
+                ->value(Html::encode($form->getEmail() ?? ''))
+            ?>
+        <?= Html::closeTag('div'); ?>
+        <?= Html::openTag('div',['class' => 'mb-3 form-group']); ?>
+            <?= Field::password($form, 'password')
+                ->label($translator->translate('i.password'))
+                ->addInputAttributes([
+                    'class' => 'form-control',
+                    'id' => 'password',                    
+                    'readonly' => 'readonly'
+                ])
+                ->value(Html::encode($form->getPassword() ?? ''))
+            ?>
+        <?= Html::closeTag('div'); ?>
+        <?= Html::openTag('div',['class' => 'mb-3 form-group']); ?>
+            <?= Field::text($form, 'web')
+                ->label($translator->translate('i.web_address'))
+                ->addInputAttributes([
+                    'class' => 'form-control',
+                    'id' => 'web',
+                    'readonly' => 'readonly'
+                ])
+                ->value(Html::encode($form->getWeb() ?? ''))
+            ?>
+        <?= Html::closeTag('div'); ?>
+        <?= Html::openTag('div',['class' => 'mb-3 form-group']); ?>
+            <?= Field::text($form, 'tax_code')
+                ->label($translator->translate('i.tax_code'))
+                ->addInputAttributes([
+                    'class' => 'form-control',
+                    'id' => 'tax_code',                    
+                    'readonly' => 'readonly'
+                ])
+                ->value(Html::encode($form->getTax_code() ?? ''))
+            ?>
+        <?= Html::closeTag('div'); ?>
+        <?= Html::openTag('div',['class' => 'mb-3 form-group']); ?>
+            <?= Field::text($form, 'subscribernumber')
+                ->label($translator->translate('i.user_subscriber_number'))
+                ->addInputAttributes([
+                    'class' => 'form-control',
+                    'id' => 'subscribernumber',                    
+                    'readonly' => 'readonly'
+                ])
+                ->value(Html::encode($form->getSubscribernumber() ?? ''))
+            ?>
+        <?= Html::closeTag('div'); ?>
+        <?= Html::openTag('div',['class' => 'mb-3 form-group']); ?>
+            <?= Field::text($form, 'iban')
+                ->label($translator->translate('i.user_iban'))
+                ->addInputAttributes([
+                    'class' => 'form-control',
+                    'id' => 'iban',
+                    'readonly' => 'readonly'
+                ])
+                ->value(Html::encode($form->getSubscribernumber() ?? ''))
+            ?>
+         <?= Html::closeTag('div'); ?>
+        <?= Html::openTag('div',['class' => 'mb-3 form-group']); ?>
+            <?= Field::text($form, 'gln')
+                ->label($translator->translate('invoice.delivery.location.global.location.number'))
+                ->addInputAttributes([
+                    'class' => 'form-control',
+                    'id' => 'gln',
+                    'readonly' => 'readonly'
+                ])
+                ->value(Html::encode($form->getGln() ?? ''))
+            ?>
+        <?= Html::closeTag('div'); ?>
+        <?= Html::openTag('div',['class' => 'mb-3 form-group']); ?>
+            <?= Field::text($form, 'rcc')
+                ->label($translator->translate('i.sumex_rcc'))
+                ->addInputAttributes([
+                    'class' => 'form-control',
+                    'id' => 'rcc'
+                ])
+                ->value(Html::encode($form->getRcc() ?? ''))
+            ?>
+        <?= Html::closeTag('div'); ?>
+    <?= Html::closeTag('div'); ?>
+    <?= Html::closeTag('div'); ?>
+    <?= Html::closeTag('div'); ?>
+    <?= Html::closeTag('div'); ?>
+    <?= Html::closeTag('div'); ?>
+<?= Form::tag()->close() ?>

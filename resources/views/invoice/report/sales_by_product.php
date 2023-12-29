@@ -18,7 +18,7 @@ $this->beginPage();
 $assetManager->register(ReportAsset::class);
 ?>
 <!DOCTYPE html>
-<html lang="<?= $s->trans('cldr'); ?>">
+<html lang="<?= $translator->translate('i.cldr'); ?>">
 <head>
     <title><?= $translator->translate('invoice.report.sales.by.product'); ?></title>
 </head>
@@ -30,10 +30,10 @@ $assetManager->register(ReportAsset::class);
 </h3>
 <table>
     <tr>
-        <th><?= $s->trans('product'); ?></th>
-        <th class="amount"><?= $s->trans('invoice_count'); ?></th>
-        <th class="amount"><?= $s->trans('sales'); ?></th>
-        <th class="amount"><?= $s->trans('item_tax'); ?></th>
+        <th><?= $translator->translate('i.product'); ?></th>
+        <th class="amount"><?= $translator->translate('i.invoice_count'); ?></th>
+        <th class="amount"><?= $translator->translate('i.sales'); ?></th>
+        <th class="amount"><?= $translator->translate('i.item_tax'); ?></th>
     </tr>
     <?php foreach ($results as $result) { ?>
         <tr>

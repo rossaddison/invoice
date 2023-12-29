@@ -9,7 +9,6 @@ use Yiisoft\Yii\Bootstrap5\Alert;
  * @var \Yiisoft\View\View $this
  * @var \Yiisoft\Router\UrlGeneratorInterface $urlGenerator
  * @var Yiisoft\Yii\View\ViewRenderer $viewRenderer
- * @var array $body
  * @var string $csrf
  * @var string $action
  * @var array $errors
@@ -29,31 +28,30 @@ if (!empty($errors)) {
 <input type="hidden" name="_csrf" value="<?= $csrf ?>">
   <?= Html::openTag('div', ['class' => 'row']); ?>
     <div class="mb-3 form-group">
-        <input type="text" class="form-control" name="email_template_title" id="email_template_title" placeholder="<?= $s->trans('title'); ?>" value="<?= Html::encode($body['email_template_title'] ?? '') ?>" required>
+        <input type="text" class="form-control" name="email_template_title" id="email_template_title" placeholder="<?= $translator->translate('i.title'); ?>" value="<?= Html::encode($form->getEmail_template_title() ?? '') ?>" required>
     </div>
     <div class="mb-3 form-group">
-        <label for="email_template_type" class="control-label"><?= $s->trans('type'); ?></label>
-        
+        <label for="email_template_type" class="control-label"><?= $translator->translate('i.type'); ?></label>
         <div class="radio">
             <label>
                 <input type="radio" name="email_template_type" id="email_template_type_invoice"
-                       value="invoice" <?= Html::encode(($body['email_template_type'] ?? 'invoice') == 'invoice' ? 'checked' : ''); ?>>
-                <?= $s->trans('invoice'); ?>
+                       value="invoice" <?= Html::encode(($form->getEmail_template_type() ?? 'invoice') == 'invoice' ? 'checked' : ''); ?>>
+                <?= $translator->translate('i.invoice'); ?>
             </label>
         </div>
         <div class="radio">
             <label>
                 <input type="radio" name="email_template_type" id="email_template_type_quote"
-                       value="quote" <?= Html::encode(($body['email_template_type'] ?? 'invoice')== 'quote' ? 'checked' : ''); ?>>
-                <?= $s->trans('quote'); ?>
+                       value="quote" <?= Html::encode(($form->getEmail_template_type() ?? 'invoice')== 'quote' ? 'checked' : ''); ?>>
+                <?= $translator->translate('i.quote'); ?>
             </label>
         </div>
     </div>
     <div class="mb-3 form-group">
-    <label for="email_template_from_name"><?= $s->trans('from_name'); ?></label>    
+    <label for="email_template_from_name"><?= $translator->translate('i.from_name'); ?></label>    
                     <input type="text" name="email_template_from_name" id="email_template_from_name"
-                           class="form-control taggable" placeholder="<?= $s->trans('from_name'); ?>"
-                           value="<?= Html::encode($body['email_template_from_name'] ?? '') ?>" required>
+                           class="form-control taggable" placeholder="<?= $translator->translate('i.from_name'); ?>"
+                           value="<?= Html::encode($form->getEmail_template_from_name() ?? '') ?>" required>
     </div> 
     
     <div class="panel panel-default">
@@ -76,41 +74,41 @@ if (!empty($errors)) {
     <div id="email_option">
         <div class="mb-3 form-group">
             <label for="email_template_from_email"></label>
-            <input class="form-control" type="text" id="email_template_from_email" name="email_template_from_email" value="<?= $body['email_template_from_email'] ?? ''; ?>">
+            <input class="form-control" type="text" id="email_template_from_email" name="email_template_from_email" value="<?= $form->getEmail_template_from_email() ?? ''; ?>">
         </div>
     </div>    
     </div>
     </div>
       
     <div class="mb-3 form-group">
-                    <input type="text" name="email_template_bcc" id="email_template_bcc" class="form-control taggable" placeholder="<?= $s->trans('bcc'); ?>"
-                           value="<?= Html::encode($body['email_template_bcc'] ?? '') ?>">
+                    <input type="text" name="email_template_bcc" id="email_template_bcc" class="form-control taggable" placeholder="<?= $translator->translate('i.bcc'); ?>"
+                           value="<?= Html::encode($form->getEmail_template_bcc() ?? '') ?>">
     </div>
 
     <div class="mb-3 form-group">
                     <input type="text" name="email_template_subject" id="email_template_subject"
-                           class="form-control taggable" placeholder="<?= $s->trans('subject'); ?>"
-                           value="<?= Html::encode($body['email_template_subject'] ?? '') ?>">
+                           class="form-control taggable" placeholder="<?= $translator->translate('i.subject'); ?>"
+                           value="<?= Html::encode($form->getEmail_template_subject() ?? '') ?>">
     </div>
 
     <div class="mb-3 form-group">
                     <select name="email_template_pdf_template" id="email_template_pdf_template"
                             class="form-control">
-                        <option value=""><?= $s->trans('pdf_template'); ?></option>
+                        <option value=""><?= $translator->translate('i.pdf_template'); ?></option>
 
-                        <optgroup label="<?= $s->trans('invoices'); ?>">
+                        <optgroup label="<?= $translator->translate('i.invoices'); ?>">
                             <?php foreach ($invoice_templates as $template): ?>
                                 <option class="hidden-invoice" value="<?= $template; ?>"
-                                    <?php $s->check_select($body['email_template_pdf_template'] ?? $selected_pdf_template, $template); ?>>
+                                    <?php $s->check_select($form->getEmail_template_pdf_template() ?? $selected_pdf_template, $template); ?>>
                                     <?= ucfirst($template); ?>
                                 </option>
                             <?php endforeach; ?>
                         </optgroup>
 
-                        <optgroup label="<?= $s->trans('quotes'); ?>">
+                        <optgroup label="<?= $translator->translate('i.quotes'); ?>">
                             <?php foreach ($quote_templates as $template): ?>
                                 <option class="hidden-quote" value="<?= $template; ?>"
-                                    <?php $s->check_select($body['email_template_pdf_template'] ?? $selected_pdf_template, $template); ?>>
+                                    <?php $s->check_select($form->getEmail_template_pdf_template() ?? $selected_pdf_template, $template); ?>>
                                     <?= ucfirst($template); ?>
                                 </option>
                             <?php endforeach; ?>
@@ -152,14 +150,14 @@ if (!empty($errors)) {
                             </div>
 
                             <textarea name="email_template_body" id="email_template_body" rows="8"
-                                      class="email-template-body form-control taggable"><?= Html::encode($body['email_template_body'] ?? '') ?>
+                                      class="email-template-body form-control taggable"><?= Html::encode($form->getEmail_template_body() ?? '') ?>
                             </textarea>
 
                             <br>
 
                             <div class="panel panel-default">
                                 <div class="panel-heading">
-                                    <?= $s->trans('preview'); ?>
+                                    <?= $translator->translate('i.preview'); ?>
                                     <span id="email-template-preview-reload" class="pull-right cursor-pointer">
                                         <i class="fa fa-refresh"></i>
                                     </span>

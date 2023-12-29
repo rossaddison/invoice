@@ -56,7 +56,7 @@ use Yiisoft\Router\CurrentRoute;
     <h5><?= $translator->translate('invoice.client.note'); ?></h5>
     <div class="btn-group">
         <a class="btn btn-success" href="<?= $urlGenerator->generate('clientnote/add'); ?>">
-            <i class="fa fa-plus"></i> <?= Html::encode($s->trans('new')); ?>
+            <i class="fa fa-plus"></i> <?= Html::encode($translator->translate('i.new')); ?>
         </a>
     </div>
 </div>
@@ -69,12 +69,12 @@ use Yiisoft\Router\CurrentRoute;
     $columns = [
         new DataColumn(
             'id',
-            header: $s->trans('id'),
+            header: $translator->translate('i.id'),
             content: static fn (object $model) => Html::encode($model->getId())
         ),        
         new DataColumn(
             'client_id',
-            header: $s->trans('client'),                
+            header: $translator->translate('i.client'),                
             content: static fn ($model): string => Html::encode($model->getClient()->getClient_name() . ' '.$model->getClient()->getClient_surname())                  
         ),
         new DataColumn(
@@ -83,14 +83,14 @@ use Yiisoft\Router\CurrentRoute;
             content: static fn ($model): string => Html::encode(ucfirst($model->getNote())) 
         ),
         new DataColumn(
-            'date',    
+            'date_note',    
             header: $translator->translate('invoice.client.note.date'),                
-            content: static fn ($model): string => Html::encode(($model->getDate()->format($datehelper->style()))) 
+            content: static fn ($model): string => Html::encode(($model->getDate_note()->format($datehelper->style()))) 
         ),
         new ActionColumn(
             content: static fn($model): string => 
             Html::a()
-            ->addAttributes(['class' => 'dropdown-button text-decoration-none', 'title' => $s->trans('view')])
+            ->addAttributes(['class' => 'dropdown-button text-decoration-none', 'title' => $translator->translate('i.view')])
             ->content('🔎')
             ->encode(false)
             ->href('/invoice/clientnote/view/'. $model->getId())
@@ -99,7 +99,7 @@ use Yiisoft\Router\CurrentRoute;
         new ActionColumn(
             content: static fn($model): string => 
             Html::a()
-            ->addAttributes(['class' => 'dropdown-button text-decoration-none', 'title' => $s->trans('edit')])
+            ->addAttributes(['class' => 'dropdown-button text-decoration-none', 'title' => $translator->translate('i.edit')])
             ->content('✎')
             ->encode(false)
             ->href('/invoice/clientnote/edit/'. $model->getId())
@@ -110,9 +110,9 @@ use Yiisoft\Router\CurrentRoute;
             Html::a()
             ->addAttributes([
                 'class'=>'dropdown-button text-decoration-none', 
-                'title' => $s->trans('delete'),
+                'title' => $translator->translate('i.delete'),
                 'type'=>'submit', 
-                'onclick'=>"return confirm("."'".$s->trans('delete_record_warning')."');"
+                'onclick'=>"return confirm("."'".$translator->translate('i.delete_record_warning')."');"
             ])
             ->content('❌')
             ->encode(false)

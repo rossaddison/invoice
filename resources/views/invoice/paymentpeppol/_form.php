@@ -26,7 +26,7 @@ if (!empty($errors)) {
 <form id="PaymentPeppolForm" method="POST" action="<?= $urlGenerator->generate(...$action) ?>" enctype="multipart/form-data">
 <input type="hidden" name="_csrf" value="<?= $csrf ?>">
 <div id="headerbar">
-<h1 class="headerbar-title"><?= $s->trans('paymentpeppols_form'); ?></h1>
+<h1 class="headerbar-title"><?= $translator->translate('i.paymentpeppols_form'); ?></h1>
 <?php $response = $head->renderPartial('invoice/layout/header_buttons',['s'=>$s, 'hide_submit_button'=>false ,'hide_cancel_button'=>false]); ?>        
 <?php echo (string)$response->getBody(); ?><div id="content">
 <?= Html::openTag('div', ['class' => 'row']); ?>
@@ -35,12 +35,12 @@ if (!empty($errors)) {
  value="<?= Html::encode($body['id'] ??  ''); ?>">
  </div>
  <div class="mb3 form-group">
-   <label for="auto_reference"><?= $s->trans('auto_reference'); ?></label>
+   <label for="auto_reference"><?= $translator->translate('i.auto_reference'); ?></label>
    <input type="text" name="auto_reference" id="auto_reference" class="form-control"
  value="<?= Html::encode($body['auto_reference'] ??  ''); ?>">
  </div>
  <div class="mb3 form-group">
-   <label for="provider"><?= $s->trans('provider'); ?></label>
+   <label for="provider"><?= $translator->translate('i.provider'); ?></label>
    <input type="text" name="provider" id="provider" class="form-control"
  value="<?= Html::encode($body['provider'] ??  ''); ?>">
  </div>

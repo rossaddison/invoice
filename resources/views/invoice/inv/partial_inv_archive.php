@@ -11,8 +11,8 @@ declare(strict_types=1);
     <table class="table table-hover table-striped">
         <thead>
         <tr>
-            <th><?= $s->trans('invoice'); ?></th>
-            <th><?= $s->trans('created'); ?></th>
+            <th><?= $translator->translate('i.invoice'); ?></th>
+            <th><?= $translator->translate('i.created'); ?></th>
         </tr>
         </thead>
         <tbody>
@@ -21,7 +21,7 @@ declare(strict_types=1);
             <tr>
                 <td>
                     <a href="<?= $urlGenerator->generate('inv/download', ['invoice' => basename($invoice)]); ?>"
-                       title="<?= $s->trans('invoice'); ?>" style="text-decoration: none">
+                       title="<?= $translator->translate('i.invoice'); ?>" style="text-decoration: none">
                         <?= basename($invoice); ?>
                     </a>
                 </td>

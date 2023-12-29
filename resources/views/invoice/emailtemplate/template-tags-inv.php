@@ -3,49 +3,49 @@
 ?>
 
         <div class="form-group">
-            <label for="tags_invoice"><?= $s->trans('invoices'); ?></label>
+            <label for="tags_invoice"><?= $translator->translate('i.invoices'); ?></label>
             <select id="tags_invoice" class="taginv-select form-control">
                 <option value="{{{invoice_number}}}">
-                    <?= $s->trans('id'); ?>
+                    <?= $translator->translate('i.id'); ?>
                 </option>
                 <option value="{{{invoice_status}}}">
-                    <?= $s->trans('status'); ?>
+                    <?= $translator->translate('i.status'); ?>
                 </option>
-                <optgroup label="<?= $s->trans('invoice_dates'); ?>">
+                <optgroup label="<?= $translator->translate('i.invoice_dates'); ?>">
                     <option value="{{{invoice_date_due}}}">
-                        <?= $s->trans('due_date'); ?>
+                        <?= $translator->translate('i.due_date'); ?>
                     </option>
                     <option value="{{{invoice_date_created}}}">
-                        <?= $s->trans('invoice_date'); ?>
+                        <?= $translator->translate('i.invoice_date'); ?>
                     </option>
                 </optgroup>
-                <optgroup label="<?= $s->trans('invoice_amounts'); ?>">
+                <optgroup label="<?= $translator->translate('i.invoice_amounts'); ?>">
                     <option value="{{{invoice_item_subtotal}}}">
-                        <?= $s->trans('subtotal'); ?>
+                        <?= $translator->translate('i.subtotal'); ?>
                     </option>
                     <option value="{{{invoice_item_tax_total}}}">
-                        <?= $s->trans('invoice_tax'); ?>
+                        <?= $translator->translate('i.invoice_tax'); ?>
                     </option>
                     <option value="{{{invoice_total}}}">
-                        <?= $s->trans('total'); ?>
+                        <?= $translator->translate('i.total'); ?>
                     </option>
                     <option value="{{{invoice_paid}}}">
-                        <?= $s->trans('total_paid'); ?>
+                        <?= $translator->translate('i.total_paid'); ?>
                     </option>
                     <option value="{{{invoice_balance}}}">
-                        <?= $s->trans('balance'); ?>
+                        <?= $translator->translate('i.balance'); ?>
                     </option>
                 </optgroup>
-                <optgroup label="<?= $s->trans('extra_information'); ?>">
+                <optgroup label="<?= $translator->translate('i.extra_information'); ?>">
                     <option value="{{{invoice_terms}}}">
-                        <?= $s->trans('invoice_terms'); ?>
+                        <?= $translator->translate('i.invoice_terms'); ?>
                     </option>
                 <option value="{{{invoice_guest_url}}}">
-                        <?= $s->trans('guest_url'); ?>
+                        <?= $translator->translate('i.guest_url'); ?>
                 </option>
-                        <?= $s->trans('payment_method'); ?>
+                        <?= $translator->translate('i.payment_method'); ?>
                 </optgroup>
-                <optgroup label="<?= $s->trans('custom_fields'); ?>">
+                <optgroup label="<?= $translator->translate('i.custom_fields'); ?>">
                     <?php foreach ($custom_fields_inv_custom as $custom) { ?>
                         <option value="{{{<?= 'cf_' . $custom->getId(); ?>}}}">
                             <?= $custom->getLabel() . ' (ID ' . $custom->getId() . ')'; ?>

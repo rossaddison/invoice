@@ -4,7 +4,7 @@
                         <div class="mb-3 form-group">
                             <div class="panel panel-default">
                                 <div class="panel-heading">
-                                    <?= $s->trans('custom_fields'); ?>
+                                    <?= $translator->translate('i.custom_fields'); ?>
                                 </div>
                                 <div>
                                     <?= Html::openTag('div', ['class' => 'row']); ?>

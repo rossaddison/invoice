@@ -1,11 +1,13 @@
 <?php
     declare(strict_types=1);
+    
+    use Yiisoft\Html\Html;
 ?>
 <?= Html::openTag('div', ['class' => 'row']); ?>
 <div class="col-xs-12 col-md-8 col-md-offset-2">
 <div class="panel panel-default">
     <div class="panel-heading">
-        <?= $s->trans('online_payments'); ?>
+        <?= $translator->translate('g.online_payments'); ?>
     </div>
     <div class="panel-body">
         <div class="form-group">
@@ -15,17 +17,17 @@
                     <input type="hidden" name="settings[enable_online_payments]" value="0">
                     <input type="checkbox" name="settings[enable_online_payments]" value="1"
                         <?php $s->check_select($body['settings[enable_online_payments]'], 1, '==', true) ?>>
-                    <?= $s->trans('enable_online_payments'); ?>
+                    <?= $translator->translate('g.enable_online_payments'); ?>
                 </label>
             </div>
         </div>
 
         <div class="form-group">
             <label for="online-payment-select">
-                <?= $s->trans('add_payment_provider'); ?>
+                <?= $translator->translate('g.add_payment_provider'); ?>
             </label>
             <select id="online-payment-select" class="form-control">
-                <option value=""><?= $s->trans('none'); ?></option>
+                <option value=""><?= $translator->translate('i.none'); ?></option>
                 <?php foreach ($gateway_drivers as $driver => $fields) {
                     $d = strtolower($driver);
                     ?>
@@ -81,7 +83,7 @@ foreach ($gateway_drivers as $driver => $fields) :
                         <input type="checkbox" name="settings[gateway_<?= $d; ?>_enabled]" value="1"
                             id="settings[gateway_<?= $d; ?>_enabled]"
                             <?php $s->check_select($body['settings[gateway_' . $d . '_enabled]'], 1, '==', true) ?>>
-                        <?= $s->trans('enabled'); ?>
+                        <?= $translator->translate('i.enabled'); ?>
                     </label>
                 </div>
             </div>

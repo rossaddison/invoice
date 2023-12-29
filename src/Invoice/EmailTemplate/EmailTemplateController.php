@@ -25,8 +25,8 @@ use Yiisoft\Json\Json;
 use Yiisoft\Router\CurrentRoute;
 use Yiisoft\Session\SessionInterface;
 use Yiisoft\Session\Flash\Flash;
-use Yiisoft\Translator\TranslatorInterface;use Yiisoft\FormModel\FormHydrator;
-use Yiisoft\Form\Helper\HtmlFormErrors;
+use Yiisoft\Translator\TranslatorInterface;
+use Yiisoft\FormModel\FormHydrator;
 use Yiisoft\Yii\View\ViewRenderer;
 
 final class EmailTemplateController
@@ -72,7 +72,6 @@ final class EmailTemplateController
             'paginator' => (new OffsetPaginator($this->emailtemplates($emailtemplateRepository)))
                             ->withPageSize((int)$settingRepository->get_setting('default_list_limit'))
                             ->withCurrentPage((int)$currentRoute->getArgument('page', '1')),
-            's'=> $settingRepository,
             'alert' => $this->alert(),
             'canEdit' => $canEdit,
             'email_templates' => $this->emailtemplates($emailtemplateRepository),
@@ -96,19 +95,17 @@ final class EmailTemplateController
                         FromDropDownRepository $fromR
                         ): Response
     {
+        $email_template = new EmailTemplate();
+        $form = new EmailTemplateForm($email_template);
         $parameters = [
             'action' => ['emailtemplate/add'],
             'errors' => [],
-            'body' => $request->getParsedBody(),
-            's'=>$settingRepository,            
+            'form' => $form,
             'email_template_tags' => $this->viewRenderer->renderPartialAsString('/invoice/emailtemplate/template-tags', [
-              's'=>$settingRepository,
               'template_tags_quote'=>$this->viewRenderer->renderPartialAsString('/invoice/emailtemplate/template-tags-quote', [
-                  's'=>$settingRepository,
                   'custom_fields_quote_custom'=>$customfieldRepository->repoTablequery('quote_custom'),
               ]),
               'template_tags_inv'=>$this->viewRenderer->renderPartialAsString('/invoice/emailtemplate/template-tags-inv', [
-                  's'=>$settingRepository,
                   'custom_fields_inv_custom'=>$customfieldRepository->repoTablequery('inv_custom'),
               ]), 
               'custom_fields' => [                        
@@ -127,12 +124,19 @@ final class EmailTemplateController
         ];
         
         if ($request->getMethod() === Method::POST) {
-            $form = new EmailTemplateForm();
-            if (null!==$this->userService->getUser() && $formHydrator->populate($form, $parameters['body']) && $form->isValid()) {
-                $this->emailtemplateService->saveEmailTemplate(new EmailTemplate(),$form);
+            $body = $request->getParsedBody();
+            /**
+             * @psalm-suppress PossiblyInvalidArgument $body 
+             */
+            if (null!==$this->userService->getUser() && $formHydrator->populate($form, $body) && $form->isValid()) {
+                /**
+                 * @psalm-suppress PossiblyInvalidArgument $body 
+                 */
+                $this->emailtemplateService->saveEmailTemplate(new EmailTemplate(), $body);
                 $this->flash_message('info', $this->translator->translate('invoice.email.template.successfully.added'));
                 return $this->webService->getRedirectResponse('emailtemplate/index');
             }
+            $parameters['errors'] = $form->getValidationResult()?->getErrorMessagesIndexedByAttribute() ?? [];
             $parameters['form'] = $form;
         }
         return $this->viewRenderer->render('__form', $parameters, );
@@ -180,22 +184,19 @@ final class EmailTemplateController
     ): Response {
         $email_template = $this->emailtemplate($currentRoute, $emailtemplateRepository);
         if ($email_template) { 
+            $form = new EmailTemplateForm($email_template);
             $parameters = [
-                'title' => $settingRepository->trans('edit'),
+                'title' => $this->translator->translate('i.edit'),
                 'action' => ['emailtemplate/edit', ['email_template_id' => $email_template->getEmail_template_id()]],
                 'errors' => [],
                 'email_template'=> $email_template,
-                'body' => $this->body($email_template),
+                'form' => $form,
                 'aliases'=> new Aliases(['@invoice' => dirname(__DIR__), '@language' => dirname(__DIR__). DIRECTORY_SEPARATOR. 'Language']),
-                's'=>$settingRepository,
                 'email_template_tags' => $this->viewRenderer->renderPartialAsString('/invoice/emailtemplate/template-tags', [
-                        's'=>$settingRepository,
                         'template_tags_quote'=>$this->viewRenderer->renderPartialAsString('/invoice/emailtemplate/template-tags-quote', [
-                            's'=>$settingRepository,
                             'custom_fields_quote_custom'=>$customfieldRepository->repoTablequery('quote_custom'),
                         ]),
                         'template_tags_inv'=>$this->viewRenderer->renderPartialAsString('/invoice/emailtemplate/template-tags-inv', [
-                            's'=>$settingRepository,
                             'custom_fields_inv_custom'=>$customfieldRepository->repoTablequery('inv_custom'),
                         ]), 
                         'custom_fields' => [                        
@@ -212,14 +213,19 @@ final class EmailTemplateController
                 'from_email'=>($fromR->getDefault())?->getEmail() ?: $this->translator->translate('invoice.email.default.none.set'),
             ];
             if ($request->getMethod() === Method::POST) {
-                $form = new EmailTemplateForm();
                 $body = $request->getParsedBody();
+                /**
+                 * @psalm-suppress PossiblyInvalidArgument $body 
+                 */
                 if ($formHydrator->populate($form, $body) && $form->isValid()) {
-                    $this->emailtemplateService->saveEmailTemplate($email_template, $form);
+                    /**
+                     * @psalm-suppress PossiblyInvalidArgument $body 
+                     */
+                    $this->emailtemplateService->saveEmailTemplate($email_template, $body);
                     $this->flash_message('info', $this->translator->translate('invoice.email.template.successfully.edited'));
                     return $this->webService->getRedirectResponse('emailtemplate/index');
                 }
-                $parameters['body'] = $body;
+                $parameters['errors'] = $form->getValidationResult()?->getErrorMessagesIndexedByAttribute() ?? [];
                 $parameters['form'] = $form;
             }
             return $this->viewRenderer->render('__form', $parameters);
@@ -273,20 +279,20 @@ final class EmailTemplateController
     /**
      * @param CurrentRoute $currentRoute
      * @param EmailTemplateRepository $emailtemplateRepository
-     * @param SettingRepository $settingRepository
      */
-    public function view(CurrentRoute $currentRoute, EmailTemplateRepository $emailtemplateRepository, SettingRepository $settingRepository   
-    ): Response {
+    public function view(CurrentRoute $currentRoute, EmailTemplateRepository $emailtemplateRepository): Response {
         $email_template = $this->emailtemplate($currentRoute, $emailtemplateRepository);
-        if ($email_template) { 
+        if ($email_template) {
+            $form = new EmailTemplateForm($email_template);
             $parameters = [
-                'title' => $settingRepository->trans('view'),
+                'title' => $this->translator->translate('i.view'),
                 'action' => ['emailtemplate/edit', ['email_template_id' => $email_template->getEmail_template_id()]],
                 'errors' => [],
-                'emailtemplate'=>$email_template,
-                'body' => $this->body($email_template),
-                'aliases'=>new Aliases(['@invoice' => dirname(__DIR__), '@language' => dirname(__DIR__). DIRECTORY_SEPARATOR.'Language']),
-                's'=>$settingRepository,
+                'emailtemplate'=> $email_template,
+                'form' => $form,
+                'aliases'=> new Aliases([
+                    '@invoice' => dirname(__DIR__), 
+                    '@language' => dirname(__DIR__). DIRECTORY_SEPARATOR.'Language']),
             ];
             return $this->viewRenderer->render('__view', $parameters); 
         }
@@ -322,25 +328,5 @@ final class EmailTemplateController
     private function emailtemplates(EmailTemplateRepository $emailtemplateRepository): \Yiisoft\Yii\Cycle\Data\Reader\EntityReader {
         $emailtemplates = $emailtemplateRepository->findAllPreloaded();        
         return $emailtemplates;
-    }
-    
-    /**
-     * 
-     * @param EmailTemplate $emailtemplate
-     * @return array
-     */
-    private function body(EmailTemplate $emailtemplate): array {
-        $body = [
-          'email_template_title'=>$emailtemplate->getEmail_template_title(),
-          'email_template_type'=>$emailtemplate->getEmail_template_type(),
-          'email_template_body'=>$emailtemplate->getEmail_template_body(),
-          'email_template_subject'=>$emailtemplate->getEmail_template_subject(),
-          'email_template_from_name'=>$emailtemplate->getEmail_template_from_name(),
-          'email_template_from_email'=>$emailtemplate->getEmail_template_from_email(),
-          'email_template_cc'=>$emailtemplate->getEmail_template_cc(),
-          'email_template_bcc'=>$emailtemplate->getEmail_template_bcc(),
-          'email_template_pdf_template'=>$emailtemplate->getEmail_template_pdf_template(),
-        ];
-        return $body;
     }
 }

@@ -46,10 +46,10 @@ use Yiisoft\Html\Html;
         <div class="modal-footer">
             <div class="btn-group">
                 <button class="quote_to_so_confirm btn btn-success" id="quote_to_so_confirm" type="button">
-                    <i class="fa fa-check"></i> <?= $s->trans('submit'); ?>
+                    <i class="fa fa-check"></i> <?= $translator->translate('i.submit'); ?>
                 </button>
                 <button class="btn btn-danger" type="button" data-dismiss="modal">
-                    <i class="fa fa-times"></i> <?= $s->trans('cancel'); ?>
+                    <i class="fa fa-times"></i> <?= $translator->translate('i.cancel'); ?>
                 </button>
             </div>
         </div>

@@ -17,7 +17,7 @@ declare(strict_types=1);
             <input type="hidden" name="inv_id" id="inv_id" value="<?php echo $inv->getId(); ?>">
             <div  class="p-2">
             <div class="control-label">
-                <?= $s->trans('custom_fields'); ?>?                
+                <?= $translator->translate('i.custom_fields'); ?>?                
             </div>   
             </div>    
         </div>
@@ -34,13 +34,13 @@ declare(strict_types=1);
                 </div>
                 </button>
                 <button class="inv_to_html_confirm_with_custom_fields btn btn-success" id="inv_to_html_confirm_with_custom_fields" type="button">
-                    <i class="fa fa-check"></i> <?= $s->trans('yes'); ?>
+                    <i class="fa fa-check"></i> <?= $translator->translate('i.yes'); ?>
                 </button>
                 <button class="inv_to_html_confirm_without_custom_fields btn btn-info" id="inv_to_html_confirm_without_custom_fields" type="button">
-                    <i class="fa fa-times"></i> <?= $s->trans('no'); ?>
+                    <i class="fa fa-times"></i> <?= $translator->translate('i.no'); ?>
                 </button>                
                 <button class="btn btn-danger" type="button" data-dismiss="modal">
-                    <i class="fa fa-times"></i> <?= $s->trans('back'); ?>
+                    <i class="fa fa-times"></i> <?= $translator->translate('i.back'); ?>
                 </button>
             </div>
         </div>

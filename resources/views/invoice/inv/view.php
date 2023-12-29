@@ -20,7 +20,7 @@ echo $alert;
 ?>
 <div class="panel panel-default">
     <div class="panel-heading">
-        <i tooltip="data-toggle" title="<?= $s->isDebugMode(1); ?>"><?= $s->trans('invoice'); ?></i>
+        <i tooltip="data-toggle" title="<?= $s->isDebugMode(1); ?>"><?= $translator->translate('i.invoice'); ?></i>
     </div>
 <?php
 $clienthelper = new ClientHelper($s);
@@ -47,14 +47,14 @@ echo $modal_create_credit;
 <?php if ($payments) { ?>
         <br>
         <br>
-        <div class="panel-heading"><b><h2><?= Html::encode($s->trans('payments')); ?></h2></b></div>
+        <div class="panel-heading"><b><h2><?= Html::encode($translator->translate('i.payments')); ?></h2></b></div>
         <div class="table-responsive">
             <table class="table table-hover table-striped">
                 <thead>
                     <tr>
-                        <th><?= Html::encode($s->trans('date')); ?></th>
-                        <th><?= Html::encode($s->trans('amount')); ?></th>
-                        <th><?= Html::encode($s->trans('note')); ?></th>
+                        <th><?= Html::encode($translator->translate('i.date')); ?></th>
+                        <th><?= Html::encode($translator->translate('i.amount')); ?></th>
+                        <th><?= Html::encode($translator->translate('i.note')); ?></th>
                     </tr>
                 </thead>
                 <tbody>
@@ -83,14 +83,14 @@ echo $modal_create_credit;
     <div id="headerbar">
         <h1 class="headerbar-title">
 <?php
-echo Html::encode($s->trans('invoice')) . ' ';
+echo Html::encode($translator->translate('i.invoice')) . ' ';
 echo(Html::encode($inv->getNumber() ? '#' . $inv->getNumber() : $inv->getId()));
 ?>
         </h1>
         <div class="headerbar-item pull-right <?php if ($inv->getIs_read_only() === false || $inv->getStatus_id() !== 4) { ?>btn-group<?php } ?>">
             <div class="options btn-group">
                 <a class="btn btn-default" data-toggle="dropdown" href="#">
-                    <i class="fa fa-chevron-down"></i><?= $s->trans('options'); ?>
+                    <i class="fa fa-chevron-down"></i><?= $translator->translate('i.options'); ?>
                 </a>
                 <ul class="dropdown-menu dropdown-menu-right">
 <?php
@@ -100,7 +100,7 @@ if ($show_buttons && $invEdit) {
                         <li>
                             <a href="<?= $urlGenerator->generate('inv/edit', ['id' => $inv->getId()]) ?>" style="text-decoration:none">
                                 <i class="fa fa-edit fa-margin"></i>
-    <?= Html::encode($s->trans('edit')); ?>
+    <?= Html::encode($translator->translate('i.edit')); ?>
                             </a>
                         </li>
     <?php
@@ -110,7 +110,7 @@ if ($show_buttons && $invEdit) {
                             <li>
                                 <a href="#add-inv-tax" data-toggle="modal"  style="text-decoration:none">
                                     <i class="fa fa-plus fa-margin"></i>
-                                    <?= Html::encode($s->trans('add_invoice_tax')); ?>
+                                    <?= Html::encode($translator->translate('i.add_invoice_tax')); ?>
                                 </a>
                             </li>
                         <?php } ?>
@@ -170,7 +170,7 @@ if ($show_buttons && $invEdit) {
                         ?>
                         <li>
                             <a href="#create-credit-inv" data-toggle="modal" data-invoice-id="<?= $inv->getId(); ?>" style="text-decoration:none">
-                                <i class="fa fa-minus fa-margin"></i> <?= Html::encode($s->trans('create_credit_invoice')); ?>
+                                <i class="fa fa-minus fa-margin"></i> <?= Html::encode($translator->translate('i.create_credit_invoice')); ?>
                             </a>
                         </li>
                     <?php } ?>
@@ -187,7 +187,7 @@ if ($show_buttons && $invEdit) {
                                data-invoice-payment-method="<?= Html::encode($inv->getPayment_method()); ?>"
                                data-payment-cf-exisst="<?= Html::encode($payment_cf_exist); ?>">
                                 <i class="fa fa-credit-card fa-margin"></i>
-                        <?= Html::encode($s->trans('enter_payment')); ?>
+                        <?= Html::encode($translator->translate('i.enter_payment')); ?>
                             </a>
                         </li>
                     <?php endif; ?>
@@ -199,7 +199,7 @@ if ($show_buttons && $invEdit) {
     <?php foreach ($enabled_gateways as $gateway) { ?>
                             <li>
                                 <a href="<?= $urlGenerator->generate('inv/url_key', ['url_key' => $inv->getUrl_key(), 'gateway' => $gateway]); ?>" style="text-decoration:none">
-                                    <i class="fa fa-minus fa-margin"></i> <?= Html::encode($s->trans('pay_now') . '-' . ucfirst($gateway)); ?>
+                                    <i class="fa fa-minus fa-margin"></i> <?= Html::encode($translator->translate('i.pay_now') . '-' . ucfirst($gateway)); ?>
                                 </a>
                             </li>
     <?php } ?>
@@ -211,7 +211,7 @@ if ($show_buttons && $invEdit) {
                             <?php if (null !== $sumex && $s->get_setting('sumex') === '1') { ?>
                             <a href="#inv-to-pdf"  data-toggle="modal" style="text-decoration:none">
                                 <i class="fa fa-print fa-margin"></i>
-                            <?= Html::encode($s->trans('generate_sumex')); ?>
+                            <?= Html::encode($translator->translate('i.generate_sumex')); ?>
                             </a>
     <?php
 // Options ... Download PDF
@@ -219,7 +219,7 @@ if ($show_buttons && $invEdit) {
     ?>
                             <a href="#inv-to-pdf"  data-toggle="modal" style="text-decoration:none">
                                 <i class="fa fa-print fa-margin"></i>
-    <?= Html::encode($s->trans('download_pdf')); ?>
+    <?= Html::encode($translator->translate('i.download_pdf')); ?>
                             </a>
 <?php } ?>
                         <!--
@@ -238,7 +238,7 @@ if ($invEdit) {
                         <li>
                             <a href="#create-recurring-inv" data-toggle="modal"  style="text-decoration:none">
                                 <i class="fa fa-refresh fa-margin"></i>
-                            <?= Html::encode($s->trans('create_recurring')); ?>
+                            <?= Html::encode($translator->translate('i.create_recurring')); ?>
                             </a>
                         </li>
                         <li>
@@ -267,14 +267,14 @@ if ($invEdit) {
                                 <i class="fa fa-send fa-margin"></i>
     <?=
 // Options ... Send Email
-    Html::encode($s->trans('send_email'));
+    Html::encode($translator->translate('i.send_email'));
     ?>
                             </a>
                         </li>
                         <li>
                             <a href="#inv-to-inv" data-toggle="modal"  style="text-decoration:none">
                                 <i class="fa fa-copy fa-margin"></i>
-    <?= Html::encode($s->trans('copy_invoice')); ?>
+    <?= Html::encode($translator->translate('i.copy_invoice')); ?>
                             </a>
                         </li>
                         <li>
@@ -316,13 +316,13 @@ if (($invEdit && $inv->getStatus_id() === 1 || ($s->get_setting('enable_invoice_
     ?>
                         <li>
                             <a href="#delete-inv" data-toggle="modal"  style="text-decoration:none">
-                                <i class="fa fa-trash fa-margin"></i> <?= Html::encode($s->trans('delete')); ?>
+                                <i class="fa fa-trash fa-margin"></i> <?= Html::encode($translator->translate('i.delete')); ?>
                             </a>
                         </li>
                         <li>
                             <a href="#delete-items"  data-toggle="modal" style="text-decoration:none">
                                 <i class="fa fa-trash fa-margin"></i>
-                        <?= Html::encode($s->trans('delete') . " " . $s->trans('item')); ?>
+                        <?= Html::encode($translator->translate('i.delete') . " " . $translator->translate('i.item')); ?>
                             </a>
                         </li>
                 <?php } ?>
@@ -332,12 +332,12 @@ if (($invEdit && $inv->getStatus_id() === 1 || ($s->get_setting('enable_invoice_
                 <?php if ($is_recurring) { ?>
                     <span class="label label-info">
                         <i class="fa fa-refresh"></i>
-    <?= Html::encode($s->trans('recurring')); ?>
+    <?= Html::encode($translator->translate('i.recurring')); ?>
                     </span>
         <?php } ?>
         <?php if ($inv->getIs_read_only() === true) { ?>
                     <span class="label label-danger">
-                        <i class="fa fa-read-only"></i><?= Html::encode($s->trans('read_only')); ?>
+                        <i class="fa fa-read-only"></i><?= Html::encode($translator->translate('i.read_only')); ?>
                     </span>
 <?php } ?>
             </div>
@@ -369,25 +369,25 @@ if (($invEdit && $inv->getStatus_id() === 1 || ($s->get_setting('enable_invoice_
                             <?php echo($inv->getClient()->getClient_zip() ? Html::encode($inv->getClient()->getClient_zip()) : ''); ?>
                             </span>
                             <span class="client-address-country-line">
-                        <?php echo($inv->getClient()->getClient_country() ? '<br>' . $countryhelper->get_country_name($s->trans('cldr'), $inv->getClient()->getClient_country()) : ''); ?>
+                        <?php echo($inv->getClient()->getClient_country() ? '<br>' . $countryhelper->get_country_name($translator->translate('i.cldr'), $inv->getClient()->getClient_country()) : ''); ?>
                             </span>
                         </div>
                         <hr>
                         <?php if ($inv->getClient()->getClient_phone()): ?>
                             <div class="client-phone">
-                            <?= $s->trans('phone'); ?>:&nbsp;
+                            <?= $translator->translate('i.phone'); ?>:&nbsp;
                                 <?= Html::encode($inv->getClient()->getClient_phone()); ?>
                             </div>
                             <?php endif; ?>
                         <?php if ($inv->getClient()->getClient_mobile()): ?>
                             <div class="client-mobile">
-    <?= $s->trans('mobile'); ?>:&nbsp;
+    <?= $translator->translate('i.mobile'); ?>:&nbsp;
     <?= Html::encode($inv->getClient()->getClient_mobile()); ?>
                             </div>
 <?php endif; ?>
 <?php if ($inv->getClient()->getClient_email()): ?>
                             <div class='client-email'>
-    <?= $s->trans('email'); ?>:&nbsp;
+    <?= $translator->translate('i.email'); ?>:&nbsp;
     <?php echo $inv->getClient()->getClient_email(); ?>
                             </div>
 <?php endif; ?>
@@ -404,11 +404,11 @@ if (($invEdit && $inv->getStatus_id() === 1 || ($s->get_setting('enable_invoice_
 
                                     <div class="invoice-properties">
                                         <label for="inv_number">
-<?= $s->trans('invoice'); ?> #
+<?= $translator->translate('i.invoice'); ?> #
                                         </label>
                                         <input type="text" id="inv_number" class="form-control input-sm" readonly
                                                    <?php if ($inv->getNumber()) : ?> value="<?= $inv->getNumber(); ?>"
-                                                   <?php else : ?> placeholder="<?= Html::encode($s->trans('not_set')); ?>"
+                                                   <?php else : ?> placeholder="<?= Html::encode($translator->translate('i.not_set')); ?>"
 <?php endif; ?>>
                                     </div>
                                     <div class="invoice-properties has-feedback">
@@ -457,7 +457,7 @@ if (($invEdit && $inv->getStatus_id() === 1 || ($s->get_setting('enable_invoice_
 <?php } ?>
                                     <div class="invoice-properties has-feedback">
                                         <label for="inv_date_due">
-<?= $s->trans('expires'); ?>
+<?= $translator->translate('i.expires'); ?>
                                         </label>
                                         <div class="input-group">
                                             <input name="inv_date_due" id="inv_date_due" disabled
@@ -481,7 +481,7 @@ if (($invEdit && $inv->getStatus_id() === 1 || ($s->get_setting('enable_invoice_
 
                                     <div class="invoice-properties">
                                         <label for="inv_status_id">
-                                        <?= $s->trans('status'); ?>
+                                        <?= $translator->translate('i.status'); ?>
                                         </label>
                                         <select name="inv_status_id" id="inv_status_id" disabled
                                                 class="form-control">
@@ -495,10 +495,10 @@ if (($invEdit && $inv->getStatus_id() === 1 || ($s->get_setting('enable_invoice_
                                         </select>
                                     </div>
                                     <div class="invoice-properties">
-                                        <label for="payment_method"><?= $s->trans('payment_method'); ?></label>
+                                        <label for="payment_method"><?= $translator->translate('i.payment_method'); ?></label>
 <?php if ($inv->getPayment_method() !== 0) { ?>
                                             <select name="payment_method" id="payment_method" class="form-control" disabled="disabled">
-                                                <option value="0"><?= Html::encode($s->trans('select_payment_method')); ?></option>
+                                                <option value="0"><?= Html::encode($translator->translate('i.select_payment_method')); ?></option>
                                         <?php foreach ($payment_methods as $payment_method) { ?>
                                                     <option <?php $s->check_select((string) $inv->getPayment_method(),
                                                     $payment_method->getId())
@@ -511,18 +511,18 @@ if (($invEdit && $inv->getStatus_id() === 1 || ($s->get_setting('enable_invoice_
 <?php } else { ?>
                                             <select name="payment_method" id="payment_method" class="form-control"
     <?= 'disabled="disabled"'; ?>>
-                                                <option "0" ><?= Html::encode($s->trans('none')); ?></option>
+                                                <option "0" ><?= Html::encode($translator->translate('i.none')); ?></option>
                                             </select>
 <?php } ?>
                                     </div>
 <?php if (($inv->getStatus_id() !== 1) && ($invEdit)) { ?>
                                         <div class="invoice-properties">
-                                            <label for="inv_password"><?= Html::encode($s->trans('password')); ?></label>
+                                            <label for="inv_password"><?= Html::encode($translator->translate('i.password')); ?></label>
                                             <input type="text" id="inv_password" class="form-control input-sm" disabled value="<?= Html::encode($body['password'] ?? ''); ?>">
                                         </div>
                                         <div class="invoice-properties">
                                             <div class="form-group">
-                                                <label for="guest-url"><?= Html::encode($s->trans('guest_url')); ?></label>
+                                                <label for="guest-url"><?= Html::encode($translator->translate('i.guest_url')); ?></label>
                                                 <div class="input-group">
                                                     <input type="text" id="guest-url" name="guest-url" readonly class="form-control" value="<?= '/invoice/inv/url_key/' . $inv->getUrl_key(); ?>">
                                                     <span class="input-group-text to-clipboard cursor-pointer"
@@ -565,7 +565,7 @@ if (($invEdit && $inv->getStatus_id() === 1 || ($s->get_setting('enable_invoice_
             <div class="col-xs-12 col-md-6">
                 <div class="panel panel-default no-margin">
                     <div class="panel-heading">
-                <?= Html::encode($s->trans('terms')); ?>
+                <?= Html::encode($translator->translate('i.terms')); ?>
                     </div>
                     <div class="panel-body">
                         <textarea name="terms" id="terms" rows="3" disabled
