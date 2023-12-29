@@ -67,8 +67,8 @@ class Delivery {
     $this->actual_delivery_date = new \DateTimeImmutable();
     $this->date_created = new \DateTimeImmutable('now');
     $this->date_modified = new \DateTimeImmutable('now');
-    $this->start_date = new \DateTimeImmutable(\Date('Y-m-01'));
-    $this->end_date = new \DateTimeImmutable(\Date('Y-m-t'));
+    $this->start_date = new \DateTimeImmutable(date('Y-m-01'));
+    $this->end_date = new \DateTimeImmutable(date('Y-m-t'));
   }
 
   public function getId(): int|null {
