@@ -113,7 +113,7 @@ class Delivery {
     $this->start_date = ($start_date instanceof DateTimeImmutable 
                       ? $start_date
                       // set the start date to the beginning of the current date by default
-                      : new \DateTimeImmutable(\Date('Y-m-01')));
+                      : new \DateTimeImmutable(date('Y-m-01')));
   }
 
   public function getActual_delivery_date(): ?DateTimeImmutable {
@@ -136,7 +136,7 @@ class Delivery {
     $this->end_date = ($end_date instanceof DateTimeImmutable 
                       ? $end_date
                       // set the end date to the end of the current date
-                      : new \DateTimeImmutable(\Date('Y-m-t')));
+                      : new \DateTimeImmutable(date('Y-m-t')));
   }
 
   public function getDate_created(): DateTimeImmutable {

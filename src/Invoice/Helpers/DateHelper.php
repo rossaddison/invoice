@@ -239,12 +239,12 @@ Class DateHelper {
     
     public function now_01() : \DateTimeImmutable
     {
-        return new \DateTimeImmutable(\Date('Y-m-01'));
+        return new \DateTimeImmutable(date('Y-m-01'));
     }
     
     public function now_t() : \DateTimeImmutable
     {
-        return new \DateTimeImmutable(\Date('Y-m-01'));
+        return new \DateTimeImmutable(date('Y-m-01'));
     }
 
     /**
