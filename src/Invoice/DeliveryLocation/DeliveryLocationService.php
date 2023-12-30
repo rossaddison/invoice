@@ -22,6 +22,7 @@ final class DeliveryLocationService {
   public function saveDeliveryLocation(DeliveryLocation $model, array $array): void {
     isset($array['client_id']) ? $model->setClient_id((int) $array['client_id']) : '';
     isset($array['name']) ? $model->setName((string)$array['name']) : '';
+    isset($array['building_number']) ? $model->setBuildingNumber((string)$array['building_number']) : '';
     isset($array['address_1']) ? $model->setAddress_1((string)$array['address_1']) : '';
     isset($array['address_2']) ? $model->setAddress_2((string)$array['address_2']) : '';
     isset($array['city']) ? $model->setCity((string)$array['city']) : '';

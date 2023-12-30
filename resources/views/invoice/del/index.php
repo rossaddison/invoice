@@ -120,7 +120,7 @@ $toolbar = Div::tag();
         ),
         new DataColumn(
             header:  $translator->translate('i.delete'),
-            content: static function ($model) use ($s, $urlGenerator): string {
+            content: static function ($model) use ($translator, $urlGenerator): string {
             return Html::a(Html::tag('button',
                         Html::tag('i', '', ['class' => 'fa fa-trash fa-margin']),
                         [
@@ -129,7 +129,7 @@ $toolbar = Div::tag();
                             'onclick' => "return confirm(" . "'" . $translator->translate('i.delete_record_warning') . "');"
                         ]
                 ),
-                $urlGenerator->generate('inv/delete', ['id' => $model->getId()]), []
+                $urlGenerator->generate('del/delete', ['id' => $model->getId()]), []
             )->render();
             }
         )        

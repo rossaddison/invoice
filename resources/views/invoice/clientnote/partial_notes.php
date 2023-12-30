@@ -10,7 +10,7 @@
             <?= nl2br(Html::encode($client_note->getNote())); ?>
         </div>
         <div class="panel-footer text-muted">
-            <?= $datehelper->date_from_mysql($client_note->getDate()); ?>
+            <?= $datehelper->date_from_mysql($client_note->getDate_note()); ?>
         </div>
     </div>
 <?php endforeach; ?>

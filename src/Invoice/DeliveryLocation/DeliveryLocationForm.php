@@ -7,12 +7,17 @@ namespace App\Invoice\DeliveryLocation;
 use App\Invoice\Entity\DeliveryLocation;
 use Yiisoft\FormModel\FormModel;
 use Yiisoft\Validator\Rule\Required;
+use \DateTimeImmutable;
 
 final class DeliveryLocationForm extends FormModel {
 
+  private DateTimeImmutable $date_created;
+  private DateTimeImmutable $date_modified;
   private ?string $client_id = '';
   #[Required]
   private ?string $name = '';
+  #[Required]
+  private ?string $building_number = '';
   #[Required]
   private ?string $address_1 = '';
   #[Required]
@@ -29,8 +34,11 @@ final class DeliveryLocationForm extends FormModel {
   private ?string $electronic_address_scheme = '';
   
   public function __construct(DeliveryLocation $del) {
+    $this->date_created = $del->getDate_created();  
+    $this->date_modified = $del->getDate_modified();  
     $this->client_id = $del->getClient_id();
     $this->name = $del->getName();
+    $this->building_number = $del->getBuildingNumber();
     $this->address_1 = $del->getAddress_1();
     $this->address_2 = $del->getAddress_2();
     $this->city = $del->getCity();
@@ -43,12 +51,26 @@ final class DeliveryLocationForm extends FormModel {
     $this->electronic_address_scheme = $del->getElectronic_address_scheme();
   }
 
+  public function getDate_created(): \DateTimeImmutable
+  {
+    return $this->date_created;  
+  }
+  
+  public function getDate_modified(): \DateTimeImmutable
+  {
+    return $this->date_modified;  
+  }
+  
   public function getClient_id(): string|null {
     return $this->client_id;
   }
-
+  
   public function getName(): string|null {
     return $this->name;
+  }
+  
+  public function getBuildingNumber(): string|null {
+    return $this->building_number;
   }
 
   public function getAddress_1(): string|null {

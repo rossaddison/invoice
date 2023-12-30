@@ -95,26 +95,25 @@ final class DeliveryLocationController {
     $this->flash_message('info', $this->translator->translate('invoice.invoice.delivery.location.add.in.invoice'));
   }
 
-  public function add(CurrentRoute $currentRoute, ViewRenderer $head, Request $request,
+  public function add(CurrentRoute $currentRoute, Request $request,
     FormHydrator $formHydrator,
-    SettingRepository $settingRepository,
   ): Response {
     $client_id = $currentRoute->getArgument('client_id');
     $delivery_location = new DeliveryLocation();
+    $delivery_location->setClient_id((int)$client_id);
     $form = new DeliveryLocationForm($delivery_location);
     $parameters = [
       'title' => $this->translator->translate('invoice.invoice.delivery.location.add'),
       'action' => ['del/add', ['client_id' => $client_id]],
       'errors' => [],
-      'client_id' => $client_id,
       'form' => $form,
-      'head' => $head,
       'session' => $this->session,
       'electronic_address_scheme' => PeppolArrays::electronic_address_scheme()
     ];
 
     if ($request->getMethod() === Method::POST) {
       $body = $request->getParsedBody();
+      //echo \Yiisoft\VarDumper\VarDumper::dump($body);  
       /**
        * @psalm-suppress PossiblyInvalidArgument $body
        */
@@ -124,7 +123,7 @@ final class DeliveryLocationController {
          */  
         $this->delService->saveDeliveryLocation($delivery_location, $body);
         return $this->factory->createResponse($this->viewRenderer->renderPartialAsString('/invoice/setting/inv_message',
-              ['heading' => 'Successful', 'message' => $settingRepository->trans('record_successfully_created'), 'url' => 'client/view', 'id' => $client_id]));
+              ['heading' => 'Successful', 'message' => $this->translator->translate('i.record_successfully_created'), 'url' => 'client/view', 'id' => $client_id]));
       }
       $parameters['errors'] = $form->getValidationResult()?->getErrorMessagesIndexedByAttribute() ?? [];
       $parameters['form'] = $form;
@@ -137,22 +136,20 @@ final class DeliveryLocationController {
    * @param CurrentRoute $currentRoute
    * @param FormHydrator $formHydrator
    * @param DeliveryLocationRepository $delRepository
-   * @param SettingRepository $settingRepository
    * @return Response
    */
   public function edit(Request $request, CurrentRoute $currentRoute,
     FormHydrator $formHydrator,
     DeliveryLocationRepository $delRepository,
-    SettingRepository $settingRepository,
   ): Response {
     $del = $this->del($currentRoute, $delRepository);
     if ($del) {
-      $form = new DeliveryLocationForm($del);  
+      $form = new DeliveryLocationForm($del);
       $parameters = [
-        'title' => $settingRepository->trans('edit'),
+        'title' => $this->translator->translate('i.edit'),
         'action' => ['del/edit', ['id' => $del->getId()]],
         'errors' => [],
-        'head' => $this->viewRenderer,
+        'form' => $form,  
         'electronic_address_scheme' => PeppolArrays::electronic_address_scheme()
       ];
       if ($request->getMethod() === Method::POST) {
@@ -173,19 +170,17 @@ final class DeliveryLocationController {
   }
 
   /**
-   *
-   * @param SettingRepository $settingRepository
    * @param CurrentRoute $currentRoute
    * @param DeliveryLocationRepository $delRepository
    * @return Response
    */
-  public function delete(SettingRepository $settingRepository, CurrentRoute $currentRoute, DeliveryLocationRepository $delRepository
+  public function delete(CurrentRoute $currentRoute, DeliveryLocationRepository $delRepository
   ): Response {
     try {
       $del = $this->del($currentRoute, $delRepository);
       if ($del) {
         $this->delService->deleteDeliveryLocation($del);
-        $this->flash_message('info', $settingRepository->trans('record_successfully_deleted'));
+        $this->flash_message('info', $this->translator->translate('i.record_successfully_deleted'));
         return $this->webService->getRedirectResponse('del/index');
       }
       return $this->webService->getRedirectResponse('del/index');
@@ -199,21 +194,19 @@ final class DeliveryLocationController {
    *
    * @param CurrentRoute $currentRoute
    * @param DeliveryLocationRepository $delRepository
-   * @param SettingRepository $settingRepository
    * @return \Yiisoft\DataResponse\DataResponse|Response
    */
-  public function view(CurrentRoute $currentRoute, DeliveryLocationRepository $delRepository,
-    SettingRepository $settingRepository,
-  ): \Yiisoft\DataResponse\DataResponse|Response {
+  public function view(CurrentRoute $currentRoute, DeliveryLocationRepository $delRepository): \Yiisoft\DataResponse\DataResponse|Response {
     $del = $this->del($currentRoute, $delRepository);
     if ($del) {
       $form = new DeliveryLocationForm($del);  
       $parameters = [
-        'title' => $settingRepository->trans('view'),
+        'title' => $this->translator->translate('i.view'),
         'action' => ['del/view', ['id' => $del->getId()]],
         'errors' => [],
         'form' => $form,
         'del' => $delRepository->repoDeliveryLocationquery((string) $del->getId()),
+        'electronic_address_scheme' => PeppolArrays::electronic_address_scheme()  
       ];
       return $this->viewRenderer->render('del/_view', $parameters);
     }

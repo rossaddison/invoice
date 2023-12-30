@@ -190,8 +190,9 @@ $this->beginPage();
               ['label' => $translator->translate('i.client'),
                 'items' => [
                   ['options' => ['class' => 'nav fs-4 ajax-loader'], 'label' => $translator->translate('invoice.client.add'), 'url' => $urlGenerator->generate('client/add')],
-                  ['options' => ['class' => 'nav fs-4 ajax-loader'], 'label' => $translator->translate('i.view'), 'url' => $urlGenerator->generate('client/index')],
+                  ['options' => ['class' => 'nav fs-4 ajax-loader'], 'label' => $translator->translate('invoice.client.view'), 'url' => $urlGenerator->generate('client/index')],
                   ['options' => ['class' => 'nav fs-4'], 'label' => $translator->translate('invoice.client.note.add'), 'url' => $urlGenerator->generate('clientnote/add')],
+                  ['options' => ['class' => 'nav fs-4'], 'label' => $translator->translate('invoice.client.note.view'), 'url' => $urlGenerator->generate('clientnote/index')],
                   ['options' => ['class' => 'nav fs-4'], 'label' => $translator->translate('invoice.invoice.delivery.location'), 'url' => $urlGenerator->generate('del/index')],
                 ],
               ],

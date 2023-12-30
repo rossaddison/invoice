@@ -51,5 +51,5 @@ final class Button
         echo Field::buttongroup()
             ->buttonsData($buttonsDataArray);
         echo Html::closeTag('div'); 
-    }    
+    }
 }
