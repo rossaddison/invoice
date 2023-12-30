@@ -335,8 +335,8 @@ Class DateHelper {
         // If invoice's Delivery period setup => use it and not beginning and end of month values
         if ($invoice->getDelivery_id()) {
             return [
-                'StartDate' => $invoice->getDelivery()?->getStart_date()->format('Y-m-d'),
-                'EndDate' => $invoice->getDelivery()?->getEnd_date()->format('Y-m-d')
+                'StartDate' => ($invoice->getDelivery()?->getStart_date())->format('Y-m-d'),
+                'EndDate' => ($invoice->getDelivery()?->getEnd_date())->format('Y-m-d')
             ];
         } else {
             return [

@@ -83,8 +83,9 @@ final class DeliveryController {
         if (null !== $inv) {
             $dels = $delRepo->repoClientquery($inv->getClient_id());
             $delivery = new Delivery();
+            // inv_id is a hidden field and is static
+            $delivery->setInv_id((int)$inv_id);
             $form = new DeliveryForm($delivery);
-            $body = $request->getParsedBody() ?? [];
             $parameters = [
                 'title' => $this->translator->translate('invoice.invoice.delivery.add'),
                 'action' => ['delivery/add', ['inv_id' => $inv->getId()]],
@@ -92,10 +93,10 @@ final class DeliveryController {
                 'form' => $form,
                 'del_count' => $delRepo->repoClientCount($inv->getClient_id()),
                 'dels' => $dels,
-                'inv_id' => $inv_id,
                 'inv' => $inv
             ];
-            if ($request->getMethod() === Method::POST) {
+            if ($request->getMethod() === Method::POST) {                
+                $body = $request->getParsedBody();
                 /**
                  * @psalm-suppress PossiblyInvalidArgument $body
                  */
@@ -231,13 +232,13 @@ final class DeliveryController {
           if (null!==$inv) {
             $dels = $delRepo->repoClientquery($inv->getClient_id());
             $parameters = [
-                'title' => $settingRepository->trans('edit'),
+                'title' => $this->translator->translate('i.edit'),
                 'action' => ['delivery/edit', ['id' => $delivery->getId()]],
                 'errors' => [],
-                'forms' => $form,
+                'form' => $form,
+                'inv' => $inv,
                 'del_count' => $delRepo->repoClientCount($inv->getClient_id()),
-                'dels' => $dels,
-                'header_buttons' => $this->viewRenderer->renderPartialAsString('invoice/layout/header_buttons'),
+                'dels' => $dels
             ];
             if ($request->getMethod() === Method::POST) {
                 $body = $request->getParsedBody();

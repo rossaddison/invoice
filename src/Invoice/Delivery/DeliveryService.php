@@ -5,7 +5,6 @@ namespace App\Invoice\Delivery;
 
 use App\Invoice\Entity\Delivery;
 use App\Invoice\Setting\SettingRepository;
-use App\Invoice\Helpers\DateHelper;
 
 final class DeliveryService
 {
@@ -18,21 +17,18 @@ final class DeliveryService
 
     public function saveDelivery(Delivery $model, array $array, SettingRepository $s): void
     {
-        $datehelper = new DateHelper($s);
-        $dim_created = new \DateTimeImmutable();
-        $dim_modified = new \DateTimeImmutable();
-        $dim_start_date = new \DateTimeImmutable();
-        $dim_actual_delivery_date = new \DateTimeImmutable();
-        $dim_end_date = new \DateTimeImmutable();
-        $model->setDate_created($dim_created::createFromFormat($datehelper->style(),(string)$array['date_created']));
-     
-        $model->setDate_modified($dim_modified::createFromFormat($datehelper->style(),(string)$array['date_modified']));
+        $model->setDate_created(new \DateTimeImmutable());
+        $model->setDate_modified(new \DateTimeImmutable());
         
-        $model->setStart_date($dim_start_date::createFromFormat($datehelper->style(),(string)$array['start_date']));
-        
-        $model->setActual_delivery_date($dim_actual_delivery_date::createFromFormat($datehelper->style(),(string)$array['actual_delivery_date']));
-        
-        $model->setEnd_Date($dim_end_date::createFromFormat($datehelper->style(),(string)$array['end_date']));
+        $datetime = new \DateTimeImmutable();
+        $d = $datetime::createFromFormat('Y-m-d', (string)$array['start_date']);
+        $datetime2 = new \DateTimeImmutable();
+        $d2 = $datetime2::createFromFormat('Y-m-d', (string)$array['actual_delivery_date']);
+        $datetime3 = new \DateTimeImmutable();
+        $d3 = $datetime3::createFromFormat('Y-m-d', (string)$array['end_date']);
+        $d ? $model->setStart_date($d) : '';
+        $d2 ? $model->setActual_delivery_date($d2) : '';
+        $d3 ? $model->setEnd_Date($d3) : '';
         
         isset($array['delivery_location_id']) ? $model->setDelivery_location_id((int)$array['delivery_location_id']) : '';
         isset($array['delivery_party_id']) ? $model->setDelivery_party_id((int)$array['delivery_party_id']) : '';

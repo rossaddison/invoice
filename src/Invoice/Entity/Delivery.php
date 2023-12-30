@@ -10,6 +10,7 @@ use Cycle\Annotated\Annotation\Entity;
 use Cycle\Annotated\Annotation\Relation\BelongsTo;
 use Cycle\ORM\Entity\Behavior;
 use \DateTimeImmutable;
+use \DateTime;
 
 #[Entity(repository: \App\Invoice\Delivery\DeliveryRepository::class)]
 #[Behavior\CreatedAt(field: 'date_created', column: 'date_created')]
@@ -65,8 +66,8 @@ class Delivery {
     $this->delivery_location_id = $delivery_location_id;
     $this->delivery_party_id = $delivery_party_id;
     $this->actual_delivery_date = new \DateTimeImmutable();
-    $this->date_created = new \DateTimeImmutable('now');
-    $this->date_modified = new \DateTimeImmutable('now');
+    $this->date_created = new \DateTimeImmutable();
+    $this->date_modified = new \DateTimeImmutable();
     $this->start_date = new \DateTimeImmutable(date('Y-m-01'));
     $this->end_date = new \DateTimeImmutable(date('Y-m-t'));
   }
@@ -99,64 +100,49 @@ class Delivery {
     $this->inv_item_id = $inv_item_id;
   }
 
-  public function getStart_date(): DateTimeImmutable {
-    /** @var DateTimeImmutable $this->start_date */
+  public function getStart_date(): null|DateTimeImmutable {
+    /** @var DateTimeImmutable|null $this->start_date */
     return $this->start_date;
   }
   
-  /**
-   * @see DateTimeImmutable::createFromFormat can return false
-   * @param DateTimeImmutable|false $start_date
-   * @return void
-   */
-  public function setStart_date(DateTimeImmutable|false $start_date): void {
-    $this->start_date = ($start_date instanceof DateTimeImmutable 
-                      ? $start_date
-                      // set the start date to the beginning of the current date by default
-                      : new \DateTimeImmutable(date('Y-m-01')));
+  public function setStart_date(DateTimeImmutable $start_date): void {
+    $this->start_date = $start_date;
   }
 
-  public function getActual_delivery_date(): ?DateTimeImmutable {
+  public function getActual_delivery_date(): null|DateTimeImmutable {
     /** @var DateTimeImmutable|null $this->actual_delivey_date */
     return $this->actual_delivery_date;
   }
 
-  public function setActual_delivery_date(DateTimeImmutable|false|null $actual_delivery_date): void {
-    $this->actual_delivery_date = ($actual_delivery_date instanceof DateTimeImmutable 
-                                ? $actual_delivery_date 
-                                : null);
+  public function setActual_delivery_date(?DateTimeImmutable $actual_delivery_date): void {
+    $this->actual_delivery_date = $actual_delivery_date;
   }
 
-  public function getEnd_date(): DateTimeImmutable {
-    /** @var DateTimeImmutable $this->end_date */
+  public function getEnd_date(): null|DateTimeImmutable {
+    /** @var DateTimeImmutable|null $this->end_date */
     return $this->end_date;
   }
 
-  public function setEnd_date(DateTimeImmutable|false $end_date): void {
-    $this->end_date = ($end_date instanceof DateTimeImmutable 
-                      ? $end_date
-                      // set the end date to the end of the current date
-                      : new \DateTimeImmutable(date('Y-m-t')));
+  public function setEnd_date(DateTimeImmutable $end_date): void {
+    $this->end_date = $end_date;
   }
 
   public function getDate_created(): DateTimeImmutable {
+    /** @var DateTimeImmutable $this->date_created */
     return $this->date_created;
   }
 
-  public function setDate_created(DateTimeImmutable|false $date_created): void {
-    $this->date_created = ($date_created instanceof DateTimeImmutable 
-                      ? $date_created
-                      : new \DateTimeImmutable('now'));
+  public function setDate_created(DateTimeImmutable $date_created): void {
+    $this->date_created = $date_created;
   }
 
   public function getDate_modified(): DateTimeImmutable {
+    /** @var DateTimeImmutable $this->date_modified */
     return $this->date_modified;
   }
 
-  public function setDate_modified(DateTimeImmutable|false $date_modified): void {
-    $this->date_modified = ($date_modified instanceof DateTimeImmutable 
-                      ? $date_modified
-                      : new \DateTimeImmutable('now'));
+  public function setDate_modified(DateTimeImmutable $date_modified): void {
+    $this->date_modified = $date_modified;
   }
 
   public function getDelivery_location_id(): string {
@@ -178,5 +164,4 @@ class Delivery {
   public function isNewRecord(): bool {
     return $this->getId() === null;
   }
-
 }

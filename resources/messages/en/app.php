@@ -907,6 +907,8 @@ return [
     'invoice.debug' => 'Debug Mode On',
     'invoice.default' => 'Default',
     'invoice.deleted' => 'Deleted',
+    'invoice.delivery' => 'Delivery',
+    'invoice.delivery.actual.delivery.date' => 'Actual Delivery Date',
     'invoice.delivery.location' => 'Delivery Location',
     'invoice.delivery.location.peppol.output' => 'There is no delivery location associated with this invoice. Therefore no Peppol output',
     'invoice.delivery.location.add' => 'Delivery Location Add',

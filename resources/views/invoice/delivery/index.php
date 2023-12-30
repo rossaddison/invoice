@@ -58,17 +58,17 @@ $toolbar = Div::tag();
         new DataColumn(
             'start_date',
             header:  $translator->translate('i.start_date'),
-            content: static fn(object $model) => Html::encode(($model->getStart_date())->format($datehelper->style()))
+            content: static fn(object $model) => Html::encode(($model->getStart_date())?->format($datehelper->style()) ?? '')
         ),
         new DataColumn(
             'actual_delivery_date',
-            header:  $translator->translate('i.actual_delivery_date'),
-            content: static fn(object $model) => Html::encode(($model->getActual_delivery_date())->format($datehelper->style()))
+            header:  $translator->translate('invoice.delivery.actual.delivery.date'),
+            content: static fn(object $model) => Html::encode(($model->getActual_delivery_date())?->format($datehelper->style()) ?? '')
         ),
         new DataColumn(
             'end_date',
             header:  $translator->translate('i.end_date'),
-            content: static fn(object $model) => Html::encode(($model->getEnd_date())->format($datehelper->style()))
+            content: static fn(object $model) => Html::encode(($model->getEnd_date())?->format($datehelper->style()) ?? '')
         ),
         new DataColumn( 
             content: static function ($model) use ($urlGenerator, $translator): string {
