@@ -1,8 +1,10 @@
 <?php
 declare(strict_types=1);
 
+use App\Widget\Button;
 use Yiisoft\FormModel\Field;
 use Yiisoft\Html\Html;
+use Yiisoft\Html\Tag\A;
 use Yiisoft\Html\Tag\Form;
 
 /**
@@ -37,24 +39,40 @@ use Yiisoft\Html\Tag\Form;
     ->onlyCommonErrors()
 ?>
 
-<ul id="product-tabs" class="nav nav-tabs nav-tabs-noborder">
-    <li class="active">
-        <a data-toggle="tab" href="#product-required" style="text-decoration: none">
-            <?= $translator->translate('invoice.product.form.tab.required'); ?> 
-        </a>
-    </li>
-    <li>
-        <a data-toggle="tab" href="#product-not-required" style="text-decoration: none">
-            <?= $translator->translate('invoice.product.form.tab.not.required'); ?>
-        </a>
-    </li>    
-</ul>
+<?= Html::openTag('ul', ['id' => 'product-tabs', 'class' => 'nav nav-tabs nav-tabs-noborder']); ?>
+    <?= Html::openTag('li', ['class' => 'active']); ?>
+        <?= A::tag()
+            ->addAttributes([
+                'data-bs-toggle' => 'tab',
+                'style' => 'text-decoration:none'
+            ])
+            ->addClass('btn btn-danger me-1')
+            ->content($translator->translate('invoice.product.form.tab.required'))
+            ->href('#product-required')
+            ->id('btn-reset')
+            ->render(); 
+        ?>
+    <?= Html::closeTag('li'); ?>
+    <?= Html::openTag('li'); ?>
+        <?= A::tag()
+            ->addAttributes([
+                'data-bs-toggle' => 'tab',
+                'style' => 'text-decoration:none'
+            ])
+            ->addClass('btn btn-danger me-1')
+            ->content($translator->translate('invoice.product.form.tab.not.required'))
+            ->href('#product-not-required')
+            ->id('btn-reset')
+            ->render(); 
+        ?>
+    <?= Html::closeTag('li'); ?>    
+<?= Html::closeTag('ul'); ?>
 
-<div class="tabbable tabs-below">
+<?= Html::openTag('div', ['class' => 'tabbable tabs-below']); ?>
 
-    <div class="tab-content">
-
-        <div id="product-required" class="tab-pane active">
+    <?= Html::openTag('div', ['class' => 'tab-content']); ?>
+        
+        <?= Html::openTag('div', ['id' => 'product-required', 'class' => 'tab-pane active']); ?>
             <?= Field::text($form, 'product_name')
                 ->label($translator->translate('i.product_name'))
                 ->required(true)    
@@ -133,7 +151,7 @@ use Yiisoft\Html\Tag\Form;
                 ->addInputAttributes([
                     'class' => 'form-control  alert alert-warning'
                 ])
-                ->value($s->format_amount((float)($form->getProduct_price()  ?? 0.00)))    
+                ->value($s->format_amount((float)($form->getProduct_price() ?? 0.00)))    
                 ->placeholder($translator->translate('i.product_price'))    
                 ->hint($translator->translate('invoice.hint.this.field.is.required')); ?>         
             <?= Html::tag('br'); ?>
@@ -156,9 +174,10 @@ use Yiisoft\Html\Tag\Form;
                 ->value($s->format_amount((float)($form->getProduct_tariff() ?? 0.00)))    
                 ->placeholder($translator->translate('i.product_tariff'))    
                 ->hint($translator->translate('invoice.hint.this.field.is.required')); ?>
-        </div>
+        <?= Html::closeTag('div'); ?>
 
-        <div id="product-not-required" class="tab-pane">
+        <?= Html::openTag('div', ['id' => 'product-not-required', 'class' => 'tab-pane']); ?>
+            
             <?= Field::select($form, 'unit_peppol_id')
                 ->label($translator->translate('invoice.product.peppol.unit'))        
                 ->addInputAttributes([
@@ -249,9 +268,9 @@ use Yiisoft\Html\Tag\Form;
                 ->value(Html::encode($form->getProvider_name()))    
                 ->placeholder($translator->translate('i.provider_name'))    
                 ->hint($translator->translate('invoice.hint.this.field.is.not.required')); ?>             
-        </div>
-    </div>
-</div>     
+        <?= Html::closeTag('div'); ?>
+    <?= Html::closeTag('div'); ?>
+<?= Html::closeTag('div'); ?>     
 
 <?= Html::openTag('div',['class'=>'panel panel-default']); ?>
     <?= Html::openTag('div',['class'=>'panel-heading']); ?>
@@ -275,22 +294,7 @@ use Yiisoft\Html\Tag\Form;
     <?= Html::closeTag('div'); ?>
 <?= Html::closeTag('div'); ?>
 
-<?= Field::buttonGroup()
-    ->addContainerClass('btn-group btn-toolbar float-end')
-    ->buttonsData([
-        [
-            $translator->translate('invoice.cancel'),
-            'type' => 'reset',
-            'class' => 'btn btn-lg btn-danger',
-            'name'=> 'btn_cancel'
-        ],
-        [
-            $translator->translate('invoice.submit'),
-            'type' => 'submit',
-            'class' => 'btn btn-lg btn-primary',
-            'name' => 'btn_send'
-        ],
-]) ?>
+<?= Button::back_save($translator); ?>
 <?= Form::tag()->close(); ?>
 <?= Html::closeTag('div'); ?>
 <?= Html::closeTag('div'); ?>

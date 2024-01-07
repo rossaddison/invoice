@@ -5,17 +5,19 @@ declare(strict_types=1);
 namespace App\Invoice\GeneratorRelation;
 
 use App\Invoice\Entity\GentorRelation;
+use App\Invoice\GeneratorRelation\GeneratorRelationForm;
 use App\Invoice\Generator\GeneratorRepository;
 use App\Invoice\Setting\SettingRepository;
 use App\Service\WebControllerService;
 use App\User\UserService;
 
+use Yiisoft\Data\Paginator\OffsetPaginator;
+use Yiisoft\FormModel\FormHydrator;
 use Yiisoft\Http\Method;
 use Yiisoft\Router\CurrentRoute;
 use Yiisoft\Session\SessionInterface as Session;
 use Yiisoft\Session\Flash\Flash;
-use Yiisoft\Translator\TranslatorInterface;use Yiisoft\FormModel\FormHydrator;
-use Yiisoft\Form\Helper\HtmlFormErrors;
+use Yiisoft\Translator\TranslatorInterface;
 use Yiisoft\Yii\View\ViewRenderer;
 
 use Psr\Http\Message\ResponseInterface as Response;
@@ -52,18 +54,26 @@ final class GeneratorRelationController
     
     /**
      * @param GeneratorRelationRepository $generatorrelationRepository
-     * @param SettingRepository $settingRepository
+     * @param SettingRepository $sR
      */
-    public function index(GeneratorRelationRepository $generatorrelationRepository, SettingRepository $settingRepository): \Yiisoft\DataResponse\DataResponse
+    public function index(GeneratorRelationRepository $generatorrelationRepository, SettingRepository $sR): \Yiisoft\DataResponse\DataResponse
     {
         $canEdit = $this->rbac();
         $generatorrelations = $this->generatorrelations($generatorrelationRepository);
-        // $generator = $this->generatorrelation($generatorrelationRepository);
+        $paginator = (new OffsetPaginator($generatorrelations));
         $parameters = [
-            's'=>$settingRepository,
             'canEdit' => $canEdit,
-            'generatorrelations' => $generatorrelations,
-            'alert' => $this->alert()
+            'alert' => $this->alert(),
+            'grid_summary'=> $sR->grid_summary(
+                $paginator, 
+                $this->translator, 
+                (int)$sR->get_setting('default_list_limit'), 
+                $this->translator->translate('invoice.generator.relations'), 
+                ''
+            ),
+            'paginator' => $paginator,
+            
+                
         ]; 
         return $this->viewRenderer->render('index', $parameters);
     }
@@ -72,27 +82,34 @@ final class GeneratorRelationController
      * 
      * @param Request $request
      * @param GeneratorRepository $generatorRepository
-     * @param SettingRepository $settingRepository
      * @param FormHydrator $formHydrator
      * @return Response
      */
-    public function add(Request $request, GeneratorRepository $generatorRepository, SettingRepository $settingRepository, FormHydrator $formHydrator): Response
+    public function add(Request $request, GeneratorRepository $generatorRepository, FormHydrator $formHydrator): Response
     {
+        $generatorrelation = new GentorRelation();
+        $form = new GeneratorRelationForm($generatorrelation);
         $parameters = [
-            'title' => $settingRepository->trans('Add'),
+            'title' => $this->translator->translate('invoice.generator.relation.form'),
             'action' => ['generatorrelation/add'],
+            'form' => $form,
             'errors' => [],
-            'body' => $request->getParsedBody(),
-            's'=>$settingRepository,
             'generators'=>$generatorRepository->findAllPreloaded()
         ];
         
         if ($request->getMethod() === Method::POST) {
-            $form = new GeneratorRelationForm();
-            if ($formHydrator->populate($form, $parameters['body']) && $form->isValid()) {
-                $this->generatorrelationService->saveGeneratorRelation(new GentorRelation(), $form);
+            $body = $request->getParsedBody();
+            /**
+             * @psalm-suppress PossiblyInvalidArgument $body 
+             */
+            if ($formHydrator->populate($form, $body) && $form->isValid()) {
+                /**
+                 * @psalm-suppress PossiblyInvalidArgument $body 
+                 */
+                $this->generatorrelationService->saveGeneratorRelation($generatorrelation, $body);
                 return $this->webService->getRedirectResponse('generatorrelation/index');
             }
+            $parameters['errors'] = $form->getValidationResult()?->getErrorMessagesIndexedByAttribute() ?? [];
             $parameters['form'] = $form;
         }
         return $this->viewRenderer->render('__form', $parameters);
@@ -104,37 +121,40 @@ final class GeneratorRelationController
      * @param CurrentRoute $currentRoute
      * @param GeneratorRelationRepository $generatorrelationRepository
      * @param GeneratorRepository $generatorRepository
-     * @param SettingRepository $settingRepository
      * @param FormHydrator $formHydrator
      * @return Response
      */
-    public function edit(Request $request, CurrentRoute $currentRoute,GeneratorRelationRepository $generatorrelationRepository, GeneratorRepository $generatorRepository, SettingRepository $settingRepository, FormHydrator $formHydrator): Response 
+    public function edit(Request $request, 
+                         CurrentRoute $currentRoute,
+                         GeneratorRelationRepository $generatorrelationRepository, 
+                         GeneratorRepository $generatorRepository, 
+                         FormHydrator $formHydrator
+    ): Response 
     {
         $generatorrelation = $this->generatorrelation($currentRoute, $generatorrelationRepository);
         if ($generatorrelation) {
+            $form = new GeneratorRelationForm($generatorrelation);
             $parameters = [
-                'title' => $settingRepository->trans('edit'),
+                'title' => $this->translator->translate('i.edit'),
                 'action' => ['generatorrelation/edit', ['id' => $generatorrelation->getRelation_id()]],
                 'errors' => [],
-                'body' => [
-                    'id'=>$generatorrelation->getRelation_id(),
-                    'lowercasename'=>$generatorrelation->getLowercase_name(),               
-                    'camelcasename'=>$generatorrelation->getCamelcase_name(),
-                    'view_field_name'=>$generatorrelation->getView_field_name(),
-                    'gentor_id'=>$generatorrelation->getGentor_id(),
-                ],
+                'form' => $form,
                 //relation generator
-                'generators'=>$generatorRepository->findAllPreloaded(),
-                's'=>$settingRepository,
+                'generators'=>$generatorRepository->findAllPreloaded()
             ];
             if ($request->getMethod() === Method::POST) {
-                $form = new GeneratorRelationForm();
                 $body = $request->getParsedBody();
+                /**
+                 * @psalm-suppress PossiblyInvalidArgument $body 
+                 */
                 if ($formHydrator->populate($form, $body) && $form->isValid()) {
-                    $this->generatorrelationService->saveGeneratorRelation($generatorrelation, $form);
+                    /**
+                     * @psalm-suppress PossiblyInvalidArgument $body 
+                     */
+                    $this->generatorrelationService->saveGeneratorRelation($generatorrelation, $body);
                     return $this->webService->getRedirectResponse('generatorrelation/index');
                 }
-                $parameters['body'] = $body;
+                $parameters['errors'] = $form->getValidationResult()?->getErrorMessagesIndexedByAttribute() ?? [];
                 $parameters['form'] = $form;
             }
             return $this->viewRenderer->render('__form', $parameters);
@@ -162,26 +182,23 @@ final class GeneratorRelationController
      * 
      * @param CurrentRoute $currentRoute
      * @param GeneratorRelationRepository $generatorrelationRepository
-     * @param SettingRepository $settingRepository
-     * @param FormHydrator $formHydrator
+     * @param GeneratorRepository $generatorRepository
      * @return \Yiisoft\DataResponse\DataResponse|Response
      */
-    public function view(CurrentRoute $currentRoute, GeneratorRelationRepository $generatorrelationRepository, SettingRepository $settingRepository, FormHydrator $formHydrator): \Yiisoft\DataResponse\DataResponse|Response {
+    public function view(CurrentRoute $currentRoute, 
+                         GeneratorRelationRepository $generatorrelationRepository,
+                         GeneratorRepository $generatorRepository
+        ): \Yiisoft\DataResponse\DataResponse|Response {
         $generatorrelation = $this->generatorrelation($currentRoute, $generatorrelationRepository);
         if ($generatorrelation) {
+            $form = new GeneratorRelationForm($generatorrelation);
             $parameters = [
-                'title' => $settingRepository->trans('view'),
+                'title' => $this->translator->translate('i.view'),
                 'action' => ['generatorrelation/view', ['id' => $generatorrelation->getRelation_id()]],
                 'errors' => [],
-                'generatorrelation'=>$generatorrelation,
-                's'=>$settingRepository,     
-                'body' => [
-                    'id'=>$generatorrelation->getRelation_id(),
-                    'lowercasename'=>$generatorrelation->getLowercase_name(),               
-                    'camelcasename'=>$generatorrelation->getCamelcase_name(),
-                    'view_field_name'=>$generatorrelation->getView_field_name(),
-                    'gentor_id'=>$generatorrelation->getGentor_id()                
-                ],
+                'form' => $form,  
+                'generatorrelation' => $generatorrelation,
+                'generators'=>$generatorRepository->findAllPreloaded(),
                 'egrs'=>$generatorrelationRepository->repoGeneratorRelationquery($generatorrelation->getRelation_id()),
             ];
             return $this->viewRenderer->render('__view', $parameters);

@@ -25,6 +25,7 @@ use Google\Cloud\Translate\V3\TranslationServiceClient;
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
 use Yiisoft\Aliases\Aliases;
+use Yiisoft\Data\Paginator\OffsetPaginator;
 use Yiisoft\DataResponse\DataResponseFactoryInterface;
 use Yiisoft\Http\Method;
 use Yiisoft\Router\CurrentRoute;
@@ -87,48 +88,65 @@ final class GeneratorController
     
     /**
      * @param GeneratorRepository $generatorRepository
+     * @param SettingRepository $sR
      * @param GeneratorRelationRepository $grr
-     * @param SettingRepository $settingRepository
      */
-    public function index(GeneratorRepository $generatorRepository, GeneratorRelationRepository $grr, SettingRepository $settingRepository): \Yiisoft\DataResponse\DataResponse
+    public function index(
+            GeneratorRepository $generatorRepository,
+            SettingRepository $sR,
+            GeneratorRelationRepository $grr): \Yiisoft\DataResponse\DataResponse
     {
         $canEdit = $this->rbac();
         $generators = $this->generators($generatorRepository);
+        $paginator = (new OffsetPaginator($generators));
         $parameters = [
-            's'=>$settingRepository,
             'canEdit' => $canEdit,
-            'generators' => $generators,
+            'grid_summary'=> $sR->grid_summary(
+                $paginator, 
+                $this->translator, 
+                (int)$sR->get_setting('default_list_limit'), 
+                $this->translator->translate('invoice.generators'), 
+                ''
+            ),
             'grr'=>$grr,
-            'alert'=> $this->alert()
+            'alert'=> $this->alert(),
+            'paginator'=>$paginator 
         ]; 
         return $this->viewRenderer->render('index', $parameters);
     }
     
     /**
-     * 
      * @param Request $request
-     * @param SettingRepository $settingRepository
      * @param FormHydrator $formHydrator
      * @param DatabaseManager $dbal
      * @return Response
      */
-    public function add(Request $request, SettingRepository $settingRepository, FormHydrator $formHydrator, DatabaseManager $dbal): Response
+    public function add(Request $request, FormHydrator $formHydrator, DatabaseManager $dbal): Response
     {
+        $gentor = new Gentor();
+        $form = new GeneratorForm($gentor);
         $parameters = [
-            'title' => $settingRepository->trans('add'),
+            'title' => $this->translator->translate('i.add'),
             'action' => ['generator/add'],
             'errors' => [],
-            'body' => $request->getParsedBody(),
-            's'=>$settingRepository,
-            'tables'=>$dbal->database('default')->getTables(),
+            'form' => $form,
+            'tables'=> $dbal->database('default')->getTables(),
             'selected_table'=>'',
         ];
         if ($request->getMethod() === Method::POST) {
-            $form = new GeneratorForm();
-            if ($formHydrator->populate($form, $parameters['body']) && $form->isValid()) {
-                $this->generatorService->saveGenerator(new Gentor(), $form);
+            $body = $request->getParsedBody();
+            //echo \Yiisoft\VarDumper\Vardumper::dump($body);
+            /**
+             * @psalm-suppress PossiblyInvalidArgument $body 
+             */
+            if ($formHydrator->populate($form, $body) && $form->isValid()) {
+                /**
+                 * @psalm-suppress PossiblyInvalidArgument $body 
+                 */
+                $this->generatorService->saveGenerator($gentor, $body);
                 return $this->webService->getRedirectResponse('generator/index');
             }
+            $parameters['errors'] = $form->getValidationResult()?->getErrorMessagesIndexedByAttribute() ?? [];
             $parameters['form'] = $form;
         }
         return $this->viewRenderer->render('__form', $parameters);
@@ -139,33 +157,37 @@ final class GeneratorController
      * @param CurrentRoute $currentRoute
      * @param Request $request
      * @param GeneratorRepository $generatorRepository
-     * @param SettingRepository $s
      * @param FormHydrator $formHydrator
      * @param DatabaseManager $dbal
      * @return Response
      */
-    public function edit(CurrentRoute $currentRoute, Request $request, GeneratorRepository $generatorRepository, SettingRepository $s, FormHydrator $formHydrator, DatabaseManager $dbal): Response 
+    public function edit(CurrentRoute $currentRoute, Request $request, GeneratorRepository $generatorRepository, FormHydrator $formHydrator, DatabaseManager $dbal): Response 
     {
         $generator = $this->generator($currentRoute, $generatorRepository);
         if ($generator) {
+            $form = new GeneratorForm($generator);
             $parameters = [
                 'title' => $this->translator->translate('i.edit'),
                 'action' => ['generator/edit', ['id' => $generator->getGentor_id()]],
                 'errors' => [],
-                'body' => $this->body($generator),
-                's'=>$s,
-                'tables'=>$dbal->database('default')->getTables(),
-                'selected_table'=>$generator->getPre_entity_table(),
+                'form' => $form,
+                'tables'=> $dbal->database('default')->getTables(),
+                'selected_table'=> $generator->getPre_entity_table(),
             ];
             if ($request->getMethod() === Method::POST) {
-                $form = new GeneratorForm();
                 $body = $request->getParsedBody();
+                /**
+                 * @psalm-suppress PossiblyInvalidArgument $body 
+                 */
                 if ($formHydrator->populate($form, $body) && $form->isValid()) {
-                    $this->generatorService->saveGenerator($generator, $form);
+                    /**
+                     * @psalm-suppress PossiblyInvalidArgument $body 
+                     */
+                    $this->generatorService->saveGenerator($generator, $body);
                     $this->flash_message('warning', $this->translator->translate('i.record_successfully_updated'));
                     return $this->webService->getRedirectResponse('generator/index');
                 }
-                $parameters['body'] = $body;
+                $parameters['errors'] = $form->getValidationResult()?->getErrorMessagesIndexedByAttribute() ?? [];
                 $parameters['form'] = $form;
             }
             return $this->viewRenderer->render('__form', $parameters);
@@ -178,10 +200,9 @@ final class GeneratorController
      * 
      * @param CurrentRoute $currentRoute
      * @param GeneratorRepository $generatorRepository
-     * @param SettingRepository $s
      * @return Response
      */
-    public function delete(CurrentRoute $currentRoute, GeneratorRepository $generatorRepository, SettingRepository $s): Response 
+    public function delete(CurrentRoute $currentRoute, GeneratorRepository $generatorRepository) : Response 
     {
         try {
             $generator = $this->generator($currentRoute, $generatorRepository);
@@ -202,19 +223,21 @@ final class GeneratorController
     /**
      * @param CurrentRoute $currentRoute
      * @param GeneratorRepository $generatorRepository
-     * @param SettingRepository $settingRepository
+     * @param DatabaseManager $dbal 
      */
-    public function view(CurrentRoute $currentRoute, GeneratorRepository $generatorRepository, SettingRepository $settingRepository): Response {
+    public function view(
+        CurrentRoute $currentRoute, 
+        GeneratorRepository $generatorRepository,
+    ): Response {
         $generator = $this->generator($currentRoute, $generatorRepository);
         if ($generator) {
+            $form = new GeneratorForm($generator);
             $parameters = [
-                'title' => $settingRepository->trans('view'),
+                'title' => $this->translator->translate('i.view'),
                 'action' => ['generator/view', ['id' => $generator->getGentor_id()]],
                 'errors' => [],
                 'generator'=>$generator,
-                's'=>$settingRepository,     
-                'body' => $this->body($generator),            
-                'selected_table'=>$generator->getPre_entity_table(),            
+                'form' => $form, 
             ];
             return $this->viewRenderer->render('__view', $parameters);
         }
@@ -279,49 +302,13 @@ final class GeneratorController
     }
     
     /**
-     * 
-     * @param Gentor $generator
-     * @return array
-     */
-    private function body(Gentor $generator): array {
-        $body = [
-                'route_prefix' => $generator->getRoute_prefix(),
-                'route_suffix' => $generator->getRoute_suffix(),
-                'camelcase_capital_name' => $generator->getCamelcase_capital_name(),
-                'small_singular_name' => $generator->getSmall_singular_name(),
-                'small_plural_name' => $generator->getSmall_plural_name(),
-                'namespace_path' => $generator->getNamespace_path(),
-                'controller_layout_dir' => $generator->getController_layout_dir(),
-                'controller_layout_dir_dot_path' => $generator->getController_layout_dir_dot_path(),
-                'repo_extra_camelcase_name' => $generator->getRepo_extra_camelcase_name(),
-                'paginator_next_page_attribute' => $generator->getPaginator_next_page_attribute(),
-                'pre_entity_table' => $generator->getPre_entity_table(),
-                'created_include' => $generator->isCreated_include(),
-                'modified_include' => $generator->isModified_include(),
-                'updated_include' => $generator->isUpdated_include(),
-                'deleted_include' => $generator->isDeleted_include(),
-                'constrain_index_field'=> $generator->getConstrain_index_field(),
-                'keyset_paginator_include' => $generator->isKeyset_paginator_include(),
-                'offset_paginator_include' => $generator->isOffset_paginator_include(),
-                'filter_field' => $generator->getFilter_field(),           
-                'filter_field_start_position' => $generator->getFilter_field_start_position(),
-                'filter_field_end_position' => $generator->getFilter_field_end_position(),
-                'flash_include' => $generator->isFlash_include(),
-                'headerline_include' => $generator->isHeaderline_include(),
-        ];
-        return $body;
-    }
-    
-    /**
      * @param CurrentRoute $currentRoute
      * @param GeneratorRepository $gr
-     * @param SettingRepository $settingRepository
      * @param GeneratorRelationRepository $grr
      * @param DatabaseManager $dbal
      * @param View $view
      */
-    public function entity(CurrentRoute $currentRoute, GeneratorRepository $gr, 
-                             SettingRepository $settingRepository, GeneratorRelationRepository $grr,
+    public function entity(CurrentRoute $currentRoute, GeneratorRepository $gr, GeneratorRelationRepository $grr,
                              DatabaseManager $dbal, View $view
                             ): Response {
         $file = self::ENTITY;
@@ -341,9 +328,7 @@ final class GeneratorController
         $build_file = $this->build_and_save($path,$content,$file,($g->getCamelcase_capital_name() ?? ''));
         $parameters = [
             'canEdit'=>$this->rbac(),
-            's'=> $settingRepository,
             'title' => $this->translator->translate('invoice.generator.generate') .$file,
-            'body' => $this->body($g),
             'generator'=> $g,
             'orm_schema'=>$orm,
             'relations'=>$relations,
@@ -356,13 +341,11 @@ final class GeneratorController
     /**
      * @param CurrentRoute $currentRoute
      * @param GeneratorRepository $gr
-     * @param SettingRepository $settingRepository
      * @param GeneratorRelationRepository $grr
      * @param DatabaseManager $dbal
      * @param View $view
      */
-    public function repo(CurrentRoute $currentRoute, GeneratorRepository $gr, 
-                             SettingRepository $settingRepository, GeneratorRelationRepository $grr,
+    public function repo(CurrentRoute $currentRoute, GeneratorRepository $gr, GeneratorRelationRepository $grr,
                              DatabaseManager $dbal, View $view
                             ): Response {
         $file = self::REPO;
@@ -382,9 +365,7 @@ final class GeneratorController
         $build_file = $this->build_and_save($path,$content,$file,$g->getCamelcase_capital_name() ?? '');
         $parameters = [
             'canEdit'=>$this->rbac(),
-            's'=> $settingRepository,
             'title' => $this->translator->translate('invoice.generator.generate').$file,
-            'body' => $this->body($g),
             'generator'=> $g,
             'orm_schema'=>$orm,
             'relations'=>$relations,
@@ -397,13 +378,11 @@ final class GeneratorController
     /**
      * @param CurrentRoute $currentRoute
      * @param GeneratorRepository $gr
-     * @param SettingRepository $settingRepository
      * @param GeneratorRelationRepository $grr
      * @param DatabaseManager $dbal
      * @param View $view
      */
-    public function service(CurrentRoute $currentRoute, GeneratorRepository $gr, 
-                             SettingRepository $settingRepository, GeneratorRelationRepository $grr,
+    public function service(CurrentRoute $currentRoute, GeneratorRepository $gr, GeneratorRelationRepository $grr,
                              DatabaseManager $dbal, View $view
                             ): Response {
         $file = self::SERVICE;
@@ -423,9 +402,7 @@ final class GeneratorController
         $build_file = $this->build_and_save($path,$content,$file,($g->getCamelcase_capital_name() ?? ''));
         $parameters = [
             'canEdit'=>$this->rbac(),
-            's'=> $settingRepository,
             'title' => $this->translator->translate('invoice.generator.generate').$file,
-            'body' => $this->body($g),
             'generator'=> $g,
             'orm_schema'=>$orm,
             'relations'=>$relations,
@@ -438,13 +415,11 @@ final class GeneratorController
     /**
      * @param CurrentRoute $currentRoute
      * @param GeneratorRepository $gr
-     * @param SettingRepository $settingRepository
      * @param GeneratorRelationRepository $grr
      * @param DatabaseManager $dbal
      * @param View $view
      */
-    public function form(CurrentRoute $currentRoute, GeneratorRepository $gr, 
-                             SettingRepository $settingRepository, GeneratorRelationRepository $grr,
+    public function form(CurrentRoute $currentRoute, GeneratorRepository $gr, GeneratorRelationRepository $grr,
                              DatabaseManager $dbal, View $view
                             ): Response {
         $file = self::FORM;
@@ -465,9 +440,7 @@ final class GeneratorController
         $build_file = $this->build_and_save($path,$content,$file,($g->getCamelcase_capital_name() ?? 'Unknown' ));
         $parameters = [
             'canEdit'=>$this->rbac(),
-            's'=> $settingRepository,
             'title' => $this->translator->translate('invoice.generator.generate').$file,
-            'body' => $this->body($g),
             'generator'=> $g,
             'orm_schema'=>$orm,
             'relations'=>$relations,
@@ -480,13 +453,11 @@ final class GeneratorController
     /**
      * @param CurrentRoute $currentRoute
      * @param GeneratorRepository $gr
-     * @param SettingRepository $settingRepository
      * @param GeneratorRelationRepository $grr
      * @param DatabaseManager $dbal
      * @param View $view
      */
-    public function controller(CurrentRoute $currentRoute, GeneratorRepository $gr, 
-                             SettingRepository $settingRepository, GeneratorRelationRepository $grr,
+    public function controller(CurrentRoute $currentRoute, GeneratorRepository $gr, GeneratorRelationRepository $grr,
                              DatabaseManager $dbal, View $view
                             ): Response {
         $file = self::CONTROLLER;
@@ -507,9 +478,7 @@ final class GeneratorController
             $build_file = $this->build_and_save($path,$content,$file,($g->getCamelcase_capital_name() ?? ''));
             $parameters = [
                 'canEdit'=>$this->rbac(),
-                's'=> $settingRepository,
                 'title' => $this->translator->translate('invoice.generator.generate').$file,
-                'body' => $this->body($g),
                 'generator'=> $g,
                 'orm_schema'=>$orm,
                 'relations'=>$relations,
@@ -551,9 +520,7 @@ final class GeneratorController
         $build_file = $this->build_and_save($path,$content,$file,'');
         $parameters = [
             'canEdit'=>$this->rbac(),
-            's'=> $settingRepository,
             'title' => $this->translator->translate('invoice.generator.generate').$file,
-            'body' => $this->body($g),
             'generator'=> $g,
             'orm_schema'=>$orm,
             'relations'=>$relations,
@@ -563,98 +530,15 @@ final class GeneratorController
         return $this->viewRenderer->render('__results', $parameters);
     }
     
-    /**
-     * @param CurrentRoute $currentRoute
-     * @param GeneratorRepository $gr
-     * @param SettingRepository $settingRepository
-     * @param GeneratorRelationRepository $grr
-     * @param DatabaseManager $dbal
-     * @param View $view
-     */
-    public function _index_adv_paginator(CurrentRoute $currentRoute, GeneratorRepository $gr, 
-                             SettingRepository $settingRepository, GeneratorRelationRepository $grr,
-                             DatabaseManager $dbal, View $view
-                            ): Response {
-        $file = self::INDEX_ADV_PAGINATOR;
-        $path = $this->getAliases();
-        /** @var Gentor $g */
-        $g = $this->generator($currentRoute, $gr);
-        $table_name = $g->getPre_entity_table();
-        if (null==$table_name) {
-            return $this->webService->getRedirectResponse('generator/index');
-        }
-        $id = $g->getGentor_id();
-        $relations = $grr->findRelations($id);
-        /** @psalm-suppress ArgumentTypeCoercion $g->getPre_entity_table() */
-        $orm = $dbal->database('default')
-                    ->table($table_name);
-        $content = $this->getContent($view,$g,$relations,$orm,$file);
-        $this->flash_message('success',$file.$this->translator->translate('invoice.generator.generate').$path.'/'.$file);
-        $build_file = $this->build_and_save($path,$content,$file,'');
-        $parameters = [
-            'canEdit'=>$this->rbac(),
-            's'=> $settingRepository,
-            'title' => $this->translator->translate('invoice.generator.generate').$file,
-            'body' => $this->body($g),
-            'generator'=> $g,
-            'orm_schema'=>$orm,
-            'relations'=>$relations,
-            'alert'=> $this->alert(),
-            'generated'=>$build_file,
-        ];
-        return $this->viewRenderer->render('__results', $parameters);
-    }    
-    /**
-     * @param CurrentRoute $currentRoute
-     * @param GeneratorRepository $gr
-     * @param SettingRepository $settingRepository
-     * @param GeneratorRelationRepository $grr
-     * @param DatabaseManager $dbal
-     * @param View $view
-     */
-    public function _index_adv_paginator_with_filter(CurrentRoute $currentRoute, GeneratorRepository $gr, 
-                             SettingRepository $settingRepository, GeneratorRelationRepository $grr,
-                             DatabaseManager $dbal, View $view
-                            ): Response {
-        $file = self::INDEX_ADV_PAGINATOR_WITH_FILTER;
-        $path = $this->getAliases();
-        /** @var Gentor $g */
-        $g = $this->generator($currentRoute, $gr);
-        $table_name = $g->getPre_entity_table();
-        if (null==$table_name) {
-            return $this->webService->getRedirectResponse('generator/index');
-        }
-        $id = $g->getGentor_id();
-        $relations = $grr->findRelations($id);
-        $orm = $dbal->database('default')
-                    ->table($table_name);
-        $content = $this->getContent($view,$g,$relations,$orm,$file);
-        $this->flash_message('success',$file.$this->translator->translate('invoice.generator.generated').$path.'/'.$file);
-        $build_file = $this->build_and_save($path,$content,$file,'');
-        $parameters = [
-            'canEdit'=>$this->rbac(),
-            's'=> $settingRepository,
-            'title' => $this->translator->translate('invoice.generator.generate').$file,
-            'body' => $this->body($g),
-            'generator'=> $g,
-            'orm_schema'=>$orm,
-            'relations'=>$relations,
-            'alert'=> $this->alert(),
-            'generated'=>$build_file,
-        ];
-        return $this->viewRenderer->render('__results', $parameters);
-    }
     
     /**
      * @param CurrentRoute $currentRoute
      * @param GeneratorRepository $gr
-     * @param SettingRepository $settingRepository
      * @param GeneratorRelationRepository $grr
      * @param DatabaseManager $dbal
      * @param View $view
      */
-    public function _form(CurrentRoute $currentRoute, GeneratorRepository $gr, 
-                             SettingRepository $settingRepository, GeneratorRelationRepository $grr,
+    public function _form(CurrentRoute $currentRoute, GeneratorRepository $gr, GeneratorRelationRepository $grr,
                              DatabaseManager $dbal, View $view
                             ): Response {
         $file = self::_FORM;
@@ -674,9 +558,7 @@ final class GeneratorController
         $build_file = $this->build_and_save($path,$content,$file,'');
         $parameters = [
             'canEdit'=>$this->rbac(),
-            's'=> $settingRepository,
             'title' => $this->translator->translate('invoice.generator.generate').$file,
-            'body' => $this->body($g),
             'generator'=> $g,
             'orm_schema'=>$orm,
             'relations'=>$relations,
@@ -689,13 +571,11 @@ final class GeneratorController
     /**
      * @param CurrentRoute $currentRoute
      * @param GeneratorRepository $gr
-     * @param SettingRepository $settingRepository
      * @param GeneratorRelationRepository $grr
      * @param DatabaseManager $dbal
      * @param View $view
      */
-    public function _view(CurrentRoute $currentRoute, GeneratorRepository $gr, 
-                             SettingRepository $settingRepository, GeneratorRelationRepository $grr,
+    public function _view(CurrentRoute $currentRoute, GeneratorRepository $gr, GeneratorRelationRepository $grr,
                              DatabaseManager $dbal, View $view
                             ): 
         Response {
@@ -716,9 +596,7 @@ final class GeneratorController
         $build_file = $this->build_and_save($path,$content,$file,'');
         $parameters = [
             'canEdit'=>$this->rbac(),
-            's'=> $settingRepository,
             'title' => $this->translator->translate('invoice.generator.generate').$file,
-            'body' => $this->body($g),
             'generator'=> $g,
             'orm_schema'=>$orm,
             'relations'=>$relations,
@@ -733,13 +611,11 @@ final class GeneratorController
     /**
      * @param CurrentRoute $currentRoute
      * @param GeneratorRepository $gr
-     * @param SettingRepository $settingRepository
      * @param GeneratorRelationRepository $grr
      * @param DatabaseManager $dbal
      * @param View $view
      */
-    public function _route(CurrentRoute $currentRoute, GeneratorRepository $gr, 
-                             SettingRepository $settingRepository, GeneratorRelationRepository $grr,
+    public function _route(CurrentRoute $currentRoute, GeneratorRepository $gr, GeneratorRelationRepository $grr,
                              DatabaseManager $dbal, View $view
                            ): Response {
         $file = self::_ROUTE;
@@ -759,9 +635,7 @@ final class GeneratorController
         $build_file = $this->build_and_save($path,$content,$file,'');
         $parameters = [
             'canEdit'=>$this->rbac(),
-            's'=> $settingRepository,
             'title' => $this->translator->translate('invoice.generator.generate').$file,
-            'body' => $this->body($g),
             'generator'=> $g,
             'orm_schema'=>$orm,
             'relations'=>$relations,
@@ -795,7 +669,11 @@ final class GeneratorController
      */
     public function google_translate_lang(CurrentRoute $currentRoute, SettingRepository $sR) : \Yiisoft\DataResponse\DataResponse|Response {
         // ? Downloaded https://curl.haxx.se/ca/cacert.pem" into 
-        // c:\wamp64\bin\php\{active_php}  
+        // c:\wamp64\bin\php\{active_php} eg. c:\wamp64\bin\php\php8.2.0
+        // check your localhost phpinfo() (or create a script) for the location of your php.ini in wampserver
+        // normally eg. Loaded Configuration File C:\wamp64\bin\apache\apache2.4.54.2\bin\php.ini
+        // Edit this symlink file manually at [curl] with eg. "c:/wamp64/bin/php/php8.2.0/cacert.pem"
+        // Note forward slashes and quotes 
         $type = $currentRoute->getArgument('type');
         if (null!==$type) {
             $curlcertificate = !empty(\ini_get('curl.cainfo')) ?  true : false;
@@ -852,7 +730,7 @@ final class GeneratorController
              * @var string $key
              */
             foreach ($response_get_translations as $key => $translation) {
-                $result_array[$key] = $translation->getTranslatedText();
+                $result_array[$key] = $translation->getTranslatedText().',';
             }
             $combined_array = array_combine($content_keys_array, $result_array);
             $file = $this->google_translate_get_file_from_type($type);
@@ -937,5 +815,26 @@ final class GeneratorController
         $build_file = new GenerateCodeFileHelper("$generated_dir_path/$name$file", $content); 
         $build_file->save();
         return $build_file;
+    }
+    
+    /**
+     * 
+     * @param Gentor $generator
+     * @return array
+     */
+    private function body(Gentor $generator): array {
+        $body = [
+            'route_prefix' => $generator->getRoute_prefix(),
+            'route_suffix' => $generator->getRoute_suffix(),
+            'camelcase_capital_name' => $generator->getCamelcase_capital_name(),
+            'small_singular_name' => $generator->getSmall_singular_name(),
+            'small_plural_name' => $generator->getSmall_plural_name(),
+            'namespace_path' => $generator->getNamespace_path(),
+            'controller_layout_dir' => $generator->getController_layout_dir(),
+            'controller_layout_dir_dot_path' => $generator->getController_layout_dir_dot_path(),
+            'pre_entity_table' => $generator->getPre_entity_table(),
+            'flash_include' => $generator->isFlash_include(),
+        ];
+        return $body;
     }
 }    

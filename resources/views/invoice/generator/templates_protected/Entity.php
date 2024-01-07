@@ -212,7 +212,7 @@ use Cycle\Annotated\Annotation\Relation\BelongsTo;
             }
             
             if ($column->getAbstractType() === 'date') {
-              echo '     '.$ate_or_lic. " $".$column->getName().';'."\n";
+              echo '     '.$ate_or_lic. " mixed $".$column->getName().';'."\n";
               $construct .= "      $".$column->getName(). ' = '.$init.','."\n    "; 
             }
             

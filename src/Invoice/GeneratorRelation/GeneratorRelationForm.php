@@ -4,20 +4,33 @@ declare(strict_types=1);
 
 namespace App\Invoice\GeneratorRelation;
 
+use App\Invoice\Entity\GentorRelation;
 use Yiisoft\FormModel\FormModel;
 use Yiisoft\Validator\Rule\Required;
 
 final class GeneratorRelationForm extends FormModel
 {
+    #[Required]
     private ?string $lowercasename = '';
     
+    #[Required]
     private ?string $camelcasename = '';
     
+    #[Required]
     private ?string $view_field_name = '';
     
     private ?int $id = null;
     
+    #[Required]
     private ?int $gentor_id = null;
+    
+    public function __construct(GentorRelation $gentorRelation)
+    {
+        $this->lowercasename = $gentorRelation->getLowercase_name();
+        $this->camelcasename = $gentorRelation->getCamelcase_name();
+        $this->view_field_name = $gentorRelation->getView_field_name();
+        $this->gentor_id = $gentorRelation->getGentor_id();
+    }
     
     public function getLowercase_name(): string|null
     {
@@ -47,20 +60,5 @@ final class GeneratorRelationForm extends FormModel
     public function getFormName(): string
     {
         return '';
-    }
-    
-    /**
-     * @return Required[][]
-     *
-     * @psalm-return array{lowercasename: list{Required}, camelcasename: list{Required}, view_field_name: list{Required}, gentor_id: list{Required}}
-     */
-    public function getRules(): array
-    {
-        return [
-            'lowercasename' => [new Required()],
-            'camelcasename' => [new Required()],
-            'view_field_name' => [new Required()],
-            'gentor_id' => [new Required()],
-        ];
     }
 }

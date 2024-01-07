@@ -1,7 +1,8 @@
 <?php
 declare(strict_types=1);
-$lang = array(
-    // General strings
+// as at 6th January 2024. Note this file has been built using copy paste from resources/messages/en/app.php
+// Remember to adjust the php file with '$lang =' as seen below 
+$lang =  [
     'g.online_payment'                     => 'Online Payment',
     'g.online_payments'                    => 'Online Payments',
     'g.online_payment_for'                 => 'Online Payment for',
@@ -83,5 +84,5 @@ $lang = array(
     'g.online_payment_payment_failed'      => 'Payment failed. Please try again.',
     'g.online_payment_payment_successful'  => 'Payment for Invoice %s successful!',
     'g.online_payment_payment_redirect'    => 'Please wait while we redirect you to the payment page...',
-    'g.online_payment_3dauth_redirect'     => 'Please wait while we redirect you to your card issuer for authentication...'
-);
+    'g.online_payment_3dauth_redirect'     => 'Please wait while we redirect you to your card issuer for authentication...',
+];

@@ -1,37 +1,113 @@
 <?php
 declare(strict_types=1);
 
+use App\Widget\Button;
+use Yiisoft\FormModel\Field;
 use Yiisoft\Html\Html;
+use Yiisoft\Html\Tag\Form;
 
 /**
  * @var \Yiisoft\View\View $this
+ * @var \App\Invoice\Entity\GentorRelation $gentorRelation
  * @var \Yiisoft\Router\UrlGeneratorInterface $urlGenerator
- * @var array $body
  * @var string $csrf
  * @var string $action
  * @var string $title
- * @var $s
  */
 ?>
 
-<?= Html::openTag('h1'); ?><?= Html::encode($title) ?><?= Html::closeTag('h1'); ?>
+<?= Html::openTag('div',['class'=>'container py-5 h-100']); ?>
+<?= Html::openTag('div',['class'=>'row d-flex justify-content-center align-items-center h-100']); ?>
+<?= Html::openTag('div',['class'=>'col-12 col-md-8 col-lg-6 col-xl-8']); ?>
+<?= Html::openTag('div',['class'=>'card border border-dark shadow-2-strong rounded-3']); ?>
+<?= Html::openTag('div',['class'=>'card-header']); ?>
 
-  <?= Html::openTag('div', ['class' => 'row']); ?>
-    <div class="mb-3 form-group">
-        <label for="lowercasename" class="form-label" style="background:lightblue">Relation Lowercase Name</label>
-        <?= Html::encode($body['lowercasename'] ?? '') ?>
-    </div>
-    <div class="mb-3 form-group">
-        <label for="camelcasename" class="form-label" style="background:lightblue">Relation Camelcase Name</label>
-        <?= Html::encode($body['camelcasename'] ?? '') ?>
-    </div>
-    <div class="mb-3 form-group">
-        <label for="view_field_name" class="form-label" style="background:lightblue">View Field Name appearing in _form and _view code</label>
-        <?= Html::encode($body['view_field_name'] ?? '') ?>
-    </div>
-    <div class="mb-3 form-group">
-        <label for="gentor_id" class="form-label" style="background:lightblue">Is a foreign key in Entity Table:</label>
-        <?= $egrs->getGentor()->pre_entity_table; ?>
-    </div>
-  </div> 
+<?= Html::openTag('h1',['class'=>'fw-normal h3 text-center']); ?>
+    <?= $title; ?>
+<?= Html::closeTag('h1'); ?>
+
+<?=
+    Form::tag()
+    ->post($urlGenerator->generate(...$action))
+    ->enctypeMultipartFormData()
+    ->csrf($csrf)
+    ->id('GeneratorRelationForm')
+    ->open();
+?>
+
+<?= Html::openTag('div', ['class' => 'col mb-3']); ?>
+<?= Html::closeTag('div'); ?>
+
+<?= Html::openTag('div', ['class' => 'col mb-3']); ?>
+<?php
+    $optionsDataGenerators = [];
+    foreach ($generators as $generator)
+    {
+        $optionsDataGenerators[$generator->getGentor_id()] = $generator->getCamelcase_capital_name();
+    }
+    
+    echo Field::select($form, 'gentor_id')
+    ->label($translator->translate('invoice.generator.relation.form.entity.generator'))
+    ->addInputAttributes([
+        'class' => 'form-control',
+        'id' => 'gentor_id',
+        'readonly' => 'readonly',
+        'disabled' => 'disabled'
+    ])
+    ->prompt($translator->translate('i.none'))        
+    ->optionsData($optionsDataGenerators)
+?>
+<?= Html::closeTag('div'); ?>
+
+<?= Html::openTag('div', ['class' => 'col mb-3']); ?>
+<?= Field::text($form, 'lowercasename')
+    ->label($translator->translate('invoice.generator.relation.form.lowercase.name'))
+    ->addInputAttributes([
+        'placeholder' => $translator->translate('invoice.generator.relation.form.lowercase.name'),
+        'class' => 'form-control',
+        'id' => 'lowercasename',
+        'readonly' => 'readonly',
+        'disabled' => 'disabled'
+    ])
+    ->value(Html::encode($form->getLowercase_name()))
+?>
+<?= Html::closeTag('div'); ?>
+
+<?= Html::openTag('div', ['class' => 'col mb-3']); ?>
+<?= Field::text($form, 'camelcasename')
+    ->label($translator->translate('invoice.generator.relation.form.camelcase.name'))
+    ->addInputAttributes([
+        'placeholder' => $translator->translate('invoice.generator.relation.form.camelcase.name'),
+        'class' => 'form-control',
+        'id' => 'camelcasename',
+        'readonly' => 'readonly',
+        'disabled' => 'disabled'
+    ])
+    ->value(Html::encode($form->getCamelcase_name()))
+?>
+<?= Html::closeTag('div'); ?>
+
+<?= Html::openTag('div', ['class' => 'col mb-3']); ?>
+<?= Field::text($form, 'view_field_name')
+    ->label($translator->translate('invoice.generator.relation.form.view.field.name'))
+    ->addInputAttributes([
+        'placeholder' => $translator->translate('invoice.generator.relation.form.view.field.name'),
+        'class' => 'form-control',
+        'id' => 'view_field_name',
+        'readonly' => 'readonly',
+        'disabled' => 'disabled'
+    ])
+    ->value(Html::encode($form->getView_field_name()))
+?>
+<?= Html::closeTag('div'); ?>
+
+<?= Button::back_save($translator); ?>    
+<?= Form::tag()->close(); ?>
+
+<?= Html::closeTag('div'); ?>
+<?= Html::closeTag('div'); ?>
+<?= Html::closeTag('div'); ?>
+<?= Html::closeTag('div'); ?>
+<?= Html::closeTag('div'); ?>
+
 

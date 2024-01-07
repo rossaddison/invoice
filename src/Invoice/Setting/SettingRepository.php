@@ -1476,7 +1476,8 @@ final class SettingRepository extends Select\Repository
             //'menu' => true,
         ],
         'google_translate_en_app_php'=>[
-            'why'=>'If you are wanting to translate resources/messages/en/app.php make sure you have loaded a copy in the ../Language/English folder.',
+            'why'=>'To translate resources/messages/en/app.php, make sure you have loaded a copy in the ../Language/English folder.'."\r\n".
+            'Note: gateway_lang and ip_lang arrays have been combined into app.php',
             'where'=>'GeneratorController/google_translate_lang',
             
         ],       

@@ -1,46 +1,92 @@
 <?php
+declare(strict_types=1);
 
-declare(strict_types=1); 
-
+use App\Widget\Button;
+use Yiisoft\FormModel\Field;
 use Yiisoft\Html\Html;
-use Yiisoft\Yii\Bootstrap5\Alert;
+use Yiisoft\Html\Tag\Form;
 
 /**
  * @var \Yiisoft\View\View $this
  * @var \Yiisoft\Router\UrlGeneratorInterface $urlGenerator
- * @var array $body
  * @var string $csrf
  * @var string $action
- * @var string $title
  */
-
-if (!empty($errors)) {
-    foreach ($errors as $field => $error) {
-        echo Alert::widget()->options(['class' => 'alert-danger'])->body(Html::encode($field . ':' . $error));
-    }
-}
-
 ?>
-<?= Html::openTag('h1'); ?><?= Html::encode($title) ?><?= Html::closeTag('h1'); ?>
-<?= Html::openTag('div', ['class' => 'row']); ?>
- <div class="mb3 form-group">
-   <label for="id" class="form-label" style="background:lightblue"><?= $translator->translate('i.id'); ?></label>
-   <?= Html::encode($body['id'] ?? ''); ?>
- </div>
- <div class="mb3 form-group">
-   <label for="name" class="form-label" style="background:lightblue"><?= $translator->translate('i.name'); ?></label>
-   <?= Html::encode($body['name'] ?? ''); ?>
- </div>
- <div class="mb3 form-group">
-   <label for="identifier_format" class="form-label" style="background:lightblue"><?= $translator->translate('i.identifier_format'); ?></label>
-   <?= Html::encode($body['identifier_format'] ?? ''); ?>
- </div>
- <div class="mb3 form-group">
-   <label for="left_pad" class="form-label" style="background:lightblue"><?= $translator->translate('i.left_pad'); ?></label>
-   <?= Html::encode($body['left_pad'] ?? ''); ?>
- </div>
-  <div class="mb3 form-group">
-   <label for="next_id" class="form-label" style="background:lightblue"><?= $translator->translate('i.next_id'); ?></label>
-   <?= Html::encode($body['next_id'] ??  ''); ?>
- </div>   
-</div>
+
+<?= Html::openTag('div',['class'=>'container py-5 h-100']); ?>
+<?= Html::openTag('div',['class'=>'row d-flex justify-content-center align-items-center h-100']); ?>
+<?= Html::openTag('div',['class'=>'col-12 col-md-8 col-lg-6 col-xl-8']); ?>
+<?= Html::openTag('div',['class'=>'card border border-dark shadow-2-strong rounded-3']); ?>
+<?= Html::openTag('div',['class'=>'card-header']); ?>
+<?= Html::openTag('h1',['class'=>'fw-normal h3 text-center']); ?>
+    <?= $translator->translate('invoice.group.form'); ?>
+<?= Html::closeTag('h1'); ?>
+<?= Form::tag()
+    ->post($urlGenerator->generate(...$action))
+    ->enctypeMultipartFormData()
+    ->csrf($csrf)
+    ->id('GroupForm')
+    ->open()
+?>
+<?= Html::openTag('div', ['class' => 'tabbable tabs-below']); ?>
+
+    <?= Html::openTag('div', ['class' => 'tab-content']); ?>
+        
+        <?= Html::openTag('div'); ?>
+            <?= Field::text($form, 'name')
+                ->label($translator->translate('i.name'))
+                ->addInputAttributes([
+                    'class' => 'form-control',
+                    'readonly' => 'readonly',
+                    'disabled' => 'disabled'
+                ])
+                ->value(Html::encode($form->getName()))
+                ->placeholder($translator->translate('i.name'))
+                ->hint($translator->translate('invoice.hint.this.field.is.required')); ?>
+            <?= Html::tag('br'); ?>
+            <?= Field::text($form, 'identifier_format')
+                ->label($translator->translate('i.identifier_format'))
+                ->addInputAttributes([
+                    'class' => 'form-control taggable',
+                    'id' => 'identifier_format',
+                    'name' => 'identifier_format',
+                    'readonly' => 'readonly',
+                    'disabled' => 'disabled'
+                ])
+                ->value(Html::encode($form->getIdentifier_format()))    
+                ->placeholder('INV-{{{id}}}')    
+                ->hint($translator->translate('invoice.hint.this.field.is.required')); ?>
+            <?= Field::text($form, 'left_pad')
+                ->label($translator->translate('i.left_pad'))
+                ->addInputAttributes([
+                    'class' => 'form-control',
+                    'readonly' => 'readonly',
+                    'disabled' => 'disabled'
+                ])
+                ->value(Html::encode($form->getLeft_pad()) ?: '0')    
+                ->placeholder('0')    
+                ->hint($translator->translate('invoice.hint.this.field.is.required')); ?>
+            <?= Html::tag('br'); ?>
+            <?= Field::text($form, 'next_id')
+                ->label($translator->translate('i.next_id'))
+                ->addInputAttributes([
+                    'class' => 'form-control',
+                    'readonly' => 'readonly',
+                    'disabled' => 'disabled'
+                ])
+                ->value(Html::encode($form->getNext_id()) ?: '1')    
+                ->placeholder('1')    
+                ->hint($translator->translate('invoice.hint.this.field.is.required')); ?>    
+            <?= Html::tag('br'); ?>
+            <?= Html::closeTag('div'); ?>         
+            <?= Button::back($translator); ?>
+        <?= Html::closeTag('div'); ?>
+    <?= Html::closeTag('div'); ?>
+<?= Html::closeTag('div'); ?>
+<?= Form::tag()->close(); ?>
+<?= Html::closeTag('div'); ?>
+<?= Html::closeTag('div'); ?>
+<?= Html::closeTag('div'); ?>
+<?= Html::closeTag('div'); ?>
+<?= Html::closeTag('div'); ?>

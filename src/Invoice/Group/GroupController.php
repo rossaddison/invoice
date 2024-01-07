@@ -19,8 +19,9 @@ use Yiisoft\Http\Method;
 use Yiisoft\Router\CurrentRoute;
 use Yiisoft\Session\SessionInterface as Session;
 use Yiisoft\Session\Flash\Flash;
-use Yiisoft\Translator\TranslatorInterface;use Yiisoft\FormModel\FormHydrator;
-use Yiisoft\Form\Helper\HtmlFormErrors;
+use Yiisoft\Translator\TranslatorInterface;
+use Yiisoft\FormModel\FormHydrator;
+
 use Yiisoft\Yii\View\ViewRenderer;
 
 final class GroupController
@@ -73,85 +74,89 @@ final class GroupController
         ->withCurrentPage($pageNum);
         $canEdit = $this->rbac();
         $parameters = [
-              'paginator' => $paginator,
-              's'=>$settingRepository,
-              'canEdit' => $canEdit,
-              'groups' => $this->groups($groupRepository),
-              'alert'=> $this->alert()
+            'grid_summary'=> $settingRepository->grid_summary(
+                $paginator, 
+                $this->translator, 
+                (int)$settingRepository->get_setting('default_list_limit'), 
+                $this->translator->translate('invoice.groups'), 
+                ''
+            ),
+            'paginator' => $paginator,
+            'canEdit' => $canEdit,
+            'groups' => $this->groups($groupRepository),
+            'alert'=> $this->alert()
         ];  
         return $this->viewRenderer->render('group/index', $parameters);
     }
     
     /**
-     * 
-     * @param ViewRenderer $head
      * @param Request $request
      * @param FormHydrator $formHydrator
-     * @param SettingRepository $SettingRepository
      * @return Response
      */
-    public function add(ViewRenderer $head, Request $request, 
-                        FormHydrator $formHydrator,
-                        SettingRepository $SettingRepository                        
-
+    public function add(Request $request, 
+                        FormHydrator $formHydrator
     ) : Response 
     {
+        $group = new Group();
+        $form = new GroupForm($group);
         $parameters = [
             'title' => $this->translator->translate('invoice.add'),
             'action' => ['group/add'],
             'errors' => [],
-            'body' => $request->getParsedBody(),
-            's'=>$SettingRepository,
-            'head'=>$head
+            'form' => $form
         ];
         
         if ($request->getMethod() === Method::POST) {
-            
-            $form = new GroupForm();
-            if ($formHydrator->populate($form, $parameters['body']) && $form->isValid()) {
-                $this->groupService->saveGroup(new Group(),$form);
+            $body = $request->getParsedBody();
+            /**
+             * @psalm-suppress PossiblyInvalidArgument $body 
+             */
+            if ($formHydrator->populate($form, $body) && $form->isValid()) {
+                /**
+                 * @psalm-suppress PossiblyInvalidArgument $body 
+                 */
+                $this->groupService->saveGroup($group, $body);
                 return $this->webService->getRedirectResponse('group/index');
             }
+            $parameters['errors'] = $form->getValidationResult()?->getErrorMessagesIndexedByAttribute() ?? [];
             $parameters['form'] = $form;
         }
         return $this->viewRenderer->render('/invoice/group/_form', $parameters);
     }
     
     /**
-     * 
-     * @param ViewRenderer $head
      * @param Request $request
      * @param CurrentRoute $currentRoute
      * @param FormHydrator $formHydrator
      * @param GroupRepository $groupRepository
-     * @param SettingRepository $settingRepository
      * @return Response
      */
-    public function edit(ViewRenderer $head, Request $request, CurrentRoute $currentRoute,
+    public function edit(Request $request, CurrentRoute $currentRoute,
                         FormHydrator $formHydrator,
-                        GroupRepository $groupRepository, 
-                        SettingRepository $settingRepository                       
-
-    ): Response {
+                        GroupRepository $groupRepository): Response {
         $group = $this->group($currentRoute, $groupRepository);
         if ($group) {
+            $form = new GroupForm($group);
             $parameters = [
-                'title' => 'Edit',
+                'title' => $this->translator->translate('i.edit'),
                 'action' => ['group/edit', ['id' => $group->getId()]],
                 'errors' => [],
-                'body' => $this->body($group),
-                's'=>$settingRepository,
-                'head'=>$head
-
+                'form' => $form
             ];
             if ($request->getMethod() === Method::POST) {
-                $form = new GroupForm();
                 $body = $request->getParsedBody();
+                /**
+                 * @psalm-suppress PossiblyInvalidArgument $body 
+                 */
                 if ($formHydrator->populate($form, $body) && $form->isValid()) {
-                    $this->groupService->saveGroup($group, $form);
+                    /**
+                     * @psalm-suppress PossiblyInvalidArgument $body 
+                     */
+                    $this->groupService->saveGroup($group, $body);
                     return $this->webService->getRedirectResponse('group/index');
                 }
-                $parameters['body'] = $body;
+                $parameters['errors'] = $form->getValidationResult()?->getErrorMessagesIndexedByAttribute() ?? [];
                 $parameters['form'] = $form;
             }
             return $this->viewRenderer->render('/invoice/group/_form', $parameters);
@@ -182,26 +187,23 @@ final class GroupController
     }
     
     /**
-     * 
      * @param CurrentRoute $currentRoute
      * @param GroupRepository $groupRepository
-     * @param SettingRepository $settingRepository
      * @return \Yiisoft\DataResponse\DataResponse|Response
      */
-    public function view(CurrentRoute $currentRoute, GroupRepository $groupRepository,
-        SettingRepository $settingRepository
-        ): \Yiisoft\DataResponse\DataResponse|Response {
+    public function view(CurrentRoute $currentRoute, 
+                         GroupRepository $groupRepository): \Yiisoft\DataResponse\DataResponse|Response {
         $group = $this->group($currentRoute, $groupRepository);
         if ($group) {
+            $form = new GroupForm($group);
             $parameters = [
-                'title' => $settingRepository->trans('view'),
-                'action' => ['invoice/edit', ['id' => $group->getId()]],
+                'title' => $this->translator->translate('i.view'),
+                'action' => ['group/view', ['id' => $group->getId()]],
                 'errors' => [],
-                'body' => $this->body($group),
-                's'=>$settingRepository,            
+                'form' => $form,      
                 'group'=>$groupRepository->repoGroupquery($group->getId()),
             ];
-            return $this->viewRenderer->render('_view', $parameters);
+            return $this->viewRenderer->render('/invoice/group/_view', $parameters);
         }
         return $this->webService->getRedirectResponse('group/index');  
     }
@@ -244,22 +246,6 @@ final class GroupController
     {
         $groups = $groupRepository->findAllPreloaded();        
         return $groups;
-    }
-    
-    /**
-     * 
-     * @param Group $group
-     * @return array
-     */
-    private function body(Group $group): array {
-        $body = [
-          'id'=>$group->getId(),
-          'name'=>$group->getName(),
-          'identifier_format'=>$group->getIdentifier_format(),
-          'next_id'=>$group->getNext_id(),
-          'left_pad'=>$group->getLeft_pad()
-        ];
-        return $body;
     }
     
     /**

@@ -224,7 +224,7 @@ return [
       // Store generated Schema in the file
       PhpFileSchemaProvider::class => [
         // >>>>>>>>>>  To update a table structure and related schema use MODE_WRITE_ONLY ...then revert back to MODE_READ_AND_WRITE
-       //'mode' => PhpFileSchemaProvider::MODE_WRITE_ONLY,
+        //'mode' => PhpFileSchemaProvider::MODE_WRITE_ONLY,
         // yii-invoice
         // For faster performance use MODE_READ_AND_WRITE => 0
         'mode' => PhpFileSchemaProvider::MODE_READ_AND_WRITE,

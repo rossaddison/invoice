@@ -1,38 +1,56 @@
-<?php 
-
+<?php
 declare(strict_types=1);
 
 namespace App\Invoice\Generator;
 
+use App\Invoice\Entity\Gentor;
 use Yiisoft\FormModel\FormModel;
 use Yiisoft\Validator\Rule\Required;
 
 final class GeneratorForm extends FormModel
 {
     private ?int $id = null;
+    #[Required]
     private ?string $route_prefix = '';
+    #[Required]
     private ?string $route_suffix = '';
+    #[Required]
     private ?string $camelcase_capital_name = '';
+    #[Required]
     private ?string $small_singular_name = '';
+    #[Required]
     private ?string $small_plural_name = '';
+    #[Required]
     private ?string $namespace_path = '';
+    #[Required]
     private ?string $controller_layout_dir = '';
-    private ?string $controller_layout_dir_dot_path = '';  
-    private ?string $repo_extra_camelcase_name = '';
-    private ?string $paginator_next_page_attribute = '';
+    #[Required]
+    private ?string $controller_layout_dir_dot_path = '';
+    #[Required]
     private ?string $pre_entity_table = '';
-    private ?string $constrain_index_field = '';
-    private ?string $filter_field = '';
-    private ?int $filter_field_start_position = null;
-    private ?int $filter_field_end_position = null;
-    private bool $created_include = false;
-    private bool $updated_include = false;
-    private bool $modified_include = false;
-    private bool $deleted_include = false;
-    private bool $keyset_paginator_include = false;
-    private bool $offset_paginator_include = false;
+    
     private bool $flash_include = true;
-    private bool $headerline_include = false;
+    private bool $created_include = true;
+    private bool $modified_include = true;
+    private bool $updated_include = true;
+    private bool $deleted_include = true;
+    
+    public function __construct(Gentor $generator) {
+         $this->route_prefix = $generator->getRoute_prefix();
+         $this->route_suffix = $generator->getRoute_suffix();
+         $this->camelcase_capital_name = $generator->getCamelcase_capital_name();
+         $this->small_singular_name = $generator->getSmall_singular_name();
+         $this->small_plural_name = $generator->getSmall_plural_name();
+         $this->namespace_path = $generator->getNamespace_path();
+         $this->controller_layout_dir = $generator->getController_layout_dir();
+         $this->controller_layout_dir_dot_path = $generator->getController_layout_dir_dot_path();
+         $this->pre_entity_table = $generator->getPre_entity_table();         
+         $this->flash_include = $generator->isFlash_include();
+         $this->created_include = $generator->isCreated_include();
+         $this->modified_include = $generator->isModified_include();
+         $this->updated_include = $generator->isUpdated_include();
+         $this->deleted_include = $generator->isDeleted_include();
+    }        
         
     public function getRoute_prefix(): string|null
     {
@@ -74,81 +92,11 @@ final class GeneratorForm extends FormModel
         return $this->controller_layout_dir_dot_path;
     }
     
-    public function getRepo_extra_camelcase_name(): string|null
-    {
-        return $this->repo_extra_camelcase_name;
-    }
-    
-    public function getPaginator_next_page_attribute(): string|null
-    {
-        return $this->paginator_next_page_attribute;
-    }
-    
     public function getPre_entity_table(): string|null
     {
         return $this->pre_entity_table;
     }
-    
-    public function getConstrain_index_field(): string|null
-    {
-        return $this->constrain_index_field;
-    }
-    
-    public function getFilter_field(): string|null
-    {
-        return $this->filter_field;
-    }
-    
-    public function getFilter_field_start_position(): int|null
-    {
-        return $this->filter_field_start_position;
-    }
-    
-    public function getFilter_field_end_position(): int|null
-    {
-        return $this->filter_field_end_position;
-    }
-    
-    public function getCreated_include(): bool
-    {
-        return $this->created_include;
-    }
-    
-    public function getUpdated_include(): bool
-    {
-        return $this->updated_include;
-    }
-    
-    public function getModified_include(): bool
-    {
-        return $this->modified_include;
-    }
-    
-    public function getDeleted_include(): bool
-    {
-        return $this->deleted_include;
-    }
-    
-    public function getKeyset_paginator_include(): bool
-    {
-        return $this->keyset_paginator_include;
-    }
-    
-    public function getOffset_paginator_include(): bool
-    {
-        return $this->offset_paginator_include;
-    }
-    
-    public function getFlash_include(): bool
-    {
-        return $this->flash_include;
-    }
-    
-    public function getHeaderline_include(): bool
-    {
-        return $this->headerline_include;
-    }
-    
+        
     /**
      * @return string
      *
@@ -157,25 +105,5 @@ final class GeneratorForm extends FormModel
     public function getFormName(): string
     {
         return '';
-    }
-    
-    /**
-     * @return Required[][]
-     *
-     * @psalm-return array{route_prefix: list{Required}, route_suffix: list{Required}, camelcase_capital_name: list{Required}, small_singular_name: list{Required}, small_plural_name: list{Required}, namespace_path: list{Required}, controller_layout_dir: list{Required}, controller_layout_dir_dot_path: list{Required}, pre_entity_table: list{Required}}
-     */
-    public function getRules(): array
-    {
-        return [
-            'route_prefix' => [new Required()],
-            'route_suffix' =>[new Required()],
-            'camelcase_capital_name' =>[new Required()],
-            'small_singular_name' => [new Required()],
-            'small_plural_name' => [new Required()],
-            'namespace_path' => [new Required()],
-            'controller_layout_dir' => [new Required()],
-            'controller_layout_dir_dot_path' => [new Required()],
-            'pre_entity_table' => [new Required()],
-        ];
     }
 }

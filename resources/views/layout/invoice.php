@@ -189,8 +189,8 @@ $this->beginPage();
               ],
               ['label' => $translator->translate('i.client'),
                 'items' => [
-                  ['options' => ['class' => 'nav fs-4 ajax-loader'], 'label' => $translator->translate('invoice.client.add'), 'url' => $urlGenerator->generate('client/add')],
-                  ['options' => ['class' => 'nav fs-4 ajax-loader'], 'label' => $translator->translate('invoice.client.view'), 'url' => $urlGenerator->generate('client/index')],
+                  ['options' => ['class' => 'nav fs-4'], 'label' => $translator->translate('invoice.client.add'), 'url' => $urlGenerator->generate('client/add')],
+                  ['options' => ['class' => 'nav fs-4'], 'label' => $translator->translate('invoice.client.view'), 'url' => $urlGenerator->generate('client/index')],
                   ['options' => ['class' => 'nav fs-4'], 'label' => $translator->translate('invoice.client.note.add'), 'url' => $urlGenerator->generate('clientnote/add')],
                   ['options' => ['class' => 'nav fs-4'], 'label' => $translator->translate('invoice.client.note.view'), 'url' => $urlGenerator->generate('clientnote/index')],
                   ['options' => ['class' => 'nav fs-4'], 'label' => $translator->translate('invoice.invoice.delivery.location'), 'url' => $urlGenerator->generate('del/index')],
@@ -203,26 +203,26 @@ $this->beginPage();
               ],
               ['label' => $translator->translate('invoice.salesorder'),
                 'items' => [
-                  ['options' => ['class' => 'nav fs-4 ajax-loader'], 'label' => $translator->translate('i.view'), 'url' => $urlGenerator->generate('salesorder/index')],
+                  ['options' => ['class' => 'nav fs-4'], 'label' => $translator->translate('i.view'), 'url' => $urlGenerator->generate('salesorder/index')],
                 ],
               ],
               ['label' => $translator->translate('i.invoice'),
                 'items' => [
-                  ['options' => ['class' => 'nav fs-4 ajax-loader'], 'label' => $translator->translate('i.view'), 'url' => $urlGenerator->generate('inv/index')],
+                  ['options' => ['class' => 'nav fs-4'], 'label' => $translator->translate('i.view'), 'url' => $urlGenerator->generate('inv/index')],
                   ['options' => ['class' => 'nav fs-4'], 'label' => $translator->translate('i.recurring'), 'url' => $urlGenerator->generate('invrecurring/index')],
                 ],
               ],
               ['label' => $translator->translate('i.payment'),
                 'items' => [
                   ['options' => ['class' => 'nav fs-4'], 'label' => $translator->translate('i.enter_payment'), 'url' => $urlGenerator->generate('payment/add')],
-                  ['options' => ['class' => 'nav fs-4 ajax-loader'], 'label' => $translator->translate('i.view'), 'url' => $urlGenerator->generate('payment/index')],
+                  ['options' => ['class' => 'nav fs-4'], 'label' => $translator->translate('i.view'), 'url' => $urlGenerator->generate('payment/index')],
                   ['options' => ['class' => 'nav fs-4'], 'label' => $translator->translate('i.payment_logs'), 'url' => $urlGenerator->generate('payment/online_log')]
                 ],
               ],
               ['label' => $translator->translate('i.product'),
                 'items' => [
                   ['options' => ['class' => 'nav fs-4'], 'label' => $translator->translate('i.add_product'), 'url' => $urlGenerator->generate('product/add')],
-                  ['options' => ['class' => 'nav fs-4 ajax-loader'], 'label' => $translator->translate('i.view'), 'url' => $urlGenerator->generate('product/index')],
+                  ['options' => ['class' => 'nav fs-4'], 'label' => $translator->translate('i.view'), 'url' => $urlGenerator->generate('product/index')],
                   ['options' => ['class' => 'nav fs-4'], 'label' => $translator->translate('i.family'), 'url' => $urlGenerator->generate('family/index')],
                   ['options' => ['class' => 'nav fs-4'], 'label' => $translator->translate('i.unit'), 'url' => $urlGenerator->generate('unit/index')],
                   ['options' => ['class' => 'nav fs-4'], 'label' => $translator->translate('invoice.peppol.unit'), 'url' => $urlGenerator->generate('unitpeppol/index')],
@@ -238,7 +238,7 @@ $this->beginPage();
               ['label' => $translator->translate('i.projects'),
                 'items' => [
                   ['options' => ['class' => 'nav fs-4'], 'label' => $translator->translate('i.create'), 'url' => $urlGenerator->generate('project/add')],
-                  ['options' => ['class' => 'nav fs-4 ajax-loader'], 'label' => $translator->translate('i.view'), 'url' => $urlGenerator->generate('project/index')],
+                  ['options' => ['class' => 'nav fs-4'], 'label' => $translator->translate('i.view'), 'url' => $urlGenerator->generate('project/index')],
                 ],
               ],
               ['label' => $translator->translate('i.reports'),
@@ -254,7 +254,7 @@ $this->beginPage();
               ['label' => $translator->translate('i.settings'),
                 'items' => [['options' => ['class' => 'nav fs-4 ajax-loader'], 'label' => $translator->translate('i.view'), 'options' => ['style' => 'background-color: #ffcccb'], 'url' => $urlGenerator->generate('setting/debug_index'), 'visible' => $debug_mode],
                   ['options' => ['class' => 'nav fs-4'], 'label' => $translator->translate('invoice.setting.add'), 'options' => ['style' => 'background-color: #ffcccb'], 'url' => $urlGenerator->generate('setting/add'), 'visible' => $debug_mode],
-                  ['options' => ['class' => 'nav fs-4 ajax-loader'], 'label' => $translator->translate('i.view'), 'url' => $urlGenerator->generate('setting/tab_index')],
+                  ['options' => ['class' => 'nav fs-4'], 'label' => $translator->translate('i.view'), 'url' => $urlGenerator->generate('setting/tab_index')],
                   ['options' => ['class' => 'nav fs-4'], 'label' => $translator->translate((($s->get_setting('install_test_data') == '1') && ($s->get_setting('use_test_data') == '1')) 
                                                                    ? 'invoice.install.test.data' : 'invoice.install.test.data.goto.tab.index'), 
                                                           'url' =>  (($s->get_setting('install_test_data') == '1' && $s->get_setting('use_test_data') == '1') 

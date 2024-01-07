@@ -18,7 +18,7 @@
                                 <?= 'Google Translate Json Filename (eg. my_json_filename.json)'; ?>
                             </label>
                             <?php $body['settings[google_translate_json_filename]'] = $s->get_setting('google_translate_json_filename');?>
-                            <input type="text" class="input-sm form-control" name="settings[google_translate_json_filename]" readonly="readonly"
+                            <input type="text" class="input-sm form-control" name="settings[google_translate_json_filename]" 
                             id="settings[google_translate_json_filename]" value="<?= $s->get_setting('google_translate_json_filename'); ?>">
                         </div>
                         <div class="form-group">

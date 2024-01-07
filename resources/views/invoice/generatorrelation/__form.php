@@ -1,50 +1,112 @@
 <?php
-
 declare(strict_types=1);
 
+use App\Widget\Button;
+use Yiisoft\FormModel\Field;
 use Yiisoft\Html\Html;
-use Yiisoft\Yii\Bootstrap5\Alert;
+use Yiisoft\Html\Tag\Form;
 
 /**
  * @var \Yiisoft\View\View $this
+ * @var \App\Invoice\Entity\GentorRelation $gentorRelation
  * @var \Yiisoft\Router\UrlGeneratorInterface $urlGenerator
- * @var array $body
  * @var string $csrf
  * @var string $action
  * @var string $title
  */
-
-if (!empty($errors)) {
-    foreach ($errors as $field => $error) {
-        echo Alert::widget()->options(['class' => 'alert-danger'])->body(Html::encode($field . ':' . $error));
-    }
-}
 ?>
 
-<?= Html::openTag('h1'); ?><?= Html::encode($title) ?><?= Html::closeTag('h1'); ?>
+<?= Html::openTag('div',['class'=>'container py-5 h-100']); ?>
+<?= Html::openTag('div',['class'=>'row d-flex justify-content-center align-items-center h-100']); ?>
+<?= Html::openTag('div',['class'=>'col-12 col-md-8 col-lg-6 col-xl-8']); ?>
+<?= Html::openTag('div',['class'=>'card border border-dark shadow-2-strong rounded-3']); ?>
+<?= Html::openTag('div',['class'=>'card-header']); ?>
 
-<form id="generatorrelationForm" method="POST" action="<?= $urlGenerator->generate(...$action) ?>" enctype="multipart/form-data">
-<input type="hidden" name="_csrf" value="<?= $csrf ?>">
-  <?= Html::openTag('div', ['class' => 'row']); ?>
-    <div class="mb-3 form-group">
-     <label for="gentor_id">Entity Generator<span style="color:red">*</span></label>   
-     <select name="gentor_id" id="generator_id" class="form-control" required>
-                                <option value="0">Entity Generator</option>
-                                <?php foreach ($generators as $generator) { ?>
-                                    <option value="<?= $generator->getGentor_id(); ?>"
-                                        <?php $s->check_select(Html::encode($body['gentor_id'] ?? ''), $generator->getGentor_id()); ?>
-                                    ><?= $generator->getCamelcase_capital_name(); ?></option>
-                                <?php } ?>
-     </select>
-    </div>   
-    <div class="mb-3 form-group">
-        <label for="lowercasename">Lowercase name excluding id (eg. tax_rate_id 'foreign key/relation' in Product table simplified to tax_rate) <span style="color:red">*</span></label>
-        <input type="text" class="form-control" name="lowercasename" id="lowercasename" placeholder="Entity Generator Relation BelongsTo Lowercase Name eg. tax_rate" value="<?= Html::encode($body['lowercasename'] ?? '') ?>" required>
-        <label for="camelcasename">Camelcase name excluding id (eg. tax_rate_id 'foreign key/relation' in Product table simplified to TaxRate AND is the name of an Entity)<span style="color:red">*</span></label>
-        <input type="text" class="form-control" name="camelcasename" id="camelcasename" placeholder="Entity Generator Relation Camelcase Name eg. TaxRate" value="<?= Html::encode($body['camelcasename'] ?? '') ?>" required>
-        <label for="view_field_name">View Field Name<span style="color:red">*</span></label>
-        <input type="text" class="form-control" name="view_field_name" id="view_field_name" placeholder="Table View Field Name that will be used in Generator's Table's _form dropdown box and _view eg. id, name" value="<?= Html::encode($body['view_field_name'] ?? '') ?>" required>
-    </div>     
-  </div>    
-  <button type="submit" class="btn btn-primary"><?= $translator->translate('i.submit'); ?></button>
-</form>
+<?= Html::openTag('h1',['class'=>'fw-normal h3 text-center']); ?>
+    <?= $title; ?>
+<?= Html::closeTag('h1'); ?>
+
+<?=
+    Form::tag()
+    ->post($urlGenerator->generate(...$action))
+    ->enctypeMultipartFormData()
+    ->csrf($csrf)
+    ->id('GeneratorRelationForm')
+    ->open();
+?>
+
+<?= Html::openTag('div', ['class' => 'col mb-3']); ?>
+<?= Field::errorSummary($form)
+    ->errors($errors)
+    ->header($translator->translate('invoice.error.summary'))
+    ->onlyCommonErrors()
+?>
+<?= Html::closeTag('div'); ?>
+
+<?= Html::openTag('div', ['class' => 'col mb-3']); ?>
+<?php
+    $optionsDataGenerators = [];
+    foreach ($generators as $generator)
+    {
+        $optionsDataGenerators[$generator->getGentor_id()] = $generator->getCamelcase_capital_name();
+    }
+    
+    echo Field::select($form, 'gentor_id')
+    ->label($translator->translate('invoice.generator.relation.form.entity.generator'))
+    ->addInputAttributes([
+        'class' => 'form-control',
+        'id' => 'gentor_id'
+    ])
+    ->prompt($translator->translate('i.none'))        
+    ->optionsData($optionsDataGenerators)
+    ->hint($translator->translate('invoice.hint.this.field.is.required')); 
+?>
+<?= Html::closeTag('div'); ?>
+
+<?= Html::openTag('div', ['class' => 'col mb-3']); ?>
+<?= Field::text($form, 'lowercasename')
+    ->label($translator->translate('invoice.generator.relation.form.lowercase.name'))
+    ->addInputAttributes([
+        'placeholder' => $translator->translate('invoice.generator.relation.form.lowercase.name'),
+        'class' => 'form-control',
+        'id' => 'lowercasename'
+    ])
+    ->value(Html::encode($form->getLowercase_name()))
+    ->hint($translator->translate('invoice.hint.this.field.is.not.required')); 
+?>
+<?= Html::closeTag('div'); ?>
+
+<?= Html::openTag('div', ['class' => 'col mb-3']); ?>
+<?= Field::text($form, 'camelcasename')
+    ->label($translator->translate('invoice.generator.relation.form.camelcase.name'))
+    ->addInputAttributes([
+        'placeholder' => $translator->translate('invoice.generator.relation.form.camelcase.name'),
+        'class' => 'form-control',
+        'id' => 'camelcasename'
+    ])
+    ->value(Html::encode($form->getCamelcase_name()))
+    ->hint($translator->translate('invoice.hint.this.field.is.not.required')); 
+?>
+<?= Html::closeTag('div'); ?>
+
+<?= Html::openTag('div', ['class' => 'col mb-3']); ?>
+<?= Field::text($form, 'view_field_name')
+    ->label($translator->translate('invoice.generator.relation.form.view.field.name'))
+    ->addInputAttributes([
+        'placeholder' => $translator->translate('invoice.generator.relation.form.view.field.name'),
+        'class' => 'form-control',
+        'id' => 'view_field_name'
+    ])
+    ->value(Html::encode($form->getView_field_name()))
+    ->hint($translator->translate('invoice.hint.this.field.is.not.required')); 
+?>
+<?= Html::closeTag('div'); ?>
+
+<?= Button::back_save($translator); ?>    
+<?= Form::tag()->close(); ?>
+
+<?= Html::closeTag('div'); ?>
+<?= Html::closeTag('div'); ?>
+<?= Html::closeTag('div'); ?>
+<?= Html::closeTag('div'); ?>
+<?= Html::closeTag('div'); ?>

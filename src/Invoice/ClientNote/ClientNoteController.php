@@ -68,7 +68,7 @@ final class ClientNoteController
             'canEdit' => $canEdit,
             'clientnotes' => $this->clientnotes($clientnoteRepository),
             'alert' => $this->alert(),
-            'grid_summary'=> $settingRepository->grid_summary($paginator, $this->translator, (int)$settingRepository->get_setting('default_list_limit'), $this->translator->translate('invoice.products'), ''),
+            'grid_summary'=> $settingRepository->grid_summary($paginator, $this->translator, (int)$settingRepository->get_setting('default_list_limit'), $this->translator->translate('invoice.client.notes'), ''),
             'paginator'=>$paginator,   
         ];
         

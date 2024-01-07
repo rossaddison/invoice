@@ -14,15 +14,15 @@ use Yiisoft\VarDumper\VarDumper;
 echo $alert;
 
 ?>
-    <h1><?= Html::encode($translator->translate('invoice.generator')); ?></h1>
-    <div>        
-        <?php
-        if ($canEdit) {
-            $highlight = PHP_SAPI !== 'cli';
-            VarDumper::dump($generated, 40, $highlight);
-            echo $highlight ? '<br>' : PHP_EOL;          
-        }
-        ?>
-    </div>
-<?php
-echo Html::closeTag('div');
+<?= Html::tag('h1')
+    ->content(Html::encode($translator->translate('invoice.generator'))); 
+?>
+<?= Html::openTag('div'); ?>    
+    <?php
+    if ($canEdit) {
+        $highlight = PHP_SAPI !== 'cli';
+        VarDumper::dump($generated, 40, $highlight);
+        echo $highlight ? '<br>' : PHP_EOL;          
+    }
+    ?>
+<?= Html::closeTag('div'); ?>

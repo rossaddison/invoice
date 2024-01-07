@@ -7,13 +7,11 @@ declare(strict_types=1);
 namespace <?= $generator->getNamespace_path().DIRECTORY_SEPARATOR.$generator->getCamelcase_capital_name(); ?>;
 
 use <?= $generator->getNamespace_path(). DIRECTORY_SEPARATOR. 'Entity'. DIRECTORY_SEPARATOR. $generator->getCamelcase_capital_name(); ?>;
+use <?= $generator->getNamespace_path().DIRECTORY_SEPARATOR.$generator->getCamelcase_capital_name().DIRECTORY_SEPARATOR.$generator->getCamelcase_capital_name(); ?>Form;
 use <?= $generator->getNamespace_path().DIRECTORY_SEPARATOR.$generator->getCamelcase_capital_name().DIRECTORY_SEPARATOR.$generator->getCamelcase_capital_name(); ?>Service;
 use <?= $generator->getNamespace_path().DIRECTORY_SEPARATOR.$generator->getCamelcase_capital_name().DIRECTORY_SEPARATOR.$generator->getCamelcase_capital_name(); ?>Repository;
 
-<?php 
-  if (!empty($generator->getRepo_extra_camelcase_name())) {
-    echo 'use ' . $generator->getNamespace_path() .DIRECTORY_SEPARATOR.$generator->getRepo_extra_camelcase_name().DIRECTORY_SEPARATOR.$generator->getRepo_extra_camelcase_name() . 'Repository;'."\n"; 
-  }
+<?php
   foreach ($relations as $relation) { 
     echo 'use ' . $generator->getNamespace_path() .DIRECTORY_SEPARATOR. $relation->getCamelcase_name().DIRECTORY_SEPARATOR.$relation->getCamelcase_name() .'Repository;'."\n"; 
   } 
@@ -25,6 +23,7 @@ use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
 
 use Yiisoft\Data\Paginator\OffsetPaginator;
+use Yiisoft\FormModel\FormHydrator;
 use Yiisoft\Http\Method;
 use Yiisoft\Router\CurrentRoute;
 use Yiisoft\Session\SessionInterface as Session;
@@ -34,11 +33,6 @@ use Yiisoft\Validator\ValidatorInterface;
 use Yiisoft\Yii\View\ViewRenderer;
 
 use \Exception;
-<?php 
-  if (!empty($generator->isOffset_paginator_include())) {
-    echo 'use Yiisoft\Data\Paginator\OffsetPaginator;'."\n"; 
-  }
-?>
 
 final class <?= $generator->getCamelcase_capital_name(); ?>Controller
 {
@@ -48,10 +42,7 @@ final class <?= $generator->getCamelcase_capital_name(); ?>Controller
     private WebControllerService $webService;
     private UserService $userService;
     private <?= $generator->getCamelcase_capital_name(); ?>Service $<?= $generator->getSmall_singular_name(); ?>Service;
-    <?php if ($generator->isOffset_paginator_include()) {
-            echo 'private const '.strtoupper($generator->getSmall_plural_name())."_PER_PAGE = 1;"."\n";
-          }
-    ?>
+    <?= 'private const '.strtoupper($generator->getSmall_plural_name())."_PER_PAGE = 1;"."\n"; ?>
     private TranslatorInterface $translator;
     
     public function __construct(
@@ -74,14 +65,8 @@ final class <?= $generator->getCamelcase_capital_name(); ?>Controller
         $this->translator = $translator;
     }
     
-    
-    
-    public function add(ViewRenderer $head, Request $request, 
-                        ValidatorInterface $validator,
-                        <?php if ($generator->getRepo_extra_camelcase_name()) {  
-                            echo $generator->getRepo_extra_camelcase_name().'Repository '. '$'.lcfirst($generator->getRepo_extra_camelcase_name()).'Repository,';
-                        }    
-                        ?>
+    public function add(Request $request, 
+                        FormHydrator $formHydrator,
                         <?php
                         $rel = '';
                         echo "\n";
@@ -92,16 +77,13 @@ final class <?= $generator->getCamelcase_capital_name(); ?>Controller
                         ?>
     ) : Response
     {
+        $<?= $generator->getSmall_singular_name(); ?> = new <?= $generator->getCamelcase_capital_name(); ?>();
+        $form = new Form($<?= $generator->getSmall_singular_name(); ?>);
         $parameters = [
-            'title' => $this->translator->translate('invoice.add'),
+            'title' => $this->translator->translate('i.add'),
             'action' => ['<?= $generator->getSmall_singular_name(); ?>/add'],
             'errors' => [],
-            'body' => $request->getParsedBody(),
-            <?php if ($generator->getRepo_extra_camelcase_name()) {  
-                echo "'s'=>". '$'.lcfirst($generator->getRepo_extra_camelcase_name()).'Repository,'."\n";
-            }
-            ?>
-            'head'=>$head,
+            'form' => $form,
             <?php echo "\n";
             foreach ($relations as $relation) {
                 echo "            '".$relation->getLowercase_name()."s'=>".'$'.$relation->getLowercase_name().'Repository->findAllPreloaded(),'."\n";
@@ -110,13 +92,20 @@ final class <?= $generator->getCamelcase_capital_name(); ?>Controller
         ];
         
         if ($request->getMethod() === Method::POST) {
-            
-            $form = new <?= $generator->getCamelcase_capital_name(); ?>Form();
-            if ($form->load($parameters['body']) && $validator->validate($form)->isValid()) {
-                $this-><?= $generator->getSmall_singular_name(); ?>Service->save<?= $generator->getCamelcase_capital_name(); ?>(new <?= $generator->getCamelcase_capital_name(); ?>(),$form);
+            $body = $request->getParsedBody();
+            //echo \Yiisoft\VarDumper\Vardumper::dump($body);
+            /**
+             * @psalm-suppress PossiblyInvalidArgument $body 
+             */
+            if ($formHydrator->populate($form, $body) && $form->isValid()) {
+                /**
+                 * @psalm-suppress PossiblyInvalidArgument $body 
+                 */
+                $this-><?= $generator->getSmall_singular_name(); ?>Service->save<?= $generator->getCamelcase_capital_name(); ?>($<?= $generator->getSmall_singular_name(); ?>, $body);
                 return $this->webService->getRedirectResponse('<?= $generator->getSmall_singular_name(); ?>/index');
             }
-            $parameters['errors'] = $form->getValidationResult();
+            $parameters['errors'] = $form->getValidationResult()?->getErrorMessagesIndexedByAttribute() ?? [];
+            $parameters['form'] = $form;
         }
         return $this->viewRenderer->render('_form', $parameters);
     }
@@ -131,26 +120,10 @@ final class <?= $generator->getCamelcase_capital_name(); ?>Controller
             'errors' => [],
         ]);
     }
-    
-    /**
-     * @param <?= $generator->getCamelcase_capital_name();?> $<?= $generator->getSmall_singular_name();?>
-     * @return array
-     */
-    private function body(<?= $generator->getCamelcase_capital_name();?> $<?= $generator->getSmall_singular_name();?>) : array {
-        $body = [
-                <?php
-                  echo "\n";
-                  $bo = '';
-                    foreach ($orm_schema->getColumns() as $column) {
-                    $bo .= "          '".$column->getName()."'=>$".$generator->getSmall_singular_name()."->get".ucfirst($column->getName())."(),\n";
-                  }
-                  echo rtrim($bo,",\n")."\n";        
-                ?>
-                ];
-        return $body;
-    }
         
-    public function index(CurrentRoute $currentRoute, <?= $generator->getCamelcase_capital_name(); ?>Repository $<?= $generator->getSmall_singular_name(); ?>Repository, SettingRepository $settingRepository): Response
+    public function index(CurrentRoute $currentRoute, 
+                          <?= $generator->getCamelcase_capital_name(); ?>Repository $<?= $generator->getSmall_singular_name(); ?>Repository, 
+                          SettingRepository $settingRepository): Response
     {      
       $page = $currentRoute->getArgument('page', '1');
       $<?= $generator->getSmall_singular_name(); ?> = $<?= $generator->getSmall_singular_name(); ?>Repository->findAllPreloaded();
@@ -169,13 +142,13 @@ final class <?= $generator->getCamelcase_capital_name(); ?>Controller
     }
     
     /**
-     * 
      * @param SettingRepository $settingRepository
      * @param CurrentRoute $currentRoute
      * @param <?= $generator->getCamelcase_capital_name(); ?>Repository $<?= $generator->getSmall_singular_name();?>Repository
      * @return Response
      */
-    public function delete(SettingRepository $settingRepository, CurrentRoute $currentRoute,<?= $generator->getCamelcase_capital_name(); ?>Repository $<?= $generator->getSmall_singular_name();?>Repository 
+    public function delete(SettingRepository $settingRepository, 
+                           CurrentRoute $currentRoute,<?= $generator->getCamelcase_capital_name(); ?>Repository $<?= $generator->getSmall_singular_name();?>Repository 
     ): Response {
         try {
             $<?= $generator->getSmall_singular_name();?> = $this-><?= $generator->getSmall_singular_name();?>($currentRoute, $<?= $generator->getSmall_singular_name();?>Repository);
@@ -191,37 +164,30 @@ final class <?= $generator->getCamelcase_capital_name(); ?>Controller
         }
     }
         
-    public function edit(ViewRenderer $head, Request $request, CurrentRoute $currentRoute, 
-                        ValidatorInterface $validator,
-                        <?php if ($generator->getCamelcase_capital_name()) {  
-                            echo $generator->getCamelcase_capital_name().'Repository '. '$'.$generator->getSmall_singular_name().'Repository,';
-                        }
-                        ?> 
-                        <?php if ($generator->getRepo_extra_camelcase_name()) {  
-                            echo $generator->getRepo_extra_camelcase_name().'Repository '. '$'.strtolower($generator->getRepo_extra_camelcase_name()).'Repository,';
-                        }
-                        ?>
-                        <?php
-                        $rel = '';
-                        echo "\n";
-                        foreach ($relations as $relation) {
-                            $rel .= '                        '.$relation->getCamelcase_name().'Repository $'.$relation->getLowercase_name().'Repository,'."\n";
-                        }
-                        echo rtrim($rel,",\n")."\n";
-                        ?>
+    public function edit(Request $request, 
+                         CurrentRoute $currentRoute, 
+                         FormHydrator $formHydrator,
+        <?php if ($generator->getCamelcase_capital_name()) {  
+            echo $generator->getCamelcase_capital_name().'Repository '. '$'.$generator->getSmall_singular_name().'Repository,';
+        }
+        ?> 
+        <?php
+        $rel = '';
+        echo "\n";
+        foreach ($relations as $relation) {
+            $rel .= '                        '.$relation->getCamelcase_name().'Repository $'.$relation->getLowercase_name().'Repository,'."\n";
+        }
+        echo rtrim($rel,",\n")."\n";
+        ?>
     ): Response {
         $<?= $generator->getSmall_singular_name(); ?> = $this-><?= $generator->getSmall_singular_name(); ?>($currentRoute, $<?= $generator->getSmall_singular_name(); ?>Repository);
         if ($<?= $generator->getSmall_singular_name(); ?>){
+            $form = new Form($<?= $generator->getSmall_singular_name(); ?>);
             $parameters = [
-                'title' => $this->translator->translate('invoice.edit'),
+                'title' => $this->translator->translate('i.edit'),
                 'action' => ['<?= $generator->getSmall_singular_name(); ?>/edit', ['id' => $<?= $generator->getSmall_singular_name();?>->getId()]],
                 'errors' => [],
-                'body' => $this->body($<?= $generator->getSmall_singular_name(); ?>),
-                'head'=>$head,
-                <?php if ($generator->getRepo_extra_camelcase_name()) {  
-                     echo "'s'=>". '$'.lcfirst($generator->getRepo_extra_camelcase_name()).'Repository,'."\n";
-                }
-                ?>
+                'form' => $form,
                 <?php
                     $rel = '';
                     foreach ($relations as $relation) {
@@ -231,14 +197,20 @@ final class <?= $generator->getCamelcase_capital_name(); ?>Controller
                 ?>
             ];
             if ($request->getMethod() === Method::POST) {
-                $form = new <?= $generator->getCamelcase_capital_name(); ?>Form();
                 $body = $request->getParsedBody();
-                if ($form->load($body) && $validator->validate($form)->isValid()) {
-                    $this-><?= $generator->getSmall_singular_name();?>Service->save<?= $generator->getCamelcase_capital_name(); ?>($<?= $generator->getSmall_singular_name();?>,$form);
+                //echo \Yiisoft\VarDumper\Vardumper::dump($body);
+                /**
+                 * @psalm-suppress PossiblyInvalidArgument $body 
+                 */
+                if ($formHydrator->populate($form, $body) && $form->isValid()) {
+                    /**
+                     * @psalm-suppress PossiblyInvalidArgument $body 
+                     */
+                    $this-><?= $generator->getSmall_singular_name();?>Service->save<?= $generator->getCamelcase_capital_name(); ?>($<?= $generator->getSmall_singular_name();?>, $body);
                     return $this->webService->getRedirectResponse('<?= $generator->getSmall_singular_name(); ?>/index');
                 }
-                $parameters['body'] = $body;
-                $parameters['errors'] = $form->getValidationResult();
+                $parameters['errors'] = $form->getValidationResult()?->getErrorMessagesIndexedByAttribute() ?? [];
+                $parameters['form'] = $form;
             }
             return $this->viewRenderer->render('_form', $parameters);
         }
@@ -289,19 +261,18 @@ final class <?= $generator->getCamelcase_capital_name(); ?>Controller
      * @param SettingRepository $settingRepository
      * @return \Yiisoft\DataResponse\DataResponse|Response
      */
-    public function view(CurrentRoute $currentRoute,<?= $generator->getCamelcase_capital_name(); ?>Repository $<?= $generator->getSmall_singular_name();?>Repository,
-        <?php if ($generator->getRepo_extra_camelcase_name()) {  
-            echo $generator->getRepo_extra_camelcase_name().'Repository '. '$'.strtolower($generator->getRepo_extra_camelcase_name()).'Repository,'."\n";
-        }
-        ?>
-        ): \Yiisoft\DataResponse\DataResponse|Response {
+    public function view(CurrentRoute $currentRoute,
+                         <?= $generator->getCamelcase_capital_name(); ?>Repository $<?= $generator->getSmall_singular_name();?>Repository) 
+                         : \Yiisoft\DataResponse\DataResponse|Response 
+    {
         $<?= $generator->getSmall_singular_name(); ?> = $this-><?= $generator->getSmall_singular_name(); ?>($currentRoute, $<?= $generator->getSmall_singular_name(); ?>Repository); 
         if ($<?= $generator->getSmall_singular_name(); ?>) {
+            $form = new Form($<?= $generator->getSmall_singular_name(); ?>);
             $parameters = [
-                'title' => $settingRepository->trans('view'),
+                'title' => $this->translator->translate('i.view'),
                 'action' => ['<?= $generator->getSmall_singular_name(); ?>/view', ['id' => $<?= $generator->getSmall_singular_name();?>->getId()]],
                 'errors' => [],
-                'body' => $this->body($<?= $generator->getSmall_singular_name(); ?>),
+                'form' => $form,
                 '<?= $generator->getSmall_singular_name();?>'=>$<?= $generator->getSmall_singular_name();?>,
             ];        
         return $this->viewRenderer->render('_view', $parameters);

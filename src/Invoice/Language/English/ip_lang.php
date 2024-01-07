@@ -1,9 +1,12 @@
 <?php
 declare(strict_types=1);
-$lang = array(
+// as at 6th January 2024. Note this file has been built using copy paste from resources/messages/en/app.php
+// Remember to adjust the app.php file with '$lang =' as seen below 
+$lang =  [
     'i.account_information'                          => 'Account Information',
     'i.active'                                       => 'Active',
     'i.active_client'                                => 'Active',
+    'i.add'                                          => 'Add',
     'i.add_client'                                   => 'Add Client',
     'i.add_family'                                   => 'Add Family',
     'i.add_files'                                    => 'Add Files...',
@@ -724,5 +727,5 @@ $lang = array(
 
     // Types
     'i.true'                                         => 'True',
-    'i.false'                                        => 'False'
-);
+    'i.false'                                        => 'False',  
+];

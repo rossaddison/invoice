@@ -36,25 +36,7 @@ class Gentor
     
     #[Column(type: 'string(100)')]
     private ?string $controller_layout_dir_dot_path = '';  
-    
-    #[Column(type: 'string(50)')]
-    private ?string $repo_extra_camelcase_name = '';
-    
-    #[Column(type: 'string(50)')]
-    private ?string $paginator_next_page_attribute = '';
-    
-    #[Column(type: 'string(50)')]
-    private string $constrain_index_field = '';
-    
-    #[Column(type: 'string(20)')]
-    private ?string $filter_field = '';
-    
-    #[Column(type: 'tinyInteger(4)', nullable:true)]
-    private ?int $filter_field_start_position = null;
-    
-    #[Column(type: 'tinyInteger(4)', nullable:true)]
-    private ?int $filter_field_end_position = null;
-    
+        
     #[Column(type: 'string(50)')]
     private ?string $pre_entity_table = '';
     
@@ -69,18 +51,9 @@ class Gentor
     
     #[Column(type: 'bool', default: false)]
     private bool $deleted_include = false;
-    
-    #[Column(type: 'bool', default: false)]
-    private bool $keyset_paginator_include = false;
-    
-    #[Column(type: 'bool', default: false)]
-    private bool $offset_paginator_include = false;
-    
+   
     #[Column(type: 'bool', default: true)]
     private bool $flash_include = true;
-    
-    #[Column(type: 'bool', default: false)]
-    private bool $headerline_include = false;
     
     public function __construct(
       string $route_prefix='',
@@ -91,21 +64,12 @@ class Gentor
       string $namespace_path ='',
       string $controller_layout_dir = 'dirname(dirname(__DIR__)',
       string $controller_layout_dir_dot_path = '/Invoice/Layout/main.php',
-      string $repo_extra_camelcase_name ='',
-      string $paginator_next_page_attribute = '',
-      string $pre_entity_table = '',
-      string $constrain_index_field = '',
-      string $filter_field = '',
-      int $filter_field_start_position = null,
-      int $filter_field_end_position = null,      
+      string $pre_entity_table = '',      
       bool $created_include = false,
       bool $updated_include = false,
       bool $modified_include = false,
       bool $deleted_include = false,      
-      bool $keyset_paginator_include = false,
-      bool $offset_paginator_include = false,      
-      bool $flash_include = false,
-      bool $headerline_include = false
+      bool $flash_include = false
     )
     {
       $this->route_prefix = $route_prefix;
@@ -116,21 +80,12 @@ class Gentor
       $this->namespace_path = $namespace_path;
       $this->controller_layout_dir = $controller_layout_dir;
       $this->controller_layout_dir_dot_path = $controller_layout_dir_dot_path;
-      $this->repo_extra_camelcase_name = $repo_extra_camelcase_name;
-      $this->paginator_next_page_attribute = $paginator_next_page_attribute;
-      $this->pre_entity_table = $pre_entity_table;      
-      $this->constrain_index_field = $constrain_index_field;      
-      $this->filter_field = $filter_field;
-      $this->filter_field_start_position = $filter_field_start_position;
-      $this->filter_field_end_position = $filter_field_end_position;
+      $this->pre_entity_table = $pre_entity_table;
       $this->created_include = $created_include;
       $this->updated_include = $updated_include;
       $this->modified_include = $modified_include;
       $this->deleted_include = $deleted_include;
-      $this->keyset_paginator_include = $keyset_paginator_include;
-      $this->offset_paginator_include = $offset_paginator_include;
       $this->flash_include = $flash_include;
-      $this->headerline_include = $headerline_include;
     }
     public function getGentor_id(): string
     {
@@ -216,27 +171,7 @@ class Gentor
     {
         $this->controller_layout_dir_dot_path = $controller_layout_dir_dot_path;
     }
-    
-    public function getRepo_extra_camelcase_name(): string|null
-    {
-        return $this->repo_extra_camelcase_name;
-    }
-    
-    public function setRepo_extra_camelcase_name(string $repo_extra_camelcase_name): void
-    {
-        $this->repo_extra_camelcase_name = $repo_extra_camelcase_name;
-    }
-    
-    public function getPaginator_next_page_attribute(): string|null
-    {
-        return $this->paginator_next_page_attribute;
-    }
-    
-    public function setPaginator_next_page_attribute(string $paginator_next_page_attribute): void
-    {
-        $this->paginator_next_page_attribute = $paginator_next_page_attribute;
-    }
-    
+            
     public function getPre_entity_table(): string|null
     {
         return $this->pre_entity_table;
@@ -246,47 +181,7 @@ class Gentor
     {
         $this->pre_entity_table = $pre_entity_table;
     }
-    
-    public function getConstrain_index_field(): string
-    {
-        return $this->constrain_index_field;
-    }
-    
-    public function setConstrain_index_field(string $constrain_index_field): void
-    {
-        $this->constrain_index_field = $constrain_index_field;
-    }
-    
-    public function getFilter_field(): string|null
-    {
-        return $this->filter_field;
-    }
-    
-    public function setFilter_field(string $filter_field): void
-    {
-        $this->filter_field = $filter_field;
-    }
-    
-    public function getFilter_field_start_position(): ?int
-    {
-        return $this->filter_field_start_position;
-    }
-    
-    public function setFilter_field_start_position (?int $filter_field_start_position): void
-    {
-        $this->filter_field_start_position = $filter_field_start_position;
-    }
-    
-    public function getFilter_field_end_position(): ?int
-    {
-        return $this->filter_field_end_position;
-    }
-    
-    public function setFilter_field_end_position (?int $filter_field_end_position): void
-    {
-        $this->filter_field_end_position = $filter_field_end_position;
-    }
-    
+        
     public function isCreated_include(): bool
     {
         return $this->created_include;
@@ -327,26 +222,6 @@ class Gentor
         $this->deleted_include = $deleted_include;
     }
     
-    public function isKeyset_paginator_include(): bool
-    {
-        return $this->keyset_paginator_include;
-    }
-    
-    public function setKeyset_paginator_include(bool $keyset_paginator_include): void
-    {
-        $this->keyset_paginator_include = $keyset_paginator_include;
-    }
-    
-    public function isOffset_paginator_include(): bool
-    {
-        return $this->offset_paginator_include;
-    }
-    
-    public function setOffset_paginator_include(bool $offset_paginator_include): void
-    {
-        $this->offset_paginator_include = $offset_paginator_include;
-    }
-    
     public function isFlash_include(): bool
     {
         return $this->flash_include;
@@ -355,15 +230,5 @@ class Gentor
     public function setFlash_include(bool $flash_include): void
     {
         $this->flash_include = $flash_include;
-    }
-    
-    public function isHeaderline_include(): bool
-    {
-        return $this->headerline_include;
-    }
-    
-    public function setHeaderline_include(bool $headerline_include): void
-    {
-        $this->headerline_include = $headerline_include;
     }
 }

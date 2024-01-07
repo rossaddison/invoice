@@ -13,10 +13,11 @@ final class Button
         echo Html::openTag('div', ['class' => 'headerbar-item pull-right']);
         $buttonsDataArray = [
             [
-                $translator->translate('i.back'), 
+                //$translator->translate('i.back'),
+                '',
                 'type' => 'reset', 
                 'onclick' => 'window.history.back()',
-                'class' => 'btn btn-danger',
+                'class' => 'btn btn-danger bi bi-arrow-left',
                 'id' => 'btn-cancel',
                 'name' => 'btn_cancel',
                 'value' => '1'
@@ -31,21 +32,23 @@ final class Button
         echo Html::openTag('div', ['class' => 'headerbar-item pull-right']);
         $buttonsDataArray = [
             [
-                $translator->translate('i.back'), 
+                //$translator->translate('i.back'),
+                '',
                 'type' => 'reset', 
                 'onclick' => 'window.history.back()',
-                'class' => 'btn btn-danger',
+                'class' => 'btn btn-danger bi bi-arrow-left',
                 'id' => 'btn-cancel',
                 'name' => 'btn_cancel',
                 'value' => '1'
             ],
             [
-            $translator->translate('i.save'), 
-            'type' => 'submit', 
-            'class' => 'btn btn-success',
-            'id' => 'btn-submit',
-            'name' => 'btn_submit',
-            'value' => '1'
+                //$translator->translate('i.save'),
+                '',
+                'type' => 'submit', 
+                'class' => 'btn btn-success bi bi-save pull-right',
+                'id' => 'btn-submit',
+                'name' => 'btn_submit',
+                'value' => '1'
         ],
         ];
         echo Field::buttongroup()

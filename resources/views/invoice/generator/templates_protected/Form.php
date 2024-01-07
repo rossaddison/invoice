@@ -9,16 +9,17 @@ declare(strict_types=1);
 
 namespace <?= $generator->getNamespace_path().DIRECTORY_SEPARATOR.$generator->getCamelcase_capital_name(); ?>;
 
+use App\Invoice\Entity\<?= $generator->getCamelcase_capital_name();?>;
 use Yiisoft\FormModel\FormModel;
 use Yiisoft\Validator\Rule\Required;
 <?php
-   foreach ($orm_schema->getColumns() as $column) {
-       if ($column->getAbstractType() === 'date' || $column->getAbstractType() === 'datetime' || $column->getAbstractType() === 'time' ) {
-           echo 'use \DateTime;'."\n";
-           echo 'use \DateTimeImmutable;'."\n";
-           break;
-       }
-   }         
+foreach ($orm_schema->getColumns() as $column) {
+    if ($column->getAbstractType() === 'date' || $column->getAbstractType() === 'datetime' || $column->getAbstractType() === 'time' ) {
+        echo 'use DateTime;'."\n";
+        echo 'use DateTimeImmutable;'."\n";
+        break;
+    }
+}         
 ?>
 
 final class <?= $generator->getCamelcase_capital_name();?>Form extends FormModel
@@ -56,6 +57,21 @@ final class <?= $generator->getCamelcase_capital_name();?>Form extends FormModel
            echo '    private ?'.$column->getType()." $".$column->getName(). '='.$init.';'."\n";
         }
     }
+    ?>
+
+    public function __construct(<?= $generator->getCamelcase_capital_name();?> $<?= $generator->getSmall_singular_name();?>) 
+    {
+    <?php
+        echo "\n";
+        $bo = '';
+        foreach ($orm_schema->getColumns() as $column) {
+            $bo .= '        $this->'.$column->getName()." = $".$generator->getSmall_singular_name()."->get".ucfirst($column->getName())."();\n";
+        }
+        echo rtrim($bo,",\n")."\n";        
+    ?>
+    }
+    
+    <?php
     foreach ($orm_schema->getColumns() as $column) {
       if (($column->getAbstractType() <> 'primary') && ($column->getAbstractType() <> 'date') && ($column->getAbstractType() <> 'time')) {
         echo "\n";
@@ -66,16 +82,12 @@ final class <?= $generator->getCamelcase_capital_name();?>Form extends FormModel
       }
       if ($column->getAbstractType() === 'date') {
         echo "\n";
-        echo '    public function get'.ucfirst($column->getName()).'() : ?\DateTime'."\n";
+        echo '    public function get'.ucfirst($column->getName()).'() : '.($column->isNullable() ? 'null|' : ''). 'string|DateTimeImmutable'."\n";
         echo '    {'."\n";
-        echo '       if (isset($this->'.$column->getName().') && !empty($this->'.$column->getName().')) {'."\n";
-        echo '          return new DateTime($this->'.$column->getName().');'."\n";            
-        echo '       }'."\n";
-        if (($column->getAbstractType() === 'date') && ($column->isNullable())) {
-            echo '       if (empty($this->'.$column->getName().')){'."\n";
-            echo '          return null;'."\n";
-            echo '        }'."\n"; 
-        }
+        echo '           **'."\n";
+        echo '           * @var string|'.($column->isNullable() ? 'null|' : '').'DateTimeImmutable $this->'. $column->getName(). ''."\n";
+        echo '           */'."\n";
+        echo '          return $this->'.$column->getName().';'."\n"; 
         echo '    }'."\n";
       }
       if ($column->getAbstractType() === 'time') {
@@ -97,16 +109,5 @@ final class <?= $generator->getCamelcase_capital_name();?>Form extends FormModel
     echo '      return '."''".';'."\n";
     echo '    }'."\n";
     echo "\n";
-    echo '    public function getRules(): array';
-    echo '    {'."\n";
-    echo '      return [';
-    echo "\n";
-    foreach ($orm_schema->getColumns() as $column) {
-       if (substr($column, -2) <> 'id') {   
-        echo "        '".$column->getName()."' => [new Required()],";
-       } 
-    }
-    echo '    ];'."\n";   
-    echo '}'."\n";
     echo '}'."\n";
  ?>

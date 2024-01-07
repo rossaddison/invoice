@@ -17,15 +17,15 @@ final class GeneratorRelationService
     /**
      * 
      * @param GentorRelation $model
-     * @param GeneratorRelationForm $form
+     * @param array $array
      * @return void
      */
-    public function saveGeneratorRelation(GentorRelation $model, GeneratorRelationForm $form): void
+    public function saveGeneratorRelation(GentorRelation $model, array $array): void
     {
-        null!==$form->getLowercase_name() ? $model->setLowercase_name($form->getLowercase_name()) : '';
-        null!==$form->getCamelcase_name() ? $model->setCamelcase_name($form->getCamelcase_name()) : '';
-        null!==$form->getView_field_name() ? $model->setView_field_name($form->getView_field_name()) : '';
-        null!==$form->getgentor_id() ? $model->setGentor_id($form->getGentor_id()) : '';
+        isset($array['lowercasename']) ? $model->setLowercase_name((string)$array['lowercasename']) : '';
+        isset($array['camelcasename']) ? $model->setCamelcase_name((string)$array['camelcasename']) : '';
+        isset($array['view_field_name']) ? $model->setView_field_name((string)$array['view_field_name']) : '';
+        isset($array['gentor_id']) ? $model->setGentor_id((int)$array['gentor_id']) : '';
         $this->repository->save($model);
     }
     

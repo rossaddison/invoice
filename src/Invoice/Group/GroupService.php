@@ -22,18 +22,16 @@ final class GroupService
     }
 
     /**
-     * 
      * @param Group $model
-     * @param GroupForm $form
+     * @param array $array
      * @return void
      */
-    public function saveGroup(Group $model, GroupForm $form): void
+    public function saveGroup(Group $model, array $array): void
     {
-       $model->setName($form->getName() ?: 'Name');
-       $model->setIdentifier_format($form->getIdentifier_format() ?: 'AAA{{{id}}}');
-       $model->setNext_id($form->getNext_id() ?: 0);
-       $model->setLeft_pad($form->getLeft_pad() ?: 0);
- 
+       isset($array['name']) ? $model->setName((string)$array['name']) : 'Name';
+       isset($array['identifier_format']) ? $model->setIdentifier_format((string)$array['identifier_format']) : 'AAA{{{id}}}';
+       isset($array['next_id']) ? $model->setNext_id((int)$array['next_id']) : 0;
+       isset($array['left_pad']) ? $model->setLeft_pad((int)$array['left_pad']) : 0;
        $this->repository->save($model);
     }
     
