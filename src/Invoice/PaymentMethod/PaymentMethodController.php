@@ -7,7 +7,6 @@ namespace App\Invoice\PaymentMethod;
 use App\Invoice\Entity\PaymentMethod;
 use App\Invoice\PaymentMethod\PaymentMethodService;
 use App\Invoice\PaymentMethod\PaymentMethodRepository;
-use App\Invoice\Setting\SettingRepository;
 
 use App\User\UserService;
 use App\Service\WebControllerService;
@@ -19,8 +18,8 @@ use Yiisoft\Http\Method;
 use Yiisoft\Router\CurrentRoute;
 use Yiisoft\Session\SessionInterface as Session;
 use Yiisoft\Session\Flash\Flash;
-use Yiisoft\Translator\TranslatorInterface;use Yiisoft\FormModel\FormHydrator;
-use Yiisoft\Form\Helper\HtmlFormErrors;
+use Yiisoft\Translator\TranslatorInterface;
+use Yiisoft\FormModel\FormHydrator;
 use Yiisoft\Yii\View\ViewRenderer;
 
 final class PaymentMethodController
@@ -75,16 +74,13 @@ final class PaymentMethodController
     
     /**
      * @param PaymentMethodRepository $paymentmethodRepository
-     * @param SettingRepository $settingRepository
      * @param Request $request
      * @param PaymentMethodService $service
      */
-    public function index(PaymentMethodRepository $paymentmethodRepository, SettingRepository $settingRepository, Request $request, PaymentMethodService $service): \Yiisoft\DataResponse\DataResponse
+    public function index(PaymentMethodRepository $paymentmethodRepository, Request $request, PaymentMethodService $service): \Yiisoft\DataResponse\DataResponse
     {
          $canEdit = $this->rbac();
          $parameters = [
-      
-          's'=>$settingRepository,
           'canEdit' => $canEdit,
           'payment_methods' => $this->paymentmethods($paymentmethodRepository),
           'alert' => $this->alert()
@@ -94,74 +90,65 @@ final class PaymentMethodController
     }
     
     /**
-     * 
-     * @param ViewRenderer $head
      * @param Request $request
      * @param FormHydrator $formHydrator
-     * @param SettingRepository $settingRepository
      * @return Response
      */
-    public function add(ViewRenderer $head,Request $request, 
-                       FormHydrator $formHydrator,
-                        SettingRepository $settingRepository                        
-
-    ): Response
+    public function add(Request $request, FormHydrator $formHydrator): Response
     {
+        $form = new PaymentMethodForm(new PaymentMethod());
         $parameters = [
             'title' => $this->translator->translate('invoice.add'),
             'action' => ['paymentmethod/add'],
             'errors' => [],
-            'body' => $request->getParsedBody(),
-            's'=>$settingRepository,
-            'head'=>$head,
+            'form' => $form
         ];
         
         if ($request->getMethod() === Method::POST) {
-            $form = new PaymentMethodForm();
-            if ($formHydrator->populate($form, $parameters['body']) && $form->isValid()) {
-                $this->paymentmethodService->savePaymentMethod(new PaymentMethod(),$form);
+            if ($formHydrator->populateFromPostAndValidate($form, $request)) {
+                /**
+                 * @psalm-suppress PossiblyInvalidArgument $request->getParsedBody()
+                 */
+                $this->paymentmethodService->savePaymentMethod(new PaymentMethod(), $request->getParsedBody());
                 return $this->webService->getRedirectResponse('paymentmethod/index');
             }
             $parameters['form'] = $form;
+            $parameters['errors'] = $form->getValidationResult()?->getErrorMessagesIndexedByAttribute() ?? [];
         }
         return $this->viewRenderer->render('_form', $parameters);
     }
     
     /**
-     * 
-     * @param ViewRenderer $head
      * @param Request $request
      * @param CurrentRoute $currentRoute
      * @param FormHydrator $formHydrator
      * @param PaymentMethodRepository $paymentmethodRepository
-     * @param SettingRepository $settingRepository
      * @return Response
      */
-    public function edit(ViewRenderer $head, Request $request, CurrentRoute $currentRoute,
+    public function edit(Request $request, CurrentRoute $currentRoute,
                         FormHydrator $formHydrator,
-                        PaymentMethodRepository $paymentmethodRepository, 
-                        SettingRepository $settingRepository                        
+                        PaymentMethodRepository $paymentmethodRepository,           
 
     ): Response {
         $payment_method = $this->paymentmethod($currentRoute, $paymentmethodRepository);
         if ($payment_method) {
+            $form = new PaymentMethodForm($payment_method);
             $parameters = [
-                'title' => 'Edit',
+                'title' => $this->translator->translate('i.edit'),
                 'action' => ['paymentmethod/edit', ['id' => $payment_method->getId()]],
                 'errors' => [],
-                'body' => $this->body($payment_method),
-                'head'=>$head,
-                's'=>$settingRepository,            
+                'form' => $form
             ];
             if ($request->getMethod() === Method::POST) {
-                $form = new PaymentMethodForm();
-                $body = $request->getParsedBody();
-                if ($formHydrator->populate($form, $body) && $form->isValid()) {
-                    $this->paymentmethodService->savePaymentMethod($payment_method, $form);
+                if ($formHydrator->populateFromPostAndValidate($form, $request)) {
+                    /**
+                     * @psalm-suppress PossiblyInvalidArgument $request->getParsedBody()
+                     */
+                    $this->paymentmethodService->savePaymentMethod($payment_method, $request->getParsedBody());
                     return $this->webService->getRedirectResponse('paymentmethod/index');
                 }
-                $parameters['body'] = $body;
                 $parameters['form'] = $form;
+                $parameters['errors'] = $form->getValidationResult()?->getErrorMessagesIndexedByAttribute() ?? [];
             }
             return $this->viewRenderer->render('_form', $parameters);
         } // if payment_method
@@ -193,22 +180,19 @@ final class PaymentMethodController
      * 
      * @param CurrentRoute $currentRoute
      * @param PaymentMethodRepository $paymentmethodRepository
-     * @param SettingRepository $settingRepository
      * @return \Yiisoft\DataResponse\DataResponse|Response
      */
-    public function view(CurrentRoute $currentRoute, PaymentMethodRepository $paymentmethodRepository,
-        SettingRepository $settingRepository
-        ): \Yiisoft\DataResponse\DataResponse|Response {
+    public function view(CurrentRoute $currentRoute, PaymentMethodRepository $paymentmethodRepository) : 
+        \Yiisoft\DataResponse\DataResponse|Response {
         $payment_method = $this->paymentmethod($currentRoute, $paymentmethodRepository);
         $parameters = [];
         if ($payment_method) {
+            $form = new PaymentMethodForm($payment_method);
             $parameters = [
-                'title' => $settingRepository->trans('view'),
+                'title' => $this->translator->translate('i.view'),
                 'action' => ['paymentmethod/edit', ['id' => $payment_method->getId()]],
-                'errors' => [],
-                'body' => $this->body($payment_method),
-                's'=>$settingRepository,             
-                'paymentmethod'=>$paymentmethodRepository->repoPaymentMethodquery($payment_method->getId()),
+                'form' => $form,
+                'paymentmethod' => $paymentmethodRepository->repoPaymentMethodquery($payment_method->getId()),
             ];
             return $this->viewRenderer->render('_view', $parameters);
         }
@@ -253,18 +237,5 @@ final class PaymentMethodController
     {
         $paymentmethods = $paymentmethodRepository->findAllPreloaded();        
         return $paymentmethods;
-    }
-    
-    /**
-     * 
-     * @param PaymentMethod $paymentmethod
-     * @return array
-     */
-    private function body(PaymentMethod $paymentmethod): array {
-        $body = [                
-          'id'=>$paymentmethod->getId(),
-          'name'=>$paymentmethod->getName()
-        ];
-        return $body;
     }
 }

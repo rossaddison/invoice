@@ -36,8 +36,8 @@ final class ClientForm extends FormModel
     private ?string $client_veka='';
     private mixed $client_birthdate;
     
-    #[Integer(min: 16)]
     #[Required]
+    #[Integer(min: 16, max:100)]
     private ?int $client_age = null;
     
     private ?int $client_gender=null;
@@ -70,6 +70,13 @@ final class ClientForm extends FormModel
         $this->client_age = $client->getClient_age();
         $this->client_gender = $client->getClient_gender();
         //$this->postaladdress_id = $client->getPostaladdress_id();
+    }
+    
+    public function getAttributeLabels(): array
+    {
+        return [
+            
+        ];
     }
         
     public function getClient_active() : bool|null

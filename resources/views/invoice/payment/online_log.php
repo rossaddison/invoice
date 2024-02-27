@@ -60,14 +60,15 @@ $columns = [
     ),        
     new DataColumn(
         'inv_id',
+        header:  $translator->translate('i.invoice'),    
         content: static function ($model) use ($urlGenerator): string {
            return Html::a($model->getInv()->getNumber(), $urlGenerator->generate('inv/view',['id'=>$model->getInv_id()]),['style'=>'text-decoration:none'])->render();
        }                       
     ),
     new DataColumn(
         'successful',    
-        header:  $translator->translate('i.transaction_successful'),                
-        content: static function ($model) use ($s) : Yiisoft\Html\Tag\CustomTag {
+        header:  $translator->translate('g.transaction_successful'),                
+        content: static function ($model) use ($translator) : Yiisoft\Html\Tag\CustomTag {
             return $model->getSuccessful() ? Html::tag('Label',$translator->translate('i.yes'),['class'=>'btn btn-success']) : Html::tag('Label',$translator->translate('i.no'),['class'=>'btn btn-danger']);
         }
     ),            
@@ -78,17 +79,17 @@ $columns = [
     ),
     new DataColumn(
         'driver',    
-        header:  $translator->translate('i.payment_provider'),
+        header:  $translator->translate('g.payment_provider'),
         content: static fn ($model): string => ($model->getDriver())                        
     ),
     new DataColumn(
         'response',    
-        header:  $translator->translate('i.provider_response'),                
+        header:  $translator->translate('g.provider_response'),                
         content: static fn ($model): string => ($model->getResponse())                        
     ),
     new DataColumn(
         'reference',    
-        header:  $translator->translate('i.transaction_reference'),                
+        header:  $translator->translate('g.transaction_reference'),                
         content: static fn ($model): string => ($model->getReference())                        
     ),
 ];            
@@ -97,24 +98,21 @@ $columns = [
         ->columns(...$columns)
         ->dataReader($paginator)
         ->headerRowAttributes(['class'=>'card-header bg-info text-black'])
-        ->filterPosition('header')
-        ->filterModelName('payment_online_log')
+        //->filterPosition('header')
+        //->filterModelName('payment_online_log')
         ->header($header)
          ->id('w3-grid')
-        ->paginator($paginator)
         ->pagination(
         OffsetPagination::widget()
-             ->menuClass('pagination justify-content-center')
              ->paginator($paginator)
              // eg. http://yii-invoice.myhost/invoice/online_log/page/3?pagesize=5 
              // ...  /page/3?pagesize=5 in the above derived with config/routes.php's payment/online_log
              // ie. Route::get('/online_log[/page/{page:\d+}]')  
-             ->urlArguments([])  
+             //->urlArguments([])  
              ->render(),
         )
         ->rowAttributes(['class' => 'align-middle'])
-        ->summaryAttributes(['class' => 'mt-3 me-3 summary text-end'])
-    ->summary('')
+        ->summaryAttributes(['class' => 'mt-3 me-3 summary text-end'])   
         ->tableAttributes(['class' => 'table table-striped text-center h-75','id'=>'table-payment'])
         ->toolbar(
             Form::tag()->post($urlGenerator->generate('payment/index'))->csrf($csrf)->open() .

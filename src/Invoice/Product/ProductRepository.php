@@ -63,7 +63,7 @@ final class ProductRepository extends Select\Repository
     
     public function withFiltering(?string $product_sku) : EntityReader
     {    
-        if (!empty($product_sku)) {
+        if (null!==($product_sku)) {
             return (new EntityReader($this->select))
                 ->withFilter($this->getFilter($product_sku));
         } else {

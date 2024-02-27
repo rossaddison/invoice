@@ -32,18 +32,4 @@ final class MailerInvForm extends FormModel
         return 'MailerInvForm';
     }
     
-    /**
-     * @return (Email|Required)[][]
-     *
-     * @psalm-return array{to_email: list{Required, Email}, from_name: list{Required}, from_email: list{Required, Email}, subject: list{Required}}
-     */
-    public function getRules(): array
-    {
-        return [
-            'to_email' => [new Required(), new Email()],
-            'from_name' => [new Required()],            
-            'from_email' => [new Required(), new Email()],
-            'subject' => [new Required()],
-        ];
-    }
 }

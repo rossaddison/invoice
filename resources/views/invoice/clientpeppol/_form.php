@@ -13,7 +13,7 @@ use App\Widget\LabelSwitch;
  * @var string $title
  */
 $errors = $form->getValidationResult()?->getErrors();
-if (!empty($errors)) {
+if (isset($errors)) {
   foreach ($errors as $field => $error) {
     echo Alert::widget()->options(['class' => 'alert-danger'])->body(Html::encode($field . ':' . $error));
   }
@@ -63,7 +63,7 @@ if (!empty($errors)) {
                          */
                         foreach ($electronic_address_scheme as $key => $value) {
                           ?>
-                          <option value="<?= $value['code']; ?>" <?php $s->check_select($form->getEndpointid_schemeid()) ?? ($defaults ? $pep['endpointid_schemeid']['eg'] : '0088'), $value['code']) ?>>
+                          <option value="<?= $value['code']; ?>" <?php $s->check_select($form->getEndpointid_schemeid() ?? ($defaults ? $pep['endpointid_schemeid']['eg'] : '0088'), $value['code']); ?>>
                               <?= $value['code'] . str_repeat("-", 10) . $value['description'] ?>
                           </option>
                         <?php } ?>

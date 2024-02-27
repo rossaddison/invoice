@@ -2,6 +2,7 @@
 declare(strict_types=1);
 
 use Yiisoft\Html\Html;
+use Yiisoft\Html\Tag\I;
 use App\Invoice\Helpers\ClientHelper;
 use App\Invoice\Helpers\CountryHelper;
 use App\Invoice\Helpers\DateHelper;
@@ -14,40 +15,41 @@ use App\Invoice\Helpers\DateHelper;
  * @var string $title
  */
 
-$vat = $s->get_setting('enable_vat_registration');
-
-echo $alert;
+        $vat = $s->get_setting('enable_vat_registration');
+        $clienthelper = new ClientHelper($s);
+        $countryhelper = new CountryHelper();
 ?>
 <div class="panel panel-default">
     <div class="panel-heading">
         <i tooltip="data-toggle" title="<?= $s->isDebugMode(1); ?>"><?= $translator->translate('i.invoice'); ?></i>
     </div>
-<?php
-$clienthelper = new ClientHelper($s);
-$countryhelper = new CountryHelper();
-echo $modal_delete_inv;
-if ($vat === '0') {
-    echo $modal_add_inv_tax;
-}
-echo $modal_add_allowance_charge;
-echo $modal_change_client;
-// modal_product_lookups is performed using below $modal_choose_items
-echo $modal_choose_items;
-// modal_task_lookups is performed using below $modal_choose_tasks
-echo $modal_choose_tasks;
-echo $modal_inv_to_pdf;
-echo $modal_inv_to_html;
-echo $modal_copy_inv;
-echo $modal_delete_items;
-echo $modal_create_recurring;
-echo $modal_create_credit;
-?>
-    <div>
-    </div>
+    <?php        
+        echo $alert;
+        echo $modal_delete_inv;
+        if ($vat === '0') {
+            echo $modal_add_inv_tax;
+        }
+        echo $modal_change_client;
+        // modal_product_lookups is performed using below $modal_choose_items
+        echo $modal_choose_items;
+        // modal_task_lookups is performed using below $modal_choose_tasks
+        echo $modal_choose_tasks;
+        echo $modal_inv_to_pdf;
+        echo $modal_inv_to_html;
+        echo $modal_copy_inv;
+        echo $modal_delete_items;
+        echo $modal_create_recurring;
+        echo $modal_create_credit;        
+    ?>
+</div>    
+
+   
 <?php if ($payments) { ?>
         <br>
         <br>
-        <div class="panel-heading"><b><h2><?= Html::encode($translator->translate('i.payments')); ?></h2></b></div>
+        <div class="panel-heading">
+            <b><h2><?= Html::encode($translator->translate('i.payments')); ?></h2></b>
+        </div>
         <div class="table-responsive">
             <table class="table table-hover table-striped">
                 <thead>
@@ -59,11 +61,11 @@ echo $modal_create_credit;
                 </thead>
                 <tbody>
     <?php foreach ($payments as $payment) { ?>
-                        <tr>
-                            <td><?= Html::encode($payment->getPayment_date()->format($datehelper->style())); ?></td>
-                            <td><?= Html::encode($s->format_currency($payment->getAmount())); ?></td>
-                            <td><?= Html::encode($payment->getNote()); ?></td>
-                        </tr>
+                <tr>
+                    <td><?= Html::encode($payment->getPayment_date()->format($datehelper->style())); ?></td>
+                    <td><?= Html::encode($s->format_currency($payment->getAmount())); ?></td>
+                    <td><?= Html::encode($payment->getNote()); ?></td>
+                </tr>
     <?php } ?>
                 </tbody>
             </table>
@@ -73,10 +75,39 @@ echo $modal_create_credit;
         <br>
         <br>
         <div class="panel-heading">
+            <?= Html::openTag('div'); ?>
+                <?= Html::openTag('button', 
+                    [
+                        'class' => 'btn btn-primary', 
+                        'href' => '#modal-choose-items', 
+                        'id' => 'modal-choose-items', 
+                        'data-bs-toggle' => 'modal'
+                    ]); 
+                ?>
+                <?= I::tag()
+                    ->addClass('fa fa-list')
+                    ->addAttributes([
+                        'data-bs-toggle' => 'tooltip', 
+                        'title' => $translator->translate('i.add_product')
+                    ]);
+                ?>
+                <?= $translator->translate('i.add_product'); ?>
+                <?= Html::closeTag('button'); ?>
+            <?= Html::closeTag('div'); ?>
     <?= $add_inv_item_product; ?>
         </div>
         <div class="panel-heading">
-            <?= $add_inv_item_task; ?>
+            <?= Html::openTag('td'); ?>
+                <?= Html::openTag('button', [
+                    'class' => 'btn btn-primary bi bi-ui-checks', 
+                    'href' => '#modal-choose-tasks', 
+                    'id' => 'modal-choose-tasks', 
+                    'data-toggle' => 'modal']); 
+                ?>
+                <?= $translator->translate('i.add_task'); ?>
+                <?= Html::closeTag('button'); ?>
+            <?= Html::closeTag('td'); ?>           
+    <?= $add_inv_item_task; ?>
         </div>
         <?php } ?>
     <input type="hidden" id="_csrf" name="_csrf" value="<?= $csrf ?>">
@@ -115,7 +146,7 @@ if ($show_buttons && $invEdit) {
                             </li>
                         <?php } ?>
                         <li>
-                            <a href="#add-inv-allowance-charge" data-toggle="modal"  style="text-decoration:none">
+                            <a href="#add-inv-allowance-charge" data-bs-toggle="modal"  style="text-decoration:none">
                                 <i class="fa fa-plus fa-margin"></i>
                                 <?= $translator->translate('invoice.invoice.allowance.or.charge.add'); ?>
                             </a>
@@ -236,7 +267,7 @@ if ($show_buttons && $invEdit) {
 if ($invEdit) {
     ?>
                         <li>
-                            <a href="#create-recurring-inv" data-toggle="modal"  style="text-decoration:none">
+                            <a href="<?= $urlGenerator->generate('invrecurring/add', ['inv_id' => $inv->getId()]); ?>" data-toggle="modal"  style="text-decoration:none">
                                 <i class="fa fa-refresh fa-margin"></i>
                             <?= Html::encode($translator->translate('i.create_recurring')); ?>
                             </a>
@@ -255,7 +286,7 @@ if ($invEdit) {
                             if (null !== $sumex) {
                                 if (null !== $sumex->getInvoice()) {
                                     ?>
-                                    <a href="<?= $urlGenerator->generate('sumex/edit', ['invoice' => $inv->getId()]); ?>" style="text-decoration:none">
+                                    <a href="<?= $urlGenerator->generate('sumex/edit', ['id' => $inv->getId()]); ?>" style="text-decoration:none">
                                         <i class="fa fa-edit fa-margin"></i>
             <?= $translator->translate('invoice.sumex.edit'); ?>
                                     </a>
@@ -585,6 +616,4 @@ if (($invEdit && $inv->getStatus_id() === 1 || ($s->get_setting('enable_invoice_
             <div id="view_partial_inv_delivery_location" class="col-xs-12 col-md-6">
 <?= $partial_inv_delivery_location; ?>
             </div>
-        </div>
-    </div>
-</div>
+<?php  echo $modal_add_allowance_charge; ?>

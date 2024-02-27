@@ -29,6 +29,7 @@ final class CustomFieldService
        isset($array['type']) ? $model->setType((string)$array['type']) : '';
        isset($array['location']) ? $model->setLocation((int)$array['location']) : '';
        isset($array['order']) ? $model->setOrder((int)$array['order']) : '';
+       $model->setRequired($array['required'] === '1' ? true : false);
        $this->repository->save($model);
     }
     

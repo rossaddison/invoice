@@ -1,9 +1,3 @@
-<?php
-  declare(strict_types=1); 
-  use App\Invoice\Helpers\NumberHelper;  
-  $numberhelper = new NumberHelper($s);
-?>
-
 <div id="modal-choose-items" class="modal modal-lg" role="dialog" aria-labelledby="modal_choose_items" aria-hidden="true">
     <form class="modal-content">
         <div class="modal-header">
@@ -39,6 +33,7 @@
             
             <div class="modal-header"> 
                     <!-- see src\Invoice\Asset\rebuild-1.13\js\modal-product-lookups.js line 64 -->
+                    <!-- Note: The above js will pass selected products to invoice/product/selection_quote function -->
                     <button class="select-items-confirm-inv btn btn-success alignment:center" type="button" disabled>
                         <i class="fa fa-check"></i>
                         <?= $translator->translate('i.submit'); ?>
@@ -46,10 +41,9 @@
             </div>
             <div id="product-lookup-table">
                 <?php  
-                    $response = $head->renderPartial('invoice/product/_partial_product_table_modal',[
-                        's'=>$s, 
-                        'products'=>$products,
-                        'numberhelper'=>$numberhelper,
+                    $response = $head->renderPartial('invoice/product/_partial_product_table_modal', [
+                        'products' => $products,
+                        'numberhelper' => $numberHelper,
                     ]);
                     echo (string)$response->getBody();
                 ?>     

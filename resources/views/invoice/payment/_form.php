@@ -1,133 +1,133 @@
 <?php
-    declare(strict_types=1); 
-    
-    use App\Invoice\Entity\CustomField;
-    use Yiisoft\Html\Html;
-    use Yiisoft\Html\Tag\Form;
-    use DateTimeImmutable;
-?>        
-    <div>
-        <?= $alert; ?>
-    </div>    
-    <?= Form::tag()
+declare(strict_types=1); 
+
+use App\Invoice\Entity\CustomField;
+
+use Yiisoft\FormModel\Field;
+use Yiisoft\Html\Html;
+use Yiisoft\Html\Tag\Form;
+
+/**
+ * @var \Yiisoft\View\View $this
+ * @var \Yiisoft\Router\UrlGeneratorInterface $urlGenerator
+ * @var string $csrf
+ * @var string $action
+ * @var string $title
+ */
+
+// If there are no invoices to make payment against give a warning
+echo $alert;
+?>
+
+<?= Form::tag()
     ->post($urlGenerator->generate(...$action))
     ->enctypeMultipartFormData()
     ->csrf($csrf)
     ->id('PaymentForm')
-    ->open() ?>  
+    ->open() ?>
 
-    <div id="headerbar">
-        <h1 class="headerbar-title"><?= $translator->translate('i.payment_form'); ?></h1>
-        <?php
-            $response = $head->renderPartial('invoice/layout/header_buttons',['s'=>$s, 'hide_submit_button'=>false ,'hide_cancel_button'=>false]);
-            echo (string)$response->getBody();
-        ?>
-    </div>
+<?= Html::openTag('div',['class'=>'container py-5 h-100']); ?>
+<?= Html::openTag('div',['class'=>'row d-flex justify-content-center align-items-center h-100']); ?>
+<?= Html::openTag('div',['class'=>'col-12 col-md-8 col-lg-6 col-xl-8']); ?>
+<?= Html::openTag('div',['class'=>'card border border-dark shadow-2-strong rounded-3']); ?>
+<?= Html::openTag('div',['class'=>'card-header']); ?>
 
-    <?= Html::openTag('div', ['class' => 'row']); ?>
-        <div class="mb3 form-group">            
-                <div class="col-xs-12 col-sm-2 text-right text-left-xs">
-                    <label for="inv_id" class="control-label" required><?= $translator->translate('i.invoice') ." - ". ($body['inv_id'] ?? ''); ?></label>
-                </div>
-                <div class="col-xs-12 col-sm-6">
-                    <?php if ($open_invs_count > 0) { ?>
-                        <select name="inv_id" id="inv_id" class="form-control" required <?= ($edit ? 'hidden' : ''); ?>>
-                                    <?php foreach ($open_invs as $inv) { 
-                                        $inv_amount = $iaR->repoInvquery((int)$inv->getId());                                        
-                                    ?>                                        
-                                        <option value="<?=  $inv->getId(); ?>"
-                                            <?php $s->check_select($body['inv_id'] ?? '', $inv->getId()); ?>>
-                                            <?=  $inv->getNumber() . ' - ' . 
-                                                 $clienthelper->format_client($cR->repoClientquery($inv->getClient_id())) . 
-                                                 ' - ' . 
-                                                 $numberhelper->format_currency($inv_amount->getBalance()); 
-                                            ?>
-                                        </option>
-                                    <?php } ?>
-                        </select>
-                    <?php } else { ?>
-                        <select name="inv_id" id="inv_id" class="form-control">
-                                        <option value="0"><?= $translator->translate('i.none'); ?></option> 
-                        </select>
-                    <?php } ?>
-                </div>
-            
-        </div>
-
-        <div class="mb3 form-group">
-            <?php
-                $pdate = $datehelper->get_or_set_with_style($body['payment_date'] ?? new DateTimeImmutable('now'));                                
-            ?>
-            <div class="col-xs-12 col-sm-2 text-right text-left-xs">
-                <label for="payment_date" class="control-label" required><?= $translator->translate('i.date'); ?></label>
-            </div>
-            <div class="col-xs-12 col-sm-6">
-                <div class="input-group">
-                    <input name="payment_date" id="payment_date" placeholder="<?= ' ('.$datehelper->display().')';?>"
-                           class="form-control input-sm datepicker" readonly
-                             value="<?= null!== $pdate ? ($pdate instanceof \DateTimeImmutable ? $pdate($datehelper->style()) : $pdate) : null; ?>" role="presentation" autocomplete="off">
-                    <span class="input-group-text">
-                        <i class="fa fa-calendar fa-fw"></i>
-                    </span>
-                </div>
-            </div>
-        </div>
-
-        <div class="mb3 form-group">
-            <div class="col-xs-12 col-sm-2 text-right text-left-xs">
-                <label for="amount" class="control-label" required><?= $translator->translate('i.amount'); ?></label>
-            </div>
-            <div class="col-xs-12 col-sm-6">               
-                <input type="number" name="amount" id="amount" class="form-control" min="0" step=".01" value="<?= ($body['amount'] ?? 0.001); ?>" required>
-            </div>
-        </div>
-
-        <div class="mb3 form-group">
-            <div class="col-xs-12 col-sm-2 text-right text-left-xs">
-                <label for="payment_method_id" class="control-label" required>
-                    <?= $translator->translate('i.payment_method'); ?>
-                </label>
-            </div>
-            <div class="col-xs-12 col-sm-6 payment-method-wrapper">
-                <?php if ($payment_methods) { ?>
-                    <select id="payment_method_id" name="payment_method_id" class="form-control" required>
-                        <?php foreach ($payment_methods as $payment_method) { ?>
-                            <option value="<?=  $payment_method->getId(); ?>"
-                                <?php $s->check_select(Html::encode($body['payment_method_id'] ?? ''), $payment_method->getId()) ?>>
-                                <?=  $payment_method->getName(); ?>
-                            </option>
-                        <?php } ?>
-                    </select>
-                <?php } else { ?>
-                    <select name="payment_method_id" id="inv_id" class="form-control">>
-                        <option value="0"><?= $translator->translate('i.none'); ?></option> 
-                    </select>
-                <?php } ?>
-            </div>
-        </div>
-        <div class="mb3 form-group">
-            <div class="col-xs-12 col-sm-2 text-right text-left-xs">
-                <label for="note" class="control-label" required><?= $translator->translate('i.note'); ?></label>
-            </div>
-            <div class="col-xs-12 col-sm-6">
-                <textarea name="note" class="form-control" required><?=  $body['note'] ?? ''; ?></textarea>
-            </div>
-        </div>
-        <?php foreach ($custom_fields as $custom_field): ?>            
-        <div class="mb3 form-group">
-        <?php if ($custom_field instanceof CustomField) { ?>
-        <?= $cvH->print_field_for_form($payment_custom_values,
-                                       $custom_field,
-                                       // Custom values to fill drop down list if a dropdown box has been created
-                                       $custom_values, 
-                                       // Class for div surrounding input
-                                       'col-xs-12 col-sm-6',
-                                       // Class surrounding above div
-                                       'form-group',
-                                       // Label class similar to above
-                                       'control-label'); ?>
-        <?php } ?>    
-        </div>    
-        <?php endforeach; ?>        
-    </div> 
+<?= Html::openTag('h1',['class'=>'fw-normal h3 text-center']); ?>    
+    <?= Html::encode($translator->translate('i.payment_form')) ?>
+<?= Html::closeTag('h1'); ?>
+<?= Html::openTag('div', ['id' => 'headerbar']); ?>
+    <?= $button::back_save($translator); ?>
+    <?= Html::openTag('div', ['id' => 'content']); ?>
+        <?= Html::openTag('div', ['class' => 'row']); ?>
+            <?= Html::openTag('div', ['class' => 'mb-3 form-group']); ?>
+                <?= Field::errorSummary($form)
+                    ->errors($errors)
+                    ->header($translator->translate('invoice.error.summary'))
+                    ->onlyCommonErrors()
+                ?>
+                <?= Field::errorSummary($form)
+                    ->errors($errors_custom)
+                    ->header($translator->translate('invoice.error.summary'))
+                    ->onlyCommonErrors()
+                ?>
+                <?php 
+                    $optionsDataPaymentMethod = [];
+                    foreach ($paymentMethods as $paymentMethod) { 
+                        $optionsDataPaymentMethod[(int)$paymentMethod->getId()] = $paymentMethod->getName();                    
+                    }
+                    echo Field::select($form, 'payment_method_id')
+                    ->label($translator->translate('i.payment_method'),['control-label'])
+                    ->optionsData($optionsDataPaymentMethod)
+                    ->hint($translator->translate('invoice.hint.this.field.is.required')); 
+                ?>
+                <?php
+                    $optionsDataInvId = [];
+                    if ($open_invs_count > 0) {
+                        foreach ($open_invs as $inv) { 
+                            $inv_amount = $iaR->repoInvquery((int)$inv->getId());
+                            $optionsDataInvId[(int)$inv->getId()] = 
+                               $inv->getNumber() . 
+                               ' - ' . 
+                               $clienthelper->format_client($cR->repoClientquery($inv->getClient_id())) . 
+                               ' - ' . 
+                               $numberhelper->format_currency($inv_amount->getBalance());
+                        }                
+                    } else {
+                        $optionsDataInvId[0] = $translator->translate('i.none');
+                    }
+                ?>
+                <?= Html::openTag('div', ['class' => 'mb-3 form-group']); ?>
+                    <?= 
+                        Field::select($form, 'inv_id') 
+                        ->label($translator->translate('invoice.invoice'),['control-label'])
+                        ->optionsData($optionsDataInvId)
+                        ->hint($translator->translate('invoice.hint.this.field.is.required'))
+                    ?>
+                <?= Html::closeTag('div'); ?>    
+                <?= Html::openTag('div', ['class' => 'mb-3 form-group']); ?>
+                    <?= Field::date($form, 'payment_date')
+                        ->label($translator->translate('i.date'), ['class' => 'form-label'])
+                        ->required(true)
+                        ->value($form->getPayment_date() ? ($form->getPayment_date())->format('Y-m-d') : '')
+                        ->hint($translator->translate('invoice.hint.this.field.is.required')); 
+                    ?>
+                <?= Html::closeTag('div'); ?>
+                <?= Html::openTag('div', ['class' => 'mb-3 form-group']); ?>
+                    <?= Field::textarea($form, 'note')
+                        ->label($translator->translate('i.note'), ['form-label'])
+                        ->addInputAttributes([
+                            'placeholder' => $translator->translate('i.note'),
+                            'value' => Html::encode($form->getNote() ?? ''),
+                            'class' => 'form-control',
+                            'id' => 'note',    
+                        ])
+                        ->hint($translator->translate('invoice.hint.this.field.is.required')); 
+                    ?>
+                <?= Html::closeTag('div'); ?>
+                <?= Html::openTag('div', ['class' => 'mb-3 form-group']); ?>
+                    <?= Field::text($form, 'amount')
+                        ->label($translator->translate('i.amount'), ['form-label'])
+                        ->placeholder($translator->translate('i.amount'))
+                        ->value(Html::encode($form->getAmount() ?? ''))
+                        ->hint($translator->translate('invoice.hint.this.field.is.required')); 
+                    ?>
+                <?= Html::closeTag('div'); ?>
+            <?= Html::closeTag('div'); ?>
+            <?= Html::openTag('div'); ?>
+                <?php foreach ($custom_fields as $custom_field): ?>  
+                    <?php if ($custom_field instanceof CustomField) { ?>
+                    <?= $cvH->print_field_for_form($custom_field, $paymentCustomForm, $translator, $payment_custom_values, $custom_values); ?>
+                    <?php } ?>                        
+                <?php endforeach; ?>
+            <?= Html::closeTag('div'); ?>    
+        <?= Html::closeTag('div'); ?>
+    <?= Html::closeTag('div'); ?>
+<?= Html::closeTag('div'); ?>
+<?= Html::closeTag('div'); ?>
+<?= Html::closeTag('div'); ?>
+<?= Html::closeTag('div'); ?>
 <?= Form::tag()->close() ?>
+<?php foreach ($errors_custom as $error_custom) {
+  echo \Yiisoft\VarDumper\VarDumper::dump($errors_custom);
+}
+?>

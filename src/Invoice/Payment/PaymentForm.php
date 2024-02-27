@@ -4,36 +4,50 @@ declare(strict_types=1);
 
 namespace App\Invoice\Payment;
 
-use App\Invoice\Helpers\DateHelper;
-
+use App\Invoice\Entity\Inv;
+use App\Invoice\Entity\Payment;
 use Yiisoft\FormModel\FormModel;
 use Yiisoft\Validator\Rule\Required;
+use Yiisoft\Validator\Rule\GreaterThan;
+
+use DateTimeImmutable;
 
 final class PaymentForm extends FormModel
 {    
+    #[Required]
     private ?int $payment_method_id=null;
-    private ?string $payment_date='';
+    
+    private mixed $payment_date='';
+    #[GreaterThan(0)]
     private ?float $amount=null;
+    #[Required]
     private ?string $note='';
+    #[Required]
     private ?int $inv_id=null;
-
+    private ?Inv $inv=null;
+    
+    public function __construct(Payment $payment) 
+    {
+        $this->payment_method_id = (int)$payment->getPayment_method_id();
+        $this->payment_date = $payment->getPayment_date();
+        $this->amount = $payment->getAmount();
+        $this->note = $payment->getNote();
+        $this->inv_id = (int)$payment->getInv_id();
+        $this->inv = $payment->getInv();
+    }
+    
     public function getPayment_method_id() : int|null
     {
       return $this->payment_method_id;
     }
     
-    public function getPayment_date(\App\Invoice\Setting\SettingRepository $s) : \DateTime
+    public function getPayment_date() : null|string|DateTimeImmutable
     {
-        $datehelper = new DateHelper($s);         
-        $datetime = new \DateTime();
-        $datetime->setTimezone(new \DateTimeZone($s->get_setting('time_zone') ?: 'Europe/London')); 
-        $datetime->format($datehelper->style());
-        $date = $datehelper->date_to_mysql(null!==$this->payment_date ? $this->payment_date : date('Y-m-d'));
-        $str_replace = str_replace($datehelper->separator(), '-', $date);
-        $datetime->modify($str_replace);
-        return $datetime;
-    }
-    
+       /**
+        * @var null|string|DateTimeImmutable $this->payment_date 
+        */
+        return $this->payment_date; 
+    }        
 
     public function getAmount() : float|null
     {
@@ -49,6 +63,11 @@ final class PaymentForm extends FormModel
     {
       return $this->inv_id;
     }
+    
+    public function getInv() : Inv|null
+    {
+        return $this->inv;
+    }        
 
     /**
      * @return string
@@ -59,19 +78,4 @@ final class PaymentForm extends FormModel
     {
       return '';
     }
-
-    /**
-     * @return Required[][]
-     *
-     * @psalm-return array{inv_id: list{Required}, payment_method_id: list{Required}, payment_date: list{Required}, amount: list{Required}, note: list{Required}}
-     */
-    public function getRules(): array    {
-      return [
-        'inv_id' => [new Required()],
-        'payment_method_id' => [new Required()],
-        'payment_date' => [new Required()],
-        'amount' => [new Required()],
-        'note' => [new Required()],
-    ];
-}
 }

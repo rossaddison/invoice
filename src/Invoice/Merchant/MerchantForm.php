@@ -1,22 +1,45 @@
 <?php
-
 declare(strict_types=1);
 
 namespace App\Invoice\Merchant;
 
-use App\Invoice\Helpers\DateHelper;
+use App\Invoice\Entity\Inv;
+use App\Invoice\Entity\Merchant;
 use Yiisoft\FormModel\FormModel;
 use Yiisoft\Validator\Rule\Required;
 
+use DateTimeImmutable;
+
 final class MerchantForm extends FormModel
 {    
-    
     private ?int $inv_id=null;
+    #[Required]
     private ?bool $successful=true;
-    private ?string $date='';
+    
+    private mixed $date='';
+    #[Required]
     private ?string $driver='';
+    #[Required]
     private ?string $response='';
+    #[Required]
     private ?string $reference='';
+    private ?Inv $inv;
+    
+    public function __construct(Merchant $merchant)
+    {
+          $this->inv_id = (int)$merchant->getInv_id();
+          $this->successful = $merchant->getSuccessful();
+          $this->date = $merchant->getDate();
+          $this->driver = $merchant->getDriver();
+          $this->response = $merchant->getResponse();
+          $this->reference = $merchant->getReference();
+          $this->inv = $merchant->getInv();
+    } 
+    
+    public function getInv() : Inv|null
+    {
+        return $this->inv;
+    }        
 
     public function getInv_id() : int|null
     {
@@ -28,17 +51,13 @@ final class MerchantForm extends FormModel
       return $this->successful;
     }
     
-    public function getDate(\App\Invoice\Setting\SettingRepository $s) : \DateTime
+    public function getDate() : string|DateTimeImmutable
     {
-        $datehelper = new DateHelper($s);         
-        $datetime = new \DateTime();
-        $datetime->setTimezone(new \DateTimeZone($s->get_setting('time_zone') ?: 'Europe/London')); 
-        $datetime->format($datehelper->style());
-        $date = $datehelper->date_to_mysql(null!==$this->date ? $this->date : date('Y-m-d'));
-        $str_replace = str_replace($datehelper->separator(), '-', $date);
-        $datetime->modify($str_replace);
-        return $datetime;
-    }
+      /**
+       * @var string|DateTimeImmutable $this->date 
+       */
+      return $this->date;
+    }    
 
     public function getDriver() : string|null
     {
@@ -64,19 +83,4 @@ final class MerchantForm extends FormModel
     {
       return '';
     }
-
-    /**
-     * @return Required[][]
-     *
-     * @psalm-return array{successful: list{Required}, date: list{Required}, driver: list{Required}, response: list{Required}, reference: list{Required}}
-     */
-    public function getRules(): array    {
-      return [
-        'successful' => [new Required()],
-        'date' => [new Required()],
-        'driver' => [new Required()],
-        'response' => [new Required()],
-        'reference' => [new Required()],
-    ];
-}
 }

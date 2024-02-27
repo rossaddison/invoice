@@ -38,12 +38,12 @@ class Upload {
     private string $description = '';
 
     public function __construct(
-            int $id = null,
-            int $client_id = null,
-            string $url_key = '',
-            string $file_name_original = '',
-            string $file_name_new = '',
-            string $description = '',
+        int $id = null,
+        int $client_id = null,
+        string $url_key = '',
+        string $file_name_original = '',
+        string $file_name_new = '',
+        string $description = '',
     ) {
         $this->id = $id;
         $this->client_id = $client_id;

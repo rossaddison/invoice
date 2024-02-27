@@ -109,10 +109,7 @@ final class GroupController
         
         if ($request->getMethod() === Method::POST) {
             $body = $request->getParsedBody();
-            /**
-             * @psalm-suppress PossiblyInvalidArgument $body 
-             */
-            if ($formHydrator->populate($form, $body) && $form->isValid()) {
+            if ($formHydrator->populateFromPostAndValidate($form, $request)) {
                 /**
                  * @psalm-suppress PossiblyInvalidArgument $body 
                  */
@@ -146,10 +143,7 @@ final class GroupController
             ];
             if ($request->getMethod() === Method::POST) {
                 $body = $request->getParsedBody();
-                /**
-                 * @psalm-suppress PossiblyInvalidArgument $body 
-                 */
-                if ($formHydrator->populate($form, $body) && $form->isValid()) {
+                if ($formHydrator->populateFromPostAndValidate($form, $request)) {
                     /**
                      * @psalm-suppress PossiblyInvalidArgument $body 
                      */
@@ -165,7 +159,6 @@ final class GroupController
     }
     
     /**
-     * 
      * @param CurrentRoute $currentRoute
      * @param GroupRepository $groupRepository
      * @return Response
@@ -177,8 +170,8 @@ final class GroupController
               if ($group) {
                 $this->groupService->deleteGroup($group);               
                 return $this->webService->getRedirectResponse('group/index'); 
-              }
-              return $this->webService->getRedirectResponse('group/index'); 
+            }
+            return $this->webService->getRedirectResponse('group/index'); 
 	} catch (\Exception $e) {
               unset($e);
               $this->flash_message('danger', $this->translator->translate('invoice.group.history'));
@@ -201,7 +194,7 @@ final class GroupController
                 'action' => ['group/view', ['id' => $group->getId()]],
                 'errors' => [],
                 'form' => $form,      
-                'group'=>$groupRepository->repoGroupquery($group->getId()),
+                'group' => $groupRepository->repoGroupquery($group->getId()),
             ];
             return $this->viewRenderer->render('/invoice/group/_view', $parameters);
         }
@@ -209,7 +202,6 @@ final class GroupController
     }
     
     /**
-     * 
      * @return bool|Response
      */
     private function rbac() : bool|Response
@@ -254,8 +246,7 @@ final class GroupController
      private function alert(): string {
        return $this->viewRenderer->renderPartialAsString('/invoice/layout/alert',
        [ 
-         'flash' => $this->flash,
-         'errors' => [],
+         'flash' => $this->flash
        ]);
      }
 

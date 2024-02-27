@@ -13,6 +13,7 @@ declare(strict_types=1);
 $this->setTitle($translator->translate('i.quote'));
 
 use Yiisoft\Html\Html;
+use Yiisoft\Html\Tag\I;
 use App\Invoice\Helpers\ClientHelper;
 use App\Invoice\Helpers\CountryHelper;
 use App\Invoice\Helpers\DateHelper;
@@ -47,9 +48,32 @@ $vat = $s->get_setting('enable_vat_registration');
 <br>
 </div>
 <div>
-    <?php if ($invEdit && $quote->getStatus_id() === 1) { 
-        echo $add_quote_item; 
-    } ?>
+    <?php if ($invEdit && $quote->getStatus_id() === 1) { ?>
+        <br>
+        <br>
+        <div class="panel-heading">
+            <?= Html::openTag('div'); ?>
+                <?= Html::openTag('button', 
+                    [
+                        'class' => 'btn btn-primary', 
+                        'href' => '#modal-choose-items', 
+                        'id' => 'modal-choose-items', 
+                        'data-bs-toggle' => 'modal'
+                    ]); 
+                ?>
+                <?= I::tag()
+                    ->addClass('fa fa-list')
+                    ->addAttributes([
+                        'data-bs-toggle' => 'tooltip', 
+                        'title' => $translator->translate('i.add_product')
+                    ]);
+                ?>
+                <?= $translator->translate('i.add_product'); ?>
+                <?= Html::closeTag('button'); ?>
+            <?= Html::closeTag('div'); ?>
+            <?= $add_quote_item; ?>
+        </div>
+    <?php } ?>
 </div> 
 <input type="hidden" id="_csrf" name="_csrf" value="<?= $csrf ?>">   
 <div id="headerbar">
@@ -374,5 +398,3 @@ $vat = $s->get_setting('enable_vat_registration');
     </div>
 </div>
 </div>    
-<div>  
-</div>

@@ -127,5 +127,5 @@ final class UserRepository extends Select\Repository
     private function findBy(string $field, string $value): User|null
     {
         return $this->findOne([$field => $value]);
-    }
+    }           
 }

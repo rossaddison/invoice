@@ -16,20 +16,19 @@ final class UnitService
     }
 
     /**
-     * 
      * @param Unit $model
-     * @param UnitForm $form
+     * @param array $array
      * @return void
      */
-    public function saveUnit(Unit $model, UnitForm $form): void
+    public function saveUnit(Unit $model, array $array): void
     {
-        $form->getUnit_name() ? $model->setUnit_name($form->getUnit_name()) : '';
-        $form->getUnit_name_plrl() ? $model->setUnit_name_plrl($form->getUnit_name_plrl()) : '';
+        isset($array['unit_id']) ? $model->setUnit_id((int)$array['unit_id']) : '';
+        isset($array['unit_name']) ? $model->setUnit_name((string)$array['unit_name']) : '';
+        isset($array['unit_name_plrl']) ? $model->setUnit_name_plrl((string)$array['unit_name_plrl']) : '';
         $this->repository->save($model);
     }
     
     /**
-     * 
      * @param Unit $model
      * @return void
      */

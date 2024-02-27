@@ -40,7 +40,7 @@ class TaxCategory implements XmlSerializable
      */
     public function getId(): null|string
     {
-        if (!empty($this->id)) {
+        if (null!==($this->id)) {
             return $this->id;
         }
         if ($this->percent >= 21) {

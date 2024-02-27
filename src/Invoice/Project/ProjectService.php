@@ -18,15 +18,14 @@ final class ProjectService
     }
 
     /**
-     * 
      * @param Project $model
-     * @param ProjectForm $form
+     * @param array $array
      * @return void
      */
-    public function saveProject(Project $model, ProjectForm $form): void
+    public function saveProject(Project $model, array $array): void
     {
-       $form->getClient_id() ? $model->setClient_id($form->getClient_id()) : '';
-       $form->getName() ? $model->setName($form->getName()) : ''; 
+       isset($array['client_id']) ? $model->setClient_id((int)$array['client_id']) : '';
+       isset($array['name']) ? $model->setName((string)$array['name']) : ''; 
        $this->repository->save($model);
     }
     

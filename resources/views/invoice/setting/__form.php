@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-use App\Widget\Button;
+
 use Yiisoft\FormModel\Field;
 use Yiisoft\Html\Html;
 use Yiisoft\Html\Tag\Form;
@@ -34,7 +34,7 @@ use Yiisoft\Html\Tag\Form;
     ->id('SettingForm')
     ->open()
 ?>
-<?= Button::back_save($translator); ?>
+<?= $button::back_save($translator); ?>
 <?= 
     $alert; 
 ?>

@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 
-use App\Widget\Button;
+
 use Yiisoft\FormModel\Field;
 use Yiisoft\Html\Html;
 use Yiisoft\Html\Tag\A;
@@ -278,26 +278,15 @@ use Yiisoft\Html\Tag\Form;
     <?= Html::closeTag('div'); ?>
     <?= Html::openTag('div',['class'=>'panel-body']); ?>
       <?php foreach ($custom_fields as $custom_field): ?>
-          <?=
-          $cvH->print_field_for_form($product_custom_values,
-            $custom_field,
-            // Custom values to fill drop down list if a dropdown box has been created
-            $custom_values,
-            // Class for div surrounding input
-            '',
-            // Class surrounding above div
-            'form-group',
-            // Label class similar to above
-            'control-label');
-          ?>
+          <?= $cvH->print_field_for_form($custom_field, $productCustomForm, $translator, $product_custom_values, $custom_values); ?>
       <?php endforeach; ?>
     <?= Html::closeTag('div'); ?>
 <?= Html::closeTag('div'); ?>
 
-<?= Button::back_save($translator); ?>
+<?= $button::back_save($translator); ?>
 <?= Form::tag()->close(); ?>
 <?= Html::closeTag('div'); ?>
 <?= Html::closeTag('div'); ?>
 <?= Html::closeTag('div'); ?>
 <?= Html::closeTag('div'); ?>
-<?= Html::closeTag('div'); ?>s
+<?= Html::closeTag('div'); ?>

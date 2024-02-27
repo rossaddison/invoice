@@ -69,8 +69,7 @@ final class CreateCommand extends Command
             $user = $this->signupForm->signup();
         } catch (Throwable $t) {
             $io->error($t->getMessage() . ' ' . $t->getFile() . ' ' . $t->getLine());
-
-          return $t->getCode() ? (int)$t->getCode() : ExitCode::UNSPECIFIED_ERROR;
+            throw $t;
         }
 
         if ($user === false) {

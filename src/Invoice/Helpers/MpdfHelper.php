@@ -316,7 +316,7 @@ Class MpdfHelper
                 }
             }
             // Set a password if set for the voucher
-            if (!empty($password)) {
+            if (null!==($password)) {
                 $mpdf->SetProtection(['copy', 'print'], $password, $password);
             }            
             return $mpdf;

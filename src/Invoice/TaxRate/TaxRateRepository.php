@@ -122,4 +122,24 @@ final class TaxRateRepository extends Select\Repository
                          ->count();
         return $countall;
     }
+    
+    /**
+     * @return array
+     */
+    public function optionsDataTaxRates() : array
+    {
+        $taxRates = $this->findAllPreloaded();
+        $optionsDataTaxRates = [];
+        /**
+         * @var TaxRate $taxRate
+         */
+        foreach ($taxRates as $taxRate)
+        {
+            $taxRateId = $taxRate->getTax_rate_id();
+            if (null!==$taxRateId) {
+                $optionsDataTaxRates[$taxRateId] = ($taxRate->getTax_rate_name() ?? '') . '  ' . ($taxRate->getTax_rate_percent() ?? '');
+            }
+        }    
+        return $optionsDataTaxRates;
+    }    
 }

@@ -14,6 +14,7 @@ use App\User\Controller\ApiUserController;
 use App\User\Controller\UserController;
 use Psr\Http\Message\ResponseFactoryInterface;
 use Yiisoft\Auth\Middleware\Authentication;
+use Yiisoft\Csrf\CsrfMiddleware;
 use Yiisoft\DataResponse\DataResponseFactoryInterface;
 use Yiisoft\DataResponse\Middleware\FormatDataResponseAsJson;
 use Yiisoft\DataResponse\Middleware\FormatDataResponseAsXml;
@@ -155,7 +156,7 @@ return [
       Route::get('')
       ->middleware(Authentication::class)
       ->action([InvoiceController::class, 'index'])
-      ->name('invoice/index'),
+      ->name('invoice/index'),   
       // InvItemAllowanceCharge
       Route::get('/acii')
       ->middleware(fn(AccessChecker $checker) => $checker->withPermission('editInv'))
@@ -286,6 +287,7 @@ return [
       Route::methods([Method::GET, Method::POST], '/client/create_confirm')
       ->middleware(fn(AccessChecker $checker) => $checker->withPermission('editInv'))
       ->middleware(Authentication::class)
+      ->middleware(CsrfMiddleware::class)
       ->action([ClientController::class, 'create_confirm'])
       ->name('client/create_confirm'),
       Route::methods([Method::GET, Method::POST], '/edit-a-client/{id}')
@@ -539,12 +541,13 @@ return [
       ->middleware(Authentication::class)
       ->action([DeliveryLocationController::class, 'index'])
       ->name('del/index'),
-      Route::methods([Method::GET, Method::POST], '/del/add/{client_id}')
+      Route::methods([Method::GET, Method::POST], '/del/add/{client_id}[/{origin}/{origin_id}/{action}]')
       ->name('del/add')
       ->middleware(fn(AccessChecker $checker) => $checker->withPermission('viewInv'))
       ->middleware(Authentication::class)
       ->action([DeliveryLocationController::class, 'add']),
-      Route::methods([Method::GET, Method::POST], '/del/edit/{id}')
+      // arguments eg. {id},[query parameters to build a varying return url i.e. {origin}, {origin_id}, {action}]      
+      Route::methods([Method::GET, Method::POST], '/del/edit/{id}[/{origin}/{origin_id}/{action}]')
       ->name('del/edit')
       ->middleware(fn(AccessChecker $checker) => $checker->withPermission('viewInv'))
       ->middleware(Authentication::class)
@@ -1016,6 +1019,11 @@ return [
       ->middleware(Authentication::class)
       ->action([InvController::class, 'confirm'])
       ->name('inv/confirm'),
+      Route::methods([Method::GET, Method::POST], '/inv/add/{origin}')
+      ->middleware(fn(AccessChecker $checker) => $checker->withPermission('editInv'))
+      ->middleware(Authentication::class)
+      ->action([InvController::class, 'add'])
+      ->name('inv/add'),      
       Route::methods([Method::GET, Method::POST], '/inv/create_confirm')
       ->middleware(fn(AccessChecker $checker) => $checker->withPermission('editInv'))
       ->middleware(Authentication::class)
@@ -1044,7 +1052,7 @@ return [
       ->action([InvAllowanceChargeController::class, 'index'])
       ->name('invallowancecharge/index'),
       // Add
-      Route::methods([Method::GET, Method::POST], '/invallowancecharge/add')
+      Route::methods([Method::GET, Method::POST], '/invallowancecharge/add/{inv_id}')
       ->middleware(Authentication::class)
       ->action([InvAllowanceChargeController::class, 'add'])
       ->name('invallowancecharge/add'),
@@ -1071,7 +1079,7 @@ return [
       ->action([InvRecurringController::class, 'index'])
       ->name('invrecurring/index'),
       // Add
-      Route::methods([Method::GET, Method::POST], '/invrecurring/add')
+      Route::methods([Method::GET, Method::POST], '/invrecurring/add/{inv_id}')
       ->middleware(fn(AccessChecker $checker) => $checker->withPermission('editInv'))
       ->middleware(Authentication::class)
       ->action([InvRecurringController::class, 'add'])
@@ -1389,22 +1397,22 @@ return [
       ->middleware(Authentication::class)
       ->action([ProductImageController::class, 'index'])
       ->name('productimage/index'),
-      Route::methods([Method::GET, Method::POST], '/image/add')
+      Route::methods([Method::GET, Method::POST], '/productimage/add/{product_id}')
       ->middleware(Authentication::class)
       ->middleware(fn(AccessChecker $checker) => $checker->withPermission('editInv'))
       ->action([ProductImageController::class, 'add'])
       ->name('productimage/add'),
-      Route::methods([Method::GET, Method::POST], '/image/edit/{id}')
+      Route::methods([Method::GET, Method::POST], '/productimage/edit/{id}')
       ->name('productimage/edit')
       ->middleware(fn(AccessChecker $checker) => $checker->withPermission('editInv'))
       ->middleware(Authentication::class)
       ->action([ProductImageController::class, 'edit']),
-      Route::methods([Method::GET, Method::POST], '/image/delete/{id}')
+      Route::methods([Method::GET, Method::POST], '/productimage/delete/{id}')
       ->name('productimage/delete')
       ->middleware(fn(AccessChecker $checker) => $checker->withPermission('editInv'))
       ->middleware(Authentication::class)
       ->action([ProductImageController::class, 'delete']),
-      Route::methods([Method::GET, Method::POST], '/image/view/{id}')
+      Route::methods([Method::GET, Method::POST], '/productimage/view/{id}')
       ->name('productimage/view')
       ->middleware(fn(AccessChecker $checker) => $checker->withPermission('editInv'))
       ->middleware(Authentication::class)
@@ -1485,229 +1493,6 @@ return [
       ->middleware(fn(AccessChecker $checker) => $checker->withPermission('editInv'))
       ->middleware(Authentication::class)
       ->action([ProjectController::class, 'view']),
-      Route::get('/client_salesorders[/page/{page:\d+}[/status/{status:\d+}]]')
-      ->middleware(fn(AccessChecker $checker) => $checker->withPermission('viewInv'))
-      ->middleware(Authentication::class)
-      ->action([SalesOrderController::class, 'guest'])
-      ->name('salesorder/guest'),
-      Route::get('/salesorder[/page/{page:\d+}[/status/{status:\d+}]]')
-      ->middleware(fn(AccessChecker $checker) => $checker->withPermission('viewInv'))
-      ->middleware(Authentication::class)
-      ->action([SalesOrderController::class, 'index'])
-      ->name('salesorder/index'),
-      Route::methods([Method::GET, Method::POST], '/salesorder/add')
-      ->name('salesorder/add')
-      ->middleware(fn(AccessChecker $checker) => $checker->withPermission('viewInv'))
-      ->middleware(Authentication::class)
-      ->action([SalesOrderController::class, 'add']),
-      Route::methods([Method::GET, Method::POST], '/salesorder/agree_to_terms/{url_key}')
-      ->name('salesorder/agree_to_terms')
-      ->middleware(fn(AccessChecker $checker) => $checker->withPermission('viewInv'))
-      ->middleware(Authentication::class)
-      ->action([SalesOrderController::class, 'agree_to_terms']),
-      Route::methods([Method::GET, Method::POST], '/salesorder/edit/{id}')
-      ->name('salesorder/edit')
-      ->middleware(fn(AccessChecker $checker) => $checker->withPermission('viewInv'))
-      ->middleware(Authentication::class)
-      ->action([SalesOrderController::class, 'edit']),
-      Route::methods([Method::GET, Method::POST], '/salesorder/delete/{id}')
-      ->name('salesorder/delete')
-      ->middleware(fn(AccessChecker $checker) => $checker->withPermission('editInv'))
-      ->middleware(Authentication::class)
-      ->action([SalesOrderController::class, 'delete']),
-      Route::methods([Method::GET, Method::POST], '/salesorder/pdf/{include}')
-      ->middleware(fn(AccessChecker $checker) => $checker->withPermission('viewInv'))
-      ->middleware(Authentication::class)
-      ->action([SalesOrderController::class, 'pdf'])
-      ->name('salesorder/pdf'),
-      Route::methods([Method::GET, Method::POST], '/salesorder/reject/{url_key}')
-      ->name('salesorder/reject')
-      ->middleware(fn(AccessChecker $checker) => $checker->withPermission('viewInv'))
-      ->middleware(Authentication::class)
-      ->action([SalesOrderController::class, 'reject']),
-      Route::methods([Method::GET, Method::POST], '/salesorder/view/{id}')
-      ->name('salesorder/view')
-      ->middleware(fn(AccessChecker $checker) => $checker->withPermission('viewInv'))
-      ->middleware(Authentication::class)
-      ->action([SalesOrderController::class, 'view']),
-      Route::methods([Method::GET, Method::POST], '/salesorder/so_to_invoice_confirm')
-      ->middleware(fn(AccessChecker $checker) => $checker->withPermission('editInv'))
-      ->middleware(Authentication::class)
-      ->action([SalesOrderController::class, 'so_to_invoice_confirm'])
-      ->name('salesorder/so_to_invoice_confirm'),
-      Route::methods([Method::GET, Method::POST], '/salesorder/url_key/{key}')
-      ->name('salesorder/url_key')
-      ->middleware(fn(AccessChecker $checker) => $checker->withPermission('viewInv'))
-      ->middleware(Authentication::class)
-      ->action([SalesOrderController::class, 'url_key']),
-      Route::methods([Method::GET, Method::POST], '/salesorderitem/edit/{id}')
-      ->name('salesorderitem/edit')
-      ->middleware(fn(AccessChecker $checker) => $checker->withPermission('viewInv'))
-      ->middleware(Authentication::class)
-      ->action([SalesOrderItemController::class, 'edit']),
-      Route::get('/setting/debug_index[/page{page:\d+}]')
-      ->middleware(fn(AccessChecker $checker) => $checker->withPermission('editInv'))
-      ->middleware(Authentication::class)
-      ->action([SettingController::class, 'debug_index'])
-      ->name('setting/debug_index'),
-      Route::methods([Method::GET, Method::POST], '/setting/save')
-      ->middleware(fn(AccessChecker $checker) => $checker->withPermission('editInv'))
-      ->middleware(Authentication::class)
-      ->action([SettingController::class, 'save'])
-      ->name('setting/save'),
-      Route::methods([Method::GET, Method::POST], '/setting/tab_index')
-      ->middleware(fn(AccessChecker $checker) => $checker->withPermission('editInv'))
-      ->middleware(Authentication::class)
-      ->action([SettingController::class, 'tab_index'])
-      ->name('setting/tab_index'),
-      Route::methods([Method::GET, Method::POST], '/setting/add')
-      ->middleware(fn(AccessChecker $checker) => $checker->withPermission('editInv'))
-      ->middleware(Authentication::class)
-      ->action([SettingController::class, 'add'])
-      ->name('setting/add'),
-      Route::methods([Method::GET, Method::POST], '/setting/draft/{setting_id}')
-      ->name('setting/draft')
-      ->middleware(fn(AccessChecker $checker) => $checker->withPermission('editInv'))
-      ->middleware(Authentication::class)
-      ->action([SettingController::class, 'inv_draft_has_number_switch']),
-      Route::methods([Method::GET, Method::POST], '/setting/edit/{setting_id}')
-      ->name('setting/edit')
-      ->middleware(fn(AccessChecker $checker) => $checker->withPermission('editInv'))
-      ->middleware(Authentication::class)
-      ->action([SettingController::class, 'edit']),
-      Route::methods([Method::GET, Method::POST], '/setting/delete/{setting_id}')
-      ->name('setting/delete')
-      ->middleware(fn(AccessChecker $checker) => $checker->withPermission('editInv'))
-      ->middleware(Authentication::class)
-      ->action([SettingController::class, 'delete']),
-      Route::methods([Method::GET, Method::POST], '/setting/index')
-      ->middleware(fn(AccessChecker $checker) => $checker->withPermission('editInv'))
-      ->middleware(Authentication::class)
-      ->action([SettingController::class, 'index'])
-      ->name('setting/index'),
-      Route::methods([Method::GET, Method::POST], '/setting/get_cron_key')
-      ->middleware(fn(AccessChecker $checker) => $checker->withPermission('editInv'))
-      ->middleware(Authentication::class)
-      ->action([SettingController::class, 'get_cron_key'])
-      ->name('setting/get_cron_key'),
-      Route::methods([Method::GET, Method::POST], '/setting/view/{setting_id}')
-      ->name('setting/view')
-      ->middleware(fn(AccessChecker $checker) => $checker->withPermission('editInv'))
-      ->middleware(Authentication::class)
-      ->action([SettingController::class, 'view']),
-      Route::methods([Method::GET, Method::POST], '/setting/clear')
-      ->middleware(fn(AccessChecker $checker) => $checker->withPermission('editInv'))
-      ->middleware(Authentication::class)
-      ->action([SettingController::class, 'clear'])
-      ->name('setting/clear'),
-      Route::get('/task[/page/{page:\d+}]')
-      ->middleware(fn(AccessChecker $checker) => $checker->withPermission('editInv'))
-      ->middleware(Authentication::class)
-      ->action([TaskController::class, 'index'])
-      ->name('task/index'),
-      Route::methods([Method::GET, Method::POST], '/task/add')
-      ->middleware(fn(AccessChecker $checker) => $checker->withPermission('editInv'))
-      ->middleware(Authentication::class)
-      ->action([TaskController::class, 'add'])
-      ->name('task/add'),
-      Route::methods([Method::GET, Method::POST], '/task/selection_inv')
-      ->middleware(fn(AccessChecker $checker) => $checker->withPermission('editInv'))
-      ->middleware(Authentication::class)
-      ->action([TaskController::class, 'selection_inv'])
-      ->name('task/selection_inv'),
-      Route::methods([Method::GET, Method::POST], '/task/edit/{id}')
-      ->name('task/edit')
-      ->middleware(fn(AccessChecker $checker) => $checker->withPermission('editInv'))
-      ->middleware(Authentication::class)
-      ->action([TaskController::class, 'edit']),
-      Route::methods([Method::GET, Method::POST], '/task/delete/{id}')
-      ->name('task/delete')
-      ->middleware(fn(AccessChecker $checker) => $checker->withPermission('editInv'))
-      ->middleware(Authentication::class)
-      ->action([TaskController::class, 'delete']),
-      Route::methods([Method::GET, Method::POST], '/task/view/{id}')
-      ->name('task/view')
-      ->middleware(fn(AccessChecker $checker) => $checker->withPermission('editInv'))
-      ->middleware(Authentication::class)
-      ->action([TaskController::class, 'view']),
-      Route::get('/taxrate')
-      ->middleware(fn(AccessChecker $checker) => $checker->withPermission('editInv'))
-      ->middleware(Authentication::class)
-      ->action([TaxRateController::class, 'index'])
-      ->name('taxrate/index'),
-      Route::methods([Method::GET, Method::POST], '/taxrate/add')
-      ->middleware(fn(AccessChecker $checker) => $checker->withPermission('editInv'))
-      ->middleware(Authentication::class)
-      ->action([TaxRateController::class, 'add'])
-      ->name('taxrate/add'),
-      Route::methods([Method::GET, Method::POST], '/taxrate/edit/{tax_rate_id}')
-      ->name('taxrate/edit')
-      ->middleware(fn(AccessChecker $checker) => $checker->withPermission('editInv'))
-      ->middleware(Authentication::class)
-      ->action([TaxRateController::class, 'edit']),
-      Route::methods([Method::GET, Method::POST], '/taxrate/delete/{tax_rate_id}')
-      ->name('taxrate/delete')
-      ->middleware(fn(AccessChecker $checker) => $checker->withPermission('editInv'))
-      ->middleware(Authentication::class)
-      ->action([TaxRateController::class, 'delete']),
-      Route::methods([Method::GET, Method::POST], '/taxrate/view/{tax_rate_id}')
-      ->name('taxrate/view')
-      ->middleware(fn(AccessChecker $checker) => $checker->withPermission('editInv'))
-      ->middleware(Authentication::class)
-      ->action([TaxRateController::class, 'view']),
-      Route::get('/unit')
-      ->middleware(fn(AccessChecker $checker) => $checker->withPermission('editInv'))
-      ->middleware(Authentication::class)
-      ->action([UnitController::class, 'index'])
-      ->name('unit/index'),
-      Route::methods([Method::GET, Method::POST], '/unit/add')
-      ->middleware(fn(AccessChecker $checker) => $checker->withPermission('editInv'))
-      ->middleware(Authentication::class)
-      ->action([UnitController::class, 'add'])
-      ->name('unit/add'),
-      Route::methods([Method::GET, Method::POST], '/unit/edit/{id}')
-      ->name('unit/edit')
-      ->middleware(fn(AccessChecker $checker) => $checker->withPermission('editInv'))
-      ->middleware(Authentication::class)
-      ->action([UnitController::class, 'edit']),
-      Route::methods([Method::GET, Method::POST], '/unit/delete/{id}')
-      ->name('unit/delete')
-      ->middleware(fn(AccessChecker $checker) => $checker->withPermission('editInv'))
-      ->middleware(Authentication::class)
-      ->action([UnitController::class, 'delete']),
-      Route::methods([Method::GET, Method::POST], '/unit/view/{id}')
-      ->name('unit/view')
-      ->middleware(fn(AccessChecker $checker) => $checker->withPermission('editInv'))
-      ->middleware(Authentication::class)
-      ->action([UnitController::class, 'view']),
-      // UnitPeppol
-      Route::get('/unitpeppol')
-      ->middleware(fn(AccessChecker $checker) => $checker->withPermission('editInv'))
-      ->middleware(Authentication::class)
-      ->action([UnitPeppolController::class, 'index'])
-      ->name('unitpeppol/index'),
-      // Add
-      Route::methods([Method::GET, Method::POST], '/unitpeppol/add')
-      ->middleware(Authentication::class)
-      ->middleware(fn(AccessChecker $checker) => $checker->withPermission('editInv'))
-      ->action([UnitPeppolController::class, 'add'])
-      ->name('unitpeppol/add'),
-      // Edit
-      Route::methods([Method::GET, Method::POST], '/unitpeppol/edit/{id}')
-      ->name('unitpeppol/edit')
-      ->middleware(fn(AccessChecker $checker) => $checker->withPermission('editInv'))
-      ->middleware(Authentication::class)
-      ->action([UnitPeppolController::class, 'edit']),
-      Route::methods([Method::GET, Method::POST], '/unitpeppol/delete/{id}')
-      ->name('unitpeppol/delete')
-      ->middleware(fn(AccessChecker $checker) => $checker->withPermission('editInv'))
-      ->middleware(Authentication::class)
-      ->action([UnitPeppolController::class, 'delete']),
-      Route::methods([Method::GET, Method::POST], '/unitpeppol/view/{id}')
-      ->name('unitpeppol/view')
-      ->middleware(fn(AccessChecker $checker) => $checker->withPermission('editInv'))
-      ->middleware(Authentication::class)
-      ->action([UnitPeppolController::class, 'view']),
       Route::get('/import')
       ->middleware(fn(AccessChecker $checker) => $checker->withPermission('editInv'))
       ->middleware(Authentication::class)
@@ -1873,6 +1658,11 @@ return [
       ->middleware(fn(AccessChecker $checker) => $checker->withPermission('editInv'))
       ->middleware(Authentication::class)
       ->action([PaymentTermController::class, 'view']),
+      Route::methods([Method::GET, Method::POST], '/quote/add/{origin}')
+      ->middleware(fn(AccessChecker $checker) => $checker->withPermission('editInv'))
+      ->middleware(Authentication::class)
+      ->action([QuoteController::class, 'add'])
+      ->name('quote/add'),      
       Route::methods([Method::GET, Method::POST], '/quote/email_stage_0/{id}')
       ->middleware(fn(AccessChecker $checker) => $checker->withPermission('editInv'))
       ->middleware(Authentication::class)
@@ -2168,7 +1958,7 @@ return [
       ->middleware(Authentication::class)
       ->action([SumexController::class, 'index'])
       ->name('sumex/index'),
-      Route::methods([Method::GET, Method::POST], '/sumex/add')
+      Route::methods([Method::GET, Method::POST], '/sumex/add/{inv_id}')
       ->middleware(fn(AccessChecker $checker) => $checker->withPermission('editInv'))
       ->middleware(Authentication::class)
       ->action([SumexController::class, 'add'])
@@ -2178,7 +1968,7 @@ return [
       ->middleware(fn(AccessChecker $checker) => $checker->withPermission('editInv'))
       ->middleware(Authentication::class)
       ->action([SumexController::class, 'delete']),
-      Route::methods([Method::GET, Method::POST], '/sumex/edit/{invoice}')
+      Route::methods([Method::GET, Method::POST], '/sumex/edit/{id}')
       ->name('sumex/edit')
       ->middleware(fn(AccessChecker $checker) => $checker->withPermission('editInv'))
       ->middleware(Authentication::class)
@@ -2188,31 +1978,254 @@ return [
       ->middleware(fn(AccessChecker $checker) => $checker->withPermission('editInv'))
       ->middleware(Authentication::class)
       ->action([SumexController::class, 'view']),
+      Route::get('/client_salesorders[/page/{page:\d+}[/status/{status:\d+}]]')
+      ->middleware(fn(AccessChecker $checker) => $checker->withPermission('viewInv'))
+      ->middleware(Authentication::class)
+      ->action([SalesOrderController::class, 'guest'])
+      ->name('salesorder/guest'),
+      Route::get('/salesorder[/page/{page:\d+}[/status/{status:\d+}]]')
+      ->middleware(fn(AccessChecker $checker) => $checker->withPermission('viewInv'))
+      ->middleware(Authentication::class)
+      ->action([SalesOrderController::class, 'index'])
+      ->name('salesorder/index'),
+      Route::methods([Method::GET, Method::POST], '/salesorder/add/{client_id}')
+      ->name('salesorder/add')
+      ->middleware(fn(AccessChecker $checker) => $checker->withPermission('viewInv'))
+      ->middleware(Authentication::class)
+      ->action([SalesOrderController::class, 'add']),
+      Route::methods([Method::GET, Method::POST], '/salesorder/agree_to_terms/{url_key}')
+      ->name('salesorder/agree_to_terms')
+      ->middleware(fn(AccessChecker $checker) => $checker->withPermission('viewInv'))
+      ->middleware(Authentication::class)
+      ->action([SalesOrderController::class, 'agree_to_terms']),
+      Route::methods([Method::GET, Method::POST], '/salesorder/edit/{id}')
+      ->name('salesorder/edit')
+      ->middleware(fn(AccessChecker $checker) => $checker->withPermission('viewInv'))
+      ->middleware(Authentication::class)
+      ->action([SalesOrderController::class, 'edit']),
+      Route::methods([Method::GET, Method::POST], '/salesorder/delete/{id}')
+      ->name('salesorder/delete')
+      ->middleware(fn(AccessChecker $checker) => $checker->withPermission('editInv'))
+      ->middleware(Authentication::class)
+      ->action([SalesOrderController::class, 'delete']),
+      Route::methods([Method::GET, Method::POST], '/salesorder/pdf/{include}')
+      ->middleware(fn(AccessChecker $checker) => $checker->withPermission('viewInv'))
+      ->middleware(Authentication::class)
+      ->action([SalesOrderController::class, 'pdf'])
+      ->name('salesorder/pdf'),
+      Route::methods([Method::GET, Method::POST], '/salesorder/reject/{url_key}')
+      ->name('salesorder/reject')
+      ->middleware(fn(AccessChecker $checker) => $checker->withPermission('viewInv'))
+      ->middleware(Authentication::class)
+      ->action([SalesOrderController::class, 'reject']),
+      Route::methods([Method::GET, Method::POST], '/salesorder/view/{id}')
+      ->name('salesorder/view')
+      ->middleware(fn(AccessChecker $checker) => $checker->withPermission('viewInv'))
+      ->middleware(Authentication::class)
+      ->action([SalesOrderController::class, 'view']),
+      Route::methods([Method::GET, Method::POST], '/salesorder/so_to_invoice_confirm')
+      ->middleware(fn(AccessChecker $checker) => $checker->withPermission('editInv'))
+      ->middleware(Authentication::class)
+      ->action([SalesOrderController::class, 'so_to_invoice_confirm'])
+      ->name('salesorder/so_to_invoice_confirm'),
+      Route::methods([Method::GET, Method::POST], '/salesorder/url_key/{key}')
+      ->name('salesorder/url_key')
+      ->middleware(fn(AccessChecker $checker) => $checker->withPermission('viewInv'))
+      ->middleware(Authentication::class)
+      ->action([SalesOrderController::class, 'url_key']),
+      Route::methods([Method::GET, Method::POST], '/salesorderitem/edit/{id}')
+      ->name('salesorderitem/edit')
+      ->middleware(fn(AccessChecker $checker) => $checker->withPermission('viewInv'))
+      ->middleware(Authentication::class)
+      ->action([SalesOrderItemController::class, 'edit']),
+      Route::get('/setting/debug_index[/page{page:\d+}]')
+      ->middleware(fn(AccessChecker $checker) => $checker->withPermission('editInv'))
+      ->middleware(Authentication::class)
+      ->action([SettingController::class, 'debug_index'])
+      ->name('setting/debug_index'),
+      Route::methods([Method::GET, Method::POST], '/setting/save')
+      ->middleware(fn(AccessChecker $checker) => $checker->withPermission('editInv'))
+      ->middleware(Authentication::class)
+      ->action([SettingController::class, 'save'])
+      ->name('setting/save'),
+      Route::methods([Method::GET, Method::POST], '/setting/tab_index')
+      ->middleware(fn(AccessChecker $checker) => $checker->withPermission('editInv'))
+      ->middleware(Authentication::class)
+      ->action([SettingController::class, 'tab_index'])
+      ->name('setting/tab_index'),
+      Route::methods([Method::GET, Method::POST], '/setting/add')
+      ->middleware(fn(AccessChecker $checker) => $checker->withPermission('editInv'))
+      ->middleware(Authentication::class)
+      ->action([SettingController::class, 'add'])
+      ->name('setting/add'),
+      Route::methods([Method::GET, Method::POST], '/setting/draft/{setting_id}')
+      ->name('setting/draft')
+      ->middleware(fn(AccessChecker $checker) => $checker->withPermission('editInv'))
+      ->middleware(Authentication::class)
+      ->action([SettingController::class, 'inv_draft_has_number_switch']),
+      Route::methods([Method::GET, Method::POST], '/setting/edit/{setting_id}')
+      ->name('setting/edit')
+      ->middleware(fn(AccessChecker $checker) => $checker->withPermission('editInv'))
+      ->middleware(Authentication::class)
+      ->action([SettingController::class, 'edit']),
+      Route::methods([Method::GET, Method::POST], '/setting/delete/{setting_id}')
+      ->name('setting/delete')
+      ->middleware(fn(AccessChecker $checker) => $checker->withPermission('editInv'))
+      ->middleware(Authentication::class)
+      ->action([SettingController::class, 'delete']),
+      Route::methods([Method::GET, Method::POST], '/setting/index')
+      ->middleware(fn(AccessChecker $checker) => $checker->withPermission('editInv'))
+      ->middleware(Authentication::class)
+      ->action([SettingController::class, 'index'])
+      ->name('setting/index'),
+      Route::methods([Method::GET, Method::POST], '/setting/get_cron_key')
+      ->middleware(fn(AccessChecker $checker) => $checker->withPermission('editInv'))
+      ->middleware(Authentication::class)
+      ->action([SettingController::class, 'get_cron_key'])
+      ->name('setting/get_cron_key'),
+      Route::methods([Method::GET, Method::POST], '/setting/view/{setting_id}')
+      ->name('setting/view')
+      ->middleware(fn(AccessChecker $checker) => $checker->withPermission('editInv'))
+      ->middleware(Authentication::class)
+      ->action([SettingController::class, 'view']),
+      Route::methods([Method::GET, Method::POST], '/setting/clear')
+      ->middleware(fn(AccessChecker $checker) => $checker->withPermission('editInv'))
+      ->middleware(Authentication::class)
+      ->action([SettingController::class, 'clear'])
+      ->name('setting/clear'),
+      Route::get('/task[/page/{page:\d+}]')
+      ->middleware(fn(AccessChecker $checker) => $checker->withPermission('editInv'))
+      ->middleware(Authentication::class)
+      ->action([TaskController::class, 'index'])
+      ->name('task/index'),
+      Route::methods([Method::GET, Method::POST], '/task/add')
+      ->middleware(fn(AccessChecker $checker) => $checker->withPermission('editInv'))
+      ->middleware(Authentication::class)
+      ->action([TaskController::class, 'add'])
+      ->name('task/add'),
+      Route::methods([Method::GET, Method::POST], '/task/selection_inv')
+      ->middleware(fn(AccessChecker $checker) => $checker->withPermission('editInv'))
+      ->middleware(Authentication::class)
+      ->action([TaskController::class, 'selection_inv'])
+      ->name('task/selection_inv'),
+      Route::methods([Method::GET, Method::POST], '/task/edit/{id}')
+      ->name('task/edit')
+      ->middleware(fn(AccessChecker $checker) => $checker->withPermission('editInv'))
+      ->middleware(Authentication::class)
+      ->action([TaskController::class, 'edit']),
+      Route::methods([Method::GET, Method::POST], '/task/delete/{id}')
+      ->name('task/delete')
+      ->middleware(fn(AccessChecker $checker) => $checker->withPermission('editInv'))
+      ->middleware(Authentication::class)
+      ->action([TaskController::class, 'delete']),
+      Route::methods([Method::GET, Method::POST], '/task/view/{id}')
+      ->name('task/view')
+      ->middleware(fn(AccessChecker $checker) => $checker->withPermission('editInv'))
+      ->middleware(Authentication::class)
+      ->action([TaskController::class, 'view']),
+      Route::get('/taxrate')
+      ->middleware(fn(AccessChecker $checker) => $checker->withPermission('editInv'))
+      ->middleware(Authentication::class)
+      ->action([TaxRateController::class, 'index'])
+      ->name('taxrate/index'),
+      Route::methods([Method::GET, Method::POST], '/taxrate/add')
+      ->middleware(fn(AccessChecker $checker) => $checker->withPermission('editInv'))
+      ->middleware(Authentication::class)
+      ->action([TaxRateController::class, 'add'])
+      ->name('taxrate/add'),
+      Route::methods([Method::GET, Method::POST], '/taxrate/edit/{tax_rate_id}')
+      ->name('taxrate/edit')
+      ->middleware(fn(AccessChecker $checker) => $checker->withPermission('editInv'))
+      ->middleware(Authentication::class)
+      ->action([TaxRateController::class, 'edit']),
+      Route::methods([Method::GET, Method::POST], '/taxrate/delete/{tax_rate_id}')
+      ->name('taxrate/delete')
+      ->middleware(fn(AccessChecker $checker) => $checker->withPermission('editInv'))
+      ->middleware(Authentication::class)
+      ->action([TaxRateController::class, 'delete']),
+      Route::methods([Method::GET, Method::POST], '/taxrate/view/{tax_rate_id}')
+      ->name('taxrate/view')
+      ->middleware(fn(AccessChecker $checker) => $checker->withPermission('editInv'))
+      ->middleware(Authentication::class)
+      ->action([TaxRateController::class, 'view']),
+      Route::get('/unit')
+      ->middleware(fn(AccessChecker $checker) => $checker->withPermission('editInv'))
+      ->middleware(Authentication::class)
+      ->action([UnitController::class, 'index'])
+      ->name('unit/index'),
+      Route::methods([Method::GET, Method::POST], '/unit/add')
+      ->middleware(fn(AccessChecker $checker) => $checker->withPermission('editInv'))
+      ->middleware(Authentication::class)
+      ->action([UnitController::class, 'add'])
+      ->name('unit/add'),
+      Route::methods([Method::GET, Method::POST], '/unit/edit/{unit_id}')
+      ->name('unit/edit')
+      ->middleware(fn(AccessChecker $checker) => $checker->withPermission('editInv'))
+      ->middleware(Authentication::class)
+      ->action([UnitController::class, 'edit']),
+      Route::methods([Method::GET, Method::POST], '/unit/delete/{unit_id}')
+      ->name('unit/delete')
+      ->middleware(fn(AccessChecker $checker) => $checker->withPermission('editInv'))
+      ->middleware(Authentication::class)
+      ->action([UnitController::class, 'delete']),
+      Route::methods([Method::GET, Method::POST], '/unit/view/{unit_id}')
+      ->name('unit/view')
+      ->middleware(fn(AccessChecker $checker) => $checker->withPermission('editInv'))
+      ->middleware(Authentication::class)
+      ->action([UnitController::class, 'view']),
+      // UnitPeppol
+      Route::get('/unitpeppol')
+      ->middleware(fn(AccessChecker $checker) => $checker->withPermission('editInv'))
+      ->middleware(Authentication::class)
+      ->action([UnitPeppolController::class, 'index'])
+      ->name('unitpeppol/index'),
+      // Add
+      Route::methods([Method::GET, Method::POST], '/unitpeppol/add')
+      ->middleware(Authentication::class)
+      ->middleware(fn(AccessChecker $checker) => $checker->withPermission('editInv'))
+      ->action([UnitPeppolController::class, 'add'])
+      ->name('unitpeppol/add'),
+      // Edit
+      Route::methods([Method::GET, Method::POST], '/unitpeppol/edit/{id}')
+      ->name('unitpeppol/edit')
+      ->middleware(fn(AccessChecker $checker) => $checker->withPermission('editInv'))
+      ->middleware(Authentication::class)
+      ->action([UnitPeppolController::class, 'edit']),
+      Route::methods([Method::GET, Method::POST], '/unitpeppol/delete/{id}')
+      ->name('unitpeppol/delete')
+      ->middleware(fn(AccessChecker $checker) => $checker->withPermission('editInv'))
+      ->middleware(Authentication::class)
+      ->action([UnitPeppolController::class, 'delete']),
+      Route::methods([Method::GET, Method::POST], '/unitpeppol/view/{id}')
+      ->name('unitpeppol/view')
+      ->middleware(fn(AccessChecker $checker) => $checker->withPermission('editInv'))
+      ->middleware(Authentication::class)
+      ->action([UnitPeppolController::class, 'view']),
       Route::get('/upload')
       ->middleware(fn(AccessChecker $checker) => $checker->withPermission('editInv'))
       ->middleware(Authentication::class)
       ->action([UploadController::class, 'index'])
       ->name('upload/index'),
-      Route::methods([Method::GET, Method::POST], '/upload/add')
+      Route::methods([Method::GET, Method::POST], '/upload/add[/{origin}/{origin_id}/{action}]')
       ->middleware(Authentication::class)
       ->middleware(fn(AccessChecker $checker) => $checker->withPermission('editInv'))
       ->action([UploadController::class, 'add'])
       ->name('upload/add'),
-      Route::methods([Method::GET, Method::POST], '/upload/edit/{id}')
+      Route::methods([Method::GET, Method::POST], '/upload/edit/{id}[/{origin}/{origin_id}/{action}]')
       ->name('upload/edit')
       ->middleware(fn(AccessChecker $checker) => $checker->withPermission('editInv'))
       ->middleware(Authentication::class)
       ->action([UploadController::class, 'edit']),
-      Route::methods([Method::GET, Method::POST], '/upload/delete/{id}')
+      Route::methods([Method::GET, Method::POST], '/upload/delete/{id}[/{origin}/{origin_id}/{action}]')
       ->name('upload/delete')
       ->middleware(fn(AccessChecker $checker) => $checker->withPermission('editInv'))
       ->middleware(Authentication::class)
       ->action([UploadController::class, 'delete']),
-      Route::methods([Method::GET, Method::POST], '/upload/view/{id}')
+      Route::methods([Method::GET, Method::POST], '/upload/view/{id}[/{origin}/{origin_id}/{action}]')
       ->name('upload/view')
       ->middleware(fn(AccessChecker $checker) => $checker->withPermission('editInv'))
       ->middleware(Authentication::class)
-      ->action([UploadController::class, 'view']),
+      ->action([UploadController::class, 'view']),      
       // UserClient
       Route::get('/userclient')
       ->middleware(fn(AccessChecker $checker) => $checker->withPermission('viewInv'))

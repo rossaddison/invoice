@@ -20,21 +20,18 @@ final class ItemLookupService
     /**
      * 
      * @param ItemLookup $model
-     * @param ItemLookupForm $form
+     * @param array $array
      * @return void
      */
-    public function saveItemLookup(ItemLookup $model, ItemLookupForm $form): void
+    public function saveItemLookup(ItemLookup $model, array $array): void
     {
-        
-       $model->setName($form->getName() ?? '');
-       $model->setDescription($form->getDescription() ?? '');
-       $model->setPrice($form->getPrice() ?? 0.00);
- 
+        isset($array['name']) ? $model->setName((string)$array['name']) : '';
+        isset($array['description']) ? $model->setDescription((string)$array['description']) : '';
+        isset($array['price']) ? $model->setPrice((float)$array['price']) : 0.00;
         $this->repository->save($model);
     }
     
     /**
-     * 
      * @param ItemLookup $model
      * @return void
      */

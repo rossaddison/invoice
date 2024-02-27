@@ -50,7 +50,7 @@ class Party implements XmlSerializable {
      * @throws InvalidArgumentException
      */
     private function validate() : void {
-      if (empty($this->endpointID)) {
+      if (null==$this->endpointID) {
         /**
          * Error
          * Location: invoice_8x8vShcxINV111_peppol
@@ -68,7 +68,7 @@ class Party implements XmlSerializable {
      */
     public function xmlSerialize(Writer $writer) : void {
         $this->validate();
-        if (!empty($this->endpointID) && !empty($this->endpointID_schemeID)) {
+        if (null!==($this->endpointID) && null!==($this->endpointID_schemeID)) {
             $writer->write([
                 [
                     'name' => Schema::CBC . 'EndpointID',
@@ -87,7 +87,7 @@ class Party implements XmlSerializable {
              * For Danish Suppliers it is mandatory to use schemeID when PartyIdentification/ID is used for AccountingCustomerParty or AccountingSupplierParty
              * @see https://github.com/search?q=org%3AOpenPEPPOL+PartyIdentification&type=code
              */
-            if (!empty($this->partyIdentificationSchemeId)) {
+            if (null!==$this->partyIdentificationSchemeId) {
                 $partyIdentificationAttributes['schemeID'] = $this->partyIdentificationSchemeId;
             }
 

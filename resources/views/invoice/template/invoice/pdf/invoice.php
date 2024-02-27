@@ -23,7 +23,7 @@ $vat = $s->get_setting('enable_vat_registration');
             <b><?= Html::encode($inv->getClient()->getClient_name()); ?></b>
         </div>
         <?php if ($inv->getClient()->getClient_vat_id()) {
-            echo '<div>' .$tranlator->translate('invoice.invoice.vat.reg.no') . ': ' . $inv->getClient()->getClient_vat_id() . '</div>';
+            echo '<div>' .$translator->translate('invoice.invoice.vat.reg.no') . ': ' . $inv->getClient()->getClient_vat_id() . '</div>';
         }
         if ($inv->getClient()->getClient_tax_code()) {
             echo '<div>' .$translator->translate('i.tax_code_short') . ': ' . $inv->getClient()->getClient_tax_code() . '</div>';

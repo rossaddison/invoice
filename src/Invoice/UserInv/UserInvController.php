@@ -19,6 +19,7 @@ use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
 use Yiisoft\Aliases\Aliases;
 use Yiisoft\Data\Paginator\OffsetPaginator;
+use Yiisoft\Data\Paginator\PageToken;
 use Yiisoft\Data\Reader\Sort;
 use Yiisoft\DataResponse\DataResponseFactoryInterface;
 use Yiisoft\FormModel\FormHydrator;
@@ -138,7 +139,7 @@ final class UserInvController
         $paginator = (new OffsetPaginator($repo))        
         ->withPageSize((int)$sR->get_setting('default_list_limit'))
         ->withCurrentPage((int)$page)               
-        ->withNextPageToken($page);   
+        ->withToken(PageToken::next((string)$page));   
         $parameters = [
           'uiR'=>$uiR,
           // get a count of clients allocated to the user
@@ -195,7 +196,7 @@ final class UserInvController
                          * @psalm-suppress PossiblyInvalidArgument $body
                          */
                         $body = $request->getParsedBody();
-                        if ($formHydrator->populate($form, $body) && $form->isValid()) {
+                        if ($formHydrator->populateFromPostAndValidate($form,  $request)) {
                             /**
                              * @psalm-suppress PossiblyInvalidArgument $body
                              */
@@ -220,8 +221,7 @@ final class UserInvController
     private function alert(): string {
       return $this->viewRenderer->renderPartialAsString('/invoice/layout/alert',
       [ 
-        'flash' => $this->flash,
-        'errors' => [],
+        'flash' => $this->flash
       ]);
     }
 
@@ -254,7 +254,7 @@ final class UserInvController
         $userinv = new UserInv();
         $form = new UserInvForm($userinv);
         $parameters = [
-            'title' => $sR->trans('add'),
+            'title' => $this->translator->translate('i.add'),
             'action' => ['userinv/add'],
             'aliases'=>$aliases,
             'errors' => [],
@@ -266,15 +266,11 @@ final class UserInvController
         ];
         
         if ($request->getMethod() === Method::POST) {            
-            $body = $request->getParsedBody();
-            /**
-             * @psalm-suppress PossiblyInvalidArgument $body
-             */
-            if ($formHydrator->populate($form, $body) && $form->isValid()) {
+            if ($formHydrator->populateFromPostAndValidate($form, $request)) {
                 // assign the observer role by default to a new user inv if it is not admin
                 // and has not been assigned the observer role
                 // form dropdown type 0 => admin, type 1 => guest
-                
+                $body = $request->getParsedBody() ?? [];
                 /**
                  * @var string $body['type']
                  */
@@ -289,6 +285,9 @@ final class UserInvController
                         } else {
                             $this->flash_message('info', $this->translator->translate('invoice.user.inv.role.observer.already.assigned'));
                         }
+                        /**
+                         * @psalm-suppress PossiblyInvalidArgument $body
+                         */
                         $this->userinvService->saveUserInv($userinv, $body);
                     }
                     // the user is not admin(1) and the type administrator(0) was selected in the dropdown on the form
@@ -305,6 +304,9 @@ final class UserInvController
                         } else {
                             $this->flash_message('info', $this->translator->translate('invoice.user.inv.role.administrator.already.assigned'));
                         }
+                        /**
+                         * @psalm-suppress PossiblyInvalidArgument $body
+                         */
                         $this->userinvService->saveUserInv($userinv, $body);
                     }
                     // the user is an admin and the type guest was selected in the dropdown on the form
@@ -384,7 +386,7 @@ final class UserInvController
                 /**
                  * @psalm-suppress PossiblyInvalidArgument $body
                  */
-                if ($formHydrator->populate($form, $body) && $form->isValid()) {
+                if ($formHydrator->populateFromPostAndValidate($form,  $request)) {
                     
                     /**
                      * @var string $body['type']

@@ -27,36 +27,7 @@ $(function () {
     }
         
     all_client_check();
-    
-    
-    //Changing the frequency textbox on modal_create_recurring triggers the $('#recur_frequency').change(function () which calls this function
-    function get_recur_start_date() {
-        var url =  $(location).attr('origin') + "/invoice/invrecurring/get_recur_start_date";
-        var btn = $('.create_recurring_confirm');
-            btn.html('<h6 class="text-center"><i class="fa fa-spin fa-spinner"></i></h6>');
-        $.ajax({ type: 'GET',
-                 contentType: "application/json; charset=utf-8",
-                 data: {
-                        invoice_date: $('#inv_date_created').val(),
-                        recur_frequency: $('#recur_frequency').val()
-                 },
-                 url: url,
-                 cache: false,
-                 dataType: 'json',
-                 success: function (data) {
-                     var response = parsedata(data);
-                     if (response.success === 1) {
-                          $('#recur_start_date').val(response.recur_start_date);
-                          btn.html('<h6 class="text-center"><i class="fa fa-check"></i></h6>');
-                     }     
-                 },
-                 error: function(xhr, status, error) {                         
-                        console.warn(xhr.responseText);
-                        alert('Status: ' + status + ' An error: ' + error.toString());
-            }
-        });
-    };
-    
+            
     // class="btn_delete_item" on views/product/partial_item_table.php
     $('.btn_delete_item').click(function () {
             var id = $(this).attr('data-id');  
@@ -129,38 +100,6 @@ $(function () {
     $('#new_row').clone().appendTo('#item_table').removeAttr('id').addClass('item').show();            
     });
     
-    // id="allowance_charge_submit" in drop down menu on views/inv/view.php
-    $(document).on('click', '#allowance_charge_submit', function () {
-    var url = $(location).attr('origin') + "/invoice/inv/save_inv_allowance_charge";
-    var btn = $('.allowance_charge_submit');
-    var absolute_url = new URL($(location).attr('href'));
-    btn.html('<h6 class="text-center"><i class="fa fa-spin fa-spinner"></i></h6>');
-    //take the inv id from the public url
-    inv_id = absolute_url.href.substring(absolute_url.href.lastIndexOf('/') + 1);
-    $.ajax({type: 'GET',
-            contentType: "application/json; charset=utf-8",
-            data: {
-                   inv_id: inv_id,
-                   inv_allowance_charge_id: $('#inv_allowance_charge_id').val(),
-                   amount: $('#inv_allowance_charge_amount').val()
-            },
-            url: url,
-            cache: false,
-            dataType: 'json',
-            success: function (data) {
-                       var response = parsedata(data);
-                       if (response.success === 1) {                                   
-                          window.location = absolute_url;
-                          btn.html('<h6 class="text-center"><i class="fa fa-check"></i></h6>');
-                          window.location.reload();                                                
-                       }
-            },
-            error: function() {
-                alert('Incomplete fields: You must include an allowance charge. ');
-            }
-    });
-    });
-    
     // id="inv_tax_submit" in drop down menu on views/inv/view.php
     $(document).on('click', '#inv_tax_submit', function () {
     var url = $(location).attr('origin') + "/invoice/inv/save_inv_tax_rate";
@@ -186,52 +125,16 @@ $(function () {
                           btn.html('<h6 class="text-center"><i class="fa fa-check"></i></h6>');
                           window.location.reload();                                                
                        }
+                       if (response.success === 0) {                                   
+                          window.location = absolute_url;
+                          btn.html('<h6 class="text-center"><i class="fa fa-check"></i></h6>');
+                          window.location.reload();                                                
+                       }
             },
             error: function() {
                 alert('Incomplete fields: You must include a tax rate. Tip: Include a zero tax rate.');
             }
     });
-    });
-
-    // id="inv_create_confirm button on views/inv/modal_create_inv.php
-    $(document).on('click', '#inv_create_confirm', function () {
-    var url = $(location).attr('origin') + "/invoice/inv/create_confirm";
-    var btn = $('.inv_create_confirm');
-    var absolute_url = new URL($(location).attr('href'));
-    btn.html('<h6 class="text-center"><i class="fa fa-spin fa-spinner"></i></h6>');
-    $.ajax({type: 'GET',
-            contentType: "application/json; charset=utf-8",
-            data: {
-                        client_id: $('#create_inv_client_id').val(),
-                        inv_group_id: $('#inv_group_id').val(),
-                        inv_password: $('#inv_password').val()
-            },                
-            url: url,
-            cache: false,
-            dataType: 'json',
-            success: function (data) {
-                var response =  parsedata(data);
-                if (response.success === 1) {
-                    // The validation was successful and inv was created
-                    btn.html('<h2 class="text-center"><i class="fa fa-check"></i></h2>');                        
-                    window.location = absolute_url;
-                    window.location.reload();
-                }
-                message = response.message;
-                if (response.success === 0) {
-                    // The validation was unsuccessful and inv was not created
-                    btn.html('<h6 class="text-center"><i class="fa fa-check"></i></h6>');                        
-                    window.location = absolute_url;
-                    window.location.reload();
-                    alert(message);
-                }     
-            },
-            error: function(xhr, status, error) {                         
-                console.warn(xhr.responseText);
-                alert('Status: ' + status + ' An error: ' + error.toString());
-            }
-            
-        });
     });
     
     // id="create_credit_confirm button on views/inv/modal_create_credit.php
@@ -259,16 +162,17 @@ $(function () {
                 var response =  parsedata(data);
                 if (response.success === 1) {
                     // The validation was successful and inv was created
-                    btn.html('<h2 class="text-center"><i class="fa fa-check"></i></h2>');                        
+                    btn.html('<h2 class="text-center"><i class="bi bi-check2-square">                                                                                                                                                                                                                                                                                                                                                                                                                           "></i></h2>');                        
                     window.location = absolute_url;
                     window.location.reload();
+                    alert(response.flash_message);
                 }
                 if (response.success === 0) {
-                    btn.html('<h2 class="text-center"><i class="fa fa-check"></i></h2>');                        
+                    btn.html('<h2 class="text-center"><i class="fa fa-times"></i></h2>');                        
                     window.location = absolute_url;
                     window.location.reload();
                     // Display the 'unsuccessful' message
-                    alert(response.message);
+                    alert(response.flash_message);
                 }    
             },
             error: function(xhr, status, error) {                         
@@ -301,6 +205,12 @@ $(function () {
                         if (response.success === 1) {
                             // The validation was successful and inv was created
                             btn.html('<h2 class="text-center"><i class="fa fa-check"></i></h2>');                        
+                            window.location = absolute_url;
+                            window.location.reload();
+                        }
+                        if (response.success === 0) {
+                            // The validation was unsuccessful
+                            btn.html('<h2 class="text-center"><i class="fa fa-times"></i></h2>');                        
                             window.location = absolute_url;
                             window.location.reload();
                         }
@@ -338,45 +248,9 @@ $(function () {
             var url = $(location).attr('origin') + "/invoice/inv/html/0";    
             window.location.reload;
             window.open(url, '_blank');
-    });
-    
-    $(document).on('click', '#create_recurring_confirm', function () {
-            var absolute_url = new URL($(location).attr('href'));
-            var url = $(location).attr('origin') + "/invoice/invrecurring/create_recurring_confirm";
-            var btn = $('.create_recurring_confirm');
-            btn.html('<h6 class="text-center"><i class="fa fa-spin fa-spinner"></i></h6>');
-            //take the inv id from the public url
-            inv_id = absolute_url.href.substring(absolute_url.href.lastIndexOf('/') + 1);        
-            $.ajax({type: 'GET',
-            contentType: "application/json; charset=utf-8",
-            data: {
-                inv_id: inv_id,
-                recur_start_date: $('#recur_start_date').val(),
-                recur_end_date: $('#recur_end_date').val(),
-                recur_frequency: $('#recur_frequency').val()
-            },                            
-            url: url,
-            cache: false,
-            dataType: 'json',
-            success: function (data) {
-                        var response =  parsedata(data);
-                        if (response.success === 1) {
-                            // The validation was successful and inv was created
-                            btn.html('<h2 class="text-center"><i class="fa fa-check"></i></h2>');                        
-                            window.location = absolute_url;
-                            window.location.reload();
-                        }
-            },
-            error: function(xhr, status, error) {                         
-                        console.warn(xhr.responseText);
-                        alert('Status: ' + status + ' An error: ' + error.toString());
-            }
-            });
-    });
+    });    
        
-    $('#recur_frequency').change(function () {
-        get_recur_start_date();
-    });
+    
 
     $('#discount_amount').keyup(function () {
     if (this.value.length > 0) {

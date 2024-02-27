@@ -4,22 +4,52 @@ declare(strict_types=1);
 
 namespace App\Invoice\QuoteItem;
 
+use App\Invoice\Entity\QuoteItem;
 use Yiisoft\FormModel\FormModel;
 use Yiisoft\Validator\Rule\Required;
+use Yiisoft\Validator\Rule\GreaterThan;
 
 final class QuoteItemForm extends FormModel
 {        
-    private ?string $quote_id='';
-    private ?string $tax_rate_id='';
-    private ?string $product_id='';
-    private ?string $name='';
-    private ?string $description='';
-    private ?float $quantity=null;
-    private ?float $price=null;
-    private ?float $discount_amount=null;
-    private ?int $order=null;
-    private ?string $product_unit='';
-    private ?int $product_unit_id=null;
+    private ?string $quote_id = '';
+    
+    #[Required]
+    private ?string $tax_rate_id = '';
+    
+    #[Required]
+    private ?string $product_id = '';
+    private ?string $name = '';
+    
+    private ?string $description = '';
+    
+    #[GreaterThan(0.00)]
+    private ?float $quantity = null;
+    
+    #[GreaterThan(0.00)]
+    private ?float $price = null;
+    
+    #[Required]
+    private ?float $discount_amount = null;
+    
+    #[Required]
+    private ?int $order = null;
+    private ?string $product_unit = '';
+    private ?int $product_unit_id = null;
+    
+    public function __construct(QuoteItem $quoteItem, string $quote_id)
+    {
+        $this->quote_id = $quote_id;
+        $this->tax_rate_id = $quoteItem->getTax_rate_id();
+        $this->product_id = $quoteItem->getProduct_id();
+        $this->name = $quoteItem->getName();
+        $this->description = $quoteItem->getDescription();
+        $this->quantity = $quoteItem->getQuantity();
+        $this->price = $quoteItem->getPrice();
+        $this->discount_amount = $quoteItem->getDiscount_amount();
+        $this->order = $quoteItem->getOrder();
+        $this->product_unit = $quoteItem->getProduct_unit();
+        $this->product_unit_id = (int)$quoteItem->getProduct_unit_id();
+    }        
 
     public function getQuote_id() : string|null
     {
@@ -84,22 +114,5 @@ final class QuoteItemForm extends FormModel
     public function getFormName(): string
     {
       return '';
-    }
-    
-    /**
-     * @return Required[][]
-     *
-     * @psalm-return array{tax_rate_id: list{Required}, product_id: list{Required}, quantity: list{Required}, price: list{Required}, discount_amount: list{Required}, order: list{Required}, product_unit_id: list{Required}}
-     */
-    public function getRule(): array    {
-      return [
-        'tax_rate_id' => [new Required()],
-        'product_id' => [new Required()],
-        'quantity' => [new Required()],
-        'price' => [new Required()],
-        'discount_amount' => [new Required()],
-        'order' => [new Required()],
-        'product_unit_id' => [new Required()],
-    ];
     }
 }

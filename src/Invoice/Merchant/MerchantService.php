@@ -1,18 +1,13 @@
 <?php
-
 declare(strict_types=1); 
 
 namespace App\Invoice\Merchant;
 
 use App\Invoice\Entity\Merchant;
-use App\Invoice\Helpers\DateHelper;
-use App\Invoice\Setting\SettingRepository as sR;
-
 
 final class MerchantService
 {
-
-    private MerchantRepository $repository;
+private MerchantRepository $repository;
 
     public function __construct(MerchantRepository $repository)
     {
@@ -20,20 +15,25 @@ final class MerchantService
     }
     
     /**
-     * 
      * @param Merchant $model
-     * @param MerchantForm $form
-     * @param sR $sR
+     * @param array $array
      * @return void
      */
-    public function saveMerchant(Merchant $model, MerchantForm $form, sR $sR): void
+    public function saveMerchant(Merchant $model, array $array): void
     {
-       $form->getInv_id() ? $model->setInv_id($form->getInv_id()) : '';
-       $form->getSuccessful() ? $model->setSuccessful($form->getSuccessful()) : '';
-       $model->setDate($form->getDate($sR));
-       $form->getDriver() ? $model->setDriver($form->getDriver()) : '';
-       $form->getResponse() ? $model->setResponse($form->getResponse()) : '';
-       $form->getReference() ? $model->setReference($form->getReference()) : '';
+       isset($array['inv_id']) ? $model->setInv_id((int)$array['inv_id']) : '';
+       $model->setSuccessful((bool)$array['successful']);
+       
+       $datetime = new \DateTime();
+       /**
+        * @var string $array['date']
+        */
+       $date = $array['date'] ?? '';
+       $model->setDate($datetime::createFromFormat('Y-m-d', $date));
+       
+       isset($array['driver']) ? $model->setDriver((string)$array['driver']) : '';
+       isset($array['response']) ? $model->setResponse((string)$array['response']) : '';
+       isset($array['reference']) ? $model->setReference((string)$array['reference']) : '';
        $this->repository->save($model);
     }
     
@@ -61,29 +61,11 @@ final class MerchantService
     }
     
     /**
-     * 
      * @param Merchant $model
      * @return void
      */
     public function deleteMerchant(Merchant $model): void
     {
         $this->repository->delete($model);
-    }
-    
-    /**
-     * 
-     * @param sR $sR
-     * @param string $date
-     * @return \DateTime
-     */
-    public function getDateTime(sR $sR, string $date) : \DateTime
-    {
-        $datehelper = new DateHelper($sR);         
-        $datetime = new \DateTime();
-        $datetime->setTimezone(new \DateTimeZone($sR->get_setting('time_zone') ?: 'Europe/London')); 
-        $datetime->format($datehelper->style());
-        $str_replace = str_replace($datehelper->separator(), '-', $date);
-        $datetime->modify($str_replace);
-        return $datetime;
     }
 }

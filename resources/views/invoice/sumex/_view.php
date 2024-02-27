@@ -2,88 +2,100 @@
 
 declare(strict_types=1); 
 
+use Yiisoft\FormModel\Field;
 use Yiisoft\Html\Html;
-use Yiisoft\Yii\Bootstrap5\Alert;
-use App\Invoice\Helpers\DateHelper;
+use Yiisoft\Html\Tag\Form;
 
 /**
  * @var \Yiisoft\View\View $this
  * @var \Yiisoft\Router\UrlGeneratorInterface $urlGenerator
- * @var array $body
  * @var string $csrf
  * @var string $action
  * @var string $title
  */
-
-if (!empty($errors)) {
-    foreach ($errors as $field => $error) {
-        echo Alert::widget()->options(['class' => 'alert-danger'])->body(Html::encode($field . ':' . $error));
-    }
-}
-
 ?>
-<?= Html::openTag('h1'); ?><?= Html::encode($title) ?><?= Html::closeTag('h1'); ?>
-<?= Html::openTag('div', ['class' => 'row']); ?>
- <div class="mb3 form-group">
-   <label for="invoice" class="form-label" style="background:lightblue"><?= $translator->translate('i.invoice'); ?></label>
-   <?= Html::encode($body['invoice'] ?? ''); ?>
- </div>
- <div class="mb3 form-group">
-   <label for="reason" class="form-label" style="background:lightblue"><?= $translator->translate('i.reason'); ?></label>
-   <?= Html::encode($body['reason'] ?? ''); ?>
- </div>
- <div class="mb3 form-group">
-   <label for="diagnosis" class="form-label" style="background:lightblue"><?= $translator->translate('i.invoice_sumex_diagnosis'); ?></label>
-   <?= Html::encode($body['diagnosis'] ?? ''); ?>
- </div>
- <div class="mb3 form-group">
-   <label for="observations" class="form-label" style="background:lightblue"><?= $translator->translate('i.sumex_observations'); ?></label>
-   <?= Html::encode($body['observations'] ?? ''); ?>
- </div>
- <div class="mb3 form-group">
-   <label for="treatmentstart" class="form-label" style="background:lightblue"><?= $translator->translate('i.treatment_start'); ?></label>
-   <?php
-        $tdate = $body['treatmentstart'];
-        if ($tdate && $tdate != "0000-00-00") {
-                //use the DateHelper
-            $datehelper = new DateHelper($s);
-            $tdate = $datehelper->date_from_mysql($tdate);
-        } else {
-            $tdate = null;
-        }
-    ?>      
-    <?= Html::encode($tdate); ?>
- </div>
- <div class="mb3 form-group">
-   <label for="treatmentend" class="form-label" style="background:lightblue"><?= $translator->translate('i.treatment_end'); ?></label>
-   <?php
-        $edate = $body['treatmentend'];
-        if ($edate && $edate != "0000-00-00") {
-                //use the DateHelper
-            $datehelper = new DateHelper($s);
-            $edate = $datehelper->date_from_mysql($edate);
-        } else {
-            $edate = null;
-        }
-    ?>      
-    <?= Html::encode($edate); ?>
- </div>
- <div class="mb3 form-group">
-   <label for="casedate" class="form-label" style="background:lightblue"><?= $translator->translate('i.case_date'); ?></label>
-   <?php
-        $cdate = $body['casedate'];
-        if ($cdate && $cdate != "0000-00-00") {
-                //use the DateHelper
-            $datehelper = new DateHelper($s);
-            $cdate = $datehelper->date_from_mysql($cdate);
-        } else {
-            $cdate = null;
-        }
-    ?>      
-    <?= Html::encode($cdate); ?>
- </div>
- <div class="mb3 form-group">
-   <label for="casenumber" class="form-label" style="background:lightblue"><?= $translator->translate('i.case_number'); ?></label>
-   <?= Html::encode($body['casenumber'] ?? ''); ?>
- </div>
-</div>
+
+<?= Form::tag()
+    ->post($urlGenerator->generate(...$action))
+    ->enctypeMultipartFormData()
+    ->csrf($csrf)
+    ->id('SumexForm')
+    ->open() ?>
+
+<?= Html::openTag('div',['class'=>'container py-5 h-100']); ?>
+<?= Html::openTag('div',['class'=>'row d-flex justify-content-center align-items-center h-100']); ?>
+<?= Html::openTag('div',['class'=>'col-12 col-md-8 col-lg-6 col-xl-8']); ?>
+<?= Html::openTag('div',['class'=>'card border border-dark shadow-2-strong rounded-3']); ?>
+<?= Html::openTag('div',['class'=>'card-header']); ?>
+
+<?= Html::openTag('h1',['class'=>'fw-normal h3 text-center']); ?>    
+    <?= Html::encode($title) ?>
+<?= Html::closeTag('h1'); ?>
+<?= Html::openTag('div', ['id' => 'headerbar']); ?>
+    <?= $button::back($translator); ?>
+    <?= Html::openTag('div', ['id' => 'content']); ?>
+        <?= Html::openTag('div', ['class' => 'row']); ?>
+            <?= Html::openTag('div', ['class' => 'mb-3 form-group']); ?>
+            <?= Field::hidden($form, 'invoice')
+                ->hideLabel()
+                ->value($form->getInvoice() ?? $inv_id); ?>
+            <?= Html::closeTag('div'); ?>
+            <?= Html::openTag('div', ['class' => 'mb-3 form-group']); ?>
+                <?= Field::select($form, 'reason')
+                    ->label($translator->translate('i.reason'))
+                    ->optionsData($optionsDataReasons)
+                    ->disabled(true); 
+                ?>
+            <?= Html::closeTag('div'); ?>
+            <?= Html::openTag('div', ['class' => 'mb-3 form-group']); ?>
+            <?= Field::text($form, 'casenumber')
+                ->label($translator->translate('i.case_number'), ['form-label'])
+                ->placeholder($translator->translate('i.case_number'))    
+                ->value(Html::encode($form->getCasenumber() ?? ''))
+                ->disabled(true); 
+            ?>    
+            <?= Html::closeTag('div'); ?>
+            <?= Html::openTag('div', ['class' => 'mb-3 form-group']); ?>
+            <?= Field::textarea($form, 'diagnosis')
+                ->label($translator->translate('i.invoice_sumex_diagnosis'), ['form-label'])
+                ->placeholder($translator->translate('i.invoice_sumex_diagnosis'))    
+                ->value(Html::encode($form->getDiagnosis() ?? ''))
+                ->disabled(true); 
+            ?>
+            <?= Html::closeTag('div'); ?>
+            <?= Html::openTag('div', ['class' => 'mb-3 form-group']); ?>
+            <?= Field::textarea($form, 'observations')
+                ->label($translator->translate('i.sumex_observations'), ['form-label'])
+                ->placeholder($translator->translate('i.sumex_observations'))    
+                ->value(Html::encode($form->getObservations() ?? ''))
+                ->disabled(true); 
+            ?>
+            <?= Html::closeTag('div'); ?>
+            <?= Html::openTag('div', ['class' => 'mb-3 form-group']); ?>
+            <?= Field::date($form, 'treatmentstart')
+                ->label($translator->translate('i.treatment_start'))
+                ->value($form->getTreatmentstart() ? ($form->getTreatmentstart())->format('Y-m-d') : '')
+                ->disabled(true); 
+            ?>
+            <?= Html::closeTag('div'); ?>
+            <?= Html::openTag('div', ['class' => 'mb-3 form-group']); ?>
+            <?= Field::date($form, 'treatmentend')
+                ->label($translator->translate('i.treatment_end'))
+                ->value($form->getTreatmentend() ? ($form->getTreatmentend())->format('Y-m-d') : '')
+                ->disabled(true); 
+            ?>
+            <?= Html::closeTag('div'); ?>
+            <?= Html::openTag('div', ['class' => 'mb-3 form-group']); ?>
+            <?= Field::date($form, 'casedate')
+                ->label($translator->translate('i.case_date'))
+                ->value($form->getCasedate() ? ($form->getCasedate())->format('Y-m-d') : '')
+                ->disabled(true); 
+            ?>
+            <?= Html::closeTag('div'); ?>
+        <?= Html::closeTag('div'); ?>
+    <?= Html::closeTag('div'); ?>
+<?= Html::closeTag('div'); ?>
+<?= Html::closeTag('div'); ?>
+<?= Html::closeTag('div'); ?>
+<?= Html::closeTag('div'); ?>
+<?= Form::tag()->close() ?>

@@ -1,6 +1,7 @@
 <?php
 declare(strict_types=1); 
 
+
 use Yiisoft\FormModel\Field;
 use Yiisoft\Html\Html;
 use Yiisoft\Html\Tag\Form;
@@ -33,7 +34,7 @@ use Yiisoft\Html\Tag\Form;
     <?= Html::openTag('h1',['class'=>'fw-normal h3 text-center']); ?>
     <?= $translator->translate('i.custom_field_form'); ?>
     <?= Html::closeTag('h1'); ?>
-    <?= $layout_header_buttons; ?>
+        <?= $button::back_save($translator); ?>
     <?= Html::closeTag('div'); ?>
 
     <?= Html::Tag('br'); ?>
@@ -79,7 +80,7 @@ use Yiisoft\Html\Tag\Form;
                 $optionsDataType = [];
                 foreach ($types as $type) { 
                         $alpha = str_replace("-", "_", strtolower($type)); 
-                        $optionsDataType[$type] = (!empty($s->trans($alpha)) ? $s->trans($alpha) : $translator->translate('invoice.custom.field.number'));
+                        $optionsDataType[$type] = (null!==($translator->translate('i.'.$alpha)) ? $translator->translate('i.'.$alpha) : $translator->translate('invoice.custom.field.number'));
                 }        
             ?>    
             <?= Html::openTag('div',['class' => 'form-group']); ?>
@@ -92,6 +93,14 @@ use Yiisoft\Html\Tag\Form;
                         ])
                         ->value(Html::encode($form->getType() ?? ''))    
                         ->optionsData($optionsDataType);    
+                ?>
+            <?= Html::closeTag('div'); ?>    
+            <?= Html::openTag('div',['class' => 'form-group']); ?>
+                <?= Field::checkbox($form, 'required')
+                    ->inputLabelAttributes(['class' => 'form-check-label'])    
+                    ->enclosedByLabel(true)
+                    ->inputClass('form-check-input')
+                    ->ariaDescribedBy($translator->translate('invoice.custom.field.required'));
                 ?>
             <?= Html::closeTag('div'); ?>    
 

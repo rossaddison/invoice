@@ -5,40 +5,34 @@ declare(strict_types=1);
 namespace App\Invoice\Upload;
 
 use App\Invoice\Entity\Upload;
-use App\Invoice\Helpers\DateHelper;
 use App\Invoice\Setting\SettingRepository;
 use Yiisoft\Files\FileHelper;
 
 final class UploadService {
 
     private UploadRepository $repository;
-    private SettingRepository $s;
 
-    public function __construct(UploadRepository $repository, SettingRepository $s) {
+    public function __construct(UploadRepository $repository) {
         $this->repository = $repository;
-        $this->s = $s;
     }
 
     /**
      * @param Upload $model
-     * @param UploadForm $form
+     * @param array $array
      * @return void
      */
-    public function saveUpload(Upload $model, UploadForm $form): void {
-        $model->nullifyRelationOnChange((int) $form->getClient_id());
-        /** @psalm-suppress PossiblyNullArgument $form->getClient_id()*/
-        $model->setClient_id($form->getClient_id());
-        $model->setUrl_key($form->getUrl_key());
-        $model->setFile_name_original($form->getFile_name_original());
-        $model->setFile_name_new($form->getFile_name_new());
-
-        $datehelper = new DateHelper($this->s);
-
-        $datetime_uploaded = $datehelper->get_or_set_with_style(null !== $form->getUploaded_date() ? $form->getUploaded_date() : new \DateTime());
-        $datetimeimmutable_uploaded = new \DateTimeImmutable($datetime_uploaded instanceof \DateTime ? $datetime_uploaded->format('Y-m-d H:i:s') : 'now');
-        $model->setUploaded_date($datetimeimmutable_uploaded);
-
-        $model->setDescription($form->getDescription());
+    public function saveUpload(Upload $model, array $array): void {
+        $model->nullifyRelationOnChange((int) $array['client_id']);
+        /** @psalm-suppress PossiblyNullArgument $array['client_id'] */
+        isset($array['client_id']) ? $model->setClient_id((int)$array['client_id']) : '';
+        isset($array['url_key']) ? $model->setUrl_key((string)$array['url_key']) : '';
+        isset($array['file_name_original']) ? $model->setFile_name_original((string)$array['file_name_original']) : '';
+        isset($array['file_name_new']) ? $model->setFile_name_new((string)$array['file_name_new']) : '';
+        
+        $uploadedDate = (new \DateTimeImmutable())::createFromFormat('Y-m-d', (string)$array['uploaded_date']);
+        $uploadedDate ? $model->setUploaded_date($uploadedDate) : '';
+        
+        isset($array['description']) ? $model->setDescription((string)$array['description']) : '';
         $this->repository->save($model);
     }
 
@@ -55,5 +49,4 @@ final class UploadService {
         strpos(realpath($targetPath), realpath($file_path)) == 0 ? FileHelper::unlink($file_path) : '';
         $this->repository->delete($model);
     }
-
 }

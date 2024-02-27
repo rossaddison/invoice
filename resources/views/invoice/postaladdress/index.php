@@ -8,7 +8,6 @@ use Yiisoft\Html\Tag\Div;
 use Yiisoft\Html\Tag\Form;
 use Yiisoft\Html\Tag\H5;
 use Yiisoft\Html\Tag\I;
-use Yiisoft\Yii\Bootstrap5\Alert;
 use Yiisoft\Yii\DataView\Column\DataColumn;
 use Yiisoft\Yii\DataView\GridView;
 use Yiisoft\Yii\DataView\OffsetPagination;
@@ -75,7 +74,7 @@ $toolbar = Div::tag();
         ),
         new DataColumn(
             header:  $translator->translate('i.delete'), 
-            content: static function ($model) use ($s, $urlGenerator): string {
+            content: static function ($model) use ($translator, $urlGenerator): string {
                 return Html::a( Html::tag('button',
                     Html::tag('i','',['class'=>'fa fa-trash fa-margin']),
                     [
@@ -94,19 +93,17 @@ $toolbar = Div::tag();
     ->columns(...$columns)
     ->dataReader($paginator)
     ->headerRowAttributes(['class'=>'card-header bg-info text-black'])
-    ->filterPosition('header')
-    ->filterModelName('postaladdress')
+    //->filterPosition('header')
+    //->filterModelName('postaladdress')
     ->header($header)
     ->id('w3-grid')
     ->pagination(
     OffsetPagination::widget()
-         ->menuClass('pagination justify-content-center')
          ->paginator($paginator)
          ->render(),
     )
     ->rowAttributes(['class' => 'align-middle'])
     ->summaryAttributes(['class' => 'mt-3 me-3 summary text-end'])
-    ->summary('')
     ->tableAttributes(['class' => 'table table-striped text-center h-85','id'=>'table-postaladdress'])
     ->toolbar(
         Form::tag()->post($urlGenerator->generate('postaladdress/index'))->csrf($csrf)->open() .

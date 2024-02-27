@@ -199,9 +199,30 @@ $vat = $s->get_setting('enable_vat_registration');
                         </div>
                     </td>
                     <td class="td-icon text-right td-vert-middle">
-                    <?php if ($invEdit) { ?>    
-                        <a href="<?= $urlGenerator->generate('quote/delete_quote_item',['_language' => $language, 'id'=>$item->getId()]) ?>" class="btn btn-md btn-link" onclick="return confirm('<?= $translator->translate('i.delete_record_warning'); ?>');"><i class="fa fa-trash"></i></a>
-                        <a href="<?= $urlGenerator->generate('quoteitem/edit',['_language' => $language, 'id'=>$item->getId()]) ?>" class="btn btn-md btn-link"><i class="fa fa-pencil"></i></a>
+                        
+                    <?php if ($invEdit) { ?>
+                        <span data-bs-toggle="tooltip" title="<?= $translator->translate('invoice.productimage.gallery'). (null!==$item->getProduct_id() ? $item->getProduct()?->getProduct_name() : $item->getTask()?->getName()); ?>">
+                            <a class="btn btn-info fa fa-eye" data-bs-toggle="modal" href="#view-product-<?= $item->getId(); ?>" style="text-decoration:none"></a></span> 
+                            <div id="view-product-<?= $item->getId(); ?>" class="modal modal-lg" tabindex="-1" role="dialog" aria-labelledby="modal_view_product_<?= $item->getId(); ?>" aria-hidden="true">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                      <button type="button" class="close" data-dismiss="modal"><i class="fa fa-times-circle"></i></button>
+                                    </div>    
+                                    <div>
+                                      <?php $product_images = $piR->repoProductImageProductquery((int)$item->getProduct_id()); ?>
+                                      <?php foreach ($product_images as $product_image) { ?>
+                                       <?php if (!empty($product_image->getFile_name_original())) { ?> 
+                                          <a data-toggle="modal" class="col-sm-4">
+                                             <img src="<?= '/products/'. $product_image->getFile_name_original(); ?>"  class="img-fluid">
+                                          </a>
+                                       <?php } ?> 
+                                      <?php } ?>
+                                    </div>
+                                    <div class="modal-footer">
+                                    </div>  
+                                </div> 
+                            </div><a href="<?= $urlGenerator->generate('quote/delete_quote_item',['_language' => $language, 'id'=>$item->getId()]) ?>" class="btn btn-danger" onclick="return confirm('<?= $translator->translate('i.delete_record_warning'); ?>');"><i class="fa fa-trash"></i></a>
+                        <a href="<?= $urlGenerator->generate('quoteitem/edit',['_language' => $language, 'id'=>$item->getId()]) ?>" class="btn btn-success"><i class="fa fa-pencil"></i></a>
                     </td>
                     <?php } ?>
                 </tr>
@@ -221,25 +242,25 @@ $vat = $s->get_setting('enable_vat_registration');
                     <td class="td-amount td-vert-middle">
                         <span><?= $translator->translate('i.subtotal'); ?></span><br/>                        
                         <span name="subtotal" class="amount" data-bs-toggle = "tooltip" title="quote_item_amount->subtotal">
-                            <?= $numberhelper->format_currency($quote_item_amount->repoQuoteItemAmountquery((string)$item->getId())?->getSubtotal() ?? 0.00); ?>
+                            <?= $numberhelper->format_currency($quote_item_amount->repoQuoteItemAmountquery((int)$item->getId())?->getSubtotal() ?? 0.00); ?>
                         </span>
                     </td>
                     <td class="td-amount td-vert-middle">
                         <span class="input-group-text"><?= $vat === '0' ? $translator->translate('i.item_discount') : $translator->translate('invoice.invoice.cash.discount'); ?></span>
                         <span name="item_discount_total" class="amount" data-bs-toggle = "tooltip" title="quote_item_amount->discount">
-                            <?= $numberhelper->format_currency($quote_item_amount->repoQuoteItemAmountquery((string)$item->getId())?->getDiscount() ?? 0.00); ?>
+                            <?= $numberhelper->format_currency($quote_item_amount->repoQuoteItemAmountquery((int)$item->getId())?->getDiscount() ?? 0.00); ?>
                         </span>
                     </td>
                     <td class="td-amount td-vert-middle">
                         <span><?= $vat === '0' ? $translator->translate('i.tax') : $translator->translate('invoice.invoice.vat.abbreviation') ?></span><br/>
                         <span name="item_tax_total" class="amount" data-bs-toggle = "tooltip" title="quote_item_amount->tax_total">
-                            <?= $numberhelper->format_currency($quote_item_amount->repoQuoteItemAmountquery((string)$item->getId())?->getTax_total() ?? 0.00); ?>
+                            <?= $numberhelper->format_currency($quote_item_amount->repoQuoteItemAmountquery((int)$item->getId())?->getTax_total() ?? 0.00); ?>
                         </span>
                     </td>
                     <td class="td-amount td-vert-middle">
                         <span><?= $translator->translate('i.total'); ?></span><br/>
                         <span name="item_total" class="amount" data-bs-toggle = "tooltip" title="quote_item_amount->total">
-                            <?= $numberhelper->format_currency($quote_item_amount->repoQuoteItemAmountquery((string)$item->getId())?->getTotal() ?? 0.00); ?>
+                            <?= $numberhelper->format_currency($quote_item_amount->repoQuoteItemAmountquery((int)$item->getId())?->getTotal() ?? 0.00); ?>
                         </span>
                     </td>                   
                 </tr>

@@ -17,6 +17,8 @@ use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
 
 // Yiisoft
+use Yiisoft\Data\Paginator\PageToken;
+use Yiisoft\Data\Paginator\OffsetPaginator;
 use Yiisoft\Data\Reader\Sort;
 use Yiisoft\Http\Method;
 use Yiisoft\Router\CurrentRoute;
@@ -27,7 +29,7 @@ use Yiisoft\FormModel\FormHydrator;
 use Yiisoft\Yii\View\ViewRenderer;
 
 use \Exception;
-use Yiisoft\Data\Paginator\OffsetPaginator;
+
 
 final class ContractController
 {
@@ -89,7 +91,7 @@ final class ContractController
         $paginator = (new OffsetPaginator($contracts))
         ->withPageSize((int)$sR->get_setting('default_list_limit'))
         ->withCurrentPage((int)$page)
-        ->withNextPageToken($page); 
+        ->withToken(PageToken::next((string)$page)); 
         $parameters = [
             'alert' => $this->alert(),
             'paginator'=>$paginator,
@@ -107,45 +109,43 @@ final class ContractController
     }
     
     /**
-     * 
      * @param CurrentRoute $currentRoute
-     * @param ViewRenderer $head
      * @param Request $request
      * @param FormHydrator $formHydrator
-     * @param sR $settingRepository
-     * @return Response
+     * @param cR $cR
+     * @param sR $sR
+     * @return \Yiisoft\DataResponse\DataResponse|Response
      */
-    public function add(CurrentRoute $currentRoute, ViewRenderer $head, Request $request, 
-                       FormHydrator $formHydrator,
-                       sR $settingRepository
-    ) : Response
+    public function add(CurrentRoute $currentRoute, Request $request, FormHydrator $formHydrator, cR $cR, sR $sR) : \Yiisoft\DataResponse\DataResponse|Response
     {   
+        $client_id = $currentRoute->getArgument('client_id');
         $contract = New Contract();
+        // To pass the client id variable to the form, set it first in the entity
+        $contract->setClient_id((int)$client_id);
+        $title = '';
         $form = new ContractForm($contract);
+        if (null!==$client_id) {
+            $title = ($cR->repoClientquery($client_id))->getClient_name();
+        } else { 
+            $title = $this->translator->translate('invoice.not.available');
+        }
         $parameters = [
-            'title' => $this->translator->translate('invoice.invoice.contract.add'),
-            'action' => ['contract/add',['client_id'=> $currentRoute->getArgument('client_id')]],
+            'title' => $this->translator->translate('invoice.invoice.contract.add') 
+                       .': '
+                       . $title,
+            'action' => ['contract/add', ['client_id' => $client_id]],
             'errors' => [],
             'form' => $form,
-            's'=> $settingRepository,
-            'head'=>$head,
-            'client_id'=> $currentRoute->getArgument('client_id')
+            'client_id' => $client_id
         ];
         
         if ($request->getMethod() === Method::POST) {
-            $body = $request->getParsedBody();
-            /**
-             * @psalm-suppress PossiblyInvalidArrayAssignment $body['client_id']
-             */
-            $body['client_id'] = $currentRoute->getArgument('client_id');
-            /**
-             * @psalm-suppress PossiblyInvalidArgument $body
-             */
-            if ($formHydrator->populate($form, $body) && $form->isValid()) {
+            if ($formHydrator->populateFromPostAndValidate($form, $request)) {
+                $body = $request->getParsedBody();
                 /**
                  * @psalm-suppress PossiblyInvalidArgument $body
                  */
-                $this->contractService->saveContract($contract, $body, $settingRepository);
+                $this->contractService->saveContract($contract, $body, $sR);
                 return $this->webService->getRedirectResponse('contract/index');
             }
             $parameters['form'] = $form;
@@ -155,41 +155,33 @@ final class ContractController
     }
     
     /**
-     * 
-     * @param ViewRenderer $head
      * @param Request $request
      * @param CurrentRoute $currentRoute
      * @param FormHydrator $formHydrator
      * @param contractR $contractRepository
-     * @param sR $settingRepository
+     * @param sR $sR
      * @return Response
      */
-    public function edit(ViewRenderer $head, Request $request, CurrentRoute $currentRoute, 
+    public function edit(Request $request, CurrentRoute $currentRoute, 
                          FormHydrator $formHydrator,
-                         contractR $contractRepository, 
-                         sR $settingRepository
-    ): Response {
+                         contractR $contractRepository, sR $sR): Response 
+    {
         $contract = $this->contract($currentRoute, $contractRepository);
         if ($contract) {
             $form = new ContractForm($contract);
             $parameters = [
-                'title' => $settingRepository->trans('edit'),
+                'title' => $this->translator->translate('i.edit'),
                 'action' => ['contract/edit', ['id' => $contract->getId()]],
                 'errors' => [],
-                'form' => $form, 
-                'head'=>$head,
-                's'=>$settingRepository
+                'form' => $form 
             ];
             if ($request->getMethod() === Method::POST) {
-                /**
-                 * @psalm-suppress PossiblyInvalidArgument $body
-                 */
-                $body = $request->getParsedBody() ?? [];
-                if ($formHydrator->populate($form, $body) && $form->isValid()) {
+                if ($formHydrator->populateFromPostAndValidate($form, $request)) {
+                     $body = $request->getParsedBody() ?? [];
                     /**
                      * @psalm-suppress PossiblyInvalidArgument $body
                      */
-                    $this->contractService->saveContract($contract, $body, $settingRepository);
+                    $this->contractService->saveContract($contract, $body, $sR);
                     return $this->webService->getRedirectResponse('contract/index');
                 }
                 $parameters['form'] = $form;
@@ -213,19 +205,16 @@ final class ContractController
     }
     
     /**
-     * 
-     * @param sR $settingRepository
      * @param CurrentRoute $currentRoute
      * @param contractR $contractRepository
      * @return Response
      */
-    public function delete(sR $settingRepository, CurrentRoute $currentRoute,contractR $contractRepository 
-    ): Response {
+    public function delete(CurrentRoute $currentRoute,contractR $contractRepository): Response {
         try {
             $contract = $this->contract($currentRoute, $contractRepository);
             if ($contract) {
                 $this->contractService->deleteContract($contract);               
-                $this->flash_message('info', $settingRepository->trans('record_successfully_deleted'));
+                $this->flash_message('success', $this->translator->translate('i.record_successfully_deleted'));
                 return $this->webService->getRedirectResponse('contract/index'); 
             }
             return $this->webService->getRedirectResponse('contract/index'); 
@@ -238,21 +227,18 @@ final class ContractController
     /**
      * @param CurrentRoute $currentRoute
      * @param contractR $contractRepository
-     * @param sR $settingRepository
      * @return \Yiisoft\DataResponse\DataResponse|Response
      */
-    public function view(CurrentRoute $currentRoute, contractR $contractRepository,
-        sR $settingRepository,
-        ): \Yiisoft\DataResponse\DataResponse|Response {
+    public function view(CurrentRoute $currentRoute, contractR $contractRepository): \Yiisoft\DataResponse\DataResponse|Response {
         $contract = $this->contract($currentRoute, $contractRepository);
         if ($contract) {
             $form = new ContractForm($contract);
             $parameters = [
-                'title' => $settingRepository->trans('view'),
+                'title' => $this->translator->translate('i.view'),
                 'action' => ['contract/view', ['id' => $contract->getId()]],
                 'errors' => [],
                 'form' => $form,
-                'contract'=>$contract,
+                'contract' => $contract,
             ];        
         return $this->viewRenderer->render('_view', $parameters);
         }
@@ -300,23 +286,7 @@ final class ContractController
                        ->withSort($sort);
         return $contracts;
     }
-    
-    /**
-     * @param Contract $contract 
-     * @return array
-     */
-    private function body(Contract $contract) : array {
-        $body = [
-          'id'=>$contract->getId(),
-          'reference'=>$contract->getReference(),
-          'name'=>$contract->getName(),
-          'period_start'=>$contract->getPeriod_start(),
-          'period_end'=>$contract->getPeriod_end(),
-          'client_id'=>$contract->getClient()?->getClient_id()
-        ];
-        return $body;
-    }
-    
+        
  /**
   * @return string
   */

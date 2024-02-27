@@ -67,7 +67,7 @@ public function format_currency(mixed $amount = null): string
 public function format_amount(mixed $amount = null) : null|string
 {
     $this->s->load_settings();
-    if ($amount) {
+    if (null!==$amount) {
         $thousands_separator = $this->s->get_setting('thousands_separator');
         $decimal_point = $this->s->get_setting('decimal_point');
         return number_format((float)$amount, ($decimal_point) ? 2 : 0, $decimal_point, $thousands_separator);
@@ -286,10 +286,10 @@ public function calculate_inv(string $inv_id, ACIR $aciR, IIR $iiR, IIAR $iiaR, 
         $grand_discount = 0.00;
         $grand_total = 0.00;
         $totals = [
-                'subtotal'=>$grand_sub_total,
-                'tax_total'=>$grand_taxtotal,
-                'discount'=>$grand_discount,
-                'total'=>$grand_total,
+                'subtotal' => $grand_sub_total,
+                'tax_total' => $grand_taxtotal,
+                'discount' => $grand_discount,
+                'total' => $grand_total,
         ];
         
         /** @var QuoteItem $item */
@@ -301,24 +301,19 @@ public function calculate_inv(string $inv_id, ACIR $aciR, IIR $iiR, IIAR $iiaR, 
              */
             foreach ($item as $key => $value){
                 if ($key === 'id'){
-                   //use the id value to retrieve quote_item_amount subtotal 
-                   /** 
-                    * @var QuoteItemAmount $quote_item_amount  
-                    * @psalm-suppress RedundantCastGivenDocblockType $value
-                    */
-                   $quote_item_amount = $qiaR->repoQuoteItemAmountquery((string)$value);
-                   $grand_sub_total = $grand_sub_total + ($quote_item_amount->getSubTotal() ?? 0.00) ;
-                                     
-                   $grand_taxtotal = $grand_taxtotal + ($quote_item_amount->getTax_total() ?: 0.00);
-                   $grand_discount = $grand_discount + ($quote_item_amount->getDiscount() ?: 0.00);
-                   $grand_total = $grand_total + ($quote_item_amount->getTotal() ?: 0.00);
+                    /** @var QuoteItemAmount $quote_item_amount */
+                    $quote_item_amount = $qiaR->repoQuoteItemAmountquery((int)$value);
+                    $grand_sub_total = $grand_sub_total + ($quote_item_amount->getSubTotal() ?? 0.00) ;
+                    $grand_taxtotal = $grand_taxtotal + ($quote_item_amount->getTax_total() ?? 0.00);
+                    $grand_discount = $grand_discount + ($quote_item_amount->getDiscount() ?? 0.00);
+                    $grand_total = $grand_total + ($quote_item_amount->getTotal() ?? 0.00);
                 }
             }
             $totals = [
-                'subtotal'=>$grand_sub_total,
-                'tax_total'=>$grand_taxtotal,
-                'discount'=>$grand_discount,
-                'total'=>$grand_total,
+                'subtotal' => $grand_sub_total,
+                'tax_total' => $grand_taxtotal,
+                'discount' => $grand_discount,
+                'total' => $grand_total,
             ];
         }
         return $totals;
@@ -367,12 +362,12 @@ public function calculate_inv(string $inv_id, ACIR $aciR, IIR $iiR, IIAR $iiaR, 
         foreach ($get_all_items_in_inv as $item){
             $inv_item_amount = $iiaR->repoInvItemAmountquery((string)$item->getId());
             if (null!==$inv_item_amount) {
-                $grand_sub_total = $grand_sub_total + ($inv_item_amount->getSubtotal() ?: 0.00);
-                $grand_taxtotal = $grand_taxtotal + ($inv_item_amount->getTax_total() ?: 0.00);
-                $grand_discount = $grand_discount + ($inv_item_amount->getDiscount() ?: 0.00);
-                $grand_charge = $grand_charge + ($inv_item_amount->getCharge() ?: 0.00);
-                $grand_allowance = $grand_allowance + ($inv_item_amount->getAllowance() ?: 0.00);
-                $grand_total = $grand_total + ($inv_item_amount->getTotal() ?: 0.00);
+                $grand_sub_total = $grand_sub_total + ($inv_item_amount->getSubtotal() ?? 0.00);
+                $grand_taxtotal = $grand_taxtotal + ($inv_item_amount->getTax_total() ?? 0.00);
+                $grand_discount = $grand_discount + ($inv_item_amount->getDiscount() ?? 0.00);
+                $grand_charge = $grand_charge + ($inv_item_amount->getCharge() ?? 0.00);
+                $grand_allowance = $grand_allowance + ($inv_item_amount->getAllowance() ?? 0.00);
+                $grand_total = $grand_total + ($inv_item_amount->getTotal() ?? 0.00);
                 $totals = [
                     'subtotal'=>$grand_sub_total,
                     'tax_total'=>$grand_taxtotal,
@@ -462,7 +457,7 @@ public function calculate_inv(string $inv_id, ACIR $aciR, IIR $iiR, IIAR $iiaR, 
                 foreach ($quote_tax_rates as $quote_tax_rate) {
                     // If the include item tax has been checked
                     $quote_tax_rate_amount = (
-                            ($quote_tax_rate->getInclude_item_tax())
+                            (null!==$quote_tax_rate->getInclude_item_tax())
                             ? 
                                 // The quote tax rate should include the applied item tax
                                 (($quote_amount->getItem_subtotal() ?? 0.00) + ($quote_amount->getItem_tax_total() ?? 0.00) * (($quote_tax_rate->getTaxRate()?->getTax_rate_percent() ?? 0.00)  / 100))
@@ -505,13 +500,13 @@ public function calculate_inv(string $inv_id, ACIR $aciR, IIR $iiR, IIAR $iiaR, 
                 foreach ($inv_tax_rates as $inv_tax_rate) {
                     // If the include item tax has been checked ie. value is 1
                     $inv_tax_rate_amount = (
-                            ($inv_tax_rate->getInclude_item_tax())
+                            null!==($inv_tax_rate->getInclude_item_tax())
                             ? 
                                 // The inv tax rate should include the applied item tax
                                 (($inv_amount->getItem_subtotal() ?: 0.00) + (($inv_amount->getItem_tax_total() ?: 0.00) * (($inv_tax_rate->getTaxRate()?->getTax_rate_percent() ?? 0.00) / 100)))
                             :
                                 // The invoice tax rate should not include the applied item tax so get the general tax rate from Tax Rate table
-                                (($inv_amount->getItem_subtotal() ?: 0.00) * (($inv_tax_rate->getTaxRate()?->getTax_rate_percent() ?: 0.00) / 100))
+                                (($inv_amount->getItem_subtotal() ?: 0.00) * (($inv_tax_rate->getTaxRate()?->getTax_rate_percent() ?? 0.00) / 100))
                     ); 
                     // Update the invoice tax rate amount                    
                     $inv_tax_rate->setInv_tax_rate_amount($inv_tax_rate_amount);
@@ -524,41 +519,39 @@ public function calculate_inv(string $inv_id, ACIR $aciR, IIR $iiR, IIAR $iiaR, 
     }
     
     /**
-     * @return string[]
-     *
-     * @psalm-return array{1D: 'calendar_day_1', 2D: 'calendar_day_2', 3D: 'calendar_day_3', 4D: 'calendar_day_4', 5D: 'calendar_day_5', 6D: 'calendar_day_6', 15D: 'calendar_day_15', 30D: 'calendar_day_30', 7D: 'calendar_week_1', 14D: 'calendar_week_2', 21D: 'calendar_week_3', 28D: 'calendar_week_4', 1M: 'calendar_month_1', 2M: 'calendar_month_2', 3M: 'calendar_month_3', 4M: 'calendar_month_4', 5M: 'calendar_month_5', 6M: 'calendar_month_6', 7M: 'calendar_month_7', 8M: 'calendar_month_8', 9M: 'calendar_month_9', 10M: 'calendar_month_10', 11M: 'calendar_month_11', 1Y: 'calendar_year_1', 2Y: 'calendar_year_2', 3Y: 'calendar_year_3', 4Y: 'calendar_year_4', 5Y: 'calendar_year_5'}
+     * @return array
      */
     public function recur_frequencies(): array 
     { 
         $recur_frequencies = [
-            '1D' => 'calendar_day_1',
-            '2D' => 'calendar_day_2',
-            '3D' => 'calendar_day_3',
-            '4D' => 'calendar_day_4',
-            '5D' => 'calendar_day_5',
-            '6D' => 'calendar_day_6',
-            '15D' => 'calendar_day_15',
-            '30D' => 'calendar_day_30',
-            '7D' => 'calendar_week_1',
-            '14D' => 'calendar_week_2',
-            '21D' => 'calendar_week_3',
-            '28D' => 'calendar_week_4',
-            '1M' => 'calendar_month_1',
-            '2M' => 'calendar_month_2',
-            '3M' => 'calendar_month_3',
-            '4M' => 'calendar_month_4',
-            '5M' => 'calendar_month_5',
-            '6M' => 'calendar_month_6',
-            '7M' => 'calendar_month_7',
-            '8M' => 'calendar_month_8',
-            '9M' => 'calendar_month_9',
-            '10M' => 'calendar_month_10',
-            '11M' => 'calendar_month_11',
-            '1Y' => 'calendar_year_1',
-            '2Y' => 'calendar_year_2',
-            '3Y' => 'calendar_year_3',
-            '4Y' => 'calendar_year_4',
-            '5Y' => 'calendar_year_5',
+            '1D' => 'i.calendar_day_1',
+            '2D' => 'i.calendar_day_2',
+            '3D' => 'i.calendar_day_3',
+            '4D' => 'i.calendar_day_4',
+            '5D' => 'i.calendar_day_5',
+            '6D' => 'i.calendar_day_6',
+            '15D' => 'i.calendar_day_15',
+            '30D' => 'i.calendar_day_30',
+            '7D' => 'i.calendar_week_1',
+            '14D' => 'i.calendar_week_2',
+            '21D' => 'i.calendar_week_3',
+            '28D' => 'i.calendar_week_4',
+            '1M' => 'i.calendar_month_1',
+            '2M' => 'i.calendar_month_2',
+            '3M' => 'i.calendar_month_3',
+            '4M' => 'i.calendar_month_4',
+            '5M' => 'i.calendar_month_5',
+            '6M' => 'i.calendar_month_6',
+            '7M' => 'i.calendar_month_7',
+            '8M' => 'i.calendar_month_8',
+            '9M' => 'i.calendar_month_9',
+            '10M' => 'i.calendar_month_10',
+            '11M' => 'i.calendar_month_11',
+            '1Y' => 'i.calendar_year_1',
+            '2Y' => 'i.calendar_year_2',
+            '3Y' => 'i.calendar_year_3',
+            '4Y' => 'i.calendar_year_4',
+            '5Y' => 'i.calendar_year_5',
         ];
         return $recur_frequencies;
     }

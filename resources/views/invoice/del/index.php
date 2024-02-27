@@ -66,6 +66,28 @@ $toolbar = Div::tag();
         ),
         new DataColumn(
             'id',
+            header:  $translator->translate('invoice.quote.delivery.location.index.button.list'),
+            content: static function ($model) use ($urlGenerator, $qR, $s) : string {
+                $datehelper = new DateHelper($s);
+                $quotes = $qR->findAllWithDeliveryLocation($model->getId());
+                $buttons = '';
+                $button = '';
+                /**
+                 * @var App\Invoice\Entity\Quote $quote
+                 */
+                foreach ($quotes as $quote) {
+                   $button = (string)Html::a($quote->getNumber().' '.($quote->getDate_created())->format($datehelper->style()), $urlGenerator->generate('quote/view',['id'=>$quote->getId()]),
+                     ['class'=>'btn btn-primary btn-sm',
+                      'data-bs-toggle' => 'tooltip',
+                      'title' => $quote->getId() 
+                     ]);
+                   $buttons .= $button . str_repeat("&nbsp;", 1);
+                }
+                return (string)$buttons;
+            }
+        ),          
+        new DataColumn(
+            'id',
             header:  $translator->translate('invoice.invoice.delivery.location.index.button.list'),
             content: static function ($model) use ($urlGenerator, $iR, $s) : string {
                 $datehelper = new DateHelper($s);
@@ -83,7 +105,7 @@ $toolbar = Div::tag();
                      ]);
                    $buttons .= $button . str_repeat("&nbsp;", 1);
                 }
-                return $buttons;
+                return (string)$buttons;
             }
         ),  
         new DataColumn(
@@ -140,13 +162,13 @@ $toolbar = Div::tag();
     ->columns(...$columns)
     ->dataReader($paginator)          
     ->headerRowAttributes(['class' => 'card-header bg-info text-black'])
-    ->filterPosition('header')
-    ->filterModelName('del')
+    //->filterPosition('header')
+    //->filterModelName('del')
     ->header($header)
     ->id('w341-grid')
     ->pagination(
       OffsetPagination::widget()
-      ->menuClass('pagination justify-content-center')
+      //->menuClass('pagination justify-content-center')
       ->paginator($paginator)
       // No need to use page argument since built-in. Use status bar value passed from urlGenerator to inv/guest
       //->urlArguments(['status'=>$status])
@@ -154,7 +176,7 @@ $toolbar = Div::tag();
     )
     ->rowAttributes(['class' => 'align-middle'])
     ->summaryAttributes(['class' => 'mt-3 me-3 summary text-end'])
-    ->summary($grid_summary)
+    ->summaryTemplate($grid_summary)
     ->emptyTextAttributes(['class' => 'card-header bg-warning text-black'])
     ->emptyText((string) $translator->translate('invoice.invoice.no.records'))
     ->tableAttributes(['class' => 'table table-striped text-center h-191', 'id' => 'table-delivery'])

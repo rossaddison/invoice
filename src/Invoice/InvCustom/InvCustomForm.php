@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace App\Invoice\InvCustom;
 
+use App\Invoice\Entity\InvCustom;
 use Yiisoft\FormModel\FormModel;
-use Yiisoft\Validator\Rule\Required;
 
 final class InvCustomForm extends FormModel
 {    
@@ -13,6 +13,13 @@ final class InvCustomForm extends FormModel
     private ?int $inv_id=null;
     private ?int $custom_field_id=null;
     private ?string $value='';
+    
+    public function __construct(InvCustom $invCustom)
+    {
+        $this->inv_id = (int)$invCustom->getInv_id();
+        $this->custom_field_id = (int)$invCustom->getCustom_field_id();
+        $this->value = $invCustom->getValue();
+    }
 
     public function getInv_id() : int|null
     {
@@ -38,15 +45,4 @@ final class InvCustomForm extends FormModel
     {
       return '';
     }
-
-    /**
-     * @return Required[][]
-     *
-     * @psalm-return array{value: list{Required}}
-     */
-    public function getRules(): array    {
-      return [
-        'value' => [new Required()],
-    ];
-}
 }

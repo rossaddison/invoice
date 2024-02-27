@@ -3,15 +3,25 @@ declare(strict_types=1);
 
 namespace App\Invoice\QuoteTaxRate;
 
+use App\Invoice\Entity\QuoteTaxRate;
 use Yiisoft\FormModel\FormModel;
 use Yiisoft\Validator\Rule\Required;
 
 final class QuoteTaxRateForm extends FormModel
 {    
-    private ?int $quote_id=null;
-    private ?int $tax_rate_id=null;
-    private ?int $include_item_tax=null;
-    private ?float $quote_tax_rate_amount=null;
+    private ?int $quote_id = null;
+    #[Required]
+    private ?int $tax_rate_id = null;
+    private ?int $include_item_tax = null;
+    private ?float $quote_tax_rate_amount = null;
+    
+    public function __construct(QuoteTaxRate $quoteTaxRate)
+    {
+        $this->quote_id = (int)$quoteTaxRate->getQuote_id();
+        $this->tax_rate_id = (int)$quoteTaxRate->getTax_rate_id();
+        $this->include_item_tax = $quoteTaxRate->getInclude_item_tax();
+        $this->quote_tax_rate_amount = $quoteTaxRate->getQuote_tax_rate_amount();
+    }        
 
     public function getQuote_id() : int|null
     {
@@ -41,16 +51,5 @@ final class QuoteTaxRateForm extends FormModel
     public function getFormName(): string
     {
       return '';
-    }
-
-    /**
-     * @return Required[][]
-     *
-     * @psalm-return array{tax_rate_id: list{Required}}
-     */
-    public function getRules(): array  {
-      return [
-         'tax_rate_id'=> [new Required()],
-      ];
     }
 }

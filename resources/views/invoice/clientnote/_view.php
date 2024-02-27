@@ -2,7 +2,7 @@
 
 declare(strict_types=1); 
 
-use App\Widget\Button;
+
 use Yiisoft\FormModel\Field;
 use Yiisoft\Html\Html;
 use Yiisoft\Html\Tag\Form;
@@ -33,23 +33,34 @@ use Yiisoft\Html\Tag\Form;
     <?= Html::encode($title) ?>
 <?= Html::closeTag('h1'); ?>
 <?= Html::openTag('div', ['id' => 'headerbar']); ?>
-    <?= Button::back($translator); ?>
+    <?= $button::back($translator); ?>
     <?= Html::openTag('div', ['id' => 'content']); ?>
         <?= Html::openTag('div', ['class' => 'row']); ?>
             <?= Html::openTag('div'); ?>
-                <?php
-                    $date_note = $datehelper->get_or_set_with_style($form->getDate_note() ?? new \DateTimeImmutable('now'));
-                ?>
-                <?= Html::openTag('div', ['class' => 'mb-3 form-group']); ?>
-                    <?= Field::date($form, 'date_note')
+                <?php 
+                    foreach ($clients as $client) { 
+                        $optionsDataClient[$client->getClient_id()] = $client->getClient_name() . ' '. $client->getClient_surname();                    
+                    }
+                    echo Field::select($form, 'client_id')
+                    ->label($translator->translate('i.client'),['control-label'])
                     ->addInputAttributes([
+                        'id' => 'client_id', 
+                        'class' => 'form-control',
                         'readonly' => 'readonly',
                         'disabled' => 'disabled'
                     ])    
-                    ->label($translator->translate('i.date'), ['class' => 'form-label'])
-                    ->required(true)
-                    ->value($form->getDate_note() ? ($form->getDate_note())->format('Y-m-d') : '')
+                    ->optionsData($optionsDataClient)
                 ?>
+                <?= Html::openTag('div', ['class' => 'mb-3 form-group']); ?>
+                    <?= Field::date($form, 'date_note')
+                        ->addInputAttributes([
+                            'readonly' => 'readonly',
+                            'disabled' => 'disabled'
+                        ])    
+                        ->label($translator->translate('i.date'), ['class' => 'form-label'])
+                        ->required(true)
+                        ->value($form->getDate_note() ? ($form->getDate_note())->format('Y-m-d') : '')
+                    ?>
                 <?= Html::closeTag('div'); ?>
                 <?= Html::openTag('div', ['class' => 'mb-3 form-group']); ?>
                 <?= Field::textarea($form, 'note')

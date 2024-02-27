@@ -73,7 +73,7 @@ Class TemplateHelper {
     {
     $template_vars = [];
     $var = '';            
-    if ((preg_match_all('/{{{([^{|}]*)}}}/', $body, $template_vars))) {
+    if (preg_match_all('/{{{([^{|}]*)}}}/', $body, $template_vars) > 0) {
         foreach ($template_vars[1] as $var) {
                 $userinv = new UserInv();
                 $replace = '';

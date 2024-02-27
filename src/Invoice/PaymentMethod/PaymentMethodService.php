@@ -8,7 +8,6 @@ use App\Invoice\Entity\PaymentMethod;
 
 final class PaymentMethodService
 {
-
     private PaymentMethodRepository $repository;
 
     public function __construct(PaymentMethodRepository $repository)
@@ -17,21 +16,17 @@ final class PaymentMethodService
     }
 
     /**
-     * 
      * @param PaymentMethod $model
-     * @param PaymentMethodForm $form
+     * @param array $array
      * @return void
      */
-    public function savePaymentMethod(PaymentMethod $model, PaymentMethodForm $form): void
+    public function savePaymentMethod(PaymentMethod $model, array $array): void
     {
-        
-       $form->getName() ? $model->setName($form->getName()) : '';
- 
+       isset($array['name']) ? $model->setName((string)$array['name']) : '';
        $this->repository->save($model);
     }
     
     /**
-     * 
      * @param PaymentMethod $model
      * @return void
      */

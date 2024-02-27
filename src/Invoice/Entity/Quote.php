@@ -7,34 +7,53 @@ use Cycle\Annotated\Annotation\Column;
 use Cycle\Annotated\Annotation\Entity;
 use Cycle\Annotated\Annotation\Relation\BelongsTo;
 use Cycle\Annotated\Annotation\Relation\HasMany;
+use Cycle\Annotated\Annotation\Relation\HasOne;
 use Cycle\ORM\Entity\Behavior;
 use Doctrine\Common\Collections\ArrayCollection;
-use \DateTimeImmutable;
 use App\Invoice\Entity\Client;
+use App\Invoice\Entity\QuoteAmount;
 use App\Invoice\Entity\Group;
 use App\User\User;
 use App\Invoice\Setting\SettingRepository as sR;
+use \DateTimeImmutable;
   
 #[Entity(repository: \App\Invoice\Quote\QuoteRepository::class)]
 #[Behavior\CreatedAt(field: 'date_created', column: 'date_created')] 
 #[Behavior\UpdatedAt(field: 'date_modified', column: 'date_modified')]
 class Quote
 {    
+    // Client
     #[BelongsTo(target:Client::class, nullable: false, fkAction:'NO ACTION')]
-    private ?Client $client = null;  
+    private ?Client $client = null; 
     
+    #[Column(type: 'integer(11)', nullable:false)]
+    private ?int $client_id =  null;
+    
+    // Group
+    #[BelongsTo(target:Group::class, nullable: false, fkAction:'NO ACTION')]
+    private ?Group $group = null;
+    
+    #[Column(type: 'integer(11)', nullable:false)]
+    private ?int $group_id =  null;
+    
+    // User
+    #[BelongsTo(target:User::class, nullable: false)]
+    private ?User $user = null;
+    
+    #[Column(type: 'integer(11)', nullable:false)]
+    private ?int $user_id =  null;
+    
+    // QuoteAmount
+    #[HasOne(target: QuoteAmount::class)]
+    private QuoteAmount $quoteAmount; 
+    
+    // QuoteItem
     /**
      * @var ArrayCollection<array-key, QuoteItem>
      */
     #[HasMany(target: QuoteItem::class)]
     private ArrayCollection $items;
-
-    #[BelongsTo(target:Group::class, nullable: false, fkAction:'NO ACTION')]
-    private ?Group $group = null;
-        
-    #[BelongsTo(target:User::class, nullable: false)]
-    private ?User $user = null;
-        
+    
     #[Column(type: 'primary')]
     private ?int $id =  null;
     
@@ -43,15 +62,6 @@ class Quote
         
     #[Column(type: 'integer(11)', nullable:true, default:0)]
     private ?int $inv_id =  null;
-     
-    #[Column(type: 'integer(11)', nullable:false)]
-    private ?int $user_id =  null;
-     
-    #[Column(type: 'integer(11)', nullable:false)]
-    private ?int $client_id =  null;
-     
-    #[Column(type: 'integer(11)', nullable:false)]
-    private ?int $group_id =  null;
     
     #[Column(type: 'tinyInteger(2)', nullable:false, default:1)]
     private ?int $status_id =  null;
@@ -91,7 +101,7 @@ class Quote
      
     #[Column(type: 'longText', nullable:true)]
     private ?string $notes =  '';
-     
+
     public function __construct(
         int $so_id = null,   
         int $inv_id = null,
@@ -110,6 +120,7 @@ class Quote
     )
     {         
         $this->items = new ArrayCollection();
+        $this->quoteAmount = new QuoteAmount();
         $this->so_id=$so_id;
         $this->inv_id=$inv_id;
         $this->client_id=$client_id;

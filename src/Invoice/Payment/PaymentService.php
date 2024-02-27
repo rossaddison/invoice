@@ -5,38 +5,40 @@ declare(strict_types=1);
 namespace App\Invoice\Payment;
 
 use App\Invoice\Entity\Payment;
-use App\Invoice\Setting\SettingRepository;
 
 final class PaymentService
 {
 
     private PaymentRepository $repository;
-    private SettingRepository $sR;
 
-    public function __construct(PaymentRepository $repository, SettingRepository $sR)
+    public function __construct(PaymentRepository $repository)
     {
         $this->repository = $repository;
-        $this->sR = $sR;
     }
     
     /**
-     * 
      * @param Payment $model
-     * @param PaymentForm $form
+     * @param array $array
      * @return void
      */
-    public function addPayment(Payment $model, PaymentForm $form): void
+    public function savePayment(Payment $model, array $array): void
     {
-       $form->getPayment_method_id() ? $model->setPayment_method_id($form->getPayment_method_id()) : '';
-       $model->setPayment_date($form->getPayment_date($this->sR));
-       $form->getAmount() ? $model->setAmount($form->getAmount()) : '';
-       $form->getNote() ? $model->setNote($form->getNote()) : '';
-       $form->getInv_id() ? $model->setInv_id($form->getInv_id()) : ''; 
+       isset($array['payment_method_id']) ? $model->setPayment_method_id((int)$array['payment_method_id']) : '';
+       
+       $datetime = new \DateTime();
+       /**
+        * @var string $array['payment_date']
+        */
+       $payment_date = $array['payment_date'] ?? '';
+       $model->setPayment_date($datetime::createFromFormat('Y-m-d', $payment_date));
+       
+       isset($array['amount']) ? $model->setAmount((float)$array['amount']) : '';
+       isset($array['note']) ? $model->setNote((string)$array['note']) : '';
+       isset($array['inv_id']) ? $model->setInv_id((int)$array['inv_id']) : ''; 
        $this->repository->save($model);
     }
     
     /**
-     * 
      * @param Payment $model
      * @param array $array
      * @return void
@@ -51,40 +53,6 @@ final class PaymentService
        /** @var string $array['note'] */
        $model->setNote($array['note']);
        $model->setInv_id((int)$array['inv_id']); 
-       $this->repository->save($model);
-    }
-    
-    /**
-     * 
-     * @param Payment $model
-     * @param PaymentForm $form
-     * @return void
-     */
-    public function editPayment(Payment $model, PaymentForm $form): void
-    {
-       $model->setPayment_date($form->getPayment_date($this->sR));
-       $form->getAmount() ? $model->setAmount($form->getAmount()) : '';
-       $form->getNote() ? $model->setNote($form->getNote()) : '';
-       // If the payment is to be allocated against another invoice ie. inv_id changed
-       // then initialize and set relation ie. setInv to null otherwise if  form id ie. $form->getInv_id has 
-       // not changed from old id ie. $model->getInv()->getId() then use relation as is ie. 
-       // $model->setInv($model->getInv())
-       null!==$form->getInv_id() ? $model->setInv($model->getInv()?->getId() 
-                                 == $form->getInv_id() 
-                                 ? $model->getInv() 
-                                 : null)
-                                 // do nothing
-                                 : '';
-       
-       $model->setInv_id((int)$form->getInv_id()); 
-       
-       null!==$form->getPayment_method_id() ? $model->setPaymentMethod($model->getPaymentMethod()?->getId() 
-                                            == $form->getPayment_method_id() 
-                                            ? $model->getPaymentMethod() 
-                                            : null)
-                                            : '';
-       $model->setPayment_method_id((int)$form->getPayment_method_id());
-       
        $this->repository->save($model);
     }
     

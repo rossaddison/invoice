@@ -198,6 +198,7 @@ $this->beginPage();
               ],
               ['label' => $translator->translate('i.quote'),
                 'items' => [
+                  ['options' => ['class' => 'nav fs-4'], 'label' => $translator->translate('i.create_quote'), 'url' => $urlGenerator->generate('quote/add', ['origin' => 'main'])],  
                   ['options' => ['class' => 'nav fs-4 ajax-loader'], 'label' => $translator->translate('i.view'), 'url' => $urlGenerator->generate('quote/index')],
                 ],
               ],
@@ -208,6 +209,7 @@ $this->beginPage();
               ],
               ['label' => $translator->translate('i.invoice'),
                 'items' => [
+                  ['options' => ['class' => 'nav fs-4'], 'label' => $translator->translate('i.create_invoice'), 'url' => $urlGenerator->generate('inv/add', ['origin' => 'main'])],
                   ['options' => ['class' => 'nav fs-4'], 'label' => $translator->translate('i.view'), 'url' => $urlGenerator->generate('inv/index')],
                   ['options' => ['class' => 'nav fs-4'], 'label' => $translator->translate('i.recurring'), 'url' => $urlGenerator->generate('invrecurring/index')],
                 ],
@@ -231,13 +233,13 @@ $this->beginPage();
               ],
               ['label' => $translator->translate('i.tasks'),
                 'items' => [
-                  ['options' => ['class' => 'nav fs-4'], 'label' => $translator->translate('i.create'), 'url' => $urlGenerator->generate('task/add')],
+                  ['options' => ['class' => 'nav fs-4'], 'label' => $translator->translate('i.add_task'), 'url' => $urlGenerator->generate('task/add')],
                   ['options' => ['class' => 'nav fs-4 ajax-loader'], 'label' => $translator->translate('i.view'), 'url' => $urlGenerator->generate('task/index')],
                 ],
               ],
               ['label' => $translator->translate('i.projects'),
                 'items' => [
-                  ['options' => ['class' => 'nav fs-4'], 'label' => $translator->translate('i.create'), 'url' => $urlGenerator->generate('project/add')],
+                  ['options' => ['class' => 'nav fs-4'], 'label' => $translator->translate('i.create_project'), 'url' => $urlGenerator->generate('project/add')],
                   ['options' => ['class' => 'nav fs-4'], 'label' => $translator->translate('i.view'), 'url' => $urlGenerator->generate('project/index')],
                 ],
               ],
@@ -373,6 +375,7 @@ $this->beginPage();
               ['label' => $translator->translate('invoice.generator'), 'options' => ['style' => 'background-color: #ffcccb'], 'visible' => $debug_mode,
                 'items' => [
                   ['options' => ['class' => 'nav fs-4'], 'label' => $translator->translate('invoice.generator'), 'url' => $urlGenerator->generate('generator/index')],
+                  ['options' => ['class' => 'nav fs-4'], 'label' => $translator->translate('invoice.generator.relations'), 'url' => $urlGenerator->generate('generatorrelation/index')],
                   ['options' => ['class' => 'nav fs-4'], 'label' => $translator->translate('invoice.generator.add'), 'url' => $urlGenerator->generate('generator/add')],
                   ['options' => ['class' => 'nav fs-4'], 'label' => $translator->translate('invoice.generator.relations.add'), 'url' => $urlGenerator->generate('generatorrelation/add')],
                   ['options' => ['class' => 'nav fs-4'], 'label' => $translator->translate('invoice.development.schema'), 'url' => $urlGenerator->generate('generator/quick_view_schema')],

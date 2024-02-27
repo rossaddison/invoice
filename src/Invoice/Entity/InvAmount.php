@@ -12,12 +12,11 @@ use App\Invoice\Entity\Inv;
 #[Entity(repository: \App\Invoice\InvAmount\InvAmountRepository::class)] 
 class InvAmount
 {
-    #[BelongsTo(target:Inv::class, nullable: false, fkAction: 'NO ACTION')]
-    private ?Inv $inv = null;
-    
     #[Column(type: 'primary')]
     private ?int $id = null;
-     
+    
+    #[BelongsTo(target:Inv::class, nullable: false, fkAction: 'NO ACTION')]
+    private ?Inv $inv = null;
     #[Column(type: 'integer(11)', nullable: false)]
     private ?int $inv_id = null;
     

@@ -4,18 +4,39 @@ declare(strict_types=1);
 
 namespace App\Invoice\Upload;
 
+use App\Invoice\Entity\Upload;
 use Yiisoft\FormModel\FormModel;
 use Yiisoft\Validator\Rule\Required;
+
+use DateTimeImmutable;
 
 final class UploadForm extends FormModel
 {    
     private ?int $client_id=null;
+    
+    #[Required]
     private string $url_key='';
+    
+    #[Required]
     private string $file_name_original='';
+    
+    #[Required]
     private string $file_name_new='';
+    
     private string $description='';
-    private string $uploaded_date='';
-
+    
+    private  mixed $uploaded_date='';
+    
+    public function __construct(Upload $upload)
+    {
+        $this->client_id = (int)$upload->getClient_id();
+        $this->url_key = $upload->getUrl_key();
+        $this->file_name_original = $upload->getFile_name_original();
+        $this->file_name_new = $upload->getFile_name_new();
+        $this->description = $upload->getDescription();
+        $this->uploaded_date = $upload->getUploaded_date();
+    }        
+    
     public function getClient_id() : int|null
     {
       return $this->client_id;
@@ -41,9 +62,12 @@ final class UploadForm extends FormModel
       return $this->description;  
     }
     
-    public function getUploaded_date() : string|null
+    public function getUploaded_date() : string|DateTimeImmutable
     {
-       return $this->uploaded_date;
+        /**
+         * @var string|DateTimeImmutable $this->uploaded_date 
+         */
+        return $this->uploaded_date;
     }
 
     /**
@@ -55,26 +79,4 @@ final class UploadForm extends FormModel
     {
       return '';
     }
-
-    /**
-     * @return Required[][]
-     *
-     * @psalm-return array{url_key: list{Required}, file_name_original: list{Required}, file_name_new: list{Required}, uploaded_date: list{Required}}
-     */
-    public function getRules(): array    {
-      return [
-        'url_key' => [
-            new Required(),
-        ],
-        'file_name_original' => [
-            new Required(),
-        ],
-        'file_name_new' => [
-            new Required(),
-        ],
-        'uploaded_date' => [
-            new Required(),
-        ],
-    ];
-}
 }

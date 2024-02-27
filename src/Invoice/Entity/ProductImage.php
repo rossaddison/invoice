@@ -35,11 +35,11 @@ class ProductImage {
     private string $description = '';
 
     public function __construct(
-            int $id = null,
-            int $product_id = null,
-            string $file_name_original = '',
-            string $file_name_new = '',
-            string $description = '',
+        int $id = null,
+        int $product_id = null,
+        string $file_name_original = '',
+        string $file_name_new = '',
+        string $description = '',
     ) {
         $this->id = $id;
         $this->product_id = $product_id;

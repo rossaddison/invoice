@@ -3,13 +3,12 @@ declare(strict_types=1);
 
 namespace App\Invoice\Entity;
 
+use App\Invoice\Entity\Inv;
+
 use Cycle\Annotated\Annotation\Column;
 use Cycle\Annotated\Annotation\Entity;
 use Cycle\Annotated\Annotation\Relation\BelongsTo;
-use Vjik\CycleTypecast\DateTimeImmutable\DateTimeImmutableToIntegerType;
-
-use App\Invoice\Entity\Inv;
-use \DateTimeImmutable;
+use DateTimeImmutable;
 
 #[Entity(repository: \App\Invoice\PaymentPeppol\PaymentPeppolRepository::class)] 
 class PaymentPeppol
@@ -22,12 +21,8 @@ class PaymentPeppol
     #[Column(type: 'primary')]
     private ?int $id = null;
     
-    // reference is a timestamp => int stored as string    
-    //#[Column(type: 'string(20)', nullable:false)]
-    //private string $auto_reference =  '';
     #[Column(type: 'timestamp', nullable: false)]
-    private DateTimeImmutableToIntegerType $auto_reference;
-    
+    private int $auto_reference;
     
     #[Column(type: 'string(20)', nullable:false)]
     private string $provider =  '';
@@ -39,7 +34,7 @@ class PaymentPeppol
     {
         $this->inv_id = $inv_id;
         // convert the current DateTimeImmutable to a timestamp
-        $this->auto_reference = new DateTimeImmutableToIntegerType();
+        $this->auto_reference = (new DateTimeImmutable())->getTimestamp();
         $this->provider = $provider;
     }
     
@@ -63,14 +58,15 @@ class PaymentPeppol
       $this->id =  $id;
     }
     
-    /**
-     * StoreCoveHelper function build_peppol_payment_for_reference
-     * @return DateTimeImmutableToIntegerType
-     */
-    public function getAuto_reference() : DateTimeImmutableToIntegerType 
+    public function getAuto_reference() : int  
     {
       return $this->auto_reference;
     }
+    
+    public function setAuto_reference(int $timestamp) : void
+    {
+      $this->auto_reference = $timestamp;   
+    }    
         
     public function getInv_id(): string
     {

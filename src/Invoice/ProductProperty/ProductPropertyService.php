@@ -18,16 +18,24 @@ final class ProductPropertyService
         $this->repository = $repository;
     }
 
-    public function saveProductProperty(ProductProperty $model, ProductPropertyForm $form): void
+    /**
+     * @param ProductProperty $model
+     * @param array $array
+     * @return void
+     */
+    public function saveProductProperty(ProductProperty $model, array $array): void
     {
-        
-   null!==$form->getProduct_id() ? $model->setProduct_id($form->getProduct_id()) : '';
-   null!==$form->getName() ? $model->setName($form->getName()) : '';
-   null!==$form->getValue() ? $model->setValue($form->getValue()) : '';
- 
+        $model->nullifyRelationOnChange((int)$array['product_id']);
+        isset($array['product_id']) ? $model->setProduct_id((int)$array['product_id']) : '';
+        isset($array['name']) ? $model->setName((string)$array['name']) : '';
+        isset($array['value']) ? $model->setValue((string)$array['value']) : '';
         $this->repository->save($model);
     }
     
+    /**
+     * @param ProductProperty $model
+     * @return void
+     */
     public function deleteProductProperty(ProductProperty $model): void
     {
         $this->repository->delete($model);

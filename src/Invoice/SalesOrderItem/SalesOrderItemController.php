@@ -29,11 +29,9 @@ use Yiisoft\Http\Method;
 use Yiisoft\Router\CurrentRoute;
 use Yiisoft\Session\SessionInterface;
 use Yiisoft\Session\Flash\Flash;
-use Yiisoft\Translator\TranslatorInterface;use Yiisoft\FormModel\FormHydrator;
-use Yiisoft\Form\Helper\HtmlFormErrors;
+use Yiisoft\Translator\TranslatorInterface;
+use Yiisoft\FormModel\FormHydrator;
 use Yiisoft\Yii\View\ViewRenderer;
-
-use \Exception;
 
 final class SalesOrderItemController
 {
@@ -43,6 +41,7 @@ final class SalesOrderItemController
     private UserService $userService;
     private SalesOrderItemService $salesorderitemService;
     private DataResponseFactoryInterface $factory;
+    private Flash $flash;
     private TranslatorInterface $translator;
     
     public function __construct(
@@ -52,6 +51,7 @@ final class SalesOrderItemController
         UserService $userService,
         SalesOrderItemService $salesorderitemService,
         DataResponseFactoryInterface $factory,
+        Flash $flash,
         TranslatorInterface $translator
     )    
     {
@@ -71,79 +71,58 @@ final class SalesOrderItemController
         }
         $this->salesorderitemService = $salesorderitemService;
         $this->factory = $factory;
+        $this->flash = $flash;
         $this->translator = $translator;
     }
         
     /**
      * @return string
-     */    
-    private function alert() : string {
+     */
+    private function alert(): string {
         return $this->viewRenderer->renderPartialAsString('/invoice/layout/alert',
-        [
-            'flash'=>$this->flash('', ''),
-            'errors' => [],
+        [ 
+            'flash' => $this->flash
         ]);
     }
     
-    /**
-     * @param SalesOrderItem $salesorderitem
-     * @return array
-     */
-    private function body(SalesOrderItem $salesorderitem) : array {
-        $body = [
-          'id'=>$salesorderitem->getId(),
-         
-          //https://docs.peppol.eu/poacc/billing/3.0/syntax/ubl-invoice/cac-InvoiceLine/cac-Item/cac-BuyersItemIdentification/
-          'peppol_po_itemid'=>$salesorderitem->getPeppol_po_itemid(),
-          
-          //https://docs.peppol.eu/poacc/billing/3.0/syntax/ubl-invoice/cac-InvoiceLine/cac-OrderLineReference/
-          'peppol_po_lineid'=>$salesorderitem->getPeppol_po_lineid(),
-          
-          'date_added'=>$salesorderitem->getDate_added(),
-          'name'=>$salesorderitem->getName(),
-          'description'=>$salesorderitem->getDescription(),
-          'quantity'=>$salesorderitem->getQuantity(),
-          'price'=>$salesorderitem->getPrice(),
-          'discount_amount'=>$salesorderitem->getDiscount_amount(),
-          'order'=>$salesorderitem->getOrder(),
-          'product_unit'=>$salesorderitem->getProduct_unit(),
-          'so_id'=>$salesorderitem->getSales_order_id(),
-          'tax_rate_id'=>$salesorderitem->getTax_rate_id(),
-          'product_id'=>$salesorderitem->getProduct_id(),
-          'product_unit_id'=>$salesorderitem->getProduct_unit_id()
-        ];
-        return $body;
-    }
-    
-    public function edit(ViewRenderer $head, CurrentRoute $currentRoute, Request $request, FormHydrator $formHydrator,
+    public function edit(CurrentRoute $currentRoute, Request $request, FormHydrator $formHydrator,
                         SOIR $soiR, SettingRepository $sR, TRR $trR, PR $pR, UR $uR, SOR $qR): \Yiisoft\DataResponse\DataResponse|Response {
         $so_item = $this->salesorderitem($currentRoute, $soiR);
         if ($so_item) {
+            $form = new SalesOrderItemForm($so_item);  
             $parameters = [
                 'title' => $this->translator->translate('invoice.edit'),
                 'action' => ['salesorderitem/edit', ['id' => $currentRoute->getArgument('id')]],
                 'errors' => [],
-                'body' => $this->body($so_item),
-                'so_id'=>$so_item->getSales_order_id(),
-                'head'=>$head,
-                's'=>$sR,
-                'tax_rates'=>$trR->findAllPreloaded(),
-                'products'=>$pR->findAllPreloaded(),
-                'quotes'=>$qR->findAllPreloaded(),            
-                'units'=>$uR->findAllPreloaded(),
-                'numberhelper'=>new NumberHelper($sR)
+                'form' => $form,
+                'so_id' => $so_item->getSales_order_id(),
+                'tax_rates' => $trR->findAllPreloaded(),
+                'products' => $pR->findAllPreloaded(),
+                'quotes' => $qR->findAllPreloaded(),            
+                'units' => $uR->findAllPreloaded(),
+                'numberhelper' => new NumberHelper($sR)
             ];
             if ($request->getMethod() === Method::POST) {
-                $form = new SalesOrderItemForm();            
-                $body = $request->getParsedBody();
-                if ($formHydrator->populate($form, $body) && $form->isValid()) {
+                if ($formHydrator->populateFromPostAndValidate($form, $request)) {
+                    $body = $request->getParsedBody();
                     // The only item that is different from the quote is the customer's purchase order number
-                    $this->salesorderitemService->savePeppol_po_itemid($so_item, $form);
-                    $this->salesorderitemService->savePeppol_po_lineid($so_item, $form);
+                    /**
+                     * @psalm-suppress PossiblyInvalidArgument $body
+                     */
+                    $this->salesorderitemService->savePeppol_po_itemid($so_item, $body);
+                    /**
+                     * @psalm-suppress PossiblyInvalidArgument $body
+                     */
+                    $this->salesorderitemService->savePeppol_po_lineid($so_item, $body);
                     return $this->factory->createResponse($this->viewRenderer->renderPartialAsString('/invoice/setting/salesorder_successful',
-                    ['heading'=> $this->translator->translate('invoice.successful'), 'message'=>$sR->trans('record_successfully_updated'),'url'=>'salesorder/view','id'=>$so_item->getSales_order_id()])); 
+                    [
+                        'heading' => $this->translator->translate('invoice.successful'), 
+                        'message' => $this->translator->translate('i.record_successfully_updated'),
+                        'url' => 'salesorder/view', 
+                        'id' => $so_item->getSales_order_id()
+                    ])); 
                 }
-                $parameters['body'] = $body;
+                $parameters['errors'] = $form->getValidationResult()?->getErrorMessagesIndexedByAttribute() ?? [];
                 $parameters['form'] = $form;
             } 
             return $this->viewRenderer->render('_item_edit_form', $parameters);

@@ -4,20 +4,45 @@ declare(strict_types=1);
 
 namespace App\Invoice\Sumex;
 
-use App\Invoice\Helpers\DateHelper;
+use App\Invoice\Entity\Sumex;
+
 use Yiisoft\FormModel\FormModel;
 use Yiisoft\Validator\Rule\Required;
+use \DateTimeImmutable;
 
 final class SumexForm extends FormModel
 {    
-    private ?int $invoice=null;
-    private ?int $reason=null;
-    private ?string $diagnosis='';
-    private ?string $observations='';
-    private ?string $treatmentstart='';
-    private ?string $treatmentend='';
-    private ?string $casedate='';
-    private ?string $casenumber='';
+    private ?int $invoice = null;
+    
+    #[Required]
+    private ?int $reason = null;
+    
+    #[Required]
+    private ?string $diagnosis = '';
+    
+    #[Required]
+    private ?string $observations = '';
+    
+    private mixed $treatmentstart;
+    
+    private mixed $treatmentend;
+    
+    private mixed $casedate;
+    
+    #[Required]
+    private ?string $casenumber = '';
+    
+    public function __construct(Sumex $sumex)
+    {
+        $this->invoice = $sumex->getInvoice();
+        $this->reason = $sumex->getReason();
+        $this->diagnosis = $sumex->getDiagnosis();
+        $this->observations = $sumex->getObservations();
+        $this->treatmentstart = $sumex->getTreatmentstart();
+        $this->treatmentend = $sumex->getTreatmentend();
+        $this->casedate = $sumex->getCasedate();
+        $this->casenumber = $sumex->getCasenumber();
+    }
 
     public function getInvoice() : int|null
     {
@@ -39,40 +64,28 @@ final class SumexForm extends FormModel
       return $this->observations;
     }
     
-    public function getTreatmentstart(\App\Invoice\Setting\SettingRepository $s) : \DateTime
+    public function getTreatmentstart() : string|null|DateTimeImmutable
     {
-        $datehelper = new DateHelper($s);         
-        $datetime = new \DateTime();
-        $datetime->setTimezone(new \DateTimeZone($s->get_setting('time_zone') ?: 'Europe/London')); 
-        $datetime->format($datehelper->style());
-        $date = $datehelper->date_to_mysql(null!==$this->treatmentstart ? $this->treatmentstart : date('Y-m-d'));
-        $str_replace = str_replace($datehelper->separator(), '-', $date);
-        $datetime->modify($str_replace);
-        return $datetime;
+        /**
+         * @var string|null|DateTimeImmutable $this->treatmentstart
+         */
+        return $this->treatmentstart;
+    }
+        
+    public function getTreatmentend() : string|null|DateTimeImmutable
+    {
+        /**
+         * @var string|null|DateTimeImmutable $this->treatmentend
+         */
+        return $this->treatmentend;
     }
     
-    public function getTreatmentend(\App\Invoice\Setting\SettingRepository $s) : \DateTime
+    public function getCasedate() : string|null|DateTimeImmutable
     {
-        $datehelper = new DateHelper($s);         
-        $datetime = new \DateTime();
-        $datetime->setTimezone(new \DateTimeZone($s->get_setting('time_zone') ?: 'Europe/London')); 
-        $datetime->format($datehelper->style());
-        $date = $datehelper->date_to_mysql(null!==$this->treatmentend ? $this->treatmentend : date('Y-m-d'));
-        $str_replace = str_replace($datehelper->separator(), '-', $date);
-        $datetime->modify($str_replace);
-        return $datetime;
-    }
-    
-    public function getCasedate(\App\Invoice\Setting\SettingRepository $s) : \DateTime
-    {
-        $datehelper = new DateHelper($s);         
-        $datetime = new \DateTime();
-        $datetime->setTimezone(new \DateTimeZone($s->get_setting('time_zone') ?: 'Europe/London')); 
-        $datetime->format($datehelper->style());
-        $date = $datehelper->date_to_mysql(null!==$this->casedate ? $this->casedate : date('Y-m-d'));
-        $str_replace = str_replace($datehelper->separator(), '-', $date);
-        $datetime->modify($str_replace);
-        return $datetime;
+        /**
+         * @var string|null|DateTimeImmutable $this->casedate
+         */
+        return $this->casedate;
     }
 
     public function getCasenumber() : string|null
@@ -89,22 +102,4 @@ final class SumexForm extends FormModel
     {
       return '';
     }
-
-    /**
-     * @return Required[][]
-     *
-     * @psalm-return array{invoice: list{Required}, reason: list{Required}, diagnosis: list{Required}, observations: list{Required}, treatmentstart: list{Required}, treatmentend: list{Required}, casedate: list{Required}, casenumber: list{Required}}
-     */
-    public function getRules(): array    {
-      return [
-        'invoice' => [new Required()],
-        'reason' => [new Required()],
-        'diagnosis' => [new Required()],
-        'observations' => [new Required()],
-        'treatmentstart' => [new Required()],
-        'treatmentend' => [new Required()],
-        'casedate' => [new Required()],
-        'casenumber' => [new Required()],
-    ];
-}
 }

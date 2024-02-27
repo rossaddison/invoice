@@ -53,15 +53,12 @@ $toolbar = Div::tag();
 <div>
     <h5><?= $translator->translate('i.quote'); ?></h5>
     <div class="btn-group">
-        <?php
-            echo $modal_create_quote;
-        ?>
         <?php if ($client_count === 0) { ?>
-        <a href="#create-quote" class="btn btn-success" data-toggle="modal" disabled data-bs-toggle = "tooltip" title="<?= $translator->translate('i.add_client'); ?>">
+        <a href="#modal-add-quote" class="btn btn-success" data-toggle="modal" disabled data-bs-toggle = "tooltip" title="<?= $translator->translate('i.add_client'); ?>">
             <i class="fa fa-plus"></i><?= $translator->translate('i.new'); ?>
         </a>
         <?php } else { ?>
-        <a href="#create-quote" class="btn btn-success" data-toggle="modal">
+        <a href="#modal-add-quote" class="btn btn-success" data-toggle="modal">
             <i class="fa fa-plus"></i><?= $translator->translate('i.new'); ?>
         </a>
         <?php } ?>
@@ -180,7 +177,7 @@ $toolbar = Div::tag();
         ),
         new DataColumn(
             header: $translator->translate('i.delete'), 
-            content: static function ($model) use ($s, $urlGenerator): string {
+            content: static function ($model) use ($translator, $urlGenerator): string {
                 if ($model->getStatus_id() == '1') {
                     return Html::a( Html::tag('button',
                                                         Html::tag('i','',['class'=>'fa fa-trash fa-margin']),
@@ -202,21 +199,20 @@ $toolbar = Div::tag();
     ->columns(...$columns)
     ->dataReader($paginator)
     ->headerRowAttributes(['class'=>'card-header bg-info text-black'])
-    ->filterPosition('header')
-    ->filterModelName('quote')
+    //->filterPosition('header')
+    //->filterModelName('quote')
     ->header($header)
     ->id('w2-grid')
     ->pagination(
     OffsetPagination::widget()
-         ->menuClass('pagination justify-content-center')
          ->paginator($paginator)         
          // No need to use page argument since built-in. Use status bar value passed from urlGenerator to quote/guest
-         ->urlArguments(['status'=>$status])
+        // ->urlArguments(['status'=>$status])
          ->render(),
     )
     ->rowAttributes(['class' => 'align-middle'])
     ->summaryAttributes(['class' => 'mt-3 me-3 summary text-end'])
-    ->summary($grid_summary)
+    ->summaryTemplate($grid_summary)
     ->emptyTextAttributes(['class' => 'card-header bg-warning text-black'])
     ->emptyText((string)$translator->translate('invoice.invoice.no.records'))
     ->tableAttributes(['class' => 'table table-striped text-center h-75','id'=>'table-quote'])
@@ -227,5 +223,4 @@ $toolbar = Div::tag();
     );
 ?>
 
-
- 
+<?php echo $modal_add_quote ?> 

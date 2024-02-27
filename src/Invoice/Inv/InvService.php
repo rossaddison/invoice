@@ -9,6 +9,7 @@ use App\Invoice\Entity\InvTaxRate;
 use App\Invoice\Entity\InvCustom;
 use App\User\User;
 // Repositories
+use App\Invoice\DeliveryLocation\DeliveryLocationRepository as DLR;
 use App\Invoice\Group\GroupRepository as GR;
 use App\Invoice\InvAmount\InvAmountRepository as IAR;
 use App\Invoice\InvCustom\InvCustomRepository as ICR;
@@ -19,6 +20,7 @@ use App\Invoice\Setting\SettingRepository as SR;
 // Helpers
 use App\Invoice\Helpers\DateHelper;
 // Services
+use App\Invoice\DeliveryLocation\DeliveryLocationService as DLS;
 use App\Invoice\InvAmount\InvAmountService as IAS;
 use App\Invoice\InvCustom\InvCustomService as ICS;
 use App\Invoice\InvItem\InvItemService as IIS;
@@ -42,61 +44,57 @@ final class InvService
         $this->repository = $repository;
         $this->session = $session;
         $this->translator = $translator;
-    }    
+    }   
     
-    /**
-     * bothInv replaces addInv and saveInv.
-     * @see https://github.com/yiisoft/demo/issues/462
-     * @param User $user
-     * @param Inv $model
-     * @param InvForm $form
-     * @param SR $s
-     * @param GR $gR
-     * @return Inv
-     */
-    public function bothInv(User $user, Inv $model, InvForm $form, SR $s, GR $gR): Inv 
+    public function saveInv(User $user, Inv $model, array $array, SR $s, GR $gR): Inv 
     {  
        // Only generate an Invoice Number if the following criteria are met:
        // 1. It is NOT a new record ie. NOT a draft
        // 2. The setting allowing for drafts having invoice numbers is OFF ie. only non-draft invoices
        // 3. The current invoice ie. model (NOT form) has NO number associated with it ie. a NULL record
        // 4. As an extra measure, the FORM has status 'sent' only so an invoice number can only be generated if set to 'sent' on current form.
-       if ((!$model->isNewRecord()) && ($s->get_setting('generate_invoice_number_for_draft') === '0') && (null==$model->getNumber())  && ($form->getStatus_id() == 2)) {
-          $model->setNumber((string)$gR->generate_number((int)$form->getGroup_id(), true));  
+       if ((!$model->isNewRecord()) && ($s->get_setting('generate_invoice_number_for_draft') === '0') && (null==$model->getNumber())  && ($array['status_id'] == 2)) {
+          $model->setNumber((string)$gR->generate_number((int)$array['group_id'], true));  
        }
-      
-       $model->nullifyRelationOnChange((int)$form->getGroup_id(),(int)$form->getClient_id(), );
-       $datehelper = new DateHelper($s);
-             
-       $datetime_created = $datehelper->get_or_set_with_style(null!==$form->getDate_created()? $form->getDate_created() : new \DateTime());
-       $datetimeimmutable_created = new \DateTimeImmutable($datetime_created instanceof \DateTime ? $datetime_created->format('Y-m-d H:i:s') : 'now');
-       $model->setDate_created($datetimeimmutable_created);
        
-       $datetime_supplied = $datehelper->get_or_set_with_style(null!==$form->getDate_supplied()? $form->getDate_supplied() : new \DateTime());
-       $datetimeimmutable_supplied = new \DateTimeImmutable($datetime_supplied instanceof \DateTime ? $datetime_supplied->format('Y-m-d H:i:s') : 'now');
-       $model->setDate_supplied($datetimeimmutable_supplied);
+       $datetime_created = new \DateTimeImmutable();
+       /**
+        * @var string $array['date_created']
+        */
+       $date_created = $array['date_created'] ?? '';
+       $model->setDate_created($datetime_created::createFromFormat('Y-m-d' , $date_created) ?: new \DateTimeImmutable('1901/01/01'));
+       
+       $datetime_supplied = new \DateTimeImmutable();
+       /**
+        * @var string $array['date_supplied']
+        */
+       $date_supplied = $array['date_supplied'] ?? '';
+       $model->setDate_supplied($datetime_supplied::createFromFormat('Y-m-d' , $date_supplied) ?: new \DateTimeImmutable('1901/01/01'));
+       
               
-       $datetimeimmutable_tax_point = $this->set_tax_point($model, $datetimeimmutable_supplied, $datetimeimmutable_created);
+       $datetimeimmutable_tax_point = $this->set_tax_point($model, 
+                                      $datetime_supplied::createFromFormat('Y-m-d' , $date_supplied) ?: new \DateTimeImmutable('1901/01/01'), 
+                                      $datetime_created::createFromFormat('Y-m-d' , $date_created) ?: new \DateTimeImmutable('1901/01/01'));
        null!==$datetimeimmutable_tax_point ? $model->setDate_tax_point($datetimeimmutable_tax_point) : '';
-              
+       
        $model->setDate_due($s);
        
-       null!==$form->getClient_id() ? $model->setClient_id((int)$form->getClient_id()) : '';
-       null!==$form->getGroup_id() ? $model->setGroup_id((int)$form->getGroup_id()) : '';
-       null!==$form->getStatus_id() ? $model->setStatus_id($form->getStatus_id()) : '';
-       null!==$form->getDelivery_id() ? $model->setDelivery_id($form->getDelivery_id()) : '';
-       null!==$form->getDelivery_location_id() ? $model->setDelivery_location_id($form->getDelivery_location_id()) : '';
-       null!==$form->getDiscount_percent() ? $model->setDiscount_percent($form->getDiscount_percent()) : '';
-       null!==$form->getDiscount_amount() ? $model->setDiscount_amount($form->getDiscount_amount()) : '';
-       null!==$form->getUrl_key() ? $model->setUrl_key($form->getUrl_key()) : '';
-       null!==$form->getPassword() ? $model->setPassword($form->getPassword()) : '';
-       null!==$form->getPayment_method() ? $model->setPayment_method($form->getPayment_method()) : '';
-       null!==$form->getTerms() ? $model->setTerms($form->getTerms()) 
+       isset($array['client_id']) ? $model->setClient_id((int)$array['client_id']) : '';
+       isset($array['group_id']) ? $model->setGroup_id((int)$array['group_id']) : '';
+       isset($array['status_id']) ? $model->setStatus_id((int)$array['status_id']) : '';
+       isset($array['delivery_id']) ? $model->setDelivery_id((int)$array['delivery_id']) : '';
+       isset($array['delivery_location_id']) ? $model->setDelivery_location_id((int)$array['delivery_location_id']) : '';
+       isset($array['discount_percent']) ? $model->setDiscount_percent((float)$array['discount_percent']) : '';
+       isset($array['discount_amount']) ? $model->setDiscount_amount((float)$array['discount_amount']) : '';
+       isset($array['url_key']) ? $model->setUrl_key((string)$array['url_key']) : '';
+       isset($array['password']) ? $model->setPassword((string)$array['password']) : '';
+       isset($array['payment_method']) ? $model->setPayment_method((int)$array['payment_method']) : '';
+       isset($array['terms']) ? $model->setTerms((string)$array['terms']) 
                                 : $this->translator->translate('invoice.payment.term.general'); 
-       null!==$form->getNote() ? $model->setNote($form->getNote()) : ''; 
-       null!==$form->getDocumentDescription() ? $model->setDocumentDescription($form->getDocumentDescription()) : ''; 
-       null!==$form->getCreditinvoice_parent_id() ? $model->setCreditinvoice_parent_id($form->getCreditinvoice_parent_id() ?: 0) : '';
-       null!==$form->getContract_id() ? $model->setContract_id($form->getContract_id()) : '';
+       isset($array['note']) ? $model->setNote((string)$array['note']) : ''; 
+       isset($array['document_description']) ? $model->setDocumentDescription((string)$array['document_description']) : ''; 
+       isset($array['creditinvoice_parent_id']) ? $model->setCreditinvoice_parent_id((int)$array['creditinvoice_parent_id'] ?: 0) : '';
+       isset($array['contract_id']) ? $model->setContract_id((int)$array['contract_id']) : '';
        if ($model->isNewRecord()) {
             if ($s->get_setting('mark_invoices_sent_copy') === '1') {
                 $model->setStatus_id(2);
@@ -108,14 +106,14 @@ final class InvService
             }
             // if draft invoices must get invoice numbers
             if ($s->get_setting('generate_invoice_number_for_draft') === '1') {
-              $model->setNumber((string)$gR->generate_number((int)$form->getGroup_id(), true));  
+              $model->setNumber((string)$gR->generate_number((int)$array['group_id'], true));  
             } else {
               $model->setNumber('');
             }
-            null!==$form->getSo_id() ? $model->setSo_id((int)$form->getSo_id()) : ''; 
-            null!==$form->getQuote_id() ? $model->setQuote_id((int)$form->getQuote_id()) : '';
-            null!==$form->getDelivery_location_id() ? $model->setDelivery_location_id($form->getDelivery_location_id()) : '';
-            null!==$form->getContract_id() ? $model->setContract_id($form->getContract_id()) : '';            
+            isset($array['so_id']) ? $model->setSo_id((int)$array['so_id']) : ''; 
+            isset($array['quote_id']) ? $model->setQuote_id((int)$array['quote_id']) : '';
+            isset($array['delivery_location_id']) ? $model->setDelivery_location_id((int)$array['delivery_location_id']) : '';
+            isset($array['contract_id']) ? $model->setContract_id((int)$array['contract_id']) : '';            
             $model->setUser_id((int)$user->getId());
             $model->setUrl_key(Random::string(32));            
             $model->setDate_created(new \DateTimeImmutable('now'));
@@ -180,11 +178,14 @@ final class InvService
      * @param ITRS $itrS
      * @param IAR $iaR
      * @param IAS $iaS
+     * @param DLR $dlR
+     * @param DLS $dlS
      * @return void
      */
-    public function deleteInv(Inv $model, ICR $icR, ICS $icS, IIR $iiR, IIS $iiS, ITRR $itrR, ITRS $itrS, IAR $iaR, IAS $iaS): void
+    public function deleteInv(Inv $model, ICR $icR, ICS $icS, IIR $iiR, IIS $iiS, ITRR $itrR, ITRS $itrS, IAR $iaR, IAS $iaS, DLR $dlR, DLS $dlS) : void
     {
         $inv_id = $model->getId();
+        $delivery_location_id = $model->getDelivery_location_id();
         // Invs with no items: If there are no invoice items there will be no invoice amount record
         // so check if there is a invoice amount otherwise null error will occur.
         if (null!==$inv_id){
@@ -204,6 +205,18 @@ final class InvService
             /** @var InvCustom */
             foreach ($icR->repoFields($inv_id) as $inv_custom) {
                 $icS->deleteInvCustom($inv_custom);
+            }
+        }
+        if ($delivery_location_id) {
+            /**
+             * @var \Yiisoft\Yii\Cycle\Data\Reader\EntityReader $deliveryLocations
+             */
+            $deliveryLocations = $dlR->repoDeliveryLocationquery($delivery_location_id);
+            /**
+             * @var \App\Invoice\Entity\DeliveryLocation $delivery_location
+             */
+            foreach ($deliveryLocations as $delivery_location) {
+                $dlS->deleteDeliveryLocation($delivery_location);
             }
         }
         $this->repository->delete($model);

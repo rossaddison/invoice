@@ -9,7 +9,6 @@ use App\Invoice\Entity\UnitPeppol;
 
 final class UnitPeppolService
 {
-
     private UnitPeppolRepository $repository;
 
     public function __construct(UnitPeppolRepository $repository)
@@ -17,14 +16,13 @@ final class UnitPeppolService
         $this->repository = $repository;
     }
 
-    public function saveUnitPeppol(UnitPeppol $model, UnitPeppolForm $form): void
+    public function saveUnitPeppol(UnitPeppol $model, array $array): void
     {
-        
-   null!==$form->getUnit_id() ? $model->setUnit_id($form->getUnit_id()) : '';
-   null!==$form->getCode() ? $model->setCode($form->getCode()) : '';
-   null!==$form->getName() ? $model->setName($form->getName()) : '';
-   null!==$form->getDescription() ? $model->setDescription($form->getDescription()) : '';
- 
+        isset($array['id']) ? $model->setId((int)$array['id']) : '';
+        isset($array['unit_id']) ? $model->setUnit_id((int)$array['unit_id']) : '';
+        isset($array['code']) ? $model->setCode((string)$array['code']) : '';
+        isset($array['name']) ? $model->setName((string)$array['name']) : '';
+        isset($array['description']) ? $model->setDescription((string)$array['description']) : '';
         $this->repository->save($model);
     }
     

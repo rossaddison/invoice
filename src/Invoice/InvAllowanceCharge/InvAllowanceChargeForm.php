@@ -3,15 +3,29 @@ declare(strict_types=1);
 
 namespace App\Invoice\InvAllowanceCharge;
 
+use App\Invoice\Entity\InvAllowanceCharge;
+use Yiisoft\Validator\Rule\GreaterThan;
 use Yiisoft\FormModel\FormModel;
 
 final class InvAllowanceChargeForm extends FormModel
 {    
     private ?int $id=null;
     private ?int $inv_id=null;
+    
     private ?int $allowance_charge_id=null;
+    
+    #[GreaterThan(0)]
     private ?int $amount=null;
+    
     private ?int $vat=null;
+    
+    public function __construct(InvAllowanceCharge $invAllowanceCharge, int $inv_id) 
+    {
+        $this->inv_id = $inv_id;
+        $this->allowance_charge_id = (int)$invAllowanceCharge->getAllowance_charge_id();
+        $this->amount = (int)$invAllowanceCharge->getAmount();
+        $this->vat = (int)$invAllowanceCharge->getVat();
+    }        
     
     public function getId() : int|null
     {
@@ -46,9 +60,4 @@ final class InvAllowanceChargeForm extends FormModel
     {
       return '';
     }
-
-    public function getRules(): array    {
-      return [
-    ];
-}
 }

@@ -196,12 +196,20 @@ class Sumex
         $this->_company['gln'] = $this->user_details->getGln();
         
         $this->_company['rcc'] = $this->user_details->getRcc();
-        /** @var DateTimeImmutable $this->sumex_treatment->getCasedate()->format($this->date_helper->style()) */
-        $this->_casedate = $this->sumex_treatment->getCasedate()->format($this->date_helper->style());
+        
+        /**
+         * @see App\Invoice\Entity\Sumex public function getCasedate(): DateTimeImmutable|string|null 
+         */
+        
+        $datetimeimmutable = $this->sumex_treatment->getCasedate() ?? new DateTimeImmutable('now');
+        $this->_casedate = $datetimeimmutable instanceof DateTimeImmutable 
+                         ? $datetimeimmutable->format('Y-m-d')
+                         : (new DateTimeImmutable('now'))->format('Y-m-d') ;
+                
         /** @var string $this->sumex_treatment->getCasenumber() */
-        $this->_casenumber = $this->sumex_treatment->getCasenumber() ?: 'No Case Number';
+        $this->_casenumber = $this->sumex_treatment->getCasenumber() ?? 'No Case Number';
         /** @var string $this->invoice->getClient()?->getClient_insurednumber() */
-        $this->_insuredid = $this->invoice->getClient()?->getClient_insurednumber() ?: 'Not Available';
+        $this->_insuredid = $this->invoice->getClient()?->getClient_insurednumber() ?? 'Not Available';
 
         $treatments = [
             'disease',
@@ -392,7 +400,7 @@ class Sumex
         
         $subNumb = $this->user_details->getSubscribernumber();
 
-        $node->setAttribute('participant_number', $subNumb ?: 'No Participating Number'); // MUST begin with 01
+        $node->setAttribute('participant_number', $subNumb ?? 'No Participating Number'); // MUST begin with 01
         $node->setAttribute('type', '16or27'); // 16or27 = 01, 16or27plus = 04
 
         // 26numbers + 1 chek
@@ -402,8 +410,8 @@ class Sumex
         // 5 digits for client id, 10 digits for invoice ID, 9 digits for Invoice Date, 1 for checksum
 
         $referenceNumber .= "06"; // Dog Fooding
-        $referenceNumber .= sprintf("%05d", ($this->invoice->getClient()?->getClient_id() ?: 'No Client Id'));
-        $referenceNumber .= sprintf("%010d", $this->invoice->getId() ?: 'No Invoice Id provided');
+        $referenceNumber .= sprintf("%05d", ($this->invoice->getClient()?->getClient_id() ?? 'No Client Id'));
+        $referenceNumber .= sprintf("%010d", $this->invoice->getId() ?? 'No Invoice Id provided');
         $referenceNumber .= sprintf("%09d", date("Ymd", strtotime(($this->invoice->getDate_modified())->format($date_helper->style()))));
         $refCsum = $this->invoice_helper->invoice_recMod10($referenceNumber);
         $referenceNumber = $referenceNumber . $refCsum;
@@ -510,19 +518,19 @@ class Sumex
         $node = $doc->createElement('invoice:balance');
         $node->setAttribute('currency', $this->_currency);
 
-        $node->setAttribute('amount', (string)($this->invoice_amount->getTotal() ?: 0.00));
-        $node->setAttribute('amount_due', (string)($this->invoice_amount->getBalance() ?: 0.00));
+        $node->setAttribute('amount', (string)($this->invoice_amount->getTotal() ?? 0.00));
+        $node->setAttribute('amount_due', (string)($this->invoice_amount->getBalance() ?? 0.00));
         // TODO: Check amount_obligations
-        $node->setAttribute('amount_obligations', (string)($this->invoice_amount->getTotal() ?: 0.00));
+        $node->setAttribute('amount_obligations', (string)($this->invoice_amount->getTotal() ?? 0.00));
 
         $vat = $doc->createElement('invoice:vat');
-        $vat->setAttribute('vat', (string)($this->invoice_amount->getTax_total() ?: 0.00));
+        $vat->setAttribute('vat', (string)($this->invoice_amount->getTax_total() ?? 0.00));
 
         $vatRate = $doc->createElement('invoice:vat_rate');
         /** @var InvAmount $this->inv_amount */
-        $vatRate->setAttribute('vat_rate', (string)(($this->invoice_amount->getTax_total() ?: 0.00)/(($this->inv_amount->getTotal() ?: 0.00)*100)));
-        $vatRate->setAttribute('amount', (string)($this->invoice_amount->getTax_total() ?: 0.00));
-        $vatRate->setAttribute('vat', (string)($this->invoice_amount->getTax_total() ?: 0.00));
+        $vatRate->setAttribute('vat_rate', (string)(($this->invoice_amount->getTax_total() ?? 0.00)/(($this->inv_amount->getTotal() ?? 0.00)*100)));
+//        $vatRate->setAttribute('amount', (string)(null!==$this->invoice_amount->getTax_total() ?: 0.00));
+        $vatRate->setAttribute('vat', (string)($this->invoice_amount->getTax_total() ?? 0.00));
 
         $vat->appendChild($vatRate);
         $node->appendChild($vat);
@@ -775,19 +783,24 @@ class Sumex
         $node = $doc->createElement('invoice:record_other');
         $node->setAttribute('record_id', (string)$recordId);
         $node->setAttribute('tariff_type', (string)590);
-        $node->setAttribute('code', ($item->getProduct()?->getProduct_sku() ?: 'Not available'));
+        $node->setAttribute('code', ($item->getProduct()?->getProduct_sku() ?? 'Not available'));
         $node->setAttribute('session', (string)1);
-        $node->setAttribute('quantity', (string)($item->getQuantity() ?: 0.00));
+        $node->setAttribute('quantity', (string)($item->getQuantity() ?? 0.00));
         $node->setAttribute('date_begin', date("Y-m-d\TH:i:s", strtotime(($item->getDate())->format($date_helper->style()))));
         $node->setAttribute('provider_id', (string)$this->_company['gln']);
         $node->setAttribute('responsible_id', (string)$this->_company['gln']);
         $node->setAttribute('unit', (string)$item->getPrice());
         #$node->setAttribute('unit_factor', 1);
-        $node->setAttribute('amount', (string)(($item->getPrice() ?: 0.00)*($item->getQuantity() ?: 0.00)));
+        if (is_numeric($item->getPrice()) && is_numeric($item->getQuantity())) {
+            $amount = (string)((($item->getPrice() ?? 0.00) * ($item->getQuantity() ?? 0.00)));
+        } else {
+            $amount  = '0';
+        }
+        $node->setAttribute('amount', $amount);
         #$node->setAttribute('validate', 0);
         #$node->setAttribute('service_attributes', 0);
         #$node->setAttribute('obligation', 0);
-        $node->setAttribute('name', ($item->getName() ?: 'Not Available'));
+        $node->setAttribute('name', (string)(null!==$item->getName() ?: 'Not Available'));
         return $node;
     }
     

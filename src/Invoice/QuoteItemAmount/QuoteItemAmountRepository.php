@@ -89,7 +89,7 @@ private EntityWriter $entityWriter;
      *
      * @psalm-return TEntity|null
      */
-    public function repoQuoteItemAmountquery(string $quote_item_id): QuoteItemAmount|null {
+    public function repoQuoteItemAmountquery(int $quote_item_id): QuoteItemAmount|null {
         $query = $this->select()
                       ->load(['quote_item'])
                       ->where(['quote_item_id' => $quote_item_id]);

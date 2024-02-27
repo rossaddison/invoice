@@ -175,25 +175,24 @@ $toolbar = Div::tag();
     ->columns(...$columns)
     ->dataReader($paginator)    
     ->headerRowAttributes(['class'=>'card-header bg-info text-black'])
-    ->filterPosition('header')
-    ->filterModelName('salesorder')
+    //->filterPosition('header')
+    //->filterModelName('salesorder')
     ->header($header)
     ->id('w12-grid')
     ->pagination(
     OffsetPagination::widget()
-         ->menuClass('pagination justify-content-center')
          ->paginator($paginator)         
          // No need to use page argument since built-in. Use status bar value passed from urlGenerator to quote/guest
-         ->urlArguments(['status'=>$status])
+         //->urlArguments(['status'=>$status])
          ->render(),
     )
     ->rowAttributes(['class' => 'align-middle'])
     ->summaryAttributes(['class' => 'mt-3 me-3 summary text-end'])
     // @see yiisoft\yii-dataview\src\BaseListView.php
-    ->summary((string)$grid_summary ?: '')
+    ->summaryTemplate((string)$grid_summary ?: '')
     ->emptyTextAttributes(['class' => 'card-header bg-warning text-black'])
     ->emptyText((string)$translator->translate('invoice.invoice.no.records'))
-    ->tableAttributes(['class' => 'table table-striped text-center h-75','id'=>'table-quote'])
+    ->tableAttributes(['class' => 'table table-striped text-center h-75','id'=>'table-salesorder'])
     ->toolbar(
         Form::tag()->post($urlGenerator->generate('salesorder/index'))->csrf($csrf)->open() .
         Div::tag()->addClass('float-end m-3')->content($toolbarReset)->encode(false)->render() .

@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 
-use App\Widget\Button;
+
 use Yiisoft\FormModel\Field;
 use Yiisoft\Html\Html;
 use Yiisoft\Html\Tag\Form;
@@ -80,7 +80,7 @@ use Yiisoft\Html\Tag\Form;
                 ->hint($translator->translate('invoice.hint.this.field.is.required')); ?>    
             <?= Html::tag('br'); ?>
             <?= Html::closeTag('div'); ?>         
-            <?= Button::back($translator); ?>
+            <?= $button::back($translator); ?>
         <?= Html::closeTag('div'); ?>
     <?= Html::closeTag('div'); ?>
 <?= Html::closeTag('div'); ?>

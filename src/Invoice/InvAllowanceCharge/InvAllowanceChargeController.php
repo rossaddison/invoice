@@ -20,8 +20,8 @@ use Yiisoft\Http\Method;
 use Yiisoft\Router\CurrentRoute;
 use Yiisoft\Session\SessionInterface as Session;
 use Yiisoft\Session\Flash\Flash;
-use Yiisoft\Translator\TranslatorInterface;use Yiisoft\FormModel\FormHydrator;
-use Yiisoft\Form\Helper\HtmlFormErrors;
+use Yiisoft\Translator\TranslatorInterface;
+use Yiisoft\FormModel\FormHydrator;
 use Yiisoft\Yii\View\ViewRenderer;
 
 use \Exception;
@@ -63,41 +63,45 @@ final class InvAllowanceChargeController
     }
     
     /**
-     * 
-     * @param ViewRenderer $head
      * @param Request $request
+     * @param CurrentRoute $currentRoute 
      * @param FormHydrator $formHydrator
-     * @param SettingRepository $settingRepository
-     * @param AllowanceChargeRepository $allowance_chargeRepository
+     * @param AllowanceChargeRepository $allowanceChargeRepository
      * @return Response
      */
-    public function add(ViewRenderer $head, Request $request, 
-                        FormHydrator $formHydrator,
-                        SettingRepository $settingRepository,                        
-                        AllowanceChargeRepository $allowance_chargeRepository
+    public function add(Request $request,
+                        CurrentRoute $currentRoute,
+                        FormHydrator $formHydrator,                        
+                        AllowanceChargeRepository $allowanceChargeRepository
     ) : Response
     {
+        $invAllowanceCharge = new InvAllowanceCharge();
+        $inv_id = $currentRoute->getArgument('inv_id');
+        $form = new InvAllowanceChargeForm($invAllowanceCharge, (int)$inv_id);
         $parameters = [
             'title' => $this->translator->translate('invoice.add'),
-            'action' => ['invallowancecharge/add'],
+            'action' => ['invallowancecharge/add', ['inv_id' => $inv_id]],
             'errors' => [],
-            'body' => $request->getParsedBody(),
-            's'=>$settingRepository,
-            'head'=>$head,
-            
-            'allowance_charges'=>$allowance_chargeRepository->findAllPreloaded(),
+            'form' => $form,
+            'optionsDataAllowanceCharges' => $allowanceChargeRepository->optionsDataAllowanceCharges(),
         ];
         
         if ($request->getMethod() === Method::POST) {
-            
-            $form = new InvAllowanceChargeForm();
-            if ($formHydrator->populate($form, $parameters['body']) && $form->isValid()) {
-                $this->invallowancechargeService->saveInvAllowanceCharge(new InvAllowanceCharge(),$form);
-                return $this->webService->getRedirectResponse('invallowancecharge/index');
-            }
-            $parameters['form'] = $form;
+            $body = $request->getParsedBody();
+            if (is_array($body)) {
+                $body['inv_id'] = $inv_id;
+                if ($formHydrator->populateFromPostAndValidate($form, $request)) {
+                    /**
+                     * @psalm-suppress PossiblyInvalidArgument $body
+                     */
+                    $this->invallowancechargeService->saveInvAllowanceCharge($invAllowanceCharge, $body);
+                    return $this->webService->getRedirectResponse('invallowancecharge/index');
+                }
+                $parameters['errors'] = $form->getValidationResult()?->getErrorMessagesIndexedByAttribute() ?? [];
+                $parameters['form'] = $form;
+            } // is_array    
         }
-        return $this->viewRenderer->render('_form', $parameters);
+        return $this->viewRenderer->render('modal_add_allowance_charge_form', $parameters);
     }
     
   /**
@@ -106,8 +110,7 @@ final class InvAllowanceChargeController
    private function alert(): string {
      return $this->viewRenderer->renderPartialAsString('/invoice/layout/alert',
      [ 
-       'flash' => $this->flash,
-       'errors' => [],
+       'flash' => $this->flash
      ]);
    }
 
@@ -119,22 +122,6 @@ final class InvAllowanceChargeController
     private function flash_message(string $level, string $message): Flash {
       $this->flash->add($level, $message, true);
       return $this->flash;
-    }
-    
-    /**
-     * @param InvAllowanceCharge $invallowancecharge     
-     * @return array
-     */
-    private function body(InvAllowanceCharge $invallowancecharge) : array {
-        $body = [
-          'id'=>$invallowancecharge->getId(),
-          'inv_id'=>$invallowancecharge->getInv_id(),
-          'allowance_charge_id'=>$invallowancecharge->getAllowance_charge_id(),
-          'amount'=>$invallowancecharge->getAmount(),
-          'vat'=>$invallowancecharge->getVat(),  
-                
-        ];
-        return $body;
     }
     
     /**
@@ -155,18 +142,17 @@ final class InvAllowanceChargeController
     }
         
     /**
-     * @param SettingRepository $settingRepository
      * @param CurrentRoute $currentRoute
      * @param InvAllowanceChargeRepository $invallowancechargeRepository
      * @return Response
      */
-    public function delete(SettingRepository $settingRepository, CurrentRoute $currentRoute,InvAllowanceChargeRepository $invallowancechargeRepository 
+    public function delete(CurrentRoute $currentRoute,InvAllowanceChargeRepository $invallowancechargeRepository 
     ): Response {
         try {
             $invallowancecharge = $this->invallowancecharge($currentRoute, $invallowancechargeRepository);
             if ($invallowancecharge) {
                 $this->invallowancechargeService->deleteInvAllowanceCharge($invallowancecharge);               
-                $this->flash_message('info', $settingRepository->trans('record_successfully_deleted'));
+                $this->flash_message('info', $this->translator->translate('i.record_successfully_deleted'));
                 return $this->webService->getRedirectResponse('invallowancecharge/index'); 
             }
             return $this->webService->getRedirectResponse('invallowancecharge/index'); 
@@ -177,42 +163,39 @@ final class InvAllowanceChargeController
     }
     
     /**
-     * 
-     * @param ViewRenderer $head
      * @param Request $request
      * @param CurrentRoute $currentRoute
      * @param FormHydrator $formHydrator
-     * @param InvAllowanceChargeRepository $invallowancechargeRepository
-     * @param SettingRepository $settingRepository
-     * @param AllowanceChargeRepository $allowance_chargeRepository
+     * @param InvAllowanceChargeRepository $invAllowanceChargeRepository
+     * @param AllowanceChargeRepository $allowanceChargeRepository
      * @return Response
      */    
-    public function edit(ViewRenderer $head, Request $request, CurrentRoute $currentRoute, 
+    public function edit(Request $request, CurrentRoute $currentRoute, 
                         FormHydrator $formHydrator,
-                        InvAllowanceChargeRepository $invallowancechargeRepository, 
-                        SettingRepository $settingRepository,                        
-                        AllowanceChargeRepository $allowance_chargeRepository
+                        InvAllowanceChargeRepository $invAllowanceChargeRepository, 
+                        AllowanceChargeRepository $allowanceChargeRepository
     ): Response {
-        $invallowancecharge = $this->invallowancecharge($currentRoute, $invallowancechargeRepository);
-        if ($invallowancecharge){
+        $invAllowanceCharge = $this->invallowancecharge($currentRoute, $invAllowanceChargeRepository);
+        if ($invAllowanceCharge){
+            $inv_id = $invAllowanceCharge->getInv_id();
+            $form = new InvAllowanceChargeForm($invAllowanceCharge, (int)$inv_id);
             $parameters = [
                 'title' => $this->translator->translate('invoice.invoice.allowance.or.charge'),
-                'action' => ['invallowancecharge/edit', ['id' => $invallowancecharge->getId()]],
+                'action' => ['invallowancecharge/edit', ['id' => $invAllowanceCharge->getId()]],
                 'errors' => [],
-                'body' => $this->body($invallowancecharge),
-                'head'=>$head,
-                'allowancecharge'=>$invallowancecharge->getAllowanceCharge(),                
-                's'=>$settingRepository,
-                'allowance_charges'=>$allowance_chargeRepository->findAllPreloaded()
+                'form' => $form,
+                'optionsDataAllowanceCharges' => $allowanceChargeRepository->optionsDataAllowanceCharges(),
             ];
             if ($request->getMethod() === Method::POST) {
-                $form = new InvAllowanceChargeForm();
                 $body = $request->getParsedBody();
-                if ($formHydrator->populate($form, $body) && $form->isValid()) {
-                    $this->invallowancechargeService->saveInvAllowanceCharge($invallowancecharge,$form);
+                if ($formHydrator->populateFromPostAndValidate($form, $request)) {
+                    /**
+                     * @psalm-suppress PossiblyInvalidArgument $body
+                     */
+                    $this->invallowancechargeService->saveInvAllowanceCharge($invAllowanceCharge, $body);
                     return $this->webService->getRedirectResponse('invallowancecharge/index');
                 }
-                $parameters['body'] = $body;
+                $parameters['errors'] = $form->getValidationResult()?->getErrorMessagesIndexedByAttribute() ?? [];
                 $parameters['form'] = $form;
             }
             return $this->viewRenderer->render('_form', $parameters);
@@ -251,20 +234,20 @@ final class InvAllowanceChargeController
     /**
      * @param CurrentRoute $currentRoute
      * @param InvAllowanceChargeRepository $invallowancechargeRepository
-     * @param SettingRepository $settingRepository
      * @return \Yiisoft\DataResponse\DataResponse|Response
      */
-    public function view(CurrentRoute $currentRoute,InvAllowanceChargeRepository $invallowancechargeRepository,
-        SettingRepository $settingRepository,
-        ): \Yiisoft\DataResponse\DataResponse|Response {
-        $invallowancecharge = $this->invallowancecharge($currentRoute, $invallowancechargeRepository); 
-        if ($invallowancecharge) {
+    public function view(CurrentRoute $currentRoute,
+                         InvAllowanceChargeRepository $invallowancechargeRepository,
+                         AllowanceChargeRepository $allowanceChargeRepository): \Yiisoft\DataResponse\DataResponse|Response {
+        $invAllowanceCharge = $this->invallowancecharge($currentRoute, $invallowancechargeRepository); 
+        if ($invAllowanceCharge) {
+          $inv_id = $invAllowanceCharge->getInv_id();  
+          $form = new InvAllowanceChargeForm($invAllowanceCharge, (int)$inv_id);  
           $parameters = [
-              'title' => $settingRepository->trans('view'),
-              'action' => ['invallowancecharge/view', ['id' => $invallowancecharge->getId()]],
-              'errors' => [],
-              'body' => $this->body($invallowancecharge),
-              'invallowancecharge'=>$invallowancecharge,
+              'title' => $this->translator->translate('i.view'),
+              'action' => ['invallowancecharge/view', ['id' => $invAllowanceCharge->getId()]],
+              'form' => $form,
+              'optionsDataAllowanceCharges' => $allowanceChargeRepository->optionsDataAllowanceCharges(),
           ];        
         return $this->viewRenderer->render('_view', $parameters);
         }

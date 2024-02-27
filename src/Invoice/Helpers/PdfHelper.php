@@ -65,7 +65,7 @@ Class PdfHelper
         // Get the client language if set : otherwise use the locale as basis
         if ($quote_or_inv instanceof \App\Invoice\Entity\Quote || 
             $quote_or_inv instanceof \App\Invoice\Entity\Inv) {     
-            $print_language = (!empty($quote_or_inv->getClient()?->getClient_language()) ?  $quote_or_inv->getClient()?->getClient_language() : $locale_lang);              
+            $print_language = (null!==($quote_or_inv->getClient()?->getClient_language()) ?  $quote_or_inv->getClient()?->getClient_language() : $locale_lang);              
             $this->session->set('print_language', $print_language); 
             return  $print_language;
         }
@@ -90,10 +90,23 @@ Class PdfHelper
      * @param \Yiisoft\Yii\View\ViewRenderer $viewrenderer
      * @return string 
      */
-    public function generate_quote_pdf(string|null $quote_id, string $user_id, bool $stream, bool $custom, object|null $quote_amount, array $quote_custom_values,\App\Invoice\Client\ClientRepository $cR, \App\Invoice\CustomValue\CustomValueRepository $cvR, \App\Invoice\CustomField\CustomFieldRepository $cfR, \App\Invoice\QuoteItem\QuoteItemRepository $qiR, \App\Invoice\QuoteItemAmount\QuoteItemAmountRepository $qiaR, \App\Invoice\Quote\QuoteRepository $qR, \App\Invoice\QuoteTaxRate\QuoteTaxRateRepository $qtrR, \App\Invoice\UserInv\UserInvRepository $uiR,
-                                \Yiisoft\Yii\View\ViewRenderer $viewrenderer)
+    public function generate_quote_pdf(string|null $quote_id, 
+                                       string $user_id,
+                                       bool $stream, 
+                                       bool $custom, 
+                                       object|null $quote_amount, 
+                                       array $quote_custom_values,
+                                       \App\Invoice\Client\ClientRepository $cR, 
+                                       \App\Invoice\CustomValue\CustomValueRepository $cvR, 
+                                       \App\Invoice\CustomField\CustomFieldRepository $cfR, 
+                                       \App\Invoice\QuoteItem\QuoteItemRepository $qiR, 
+                                       \App\Invoice\QuoteItemAmount\QuoteItemAmountRepository $qiaR, 
+                                       \App\Invoice\Quote\QuoteRepository $qR, 
+                                       \App\Invoice\QuoteTaxRate\QuoteTaxRateRepository $qtrR, 
+                                       \App\Invoice\UserInv\UserInvRepository $uiR,
+                                       \Yiisoft\Yii\View\ViewRenderer $viewrenderer)
     {       
-            if ($quote_id) {
+            if (null!==$quote_id) {
             
             $quote = $qR->repoCount($quote_id) > 0 ? $qR->repoQuoteLoadedquery($quote_id) : null;
             
@@ -205,7 +218,7 @@ Class PdfHelper
     public function generate_salesorder_pdf(string|null $so_id, string $user_id, bool $stream, bool $custom, object|null $so_amount, array $so_custom_values,\App\Invoice\Client\ClientRepository $cR, \App\Invoice\CustomValue\CustomValueRepository $cvR, \App\Invoice\CustomField\CustomFieldRepository $cfR, \App\Invoice\SalesOrderItem\SalesOrderItemRepository $soiR, \App\Invoice\SalesOrderItemAmount\SalesOrderItemAmountRepository $soiaR, \App\Invoice\SalesOrder\SalesOrderRepository $soR, \App\Invoice\SalesOrderTaxRate\SalesOrderTaxRateRepository $sotrR, \App\Invoice\UserInv\UserInvRepository $uiR,
                                 \Yiisoft\Yii\View\ViewRenderer $viewrenderer, Translator $translator) : string
     {       
-          if ($so_id) {
+          if (null!==$so_id) {
             
             $so = $soR->repoCount($so_id) > 0 ? $soR->repoSalesOrderLoadedquery($so_id) : null;
             
@@ -315,7 +328,7 @@ Class PdfHelper
      */
     public function generate_inv_html(string|null $inv_id, string $user_id, bool $custom, SalesOrder|null $so, InvAmount|null $inv_amount, array $inv_custom_values,\App\Invoice\Client\ClientRepository $cR, \App\Invoice\CustomValue\CustomValueRepository $cvR, \App\Invoice\CustomField\CustomFieldRepository $cfR, \App\Invoice\InvItem\InvItemRepository $iiR, \App\Invoice\InvItemAmount\InvItemAmountRepository $iiaR, Inv $inv, \App\Invoice\InvTaxRate\InvTaxRateRepository $itrR, \App\Invoice\UserInv\UserInvRepository $uiR, SumexRepository $sumexR,
                                 \Yiisoft\Yii\View\ViewRenderer $viewrenderer) : string {
-        if ($inv_id) {
+        if (null!==$inv_id) {
             // If userinv details have been filled, use these details
             $userinv = ($uiR->repoUserInvcount($user_id)>0 ? $uiR->repoUserInvquery($user_id) : null);
             // 'draft' => status_id => 1 
@@ -416,7 +429,7 @@ Class PdfHelper
     public function generate_inv_pdf(string|null $inv_id, string $user_id, bool $stream, bool $custom, SalesOrder|null $so, InvAmount|null $inv_amount, array $inv_custom_values,\App\Invoice\Client\ClientRepository $cR, \App\Invoice\CustomValue\CustomValueRepository $cvR, \App\Invoice\CustomField\CustomFieldRepository $cfR, \App\Invoice\InvItem\InvItemRepository $iiR, \App\Invoice\InvItemAmount\InvItemAmountRepository $iiaR, \App\Invoice\Inv\InvRepository $iR, \App\Invoice\InvTaxRate\InvTaxRateRepository $itrR, \App\Invoice\UserInv\UserInvRepository $uiR, SumexRepository $sumexR,
                                 \Yiisoft\Yii\View\ViewRenderer $viewrenderer) : string
     {       
-       if ($inv_id) { 
+       if (null!==$inv_id) { 
             $inv = $iR->repoCount($inv_id) > 0 ? $iR->repoInvLoadedquery($inv_id) : null;
             if ($inv) {
                 $html = $this->generate_inv_html($inv_id, $user_id, $custom, $so, $inv_amount, $inv_custom_values, $cR, $cvR, $cfR, $iiR, $iiaR, $inv, $itrR, $uiR, $sumexR, $viewrenderer);

@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Invoice\Setting;
 
 use App\Invoice\Entity\Setting;
+
 use Yiisoft\FormModel\FormModel;
 use Yiisoft\Validator\Rule\Required;
 

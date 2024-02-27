@@ -90,10 +90,7 @@ final class FamilyController
         ];        
         if ($request->getMethod() === Method::POST) {
             $body = $request->getParsedBody();
-            /**
-             * @psalm-suppress PossiblyInvalidArgument $body 
-             */
-            if ($formHydrator->populate($form, $body) && $form->isValid()) {
+           if ($formHydrator->populateFromPostAndValidate($form,  $request)) {
                 /**
                  * @psalm-suppress PossiblyInvalidArgument $body 
                  */
@@ -107,15 +104,13 @@ final class FamilyController
     }
     
     /**
-     * 
      * @param CurrentRoute $currentRoute
      * @param Request $request
-     * @param SettingRepository $settingRepository
      * @param FamilyRepository $familyRepository
      * @param FormHydrator $formHydrator
      * @return Response
      */
-    public function edit(CurrentRoute $currentRoute, Request $request, SettingRepository $settingRepository, FamilyRepository $familyRepository, FormHydrator $formHydrator): Response 
+    public function edit(CurrentRoute $currentRoute, Request $request, FamilyRepository $familyRepository, FormHydrator $formHydrator): Response 
     {
         $family = $this->family($currentRoute, $familyRepository);
         if ($family) {
@@ -131,7 +126,7 @@ final class FamilyController
                 /**
                  * @psalm-suppress PossiblyInvalidArgument $body 
                  */
-                if ($formHydrator->populate($form, $body) && $form->isValid()) {
+                if ($formHydrator->populateFromPostAndValidate($form,  $request)) {
                     /**
                      * @psalm-suppress PossiblyInvalidArgument $body 
                      */
@@ -148,7 +143,6 @@ final class FamilyController
     }
     
     /**
-     * 
      * @param CurrentRoute $currentRoute
      * @param FamilyRepository $familyRepository
      * @return Response
@@ -172,18 +166,17 @@ final class FamilyController
     /**
      * @param CurrentRoute $currentRoute
      * @param FamilyRepository $familyRepository
-     * @param SettingRepository $settingRepository
      */
-    public function view(CurrentRoute $currentRoute, FamilyRepository $familyRepository,SettingRepository $settingRepository): Response {
+    public function view(CurrentRoute $currentRoute, FamilyRepository $familyRepository): Response {
         $family = $this->family($currentRoute, $familyRepository);
         if ($family) {
             $form = new FamilyForm($family);
             $parameters = [
-                'title' => 'View',
+                'title' => $this->translator->translate('i.view'), 
                 'action' => ['family/view', ['id' => $family->getFamily_id()]],
                 'errors' => [],
-                'family'=>$family,
-                'form'=>$form,
+                'family' => $family,
+                'form' => $form,
             ];
             return $this->viewRenderer->render('_view', $parameters);
         }
@@ -221,8 +214,7 @@ final class FamilyController
    private function alert(): string {
      return $this->viewRenderer->renderPartialAsString('/invoice/layout/alert',
      [ 
-       'flash' => $this->flash,
-       'errors' => [],
+       'flash' => $this->flash
      ]);
    }
 

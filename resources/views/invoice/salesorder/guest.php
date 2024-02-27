@@ -148,13 +148,12 @@ $toolbar = Div::tag();
     ->dataReader($paginator)    
     ->columns(...$columns)
     ->headerRowAttributes(['class'=>'card-header bg-info text-black'])
-    ->filterPosition('header')
-    ->filterModelName('salesorder')
+    //->filterPosition('header')
+    //->filterModelName('salesorder')
     ->header($header)
     ->id('w12-grid')
     ->pagination(
     OffsetPagination::widget()
-         ->menuClass('pagination justify-content-center')
          ->paginator($paginator)         
          // No need to use page argument since built-in. Use status bar value passed from urlGenerator to quote/guest
          ->urlArguments(['status'=>$status])

@@ -22,7 +22,7 @@ $pagination = OffsetPagination::widget()
 ->urlGenerator(fn ($page) => $urlGenerator->generate('invrecurring/index', ['page' => $page])); 
 ?>
 <?php
-    if ($pagination->isRequired()) {
+    if ($pagination->isPaginationRequired()) {
        echo $pagination;
     }
 ?>               
@@ -59,11 +59,14 @@ $pagination = OffsetPagination::widget()
       </td>      
       <td><a href="<?= $urlGenerator->generate('inv/view',['id'=>$invrecurring->getInv_id()]); ?>"  title="<?= $translator->translate('i.edit'); ?>" style="text-decoration:none"><?php echo($invrecurring->getInv()->getNumber() ? $invrecurring->getInv()->getNumber() : $invrecurring->getInv_id()); ?></a></td>   
       <td><?= Html::a($invrecurring->getInv()->getClient()->getClient_name(),$urlGenerator->generate('client/view',['id'=>$invrecurring->getInv()->getClient()->getClient_id()])); ?></td>         
-      <td><?= Html::encode(($invrecurring->getStart())->format($datehelper->style())); ?></td>
-      <td><?= Html::encode(($invrecurring->getEnd())->format($datehelper->style())); ?></td>
-      <td><?= Html::encode($s->trans($recur_frequencies[$invrecurring->getFrequency()])); ?></td>
+      <td><?= Html::encode(($invrecurring->getStart())->format('Y-m-d') !== '-0001-11-30' 
+                            ? ($invrecurring->getStart())->format($datehelper->style()) : ''); ?></td>
+      <td><?= Html::encode(($invrecurring->getEnd())->format('Y-m-d') !== '-0001-11-30'
+                            ? ($invrecurring->getEnd())->format($datehelper->style()) : ''); ?></td>
+      <td><?= Html::encode($translator->translate($recur_frequencies[$invrecurring->getFrequency()])); ?></td>
       <!-- If the next_date has a date then the invoice is still recurring and therefore active. -->
-      <td><?= Html::encode($no_next ? '' : ($invrecurring->getNext())->format($datehelper->style())); ?></td>
+      <td><?= Html::encode($no_next ? '' : (($invrecurring->getNext())->format('Y-m-d') !=='-0001-11-30'
+                                            ? ($invrecurring->getNext())->format($datehelper->style()) : '')); ?></td>
       <td>
           <div class="options btn-group">
           <a class="btn btn-default btn-sm dropdown-toggle" data-toggle="dropdown" href="#">
@@ -78,6 +81,11 @@ $pagination = OffsetPagination::widget()
                        <?= $translator->translate('i.stop'); ?>
                   </a>
                 <?php } ?>  
+              </li>
+              <li>
+                  <a href="<?= $urlGenerator->generate('invrecurring/edit',['id'=>$invrecurring->getId()]); ?>" style="text-decoration:none">                       <i class="fa fa-trash fa-margin"></i>
+                       <?= $translator->translate('i.edit'); ?>
+                  </a>
               </li>
               <li>
                   <a href="<?= $urlGenerator->generate('invrecurring/delete',['id'=>$invrecurring->getId()]); ?>" style="text-decoration:none">                       <i class="fa fa-trash fa-margin"></i>

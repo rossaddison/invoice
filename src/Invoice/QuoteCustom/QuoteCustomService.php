@@ -14,18 +14,17 @@ final class QuoteCustomService
     {
         $this->repository = $repository;
     }
-
+    
     /**
-     * 
      * @param QuoteCustom $model
-     * @param QuoteCustomForm $form
+     * @param array $array
      * @return void
      */
-    public function saveQuoteCustom(QuoteCustom $model, QuoteCustomForm $form): void
+    public function saveQuoteCustom(QuoteCustom $model, array $array): void
     { 
-       null!==$form->getQuote_id() ? $model->setQuote_id($form->getQuote_id()) : '';
-       null!==$form->getCustom_field_id() ? $model->setCustom_field_id($form->getCustom_field_id()) : '';
-       $model->setValue($form->getValue() ?? '');
+       isset($array['quote_id']) ? $model->setQuote_id((int)$array['quote_id']) : '';
+       isset($array['custom_field_id']) ? $model->setCustom_field_id((int)$array['custom_field_id']) : '';
+       isset($array['value']) ? $model->setValue((string)$array['value']) : '';
        $this->repository->save($model);
     }
     

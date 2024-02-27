@@ -120,14 +120,11 @@ final class EmailTemplateController
             // see src\Invoice\Asset\rebuild-1.13\js\mailer_ajax_email_addresses
             'admin_email'=>$settingRepository->getConfigAdminEmail(),
             'sender_email'=>$settingRepository->getConfigSenderEmail(),
-            'from_email'=>($fromR->getDefault())?->getEmail() ?: $this->translator->translate('invoice.email.default.none.set'),
+            'from_email'=> null!==$fromR->getDefault()?->getEmail() ? $fromR->getDefault()?->getEmail() : $this->translator->translate('invoice.email.default.none.set')
         ];
         
         if ($request->getMethod() === Method::POST) {
             $body = $request->getParsedBody();
-            /**
-             * @psalm-suppress PossiblyInvalidArgument $body 
-             */
             if (null!==$this->userService->getUser() && $formHydrator->populate($form, $body) && $form->isValid()) {
                 /**
                  * @psalm-suppress PossiblyInvalidArgument $body 
@@ -148,8 +145,7 @@ final class EmailTemplateController
    private function alert(): string {
      return $this->viewRenderer->renderPartialAsString('/invoice/layout/alert',
      [ 
-       'flash' => $this->flash,
-       'errors' => [],
+       'flash' => $this->flash
      ]);
    }
 
@@ -164,8 +160,6 @@ final class EmailTemplateController
     }
 
     /**
-     * 
-     * @param ViewRenderer $tag
      * @param CurrentRoute $currentRoute
      * @param Request $request
      * @param EmailTemplateRepository $emailtemplateRepository
@@ -175,7 +169,7 @@ final class EmailTemplateController
      * @param FormHydrator $formHydrator
      * @return Response
      */
-    public function edit(ViewRenderer $tag, CurrentRoute $currentRoute, Request $request, 
+    public function edit(CurrentRoute $currentRoute, Request $request, 
                          EmailTemplateRepository $emailtemplateRepository, 
                          CustomFieldRepository $customfieldRepository,
                          SettingRepository $settingRepository,
@@ -206,18 +200,16 @@ final class EmailTemplateController
                 'invoice_templates'=>$settingRepository->get_invoice_templates('pdf'),
                 'quote_templates'=>$settingRepository->get_quote_templates('pdf'),
                 'selected_pdf_template'=>$email_template->getEmail_template_pdf_template(),
-                'tag'=>$tag,
                 // see src\Invoice\Asset\rebuild-1.13\js\mailer_ajax_email_addresses
                 'admin_email'=>$settingRepository->getConfigAdminEmail(),
                 'sender_email'=>$settingRepository->getConfigSenderEmail(),
-                'from_email'=>($fromR->getDefault())?->getEmail() ?: $this->translator->translate('invoice.email.default.none.set'),
+                'from_email'=>(null!==($fromR->getDefault())?->getEmail() 
+                               ? ($fromR->getDefault())?->getEmail() 
+                               : $this->translator->translate('invoice.email.default.none.set')),
             ];
             if ($request->getMethod() === Method::POST) {
                 $body = $request->getParsedBody();
-                /**
-                 * @psalm-suppress PossiblyInvalidArgument $body 
-                 */
-                if ($formHydrator->populate($form, $body) && $form->isValid()) {
+                if ($formHydrator->populateFromPostAndValidate($form, $request)) {
                     /**
                      * @psalm-suppress PossiblyInvalidArgument $body 
                      */
@@ -234,12 +226,10 @@ final class EmailTemplateController
     }
     
     /**
-     * 
      * @param CurrentRoute $currentRoute
      * @param EmailTemplateRepository $emailtemplateRepository
      * @return Response
      */
-    
     public function delete(CurrentRoute $currentRoute, EmailTemplateRepository $emailtemplateRepository 
     ): Response {       
         $email_template = $this->emailtemplate($currentRoute, $emailtemplateRepository);

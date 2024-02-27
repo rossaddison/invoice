@@ -4,26 +4,73 @@ declare(strict_types=1);
 
 namespace App\Invoice\SalesOrderItem;
 
+use App\Invoice\Entity\SalesOrderItem as SoItem;
 use Yiisoft\FormModel\FormModel;
 use Yiisoft\Validator\Rule\Required;
 
 final class SalesOrderItemForm extends FormModel
 {        
-    private ?string $so_id='';
-    private ?string $peppol_po_itemid='';
-    private ?string $peppol_po_lineid='';
-    private ?string $tax_rate_id='';
-    private ?string $product_id='';
-    private ?string $name='';
-    private ?string $description='';
-    private ?float $quantity=null;
-    private ?float $price=null;
-    private ?float $discount_amount=null;
-    private ?float $charge_amount=null;
-    private ?int $order=null;
-    private ?string $product_unit='';
-    private ?int $product_unit_id=null;
+    private ?string $id = '';
+    private ?string $so_id = '';
+    private ?string $peppol_po_itemid = '';
+    private ?string $peppol_po_lineid = '';
+    
+    #[Required]
+    private ?string $tax_rate_id = '';
+    
+    #[Required]
+    private ?string $product_id = '';
+    private mixed $date_added = '';
+    private ?string $name = '';
+    private ?string $description = '';
+    
+    #[Required]
+    private ?float $quantity = null;
+    
+    #[Required]
+    private ?float $price = null;
+    
+    #[Required]
+    private ?float $discount_amount = null;
+    
+    #[Required]
+    private ?float $charge_amount = null;
+    
+    private ?int $order = null;
+    private ?string $product_unit = '';
+    
+    #[Required]
+    private ?int $product_unit_id = null;
+    
+    public function __construct(SoItem $salesOrderItem)
+    {
+        $this->id = $salesOrderItem->getId();
 
+        //https://docs.peppol.eu/poacc/billing/3.0/syntax/ubl-invoice/cac-InvoiceLine/cac-Item/cac-BuyersItemIdentification/
+        $this->peppol_po_itemid = $salesOrderItem->getPeppol_po_itemid();
+
+        //https://docs.peppol.eu/poacc/billing/3.0/syntax/ubl-invoice/cac-InvoiceLine/cac-OrderLineReference/
+        $this->peppol_po_lineid = $salesOrderItem->getPeppol_po_lineid();
+
+        $this->date_added = $salesOrderItem->getDate_added();
+        $this->name = $salesOrderItem->getName();
+        $this->description = $salesOrderItem->getDescription();
+        $this->quantity = $salesOrderItem->getQuantity();
+        $this->price = $salesOrderItem->getPrice();
+        $this->discount_amount = $salesOrderItem->getDiscount_amount();
+        $this->order = $salesOrderItem->getOrder();
+        $this->product_unit = $salesOrderItem->getProduct_unit();
+        $this->so_id = $salesOrderItem->getSales_order_id();
+        $this->tax_rate_id = $salesOrderItem->getTax_rate_id();
+        $this->product_id = $salesOrderItem->getProduct_id();
+        $this->product_unit_id = (int)$salesOrderItem->getProduct_unit_id();
+    }
+    
+    public function getId() : string|null
+    {
+        return $this->id;
+    }    
+    
     public function getSo_id() : string|null
     {
       return $this->so_id;
@@ -102,19 +149,5 @@ final class SalesOrderItemForm extends FormModel
     public function getFormName(): string
     {
       return '';
-    }
-    
-    
-    public function getRule(): array    {
-      return [
-        //'tax_rate_id' => [new Required()],
-        //'product_id' => [new Required()],
-        //'quantity' => [new Required()],
-       // 'price' => [new Required()],
-        //'discount_amount' => [new Required()],
-        //'charge_amount' => [new Required()],
-       // 'order' => [new Required()],
-       // 'product_unit_id' => [new Required()],
-      ];
     }
 }

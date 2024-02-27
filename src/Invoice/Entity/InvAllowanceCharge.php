@@ -7,6 +7,7 @@ use Cycle\Annotated\Annotation\Column;
 use Cycle\Annotated\Annotation\Entity;
 use Cycle\Annotated\Annotation\Relation\BelongsTo;
 use App\Invoice\Entity\AllowanceCharge;
+use App\Invoice\Entity\Inv;
   
  #[Entity(repository: \App\Invoice\InvAllowanceCharge\InvAllowanceChargeRepository::class)]
  
@@ -17,6 +18,9 @@ use App\Invoice\Entity\AllowanceCharge;
      
      #[Column(type:'primary')]
      private ?int $id =  null;
+     
+     #[BelongsTo(target:Inv::class, nullable: false, fkAction:'NO ACTION')]
+     private ?Inv $inv = null;
      
      #[Column(type:'integer(11)', nullable: false)]
      private ?int $inv_id =  null;
@@ -48,6 +52,11 @@ use App\Invoice\Entity\AllowanceCharge;
     public function getAllowanceCharge() : ?AllowanceCharge
     {
       return $this->allowance_charge;
+    }
+    
+    public function getInv() : ?Inv
+    {
+      return $this->inv;
     }
     
     public function setAllowanceCharge(?AllowanceCharge $allowance_charge): void

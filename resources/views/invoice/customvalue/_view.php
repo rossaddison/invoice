@@ -16,14 +16,6 @@ use Yiisoft\Html\Html;
 <?= Html::openTag('div',['class' => 'row']); ?>
     <?= Html::openTag('div',['class' => 'col-xs-12 col-md-6 col-md-offset-3']); ?>
         <?= Html::openTag('div',['class' => 'mb3 form-group']); ?>
-            <?= 
-                Field::errorSummary($form)
-               ->errors($errors)
-               ->header($translator->translate('invoice.custom.value.error.summary'))
-               ->onlyCommonErrors()   
-            ?>
-        <?= Html::closeTag('div'); ?>
-        <?= Html::openTag('div',['class' => 'mb3 form-group']); ?>
                 <?= Field::text($form, 'value')
                     ->label($translator->translate('i.value'))    
                     ->addInputAttributes([

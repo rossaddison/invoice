@@ -3,20 +3,78 @@ declare(strict_types=1);
 
 namespace App\Invoice\PostalAddress;
 
+use App\Invoice\Entity\PostalAddress;
 use Yiisoft\FormModel\FormModel;
+use Yiisoft\Translator\TranslatorInterface as Translator;
 use Yiisoft\Validator\Rule\Required;
 
 final class PostalAddressForm extends FormModel
 {   
-    private ?int    $id=null;
-    private ?int    $client_id=null;
-    private ?string $street_name='';
-    private ?string $additional_street_name='';
-    private ?string $building_number='';
-    private ?string $city_name='';
-    private ?string $postalzone='';
-    private ?string $countrysubentity='';
-    private ?string $country='';
+    private ?int    $id = null;
+    #[Required]
+    private ?int    $client_id = null;
+    #[Required]
+    private ?string $street_name = '';
+    #[Required]
+    private ?string $additional_street_name = '';
+    
+    private ?string $building_number = '';
+    #[Required]
+    private ?string $city_name = '';
+    #[Required]
+    private ?string $postalzone = '';
+    #[Required]
+    private ?string $countrysubentity = '';
+    #[Required]
+    private ?string $country = '';
+    
+    private Translator $translator;
+        
+    public function __construct(Translator $translator, PostalAddress $postalAddress, int $client_id) 
+    {    
+        $this->translator = $translator;
+        
+        // two hidden fields with ->hideLabel(true) in the view
+        $this->id = (int)$postalAddress->getId();
+        $this->client_id = $client_id;
+        
+        // not hidden fields
+        $this->street_name = $postalAddress->getStreet_name();
+        $this->additional_street_name = $postalAddress->getAdditional_street_name();
+        $this->building_number = $postalAddress->getBuilding_number();
+        $this->city_name = $postalAddress->getCity_name();
+        $this->postalzone = $postalAddress->getPostalzone();
+        $this->countrysubentity = $postalAddress->getCountrysubentity();
+        $this->country = $postalAddress->getCountry();
+    }
+    
+    public function getPropertyLabels() : array 
+    {
+        return [
+            'street_name' => $this->translator->translate('invoice.client.postaladdress.street.name'),
+            'additional_street_name' => $this->translator->translate('invoice.client.postaladdress.additional.street.name'),
+            'building_number' => $this->translator->translate('invoice.client.postaladdress.building.number'),
+            'city_name' => $this->translator->translate('invoice.client.postaladdress.city.name'),
+            'postalzone' => $this->translator->translate('invoice.client.postaladdress.postalzone'),
+            'countrysubentity' => $this->translator->translate('invoice.client.postaladdress.countrysubentity'),
+            'country' => $this->translator->translate('invoice.client.postaladdress.country')
+        ];
+    }  
+        
+    public function getPropertyHints() : array
+    {
+        $required = 'invoice.hint.this.field.is.required';
+        $not_required = 'invoice.hint.this.field.is.not.required';
+        return [
+            'street_name' => $this->translator->translate($required),
+            'additional_street_name' => $this->translator->translate($required),
+            'building_number' => $this->translator->translate($not_required),
+            'city_name' => $this->translator->translate($required),
+            'postalzone' => $this->translator->translate($required),
+            'countrysubentity' => $this->translator->translate($required),
+            'country' => $this->translator->translate($required)
+        ];
+    }    
 
     public function getId() : int|null
     {
@@ -71,17 +129,4 @@ final class PostalAddressForm extends FormModel
     {
       return '';
     }
-
-    public function getRules(): array    {
-      return [
-        'client_id' => [new Required()],  
-        'street_name' => [new Required()],
-        'additional_street_name' => [new Required()],
-        'building_number' => [new Required()],
-        'city_name' => [new Required()],
-        'postalzone' => [new Required()],
-        'countrysubentity' => [new Required()],
-        'country' => [new Required()],
-      ];
-}
 }

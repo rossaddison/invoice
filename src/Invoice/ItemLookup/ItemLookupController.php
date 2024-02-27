@@ -13,12 +13,13 @@ use App\Service\WebControllerService;
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
 
+use Yiisoft\Data\Paginator\OffsetPaginator;
 use Yiisoft\Http\Method;
 use Yiisoft\Router\CurrentRoute;
 use Yiisoft\Session\SessionInterface as Session;
 use Yiisoft\Session\Flash\Flash;
-use Yiisoft\Translator\TranslatorInterface;use Yiisoft\FormModel\FormHydrator;
-use Yiisoft\Form\Helper\HtmlFormErrors;
+use Yiisoft\Translator\TranslatorInterface;
+use Yiisoft\FormModel\FormHydrator;
 use Yiisoft\Yii\View\ViewRenderer;
 
 final class ItemLookupController
@@ -52,90 +53,87 @@ final class ItemLookupController
     
     /**
      * @param ItemLookupRepository $itemlookupRepository
-     * @param SettingRepository $settingRepository
-     * @param Request $request
-     * @param ItemLookupService $service
      */
-    public function index(ItemLookupRepository $itemlookupRepository, SettingRepository $settingRepository, Request $request, ItemLookupService $service): \Yiisoft\DataResponse\DataResponse
+    public function index(ItemLookupRepository $itemlookupRepository, SettingRepository $sR): \Yiisoft\DataResponse\DataResponse
     {
       $canEdit = $this->rbac();
+      $itemLookups = $this->itemlookups($itemlookupRepository);
+      $paginator = (new OffsetPaginator($itemLookups));
       $parameters = [
-       's'=>$settingRepository,
+       'paginator' => $paginator,   
        'canEdit' => $canEdit,
-       'itemlookups' => $this->itemlookups($itemlookupRepository),
+       'grid_summary'=> $sR->grid_summary(
+               $paginator, 
+               $this->translator, 
+               (int)$sR->get_setting('default_list_limit'), 
+               $this->translator->translate('invoice.item.lookup'), ''),   
        'alert'=> $this->alert()
       ];
       return $this->viewRenderer->render('index', $parameters);
     }
     
     /**
-     * 
-     * @param ViewRenderer $head
      * @param Request $request
      * @param FormHydrator $formHydrator
-     * @param SettingRepository $settingRepository
      * @return Response
      */
-    public function add(ViewRenderer $head, Request $request, 
-                        FormHydrator $formHydrator,
-                        SettingRepository $settingRepository,                        
-
+    public function add(Request $request, 
+                        FormHydrator $formHydrator
     ): Response
     {
+        $itemLookup = new ItemLookup();
+        $form = new ItemLookupForm($itemLookup);
         $parameters = [
           'title' => $this->translator->translate('invoice.add'),
           'action' => ['itemlookup/add'],
           'errors' => [],
-          'body' => $request->getParsedBody(),
-          's'=>$settingRepository,
-          'head'=>$head,
+          'form' => $form
         ];
-        
         if ($request->getMethod() === Method::POST) {
-            
-            $form = new ItemLookupForm();
-            if ($formHydrator->populate($form, $parameters['body']) && $form->isValid()) {
-                $this->itemlookupService->saveItemLookup(new ItemLookup(),$form);
+            $body = $request->getParsedBody();
+            if ($formHydrator->populateFromPostAndValidate($form, $request)) {
+                /**
+                 * @psalm-suppress PossiblyInvalidArgument $body
+                 */
+                $this->itemlookupService->saveItemLookup($itemLookup, $body);
                 return $this->webService->getRedirectResponse('itemlookup/index');
             }
+            $parameters['errors'] = $form->getValidationResult()?->getErrorMessagesIndexedByAttribute() ?? [];
             $parameters['form'] = $form;
         }
         return $this->viewRenderer->render('_form', $parameters);
     }
     
     /**
-     * 
-     * @param ViewRenderer $head
      * @param Request $request
      * @param CurrentRoute $currentRoute
      * @param FormHydrator $formHydrator
      * @param ItemLookupRepository $itemlookupRepository
-     * @param SettingRepository $settingRepository
      * @return Response
      */
-    public function edit(ViewRenderer $head, Request $request, CurrentRoute $currentRoute,
+    public function edit(Request $request, CurrentRoute $currentRoute,
       FormHydrator $formHydrator,
-      ItemLookupRepository $itemlookupRepository, 
-      SettingRepository $settingRepository, 
+      ItemLookupRepository $itemlookupRepository
     ): Response {
         $lookup = $this->itemlookup($currentRoute, $itemlookupRepository);
-        if ($lookup) {
+        if (null!==$lookup) {
+            $form = new ItemLookupForm($lookup);
             $parameters = [
-              'title' => $settingRepository->trans('edit'),
+              'title' => $this->translator->translate('i.edit'),
               'action' => ['itemlookup/edit', ['id' => $lookup->getId()]],
               'errors' => [],
-              'body' => $this->body($lookup),
-              'head'=>$head,
-              's'=>$settingRepository,            
+              'form' => $form      
             ];
             if ($request->getMethod() === Method::POST) {
-                $form = new ItemLookupForm();
                 $body = $request->getParsedBody();
-                if ($formHydrator->populate($form, $body) && $form->isValid()) {
-                    $this->itemlookupService->saveItemLookup($lookup, $form);
+                if ($formHydrator->populateFromPostAndValidate($form, $request)) {
+                   /**
+                    * @psalm-suppress PossiblyInvalidArgument $body
+                    */
+                    $this->itemlookupService->saveItemLookup($lookup, $body);
                     return $this->webService->getRedirectResponse('itemlookup/index');
                 }
-                $parameters['body'] = $body;
+                $parameters['errors'] = $form->getValidationResult()?->getErrorMessagesIndexedByAttribute() ?? [];
                 $parameters['form'] = $form;
             }
             return $this->viewRenderer->render('_form', $parameters);
@@ -160,24 +158,19 @@ final class ItemLookupController
     }
     
     /**
-     * 
      * @param CurrentRoute $currentRoute
      * @param ItemLookupRepository $itemlookupRepository
-     * @param SettingRepository $settingRepository
      * @return \Yiisoft\DataResponse\DataResponse|Response
      */
-    public function view(CurrentRoute $currentRoute, ItemLookupRepository $itemlookupRepository,
-        SettingRepository $settingRepository,
+    public function view(CurrentRoute $currentRoute, ItemLookupRepository $itemlookupRepository
         ): \Yiisoft\DataResponse\DataResponse|Response {
-        $lookup = $this->itemlookup($currentRoute, $itemlookupRepository);
-        if ($lookup) {
+        $itemLookup = $this->itemlookup($currentRoute, $itemlookupRepository);
+        if (null!==$itemLookup) {
+            $form = new ItemLookupForm($itemLookup);
             $parameters = [
-              'title' => $settingRepository->trans('view'),
-              'action' => ['itemlookup/edit', ['id' => $lookup->getId()]],
-              'errors' => [],
-              'body' => $this->body($lookup),
-              's'=>$settingRepository,             
-              'itemlookup'=>$itemlookupRepository->repoItemLookupquery($lookup->getId()),
+              'title' => $this->translator->translate('i.view'),
+              'action' => ['itemlookup/view', ['id' => $itemLookup->getId()]],
+              'form' => $form, 
             ];
             return $this->viewRenderer->render('_view', $parameters);
         }
@@ -223,40 +216,24 @@ final class ItemLookupController
         $itemlookups = $itemlookupRepository->findAllPreloaded();        
         return $itemlookups;
     }
-    
+        
     /**
-     * 
-     * @param ItemLookup $itemlookup
-     * @return array
+     * @return string
      */
-    private function body(ItemLookup $itemlookup): array {
-      $body = [
-        'id'=>$itemlookup->getId(),
-        'name'=>$itemlookup->getName(),
-        'description'=>$itemlookup->getDescription(),
-        'price'=>$itemlookup->getPrice()
-      ];
-      return $body;
-    }
-    
-  /**
-   * @return string
-   */
-   private function alert(): string {
-     return $this->viewRenderer->renderPartialAsString('/invoice/layout/alert',
-     [ 
-       'flash' => $this->flash,
-       'errors' => [],
-     ]);
+     private function alert(): string {
+       return $this->viewRenderer->renderPartialAsString('/invoice/layout/alert',
+       [ 
+         'flash' => $this->flash
+       ]);
    }
 
-  /**
-   * @param string $level
-   * @param string $message
-   * @return Flash
-   */
-  private function flash_message(string $level, string $message): Flash {
-    $this->flash->add($level, $message, true);
-    return $this->flash;
-  }
+    /**
+     * @param string $level
+     * @param string $message
+     * @return Flash
+     */
+    private function flash_message(string $level, string $message): Flash {
+      $this->flash->add($level, $message, true);
+      return $this->flash;
+    }
 }

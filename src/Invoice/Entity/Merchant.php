@@ -90,9 +90,9 @@ use \DateTimeImmutable;
       $this->successful = $successful;
     }
     
-    public function getDate(): DateTimeImmutable
+    public function getDate(): string|DateTimeImmutable
     {
-       /** @var DateTimeImmutable $this->date */
+       /** @var string|DateTimeImmutable $this->date */
        return $this->date;     
     }
     

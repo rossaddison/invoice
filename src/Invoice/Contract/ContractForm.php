@@ -12,8 +12,10 @@ use DateTimeImmutable;
 final class ContractForm extends FormModel
 {    
     private ?int $id=null;
+    
     #[Required]
     private ?string $reference='';
+    
     #[Required]
     private ?string $name='';
     

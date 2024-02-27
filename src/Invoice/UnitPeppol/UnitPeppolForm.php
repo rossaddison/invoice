@@ -4,35 +4,54 @@ declare(strict_types=1);
 
 namespace App\Invoice\UnitPeppol;
 
+use App\Invoice\Entity\UnitPeppol;
 use Yiisoft\FormModel\FormModel;
 use Yiisoft\Validator\Rule\Required;
 
 final class UnitPeppolForm extends FormModel
 {    
+    private ?string $id = '';
+    #[Required]
+    private ?string $unit_id = '';
+    #[Required]
+    private ?string $code = '';
+    #[Required]
+    private ?string $name = '';
+    #[Required]
+    private ?string $description = '';
     
-    private ?int $unit_id=null;
-    private ?string $code='';
-    private ?string $name='';
-    private ?string $description='';
-
-    public function getUnit_id() : int|null
+    public function __construct(UnitPeppol $unitPeppol)
     {
-      return $this->unit_id;
+        $this->id = $unitPeppol->getId();
+        $this->unit_id = $unitPeppol->getUnit_id();
+        $this->code = $unitPeppol->getCode();
+        $this->name = $unitPeppol->getName();
+        $this->description =  $unitPeppol->getDescription();
+    }  
+    
+    public function getId() : string|null
+    {
+        return $this->id;
+    }    
+    
+    public function getUnit_id() : string|null
+    {
+        return $this->unit_id;
     }
 
     public function getCode() : string|null
     {
-      return $this->code;
+        return $this->code;
     }
 
     public function getName() : string|null
     {
-      return $this->name;
+        return $this->name;
     }
 
     public function getDescription() : string|null
     {
-      return $this->description;
+        return $this->description;
     }
 
     /**
@@ -41,15 +60,6 @@ final class UnitPeppolForm extends FormModel
      */
     public function getFormName(): string
     {
-      return '';
+        return '';
     }
-
-    public function getRules(): array    {
-      return [
-        'unit_id' => [new Required()],  
-        'code' => [new Required()],
-        'name' => [new Required()],
-        'description' => [new Required()],
-      ];
-}
 }

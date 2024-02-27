@@ -41,116 +41,48 @@ final class QuoteService
     /**
      * @param User $user
      * @param Quote $model
-     * @param QuoteForm $form
-     * @param SR $s
-     * @return void
-     */
-    public function addQuote(User $user, Quote $model, QuoteForm $form, SR $s): void
-    { 
-        null!==$form->getInv_id() ? $model->setInv_id((int)$form->getInv_id()) : '';
-        null!==$form->getSo_id() ? $model->setSo_id((int)$form->getSo_id()) : '';
-        null!==$form->getGroup_id() ? $model->setGroup_id($form->getGroup_id()) : '';
-        null!==$form->getClient_id() ? $model->setClient_id($form->getClient_id()) : '';
-        null!==$form->getStatus_id() ? $model->setStatus_id($form->getStatus_id()) : '';
-        null!==$form->getDiscount_amount() ? $model->setDiscount_amount($form->getDiscount_amount()) : '';
-        null!==$form->getDiscount_percent() ? $model->setDiscount_percent($form->getDiscount_percent()) : '';       
-        null!==$form->getUrl_key() ? $model->setUrl_key($form->getUrl_key()) : '';
-        null!==$form->getPassword() ? $model->setPassword($form->getPassword()) : '';
-        null!==$form->getNotes() ? $model->setNotes($form->getNotes()) : '';       
-        if ($model->isNewRecord()) {
-             $model->setInv_id(0);             
-             $model->setSo_id(0);
-             !empty($form->getNumber()) ? $model->setNumber($form->getNumber()) : '';
-             $model->setStatus_id(1);
-             $model->setUser_id((int)$user->getId());
-             $model->setUrl_key(Random::string(32));            
-             $model->setDate_created(new \DateTimeImmutable('now'));
-             $model->setDate_expires($s);
-             $model->setDiscount_amount(0.00);
-        }
-        $this->repository->save($model);
-    }
-    
-    /**
-     * @param User $user
-     * @param Quote $model
-     * @param QuoteForm $form
-     * @param SR $s
-     * @return Quote
-     */
-    public function saveQuote(User $user, Quote $model, QuoteForm $form, SR $s, GR $gR): Quote
-    { 
-        $model->setInv_id((int)$form->getInv_id());
-        $model->setSo_id((int)$form->getSo_id());
-        null!==$form->getClient_id() ? $model->setClient($model->getClient()?->getClient_id() == $form->getClient_id() ? $model->getClient() : null): '';
-        $model->setClient_id((int)$form->getClient_id());
-       
-        null!==$form->getGroup_id() ? $model->setGroup($model->getGroup()?->getId() == $form->getGroup_id() ? $model->getGroup() : null): '';
-        $model->setGroup_id((int)$form->getGroup_id());          
-        
-        null!==$form->getStatus_id() ? $model->setStatus_id($form->getStatus_id()) : '';
-        null!==$form->getDiscount_percent() ? $model->setDiscount_percent($form->getDiscount_percent()) : '';
-        null!==$form->getDiscount_amount() ? $model->setDiscount_amount($form->getDiscount_amount()) : '';
-        null!==$form->getUrl_key() ? $model->setUrl_key($form->getUrl_key()) : '';
-        null!==$form->getPassword() ? $model->setPassword($form->getPassword()) : '';
-        null!==$form->getNotes() ? $model->setNotes($form->getNotes()) : '';
-        if ($model->isNewRecord()) {
-             $model->setInv_id(0); 
-             $model->setSo_id(0);
-             !empty($form->getNumber()) ? $model->setNumber($form->getNumber()) : '';
-             $model->setStatus_id(1);
-             $model->setUser($user);
-             $model->setUser_id((int)$user->getId());
-             $model->setUrl_key(Random::string(32));            
-             $model->setDate_created(new \DateTimeImmutable('now'));
-             $model->setDate_expires($s);
-             $model->setDiscount_amount(0.00);
-        }
-        // Regenerate quote numbers if the setting is changed
-        if (!$model->isNewRecord() && $s->get_setting('generate_quote_number_for_draft') === '1') {
-             null!==$form->getGroup_id() ? $model->setNumber((string)$gR->generate_number($form->getGroup_id(), true)) : '';  
-        }
-        $this->repository->save($model);
-        return $model;
-    }
-    
-    /**
-     * bothQuote replaced addQuote and saveQuote. addQuote and saveQuote will be merged into saveQuote ultimately
-     * @param User $user
-     * @param Quote $model
-     * @param QuoteForm $form
+     * @param array $array
      * @param SR $s
      * @param GR $gR
      * @return Quote
      */
-    public function bothQuote(User $user, Quote $model, QuoteForm $form, SR $s, GR $gR): Quote
+    public function saveQuote(User $user, Quote $model, array $array, SR $s, GR $gR): Quote
     {    
-        $model->nullifyRelationOnChange((int)$form->getGroup_id(),(int)$form->getClient_id());
-        null!==$form->getInv_id() ? $model->setInv_id((int)$form->getInv_id()) : '';
-        null!==$form->getSo_id() ? $model->setSo_id((int)$form->getSo_id()) : '';
-        null!==$form->getClient_id() ? $model->setClient_id($form->getClient_id()) : 0;
-        null!==$form->getGroup_id() ? $model->setGroup_id($form->getGroup_id()) : 0;
-        null!==$form->getStatus_id() ? $model->setStatus_id($form->getStatus_id()) : '';
-        null!==$form->getDiscount_percent() ? $model->setDiscount_percent($form->getDiscount_percent()) : '';
-        null!==$form->getDiscount_amount() ? $model->setDiscount_amount($form->getDiscount_amount()) : '';
-        null!==$form->getUrl_key() ? $model->setUrl_key($form->getUrl_key()) : '';
-        null!==$form->getPassword() ? $model->setPassword($form->getPassword()) : '';
-        null!==$form->getNotes() ? $model->setNotes($form->getNotes()) : '';
+        $model->nullifyRelationOnChange((int)$array['group_id'],(int)$array['client_id']);
+        
+        $datetime_created = new \DateTimeImmutable();
+        /**
+         * @var string $array['date_created']
+         */
+        $date_created = $array['date_created'] ?? '';
+        $model->setDate_created($datetime_created::createFromFormat('Y-m-d' , $date_created) ?: new \DateTimeImmutable('1901/01/01'));
+        
+        isset($array['inv_id']) ? $model->setInv_id((int)$array['inv_id']) : '';
+        isset($array['so_id']) ? $model->setSo_id((int)$array['so_id']) : '';
+        isset($array['client_id']) ? $model->setClient_id((int)$array['client_id']) : 0;
+        isset($array['group_id']) ? $model->setGroup_id((int)$array['group_id']) : 0;
+        isset($array['status_id']) ? $model->setStatus_id((int)$array['status_id']) : '';
+        isset($array['delivery_location_id']) ? $model->setDelivery_location_id((int)$array['delivery_location_id']) : '';
+        isset($array['discount_percent']) ? $model->setDiscount_percent((float)$array['discount_percent']) : '';
+        isset($array['discount_amount']) ? $model->setDiscount_amount((float)$array['discount_amount']) : '';
+        isset($array['url_key']) ? $model->setUrl_key((string)$array['url_key']) : '';
+        isset($array['password']) ? $model->setPassword((string)$array['password']) : '';
+        isset($array['notes']) ? $model->setNotes((string)$array['notes']) : '';
         if ($model->isNewRecord()) {
-             $model->setInv_id(0);
-             $model->setSo_id(0);
-             !empty($form->getNumber()) ? $model->setNumber($form->getNumber()) : '';
-             $model->setStatus_id(1);
-             $model->setUser($user);
-             $model->setUser_id((int)$user->getId());
-             $model->setUrl_key(Random::string(32));            
-             $model->setDate_created(new \DateTimeImmutable('now'));
-             $model->setDate_expires($s);
-             $model->setDiscount_amount(0.00);
+            $model->setInv_id(0);
+            $model->setSo_id(0);
+            isset($array['number']) ? $model->setNumber((string)$array['number']) : '';
+            $model->setStatus_id(1);
+            $model->setUser($user);
+            $model->setUser_id((int)$user->getId());
+            $model->setUrl_key(Random::string(32));            
+            $model->setDate_created(new \DateTimeImmutable('now'));
+            $model->setDate_expires($s);
+            $model->setDiscount_amount(0.00);
         }
         // Regenerate quote numbers if the setting is changed
         if (!$model->isNewRecord() && $s->get_setting('generate_quote_number_for_draft') === '1') {
-             null!==$form->getGroup_id() ? $model->setNumber((string)$gR->generate_number($form->getGroup_id(), true)) : '';  
+            null!==$array['group_id'] ? $model->setNumber((string)$gR->generate_number((int)$array['group_id'], true)) : '';  
         }
         $this->repository->save($model);
         return $model;

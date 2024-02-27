@@ -6,9 +6,6 @@ namespace App\Invoice\Task;
 
 use App\Invoice\Entity\Task;
 
-use App\Invoice\Setting\SettingRepository as sR;
-
-
 final class TaskService
 {
     private TaskRepository $repository;
@@ -19,26 +16,30 @@ final class TaskService
     }
     
     /**
-     * 
      * @param Task $model
-     * @param TaskForm $form
-     * @param sR $sR
+     * @param array $array
      * @return void
      */
-    public function saveTask(Task $model, TaskForm $form, sR $sR): void
+    public function saveTask(Task $model, array $array): void
     {
-       $form->getProject_id() ? $model->setProject_id($form->getProject_id()) : '';
-       $form->getName() ? $model->setName($form->getName()) : '';
-       $form->getDescription() ? $model->setDescription($form->getDescription()) : '';
-       $form->getPrice() ? $model->setPrice($form->getPrice()) : $model->setPrice(0.00);
-       $form->getStatus() ? $model->setStatus($form->getStatus()) : '';
-       $form->getTax_rate_id() ? $model->setTax_rate_id($form->getTax_rate_id()) : '';
-       null!==$form->getFinish_date($sR) ? $model->setFinish_date($form->getFinish_date($sR)) : '';
+       isset($array['project_id']) ? $model->setProject_id((int)$array['project_id']) : '';
+       isset($array['name']) ? $model->setName((string)$array['name']) : '';
+       isset($array['description']) ? $model->setDescription((string)$array['description']) : '';
+       isset($array['price']) ? $model->setPrice((float)$array['price']) : $model->setPrice(0.00);
+       isset($array['status']) ? $model->setStatus((int)$array['status']) : '';
+       isset($array['tax_rate_id']) ? $model->setTax_rate_id((int)$array['tax_rate_id']) : '';
+       
+       $datetime = new \DateTime();
+       /**
+        * @var string $array['finish_date']
+        */
+       $finish_date = $array['finish_date'] ?? '';
+       $model->setFinish_date($datetime::createFromFormat('Y-m-d' , $finish_date));
+       
        $this->repository->save($model);
     }
     
     /**
-     * 
      * @param Task $model
      * @return void
      */

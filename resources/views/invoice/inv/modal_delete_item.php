@@ -1,6 +1,6 @@
 <?php
 declare(strict_types=1);
-// delete-items triggered by #delete-items on quote\view.php
+// delete-items triggered by #delete-items on inv\view.php
 ?>
 <div id="delete-items" class="modal modal-lg" role="dialog" aria-labelledby="modal_delete_item" aria-hidden="true">
     <form class="modal-content">
@@ -15,7 +15,7 @@ declare(strict_types=1);
         </div>           
         <div class="modal-footer">
             <div class="btn-group">
-                <!--quote.js delete-items-confirm-inv function  -->
+                <!--inv.js delete-items-confirm-inv function  -->
                 <button class="delete-items-confirm-inv btn btn-success" id="delete-items-confirm-inv" type="button">
                             <i class="fa fa-check"></i><?= $translator->translate('i.yes'); ?>
                 </button>                

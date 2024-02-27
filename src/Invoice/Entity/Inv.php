@@ -15,6 +15,7 @@ use App\User\User;
 use App\Invoice\Entity\Delivery;
 use App\Invoice\Entity\Group;
 use App\Invoice\Entity\Client;
+use App\Invoice\Entity\DeliveryLocation;
 use App\Invoice\Entity\InvItem;
 use App\Invoice\Entity\InvAmount;
 use \DateTimeImmutable;
@@ -23,39 +24,46 @@ use \DateTimeImmutable;
 #[Behavior\CreatedAt(field: 'date_created', column: 'date_created')]
 #[Behavior\UpdatedAt(field: 'date_modified', column: 'date_modified')]
 class Inv {
-
+    
+    // Users
     #[BelongsTo(target: User::class, nullable: false)]
     private ?User $user = null;
-
+    
+    #[Column(type: 'integer(11)', nullable: false)]
+    private ?int $user_id = null;
+    
+    // Group
     #[BelongsTo(target: Group::class, nullable: false, fkAction: 'NO ACTION')]
     private ?Group $group = null;
+    
+    #[Column(type: 'integer(11)', nullable: false)]
+    private ?int $group_id = null;
 
+    // Client
     #[BelongsTo(target: Client::class, nullable: false, fkAction: 'NO ACTION')]
     private ?Client $client = null;
+    
+    #[Column(type: 'integer(11)', nullable: false)]
+    private ?int $client_id = null;
 
+    //Delivery
     #[BelongsTo(target: Delivery::class, nullable: true, fkAction: 'NO ACTION')]
     private ?Delivery $delivery = null;
+    
+    #[Column(type: 'integer(11)', nullable: true)]
+    private ?int $delivery_id = null;
 
+    #[HasOne(target: InvAmount::class)]
+    private InvAmount $invAmount;
+    
     /**
      * @var ArrayCollection<array-key, InvItem>
      */
     #[HasMany(target: InvItem::class)]
     private ArrayCollection $items;
 
-    #[HasOne(target: InvAmount::class)]
-    private InvAmount $invamount;
-
     #[Column(type: 'primary')]
     private ?int $id = null;
-
-    #[Column(type: 'integer(11)', nullable: false)]
-    private ?int $client_id = null;
-
-    #[Column(type: 'integer(11)', nullable: false)]
-    private ?int $group_id = null;
-
-    #[Column(type: 'integer(11)', nullable: false)]
-    private ?int $user_id = null;
 
     #[Column(type: 'tinyInteger', nullable: false, default: 1)]
     private ?int $status_id = null;
@@ -64,10 +72,9 @@ class Inv {
     private ?int $contract_id = null;
 
     #[Column(type: 'integer(11)', nullable: true)]
-    private ?int $delivery_id = null;
-
-    #[Column(type: 'integer(11)', nullable: true)]
     private ?int $delivery_location_id = null;
+    #[BelongsTo(target: DeliveryLocation::class, nullable: false, fkAction: 'CASCADE', fkOnDelete: 'CASCADE')]
+    private ?DeliveryLocation $deliveryLocation = null;
 
     #[Column(type: 'integer(11)', nullable: true)]
     private ?int $so_id = null;
@@ -162,7 +169,8 @@ class Inv {
             string $stand_in_code = ''
     ) {
         $this->items = new ArrayCollection();
-        $this->invamount = new InvAmount();
+        // create also the invoice amount when the invoice is created. 
+        $this->invAmount = new InvAmount();
         $this->client_id = $client_id;
         $this->group_id = $group_id;
         $this->so_id = $so_id;
@@ -171,11 +179,12 @@ class Inv {
         $this->status_id = $status_id;
         $this->is_read_only = $is_read_only;
         $this->password = $password;
-        $this->date_created = new \DateTimeImmutable('1901/01/01');
-        $this->date_modified = new \DateTimeImmutable('1901/01/01');
-        $this->date_due = new \DateTimeImmutable('1901/01/01');
-        $this->date_supplied = new \DateTimeImmutable('1901/01/01');
-        $this->date_tax_point = new \DateTimeImmutable('1901/01/01');
+        $this->date_created = new \DateTimeImmutable('now');
+        $this->date_modified = new \DateTimeImmutable('now');
+        $this->date_due = new \DateTimeImmutable('2024/01/01');
+        $this->date_supplied = new \DateTimeImmutable('2024/01/01');
+        $this->date_tax_point = new \DateTimeImmutable('2024/01/01');
+        $this->time_created = new \DateTimeImmutable('now');
         $this->stand_in_code = $stand_in_code;
         $this->number = $number;
         $this->discount_amount = $discount_amount;
@@ -293,6 +302,11 @@ class Inv {
     public function setDelivery_location_id(int $delivery_location_id): void {
         $this->delivery_location_id = $delivery_location_id;
     }
+    
+    public function getDeliveryLocation() : ?DeliveryLocation
+    {
+        return $this->deliveryLocation;
+    }    
 
     public function getContract_id(): string {
         return (string) $this->contract_id;
@@ -500,7 +514,7 @@ class Inv {
     }
 
     public function getInvAmount(): InvAmount {
-        return $this->invamount;
+        return $this->invAmount;
     }
 
     /**

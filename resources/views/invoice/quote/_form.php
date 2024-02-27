@@ -1,239 +1,181 @@
 <?php
+
 declare(strict_types=1); 
 
+use Yiisoft\FormModel\Field;
 use Yiisoft\Html\Html;
-use Yiisoft\Yii\Bootstrap5\Alert;
-use App\Invoice\Helpers\DateHelper;
-use App\Invoice\Helpers\ModalHelper;
+use Yiisoft\Html\Tag\Form;
 
 /**
  * @var \Yiisoft\View\View $this
  * @var \Yiisoft\Router\UrlGeneratorInterface $urlGenerator
- * @var array $body
  * @var string $csrf
  * @var string $action
  * @var string $title
  */
-
-
-$modalhelper = new ModalHelper($s);
-$datehelper = new DateHelper($s);
-
-if (!empty($errors)) {
-    foreach ($errors as $field => $error) {
-        echo Alert::widget()->options(['class' => 'alert-danger'])->body(Html::encode($field . ':' . $error));
-    }
-}
+$vat = $s->get_setting('enable_vat_registration') === '1' ? true : false;
 
 ?>
-<form class="row" class="form-horizontal" id="QuoteForm" method="POST" action="<?= $urlGenerator->generate(...$action) ?>" enctype="multipart/form-data">
-<input type="hidden" name="_csrf" value="<?= $csrf ?>">
-    <div id="headerbar">
-        <h1 class="headerbar-title"><?= $translator->translate('i.quotes_form'); ?></h1>    
-        <?php
-            $response = $head->renderPartial('invoice/layout/header_buttons',['s'=>$s, 'hide_submit_button'=>false ,'hide_cancel_button'=>false]);
-            echo (string)$response->getBody();
-        ?>
-    </div>
-    <div class="form-group">
-      <div class="col-xs-12 col-sm-2 text-right text-left-xs">  
-        <label for="number" class="control-label"><?= $translator->translate('invoice.quote.id');?></label>
-      </div>
-      <div class="col-xs-12 col-sm-6">  
-        <div clsss="input-group">  
-            <input type="text" name="number" id="number" class="form-control" required disabled value="<?= Html::encode($body['id'] ??  ''); ?>">
-        </div>
-      </div>    
-    </div>
-    <div class="form-group">
-      <div class="col-xs-12 col-sm-2 text-right text-left-xs">  
-        <label for="number" class="control-label"><?= $translator->translate('invoice.quote.number');?></label>
-      </div>
-      <div class="col-xs-12 col-sm-6">  
-        <div clsss="input-group">  
-            <input type="text" name="number" id="number" class="form-control" disabled value="<?= Html::encode($body['number'] ??  ''); ?>">
-        </div>
-      </div>    
-    </div>
-    <div class="form-group">
-      <div class="col-xs-12 col-sm-2 text-right text-left-xs">
-        <label for="client_id" class="control-label"><?= $translator->translate('i.client'); ?></label>
-      </div>
-      <div class="col-xs-12 col-sm-6">  
-        <select name="client_id" id="client_id" class="form-control" required>
-           <option value=""><?= $translator->translate('i.client'); ?></option>
-             <?php foreach ($clients as $client) { ?>
-              <option value="<?= $client->getClient_id(); ?>"
-               <?php $s->check_select(Html::encode($body['client_id'] ?? ''), $client->getClient_id()) ?>
-               ><?= $client->getClient_name(); ?></option>
-             <?php } ?>     
-        </select>
-      </div>    
-    </div>
-
-    <div class="form-group">
-      <div class="col-xs-12 col-sm-2 text-right text-left-xs">  
-        <label for="group_id" class="control-label"><?= $translator->translate('i.quote_group'); ?>: </label>
-      </div>
-      <div class="col-xs-12 col-sm-6">
-          <select name="group_id" id="group_id" class="form-control">         
-          <?php foreach ($groups as $group) { ?>
-              <option value="<?php echo $group->getId(); ?>"
-                  <?php $s->check_select(Html::encode($body['group_id'] ?? $s->get_setting('default_quote_group')), $group->getId()); ?>>
-                  <?= Html::encode($group->getName()); ?>
-              </option>
-          <?php } ?>
-      </select>
-      </div>
-    </div>
-    
-    <?php if ($del_count > 0) { ?>
-    <div class="form-group">
-        <div class="col-xs-12 col-sm-2 text-right text-left-xs">
-            <label for="delivery_location_id"><?= $translator->translate('invoice.invoice.delivery.location'); ?>: </label>
-        </div>        
-        <div class="col-xs-12 col-sm-6">
-            <div class="input-group">  
-                <select name="delivery_location_id" id="delivery_location_id"
-                        class="form-control">
-                    <?php foreach ($dels as $del) { ?>
-                        <option value="<?php echo $del->getId(); ?>"
-                            <?php echo $s->check_select(Html::encode($body['delivery_location_id'] ?? $del->getId()), $del->getId()); ?>>
-                            <?php echo $del->getAddress_1(). ', '.$del->getAddress_2() .', '. $del->getCity() .', '. $del->getZip() ; ?>
-                        </option>
+<?= Html::openTag('div',['class'=>'container py-5 h-100']); ?>
+<?= Html::openTag('div',['class'=>'row d-flex justify-content-center align-items-center h-100']); ?>
+<?= Html::openTag('div',['class'=>'col-12 col-md-8 col-lg-6 col-xl-8']); ?>
+<?= Html::openTag('div',['class'=>'card border border-dark shadow-2-strong rounded-3']); ?>
+<?= Html::openTag('div',['class'=>'card-header']); ?>
+    <?= Html::openTag('h1',['class'=>'fw-normal h3 text-center']); ?><?= $translator->translate('i.edit'); ?><?= Html::closeTag('h1'); ?>
+        <?= Form::tag()->post($urlGenerator->generate(...$action))
+                       ->enctypeMultipartFormData()
+                       ->csrf($csrf)
+                       ->id('QuoteForm')
+                       ->open()?>
+                <?= Html::openTag('div', ['class' => 'container']); ?>
+                    <?= Html::openTag('div', ['class' => 'row']); ?>
+                        <?= Html::openTag('div', ['class' => 'col card mb-3']); ?>
+                            <?= Html::openTag('div',['class' => 'card-header']); ?>
+                                <?= Html::openTag('div'); ?>
+                                     <?= Field::hidden($form,'number')
+                                         ->hideLabel(false)
+                                         ->label($translator->translate('i.quote'))
+                                         ->addInputAttributes([
+                                             'class' => 'form-control',
+                                             'readonly' => 'readonly',
+                                           ])
+                                         ->value(Html::encode($form->getNumber()))
+                                     ?>
+                                <?= Html::closeTag('div'); ?>
+                                <?= Html::openTag('div'); ?>
+                                    <?= Field::select($form, 'client_id')
+                                        ->label($translator->translate('invoice.user.account.clients'))
+                                        ->addInputAttributes(['class' => 'form-control'])
+                                        ->value($form->getClient_id())
+                                        ->prompt($translator->translate('i.none'))
+                                        ->optionsData($optionsData['client'])
+                                        ->hint($translator->translate('invoice.hint.this.field.is.required')); 
+                                    ?>
+                                <?= Html::closeTag('div'); ?>            
+                                <?= Html::openTag('div'); ?>
+                                    <?= Field::select($form, 'group_id')
+                                        ->label($translator->translate('i.quote_group'))
+                                        ->addInputAttributes(['class' => 'form-control'])
+                                        ->value($form->getGroup_id() ?? $defaultGroupId)
+                                        ->prompt($translator->translate('i.none'))
+                                        ->optionsData($optionsData['group'])
+                                        ->hint($translator->translate('invoice.hint.this.field.is.required')); 
+                                    ?>
+                                <?= Html::closeTag('div'); ?>   
+                            
+                            <?php if ($del_count > 0) { ?>
+                                <?= Html::openTag('div'); ?>
+                                    <?= Field::select($form, 'delivery_location_id')
+                                        ->label($translator->translate('invoice.invoice.delivery.location'))
+                                        ->addInputAttributes(['class' => 'form-control'])
+                                        ->value($form->getDelivery_location_id())
+                                        ->prompt($translator->translate('i.none'))
+                                        ->optionsData($optionsData['deliveryLocation'])
+                                        ->hint($translator->translate('invoice.hint.this.field.is.not.required')); 
+                                    ?>
+                                <?= Html::closeTag('div'); ?>           
+                                <?php if (null!==$form->getDelivery_location_id() && !empty($form->getDelivery_location_id())) { ?>
+                                <span class="input-group-text">
+                                    <a href="<?= $urlGenerator->generate('del/edit', ['id'=> $form->getDelivery_location_id()]); ?>"><i class="fa fa-pencil fa-fw"></i><?php echo $translator->translate('invoice.invoice.delivery.location'); ?></a>
+                                </span>  
+                                <?php } ?>
+                                <?php
+                            } else {
+                                echo Html::a($translator->translate('invoice.invoice.delivery.location.add'), 
+                                             $urlGenerator->generate('del/add', 
+                                             [
+                                                 'client_id' => $quote->getClient_id(), 
+                                                 'origin' => 'quote', 
+                                                 'origin_id' => $quote->getId(), 
+                                                 'action' => $return_url_action
+                                             ]), [
+                                                 'class' => 'btn btn-danger btn-lg mt-3'
+                                             ]);
+                            }
+                            ?>
+                        <?= Html::openTag('br'); ?>    
+                        <?= Html::openTag('br'); ?>    
+                        <?= Html::openTag('div'); ?>
+                            <?= Field::date($form,'date_created')
+                                ->label($translator->translate('invoice.invoice.date.issued'))
+                                ->value($form->getDate_created() ? ($form->getDate_created())->format('Y-m-d') : '')
+                                ->hint($translator->translate('invoice.hint.this.field.is.required')); 
+                            ?>
+                        <?= Html::closeTag('div'); ?>
+                        <?= Html::openTag('div'); ?>
+                            <?= Field::password($form,'password')
+                                ->label($translator->translate('i.password'))
+                                ->addInputAttributes(['class' => 'form-control'])
+                                ->value(Html::encode($form->getPassword()))
+                                ->placeholder($translator->translate('i.password'))
+                                ->hint($translator->translate('invoice.hint.this.field.is.not.required')); 
+                            ?>
+                        <?= Html::closeTag('div'); ?>
+                        <?= Html::openTag('div'); ?>
+                            <?= Field::select($form, 'status_id')
+                                ->label($translator->translate('i.status'))
+                                ->addInputAttributes(['class' => 'form-control'])
+                                ->value($form->getStatus_id())
+                                ->prompt($translator->translate('i.none'))
+                                ->optionsData($optionsData['quoteStatus'])
+                                ->hint($translator->translate('invoice.hint.this.field.is.not.required')); 
+                            ?>
+                        <?= Html::closeTag('div'); ?>
+                        <?= Html::openTag('div'); ?>
+                        <?php // If the quote is in draft status; do not show the url_key
+                            if ($form->getStatus_id() == 1) { ?>
+                            <?= Field::hidden($form,'url_key')
+                                ->hideLabel(true);
+                            ?>
+                        <?php } ?>
+                        <?php if ($form->getStatus_id() > 1) { ?>
+                            <?= Field::text($form,'url_key')
+                                ->hideLabel(false)
+                                ->label(($form->getStatus_id() ?? 1) > 1 ? $translator->translate('i.guest_url') : '') 
+                                ->addInputAttributes($editInputAttributesUrlKey);
+                            ?>
+                        <?php } ?>
+                        <?= Html::closeTag('div'); ?>
+                    <?php   if ($vat === false) { ?>
+                        <?= Html::openTag('div'); ?>
+                            <?= Field::text($form,'discount_amount')
+                                ->hideLabel(false)
+                                ->label($translator->translate('i.discount').' '. $s->get_setting('currency_symbol'))
+                                ->addInputAttributes(['class' => 'form-control'])
+                                ->value($s->format_amount((float)($form->getDiscount_amount() ?? 0.00)))
+                                ->placeholder($translator->translate('i.discount')); 
+                            ?>
+                        <?= Html::closeTag('div'); ?>
+                        <?= Html::openTag('div'); ?>
+                            <?= Field::text($form,'discount_percent')
+                                ->label($translator->translate('i.discount_percentage'))
+                                ->addInputAttributes(['class' => 'form-control'])
+                                ->value(Html::encode($s->format_amount((float)($form->getDiscount_percent() ?? 0.00))))
+                                ->placeholder($translator->translate('i.discount_percentage')); 
+                            ?>
+                        <?= Html::closeTag('div'); ?>
                     <?php } ?>
-                </select>
-            </div>
-        </div>    
-    </div>
-    <?php } else {
-        echo '<div>';
-        echo $no_delivery_locations ? $alert : '';
-        echo Html::a($translator->translate('invoice.invoice.delivery.location.add'), $urlGenerator->generate('del/add',['client_id'=>$quote->getClient_id()]));
-        echo '</div>';
-    }
-    ?>
+                        <?= Html::openTag('div'); ?>
+                            <?= Field::hidden($form, 'inv_id')
+                                ->hideLabel(); ?>
+                        <?= Html::closeTag('div'); ?>
+                        <?= Html::closeTag('div'); ?>
+                    <?php foreach ($custom_fields as $custom_field): ?>
+                        <?php echo $cvH->print_field_for_form($custom_field, $quoteCustomForm, $translator, $quote_custom_values, $custom_values); ?>
+                    <?php endforeach; ?>
+                    <?= Html::closeTag('div'); ?>
+                <?= Html::closeTag('div'); ?>    
+            <?= Html::closeTag('div'); ?>
+        <?= Html::closeTag('div'); ?>
+        <?= $button::back_save($translator); ?>
+    <?= Html::closeTag('div'); ?>
+    
+<?= Html::closeTag('div'); ?>
 
-    <div class="form-group">
-      <div class="col-xs-12 col-sm-2 text-right text-left-xs">  
-        <label form-label for="date_created" class="control-label"><?= $translator->translate('i.created') ." (".  $datehelper->display().") "; ?></label>
-      </div>
-      <div class="col-xs-12 col-sm-6">  
-            <div class="input-group"> 
-            <input type="text" name="date_created" disabled id="date_created" placeholder="<?= $datehelper->display(); ?>" 
-                   class="form-control input-sm datepicker" 
-                   value="<?= Html::encode($datehelper->date_from_mysql($body['date_created'] ?? (new \DateTimeImmutable('now'))   )); ?>"> 
-            <span class="input-group-text"> 
-            <i class="fa fa-calendar fa-fw"></i> 
-             </span> 
-            </div>
-      </div>    
-    </div>
-    <div class="form-group">
-      <div class="col-xs-12 col-sm-2 text-right text-left-xs">  
-        <label for="password" class="control-label"><?= $translator->translate('i.quote_pre_password'); ?></label>
-      </div>
-      <div class="col-xs-12 col-sm-6">  
-           <div class="input-group">  
-                    <input type="text" name="password" id="password" class="form-control" value="<?= Html::encode($body['password'] ??  ''); ?>">
-           </div>
-      </div>    
-    </div> 
-    <div class="form-group">
-        <div class="col-xs-12 col-sm-2 text-right text-left-xs">
-            <label for="status_id" class="control-label"><?php echo $translator->translate('i.status'); ?></label>
-        </div>
-        <div class="col-xs-12 col-sm-6">
-            <select name="status_id" id="status_id" class="form-control">
-                <option value="0"><?php Html::encode($body['status_id'] ?? 1); ?></option>
-                <?php foreach ($quote_statuses as $key => $status) { ?>
-                    <option value="<?php echo $key; ?>" <?php $s->check_select(Html::encode($body['status_id'] ?? ''), $key) ?>>
-                        <?php echo $status['label']; ?>
-                    </option>
-                <?php } ?>
-            </select>
-        </div>
-    </div>
-    <div class="form-group">
-        <div class="col-xs-12 col-sm-2 text-right text-left-xs">
-            <label for="url_key" class="control-label"><?= ($body['status_id'] ?? 1) > 1 ? $translator->translate('i.guest_url') : ''; ?></label>
-        </div>
-        <!-- If the status is draft ie. 1 => hide the url key -->
-        <input type="text" name="url_key" id="url_key" class="form-control" readonly value="<?= Html::encode($body['url_key'] ??  ''); ?>" <?= ($body['status_id'] ?? 1) == 1 ? 'hidden' : ''; ?>>
-    </div>
-    <div class="form-group">
-      <div class="col-xs-12 col-sm-2 text-right text-left-xs">  
-        <label for="discount_amount" class="control-label"><?= $translator->translate('i.discount'); ?></label>
-      </div>
-      <div class="col-xs-12 col-sm-6">
-        <div class="input-group">  
-        <input type="number" name="discount_amount" id="discount_amount" class="form-control" value="<?= $s->format_amount((float)Html::encode($body['discount_amount'] ??  '')); ?>"> 
-                  <span class="input-group-text"><?= $s->get_setting('currency_symbol'); ?></span>
-        </div>          
-      </div>
-    </div>
-    <div class="form-group">
-        <div class="col-xs-12 col-sm-2 text-right text-left-xs">
-            <label for="discount_percent" class="control-label"><?= $translator->translate('i.discount'); ?></label>
-        </div>
-        <div class="col-xs-12 col-sm-6">
-            <div class="input-group">
-                <input type="number" name="discount_percent" id="discount_percent" class="form-control"
-                    value="<?= $s->format_amount((float)Html::encode($body['discount_percent'] ??  '')); ?>">
-                    <span class="input-group-text">&percnt;</span>
-            </div>
-        </div>    
-    </div>
-    <div class="form-group">
-        <div class="col-xs-12 col-sm-2 text-right text-left-xs">   
-            <label for="notes" class="control-label"><?= $translator->translate('i.notes'); ?></label>
-        </div>
-        <div class="col-xs-12 col-sm-6">
-            <div class="input-group">
-                <input type="text" name="notes" id="notes" class="form-control" value="<?= Html::encode($body['notes'] ??  ''); ?>">
-            </div>
-        </div>    
-    </div>
-    
-        <?php foreach ($custom_fields as $custom_field): ?>
-        <div class="form-group">
-        <?= $cvH->print_field_for_form($quote_custom_values,
-                                       $custom_field,
-                                       // Custom values to fill drop down list if a dropdown box has been created
-                                       $custom_values, 
-                                       // Class for div surrounding input
-                                       'col-xs-12 col-sm-6',
-                                       // Class surrounding above div
-                                       'form-group',
-                                       // Label class similar to above
-                                       'control-label'); ?>
-        </div>    
-        <?php endforeach; ?>
-    
-    <!-- Filled in when quote is connected to an invoice. Default is zero -->
-    <div class="form-group">
-      <div class="col-xs-12 col-sm-2 text-right text-left-xs">  
-        <label for="inv_id" class="control-label"></label>
-      </div>
-      <div class="col-xs-12 col-sm-6">  
-      <select name="inv_id" id="inv_id" hidden class="form-control">
-         <option value="0"><?php Html::encode($body['inv_id'] ?? ''); ?></option>
-           <?php foreach ($invs as $inv) { ?>
-            <option value="<?= $inv->getId(); ?>"
-             <?php $s->check_select(Html::encode($body['inv_id'] ?? ''), $inv->getId()) ?>
-             ><?= $inv->getId(); ?></option>
-           <?php } ?>
-      </select>
-      </div>    
-    </div> 
-    <div class="form-group">
-        <div class="col-xs-12 col-sm-2 text-right text-left-xs">   
-            <label for="id" class="control-label"></label>
-        </div>
-        <div class="col-xs-12 col-sm-6">
-            <div class="input-group">
-                <input type="hidden" name="id" id="id" class="form-control" value="<?= Html::encode($body['id'] ??  ''); ?>">
-            </div>
-        </div>    
-    </div>
-</form>
+<?= Html::closeTag('form'); ?>
+
+<?= Html::closeTag('div'); ?>
+<?= Html::closeTag('div'); ?>
+<?= Html::closeTag('div'); ?>
+<?= Html::closeTag('div'); ?>
+<?= Html::closeTag('div'); ?>  

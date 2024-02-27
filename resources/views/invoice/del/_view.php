@@ -2,7 +2,7 @@
 
 declare(strict_types=1); 
 
-use App\Widget\Button;
+
 use Yiisoft\FormModel\Field;
 use Yiisoft\Html\Html;
 use Yiisoft\Html\Tag\Form;
@@ -32,7 +32,7 @@ use Yiisoft\Html\Tag\Form;
     <?= Html::encode($title) ?>
 <?= Html::closeTag('h1'); ?>
 <?= Html::openTag('div', ['id' => 'headerbar']); ?>
-    <?= Button::back($translator); ?>
+    <?= $button::back($translator); ?>
     <?= Html::openTag('div', ['id' => 'content']); ?>
         <?= Html::openTag('div', ['class' => 'row']); ?>
             <?= Html::openTag('div'); ?>
@@ -92,6 +92,7 @@ use Yiisoft\Html\Tag\Form;
                         'placeholder' => $translator->translate('i.street_address_2'),
                         'value' => Html::encode($form->getAddress_2() ?? ''),
                     ]) 
+                    ->disabled(true)
                 ?>
             <?= Html::closeTag('div'); ?>
             <?= Html::openTag('div'); ?>
@@ -101,6 +102,7 @@ use Yiisoft\Html\Tag\Form;
                         'placeholder' => $translator->translate('i.city'),
                         'value' => Html::encode($form->getCity() ?? ''),
                     ]) 
+                    ->disabled(true)
                 ?>
             <?= Html::closeTag('div'); ?>
             <?= Html::openTag('div'); ?>
@@ -110,6 +112,7 @@ use Yiisoft\Html\Tag\Form;
                         'placeholder' => $translator->translate('i.state'),
                         'value' => Html::encode($form->getState() ?? ''),
                     ]) 
+                    ->disabled(true)
                 ?>
             <?= Html::closeTag('div'); ?>
             <?= Html::openTag('div'); ?>
@@ -119,6 +122,7 @@ use Yiisoft\Html\Tag\Form;
                         'placeholder' => $translator->translate('i.zip'),
                         'value' => Html::encode($form->getZip() ?? ''),
                     ])
+                    ->disabled(true)
                 ?>
             <?= Html::closeTag('div'); ?>
             <?= Html::openTag('div'); ?>
@@ -127,6 +131,7 @@ use Yiisoft\Html\Tag\Form;
                     ->addInputAttributes([
                         'placeholder' => $translator->translate('i.country'),
                     ]) 
+                    ->disabled(true)
                 ?>
             <?= Html::closeTag('div'); ?>
             <?= Html::openTag('div'); ?>
@@ -139,6 +144,7 @@ use Yiisoft\Html\Tag\Form;
                         'placeholder' => $translator->translate('invoice.delivery.location.global.location.number'),
                         'value' => Html::encode($form->getGlobal_location_number() ?? ''),
                     ]) 
+                    ->disabled(true)            
                 ?>
             <?= Html::closeTag('div'); ?>
             <?= Html::openTag('div'); ?>
@@ -158,6 +164,7 @@ use Yiisoft\Html\Tag\Form;
                 <?= Field::select($form, 'electronic_address_scheme')
                     ->label($translator->translate('invoice.delivery.location.electronic.address.scheme'))
                     ->optionsData($optionsDataEAS)
+                    ->disabled(true)    
                 ?>
             <?= Html::closeTag('div'); ?>
         <?= Html::closeTag('div'); ?>

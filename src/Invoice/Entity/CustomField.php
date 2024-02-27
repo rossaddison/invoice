@@ -27,22 +27,27 @@ class CustomField
      
     #[Column(type: 'integer(11)',nullable:true, default:999)] 
     private ?int $order =  null;
-     
+    
+    #[Column(type: 'bool', default: true)]
+    private bool $required = true;
+    
     public function __construct(
-         int $id = null,
-         string $table = '',
-         string $label = '',
-         string $type = '',
-         int $location = null,
-         int $order = null
+        int $id = null,
+        string $table = '',
+        string $label = '',
+        string $type = '',
+        int $location = null,
+        int $order = null,
+        bool $required=false,     
     )
     {
-         $this->id=$id;
-         $this->table=$table;
-         $this->label=$label;
-         $this->type=$type;
-         $this->location=$location;
-         $this->order=$order;         
+        $this->id=$id;
+        $this->table=$table;
+        $this->label=$label;
+        $this->type=$type;
+        $this->location=$location;
+        $this->order=$order;
+        $this->required=$required; 
     }
      
     public function getId(): string
@@ -104,4 +109,14 @@ class CustomField
     {
       $this->order =  $order;
     }
+    
+    public function getRequired(): bool
+    {
+       return $this->required;
+    }
+    
+    public function setRequired(bool $required) : void
+    {
+      $this->required =  $required;
+    } 
 }

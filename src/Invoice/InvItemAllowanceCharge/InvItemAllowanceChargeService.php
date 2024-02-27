@@ -21,17 +21,16 @@ final class InvItemAllowanceChargeService
 
     /**
      * @param InvItemAllowanceCharge $model
-     * @param InvItemAllowanceChargeForm $form
+     * @param array $array
      * @param float $vat
      * @return void
      */
-    public function saveInvItemAllowanceCharge(InvItemAllowanceCharge $model, InvItemAllowanceChargeForm $form, float $vat): void
+    public function saveInvItemAllowanceCharge(InvItemAllowanceCharge $model, array $array, float $vat): void
     {
-        $model->nullifyRelationOnChange((int)$form->getInv_item_id(), (int)$form->getAllowance_charge_id());
-        null!==$form->getInv_id() ? $model->setInv_id($form->getInv_id()) : '';
-        null!==$form->getInv_item_id() ? $model->setInv_item_id($form->getInv_item_id()) : '';
-        null!==$form->getAllowance_charge_id() ? $model->setAllowance_charge_id($form->getAllowance_charge_id()) : '';
-        null!==$form->getAmount() ? $model->setAmount($form->getAmount()) : 0.00;
+        isset($array['inv_id']) ? $model->setInv_id((int)$array['inv_id']) : '';
+        isset($array['inv_item_id']) ? $model->setInv_item_id((int)$array['inv_item_id']) : '';
+        isset($array['allowance_charge_id']) ? $model->setAllowance_charge_id((int)$array['allowance_charge_id']) : '';
+        isset($array['amount']) ? $model->setAmount((int)$array['amount']) : '';
         $model->setVat($vat);
         $this->repository->save($model);
     }
@@ -41,21 +40,21 @@ final class InvItemAllowanceChargeService
         $inv_item_id = $model->getInv_item_id();
         $inv_item_amount = $iiaR->repoInvItemAmountquery($inv_item_id);
         if (null!==$inv_item_amount) {
-            $all_charges = $inv_item_amount->getCharge() ?: 0.00;
-            $all_allowances = $inv_item_amount->getAllowance() ?: 0.00;
-            $old_tax_total = $inv_item_amount->getTax_total() ?: 0.00;
+            $all_charges = $inv_item_amount->getCharge() ?? 0.00;
+            $all_allowances = $inv_item_amount->getAllowance() ?? 0.00;
+            $old_tax_total = $inv_item_amount->getTax_total() ?? 0.00;
             $amount = (float)$model->getAmount();
             $vat = (float)$model->getVat();
-            $old_total = $inv_item_amount->getTotal() ?: 0.00;
+            $old_total = $inv_item_amount->getTotal() ?? 0.00;
             if ($model->getAllowanceCharge()?->getIdentifier() == true) {
                  // deleting a charge will reduce the total
-                 $new_total = $old_total - $amount;
+                 $new_total = $old_total - $amount - $vat;
                  $inv_item_amount->setCharge($all_charges-$amount);
                  $inv_item_amount->setTax_total($old_tax_total-$vat);
                  $inv_item_amount->setTotal($new_total);
             } else {
                  // deleting an allowance will increase the total
-                 $new_total = $old_total + $amount;
+                 $new_total = $old_total + $amount + $vat;
                  $inv_item_amount->setAllowance($all_allowances-$amount);
                  $inv_item_amount->setTax_total($old_tax_total+$vat);
                  $inv_item_amount->setTotal($new_total);

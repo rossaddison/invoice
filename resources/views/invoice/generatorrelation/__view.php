@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 
-use App\Widget\Button;
+
 use Yiisoft\FormModel\Field;
 use Yiisoft\Html\Html;
 use Yiisoft\Html\Tag\Form;
@@ -101,7 +101,7 @@ use Yiisoft\Html\Tag\Form;
 ?>
 <?= Html::closeTag('div'); ?>
 
-<?= Button::back_save($translator); ?>    
+<?= $button::back_save($translator); ?>    
 <?= Form::tag()->close(); ?>
 
 <?= Html::closeTag('div'); ?>

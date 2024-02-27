@@ -32,7 +32,7 @@ class AdditionalDocumentReference implements XmlSerializable {
    * @throws InvalidArgumentException
    */
   public function validate() : void {
-    if (empty($this->documentDescription)) {
+    if ($this->documentDescription === null) {
       throw new InvalidArgumentException($this->translator->translate('invoice.peppol.validator.Invoice.cac.AdditionalDocumentReference.cbc.DocumentDescription'));
     }
   }

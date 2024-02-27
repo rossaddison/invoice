@@ -41,7 +41,8 @@ use Yiisoft\Router\CurrentRoute;
 use Yiisoft\Session\SessionInterface as Session;
 use Yiisoft\Session\Flash\Flash;
 use Yiisoft\Translator\TranslatorInterface;
-use Yiisoft\Yii\View\ViewRenderer;use Yiisoft\FormModel\FormHydrator;
+use Yiisoft\Yii\View\ViewRenderer;
+use Yiisoft\FormModel\FormHydrator;
 
 final class TaskController
 {
@@ -83,7 +84,6 @@ final class TaskController
      * @param tR $tR
      * @param DateHelper $dateHelper
      * @param prjctR $prjctR
-     * @param sR $sR
      */
     public function index(Request $request, tR $tR, DateHelper $dateHelper, prjctR $prjctR, sR $sR) : \Yiisoft\DataResponse\DataResponse
     {            
@@ -94,105 +94,106 @@ final class TaskController
         $canEdit = $this->rbac();
         $parameters = [
             'paginator' => $paginator,
-            's'=>$sR,
             'canEdit' => $canEdit,
-            'datehelper'=>$dateHelper,
             'alert' => $this->alert(),
-            'prjct'=>$prjctR,
+            'prjct' => $prjctR,
+            'grid_summary' => $sR->grid_summary($paginator, 
+                                                $this->translator, 
+                                                (int)$sR->get_setting('default_list_limit'), 
+                                                $this->translator->translate('invoice.products'), ''),
+            'statuses' => $this->getStatuses($this->translator),
             'tasks' => $this->tasks($tR),
         ];    
         return $this->viewRenderer->render('index', $parameters);  
     }
     
    /**
-    * 
-    * @param ViewRenderer $head
     * @param Request $request
     * @param FormHydrator $formHydrator
     * @param sR $sR
-    * @param prjctR $projectRepository
+    * @param prjctR $pR
     * @param trR $trR
     * @return Response
     */
-    public function add(ViewRenderer $head, 
-                        Request $request, 
+    public function add(Request $request, 
                         FormHydrator $formHydrator,
                         sR $sR,                        
-                        prjctR $projectRepository,
+                        prjctR $pR,
                         trR $trR
     ): Response
     {
+        $task = new Task();
+        $form = new TaskForm($task);
         $parameters = [
             'title' => $this->translator->translate('invoice.add'),
             'action' => ['task/add'],
             'alert' => $this->alert(),
-            'body' => $request->getParsedBody(),
+            'form' => $form,
             'errors' => [],
             'numberhelper'=>new NumberHelper($sR),
-            'datehelper'=>new DateHelper($sR),
-            'statuses'=>$this->getStatuses($this->translator),
-            's'=>$sR,
-            'head'=>$head,            
-            'projects'=>$projectRepository->findAllPreloaded(),
-            'tax_rates'=>$trR->findAllPreloaded(),
+            'statuses' => $this->getStatuses($this->translator),
+            'taxRates' => $trR->optionsDataTaxRates(),
+            'projects' => $pR->optionsDataProjects()     
         ];
         if ($request->getMethod() === Method::POST) {
-            $form = new TaskForm();
-            if ($formHydrator->populate($form, $parameters['body']) && $form->isValid()) {
-                $this->taskService->saveTask(new Task(), $form, $sR);
-                $this->flash_message('info', $sR->trans('record_successfully_created'));
+            if ($formHydrator->populateFromPostAndValidate($form,  $request)) {
+                $body = $request->getParsedBody();
+                /**
+                 * @psalm-suppress PossiblyInvalidArgument $body
+                 */
+                $this->taskService->saveTask($task, $body);
+                $this->flash_message('info', $this->translator->translate('i.record_successfully_created'));
                 return $this->webService->getRedirectResponse('task/index');
             }
+            $parameters['errors'] = $form->getValidationResult()?->getErrorMessagesIndexedByAttribute() ?? [];
             $parameters['form'] = $form;
         }
         return $this->viewRenderer->render('_form', $parameters);
     }
     
     /**
-     * @param ViewRenderer $head
      * @param Request $request
      * @param CurrentRoute $currentRoute
      * @param FormHydrator $formHydrator
      * @param tR $tR
      * @param sR $sR
-     * @param prjctR $projectRepository
-     * @param trR $tax_rateRepository
+     * @param prjctR $pR
+     * @param trR $trR
      * @return Response
      */
-    public function edit(ViewRenderer $head, 
+    public function edit(
                         Request $request, 
                         CurrentRoute $currentRoute,
-                       FormHydrator $formHydrator,
+                        FormHydrator $formHydrator,
                         tR $tR, 
                         sR $sR,                        
-                        prjctR $projectRepository,
-                        trR $tax_rateRepository
+                        prjctR $pR,
+                        trR $trR
     ): Response {
             $task = $this->task($currentRoute, $tR);
             if ($task) {
+            $form = new TaskForm($task);    
             $parameters = [
-                'title' => $sR->trans('edit'),
+                'title' => $this->translator->translate('i.edit'),
                 'action' => ['task/edit', ['id' => $task->getId()]],
                 'alert' => $this->alert(),
-                'body' => $this->body($task),
-                'errors'=>[],
-                'numberhelper'=>new NumberHelper($sR),
-                'datehelper'=>new DateHelper($sR),
-                'statuses'=>$this->getStatuses($this->translator),
-                's'=>$sR,
-                'head'=>$head,            
-                'projects'=>$projectRepository->findAllPreloaded(),
-                'tax_rates'=>$tax_rateRepository->findAllPreloaded(),
+                'form' => $form,
+                'errors' => [],
+                'statuses' => $this->getStatuses($this->translator),
+                'taxRates' => $trR->optionsDataTaxRates(),
+                'projects' => $pR->optionsDataProjects()     
             ];
             if ($request->getMethod() === Method::POST) {
-                $body = $request->getParsedBody();
-                $form = new TaskForm();
-                if ($formHydrator->populate($form, $body) && $form->isValid()) {
-                    $this->taskService->saveTask($task, $form, $sR);
-                    $this->flash_message('info', $sR->trans('record_successfully_updated'));
+                if ($formHydrator->populateFromPostAndValidate($form,  $request)) {
+                    $body = $request->getParsedBody();
+                    /**
+                     * @psalm-suppress PossiblyInvalidArgument $body
+                     */
+                    $this->taskService->saveTask($task, $body);
+                    $this->flash_message('info', $this->translator->translate('i.record_successfully_updated'));
                     return $this->webService->getRedirectResponse('task/index');
                 }
-                $parameters['body'] = $body;
+                $parameters['errors'] = $form->getValidationResult()?->getErrorMessagesIndexedByAttribute() ?? [];
                 $parameters['form'] = $form;
             }
             return $this->viewRenderer->render('_form', $parameters);
@@ -202,16 +203,15 @@ final class TaskController
     
     /**
      * @param CurrentRoute $currentRoute
-     * @param sR $sR
      * @param tR $tR
      * @return Response
      */
-    public function delete(CurrentRoute $currentRoute, sR $sR, tR $tR 
+    public function delete(CurrentRoute $currentRoute, tR $tR 
     ): Response {
             $task = $this->task($currentRoute, $tR);
             /** @var Task $task */
             $this->taskService->deleteTask($task); 
-            $this->flash_message('info', $sR->trans('record_successfully_deleted'));
+            $this->flash_message('info', $this->translator->translate('i.record_successfully_deleted'));
             return $this->webService->getRedirectResponse('task/index'); 	
     }
     
@@ -293,7 +293,8 @@ final class TaskController
      * @return void
      */    
     private function save_task_lookup_item_inv(int $order, Task $task, string $inv_id, tR $taskR, trR $trR, iiaR $iiaR, sR $sR, FormHydrator $formHydrator) : void {
-      $form = new InvItemForm();
+      $invItem = new InvItem();
+      $form = new InvItemForm($invItem, (int)$inv_id);
       $ajax_content = [
            'name'=> $task->getName(),        
            'inv_id'=> $inv_id,            
@@ -310,30 +311,33 @@ final class TaskController
            'order'=> $order
       ];
       if ($formHydrator->populate($form, $ajax_content) && $form->isValid()) {
-           $this->invitemService->addInvItem_task(new InvItem(), $form, $inv_id, $taskR, $trR, new iiaS($iiaR), $iiaR, $sR);                 
+           $this->invitemService->addInvItem_task($invItem, $ajax_content, $inv_id, $taskR, $trR, new iiaS($iiaR), $iiaR, $sR);                 
       }
     }
     
     /**
      * @param CurrentRoute $currentRoute
      * @param tR $tR
-     * @param sR $sR
+     * @param trR $trR
+     * @param prjctR $pR
      * @return \Yiisoft\DataResponse\DataResponse|Response
      */
-    public function view(CurrentRoute $currentRoute, tR $tR,
-      sR $sR,
+    public function view(CurrentRoute $currentRoute, tR $tR, trR $trR, prjctR $pR
       ): \Yiisoft\DataResponse\DataResponse|Response {
       $task = $this->task($currentRoute, $tR);
       if ($task) {
-          $parameters = [
-              'title' => $sR->trans('view'),
-              'action' => ['task/view', ['id' => $task->getId()]],
-              'errors' => [],
-              'body' => $this->body($task),
-              's'=>$sR,             
-              'task'=>$tR->repoTaskquery($task->getId()),
-          ];
-          return $this->viewRenderer->render('_view', $parameters);
+            $taskForm = new TaskForm($task);
+            $parameters = [
+               'title' => $this->translator->translate('i.view'),
+               'action' => ['task/view', ['id' => $task->getId()]],
+               'errors' => [],
+               'form' => $taskForm,
+               'statuses' => $this->getStatuses($this->translator), 
+               'task' => $tR->repoTaskquery($task->getId()),
+               'taxRates' => $trR->optionsDataTaxRates(),
+               'projects' => $pR->optionsDataProjects()   
+            ];
+            return $this->viewRenderer->render('_view', $parameters);
       }
       return $this->webService->getRedirectResponse('task/index'); 	
     }
@@ -378,33 +382,13 @@ final class TaskController
     }
     
     /**
-     * 
-     * @param Task $task
-     * @return array
-     */
-    private function body(Task $task): array {
-        $body = [                
-          'id'=>$task->getId(),
-          'project_id'=>$task->getProject_id(),
-          'name'=>$task->getName(),
-          'description'=>$task->getDescription(),
-          'price'=>$task->getPrice(),
-          'finish_date'=>$task->getFinish_date(),
-          'status'=>$task->getStatus(),
-          'tax_rate_id'=>$task->getTax_rate_id()
-        ];
-        return $body;
-    }
-    
-    /**
      * @return string
      */
     private function alert(): string {
-      return $this->viewRenderer->renderPartialAsString('/invoice/layout/alert',
-      [ 
-        'flash' => $this->flash,
-        'errors' => [],
-      ]);
+        return $this->viewRenderer->renderPartialAsString('/invoice/layout/alert',
+        [ 
+            'flash' => $this->flash
+        ]);
     }
 
     /**
@@ -413,7 +397,7 @@ final class TaskController
      * @return Flash
      */
     private function flash_message(string $level, string $message): Flash {
-      $this->flash->add($level, $message, true);
-      return $this->flash;
-    }
+        $this->flash->add($level, $message, true);
+        return $this->flash;
+    }    
 }

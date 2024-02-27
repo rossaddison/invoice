@@ -59,7 +59,7 @@ use Yiisoft\Yii\DataView\Column\DataColumn;
             new DataColumn(
                 visible: $invEdit,
                 header:  $translator->translate('i.delete'),
-                content: static function ($model) use ($s, $urlGenerator): string {
+                content: static function ($model) use ($translator, $urlGenerator): string {
                 return Html::a(Html::tag('button',
                                 Html::tag('i', '', ['class' => 'fa fa-trash fa-margin']),
                                 [
@@ -79,7 +79,7 @@ use Yiisoft\Yii\DataView\Column\DataColumn;
       ->dataReader($paginator)
       ->rowAttributes(['class' => 'align-middle'])
       ->summaryAttributes(['class' => 'mt-3 me-3 summary text-end'])
-      ->summary($grid_summary)
+      ->summaryTemplate($grid_summary)
       ->emptyTextAttributes(['class' => 'card-header bg-warning text-black'])
       ->emptyText((string) $translator->translate('invoice.invoice.no.attachments'))
       ->tableAttributes(['class' => 'table table-striped text-center h-475', 'id' => 'table-product-image-list'])

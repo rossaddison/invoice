@@ -10,6 +10,7 @@ use Psr\Http\Message\ResponseFactoryInterface;
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface;
 use Yiisoft\Data\Paginator\OffsetPaginator;
+use Yiisoft\Data\Paginator\PageToken;
 use Yiisoft\Data\Reader\Sort;
 use Yiisoft\Router\CurrentRoute;
 use Yiisoft\Yii\View\ViewRenderer;
@@ -51,7 +52,9 @@ final class UserController
         );
 
         $paginator_new = (new OffsetPaginator($dataReader));
-        $paginator = $paginator_new->withNextPageToken((string) $page)->withPageSize($pageSize);
+        $paginator = $paginator_new
+                     ->withToken(PageToken::next((string) $page))
+                     ->withPageSize($pageSize);
 
         return $this->viewRenderer->render('index', ['paginator' => $paginator]);
     }

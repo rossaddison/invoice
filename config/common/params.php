@@ -9,16 +9,20 @@ use Yiisoft\Assets\AssetManager;
 use Yiisoft\Definitions\Reference;
 use Yiisoft\Form\Field\SubmitButton;
 use Yiisoft\Form\Field\Checkbox;
+use Yiisoft\Form\Field\ErrorSummary;
 use Yiisoft\FormModel\ValidationRulesEnricher;
 use Yiisoft\Router\CurrentRoute;
 use Yiisoft\Router\UrlGeneratorInterface;
 use Yiisoft\Translator\TranslatorInterface;
 use Yiisoft\Yii\Cycle\Schema\Conveyor\AttributedSchemaConveyor;
 use Yiisoft\Yii\Cycle\Schema\Provider\FromConveyorSchemaProvider;
-use Yiisoft\Yii\Cycle\Schema\Provider\PhpFileSchemaProvider;
+use Cycle\Schema\Provider\PhpFileSchemaProvider;
+use Yiisoft\Yii\DataView\OffsetPagination;
+use Yiisoft\Yii\DataView\Column\DataColumn;
 use Yiisoft\Yii\View\CsrfViewInjection;
 // yii3-i
 use App\Invoice\Helpers\DateHelper;
+use App\Invoice\Helpers\NumberHelper;
 use App\Invoice\Setting\SettingRepository;
 use App\Widget\Button;
 use Yiisoft\Session\SessionInterface;
@@ -51,27 +55,39 @@ return [
         'validationRulesEnricher' => new ValidationRulesEnricher(),
         'default' => [
         'containerClass' => 'form-floating mb-3',
-        'inputClass' => 'form-control',
+        'inputClass' => 'form-control h3',
         'invalidClass' => 'is-invalid',
         'validClass' => 'is-valid',
         'template' => '{input}{label}{hint}{error}',
-        'labelClass' => 'floatingInput',
-        'errorClass' => 'fw-bold fst-italic',
-        'hintClass' => 'text-danger',
+        'labelClass' => 'floatingInput h6',
+        'errorClass' => 'fw-bold fst-italic', 
+        'hintClass' => 'text-danger h6',
         'fieldConfigs' => [
-          SubmitButton::class => [
-            'buttonClass()' => ['btn btn-primary btn-sm mt-3'],
-            'containerClass()' => ['d-grid gap-2 form-floating'],
-          ],
-          // if this class is not used then the checkbox ends up floating 
-          // because of the default containerClass above;
-          // refer to client form with active client checkbox  
-          Checkbox::class => [
-            'containerClass()' => ['form-group']    
-          ]  
+            SubmitButton::class => [
+              'buttonClass()' => ['btn btn-primary btn-sm mt-3'],
+              'containerClass()' => ['d-grid gap-2 form-floating'],
+            ],
+            // if this class is not used then the checkbox ends up floating 
+            // because of the default containerClass above;
+            // refer to client form with active client checkbox  
+            Checkbox::class => [
+              'containerClass()' => ['form-group']    
+            ],
+            DataColumn::class => [
+              'containerClass()' => ['form-group']  
+            ],
+            OffsetPagination::class => [
+                'listTag()' => ['ul'],
+                'listAttributes()' => [['class' => 'pagination']],
+                'itemTag()' => ['li'],
+                'itemAttributes()' => [['class' => 'page-item']],
+                'linkAttributes()' => [['class' => 'page-link']],
+                'currentItemClass()' => ['active'],
+                'disabledItemClass()' => ['disabled'],
+            ], 
         ],  
-       ],
-       'bootstrap5-vertical' => [
+        ],
+        'bootstrap5-vertical' => [
             'template' => "{label}\n{input}\n{hint}\n{error}",
             'containerClass' => 'mb-3',
             'labelClass' => 'form-label',
@@ -141,6 +157,7 @@ return [
       'button' => Reference::to(Button::class), 
       'session' => Reference::to(SessionInterface::class),
       'datehelper' => Reference::to(DateHelper::class),
+      'numberHelper' => Reference::to(NumberHelper::class)
     ],
   ],
   'yiisoft/cookies' => [

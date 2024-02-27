@@ -542,7 +542,7 @@ final class InvRepository extends Select\Repository
         foreach ($invoices as $invoice) {  
             $invoice_amount = $iaR->repoInvquery((int)$invoice->getId());            
             if (null!==$invoice_amount) {
-               $sum += $invoice_amount->getTotal() ?: 0.00;
+               $sum += $invoice_amount->getTotal() ?? 0.00;
             }   
         }
         return $sum;

@@ -3,7 +3,7 @@
 ?>
 
 declare(strict_types=1); 
-use App\Widget\Button;
+
 use Yiisoft\FormModel\Field;
 use Yiisoft\Html\Html;
 use Yiisoft\Html\Tag\Form;
@@ -36,7 +36,7 @@ use Yiisoft\Html\Tag\Form;
     echo "->id('".$generator->getCamelcase_capital_name()."Form')";
     echo "->open()";
     echo "?>";
-    echo '<?= Button::back_save($translator); ?>';
+    echo '<?= $button::back_save($translator); ?>';
     echo "<?= Html::openTag('div', ['class' => 'container']); ?>";
     echo "<?= Html::openTag('div', ['class' => 'row']); ?>";
     echo "<?= Html::openTag('div', ['class' => 'col card mb-3']); ?>"; 

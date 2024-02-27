@@ -1,86 +1,100 @@
 <?php
-
 declare(strict_types=1); 
 
+
+use Yiisoft\FormModel\Field;
 use Yiisoft\Html\Html;
-use Yiisoft\Yii\Bootstrap5\Alert;
-use App\Invoice\Helpers\DateHelper;
+use Yiisoft\Html\Tag\Form;
 
 /**
  * @var \Yiisoft\View\View $this
  * @var \Yiisoft\Router\UrlGeneratorInterface $urlGenerator
- * @var array $body
  * @var string $csrf
  * @var string $action
  * @var string $title
  */
-
-if (!empty($errors)) {
-    foreach ($errors as $field => $error) {
-        echo Alert::widget()->options(['class' => 'alert-danger'])->body(Html::encode($field . ':' . $error));
-    }
-}
-
 ?>
-<?= Html::openTag('h1'); ?><?= Html::encode($title) ?><?= Html::closeTag('h1'); ?>
-<form id="MerchantForm" method="POST" action="<?= $urlGenerator->generate(...$action) ?>" enctype="multipart/form-data">
-<input type="hidden" name="_csrf" value="<?= $csrf ?>">
-<div id="headerbar">
-<h1 class="headerbar-title"><?= $translator->translate('i.merchants_form'); ?></h1>
-<?php $response = $head->renderPartial('invoice/layout/header_buttons',['s'=>$s, 'hide_submit_button'=>false ,'hide_cancel_button'=>false]); ?>        
-<?php echo (string)$response->getBody(); ?><div id="content">
-<?= Html::openTag('div', ['class' => 'row']); ?>
- <div class="mb3 form-group">
-    <label for="inv_id">Inv</label>
-    <select name="inv_id" id="inv_id" class="form-control simple-select">
-       <option value="0">Inv</option>
-         <?php foreach ($invs as $inv) { ?>
-          <option value="<?= $inv->getId(); ?>"
-           <?php $s->check_select(Html::encode($body['inv_id'] ?? ''), $inv->getId()) ?>
-           ><?= $inv->getId(); ?></option>
-         <?php } ?>
-    </select>
- </div>
- <div class="mb3 form-group">
-   <label for="successful" class="form-label"><?= $translator->translate('i.successful'); ?></label>
-   <input type="hidden" name="successful" value="0">
-   <input type="checkbox" name="successful" id="successful" value="1" <?php $s->check_select(Html::encode($body['successful'] ??'' ), 1, '==', true) ?>>
- </div>
- <div class="mb-3 form-group has-feedback"> <?php  $date = $body['date'] ?? null; 
-$datehelper = new DateHelper($s); 
-if ($date && $date !== "0000-00-00") { 
-    $date = $datehelper->date_from_mysql($date); 
-} else { 
-    $date = null; 
-} 
-   ?>  
-<label form-label for="date"><?= $translator->translate('i.date') ." (". $datehelper->display().") "; ?></label><div class="mb3 input-group"> 
-<input type="text" name="date" id="date" placeholder="<?= $datehelper->display(); ?>" 
-       class="form-control data-datepicker" 
-       value="<?php if ($date <> null) {echo Html::encode($date);} ?>"> 
-<span class="input-group-text"> 
-<i class="fa fa-calendar fa-fw"></i> 
- </span> 
-</div>
-</div>   <div class="mb3 form-group">
-   <label for="driver">Driver</label>
-   <input type="text" name="driver" id="driver" class="form-control"
- value="<?= Html::encode($body['driver'] ??  ''); ?>">
- </div>
- <div class="mb3 form-group">
-   <label for="response">Merchant Response</label>
-   <input type="text" name="response" id="response" class="form-control"
- value="<?= Html::encode($body['response'] ??  ''); ?>">
- </div>
- <div class="mb3 form-group">
-   <label for="reference">Reference</label>
-   <input type="text" name="reference" id="reference" class="form-control"
- value="<?= Html::encode($body['reference'] ??  ''); ?>">
- </div>
 
-</div>
+<?= Form::tag()
+    ->post($urlGenerator->generate(...$action))
+    ->enctypeMultipartFormData()
+    ->csrf($csrf)
+    ->id('MerchantForm')
+    ->open() ?>
 
-</div>
+<?= Html::openTag('div',['class'=>'container py-5 h-100']); ?>
+<?= Html::openTag('div',['class'=>'row d-flex justify-content-center align-items-center h-100']); ?>
+<?= Html::openTag('div',['class'=>'col-12 col-md-8 col-lg-6 col-xl-8']); ?>
+<?= Html::openTag('div',['class'=>'card border border-dark shadow-2-strong rounded-3']); ?>
+<?= Html::openTag('div',['class'=>'card-header']); ?>
 
-</div>
-</form>
+<?= Html::openTag('h1',['class'=>'fw-normal h3 text-center']); ?>    
+    <?= Html::encode($title) ?>
+<?= Html::closeTag('h1'); ?>
+<?= Html::openTag('div', ['id' => 'headerbar']); ?>
+    <?= $button::back_save($translator); ?>
+    <?= Html::openTag('div', ['id' => 'content']); ?>
+        <?= Html::openTag('div', ['class' => 'row']); ?>
+            <?= Html::openTag('div', ['class' => 'mb-3 form-group']); ?>
+                <?= Field::errorSummary($form)
+                    ->errors($errors)
+                    ->header($translator->translate('invoice.error.summary'))
+                    ->onlyCommonErrors()
+                ?>
+            <?= Html::closeTag('div'); ?>
+            <?php 
+                    foreach ($invs as $inv) { 
+                        $optionsDataInv[$inv->getId()] = $inv->getNumber();                    
+                    }
+                    echo Field::select($form, 'inv_id')
+                    ->label($translator->translate('invoice.invoice'),['control-label'])
+                    ->optionsData($optionsDataInv)
+                    ->hint($translator->translate('invoice.hint.this.field.is.required')); 
+            ?>
+            <?= Html::openTag('div', ['class' => 'mb-3 form-group']); ?>
+            <?= Field::checkbox($form, 'successful')
+                ->inputLabelAttributes(['class' => 'form-check-label'])    
+                ->enclosedByLabel(true)
+                ->inputClass('form-check-input')
+                ->ariaDescribedBy($translator->translate('invoice.successful'))
+            ?>        
+            <?= Html::closeTag('div'); ?>
+            <?= Html::openTag('div', ['class' => 'mb-3 form-group']); ?>
+                <?= Field::date($form, 'date')
+                ->label($translator->translate('i.date'), ['class' => 'form-label'])
+                ->required(true)
+                ->value($form->getDate() ? ($form->getDate())->format('Y-m-d') : '')
+                ->hint($translator->translate('invoice.hint.this.field.is.required')); 
+            ?>
+            <?= Html::closeTag('div'); ?>
+            <?= Html::openTag('div', ['class' => 'mb-3 form-group']); ?>
+            <?= Field::text($form, 'driver')
+                ->label($translator->translate('invoice.merchant.driver'), ['form-label'])
+                ->placeholder($translator->translate('invoice.merchant.driver'))    
+                ->value(Html::encode($form->getDriver() ?? ''))    
+                ->hint($translator->translate('invoice.hint.this.field.is.required')); 
+            ?>
+            <?= Html::closeTag('div'); ?>
+            <?= Html::openTag('div', ['class' => 'mb-3 form-group']); ?>
+            <?= Field::text($form, 'response')
+                ->label($translator->translate('invoice.merchant.response'), ['form-label'])
+                ->placeholder($translator->translate('invoice.merchant.response'))    
+                ->value(Html::encode($form->getResponse() ?? ''))    
+                ->hint($translator->translate('invoice.hint.this.field.is.required')); 
+            ?>
+            <?= Html::closeTag('div'); ?>
+            <?= Html::openTag('div', ['class' => 'mb-3 form-group']); ?>
+            <?= Field::text($form, 'reference')
+                ->label($translator->translate('invoice.merchant.reference'), ['form-label'])
+                ->placeholder($translator->translate('invoice.merchant.reference'))    
+                ->value(Html::encode($form->getReference() ?? ''))    
+                ->hint($translator->translate('invoice.hint.this.field.is.required')); 
+            ?>
+            <?= Html::closeTag('div'); ?>
+        <?= Html::closeTag('div'); ?>
+    <?= Html::closeTag('div'); ?>
+<?= Html::closeTag('div'); ?>
+<?= Html::closeTag('div'); ?>
+<?= Html::closeTag('div'); ?>
+<?= Html::closeTag('div'); ?>
+<?= Form::tag()->close() ?>

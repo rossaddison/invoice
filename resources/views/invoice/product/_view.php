@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 use Yiisoft\Html\Html;
 
+
 /**
  * @var \Yiisoft\View\View $this
  * @var \Yiisoft\Router\UrlGeneratorInterface $urlGenerator
@@ -12,10 +13,7 @@ use Yiisoft\Html\Html;
  * @var string $title
  */
 
-echo $alert;
-
 ?>
-
 <div id="headerbar">
     <h1 class="headerbar-title"><?= str_repeat("&nbsp;", 2).Html::encode($title) ?></h1>
 </div>
@@ -33,6 +31,9 @@ echo $alert;
     <li>
         <a data-toggle="tab" href="#product-gallery" style="text-decoration: none"><?= $translator->translate('invoice.product.view.tab.gallery'); ?> </a>
     </li>
+    <li>
+        <?= $button::back($translator); ?>
+    </li>    
 </ul>
 
 <div class="tabbable tabs-below">

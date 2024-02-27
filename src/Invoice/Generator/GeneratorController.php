@@ -135,11 +135,7 @@ final class GeneratorController
         ];
         if ($request->getMethod() === Method::POST) {
             $body = $request->getParsedBody();
-            //echo \Yiisoft\VarDumper\Vardumper::dump($body);
-            /**
-             * @psalm-suppress PossiblyInvalidArgument $body 
-             */
-            if ($formHydrator->populate($form, $body) && $form->isValid()) {
+            if ($formHydrator->populateFromPostAndValidate($form, $request)) {
                 /**
                  * @psalm-suppress PossiblyInvalidArgument $body 
                  */
@@ -153,7 +149,6 @@ final class GeneratorController
     }
     
     /**
-     * 
      * @param CurrentRoute $currentRoute
      * @param Request $request
      * @param GeneratorRepository $generatorRepository
@@ -176,10 +171,7 @@ final class GeneratorController
             ];
             if ($request->getMethod() === Method::POST) {
                 $body = $request->getParsedBody();
-                /**
-                 * @psalm-suppress PossiblyInvalidArgument $body 
-                 */
-                if ($formHydrator->populate($form, $body) && $form->isValid()) {
+                if ($formHydrator->populateFromPostAndValidate($form, $request)) {
                     /**
                      * @psalm-suppress PossiblyInvalidArgument $body 
                      */
@@ -197,7 +189,6 @@ final class GeneratorController
     }
     
     /**
-     * 
      * @param CurrentRoute $currentRoute
      * @param GeneratorRepository $generatorRepository
      * @return Response
@@ -235,8 +226,7 @@ final class GeneratorController
             $parameters = [
                 'title' => $this->translator->translate('i.view'),
                 'action' => ['generator/view', ['id' => $generator->getGentor_id()]],
-                'errors' => [],
-                'generator'=>$generator,
+                'generator' => $generator,
                 'form' => $form, 
             ];
             return $this->viewRenderer->render('__view', $parameters);
@@ -286,8 +276,7 @@ final class GeneratorController
      private function alert(): string {
       return $this->viewRenderer->renderPartialAsString('/invoice/layout/alert',
       [ 
-        'flash' => $this->flash,
-        'errors' => [],
+        'flash' => $this->flash
       ]);
     }
 
@@ -309,8 +298,7 @@ final class GeneratorController
      * @param View $view
      */
     public function entity(CurrentRoute $currentRoute, GeneratorRepository $gr, GeneratorRelationRepository $grr,
-                             DatabaseManager $dbal, View $view
-                            ): Response {
+                           DatabaseManager $dbal, View $view): Response {
         $file = self::ENTITY;
         $path = $this->getAliases();
         /** @var Gentor $g */
@@ -493,15 +481,14 @@ final class GeneratorController
     /**
      * @param CurrentRoute $currentRoute
      * @param GeneratorRepository $gr
-     * @param SettingRepository $settingRepository
      * @param GeneratorRelationRepository $grr
      * @param DatabaseManager $dbal
      * @param View $view
      */
     public function _index(CurrentRoute $currentRoute, GeneratorRepository $gr, 
-                             SettingRepository $settingRepository, GeneratorRelationRepository $grr,
-                             DatabaseManager $dbal, View $view
-                            ): Response {
+                           GeneratorRelationRepository $grr,
+                           DatabaseManager $dbal, View $view): Response 
+    {
         $file = self::INDEX;
         $path = $this->getAliases();
         /** @var Gentor $g */
@@ -676,7 +663,7 @@ final class GeneratorController
         // Note forward slashes and quotes 
         $type = $currentRoute->getArgument('type');
         if (null!==$type) {
-            $curlcertificate = !empty(\ini_get('curl.cainfo')) ?  true : false;
+            $curlcertificate = \ini_get('curl.cainfo');
             if ($curlcertificate == false) {
                 throw new CaCertFileNotFoundException(); 
             }
@@ -753,7 +740,6 @@ final class GeneratorController
     }
     
     /**
-     * 
      * @param string $type
      * @return string
      */
@@ -776,7 +762,6 @@ final class GeneratorController
     }
     
    /**
-    * 
     * @return string
     */    
     private function getAliases(): string{
@@ -787,7 +772,6 @@ final class GeneratorController
     }
     
     /**
-     * 
      * @param View $view
      * @param Gentor $generator
      * @param \Yiisoft\Data\Reader\DataReaderInterface $relations
@@ -803,7 +787,6 @@ final class GeneratorController
     }
     
     /**
-     * 
      * @param string $generated_dir_path
      * @param string $content
      * @param string $file
@@ -818,7 +801,6 @@ final class GeneratorController
     }
     
     /**
-     * 
      * @param Gentor $generator
      * @return array
      */

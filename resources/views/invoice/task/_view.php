@@ -1,54 +1,120 @@
 <?php
+declare(strict_types=1);
 
-declare(strict_types=1); 
 
+use Yiisoft\FormModel\Field;
 use Yiisoft\Html\Html;
-use Yiisoft\Yii\Bootstrap5\Alert;
-use App\Invoice\Helpers\DateHelper;
+use Yiisoft\Html\Tag\Form;
 
 /**
  * @var \Yiisoft\View\View $this
  * @var \Yiisoft\Router\UrlGeneratorInterface $urlGenerator
- * @var array $body
  * @var string $csrf
  * @var string $action
- * @var string $title
  */
-
-if (!empty($errors)) {
-    foreach ($errors as $field => $error) {
-        echo Alert::widget()->options(['class' => 'alert-danger'])->body(Html::encode($field . ':' . $error));
-    }
-}
-
 ?>
-<?= Html::openTag('h1'); ?><?= Html::encode($title) ?><?= Html::closeTag('h1'); ?>
-<?= Html::openTag('div', ['class' => 'row']); ?>
- <div class="mb3 form-group">
-<label for="name" class="form-label" style="background:lightblue"><?= $translator->translate('i.name'); ?></label>
-   <?= Html::encode($body['name'] ?? ''); ?>
- </div>
- <div class="mb3 form-group">
-<label for="description" class="form-label" style="background:lightblue"><?= $translator->translate('i.description'); ?></label>
-   <?= Html::encode($body['description'] ?? ''); ?>
- </div>
- <div class="mb3 form-group">
-<label for="price" class="form-label" style="background:lightblue"><?= $translator->translate('i.price'); ?></label>
-   <?= Html::encode($body['price'] ?? ''); ?>
- </div>
-<div class="mb3 form-group">
-  <label for="finish_date" class="form-label" style="background:lightblue"><?= $translator->translate('i.task_finish_date'); ?>  </label>
-<?php $date = $body['finish_date']; if ($date && $date != "0000-00-00") {    $datehelper = new DateHelper($s);  $date = $datehelper->date_from_mysql($date);} else {  $date = null;}?><?= Html::encode($date); ?></div>
- <div class="mb3 form-group">
-<label for="status" class="form-label" style="background:lightblue"><?= $translator->translate('i.status'); ?></label>
-   <?= Html::encode($body['status'] ?? ''); ?>
- </div>
- <div class="mb3 form-group">
-   <label for="project_id" class="form-label" style="background:lightblue"><?= $translator->translate('i.project'); ?></label>
-   <?= null!==$task->getProject() ? $task->getProject()->getName() : '';?>
- </div>
- <div class="mb3 form-group">
-   <label for="tax_rate_id" class="form-label" style="background:lightblue"><?= $translator->translate('i.tax_rate'); ?></label>
-   <?= null!==$task->getTaxRate() ? $task->getTaxRate()->getTax_rate_name() : '';?>
- </div>
-</div>
+<?= Html::openTag('div',['class'=>'container py-5 h-100']); ?>
+<?= Html::openTag('div',['class'=>'row d-flex justify-content-center align-items-center h-100']); ?>
+<?= Html::openTag('div',['class'=>'col-12 col-md-8 col-lg-6 col-xl-8']); ?>
+<?= Html::openTag('div',['class'=>'card border border-dark shadow-2-strong rounded-3']); ?>
+<?= Html::openTag('div',['class'=>'card-header']); ?>
+<?= Html::openTag('h1',['class'=>'fw-normal h3 text-center']); ?>
+<?= $translator->translate('i.tasks_form'); ?>
+<?= Html::closeTag('h1'); ?>
+<?= Form::tag()
+    ->post($urlGenerator->generate(...$action))
+    ->enctypeMultipartFormData()
+    ->csrf($csrf)
+    ->id('TaskForm')
+    ->open()
+?> 
+<?= Html::openTag('div'); ?>
+    <?= Field::text($form, 'name')
+        ->label($translator->translate('i.name'))
+        ->required(true)    
+        ->addInputAttributes([
+            'readonly' => 'readonly',
+            'disabled' => 'disabled'
+        ])
+        ->value(Html::encode($form->getName()))
+        ->placeholder($translator->translate('i.name'));
+    ?>
+    <?= Html::tag('br'); ?>
+    <?= Field::text($form, 'description')
+        ->label($translator->translate('i.description'))
+        ->required(true)        
+        ->addInputAttributes([
+            'readonly' => 'readonly',
+            'disabled' => 'disabled'
+        ])
+        ->value(Html::encode($form->getDescription()))    
+        ->placeholder($translator->translate('i.description'))    
+    ?>                    
+    <?= Html::tag('br'); ?>
+    <?= Field::select($form, 'project_id')
+        ->label($translator->translate('i.project'))    
+        ->addInputAttributes([
+            'readonly' => 'readonly',
+            'disabled' => 'disabled'
+        ])
+        ->optionsData($projects)
+        ->value($form->getProject_id())                
+        ->prompt($translator->translate('i.none'))  
+    ?>
+    <?= Html::tag('br'); ?>
+    <?= Field::select($form, 'tax_rate_id')
+        ->label($translator->translate('i.tax_rate'))    
+        ->addInputAttributes([
+            'readonly' => 'readonly',
+            'disabled' => 'disabled'
+        ])
+        ->optionsData($taxRates)
+        ->value($form->getTax_rate_id())                
+        ->prompt($translator->translate('i.none'))     
+    ?>
+    <?= Html::tag('br'); ?>
+    <?= Field::text($form, 'price')
+        ->label($translator->translate('i.price'))
+        ->addInputAttributes([
+            'readonly' => 'readonly',
+            'disabled' => 'disabled'
+        ])
+        ->value($s->format_amount((float)($form->getPrice() ?? 0.00)))    
+        ->placeholder($translator->translate('i.price'))    
+        ->hint($translator->translate('invoice.hint.this.field.is.required')); ?>         
+    <?= Html::tag('br'); ?>
+    <?= Field::date($form, 'finish_date')
+        ->label($translator->translate('i.task_finish_date'))
+        ->addInputAttributes([
+            'readonly' => 'readonly',
+            'disabled' => 'disabled'
+        ])
+        ->value(Html::encode($form->getFinish_date($s) ? ($form->getFinish_date($s))->format('Y-m-d') : ''))
+    ?>    
+    <?= Html::tag('br'); ?>
+    <?php 
+        $optionsDataStatus = [];
+        foreach ($statuses as $key => $status) {
+            if ($form->getStatus() !== 4 && $key === 4) {
+                continue;
+            }
+            $optionsDataStatus[$key] = $status['label'];
+        }    
+    ?>
+    <?= Field::select($form, 'status')
+        ->label($translator->translate('i.status'))    
+        ->addInputAttributes([
+            'readonly' => 'readonly',
+            'disabled' => 'disabled'
+        ])
+        ->optionsData($optionsDataStatus)
+        ->value($form->getStatus())   
+    ?>
+<?= Html::closeTag('div'); ?>     
+<?= $button::back($translator); ?>
+<?= Form::tag()->close(); ?>
+<?= Html::closeTag('div'); ?>
+<?= Html::closeTag('div'); ?>
+<?= Html::closeTag('div'); ?>
+<?= Html::closeTag('div'); ?>
+<?= Html::closeTag('div'); ?>

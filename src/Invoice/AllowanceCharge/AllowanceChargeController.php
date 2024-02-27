@@ -63,18 +63,14 @@ final class AllowanceChargeController
     }
     
     /**
-     * @param ViewRenderer $head
      * @param Request $request
      * @param FormHydrator $formHydrator
-     * @param SettingRepository $settingRepository
      * @param TaxRateRepository $tR
      * @return Response
      */
-    public function add_allowance(ViewRenderer $head, Request $request, 
+    public function add_allowance(Request $request, 
         FormHydrator $formHydrator,
-        SettingRepository $settingRepository,
-        TaxRateRepository $tR,
-
+        TaxRateRepository $tR
     ) : Response
     {
         $allowance_charge = new AllowanceCharge();        
@@ -87,8 +83,7 @@ final class AllowanceChargeController
             'allowances' => $allowances,
             'errors' => [],
             'form' => $form,
-            'tax_rates'=>$tR->findAllPreloaded(),
-            'head'=>$head,
+            'tax_rates' => $tR->findAllPreloaded(),
         ];
         
         /**
@@ -116,10 +111,12 @@ final class AllowanceChargeController
             }
         }
         if ($request->getMethod() === Method::POST) {
-            if ($formHydrator->populate($form, $body) 
-                && $form->isValid()) {
+            if ($formHydrator->populateFromPostAndValidate($form, $request)) {
+                /**
+                 * @psalm-suppress PossiblyInvalidArgument $body
+                 */
                 $this->allowancechargeService->saveAllowanceCharge($allowance_charge, $body);
-                $this->flash_message('info', $settingRepository->trans('record_successfully_created'));
+                $this->flash_message('info', $this->translator->translate('i.record_successfully_created'));
                 return $this->webService->getRedirectResponse('allowancecharge/index');
             }
             $parameters['form'] = $form;
@@ -129,18 +126,14 @@ final class AllowanceChargeController
     }
     
     /**
-     * @param ViewRenderer $head
      * @param Request $request
      * @param FormHydrator $formHydrator
-     * @param SettingRepository $settingRepository
      * @param TaxRateRepository $tR
      * @return Response
      */
-    public function add_charge(ViewRenderer $head, Request $request, 
+    public function add_charge(Request $request, 
                         FormHydrator $formHydrator,
-                        SettingRepository $settingRepository,
-                        TaxRateRepository $tR,
-
+                        TaxRateRepository $tR
     ) : Response
     {
         $allowance_charge = new AllowanceCharge();
@@ -153,8 +146,7 @@ final class AllowanceChargeController
             'errors' => [],
             'form' => $form,
             'charges' => $charges,       
-            'tax_rates'=>$tR->findAllPreloaded(),
-            'head'=>$head,
+            'tax_rates'=>$tR->findAllPreloaded()
         ];
         /**
          * @var array $body
@@ -183,9 +175,12 @@ final class AllowanceChargeController
         }
         if ($request->getMethod() === Method::POST) {
             $form = new AllowanceChargeForm($allowance_charge);
-            if ($formHydrator->populate($form, $body) && $form->isValid()) {
+            if ($formHydrator->populateFromPostAndValidate($form, $request)) {
+                /**
+                 * @psalm-suppress PossiblyInvalidArgument $body
+                 */
                 $this->allowancechargeService->saveAllowanceCharge($allowance_charge, $body);
-                $this->flash_message('info', $settingRepository->trans('record_successfully_created'));
+                $this->flash_message('info', $this->translator->translate('i.record_successfully_created'));
                 return $this->webService->getRedirectResponse('allowancecharge/index');
             }
             $parameters['form'] = $form;
@@ -226,18 +221,17 @@ final class AllowanceChargeController
     }
     
     /**
-     * @param SettingRepository $settingRepository
      * @param CurrentRoute $currentRoute
      * @param AllowanceChargeRepository $allowancechargeRepository
      * @return Response
      */
-    public function delete(SettingRepository $settingRepository, CurrentRoute $currentRoute,AllowanceChargeRepository $allowancechargeRepository 
+    public function delete(CurrentRoute $currentRoute,AllowanceChargeRepository $allowancechargeRepository 
     ): Response {
         try {
             $allowancecharge = $this->allowancecharge($currentRoute, $allowancechargeRepository);
             if ($allowancecharge) {
                 $this->allowancechargeService->deleteAllowanceCharge($allowancecharge);               
-                $this->flash_message('info', $settingRepository->trans('record_successfully_deleted'));
+                $this->flash_message('info', $this->translator->translate('i.record_successfully_deleted'));
                 return $this->webService->getRedirectResponse('allowancecharge/index'); 
             }
             return $this->webService->getRedirectResponse('allowancecharge/index'); 
@@ -252,14 +246,12 @@ final class AllowanceChargeController
      * @param CurrentRoute $currentRoute
      * @param FormHydrator $formHydrator
      * @param AllowanceChargeRepository $allowancechargeRepository
-     * @param SettingRepository $settingRepository
      * @param TaxRateRepository $tR
      * @return Response
      */
     public function edit_allowance(Request $request, CurrentRoute $currentRoute, 
         FormHydrator $formHydrator,
         AllowanceChargeRepository $allowancechargeRepository, 
-        SettingRepository $settingRepository, 
         TaxRateRepository $tR
 
     ): Response {
@@ -281,12 +273,12 @@ final class AllowanceChargeController
                 /**
                  * @psalm-suppress PossiblyInvalidArgument $body 
                  */
-                if ($formHydrator->populate($form, $body) && $form->isValid()) {
+                if ($formHydrator->populateFromPostAndValidate($form, $request)) {
                     /**
                      * @psalm-suppress PossiblyInvalidArgument $body
                      */
                     $this->allowancechargeService->saveAllowanceCharge($allowancecharge, $body);
-                    $this->flash_message('info', $settingRepository->trans('record_successfully_updated'));
+                    $this->flash_message('info', $this->translator->translate('i.record_successfully_updated'));
                     return $this->webService->getRedirectResponse('allowancecharge/index');
                 }
                 $parameters['form'] = $form;
@@ -302,14 +294,12 @@ final class AllowanceChargeController
      * @param CurrentRoute $currentRoute
      * @param FormHydrator $formHydrator
      * @param AllowanceChargeRepository $allowancechargeRepository
-     * @param SettingRepository $settingRepository
      * @param TaxRateRepository $tR
      * @return Response
      */
     public function edit_charge(Request $request, CurrentRoute $currentRoute, 
                         FormHydrator $formHydrator,
                         AllowanceChargeRepository $allowancechargeRepository, 
-                        SettingRepository $settingRepository, 
                         TaxRateRepository $tR
 
     ): Response {
@@ -332,12 +322,12 @@ final class AllowanceChargeController
                 /**
                  * @psalm-suppress PossiblyInvalidArgument $body
                  */
-                if ($formHydrator->populate($form, $body) && $form->isValid()) {
+                if ($formHydrator->populateFromPostAndValidate($form,  $request)) {
                    /**
                     * @psalm-suppress PossiblyInvalidArgument $body
                     */
                     $this->allowancechargeService->saveAllowanceCharge($allowancecharge, $body);
-                    $this->flash_message('info', $settingRepository->trans('record_successfully_updated'));
+                    $this->flash_message('info', $this->translator->translate('i.record_successfully_updated'));
                     return $this->webService->getRedirectResponse('allowancecharge/index');
                 }
                 $parameters['form'] = $form;
@@ -389,12 +379,10 @@ final class AllowanceChargeController
     /**
      * @param CurrentRoute $currentRoute
      * @param AllowanceChargeRepository $allowancechargeRepository
-     * @param SettingRepository $settingRepository
      * @return \Yiisoft\DataResponse\DataResponse|Response
      */
-    public function view(CurrentRoute $currentRoute,AllowanceChargeRepository $allowancechargeRepository,
-        SettingRepository $settingRepository,
-        ): \Yiisoft\DataResponse\DataResponse|Response {
+    public function view(CurrentRoute $currentRoute,AllowanceChargeRepository $allowancechargeRepository) 
+                         : \Yiisoft\DataResponse\DataResponse|Response {
         $allowancecharge = $this->allowancecharge($currentRoute, $allowancechargeRepository);
         if ($allowancecharge) {
             $form = new AllowanceChargeForm($allowancecharge);

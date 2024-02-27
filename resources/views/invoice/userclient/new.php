@@ -2,7 +2,7 @@
 declare(strict_types=1);
 
 use App\Invoice\Helpers\ClientHelper;
-use App\Widget\Button;
+
 use Yiisoft\FormModel\Field;
 use Yiisoft\Html\Html;
 
@@ -18,7 +18,7 @@ $client_helper = new ClientHelper($s);
     <?= Html::openTag('h1', ['class' => 'headerbar-title']); ?>
         <?= $translator->translate('i.assign_client'); ?>
     <?= Html::closeTag('h1'); ?>
-    <?= Button::back_save($translator); ?>
+    <?= $button::back_save($translator); ?>
 <?= Html::closeTag('div'); ?>
 
 <?= Html::openTag('div', ['id' => 'content']); ?>

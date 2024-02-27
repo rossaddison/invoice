@@ -229,7 +229,7 @@ $vat = $s->get_setting('enable_vat_registration');
                     <td class="td-icon text-right td-vert-middle">                        
                         <?php if ($show_buttons === true && $user_can_edit === true && $draft === true) { ?>
                         <span data-bs-toggle="tooltip" title="<?= $translator->translate('invoice.productimage.gallery'). (null!==$item->getProduct_id() ? $item->getProduct()?->getProduct_name() : $item->getTask()?->getName()); ?>">
-                            <a class="btn btn-info fa fa-eye" data-toggle="modal" href="#view-product-<?= $item->getId(); ?>" style="text-decoration:none"></a></span> 
+                            <a class="btn btn-info fa fa-eye" data-bs-toggle="modal" href="#view-product-<?= $item->getId(); ?>" style="text-decoration:none"></a></span> 
                             <div id="view-product-<?= $item->getId(); ?>" class="modal modal-lg" tabindex="-1" role="dialog" aria-labelledby="modal_view_product_<?= $item->getId(); ?>" aria-hidden="true">
                                 <div class="modal-content">
                                     <div class="modal-header">
@@ -249,7 +249,8 @@ $vat = $s->get_setting('enable_vat_registration');
                                     </div>  
                                 </div> 
                              </div>
-                             <a href="<?= $urlGenerator->generate('acii/index', ['inv_item_id'=> $item->getId(), '_language'=>$currentRoute->getArgument('_language')]) ?>" class="btn btn-primary btn" data-bs-toggle = "tooltip" title="<?= $translator->translate('invoice.invoice.allowance.or.charge.index'); ?>"><i class="<?= $aciiR->repoInvItemCount((string)$item->getId()) > 0 ? 'fa fa-list' : 'fa fa-plus'; ?>"></i></a>
+                             <!-- Make sure to fill the third parameter of generate in order to use query parameters --> 
+                             <a href="<?= $urlGenerator->generate('acii/index', ['inv_item_id'=> $item->getId(), '_language'=>$currentRoute->getArgument('_language')], ['inv_item_id'=> $item->getId()]) ?>" class="btn btn-primary btn" data-bs-toggle = "tooltip" title="<?= $translator->translate('invoice.invoice.allowance.or.charge.index'); ?>"><i class="<?= $aciiR->repoInvItemCount((string)$item->getId()) > 0 ? 'fa fa-list' : 'fa fa-plus'; ?>"></i></a>
                              <a href="<?= $urlGenerator->generate('inv/delete_inv_item',['id'=>$item->getId(),'_language'=>$currentRoute->getArgument('_language')]) ?>" class="btn btn-danger btn" onclick="return confirm('<?= $translator->translate('i.delete_record_warning'); ?>');"><i class="fa fa-trash"></i></a>
                              <?php if  ($item->getTask_id()) { ?>    
                               <a href="<?= $urlGenerator->generate('invitem/edit_task',['id'=>$item->getId(), '_language'=>$currentRoute->getArgument('_language')]) ?>" class="btn btn-success btn"><i class="fa fa-pencil"></i></a>

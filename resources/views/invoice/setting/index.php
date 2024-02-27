@@ -28,7 +28,7 @@ $pagination = OffsetPagination::widget()
 ?>
 
 <?php
-  if ($pagination->isRequired()) {
+  if ($pagination->isPaginationRequired()) {
      echo $pagination;
   }
 ?>

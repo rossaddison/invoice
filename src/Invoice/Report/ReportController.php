@@ -72,8 +72,7 @@ class ReportController
     private function alert(): string {
       return $this->viewRenderer->renderPartialAsString('/invoice/layout/alert',
       [ 
-        'flash' => $this->flash,
-        'errors' => [],
+        'flash' => $this->flash
       ]);
     }
 

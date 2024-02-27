@@ -159,7 +159,7 @@
                         </div>
                         <div class="form-group">
                             <label for="settings[pdf_stream_inv]" <?= $s->where('pdf_stream_inv'); ?>>
-                                <i class="fa fa-brands fa-google"></i>
+                                <i class="fa fa-brands fa-google"></i><?= $translator->translate('invoice.invoice.stream'); ?>
                                 <?php $body['settings[pdf_stream_inv]'] = $s->get_setting('pdf_stream_inv');?>
                             </label>
                             <select name="settings[pdf_stream_inv]" id="settings[pdf_stream_inv]"
@@ -174,7 +174,7 @@
                         </div>
                         <div class="form-group">
                             <label for="settings[pdf_archive_inv]" <?= $s->where('pdf_archive_inv'); ?>>
-                                <i class="fa fa-folder"></i>
+                                <i class="fa fa-folder"></i><?= $translator->translate('invoice.invoice.archive'); ?>
                                 <?php $body['settings[pdf_archive_inv]'] = $s->get_setting('pdf_archive_inv');?>
                             </label>
                             <select name="settings[pdf_archive_inv]" id="settings[pdf_archive_inv]"

@@ -123,20 +123,27 @@ $toolbar = Div::tag();
             header:  $translator->translate('i.view'),
             visible: $canView,
             content: static function ($model) use ($urlGenerator): string {
-               return Html::a(Html::tag('i','',['class'=>'fa fa-eye fa-margin']), $urlGenerator->generate('inv/view',['id'=>$model->getInv_id()]),[])->render();
+               return Html::a(Html::tag('i','',['class'=>'fa fa-eye fa-margin']), 
+                                                $urlGenerator->generate('payment/view',
+                                                ['id'=>$model->getId()]),[])->render();
             }                        
         ),
         new DataColumn(
             header:  $translator->translate('i.edit'), 
             visible: $canEdit,
             content: static function ($model) use ($s, $urlGenerator): string {
-               return $model->getInv()?->getIs_read_only() === false && $s->get_setting('disable_read_only') === (string)0 ? Html::a(Html::tag('i','',['class'=>'fa fa-edit fa-margin']), $urlGenerator->generate('inv/edit',['id'=>$model->getInv_id()]),[])->render() : '';
+               return $model->getInv()?->getIs_read_only() === false 
+                      && $s->get_setting('disable_read_only') === (string)0 
+                      ? Html::a(Html::tag('i','',
+                                ['class'=>'fa fa-edit fa-margin']), 
+                                $urlGenerator->generate('payment/edit',
+                                    ['id'=>$model->getId()]),[])->render() : '';
             }                        
         ),
         new DataColumn(
             header:  $translator->translate('i.delete'),
             visible: $canEdit,
-            content: static function ($model) use ($s, $urlGenerator): string {
+            content: static function ($model) use ($translator, $s, $urlGenerator): string {
                 return $model->getInv()?->getIs_read_only() === false && $s->get_setting('disable_read_only') === (string)0 ? Html::a( Html::tag('button',
                     Html::tag('i','',['class'=>'fa fa-trash fa-margin']),
                     [
@@ -145,7 +152,7 @@ $toolbar = Div::tag();
                         'onclick'=>"return confirm("."'".$translator->translate('i.delete_record_warning')."');"
                     ]
                     ),
-                    $urlGenerator->generate('inv/delete',['id'=>$model->getInv_id()]),[]                                         
+                    $urlGenerator->generate('payment/delete',['id'=>$model->getId()]),[]                                         
                 )->render() : '';
             }                        
         ),
@@ -155,21 +162,19 @@ $toolbar = Div::tag();
         ->columns(...$columns)
         ->dataReader($paginator)
         ->headerRowAttributes(['class'=>'card-header bg-info text-black'])
-        ->filterPosition('header')
-        ->filterModelName('payment')
+        //->filterPosition('header')
+        //->filterModelName('payment')
         ->header($header)
         ->id('w3-grid')
         ->pagination(
         OffsetPagination::widget()
-             ->menuClass('pagination justify-content-center')
-             ->paginator($paginator)
-             ->urlArguments([])
+             ->paginator($paginator)             
              // No need to use page argument since built-in.    
              ->render(),
         )
         ->rowAttributes(['class' => 'align-middle'])
         ->summaryAttributes(['class' => 'mt-3 me-3 summary text-end'])
-        ->summary($grid_summary)
+        ->summaryTemplate($grid_summary)
         ->emptyTextAttributes(['class' => 'card-header bg-warning text-black'])
         ->emptyText((string)$translator->translate('invoice.invoice.no.records'))                         
         ->tableAttributes(['class' => 'table table-striped text-center h-75','id'=>'table-payment'])

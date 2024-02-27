@@ -30,7 +30,7 @@ class Country implements XmlSerializable {
     public function xmlSerialize(Writer $writer): void {
         $attributes = [];
 
-        if (!empty($this->listId)) {
+        if (null!==$this->listId) {
             // Alpha 2 => 2 digit country code
             $attributes['listID'] = 'ISO3166-1:Alpha2';
         }

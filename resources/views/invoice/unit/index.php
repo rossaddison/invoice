@@ -3,103 +3,142 @@
 declare(strict_types=1);
 
 use Yiisoft\Html\Html;
-use App\Widget\OffsetPagination;
+use Yiisoft\View\WebView;
+use Yiisoft\Html\Tag\A;
+use Yiisoft\Html\Tag\Div;
+use Yiisoft\Html\Tag\Form;
+use Yiisoft\Html\Tag\H5;
+use Yiisoft\Html\Tag\I;
+use Yiisoft\Yii\DataView\Column\ActionColumn;
+use Yiisoft\Yii\DataView\Column\DataColumn;
+use Yiisoft\Yii\DataView\GridView;
+use Yiisoft\Yii\DataView\OffsetPagination;
 
 /**
- * @var \App\Invoice\Entity\Unit $units
- * @var \Yiisoft\Router\UrlGeneratorInterface $urlGenerator
- * @var App\Invoice\Setting\SettingRepository $s
- * @var Yiisoft\Yii\View\Csrf $csrf
- */
+ * @var \App\Invoice\Entity\Unit $unit
+ * @var string $csrf
+ * @var CurrentRoute $currentRoute 
+ * @var OffsetPaginator $paginator
+ * @var \Yiisoft\Router\UrlGeneratorInterface $urlGenerator 
+ * @var TranslatorInterface $translator
+ * @var WebView $this
+ */ 
 
-echo $alert;
-
+ echo $alert;
 ?>
+<?php
+    $header = Div::tag()
+        ->addClass('row')
+        ->content(
+            H5::tag()
+                ->addClass('bg-primary text-white p-3 rounded-top')
+                ->content(
+                    I::tag()->addClass('bi bi-receipt')
+                            ->content(' ' . Html::encode($translator->translate('i.unit')))
+                )
+        )
+        ->render();
 
-<div id="headerbar">
-    <h1 class="headerbar-title"><?= $translator->translate('i.units'); ?></h1>
+    $toolbarReset = A::tag()
+        ->addAttributes(['type' => 'reset'])
+        ->addClass('btn btn-danger me-1 ajax-loader')
+        ->content(I::tag()->addClass('bi bi-bootstrap-reboot'))
+        ->href($urlGenerator->generate($currentRoute->getName()))
+        ->id('btn-reset')
+        ->render();
+    $toolbar = Div::tag();
+?>
+<?= Html::openTag('div'); ?>
+    <?= Html::openTag('h5'); ?>
+        <?= $translator->translate('i.unit'); ?>
+    <?= Html::closeTag('h5'); ?>    
+<?= Html::closeTag('div'); ?>
 
-    <div class="headerbar-item pull-right">
-        <a class="btn btn-sm btn-primary" href="<?= $urlGenerator->generate('unit/add'); ?>">
-            <i class="fa fa-plus"></i> <?= $translator->translate('i.new'); ?>
-        </a>
-    </div>
+<?= Html::openTag('div'); ?>
+    <?= Html::openTag('div', ['class' => 'btn-group']); ?>
+        <?= A::tag()
+            ->addClass('btn btn-success')
+            ->content(I::tag()
+                      ->addClass('fa fa-plus')) 
+            ->href($urlGenerator->generate('unit/add')); ?>
+    <?= Html::closeTag('div'); ?>
+<?= Html::closeTag('div'); ?>
 
+
+<br>
     <?php
-      $pagination = OffsetPagination::widget()
-      ->paginator($paginator)
-      ->urlGenerator(fn ($page) => $urlGenerator->generate('family/index', ['page' => $page]));
+        $columns = [
+            new DataColumn(
+                'unit_id',
+                header: $translator->translate('i.id'),
+                content: static fn (object $model) => Html::encode($model->getUnit_id())
+            ),
+            new DataColumn(
+                'unit_name',
+                header: $translator->translate('i.unit_name'),
+                content: static fn (object $model) => Html::encode($model->getUnit_name())
+            ),
+            new DataColumn(
+                'unit_name_plrl',
+                header: $translator->translate('i.unit_name_plrl'),
+                content: static fn (object $model) => Html::encode($model->getUnit_name_plrl())
+            ),
+            new ActionColumn(
+                content: static fn($model): string => Html::openTag('div', ['class' => 'btn-group']) .
+                Html::a()
+                ->addAttributes([
+                    'class' => 'dropdown-button text-decoration-none', 
+                    'title' => $translator->translate('i.view')
+                ])
+                ->content('🔎')
+                ->encode(false)
+                ->href('/invoice/unit/view/'. $model->getUnit_id())
+                ->render() .
+                Html::a()
+                ->addAttributes([
+                    'class' => 'dropdown-button text-decoration-none', 
+                    'title' => $translator->translate('i.edit')
+                ])
+                ->content('✎')
+                ->encode(false)
+                ->href('/invoice/unit/edit/'. $model->getUnit_id())
+                ->render() .
+                Html::a()
+                ->addAttributes([
+                    'class'=>'dropdown-button text-decoration-none', 
+                    'title' => $translator->translate('i.delete'),
+                    'type'=>'submit', 
+                    'onclick'=>"return confirm("."'".$translator->translate('i.delete_record_warning')."');"
+                ])
+                ->content('❌')
+                ->encode(false)
+                ->href('/invoice/unit/delete/'. $model->getUnit_id())
+                ->render() . Html::closeTag('div')
+            ),
+        ];
     ?>
-    <?php 
-        if ($pagination->isRequired()) {
-           echo $pagination;
-        }
+    <?= GridView::widget()    
+        ->columns(...$columns)
+        ->dataReader($paginator)    
+        ->headerRowAttributes(['class'=>'card-header bg-info text-black'])
+        ////->filterPosition('header')
+        //->filterModelName('company')
+        ->header($header)
+        ->id('w175-grid')
+        ->pagination(
+        OffsetPagination::widget()
+             ->paginator($paginator)
+             ->render(),
+        )
+        ->rowAttributes(['class' => 'align-middle'])
+        ->summaryAttributes(['class' => 'mt-3 me-3 summary text-end'])
+        ->summaryTemplate($grid_summary)
+        ->emptyTextAttributes(['class' => 'card-header bg-warning text-black'])
+        ->emptyText((string)$translator->translate('invoice.invoice.no.records'))
+        ->tableAttributes(['class' => 'table table-striped text-center h-75','id'=>'table-unit'])
+        ->toolbar(
+            Form::tag()->post($urlGenerator->generate('unit/index'))->csrf($csrf)->open() .
+            Div::tag()->addClass('float-end m-3')->content($toolbarReset)->encode(false)->render() .
+            Form::tag()->close()
+        );
     ?>
-</div>
-
-<div id="content" class="table-content">
-
-    <div class="table-responsive">
-        <table class="table table-hover table-striped">
-
-            <thead>
-            <tr>
-                <th><?= $translator->translate('i.unit_name'); ?></th>
-                <th><?= $translator->translate('i.unit_name_plrl'); ?></th>
-                <th><?= $translator->translate('i.options'); ?></th>
-            </tr>
-            </thead>
-
-            <tbody>
-            <?php foreach ($units as $unit) { ?>
-                <tr>
-                    <td><?= Html::encode($unit->getUnit_name()); ?></td>
-                    <td><?= Html::encode($unit->getUnit_name_plrl()); ?></td>
-                    <td>
-                        <div class="options btn-group">
-                            <a class="btn btn-default btn-sm dropdown-toggle"
-                               data-toggle="dropdown" href="#">
-                                <i class="fa fa-cog"></i> <?= $translator->translate('i.options'); ?>
-                            </a>
-                            <ul class="dropdown-menu">
-                                <li>
-                                    <a href="<?= $urlGenerator->generate('unit/edit', ['id' => $unit->getUnit_id()]); ?>" style="text-decoration:none">
-                                        <i class="fa fa-edit fa-margin"></i> <?= $translator->translate('i.edit'); ?>
-                                    </a>
-                                </li>
-                                <?php if ($upR->repoUnitCount((string)$unit->getUnit_id()) === 0 ) { ?>
-                                <li>
-                                    <a href="<?= $urlGenerator->generate('unitpeppol/add', ['unit_id' => $unit->getUnit_id()]); ?>" style="text-decoration:none">
-                                        <i class="fa fa-plus fa-margin"></i><?= $translator->translate('invoice.unit.peppol.add'); ?>
-                                    </a>
-                                </li>
-                                <?php } ?>
-                                <?php if ($upR->repoUnitCount((string)$unit->getUnit_id()) > 0 ) { ?>
-                                <li>
-                                    <a href="<?= $urlGenerator->generate('unitpeppol/edit', ['id' => $unit->getUnit_id()]); ?>" style="text-decoration:none">
-                                        <i class="fa fa-edit fa-margin"></i> <?= $translator->translate('invoice.unit.peppol.edit'); ?>
-                                    </a>
-                                </li>
-                                <?php } ?>
-                                    <li>
-                                    <form action="<?= $urlGenerator->generate('unit/delete', ['id' => $unit->getUnit_id()]); ?>" style="text-decoration:none"
-                                          method="POST">
-                                        <input type="hidden" name="_csrf" value="<?= $csrf; ?>">
-                                        <button type="submit" class="dropdown-button"
-                                                onclick="return confirm('<?= $translator->translate('i.delete_record_warning'); ?>');">
-                                            <i class="fa fa-trash-o fa-margin"></i> <?= $translator->translate('i.delete'); ?>
-                                        </button>
-                                    </form>
-                                </li>
-                            </ul>
-                        </div>
-                    </td>
-                </tr>
-            <?php } ?>
-            </tbody>
-
-        </table>
-
-    </div>
-
-</div>

@@ -44,8 +44,15 @@
 <p>Introducing India's PayTm payment gateway's QR code method of payment and comparing this with Stripe's method.</p>
 <p>A General Sales Tax (GST) Tax System will have to be implemented first for this purpose.</p>
 <p><b>What's next?</b></p>
+<p>Implementation of filters on grids</p>
 <p>Upskilling on Docker.</p>
-<p>Further integration of the entity into the form constructs for the rest of the entities.</p>
+<p><b>27 February 2024</b></p>
+<p>Psalm Level 1 Testing of Form Hydration, and Form Model Implementation</p>
+<p>Transfering of relevant code to the Generator templates.</p>
+<p>Creation of two bootstrap modal widgets src\Widget\Bootstrap5ModalInv.php, and src\Widget\Bootstrap5ModalQuote.php</p>
+<p></p>
+
+p>Further integration of the entity into the form constructs for the rest of the entities.</p>
 <p><b>11 December 2023</b></p>
 <p>https://github.com/yiisoft/form/issues/298</p>
 <p>Form Hydration, Form Model for Client, ClientNote, and Setting have been completed.</p>

@@ -77,8 +77,6 @@ use App\Invoice\Helpers\Peppol\Exception\PeppolTaxCategoryCodeNotFoundException;
 use App\Invoice\Helpers\Peppol\Exception\PeppolTaxCategoryPercentNotFoundException;
 use \DateTime;
 use \DateTimeImmutable;
-// Vjik 
-use Vjik\CycleTypecast\DateTimeImmutable\DateTimeImmutableToIntegerType;
 
 Class StoreCoveHelper {
 
@@ -207,9 +205,9 @@ Class StoreCoveHelper {
      * 
      * @param string $provider
      * @param int $inv_id
-     * @return DateTimeImmutableToIntegerType
+     * @return int
      */
-    private function build_peppol_payment_for_reference(string $provider, int $inv_id) : DateTimeImmutableToIntegerType
+    private function build_peppol_payment_for_reference(string $provider, int $inv_id) : int
     {
       $pp = new PaymentPeppol($inv_id, $provider);
       return $pp->getAuto_reference(); 
@@ -400,19 +398,19 @@ Class StoreCoveHelper {
      * @throws ContactTelephoneNotFoundException
      */
     public function validate_supplier_contact(Contact $contact): void {
-        if (empty($contact->getElectronicMail())) {
+        if (null==($contact->getElectronicMail())) {
             throw new ContactEmailNotFoundException($this->t);
         }
-        if (empty($contact->getName())) {
+        if (null==($contact->getName())) {
             throw new ContactNameNotFoundException($this->t);
         }
-        if (empty($contact->getFirstName())) {
+        if (null==($contact->getFirstName())) {
             throw new ContactFirstNameNotFoundException($this->t);
         }
-        if (empty($contact->getLastName())) {
+        if (null==($contact->getLastName())) {
             throw new ContactLastNameNotFoundException($this->t);
         }
-        if (empty($contact->getTelephone())) {
+        if (null==($contact->getTelephone())) {
             throw new ContactTelephoneNotFoundException($this->t);
         }
     }
@@ -431,7 +429,7 @@ Class StoreCoveHelper {
       $sales_order_item = $soiR->repoSalesOrderItemquery($sales_order_item_id);
       if (null !== $sales_order_item) {
         $peppol_po_itemid = $sales_order_item->getPeppol_po_itemid();
-        if (!empty($peppol_po_itemid)) {
+        if (null!==($peppol_po_itemid)) {
           return $peppol_po_itemid;
         } else {
           throw new PeppolSalesOrderItemPurchaseOrderItemNumberNotExistException($this->t);
@@ -457,7 +455,7 @@ Class StoreCoveHelper {
       $sales_order_item = $soiR->repoSalesOrderItemquery($sales_order_item_id);
       if (null !== $sales_order_item) {
         $peppol_po_lineid = $sales_order_item->getPeppol_po_lineid();
-        if (!empty($peppol_po_lineid)) {
+        if (null!==($peppol_po_lineid)) {
           return $peppol_po_lineid;
         } else {
           throw new PeppolSalesOrderItemPurchaseOrderLineNumberNotExistException($this->t);
@@ -615,7 +613,7 @@ Class StoreCoveHelper {
                       'category' => $item->getProduct()?->getTaxRate()?->getStoreCove_tax_type(),
                   ],
                   //https://docs.peppol.eu/poacc/billing/3.0/syntax/ubl-invoice/cac-InvoiceLine/cac-OrderLineReference/cbc-LineID/
-                  'orderLineReferenceLineId' => $peppol_po_lineid ?: $this->t->translate('invoice.client.') ,
+                  'orderLineReferenceLineId' => null!==$peppol_po_lineid ? $peppol_po_lineid : $this->t->translate('invoice.client.') ,
                   'accountingCost' => $client_peppol->getAccountingCost(),
                   'name' => $item->getName(),
                   'description' => $item->getDescription(),
@@ -1044,7 +1042,7 @@ Class StoreCoveHelper {
      */
     public function build_delivery_location_ID_scheme(): array {
       $id = $this->delivery_location->getGlobal_location_number();
-      if (empty($id)) {
+      if (null==($id)) {
         throw new PeppolDeliveryLocationIDNotFoundException($this->t);
       }
       $array = [
@@ -1109,7 +1107,7 @@ Class StoreCoveHelper {
             $tax_category = $taxRate->getPeppol_tax_rate_code();
             $tax_percent = $taxRate->getTax_rate_percent();
             // Throw an exception if any Tax Category does not have a code
-            if (empty($tax_category)) {
+            if (null==($tax_category)) {
                 throw new PeppolTaxCategoryCodeNotFoundException($this->t);
             }
             if (null === $tax_percent) {
@@ -1129,11 +1127,11 @@ Class StoreCoveHelper {
                             $item_amount = $iiaR->repoInvItemAmountquery((string) $item_id);
                             if (null !== $item_amount) {
                                 $item_sub_total = $item_amount->getSubtotal();
-                                if (!empty($item_sub_total)) {
+                                if (null!==($item_sub_total)) {
                                     $taxable_amount_total += $item_sub_total;
                                 }
                                 $item_tax_total = $item_amount->getTax_total();
-                                if (!empty($item_tax_total)) {
+                                if (null!==($item_tax_total)) {
                                     $tax_amount_total += $item_tax_total;
                                 }
                             }
@@ -1543,7 +1541,7 @@ Class StoreCoveHelper {
                     'invoicePeriod' => $this->invoice_period($invoice, $this->s),
                     'references' => $references,
                     'accountingCost' => $this->AccountingCost($invoice, $cpR),
-                    'note' => $invoice->getNote() ?: $this->t->translate('invoice.storecove.advisory.to.developer.easily.missed'),
+                    'note' => null!==$invoice->getNote() ? $invoice->getNote() : $this->t->translate('invoice.storecove.advisory.to.developer.easily.missed'),
                     'accountingSupplierParty' => [
                         'party' => [
                             'contact' => [

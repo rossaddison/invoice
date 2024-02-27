@@ -3,9 +3,9 @@ declare(strict_types=1);
 
 ?>
 
-<p class="panel d-block p-2 text bg-info">Files uploaded here are saved directly to the public assets folder. 
+<p class="panel d-block p-2 text bg-warning">Files uploaded here are saved directly to the public assets folder. 
  
-    The code that is being used to add the image is located within the <code>ProductImageController</code>, specifically the <code>add</code> function. 
+    The code that is being used to add the image is located within the <code>ProductController</code>, specifically the <code>image_attachment and image_attachment_move_to</code> functions. 
  
     The path aliases that are used in the attachment process are located in <code>src/Invoice/Setting/SettingsRepository</code> and the <code>get_productimages_files_folder_aliases()</code> function is being used in this regard. 
  

@@ -81,14 +81,31 @@ $toolbar = Div::tag();
         new DataColumn(
             header:  $translator->translate('invoice.invoice.allowance.or.charge.reason.code'),
             content: static fn (object $model) => $model->getAllowanceCharge()->getReason_code()
-        ),        
+        ),
+        new DataColumn(
+            content: static function ($model) use ($translator) : string 
+            {
+                if ($model->getAllowanceCharge()->getIdentifier() == 1) {
+                    return  $translator->translate('invoice.invoice.allowance.or.charge.charge');
+                } else {
+                   return $translator->translate('invoice.invoice.allowance.or.charge.allowance');  
+                } 
+            },
+        ),    
         new DataColumn(
             header:  $translator->translate('invoice.invoice.allowance.or.charge.reason'),
             content: static fn (object $model) => $model->getAllowanceCharge()->getReason()
         ),        
         new DataColumn(
             header:  $translator->translate('invoice.invoice.allowance.or.charge.amount'),
-            content: static fn (object $model) => $numberHelper->format_currency($model->getAmount())
+            content: static function (object $model) use ($numberHelper) : string {
+                // show the charge in brackets
+                if ($model->getAllowanceCharge()->getIdentifier() == 0) {
+                    return '('.$numberHelper->format_currency($model->getAmount()).')';
+                } else {
+                    return $numberHelper->format_currency($model->getAmount());
+                }
+            }
         ),        
         new DataColumn(
             header:  $translator->translate('invoice.invoice.vat'),
@@ -108,7 +125,7 @@ $toolbar = Div::tag();
         ),
         new DataColumn(
             header:  $translator->translate('i.delete'), 
-            content: static function ($model) use ($s, $urlGenerator): string {
+            content: static function ($model) use ($translator, $urlGenerator): string {
                 return Html::a( Html::tag('button',
                     Html::tag('i','',['class'=>'fa fa-trash fa-margin']),
                     [
@@ -124,21 +141,21 @@ $toolbar = Div::tag();
     ];
 ?>
 <?= GridView::widget()
-        ->columns(...$columns)
+        ->columns(...$columns)        
+        ->dataReader($paginator)    
         ->headerRowAttributes(['class'=>'card-header bg-info text-black'])
-        ->filterPosition('header')
-        ->filterModelName('acii')
+        //->filterPosition('header')
+        //->filterModelName('acii')
         ->header($header)
         ->id('w18-grid')
         ->pagination(
         OffsetPagination::widget()
-             ->menuClass('pagination justify-content-center')
              ->paginator($paginator) 
              ->render(),
         )
         ->rowAttributes(['class' => 'align-middle'])
         ->summaryAttributes(['class' => 'mt-3 me-3 summary text-end'])
-        ->summary($grid_summary)
+        ->summaryTemplate($grid_summary)
         ->emptyTextAttributes(['class' => 'card-header bg-warning text-black'])
         ->emptyText((string)$translator->translate('invoice.invoice.no.records'))            
         ->tableAttributes(['class' => 'table table-striped text-center h-75','id'=>'table-invitemallowancecharge'])

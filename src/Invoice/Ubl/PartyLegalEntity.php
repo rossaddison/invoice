@@ -67,7 +67,7 @@ class PartyLegalEntity implements XmlSerializable {
     public function setCompanyId(string $companyId, array $companyIdAttributes = null): PartyLegalEntity
     {
         $this->companyId = $companyId;
-        if (!empty($companyIdAttributes)) {
+        if (null!==($companyIdAttributes)) {
           $this->companyIdAttributes = $companyIdAttributes;
         }
         return $this;

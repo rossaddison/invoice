@@ -31,7 +31,7 @@ echo $alert;
       ->urlGenerator(fn ($page) => $urlGenerator->generate('family/index', ['page' => $page]));
     ?>
     <?php 
-      if ($pagination->isRequired()) {
+      if ($pagination->isPaginationRequired()) {
          echo $pagination;
       }
     ?> 

@@ -6,6 +6,7 @@ namespace App\Invoice\PostalAddress;
 
 use App\Invoice\Entity\PostalAddress;
 use App\Invoice\Client\ClientRepository;
+use App\Invoice\PostalAddress\PostalAddressForm;
 use App\Invoice\PostalAddress\PostalAddressService;
 use App\Invoice\PostalAddress\PostalAddressRepository;
 use App\Invoice\Setting\SettingRepository;
@@ -17,12 +18,13 @@ use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
 
 use Yiisoft\Data\Paginator\OffsetPaginator;
+use Yiisoft\Data\Paginator\PageToken;
 use Yiisoft\Http\Method;
 use Yiisoft\Router\CurrentRoute;
 use Yiisoft\Session\SessionInterface;
 use Yiisoft\Session\Flash\Flash;
-use Yiisoft\Translator\TranslatorInterface;use Yiisoft\FormModel\FormHydrator;
-use Yiisoft\Form\Helper\HtmlFormErrors;
+use Yiisoft\Translator\TranslatorInterface;
+use Yiisoft\FormModel\FormHydrator;
 use Yiisoft\Yii\View\ViewRenderer;
 
 use \Exception;
@@ -64,36 +66,39 @@ final class PostalAddressController
     }
     
     /**
-     * 
      * @param CurrentRoute $currentRoute
-     * @param ViewRenderer $head
      * @param Request $request
      * @param FormHydrator $formHydrator
      * @param ClientRepository $clientRepo
      * @return Response
      */
-    public function add(CurrentRoute $currentRoute, ViewRenderer $head, Request $request, 
-                       FormHydrator $formHydrator, ClientRepository $clientRepo
+    public function add(CurrentRoute $currentRoute, 
+                        Request $request, 
+                        FormHydrator $formHydrator
     ) : Response
     {
         $client_id = $currentRoute->getArgument('client_id');
+        $postalAddress = new PostalAddress();
+        $form = new PostalAddressForm($this->translator, $postalAddress, (int)$client_id);
         $parameters = [
             'canEdit' => ($this->userService->hasPermission('viewInv') && $this->userService->hasPermission('editInv')) ? true : false,
             'client_id' => $client_id,
             'title' => $this->translator->translate('invoice.add'),
-            'action' => ['postaladdress/add',['client_id'=>$client_id]],
+            'action' => ['postaladdress/add', ['client_id'=>$client_id]],
             'errors' => [],
-            'body' => $request->getParsedBody(),
-            'head'=>$head,
+            'form' => $form
         ];
         
         if ($request->getMethod() === Method::POST) {
-            
-            $form = new PostalAddressForm();
-            if ($formHydrator->populate($form, $parameters['body']) && $form->isValid()) {
-                $this->postaladdressService->savePostalAddress(new PostalAddress(), $form);
+            if ($formHydrator->populateFromPostAndValidate($form, $request)) {
+                $body = $request->getParsedBody();
+                /**
+                 * @psalm-suppress PossiblyInvalidArgument $body
+                 */
+                $this->postaladdressService->savePostalAddress($postalAddress, $body);
                 return $this->webService->getRedirectResponse('postaladdress/index');
             }
+            $parameters['errors'] = $form->getValidationResult()?->getErrorMessagesIndexedByAttribute() ?? [];
             $parameters['form'] = $form;
         }
         return $this->viewRenderer->render('_form', $parameters);
@@ -103,11 +108,10 @@ final class PostalAddressController
      * @return string
      */
     private function alert(): string {
-      return $this->viewRenderer->renderPartialAsString('/invoice/layout/alert',
-      [ 
-        'flash' => $this->flash,
-        'errors' => [],
-      ]);
+        return $this->viewRenderer->renderPartialAsString('/invoice/layout/alert',
+        [ 
+          'flash' => $this->flash
+        ]);
     }
 
     /**
@@ -118,25 +122,6 @@ final class PostalAddressController
     private function flash_message(string $level, string $message): Flash {
       $this->flash->add($level, $message, true);
       return $this->flash;
-    }
-    
-    /**
-     * @param PostalAddress $postaladdress
-     * @return array
-     */
-    private function body(PostalAddress $postaladdress) : array {
-        $body = [
-          'id'=>$postaladdress->getId(),
-          'client_id'=>$postaladdress->getClient_id(),
-          'street_name'=>$postaladdress->getStreet_name(),
-          'additional_street_name'=>$postaladdress->getAdditional_street_name(),
-          'building_number'=>$postaladdress->getBuilding_number(),
-          'city_name'=>$postaladdress->getCity_name(),
-          'postalzone'=>$postaladdress->getPostalzone(),
-          'countrysubentity'=>$postaladdress->getCountrysubentity(),
-          'country'=>$postaladdress->getCountry()
-        ];
-        return $body;
     }
     
     /**
@@ -153,33 +138,31 @@ final class PostalAddressController
         $paginator = (new OffsetPaginator($postaladdresses))
         ->withPageSize((int)$settingRepository->get_setting('default_list_limit'))
         ->withCurrentPage((int)$page)        
-        ->withNextPageToken($page); 
+        ->withToken(PageToken::next((string)$page)); 
       $parameters = [
         'canEdit' => ($this->userService->hasPermission('viewInv') && $this->userService->hasPermission('editInv')) ? true : false,  
-        's'=>$settingRepository,
         'postaladdresses' => $postaladdresses,
-        'alert'=> $this->alert(),
-        'paginator'=>$paginator,
-        'max'=>(int)$settingRepository->get_setting('default_list_limit'),  
+        'alert' => $this->alert(),
+        'paginator' => $paginator,
+        'max' => (int)$settingRepository->get_setting('default_list_limit'),  
         'cR' => $cR
       ];         
       return $this->viewRenderer->render('index', $parameters);
     }
     
     /**
-     * 
-     * @param SettingRepository $settingRepository
      * @param CurrentRoute $currentRoute
      * @param PostalAddressRepository $postaladdressRepository
      * @return Response
      */
-    public function delete(SettingRepository $settingRepository, CurrentRoute $currentRoute,PostalAddressRepository $postaladdressRepository 
-    ): Response {
-        try {
+    public function delete(CurrentRoute $currentRoute,PostalAddressRepository $postaladdressRepository)
+                           : Response 
+    {
+    try {
             $postaladdress = $this->postaladdress($currentRoute, $postaladdressRepository);
             if ($postaladdress) {
                 $this->postaladdressService->deletePostalAddress($postaladdress);               
-                $this->flash_message('info', $settingRepository->trans('record_successfully_deleted'));
+                $this->flash_message('info', $this->translator->translate('i.record_successfully_deleted'));
                 return $this->webService->getRedirectResponse('postaladdress/index'); 
             }
             return $this->webService->getRedirectResponse('postaladdress/index'); 
@@ -190,38 +173,36 @@ final class PostalAddressController
     }
     
     /**
-     * 
-     * @param ViewRenderer $head
      * @param Request $request
      * @param CurrentRoute $currentRoute
      * @param FormHydrator $formHydrator
-     * @param PostalAddressRepository $postaladdressRepository
-     * @param SettingRepository $settingRepository
+     * @param PostalAddressRepository $postalAddressRepository
      * @return Response
      */    
-    public function edit(ViewRenderer $head, Request $request, CurrentRoute $currentRoute, 
-                       FormHydrator $formHydrator,
-                        PostalAddressRepository $postaladdressRepository, 
-                        SettingRepository $settingRepository                        
+    public function edit(Request $request, CurrentRoute $currentRoute, 
+                         FormHydrator $formHydrator,
+                         PostalAddressRepository $postalAddressRepository            
 
     ): Response {
-        $postaladdress = $this->postaladdress($currentRoute, $postaladdressRepository);
-        if ($postaladdress){
+        $postalAddress = $this->postaladdress($currentRoute, $postalAddressRepository);
+        if ($postalAddress){
+            $form = new PostalAddressForm($this->translator, $postalAddress, (int)$postalAddress->getClient_id());
             $parameters = [
-                'title' => $settingRepository->trans('edit'),
-                'action' => ['postaladdress/edit', ['id' => $postaladdress->getId()]],
+                'title' => $this->translator->translate('i.edit'),
+                'action' => ['postaladdress/edit', ['id' => $postalAddress->getId()]],
                 'errors' => [],
-                'body' => $this->body($postaladdress),
-                'head'=>$head  
+                'form' => $form
             ];
             if ($request->getMethod() === Method::POST) {
-                $form = new PostalAddressForm();
-                $body = $request->getParsedBody();
-                if ($formHydrator->populate($form, $body) && $form->isValid()) {
-                    $this->postaladdressService->savePostalAddress($postaladdress,$form);
+                if ($formHydrator->populateFromPostAndValidate($form, $request)) {
+                    $body = $request->getParsedBody();
+                    /**
+                     * @psalm-suppress PossiblyInvalidArgument $body
+                     */
+                    $this->postaladdressService->savePostalAddress($postalAddress, $body);
                     return $this->webService->getRedirectResponse('postaladdress/index');
                 }
-                $parameters['body'] = $body;
+                $parameters['errors'] = $form->getValidationResult()?->getErrorMessagesIndexedByAttribute() ?? [];
                 $parameters['form'] = $form;
             }
             return $this->viewRenderer->render('_form', $parameters);
@@ -260,22 +241,21 @@ final class PostalAddressController
         
     /**
      * @param CurrentRoute $currentRoute
-     * @param PostalAddressRepository $postaladdressRepository
-     * @param SettingRepository $settingRepository
+     * @param PostalAddressRepository $postalAddressRepository
      * @return \Yiisoft\DataResponse\DataResponse|Response
      */
     public function view(CurrentRoute $currentRoute,
-                         PostalAddressRepository $postaladdressRepository,
-                         SettingRepository $settingRepository,
-                         ): \Yiisoft\DataResponse\DataResponse|Response {
-        $postaladdress = $this->postaladdress($currentRoute, $postaladdressRepository); 
-        if ($postaladdress) {
+                         PostalAddressRepository $postalAddressRepository) 
+            : \Yiisoft\DataResponse\DataResponse|Response 
+    {
+        $postalAddress = $this->postaladdress($currentRoute, $postalAddressRepository); 
+        if ($postalAddress) {
+            $form = new PostalAddressForm($this->translator, $postalAddress, (int)$postalAddress->getClient_id());
             $parameters = [
-                'title' => $settingRepository->trans('view'),
-                'action' => ['postaladdress/view', ['id' => $postaladdress->getId()]],
-                'errors' => [],
-                'body' => $this->body($postaladdress),
-                'postaladdress'=>$postaladdress,
+                'title' => $this->translator->translate('i.view'),
+                'action' => ['postaladdress/view', ['id' => $postalAddress->getId()]],
+                'form' => $form,
+                'postaladdress'=>$postalAddress,
             ];        
         return $this->viewRenderer->render('_view', $parameters);
         }

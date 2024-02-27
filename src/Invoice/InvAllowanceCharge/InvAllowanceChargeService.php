@@ -5,29 +5,44 @@ declare(strict_types=1);
 namespace App\Invoice\InvAllowanceCharge;
 
 use App\Invoice\Entity\InvAllowanceCharge;
-use App\Invoice\InvAllowanceCharge\InvAllowanceChargeForm;
+use App\Invoice\AllowanceCharge\AllowanceChargeRepository as ACR;
 
 final class InvAllowanceChargeService
 {
     private InvAllowanceChargeRepository $repository;
-
-    public function __construct(InvAllowanceChargeRepository $repository)
+    private ACR $acR;
+    
+    public function __construct(InvAllowanceChargeRepository $repository, ACR $acR)
     {
         $this->repository = $repository;
+        $this->acR = $acR;
     }
     
     /**
      * @param InvAllowanceCharge $model
-     * @param InvAllowanceChargeForm $form
+     * @param array $array
      * @return void
      */
-    public function saveInvAllowanceCharge(InvAllowanceCharge $model, InvAllowanceChargeForm $form): void
+    public function saveInvAllowanceCharge(InvAllowanceCharge $model, array $array): void
     {
-        null!==$form->getId() ? $model->setId($form->getId()) : '';
-        null!==$form->getInv_id() ? $model->setInv_id($form->getInv_id()) : '';
-        null!==$form->getAllowance_charge_id() ? $model->setAllowance_charge_id($form->getAllowance_charge_id()) : '';
-        null!==$form->getAmount() ? $model->setAmount($form->getAmount()) : 0.00;
-        null!==$form->getVat() ? $model->setVat($form->getVat()) : 0.00;
+        $model->nullifyRelationOnChange((int)$array['allowance_charge_id']);
+        isset($array['id']) ? $model->setId((int)$array['id']) : '';
+        isset($array['inv_id']) ? $model->setInv_id((int)$array['inv_id']) : '';
+        isset($array['allowance_charge_id']) ? $model->setAllowance_charge_id((int)$array['allowance_charge_id']) : '';
+        isset($array['amount']) ? $model->setAmount((float)$array['amount']) : 0.00;
+        $allowance_charge = $this->acR->repoAllowanceChargequery((string)$array['allowance_charge_id']);
+        if (null!==$allowance_charge && null!==$allowance_charge->getTaxRate()) {
+            $allowanceChargeTaxRate = $allowance_charge->getTaxRate();
+            if (null!==$allowanceChargeTaxRate) {
+                if ($array['amount'] == '') {
+                    $amount = 0.00;
+                } else {
+                    $amount = (float)$array['amount'];
+                }
+                $vat = $amount * ($allowanceChargeTaxRate->getTax_rate_percent() ?? 0.00) / 100;
+                $model->setVat($vat);
+            }    
+        }    
         $this->repository->save($model);
     }
     

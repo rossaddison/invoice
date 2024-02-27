@@ -107,7 +107,7 @@ use Yiisoft\Router\CurrentRoute;
             ),
             new DataColumn(
                 header:  $translator->translate('i.delete'),    
-                content: static function ($model) use ($s, $urlGenerator): string {
+                content: static function ($model) use ($translator, $urlGenerator): string {
                    return Html::a( Html::tag('button',
                             Html::tag('i','',['class'=>'fa fa-trash fa-margin']),
                             [
@@ -126,20 +126,20 @@ use Yiisoft\Router\CurrentRoute;
         ->columns(...$columns)
         ->dataReader($paginator)    
         ->headerRowAttributes(['class'=>'card-header bg-info text-black'])
-        ->filterPosition('header')
-        ->filterModelName('unitpeppol')
+        //->filterPosition('header')
+        //->filterModelName('unitpeppol')
         ->header($header)
         ->id('w44-grid')
         ->pagination(
         OffsetPagination::widget()
-             ->menuClass('pagination justify-content-center')
+             //->menuClass('pagination justify-content-center')
              ->paginator($paginator)
-             ->urlArguments([])
+             //->urlArguments([])
              ->render(),
         )
         ->rowAttributes(['class' => 'align-middle'])
         ->summaryAttributes(['class' => 'mt-3 me-3 summary text-end'])
-        ->summary($grid_summary)
+        ->summaryTemplate($grid_summary)
         ->emptyTextAttributes(['class' => 'card-header bg-warning text-black'])
         ->emptyText((string)$translator->translate('invoice.invoice.no.records'))
         ->tableAttributes(['class' => 'table table-striped text-center h-81','id'=>'table-unitpeppol'])

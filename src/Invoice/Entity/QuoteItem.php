@@ -60,7 +60,7 @@ class QuoteItem
     
     #[Column(type: 'integer(11)', nullable: true)]
     private ?int $product_unit_id;
-     
+        
     public function __construct(
         int $id = null,        
         string $name = '',

@@ -16,18 +16,18 @@ final class TaxRateService
     }
     
     /**
-     * 
      * @param TaxRate $model
-     * @param TaxRateForm $form
+     * @param array $array
      * @return void
      */
-    public function saveTaxRate(TaxRate $model, TaxRateForm $form): void
+    public function saveTaxRate(TaxRate $model, array $array): void
     {
-        null!==$form->getTax_rate_name() ? $model->setTax_rate_name($form->getTax_rate_name()) : '';
-        null!==$form->getTax_rate_percent() ? $model->setTax_rate_percent($form->getTax_rate_percent()) : '';
-        null!==$form->getTax_rate_default() ? $model->setTax_rate_default($form->getTax_rate_default()) : '';        
-        null!==$form->getPeppol_tax_rate_code() ? $model->setPeppol_tax_rate_code($form->getPeppol_tax_rate_code()) : '';        
-        null!==$form->getStorecove_tax_type() ? $model->setStorecove_tax_type($form->getStorecove_tax_type()) : '';
+        isset($array['tax_rate_name']) ? $model->setTax_rate_name((string)$array['tax_rate_name']) : '';
+        isset($array['tax_rate_percent'])  ? $model->setTax_rate_percent((float)$array['tax_rate_percent']) : '';
+        isset($array['tax_rate_code'])  ? $model->setTax_rate_code((string)$array['tax_rate_code']) : '';
+        $model->setTax_rate_default($array['tax_rate_default'] === '1' ? true : false);
+        isset($array['peppol_tax_rate_code']) ? $model->setPeppol_tax_rate_code((string)$array['peppol_tax_rate_code']) : '';        
+        isset($array['storecove_tax_type']) ? $model->setStorecove_tax_type((string)$array['storecove_tax_type']) : '';
         if ($model->isNewRecord()) {
             $model->setTax_rate_default(false);
         }
@@ -35,7 +35,6 @@ final class TaxRateService
     }
     
     /**
-     * 
      * @param TaxRate $model
      * @return void
      */

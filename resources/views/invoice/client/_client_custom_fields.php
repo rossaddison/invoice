@@ -28,14 +28,7 @@ use Yiisoft\Html\Html;
 <div col="row">
     <?php foreach ($custom_fields as $custom_field): ?>
     <div class="col-md-4">
-          <?= $cvH->print_field_for_form($client_custom_values, $custom_field, 
-                                       $custom_values, 
-                                       // Class for div surrounding input
-                                       'col-xs-12 col-sm-6',
-                                       // Class surrounding above div
-                                       'form-group',
-                                       // Label class similar to above
-                                       'control-label'); ?>
+          <?= $cvH->print_field_for_form($custom_field, $form, $translator, $client_custom_values, $custom_values); ?>
     </div>    
     <?php endforeach; ?>        
 </div> 

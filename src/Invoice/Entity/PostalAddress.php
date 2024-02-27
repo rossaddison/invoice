@@ -6,8 +6,6 @@ namespace App\Invoice\Entity;
 
 use Cycle\Annotated\Annotation\Column;
 use Cycle\Annotated\Annotation\Entity;
-
-use App\Invoice\Entity\Client;
   
  #[Entity(repository: \App\Invoice\PostalAddress\PostalAddressRepository::class)]
  

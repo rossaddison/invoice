@@ -46,8 +46,16 @@ final class AssignRoleCommand extends Command
     protected function execute(InputInterface $input, OutputInterface $output) 
     {
         $io = new SymfonyStyle($input, $output);
-
+        
+        /**
+         * @var mixed $input->getArgument('role')
+         * @var string $roleName
+         */
         $roleName = $input->getArgument('role');
+        /**
+         * @var mixed $input->getArgument('userId')
+         * @var int $userId
+         */
         $userId = $input->getArgument('userId');
 
         try {
@@ -61,6 +69,9 @@ final class AssignRoleCommand extends Command
                 throw new InvalidArgumentException('User Id is NULL');
             }
 
+            /**
+             * @var string $roleName
+             */
             $role = $this->itemsStorage->getRole($roleName);
 
             if (null === $role) {
@@ -74,14 +85,17 @@ final class AssignRoleCommand extends Command
                 $role = new Role($roleName);
                 $this->manager->addRole($role);
             }
-
+            
+            /**
+             * @var int|object|string $userId
+             */
             $this->manager->assign($roleName, $userId);
 
             $io->success('Role was assigned to given user');
         } catch (Throwable $t) {
             $io->error($t->getMessage());
 
-            return $t->getCode() ?: ExitCode::UNSPECIFIED_ERROR;
+            return ExitCode::UNSPECIFIED_ERROR;
         }
 
         return ExitCode::OK;

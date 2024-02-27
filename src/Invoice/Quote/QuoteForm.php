@@ -3,23 +3,67 @@ declare(strict_types=1);
 
 namespace App\Invoice\Quote;
 
+use App\Invoice\Entity\Quote;
 use Yiisoft\FormModel\FormModel;
 use Yiisoft\Validator\Rule\Required;
 
+use DateTimeImmutable;
+
 final class QuoteForm extends FormModel
 {    
-    private string $number ='';
+    private ?string $number = '';
+    private mixed $date_created = '';
+    private ?string $inv_id = null;
+    private ?string $so_id = null;
     
-    private ?string $inv_id=null;
-    private ?string $so_id=null;
-    private ?int $group_id=null;
-    private ?int $client_id=null;    
-    private ?int $status_id=1;
-    private ?float $discount_amount=0;
-    private ?float $discount_percent=0;
-    private ?string $url_key='';
-    private ?string $password='';
-    private ?string $notes='';    
+    #[Required]
+    private ?int $group_id = null;
+    #[Required]
+    private ?int $client_id = null;
+    
+    private ?int $status_id = 1;
+    private ?float $discount_amount = 0;
+    private ?float $discount_percent = 0;
+    private ?string $url_key = '';
+    private ?string $password = '';
+    private ?string $notes = '';
+    
+    private ?int $delivery_location_id = null;
+    
+    public function __construct(Quote $quote)
+    {
+        $this->number = $quote->getNumber();
+        $this->date_created = $quote->getDate_created();
+        $this->inv_id = $quote->getInv_id();
+        $this->so_id = $quote->getSo_id();
+        $this->group_id = (int)$quote->getGroup_id();
+        $this->client_id = (int)$quote->getClient_id();
+        $this->status_id = $quote->getStatus_id();
+        $this->discount_amount = $quote->getDiscount_amount();
+        $this->discount_percent = $quote->getDiscount_percent();
+        $this->url_key = $quote->getUrl_key();
+        $this->password = $quote->getPassword();
+        $this->notes = $quote->getNotes();
+        $this->delivery_location_id = (int)$quote->getDelivery_location_id();
+    } 
+    
+    public function getDate_created() : string|null|DateTimeImmutable 
+    {
+      /**
+       * @var string|null|DateTimeImmutable $this->date_created 
+       */
+        return $this->date_created;
+    }
+        
+    public function getNumber() : string|null
+    {
+      return $this->number;
+    }
+    
+    public function getInv_id() : string|null
+    {
+      return $this->inv_id;
+    }
     
     // The Entities ie. Entity/Quote.php have return type string => return type strings in the form 
     // get => string ; 
@@ -27,10 +71,10 @@ final class QuoteForm extends FormModel
     {
       return $this->so_id;
     }
-    
-    public function getInv_id() : string|null
+        
+    public function getGroup_id() : int|null
     {
-      return $this->inv_id;
+      return $this->group_id;
     }
 
     public function getClient_id() : int|null
@@ -38,19 +82,14 @@ final class QuoteForm extends FormModel
       return $this->client_id;
     }
 
-    public function getGroup_id() : int|null
-    {
-      return $this->group_id;
-    }
-
     public function getStatus_id() : int|null
     {
       return $this->status_id;
     }
-        
-    public function getNumber() : string
+    
+    public function getDelivery_location_id() : int|null
     {
-      return $this->number;
+      return $this->delivery_location_id;
     }
     
     public function getDiscount_amount() : float|null
@@ -87,16 +126,4 @@ final class QuoteForm extends FormModel
     {
       return '';
     }
-    
-    /**
-     * @return Required[][]
-     *
-     * @psalm-return array{client_id: list{Required}, group_id: list{Required}}
-     */
-    public function getRules(): array    {
-      return [
-         'client_id'=> [new Required()],
-         'group_id'=> [new Required()],
-      ];
-     }
 }

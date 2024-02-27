@@ -73,20 +73,19 @@ final class CustomFieldController
               'max'=>$settingRepository->get_setting('default_list_limit'),
               'customfields' => $this->customfields($customfieldRepository),
               'custom_tables' => $this->custom_tables(),            
-              'custom_value_fields'=>$this->custom_value_fields(),
-              'alert'=> $this->alert(),
+              'custom_value_fields' => $this->custom_value_fields(),
+              'alert' => $this->alert(),
        ];    
        return $this->viewRenderer->render('index', $parameters);
     }
     
     /**
-     * @param ViewRenderer $head
      * @param Request $request
      * @param FormHydrator $formHydrator
      * @param SettingRepository $settingRepository
      * @return Response
      */
-    public function add(ViewRenderer $head, Request $request, 
+    public function add(Request $request, 
                         FormHydrator $formHydrator,
                         SettingRepository $settingRepository
     ): Response
@@ -99,21 +98,16 @@ final class CustomFieldController
             'action' => ['customfield/add'],
             'errors' => [],
             'form' => $form,
-            'head'=>$head,
             'tables' => $this->custom_tables(),
             'user_input_types'=>['NUMBER','TEXT','DATE','BOOLEAN'],
             'custom_value_fields'=>['SINGLE-CHOICE','MULTIPLE-CHOICE'],
-            'layout_header_buttons'=>$this->viewRenderer->renderPartialAsString('/invoice/layout/header_buttons'),
             // Create an array for "moduled" ES6 jquery script. The script is "moduled" and therefore deferred by default to avoid
             // the $ undefined reference error in the DOM.
             'positions'=>$this->positions($settingRepository)
         ];
         
         if ($request->getMethod() === Method::POST) {
-            /**
-             * @psalm-suppress PossiblyInvalidArgument $body
-             */
-            if ($formHydrator->populate($form, $body) && $form->isValid()) {
+            if ($formHydrator->populateFromPostAndValidate($form, $request)) {
                 /**
                  * @psalm-suppress PossiblyInvalidArgument $body
                  */
@@ -127,7 +121,6 @@ final class CustomFieldController
     }
     
     /**
-     * @param ViewRenderer $head
      * @param Request $request
      * @param CurrentRoute $currentRoute
      * @param FormHydrator $formHydrator
@@ -135,7 +128,7 @@ final class CustomFieldController
      * @param SettingRepository $settingRepository
      * @return Response
      */
-    public function edit(ViewRenderer $head, Request $request, CurrentRoute $currentRoute,
+    public function edit(Request $request, CurrentRoute $currentRoute,
                        FormHydrator $formHydrator,
                         CustomFieldRepository $customfieldRepository, 
                         SettingRepository $settingRepository                        
@@ -149,19 +142,14 @@ final class CustomFieldController
                 'action' => ['customfield/edit', ['id' => $custom_field->getId()]],
                 'errors' => [],
                 'form' => $form,
-                'head'=>$head,
                 'tables' => $this->custom_tables(),
-                'user_input_types'=>['NUMBER','TEXT','DATE','BOOLEAN'],
-                'custom_value_fields'=>['SINGLE-CHOICE','MULTIPLE-CHOICE'],
-                'layout_header_buttons'=>$this->viewRenderer->renderPartialAsString('/invoice/layout/header_buttons'),
-                'positions'=>$this->positions($settingRepository)    
+                'user_input_types' => ['NUMBER','TEXT','DATE','BOOLEAN'],
+                'custom_value_fields' => ['SINGLE-CHOICE','MULTIPLE-CHOICE'],
+                'positions' => $this->positions($settingRepository)    
             ];
             if ($request->getMethod() === Method::POST) {
                 $body = $request->getParsedBody() ?? [];
-                /**
-                 * @psalm-suppress PossiblyInvalidArgument $body
-                 */
-                if ($formHydrator->populate($form, $body) && $form->isValid()) {
+                if ($formHydrator->populateFromPostAndValidate($form, $request)) {
                     /**
                      * @psalm-suppress PossiblyInvalidArgument $body
                      */
@@ -212,7 +200,7 @@ final class CustomFieldController
                 'action' => ['customfield/edit', ['id' => $custom_field->getId()]],
                 'errors' => [],
                 'form' => $form,
-                'customfield'=>$custom_field->getId(),
+                'customfield' => $custom_field->getId(),
             ];
             return $this->viewRenderer->render('_view', $parameters);
         } else {
@@ -289,17 +277,17 @@ final class CustomFieldController
         // The default position on the form is custom fields so if none of the other options are chosen then the new field
         // will appear under the default custom field section. The client form has five areas where the new field can appear.
         $positions = [
-                    'client' =>  ['custom_fields','address','contact_information','personal_information','tax_information'],
-                    'product'=>  ['custom_fields'],
+                    'client' =>  ['i.custom_fields','i.address','i.contact_information','i.personal_information','tax_information'],
+                    'product'=>  ['i.custom_fields'],
                     // A custom field created with "properties" will appear in the address section 
-                    'invoice' => ['custom_fields','properties'],                    
-                    'payment' => ['custom_fields'],
-                    'quote' =>   ['custom_fields','properties'],
-                    'user' =>    ['custom_fields','account_information','address','tax_information','contact_information'],                    
+                    'invoice' => ['i.custom_fields','i.properties'],                    
+                    'payment' => ['i.custom_fields'],
+                    'quote' =>   ['i.custom_fields','i.properties'],
+                    'user' =>    ['i.custom_fields','i.account_information','i.address','i.tax_information','i.contact_information'],                    
                 ];
                 foreach ($positions as $key => $val) {
                     foreach ($val as $key2 => $val2) {
-                        $val[$key2] = $s->trans($val2);
+                        $val[$key2] = $this->translator->translate($val2);
                     }
                     $positions[$key] = $val;
                 }
@@ -307,9 +295,7 @@ final class CustomFieldController
     }
     
     /**
-     * @return string[]
-     *
-     * @psalm-return array{client_custom: 'client', product_custom: 'product', inv_custom: 'invoice', payment_custom: 'payment', quote_custom: 'quote', user_custom: 'user'}
+     * @return array
      */
     private function custom_tables(): array
     {
@@ -319,6 +305,7 @@ final class CustomFieldController
             'inv_custom' => 'invoice',
             'payment_custom' => 'payment',
             'quote_custom' => 'quote',
+            'sales_order_custom' => 'sales_order',
             'user_custom' => 'user',
         ];
     }

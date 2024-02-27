@@ -7,7 +7,6 @@ namespace App\Invoice\Sumex;
 use App\Invoice\Entity\Sumex;
 use App\Invoice\Setting\SettingRepository;
 use App\Invoice\Sumex\SumexRepository;
-use App\Invoice\Sumex\SumexForm;
 
 final class SumexService
 {
@@ -20,28 +19,37 @@ final class SumexService
     }
     
     /**
-     * 
      * @param Sumex $model
-     * @param SumexForm $form
+     * @param array $array
      * @param SettingRepository $s
      * @return void
      */
-    public function saveSumex(Sumex $model, SumexForm $form, SettingRepository $s): void
+    public function saveSumex(Sumex $model, array $array): void
     {
-       $form->getInvoice() ? $model->setInvoice($form->getInvoice()) : '';
-       $form->getReason() ? $model->setReason($form->getReason()) : '';
-       $form->getDiagnosis() ? $model->setDiagnosis($form->getDiagnosis()) : '';
-       $form->getObservations() ? $model->setObservations($form->getObservations()) : '';
-       $model->setTreatmentstart($form->getTreatmentstart($s));
-       $model->setTreatmentend($form->getTreatmentend($s));
-       $model->setCasedate($form->getCasedate($s));
-       $form->getCasenumber() ? $model->setCasenumber($form->getCasenumber()) : '';
+       // invoice is an id
+       isset($array['invoice']) ? $model->setInvoice((int)$array['invoice']) : '';
+       isset($array['reason']) ? $model->setReason((int)$array['reason']) : '';
+       isset($array['diagnosis']) ? $model->setDiagnosis((string)$array['diagnosis']) : '';
+       isset($array['observations']) ? $model->setObservations((string)$array['observations']) : '';
+              
+       $datetime_ts = new \DateTime();
+       isset($array['treatmentstart']) ? $model->setTreatmentstart(
+               $datetime_ts::createFromFormat('Y-m-d', (string)$array['treatmentstart'])) : '';
+       
+       $datetime_te = new \DateTime();
+       isset($array['treatmentend']) ? $model->setTreatmentend(
+               $datetime_te::createFromFormat('Y-m-d', (string)$array['treatmentend'])) : '';
+       
+       $datetime_cd = new \DateTime();
+       isset($array['casedate']) ? $model->setCasedate(
+               $datetime_cd::createFromFormat('Y-m-d', (string)$array['casedate'])) : '';
+       
+       isset($array['casenumber']) ? $model->setCasenumber((string)$array['casenumber']) : '';
  
        $this->repository->save($model);
     }
     
     /**
-     * 
      * @param Sumex $model
      * @return void
      */

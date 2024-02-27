@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace App\Invoice\ProductImage;
 
 use App\Invoice\Entity\ProductImage;
-use App\Invoice\Helpers\DateHelper;
+
 use App\Invoice\Setting\SettingRepository;
 use Yiisoft\Files\FileHelper;
 
@@ -21,23 +21,23 @@ final class ProductImageService {
 
     /**
      * @param ProductImage $model
-     * @param ProductImageForm $form
+     * @param array $array
      * @return void
      */
-    public function saveProductImage(ProductImage $model, ProductImageForm $form): void {
-        $model->nullifyRelationOnChange((int) $form->getProduct_id());
-        /** @psalm-suppress PossiblyNullArgument $form->getProduct_id()*/
-        $model->setProduct_id($form->getProduct_id());
-        $model->setFile_name_original($form->getFile_name_original());
-        $model->setFile_name_new($form->getFile_name_new());
-
-        $datehelper = new DateHelper($this->s);
-
-        $datetime_uploaded = $datehelper->get_or_set_with_style(null !== $form->getUploaded_date() ? $form->getUploaded_date() : new \DateTime());
-        $datetimeimmutable_uploaded = new \DateTimeImmutable($datetime_uploaded instanceof \DateTime ? $datetime_uploaded->format('Y-m-d H:i:s') : 'now');
-        $model->setUploaded_date($datetimeimmutable_uploaded);
-
-        $model->setDescription($form->getDescription());
+    public function saveProductImage(ProductImage $model, array $array): void {
+        $model->nullifyRelationOnChange((int)$array['product_id']);
+        
+        $datetime_created = new \DateTimeImmutable();
+        $model->setUploaded_date(
+            $datetime_created::createFromFormat('Y-m-d', (string)$array['uploaded_date']) 
+            ?: new \DateTimeImmutable('now')
+        );
+        
+        isset($array['product_id']) ? $model->setProduct_id((int)$array['product_id']) : '';
+        isset($array['file_name_original']) ? $model->setFile_name_original((string)$array['file_name_original']) : '';
+        isset($array['file_name_new']) ? $model->setFile_name_new((string)$array['file_name_new']) : '';
+        isset($array['description']) ? $model->setDescription((string)$array['description']) : '';
+        
         $this->repository->save($model);
     }
 

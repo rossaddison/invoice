@@ -144,5 +144,5 @@ private EntityWriter $entityWriter;
         $query = $this->select()
                       ->where(['id' => $id]);
         return $query->count();
-    }   
+    }     
 }

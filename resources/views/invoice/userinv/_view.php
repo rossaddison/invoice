@@ -2,7 +2,7 @@
 
 declare(strict_types=1); 
 
-use App\Widget\Button;
+
 use Yiisoft\Arrays\ArrayHelper;
 use Yiisoft\FormModel\Field;
 use Yiisoft\Html\Html;
@@ -35,7 +35,7 @@ use Yiisoft\Html\Tag\Form;
         <?= Html::openTag('h1', ['class' => 'headerbar-title']); ?>
             <?= Html::encode($title) ?>
         <?= Html::closeTag('h1'); ?>
-        <?= Button::back($translator); ?>
+        <?= $button::back($translator); ?>
 <?= Html::closeTag('div'); ?>
 <?= Html::openTag('div', ['id' => 'content']); ?>
     <?= Html::openTag('div', ['class' => 'row']); ?>        

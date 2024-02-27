@@ -15,6 +15,7 @@ use App\Service\WebControllerService;
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
 
+use Yiisoft\Data\Paginator\PageToken;
 use Yiisoft\Data\Paginator\OffsetPaginator;
 use Yiisoft\Http\Method;
 use Yiisoft\Router\CurrentRoute;
@@ -71,13 +72,9 @@ final class FromDropDownController
             'errors' => [],
             'form' => $form
         ];
-        
         if ($request->getMethod() === Method::POST) {
             $body = $request->getParsedBody();
-            /**
-             * @psalm-suppress PossiblyInvalidArgument $body
-             */
-            if ($formHydrator->populate($form, $body) && $form->isValid()) {
+            if ($formHydrator->populateFromPostAndValidate($form, $request)) {
                 /**
                  * @psalm-suppress PossiblyInvalidArgument $body
                  */
@@ -96,8 +93,7 @@ final class FromDropDownController
     private function alert() : string {
         return $this->viewRenderer->renderPartialAsString('/invoice/layout/alert',
         [
-            'flash'=>$this->flash,
-            'errors' => [],
+            'flash' => $this->flash
         ]);
     }
         
@@ -108,7 +104,7 @@ final class FromDropDownController
       $paginator = (new OffsetPaginator($from))
       ->withPageSize((int) $settingRepository->get_setting('default_list_limit'))
       ->withCurrentPage((int)$page)
-      ->withNextPageToken($page);
+      ->withToken(PageToken::next((string)$page));
       $parameters = [
       'froms' => $this->froms($fromRepository),
       'paginator' => $paginator,
@@ -148,8 +144,8 @@ final class FromDropDownController
      * @return Response
      */
     public function edit(Request $request, CurrentRoute $currentRoute, 
-                       FormHydrator $formHydrator,
-                        FromDropDownRepository $fromRepository) : Response 
+                         FormHydrator $formHydrator,
+                         FromDropDownRepository $fromRepository) : Response 
     {
         $from = $this->from($currentRoute, $fromRepository);
         if ($from){
@@ -162,14 +158,11 @@ final class FromDropDownController
             ];
             if ($request->getMethod() === Method::POST) {
                 $body = $request->getParsedBody();
-                /**
-                 * @psalm-suppress PossiblyInvalidArgument $body
-                 */
-                if ($formHydrator->populate($form, $body) && $form->isValid()) {
+                if ($formHydrator->populateFromPostAndValidate($form,  $request)) {
                     /**
                      * @psalm-suppress PossiblyInvalidArgument $body
                      */
-                    $this->fromService->saveFromDropDown($from,$body);
+                    $this->fromService->saveFromDropDown($from, $body);
                     return $this->webService->getRedirectResponse('from/index');
                 }
                 $parameters['errors'] = $form->getValidationResult()?->getErrorMessagesIndexedByAttribute() ?? [];

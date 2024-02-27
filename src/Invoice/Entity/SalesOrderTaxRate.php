@@ -43,11 +43,11 @@ class SalesOrderTaxRate
         float $so_tax_rate_amount = 0.00
     )
     {
-        $this->id=$id;
-        $this->so_id=$so_id;
-        $this->tax_rate_id=$tax_rate_id;
-        $this->include_item_tax=$include_item_tax;
-        $this->so_tax_rate_amount=$so_tax_rate_amount;
+        $this->id = $id;
+        $this->so_id = $so_id;
+        $this->tax_rate_id = $tax_rate_id;
+        $this->include_item_tax = $include_item_tax;
+        $this->so_tax_rate_amount = $so_tax_rate_amount;
     }
     
     public function getSalesOrder() : ?SalesOrder

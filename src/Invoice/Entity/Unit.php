@@ -20,10 +20,12 @@ class Unit
     private string $unit_name_plrl = '';
         
     public function __construct(
-        string $unit_name='',
-        string $unit_name_plrl=''
+        int $id = null,    
+        string $unit_name = '',
+        string $unit_name_plrl = ''
     )
     {
+        $this->id = $id;
         $this->unit_name = $unit_name;
         $this->unit_name_plrl = $unit_name_plrl;
     }
@@ -32,6 +34,11 @@ class Unit
     {
         return $this->id;
     }
+    
+    public function setUnit_id(int $id) : void
+    {
+        $this->id = $id;
+    }    
 
     public function getUnit_name(): string
     {

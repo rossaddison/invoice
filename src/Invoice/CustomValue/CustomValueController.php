@@ -102,26 +102,21 @@ final class CustomValueController
     }
     
     /**
-     * 
-     * @param ViewRenderer $head
      * @param Request $request
      * @param SessionInterface $session
      * @param CurrentRoute $currentRoute
      * @param FormHydrator $formHydrator
-     * @param SettingRepository $settingRepository
      * @param CustomFieldRepository $custom_fieldRepository
      * @return Response
      */
-    public function new(ViewRenderer $head, Request $request, SessionInterface $session, CurrentRoute $currentRoute, 
-                        FormHydrator $formHydrator,
-                        SettingRepository $settingRepository,                        
+    public function new(Request $request, SessionInterface $session, CurrentRoute $currentRoute, 
+                        FormHydrator $formHydrator,                        
                         CustomFieldRepository $custom_fieldRepository
     ): Response
     {
         $field_id = $currentRoute->getArgument('id');        
         if (null!==$field_id) {
             $session->set('custom_field_id', $field_id);
-            $body = $request->getParsedBody() ?? '';
             $custom_field = $custom_fieldRepository->repoCustomFieldquery($field_id);
             $custom_value = new CustomValue();
             if ($custom_field){
@@ -132,16 +127,12 @@ final class CustomValueController
                     'errors' => [],
                     'form' => $form,
                     'custom_field'=>$custom_field, 
-                    'header_buttons'=>$this->viewRenderer->renderPartialAsString('/invoice/layout/header_buttons'),
-                    'head'=>$head,
                     'custom_fields'=>$custom_fieldRepository->findAllPreloaded()
                 ];
 
                 if ($request->getMethod() === Method::POST) {
-                    /**
-                     * @psalm-suppress PossiblyInvalidArgument $body
-                     */
-                    if ($formHydrator->populate($form, $body) && $form->isValid()) {
+                    $body = $request->getParsedBody() ?? '';
+                    if ($formHydrator->populateFromPostAndValidate($form,  $request)) {
                         /**
                          * @psalm-suppress PossiblyInvalidArgument $body
                          */
@@ -158,26 +149,22 @@ final class CustomValueController
     }
     
     /**
-     * @param ViewRenderer $head
      * @param SessionInterface $session
      * @param Request $request
      * @param CurrentRoute $currentRoute
      * @param FormHydrator $formHydrator
      * @param CustomValueRepository $customvalueRepository
-     * @param SettingRepository $settingRepository
      * @param CustomFieldRepository $custom_fieldRepository
      * @return Response
      */
-    public function edit(ViewRenderer $head, SessionInterface $session, Request $request, CurrentRoute $currentRoute, 
+    public function edit(SessionInterface $session, Request $request, CurrentRoute $currentRoute, 
                         FormHydrator $formHydrator,
-                        CustomValueRepository $customvalueRepository, 
-                        SettingRepository $settingRepository,                        
+                        CustomValueRepository $customvalueRepository,                
                         CustomFieldRepository $custom_fieldRepository
     ): Response {
         $custom_field_id = (string)$session->get('custom_field_id');
         $custom_field = $custom_fieldRepository->repoCustomFieldquery($custom_field_id);
         $custom_value = $this->customvalue($currentRoute, $customvalueRepository);
-        $body = $request->getParsedBody() ?? ''; 
         if ($custom_field && $custom_value) {
             $form = new CustomValueForm($custom_value);
             $parameters = [
@@ -185,17 +172,12 @@ final class CustomValueController
                 'action' => ['customvalue/edit', ['id' => $custom_value->getId()]],
                 'errors' => [],
                 'form' => $form,
-                'header_buttons'=>$this->viewRenderer->renderPartialAsString('/invoice/layout/header_buttons',
-                          ['hide_submit_button'=>false, 'hide_cancel_button'=>false,'s'=>$settingRepository]),
-                'head' => $head,
                 'custom_field' => $custom_field,
                 'custom_fields'=> $custom_fieldRepository->findAllPreloaded()
             ];
             if ($request->getMethod() === Method::POST) {
-                /**
-                 * @psalm-suppress PossiblyInvalidArgument $body
-                 */
-                if ($formHydrator->populate($form, $body) && $form->isValid()) {
+                $body = $request->getParsedBody() ?? [];
+                if ($formHydrator->populateFromPostAndValidate($form, $request)) {
                     /**
                      * @psalm-suppress PossiblyInvalidArgument $body
                      */
@@ -215,18 +197,16 @@ final class CustomValueController
      * @param SessionInterface $session
      * @param CurrentRoute $currentRoute
      * @param CustomValueRepository $customvalueRepository
-     * @param SettingRepository $sR
      * @return Response
      */
     public function delete(SessionInterface $session,CurrentRoute $currentRoute,
-                           CustomValueRepository $customvalueRepository,
-                           SettingRepository $sR
+                           CustomValueRepository $customvalueRepository
     ): Response {
         $custom_field_id = (string)$session->get('custom_field_id');
             $custom_value = $this->customvalue($currentRoute,$customvalueRepository);
             if ($custom_value) {
                 $this->customvalueService->deleteCustomValue($custom_value);               
-                $this->flash($session, 'info', $sR->trans('record_successfully_deleted'));
+                $this->flash($session, 'info', $this->translator->translate('i.record_successfully_deleted'));
                 return $this->webService->getRedirectResponse('customvalue/field', ['id' => $custom_field_id]);  
             }
             return $this->webService->getRedirectResponse('customvalue/field', ['id' => $custom_field_id]);
@@ -235,19 +215,17 @@ final class CustomValueController
     /**
      * @param CurrentRoute $currentRoute
      * @param CustomValueRepository $customvalueRepository
-     * @param SettingRepository $settingRepository
      */
-    public function view(CurrentRoute $currentRoute, CustomValueRepository $customvalueRepository,
-        SettingRepository $settingRepository,
-        ): Response {
+    public function view(CurrentRoute $currentRoute, CustomValueRepository $customvalueRepository): Response 
+    {
         $custom_value = $this->customvalue($currentRoute, $customvalueRepository);
         if ($custom_value) {
+            $form = new CustomValueForm($custom_value);
             $parameters = [
-                'title' => $settingRepository->trans('view'),
+                'title' => $this->translator->translate('i.view'),
                 'action' => ['customvalue/view', ['id' => $custom_value->getId()]],
-                'errors' => [],
-                'body' => $this->body($custom_value),
-                'customvalue'=>$custom_value->getId(),
+                'form' => $form,
+                'customvalue' => $custom_value->getId(),
             ];
             return $this->viewRenderer->render('_view', $parameters);
         }
@@ -291,20 +269,6 @@ final class CustomValueController
     {
         $customvalues = $customvalueRepository->findAllPreloaded();        
         return $customvalues;
-    }
-    
-    /**
-     * 
-     * @param CustomValue $customvalue
-     * @return array
-     */
-    private function body(CustomValue $customvalue): array {
-        $body = [                
-          'id'=>$customvalue->getId(),             
-          'custom_field_id'=>$customvalue->getCustom_field_id(),
-          'value'=>$customvalue->getValue()
-        ];
-        return $body;
     }
     
     private function flash(SessionInterface $session, string $level, string $message): Flash{

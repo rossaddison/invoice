@@ -25,7 +25,7 @@ class DeliveryLocation {
   #[Column(type: 'text', nullable: true)]
   private ?string $building_number = '';
 
-  #[Column(type: 'text', nullable: true)]
+  #[Column(type: 'text', nullable: false)]
   private ?string $address_1 = '';
 
   #[Column(type: 'text', nullable: true)]
@@ -37,7 +37,7 @@ class DeliveryLocation {
   #[Column(type: 'text', nullable: true)]
   private ?string $state = '';
 
-  #[Column(type: 'text', nullable: true)]
+  #[Column(type: 'text', nullable: false)]
   private ?string $zip = '';
 
   #[Column(type: 'text', nullable: true)]

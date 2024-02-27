@@ -22,7 +22,7 @@
             ->urlGenerator(fn ($page) => $urlGenerator->generate('emailtemplate/index', ['page' => $page]));
         ?>
         <?php
-            if ($pagination->isRequired()) {
+            if ($pagination->isPaginationRequired()) {
                  echo $pagination;
             }
         ?>

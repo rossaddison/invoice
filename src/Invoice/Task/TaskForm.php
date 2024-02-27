@@ -4,21 +4,45 @@ declare(strict_types=1);
 
 namespace App\Invoice\Task;
 
-use App\Invoice\Helpers\DateHelper;
+use DateTimeImmutable;
 
+use App\Invoice\Entity\Task;
 use Yiisoft\FormModel\FormModel;
 use Yiisoft\Validator\Rule\Required;
 
 final class TaskForm extends FormModel
 {        
+    #[Required]
     private ?int $project_id=null;
+    
+    #[Required]
     private ?string $name='';
+    
+    #[Required]
     private ?string $description='';
+    
+    #[Required]
     private ?float $price=null;
-    private ?string $finish_date='';
+    
+    private mixed $finish_date='';
+    
+    #[Required]
     private ?int $status=null;
+    
+    #[Required]
     private ?int $tax_rate_id=null;
-
+    
+    public function __construct(Task $task)
+    {
+        $this->project_id = (int)$task->getProject_id();
+        $this->name = $task->getName();
+        $this->description = $task->getDescription();
+        $this->price = $task->getPrice();
+        $this->finish_date = $task->getFinish_date();
+        $this->status = $task->getStatus();
+        $this->tax_rate_id = (int)$task->getTax_rate_id();
+    }
+    
     public function getProject_id() : int|null
     {
       return $this->project_id;
@@ -39,20 +63,13 @@ final class TaskForm extends FormModel
       return $this->price;
     }
     
-    public function getFinish_date(\App\Invoice\Setting\SettingRepository $s) : \DateTime|null
+    public function getFinish_date() : null|string|DateTimeImmutable
     {
-        $datehelper = new DateHelper($s);         
-        $datetime = new \DateTime();
-        $datetime->setTimezone(new \DateTimeZone($s->get_setting('time_zone') ?: 'Europe/London')); 
-        $datetime->format($datehelper->style());
-        if (!empty($this->finish_date)) { 
-            $date = $datehelper->date_to_mysql($this->finish_date);
-            $str_replace = str_replace($datehelper->separator(), '-', $date);
-            $datetime->modify($str_replace);
-            return $datetime;
-        }
-        return null;
-    }
+      /**
+       * @var null|string|DateTimeImmutable $this->finish_date 
+       */
+      return $this->finish_date;
+    }    
     
     public function getStatus() : int|null
     {
@@ -72,21 +89,5 @@ final class TaskForm extends FormModel
     public function getFormName(): string
     {
       return '';
-    }
-
-    /**
-     * @return Required[][]
-     *
-     * @psalm-return array{name: list{Required}, description: list{Required}, price: list{Required}, tax_rate_id: list{Required}, finish_date: list{Required}}
-     */
-    public function getRules(): array    {
-    return [
-      'name' => [new Required()],
-      'description' => [new Required()],
-      'price' => [new Required()],
-      'tax_rate_id' => [new Required()],
-      'finish_date' => [new Required()],
-      // The project_id is nullable (see #[BelongsTo(target:Project::class, nullable: true)
-    ];
     }
 }

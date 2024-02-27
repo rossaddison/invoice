@@ -1,65 +1,51 @@
 <?php
+declare(strict_types=1);
 
-declare(strict_types=1); 
 
+use Yiisoft\FormModel\Field;
 use Yiisoft\Html\Html;
-use Yiisoft\Yii\Bootstrap5\Alert;
-/**
- * @var \Yiisoft\View\View $this
- * @var \Yiisoft\Router\UrlGeneratorInterface $urlGenerator
- * @var array $body
- * @var string $csrf
- * @var string $action
- * @var string $title
- */
+use Yiisoft\Html\Tag\Form;
 
-if (!empty($errors)) {
-    foreach ($errors as $field => $error) {
-        echo Alert::widget()->options(['class' => 'alert-danger'])->body(Html::encode($field . ':' . $error));
-    }
-}
+echo Form::tag()
+    ->post($urlGenerator->generate(...$action))
+    ->enctypeMultipartFormData()
+    ->csrf($csrf)
+    ->id('InvAllowanceChargeForm')
+    ->open() ?>
 
-?>
-<?= Html::openTag('h1'); ?><?= Html::encode($title) ?><?= Html::closeTag('h1'); ?>
-<form id="InvAllowanceChargeForm" method="POST" action="<?= $urlGenerator->generate(...$action) ?>" enctype="multipart/form-data">
-<input type="hidden" name="_csrf" value="<?= $csrf ?>">
-<div id="headerbar">
-<h1 class="headerbar-title"><?= $translator->translate('invoice.invoice.allowance.or.charge'); ?></h1>
-<?php $response = $head->renderPartial('invoice/layout/header_buttons',['s'=>$s, 'hide_submit_button'=>false ,'hide_cancel_button'=>false]); ?>        
-<?php echo (string)$response->getBody(); ?><div id="content">
-<?= Html::openTag('div', ['class' => 'row']); ?>
- <div class="mb3 form-group" hidden>
-    <label for="allowance_charge_id">Allowance charge</label>
-    <select name="allowance_charge_id" id="allowance_charge_id" class="form-control">
-       <option value="0">Allowance charge</option>
-         <?php foreach ($allowance_charges as $allowance_charge) { ?>
-          <option value="<?= $allowance_charge->getId(); ?>"
-           <?php $s->check_select(Html::encode($body['allowance_charge_id'] ?? ''), $allowance_charge->getId()) ?>
-           ><?= $allowance_charge->getId(); ?></option>
-         <?php } ?>
-    </select>
- </div>
- <div class="mb3 form-group" hidden>
-   <label for="id"><?= $translator->translate('i.id'); ?></label>
-   <input type="text" name="id" id="id" class="form-control"
- value="<?= Html::encode($body['id'] ??  ''); ?>">
- </div>
- <div class="mb3 form-group">
-   <label for="identifier"><?= ($allowancecharge->getIdentifier() ? $translator->translate('invoice.invoice.allowance.or.charge.charge') : $translator->translate('invoice.invoice.allowance.or.charge.allowance')). ' :'. $allowancecharge->getReason(). ' '. $allowancecharge->getReason_code(). ' '. $allowancecharge->getTaxRate()->getTax_rate_name(); ?></label>
- </div>   
- <div class="mb3 form-group">
-   <label for="amount"><?= $translator->translate('invoice.invoice.allowance.or.charge.amount'); ?></label>
-   <input type="text" name="amount" id="amount" class="form-control"
- value="<?= Html::encode($body['amount'] ??  ($allowancecharge->getAmount() ?: 0.00)); ?>">
- </div>
- <div class="mb3 form-group">
-   <label for="vat"><?= $allowancecharge->getIdentifier() ? $translator->translate('invoice.invoice.allowance.or.charge.charge.vat') : $translator->translate('invoice.invoice.allowance.or.charge.allowance.vat'); ?></label>
-   <input type="text" name="vat" id="vat" class="form-control"
- value="<?= Html::encode($body['vat'] ??  ($allowancecharge->getVat() ?: 0.00)); ?>">
- </div>   
-</div>
+<?= Html::openTag('div',['class'=>'container py-5 h-100']); ?>
+<?= Html::openTag('div',['class'=>'row d-flex justify-content-center align-items-center h-100']); ?>
+<?= Html::openTag('div',['class'=>'col-12 col-md-8 col-lg-6 col-xl-8']); ?>
+<?= Html::openTag('div',['class'=>'card border border-dark shadow-2-strong rounded-3']); ?>
+<?= Html::openTag('div',['class'=>'card-header']); ?>
 
-</div>
-
-</div>
-</form>
+<?= Html::openTag('h1',['class'=>'fw-normal h3 text-center']); ?>    
+    <?= Html::encode($title) ?>
+<?= Html::closeTag('h1'); ?>
+<?= Html::openTag('div', ['id' => 'headerbar']); ?>
+    <?= $button::back_save($translator); ?>
+    <?= Html::openTag('div', ['id' => 'content']); ?>
+        <?= Html::openTag('div', ['class' => 'row']); ?>
+            <?= Html::openTag('div', ['class' => 'mb-3 form-group']); ?>
+                <?php 
+                    echo Field::select($form, 'allowance_charge_id')
+                    ->label($translator->translate('invoice.invoice.allowance.or.charge'),['control-label'])
+                    ->optionsData($optionsDataAllowanceCharges)
+                ?>
+            <?= Html::closeTag('div'); ?>
+            <?= Html::openTag('div'); ?>
+                <?= Html::openTag('div', ['class' => 'mb-3 form-group']); ?>
+                    <?= Field::text($form, 'amount')
+                    ->label($translator->translate('invoice.invoice.allowance.or.charge.amount'), ['class' => 'form-label'])
+                    ->value(Html::encode($form->getAmount() ?? ''))
+                    ->hint($translator->translate('invoice.hint.this.field.is.required')); 
+                ?>
+                <?= Html::closeTag('div'); ?>
+            <?= Html::closeTag('div'); ?>
+        <?= Html::closeTag('div'); ?>
+    <?= Html::closeTag('div'); ?>
+<?= Html::closeTag('div'); ?>
+<?= Html::closeTag('div'); ?>
+<?= Html::closeTag('div'); ?>
+<?= Html::closeTag('div'); ?>
+<?= Form::tag()->close() ?>

@@ -2,6 +2,7 @@
 
 declare(strict_types=1); 
 
+
 use Yiisoft\FormModel\Field;
 use Yiisoft\Html\Html;
 
@@ -22,7 +23,7 @@ use Yiisoft\Html\Html;
     <?= Html::openTag('h1',['class'=>'fw-normal h3 text-center']); ?>
     <?= $translator->translate('i.custom_values_new'); ?>
     <?= Html::closeTag('h1'); ?>
-    <?= $header_buttons; ?>
+        <?= $button::back_save($translator); ?>
     <?= Html::closeTag('div'); ?>
 
     <?= Html::openTag('div',['id' => 'content']); ?>

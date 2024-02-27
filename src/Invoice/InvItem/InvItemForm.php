@@ -4,29 +4,80 @@ declare(strict_types=1);
 
 namespace App\Invoice\InvItem;
 
+use App\Invoice\Entity\InvItem;
 use Yiisoft\FormModel\FormModel;
 use Yiisoft\Validator\Rule\Required;
+use Yiisoft\Validator\Rule\GreaterThan;
+
+use DateTimeImmutable;
 
 final class InvItemForm extends FormModel
 {        
+    private ?string $id='';
     private ?string $inv_id='';
     private ?string $so_item_id='';
+    
+    #[Required]
     private ?string $tax_rate_id='';
+   
     private ?string $product_id='';
+   
     private ?string $task_id='';
+    // Then name of the product is retrieved using the users product_id dropdown list choice
     private ?string $name='';
+    
     private ?string $description='';
+    
     private ?string $note='';
+    
+    #[GreaterThan(0.00)]
     private ?float $quantity=null;
+    
+    #[GreaterThan(0.00)]
     private ?float $price=null;
+    
     private ?float $discount_amount=null;
-    private ?int $order=null;
+    
+    private ?string $order=null;
     private ?string $product_unit='';
+    
+    #[Required]
     private ?int $product_unit_id=null;
-    private ?string $date='';
+    
+    #[Required]
+    private DateTimeImmutable $date;
+    
+    private ?int $belongs_to_vat_invoice=null;
     private ?string $delivery_id='';
     
-    public function getDate() : string|null
+    public function __construct(InvItem $invitem, int $inv_id)
+    {
+        $this->id = (string)$invitem->getId();
+        $this->inv_id = (string)$inv_id;
+        $this->so_item_id = $invitem->getSo_item_id();
+        $this->tax_rate_id = $invitem->getTax_rate_id();
+        $this->product_id = $invitem->getProduct_id();
+        $this->task_id = $invitem->getTask_id();
+        $this->name = $invitem->getName();
+        $this->description = $invitem->getDescription();
+        $this->note = $invitem->getNote();
+        $this->quantity = $invitem->getQuantity();
+        $this->price = $invitem->getPrice();
+        $this->discount_amount = $invitem->getDiscount_amount();
+        $this->order = (string)$invitem->getOrder();
+        $this->product_unit = $invitem->getProduct_unit();
+        $this->product_unit_id = (int)$invitem->getProduct_unit_id();
+        $this->date = $invitem->getDate();
+        $this->belongs_to_vat_invoice = (int)$invitem->getBelongs_to_vat_invoice();
+        $this->delivery_id = $invitem->getDelivery_id();
+    } 
+    
+    public function getId() : string|null
+    {
+        return $this->id;
+    }    
+    
+    public function getDate() : DateTimeImmutable
     {
         return $this->date;
     }
@@ -85,8 +136,8 @@ final class InvItemForm extends FormModel
     {
       return $this->discount_amount;
     }
-    
-    public function getOrder() : int|null
+        
+    public function getOrder() : string|null
     {
       return $this->order;
     }
@@ -99,6 +150,11 @@ final class InvItemForm extends FormModel
     public function getProduct_unit_id() : int|null
     {
       return $this->product_unit_id;
+    }
+    
+    public function getBelongs_to_vat_invoice() : int|null
+    {
+      return $this->belongs_to_vat_invoice;
     }
     
     public function getDelivery_id() : string|null
@@ -114,21 +170,5 @@ final class InvItemForm extends FormModel
     public function getFormName(): string
     {
       return '';
-    }
-    
-    /**
-     * @return array
-     */
-    public function getRule(): array {
-        return [
-          'tax_rate_id' => [new Required()],
-          'product_id' => [new Required()],
-          'task_id' => [new Required()],
-          'quantity' => [new Required()],
-          'price' => [new Required()],
-          'discount_amount' => [new Required()],
-          'order' => [new Required()],
-          'product_unit_id' => [new Required()],
-        ];
     }
 }

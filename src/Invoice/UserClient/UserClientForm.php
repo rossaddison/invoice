@@ -41,13 +41,4 @@ final class UserClientForm extends FormModel
       return '';
     }
 
-    /**
-     * @return array
-     *
-     * @psalm-return array<never, never>
-     */
-    public function getRules(): array    {
-      return [
-    ];
-}
 }

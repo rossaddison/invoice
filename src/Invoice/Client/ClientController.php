@@ -6,7 +6,10 @@ namespace App\Invoice\Client;
 use App\Invoice\Entity\Client;
 use App\Invoice\Entity\ClientNote;
 use App\Invoice\Entity\ClientCustom;
-use App\Invoice\Entity\CustomField;
+use App\Invoice\Entity\Inv;
+use App\Invoice\Inv\InvForm;
+use App\Invoice\Entity\PostalAddress;
+use App\Invoice\Entity\Quote;
 // Services
 use App\Service\WebControllerService;
 use App\Invoice\ClientCustom\ClientCustomService;
@@ -15,6 +18,7 @@ use App\Invoice\Client\ClientForm;
 use App\Invoice\ClientCustom\ClientCustomForm;
 use App\Invoice\ClientNote\ClientNoteService as cnS;
 use App\Invoice\ClientNote\ClientNoteForm;
+use App\Invoice\Quote\QuoteForm;
 use App\Invoice\UserClient\UserClientService;
 use App\User\UserService;
 // Repositories
@@ -44,6 +48,9 @@ use App\Invoice\Helpers\GenerateCodeFileHelper;
 // Psr\\Http
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
+// Widgets
+use App\Widget\Bootstrap5ModalQuote;
+use App\Widget\Bootstrap5ModalInv; 
 // Yii
 use Yiisoft\Aliases\Aliases;
 use Yiisoft\Data\Paginator\OffsetPaginator;
@@ -57,6 +64,7 @@ use Yiisoft\Translator\TranslatorInterface;
 use Yiisoft\User\CurrentUser;
 use Yiisoft\Validator\Validator;
 use Yiisoft\FormModel\FormHydrator;
+use Yiisoft\Yii\Cycle\Data\Reader\EntityReader;
 use Yiisoft\Yii\View\ViewRenderer;
 // Miscellaneous
 
@@ -115,8 +123,7 @@ final class ClientController
     private function alert() : string {
         return $this->viewRenderer->renderPartialAsString('/invoice/layout/alert',
         [
-            'flash'=>$this->flash,
-            'errors' => [],
+            'flash'=>$this->flash
         ]);
     }
     
@@ -182,32 +189,34 @@ final class ClientController
         return $custom_field_form_values;
     }
     
+    /**
+     * @param Request $request
+     * @param FormHydrator $formHydrator
+     * @param cfR $cfR
+     * @param cvR $cvR
+     * @param sR $sR
+     * @return Response
+     */
     public function add(
         Request $request, 
         FormHydrator $formHydrator, 
         cfR $cfR, 
         cvR $cvR, 
-        sR $sR,
-        Validator $validator    
+        sR $sR    
     ) : Response 
     {
-        /**
-         * @psalm-suppress PossiblyInvalidArgument
-         */
-        $body = $request->getParsedBody() ?? [];
         $countries = new CountryHelper();
         $new_client = New Client();
         $form = new ClientForm($new_client);
+        $clientCustom = new ClientCustom();
+        $clientCustomForm = new ClientCustomForm($clientCustom);
         $parameters = [
-            'title' => $sR->trans('add'),
+            'title' => $this->translator->translate('i.add'),
             'alert' => $this->alert(),
             'action' => ['client/add'],
             'errors' => [],
+            'errors_custom' => [],
             'client' => $new_client,
-            'buttons' => $this->viewRenderer->renderPartialAsString('/invoice/layout/header_buttons',[
-                's'=>$sR, 'hide_submit_button'=>false ,'hide_cancel_button'=>false
-            ]), 
-            'datehelper'=> new DateHelper($sR),
             'aliases'=> new Aliases(['@invoice' => dirname(__DIR__), '@language' => dirname(__DIR__). DIRECTORY_SEPARATOR.'Language']),
             'selected_country' => $sR->get_setting('default_country'),            
             'selected_language' => $sR->get_setting('default_language'),
@@ -215,35 +224,47 @@ final class ClientController
             'optionsDataGender' => $this->optionsDataGender(),
             'postal_address_count' => 0,
             'postaladdresses' => null,
-            'countries'=> $countries->get_country_list($sR->get_setting('cldr')),
-            'custom_fields'=> $cfR->repoTablequery('client_custom'),
-            'custom_values'=> $cvR->attach_hard_coded_custom_field_values_to_custom_field($cfR->repoTablequery('client_custom')),
-            'cvH'=> new CVH($sR),
-            'client_custom_values'=> [],
+            'countries' => $countries->get_country_list($sR->get_setting('cldr')),
+            'custom_fields' => $cfR->repoTablequery('client_custom'),
+            'custom_values' => $cvR->attach_hard_coded_custom_field_values_to_custom_field($cfR->repoTablequery('client_custom')),
+            'cvH' => new CVH($sR),
+            'client_custom_values' => [],
+            'clientCustomForm' => $clientCustomForm 
         ];
-        /**
-         * @psalm-suppress PossiblyInvalidArgument
-         */
-        if ($request->getMethod() === Method::POST && $formHydrator->populate($form, $body) && $validator->validate($form)->isValid()) {
+        if ($request->getMethod() === Method::POST && $formHydrator->populateFromPostAndValidate($form, $request)) {
+            $body = $request->getParsedBody() ?? [];
+            /**
+             * @psalm-suppress PossiblyInvalidArgument $body
+             */
             $client_id = $this->clientService->saveClient($new_client, $body, $sR);
-            if ($client_id) {
-                // Get the custom fields that are mandatory for a client and initialise the first client with an empty value for each custom field
-                $custom_fields = $cfR->repoTablequery('client_custom');
-                /** @var CustomField $custom_field 
-                 */
-                foreach($custom_fields as $custom_field){
-                    $form = new ClientCustomForm(new ClientCustom);
-                    $client_custom = [];
-                    $client_custom['client_id'] = $client_id;
-                    $client_custom['custom_field_id'] = $custom_field->getId();                    
-                    // Note: There are no Required rules for value under ClientCustomForm
-                    $client_custom['value'] = '';                    
-                    if ($formHydrator->populate($form, $client_custom) && $form->isValid()) {
-                      $this->clientCustomService->saveClientCustom(new ClientCustom(), $client_custom);
+            if (null!==$client_id) {
+                if (isset($body['custom'])) {
+                    // Retrieve the custom array
+                    /** @var array $custom */
+                    $custom = $body['custom'];
+                    /** 
+                     * @var int $custom_field_id
+                     * @var string|array $value
+                     */
+                    foreach($custom as $custom_field_id => $value){
+                        $clientCustom = new ClientCustom();
+                        $formClientCustom = new ClientCustomForm($clientCustom);
+                        $client_custom = [];
+                        $client_custom['client_id'] = $client_id;
+                        $client_custom['custom_field_id'] = $custom_field_id;                    
+                        // Note: There are no Required rules for value under ClientCustomForm
+                        $client_custom['value'] = is_array($value) ? serialize($value) : $value;                    
+                        if ($formHydrator->populate($formClientCustom, $client_custom) && $formClientCustom->isValid()) {
+                          $this->clientCustomService->saveClientCustom($clientCustom, $client_custom);
+                        }
+                        // These two can be used to create customised labels for custom field error validation on the form
+                        // Currently not used.
+                        $parameters['formCientCustom'] = $formClientCustom; 
+                        $parameters['errors_custom'] = $formClientCustom->getValidationResult()?->getErrorMessagesIndexedByAttribute() ?? [];
                     }
-                }
-                $this->flash_message('info', $sR->trans('record_successfully_created'));
-                return $this->webService->getRedirectResponse('client/index');  
+                    $this->flash_message('info', $this->translator->translate('i.record_successfully_created'));
+                    return $this->webService->getRedirectResponse('client/index');
+                }    
             }
         }
         $parameters['errors'] = $form->getValidationResult()?->getErrorMessagesIndexedByAttribute() ?? [];
@@ -322,7 +343,7 @@ final class ClientController
     ): Response {
         try {
             $this->clientService->deleteClient($this->client($currentRoute, $cR)); 
-             $this->flash_message('info', $sR->trans('record_successfully_deleted'));
+             $this->flash_message('info', $this->translator->translate('i.record_successfully_deleted'));
             //UserClient Entity automatically deletes the UserClient record relevant to this client 
             return $this->webService->getRedirectResponse('client/index');
 	} catch (\Exception $e) {
@@ -335,10 +356,11 @@ final class ClientController
     public function edit(Request $request, cR $cR, ccR $ccR, cfR $cfR, cvR $cvR, 
         FormHydrator $formHydrator, paR $paR, sR $sR, CurrentRoute $currentRoute, Validator $validator
     ): Response {
-    $body = $request->getParsedBody() ?? [];   
     $client = null!==$this->client($currentRoute, $cR) ? $this->client($currentRoute, $cR) : null;
     if (null!==$client) {
-        $form = new ClientForm($client);   
+        $form = new ClientForm($client);
+        $clientCustom = new ClientCustom();
+        $clientCustomForm = new ClientCustomForm($clientCustom);
         $selected_country =  $client->getClient_country(); 
         $selected_language = $client->getClient_language();
         $countries = new CountryHelper();
@@ -346,42 +368,71 @@ final class ClientController
         if (null!==$client_id) {
             $postaladdresses = $paR->repoClientAll((string)$client_id); 
             $parameters = [
-               'title' => $sR->trans('edit'),
+               'title' => $this->translator->translate('i.edit'),
                'action' => ['client/edit', ['id' => $client_id]],
                'alert' => $this->alert(),
                'errors' => [],
+               'errors_custom' => [], 
                'buttons' => $this->viewRenderer->renderPartialAsString('/invoice/layout/header_buttons',['s'=>$sR, 'hide_submit_button'=>false ,'hide_cancel_button'=>false]), 
                'datehelper'=> new DateHelper($sR),
                'client'=> $client,
                'form' => $form,
                'optionsDataGender' => $this->optionsDataGender(), 
                'aliases'=> new Aliases(['@invoice' => dirname(__DIR__), '@language' => dirname(__DIR__). DIRECTORY_SEPARATOR.'Language']),
-               'selected_country' => $selected_country ?: $sR->get_setting('default_country'),            
-               'selected_language' => $selected_language ?: $sR->get_setting('default_language'),
+               'selected_country' => null!==$selected_country ? $selected_country : $sR->get_setting('default_country'),            
+               'selected_language' => null!==$selected_language ? $selected_language : $sR->get_setting('default_language'),
                'datepicker_dropdown_locale_cldr' => $this->session->get('_language') ?? 'en',
                'postal_address_count' => $paR->repoClientCount((string)$client_id),
-               'postaladdresses' => $postaladdresses,
-               'countries'=> $countries->get_country_list($sR->get_setting('cldr')),
-               'custom_fields'=> $cfR->repoTablequery('client_custom'),
-               'custom_values'=> $cvR->attach_hard_coded_custom_field_values_to_custom_field($cfR->repoTablequery('client_custom')),
-               'cvH'=> new CVH($sR),
-               'client_custom_values'=> $this->client_custom_values((string)$client_id, $ccR),                
+               'postaladdresses' => $this->optionsDataPostalAddress($postaladdresses),
+               'countries' => $countries->get_country_list($sR->get_setting('cldr')),
+               'custom_fields' => $cfR->repoTablequery('client_custom'),
+               'custom_values' => $cvR->attach_hard_coded_custom_field_values_to_custom_field($cfR->repoTablequery('client_custom')),
+               'cvH' => new CVH($sR),
+               'client_custom_values' => $this->client_custom_values((string)$client_id, $ccR),
+               'clientCustomForm' => $clientCustomForm 
             ];
-            if ($request->getMethod() === Method::POST) {            
+            if ($request->getMethod() === Method::POST) {
+               $body = $request->getParsedBody() ?? []; 
                if (is_array($body)) {
-                   $returned_form = $this->edit_save_form_fields($body, $form, $client, $formHydrator, $sR, $validator);
+                   $returned_form = $this->save_form_fields($body, $form, $client, $formHydrator, $sR, $validator);
                    $parameters['body'] = $body;
-                   if (!empty($returned_form->getValidationResult()?->getErrorMessagesIndexedByAttribute())) {
+                   if (!$returned_form->isValid()) {
                        $parameters['form'] = $returned_form;
                        $parameters['errors'] = $returned_form->getValidationResult()?->getErrorMessagesIndexedByAttribute() ?? [];
                        return $this->viewRenderer->render('__form', $parameters);
-                   }  
+                   } 
                    // Only save custom fields if they exist
                    if ($cfR->repoTableCountquery('client_custom') > 0) { 
-                       $this->edit_save_custom_fields($body, $formHydrator, $ccR, (string)$client_id); 
-                   }
-               }    
-               $this->flash_message('info', $sR->trans('record_successfully_updated'));
+                        if (isset($body['custom'])) {
+                            $custom = (array)$body['custom'];
+                            /** @var string|array $value */
+                            foreach ($custom as $custom_field_id => $value) {
+                                $client_custom = $ccR->repoFormValuequery((string)$client_id, (string)$custom_field_id);
+                                if (null!==$client_custom) {
+                                    $client_custom_input = [
+                                        'client_id'=>$client_id,
+                                        'custom_field_id'=>(int)$custom_field_id,
+                                        'value' => is_array($value) ? serialize($value) : $value 
+                                    ];
+                                    $clientCustomForm = new ClientCustomForm($client_custom);
+                                    if ($formHydrator->populate($clientCustomForm, $client_custom_input) 
+                                       && $clientCustomForm->isValid()
+                                    )
+                                    {
+                                        $this->clientCustomService->saveClientCustom($client_custom, $client_custom_input);     
+                                    }
+                                    $parameters['errors_custom'] = $clientCustomForm->getValidationResult()?->getErrorMessagesIndexedByAttribute() ?? [];
+                                    $parameters['clientCustomForm'] = $clientCustomForm;
+                                }
+                            } //foreach
+                            $errors_custom = $parameters['errors_custom'];
+                            if (count($errors_custom) > 0) {
+                                return $this->viewRenderer->render('__form', $parameters);
+                            }
+                        } //isset  
+                   } // cfR
+               } // is_array    
+               $this->flash_message('info', $this->translator->translate('i.record_successfully_updated'));
                return $this->webService->getRedirectResponse('client/index');
            }
            return $this->viewRenderer->render('__form', $parameters);
@@ -400,45 +451,22 @@ final class ClientController
      * @param Validator $validator
      * @return ClientForm
      */
-    public function edit_save_form_fields(array $body, ClientForm $form, Client $client, FormHydrator $formHydrator, sR $sR, Validator $validator) : ClientForm {
-        if ($formHydrator->populate($form, $body) && $validator->validate($form)->isValid()) {
+    public function save_form_fields(array $body, ClientForm $form, Client $client, FormHydrator $formHydrator, sR $sR, Validator $validator) : ClientForm {
+        if ($formHydrator->populate($form, $body) &&  $form->isValid()) {
            $this->clientService->saveClient($client, $body, $sR);
         }
         return $form;
     }
     
     /**
-     * 
-     * @param array $body
-     * @param FormHydrator $formHydrator
-     * @param ccR $ccR
      * @param string $client_id
-     * @return void
+     * @param int $custom_field_id
+     * @param ccR $ccR
+     * @return bool
      */
-    public function edit_save_custom_fields(array $body, FormHydrator $formHydrator, ccR $ccR, string $client_id): void {
-        $custom = (array)$body['custom'];
-        /** @var string $value */
-        foreach ($custom as $custom_field_id => $value) {
-          $client_custom = $ccR->repoFormValuequery($client_id, (string)$custom_field_id);
-          if (null!==$client_custom) {
-              $client_custom_input = [
-                  'client_id'=>(int)$client_id,
-                  'custom_field_id'=>(int)$custom_field_id,
-                  'value'=>$value
-              ];
-              $form = new ClientCustomForm($client_custom);
-              if ($formHydrator->populate($form, $client_custom_input) && $form->isValid())
-              {
-                  $this->clientCustomService->saveClientCustom($client_custom, $client_custom_input);     
-              }
-          } else {
-            $client_custom = new ClientCustom();
-            $client_custom->setClient_id((int)$client_id);
-            $client_custom->setCustom_field_id((int)$custom_field_id);
-            $client_custom->setValue($value);
-            $ccR->save($client_custom);          
-          }
-        }        
+    public function add_custom_field(string $client_id, int $custom_field_id, ccR $ccR): bool
+    {
+        return ($ccR->repoClientCustomCount($client_id, (string)$custom_field_id) > 0 ? false : true);        
     }
     
     /**
@@ -479,7 +507,7 @@ final class ClientController
         return $this->viewRenderer->render('index', $parameters);
     }
     
-    public function guest(CurrentRoute $currentRoute, SessionInterface $session, cR $cR, iaR $iaR, iR $iR, sR $sR, cpR $cpR, ucR $ucR): 
+    public function guest(CurrentRoute $currentRoute, cR $cR, iaR $iaR, iR $iR, sR $sR, cpR $cpR, ucR $ucR): 
         Response
     {
         $pageNum = (int)$currentRoute->getArgument('page', '1');        
@@ -611,7 +639,7 @@ final class ClientController
      * @param ccR $ccR
      * @return \Yiisoft\DataResponse\DataResponse
      */
-    public function save_custom_fields(FormHydrator $formHydrator, Request $request, ccR $ccR)
+    public function save_custom(FormHydrator $formHydrator, Request $request, ccR $ccR)
                     : \Yiisoft\DataResponse\DataResponse
     {
        $body = $request->getQueryParams();
@@ -620,10 +648,11 @@ final class ClientController
             'custom'=>$custom,            
         ];      
        $client_id = (string)$this->session->get('client_id');
-       if (!empty($custom_field_body['custom'])) {
+       if (isset($custom_field_body['custom'])) {
             $db_array = [];
             $values = [];
             /**
+             * @var array $custom_field_body['custom']
              * @var array $custom 
              * @var string $custom['name']
              */
@@ -703,7 +732,7 @@ final class ClientController
         ];
         $form = new ClientNoteForm(new ClientNote());        
         if ($formHydrator->populate($form, $data) && $form->isValid()) {    
-            $cnS->addClientNote(new ClientNote(), $data, $sR);
+            $cnS->addClientNote(new ClientNote(), $data);
             $parameters = [
                 'success' => 1,
             ];
@@ -734,6 +763,48 @@ final class ClientController
     }
     
     /**
+     * @param EntityReader $postalAddresses
+     * @return array
+     */
+    private function optionsDataPostalAddress(EntityReader $postalAddresses) : array
+    {
+        $optionsDataPostalAddress = [];
+        /**
+         * @var PostalAddress $postalAddress
+         */
+        foreach ($postalAddresses as $postalAddress)
+        {
+            $paId = (int)$postalAddress->getId();
+            $address = [];
+            if ($paId > 0) {
+                if ($postalAddress->getStreet_name()) {
+                    $address[] = $postalAddress->getStreet_name();
+                }
+                if ($postalAddress->getAdditional_street_name()) {
+                    $address[] = $postalAddress->getAdditional_street_name();
+                }
+                if ($postalAddress->getBuilding_number()) {
+                    $address[] = $postalAddress->getBuilding_number();
+                }
+                if ($postalAddress->getCity_name()) {
+                    $address[] = $postalAddress->getCity_name();
+                }
+                if ($postalAddress->getPostalzone()) {
+                    $address[] = $postalAddress->getPostalzone();
+                }
+                if ($postalAddress->getCountrysubentity()) {
+                    $address[] = $postalAddress->getCountrysubentity();
+                }
+                if ($postalAddress->getCountry()) {
+                    $address[] = $postalAddress->getCountry();
+                }
+                $optionsDataPostalAddress[$paId] = implode(",", $address);
+            }
+        }
+        return $optionsDataPostalAddress;
+    }    
+    
+    /**
      * 
      * @param SessionInterface $session
      * @param CurrentRoute $currentRoute
@@ -757,163 +828,170 @@ final class ClientController
      */    
     public function view(SessionInterface $session, CurrentRoute $currentRoute, cR $cR, cfR $cfR, cnR $cnR, cpR $cpR, cvR $cvR, ccR $ccR, delR $delR, gR $gR, iR $iR, iaR $iaR, irR $irR, qR $qR, pymtR $pymtR, qaR $qaR, sR $sR, ucR $ucR   
     ): Response {
-      $client = $this->client($currentRoute, $cR);      
-      if ($client instanceof Client) {
-            $client_id = $client->getClient_id();  
-            if (null!==$client_id) {
-              $parameters = [
-                  'title' => $sR->trans('client'),
-                  'alert' => $this->alert(),
-                  'iR' => $iR,
-                  'iaR' => $iaR,
-                  'clienthelper' => new ClientHelper($sR),
-                  'custom_fields'=>$cfR->repoTablequery('client_custom'),
-                  'custom_values'=>$cvR->attach_hard_coded_custom_field_values_to_custom_field($cfR->repoTablequery('client_custom')),
-                  'cpR' => $cpR,
-                  'cvH' => new CVH($sR),
-                  'client_custom_values'=>$this->client_custom_values((string)$client_id, $ccR),
-                  'client' => $client,            
-                  'client_notes' => $cnR->repoClientNoteCount($client_id) > 0 ? $cnR->repoClientquery((string)$client_id) : [],
-                  'partial_client_address'=>$this->viewRenderer->renderPartialAsString('/invoice/client/partial_client_address', [
-                      'client'=> $client,            
-                      'countryhelper'=> new CountryHelper(),
-                  ]),
-                  'modal_create_quote'=>$this->viewRenderer->renderPartialAsString('/invoice/quote/modal_create_quote',[
-                      'ucR' => $ucR,
-                      'clients'=>$cR->findAllPreloaded(),
-                      'invoice_groups'=>$gR->findAllPreloaded(),
-                      'datehelper'=> new DateHelper($sR)
-                  ]),
-                  'modal_create_inv'=>$this->viewRenderer->renderPartialAsString('/invoice/inv/modal_create_inv',[
-                      'ucR' => $ucR,
-                      'clients'=>$cR->findAllPreloaded(),
-                      'invoice_groups'=>$gR->findAllPreloaded(),
-                      'datehelper'=> new DateHelper($sR)
-                  ]),
-                  'quote_table'=>$this->viewRenderer->renderPartialAsString('/invoice/quote/partial_quote_table', [
-                      'qaR'=> $qaR,
-                      'quote_count' => $qR->repoCountByClient($client_id),
-                      'quotes' => $qR->repoClient($client_id),
-                      'clienthelper' => new ClientHelper($sR),
-                      'datehelper' => new DateHelper($sR),
-                      'quote_statuses' => $qR->getStatuses($this->translator),
-                  ]),
-                  'quote_draft_table'=>$this->viewRenderer->renderPartialAsString('/invoice/quote/partial_quote_table', [
-                      'qaR'=> $qaR,
-                      'quote_count' => $qR->by_client_quote_status_count($client_id,1),
-                      'quotes' => $qR->by_client_quote_status($client_id,1),
-                      'clienthelper' => new ClientHelper($sR),
-                      'datehelper' => new DateHelper($sR),
-                      'quote_statuses' => $qR->getStatuses($this->translator),
-                  ]),
-                  'quote_sent_table'=>$this->viewRenderer->renderPartialAsString('/invoice/quote/partial_quote_table', [
-                      'qaR'=> $qaR,
-                      'quote_count' => $qR->by_client_quote_status_count($client_id,2),
-                      'quotes' => $qR->by_client_quote_status($client_id,2),
-                      'clienthelper' => new ClientHelper($sR),
-                      'datehelper' => new DateHelper($sR),
-                      'quote_statuses' => $qR->getStatuses($this->translator),
-                  ]),
-                  'quote_viewed_table'=>$this->viewRenderer->renderPartialAsString('/invoice/quote/partial_quote_table', [
-                      'qaR'=> $qaR,
-                      'quote_count' => $qR->by_client_quote_status_count($client_id,3),
-                      'quotes' => $qR->by_client_quote_status($client_id,3),
-                      'clienthelper' => new ClientHelper($sR),
-                      'datehelper' => new DateHelper($sR),
-                      'quote_statuses' => $qR->getStatuses($this->translator),
-                  ]),
-                  'quote_approved_table'=>$this->viewRenderer->renderPartialAsString('/invoice/quote/partial_quote_table', [
-                      'qaR'=> $qaR,
-                      'quote_count' => $qR->by_client_quote_status_count($client_id,4),
-                      'quotes' => $qR->by_client_quote_status($client_id,4),
-                      'clienthelper' => new ClientHelper($sR),
-                      'datehelper' => new DateHelper($sR),
-                      'quote_statuses' => $qR->getStatuses($this->translator),
-                  ]),
-                  'quote_rejected_table'=>$this->viewRenderer->renderPartialAsString('/invoice/quote/partial_quote_table', [
-                      'qaR'=> $qaR,
-                      'quote_count' => $qR->by_client_quote_status_count($client_id,5),
-                      'quotes' => $qR->by_client_quote_status($client_id,5),
-                      'clienthelper' => new ClientHelper($sR),
-                      'datehelper' => new DateHelper($sR),
-                      'quote_statuses' => $qR->getStatuses($this->translator),
-                  ]),
-                  'quote_cancelled_table'=>$this->viewRenderer->renderPartialAsString('/invoice/quote/partial_quote_table', [
-                      'qaR'=> $qaR,
-                      'quote_count' => $qR->by_client_quote_status_count($client_id,6),
-                      'quotes' => $qR->by_client_quote_status($client_id,6),
-                      'clienthelper' => new ClientHelper($sR),
-                      'datehelper' => new DateHelper($sR),
-                      'quote_statuses' => $qR->getStatuses($this->translator),
-                  ]),
-                  'invoice_table'=>$this->viewRenderer->renderPartialAsString('/invoice/inv/partial_inv_table', [
-                      'iaR'=> $iaR,
-                      'irR'=> $irR,
-                      'invoice_count'=>$iR->repoCountByClient($client_id),
-                      'invoices' => $iR->repoClient($client_id),
-                      'clienthelper' => new ClientHelper($sR),
-                      'datehelper' => new DateHelper($sR),
-                      'inv_statuses' => $iR->getStatuses($this->translator),
-                      'session' => $session,
-                  ]),
-                  'invoice_draft_table'=>$this->viewRenderer->renderPartialAsString('/invoice/inv/partial_inv_table', [
-                      'iaR'=> $iaR,
-                      'irR'=> $irR,
-                      'invoice_count' => $iR->by_client_inv_status_count($client_id,1),    
-                      'invoices' => $iR->by_client_inv_status($client_id,1),
-                      'clienthelper' => new ClientHelper($sR),
-                      'datehelper' => new DateHelper($sR),
-                      'inv_statuses' => $iR->getStatuses($this->translator)
-                  ]),
-                  'invoice_sent_table'=>$this->viewRenderer->renderPartialAsString('/invoice/inv/partial_inv_table', [
-                      'iaR'=> $iaR,
-                      'irR'=> $irR,
-                      'invoice_count' => $iR->by_client_inv_status_count($client_id,2),    
-                      'invoices' => $iR->by_client_inv_status($client_id,2),
-                      'clienthelper' => new ClientHelper($sR),
-                      'datehelper' => new DateHelper($sR),
-                      'inv_statuses' => $iR->getStatuses($this->translator)
-                  ]),
-                  'invoice_viewed_table'=>$this->viewRenderer->renderPartialAsString('/invoice/inv/partial_inv_table', [
-                      'iaR'=> $iaR,
-                      'irR'=> $irR,
-                      'invoice_count' => $iR->by_client_inv_status_count($client_id,3),    
-                      'invoices' => $iR->by_client_inv_status($client_id,3),
-                      'clienthelper' => new ClientHelper($sR),
-                      'datehelper' => new DateHelper($sR),
-                      'inv_statuses' => $iR->getStatuses($this->translator)
-                  ]),
-                  'invoice_paid_table'=>$this->viewRenderer->renderPartialAsString('/invoice/inv/partial_inv_table', [
-                      'iaR'=> $iaR,
-                      'irR'=> $irR,
-                      'invoice_count' => $iR->by_client_inv_status_count($client_id,4),    
-                      'invoices' => $iR->by_client_inv_status($client_id,4),
-                      'clienthelper' => new ClientHelper($sR),
-                      'datehelper' => new DateHelper($sR),
-                      'inv_statuses' => $iR->getStatuses($this->translator)
-                  ]),
-                  'partial_notes'=>$this->viewRenderer->renderPartialAsString('/invoice/clientnote/partial_notes', [
-                      'client_notes' => $cnR->repoClientquery((string)$client_id),
-                      'datehelper' => new DateHelper($sR),
-                  ]),
-                  'payment_table'=>$this->viewRenderer->renderPartialAsString('/invoice/payment/partial_payment_table', [
-                      'client'=> $client,
-                      // All payments from the client are loaded and filtered in the view with 
-                      // if ($payment->getInv()->getClient_id() === $client->getClient_id())
-                      'payments'=> $pymtR->repoPaymentInvLoadedAll((int)$sR->get_setting('payment_list_limit') ?: 10),
-                      'clienthelper' => new ClientHelper($sR),
-                  ]), 
-                  'delivery_locations'=>$this->viewRenderer->renderPartialAsString('/invoice/client/client_delivery_location_list', [
-                      'client'=> $client,
-                      'locations'=> $delR->repoClientquery((string)$client->getClient_id()),
-                      'clienthelper' => new ClientHelper($sR),
-                  ]), 
-              ];
-              return $this->viewRenderer->render('view', $parameters);
-         } else {
-              return $this->webService->getRedirectResponse('client/index');
-         } 
-      } // if $client     
-      return $this->webService->getRedirectResponse('client/index');
-}
+        $quote = new Quote();
+        $quoteForm = new QuoteForm($quote);
+        $bootstrap5ModalQuote = new Bootstrap5ModalQuote($this->translator, $this->viewRenderer, $cR, $gR, $sR, $ucR, $quoteForm);
+        
+        $inv = new Inv();
+        $invForm = new InvForm($inv);
+        $bootstrap5ModalInv = new Bootstrap5ModalInv($this->translator, $this->viewRenderer, $cR, $gR, $sR, $ucR, $invForm);
+                
+        $optionsGroupData = [];
+        
+        $groups = $gR->findAllPreloaded();
+        /**
+         * @var \App\Invoice\Entity\Group
+         */
+        foreach ($groups as $group) {
+            $optionsGroupData[$group->getId()] = $group->getName();
+        } 
+        $client = $this->client($currentRoute, $cR);      
+        if ($client instanceof Client) {
+              $client_id = $client->getClient_id();  
+              if (null!==$client_id) {
+                $parameters = [
+                    'title' => $this->translator->translate('i.client'),
+                    'alert' => $this->alert(),
+                    'iR' => $iR,
+                    'iaR' => $iaR,
+                    'clienthelper' => new ClientHelper($sR),
+                    'custom_fields'=>$cfR->repoTablequery('client_custom'),
+                    'custom_values'=>$cvR->attach_hard_coded_custom_field_values_to_custom_field($cfR->repoTablequery('client_custom')),
+                    'cpR' => $cpR,
+                    'cvH' => new CVH($sR),
+                    'client_custom_values'=>$this->client_custom_values((string)$client_id, $ccR),
+                    'client' => $client,            
+                    'client_notes' => $cnR->repoClientNoteCount($client_id) > 0 ? $cnR->repoClientquery((string)$client_id) : [],
+                    'partial_client_address'=>$this->viewRenderer->renderPartialAsString('/invoice/client/partial_client_address', [
+                        'client'=> $client,            
+                        'countryhelper'=> new CountryHelper(),
+                    ]),
+                    'client_modal_layout_quote' => $bootstrap5ModalQuote->renderPartialLayoutWithFormAsString((string)$client_id, []),
+                    'client_modal_layout_inv'=> $bootstrap5ModalInv->renderPartialLayoutWithFormAsString((string)$client_id, []),  
+                    'quote_table'=>$this->viewRenderer->renderPartialAsString('/invoice/quote/partial_quote_table', [
+                        'qaR'=> $qaR,
+                        'quote_count' => $qR->repoCountByClient($client_id),
+                        'quotes' => $qR->repoClient($client_id),
+                        'clienthelper' => new ClientHelper($sR),
+                        'datehelper' => new DateHelper($sR),
+                        'quote_statuses' => $qR->getStatuses($this->translator),
+                    ]),
+                    'quote_draft_table'=>$this->viewRenderer->renderPartialAsString('/invoice/quote/partial_quote_table', [
+                        'qaR'=> $qaR,
+                        'quote_count' => $qR->by_client_quote_status_count($client_id,1),
+                        'quotes' => $qR->by_client_quote_status($client_id,1),
+                        'clienthelper' => new ClientHelper($sR),
+                        'datehelper' => new DateHelper($sR),
+                        'quote_statuses' => $qR->getStatuses($this->translator),
+                    ]),
+                    'quote_sent_table'=>$this->viewRenderer->renderPartialAsString('/invoice/quote/partial_quote_table', [
+                        'qaR'=> $qaR,
+                        'quote_count' => $qR->by_client_quote_status_count($client_id,2),
+                        'quotes' => $qR->by_client_quote_status($client_id,2),
+                        'clienthelper' => new ClientHelper($sR),
+                        'datehelper' => new DateHelper($sR),
+                        'quote_statuses' => $qR->getStatuses($this->translator),
+                    ]),
+                    'quote_viewed_table'=>$this->viewRenderer->renderPartialAsString('/invoice/quote/partial_quote_table', [
+                        'qaR'=> $qaR,
+                        'quote_count' => $qR->by_client_quote_status_count($client_id,3),
+                        'quotes' => $qR->by_client_quote_status($client_id,3),
+                        'clienthelper' => new ClientHelper($sR),
+                        'datehelper' => new DateHelper($sR),
+                        'quote_statuses' => $qR->getStatuses($this->translator),
+                    ]),
+                    'quote_approved_table'=>$this->viewRenderer->renderPartialAsString('/invoice/quote/partial_quote_table', [
+                        'qaR'=> $qaR,
+                        'quote_count' => $qR->by_client_quote_status_count($client_id,4),
+                        'quotes' => $qR->by_client_quote_status($client_id,4),
+                        'clienthelper' => new ClientHelper($sR),
+                        'datehelper' => new DateHelper($sR),
+                        'quote_statuses' => $qR->getStatuses($this->translator),
+                    ]),
+                    'quote_rejected_table'=>$this->viewRenderer->renderPartialAsString('/invoice/quote/partial_quote_table', [
+                        'qaR'=> $qaR,
+                        'quote_count' => $qR->by_client_quote_status_count($client_id,5),
+                        'quotes' => $qR->by_client_quote_status($client_id,5),
+                        'clienthelper' => new ClientHelper($sR),
+                        'datehelper' => new DateHelper($sR),
+                        'quote_statuses' => $qR->getStatuses($this->translator),
+                    ]),
+                    'quote_cancelled_table'=>$this->viewRenderer->renderPartialAsString('/invoice/quote/partial_quote_table', [
+                        'qaR'=> $qaR,
+                        'quote_count' => $qR->by_client_quote_status_count($client_id,6),
+                        'quotes' => $qR->by_client_quote_status($client_id,6),
+                        'clienthelper' => new ClientHelper($sR),
+                        'datehelper' => new DateHelper($sR),
+                        'quote_statuses' => $qR->getStatuses($this->translator),
+                    ]),
+                    'invoice_table'=>$this->viewRenderer->renderPartialAsString('/invoice/inv/partial_inv_table', [
+                        'iaR'=> $iaR,
+                        'irR'=> $irR,
+                        'invoice_count'=>$iR->repoCountByClient($client_id),
+                        'invoices' => $iR->repoClient($client_id),
+                        'clienthelper' => new ClientHelper($sR),
+                        'datehelper' => new DateHelper($sR),
+                        'inv_statuses' => $iR->getStatuses($this->translator),
+                        'session' => $session,
+                    ]),
+                    'invoice_draft_table'=>$this->viewRenderer->renderPartialAsString('/invoice/inv/partial_inv_table', [
+                        'iaR'=> $iaR,
+                        'irR'=> $irR,
+                        'invoice_count' => $iR->by_client_inv_status_count($client_id,1),    
+                        'invoices' => $iR->by_client_inv_status($client_id,1),
+                        'clienthelper' => new ClientHelper($sR),
+                        'datehelper' => new DateHelper($sR),
+                        'inv_statuses' => $iR->getStatuses($this->translator)
+                    ]),
+                    'invoice_sent_table'=>$this->viewRenderer->renderPartialAsString('/invoice/inv/partial_inv_table', [
+                        'iaR'=> $iaR,
+                        'irR'=> $irR,
+                        'invoice_count' => $iR->by_client_inv_status_count($client_id,2),    
+                        'invoices' => $iR->by_client_inv_status($client_id,2),
+                        'clienthelper' => new ClientHelper($sR),
+                        'datehelper' => new DateHelper($sR),
+                        'inv_statuses' => $iR->getStatuses($this->translator)
+                    ]),
+                    'invoice_viewed_table'=>$this->viewRenderer->renderPartialAsString('/invoice/inv/partial_inv_table', [
+                        'iaR'=> $iaR,
+                        'irR'=> $irR,
+                        'invoice_count' => $iR->by_client_inv_status_count($client_id,3),    
+                        'invoices' => $iR->by_client_inv_status($client_id,3),
+                        'clienthelper' => new ClientHelper($sR),
+                        'datehelper' => new DateHelper($sR),
+                        'inv_statuses' => $iR->getStatuses($this->translator)
+                    ]),
+                    'invoice_paid_table'=>$this->viewRenderer->renderPartialAsString('/invoice/inv/partial_inv_table', [
+                        'iaR'=> $iaR,
+                        'irR'=> $irR,
+                        'invoice_count' => $iR->by_client_inv_status_count($client_id,4),    
+                        'invoices' => $iR->by_client_inv_status($client_id,4),
+                        'clienthelper' => new ClientHelper($sR),
+                        'datehelper' => new DateHelper($sR),
+                        'inv_statuses' => $iR->getStatuses($this->translator)
+                    ]),
+                    'partial_notes'=>$this->viewRenderer->renderPartialAsString('/invoice/clientnote/partial_notes', [
+                        'client_notes' => $cnR->repoClientquery((string)$client_id),
+                        'datehelper' => new DateHelper($sR),
+                    ]),
+                    'payment_table'=>$this->viewRenderer->renderPartialAsString('/invoice/payment/partial_payment_table', [
+                        'client'=> $client,
+                        // All payments from the client are loaded and filtered in the view with 
+                        // if ($payment->getInv()->getClient_id() === $client->getClient_id())
+                        'payments'=> $pymtR->repoPaymentInvLoadedAll((int)$sR->get_setting('payment_list_limit') ?: 10),
+                        'clienthelper' => new ClientHelper($sR),
+                    ]), 
+                    'delivery_locations'=>$this->viewRenderer->renderPartialAsString('/invoice/client/client_delivery_location_list', [
+                        'client'=> $client,
+                        'locations'=> $delR->repoClientquery((string)$client->getClient_id()),
+                        'clienthelper' => new ClientHelper($sR),
+                    ]), 
+                ];
+                return $this->viewRenderer->render('view', $parameters);
+           } else {
+                return $this->webService->getRedirectResponse('client/index');
+           } 
+        } // if $client     
+        return $this->webService->getRedirectResponse('client/index');
+    }
 }

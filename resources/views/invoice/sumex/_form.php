@@ -2,120 +2,103 @@
 
 declare(strict_types=1); 
 
+use Yiisoft\FormModel\Field;
 use Yiisoft\Html\Html;
-use Yiisoft\Yii\Bootstrap5\Alert;
+use Yiisoft\Html\Tag\Form;
 
 /**
  * @var \Yiisoft\View\View $this
  * @var \Yiisoft\Router\UrlGeneratorInterface $urlGenerator
- * @var array $body
  * @var string $csrf
  * @var string $action
  * @var string $title
  */
-
-if (!empty($errors)) {
-    foreach ($errors as $field => $error) {
-        echo Alert::widget()->options(['class' => 'alert-danger'])->body(Html::encode($field . ':' . $error));
-    }
-}
-
 ?>
-<?= Html::openTag('h1'); ?><?= Html::encode($title) ?><?= Html::closeTag('h1'); ?>
-<form id="SumexForm" method="POST" action="<?= $urlGenerator->generate(...$action) ?>" enctype="multipart/form-data">
-<input type="hidden" name="_csrf" value="<?= $csrf ?>">
-<div id="headerbar">
-<h1 class="headerbar-title"><?= $translator->translate('i.sumexs_form'); ?></h1>
-    <?php $response = $head->renderPartial('invoice/layout/header_buttons',['s'=>$s, 'hide_submit_button'=>false ,'hide_cancel_button'=>false]); ?>        
-    <?php echo (string)$response->getBody(); ?>
-<div id="content">
-    <?= Html::openTag('div', ['class' => 'row']); ?>
-    <div class="mb3 form-group" hidden>
-       <label for="invoice"><?= $translator->translate('i.invoice'); ?></label>
-       <input type="text" name="invoice" id="invoice" class="form-control" required
-     value="<?= Html::encode($body['invoice'] ??  ''); ?>">
-    </div>
-    <div class="mb3 form-group has-feedback">
-        <span class="input-group"><?= $translator->translate('i.reason'); ?></span>
-        <select name="reason" id="reason" class="form-control input-sm">
-            <?php $reasons = [
-                'disease',
-                'accident',
-                'maternity',
-                'prevention',
-                'birthdefect',
-                'unknown'
-            ]; ?>
-            <?php foreach ($reasons as $key => $reason): ?>
-                <?php $selected = ($body['reason'] === $key ? " selected" : ""); ?>
-                <option value="<?= $key; ?>"<?= $selected; ?>>
-                    <?= $translator->translate('i.reason_' . $reason); ?>
-                </option>
-            <?php endforeach; ?>
-        </select>
-    </div>
-    <div class="mb3 form-group has-feedback">
-       <label for="diagnosis"><?= $translator->translate('i.invoice_sumex_diagnosis'); ?></label>
-       <textarea name="diagnosis" id="diagnosis" class="form-control" required>
-            <?= Html::encode($body['diagnosis'] ?:  ''); ?>
-       </textarea>
-    </div>
-    <div class="mb3 form-group has-feedback">
-       <label for="observations"><?= $translator->translate('i.sumex_observations'); ?></label>
-       <textarea name="observations" id="observations" class="form-control" required>
-            <?= Html::encode($body['observations'] ?:  ''); ?>
-       </textarea>
-    </div>
-    <div class="mb-3 form-group has-feedback">
-        <?php
-           $tdate = $datehelper->get_or_set_with_style($body['treatmentstart']);
-        ?>
-        <label form-label for="treatmentstart"><?= $translator->translate('i.treatment_start') .' ('.$datehelper->display().')'; ?></label>
-        <div class="input-group">
-            <input type="text" name="treatmentstart" id="treatmentstart" placeholder="<?= ' ('.$datehelper->display().')';?>" required
-                   class="form-control input-sm datepicker" readonly                   
-                   value="<?= null!== $tdate ? Html::encode($tdate instanceof \DateTimeImmutable ? $tdate->format($datehelper->style()) : $tdate) : null; ?>" role="presentation" autocomplete="off">
-            <span class="input-group-text">
-            <i class="fa fa-calendar fa-fw"></i>
-        </span>
-        </div>        
-    </div>  
-    <div class="mb-3 form-group has-feedback">
-        <?php
-           $edate = $datehelper->get_or_set_with_style($body['treatmentend']);
-        ?>
-        <label form-label for="treatmentend"><?= $translator->translate('i.treatment_end') .' ('.$datehelper->display().')'; ?></label>
-        <div class="input-group">
-            <input type="text" name="treatmentend" id="treatmentend" placeholder="<?= ' ('.$datehelper->display().')';?>" required
-                   class="form-control input-sm datepicker" readonly                   
-                   value="<?= null!== $edate ? Html::encode($edate instanceof \DateTimeImmutable ? $edate->format($datehelper->style()) : $edate) : null; ?>" role="presentation" autocomplete="off">
-            <span class="input-group-text">
-                <i class="fa fa-calendar fa-fw"></i>
-            </span>
-        </div>        
-    </div>
-    </div>
-    
-    <div class="mb-3 form-group has-feedback">
-        <?php
-           $cdate = $datehelper->get_or_set_with_style($body['casedate']);
-        ?>
-        <label form-label for="casedate"><?= $translator->translate('i.case_date') .' ('.$datehelper->display().')'; ?></label>
-        <div class="input-group">
-            <input type="text" name="casedate" id="casedate" placeholder="<?= ' ('.$datehelper->display().')';?>" required
-                   class="form-control input-sm datepicker" readonly                   
-                   value="<?= null!== $cdate ? Html::encode($cdate instanceof \DateTimeImmutable ? $cdate->format($datehelper->style()) : $cdate) : null; ?>" role="presentation" autocomplete="off">
-            <span class="input-group-text">
-            <i class="fa fa-calendar fa-fw"></i>
-            </span>
-        </div>        
-    </div>
-    
-    <div class="mb3 form-group has-feedback">
-       <label for="casenumber"><?= $translator->translate('i.case_number'); ?></label>
-       <input type="text" name="casenumber" id="casenumber" class="form-control" required
-       value="<?= Html::encode($body['casenumber'] ??  ''); ?>">
-    </div>
-</div>
-</div>
-</form>
+
+<?= Form::tag()
+    ->post($urlGenerator->generate(...$action))
+    ->enctypeMultipartFormData()
+    ->csrf($csrf)
+    ->id('SumexForm')
+    ->open() ?>
+
+<?= Html::openTag('div',['class'=>'container py-5 h-100']); ?>
+<?= Html::openTag('div',['class'=>'row d-flex justify-content-center align-items-center h-100']); ?>
+<?= Html::openTag('div',['class'=>'col-12 col-md-8 col-lg-6 col-xl-8']); ?>
+<?= Html::openTag('div',['class'=>'card border border-dark shadow-2-strong rounded-3']); ?>
+<?= Html::openTag('div',['class'=>'card-header']); ?>
+
+<?= Html::openTag('h1',['class'=>'fw-normal h3 text-center']); ?>    
+    <?= Html::encode($title) ?>
+<?= Html::closeTag('h1'); ?>
+<?= Html::openTag('div', ['id' => 'headerbar']); ?>
+    <?= $button::back_save($translator); ?>
+    <?= Html::openTag('div', ['id' => 'content']); ?>
+        <?= Html::openTag('div', ['class' => 'row']); ?>
+            <?= Html::openTag('div', ['class' => 'mb-3 form-group']); ?>
+            <?= Field::hidden($form, 'invoice')
+                ->hideLabel()
+                ->value($form->getInvoice() ?? $inv_id); ?>
+            <?= Html::closeTag('div'); ?>
+            <?= Html::openTag('div', ['class' => 'mb-3 form-group']); ?>
+                <?= Field::select($form, 'reason')
+                    ->label($translator->translate('i.reason'))
+                    ->optionsData($optionsDataReasons)
+                    ->hint($translator->translate('invoice.hint.this.field.is.required')); 
+                ?>
+            <?= Html::closeTag('div'); ?>
+            <?= Html::openTag('div', ['class' => 'mb-3 form-group']); ?>
+            <?= Field::text($form, 'casenumber')
+                ->label($translator->translate('i.case_number'), ['form-label'])
+                ->placeholder($translator->translate('i.case_number'))    
+                ->value(Html::encode($form->getCasenumber() ?? ''))    
+                ->hint($translator->translate('invoice.hint.this.field.is.required')); 
+            ?>    
+            <?= Html::closeTag('div'); ?>
+            <?= Html::openTag('div', ['class' => 'mb-3 form-group']); ?>
+            <?= Field::textarea($form, 'diagnosis')
+                ->label($translator->translate('i.invoice_sumex_diagnosis'), ['form-label'])
+                ->placeholder($translator->translate('i.invoice_sumex_diagnosis'))    
+                ->value(Html::encode($form->getDiagnosis() ?? ''))    
+                ->hint($translator->translate('invoice.hint.this.field.is.required')); 
+            ?>
+            <?= Html::closeTag('div'); ?>
+            <?= Html::openTag('div', ['class' => 'mb-3 form-group']); ?>
+            <?= Field::textarea($form, 'observations')
+                ->label($translator->translate('i.sumex_observations'), ['form-label'])
+                ->placeholder($translator->translate('i.sumex_observations'))    
+                ->value(Html::encode($form->getObservations() ?? ''))
+                ->hint($translator->translate('invoice.hint.this.field.is.required')); 
+            ?>
+            <?= Html::closeTag('div'); ?>
+            <?= Html::openTag('div', ['class' => 'mb-3 form-group']); ?>
+            <?= Field::date($form, 'treatmentstart')
+                ->label($translator->translate('i.treatment_start'))
+                ->value($form->getTreatmentstart() ? ($form->getTreatmentstart())->format('Y-m-d') : '')
+                ->required(true)            
+                ->hint($translator->translate('invoice.hint.this.field.is.required')); 
+            ?>
+            <?= Html::closeTag('div'); ?>
+            <?= Html::openTag('div', ['class' => 'mb-3 form-group']); ?>
+            <?= Field::date($form, 'treatmentend')
+                ->label($translator->translate('i.treatment_end'))
+                ->value($form->getTreatmentend() ? ($form->getTreatmentend())->format('Y-m-d') : '')
+                ->required(true)            
+                ->hint($translator->translate('invoice.hint.this.field.is.required')); 
+            ?>
+            <?= Html::closeTag('div'); ?>
+            <?= Html::openTag('div', ['class' => 'mb-3 form-group']); ?>
+            <?= Field::date($form, 'casedate')
+                ->label($translator->translate('i.case_date'))
+                ->value($form->getCasedate() ? ($form->getCasedate())->format('Y-m-d') : '')
+                ->required(true)            
+                ->hint($translator->translate('invoice.hint.this.field.is.required')); 
+            ?>
+            <?= Html::closeTag('div'); ?>
+        <?= Html::closeTag('div'); ?>
+    <?= Html::closeTag('div'); ?>
+<?= Html::closeTag('div'); ?>
+<?= Html::closeTag('div'); ?>
+<?= Html::closeTag('div'); ?>
+<?= Html::closeTag('div'); ?>
+<?= Form::tag()->close() ?>

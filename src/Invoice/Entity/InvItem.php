@@ -55,7 +55,7 @@ class InvItem
     #[Column(type: 'integer(11)', nullable: true)]
     private ?int $product_unit_id =  null;
     
-    #[Column(type: 'datetime', nullable: true)]
+    #[Column(type: 'datetime', nullable: false)]
     private DateTimeImmutable $date;
     
     #[BelongsTo(target: \App\Invoice\Entity\TaxRate::class, nullable: false, fkAction: 'NO ACTION')]

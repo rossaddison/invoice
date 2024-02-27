@@ -140,7 +140,7 @@ class Invoice implements XmlSerializable {
       throw new InvalidArgumentException('Missing invoice id');
     }
     
-    if (empty($this->note)) {
+    if ($this->note === null) {
       throw new InvalidArgumentException('Missing invoice note');
     }
 

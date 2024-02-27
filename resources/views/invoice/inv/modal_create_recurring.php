@@ -20,7 +20,7 @@
                 <select name="recur_frequency" id="recur_frequency" class="form-control">
                     <?php foreach ($recur_frequencies as $key => $lang) { ?>
                         <option value="<?php echo $key; ?>">
-                            <?= $s->trans($lang); ?>
+                            <?= $translator->translate($lang); ?>
                         </option>
                     <?php } ?>
                 </select>

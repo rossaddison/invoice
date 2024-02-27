@@ -4,6 +4,9 @@ declare(strict_types=1);
 
 use Yiisoft\Yii\Runner\Http\HttpApplicationRunner;
 
+/**
+ * @psalm-suppress RiskyTruthyFalsyComparison getenv('YII_C3')
+ */
 if (getenv('YII_C3')) {
     $c3 = dirname(__DIR__) . '/c3.php';
     if (file_exists($c3)) {

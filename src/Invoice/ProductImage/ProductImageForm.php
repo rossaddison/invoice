@@ -4,16 +4,33 @@ declare(strict_types=1);
 
 namespace App\Invoice\ProductImage;
 
+use App\Invoice\Entity\ProductImage;
 use Yiisoft\FormModel\FormModel;
 use Yiisoft\Validator\Rule\Required;
+
+use DateTimeImmutable;
 
 final class ProductImageForm extends FormModel
 {    
     private ?int $product_id=null;
+    #[Required]
     private string $file_name_original='';
+    #[Required]
     private string $file_name_new='';
+    
     private string $description='';
-    private string $uploaded_date='';
+    
+    #[Required]
+    private mixed $uploaded_date='';
+    
+    public function __construct(ProductImage $productImage, int $product_id)
+    {
+        $this->product_id = $product_id;
+        $this->file_name_original = $productImage->getFile_name_original();
+        $this->file_name_new = $productImage->getFile_name_new();
+        $this->description = $productImage->getDescription();
+        $this->uploaded_date = $productImage->getUploaded_date();
+    }        
 
     public function getProduct_id() : int|null
     {
@@ -35,9 +52,12 @@ final class ProductImageForm extends FormModel
       return $this->description;  
     }
     
-    public function getUploaded_date() : string|null
+    public function getUploaded_date() : string|DateTimeImmutable
     {
-       return $this->uploaded_date;
+        /**
+         * @var string|DateTimeImmutable $this->uploaded_date 
+         */
+        return $this->uploaded_date;
     }
 
     /**
@@ -49,23 +69,4 @@ final class ProductImageForm extends FormModel
     {
       return '';
     }
-
-    /**
-     * @return Required[][]
-     *
-     * @psalm-return array{file_name_original: list{Required}, file_name_new: list{Required}, uploaded_date: list{Required}}
-     */
-    public function getRules(): array    {
-      return [
-        'file_name_original' => [
-            new Required(),
-        ],
-        'file_name_new' => [
-            new Required(),
-        ],
-        'uploaded_date' => [
-            new Required(),
-        ],
-    ];
-}
 }

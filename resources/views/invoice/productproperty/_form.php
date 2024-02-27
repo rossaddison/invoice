@@ -2,56 +2,63 @@
 
 declare(strict_types=1); 
 
+
+use Yiisoft\FormModel\Field;
 use Yiisoft\Html\Html;
-use Yiisoft\Yii\Bootstrap5\Alert;
+use Yiisoft\Html\Tag\Form;
 
 /**
  * @var \Yiisoft\View\View $this
  * @var \Yiisoft\Router\UrlGeneratorInterface $urlGenerator
- * @var array $body
  * @var string $csrf
  * @var string $action
  * @var string $title
  */
-
-if (!empty($errors)) {
-    foreach ($errors as $field => $error) {
-        echo Alert::widget()->options(['class' => 'alert-danger'])->body(Html::encode($field . ':' . $error));
-    }
-}
-
 ?>
-<?= Html::openTag('h1'); ?><?= Html::encode($title) ?><?= Html::closeTag('h1'); ?>
-<form id="ProductPropertyForm" method="POST" action="<?= $urlGenerator->generate(...$action) ?>" enctype="multipart/form-data">
-<input type="hidden" name="_csrf" value="<?= $csrf ?>">
-<div id="headerbar">
-<h1 class="headerbar-title"><?= $translator->translate('i.productproperties_form'); ?></h1>
-<?php $response = $head->renderPartial('invoice/layout/header_buttons',['s'=>$s, 'hide_submit_button'=>false ,'hide_cancel_button'=>false]); ?>        
-<?php echo (string)$response->getBody(); ?><div id="content">
-<?= Html::openTag('div', ['class' => 'row']); ?>
- <div class="mb3 form-group hidden">
-    <label for="product_id">Product</label>
-    <input type="hidden" name="product_id" id="product_id" class="form-control"
- value="<?= Html::encode($body['product_id'] ??  $product_id); ?>">
- </div>
- <div class="row mb3 form-group">
-   <input type="hidden" name="id" id="id" class="form-control"
- value="<?= Html::encode($body['id'] ??  ''); ?>">
- </div>
- <div class="row mb3 form-group">
-   <label for="name"><?= $translator->translate('i.name'); ?></label>
-   <input type="text" name="name" id="name" class="form-control"
- value="<?= Html::encode($body['name'] ??  ''); ?>">
- </div>
- <div class="row mb3 form-group">
-   <label for="value"><?= $translator->translate('i.value'); ?></label>
-   <input type="text" name="value" id="value" class="form-control"
- value="<?= Html::encode($body['value'] ??  ''); ?>">
- </div>
 
-</div>
+<?= Form::tag()
+    ->post($urlGenerator->generate(...$action))
+    ->enctypeMultipartFormData()
+    ->csrf($csrf)
+    ->id('ProductPropertyForm')
+    ->open() ?>
 
-</div>
+<?= Html::openTag('div',['class'=>'container py-5 h-100']); ?>
+<?= Html::openTag('div',['class'=>'row d-flex justify-content-center align-items-center h-100']); ?>
+<?= Html::openTag('div',['class'=>'col-12 col-md-8 col-lg-6 col-xl-8']); ?>
+<?= Html::openTag('div',['class'=>'card border border-dark shadow-2-strong rounded-3']); ?>
+<?= Html::openTag('div',['class'=>'card-header']); ?>
 
-</div>
-</form>
+<?= Html::openTag('h1',['class'=>'fw-normal h3 text-center']); ?>    
+    <?= Html::encode($title) ?>
+<?= Html::closeTag('h1'); ?>
+<?= Html::openTag('div', ['id' => 'headerbar']); ?>
+    <?= $button::back_save($translator); ?>
+    <?= Html::openTag('div', ['id' => 'content']); ?>
+        <?= Html::openTag('div', ['class' => 'row']); ?>
+            <?= Html::openTag('div', ['class' => 'mb-3 form-group']); ?>
+                <?= Field::errorSummary($form)
+                    ->errors($errors)
+                    ->header($translator->translate('invoice.error.summary'))
+                    ->onlyCommonErrors()
+                ?>
+            <?= Html::closeTag('div'); ?>
+            <?= Html::openTag('div'); ?>
+                <?= Html::openTag('div', ['class' => 'mb-3 form-group']); ?>
+                    <?= Field::hidden($form, 'product_id')
+                        ->hideLabel(true); ?>
+                <?= Html::closeTag('div'); ?>
+                <?= Html::openTag('div', ['class' => 'mb-3 form-group']); ?>
+                    <?= Field::text($form, 'name'); ?>
+                <?= Html::closeTag('div'); ?>
+                <?= Html::openTag('div', ['class' => 'mb-3 form-group']); ?>
+                    <?= Field::text($form, 'value'); ?>
+                <?= Html::closeTag('div'); ?>
+            <?= Html::closeTag('div'); ?>
+        <?= Html::closeTag('div'); ?>
+    <?= Html::closeTag('div'); ?>
+<?= Html::closeTag('div'); ?>
+<?= Html::closeTag('div'); ?>
+<?= Html::closeTag('div'); ?>
+<?= Html::closeTag('div'); ?>
+<?= Form::tag()->close() ?>

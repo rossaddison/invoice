@@ -5,10 +5,12 @@ use App\Invoice\Entity\Inv;
 use Yiisoft\Html\Html;
 use Yiisoft\View\WebView;
 use Yiisoft\Html\Tag\A;
+use Yiisoft\Html\Tag\Br;
 use Yiisoft\Html\Tag\Div;
 use Yiisoft\Html\Tag\Form;
 use Yiisoft\Html\Tag\H5;
 use Yiisoft\Html\Tag\I;
+use Yiisoft\Yii\DataView\Column\ActionColumn;
 use Yiisoft\Yii\DataView\Column\DataColumn;
 use Yiisoft\Yii\DataView\GridView;
 use Yiisoft\Yii\DataView\OffsetPagination;
@@ -34,6 +36,7 @@ use Yiisoft\Yii\DataView\OffsetPagination;
                 ->content(
                     I::tag()->addClass('bi bi-receipt')
                             ->content(' ' . Html::encode($translator->translate('invoice.invoice.contract')))
+                            ->encode(true)
                 )
         )
         ->render();
@@ -52,7 +55,8 @@ use Yiisoft\Yii\DataView\OffsetPagination;
         <?= $translator->translate('invoice.invoice.contract.contracts'); ?>
     <?= Html::closeTag('h5'); ?>    
 <?= Html::closeTag('div'); ?>
-<br>
+
+<?= Br::tag(); ?>
     <?php
         $columns = [
             new DataColumn(
@@ -109,53 +113,56 @@ use Yiisoft\Yii\DataView\OffsetPagination;
                 header: $translator->translate('invoice.invoice.contract.period.end'),                
                 content: static fn ($model): string => ($model->getPeriod_end())->format($datehelper->style())                        
             ),
-            new DataColumn(
-                header: $translator->translate('i.view'),    
-                content: static function ($model) use ($urlGenerator): string {
-                   return Html::a(Html::tag('i','',['class'=>'fa fa-eye fa-margin']), $urlGenerator->generate('contract/view',['id'=>$model->getId()]),[])->render();
-                }
-            ),
-            new DataColumn(
-                header: $translator->translate('i.edit'),    
-                content: static function ($model) use ($urlGenerator): string {
-                   return Html::a(Html::tag('i','',['class'=>'fa fa-edit fa-margin']), $urlGenerator->generate('contract/edit',['id'=>$model->getId()]),[])->render();
-                }
-            ),
-            new DataColumn(
-                header: $translator->translate('i.delete'),    
-                content: static function ($model) use ($translator, $urlGenerator): string {
-                   return Html::a( Html::tag('button',
-                        Html::tag('i','',['class'=>'fa fa-trash fa-margin']),
-                        [
-                            'type'=>'submit', 
-                            'class'=>'dropdown-button',
-                            'onclick'=>"return confirm("."'".$translator->translate('i.delete_record_warning')."');"
-                        ]
-                        ),
-                        $urlGenerator->generate('contract/delete',['id'=>$model->getId()]),[]                                         
-                    )->render();
-                }
-            ),          
+            new ActionColumn(
+                content: static fn($model): string => Html::openTag('div', ['class' => 'btn-group']) .
+                Html::a()
+                ->addAttributes([
+                    'class' => 'dropdown-button text-decoration-none', 
+                    'title' => $translator->translate('i.view')
+                ])
+                ->content('🔎')
+                ->encode(false)
+                ->href('/invoice/contract/view/'. $model->getId())
+                ->render() .
+                Html::a()
+                ->addAttributes([
+                    'class' => 'dropdown-button text-decoration-none', 
+                    'title' => $translator->translate('i.edit')
+                ])
+                ->content('✎')
+                ->encode(false)
+                ->href('/invoice/contract/edit/'. $model->getId())
+                ->render() .
+                Html::a()
+                ->addAttributes([
+                    'class'=>'dropdown-button text-decoration-none', 
+                    'title' => $translator->translate('i.delete'),
+                    'type'=>'submit', 
+                    'onclick'=>"return confirm("."'".$translator->translate('i.delete_record_warning')."');"
+                ])
+                ->content('❌')
+                ->encode(false)
+                ->href('/invoice/contract/delete/'. $model->getId())
+                ->render() . Html::closeTag('div')
+            ),        
         ];
     ?>
     <?= GridView::widget()    
         ->columns(...$columns)
         ->dataReader($paginator)    
         ->headerRowAttributes(['class'=>'card-header bg-info text-black'])
-        ->filterPosition('header')
-        ->filterModelName('contract')
+        //->filterPosition('header')
+        //->filterModelName('contract')
         ->header($header)
         ->id('w11-grid')
         ->pagination(
         OffsetPagination::widget()
-             ->menuClass('pagination justify-content-center')
              ->paginator($paginator)
-             ->urlArguments([])
              ->render(),
         )
         ->rowAttributes(['class' => 'align-middle'])
         ->summaryAttributes(['class' => 'mt-3 me-3 summary text-end'])
-        ->summary($grid_summary)
+        ->summaryTemplate($grid_summary)
         ->emptyTextAttributes(['class' => 'card-header bg-warning text-black'])
         ->emptyText((string)$translator->translate('invoice.invoice.no.records'))
         ->tableAttributes(['class' => 'table table-striped text-center h-75','id'=>'table-contract'])

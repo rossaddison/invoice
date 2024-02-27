@@ -75,14 +75,10 @@ final class DeliveryPartyController
             'action' => ['deliveryparty/add'],
             'errors' => [],
             'form' => $form,
-            'head'=>$head,
         ];
         if ($request->getMethod() === Method::POST) {
             $body = $request->getParsedBody();
-            /**
-             * @psalm-suppress PossiblyInvalidArgument $body 
-             */
-            if ($formHydrator->populate($form, $body) && $form->isValid()) {
+            if ($formHydrator->populateFromPostAndValidate($form,  $request)) {
                 /**
                  * @psalm-suppress PossiblyInvalidArgument $body 
                  */
@@ -118,12 +114,11 @@ final class DeliveryPartyController
     }
     
     /**
-     * @param SettingRepository $settingRepository
      * @param CurrentRoute $currentRoute
      * @param DeliveryPartyRepository $deliverypartyRepository
      * @return Response
      */
-    public function delete(SettingRepository $settingRepository, CurrentRoute $currentRoute,DeliveryPartyRepository $deliverypartyRepository 
+    public function delete(CurrentRoute $currentRoute,DeliveryPartyRepository $deliverypartyRepository 
     ): Response {
         try {
             $deliveryparty = $this->deliveryparty($currentRoute, $deliverypartyRepository);
@@ -140,7 +135,6 @@ final class DeliveryPartyController
     }
     
     /**
-     * @param ViewRenderer $head
      * @param Request $request
      * @param CurrentRoute $currentRoute
      * @param FormHydrator $formHydrator
@@ -148,7 +142,7 @@ final class DeliveryPartyController
      * @param SettingRepository $settingRepository
      * @return Response
      */    
-    public function edit(ViewRenderer $head, Request $request, CurrentRoute $currentRoute, 
+    public function edit(Request $request, CurrentRoute $currentRoute, 
                         FormHydrator $formHydrator,
                         DeliveryPartyRepository $deliverypartyRepository             
 
@@ -162,14 +156,10 @@ final class DeliveryPartyController
                 'title' => $this->translator->translate('i.edit'),
                 'action' => ['deliveryparty/edit', ['id' => $deliveryparty->getId()]],
                 'errors' => [],
-                'head'=>$head
             ];
             if ($request->getMethod() === Method::POST) {
                 $body = $request->getParsedBody();
-                /**
-                 * @psalm-suppress PossiblyInvalidArgument $body 
-                 */
-                if ($formHydrator->populate($form, $body) && $form->isValid()) {
+                if ($formHydrator->populateFromPostAndValidate($form, $request)) {
                     /**
                      * @psalm-suppress PossiblyInvalidArgument $body 
                      */
@@ -190,8 +180,7 @@ final class DeliveryPartyController
    private function alert(): string {
      return $this->viewRenderer->renderPartialAsString('/invoice/layout/alert',
      [ 
-       'flash' => $this->flash,
-       'errors' => [],
+       'flash' => $this->flash
      ]);
    }
 
@@ -258,7 +247,6 @@ final class DeliveryPartyController
             $parameters = [
                 'title' => $this->translator->translate('i.view'),
                 'action' => ['deliveryparty/view', ['id' => $deliveryparty->getId()]],
-                'errors' => [],
                 'form' => $form,
                 'deliveryparty'=>$deliveryparty,
             ];        

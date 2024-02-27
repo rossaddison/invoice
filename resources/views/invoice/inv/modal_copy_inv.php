@@ -12,7 +12,7 @@ use Yiisoft\Html\Html;
                 <button type="button" class="close" data-dismiss="modal"><i class="fa fa-times-circle"></i></button>
             </div>       
             <div class="modal-header">
-                <h5 class="col-12 modal-title text-center"><?php echo $translator->translate('i.copy_inv'); ?></h5>
+                <h5 class="col-12 modal-title text-center"><?php echo $translator->translate('i.copy_invoice'); ?></h5>
                 <br>
             </div> 
             <input type="hidden" name="user_id" id="user_id" value="<?= $inv->getUser_id(); ?>">

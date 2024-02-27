@@ -71,20 +71,17 @@ final class ClientNoteController
             'grid_summary'=> $settingRepository->grid_summary($paginator, $this->translator, (int)$settingRepository->get_setting('default_list_limit'), $this->translator->translate('invoice.client.notes'), ''),
             'paginator'=>$paginator,   
         ];
-        
         return $this->viewRenderer->render('index', $parameters);
     }
     
     /**
      * @param Request $request
      * @param FormHydrator $formHydrator
-     * @param SettingRepository $settingRepository
      * @param ClientRepository $clientRepository
      * @return Response
      */
     public function add(Request $request, 
                         FormHydrator $formHydrator,
-                        SettingRepository $settingRepository,
                         ClientRepository $clientRepository
     ): Response
     {
@@ -95,43 +92,36 @@ final class ClientNoteController
             'action' => ['clientnote/add'],
             'errors' => [],
             'form' => $form,
-            'clients'=>$clientRepository->findAllPreloaded(),
+            'clients' => $clientRepository->findAllPreloaded(),
         ];
         
         if ($request->getMethod() === Method::POST) {
-            $body = $request->getParsedBody();
-            /**
-             * @psalm-suppress PossiblyInvalidArgument $body 
-             */
-            if ($formHydrator->populate($form, $body) && $form->isValid()) {
+            if ($formHydrator->populateFromPostAndValidate($form, $request)) {
+               $body = $request->getParsedBody(); 
                /**
                 * @psalm-suppress PossiblyInvalidArgument $body 
                 */ 
-                $this->clientnoteService->addClientNote($clientnote, $body, $settingRepository);
+                $this->clientnoteService->addClientNote($clientnote, $body);
                 return $this->webService->getRedirectResponse('clientnote/index');
             }
-            $parameters['form'] = $form;
             $parameters['errors'] = $form->getValidationResult()?->getErrorMessagesIndexedByAttribute() ?? [];
+            $parameters['form'] = $form;
         }
         return $this->viewRenderer->render('_form', $parameters);
     }
     
     /**
-     * 
-     * @param ViewRenderer $head
      * @param Request $request
      * @param FormHydrator $formHydrator
      * @param ClientNoteRepository $clientnoteRepository
-     * @param SettingRepository $settingRepository
      * @param ClientRepository $clientRepository
      * @param DateHelper $dateHelper
      * @param CurrentRoute $currentRoute
      * @return Response
      */
-    public function edit(ViewRenderer $head, Request $request, 
+    public function edit(Request $request, 
                         FormHydrator $formHydrator,
-                        ClientNoteRepository $clientnoteRepository, 
-                        SettingRepository $settingRepository,                        
+                        ClientNoteRepository $clientnoteRepository,                  
                         ClientRepository $clientRepository,
                         CurrentRoute $currentRoute
     ): Response {
@@ -143,19 +133,18 @@ final class ClientNoteController
                 'action' => ['clientnote/edit', ['id' => $client_note->getId()]],
                 'errors' => [],
                 'form' => $form,
-                'head'=>$head,
-                'clients'=>$clientRepository->findAllPreloaded()
+                'clients' => $clientRepository->findAllPreloaded()
             ];
             if ($request->getMethod() === Method::POST) {
                 /**
                  * @psalm-suppress PossiblyInvalidArgument $body
                  */
                 $body = $request->getParsedBody();
-                if ($formHydrator->populate($form, $body) && $form->isValid()) {
+                if ($formHydrator->populateFromPostAndValidate($form, $request)) {
                     /**
                      * @psalm-suppress PossiblyInvalidArgument $body
                      */
-                    $this->clientnoteService->saveClientNote($client_note, $body, $settingRepository);
+                    $this->clientnoteService->saveClientNote($client_note, $body);
                     return $this->webService->getRedirectResponse('clientnote/index');
                 }
                 $parameters['form'] = $form;
@@ -186,9 +175,10 @@ final class ClientNoteController
      * 
      * @param CurrentRoute $currentRoute
      * @param ClientNoteRepository $clientnoteRepository
+     * @param ClientRepository $clientRepository
      * @return Response
      */
-    public function view(CurrentRoute $currentRoute, ClientNoteRepository $clientnoteRepository
+    public function view(CurrentRoute $currentRoute, ClientNoteRepository $clientnoteRepository, ClientRepository $clientRepository
         ): Response {
         $client_note = $this->clientnote($currentRoute, $clientnoteRepository);
         if ($client_note) {
@@ -197,7 +187,8 @@ final class ClientNoteController
                 'title' => $this->translator->translate('i.view'),
                 'action' => ['clientnote/edit', ['id' => $client_note->getId()]],
                 'errors' => [],
-                'form' => $form,             
+                'form' => $form,
+                'clients'=>$clientRepository->findAllPreloaded(),
                 'clientnote'=>$client_note,
             ];
             return $this->viewRenderer->render('_view', $parameters);
@@ -252,8 +243,7 @@ final class ClientNoteController
     private function alert(): string {
       return $this->viewRenderer->renderPartialAsString('/invoice/layout/alert',
       [ 
-        'flash' => $this->flash,
-        'errors' => [],
+        'flash' => $this->flash
       ]);
     }
     

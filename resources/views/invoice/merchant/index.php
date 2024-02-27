@@ -1,74 +1,159 @@
 <?php
-
 declare(strict_types=1);
 
+use Yiisoft\Data\Paginator\OffsetPaginator;
 use Yiisoft\Html\Html;
-use Yiisoft\Yii\Bootstrap5\Modal;
+use Yiisoft\Translator\TranslatorInterface;
+use Yiisoft\View\WebView;
+use Yiisoft\Html\Tag\A;
+use Yiisoft\Html\Tag\Div;
+use Yiisoft\Html\Tag\Form;
+use Yiisoft\Html\Tag\H5;
+use Yiisoft\Html\Tag\I;
+use Yiisoft\Yii\DataView\Column\DataColumn;
+use Yiisoft\Yii\DataView\Column\ActionColumn;
+use Yiisoft\Yii\DataView\GridView;
+use Yiisoft\Yii\DataView\OffsetPagination;
+use Yiisoft\Router\CurrentRoute;
 
 /**
  * @var \App\Invoice\Entity\Merchant $merchant
- * @var \Yiisoft\Router\UrlGeneratorInterface $urlGenerator
- * @var bool $canEdit
- * @var string $id
- */
-
-echo $alert;
+ * @var string $csrf
+ * @var CurrentRoute $currentRoute 
+ * @var OffsetPaginator $paginator
+ * @var \Yiisoft\Router\UrlGeneratorInterface $urlGenerator 
+ * @var TranslatorInterface $translator 
+ * @var WebView $this
+ */ 
+ 
+ echo $alert;
 ?>
-<h1>Merchants</h1>
-<div>
 <?php
-    if ($canEdit) {
-        echo Html::a('Add',
-        $urlGenerator->generate('merchant/add'),
-            ['class' => 'btn btn-outline-secondary btn-md-12 mb-3']
-     );
-    //list all the items
-    foreach ($merchants as $merchant){
-      echo Html::br();
-      $label = $merchant->getId() . " ";
-      echo Html::label($label);
-      echo Html::a('Edit',
-      $urlGenerator->generate('merchant/edit', ['id' => $merchant->getId()]),
-            ['class' => 'btn btn-info btn-sm ms-2']
-          );
-      echo Html::a('View',
-      $urlGenerator->generate('merchant/view', ['id' => $merchant->getId()]),
-      ['class' => 'btn btn-warning btn-sm ms-2']
-             );
-      //modal delete button
-      echo Modal::widget()
-      ->title('Please confirm that you want to delete this record')
-      ->titleOptions(['class' => 'text-center'])
-      ->options(['class' => 'testMe'])
-      ->size(Modal::SIZE_SMALL)
-      ->headerOptions(['class' => 'text-danger'])
-      ->bodyOptions(['class' => 'modal-body', 'style' => 'text-align:center;',])
-      ->footerOptions(['class' => 'text-dark'])
-      ->footer(
-                  Html::button(
-                  'Close',
-                  [
-                              'type' => 'button',
-                              'class' => ['btn btn-success btn-sm ms-2'],
-                              'data' => [
-                              'bs-dismiss' => 'modal',
-                   ],
-                   ]
-                   ).                   Html::a('Yes Delete it Please ... I am sure!',
-                   $urlGenerator->generate('merchant/delete', ['id' => $merchant->getId()]),
-                   ['class' => 'btn btn-danger btn-sm ms-2']
-                              )
-                        )
-      ->withoutCloseButton()
-      ->toggleButton([
-                      'class' => ['btn btn-danger btn-sm ms-2'],
-                      'label' => 'Delete',
-                      ])
-      ->begin();
-      echo '<p>Are you sure you want to delete this record? </p>';
-      echo Modal::end();
-      echo Html::br();
-    }
-    }
+    $header = Div::tag()
+        ->addClass('row')
+        ->content(
+            H5::tag()
+                ->addClass('bg-primary text-white p-3 rounded-top')
+                ->content(
+                    I::tag()->addClass('bi bi-receipt')
+                            ->content(' ' . Html::encode($translator->translate('invoice.merchant')))
+                )
+        )
+        ->render();
+
+    $toolbarReset = A::tag()
+        ->addAttributes(['type' => 'reset'])
+        ->addClass('btn btn-danger me-1 ajax-loader')
+        ->content(I::tag()->addClass('bi bi-bootstrap-reboot'))
+        ->href($urlGenerator->generate($currentRoute->getName()))
+        ->id('btn-reset')
+        ->render();
+    
+    $toolbar = Div::tag();
+?>
+
+<div>
+    <h5><?= $translator->translate('invoice.merchant'); ?></h5>
+    <div class="btn-group">
+        <a class="btn btn-success" href="<?= $urlGenerator->generate('merchant/add'); ?>">
+            <i class="fa fa-plus"></i> <?= Html::encode($translator->translate('i.new')); ?>
+        </a>
+    </div>
+</div>
+<br>
+<div>
+
+</div>
+<div>
+<?php 
+    $columns = [
+        new DataColumn(
+            'id',
+            header: $translator->translate('i.id'),
+            content: static fn (object $model) => Html::encode($model->getId())
+        ),        
+        new DataColumn(
+            'inv',
+            header: $translator->translate('invoice.invoice'),                
+            content: static fn ($model): string => Html::encode($model->getInv()?->getNumber())                  
+        ),
+        new DataColumn(
+            'date',    
+            header: $translator->translate('i.date'),                
+            content: static fn ($model): string => Html::encode(($model->getDate()->format($datehelper->style()))) 
+        ),
+        new DataColumn(
+            'driver',    
+            header: $translator->translate('invoice.merchant.driver'),                
+            content: static fn ($model): string => Html::encode($model->getDriver()) 
+        ),
+        new DataColumn(
+            'response',    
+            header: $translator->translate('invoice.merchant.response'),                
+            content: static fn ($model): string => Html::encode($model->getResponse()) 
+        ),
+        new DataColumn(
+            'reference',    
+            header: $translator->translate('invoice.merchant.reference'),                
+            content: static fn ($model): string => Html::encode($model->getReference()) 
+        ),
+        new ActionColumn(
+            content: static fn($model): string => Html::openTag('div', ['class' => 'btn-group']) .
+            Html::a()
+            ->addAttributes([
+                'class' => 'dropdown-button text-decoration-none', 
+                'title' => $translator->translate('i.view')
+            ])
+            ->content('🔎')
+            ->encode(false)
+            ->href('/invoice/merchant/view/'. $model->getId())
+            ->render() .
+            Html::a()
+            ->addAttributes([
+                'class' => 'dropdown-button text-decoration-none', 
+                'title' => $translator->translate('i.edit')
+            ])
+            ->content('✎')
+            ->encode(false)
+            ->href('/invoice/merchant/edit/'. $model->getId())
+            ->render() .
+            Html::a()
+            ->addAttributes([
+                'class'=>'dropdown-button text-decoration-none', 
+                'title' => $translator->translate('i.delete'),
+                'type'=>'submit', 
+                'onclick'=>"return confirm("."'".$translator->translate('i.delete_record_warning')."');"
+            ])
+            ->content('❌')
+            ->encode(false)
+            ->href('/invoice/merchant/delete/'. $model->getId())
+            ->render() . Html::closeTag('div')
+        ),
+    ];       
+?>
+<?= GridView::widget()
+    ->columns(...$columns)
+    ->dataReader($paginator)
+    ->headerRowAttributes(['class'=>'card-header bg-info text-black'])
+    //->filterPosition('header')
+    //->filterModelName('merchant')            
+    ->header($header)
+    ->id('w144-grid')
+    ->pagination(
+    OffsetPagination::widget()
+        ->paginator($paginator)
+         ->render(),
+    )
+    ->rowAttributes(['class' => 'align-middle'])
+    ->summaryAttributes(['class' => 'mt-3 me-3 summary text-end'])
+    ->summaryTemplate($grid_summary)
+    ->emptyTextAttributes(['class' => 'card-header bg-warning text-black'])
+    ->emptyText((string)$translator->translate('invoice.invoice.no.records'))
+    ->tableAttributes(['class' => 'table table-striped text-center h-75','id'=>'table-merchant'])
+    ->toolbar(
+        Form::tag()->post($urlGenerator->generate('merchant/index'))->csrf($csrf)->open() .    
+        Div::tag()->addClass('float-end m-3')->content($toolbarReset)->encode(false)->render() .
+        Form::tag()->close()
+    );
 ?>
 </div>

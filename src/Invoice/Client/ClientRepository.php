@@ -6,6 +6,7 @@ namespace App\Invoice\Client;
 
 use Cycle\ORM\Select;
 use App\Invoice\Entity\Client;
+use App\Invoice\UserClient\UserClientRepository;
 use Cycle\Database\Injection\Parameter;
 use Throwable;
 use Yiisoft\Data\Reader\Sort;
@@ -183,5 +184,18 @@ private EntityWriter $entityWriter;
             ->select()
             ->where(['client_name' => $client_name]);
         return  $query->fetchOne() ?: null;
-    }    
+    } 
+    
+    public function optionsData(UserClientRepository $ucR) : array
+    {
+        $optionsData = [];
+        /**
+         * @var Client $client
+         */
+        foreach ($this->repoUserClient($ucR->getClients_with_user_accounts()) as $client) {
+            
+            $optionsData[(int)$client->getClient_id()] = ($client->getClient_name() ?: '') . str_repeat(' ', 3). ($client->getClient_surname() ?? '');
+        }
+        return $optionsData;
+    }        
 }

@@ -15,12 +15,13 @@ use App\Service\WebControllerService;
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
 
+use Yiisoft\Data\Paginator\OffsetPaginator;
 use Yiisoft\Http\Method;
 use Yiisoft\Router\CurrentRoute;
 use Yiisoft\Session\SessionInterface as Session;
 use Yiisoft\Session\Flash\Flash;
-use Yiisoft\Translator\TranslatorInterface;use Yiisoft\FormModel\FormHydrator;
-use Yiisoft\Form\Helper\HtmlFormErrors;
+use Yiisoft\Translator\TranslatorInterface;
+use Yiisoft\FormModel\FormHydrator;
 use Yiisoft\Yii\View\ViewRenderer;
 
 final class ProfileController
@@ -56,51 +57,59 @@ final class ProfileController
      * @param ProfileRepository $profileRepository
      * @param SettingRepository $settingRepository
      */
-    public function index(ProfileRepository $profileRepository, SettingRepository $settingRepository): \Yiisoft\DataResponse\DataResponse
+    public function index(CurrentRoute $currentRoute, ProfileRepository $profileRepository, SettingRepository $settingRepository): \Yiisoft\DataResponse\DataResponse
     {      
-         $canEdit = $this->rbac();
-         $this->flash_message('info', $this->translator->translate('invoice.profile.new'));
-         $parameters = [
-          's'=>$settingRepository,
-          'canEdit' => $canEdit,
-          'profiles' => $this->profiles($profileRepository),
-          'alert'=> $this->alert()
-         ];
+        $page = (int)$currentRoute->getArgument('page', '1');
+        $canEdit = $this->rbac();
+        $this->flash_message('info', $this->translator->translate('invoice.profile.new'));
+        $paginator = (new OffsetPaginator($this->profiles($profileRepository)))
+        ->withPageSize((int) $settingRepository->get_setting('default_list_limit'))
+        ->withCurrentPage($page);
         
+        $parameters = [
+            'canEdit' => $canEdit,
+            'paginator' => $paginator,   
+            'profiles' => $this->profiles($profileRepository),
+            'alert'=> $this->alert(),
+            'grid_summary' => $settingRepository->grid_summary(
+                                $paginator, 
+                                $this->translator, 
+                                (int)$settingRepository->get_setting('default_list_limit'), 
+                                $this->translator->translate('invoice.profile.plural'), ''),
+        ];
         return $this->viewRenderer->render('index', $parameters);
     }
     
     /**
-     * @param ViewRenderer $head
      * @param Request $request
      * @param FormHydrator $formHydrator
-     * @param SettingRepository $settingRepository
      * @param CompanyRepository $companyRepository
      * @return Response
      */    
-    public function add(ViewRenderer $head, Request $request, 
-                        FormHydrator $formHydrator,
-                        SettingRepository $settingRepository,                        
+    public function add(Request $request, 
+                        FormHydrator $formHydrator,                        
                         CompanyRepository $companyRepository
     ): Response
     {
+        $form = new ProfileForm(new Profile(), $this->translator);
         $parameters = [
             'title' => $this->translator->translate('invoice.add'),
             'action' => ['profile/add'],
             'errors' => [],
-            'body' => $request->getParsedBody(),
-            's'=>$settingRepository,
-            'head'=>$head,            
-            'companies'=>$companyRepository->findAllPreloaded(),
+            'form' => $form,        
+            'companies' => $companyRepository->findAllPreloaded(),
         ];
         
         if ($request->getMethod() === Method::POST) {
-            
-            $form = new ProfileForm();
-            if ($formHydrator->populate($form, $parameters['body']) && $form->isValid()) {
-                $this->profileService->saveProfile(new Profile(),$form);
+            if ($formHydrator->populateFromPostAndValidate($form, $request)) {
+                $body = $request->getParsedBody();
+                /** 
+                 * @psalm-suppress PossiblyInvalidArgument $body
+                 */
+                $this->profileService->saveProfile(new Profile(), $body);
                 return $this->webService->getRedirectResponse('profile/index');
             }
+            $parameters['errors'] = $form->getValidationResult()?->getErrorMessagesIndexedByAttribute() ?? [];
             $parameters['form'] = $form;
         }
         return $this->viewRenderer->render('_form', $parameters);
@@ -112,52 +121,49 @@ final class ProfileController
     private function alert(): string {
       return $this->viewRenderer->renderPartialAsString('/invoice/layout/alert',
       [ 
-         'flash' => $this->flash,
-         'errors' => [],
+         'flash' => $this->flash
       ]);
     }
     
     /**
-     * @param ViewRenderer $head
      * @param Request $request
      * @param CurrentRoute $currentRoute
      * @param FormHydrator $formHydrator
      * @param ProfileRepository $profileRepository
-     * @param SettingRepository $settingRepository
      * @param CompanyRepository $companyRepository
      * @return Response
      */
-    public function edit(ViewRenderer $head, Request $request, CurrentRoute $currentRoute,
+    public function edit(Request $request, CurrentRoute $currentRoute,
                         FormHydrator $formHydrator,
                         ProfileRepository $profileRepository, 
-                        SettingRepository $settingRepository,                        
                         CompanyRepository $companyRepository
     ): Response {
         $profile = $this->profile($currentRoute, $profileRepository);
         if ($profile) {
-        $parameters = [
-            'title' => $settingRepository->trans('edit'),
-            'action' => ['profile/edit', ['id' => $profile->getId()]],
-            'errors' => [],
-            'body' => $this->body($profile),
-            'head'=>$head,
-            's'=>$settingRepository,
-            'companies'=>$companyRepository->findAllPreloaded()
-        ];
-        if ($request->getMethod() === Method::POST) {
-            $form = new ProfileForm();
-            $body = $request->getParsedBody();
-            if ($formHydrator->populate($form, $parameters['body']) && $form->isValid()) {
-                $this->profileService->saveProfile($profile, $form);
-                return $this->webService->getRedirectResponse('profile/index');
+            $form = new ProfileForm($profile, $this->translator);
+            $parameters = [
+                'title' => $this->translator->translate('i.edit'),
+                'action' => ['profile/edit', ['id' => $profile->getId()]],
+                'form' => $form,
+                'errors' => [],
+                'companies' => $companyRepository->findAllPreloaded()
+            ];
+            if ($request->getMethod() === Method::POST) {
+                if ($formHydrator->populateFromPostAndValidate($form, $request)) {
+                    $body = $request->getParsedBody() ?? [];
+                    /**
+                     * @psalm-suppress PossiblyInvalidArgument $body
+                     */
+                    $this->profileService->saveProfile($profile, $body);
+                    return $this->webService->getRedirectResponse('profile/index');
+                }
+                $parameters['errors'] = $form->getValidationResult()?->getErrorMessagesIndexedByAttribute() ?? [];
+                $parameters['form'] = $form;
             }
-            $parameters['body'] = $body;
-            $parameters['form'] = $form;
+            return $this->viewRenderer->render('_form', $parameters);
         }
-        return $this->viewRenderer->render('_form', $parameters);
+        return $this->webService->getRedirectResponse('profile/index');    
     }
-    return $this->webService->getRedirectResponse('profile/index');    
-}
     
     /**
      * @param CurrentRoute $currentRoute
@@ -186,20 +192,19 @@ final class ProfileController
     /**
      * @param CurrentRoute $currentRoute
      * @param ProfileRepository $profileRepository
-     * @param SettingRepository $settingRepository
+     * @param CompanyRepository $companyRepository
      */
-    public function view(CurrentRoute $currentRoute, ProfileRepository $profileRepository,
-        SettingRepository $settingRepository,
-        ): \Yiisoft\DataResponse\DataResponse|Response {
+    public function view(CurrentRoute $currentRoute, ProfileRepository $profileRepository, CompanyRepository $companyRepository) : \Yiisoft\DataResponse\DataResponse|Response {
         $profile = $this->profile($currentRoute, $profileRepository);
         if ($profile) {
+            $form = new ProfileForm($profile, $this->translator);
             $parameters = [
-                'title' => $settingRepository->trans('view'),
+                'title' => $this->translator->translate('i.view'),
                 'action' => ['profile/view', ['id' => $profile->getId()]],
+                'companies' => $companyRepository->findAllPreloaded(),
+                'form' => $form,
                 'errors' => [],
-                'body' => $this->body($profile),
-                's'=> $settingRepository,             
-                'profile'=>$profileRepository->repoProfilequery((string)$profile->getId()),
+                'profile' => $profileRepository->repoProfilequery((string)$profile->getId()),
             ];
             return $this->viewRenderer->render('_view', $parameters);
         }
@@ -243,25 +248,6 @@ final class ProfileController
     {
         $profiles = $profileRepository->findAllPreloaded();        
         return $profiles;
-    }
-    
-    /**
-     * 
-     * @param Profile $profile
-     * @return array
-     */
-    private function body(Profile $profile): array {
-        $body = [                
-          'id'=>$profile->getId(),
-          'company_id'=>$profile->getCompany_id(),
-          'current'=>$profile->getCurrent(),
-          'mobile'=>$profile->getMobile(),
-          'email'=>$profile->getEmail(),
-          'description'=>$profile->getDescription(),
-          'date_created'=>$profile->getDate_created(),
-          'date_modified'=>$profile->getDate_modified()
-        ];
-        return $body;
     }
     
     /**

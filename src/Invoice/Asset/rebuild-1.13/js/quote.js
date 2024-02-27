@@ -147,13 +147,13 @@ $(function () {
             dataType: 'json',
             success: function (data) {
                        var response = parsedata(data);
-                       if (response.success === 1) {                                   
-                          window.location = absolute_url;
-                          window.location.reload();                                                
-                       } 
+                       window.location = absolute_url;
+                       window.location.reload();
+                       alert(response.flash_message); 
             },
-            error: function() {
-                alert('Incomplete fields: You must include a tax rate. Tip: Include a zero tax rate.');
+            error: function(xhr, status, error) {                         
+                console.warn(xhr.responseText);
+                alert('Status: ' + status + ' An error: ' + error.toString());
             }
     });
     });
@@ -194,8 +194,7 @@ $(function () {
             error: function(xhr, status, error) {                         
                 console.warn(xhr.responseText);
                 alert('Status: ' + status + ' An error: ' + error.toString());
-            }
-            
+            }            
         });
     });
     
@@ -257,16 +256,15 @@ $(function () {
                             btn.html('<h2 class="text-center"><i class="fa fa-check"></i></h2>');                        
                             window.location = absolute_url;
                             window.location.reload();
-                            alert('Invoice created from Quote!');
+                            alert(response.flash_message);
                         }
                         if (response.success === 0) {
                             // The validation was not successful created
                             btn.html('<h2 class="text-center"><i class="fa fa-check"></i></h2>');                        
                             window.location = absolute_url;
                             window.location.reload();
-                            alert('Invoice NOT created from Quote! Duplicate Invoice. Copy your Quote to another quote and then copy to invoice. Each quote must have a matching invoice.');
+                            alert(response.flash_message);
                         }    
-                        
             },
             error: function(xhr, status, error) {                         
                         console.warn(xhr.responseText);
@@ -303,14 +301,14 @@ $(function () {
                             btn.html('<h2 class="text-center"><i class="fa fa-check"></i></h2>');                        
                             window.location = absolute_url;
                             window.location.reload();
-                            alert('Sales Order created from Quote and you entered your Purchase Order Number!');
+                            alert(response.flash_message);
                         }
                         if (response.success === 0) {
                             // The validation was not successfully created
                             btn.html('<h2 class="text-center"><i class="fa fa-check"></i></h2>');                        
                             window.location = absolute_url;
                             window.location.reload();
-                            alert('Sales Order not created from Quote! Duplicate Sales Order. Copy your Quote to another quote and then copy to sales order. Each quote must have a matching sales order.');
+                            alert(response.flash_message);
                         }    
                         
             },
@@ -346,6 +344,7 @@ $(function () {
                             btn.html('<h2 class="text-center"><i class="fa fa-check"></i></h2>');                        
                             window.location = absolute_url;
                             window.location.reload();
+                            alert(response.flash_message);
                         }
             },
             error: function(xhr, status, error) {                         

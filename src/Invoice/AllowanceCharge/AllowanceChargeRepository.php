@@ -7,6 +7,7 @@ use App\Invoice\Entity\AllowanceCharge;
 use Cycle\ORM\Select;
 use Throwable;
 use Yiisoft\Data\Reader\Sort;
+use Yiisoft\Translator\TranslatorInterface;
 use Yiisoft\Yii\Cycle\Data\Reader\EntityReader;
 use Yiisoft\Yii\Cycle\Data\Writer\EntityWriter;
 
@@ -16,14 +17,17 @@ use Yiisoft\Yii\Cycle\Data\Writer\EntityWriter;
  */
 final class AllowanceChargeRepository extends Select\Repository
 {
+    
 private EntityWriter $entityWriter;
+private TranslatorInterface $translator;
     /**
      * @param Select<TEntity> $select
      * @param EntityWriter $entityWriter
      */
-    public function __construct(Select $select, EntityWriter $entityWriter)
+    public function __construct(Select $select, EntityWriter $entityWriter, TranslatorInterface $translator)
     {
         $this->entityWriter = $entityWriter;
+        $this->translator = $translator;
         parent::__construct($select);
     }
 
@@ -113,5 +117,24 @@ private EntityWriter $entityWriter;
         $query = $this->select()
                       ->where(['id' => $id]);
         return $query->count();
-    }   
+    }
+    
+    public function optionsDataAllowanceCharges() : array 
+    {
+        $optionsDataAllowanceCharges = [];
+        $allowanceCharges = $this->findAllPreloaded();
+        /**
+         * @var AllowanceCharge $allowanceCharge
+         */
+        foreach ($allowanceCharges as $allowanceCharge) {
+            $key = $allowanceCharge->getId();
+            $key ? ($optionsDataAllowanceCharges[$key] = ($allowanceCharge->getIdentifier() 
+            ? $this->translator->translate('invoice.invoice.allowance.or.charge.charge')
+            : $this->translator->translate('invoice.invoice.allowance.or.charge.allowance')). 
+            '  '. $allowanceCharge->getReason_code(). 
+            ' '.
+            $allowanceCharge->getReason()) : '';
+        }
+        return $optionsDataAllowanceCharges;
+    }
 }

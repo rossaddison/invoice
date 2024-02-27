@@ -74,7 +74,7 @@
                                 </a>
                             </li>
                             <li>
-                                <a href="<?= $urlGenerator->generate('quote/pdf', ['_language' =>$session->get('_language'), 'include'=> true]); ?>"
+                                <a href="<?= $urlGenerator->generate('quote/pdf', ['_language' =>$session->get('_language'), 'include'=> true, 'quote_id' => $quote->getId() ]); ?>"
                                    target="_blank" style="text-decoration:none">
                                     <i class="fa fa-print fa-margin"></i> <?= $translator->translate('i.download_pdf'); ?>
                                 </a>

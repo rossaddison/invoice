@@ -31,7 +31,7 @@ use Yiisoft\Html\Html;
                     <?= nl2br(Html::encode($product->getProduct_description())); ?>
                 </td>
                 <td class="text-right">
-                    <?= $numberhelper->format_currency($product->getProduct_price()); ?>
+                    <?= $numberHelper->format_currency($product->getProduct_price()); ?>
                 </td>
             </tr>
         <?php } ?>

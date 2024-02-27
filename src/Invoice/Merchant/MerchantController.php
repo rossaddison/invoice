@@ -19,8 +19,9 @@ use Yiisoft\Http\Method;
 use Yiisoft\Router\CurrentRoute;
 use Yiisoft\Session\SessionInterface as Session;
 use Yiisoft\Session\Flash\Flash;
-use Yiisoft\Translator\TranslatorInterface;use Yiisoft\FormModel\FormHydrator;
-use Yiisoft\Form\Helper\HtmlFormErrors;
+use Yiisoft\Translator\TranslatorInterface;
+use Yiisoft\FormModel\FormHydrator;
+use Yiisoft\Data\Paginator\OffsetPaginator;
 use Yiisoft\Yii\View\ViewRenderer;
 
 final class MerchantController
@@ -54,96 +55,101 @@ final class MerchantController
     
     /**
      * @param MerchantRepository $merchantRepository
-     * @param SettingRepository $settingRepository
-     * @param Request $request
+     * @param SettingRepository $sR
      * @param MerchantService $service
      */
-    public function index(MerchantRepository $merchantRepository, SettingRepository $settingRepository, Request $request, MerchantService $service): \Yiisoft\DataResponse\DataResponse
+    public function index(MerchantRepository $merchantRepository, SettingRepository $sR, MerchantService $service): \Yiisoft\DataResponse\DataResponse
     {
          $canEdit = $this->rbac();
-         $parameters = [      
-          's'=>$settingRepository,
+         $merchants = $this->merchants($merchantRepository);
+         $paginator = (new OffsetPaginator($merchants));
+         $parameters = [ 
           'canEdit' => $canEdit,
+          'paginator' => $paginator,   
           'merchants' => $this->merchants($merchantRepository),
+          'grid_summary'=> $sR->grid_summary(
+               $paginator, 
+               $this->translator, 
+               (int)$sR->get_setting('default_list_limit'), 
+               $this->translator->translate('invoice.merchant'), ''),      
           'alert'=> $this->alert()
          ];      
         return $this->viewRenderer->render('index', $parameters);
     }
     
     /**
-     * 
-     * @param ViewRenderer $head
      * @param Request $request
      * @param FormHydrator $formHydrator
      * @param SettingRepository $settingRepository
      * @param InvRepository $invRepository
      * @return Response
      */
-    public function add(ViewRenderer $head, Request $request, 
+    public function add(Request $request, 
                         FormHydrator $formHydrator,
                         SettingRepository $settingRepository,                        
                         InvRepository $invRepository
     ): Response
     {
+        $merchant = new Merchant();
+        $form = new MerchantForm($merchant);
         $parameters = [
             'title' => $this->translator->translate('invoice.add'),
             'action' => ['merchant/add'],
             'errors' => [],
-            'body' => $request->getParsedBody(),
-            's'=>$settingRepository,
-            'head'=>$head,
-            
+            'form' => $form,
             'invs'=>$invRepository->findAllPreloaded(),
         ];
         
         if ($request->getMethod() === Method::POST) {
-            
-            $form = new MerchantForm();
-            if ($formHydrator->populate($form, $parameters['body']) && $form->isValid()) {
-                $this->merchantService->saveMerchant(new Merchant(), $form, $settingRepository);
+            $body = $request->getParsedBody();
+            if ($formHydrator->populateFromPostAndValidate($form, $request)) {
+                /**
+                 * @psalm-suppress PossiblyInvalidArgument $body
+                 */
+                $this->merchantService->saveMerchant($merchant, $body);
                 return $this->webService->getRedirectResponse('merchant/index');
             }
+            $parameters['errors'] = $form->getValidationResult()?->getErrorMessagesIndexedByAttribute() ?? [];
             $parameters['form'] = $form;
         }
         return $this->viewRenderer->render('_form', $parameters);
     }
     
     /**
-     * 
-     * @param ViewRenderer $head
      * @param Request $request
      * @param CurrentRoute $currentRoute
      * @param FormHydrator $formHydrator
      * @param MerchantRepository $merchantRepository
-     * @param SettingRepository $settingRepository
+     * @param SettingRepository $sR
      * @param InvRepository $invRepository
      * @return Response
      */
-    public function edit(ViewRenderer $head, Request $request, CurrentRoute $currentRoute,
+    public function edit(Request $request, CurrentRoute $currentRoute,
                         FormHydrator $formHydrator,
-                        MerchantRepository $merchantRepository, 
-                        SettingRepository $settingRepository,                        
+                        MerchantRepository $merchantRepository,
+                        SettingRepository $sR,
                         InvRepository $invRepository
     ): Response {
         $merchant = $this->merchant($currentRoute, $merchantRepository);
         if ($merchant) {
+            $form = new MerchantForm($merchant);
             $parameters = [
-                'title' => $settingRepository->trans('edit'),
+                'title' => $this->translator->translate('i.edit'),
                 'action' => ['merchant/edit', ['id' => $merchant->getId()]],
                 'errors' => [],
-                'body' => $this->body($merchant),
-                'head'=>$head,
-                's'=>$settingRepository,
-                'invs'=>$invRepository->findAllPreloaded()
+                'form' => $form,
+                'invs' => $invRepository->findAllPreloaded()
             ];
             if ($request->getMethod() === Method::POST) {
-                $form = new MerchantForm();
                 $body = $request->getParsedBody();
-                if ($formHydrator->populate($form, $body) && $form->isValid()) {
-                    $this->merchantService->saveMerchant($merchant, $form, $settingRepository);
+                if ($formHydrator->populateFromPostAndValidate($form, $request)) {
+                    /**
+                     * @psalm-suppress PossiblyInvalidArgument $body
+                     */
+                    $this->merchantService->saveMerchant($merchant, $body);
                     return $this->webService->getRedirectResponse('merchant/index');
                 }
-                $parameters['body'] = $body;
+                $parameters['errors'] = $form->getValidationResult()?->getErrorMessagesIndexedByAttribute() ?? [];
                 $parameters['form'] = $form;
             }
             return $this->viewRenderer->render('_form', $parameters);
@@ -152,7 +158,6 @@ final class MerchantController
     }
     
     /**
-     * 
      * @param CurrentRoute $currentRoute
      * @param MerchantRepository $merchantRepository
      * @return Response
@@ -169,21 +174,21 @@ final class MerchantController
     
     /**
      * @param CurrentRoute $currentRoute
+     * @param InvRepository $invRepository
      * @param MerchantRepository $merchantRepository
-     * @param SettingRepository $settingRepository
      */
-    public function view(CurrentRoute $currentRoute, MerchantRepository $merchantRepository,
-        SettingRepository $settingRepository
+    public function view(CurrentRoute $currentRoute, 
+                         InvRepository $invRepository,   
+                         MerchantRepository $merchantRepository
         ): \Yiisoft\DataResponse\DataResponse|Response {
         $merchant = $this->merchant($currentRoute, $merchantRepository);
         if ($merchant) {
+            $form = new MerchantForm($merchant);
             $parameters = [
-                'title' => $settingRepository->trans('view'),
+                'title' => $this->translator->translate('i.view'),
                 'action' => ['merchant/view', ['id' =>$merchant->getId()]],
-                'errors' => [],
-                'body' => $this->body($merchant),
-                's'=>$settingRepository,             
-                'merchant'=>$merchantRepository->repoMerchantquery($merchant->getId()),
+                'form' => $form,
+                'invs' => $invRepository->findAllPreloaded(),
             ];
             return $this->viewRenderer->render('_view', $parameters);
         }
@@ -196,7 +201,6 @@ final class MerchantController
      */
     public function online_log(MerchantRepository $mR, SettingRepository $sR): \Yiisoft\DataResponse\DataResponse {
         $parameters = [
-            's'=>$sR,
             'payment_logs'=>$mR->findAllPreloaded(),
         ];
         return $this->viewRenderer->render('_view', $parameters);
@@ -240,34 +244,16 @@ final class MerchantController
         $merchants = $merchantRepository->findAllPreloaded();        
         return $merchants;
     }
-    
+        
     /**
-     * 
-     * @param Merchant $merchant
-     * @return array
+     * @return string
      */
-    private function body(Merchant $merchant): array {
-        $body = [
-          'inv_id'=>$merchant->getInv_id(),
-          'successful'=>$merchant->getSuccessful(),
-          'date'=>$merchant->getDate(),
-          'driver'=>$merchant->getDriver(),
-          'response'=>$merchant->getResponse(),
-          'reference'=>$merchant->getReference()
-        ];
-        return $body;
+    private function alert(): string {
+      return $this->viewRenderer->renderPartialAsString('/invoice/layout/alert',
+      [ 
+        'flash' => $this->flash
+      ]);
     }
-    
-    /**
-   * @return string
-   */
-   private function alert(): string {
-     return $this->viewRenderer->renderPartialAsString('/invoice/layout/alert',
-     [ 
-       'flash' => $this->flash,
-       'errors' => [],
-     ]);
-   }
 
     /**
      * @param string $level

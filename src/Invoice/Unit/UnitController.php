@@ -19,8 +19,8 @@ use Yiisoft\Http\Method;
 use Yiisoft\Router\CurrentRoute;
 use Yiisoft\Session\SessionInterface as Session;
 use Yiisoft\Session\Flash\Flash;
-use Yiisoft\Translator\TranslatorInterface;use Yiisoft\FormModel\FormHydrator;
-use Yiisoft\Form\Helper\HtmlFormErrors;
+use Yiisoft\Translator\TranslatorInterface;
+use Yiisoft\FormModel\FormHydrator;
 use Yiisoft\Yii\View\ViewRenderer;
 
 final class UnitController
@@ -66,8 +66,13 @@ final class UnitController
             ->withCurrentPage($pageNum);
         $parameters = [
             'alert'=> $this->alert(),
+            'grid_summary'=> $settingRepository->grid_summary(
+                    $paginator, 
+                    $this->translator, 
+                    (int)$settingRepository->get_setting('default_list_limit'), 
+                    $this->translator->translate('i.units'), ''
+            ),
             'paginator'=> $paginator,
-            's'=> $settingRepository,
             'upR'=>$upR,
             'units' => $units, 
         ]; 
@@ -76,65 +81,65 @@ final class UnitController
     
     /**
      * @param Request $request
-     * @param SettingRepository $settingRepository
      * @param FormHydrator $formHydrator
      * @return Response
      */
-    public function add(Request $request, SettingRepository $settingRepository, FormHydrator $formHydrator): Response
+    public function add(Request $request, FormHydrator $formHydrator): Response
     {
+        $unit = new Unit();
+        $form = new UnitForm($unit);
         $parameters = [
-            'title' => $settingRepository->trans('add'),
+            'title' => $this->translator->translate('i.add'),
             'action' => ['unit/add'],
-            'errors' => [],
-            'body' => $request->getParsedBody(),
-            's'=>$settingRepository
+            'form' => $form,
+            'errors' => []
         ];
         if ($request->getMethod() === Method::POST) {
-            $form = new UnitForm();
-            $unit = new Unit();
-            if ($formHydrator->populate($form, $parameters['body']) && $form->isValid()) {
-                $this->unitService->saveUnit($unit, $form);
-                $this->flash_message('info', $settingRepository->trans('record_successfully_created'));
+            if ($formHydrator->populateFromPostAndValidate($form, $request)) {
+                $body = $request->getParsedBody();
+                /**
+                 * @psalm-suppress PossiblyInvalidArgument $body
+                 */
+                $this->unitService->saveUnit($unit, $body);
+                $this->flash_message('info', $this->translator->translate('i.record_successfully_created'));
                 return $this->webService->getRedirectResponse('unit/index');
             }
+            $parameters['errors'] = $form->getValidationResult()?->getErrorMessagesIndexedByAttribute() ?? [];
             $parameters['form'] = $form;
         }
         return $this->viewRenderer->render('__form', $parameters);
     }
     
     /**
-     * 
      * @param Request $request
      * @param CurrentRoute $currentRoute
      * @param UnitRepository $unitRepository
-     * @param SettingRepository $settingRepository
      * @param FormHydrator $formHydrator
      * @return Response
      */
     public function edit(Request $request, CurrentRoute $currentRoute,
-      UnitRepository $unitRepository, SettingRepository $settingRepository, FormHydrator $formHydrator): Response 
+      UnitRepository $unitRepository, FormHydrator $formHydrator): Response 
     {
         $unit = $this->unit($currentRoute, $unitRepository);
         if ($unit) {
+            $form = new UnitForm($unit);
             $parameters = [
                 'title' => $this->translator->translate('invoice.unit.edit'),
-                'action' => ['unit/edit', ['id' => $unit->getUnit_id()]],
-                'errors' => [],
-                'body' => [
-                    'unit_name' => $unit->getUnit_name(),
-                    'unit_name_plrl' => $unit->getUnit_name_plrl(),
-                ],
-                's'=>$settingRepository,
+                'action' => ['unit/edit', ['unit_id' => $unit->getUnit_id()]],
+                'form' => $form,
+                'errors' => []
             ];
             if ($request->getMethod() === Method::POST) {
-                $form = new UnitForm();
-                $body = $request->getParsedBody();
-                if ($formHydrator->populate($form, $body) && $form->isValid()) {
-                    $this->unitService->saveUnit($unit, $form);
-                    $this->flash_message('info', $settingRepository->trans('record_successfully_updated'));
+                if ($formHydrator->populateFromPostAndValidate($form,  $request)) {
+                    $body = $request->getParsedBody();
+                    /**
+                     * @psalm-suppress PossiblyInvalidArgument $body
+                     */
+                    $this->unitService->saveUnit($unit, $body);
+                    $this->flash_message('info', $this->translator->translate('i.record_successfully_updated'));
                     return $this->webService->getRedirectResponse('unit/index');
                 }
-                $parameters['body'] = $body;
+                $parameters['errors'] = $form->getValidationResult()?->getErrorMessagesIndexedByAttribute() ?? [];
                 $parameters['form'] = $form;
             }
             return $this->viewRenderer->render('__form', $parameters);
@@ -153,6 +158,7 @@ final class UnitController
           /** @var Unit $unit */
           $unit = $this->unit($currentRoute, $unitRepository);              
           $this->unitService->deleteUnit($unit);
+          $this->flash_message('success', $this->translator->translate('i.record_successfully_deleted'));
           return $this->webService->getRedirectResponse('unit/index');
         } catch (\Exception $e) {
           unset($e);
@@ -164,24 +170,16 @@ final class UnitController
     /**
      * @param CurrentRoute $currentRoute
      * @param UnitRepository $unitRepository
-     * @param SettingRepository $settingRepository
-     * @param FormHydrator $formHydrator
      */
-    public function view(CurrentRoute $currentRoute, UnitRepository $unitRepository,SettingRepository $settingRepository, FormHydrator $formHydrator)
+    public function view(CurrentRoute $currentRoute, UnitRepository $unitRepository)
     : \Yiisoft\DataResponse\DataResponse|Response {
         $unit = $this->unit($currentRoute, $unitRepository);
         if ($unit) {
+            $form = new UnitForm($unit);
             $parameters = [
-                'title' => $settingRepository->trans('edit_setting'),
-                'action' => ['unit/edit', ['unit_id' => $unit->getUnit_id()]],
-                'errors' => [],
-                'unit'=>$unit,
-                's'=>$settingRepository,     
-                'body' => [
-                    'unit_id'=>$unit->getUnit_id(),
-                    'unit_name'=>$unit->getUnit_name(),
-                    'unit_name_plrl'=>$unit->getUnit_name_plrl(),               
-                ],            
+                'title' => $this->translator->translate('i.view'),
+                'action' => ['unit/view', ['unit_id' => $unit->getUnit_id()]],
+                'form' => $form
             ];
             return $this->viewRenderer->render('__view', $parameters);
         }
@@ -195,7 +193,7 @@ final class UnitController
      */
     private function unit(CurrentRoute $currentRoute, UnitRepository $unitRepository): Unit|null
     {
-        $unit_id = $currentRoute->getArgument('id');
+        $unit_id = $currentRoute->getArgument('unit_id');
         if (null!==$unit_id) {
             $unit = $unitRepository->repoUnitquery($unit_id);
             return $unit; 
@@ -220,8 +218,7 @@ final class UnitController
      private function alert(): string {
       return $this->viewRenderer->renderPartialAsString('/invoice/layout/alert',
       [ 
-        'flash' => $this->flash,
-        'errors' => [],
+        'flash' => $this->flash
       ]);
     }
 

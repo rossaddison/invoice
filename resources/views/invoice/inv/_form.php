@@ -16,7 +16,7 @@ use DateTimeImmutable;
  */
 $datehelper = new DateHelper($s);
 
-if (!empty($errors)) {
+if (isset($errors)) {
     foreach ($errors as $field => $error) {
         echo Alert::widget()->options(['class' => 'alert-danger'])->body(Html::encode($field . ':' . $error));
     }
@@ -136,7 +136,14 @@ echo $note_on_tax_point;
                     <?php } ?>
                     <?php
                 } else {
-                    echo Html::a($translator->translate('invoice.invoice.delivery.location.add'), $urlGenerator->generate('del/add', ['client_id' => $inv->getClient_id()]), ['class' => 'btn btn-danger btn-lg mt-3']);
+                    echo Html::a($translator->translate('invoice.invoice.delivery.location.add'), $urlGenerator->generate('del/add', [
+                        'client_id' => $inv->getClient_id()
+                    ],
+                    [
+                        'origin' => 'inv', 
+                        'origin_id' => '', 
+                        'action' => 'add'
+                    ]), ['class' => 'btn btn-danger btn-lg mt-3']);
                 }
                 ?>
             </div>
@@ -402,18 +409,7 @@ echo $note_on_tax_point;
 
         <?php foreach ($custom_fields as $custom_field): ?>
         <div class="form-group">
-            <?=
-            $cvH->print_field_for_form($inv_custom_values,
-                    $custom_field,
-                    // Custom values to fill drop down list if a dropdown box has been created
-                    $custom_values,
-                    // Class for div surrounding input
-                    'col-xs-12 col-sm-6',
-                    // Class surrounding above div
-                    'form-group',
-                    // Label class similar to above
-                    'control-label');
-            ?>
+            <?= $cvH->print_field_for_form($custom_field, $form, $translator, $inv_custom_values, $custom_values); ?>
         </div>
 <?php endforeach; ?>
 

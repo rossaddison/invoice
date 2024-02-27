@@ -2,82 +2,80 @@
 
 declare(strict_types=1); 
 
+
+use Yiisoft\FormModel\Field;
 use Yiisoft\Html\Html;
-use Yiisoft\Yii\Bootstrap5\Alert;
+use Yiisoft\Html\Tag\Form;
 
 /**
  * @var \Yiisoft\View\View $this
  * @var \Yiisoft\Router\UrlGeneratorInterface $urlGenerator
- * @var array $body
  * @var string $csrf
  * @var string $action
  * @var string $title
  */
-
-if (!empty($errors)) {
-    foreach ($errors as $field => $error) {
-        echo Alert::widget()->options(['class' => 'alert-danger'])->body(Html::encode($field . ':' . $error));
-    }
-}
-
 ?>
-<?= Html::openTag('h1'); ?><?= Html::encode($title) ?><?= Html::closeTag('h1'); ?>
-<form id="PostalAddressForm" method="POST" action="<?= $urlGenerator->generate(...$action) ?>" enctype="multipart/form-data">
-<input type="hidden" name="_csrf" value="<?= $csrf ?>">
-<div id="headerbar">
-<h1 class="headerbar-title"><?= $translator->translate('i.postaladdresses_form'); ?></h1>
-<?php $response = $head->renderPartial('invoice/layout/header_buttons',['s'=>$s, 'hide_submit_button'=>false ,'hide_cancel_button'=>false]); ?>        
-<?php echo (string)$response->getBody(); ?><div id="content">
-<?= Html::openTag('div', ['class' => 'row']); ?>
- <div class="mb3 form-group">
-   <label hidden for="id"><?= $translator->translate('i.id'); ?></label>
-   <input type="text" hidden name="id" id="id" class="form-control"
- value="<?= Html::encode($body['id'] ??  ''); ?>">
- </div>
- <div class="mb3 form-group">
-   <label hidden for="client_id"></label>
-   <input type="text" hidden name="client_id" id="client_id" class="form-control"
- value="<?= Html::encode($body['client_id'] ??  $client_id); ?>">
- </div>   
- <div class="mb3 form-group">
-   <label for="street_name"><?= $translator->translate('invoice.client.postaladdress.street.name'); ?></label>
-   <input type="text" name="street_name" id="street_name" class="form-control"
- value="<?= Html::encode($body['street_name'] ??  ''); ?>">
- </div>
- <div class="mb3 form-group">
-   <label for="additional_street_name"><?= $translator->translate('invoice.client.postaladdress.additional.street.name'); ?></label>
-   <input type="text" name="additional_street_name" id="additional_street_name" class="form-control"
- value="<?= Html::encode($body['additional_street_name'] ??  ''); ?>">
- </div>
- <div class="mb3 form-group">
-   <label for="building_number"><?= $translator->translate('invoice.client.postaladdress.building.number'); ?></label>
-   <input type="text" name="building_number" id="building_number" class="form-control"
- value="<?= Html::encode($body['building_number'] ??  ''); ?>">
- </div>
- <div class="mb3 form-group">
-   <label for="city_name"><?= $translator->translate('invoice.client.postaladdress.city.name'); ?></label>
-   <input type="text" name="city_name" id="city_name" class="form-control"
- value="<?= Html::encode($body['city_name'] ??  ''); ?>">
- </div>
- <div class="mb3 form-group">
-   <label for="postalzone"><?= $translator->translate('invoice.client.postaladdress.postalzone'); ?></label>
-   <input type="text" name="postalzone" id="postalzone" class="form-control"
- value="<?= Html::encode($body['postalzone'] ??  ''); ?>">
- </div>
- <div class="mb3 form-group">
-   <label for="countrysubentity"><?= $translator->translate('invoice.client.postaladdress.countrysubentity'); ?></label>
-   <input type="text" name="countrysubentity" id="countrysubentity" class="form-control"
- value="<?= Html::encode($body['countrysubentity'] ??  ''); ?>">
- </div>
- <div class="mb3 form-group">
-   <label for="country"><?= $translator->translate('invoice.client.postaladdress.country'); ?></label>
-   <input type="text" name="country" id="country" class="form-control"
- value="<?= Html::encode($body['country'] ??  ''); ?>">
- </div>
 
-</div>
+<?= Form::tag()
+    ->post($urlGenerator->generate(...$action))
+    ->enctypeMultipartFormData()
+    ->csrf($csrf)
+    ->id('PostalAddressForm')
+    ->open() ?>
 
-</div>
+<?= Html::openTag('div',['class'=>'container py-5 h-100']); ?>
+<?= Html::openTag('div',['class'=>'row d-flex justify-content-center align-items-center h-100']); ?>
+<?= Html::openTag('div',['class'=>'col-12 col-md-8 col-lg-6 col-xl-8']); ?>
+<?= Html::openTag('div',['class'=>'card border border-dark shadow-2-strong rounded-3']); ?>
+<?= Html::openTag('div',['class'=>'card-header']); ?>
 
-</div>
-</form>
+<?= Html::openTag('h1',['class'=>'fw-normal h3 text-center']); ?>    
+    <?= Html::encode($title) ?>
+<?= Html::closeTag('h1'); ?>
+<?= Html::openTag('div', ['id' => 'headerbar']); ?>
+    <?= $button::back_save($translator); ?>
+    <?= Html::openTag('div', ['id' => 'content']); ?>
+        <?= Html::openTag('div', ['class' => 'row']); ?>
+            <?= Html::openTag('div', ['class' => 'mb-3 form-group']); ?>
+                <?= Field::errorSummary($form)
+                    ->errors($errors)
+                    ->header($translator->translate('invoice.error.summary'))
+                    ->onlyCommonErrors()
+                ?>
+            <?= Html::closeTag('div'); ?>
+            <?= Html::openTag('div'); ?>
+                <?= Field::hidden($form, 'id')
+                    ->hideLabel(); ?>
+            <?= Html::closeTag('div'); ?>
+            <?= Html::openTag('div'); ?>
+                <?= Field::hidden($form, 'client_id')
+                    ->hideLabel(); ?>
+            <?= Html::closeTag('div'); ?>
+            <?= Html::openTag('div'); ?>
+                <?= Field::text($form, 'street_name'); ?>
+            <?= Html::closeTag('div'); ?>
+            <?= Html::openTag('div'); ?>
+                <?= Field::text($form, 'additional_street_name'); ?>
+            <?= Html::closeTag('div'); ?>
+            <?= Html::openTag('div'); ?>
+                <?= Field::text($form, 'building_number'); ?>
+            <?= Html::closeTag('div'); ?>
+            <?= Html::openTag('div'); ?>
+                <?= Field::text($form, 'city_name'); ?>
+            <?= Html::closeTag('div'); ?>
+            <?= Html::openTag('div'); ?>
+                <?= Field::text($form, 'postalzone'); ?>
+            <?= Html::closeTag('div'); ?>
+            <?= Html::openTag('div'); ?>
+                <?= Field::text($form, 'countrysubentity'); ?>
+            <?= Html::closeTag('div'); ?>
+            <?= Html::openTag('div'); ?>
+                <?= Field::text($form, 'country'); ?>
+            <?= Html::closeTag('div'); ?>
+        <?= Html::closeTag('div'); ?>
+    <?= Html::closeTag('div'); ?>
+<?= Html::closeTag('div'); ?>
+<?= Html::closeTag('div'); ?>
+<?= Html::closeTag('div'); ?>
+<?= Html::closeTag('div'); ?>
+<?= Form::tag()->close() ?>

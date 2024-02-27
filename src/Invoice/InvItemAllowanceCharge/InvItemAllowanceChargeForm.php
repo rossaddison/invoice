@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Invoice\InvItemAllowanceCharge;
 
+use App\Invoice\Entity\InvItemAllowanceCharge;
 use Yiisoft\FormModel\FormModel;
 use Yiisoft\Validator\Rule\Required;
 
@@ -11,9 +12,21 @@ final class InvItemAllowanceChargeForm extends FormModel
 {  
     private ?int $inv_id=null;
     private ?int $inv_item_id=null;
+    #[Required]
     private ?int $allowance_charge_id=null;
+    #[Required]
     private ?float $amount=null;
+    #[Required]
     private ?float $vat=null;
+    
+    public function __construct(InvItemAllowanceCharge $invItemAllowanceCharge, int $inv_item_id)
+    {
+        $this->inv_id = (int)$invItemAllowanceCharge->getInv_id();
+        $this->inv_item_id = $inv_item_id;
+        $this->allowance_charge_id = (int)$invItemAllowanceCharge->getAllowance_charge_id();
+        $this->amount = (float)$invItemAllowanceCharge->getAmount();
+        $this->vat = (float)$invItemAllowanceCharge->getVat();
+    }        
 
     public function getInv_id() : int|null
     {
@@ -49,11 +62,4 @@ final class InvItemAllowanceChargeForm extends FormModel
       return '';
     }
 
-    public function getRules(): array    {
-      return [
-        'allowance_charge_id' => [new Required()],  
-        'amount' => [new Required()],
-        'vat' => [new Required()],
-      ];
-}
 }

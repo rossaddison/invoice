@@ -31,7 +31,7 @@
         $invoice_list_split = $invoice_count > 3 ? $invoice_count / 2 : 9999;
         foreach ($invoices as $invoice) {
             // Disable read-only if not applicable
-            if ($s->get_setting('disable_read_only') === true) {
+            if ($s->get_setting('disable_read_only') === (string)1) {
                 $invoice->setIs_read_only(0);
             }
             // Convert the dropdown menu to a dropup if invoice is after the invoice split

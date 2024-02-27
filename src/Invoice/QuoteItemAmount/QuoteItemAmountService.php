@@ -19,22 +19,6 @@ final class QuoteItemAmountService
     /**
      * 
      * @param QuoteItemAmount $model
-     * @param QuoteItemAmountForm $form
-     * @return void
-     */
-    public function saveQuoteItemAmount(QuoteItemAmount $model, QuoteItemAmountForm $form): void
-    { 
-       null!==$form->getQuote_item_id() ? $model->setQuote_item_id($form->getQuote_item_id()) : '';
-       $model->setSubtotal($form->getSubtotal() ?? 0.00);
-       $model->setTax_total($form->getTax_total() ?? 0.00);
-       $model->setDiscount($form->getDiscount() ?? 0.00);
-       $model->setTotal($form->getTotal() ?? 0.00);
-       $this->repository->save($model);
-    }
-    
-    /**
-     * 
-     * @param QuoteItemAmount $model
      * @param array $quoteitem
      * @return void
      */

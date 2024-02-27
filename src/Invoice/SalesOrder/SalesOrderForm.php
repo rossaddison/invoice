@@ -3,18 +3,28 @@ declare(strict_types=1);
 
 namespace App\Invoice\SalesOrder;
 
+use App\Invoice\Entity\SalesOrder;
 use Yiisoft\FormModel\FormModel;
 use Yiisoft\Validator\Rule\Required;
 
+use DateTimeImmutable;
+
 final class SalesOrderForm extends FormModel
 {    
-    private string $number ='';
+    private ?string $number ='';
+    private mixed $date_created='';
+    
+    #[Required]
     private ?string $quote_id=null;
     private ?string $inv_id=null;
+    
+    #[Required]
     private ?int $group_id=null;
+    
+    #[Required]
     private ?int $client_id=null;
     private ?string $client_po_number=null;
-     private ?string $client_po_line_number=null;
+    private ?string $client_po_line_number=null;
     private ?string $client_po_person=null;
     private ?int $status_id=1;
     private ?float $discount_amount=0;
@@ -23,6 +33,26 @@ final class SalesOrderForm extends FormModel
     private ?string $password='';
     private ?string $notes='';    
     private ?string $payment_term='';
+    
+    public function __construct(SalesOrder $salesOrder)
+    {
+        $this->number = $salesOrder->getNumber();
+        $this->date_created = $salesOrder->getDate_created();
+        $this->quote_id = $salesOrder->getQuote_id();
+        $this->inv_id = $salesOrder->getInv_id();
+        $this->group_id = (int)$salesOrder->getGroup_id();
+        $this->client_id = (int)$salesOrder->getClient_id();
+        $this->client_po_number = $salesOrder->getClient_po_number();
+        $this->client_po_line_number = $salesOrder->getClient_po_line_number();
+        $this->client_po_person = $salesOrder->getClient_po_person();
+        $this->status_id = $salesOrder->getStatus_id();
+        $this->discount_amount = $salesOrder->getDiscount_amount();
+        $this->discount_percent = $salesOrder->getDiscount_percent();
+        $this->url_key = $salesOrder->getUrl_key();
+        $this->password = $salesOrder->getPassword();
+        $this->notes = $salesOrder->getNotes();
+        $this->payment_term = $salesOrder->getPaymentTerm();
+    }        
     
     // The Entities ie. Entity/SalesOrder.php have return type string => return type strings in the form 
     // get => string ; 
@@ -66,8 +96,16 @@ final class SalesOrderForm extends FormModel
     {
       return $this->status_id;
     }
-        
-    public function getNumber() : string
+    
+    public function getDate_created() : string|null|DateTimeImmutable 
+    {
+      /**
+       * @var string|null|DateTimeImmutable $this->date_created 
+       */
+        return $this->date_created;
+    }
+    
+    public function getNumber() : string|null
     {
       return $this->number;
     }
@@ -110,18 +148,5 @@ final class SalesOrderForm extends FormModel
     public function getFormName(): string
     {
       return '';
-    }
-    
-    /**
-     * @return Required[][]
-     *
-     * @psalm-return array{quote_id: list{Required}, client_id: list{Required}, group_id: list{Required}}
-     */
-    public function getRules(): array {
-      return [
-         'quote_id'=> [new Required()],
-         'client_id'=> [new Required()],
-         'group_id'=> [new Required()],
-      ];
     }
 }

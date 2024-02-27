@@ -115,7 +115,7 @@ private EntityWriter $entityWriter;
     {
         $template_vars = [];
         $var = '';
-        if (preg_match_all('/{{{([^{|}]*)}}}/', $identifier_format, $template_vars)) {
+        if (preg_match_all('/{{{([^{|}]*)}}}/', $identifier_format, $template_vars) > 0) {
             foreach ($template_vars[1] as $var) {
                 switch ($var) {
                     case 'year':
@@ -138,8 +138,9 @@ private EntityWriter $entityWriter;
                 }
                 $identifier_format = str_replace('{{{' . $var . '}}}', $replace, $identifier_format);
             }
+            return $identifier_format;
         }
-        return $identifier_format;
+        return '';
     }
     
     /**
@@ -182,4 +183,17 @@ private EntityWriter $entityWriter;
             return 0;
         }     
     }
+    
+    public function optionsData() : array
+    {
+        $optionsData = [];
+        $groups = $this->findAllPreloaded();
+        /**
+         * @var Group $group
+         */
+        foreach ($groups as $group) {
+            $optionsData[$group->getId()] = $group->getName();
+        }
+        return $optionsData;
+    }        
 }

@@ -22,6 +22,7 @@ use App\Service\WebControllerService;
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
 
+use Yiisoft\Data\Paginator\PageToken;
 use Yiisoft\Data\Paginator\OffsetPaginator;
 use Yiisoft\FormModel\FormHydrator;
 use Yiisoft\Http\Method;
@@ -97,7 +98,7 @@ final class <?= $generator->getCamelcase_capital_name(); ?>Controller
             /**
              * @psalm-suppress PossiblyInvalidArgument $body 
              */
-            if ($formHydrator->populate($form, $body) && $form->isValid()) {
+            if ($formHydrator->populateFromPostAndValidate($form,  $request)) {
                 /**
                  * @psalm-suppress PossiblyInvalidArgument $body 
                  */
@@ -130,7 +131,7 @@ final class <?= $generator->getCamelcase_capital_name(); ?>Controller
       $paginator = (new OffsetPaginator($<?= $generator->getSmall_singular_name(); ?>))
       ->withPageSize((int) $settingRepository->get_setting('default_list_limit'))
       ->withCurrentPage((int)$page)
-      ->withNextPageToken($page);
+      ->withToken(PageToken::next((string)$page));
       $parameters = [
       '<?= $generator->getSmall_singular_name(); ?>s' => $this-><?= $generator->getSmall_singular_name(); ?>s($<?= $generator->getSmall_singular_name(); ?>Repository),
       'paginator' => $paginator,
@@ -202,7 +203,7 @@ final class <?= $generator->getCamelcase_capital_name(); ?>Controller
                 /**
                  * @psalm-suppress PossiblyInvalidArgument $body 
                  */
-                if ($formHydrator->populate($form, $body) && $form->isValid()) {
+                if ($formHydrator->populateFromPostAndValidate($form,  $request)) {
                     /**
                      * @psalm-suppress PossiblyInvalidArgument $body 
                      */
@@ -271,7 +272,6 @@ final class <?= $generator->getCamelcase_capital_name(); ?>Controller
             $parameters = [
                 'title' => $this->translator->translate('i.view'),
                 'action' => ['<?= $generator->getSmall_singular_name(); ?>/view', ['id' => $<?= $generator->getSmall_singular_name();?>->getId()]],
-                'errors' => [],
                 'form' => $form,
                 '<?= $generator->getSmall_singular_name();?>'=>$<?= $generator->getSmall_singular_name();?>,
             ];        

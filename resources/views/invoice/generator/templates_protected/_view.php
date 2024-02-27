@@ -3,7 +3,7 @@
 ?>
 
 declare(strict_types=1); 
-use App\Widget\Button;
+
 use Yiisoft\Html\Html;
 use Yiisoft\Html\Tag\Form;
 
@@ -36,7 +36,7 @@ use Yiisoft\Html\Tag\Form;
     echo "    ->open()"."\n";
     echo "?>"."\n";
     echo "\n";
-    echo '<?= Button::back_save($translator); ?>'."\n";
+    echo '<?= $button::back_save($translator); ?>'."\n";
     echo "\n";
     echo "<?= Html::openTag('div', ['class' => 'container']); ?>"."\n";
     echo "<?= Html::openTag('div', ['class' => 'row']); ?>"."\n";

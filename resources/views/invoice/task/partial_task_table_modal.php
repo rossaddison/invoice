@@ -23,7 +23,7 @@ use Yiisoft\Html\Html;
                            id="task-id-<?= $task->getId() ?>" value="<?= $task->getId(); ?>">
                 </td>
                 <td nowrap class="text-left">
-                    <b><?= ($prjct->count($task->getProject_id()) > 0 ? $prjct->repoProjectquery($task->getId())->getName() : '') ?></b>
+                    <b><?= ($prjct->count($task->getProject_id()) > 0 ? $prjct->repoProjectquery($task->getProject_id())->getName() : '') ?></b>
                 </td>
                 <td>
                     <b><?= Html::encode($task->getName()); ?></b>

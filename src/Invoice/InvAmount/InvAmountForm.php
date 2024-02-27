@@ -3,20 +3,45 @@ declare(strict_types=1);
 
 namespace App\Invoice\InvAmount;
 
+use App\Invoice\Entity\InvAmount;
 use Yiisoft\FormModel\FormModel;
 use Yiisoft\Validator\Rule\Required;
 
 final class InvAmountForm extends FormModel
 {    
-    
     private ?int $inv_id=null;
+    
     private ?int $sign=null;
+    
+    #[Required]
     private ?float $item_subtotal=null;
+    
+    #[Required]
     private ?float $item_tax_total=null;
+    
+    #[Required]
     private ?float $tax_total=null;
+    
+    #[Required]
     private ?float $total=null;
+    
+    #[Required]
     private ?float $paid=null;
+    
+    #[Required]
     private ?float $balance=null;
+    
+    public function __construct(InvAmount $invAmount)
+    {
+        $this->inv_id = (int)$invAmount->getInv_id();
+        $this->sign = $invAmount->getSign();
+        $this->item_subtotal = $invAmount->getItem_subtotal();
+        $this->item_tax_total = $invAmount->getItem_tax_total();
+        $this->tax_total = $invAmount->getTax_total();
+        $this->total = $invAmount->getTotal();
+        $this->paid = $invAmount->getPaid();
+        $this->balance = $invAmount->getBalance();
+    }        
 
     public function getInv_id() : int|null
     {

@@ -7,6 +7,7 @@ namespace App\Invoice\Project;
 use App\Invoice\Client\ClientRepository;
 use App\Invoice\Entity\Project;
 use App\Invoice\Project\ProjectService;
+use App\Invoice\Project\ProjectForm;
 use App\Invoice\Project\ProjectRepository;
 use App\Invoice\Setting\SettingRepository;
 use App\Service\WebControllerService;
@@ -20,8 +21,8 @@ use Yiisoft\Http\Method;
 use Yiisoft\Router\CurrentRoute;
 use Yiisoft\Session\SessionInterface as Session;
 use Yiisoft\Session\Flash\Flash;
-use Yiisoft\Translator\TranslatorInterface;use Yiisoft\FormModel\FormHydrator;
-use Yiisoft\Form\Helper\HtmlFormErrors;
+use Yiisoft\Translator\TranslatorInterface;
+use Yiisoft\FormModel\FormHydrator;
 use Yiisoft\Yii\View\ViewRenderer;
 
 final class ProjectController
@@ -55,59 +56,58 @@ final class ProjectController
     
     /**
      * @param ProjectRepository $projectRepository
-     * @param SettingRepository $settingRepository
+     * @param SettingRepository $sR
      * @param Request $request
      * @param ProjectService $service
      */
-    public function index(ProjectRepository $projectRepository, SettingRepository $settingRepository, Request $request, ProjectService $service): \Yiisoft\DataResponse\DataResponse
+    public function index(ProjectRepository $projectRepository, SettingRepository $sR, Request $request, ProjectService $service): \Yiisoft\DataResponse\DataResponse
     {            
         $pageNum = (int)$request->getAttribute('page', '1');
         $paginator = (new OffsetPaginator($this->projects($projectRepository)))
-        ->withPageSize((int)$settingRepository->get_setting('default_list_limit'))
+        ->withPageSize((int)$sR->get_setting('default_list_limit'))
         ->withCurrentPage($pageNum);      
         $canEdit = $this->rbac();
         $parameters = [
               'paginator' => $paginator,  
-              's'=>$settingRepository,
               'canEdit' => $canEdit,
               'projects' => $this->projects($projectRepository),
+              'grid_summary' => $sR->grid_summary($paginator, $this->translator, (int)$sR->get_setting('default_list_limit'), $this->translator->translate('invoice.products'), ''),
               'alert'=> $this->alert()
         ];  
         return $this->viewRenderer->render('index', $parameters);
     }
     
     /**
-     * 
-     * @param ViewRenderer $head
      * @param Request $request
      * @param FormHydrator $formHydrator
-     * @param SettingRepository $settingRepository
      * @param ClientRepository $clientRepository
      * @return Response
      */
-    public function add(ViewRenderer $head, Request $request, 
-                       FormHydrator $formHydrator,
-                        SettingRepository $settingRepository,                        
+    public function add(Request $request, 
+                        FormHydrator $formHydrator,
                         ClientRepository $clientRepository
     ): Response
     {
+        $project = new Project();
+        $form = new ProjectForm($project);
         $parameters = [
             'title' => $this->translator->translate('invoice.add'),
             'action' => ['project/add'],
             'errors' => [],
-            'body' => $request->getParsedBody(),
-            's'=>$settingRepository,
-            'head'=>$head,
-            'clients'=>$clientRepository->findAllPreloaded(),
+            'form' => $form,
+            'clients' => $clientRepository->findAllPreloaded(),
         ];
         
         if ($request->getMethod() === Method::POST) {
-            
-            $form = new ProjectForm();
-            if ($formHydrator->populate($form, $parameters['body']) && $form->isValid()) {
-              $this->projectService->saveProject(new Project(),$form);
-              return $this->webService->getRedirectResponse('project/index');
-          }
+            if ($formHydrator->populateFromPostAndValidate($form,  $request)) {
+                $body = $request->getParsedBody();
+                /**
+                 * @psalm-suppress PossiblyInvalidArgument $body
+                 */
+                $this->projectService->saveProject($project, $body);
+                return $this->webService->getRedirectResponse('project/index');
+            }
+            $parameters['errors'] = $form->getValidationResult()?->getErrorMessagesIndexedByAttribute() ?? [];
             $parameters['form'] = $form;
         }
         return $this->viewRenderer->render('_form', $parameters);
@@ -119,8 +119,7 @@ final class ProjectController
    private function alert(): string {
      return $this->viewRenderer->renderPartialAsString('/invoice/layout/alert',
      [ 
-       'flash' => $this->flash,
-       'errors' => [],
+       'flash' => $this->flash
      ]);
    }
 
@@ -135,41 +134,39 @@ final class ProjectController
     }
     
     /**
-     * 
-     * @param ViewRenderer $head
      * @param Request $request
      * @param CurrentRoute $currentRoute
      * @param FormHydrator $formHydrator
      * @param ProjectRepository $projectRepository
-     * @param SettingRepository $settingRepository
      * @param ClientRepository $clientRepository
      * @return Response
      */
-    public function edit(ViewRenderer $head, Request $request, CurrentRoute $currentRoute,
+    public function edit(
+                        Request $request, CurrentRoute $currentRoute,
                         FormHydrator $formHydrator,
                         ProjectRepository $projectRepository, 
-                        SettingRepository $settingRepository,                        
                         ClientRepository $clientRepository
     ): Response {
         $project = $this->project($currentRoute, $projectRepository);
         if ($project) {
+            $form = new ProjectForm($project);
             $parameters = [
-                'title' => 'Edit',
-                'action' => ['project/edit', ['id' =>$project->getId()]],
+                'title' => $this->translator->translate('i.edit'),
+                'action' => ['project/edit', ['id' => $project->getId()]],
                 'errors' => [],
-                'body' => $this->body($project),
-                'head'=>$head,
-                's'=>$settingRepository,
-                'clients'=>$clientRepository->findAllPreloaded()
+                'form' => $form,
+                'clients' => $clientRepository->findAllPreloaded()
             ];
             if ($request->getMethod() === Method::POST) {
-                $form = new ProjectForm();
-                $body = $request->getParsedBody();
-                if ($formHydrator->populate($form, $body) && $form->isValid()) {
-                $this->projectService->saveProject($project, $form);
+                if ($formHydrator->populateFromPostAndValidate($form, $request)) {
+                    $body = $request->getParsedBody();
+                    /**
+                     * @psalm-suppress PossiblyInvalidArgument $body
+                     */
+                    $this->projectService->saveProject($project, $body);
                     return $this->webService->getRedirectResponse('project/index');
                 }
-                $parameters['body'] = $body;
+                $parameters['errors'] = $form->getValidationResult()?->getErrorMessagesIndexedByAttribute() ?? [];
                 $parameters['form'] = $form;
             }
             return $this->viewRenderer->render('_form', $parameters);
@@ -180,16 +177,14 @@ final class ProjectController
     /**
      * @param CurrentRoute $currentRoute
      * @param ProjectRepository $projectRepository
-     * @param SettingRepository $sR
      * @return Response
      */
     public function delete(CurrentRoute $currentRoute, 
-                           ProjectRepository $projectRepository,
-                           SettingRepository $sR): Response {
+                           ProjectRepository $projectRepository): Response {
         $project = $this->project($currentRoute, $projectRepository);
         if ($project) {
             $this->projectService->deleteProject($project);               
-            $this->flash_message('success', $sR->trans('record_successfully_deleted'));
+            $this->flash_message('success', $this->translator->translate('i.record_successfully_deleted'));
         }
         return $this->webService->getRedirectResponse('project/index'); 
     }
@@ -197,20 +192,19 @@ final class ProjectController
     /**
      * @param CurrentRoute $currentRoute
      * @param ProjectRepository $projectRepository
-     * @param SettingRepository $settingRepository
+     * @param ClientRepository $clientRepository
      */
-    public function view(CurrentRoute $currentRoute, ProjectRepository $projectRepository,
-        SettingRepository $settingRepository,
-        ): \Yiisoft\DataResponse\DataResponse|Response {
+    public function view(CurrentRoute $currentRoute, ProjectRepository $projectRepository, ClientRepository $clientRepository): \Yiisoft\DataResponse\DataResponse|Response {
         $project = $this->project($currentRoute, $projectRepository);
-        if ($project) {
+        if ($project) { 
+            $form = new ProjectForm($project);
             $parameters = [
-                'title' => $settingRepository->trans('view'),
-                'action' => ['project/view', ['id' =>$project->getId()]],
+                'title' => $this->translator->translate('i.view'),
+                'action' => ['project/view', ['id' => $project->getId()]],
                 'errors' => [],
-                'body' => $this->body($project),
-                's'=>$settingRepository,             
-                'project'=>$projectRepository->repoProjectquery($project->getId()),
+                'form' => $form,
+                'clients' => $clientRepository->findAllPreloaded(),
+                'project' => $projectRepository->repoProjectquery($project->getId()),
             ];
             return $this->viewRenderer->render('_view', $parameters);
         }
@@ -254,19 +248,5 @@ final class ProjectController
     {
         $projects = $projectRepository->findAllPreloaded();        
         return $projects;
-    }
-    
-    /**
-     * 
-     * @param Project $project
-     * @return array
-     */
-    private function body(Project $project): array {
-        $body = [                
-          'id'=>$project->getId(),
-          'client_id'=>$project->getClient_id(),
-          'name'=>$project->getName()
-                ];
-        return $body;
     }
 }

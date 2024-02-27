@@ -16,12 +16,13 @@ use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
 
 use Yiisoft\Data\Paginator\OffsetPaginator;
+use Yiisoft\Data\Paginator\PageToken;
 use Yiisoft\Http\Method;
 use Yiisoft\Router\CurrentRoute;
 use Yiisoft\Session\SessionInterface;
 use Yiisoft\Session\Flash\Flash;
-use Yiisoft\Translator\TranslatorInterface;use Yiisoft\FormModel\FormHydrator;
-use Yiisoft\Form\Helper\HtmlFormErrors;
+use Yiisoft\Translator\TranslatorInterface;
+use Yiisoft\FormModel\FormHydrator;
 use Yiisoft\Yii\View\ViewRenderer;
 
 use \Exception;
@@ -57,35 +58,32 @@ final class PaymentPeppolController
     }
     
     /**
-     * 
-     * @param ViewRenderer $head
      * @param Request $request
      * @param FormHydrator $formHydrator
-     * @param SettingRepository $settingRepository
      * @return Response
      */
-    public function add(ViewRenderer $head, Request $request, 
-                        FormHydrator $formHydrator,
-                        SettingRepository $settingRepository,                        
-
-    ) : Response
+    public function add(Request $request, 
+                        FormHydrator $formHydrator) : Response
     {
+        $paymentPeppol = new PaymentPeppol();
+        $form = new PaymentPeppolForm($paymentPeppol);
         $parameters = [
             'title' => $this->translator->translate('invoice.add'),
             'action' => ['paymentpeppol/add'],
             'errors' => [],
-            'body' => $request->getParsedBody(),
-            's'=>$settingRepository,
-            'head'=>$head,
-            
+            'form' => $form,
         ];
         
         if ($request->getMethod() === Method::POST) {
-            $form = new PaymentPeppolForm();
-            if ($formHydrator->populate($form, $parameters['body']) && $form->isValid()) {
-                $this->paymentpeppolService->savePaymentPeppol(new PaymentPeppol(),$form);
+            $body = $request->getParsedBody();
+            if ($formHydrator->populateFromPostAndValidate($form, $request)) {
+                /**
+                 * @psalm-suppress PossiblyInvalidArgument $body
+                 */
+                $this->paymentpeppolService->savePaymentPeppol($paymentPeppol, $body);
                 return $this->webService->getRedirectResponse('paymentpeppol/index');
             }
+            $parameters['errors'] = $form->getValidationResult()?->getErrorMessagesIndexedByAttribute() ?? [];
             $parameters['form'] = $form;
         }
         return $this->viewRenderer->render('_form', $parameters);
@@ -97,8 +95,7 @@ final class PaymentPeppolController
    private function alert(): string {
      return $this->viewRenderer->renderPartialAsString('/invoice/layout/alert',
      [ 
-       'flash' => $this->flash,
-       'errors' => [],
+       'flash' => $this->flash
      ]);
    }
 
@@ -110,19 +107,6 @@ final class PaymentPeppolController
     private function flash_message(string $level, string $message): Flash {
       $this->flash->add($level, $message, true);
       return $this->flash;
-    }
-    
-    /**
-     * @param PaymentPeppol $paymentpeppol     * @return array
-     */
-    private function body(PaymentPeppol $paymentpeppol) : array {
-        $body = [
-          'inv_id'=>$paymentpeppol->getInv_id(),
-          'id'=>$paymentpeppol->getId(),
-          'auto_reference'=>$paymentpeppol->getAuto_reference(),
-          'provider'=>$paymentpeppol->getProvider()
-        ];
-        return $body;
     }
     
     /**
@@ -138,7 +122,7 @@ final class PaymentPeppolController
       $paginator = (new OffsetPaginator($paymentpeppols))
       ->withPageSize((int) $settingRepository->get_setting('default_list_limit'))
       ->withCurrentPage((int)$page)
-      ->withNextPageToken($page);
+      ->withToken(PageToken::next((string)$page));
       $parameters = [
       'paymentpeppols' => $this->paymentpeppols($paymentpeppolRepository),
       'paginator' => $paginator,
@@ -150,18 +134,16 @@ final class PaymentPeppolController
     }
         
     /**
-     * @param SettingRepository $settingRepository
      * @param CurrentRoute $currentRoute
      * @param PaymentPeppolRepository $paymentpeppolRepository
      * @return Response
      */
-    public function delete(SettingRepository $settingRepository, CurrentRoute $currentRoute,PaymentPeppolRepository $paymentpeppolRepository 
-    ): Response {
+    public function delete(CurrentRoute $currentRoute, PaymentPeppolRepository $paymentpeppolRepository) : Response {
         try {
             $paymentpeppol = $this->paymentpeppol($currentRoute, $paymentpeppolRepository);
-            if ($paymentpeppol) {
+            if (null!==$paymentpeppol) {
                 $this->paymentpeppolService->deletePaymentPeppol($paymentpeppol);               
-                $this->flash_message('info', $settingRepository->trans('record_successfully_deleted'));
+                $this->flash_message('info', $this->translator->translate('i.record_successfully_deleted'));
                 return $this->webService->getRedirectResponse('paymentpeppol/index'); 
             }
             return $this->webService->getRedirectResponse('paymentpeppol/index'); 
@@ -172,40 +154,35 @@ final class PaymentPeppolController
     }
     
     /**
-     * 
-     * @param ViewRenderer $head
      * @param Request $request
      * @param CurrentRoute $currentRoute
      * @param FormHydrator $formHydrator
      * @param PaymentPeppolRepository $paymentpeppolRepository
-     * @param SettingRepository $settingRepository
      * @return Response
      */    
-    public function edit(ViewRenderer $head, Request $request, CurrentRoute $currentRoute, 
+    public function edit(Request $request, CurrentRoute $currentRoute, 
                         FormHydrator $formHydrator,
-                        PaymentPeppolRepository $paymentpeppolRepository, 
-                        SettingRepository $settingRepository,                        
-
-    ): Response {
-        $paymentpeppol = $this->paymentpeppol($currentRoute, $paymentpeppolRepository);
-        if ($paymentpeppol){
+                        PaymentPeppolRepository $paymentpeppolRepository): Response
+    {
+        $paymentPeppol = $this->paymentpeppol($currentRoute, $paymentpeppolRepository);
+        if ($paymentPeppol){
+            $form = new PaymentPeppolForm($paymentPeppol);
             $parameters = [
                 'title' => $this->translator->translate('invoice.edit'),
-                'action' => ['paymentpeppol/edit', ['id' => $paymentpeppol->getId()]],
+                'action' => ['paymentpeppol/edit', ['id' => $paymentPeppol->getId()]],
                 'errors' => [],
-                'body' => $this->body($paymentpeppol),
-                'head'=>$head,
-                's'=>$settingRepository,
-                
+                'form' => $form,
             ];
             if ($request->getMethod() === Method::POST) {
-                $form = new PaymentPeppolForm();
                 $body = $request->getParsedBody();
-                if ($formHydrator->populate($form, $body) && $form->isValid()) {
-                    $this->paymentpeppolService->savePaymentPeppol($paymentpeppol,$form);
+                if ($formHydrator->populateFromPostAndValidate($form, $request)) {
+                    /**
+                     * @psalm-suppress PossiblyInvalidArgument $body
+                     */
+                    $this->paymentpeppolService->savePaymentPeppol($paymentPeppol, $body);
                     return $this->webService->getRedirectResponse('paymentpeppol/index');
                 }
-                $parameters['body'] = $body;
+                $parameters['errors'] = $form->getValidationResult()?->getErrorMessagesIndexedByAttribute() ?? [];
                 $parameters['form'] = $form;
             }
             return $this->viewRenderer->render('_form', $parameters);
@@ -244,22 +221,21 @@ final class PaymentPeppolController
     /**
      * @param CurrentRoute $currentRoute
      * @param PaymentPeppolRepository $paymentpeppolRepository
-     * @param SettingRepository $settingRepository
      * @return \Yiisoft\DataResponse\DataResponse|Response
      */
-    public function view(CurrentRoute $currentRoute,PaymentPeppolRepository $paymentpeppolRepository,
-        SettingRepository $settingRepository,
-        ): \Yiisoft\DataResponse\DataResponse|Response {
-        $paymentpeppol = $this->paymentpeppol($currentRoute, $paymentpeppolRepository); 
-        if ($paymentpeppol) {
+    public function view(CurrentRoute $currentRoute,PaymentPeppolRepository $paymentpeppolRepository) 
+        : \Yiisoft\DataResponse\DataResponse|Response 
+    {
+        $paymentPeppol = $this->paymentpeppol($currentRoute, $paymentpeppolRepository); 
+        if ($paymentPeppol) {
+            $form = new PaymentPeppolForm($paymentPeppol);
             $parameters = [
-                'title' => $settingRepository->trans('view'),
-                'action' => ['paymentpeppol/view', ['id' => $paymentpeppol->getId()]],
-                'errors' => [],
-                'body' => $this->body($paymentpeppol),
-                'paymentpeppol'=>$paymentpeppol,
+                'title' => $this->translator->translate('i.view'),
+                'action' => ['paymentpeppol/view', ['id' => $paymentPeppol->getId()]],
+                'form' => $form,
+                'paymentpeppol' => $paymentPeppol,
             ];        
-        return $this->viewRenderer->render('_view', $parameters);
+            return $this->viewRenderer->render('_view', $parameters);
         }
         return $this->webService->getRedirectResponse('paymentpeppol/index');
     }

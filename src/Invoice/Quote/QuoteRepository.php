@@ -53,6 +53,17 @@ final class QuoteRepository extends Select\Repository
     }
     
     /**
+     * @param int $delivery_location_id
+     * @return EntityReader
+     */
+    public function findAllWithDeliveryLocation(int $delivery_location_id) : EntityReader
+    {
+        $query = $this->select()
+                      ->where(['delivery_location_id' => $delivery_location_id]);  
+        return $this->prepareDataReader($query);
+    }
+    
+    /**
      * Get quotes  without filter
      *
      * @psalm-return EntityReader

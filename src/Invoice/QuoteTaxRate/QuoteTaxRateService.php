@@ -18,15 +18,15 @@ final class QuoteTaxRateService
     /**
      * 
      * @param QuoteTaxRate $model
-     * @param QuoteTaxRateForm $form
+     * @param array $array 
      * @return void
      */
-    public function saveQuoteTaxRate(QuoteTaxRate $model, QuoteTaxRateForm $form): void
+    public function saveQuoteTaxRate(QuoteTaxRate $model, array $array): void
     {
-       null!==$form->getQuote_id() ? $model->setQuote_id($form->getQuote_id()) : '';
-       null!==$form->getTax_rate_id() ? $model->setTax_rate_id($form->getTax_rate_id()) : '';
-       $model->setInclude_item_tax($form->getInclude_item_tax() ?: 0);
-       $model->setQuote_tax_rate_amount($form->getQuote_tax_rate_amount() ?: 0.00);
+       isset($array['quote_id']) ? $model->setQuote_id((int)$array['quote_id']) : '';
+       isset($array['tax_rate_id']) ? $model->setTax_rate_id((int)$array['tax_rate_id']) : '';
+       $model->setInclude_item_tax((int)$array['include_item_tax'] ?: 0);
+       isset($array['tax_rate_amount']) ?  $model->setQuote_tax_rate_amount((float)$array['quote_tax_rate_amount']) : '';
  
        $this->repository->save($model);
     }

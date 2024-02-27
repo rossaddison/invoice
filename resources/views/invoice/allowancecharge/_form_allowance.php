@@ -67,7 +67,7 @@ use Yiisoft\Html\Tag\Form;
                 ->addInputAttributes([
                     'class' => 'form-control'
                 ])
-                ->label('') 
+                ->hideLabel()
                 ->value(Html::encode($form->getId() ?? '')); 
             ?>
         <?= Html::closeTag('div'); ?>

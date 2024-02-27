@@ -5,11 +5,9 @@ declare(strict_types=1);
 namespace App\Invoice\PostalAddress;
 
 use App\Invoice\Entity\PostalAddress;
-use App\Invoice\Client\ClientRepository;
 
 final class PostalAddressService
 {
-
     private PostalAddressRepository $repository;
     
     public function __construct(PostalAddressRepository $repository)
@@ -19,21 +17,20 @@ final class PostalAddressService
     
     /**
      * @param PostalAddress $model
-     * @param PostalAddressForm $form
-     * @param ClientRepository $clientRepo
+     * @param array $array
      * @return void
      */
-    public function savePostalAddress(PostalAddress $model, PostalAddressForm $form) : void
+    public function savePostalAddress(PostalAddress $model, array $array) : void
     {
-        null!==$form->getId() ? $model->setId($form->getId()) : '';
-        null!==$form->getClient_id() ? $model->setClient_id($form->getClient_id()) : '';
-        null!==$form->getStreet_name() ? $model->setStreet_name($form->getStreet_name()) : '';
-        null!==$form->getAdditional_street_name() ? $model->setAdditional_street_name($form->getAdditional_street_name()) : '';
-        null!==$form->getBuilding_number() ? $model->setBuilding_number($form->getBuilding_number()) : '';
-        null!==$form->getCity_name() ? $model->setCity_name($form->getCity_name()) : '';
-        null!==$form->getPostalzone() ? $model->setPostalzone($form->getPostalzone()) : '';
-        null!==$form->getCountrysubentity() ? $model->setCountrysubentity($form->getCountrysubentity()) : '';
-        null!==$form->getCountry() ? $model->setCountry($form->getCountry()) : '';
+        isset($array['id']) ? $model->setId((int)$array['id']) : '';
+        isset($array['client_id']) ? $model->setClient_id((int)$array['client_id']) : '';
+        isset($array['street_name']) ? $model->setStreet_name((string)$array['street_name']) : '';
+        isset($array['additional_street_name']) ? $model->setAdditional_street_name((string)$array['additional_street_name']) : '';
+        isset($array['building_number']) ? $model->setBuilding_number((string)$array['building_number']) : '';
+        isset($array['city_name']) ? $model->setCity_name((string)$array['city_name']) : '';
+        isset($array['postalzone']) ? $model->setPostalzone((string)$array['postalzone']) : '';
+        isset($array['countrysubentity']) ? $model->setCountrysubentity((string)$array['countrysubentity']) : '';
+        isset($array['country']) ? $model->setCountry((string)$array['country']) : '';
         $this->repository->save($model);
     }
     

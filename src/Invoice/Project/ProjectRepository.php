@@ -90,7 +90,7 @@ private EntityWriter $entityWriter;
      * @psalm-return TEntity|null
      */
     public function repoProjectquery(string $id):Project|null    {
-        $query = $this->select()->load('client')->where(['id' =>$id]);
+        $query = $this->select()->load('client')->where(['id' => $id]);
         return  $query->fetchOne() ?: null;        
     }
     
@@ -105,4 +105,20 @@ private EntityWriter $entityWriter;
                       ->count();
         return $count;
     }
+    
+    /**
+     * @return array
+     */
+    public function optionsDataProjects() : array
+    {
+        $optionsDataProjects = [];
+        /**
+         * @var Project $project
+         */
+        foreach ($this->findAllPreloaded() as $project)
+        {
+            $optionsDataProjects[$project->getId()] = $project->getName();
+        }    
+        return $optionsDataProjects;
+    } 
 }

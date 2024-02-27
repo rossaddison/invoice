@@ -110,9 +110,9 @@ class Sumex
       $this->observations =  $observations;
     }
     
-    public function getTreatmentstart(): DateTimeImmutable|null
+    public function getTreatmentstart(): DateTimeImmutable|string|null 
     {
-      /** @var DateTimeImmutable $this->treatmentstart */
+      /** @var DateTimeImmutable|string|null $this->treatmentstart */
       return $this->treatmentstart;
     }
     
@@ -121,9 +121,9 @@ class Sumex
       $this->treatmentstart =  $treatmentstart;
     }
     
-    public function getTreatmentend(): DateTimeImmutable|null
+    public function getTreatmentend(): DateTimeImmutable|string|null 
     {
-      /** @var DateTimeImmutable $this->treatmentend */
+      /** @var DateTimeImmutable|string|null $this->treatmentend */
       return $this->treatmentend;
     }
     
@@ -132,9 +132,9 @@ class Sumex
       $this->treatmentend =  $treatmentend;
     }
     
-    public function getCasedate(): DateTimeImmutable
+    public function getCasedate(): DateTimeImmutable|string|null 
     {
-      /** @var DateTimeImmutable $this->casedate */
+      /** @var DateTimeImmutable|string|null $this->casedate */
       return $this->casedate;
     }
     

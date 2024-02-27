@@ -18,6 +18,7 @@ use Psr\Http\Message\ServerRequestInterface as Request;
 use Yiisoft\Data\Reader\DataReaderInterface;
 use Yiisoft\Data\Reader\SortableDataInterface;
 use Yiisoft\Data\Reader\Sort;
+use Yiisoft\Data\Paginator\PageToken;
 use Yiisoft\Data\Paginator\OffsetPaginator;
 use Yiisoft\Http\Method;
 use Yiisoft\Router\CurrentRoute;
@@ -97,10 +98,7 @@ final class DeliveryController {
             ];
             if ($request->getMethod() === Method::POST) {                
                 $body = $request->getParsedBody();
-                /**
-                 * @psalm-suppress PossiblyInvalidArgument $body
-                 */
-                if ($formHydrator->populate($form, $body) && $form->isValid()) {
+                if ($formHydrator->populateFromPostAndValidate($form,  $request)) {
                     /**
                      * @psalm-suppress PossiblyInvalidArgument $body
                      */
@@ -159,7 +157,7 @@ final class DeliveryController {
         $paginator = (new OffsetPaginator($deliveries))
                 ->withPageSize((int) $sR->get_setting('default_list_limit'))
                 ->withCurrentPage((int)$page)
-                ->withNextPageToken($page);
+                ->withToken(PageToken::next((string)$page));
         $parameters = [
             'alert' => $this->alert(),
             'paginator' => $paginator,
@@ -242,10 +240,7 @@ final class DeliveryController {
             ];
             if ($request->getMethod() === Method::POST) {
                 $body = $request->getParsedBody();
-                /**
-                 * @psalm-suppress PossiblyInvalidArgument $body
-                 */
-                if ($formHydrator->populate($form, $body) && $form->isValid()) {
+                if ($formHydrator->populateFromPostAndValidate($form,  $request)) {
                 /**
                  * @psalm-suppress PossiblyInvalidArgument $body
                  */

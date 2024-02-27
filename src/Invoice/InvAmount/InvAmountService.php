@@ -49,10 +49,10 @@ final class InvAmountService
        $model->setSign(1);
        null!==$basis_invoice ? $model->setItem_subtotal(($basis_invoice->getItem_subtotal() ?: 0.00)*-1) : '';
        null!==$basis_invoice ? $model->setItem_tax_total(($basis_invoice->getItem_tax_total() ?: 0.00)*-1) : '';
-       null!==$basis_invoice ? $model->setTax_total(($basis_invoice->getTax_total() ?: 0.00)*-1) : '';
-       null!==$basis_invoice ? $model->setTotal(($basis_invoice->getTotal() ?: 0.00)*-1) : ''; 
+       null!==$basis_invoice ? $model->setTax_total(($basis_invoice->getTax_total() ?? 0.00)*-1) : '';
+       null!==$basis_invoice ? $model->setTotal(($basis_invoice->getTotal() ?? 0.00)*-1) : ''; 
        $model->setPaid(0.00);
-       null!==$basis_invoice ? $model->setBalance(($basis_invoice->getBalance()?: 0.00)*-1) : ''; 
+       null!==$basis_invoice ? $model->setBalance(($basis_invoice->getBalance() ?? 0.00)*-1) : ''; 
        $this->repository->save($model);
     }
 
@@ -71,29 +71,29 @@ final class InvAmountService
         /** @psalm-suppress PossiblyNullArgument, PossiblyNullReference */
         $model->setItem_subtotal($basis_invoice->getItem_subtotal());
         $model->setItem_tax_total($basis_invoice->getItem_tax_total() ?: 0.00);
-        $model->setTax_total($basis_invoice->getTax_total() ?: 0.00);
-        $model->setTotal($basis_invoice->getTotal() ?: 0.00); 
+        $model->setTax_total($basis_invoice->getTax_total() ?? 0.00);
+        $model->setTotal($basis_invoice->getTotal() ?? 0.00); 
         $model->setPaid(0.00);
-        $model->setBalance($basis_invoice->getTotal() ?: 0.00); 
+        $model->setBalance($basis_invoice->getTotal() ?? 0.00); 
         $this->repository->save($model);
     } 
 
     /**
-     * 
      * @param InvAmount $model
+     * @param array $array
      * @param InvAmountForm $form
      * @return void
      */
-    public function saveInvAmount(InvAmount $model, InvAmountForm $form): void
+    public function saveInvAmount(InvAmount $model, array $array) : void
     {  
-       $form->getInv_id() ? $model->setInv_id($form->getInv_id()) : '';
+       isset($array['inv_id']) ? $model->setInv_id((int)$array['inv_id']) : '';
        $model->setSign(1);
-       $form->getItem_subtotal() ? $model->setItem_subtotal($form->getItem_subtotal()) : '';
-       $form->getItem_tax_total() ? $model->setItem_tax_total($form->getItem_tax_total()) : '';
-       $form->getTax_total() ? $model->setTax_total($form->getTax_total()) : '';
-       $form->getTotal() ? $model->setTotal($form->getTotal()) : ''; 
-       $form->getPaid() ? $model->setPaid($form->getPaid()) : '';
-       $form->getBalance() ? $model->setBalance($form->getBalance()) : ''; 
+       isset($array['item_subtotal']) ? $model->setItem_subtotal((float)$array['item_subtotal']) : '';
+       isset($array['item_tax_total']) ? $model->setItem_tax_total((float)$array['item_tax_total']) : '';
+       isset($array['tax_total']) ? $model->setTax_total((float)$array['tax_total']) : '';
+       isset($array['total']) ? $model->setTotal((float)$array['total']) : ''; 
+       isset($array['paid']) ? $model->setPaid((float)$array['paid']) : '';
+       isset($array['balance']) ? $model->setBalance((float)$array['balance']) : ''; 
        $this->repository->save($model);
     }
     

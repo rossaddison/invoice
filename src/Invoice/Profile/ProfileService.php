@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace App\Invoice\Profile;
 
 use App\Invoice\Entity\Profile;
-use App\Invoice\Profile\ProfileForm;
 use App\Invoice\Profile\ProfileRepository;
 
 
@@ -20,23 +19,22 @@ final class ProfileService
     }
 
     /**
-     * 
      * @param Profile $model
-     * @param ProfileForm $form
+     * @param array $array
      * @return void
      */
-    public function saveProfile(Profile $model, ProfileForm $form): void
+    public function saveProfile(Profile $model, array $array): void
     {
-       $form->getCompany_id() ? $model->setCompany_id($form->getCompany_id()) : '';
-       $form->getCurrent() ? $model->setCurrent($form->getCurrent()) : '';
-       $form->getMobile() ? $model->setMobile($form->getMobile()) : '';
-       $form->getEmail() ? $model->setEmail($form->getEmail()) : '';
- 
+       isset($array['company_id']) ? $model->setCompany_id((int)$array['company_id']) : '';
+       $model->setCurrent($array['current'] === '1' ? 1 : 0);
+       isset($array['mobile']) ? $model->setMobile((string)$array['mobile']) : '';
+       isset($array['email']) ? $model->setEmail((string)$array['email']) : '';
+       isset($array['description']) ? $model->setDescription((string)$array['description']) : '';
+       
        $this->repository->save($model);
     }
     
     /**
-     * 
      * @param Profile $model
      * @return void
      */

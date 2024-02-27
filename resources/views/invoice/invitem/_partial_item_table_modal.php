@@ -1,6 +1,7 @@
 <?php
 declare(strict_types=1); 
 use Yiisoft\Html\Html;
+// Used under Options to delete items
 ?>
 <div class="table-responsive">
     <table class="table table-hover table-bordered table-striped">

@@ -2,60 +2,78 @@
 
 declare(strict_types=1); 
 
+
+use Yiisoft\FormModel\Field;
 use Yiisoft\Html\Html;
-use Yiisoft\Yii\Bootstrap5\Alert;
-use App\Invoice\Helpers\DateHelper;
+use Yiisoft\Html\Tag\Form;
 
 /**
  * @var \Yiisoft\View\View $this
  * @var \Yiisoft\Router\UrlGeneratorInterface $urlGenerator
- * @var array $body
  * @var string $csrf
  * @var string $action
  * @var string $title
  */
-
-if (!empty($errors)) {
-    foreach ($errors as $field => $error) {
-        echo Alert::widget()->options(['class' => 'alert-danger'])->body(Html::encode($field . ':' . $error));
-    }
-}
-
 ?>
-<?= Html::openTag('h1'); ?><?= Html::encode($title) ?><?= Html::closeTag('h1'); ?>
-<form id="ItemLookupForm" method="POST" action="<?= $urlGenerator->generate(...$action) ?>" enctype="multipart/form-data">
-<input type="hidden" name="_csrf" value="<?= $csrf ?>">
-<div id="headerbar">
-<h1 class="headerbar-title"><?= $translator->translate('i.itemlookups_form'); ?></h1>
-<?php $response = $head->renderPartial('invoice/layout/header_buttons',['s'=>$s, 'hide_submit_button'=>false ,'hide_cancel_button'=>false]); ?>        
-<?php echo (string)$response->getBody(); ?><div id="content">
-<?= Html::openTag('div', ['class' => 'row']); ?>
- <div class="mb3 form-group">
-   <input type="hidden" name="id" id="id" class="form-control"
- value="<?= Html::encode($body['id'] ??  ''); ?>">
- </div>
- <div class="mb3 form-group">
-   <label for="name"><?= $translator->translate('i.name'); ?></label>
-   <input type="text" name="name" id="name" class="form-control"
- value="<?= Html::encode($body['name'] ??  ''); ?>">
- </div>
- <div class="mb3 form-group">
-   <label for="description"><?= $translator->translate('i.description'); ?></label>
-   <input type="text" name="description" id="description" class="form-control"
- value="<?= Html::encode($body['description'] ??  ''); ?>">
- </div>
-<div class="form-group">
-  <label for="price"><?= $translator->translate('i.price'); ?></label>
-      <div class="input-group has-feedback">
-          <input type="text" name="price" id="price" class="form-control"
-              value="<?= $s->format_amount($body['price'] ?? ''); ?>">
-              <span class="input-group-text"><?= $s->get_setting('currency_symbol'); ?></span>
-      </div>
-</div>
 
-</div>
+<?= Form::tag()
+    ->post($urlGenerator->generate(...$action))
+    ->enctypeMultipartFormData()
+    ->csrf($csrf)
+    ->id('ItemLookupForm')
+    ->open() ?>
 
-</div>
+<?= Html::openTag('div',['class'=>'container py-5 h-100']); ?>
+<?= Html::openTag('div',['class'=>'row d-flex justify-content-center align-items-center h-100']); ?>
+<?= Html::openTag('div',['class'=>'col-12 col-md-8 col-lg-6 col-xl-8']); ?>
+<?= Html::openTag('div',['class'=>'card border border-dark shadow-2-strong rounded-3']); ?>
+<?= Html::openTag('div',['class'=>'card-header']); ?>
 
-</div>
-</form>
+<?= Html::openTag('h1',['class'=>'fw-normal h3 text-center']); ?>    
+    <?= Html::encode($title) ?>
+<?= Html::closeTag('h1'); ?>
+<?= Html::openTag('div', ['id' => 'headerbar']); ?>
+    <?= $button::back_save($translator); ?>
+    <?= Html::openTag('div', ['id' => 'content']); ?>
+        <?= Html::openTag('div', ['class' => 'row']); ?>
+            <?= Html::openTag('div', ['class' => 'mb-3 form-group']); ?>
+                <?= Field::errorSummary($form)
+                    ->errors($errors)
+                    ->header($translator->translate('invoice.error.summary'))
+                    ->onlyProperties(...['name', 'description', 'price'])    
+                    ->onlyCommonErrors()
+                ?>
+            <?= Html::closeTag('div'); ?>
+            <?= Html::openTag('div'); ?>
+                <?= Html::openTag('div', ['class' => 'mb-3 form-group']); ?>
+                <?= Field::text($form, 'name')
+                    ->label($translator->translate('i.name'), ['form-label'])
+                    ->placeholder($translator->translate('i.name'))    
+                    ->value(Html::encode($form->getName() ?? ''))    
+                    ->hint($translator->translate('invoice.hint.this.field.is.required')); 
+                ?>
+                <?= Html::closeTag('div'); ?>
+                <?= Html::openTag('div', ['class' => 'mb-3 form-group']); ?>
+                <?= Field::textarea($form, 'description')
+                    ->label($translator->translate('i.description'), ['form-label'])
+                    ->placeholder($translator->translate('i.description'))    
+                    ->value(Html::encode($form->getDescription() ?? ''))    
+                    ->hint($translator->translate('invoice.hint.this.field.is.required')); 
+                ?>
+                <?= Html::closeTag('div'); ?>
+                <?= Html::openTag('div', ['class' => 'mb-3 form-group']); ?>
+                <?= Field::text($form, 'price')
+                    ->label($translator->translate('i.price'), ['form-label'])
+                    ->placeholder($translator->translate('i.price'))    
+                    ->value(Html::encode($s->format_amount($form->getPrice() ?? 0.00)))    
+                    ->hint($translator->translate('invoice.hint.this.field.is.required')); 
+                ?>
+                <?= Html::closeTag('div'); ?>
+            <?= Html::closeTag('div'); ?>
+        <?= Html::closeTag('div'); ?>
+    <?= Html::closeTag('div'); ?>
+<?= Html::closeTag('div'); ?>
+<?= Html::closeTag('div'); ?>
+<?= Html::closeTag('div'); ?>
+<?= Html::closeTag('div'); ?>
+<?= Form::tag()->close() ?>

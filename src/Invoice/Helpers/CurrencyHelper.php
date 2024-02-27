@@ -59,7 +59,7 @@ class CurrencyHelper
     {
         $code = strtoupper($currency_code);
         $currencies = static::all();
-        if (!empty($currencies[$code])) {
+        if (isset($currencies[$code])) {
             /** 
              * @var string $currencies[$code]['numeric']
              * @var string $currencies[$code]['decimals']

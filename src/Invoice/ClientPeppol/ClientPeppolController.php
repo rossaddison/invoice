@@ -78,8 +78,7 @@ final class ClientPeppolController {
     SettingRepository $settingRepository
   ): Response {
     $client_id = $currentRoute->getArgument('client_id');
-    $client_peppol = new ClientPeppol();
-    $body = $request->getParsedBody() ?? [];
+    $client_peppol = new ClientPeppol();    
     $form = new ClientPeppolForm($client_peppol);
     $electronic_address_scheme = PeppolArrays::electronic_address_scheme();
     $peppolarrays = new PeppolArrays();
@@ -91,18 +90,14 @@ final class ClientPeppolController {
         'pep' => $this->pep(),
         'setting' => $settingRepository->get_setting('enable_client_peppol_defaults'),
         'defaults' => $settingRepository->get_setting('enable_client_peppol_defaults') == '1' ? true : false,
-        'buttons' => $this->viewRenderer->renderPartialAsString('/invoice/layout/header_buttons', ['s' => $settingRepository, 'hide_submit_button' => false, 'hide_cancel_button' => false]),
-        's' => $settingRepository,
         'client_id' => $client_id,
         'receiver_identifier_array' => StoreCoveArrays::store_cove_receiver_identifier_array(),
         'electronic_address_scheme' => $electronic_address_scheme,
         'iso_6523_array' => $peppolarrays->getIso_6523_icd()
       ];
       if ($request->getMethod() === Method::POST) {
-        /**
-         * @psalm-suppress PossiblyInvalidArgument $body
-         */  
-        if ($formHydrator->populate($form, $body) && $form->isValid()) {
+        $body = $request->getParsedBody() ?? [];  
+        if ($formHydrator->populateFromPostAndValidate($form, $request)) {
          /**
           * @psalm-suppress PossiblyInvalidArgument $body
           */  
@@ -267,7 +262,7 @@ final class ClientPeppolController {
         /**
          * @psalm-suppress PossiblyInvalidArgument $body
          */  
-        if ($formHydrator->populate($form, $body) && $form->isValid()) {
+        if ($formHydrator->populateFromPostAndValidate($form,  $request)) {
          /**
           * @psalm-suppress PossiblyInvalidArgument $body
           */  

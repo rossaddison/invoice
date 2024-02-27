@@ -1,107 +1,176 @@
 <?php
-
 declare(strict_types=1);
 
+use Yiisoft\Data\Paginator\OffsetPaginator;
 use Yiisoft\Html\Html;
-use App\Widget\OffsetPagination;
+use Yiisoft\Translator\TranslatorInterface;
+use Yiisoft\View\WebView;
+use Yiisoft\Html\Tag\A;
+use Yiisoft\Html\Tag\Div;
+use Yiisoft\Html\Tag\Form;
+use Yiisoft\Html\Tag\H5;
+use Yiisoft\Html\Tag\I;
+use Yiisoft\Yii\DataView\Column\DataColumn;
+use Yiisoft\Yii\DataView\Column\ActionColumn;
+use Yiisoft\Yii\DataView\GridView;
+use Yiisoft\Yii\DataView\OffsetPagination;
+use Yiisoft\Router\CurrentRoute;
 
 /**
  * @var \App\Invoice\Entity\Task $task
- * @var \Yiisoft\Router\UrlGeneratorInterface $urlGenerator
- * @var \Yiisoft\Session\Flash\FlashInterface $flash 
- */
+ * @var string $csrf
+ * @var CurrentRoute $currentRoute 
+ * @var OffsetPaginator $paginator
+ * @var \Yiisoft\Router\UrlGeneratorInterface $urlGenerator 
+ * @var TranslatorInterface $translator 
+ * @var WebView $this
+ */ 
+ 
+ echo $alert;
+?>
 
-echo $alert;
+<?php
+    $header = Div::tag()
+        ->addClass('row')
+        ->content(
+            H5::tag()
+                ->addClass('bg-primary text-white p-3 rounded-top')
+                ->content(
+                    I::tag()->addClass('bi bi-receipt')
+                            ->content(' ' . Html::encode($translator->translate('i.tasks')))
+                )
+        )
+        ->render();
+
+    $toolbarReset = A::tag()
+        ->addAttributes(['type' => 'reset'])
+        ->addClass('btn btn-danger me-1 ajax-loader')
+        ->content(I::tag()->addClass('bi bi-bootstrap-reboot'))
+        ->href($urlGenerator->generate($currentRoute->getName()))
+        ->id('btn-reset')
+        ->render(); 
+
+    $toolbar = Div::tag();
 ?>
 
 <div>
- <h5><?= $translator->translate('i.task');?></h5>
- <a class="btn btn-success" href="<?= $urlGenerator->generate('task/add'); ?>"><i class="fa fa-plus"></i>
-   <?= 
-        $translator->translate('i.new'); 
-   ?>
- </a>
+    <h5><?= $translator->translate('i.tasks'); ?></h5>
+    <div class="btn-group">
+        <a class="btn btn-success" href="<?= $urlGenerator->generate('task/add'); ?>">
+            <i class="fa fa-plus"></i> <?= Html::encode($translator->translate('i.new')); ?>
+        </a>
+    </div>
 </div>
 <br>
-<div class="submenu-row">
- <div class="btn-group index-options">
- </div>
+<div>
+
 </div>
-
-<?php
-    $pagination = OffsetPagination::widget()
-    ->paginator($paginator)
-    ->urlGenerator(fn ($page) => $urlGenerator->generate('task/index', ['page' => $page]));   
+<div>
+<?php 
+    $columns = [
+        new DataColumn(
+            'id',
+            header: $translator->translate('i.id'),
+            content: static fn (object $model) => Html::encode($model->getId())
+        ), 
+        new DataColumn(
+            'project_id',
+            header: $translator->translate('i.project'),                
+            content: static function ($model) use ($prjct) : string {
+                return Html::encode(($prjct->count($model->getProject_id()) > 0 ? $prjct->repoProjectquery($model->getId())->getName() : '')); 
+            }                   
+        ),
+        new DataColumn(
+            'status',
+            header: $translator->translate('i.status'),
+            withSorting: true,
+            content: static fn ($model) : string => Html::encode($statuses[$model->getStatus()]['label'])
+        ),
+        new DataColumn(
+            'name',
+            header: $translator->translate('i.name'),
+            withSorting: true,
+            content: static fn ($model): string => Html::encode($model->getName())
+        ),
+        new DataColumn(
+            'description',    
+            header: $translator->translate('i.description'),                
+            content: static fn ($model): string => Html::encode(ucfirst($model->getDescription())) 
+        ),
+        new DataColumn(
+            'price',
+            header: $translator->translate('i.price'),   
+            content: static fn ($model): string => Html::encode($s->format_currency(null!==$model->getPrice() ? $model->getPrice() : 0.00))                        
+        ),
+        new DataColumn(
+            'finish_date',
+            header: $translator->translate('i.task_finish_date'),   
+            content: static fn ($model): string => Html::encode($datehelper->date_from_mysql($model->getFinish_date()))                       
+        ),
+        new DataColumn(
+            'tax_rate_id',    
+            header: $translator->translate('i.tax_rate'),
+            content: static fn ($model): string => ($model->getTaxrate()->getTax_rate_id()) ? Html::encode($model->getTaxrate()->getTax_rate_name()) : $translator->translate('i.none')                       
+        ),
+        new ActionColumn(
+            content: static fn($model): string => 
+            Html::a()
+            ->addAttributes(['class' => 'dropdown-button text-decoration-none', 'title' => $translator->translate('i.view')])
+            ->content('🔎')
+            ->encode(false)
+            ->href('/invoice/task/view/'. $model->getId())
+            ->render(),
+        ),
+        new ActionColumn(
+            content: static fn($model): string => 
+            Html::a()
+            ->addAttributes(['class' => 'dropdown-button text-decoration-none', 'title' => $translator->translate('i.edit')])
+            ->content('✎')
+            ->encode(false)
+            ->href('/invoice/task/edit/'. $model->getId())
+            ->render(),
+        ),
+        new ActionColumn(
+            content: static fn($model): string => 
+            Html::a()
+            ->addAttributes([
+                'class'=>'dropdown-button text-decoration-none', 
+                'title' => $translator->translate('i.delete'),
+                'type'=>'submit', 
+                'onclick'=>"return confirm("."'".$translator->translate('i.delete_record_warning')."');"
+            ])
+            ->content('❌')
+            ->encode(false)
+            ->href('/invoice/task/delete/'. $model->getId())
+            ->render(),
+        )
+    ];       
 ?>
-<?php
-    if ($pagination->isRequired()) {
-        echo $pagination;
-    }
-?>
-<div class="table-responsive">
-<table class="table table-hover table-striped">
-   <thead>
-    <tr>        
-        <th><?= $translator->translate('i.status'); ?></th>
-        <th><?= $translator->translate('i.name'); ?></th>
-        <th><?= $translator->translate('i.description'); ?></th>
-        <th><?= $translator->translate('i.price'); ?></th>
-        <th><?= $translator->translate('i.task_finish_date'); ?></th>
-        <th><?= $translator->translate('i.project'); ?></th>
-        <th><?= $translator->translate('i.tax_rate'); ?></th>
-        <th><?= $translator->translate('i.options'); ?></th>
-    </tr>
-   </thead>
-<tbody>
 
-<?php foreach ($paginator->read() as $task) { ?>
-     <tr>
-        <td><?= Html::encode($task->getStatus() ? $translator->translate('i.active') : $translator->translate('i.inactive')); ?></td>
-        <td><?= Html::encode($task->getName()); ?></td>
-        <td><?= Html::encode($task->getDescription()); ?></td>
-        <td class="amount"><?= Html::encode($s->format_currency(null!==$task->getPrice() ? $task->getPrice() : 0.00)); ?></td>
-        <td><?= Html::encode($datehelper->date_from_mysql($task->getFinish_date())); ?></td>        
-        <td><?= Html::encode(($prjct->count($task->getProject_id()) > 0 ? $prjct->repoProjectquery($task->getId())->getName() : '')); ?></td>
-        <td><?php echo ($task->getTaxrate()->getTax_rate_name()) ? Html::encode($task->getTaxrate()->getTax_rate_name()) : $translator->translate('i.none'); ?></td>
-        <td>
-          <div class="options btn-group">
-          <a class="btn btn-default btn-sm dropdown-toggle" data-toggle="dropdown" href="#">
-                <i class="fa fa-cog"></i>
-                <?= $translator->translate('i.options'); ?>
-          </a>
-          <ul class="dropdown-menu">
-              <li>
-                  <a href="<?= $urlGenerator->generate('task/edit',['id'=>$task->getId()]); ?>" style="text-decoration:none"><i class="fa fa-edit fa-margin"></i>
-                       <?= $translator->translate('i.edit'); ?>
-                  </a>
-              </li>
-              <li>
-                  <a href="<?= $urlGenerator->generate('task/view',['id'=>$task->getId()]); ?>" style="text-decoration:none"><i class="fa fa-eye fa-margin"></i>
-                       <?= $translator->translate('i.view'); ?>
-                  </a>
-              </li>
-              <li>
-                  <a href="<?= $urlGenerator->generate('task/delete',['id'=>$task->getId()]); ?>" style="text-decoration:none" onclick="return confirm('<?= $translator->translate('i.delete_record_warning'); ?>');">
-                       <i class="fa fa-trash fa-margin"></i><?= $translator->translate('i.delete'); ?>                                    
-                  </a>
-              </li>
-          </ul>
-          </div>
-         </td>
-     </tr>
-<?php } ?>
-</tbody>
-</table>
-<?php
-    $pageSize = $paginator->getCurrentPageSize();
-    if ($pageSize > 0) {
-      echo Html::p(
-        sprintf($translator->translate('invoice.index.footer.showing').' tasks', $pageSize, $paginator->getTotalItems()),
-        ['class' => 'text-muted']
+
+<?= GridView::widget()
+    ->columns(...$columns)
+    ->dataReader($paginator)
+    ->headerRowAttributes(['class'=>'card-header bg-info text-black'])
+    //->filterPosition('header')
+    //->filterModelName('task')            
+    ->header($header)
+    ->id('w64-grid')
+    ->pagination(
+    OffsetPagination::widget()
+        ->paginator($paginator)
+         ->render(),
+    )
+    ->rowAttributes(['class' => 'align-middle'])
+    ->summaryAttributes(['class' => 'mt-3 me-3 summary text-end'])
+    ->summaryTemplate($grid_summary)
+    ->emptyTextAttributes(['class' => 'card-header bg-warning text-black'])
+    ->emptyText((string)$translator->translate('invoice.invoice.no.records'))
+    ->tableAttributes(['class' => 'table table-striped text-center h-75','id'=>'table-task'])
+    ->toolbar(
+        Form::tag()->post($urlGenerator->generate('task/index'))->csrf($csrf)->open() . 
+        Div::tag()->addClass('float-end m-3')->content($toolbarReset)->encode(false)->render() .
+        Form::tag()->close()
     );
-    } else {
-      echo Html::p($translator->translate('invoice.records.no'));
-    }
 ?>
-</div>
 </div>

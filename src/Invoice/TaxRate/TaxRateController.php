@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Invoice\TaxRate;
 
 use App\Invoice\Entity\TaxRate;
+use App\Invoice\Enum\StoreCoveTaxType;
 use App\Invoice\Helpers\Peppol\PeppolArrays;
 use App\Invoice\TaxRate\TaxRateRepository;
 use App\Invoice\Setting\SettingRepository;
@@ -19,8 +20,8 @@ use Yiisoft\Http\Method;
 use Yiisoft\Router\CurrentRoute;
 use Yiisoft\Session\Flash\Flash;
 use Yiisoft\Session\SessionInterface as Session;
-use Yiisoft\Translator\TranslatorInterface as Translator; use Yiisoft\FormModel\FormHydrator;
-use Yiisoft\Form\Helper\HtmlFormErrors;
+use Yiisoft\Translator\TranslatorInterface as Translator; 
+use Yiisoft\FormModel\FormHydrator;
 use Yiisoft\Yii\View\ViewRenderer;
 
 final class TaxRateController
@@ -65,51 +66,50 @@ final class TaxRateController
       
         $canEdit = $this->rbac();
         $parameters = [
-              'paginator' => $paginator,  
-              's'=>$settingRepository,
+              'grid_summary'=> $settingRepository->grid_summary($paginator, $this->translator, (int)$settingRepository->get_setting('default_list_limit'), $this->translator->translate('i.tax_rates'), ''),
+              'paginator' => $paginator,
               'canEdit' => $canEdit,
-              'taxrates' => $this->taxrates($taxrateRepository),
-              'alert'=> $this->alert()
+              'alert' => $this->alert()
         ];
         return $this->viewRenderer->render('index', $parameters);
     }
     
     /**
-     * 
-     * @param ViewRenderer $head
      * @param Request $request
-     * @param SettingRepository $settingRepository
      * @param FormHydrator $formHydrator
      * @return Response
      */
-    public function add(ViewRenderer $head, Request $request,SettingRepository $settingRepository, FormHydrator $formHydrator): Response
+    public function add(Request $request, FormHydrator $formHydrator): Response
     {
         $peppol_arrays = new PeppolArrays();
+        $taxRate = new TaxRate();
+        $form = new TaxRateForm($taxRate);
         $parameters = [
             'title' => $this->translator->translate('invoice.tax.rate.add'),
             'action' => ['taxrate/add'],
-            'head'=>$head,
+            'form' => $form,
             'errors' => [],
-            'body' => $request->getParsedBody(),
-            'peppol_tax_rate_code_array' => $peppol_arrays->getUncl5305(),
-            's'=>$settingRepository
+            'optionsDataPeppolTaxRateCode' => $this->optionsDataPeppolTaxRateCode($peppol_arrays->getUncl5305()),
+            'optionsDataStoreCoveTaxType' => $this->optionsDataStoreCoveTaxType()
         ];
         
         if ($request->getMethod() === Method::POST) {
-            $form = new TaxRateForm();
-            if ($formHydrator->populate($form, $parameters['body']) && $form->isValid()) {
-              $this->taxrateService->saveTaxRate(new TaxRate(), $form);
-              $this->flash_message('success', $settingRepository->trans('record_successfully_created'));
-              return $this->webService->getRedirectResponse('taxrate/index');
+            if ($formHydrator->populateFromPostAndValidate($form, $request)) {
+                $body = $request->getParsedBody();
+                /**
+                 * @psalm-suppress PossiblyInvalidArgument $body
+                 */
+                $this->taxrateService->saveTaxRate($taxRate, $body);
+                $this->flash_message('success', $this->translator->translate('i.record_successfully_created'));
+                return $this->webService->getRedirectResponse('taxrate/index');
             }
+            $parameters['errors'] = $form->getValidationResult()?->getErrorMessagesIndexedByAttribute() ?? [];
             $parameters['form'] = $form;
         }
         return $this->viewRenderer->render('__form', $parameters);
     }
     
     /**
-     * 
-     * @param ViewRenderer $head
      * @param Request $request
      * @param CurrentRoute $currentRoute
      * @param SettingRepository $settingRepository
@@ -117,38 +117,34 @@ final class TaxRateController
      * @param FormHydrator $formHydrator
      * @return Response
      */
-    public function edit(ViewRenderer $head, Request $request, CurrentRoute $currentRoute,
-            SettingRepository $settingRepository, TaxRateRepository $taxrateRepository, FormHydrator $formHydrator): Response 
+    public function edit(Request $request, 
+                         CurrentRoute $currentRoute,
+                         TaxRateRepository $taxrateRepository, 
+                         FormHydrator $formHydrator): Response 
     {
-        $taxrate = $this->taxrate($currentRoute, $taxrateRepository);
+        $taxRate = $this->taxrate($currentRoute, $taxrateRepository);
         $peppol_arrays = new PeppolArrays();
-        if ($taxrate) {
+        if ($taxRate) {
+            $form = new TaxRateForm($taxRate);
             $parameters = [
-                'title' => $settingRepository->trans('edit'),
-                'action' => ['taxrate/edit', ['tax_rate_id' => $taxrate->getTax_rate_id()]],
+                'title' => $this->translator->translate('i.edit'),
+                'action' => ['taxrate/edit', ['tax_rate_id' => $taxRate->getTax_rate_id()]],
+                'form' => $form,
                 'errors' => [],
-                'head'=>$head,
-                'translator'=>$this->translator,
-                'peppol_tax_rate_code_array' => $peppol_arrays->getUncl5305(),
-                'body' => [
-                    'tax_rate_code' => $taxrate->getTax_rate_code(),
-                    'peppol_tax_rate_code' => $taxrate->getPeppol_tax_rate_code(),
-                    'storecove_tax_type' => $taxrate->getStorecove_tax_type(),
-                    'tax_rate_name' => $taxrate->getTax_rate_name(),
-                    'tax_rate_percent'=> $taxrate->getTax_rate_percent(),
-                    'tax_rate_default'=> $taxrate->getTax_rate_default(),
-                ],
-                's'=>$settingRepository,
+                'optionsDataPeppolTaxRateCode' => $this->optionsDataPeppolTaxRateCode($peppol_arrays->getUncl5305()),
+                'optionsDataStoreCoveTaxType' => $this->optionsDataStoreCoveTaxType()
             ];
             if ($request->getMethod() === Method::POST) {
-                $form = new TaxRateForm();
-                $body = $request->getParsedBody();
-                if ($formHydrator->populate($form, $body) && $form->isValid()) {
-                    $this->taxrateService->saveTaxRate($taxrate, $form);                
-                    $this->flash_message('success', $settingRepository->trans('record_successfully_updated'));
+                if ($formHydrator->populateFromPostAndValidate($form, $request)) {
+                    $body = $request->getParsedBody();
+                    /**
+                     * @psalm-suppress PossiblyInvalidArgument $body
+                     */
+                    $this->taxrateService->saveTaxRate($taxRate, $body);                
+                    $this->flash_message('success', $this->translator->translate('i.record_successfully_updated'));
                     return $this->webService->getRedirectResponse('taxrate/index');
                 }
-                $parameters['body'] = $body;
+                $parameters['errors'] = $form->getValidationResult()?->getErrorMessagesIndexedByAttribute() ?? [];
                 $parameters['form'] = $form;
             }
             return $this->viewRenderer->render('__form', $parameters);
@@ -179,28 +175,20 @@ final class TaxRateController
     /**
      * @param CurrentRoute $currentRoute
      * @param TaxRateRepository $taxrateRepository
-     * @param SettingRepository $settingRepository
-     * @param FormHydrator $formHydrator
      */
-    public function view(CurrentRoute $currentRoute, TaxRateRepository $taxrateRepository,SettingRepository $settingRepository, FormHydrator $formHydrator)
+    public function view(CurrentRoute $currentRoute, 
+                         TaxRateRepository $taxrateRepository)
         : \Yiisoft\DataResponse\DataResponse|Response {
-        $taxrate = $this->taxrate($currentRoute, $taxrateRepository);
-        if ($taxrate) {
+        $taxRate = $this->taxrate($currentRoute, $taxrateRepository);
+        $peppol_arrays = new PeppolArrays();
+        if ($taxRate) {
+            $form = new TaxRateForm($taxRate);
             $parameters = [
                 'title' =>  $this->translator->translate('invoice.tax.rate.edit'),
-                'action' => ['taxrate/edit', ['tax_rate_id' => $taxrate->getTax_rate_id()]],
-                'errors' => [],
-                'taxrate'=>$taxrate,
-                's'=>$settingRepository,
-                'translator'=>$this->translator,
-                'body' => [
-                    'tax_rate_code' => $taxrate->getTax_rate_code(),
-                    'peppol_tax_rate_code' => $taxrate->getPeppol_tax_rate_code(),
-                    'tax_rate_id'=>$taxrate->getTax_rate_id(),
-                    'tax_rate_name'=>$taxrate->getTax_rate_name(),
-                    'tax_rate_percent'=>$taxrate->getTax_rate_percent(),
-                    'default'=>$taxrate->getTax_rate_default()
-                ],            
+                'action' => ['taxrate/edit', ['tax_rate_id' => $taxRate->getTax_rate_id()]],
+                'form' => $form,
+                'optionsDataPeppolTaxRateCode' => $this->optionsDataPeppolTaxRateCode($peppol_arrays->getUncl5305()),
+                'optionsDataStoreCoveTaxType' => $this->optionsDataStoreCoveTaxType()
             ];
             return $this->viewRenderer->render('__view', $parameters);
         }
@@ -252,8 +240,7 @@ final class TaxRateController
     private function alert(): string {
       return $this->viewRenderer->renderPartialAsString('/invoice/layout/alert',
       [ 
-        'flash' => $this->flash,
-        'errors' => [],
+        'flash' => $this->flash
       ]);
     }
 
@@ -266,4 +253,39 @@ final class TaxRateController
       $this->flash->add($level, $message, true);
       return $this->flash;
     }
+    
+    /**
+     * @param array $peppolTaxRateCodeArray
+     * @return array
+     */
+    private function optionsDataPeppolTaxRateCode(array $peppolTaxRateCodeArray) : array
+    {
+        $optionsDataPeppolTaxRateCode = [];
+        /**
+         * @var array $value
+         */
+        foreach ($peppolTaxRateCodeArray as $key => $value)
+        {
+            /**
+             * @var string $value['Id']
+             * @var string $value['Name']
+             * @var string $value['Description']
+             */
+            $optionsDataPeppolTaxRateCode[$value['Id']] = $value['Id'] . str_repeat("-", 10) . $value['Name'] . str_repeat("-", 10) . $value['Description']; 
+        }
+        return $optionsDataPeppolTaxRateCode;
+    }    
+    
+    /**
+     * @return array
+     */
+    private function optionsDataStoreCoveTaxType() : array
+    {
+       $optionsDataStoreCoveTaxType = [];
+       foreach (array_column(StoreCoveTaxType::cases(),'value') as $key => $value)
+       {
+           $optionsDataStoreCoveTaxType[$value] = str_replace('_', ' ',ucfirst($value));
+       }
+       return $optionsDataStoreCoveTaxType;
+    }    
 }

@@ -231,18 +231,7 @@ use Yiisoft\Arrays\ArrayHelper;
                     continue;
                 }
                 ?>
-                <?=
-                $cvH->print_field_for_form($client_custom_values,
-                        $custom_field,
-                        // Custom values to fill drop down list if a dropdown box has been created
-                        $custom_values,
-                        // Class for div surrounding input
-                        'col-xs-12 col-sm-6',
-                        // Class surrounding above div
-                        'form-group',
-                        // Label class similar to above
-                        'control-label');
-                ?>
+                <?= $cvH->print_field_for_form($custom_field, $form, $translator, $client_custom_values, $custom_values); ?>
             <?php endforeach; ?>
         <?= Html::closeTag('div'); ?>    
     <?= Html::closeTag('div'); ?>
@@ -342,18 +331,7 @@ use Yiisoft\Arrays\ArrayHelper;
                     continue;
                 }
                 ?>
-                <?=
-                $cvH->print_field_for_form($client_custom_values,
-                        $custom_field,
-                        // Custom values to fill drop down list if a dropdown box has been created
-                        $custom_values,
-                        // Class for div surrounding input
-                        'col-xs-12 col-sm-6',
-                        // Class surrounding above div
-                        'form-group',
-                        // Label class similar to above
-                        'control-label');
-                ?>
+                <?= $cvH->print_field_for_form($custom_field, $form, $translator, $client_custom_values, $custom_values); ?>
         <?php endforeach; ?>
         <?= Html::closeTag('div'); ?>
     <?= Html::closeTag('div'); ?>
@@ -448,19 +426,7 @@ use Yiisoft\Arrays\ArrayHelper;
                         continue;
                     }
                     ?>
-                    <?=
-                    $cvH->print_field_for_form(
-                        $client_custom_values,
-                        $custom_field,
-                        // Custom values to fill drop down list if a dropdown box has been created
-                        $custom_values,
-                        // Class for div surrounding input
-                        'col-xs-12 col-sm-6',
-                        // Class surrounding above div
-                        'form-group',
-                        // Label class similar to above
-                        'control-label');
-                    ?>
+                    <?= $cvH->print_field_for_form($custom_field, $form, $translator, $client_custom_values, $custom_values); ?>
                 <?php endforeach; ?>
             <?= Html::closeTag('div'); ?>    
         <?= Html::closeTag('div'); ?>
@@ -501,18 +467,7 @@ use Yiisoft\Arrays\ArrayHelper;
                     continue;
                 }
                 ?>
-                <?=
-                $cvH->print_field_for_form($client_custom_values,
-                    $custom_field,
-                    // Custom values to fill drop down list if a dropdown box has been created
-                    $custom_values,
-                    // Class for div surrounding input
-                    'col-xs-12 col-sm-6',
-                    // Class surrounding above div
-                    'form-group',
-                    // Label class similar to above
-                    'control-label');
-                ?>
+                <?= $cvH->print_field_for_form($custom_field, $form, $translator, $client_custom_values, $custom_values); ?>
             <?php endforeach; ?>
         <?= Html::closeTag('div'); ?>
         <?= Html::openTag('div',['class' => 'form-group']); ?>
@@ -530,18 +485,7 @@ use Yiisoft\Arrays\ArrayHelper;
                                     continue;
                                 }
                                 ?>
-                                <?=
-                                $cvH->print_field_for_form($client_custom_values,
-                                    $custom_field,
-                                    // Custom values to fill drop down list if a dropdown box has been created
-                                    $custom_values,
-                                    // Class for div surrounding input
-                                    'col-xs-12 col-sm-6',
-                                    // Class surrounding above div
-                                    'form-group',
-                                    // Label class similar to above
-                                    'control-label');
-                                ?>
+                                <?= $cvH->print_field_for_form($custom_field, $form, $translator, $client_custom_values, $custom_values); ?>
                             <?php endforeach; ?>
                         <?= Html::closeTag('div'); ?>
                     <?= Html::closeTag('div'); ?>

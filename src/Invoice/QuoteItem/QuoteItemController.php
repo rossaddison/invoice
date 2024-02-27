@@ -30,8 +30,8 @@ use Yiisoft\Router\CurrentRoute;
 use Yiisoft\Router\FastRoute\UrlGenerator;
 use Yiisoft\Session\Flash\Flash;
 use Yiisoft\Session\SessionInterface as Session;
-use Yiisoft\Translator\TranslatorInterface;use Yiisoft\FormModel\FormHydrator;
-use Yiisoft\Form\Helper\HtmlFormErrors;
+use Yiisoft\Translator\TranslatorInterface;
+use Yiisoft\FormModel\FormHydrator;
 use Yiisoft\Yii\View\ViewRenderer;
 
 final class QuoteItemController
@@ -71,13 +71,11 @@ final class QuoteItemController
     
     /**
      * @param QIR $qiR
-     * @param SR $sR
      */
-    public function index(QIR $qiR, SR $sR): \Yiisoft\DataResponse\DataResponse
+    public function index(QIR $qiR): \Yiisoft\DataResponse\DataResponse
     {       
          $canEdit = $this->rbac();
-         $parameters = [      
-          's'=>$sR,
+         $parameters = [ 
           'quote_id'=>$this->session->get('quote_id'),
           'canEdit' => $canEdit,
           'quoteitems' => $this->quoteitems($qiR),
@@ -91,7 +89,6 @@ final class QuoteItemController
     // Triggered by clicking on the save button on the item view appearing above the quote view
     
     /**
-     * @param ViewRenderer $head
      * @param Request $request
      * @param FormHydrator $formHydrator
      * @param SR $sR
@@ -100,39 +97,42 @@ final class QuoteItemController
      * @param TRR $trR
      * @param QIAR $qiar
      */
-    public function add(ViewRenderer $head, Request $request,  
+    public function add(Request $request,  
       FormHydrator $formHydrator,
       SR $sR,
       PR $pR,
       UR $uR,                                                
       TRR $trR,
       QIAR $qiar,
-    ) : \Yiisoft\DataResponse\DataResponse
+    ) : \Yiisoft\DataResponse\DataResponse|Response
     {
         // This function is used 
         $quote_id = (string)$this->session->get('quote_id');
+        $quoteItem = new QuoteItem(); 
+        $form = new QuoteItemForm($quoteItem, $quote_id);
         $parameters = [
             'title' => $this->translator->translate('invoice.add'),
             'action' => ['quoteitem/add'],
             'errors' => [],
-            'body' => $request->getParsedBody(),
-            's'=>$sR,
-            'head'=>$head,
-            'quote_id'=>$quote_id,
-            'tax_rates'=>$trR->findAllPreloaded(),
-            'products'=>$pR->findAllPreloaded(),
-            'units'=>$uR->findAllPreloaded(),
-            'numberhelper'=>new NumberHelper($sR)
+            'form' => $form,
+            'quote_id' => $quote_id,
+            'tax_rates' => $trR->findAllPreloaded(),
+            'products' => $pR->findAllPreloaded(),
+            'units' => $uR->findAllPreloaded(),
+            'numberhelper' => new NumberHelper($sR)
         ];
-        
-        if ($request->getMethod() === Method::POST) {            
-           $form = new QuoteItemForm();
-           if ($formHydrator->populate($form, $parameters['body']) && $form->isValid()) {
-               $this->quoteitemService->addQuoteItem(new QuoteItem(), $form, $quote_id, $pR, $qiar, new QIAS($qiar),$uR, $trR);
-               return $this->factory->createResponse($this->viewRenderer->renderPartialAsString('/invoice/setting/quote_successful',
-                       ['heading'=>'Successful','message'=>$sR->trans('record_successfully_created'),'url'=>'quote/view','id'=>$quote_id]));  
-           }    
-           $parameters['form'] = $form;
+        if ($request->getMethod() === Method::POST) {
+            if ($formHydrator->populateFromPostAndValidate($form, $request)) {
+                $body = $request->getParsedBody();
+                /**
+                 * @psalm-suppress PossiblyInvalidArgument $body
+                 */
+                $this->quoteitemService->addQuoteItem($quoteItem, $body, $quote_id, $pR, $qiar, new QIAS($qiar), $uR, $trR, $this->translator);
+                $this->flash_message('success', $this->translator->translate('i.record_successfully_created'));
+                return $this->webService->getRedirectResponse('quote/view', ['id'=>$quote_id]);  
+            }    
+            $parameters['form'] = $form;
+            $parameters['errors'] = $form->getValidationResult()?->getErrorMessagesIndexedByAttribute() ?? [];
         }
         return $this->viewRenderer->render('_item_form', $parameters);
     }
@@ -144,7 +144,6 @@ final class QuoteItemController
      return $this->viewRenderer->renderPartialAsString('/invoice/layout/alert',
      [ 
        'flash' => $this->flash,
-       'errors' => [],
      ]);
    }
 
@@ -159,7 +158,6 @@ final class QuoteItemController
     }
     
     /**
-     * @param ViewRenderer $head
      * @param CurrentRoute $currentRoute
      * @param Request $request
      * @param FormHydrator $formHydrator
@@ -172,49 +170,52 @@ final class QuoteItemController
      * @param QIAS $qias
      * @param QIAR $qiar
      */
-    public function edit(ViewRenderer $head, CurrentRoute $currentRoute, Request $request, FormHydrator $formHydrator,
+    public function edit(CurrentRoute $currentRoute, Request $request, FormHydrator $formHydrator,
                         QIR $qiR, SR $sR, TRR $trR, PR $pR, UR $uR, QR $qR, QIAS $qias, QIAR $qiar): \Yiisoft\DataResponse\DataResponse|Response {
-      $quote_id = (string)$this->session->get('quote_id');
-      $quote_item = $this->quoteitem($currentRoute, $qiR);
-      $parameters = [
-              'title' => $this->translator->translate('invoice.edit'),
-              'action' => ['quoteitem/edit', ['id' => $currentRoute->getArgument('id')]],
-              'errors' => [],
-              'body' => $this->body($quote_item ?: new QuoteItem()),
-              'quote_id'=>$quote_id,
-              'head'=>$head,
-              's'=>$sR,
-              'tax_rates'=>$trR->findAllPreloaded(),
-              'products'=>$pR->findAllPreloaded(),
-              'quotes'=>$qR->findAllPreloaded(),            
-              'units'=>$uR->findAllPreloaded(),
-              'numberhelper'=>new NumberHelper($sR)
-          ];
-          if ($request->getMethod() === Method::POST) {
-              $form = new QuoteItemForm();            
-              $body = $request->getParsedBody();
-              if ($formHydrator->populate($form, $body) && $form->isValid()) {
-                $quantity = $form->getQuantity() ?? 0.00;
-                $price = $form->getPrice() ?? 0.00;
-                $discount = $form->getDiscount_amount() ?? 0.00;
-                $tax_rate_id = $this->quoteitemService->saveQuoteItem($quote_item ?: new QuoteItem(), $form, $quote_id, $pR, $uR) ?: 1;
-                $tax_rate_percentage = $this->taxrate_percentage($tax_rate_id, $trR);
-                if (null!==$tax_rate_percentage) {
+        $quote_id = (string)$this->session->get('quote_id');
+        $quoteItem = $this->quoteitem($currentRoute, $qiR);
+        if (null!==$quoteItem) {
+            $form = new QuoteItemForm($quoteItem, $quote_id);
+            $parameters = [
+                'title' => $this->translator->translate('invoice.edit'),
+                'action' => ['quoteitem/edit', ['id' => $currentRoute->getArgument('id')]],
+                'errors' => [],
+                'form' => $form,
+                'quote_id' => $quote_id,
+                'tax_rates' => $trR->findAllPreloaded(),
+                'products' => $pR->findAllPreloaded(),
+                'quotes' => $qR->findAllPreloaded(),            
+                'units' => $uR->findAllPreloaded(),
+                'numberhelper' => new NumberHelper($sR)
+            ];
+            if ($request->getMethod() === Method::POST) {
+                if ($formHydrator->populateFromPostAndValidate($form, $request)) {
+                    $body = $request->getParsedBody();
+                    $quantity = null!==$form->getQuantity() ? $form->getQuantity() : 0.00;
+                    $price = null!==$form->getPrice() ? $form->getPrice() : 0.00;
+                    $discount = null!==$form->getDiscount_amount() ? $form->getDiscount_amount() : 0.00;
                     /**
-                     * @psalm-suppress PossiblyNullReference getId
+                     * @psalm-suppress PossiblyInvalidArgument $body
                      */
-                    $request_quote_item = (int)$this->quoteitem($currentRoute, $qiR)->getId();
-                    $this->saveQuoteItemAmount($request_quote_item, 
-                                               $quantity, $price, $discount, $tax_rate_percentage, $qias, $qiar, $sR);    
-                    return $this->factory->createResponse($this->viewRenderer->renderPartialAsString('/invoice/setting/quote_successful',
-                    ['heading'=>'Successful', 'message'=>$sR->trans('record_successfully_updated'),'url'=>'quote/view','id'=>$quote_id])); 
-                }
-              }
-              $parameters['body'] = $body;
-              $parameters['form'] = $form;
-          } 
-          return $this->viewRenderer->render('_item_edit_form', $parameters);
-          //quote_item
+                    $tax_rate_id = $this->quoteitemService->saveQuoteItem($quoteItem, $body, $quote_id, $pR, $uR, $this->translator) ?: 1;
+                    $tax_rate_percentage = $this->taxrate_percentage($tax_rate_id, $trR);
+                    if (null!==$tax_rate_percentage) {
+                        /**
+                         * @psalm-suppress PossiblyNullReference getId
+                         */
+                        $request_quote_item = (int)$this->quoteitem($currentRoute, $qiR)->getId();
+                        $this->saveQuoteItemAmount($request_quote_item, 
+                                                   $quantity, $price, $discount, $tax_rate_percentage, $qias, $qiar, $sR);    
+                        $this->flash_message('success', $this->translator->translate('i.record_successfully_updated'));
+                        return $this->webService->getRedirectResponse('quote/view', ['id' => $quote_id]);
+                    }
+                }    
+                $parameters['errors'] = $form->getValidationResult()?->getErrorMessagesIndexedByAttribute() ?? [];
+                $parameters['form'] = $form;
+            } 
+            return $this->viewRenderer->render('_item_edit_form', $parameters);
+        }
+        return $this->webService->getNotFoundResponse();
     }
     
     /**
@@ -269,7 +270,7 @@ final class QuoteItemController
         if ($qiar->repoCount((string)$quote_item_id) === 0) {
           $qias->saveQuoteItemAmountNoForm(new QuoteItemAmount() , $qias_array);
         } else {
-            $quote_item_amount = $qiar->repoQuoteItemAmountquery((string)$quote_item_id);
+            $quote_item_amount = $qiar->repoQuoteItemAmountquery($quote_item_id);
             if ($quote_item_amount) {
                 $qias->saveQuoteItemAmountNoForm($quote_item_amount , $qias_array);  
             }    
@@ -315,24 +316,22 @@ final class QuoteItemController
     /**
      * @param CurrentRoute $currentRoute
      * @param QIR $qiR
-     * @param SR $sR
      */
-    public function view(CurrentRoute $currentRoute, QIR $qiR,
-      SR $sR 
-      ): \Yiisoft\DataResponse\DataResponse|Response {
-      $quote_item = $this->quoteitem($currentRoute, $qiR);
-      if ($quote_item) {
-          $parameters = [
-              'title' => $sR->trans('view'),
-              'action' => ['quoteitem/edit', ['id' => $quote_item->getId()]],
-              'errors' => [],
-              'body' => $this->body($quote_item),
-              's'=>$sR,             
-              'quoteitem'=>$qiR->repoQuoteItemquery($quote_item->getId()),
-          ];
-          return $this->viewRenderer->render('_view', $parameters);
-      }
-      return $this->webService->getNotFoundResponse();
+    public function view(CurrentRoute $currentRoute, QIR $qiR): \Yiisoft\DataResponse\DataResponse|Response 
+    {
+        $quoteItem = $this->quoteitem($currentRoute, $qiR);
+        if ($quoteItem) {
+            $form = new QuoteItemForm($quoteItem, $quoteItem->getQuote_id()); 
+            $parameters = [
+                'title' => $this->translator->translate('i.view'),
+                'action' => ['quoteitem/edit', ['id' => $quoteItem->getId()]],
+                'errors' => [],
+                'form' => $form,
+                'quoteitem' => $qiR->repoQuoteItemquery($quoteItem->getId()),
+            ];
+            return $this->viewRenderer->render('_view', $parameters);
+        }
+        return $this->webService->getNotFoundResponse();
     }
     
     /**
@@ -340,12 +339,12 @@ final class QuoteItemController
      */
     private function rbac(): bool|Response 
     {
-      $canEdit = $this->userService->hasPermission('editInv');
-      if (!$canEdit){
-          $this->flash_message('warning', $this->translator->translate('invoice.permission'));
-          return $this->webService->getRedirectResponse('quote/index');
-      }
-      return $canEdit;
+        $canEdit = $this->userService->hasPermission('editInv');
+        if (!$canEdit){
+            $this->flash_message('warning', $this->translator->translate('invoice.permission'));
+            return $this->webService->getRedirectResponse('quote/index');
+        }
+        return $canEdit;
     }
     
     /**
@@ -355,14 +354,14 @@ final class QuoteItemController
      */
     private function quoteitem(CurrentRoute $currentRoute, QIR $qiR): QuoteItem|null
     {
-      $id = $currentRoute->getArgument('id'); 
-      if (null!==$id) {
-          $quoteitem = $qiR->repoQuoteItemquery($id);
-          if ($quoteitem) {
-            return $quoteitem;
-          }  
-      }
-      return null;
+        $id = $currentRoute->getArgument('id'); 
+        if (null!== $id) {
+            $quoteitem = $qiR->repoQuoteItemquery($id);
+            if ($quoteitem) {
+              return $quoteitem;
+            }  
+        }
+        return null;
     }
     
     /**
@@ -374,27 +373,5 @@ final class QuoteItemController
     {
       $quoteitems = $qiR->findAllPreloaded();        
       return $quoteitems;
-    }
-    
-    /**
-     * @param QuoteItem $quoteitem
-     * @return array
-     */
-    private function body(QuoteItem $quoteitem): array {
-      $body = [
-        'id'=>$quoteitem->getId(),
-        'quote_id'=>$quoteitem->getQuote_id(),
-        'tax_rate_id'=>$quoteitem->getTax_rate_id(),
-        'product_id'=>$quoteitem->getProduct_id(),
-        'name'=>$quoteitem->getName(),
-        'description'=>$quoteitem->getDescription(),
-        'quantity'=>$quoteitem->getQuantity(),
-        'price'=>$quoteitem->getPrice(),
-        'discount_amount'=>$quoteitem->getDiscount_amount(),
-        'order'=>$quoteitem->getOrder(),
-        'product_unit'=>$quoteitem->getProduct_unit(),
-        'product_unit_id'=>$quoteitem->getProduct_unit_id()
-      ];
-      return $body;
-    }
+    }    
 }

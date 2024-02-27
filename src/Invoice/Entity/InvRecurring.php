@@ -6,6 +6,7 @@ namespace App\Invoice\Entity;
 use Cycle\Annotated\Annotation\Column;
 use Cycle\Annotated\Annotation\Entity;
 use Cycle\Annotated\Annotation\Relation\BelongsTo;
+use \DateTime;
 use \DateTimeImmutable;  
 #[Entity(repository: \App\Invoice\InvRecurring\InvRecurringRepository::class)]
  
@@ -20,7 +21,7 @@ class InvRecurring
     #[Column(type:'integer(11)', nullable: false)]
     private ?int $inv_id =  null;
 
-    #[Column(type:'date', nullable: true)]
+    #[Column(type:'date', nullable: false)]
     private mixed $start;
 
     #[Column(type:'date', nullable: true)]
@@ -35,12 +36,18 @@ class InvRecurring
     public function __construct(
         int $id = null,
         int $inv_id = null,
+        mixed $start = '',
+        mixed $end = '',    
         string $frequency = '',
+        mixed $next = '',
     )
     {
         $this->id=$id;
         $this->inv_id=$inv_id;
+        $this->start=$start;
+        $this->end=$end;
         $this->frequency=$frequency;
+        $this->next=$next;
     }
 
     public function getId(): string
@@ -68,37 +75,37 @@ class InvRecurring
         $this->inv_id =  $inv_id;
     }
     
-    public function getStart() : DateTimeImmutable  
+    public function getStart() : string|DateTimeImmutable  
     {
-        /** @var DateTimeImmutable $this->start */
+        /** @var string|DateTimeImmutable $this->start */
         return $this->start;
     }    
     
-    public function setStart(string $start): void
+    public function setStart(DateTime $start): void
     {
-        $this->start = new \DateTime($start);
+        $this->start = $start;
     }
     
-    public function getEnd() : DateTimeImmutable  
+    public function getEnd() : string|DateTimeImmutable  
     {
-        /** @var DateTimeImmutable $this->end */
+        /** @var string|DateTimeImmutable $this->end */
         return $this->end;
     }    
     
-    public function setEnd(string $end): void
+    public function setEnd(DateTime $end): void
     {
-        $this->end = new \DateTime($end);
+        $this->end = $end;
     }
     
-    public function getNext() : DateTimeImmutable|null  
+    public function getNext() : string|DateTimeImmutable|null  
     {
-        /** @var DateTimeImmutable $this->next */
+        /** @var string|DateTimeImmutable $this->next */
         return $this->next;
     }    
     
-    public function setNext(string $next): void 
+    public function setNext(DateTime $next): void 
     {
-        $this->next = new \DateTime($next);
+        $this->next = $next;
     }
 
     public function getFrequency(): string

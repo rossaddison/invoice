@@ -2,7 +2,7 @@
 
 declare(strict_types=1); 
 
-use App\Widget\Button;
+
 
 use Yiisoft\FormModel\Field;
 use Yiisoft\Html\Html;
@@ -30,18 +30,13 @@ use Yiisoft\Html\Tag\Form;
     ->open() ?>
 
     <?= Html::openTag('div', ['class' => 'headerbar']); ?>
-        <?= Html::openTag('h1');?>
-            <?= Html::encode($translator->translate('i.companies_form')); ?>
-        <?=Html::closeTag('h1'); ?>
-        <?= Button::back_save($translator); ?>        
-        <?php echo (string)$response->getBody(); ?>
+        <?= $button::back_save($translator); ?> 
         <?= Html::openTag('div',['id' => 'content']); ?>
             <?= Html::openTag('div', ['class' => 'row']); ?>
                 <?= Html::openTag('div',['class' => 'mb-3 form-group']); ?>    
                     <?= Field::errorSummary($form)
                         ->errors($errors)
                         ->header($translator->translate('invoice.client.error.summary'))
-                        ->onlyProperties(...['client_name', 'client_surname', 'client_email', 'client_age'])    
                         ->onlyCommonErrors()
                     ?>
                 <?= Html::closeTag('div'); ?>    
@@ -50,7 +45,7 @@ use Yiisoft\Html\Tag\Form;
                         ->addInputAttributes([
                             'class' => 'form-control'
                         ])
-                        ->label('')
+                        ->hideLabel()
                         ->value(Html::encode($form->getId() ??  ''));
                     ?>
                 <?= Html::closeTag('div'); ?>

@@ -42,14 +42,14 @@ $(function () {
                             btn.html('<h2 class="text-center"><i class="fa fa-check"></i></h2>');                        
                             window.location = absolute_url;
                             window.location.reload();
-                            alert('Invoice created from Sales Order!');
+                            alert(response.flash_message);
                         }
                         if (response.success === 0) {
                             // The validation was not successful created
                             btn.html('<h2 class="text-center"><i class="fa fa-check"></i></h2>');                        
                             window.location = absolute_url;
                             window.location.reload();
-                            alert('Invoice NOT created from Sales Order! Duplicate Invoice. Copy your Sales Order to another Sales Order and then copy to invoice. Each Sales Order must have a matching invoice.');
+                            alert(response.flash_message);
                         }    
                         
             },

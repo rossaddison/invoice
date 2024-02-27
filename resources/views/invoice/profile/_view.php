@@ -2,46 +2,83 @@
 
 declare(strict_types=1); 
 
+
+use Yiisoft\FormModel\Field;
 use Yiisoft\Html\Html;
-use Yiisoft\Yii\Bootstrap5\Alert;
+use Yiisoft\Html\Tag\Form;
 
 /**
  * @var \Yiisoft\View\View $this
  * @var \Yiisoft\Router\UrlGeneratorInterface $urlGenerator
- * @var array $body
  * @var string $csrf
  * @var string $action
  * @var string $title
  */
-
-if (!empty($errors)) {
-    foreach ($errors as $field => $error) {
-        echo Alert::widget()->options(['class' => 'alert-danger'])->body(Html::encode($field . ':' . $error));
-    }
-}
-
 ?>
-<?= Html::openTag('h1'); ?><?= Html::encode($title) ?><?= Html::closeTag('h1'); ?>
-<?= Html::openTag('div', ['class' => 'row']); ?>
- <div class="mb3 form-group">   
- <div  class="form-check form-switch">
-    <label for="current" class="form-check-label ">
-      <?= $translator->translate('i.active'); ?>
-      <input class="form-check-input" id="current" name="current" type="checkbox" value="1" disabled
-      <?php $s->check_select(Html::encode($body['current'] ?? ''), 1, '==', true) ?>>
-    </label>   
- </div>
- </div> 
- <div class="mb3 form-group">
-<label for="mobile" class="form-label" style="background:lightblue"><?= $translator->translate('i.mobile'); ?></label>
-   <?= Html::encode($body['mobile'] ?? ''); ?>
- </div>
- <div class="mb3 form-group">
-<label for="email" class="form-label" style="background:lightblue"><?= $translator->translate('i.email'); ?></label>
-   <?= Html::encode($body['email'] ?? ''); ?>
- </div>
- <div class="mb3 form-group">
-   <label for="company_id" class="form-label" style="background:lightblue"><?= $translator->translate('i.name'); ?></label>
-   <?= Html::encode($profile->getCompany()->name); ?>
- </div>
-</div>
+
+<?= Form::tag()
+    ->post($urlGenerator->generate(...$action))
+    ->enctypeMultipartFormData()
+    ->csrf($csrf)
+    ->id('ProfileForm')
+    ->open() ?>
+
+<?= Html::openTag('div',['class'=>'container py-5 h-100']); ?>
+<?= Html::openTag('div',['class'=>'row d-flex justify-content-center align-items-center h-100']); ?>
+<?= Html::openTag('div',['class'=>'col-12 col-md-8 col-lg-6 col-xl-8']); ?>
+<?= Html::openTag('div',['class'=>'card border border-dark shadow-2-strong rounded-3']); ?>
+<?= Html::openTag('div',['class'=>'card-header']); ?>
+
+<?= Html::openTag('h1',['class'=>'fw-normal h3 text-center']); ?>    
+    <?= Html::encode($title) ?>
+<?= Html::closeTag('h1'); ?>
+<?= Html::openTag('div', ['id' => 'headerbar']); ?>
+    <?= $button::back($translator); ?>
+    <?= Html::openTag('div', ['id' => 'content']); ?>
+        <?= Html::openTag('div', ['class' => 'row']); ?>
+            <?= Html::openTag('div', ['class' => 'mb-3 form-group']); ?>
+                <?= Html::openTag('div', ['class' => 'mb-3 form-group']); ?>
+                    <?= Field::checkbox($form, 'current')
+                        ->inputLabelAttributes(['class' => 'form-check-label'])    
+                        ->enclosedByLabel(true)
+                        ->disabled(true)
+                        ->inputClass('form-check-input')
+                        ->ariaDescribedBy($translator->translate('i.active'))
+                    ?>
+                <?= Html::closeTag('div'); ?>
+                <?= Html::openTag('div', ['class' => 'mb-3 form-group']); ?>
+                    <?php 
+                        $optionsDataCompany = [];
+                        foreach ($companies as $company) {
+                            $optionsDataCompany[$company->getId()] = $company->getName();
+                        }
+                    ?>
+                    <?= Field::select($form, 'company_id')
+                        ->optionsData($optionsDataCompany)
+                        ->disabled(true);
+                    ?>    
+                <?= Html::closeTag('div'); ?>
+                <?= Html::openTag('div', ['class' => 'mb-3 form-group']); ?>
+                    <?= Field::telephone($form, 'mobile')
+                        ->disabled(true);
+                    ?>
+                <?= Html::closeTag('div'); ?>
+                <?= Html::openTag('div', ['class' => 'mb-3 form-group']); ?>
+                    <?= Field::email($form, 'email')
+                        ->disabled(true); 
+                    ?>
+                <?= Html::closeTag('div'); ?>
+                <?= Html::openTag('div', ['class' => 'mb-3 form-group']); ?>
+                    <?= Field::text($form, 'description')
+                        ->disabled(true); 
+                    ?>
+                <?= Html::closeTag('div'); ?>
+            <?= Html::closeTag('div'); ?>
+        <?= Html::closeTag('div'); ?>
+    <?= Html::closeTag('div'); ?>
+<?= Html::closeTag('div'); ?>
+<?= Html::closeTag('div'); ?>
+<?= Html::closeTag('div'); ?>
+<?= Html::closeTag('div'); ?>
+<?= Form::tag()->close() ?>
+

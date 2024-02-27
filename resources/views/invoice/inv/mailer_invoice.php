@@ -129,6 +129,7 @@ use Yiisoft\Html\Tag\Input;
                     </div>
                     <?= Html::tag('Label',$translator->translate('i.to_email')) ?>
                     <?= Field::email($form, 'to_email')->addInputAttributes(['value'=> Html::encode($invoice->getClient()->getClient_email())])
+                                                       ->required(true)
                                                        ->hideLabel() ?> 
                     
                     <?= Html::tag('Label',$translator->translate('i.email_template')) ?>                        
@@ -138,11 +139,14 @@ use Yiisoft\Html\Tag\Input;
                     
                     <?= Html::tag('Label',$translator->translate('i.from_name')) ?>
                     <?= Field::text($form, 'from_name')->addInputAttributes(['class'=>'email-template-from-name form-control']) 
-                                                       ->addInputAttributes(['value'=> $auto_template['from_name'] ?? '' ?: (null!==$userinv ? Html::encode($userinv->getName()) : '')])->hideLabel()?>
+                                                       ->addInputAttributes(['value'=> $auto_template['from_name'] ?? '' ?: (null!==$userinv ? Html::encode($userinv->getName()) : '')])
+                                                       ->hideLabel()
+                                                       ->required(true); ?>
                     
                     <?= Html::tag('Label',$translator->translate('i.from_email')). str_repeat("&nbsp;", 2). ($auto_template['from_email'] ? $translator->translate('invoice.email.source.email.template') : $translator->translate('invoice.email.source.user.account')) ?>
                     <?= Field::email($form, 'from_email')->addInputAttributes(['value'=> $auto_template['from_email'] ?? '' ?: (null!==$userinv ? Html::encode($userinv->getEmail()) : '')  ])->hideLabel()
-                                                         ->addInputAttributes(['class'=>'email-template-from-email form-control']) ?>                            
+                                                         ->addInputAttributes(['class'=>'email-template-from-email form-control'])
+                                                         ->required(true); ?>                            
                     
                     <?= Html::tag('Label',$translator->translate('i.cc')) ?>
                     <?= Field::text($form, 'cc')->addInputAttributes(['class'=>'email-template-cc form-control'])  
@@ -158,7 +162,8 @@ use Yiisoft\Html\Tag\Input;
                     <?= Field::text($form, 'subject')->addInputAttributes(['id'=>'mailerinvform-subject'])
                                                      ->addInputAttributes(['class'=>'email-template-subject form-control'])
                                                      ->addInputAttributes(['value'=>$auto_template['subject'] ?? '' ?: $translator->translate('i.invoice'). '#'. $invoice->getNumber() ])
-                                                     ->hideLabel() ?>
+                                                     ->hideLabel()
+                                                     ->required(true); ?>
                     
                     <?= Html::tag('Label',$translator->translate('i.pdf_template')) ?>
                     <?= Field::select($form, 'pdf_template')->optionsData($pdf_templates, true,[],[])

@@ -1,53 +1,118 @@
 <?php
-
 declare(strict_types=1); 
 
+
+use Yiisoft\FormModel\Field;
 use Yiisoft\Html\Html;
+use Yiisoft\Html\Tag\Form;
 
 /**
  * @var \Yiisoft\View\View $this
  * @var \Yiisoft\Router\UrlGeneratorInterface $urlGenerator
- * @var array $body
  * @var string $csrf
  * @var string $action
  * @var string $title
  */
-
 ?>
-<?= Html::openTag('h1'); ?><?= Html::encode($title) ?><?= Html::closeTag('h1'); ?>
-<?= Html::openTag('div', ['class' => 'row']); ?>
- <div class="mb3 form-group">
-   <label for="successful" class="form-label" style="background:lightblue">Successful</label>
-   <?= Html::encode($body['successful'] ?? ''); ?>
- </div>
- <div class="mb3 form-group">
-   <label for="date" class="form-label" style="background:lightblue"><?= $translator->translate('i.date'); ?></label>
-   <?php
-        $date = $body['date'];
-        if ($date && $date != "0000-00-00") {
-                //use the DateHelper
-            $datehelper = new DateHelper($s);
-            $date = $datehelper->date_from_mysql($date);
-        } else {
-            $date = null;
-        }
-    ?>      
-    <?= Html::encode($date); ?> 
- </div>
- <div class="mb3 form-group">
-   <label for="driver" class="form-label" style="background:lightblue">Driver</label>
-   <?= Html::encode($body['driver'] ?? ''); ?>
- </div>
- <div class="mb3 form-group">
-   <label for="response" class="form-label" style="background:lightblue">Response</label>
-   <?= Html::encode($body['response'] ?? ''); ?>
- </div>
- <div class="mb3 form-group">
-   <label for="reference" class="form-label" style="background:lightblue">Reference</label>
-   <?= Html::encode($body['reference'] ?? ''); ?>
- </div>
- <div class="mb3 form-group">
-   <label for="inv_id" class="form-label" style="background:lightblue">Inv</label>
-   <?= $merchant->getInv()->getId();?>
- </div>
-</div>
+
+<?= Form::tag()
+    ->post($urlGenerator->generate(...$action))
+    ->enctypeMultipartFormData()
+    ->csrf($csrf)
+    ->id('MerchantForm')
+    ->open() ?>
+
+<?= Html::openTag('div',['class'=>'container py-5 h-100']); ?>
+<?= Html::openTag('div',['class'=>'row d-flex justify-content-center align-items-center h-100']); ?>
+<?= Html::openTag('div',['class'=>'col-12 col-md-8 col-lg-6 col-xl-8']); ?>
+<?= Html::openTag('div',['class'=>'card border border-dark shadow-2-strong rounded-3']); ?>
+<?= Html::openTag('div',['class'=>'card-header']); ?>
+
+<?= Html::openTag('h1',['class'=>'fw-normal h3 text-center']); ?>    
+    <?= Html::encode($title) ?>
+<?= Html::closeTag('h1'); ?>
+<?= Html::openTag('div', ['id' => 'headerbar']); ?>
+    <?= $button::back($translator); ?>
+    <?= Html::openTag('div', ['id' => 'content']); ?>
+        <?= Html::openTag('div', ['class' => 'row']); ?>
+            <?= Html::openTag('div', ['class' => 'mb-3 form-group']); ?>
+                <?= Field::errorSummary($form)
+                    ->errors($errors)
+                    ->header($translator->translate('invoice.error.summary'))
+                    ->onlyCommonErrors()
+                ?>
+                <?= Html::closeTag('div'); ?>
+                <?= Html::openTag('div', ['class' => 'mb-3 form-group']); ?>
+                <?= Field::text($form, 'inv')
+                    ->label($translator->translate('invoice.invoice.number'), ['form-label'])
+                    ->addInputAttributes([
+                        'readonly' => 'readonly',
+                        'disabled' => 'disabled'
+                    ])        
+                    ->placeholder($translator->translate('invoice.successful'))    
+                    ->value(Html::encode($form->getInv()?->getNumber() ?? $translator->translate('i.reason.uknown'))) 
+                ?>
+                <?= Html::closeTag('div'); ?>    
+                <?= Html::openTag('div', ['class' => 'mb-3 form-group']); ?>
+                <?= Field::checkbox($form, 'successful')
+                    ->inputLabelAttributes(['class' => 'form-check-label'])    
+                    ->enclosedByLabel(true)
+                    ->addInputAttributes([
+                            'readonly' => 'readonly',
+                            'disabled' => 'disabled'
+                    ])                
+                    ->inputClass('form-check-input')
+                    ->ariaDescribedBy($translator->translate('invoice.successful'))
+                ?>        
+                <?= Html::closeTag('div'); ?>
+                <?= Html::openTag('div', ['class' => 'mb-3 form-group']); ?>
+                    <?= Field::date($form, 'date')
+                    ->label($translator->translate('i.date'), ['class' => 'form-label'])
+                    ->addInputAttributes([
+                        'readonly' => 'readonly',
+                        'disabled' => 'disabled'
+                    ])    
+                    ->value($form->getDate() ? ($form->getDate())->format('Y-m-d') : '') 
+                ?>
+                <?= Html::closeTag('div'); ?>
+                <?= Html::openTag('div', ['class' => 'mb-3 form-group']); ?>
+                <?= Field::text($form, 'driver')
+                    ->label($translator->translate('invoice.merchant.driver'), ['form-label'])
+                    ->placeholder($translator->translate('invoice.merchant.driver'))
+                    ->addInputAttributes([
+                        'readonly' => 'readonly',
+                        'disabled' => 'disabled'
+                    ])        
+                    ->value(Html::encode($form->getDriver() ?? '')) 
+                ?>
+                <?= Html::closeTag('div'); ?>
+                <?= Html::openTag('div', ['class' => 'mb-3 form-group']); ?>
+                <?= Field::text($form, 'response')
+                    ->label($translator->translate('invoice.merchant.response'), ['form-label'])
+                    ->placeholder($translator->translate('invoice.merchant.response'))
+                    ->addInputAttributes([
+                        'readonly' => 'readonly',
+                        'disabled' => 'disabled'
+                    ])        
+                    ->value(Html::encode($form->getResponse() ?? '')) 
+                ?>
+                <?= Html::closeTag('div'); ?>
+                <?= Html::openTag('div', ['class' => 'mb-3 form-group']); ?>
+                <?= Field::text($form, 'reference')
+                    ->label($translator->translate('invoice.merchant.reference'), ['form-label'])
+                    ->placeholder($translator->translate('invoice.merchant.reference'))
+                    ->addInputAttributes([
+                        'readonly' => 'readonly',
+                        'disabled' => 'disabled'
+                    ])        
+                    ->value(Html::encode($form->getReference() ?? '')) 
+                ?>
+                <?= Html::closeTag('div'); ?>
+            <?= Html::closeTag('div'); ?>
+        <?= Html::closeTag('div'); ?>
+    <?= Html::closeTag('div'); ?>
+<?= Html::closeTag('div'); ?>
+<?= Html::closeTag('div'); ?>
+<?= Html::closeTag('div'); ?>
+<?= Html::closeTag('div'); ?>
+<?= Form::tag()->close() ?>

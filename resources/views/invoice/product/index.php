@@ -92,14 +92,14 @@ use Yiisoft\Router\CurrentRoute;
             'product_sku',
             //filter: 'filter_product_sku',
             //The filter is still currently working through javascript and not php ajax request ... yet to be tested
-            filterProperty: 'filter_product_sku',
-            filterType: 'text',
-            filterInputAttributes: ['id'=>'filter_product_sku'],
-            filterModelName: 'product_sku',
+            //filterProperty: 'filter_product_sku',
+            //filterType: 'text',
+            //filterInputAttributes: ['id'=>'filter_product_sku'],
+            //filterModelName: 'product_sku',
             // Stringable|null|string|int|bool|float    
-            filterValueDefault: 'SKU',
-            filterInputSelectItems: ['this','that'],
-            filterInputSelectPrompt: 'this or that',    
+            //filterValueDefault: 'SKU',
+            //filterInputSelectItems: ['this','that'],
+            //filterInputSelectPrompt: 'this or that',    
             /**
              * @see \src\Invoice\Asset\rebuild-1.13\js\product.js line 47 product_sku: $('#filter_product_sku').val()
              */
@@ -184,21 +184,19 @@ use Yiisoft\Router\CurrentRoute;
     ->columns(...$columns)
     ->dataReader($paginator)
     ->headerRowAttributes(['class'=>'card-header bg-info text-black'])
-    ->filterPosition('header')
-    ->filterModelName('product')
+    //->filterPosition('header')
+    //->filterModelName('product')
     ->urlQueryParameters(['product_sku'])            
     ->header($header)
     ->id('w4-grid')
     ->pagination(
     OffsetPagination::widget()
-         ->menuClass('pagination justify-content-center')
-         ->paginator($paginator)
-         ->urlArguments([])
+        ->paginator($paginator)
          ->render(),
     )
     ->rowAttributes(['class' => 'align-middle'])
     ->summaryAttributes(['class' => 'mt-3 me-3 summary text-end'])
-    ->summary($grid_summary)
+    ->summaryTemplate($grid_summary)
     ->emptyTextAttributes(['class' => 'card-header bg-warning text-black'])
     ->emptyText((string)$translator->translate('invoice.invoice.no.records'))
     ->tableAttributes(['class' => 'table table-striped text-center h-75','id'=>'table-product'])

@@ -97,33 +97,40 @@ final class ProductImageController {
     }
 
     /**
-     * @param ViewRenderer $head
+     * @see Alternative currently used: ProductController function image_attachment_move_to
+     * @see This function is not currently used but can be adapted for use
      * @param Request $request
+     * @param CurrentRoute $currentRoute
      * @param FormHydrator $formHydrator
      * @param ProductRepository $productRepository
      * @return Response
      */
-    public function add(ViewRenderer $head, Request $request,
+    public function add(Request $request, CurrentRoute $currentRoute,
             FormHydrator $formHydrator,
             ProductRepository $productRepository
     ): Response {
+        $product_id = $currentRoute->getArgument('product_id');
+        $productImage = new ProductImage();
+        $productImageForm = new ProductImageForm($productImage, (int)$product_id);
         $parameters = [
             'title' => $this->translator->translate('invoice.add'),
             'action' => ['productimage/add'],
             'errors' => [],
-            'body' => $request->getParsedBody(),
-            'head' => $head,
+            'form' => $productImageForm,
             'products' => $productRepository->findAllPreloaded(),
         ];
 
         if ($request->getMethod() === Method::POST) {
-            $form = new ProductImageForm();
-            $productimage = new ProductImage();
-            if ($formHydrator->populate($form, $parameters['body']) && $form->isValid()) {
-                $this->productimageService->saveProductImage($productimage, $form);
+            if ($formHydrator->populateFromPostAndValidate($productImageForm, $request)) {
+                $body = $request->getParsedBody();
+                /**
+                 * @psalm-suppress PossiblyInvalidArgument
+                 */
+                $this->productimageService->saveProductImage($productImage, $body);
                 return $this->webService->getRedirectResponse('productimage/index');
             }
-            $parameters['form'] = $form;
+            $parameters['errors'] = $productImageForm->getValidationResult()?->getErrorMessagesIndexedByAttribute() ?? [];
+            $parameters['form'] = $productImageForm;
         }
         return $this->viewRenderer->render('_form', $parameters);
     }
@@ -134,8 +141,7 @@ final class ProductImageController {
     private function alert(): string {
       return $this->viewRenderer->renderPartialAsString('/invoice/layout/alert',
       [ 
-        'flash' => $this->flash,
-        'errors' => [],
+        'flash' => $this->flash
       ]);
     }
 
@@ -164,9 +170,14 @@ final class ProductImageController {
             if ($productimage) {
                 $this->productimageService->deleteProductImage($productimage, $settingRepository);
                 $product_id = (string) $productimage->getProduct()?->getProduct_id();
-                $this->flash_message('info', $settingRepository->trans('record_successfully_deleted'));
+                $this->flash_message('info', $this->translator->translate('i.record_successfully_deleted'));
                 return $this->factory->createResponse($this->viewRenderer->renderPartialAsString('/invoice/setting/inv_message',
-                                        ['heading' => '', 'message' => $settingRepository->trans('record_successfully_deleted'), 'url' => 'product/view', 'id' => $product_id]));
+                [
+                    'heading' => '', 
+                    'message' => $this->translator->translate('i.record_successfully_deleted'), 
+                    'url' => 'product/view', 
+                    'id' => $product_id
+                ]));
             }
             return $this->webService->getRedirectResponse('productimage/index');
         } catch (Exception $e) {
@@ -176,40 +187,40 @@ final class ProductImageController {
     }
 
     /**
-     * @param ViewRenderer $head
      * @param Request $request
      * @param CurrentRoute $currentRoute
      * @param FormHydrator $formHydrator
      * @param ProductImageRepository $productimageRepository
-     * @param SettingRepository $settingRepository
      * @param ProductRepository $productRepository
      * @return Response
      */
-    public function edit(ViewRenderer $head, 
+    public function edit( 
             Request $request, CurrentRoute $currentRoute,
             FormHydrator $formHydrator,
             ProductImageRepository $productimageRepository,
-            SettingRepository $settingRepository,
             ProductRepository $productRepository
     ): Response {
-        $productimage = $this->productimage($currentRoute, $productimageRepository);
-        if ($productimage) {
+        $productImage = $this->productimage($currentRoute, $productimageRepository);
+        if ($productImage) {
+            $product_id = $productImage->getProduct_id();
+            $form = new ProductImageForm($productImage, (int)$product_id);
             $parameters = [
-                'title' => $settingRepository->trans('edit'),
-                'action' => ['productimage/edit', ['id' => $productimage->getId()]],
+                'title' => $this->translator->translate('i.edit'),
+                'action' => ['productimage/edit', ['id' => $productImage->getId()]],
                 'errors' => [],
-                'body' => $this->body($productimage),
-                'head' => $head,
+                'form' => $form,
                 'products' => $productRepository->findAllPreloaded()
             ];
             if ($request->getMethod() === Method::POST) {
-                $form = new ProductImageForm();
-                $body = $request->getParsedBody();
-                if ($formHydrator->populate($form, $body) && $form->isValid()) {
-                    $this->productimageService->saveProductImage($productimage, $form);
+                if ($formHydrator->populateFromPostAndValidate($form, $request)) {
+                    $body = $request->getParsedBody();
+                    /**
+                     * @psalm-suppress PossiblyInvalidArgument $body
+                     */
+                    $this->productimageService->saveProductImage($productImage, $body);
                     return $this->webService->getRedirectResponse('productimage/index');
                 }
-                $parameters['body'] = $body;
+                $parameters['errors'] = $form->getValidationResult()?->getErrorMessagesIndexedByAttribute() ?? [];
                 $parameters['form'] = $form;
             }
             return $this->viewRenderer->render('_form', $parameters);
@@ -218,24 +229,19 @@ final class ProductImageController {
     }
 
     /**
-     * @param Request $request
      * @param CurrentRoute $currentRoute
      * @param ProductImageRepository $productimageRepository
-     * @param SettingRepository $settingRepository
+     * @return \Yiisoft\DataResponse\DataResponse|Response
      */
-    public function view(CurrentRoute $currentRoute, ProductImageRepository $productimageRepository,
-            SettingRepository $settingRepository,
-    ): \Yiisoft\DataResponse\DataResponse|Response {
-        $productimage = $this->productimage($currentRoute, $productimageRepository);
-        if ($productimage) {
+    public function view(CurrentRoute $currentRoute, ProductImageRepository $productimageRepository) : 
+        \Yiisoft\DataResponse\DataResponse|Response {
+        $productImage = $this->productimage($currentRoute, $productimageRepository);
+        if ($productImage) {
             $parameters = [
-                'alert' => $this->alert(),
-                'title' => $settingRepository->trans('view'),
-                'action' => ['productimage/view', ['id' => $productimage->getId()]],
-                'errors' => [],
-                'body' => $this->body($productimage),
-                's' => $settingRepository,
-                'productimage' => $productimageRepository->repoProductImagequery($productimage->getId()),
+                'title' => $this->translator->translate('i.view'),
+                'action' => ['productimage/view', ['id' => $productImage->getId()]],
+                'form' => new ProductImageForm($productImage, (int)$productImage->getProduct_id()),
+                'productimage' => $productimageRepository->repoProductImagequery($productImage->getId()),
             ];
             return $this->viewRenderer->render('_view', $parameters);
         }
@@ -267,23 +273,7 @@ final class ProductImageController {
         $productimages = $productimageRepository->findAllPreloaded();
         return $productimages;
     }
-
-    /**
-     * @param ProductImage $productimage
-     * @return array
-     */
-    private function body(ProductImage $productimage): array {
-        $body = [
-            'id' => $productimage->getId(),
-            'product_id' => $productimage->getProduct_id(),
-            'file_name_original' => $productimage->getFile_name_original(),
-            'file_name_new' => $productimage->getFile_name_new(),
-            'description' => $productimage->getDescription(),
-            'uploaded_date' => $productimage->getUploaded_date()
-        ];
-        return $body;
-    }
-
+    
     /**
      * @param ProductImageRepository $productimageRepository
      * @param Sort $sort

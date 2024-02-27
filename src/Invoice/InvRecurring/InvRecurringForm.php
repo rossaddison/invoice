@@ -4,32 +4,57 @@ declare(strict_types=1);
 
 namespace App\Invoice\InvRecurring;
 
+use App\Invoice\Entity\InvRecurring;
 use Yiisoft\FormModel\FormModel;
+use Yiisoft\Validator\EmptyCondition\WhenNull;
 use Yiisoft\Validator\Rule\Required;
-use \DateTime;
+
 use \DateTimeImmutable;
 
 final class InvRecurringForm extends FormModel
 {    
-    
     private ?int $inv_id=null;
-    private ?string $start='';
-    private ?string $end='';
-    private ?string $frequency='';
-    private ?string $next='';
-
+    
+    #[Required]
+    private ?string $frequency='';    
+    
+    // setting the frequency dropdown sets the start date relative to the current invoice date
+    
+    private mixed $start='';
+    
+    // https://github.com/yiisoft/validator/blob/master/docs/guide/en/built-in-rules-required.md
+    #[Required(emptyCondition: new WhenNull())]
+    private mixed $next='';
+    
+    private mixed $end='';    
+    
+    public function __construct(InvRecurring $invRecurring, int $inv_id)
+    {           
+        $this->inv_id = $inv_id;
+        $this->frequency = $invRecurring->getFrequency();
+        $this->start = $invRecurring->getStart();
+        $this->next = $invRecurring->getNext();
+        $this->end = $invRecurring->getEnd();
+    }
+    
     public function getInv_id() : ?int
     {
       return $this->inv_id;
     }
 
-    public function getStart() : ?string
+    public function getStart() : null|string|DateTimeImmutable
     {
+        /**
+         * @var null|string|DateTimeImmutable $this->start
+         */
         return $this->start;
     }
 
-    public function getEnd() : ?string
+    public function getEnd() : null|string|DateTimeImmutable
     {
+        /**
+         * @var null|string|DateTimeImmutable $this->end
+         */
         return $this->end;
     }
 
@@ -38,8 +63,11 @@ final class InvRecurringForm extends FormModel
       return $this->frequency;
     }
 
-    public function getNext() : ?string
+    public function getNext() : null|string|DateTimeImmutable
     {
+        /**
+         * @var null|string|DateTimeImmutable $this->next
+         */
         return $this->next;
     }
 
@@ -52,17 +80,4 @@ final class InvRecurringForm extends FormModel
     {
       return '';
     }
-
-    /**
-     * @return Required[][]
-     *
-     * @psalm-return array{start: list{Required}, frequency: list{Required}, next: list{Required}}
-     */
-    public function getRules(): array    {
-        return [
-        'start' => [new Required()],
-        'frequency' => [new Required()],
-        'next' => [new Required()],
-    ];
-}
 }

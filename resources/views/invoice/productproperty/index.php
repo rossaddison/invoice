@@ -79,7 +79,7 @@ echo $alert;
         ),
         new DataColumn(
             header:  $translator->translate('i.delete'),
-            content: static function ($model) use ($s, $urlGenerator): string {
+            content: static function ($model) use ($translator, $urlGenerator): string {
             return Html::a(Html::tag('button',
                 Html::tag('i', '', ['class' => 'fa fa-trash fa-margin']),
                 [
@@ -98,14 +98,13 @@ echo $alert;
       ->columns(...$columns)
       ->dataReader($paginator)      
       ->headerRowAttributes(['class' => 'card-header bg-info text-black'])
-      ->filterPosition('header')
-      ->filterModelName('productproperty')
+      //->filterPosition('header')
+      //->filterModelName('productproperty')
       ->header($header)
       ->id('w99999999999999999-grid')
-      ->paginator($paginator)
       ->pagination(
         OffsetPagination::widget()
-        ->menuClass('pagination justify-content-center')
+        //->menuClass('pagination justify-content-center')
         ->paginator($paginator)
         // No need to use page argument since built-in. Use status bar value passed from urlGenerator to inv/guest
         //->urlArguments(['status'=>$status])
@@ -113,7 +112,7 @@ echo $alert;
       )
       ->rowAttributes(['class' => 'align-middle'])
       ->summaryAttributes(['class' => 'mt-3 me-3 summary text-end'])
-      ->summary($grid_summary)
+      ->summaryTemplate($grid_summary)
       ->emptyTextAttributes(['class' => 'card-header bg-warning text-black'])
       ->emptyText((string) $translator->translate('invoice.invoice.no.records'))
       ->tableAttributes(['class' => 'table table-striped text-center h-99999999999999999', 'id' => 'table-productproperty'])

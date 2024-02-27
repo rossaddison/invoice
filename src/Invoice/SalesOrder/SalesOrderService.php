@@ -10,13 +10,11 @@ use App\Invoice\Entity\SalesOrderItem;
 use App\Invoice\Entity\SalesOrderTaxRate;
 
 // Repositories
-use App\Invoice\Group\GroupRepository as GR;
 use App\Invoice\SalesOrderAmount\SalesOrderAmountRepository as SoAR;
 use App\Invoice\SalesOrderCustom\SalesOrderCustomRepository as SoCR;
 use App\Invoice\SalesOrderItem\SalesOrderItemRepository as SoIR;
 use App\Invoice\SalesOrderTaxRate\SalesOrderTaxRateRepository as SoTRR;
 use App\Invoice\SalesOrder\SalesOrderRepository as SoR;
-use App\Invoice\Setting\SettingRepository as SR;
 // Services
 use App\Invoice\SalesOrderAmount\SalesOrderAmountService as SoAS;
 use App\Invoice\SalesOrderCustom\SalesOrderCustomService as SoCS;
@@ -42,25 +40,25 @@ final class SalesOrderService
      * 
      * @param User $user
      * @param SalesOrder $model
-     * @param SalesOrderForm $form
+     * @param array $array
      * @return void
      */
-    public function addSo(User $user, SalesOrder $model, SalesOrderForm $form): void
+    public function addSo(User $user, SalesOrder $model, array $array) : void
     {  
-        null!==$form->getQuote_id() ? $model->setQuote_id((int)$form->getQuote_id()) : '';
-        null!==$form->getInv_id() ? $model->setInv_id((int)$form->getInv_id()) : '';
-        null!==$form->getGroup_id() ? $model->setGroup_id($form->getGroup_id()) : '';
-        null!==$form->getClient_id() ? $model->setClient_id($form->getClient_id()) : '';
-        null!==$form->getClient_po_number() ? $model->setClient_po_number($form->getClient_po_number()) : '';
-        null!==$form->getClient_po_person() ? $model->setClient_po_person($form->getClient_po_person()) : '';
-        null!==$form->getStatus_id() ? $model->setStatus_id($form->getStatus_id()) : '';
-        null!==$form->getDiscount_amount() ? $model->setDiscount_amount($form->getDiscount_amount()) : '';
-        null!==$form->getDiscount_percent() ? $model->setDiscount_percent($form->getDiscount_percent()) : '';       
-        null!==$form->getUrl_key() ? $model->setUrl_key($form->getUrl_key()) : Random::string(32);
-        null!==$form->getPassword() ? $model->setPassword($form->getPassword()) : '';
-        null!==$form->getNotes() ? $model->setNotes($form->getNotes()) : '';       
-        null!==$form->getPaymentTerm() ? $model->setPaymentTerm($form->getPaymentTerm()) : '';
-        $model->setNumber($form->getNumber());
+        isset($array['quote_id']) ? $model->setQuote_id((int)$array['quote_id']) : '';
+        isset($array['inv_id']) ? $model->setInv_id((int)$array['inv_id']) : '';
+        isset($array['group_id']) ? $model->setGroup_id((int)$array['group_id']) : '';
+        isset($array['client_id']) ? $model->setClient_id((int)$array['client_id']) : '';
+        isset($array['client_po_number']) ? $model->setClient_po_number((string)$array['client_po_number']) : '';
+        isset($array['client_po_person']) ? $model->setClient_po_person((string)$array['client_po_person']) : '';
+        isset($array['status_id']) ? $model->setStatus_id((int)$array['status_id']) : '';
+        isset($array['discount_amount']) ? $model->setDiscount_amount((float)$array['discount_amount']) : '';
+        isset($array['discount_percent']) ? $model->setDiscount_percent((float)$array['discount_percent']) : '';       
+        isset($array['url_key']) ? $model->setUrl_key((string)$array['url_key']) : Random::string(32);
+        isset($array['password']) ? $model->setPassword((string)$array['password']) : '';
+        isset($array['notes']) ? $model->setNotes((string)$array['notes']) : '';       
+        isset($array['payment_term']) ? $model->setPaymentTerm((string)$array['payment_term']) : '';
+        $model->setNumber((string)$array['number']);
         if ($model->isNewRecord()) {        
              $model->setStatus_id(1);
              $model->setUser_id((int)$user->getId());
@@ -72,25 +70,24 @@ final class SalesOrderService
     
     /**
      * @param SalesOrder $model
-     * @param SalesOrderForm $form
-     * @param SR $s
+     * @param array $array
      * @return SalesOrder
      */
-    public function saveSo(SalesOrder $model, SalesOrderForm $form, SR $s, GR $gR): SalesOrder
+    public function saveSo(SalesOrder $model, array $array): SalesOrder
     { 
-        $model->setQuote_id((int)$form->getQuote_id());
-        $model->setInv_id((int)$form->getInv_id());
-        null!==$form->getClient_id() ? $model->setClient_id($form->getClient_id()) : '';
-        null!==$form->getGroup_id() ? $model->setGroup_id($form->getGroup_id()) : '';          
-        null!==$form->getClient_po_number() ? $model->setClient_po_number($form->getClient_po_number()) : '';
-        null!==$form->getClient_po_person() ? $model->setClient_po_person($form->getClient_po_person()) : '';
-        null!==$form->getStatus_id() ? $model->setStatus_id($form->getStatus_id()) : '';
-        null!==$form->getDiscount_percent() ? $model->setDiscount_percent($form->getDiscount_percent()) : '';
-        null!==$form->getDiscount_amount() ? $model->setDiscount_amount($form->getDiscount_amount()) : '';
-        null!==$form->getUrl_key() ? $model->setUrl_key($form->getUrl_key()) : '';
-        null!==$form->getPassword() ? $model->setPassword($form->getPassword()) : '';
-        null!==$form->getNotes() ? $model->setNotes($form->getNotes()) : '';       
-        null!==$form->getPaymentTerm() ? $model->setPaymentTerm($form->getPaymentTerm()) : '';
+        $model->setQuote_id((int)$array['quote_id']);
+        $model->setInv_id((int)$array['inv_id']);
+        isset($array['client_id']) ? $model->setClient_id((int)$array['client_id']) : '';
+        isset($array['group_id']) ? $model->setGroup_id((int)$array['group_id']) : '';          
+        isset($array['client_po_number']) ? $model->setClient_po_number((string)$array['client_po_number']) : '';
+        isset($array['client_po_person']) ? $model->setClient_po_person((string)$array['client_po_person']) : '';
+        isset($array['status_id']) ? $model->setStatus_id((int)$array['status_id']) : '';
+        isset($array['discount_percent']) ? $model->setDiscount_percent((float)$array['discount_percent']) : '';
+        isset($array['discount_amount']) ? $model->setDiscount_amount((float)$array['discount_amount']) : '';
+        isset($array['url_key']) ? $model->setUrl_key((string)$array['url_key']) : '';
+        isset($array['password']) ? $model->setPassword((string)$array['password']) : '';
+        isset($array['notes']) ? $model->setNotes((string)$array['notes']) : '';       
+        isset($array['payment_term']) ? $model->setPaymentTerm((string)$array['payment_term']) : '';
         $this->repository->save($model);
         return $model;
     }

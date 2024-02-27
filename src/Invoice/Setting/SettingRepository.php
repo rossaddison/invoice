@@ -1,5 +1,4 @@
 <?php
-
 declare(strict_types=1);
 
 namespace App\Invoice\Setting;
@@ -192,19 +191,19 @@ final class SettingRepository extends Select\Repository
      * @return string
      */
     public function add_setting_key(string $key) : string {
-           // Add the new setting key
-            // eg. if a new payment gateway has been added
-            // to the Payment Gateway array save all the new keys
-            // and values of the array
-            $new_setting = new Setting();
-            $new_setting->setSetting_key($key);
-            // Default value is ''
-            $new_setting->setSetting_value('');
-            $this->save($new_setting);
-            $this->load_settings();
-            /** @var string $this->settings[$key] */
-            $setting = $this->settings[$key];
-            return $setting;
+        // Add the new setting key
+        // eg. if a new payment gateway has been added
+        // to the Payment Gateway array save all the new keys
+        // and values of the array
+        $new_setting = new Setting();
+        $new_setting->setSetting_key($key);
+        // Default value is ''
+        $new_setting->setSetting_value('');
+        $this->save($new_setting);
+        $this->load_settings();
+        /** @var string $this->settings[$key] */
+        $setting = $this->settings[$key];
+        return $setting;
     }
     
     /**
@@ -272,19 +271,13 @@ final class SettingRepository extends Select\Repository
 
         switch ($operator) {
             case '==':
-                $echo_selected = $value1 == $value2 ? true : false;
+                $echo_selected = (null!==$value1) == (null!==$value2) ? true : false;
                 break;
             case '!=':
-                $echo_selected = $value1 != $value2 ? true : false;
-                break;
-            case 'e':
-                $echo_selected = empty($value1) ? true : false;
-                break;
-            case '!e':
-                $echo_selected = empty($value1) ? true : false;
+                $echo_selected = (null!==$value1) != (null!==$value2) ? true : false;
                 break;
             default:
-                $echo_selected = $value1 ? true : false;
+                $echo_selected = (null!==$value1) ? true : false;
                 break;
         }
 
@@ -420,9 +413,9 @@ final class SettingRepository extends Select\Repository
         
         $yii_cycle_array = (array)$params['yiisoft/yii-cycle'];
         $schema_providers_array = (array)$yii_cycle_array['schema-providers'];
-        $php_file_array = (array)$schema_providers_array['Yiisoft\\Yii\\Cycle\\Schema\\Provider\\PhpFileSchemaProvider'];
+        $php_file_array = (array)$schema_providers_array['Cycle\\Schema\\Provider\\PhpFileSchemaProvider'];
         return (int)$php_file_array['mode'];
-    }       
+    } 
     
     /**
      * 
@@ -842,7 +835,7 @@ final class SettingRepository extends Select\Repository
     public function format_amount(float|null $amount = null): string|null
     {
         $this->load_settings();    
-        if ($amount) {
+        if (null!==$amount) {
             $thousands_separator = $this->get_setting('thousands_separator');
             $decimal_point = $this->get_setting('decimal_point');
             //force the rounding of amounts to 2 decimal points if the decimal point setting is filled.
@@ -1625,7 +1618,7 @@ final class SettingRepository extends Select\Repository
         $why = '';
         $where = '';
         $reference = '';
-        $menu = false;
+        $menu = null;
         /** 
          * @var array $value 
          * @var string $key
@@ -1652,7 +1645,8 @@ final class SettingRepository extends Select\Repository
                 }
             }
         }
-        $information = (!$menu ? 'data-bs-toggle = "tooltip" data-bs-placement= "bottom" '.' '.'title = "' : ''). $why .' and is used in '.$where.'"';
+        $information = (null==$menu ? 'data-bs-toggle = "tooltip" data-bs-placement= "bottom" '.' '.'title = "' : ''). 
+                        $why .' and is used in '.$where.'"';
         $build = $debug_mode ? $information : '';
         return $build;
     }
@@ -1925,27 +1919,38 @@ final class SettingRepository extends Select\Repository
      */
     public function debug_mode_file_location(int $key) : string {
         $layout = '..resources/views/layout/';
-        $common = '..resources/views/invoice/';
+        $common_invoice = '..resources/views/invoice/';
+        $common_quote = '..resources/views/quote/';
         $array = [//0
                   $layout.'invoice', 
                   //1
-                  $common.'inv/view',
+                  $common_invoice.'inv/view',
                   //2
-                  $common.'invitem/_item_form_product',
+                  $common_invoice.'invitem/_item_form_product',
                   //3
-                  $common.'invitem/_item_form_task',
+                  $common_invoice.'invitem/_item_form_task',
                   //4
-                  $common.'inv/view_custom_fields',
+                  $common_invoice.'inv/view_custom_fields',
                   //5
-                  $common.'inv/partial_inv_attachments',
+                  $common_invoice.'inv/partial_inv_attachments',
                   //6
-                  $common.'inv/partial_inv_delivery_location',
+                  $common_invoice.'inv/partial_inv_delivery_location',
                   //7
-                  $common.'inv/partial_item_table',
+                  $common_invoice.'inv/partial_item_table',
                   //8
-                  $common.'product/views/partial_product_image',
+                  $common_invoice.'product/views/partial_product_image',
                   //9
-                  $common.'product/views/partial_product_gallery'
+                  $common_invoice.'product/views/partial_product_gallery',
+                  //10
+                  $layout.'quote', 
+                  //11
+                  $common_quote.'quote/view',
+                  //12
+                  $common_quote.'quoteitem/_item_edit_form',
+                  //13
+                  $common_quote.'quoteitem/_item_form',
+                  //14 
+                  $common_invoice.'invitem/_item_edit_product'
         ];
         return $array[$key];
     }
@@ -1992,4 +1997,13 @@ final class SettingRepository extends Select\Repository
         }
         return '';
     }
+    
+    /**
+     * @param string $input
+     * @return string
+     */
+    public function snakeToCamel(string $input) : string
+    {
+        return lcfirst(ucwords(str_replace('_', ' ', $input)));
+    }        
 }

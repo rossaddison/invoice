@@ -721,7 +721,7 @@ final class InvoiceController
             // Current tasks
             'tasks'=>$taskR->findAllPreloaded(),
             
-            'task_statuses'=>$taskR->getTask_statuses($sR),
+            'task_statuses'=>$taskR->getTask_statuses($translator),
             
             'modal_create_client'=>$this->viewRenderer->renderPartialAsString('/invoice/client/modal_create_client',[
                 'datehelper'=> new DateHelper($sR)
@@ -1207,35 +1207,31 @@ final class InvoiceController
      * @return void
      */    
     private function install_default_payment_methods(PaymentMethodRepository $pmR) : void {
-        // 1
-        $pm_none = new PaymentMethod();
-        $pm_none->setName('None');
-        $pmR->save($pm_none);
-        // 2 
+        // 1 
         $pm_cash = new PaymentMethod();
         $pm_cash->setName('Cash');
         $pmR->save($pm_cash);
-        // 3
+        // 2
         $pm_cheque = new PaymentMethod();
         $pm_cheque->setName('Cheque');
         $pmR->save($pm_cheque);
-        // 4
+        // 3
         $pm_succeeded = new PaymentMethod();
         $pm_succeeded->setName('Card / Direct Debit - Payment Succeeded');
         $pmR->save($pm_succeeded);
-        // 5
+        // 4
         $pm_processing = new PaymentMethod();
         $pm_processing->setName('Card / Direct Debit - Payment Processing');
         $pmR->save($pm_processing);
-        // 6
+        // 5
         $pm_unsuccessful = new PaymentMethod();
         $pm_unsuccessful->setName('Card / Direct Debit - Payment Unsuccessful');
         $pmR->save($pm_unsuccessful);
-        // 7
+        // 6
         $customer_ready = new PaymentMethod();
         $customer_ready->setName('Card / Direct Debit - Customer Ready for Payment');
         $pmR->save($customer_ready);
-        // 8
+        // 7
         $peppol_access_point = new PaymentMethod();
         $peppol_access_point->setName('Peppol Access Point');
         $pmR->save($peppol_access_point);

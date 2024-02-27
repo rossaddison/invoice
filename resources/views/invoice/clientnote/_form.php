@@ -2,7 +2,7 @@
 
 declare(strict_types=1); 
 
-use App\Widget\Button;
+
 use Yiisoft\FormModel\Field;
 use Yiisoft\Html\Html;
 use Yiisoft\Html\Tag\Form;
@@ -33,7 +33,7 @@ use Yiisoft\Html\Tag\Form;
     <?= Html::encode($title) ?>
 <?= Html::closeTag('h1'); ?>
 <?= Html::openTag('div', ['id' => 'headerbar']); ?>
-    <?= Button::back_save($translator); ?>
+    <?= $button::back_save($translator); ?>
     <?= Html::openTag('div', ['id' => 'content']); ?>
         <?= Html::openTag('div', ['class' => 'row']); ?>
             <?= Html::openTag('div', ['class' => 'mb-3 form-group']); ?>
@@ -58,9 +58,6 @@ use Yiisoft\Html\Tag\Form;
                 ?>
             <?= Html::closeTag('div'); ?>
             <?= Html::openTag('div'); ?>
-                <?php
-                    $date_note = $datehelper->get_or_set_with_style($form->getDate_note() ?? new \DateTimeImmutable('now'));
-                ?>
                 <?= Html::openTag('div', ['class' => 'mb-3 form-group']); ?>
                     <?= Field::date($form, 'date_note')
                     ->label($translator->translate('i.date'), ['class' => 'form-label'])

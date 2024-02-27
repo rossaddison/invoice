@@ -5,6 +5,7 @@ declare(strict_types=1);
 use Yiisoft\FormModel\Field;
 use Yiisoft\Html\Html;
 use Yiisoft\Html\Tag\Form;
+use Yiisoft\Html\Tag\I;
 use Yiisoft\View\WebView;
 
 /**
@@ -20,7 +21,14 @@ use Yiisoft\View\WebView;
 
 <div class="panel panel-default no-margin">
     <div class="panel-heading">
-        <i tooltip="data-bs-toggle" title="<?= $s->isDebugMode(5);?>"><?= $translator->translate('i.attachments'); ?></i>
+        <?= I::tag()
+            ->addClass('bi bi-info-circle')
+            ->addAttributes([
+                'tooltip' => 'data-bs-toggle', 
+                'title' => $s->isDebugMode(5)
+            ])
+            ->content(' '.$translator->translate('i.attachments')); 
+        ?>
     </div>
     <div class="panel-body clearfix">
         <div class="container">
@@ -55,6 +63,8 @@ use Yiisoft\View\WebView;
                                 [
                                     $translator->translate('layout.submit'),
                                     'type' => 'submit',
+                                    'title' => 'actions: inv/view_partial_inv_attachments and inv/attachment',
+                                    'tooltip' => 'data-bs-toggle',
                                     'class' => 'btn btn-sm btn-primary',
                                     'name' => 'contact-button',
                                 ],

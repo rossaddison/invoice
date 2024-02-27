@@ -2,7 +2,7 @@
 
 declare(strict_types=1); 
 
-use App\Widget\Button;
+
 use Yiisoft\FormModel\Field;
 use Yiisoft\Html\Html;
 use Yiisoft\Html\Tag\Form;
@@ -38,7 +38,7 @@ use Yiisoft\Html\Tag\Form;
         <?= Html::openTag('h1', ['class' => 'headerbar-title']); ?>
             <?= Html::encode($title) ?>
         <?= Html::closeTag('h1'); ?>
-        <?= Button::back_save($translator); ?>
+        <?= $button::back_save($translator); ?>
     <?= Html::closeTag('div'); ?>
     <?= Html::openTag('div', ['id' => 'content']); ?>
         <?= Html::openTag('div', ['class' => 'mb-3 form-group has-feedback']); ?>

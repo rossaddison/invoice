@@ -1,18 +1,27 @@
 <?php
-
 declare(strict_types=1);
 
 namespace App\Invoice\PaymentCustom;
 
+use App\Invoice\Entity\PaymentCustom;
 use Yiisoft\FormModel\FormModel;
 use Yiisoft\Validator\Rule\Required;
 
 final class PaymentCustomForm extends FormModel
 {    
-    
+    #[Required]
     private ?int $payment_id=null;
+    #[Required]
     private ?int $custom_field_id=null;
+    #[Required]
     private ?string $value='';
+    
+    public function __construct(PaymentCustom $paymentCustom)
+    {
+        $this->payment_id = (int)$paymentCustom->getPayment_id();
+        $this->custom_field_id = (int)$paymentCustom->getCustom_field_id();
+        $this->value = $paymentCustom->getValue();
+    }        
 
     public function getPayment_id() : int|null
     {
@@ -38,17 +47,4 @@ final class PaymentCustomForm extends FormModel
     {
       return '';
     }
-
-    /**
-     * @return Required[][]
-     *
-     * @psalm-return array{payment_id: list{Required}, custom_field_id: list{Required}, value: list{Required}}
-     */
-    public function getRules(): array    {
-      return [
-        'payment_id' => [new Required()],
-        'custom_field_id' => [new Required()],
-        'value' => [new Required()]
-    ];
-}
 }

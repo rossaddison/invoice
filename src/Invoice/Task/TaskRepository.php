@@ -11,6 +11,7 @@ use Cycle\Database\Injection\Parameter;
 use Yiisoft\Data\Reader\Sort;
 use Yiisoft\Yii\Cycle\Data\Reader\EntityReader;
 use Yiisoft\Yii\Cycle\Data\Writer\EntityWriter;
+use Yiisoft\Translator\TranslatorInterface as Translator;
 
 /**
  * @template TEntity of Task
@@ -137,29 +138,28 @@ private EntityWriter $entityWriter;
     }
     
     /**
-     * 
-     * @param \App\Invoice\Setting\SettingRepository $sR
+     * @param Translator $translator
      * @return array
      */
-    public function getTask_statuses(\App\Invoice\Setting\SettingRepository $sR): array
+    public function getTask_statuses(Translator $translator): array
     {
         return [
             '1' => [
-                'label' => $sR->trans('not_started'),
+                'label' => $translator->translate('i.not_started'),
                 'class' => 'draft'
             ],
             '2' => [
-                'label' => $sR->trans('in_progress'),
+                'label' => $translator->translate('i.in_progress'),
                 'class' => 'viewed'
             ],
             '3' => [
-                'label' => $sR->trans('complete'),
+                'label' => $translator->translate('i.complete'),
                 'class' => 'sent'
             ],
             '4' => [
-                'label' => $sR->trans('invoiced'),
+                'label' => $translator->translate('i.invoiced'),
                 'class' => 'paid'
             ]
         ];
     }
-}
+}    

@@ -38,7 +38,7 @@ class ClassifiedTaxCategory implements XmlSerializable
      */
     public function getId(): ?string
     {
-        if (!empty($this->id)) {
+        if (null!==($this->id)) {
             return $this->id;
         }
 
@@ -100,7 +100,7 @@ class ClassifiedTaxCategory implements XmlSerializable
         
         // Exempt Tax category => 0% => 0 tax charged.
         $writer->write([
-            Schema::CBC . 'Percent' => number_format($this->percent ?: 0.00 , 2, '.', ''),
+            Schema::CBC . 'Percent' => number_format($this->percent ?? 0.00 , 2, '.', ''),
         ]);
 
         if ($this->taxExemptionReasonCode !== null) {

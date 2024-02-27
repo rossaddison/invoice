@@ -74,5 +74,11 @@ class ProductProperty
     public function getProduct() : ?Product
     {
         return $this->product;
-    }  
+    }
+    
+    public function nullifyRelationOnChange(int $product_id): void {
+        if ($this->product_id <> $product_id) {
+            $this->product = null;
+        }
+    }
 }

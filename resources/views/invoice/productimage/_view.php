@@ -2,40 +2,76 @@
 
 declare(strict_types=1); 
 
+
+use Yiisoft\FormModel\Field;
 use Yiisoft\Html\Html;
-use App\Invoice\Helpers\DateHelper;
+use Yiisoft\Html\Tag\Form;
 
 /**
  * @var \Yiisoft\View\View $this
  * @var \Yiisoft\Router\UrlGeneratorInterface $urlGenerator
- * @var array $body
  * @var string $csrf
  * @var string $action
  * @var string $title
  */
-
-echo $alert;
-
 ?>
-<?= Html::openTag('h1'); ?><?= Html::encode($title) ?><?= Html::closeTag('h1'); ?>
-<?= Html::openTag('div', ['class' => 'row']); ?>
- <div class="mb3 form-group">
-<label for="file_name_original" class="form-label" style="background:lightblue"><?= $translator->translate('invoice.upload.filename.original'); ?></label>
-   <?= Html::encode($body['file_name_original'] ?? ''); ?>
- </div>
- <div class="mb3 form-group">
-<label for="file_name_new" class="form-label" style="background:lightblue"><?= $translator->translate('invoice.upload.filename.new'); ?></label>
-   <?= Html::encode($body['file_name_new'] ?? ''); ?>
- </div>
- <div class="mb3 form-group">
-<label for="description" class="form-label" style="background:lightblue"><?= $translator->translate('invoice.upload.filename.description'); ?></label>
-   <?= Html::encode($body['description'] ?? ''); ?>
- </div>   
-<div class="mb3 form-group">
-  <label for="uploaded_date" class="form-label" style="background:lightblue"><?= $translator->translate('invoice.upload.date'); ?></label>
-<?php $date = $body['uploaded_date']; if ($date && $date != "0000-00-00") {    $datehelper = new DateHelper($s);  $date = $datehelper->date_from_mysql($date);} else {  $date = null;}?><?= Html::encode($date); ?></div>
- <div class="mb3 form-group">
-   <label for="product_id" class="form-label" style="background:lightblue"><?= $translator->translate('i.product'); ?></label>
-   <?= $productimage->getProduct()->getProduct_id();?>
- </div>
-</div>
+
+<?= Form::tag()
+    ->post($urlGenerator->generate(...$action))
+    ->enctypeMultipartFormData()
+    ->csrf($csrf)
+    ->id('ProductImageForm')
+    ->open() ?>
+
+<?= Html::openTag('div',['class'=>'container py-5 h-100']); ?>
+<?= Html::openTag('div',['class'=>'row d-flex justify-content-center align-items-center h-100']); ?>
+<?= Html::openTag('div',['class'=>'col-12 col-md-8 col-lg-6 col-xl-8']); ?>
+<?= Html::openTag('div',['class'=>'card border border-dark shadow-2-strong rounded-3']); ?>
+<?= Html::openTag('div',['class'=>'card-header']); ?>
+
+<?= Html::openTag('h1',['class'=>'fw-normal h3 text-center']); ?>    
+    <?= Html::encode($title) ?>
+<?= Html::closeTag('h1'); ?>
+<?= Html::openTag('div', ['id' => 'headerbar']); ?>
+    <?= $button::back($translator); ?>
+    <?= Html::openTag('div', ['id' => 'content']); ?>
+        <?= Html::openTag('div', ['class' => 'row']); ?>
+            <?= Html::openTag('div', ['class' => 'mb-3 form-group']); ?>
+               <?= Html::closeTag('div'); ?>
+                    <?= Html::openTag('div'); ?>
+                        <?= Field::hidden($form, 'product_id')
+                            ->hideLabel(true);
+                        ?>    
+                    <?= Html::closeTag('div'); ?>
+                <?= Html::openTag('div'); ?>
+                <?= Html::openTag('div', ['class' => 'mb-3 form-group']); ?>
+                    <?= Field::date($form, 'uploaded_date')
+                        ->addInputAttributes([
+                            'readonly' => 'readonly',
+                            'disabled' => 'disabled'
+                        ])    
+                        ->label($translator->translate('i.date'), ['class' => 'form-label'])
+                        ->required(true)
+                        ->value($form->getUploaded_date() ? ($form->getUploaded_date())->format('Y-m-d') : '')
+                    ?>
+                <?= Html::closeTag('div'); ?>
+                <?= Html::openTag('div', ['class' => 'mb-3 form-group']); ?>
+                    <?= Field::text($form, 'file_name_original')
+                        ->disabled(true); ?>
+                <?= Html::closeTag('div'); ?>
+                <?= Html::openTag('div', ['class' => 'mb-3 form-group']); ?>
+                    <?= Field::text($form, 'file_name_new')
+                        ->disabled(true); ?>
+                <?= Html::closeTag('div'); ?>
+                <?= Html::openTag('div', ['class' => 'mb-3 form-group']); ?>
+                    <?= Field::text($form, 'description')
+                        ->disabled(true); ?>
+                <?= Html::closeTag('div'); ?>
+            <?= Html::closeTag('div'); ?>
+        <?= Html::closeTag('div'); ?>
+    <?= Html::closeTag('div'); ?>
+<?= Html::closeTag('div'); ?>
+<?= Html::closeTag('div'); ?>
+<?= Html::closeTag('div'); ?>
+<?= Html::closeTag('div'); ?>
+<?= Form::tag()->close() ?>

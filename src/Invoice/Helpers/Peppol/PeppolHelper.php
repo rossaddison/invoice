@@ -237,13 +237,13 @@ Class PeppolHelper {
       $so = $soR->repoSalesOrderUnloadedquery($invoice->getSo_id());
       // Order Reference https://docs.peppol.eu/poacc/billing/3.0/bis/#orderref
       $client_purchase_order_id = '';
-      if ($so && $so->getClient_po_number()) {
+      if ($so && null!==$so->getClient_po_number()) {
         $client_purchase_order_id = $so->getClient_po_number();
         $sales_order_id = $so->getNumber();
       }
       // Buyer Reference https://docs.peppol.eu/poacc/billing/3.0/bis/#buyerref
       $BuyerReference = '';
-      if ($so && $so->getClient_po_person()) {
+      if ($so && null!==$so->getClient_po_person()) {
         $BuyerReference = $so->getClient_po_person();
       }
       $config_company_details = $this->s->get_config_company_details();
@@ -296,7 +296,7 @@ Class PeppolHelper {
       $payment_means_array = $this->build_peppol_payment_means_array();
       $payeeFinancialAccount = $this->build_financial_account($payment_means_array);
       // return the $paymentId (ie. a payment reference id)
-      $paymentId = 'peppol' . ($invoice->getNumber() ?: 'Number unavailable') . (new DateTime())->format('Y-m-d');
+      $paymentId = 'peppol' . ($invoice->getNumber() ?? 'Number unavailable') . (new DateTime())->format('Y-m-d');
       $payment_terms = $invoice->getTerms();
       // @see https://docs.peppol.eu/poacc/billing/3.0/syntax/ubl-invoice/cac-TaxTotal/
       // When the tax currency code is different and therefore provided,
@@ -327,8 +327,8 @@ Class PeppolHelper {
       $invoiceLines = $this->build_invoice_lines_array($invoice, $invoice_period, $iiaR, $cpR, $soiR, $aciiR, $unpR);
       $profileID = 'urn:fdc:peppol.eu:2017:poacc:billing:01:1.0';
       $supplierAssignedAccountID = $this->SupplierAssignedAccountId($invoice, $cpR);
-      $note = $invoice->getNote() ?: '';
-      if (empty($note)) {
+      $note = null!==$invoice->getNote() ? $invoice->getNote() : '';
+      if (null==($note)) {
         throw new PeppolInvoiceNoteNotFoundException($this->t);
       }
       if ($invoice->getSo_id()) {
@@ -431,7 +431,7 @@ Class PeppolHelper {
    */
   private function AdditionalDocumentReference(Inv $invoice, UPR $upR): AdditionalDocumentReference {
     $url_key = $invoice->getUrl_key();
-    $invoice_number = $this->t->translate('invoice.peppol.document.reference.null'). ($invoice->getId() ?: 'Not Found');
+    $invoice_number = $this->t->translate('invoice.peppol.document.reference.null'). ($invoice->getId() ?? 'Not Found');
     if (null!==$invoice->getNumber()) {
       $invoice_number = $invoice->getNumber();
     }
@@ -468,7 +468,7 @@ Class PeppolHelper {
     $invoice_id = $invoice->getId();
     $additionalDocumentReferences = new AdditionalDocumentReference(
       $this->t,
-      $invoice_number ?: $this->t->translate('invoice.peppol.document.reference.null').($invoice_id ?: 'Not Found'),
+      null!==$invoice_number ? $invoice_number : $this->t->translate('invoice.peppol.document.reference.null').(null!==$invoice_id ? $invoice_id : 'Not Found'),
       '130',
       $invoice->getDocumentDescription(),
       $attachments,
@@ -673,7 +673,7 @@ Class PeppolHelper {
 
   public function build_delivery_location_ID_scheme(): array {
     $id = $this->delivery_location->getGlobal_location_number();
-    if (empty($id)) {
+    if (null==($id)) {
       throw new PeppolDeliveryLocationIDNotFoundException($this->t);
     }
     $array = [
@@ -1048,13 +1048,13 @@ Class PeppolHelper {
           }  
           // Item Identification number eg. TRQWERQERQ9879
           $peppol_po_itemid = $this->Peppol_po_itemid($item, $soiR);
-          if (empty($peppol_po_itemid)) {
+          if (null==($peppol_po_itemid)) {
             throw new PeppolSalesOrderItemPurchaseOrderItemNumberNotExistException($this->t);
           }
           
           // Item Line Number eg. Line 1 of 4
           $peppol_po_lineid = $this->Peppol_po_lineid($item, $soiR);
-          if (empty($peppol_po_lineid)) {
+          if (null==($peppol_po_lineid)) {
             throw new PeppolSalesOrderItemPurchaseOrderLineNumberNotExistException($this->t);
           }
           /**
@@ -1065,7 +1065,7 @@ Class PeppolHelper {
            * Error message: [BR-CL-13]-Item classification identifier identification scheme identifier MUST be coded using one of the UNTDID 7143 list.
            */
           $listid = $product?->getProduct_icc_listid();
-          if (empty($listid) && null!==$product) {
+          if (null==($listid) && null!==$product) {
             throw new PeppolProductItemClassificationCodeSchemeIdNotFoundException($this->t, $product); 
           }
           $price = (null !== $item->getPrice() ? $item->getPrice() : 0.00);
@@ -1354,7 +1354,7 @@ Class PeppolHelper {
       $sales_order_item = $soiR->repoSalesOrderItemquery($sales_order_item_id);
       if (null !== $sales_order_item) {
         $peppol_po_itemid = $sales_order_item->getPeppol_po_itemid();
-        if (!empty($peppol_po_itemid)) {
+        if (null!==($peppol_po_itemid)) {
           return $peppol_po_itemid;
         } else {
           throw new PeppolSalesOrderItemPurchaseOrderItemNumberNotExistException($this->t);
@@ -1380,7 +1380,7 @@ Class PeppolHelper {
       $sales_order_item = $soiR->repoSalesOrderItemquery($sales_order_item_id);
       if (null !== $sales_order_item) {
         $peppol_po_lineid = $sales_order_item->getPeppol_po_lineid();
-        if (!empty($peppol_po_lineid)) {
+        if (null!==($peppol_po_lineid)) {
           return $peppol_po_lineid;
         } else {
           throw new PeppolSalesOrderItemPurchaseOrderLineNumberNotExistException($this->t);
@@ -1615,7 +1615,7 @@ Class PeppolHelper {
         $tax_category = $taxRate->getPeppol_tax_rate_code();
         $tax_percent = $taxRate->getTax_rate_percent();
         // Throw an exception if any Tax Category does not have a code
-        if (empty($tax_category)) {
+        if (null === ($tax_category)) {
           throw new PeppolTaxCategoryCodeNotFoundException($this->t);
         }
         if (null === $tax_percent) {
@@ -1635,11 +1635,11 @@ Class PeppolHelper {
                 $item_amount = $iiaR->repoInvItemAmountquery((string) $item_id);
                 if (null !== $item_amount) {
                   $item_sub_total = $item_amount->getSubtotal();
-                  if (!empty($item_sub_total)) {
+                  if (null!==($item_sub_total)) {
                     $taxable_amount_total += $item_sub_total;
                   }
                   $item_tax_total = $item_amount->getTax_total();
-                  if (!empty($item_tax_total)) {
+                  if (null!==($item_tax_total)) {
                     $tax_amount_total += $item_tax_total;
                   }
                 }

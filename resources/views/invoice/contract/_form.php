@@ -14,6 +14,14 @@ use Yiisoft\Html\Tag\Form;
  * @var string $title
  */
 ?>
+<?= Html::openTag('div',['class'=>'container py-5 h-100']); ?>
+<?= Html::openTag('div',['class'=>'row d-flex justify-content-center align-items-center h-100']); ?>
+<?= Html::openTag('div',['class'=>'col-12 col-md-8 col-lg-6 col-xl-8']); ?>
+<?= Html::openTag('div',['class'=>'card border border-dark shadow-2-strong rounded-3']); ?>
+<?= Html::openTag('div',['class'=>'card-header']); ?>
+<?= Html::openTag('h1',['class'=>'fw-normal h3 text-center']); ?>
+    <?= Html::encode($title); ?>
+<?= Html::closeTag('h1'); ?>
 <?=
     Form::tag()
     ->post($urlGenerator->generate(...$action))
@@ -22,30 +30,20 @@ use Yiisoft\Html\Tag\Form;
     ->id('ContractForm')
     ->open()
 ?>
-<?= Html::openTag('div',['id' => 'headerbar']); ?>
-<h1 class="headerbar-title"><?= $translator->translate('invoice.invoice.contract.add'); ?></h1>
-<?php $response = $head->renderPartial('invoice/layout/header_buttons',['s'=>$s, 'hide_submit_button'=>false ,'hide_cancel_button'=>false]); ?>        
-<?php echo (string)$response->getBody(); ?>
+
     <?= Field::errorSummary($form)
         ->errors($errors)
         ->header($translator->translate('invoice.client.error.summary'))
         ->onlyCommonErrors()
     ?>
     <?= Field::text($form, 'client_id')
-        ->addInputAttributes([ 
-             'class' => 'form-control',
-             'id' => 'client_id',
-        ])
         ->readonly(true)
-        ->required(true)
-        ->value(Html::encode($form->getClient_id() ?? $client_id))
+        ->value(Html::encode($form->getClient_id()) ?? $client_id)
     ?>    
     <?= Field::text($form, 'reference')
        ->label($translator->translate('invoice.invoice.contract.reference'))
        ->addInputAttributes([
            'value' => Html::encode($form->getReference() ?? ''),
-           'class' => 'form-control',
-           'id' => 'reference',    
        ])
        ->required(true)
        ->hint($translator->translate('invoice.hint.this.field.is.required')); 
@@ -53,38 +51,36 @@ use Yiisoft\Html\Tag\Form;
     <?= Field::text($form, 'name')
         ->label($translator->translate('invoice.invoice.contract.name'))
         ->addInputAttributes([
-            'value' => Html::encode($form->getName() ?? ''),
-            'class' => 'form-control',
-            'id' => 'name',    
+            'value' => Html::encode($form->getName() ?? ''),                
         ])
         ->required(true)
         ->hint($translator->translate('invoice.hint.this.field.is.required')); 
     ?>
-    <?= Field::text($form, 'period_start')
+    <?= Field::date($form, 'period_start')
         ->label($translator->translate('invoice.invoice.contract.period.start'))
         ->addInputAttributes([
-            'class' => 'form-control input-dm datepicker',
-            'id' => 'period_start',
             'role' => 'presentation',
             'autocomplete' => 'off',
-            'placeholder' => $datehelper->display()
         ])
-        ->value(Html::encode(Html::encode( $datehelper->get_or_set_with_style($form->getPeriod_start() ?? new DateTimeImmutable('now')))))
+        ->value(Html::encode(Html::encode($form->getPeriod_start() ? $form->getPeriod_end()->format('Y-m-d') : '')))
         ->required(true)            
         ->hint($translator->translate('invoice.hint.this.field.is.required')); 
     ?>
-    <?= Field::text($form, 'period_end')
+    <?= Field::date($form, 'period_end')
         ->label($translator->translate('invoice.invoice.contract.period.end'))
         ->addInputAttributes([
-            'class' => 'form-control input-dm datepicker',
-            'id' => 'period_end',
-            'role' => 'presentation',
             'autocomplete' => 'off',
-            'placeholder' => $datehelper->display()
         ])
-        ->value(Html::encode(Html::encode( $datehelper->get_or_set_with_style($form->getPeriod_end() ?? new DateTimeImmutable('now')))))
+        ->value(Html::encode(Html::encode(($form->getPeriod_end() ? $form->getPeriod_end()->format('Y-m-d') : ''))))
         ->required(true)
         ->hint($translator->translate('invoice.hint.this.field.is.required')); 
     ?>
-<?= Form::tag()->close(); ?>
 
+<?= Html::closeTag('h1'); ?>
+<?= $button::back_save($translator); ?>
+<?= Form::tag()->close(); ?>
+<?= Html::closeTag('div'); ?>
+<?= Html::closeTag('div'); ?>
+<?= Html::closeTag('div'); ?>
+<?= Html::closeTag('div'); ?>
+<?= Html::closeTag('div'); ?>

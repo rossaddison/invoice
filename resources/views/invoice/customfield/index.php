@@ -27,7 +27,7 @@ echo $alert;
             ->urlGenerator(fn ($page) => $urlGenerator->generate('customfield/index', ['page' => $page]));
         ?>
         <?php
-            if ($pagination->isRequired()) {
+            if ($pagination->isPaginationRequired()) {
                echo $pagination;
             }
         ?>

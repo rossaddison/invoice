@@ -24,7 +24,7 @@ final class SalesOrderItemService
     /**
      * Used in quote/quote_to_so_quote_items subfunction in quote/quote_to_so_confirm
      * @param SalesOrderItem $model
-     * @param SalesOrderItemForm $form
+     * @param array $array
      * @param string $sales_order_id
      * @param PR $pr
      * @param SoIAR $soiar
@@ -33,100 +33,97 @@ final class SalesOrderItemService
      * @param TRR $trr
      * @return void
      */
-    public function addSoItem(SalesOrderItem $model, SalesOrderItemForm $form, string $sales_order_id, PR $pr, SoIAR $soiar, SoIAS $soias, UR $uR, TRR $trr): void
+    public function addSoItem(SalesOrderItem $model, array $array, string $sales_order_id, PR $pr, SoIAR $soiar, SoIAS $soias, UR $uR, TRR $trr): void
     {  
        // This function is used in product/save_product_lookup_item_PO when adding a po using the modal 
-       $tax_rate_id = ((null !==($form->getTax_rate_id())) ? $form->getTax_rate_id() : '');
+       $tax_rate_id = ((isset($array['tax_rate_id'])) ? (int)$array['tax_rate_id'] : '');
        $model->setTax_rate_id((int)$tax_rate_id);
-       $product_id = ((null !==($form->getProduct_id())) ? $form->getProduct_id() : '');
+       $product_id = ((isset($array['product_id'])) ? (int)$array['product_id'] : '');
        $model->setProduct_id((int)$product_id);
        $model->setSales_order_id((int)$sales_order_id);
-       $product = $pr->repoProductquery($form->getProduct_id());
+       $product = $pr->repoProductquery((string)$array['product_id']);
        $name = '';
        if ($product) {
-            if (null !==$form->getProduct_id() && $pr->repoCount($product_id)> 0) {
+            if (isset($array['product_id']) && $pr->repoCount((string)$array['product_id'])> 0) {
                $name = $product->getProduct_name();            
             }
             null!==$name ? $model->setName($name) : $model->setName('');
             // If the user has changed the description on the form => override default product description
-            $description = ((null !==($form->getDescription())) ? 
-                                      $form->getDescription() : 
-                                      $product->getProduct_description());
+            $description = ((isset($array['description'])) ? 
+                                   (string)$array['description'] : 
+                                   (string)$array['product_description']);
                  
-            null!==$description ? $model->setDescription($description) : $model->setDescription('') ;
+            $model->setDescription($description ?: '');
        }
-       null!==$form->getQuantity() ? $model->setQuantity($form->getQuantity()) : $model->setQuantity(0);
-       null!==$form->getPrice() ? $model->setPrice($form->getPrice()) : $model->setPrice(0.00);
-       null!==$form->getDiscount_amount() ? $model->setDiscount_amount($form->getDiscount_amount()) : $model->setDiscount_amount(0.00);
-       null!==$form->getCharge_amount() ? $model->setCharge_amount($form->getCharge_amount()) : $model->setCharge_amount(0.00);
-       null!==$form->getOrder() ? $model->setOrder($form->getOrder()) : $model->setOrder(0) ;
+       isset($array['quantity']) ? $model->setQuantity((int)$array['quantity']) : $model->setQuantity(0);
+       isset($array['price']) ? $model->setPrice((float)$array['price']) : $model->setPrice(0.00);
+       isset($array['discount_amount']) ? $model->setDiscount_amount((float)$array['discount_amount']) : $model->setDiscount_amount(0.00);
+       isset($array['charge_amount']) ? $model->setCharge_amount((float)$array['charge_amount']) : $model->setCharge_amount(0.00);
+       isset($array['order']) ? $model->setOrder((int)$array['order']) : $model->setOrder(0) ;
        // Product_unit is a string which we get from unit's name field using the unit_id
-       $unit = $uR->repoUnitquery((string)$form->getProduct_unit_id());
+       $unit = $uR->repoUnitquery((string)$array['product_unit_id']);
        if ($unit) {
           $model->setProduct_unit($unit->getUnit_name());
        }     
-       $model->setProduct_unit_id((int)$form->getProduct_unit_id());
+       $model->setProduct_unit_id((int)$array['product_unit_id']);
        // Users are required to enter a tax rate even if it is zero percent.
        $tax_rate_percentage = $this->taxrate_percentage((int)$tax_rate_id, $trr);
-       if ($product_id) {
+       if (isset($array['product_id'])) {
           $this->repository->save($model);  
-          if (null!==$form->getQuantity() && null!==$form->getPrice() && null!==$form->getDiscount_amount() && null!==$tax_rate_percentage) {
-            $this->saveSalesOrderItemAmount((int)$model->getId(), $form->getQuantity(), $form->getPrice(), $form->getDiscount_amount(), $tax_rate_percentage, $soiar, $soias);
+          if (isset($array['quantity']) && isset($array['price']) && isset($array['discount_amount']) && null!==$tax_rate_percentage) {
+            $this->saveSalesOrderItemAmount((int)$model->getId(), (float)$array['quantity'], (float)$array['price'], (float)$array['discount_amount'], $tax_rate_percentage, $soiar, $soias);
           }
        }
     }  
     
     /**
-     * 
      * @param SalesOrderItem $model
-     * @param SalesOrderItemForm $form
+     * @param array $array
      * @param string $sales_order_id
      * @param PR $pr
      * @param UR $uR
      * @return int
      */
-    public function saveSalesOrderItem(SalesOrderItem $model, SalesOrderItemForm $form, string $sales_order_id, PR $pr, UR $uR): int
+    public function saveSalesOrderItem(SalesOrderItem $model, array $array, string $sales_order_id, PR $pr, UR $uR): int
     {        
        // This function is used in quoteitem/edit when editing an item on the quote view
        // see https://github.com/cycle/orm/issues/348
-       null!==$form->getTax_rate_id() ? $model->setTaxRate($model->getTaxRate()?->getTax_rate_id() == $form->getTax_rate_id() ? $model->getTaxRate() : null): '';
-       $tax_rate_id = ((null !==($form->getTax_rate_id())) ? $form->getTax_rate_id() : '');
+       isset($array['tax_rate_id']) ? $model->setTaxRate($model->getTaxRate()?->getTax_rate_id() == $array['tax_rate_id'] ? $model->getTaxRate() : null): '';
+       $tax_rate_id = ((isset($array['tax_rate_id'])) ? (int)$array['tax_rate_id'] : '');
        $model->setTax_rate_id((int)$tax_rate_id);
        
-       null!==$form->getProduct_id() ? $model->setProduct($model->getProduct()?->getProduct_id() == $form->getProduct_id() ? $model->getProduct() : null): '';
-       $product_id = ((null !==($form->getProduct_id())) ? $form->getProduct_id() : '');
+       isset($array['product_id']) ? $model->setProduct($model->getProduct()?->getProduct_id() == $array['product_id'] ? $model->getProduct() : null): '';
+       $product_id = ((isset($array['product_id'])) ? (int)$array['product_id'] : '');
        $model->setProduct_id((int)$product_id);
        
        !empty($sales_order_id) ? $model->setSalesOrder($model->getSalesOrder()?->getId() == $sales_order_id ? $model->getSalesOrder() : null): ''; 
        // The sales order is passed as a parameter
        $model->setSales_order_id((int)$sales_order_id);
        
-       $product = $pr->repoProductquery($form->getProduct_id());
+       $product = $pr->repoProductquery((string)$array['product_id']);
        if ($product) {
-            $name = (( (null !==($form->getProduct_id())) && ($pr->repoCount($product_id)> 0) ) ? $product->getProduct_name() : '');  
+            $name = (((isset($array['product_id'])) && ($pr->repoCount($product->getProduct_id())> 0) ) ? $product->getProduct_name() : '');  
             $model->setName($name ?? '');
             // If the user has changed the description on the form => override default product description
-            $description = ((null !==($form->getDescription())) ? 
-                                      $form->getDescription() : 
+            $description = ((isset($array['description'])) ? 
+                                      (string)$array['description'] : 
                                       $product->getProduct_description());
             $model->setDescription($description ?? '');
        }
-       $model->setQuantity($form->getQuantity() ?? 0.00);
-       $model->setPrice($form->getPrice() ?? 0.00);
-       null!==$form->getDiscount_amount() ? $model->setDiscount_amount($form->getDiscount_amount()) : $model->setDiscount_amount(0.00);
-       null!==$form->getCharge_amount() ? $model->setCharge_amount($form->getCharge_amount()) : $model->setCharge_amount(0.00);
-       null!==$form->getPeppol_po_itemid() ? $model->setPeppol_po_itemid($form->getPeppol_po_itemid()) : $model->setPeppol_po_itemid('');
-       null!==$form->getPeppol_po_lineid() ? $model->setPeppol_po_lineid($form->getPeppol_po_lineid()) : $model->setPeppol_po_lineid('');
-       $model->setOrder($form->getOrder() ?? 0);
+       isset($array['quantity']) ? $model->setQuantity((int)$array['quantity']) : '';
+       isset($array['price']) ? $model->setPrice((float)$array['price']) : '';
+       isset($array['discount_amount']) ? $model->setDiscount_amount((float)$array['discount_amount']) : $model->setDiscount_amount(0.00);
+       isset($array['charget_amount']) ? $model->setCharge_amount((float)$array['discount_amount']) : $model->setCharge_amount(0.00);
+       isset($array['peppol_po_itemid']) ? $model->setPeppol_po_itemid((string)$array['peppol_po_itemid']) : $model->setPeppol_po_itemid('');
+       isset($array['peppol_po_lineid']) ? $model->setPeppol_po_lineid((string)$array['peppol_po_lineid']) : $model->setPeppol_po_lineid('');
+       isset($array['order']) ? $model->setOrder((int)$array['order']) : '';
        // Product_unit is a string which we get from unit's name field using the unit_id
-       $unit = $uR->repoUnitquery((string)$form->getProduct_unit_id());
+       $unit = $uR->repoUnitquery((string)$array['product_unit_id']);
        if ($unit) {
            $model->setProduct_unit($unit->getUnit_name());
        }
-       $model->setProduct_unit_id((int)$form->getProduct_unit_id());
-       if ($product_id) {
-           $this->repository->save($model);
-       } 
+       $model->setProduct_unit_id((int)$array['product_unit_id']);
+       $this->repository->save($model);
        // pass the tax_rate_id so that we can save the quote item amount
        return (int)$tax_rate_id;
     } 
@@ -134,24 +131,24 @@ final class SalesOrderItemService
     /**
      * Used in salesorderitem/edit function
      * @param SalesOrderItem $model
-     * @param SalesOrderItemForm $form
+     * @param array $array
      * @return bool
      */
-    public function savePeppol_po_itemid(SalesOrderItem $model, SalesOrderItemForm $form): bool
+    public function savePeppol_po_itemid(SalesOrderItem $model, array $array): bool
     {        
-       null!==$form->getPeppol_po_itemid() ? $model->setPeppol_po_itemid($form->getPeppol_po_itemid()) : '';
+       isset($array['peppol_po_itemid']) ? $model->setPeppol_po_itemid((string)$array['peppol_po_itemid']) : '';
        return $this->repository->save($model) ? true : false;
     }
     
     /**
      * Used in salesorderitem/edit function
      * @param SalesOrderItem $model
-     * @param SalesOrderItemForm $form
+     * @param array $array
      * @return bool
      */
-    public function savePeppol_po_lineid(SalesOrderItem $model, SalesOrderItemForm $form): bool
+    public function savePeppol_po_lineid(SalesOrderItem $model, array $array): bool
     {        
-       null!==$form->getPeppol_po_lineid() ? $model->setPeppol_po_lineid($form->getPeppol_po_lineid()) : '';
+       isset($array['peppol_po_lineid']) ? $model->setPeppol_po_lineid((string)$array['peppol_po_lineid']) : '';
        return $this->repository->save($model) ? true : false;
     }
     

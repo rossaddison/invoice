@@ -13,6 +13,7 @@ use App\User\UserService;
 
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
+use Yiisoft\Data\Paginator\OffsetPaginator;
 use Yiisoft\Http\Method;
 use Yiisoft\Router\CurrentRoute;
 use Yiisoft\Session\SessionInterface;
@@ -52,35 +53,36 @@ final class CompanyController
     
     /**
      * @param CompanyRepository $companyRepository
-     * @param SettingRepository $settingRepository
-     * @param Request $request
+     * @param SettingRepository $sR
      * @param CompanyService $service
      * @return \Yiisoft\DataResponse\DataResponse
      */
-    public function index(CompanyRepository $companyRepository, SettingRepository $settingRepository, Request $request, CompanyService $service): \Yiisoft\DataResponse\DataResponse
+    public function index(CompanyRepository $companyRepository, SettingRepository $sR, CompanyService $service): \Yiisoft\DataResponse\DataResponse
     {      
-         $canEdit = $this->rbac();
-         $parameters = [
-          's'=>$settingRepository,
-          'canEdit' => $canEdit,
-          'companies' => $this->companies($companyRepository),
-          'company_public'=>$this->translator->translate('invoice.company.public'),   
-          'alert'=> $this->alert()
-         ];
+        $canEdit = $this->rbac();
+        $companies = $this->companies($companyRepository);
+        $paginator = (new OffsetPaginator($companies))
+                         ->withPageSize((int)$sR->get_setting('default_list_limit'));
+        $parameters = [
+         'canEdit' => $canEdit,
+         'paginator' => $paginator,   
+         'company_public'=>$this->translator->translate('invoice.company.public'),   
+         'alert'=> $this->alert(),
+         'grid_summary' => $sR->grid_summary($paginator, 
+                                              $this->translator, 
+                                              (int)$sR->get_setting('default_list_limit'), 
+                                              $this->translator->translate('invoice.invoice.contracts'), ''),   
+        ];
         return $this->viewRenderer->render('index', $parameters);
     }
     
     /**
-     * 
-     * @param ViewRenderer $head
      * @param Request $request
      * @param FormHydrator $formHydrator
-     * @param SettingRepository $settingRepository
      * @return Response
      */
-    public function add(ViewRenderer $head, Request $request, 
-                        FormHydrator $formHydrator,
-                        SettingRepository $settingRepository,                   
+    public function add(Request $request, 
+                        FormHydrator $formHydrator,                   
     ): Response
     {
         $body = $request->getParsedBody() ?? [];
@@ -90,15 +92,11 @@ final class CompanyController
             'action' => ['company/add'],
             'errors' => [],
             'form' => $form,
-            's'=>$settingRepository,
-            'company_public'=>$this->translator->translate('invoice.company.public'),
+            'company_public' => $this->translator->translate('invoice.company.public'),
         ];
         
         if ($request->getMethod() === Method::POST) {
-            /**
-             * @psalm-suppress PossiblyInvalidArgument $body
-             */
-            if ($formHydrator->populate($form, $body) && $form->isValid()) {
+            if ($formHydrator->populateFromPostAndValidate($form, $request)) {
                 /**
                  * @psalm-suppress PossiblyInvalidArgument $body
                  */
@@ -112,39 +110,30 @@ final class CompanyController
     }
     
     /**
-     * 
-     * @param ViewRenderer $head
      * @param Request $request
      * @param FormHydrator $formHydrator
      * @param CompanyRepository $companyRepository
-     * @param SettingRepository $settingRepository
      * @param CurrentRoute $currentRoute
      * @return Response
      */
-    public function edit(ViewRenderer $head, Request $request, 
+    public function edit(Request $request, 
                          FormHydrator $formHydrator,
-                         CompanyRepository $companyRepository, 
-                         SettingRepository $settingRepository,
+                         CompanyRepository $companyRepository,
                          CurrentRoute $currentRoute
-
     ): Response {
         $company = $this->company($currentRoute, $companyRepository);
         if ($company) {
             $form = new CompanyForm($company);
             $parameters = [
-                'title' => $settingRepository->trans('edit'),
+                'title' => $this->translator->translate('i.edit'),
                 'action' => ['company/edit', ['id' => $company->getId()]],
                 'errors' => [],
                 'form' => $form,
-                'company_public'=>$this->translator->translate('invoice.company.public'),
-                's'=>$settingRepository,
+                'company_public' => $this->translator->translate('invoice.company.public'),
             ];
             if ($request->getMethod() === Method::POST) {
                 $body = $request->getParsedBody();
-                /**
-                 * @psalm-suppress PossiblyInvalidArgument $body
-                 */
-                if ($formHydrator->populate($form, $body) && $form->isValid()) {
+                if ($formHydrator->populateFromPostAndValidate($form, $request)) {
                     /**
                      * @psalm-suppress PossiblyInvalidArgument $body
                      */
@@ -179,21 +168,19 @@ final class CompanyController
      * 
      * @param CurrentRoute $currentRoute
      * @param CompanyRepository $companyRepository
-     * @param SettingRepository $settingRepository
      * @return Response
      */
-    public function view(CurrentRoute $currentRoute, CompanyRepository $companyRepository,
-        SettingRepository $settingRepository,
+    public function view(CurrentRoute $currentRoute, CompanyRepository $companyRepository
         ): Response {
         $company = $this->company($currentRoute, $companyRepository);
         if ($company) {
+           $form = new CompanyForm($company);
             $parameters = [
-                'title' => $settingRepository->trans('view'),
+                'title' => $this->translator->translate('i.view'),
                 'action' => ['company/view', ['id' => $company->getId()]],
-                'errors' => [],
-                'body' => $this->body($company),
-                's'=>$settingRepository,             
-                'company'=>$companyRepository->repoCompanyquery((string)$company->getId()),
+                'form' => $form,
+                'errors' => [],    
+                'company' => $companyRepository->repoCompanyquery((string)$company->getId()),
             ];
             return $this->viewRenderer->render('_view', $parameters);
         } else {
@@ -240,33 +227,7 @@ final class CompanyController
         $companies = $companyRepository->findAllPreloaded();        
         return $companies;
     }
-    
-    /**
-     * 
-     * @param Company $company
-     * @return array
-     */
-    private function body(Company $company): array {
-        $body = [                
-            'id'=>$company->getId(),
-            'current'=>$company->getCurrent(),
-            'name'=>$company->getName(),
-            'address_1'=>$company->getAddress_1(),
-            'address_2'=>$company->getAddress_2(),
-            'city'=>$company->getCity(),
-            'state'=>$company->getState(),
-            'zip'=>$company->getZip(),
-            'country'=>$company->getCountry(),
-            'phone'=>$company->getPhone(),
-            'fax'=>$company->getFax(),
-            'email'=>$company->getEmail(),
-            'web'=>$company->getWeb(),
-            'date_created'=>$company->getDate_created(),
-            'date_modified'=>$company->getDate_modified()
-        ];
-        return $body;
-    }
-    
+        
   /**
   * @return string
   */
@@ -288,4 +249,3 @@ final class CompanyController
       return $this->flash;
     }
 }
-

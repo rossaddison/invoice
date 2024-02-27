@@ -52,15 +52,12 @@ $toolbar = Div::tag();
 <div>
     <h5><?= $translator->translate('i.invoice'); ?></h5>
     <div class="btn-group">
-        <?php
-        echo $modal_create_inv;
-        ?>
         <?php if ($client_count === 0) { ?>
-            <a href="#create-inv" class="btn btn-success" data-toggle="modal" disabled data-bs-toggle = "tooltip" title="<?= $translator->translate('i.add_client'); ?>">
+            <a href="#modal-add-inv" class="btn btn-success" data-toggle="modal" disabled data-bs-toggle = "tooltip" title="<?= $translator->translate('i.add_client'); ?>">
                 <i class="fa fa-plus"></i><?= $translator->translate('i.new'); ?>
             </a>
         <?php } else { ?>
-            <a href="#create-inv" class="btn btn-success" data-toggle="modal">
+            <a href="#modal-add-inv" class="btn btn-success" data-toggle="modal">
                 <i class="fa fa-plus"></i><?= $translator->translate('i.new'); ?>
             </a>
         <?php } ?>
@@ -111,7 +108,7 @@ $toolbar = Div::tag();
         new DataColumn(
             'status_id',
             header: $translator->translate('i.status'),
-            content: static function ($model) use ($s, $irR, $inv_statuses): Yiisoft\Html\Tag\CustomTag {
+            content: static function ($model) use ($s, $irR, $inv_statuses, $translator): Yiisoft\Html\Tag\CustomTag {
                 $span = $inv_statuses[(string) $model->getStatus_id()]['label'];
                 if ($model->getCreditinvoice_parent_id() > 0) {
                     $span = Html::tag('i', str_repeat(' ', 2) . $translator->translate('i.credit_invoice'), ['class' => 'fa fa-credit-invoice']);
@@ -134,11 +131,11 @@ $toolbar = Div::tag();
         new DataColumn(
             'quote_id',
             header: $translator->translate('invoice.quote.number.status'),
-            content: static function ($model) use ($s, $urlGenerator, $qR): string {
+            content: static function ($model) use ($translator, $urlGenerator, $qR): string {
                 $quote_id = $model->getQuote_id();
                 $quote = $qR->repoQuoteUnloadedquery($quote_id);
                 if ($quote) {
-                    return (string) Html::a($quote->getNumber() . ' ' . (string) $qR->getStatuses($s)[$quote->getStatus_id()]['label'], $urlGenerator->generate('quote/view', ['id' => $quote_id]), ['style' => 'text-decoration:none', 'class' => 'label ' . (string) $qR->getStatuses($s)[$quote->getStatus_id()]['class']]);
+                    return (string) Html::a($quote->getNumber() . ' ' . (string) $qR->getStatuses($translator)[$quote->getStatus_id()]['label'], $urlGenerator->generate('quote/view', ['id' => $quote_id]), ['style' => 'text-decoration:none', 'class' => 'label ' . (string) $qR->getStatuses($translator)[$quote->getStatus_id()]['class']]);
                 } else {
                     return '';
                 }
@@ -210,7 +207,20 @@ $toolbar = Div::tag();
         new DataColumn(
             header: $translator->translate('invoice.delivery.location.add'),
             content: static function ($model) use ($urlGenerator): string {
-                return Html::a(Html::tag('i', '', ['class' => 'fa fa-plus fa-margin']), $urlGenerator->generate('del/add', ['client_id' => $model->getClient_id()]), [])->render();
+                return Html::a(Html::tag('i', '', ['class' => 'fa fa-plus fa-margin']), $urlGenerator->generate('del/add', [
+                    /**
+                     * 
+                     * @see DeliveryLocation add function getRedirectResponse
+                     * @see config/common/routes/routes.php Route::methods([Method::GET, Method::POST], '/del/add/{client_id}[/{origin}/{origin_id}/{action}]')
+                     */
+                    'client_id' => $model->getClient_id()
+                    
+                ],
+                [
+                    'origin' => 'inv',
+                    'origin_id' => $model->getId(),
+                    'action' => 'index'
+                ]))->render();
             }     
         ),        
         new DataColumn(
@@ -227,7 +237,7 @@ $toolbar = Div::tag();
         ),
         new DataColumn(
             header: $translator->translate('i.delete'),
-            content: static function ($model) use ($s, $urlGenerator): string {
+            content: static function ($model) use ($s, $translator, $urlGenerator): string {
                 return $model->getIs_read_only() === false && $s->get_setting('disable_read_only') === (string) 0 && $model->getSo_id() === '0' && $model->getQuote_id() === '0' ? Html::a(Html::tag('button',
                         Html::tag('i', '', ['class' => 'fa fa-trash fa-margin']),
                         [
@@ -246,20 +256,20 @@ $toolbar = Div::tag();
     // unpack the contents within the array using the three dot splat operator    
     ->columns(...$columns)
     ->dataReader($paginator)
-    ->filterModelName('invoice')
-    ->filterPosition('header')
+    //->filterModelName('invoice')
+    //->filterPosition('header')
     ->header($header)
     ->headerRowAttributes(['class' => 'card-header bg-info text-black'])    
     ->id('w3-grid') 
     ->pagination(
         OffsetPagination::widget()
         ->paginator($paginator)
-        ->urlArguments(['status'=>$status])    
+        //->urlArguments(['status'=>$status])    
         ->render()
     )    
     ->rowAttributes(['class' => 'align-middle'])
     ->summaryAttributes(['class' => 'mt-3 me-3 summary text-end'])
-    ->summary($grid_summary)
+    ->summaryTemplate($grid_summary)
     ->emptyTextAttributes(['class' => 'card-header bg-warning text-black'])
     ->emptyText((string) $translator->translate('invoice.invoice.no.records'))
     ->tableAttributes(['class' => 'table table-striped text-center h-75', 'id' => 'table-invoice'])
@@ -269,3 +279,5 @@ $toolbar = Div::tag();
           Form::tag()->close()    
     )    
 ?>
+
+<?php echo $modal_add_inv; ?>

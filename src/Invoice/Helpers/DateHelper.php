@@ -39,7 +39,7 @@ Class DateHelper {
         $formats = $this->date_formats();
         return $formats[$format]['datepicker-dateFormat'] ?? 'd-m-Y';
     }
-
+    
     /**
      * @return string
      */
@@ -254,7 +254,7 @@ Class DateHelper {
     public function date_for_payment_form(\DateTimeImmutable $datetimeimmutable): string {
         return DateTime::createFromImmutable($datetimeimmutable)->format($this->style());
     }
-
+    
     /**
      * @param string $date
      * @return bool
@@ -293,6 +293,16 @@ Class DateHelper {
 
         return $new_date->format($this->s->get_setting('date_format'));
     }
+    
+    /**
+     * @param \DateTimeImmutable $date
+     * @param string $increment
+     * @return string
+     */
+    public function add_to_immutable(\DateTimeImmutable $date, string $increment): string {
+        return $date->add(new DateInterval('P' . $increment))
+                    ->format('Y-m-d');
+    }
 
     /**
      * @param string $date
@@ -316,7 +326,7 @@ Class DateHelper {
         if ($date instanceof \DateTimeImmutable) {
             $return_date = $this->date_from_mysql($date);
             // Set with style
-        } elseif (!empty($date)) {
+        } elseif (null!==($date)) {
             $return_date = $this->datetime_zone_style((string) $date);
         } else {
             $return_date = null;

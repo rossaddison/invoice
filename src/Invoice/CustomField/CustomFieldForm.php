@@ -20,6 +20,8 @@ final class CustomFieldForm extends FormModel
     private ?int $location=null;
     #[Required]
     private ?int $order=null;
+    #[Required]
+    private ?bool $required=false;
     
     public function __construct(CustomField $custom_field)
     {
@@ -28,6 +30,7 @@ final class CustomFieldForm extends FormModel
         $this->type = $custom_field->getType();
         $this->location = $custom_field->getLocation();
         $this->order = $custom_field->getOrder();
+        $this->required = $custom_field->getRequired();
     }
 
     public function getTable() : string|null
@@ -53,6 +56,11 @@ final class CustomFieldForm extends FormModel
     public function getOrder() : int|null
     {
       return $this->order;
+    }
+    
+    public function getRequired() : bool|null
+    {
+      return $this->required;
     }
 
     /**

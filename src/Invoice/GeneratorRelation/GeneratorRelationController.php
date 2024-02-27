@@ -94,15 +94,12 @@ final class GeneratorRelationController
             'action' => ['generatorrelation/add'],
             'form' => $form,
             'errors' => [],
-            'generators'=>$generatorRepository->findAllPreloaded()
+            'generators' => $generatorRepository->findAllPreloaded()
         ];
         
         if ($request->getMethod() === Method::POST) {
             $body = $request->getParsedBody();
-            /**
-             * @psalm-suppress PossiblyInvalidArgument $body 
-             */
-            if ($formHydrator->populate($form, $body) && $form->isValid()) {
+           if ($formHydrator->populateFromPostAndValidate($form,  $request)) {
                 /**
                  * @psalm-suppress PossiblyInvalidArgument $body 
                  */
@@ -147,7 +144,7 @@ final class GeneratorRelationController
                 /**
                  * @psalm-suppress PossiblyInvalidArgument $body 
                  */
-                if ($formHydrator->populate($form, $body) && $form->isValid()) {
+                if ($formHydrator->populateFromPostAndValidate($form,  $request)) {
                     /**
                      * @psalm-suppress PossiblyInvalidArgument $body 
                      */
@@ -198,8 +195,8 @@ final class GeneratorRelationController
                 'errors' => [],
                 'form' => $form,  
                 'generatorrelation' => $generatorrelation,
-                'generators'=>$generatorRepository->findAllPreloaded(),
-                'egrs'=>$generatorrelationRepository->repoGeneratorRelationquery($generatorrelation->getRelation_id()),
+                'generators' => $generatorRepository->findAllPreloaded(),
+                'egrs' => $generatorrelationRepository->repoGeneratorRelationquery($generatorrelation->getRelation_id()),
             ];
             return $this->viewRenderer->render('__view', $parameters);
         }
@@ -251,8 +248,7 @@ final class GeneratorRelationController
     private function alert(): string {
       return $this->viewRenderer->renderPartialAsString('/invoice/layout/alert',
       [ 
-        'flash' => $this->flash,
-        'errors' => [],
+        'flash' => $this->flash
       ]);
     }
 

@@ -18,15 +18,15 @@ final class SalesOrderTaxRateService
     /**
      * 
      * @param SalesOrderTaxRate $model
-     * @param SalesOrderTaxRateForm $form
+     * @param array $array
      * @return void
      */
-    public function saveSoTaxRate(SalesOrderTaxRate $model, SalesOrderTaxRateForm $form): void
+    public function saveSoTaxRate(SalesOrderTaxRate $model, array $array): void
     {
-       null!==$form->getSo_id() ? $model->setSo_id($form->getSo_id()) : '';
-       null!==$form->getTax_rate_id() ? $model->setTax_rate_id($form->getTax_rate_id()) : '';
-       $model->setInclude_item_tax($form->getInclude_item_tax() ?: 0);
-       $model->setSo_tax_rate_amount($form->getSo_tax_rate_amount() ?: 0.00);
+       isset($array['so_id']) ? $model->setSo_id((int)$array['so_id']) : '';
+       isset($array['tax_rate_id']) ? $model->setTax_rate_id((int)$array['tax_rate_id']) : '';
+       $model->setInclude_item_tax((int)$array['include_item_tax'] ?: 0);
+       $model->setSo_tax_rate_amount((float)$array['so_tax_rate_amount'] ?: 0.00);
  
        $this->repository->save($model);
     }

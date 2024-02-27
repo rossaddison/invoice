@@ -35,7 +35,9 @@
                 <button type="button" id="filter-button-quote" class="btn btn-default"><?php echo $translator->translate('i.search_product'); ?></button>
                 <button type="button" id="product-reset-button-quote" class="btn btn-default"><?php echo $translator->translate('i.reset'); ?></button>
             </div>
-            <div class="modal-header">                             
+            <div class="modal-header">
+                    <!-- see src\Invoice\Asset\rebuild-1.13\js\modal-product-lookups.js line 64 -->
+                    <!-- Note: The above js will pass selected products to invoice/product/selection_quote function -->
                     <button class="select-items-confirm-quote btn btn-success alignment:center" type="button" disabled>
                         <i class="fa fa-check"></i>
                         <?= $translator->translate('i.submit'); ?>
@@ -44,12 +46,7 @@
             <br/>
             <div id="product-lookup-table">
                 <?php  
-                    $response = $head->renderPartial('invoice/product/_partial_product_table_modal',[
-                        's'=>$s, 
-                        'products'=>$products,
-                        'numberhelper'=>$numberhelper,
-                    ]);
-                    echo (string)$response->getBody();
+                    echo $partial_product_table_modal;
                 ?>     
             </div>
         </div>

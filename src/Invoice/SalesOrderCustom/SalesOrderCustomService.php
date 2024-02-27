@@ -16,16 +16,15 @@ final class SalesOrderCustomService
     }
 
     /**
-     * 
      * @param SalesOrderCustom $model
-     * @param SalesOrderCustomForm $form
+     * @param array $array
      * @return void
      */
-    public function saveSoCustom(SalesOrderCustom $model, SalesOrderCustomForm $form): void
+    public function saveSoCustom(SalesOrderCustom $model, array $array) : void
     { 
-       null!==$form->getSo_id() ? $model->setSo_id($form->getSo_id()) : '';
-       null!==$form->getCustom_field_id() ? $model->setCustom_field_id($form->getCustom_field_id()) : '';
-       $model->setValue($form->getValue() ?? '');
+       isset($array['so_id']) ? $model->setSo_id((int)$array['so_id']) : '';
+       isset($array['custom_field_id']) ? $model->setCustom_field_id((int)$array['custom_field_id']) : '';
+       isset($array['value']) ? $model->setValue((string)$array['value']) : '';
        $this->repository->save($model);
     }
     

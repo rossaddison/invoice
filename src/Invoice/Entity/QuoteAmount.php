@@ -14,12 +14,11 @@ class QuoteAmount
 {
     #[BelongsTo(target:Quote::class, nullable: false, fkAction:'NO ACTION')]
     private ?Quote $quote = null;    
-    
-    #[Column(type: 'primary')]
-    private ?int $id =  null;
-     
     #[Column(type: 'integer(11)', nullable:false)]
     private ?int $quote_id =  null;
+    
+    #[Column(type: 'primary')]
+    private ?int $id =  null;   
     
     #[Column(type: 'decimal(20,2)', nullable:false, default: 0.00)]
     private ?float $item_subtotal =  0.00;

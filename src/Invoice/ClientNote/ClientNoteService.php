@@ -16,7 +16,7 @@ final class ClientNoteService
         $this->repository = $repository;
     }
     
-    public function addClientNote(ClientNote $model, array $array, SettingRepository $s): void
+    public function addClientNote(ClientNote $model, array $array): void
     {
        isset($array['client_id']) ? $model->setClient_id((int)$array['client_id']) : '';
        
@@ -34,10 +34,9 @@ final class ClientNoteService
     /**
      * @param ClientNote $model
      * @param array $array
-     * @param SettingRepository $s
      * @return void
      */
-    public function saveClientNote(ClientNote $model, array $array, SettingRepository $s): void
+    public function saveClientNote(ClientNote $model, array $array,): void
     {
        isset($array['client_id']) 
        && $model->getClient()?->getClient_id() == $array['client_id']

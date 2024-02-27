@@ -55,7 +55,7 @@ $pagination = OffsetPagination::widget()
 </div>
 <div id="content" class="table-content">
     <?php 
-                if ($pagination->isRequired()) {
+                if ($pagination->isPaginationRequired()) {
                    echo $pagination;
                 }
     ?>  

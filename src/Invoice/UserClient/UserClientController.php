@@ -86,11 +86,8 @@ final class UserClientController
             'form' => $form
         ];
         if ($request->getMethod() === Method::POST) {
-            $body = $request->getParsedBody();
-            /**
-             * @psalm-suppress PossiblyInvalidArgument $body
-             */
-            if ($formHydrator->populate($form, $body) && $form->isValid()) {
+            if ($formHydrator->populateFromPostAndValidate($form, $request)) {
+                $body = $request->getParsedBody();
                 /**
                  * @psalm-suppress PossiblyInvalidArgument $body
                  */
@@ -151,11 +148,8 @@ final class UserClientController
                 'form' => $form,
             ];
             if ($request->getMethod() === Method::POST) {
-                $body = $request->getParsedBody();
-                /**
-                 * @psalm-suppress PossiblyInvalidArgument $body
-                 */
-                if ($formHydrator->populate($form, $body) && $form->isValid()) {
+                if ($formHydrator->populateFromPostAndValidate($form, $request)) {
+                    $body = $request->getParsedBody();
                     /**
                      * @psalm-suppress PossiblyInvalidArgument $body
                      */
@@ -325,8 +319,7 @@ final class UserClientController
     private function alert(): string {
       return $this->viewRenderer->renderPartialAsString('/invoice/layout/alert',
       [ 
-        'flash' => $this->flash,
-        'errors' => [],
+        'flash' => $this->flash
       ]);
     }
 

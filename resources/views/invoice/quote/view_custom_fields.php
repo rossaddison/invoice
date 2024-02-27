@@ -1,4 +1,8 @@
-
+<?php
+    declare(strict_types=1);
+    
+    use Yiisoft\Html\Html;
+?>
 
 <?php if ($custom_fields): ?>
                     <div>
@@ -17,7 +21,7 @@
                                                 } ?>
                                                 <?php $i++; ?>
                                                 <?php if ($i % 2 != 0): ?>
-                                                    <?= $cvH->print_field_for_view($quote_custom_values, $custom_field, $custom_values, 'mt-3 ml-3 mb-3'); ?>
+                                                    <?= $cvH->print_field_for_view($custom_field, $quoteCustomForm, $quote_custom_values, $custom_values); ?>
                                                 <?php endif; ?>
                                             <?php endforeach; ?>
                                         </div>
@@ -29,7 +33,7 @@
                                                 } ?>
                                                 <?php $i++; ?>
                                                 <?php if ($i % 2 == 0): ?>
-                                                    <?= $cvH->print_field_for_view($quote_custom_values,$custom_field, $custom_values, 'mt-3 ml-3 mb-3'); ?>
+                                                    <?= $cvH->print_field_for_view($custom_field, $quoteCustomForm, $quote_custom_values, $custom_values); ?>
                                                 <?php endif; ?>
                                             <?php endforeach; ?>
                                         </div>

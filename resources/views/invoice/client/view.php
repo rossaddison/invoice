@@ -29,16 +29,10 @@
 
     <div class="headerbar-item pull-right">
         <div class="btn-group btn-group-sm">
-                <?php
-                    echo $modal_create_quote;
-                    echo $modal_create_inv;
-                ?>
-                <a href="#create-quote" class="btn btn-primary" data-toggle="modal"
-                   data-client-id="<?= $client->getClient_id(); ?>" style="text-decoration:none">
-                   <i class="fa fa-file-text"></i><?= $translator->translate('i.create_quote'); ?>
+                <a href="#modal-add-quote" data-toggle="modal" class="btn btn-success" style="text-decoration:none">
+                    <i class="fa fa-file-text"></i><?= $translator->translate('i.create_quote'); ?>
                 </a>
-                <a href="#create-inv" class="btn btn-success" data-toggle="modal"
-                   data-client-id="<?= $client->getClient_id(); ?>" style="text-decoration:none">
+                <a href="#modal-add-inv" data-toggle="modal" class="btn btn-success"  style="text-decoration:none">
                    <i class="fa fa-file-text"></i><?= $translator->translate('i.create_invoice'); ?>
                 </a>
                 <?php if ($cpR->repoClientCount((string)$client->getClient_id()) === 0 ) { ?>
@@ -61,7 +55,7 @@
                    class="btn btn-primary" style="text-decoration:none">
                     <i class="fa fa-plus"></i><?= $translator->translate('invoice.client.postaladdress.add'); ?>
                 </a>
-                <a href="<?= $urlGenerator->generate('del/add',['client_id' => $client->getClient_id()]); ?>"
+                <a href="<?= $urlGenerator->generate('del/add',['client_id' => $client->getClient_id(), 'origin' => 'client', 'origin_id' => $client->getClient_id(), 'action' => 'view']); ?>"
                    class="btn btn-success" style="text-decoration:none">
                    <i class="fa fa-plus fa-margin"></i><?= $translator->translate('invoice.invoice.delivery.location.add'); ?>
                 </a>
@@ -101,7 +95,7 @@
 
             <?= $alert; ?>
 
-            <?= Html::openTag('div', ['class' => 'row']); ?>
+            <div class="row">
                 <div class="col-xs-12 col-sm-6 col-md-6">
 
                     <h3><?= Html::encode($clienthelper->format_client($client)); ?></h3>
@@ -152,7 +146,7 @@
 
             <hr>
             
-            <?= Html::openTag('div', ['class' => 'row']); ?>
+            <div class="row">
                 <div class="col-xs-12 col-md-6">
                     <div class="panel panel-default no-margin">
                         <div class="panel-heading"><?= $translator->translate('invoice.invoice.delivery.location.client'); ?></div>
@@ -165,7 +159,7 @@
             
             <hr>
 
-            <?= Html::openTag('div', ['class' => 'row']); ?>
+            <div class="row">
                 <div class="col-xs-12 col-md-6">
                     <div class="panel panel-default no-margin">
                         <div class="panel-heading"><?= $translator->translate('i.contact_information'); ?></div>
@@ -254,14 +248,14 @@
                             </table>
                         </div>
 
-                    </div>
-                </div>
-            </div>
+        </div>
+    </div>
+</div>
 
             <?php if ($client->getClient_surname() !== ""): ?>
                 <hr>
 
-                <?= Html::openTag('div', ['class' => 'row']); ?>
+                <div class="row">
                     <div class="col-xs-12 col-md-6">
 
                         <div class="panel panel-default">
@@ -326,7 +320,7 @@
             if ($custom_fields) : ?>
                 <hr>
 
-                <?= Html::openTag('div', ['class' => 'row']); ?>
+                <div class="row">
                     <div class="col-xs-12 col-md-6">
                         <div class="panel panel-default no-margin">
 
@@ -358,7 +352,7 @@
 
             <hr>
 
-            <?= Html::openTag('div', ['class' => 'row']); ?>
+            <div class="row">
                 <div class="col-xs-12 col-md-6">
 
                     <div class="panel panel-default no-margin">
@@ -439,3 +433,25 @@
     </div>
 
 </div>
+
+<?php
+    /**
+     * Note: The quote modal is used in 3 places
+     * Note: {origin} is set in QuoteController/index function ...
+     *      'action' => ['quote/add', ['origin' => 'quote']],
+     * Note: {origin} is set in resources/views/layout/invoice.php  ... 
+     *      $urlGenerator->generate('quote/add',['origin' => 'main'])], 
+     * Note: {origin} is set in ClientController/index function ... 
+     *      'action' => ['quote/add', ['origin' => $client_id]], 
+     * @see config/common/routes quote/add/{origin}
+     * @see ClientController/view function 'client_modal_layout_quote' => [ .... ]
+     * @see views\invoice\quote\modal_layout.php
+     * @see views\invoice\quote\modal_add_quote_form.php contained in above file.
+     * Note: 'action' is equivalent to $urlGenerator->generate('quote/add', ['origin' => $client->getClient_id() or 'quote' or 'main'])
+     * Note: If origin is a client number, quote/add/{origin} route will return to url client/view/{origin}
+     * Note: If origin is 'quote', quote/add/{origin} route will return to url quote/index
+     * Note: If origin is 'main', quote/add/{origin} route will return to url invoice/
+     */
+    echo $client_modal_layout_quote;
+    echo $client_modal_layout_inv;
+?>
