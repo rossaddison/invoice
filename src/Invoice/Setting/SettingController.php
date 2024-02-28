@@ -220,7 +220,8 @@ final class SettingController
                 'sender_identifier_array'=>StoreCoveArrays::store_cove_sender_identifier_array(),
             ]),
         ];
-        if ($request->getMethod() === Method::POST) {            
+        if ($request->getMethod() === Method::POST) {
+            $body = $request->getParsedBody();
             if (is_array($body)) {
                 $settings = (array)$body['settings'];
                 /** 
@@ -245,7 +246,7 @@ final class SettingController
                         } elseif (isset($settings[$key . '_field_is_amount'])) {
                             // Format amount inputs
                             $this->tab_index_settings_save($key, (string)$numberhelper->standardize_amount($value), $sR);
-                        } else {     
+                        } else {
                             $this->tab_index_settings_save($key, $value, $sR);
                         }  
 
@@ -418,10 +419,11 @@ final class SettingController
                  * @psalm-suppress PossiblyInvalidArgument
                  */
                 if ($formHydrator->populate($form, $request->getParsedBody()) && $form->isValid()) {
+                    $body = $request->getParsedBody();
                     /**
                      * @psalm-suppress PossiblyInvalidArgument
                      */
-                    $this->settingService->saveSetting($setting, $request->getParsedBody());
+                    $this->settingService->saveSetting($setting, $body);
                     $this->flash_message('info', $this->translator->translate('i.record_successfully_updated'));
                     return $this->webService->getRedirectResponse('setting/debug_index');
                 }
@@ -473,7 +475,6 @@ final class SettingController
     }
     
     /**
-     * 
      * @param Request $request
      * @param CurrentRoute $currentRoute
      * @param FormHydrator $formHydrator
@@ -483,24 +484,18 @@ final class SettingController
              FormHydrator $formHydrator): Response 
     {
         $setting = $this->setting($currentRoute, $this->s);
-        /**
-         * @psalm-suppress PossiblyInvalidArgument
-         */
-        $body = $request->getParsedBody() ?? [];
         if ($setting) {
+            $form = new SettingForm($setting);
             $parameters = [
-                'title' => $this->s->trans('edit'),
+                'title' => $this->translator->translate('i.edit'),
                 'action' => ['setting/edit', ['setting_id' => $setting->getSetting_id()]],
                 'errors' => [],
             ];
             if ($request->getMethod() === Method::POST) {
-                $form = new SettingForm($setting);
-                /**
-                 * @psalm-suppress PossiblyInvalidArgument
-                 */
                 if ($formHydrator->populateFromPostAndValidate($form,  $request)) {
+                    $body = $request->getParsedBody() ?? [];
                     /**
-                     * @psalm-suppress PossiblyInvalidArgument
+                     * @psalm-suppress PossiblyInvalidArgument $body
                      */
                     $this->settingService->saveSetting($setting, $body);
                     return $this->webService->getRedirectResponse('setting/index');

@@ -271,19 +271,25 @@ final class SettingRepository extends Select\Repository
 
         switch ($operator) {
             case '==':
-                $echo_selected = (null!==$value1) == (null!==$value2) ? true : false;
+                $echo_selected = $value1 == $value2 ? true : false;
                 break;
             case '!=':
-                $echo_selected = (null!==$value1) != (null!==$value2) ? true : false;
+                $echo_selected = $value1 != $value2 ? true : false;
+                break;
+            case 'e':
+                $echo_selected = empty($value1) ? true : false;
+                break;
+            case '!e':
+                $echo_selected = empty($value1) ? true : false;
                 break;
             default:
-                $echo_selected = (null!==$value1) ? true : false;
+                $echo_selected = $value1 ? true : false;
                 break;
         }
 
         echo $echo_selected ? $select : '';
     }
-    
+       
    /**
      * @return (mixed|string)[]
      *
