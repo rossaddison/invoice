@@ -124,7 +124,7 @@ $vat = $s->get_setting('enable_vat_registration');
         <?php
         if (null!==$items) {
         foreach ($items as $item) { 
-            $quote_item_amount = $qiaR->repoQuoteItemAmountquery((string)$item->getId());
+            $quote_item_amount = $qiaR->repoQuoteItemAmountquery((int)$item->getId());
             ?>
             <tr>
                 <td><?= Html::encode($item->getName()); ?></td>

@@ -77,7 +77,7 @@ use Yiisoft\Router\CurrentRoute;
             'project_id',
             header: $translator->translate('i.project'),                
             content: static function ($model) use ($prjct) : string {
-                return Html::encode(($prjct->count($model->getProject_id()) > 0 ? $prjct->repoProjectquery($model->getId())->getName() : '')); 
+                return Html::encode(($prjct->count($model->getProject_id()) > 0 ? $prjct->repoProjectquery($model->getProject_id())->getName() : '')); 
             }                   
         ),
         new DataColumn(
