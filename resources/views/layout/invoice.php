@@ -12,6 +12,7 @@ use App\Invoice\Asset\i18nAsset\en_GB_Asset;
 use App\Invoice\Asset\i18nAsset\es_ES_Asset;
 use App\Invoice\Asset\i18nAsset\fr_FR_Asset;
 use App\Invoice\Asset\i18nAsset\id_Asset;
+use App\Invoice\Asset\i18nAsset\it_Asset;
 use App\Invoice\Asset\i18nAsset\ja_Asset;
 use App\Invoice\Asset\i18nAsset\nl_Asset;
 use App\Invoice\Asset\i18nAsset\ru_Asset;
@@ -83,6 +84,9 @@ switch ($session->get('_language') ?? $session->set('_language', $currentRoute->
     break;
   case 'id' : $assetManager->register(id_Asset::class);
     $locale = 'Indonesian';
+    break;
+  case 'it' : $assetManager->register(it_Asset::class);
+    $locale = 'Italian';
     break;
   case 'ja' : $assetManager->register(ja_Asset::class);
     $locale = 'Japanese';
@@ -189,7 +193,7 @@ $this->beginPage();
               ],
               ['label' => $translator->translate('i.client'),
                 'items' => [
-                  ['options' => ['class' => 'nav fs-4'], 'label' => $translator->translate('invoice.client.add'), 'url' => $urlGenerator->generate('client/add')],
+                  ['options' => ['class' => 'nav fs-4'], 'label' => $translator->translate('invoice.client.add'), 'url' => $urlGenerator->generate('client/add', ['origin' => 'main'])],
                   ['options' => ['class' => 'nav fs-4'], 'label' => $translator->translate('invoice.client.view'), 'url' => $urlGenerator->generate('client/index')],
                   ['options' => ['class' => 'nav fs-4'], 'label' => $translator->translate('invoice.client.note.add'), 'url' => $urlGenerator->generate('clientnote/add')],
                   ['options' => ['class' => 'nav fs-4'], 'label' => $translator->translate('invoice.client.note.view'), 'url' => $urlGenerator->generate('clientnote/index')],
@@ -386,7 +390,7 @@ $this->beginPage();
                   ['options' => ['class' => 'nav fs-4', 'data-bs-toggle' => 'tooltip', 'title' => $s->where('google_translate_json_filename')],
                     'label' => $translator->translate('invoice.generator.google.translate.ip'), 'url' => $urlGenerator->generate('generator/google_translate_lang', ['type' => 'ip'])],
                   ['options' => ['class' => 'nav fs-4'], 'label' => $translator->translate('invoice.generator.google.translate.gateway'), 'url' => $urlGenerator->generate('generator/google_translate_lang', ['type' => 'gateway'])],
-                  ['options' => ['class' => 'nav fs-4', 'data-bs-toggle' => 'tooltip', 'title' => $s->where('google_translate_en_app_php')], 'label' => $translator->translate('invoice.generator.google.translate.app'), 'url' => $urlGenerator->generate('generator/google_translate_lang', ['type' => 'app'])],
+                  ['options' => ['class' => 'nav fs-4'], 'label' => $translator->translate('invoice.generator.google.translate.latest'), 'url' => $urlGenerator->generate('generator/google_translate_lang', ['type' => 'latest'])],
                   ['label' => $translator->translate('invoice.test.reset.setting'), 'url' => $urlGenerator->generate('invoice/setting_reset'),
                     'options' => ['class' => 'nav fs-4', 'data-bs-toggle' => 'tooltip', 'title' => $translator->translate('invoice.test.reset.setting.tooltip')]],
                   ['label' => $translator->translate('invoice.test.reset'), 'url' => $urlGenerator->generate('invoice/test_data_reset'),
@@ -466,6 +470,10 @@ $this->beginPage();
                     'label' => 'Indonesian / bahasa Indonesia',
                     'url' => $urlGenerator->generateFromCurrent(['_language' => 'id'], fallbackRouteName: 'invoice/index'),
                   ],
+                  [
+                        'label' => 'Italian / Italiano',
+                        'url' => $urlGenerator->generateFromCurrent(['_language' => 'it'], fallbackRouteName: 'invoice/index'),
+                  ],       
                   [
                     'label' => 'Japanese / 日本',
                     'url' => $urlGenerator->generateFromCurrent(['_language' => 'ja'], fallbackRouteName: 'invoice/index'),

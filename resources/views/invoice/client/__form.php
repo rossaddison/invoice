@@ -285,7 +285,10 @@ use Yiisoft\Arrays\ArrayHelper;
                 <label for="postaladdress_id"><?= $translator->translate('invoice.client.postaladdress.available'); ?>: </label>
             <?= Html::closeTag('div'); ?>           
             <?= Html::openTag('div',['class' => 'input-group']); ?>
-                <?php if ($postal_address_count > 0) { ?>
+                <?php
+                    // only allow the postal address add button if we are editing the client
+                    // we add a client on the dashboard
+                    if ($postal_address_count > 0 && $origin == 'edit') { ?>
                     <?= Field::select($form, 'postaladdress_id')
                         ->label($translator->translate('invoice.client.postaladdress.available'))    
                         ->required(true)
@@ -297,9 +300,11 @@ use Yiisoft\Arrays\ArrayHelper;
                         ->hint($translator->translate('invoice.hint.this.field.is.required'));    
                     ?>
                 <?php
-                } else {
+                }
+                if ($postal_address_count ===  0 && $origin == 'edit')
+                {
                     // hide the field but maintain the postaladdress_id that will appear in the $request->bodyParams array
-                    echo Html::a($translator->translate('invoice.client.postaladdress.add'), $urlGenerator->generate('postaladdress/add', ['client_id' => $client->getClient_id()]), ['class' => 'btn btn-warning btn-lg mt-3']);
+                    echo Html::a($translator->translate('invoice.client.postaladdress.add'), $urlGenerator->generate('postaladdress/add', ['client_id' => $client->getClient_id(), 'origin' => 'client']), ['class' => 'btn btn-warning btn-lg mt-3']);
                 }
                 ?>
             <?= Html::closeTag('div'); ?>            

@@ -32,7 +32,7 @@ $pagination = OffsetPagination::widget()
 <div>
     <h5><?= Html::encode($this->getTitle()); ?></h5>
     <div class="btn-group">
-        <a href="<?= $urlGenerator->generate('client/add');?>" class="btn btn-success" style="text-decoration:none"><i class="fa fa-plus"></i> <?= $translator->translate('i.new'); ?></a>
+        <a href="<?= $urlGenerator->generate('client/add', ['origin' => 'add']);?>" class="btn btn-success" style="text-decoration:none"><i class="fa fa-plus"></i> <?= $translator->translate('i.new'); ?></a>
     </div>
     <br>
     <br>
@@ -116,7 +116,7 @@ $pagination = OffsetPagination::widget()
                                 </a>
                             </li>
                             <li>
-                                <a href="<?= $urlGenerator->generate('client/edit', ['id' => $client->getClient_id()]); ?>" style="text-decoration:none">
+                                <a href="<?= $urlGenerator->generate('client/edit', ['id' => $client->getClient_id(), 'origin' => 'edit']); ?>" style="text-decoration:none">
                                     <i class="fa fa-edit fa-margin"></i> <?= $translator->translate('i.edit'); ?>
                                 </a>
                             </li>

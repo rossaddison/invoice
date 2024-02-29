@@ -84,7 +84,7 @@ final class PostalAddressController
             'canEdit' => ($this->userService->hasPermission('viewInv') && $this->userService->hasPermission('editInv')) ? true : false,
             'client_id' => $client_id,
             'title' => $this->translator->translate('invoice.add'),
-            'action' => ['postaladdress/add', ['client_id'=>$client_id]],
+            'action' => ['postaladdress/add', ['client_id' => $client_id]],
             'errors' => [],
             'form' => $form
         ];

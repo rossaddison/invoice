@@ -21,18 +21,12 @@
                     <?php
                         echo $modal_create_client;
                     ?>
-                    <?php
-                        echo $modal_create_quote;
-                    ?>
-                    <?php
-                        echo $modal_create_inv;
-                    ?>
-                     <?php if ($client_count === 0) { ?>
+                    <?php if ($client_count === 0) { ?>
                     <a href="#create-client" class="btn btn-success" data-toggle="modal" disabled data-bs-toggle = "tooltip" title="<?= $translator->translate('i.add_client'); ?>" style="text-decoration:none">
                         <i class="fa fa-plus"></i><?= $translator->translate('i.client'); ?>
                     </a>
                     <?php } else { ?>
-                    <a href="#create-client" class="btn btn-success" data-toggle="modal" style="text-decoration:none">
+                    <a href="<?= $urlGenerator->generate('client/add', ['origin' => 'dashboard']); ?>" class="btn btn-success" style="text-decoration:none">
                         <i class="fa fa-plus"></i><?= $translator->translate('i.client'); ?>
                     </a>
                     <?php } ?>
@@ -41,7 +35,7 @@
                         <i class="fa fa-plus"></i><?= $translator->translate('i.quote'); ?>
                     </a>
                     <?php } else { ?>
-                    <a href="#create-quote" class="btn btn-success" data-toggle="modal" style="text-decoration:none">
+                    <a href="<?= $urlGenerator->generate('quote/add', ['origin' => 'dashboard']);?>" class="btn btn-success" style="text-decoration:none">
                         <i class="fa fa-plus"></i><?= $translator->translate('i.quote'); ?>
                     </a>
                     <?php } ?>
@@ -50,7 +44,7 @@
                         <i class="fa fa-plus"></i><?= $translator->translate('i.invoice'); ?>
                     </a>
                     <?php } else { ?>
-                    <a href="#create-inv" class="btn btn-success" data-toggle="modal" style="text-decoration:none">
+                    <a href="<?= $urlGenerator->generate('inv/add', ['origin' => 'dashboard']);?>" class="btn btn-success" data-toggle="modal" style="text-decoration:none">
                         <i class="fa fa-plus"></i><?= $translator->translate('i.invoice'); ?>
                     </a>
                     <?php } ?>

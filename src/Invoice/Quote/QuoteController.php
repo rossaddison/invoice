@@ -321,17 +321,19 @@ final class QuoteController
         $layoutWithForm = $bootstrap5ModalQuote->renderPartialLayoutWithFormAsString($origin, $errors);
         $layoutParameters = [];
         $parametersNonModalForm = [];
-        if ($origin == 'main') {
+        // do not use a modal if originating from the main menu or from the dashboard
+        if (($origin == 'main') || ($origin == 'dashboard')) {
             $parametersNonModalForm = [
                 'form' => $bootstrap5ModalQuote->getFormParameters(),
                 /**
-                 * Use: To build the delivery location route
-                 * A delivery location can be added when a quote is being added or edited
+                 * Purpose: To build the delivery location route
+                 * A delivery location can be added from the quote form when a quote is being added or edited
                  * Once the delivery location is added, use the below action to return back to this form
                  */
                 'return_url_action' => 'add'  
             ];
         }
+        // use a modal if originating from the quote/view
         if ($origin == 'quote') {
             $layoutParameters = [
                 // use type to id the quote\modal_layout.php eg.  ->options(['id' => 'modal-add-'.$type,
@@ -341,7 +343,7 @@ final class QuoteController
             ];
         }
         // otherwise it will be a client number eg. 25
-        if (($origin <> 'main') && ($origin <> 'quote')) {
+        if (($origin <> 'main') && ($origin <> 'quote') && ($origin <> 'dashboard')) {
             $layoutParameters = [
                 'type' => 'client',
                 'form' => $layoutWithForm,
@@ -353,6 +355,7 @@ final class QuoteController
         // 1. Main Menu e.g /invoice
         // 2. Client Menu e.g. /invoice/client/view/25
         // 3. Quote Menu e.g. /invoice/quote
+        // 4. Dashboard e.g. /invoice/dashboard
         // Use the currentRoute's origin argument to return to correct origin
         if ($request->getMethod() === Method::POST) {
             if ($formHydrator->populateFromPostAndValidate($form, $request)) {
@@ -400,20 +403,18 @@ final class QuoteController
                       : $this->translator->translate('i.generate_quote_number_for_draft') . '=>' . $this->translator->translate('i.no') );
                     } //$model_id
                     $this->flash_message('success', $this->translator->translate('i.record_successfully_created'));
-                    if ($origin == 'main') {
+                    if ($origin == 'main' || $origin == 'quote') {
                         return $this->web_service->getRedirectResponse('quote/index');
                     }
-                    if ($origin == 'quote') {
-                        return $this->web_service->getRedirectResponse('quote/index');
-                    }
-                    // otherwise return to client
-                    return $this->web_service->getRedirectResponse('client/view', ['id' => $origin]);
+                    if ($origin == 'dashboard') {
+                        return $this->web_service->getRedirectResponse('invoice/dashboard');
+                    }    
                 }    
             }
             $errors = $form->getValidationResult()?->getErrorMessagesIndexedByAttribute() ?? [];
         } // POST
-        // show the form without a modal when using the main menu
-        if ($origin == 'main') {
+        // show the form without a modal when using the main menu or dashboard
+        if ($origin == 'main' || $origin == 'dashboard') {
             // update the errors array with latest errors
             $bootstrap5ModalQuote->renderPartialLayoutWithFormAsString($origin, $errors);
             // do not use the layout just get the formParameters

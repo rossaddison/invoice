@@ -190,6 +190,7 @@ final class ClientController
     }
     
     /**
+     * @param CurrentRoute $currentRoute
      * @param Request $request
      * @param FormHydrator $formHydrator
      * @param cfR $cfR
@@ -198,6 +199,7 @@ final class ClientController
      * @return Response
      */
     public function add(
+        CurrentRoute $currentRoute,    
         Request $request, 
         FormHydrator $formHydrator, 
         cfR $cfR, 
@@ -205,6 +207,7 @@ final class ClientController
         sR $sR    
     ) : Response 
     {
+        $origin = $currentRoute->getArgument('origin');
         $countries = new CountryHelper();
         $new_client = New Client();
         $form = new ClientForm($new_client);
@@ -213,11 +216,12 @@ final class ClientController
         $parameters = [
             'title' => $this->translator->translate('i.add'),
             'alert' => $this->alert(),
-            'action' => ['client/add'],
+            'action' => ['client/add', ['origin' => $origin]],
+            'origin' => $origin,
             'errors' => [],
             'errors_custom' => [],
             'client' => $new_client,
-            'aliases'=> new Aliases(['@invoice' => dirname(__DIR__), '@language' => dirname(__DIR__). DIRECTORY_SEPARATOR.'Language']),
+            'aliases' => new Aliases(['@invoice' => dirname(__DIR__), '@language' => dirname(__DIR__). DIRECTORY_SEPARATOR.'Language']),
             'selected_country' => $sR->get_setting('default_country'),            
             'selected_language' => $sR->get_setting('default_language'),
             'datepicker_dropdown_locale_cldr' => $this->session->get('_language') ?? 'en',
@@ -229,7 +233,7 @@ final class ClientController
             'custom_values' => $cvR->attach_hard_coded_custom_field_values_to_custom_field($cfR->repoTablequery('client_custom')),
             'cvH' => new CVH($sR),
             'client_custom_values' => [],
-            'clientCustomForm' => $clientCustomForm 
+            'clientCustomForm' => $clientCustomForm,
         ];
         if ($request->getMethod() === Method::POST && $formHydrator->populateFromPostAndValidate($form, $request)) {
             $body = $request->getParsedBody() ?? [];
@@ -263,7 +267,12 @@ final class ClientController
                         $parameters['errors_custom'] = $formClientCustom->getValidationResult()?->getErrorMessagesIndexedByAttribute() ?? [];
                     }
                     $this->flash_message('info', $this->translator->translate('i.record_successfully_created'));
-                    return $this->webService->getRedirectResponse('client/index');
+                    if ($origin == 'main' || $origin == 'add') {
+                        return $this->webService->getRedirectResponse('client/index');
+                    }
+                    if ($origin == 'dashboard') {
+                        return $this->webService->getRedirectResponse('invoice/dashboard');
+                    }
                 }    
             }
         }
@@ -271,7 +280,7 @@ final class ClientController
         $parameters['form'] = $form;
         return $this->viewRenderer->render('__form', $parameters);
     }
-    
+        
     /**
      * 
      * @param FormHydrator $formHydrator
@@ -353,9 +362,17 @@ final class ClientController
         }
     } 
     
-    public function edit(Request $request, cR $cR, ccR $ccR, cfR $cfR, cvR $cvR, 
-        FormHydrator $formHydrator, paR $paR, sR $sR, CurrentRoute $currentRoute, Validator $validator
+    public function edit(Request $request, 
+                         cR $cR, 
+                         ccR $ccR, 
+                         cfR $cfR, 
+                         cvR $cvR, 
+                         FormHydrator $formHydrator, 
+                         paR $paR, 
+                         sR $sR, 
+                         CurrentRoute $currentRoute, Validator $validator
     ): Response {
+    $origin = $currentRoute->getArgument('origin');    
     $client = null!==$this->client($currentRoute, $cR) ? $this->client($currentRoute, $cR) : null;
     if (null!==$client) {
         $form = new ClientForm($client);
@@ -369,16 +386,17 @@ final class ClientController
             $postaladdresses = $paR->repoClientAll((string)$client_id); 
             $parameters = [
                'title' => $this->translator->translate('i.edit'),
-               'action' => ['client/edit', ['id' => $client_id]],
+               'action' => ['client/edit', ['id' => $client_id, 'origin' => $origin]],
                'alert' => $this->alert(),
                'errors' => [],
+               'origin' => $origin,
                'errors_custom' => [], 
                'buttons' => $this->viewRenderer->renderPartialAsString('/invoice/layout/header_buttons',['s'=>$sR, 'hide_submit_button'=>false ,'hide_cancel_button'=>false]), 
-               'datehelper'=> new DateHelper($sR),
-               'client'=> $client,
+               'datehelper' => new DateHelper($sR),
+               'client' => $client,
                'form' => $form,
                'optionsDataGender' => $this->optionsDataGender(), 
-               'aliases'=> new Aliases(['@invoice' => dirname(__DIR__), '@language' => dirname(__DIR__). DIRECTORY_SEPARATOR.'Language']),
+               'aliases' => new Aliases(['@invoice' => dirname(__DIR__), '@language' => dirname(__DIR__). DIRECTORY_SEPARATOR.'Language']),
                'selected_country' => null!==$selected_country ? $selected_country : $sR->get_setting('default_country'),            
                'selected_language' => null!==$selected_language ? $selected_language : $sR->get_setting('default_language'),
                'datepicker_dropdown_locale_cldr' => $this->session->get('_language') ?? 'en',
@@ -410,8 +428,8 @@ final class ClientController
                                 $client_custom = $ccR->repoFormValuequery((string)$client_id, (string)$custom_field_id);
                                 if (null!==$client_custom) {
                                     $client_custom_input = [
-                                        'client_id'=>$client_id,
-                                        'custom_field_id'=>(int)$custom_field_id,
+                                        'client_id' => $client_id,
+                                        'custom_field_id' => (int)$custom_field_id,
                                         'value' => is_array($value) ? serialize($value) : $value 
                                     ];
                                     $clientCustomForm = new ClientCustomForm($client_custom);
@@ -433,7 +451,9 @@ final class ClientController
                    } // cfR
                } // is_array    
                $this->flash_message('info', $this->translator->translate('i.record_successfully_updated'));
-               return $this->webService->getRedirectResponse('client/index');
+               if ($origin  == 'edit') {
+                    return $this->webService->getRedirectResponse('client/index');
+               }
            }
            return $this->viewRenderer->render('__form', $parameters);
         } // null!==client_id
@@ -855,20 +875,21 @@ final class ClientController
                     'iR' => $iR,
                     'iaR' => $iaR,
                     'clienthelper' => new ClientHelper($sR),
-                    'custom_fields'=>$cfR->repoTablequery('client_custom'),
-                    'custom_values'=>$cvR->attach_hard_coded_custom_field_values_to_custom_field($cfR->repoTablequery('client_custom')),
+                    'custom_fields' => $cfR->repoTablequery('client_custom'),
+                    'custom_values' => $cvR->attach_hard_coded_custom_field_values_to_custom_field($cfR->repoTablequery('client_custom')),
                     'cpR' => $cpR,
                     'cvH' => new CVH($sR),
                     'client_custom_values'=>$this->client_custom_values((string)$client_id, $ccR),
                     'client' => $client,            
                     'client_notes' => $cnR->repoClientNoteCount($client_id) > 0 ? $cnR->repoClientquery((string)$client_id) : [],
-                    'partial_client_address'=>$this->viewRenderer->renderPartialAsString('/invoice/client/partial_client_address', [
-                        'client'=> $client,            
-                        'countryhelper'=> new CountryHelper(),
+                    'partial_client_address' => $this->viewRenderer->renderPartialAsString('/invoice/client/partial_client_address', [
+                        'client' => $client,            
+                        'countryhelper' => new CountryHelper(),
                     ]),
+                    // Note here the client_id is presented as the 'origin'. Origin could be 'quote', 'main', 'dashboard'
                     'client_modal_layout_quote' => $bootstrap5ModalQuote->renderPartialLayoutWithFormAsString((string)$client_id, []),
                     'client_modal_layout_inv'=> $bootstrap5ModalInv->renderPartialLayoutWithFormAsString((string)$client_id, []),  
-                    'quote_table'=>$this->viewRenderer->renderPartialAsString('/invoice/quote/partial_quote_table', [
+                    'quote_table' => $this->viewRenderer->renderPartialAsString('/invoice/quote/partial_quote_table', [
                         'qaR'=> $qaR,
                         'quote_count' => $qR->repoCountByClient($client_id),
                         'quotes' => $qR->repoClient($client_id),

@@ -508,12 +508,14 @@ final class InvController {
         $layoutWithForm = $bootstrap5ModalInv->renderPartialLayoutWithFormAsString($origin, $errors);
         $layoutParameters = [];
         $parametersNonModalForm = [];
-        if ($origin == 'main') {
+        // do not use a modal from main menu selection and dashboard selection
+        if (($origin == 'main') || ($origin == 'dashboard')) {
             $parametersNonModalForm = [
                 'form' => $bootstrap5ModalInv->getFormParameters(),
                 'return_url_action' => 'add'      
             ];
         }
+        // use a modal from the invoice view
         if ($origin == 'inv') {
             $layoutParameters = [
                 // use type to id the quote\modal_layout.php eg.  ->options(['id' => 'modal-add-'.$type,
@@ -523,8 +525,9 @@ final class InvController {
             ];
         }
         // otherwise it will be a client number
-        if (($origin <> 'main') && ($origin <> 'inv')) {
-            $parametersModalForm = [
+        // use a modal from the client view
+        if (($origin <> 'main') && ($origin <> 'inv') && ($origin <> 'dashboard')) {
+            $layoutParameters = [
                 'type' => 'client',
                 'form' => $layoutWithForm,
                 'return_url_action' => 'add'
@@ -534,6 +537,7 @@ final class InvController {
         // 1. Main Menu e.g /invoice
         // 2. Client Menu e.g. /invoice/client/view/25
         // 3. Invoice Menu e.g. /invoice/inv
+        // 4. Dashboard e.g. /invoice/dashboard
         // Use the currentRoute's origin argument to return to correct origin
         
         if ($request->getMethod() === Method::POST) {
@@ -587,11 +591,11 @@ final class InvController {
                       : $this->translator->translate('i.generate_invoice_number_for_draft') . '=>' . $this->translator->translate('i.no') );
                     } //$model_id
                     $this->flash_message('success', $this->translator->translate('i.record_successfully_created'));
-                    if ($origin == 'main') {
+                    if (($origin == 'main') || ($origin == 'inv')) {
                         return $this->web_service->getRedirectResponse('inv/index');
                     }
-                    if ($origin == 'inv') {
-                        return $this->web_service->getRedirectResponse('inv/index');
+                    if ($origin == 'dashboard') {
+                        return $this->web_service->getRedirectResponse('invoice/dashboard');
                     }
                     // otherwise return to client
                     return $this->web_service->getRedirectResponse('client/view', ['id' => $origin]);
@@ -600,7 +604,7 @@ final class InvController {
             $errors = $form->getValidationResult()?->getErrorMessagesIndexedByAttribute() ?? [];
         } // POST
         // show the form without a modal when using the main menu
-        if ($origin == 'main') {
+        if (($origin == 'main') || ($origin == 'dashboard')) {
             // update the errors array with latest errors
             $bootstrap5ModalInv->renderPartialLayoutWithFormAsString($origin, $errors);
             // do not use the layout just get the formParameters
@@ -620,7 +624,7 @@ final class InvController {
             ]);
         }
         // Otherwise return to client
-        if (($origin <> 'main') && ($origin <> 'inv')) {
+        if (($origin <> 'main') && ($origin <> 'inv') && ($origin <> 'dashboard')) {
             return $this->view_renderer->render('/invoice/inv/modal_layout', [
                 'type' => 'client',
                 'form' => $bootstrap5ModalInv->renderPartialLayoutWithFormAsString($origin, $errors),

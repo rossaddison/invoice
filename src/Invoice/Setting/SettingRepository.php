@@ -277,13 +277,16 @@ final class SettingRepository extends Select\Repository
                 $echo_selected = $value1 != $value2 ? true : false;
                 break;
             case 'e':
-                $echo_selected = empty($value1) ? true : false;
+                // previously empty($value1) ? true : false. A strict comparison avoids RiskyTruthy behaviour
+                $echo_selected = (!isset($value1) || $value1 == false) ? true : false;
                 break;
             case '!e':
-                $echo_selected = empty($value1) ? true : false;
+                // previously empty($value1) ? true : false. A strict comparison avoids RiskyTruthy behaviour
+                $echo_selected = (!isset($value1) || $value1 == false) ? true : false;
                 break;
             default:
-                $echo_selected = $value1 ? true : false;
+                
+                $echo_selected = null!==$value1 ? true : false;
                 break;
         }
 
@@ -542,7 +545,8 @@ final class SettingRepository extends Select\Repository
             'de'=>'German',
             'en'=>'English',
             'es'=>'Spanish',
-            'id'=>'Indonesian',            
+            'id'=>'Indonesian', 
+            'it'=>'Italian',
             'ja'=>'Japanese',
             'nl'=>'Dutch',
             'ru'=>'Russian',

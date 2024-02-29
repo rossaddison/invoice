@@ -14,7 +14,6 @@ use App\User\Controller\ApiUserController;
 use App\User\Controller\UserController;
 use Psr\Http\Message\ResponseFactoryInterface;
 use Yiisoft\Auth\Middleware\Authentication;
-use Yiisoft\Csrf\CsrfMiddleware;
 use Yiisoft\DataResponse\DataResponseFactoryInterface;
 use Yiisoft\DataResponse\Middleware\FormatDataResponseAsJson;
 use Yiisoft\DataResponse\Middleware\FormatDataResponseAsXml;
@@ -279,18 +278,12 @@ return [
       ->middleware(Authentication::class)
       ->action([ClientController::class, 'index'])
       ->name('client/index'),
-      Route::methods([Method::GET, Method::POST], '/client/add')
+      Route::methods([Method::GET, Method::POST], '/client/add/{origin}')
       ->middleware(fn(AccessChecker $checker) => $checker->withPermission('editInv'))
       ->middleware(Authentication::class)
       ->action([ClientController::class, 'add'])
       ->name('client/add'),      
-      Route::methods([Method::GET, Method::POST], '/client/create_confirm')
-      ->middleware(fn(AccessChecker $checker) => $checker->withPermission('editInv'))
-      ->middleware(Authentication::class)
-      ->middleware(CsrfMiddleware::class)
-      ->action([ClientController::class, 'create_confirm'])
-      ->name('client/create_confirm'),
-      Route::methods([Method::GET, Method::POST], '/edit-a-client/{id}')
+      Route::methods([Method::GET, Method::POST], '/edit-a-client/{id}/{origin}')
       ->name('client/edit')
       ->middleware(fn(AccessChecker $checker) => $checker->withPermission('editInv'))
       ->middleware(Authentication::class)
@@ -802,7 +795,7 @@ return [
       ->middleware(fn(AccessChecker $checker) => $checker->withPermission('editInv'))
       ->middleware(Authentication::class)
       ->action([GeneratorController::class, 'quick_view_schema']),
-      // type = eg. 'app', 'ip' or 'gateway'
+      // type = eg. 'app', 'ip' or 'gateway' or 'latest'
       // Translate either app_lang, ip_lang.php or gateway_lang.php in src/Invoice/Language/English
       // using Setting google_translate_locale under Settings...View...Google Translate
       Route::methods([Method::GET, Method::POST], '/generator/google_translate_lang/{type}')

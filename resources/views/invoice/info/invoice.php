@@ -190,7 +190,7 @@ if ($user_inv && $user_client) {  <br>
 <p>Psalm Level 7,6,5,4 Testing (0 errors)</p>
 <p><b>30 December 2022</b></p>
 <p><b>12 Post-setup Steps to Introducing Azerbaijani language</b></p>
-<p>1. config/params {locales}</p>
+<p>1. config/web/params {locales}</p>
 <p>2. views/layout/invoice.php {az_Asset and menu construction}</p>
 <p>3a. views/layout/main.php {menu construction}</p>
 <p>3b. views/layout/guest.php {menu construction}</p>

@@ -103,6 +103,7 @@ final class DeliveryLocationController {
   ): Response {
     $client_id = $currentRoute->getArgument('client_id');
     /**
+     * Query parameters are between the square brackets in the example below
      * @see config/common/routes/routes/routes.php Route::methods([Method::GET, Method::POST], '/del/add/{client_id}[/{origin}/{origin_id}/{action}]')
      * @see vendor/yiisoft/router/src/UrlGeneratorInterface Query parameters
      * Delivery locations can be added from either the quote form or the invoice form

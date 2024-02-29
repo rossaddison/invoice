@@ -725,16 +725,6 @@ final class InvoiceController
             
             'modal_create_client'=>$this->viewRenderer->renderPartialAsString('/invoice/client/modal_create_client',[
                 'datehelper'=> new DateHelper($sR)
-            ]),            
-            'modal_create_quote'=>$this->viewRenderer->renderPartialAsString('/invoice/quote/modal_create_quote',[
-                'clients'=>$cR->findAllPreloaded(),
-                'invoice_groups'=>$gR->findAllPreloaded(),
-                'datehelper'=> new DateHelper($sR)
-            ]),
-            'modal_create_inv'=>$this->viewRenderer->renderPartialAsString('/invoice/inv/modal_create_inv',[
-                'clients'=>$cR->findAllPreloaded(),
-                'invoice_groups'=>$gR->findAllPreloaded(),
-                'datehelper'=> new DateHelper($sR)
             ]),
             'client_count' =>$cR->count(), 
         ];

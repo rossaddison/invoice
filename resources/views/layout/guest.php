@@ -68,6 +68,7 @@ switch ($session->get('_language')) {
     case 'en' : $assetManager->register(en_GB_Asset::class); $locale = 'English'; break;
     case 'fr' : $assetManager->register(fr_FR_Asset::class); $locale = 'French'; break;
     case 'id' : $assetManager->register(id_Asset::class); $locale = 'Indonesian'; break;
+    case 'it' : $assetManager->register(id_Asset::class); $locale = 'Italian'; break;
     case 'ja' : $assetManager->register(ja_Asset::class); $locale = 'Japanese'; break;
     case 'nl' : $assetManager->register(nl_Asset::class); $locale = 'Dutch'; break;
     case 'ru' : $assetManager->register(ru_Asset::class); $locale = 'Russian'; break;

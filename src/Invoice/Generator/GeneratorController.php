@@ -62,9 +62,18 @@ final class GeneratorController
     const _FORM = '_form.php';     
     const _VIEW = '_view.php';
     const _ROUTE = '_route.php';
+    
+    // e.g. i.this_is_a_sentence
     const _IP = '_ip_lang.php';
+    
+    // e.g. g.this_is_a_gateway 
     const _GATEWAY = '_gateway_lang.php';
+    
+    // e.g. a complete file that is too big for Google to translate
     const _APP = '_app.php';
+    
+    // e.g. invoice.invoice.this.is.a.sentence 
+    const _LATEST = '_latest_lang.php';
     
     public function __construct(
         DataResponseFactoryInterface $factory,    
@@ -686,7 +695,7 @@ final class GeneratorController
             // Use the ..src/Invoice/Language/English/ip_lang.php associative array as template
             $folder_language = 'English';           
             $lang = new Lang();
-            // type eg. 'ip', 'gateway'  of ip_lang.php or gateway_lang.php
+            // type eg. 'ip', 'gateway'  of ip_lang.php or gateway_lang.php or latest_lang.php i.e. invoice.invoice. lines
             $lang->load($type, $folder_language);
             $content = $lang->_language;
             // Build a template array using keys from $content
@@ -754,6 +763,9 @@ final class GeneratorController
                 break;
             case 'app':
                 $file = self::_APP;
+                break;
+            case 'latest':
+                $file = self::_LATEST;
                 break;
             default:
                 break;
