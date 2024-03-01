@@ -444,19 +444,28 @@ class ProductController
         $canEdit = $this->rbac();
         $this->flash_message('info', $this->translator->translate('invoice.productimage.view'));
         $query_params = $request->getQueryParams();
-        
         /**
          * @var string $query_params['page']
          */
         $page = $query_params['page'] ?? $currentRoute->getArgument('page', '1');
         
         /** @var string $query_params['sort'] */
-        $sort = Sort::only(['id','family_id','unit_id','tax_rate_id','product_name','product_sku'])
+        $sort = Sort::only(['id', 'family_id', 'unit_id', 'tax_rate_id', 'product_name', 'product_sku', 'product_price'])
                     // (@see vendor\yiisoft\data\src\Reader\Sort
                     // - => 'desc'  so -id => default descending on id
-                    // Show the latest quotes first => -id
+                    // Show the latest products first => -id
                     ->withOrderString($query_params['sort'] ?? '-id');
-        $products = $this->products_with_sort($pR, $sort); 
+        $products = $this->products_with_sort($pR, $sort);
+        if (isset($query_params['filter_product_sku']) && !empty($query_params['filter_product_sku'])) {
+            $products = $pR->filter_product_sku((string)$query_params['filter_product_sku']);
+        }
+        if (isset($query_params['filter_product_price']) && !empty($query_params['filter_product_price'])) {
+            $products = $pR->filter_product_price((string)$query_params['filter_product_price']);
+        }
+        if ((isset($query_params['filter_product_sku']) && !empty($query_params['filter_product_sku'])) && 
+           (isset($query_params['filter_product_price']) && !empty($query_params['filter_product_price']))) {
+            $products = $pR->filter_product_sku_price((string)$query_params['filter_product_price'], (string)$query_params['filter_product_sku']);
+        }  
         $paginator = (new OffsetPaginator($products))
         ->withPageSize((int)$sR->get_setting('default_list_limit'))
         ->withCurrentPage((int)$page)
@@ -466,7 +475,7 @@ class ProductController
             'paginator' => $paginator,
             'canEdit' => $canEdit,
             'grid_summary' => $sR->grid_summary($paginator, $this->translator, (int)$sR->get_setting('default_list_limit'), $this->translator->translate('invoice.products'), ''),
-            'products' => $this->products($pR),
+            'optionsDataProductsDropdownFilter' => $this->optionsDataProducts($pR)
         ]; 
         return $this->viewRenderer->render('index', $parameters);
     }
@@ -1009,4 +1018,31 @@ class ProductController
         } //null!==$product_image_id
         exit;
     }
+    
+    /**
+     * @param ProductRepository $pR
+     * @return array
+     */
+    public function optionsDataProducts(ProductRepository $pR) : array
+    {
+        $optionsDataProducts = [];
+        $products = $pR->findAllPreloaded();
+        /**
+         * @var Product $product
+         */
+        foreach ($products as $product){
+            $productSku = $product->getProduct_sku();
+            // Remove repeats
+            if (!in_array($product->getProduct_sku(), $optionsDataProducts)) {
+                 // Include the $productSku as 'key' so that Url Query Parameter
+                 // picks it up.
+                // Tip: After selecting a value in the dropdown, or inputting into an input box always see
+                // how the above query url Parameter is being influenced by the selection or input
+                if (null!==$productSku) { 
+                    $optionsDataProducts[$productSku] = $product->getProduct_sku();
+                }
+            }
+        }
+        return $optionsDataProducts;
+    }   
 }

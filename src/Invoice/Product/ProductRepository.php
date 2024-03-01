@@ -112,18 +112,27 @@ final class ProductRepository extends Select\Repository
         );
     }
     
-    public function filters(string $product_sku): EntityReader
+    public function filter_product_sku(string $product_sku): EntityReader
     {
-        $query = $this->select();
-        
-        if (empty($product_sku)) {}
-        
-        if (!empty($product_sku)) {
-            $query = $query->where(['product_sku' => ltrim(rtrim($product_sku))]);
-        }
-            
+        $select = $this->select();
+        $query = $select->where(['product_sku' => ltrim(rtrim($product_sku))]);
         return $this->prepareDataReader($query); 
-    }    
+    }
+
+    public function filter_product_price(string $product_price): EntityReader
+    {
+        $select = $this->select();
+        $query = $select->where(['product_price' => ltrim(rtrim($product_price))]);
+        return $this->prepareDataReader($query); 
+    }
+    
+     public function filter_product_sku_price(string $product_price, string $product_sku): EntityReader
+    {
+        $select = $this->select();
+        $query = $select->where(['product_price' => ltrim(rtrim($product_price))])
+                        ->andWhere(['product_sku' => ltrim(rtrim($product_sku))]);
+        return $this->prepareDataReader($query); 
+    }       
     
     /**
      * @param null|string $product_id

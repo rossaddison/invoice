@@ -14,6 +14,7 @@ use Yiisoft\Yii\DataView\Column\DataColumn;
 use Yiisoft\Yii\DataView\Column\ActionColumn;
 use Yiisoft\Yii\DataView\GridView;
 use Yiisoft\Yii\DataView\OffsetPagination;
+use Yiisoft\Yii\DataView\Filter\Widget\DropdownFilter;
 use Yiisoft\Router\CurrentRoute;
 
 /**
@@ -81,7 +82,8 @@ use Yiisoft\Router\CurrentRoute;
         new DataColumn(
             'id',
             header: $translator->translate('i.id'),
-            content: static fn (object $model) => Html::encode($model->getProduct_id())
+            content: static fn (object $model) => Html::encode($model->getProduct_id()),
+            withSorting: true,    
         ),        
         new DataColumn(
             'family_id',
@@ -89,24 +91,27 @@ use Yiisoft\Router\CurrentRoute;
             content: static fn ($model): string => Html::encode($model->getFamily()->getFamily_name())                  
         ),
         new DataColumn(
-            'product_sku',
-            //filter: 'filter_product_sku',
-            //The filter is still currently working through javascript and not php ajax request ... yet to be tested
-            //filterProperty: 'filter_product_sku',
-            //filterType: 'text',
-            //filterInputAttributes: ['id'=>'filter_product_sku'],
-            //filterModelName: 'product_sku',
-            // Stringable|null|string|int|bool|float    
-            //filterValueDefault: 'SKU',
-            //filterInputSelectItems: ['this','that'],
-            //filterInputSelectPrompt: 'this or that',    
             /**
-             * @see \src\Invoice\Asset\rebuild-1.13\js\product.js line 47 product_sku: $('#filter_product_sku').val()
-             */
-            header: $translator->translate('i.product_sku'),
+             * Use: Full parameter input example of DataColumn
+             * @see Yiisoft\Yii\DataView\Column\DataColumn bool|array|FilterWidget|DropdownFilter|TextInputFilter
+             */    
+            'product_sku',
+            queryProperty: 'filter_product_sku',
+            header:  $translator->translate('i.product_sku'),
+            encodeHeader: true,
+            footer: null,
+            columnAttributes: [],
+            headerAttributes: [],
+            bodyAttributes: [],
             withSorting: true,
-            content: static fn ($model): string => Html::encode($model->getProduct_sku())
-        ),
+            content: static fn ($model): string => Html::encode($model->getProduct_sku()),
+            dateTimeFormat: null,
+            // bool|array   bool => TextInputFilter e.g. filter: true; array => DropDownFilter e.g.     
+            filter: $optionsDataProductsDropdownFilter,
+            filterFactory: null,
+            filterValidation: null,
+            filterEmpty: null,
+            visible: true),
         new DataColumn(
             'product_description',    
             header: $translator->translate('i.product_description'),                
@@ -114,8 +119,10 @@ use Yiisoft\Router\CurrentRoute;
         ),
         new DataColumn(
             'product_price',
+            queryProperty: 'filter_product_price',    
             header: $translator->translate('i.product_price'),   
-            content: static fn ($model): string => Html::encode($s->format_currency($model->getProduct_price()))                        
+            content: static fn ($model): string => Html::encode($model->getProduct_price()),
+            filter: true    
         ),
         new DataColumn(
             'product_price_base_quantity',    
@@ -184,9 +191,8 @@ use Yiisoft\Router\CurrentRoute;
     ->columns(...$columns)
     ->dataReader($paginator)
     ->headerRowAttributes(['class'=>'card-header bg-info text-black'])
-    //->filterPosition('header')
-    //->filterModelName('product')
-    ->urlQueryParameters(['product_sku'])            
+    ->enableMultisort(true)
+    ->urlQueryParameters(['filter_product_sku', 'filter_product_price'])            
     ->header($header)
     ->id('w4-grid')
     ->pagination(
