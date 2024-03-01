@@ -157,6 +157,7 @@ return [
       'button' => Reference::to(Button::class), 
       'session' => Reference::to(SessionInterface::class),
       'datehelper' => Reference::to(DateHelper::class),
+      'dateHelper' => Reference::to(DateHelper::class),  
       'numberHelper' => Reference::to(NumberHelper::class)
     ],
   ],

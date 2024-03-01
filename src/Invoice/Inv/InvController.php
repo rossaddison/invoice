@@ -589,6 +589,9 @@ final class InvController {
                       $this->flash_message('info', $this->sR->get_setting('generate_invoice_number_for_draft') === '1' 
                       ? $this->translator->translate('i.generate_invoice_number_for_draft') . '=>' . $this->translator->translate('i.yes') 
                       : $this->translator->translate('i.generate_invoice_number_for_draft') . '=>' . $this->translator->translate('i.no') );
+                      $this->sR->get_setting('mark_invoices_sent_copy') === '1'   
+                      ? $this->flash_message('danger', $this->translator->translate('invoice.mark.sent.copy.on')) 
+                      : '';
                     } //$model_id
                     $this->flash_message('success', $this->translator->translate('i.record_successfully_created'));
                     if (($origin == 'main') || ($origin == 'inv')) {
@@ -1919,6 +1922,7 @@ final class InvController {
             $inv_statuses = $invRepo->getStatuses($this->translator);
             $label = $invRepo->getSpecificStatusArrayLabel((string) $status);
             $this->draft_flash($currentRoute);
+            $this->mark_sent_flash($currentRoute);
             $parameters = [
                 'paginator' => $paginator,
                 'sortOrder' => $query_params['sort'] ?? '',
@@ -3631,6 +3635,39 @@ final class InvController {
       $message = ($this->translator->translate('invoice.invoice.draft.number.'
         .$on_off)) . str_repeat("&nbsp;", 2)
         .(!empty($setting_url) ? (string)Html::a(Html::tag('i','',['class'=>'fa fa-pencil']), $setting_url, ['class'=>'btn btn-primary']) 
+        : '');
+      $this->flash_message($level, $message);
+    }
+
+    /**
+     * Purpose: Warning: Setting 'Mark invoices as sent when copy' should only be ON during development
+     * Use: Toggle Button on Flash message reminder
+     * @param CurrentRoute $currentRoute
+     * @return void
+     */
+    private function mark_sent_flash(CurrentRoute $currentRoute) : void {
+      // Get the current mark_invoice_sent_copy setting
+      $mark_sent = $this->sR->get_setting('mark_invoices_sent_copy');
+      // Get the setting_id to allow for editing
+      $setting = $this->sR->withKey('mark_invoices_sent_copy');
+      $setting_url = '';
+      $setting_id = '';
+      if (null!==$setting) {
+        $setting_id = $setting->getSetting_id();
+        $setting_url = $this->url_generator->generate('setting/mark_sent',['_language'=> $currentRoute->getArgument('_language'), 'setting_id'=>$setting_id]);
+      }
+      $level = $mark_sent == '0' ? 'success': 'danger';
+      $on_off = $mark_sent == '0' ? 'off' : 'on';
+      /**
+       * @link https://emojipedia.or/check-mark
+       * @link https://emojipedia.org/cross-mark  ️
+       */
+      $message = ($mark_sent == '0' ? '✔' : '❌')  . ($this->translator->translate('invoice.invoice.mark.sent.'
+        .$on_off)) . str_repeat("&nbsp;", 2)
+        .(!empty($setting_url) ? (string)Html::a(Html::tag('i','',
+                ['class'=>'fa fa-pencil']), 
+                $setting_url, 
+                ['class'=> $mark_sent == '0' ? 'btn btn-success' : 'btn btn-danger']) 
         : '');
       $this->flash_message($level, $message);
     }    

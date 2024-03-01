@@ -393,6 +393,33 @@ final class SettingController
       }
       return $this->webService->getRedirectResponse('inv/index');
     }
+
+    /**
+     * Purpose: A warning is given if this setting is ON during production
+     * Use: Toggle between 1. On (Development) or 2. Off (Production) on the flash message under invoice/index 
+     * Location: Settings ... View ... Invoices ... Other Settings ... Mark invoices as sent when copying an invoice
+     * Route name: setting/mark_sent route action setting/mark_sent
+     * @see /config/common/routes.php
+     * @param CurrentRoute $currentRoute
+     * @return Response
+     */
+    public function mark_sent(CurrentRoute $currentRoute): Response 
+    {
+        $setting = $this->setting($currentRoute, $this->s);
+        if ($setting) {
+            if ($setting->getSetting_value() == '0') {
+               $setting->setSetting_value('1');
+               $this->s->save($setting);
+               return $this->webService->getRedirectResponse('inv/index');
+            }
+            if ($setting->getSetting_value() == '1') {
+               $setting->setSetting_value('0');
+               $this->s->save($setting);
+               return $this->webService->getRedirectResponse('inv/index');
+            }
+        }
+        return $this->webService->getRedirectResponse('inv/index');
+    }
     
     /**
      * 

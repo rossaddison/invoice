@@ -10,6 +10,7 @@ use Yiisoft\Html\Tag\Div;
 use Yiisoft\Html\Tag\Form;
 use Yiisoft\Html\Tag\H5;
 use Yiisoft\Html\Tag\I;
+use Yiisoft\Html\Tag\Label;
 use Yiisoft\Yii\DataView\GridView;
 use Yiisoft\Router\CurrentRoute;
 use Yiisoft\Yii\DataView\Column\DataColumn;
@@ -170,12 +171,41 @@ $toolbar = Div::tag();
         ),        
         new DataColumn(
             'date_created',
-            header: $translator->translate('i.date_created'),
+            header: $translator->translate('invoice.datetime.immutable.date.created'),
             content: static fn($model): string => ($model->getDate_created())->format($datehelper->style())
         ),
         new DataColumn(
+            'time_created',
+            header: $translator->translate('invoice.datetime.immutable.time.created'),
+            // Show only the time of the DateTimeImmutable    
+            content: static fn($model): string => ($model->getTime_created())->format('H:i:s')
+        ),              
+        new DataColumn(
+            'date_modified',
+            header: $translator->translate('invoice.datetime.immutable.date.modified'),
+            content: static function ($model) use ($dateHelper) : string  {
+                if ($model->getDate_modified() <> $model->getDate_created()) {
+                    return Label::tag()
+                           ->attributes(['class' => 'label label-danger'])
+                           ->content(Html::encode($model->getDate_modified()->format($dateHelper->style())))
+                           ->render(); 
+                } else {
+                    return Label::tag()
+                           ->attributes(['class' => 'label label-success'])
+                           ->content(Html::encode($model->getDate_modified()->format($dateHelper->style())))
+                           ->render(); 
+                } 
+            } 
+        ), 
+        new DataColumn(
             'date_due',
-            content: static fn($model): string => ($model->getDate_due())->format($datehelper->style())
+            content: static function($model) use ($datehelper) : string {
+                $now = new \DateTimeImmutable('now');
+                return Label::tag()
+                        ->attributes(['class' => $model->getDate_due() > $now ? 'label label-success' : 'label label-warning'])
+                        ->content(Html::encode($model->getDate_due()->format($datehelper->style())))
+                        ->render();
+            }   
         ),        
         new DataColumn(
             'id',
@@ -183,7 +213,10 @@ $toolbar = Div::tag();
             content: static function ($model) use ($s, $iaR): string|null {
                 $inv_id = $model->getId();
                 $inv_amount = (($iaR->repoInvAmountCount((int) $inv_id) > 0) ? $iaR->repoInvquery((int) $inv_id) : null);
-                return $s->format_currency(null !== $inv_amount ? $inv_amount->getTotal() : 0.00);
+                return  Label::tag()
+                        ->attributes(['class' => $inv_amount->getTotal() > 0.00 ? 'label label-success' : 'label label-warning'])
+                        ->content(Html::encode($s->format_currency(null !== $inv_amount ? $inv_amount->getTotal() : 0.00)))
+                        ->render();
             }     
         ),        
         new DataColumn(
@@ -192,7 +225,10 @@ $toolbar = Div::tag();
             content: static function ($model) use ($s, $iaR): string|null {
                 $inv_id = $model->getId();
                 $inv_amount = (($iaR->repoInvAmountCount((int) $inv_id) > 0) ? $iaR->repoInvquery((int) $inv_id) : null);
-                return $s->format_currency(null !== $inv_amount ? $inv_amount->getPaid() : 0.00);
+                return Label::tag()
+                        ->attributes(['class' => $inv_amount->getPaid() < $inv_amount->getTotal() ? 'label label-danger' : 'label label-success'])
+                        ->content(Html::encode($s->format_currency(null !== $inv_amount ? $inv_amount->getPaid() : 0.00)))
+                        ->render();
             }     
         ),        
         new DataColumn(
@@ -201,7 +237,10 @@ $toolbar = Div::tag();
             content: static function ($model) use ($s, $iaR): string|null {
                 $inv_id = $model->getId();
                 $inv_amount = (($iaR->repoInvAmountCount((int) $inv_id) > 0) ? $iaR->repoInvquery((int) $inv_id) : null);
-                return $s->format_currency(null !== $inv_amount ? $inv_amount->getBalance() : 0.00);
+                return  Label::tag()
+                        ->attributes(['class' => $inv_amount->getBalance() > 0.00 ? 'label label-success' : 'label label-warning'])
+                        ->content(Html::encode($s->format_currency(null !== $inv_amount ? $inv_amount->getBalance() : 0.00)))
+                        ->render();
             }     
         ),
         new DataColumn(

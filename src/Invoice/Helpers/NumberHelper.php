@@ -245,7 +245,9 @@ public function calculate_inv(string $inv_id, ACIR $aciR, IIR $iiR, IIAR $iiaR, 
                 $inv_amount->setBalance($balance);                
                 $iaR->save($inv_amount);
                 $invoice = $iR->repoInvUnLoadedquery($inv_id) ?? null;
-                $this->inv_balance_zero_set_to_read_only_if_fully_paid($iR, $this->s, $invoice, $balance);
+                if ($inv_total > 0.00 && $total_paid > 0.00) {
+                    $this->inv_balance_zero_set_to_read_only_if_fully_paid($iR, $this->s, $invoice, $balance);
+                }
             }    
         }
         // There are no longer any items on the invoice so initialize the Invoice Amount Record to zero
@@ -323,11 +325,13 @@ public function calculate_inv(string $inv_id, ACIR $aciR, IIR $iiR, IIAR $iiaR, 
      * @psalm-param IR<Inv> $iR
      */
     private function inv_balance_zero_set_to_read_only_if_fully_paid(IR $iR, SRepo $sR, Inv|null $invoice, float $balance) : void {
-        // sent => 2, viewed => 3, paid => 4
+        // draft => 1, sent => 2, viewed => 3, paid => 4
         // As soon as the balance on the invoice is zero and the read-only-toggle is 4 ie. paid,
-        // for Administrative purposes set the invoice to read-only
+        // for Administrative purposes set the invoice to read-only to avoid tampering
         if (($sR->get_setting('read_only_toggle') === (string)4) && null!==$invoice) {
-            if ($balance == 0.00) {
+            // Force the user to set the status to read-only manually i.e. view..edit  if it is a deliberate zero invoice
+            // i.e. `paid` and `total` equaling zero .... here by only setting to read only if `paid` and `total` are greater than zero.
+            if ($balance == 0.00 && ($invoice->getInvAmount()->getPaid() > 0.00) && ($invoice->getInvAmount()->getTotal() > 0.00)) {
                 $invoice->setIs_read_only(true);
                 // Set the status to paid
                 $invoice->setStatus_id(4);

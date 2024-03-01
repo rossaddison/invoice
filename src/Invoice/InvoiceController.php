@@ -888,6 +888,7 @@ final class InvoiceController
             'invoice_default_payment_method'=>1,
             'invoices_due_after' => 30,
             'invoice_logo' => 'favicon.ico',
+            //This setting should be zero during Production. See inv/mark_sent warning
             'mark_invoices_sent_copy' => 0,
             'mpdf_ltr' => 1,
             'mpdf_cjk' => 1,

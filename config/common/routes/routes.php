@@ -2056,6 +2056,11 @@ return [
       ->middleware(fn(AccessChecker $checker) => $checker->withPermission('editInv'))
       ->middleware(Authentication::class)
       ->action([SettingController::class, 'inv_draft_has_number_switch']),
+      Route::methods([Method::GET, Method::POST], '/setting/mark_sent/{setting_id}')
+      ->name('setting/mark_sent')
+      ->middleware(fn(AccessChecker $checker) => $checker->withPermission('editInv'))
+      ->middleware(Authentication::class)
+      ->action([SettingController::class, 'mark_sent']),      
       Route::methods([Method::GET, Method::POST], '/setting/edit/{setting_id}')
       ->name('setting/edit')
       ->middleware(fn(AccessChecker $checker) => $checker->withPermission('editInv'))

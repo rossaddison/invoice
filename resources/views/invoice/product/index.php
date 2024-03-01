@@ -14,7 +14,6 @@ use Yiisoft\Yii\DataView\Column\DataColumn;
 use Yiisoft\Yii\DataView\Column\ActionColumn;
 use Yiisoft\Yii\DataView\GridView;
 use Yiisoft\Yii\DataView\OffsetPagination;
-use Yiisoft\Yii\DataView\Filter\Widget\DropdownFilter;
 use Yiisoft\Router\CurrentRoute;
 
 /**

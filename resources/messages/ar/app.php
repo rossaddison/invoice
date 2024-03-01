@@ -1547,7 +1547,7 @@ return [
 'menu.contact' => 'اتصال,',
 'menu.language' => 'لغة,',
 'menu.login' => 'تسجيل الدخول,',
-'menu.logout' => 'تسجيل الخروج ({تسجيل الدخول}),',
+'menu.logout' => 'تسجيل الخروج ',
 'menu.signup' => 'اشتراك,',
 'menu.swagger' => 'اختيال,',
 'menu.users' => 'المستخدمين,',
