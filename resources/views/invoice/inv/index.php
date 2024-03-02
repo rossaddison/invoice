@@ -210,36 +210,30 @@ $toolbar = Div::tag();
         new DataColumn(
             'id',
             header: $translator->translate('i.total'),
-            content: static function ($model) use ($s, $iaR): string|null {
-                $inv_id = $model->getId();
-                $inv_amount = (($iaR->repoInvAmountCount((int) $inv_id) > 0) ? $iaR->repoInvquery((int) $inv_id) : null);
-                return  Label::tag()
-                        ->attributes(['class' => $inv_amount->getTotal() > 0.00 ? 'label label-success' : 'label label-warning'])
-                        ->content(Html::encode($s->format_currency(null !== $inv_amount ? $inv_amount->getTotal() : 0.00)))
+            content: static function ($model) use ($s): string|null {
+               return  Label::tag()
+                        ->attributes(['class' => $model->getInvAmount()->getTotal() > 0.00 ? 'label label-success' : 'label label-warning'])
+                        ->content(Html::encode($s->format_currency(null!==$model->getInvAmount()->getTotal() ? $model->getInvAmount()->getTotal() : 0.00)))
                         ->render();
             }     
         ),        
         new DataColumn(
             'id',
             header: $translator->translate('i.paid'),
-            content: static function ($model) use ($s, $iaR): string|null {
-                $inv_id = $model->getId();
-                $inv_amount = (($iaR->repoInvAmountCount((int) $inv_id) > 0) ? $iaR->repoInvquery((int) $inv_id) : null);
+            content: static function ($model) use ($s): string|null {
                 return Label::tag()
-                        ->attributes(['class' => $inv_amount->getPaid() < $inv_amount->getTotal() ? 'label label-danger' : 'label label-success'])
-                        ->content(Html::encode($s->format_currency(null !== $inv_amount ? $inv_amount->getPaid() : 0.00)))
+                        ->attributes(['class' => $model->getInvAmount()->getPaid() < $model->getInvAmount()->getTotal() ? 'label label-danger' : 'label label-success'])
+                        ->content(Html::encode($s->format_currency(null!==$model->getInvAmount()->getPaid() ? $model->getInvAmount()->getPaid() : 0.00)))
                         ->render();
             }     
         ),        
         new DataColumn(
             'id',
             header: $translator->translate('i.balance'),
-            content: static function ($model) use ($s, $iaR): string|null {
-                $inv_id = $model->getId();
-                $inv_amount = (($iaR->repoInvAmountCount((int) $inv_id) > 0) ? $iaR->repoInvquery((int) $inv_id) : null);
+            content: static function ($model) use ($s): string|null {
                 return  Label::tag()
-                        ->attributes(['class' => $inv_amount->getBalance() > 0.00 ? 'label label-success' : 'label label-warning'])
-                        ->content(Html::encode($s->format_currency(null !== $inv_amount ? $inv_amount->getBalance() : 0.00)))
+                        ->attributes(['class' => $model->getInvAmount()->getBalance() > 0.00 ? 'label label-success' : 'label label-warning'])
+                        ->content(Html::encode($s->format_currency(null!== $model->getInvAmount() ? $model->getInvAmount()->getBalance() : 0.00)))
                         ->render();
             }     
         ),

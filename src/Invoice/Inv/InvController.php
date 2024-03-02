@@ -1864,7 +1864,6 @@ final class InvController {
     /**
      *
      * @param Request $request
-     * @param IAR $iaR
      * @param IR $invRepo
      * @param IRR $irR
      * @param CR $clientRepo
@@ -1876,8 +1875,8 @@ final class InvController {
      * @param CurrentRoute $currentRoute
      * @return \Yiisoft\DataResponse\DataResponse|Response
      */
-    public function index(Request $request, IAR $iaR, IR $invRepo, IRR $irR, CR $clientRepo, GR $groupRepo, QR $qR, SOR $soR, DLR $dlR, UCR $ucR, CurrentRoute $currentRoute): \Yiisoft\DataResponse\DataResponse|Response {
-        // build the inv
+    public function index(Request $request, IR $invRepo, IRR $irR, CR $clientRepo, GR $groupRepo, QR $qR, SOR $soR, DLR $dlR, UCR $ucR, CurrentRoute $currentRoute): \Yiisoft\DataResponse\DataResponse|Response {
+        // build the inv and hasOne InvAmount table
         $inv = new Inv();
         $invForm = new InvForm($inv);
         $bootstrap5ModalInv = new Bootstrap5ModalInv(
@@ -1938,7 +1937,6 @@ final class InvController {
                 'inv_statuses' => $inv_statuses,
                 'max' => (int) $this->sR->get_setting('default_list_limit'),
                 'status' => $status,
-                'iaR' => $iaR,
                 'qR' => $qR,
                 'dlR' => $dlR,
                 'soR' => $soR,
@@ -2486,7 +2484,6 @@ final class InvController {
               $this->inv_to_inv_inv_items($inv_id, $copy_id, $iiaR, $iiaS, $pR, $taskR, $iiR, $trR, $formHydrator, $unR);
               $this->inv_to_inv_inv_tax_rates($inv_id, $copy_id, $itrR, $formHydrator);
               $this->inv_to_inv_inv_custom($inv_id, $copy_id, $icR, $formHydrator);
-              $this->inv_to_inv_inv_amount($inv_id, $copy_id);
               $iR->save($copy);
               $parameters = ['success' => 1];
               //return response to inv.js to reload page at location
