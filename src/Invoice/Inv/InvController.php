@@ -1862,7 +1862,6 @@ final class InvController {
     }
 
     /**
-     *
      * @param Request $request
      * @param IR $invRepo
      * @param IRR $irR
@@ -1908,15 +1907,26 @@ final class InvController {
              * @var string|null $query_params['sort']
              */
             $sort_string = $query_params['sort'] ?? '-id';
-            $sort = Sort::only(['status_id', 'number', 'date_created', 'date_due', 'id', 'client_id'])
+            $sort = Sort::only(['id', 'status_id', 'number', 'date_created', 'date_due', 'client_id'])
                     // (@see vendor\yiisoft\data\src\Reader\Sort
                     // - => 'desc'  so -id => default descending on id
                     // Show the latest quotes first => -id
                     ->withOrderString($sort_string);
             $invs = $this->invs_status_with_sort($invRepo, $status, $sort);
+            if (isset($query_params['filterInvNumber']) && !empty($query_params['filterInvNumber'])) {
+                $invs = $invRepo->filterInvNumber((string)$query_params['filterInvNumber']);
+            }
+            if (isset($query_params['filterInvAmountTotal']) && !empty($query_params['filterInvAmountTotal'])) {
+                $invs = $invRepo->filterInvAmountTotal((string)$query_params['filterInvAmountTotal']);
+            }
+            if ((isset($query_params['filterInvNumber']) && !empty($query_params['filterInvNumber'])) && 
+               (isset($query_params['filterInvAmountTotal']) && !empty($query_params['filterInvAmountTotal']))) {
+                $invs = $invRepo->filterInvNumberAndInvAmountTotal((string)$query_params['filterInvNumber'], (float)$query_params['filterInvAmountTotal']);
+            } 
             $paginator = (new OffsetPaginator($invs))
                 ->withPageSize((int) $this->sR->get_setting('default_list_limit'))
                 ->withCurrentPage((int)$page)
+                ->withSort($sort)    
                 ->withToken(PageToken::next((string)$page));
             $inv_statuses = $invRepo->getStatuses($this->translator);
             $label = $invRepo->getSpecificStatusArrayLabel((string) $status);
@@ -1924,9 +1934,9 @@ final class InvController {
             $this->mark_sent_flash($currentRoute);
             $parameters = [
                 'paginator' => $paginator,
-                'sortOrder' => $query_params['sort'] ?? '',
-                'alert' => $this->alert(),'client_count' => $clientRepo->count(),
+                'alert' => $this->alert(), 'client_count' => $clientRepo->count(),
                 'invs' => $invs,
+                'optionsDataClientsDropdownFilter' => $this->optionsDataClients($invRepo),
                 'grid_summary' => $this->sR->grid_summary(
                     $paginator,
                     $this->translator,
@@ -1934,8 +1944,12 @@ final class InvController {
                     $this->translator->translate('invoice.invoice.invoices'),
                     $label
                 ),
+                'defaultPageSizeOffsetPaginator' => (int)$this->sR->get_setting('default_list_limit'),
+                // numbered tiles between the arrrows                
+                'maxNavLinkCount' => 3,
                 'inv_statuses' => $inv_statuses,
                 'max' => (int) $this->sR->get_setting('default_list_limit'),
+                'page' => $page,
                 'status' => $status,
                 'qR' => $qR,
                 'dlR' => $dlR,
@@ -3635,7 +3649,7 @@ final class InvController {
         : '');
       $this->flash_message($level, $message);
     }
-
+    
     /**
      * Purpose: Warning: Setting 'Mark invoices as sent when copy' should only be ON during development
      * Use: Toggle Button on Flash message reminder
@@ -3667,5 +3681,29 @@ final class InvController {
                 ['class'=> $mark_sent == '0' ? 'btn btn-success' : 'btn btn-danger']) 
         : '');
       $this->flash_message($level, $message);
-    }    
+    } 
+    
+    /**
+     * @param IR $iR
+     * @return array
+     */
+    public function optionsDataClients(IR $iR) : array
+    {
+        $optionsDataClients = [];
+        // Get all the invoices that have been made out to clients with user accounts
+        $invs = $iR->findAllPreloaded();
+        /**
+         * @var Inv $inv
+         */
+        foreach ($invs as $inv) {
+            $client = $inv->getClient();
+            if (null!==$client) {
+                if (strlen($client->getClient_full_name()) > 0) {
+                    $fullName = $client->getClient_full_name();
+                    $optionsDataClients[$fullName]  =  !empty($fullName) ? $fullName : '';
+                }    
+            }
+        }
+        return $optionsDataClients;
+    }
 }

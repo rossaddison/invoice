@@ -4,17 +4,19 @@ declare(strict_types=1);
 use Yiisoft\Data\Paginator\OffsetPaginator;
 use Yiisoft\Html\Html;
 use Yiisoft\Translator\TranslatorInterface;
-use Yiisoft\View\WebView;
 use Yiisoft\Html\Tag\A;
 use Yiisoft\Html\Tag\Div;
 use Yiisoft\Html\Tag\Form;
 use Yiisoft\Html\Tag\H5;
 use Yiisoft\Html\Tag\I;
+use Yiisoft\Router\CurrentRoute;
+use Yiisoft\View\WebView;
 use Yiisoft\Yii\DataView\Column\DataColumn;
 use Yiisoft\Yii\DataView\Column\ActionColumn;
 use Yiisoft\Yii\DataView\GridView;
 use Yiisoft\Yii\DataView\OffsetPagination;
-use Yiisoft\Router\CurrentRoute;
+use Yiisoft\Yii\DataView\UrlConfig;
+use Yiisoft\Yii\DataView\YiiRouter\UrlCreator;
 
 /**
  * @var \App\Invoice\Entity\Product $product
@@ -105,7 +107,7 @@ use Yiisoft\Router\CurrentRoute;
             withSorting: true,
             content: static fn ($model): string => Html::encode($model->getProduct_sku()),
             dateTimeFormat: null,
-            // bool|array   bool => TextInputFilter e.g. filter: true; array => DropDownFilter e.g.     
+            // bool|array   bool => TextInputFilter e.g. filter: true; array => DropDownFilter e.g. as below     
             filter: $optionsDataProductsDropdownFilter,
             filterFactory: null,
             filterValidation: null,
@@ -119,7 +121,7 @@ use Yiisoft\Router\CurrentRoute;
         new DataColumn(
             'product_price',
             queryProperty: 'filter_product_price',    
-            header: $translator->translate('i.product_price'),   
+            header: $translator->translate('i.product_price'). ' ( '. $s->get_setting('currency_symbol'). ' ) ',   
             content: static fn ($model): string => Html::encode($model->getProduct_price()),
             filter: true    
         ),
@@ -140,7 +142,7 @@ use Yiisoft\Router\CurrentRoute;
         ),
         new DataColumn(
             'product_tariff',                    
-            header: $s->get_setting('sumex') ? $translator->translate('i.product_tariff') : '',                
+            header: $s->get_setting('sumex') ? $translator->translate('i.product_tariff'). '('. $s->get_setting('currency_symbol'). ')' : '',                
             content: static fn ($model): string => ($s->get_setting('sumex') ? Html::encode($model->getProduct_tariff()) : Html::encode($translator->translate('i.none'))),                       
             visible: $s->get_setting('sumex') ? true : false
         ),
@@ -196,12 +198,28 @@ use Yiisoft\Router\CurrentRoute;
     ->id('w4-grid')
     ->pagination(
     OffsetPagination::widget()
+        /**
+         * @link https://getbootstrap.com/docs/5.0/components/pagination/
+         */    
+        ->listTag('ul')    
+        ->listAttributes(['class' => 'pagination'])
+        ->itemTag('li')
+        ->itemAttributes(['class' => 'page-item'])
+        ->linkAttributes(['class' => 'page-link'])
+        ->currentItemClass('active')
+        ->currentLinkClass('page-link')
+        ->disabledItemClass('disabled')
+        ->disabledLinkClass('disabled')
+        ->defaultPageSize($defaultPageSizeOffsetPaginator)
+        ->urlConfig(new UrlConfig()) 
+        ->urlCreator(new UrlCreator($urlGenerator))        
         ->paginator($paginator)
-         ->render(),
+        ->maxNavLinkCount($maxNavLinkCount)
+        ->render()
     )
     ->rowAttributes(['class' => 'align-middle'])
     ->summaryAttributes(['class' => 'mt-3 me-3 summary text-end'])
-    ->summaryTemplate($grid_summary)
+    ->summaryTemplate($pageSizeLimiter::buttons($currentRoute, $s, $urlGenerator).' '.$grid_summary)
     ->emptyTextAttributes(['class' => 'card-header bg-warning text-black'])
     ->emptyText((string)$translator->translate('invoice.invoice.no.records'))
     ->tableAttributes(['class' => 'table table-striped text-center h-75','id'=>'table-product'])

@@ -421,6 +421,17 @@ final class SettingController
         return $this->webService->getRedirectResponse('inv/index');
     }
     
+    public function listlimit(CurrentRoute $currentRoute): Response 
+    {
+        $setting = $this->setting($currentRoute, $this->s);
+        $limit = $currentRoute->getArgument('limit');
+        if ($setting) {
+            $setting->setSetting_value((string)$limit);
+            $this->s->save($setting);
+        }
+        return $this->webService->getRedirectResponse('inv/index');
+    }
+    
     /**
      * 
      * @param Request $request

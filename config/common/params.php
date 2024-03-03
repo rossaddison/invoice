@@ -25,6 +25,7 @@ use App\Invoice\Helpers\DateHelper;
 use App\Invoice\Helpers\NumberHelper;
 use App\Invoice\Setting\SettingRepository;
 use App\Widget\Button;
+use App\Widget\PageSizeLimiter;
 use Yiisoft\Session\SessionInterface;
 
 return [
@@ -158,7 +159,8 @@ return [
       'session' => Reference::to(SessionInterface::class),
       'datehelper' => Reference::to(DateHelper::class),
       'dateHelper' => Reference::to(DateHelper::class),  
-      'numberHelper' => Reference::to(NumberHelper::class)
+      'numberHelper' => Reference::to(NumberHelper::class),
+      'pageSizeLimiter' => Reference::to(PageSizeLimiter::class)  
     ],
   ],
   'yiisoft/cookies' => [

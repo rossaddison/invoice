@@ -16,6 +16,8 @@ use Yiisoft\Router\CurrentRoute;
 use Yiisoft\Yii\DataView\Column\DataColumn;
 use Yiisoft\Yii\DataView\Column\ColumnInterface;
 use Yiisoft\Yii\DataView\OffsetPagination;
+use Yiisoft\Yii\DataView\UrlConfig;
+use Yiisoft\Yii\DataView\YiiRouter\UrlCreator;
 
 /**
  * @var \App\Invoice\Entity\Inv $inv
@@ -42,7 +44,7 @@ $header = Div::tag()
 
 $toolbarReset = A::tag()
         ->addAttributes(['type' => 'reset'])
-        ->addClass('btn btn-danger me-1 ajax-loader')
+        ->addClass('btn btn-primary me-1 ajax-loader')
         ->content(I::tag()->addClass('bi bi-bootstrap-reboot'))
         ->href($urlGenerator->generate($currentRoute->getName()))
         ->id('btn-reset')
@@ -66,6 +68,7 @@ $toolbar = Div::tag();
     <br>
     <br>
     <div class="submenu-row">
+        <!--  Route::get('/inv[/page/{page:\d+}[/status/{status:\d+}]]') -->
         <div class="btn-group index-options">
             <a href="<?= $urlGenerator->generate('inv/index', ['page' => 1, 'status' => 0]); ?>"
                class="btn <?= $status == 0 ? 'btn-primary' : 'btn-default' ?>">
@@ -125,9 +128,12 @@ $toolbar = Div::tag();
         ),
         new DataColumn(
             'number',
+            queryProperty: 'filterInvNumber',       
+            header: $translator->translate('invoice.invoice.number'),    
             content: static function ($model) use ($urlGenerator): string {
                 return Html::a($model->getNumber(), $urlGenerator->generate('inv/view', ['id' => $model->getId()]), ['style' => 'text-decoration:none'])->render();
-            }     
+            },
+            filter: true            
         ),        
         new DataColumn(
             'quote_id',
@@ -157,8 +163,10 @@ $toolbar = Div::tag();
         ),        
         new DataColumn(
             'client_id',
+            queryProperty: 'filterClient',
             header: $translator->translate('i.client'),
-            content: static fn($model): string => $model->getClient()->getClient_name() . str_repeat(' ', 2).$model->getClient()->getClient_surname()
+            content: static fn($model): string => $model->getClient()->getClient_name() . str_repeat(' ', 2).$model->getClient()->getClient_surname(),
+            filter: $optionsDataClientsDropdownFilter    
         ),
         new DataColumn(
             'delivery_location_id',
@@ -209,31 +217,34 @@ $toolbar = Div::tag();
         ),        
         new DataColumn(
             'id',
-            header: $translator->translate('i.total'),
-            content: static function ($model) use ($s): string|null {
-               return  Label::tag()
+            queryProperty: 'filterInvAmountTotal',
+            header: $translator->translate('i.total') . ' ( '. $s->get_setting('currency_symbol'). ' ) ',
+            content: static function ($model) : string|null {
+               return  
+                    Label::tag()
                         ->attributes(['class' => $model->getInvAmount()->getTotal() > 0.00 ? 'label label-success' : 'label label-warning'])
-                        ->content(Html::encode($s->format_currency(null!==$model->getInvAmount()->getTotal() ? $model->getInvAmount()->getTotal() : 0.00)))
+                        ->content(Html::encode(null!==$model->getInvAmount()->getTotal() ? $model->getInvAmount()->getTotal() : 0.00))
                         ->render();
-            }     
+            },
+            filter: true
         ),        
         new DataColumn(
             'id',
-            header: $translator->translate('i.paid'),
-            content: static function ($model) use ($s): string|null {
+            header: $translator->translate('i.paid') . ' ( '. $s->get_setting('currency_symbol'). ' ) ',
+            content: static function ($model) : string|null {
                 return Label::tag()
                         ->attributes(['class' => $model->getInvAmount()->getPaid() < $model->getInvAmount()->getTotal() ? 'label label-danger' : 'label label-success'])
-                        ->content(Html::encode($s->format_currency(null!==$model->getInvAmount()->getPaid() ? $model->getInvAmount()->getPaid() : 0.00)))
+                        ->content(Html::encode(null!==$model->getInvAmount()->getPaid() ? $model->getInvAmount()->getPaid() : 0.00))
                         ->render();
             }     
         ),        
         new DataColumn(
             'id',
-            header: $translator->translate('i.balance'),
-            content: static function ($model) use ($s): string|null {
+            header: $translator->translate('i.balance')  . ' ( '. $s->get_setting('currency_symbol'). ' ) ',
+            content: static function ($model) : string|null {
                 return  Label::tag()
                         ->attributes(['class' => $model->getInvAmount()->getBalance() > 0.00 ? 'label label-success' : 'label label-warning'])
-                        ->content(Html::encode($s->format_currency(null!== $model->getInvAmount() ? $model->getInvAmount()->getBalance() : 0.00)))
+                        ->content(Html::encode(null!== $model->getInvAmount() ? $model->getInvAmount()->getBalance() : 0.00))
                         ->render();
             }     
         ),
@@ -289,20 +300,36 @@ $toolbar = Div::tag();
     // unpack the contents within the array using the three dot splat operator    
     ->columns(...$columns)
     ->dataReader($paginator)
-    //->filterModelName('invoice')
-    //->filterPosition('header')
     ->header($header)
     ->headerRowAttributes(['class' => 'card-header bg-info text-black'])    
     ->id('w3-grid') 
     ->pagination(
+        /**
+         * @link https://getbootstrap.com/docs/5.0/components/pagination/
+         */    
         OffsetPagination::widget()
+        ->listTag('ul')    
+        ->listAttributes(['class' => 'pagination'])
+        ->itemTag('li')
+        ->itemAttributes(['class' => 'page-item'])
+        ->linkAttributes(['class' => 'page-link'])
+        ->currentItemClass('active')
+        ->currentLinkClass('page-link')
+        ->disabledItemClass('disabled')
+        ->disabledLinkClass('disabled')
+        ->defaultPageSize($defaultPageSizeOffsetPaginator)
+        ->urlConfig(new UrlConfig()) 
+        ->urlCreator(new UrlCreator($urlGenerator))    
         ->paginator($paginator)
-        //->urlArguments(['status'=>$status])    
+        ->maxNavLinkCount($maxNavLinkCount)
         ->render()
     )    
     ->rowAttributes(['class' => 'align-middle'])
     ->summaryAttributes(['class' => 'mt-3 me-3 summary text-end'])
-    ->summaryTemplate($grid_summary)
+    /**
+     * @see config/common/params.php `yiisoft/view` => ['parameters' => ['pageSizeLimiter' ... No need to be in inv/index
+     */    
+    ->summaryTemplate($pageSizeLimiter::buttons($currentRoute, $s, $urlGenerator).' '.$grid_summary)
     ->emptyTextAttributes(['class' => 'card-header bg-warning text-black'])
     ->emptyText((string) $translator->translate('invoice.invoice.no.records'))
     ->tableAttributes(['class' => 'table table-striped text-center h-75', 'id' => 'table-invoice'])

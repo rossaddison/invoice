@@ -473,6 +473,9 @@ class ProductController
         $parameters = [
             'alert' => $this->alert(),
             'paginator' => $paginator,
+            'defaultPageSizeOffsetPaginator' => (int)$sR->get_setting('default_list_limit'),
+            // numbered tiles between the arrrows
+            'maxNavLinkCount' => 3,
             'canEdit' => $canEdit,
             'grid_summary' => $sR->grid_summary($paginator, $this->translator, (int)$sR->get_setting('default_list_limit'), $this->translator->translate('invoice.products'), ''),
             'optionsDataProductsDropdownFilter' => $this->optionsDataProducts($pR)
@@ -1034,10 +1037,10 @@ class ProductController
             $productSku = $product->getProduct_sku();
             // Remove repeats
             if (!in_array($product->getProduct_sku(), $optionsDataProducts)) {
-                 // Include the $productSku as 'key' so that Url Query Parameter
-                 // picks it up.
+                // Include the $productSku as 'key' so that Url Query Parameter
+                // picks it up.
                 // Tip: After selecting a value in the dropdown, or inputting into an input box always see
-                // how the above query url Parameter is being influenced by the selection or input
+                // how the browser's query url Parameter is being influenced by the selection or input
                 if (null!==$productSku) { 
                     $optionsDataProducts[$productSku] = $product->getProduct_sku();
                 }

@@ -41,6 +41,32 @@ final class InvRepository extends Select\Repository
         parent::__construct($select);
     }
     
+    public function filterInvNumber(string $invNumber): EntityReader
+    {
+        $select = $this->select();
+        $query = $select->where(['number' => ltrim(rtrim($invNumber))]);
+        return $this->prepareDataReader($query); 
+    }
+
+    public function filterInvAmountTotal(string $invAmountTotal): EntityReader
+    {
+        $select = $this->select();
+        $query = $select
+                 ->load('invAmount') 
+                 ->where(['invAmount.total' => $invAmountTotal]);
+        return $this->prepareDataReader($query); 
+    }
+    
+     public function filterInvNumberAndInvAmountTotal(string $invNumber, float $invAmountTotal): EntityReader
+    {
+        $select = $this->select();
+        $query = $select
+                 ->load('invAmount')
+                 ->where(['number' => $invNumber])
+                 ->andWhere(['invAmount.total' => $invAmountTotal]);
+        return $this->prepareDataReader($query); 
+    }       
+    
     /**
      * 
      * @param int $status_id
