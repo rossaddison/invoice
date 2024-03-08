@@ -939,48 +939,28 @@ final class QuoteController
             ];
             if ($request->getMethod() === Method::POST) {   
                 $body = (array)$request->getParsedBody();
-                $returned_form = $this->edit_save_form_fields($body, $currentRoute, $formHydrator, $quoteRepo, $groupRepo, $uR, $ucR, $uiR);
-                if (null!==$returned_form) {
-                    $parameters['form'] = $returned_form;
-                    $parameters['errors'] = $form->getValidationResult()->getErrorMessagesIndexedByAttribute();
-                    $this->edit_save_custom_fields($body, $formHydrator, $qcR, $quote_id);            
-                    $this->flash_message('success', $this->translator->translate('i.record_successfully_updated'));
-                    return $this->web_service->getRedirectResponse('quote/view', ['id' => $quote_id]);
-                }
-                return $this->web_service->getNotFoundResponse();
+                $quote = $this->quote($currentRoute, $quoteRepo, false);
+                if ($quote) {
+                    $form = new QuoteForm($quote);
+                    $client_id = $quote->getClient_id();
+                    $user = $this->active_user($client_id, $uR, $ucR, $uiR);
+                    if (null!==$user) { 
+                        if ($formHydrator->populate($form, $body) && $form->isValid()) {
+                            $this->quote_service->saveQuote($user, $quote, $body, $this->sR, $groupRepo);
+                            $this->edit_save_custom_fields($body, $formHydrator, $qcR, $quote_id);            
+                            $this->flash_message('success', $this->translator->translate('i.record_successfully_updated'));
+                            return $this->web_service->getRedirectResponse('quote/view', ['id' => $quote_id]);
+                        } else {
+                            $parameters['form'] = $form;
+                            $parameters['errors'] = $form->getValidationResult()->getErrorMessagesIndexedByAttribute();
+                            return $this->view_renderer->render('/invoice/quote/_form', $parameters);
+                        }
+                    }
+                }    
             }
             return $this->view_renderer->render('/invoice/quote/_form', $parameters);
         } // $quote
         return $this->web_service->getNotFoundResponse();
-    }
-    
-    /**
-     * @param array $body
-     * @param CurrentRoute $currentRoute
-     * @param FormHydrator $formHydrator
-     * @param QR $quoteRepo
-     * @param GR $gR
-     * @param UR $uR
-     * @param UCR $ucR
-     * @param UIR $uiR
-     * @return QuoteForm|null
-     */
-    public function edit_save_form_fields(array $body, CurrentRoute $currentRoute, FormHydrator $formHydrator, QR $quoteRepo, GR $gR, UR $uR, UCR $ucR, UIR $uiR) : QuoteForm|null {
-        // false => use Loaded query to use relations
-        $quote = $this->quote($currentRoute, $quoteRepo, false);
-        if ($quote) {
-            $form = new QuoteForm($quote);
-            $client_id = $quote->getClient_id();
-            $user = $this->active_user($client_id, $uR, $ucR, $uiR);
-            if (null!==$user) { 
-                if ($formHydrator->populate($form, $body) && $form->isValid()) {
-                    $this->quote_service->saveQuote($user, $quote, $body, $this->sR, $gR);
-                }
-                return null;
-            } //null!==$user
-            return $form;
-        } //$quote
-        return null;
     }
     
     /**
@@ -2835,13 +2815,14 @@ final class QuoteController
                                      'groups' => $gR->findAllPreloaded(),
                             ]),
                             'modal_quote_to_pdf' => $this->view_renderer->renderPartialAsString('/invoice/quote/modal_quote_to_pdf',[
-                                     'quote' => $quote,                        
+                                     'quote' => $quote,
                             ]),
                             'view_custom_fields' => $this->view_renderer->renderPartialAsString('/invoice/quote/view_custom_fields', [
                                      'custom_fields' => $cfR->repoTablequery('quote_custom'),
                                      'custom_values' => $cvR->attach_hard_coded_custom_field_values_to_custom_field($cfR->repoTablequery('quote_custom')),
                                      'quote_custom_values' => $quote_custom_values,  
                                      'cvH' => new CVH($this->sR),
+                                     'cvR' => $cvR,
                                      'quoteCustomForm' => new QuoteCustomForm(new QuoteCustom())
                             ]),        
                         ];

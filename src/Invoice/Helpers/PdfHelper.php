@@ -146,7 +146,8 @@ Class PdfHelper
                     // Custom fields appearing near the top of the quote
                     'custom_fields'=>$cfR->repoTablequery('quote_custom'),
                     'custom_values'=>$cvR->attach_hard_coded_custom_field_values_to_custom_field($cfR->repoTablequery('quote_custom')),
-                    'cvH'=> new CVH($this->s),
+                    'cvH' => new CVH($this->s),
+                    'cvR' => $cvR,
                     'quote_custom_values' => $quote_custom_values,
                     'top_custom_fields' =>$viewrenderer->renderPartialAsString('/invoice/template/quote/pdf/top_custom_fields', [
                         'custom_fields'=>$cfR->repoTablequery('quote_custom'),
@@ -181,7 +182,7 @@ Class PdfHelper
                     'cldr'=> array_keys($this->s->locale_language_array(), $this->get_print_language($quote)),
                 ];        
                 // Quote Template will be either 'quote' or a custom designed quote in the folder.
-                $html = $viewrenderer->renderPartialAsString('/invoice/template/quote/pdf/'.$quote_template,$data);
+                $html = $viewrenderer->renderPartialAsString('/invoice/template/quote/pdf/'.$quote_template, $data);
                 if ($this->s->get_setting('pdf_html_quote') === '1') {
                     return $html;
                 }

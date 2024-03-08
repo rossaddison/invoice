@@ -340,6 +340,7 @@ Class CustomValuesHelper {
     }    
     
     /**
+     * @param Translator $translator
      * @param array $entity_custom_values
      * @param CustomField $custom_field
      * @param cvR $cvR

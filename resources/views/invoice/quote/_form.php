@@ -76,7 +76,8 @@ $vat = $s->get_setting('enable_vat_registration') === '1' ? true : false;
                                 <?= Html::closeTag('div'); ?>           
                                 <?php if (null!==$form->getDelivery_location_id() && !empty($form->getDelivery_location_id())) { ?>
                                 <span class="input-group-text">
-                                    <a href="<?= $urlGenerator->generate('del/edit', ['id'=> $form->getDelivery_location_id()]); ?>"><i class="fa fa-pencil fa-fw"></i><?php echo $translator->translate('invoice.invoice.delivery.location'); ?></a>
+                                    <!-- Remember second set of square brackets in urlGenerator are query Parameters NOT currentRoute arguments -->
+                                    <a href="<?= $urlGenerator->generate('del/edit', ['id'=> $form->getDelivery_location_id()], ['origin' => 'quote', 'origin_id' => $quote->getId(), 'action' => 'edit']); ?>"><i class="fa fa-pencil fa-fw"></i><?php echo $translator->translate('invoice.invoice.delivery.location'); ?></a>
                                 </span>  
                                 <?php } ?>
                                 <?php
