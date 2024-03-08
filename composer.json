@@ -72,6 +72,8 @@
         
         "psalm/plugin-symfony": "*",
         
+        "rossaddison/yii-cycle": "*",
+        
         "yiisoft/files": "^2.0",
         "yiisoft/friendly-exception": "*",
         "yiisoft/json": "*",
@@ -124,8 +126,6 @@
         "yiisoft/yii-bootstrap5": "^3.0@dev",
         "yiisoft/yii-bulma": "*",
         "yiisoft/yii-console": "^2.0",
-        
-        "yiisoft/yii-cycle":"dev-master",
         
         "yiisoft/yii-dataview": "^3.0",
         
