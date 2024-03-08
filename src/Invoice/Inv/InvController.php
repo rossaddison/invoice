@@ -604,7 +604,7 @@ final class InvController {
                     return $this->web_service->getRedirectResponse('client/view', ['id' => $origin]);
                 }    
             }
-            $errors = $form->getValidationResult()?->getErrorMessagesIndexedByAttribute() ?? [];
+            $errors = $form->getValidationResult()->getErrorMessagesIndexedByAttribute();
         } // POST
         // show the form without a modal when using the main menu
         if (($origin == 'main') || ($origin == 'dashboard')) {
@@ -743,7 +743,7 @@ final class InvController {
                   }
                   return $this->web_service->getRedirectResponse('inv/index');
             }
-            $parameters['errors'] = $form->getValidationResult()?->getErrorMessagesIndexedByAttribute() ?? [];
+            $parameters['errors'] = $form->getValidationResult()->getErrorMessagesIndexedByAttribute();
             $parameters['form'] = $form;
         }
         return $this->view_renderer->render('/invoice/inv/_form_create_confirm', $parameters);
@@ -1268,7 +1268,7 @@ final class InvController {
                     if ($returned_form instanceof InvForm) {
                         if (!$returned_form->isValid()) {
                             $parameters['form'] = $returned_form;
-                            $parameters['errors'] = $returned_form->getValidationResult()?->getErrorMessagesIndexedByAttribute() ?? [];
+                            $parameters['errors'] = $returned_form->getValidationResult()->getErrorMessagesIndexedByAttribute();
                             return $this->view_renderer->render('/invoice/inv/_form_edit', $parameters);
                         }
                         $this->edit_save_custom_fields($body, $formHydrator, $icR, $inv_id);

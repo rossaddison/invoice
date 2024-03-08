@@ -109,7 +109,7 @@ final class ProfileController
                 $this->profileService->saveProfile(new Profile(), $body);
                 return $this->webService->getRedirectResponse('profile/index');
             }
-            $parameters['errors'] = $form->getValidationResult()?->getErrorMessagesIndexedByAttribute() ?? [];
+            $parameters['errors'] = $form->getValidationResult()->getErrorMessagesIndexedByAttribute();
             $parameters['form'] = $form;
         }
         return $this->viewRenderer->render('_form', $parameters);
@@ -157,7 +157,7 @@ final class ProfileController
                     $this->profileService->saveProfile($profile, $body);
                     return $this->webService->getRedirectResponse('profile/index');
                 }
-                $parameters['errors'] = $form->getValidationResult()?->getErrorMessagesIndexedByAttribute() ?? [];
+                $parameters['errors'] = $form->getValidationResult()->getErrorMessagesIndexedByAttribute();
                 $parameters['form'] = $form;
             }
             return $this->viewRenderer->render('_form', $parameters);

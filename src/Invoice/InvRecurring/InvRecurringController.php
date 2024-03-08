@@ -194,7 +194,7 @@ final class InvRecurringController
                         $this->invrecurringService->saveInvRecurring($invRecurring, $body);
                         return $this->webService->getRedirectResponse('invrecurring/index');
                     }
-                    $parameters['errors'] = $form->getValidationResult()?->getErrorMessagesIndexedByAttribute() ?? [];
+                    $parameters['errors'] = $form->getValidationResult()->getErrorMessagesIndexedByAttribute();
                     $parameters['form'] = $form;
                 }
                 return $this->viewRenderer->render('_form_add', $parameters);
@@ -294,7 +294,7 @@ final class InvRecurringController
                         $this->invrecurringService->saveInvRecurring($inv_recurring, $body);
                         return $this->webService->getRedirectResponse('invrecurring/index');
                     }
-                    $parameters['errors'] = $form->getValidationResult()?->getErrorMessagesIndexedByAttribute() ?? [];
+                    $parameters['errors'] = $form->getValidationResult()->getErrorMessagesIndexedByAttribute();
                     $parameters['form'] = $form;
                 }
                 return $this->viewRenderer->render('_form_edit', $parameters);

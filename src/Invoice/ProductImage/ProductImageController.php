@@ -129,7 +129,7 @@ final class ProductImageController {
                 $this->productimageService->saveProductImage($productImage, $body);
                 return $this->webService->getRedirectResponse('productimage/index');
             }
-            $parameters['errors'] = $productImageForm->getValidationResult()?->getErrorMessagesIndexedByAttribute() ?? [];
+            $parameters['errors'] = $productImageForm->getValidationResult()->getErrorMessagesIndexedByAttribute();
             $parameters['form'] = $productImageForm;
         }
         return $this->viewRenderer->render('_form', $parameters);
@@ -220,7 +220,7 @@ final class ProductImageController {
                     $this->productimageService->saveProductImage($productImage, $body);
                     return $this->webService->getRedirectResponse('productimage/index');
                 }
-                $parameters['errors'] = $form->getValidationResult()?->getErrorMessagesIndexedByAttribute() ?? [];
+                $parameters['errors'] = $form->getValidationResult()->getErrorMessagesIndexedByAttribute();
                 $parameters['form'] = $form;
             }
             return $this->viewRenderer->render('_form', $parameters);

@@ -91,7 +91,7 @@ final class ProductPropertyController
                 $this->productpropertyService->saveProductProperty($productProperty, $body);
                 return $this->webService->getRedirectResponse('productproperty/index');
             }
-            $parameters['errors'] = $form->getValidationResult()?->getErrorMessagesIndexedByAttribute() ?? [];
+            $parameters['errors'] = $form->getValidationResult()->getErrorMessagesIndexedByAttribute();
             $parameters['form'] = $form;
         }
         return $this->viewRenderer->render('_form', $parameters);
@@ -186,7 +186,7 @@ final class ProductPropertyController
                     $this->productpropertyService->saveProductProperty($productProperty, $body);
                     return $this->webService->getRedirectResponse('productproperty/index');
                 }
-                $parameters['errors'] = $form->getValidationResult()?->getErrorMessagesIndexedByAttribute() ?? [];
+                $parameters['errors'] = $form->getValidationResult()->getErrorMessagesIndexedByAttribute();
                 $parameters['form'] = $form;
             }
             return $this->viewRenderer->render('_form', $parameters);

@@ -116,7 +116,7 @@ final class GroupController
                 $this->groupService->saveGroup($group, $body);
                 return $this->webService->getRedirectResponse('group/index');
             }
-            $parameters['errors'] = $form->getValidationResult()?->getErrorMessagesIndexedByAttribute() ?? [];
+            $parameters['errors'] = $form->getValidationResult()->getErrorMessagesIndexedByAttribute();
             $parameters['form'] = $form;
         }
         return $this->viewRenderer->render('/invoice/group/_form', $parameters);
@@ -150,7 +150,7 @@ final class GroupController
                     $this->groupService->saveGroup($group, $body);
                     return $this->webService->getRedirectResponse('group/index');
                 }
-                $parameters['errors'] = $form->getValidationResult()?->getErrorMessagesIndexedByAttribute() ?? [];
+                $parameters['errors'] = $form->getValidationResult()->getErrorMessagesIndexedByAttribute();
                 $parameters['form'] = $form;
             }
             return $this->viewRenderer->render('/invoice/group/_form', $parameters);

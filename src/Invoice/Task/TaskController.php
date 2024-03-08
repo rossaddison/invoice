@@ -145,7 +145,7 @@ final class TaskController
                 $this->flash_message('info', $this->translator->translate('i.record_successfully_created'));
                 return $this->webService->getRedirectResponse('task/index');
             }
-            $parameters['errors'] = $form->getValidationResult()?->getErrorMessagesIndexedByAttribute() ?? [];
+            $parameters['errors'] = $form->getValidationResult()->getErrorMessagesIndexedByAttribute();
             $parameters['form'] = $form;
         }
         return $this->viewRenderer->render('_form', $parameters);
@@ -193,7 +193,7 @@ final class TaskController
                     $this->flash_message('info', $this->translator->translate('i.record_successfully_updated'));
                     return $this->webService->getRedirectResponse('task/index');
                 }
-                $parameters['errors'] = $form->getValidationResult()?->getErrorMessagesIndexedByAttribute() ?? [];
+                $parameters['errors'] = $form->getValidationResult()->getErrorMessagesIndexedByAttribute();
                 $parameters['form'] = $form;
             }
             return $this->viewRenderer->render('_form', $parameters);

@@ -85,7 +85,7 @@ final class DeliveryPartyController
                 $this->deliverypartyService->saveDeliveryParty(new DeliveryParty(), $body);
                 return $this->webService->getRedirectResponse('deliveryparty/index');
             }
-            $parameters['errors'] = $form->getValidationResult()?->getErrorMessagesIndexedByAttribute() ?? [];
+            $parameters['errors'] = $form->getValidationResult()->getErrorMessagesIndexedByAttribute();
             $parameters['form'] = $form;
         }
         return $this->viewRenderer->render('_form', $parameters);
@@ -166,7 +166,7 @@ final class DeliveryPartyController
                     $this->deliverypartyService->saveDeliveryParty($deliveryparty, $body);
                     return $this->webService->getRedirectResponse('deliveryparty/index');
                 }
-                $parameters['errors'] = $form->getValidationResult()?->getErrorMessagesIndexedByAttribute() ?? [];
+                $parameters['errors'] = $form->getValidationResult()->getErrorMessagesIndexedByAttribute();
                 $parameters['form'] = $form;
             }
             return $this->viewRenderer->render('_form', $parameters);

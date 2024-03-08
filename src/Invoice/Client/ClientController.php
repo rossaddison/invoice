@@ -266,7 +266,7 @@ final class ClientController
                         // These two can be used to create customised labels for custom field error validation on the form
                         // Currently not used.
                         $parameters['formCientCustom'] = $formClientCustom; 
-                        $parameters['errors_custom'] = $formClientCustom->getValidationResult()?->getErrorMessagesIndexedByAttribute() ?? [];
+                        $parameters['errors_custom'] = $formClientCustom->getValidationResult()->getErrorMessagesIndexedByAttribute();
                     }
                     $this->flash_message('info', $this->translator->translate('i.record_successfully_created'));
                     if ($origin == 'main' || $origin == 'add') {
@@ -278,7 +278,7 @@ final class ClientController
                 }    
             }
         }
-        $parameters['errors'] = $form->getValidationResult()?->getErrorMessagesIndexedByAttribute() ?? [];
+        $parameters['errors'] = $form->getValidationResult()->getErrorMessagesIndexedByAttribute();
         $parameters['form'] = $form;
         return $this->viewRenderer->render('__form', $parameters);
     }
@@ -418,7 +418,7 @@ final class ClientController
                    $parameters['body'] = $body;
                    if (!$returned_form->isValid()) {
                        $parameters['form'] = $returned_form;
-                       $parameters['errors'] = $returned_form->getValidationResult()?->getErrorMessagesIndexedByAttribute() ?? [];
+                       $parameters['errors'] = $returned_form->getValidationResult()->getErrorMessagesIndexedByAttribute();
                        return $this->viewRenderer->render('__form', $parameters);
                    } 
                    // Only save custom fields if they exist
@@ -441,7 +441,7 @@ final class ClientController
                                     {
                                         $this->clientCustomService->saveClientCustom($client_custom, $client_custom_input);     
                                     }
-                                    $parameters['errors_custom'] = $clientCustomForm->getValidationResult()?->getErrorMessagesIndexedByAttribute() ?? [];
+                                    $parameters['errors_custom'] = $clientCustomForm->getValidationResult()->getErrorMessagesIndexedByAttribute();
                                     $parameters['clientCustomForm'] = $clientCustomForm;
                                 }
                             } //foreach
@@ -805,7 +805,7 @@ final class ClientController
         } else {
             $parameters = [
                 'success' => 0,
-                'validation_errors' => $form->getValidationResult()?->getErrorMessagesIndexedByAttribute() ?? []
+                'validation_errors' => $form->getValidationResult()->getErrorMessagesIndexedByAttribute()
             ];
         }        
         return $this->factory->createResponse(Json::encode($parameters));          

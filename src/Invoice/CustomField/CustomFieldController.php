@@ -115,7 +115,7 @@ final class CustomFieldController
                 return $this->webService->getRedirectResponse('customfield/index');
             }
             $parameters['form'] = $form;
-            $parameters['errors'] = $form->getValidationResult()?->getErrorMessagesIndexedByAttribute() ?? [];
+            $parameters['errors'] = $form->getValidationResult()->getErrorMessagesIndexedByAttribute();
         }
         return $this->viewRenderer->render('_form', $parameters);
     }
@@ -157,7 +157,7 @@ final class CustomFieldController
                     return $this->webService->getRedirectResponse('customfield/index');
                 }
                 $parameters['form'] = $form;
-                $parameters['errors'] = $form->getValidationResult()?->getErrorMessagesIndexedByAttribute() ?? [];
+                $parameters['errors'] = $form->getValidationResult()->getErrorMessagesIndexedByAttribute();
             }
             return $this->viewRenderer->render('_form', $parameters);
         }

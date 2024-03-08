@@ -135,7 +135,7 @@ final class CompanyPrivateController
                 }
             }
             $parameters['form'] = $form;
-            $parameters['errors'] = $form->getValidationResult()?->getErrorMessagesIndexedByAttribute() ?? [];
+            $parameters['errors'] = $form->getValidationResult()->getErrorMessagesIndexedByAttribute();
         }
         return $this->viewRenderer->render('_form', $parameters);
     }
@@ -284,7 +284,7 @@ final class CompanyPrivateController
                     } // after  save
                 }
                 $parameters['form'] = $form;
-                $parameters['errors'] = $form->getValidationResult()?->getErrorMessagesIndexedByAttribute() ?? [];
+                $parameters['errors'] = $form->getValidationResult()->getErrorMessagesIndexedByAttribute();
                 
             }
             return $this->viewRenderer->render('_form', $parameters);

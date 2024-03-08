@@ -97,7 +97,7 @@ final class FamilyController
                 $this->familyService->saveFamily($family, $body);
                 return $this->webService->getRedirectResponse('family/index');  
             } 
-            $parameters['errors'] = $form->getValidationResult()?->getErrorMessagesIndexedByAttribute() ?? [];
+            $parameters['errors'] = $form->getValidationResult()->getErrorMessagesIndexedByAttribute();
             $parameters['form'] = $form;
         }
         return $this->viewRenderer->render('_form', $parameters);
@@ -133,7 +133,7 @@ final class FamilyController
                     $this->familyService->saveFamily($family, $body);
                     return $this->webService->getRedirectResponse('family/index');
                 }
-                $parameters['errors'] = $form->getValidationResult()?->getErrorMessagesIndexedByAttribute() ?? [];
+                $parameters['errors'] = $form->getValidationResult()->getErrorMessagesIndexedByAttribute();
                 $parameters['form'] = $form;
             }
             return $this->viewRenderer->render('_form', $parameters);

@@ -151,7 +151,7 @@ final class GeneratorController
                 $this->generatorService->saveGenerator($gentor, $body);
                 return $this->webService->getRedirectResponse('generator/index');
             }
-            $parameters['errors'] = $form->getValidationResult()?->getErrorMessagesIndexedByAttribute() ?? [];
+            $parameters['errors'] = $form->getValidationResult()->getErrorMessagesIndexedByAttribute();
             $parameters['form'] = $form;
         }
         return $this->viewRenderer->render('__form', $parameters);
@@ -188,7 +188,7 @@ final class GeneratorController
                     $this->flash_message('warning', $this->translator->translate('i.record_successfully_updated'));
                     return $this->webService->getRedirectResponse('generator/index');
                 }
-                $parameters['errors'] = $form->getValidationResult()?->getErrorMessagesIndexedByAttribute() ?? [];
+                $parameters['errors'] = $form->getValidationResult()->getErrorMessagesIndexedByAttribute();
                 $parameters['form'] = $form;
             }
             return $this->viewRenderer->render('__form', $parameters);

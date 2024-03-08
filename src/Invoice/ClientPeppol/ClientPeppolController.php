@@ -106,7 +106,7 @@ final class ClientPeppolController {
                 ['url' => $this->userService->hasPermission('editClientPeppol') && $this->userService->hasPermission('viewInv') && !$this->userService->hasPermission('editInv') ? 'client/guest' : 'client/index',
                   'heading' => $this->translator->translate('invoice.client.peppol'), 'message' => $settingRepository->trans('record_successfully_updated')]));
         }
-        $parameters['errors'] = $form->getValidationResult()?->getErrorMessagesIndexedByAttribute() ?? [];
+        $parameters['errors'] = $form->getValidationResult()->getErrorMessagesIndexedByAttribute();
         $parameters['form'] = $form;
       } // if
       return $this->viewRenderer->render('/invoice/clientpeppol/_form', $parameters);
@@ -277,7 +277,7 @@ final class ClientPeppolController {
             return $this->webService->getRedirectResponse('client/index');
           }
         }
-        $parameters['errors'] = $form->getValidationResult()?->getErrorMessagesIndexedByAttribute() ?? [];
+        $parameters['errors'] = $form->getValidationResult()->getErrorMessagesIndexedByAttribute();
         $parameters['form'] = $form;
       }
       return $this->viewRenderer->render('_form', $parameters);

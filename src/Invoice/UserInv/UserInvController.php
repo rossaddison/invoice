@@ -203,7 +203,7 @@ final class UserInvController
                             $this->userinvService->saveUserInv($userinv, $body);
                             return $this->webService->getRedirectResponse('invoice/index');
                         }
-                        $parameters['errors'] = $form->getValidationResult()?->getErrorMessagesIndexedByAttribute() ?? [];
+                        $parameters['errors'] = $form->getValidationResult()->getErrorMessagesIndexedByAttribute();
                         $parameters['form'] = $form;
                     }
                     return $this->viewRenderer->render('_form_guest', $parameters);
@@ -316,7 +316,7 @@ final class UserInvController
                     return $this->webService->getRedirectResponse('userinv/index');
                 } // null!== $form->getUser_id()
             }
-            $parameters['errors'] = $form->getValidationResult()?->getErrorMessagesIndexedByAttribute() ?? [];
+            $parameters['errors'] = $form->getValidationResult()->getErrorMessagesIndexedByAttribute();
             $parameters['form'] = $form;
         }
         return $this->viewRenderer->render('_form', $parameters);
@@ -430,7 +430,7 @@ final class UserInvController
                         return $this->webService->getRedirectResponse('userinv/index');
                     } // null!== user_id    
                 }
-                $parameters['errors'] = $form->getValidationResult()?->getErrorMessagesIndexedByAttribute() ?? [];
+                $parameters['errors'] = $form->getValidationResult()->getErrorMessagesIndexedByAttribute();
                 $parameters['form'] = $form;
             }
             return $this->viewRenderer->render('_form', $parameters);

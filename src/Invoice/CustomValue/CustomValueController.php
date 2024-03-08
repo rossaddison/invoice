@@ -140,7 +140,7 @@ final class CustomValueController
                         return $this->webService->getRedirectResponse('customvalue/field', ['id' => $field_id]);                 
                     }
                     $parameters['form'] = $form;
-                    $parameters['errors'] = $form->getValidationResult()?->getErrorMessagesIndexedByAttribute() ?? [];
+                    $parameters['errors'] = $form->getValidationResult()->getErrorMessagesIndexedByAttribute();
                 }
                 return $this->viewRenderer->render('new', $parameters);
             }            
@@ -185,7 +185,7 @@ final class CustomValueController
                     return $this->webService->getRedirectResponse('customvalue/field', ['id' => $custom_field_id]);                 
                 }
                 $parameters['form'] = $form;
-                $parameters['errors'] = $form->getValidationResult()?->getErrorMessagesIndexedByAttribute() ?? [];
+                $parameters['errors'] = $form->getValidationResult()->getErrorMessagesIndexedByAttribute();
             }
             return $this->viewRenderer->render('edit', $parameters);
         }

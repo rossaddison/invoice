@@ -364,7 +364,7 @@ final class SettingController
                 return $this->webService->getRedirectResponse('setting/debug_index');
             }
             $parameters['form'] = $form;
-            $parameters['error'] = $form->getValidationResult()?->getErrorMessagesIndexedByAttribute();
+            $parameters['error'] = $form->getValidationResult()->getErrorMessagesIndexedByAttribute();
         }
         return $this->viewRenderer->render('__form', $parameters);
     }
@@ -467,7 +467,7 @@ final class SettingController
                     return $this->webService->getRedirectResponse('setting/debug_index');
                 }
                 $parameters['form'] = $form;
-                $parameters['error'] = $form->getValidationResult()?->getErrorMessagesIndexedByAttribute();
+                $parameters['error'] = $form->getValidationResult()->getErrorMessagesIndexedByAttribute();
             }
             return $this->viewRenderer->render('__form', $parameters);
         }
@@ -540,7 +540,7 @@ final class SettingController
                     return $this->webService->getRedirectResponse('setting/index');
                 }
                 $parameters['form'] = $form;
-                $parameters['error'] = $form->getValidationResult()?->getErrorMessagesIndexedByAttribute();
+                $parameters['error'] = $form->getValidationResult()->getErrorMessagesIndexedByAttribute();
             }
             return $this->viewRenderer->render('__form', $parameters);
         }

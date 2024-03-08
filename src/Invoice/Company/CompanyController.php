@@ -104,7 +104,7 @@ final class CompanyController
                 return $this->webService->getRedirectResponse('company/index');
             }
             $parameters['form'] = $form;
-            $parameters['errors'] = $form->getValidationResult()?->getErrorMessagesIndexedByAttribute() ?? [];
+            $parameters['errors'] = $form->getValidationResult()->getErrorMessagesIndexedByAttribute();
         }
         return $this->viewRenderer->render('_form', $parameters);
     }
@@ -140,7 +140,7 @@ final class CompanyController
                     $this->companyService->saveCompany($company, $body);
                     return $this->webService->getRedirectResponse('company/index');
                 }
-                $parameters['errors'] = $form->getValidationResult()?->getErrorMessagesIndexedByAttribute() ?? [];
+                $parameters['errors'] = $form->getValidationResult()->getErrorMessagesIndexedByAttribute();
                 $parameters['form'] = $form;
             }
             return $this->viewRenderer->render('_form', $parameters);

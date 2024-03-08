@@ -98,7 +98,7 @@ final class ItemLookupController
                 $this->itemlookupService->saveItemLookup($itemLookup, $body);
                 return $this->webService->getRedirectResponse('itemlookup/index');
             }
-            $parameters['errors'] = $form->getValidationResult()?->getErrorMessagesIndexedByAttribute() ?? [];
+            $parameters['errors'] = $form->getValidationResult()->getErrorMessagesIndexedByAttribute();
             $parameters['form'] = $form;
         }
         return $this->viewRenderer->render('_form', $parameters);
@@ -133,7 +133,7 @@ final class ItemLookupController
                     $this->itemlookupService->saveItemLookup($lookup, $body);
                     return $this->webService->getRedirectResponse('itemlookup/index');
                 }
-                $parameters['errors'] = $form->getValidationResult()?->getErrorMessagesIndexedByAttribute() ?? [];
+                $parameters['errors'] = $form->getValidationResult()->getErrorMessagesIndexedByAttribute();
                 $parameters['form'] = $form;
             }
             return $this->viewRenderer->render('_form', $parameters);

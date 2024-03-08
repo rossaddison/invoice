@@ -73,10 +73,8 @@ final class CreateCommand extends Command
         }
 
         if ($user === false) {
-            $errors = $this->signupForm->getValidationResult()?->getErrors();
-            if (null!==$errors) {
-                array_walk($errors, fn (string $error, string $attribute) : mixed => $io->error("$attribute: $error"));
-            }
+            $errors = $this->signupForm->getValidationResult()->getErrors();
+            array_walk($errors, fn (string $error, string $attribute) : mixed => $io->error("$attribute: $error"));
             return ExitCode::DATAERR;
         }
 

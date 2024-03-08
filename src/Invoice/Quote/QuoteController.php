@@ -411,7 +411,7 @@ final class QuoteController
                     }    
                 }    
             }
-            $errors = $form->getValidationResult()?->getErrorMessagesIndexedByAttribute() ?? [];
+            $errors = $form->getValidationResult()->getErrorMessagesIndexedByAttribute();
         } // POST
         // show the form without a modal when using the main menu or dashboard
         if ($origin == 'main' || $origin == 'dashboard') {
@@ -942,7 +942,7 @@ final class QuoteController
                 $returned_form = $this->edit_save_form_fields($body, $currentRoute, $formHydrator, $quoteRepo, $groupRepo, $uR, $ucR, $uiR);
                 if (null!==$returned_form) {
                     $parameters['form'] = $returned_form;
-                    $parameters['errors'] = $form->getValidationResult()?->getErrorMessagesIndexedByAttribute() ?? [];
+                    $parameters['errors'] = $form->getValidationResult()->getErrorMessagesIndexedByAttribute();
                     $this->edit_save_custom_fields($body, $formHydrator, $qcR, $quote_id);            
                     $this->flash_message('success', $this->translator->translate('i.record_successfully_updated'));
                     return $this->web_service->getRedirectResponse('quote/view', ['id' => $quote_id]);

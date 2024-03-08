@@ -124,7 +124,7 @@ final class InvItemController
                 $this->flash_message('info', $this->translator->translate('i.record_successfully_created'));
                 return $this->webService->getRedirectResponse('inv/view',['id'=> $inv_id]);              
             }
-            $parameters['errors'] = $form->getValidationResult()?->getErrorMessagesIndexedByAttribute() ?? [];
+            $parameters['errors'] = $form->getValidationResult()->getErrorMessagesIndexedByAttribute();
             $parameters['form'] = $form;
         }
         return $this->viewRenderer->render('_item_form_product', $parameters);
@@ -178,7 +178,7 @@ final class InvItemController
                 $this->flash_message('info', $this->translator->translate('i.record_successfully_created'));
                 return $this->webService->getRedirectResponse('inv/view',['id'=>$inv_id]);                  
             }
-            $parameters['errors'] = $form->getValidationResult()?->getErrorMessagesIndexedByAttribute() ?? [];
+            $parameters['errors'] = $form->getValidationResult()->getErrorMessagesIndexedByAttribute();
             $parameters['form'] = $form;
         }        
         return $this->viewRenderer->renderPartial('_item_form_task', $parameters);
@@ -306,7 +306,7 @@ final class InvItemController
                         return $this->webService->getRedirectResponse('inv/view', ['id' => $inv_id]);
                     }    
                 } 
-                $parameters['errors'] = $form->getValidationResult()?->getErrorMessagesIndexedByAttribute() ?? [];
+                $parameters['errors'] = $form->getValidationResult()->getErrorMessagesIndexedByAttribute();
                 $parameters['form'] = $form;
             } 
             return $this->viewRenderer->render('_item_edit_product', $parameters);
@@ -436,7 +436,7 @@ final class InvItemController
                         return $this->webService->getRedirectResponse('inv/view', ['id' => $inv_id]);
                     }
                 }
-                $parameters['errors'] = $form->getValidationResult()?->getErrorMessagesIndexedByAttribute() ?? [];
+                $parameters['errors'] = $form->getValidationResult()->getErrorMessagesIndexedByAttribute();
                 $parameters['form'] = $form;
             } 
             return $this->viewRenderer->render('_item_form_task', $parameters);

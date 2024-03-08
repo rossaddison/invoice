@@ -212,7 +212,7 @@ final class PaymentController
                             && $this->add_custom_field($payment_id, $custom_field_id, $pcR)) {
                             $this->paymentCustomService->savePaymentCustom($paymentCustom, $paymentCustomInput);
                         }
-                        $parameters['errors_custom'] = $paymentCustomForm->getValidationResult()?->getErrorMessagesIndexedByAttribute() ?? [];
+                        $parameters['errors_custom'] = $paymentCustomForm->getValidationResult()->getErrorMessagesIndexedByAttribute();
                         $parameters['paymentCustomForm'] = $paymentCustomForm;
                     } // foreach
                     if (count($parameters['errors_custom']) > 0) {
@@ -221,7 +221,7 @@ final class PaymentController
                 } // isset body['custom'] 
                 return $this->webService->getRedirectResponse('payment/index');
             } // $formHydrator
-            $parameters['errors'] = $form->getValidationResult()?->getErrorMessagesIndexedByAttribute() ?? [];
+            $parameters['errors'] = $form->getValidationResult()->getErrorMessagesIndexedByAttribute();
             $parameters['form'] = $form;   
         } // request 
         return $this->viewRenderer->render('_form', $parameters); 
@@ -448,7 +448,7 @@ final class PaymentController
                             if (null!==$formCustom) {
                                 // $parameters['errors_custom'] can be used to provide customized labels if ->required(true) not used 
                                 // currently not used
-                                $parameters['errors_custom'] = $formCustom->getValidationResult()?->getErrorMessagesIndexedByAttribute() ?? [];
+                                $parameters['errors_custom'] = $formCustom->getValidationResult()->getErrorMessagesIndexedByAttribute();
                                 $parameters['form_custom'] = $formCustom;
                                 if (count($parameters['errors_custom']) > 0) {
                                      return $this->viewRenderer->render('_form', $parameters);
@@ -461,7 +461,7 @@ final class PaymentController
                     return $this->webService->getRedirectResponse('payment/index');
                 }
                 if (null!==$form) {
-                    $parameters['errors'] = $form->getValidationResult()?->getErrorMessagesIndexedByAttribute() ?? [];
+                    $parameters['errors'] = $form->getValidationResult()->getErrorMessagesIndexedByAttribute();
                     $parameters['form'] = $form;
                 }
            } // request

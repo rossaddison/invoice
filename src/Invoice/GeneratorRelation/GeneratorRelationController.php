@@ -106,7 +106,7 @@ final class GeneratorRelationController
                 $this->generatorrelationService->saveGeneratorRelation($generatorrelation, $body);
                 return $this->webService->getRedirectResponse('generatorrelation/index');
             }
-            $parameters['errors'] = $form->getValidationResult()?->getErrorMessagesIndexedByAttribute() ?? [];
+            $parameters['errors'] = $form->getValidationResult()->getErrorMessagesIndexedByAttribute();
             $parameters['form'] = $form;
         }
         return $this->viewRenderer->render('__form', $parameters);
@@ -151,7 +151,7 @@ final class GeneratorRelationController
                     $this->generatorrelationService->saveGeneratorRelation($generatorrelation, $body);
                     return $this->webService->getRedirectResponse('generatorrelation/index');
                 }
-                $parameters['errors'] = $form->getValidationResult()?->getErrorMessagesIndexedByAttribute() ?? [];
+                $parameters['errors'] = $form->getValidationResult()->getErrorMessagesIndexedByAttribute();
                 $parameters['form'] = $form;
             }
             return $this->viewRenderer->render('__form', $parameters);

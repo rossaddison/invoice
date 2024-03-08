@@ -107,7 +107,7 @@ final class ProjectController
                 $this->projectService->saveProject($project, $body);
                 return $this->webService->getRedirectResponse('project/index');
             }
-            $parameters['errors'] = $form->getValidationResult()?->getErrorMessagesIndexedByAttribute() ?? [];
+            $parameters['errors'] = $form->getValidationResult()->getErrorMessagesIndexedByAttribute();
             $parameters['form'] = $form;
         }
         return $this->viewRenderer->render('_form', $parameters);
@@ -166,7 +166,7 @@ final class ProjectController
                     $this->projectService->saveProject($project, $body);
                     return $this->webService->getRedirectResponse('project/index');
                 }
-                $parameters['errors'] = $form->getValidationResult()?->getErrorMessagesIndexedByAttribute() ?? [];
+                $parameters['errors'] = $form->getValidationResult()->getErrorMessagesIndexedByAttribute();
                 $parameters['form'] = $form;
             }
             return $this->viewRenderer->render('_form', $parameters);

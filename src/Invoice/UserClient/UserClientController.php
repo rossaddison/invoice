@@ -95,7 +95,7 @@ final class UserClientController
                 return $this->webService->getRedirectResponse('userclient/index');
             }
             $parameters['form'] = $form;
-            $parameters['errors'] = $form->getValidationResult()?->getErrorMessagesIndexedByAttribute() ?? [];
+            $parameters['errors'] = $form->getValidationResult()->getErrorMessagesIndexedByAttribute();
         }
         return $this->viewRenderer->render('_form', $parameters);
     }
@@ -157,7 +157,7 @@ final class UserClientController
                     return $this->webService->getRedirectResponse('userclient/index');
                 }
                 $parameters['form'] = $form;
-                $parameters['errors'] = $form->getValidationResult()?->getErrorMessagesIndexedByAttribute() ?? [];
+                $parameters['errors'] = $form->getValidationResult()->getErrorMessagesIndexedByAttribute();
             }
             return $this->viewRenderer->render('_form', $parameters);
         }
@@ -226,7 +226,7 @@ final class UserClientController
                                 $this->flash_message('info' , $this->translator->translate('i.client_already_exists'));
                                 return $this->webService->getRedirectResponse('userinv/index');
                             }
-                            $parameters['errors'] = $form->getValidationResult()?->getErrorMessagesIndexedByAttribute() ?? [];
+                            $parameters['errors'] = $form->getValidationResult()->getErrorMessagesIndexedByAttribute();
                             $parameters['form'] = $form;
                         }
                     }
