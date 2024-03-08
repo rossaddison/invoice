@@ -11,9 +11,12 @@ use Yiisoft\Html\Tag\Div;
 use Yiisoft\Html\Tag\Form;
 use Yiisoft\Html\Tag\H5;
 use Yiisoft\Html\Tag\I;
+use Yiisoft\Html\Tag\Label;
 use Yiisoft\Yii\DataView\Column\DataColumn;
 use Yiisoft\Yii\DataView\GridView;
 use Yiisoft\Yii\DataView\OffsetPagination;
+use Yiisoft\Yii\DataView\UrlConfig;
+use Yiisoft\Yii\DataView\YiiRouter\UrlCreator;
 use Yiisoft\Router\CurrentRoute;
 
 /**
@@ -132,9 +135,12 @@ $toolbar = Div::tag();
         ),
         new DataColumn(
             'number',
+            queryProperty: 'filterQuoteNumber',
+            header: $translator->translate('invoice.quote.number'),        
             content: static function ($model) use ($urlGenerator): string {
                return Html::a($model->getNumber(), $urlGenerator->generate('quote/view',['id'=>$model->getId()]),['style'=>'text-decoration:none'])->render();
-            }                       
+            }, 
+            filter: true
         ),
         new DataColumn(
             'date_created',    
@@ -150,19 +156,25 @@ $toolbar = Div::tag();
             content: static fn ($model): string => ($model->getDate_required())->format($datehelper->style())
         ),
         new DataColumn(
-            'client_id',    
-            header: $translator->translate('i.client'),                
-            content: static fn ($model): string => $model->getClient()->getClient_name()                        
+            'client_id',
+            queryProperty: 'filterClient',
+            header: $translator->translate('i.client'),
+            content: static fn($model): string => $model->getClient()->getClient_name() . str_repeat(' ', 2).$model->getClient()->getClient_surname(),
+            filter: $optionsDataClientsDropdownFilter    
         ),
         new DataColumn(
-            'id',
-            header: $translator->translate('i.total'),
-            content: function ($model) use ($s, $qaR) : string|null {
-               $quote_id = $model->getId(); 
-               $quote_amount = (($qaR->repoQuoteAmountCount((string)$quote_id) > 0) ? $qaR->repoQuotequery((string)$quote_id) : null);
-               return $s->format_currency(null!==$quote_amount ? $quote_amount->getTotal() : 0.00);
-            }
-        ),
+        'id',
+            queryProperty: 'filterQuoteAmountTotal',
+            header: $translator->translate('i.total') . ' ( '. $s->get_setting('currency_symbol'). ' ) ',
+            content: static function ($model) : string|null {
+               return  
+                    Label::tag()
+                        ->attributes(['class' => $model->getQuoteAmount()->getTotal() > 0.00 ? 'label label-success' : 'label label-warning'])
+                        ->content(Html::encode(null!==$model->getQuoteAmount()->getTotal() ? $model->getQuoteAmount()->getTotal() : 0.00))
+                        ->render();
+            },
+            filter: true
+        ),        
         new DataColumn(
             header: $translator->translate('i.view'),
             content: static function ($model) use ($urlGenerator): string {
@@ -180,13 +192,13 @@ $toolbar = Div::tag();
             content: static function ($model) use ($translator, $urlGenerator): string {
                 if ($model->getStatus_id() == '1') {
                     return Html::a( Html::tag('button',
-                                                        Html::tag('i','',['class'=>'fa fa-trash fa-margin']),
-                                                        [
-                                                            'type'=>'submit', 
-                                                            'class'=>'dropdown-button',
-                                                            'onclick'=>"return confirm("."'".$translator->translate('i.delete_record_warning')."');"
-                                                        ]
-                                                        ),
+                        Html::tag('i','',['class'=>'fa fa-trash fa-margin']),
+                        [
+                            'type'=>'submit', 
+                            'class'=>'dropdown-button',
+                            'onclick'=>"return confirm("."'".$translator->translate('i.delete_record_warning')."');"
+                        ]
+                        ),
                         $urlGenerator->generate('quote/delete',['id'=>$model->getId()]),[]                                         
                     )->render();
                 } else { return ''; }
@@ -199,20 +211,31 @@ $toolbar = Div::tag();
     ->columns(...$columns)
     ->dataReader($paginator)
     ->headerRowAttributes(['class'=>'card-header bg-info text-black'])
-    //->filterPosition('header')
-    //->filterModelName('quote')
     ->header($header)
     ->id('w2-grid')
     ->pagination(
     OffsetPagination::widget()
-         ->paginator($paginator)         
-         // No need to use page argument since built-in. Use status bar value passed from urlGenerator to quote/guest
-        // ->urlArguments(['status'=>$status])
-         ->render(),
+        ->listTag('ul')    
+        ->listAttributes(['class' => 'pagination'])
+        ->itemTag('li')
+        ->itemAttributes(['class' => 'page-item'])
+        ->linkAttributes(['class' => 'page-link'])
+        ->currentItemClass('active')
+        ->currentLinkClass('page-link')
+        ->disabledItemClass('disabled')
+        ->disabledLinkClass('disabled')
+        ->defaultPageSize($defaultPageSizeOffsetPaginator)
+        ->urlConfig(new UrlConfig()) 
+        ->urlCreator(new UrlCreator($urlGenerator))    
+        ->paginator($paginator)
+        ->render()
     )
     ->rowAttributes(['class' => 'align-middle'])
     ->summaryAttributes(['class' => 'mt-3 me-3 summary text-end'])
-    ->summaryTemplate($grid_summary)
+    /**
+     * @see config/common/params.php `yiisoft/view` => ['parameters' => ['pageSizeLimiter' ... No need to be in inv/index
+     */        
+    ->summaryTemplate($pageSizeLimiter::buttons($currentRoute, $s, $urlGenerator, 'quote').' '.$grid_summary)
     ->emptyTextAttributes(['class' => 'card-header bg-warning text-black'])
     ->emptyText((string)$translator->translate('invoice.invoice.no.records'))
     ->tableAttributes(['class' => 'table table-striped text-center h-75','id'=>'table-quote'])

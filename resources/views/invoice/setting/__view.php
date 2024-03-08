@@ -34,7 +34,7 @@ use Yiisoft\Html\Tag\Form;
     ->id('SettingForm')
     ->open()
 ?>
-<?= $button::back_save($translator); ?>
+<?= $button::back_save(); ?>
 <?= Html::openTag('div', ['class'=> 'card']); ?>
 <?= Field::text($form, 'setting_key')
     ->label($translator->translate('invoice.setting.key'))

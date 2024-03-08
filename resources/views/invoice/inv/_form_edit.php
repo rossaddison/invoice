@@ -283,7 +283,7 @@ echo $note_on_tax_point;
         <?= Html::closeTag('div'); ?>
     <?= Html::closeTag('div'); ?>
     
-    <?= $button::back_save($translator); ?>
+    <?= $button::back_save(); ?>
     
 <?= Html::closeTag('div'); ?>
 

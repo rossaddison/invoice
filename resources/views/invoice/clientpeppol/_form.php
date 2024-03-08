@@ -25,7 +25,7 @@ if (isset($errors)) {
     <input type="hidden" name="_csrf" value="<?= $csrf ?>">
     <div id="headerbar">
         <h1 class="headerbar-title"><?= Html::a($translator->translate('invoice.client.peppol.clientpeppols_form'), 'https://docs.peppol.eu/poacc/billing/3.0/syntax/ubl-invoice/cac-AccountingCustomerParty/'); ?></h1>
-        <?php echo $buttons; ?><div id="content">
+        <?php echo $button::back_save(); ?><div id="content">
         <?=
         LabelSwitch::checkbox(
           'client-peppol-label-switch',
@@ -195,7 +195,7 @@ if (isset($errors)) {
                 <div class="mb3 form-group">
                     <label for="supplier_assigned_accountid"><?= $translator->translate('invoice.client.peppol.supplier.assigned.account.id') . ' ' . $translator->translate('invoice.client.peppol.buyer_reference.example'); ?></label>
                     <input type="text" name="supplier_assigned_accountid" id="supplier_assigned_accountid" class="form-control" required
-                           value="<?= Html::encode($form->getSupplier_assigned_accountid() ?? ''); ?>">
+                           value="<?= Html::encode($form->getSupplierAssignedAccountId() ?? ''); ?>">
                 </div>
             </div>
         </div>

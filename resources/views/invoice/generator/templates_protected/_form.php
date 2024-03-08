@@ -36,7 +36,7 @@ use Yiisoft\Html\Tag\Form;
     echo "->id('".$generator->getCamelcase_capital_name()."Form')";
     echo "->open()";
     echo "?>";
-    echo '<?= $button::back_save($translator); ?>';
+    echo '<?= $button::back_save(); ?>';
     echo "<?= Html::openTag('div', ['class' => 'container']); ?>";
     echo "<?= Html::openTag('div', ['class' => 'row']); ?>";
     echo "<?= Html::openTag('div', ['class' => 'col card mb-3']); ?>"; 

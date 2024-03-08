@@ -34,7 +34,7 @@ use Yiisoft\Html\Tag\Form;
     ->id('SettingForm')
     ->open()
 ?>
-<?= $button::back_save($translator); ?>
+<?= $button::back_save(); ?>
 <?= 
     $alert; 
 ?>

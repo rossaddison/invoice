@@ -107,7 +107,7 @@ use App\Widget\Bootstrap5ModalInv;
 // Libraries
 use App\Invoice\Libraries\Crypt;
 // Yii
-use Yiisoft\Data\Paginator\OffsetPaginator;
+use Yiisoft\Data\Paginator\OffsetPaginator as DataOffsetPaginator;
 use Yiisoft\Data\Paginator\PageToken;
 use Yiisoft\Data\Reader\Sort;
 use Yiisoft\DataResponse\DataResponseFactoryInterface;
@@ -1777,7 +1777,7 @@ final class InvController {
                 // they can view their invoices and make payment
                 $user_clients = $ucR->get_assigned_to_user($user_id);
                 $invs = $this->invs_status_with_sort_guest($iR, $status, $user_clients, $sort);
-                $paginator = (new OffsetPaginator($invs))
+                $paginator = (new DataOffsetPaginator($invs))
                     ->withPageSize((int) $this->sR->get_setting('default_list_limit'))
                     ->withCurrentPage((int)$pageNum);
                 $inv_statuses = $iR->getStatuses($this->translator);
@@ -1923,7 +1923,7 @@ final class InvController {
                (isset($query_params['filterInvAmountTotal']) && !empty($query_params['filterInvAmountTotal']))) {
                 $invs = $invRepo->filterInvNumberAndInvAmountTotal((string)$query_params['filterInvNumber'], (float)$query_params['filterInvAmountTotal']);
             } 
-            $paginator = (new OffsetPaginator($invs))
+            $paginator = (new DataOffsetPaginator($invs))
                 ->withPageSize((int) $this->sR->get_setting('default_list_limit'))
                 ->withCurrentPage((int)$page)
                 ->withSort($sort)    
@@ -1935,7 +1935,6 @@ final class InvController {
             $parameters = [
                 'paginator' => $paginator,
                 'alert' => $this->alert(), 'client_count' => $clientRepo->count(),
-                'invs' => $invs,
                 'optionsDataClientsDropdownFilter' => $this->optionsDataClients($invRepo),
                 'grid_summary' => $this->sR->grid_summary(
                     $paginator,
@@ -1944,9 +1943,10 @@ final class InvController {
                     $this->translator->translate('invoice.invoice.invoices'),
                     $label
                 ),
-                'defaultPageSizeOffsetPaginator' => (int)$this->sR->get_setting('default_list_limit'),
+                'defaultPageSizeOffsetPaginator' => $this->sR->get_setting('default_list_limit')
+                                                    ? (int)$this->sR->get_setting('default_list_limit') : 1,
                 // numbered tiles between the arrrows                
-                'maxNavLinkCount' => 3,
+                'maxNavLinkCount' => 10,
                 'inv_statuses' => $inv_statuses,
                 'max' => (int) $this->sR->get_setting('default_list_limit'),
                 'page' => $page,
@@ -3528,7 +3528,7 @@ final class InvController {
      */
     private function view_partial_inv_attachments(CurrentRoute $currentRoute, string $url_key, int $client_id, UPR $upR): string {
         $uploads = $upR->repoUploadUrlClientquery($url_key, $client_id);
-        $dataReader = new OffsetPaginator($uploads);
+        $dataReader = new DataOffsetPaginator($uploads);
         $invEdit = $this->user_service->hasPermission('editPayment');
         $invView = $this->user_service->hasPermission('viewPayment');
         return $this->view_renderer->renderPartialAsString('/invoice/inv/partial_inv_attachments', [

@@ -175,7 +175,7 @@ $vat = $s->get_setting('enable_vat_registration') === '1' ? true : false;
         <?= Html::closeTag('div'); ?>
     <?= Html::closeTag('div'); ?>
     
-    <?= $button::back_save($translator); ?>
+    <?= $button::back_save(); ?>
     
 <?= Html::closeTag('div'); ?>
 

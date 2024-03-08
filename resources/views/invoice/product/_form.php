@@ -283,7 +283,7 @@ use Yiisoft\Html\Tag\Form;
     <?= Html::closeTag('div'); ?>
 <?= Html::closeTag('div'); ?>
 
-<?= $button::back_save($translator); ?>
+<?= $button::back_save(); ?>
 <?= Form::tag()->close(); ?>
 <?= Html::closeTag('div'); ?>
 <?= Html::closeTag('div'); ?>

@@ -321,7 +321,6 @@ $toolbar = Div::tag();
         ->urlConfig(new UrlConfig()) 
         ->urlCreator(new UrlCreator($urlGenerator))    
         ->paginator($paginator)
-        ->maxNavLinkCount($maxNavLinkCount)
         ->render()
     )    
     ->rowAttributes(['class' => 'align-middle'])
@@ -329,7 +328,7 @@ $toolbar = Div::tag();
     /**
      * @see config/common/params.php `yiisoft/view` => ['parameters' => ['pageSizeLimiter' ... No need to be in inv/index
      */    
-    ->summaryTemplate($pageSizeLimiter::buttons($currentRoute, $s, $urlGenerator).' '.$grid_summary)
+    ->summaryTemplate($pageSizeLimiter::buttons($currentRoute, $s, $urlGenerator, 'inv').' '.$grid_summary)
     ->emptyTextAttributes(['class' => 'card-header bg-warning text-black'])
     ->emptyText((string) $translator->translate('invoice.invoice.no.records'))
     ->tableAttributes(['class' => 'table table-striped text-center h-75', 'id' => 'table-invoice'])

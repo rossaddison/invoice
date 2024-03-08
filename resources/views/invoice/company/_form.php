@@ -30,7 +30,7 @@ use Yiisoft\Html\Tag\Form;
     ->open() ?>
 
     <?= Html::openTag('div', ['class' => 'headerbar']); ?>
-        <?= $button::back_save($translator); ?> 
+        <?= $button::back_save(); ?> 
         <?= Html::openTag('div',['id' => 'content']); ?>
             <?= Html::openTag('div', ['class' => 'row']); ?>
                 <?= Html::openTag('div',['class' => 'mb-3 form-group']); ?>    

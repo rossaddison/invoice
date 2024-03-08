@@ -28,7 +28,7 @@ echo Form::tag()
 <?= Html::closeTag('h1'); ?>
 
 <?= Html::openTag('div', ['id' => 'headerbar-modal-add-allowance-charge-form']); ?>
-    <?= $button::back_save($translator); ?>
+    <?= $button::back_save(); ?>
     <?= Html::openTag('div', ['id' => 'content']); ?>
         <?= Html::openTag('div', ['class' => 'row']); ?>
             <?= Html::openTag('div', ['class' => 'mb-3 form-group']); ?>

@@ -193,10 +193,10 @@ final class SettingController
                 'locales'=>$this->s->locales(),
             ]),
             'online_payment'=>$this->viewRenderer->renderPartialAsString('/invoice/setting/views/partial_settings_online_payment',[
-                'gateway_drivers'=>$this->s->payment_gateways(),
-                'gateway_currency_codes'=>CurrencyHelper::all(),
+                'gateway_drivers' => $this->s->payment_gateways(),
+                'gateway_currency_codes' => CurrencyHelper::all(),
                 'gateway_regions' => $this->s->amazon_regions(),
-                'payment_methods'=>$pm->findAllPreloaded(),                
+                'payment_methods' =>  $pm->findAllPreloaded(),                
                 'crypt'=> $crypt
             ]),
             'mpdf' => $this->viewRenderer->renderPartialAsString('/invoice/setting/views/partial_settings_mpdf'),            
@@ -424,12 +424,13 @@ final class SettingController
     public function listlimit(CurrentRoute $currentRoute): Response 
     {
         $setting = $this->setting($currentRoute, $this->s);
+        $origin = $currentRoute->getArgument('origin') ?? 'inv';
         $limit = $currentRoute->getArgument('limit');
         if ($setting) {
             $setting->setSetting_value((string)$limit);
             $this->s->save($setting);
         }
-        return $this->webService->getRedirectResponse('inv/index');
+        return $this->webService->getRedirectResponse($origin.'/index');
     }
     
     /**

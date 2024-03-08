@@ -36,7 +36,7 @@ use Yiisoft\Html\Tag\Form;
     echo "    ->open()"."\n";
     echo "?>"."\n";
     echo "\n";
-    echo '<?= $button::back_save($translator); ?>'."\n";
+    echo '<?= $button::back_save(); ?>'."\n";
     echo "\n";
     echo "<?= Html::openTag('div', ['class' => 'container']); ?>"."\n";
     echo "<?= Html::openTag('div', ['class' => 'row']); ?>"."\n";

@@ -680,6 +680,25 @@ final class InvRepository extends Select\Repository
         }
         return $sum;
     }
+    
+    /**
+     * @param int $client_id
+     * @param IAR $iaR
+     * @return int
+     */
+    public function with_total_balance_invoices(int $client_id, IAR $iaR): int
+    {
+        $invoices = $this->findAllWithClient($client_id);
+        $num_invoices = 0;
+        /**
+         * @var Inv $invoice
+         */
+        foreach ($invoices as $invoice) {
+            $invoice_amount = ($iaR->repoInvAmountCount((int)$invoice->getId())> 0 ? $iaR->repoInvquery((int)$invoice->getId()) : null); 
+            $num_invoices += (null!==$invoice_amount && null!==$invoice_amount->getBalance() ? 1 : 0);
+        }
+        return $num_invoices;
+    }
 
     /**
      * 

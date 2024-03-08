@@ -62,7 +62,7 @@ use Psr\Http\Message\ServerRequestInterface as Request;
 // Yiisoft
 use Yiisoft\Data\Reader\Sort;
 use Yiisoft\DataResponse\DataResponseFactoryInterface;
-use Yiisoft\Data\Paginator\OffsetPaginator;
+use Yiisoft\Data\Paginator\OffsetPaginator as DataOffsetPaginator;
 use Yiisoft\Data\Paginator\PageToken;
 use Yiisoft\FormModel\FormHydrator;
 use Yiisoft\Http\Method;
@@ -466,7 +466,7 @@ class ProductController
            (isset($query_params['filter_product_price']) && !empty($query_params['filter_product_price']))) {
             $products = $pR->filter_product_sku_price((string)$query_params['filter_product_price'], (string)$query_params['filter_product_sku']);
         }  
-        $paginator = (new OffsetPaginator($products))
+        $paginator = (new DataOffsetPaginator($products))
         ->withPageSize((int)$sR->get_setting('default_list_limit'))
         ->withCurrentPage((int)$page)
         ->withToken(PageToken::next((string)$page)); 
@@ -474,8 +474,6 @@ class ProductController
             'alert' => $this->alert(),
             'paginator' => $paginator,
             'defaultPageSizeOffsetPaginator' => (int)$sR->get_setting('default_list_limit'),
-            // numbered tiles between the arrrows
-            'maxNavLinkCount' => 3,
             'canEdit' => $canEdit,
             'grid_summary' => $sR->grid_summary($paginator, $this->translator, (int)$sR->get_setting('default_list_limit'), $this->translator->translate('invoice.products'), ''),
             'optionsDataProductsDropdownFilter' => $this->optionsDataProducts($pR)
@@ -925,7 +923,7 @@ class ProductController
      */
     private function view_partial_product_image(CurrentRoute $currentRoute, int $product_id, piR $piR, sR $sR): string {
         $productimages = $piR->repoProductImageProductquery($product_id);
-        $paginator = new OffsetPaginator($productimages);
+        $paginator = new DataOffsetPaginator($productimages);
         $invEdit = $this->userService->hasPermission('editInv');
         $invView = $this->userService->hasPermission('viewInv');
         return $this->viewRenderer->renderPartialAsString('/invoice/product/views/partial_product_image', [

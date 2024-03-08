@@ -47,7 +47,7 @@
                      <i class="fa fa-edit"></i> <?= $translator->translate('invoice.client.peppol.edit'); ?>
                 </a>
                 <?php } ?>
-                <a href="<?= $urlGenerator->generate('client/edit', ['id' => $client->getClient_id()]); ?>"
+                <a href="<?= $urlGenerator->generate('client/edit', ['id' => $client->getClient_id(), 'origin' => 'edit']); ?>"
                    class="btn btn-danger" style="text-decoration:none">
                     <i class="fa fa-edit"></i><?= $translator->translate('i.edit'); ?>
                 </a>

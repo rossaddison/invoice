@@ -2,14 +2,27 @@
 declare(strict_types=1);
 
 namespace App\Widget;
-    
+
+use Yiisoft\Router\UrlGeneratorInterface as UrlGenerator;
 use Yiisoft\FormModel\Field;
 use Yiisoft\Html\Html;
+use Yiisoft\Html\Tag\Span;
+use Yiisoft\Router\CurrentRoute;
 use Yiisoft\Translator\TranslatorInterface as Translator;
 
 final class Button
 {
-    public static function back(Translator $translator) : void {
+    private CurrentRoute $currentRoute;
+    private Translator $translator;
+    private UrlGenerator $generator;
+    
+    public function __construct(CurrentRoute $currentRoute, Translator $translator, UrlGenerator $generator) {
+        $this->currentRoute = $currentRoute;
+        $this->translator = $translator;
+        $this->generator = $generator;
+    }
+    
+    public static function back() : void {
         echo Html::openTag('div', ['class' => 'headerbar-item pull-right']);
         $buttonsDataArray = [
             [
@@ -28,7 +41,7 @@ final class Button
         echo Html::closeTag('div'); 
     }
     
-    public static function back_save(Translator $translator) : void {
+    public static function back_save() : void {
         echo Html::openTag('div', ['class' => 'headerbar-item pull-right']);
         $buttonsDataArray = [
             [
@@ -56,7 +69,7 @@ final class Button
         echo Html::closeTag('div'); 
     }
     
-    public static function save(Translator $translator) : void {
+    public static function save() : void {
         echo Html::openTag('div', ['class' => 'headerbar-item pull-right']);
         $buttonsDataArray = [
            [
@@ -72,5 +85,34 @@ final class Button
         echo Field::buttongroup()
             ->buttonsData($buttonsDataArray);
         echo Html::closeTag('div'); 
-    }    
+    }
+    
+    public static function activeLabel(Translator $translator) : string {
+        return Span::tag()
+                ->addClass('label active')
+                ->content(Html::encode($translator->translate('i.yes')))
+                ->render();
+    }
+    
+    public static function inactiveLabel(Translator $translator) : string {
+        return Span::tag()
+                ->addClass('label inactive')
+                ->content(Html::encode($translator->translate('i.no')))
+                ->render();
+    }
+    
+    public static function inactiveWithAddUserAccount(UrlGenerator $generator, Translator $translator) : string {
+        return Span::tag()
+                ->content(
+                    Html::a('', $generator->generate('userinv/add'),
+                        [
+                            'class' => 'fa fa-plus',
+                            'style' => 'text-decoration:none',
+                            'tooltip' => 'data-bs-toggle',
+                            'title' => $translator->translate('invoice.client.has.not.user.account') 
+                        ]
+                    )
+                )
+                ->render();
+    }        
 }

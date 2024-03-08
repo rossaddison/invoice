@@ -169,6 +169,10 @@ class Quote
         $this->user = $user;
     }
     
+    public function getQuoteAmount(): QuoteAmount {
+        return $this->quoteAmount;
+    }
+    
     /**
      * @return null|numeric-string
      */

@@ -197,5 +197,27 @@ private EntityWriter $entityWriter;
             $optionsData[(int)$client->getClient_id()] = ($client->getClient_name() ?: '') . str_repeat(' ', 3). ($client->getClient_surname() ?? '');
         }
         return $optionsData;
-    }        
+    }
+    
+    public function filter_client_name(string $client_name): EntityReader
+    {
+        $select = $this->select();
+        $query = $select->where(['client_name' => ltrim(rtrim($client_name))]);
+        return $this->prepareDataReader($query); 
+    }
+
+    public function filter_client_surname(string $client_surname): EntityReader
+    {
+        $select = $this->select();
+        $query = $select->where(['client_surname' => ltrim(rtrim($client_surname))]);
+        return $this->prepareDataReader($query); 
+    }
+    
+    public function filter_client_name_surname(string $client_name, string $client_surname): EntityReader
+    {
+        $select = $this->select();
+        $query = $select->where(['client_name' => ltrim(rtrim($client_name))])
+                        ->andWhere(['client_surname' => ltrim(rtrim($client_surname))]);
+        return $this->prepareDataReader($query); 
+    }       
 }

@@ -51,7 +51,7 @@ echo $alert;
      <tr>                
       <td><?= $s->lang($custom_tables[$customfield->getTable()] ?? ''); ?></td>
       <td><?= Html::encode($customfield->getLabel()); ?></td>
-      <td><?= $s->trans($alpha); ?></td>
+      <td><?= $translator->translate($alpha); ?></td>
       <td><?= Html::encode($customfield->getOrder()); ?></td>
       <td>
             <div class="options btn-group btn-group-sm">

@@ -15,7 +15,7 @@ echo $alert;
 <div id="headerbar">
     <h1 class="headerbar-title"><?= $translator->translate('i.settings'); ?></h1>
     <?php
-        echo $button::back_save($translator);
+        echo $button::back_save();
     ?>
 </div>
 

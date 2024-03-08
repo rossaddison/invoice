@@ -13,7 +13,8 @@
 <p><s>7. Improve Generator index template using Yiisoft functions.</s></p>
 <p><s>8. Include Product images</s></p>
 <p>9. Integrate <code>https://github.com/php-finance/double-entry</code></p>
-<p>10. Remove all $s variables passed to views since the variable is definded under config/params.php
+<p>10. Remove all $s variables passed to views since the variable is definded under config/params.php</p>
+<p>11. Upskilling on Docker. </p>
 <br>
 <code>
 'yiisoft/view' => [
@@ -27,6 +28,8 @@
       's' => Reference::to(SettingRepository::class),
       'session' => Reference::to(SessionInterface::class),
       'datehelper' => Reference::to(DateHelper::class),
+      'pageSizeLimiter' => Reference::to(PageSizeLimiter::class),
+      'gridComponents' => Reference::to(GridComponents::class)  
     ],
   ],      
 </code>    
@@ -44,8 +47,12 @@
 <p>Introducing India's PayTm payment gateway's QR code method of payment and comparing this with Stripe's method.</p>
 <p>A General Sales Tax (GST) Tax System will have to be implemented first for this purpose.</p>
 <p><b>What's next?</b></p>
-<p>Implementation of filters on grids</p>
-<p>Upskilling on Docker.</p>
+<p>Updating custom fields index and include filters</p>
+<p><b>8th March 2024</b></p>
+<p>Update the client index with filters firstname surname, and a mini table of invoices per client using Entity Client ArrayCollection</p>
+<p>to build the ArrayCollection up and use its <b>count</b> and <b>toArray</b> function to count the number of invoices</p>
+<p>and produce outstanding balance details respectively</p>
+
 <p><b>27 February 2024</b></p>
 <p>Psalm Level 1 Testing of Form Hydration, and Form Model Implementation</p>
 <p>Transfering of relevant code to the Generator templates.</p>

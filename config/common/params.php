@@ -26,6 +26,7 @@ use App\Invoice\Helpers\NumberHelper;
 use App\Invoice\Setting\SettingRepository;
 use App\Widget\Button;
 use App\Widget\PageSizeLimiter;
+use App\Widget\GridComponents;
 use Yiisoft\Session\SessionInterface;
 
 return [
@@ -160,7 +161,8 @@ return [
       'datehelper' => Reference::to(DateHelper::class),
       'dateHelper' => Reference::to(DateHelper::class),  
       'numberHelper' => Reference::to(NumberHelper::class),
-      'pageSizeLimiter' => Reference::to(PageSizeLimiter::class)  
+      'pageSizeLimiter' => Reference::to(PageSizeLimiter::class),
+      'gridComponents' => Reference::to(GridComponents::class)  
     ],
   ],
   'yiisoft/cookies' => [

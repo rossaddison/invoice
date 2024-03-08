@@ -100,19 +100,11 @@ use Yiisoft\Yii\DataView\YiiRouter\UrlCreator;
             queryProperty: 'filter_product_sku',
             header:  $translator->translate('i.product_sku'),
             encodeHeader: true,
-            footer: null,
-            columnAttributes: [],
-            headerAttributes: [],
-            bodyAttributes: [],
-            withSorting: true,
             content: static fn ($model): string => Html::encode($model->getProduct_sku()),
-            dateTimeFormat: null,
             // bool|array   bool => TextInputFilter e.g. filter: true; array => DropDownFilter e.g. as below     
             filter: $optionsDataProductsDropdownFilter,
-            filterFactory: null,
-            filterValidation: null,
-            filterEmpty: null,
-            visible: true),
+            visible: true
+        ),
         new DataColumn(
             'product_description',    
             header: $translator->translate('i.product_description'),                
@@ -214,7 +206,6 @@ use Yiisoft\Yii\DataView\YiiRouter\UrlCreator;
         ->urlConfig(new UrlConfig()) 
         ->urlCreator(new UrlCreator($urlGenerator))        
         ->paginator($paginator)
-        ->maxNavLinkCount($maxNavLinkCount)
         ->render()
     )
     ->rowAttributes(['class' => 'align-middle'])

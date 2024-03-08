@@ -91,7 +91,17 @@ foreach ($gateway_drivers as $driver => $fields) :
         
         <div class="panel-body small">
 
-            <?php foreach ($fields as $key => $setting) { ?>
+             
+                <!-- 'AuthorizeNet_AIM' => array(
+                            'version' => array(
+                                'type' => 'checkbox',
+                                'label' => 'Omnipay Version'                    
+                      ) 
+                -->
+            
+                <?php // 'driver' => 'AuthorizeNet_AIM'      
+                   // foreach 'version' as 'type' => 'checkbox'
+                      foreach ($fields as $key => $setting) { ?>
                 <?php $body['settings[gateway_' . $d . '_'.$key.']'] = $s->get_setting('gateway_' . $d . '_' . $key);?>
                 <?php if ($setting['type'] == 'checkbox') : ?>
 
@@ -108,7 +118,7 @@ foreach ($gateway_drivers as $driver => $fields) :
                                 . 'eg. on Stripe you will have to agree to check "Handle card information directly". See https://https://dashboard.stripe.com/settings/integration'
                                 : ''; ?>"
                             >
-                            <?= $s->trans('online_payment_' . $key, '', $setting['label']); ?>
+                            <?= $setting['label']; ?>
                         </label>
                     </div>
             
@@ -116,7 +126,7 @@ foreach ($gateway_drivers as $driver => $fields) :
 
                     <div class="form-group">
                         <label for="settings[gateway_<?= $d; ?>_<?= $key ?>]">
-                            <?= $s->trans('online_payment_' . $key, '', $setting['label']); ?>
+                            <?= $translator->translate('g.online_payment_' . $key);?>
                         </label>
                                 <input type="<?= $setting['type']; ?>" class="input-sm form-control"
                             name="settings[gateway_<?= $d; ?>_<?= $key ?>]"
@@ -147,7 +157,7 @@ foreach ($gateway_drivers as $driver => $fields) :
             { ?>
             <div class="form-group">
                 <label for="settings[gateway_<?= $d; ?>_region]">
-                    <?= $s->trans('online_payment_region'); ?>
+                    <?= $translator->translate('g.online_payment_region'); ?>
                 </label>
                 <?php $body['settings[gateway_' . $d . '_region]'] = $s->get_setting('gateway_' . $d . '_region');?>
                 <select name="settings[gateway_<?= $d; ?>_region]"
@@ -165,7 +175,7 @@ foreach ($gateway_drivers as $driver => $fields) :
 
             <div class="form-group">
                 <label for="settings[gateway_<?= $d; ?>_currency]">
-                    <?= $s->trans('currency'); ?>
+                    <?= $translator->translate('i.currency'); ?>
                 </label>
                 <?php $body['settings[gateway_' . $d . '_currency]'] = $s->get_setting('gateway_' . $d . '_currency');?>
                 <select name="settings[gateway_<?= $d; ?>_currency]"
@@ -182,7 +192,7 @@ foreach ($gateway_drivers as $driver => $fields) :
 
             <div class="form-group">
                 <label for="settings[gateway_<?= $d; ?>_payment_method]">
-                    <?= $s->trans('online_payment_method'); ?>
+                    <?= $translator->translate('g.online_payment_method'); ?>
                 </label>
                 <?php $body['settings[gateway_' . $d . '_payment_method]'] = $s->get_setting('gateway_' . $d . '_payment_method');?>
                 <select name="settings[gateway_<?= $d; ?>_payment_method]"
@@ -203,4 +213,4 @@ foreach ($gateway_drivers as $driver => $fields) :
 <?php endforeach; ?>
 
 </div>
-</div>
+<?= Html::closeTag('div'); ?>

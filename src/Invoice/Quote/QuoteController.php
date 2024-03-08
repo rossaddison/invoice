@@ -109,7 +109,7 @@ use App\Invoice\Helpers\PdfHelper;
 use App\Invoice\Helpers\TemplateHelper;
 use App\Widget\Bootstrap5ModalQuote;
 // Yii
-use Yiisoft\Data\Paginator\OffsetPaginator;
+use Yiisoft\Data\Paginator\OffsetPaginator as DataOffsetPaginator;
 use Yiisoft\Data\Paginator\PageToken;
 use Yiisoft\Data\Reader\Sort;
 use Yiisoft\DataResponse\DataResponseFactoryInterface;
@@ -1405,7 +1405,7 @@ final class QuoteController
                 // they can view their quotes when they log in
                 $user_clients = $ucR->get_assigned_to_user((string)$user->getId());
                 $quotes = $this->quotes_status_with_sort_guest($qR, $status, $user_clients, $sort);
-                $paginator = (new OffsetPaginator($quotes))
+                $paginator = (new DataOffsetPaginator($quotes))
                 ->withPageSize((int)$this->sR->get_setting('default_list_limit'))
                 ->withCurrentPage($pageNum);
                 $quote_statuses = $qR->getStatuses($this->translator);
@@ -1491,10 +1491,21 @@ final class QuoteController
                     // Show the latest quotes first => -id
                     /** @psalm-suppress MixedArgument $sort_string */
                     ->withOrderString((string)$sort_string);
-        $quotes = $this->quotes_status_with_sort($quoteRepo, $status, $sort); 
-        $paginator = (new OffsetPaginator($quotes))
+        $quotes = $this->quotes_status_with_sort($quoteRepo, $status, $sort);
+        if (isset($query_params['filterQuoteNumber']) && !empty($query_params['filterQuoteNumber'])) {
+                $quotes = $quoteRepo->filterQuoteNumber((string)$query_params['filterQuoteNumber']);
+        }
+        if (isset($query_params['filterQuoteAmountTotal']) && !empty($query_params['filterQuoteAmountTotal'])) {
+            $quotes = $quoteRepo->filterQuoteAmountTotal((string)$query_params['filterQuoteAmountTotal']);
+        }
+        if ((isset($query_params['filterQuoteNumber']) && !empty($query_params['filterQuoteNumber'])) && 
+           (isset($query_params['filterQuoteAmountTotal']) && !empty($query_params['filterQuoteAmountTotal']))) {
+            $quotes = $quoteRepo->filterQuoteNumberAndQuoteAmountTotal((string)$query_params['filterQuoteNumber'], (float)$query_params['filterQuoteAmountTotal']);
+        } 
+        $paginator = (new DataOffsetPaginator($quotes))
         ->withPageSize((int)$this->sR->get_setting('default_list_limit'))
         ->withCurrentPage((int)$page)
+        ->withSort($sort)            
         ->withToken(PageToken::next((string)$page));    
         $quote_statuses = $quoteRepo->getStatuses($this->translator);
         $parameters = [
@@ -1502,14 +1513,17 @@ final class QuoteController
             'paginator' => $paginator,
             'sortOrder' => $query_params['sort'] ?? '', 
             'alert' => $this->alert(),
-            'client_count'=>$clientRepo->count(),
-            'grid_summary'=> $sR->grid_summary(
+            'client_count' => $clientRepo->count(),
+            'optionsDataClientsDropdownFilter' => $this->optionsDataClients($quoteRepo),
+            'grid_summary' => $sR->grid_summary(
                 $paginator, 
                 $this->translator, 
                 (int)$sR->get_setting('default_list_limit'), 
                 $this->translator->translate('invoice.quotes'), 
                 $quoteRepo->getSpecificStatusArrayLabel((string)$status)
             ),
+            'defaultPageSizeOffsetPaginator' => $this->sR->get_setting('default_list_limit')
+                                                    ? (int)$this->sR->get_setting('default_list_limit') : 1,
             'quote_statuses' => $quote_statuses,
             'max' => (int)$sR->get_setting('default_list_limit'),
             'qaR' => $qaR,
@@ -2928,5 +2942,29 @@ final class QuoteController
             'group' => $optionsDataGroup,
             'quoteStatus' => $optionsDataQuoteStatus
         ];
+    }
+    
+    /**
+     * @param QR $qR
+     * @return array
+     */
+    public function optionsDataClients(QR $qR) : array
+    {
+        $optionsDataClients = [];
+        // Get all the invoices that have been made out to clients with user accounts
+        $quotes = $qR->findAllPreloaded();
+        /**
+         * @var Quote $quote
+         */
+        foreach ($quotes as $quote) {
+            $client = $quote->getClient();
+            if (null!==$client) {
+                if (strlen($client->getClient_full_name()) > 0) {
+                    $fullName = $client->getClient_full_name();
+                    $optionsDataClients[$fullName]  =  !empty($fullName) ? $fullName : '';
+                }    
+            }
+        }
+        return $optionsDataClients;
     }
 }

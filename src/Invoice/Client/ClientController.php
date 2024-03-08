@@ -53,7 +53,9 @@ use App\Widget\Bootstrap5ModalQuote;
 use App\Widget\Bootstrap5ModalInv; 
 // Yii
 use Yiisoft\Aliases\Aliases;
-use Yiisoft\Data\Paginator\OffsetPaginator;
+use Yiisoft\Data\Paginator\OffsetPaginator as DataOffsetPaginator;
+use Yiisoft\Data\Paginator\PageToken;
+use Yiisoft\Data\Reader\Sort;
 use Yiisoft\DataResponse\DataResponseFactoryInterface;
 use Yiisoft\Http\Method;
 use Yiisoft\Json\Json;
@@ -490,7 +492,6 @@ final class ClientController
     }
     
     /**
-     * 
      * @param string $level
      * @param string $message
      * @return Flash
@@ -500,31 +501,76 @@ final class ClientController
         return $this->flash;
     }
     
-    
-     public function index(CurrentRoute $currentRoute, cR $cR, iaR $iaR, iR $iR, sR $sR, cpR $cpR, ucR $ucR): 
+    public function index(CurrentRoute $currentRoute, Request $request, cR $cR, iaR $iaR, iR $iR, sR $sR, cpR $cpR, ucR $ucR): 
         \Yiisoft\DataResponse\DataResponse
     {
         $canEdit = $this->rbac();
-        $pageNum = (int)$currentRoute->getArgument('page', '1');        
+        $query_params = $request->getQueryParams();
+        /**
+         * @var string $query_params['page']
+         */
+        $page = $query_params['page'] ?? $currentRoute->getArgument('page', '1');        
         $active = (int)$currentRoute->getArgument('active', '2');
-        $paginator = (new OffsetPaginator($this->clients($cR, $active)))
+        /** @var string $query_params['sort'] */
+        $sort = Sort::only(['id', 'client_name', 'client_surname'])
+                    // (@see vendor\yiisoft\data\src\Reader\Sort
+                    // - => 'desc'  so -id => default descending on id
+                    // Show the latest products first => -id
+                    ->withOrderString($query_params['sort'] ?? '-id');
+        $clients = $this->clients_with_sort($cR, $sort, $active);
+        if (isset($query_params['filter_client_name']) && !empty($query_params['filter_client_name'])) {
+            $clients = $cR->filter_client_name((string)$query_params['filter_client_name']);
+        }
+        if (isset($query_params['filter_client_surname']) && !empty($query_params['filter_client_surname'])) {
+            $clients = $cR->filter_client_surname((string)$query_params['filter_client_surname']);
+        }
+        //if (isset($query_params['filter_client_balance']) && !empty($query_params['filter_client_balance'])) {
+        //    $clients = $iR->filter_client_balance((string)$query_params['filter_client_balance']);
+        //}
+        if ((isset($query_params['filter_client_name']) && !empty($query_params['filter_client_name'])) && 
+           (isset($query_params['filter_client_surname']) && !empty($query_params['filter_client_surname']))) {
+            $clients = $cR->filter_client_name_surname((string)$query_params['filter_client_name'], (string)$query_params['filter_client_surname']);
+        }  
+        
+        $paginator = (new DataOffsetPaginator($clients))
             ->withPageSize((int)$sR->get_setting('default_list_limit'))
-            ->withCurrentPage($pageNum);
+            ->withCurrentPage((int)$page)
+            ->withToken(PageToken::next((string)$page));     
         $parameters = [
-            'paginator'=>$paginator,
-            'alert'=>$this->alert(),
-            'iR'=> $iR,
-            'iaR'=> $iaR,
+            'paginator' => $paginator,
+            'alert' => $this->alert(),
+            'iR' => $iR,
+            'iaR' => $iaR,
             'canEdit' => $canEdit,
-            'active'=>$active,
-            'pageNum'=>$pageNum,
-            'cpR'=>$cpR,
-            'ucR'=>$ucR,
-            'modal_create_client'=>$this->viewRenderer->renderPartialAsString('modal_create_client',[
-                'datehelper'=> new DateHelper($sR)
-            ])
+            'active' => $active,
+            'page' => $page,
+            'cpR' => $cpR,
+            'ucR' => $ucR,
+            'grid_summary' => $sR->grid_summary($paginator, $this->translator, (int)$sR->get_setting('default_list_limit'), $this->translator->translate('invoice.clients'), ''),
+            'defaultPageSizeOffsetPaginator' => $sR->get_setting('default_list_limit')
+                                                    ? (int)$sR->get_setting('default_list_limit') : 1,
+            'modal_create_client' => $this->viewRenderer->renderPartialAsString('modal_create_client',[
+                'datehelper' => new DateHelper($sR)
+            ]),
+            'optionsDataClientNameDropdownFilter' => $this->optionsDataClientNameDropdownFilter($cR),
+            'optionsDataClientSurnameDropdownFilter' => $this->optionsDataClientSurnameDropdownFilter($cR),
         ];    
         return $this->viewRenderer->render('index', $parameters);
+    }
+    
+    /**
+     * @param cR $cR
+     * @param Sort $sort
+     * @param int $active
+     *
+     * @return \Yiisoft\Data\Reader\SortableDataInterface&\Yiisoft\Data\Reader\DataReaderInterface
+     *
+     * @psalm-return \Yiisoft\Data\Reader\SortableDataInterface&\Yiisoft\Data\Reader\DataReaderInterface<int, Client>
+     */
+    private function clients_with_sort(cR $cR, Sort $sort, int $active): \Yiisoft\Data\Reader\SortableDataInterface {       
+        $query = $this->clients($cR, $active);
+        $clients = $query->withSort($sort);
+        return $clients;
     }
     
     public function guest(CurrentRoute $currentRoute, cR $cR, iaR $iaR, iR $iR, sR $sR, cpR $cpR, ucR $ucR): 
@@ -538,7 +584,7 @@ final class ClientController
           if (null!==$user_id) {  
             $client_array = $ucR->get_assigned_to_user($user_id);
             $clients = $cR->repoUserClient($client_array);
-            $paginator = (new OffsetPaginator($clients))
+            $paginator = (new DataOffsetPaginator($clients))
                 ->withPageSize((int)$sR->get_setting('default_list_limit'))
                 ->withCurrentPage($pageNum);
             $parameters = [
@@ -822,7 +868,37 @@ final class ClientController
             }
         }
         return $optionsDataPostalAddress;
-    }    
+    }
+
+    public function optionsDataClientNameDropdownFilter(cR $cR) : array
+    {
+        $optionsDataClientName = [];
+        $clients = $cR->findAllPreloaded();
+        /**
+         * @var Client $client
+         */
+        foreach ($clients as $client) {
+            $firstname = $client->getClient_name();
+            $optionsDataClientName[$firstname] = $firstname; 
+        }
+        return $optionsDataClientName;
+    }
+    
+    public function optionsDataClientSurnameDropdownFilter(cR $cR) : array
+    {
+        $optionsDataClientSurname = [];
+        $clients = $cR->findAllPreloaded();
+        /**
+         * @var Client $client
+         */
+        foreach ($clients as $client) {
+            $surname = $client->getClient_surname();
+            if (null!=$surname) {
+                $optionsDataClientSurname[$surname] = $surname;
+            }    
+        }
+        return $optionsDataClientSurname;
+    }
     
     /**
      * 

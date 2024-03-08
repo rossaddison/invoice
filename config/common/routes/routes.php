@@ -125,7 +125,6 @@ return [
       ->action([UserController::class, 'profile'])
       ->name('user/profile'),
     ),
-  
     Group::create('/api')
       ->middleware(FormatDataResponseAsXml::class)
       ->middleware(ApiDataWrapper::class)
@@ -2091,7 +2090,7 @@ return [
       ->middleware(Authentication::class)
       ->action([SettingController::class, 'clear'])
       ->name('setting/clear'),
-      Route::methods([Method::GET, Method::POST], '/setting/listlimit/{setting_id}/{limit}')
+      Route::methods([Method::GET, Method::POST], '/setting/listlimit/{setting_id}/{limit}/{origin}')
       ->middleware(fn(AccessChecker $checker) => $checker->withPermission('editInv'))
       ->middleware(Authentication::class)
       ->action([SettingController::class, 'listlimit'])

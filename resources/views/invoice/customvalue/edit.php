@@ -18,7 +18,7 @@ use Yiisoft\Html\Html;
         <?= Html::openTag('h1',['class' => 'headerbar-title']); ?>
             <?= $translator->translate('i.custom_values_new'); ?>
         <?= Html::closeTag('h1'); ?>
-        <?= $button::back_save($translator); ?>
+        <?= $button::back_save(); ?>
     <?= Html::closeTag('div'); ?>
 
     <?= Html::openTag('div',['id' => 'content']); ?>

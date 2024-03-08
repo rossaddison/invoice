@@ -35,6 +35,32 @@ final class QuoteRepository extends Select\Repository
         parent::__construct($select);
     }
     
+    public function filterQuoteNumber(string $quoteNumber): EntityReader
+    {
+        $select = $this->select();
+        $query = $select->where(['number' => ltrim(rtrim($quoteNumber))]);
+        return $this->prepareDataReader($query); 
+    }
+
+    public function filterQuoteAmountTotal(string $quoteAmountTotal): EntityReader
+    {
+        $select = $this->select();
+        $query = $select
+                 ->load('quoteAmount') 
+                 ->where(['quoteAmount.total' => $quoteAmountTotal]);
+        return $this->prepareDataReader($query); 
+    }
+    
+     public function filterQuoteNumberAndQuoteAmountTotal(string $quoteNumber, float $quoteAmountTotal): EntityReader
+    {
+        $select = $this->select();
+        $query = $select
+                 ->load('quoteAmount')
+                 ->where(['number' => $quoteNumber])
+                 ->andWhere(['quoteAmount.total' => $quoteAmountTotal]);
+        return $this->prepareDataReader($query); 
+    }     
+    
     /**
      * Get Quotes with filter
      *

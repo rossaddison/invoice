@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace App\Invoice\Entity;
 
 use App\Invoice\Entity\DeliveryLocation;
+use App\Invoice\Entity\Inv;
 use Cycle\Annotated\Annotation\Column;
 use Cycle\Annotated\Annotation\Entity;
 use Cycle\Annotated\Annotation\Relation\HasMany;
@@ -111,6 +112,12 @@ class Client
      */
     #[HasMany(target: DeliveryLocation::class)]
     private ArrayCollection $delivery_locations;
+    
+    /**
+     * @var ArrayCollection<array-key, Inv>
+     */
+    #[HasMany(target: Inv::class)]
+    private ArrayCollection $invs;
      
     public function __construct(
             // treat as firstname
@@ -170,6 +177,7 @@ class Client
         $this->client_date_modified = new \DateTimeImmutable();
         $this->postaladdress_id = $postaladdress_id;
         $this->delivery_locations = new ArrayCollection();
+        $this->invs = new ArrayCollection();
     }
     
     public function getClient_id(): ?int
@@ -456,6 +464,18 @@ class Client
     
     public function getDelivery_locations() : ArrayCollection {
         return $this->delivery_locations;
+    }
+    
+    public function getInvs() : ArrayCollection {
+        return $this->invs;
+    }
+    
+    public function setInvs() : void {
+        $this->invs = new ArrayCollection();
+    }
+    
+    public function addInv(Inv $inv) : void {
+        $this->invs[] = $inv;
     }
         
     public function isNewRecord(): bool
