@@ -210,7 +210,7 @@ use Yiisoft\Yii\DataView\YiiRouter\UrlCreator;
     )
     ->rowAttributes(['class' => 'align-middle'])
     ->summaryAttributes(['class' => 'mt-3 me-3 summary text-end'])
-    ->summaryTemplate($pageSizeLimiter::buttons($currentRoute, $s, $urlGenerator).' '.$grid_summary)
+    ->summaryTemplate($pageSizeLimiter::buttons($currentRoute, $s, $urlGenerator, 'product').' '.$grid_summary)
     ->emptyTextAttributes(['class' => 'card-header bg-warning text-black'])
     ->emptyText((string)$translator->translate('invoice.invoice.no.records'))
     ->tableAttributes(['class' => 'table table-striped text-center h-75','id'=>'table-product'])

@@ -163,42 +163,45 @@ class ProductController
             'product_custom_values' => [],
             'productCustomForm' => $productCustomForm
         ];
-        if ($request->getMethod() === Method::POST && $formHydrator->populateFromPostAndValidate($form, $request)) {
-            $body = $request->getParsedBody() ?? [];
-            /**
-             * @psalm-suppress PossiblyInvalidArgument $body
-             */
-            $product_id = $this->productService->saveProduct($product, $body);
-            if ($product_id) {
-                if (isset($body['custom'])) {
-                    // Retrieve the custom array
-                    /** @var array $custom */
-                    $custom = $body['custom'];
-                    /** 
-                     * @var int $custom_field_id
-                     * @var string|array $value
-                     */
-                    foreach($custom as $custom_field_id => $value){
-                        $productCustom = new ProductCustom();
-                        $formProductCustom = new ProductCustomForm($productCustom);
-                        $product_custom = [];
-                        $product_custom['product_id'] = $product_id;
-                        $product_custom['custom_field_id'] = $custom_field_id;                    
-                        $product_custom['value'] = is_array($value) ? serialize($value) : $value;                    
-                        if ($formHydrator->populate($formProductCustom, $product_custom) && $formProductCustom->isValid()) {
-                          $this->productCustomService->saveProductCustom($productCustom, $product_custom);
+        if ($request->getMethod() === Method::POST) {  
+            if ($formHydrator->populateFromPostAndValidate($form, $request)) {
+                $body = $request->getParsedBody() ?? [];
+                /**
+                 * @psalm-suppress PossiblyInvalidArgument $body
+                 */
+                $product_id = $this->productService->saveProduct($product, $body);
+                if ($product_id) {
+                    if (isset($body['custom'])) {
+                        // Retrieve the custom array
+                        /** @var array $custom */
+                        $custom = $body['custom'];
+                        /** 
+                         * @var int $custom_field_id
+                         * @var string|array $value
+                         */
+                        foreach($custom as $custom_field_id => $value){
+                            $productCustom = new ProductCustom();
+                            $formProductCustom = new ProductCustomForm($productCustom);
+                            $product_custom = [];
+                            $product_custom['product_id'] = $product_id;
+                            $product_custom['custom_field_id'] = $custom_field_id;                    
+                            $product_custom['value'] = is_array($value) ? serialize($value) : $value;                    
+                            if ($formHydrator->populate($formProductCustom, $product_custom) && $formProductCustom->isValid()) {
+                              $this->productCustomService->saveProductCustom($productCustom, $product_custom);
+                            }
+                            // These two can be used to create customised labels for custom field error validation on the form
+                            // Currently not used.
+                            $parameters['formProductCustom'] = $formProductCustom; 
+                            $parameters['errors_custom'] = $formProductCustom->getValidationResult()->getErrorMessagesIndexedByAttribute();
                         }
-                        // These two can be used to create customised labels for custom field error validation on the form
-                        // Currently not used.
-                        $parameters['formProductCustom'] = $formProductCustom; 
-                        $parameters['errors_custom'] = $formProductCustom->getValidationResult()->getErrorMessagesIndexedByAttribute();
-                    }
-                    $this->flash_message('info', $this->translator->translate('i.record_successfully_created'));
-                    return $this->webService->getRedirectResponse('product/index');
-                }    
-            }
+                        $this->flash_message('info', $this->translator->translate('i.record_successfully_created'));
+                        return $this->webService->getRedirectResponse('product/index');
+                    }    
+                }
+            } else {
+                $parameters['errors'] = $form->getValidationResult()->getErrorMessagesIndexedByAttribute();
+            }    
         }
-        $parameters['errors'] = $form->getValidationResult()->getErrorMessagesIndexedByAttribute();
         $parameters['form'] = $form;
         return $this->viewRenderer->render('_form', $parameters);
     }
