@@ -237,48 +237,52 @@ final class ClientController
             'client_custom_values' => [],
             'clientCustomForm' => $clientCustomForm,
         ];
-        if ($request->getMethod() === Method::POST && $formHydrator->populateFromPostAndValidate($form, $request)) {
-            $body = $request->getParsedBody() ?? [];
-            /**
-             * @psalm-suppress PossiblyInvalidArgument $body
-             */
-            $client_id = $this->clientService->saveClient($new_client, $body, $sR);
-            if (null!==$client_id) {
-                if (isset($body['custom'])) {
-                    // Retrieve the custom array
-                    /** @var array $custom */
-                    $custom = $body['custom'];
-                    /** 
-                     * @var int $custom_field_id
-                     * @var string|array $value
-                     */
-                    foreach($custom as $custom_field_id => $value){
-                        $clientCustom = new ClientCustom();
-                        $formClientCustom = new ClientCustomForm($clientCustom);
-                        $client_custom = [];
-                        $client_custom['client_id'] = $client_id;
-                        $client_custom['custom_field_id'] = $custom_field_id;                    
-                        // Note: There are no Required rules for value under ClientCustomForm
-                        $client_custom['value'] = is_array($value) ? serialize($value) : $value;                    
-                        if ($formHydrator->populate($formClientCustom, $client_custom) && $formClientCustom->isValid()) {
-                          $this->clientCustomService->saveClientCustom($clientCustom, $client_custom);
+        if ($request->getMethod() === Method::POST) { 
+            if ($formHydrator->populateFromPostAndValidate($form, $request)) {
+                $body = $request->getParsedBody() ?? [];
+                /**
+                 * @psalm-suppress PossiblyInvalidArgument $body
+                 */
+                $client_id = $this->clientService->saveClient($new_client, $body, $sR);
+                if (null!==$client_id) {
+                    if (isset($body['custom'])) {
+                        // Retrieve the custom array
+                        /** @var array $custom */
+                        $custom = $body['custom'];
+                        /** 
+                         * @var int $custom_field_id
+                         * @var string|array $value
+                         */
+                        foreach($custom as $custom_field_id => $value){
+                            $clientCustom = new ClientCustom();
+                            $formClientCustom = new ClientCustomForm($clientCustom);
+                            $client_custom = [];
+                            $client_custom['client_id'] = $client_id;
+                            $client_custom['custom_field_id'] = $custom_field_id;                    
+                            // Note: There are no Required rules for value under ClientCustomForm
+                            $client_custom['value'] = is_array($value) ? serialize($value) : $value;                    
+                            if ($formHydrator->populate($formClientCustom, $client_custom) && $formClientCustom->isValid()) {
+                              $this->clientCustomService->saveClientCustom($clientCustom, $client_custom);
+                            }
+                            // These two can be used to create customised labels for custom field error validation on the form
+                            // Currently not used.
+                            $parameters['formCientCustom'] = $formClientCustom; 
+                            $parameters['errors_custom'] = $formClientCustom->getValidationResult()->getErrorMessagesIndexedByAttribute();
                         }
-                        // These two can be used to create customised labels for custom field error validation on the form
-                        // Currently not used.
-                        $parameters['formCientCustom'] = $formClientCustom; 
-                        $parameters['errors_custom'] = $formClientCustom->getValidationResult()->getErrorMessagesIndexedByAttribute();
-                    }
-                    $this->flash_message('info', $this->translator->translate('i.record_successfully_created'));
-                    if ($origin == 'main' || $origin == 'add') {
-                        return $this->webService->getRedirectResponse('client/index');
-                    }
-                    if ($origin == 'dashboard') {
-                        return $this->webService->getRedirectResponse('invoice/dashboard');
-                    }
-                }    
+                        $this->flash_message('info', $this->translator->translate('i.record_successfully_created'));
+                        if ($origin == 'main' || $origin == 'add') {
+                            return $this->webService->getRedirectResponse('client/index');
+                        }
+                        if ($origin == 'dashboard') {
+                            return $this->webService->getRedirectResponse('invoice/dashboard');
+                        }
+                    }    
+                }
             }
-        }
-        $parameters['errors'] = $form->getValidationResult()->getErrorMessagesIndexedByAttribute();
+            else {
+                $parameters['errors'] = $form->getValidationResult()->getErrorMessagesIndexedByAttribute();
+            }
+        }    
         $parameters['form'] = $form;
         return $this->viewRenderer->render('__form', $parameters);
     }
