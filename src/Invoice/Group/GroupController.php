@@ -14,7 +14,8 @@ use App\User\UserService;
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
 
-use Yiisoft\Data\Paginator\OffsetPaginator;
+use Yiisoft\Data\Paginator\OffsetPaginator as DataOffsetPaginator;
+use Yiisoft\Data\Paginator\PageToken;
 use Yiisoft\Http\Method;
 use Yiisoft\Router\CurrentRoute;
 use Yiisoft\Session\SessionInterface as Session;
@@ -68,12 +69,15 @@ final class GroupController
      */
     public function index(GroupRepository $groupRepository, SettingRepository $settingRepository, Request $request, GroupService $service): \Yiisoft\DataResponse\DataResponse
     {    
-        $pageNum = (int)$request->getAttribute('page', '1');
-        $paginator = (new OffsetPaginator($this->groups($groupRepository)))
+        $page = (int)$request->getAttribute('page', '1');
+        $paginator = (new DataOffsetPaginator($this->groups($groupRepository)))
         ->withPageSize((int)$settingRepository->get_setting('default_list_limit'))
-        ->withCurrentPage($pageNum);
+        ->withCurrentPage($page)
+        ->withToken(PageToken::next((string)$page));
         $canEdit = $this->rbac();
         $parameters = [
+            'defaultPageSizeOffsetPaginator' => $settingRepository->get_setting('default_list_limit')
+                                                    ? (int)$settingRepository->get_setting('default_list_limit') : 1,            
             'grid_summary'=> $settingRepository->grid_summary(
                 $paginator, 
                 $this->translator, 

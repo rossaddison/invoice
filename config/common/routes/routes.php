@@ -2091,7 +2091,7 @@ return [
       ->action([SettingController::class, 'clear'])
       ->name('setting/clear'),
       Route::methods([Method::GET, Method::POST], '/setting/listlimit/{setting_id}/{limit}/{origin}')
-      ->middleware(fn(AccessChecker $checker) => $checker->withPermission('editInv'))
+      ->middleware(fn(AccessChecker $checker) => $checker->withPermission('editClientPeppol'))
       ->middleware(Authentication::class)
       ->action([SettingController::class, 'listlimit'])
       ->name('setting/listlimit'),      

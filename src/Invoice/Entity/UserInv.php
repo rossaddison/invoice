@@ -9,7 +9,7 @@ use Cycle\Annotated\Annotation\Relation\BelongsTo;
 use Cycle\ORM\Entity\Behavior;
 use \DateTimeImmutable;
 use App\User\User;
-use App\Invoice\Setting\SettingRepository;
+use Yiisoft\Translator\TranslatorInterface as Translator;
 
 #[Entity(repository:\App\Invoice\UserInv\UserInvRepository::class)]
 #[Behavior\CreatedAt(field: 'date_created', column: 'date_created')]
@@ -217,9 +217,9 @@ class UserInv
        return $this->active;
     }
     
-    public function getActiveLabel(SettingRepository $sR): string
+    public function getActiveLabel(Translator $translator): string
     {
-        return $this->active ? '<span class="label active">'.$sR->trans('yes').'</span>' : '<span class="label inactive">'.$sR->trans('no').'</span>';
+        return $this->active ? '<span class="label active">'.$translator->translate('i.yes').'</span>' : '<span class="label inactive">'.$translator->translate('i.no').'</span>';
     }
     
     public function setActive(bool $active) : void

@@ -20,6 +20,7 @@ use App\Invoice\ClientNote\ClientNoteService as cnS;
 use App\Invoice\ClientNote\ClientNoteForm;
 use App\Invoice\Quote\QuoteForm;
 use App\Invoice\UserClient\UserClientService;
+use App\Invoice\UserClient\Exception\NoClientsAssignedToUserException;
 use App\User\UserService;
 // Repositories
 use App\Invoice\Client\ClientRepository as cR;
@@ -584,29 +585,35 @@ final class ClientController
         $active = (int)$currentRoute->getArgument('active', '2');
         $user = $this->userService->getUser();
         if (null!==$user) {
-          $user_id = $user->getId();
-          if (null!==$user_id) {  
-            $client_array = $ucR->get_assigned_to_user($user_id);
-            $clients = $cR->repoUserClient($client_array);
-            $paginator = (new DataOffsetPaginator($clients))
-                ->withPageSize((int)$sR->get_setting('default_list_limit'))
-                ->withCurrentPage($pageNum);
-            $parameters = [
-                'paginator'=>$paginator,
-                'alert'=>$this->alert(),
-                'iR'=> $iR,
-                'iaR'=> $iaR,
-                'editInv' => $this->userService->hasPermission('editInv'), 
-                'active'=>$active,
-                'pageNum'=>$pageNum,
-                'cpR'=>$cpR,
-                'modal_create_client'=>$this->viewRenderer->renderPartialAsString('modal_create_client',[
-                    'datehelper'=> new DateHelper($sR)
-                ])
-            ];    
-            return $this->viewRenderer->render('guest', $parameters);
-          } // null!== $user_id
-          return $this->webService->getNotFoundResponse();
+            $user_id = $user->getId();
+            if (null!==$user_id) {  
+                $client_array = $ucR->get_assigned_to_user($user_id);
+                if (!empty($client_array)) {
+                    $clients = $cR->repoUserClient($client_array);
+                    $paginator = (new DataOffsetPaginator($clients))
+                        ->withPageSize((int)$sR->get_setting('default_list_limit'))
+                        ->withCurrentPage($pageNum);
+                    $parameters = [
+                        'paginator' => $paginator,
+                        'alert' => $this->alert(),
+                        'iR' => $iR,
+                        'iaR' => $iaR,
+                        'editInv' => $this->userService->hasPermission('editInv'), 
+                        'active' => $active,
+                        'pageNum' => $pageNum,
+                        'cpR' => $cpR,
+                        'grid_summary' => $sR->grid_summary($paginator, $this->translator, (int)$sR->get_setting('default_list_limit'), $this->translator->translate('invoice.clients'), ''),                
+                        'defaultPageSizeOffsetPaginator' => $sR->get_setting('default_list_limit')
+                                                            ? (int)$sR->get_setting('default_list_limit') : 1,
+                        'modal_create_client' => $this->viewRenderer->renderPartialAsString('modal_create_client',[
+                            'datehelper'=> new DateHelper($sR)
+                        ])
+                    ];    
+                    return $this->viewRenderer->render('guest', $parameters);
+                } // 
+                $this->flash_message('warning', $this->translator->translate('invoice.user.clients.assigned.not'));
+                throw new NoClientsAssignedToUserException($this->translator);
+            } // null!== $user_id
         } // null!== $this->userService
         return $this->webService->getNotFoundResponse();
     }

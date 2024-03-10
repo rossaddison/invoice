@@ -15,9 +15,6 @@ use Yiisoft\Yii\DataView\GridView;
 use Yiisoft\Router\CurrentRoute;
 use Yiisoft\Yii\DataView\Column\DataColumn;
 use Yiisoft\Yii\DataView\Column\ColumnInterface;
-use Yiisoft\Yii\DataView\OffsetPagination;
-use Yiisoft\Yii\DataView\UrlConfig;
-use Yiisoft\Yii\DataView\YiiRouter\UrlCreator;
 
 /**
  * @var \App\Invoice\Entity\Inv $inv
@@ -304,24 +301,7 @@ $toolbar = Div::tag();
     ->headerRowAttributes(['class' => 'card-header bg-info text-black'])    
     ->id('w3-grid') 
     ->pagination(
-        /**
-         * @link https://getbootstrap.com/docs/5.0/components/pagination/
-         */    
-        OffsetPagination::widget()
-        ->listTag('ul')    
-        ->listAttributes(['class' => 'pagination'])
-        ->itemTag('li')
-        ->itemAttributes(['class' => 'page-item'])
-        ->linkAttributes(['class' => 'page-link'])
-        ->currentItemClass('active')
-        ->currentLinkClass('page-link')
-        ->disabledItemClass('disabled')
-        ->disabledLinkClass('disabled')
-        ->defaultPageSize($defaultPageSizeOffsetPaginator)
-        ->urlConfig(new UrlConfig()) 
-        ->urlCreator(new UrlCreator($urlGenerator))    
-        ->paginator($paginator)
-        ->render()
+        $gridComponents->offsetPaginationWidget($defaultPageSizeOffsetPaginator, $paginator)
     )    
     ->rowAttributes(['class' => 'align-middle'])
     ->summaryAttributes(['class' => 'mt-3 me-3 summary text-end'])

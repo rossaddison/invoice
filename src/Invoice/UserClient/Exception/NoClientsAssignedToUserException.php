@@ -2,12 +2,12 @@
 
 declare(strict_types=1);
 
-namespace App\Invoice\Helpers\Peppol\Exception;
+namespace App\Invoice\UserClient\Exception;
 
 use Yiisoft\FriendlyException\FriendlyExceptionInterface;
 use Yiisoft\Translator\TranslatorInterface;
 
-class PeppolClientIdNotFoundException extends \RuntimeException implements FriendlyExceptionInterface {
+class NoClientsAssignedToUserException extends \RuntimeException implements FriendlyExceptionInterface {
 
   private TranslatorInterface $translator;
 
@@ -16,16 +16,16 @@ class PeppolClientIdNotFoundException extends \RuntimeException implements Frien
   }
 
   public function getName(): string {
-    return $this->translator->translate('invoice.client.peppol.not.found.id');
+    return $this->translator->translate('invoice.user.clients.assigned.not');
   }
 
   /**
    * @return string
-   * @psalm-return '    Please try again'
+   * @psalm-return '    Please contact your administrator'
    */
   public function getSolution(): ?string {
     return <<<'SOLUTION'
-                Please try again
+                Please contact your administrator
             SOLUTION;
   }
 }

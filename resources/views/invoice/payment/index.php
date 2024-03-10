@@ -162,19 +162,14 @@ $toolbar = Div::tag();
         ->columns(...$columns)
         ->dataReader($paginator)
         ->headerRowAttributes(['class'=>'card-header bg-info text-black'])
-        //->filterPosition('header')
-        //->filterModelName('payment')
         ->header($header)
         ->id('w3-grid')
         ->pagination(
-        OffsetPagination::widget()
-             ->paginator($paginator)             
-             // No need to use page argument since built-in.    
-             ->render(),
+            $gridComponents->offsetPaginationWidget($defaultPageSizeOffsetPaginator, $paginator)
         )
         ->rowAttributes(['class' => 'align-middle'])
         ->summaryAttributes(['class' => 'mt-3 me-3 summary text-end'])
-        ->summaryTemplate($grid_summary)
+        ->summaryTemplate($pageSizeLimiter::buttons($currentRoute, $s, $urlGenerator, 'payment') .' '.$grid_summary)
         ->emptyTextAttributes(['class' => 'card-header bg-warning text-black'])
         ->emptyText((string)$translator->translate('invoice.invoice.no.records'))                         
         ->tableAttributes(['class' => 'table table-striped text-center h-75','id'=>'table-payment'])

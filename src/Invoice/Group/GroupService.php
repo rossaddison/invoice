@@ -42,6 +42,11 @@ final class GroupService
      */
     public function deleteGroup(Group $model): void
     {
-       $this->repository->delete($model);
+        // The first three default groups i.e. quote, salesorder, and invoice cannot be deleted
+        if (($model->getName() <> 'Quote Group') 
+                && ($model->getName() <> 'Invoice Group')
+                    && ($model->getName() <> 'Sales Order Group')) {
+            $this->repository->delete($model);
+        }
     }
 }

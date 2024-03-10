@@ -30,6 +30,7 @@ use App\Invoice\PaymentCustom\PaymentCustomForm;
 use App\Invoice\PaymentCustom\PaymentCustomService;
 use App\Invoice\Setting\SettingRepository;
 use App\Invoice\UserClient\UserClientRepository;
+use App\Invoice\UserClient\Exception\NoClientsAssignedToUserException;
 use App\Invoice\UserInv\UserInvRepository;
 
 use App\User\User;
@@ -583,32 +584,37 @@ final class PaymentController
             } else {
                 $client_id_array = [];
             }
-            $payments = $this->payments_with_sort_guest($paymentRepository, $client_id_array, $sort_by); 
-            $paginator = (new OffsetPaginator($payments))
-             ->withPageSize((int)$settingRepository->get_setting('default_list_limit'))
-             ->withCurrentPage((int)$page)
-             ->withToken(PageToken::next((string)$page));
-            $canEdit = $this->userService->hasPermission('editPayment');
-            $canView = $this->userService->hasPermission('viewPayment');
-            $parameters = [
-                'alert'=>$this->alert(),
-                'canEdit'=>$canEdit,
-                'canView'=>$canView,
-                'grid_summary' => $settingRepository->grid_summary(
-                    $paginator,
-                    $this->translator,
-                    (int) $settingRepository->get_setting('default_list_limit'),
-                    $this->translator->translate('invoice.invoice.payments'),
-                    ''
-                ),                    
-                'page'=>$page,
-                'paginator' => $paginator,
-                'sortOrder' => $query_params['sort'] ?? '', 
-                'iaR'=>$iaR,
-                'payments'=>$this->payments($paymentRepository),
-                'max'=>(int)$settingRepository->get_setting('default_list_limit'),
-            ];
-            return $this->viewRenderer->render('index', $parameters);  
+            if (!empty($client_id_array)) {
+                $payments = $this->payments_with_sort_guest($paymentRepository, $client_id_array, $sort_by); 
+                $paginator = (new OffsetPaginator($payments))
+                 ->withPageSize((int)$settingRepository->get_setting('default_list_limit'))
+                 ->withCurrentPage((int)$page)
+                 ->withToken(PageToken::next((string)$page));
+                $canEdit = $this->userService->hasPermission('editPayment');
+                $canView = $this->userService->hasPermission('viewPayment');
+                $parameters = [
+                    'alert'=>$this->alert(),
+                    'canEdit'=>$canEdit,
+                    'canView'=>$canView,
+                    'defaultPageSizeOffsetPaginator' => $settingRepository->get_setting('default_list_limit')
+                                                        ? (int)$settingRepository->get_setting('default_list_limit') : 1,
+                    'grid_summary' => $settingRepository->grid_summary(
+                        $paginator,
+                        $this->translator,
+                        (int) $settingRepository->get_setting('default_list_limit'),
+                        $this->translator->translate('invoice.invoice.payments'),
+                        ''
+                    ),                    
+                    'page'=>$page,
+                    'paginator' => $paginator,
+                    'sortOrder' => $query_params['sort'] ?? '', 
+                    'iaR'=>$iaR,
+                    'payments'=>$this->payments($paymentRepository),
+                    'max'=>(int)$settingRepository->get_setting('default_list_limit'),
+                ];
+                return $this->viewRenderer->render('index', $parameters);
+            } 
+            throw new NoClientsAssignedToUserException($this->translator);
         } //if user 
         return $this->webService->getRedirectResponse('payment/index');
     }

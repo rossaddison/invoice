@@ -24,7 +24,7 @@ $clienthelper = new ClientHelper($s);
 <div class="col-12 col-md-8 col-lg-6 col-xl-8">
 <div class="card border border-dark shadow-2-strong rounded-3">
     <div class="card-header bg-dark text-white">
-        <h2 class="fw-normal h3 text-center"><?= $translator->translate('i.online_payment_for_invoice'); ?> #
+        <h2 class="fw-normal h3 text-center"><?= $translator->translate('g.online_payment_for_invoice'); ?> #
                                              <?= $invoice->getNumber(). ' => '.
                                                  $invoice->getClient()->getClient_name() . ' '.
                                                  $invoice->getClient()->getClient_surname() . ' '.

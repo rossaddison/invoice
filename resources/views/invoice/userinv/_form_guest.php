@@ -33,7 +33,7 @@ use Yiisoft\Html\Tag\Form;
         <?= Html::openTag('h1', ['class' => 'headerbar-title']); ?>
             <?= Html::encode($title) ?>
         <?= Html::closeTag('h1'); ?>
-        <?= $header_buttons; ?>
+        <?= $button::back_save(); ?>
 <?= Html::closeTag('div'); ?>
 <?= Html::openTag('div', ['id' => 'content']); ?>
     <?= Html::openTag('div', ['class' => 'row']); ?>
@@ -41,7 +41,6 @@ use Yiisoft\Html\Tag\Form;
             <?= Field::errorSummary($form)
                 ->errors($errors)
                 ->header($translator->translate('invoice.error.summary'))
-                ->onlyProperties(...[''])    
                 ->onlyCommonErrors()
             ?>
         <?= Html::closeTag('div'); ?>
@@ -58,9 +57,9 @@ use Yiisoft\Html\Tag\Form;
                     'class' => 'form-control',
                     'id' => 'user_id'
                 ])
+                ->hideLabel(true)        
                 ->optionsData($optionsDataUser)
-                ->value(Html::encode($form->getUser_id() ?? ''))
-                ->hint($translator->translate('invoice.hint.this.field.is.required'));        
+                ->value(Html::encode($form->getUser_id() ?? ''));
             ?>
         <?= Html::closeTag('div'); ?>
         <?= Html::openTag('div', ['class' => 'mb-3 form-group']); ?>
@@ -82,27 +81,23 @@ use Yiisoft\Html\Tag\Form;
                     'class' => 'form-control',
                     'id' => 'type'
                 ])
+                ->hidelabel(true)        
                 ->optionsData($optionsDataType)
-                ->value(Html::encode($form->getType()))
-                ->hint($translator->translate('invoice.hint.this.field.is.required'));        
+                ->value(Html::encode($form->getType()));        
             ?>
         <?= Html::closeTag('div'); ?>
         <?= Html::openTag('div', ['class' => 'mb-3 form-group']); ?>
             <?= Html::openTag('div', ['class' => 'p-2']); ?> 
                 <?= Field::hidden($form, 'active')
-                    ->inputLabelAttributes(['class' => 'form-check-label'])    
-                    ->enclosedByLabel(true)
-                    ->inputClass('form-check-input')
-                    ->ariaDescribedBy($translator->translate('i.active'));
+                    ->hideLabel(true)
+                    ->value(Html::encode($form->getActive()))
                 ?>
             <?= Html::closeTag('div'); ?>
         <?= Html::closeTag('div'); ?><?= Html::closeTag('div'); ?>
         <?= Html::openTag('div', ['class' => 'mb-3 form-group']); ?>
             <?= Field::hidden($form, 'all_clients')
-                    ->inputLabelAttributes(['class' => 'form-check-label'])    
-                    ->enclosedByLabel(true)
-                    ->inputClass('form-check-input')
-                    ->ariaDescribedBy($translator->translate('i.user_all_clients'));
+                ->hideLabel(true)
+                ->value(Html::encode($form->getAll_clients()));
             ?>
         <?= Html::closeTag('div'); ?>
         <?= Html::openTag('div', ['class' => 'mb-3 form-group no-margin']); ?>

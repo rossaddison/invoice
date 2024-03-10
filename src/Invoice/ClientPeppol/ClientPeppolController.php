@@ -86,6 +86,7 @@ final class ClientPeppolController {
       $parameters = [
         'title' => $this->translator->translate('invoice.add'),
         'action' => ['clientpeppol/add', ['client_id' => $client_id]],
+        'errors' => [],  
         'form' => $form,  
         'pep' => $this->pep(),
         'setting' => $settingRepository->get_setting('enable_client_peppol_defaults'),
@@ -98,13 +99,22 @@ final class ClientPeppolController {
       if ($request->getMethod() === Method::POST) {
         $body = $request->getParsedBody() ?? [];  
         if ($formHydrator->populateFromPostAndValidate($form, $request)) {
-         /**
-          * @psalm-suppress PossiblyInvalidArgument $body
-          */  
-          $this->clientpeppolService->saveClientPeppol($client_peppol, $body);
-          return $this->factory->createResponse($this->viewRenderer->renderPartialAsString('/invoice/setting/clientpeppol_successful_guest',
-                ['url' => $this->userService->hasPermission('editClientPeppol') && $this->userService->hasPermission('viewInv') && !$this->userService->hasPermission('editInv') ? 'client/guest' : 'client/index',
-                  'heading' => $this->translator->translate('invoice.client.peppol'), 'message' => $settingRepository->trans('record_successfully_updated')]));
+            /**
+             * @psalm-suppress PossiblyInvalidArgument $body
+             */  
+            $this->clientpeppolService->saveClientPeppol($client_peppol, $body);
+            return $this->factory->createResponse($this->viewRenderer->renderPartialAsString('/invoice/setting/clientpeppol_successful_guest',
+                [
+                    'url' => $this->userService->hasPermission('editClientPeppol') 
+                             && $this->userService->hasPermission('viewInv') 
+                             && !$this->userService->hasPermission('editInv') 
+                             ? 'client/guest' 
+                             : 'client/index',
+                    'heading' => $this->translator->translate('invoice.client.peppol'), 
+                    'message' => $settingRepository->trans('record_successfully_updated')
+                ]
+                )
+            );
         }
         $parameters['errors'] = $form->getValidationResult()->getErrorMessagesIndexedByAttribute();
         $parameters['form'] = $form;

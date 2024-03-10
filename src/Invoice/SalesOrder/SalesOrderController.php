@@ -50,6 +50,7 @@ use App\Invoice\SalesOrderTaxRate\SalesOrderTaxRateService as SoTRS;
 use App\Invoice\Setting\SettingRepository;
 use App\Invoice\TaxRate\TaxRateRepository as TRR;
 use App\Invoice\UserClient\UserClientRepository as UCR;
+use App\Invoice\UserClient\Exception\NoClientsAssignedToUserException;
 use App\Invoice\UserInv\UserInvRepository as UIR;
 use App\Invoice\Unit\UnitRepository as UNR;
 use App\User\UserRepository as UR;
@@ -188,37 +189,42 @@ final class SalesOrderController
                 // A user-guest-client will be allocated their client number by the administrator so that
                 // they can view their salesorders when they log in
                 $user_clients = $ucR->get_assigned_to_user((string)$user->getId());
-                $salesorders = $this->salesorders_status_with_sort_guest($soR, $status, $user_clients, $sort);
-                $paginator = (new OffsetPaginator($salesorders))
-                ->withPageSize((int)$this->sR->get_setting('default_list_limit'))
-                ->withCurrentPage((int)$pageNum);
-                /**
-                 * @var array $so_statuses
-                 */
-                $so_statuses = $soR->getStatuses($this->translator);
-                /**
-                 *  @var array $so_statuses[$status]
-                 *  @var string $so_label 
-                 */
-                $so_label = $so_statuses[$status]['label'];
-                $parameters = [            
-                    'alert'=> $this->alert(),
-                    'soaR'=> $soaR,
-                    'salesorders' => $salesorders,
-                    'grid_summary'=>
-                        $this->sR->grid_summary($paginator, 
-                        $this->translator, 
-                        (int)$this->sR->get_setting('default_list_limit'), 
-                        $this->translator->translate('invoice.salesorders'),
-                        $so_label),
-                    'so_statuses'=> $so_statuses,            
-                    'max'=> (int) $this->sR->get_setting('default_list_limit'),
-                    'page'=> $pageNum,
-                    'paginator'=> $paginator,                   
-                    'sortOrder' => $sort_string, 
-                    'status'=> $status,
-                ];    
-                return $this->viewRenderer->render('/invoice/salesorder/guest', $parameters);  
+                if (!empty($user_clients)) {
+                    $salesorders = $this->salesorders_status_with_sort_guest($soR, $status, $user_clients, $sort);
+                    $paginator = (new OffsetPaginator($salesorders))
+                    ->withPageSize((int)$this->sR->get_setting('default_list_limit'))
+                    ->withCurrentPage((int)$pageNum);
+                    /**
+                     * @var array $so_statuses
+                     */
+                    $so_statuses = $soR->getStatuses($this->translator);
+                    /**
+                     *  @var array $so_statuses[$status]
+                     *  @var string $so_label 
+                     */
+                    $so_label = $so_statuses[$status]['label'];
+                    $parameters = [            
+                        'alert'=> $this->alert(),
+                        'soaR'=> $soaR,
+                        'salesorders' => $salesorders,
+                        'grid_summary' =>
+                            $this->sR->grid_summary($paginator, 
+                            $this->translator, 
+                            (int)$this->sR->get_setting('default_list_limit'), 
+                            $this->translator->translate('invoice.salesorders'),
+                            $so_label),
+                        'defaultPageSizeOffsetPaginator' => $this->sR->get_setting('default_list_limit')
+                                                        ? (int)$this->sR->get_setting('default_list_limit') : 1,
+                        'so_statuses'=> $so_statuses,            
+                        'max'=> (int) $this->sR->get_setting('default_list_limit'),
+                        'page'=> $pageNum,
+                        'paginator'=> $paginator,                   
+                        'sortOrder' => $sort_string, 
+                        'status'=> $status,
+                    ];    
+                    return $this->viewRenderer->render('/invoice/salesorder/guest', $parameters);
+                } 
+                throw new NoClientsAssignedToUserException($this->translator);
             } // userinv
             return $this->webService->getNotFoundResponse();
         } //user

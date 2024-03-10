@@ -14,7 +14,6 @@ use Yiisoft\Translator\TranslatorInterface;
 use Yiisoft\View\WebView;
 use Yiisoft\Yii\DataView\Column\DataColumn;
 use Yiisoft\Yii\DataView\GridView;
-use Yiisoft\Yii\DataView\OffsetPagination;
 
 echo $alert;
 
@@ -77,6 +76,7 @@ $toolbar = Div::tag();
             </div>
     </div>
 </div>
+<br>
 <?php
     $columns = [
         new DataColumn(
@@ -159,16 +159,11 @@ $toolbar = Div::tag();
         ->header($header)
         ->id('w8-grid')
         ->pagination(
-        OffsetPagination::widget()
-             ->menuClass('pagination justify-content-center')
-             ->paginator($paginator)
-             // No need to use page argument since built-in. Use status bar value passed from urlGenerator to inv/guest   
-             ->urlArguments(['status'=>$status])
-             ->render(),
+           $gridComponents->offsetPaginationWidget($defaultPageSizeOffsetPaginator, $paginator)
         )
         ->rowAttributes(['class' => 'align-middle'])
         ->summaryAttributes(['class' => 'mt-3 me-3 summary text-end'])
-        ->summaryTemplate($grid_summary)
+        ->summaryTemplate(($editInv ?$pageSizeLimiter::buttons($currentRoute, $s, $urlGenerator, 'inv') : '').' '.$grid_summary)
         ->emptyTextAttributes(['class' => 'card-header bg-warning text-black'])
         ->emptyText((string)$translator->translate('invoice.invoice.no.records')) 
         ->tableAttributes(['class' => 'table table-striped text-center h-75','id'=>'table-invoice-guest'])

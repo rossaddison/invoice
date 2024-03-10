@@ -52,40 +52,40 @@ $toolbar = Div::tag();
      && Invoice\Asset\invoice\css\style.css & yii3i.css -->
     <div class="submenu-row">
             <div class="btn-group index-options">
-                <a href="<?= $urlGenerator->generate('salesorder/index',['page'=>1,'status'=>0]); ?>"
+                <a href="<?= $urlGenerator->generate('salesorder/guest',['page'=>1,'status'=>0]); ?>"
                    class="btn <?php echo $status == 0 ? 'btn-primary' : 'btn-default' ?>">
                     <?= $translator->translate('i.all'); ?>
                 </a>
-                <a href="<?= $urlGenerator->generate('salesorder/index',['page'=>1,'status'=>2]); ?>" style="text-decoration:none"
+                <a href="<?= $urlGenerator->generate('salesorder/guest',['page'=>1,'status'=>2]); ?>" style="text-decoration:none"
                    data-bs-toggle = "tooltip" title="<?= $s->get_setting('debug_mode') === '1' ? $translator->translate('invoice.payment.term.add.additional.terms.at.setting.repository') : ''; ?>"
                    class="btn  <?php echo $status == 2 ? 'btn-primary' : 'label '.$so_statuses[(string)2]['class'] ?>">
                     <?= $so_statuses[(string)2]['label']; ?>
                 </a>
-                <a href="<?= $urlGenerator->generate('salesorder/index',['page'=>1,'status'=>3]); ?>" style="text-decoration:none"
+                <a href="<?= $urlGenerator->generate('salesorder/guest',['page'=>1,'status'=>3]); ?>" style="text-decoration:none"
                    class="btn  <?php echo $status == 3 ? 'btn-primary' : 'label '.$so_statuses[(string)3]['class']  ?>">
                     <?= $so_statuses[(string)3]['label']; ?>
                 </a>
-                <a href="<?= $urlGenerator->generate('salesorder/index',['page'=>1,'status'=>4]); ?>" style="text-decoration:none"
+                <a href="<?= $urlGenerator->generate('salesorder/guest',['page'=>1,'status'=>4]); ?>" style="text-decoration:none"
                    class="btn  <?php echo $status == 4 ? 'btn-primary' : 'label '.$so_statuses[(string)4]['class'] ?>">
                     <?= $so_statuses[(string)4]['label']; ?>
                 </a>
-                <a href="<?= $urlGenerator->generate('salesorder/index',['page'=>1,'status'=>5]); ?>" style="text-decoration:none"
+                <a href="<?= $urlGenerator->generate('salesorder/guest',['page'=>1,'status'=>5]); ?>" style="text-decoration:none"
                    class="btn  <?php echo $status == 5 ? 'btn-primary' : 'label '.$so_statuses[(string)5]['class']  ?>">
                     <?= $so_statuses[(string)5]['label']; ?>
                 </a>
-                <a href="<?= $urlGenerator->generate('salesorder/index',['page'=>1,'status'=>6]); ?>" style="text-decoration:none"
+                <a href="<?= $urlGenerator->generate('salesorder/guest',['page'=>1,'status'=>6]); ?>" style="text-decoration:none"
                    class="btn  <?php echo $status == 6 ? 'btn-primary' : 'label '.$so_statuses[(string)6]['class']  ?>">
                     <?= $so_statuses[(string)6]['label']; ?>
                 </a>
-                <a href="<?= $urlGenerator->generate('salesorder/index',['page'=>1,'status'=>7]); ?>" style="text-decoration:none"
+                <a href="<?= $urlGenerator->generate('salesorder/guest',['page'=>1,'status'=>7]); ?>" style="text-decoration:none"
                    class="btn  <?php echo $status == 7 ? 'btn-primary' : 'label '.$so_statuses[(string)7]['class']  ?>">
                     <?= $so_statuses[(string)7]['label']; ?>
                 </a>
-                <a href="<?= $urlGenerator->generate('salesorder/index',['page'=>1,'status'=>8]); ?>" style="text-decoration:none"
+                <a href="<?= $urlGenerator->generate('salesorder/guest',['page'=>1,'status'=>8]); ?>" style="text-decoration:none"
                    class="btn  <?php echo $status == 8 ? 'btn-primary' : 'label '.$so_statuses[(string)8]['class']  ?>">
                     <?= $so_statuses[(string)8]['label']; ?>
                 </a>
-                <a href="<?= $urlGenerator->generate('salesorder/index',['page'=>1,'status'=>9]); ?>" style="text-decoration:none"
+                <a href="<?= $urlGenerator->generate('salesorder/guest',['page'=>1,'status'=>9]); ?>" style="text-decoration:none"
                    class="btn  <?php echo $status == 9 ? 'btn-primary' : 'label '.$so_statuses[(string)9]['class']  ?>">
                     <?= $so_statuses[(string)9]['label']; ?>
                 </a>
@@ -148,26 +148,19 @@ $toolbar = Div::tag();
     ->dataReader($paginator)    
     ->columns(...$columns)
     ->headerRowAttributes(['class'=>'card-header bg-info text-black'])
-    //->filterPosition('header')
-    //->filterModelName('salesorder')
     ->header($header)
     ->id('w12-grid')
     ->pagination(
-    OffsetPagination::widget()
-         ->paginator($paginator)         
-         // No need to use page argument since built-in. Use status bar value passed from urlGenerator to quote/guest
-         ->urlArguments(['status'=>$status])
-         ->render(),
+        $gridComponents->offsetPaginationWidget($defaultPageSizeOffsetPaginator, $paginator)
     )
     ->rowAttributes(['class' => 'align-middle'])
     ->summaryAttributes(['class' => 'mt-3 me-3 summary text-end'])
-    // @see yiisoft\yii-dataview\src\BaseListView.php
-    ->summary((string)$grid_summary ?: '')
+    ->summaryTemplate($pageSizeLimiter::buttons($currentRoute, $s, $urlGenerator, 'salesorder').' '.$grid_summary)
     ->emptyTextAttributes(['class' => 'card-header bg-warning text-black'])
     ->emptyText((string)$translator->translate('invoice.invoice.no.records'))
     ->tableAttributes(['class' => 'table table-striped text-center h-75','id'=>'table-quote'])
     ->toolbar(
-        Form::tag()->post($urlGenerator->generate('salesorder/index'))->csrf($csrf)->open() .
+        Form::tag()->post($urlGenerator->generate('salesorder/guest'))->csrf($csrf)->open() .
         Div::tag()->addClass('float-end m-3')->content($toolbarReset)->encode(false)->render() .
         Form::tag()->close()
     );

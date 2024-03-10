@@ -574,12 +574,18 @@ if (($invEdit && $inv->getStatus_id() === 1 || ($s->get_setting('enable_invoice_
                                             <img src="/img/overdue.png">
 <?php } ?>
                                     </div>
-            <?php if ($inv->getSo_id() !== '0') { ?>
-                                        <div><?= $translator->translate('invoice.salesorder'); ?></div>
-                                        <div class="input-group">
-    <?= Html::a($sales_order_number, $urlGenerator->generate('salesorder/view', ['id' => $inv->getSo_id()]), ['class' => 'btn btn-success']); ?>
-                                        </div>
-<?php } ?>
+<?php if (null!==$inv->getSo_id()) { 
+    Html::openTag('div');
+        $translator->translate('invoice.salesorder'); 
+    Html::closeTag('div');
+    Html::openTag('div', ['class' => 'input-group']);
+    Html::a(
+        $sales_order_number, 
+        $urlGenerator->generate('salesorder/view', ['id' => $inv->getSo_id()]), 
+        ['class' => 'btn btn-success']
+    ); 
+    Html::closeTag('div');
+ } ?>
                                     <input type="text" id="dropzone_client_id" readonly class="form-control" value="<?= $inv->getClient()->getClient_id(); ?>" hidden>
                                 </div>
                             </div>

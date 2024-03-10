@@ -89,6 +89,7 @@ use App\Invoice\Unit\UnitRepository as UNR;
 use App\Invoice\UnitPeppol\UnitPeppolRepository as unpR;
 use App\Invoice\Upload\UploadRepository as UPR;
 use App\Invoice\UserClient\UserClientRepository as UCR;
+use App\Invoice\UserClient\Exception\NoClientsAssignedToUserException;
 use App\Invoice\UserInv\UserInvRepository as UIR;
 use App\User\UserRepository as UR;
 use App\Service\WebControllerService;
@@ -1749,7 +1750,7 @@ final class InvController {
         /**
          * @var string $query_params['page']
          */
-        $pageNum = $query_params['page'] ?? $currentRoute->getArgument('page', '1');
+        $page = $query_params['page'] ?? $currentRoute->getArgument('page', '1');
         
         //status 0 => 'all';
         $status = (int) $currentRoute->getArgument('status', '0');
@@ -1776,33 +1777,42 @@ final class InvController {
                 // A user-guest-client will be allocated their client number by the administrator so that
                 // they can view their invoices and make payment
                 $user_clients = $ucR->get_assigned_to_user($user_id);
-                $invs = $this->invs_status_with_sort_guest($iR, $status, $user_clients, $sort);
-                $paginator = (new DataOffsetPaginator($invs))
-                    ->withPageSize((int) $this->sR->get_setting('default_list_limit'))
-                    ->withCurrentPage((int)$pageNum);
-                $inv_statuses = $iR->getStatuses($this->translator);
-                $label = $iR->getSpecificStatusArrayLabel((string) $status);
-                $parameters = [
-                    'alert' => $this->alert(),
-                    'iaR' => $iaR,
-                    'irR' => $irR,
-                    'invs' => $invs,
-                    'grid_summary' => $this->sR->grid_summary(
+                if (!empty($user_clients)) {
+                    $invs = $this->invs_status_with_sort_guest($iR, $status, $user_clients, $sort);
+                    $paginator = (new DataOffsetPaginator($invs))
+                        ->withPageSize((int) $this->sR->get_setting('default_list_limit'))
+                        ->withCurrentPage((int)$page)
+                        ->withToken(PageToken::next((string)$page));   
+                    $inv_statuses = $iR->getStatuses($this->translator);
+                    $label = $iR->getSpecificStatusArrayLabel((string) $status);
+                    $parameters = [
+                        'alert' => $this->alert(),
+                        'iaR' => $iaR,
+                        'irR' => $irR,
+                        'invs' => $invs,
+                        'grid_summary' => $this->sR->grid_summary(
                             $paginator,
                             $this->translator,
                             (int) $this->sR->get_setting('default_list_limit'),
                             $this->translator->translate('invoice.invoice.invoices'),
                             $label
-                    ),
-                    'inv_statuses' => $inv_statuses,
-                    'max' => (int) $this->sR->get_setting('default_list_limit'),
-                    'page' => $pageNum,
-                    'paginator' => $paginator,
-                    // Clicking on a grid column sort hyperlink will generate a url query_param eg. ?sort=
-                    'sortOrder' => $query_params['sort'] ?? '',
-                    'status' => $status,
-                ];
-                return $this->view_renderer->render('/invoice/inv/guest', $parameters);
+                        ),
+                        // the guest will not have access to the pageSizeLimiter
+                        'editInv' => $this->user_service->hasPermission('editInv'),
+                        'defaultPageSizeOffsetPaginator' => $this->sR->get_setting('default_list_limit')
+                                                        ? (int)$this->sR->get_setting('default_list_limit') : 1,
+                        // numbered tiles between the arrrows                
+                        'maxNavLinkCount' => 10,
+                        'inv_statuses' => $inv_statuses,
+                        'page' => $page,
+                        'paginator' => $paginator,
+                        // Clicking on a grid column sort hyperlink will generate a url query_param eg. ?sort=
+                        'sortOrder' => $query_params['sort'] ?? '',
+                        'status' => $status,
+                    ];
+                    return $this->view_renderer->render('/invoice/inv/guest', $parameters);
+                } // no clients assigned to this user    
+                throw new NoClientsAssignedToUserException($this->translator);   
             } // $user_inv
             return $this->web_service->getNotFoundResponse();
         } // $user

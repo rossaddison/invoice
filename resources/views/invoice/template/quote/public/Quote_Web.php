@@ -188,7 +188,7 @@ $vat = $s->get_setting('enable_vat_registration');
                                 </td>
                                 <td class="amount"><?= $numberhelper->format_currency($item->getPrice()); ?></td>
                                 <td class="amount"><?= $numberhelper->format_currency($item->getDiscount_amount()); ?></td>
-                                <td class="amount"><?= $numberhelper->format_currency($quote_item_amount->repoQuoteItemAmountquery((string)$item->getId())->getSubtotal() ?? 0.00); ?></td>
+                                <td class="amount"><?= $numberhelper->format_currency($quote_item_amount->repoQuoteItemAmountquery((int)$item->getId())->getSubtotal() ?? 0.00); ?></td>
                             </tr>
                         <?php endforeach ?>
                         <tr>

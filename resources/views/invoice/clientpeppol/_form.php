@@ -2,7 +2,6 @@
 declare(strict_types=1);
 
 use Yiisoft\Html\Html;
-use Yiisoft\Yii\Bootstrap5\Alert;
 use App\Widget\LabelSwitch;
 
 /**
@@ -12,12 +11,7 @@ use App\Widget\LabelSwitch;
  * @var string $action
  * @var string $title
  */
-$errors = $form->getValidationResult()?->getErrors();
-if (isset($errors)) {
-  foreach ($errors as $field => $error) {
-    echo Alert::widget()->options(['class' => 'alert-danger'])->body(Html::encode($field . ':' . $error));
-  }
-}
+
 ?>
 
 <?= Html::openTag('h1'); ?><?= Html::encode($title) ?><?= Html::closeTag('h1'); ?>
@@ -25,7 +19,7 @@ if (isset($errors)) {
     <input type="hidden" name="_csrf" value="<?= $csrf ?>">
     <div id="headerbar">
         <h1 class="headerbar-title"><?= Html::a($translator->translate('invoice.client.peppol.clientpeppols_form'), 'https://docs.peppol.eu/poacc/billing/3.0/syntax/ubl-invoice/cac-AccountingCustomerParty/'); ?></h1>
-        <?php echo $button::back_save(); ?><div id="content">
+        <?= $button::back_save(); ?><div id="content">
         <?=
         LabelSwitch::checkbox(
           'client-peppol-label-switch',

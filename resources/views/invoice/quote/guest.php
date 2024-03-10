@@ -14,7 +14,6 @@ use Yiisoft\Translator\TranslatorInterface;
 use Yiisoft\View\WebView;
 use Yiisoft\Yii\DataView\Column\DataColumn;
 use Yiisoft\Yii\DataView\GridView;
-use Yiisoft\Yii\DataView\OffsetPagination;
 
 /**
  * @var \App\Invoice\Entity\Quote $quote 
@@ -102,7 +101,9 @@ $toolbar = Div::tag();
             'number',
             header: '#',
             content: static function ($model) use ($urlGenerator): string {
-               return Html::a($model->getNumber(), $urlGenerator->generate('quote/view',['id'=>$model->getId()]),['style'=>'text-decoration:none'])->render();
+               return Html::a(null!==$model->getNumber() && !empty($model->getNumber()) 
+                                  ? $model->getNumber() 
+                                  : 'QUOTE-ID-'.$model->getId(), $urlGenerator->generate('quote/view',['id'=>$model->getId()]),['style'=>'text-decoration:none'])->render();
                }
         ),
         new DataColumn(
@@ -123,7 +124,7 @@ $toolbar = Div::tag();
             'date_required',
             content: static fn ($model): string => ($model->getDate_required())->format($datehelper->style())
         ), 
-        DataColumn(
+        new DataColumn(
             'id',
             header: $translator->translate('i.total'),
             content: static function ($model) use ($s, $qaR) : string|null {
@@ -136,23 +137,16 @@ $toolbar = Div::tag();
 ?>
 <?= GridView::widget()
         ->columns(...$columns) 
-        ->dataHeader($paginator)            
-        ->headerRowAttributes(['class'=>'card-header bg-info text-black'])
-        //->filterPosition('header')
-        //->filterModelName('quote_guest')
-        ->header($header)
+        ->dataReader($paginator)
+        ->header($header)         
+        ->headerRowAttributes(['class'=>'card-header bg-info text-black'])        
         ->id('w7-grid')
         ->pagination(
-        OffsetPagination::widget()
-             //->menuClass('pagination justify-content-center')
-             ->paginator($paginator)
-             // No need to use page argument since built-in. Use status bar value passed from urlGenerator to quote/guest
-             //->urlArguments(['status'=>$status])
-             ->render(),
+           $gridComponents->offsetPaginationWidget($defaultPageSizeOffsetPaginator, $paginator)
         )
         ->rowAttributes(['class' => 'align-middle'])
         ->summaryAttributes(['class' => 'mt-3 me-3 summary text-end'])
-        ->summaryTemplate($grid_summary)
+        ->summaryTemplate(($editInv ? $pageSizeLimiter::buttons($currentRoute, $s, $urlGenerator, 'quote') : '').' '.$grid_summary)
         ->emptyTextAttributes(['class' => 'card-header bg-warning text-black'])
         ->emptyText((string)$translator->translate('invoice.invoice.no.records'))
         ->tableAttributes(['class' => 'table table-striped text-center h-75','id'=>'table-quote-guest'])

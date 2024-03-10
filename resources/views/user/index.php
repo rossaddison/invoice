@@ -134,9 +134,7 @@ $toolbar = Div::tag();
     ->id('w1-grid')
     ->pagination(
         OffsetPagination::widget()
-            ->menuClass('pagination justify-content-center')
             ->paginator($paginator)
-            ->urlArguments([])
             ->render(),
     )
     ->rowAttributes(['class' => 'align-middle'])

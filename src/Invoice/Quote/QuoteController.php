@@ -75,6 +75,7 @@ use App\Invoice\DeliveryLocation\DeliveryLocationRepository as DLR;
 use App\Invoice\EmailTemplate\EmailTemplateRepository as ETR;
 use App\Invoice\Family\FamilyRepository as FR;
 use App\Invoice\Group\GroupRepository as GR;
+use App\Invoice\Group\Exception\GroupException;
 use App\Invoice\InvCustom\InvCustomRepository as ICR;
 use App\Invoice\Inv\InvRepository as IR;
 use App\Invoice\InvAmount\InvAmountRepository as IAR;
@@ -97,6 +98,7 @@ use App\Invoice\Setting\SettingRepository as SR;
 use App\Invoice\TaxRate\TaxRateRepository as TRR;
 use App\Invoice\Unit\UnitRepository as UNR;
 use App\Invoice\UserClient\UserClientRepository as UCR;
+use App\Invoice\UserClient\Exception\NoClientsAssignedToUserException;
 use App\Invoice\UserInv\UserInvRepository as UIR;
 use App\User\UserRepository as UR;
 // App Helpers
@@ -497,61 +499,66 @@ final class QuoteController
         if (!empty($url_key)) {
           if ($qR->repoUrl_key_guest_count($url_key) > 0) { 
             $quote = $qR->repoUrl_key_guest_loaded($url_key);
-            if ($quote && null!==$quote->getId()) {
-              $quote_id =  $quote->getId(); 
-              $so_body = [                    
-                'quote_id' => $quote_id,
-                'inv_id' => 0,
-                'client_id' => $quote->getClient_id(),
-                'group_id' => $this->sR->get_setting('default_sales_order_group'), 
-                'status_id' => 4,
-                'client_po_number' => $purchase_order_number,
-                'client_po_person' => $purchase_order_person,
-                'number' => $gR->generate_number((int)$this->sR->get_setting('default_sales_order_group')),  
-                'discount_amount' => floatval($quote->getDiscount_amount()),
-                'discount_percent' => floatval($quote->getDiscount_percent()),
-                // The quote's url will be the same for the po allowing for a trace 
-                'url_key' => $quote->getUrl_key(),
-                'password' => $quote->getPassword() ?? '',              
-                'notes' => $quote->getNotes()
-              ];
-              $this->flash_message('info', $this->translator->translate('invoice.salesorder.agree.to.terms'));  
-              $new_so = new SoEntity();
-              $form = new SoForm($new_so);
-              if (($formHydrator->populate($form, $so_body) && $form->isValid()) && ($quote->getSo_id()===(string)0))
-              {   
-                $quote_id = $so_body['quote_id']; 
-                $client_id = $so_body['client_id'];
-                $user = $this->active_user($client_id, $uR, $ucR, $uiR);
-                if (null!==$user) {
-                  $this->so_service->addSo($user, $new_so, $so_body);            
-                  // Ensure that the quote has a specific po and therefore cannot be copied again.
-                  $new_so_id = $new_so->getId();
-                  // Transfer each quote_item to so_item and the corresponding so_item_amount to so_item_amount for each item
-                  if (null!==$new_so_id && null!==$quote_id) {
-                      $this->quote_to_so_quote_items($quote_id, $new_so_id, $soiaR, $soiaS, $pR, $qiR, $trR, $unR, $formHydrator);
-                      $this->quote_to_so_quote_tax_rates($quote_id,$new_so_id,$qtrR, $formHydrator);
-                      $this->quote_to_so_quote_custom($quote_id,$new_so_id, $qcR, $cfR, $formHydrator);
-                      $this->quote_to_so_quote_amount($quote_id,$new_so_id, $qaR, $soaR);            
-                      // Set the quote's sales order id so that it cannot be copied in the future
-                      $quote->setSo_id($new_so_id);
-                      // The quote has been approved with purchase order number
-                      $quote->setStatus_id(4);
-                      $qR->save($quote);
-                      $parameters = ['success'=>1];
-                      //return response to quote.js to reload page at location
-                      return $this->factory->createResponse(Json::encode($parameters));
-                  } // null!==$new_so_id
-                } // null!==$user   
-              } else {
-                  $parameters = [
-                     'success'=>0,
+            $number = $gR->generate_number((int)$this->sR->get_setting('default_sales_order_group'));
+            if (null!==$number) {
+                if ($quote && null!==$quote->getId()) {
+                  $quote_id =  $quote->getId(); 
+                  $so_body = [                    
+                    'quote_id' => $quote_id,
+                    'inv_id' => 0,
+                    'client_id' => $quote->getClient_id(),
+                    'group_id' => $this->sR->get_setting('default_sales_order_group'), 
+                    'status_id' => 4,
+                    'client_po_number' => $purchase_order_number,
+                    'client_po_person' => $purchase_order_person,
+                    'number' => $number,
+                    'discount_amount' => floatval($quote->getDiscount_amount()),
+                    'discount_percent' => floatval($quote->getDiscount_percent()),
+                    // The quote's url will be the same for the po allowing for a trace 
+                    'url_key' => $quote->getUrl_key(),
+                    'password' => $quote->getPassword() ?? '',              
+                    'notes' => $quote->getNotes()
                   ];
-                  //return response to quote.js to reload page at location
-                  return $this->factory->createResponse(Json::encode($parameters));          
-              }
-            } // quote    
-            return $this->web_service->getNotFoundResponse();
+                  $this->flash_message('info', $this->translator->translate('invoice.salesorder.agree.to.terms'));  
+                  $new_so = new SoEntity();
+                  $form = new SoForm($new_so);
+                  if (($formHydrator->populate($form, $so_body) && $form->isValid()) && ($quote->getSo_id()===(string)0))
+                  {   
+                    $quote_id = $so_body['quote_id']; 
+                    $client_id = $so_body['client_id'];
+                    $user = $this->active_user($client_id, $uR, $ucR, $uiR);
+                    if (null!==$user) {
+                      $this->so_service->addSo($user, $new_so, $so_body);            
+                      // Ensure that the quote has a specific po and therefore cannot be copied again.
+                      $new_so_id = $new_so->getId();
+                      // Transfer each quote_item to so_item and the corresponding so_item_amount to so_item_amount for each item
+                      if (null!==$new_so_id && null!==$quote_id) {
+                          $this->quote_to_so_quote_items($quote_id, $new_so_id, $soiaR, $soiaS, $pR, $qiR, $trR, $unR, $formHydrator);
+                          $this->quote_to_so_quote_tax_rates($quote_id,$new_so_id,$qtrR, $formHydrator);
+                          $this->quote_to_so_quote_custom($quote_id,$new_so_id, $qcR, $cfR, $formHydrator);
+                          $this->quote_to_so_quote_amount($quote_id,$new_so_id, $qaR, $soaR);            
+                          // Set the quote's sales order id so that it cannot be copied in the future
+                          $quote->setSo_id($new_so_id);
+                          // The quote has been approved with purchase order number
+                          $quote->setStatus_id(4);
+                          $qR->save($quote);
+                          $parameters = ['success'=>1];
+                          //return response to quote.js to reload page at location
+                          return $this->factory->createResponse(Json::encode($parameters));
+                      } // null!==$new_so_id
+                    } // null!==$user   
+                  } else {
+                      $parameters = [
+                         'success'=>0,
+                      ];
+                      //return response to quote.js to reload page at location
+                      return $this->factory->createResponse(Json::encode($parameters));          
+                  }
+                } // quote    
+                return $this->web_service->getNotFoundResponse();
+            } else {
+                throw new GroupException($this->translator);
+            }    
           } // if $qR
           return $this->web_service->getNotFoundResponse();
         } // null!==$url_key
@@ -1355,7 +1362,10 @@ final class QuoteController
     public function guest(Request $request, QAR $qaR, CurrentRoute $currentRoute,
                           QR $qR, UCR $ucR, UIR $uiR) : \Yiisoft\DataResponse\DataResponse|Response {
         $query_params = $request->getQueryParams();
-        $pageNum = (int)$currentRoute->getArgument('page', '1');
+        /**
+         * @var string $query_params['page']
+         */
+        $page = $query_params['page'] ?? $currentRoute->getArgument('page', '1');
          //status 0 => 'all';
         $status = (int)$currentRoute->getArgument('status', '0');
         /**
@@ -1384,32 +1394,50 @@ final class QuoteController
                 // A user-guest-client will be allocated their client number by the administrator so that
                 // they can view their quotes when they log in
                 $user_clients = $ucR->get_assigned_to_user((string)$user->getId());
-                $quotes = $this->quotes_status_with_sort_guest($qR, $status, $user_clients, $sort);
-                $paginator = (new DataOffsetPaginator($quotes))
-                ->withPageSize((int)$this->sR->get_setting('default_list_limit'))
-                ->withCurrentPage($pageNum);
-                $quote_statuses = $qR->getStatuses($this->translator);
-                $parameters = [            
-                    'alert'=> $this->alert(),
-                    'qaR'=> $qaR,
-                    'quotes' => $quotes,
-                    'grid_summary'=> $this->sR->grid_summary(
-                         $paginator, 
-                         $this->translator, 
-                         (int)$this->sR->get_setting('default_list_limit'), 
-                         $this->translator->translate('invoice.quotes'), 
-                         $qR->getSpecificStatusArrayLabel((string)$status)
-                    ),
-                    'quote_statuses'=> $quote_statuses,            
-                    'max'=> (int) $this->sR->get_setting('default_list_limit'),
-                    'page'=> $pageNum,
-                    'paginator'=> $paginator,
-                    'sortOrder' => $sort_string, 
-                    'status'=> $status,
-                ];    
-                return $this->view_renderer->render('/invoice/quote/guest', $parameters);  
+                if (!empty($user_clients)) {
+                    $quotes = $this->quotes_status_with_sort_guest($qR, $status, $user_clients, $sort);
+                    if (isset($query_params['filterQuoteNumber']) && !empty($query_params['filterQuoteNumber'])) {
+                        $quotes = $qR->filterQuoteNumber((string)$query_params['filterQuoteNumber']);
+                    }
+                    if (isset($query_params['filterQuoteAmountTotal']) && !empty($query_params['filterQuoteAmountTotal'])) {
+                        $quotes = $qR->filterQuoteAmountTotal((string)$query_params['filterQuoteAmountTotal']);
+                    }
+                    if ((isset($query_params['filterQuoteNumber']) && !empty($query_params['filterQuoteNumber'])) && 
+                       (isset($query_params['filterQuoteAmountTotal']) && !empty($query_params['filterQuoteAmountTotal']))) {
+                        $quotes = $qR->filterQuoteNumberAndQuoteAmountTotal((string)$query_params['filterQuoteNumber'], (float)$query_params['filterQuoteAmountTotal']);
+                    } 
+                    $paginator = (new DataOffsetPaginator($quotes))
+                    ->withPageSize((int)$this->sR->get_setting('default_list_limit'))
+                    ->withCurrentPage((int)$page)
+                    ->withSort($sort)            
+                    ->withToken(PageToken::next((string)$page));            
+                    $quote_statuses = $qR->getStatuses($this->translator);
+                    $parameters = [            
+                        'alert'=> $this->alert(),
+                        'qaR'=> $qaR,
+                        'quotes' => $quotes,
+                        // guests will not have access to the pageListLimiter
+                        'editInv' => $this->user_service->hasPermission('editInv'),
+                        'grid_summary'=> $this->sR->grid_summary(
+                             $paginator, 
+                             $this->translator, 
+                             (int)$this->sR->get_setting('default_list_limit'), 
+                             $this->translator->translate('invoice.quotes'), 
+                             $qR->getSpecificStatusArrayLabel((string)$status)
+                        ),
+                        'defaultPageSizeOffsetPaginator' => $this->sR->get_setting('default_list_limit')
+                                                        ? (int)$this->sR->get_setting('default_list_limit') : 1,
+                        'quote_statuses' => $quote_statuses,            
+                        'max' => (int) $this->sR->get_setting('default_list_limit'),
+                        'page'=> $page,
+                        'paginator' => $paginator,
+                        'sortOrder' => $sort_string, 
+                        'status'=> $status,
+                    ];    
+                    return $this->view_renderer->render('/invoice/quote/guest', $parameters);
+                } // empty user client 
+                throw new NoClientsAssignedToUserException($this->translator);
             } // userinv
-            return $this->web_service->getNotFoundResponse();
         } //user
         return $this->web_service->getNotFoundResponse();
     }

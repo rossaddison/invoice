@@ -180,16 +180,11 @@ $toolbar = Div::tag();
     ->header($header)
     ->id('w12-grid')
     ->pagination(
-    OffsetPagination::widget()
-         ->paginator($paginator)         
-         // No need to use page argument since built-in. Use status bar value passed from urlGenerator to quote/guest
-         //->urlArguments(['status'=>$status])
-         ->render(),
+        $gridComponents->offsetPaginationWidget($defaultPageSizeOffsetPaginator, $paginator)
     )
     ->rowAttributes(['class' => 'align-middle'])
     ->summaryAttributes(['class' => 'mt-3 me-3 summary text-end'])
-    // @see yiisoft\yii-dataview\src\BaseListView.php
-    ->summaryTemplate((string)$grid_summary ?: '')
+    ->summaryTemplate($pageSizeLimiter::buttons($currentRoute, $s, $urlGenerator, 'salesorder').' '.$grid_summary)
     ->emptyTextAttributes(['class' => 'card-header bg-warning text-black'])
     ->emptyText((string)$translator->translate('invoice.invoice.no.records'))
     ->tableAttributes(['class' => 'table table-striped text-center h-75','id'=>'table-salesorder'])

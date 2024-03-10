@@ -1795,7 +1795,6 @@ final class SettingRepository extends Select\Repository
     //https://www.php.net/manual/en/features.file-upload.errors.php
     
     /**
-     * 
      * @param int $code
      * @return string
      */

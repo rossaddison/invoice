@@ -11,16 +11,12 @@ declare(strict_types=1);
  * @var \Yiisoft\View\WebView $this
  */
 
-use App\Widget\OffsetPagination;
 use Yiisoft\Html\Html;
 
 echo $alert;
 
 $this->setTitle($translator->translate('i.clients'));
 
-$pagination = OffsetPagination::widget()
-  ->paginator($paginator)
-  ->urlGenerator(fn ($page) => $urlGenerator->generate('client/index', ['page' => $page, 'active'=>$active]));
 ?>
 
 <div>
@@ -32,29 +28,9 @@ $pagination = OffsetPagination::widget()
 <div>
     <h5><?= Html::encode($this->getTitle()); ?></h5>
     <br>
-    <div class="submenu-row">
-            <div class="btn-group index-options">
-                <a href="<?= $urlGenerator->generate('client/index',['page'=>1, 'active'=>2]); ?>"
-                   class="btn <?= $active == 2 ? 'btn-primary' : 'btn-default' ?>">
-                    <?= $translator->translate('i.all'); ?>
-                </a>
-                <a href="<?= $urlGenerator->generate('client/index',['page'=>1, 'active'=>1]); ?>" style="text-decoration:none"
-                   class="btn  <?= $active == 1 ? 'btn-primary' : 'btn-default' ?>">
-                    <?= $translator->translate('i.active'); ?>
-                </a>
-                <a href="<?= $urlGenerator->generate('client/index',['page'=>1, 'active'=>0]); ?>" style="text-decoration:none"
-                   class="btn  <?= $active == 0 ? 'btn-primary' : 'btn-default' ?>">
-                    <?= $translator->translate('i.inactive'); ?>
-                </a>    
-            </div>
-    </div>
 </div>
 <div id="content" class="table-content">
-    <?php 
-                if ($pagination->isPaginationRequired()) {
-                   echo $pagination;
-                }
-    ?>  
+    
         <div class="table-responsive">
         <table class="table table-hover table-striped">
         <thead>
@@ -127,18 +103,6 @@ $pagination = OffsetPagination::widget()
             <?php } ?>            
         </tbody>
     </table>
-         
-    <?php
-        $pageSize = $paginator->getCurrentPageSize();
-        if ($pageSize > 0) {
-            echo Html::p(
-                sprintf($translator->translate('invoice.index.footer.showing').' clients', $pageSize, $paginator->getTotalItems()),
-                ['class' => 'text-muted']
-            );
-        } else {
-            echo Html::p($translator->translate('invoice.records.no'));
-        }
-    ?>
         
 </div>
 </div>
