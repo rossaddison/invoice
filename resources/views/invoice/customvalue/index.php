@@ -58,7 +58,7 @@ use App\Invoice\Entity\CustomField;
                         <?php foreach ($custom_values_types as $type): ?>
                             <?= $alpha = str_replace('-', '_', strtolower($type)); ?>
                             <option value="<?= $type; ?>" <?= $s->check_select($custom_field->getType(), $type); ?>>
-                                <?= $s->trans($alpha); ?>
+                                <?= $translator->translate('i'.$alpha.''); ?>
                             </option>
                         <?php endforeach; ?>
                     </select>

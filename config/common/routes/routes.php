@@ -394,7 +394,7 @@ return [
       ->middleware(fn(AccessChecker $checker) => $checker->withPermission('editInv'))
       ->middleware(Authentication::class)
       ->action([CompanyPrivateController::class, 'view']),
-      Route::get('/customfield')
+      Route::get('/customfield[/page/{page:\d+}]')
       ->middleware(Authentication::class)
       ->action([CustomFieldController::class, 'index'])
       ->name('customfield/index'),

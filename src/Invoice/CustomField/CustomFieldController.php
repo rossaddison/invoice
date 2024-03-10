@@ -15,7 +15,9 @@ use App\Service\WebControllerService;
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
 // Yii
-use Yiisoft\Data\Paginator\OffsetPaginator;
+use Yiisoft\Data\Paginator\OffsetPaginator as DataOffsetPaginator;
+use Yiisoft\Data\Paginator\PageToken;
+use Yiisoft\Data\Reader\Sort;
 use Yiisoft\Http\Method;
 use Yiisoft\Json\Json;
 use Yiisoft\Router\CurrentRoute;
@@ -61,22 +63,53 @@ final class CustomFieldController
      */
     public function index(CustomFieldRepository $customfieldRepository, SettingRepository $settingRepository, Request $request): \Yiisoft\DataResponse\DataResponse
     {
-        $pageNum = (int)$request->getAttribute('page', '1');
-        $paginator = (new OffsetPaginator($this->customfields($customfieldRepository)))
+        $query_params = $request->getQueryParams();
+        /**
+         * @var string $query_params['page']
+         */
+        $page = $query_params['page'] ?? 1;
+         /** @var string $query_params['sort'] */
+        $sort = Sort::only(['id'])
+                ->withOrderString($query_params['sort'] ?? '-id');
+        $customFields = $this->customFieldsWithSort($customfieldRepository, $sort);
+        $paginator = (new DataOffsetPaginator($customFields))
         ->withPageSize((int)$settingRepository->get_setting('default_list_limit'))
-        ->withCurrentPage($pageNum);
+        ->withCurrentPage((int)$page)
+        ->withToken(PageToken::next((string)$page));          
         $canEdit = $this->rbac();
         $this->flash_message('info' , $this->viewRenderer->renderPartialAsString('/invoice/info/custom_field'));
         $parameters = [
-              'paginator' => $paginator, 
-              'canEdit' => $canEdit,
-              'max'=>$settingRepository->get_setting('default_list_limit'),
-              'customfields' => $this->customfields($customfieldRepository),
-              'custom_tables' => $this->custom_tables(),            
-              'custom_value_fields' => $this->custom_value_fields(),
-              'alert' => $this->alert(),
+            'page' => $page,
+            'paginator' => $paginator, 
+            'canEdit' => $canEdit,
+            'grid_summary' => $settingRepository->grid_summary(
+                $paginator, 
+                $this->translator, 
+                (int)$settingRepository->get_setting('default_list_limit'), 
+                $this->translator->translate('i.custom_fields'
+            ), ''),
+            'defaultPageSizeOffsetPaginator' => $settingRepository->get_setting('default_list_limit')
+                                                  ? (int)$settingRepository->get_setting('default_list_limit') : 1,
+            'customfields' => $this->customfields($customfieldRepository),
+            'custom_tables' => $this->custom_tables(),            
+            'custom_value_fields' => $this->custom_value_fields(),
+            'alert' => $this->alert(),
        ];    
        return $this->viewRenderer->render('index', $parameters);
+    }
+    
+    /**
+     * @param CustomFieldRepository $cfR
+     * @param Sort $sort
+     *
+     * @return \Yiisoft\Data\Reader\SortableDataInterface&\Yiisoft\Data\Reader\DataReaderInterface
+     *
+     * @psalm-return \Yiisoft\Data\Reader\SortableDataInterface&\Yiisoft\Data\Reader\DataReaderInterface<int, CustomField>
+     */
+    private function customFieldsWithSort(CustomFieldRepository $cfR, Sort $sort): \Yiisoft\Data\Reader\SortableDataInterface {       
+        $query = $this->customFields($cfR);
+        $customFields = $query->withSort($sort);
+        return $customFields;
     }
     
     /**
@@ -189,17 +222,16 @@ final class CustomFieldController
      * @param CustomFieldRepository $customfieldRepository
      * @param SettingRepository $settingRepository
      */
-    public function view(CurrentRoute $currentRoute,CustomFieldRepository $customfieldRepository,
-        SettingRepository $settingRepository
-        ): Response {
+    public function view(CurrentRoute $currentRoute, CustomFieldRepository $customfieldRepository): Response {
         $custom_field = $this->customfield($currentRoute, $customfieldRepository);
         if ($custom_field) {
             $form = new CustomFieldForm($custom_field);
             $parameters = [
-                'title' => $settingRepository->trans('view'),
+                'title' => $this->translator->translate('i.view'),
                 'action' => ['customfield/edit', ['id' => $custom_field->getId()]],
                 'errors' => [],
                 'form' => $form,
+                'custom_tables' => $this->custom_tables(),                   
                 'customfield' => $custom_field->getId(),
             ];
             return $this->viewRenderer->render('_view', $parameters);
@@ -269,7 +301,6 @@ final class CustomFieldController
     }
     
     /**
-     * 
      * @param SettingRepository $s
      * @return string
      */
@@ -277,13 +308,13 @@ final class CustomFieldController
         // The default position on the form is custom fields so if none of the other options are chosen then the new field
         // will appear under the default custom field section. The client form has five areas where the new field can appear.
         $positions = [
-                    'client' =>  ['i.custom_fields','i.address','i.contact_information','i.personal_information','tax_information'],
+                    'client' =>  ['i.custom_fields', 'i.address', 'i.contact_information', 'i.personal_information', 'i.tax_information'],
                     'product'=>  ['i.custom_fields'],
                     // A custom field created with "properties" will appear in the address section 
                     'invoice' => ['i.custom_fields','i.properties'],                    
                     'payment' => ['i.custom_fields'],
                     'quote' =>   ['i.custom_fields','i.properties'],
-                    'user' =>    ['i.custom_fields','i.account_information','i.address','i.tax_information','i.contact_information'],                    
+                    'user' =>    ['i.custom_fields', 'i.account_information', 'i.address', 'i.tax_information', 'i.contact_information'],                    
                 ];
                 foreach ($positions as $key => $val) {
                     foreach ($val as $key2 => $val2) {

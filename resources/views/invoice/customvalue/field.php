@@ -63,7 +63,7 @@ use Yiisoft\FormModel\Field;
                         $optionsDataType = [];
                         foreach ($custom_values_types as $type) {
                             $alpha = str_replace('-', '_', strtolower($type));
-                            $optionsDataType[$type] = $s->trans($alpha);
+                            $optionsDataType[$type] = $translator->translate('i.'.$alpha.'');
                         }
                     ?>
                     <?= Html::openTag('div',['class' => 'form-group']); ?>    

@@ -9,7 +9,7 @@ use Yiisoft\FormModel\FormModel;
 use Yiisoft\Validator\Rule\Required;
 
 final class CustomFieldForm extends FormModel
-{    
+{   private ?int $id = null;    
     #[Required]
     private ?string $table='';
     #[Required]
@@ -25,6 +25,7 @@ final class CustomFieldForm extends FormModel
     
     public function __construct(CustomField $custom_field)
     {
+        $this->id = (int)$custom_field->getId();
         $this->table = $custom_field->getTable();
         $this->label = $custom_field->getLabel();
         $this->type = $custom_field->getType();
@@ -32,6 +33,11 @@ final class CustomFieldForm extends FormModel
         $this->order = $custom_field->getOrder();
         $this->required = $custom_field->getRequired();
     }
+    
+    public function getId() : int|null
+    {
+      return $this->id;  
+    }    
 
     public function getTable() : string|null
     {

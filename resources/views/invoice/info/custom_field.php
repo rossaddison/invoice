@@ -45,3 +45,6 @@ and multiple choice.
 The <code>*_custom</code> tables hold all the custom_field's values that belong to the * table eg. the client_custom table holds all values of the custom_field designed 
 for the client form. 
 </p>
+<p>
+    <b>Custom Field positions:</b> see CustomFieldController positions function<br>
+</p>

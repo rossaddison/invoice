@@ -914,6 +914,7 @@ return [
     'invoice.custom.invoice.add' => 'Custom Invoice Add',
     'invoice.custom.field' => 'Custom Field',
     'invoice.custom.field.add' => 'Custom Field Add',
+    'invoice.custom.field.location' => 'Document Position',
     'invoice.custom.field.number' => 'Number',
     'invoice.custom.field.required' => 'Required',
     'invoice.custom.value' => 'Custom Value',

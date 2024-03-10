@@ -63,7 +63,7 @@ use Yiisoft\Html\Html;
                         'class' => 'form-control', 
                         'disabled' => 'disabled', 
                         'id' => 'type',
-                        'value' => Html::encode($s->trans($alpha) ?? '') 
+                        'value' => Html::encode($translator->translate('i.'.$alpha.'') ?? '') 
                         ]);
                     ?>
                 <?= Html::closeTag('div'); ?>
