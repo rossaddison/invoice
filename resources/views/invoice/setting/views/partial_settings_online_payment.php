@@ -110,14 +110,7 @@ foreach ($gateway_drivers as $driver => $fields) :
                             <input type="hidden" name="settings[gateway_<?= $d; ?>_<?= $key ?>]"
                                 value="0">
                             <input type="checkbox" name="settings[gateway_<?= $d; ?>_<?= $key ?>]"
-                                value="1"
-                                <?php $s->check_select($body['settings[gateway_' . $d . '_'.$key.']'], 1, '==', true) ?>
-                                data-bs-toggle = "tooltip" title="<?= $setting['label'] === 'Omnipay Version' 
-                                ? 'Leave this box unchecked if you are using the latest PCI Compliant version eg. Stripe version 10. 15112022. '
-                                . 'Check this box if you are using an Omnipay Version. You should be advised not to deal with Card Numbers on forms. '
-                                . 'eg. on Stripe you will have to agree to check "Handle card information directly". See https://https://dashboard.stripe.com/settings/integration'
-                                : ''; ?>"
-                            >
+                                value="1" <?php $s->check_select($body['settings[gateway_' . $d . '_'.$key.']'], 1, '==', true) ?>>
                             <?= $setting['label']; ?>
                         </label>
                     </div>
@@ -189,7 +182,28 @@ foreach ($gateway_drivers as $driver => $fields) :
                     <?php } ?>
                 </select>
             </div>
-
+            
+            <?php if ($d == 'mollie') { ?>
+                <div class="form-group">
+                <label for="settings[gateway_<?= $d; ?>_locale]">
+                    <?= $translator->translate('invoice.payment.gateway.default.locale'); ?>
+                </label>
+                <?php $body['settings[gateway_' . $d . '_locale]'] = $s->get_setting('gateway_' . $d . '_locale');?>
+                <select name="settings[gateway_<?= $d; ?>_locale]"
+                    id="settings[gateway_<?= $d; ?>_locale]"
+                    class="input-sm form-control">
+                    <?php 
+                        $locales = $s->mollieSupportedLocaleArray();
+                        foreach ($locales as $key => $value) { ?>
+                        <option value="<?= $value; ?>"
+                            <?php $s->check_select($body['settings[gateway_mollie_locale]'], $value); ?>>
+                            <?= $value; ?>
+                        </option>
+                    <?php } ?>
+                </select>
+            </div>
+            <?php } ?>
+            
             <div class="form-group">
                 <label for="settings[gateway_<?= $d; ?>_payment_method]">
                     <?= $translator->translate('g.online_payment_method'); ?>

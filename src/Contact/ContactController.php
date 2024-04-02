@@ -27,10 +27,10 @@ final class ContactController
             ->withViewPath(__DIR__ . '/views');
     }
 
-    public function contact(
+    public function fill(
         FormHydrator $formHydrator,
         ServerRequestInterface $request
-    ): ResponseInterface {
+    ) : ResponseInterface {
         $body = $request->getParsedBody();
         $form = new ContactForm();
         if (($request->getMethod() === Method::POST) 
@@ -39,7 +39,7 @@ final class ContactController
             $this->mailer->send($form, $request);
             return $this->responseFactory
                 ->createResponse(Status::FOUND)
-                ->withHeader(Header::LOCATION, $this->url->generate('site/contact'));
+                ->withHeader(Header::LOCATION, $this->url->generate('contact/fill'));
         }
 
         return $this->viewRenderer->render('form', ['form' => $form]);

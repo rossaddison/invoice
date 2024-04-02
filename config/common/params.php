@@ -69,7 +69,7 @@ return [
               'buttonClass()' => ['btn btn-primary btn-sm mt-3'],
               'containerClass()' => ['d-grid gap-2 form-floating'],
             ],
-            // if this class is not used then the checkbox ends up floating 
+            // if this Checkbox class is not used then the checkbox ends up floating 
             // because of the default containerClass above;
             // refer to client form with active client checkbox  
             Checkbox::class => [
@@ -175,7 +175,8 @@ return [
   ],  
   'yiisoft/yii-view' => [
     'viewPath' => '@views',
-    'layout' => '@views/layout/main',
+    //'layout' => '@views/layout/main.php',  
+    'layout' => '@views/layout/templates/soletrader/main.php',
     'injections' => [
       Reference::to(CommonViewInjection::class),
       Reference::to(CsrfViewInjection::class),

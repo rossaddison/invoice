@@ -71,9 +71,9 @@ echo $note_on_tax_point;
                                         ->hint($translator->translate('invoice.hint.this.field.is.required')); 
                                     ?>
                                 <?= Html::closeTag('div'); ?>            
-                                <?php if (null!==$delivery->getId()) { ?>
+                                <?php if (null!==$inv->getDelivery()?->getId()) { ?>
                                 <span class="input-group-text">
-                                    <a href="<?= $urlGenerator->generate('delivery/edit', ['id'=> $delivery->getId()]); ?>"><i class="fa fa-pencil fa-fw"></i></a>
+                                    <a href="<?= $urlGenerator->generate('delivery/edit', ['id'=> $inv->getDelivery()?->getId()]); ?>"><i class="fa fa-pencil fa-fw"></i></a>
                                 </span>  
                                 <?php } ?>
                                 <span class="input-group-text">
@@ -125,7 +125,9 @@ echo $note_on_tax_point;
                                             'client_id' => $inv->getClient_id()
                                         ],
                                         [
-                                            
+                                            'origin' => 'inv',
+                                            'origin_id' => $inv->getId(),
+                                            'action' => 'edit'    
                                         ]), ['class' => 'btn btn-danger btn-lg mt-3']);
                             }
                             ?>
@@ -215,6 +217,7 @@ echo $note_on_tax_point;
                             <?= Field::select($form,'payment_method')
                                 ->hideLabel(false)
                                 ->label($translator->translate('i.payment_method'))
+                                ->value($form->getPayment_method())
                                 ->prompt($translator->translate('i.none'))
                                 ->optionsData($optionsData['paymentMethod'])
                                 ->addInputAttributes($editInputAttributesPaymentMethod)
@@ -292,4 +295,4 @@ echo $note_on_tax_point;
 <?= Html::closeTag('div'); ?>
 <?= Html::closeTag('div'); ?>
 <?= Html::closeTag('div'); ?>
-<?= Html::closeTag('div'); ?>  
+<?= Html::closeTag('div'); ?> 

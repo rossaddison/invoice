@@ -134,9 +134,10 @@ $isGuest = $user === null || $user->getId() === null;
 $xdebug = extension_loaded('xdebug') ? 'php.ini zend_extension Installed : Performance compromised!' : 'php.ini zend_extension Commented out: Performance NOT compromised';
 
 // Platform, Performance, and Clear Assets Cache, and links Menu will disappear if set to false;
-$debug_mode = true;
-$s->debug_mode($debug_mode);
-
+/**
+ * @see src\ViewInjection\LayoutViewInjection.php $debugMode
+ */
+$s->debugMode($debugMode);
 // 0 => fast Read and Write, // 1 => slower Write Only
 $read_write = $s->getSchemaProvidersMode();
 
@@ -258,8 +259,8 @@ $this->beginPage();
                 ],
               ],
               ['label' => $translator->translate('i.settings'),
-                'items' => [['options' => ['class' => 'nav fs-4 ajax-loader'], 'label' => $translator->translate('i.view'), 'options' => ['style' => 'background-color: #ffcccb'], 'url' => $urlGenerator->generate('setting/debug_index'), 'visible' => $debug_mode],
-                  ['options' => ['class' => 'nav fs-4'], 'label' => $translator->translate('invoice.setting.add'), 'options' => ['style' => 'background-color: #ffcccb'], 'url' => $urlGenerator->generate('setting/add'), 'visible' => $debug_mode],
+                'items' => [['options' => ['class' => 'nav fs-4 ajax-loader'], 'label' => $translator->translate('i.view'), 'options' => ['style' => 'background-color: #ffcccb'], 'url' => $urlGenerator->generate('setting/debug_index'), 'visible' => $debugMode],
+                  ['options' => ['class' => 'nav fs-4'], 'label' => $translator->translate('invoice.setting.add'), 'options' => ['style' => 'background-color: #ffcccb'], 'url' => $urlGenerator->generate('setting/add'), 'visible' => $debugMode],
                   ['options' => ['class' => 'nav fs-4'], 'label' => $translator->translate('i.view'), 'url' => $urlGenerator->generate('setting/tab_index')],
                   ['options' => ['class' => 'nav fs-4'], 'label' => $translator->translate((($s->get_setting('install_test_data') == '1') && ($s->get_setting('use_test_data') == '1')) 
                                                                    ? 'invoice.install.test.data' : 'invoice.install.test.data.goto.tab.index'), 
@@ -282,7 +283,7 @@ $this->beginPage();
                   ['options' => ['class' => 'nav fs-4'], 'label' => $translator->translate('invoice.setting.company.profile'), 'url' => $urlGenerator->generate('profile/index')],
                 ],
               ],
-              ['label' => $translator->translate('invoice.platform'), 'options' => ['style' => 'background-color: #ffcccb'], 'visible' => $debug_mode,
+              ['label' => $translator->translate('invoice.platform'), 'options' => ['style' => 'background-color: #ffcccb'], 'visible' => $debugMode,
                 'items' => [
                   ['label' => 'WAMP'],
                   ['label' => $translator->translate('invoice.platform.editor') . ': Apache Netbeans IDE 19 64 bit'],
@@ -298,6 +299,11 @@ $this->beginPage();
                   ['label' => $translator->translate('invoice.platform.netbeans.UTF-8'), 'url' => 'https://stackoverflow.com/questions/59800221/gradle-netbeans-howto-set-encoding-to-utf-8-in-editor-and-compiler'],
                   ['label' => $translator->translate('invoice.platform.csrf'), 'url' => 'https://cheatsheetseries.owasp.org/cheatsheets/Cross-Site_Request_Forgery_Prevention_Cheat_Sheet.html#use-of-custom-request-headers'],
                   ['label' => $translator->translate('invoice.development.progress'), 'url' => $urlGenerator->generate('invoice/index')],
+                  ['label' => 'Bootstrap 5 Icons with Filter', 
+                     'url' => 'https://icons.getbootstrap.com/'],
+                  ['label' => 'BootstrapBrain Free Wavelight Template', 
+                     'url' => 'https://bootstrapbrain.com/template/free-bootstrap-5-multipurpose-one-page-template-wave/
+                  '],  
                   ['label' => 'Html to Markdown', 
                      'url' => 'https://convertsimple.com/convert-html-to-markdown/'],
                   ['label' => 'European Invoicing', 
@@ -356,13 +362,14 @@ $this->beginPage();
                   ['label' => $translator->translate('invoice.development.progress'), 'url' => $urlGenerator->generate('invoice/ubuntu')],
                 ],
               ],
-              ['label' => $translator->translate('invoice.faq'), 'options' => ['style' => 'background-color: #ffcccb'], 'visible' => $debug_mode,
+              ['label' => $translator->translate('invoice.faq'), 'options' => ['style' => 'background-color: #ffcccb'], 'visible' => $debugMode,
                 'items' => [
                   ['label' => $translator->translate('invoice.faq.taxpoint'), 'url' => $urlGenerator->generate('invoice/faq', ['topic' => 'tp'])],
                   ['label' => $translator->translate('invoice.faq.shared.hosting'), 'url' => $urlGenerator->generate('invoice/faq', ['topic' => 'shared'])],
+                  ['label' => $translator->translate('invoice.faq.payment.provider'), 'url' => $urlGenerator->generate('invoice/faq', ['topic' => 'paymentprovider'])],  
                 ]],
-              ['label' => $translator->translate('invoice.vat'), 'options' => ['style' => $vat ? 'background-color: #ffcccb' : 'background-color: #90EE90'], 'visible' => $debug_mode],
-              ['label' => $translator->translate('invoice.performance'), 'options' => ['style' => $read_write ? 'background-color: #ffcccb' : 'background-color: #90EE90','data-bs-toggle'=>'tooltip','title' => $read_write ? $translator->translate('invoice.performance.label.switch.on') : $translator->translate('invoice.performance.label.switch.off')], 'visible' => $debug_mode,
+              ['label' => $translator->translate('invoice.vat'), 'options' => ['style' => $vat ? 'background-color: #ffcccb' : 'background-color: #90EE90'], 'visible' => $debugMode],
+              ['label' => $translator->translate('invoice.performance'), 'options' => ['style' => $read_write ? 'background-color: #ffcccb' : 'background-color: #90EE90','data-bs-toggle'=>'tooltip','title' => $read_write ? $translator->translate('invoice.performance.label.switch.on') : $translator->translate('invoice.performance.label.switch.off')], 'visible' => $debugMode,
                 'items' => [
                   ['label' => $translator->translate('invoice.platform.xdebug') . ' ' . $xdebug, 'options' => ['class' => 'nav fs-4', 'data-bs-toggle' => 'tooltip', 'title' => 'Via Wampserver Menu: Icon..Php 8.1.8-->Php extensions-->xdebug 3.1.5(click)-->Allow php command prompt to restart automatically-->(click)Restart All Services-->No typing in or editing of a php.ini file!!']],
                   ['label' => '...config/common/params.php SyncTable currently not commented out and PhpFileSchemaProvider::MODE_READ_AND_WRITE...fast....MODE_WRITE_ONLY...slower'],
@@ -376,7 +383,7 @@ $this->beginPage();
                   ['label' => 'config.params: yiisoft/yii-debug-api: enabled, disable for improved performance'],
                 ],
               ],
-              ['label' => $translator->translate('invoice.generator'), 'options' => ['style' => 'background-color: #ffcccb'], 'visible' => $debug_mode,
+              ['label' => $translator->translate('invoice.generator'), 'options' => ['style' => 'background-color: #ffcccb'], 'visible' => $debugMode,
                 'items' => [
                   ['options' => ['class' => 'nav fs-4'], 'label' => $translator->translate('invoice.generator'), 'url' => $urlGenerator->generate('generator/index')],
                   ['options' => ['class' => 'nav fs-4'], 'label' => $translator->translate('invoice.generator.relations'), 'url' => $urlGenerator->generate('generatorrelation/index')],
@@ -402,23 +409,23 @@ $this->beginPage();
               ['label' => $translator->translate('invoice.utility.assets.clear'),
                 'url' => $urlGenerator->generate('setting/clear'), 'options' => ['class' => 'nav fs-4', 'data-bs-toggle' => 'tooltip',
                   'title' => 'Clear the assets cache which resides in /public/assets.', 'style' => 'background-color: #ffcccb'],
-                'visible' => $debug_mode],
+                'visible' => $debugMode],
               ['label' => $translator->translate('invoice.debug'),
                 'url' => '',
-                'options' => ['class' => 'nav fs-4', 'data-bs-toggle' => 'tooltip', 'title' => 'Disable in views/layout/invoice.php. Red background links and menus will disappear.', 'style' => 'background-color: #ffcccb'],
-                'visible' => $debug_mode],
+                'options' => ['class' => 'nav fs-4', 'data-bs-toggle' => 'tooltip', 'title' => 'Disable in invoice\src\ViewInjection\LayoutViewInjection.php. Red background links and menus will disappear.', 'style' => 'background-color: '. ($debugMode ? '#90EE90' : '#ffcccb')],
+                'visible' => $debugMode],
               ['label' => 'Locale => ' . $locale,
                 'url' => '',
                 'options' => ['class' => 'nav fs-4', 'data-bs-toggle' => 'tooltip', 'title' => 'Storage: session/runtime file.', 'style' => 'background-color: #90EE90'],
-                'visible' => $debug_mode],
+                'visible' => $debugMode],
               ['label' => 'cldr => ' . $s->get_setting('cldr'),
                 'url' => '',
                 'options' => ['class' => 'nav fs-4', 'data-bs-toggle' => 'tooltip', 'title' => 'Storage: database', 'style' => 'background-color: #ffffe0'],
-                'visible' => $debug_mode],
+                'visible' => $debugMode],
               ['label' => 'File Location',
                 'url' => '',
                 'options' => ['class' => 'nav fs-4', 'data-bs-toggle' => 'tooltip', 'title' => $s->debug_mode_file_location(0), 'style' => 'background-color: #ffcccb'],
-                'visible' => $debug_mode],
+                'visible' => $debugMode],
               ]
         );
 

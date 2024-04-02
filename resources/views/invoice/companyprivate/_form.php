@@ -2,6 +2,7 @@
 
 declare(strict_types=1); 
 
+use App\Widget\Button;
 use Yiisoft\FormModel\Field;
 use Yiisoft\Html\Html;
 use Yiisoft\Html\Tag\Form;
@@ -36,8 +37,6 @@ use Yiisoft\Html\Tag\Form;
         <?= Html::openTag('h1', ['class' => 'headerbar-title']); ?>
             <?= $title; ?>
         <?= Html::closeTag('h1'); ?>
-        <?php $response = $head->renderPartial('invoice/layout/header_buttons',['s'=>$s, 'hide_submit_button'=>false ,'hide_cancel_button'=>false]); ?>        
-        <?= (string)$response->getBody(); ?>
         <?= Html::openTag('div', ['id' => 'content']); ?>
             <?= Html::openTag('div', ['class' => 'row']); ?>
                 <?= Html::openTag('div', ['class' => 'mb3 form-group']); ?>
@@ -143,6 +142,7 @@ use Yiisoft\Html\Tag\Form;
             <?= Html::closeTag('div'); ?>
         <?= Html::closeTag('div'); ?>    
     <?= Html::closeTag('div'); ?>
+<?= Button::back_save($translator); ?>
 <?= Form::tag()->close() ?>
 <?= Html::closeTag('div'); ?>
 <?= Html::closeTag('div'); ?>

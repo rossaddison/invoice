@@ -201,11 +201,11 @@ final class FromDropDownController
     }
 
     /**
-     * @return \Yiisoft\Yii\Cycle\Data\Reader\EntityReader
+     * @return \Yiisoft\Data\Cycle\Reader\EntityReader
      *
-     * @psalm-return \Yiisoft\Yii\Cycle\Data\Reader\EntityReader
+     * @psalm-return \Yiisoft\Data\Cycle\Reader\EntityReader
      */
-    private function froms(FromDropDownRepository $fromRepository) : \Yiisoft\Yii\Cycle\Data\Reader\EntityReader
+    private function froms(FromDropDownRepository $fromRepository) : \Yiisoft\Data\Cycle\Reader\EntityReader
     {
         $froms = $fromRepository->findAllPreloaded();        
         return $froms;

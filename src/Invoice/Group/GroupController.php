@@ -234,11 +234,11 @@ final class GroupController
     }
     
     /**
-     * @return \Yiisoft\Yii\Cycle\Data\Reader\EntityReader
+     * @return \Yiisoft\Data\Cycle\Reader\EntityReader
      *
-     * @psalm-return \Yiisoft\Yii\Cycle\Data\Reader\EntityReader
+     * @psalm-return \Yiisoft\Data\Cycle\Reader\EntityReader
      */
-    private function groups(GroupRepository $groupRepository) : \Yiisoft\Yii\Cycle\Data\Reader\EntityReader
+    private function groups(GroupRepository $groupRepository) : \Yiisoft\Data\Cycle\Reader\EntityReader
     {
         $groups = $groupRepository->findAllPreloaded();        
         return $groups;

@@ -10,8 +10,8 @@ use App\Invoice\Setting\SettingRepository as SR;
 use Cycle\ORM\Select;
 use Yiisoft\Data\Reader\Sort;
 use Yiisoft\Translator\TranslatorInterface as Translator;
-use Yiisoft\Yii\Cycle\Data\Reader\EntityReader;
-use Yiisoft\Yii\Cycle\Data\Writer\EntityWriter;
+use Yiisoft\Data\Cycle\Reader\EntityReader;
+use Yiisoft\Data\Cycle\Writer\EntityWriter;
 
 /**
  * @template TEntity of InvAmount

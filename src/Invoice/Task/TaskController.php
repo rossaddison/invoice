@@ -371,11 +371,11 @@ final class TaskController
     }
     
     /**
-     * @return \Yiisoft\Yii\Cycle\Data\Reader\EntityReader
+     * @return \Yiisoft\Data\Cycle\Reader\EntityReader
      *
-     * @psalm-return \Yiisoft\Yii\Cycle\Data\Reader\EntityReader
+     * @psalm-return \Yiisoft\Data\Cycle\Reader\EntityReader
      */
-    private function tasks(tR $tR): \Yiisoft\Yii\Cycle\Data\Reader\EntityReader
+    private function tasks(tR $tR): \Yiisoft\Data\Cycle\Reader\EntityReader
     {
         $tasks = $tR->findAllPreloaded();        
         return $tasks;

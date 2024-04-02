@@ -3,7 +3,7 @@
     
     use Yiisoft\Html\Html;
 ?>
-<?= Html::openTag('div', ['class' => 'row']); ?>
+<div class="row">
     <div class="col-xs-12 col-md-8 col-md-offset-2">
 
         <div class="panel panel-default">
@@ -12,7 +12,7 @@
             </div>
             <div class="panel-body">
 
-                <?= Html::openTag('div', ['class' => 'row']); ?>
+                <div class="row">
                     <div class="col-xs-12 col-md-6">
 
                         <div class="form-group">
@@ -96,7 +96,7 @@
                 <?= $translator->translate('i.pdf_settings'); ?>
             </div>
             <div class="panel-body">
-                <?= Html::openTag('div', ['class' => 'row']); ?>
+                <div class="row">
                     <div class="col-xs-12 col-md-6">
                         <div class="form-group">
                             <label for="settings[mark_invoices_sent_pdf]" <?= $s->where('mark_invoices_sent_pdf'); ?>>
@@ -213,7 +213,7 @@
             </div>
             <div class="panel-body">
 
-                <?= Html::openTag('div', ['class' => 'row']); ?>
+                <div class="row">
                     <div class="col-xs-12 col-md-6">
 
                         <div class="form-group">
@@ -341,7 +341,7 @@
                     </div>
                 </div>
 
-                <?= Html::openTag('div', ['class' => 'row']); ?>
+                <div class="row">
                     <div class="col-xs-12 col-md-6">
 
                         <div class="form-group">
@@ -360,13 +360,13 @@
             </div>
         </div>
 
-        <div class="panel panel-default">
-            <div class="panel-heading">
+                        <div class="panel panel-default">
+                            <div class="panel-heading">
                 <?= $translator->translate('i.email_settings'); ?>
             </div>
             <div class="panel-body">
 
-                <?= Html::openTag('div', ['class' => 'row']); ?>
+                <div class="row">
                     <div class="col-xs-12 col-md-6">
 
                         <div class="form-group">
@@ -397,7 +397,7 @@
             </div>
             <div class="panel-body">
 
-                <?= Html::openTag('div', ['class' => 'row']); ?>
+                <div class="row">
                     <div class="col-xs-12 col-md-6">
 
                         <div class="form-group">
@@ -447,7 +447,7 @@
             </div>
             <div class="panel-body">
 
-                <?= Html::openTag('div', ['class' => 'row']); ?>
+                <div class="row">
                     <div class="col-xs-12 col-md-6">
                         <div class="form-group">
                             <label for="settings[sumex]">

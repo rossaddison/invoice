@@ -261,11 +261,11 @@ final class CustomValueController
     }  
     
     /**
-     * @return \Yiisoft\Yii\Cycle\Data\Reader\EntityReader
+     * @return \Yiisoft\Data\Cycle\Reader\EntityReader
      *
-     * @psalm-return \Yiisoft\Yii\Cycle\Data\Reader\EntityReader
+     * @psalm-return \Yiisoft\Data\Cycle\Reader\EntityReader
      */
-    private function customvalues(CustomValueRepository $customvalueRepository): \Yiisoft\Yii\Cycle\Data\Reader\EntityReader 
+    private function customvalues(CustomValueRepository $customvalueRepository): \Yiisoft\Data\Cycle\Reader\EntityReader 
     {
         $customvalues = $customvalueRepository->findAllPreloaded();        
         return $customvalues;

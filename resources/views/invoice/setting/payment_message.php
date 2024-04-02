@@ -77,6 +77,4 @@
             <a href="<?= $sandbox_url; ?>"><?= $sandbox_url; ?></a>
        <?php } ?>     
 </form>
-</body>
-</html>
 

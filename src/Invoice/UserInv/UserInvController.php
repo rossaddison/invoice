@@ -164,14 +164,12 @@ final class UserInvController
      * @param Request $request
      * @param FormHydrator $formHydrator
      * @param UserInvRepository $userinvRepository
-     * @param SettingRepository $settingRepository
      * @param uR $uR
      * @return Response
      */
     public function guest(Request $request, 
                         FormHydrator $formHydrator,
                         UserInvRepository $userinvRepository, 
-                        SettingRepository $settingRepository,
                         uR $uR,
 
     ): Response {
@@ -184,7 +182,7 @@ final class UserInvController
                 if ($userinv) {
                     $form = new UserInvForm($userinv);
                     $parameters = [
-                        'title' => $settingRepository->trans('edit'),
+                        'title' => $this->translator->translate('i.edit'),
                         'action' => ['userinv/guest'],
                         'errors' => [],
                         'form' => $form,
@@ -374,7 +372,7 @@ final class UserInvController
         if ($userinv) {
             $form = new UserInvForm($userinv);
             $parameters = [
-                'title' => $settingRepository->trans('edit'),
+                'title' => $this->translator->translate('i.edit'),
                 'action' => ['userinv/edit', ['id' => $userinv->getId()]],
                 'errors' => [],
                 'form' => $form,
@@ -487,11 +485,8 @@ final class UserInvController
      * @param CurrentRoute $currentRoute
      * @param UserInvRepository $userinvRepository
      * @param uR $uR
-     * @param SettingRepository $settingRepository
      */
-    public function view(CurrentRoute $currentRoute,UserInvRepository $userinvRepository, uR $uR,
-        SettingRepository $settingRepository
-        ): \Yiisoft\DataResponse\DataResponse|Response {
+    public function view(CurrentRoute $currentRoute,UserInvRepository $userinvRepository, uR $uR): \Yiisoft\DataResponse\DataResponse|Response {
         $aliases = new Aliases(['@invoice' => dirname(__DIR__), 
                                 '@language' => dirname(__DIR__). DIRECTORY_SEPARATOR. 'Language']);
         $userinv = $this->userinv($currentRoute, $userinvRepository);
@@ -499,7 +494,7 @@ final class UserInvController
             $form = new UserInvForm($userinv);
             $parameters = [
                 'aliases' => $aliases,
-                'title' => $settingRepository->trans('view'),
+                'title' => $this->translator->translate('i.view'),
                 'action' => ['userinv/view', ['id' => $userinv->getId()]],
                 'errors' => [],
                 'form' => $form,
@@ -529,11 +524,11 @@ final class UserInvController
      * @param int $active
      * @param Sort $sort
      *
-     * @return \Yiisoft\Data\Reader\SortableDataInterface|\Yiisoft\Yii\Cycle\Data\Reader\EntityReader
+     * @return \Yiisoft\Data\Reader\SortableDataInterface|\Yiisoft\Data\Cycle\Reader\EntityReader
      *
-     * @psalm-return \Yiisoft\Data\Reader\SortableDataInterface|\Yiisoft\Yii\Cycle\Data\Reader\EntityReader
+     * @psalm-return \Yiisoft\Data\Reader\SortableDataInterface|\Yiisoft\Data\Cycle\Reader\EntityReader
      */
-    private function userinvs_active_with_sort(UserInvRepository $uiR, int $active, Sort $sort): \Yiisoft\Data\Reader\SortableDataInterface|\Yiisoft\Yii\Cycle\Data\Reader\EntityReader {       
+    private function userinvs_active_with_sort(UserInvRepository $uiR, int $active, Sort $sort): \Yiisoft\Data\Reader\SortableDataInterface|\Yiisoft\Data\Cycle\Reader\EntityReader {       
         $userinvs = $uiR->findAllWithActive($active)
                         ->withSort($sort);
         return $userinvs;

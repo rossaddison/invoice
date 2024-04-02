@@ -1,4 +1,5 @@
 <?php
+
 return [
     1 => [
         'admin',
@@ -7,9 +8,6 @@ return [
         'observer',
     ],
     3 => [
-        'observer',
-    ],
-    4 => [
         'observer',
     ],
 ];

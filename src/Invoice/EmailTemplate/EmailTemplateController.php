@@ -311,11 +311,11 @@ final class EmailTemplateController
     }
     
     /**
-     * @return \Yiisoft\Yii\Cycle\Data\Reader\EntityReader
+     * @return \Yiisoft\Data\Cycle\Reader\EntityReader
      *
-     * @psalm-return \Yiisoft\Yii\Cycle\Data\Reader\EntityReader
+     * @psalm-return \Yiisoft\Data\Cycle\Reader\EntityReader
      */
-    private function emailtemplates(EmailTemplateRepository $emailtemplateRepository): \Yiisoft\Yii\Cycle\Data\Reader\EntityReader {
+    private function emailtemplates(EmailTemplateRepository $emailtemplateRepository): \Yiisoft\Data\Cycle\Reader\EntityReader {
         $emailtemplates = $emailtemplateRepository->findAllPreloaded();        
         return $emailtemplates;
     }

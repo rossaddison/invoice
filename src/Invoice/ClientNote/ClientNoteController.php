@@ -227,11 +227,11 @@ final class ClientNoteController
     }
     
     /**
-     * @return \Yiisoft\Yii\Cycle\Data\Reader\EntityReader
+     * @return \Yiisoft\Data\Cycle\Reader\EntityReader
      *
-     * @psalm-return \Yiisoft\Yii\Cycle\Data\Reader\EntityReader
+     * @psalm-return \Yiisoft\Data\Cycle\Reader\EntityReader
      */
-    private function clientnotes(ClientNoteRepository $clientnoteRepository): \Yiisoft\Yii\Cycle\Data\Reader\EntityReader
+    private function clientnotes(ClientNoteRepository $clientnoteRepository): \Yiisoft\Data\Cycle\Reader\EntityReader
     {
         $clientnotes = $clientnoteRepository->findAllPreloaded();        
         return $clientnotes;

@@ -207,11 +207,11 @@ final class ItemLookupController
     }
     
     /**
-     * @return \Yiisoft\Yii\Cycle\Data\Reader\EntityReader
+     * @return \Yiisoft\Data\Cycle\Reader\EntityReader
      *
-     * @psalm-return \Yiisoft\Yii\Cycle\Data\Reader\EntityReader
+     * @psalm-return \Yiisoft\Data\Cycle\Reader\EntityReader
      */
-    private function itemlookups(ItemLookupRepository $itemlookupRepository): \Yiisoft\Yii\Cycle\Data\Reader\EntityReader 
+    private function itemlookups(ItemLookupRepository $itemlookupRepository): \Yiisoft\Data\Cycle\Reader\EntityReader 
     {
         $itemlookups = $itemlookupRepository->findAllPreloaded();        
         return $itemlookups;

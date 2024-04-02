@@ -48,6 +48,7 @@ $toolbarReset = A::tag()
         ->render();
 
 $toolbar = Div::tag();
+$decimal_places = (int)$s->get_setting('tax_rate_decimal_places');
 ?>
 <div>
     <h5><?= $translator->translate('i.invoice'); ?></h5>
@@ -216,11 +217,13 @@ $toolbar = Div::tag();
             'id',
             queryProperty: 'filterInvAmountTotal',
             header: $translator->translate('i.total') . ' ( '. $s->get_setting('currency_symbol'). ' ) ',
-            content: static function ($model) : string|null {
+            content: static function ($model) use ($decimal_places) : string|null {
                return  
                     Label::tag()
                         ->attributes(['class' => $model->getInvAmount()->getTotal() > 0.00 ? 'label label-success' : 'label label-warning'])
-                        ->content(Html::encode(null!==$model->getInvAmount()->getTotal() ? $model->getInvAmount()->getTotal() : 0.00))
+                        ->content(Html::encode(null!==$model->getInvAmount()->getTotal() 
+                                ? number_format($model->getInvAmount()->getTotal() , $decimal_places) 
+                                : number_format(0, $decimal_places)))
                         ->render();
             },
             filter: true
@@ -228,20 +231,24 @@ $toolbar = Div::tag();
         new DataColumn(
             'id',
             header: $translator->translate('i.paid') . ' ( '. $s->get_setting('currency_symbol'). ' ) ',
-            content: static function ($model) : string|null {
+            content: static function ($model) use ($decimal_places) : string|null {
                 return Label::tag()
                         ->attributes(['class' => $model->getInvAmount()->getPaid() < $model->getInvAmount()->getTotal() ? 'label label-danger' : 'label label-success'])
-                        ->content(Html::encode(null!==$model->getInvAmount()->getPaid() ? $model->getInvAmount()->getPaid() : 0.00))
+                        ->content(Html::encode(null!==$model->getInvAmount()->getPaid() 
+                                ? number_format($model->getInvAmount()->getPaid(),  $decimal_places) 
+                                : number_format(0, $decimal_places)))
                         ->render();
             }     
         ),        
         new DataColumn(
             'id',
             header: $translator->translate('i.balance')  . ' ( '. $s->get_setting('currency_symbol'). ' ) ',
-            content: static function ($model) : string|null {
+            content: static function ($model) use ($decimal_places) : string|null {
                 return  Label::tag()
                         ->attributes(['class' => $model->getInvAmount()->getBalance() > 0.00 ? 'label label-success' : 'label label-warning'])
-                        ->content(Html::encode(null!== $model->getInvAmount() ? $model->getInvAmount()->getBalance() : 0.00))
+                        ->content(Html::encode(null!== $model->getInvAmount() 
+                                ? number_format($model->getInvAmount()->getBalance(), $decimal_places) 
+                                : number_format(0, $decimal_places)))
                         ->render();
             }     
         ),

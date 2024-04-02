@@ -221,11 +221,11 @@ final class InvAllowanceChargeController
     }
 
     /**
-     * @return \Yiisoft\Yii\Cycle\Data\Reader\EntityReader
+     * @return \Yiisoft\Data\Cycle\Reader\EntityReader
      *
-     * @psalm-return \Yiisoft\Yii\Cycle\Data\Reader\EntityReader
+     * @psalm-return \Yiisoft\Data\Cycle\Reader\EntityReader
      */
-    private function invallowancecharges(InvAllowanceChargeRepository $invallowancechargeRepository) : \Yiisoft\Yii\Cycle\Data\Reader\EntityReader
+    private function invallowancecharges(InvAllowanceChargeRepository $invallowancechargeRepository) : \Yiisoft\Data\Cycle\Reader\EntityReader
     {
         $invallowancecharges = $invallowancechargeRepository->findAllPreloaded();        
         return $invallowancecharges;

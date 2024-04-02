@@ -39,6 +39,7 @@ return [
         ],
     ],
     'middlewares' => [
+        RequestCatcherMiddleware::class,
         ErrorCatcher::class,
         SentryMiddleware::class,
         SessionMiddleware::class,
@@ -46,6 +47,5 @@ return [
         CookieLoginMiddleware::class,
         Locale::class,
         Router::class,
-        RequestCatcherMiddleware::class,
     ]
 ];

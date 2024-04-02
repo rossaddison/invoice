@@ -8,7 +8,7 @@ use Cycle\ORM\Select;
 use Throwable;
 use App\Auth\Token;
 use Yiisoft\Auth\IdentityWithTokenRepositoryInterface;
-use Yiisoft\Yii\Cycle\Data\Writer\EntityWriter;
+use Yiisoft\Data\Cycle\Writer\EntityWriter;
 
 /**
  * @template TEntity of Token

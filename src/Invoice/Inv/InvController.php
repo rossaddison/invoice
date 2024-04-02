@@ -105,6 +105,7 @@ use App\Invoice\Helpers\Peppol\PeppolArrays;
 use App\Invoice\Helpers\StoreCove\StoreCoveHelper;
 use App\Invoice\Helpers\TemplateHelper;
 use App\Widget\Bootstrap5ModalInv;
+use App\Widget\Bootstrap5ModalTranslatorMessageWithoutAction;
 // Libraries
 use App\Invoice\Libraries\Crypt;
 // Yii
@@ -1245,6 +1246,7 @@ final class InvController {
                 'inv_custom_values' => $this->inv_custom_values($inv_id, $icR),
                 'invCustomForm' => $invCustomForm,
                 'inv' => $inv,
+                // del or delivery location
                 'del_count' => $delRepo->repoClientCount($inv->getClient_id()),
                 'delivery_count' => (null !== $inv_id ? $deliveryRepo->repoCountInvoice($inv_id) : 0),
                 'contract_count' => $contractRepo->repoClientCount($inv->getClient_id()),
@@ -1981,7 +1983,7 @@ final class InvController {
      *
      * @return \Yiisoft\Data\Reader\DataReaderInterface
      *
-     * @psalm-return \Yiisoft\Yii\Cycle\Data\Reader\EntityReader<array-key, array<array-key, mixed>|object>
+     * @psalm-return \Yiisoft\Data\Cycle\Reader\EntityReader<array-key, array<array-key, mixed>|object>
      */
     private function invs_status_with_sort(IR $iR, int $status, Sort $sort): \Yiisoft\Data\Reader\DataReaderInterface {
         $invs = $iR->findAllWithStatus($status)
@@ -2390,11 +2392,11 @@ final class InvController {
     }
 
     /**
-     * @return \Yiisoft\Yii\Cycle\Data\Reader\EntityReader
+     * @return \Yiisoft\Data\Cycle\Reader\EntityReader
      *
-     * @psalm-return \Yiisoft\Yii\Cycle\Data\Reader\EntityReader
+     * @psalm-return \Yiisoft\Data\Cycle\Reader\EntityReader
      */
-    private function invs(InvRepository $invRepo, int $status): \Yiisoft\Yii\Cycle\Data\Reader\EntityReader {
+    private function invs(InvRepository $invRepo, int $status): \Yiisoft\Data\Cycle\Reader\EntityReader {
         $invs = $invRepo->findAllWithStatus($status);
         return $invs;
     }
@@ -2822,8 +2824,7 @@ final class InvController {
                         // according to the read only toggle setting.
                         $this->sR->invoice_mark_viewed((string) $inv_id, $iR);
                     }
-                    $iR->save($inv);
-
+                    $iR->save($inv);                    
                     $payment_method = $inv->getPayment_method() !== 0 ? $pmR->repoPaymentMethodquery((string) $inv->getPayment_method()) : null;
                     $custom_fields = [
                         'invoice' => $cfR->repoTablequery('inv_custom'),
@@ -2837,7 +2838,6 @@ final class InvController {
                         $is_overdue = ($inv_amount->getBalance() > 0 && ($inv->getDate_due()) < (new \DateTimeImmutable('now')) ? true : false);
                         $parameters = [
                             'render' => $this->view_renderer->renderPartialAsString('/invoice/template/invoice/public/' . ($this->sR->get_setting('public_invoice_template') ?: 'Invoice_Web'), [
-                                // TODO logo
                                 'alert' => $this->alert(),
                                 'aliases' => $this->sR->get_img(),
                                 'attachments' => $attachments,
@@ -2849,7 +2849,6 @@ final class InvController {
                                 'custom_fields' => $custom_fields,
                                 'download_pdf_non_sumex_action' => ['inv/download_pdf', ['url_key' => $url_key]],
                                 'download_pdf_sumex_action' => ['inv/download_pdf', ['url_key' => $url_key]],
-                                'flash_message' => $this->flash_message('info', ''),
                                 'inv' => $inv,
                                 'inv_amount' => $inv_amount,
                                 'inv_tax_rates' => ($inv_id > 0) && $itrR->repoCount($inv_id) > 0 ? $itrR->repoInvquery($inv_id) : null,
@@ -2859,6 +2858,7 @@ final class InvController {
                                 'items' => ($inv_id > 0) ? $iiR->repoInvquery($inv_id) : new InvItem(),
                                 'logo' => '',
                                 'payment_method' => $payment_method,
+                                'paymentTermsArray' => $this->sR->get_payment_term_array($this->translator),
                                 'userinv' => $uiR->repoUserInvUserIdcount($user_id) > 0 ? $uiR->repoUserInvUserIdquery($user_id) : null,
                             ]),
                         ];
@@ -3308,6 +3308,8 @@ final class InvController {
                 $url_key = $inv->getUrl_key();
                 $client_id = $inv->getClient_id();
                 $delivery_location_id = $inv->getDelivery_location_id();
+                $bootstrap5ModalTranslatorMessageWithoutAction = new Bootstrap5ModalTranslatorMessageWithoutAction(
+                        $this->view_renderer);
                 $parameters = [
                     'sales_order_number' => $sales_order_number,
                     'title' => $this->translator->translate('i.view'),
@@ -3422,7 +3424,13 @@ final class InvController {
                     'modal_create_credit' => $this->view_modal_create_credit($currentRoute, $gR, $iR),
                     'view_custom_fields' => $this->view_custom_fields($cfR, $cvR, $inv_custom_values),
                     'partial_inv_attachments' => $this->view_partial_inv_attachments($currentRoute, $url_key, (int) $client_id, $upR),
-                    'partial_inv_delivery_location' => $this->view_partial_delivery_location($currentRoute, $dlR, $delivery_location_id)
+                    'partial_inv_delivery_location' => $this->view_partial_delivery_location($currentRoute, $dlR, $delivery_location_id),
+                    'modal_message_no_payment_method' => $bootstrap5ModalTranslatorMessageWithoutAction
+                        ->renderPartialLayoutWithTranslatorMessageAsString(
+                        $this->translator->translate('invoice.payment.method'),
+                        $this->translator->translate('invoice.payment.information.payment.method.required'),
+                        'inv'
+                    )  
                 ];
                 return $this->view_renderer->render('/invoice/inv/view', $parameters);
             } // if $inv_amount

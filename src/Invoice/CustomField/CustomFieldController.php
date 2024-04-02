@@ -269,11 +269,11 @@ final class CustomFieldController
     }
     
     /**
-     * @return \Yiisoft\Yii\Cycle\Data\Reader\EntityReader
+     * @return \Yiisoft\Data\Cycle\Reader\EntityReader
      *
-     * @psalm-return \Yiisoft\Yii\Cycle\Data\Reader\EntityReader
+     * @psalm-return \Yiisoft\Data\Cycle\Reader\EntityReader
      */
-    private function customfields(CustomFieldRepository $customfieldRepository): \Yiisoft\Yii\Cycle\Data\Reader\EntityReader 
+    private function customfields(CustomFieldRepository $customfieldRepository): \Yiisoft\Data\Cycle\Reader\EntityReader 
     {
         $customfields = $customfieldRepository->findAllPreloaded();        
         return $customfields;

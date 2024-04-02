@@ -89,11 +89,26 @@ return [
     Route::get('/')
     ->action([SiteController::class, 'index'])
     ->name('site/index'),
+    Route::methods([Method::GET, Method::POST], '/fill')
+    ->action([ContactController::class, 'fill'])
+    ->name('contact/fill'),
+    Route::methods([Method::GET, Method::POST], '/about')
+    ->action([SiteController::class, 'about'])
+    ->name('site/about'),
+    Route::methods([Method::GET, Method::POST], '/team')
+    ->action([SiteController::class, 'team'])
+    ->name('site/team'),
+    Route::methods([Method::GET, Method::POST], '/pricing')
+    ->action([SiteController::class, 'pricing'])
+    ->name('site/pricing'),
+    Route::methods([Method::GET, Method::POST], '/testimonial')
+    ->action([SiteController::class, 'testimonial'])
+    ->name('site/testimonial'),
     Route::methods([Method::GET, Method::POST], '/contact')
-    ->action([ContactController::class, 'contact'])
+    ->action([SiteController::class, 'contact'])
     ->name('site/contact'),
-  // Auth
-  Route::methods([Method::GET, Method::POST], '/login')
+    // Auth
+    Route::methods([Method::GET, Method::POST], '/login')
     ->middleware(LimitRequestsMiddleware::class)
     ->action([AuthController::class, 'login'])
     ->name('auth/login'),
@@ -1228,6 +1243,14 @@ return [
       ->middleware(Authentication::class)
       ->action([PaymentInformationController::class, 'braintree_complete'])
       ->name('paymentinformation/braintree_complete'),
+      Route::methods([Method::GET, Method::POST], '/paymentinformation/mollie_complete/{url_key}')
+      ->middleware(fn(AccessChecker $checker) => $checker->withPermission('viewPayment'))
+      ->middleware(Authentication::class)
+      ->action([PaymentInformationController::class, 'mollie_complete'])
+      ->name('paymentinformation/mollie_complete'),      
+      Route::methods([Method::POST], '/paymentinformation/mollie_webhook')
+      ->action([PaymentInformationController::class, 'mollie_webhook'])
+      ->name('paymentinformation/mollie_webhook'),      
       Route::methods([Method::GET, Method::POST], '/paymentinformation/stripe_complete/{url_key}')
       ->middleware(fn(AccessChecker $checker) => $checker->withPermission('viewPayment'))
       ->middleware(Authentication::class)
@@ -1237,17 +1260,7 @@ return [
       ->middleware(fn(AccessChecker $checker) => $checker->withPermission('viewPayment'))
       ->middleware(Authentication::class)
       ->action([PaymentInformationController::class, 'stripe_incomplete'])
-      ->name('paymentinformation/stripe_incomplete'),
-      Route::methods([Method::GET, Method::POST], '/paymentinformation/make_payment_stripe_pci/{url_key}')
-      ->middleware(fn(AccessChecker $checker) => $checker->withPermission('viewPayment'))
-      ->middleware(Authentication::class)
-      ->action([PaymentInformationController::class, 'make_payment_stripe_pci'])
-      ->name('paymentinformation/make_payment_stripe_pci'),
-      Route::methods([Method::GET, Method::POST], '/paymentinformation/make_payment_amazon_pci/{url_key}')
-      ->middleware(fn(AccessChecker $checker) => $checker->withPermission('viewPayment'))
-      ->middleware(Authentication::class)
-      ->action([PaymentInformationController::class, 'make_payment_amazon_pci'])
-      ->name('paymentinformation/make_payment_amazon_pci'),
+      ->name('paymentinformation/stripe_incomplete'), 
       Route::methods([Method::GET, Method::POST], '/paymentinformation/make_payment_omnipay/{url_key}')
       ->middleware(fn(AccessChecker $checker) => $checker->withPermission('viewPayment'))
       ->middleware(Authentication::class)
@@ -1258,11 +1271,11 @@ return [
       ->middleware(Authentication::class)
       ->action([PaymentInformationController::class, 'fetch'])
       ->name('paymentinformation/fetch'),
-      Route::methods([Method::GET, Method::POST], '/paymentinformation/form/{url_key}/{gateway}')
+      Route::methods([Method::GET, Method::POST], '/paymentinformation/inform/{url_key}/{gateway}')
       ->middleware(fn(AccessChecker $checker) => $checker->withPermission('viewPayment'))
       ->middleware(Authentication::class)
-      ->action([PaymentInformationController::class, 'form'])
-      ->name('paymentinformation/form'),
+      ->action([PaymentInformationController::class, 'inform'])
+      ->name('paymentinformation/inform'),
       Route::methods([Method::GET, Method::POST], '/paymentinformation/omnnipay_payment_return/{url_key}/{driver}')
       ->middleware(fn(AccessChecker $checker) => $checker->withPermission('viewPayment'))
       ->middleware(Authentication::class)

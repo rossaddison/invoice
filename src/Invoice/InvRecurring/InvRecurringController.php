@@ -344,9 +344,9 @@ final class InvRecurringController
     
     /**
      * @param IRR $invrecurringRepository
-     * @return \Yiisoft\Yii\Cycle\Data\Reader\EntityReader
+     * @return \Yiisoft\Data\Cycle\Reader\EntityReader
      */
-    private function invrecurrings(IRR $invrecurringRepository): \Yiisoft\Yii\Cycle\Data\Reader\EntityReader
+    private function invrecurrings(IRR $invrecurringRepository): \Yiisoft\Data\Cycle\Reader\EntityReader
     {
         $invrecurrings = $invrecurringRepository->findAllPreloaded();        
         return $invrecurrings;

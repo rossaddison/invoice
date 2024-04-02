@@ -134,6 +134,9 @@ final class InvoiceController
             case 'shared':
                 $view = $this->viewRenderer->renderPartialAsString('/invoice/info/shared_hosting');
                 break;
+            case 'paymentprovider':
+                $view = $this->viewRenderer->renderPartialAsString('/invoice/info/payment_provider');
+                break;
             default:
                 $view = '';
                 break;
@@ -929,7 +932,7 @@ final class InvoiceController
             'sumex_canton' => 1,
             'sumex_role' => 1,
             'sumex_place' => 1,
-            'tax_rate_decimal_places' => 3, 
+            'tax_rate_decimal_places' => 2, 
             'thousands_separator' => ',',
             'time_zone' => 'Europe/London'
         ]; 
@@ -1332,7 +1335,7 @@ final class InvoiceController
             } else {
                 $this->test_data_delete($uR, $fR, $pR, $cR); 
                 $this->install_test_data($trR, $uR, $fR, $pR, $cR, $sR);
-                $flash = $sR->trans('reset');
+                $flash = $this->translator->translate('i.reset');
             }
         } else {
                 $flash = $this->translator->translate('invoice.install.test.data');           

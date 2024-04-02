@@ -265,9 +265,9 @@ final class ContractController
     /**
      * 
      * @param contractR $contractRepository
-     * @return \Yiisoft\Yii\Cycle\Data\Reader\EntityReader
+     * @return \Yiisoft\Data\Cycle\Reader\EntityReader
      */
-    private function contracts(contractR $contractRepository) : \Yiisoft\Yii\Cycle\Data\Reader\EntityReader
+    private function contracts(contractR $contractRepository) : \Yiisoft\Data\Cycle\Reader\EntityReader
     {
         $contracts = $contractRepository->findAllPreloaded();        
         return $contracts;

@@ -203,11 +203,11 @@ final class UnitController
     
     
     /**
-     * @return \Yiisoft\Yii\Cycle\Data\Reader\EntityReader
+     * @return \Yiisoft\Data\Cycle\Reader\EntityReader
      *
-     * @psalm-return \Yiisoft\Yii\Cycle\Data\Reader\EntityReader
+     * @psalm-return \Yiisoft\Data\Cycle\Reader\EntityReader
      */
-    private function units(UnitRepository $unitRepository): \Yiisoft\Yii\Cycle\Data\Reader\EntityReader{
+    private function units(UnitRepository $unitRepository): \Yiisoft\Data\Cycle\Reader\EntityReader{
         $units = $unitRepository->findAllPreloaded();
         return $units;
     }

@@ -257,5 +257,5 @@ $(document).ready(function () {
                 $('.passmeter-2').show();
             }
         });
-    }
+    } 
 });

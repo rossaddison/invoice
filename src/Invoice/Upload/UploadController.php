@@ -26,7 +26,7 @@ use Yiisoft\Session\Flash\Flash;
 use Yiisoft\Translator\TranslatorInterface;
 use Yiisoft\FormModel\FormHydrator;
 use Yiisoft\Yii\View\ViewRenderer;
-use Yiisoft\Yii\Cycle\Data\Reader\EntityReader;
+use Yiisoft\Data\Cycle\Reader\EntityReader;
 
 use \Exception;
 
@@ -268,11 +268,11 @@ final class UploadController {
     /**
      * @param UploadRepository $uploadRepository
      *
-     * @return \Yiisoft\Yii\Cycle\Data\Reader\EntityReader
+     * @return \Yiisoft\Data\Cycle\Reader\EntityReader
      *
-     * @psalm-return \Yiisoft\Yii\Cycle\Data\Reader\EntityReader
+     * @psalm-return \Yiisoft\Data\Cycle\Reader\EntityReader
      */
-    private function uploads(UploadRepository $uploadRepository): \Yiisoft\Yii\Cycle\Data\Reader\EntityReader {
+    private function uploads(UploadRepository $uploadRepository): \Yiisoft\Data\Cycle\Reader\EntityReader {
         $uploads = $uploadRepository->findAllPreloaded();
         return $uploads;
     }

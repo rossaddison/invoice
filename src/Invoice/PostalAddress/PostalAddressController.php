@@ -229,11 +229,11 @@ final class PostalAddressController
     }
 
     /**
-     * @return \Yiisoft\Yii\Cycle\Data\Reader\EntityReader
+     * @return \Yiisoft\Data\Cycle\Reader\EntityReader
      *
-     * @psalm-return \Yiisoft\Yii\Cycle\Data\Reader\EntityReader
+     * @psalm-return \Yiisoft\Data\Cycle\Reader\EntityReader
      */
-    private function postaladdresses(PostalAddressRepository $postaladdressRepository) : \Yiisoft\Yii\Cycle\Data\Reader\EntityReader
+    private function postaladdresses(PostalAddressRepository $postaladdressRepository) : \Yiisoft\Data\Cycle\Reader\EntityReader
     {
         $postaladdresses = $postaladdressRepository->findAllPreloaded();        
         return $postaladdresses;

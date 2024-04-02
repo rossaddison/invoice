@@ -5,6 +5,7 @@ namespace App\Invoice\Setting;
 
 // App
 use App\Invoice\Entity\Setting;
+use App\Invoice\CustomField\CustomFieldRepository as CFR;
 use App\Invoice\Setting\SettingRepository;
 use App\Invoice\Setting\SettingForm;
 use App\Invoice\EmailTemplate\EmailTemplateRepository as ER;
@@ -124,7 +125,8 @@ final class SettingController
      */
     public function tab_index(Request $request, 
                               FormHydrator $formHydrator, 
-                              ViewRenderer $head, 
+                              ViewRenderer $head,
+                              CFR $cfR,
                               ER $eR, 
                               GR $gR, 
                               PM $pm, 
@@ -172,6 +174,17 @@ final class SettingController
                 'public_invoice_templates'=>$this->s->get_invoice_templates('public'),
                 'pdf_invoice_templates'=>$this->s->get_invoice_templates('pdf'),
                 'email_templates_invoice'=>$eR->repoEmailTemplateType('invoice'),
+                'email_template_tags' => $this->viewRenderer->renderPartialAsString('/invoice/emailtemplate/template-tags', [
+                        'template_tags_quote'=>$this->viewRenderer->renderPartialAsString('/invoice/emailtemplate/template-tags-quote', [
+                            'custom_fields_quote_custom'=>$cfR->repoTablequery('quote_custom'),
+                        ]),
+                        'template_tags_inv'=>$this->viewRenderer->renderPartialAsString('/invoice/emailtemplate/template-tags-inv', [
+                            'custom_fields_inv_custom'=>$cfR->repoTablequery('inv_custom'),
+                        ]), 
+                        'custom_fields' => [                        
+                            'client_custom'=>$cfR->repoTablequery('client_custom')
+                        ],            
+                ]),      
                 'roles' => Sumex::ROLES,
                 'places' => Sumex::PLACES,
                 'cantons' => Sumex::CANTONS,
@@ -193,7 +206,7 @@ final class SettingController
                 'locales'=>$this->s->locales(),
             ]),
             'online_payment'=>$this->viewRenderer->renderPartialAsString('/invoice/setting/views/partial_settings_online_payment',[
-                'gateway_drivers' => $this->s->payment_gateways(),
+                'gateway_drivers' => $this->s->active_payment_gateways(),
                 'gateway_currency_codes' => CurrencyHelper::all(),
                 'gateway_regions' => $this->s->amazon_regions(),
                 'payment_methods' =>  $pm->findAllPreloaded(),                
@@ -597,11 +610,11 @@ final class SettingController
     //$settings = $this->settings();
     
     /**
-     * @return \Yiisoft\Yii\Cycle\Data\Reader\EntityReader
+     * @return \Yiisoft\Data\Cycle\Reader\EntityReader
      *
-     * @psalm-return \Yiisoft\Yii\Cycle\Data\Reader\EntityReader
+     * @psalm-return \Yiisoft\Data\Cycle\Reader\EntityReader
      */
-    private function settings(SettingRepository $settingRepository): \Yiisoft\Yii\Cycle\Data\Reader\EntityReader{
+    private function settings(SettingRepository $settingRepository): \Yiisoft\Data\Cycle\Reader\EntityReader{
         $settings = $settingRepository->findAllPreloaded();
         return $settings;
     }

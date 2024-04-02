@@ -118,7 +118,7 @@ final class InvService
             $model->setUrl_key(Random::string(32));            
             $model->setDate_created(new \DateTimeImmutable('now'));
             $model->setTime_created((new \DateTimeImmutable('now'))->format('H:i:s'));
-            $model->setPayment_method(0);
+            $model->setPayment_method((int)$s->get_setting('invoice_default_payment_method') ?: 4);
             $model->setDate_due($s);
             $model->setDiscount_amount(0.00);
        }
@@ -209,7 +209,7 @@ final class InvService
         }
         if ($delivery_location_id) {
             /**
-             * @var \Yiisoft\Yii\Cycle\Data\Reader\EntityReader $deliveryLocations
+             * @var \Yiisoft\Data\Cycle\Reader\EntityReader $deliveryLocations
              */
             $deliveryLocations = $dlR->repoDeliveryLocationquery($delivery_location_id);
             /**

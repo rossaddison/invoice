@@ -270,11 +270,11 @@ final class GeneratorController
     }
    
     /**
-     * @return \Yiisoft\Yii\Cycle\Data\Reader\EntityReader
+     * @return \Yiisoft\Data\Cycle\Reader\EntityReader
      *
-     * @psalm-return \Yiisoft\Yii\Cycle\Data\Reader\EntityReader
+     * @psalm-return \Yiisoft\Data\Cycle\Reader\EntityReader
      */
-    private function generators(GeneratorRepository $generatorRepository): \Yiisoft\Yii\Cycle\Data\Reader\EntityReader {
+    private function generators(GeneratorRepository $generatorRepository): \Yiisoft\Data\Cycle\Reader\EntityReader {
         $generators = $generatorRepository->findAllPreloaded();
         return $generators;
     }

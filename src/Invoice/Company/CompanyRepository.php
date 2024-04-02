@@ -8,8 +8,8 @@ use App\Invoice\Entity\Company;
 use Cycle\ORM\Select;
 use Throwable;
 use Yiisoft\Data\Reader\Sort;
-use Yiisoft\Yii\Cycle\Data\Reader\EntityReader;
-use Yiisoft\Yii\Cycle\Data\Writer\EntityWriter;
+use Yiisoft\Data\Cycle\Reader\EntityReader;
+use Yiisoft\Data\Cycle\Writer\EntityWriter;
 
 /**
  * @template TEntity of Company
@@ -93,4 +93,15 @@ private EntityWriter $entityWriter;
         $query = $this->select()->where(['id' =>$id]);
         return  $query->fetchOne() ?: null;        
     }
+    
+    /**
+     * @return null|Company
+     *
+     * @psalm-return TEntity|null
+     */
+    public function repoCompanyActivequery(): Company|null    {
+        $query = $this->select()->where(['current' => '1']);
+        return  $query->fetchOne() ?: null;        
+    }
+    
 }

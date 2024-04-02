@@ -17,8 +17,8 @@ use Cycle\Database\Injection\Parameter;
 use Yiisoft\Data\Reader\Sort;
 use Yiisoft\Translator\TranslatorInterface as Translator;
 use Yiisoft\Security\Random;
-use Yiisoft\Yii\Cycle\Data\Reader\EntityReader;
-use Yiisoft\Yii\Cycle\Data\Writer\EntityWriter;
+use Yiisoft\Data\Cycle\Reader\EntityReader;
+use Yiisoft\Data\Cycle\Writer\EntityWriter;
 
 /**
  * @template TEntity of Inv
@@ -454,7 +454,47 @@ final class InvRepository extends Select\Repository
                 'label' => $translator->translate('i.overdue'),
                 'class' => 'overdue',
                 'href' => 5
-            )
+            ),
+            '6' => array(
+                'label' => $translator->translate('i.unpaid'),
+                'class' => 'unpaid',
+                'href' => 6
+            ),
+            '7' => array(
+                'label' => $translator->translate('i.reminder'),
+                'class' => 'reminder',
+                'href' => 7
+            ),
+            '8' => array(
+                'label' => $translator->translate('i.letter'),
+                'class' => 'letter',
+                'href' => 8
+            ),
+            '9' => array(
+                'label' => $translator->translate('i.claim'),
+                'class' => 'claim',
+                'href' => 9
+            ),
+            '10' => array(
+                'label' => $translator->translate('i.judgement'),
+                'class' => 'judgement',
+                'href' => 10
+            ),
+            '11' => array(
+                'label' => $translator->translate('i.enforcement'),
+                'class' => 'enforcement',
+                'href' => 11
+            ),            
+            '12' => array(
+                'label' => $translator->translate('i.credit_invoice_for_invoice'),
+                'class' => 'creditnote',
+                'href' => 12
+            ),
+            '13' => array(
+                'label' => $translator->translate('i.loss'),
+                'class' => 'loss',
+                'href' => 13
+            ),
         );       
     }
     

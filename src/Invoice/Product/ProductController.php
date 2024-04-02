@@ -72,7 +72,7 @@ use Yiisoft\Session\SessionInterface;
 use Yiisoft\Session\Flash\Flash;
 use Yiisoft\Translator\TranslatorInterface;
 use Yiisoft\Validator\Validator;
-use Yiisoft\Yii\Cycle\Data\Reader\EntityReader;
+use Yiisoft\Data\Cycle\Reader\EntityReader;
 use Yiisoft\Yii\View\ViewRenderer;
 
 class ProductController
@@ -724,11 +724,11 @@ class ProductController
     }
     
     /**
-     * @return \Yiisoft\Yii\Cycle\Data\Reader\EntityReader
+     * @return \Yiisoft\Data\Cycle\Reader\EntityReader
      *
-     * @psalm-return \Yiisoft\Yii\Cycle\Data\Reader\EntityReader
+     * @psalm-return \Yiisoft\Data\Cycle\Reader\EntityReader
      */
-    private function products(pR $pR): \Yiisoft\Yii\Cycle\Data\Reader\EntityReader{
+    private function products(pR $pR): \Yiisoft\Data\Cycle\Reader\EntityReader{
         $products = $pR->findAllPreloaded();        
         return $products;
     }

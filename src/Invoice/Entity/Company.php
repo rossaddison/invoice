@@ -51,7 +51,22 @@ class Company
      
     #[Column(type: 'text', nullable: true)]
     private ?string $web =  '';
-     
+    
+    #[Column(type: 'text', nullable: true)]
+    private ?string $slack =  '';
+    
+    #[Column(type: 'text', nullable: true)]
+    private ?string $facebook =  '';
+    
+    #[Column(type: 'text', nullable: true)]
+    private ?string $twitter =  '';
+    
+    #[Column(type: 'text', nullable: true)]
+    private ?string $linkedin =  '';
+    
+    #[Column(type: 'text', nullable: true)]
+    private ?string $whatsapp =  '';
+    
     #[Column(type: 'datetime')]
     private DateTimeImmutable $date_created;
      
@@ -72,6 +87,11 @@ class Company
          string $fax = '',
          string $email = '',
          string $web = '',
+         string $slack = '',
+         string $facebook = '',
+         string $twitter = '',
+         string $linkedin = '',
+         string $whatsapp = '',   
      )
      {
          $this->id=$id;
@@ -87,6 +107,11 @@ class Company
          $this->fax=$fax;
          $this->email=$email;
          $this->web=$web;
+         $this->slack=$slack;
+         $this->facebook=$facebook;
+         $this->twitter=$twitter;
+         $this->linkedin=$linkedin;
+         $this->whatsapp=$whatsapp;
          $this->date_created = new \DateTimeImmutable();
          $this->date_modified = new \DateTimeImmutable();
      }
@@ -219,6 +244,56 @@ class Company
     public function setWeb(string $web) : void
     {
       $this->web =  $web;
+    }
+    
+    public function getSlack(): string|null
+    {
+       return $this->slack;
+    }
+    
+    public function setSlack(string $slack) : void
+    {
+      $this->slack =  $slack;
+    }
+    
+    public function getTwitter(): string|null
+    {
+       return $this->twitter;
+    }
+    
+    public function setTwitter(string $twitter) : void
+    {
+      $this->twitter =  $twitter;
+    }
+    
+    public function getFacebook(): string|null
+    {
+       return $this->facebook;
+    }
+    
+    public function setFacebook(string $facebook) : void
+    {
+      $this->facebook =  $facebook;
+    }
+    
+    public function getLinkedIn(): string|null
+    {
+       return $this->linkedin;
+    }
+    
+    public function setLinkedIn(string $linkedin) : void
+    {
+      $this->linkedin =  $linkedin;
+    }
+    
+    public function getWhatsapp(): string|null
+    {
+       return $this->whatsapp;
+    }
+    
+    public function setWhatsapp(string $whatsapp) : void
+    {
+      $this->whatsapp =  $whatsapp;
     }
     
     public function getDate_created(): DateTimeImmutable

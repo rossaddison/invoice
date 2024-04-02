@@ -4,12 +4,12 @@
         as a test platform for WAMP and also Ubuntu 22.04 LTS for LAMP.</b>
 </p>
 <p><b>To Do's - Longer Term Goals</b></p>
-<p>1. <s>Integration of Payment Gateways</s>PCI Compliant Stripe, Amazon Pay, and Braintree have been introduced.</p>
+<p>1. <s>Integration of Payment Gateways</s>PCI Compliant Stripe, Amazon Pay, Braintree, and Mollie have been introduced.</p>
 <p>2. Accountant Role with the ability of an accountant/bookkeeper to record payments against invoices.</p>
-<p>3. Include a <b>Company Private Detail</b> specific logo on an invoice.</p>
+<p><s>3. Include a <b>Company Private Detail</b> specific logo on a pdf invoice.</s></p>
 <p>4. Acceptance Tests for Invoice</p>
 <p>5. Further validation and exceptions to be included in testing of e-Invoicing using PeppolHelper.</p>
-<p>6. Filters to be introduced on grids</p>
+<p><s>6. Filters to be introduced on grids</s></p>
 <p><s>7. Improve Generator index template using Yiisoft functions.</s></p>
 <p><s>8. Include Product images</s></p>
 <p>9. Integrate <code>https://github.com/php-finance/double-entry</code></p>
@@ -40,14 +40,44 @@
 <p><s>Psalm Level 2 - Testing</s></p>
 <p><s>Dead Code Removal with Psalm 3 Testing</s></p>
 <p><s>Language array generator using Google Translate</s></p>
-<p>All invoices with dates falling within CompanyPrivate start and end dates will have the specific logo uploaded</p>
-<p>for this CompanyPrivate record attached to these invoices.</p>
-<p>CompanyPrivate logo will be automatically input on invoice/quotes depending on whether the date of the invoice falls between the start and end date.</p>
+<p><s>All invoices with dates falling within CompanyPrivate start and end dates will have the specific logo uploaded</s></p>
+<p><s>for this CompanyPrivate record attached to these invoices.</s></p>
+<p><s>CompanyPrivate logo will be automatically input on invoice/quotes depending on whether the date of the invoice falls between the start and end date.</s></p>
 <p>Introducing Paypal.</p>
 <p>Introducing India's PayTm payment gateway's QR code method of payment and comparing this with Stripe's method.</p>
 <p>A General Sales Tax (GST) Tax System will have to be implemented first for this purpose.</p>
 <p><b>What's next?</b></p>
-<p>Updating custom fields index and include filters</p>
+<p>Testing Credit Notes against Invoices with refunds (if payment made) linked to each of the payment gateways.</p>
+<p><b>2nd April 2024</b></p>
+<p>1. The debug mode setting, normally situated in ..\views\layout\invoice\main.php, has been moved to the </p>
+<p>   ..\src\ViewInjection\LayoutViewInjection.php return array i.e.  'debugMode' => true, </p>
+<p>2. A few basic front pages have been created for the site using 
+    <a href="https://bootstrapbrain.com/template/free-bootstrap-5-multipurpose-one-page-template-wave/">
+        BootstrapBrain Wavelight Free Template
+    </a>
+    to illustrate the common view injection.
+</p>
+<p>3. All dependency classes e.g. bsb- have been removed from the template and just raw bootstrap 5 code remains</p>
+<p>4. An acknowledgement link has been included on the about page.</p>
+<p>5. A soletrader layout template has been created to illustrate the ..\src\ViewInjection\CommonViewInjection.php pages. i.e. ..resources\views\layout\templates\soletrader\main.php</p>    
+<p>6. The front pages use the variables declared in the CommonViewInjection.php pages.</p>
+<p>7. The Mollie Payment Api has been introduced. <a>https://github.com/mollie/mollie-api-php</a>
+      A redirectUrl and not a webhookUrl is being used. After clients make payment on the Mollie site,
+      they are redirected back with the invoice_url_key. This is matched with Mollie's metadata invoice_url_key.
+      A payment table appears above the invoice view on successful payment.
+</p>
+<p>8. Invoices are accepting payments. TODO: Refunds will be available on balancing credit notes if the invoice has a payment.
+<p>
+<p>9. Updated custom fields index.</p>
+<p>10. Payment gateways Amazon, Stripe, and Mollie have been tested.</p>
+<p>11. Functions within the PaymentInformationController have been renamed from 'form' to 'inform' to
+       better reflect the fact that data is not being captured on a form for pci compliance purposes.
+</p>
+<p>12. Additional invoice statuses have been included in inv/getStatuses(Translator $translator) namely
+       unpaid, reminder, letter, claim, judgement, enforcement, credit_invoice_for_invoice, loss 
+</p>       
+    </code>    
+<p>
 <p><b>8th March 2024</b></p>
 <p>Update the client index with filters firstname surname, and a mini table of invoices per client using Entity Client ArrayCollection</p>
 <p>to build the ArrayCollection up and use its <b>count</b> and <b>toArray</b> function to count the number of invoices</p>

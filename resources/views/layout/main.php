@@ -52,10 +52,15 @@ $this->beginPage();
     </head>
     <body class="cover-container-fluid d-flex w-100 h-100 mx-auto flex-column">
     <header class="mb-auto">
-        <?php $this->beginBody() ?>
-
+        <?php $this->beginBody();
+              $logoPath = ((null!==$companyLogoFileName) ? '/logo/'. $companyLogoFileName : '/site/logo/logo.png');  
+        ?>
         <?= NavBar::widget()
-            ->brandText($brandLabel)
+            ->brandImage($logoPath)
+            ->brandImageAttributes(['margin' => 10, 
+                                    'width' => 80, 
+                                    'height' => 40])    
+            ->brandText(str_repeat('&nbsp;', 7).$brandLabel)
             ->brandUrl($urlGenerator->generate('site/index'))
             ->options(['class' => 'navbar navbar-light bg-light navbar-expand-sm text-white'])
             ->begin() ?>

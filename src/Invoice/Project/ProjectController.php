@@ -240,11 +240,11 @@ final class ProjectController
     }
     
     /**
-     * @return \Yiisoft\Yii\Cycle\Data\Reader\EntityReader
+     * @return \Yiisoft\Data\Cycle\Reader\EntityReader
      *
-     * @psalm-return \Yiisoft\Yii\Cycle\Data\Reader\EntityReader
+     * @psalm-return \Yiisoft\Data\Cycle\Reader\EntityReader
      */
-    private function projects(ProjectRepository $projectRepository): \Yiisoft\Yii\Cycle\Data\Reader\EntityReader
+    private function projects(ProjectRepository $projectRepository): \Yiisoft\Data\Cycle\Reader\EntityReader
     {
         $projects = $projectRepository->findAllPreloaded();        
         return $projects;

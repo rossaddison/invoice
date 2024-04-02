@@ -16,5 +16,30 @@ final class SiteController
     public function index(): \Yiisoft\DataResponse\DataResponse
     {
         return $this->viewRenderer->render('index');
+    }
+
+    public function about(): \Yiisoft\DataResponse\DataResponse
+    {
+        return $this->viewRenderer->render('about');
+    }
+
+    public function team(): \Yiisoft\DataResponse\DataResponse
+    {
+        return $this->viewRenderer->render('team');
+    }
+
+    public function pricing(): \Yiisoft\DataResponse\DataResponse
+    {
+        return $this->viewRenderer->render('pricing');
+    }
+
+    public function testimonial(): \Yiisoft\DataResponse\DataResponse
+    {
+        return $this->viewRenderer->render('testimonial');
+    }
+    
+    public function contact(): \Yiisoft\DataResponse\DataResponse
+    {
+        return $this->viewRenderer->render('contact');
     }    
 }

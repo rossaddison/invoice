@@ -74,4 +74,4 @@ $datehelper = new DateHelper($s);
    <label for="group_id" class="form-label" style="background:lightblue">Group</label>
    <?= $quote->getGroup()->name; ?>
  </div>
-</div>
+ <?= Html::closeTag('div'); ?>

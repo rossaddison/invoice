@@ -79,9 +79,9 @@ Class InvoiceHelper
         }
 
         if (!$isEur && $amount > 99999999.95) {
-            $this->flash('danger', $this->s->trans('Invalid amount'));
+            $this->flash('danger', $this->s->trans('invalid_amount'));
         } elseif ($isEur && $amount > 99999999.99) {
-            $this->flash('danger', $this->s->trans('Invalid amount'));
+            $this->flash('danger', $this->s->trans('invalid_amount'));
         }
 
         $amountLine = sprintf("%010d", (float)$amount * 100);

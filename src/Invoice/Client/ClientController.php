@@ -67,7 +67,7 @@ use Yiisoft\Translator\TranslatorInterface;
 use Yiisoft\User\CurrentUser;
 use Yiisoft\Validator\Validator;
 use Yiisoft\FormModel\FormHydrator;
-use Yiisoft\Yii\Cycle\Data\Reader\EntityReader;
+use Yiisoft\Data\Cycle\Reader\EntityReader;
 use Yiisoft\Yii\View\ViewRenderer;
 // Miscellaneous
 
@@ -159,11 +159,11 @@ final class ClientController
     }
     
     /**
-     * @return \Yiisoft\Yii\Cycle\Data\Reader\EntityReader
+     * @return \Yiisoft\Data\Cycle\Reader\EntityReader
      *
-     * @psalm-return \Yiisoft\Yii\Cycle\Data\Reader\EntityReader
+     * @psalm-return \Yiisoft\Data\Cycle\Reader\EntityReader
      */
-    private function clients(cR $cR, int $active): \Yiisoft\Yii\Cycle\Data\Reader\EntityReader {
+    private function clients(cR $cR, int $active): \Yiisoft\Data\Cycle\Reader\EntityReader {
         $clients = $cR->findAllWithActive($active); 
         return $clients;
     }

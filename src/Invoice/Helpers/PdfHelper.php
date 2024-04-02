@@ -386,7 +386,11 @@ Class PdfHelper
                 'sumex'=> $sumex, 
                 'userinv'=>$userinv,
                 'company_logo_and_address'=>$viewrenderer->renderPartialAsString('/invoice/setting/company_logo_and_address.php',
-                    ['company'=>$company = $this->s->get_config_company_details(), 
+                    [
+                     // if there is no active company with private details, use the config params company details   
+                     'company'=> !$this->s->get_private_company_details() 
+                                 ? $this->s->get_private_company_details()
+                                 : $this->s->get_config_company_details(), 
                      'document_number'=> $inv->getNumber(),
                      //'client_number'=> $client_number,
                      'client_purchase_order_number' => $client_purchase_order_number,

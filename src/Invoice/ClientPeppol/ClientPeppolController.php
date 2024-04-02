@@ -23,7 +23,8 @@ use Yiisoft\Http\Method;
 use Yiisoft\Router\CurrentRoute;
 use Yiisoft\Session\SessionInterface;
 use Yiisoft\Session\Flash\Flash;
-use Yiisoft\Translator\TranslatorInterface;use Yiisoft\FormModel\FormHydrator;
+use Yiisoft\Translator\TranslatorInterface;
+use Yiisoft\FormModel\FormHydrator;
 use Yiisoft\Yii\View\ViewRenderer;
 use \Exception;
 
@@ -111,7 +112,7 @@ final class ClientPeppolController {
                              ? 'client/guest' 
                              : 'client/index',
                     'heading' => $this->translator->translate('invoice.client.peppol'), 
-                    'message' => $settingRepository->trans('record_successfully_updated')
+                    'message' => $this->translator->translate('i.record_successfully_updated')
                 ]
                 )
             );
@@ -207,19 +208,17 @@ final class ClientPeppolController {
   }
 
   /**
-   *
-   * @param SettingRepository $settingRepository
    * @param CurrentRoute $currentRoute
    * @param ClientPeppolRepository $clientpeppolRepository
    * @return Response
    */
-  public function delete(SettingRepository $settingRepository, CurrentRoute $currentRoute, ClientPeppolRepository $clientpeppolRepository
+  public function delete(CurrentRoute $currentRoute, ClientPeppolRepository $clientpeppolRepository
   ): Response {
     try {
       $clientpeppol = $this->clientpeppol($currentRoute, $clientpeppolRepository);
       if ($clientpeppol) {
         $this->clientpeppolService->deleteClientPeppol($clientpeppol);
-        $this->flash_message('info', $settingRepository->trans('record_successfully_deleted'));
+        $this->flash_message('info', $this->translator->translate('i.record_successfully_deleted'));
         return $this->webService->getRedirectResponse('clientpeppol/index');
       }
       return $this->webService->getRedirectResponse('clientpeppol/index');
@@ -252,7 +251,7 @@ final class ClientPeppolController {
       $peppolarrays = new PeppolArrays();
       $form = new ClientPeppolForm($clientpeppol);
       $parameters = [
-        'title' => $settingRepository->trans('edit'),
+        'title' => $this->translator->translate('i.edit'),
         'action' => ['clientpeppol/edit', ['client_id' => $clientpeppol->getClient_id()]],
         'buttons' => $this->viewRenderer->renderPartialAsString('/invoice/layout/header_buttons', ['s' => $settingRepository, 'hide_submit_button' => false, 'hide_cancel_button' => false]),
         'errors' => [],
@@ -280,7 +279,7 @@ final class ClientPeppolController {
           // Guest user's return url to see user's clients
           if ($this->userService->hasPermission('editClientPeppol') && $this->userService->hasPermission('viewInv') && !$this->userService->hasPermission('editInv')) {
             return $this->factory->createResponse($this->viewRenderer->renderPartialAsString('/invoice/setting/clientpeppol_successful_guest',
-                  ['url' => 'client/guest', 'heading' => $this->translator->translate('invoice.client.peppol'), 'message' => $settingRepository->trans('record_successfully_updated')]));
+                  ['url' => 'client/guest', 'heading' => $this->translator->translate('invoice.client.peppol'), 'message' => $this->translator->translate('i.record_successfully_updated')]));
           }
           // Administrator's return url to see all clients
           if ($this->userService->hasPermission('editClientPeppol') && $this->userService->hasPermission('viewInv') && $this->userService->hasPermission('editInv')) {
@@ -333,11 +332,11 @@ final class ClientPeppolController {
   }
 
   /**
-   * @return \Yiisoft\Yii\Cycle\Data\Reader\EntityReader
+   * @return \Yiisoft\Data\Cycle\Reader\EntityReader
    *
-   * @psalm-return \Yiisoft\Yii\Cycle\Data\Reader\EntityReader
+   * @psalm-return \Yiisoft\Data\Cycle\Reader\EntityReader
    */
-  private function clientpeppols(ClientPeppolRepository $clientpeppolRepository): \Yiisoft\Yii\Cycle\Data\Reader\EntityReader {
+  private function clientpeppols(ClientPeppolRepository $clientpeppolRepository): \Yiisoft\Data\Cycle\Reader\EntityReader {
     $clientpeppols = $clientpeppolRepository->findAllPreloaded();
     return $clientpeppols;
   }
@@ -345,17 +344,14 @@ final class ClientPeppolController {
   /**
    * @param CurrentRoute $currentRoute
    * @param ClientPeppolRepository $clientpeppolRepository
-   * @param SettingRepository $settingRepository
    * @return \Yiisoft\DataResponse\DataResponse|Response
    */
-  public function view(CurrentRoute $currentRoute, ClientPeppolRepository $clientpeppolRepository,
-    SettingRepository $settingRepository,
-  ): \Yiisoft\DataResponse\DataResponse|Response {
+  public function view(CurrentRoute $currentRoute, ClientPeppolRepository $clientpeppolRepository): \Yiisoft\DataResponse\DataResponse|Response {
     $clientpeppol = $this->clientpeppol($currentRoute, $clientpeppolRepository);
     if ($clientpeppol) {
       $form = new ClientPeppolForm($clientpeppol);  
       $parameters = [
-        'title' => $settingRepository->trans('view'),
+        'title' => $this->translator->translate('i.view'),
         'action' => ['clientpeppol/view', ['id' => $clientpeppol->getId()]],
         'errors' => [],
         'form' => $form,

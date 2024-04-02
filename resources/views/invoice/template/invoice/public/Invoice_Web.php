@@ -61,7 +61,7 @@ $vat = $s->get_setting('enable_vat_registration');
                         </a>
                             
                     <?php if ($s->get_setting('enable_online_payments') == 1 && $inv_amount->getBalance() > 0) { ?>
-                        <a href="<?= $urlGenerator->generate('paymentinformation/form', 
+                        <a href="<?= $urlGenerator->generate('paymentinformation/inform', 
                                 ['url_key' => $inv_url_key, 
                                  'gateway' => $client_chosen_gateway]); ?>" class="btn btn-success">
                             <i class="fa fa-credit-card"></i><?= $translator->translate('i.pay_now').' '. str_replace('_',' ',$client_chosen_gateway); ?>
@@ -273,11 +273,13 @@ $vat = $s->get_setting('enable_vat_registration');
                     </table>
                 </div>
 
-                <?php if ($inv_amount->getBalance() == 0) {
-                    echo '<img src="' . $aliases->get('@img').'/paid.png' . '" class="paid-stamp">';
+                <?php                
+                // img folder located in public folder
+                if ($inv_amount->getBalance() == 0) {
+                    echo '<img src="/img/paid.png" class="paid-stamp">';
                 } 
                 if ($is_overdue) {
-                    echo '<img src="' . $aliases->get('@img').'/overdue.png' . '" class="overdue-stamp">';
+                    echo '<img src="/img/overdue.png" class="overdue-stamp">';
                 } ?>
 
             </div><!-- .invoice-items -->
@@ -287,9 +289,10 @@ $vat = $s->get_setting('enable_vat_registration');
             <?= Html::openTag('div', ['class' => 'row']); ?>
 
                 <?php if ($inv->getTerms()) { ?>
+                    
                     <div class="col-xs-12 col-md-6">
                         <h4><?= $translator->translate('i.terms'); ?></h4>
-                        <p><?= nl2br(Html::encode($inv->getTerms())); ?></p>
+                        <p><?= nl2br(Html::encode($paymentTermsArray[$inv->getTerms()] ?? '')); ?></p>
                     </div>
                 <?php } ?>
 

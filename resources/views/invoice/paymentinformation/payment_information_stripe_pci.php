@@ -5,7 +5,6 @@ use App\Invoice\Helpers\NumberHelper;
 use App\Invoice\Helpers\ClientHelper;
 
 use Yiisoft\Html\Html;
-use Yiisoft\Html\Tag\Form;
 
 /**
  * @var \Yiisoft\View\View $this
@@ -24,11 +23,20 @@ $clienthelper = new ClientHelper($s);
 <div class="col-12 col-md-8 col-lg-6 col-xl-8">
 <div class="card border border-dark shadow-2-strong rounded-3">
     <div class="card-header bg-dark text-white">
-        <h2 class="fw-normal h3 text-center"><?= $translator->translate('g.online_payment_for_invoice'); ?> #
-                                             <?= $invoice->getNumber(). ' => '.
-                                                 $invoice->getClient()->getClient_name() . ' '.
-                                                 $invoice->getClient()->getClient_surname() . ' '.
-                                                 $numberhelper->format_currency($balance); ?>
+        <h2 class="fw-normal h3 text-center">
+            <div class="row gy-4">
+                <div class="col-4">
+                    <?= Html::tag('br'); ?>
+                    <?= $companyLogo; ?>
+                </div>
+                <div class="col-8">
+                    <?= $translator->translate('g.online_payment_for_invoice'); ?> #
+                    <?= $invoice->getNumber(). ' => '.
+                        $invoice->getClient()->getClient_name() . ' '.
+                        $invoice->getClient()->getClient_surname() . ' '.
+                        $numberhelper->format_currency($balance); ?>
+                </div>    
+            </div>     
         </h2>
         <a href="<?= $urlGenerator->generate('inv/pdf_download_include_cf', ['url_key' => $inv_url_key]); ?>" class="btn btn-sm btn-primary fw-normal h3 text-center" style="text-decoration:none">
             <i class="fa fa-file-pdf-o"></i> <?= $translator->translate('i.download_pdf').'=>'.$translator->translate('i.yes').' '.$translator->translate('i.custom_fields'); ?>
@@ -39,14 +47,8 @@ $clienthelper = new ClientHelper($s);
     </div> 
     <br><?= Html::tag('Div',Html::tag('H4', $title)); ?><br>
 <div class="card-body p-5 text-center">    
-    <?=                    
-    Form::tag()
-    ->post($urlGenerator->generate(...$action))
-    ->enctypeMultipartFormData()
-    ->csrf($csrf)
-    ->id('payment-form')
-    ->open();
-    ?>
+    <?= Html::openTag('form', ['method' => 'post', 'enctype' => 'multipart/form-data', 'id' => 'payment-form']); ?>                   
+    
     <?= $alert; ?>
     <?=
        // Stripe injects the payment element here
@@ -62,11 +64,6 @@ $clienthelper = new ClientHelper($s);
             <?= ' '.$translator->translate('i.pay_now') . ': ' . $numberhelper->format_currency($balance) ?>
         </span>
     </button>
-<?php            
-    if ($logo) {
-        echo $logo;
-    }
-?>    
 <?= Html::encode($clienthelper->format_client($client_on_invoice)) ?>
 <?= $partial_client_address; ?>
 <br>
@@ -104,10 +101,11 @@ $clienthelper = new ClientHelper($s);
     <div class="col-xs-12 text-muted">
         <br>
         <h4><?= $translator->translate('i.terms'); ?></h4>
-        <div><?= nl2br(Html::encode($invoice->getTerms())); ?></div>
+        <?php $paymentTermArray = $s->get_payment_term_array($translator); ?>
+        <div><?= nl2br(Html::encode($paymentTermArray[$invoice->getTerms()] ?? '')); ?></div>
     </div>
 <?php endif; ?>
-<?= Form::tag()->close(); ?>
+<?= Html::closeTag('form'); ?>
 </div>
 </div>
 </div>

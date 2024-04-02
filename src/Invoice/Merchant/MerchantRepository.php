@@ -10,8 +10,8 @@ use Cycle\Database\Injection\Parameter;
 use Cycle\ORM\Select;
 // Yiisoft
 use Yiisoft\Data\Reader\Sort;
-use Yiisoft\Yii\Cycle\Data\Reader\EntityReader;
-use Yiisoft\Yii\Cycle\Data\Writer\EntityWriter;
+use Yiisoft\Data\Cycle\Reader\EntityReader;
+use Yiisoft\Data\Cycle\Writer\EntityWriter;
 
 use Throwable;
 

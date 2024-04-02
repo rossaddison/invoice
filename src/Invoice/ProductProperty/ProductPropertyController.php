@@ -132,19 +132,17 @@ final class ProductPropertyController
     }
         
     /**
-     * 
-     * @param SettingRepository $settingRepository
      * @param CurrentRoute $currentRoute
      * @param ProductPropertyRepository $productpropertyRepository
      * @return Response
      */
-    public function delete(SettingRepository $settingRepository, CurrentRoute $currentRoute,ProductPropertyRepository $productpropertyRepository 
+    public function delete(CurrentRoute $currentRoute,ProductPropertyRepository $productpropertyRepository 
     ): Response {
         try {
             $productproperty = $this->productproperty($currentRoute, $productpropertyRepository);
             if ($productproperty) {
                 $this->productpropertyService->deleteProductProperty($productproperty);               
-                $this->flash_message('info', $settingRepository->trans('record_successfully_deleted'));
+                $this->flash_message('info', $this->translator->translate('i.record_successfully_deleted'));
                 return $this->webService->getRedirectResponse('productproperty/index'); 
             }
             return $this->webService->getRedirectResponse('productproperty/index'); 
@@ -222,11 +220,11 @@ final class ProductPropertyController
     }
 
     /**
-     * @return \Yiisoft\Yii\Cycle\Data\Reader\EntityReader
+     * @return \Yiisoft\Data\Cycle\Reader\EntityReader
      *
-     * @psalm-return \Yiisoft\Yii\Cycle\Data\Reader\EntityReader
+     * @psalm-return \Yiisoft\Data\Cycle\Reader\EntityReader
      */
-    private function productpropertys(ProductPropertyRepository $productpropertyRepository) : \Yiisoft\Yii\Cycle\Data\Reader\EntityReader
+    private function productpropertys(ProductPropertyRepository $productpropertyRepository) : \Yiisoft\Data\Cycle\Reader\EntityReader
     {
         $productproperties = $productpropertyRepository->findAllPreloaded();        
         return $productproperties;

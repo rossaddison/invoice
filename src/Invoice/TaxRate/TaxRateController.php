@@ -225,11 +225,11 @@ final class TaxRateController
     //$taxrates = $this->taxrates();
     
     /**
-     * @return \Yiisoft\Yii\Cycle\Data\Reader\EntityReader
+     * @return \Yiisoft\Data\Cycle\Reader\EntityReader
      *
-     * @psalm-return \Yiisoft\Yii\Cycle\Data\Reader\EntityReader
+     * @psalm-return \Yiisoft\Data\Cycle\Reader\EntityReader
      */
-    private function taxrates(TaxRateRepository $taxrateRepository): \Yiisoft\Yii\Cycle\Data\Reader\EntityReader{
+    private function taxrates(TaxRateRepository $taxrateRepository): \Yiisoft\Data\Cycle\Reader\EntityReader{
         $taxrates = $taxrateRepository->findAllPreloaded();
         return $taxrates;
     }

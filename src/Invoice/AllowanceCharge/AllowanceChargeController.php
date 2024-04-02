@@ -366,11 +366,11 @@ final class AllowanceChargeController
     }
 
     /**
-     * @return \Yiisoft\Yii\Cycle\Data\Reader\EntityReader
+     * @return \Yiisoft\Data\Cycle\Reader\EntityReader
      *
-     * @psalm-return \Yiisoft\Yii\Cycle\Data\Reader\EntityReader
+     * @psalm-return \Yiisoft\Data\Cycle\Reader\EntityReader
      */
-    private function allowancecharges(AllowanceChargeRepository $allowancechargeRepository) : \Yiisoft\Yii\Cycle\Data\Reader\EntityReader
+    private function allowancecharges(AllowanceChargeRepository $allowancechargeRepository) : \Yiisoft\Data\Cycle\Reader\EntityReader
     {
         $allowancecharges = $allowancechargeRepository->findAllPreloaded();        
         return $allowancecharges;

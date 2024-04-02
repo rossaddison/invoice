@@ -265,11 +265,11 @@ final class ProductImageController {
     /**
      * @param ProductImageRepository $productimageRepository
      *
-     * @return \Yiisoft\Yii\Cycle\Data\Reader\EntityReader
+     * @return \Yiisoft\Data\Cycle\Reader\EntityReader
      *
-     * @psalm-return \Yiisoft\Yii\Cycle\Data\Reader\EntityReader
+     * @psalm-return \Yiisoft\Data\Cycle\Reader\EntityReader
      */
-    private function productimages(ProductImageRepository $productimageRepository): \Yiisoft\Yii\Cycle\Data\Reader\EntityReader {
+    private function productimages(ProductImageRepository $productimageRepository): \Yiisoft\Data\Cycle\Reader\EntityReader {
         $productimages = $productimageRepository->findAllPreloaded();
         return $productimages;
     }

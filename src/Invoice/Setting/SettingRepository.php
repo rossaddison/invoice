@@ -4,6 +4,10 @@ declare(strict_types=1);
 namespace App\Invoice\Setting;
 
 use App\Invoice\Entity\Setting;
+use App\Invoice\Entity\Company;
+use App\Invoice\Entity\CompanyPrivate;
+use App\Invoice\Company\CompanyRepository as compR;
+use App\Invoice\CompanyPrivate\CompanyPrivateRepository as compPR;
 use App\Invoice\Inv\InvRepository as IR;
 use App\Invoice\Libraries\Lang;
 use App\Invoice\Quote\QuoteRepository as QR;
@@ -18,8 +22,8 @@ use Yiisoft\Files\PathMatcher\PathMatcher;
 use Yiisoft\Html\Html;
 use Yiisoft\Session\SessionInterface;
 use Yiisoft\Translator\TranslatorInterface;
-use Yiisoft\Yii\Cycle\Data\Reader\EntityReader;
-use Yiisoft\Yii\Cycle\Data\Writer\EntityWriter;
+use Yiisoft\Data\Cycle\Reader\EntityReader;
+use Yiisoft\Data\Cycle\Writer\EntityWriter;
 use Yiisoft\Yii\Runner\Http\HttpApplicationRunner;
 
 /**
@@ -33,18 +37,29 @@ final class SettingRepository extends Select\Repository
     public array $settings = [];
     
     private SessionInterface $session;
-    private TranslatorInterface $translator;        
+    private TranslatorInterface $translator;
+    private compR $compR;
+    private compPR $compPR;
     /**
      * 
      * @param Select<TEntity> $select 
      * @param EntityWriter $entityWriter
      * @param SessionInterface $session
      */
-    public function __construct(Select $select, EntityWriter $entityWriter, SessionInterface $session, TranslatorInterface $translator)
+    public function __construct(
+            Select $select, 
+            EntityWriter $entityWriter, 
+            SessionInterface $session, 
+            TranslatorInterface $translator,
+            compR $compR,
+            compPR $compPR
+    )
     {
         $this->entityWriter = $entityWriter;
         $this->session = $session;
         $this->translator = $translator;
+        $this->compR = $compR;
+        $this->compPR = $compPR;        
         parent::__construct($select);
     }
     
@@ -109,6 +124,10 @@ final class SettingRepository extends Select\Repository
             Sort::only(['id', 'setting_key', 'setting_value'])
                 ->withOrder(['setting_key' => 'asc'])
         );
+    }
+    
+    public function getActiveCompany() : Company|null {
+        return $this->compR->repoCompanyActivequery();
     }
     
     /**
@@ -312,11 +331,67 @@ final class SettingRepository extends Select\Repository
             'esmtp_scheme' =>$params['symfony/mailer']['esmtpTransport']['scheme'],
             'esmtp_host'=>$params['symfony/mailer']['esmtpTransport']['host'],
             'esmtp_port'=>$params['symfony/mailer']['esmtpTransport']['port'],
-            'use_send_mail'=>$params['yiisoft/mailer']['useSendmail'] == 1 ? $this->trans('true') : $this->trans('false'),           
+            'use_send_mail'=>$params['yiisoft/mailer']['useSendmail'] == 1 ? $this->translator->translate('i.true') : $this->translator->translate('i.false'),           
         ];
         return $config_array;
     }
     
+    /**
+     * @see C:\wamp64\www\invoice\src\Invoice\Helpers\PdfHelper.php generate_inv_html
+     * @return array
+     */
+    public function get_private_company_details() : array
+    {
+        $companyLogoFileName = '';
+        $company = $this->getActiveCompany();
+        $config = $this->get_config_params();
+        $params = $config->get('params');
+        if (null!==$company) {
+           /**
+            * @var array $params['company']
+            * @var string $params['company']['vat_id']
+            * @var string $params['company']['tax_code']
+            * @var string $params['company']['tax_currency'],
+            * @var string $params['company']['iso_3166_country_identification_code']
+            * @var string $params['company']['iso_3166_country_identification_list_id']
+            */
+            $company_array = [
+                // Normally non-changing parameters
+                'vat_id' => $params['company']['vat_id'],
+                'tax_code' => $params['company']['tax_code'],
+                'tax_currency' => $params['company']['tax_currency'],
+                'iso_3166_country_identification_code' => $params['company']['iso_3166_country_identification_code'],
+                'iso_3166_country_identification_list_id' => $params['company']['iso_3166_country_identification_list_id'],
+                // Changeable paramters
+                'name' => $company->getName(),
+                'address_1' => $company->getAddress_1(),
+                'address_2' => $company->getAddress_2(),
+                'zip' => $company->getZip(),
+                'city' => $company->getCity(),
+                'state' => $company->getState(),
+                'country' => $company->getCountry(),
+                'phone' =>  $company->getPhone(),
+                'fax' => $company->getFax(), 
+            ];
+            /**
+             * @var CompanyPrivate $private
+             */
+            foreach ($this->compPR->findAllPreloaded() as $private) {
+                
+                    if ($private->getCompany_id() == (string)$company->getId()) {
+                        // site's logo: take the first logo where the current date falls within the logo's start and end dates
+                        if ($private->getStart_date()?->format('Y-m-d') < (new \DateTimeImmutable('now'))->format('Y-m-d') 
+                        && ($private->getEnd_date()?->format('Y-m-d') > (new \DateTimeImmutable('now'))->format('Y-m-d'))) {
+                            $companyLogoFileName = (string)$private->getLogo_filename();
+                          //  break;
+                        } 
+                    }
+            }
+            $company_array['logo_path'] = '/logo' . ($companyLogoFileName ?: '');
+            return $company_array;
+        }
+        return [];
+    }
     /**
      * @return array
      */
@@ -341,6 +416,7 @@ final class SettingRepository extends Select\Repository
          * @var string $params['company']['iso_3166_country_identification_list_id']
          */
         $company_array = [
+            'logo_path' => '/site/'. $this->public_logo().'.png', 
             'name' => $params['company']['name'],
             'address_1' => $params['company']['address_1'],
             'address_2' => $params['company']['address_2'],
@@ -621,23 +697,13 @@ final class SettingRepository extends Select\Repository
     }  
     
     /**
-     * 
      * @param string $words
      * @return string
      */
     public function trans(string $words) : string
     {
-        $language_folder = $this->load_language_folder();
-        /** 
-         * @var string $value 
-         * @var string $key
-         */
-        foreach ($language_folder as $key => $value){
-             if ($words === $key){
-                  return $value;                                    
-             }
-        }
-        return '';
+        // A few $s->trans uses still exist in e.g. MpdfHelper. These will be removed later
+        return $this->translator->translate('i.'.$words);
     }
     
     /**
@@ -875,12 +941,7 @@ final class SettingRepository extends Select\Repository
     public function get_img() : Aliases
     {
         $aliases = new Aliases(['@base' => dirname(dirname(dirname(__DIR__))), 
-                                '@img' => dirname(dirname(dirname(__DIR__)))
-                                          .DIRECTORY_SEPARATOR. 'src'
-                                          .DIRECTORY_SEPARATOR. 'Invoice'
-                                          .DIRECTORY_SEPARATOR. 'Asset'
-                                          .DIRECTORY_SEPARATOR. 'core'
-                                          .DIRECTORY_SEPARATOR. 'img',
+                                '@img' => '@base/public/img',
                                ]);
         return $aliases;
     }
@@ -1037,7 +1098,7 @@ final class SettingRepository extends Select\Repository
      * 
      * @return array
      */
-    public function payment_gateways() : array 
+    public function inactive_payment_gateways() : array 
     {
         $payment_gateways = array(
             'AuthorizeNet_AIM' => array(
@@ -1059,7 +1120,7 @@ final class SettingRepository extends Select\Repository
                 ),
                 'version' => array(
                     'type' => 'checkbox',
-                    'label' => 'Omnipay Version'                    
+                    'label' => $this->translator->translate('g.online_payment_version')                    
                 )
                 //'liveEndpoint' => array(
                 //    'type' => 'text',
@@ -1089,7 +1150,7 @@ final class SettingRepository extends Select\Repository
                 ),
                 'version' => array(
                     'type' => 'checkbox',
-                    'label' => 'Omnipay Version'                    
+                    'label' => $this->translator->translate('g.online_payment_version')                    
                 )
                 //'liveEndpoint' => array(
                 //    'type' => 'text',
@@ -1123,7 +1184,7 @@ final class SettingRepository extends Select\Repository
                 ),
                 'version' => array(
                     'type' => 'checkbox',
-                    'label' => 'Omnipay Version'                    
+                    'label' => $this->translator->translate('g.online_payment_version')                    
                 )
                 //'solutionType' => array(
                 //    'type' => 'text',
@@ -1169,10 +1230,56 @@ final class SettingRepository extends Select\Repository
                 ),
                 'version' => array(
                     'type' => 'checkbox',
-                    'label' => 'Omnipay Version'                    
+                    'label' => $this->translator->translate('g.online_payment_version')                    
                 )
             ),
-            // Below are listed online dashboard tested PCI COMPLIANT Payment Gateways 
+            // March 2023 
+            //https://developer.paypal.com/docs/checkout/advanced/
+            // Eligibility: Australia, Canada, France, 
+            //              Germany, Italy, Spain,
+            //              United States, United Kingdom
+            // https://developer.paypal.com/sdk/js/configuration/
+            'PayPal_Checkout' => array(                
+                'clientId' => array(
+                    'type' => 'password',
+                    'label' => 'Client Id',
+                ),
+                'clientSecret' => array(
+                    'type' => 'password',
+                    'label' => 'Client Secret',
+                ),
+                'returnUrl' => array(
+                    'type' => 'text',
+                    'label' => 'Return Url',
+                ),
+                'version' => array(
+                    'type' => 'checkbox',
+                    'label' => $this->translator->translate('g.online_payment_version')                    
+                ),
+                'sandbox' => array(
+                    'type' => 'checkbox',
+                    'label' => 'Sandbox'                    
+                ),
+                'webhookId' => array(
+                    'type' => 'text',
+                    'label' => 'Webhook Id',
+                )                
+            ), 
+        );
+        return $payment_gateways;
+    }
+    
+    /**
+     * Note: The version and sandbox sub arrays are mandatory for the package to work
+     *       If the version ie. version is checked it implies this is omnipay.
+     *       You should leave the version checkbox unchecked for each of the below gateways
+     *       since none of them are linked to omnipay. 
+     * @return array
+     */
+    public function active_payment_gateways() : array 
+    {
+        $payment_gateways = array(
+            // Below are listed online dashboard tested PCI COMPLIANT i.e. credit card details not stored on server, Payment Gateways 
             'Amazon_Pay' => array(
                 'publicKeyId' => array(
                     'type' => 'password',
@@ -1200,11 +1307,62 @@ final class SettingRepository extends Select\Repository
                 ),
                 'version' => array(
                     'type' => 'checkbox',
-                    'label' => 'Omnipay Version'                    
+                    'label' => $this->translator->translate('g.online_payment_version')
                 ),                
                 'sandbox' => array(
                     'type' => 'checkbox',
                     'label' => 'Sandbox'                    
+                )
+            ),
+            // https://sandbox.braintreegateway.com/merchants
+            'Braintree' => array(
+                'privateKey' => array(
+                    'type' => 'password',
+                    'label' => 'Api Key',
+                ),
+                'publicKey' => array(
+                    'type' => 'password',
+                    'label' => 'Public Key',
+                ),
+                'merchantId' => array(
+                    'type' => 'password',
+                    'label' => 'Merchant Id',
+                ),
+                'version' => array(
+                    'type' => 'checkbox',
+                    'label' => $this->translator->translate('g.online_payment_version')
+                ),
+                'sandbox' => array(
+                    'type' => 'checkbox',
+                    'label' => 'Sandbox'                    
+                ),
+            ),
+            'Mollie' => array(
+                'testOrLiveApiKey' => array(
+                    'type' => 'password',
+                    'label' => 'Test or Live Api Key i.e key starts with test_ or live_'
+                ),
+                'partnerID' => array(
+                    'type' => 'text',
+                    'label' => 'Partner ID'
+                ),
+                'profileID' => array(
+                    'type' => 'text',
+                    'label' => 'Profile ID'
+                ),
+                'version' => array(
+                    'type' => 'checkbox',
+                    'label' => $this->translator->translate('g.online_payment_version')
+                ),
+                'sandbox' => array(
+                    'type' => 'checkbox',
+                    'label' => 'Sandbox'                    
+                ),
+            ),
+            'StoreCove' => array(
+                'apiKey' => array(
+                    'type' => 'password',
+                    'label' => 'Api Key',
                 )
             ),
             'Stripe' => array(
@@ -1225,74 +1383,9 @@ final class SettingRepository extends Select\Repository
                 ),
                 'version' => array(
                     'type' => 'checkbox',
-                    'label' => 'Omnipay Version'                    
-                ),
-                // 'sandbox' => array(
-                //    'type' => 'checkbox',
-                //    'label' => 'Sandbox'                    
-                //)
-            ),
-            'StoreCove' => array(
-                'apiKey' => array(
-                    'type' => 'password',
-                    'label' => 'Api Key',
-                )
-            ),
-            // https://sandbox.braintreegateway.com/merchants
-            'Braintree' => array(
-                'privateKey' => array(
-                    'type' => 'password',
-                    'label' => 'Api Key',
-                ),
-                'publicKey' => array(
-                    'type' => 'password',
-                    'label' => 'Public Key',
-                ),
-                'merchantId' => array(
-                    'type' => 'password',
-                    'label' => 'Merchant Id',
-                ),
-                'version' => array(
-                    'type' => 'checkbox',
-                    'label' => 'Omnipay Version'                    
-                ),
-                'sandbox' => array(
-                    'type' => 'checkbox',
-                    'label' => 'Sandbox'                    
+                    'label' => $this->translator->translate('g.online_payment_version')
                 ),
             ),
-            // March 2023 
-            //https://developer.paypal.com/docs/checkout/advanced/
-            // Eligibility: Australia, Canada, France, 
-            //              Germany, Italy, Spain,
-            //              United States, United Kingdom
-            // https://developer.paypal.com/sdk/js/configuration/
-            //'PayPal_Checkout' => array(                
-            //    'clientId' => array(
-            //        'type' => 'password',
-            //        'label' => 'Client Id',
-            //    ),
-            //    'clientSecret' => array(
-            //        'type' => 'password',
-            //        'label' => 'Client Secret',
-            //    ),
-            //    'returnUrl' => array(
-            //        'type' => 'text',
-            //        'label' => 'Return Url',
-            //    ),
-            //    'version' => array(
-            //        'type' => 'checkbox',
-            //        'label' => 'Omnipay Version'                    
-            //    ),
-            //    'sandbox' => array(
-            //        'type' => 'checkbox',
-            //        'label' => 'Sandbox'                    
-            //    ),
-            //    'webhookId' => array(
-            //        'type' => 'text',
-            //        'label' => 'Webhook Id',
-            //    )                
-            //), 
         );
         return $payment_gateways;
     }
@@ -1305,7 +1398,7 @@ final class SettingRepository extends Select\Repository
      */
     public function payment_gateways_enabled_DriverList(): array {
         $available_drivers = [];
-        $gateways = $this->payment_gateways();
+        $gateways = $this->active_payment_gateways();
         foreach ($gateways as $driver => $_fields) {
             $d = strtolower((string)$driver);
             if ($this->get_setting('gateway_' . $d . '_enabled') === '1') {
@@ -1317,15 +1410,15 @@ final class SettingRepository extends Select\Repository
     
     // Sandbox Url Array
     /**
-     * @return string[]
-     *
-     * @psalm-return array{stripe: 'https://dashboard.stripe.com', amazon_pay: 'https://sellercentral-europe.amazon.com/external-payments/sandbox/home', braintree: 'https://sandbox.braintreegateway.com/login'}
+     * 
+     * @return array
      */
     public function sandbox_url_array() : array {
         $sandbox_array = [
             'stripe' => 'https://dashboard.stripe.com',
             'amazon_pay' => 'https://sellercentral-europe.amazon.com/external-payments/sandbox/home',
             'braintree' => 'https://sandbox.braintreegateway.com/login',
+            'mollie' => 'https://my.mollie.com/dashboard/'
         ];
         return $sandbox_array;
     }
@@ -1544,7 +1637,13 @@ final class SettingRepository extends Select\Repository
           'where'=>'src/Invoice/Helpers/MpdfHelper.php function initialize_pdf',  
         ],    
         'number_format'=>[
-          'why'=>'When the number format is chosen, the decimal point, and thousands_separator settings have to be derived from the number_format array located in SettingsRepository using the tab_index_number_format function in the SettingController',
+          'why'=>'When the number format is chosen, the decimal point, '. "\r\n". 
+                 'and thousands_separator settings have to be derived from'. "\r\n". 
+                 'the number_format array located in SettingsRepository using '. "\r\n".
+                 'the tab_index_number_format function in the SettingController.' . "\r\n".
+                 'Note: This setting does not effect the number of decimal places: '. "\r\n".
+                 'Only the type of decimal point used i.e comma or dot, and the space'. "\r\n". 
+                 'between the numbers for display.',
           'where'=>'SettingController/tab_index_number_format'
         ],  
         'open_reports_in_new_tab'=>[
@@ -1891,19 +1990,37 @@ final class SettingRepository extends Select\Repository
     }
     
     // Record the debug_mode in a setting.
-    public function debug_mode(bool $debug_mode = true) : void {
-        if (($debug_mode == true) && ($this->get_setting('debug_mode') === '0' || null==$this->get_setting('debug_mode'))) {
-            $debug_mode = new Setting();
-            $debug_mode->setSetting_key('debug_mode');
-            $debug_mode->setSetting_value('1');
-            $this->save($debug_mode);            
+    public function debugMode(bool $debugMode) : void {
+        if ($debugMode == true)  {
+            $count = $this->repoCount('debug_mode');
+            if ($count == 1) {
+                $setting = $this->withKey('debug_mode');
+                if (null!==$setting) {
+                    $setting->setSetting_value('1');
+                    $this->save($setting);
+                }
+            } else {
+                $setting = new Setting();
+                $setting->setSetting_key('debug_mode');
+                $setting->setSetting_value('1');
+                $this->save($setting);
+            }
         }
-        if (($debug_mode == false) && ($this->get_setting('debug_mode') === '1' || null==$this->get_setting('debug_mode'))) {
-            $debug_mode = new Setting();
-            $debug_mode->setSetting_key('debug_mode');
-            $debug_mode->setSetting_value('0');
-            $this->save($debug_mode);
-        }        
+        if ($debugMode == false)  {
+            $count = $this->repoCount('debug_mode');
+            if ($count == 1) {
+                $setting = $this->withKey('debug_mode');
+                if (null!==$setting) {
+                    $setting->setSetting_value('0');
+                    $this->save($setting);
+                }
+            } else {
+                $setting = new Setting();
+                $setting->setSetting_key('debug_mode');
+                $setting->setSetting_value('0');
+                $this->save($setting);    
+            }            
+        }
     }
     
     /**
@@ -1959,7 +2076,13 @@ final class SettingRepository extends Select\Repository
                   //13
                   $common_quote.'quoteitem/_item_form',
                   //14 
-                  $common_invoice.'invitem/_item_edit_product'
+                  $common_invoice.'invitem/_item_edit_product',
+                  //15
+                  $common_invoice.'inv/modal_message_layout',
+                  //16
+                  $common_invoice.'inv/modal_message',
+                  //17
+                  $common_invoice.'inv/modal_message_action',
         ];
         return $array[$key];
     }
@@ -2014,5 +2137,54 @@ final class SettingRepository extends Select\Repository
     public function snakeToCamel(string $input) : string
     {
         return lcfirst(ucwords(str_replace('_', ' ', $input)));
-    }        
+    } 
+    
+    public function mollieSupportedPaymentMethodArray() : array
+    {
+        // Payment methods for mollie can be selected on the dashboard 18-03-2024 
+        // These methods will appear on the $payment->getCheckOutUrl()
+        $array = [
+            'applepay', 
+            'bancontact', 'banktransfer', 'belfius',
+            'creditcard',
+            'directdebit',
+            'eps',
+            'giftcard','giropay',
+            'ideal',
+            'kbc',
+            'mybank', 
+            'paypal', 'paysafecard', 'przelewy24',
+            'sofort'        
+        ];
+        return $array;
+    }
+    
+    public function mollieSupportedLocaleArray() : array
+    {
+        $array = [
+            'en_US',
+            'en_GB',
+            'nl_NL',
+            'nl_BE',
+            'fr_FR',
+            'fr_BE',
+            'de_DE',
+            'de_AT',
+            'de_CH',
+            'es_ES',
+            'ca_ES',
+            'pt_PT',
+            'it_IT',
+            'nb_NO',
+            'sv_SE',
+            'fi_FI',
+            'da_DK',
+            'is_IS',
+            'hu_HU',
+            'pl_PL',
+            'lv_LV',
+            'lt_LT'
+        ];
+        return $array;
+    }
 }

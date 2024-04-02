@@ -183,19 +183,17 @@ final class DeliveryController {
     }
 
     /**
-     *
-     * @param SettingRepository $settingRepository
      * @param CurrentRoute $currentRoute
      * @param DeliveryRepository $deliveryRepository
      * @return Response
      */
-    public function delete(SettingRepository $settingRepository, CurrentRoute $currentRoute, DeliveryRepository $deliveryRepository
+    public function delete(CurrentRoute $currentRoute, DeliveryRepository $deliveryRepository
     ): Response {
         try {
             $delivery = $this->delivery($currentRoute, $deliveryRepository);
             if ($delivery) {
                 $this->deliveryService->deleteDelivery($delivery);
-                $this->flash_message('info', $settingRepository->trans('record_successfully_deleted'));
+                $this->flash_message('info', $this->translator->translate('i.record_successfully_deleted'));
                 return $this->webService->getRedirectResponse('delivery/index');
             }
             return $this->webService->getRedirectResponse('delivery/index');
@@ -274,11 +272,11 @@ final class DeliveryController {
     }
 
     /**
-     * @return \Yiisoft\Yii\Cycle\Data\Reader\EntityReader
+     * @return \Yiisoft\Data\Cycle\Reader\EntityReader
      *
-     * @psalm-return \Yiisoft\Yii\Cycle\Data\Reader\EntityReader
+     * @psalm-return \Yiisoft\Data\Cycle\Reader\EntityReader
      */
-    private function deliveries(DeliveryRepository $deliveryRepository): \Yiisoft\Yii\Cycle\Data\Reader\EntityReader {
+    private function deliveries(DeliveryRepository $deliveryRepository): \Yiisoft\Data\Cycle\Reader\EntityReader {
         $deliveries = $deliveryRepository->findAllPreloaded();
         return $deliveries;
     }
@@ -286,17 +284,14 @@ final class DeliveryController {
     /**
      * @param CurrentRoute $currentRoute
      * @param DeliveryRepository $deliveryRepository
-     * @param SettingRepository $settingRepository
      * @return \Yiisoft\DataResponse\DataResponse|Response
      */
-    public function view(CurrentRoute $currentRoute, DeliveryRepository $deliveryRepository,
-            SettingRepository $settingRepository,
-    ): \Yiisoft\DataResponse\DataResponse|Response {
+    public function view(CurrentRoute $currentRoute, DeliveryRepository $deliveryRepository) : \Yiisoft\DataResponse\DataResponse|Response {
         $delivery = $this->delivery($currentRoute, $deliveryRepository);
         if ($delivery) {
             $form = new DeliveryForm($delivery);
             $parameters = [
-                'title' => $settingRepository->trans('view'),
+                'title' => $this->translator->translate('i.view'),
                 'action' => ['delivery/view', ['id' => $delivery->getId()]],
                 'errors' => [],
                 'form' => $form,

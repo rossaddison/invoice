@@ -8,7 +8,7 @@ use Cycle\ORM\Select;
 use Throwable;
 use App\Auth\Identity;
 use Yiisoft\Auth\IdentityRepositoryInterface;
-use Yiisoft\Yii\Cycle\Data\Writer\EntityWriter;
+use Yiisoft\Data\Cycle\Writer\EntityWriter;
 
 /**
  * @template TEntity of Identity

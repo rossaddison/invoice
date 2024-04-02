@@ -1,0 +1,111 @@
+<?php
+declare(strict_types=1);
+
+use App\Invoice\Helpers\NumberHelper;
+use App\Invoice\Helpers\ClientHelper;
+
+use Yiisoft\Html\Html;
+use Yiisoft\Html\Tag\A;
+
+/**
+ * @var \Yiisoft\View\View $this
+ * @var \Yiisoft\Router\UrlGeneratorInterface $urlGenerator
+ * @var string $csrf
+ * @var string $action
+ */
+
+$numberhelper = new NumberHelper($s);
+$clienthelper = new ClientHelper($s);
+?>
+
+<?php if ($disable_form === false) { ?>
+<div class="container py-5 h-100">
+<div class="row d-flex justify-content-center align-items-center h-100">
+<div class="col-12 col-md-8 col-lg-6 col-xl-8">
+<div class="card border border-dark shadow-2-strong rounded-3">
+    <div class="card-header bg-dark text-white">
+        <h2 class="fw-normal h3 text-center">
+            <?php echo Html::tag('br'); echo $companyLogo; ?><?= $translator->translate('g.online_payment_for_invoice'); ?> #
+                                             <?= $invoice->getNumber(). ' => '.
+                                                 $invoice->getClient()->getClient_name() . ' '.
+                                                 $invoice->getClient()->getClient_surname() . ' '.
+                                                 $numberhelper->format_currency($balance); ?>
+            
+        </h2>
+        <a href="<?= $urlGenerator->generate('inv/pdf_download_include_cf', ['url_key' => $inv_url_key]); ?>" class="btn btn-sm btn-primary fw-normal h3 text-center" style="text-decoration:none">
+            <i class="fa fa-file-pdf-o"></i> <?= $translator->translate('i.download_pdf').'=>'.$translator->translate('i.yes').' '.$translator->translate('i.custom_fields'); ?>
+        </a>
+        <a href="<?= $urlGenerator->generate('inv/pdf_download_exclude_cf', ['url_key' => $inv_url_key]); ?>" class="btn btn-sm btn-danger fw-normal h3 text-center" style="text-decoration:none">
+            <i class="fa fa-file-pdf-o"></i> <?= $translator->translate('i.download_pdf').'=>'.$translator->translate('i.no').' '.$translator->translate('i.custom_fields'); ?>
+        </a>
+    </div> 
+    <br><?= Html::tag('Div',Html::tag('H4', $title)); ?><br>
+<div class="card-body p-5 text-center">    
+    <?= $alert; ?>
+    <?= A::tag()
+        ->href('https://www.mollie.com/gb/security')
+        // open in a separate window
+        ->target('_blank')    
+        ->addClass('btn btn-lg btn-primary bi bi-info-circle')    
+        ->content(' '.$translator->translate('invoice.read.this.please'))
+        ->render();    
+    ?>        
+    <?= A::tag()
+        ->href($payment->getCheckOutUrl())
+        ->target('_blank')
+        ->addClass('btn btn-lg btn-success fa fa-credit-card fa-margin')    
+        ->content(' '. $translator->translate('i.pay_now') . ': ' . $numberhelper->format_currency($balance))
+        ->render();
+    ?>
+    <br>
+
+<?= Html::openTag('div', ['class' => 'card-header']); ?>    
+    <?= Html::encode($clienthelper->format_client($client_on_invoice)); ?>
+    <?= Html::tag('br'); ?>
+    <?= $partial_client_address; ?>
+<?= Html::closeTag('div'); ?>    
+<br>
+<div class="table-responsive">
+    <table class="table table-bordered table-condensed no-margin">
+    <tbody>
+    <tr>
+        <td><?= $translator->translate('i.invoice_date'); ?></td>
+        <td class="text-right"><?= Html::encode($invoice->getDate_created()->format($datehelper->style())); ?></td>
+    </tr>
+    <tr class="<?= ($is_overdue ? 'overdue' : '') ?>">
+        <td><?= $translator->translate('i.due_date'); ?></td>
+        <td class="text-right">
+            <?= Html::encode($invoice->getDate_due()->format($datehelper->style())); ?>
+        </td>
+    </tr>
+    <tr class="<?php echo($is_overdue ? 'overdue' : '') ?>">
+        <td><?= $translator->translate('i.total'); ?></td>
+        <td class="text-right"><?= Html::encode($numberhelper->format_currency($total)); ?></td>
+    </tr>
+    <tr class="<?= ($is_overdue ? 'overdue' : '') ?>">
+        <td><?= $translator->translate('i.balance'); ?></td>
+        <td class="text-right"><?= Html::encode($numberhelper->format_currency($balance)); ?></td>
+    </tr>
+    <?php if ($invoice_payment_method): ?>
+        <tr>
+            <td><?= $translator->translate('i.payment_method') . ': '; ?></td>
+            <td class="text-right"><?= $invoice_payment_method; ?></td>
+        </tr>
+    <?php endif; ?>
+    </tbody>
+</table>
+</div>
+<?php if (!empty($invoice->getTerms())) : ?>
+    <div class="col-xs-12 text-muted">
+    <?php $paymentTermArray = $s->get_payment_term_array($translator); ?>    
+        <br>
+        <h4><?= $translator->translate('i.terms'); ?></h4>
+        <div><?= nl2br(Html::encode($paymentTermArray[$invoice->getTerms()] ?? '')); ?></div>
+    </div>
+<?php endif; ?>
+</div>
+</div>
+</div>
+</div>
+</div>                  
+<?php } ?>

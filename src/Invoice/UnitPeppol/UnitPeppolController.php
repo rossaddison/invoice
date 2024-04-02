@@ -26,7 +26,7 @@ use Yiisoft\Session\SessionInterface as Session;
 use Yiisoft\Session\Flash\Flash;
 use Yiisoft\Translator\TranslatorInterface;
 use Yiisoft\FormModel\FormHydrator;
-use Yiisoft\Yii\Cycle\Data\Reader\EntityReader;
+use Yiisoft\Data\Cycle\Reader\EntityReader;
 use Yiisoft\Yii\View\ViewRenderer;
 
 use \Exception;
@@ -245,11 +245,11 @@ final class UnitPeppolController
     }
 
     /**
-     * @return \Yiisoft\Yii\Cycle\Data\Reader\EntityReader
+     * @return \Yiisoft\Data\Cycle\Reader\EntityReader
      *
-     * @psalm-return \Yiisoft\Yii\Cycle\Data\Reader\EntityReader
+     * @psalm-return \Yiisoft\Data\Cycle\Reader\EntityReader
      */
-    private function unitpeppols(UnitPeppolRepository $unitpeppolRepository) : \Yiisoft\Yii\Cycle\Data\Reader\EntityReader
+    private function unitpeppols(UnitPeppolRepository $unitpeppolRepository) : \Yiisoft\Data\Cycle\Reader\EntityReader
     {
         $unitpeppols = $unitpeppolRepository->findAllPreloaded();        
         return $unitpeppols;

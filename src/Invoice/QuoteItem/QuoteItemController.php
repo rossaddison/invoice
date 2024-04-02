@@ -365,11 +365,11 @@ final class QuoteItemController
     }
     
     /**
-     * @return \Yiisoft\Yii\Cycle\Data\Reader\EntityReader
+     * @return \Yiisoft\Data\Cycle\Reader\EntityReader
      *
-     * @psalm-return \Yiisoft\Yii\Cycle\Data\Reader\EntityReader
+     * @psalm-return \Yiisoft\Data\Cycle\Reader\EntityReader
      */
-    private function quoteitems(QIR $qiR): \Yiisoft\Yii\Cycle\Data\Reader\EntityReader
+    private function quoteitems(QIR $qiR): \Yiisoft\Data\Cycle\Reader\EntityReader
     {
       $quoteitems = $qiR->findAllPreloaded();        
       return $quoteitems;

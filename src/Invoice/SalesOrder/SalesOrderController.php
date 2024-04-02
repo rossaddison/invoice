@@ -728,11 +728,11 @@ final class SalesOrderController
     }
 
     /**
-     * @return \Yiisoft\Yii\Cycle\Data\Reader\EntityReader
+     * @return \Yiisoft\Data\Cycle\Reader\EntityReader
      *
-     * @psalm-return \Yiisoft\Yii\Cycle\Data\Reader\EntityReader
+     * @psalm-return \Yiisoft\Data\Cycle\Reader\EntityReader
      */
-    private function salesorders(SalesOrderRepository $salesorderRepository) : \Yiisoft\Yii\Cycle\Data\Reader\EntityReader
+    private function salesorders(SalesOrderRepository $salesorderRepository) : \Yiisoft\Data\Cycle\Reader\EntityReader
     {
         $salesorders = $salesorderRepository->findAllPreloaded();        
         return $salesorders;

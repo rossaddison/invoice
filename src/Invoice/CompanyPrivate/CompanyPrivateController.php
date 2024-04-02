@@ -379,11 +379,11 @@ final class CompanyPrivateController
     }
     
     /**
-     * @return \Yiisoft\Yii\Cycle\Data\Reader\EntityReader
+     * @return \Yiisoft\Data\Cycle\Reader\EntityReader
      *
-     * @psalm-return \Yiisoft\Yii\Cycle\Data\Reader\EntityReader
+     * @psalm-return \Yiisoft\Data\Cycle\Reader\EntityReader
      */
-    private function companyprivates(CompanyPrivateRepository $companyprivateRepository): \Yiisoft\Yii\Cycle\Data\Reader\EntityReader 
+    private function companyprivates(CompanyPrivateRepository $companyprivateRepository): \Yiisoft\Data\Cycle\Reader\EntityReader 
     {
         $companyprivates = $companyprivateRepository->findAllPreloaded();        
         return $companyprivates;

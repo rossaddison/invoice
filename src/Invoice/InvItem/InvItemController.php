@@ -37,7 +37,7 @@ use Yiisoft\Session\Flash\Flash;
 use Yiisoft\Session\SessionInterface as Session;
 use Yiisoft\Translator\TranslatorInterface;
 use Yiisoft\FormModel\FormHydrator;
-use Yiisoft\Yii\Cycle\Data\Reader\EntityReader;
+use Yiisoft\Data\Cycle\Reader\EntityReader;
 use Yiisoft\Yii\View\ViewRenderer;
 
 final class InvItemController
@@ -483,9 +483,9 @@ final class InvItemController
     
     /**
      * @param IIR $iiR
-     * @return \Yiisoft\Yii\Cycle\Data\Reader\EntityReader
+     * @return \Yiisoft\Data\Cycle\Reader\EntityReader
      */
-    private function invitems(IIR $iiR): \Yiisoft\Yii\Cycle\Data\Reader\EntityReader 
+    private function invitems(IIR $iiR): \Yiisoft\Data\Cycle\Reader\EntityReader 
     {
         $invitems = $iiR->findAllPreloaded();        
         return $invitems;

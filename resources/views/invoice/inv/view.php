@@ -39,7 +39,8 @@ use App\Invoice\Helpers\DateHelper;
         echo $modal_copy_inv;
         echo $modal_delete_items;
         echo $modal_create_recurring;
-        echo $modal_create_credit;        
+        echo $modal_create_credit;
+        echo $modal_message_no_payment_method;
     ?>
 </div>    
 
@@ -227,12 +228,25 @@ if ($show_buttons && $invEdit) {
                     // Show the pay now button if not a draft and the user has viewPayment permission ie. not editPayment permission
                     if (($read_only === false && in_array($inv->getStatus_id(), [2, 3]) && $inv_amount->getBalance() > 0) && $paymentView) {
                         ?>
-    <?php foreach ($enabled_gateways as $gateway) { ?>
-                            <li>
-                                <a href="<?= $urlGenerator->generate('inv/url_key', ['url_key' => $inv->getUrl_key(), 'gateway' => $gateway]); ?>" style="text-decoration:none">
-                                    <i class="fa fa-minus fa-margin"></i> <?= Html::encode($translator->translate('i.pay_now') . '-' . ucfirst($gateway)); ?>
-                                </a>
-                            </li>
+    <?php foreach ($enabled_gateways as $gateway) { ?>                        
+        <li>
+            <?php if ($inv->getPayment_method() !== 0) {
+                // Because there is a payment method there is no need to show a message modal
+            ?>
+            <a href="<?= $urlGenerator->generate('inv/url_key', ['url_key' => $inv->getUrl_key(), 'gateway' => $gateway]); ?>"
+                style="text-decoration:none">
+                <i class="fa fa-minus fa-margin"></i> <?= Html::encode($translator->translate('i.pay_now') . '-' . ucfirst($gateway)); ?>
+            </a>
+            <?php } ?>
+            <?php
+             // show a message modal if there is no payment method
+             // resources/views/invoice/inv/modal_message_layout has the ... 'id' => 'modal-message-'.$type which matches the #modal-message-inv below ?>
+            <?php if ($inv->getPayment_method() === 0) { ?>
+            <a href="#modal-message-inv" data-toggle="modal" style="text-decoration:none">
+                <i class="fa fa-minus fa-margin"></i> <?= Html::encode($translator->translate('i.pay_now') . '-' . ucfirst($gateway)); ?>
+            </a>
+            <?php } ?>
+        </li>
     <?php } ?>
 <?php } ?>
                     <li>
@@ -603,10 +617,11 @@ if (($invEdit && $inv->getStatus_id() === 1 || ($s->get_setting('enable_invoice_
                 <div class="panel panel-default no-margin">
                     <div class="panel-heading">
                 <?= Html::encode($translator->translate('i.terms')); ?>
+                <?php $paymentTermArray = $s->get_payment_term_array($translator); ?>         
                     </div>
                     <div class="panel-body">
                         <textarea name="terms" id="terms" rows="3" disabled
-                                  class="input-sm form-control"><?= Html::encode($body['terms'] ?? ''); ?></textarea>
+                                  class="input-sm form-control"><?= Html::encode($paymentTermArray[$body['terms']] ?? ''); ?></textarea>
                     </div>
                 </div>
 
@@ -623,3 +638,5 @@ if (($invEdit && $inv->getStatus_id() === 1 || ($s->get_setting('enable_invoice_
 <?= $partial_inv_delivery_location; ?>
             </div>
 <?php  echo $modal_add_allowance_charge; ?>
+
+       

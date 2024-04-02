@@ -208,11 +208,11 @@ final class PaymentPeppolController
     }
 
     /**
-     * @return \Yiisoft\Yii\Cycle\Data\Reader\EntityReader
+     * @return \Yiisoft\Data\Cycle\Reader\EntityReader
      *
-     * @psalm-return \Yiisoft\Yii\Cycle\Data\Reader\EntityReader
+     * @psalm-return \Yiisoft\Data\Cycle\Reader\EntityReader
      */
-    private function paymentpeppols(PaymentPeppolRepository $paymentpeppolRepository) : \Yiisoft\Yii\Cycle\Data\Reader\EntityReader
+    private function paymentpeppols(PaymentPeppolRepository $paymentpeppolRepository) : \Yiisoft\Data\Cycle\Reader\EntityReader
     {
         $paymentpeppols = $paymentpeppolRepository->findAllPreloaded();        
         return $paymentpeppols;

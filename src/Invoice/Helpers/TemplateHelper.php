@@ -216,17 +216,17 @@ Class TemplateHelper {
                         $invoice = $iR->repoCount($pk) > 0 ? $iR->repoInvUnloadedquery($pk) : null;
                         if ($invoice) {$userinv = $uiR->repoUserInvUserIdCount($invoice->getUser_id()) > 0 ? $uiR->repoUserInvUserIdquery($invoice->getUser_id()) : null;}
                         if ($userinv) {$replace = $userinv->getTax_code();}
-                    break;    
+                        break;    
                     case 'user_subscribernumber':
                         $invoice = $iR->repoCount($pk) > 0 ? $iR->repoInvUnloadedquery($pk) : null;
                         if ($invoice) {$userinv = $uiR->repoUserInvUserIdCount($invoice->getUser_id()) > 0 ? $uiR->repoUserInvUserIdquery($invoice->getUser_id()) : null;}
                         if ($userinv) {$replace = $userinv->getSubscribernumber();}
-                    break;    
+                        break;    
                     case 'user_iban':                        
                         $invoice = $iR->repoCount($pk) > 0 ? $iR->repoInvUnloadedquery($pk) : null;
                         if ($invoice) {$userinv = $uiR->repoUserInvUserIdCount($invoice->getUser_id()) > 0 ? $uiR->repoUserInvUserIdquery($invoice->getUser_id()) : null;}
                         if ($userinv) {$replace = $userinv->getIban();}
-                    break;    
+                        break;    
                     case 'user_gln':
                         $invoice = $iR->repoCount($pk) > 0 ? $iR->repoInvUnloadedquery($pk) : null;
                         if ($invoice) {$userinv = $uiR->repoUserInvUserIdCount($invoice->getUser_id()) > 0 ? $uiR->repoUserInvUserIdquery($invoice->getUser_id()) : null;}
@@ -395,7 +395,6 @@ Class TemplateHelper {
     }
 
     /**
-     * 
      * @param Inv $invoice
      * @return string
      */
@@ -420,7 +419,6 @@ Class TemplateHelper {
     }
     
     /**
-     * 
      * @return string
      */
     function select_pdf_quote_template() : string
@@ -437,4 +435,4 @@ Class TemplateHelper {
     {
         return $this->s->get_setting('email_quote_template');
     }
-}
+    }

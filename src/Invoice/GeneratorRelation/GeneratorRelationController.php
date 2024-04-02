@@ -233,11 +233,11 @@ final class GeneratorRelationController
     //$generatorrelations = $this->generatorrelations();
     
     /**
-     * @return \Yiisoft\Yii\Cycle\Data\Reader\EntityReader
+     * @return \Yiisoft\Data\Cycle\Reader\EntityReader
      *
-     * @psalm-return \Yiisoft\Yii\Cycle\Data\Reader\EntityReader
+     * @psalm-return \Yiisoft\Data\Cycle\Reader\EntityReader
      */
-    private function generatorrelations(GeneratorRelationRepository $generatorrelationRepository): \Yiisoft\Yii\Cycle\Data\Reader\EntityReader {
+    private function generatorrelations(GeneratorRelationRepository $generatorrelationRepository): \Yiisoft\Data\Cycle\Reader\EntityReader {
         $generatorrelations = $generatorrelationRepository->findAllPreloaded();
         return $generatorrelations;
     }

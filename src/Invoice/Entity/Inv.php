@@ -71,9 +71,9 @@ class Inv {
     #[Column(type: 'integer(11)', nullable: true, default: 0)]
     private ?int $contract_id = null;
 
-    #[Column(type: 'integer(11)', nullable: true)]
+    #[Column(type: 'integer(11)', nullable: true, default: 0)]
     private ?int $delivery_location_id = null;
-    #[BelongsTo(target: DeliveryLocation::class, nullable: false, fkAction: 'CASCADE', fkOnDelete: 'CASCADE')]
+    #[BelongsTo(target: DeliveryLocation::class, nullable: true, fkAction: 'NO ACTION', fkOnDelete: 'NO ACTION')]
     private ?DeliveryLocation $deliveryLocation = null;
 
     #[Column(type: 'integer(11)', nullable: true)]

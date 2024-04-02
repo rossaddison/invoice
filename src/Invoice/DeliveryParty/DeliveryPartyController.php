@@ -212,11 +212,11 @@ final class DeliveryPartyController
     }
 
     /**
-     * @return \Yiisoft\Yii\Cycle\Data\Reader\EntityReader
+     * @return \Yiisoft\Data\Cycle\Reader\EntityReader
      *
-     * @psalm-return \Yiisoft\Yii\Cycle\Data\Reader\EntityReader
+     * @psalm-return \Yiisoft\Data\Cycle\Reader\EntityReader
      */
-    private function deliveryparties(DeliveryPartyRepository $deliverypartyRepository) : \Yiisoft\Yii\Cycle\Data\Reader\EntityReader
+    private function deliveryparties(DeliveryPartyRepository $deliverypartyRepository) : \Yiisoft\Data\Cycle\Reader\EntityReader
     {
         $deliveryparties = $deliverypartyRepository->findAllPreloaded();        
         return $deliveryparties;

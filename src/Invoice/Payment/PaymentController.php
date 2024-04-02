@@ -708,6 +708,7 @@ final class PaymentController
             'canEdit' => $canEdit,
             'canView' => $canView,
             'grid_summary' => $settingRepository->grid_summary($paginator, $this->translator, (int)$settingRepository->get_setting('default_list_limit'), $this->translator->translate('invoice.payments'), ''),
+            'defaultPageSizeOffsetPaginator' => (int)$settingRepository->get_setting('default_list_limit'),
             'page' => $page,
             'paginator' => $paginator,
             'sortOrder' => $query_params['sort'] ?? '', 
@@ -722,11 +723,11 @@ final class PaymentController
     /**
      * @param MerchantRepository $merchantRepository
      *
-     * @return \Yiisoft\Yii\Cycle\Data\Reader\EntityReader
+     * @return \Yiisoft\Data\Cycle\Reader\EntityReader
      *
-     * @psalm-return \Yiisoft\Yii\Cycle\Data\Reader\EntityReader
+     * @psalm-return \Yiisoft\Data\Cycle\Reader\EntityReader
      */
-    private function merchants(MerchantRepository $merchantRepository): \Yiisoft\Yii\Cycle\Data\Reader\EntityReader 
+    private function merchants(MerchantRepository $merchantRepository): \Yiisoft\Data\Cycle\Reader\EntityReader 
     {
         $merchants = $merchantRepository->findAllPreloaded();        
         return $merchants;
@@ -844,11 +845,11 @@ final class PaymentController
     }
     
     /**
-     * @return \Yiisoft\Yii\Cycle\Data\Reader\EntityReader
+     * @return \Yiisoft\Data\Cycle\Reader\EntityReader
      *
-     * @psalm-return \Yiisoft\Yii\Cycle\Data\Reader\EntityReader
+     * @psalm-return \Yiisoft\Data\Cycle\Reader\EntityReader
      */
-    private function payments(PaymentRepository $paymentRepository): \Yiisoft\Yii\Cycle\Data\Reader\EntityReader 
+    private function payments(PaymentRepository $paymentRepository): \Yiisoft\Data\Cycle\Reader\EntityReader 
     {
         $payments = $paymentRepository->findAllPreloaded();        
         return $payments;

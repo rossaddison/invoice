@@ -8,6 +8,7 @@ use Yiisoft\Html\Html;
         <tr> 
             <td style="width:60%;text-align:left">
                 <div id="logo">
+                    <img src="<?= $company['logo_path']; ?>" height="100" width="150"/>
                     <img src="<?= '/site/'. $s->public_logo().'.png'; ?>" height="100" width="150"/>
                 </div>
             </td>

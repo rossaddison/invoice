@@ -51,36 +51,36 @@ $clienthelper = new ClientHelper($s);
     ?>
     <?= $alert; ?>
     <?= Html::input('hidden','invoice_url_key', Html::encode($inv_url_key)); ?>
-    <?= Html::label($translator->translate('i.online_payment_method'),'gateway-select'); ?>
+    <?= Html::label($translator->translate('g.online_payment_method'),'gateway-select'); ?>
     <?= Field::text($form, 'gateway_driver')
     ->addInputAttributes(['class'=>'input-sm form-control'])
     ->addInputAttributes(['value'=>$body['gateway_driver'] ?? $client_chosen_gateway ])
     ->addInputAttributes(['readonly'=>true])
     ->hideLabel()
     ?>
-    <?= $translator->translate('i.creditcard_details'); ?>
-    <?= $translator->translate('i.online_payment_creditcard_hint'); ?>
-    <?= $translator->translate('i.creditcard_number'); ?>
+    <?= $translator->translate('g.creditcard_details'); ?>
+    <?= $translator->translate('g.online_payment_creditcard_hint'); ?>
+    <?= $translator->translate('g.creditcard_number'); ?>
     <?= Field::text($form, 'creditcard_number')
     ->addInputAttributes(['class'=>'input-sm form-control'])
     ->addInputAttributes(['value'=>$body['creditcard_number'] ?? '4242424242424242' ])
     ->hideLabel()
     ?>
-    <?= $translator->translate('i.creditcard_expiry_month'); ?>
+    <?= $translator->translate('g.creditcard_expiry_month'); ?>
     <?= Field::text($form, 'creditcard_expiry_month')
     ->addInputAttributes(['class'=>'input-sm form-control'])  
     ->addInputAttributes(['min'=>'1','max'=>'12'])    
     ->addInputAttributes(['value'=>$body['creditcard_expiry_month'] ?? '06' ])
     ->hideLabel()
     ?>
-    <?= $translator->translate('i.creditcard_expiry_year'); ?>
+    <?= $translator->translate('g.creditcard_expiry_year'); ?>
     <?= Field::text($form, 'creditcard_expiry_year')
     ->addInputAttributes(['class'=>'input-sm form-control'])  
     ->addInputAttributes(['min'=>date('Y'),'max'=>date('Y') + 20])    
     ->addInputAttributes(['value'=>$body['creditcard_expiry_year'] ?? '2030' ])
     ->hideLabel()
     ?>
-    <?= $translator->translate('i.creditcard_cvv'); ?>
+    <?= $translator->translate('g.creditcard_cvv'); ?>
     <?= Field::text($form, 'creditcard_cvv')
     ->addInputAttributes(['class'=>'input-sm form-control'])  
     ->addInputAttributes(['type'=>'number']) 
@@ -97,11 +97,6 @@ $clienthelper = new ClientHelper($s);
         'name' => 'btn_send'
     ],
     ]) ?>
-<?php            
-    if ($logo) {
-        echo $logo;
-    }
-?>    
 <?= Html::encode($clienthelper->format_client($client_on_invoice)) ?>
 <?= $partial_client_address; ?>
 <br>
@@ -141,7 +136,7 @@ $clienthelper = new ClientHelper($s);
     <div class="col-xs-12 text-muted">
         <br>
         <h4><?= $translator->translate('i.terms'); ?></h4>
-        <div><?= nl2br(Html::encode($invoice->getTerms)); ?></div>
+        <div><?= nl2br(Html::encode($invoice->getTerms())); ?></div>
     </div>
 <?php endif; ?>
 <?= Form::tag()->close(); ?>

@@ -303,11 +303,11 @@ final class UserClientController
     }
     
     /**
-     * @return \Yiisoft\Yii\Cycle\Data\Reader\EntityReader
+     * @return \Yiisoft\Data\Cycle\Reader\EntityReader
      *
-     * @psalm-return \Yiisoft\Yii\Cycle\Data\Reader\EntityReader
+     * @psalm-return \Yiisoft\Data\Cycle\Reader\EntityReader
      */
-    private function userclients(UserClientRepository $userclientRepository): \Yiisoft\Yii\Cycle\Data\Reader\EntityReader
+    private function userclients(UserClientRepository $userclientRepository): \Yiisoft\Data\Cycle\Reader\EntityReader
     {
         $userclients = $userclientRepository->findAllPreloaded();        
         return $userclients;

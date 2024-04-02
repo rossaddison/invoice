@@ -18,7 +18,7 @@ use Yiisoft\View\WebView;
  * @var WebView               $this
  * @var TranslatorInterface   $translator
  */
-$this->setTitle($translator->translate('menu.contact'));
+$this->setTitle($translator->translate('menu.contact.us'));
 ?>
 
 <?= FlashMessage::widget() ?>
@@ -32,7 +32,7 @@ $this->setTitle($translator->translate('menu.contact'));
                 </div>
                 <div class="card-body p-5 text-center">
                     <?= Form::tag()
-                        ->post($url->generate('site/contact'))
+                        ->post($url->generate('contact/fill'))
                         ->enctypeMultipartFormData()
                         ->csrf($csrf)
                         ->id('form-contact')
@@ -63,7 +63,6 @@ $this->setTitle($translator->translate('menu.contact'));
                                 'name' => 'contact-button',
                             ],
                         ]) ?>
-
                     <?= Form::tag()->close() ?>
                 </div>
             </div>

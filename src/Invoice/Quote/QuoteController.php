@@ -581,7 +581,7 @@ final class QuoteController
                     $quote->setStatus_id(5);
                     $qR->save($quote);
                     return $this->factory->createResponse($this->view_renderer->renderPartialAsString('/invoice/setting/quote_successful',
-                    ['heading'=>$this->sR->trans('rejected'),'message'=>$this->sR->trans('record_successfully_updated'),'url'=>'quote/view','id'=>$quote_id]));  
+                    ['heading' => $this->translator->translate('i.record_successfully_updated'),'url'=>'quote/view','id'=>$quote_id]));  
                 }    
                 return $this->web_service->getNotFoundResponse();
             }
@@ -680,8 +680,8 @@ final class QuoteController
                     // Inform the user of generated invoice number for drat setting
                     $this->flash_message('info', 
                           $this->sR->get_setting('generate_quote_number_for_draft') === '1' 
-                          ? $this->sR->trans('generate_quote_number_for_draft').'=>'.$this->sR->trans('yes') 
-                          : $this->sR->trans('generate_quote_number_for_draft').'=>'.$this->sR->trans('no') );
+                          ? $this->translator->translate('i.generate_quote_number_for_draft').'=>'.$this->translator->translate('i.yes') 
+                          : $this->translator->translate('i.generate_quote_number_for_draft').'=>'.$this->translator->translate('i.no') );
                   //return response to quote.js to reload page at location
                   return $this->factory->createResponse(Json::encode($parameters));
                   }  
@@ -873,7 +873,7 @@ final class QuoteController
         }
         $quote_id = (string)$this->session->get('quote_id');
         return $this->factory->createResponse($this->view_renderer->renderPartialAsString('/invoice/setting/inv_message',
-        ['heading'=>$this->sR->trans('quote_tax_rate'),'message'=>$this->translator->translate('i.record_successfully_deleted'),'url'=>'quote/view','id'=>$quote_id]));  
+        ['heading' => $this->translator->translate('i.quote_tax_rate'),'message'=>$this->translator->translate('i.record_successfully_deleted'),'url'=>'quote/view','id'=>$quote_id]));  
     }
         
     /**
@@ -1043,7 +1043,7 @@ final class QuoteController
         $mailer_helper = new MailerHelper($this->sR, $this->session, $this->translator,  $this->logger, $this->mailer, $ccR, $qcR, $icR, $pcR, $socR, $cfR, $cvR);
         $template_helper = new TemplateHelper($this->sR, $ccR, $qcR, $icR, $pcR, $socR, $cfR, $cvR);
         if (!$mailer_helper->mailer_configured()) {
-            $this->flash_message('warning', $this->sR->trans('email_not_configured'));
+            $this->flash_message('warning',$this->translator->translate('i.email_not_configured'));
             return $this->web_service->getRedirectResponse('quote/index');
         }
         $quote_entity = $this->quote($currentRoute, $qR, true);
@@ -1280,7 +1280,7 @@ final class QuoteController
                 $to = (string)$body['MailerQuoteForm']['to_email'] ?: '';
                 if (empty($to)) {
                     return $this->factory->createResponse($this->view_renderer->renderPartialAsString('/invoice/setting/quote_message',
-                    ['heading'=>'','message'=>$this->sR->trans('email_to_address_missing'),'url'=>'quote/view','id'=>$quote_id]));  
+                    ['heading'=>'','message'=>$this->translator->translate('i.email_to_address_missing'),'url'=>'quote/view','id'=>$quote_id]));  
                 }
                                 
                 /**
@@ -1294,7 +1294,7 @@ final class QuoteController
                 
                 if (empty($from[0])) {
                     return $this->factory->createResponse($this->view_renderer->renderPartialAsString('/invoice/setting/quote_message',
-                    ['heading'=>'','message'=>$this->sR->trans('email_to_address_missing'),'url'=>'quote/view','id'=>$quote_id]));  
+                    ['heading'=>'','message'=> $this->translator->translate('i.email_to_address_missing'),'url'=>'quote/view','id'=>$quote_id]));  
                 }
 
                 /**  
@@ -1628,10 +1628,10 @@ final class QuoteController
             'client_address_2' => ($client->getClient_address_2() ?? '').'<br>',
             'client_townline' => ($client->getClient_city() ?? '').'<br>'.($client->getClient_state() ?? '').'<br>'.($client->getClient_zip() ?? '').'<br>',
             'client_country' => $client->getClient_country() ?? '',
-            'client_phone' => $sR->trans('phone').'&nbsp;'.($client->getClient_phone() ?? ''),
-            'client_mobile' => $sR->trans('mobile').'&nbsp;'.($client->getClient_mobile() ?? ''),
-            'client_fax' => $sR->trans('fax').'&nbsp;'.($client->getClient_fax() ?? ''),
-            'client_email' => $sR->trans('email').'&nbsp;'. Html::link($client->getClient_email()),                
+            'client_phone' => $this->translator->translate('i.phone').'&nbsp;'.($client->getClient_phone() ?? ''),
+            'client_mobile' => $this->translator->translate('i.mobile').'&nbsp;'.($client->getClient_mobile() ?? ''),
+            'client_fax' => $this->translator->translate('i.fax').'&nbsp;'.($client->getClient_fax() ?? ''),
+            'client_email' => $this->translator->translate('i.email').'&nbsp;'. Html::link($client->getClient_email()),                
             // Reset the a href id="after_client_change_url" link to the new client url
             'after_client_change_url' => '/invoice/client/view/'.(string)$body['client_id'],
             'after_client_change_name' => $client->getClient_name(),
@@ -1790,11 +1790,11 @@ final class QuoteController
     }
     
     /**
-     * @return \Yiisoft\Yii\Cycle\Data\Reader\EntityReader
+     * @return \Yiisoft\Data\Cycle\Reader\EntityReader
      *
-     * @psalm-return \Yiisoft\Yii\Cycle\Data\Reader\EntityReader
+     * @psalm-return \Yiisoft\Data\Cycle\Reader\EntityReader
      */
-    private function quotes(QuoteRepository $quoteRepo, int $status): \Yiisoft\Yii\Cycle\Data\Reader\EntityReader
+    private function quotes(QuoteRepository $quoteRepo, int $status): \Yiisoft\Data\Cycle\Reader\EntityReader
     {
         $quotes = $quoteRepo->findAllWithStatus($status);  
         return $quotes;
