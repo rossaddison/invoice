@@ -699,7 +699,6 @@ final class InvController {
                  * @var string $body['client_id']
                  */
                 $client_id = $body['client_id'];
-                echo $client_id;
                 $user_client = $ucR->repoUserquery($client_id);
                 if (null!==$user_client && null!==$user_client->getClient()) {
                   $client_first_name = $user_client->getClient()?->getClient_name();
@@ -1966,6 +1965,9 @@ final class InvController {
                 'qR' => $qR,
                 'dlR' => $dlR,
                 'soR' => $soR,
+                // Use the invRepo to retrieve the Invoice Number of the invoice
+                // that a credit note has been generated from
+                'iR' => $invRepo,
                 'irR' => $irR,
                 'modal_add_inv' => $bootstrap5ModalInv->renderPartialLayoutWithFormAsString('inv', [])
             ];

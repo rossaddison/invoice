@@ -427,73 +427,87 @@ final class InvRepository extends Select\Repository
         return array(
             '0' => array(
                 'label' => $translator->translate('i.all'),
-                'class' => 'all',
-                'href' => 0
+                'class' => 'default',
+                'href' => 0,
+                'emoji' => '🌎 '
             ),
             '1' => array(
                 'label' => $translator->translate('i.draft'),
-                'class' => 'draft',
-                'href' => 1
+                'class' => 'default',
+                'href' => 1,
+                'emoji' => '🗋 '
             ),
             '2' => array(
                 'label' => $translator->translate('i.sent'),
-                'class' => 'sent',
-                'href' => 2
+                'class' => 'info',
+                'href' => 2,
+                'emoji' => '📨 '
             ),
             '3' => array(
                 'label' => $translator->translate('i.viewed'),
-                'class' => 'viewed',
-                'href' => 3
+                'class' => 'info',
+                'href' => 3,
+                'emoji' => '👀 '
             ),
             '4' => array(
                 'label' => $translator->translate('i.paid'),
-                'class' => 'paid',
-                'href' => 4
+                'class' => 'success',
+                'href' => 4,
+                'emoji' => '😀 '
             ),
             '5' => array(
                 'label' => $translator->translate('i.overdue'),
-                'class' => 'overdue',
-                'href' => 5
+                'class' => 'warning',
+                'href' => 5,
+                'emoji' => '🏦 '
             ),
             '6' => array(
                 'label' => $translator->translate('i.unpaid'),
-                'class' => 'unpaid',
-                'href' => 6
+                'class' => 'danger',
+                'href' => 6,
+                'emoji' => '💸 '
             ),
             '7' => array(
                 'label' => $translator->translate('i.reminder'),
-                'class' => 'reminder',
-                'href' => 7
+                'class' => 'info',
+                'href' => 7,
+                'emoji' => '🔔 '
             ),
             '8' => array(
                 'label' => $translator->translate('i.letter'),
-                'class' => 'letter',
-                'href' => 8
+                'class' => 'danger',
+                'href' => 8,
+                'emoji' => '🗎 '
             ),
             '9' => array(
                 'label' => $translator->translate('i.claim'),
-                'class' => 'claim',
-                'href' => 9
+                'class' => 'info',
+                'href' => 9,
+                'emoji' => '🛄 '
             ),
             '10' => array(
                 'label' => $translator->translate('i.judgement'),
-                'class' => 'judgement',
-                'href' => 10
+                'class' => 'success',
+                'href' => 10,
+                'emoji' => '🙌 '
             ),
             '11' => array(
                 'label' => $translator->translate('i.enforcement'),
-                'class' => 'enforcement',
-                'href' => 11
+                'class' => 'primary',
+                'href' => 11,
+                'emoji' => '👮 '
             ),            
             '12' => array(
                 'label' => $translator->translate('i.credit_invoice_for_invoice'),
-                'class' => 'creditnote',
-                'href' => 12
+                'class' => 'default',
+                'href' => 12,
+                'emoji' => '🛑️ '
             ),
             '13' => array(
                 'label' => $translator->translate('i.loss'),
-                'class' => 'loss',
-                'href' => 13
+                'class' => 'danger',
+                'href' => 13,
+                'emoji' => '❎ '
             ),
         );       
     }

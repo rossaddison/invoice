@@ -198,6 +198,10 @@ if ($show_buttons && $invEdit) {
 //Options...Create Credit Invoice
                     // Show the create credit invoice button if the invoice is read-only or if it is paid
                     // and the user is allowed to edit.
+                    /**
+                     * @see Modal string activated with #create-credit-inv. Modal string from InvController/index output to $modal_create_credit
+                     * @see InvController/create_credit_confirm run from src\Invoice\Asset\rebuild-1.1.3\inv.js create-credit-confirm
+                     */
                     if (( $read_only === true || $inv->getStatus_id() === 4) && $invEdit) {
                         ?>
                         <li>
@@ -585,7 +589,31 @@ if (($invEdit && $inv->getStatus_id() === 1 || ($s->get_setting('enable_invoice_
                                             <img src="/img/paid.png">
 <?php } ?>
 <?php if ($inv->getStatus_id() === 5) { ?>
-                                            <img src="/img/overdue.png">
+    <img src="/img/overdue.png">
+<?php } ?>
+<?php if ($inv->getStatus_id() === 6) { ?>
+         <img src="/img/unpaid.png">
+<?php } ?>
+<?php if ($inv->getStatus_id() === 7) { ?>
+                                            <img src="/img/reminder.png">
+<?php } ?>
+<?php if ($inv->getStatus_id() === 8) { ?>
+                                            <img src="/img/lba.png">
+<?php } ?>
+<?php if ($inv->getStatus_id() === 9) { ?>
+                                            <img src="/img/legalclaim.png">
+<?php } ?>
+<?php if ($inv->getStatus_id() === 10) { ?>
+                                            <img src="/img/judgement.png">
+<?php } ?>                                            
+<?php if ($inv->getStatus_id() === 11) { ?>
+                                            <img src="/img/officer.png">
+<?php } ?>                                              
+<?php if ($inv->getStatus_id() === 12) { ?>
+                                            <img src="/img/creditnote.png">
+<?php } ?>
+<?php if ($inv->getStatus_id() === 13) { ?>
+                                            <img src="/img/writtenoff.png">
 <?php } ?>
                                     </div>
 <?php if (null!==$inv->getSo_id()) { 

@@ -69,28 +69,60 @@ $decimal_places = (int)$s->get_setting('tax_rate_decimal_places');
         <!--  Route::get('/inv[/page/{page:\d+}[/status/{status:\d+}]]') -->
         <div class="btn-group index-options">
             <a href="<?= $urlGenerator->generate('inv/index', ['page' => 1, 'status' => 0]); ?>"
-               class="btn <?= $status == 0 ? 'btn-primary' : 'btn-default' ?>">
-                   <?= $translator->translate('i.all'); ?>
+               class="btn btn-<?= $status == 0 ? $inv_statuses['0']['class'] : 'btn-default' ?>">
+                   <?= $inv_statuses['0']['emoji'].' '.$translator->translate('i.all'); ?>
             </a>
             <a href="<?= $urlGenerator->generate('inv/index', ['page' => 1, 'status' => 1]); ?>" style="text-decoration:none"
-               class="btn  <?= $status == 1 ? 'btn-primary' : 'btn-default' ?>">
-                   <?= $translator->translate('i.draft'); ?>
+               class="btn btn-<?= $status == 1 ? $inv_statuses['1']['class'] : 'btn-default' ?>">
+                   <?= $inv_statuses['1']['emoji'].' '.$translator->translate('i.draft'); ?>
             </a>
             <a href="<?= $urlGenerator->generate('inv/index', ['page' => 1, 'status' => 2]); ?>" style="text-decoration:none"
-               class="btn  <?= $status == 2 ? 'btn-primary' : 'btn-default' ?>">
-                   <?= $translator->translate('i.sent'); ?>
+               class="btn btn-<?= $status == 2 ? $inv_statuses['2']['class'] : 'btn-default' ?>">
+                   <?= $inv_statuses['2']['emoji'].' '.$translator->translate('i.sent'); ?>
             </a>
             <a href="<?= $urlGenerator->generate('inv/index', ['page' => 1, 'status' => 3]); ?>" style="text-decoration:none"
-               class="btn  <?= $status == 3 ? 'btn-primary' : 'btn-default' ?>">
-                   <?= $translator->translate('i.viewed'); ?>
+               class="btn btn-<?= $status == 3 ? $inv_statuses['3']['class'] : 'btn-default' ?>">
+                   <?= $inv_statuses['3']['emoji'].' '.$translator->translate('i.viewed'); ?>
             </a>
             <a href="<?= $urlGenerator->generate('inv/index', ['page' => 1, 'status' => 4]); ?>" style="text-decoration:none"
-               class="btn  <?= $status == 4 ? 'btn-primary' : 'btn-default' ?>">
-                   <?= $translator->translate('i.paid'); ?>
+               class="btn btn-<?= $status == 4 ? $inv_statuses['4']['class'] : 'btn-default' ?>">
+                   <?= $inv_statuses['4']['emoji'].' '.$translator->translate('i.paid'); ?>
             </a>
             <a href="<?= $urlGenerator->generate('inv/index', ['page' => 1, 'status' => 5]); ?>" style="text-decoration:none"
-               class="btn  <?= $status == 5 ? 'btn-primary' : 'btn-default' ?>">
-                <?= $translator->translate('i.overdue'); ?>
+               class="btn btn-<?= $status == 5 ? $inv_statuses['5']['class'] : 'btn-default' ?>">
+                <?= $inv_statuses['5']['emoji'].' '.$translator->translate('i.overdue'); ?>
+            </a>
+            <a href="<?= $urlGenerator->generate('inv/index', ['page' => 1, 'status' => 6]); ?>" style="text-decoration:none"
+               class="btn btn-<?= $status == 6 ? $inv_statuses['6']['class'] : 'btn-default' ?>">
+                <?= $inv_statuses['6']['emoji'].' '.$translator->translate('i.unpaid'); ?>
+            </a>
+            <a href="<?= $urlGenerator->generate('inv/index', ['page' => 1, 'status' => 7]); ?>" style="text-decoration:none"
+               class="btn btn-<?= $status == 7 ? $inv_statuses['7']['class'] : 'btn-default' ?>">
+                <?= $inv_statuses['7']['emoji'].' '.$translator->translate('i.reminder'); ?>
+            </a>
+            <a href="<?= $urlGenerator->generate('inv/index', ['page' => 1, 'status' => 8]); ?>" style="text-decoration:none"
+               class="btn btn-<?= $status == 8 ? $inv_statuses['8']['class'] : 'btn-default' ?>">
+                <?= $inv_statuses['8']['emoji'].' '.$translator->translate('i.letter'); ?>
+            </a>
+            <a href="<?= $urlGenerator->generate('inv/index', ['page' => 1, 'status' => 9]); ?>" style="text-decoration:none"
+               class="btn btn-<?= $status == 9 ? $inv_statuses['9']['class'] : 'btn-default' ?>">
+                <?= $inv_statuses['9']['emoji'].' '.$translator->translate('i.claim'); ?>
+            </a>
+            <a href="<?= $urlGenerator->generate('inv/index', ['page' => 1, 'status' => 10]); ?>" style="text-decoration:none"
+               class="btn btn-<?= $status == 10 ? $inv_statuses['10']['class'] : 'btn-default' ?>">
+                <?= $inv_statuses['10']['emoji'].' '.$translator->translate('i.judgement'); ?>
+            </a>
+            <a href="<?= $urlGenerator->generate('inv/index', ['page' => 1, 'status' => 11]); ?>" style="text-decoration:none"
+               class="btn btn-<?= $status == 11 ? $inv_statuses['11']['class'] : 'btn-default' ?>">
+                <?= $inv_statuses['11']['emoji'].' '.$translator->translate('i.enforcement'); ?>
+            </a>
+            <a href="<?= $urlGenerator->generate('inv/index', ['page' => 1, 'status' => 12]); ?>" style="text-decoration:none"
+               class="btn btn-<?= $status == 12 ? $inv_statuses['12']['class'] : 'btn-default' ?>">
+                <?= $inv_statuses['12']['emoji'].' '.$translator->translate('i.credit_invoice_for_invoice'); ?>
+            </a>
+            <a href="<?= $urlGenerator->generate('inv/index', ['page' => 1, 'status' => 13]); ?>" style="text-decoration:none"
+               class="btn btn-<?= $status == 13 ? $inv_statuses['13']['class'] : 'btn-default' ?>">
+                <?= $inv_statuses['13']['emoji'].' '.$translator->translate('i.loss'); ?>
             </a>
         </div>
     </div>
@@ -111,25 +143,37 @@ $decimal_places = (int)$s->get_setting('tax_rate_decimal_places');
             'status_id',
             header: $translator->translate('i.status'),
             content: static function ($model) use ($s, $irR, $inv_statuses, $translator): Yiisoft\Html\Tag\CustomTag {
-                $span = $inv_statuses[(string) $model->getStatus_id()]['label'];
-                if ($model->getCreditinvoice_parent_id() > 0) {
-                    $span = Html::tag('i', str_repeat(' ', 2) . $translator->translate('i.credit_invoice'), ['class' => 'fa fa-credit-invoice']);
-                }
+                $label = $inv_statuses[(string) $model->getStatus_id()]['label'];
                 if (($model->getIs_read_only()) && $s->get_setting('disable_read_only') === (string) 0) {
-                    $span = Html::tag('i', str_repeat(' ', 2) . $translator->translate('i.paid'), ['class' => 'fa fa-read-only']);
+                    $label =  $translator->translate('i.paid'). ' 🚫';
                 }
                 if ($irR->repoCount((string) $model->getId()) > 0) {
-                    $span = Html::tag('i', str_repeat(' ', 2) . $translator->translate('i.recurring'), ['class' => 'fa fa-refresh']);
+                    $label = $translator->translate('i.recurring'). ' 🔄';
                 }
-                return Html::tag('span', $span, ['class' => 'label ' . $inv_statuses[(string) $model->getStatus_id()]['class']]);
+                return Html::tag('span', $inv_statuses[(string) $model->getStatus_id()]['emoji']. $label, ['class' => 'label label-' . $inv_statuses[(string) $model->getStatus_id()]['class']]);
             }    
         ),
         new DataColumn(
             'number',
             queryProperty: 'filterInvNumber',       
             header: $translator->translate('invoice.invoice.number'),    
-            content: static function ($model) use ($urlGenerator): string {
-                return Html::a($model->getNumber(), $urlGenerator->generate('inv/view', ['id' => $model->getId()]), ['style' => 'text-decoration:none'])->render();
+            content: static function ($model) use ($urlGenerator, $iR): string {
+                $creditInvoiceUrl = '';
+                if ((int)$model->getCreditinvoice_parent_id() > 0)  {
+                        // include a path to the parent invoice as well as the credit note/invoice
+                        $inv = $iR->repoInvUnLoadedquery($model->getCreditinvoice_parent_id());
+                        $creditInvoiceUrl = '⬅️'.Html::a($inv->getNumber(), $urlGenerator->generate('inv/view', 
+                                                       ['id' => $model->getCreditinvoice_parent_id()]
+                                                    ),
+                                                    [
+                                                       'style' => 'text-decoration:none'
+                                                    ])->render();
+                }
+                return  Html::a($model->getNumber(), $urlGenerator->generate('inv/view', ['id' => $model->getId()]),
+                        [
+                           'style' => 'text-decoration:none'
+                        ])->render() . 
+                        $creditInvoiceUrl;
             },
             filter: true            
         ),        

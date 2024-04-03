@@ -210,7 +210,7 @@ return [
     'i.credit_invoice'                               => 'Credit Invoice',
     'i.credit_invoice_date'                          => 'Credit invoice date',
     'i.credit_invoice_details'                       => 'Credit invoice details',
-    'i.credit_invoice_for_invoice'                   => 'Credit invoice for invoice',
+    'i.credit_invoice_for_invoice'                   => 'Credit Note',
     'i.cron_key'                                     => 'CRON Key',
     'i.currency_code'                                => 'Currency Code',
     'i.currency'                                     => 'Currency',
