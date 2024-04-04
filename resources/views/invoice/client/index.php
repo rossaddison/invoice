@@ -80,8 +80,8 @@ $this->setTitle($translator->translate('i.clients'));
             } 
         ),
         new DataColumn(
-            'client_name',
-            queryProperty: 'filter_client_name',    
+            field: 'client_name',
+            property: 'filter_client_name',    
             header: $translator->translate('i.client_name'),
             content: static function ($model) use ($urlGenerator) : string {
                 return  A::tag()
@@ -93,8 +93,8 @@ $this->setTitle($translator->translate('i.clients'));
             filter: $optionsDataClientNameDropdownFilter        
         ),
         new DataColumn(
-            'client_surname',
-            queryProperty: 'filter_client_surname',    
+            field:  'client_surname',
+            property: 'filter_client_surname',    
             header: $translator->translate('i.client_surname'),
             content: static function ($model) use ($urlGenerator) : string {
                 return  A::tag()

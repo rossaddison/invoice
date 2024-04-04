@@ -154,8 +154,8 @@ $decimal_places = (int)$s->get_setting('tax_rate_decimal_places');
             }    
         ),
         new DataColumn(
-            'number',
-            queryProperty: 'filterInvNumber',       
+            field: 'number',
+            property: 'filterInvNumber',       
             header: $translator->translate('invoice.invoice.number'),    
             content: static function ($model) use ($urlGenerator, $iR): string {
                 $creditInvoiceUrl = '';
@@ -204,8 +204,8 @@ $decimal_places = (int)$s->get_setting('tax_rate_decimal_places');
             }     
         ),        
         new DataColumn(
-            'client_id',
-            queryProperty: 'filterClient',
+            field: 'client_id',
+            property: 'filterClient',
             header: $translator->translate('i.client'),
             content: static fn($model): string => $model->getClient()->getClient_name() . str_repeat(' ', 2).$model->getClient()->getClient_surname(),
             filter: $optionsDataClientsDropdownFilter    
@@ -258,8 +258,8 @@ $decimal_places = (int)$s->get_setting('tax_rate_decimal_places');
             }   
         ),        
         new DataColumn(
-            'id',
-            queryProperty: 'filterInvAmountTotal',
+            field: 'id',
+            property: 'filterInvAmountTotal',
             header: $translator->translate('i.total') . ' ( '. $s->get_setting('currency_symbol'). ' ) ',
             content: static function ($model) use ($decimal_places) : string|null {
                return  

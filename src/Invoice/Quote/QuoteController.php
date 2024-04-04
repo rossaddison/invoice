@@ -114,6 +114,7 @@ use App\Widget\Bootstrap5ModalQuote;
 use Yiisoft\Data\Paginator\OffsetPaginator as DataOffsetPaginator;
 use Yiisoft\Data\Paginator\PageToken;
 use Yiisoft\Data\Reader\Sort;
+use Yiisoft\Data\Reader\OrderHelper;
 use Yiisoft\DataResponse\DataResponseFactoryInterface;
 use Yiisoft\Html\Html;
 use Yiisoft\Http\Method;
@@ -1491,14 +1492,14 @@ final class QuoteController
         $page = $query_params['page'] ?? $currentRoute->getArgument('page', '1');
         //status 0 => 'all';
         $status = (int)$currentRoute->getArgument('status','0');
-        /** @psalm-suppress MixedAssignment $sort_string */
+       /** @var string $query_params['sort'] */
         $sort_string = $query_params['sort'] ?? '-id';
+        $order =  OrderHelper::stringToArray($sort_string);
         $sort = Sort::only(['id','status_id','number','date_created','date_expires','client_id'])
                     // (@see vendor\yiisoft\data\src\Reader\Sort
                     // - => 'desc'  so -id => default descending on id
-                    // Show the latest quotes first => -id
-                    /** @psalm-suppress MixedArgument $sort_string */
-                    ->withOrderString((string)$sort_string);
+                    // Show the latest quotes first => -id                 
+                    ->withOrder($order);
         $quotes = $this->quotes_status_with_sort($quoteRepo, $status, $sort);
         if (isset($query_params['filterQuoteNumber']) && !empty($query_params['filterQuoteNumber'])) {
                 $quotes = $quoteRepo->filterQuoteNumber((string)$query_params['filterQuoteNumber']);

@@ -96,8 +96,8 @@ use Yiisoft\Yii\DataView\YiiRouter\UrlCreator;
              * Use: Full parameter input example of DataColumn
              * @see Yiisoft\Yii\DataView\Column\DataColumn bool|array|FilterWidget|DropdownFilter|TextInputFilter
              */    
-            'product_sku',
-            queryProperty: 'filter_product_sku',
+            field: 'product_sku',
+            property: 'filter_product_sku',
             header:  $translator->translate('i.product_sku'),
             encodeHeader: true,
             content: static fn ($model): string => Html::encode($model->getProduct_sku()),
@@ -111,8 +111,8 @@ use Yiisoft\Yii\DataView\YiiRouter\UrlCreator;
             content: static fn ($model): string => Html::encode(ucfirst($model->getProduct_description())) 
         ),
         new DataColumn(
-            'product_price',
-            queryProperty: 'filter_product_price',    
+            field: 'product_price',
+            property: 'filter_product_price',    
             header: $translator->translate('i.product_price'). ' ( '. $s->get_setting('currency_symbol'). ' ) ',   
             content: static fn ($model): string => Html::encode($model->getProduct_price()),
             filter: true    

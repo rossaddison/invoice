@@ -134,8 +134,8 @@ $toolbar = Div::tag();
             }            
         ),
         new DataColumn(
-            'number',
-            queryProperty: 'filterQuoteNumber',
+            field: 'number',
+            property: 'filterQuoteNumber',
             header: $translator->translate('invoice.quote.number'),        
             content: static function ($model) use ($urlGenerator): string {
                return Html::a($model->getNumber(), $urlGenerator->generate('quote/view',['id'=>$model->getId()]),['style'=>'text-decoration:none'])->render();
@@ -156,15 +156,15 @@ $toolbar = Div::tag();
             content: static fn ($model): string => ($model->getDate_required())->format($datehelper->style())
         ),
         new DataColumn(
-            'client_id',
-            queryProperty: 'filterClient',
+            field: 'client_id',
+            property: 'filterClient',
             header: $translator->translate('i.client'),
             content: static fn($model): string => $model->getClient()->getClient_name() . str_repeat(' ', 2).$model->getClient()->getClient_surname(),
             filter: $optionsDataClientsDropdownFilter    
         ),
         new DataColumn(
-        'id',
-            queryProperty: 'filterQuoteAmountTotal',
+            field: 'id',
+            property: 'filterQuoteAmountTotal',
             header: $translator->translate('i.total') . ' ( '. $s->get_setting('currency_symbol'). ' ) ',
             content: static function ($model) : string|null {
                return  

@@ -112,6 +112,7 @@ use App\Invoice\Libraries\Crypt;
 use Yiisoft\Data\Paginator\OffsetPaginator as DataOffsetPaginator;
 use Yiisoft\Data\Paginator\PageToken;
 use Yiisoft\Data\Reader\Sort;
+use Yiisoft\Data\Reader\OrderHelper;
 use Yiisoft\DataResponse\DataResponseFactoryInterface;
 use Yiisoft\Http\Method;
 use Yiisoft\Html\Html;
@@ -1918,11 +1919,12 @@ final class InvController {
              * @var string|null $query_params['sort']
              */
             $sort_string = $query_params['sort'] ?? '-id';
+            $order =  OrderHelper::stringToArray($sort_string);
             $sort = Sort::only(['id', 'status_id', 'number', 'date_created', 'date_due', 'client_id'])
                     // (@see vendor\yiisoft\data\src\Reader\Sort
                     // - => 'desc'  so -id => default descending on id
                     // Show the latest quotes first => -id
-                    ->withOrderString($sort_string);
+                    ->withOrder($order);
             $invs = $this->invs_status_with_sort($invRepo, $status, $sort);
             if (isset($query_params['filterInvNumber']) && !empty($query_params['filterInvNumber'])) {
                 $invs = $invRepo->filterInvNumber((string)$query_params['filterInvNumber']);

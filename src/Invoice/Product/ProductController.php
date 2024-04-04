@@ -61,6 +61,7 @@ use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
 // Yiisoft
 use Yiisoft\Data\Reader\Sort;
+use Yiisoft\Data\Reader\OrderHelper;
 use Yiisoft\DataResponse\DataResponseFactoryInterface;
 use Yiisoft\Data\Paginator\OffsetPaginator as DataOffsetPaginator;
 use Yiisoft\Data\Paginator\PageToken;
@@ -453,11 +454,13 @@ class ProductController
         $page = $query_params['page'] ?? $currentRoute->getArgument('page', '1');
         
         /** @var string $query_params['sort'] */
+        $sort_string = $query_params['sort'] ?? '-id';
+        $order =  OrderHelper::stringToArray($sort_string);
         $sort = Sort::only(['id', 'family_id', 'unit_id', 'tax_rate_id', 'product_name', 'product_sku', 'product_price'])
                     // (@see vendor\yiisoft\data\src\Reader\Sort
                     // - => 'desc'  so -id => default descending on id
                     // Show the latest products first => -id
-                    ->withOrderString($query_params['sort'] ?? '-id');
+                    ->withOrder($order);
         $products = $this->products_with_sort($pR, $sort);
         if (isset($query_params['filter_product_sku']) && !empty($query_params['filter_product_sku'])) {
             $products = $pR->filter_product_sku((string)$query_params['filter_product_sku']);

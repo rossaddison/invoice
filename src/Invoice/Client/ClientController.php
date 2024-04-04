@@ -57,6 +57,7 @@ use Yiisoft\Aliases\Aliases;
 use Yiisoft\Data\Paginator\OffsetPaginator as DataOffsetPaginator;
 use Yiisoft\Data\Paginator\PageToken;
 use Yiisoft\Data\Reader\Sort;
+use Yiisoft\Data\Reader\OrderHelper;
 use Yiisoft\DataResponse\DataResponseFactoryInterface;
 use Yiisoft\Http\Method;
 use Yiisoft\Json\Json;
@@ -517,11 +518,13 @@ final class ClientController
         $page = $query_params['page'] ?? $currentRoute->getArgument('page', '1');        
         $active = (int)$currentRoute->getArgument('active', '2');
         /** @var string $query_params['sort'] */
+        $sort_string = $query_params['sort'] ?? '-id';
+        $order =  OrderHelper::stringToArray($sort_string);
         $sort = Sort::only(['id', 'client_name', 'client_surname'])
                     // (@see vendor\yiisoft\data\src\Reader\Sort
                     // - => 'desc'  so -id => default descending on id
                     // Show the latest products first => -id
-                    ->withOrderString($query_params['sort'] ?? '-id');
+                    ->withOrder($order);
         $clients = $this->clients_with_sort($cR, $sort, $active);
         if (isset($query_params['filter_client_name']) && !empty($query_params['filter_client_name'])) {
             $clients = $cR->filter_client_name((string)$query_params['filter_client_name']);
