@@ -43,6 +43,7 @@ use Psr\Http\Message\ServerRequestInterface as Request;
 use Yiisoft\Data\Paginator\OffsetPaginator;
 use Yiisoft\Data\Paginator\PageToken;
 use Yiisoft\Data\Reader\Sort;
+use Yiisoft\Data\Reader\OrderHelper;
 use Yiisoft\DataResponse\DataResponseFactoryInterface;
 use Yiisoft\Http\Method;
 use Yiisoft\Json\Json;
@@ -677,29 +678,43 @@ final class PaymentController
      * @param CurrentRoute $currentRoute
      * @param PaymentRepository $paymentRepository
      * @param SettingRepository $settingRepository
-     * @param DateHelper $dateHelper
      * @param InvAmountRepository $iaR
      */
     public function index(Request $request,  
                           CurrentRoute $currentRoute,  
                           PaymentRepository $paymentRepository, 
-                          SettingRepository $settingRepository, 
-                          DateHelper $dateHelper,  
+                          SettingRepository $settingRepository,
                           InvAmountRepository $iaR) : \Yiisoft\DataResponse\DataResponse {
         $query_params = $request->getQueryParams();
         $page = (int)$currentRoute->getArgument('page','1');
         // Clicking on the gridview's Inv_id column hyperlink generates 
         // the query_param called 'sort' which is seen in the url
         // Clicking on the paginator does not generate the query_param 'sort'
-        /** @psalm-suppress MixedAssignment $sort */
-        $sort = $query_params['sort'] ?? '-inv_id';
-        $sort_by = Sort::only(['id','inv_id','payment_date'])
+        /**
+         * @var string|null $query_params['sort']
+         */
+        $sort_string = $query_params['sort'] ?? '-inv_id';
+        $order =  OrderHelper::stringToArray($sort_string);
+        $sort = Sort::only(['id','inv_id','payment_date', 'payment_date'])
                 // Sort the merchant responses in descending order
-                ->withOrderString((string)$sort); 
-        $payments = $this->payments_with_sort($paymentRepository, $sort_by); 
+                ->withOrder($order); 
+        $payments = $this->payments_with_sort($paymentRepository, $sort);
+        if (isset($query_params['paymentAmountFilter']) && !empty($query_params['paymentAmountFilter'])) {
+            $payments = $paymentRepository->repoPaymentAmountFilter((string)$query_params['paymentAmountFilter']);
+        }
+        if (isset($query_params['paymentDateFilter']) && !empty($query_params['paymentDateFilter'])) {
+            $payments = $paymentRepository->repoPaymentDateFilter((string)$query_params['paymentDateFilter']);
+        }
+        if (isset($query_params['paymentAmountFilter']) && !empty($query_params['paymentAmountFilter']) && 
+            isset($query_params['paymentDateFilter']) && !empty($query_params['paymentDateFilter'])) {
+            $payments = $paymentRepository->repoPaymentAmountWithDateFilter(
+                    (string)$query_params['paymentAmountFilter'], 
+                    (string)$query_params['paymentDateFilter']);
+        }
         $paginator = (new OffsetPaginator($payments))
          ->withPageSize((int)$settingRepository->get_setting('default_list_limit'))
          ->withCurrentPage($page)
+         ->withSort($sort)           
          ->withToken(PageToken::next((string)$page));
         $canEdit = $this->userService->hasPermission('editPayment');
         $canView = $this->userService->hasPermission('viewPayment');
@@ -707,12 +722,18 @@ final class PaymentController
             'alert' => $this->alert(),
             'canEdit' => $canEdit,
             'canView' => $canView,
-            'grid_summary' => $settingRepository->grid_summary($paginator, $this->translator, (int)$settingRepository->get_setting('default_list_limit'), $this->translator->translate('invoice.payments'), ''),
-            'defaultPageSizeOffsetPaginator' => (int)$settingRepository->get_setting('default_list_limit'),
+            'grid_summary' => $settingRepository->grid_summary(
+                $paginator, 
+                $this->translator, 
+                (int)$settingRepository->get_setting('default_list_limit'), 
+                $this->translator->translate('invoice.payments'), 
+                ''
+            ),
+            'defaultPageSizeOffsetPaginator' => $settingRepository->get_setting('default_list_limit')
+                                                    ? (int)$settingRepository->get_setting('default_list_limit') : 1,
             'page' => $page,
             'paginator' => $paginator,
             'sortOrder' => $query_params['sort'] ?? '', 
-            'd' => $dateHelper,
             'iaR' => $iaR,
             'payments' => $this->payments($paymentRepository),
             'max' => (int)$settingRepository->get_setting('default_list_limit'),
@@ -767,21 +788,32 @@ final class PaymentController
      * @param CurrentRoute $currentRoute
      * @param MerchantRepository $merchantRepository
      * @param SettingRepository $settingRepository
-     * @param DateHelper $dateHelper
      */
     public function online_log(Request $request, CurrentRoute $currentRoute,  
                           MerchantRepository $merchantRepository, 
-                          SettingRepository $settingRepository, 
-                          DateHelper $dateHelper): \Yiisoft\DataResponse\DataResponse
+                          SettingRepository $settingRepository): \Yiisoft\DataResponse\DataResponse
     {   
         $query_params = $request->getQueryParams();
         $page = (int)$currentRoute->getArgument('page','1');
-        /** @psalm-suppress MixedAssignment $sort */
-        $sort = $query_params['sort'] ?? '-inv_id';
-        $sort_by = Sort::only(['inv_id','date', 'successful', 'driver'])
+        /**
+         * @var string|null $query_params['sort']
+         */
+        $sort_string = $query_params['sort'] ?? '-inv_id';
+        $order =  OrderHelper::stringToArray($sort_string);
+        $sort = Sort::only(['inv_id','date', 'successful', 'driver'])
                 // Sort the merchant responses in descending order
-                ->withOrderString((string)$sort); 
-        $merchants = $this->merchant_with_sort($merchantRepository, $sort_by); 
+                ->withOrder($order); 
+        $merchants = $this->merchant_with_sort($merchantRepository, $sort);
+        if (isset($query_params['filterInvNumber']) && !empty($query_params['filterInvNumber'])) {
+            $merchants = $merchantRepository->repoMerchantInvNumberquery((string)$query_params['filterInvNumber']);
+        }
+        if (isset($query_params['filterPaymentProvider']) && !empty($query_params['filterPaymentProvider'])) {
+            $merchants = $merchantRepository->repoMerchantPaymentProviderquery((string)$query_params['filterPaymentProvider']);
+        }
+        if ((isset($query_params['filterInvNumber']) && !empty($query_params['filterInvNumber'])) 
+          && (isset($query_params['filterPaymentProvider']) && !empty($query_params['filterPaymentProvider']))) {
+            $merchants = $merchantRepository->repoMerchantInvNumberWithPaymentProvider((string)$query_params['filterInvNumber'], (string)$query_params['filterPaymentProvider']);
+        }
         $paginator = (new OffsetPaginator($merchants))
          ->withPageSize((int)$settingRepository->get_setting('default_list_limit'))
          ->withCurrentPage($page)
@@ -792,10 +824,16 @@ final class PaymentController
             'alert' => $this->alert(),
             'page' => $page,
             'paginator' => $paginator,
-            'sortOrder' => $query_params['sort'] ?? '', 
-            'd' => $dateHelper,
+            'grid_summary' => $settingRepository->grid_summary(
+                $paginator,
+                $this->translator,
+                (int) $settingRepository->get_setting('default_list_limit'),
+                $this->translator->translate('i.payment_logs'),
+                ''
+            ),
+            'defaultPageSizeOffsetPaginator' => $settingRepository->get_setting('default_list_limit')
+                                                    ? (int)$settingRepository->get_setting('default_list_limit') : 1,
             'merchants'=> $this->merchants($merchantRepository),
-            'max' => (int)$settingRepository->get_setting('default_list_limit'),
         ];
         return $this->viewRenderer->render('online_log', $parameters);  
     }
@@ -931,8 +969,6 @@ final class PaymentController
         if ($payment) {
             $paymentId = $payment->getId();
             $form = new PaymentForm($payment);
-            $paymentCustom = new PaymentCustom();
-            $paymentCustomForm = new PaymentCustomForm($paymentCustom);
             $parameters = [
                 'title' => $this->translator->translate('i.view'),
                 'action' => ['payment/edit', ['id' => $paymentId]],
@@ -941,13 +977,32 @@ final class PaymentController
                 'paymentMethods' => $paymentMethodRepository->findAllPreloaded(),
                 'payment' => $paymentRepository->repoPaymentquery($paymentId),
                 'cvH'=> new CustomValuesHelper($settingRepository),
-                'customFields' => $cfR->repoTablequery('payment_custom'),
-                'customValues' => $cvR->attach_hard_coded_custom_field_values_to_custom_field($cfR->repoTablequery('payment_custom')),
-                'paymentCustomValues' => $this->payment_custom_values($paymentId, $pcR),
-                'paymentCustomForm' => $paymentCustomForm
+                'view_custom_fields' => $this->view_custom_fields(
+                    $cfR,
+                    $cvR, 
+                    $this->payment_custom_values($paymentId, $pcR),
+                    $settingRepository    
+                ),
             ];
             return $this->viewRenderer->render('_view', $parameters);
         }
         return $this->webService->getRedirectResponse('payment/index');
+    }
+        
+    /**
+     * @param CustomFieldRepository $cfR
+     * @param CustomValueRepository $cvR
+     * @param array $payment_custom_values
+     * @param SettingRepository $settingRepository
+     * @return string
+     */
+    private function view_custom_fields(CustomFieldRepository $cfR, CustomValueRepository $cvR, array $payment_custom_values, SettingRepository $settingRepository): string {
+        return $this->viewRenderer->renderPartialAsString('/invoice/payment/view_custom_fields', [
+            'custom_fields' => $cfR->repoTablequery('payment_custom'),
+            'custom_values' => $cvR->attach_hard_coded_custom_field_values_to_custom_field($cfR->repoTablequery('payment_custom')),
+            'payment_custom_values' => $payment_custom_values,
+            'cvH' => new CustomValuesHelper($settingRepository),
+            'paymentCustomForm' => new PaymentCustomForm(new PaymentCustom()),
+        ]);
     }
 }

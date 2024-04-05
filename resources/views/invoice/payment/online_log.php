@@ -12,7 +12,6 @@ use Yiisoft\Html\Tag\H5;
 use Yiisoft\Html\Tag\I;
 use Yiisoft\Yii\DataView\Column\DataColumn;
 use Yiisoft\Yii\DataView\GridView;
-use Yiisoft\Yii\DataView\OffsetPagination;
 use Yiisoft\Router\CurrentRoute;
 
 /**
@@ -59,11 +58,17 @@ $columns = [
         content: static fn (object $model) => $model->getId()
     ),        
     new DataColumn(
-        'inv_id',
+        field: 'inv_id',
+        property: 'filterInvNumber', 
         header:  $translator->translate('i.invoice'),    
         content: static function ($model) use ($urlGenerator): string {
-           return Html::a($model->getInv()->getNumber(), $urlGenerator->generate('inv/view',['id'=>$model->getInv_id()]),['style'=>'text-decoration:none'])->render();
-       }                       
+            $return = '';
+            if (null!==$model->getInv()) {
+                $return = Html::a($model->getInv()->getNumber(), $urlGenerator->generate('inv/view',['id'=>$model->getInv_id()]),['style'=>'text-decoration:none'])->render(); 
+            }
+            return $return;
+       },
+       filter: true
     ),
     new DataColumn(
         'successful',    
@@ -78,9 +83,11 @@ $columns = [
         content: static fn ($model): string => ($model->getDate())->format($datehelper->style())                        
     ),
     new DataColumn(
-        'driver',    
+        field: 'driver',
+        property: 'filterPaymentProvider',    
         header:  $translator->translate('g.payment_provider'),
-        content: static fn ($model): string => ($model->getDriver())                        
+        content: static fn ($model): string => ($model->getDriver()),
+        filter: true
     ),
     new DataColumn(
         'response',    
@@ -95,38 +102,24 @@ $columns = [
 ];            
 ?>
 <?= GridView::widget()
-        ->columns(...$columns)
-        ->dataReader($paginator)
-        ->headerRowAttributes(['class'=>'card-header bg-info text-black'])
-        //->filterPosition('header')
-        //->filterModelName('payment_online_log')
-        ->header($header)
-         ->id('w3-grid')
-        ->pagination(
-        OffsetPagination::widget()
-             ->paginator($paginator)
-             // eg. http://yii-invoice.myhost/invoice/online_log/page/3?pagesize=5 
-             // ...  /page/3?pagesize=5 in the above derived with config/routes.php's payment/online_log
-             // ie. Route::get('/online_log[/page/{page:\d+}]')  
-             //->urlArguments([])  
-             ->render(),
-        )
-        ->rowAttributes(['class' => 'align-middle'])
-        ->summaryAttributes(['class' => 'mt-3 me-3 summary text-end'])   
-        ->tableAttributes(['class' => 'table table-striped text-center h-75','id'=>'table-payment'])
-        ->toolbar(
-            Form::tag()->post($urlGenerator->generate('payment/index'))->csrf($csrf)->open() .
-            Div::tag()->addClass('float-end m-3')->content($toolbarReset)->encode(false)->render() .
-            Form::tag()->close()
-        );
-            
-    $pageSize = $paginator->getCurrentPageSize();
-    if ($pageSize > 0) {
-      echo Html::p(
-        sprintf($translator->translate('invoice.index.footer.showing').' payments: Max '. $max . ' payments per page: Total Payments '.$paginator->getTotalItems() , $pageSize, $paginator->getTotalItems()),
-        ['class' => 'text-muted']
+    ->columns(...$columns)
+    ->dataReader($paginator)
+    ->headerRowAttributes(['class'=>'card-header bg-info text-black'])       
+    ->header($header)
+    ->id('w78-grid')
+    ->pagination(
+         $gridComponents->offsetPaginationWidget($defaultPageSizeOffsetPaginator, $paginator)   
+    )        
+    ->rowAttributes(['class' => 'align-middle'])
+    ->summaryAttributes(['class' => 'mt-3 me-3 summary text-end'])
+    /**
+     * @see config/common/params.php `yiisoft/view` => ['parameters' => ['pageSizeLimiter' ... No need to be in payment/index
+     */    
+    ->summaryTemplate($pageSizeLimiter::buttons($currentRoute, $s, $urlGenerator, 'payment').' '.$grid_summary)
+    ->tableAttributes(['class' => 'table table-striped text-center h-75','id'=>'table-payment'])
+    ->toolbar(
+        Form::tag()->post($urlGenerator->generate('payment/index'))->csrf($csrf)->open() .
+        Div::tag()->addClass('float-end m-3')->content($toolbarReset)->encode(false)->render() .
+        Form::tag()->close()
     );
-    } else {
-      echo Html::p($translator->translate('invoice.records.no'));
-    }
 ?>

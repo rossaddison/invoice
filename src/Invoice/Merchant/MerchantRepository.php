@@ -99,6 +99,37 @@ private EntityWriter $entityWriter;
         return  $query->fetchOne() ?: null;        
     }
     
+    /**
+     * Retrieve all the merchants that relate to this invoice id
+     * @param string $invNumber
+     * 
+     * @psalm-return EntityReader
+     */
+    public function repoMerchantInvNumberquery(string $invNumber): EntityReader {
+        $query = $this->select()
+                      ->where(['inv.number' => $invNumber]);
+        return   $this->prepareDataReader($query); 
+    }
+    
+    /**
+     * Retrieve all the merchants that relate to this invoice id
+     * @param string $paymentProvider
+     * 
+     * @psalm-return EntityReader
+     */
+    public function repoMerchantPaymentProviderquery(string $paymentProvider): EntityReader {
+        $query = $this->select()
+                      ->where(['driver' => $paymentProvider]);
+        return   $this->prepareDataReader($query); 
+    }
+    
+    public function repoMerchantInvNumberWithPaymentProvider(string $invNumber, string $invPaymentProvider): EntityReader {
+        $query = $this->select()
+                      ->where(['inv.number' => $invNumber])
+                      ->andWhere(['driver' => $invPaymentProvider]);
+        return   $this->prepareDataReader($query);
+    }
+     
     // Find all merchant responses associated with a user's clients ie. their client list / client_id_array
     
     /**

@@ -12,7 +12,6 @@ use Yiisoft\Html\Tag\H5;
 use Yiisoft\Html\Tag\I;
 use Yiisoft\Yii\DataView\Column\DataColumn;
 use Yiisoft\Yii\DataView\GridView;
-use Yiisoft\Yii\DataView\OffsetPagination;
 use Yiisoft\Router\CurrentRoute;
 
 /**
@@ -66,16 +65,22 @@ $toolbar = Div::tag();
             content: static fn ($model): string => $model->getId()                        
         ),    
         new DataColumn(
-            'payment_date',
+            field: 'payment_date',
+            property: 'paymentDateFilter',    
             header:  $translator->translate('i.payment_date'),                
-            content: static fn ($model): string => ($model->getPayment_date())->format($datehelper->style())                        
+            content: static function ($model) use ($datehelper) : string {
+                return $model->getPayment_date()->format($datehelper->style());                        
+            },                        
+            filter: true    
         ),
         new DataColumn(
-            'amount',
+            field: 'amount',
+            property: 'paymentAmountFilter',    
             header:  $translator->translate('i.amount'),
             content: static function ($model) use ($s): string|null {                        
                 return $s->format_currency($model->getAmount() ?: 0.00);
-            }
+            },
+            filter: true
         ),
         new DataColumn(
             'note',

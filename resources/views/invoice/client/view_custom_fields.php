@@ -16,7 +16,7 @@
                                                 } ?>
                                                 <?php $i++; ?>
                                                 <?php if ($i % 2 != 0): ?>
-                                                    <?= $cvH->print_field_for_view($client_custom_values, $custom_field, $custom_values, 'mt-3 ml-3 mb-3'); ?>
+                                                    <?= $cvH->print_field_for_view($custom_field, $form, $client_custom_values, $custom_values); ?>
                                                 <?php endif; ?>
                                             <?php endforeach; ?>
                                         </div>
@@ -28,7 +28,7 @@
                                                 } ?>
                                                 <?php $i++; ?>
                                                 <?php if ($i % 2 == 0): ?>
-                                                    <?= $cvH->print_field_for_view($client_custom_values,$custom_field, $custom_values); ?>
+                                                    <?= $cvH->print_field_for_view($custom_field, $form, $client_custom_values, $custom_values); ?>
                                                 <?php endif; ?>
                                             <?php endforeach; ?>
                                         </div>

@@ -102,25 +102,7 @@ use Yiisoft\Html\Tag\Form;
                 <?= Html::closeTag('div'); ?>
             <?= Html::closeTag('div'); ?>
             <?= Html::openTag('div'); ?>
-                <?php foreach ($customFields as $customField): ?>            
-                    <div class="mb-3 form-group">
-                    <?php if ($customField instanceof CustomField) { ?>
-                    <?= $cvH->print_field_for_view($paymentCustomValues,
-                        $customField,
-                        // Custom values to fill drop down list if a dropdown box has been created
-                        $customValues, 
-                        // Class for div surrounding input
-                        'col-xs-12 col-sm-6',
-                        // Class surrounding above div
-                        'form-group',
-                        // Label class similar to above
-                        'control-label',
-                        $paymentCustomForm,
-                        $translator    
-                        ); ?>
-                    <?php } ?>    
-                    </div>    
-                <?php endforeach; ?>
+                <?= $view_custom_fields; ?>
             <?= Html::closeTag('div'); ?>    
         <?= Html::closeTag('div'); ?>
     <?= Html::closeTag('div'); ?>

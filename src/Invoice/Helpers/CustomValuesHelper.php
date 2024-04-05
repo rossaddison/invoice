@@ -245,8 +245,9 @@ Class CustomValuesHelper {
             ->label($custom_field->getLabel())                        
             ->addInputAttributes([
                 'name' => 'custom['. $custom_field->getId().']',
-                'id' => $custom_field->getId()    
-            ])    
+                'id' => $custom_field->getId(),
+            ])
+            ->disabled(true)        
             ->value($dateValue); 
 
             break;

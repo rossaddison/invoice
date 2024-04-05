@@ -116,6 +116,34 @@ private EntityWriter $entityWriter;
     }
     
     /**
+     * @psalm-return EntityReader
+     */
+    public function repoPaymentAmountFilter(string $paymentAmount) {
+        $query = $this->select()
+                      ->where(['amount' => $paymentAmount]);
+        return  $this->prepareDataReader($query);           
+    }
+    
+    /**
+     * @psalm-return EntityReader
+     */
+    public function repoPaymentDateFilter(string $paymentDate) {
+        $query = $this->select()
+                      ->where(['payment_date' => $paymentDate]);
+        return  $this->prepareDataReader($query);           
+    }
+    
+    /**
+     * @psalm-return EntityReader
+     */
+    public function repoPaymentAmountWithDateFilter(string $paymentAmount, string $paymentDate) {
+        $query = $this->select()
+                      ->where(['payment_date' => $paymentDate])
+                      ->andWhere(['amount' => $paymentAmount]);
+        return  $this->prepareDataReader($query);           
+    }
+    
+    /**
      * @return null|Payment
      *
      * @psalm-return TEntity|null
