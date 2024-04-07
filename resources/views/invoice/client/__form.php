@@ -74,6 +74,18 @@ use Yiisoft\Arrays\ArrayHelper;
     ->required(true)        
     ->hint($translator->translate('invoice.hint.this.field.is.required'));
 ?>
+
+<?= Field::text($form, 'client_group')
+    ->label($translator->translate('invoice.client.group'))
+    ->addInputAttributes([
+        'value' => Html::encode($form->getClient_group() ?? ''), 
+        'placeholder' => $translator->translate('invoice.client.group'),
+        'class' => 'form-control'
+    ])
+    ->required(true)        
+    ->hint($translator->translate('invoice.hint.this.field.is.not.required'));
+?>
+
 <?= Field::text($form, 'client_number')
     ->label($translator->translate('invoice.client.number'))
     ->addInputAttributes([

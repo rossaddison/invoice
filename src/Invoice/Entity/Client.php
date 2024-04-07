@@ -38,6 +38,9 @@ class Client
     #[Column(type: 'string(151)', nullable: true)]
     private ?string $client_surname = '';
     
+    #[Column(type: 'string(3)', nullable: true)]
+    private ?string $client_group = '';
+    
     #[Column(type: 'text', nullable: true)]
     private ?string $client_address_1 =  '';
      
@@ -123,6 +126,7 @@ class Client
             // treat as firstname
             string $client_name ='',             
             string $client_surname='',
+            string $client_group='',
             string $client_number='',
             string $client_address_1='', 
             string $client_address_2='', 
@@ -150,6 +154,7 @@ class Client
     {
         $this->client_name = $client_name;        
         $this->client_surname = $client_surname;
+        $this->client_group = $client_group;
         $this->client_number = $client_number;
         $this->client_address_1 = $client_address_1;
         $this->client_address_2 = $client_address_2;
@@ -220,6 +225,16 @@ class Client
     public function setClient_surname(string $client_surname) : void
     {
       $this->client_surname =  $client_surname;
+    }
+    
+    public function getClient_group(): ?string
+    {
+       return $this->client_group;
+    }
+    
+    public function setClient_group(string $client_group) : void
+    {
+      $this->client_group =  $client_group;
     }
     
     public function getClient_address_1(): ?string

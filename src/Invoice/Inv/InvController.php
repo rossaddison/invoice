@@ -1934,7 +1934,10 @@ final class InvController {
             if ((isset($query_params['filterInvNumber']) && !empty($query_params['filterInvNumber'])) && 
                (isset($query_params['filterInvAmountTotal']) && !empty($query_params['filterInvAmountTotal']))) {
                 $invs = $invRepo->filterInvNumberAndInvAmountTotal((string)$query_params['filterInvNumber'], (float)$query_params['filterInvAmountTotal']);
-            } 
+            }
+            if (isset($query_params['filterClientGroup']) && !empty($query_params['filterClientGroup'])) {
+                $invs = $invRepo->filterClientGroup((string)$query_params['filterClientGroup']);
+            }
             $paginator = (new DataOffsetPaginator($invs))
                 ->withPageSize((int) $this->sR->get_setting('default_list_limit'))
                 ->withCurrentPage((int)$page)

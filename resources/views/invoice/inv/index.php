@@ -139,6 +139,19 @@ $decimal_places = (int)$s->get_setting('tax_rate_decimal_places');
             header: $translator->translate('i.id'),
             content: static fn(object $any) => $any->getId()    
         ),
+                    
+        new DataColumn(
+            header: $translator->translate('i.view'), 
+            content: static function ($model) use ($urlGenerator): string {
+                return Html::a(Html::tag('i', '', ['class' => 'fa fa-eye fa-margin']), $urlGenerator->generate('inv/view', ['id' => $model->getId()]), [])->render();
+            }  
+        ),        
+        new DataColumn(
+            header: $translator->translate('i.edit'),
+            content: static function ($model) use ($s, $urlGenerator): string {
+                return $model->getIs_read_only() === false && $s->get_setting('disable_read_only') === (string) 0 ? Html::a(Html::tag('i', '', ['class' => 'fa fa-edit fa-margin']), $urlGenerator->generate('inv/edit', ['id' => $model->getId()]), [])->render() : '';
+            }     
+        ),
         new DataColumn(
             'status_id',
             header: $translator->translate('i.status'),
@@ -176,33 +189,7 @@ $decimal_places = (int)$s->get_setting('tax_rate_decimal_places');
                         $creditInvoiceUrl;
             },
             filter: true            
-        ),        
-        new DataColumn(
-            'quote_id',
-            header: $translator->translate('invoice.quote.number.status'),
-            content: static function ($model) use ($translator, $urlGenerator, $qR): string {
-                $quote_id = $model->getQuote_id();
-                $quote = $qR->repoQuoteUnloadedquery($quote_id);
-                if ($quote) {
-                    return (string) Html::a($quote->getNumber() . ' ' . (string) $qR->getStatuses($translator)[$quote->getStatus_id()]['label'], $urlGenerator->generate('quote/view', ['id' => $quote_id]), ['style' => 'text-decoration:none', 'class' => 'label ' . (string) $qR->getStatuses($translator)[$quote->getStatus_id()]['class']]);
-                } else {
-                    return '';
-                }
-            }    
-        ),
-        new DataColumn(
-            'so_id',
-            header: $translator->translate('invoice.salesorder.number.status'),
-            content: static function ($model) use ($s, $urlGenerator, $soR): string {
-                $so_id = $model->getSo_id();
-                $so = $soR->repoSalesOrderUnloadedquery($so_id);
-                if ($so) {
-                    return (string) Html::a($so->getNumber() . ' ' . (string) $soR->getStatuses($s)[$so->getStatus_id()]['label'], $urlGenerator->generate('salesorder/view', ['id' => $so_id]), ['style' => 'text-decoration:none', 'class' => 'label ' . (string) $soR->getStatuses($s)[$so->getStatus_id()]['class']]);
-                } else {
-                    return '';
-                }
-            }     
-        ),        
+        ),      
         new DataColumn(
             field: 'client_id',
             property: 'filterClient',
@@ -211,14 +198,12 @@ $decimal_places = (int)$s->get_setting('tax_rate_decimal_places');
             filter: $optionsDataClientsDropdownFilter    
         ),
         new DataColumn(
-            'delivery_location_id',
-            header: $translator->translate('invoice.delivery.location.global.location.number'),
-            content: static function ($model) use ($dlR): string|null {
-                $delivery_location_id = $model->getDelivery_location_id();
-                $delivery_location = (($dlR->repoCount($delivery_location_id) > 0) ? $dlR->repoDeliveryLocationquery($delivery_location_id) : null);
-                return null !== $delivery_location ? $delivery_location->getGlobal_location_number() : '';
-            } 
-        ),        
+            field: 'client_id',
+            property: 'filterClientGroup',
+            header: $translator->translate('invoice.client.group'),
+            content: static fn($model): string => $model->getClient()->getClient_group() ?? '',
+            filter: true    
+        ),  
         new DataColumn(
             'date_created',
             header: $translator->translate('invoice.datetime.immutable.date.created'),
@@ -314,18 +299,41 @@ $decimal_places = (int)$s->get_setting('tax_rate_decimal_places');
                     'action' => 'index'
                 ]))->render();
             }     
-        ),        
+        ),
         new DataColumn(
-            header: $translator->translate('i.view'), 
-            content: static function ($model) use ($urlGenerator): string {
-                return Html::a(Html::tag('i', '', ['class' => 'fa fa-eye fa-margin']), $urlGenerator->generate('inv/view', ['id' => $model->getId()]), [])->render();
-            }  
-        ),        
+            'quote_id',
+            header: $translator->translate('invoice.quote.number.status'),
+            content: static function ($model) use ($translator, $urlGenerator, $qR): string {
+                $quote_id = $model->getQuote_id();
+                $quote = $qR->repoQuoteUnloadedquery($quote_id);
+                if ($quote) {
+                    return (string) Html::a($quote->getNumber() . ' ' . (string) $qR->getStatuses($translator)[$quote->getStatus_id()]['label'], $urlGenerator->generate('quote/view', ['id' => $quote_id]), ['style' => 'text-decoration:none', 'class' => 'label ' . (string) $qR->getStatuses($translator)[$quote->getStatus_id()]['class']]);
+                } else {
+                    return '';
+                }
+            }    
+        ),
         new DataColumn(
-            header: $translator->translate('i.edit'),
-            content: static function ($model) use ($s, $urlGenerator): string {
-                return $model->getIs_read_only() === false && $s->get_setting('disable_read_only') === (string) 0 ? Html::a(Html::tag('i', '', ['class' => 'fa fa-edit fa-margin']), $urlGenerator->generate('inv/edit', ['id' => $model->getId()]), [])->render() : '';
+            'so_id',
+            header: $translator->translate('invoice.salesorder.number.status'),
+            content: static function ($model) use ($s, $urlGenerator, $soR): string {
+                $so_id = $model->getSo_id();
+                $so = $soR->repoSalesOrderUnloadedquery($so_id);
+                if ($so) {
+                    return (string) Html::a($so->getNumber() . ' ' . (string) $soR->getStatuses($s)[$so->getStatus_id()]['label'], $urlGenerator->generate('salesorder/view', ['id' => $so_id]), ['style' => 'text-decoration:none', 'class' => 'label ' . (string) $soR->getStatuses($s)[$so->getStatus_id()]['class']]);
+                } else {
+                    return '';
+                }
             }     
+        ), 
+        new DataColumn(
+            'delivery_location_id',
+            header: $translator->translate('invoice.delivery.location.global.location.number'),
+            content: static function ($model) use ($dlR): string|null {
+                $delivery_location_id = $model->getDelivery_location_id();
+                $delivery_location = (($dlR->repoCount($delivery_location_id) > 0) ? $dlR->repoDeliveryLocationquery($delivery_location_id) : null);
+                return null !== $delivery_location ? $delivery_location->getGlobal_location_number() : '';
+            } 
         ),
         new DataColumn(
             header: $translator->translate('i.delete'),

@@ -84,6 +84,14 @@ final class InvRepository extends Select\Repository
        }       
     }
     
+    public function filterClientGroup(string $clientGroup): EntityReader
+    {
+        $select = $this->select()
+                       ->load(['client']);
+        $query = $select->where(['client.client_group' => ltrim(rtrim($clientGroup))]);
+        return $this->prepareDataReader($query); 
+    }
+    
     /**
      * 
      * @param int $client_id
