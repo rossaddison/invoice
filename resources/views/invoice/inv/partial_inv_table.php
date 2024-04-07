@@ -39,7 +39,7 @@
             ?>
             <tr>
                 <td>
-                    <span class="label <?= $inv_statuses[(string)$invoice->getStatus_id()]['class']; ?>">
+                    <span class="label label-<?= $inv_statuses[(string)$invoice->getStatus_id()]['class']; ?>">
                         <?= $inv_statuses[(string)$invoice->getStatus_id()]['label']; ?>
                         <?php if ($iaR->repoInvAmountCount((int)$invoice->getId()) > 0) { 
                             if ($iaR->repoInvquery((int)$invoice->getId())->getSign() === '-1') { ?>

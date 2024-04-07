@@ -5,7 +5,7 @@ declare(strict_types=1);
 use App\Contact\ContactController;
 use App\Auth\Controller\AuthController;
 use App\Auth\Controller\SignupController;
-use App\Auth\Controller\ChangeController;
+use App\Auth\Controller\ChangePasswordController;
 use App\Controller\SiteController;
 use App\Controller\Actions\ApiInfo;
 use App\Middleware\AccessChecker;
@@ -127,7 +127,7 @@ return [
       ResponseFactoryInterface $responseFactory,
       StorageInterface $storage
       ) => new LimitRequestsMiddleware(new Counter($storage, 10, 10), $responseFactory))
-    ->action([ChangeController::class, 'change'])
+    ->action([ChangePasswordController::class, 'change'])
     ->name('auth/change'),
     Group::create('/user')
       ->routes(

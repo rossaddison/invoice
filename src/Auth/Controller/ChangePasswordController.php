@@ -7,7 +7,7 @@ namespace App\Auth\Controller;
 use App\Auth\AuthService;
 use App\Auth\Identity;
 use App\Auth\IdentityRepository;
-use App\Auth\Form\ChangeForm;
+use App\Auth\Form\ChangePasswordForm;
 use App\Service\WebControllerService;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
@@ -19,7 +19,7 @@ use Yiisoft\Translator\TranslatorInterface as Translator;
 use Yiisoft\User\CurrentUser;
 use Yiisoft\Yii\View\ViewRenderer;
 
-final class ChangeController
+final class ChangePasswordController
 {
     public function __construct(
       private Session $session,
@@ -34,7 +34,7 @@ final class ChangeController
       $this->session = $session;      
       $this->flash = new Flash($session);
       $this->translator = $translator;
-      $this->viewRenderer = $viewRenderer->withControllerName('change');
+      $this->viewRenderer = $viewRenderer->withControllerName('changepassword');
     }
     
     public function change(
@@ -43,12 +43,15 @@ final class ChangeController
       IdentityRepository $identityRepository,
       ServerRequestInterface $request,
       FormHydrator $formHydrator,
-      ChangeForm $changeForm
+      ChangePasswordForm $changePasswordForm
     ): ResponseInterface {
+      if ($authService->isGuest()) {
+          return $this->redirectToMain();
+      }  
       // permit an authenticated user, ie. not a guest, only and null!== current user
       if (!$authService->isGuest()) {
         if ($this->current_user->can('viewInv',[])) {
-          // readonly the login detail on the reset form
+          // readonly the login detail on the change form
           $identity_id = $this->current_user->getIdentity()->getId();
           if (null!==$identity_id) {
             $identity = $identityRepository->findIdentity($identity_id);
@@ -56,8 +59,8 @@ final class ChangeController
               // Identity and User are in a HasOne relationship so no null value
               $login = $identity->getUser()?->getLogin();
               if ($request->getMethod() === Method::POST
-                && $formHydrator->populate($changeForm, $request->getParsedBody())
-                && $changeForm->change() 
+                && $formHydrator->populate($changePasswordForm, $request->getParsedBody())
+                && $changePasswordForm->change() 
               ) {
                 // Identity implements CookieLoginIdentityInterface: ensure the regeneration of the cookie auth key by means of $authService->logout();
                 // @see vendor\yiisoft\user\src\Login\Cookie\CookieLoginIdentityInterface 
@@ -69,11 +72,11 @@ final class ChangeController
                 $this->flash_message('success', $this->translator->translate('validator.password.change'));
                 return $this->redirectToMain();
               }
-              return $this->viewRenderer->render('change', ['formModel' => $changeForm, 'login' => $login]);
+              return $this->viewRenderer->render('change', ['formModel' => $changePasswordForm, 'login' => $login]);
             } // identity
           } // identity_id 
         } // current user
-      } // auth service  
+      } // auth service 
       return $this->redirectToMain();
     } // reset
     

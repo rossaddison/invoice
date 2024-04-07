@@ -15,11 +15,10 @@ use Yiisoft\Validator\Rule\Required;
 use Yiisoft\Validator\ValidatorInterface;
 use Yiisoft\Validator\RulesProviderInterface;
 
-final class ChangeForm extends FormModel implements RulesProviderInterface
+final class ChangePasswordForm extends FormModel implements RulesProviderInterface
 {
     private string $login = '';
     private string $password = '';
-    private string $passwordVerify = '';
     private string $newPassword = '';
     private string $newPasswordVerify = '';
     
@@ -36,11 +35,11 @@ final class ChangeForm extends FormModel implements RulesProviderInterface
         if ($this->validator->validate($this)->isValid()) {
             $user = $this->userRepository->findByLogin($this->getLogin());
             if (null!==$user) {
-              $user->setPassword($this->getNewPassword());
-              // The cookie identity auth_key is regenerated on logout
-              // Refer to ResetController reset function
-              $this->userRepository->save($user);
-              return true;
+                $user->setPassword($this->getNewPassword());
+                // The cookie identity auth_key is regenerated on logout
+                // Refer to ResetController reset function
+                $this->userRepository->save($user);
+                return true;
             }
         }
         return false;
@@ -49,14 +48,13 @@ final class ChangeForm extends FormModel implements RulesProviderInterface
     /**
      * @return string[]
      *
-     * @psalm-return array{login: string, password: string, passwordVerify: string, newPassword: string, newPasswordVerify: string}
+     * @psalm-return array{login: string, password: string, newPassword: string, newPasswordVerify: string}
      */
     public function getAttributeLabels(): array
     {
         return [
             'login' => $this->translator->translate('layout.login'),
             'password' => $this->translator->translate('layout.password'),
-            'passwordVerify' => $this->translator->translate('layout.password-verify'),
             'newPassword' => $this->translator->translate('layout.password.new'),
             'newPasswordVerify' => $this->translator->translate('layout.password-verify.new'),
         ];
@@ -81,12 +79,7 @@ final class ChangeForm extends FormModel implements RulesProviderInterface
     {
         return $this->password;
     }
-    
-    public function getPasswordVerify(): string
-    {  
-        return $this->passwordVerify;
-    }
-    
+        
     public function getNewPassword(): string
     {  
         return $this->newPassword;
@@ -112,7 +105,6 @@ final class ChangeForm extends FormModel implements RulesProviderInterface
                 },
             ],
             'password' => $this->PasswordRules(),
-            'passwordVerify' => $this->PasswordVerifyRules(),
             'newPassword' => [
                 new Required(),
                 new Length(min: 8),
@@ -138,24 +130,7 @@ final class ChangeForm extends FormModel implements RulesProviderInterface
             ),
         ];
     }
-        
-    private function PasswordVerifyRules(): array
-    {
-        return [
-            new Required(),
-            new Callback(
-                callback: function (): Result {
-                    $result = new Result();
-                    if (!($this->password === $this->passwordVerify)) {
-                        $result->addError($this->translator->translate('validator.password.not.match'));
-                    }
-                    return $result;
-                },
-                skipOnEmpty: true,
-            ),
-        ];
-    }
-    
+           
     private function NewPasswordVerifyRules(): array
     {
         return [

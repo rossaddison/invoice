@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-use App\Auth\Form\ChangeForm;
+use App\Auth\Form\ChangePasswordForm;
 use Yiisoft\FormModel\Field;
 use Yiisoft\Html\Html;
 use Yiisoft\Html\Tag\Form;
@@ -15,9 +15,9 @@ use Yiisoft\View\WebView;
  * @var TranslatorInterface   $translator
  * @var UrlGeneratorInterface $urlGenerator
  * @var string                $csrf
- * @var ChangeForm             $formModel
+ * @var ChangePasswordForm             $formModel
  */
-$this->setTitle($translator->translate('change'));
+$this->setTitle($translator->translate('password.change'));
 ?>
 
 <div class="container py-5 h-100">
@@ -29,15 +29,18 @@ $this->setTitle($translator->translate('change'));
                 </div>
                 <div class="card-body p-5 text-center">
                     <?= Form::tag()
-                        // note: the chagne function actually appears in the ChangeController
+                        // note: the chagne function actually appears in the ChangePasswordController
                         ->post($urlGenerator->generate('auth/change'))
                         ->csrf($csrf)
-                        ->id('changeForm')
+                        ->id('changePasswordForm')
                         ->open() ?>
-
-                    <?= Field::text($formModel, 'login')->addInputAttributes(['value'=> $login ?? '', 'readonly'=>'readonly']) ?>
+                    <?= Field::text($formModel, 'login')->addInputAttributes(
+                            [
+                                'value'=> $login ?? '', 
+                                'readonly'=>'readonly'
+                            ]
+                        ); ?>
                     <?= Field::password($formModel, 'password') ?>
-                    <?= Field::password($formModel, 'passwordVerify') ?>
                     <?= Field::password($formModel, 'newPassword') ?>
                     <?= Field::password($formModel, 'newPasswordVerify') ?>
                     <?= Field::submitButton()

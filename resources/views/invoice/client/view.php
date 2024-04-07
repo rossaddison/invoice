@@ -55,7 +55,7 @@
                    class="btn btn-primary" style="text-decoration:none">
                     <i class="fa fa-plus"></i><?= $translator->translate('invoice.client.postaladdress.add'); ?>
                 </a>
-                <a href="<?= $urlGenerator->generate('del/add',['client_id' => $client->getClient_id(), 'origin' => 'client', 'origin_id' => $client->getClient_id(), 'action' => 'view']); ?>"
+                <a href="<?= $urlGenerator->generate('del/add',['client_id' => $client->getClient_id()], ['origin' => 'client', 'origin_id' => $client->getClient_id(), 'action' => 'view']); ?>"
                    class="btn btn-success" style="text-decoration:none">
                    <i class="fa fa-plus fa-margin"></i><?= $translator->translate('invoice.invoice.delivery.location.add'); ?>
                 </a>
