@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace App\Invoice\Inv;
 
 // Entity's
+use App\Invoice\Entity\Client;
 use App\Invoice\Entity\Contract;
 use App\Invoice\Entity\Delivery;
 use App\Invoice\Entity\DeliveryLocation;
@@ -105,6 +106,7 @@ use App\Invoice\Helpers\StoreCove\StoreCoveHelper;
 use App\Invoice\Helpers\TemplateHelper;
 use App\Widget\Bootstrap5ModalInv;
 use App\Widget\Bootstrap5ModalTranslatorMessageWithoutAction;
+use App\Widget\InvFilterWidget;
 // Libraries
 use App\Invoice\Libraries\Crypt;
 // Yii
@@ -654,14 +656,14 @@ final class InvController {
      * @return Response
      */
     public function credit(Request $request, 
-                        FormHydrator $formHydrator,
-                        CR $clientRepository,
-                        GR $gR,
-                        SumexR $sumexR,
-                        TRR $trR,
-                        UR $uR,
-                        UCR $ucR,  
-                        UIR $uiR
+        FormHydrator $formHydrator,
+        CR $clientRepository,
+        GR $gR,
+        SumexR $sumexR,
+        TRR $trR,
+        UR $uR,
+        UCR $ucR,  
+        UIR $uiR
     ) : Response
     {
         $inv = new Inv();
@@ -772,20 +774,20 @@ final class InvController {
         // Set the basis_inv to read-only;
         $basis_inv->setIs_read_only(true);
         $ajax_body = [
-          'client_id' => $body['client_id'],
-          'group_id' => $body['group_id'],
-          'user_id' => $body['user_id'],
-          'creditinvoice_parent_id' => (string) $body['inv_id'],
-          'status_id' => $basis_inv->getStatus_id(),
-          'is_read_only' => false,
-          'number' => $gR->generate_number((int) $body['group_id'], true),
-          'discount_amount' => null,
-          'discount_percent' => null,
-          'url_key' => '',
-          'password' => $body['password'],
-          'payment_method' => 0,
-          'terms' => '',
-          'delivery_location_id' => $basis_inv->getDelivery_location_id()
+            'client_id' => $body['client_id'],
+            'group_id' => $body['group_id'],
+            'user_id' => $body['user_id'],
+            'creditinvoice_parent_id' => (string) $body['inv_id'],
+            'status_id' => $basis_inv->getStatus_id(),
+            'is_read_only' => false,
+            'number' => $gR->generate_number((int) $body['group_id'], true),
+            'discount_amount' => null,
+            'discount_percent' => null,
+            'url_key' => '',
+            'password' => $body['password'],
+            'payment_method' => 0,
+            'terms' => '',
+            'delivery_location_id' => $basis_inv->getDelivery_location_id()
         ];
         // Save the basis invoice
         $iR->save($basis_inv);
@@ -1887,6 +1889,7 @@ final class InvController {
      */
     public function index(Request $request, IR $invRepo, IRR $irR, CR $clientRepo, GR $groupRepo, QR $qR, SOR $soR, DLR $dlR, UCR $ucR, CurrentRoute $currentRoute): \Yiisoft\DataResponse\DataResponse|Response {
         // build the inv and hasOne InvAmount table
+        $visible = $this->sR->get_setting('columns_all_visible');
         $inv = new Inv();
         $invForm = new InvForm($inv);
         $bootstrap5ModalInv = new Bootstrap5ModalInv(
@@ -1938,6 +1941,11 @@ final class InvController {
             if (isset($query_params['filterClientGroup']) && !empty($query_params['filterClientGroup'])) {
                 $invs = $invRepo->filterClientGroup((string)$query_params['filterClientGroup']);
             }
+            if (isset($query_params['filterDateCreatedYearMonth']) && !empty($query_params['filterDateCreatedYearMonth']))
+            {
+                // Use the mySql format 'Y-m'
+                $invs = $invRepo->filterDateCreatedLike('Y-m', (string)$query_params['filterDateCreatedYearMonth']);
+            }
             $paginator = (new DataOffsetPaginator($invs))
                 ->withPageSize((int) $this->sR->get_setting('default_list_limit'))
                 ->withCurrentPage((int)$page)
@@ -1950,7 +1958,11 @@ final class InvController {
             $parameters = [
                 'paginator' => $paginator,
                 'alert' => $this->alert(), 'client_count' => $clientRepo->count(),
-                'optionsDataClientsDropdownFilter' => $this->optionsDataClients($invRepo),
+                'visible' => $visible == '0' ? false : true, 
+                'optionsDataClientsDropdownFilter' => $this->optionsDataClientsFilter($invRepo),
+                'optionsDataClientGroupDropDownFilter' => $this->optionsDataClientGroupFilter($clientRepo),
+                'optionsDataInvNumberDropDownFilter' => $this->optionsDataInvNumberFilter($invRepo),
+                'optionsDataYearMonthDropDownFilter' => $this->optionsDataYearMonthFilter(),
                 'grid_summary' => $this->sR->grid_summary(
                     $paginator,
                     $this->translator,
@@ -3711,7 +3723,7 @@ final class InvController {
      * @param IR $iR
      * @return array
      */
-    public function optionsDataClients(IR $iR) : array
+    public function optionsDataClientsFilter(IR $iR) : array
     {
         $optionsDataClients = [];
         // Get all the invoices that have been made out to clients with user accounts
@@ -3729,5 +3741,60 @@ final class InvController {
             }
         }
         return $optionsDataClients;
+    }
+    
+    public function optionsDataYearMonthFilter() : array {
+        $ym = []; 
+        for ($y = 2024, $now = date('Y') + 10; $y <= $now; ++$y) {
+            $months = ['01','02','03','04','05','06','07','08','09','10','11','12'];                     
+            foreach ($months as $month) {
+                $yearMonth = $y.'-'.$month;
+                $ym[$yearMonth] = $yearMonth;
+            }
+        }
+        return $ym;
+    }
+    
+    public function optionsDataClientGroupFilter(CR $cR) : array {
+        $clientGroup = [];
+        $allClients = $cR->findAllPreloaded();
+        /**
+         * @var Client $client
+         */
+        foreach ($allClients as $client) {
+            if (!in_array($client->getClient_group(), $clientGroup)) {
+                /**
+                 * @var string $client->getClient_group()
+                 */
+                $group = $client->getClient_group();
+                if (null!==$group) {
+                    $clientGroup[$group] = $group;
+                }    
+            }            
+        }
+        return $clientGroup;
+    }
+    
+    /**
+     * @param IR $iR
+     * @return array
+     */
+    public function optionsDataInvNumberFilter(IR $iR) : array
+    {
+        $optionsDataInvNumbers = [];
+        // Get all the invoices that have been made out to clients with user accounts
+        $invs = $iR->findAllPreloaded();
+        /**
+         * @var Inv $inv
+         */
+        foreach ($invs as $inv) {
+            $invNumber = $inv->getNumber();
+            if (null!==$invNumber) {
+                if (!in_array($invNumber, $optionsDataInvNumbers)) {
+                    $optionsDataInvNumbers[$invNumber] = $invNumber;
+                }
+            }
+        }
+        return $optionsDataInvNumbers;
     }
 }

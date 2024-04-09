@@ -8,7 +8,6 @@ use Yiisoft\View\WebView;
 use Yiisoft\Html\Tag\A;
 use Yiisoft\Html\Tag\Div;
 use Yiisoft\Html\Tag\Form;
-use Yiisoft\Html\Tag\H5;
 use Yiisoft\Html\Tag\I;
 use Yiisoft\Html\Tag\Label;
 use Yiisoft\Yii\DataView\GridView;
@@ -28,16 +27,7 @@ use Yiisoft\Yii\DataView\Column\ColumnInterface;
 ?>
 <?= $alert; ?>
 <?php
-$header = Div::tag()
-        ->addClass('row')
-        ->content(
-                H5::tag()
-                ->addClass('bg-primary text-white p-3 rounded-top')
-                ->content(
-                        I::tag()->addClass('bi bi-receipt')->content(' ' . $translator->translate('i.invoice'))
-                )
-        )
-        ->render();
+
 
 $toolbarReset = A::tag()
         ->addAttributes(['type' => 'reset'])
@@ -46,6 +36,15 @@ $toolbarReset = A::tag()
         ->href($urlGenerator->generate($currentRoute->getName()))
         ->id('btn-reset')
         ->render();
+
+$allVisible = A::tag()
+        ->addAttributes(['type' => 'reset', 'data-bs-toggle' => 'tooltip', 'title' => $translator->translate('invoice.hide.or.unhide.columns')])
+        ->addClass('btn btn-warning me-1 ajax-loader')
+        ->content('↔️')
+        ->href($urlGenerator->generate('setting/visible'))
+        ->id('btn-all-visible')
+        ->render();
+
 
 $toolbar = Div::tag();
 $decimal_places = (int)$s->get_setting('tax_rate_decimal_places');
@@ -129,7 +128,7 @@ $decimal_places = (int)$s->get_setting('tax_rate_decimal_places');
     <br>
 </div>
 
-<?php
+<?php 
     /**
      * @var ColumnInterface[] $columns
      */
@@ -139,17 +138,16 @@ $decimal_places = (int)$s->get_setting('tax_rate_decimal_places');
             header: $translator->translate('i.id'),
             content: static fn(object $any) => $any->getId()    
         ),
-                    
         new DataColumn(
-            header: $translator->translate('i.view'), 
+            header: '🔍', 
             content: static function ($model) use ($urlGenerator): string {
-                return Html::a(Html::tag('i', '', ['class' => 'fa fa-eye fa-margin']), $urlGenerator->generate('inv/view', ['id' => $model->getId()]), [])->render();
+                return Html::a('🔍', $urlGenerator->generate('inv/view', ['id' => $model->getId()]), [])->render();
             }  
         ),        
         new DataColumn(
-            header: $translator->translate('i.edit'),
+            header: '🖉',
             content: static function ($model) use ($s, $urlGenerator): string {
-                return $model->getIs_read_only() === false && $s->get_setting('disable_read_only') === (string) 0 ? Html::a(Html::tag('i', '', ['class' => 'fa fa-edit fa-margin']), $urlGenerator->generate('inv/edit', ['id' => $model->getId()]), [])->render() : '';
+                return $model->getIs_read_only() === false && $s->get_setting('disable_read_only') === (string) 0 ? Html::a('🖉', $urlGenerator->generate('inv/edit', ['id' => $model->getId()]), [])->render() : '';
             }     
         ),
         new DataColumn(
@@ -188,7 +186,7 @@ $decimal_places = (int)$s->get_setting('tax_rate_decimal_places');
                         ])->render() . 
                         $creditInvoiceUrl;
             },
-            filter: true            
+            filter: $optionsDataInvNumberDropDownFilter            
         ),      
         new DataColumn(
             field: 'client_id',
@@ -199,16 +197,18 @@ $decimal_places = (int)$s->get_setting('tax_rate_decimal_places');
         ),
         new DataColumn(
             field: 'client_id',
-            property: 'filterClientGroup',
+            property: 'filterClientGroup', 
             header: $translator->translate('invoice.client.group'),
             content: static fn($model): string => $model->getClient()->getClient_group() ?? '',
-            filter: true    
-        ),  
+            filter: $optionsDataClientGroupDropDownFilter  
+        ), 
         new DataColumn(
-            'date_created',
-            header: $translator->translate('invoice.datetime.immutable.date.created'),
-            content: static fn($model): string => ($model->getDate_created())->format($datehelper->style())
-        ),
+            field: 'date_created',
+            property: 'filterDateCreatedYearMonth',  
+            header: $translator->translate('invoice.datetime.immutable.date.created.mySql.format.year.month.filter'),
+            content: static fn($model): string => ($model->getDate_created())->format('Y-m-d'),
+            filter: $optionsDataYearMonthDropDownFilter
+        ),           
         new DataColumn(
             'time_created',
             header: $translator->translate('invoice.datetime.immutable.time.created'),
@@ -282,7 +282,7 @@ $decimal_places = (int)$s->get_setting('tax_rate_decimal_places');
             }     
         ),
         new DataColumn(
-            header: $translator->translate('invoice.delivery.location.add'),
+            header: '🚚',
             content: static function ($model) use ($urlGenerator): string {
                 return Html::a(Html::tag('i', '', ['class' => 'fa fa-plus fa-margin']), $urlGenerator->generate('del/add', [
                     /**
@@ -291,14 +291,14 @@ $decimal_places = (int)$s->get_setting('tax_rate_decimal_places');
                      * @see config/common/routes/routes.php Route::methods([Method::GET, Method::POST], '/del/add/{client_id}[/{origin}/{origin_id}/{action}]')
                      */
                     'client_id' => $model->getClient_id()
-                    
                 ],
                 [
                     'origin' => 'inv',
                     'origin_id' => $model->getId(),
                     'action' => 'index'
                 ]))->render();
-            }     
+            },
+            visible: $visible        
         ),
         new DataColumn(
             'quote_id',
@@ -311,7 +311,8 @@ $decimal_places = (int)$s->get_setting('tax_rate_decimal_places');
                 } else {
                     return '';
                 }
-            }    
+            },
+            visible: $visible        
         ),
         new DataColumn(
             'so_id',
@@ -324,7 +325,8 @@ $decimal_places = (int)$s->get_setting('tax_rate_decimal_places');
                 } else {
                     return '';
                 }
-            }     
+            },
+            visible: $visible        
         ), 
         new DataColumn(
             'delivery_location_id',
@@ -333,7 +335,8 @@ $decimal_places = (int)$s->get_setting('tax_rate_decimal_places');
                 $delivery_location_id = $model->getDelivery_location_id();
                 $delivery_location = (($dlR->repoCount($delivery_location_id) > 0) ? $dlR->repoDeliveryLocationquery($delivery_location_id) : null);
                 return null !== $delivery_location ? $delivery_location->getGlobal_location_number() : '';
-            } 
+            },
+            visible: $visible
         ),
         new DataColumn(
             header: $translator->translate('i.delete'),
@@ -348,7 +351,8 @@ $decimal_places = (int)$s->get_setting('tax_rate_decimal_places');
                         ),
                         $urlGenerator->generate('inv/delete', ['id' => $model->getId()]), []
                 )->render() : '';
-            }     
+            },
+            visible: $visible
         )   
     ];
 ?>
@@ -356,13 +360,13 @@ $decimal_places = (int)$s->get_setting('tax_rate_decimal_places');
     // unpack the contents within the array using the three dot splat operator    
     ->columns(...$columns)
     ->dataReader($paginator)
-    ->header($header)
-    ->headerRowAttributes(['class' => 'card-header bg-info text-black'])    
+    ->header($gridComponents->header(' ' . $translator->translate('i.invoice')))
+    ->headerRowAttributes(['class' => 'card-header bg-info text-black']) 
     ->id('w3-grid') 
     ->pagination(
         $gridComponents->offsetPaginationWidget($defaultPageSizeOffsetPaginator, $paginator)
-    )    
-    ->rowAttributes(['class' => 'align-middle'])
+    )
+    ->rowAttributes(['class' => 'align-left'])
     ->summaryAttributes(['class' => 'mt-3 me-3 summary text-end'])
     /**
      * @see config/common/params.php `yiisoft/view` => ['parameters' => ['pageSizeLimiter' ... No need to be in inv/index
@@ -370,11 +374,12 @@ $decimal_places = (int)$s->get_setting('tax_rate_decimal_places');
     ->summaryTemplate($pageSizeLimiter::buttons($currentRoute, $s, $urlGenerator, 'inv').' '.$grid_summary)
     ->emptyTextAttributes(['class' => 'card-header bg-warning text-black'])
     ->emptyText((string) $translator->translate('invoice.invoice.no.records'))
-    ->tableAttributes(['class' => 'table table-striped text-center h-75', 'id' => 'table-invoice'])
+    ->tableAttributes(['class' => 'table table-striped h-75', 'id' => 'table-invoice'])
     ->toolbar(
-          Form::tag()->post($urlGenerator->generate('quote/index'))->csrf($csrf)->open() .
-          Div::tag()->addClass('float-end m-3')->content($toolbarReset)->encode(false)->render() .
-          Form::tag()->close()    
+        Form::tag()->post($urlGenerator->generate('quote/index'))->csrf($csrf)->open() .
+        Div::tag()->addClass('float-end m-3')->content($allVisible)->encode(false)->render() .  
+        Div::tag()->addClass('float-end m-3')->content($toolbarReset)->encode(false)->render() .
+        Form::tag()->close()    
     )    
 ?>
 

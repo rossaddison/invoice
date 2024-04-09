@@ -2107,7 +2107,12 @@ return [
       ->middleware(fn(AccessChecker $checker) => $checker->withPermission('editClientPeppol'))
       ->middleware(Authentication::class)
       ->action([SettingController::class, 'listlimit'])
-      ->name('setting/listlimit'),      
+      ->name('setting/listlimit'), 
+      Route::methods([Method::GET, Method::POST], '/setting/visible')
+      ->name('setting/visible')
+      ->middleware(fn(AccessChecker $checker) => $checker->withPermission('editInv'))
+      ->middleware(Authentication::class)
+      ->action([SettingController::class, 'visible']),       
       Route::get('/task[/page/{page:\d+}]')
       ->middleware(fn(AccessChecker $checker) => $checker->withPermission('editInv'))
       ->middleware(Authentication::class)

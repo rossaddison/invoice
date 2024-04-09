@@ -44,7 +44,7 @@ final class InvRepository extends Select\Repository
     public function filterInvNumber(string $invNumber): EntityReader
     {
         $select = $this->select();
-        $query = $select->where(['number' => ltrim(rtrim($invNumber))]);
+        $query = $select->where(['number' => ltrim(rtrim($invNumber))]);        
         return $this->prepareDataReader($query); 
     }
 
@@ -53,7 +53,7 @@ final class InvRepository extends Select\Repository
         $select = $this->select();
         $query = $select
                  ->load('invAmount') 
-                 ->where(['invAmount.total' => $invAmountTotal]);
+                 ->where('invAmount.total' , 'like', $invAmountTotal.'%');
         return $this->prepareDataReader($query); 
     }
     
@@ -91,6 +91,17 @@ final class InvRepository extends Select\Repository
         $query = $select->where(['client.client_group' => ltrim(rtrim($clientGroup))]);
         return $this->prepareDataReader($query); 
     }
+    
+    public function filterDateCreatedLike(string $format, string $dateCreated) : EntityReader
+    {
+        $select = $this->select();
+        $dateTimeImmutable = \DateTimeImmutable::createFromFormat($format, $dateCreated);
+        $query = $select->where('date_created', 
+                                'like', 
+                                ($dateTimeImmutable instanceof \DateTimeImmutable ? 
+                                $dateTimeImmutable->format('Y-m').'%' : ''));
+        return $this->prepareDataReader($query);
+    }    
     
     /**
      * 

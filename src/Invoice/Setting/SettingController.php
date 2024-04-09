@@ -434,6 +434,30 @@ final class SettingController
         return $this->webService->getRedirectResponse('inv/index');
     }
     
+    public function visible() : Response {
+        $setting = $this->s->withKey('columns_all_visible');
+        if ($setting) {
+            if ($setting->getSetting_value() == '0') {
+               $setting->setSetting_value('1');
+               $this->s->save($setting);
+               return $this->webService->getRedirectResponse('inv/index');
+            }
+            if ($setting->getSetting_value() == '1') {
+               $setting->setSetting_value('0');
+               $this->s->save($setting);
+               return $this->webService->getRedirectResponse('inv/index');
+            }
+            $setting->setSetting_value('0');
+            $this->s->save($setting);
+            return $this->webService->getRedirectResponse('inv/index');
+        } else {
+            $new_setting = new Setting();
+            $new_setting->setSetting_key('columns_all_visible');
+            $this->s->save($new_setting);
+        }
+        return $this->webService->getRedirectResponse('inv/index');
+    }
+    
     public function listlimit(CurrentRoute $currentRoute): Response 
     {
         $setting = $this->setting($currentRoute, $this->s);
