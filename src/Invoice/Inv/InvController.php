@@ -106,7 +106,6 @@ use App\Invoice\Helpers\StoreCove\StoreCoveHelper;
 use App\Invoice\Helpers\TemplateHelper;
 use App\Widget\Bootstrap5ModalInv;
 use App\Widget\Bootstrap5ModalTranslatorMessageWithoutAction;
-use App\Widget\InvFilterWidget;
 // Libraries
 use App\Invoice\Libraries\Crypt;
 // Yii

@@ -8,8 +8,18 @@ use Yiisoft\Html\Html;
         <tr> 
             <td style="width:60%;text-align:left">
                 <div id="logo">
-                    <img src="<?= $company['logo_path']; ?>" height="100" width="150"/>
-                    <img src="<?= '/site/'. $s->public_logo().'.png'; ?>" height="100" width="150"/>
+                    <?php 
+                        /**
+                         * Use the default site logo unless the CompanyPrivate details logo linked to a CompanyPublic
+                         * details has been set
+                         * @see src\Invoice\Helpers\PdfHelper public function generate_quote/inv_pdf 
+                         */
+                    ?>
+                    <?php if (isset($company['logo_path']) && !empty($company['logo_path'])) { ?> 
+                        <img src="<?= $company['logo_path']; ?>" height="100" width="150"/>
+                    <?php } else { ?>
+                        <img src="<?= '/site/'. $s->public_logo().'.png'; ?>" height="100" width="150"/>
+                    <?php } ?>
                 </div>
             </td>
             <td style="width:40%;text-align:left">
