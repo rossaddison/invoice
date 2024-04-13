@@ -158,16 +158,19 @@ $this->beginPage();
         <?php
         Html::tag('Noscript', Html::tag('Div', $translator->translate('i.please_enable_js'), ['class' => 'alert alert-danger no-margin']));
         ?>
+        
         <?php
         $this->beginBody();
-
+        $logoPath = ((null!==$companyLogoFileName) ? '/logo/'. $companyLogoFileName : '/site/logo/logo.png');  
+        
         $offcanvas = new Offcanvas();
         $offcanvas->title($s->get_setting('custom_title') ?: 'Yii-Invoice');
 
         echo NavBar::widget()
           // public folder represented by first forward slash ie. root
-          ->brandImage('/site/favicon.ico')
-          ->brandImageAttributes(['width' => 40, 'height' => 20])
+          ->brandImage($logoPath)              
+          ->brandImageAttributes(['margin' => 10, 'width' => 80, 'height' => 40])
+          //->brandText(str_repeat('&nbsp;', 7).$brandLabel)      
           ->brandUrl($urlGenerator->generate('invoice/index'))
           ->withWidget(
             // If not full screen => 'burger icon ie. 3 horizontal lines' represents menu and

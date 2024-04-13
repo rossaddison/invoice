@@ -214,6 +214,32 @@ final class UserInvController
     }
     
     /**
+     * @see src\Widget\PageSizeLimiter buttonsGuest function
+     * @see ..\resources\views\invoice\inv\guest.php
+     * @see InvController\guest 
+     * @param CurrentRoute $currentRoute
+     * @param UserInvRepository $uiR
+     * @return Response
+     */
+    public function guestlimit(CurrentRoute $currentRoute, UserInvRepository $uiR) : Response {
+        $userInvId = $currentRoute->getArgument('userinv_id');
+        // $origin => 'inv' or 'quote'
+        $origin = $currentRoute->getArgument('origin');
+        if (null!=$userInvId && null!==$origin) {
+            $limit = (int)$currentRoute->getArgument('limit');
+            $userInv = $uiR->repoUserInvquery($userInvId);
+            if (null!==$userInv) {
+                $userInv->setListLimit($limit);
+                $uiR->save($userInv);
+            }
+        }    
+        /**
+         * @see config/common/routes.php Route::get('/client_invoices[/page/{page:\d+}[/status/{status:\d+}]]')
+         */
+        return $this->webService->getRedirectResponse(null!==$origin ? $origin.'/guest' : 'client/guest');
+    }
+    
+    /**
      * @return string
      */
     private function alert(): string {

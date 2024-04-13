@@ -50,6 +50,7 @@ final class UserInvService
        isset($array['iban']) ? $model->setIban((string)$array['iban']) : '';
        isset($array['gln']) ? $model->setGln((int)$array['gln']) : '';
        isset($array['rcc']) ? $model->setRcc((string)$array['rcc']) : '';
+       isset($array['listLimit']) ? $model->setListLimit((int)$array['listLimit']) : '';
        $this->repository->save($model);
     }
     

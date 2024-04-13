@@ -4,16 +4,17 @@ declare(strict_types=1);
 
 use Yiisoft\Data\Paginator\OffsetPaginator;
 use Yiisoft\Html\Html;
+use Yiisoft\Translator\TranslatorInterface;
+use Yiisoft\View\WebView;
 use Yiisoft\Html\Tag\A;
 use Yiisoft\Html\Tag\Div;
 use Yiisoft\Html\Tag\Form;
-use Yiisoft\Html\Tag\H5;
 use Yiisoft\Html\Tag\I;
-use Yiisoft\Router\CurrentRoute;
-use Yiisoft\Translator\TranslatorInterface;
-use Yiisoft\View\WebView;
-use Yiisoft\Yii\DataView\Column\DataColumn;
+use Yiisoft\Html\Tag\Label;
 use Yiisoft\Yii\DataView\GridView;
+use Yiisoft\Router\CurrentRoute;
+use Yiisoft\Yii\DataView\Column\DataColumn;
+use Yiisoft\Yii\DataView\Column\ColumnInterface;
 
 echo $alert;
 
@@ -26,17 +27,6 @@ echo $alert;
  * @var TranslatorInterface $translator
  * @var WebView $this
  */
-
-$header = Div::tag()
-    ->addClass('row')
-    ->content(
-        H5::tag()
-            ->addClass('bg-primary text-white p-3 rounded-top')
-            ->content(
-                I::tag()->addClass('bi bi-receipt')->content(' ' . $translator->translate('i.invoice'))
-            )
-    )
-    ->render();
 
 $toolbarReset = A::tag()
     ->addAttributes(['type' => 'reset'])
@@ -53,31 +43,66 @@ $toolbar = Div::tag();
     <br>
     <div class="submenu-row">
             <div class="btn-group index-options">
-                <a href="<?= $urlGenerator->generate('inv/guest',['page'=>1,'status'=>0]); ?>"
-                   class="btn <?= $status == 0 ? 'btn-primary' : 'btn-default' ?>">
-                    <?= $translator->translate('i.all'); ?>
+                <a href="<?= $urlGenerator->generate('inv/guest', ['page' => 1, 'status' => 0]); ?>"
+                   class="btn btn-<?= $status == 0 ? $inv_statuses['0']['class'] : 'btn-default' ?>">
+                   <?= $inv_statuses['0']['emoji'].' '.$translator->translate('i.all'); ?>
                 </a>
-                <a href="<?= $urlGenerator->generate('inv/guest',['page'=>1,'status'=>2]); ?>" style="text-decoration:none"
-                   class="btn  <?= $status == 2 ? 'btn-primary' : 'btn-default' ?>">
-                    <?= $translator->translate('i.sent'); ?>
+                <a href="<?= $urlGenerator->generate('inv/guest', ['page' => 1, 'status' => 2]); ?>" style="text-decoration:none"
+                   class="btn btn-<?= $status == 2 ? $inv_statuses['2']['class'] : 'btn-default' ?>">
+                       <?= $inv_statuses['2']['emoji'].' '.$translator->translate('i.sent'); ?>
                 </a>
-                <a href="<?= $urlGenerator->generate('inv/guest',['page'=>1,'status'=>3]); ?>" style="text-decoration:none"
-                   class="btn  <?= $status == 3 ? 'btn-primary' : 'btn-default'  ?>">
-                    <?= $translator->translate('i.viewed'); ?>
+                <a href="<?= $urlGenerator->generate('inv/guest', ['page' => 1, 'status' => 3]); ?>" style="text-decoration:none"
+                   class="btn btn-<?= $status == 3 ? $inv_statuses['3']['class'] : 'btn-default' ?>">
+                       <?= $inv_statuses['3']['emoji'].' '.$translator->translate('i.viewed'); ?>
                 </a>
-                <a href="<?= $urlGenerator->generate('inv/guest',['page'=>1,'status'=>4]); ?>" style="text-decoration:none"
-                   class="btn  <?= $status == 4 ? 'btn-primary' : 'btn-default' ?>">
-                    <?= $translator->translate('i.paid'); ?>
+                <a href="<?= $urlGenerator->generate('inv/guest', ['page' => 1, 'status' => 4]); ?>" style="text-decoration:none"
+                   class="btn btn-<?= $status == 4 ? $inv_statuses['4']['class'] : 'btn-default' ?>">
+                       <?= $inv_statuses['4']['emoji'].' '.$translator->translate('i.paid'); ?>
                 </a>
-                <a href="<?= $urlGenerator->generate('inv/guest',['page'=>1,'status'=>5]); ?>" style="text-decoration:none"
-                   class="btn  <?= $status == 5 ? 'btn-primary' : 'btn-default'  ?>">
-                    <?= $translator->translate('i.overdue'); ?>
+                <a href="<?= $urlGenerator->generate('inv/guest', ['page' => 1, 'status' => 5]); ?>" style="text-decoration:none"
+                   class="btn btn-<?= $status == 5 ? $inv_statuses['5']['class'] : 'btn-default' ?>">
+                    <?= $inv_statuses['5']['emoji'].' '.$translator->translate('i.overdue'); ?>
                 </a>
+                 <a href="<?= $urlGenerator->generate('inv/guest', ['page' => 1, 'status' => 6]); ?>" style="text-decoration:none"
+                    class="btn btn-<?= $status == 6 ? $inv_statuses['6']['class'] : 'btn-default' ?>">
+                     <?= $inv_statuses['6']['emoji'].' '.$translator->translate('i.unpaid'); ?>
+                 </a>
+                 <a href="<?= $urlGenerator->generate('inv/guest', ['page' => 1, 'status' => 7]); ?>" style="text-decoration:none"
+                    class="btn btn-<?= $status == 7 ? $inv_statuses['7']['class'] : 'btn-default' ?>">
+                     <?= $inv_statuses['7']['emoji'].' '.$translator->translate('i.reminder'); ?>
+                 </a>
+                 <a href="<?= $urlGenerator->generate('inv/guest', ['page' => 1, 'status' => 8]); ?>" style="text-decoration:none"
+                    class="btn btn-<?= $status == 8 ? $inv_statuses['8']['class'] : 'btn-default' ?>">
+                     <?= $inv_statuses['8']['emoji'].' '.$translator->translate('i.letter'); ?>
+                 </a>
+                 <a href="<?= $urlGenerator->generate('inv/guest', ['page' => 1, 'status' => 9]); ?>" style="text-decoration:none"
+                    class="btn btn-<?= $status == 9 ? $inv_statuses['9']['class'] : 'btn-default' ?>">
+                     <?= $inv_statuses['9']['emoji'].' '.$translator->translate('i.claim'); ?>
+                 </a>
+                 <a href="<?= $urlGenerator->generate('inv/guest', ['page' => 1, 'status' => 10]); ?>" style="text-decoration:none"
+                    class="btn btn-<?= $status == 10 ? $inv_statuses['10']['class'] : 'btn-default' ?>">
+                     <?= $inv_statuses['10']['emoji'].' '.$translator->translate('i.judgement'); ?>
+                 </a>
+                 <a href="<?= $urlGenerator->generate('inv/guest', ['page' => 1, 'status' => 11]); ?>" style="text-decoration:none"
+                    class="btn btn-<?= $status == 11 ? $inv_statuses['11']['class'] : 'btn-default' ?>">
+                     <?= $inv_statuses['11']['emoji'].' '.$translator->translate('i.enforcement'); ?>
+                 </a>
+                 <a href="<?= $urlGenerator->generate('inv/guest', ['page' => 1, 'status' => 12]); ?>" style="text-decoration:none"
+                    class="btn btn-<?= $status == 12 ? $inv_statuses['12']['class'] : 'btn-default' ?>">
+                     <?= $inv_statuses['12']['emoji'].' '.$translator->translate('i.credit_invoice_for_invoice'); ?>
+                 </a>
+                 <a href="<?= $urlGenerator->generate('inv/guest', ['page' => 1, 'status' => 13]); ?>" style="text-decoration:none"
+                    class="btn btn-<?= $status == 13 ? $inv_statuses['13']['class'] : 'btn-default' ?>">
+                     <?= $inv_statuses['13']['emoji'].' '.$translator->translate('i.loss'); ?>
+                 </a>
             </div>
     </div>
 </div>
 <br>
 <?php
+    /**
+     * @var ColumnInterface[] $columns
+     */
     $columns = [
         new DataColumn(
             'id',
@@ -86,27 +111,26 @@ $toolbar = Div::tag();
         ),
         new DataColumn(
             'status_id',
-            $translator->translate('i.status'),
-            content: static function ($model) use ($s, $irR, $inv_statuses): Yiisoft\Html\Tag\CustomTag { 
-                $span = $inv_statuses[(string)$model->getStatus_id()]['label'];
-                if ($model->getCreditinvoice_parent_id()>0) { 
-                    $span = Html::tag('i', str_repeat(' ',2).$translator->translate('i.credit_invoice'),['class'=>'fa fa-credit-invoice']);
+            header: $translator->translate('i.status'),
+            content: static function ($model) use ($s, $irR, $inv_statuses, $translator): Yiisoft\Html\Tag\CustomTag {
+                $label = $inv_statuses[(string) $model->getStatus_id()]['label'];
+                if (($model->getIs_read_only()) && $s->get_setting('disable_read_only') === (string) 0) {
+                    $label =  $translator->translate('i.paid'). ' 🚫';
                 }
-                if (($model->getIs_read_only()) && $s->get_setting('disable_read_only') === (string)0){ 
-                    $span = Html::tag('i', str_repeat(' ',2).$translator->translate('i.paid'), ['class'=>'fa fa-read-only']);
+                if ($irR->repoCount((string) $model->getId()) > 0) {
+                    $label = $translator->translate('i.recurring'). ' 🔄';
                 }
-                if ($irR->repoCount((string)$model->getId())>0) { 
-                    $span = Html::tag('i',str_repeat(' ',2).$translator->translate('i.recurring'),['class'=>'fa fa-refresh']);
-                }
-                return Html::tag('span', $span, ['class'=>'label '. $inv_statuses[(string)$model->getStatus_id()]['class']]);
-            }       
+                return Html::tag('span', $inv_statuses[(string) $model->getStatus_id()]['emoji']. $label, ['class' => 'label label-' . $inv_statuses[(string) $model->getStatus_id()]['class']]);
+            }    
         ),
         new DataColumn(
-            'number',
+            field: 'number',
+            property: 'filterInvNumber',       
             header: '#',
             content: static function ($model) use ($urlGenerator): string {
                return Html::a($model->getNumber(), $urlGenerator->generate('inv/view',['id'=>$model->getId()]),['style'=>'text-decoration:none'])->render();
-           }                       
+            },
+            filter: $optionsDataInvNumberDropDownFilter
         ),
         new DataColumn(
             'client_id',                
@@ -117,53 +141,71 @@ $toolbar = Div::tag();
             header: $translator->translate('i.date_created'),    
             content: static fn ($model): string => ($model->getDate_created())->format($datehelper->style())                        
         ),
-        new DataColumn(              
-            'date_due',     
-            content: static fn ($model): string => ($model->getDate_due())->format($datehelper->style())                        
-        ),
         new DataColumn(
-            'id',     
-            header: $translator->translate('i.total'),                
-            content: static function ($model) use ($s, $iaR) : string|null {
-               $inv_id = $model->getId(); 
-               $inv_amount = (($iaR->repoInvAmountCount((int)$inv_id) > 0) ? $iaR->repoInvquery((int)$inv_id) : null);
-               return $s->format_currency(null!==$inv_amount ? $inv_amount->getTotal() : 0.00);
-            }                        
-        ),
+            'date_due',
+            content: static function($model) use ($datehelper) : string {
+                $now = new \DateTimeImmutable('now');
+                return Label::tag()
+                        ->attributes(['class' => $model->getDate_due() > $now ? 'label label-success' : 'label label-warning'])
+                        ->content(Html::encode($model->getDate_due()->format($datehelper->style())))
+                        ->render();
+            }   
+        ),        
+        new DataColumn(
+            field: 'id',
+            property: 'filterInvAmountTotal',
+            header: $translator->translate('i.total') . ' ( '. $s->get_setting('currency_symbol'). ' ) ',
+            content: static function ($model) use ($decimal_places) : string|null {
+               return  
+                    Label::tag()
+                        ->attributes(['class' => $model->getInvAmount()->getTotal() > 0.00 ? 'label label-success' : 'label label-warning'])
+                        ->content(Html::encode(null!==$model->getInvAmount()->getTotal() 
+                                ? number_format($model->getInvAmount()->getTotal() , $decimal_places) 
+                                : number_format(0, $decimal_places)))
+                        ->render();
+            },
+            filter: true
+        ),        
         new DataColumn(
             'id',
-            header: $translator->translate('i.paid'),                
-            content: static function ($model) use ($s, $iaR) : string|null {
-               $inv_id = $model->getId(); 
-               $inv_amount = (($iaR->repoInvAmountCount((int)$inv_id) > 0) ? $iaR->repoInvquery((int)$inv_id) : null);
-               return $s->format_currency(null!==$inv_amount ? $inv_amount->getPaid() : 0.00);
-            }                        
-        ),
+            header: $translator->translate('i.paid') . ' ( '. $s->get_setting('currency_symbol'). ' ) ',
+            content: static function ($model) use ($decimal_places) : string|null {
+                return Label::tag()
+                        ->attributes(['class' => $model->getInvAmount()->getPaid() < $model->getInvAmount()->getTotal() ? 'label label-danger' : 'label label-success'])
+                        ->content(Html::encode(null!==$model->getInvAmount()->getPaid() 
+                                ? number_format($model->getInvAmount()->getPaid(),  $decimal_places) 
+                                : number_format(0, $decimal_places)))
+                        ->render();
+            }     
+        ),        
         new DataColumn(
-            'id',    
-            header: $translator->translate('i.balance'),                
-            content: static function ($model) use ($s, $iaR) : string|null {
-               $inv_id = $model->getId(); 
-               $inv_amount = (($iaR->repoInvAmountCount((int)$inv_id) > 0) ? $iaR->repoInvquery((int)$inv_id) : null);
-               return $s->format_currency(null!==$inv_amount ? $inv_amount->getBalance() : 0.00);
-            }                        
+            'id',
+            header: $translator->translate('i.balance')  . ' ( '. $s->get_setting('currency_symbol'). ' ) ',
+            content: static function ($model) use ($decimal_places) : string|null {
+                return  Label::tag()
+                        ->attributes(['class' => $model->getInvAmount()->getBalance() > 0.00 ? 'label label-success' : 'label label-warning'])
+                        ->content(Html::encode(null!== $model->getInvAmount() 
+                                ? number_format($model->getInvAmount()->getBalance(), $decimal_places) 
+                                : number_format(0, $decimal_places)))
+                        ->render();
+            }     
         ),
     ]            
 ?>
 <?= GridView::widget()
-        ->dataReader($paginator)                    
-        ->columns(...$columns)
+        ->columns(...$columns)        
+        ->dataReader($paginator)
         ->headerRowAttributes(['class'=>'card-header bg-info text-black'])
-        //->filterPosition('header')
-        //->filterModelName('invoice_guest')
-        ->header($header)
-        ->id('w8-grid')
+        ->header($gridComponents->header(' ' . $translator->translate('i.invoice')))
+        ->id('w9-grid')
         ->pagination(
            $gridComponents->offsetPaginationWidget($defaultPageSizeOffsetPaginator, $paginator)
         )
         ->rowAttributes(['class' => 'align-middle'])
         ->summaryAttributes(['class' => 'mt-3 me-3 summary text-end'])
-        ->summaryTemplate(($editInv ?$pageSizeLimiter::buttons($currentRoute, $s, $urlGenerator, 'inv') : '').' '.$grid_summary)
+        ->summaryTemplate(($viewInv ? 
+                           $pageSizeLimiter::buttonsGuest($userinv, $urlGenerator, $translator, 'inv', $defaultPageSizeOffsetPaginator) : '').' '.
+                           $grid_summary)
         ->emptyTextAttributes(['class' => 'card-header bg-warning text-black'])
         ->emptyText((string)$translator->translate('invoice.invoice.no.records')) 
         ->tableAttributes(['class' => 'table table-striped text-center h-75','id'=>'table-invoice-guest'])

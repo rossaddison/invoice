@@ -109,6 +109,7 @@ use App\Widget\Bootstrap5ModalTranslatorMessageWithoutAction;
 // Libraries
 use App\Invoice\Libraries\Crypt;
 // Yii
+use Yiisoft\Data\Cycle\Reader\EntityReader;
 use Yiisoft\Data\Paginator\OffsetPaginator as DataOffsetPaginator;
 use Yiisoft\Data\Paginator\PageToken;
 use Yiisoft\Data\Reader\Sort;
@@ -1771,7 +1772,9 @@ final class InvController {
             $user_id = $user->getId();
             // Use this user's id to see whether a user has been setup under UserInv ie. yii-invoice's list of users
             $userinv = ($uiR->repoUserInvUserIdcount((string) $user_id) > 0 ? $uiR->repoUserInvUserIdquery((string) $user_id) : null);
-            if ($userinv && null !== $user_id) {
+            
+            if (null!==$userinv && null !== $user_id) {
+                $userInvListLimit = $userinv->getListLimit();
                 // Determine what clients have been allocated to this user (@see Settings...User Account)
                 // by looking at UserClient table
                 // eg. If the user is a guest-accountant, they will have been allocated certain clients
@@ -1781,28 +1784,42 @@ final class InvController {
                 $user_clients = $ucR->get_assigned_to_user($user_id);
                 if (!empty($user_clients)) {
                     $invs = $this->invs_status_with_sort_guest($iR, $status, $user_clients, $sort);
+                    $preFilterInvs = $invs;
+                    if (isset($query_params['filterInvNumber']) && !empty($query_params['filterInvNumber'])) {
+                        $invs = $iR->filterInvNumber((string)$query_params['filterInvNumber']);
+                    }
+                    if (isset($query_params['filterInvAmountTotal']) && !empty($query_params['filterInvAmountTotal'])) {
+                        $invs = $iR->filterInvAmountTotal((string)$query_params['filterInvAmountTotal']);
+                    }
+                    if ((isset($query_params['filterInvNumber']) && !empty($query_params['filterInvNumber'])) && 
+                       (isset($query_params['filterInvAmountTotal']) && !empty($query_params['filterInvAmountTotal']))) {
+                        $invs = $iR->filterInvNumberAndInvAmountTotal((string)$query_params['filterInvNumber'], (float)$query_params['filterInvAmountTotal']);
+                    }
                     $paginator = (new DataOffsetPaginator($invs))
-                        ->withPageSize((int) $this->sR->get_setting('default_list_limit'))
+                        ->withPageSize(null!== $userInvListLimit ? $userInvListLimit : 10)
                         ->withCurrentPage((int)$page)
                         ->withToken(PageToken::next((string)$page));   
                     $inv_statuses = $iR->getStatuses($this->translator);
                     $label = $iR->getSpecificStatusArrayLabel((string) $status);
                     $parameters = [
                         'alert' => $this->alert(),
+                        'decimal_places' => (int)$this->sR->get_setting('tax_rate_decimal_places'),
+                        'optionsDataInvNumberDropDownFilter' => $this->optionsDataInvNumberGuestFilter($preFilterInvs),
                         'iaR' => $iaR,
                         'irR' => $irR,
                         'invs' => $invs,
                         'grid_summary' => $this->sR->grid_summary(
                             $paginator,
                             $this->translator,
-                            (int) $this->sR->get_setting('default_list_limit'),
+                            null!== $userInvListLimit ? $userInvListLimit : 10,
                             $this->translator->translate('invoice.invoice.invoices'),
                             $label
                         ),
                         // the guest will not have access to the pageSizeLimiter
-                        'editInv' => $this->user_service->hasPermission('editInv'),
-                        'defaultPageSizeOffsetPaginator' => $this->sR->get_setting('default_list_limit')
-                                                        ? (int)$this->sR->get_setting('default_list_limit') : 1,
+                        'viewInv' => $this->user_service->hasPermission('viewInv'),
+                        // update userinv with the user's listlimit preference
+                        'userinv' => $userinv,
+                        'defaultPageSizeOffsetPaginator' => null!==$userinv->getListLimit() ? $userinv->getListLimit(): 10,
                         // numbered tiles between the arrrows                
                         'maxNavLinkCount' => 10,
                         'inv_statuses' => $inv_statuses,
@@ -1957,6 +1974,7 @@ final class InvController {
             $parameters = [
                 'paginator' => $paginator,
                 'alert' => $this->alert(), 'client_count' => $clientRepo->count(),
+                'decimal_places' => (int)$this->sR->get_setting('tax_rate_decimal_places'),
                 'visible' => $visible == '0' ? false : true, 
                 'optionsDataClientsDropdownFilter' => $this->optionsDataClientsFilter($invRepo),
                 'optionsDataClientGroupDropDownFilter' => $this->optionsDataClientGroupFilter($clientRepo),
@@ -2019,7 +2037,7 @@ final class InvController {
      * @psalm-return \Yiisoft\Data\Reader\SortableDataInterface&\Yiisoft\Data\Reader\DataReaderInterface<int, Inv>
      */
     private function invs_status_with_sort_guest(IR $iR, int $status, array $user_clients, Sort $sort): \Yiisoft\Data\Reader\SortableDataInterface {
-        $invs = $iR->repoGuest_Clients_Sent_Viewed_Paid($status, $user_clients)
+        $invs = $iR->repoGuest_Clients_Post_Draft($status, $user_clients)
                 ->withSort($sort);
         return $invs;
     }
@@ -3783,6 +3801,28 @@ final class InvController {
         $optionsDataInvNumbers = [];
         // Get all the invoices that have been made out to clients with user accounts
         $invs = $iR->findAllPreloaded();
+        /**
+         * @var Inv $inv
+         */
+        foreach ($invs as $inv) {
+            $invNumber = $inv->getNumber();
+            if (null!==$invNumber) {
+                if (!in_array($invNumber, $optionsDataInvNumbers)) {
+                    $optionsDataInvNumbers[$invNumber] = $invNumber;
+                }
+            }
+        }
+        return $optionsDataInvNumbers;
+    }
+    
+    /**
+     * Note function invs_status_with_sort_guest($iR, $status, $user_clients, $sort) has been used to generate $invs
+     * @param \Yiisoft\Data\Reader\SortableDataInterface&\Yiisoft\Data\Reader\DataReaderInterface $invs
+     * @return array
+     */
+    public function optionsDataInvNumberGuestFilter(\Yiisoft\Data\Reader\SortableDataInterface&\Yiisoft\Data\Reader\DataReaderInterface $invs) : array
+    {
+        $optionsDataInvNumbers = [];
         /**
          * @var Inv $inv
          */

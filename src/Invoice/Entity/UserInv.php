@@ -108,6 +108,9 @@ class UserInv
      
     #[Column(type:"string(7)",nullable:true)]
     private ?string $rcc =  '';
+    
+    #[Column(type: 'integer(3)', nullable:true, default: 10)]
+    private ?int $listLimit =  null;
      
     public function __construct(
         int $id = null,
@@ -138,6 +141,7 @@ class UserInv
         string $iban = '',
         int $gln = null,
         string $rcc = '',
+        int $listLimit = 10    
      )
      {
         $this->id=$id;
@@ -170,6 +174,7 @@ class UserInv
         $this->iban=$iban;
         $this->gln=$gln;
         $this->rcc=$rcc;
+        $this->listLimit=$listLimit;
      }
     
     public function getId(): int|null
@@ -476,6 +481,16 @@ class UserInv
     {
       $this->rcc = $rcc;
     }
+    
+    public function getListLimit() : ?int
+    {
+       return $this->listLimit; 
+    }    
+    
+    public function setListLimit(int $listLimit) : void
+    {
+      $this->listLimit = $listLimit;  
+    }    
     
     public function isNewRecord(): bool
     {

@@ -46,6 +46,7 @@ final class UserInvForm extends FormModel
     private ?string $iban='';
     private ?int $gln=null;
     private ?string $rcc='';
+    private ?int $listLimit=10;
     
     public function __construct(UserInv $userinv)
     {
@@ -76,6 +77,7 @@ final class UserInvForm extends FormModel
         $this->iban = $userinv->getIban();
         $this->gln = $userinv->getGln();
         $this->rcc = $userinv->getRcc();
+        $this->listLimit = $userinv->getListLimit();
     }        
     
     public function getUser_id() : int|null
@@ -212,6 +214,11 @@ final class UserInvForm extends FormModel
     {
       return $this->rcc;
     }
+    
+    public function getListLimit() : ?int
+    {
+      return $this->listLimit;  
+    }    
 
     /**
      * @return string

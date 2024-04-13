@@ -2302,6 +2302,11 @@ return [
       ->middleware(fn(AccessChecker $checker) => $checker->withPermission('editUserInv'))
       ->middleware(Authentication::class)
       ->action([UserInvController::class, 'guest']),
+      Route::methods([Method::GET, Method::POST], '/userinv/guestlimit/{userinv_id}/{limit}/{origin}')
+      ->name('userinv/guestlimit')
+      ->middleware(fn(AccessChecker $checker) => $checker->withPermission('editUserInv'))
+      ->middleware(Authentication::class)
+      ->action([UserInvController::class, 'guestlimit']),      
       Route::methods([Method::GET, Method::POST], '/userinv/client/{id}')
       ->name('userinv/client')
       ->middleware(fn(AccessChecker $checker) => $checker->withPermission('editInv'))

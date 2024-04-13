@@ -487,7 +487,7 @@ Class PdfHelper
                 $return = 'overdue';
                 break;
             default: 
-                $return =  'invoice';
+                $return =  strlen($this->s->get_setting('pdf_invoice_template')) > 0 ? $this->s->get_setting('pdf_invoice_template') : 'invoice';
                 break;
         }
         return $return;

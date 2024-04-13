@@ -276,7 +276,7 @@ final class InvRepository extends Select\Repository
     public function repoUrl_key_guest_count(string $url_key) : int {
         $count = $this->select()
                       ->where(['url_key' => $url_key])
-                      ->andWhere(['status_id'=>['in'=> new Parameter([2,3,4])]])
+                      ->andWhere(['status_id'=>['in'=> new Parameter([2,3,4,5,6,7,8,9,10,11,12,13])]])
                       ->count();
         return  $count;        
     }
@@ -288,7 +288,7 @@ final class InvRepository extends Select\Repository
         $count = $this->select()
                       ->where(['id' => $inv_id])
                       // sent = 2, viewed = 3, paid = 4
-                      ->andWhere(['status_id'=>['in'=> new Parameter([2,3,4])]])
+                      ->andWhere(['status_id'=>['in'=> new Parameter([2,3,4,5,6,7,8,9,10,11,12,13])]])
                       ->andWhere(['client_id'=>['in'=> new Parameter($user_client)]]);
         return  $count;        
     }
@@ -298,22 +298,23 @@ final class InvRepository extends Select\Repository
      * @param int $status_id
      * @param array $user_client
      */
-    public function repoGuest_Clients_Sent_Viewed_Paid(int $status_id, array $user_client = []) : EntityReader {
-        // Get specific statuses
+    public function repoGuest_Clients_Post_Draft
+            (int $status_id, array $user_client = []) : EntityReader {
+        // sent = 2, viewed = 3, paid = 4, overdue = 5, unpaid = 6, reminder sent = 7, 
+        // 7 day letter before action = 8, started a legal claim = 9
+        // judgement obtained = 10, enforcement officer attending address = 11, credit note = 12, written off = 13
         if ($status_id > 0) {
             $query = $this->select()
-                    // sent = 2, viewed = 3, paid = 4
                     ->where(['status_id'=>$status_id])
                     ->where(['client_id'=>['in'=> new Parameter($user_client)]])                      
-                    ->andWhere(['status_id'=>['in'=> new Parameter([2,3,4])]]);
+                    ->andWhere(['status_id'=>['in'=> new Parameter([2,3,4,5,6,7,8,9,10,11,12,13])]]);
             return $this->prepareDataReader($query);
        } else
-       // Get all the invoices that are either sent, viewed, or paid
+       // Get all the invoices
        {
-            $query = $this->select()
-                    // sent = 2, viewed = 3, paid = 4
+            $query = $this->select()                    
                     ->where(['client_id'=>['in'=> new Parameter($user_client)]])                      
-                    ->andWhere(['status_id'=>['in'=> new Parameter([2,3,4])]]);
+                    ->andWhere(['status_id'=>['in'=> new Parameter([2,3,4,5,6,7,8,9,10,11,12,13])]]);
             return $this->prepareDataReader($query);
        }
     }
@@ -343,7 +344,7 @@ final class InvRepository extends Select\Repository
     public function guest_visible() : EntityReader {
         // 1 draft, 2 sent, 3 viewed, 4 paid
         $query = $this->select()
-                      ->where(['status_id'=>['in'=> new Parameter([2,3,4])]]);
+                      ->where(['status_id'=>['in'=> new Parameter([2,3,4,5,6,7,8,9,10,11,12,13])]]);
         return $this->prepareDataReader($query);    
     }
     

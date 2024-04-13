@@ -115,9 +115,14 @@ $this->beginPage();
 ?>
 <?php
 $this->beginBody();
+$logoPath = ((null!==$companyLogoFileName) ? '/logo/'. $companyLogoFileName : '/site/logo/logo.png');
 
 echo NavBar::widget()
-->brandText($brandLabel)
+->brandImage($logoPath)
+->brandImageAttributes(['margin' => 10, 
+                        'width' => 80, 
+                        'height' => 40])    
+//->brandText(str_repeat('&nbsp;', 7).$brandLabel)
 ->brandUrl($urlGenerator->generate('site/index'))
 ->begin();
 

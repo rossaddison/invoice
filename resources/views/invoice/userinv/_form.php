@@ -350,6 +350,18 @@ use Yiisoft\Html\Tag\Form;
                 ->hint($translator->translate('invoice.hint.this.field.is.not.required')); 
             ?>
         <?= Html::closeTag('div'); ?>
+        <?= Html::openTag('div',['class' => 'mb-3 form-group']); ?>
+            <?= Field::text($form, 'listLimit')
+                ->label($translator->translate('invoice.user.inv.list.limit'))
+                ->addInputAttributes([
+                    'placeholder' => $translator->translate('invoice.user.inv.list.limit'),
+                    'class' => 'form-control',
+                    'id' => 'listLimit'
+                ])
+                ->value(Html::encode($form->getListLimit() ?? 10))
+                ->hint($translator->translate('invoice.hint.this.field.is.not.required')); 
+            ?>
+        <?= Html::closeTag('div'); ?>
     <?= Html::closeTag('div'); ?>
     <?= Html::closeTag('div'); ?>
     <?= Html::closeTag('div'); ?>

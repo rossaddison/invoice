@@ -11,7 +11,6 @@ use App\Invoice\Entity\Payment;
 use App\Invoice\Entity\PaymentCustom;
 use App\Invoice\Entity\Inv;
 use App\Invoice\Helpers\CustomValuesHelper;
-use App\Invoice\Helpers\DateHelper;
 use App\Invoice\Helpers\NumberHelper;
 use App\Invoice\Helpers\ClientHelper;
 use App\Invoice\Inv\InvRepository;
@@ -566,7 +565,9 @@ final class PaymentController
                 // Sort the merchant responses in descending order
                 ->withOrderString((string)$sort);
         // Retrieve the user from Yii-Demo's list of users in the User Table
-        $user = $this->userService->getUser(); 
+        $user = $this->userService->getUser();
+        // Set the page size limiter to 10 as default 
+        $userInvListLimit = 10;
         if ($user instanceof User && null!==$user->getId()) {
             // Use this user's id to see whether a user has been setup under UserInv ie. yii-invoice's list of users
             $userinv = ($uiR->repoUserInvUserIdcount((string)$user->getId()) > 0 
@@ -582,13 +583,15 @@ final class PaymentController
             if (null!== $userinv && null!==$user->getId()) {
                 /** @psalm-suppress PossiblyNullArgument */
                 $client_id_array = $ucR->get_assigned_to_user($user->getId());
+                // Use the users last preferred Page Size Limiter value
+                $userInvListLimit = $userinv->getListLimit();
             } else {
                 $client_id_array = [];
             }
             if (!empty($client_id_array)) {
                 $payments = $this->payments_with_sort_guest($paymentRepository, $client_id_array, $sort_by); 
                 $paginator = (new OffsetPaginator($payments))
-                 ->withPageSize((int)$settingRepository->get_setting('default_list_limit'))
+                 ->withPageSize($userInvListLimit ?? 10)
                  ->withCurrentPage((int)$page)
                  ->withToken(PageToken::next((string)$page));
                 $canEdit = $this->userService->hasPermission('editPayment');
@@ -596,16 +599,7 @@ final class PaymentController
                 $parameters = [
                     'alert'=>$this->alert(),
                     'canEdit'=>$canEdit,
-                    'canView'=>$canView,
-                    'defaultPageSizeOffsetPaginator' => $settingRepository->get_setting('default_list_limit')
-                                                        ? (int)$settingRepository->get_setting('default_list_limit') : 1,
-                    'grid_summary' => $settingRepository->grid_summary(
-                        $paginator,
-                        $this->translator,
-                        (int) $settingRepository->get_setting('default_list_limit'),
-                        $this->translator->translate('invoice.invoice.payments'),
-                        ''
-                    ),                    
+                    'canView'=>$canView, 
                     'page'=>$page,
                     'paginator' => $paginator,
                     'sortOrder' => $query_params['sort'] ?? '', 
@@ -613,11 +607,11 @@ final class PaymentController
                     'payments'=>$this->payments($paymentRepository),
                     'max'=>(int)$settingRepository->get_setting('default_list_limit'),
                 ];
-                return $this->viewRenderer->render('index', $parameters);
+                return $this->viewRenderer->render('guest', $parameters);
             } 
             throw new NoClientsAssignedToUserException($this->translator);
         } //if user 
-        return $this->webService->getRedirectResponse('payment/index');
+        return $this->webService->getRedirectResponse('payment/guest');
     }
     
      /**
@@ -625,14 +619,12 @@ final class PaymentController
       * @param Request $request
       * @param CurrentRoute $currentRoute
       * @param MerchantRepository $merchantRepository
-      * @param SettingRepository $settingRepository
       * @param UserClientRepository $ucR
       * @param UserInvRepository $uiR
       * @return \Yiisoft\DataResponse\DataResponse|Response
       */
     public function guest_online_log(Request $request, CurrentRoute $currentRoute, 
                           MerchantRepository $merchantRepository, 
-                          SettingRepository $settingRepository,
                           UserClientRepository $ucR,
                           UserInvRepository $uiR): \Yiisoft\DataResponse\DataResponse|Response
     {   
@@ -655,22 +647,22 @@ final class PaymentController
             $client_id_array = (null!== $userinv ? $ucR->get_assigned_to_user($user_id) : []);
             $merchants = $this->merchant_with_sort_guest($merchantRepository, $client_id_array, $sort_by); 
             $paginator = (new OffsetPaginator($merchants))
-             ->withPageSize((int)$settingRepository->get_setting('default_list_limit'))
+             ->withPageSize(10)
              ->withCurrentPage($page)
              ->withToken(PageToken::next((string)$page));
             // No need for rbac here since the route accessChecker for payment/online_log
             // includes 'viewPayment' @see config/routes.php
             $parameters = [
-                'alert'=>$this->alert(),
-                'page'=>$page,
+                'alert' =>$this->alert(),
+                'page' => $page,
                 'paginator' => $paginator,
                 'sortOrder' => $query_params['sort'] ?? '',
                 'merchants'=>$this->merchants($merchantRepository),
-                'max'=>(int)$settingRepository->get_setting('default_list_limit'),
+                'max'=> 10,
             ];
-            return $this->viewRenderer->render('online_log', $parameters);  
+            return $this->viewRenderer->render('guest_online_log', $parameters);  
         }
-        return $this->webService->getRedirectResponse('payment/index');
+        return $this->webService->getRedirectResponse('payment/guest');
     }
     
     /**

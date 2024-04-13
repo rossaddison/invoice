@@ -1565,6 +1565,8 @@ return [
     'invoice.user.client.count' => '#',
     'invoice.user.clients.assigned.not' => 'This user has no Clients assigned to it.',
     'invoice.user.inv.active.not' => 'The User Account is not Active',
+    'invoice.user.inv.list.limit' => 'Number of records listed per page (Note: Overrides default)',
+    'invoice.user.inv.refer.to' => 'The default of 10 records per page may be overwritten by clicking here.',
     'invoice.user.inv.more.than.one.assigned' => 'Invoice Creation Unsuccessful: Consult your Settings ... User Account. More than one user has been assigned to this client.',
     'invoice.user.inv.role.accountant' => 'Accountant',
     'invoice.user.inv.role.accountant.assigned' => 'Accountant Role Assigned',

@@ -48,6 +48,21 @@
 <p>A General Sales Tax (GST) Tax System will have to be implemented first for this purpose.</p>
 <p><b>What's next?</b></p>
 <p>Testing Credit Notes against Invoices with refunds (if payment made) linked to each of the payment gateways.</p>
+<p><b>13th April 2024</b></p>
+<p>1. Create a function userinv/guestlimit which stores a guest user's page size limiter selector's last choice.</p>
+<p>2. This value is then specific to the user and separate from the default_page_size limiter.</p>
+<p>3. Introduce all the invoice statuses to the guest grid.</p>
+<p>4. Create a separate payment guest index page for logged in users with clients.</p>
+<p>5. Create a separate payment online log guest index page for logged in users with clients.</p>
+<p>6. Added the extra field to user inv: ListLimit</p>
+<p>7. Adjusted the layouts i.e. ...resources/views/layout guest.php, main.php, and invoice.php
+      to better reflect the logo.
+</p>
+<p>8. Adjusted the pdfHelper to accomodate additional templates. It should be noted that mpdfHelper is not bootstrap compatible.</p>
+<p>9. Include two filters InvNumer and Inv Amount Total into the guest grid.</p>
+<p>10. Include the additional Invoice statuses into the InvRepository statuses array.</p>
+<p>11. Include an addition buttonsGuest function into the PageSizeLimiter widget used for guest users paying off Invoices.</p>
+<p></p>
 <p><b>2nd April 2024</b></p>
 <p>1. The debug mode setting, normally situated in ..\views\layout\invoice\main.php, has been moved to the </p>
 <p>   ..\src\ViewInjection\LayoutViewInjection.php return array i.e.  'debugMode' => true, </p>

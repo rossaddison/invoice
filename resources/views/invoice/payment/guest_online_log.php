@@ -8,7 +8,6 @@ use Yiisoft\View\WebView;
 use Yiisoft\Html\Tag\A;
 use Yiisoft\Html\Tag\Div;
 use Yiisoft\Html\Tag\Form;
-use Yiisoft\Html\Tag\H5;
 use Yiisoft\Html\Tag\I;
 use Yiisoft\Yii\DataView\Column\DataColumn;
 use Yiisoft\Yii\DataView\GridView;
@@ -96,17 +95,16 @@ $columns = [
     ->dataReader($paginator)
     ->headerRowAttributes(['class'=>'card-header bg-info text-black'])       
     ->header($gridComponents->header(' ' . $translator->translate('i.payment_logs')))
-    ->id('w79-grid')
+    ->id('w78-grid')
     ->pagination(
-         $gridComponents->offsetPaginationWidget($defaultPageSizeOffsetPaginator, $paginator)   
+         $gridComponents->offsetPaginationWidget(10, $paginator)   
     )        
     ->rowAttributes(['class' => 'align-middle'])
     ->summaryAttributes(['class' => 'mt-3 me-3 summary text-end'])
     /**
      * @see config/common/params.php `yiisoft/view` => ['parameters' => ['pageSizeLimiter' ... No need to be in payment/index
-     */    
-    ->summaryTemplate($pageSizeLimiter::buttons($currentRoute, $s, $urlGenerator, 'payment').' '.$grid_summary)
-    ->tableAttributes(['class' => 'table table-striped text-center h-75','id'=>'table-payment-online-log'])
+     */
+    ->tableAttributes(['class' => 'table table-striped text-center h-75','id'=>'table-payment-guest-online-log'])
     ->toolbar(
         Form::tag()->post($urlGenerator->generate('payment/index'))->csrf($csrf)->open() .
         Div::tag()->addClass('float-end m-3')->content($toolbarReset)->encode(false)->render() .

@@ -51,8 +51,7 @@ declare(strict_types=1);
                     'label' => 'Live Api Key'
                 ),  
    </pre>
-<p><b>Step 5:</b> Add to PaymentInformationController <code>public function form</code> the following code: 
-    <pre>
-        
-    </pre>
+<p><b>Step 5:</b>
+    Add to the PaymentInformationController the required code. 
+    Refer to the 4 tested gateways already setup.
 </p>

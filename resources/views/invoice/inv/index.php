@@ -16,13 +16,17 @@ use Yiisoft\Yii\DataView\Column\DataColumn;
 use Yiisoft\Yii\DataView\Column\ColumnInterface;
 
 /**
+ * @see config/common/params.php 'yiisoft/view => ['gridComponents' => Reference::to(GridComponents::class)]',
+ */
+
+/**
  * @var \App\Invoice\Entity\Inv $inv
  * @var string $csrf
  * @var CurrentRoute $currentRoute
  * @var OffsetPaginator $paginator
  * @var \Yiisoft\Router\UrlGeneratorInterface $urlGenerator
  * @var TranslatorInterface $translator
- * @var WebView $this
+ * @var WebView $this 
  */
 ?>
 <?= $alert; ?>
@@ -47,7 +51,6 @@ $allVisible = A::tag()
 
 
 $toolbar = Div::tag();
-$decimal_places = (int)$s->get_setting('tax_rate_decimal_places');
 ?>
 <div>
     <h5><?= $translator->translate('i.invoice'); ?></h5>
@@ -376,7 +379,7 @@ $decimal_places = (int)$s->get_setting('tax_rate_decimal_places');
     ->emptyText((string) $translator->translate('invoice.invoice.no.records'))
     ->tableAttributes(['class' => 'table table-striped h-75', 'id' => 'table-invoice'])
     ->toolbar(
-        Form::tag()->post($urlGenerator->generate('quote/index'))->csrf($csrf)->open() .
+        Form::tag()->post($urlGenerator->generate('inv/index'))->csrf($csrf)->open() .
         Div::tag()->addClass('float-end m-3')->content($allVisible)->encode(false)->render() .  
         Div::tag()->addClass('float-end m-3')->content($toolbarReset)->encode(false)->render() .
         Form::tag()->close()    
