@@ -340,5 +340,5 @@ echo NavBar::end();
     echo Html::script($js1)->type('module');
 ?>
 <?php
-   $this->endPage(true);     
+   $this->endPage();     
 ?>

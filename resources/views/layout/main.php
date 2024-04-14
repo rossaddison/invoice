@@ -212,4 +212,4 @@ $this->beginPage();
     </body>
     </html>
 <?php
-$this->endPage(true);
+$this->endPage();
