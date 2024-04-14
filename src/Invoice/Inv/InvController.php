@@ -119,7 +119,7 @@ use Yiisoft\Html\Html;
 use Yiisoft\Json\Json;
 use Yiisoft\Mailer\MailerInterface;
 use Yiisoft\Router\FastRoute\UrlGenerator;
-use Yiisoft\Router\CurrentRoute;
+use Yiisoft\Router\HydratorAttribute\RouteArgument;
 use Yiisoft\Security\Random;
 use Yiisoft\Session\SessionInterface;
 use Yiisoft\Session\Flash\Flash;
@@ -385,21 +385,20 @@ final class InvController {
     }
 
     /**
-     * Upload a file
-     *
-     * @param CurrentRoute $currentRoute
+     * 
+     * @param int $inv_id
      * @param IR $iR
      * @param UPR $uPR
+     * @return \Yiisoft\DataResponse\DataResponse|Response
      */
-    public function attachment(CurrentRoute $currentRoute, IR $iR, UPR $uPR): \Yiisoft\DataResponse\DataResponse|Response {
+    public function attachment( #[RouteArgument('id')] int $inv_id, IR $iR, UPR $uPR): \Yiisoft\DataResponse\DataResponse|Response {
         $aliases = $this->sR->get_customer_files_folder_aliases();
         $targetPath = $aliases->get('@customer_files');
-        $inv_id = $currentRoute->getArgument('id');
-        if (null !== $inv_id) {
+        if ($inv_id) {
             if (!is_writable($targetPath)) {
-                return $this->factory->createResponse($this->attachment_not_writable((int) $inv_id));
+                return $this->factory->createResponse($this->attachment_not_writable($inv_id));
             }
-            $invoice = $iR->repoInvLoadedquery($inv_id) ?: null;
+            $invoice = $iR->repoInvLoadedquery((string)$inv_id) ?: null;
             if ($invoice instanceof Inv) {
                 $client_id = $invoice->getClient()?->getClient_id();
                 if (null!==$client_id) {
@@ -414,12 +413,12 @@ final class InvController {
                         $original_file_name = preg_replace('/\s+/', '_', $_FILES['InvAttachmentsForm']['name']['attachFile']);
                         $target_path_with_filename = $targetPath . '/' . $url_key . '_' . $original_file_name;
                         if ($this->attachment_move_to($temporary_file, $target_path_with_filename, $client_id, $url_key, $original_file_name, $uPR)) {
-                            return $this->factory->createResponse($this->attachment_successfully_created((int) $inv_id));
+                            return $this->factory->createResponse($this->attachment_successfully_created($inv_id));
                         } else {
-                            return $this->factory->createResponse($this->attachment_no_file_uploaded((int) $inv_id));
+                            return $this->factory->createResponse($this->attachment_no_file_uploaded($inv_id));
                         }
                     } else {
-                        return $this->factory->createResponse($this->attachment_no_file_uploaded((int) $inv_id));
+                        return $this->factory->createResponse($this->attachment_no_file_uploaded($inv_id));
                     }
                 } // $client_id
             } // $invoice
@@ -469,21 +468,9 @@ final class InvController {
       return $body;
     }
 
-    /**
-     * @param Request $request
-     * @param CurrentRoute $currentRoute
-     * @param FormHydrator $formHydrator
-     * @param CR $clientRepository
-     * @param GR $gR
-     * @param SumexR $sumexR
-     * @param TRR $trR
-     * @param UR $uR
-     * @param UCR $ucR
-     * @param UIR $uiR
-     * @return Response
-     */
+   
     public function add(Request $request,
-                        CurrentRoute $currentRoute,
+                        #[RouteArgument('origin')] string $origin,
                         FormHydrator $formHydrator,
                         CR $clientRepository,
                         GR $gR,
@@ -494,7 +481,6 @@ final class InvController {
                         UIR $uiR
     ) : \Yiisoft\DataResponse\DataResponse|Response
     {
-        $origin = $currentRoute->getArgument('origin') ?? '';
         $inv = new Inv();
         $errors = [];
         $form = new InvForm($inv);
@@ -541,7 +527,7 @@ final class InvController {
         // 2. Client Menu e.g. /invoice/client/view/25
         // 3. Invoice Menu e.g. /invoice/inv
         // 4. Dashboard e.g. /invoice/dashboard
-        // Use the currentRoute's origin argument to return to correct origin
+        // Use the RouteArgument's origin argument to return to correct origin
         
         if ($request->getMethod() === Method::POST) {
             $body = $request->getParsedBody();
@@ -857,7 +843,7 @@ final class InvController {
     }
 
     /**
-     * @param CurrentRoute $currentRoute
+     * @param int $id
      * @param InvRepository $invRepo
      * @param ICR $icR
      * @param InvCustomService $icS
@@ -867,13 +853,15 @@ final class InvController {
      * @param InvTaxRateService $itrS
      * @param IAR $iaR
      * @param InvAmountService $iaS
+     * @param DLR $dlR
+     * @param DLS $dlS
      * @return Response
      */
-    public function delete(CurrentRoute $currentRoute, InvRepository $invRepo,
+    public function delete(#[RouteArgument('id')] int $id, InvRepository $invRepo,
             ICR $icR, InvCustomService $icS, IIR $iiR, InvItemService $iiS, ITRR $itrR,
             InvTaxRateService $itrS, IAR $iaR, InvAmountService $iaS, DLR $dlR, DLS $dlS): Response {
         try {
-            $inv = $this->inv($currentRoute, $invRepo);
+            $inv = $this->inv($id, $invRepo);
             if ($inv) {
                 $this->inv_service->deleteInv($inv, $icR, $icS, $iiR, $iiS, $itrR, $itrS, $iaR, $iaS, $dlR, $dlS);
                 $this->flash_message('info', $this->translator->translate('i.record_successfully_deleted'));
@@ -888,12 +876,12 @@ final class InvController {
     }
 
     /**
-     * @param CurrentRoute $currentRoute
+     * @param int $id
      * @param IIR $iiR
      */
-    public function delete_inv_item(CurrentRoute $currentRoute, IIR $iiR, ACIIR $aciiR, IIAR $iiaR): \Yiisoft\DataResponse\DataResponse|Response {
+    public function delete_inv_item(#[RouteArgument('id')] int $id, IIR $iiR, ACIIR $aciiR, IIAR $iiaR): \Yiisoft\DataResponse\DataResponse|Response {
         try {
-            $invItem = $this->inv_item($currentRoute, $iiR);
+            $invItem = $this->inv_item($id, $iiR);
             if ($invItem) {
                 // Do not allow the item to be deleted if the invoice
                 // status is sent ie. 2
@@ -921,12 +909,12 @@ final class InvController {
     }
 
     /**
-     * @param CurrentRoute $currentRoute
+     * @param int $id
      * @param ITRR $invtaxrateRepository
      */
-    public function delete_inv_tax_rate(CurrentRoute $currentRoute, ITRR $invtaxrateRepository): \Yiisoft\DataResponse\DataResponse|Response {
+    public function delete_inv_tax_rate(#[RouteArgument('id')] int $id, ITRR $invtaxrateRepository): \Yiisoft\DataResponse\DataResponse|Response {
         try {
-            $inv_tax_rate = $this->invtaxrate($currentRoute, $invtaxrateRepository);
+            $inv_tax_rate = $this->invtaxrate($id, $invtaxrateRepository);
             $this->inv_tax_rate_service->deleteInvTaxRate($inv_tax_rate);
         } catch (\Exception $e) {
             $this->flash_message('danger', $e->getMessage());
@@ -948,15 +936,14 @@ final class InvController {
     }        
 
     /**
-     * @param CurrentRoute $currentRoute
+     * @param int $upload_id 
      * @param UPR $upR
      *
      * @return never
      */
-    public function download_file(CurrentRoute $currentRoute, UPR $upR) {
-        $upload_id = $currentRoute->getArgument('upload_id');
-        if (null !== $upload_id) {
-            $upload = $upR->repoUploadquery($upload_id);
+    public function download_file(#[RouteArgument('upload_id')] int $upload_id, UPR $upR) {
+        if ($upload_id) {
+            $upload = $upR->repoUploadquery((string)$upload_id);
             if (null !== $upload) {
                 $aliases = $this->sR->get_customer_files_folder_aliases();
                 $targetPath = $aliases->get('@customer_files');
@@ -991,13 +978,12 @@ final class InvController {
     }
 
     /**
-     * @param CurrentRoute $currentRoute
+     * @param string $invoice
      * @return void
      */
-    public function download(CurrentRoute $currentRoute): void {
+    public function download(#[RouteArgument('invoice')] string $invoice): void {
         $aliases = $this->sR->get_invoice_archived_folder_aliases();
-        $invoice = $currentRoute->getArgument('invoice');
-        if (null!==$invoice) {
+        if ($invoice) {
             header('Content-type: application/pdf');
             header('Content-Disposition: attachment; filename="' . urldecode($invoice) . '"');
             readfile($aliases->get('@archive_invoice') . DIRECTORY_SEPARATOR . urldecode($invoice));
@@ -1175,7 +1161,7 @@ final class InvController {
 
     /**
      * @param Request $request
-     * @param CurrentRoute $currentRoute
+     * @param int $id 
      * @param FormHydrator $formHydrator
      * @param IR $invRepo
      * @param CR $clientRepo
@@ -1192,7 +1178,9 @@ final class InvController {
      * @param paR $paR
      * @return \Yiisoft\DataResponse\DataResponse|Response
      */
-    public function edit(Request $request, CurrentRoute $currentRoute,
+    public function edit(
+            Request $request, 
+            #[RouteArgument('id')] int $id,
             FormHydrator $formHydrator,
             IR $invRepo,
             CR $clientRepo,
@@ -1211,7 +1199,7 @@ final class InvController {
             UIR $uiR
     ): \Yiisoft\DataResponse\DataResponse|Response {
 
-        $inv = $this->inv($currentRoute, $invRepo, true);
+        $inv = $this->inv($id, $invRepo, true);
         if ($inv) {
             $form = new InvForm($inv);
             $invCustom = new InvCustom();
@@ -1266,7 +1254,7 @@ final class InvController {
                             'message' => $this->translator->translate('i.error') . $this->translator->translate('invoice.balance.does.not.equal.zero'),
                                                     'url' => 'inv/view', 'id' => $inv_id]));
                     }
-                    $returned_form = $this->edit_save_form_fields($body, $currentRoute, $formHydrator, $invRepo, $groupRepo, $userRepo, $ucR, $uiR);
+                    $returned_form = $this->edit_save_form_fields($body, $id, $formHydrator, $invRepo, $groupRepo, $userRepo, $ucR, $uiR);
                     $parameters['form'] = $returned_form;
                     if ($returned_form instanceof InvForm) {
                         if (!$returned_form->isValid()) {
@@ -1307,7 +1295,7 @@ final class InvController {
 
     /**
      * @param array|object|null $body
-     * @param CurrentRoute $currentRoute
+     * @param int $id
      * @param FormHydrator $formHydrator
      * @param IR $invRepo
      * @param GR $groupRepo
@@ -1317,8 +1305,8 @@ final class InvController {
      * @param UIR $uiR
      * @return InvForm|null
      */
-    public function edit_save_form_fields(array|object|null $body, CurrentRoute $currentRoute, FormHydrator $formHydrator, IR $invRepo, GR $groupRepo, UR $uR, UCR $ucR, UIR $uiR): InvForm|null {
-        $inv = $this->inv($currentRoute, $invRepo, true);
+    public function edit_save_form_fields(array|object|null $body, int $id, FormHydrator $formHydrator, IR $invRepo, GR $groupRepo, UR $uR, UCR $ucR, UIR $uiR): InvForm|null {
+        $inv = $this->inv($id, $invRepo, true);
         if ($inv) {
             $client_id = $inv->getClient_id();
             $user = $this->active_user($client_id, $uR, $ucR, $uiR);
@@ -1387,7 +1375,7 @@ final class InvController {
 
     /**
      * @param ViewRenderer $head
-     * @param CurrentRoute $currentRoute
+     * @param int $id
      * @param CCR $ccR
      * @param CFR $cfR
      * @param CVR $cvR
@@ -1401,7 +1389,7 @@ final class InvController {
      * @return Response
      */
     public function email_stage_0(ViewRenderer $head,
-            CurrentRoute $currentRoute,
+            #[RouteArgument('id')] int $id, 
             CCR $ccR, CFR $cfR, CVR $cvR,
             ETR $etR,
             ICR $icR, IR $iR,
@@ -1412,7 +1400,7 @@ final class InvController {
             $this->flash_message('warning', $this->translator->translate('i.email_not_configured'));
             return $this->web_service->getRedirectResponse('inv/index');
         }
-        $inv = $this->inv($currentRoute, $iR, true);
+        $inv = $this->inv($id, $iR, true);
         if ($inv instanceof Inv) {
             $inv_id = $inv->getId();
             $invoice = $iR->repoInvUnLoadedquery((string) $inv_id);
@@ -1617,7 +1605,7 @@ final class InvController {
 
     /**
      * @param Request $request
-     * @param CurrentRoute $currentRoute
+     * @param int $inv_id
      * @param CR $cR
      * @param CCR $ccR
      * @param CFR $cfR
@@ -1639,13 +1627,12 @@ final class InvController {
      * @return Response
      */
     public function email_stage_2(Request $request,
-            CurrentRoute $currentRoute,
+            #[RouteArgument('id')] int $inv_id,
             CR $cR, CCR $ccR, CFR $cfR, CVR $cvR,
             GR $gR,
             IAR $iaR, IIAR $iiaR, ICR $icR, IIR $iiR, IR $iR, ITRR $itrR,
             PCR $pcR, SOCR $socR, QR $qR, QAR $qaR, QCR $qcR, SOR $soR, UIR $uiR, SumexR $sumexR): Response {
-        $inv_id = $currentRoute->getArgument('id');
-        if (null!==$inv_id) {
+        if ($inv_id) {
             $mailer_helper = new MailerHelper($this->sR, $this->session, $this->translator, $this->logger, $this->mailer, $ccR, $qcR, $icR, $pcR, $socR, $cfR, $cvR);
             $body = $request->getParsedBody() ?? [];
             if (is_array($body)) {
@@ -1686,15 +1673,15 @@ final class InvController {
 
                 $attachFiles = $request->getUploadedFiles();
 
-                $this->generate_inv_number_if_applicable($inv_id, $iR, $this->sR, $gR);
+                $this->generate_inv_number_if_applicable((string)$inv_id, $iR, $this->sR, $gR);
 
                 // Custom fields are automatically included on the invoice
-                if ($this->email_stage_1($inv_id, $from, $to, $subject, $email_body, $cc, $bcc, $attachFiles,
+                if ($this->email_stage_1((string)$inv_id, $from, $to, $subject, $email_body, $cc, $bcc, $attachFiles,
                     $cR, $ccR, $cfR, $cvR,
                     $iaR, $icR, $iiaR, $iiR, $iR, $itrR,
                     $pcR, $socR,
                     $qR, $qaR, $qcR, $soR, $uiR, $sumexR, $this->view_renderer)) {
-                    $invoice = $iR->repoInvUnloadedquery($inv_id);
+                    $invoice = $iR->repoInvUnloadedquery((string)$inv_id);
                     if ($invoice) {
                       //draft->sent->view->paid
                       //set the invoice to sent ie. 2                                    
@@ -1741,21 +1728,22 @@ final class InvController {
      * @param Request $request
      * @param IAR $iaR
      * @param IRR $irR
-     * @param CurrentRoute $currentRoute
+     * @param string $page
+     * @param string $status
      * @param IR $iR
      * @param UCR $ucR
      * @param UIR $uiR
      */
-    public function guest(Request $request, IAR $iaR, IRR $irR, CurrentRoute $currentRoute,
+    public function guest(Request $request, IAR $iaR, IRR $irR, string $page = '1', string $status = '0',
             IR $iR, UCR $ucR, UIR $uiR): \Yiisoft\DataResponse\DataResponse|Response {
         $query_params = $request->getQueryParams();
         /**
          * @var string $query_params['page']
          */
-        $page = $query_params['page'] ?? $currentRoute->getArgument('page', '1');
+        $page = $query_params['page'] ?? $page;
         
         //status 0 => 'all';
-        $status = (int) $currentRoute->getArgument('status', '0');
+        $status = (int) $status;
         /**
          * @var string|null $query_params['sort']
          */
@@ -1797,7 +1785,7 @@ final class InvController {
                     $paginator = (new DataOffsetPaginator($invs))
                         ->withPageSize(null!== $userInvListLimit ? $userInvListLimit : 10)
                         ->withCurrentPage((int)$page)
-                        ->withToken(PageToken::next((string)$page));   
+                        ->withToken(PageToken::next($page));   
                     $inv_statuses = $iR->getStatuses($this->translator);
                     $label = $iR->getSpecificStatusArrayLabel((string) $status);
                     $parameters = [
@@ -1839,7 +1827,7 @@ final class InvController {
 
     /**
      *
-     * @param CurrentRoute $currentRoute
+     * @param int $include
      * @param CR $cR
      * @param CVR $cvR
      * @param CFR $cfR
@@ -1854,12 +1842,11 @@ final class InvController {
      * @param UIR $uiR
      * @return \Yiisoft\DataResponse\DataResponse
      */
-    public function html(CurrentRoute $currentRoute, CR $cR, CVR $cvR, CFR $cfR, GR $gR, IAR $iaR, ICR $icR, IIR $iiR, IIAR $iiaR, IR $iR, ITRR $itrR, SumexR $sumexR, UIR $uiR, SOR $soR): \Yiisoft\DataResponse\DataResponse {
-        $include = $currentRoute->getArgument('include');
+    public function html(#[RouteArgument('include')] int $include, CR $cR, CVR $cvR, CFR $cfR, GR $gR, IAR $iaR, ICR $icR, IIR $iiR, IIAR $iiaR, IR $iR, ITRR $itrR, SumexR $sumexR, UIR $uiR, SOR $soR): \Yiisoft\DataResponse\DataResponse {
         $inv_id = (string) $this->session->get('inv_id');
         $inv_amount = (($iaR->repoInvAmountCount((int) $inv_id) > 0) ? $iaR->repoInvquery((int) $inv_id) : null);
         if ($inv_amount) {
-            $custom = (($include === (string) 1) ? true : false);
+            $custom = (($include === 1) ? true : false);
             $inv_custom_values = $this->inv_custom_values($inv_id, $icR);
             $inv = $iR->repoInvUnloadedquery($inv_id);
             if ($inv) {
@@ -1899,10 +1886,12 @@ final class InvController {
      * @param SOR $soR
      * @param DLR $dlR
      * @param UCR $ucR
-     * @param CurrentRoute $currentRoute
+     * @param string $_language
+     * @param string $page
+     * @param string $status
      * @return \Yiisoft\DataResponse\DataResponse|Response
      */
-    public function index(Request $request, IR $invRepo, IRR $irR, CR $clientRepo, GR $groupRepo, QR $qR, SOR $soR, DLR $dlR, UCR $ucR, CurrentRoute $currentRoute): \Yiisoft\DataResponse\DataResponse|Response {
+    public function index(Request $request, IR $invRepo, IRR $irR, CR $clientRepo, GR $groupRepo, QR $qR, SOR $soR, DLR $dlR, UCR $ucR, #[RouteArgument('_language')] string $_language, #[RouteArgument('page')] string $page = '1', #[RouteArgument('status')] string $status = '0'): \Yiisoft\DataResponse\DataResponse|Response {
         // build the inv and hasOne InvAmount table
         $visible = $this->sR->get_setting('columns_all_visible');
         $inv = new Inv();
@@ -1917,21 +1906,21 @@ final class InvController {
             $invForm
         );    
         // If the language dropdown changes
-        $this->session->set('_language', $currentRoute->getArgument('_language'));
+        $this->session->set('_language', $_language);
         // ensure that admin is aware when read-only functionality ie. invoice deletion prevention has changed
         $this->disable_read_only_status_message();
         $active_clients = $ucR->getClients_with_user_accounts();
         if ($active_clients) {
             $query_params = $request->getQueryParams();
-            // All, Draft, Sent ... filter governed by routes eg. invoice.myhost/invoice/inv/page/1/status/1 => $currentRoute->getArgument
+            // All, Draft, Sent ... filter governed by routes eg. invoice.myhost/invoice/inv/page/1/status/1 => #[RouteArgument('page')] string $page etc 
             // Paginator ... governed by query params format eg. invoice.myhost/invoice/inv?page=1&pagesize=1 => $query_params
             
             /**
              * @var string $query_params['page']
              */
-            $page = $query_params['page'] ?? $currentRoute->getArgument('page', '1');
+            $page = $query_params['page'] ?? $page;
             //status 0 => 'all';
-            $status = (int) $currentRoute->getArgument('status', '0');
+            $status = (int) $status;
             /**
              * @var string|null $query_params['sort']
              */
@@ -1965,11 +1954,11 @@ final class InvController {
                 ->withPageSize((int) $this->sR->get_setting('default_list_limit'))
                 ->withCurrentPage((int)$page)
                 ->withSort($sort)    
-                ->withToken(PageToken::next((string)$page));
+                ->withToken(PageToken::next($page));
             $inv_statuses = $invRepo->getStatuses($this->translator);
             $label = $invRepo->getSpecificStatusArrayLabel((string) $status);
-            $this->draft_flash($currentRoute);
-            $this->mark_sent_flash($currentRoute);
+            $this->draft_flash($_language);
+            $this->mark_sent_flash($_language);
             $parameters = [
                 'paginator' => $paginator,
                 'alert' => $this->alert(), 'client_count' => $clientRepo->count(),
@@ -2044,7 +2033,7 @@ final class InvController {
     // Called from inv.js inv_to_pdf_confirm_with_custom_fields
 
     /**
-     * @param CurrentRoute $currentRoute
+     * @param int $include
      * @param CR $cR
      * @param CVR $cvR
      * @param CFR $cfR
@@ -2060,14 +2049,13 @@ final class InvController {
      * @param UIR $uiR
      * @param Request $request
      */
-    public function pdf(CurrentRoute $currentRoute, CR $cR, CVR $cvR, CFR $cfR, GR $gR, SOR $soR, IAR $iaR, ICR $icR, IIR $iiR, IIAR $iiaR, IR $iR, ITRR $itrR, SumexR $sumexR, UIR $uiR): \Yiisoft\DataResponse\DataResponse {
+    public function pdf(#[RouteArgument('include')] int $include, CR $cR, CVR $cvR, CFR $cfR, GR $gR, SOR $soR, IAR $iaR, ICR $icR, IIR $iiR, IIAR $iiaR, IR $iR, ITRR $itrR, SumexR $sumexR, UIR $uiR): \Yiisoft\DataResponse\DataResponse {
         // include is a value of 0 or 1 passed from inv.js function inv_to_pdf_with(out)_custom_fields indicating whether the user
         // wants custom fields included on the inv or not.
-        $include = $currentRoute->getArgument('include');
         $inv_id = (string) $this->session->get('inv_id');
         $inv_amount = (($iaR->repoInvAmountCount((int) $inv_id) > 0) ? $iaR->repoInvquery((int) $inv_id) : null);
         if ($inv_amount) {
-            $custom = (($include === (string) 1) ? true : false);
+            $custom = (($include === 1) ? true : false);
             $inv_custom_values = $this->inv_custom_values($inv_id, $icR);
             // session is passed to the pdfHelper and will be used for the locale ie. $session->get('_language') or the print_language ie $session->get('print_language')
             $pdfhelper = new PdfHelper($this->sR, $this->session);
@@ -2103,7 +2091,7 @@ final class InvController {
     }
 
     /**
-     * @param CurrentRoute $currentRoute
+     * @param int $inv_id
      * @param CR $cR
      * @param CVR $cvR
      * @param CFR $cfR
@@ -2119,32 +2107,31 @@ final class InvController {
      * @param SumexR $sumexR
      * @return void
      */
-    public function pdf_dashboard_include_cf(CurrentRoute $currentRoute, CR $cR, CVR $cvR, CFR $cfR, GR $gR, IAR $iaR, ICR $icR, IIR $iiR, IIAR $iiaR, IR $iR, ITRR $itrR, UIR $uiR, SOR $soR, SumexR $sumexR): void {
-        $inv_id = $currentRoute->getArgument('id');
-        if (null !== $inv_id) {
-            $inv_amount = (($iaR->repoInvAmountCount((int) $inv_id) > 0) ? $iaR->repoInvquery((int) $inv_id) : null);
+    public function pdf_dashboard_include_cf(#[RouteArgument('id')] int $inv_id, CR $cR, CVR $cvR, CFR $cfR, GR $gR, IAR $iaR, ICR $icR, IIR $iiR, IIAR $iiaR, IR $iR, ITRR $itrR, UIR $uiR, SOR $soR, SumexR $sumexR): void {
+        if ($inv_id) {
+            $inv_amount = (($iaR->repoInvAmountCount($inv_id) > 0) ? $iaR->repoInvquery($inv_id) : null);
             if ($inv_amount) {
-                $inv_custom_values = $this->inv_custom_values($inv_id, $icR);
+                $inv_custom_values = $this->inv_custom_values((string)$inv_id, $icR);
                 // session is passed to the pdfHelper and will be used for the locale ie. $session->get('_language') or the print_language ie $session->get('print_language')
                 $pdfhelper = new PdfHelper($this->sR, $this->session);
                 // The invoice will be streamed ie. shown, and not archived
                 $stream = true;
                 // If we are required to mark invoices as 'sent' when sent.
                 if ($this->sR->get_setting('mark_invoices_sent_pdf') == 1) {
-                    $this->generate_inv_number_if_applicable($inv_id, $iR, $this->sR, $gR);
-                    $this->sR->invoice_mark_sent($inv_id, $iR);
+                    $this->generate_inv_number_if_applicable((string)$inv_id, $iR, $this->sR, $gR);
+                    $this->sR->invoice_mark_sent((string)$inv_id, $iR);
                 }
-                $inv = $iR->repoInvUnloadedquery($inv_id);
+                $inv = $iR->repoInvUnloadedquery((string)$inv_id);
                 if ($inv) {
                     $so = (!empty($inv->getSo_id()) ? $soR->repoSalesOrderLoadedquery($inv->getSo_id()) : null);
-                    $pdfhelper->generate_inv_pdf($inv_id, $inv->getUser_id(), $stream, true, $so, $inv_amount, $inv_custom_values, $cR, $cvR, $cfR, $iiR, $iiaR, $iR, $itrR, $uiR, $sumexR, $this->view_renderer);
+                    $pdfhelper->generate_inv_pdf((string)$inv_id, $inv->getUser_id(), $stream, true, $so, $inv_amount, $inv_custom_values, $cR, $cvR, $cfR, $iiR, $iiaR, $iR, $itrR, $uiR, $sumexR, $this->view_renderer);
                 } //inv
             } //$inv_amount
-        } //null!==$inv_id
+        } //$inv_id
     }
 
     /**
-     * @param CurrentRoute $currentRoute
+     * @param int $inv_id
      * @param CR $cR
      * @param CVR $cvR
      * @param CFR $cfR
@@ -2160,33 +2147,31 @@ final class InvController {
      * @param SumexR $sumexR
      * @return void
      */
-    public function pdf_dashboard_exclude_cf(CurrentRoute $currentRoute, CR $cR, CVR $cvR, CFR $cfR, GR $gR, IAR $iaR, ICR $icR, IIR $iiR, IIAR $iiaR, IR $iR, ITRR $itrR, UIR $uiR, SOR $soR, SumexR $sumexR): void {
-        $inv_id = $currentRoute->getArgument('id');
-        if (null !== $inv_id) {
-            $inv_amount = (($iaR->repoInvAmountCount((int) $inv_id) > 0) ? $iaR->repoInvquery((int) $inv_id) : null);
+    public function pdf_dashboard_exclude_cf(#[RouteArgument('id')] int $inv_id, CR $cR, CVR $cvR, CFR $cfR, GR $gR, IAR $iaR, ICR $icR, IIR $iiR, IIAR $iiaR, IR $iR, ITRR $itrR, UIR $uiR, SOR $soR, SumexR $sumexR): void {
+        if ($inv_id) {
+            $inv_amount = (($iaR->repoInvAmountCount($inv_id) > 0) ? $iaR->repoInvquery($inv_id) : null);
             if ($inv_amount) {
-                $inv_custom_values = $this->inv_custom_values($inv_id, $icR);
+                $inv_custom_values = $this->inv_custom_values((string)$inv_id, $icR);
                 // session is passed to the pdfHelper and will be used for the locale ie. $session->get('_language') or the print_language ie $session->get('print_language')
                 $pdfhelper = new PdfHelper($this->sR, $this->session);
                 // The invoice will be streamed ie. shown, and not archived
                 $stream = true;
                 // If we are required to mark invoices as 'sent' when sent.
                 if ($this->sR->get_setting('mark_invoices_sent_pdf') == 1) {
-                    $this->generate_inv_number_if_applicable($inv_id, $iR, $this->sR, $gR);
-                    $this->sR->invoice_mark_sent($inv_id, $iR);
+                    $this->generate_inv_number_if_applicable((string)$inv_id, $iR, $this->sR, $gR);
+                    $this->sR->invoice_mark_sent((string)$inv_id, $iR);
                 }
-                $inv = $iR->repoInvUnloadedquery($inv_id);
+                $inv = $iR->repoInvUnloadedquery((string)$inv_id);
                 if ($inv) {
                     $so = (!empty($inv->getSo_id()) ? $soR->repoSalesOrderLoadedquery($inv->getSo_id()) : null);
-                    $pdfhelper->generate_inv_pdf($inv_id, $inv->getUser_id(), $stream, false, $so, $inv_amount, $inv_custom_values, $cR, $cvR, $cfR, $iiR, $iiaR, $iR, $itrR, $uiR, $sumexR, $this->view_renderer);
+                    $pdfhelper->generate_inv_pdf((string)$inv_id, $inv->getUser_id(), $stream, false, $so, $inv_amount, $inv_custom_values, $cR, $cvR, $cfR, $iiR, $iiaR, $iR, $itrR, $uiR, $sumexR, $this->view_renderer);
                 } //inv
             } //inv_amount
         } // inv_id
     }
 
     /**
-     *
-     * @param CurrentRoute $currentRoute
+     * @param string $url_key
      * @param CR $cR
      * @param CVR $cvR
      * @param CFR $cfR
@@ -2202,9 +2187,8 @@ final class InvController {
      * @param UPR $upR
      * @return mixed
      */
-    public function pdf_download_include_cf(CurrentRoute $currentRoute, CR $cR, CVR $cvR, CFR $cfR, GR $gR, SOR $soR, IAR $iaR, ICR $icR, IIR $iiR, IIAR $iiaR, IR $iR, ITRR $itrR, SumexR $sumexR, UIR $uiR, UPR $upR): mixed {
-        $url_key = $currentRoute->getArgument('url_key');
-        if (null!==$url_key) {
+    public function pdf_download_include_cf(#[RouteArgument('url_key')] string $url_key, CR $cR, CVR $cvR, CFR $cfR, GR $gR, SOR $soR, IAR $iaR, ICR $icR, IIR $iiR, IIAR $iiaR, IR $iR, ITRR $itrR, SumexR $sumexR, UIR $uiR, UPR $upR): mixed {
+        if ($url_key) {
             // If the status is sent 2, viewed 3, or paid 4 and the url key exists
             if ($iR->repoUrl_key_guest_count($url_key) < 1) {
                 return $this->web_service->getNotFoundResponse();
@@ -2268,8 +2252,7 @@ final class InvController {
     }
 
     /**
-     *
-     * @param CurrentRoute $currentRoute
+     * @param string $urlKey
      * @param CR $cR
      * @param CVR $cvR
      * @param CFR $cfR
@@ -2285,15 +2268,14 @@ final class InvController {
      * @param UPR $upR
      * @return mixed
      */
-    public function pdf_download_exclude_cf(CurrentRoute $currentRoute, CR $cR, CVR $cvR, CFR $cfR, GR $gR, IAR $iaR, ICR $icR, IIR $iiR, IIAR $iiaR, IR $iR, ITRR $itrR, SOR $soR, SumexR $sumexR, UIR $uiR, UPR $upR): mixed {
-        $url_key = $currentRoute->getArgument('url_key');
-        if (null!==$url_key) {
+    public function pdf_download_exclude_cf(#[RouteArgument('url_key')] string $urlKey, CR $cR, CVR $cvR, CFR $cfR, GR $gR, IAR $iaR, ICR $icR, IIR $iiR, IIAR $iiaR, IR $iR, ITRR $itrR, SOR $soR, SumexR $sumexR, UIR $uiR, UPR $upR): mixed {
+        if ($urlKey) {
             // If the status is sent 2, viewed 3, or paid 4 and the url key exists
-            if ($iR->repoUrl_key_guest_count($url_key) < 1) {
+            if ($iR->repoUrl_key_guest_count($urlKey) < 1) {
                 return $this->web_service->getNotFoundResponse();
             }
             // Retrieve the inv_id
-            $inv_guest = $iR->repoUrl_key_guest_count($url_key) ? $iR->repoUrl_key_guest_loaded($url_key) : null;
+            $inv_guest = $iR->repoUrl_key_guest_count($urlKey) ? $iR->repoUrl_key_guest_loaded($urlKey) : null;
             if ($inv_guest) {
                 $inv_id = $inv_guest->getId();
                 $inv_amount = (($iaR->repoInvAmountCount((int) $inv_id) > 0) ? $iaR->repoInvquery((int) $inv_id) : null);
@@ -2408,15 +2390,14 @@ final class InvController {
     }
 
     /**
-     * @param CurrentRoute $currentRoute
+     * @param int $id
      * @param InvRepository $invRepo
      * @param bool $unloaded
      * @return Inv|null
      */
-    private function inv(CurrentRoute $currentRoute, InvRepository $invRepo, bool $unloaded = false): Inv|null {
-        $id = $currentRoute->getArgument('id');
-        if (null !== $id) {
-            $inv = ($unloaded ? $invRepo->repoInvUnLoadedquery($id) : $invRepo->repoInvLoadedquery($id));
+    private function inv(int $id, InvRepository $invRepo, bool $unloaded = false): Inv|null {
+        if ($id) {
+            $inv = ($unloaded ? $invRepo->repoInvUnLoadedquery((string)$id) : $invRepo->repoInvLoadedquery((string)$id));
             if (null !== $inv) {
                 return $inv;
             }
@@ -2462,14 +2443,13 @@ final class InvController {
     }
 
     /**
-     * @param CurrentRoute $currentRoute
+     * @param int $id
      * @param IIR $invitemRepository
      * @return InvItem|null
      */
-    private function inv_item(CurrentRoute $currentRoute, IIR $invitemRepository): InvItem|null {
-        $id = $currentRoute->getArgument('id');
-        if (null !== $id) {
-            $invitem = $invitemRepository->repoInvItemquery($id) ?: null;
+    private function inv_item(int $id, IIR $invitemRepository): InvItem|null {
+        if ($id) {
+            $invitem = $invitemRepository->repoInvItemquery((string)$id) ?: null;
             if ($invitem === null) {
                 return null;
             }
@@ -2494,7 +2474,6 @@ final class InvController {
      * @param IIAS $iiaS
      * @param PR $pR
      * @param TASKR $taskR
-     * @param IAR $iaR
      * @param ICR $icR
      * @param IIAR $iiaR
      * @param IIR $iiR
@@ -2507,7 +2486,7 @@ final class InvController {
      * @param UNR $unR
      */
     public function inv_to_inv_confirm(Request $request, FormHydrator $formHydrator,
-            GR $gR, IIAS $iiaS, PR $pR, TASKR $taskR, IAR $iaR, ICR $icR,
+            GR $gR, IIAS $iiaS, PR $pR, TASKR $taskR, ICR $icR,
             IIAR $iiaR, IIR $iiR, IR $iR, ITRR $itrR, TRR $trR, UR $uR, UCR $ucR, UIR $uiR, UNR $unR): \Yiisoft\DataResponse\DataResponse|Response {
       $data_inv_js = $request->getQueryParams();
       $inv_id = (string) $data_inv_js['inv_id'];
@@ -2651,14 +2630,13 @@ final class InvController {
     }
 
     /**
-     * @param CurrentRoute $currentRoute
+     * @param int $id
      * @param ITRR $invtaxrateRepository
      * @return InvTaxRate|null
      */
-    private function invtaxrate(CurrentRoute $currentRoute, ITRR $invtaxrateRepository): InvTaxRate|null {
-        $id = $currentRoute->getArgument('id');
-        if (null !== $id) {
-            $invtaxrate = $invtaxrateRepository->repoInvTaxRatequery($id);
+    private function invtaxrate(int $id, ITRR $invtaxrateRepository): InvTaxRate|null {
+        if ($id) {
+            $invtaxrate = $invtaxrateRepository->repoInvTaxRatequery((string)$id);
             if (null !== $invtaxrate) {
                 return $invtaxrate;
             }
@@ -2810,7 +2788,9 @@ final class InvController {
     }
 
     /**
-     * @param CurrentRoute $currentRoute
+     * @param string $urlKey
+     * @param string $clientChosenGateway
+     * @param string $_language
      * @param CurrentUser $currentUser
      * @param CFR $cfR
      * @param IAR $iaR
@@ -2825,24 +2805,22 @@ final class InvController {
      * @param UPR $upR
      * @return Response
      */
-    public function url_key(CurrentRoute $currentRoute, CurrentUser $currentUser, CFR $cfR, IAR $iaR, IIAR $iiaR, IIR $iiR, IR $iR, ITRR $itrR, UR $uR, UCR $ucR, UIR $uiR, PMR $pmR, UPR $upR): Response {
-        $url_key = $currentRoute->getArgument('url_key');
+    public function url_key(#[RouteArgument('url_key')] string $urlKey, #[RouteArgument('gateway')] string $clientChosenGateway, #[RouteArgument('_language')] string $_language, CurrentUser $currentUser, CFR $cfR, IAR $iaR, IIAR $iiaR, IIR $iiR, IR $iR, ITRR $itrR, UR $uR, UCR $ucR, UIR $uiR, PMR $pmR, UPR $upR): Response {
         // if the current user is a guest it will return a null value
-        if ($url_key === null || $currentUser->isGuest()) {
+        if ($urlKey === '' || $currentUser->isGuest()) {
             return $this->web_service->getNotFoundResponse();
         }
 
-        $client_chosen_gateway = $currentRoute->getArgument('gateway');
-        if ($client_chosen_gateway === null) {
+        if ($clientChosenGateway === '') {
             return $this->web_service->getNotFoundResponse();
         }
 
         // If the status is sent 2, viewed 3, or paid 4 and the url key exists accept otherwise not found response
-        if ($iR->repoUrl_key_guest_count($url_key) < 1) {
+        if ($iR->repoUrl_key_guest_count($urlKey) < 1) {
             return $this->web_service->getNotFoundResponse();
         }
 
-        $inv = $iR->repoUrl_key_guest_loaded($url_key);
+        $inv = $iR->repoUrl_key_guest_loaded($urlKey);
         if ($inv instanceof Inv) {
             $inv_id = $inv->getId();
             $client_id = $inv->getClient_id();
@@ -2866,7 +2844,7 @@ final class InvController {
                             // TODO 'user' => $cfR->repoTablequery('user_custom'),
                     ];
 
-                    $attachments = $this->view_partial_inv_attachments($currentRoute, $url_key, (int) $client_id, $upR);
+                    $attachments = $this->view_partial_inv_attachments($_language, $urlKey, (int) $client_id, $upR);
                     $inv_amount = (($iaR->repoInvAmountCount((int) $inv_id) > 0) ? $iaR->repoInvquery((int) $inv_id) : null);
                     if ($inv_amount) {
                         $is_overdue = ($inv_amount->getBalance() > 0 && ($inv->getDate_due()) < (new \DateTimeImmutable('now')) ? true : false);
@@ -2877,16 +2855,16 @@ final class InvController {
                                 'attachments' => $attachments,
                                 'balance' => ($inv_amount->getTotal() ?? 0.00) - ($inv_amount->getPaid() ?? 0.00),
                                 // Gateway that the paying user has selected
-                                'client_chosen_gateway' => $client_chosen_gateway,
+                                'client_chosen_gateway' => $clientChosenGateway,
                                 'clienthelper' => new ClientHelper($this->sR),
                                 'client' => $inv->getClient(),
                                 'custom_fields' => $custom_fields,
-                                'download_pdf_non_sumex_action' => ['inv/download_pdf', ['url_key' => $url_key]],
-                                'download_pdf_sumex_action' => ['inv/download_pdf', ['url_key' => $url_key]],
+                                'download_pdf_non_sumex_action' => ['inv/download_pdf', ['url_key' => $urlKey]],
+                                'download_pdf_sumex_action' => ['inv/download_pdf', ['url_key' => $urlKey]],
                                 'inv' => $inv,
                                 'inv_amount' => $inv_amount,
                                 'inv_tax_rates' => ($inv_id > 0) && $itrR->repoCount($inv_id) > 0 ? $itrR->repoInvquery($inv_id) : null,
-                                'inv_url_key' => $url_key,
+                                'inv_url_key' => $urlKey,
                                 'inv_item_amount' => $iiaR,
                                 'is_overdue' => $is_overdue,
                                 'items' => ($inv_id > 0) ? $iiR->repoInvquery($inv_id) : new InvItem(),
@@ -3010,7 +2988,7 @@ final class InvController {
     
     /**
      * Purpose: Generate OpenPeppol Ubl Invoice 3.0.15 XML file to 1. screen or 2. file
-     * @param CurrentRoute $currentRoute
+     * @param int $id
      * @param CurrentUser $currentUser
      * @param cpR $cpR
      * @param IAR $iaR
@@ -3031,7 +3009,7 @@ final class InvController {
      * @param TRR $trR
      * @return Response
      */
-     public function peppol(CurrentRoute $currentRoute,
+     public function peppol(#[RouteArgument('id')] int $id,
       CurrentUser $currentUser,
       cpR $cpR,
       IAR $iaR,
@@ -3054,10 +3032,9 @@ final class InvController {
       if ($currentUser->isGuest()) {
           return $this->web_service->getNotFoundResponse();
       }
-      $id = $currentRoute->getArgument('id');
       // Load the inv's HASONE relation 'invamount'
-      if (null !== $id) {
-          $invoice = $invRepo->repoInvLoadInvAmountquery($id);
+      if ($id) {
+          $invoice = $invRepo->repoInvLoadInvAmountquery((string)$id);
           if ($invoice) {
               $client_id = $invoice->getClient()?->getClient_id();
               if (null !== $client_id) {
@@ -3117,17 +3094,16 @@ final class InvController {
      * stream Ubl invoice to screen or alternatively output to file 
      * 
      * View: resources/views/invoice/inv/view.php
-     * @param CurrentRoute $currentRoute
+     * @param int $id
      * @param CurrentUser $currentUser
      * @return Response
      */    
-    public function peppol_stream_toggle(CurrentRoute $currentRoute, CurrentUser $currentUser,
+    public function peppol_stream_toggle(#[RouteArgument('id')] int $id, CurrentUser $currentUser,
       ) : Response  
     {
       if ($currentUser->isGuest()) {
             return $this->web_service->getNotFoundResponse();
       }
-      $id = $currentRoute->getArgument('id');
       if ($this->sR->repoCount('peppol_xml_stream') > 0) {
         $record = $this->sR->withKey('peppol_xml_stream');
         if ($this->sR->get_setting('peppol_xml_stream') === '1') {
@@ -3143,13 +3119,13 @@ final class InvController {
         } // else
       } // $this->sR->repoCount
       $this->flash_message('info',$this->translator->translate('invoice.peppol.stream.toggle'));
-      return $this->web_service->getRedirectResponse('inv/view',['id'=>$id]); 
+      return $this->web_service->getRedirectResponse('inv/view',['id' => $id]); 
     } // peppol stream toggle
     
     /**
      * @see https://www.storecove.com/docs#_json_object
      * @see StoreCove API key stored under Online Payment keys under Settings...View...Online Payment
-     * @param CurrentRoute $currentRoute
+     * @param int $id
      * @param CurrentUser $currentUser
      * @param cpR $cpR
      * @param IIAR $iiaR
@@ -3169,7 +3145,8 @@ final class InvController {
      * @param TRR $trR
      * @return Response
      */
-    public function storecove(CurrentRoute $currentRoute,
+    public function storecove(
+            #[RouteArgument('id')] int $id, 
             CurrentUser $currentUser,
             cpR $cpR,
             IIAR $iiaR,
@@ -3191,10 +3168,9 @@ final class InvController {
         if ($currentUser->isGuest()) {
             return $this->web_service->getNotFoundResponse();
         }
-        $id = $currentRoute->getArgument('id');
         // Load the inv's HASONE relation 'invamount'
-        if (null !== $id) {
-            $invoice = $invRepo->repoInvLoadInvAmountquery($id);
+        if ($id) {
+            $invoice = $invRepo->repoInvLoadInvAmountquery((string)$id);
             if ($invoice) {
                 $client_id = $invoice->getClient()?->getClient_id();
                 if (null !== $client_id) {
@@ -3280,7 +3256,8 @@ final class InvController {
 
     /**
      * @param ViewRenderer $head
-     * @param CurrentRoute $currentRoute
+     * @param int $id
+     * @param string $_language
      * @param CFR $cfR
      * @param CVR $cvR
      * @param PR $pR
@@ -3310,11 +3287,11 @@ final class InvController {
      * @param DLR $dlR
      * @return \Yiisoft\DataResponse\DataResponse|Response
      */
-    public function view(ViewRenderer $head, CurrentRoute $currentRoute, 
+    public function view(ViewRenderer $head, #[RouteArgument('id')] int $id, #[RouteArgument('_language')] string $_language, 
             CFR $cfR, CVR $cvR, PR $pR, PIR $piR, IAR $iaR, IIAR $iiaR, IIR $iiR, IR $iR, IRR $irR, ITRR $itrR, PMR $pmR,
             TRR $trR, FR $fR, UNR $uR, ACR $acR, ACIR $aciR, ACIIR $aciiR, CR $cR, GR $gR, ICR $icR, PYMR $pymR, TASKR $taskR, PRJCTR $prjctR, UIR $uiR, UCR $ucR, UPR $upR, SOR $soR, SumexR $sumexR, DLR $dlR)
     : \Yiisoft\DataResponse\DataResponse|Response {
-        $inv = $this->inv($currentRoute, $iR, false);
+        $inv = $this->inv($id, $iR, false);
         $enabled_gateways = $this->sR->payment_gateways_enabled_DriverList();
         $this->flash_no_enabled_gateways($enabled_gateways, $this->translator->translate('invoice.payment.gateway.no'));
         if ($inv) {
@@ -3369,7 +3346,7 @@ final class InvController {
                     'peppol_stream_toggle' => $this->sR->get_setting('peppol_xml_stream'),
                     // Sits above options section of invoice allowing the adding of a new row to the invoice
                     'add_inv_item_product' => $this->view_renderer->renderPartialAsString('/invoice/invitem/_item_form_product', [
-                        'action' => ['invitem/add_product', ['_language' => $currentRoute->getArgument('_language')]],
+                        'action' => ['invitem/add_product', ['_language' => $_language]],
                         'errors' => [],
                         'form' => new InvItemForm(new InvItem(), (int)$this->session->get('inv_id')),
                         'inv' => $iR->repoInvLoadedquery((string)$invoice),
@@ -3384,7 +3361,7 @@ final class InvController {
                         'numberhelper' => $this->number_helper
                     ]),
                     'add_inv_item_task' => $this->view_renderer->renderPartialAsString('/invoice/invitem/_item_form_task', [
-                        'action' => ['invitem/add_task', ['_language' => $currentRoute->getArgument('_language')]],
+                        'action' => ['invitem/add_task', ['_language' => $_language]],
                         'errors' => [],
                         'form' => new InvItemForm(new InvItem(), (int)$this->session->get('inv_id')),
                         'inv' => $iR->repoInvLoadedquery((string) $this->session->get('inv_id')),
@@ -3447,18 +3424,18 @@ final class InvController {
                     ]),
                     // Partial item table: Used to build items either products/tasks that make up the invoice
                     // Partial item table: Items and Grand Totals
-                    'partial_item_table' => $this->view_partial_item_table($show_buttons, $currentRoute, $aciR, $aciiR, $pR, $piR, $taskR, $iiR, $iiaR, $iR, $trR, $uR,
+                    'partial_item_table' => $this->view_partial_item_table($show_buttons, $id, $aciR, $aciiR, $pR, $piR, $taskR, $iiR, $iiaR, $iR, $trR, $uR,
                             $itrR, $inv_amount),
-                    'modal_delete_inv' => $this->view_modal_delete_inv($currentRoute),
+                    'modal_delete_inv' => $this->view_modal_delete_inv($_language),
                     'modal_delete_items' => $this->view_modal_delete_items($iiR),
-                    'modal_change_client' => $this->view_modal_change_client($currentRoute, $cR, $iR),
-                    'modal_inv_to_pdf' => $this->view_modal_inv_to_pdf($currentRoute, $iR),
-                    'modal_inv_to_html' => $this->view_modal_inv_to_html($currentRoute, $iR),
+                    'modal_change_client' => $this->view_modal_change_client($id, $cR, $iR),
+                    'modal_inv_to_pdf' => $this->view_modal_inv_to_pdf($id, $iR),
+                    'modal_inv_to_html' => $this->view_modal_inv_to_html($id, $iR),
                     'modal_create_recurring' => $this->view_modal_create_recurring($irR),
-                    'modal_create_credit' => $this->view_modal_create_credit($currentRoute, $gR, $iR),
+                    'modal_create_credit' => $this->view_modal_create_credit($id, $gR, $iR),
                     'view_custom_fields' => $this->view_custom_fields($cfR, $cvR, $inv_custom_values),
-                    'partial_inv_attachments' => $this->view_partial_inv_attachments($currentRoute, $url_key, (int) $client_id, $upR),
-                    'partial_inv_delivery_location' => $this->view_partial_delivery_location($currentRoute, $dlR, $delivery_location_id),
+                    'partial_inv_attachments' => $this->view_partial_inv_attachments($_language, $url_key, (int) $client_id, $upR),
+                    'partial_inv_delivery_location' => $this->view_partial_delivery_location($_language, $dlR, $delivery_location_id),
                     'modal_message_no_payment_method' => $bootstrap5ModalTranslatorMessageWithoutAction
                         ->renderPartialLayoutWithTranslatorMessageAsString(
                         $this->translator->translate('invoice.payment.method'),
@@ -3490,28 +3467,28 @@ final class InvController {
     }
 
     /**
-     * @param CurrentRoute $currentRoute
+     * @param int $id
      * @param CR $cR
      * @param IR $iR
      * @return string
      */
-    private function view_modal_change_client(CurrentRoute $currentRoute, CR $cR, IR $iR): string {
+    private function view_modal_change_client(int $id, CR $cR, IR $iR): string {
         return $this->view_renderer->renderPartialAsString('/invoice/inv/modal_change_client', [
-                    'inv' => $this->inv($currentRoute, $iR, true),
+                    'inv' => $this->inv($id, $iR, true),
                     'clients' => $cR->findAllPreloaded()
         ]);
     }
 
     /**
-     * @param CurrentRoute $currentRoute
+     * @param int $id
      * @param GR $gR
      * @param IR $iR
      * @return string
      */
-    private function view_modal_create_credit(CurrentRoute $currentRoute, GR $gR, IR $iR): string {
+    private function view_modal_create_credit(int $id, GR $gR, IR $iR): string {
         return $this->view_renderer->renderPartialAsString('/invoice/inv/modal_create_credit', [
                     'invoice_groups' => $gR->repoCountAll() > 0 ? $gR->findAllPreloaded() : null,
-                    'inv' => $this->inv($currentRoute, $iR, false),
+                    'inv' => $this->inv($id, $iR, false),
                     'datehelper' => $this->date_helper
         ]);
     }
@@ -3528,10 +3505,11 @@ final class InvController {
     }
 
     /**
+     * @param string $_language
      * @return string
      */
-    private function view_modal_delete_inv(CurrentRoute $currentRoute): string {
-        return $this->view_renderer->renderPartialAsString('/invoice/inv/modal_delete_inv', ['action' => ['inv/delete', ['id' => $this->session->get('inv_id'), '_language' => $currentRoute->getArgument('_language')]],
+    private function view_modal_delete_inv(string $_language): string {
+        return $this->view_renderer->renderPartialAsString('/invoice/inv/modal_delete_inv', ['action' => ['inv/delete', ['id' => $this->session->get('inv_id'), '_language' => $_language]],
         ]);
     }
 
@@ -3549,36 +3527,35 @@ final class InvController {
     }
 
     /**
-     * @param CurrentRoute $currentRoute
+     * @param int $id
      * @param IR $iR
      * @return string
      */
-    private function view_modal_inv_to_pdf(CurrentRoute $currentRoute, IR $iR): string {
+    private function view_modal_inv_to_pdf(int $id, IR $iR): string {
         return $this->view_renderer->renderPartialAsString('/invoice/inv/modal_inv_to_pdf', [
-                    'inv' => $this->inv($currentRoute, $iR, true),
+                    'inv' => $this->inv($id, $iR, true),
         ]);
     }
 
     /**
-     * @param CurrentRoute $currentRoute
+     * @param int $id
      * @param IR $iR
      * @return string
      */
-    private function view_modal_inv_to_html(CurrentRoute $currentRoute, IR $iR): string {
+    private function view_modal_inv_to_html(int $id, IR $iR): string {
         return $this->view_renderer->renderPartialAsString('/invoice/inv/modal_inv_to_html', [
-                    'inv' => $this->inv($currentRoute, $iR, true),
+                    'inv' => $this->inv($id, $iR, true),
         ]);
     }
 
     /**
-     *
-     * @param CurrentRoute $currentRoute
+     * @param string $_language
      * @param string $url_key
      * @param int $client_id
      * @param UPR $upR
      * @return string
      */
-    private function view_partial_inv_attachments(CurrentRoute $currentRoute, string $url_key, int $client_id, UPR $upR): string {
+    private function view_partial_inv_attachments(string $_language, string $url_key, int $client_id, UPR $upR): string {
         $uploads = $upR->repoUploadUrlClientquery($url_key, $client_id);
         $dataReader = new DataOffsetPaginator($uploads);
         $invEdit = $this->user_service->hasPermission('editPayment');
@@ -3592,17 +3569,17 @@ final class InvController {
             'dataReader' => $dataReader,
             'invEdit' => $invEdit
           ]),
-          'action' => ['inv/attachment', ['id' => $this->session->get('inv_id'), '_language' => $currentRoute->getArgument('_language')]]
+          'action' => ['inv/attachment', ['id' => $this->session->get('inv_id'), '_language' => $_language]]
         ]);
     }
     
     /**
-     * @param CurrentRoute $currentRoute
+     * @param string $_language
      * @param DLR $dlr
      * @param string $delivery_location_id
      * @return string
      */
-    private function view_partial_delivery_location(CurrentRoute $currentRoute, DLR $dlr, string $delivery_location_id) : string {
+    private function view_partial_delivery_location(string $_language, DLR $dlr, string $delivery_location_id) : string {
       if (!empty($delivery_location_id)) {
         $del = $dlr->repoDeliveryLocationquery($delivery_location_id);
         if (null!==$del) {
@@ -3615,7 +3592,7 @@ final class InvController {
             'state' => $del->getZip(),
             'country' => $del->getCountry(),
             'global_location_number' => $del->getGlobal_location_number(),
-            'delivery_location_url' => $this->url_generator->generate('del/view',['_language' => $currentRoute->getArgument('_language'), 'id' => $delivery_location_id])
+            'delivery_location_url' => $this->url_generator->generate('del/view',['_language' => $_language, 'id' => $delivery_location_id])
           ]);
         } //null!==$del   
       } else {
@@ -3626,7 +3603,7 @@ final class InvController {
 
     /**
      * @param bool $show_buttons
-     * @param CurrentRoute $currentRoute
+     * @param int $id
      * @param ACIR $aciR
      * @param ACIIR $aciiR
      * @param PR $pR
@@ -3642,8 +3619,8 @@ final class InvController {
      * @param bool $so_exists
      * @return string
      */
-    private function view_partial_item_table(bool $show_buttons, CurrentRoute $currentRoute, ACIR $aciR, ACIIR $aciiR, PR $pR, PIR $piR, TaskR $taskR, IIR $iiR, IIAR $iiaR, IR $iR, TRR $trR, UNR $uR, ITRR $itrR, InvAmount|null $inv_amount): string {
-        $inv = $this->inv($currentRoute, $iR, false);
+    private function view_partial_item_table(bool $show_buttons, int $id, ACIR $aciR, ACIIR $aciiR, PR $pR, PIR $piR, TaskR $taskR, IIR $iiR, IIAR $iiaR, IR $iR, TRR $trR, UNR $uR, ITRR $itrR, InvAmount|null $inv_amount): string {
+        $inv = $this->inv($id, $iR, false);
         if ($inv) {
             $draft = ($inv->getStatus_id() == '1' ? true : false);
             $inv_tax_rates = (($itrR->repoCount((string) $this->session->get('inv_id')) > 0) ? $itrR->repoInvquery((string) $this->session->get('inv_id')) : null);
@@ -3678,10 +3655,10 @@ final class InvController {
     
     /**
      * Use: Toggle Button on Flash message reminder
-     * @param CurrentRoute $currentRoute
+     * @param string $_language
      * @return void
      */
-    private function draft_flash(CurrentRoute $currentRoute) : void {
+    private function draft_flash(string $_language) : void {
       // Get the current draft setting
       $draft = $this->sR->get_setting('generate_invoice_number_for_draft');
       // Get the setting_id to allow for editing
@@ -3691,7 +3668,7 @@ final class InvController {
       if (null!==$setting) {
         $setting_id = $setting->getSetting_id();
         // The route name has been simplified and differs from the action 'setting/inv_draft_has_number_switch'
-        $setting_url = $this->url_generator->generate('setting/draft',['_language'=> $currentRoute->getArgument('_language'), 'setting_id'=>$setting_id]);
+        $setting_url = $this->url_generator->generate('setting/draft',['_language'=> $_language, 'setting_id'=>$setting_id]);
       }
       $level = $draft == '0' ? 'warning': 'info';
       $on_off = $draft == '0' ? 'off' : 'on';
@@ -3705,10 +3682,10 @@ final class InvController {
     /**
      * Purpose: Warning: Setting 'Mark invoices as sent when copy' should only be ON during development
      * Use: Toggle Button on Flash message reminder
-     * @param CurrentRoute $currentRoute
+     * @param string $_language
      * @return void
      */
-    private function mark_sent_flash(CurrentRoute $currentRoute) : void {
+    private function mark_sent_flash(string $_language) : void {
       // Get the current mark_invoice_sent_copy setting
       $mark_sent = $this->sR->get_setting('mark_invoices_sent_copy');
       // Get the setting_id to allow for editing
@@ -3717,7 +3694,7 @@ final class InvController {
       $setting_id = '';
       if (null!==$setting) {
         $setting_id = $setting->getSetting_id();
-        $setting_url = $this->url_generator->generate('setting/mark_sent',['_language'=> $currentRoute->getArgument('_language'), 'setting_id'=>$setting_id]);
+        $setting_url = $this->url_generator->generate('setting/mark_sent', ['_language' => $_language, 'setting_id' => $setting_id]);
       }
       $level = $mark_sent == '0' ? 'success': 'danger';
       $on_off = $mark_sent == '0' ? 'off' : 'on';
