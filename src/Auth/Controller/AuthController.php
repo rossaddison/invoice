@@ -9,24 +9,20 @@ use App\Auth\Form\LoginForm;
 use App\Service\WebControllerService;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
-use Yiisoft\Http\Method;
-use Yiisoft\Router\CurrentRoute;
+use Yiisoft\FormModel\FormHydrator;
 use Yiisoft\Translator\TranslatorInterface;
 use Yiisoft\User\Login\Cookie\CookieLogin;
 use Yiisoft\User\Login\Cookie\CookieLoginIdentityInterface;
-use Yiisoft\FormModel\FormHydrator;
 use Yiisoft\Yii\View\ViewRenderer;
 
 final class AuthController
 {
     public function __construct(
-        private AuthService $authService,
-        private CurrentRoute $currentRoute,
-        private WebControllerService $webService,
-        private ViewRenderer $viewRenderer,
+        private readonly AuthService          $authService,
+        private readonly WebControllerService $webService,
+        private ViewRenderer                  $viewRenderer,
     ) {
         $this->viewRenderer = $viewRenderer->withControllerName('auth');
-        $this->currentRoute = $currentRoute;        
     }
 
     public function login(
@@ -39,21 +35,16 @@ final class AuthController
             return $this->redirectToMain();
         }
 
-        $body = $request->getParsedBody();
         $loginForm = new LoginForm($this->authService, $translator);
 
-        if (
-            $request->getMethod() === Method::POST
-            && $formHydrator->populate($loginForm, $body)
-            && $loginForm->isValid()
-        ) {
+        if ($formHydrator->populateFromPostAndValidate($loginForm, $request)) {
             $identity = $this->authService->getIdentity();
 
             if ($identity instanceof CookieLoginIdentityInterface && $loginForm->getPropertyValue('rememberMe')) {
-                return $cookieLogin->addCookie($identity, $this->redirectToInvoiceIndex($this->currentRoute));
+                return $cookieLogin->addCookie($identity, $this->redirectToInvoiceIndex());
             }
             
-            return $this->redirectToInvoiceIndex($this->currentRoute);
+            return $this->redirectToInvoiceIndex();
         }
 
         return $this->viewRenderer->render('login', ['formModel' => $loginForm]);
@@ -70,8 +61,8 @@ final class AuthController
         return $this->webService->getRedirectResponse('site/index', ['_language'=>'en']);
     }
     
-    private function redirectToInvoiceIndex(CurrentRoute $currentRoute): ResponseInterface
+    private function redirectToInvoiceIndex(): ResponseInterface
     {
-        return $this->webService->getRedirectResponse('invoice/index', ['_language'=>$currentRoute->getArgument('_language')]);
+        return $this->webService->getRedirectResponse('invoice/index', ['_language'=>'en']);
     }
 }

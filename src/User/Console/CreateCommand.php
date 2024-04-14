@@ -5,13 +5,15 @@ declare(strict_types=1);
 namespace App\User\Console;
 
 use App\Auth\Form\SignupForm;
+use App\User\User;
 use LogicException;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
-use Throwable;use Yiisoft\FormModel\FormHydrator;
+use Throwable;
+use Yiisoft\FormModel\FormHydrator;
 use Yiisoft\Rbac\Manager;
 use Yiisoft\Yii\Console\ExitCode;
 
@@ -19,10 +21,13 @@ final class CreateCommand extends Command
 {
     protected static $defaultName = 'user/create';
     
-    public function __construct(private SignupForm $signupForm, private Manager $manager, private FormHydrator $formHydrator)
+    public function __construct(
+        private readonly SignupForm   $signupForm,
+        private readonly Manager      $manager,
+        private readonly FormHydrator $formHydrator
+    )
     {
-         $this->formHydrator = $formHydrator;
-         parent::__construct();
+        parent::__construct();
     }
 
     protected function configure(): void
@@ -36,7 +41,6 @@ final class CreateCommand extends Command
     }
     
     /**
-     * 
      * @param InputInterface $input
      * @param OutputInterface $output
      * @param string $error
@@ -59,21 +63,20 @@ final class CreateCommand extends Command
         $password = $input->getArgument('password');
         $isAdmin = (bool) $input->getArgument('isAdmin');
 
-        $this->formHydrator->populate($this->signupForm, [
-            'login' => $login,
-            'password' => $password,
-            'passwordVerify' => $password,
-        ]);
-
         try {
+            $this->formHydrator->populate(model: $this->signupForm, data: [
+                'login' => $login,
+                'password' => $password,
+                'passwordVerify' => $password,
+            ], scope: '');
             $user = $this->signupForm->signup();
         } catch (Throwable $t) {
             $io->error($t->getMessage() . ' ' . $t->getFile() . ' ' . $t->getLine());
             throw $t;
         }
-
-        if ($user === false) {
-            $errors = $this->signupForm->getValidationResult()->getErrors();
+        
+        if (!$user instanceof User) {
+            $errors = $this->signupForm->getValidationResult()->getErrorMessagesIndexedByAttribute();
             array_walk($errors, fn (string $error, string $attribute) : mixed => $io->error("$attribute: $error"));
             return ExitCode::DATAERR;
         }

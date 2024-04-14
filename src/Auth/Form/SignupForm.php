@@ -12,19 +12,16 @@ use Yiisoft\Validator\Result;
 use Yiisoft\Validator\Rule\Equal;
 use Yiisoft\Validator\Rule\Length;
 use Yiisoft\Validator\Rule\Required;
-use Yiisoft\Validator\ValidatorInterface;
 use Yiisoft\Validator\RulesProviderInterface;
 
 final class SignupForm extends FormModel implements RulesProviderInterface
 {
     private string $login = '';
     private string $password = '';
-    private string $passwordVerify = '';
 
     public function __construct(
-        private ValidatorInterface $validator,
-        private TranslatorInterface $translator,
-        private UserRepository $userRepository,
+        private readonly TranslatorInterface $translator,
+        private readonly UserRepository $userRepository,
     ) {
     }
 
@@ -62,16 +59,11 @@ final class SignupForm extends FormModel implements RulesProviderInterface
         return $this->password;
     }
 
-    public function signup(): false|User
+    public function signup(): User
     {
-        if ($this->validator->validate($this)->isValid()) {
-            $user = new User($this->getLogin(), $this->getPassword());
-            $this->userRepository->save($user);
-            
-            return $user;
-        }
-
-        return false;
+        $user = new User($this->getLogin(), $this->getPassword());
+        $this->userRepository->save($user);
+        return $user;
     }
 
     /**
