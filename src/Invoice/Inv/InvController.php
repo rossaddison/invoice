@@ -936,6 +936,7 @@ final class InvController {
     }        
 
     /**
+     * Use: Download an attached, and currently uploaded file 
      * @param int $upload_id 
      * @param UPR $upR
      *
@@ -1724,26 +1725,25 @@ final class InvController {
       return $this->flash;
     }
 
-    /**
+   /**
+     * @see Route::get('/client_invoices[/page/{page:\d+}[/status/{status:\d+}]]') status and page are decimals
      * @param Request $request
      * @param IAR $iaR
      * @param IRR $irR
-     * @param string $page
-     * @param string $status
      * @param IR $iR
      * @param UCR $ucR
      * @param UIR $uiR
+     * @param int $page
+     * @param int $status 
      */
-    public function guest(Request $request, IAR $iaR, IRR $irR, string $page = '1', string $status = '0',
-            IR $iR, UCR $ucR, UIR $uiR): \Yiisoft\DataResponse\DataResponse|Response {
+    public function guest(Request $request, IAR $iaR, IRR $irR, IR $iR, UCR $ucR, UIR $uiR, 
+        #[RouteArgument('page')] $page = 1, #[RouteArgument('status')] $status = 0): \Yiisoft\DataResponse\DataResponse|Response {
         $query_params = $request->getQueryParams();
         /**
          * @var string $query_params['page']
          */
-        $page = $query_params['page'] ?? $page;
+        $pageMixed = $query_params['page'] ?? $page;
         
-        //status 0 => 'all';
-        $status = (int) $status;
         /**
          * @var string|null $query_params['sort']
          */
@@ -1784,10 +1784,10 @@ final class InvController {
                     }
                     $paginator = (new DataOffsetPaginator($invs))
                         ->withPageSize(null!== $userInvListLimit ? $userInvListLimit : 10)
-                        ->withCurrentPage((int)$page)
-                        ->withToken(PageToken::next($page));   
+                        ->withCurrentPage((int)$pageMixed)
+                        ->withToken(PageToken::next((string)$pageMixed));   
                     $inv_statuses = $iR->getStatuses($this->translator);
-                    $label = $iR->getSpecificStatusArrayLabel((string) $status);
+                    $label = $iR->getSpecificStatusArrayLabel((string)$status);
                     $parameters = [
                         'alert' => $this->alert(),
                         'decimal_places' => (int)$this->sR->get_setting('tax_rate_decimal_places'),
@@ -1810,7 +1810,7 @@ final class InvController {
                         // numbered tiles between the arrrows                
                         'maxNavLinkCount' => 10,
                         'inv_statuses' => $inv_statuses,
-                        'page' => $page,
+                        'page' => (string) $pageMixed,
                         'paginator' => $paginator,
                         // Clicking on a grid column sort hyperlink will generate a url query_param eg. ?sort=
                         'sortOrder' => $query_params['sort'] ?? '',
@@ -2016,7 +2016,7 @@ final class InvController {
 
     /**
      * @param IR $iR
-     * @param int $status
+     * @param mixed $status
      * @param array $user_clients
      * @param Sort $sort
      *
@@ -2024,8 +2024,8 @@ final class InvController {
      *
      * @psalm-return \Yiisoft\Data\Reader\SortableDataInterface&\Yiisoft\Data\Reader\DataReaderInterface<int, Inv>
      */
-    private function invs_status_with_sort_guest(IR $iR, int $status, array $user_clients, Sort $sort): \Yiisoft\Data\Reader\SortableDataInterface {
-        $invs = $iR->repoGuest_Clients_Post_Draft($status, $user_clients)
+    private function invs_status_with_sort_guest(IR $iR, mixed $status, array $user_clients, Sort $sort): \Yiisoft\Data\Reader\SortableDataInterface {
+        $invs = $iR->repoGuest_Clients_Post_Draft((int)$status, $user_clients)
                 ->withSort($sort);
         return $invs;
     }
