@@ -26,11 +26,10 @@ use Yiisoft\Data\Paginator\PageToken;
 use Yiisoft\Data\Paginator\OffsetPaginator;
 use Yiisoft\FormModel\FormHydrator;
 use Yiisoft\Http\Method;
-use Yiisoft\Router\CurrentRoute;
+use Yiisoft\Router\HydratorAttribute\RouteArgument;
 use Yiisoft\Session\SessionInterface as Session;
 use Yiisoft\Session\Flash\Flash;
 use Yiisoft\Translator\TranslatorInterface;
-use Yiisoft\Validator\ValidatorInterface;
 use Yiisoft\Yii\View\ViewRenderer;
 
 use \Exception;
@@ -122,15 +121,13 @@ final class <?= $generator->getCamelcase_capital_name(); ?>Controller
         ]);
     }
         
-    public function index(CurrentRoute $currentRoute, 
-                          <?= $generator->getCamelcase_capital_name(); ?>Repository $<?= $generator->getSmall_singular_name(); ?>Repository, 
-                          SettingRepository $settingRepository): Response
+    public function index(<?= $generator->getCamelcase_capital_name(); ?>Repository $<?= $generator->getSmall_singular_name(); ?>Repository, 
+                          SettingRepository $settingRepository, #[RouteArgument('page')] int $page = 1): Response
     {      
-      $page = $currentRoute->getArgument('page', '1');
       $<?= $generator->getSmall_singular_name(); ?> = $<?= $generator->getSmall_singular_name(); ?>Repository->findAllPreloaded();
       $paginator = (new OffsetPaginator($<?= $generator->getSmall_singular_name(); ?>))
       ->withPageSize((int) $settingRepository->get_setting('default_list_limit'))
-      ->withCurrentPage((int)$page)
+      ->withCurrentPage($page)
       ->withToken(PageToken::next((string)$page));
       $parameters = [
       '<?= $generator->getSmall_singular_name(); ?>s' => $this-><?= $generator->getSmall_singular_name(); ?>s($<?= $generator->getSmall_singular_name(); ?>Repository),
@@ -143,14 +140,14 @@ final class <?= $generator->getCamelcase_capital_name(); ?>Controller
     }
     
     /**
-     * @param CurrentRoute $currentRoute
      * @param <?= $generator->getCamelcase_capital_name(); ?>Repository $<?= $generator->getSmall_singular_name();?>Repository
+     * @param int $id
      * @return Response
      */
-    public function delete(CurrentRoute $currentRoute,<?= $generator->getCamelcase_capital_name(); ?>Repository $<?= $generator->getSmall_singular_name();?>Repository 
+    public function delete(<?= $generator->getCamelcase_capital_name(); ?>Repository $<?= $generator->getSmall_singular_name();?>Repository, #[RouteArgument('id')] int $id 
     ): Response {
         try {
-            $<?= $generator->getSmall_singular_name();?> = $this-><?= $generator->getSmall_singular_name();?>($currentRoute, $<?= $generator->getSmall_singular_name();?>Repository);
+            $<?= $generator->getSmall_singular_name();?> = $this-><?= $generator->getSmall_singular_name();?>($id, $<?= $generator->getSmall_singular_name();?>Repository);
             if ($<?= $generator->getSmall_singular_name();?>) {
                 $this-><?= $generator->getSmall_singular_name();?>Service->delete<?= $generator->getCamelcase_capital_name(); ?>($<?= $generator->getSmall_singular_name();?>);               
                 $this->flash_message('info', $this->translator->translate('i.record_successfully_deleted'));
@@ -164,7 +161,6 @@ final class <?= $generator->getCamelcase_capital_name(); ?>Controller
     }
         
     public function edit(Request $request, 
-                         CurrentRoute $currentRoute, 
                          FormHydrator $formHydrator,
         <?php if ($generator->getCamelcase_capital_name()) {  
             echo $generator->getCamelcase_capital_name().'Repository '. '$'.$generator->getSmall_singular_name().'Repository,';
@@ -176,15 +172,14 @@ final class <?= $generator->getCamelcase_capital_name(); ?>Controller
         foreach ($relations as $relation) {
             $rel .= '                        '.$relation->getCamelcase_name().'Repository $'.$relation->getLowercase_name().'Repository,'."\n";
         }
-        echo rtrim($rel,",\n")."\n";
-        ?>
-    ): Response {
-        $<?= $generator->getSmall_singular_name(); ?> = $this-><?= $generator->getSmall_singular_name(); ?>($currentRoute, $<?= $generator->getSmall_singular_name(); ?>Repository);
+        echo rtrim($rel,",\n");
+        ?>#[RouteArgument('id')] int $id): Response {
+        $<?= $generator->getSmall_singular_name(); ?> = $this-><?= $generator->getSmall_singular_name(); ?>($id, $<?= $generator->getSmall_singular_name(); ?>Repository);
         if ($<?= $generator->getSmall_singular_name(); ?>){
             $form = new Form($<?= $generator->getSmall_singular_name(); ?>);
             $parameters = [
                 'title' => $this->translator->translate('i.edit'),
-                'action' => ['<?= $generator->getSmall_singular_name(); ?>/edit', ['id' => $<?= $generator->getSmall_singular_name();?>->getId()]],
+                'action' => ['<?= $generator->getSmall_singular_name(); ?>/edit', ['id' => $id]],
                 'errors' => [],
                 'form' => $form,
                 <?php
@@ -228,15 +223,14 @@ final class <?= $generator->getCamelcase_capital_name(); ?>Controller
     
     //For rbac refer to AccessChecker    
     
-    /**
-     * @param CurrentRoute $currentRoute
+    /**     
      * @param <?= $generator->getCamelcase_capital_name();?>Repository $<?= $generator->getSmall_singular_name();?>Repository
+     * @param int $id
      * @return <?= $generator->getCamelcase_capital_name();?>|null
      */
-    private function <?= $generator->getSmall_singular_name();?>(CurrentRoute $currentRoute,<?= $generator->getCamelcase_capital_name();?>Repository $<?= $generator->getSmall_singular_name();?>Repository) : <?= $generator->getCamelcase_capital_name();?>|null
+    private function <?= $generator->getSmall_singular_name();?>(<?= $generator->getCamelcase_capital_name();?>Repository $<?= $generator->getSmall_singular_name();?>Repository, int $id) : <?= $generator->getCamelcase_capital_name();?>|null
     {
-        $id = $currentRoute->getArgument('id');       
-        if (null!==$id) {
+        if ($id) {
             $<?= $generator->getSmall_singular_name();?> = $<?= $generator->getSmall_singular_name();?>Repository->repo<?= $generator->getCamelcase_capital_name();?>Loadedquery($id);
             return $<?= $generator->getSmall_singular_name();?>;
         }
@@ -255,21 +249,20 @@ final class <?= $generator->getCamelcase_capital_name(); ?>Controller
     }
         
     /**
-     * @param CurrentRoute $currentRoute
      * @param <?= $generator->getCamelcase_capital_name(); ?>Repository $<?= $generator->getSmall_singular_name(); ?>Repository
      * @param SettingRepository $settingRepository
+     * @param int id
      * @return \Yiisoft\DataResponse\DataResponse|Response
      */
-    public function view(CurrentRoute $currentRoute,
-                         <?= $generator->getCamelcase_capital_name(); ?>Repository $<?= $generator->getSmall_singular_name();?>Repository) 
+    public function view(<?= $generator->getCamelcase_capital_name(); ?>Repository $<?= $generator->getSmall_singular_name();?>Repository, #[RouteArgument('id')] int $id) 
                          : \Yiisoft\DataResponse\DataResponse|Response 
     {
-        $<?= $generator->getSmall_singular_name(); ?> = $this-><?= $generator->getSmall_singular_name(); ?>($currentRoute, $<?= $generator->getSmall_singular_name(); ?>Repository); 
+        $<?= $generator->getSmall_singular_name(); ?> = $this-><?= $generator->getSmall_singular_name(); ?>($id, $<?= $generator->getSmall_singular_name(); ?>Repository); 
         if ($<?= $generator->getSmall_singular_name(); ?>) {
             $form = new Form($<?= $generator->getSmall_singular_name(); ?>);
             $parameters = [
                 'title' => $this->translator->translate('i.view'),
-                'action' => ['<?= $generator->getSmall_singular_name(); ?>/view', ['id' => $<?= $generator->getSmall_singular_name();?>->getId()]],
+                'action' => ['<?= $generator->getSmall_singular_name(); ?>/view', ['id' => $id]],
                 'form' => $form,
                 '<?= $generator->getSmall_singular_name();?>'=>$<?= $generator->getSmall_singular_name();?>,
             ];        
