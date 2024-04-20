@@ -1455,9 +1455,10 @@ final class QuoteController
      * @param CurrentRoute $currentRoute
      * @param sR $sR
      * @param UCR $ucR
-     * @return \Yiisoft\DataResponse\DataResponse
+     * @return \Yiisoft\DataResponse\DataResponse|Response
      */
-    public function index(Request $request, QAR $qaR, QR $quoteRepo, CR $clientRepo, GR $groupRepo, SOR $soR, CurrentRoute $currentRoute, sR $sR, UCR $ucR): \Yiisoft\DataResponse\DataResponse
+    public function index(Request $request, QAR $qaR, QR $quoteRepo, CR $clientRepo, GR $groupRepo, SOR $soR, CurrentRoute $currentRoute, sR $sR, UCR $ucR)
+            : \Yiisoft\DataResponse\DataResponse|Response
     {
         // build the quote
         $quote = new Quote();
@@ -1474,72 +1475,77 @@ final class QuoteController
         // If the language dropdown changes
         $this->session->set('_language', $currentRoute->getArgument('_language'));
         $active_clients = $ucR->getClients_with_user_accounts();
-        $clients = $clientRepo->repoUserClient($active_clients);
-        $optionsDataActive = [];
-        /**
-         * @var \App\Invoice\Entity\Client $client
-         */
-        foreach ($clients as $client) {
-            $client_id = $client->getClient_id();
-            if (null!==$client_id) {
-                $optionsDataActive[$client_id] = $client->getClient_full_name();
-            }    
-        }
-        $query_params = $request->getQueryParams();
-        /**
-         * @var string $query_params['page']
-         */
-        $page = $query_params['page'] ?? $currentRoute->getArgument('page', '1');
-        //status 0 => 'all';
-        $status = (int)$currentRoute->getArgument('status','0');
-       /** @var string $query_params['sort'] */
-        $sort_string = $query_params['sort'] ?? '-id';
-        $order =  OrderHelper::stringToArray($sort_string);
-        $sort = Sort::only(['id','status_id','number','date_created','date_expires','client_id'])
-                    // (@see vendor\yiisoft\data\src\Reader\Sort
-                    // - => 'desc'  so -id => default descending on id
-                    // Show the latest quotes first => -id                 
-                    ->withOrder($order);
-        $quotes = $this->quotes_status_with_sort($quoteRepo, $status, $sort);
-        if (isset($query_params['filterQuoteNumber']) && !empty($query_params['filterQuoteNumber'])) {
-                $quotes = $quoteRepo->filterQuoteNumber((string)$query_params['filterQuoteNumber']);
-        }
-        if (isset($query_params['filterQuoteAmountTotal']) && !empty($query_params['filterQuoteAmountTotal'])) {
-            $quotes = $quoteRepo->filterQuoteAmountTotal((string)$query_params['filterQuoteAmountTotal']);
-        }
-        if ((isset($query_params['filterQuoteNumber']) && !empty($query_params['filterQuoteNumber'])) && 
-           (isset($query_params['filterQuoteAmountTotal']) && !empty($query_params['filterQuoteAmountTotal']))) {
-            $quotes = $quoteRepo->filterQuoteNumberAndQuoteAmountTotal((string)$query_params['filterQuoteNumber'], (float)$query_params['filterQuoteAmountTotal']);
-        } 
-        $paginator = (new DataOffsetPaginator($quotes))
-        ->withPageSize((int)$this->sR->get_setting('default_list_limit'))
-        ->withCurrentPage((int)$page)
-        ->withSort($sort)            
-        ->withToken(PageToken::next((string)$page));    
-        $quote_statuses = $quoteRepo->getStatuses($this->translator);
-        $parameters = [
-            'status' => $status,
-            'paginator' => $paginator,
-            'sortOrder' => $query_params['sort'] ?? '', 
-            'alert' => $this->alert(),
-            'client_count' => $clientRepo->count(),
-            'optionsDataClientsDropdownFilter' => $this->optionsDataClients($quoteRepo),
-            'grid_summary' => $sR->grid_summary(
-                $paginator, 
-                $this->translator, 
-                (int)$sR->get_setting('default_list_limit'), 
-                $this->translator->translate('invoice.quotes'), 
-                $quoteRepo->getSpecificStatusArrayLabel((string)$status)
-            ),
-            'defaultPageSizeOffsetPaginator' => $this->sR->get_setting('default_list_limit')
-                                                    ? (int)$this->sR->get_setting('default_list_limit') : 1,
-            'quote_statuses' => $quote_statuses,
-            'max' => (int)$sR->get_setting('default_list_limit'),
-            'qaR' => $qaR,
-            'soR' => $soR,
-            'modal_add_quote' => $bootstrap5ModalQuote->renderPartialLayoutWithFormAsString('quote', [])
-        ];  
-        return $this->view_renderer->render('/invoice/quote/index', $parameters);  
+        if (!$active_clients == []) {
+            $clients = $clientRepo->repoUserClient($active_clients);
+            $optionsDataActive = [];
+            /**
+             * @var \App\Invoice\Entity\Client $client
+             */
+            foreach ($clients as $client) {
+                $client_id = $client->getClient_id();
+                if (null!==$client_id) {
+                    $optionsDataActive[$client_id] = $client->getClient_full_name();
+                }    
+            }
+            $query_params = $request->getQueryParams();
+            /**
+             * @var string $query_params['page']
+             */
+            $page = $query_params['page'] ?? $currentRoute->getArgument('page', '1');
+            //status 0 => 'all';
+            $status = (int)$currentRoute->getArgument('status','0');
+           /** @var string $query_params['sort'] */
+            $sort_string = $query_params['sort'] ?? '-id';
+            $order =  OrderHelper::stringToArray($sort_string);
+            $sort = Sort::only(['id','status_id','number','date_created','date_expires','client_id'])
+                        // (@see vendor\yiisoft\data\src\Reader\Sort
+                        // - => 'desc'  so -id => default descending on id
+                        // Show the latest quotes first => -id                 
+                        ->withOrder($order);
+            $quotes = $this->quotes_status_with_sort($quoteRepo, $status, $sort);
+            if (isset($query_params['filterQuoteNumber']) && !empty($query_params['filterQuoteNumber'])) {
+                    $quotes = $quoteRepo->filterQuoteNumber((string)$query_params['filterQuoteNumber']);
+            }
+            if (isset($query_params['filterQuoteAmountTotal']) && !empty($query_params['filterQuoteAmountTotal'])) {
+                $quotes = $quoteRepo->filterQuoteAmountTotal((string)$query_params['filterQuoteAmountTotal']);
+            }
+            if ((isset($query_params['filterQuoteNumber']) && !empty($query_params['filterQuoteNumber'])) && 
+               (isset($query_params['filterQuoteAmountTotal']) && !empty($query_params['filterQuoteAmountTotal']))) {
+                $quotes = $quoteRepo->filterQuoteNumberAndQuoteAmountTotal((string)$query_params['filterQuoteNumber'], (float)$query_params['filterQuoteAmountTotal']);
+            } 
+            $paginator = (new DataOffsetPaginator($quotes))
+            ->withPageSize((int)$this->sR->get_setting('default_list_limit'))
+            ->withCurrentPage((int)$page)
+            ->withSort($sort)            
+            ->withToken(PageToken::next((string)$page));    
+            $quote_statuses = $quoteRepo->getStatuses($this->translator);
+            $parameters = [
+                'status' => $status,
+                'paginator' => $paginator,
+                'sortOrder' => $query_params['sort'] ?? '', 
+                'alert' => $this->alert(),
+                'client_count' => $clientRepo->count(),
+                'optionsDataClientsDropdownFilter' => $this->optionsDataClients($quoteRepo),
+                'grid_summary' => $sR->grid_summary(
+                    $paginator, 
+                    $this->translator, 
+                    (int)$sR->get_setting('default_list_limit'), 
+                    $this->translator->translate('invoice.quotes'), 
+                    $quoteRepo->getSpecificStatusArrayLabel((string)$status)
+                ),
+                'defaultPageSizeOffsetPaginator' => $this->sR->get_setting('default_list_limit')
+                                                        ? (int)$this->sR->get_setting('default_list_limit') : 1,
+                'quote_statuses' => $quote_statuses,
+                'max' => (int)$sR->get_setting('default_list_limit'),
+                'qaR' => $qaR,
+                'soR' => $soR,
+                'modal_add_quote' => $bootstrap5ModalQuote->renderPartialLayoutWithFormAsString('quote', [])
+            ];  
+            return $this->view_renderer->render('/invoice/quote/index', $parameters);
+        } else {
+            $this->flash_message('info', $this->translator->translate('invoice.user.client.active.no'));
+            return $this->web_service->getRedirectResponse('client/index');
+        }        
     }
         
     /**
