@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Invoice\Spreadsheet\Import;
+namespace App\Invoice\Import;
 
 use App\Service\WebControllerService;
 use App\User\UserService;

@@ -74,8 +74,7 @@ use App\Invoice\Report\ReportController;
 use App\Invoice\SalesOrder\SalesOrderController;
 use App\Invoice\SalesOrderItem\SalesOrderItemController;
 use App\Invoice\Setting\SettingController;
-use App\Invoice\Spreadsheet\Export\ExportController;
-use App\Invoice\Spreadsheet\Import\ImportController;
+use App\Invoice\Import\ImportController;
 use App\Invoice\Sumex\SumexController;
 use App\Invoice\Task\TaskController;
 use App\Invoice\TaxRate\TaxRateController;
@@ -650,11 +649,6 @@ return [
       ->middleware(fn(AccessChecker $checker) => $checker->withPermission('editInv'))
       ->middleware(Authentication::class)
       ->action([EmailTemplateController::class, 'view']),
-      Route::methods([Method::GET, Method::POST], '/export/blankclientsheet_ods')
-      ->name('export/blankclientsheet_ods')
-      ->middleware(fn(AccessChecker $checker) => $checker->withPermission('editInv'))
-      ->middleware(Authentication::class)
-      ->action([ExportController::class, 'blankclientsheet_ods']),       
       Route::get('/family[/page/{page:\d+}]')
       ->middleware(fn(AccessChecker $checker) => $checker->withPermission('editInv'))
       ->middleware(Authentication::class)
