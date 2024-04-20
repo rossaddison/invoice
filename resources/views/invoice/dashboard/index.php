@@ -161,7 +161,7 @@
                         <?php foreach ($quotes as $quote) { ?>
                             <tr>
                                 <td>
-                                <span class="label
+                                <span class="label label-
                                 <?= $quote_statuses[$quote->getStatus_id()]['class']; ?>">
                                     <?= $quote_statuses[$quote->getStatus_id()]['label']; ?>
                                 </span>
@@ -231,7 +231,7 @@
                             } ?>
                             <tr>
                                 <td>
-                                    <span class="label <?= $invoice_statuses[$invoice->getStatus_id()]['class']; ?>">
+                                    <span class="label label-<?= $invoice_statuses[$invoice->getStatus_id()]['class']; ?>">
                                         <?= $invoice_statuses[$invoice->getStatus_id()]['label'];
                                         if (null!==$iaR->repoCreditInvoicequery((string)$invoice->getId())) { ?>
                                             &nbsp;<i class="fa fa-credit-invoice" title="<?= $translator->translate('i.credit_invoice') ?>"></i>

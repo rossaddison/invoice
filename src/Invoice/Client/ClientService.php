@@ -30,6 +30,7 @@ final class ClientService
         $datehelper = new DateHelper($s);
         isset($body['client_name']) ? $model->setClient_name((string)$body['client_name']) : '';
         isset($body['client_surname']) ? $model->setClient_surname((string)$body['client_surname']): '';
+        isset($body['client_frequency']) ? $model->setClient_frequency((string)$body['client_frequency']): '';
         isset($body['client_group']) ? $model->setClient_group((string)$body['client_group']): '';
         isset($body['client_number']) ? $model->setClient_number((string)$body['client_number']): '';
         isset($body['client_address_1']) ? $model->setClient_address_1((string)$body['client_address_1']): '';

@@ -26,8 +26,13 @@ use App\User\UserService;
 // Yii
 use Yiisoft\Aliases\Aliases;
 use Yiisoft\Arrays\ArrayHelper;
+use Yiisoft\Cache\ArrayCache;
 use Yiisoft\Data\Paginator\OffsetPaginator;
 use Yiisoft\DataResponse\DataResponseFactoryInterface;
+use Yiisoft\Db\Cache\SchemaCache;
+use Yiisoft\Db\Mysql\Connection;
+use Yiisoft\Db\Mysql\Driver;
+use Yiisoft\Db\Mysql\Dsn;
 use Yiisoft\Files\FileHelper;
 use Yiisoft\Http\Method;
 use Yiisoft\Json\Json;
@@ -114,7 +119,6 @@ final class SettingController
     
     /**
      * @param Request $request
-     * @param FormHydrator $formHydrator
      * @param ViewRenderer $head
      * @param ER $eR
      * @param GR $gR
@@ -123,8 +127,7 @@ final class SettingController
      * @param TR $tR
      * @return Response
      */
-    public function tab_index(Request $request, 
-                              FormHydrator $formHydrator, 
+    public function tab_index(Request $request,
                               ViewRenderer $head,
                               CFR $cfR,
                               ER $eR, 
@@ -232,6 +235,10 @@ final class SettingController
                 'countries'=>$countries->get_country_list((string)$this->session->get('_language')),
                 'sender_identifier_array'=>StoreCoveArrays::store_cove_sender_identifier_array(),
             ]),
+            'invoiceplane'=>$this->viewRenderer->renderPartialAsString('/invoice/setting/views/partial_settings_invoiceplane',[
+                'actionTestConnection' => ['import/testconnection',['_language' => 'en']],
+                'actionImport' => ['import/invoiceplane',['_language' => 'en']],
+            ])
         ];
         if ($request->getMethod() === Method::POST) {
             $body = $request->getParsedBody();
@@ -669,5 +676,30 @@ final class SettingController
                'cronkey'=>Random::string(32)
         ];
         return $this->factory->createResponse(Json::encode($parameters));     
+    }
+    
+    private function invoiceplaneConnected() : bool
+    {
+        $settingInvoiceplaneName = $this->s->get_setting('invoiceplane_database_name');
+        $settingInvoiceplaneUsername = $this->s->get_setting('invoiceplane_database_username');
+        $settingInvoiceplanePassword = $this->s->get_setting('invoiceplane_database_password') ?: '';
+        if (strlen($settingInvoiceplaneName) > 0 && strlen($settingInvoiceplaneUsername) > 0)
+        {
+            $dsn = (new Dsn(
+                'mysql', 
+                '127.0.0.1', 
+                $settingInvoiceplaneName, 
+                '3306', 
+                [
+                    'charset' => 'utf8mb4'
+                ])
+            )->asString();
+            $arrayCache = new ArrayCache();
+            $schemaCache = new SchemaCache($arrayCache);
+            $pdoDriver = new Driver($dsn, $settingInvoiceplaneUsername, $settingInvoiceplanePassword); 
+            new Connection($pdoDriver, $schemaCache);
+            return true;
+        }
+        return false;
     }
 }

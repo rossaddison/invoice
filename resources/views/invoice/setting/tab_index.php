@@ -59,6 +59,9 @@ echo $alert;
     <li>
         <a data-toggle="tab" href="#settings-storecove" style="text-decoration: none"><?= $translator->translate('invoice.invoice.storecove'); ?></a>
     </li>
+    <li>
+        <a data-toggle="tab" href="#settings-invoiceplane" style="text-decoration: none"><?= $translator->translate('invoice.invoice.invoiceplane'); ?></a>
+    </li>
 </ul>
 
 <form method="post" id="form-settings" action="<?= $urlGenerator->generate(...$action) ?>"  enctype="multipart/form-data">
@@ -119,6 +122,10 @@ echo $alert;
             
             <div id="settings-storecove" class="tab-pane">
                 <?= $storecove; ?>
+            </div>
+            
+            <div id="settings-invoiceplane" class="tab-pane">
+                <?= $invoiceplane; ?>
             </div>
 
         </div>

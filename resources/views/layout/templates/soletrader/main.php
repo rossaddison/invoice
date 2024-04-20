@@ -150,9 +150,14 @@ $this->setTitle($title);
                         ]
                     ],
                     [
-                        'label' => str_repeat(' ',1).$translator->translate('i.language'),
+                        'label' => '',
                         'url' => '#',
-                        'linkOptions' => ['class' => 'bi bi-translate'],
+                        'linkOptions' => [
+                            'class' => 'bi bi-translate',
+                            'style' => 'font-size: 1rem; color: cornflowerblue;',
+                            'data-bs-toggle' => 'dropdown',
+                            'title' => $translator->translate('i.language')
+                        ],    
                         'items' => [
                             [
                         'label' => 'Afrikaans',                                

@@ -42,7 +42,6 @@ use App\Invoice\FromDropDown\FromDropDownController;
 use App\Invoice\Generator\GeneratorController;
 use App\Invoice\GeneratorRelation\GeneratorRelationController;
 use App\Invoice\Group\GroupController;
-use App\Invoice\Import\ImportController;
 use App\Invoice\InvoiceController;
 use App\Invoice\Inv\InvController;
 use App\Invoice\InvAllowanceCharge\InvAllowanceChargeController;
@@ -75,6 +74,8 @@ use App\Invoice\Report\ReportController;
 use App\Invoice\SalesOrder\SalesOrderController;
 use App\Invoice\SalesOrderItem\SalesOrderItemController;
 use App\Invoice\Setting\SettingController;
+use App\Invoice\Spreadsheet\Export\ExportController;
+use App\Invoice\Spreadsheet\Import\ImportController;
 use App\Invoice\Sumex\SumexController;
 use App\Invoice\Task\TaskController;
 use App\Invoice\TaxRate\TaxRateController;
@@ -649,6 +650,11 @@ return [
       ->middleware(fn(AccessChecker $checker) => $checker->withPermission('editInv'))
       ->middleware(Authentication::class)
       ->action([EmailTemplateController::class, 'view']),
+      Route::methods([Method::GET, Method::POST], '/export/blankclientsheet_ods')
+      ->name('export/blankclientsheet_ods')
+      ->middleware(fn(AccessChecker $checker) => $checker->withPermission('editInv'))
+      ->middleware(Authentication::class)
+      ->action([ExportController::class, 'blankclientsheet_ods']),       
       Route::get('/family[/page/{page:\d+}]')
       ->middleware(fn(AccessChecker $checker) => $checker->withPermission('editInv'))
       ->middleware(Authentication::class)
@@ -866,7 +872,22 @@ return [
       ->name('group/view')
       ->middleware(fn(AccessChecker $checker) => $checker->withPermission('editInv'))
       ->middleware(Authentication::class)
-      ->action([GroupController::class, 'view']),
+      ->action([GroupController::class, 'view']),     
+      Route::methods([Method::GET, Method::POST], '/import/index')
+      ->name('import/index')
+      ->middleware(fn(AccessChecker $checker) => $checker->withPermission('editInv'))
+      ->middleware(Authentication::class)
+      ->action([ImportController::class, 'index']),
+       Route::methods([Method::GET, Method::POST], '/import/testconnection')
+      ->name('import/testconnection')
+      ->middleware(fn(AccessChecker $checker) => $checker->withPermission('editInv'))
+      ->middleware(Authentication::class)
+      ->action([ImportController::class, 'testConnection']),        
+      Route::methods([Method::GET, Method::POST], '/import/invoiceplane')
+      ->name('import/invoiceplane')
+      ->middleware(fn(AccessChecker $checker) => $checker->withPermission('editInv'))
+      ->middleware(Authentication::class)
+      ->action([ImportController::class, 'invoiceplane']),     
       Route::get('/inv[/page/{page:\d+}[/status/{status:\d+}]]')
       ->middleware(fn(AccessChecker $checker) => $checker->withPermission('editInv'))
       ->middleware(Authentication::class)
@@ -1498,31 +1519,6 @@ return [
       ->middleware(fn(AccessChecker $checker) => $checker->withPermission('editInv'))
       ->middleware(Authentication::class)
       ->action([ProjectController::class, 'view']),
-      Route::get('/import')
-      ->middleware(fn(AccessChecker $checker) => $checker->withPermission('editInv'))
-      ->middleware(Authentication::class)
-      ->action([ImportController::class, 'index'])
-      ->name('import/index'),
-      Route::methods([Method::GET, Method::POST], '/import/add')
-      ->middleware(fn(AccessChecker $checker) => $checker->withPermission('editInv'))
-      ->middleware(Authentication::class)
-      ->action([ImportController::class, 'add'])
-      ->name('import/add'),
-      Route::methods([Method::GET, Method::POST], '/import/edit/{id}')
-      ->name('import/edit')
-      ->middleware(fn(AccessChecker $checker) => $checker->withPermission('editInv'))
-      ->middleware(Authentication::class)
-      ->action([ImportController::class, 'edit']),
-      Route::methods([Method::GET, Method::POST], '/import/delete/{id}')
-      ->name('import/delete')
-      ->middleware(fn(AccessChecker $checker) => $checker->withPermission('editInv'))
-      ->middleware(Authentication::class)
-      ->action([ImportController::class, 'delete']),
-      Route::methods([Method::GET, Method::POST], '/import/view/{id}')
-      ->name('import/view')
-      ->middleware(fn(AccessChecker $checker) => $checker->withPermission('editInv'))
-      ->middleware(Authentication::class)
-      ->action([ImportController::class, 'view']),
       Route::get('/merchant')
       ->middleware(fn(AccessChecker $checker) => $checker->withPermission('editInv'))
       ->middleware(Authentication::class)

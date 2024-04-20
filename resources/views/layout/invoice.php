@@ -185,8 +185,17 @@ $this->beginPage();
           ->items(
             $isGuest ? [] :
               [
-              ['label' => $translator->translate('i.dashboard'), 'url' => $urlGenerator->generate('invoice/dashboard')],
+              ['label' => '',
+               'url' => $urlGenerator->generate('invoice/dashboard'),
+               'linkOptions' => [
+                    'class' => 'fa fa-dashboard',
+                    'style' => 'font-size: 2rem; color: cornflowerblue;',
+                    'data-bs-toggle' => 'tooltip',
+                    'title' => $translator->translate('i.dashboard')
+                ],      
+              ],
               ['label' => $translator->translate('invoice.peppol.abbreviation'),
+                  
                 'items' => [
                   ['options' => ['class' => 'nav fs-4'], 'label' => $translator->translate('invoice.invoice.allowance.or.charge.add'), 'url' => $urlGenerator->generate('allowancecharge/index')],
                   ['options' => ['class' => 'nav fs-4'], 'label' => $translator->translate('invoice.peppol.store.cove.1.1.1'), 'url' => 'https://www.storecove.com/register/'],
@@ -195,8 +204,14 @@ $this->beginPage();
                   ['options' => ['class' => 'nav fs-4'], 'label' => $translator->translate('invoice.peppol.store.cove.1.1.4'), 'url' => $urlGenerator->generate('invoice/store_cove_send_test_json_invoice')],
                 ],
               ],
-              ['label' => $translator->translate('i.client'),
-                'items' => [
+              ['label' => '',
+               'linkOptions' => [
+                    'class' => 'bi bi-people',
+                    'style' => 'font-size: 2rem; color: cornflowerblue;',
+                    'data-bs-toggle' => 'dropdown',
+                    'title' => $translator->translate('i.client')
+                ],      
+               'items' => [
                   ['options' => ['class' => 'nav fs-4'], 'label' => $translator->translate('invoice.client.add'), 'url' => $urlGenerator->generate('client/add', ['origin' => 'main'])],
                   ['options' => ['class' => 'nav fs-4'], 'label' => $translator->translate('invoice.client.view'), 'url' => $urlGenerator->generate('client/index')],
                   ['options' => ['class' => 'nav fs-4'], 'label' => $translator->translate('invoice.client.note.add'), 'url' => $urlGenerator->generate('clientnote/add')],
@@ -222,7 +237,13 @@ $this->beginPage();
                   ['options' => ['class' => 'nav fs-4'], 'label' => $translator->translate('i.recurring'), 'url' => $urlGenerator->generate('invrecurring/index')],
                 ],
               ],
-              ['label' => $translator->translate('i.payment'),
+              ['label' => '',
+               'linkOptions' => [
+                    'class' => 'bi bi-coin',
+                    'style' => 'font-size: 2rem; color: cornflowerblue;',
+                    'data-bs-toggle' => 'dropdown',
+                    'title' => $translator->translate('i.payment')
+                ],      
                 'items' => [
                   ['options' => ['class' => 'nav fs-4'], 'label' => $translator->translate('i.enter_payment'), 'url' => $urlGenerator->generate('payment/add')],
                   ['options' => ['class' => 'nav fs-4'], 'label' => $translator->translate('i.view'), 'url' => $urlGenerator->generate('payment/index')],
@@ -261,7 +282,13 @@ $this->beginPage();
                   ['options' => ['class' => 'nav fs-4'], 'label' => $translator->translate('i.invoice_aging'), 'url' => $urlGenerator->generate('report/invoice_aging_index')],
                 ],
               ],
-              ['label' => $translator->translate('i.settings'),
+              ['label' => '',
+                'linkOptions' => [
+                    'class' => 'fa fa-cogs',
+                    'style' => 'font-size: 2rem; color: cornflowerblue;',
+                    'data-bs-toggle' => 'dropdown',
+                    'title' => $translator->translate('i.settings')
+                ],  
                 'items' => [['options' => ['class' => 'nav fs-4 ajax-loader'], 'label' => $translator->translate('i.view'), 'options' => ['style' => 'background-color: #ffcccb'], 'url' => $urlGenerator->generate('setting/debug_index'), 'visible' => $debugMode],
                   ['options' => ['class' => 'nav fs-4'], 'label' => $translator->translate('invoice.setting.add'), 'options' => ['style' => 'background-color: #ffcccb'], 'url' => $urlGenerator->generate('setting/add'), 'visible' => $debugMode],
                   ['options' => ['class' => 'nav fs-4'], 'label' => $translator->translate('i.view'), 'url' => $urlGenerator->generate('setting/tab_index')],
@@ -440,7 +467,13 @@ $this->beginPage();
           ->items(
             [
               [
-                'label' => $translator->translate('i.language'),
+                'label' => '',
+                'linkOptions' => [
+                    'class' => 'bi bi-translate',
+                    'style' => 'font-size: 2rem; color: cornflowerblue;',
+                    'data-bs-toggle' => 'dropdown',
+                    'title' => $translator->translate('i.language')
+                ],    
                 'url' => '#',
                 //'visible' => $isGuest,
                 'items' => [

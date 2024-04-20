@@ -82,7 +82,19 @@ use Yiisoft\Arrays\ArrayHelper;
         'placeholder' => $translator->translate('invoice.client.group'),
         'class' => 'form-control'
     ])
-    ->required(true)        
+    ->required(false)        
+    ->hint($translator->translate('invoice.hint.this.field.is.not.required'));
+?>
+
+<?= Field::select($form, 'client_frequency')
+    ->label($translator->translate('invoice.client.frequency'))
+    ->addInputAttributes([
+        'value' => Html::encode($form->getClient_frequency() ?? ''), 
+        'placeholder' => $translator->translate('invoice.client.frequency'),
+        'class' => 'form-control'
+    ])
+    ->optionsData($optionsDataClientFrequencyDropdownFilter)            
+    ->required(false)        
     ->hint($translator->translate('invoice.hint.this.field.is.not.required'));
 ?>
 

@@ -278,6 +278,8 @@ final class SalesOrderController
             'alert' => $this->alert(),
             'client_count' => $clientRepo->count(),
             'grid_summary' => $sR->grid_summary($paginator, $this->translator, (int)$sR->get_setting('default_list_limit'), $this->translator->translate('invoice.salesorders'), $so_label),        
+            'defaultPageSizeOffsetPaginator' => $this->sR->get_setting('default_list_limit')
+                                                    ? (int)$this->sR->get_setting('default_list_limit') : 1,
             'so_statuses' => $so_statuses,
             'max' =>(int)$sR->get_setting('default_list_limit'),
             'soaR' => $soaR

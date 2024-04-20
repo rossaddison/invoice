@@ -41,6 +41,9 @@ class Client
     #[Column(type: 'string(3)', nullable: true)]
     private ?string $client_group = '';
     
+    #[Column(type: 'string(15)', nullable: true)]
+    private ?string $client_frequency = '';
+    
     #[Column(type: 'text', nullable: true)]
     private ?string $client_address_1 =  '';
      
@@ -127,6 +130,7 @@ class Client
             string $client_name ='',             
             string $client_surname='',
             string $client_group='',
+            string $client_frequency='',
             string $client_number='',
             string $client_address_1='', 
             string $client_address_2='', 
@@ -155,6 +159,7 @@ class Client
         $this->client_name = $client_name;        
         $this->client_surname = $client_surname;
         $this->client_group = $client_group;
+        $this->client_frequency = $client_frequency;
         $this->client_number = $client_number;
         $this->client_address_1 = $client_address_1;
         $this->client_address_2 = $client_address_2;
@@ -190,6 +195,14 @@ class Client
         return $this->id;
     }
     
+    public function setClient_date_created(string $client_date_created) : void
+    {
+        /**
+         * @see ImportController insertClients function
+         */
+        $this->client_date_created =  (new \DateTimeImmutable())->createFromFormat('Y-m-d h:i:s', $client_date_created) ?: new \DateTimeImmutable('now');
+    }    
+    
     public function getClient_date_created(): DateTimeImmutable
     {
         /** @var DateTimeImmutable $this->client_date_created */
@@ -200,6 +213,12 @@ class Client
     {
         /** @var DateTimeImmutable $this->client_date_created */
         return $this->client_date_modified;
+    }
+    
+    // Used in ImportController to import Invoiceplane $client_date_modified
+    public function setClient_date_modified(string $client_date_modified) : void
+    {
+        $this->client_date_modified =  (new \DateTimeImmutable())->createFromFormat('Y-m-d h:i:s', $client_date_modified) ?: new \DateTimeImmutable('now');
     }
     
     public function getClient_full_name() : string
@@ -225,6 +244,16 @@ class Client
     public function setClient_surname(string $client_surname) : void
     {
       $this->client_surname =  $client_surname;
+    }
+    
+    public function getClient_frequency(): ?string
+    {
+       return $this->client_frequency;
+    }
+    
+    public function setClient_frequency(string $client_frequency) : void
+    {
+      $this->client_frequency =  $client_frequency;
     }
     
     public function getClient_group(): ?string

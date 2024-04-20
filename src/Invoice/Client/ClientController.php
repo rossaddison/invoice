@@ -230,6 +230,7 @@ final class ClientController
             'selected_language' => $sR->get_setting('default_language'),
             'datepicker_dropdown_locale_cldr' => $this->session->get('_language') ?? 'en',
             'optionsDataGender' => $this->optionsDataGender(),
+            'optionsDataClientFrequencyDropdownFilter' => $this->optionsDataClientFrequencyDropDownFilter(),
             'postal_address_count' => 0,
             'postaladdresses' => null,
             'countries' => $countries->get_country_list($sR->get_setting('cldr')),
@@ -913,6 +914,20 @@ final class ClientController
         }
         return $optionsDataClientSurname;
     }
+    
+    public function optionsDataClientFrequencyDropdownFilter() : array
+    {
+        $optionsDataClientFrequency = [];
+        $optionsDataClientFrequency['None'] = 'None';
+        $optionsDataClientFrequency['Only 1'] = 'Only 1';
+        $optionsDataClientFrequency['Daily'] = 'Daily';
+        $optionsDataClientFrequency['Weekly'] = 'Weekly';
+        $optionsDataClientFrequency['Monthly'] = 'Monthly';
+        $optionsDataClientFrequency['2 Monthly'] = '2 Monthly';
+        $optionsDataClientFrequency['3 Monthly'] = '3 Monthly';
+        $optionsDataClientFrequency['6 Monthly'] = '6 Monthly';
+        return $optionsDataClientFrequency;
+    }    
     
     /**
      * 

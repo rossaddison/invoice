@@ -14,6 +14,7 @@ final class ClientForm extends FormModel
 {
     private ?string $client_name='';
     private ?string $client_group='';
+    private ?string $client_frequency='';
     private ?string $client_number='';
     private ?string $client_address_1='';
     private ?string $client_address_2='';
@@ -47,6 +48,7 @@ final class ClientForm extends FormModel
     public function __construct(Client $client) { 
         $this->client_name = $client->getClient_name();
         $this->client_group = $client->getClient_group();
+        $this->client_frequency = $client->getClient_frequency();
         $this->client_number = $client->getClient_number();
         $this->client_address_1 = $client->getClient_address_1();
         $this->client_address_2 = $client->getClient_address_2();
@@ -94,6 +96,11 @@ final class ClientForm extends FormModel
     public function getClient_name() : string|null
     {
       return $this->client_name;
+    }
+    
+    public function getClient_frequency() : string|null
+    {
+      return $this->client_frequency;
     }
     
     public function getClient_group() : string|null
