@@ -45,6 +45,7 @@
         "ext-fileinfo": "*",
         "ext-json": "*",
         "ext-curl": "*",
+        "ext-zip": "*",
         "mpdf/mpdf": "^8.0", 
         "digitalbazaar/json-ld": "*",
         "brick/money": "*",
