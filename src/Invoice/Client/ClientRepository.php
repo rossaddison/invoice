@@ -189,10 +189,10 @@ private EntityWriter $entityWriter;
     public function optionsData(UserClientRepository $ucR) : array
     {
         $optionsData = [];
-        /**
-         * @var Client $client
-         */
         if (!$ucR->getClients_with_user_accounts() == []) {
+            /**
+             * @var Client $client
+             */
             foreach ($this->repoUserClient($ucR->getClients_with_user_accounts()) as $client) {
 
                 $optionsData[(int)$client->getClient_id()] = ($client->getClient_name() ?: '') . str_repeat(' ', 3). ($client->getClient_surname() ?? '');
