@@ -24,6 +24,10 @@ Yii3 Invoice
 * Step 2: Ensure C:\ProgramFiles\nodejs is in environment variable path. Search ... edit the system environment variables
 * Step 3: Run ````npm i```` in ````c:\wamp64\invoice```` folder.
 
+**Recommended php.ini settings**
+* Step 1: Wampserver ... Php {version} ... Php Settings ... xdebug.mode = off
+* Step 2:                                               ... Maximum Execution = 240
+
 Adjust c:\wamp64\yii3-i\config\common\params.php file line approx. 193 to **MODE_WRITE_ONLY** for installation.
 This will automatically build up the tables under database yii3-i.
 

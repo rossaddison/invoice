@@ -269,17 +269,17 @@ final class ClientController
                             }
                             // These two can be used to create customised labels for custom field error validation on the form
                             // Currently not used.
-                            $parameters['formCientCustom'] = $formClientCustom; 
+                            $parameters['formClientCustom'] = $formClientCustom; 
                             $parameters['errors_custom'] = $formClientCustom->getValidationResult()->getErrorMessagesIndexedByAttribute();
                         }
-                        $this->flash_message('info', $this->translator->translate('i.record_successfully_created'));
-                        if ($origin == 'main' || $origin == 'add') {
-                            return $this->webService->getRedirectResponse('client/index');
-                        }
-                        if ($origin == 'dashboard') {
-                            return $this->webService->getRedirectResponse('invoice/dashboard');
-                        }
                     }    
+                    $this->flash_message('info', $this->translator->translate('i.record_successfully_created'));
+                    if ($origin == 'main' || $origin == 'add') {
+                        return $this->webService->getRedirectResponse('client/index');
+                    }
+                    if ($origin == 'dashboard') {
+                        return $this->webService->getRedirectResponse('invoice/dashboard');
+                    }   
                 }
             }
             else {
@@ -404,7 +404,8 @@ final class ClientController
                'datehelper' => new DateHelper($sR),
                'client' => $client,
                'form' => $form,
-               'optionsDataGender' => $this->optionsDataGender(), 
+               'optionsDataGender' => $this->optionsDataGender(),
+               'optionsDataClientFrequencyDropdownFilter' => $this->optionsDataClientFrequencyDropDownFilter(),
                'aliases' => new Aliases(['@invoice' => dirname(__DIR__), '@language' => dirname(__DIR__). DIRECTORY_SEPARATOR.'Language']),
                'selected_country' => null!==$selected_country ? $selected_country : $sR->get_setting('default_country'),            
                'selected_language' => null!==$selected_language ? $selected_language : $sR->get_setting('default_language'),
