@@ -37,7 +37,9 @@ private EntityWriter $entityWriter;
      */
     public function findAllPreloaded(): EntityReader
     {
-        $query = $this->select()->load('quote')->load('tax_rate');
+        $query = $this->select()
+                      ->load('quote')
+                      ->load('tax_rate');
         return $this->prepareDataReader($query);
     }
     

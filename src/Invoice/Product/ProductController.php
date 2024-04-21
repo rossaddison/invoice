@@ -195,9 +195,9 @@ class ProductController
                             $parameters['formProductCustom'] = $formProductCustom; 
                             $parameters['errors_custom'] = $formProductCustom->getValidationResult()->getErrorMessagesIndexedByAttribute();
                         }
-                        $this->flash_message('info', $this->translator->translate('i.record_successfully_created'));
-                        return $this->webService->getRedirectResponse('product/index');
-                    }    
+                    }
+                    $this->flash_message('info', $this->translator->translate('i.record_successfully_created'));
+                    return $this->webService->getRedirectResponse('product/index');
                 }
             } else {
                 $parameters['errors'] = $form->getValidationResult()->getErrorMessagesIndexedByAttribute();

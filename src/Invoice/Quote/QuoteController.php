@@ -2766,104 +2766,103 @@ final class QuoteController
                 if ($quote->getSo_id()) { 
                     $so = $soR->repoSalesOrderUnloadedquery($quote->getSo_id());
                     $sales_order_number = $so ? (null!==$so->getNumber() ? $so->getNumber() : '') : '';
-                }    
-                if ($quote_tax_rates) {
-                    $quote_amount = (($qaR->repoQuoteAmountCount((string)$this->session->get('quote_id')) > 0) ? $qaR->repoQuotequery((string)$this->session->get('quote_id')) : null);
-                    if ($quote_amount) {
-                        $quote_custom_values = $this->quote_custom_values((string)$this->session->get('quote_id'), $qcR);
-                        $parameters = [
-                            'title' => $this->translator->translate('i.view'),            
-                            'body' => $this->body($quote), 
-                            'alert'=>$this->alert(),
-                             // Hide buttons on the view if a 'viewInv' user does not have 'editInv' permission
-                            'invEdit' => $this->user_service->hasPermission('editInv') ? true : false,       
-                            // if the quote amount total is greater than zero show the buttons eg. Send email
-                            'quote_amount_total' => $quote_amount->getTotal(), 
-                            'sales_order_number' => $sales_order_number,
-                            'add_quote_item' => $this->view_renderer->renderPartialAsString('/invoice/quoteitem/_item_form',[
-                                'action' => ['quoteitem/add',['_language' => $currentRoute->getArgument('_language')]],
-                                'errors' => [],
-                                'form' => new QuoteItemForm(new QuoteItem(), $quote_id),
-                                'quote_id' => $this->quote($currentRoute, $qR, true),
-                                'tax_rates' => $trR->findAllPreloaded(),
-                                'products' => $pR->findAllPreloaded(),
-                                'units' => $uR->findAllPreloaded(),
-                                'numberhelper' => new NumberHelper($this->sR)
+                }
+                $quote_amount = (($qaR->repoQuoteAmountCount((string)$this->session->get('quote_id')) > 0) ? $qaR->repoQuotequery((string)$this->session->get('quote_id')) : null);
+                if ($quote_amount) {
+                    $quote_custom_values = $this->quote_custom_values((string)$this->session->get('quote_id'), $qcR);
+                    $parameters = [
+                        'title' => $this->translator->translate('i.view'),            
+                        'body' => $this->body($quote), 
+                        'alert'=>$this->alert(),
+                         // Hide buttons on the view if a 'viewInv' user does not have 'editInv' permission
+                        'invEdit' => $this->user_service->hasPermission('editInv') ? true : false,       
+                        // if the quote amount total is greater than zero show the buttons eg. Send email
+                        'quote_amount_total' => $quote_amount->getTotal(), 
+                        'sales_order_number' => $sales_order_number,
+                        'add_quote_item' => $this->view_renderer->renderPartialAsString('/invoice/quoteitem/_item_form',[
+                            'action' => ['quoteitem/add',['_language' => $currentRoute->getArgument('_language')]],
+                            'errors' => [],
+                            'form' => new QuoteItemForm(new QuoteItem(), $quote_id),
+                            'quote_id' => $this->quote($currentRoute, $qR, true),
+                            'tax_rates' => $trR->findAllPreloaded(),
+                            'products' => $pR->findAllPreloaded(),
+                            'units' => $uR->findAllPreloaded(),
+                            'numberhelper' => new NumberHelper($this->sR)
+                        ]),
+                        // Get all the fields that have been setup for this SPECIFIC quote in quote_custom. 
+                        'fields' => $qcR->repoFields((string)$this->session->get('quote_id')),
+                        // Get the standard extra custom fields built for EVERY quote. 
+                        'custom_fields' => $cfR->repoTablequery('quote_custom'),
+                        'custom_values' => $cvR->attach_hard_coded_custom_field_values_to_custom_field($cfR->repoTablequery('quote_custom')),
+                        'cvH' => new CVH($this->sR),
+                        'quote_custom_values' => $quote_custom_values,
+                        'quote_statuses' => $qR->getStatuses($this->translator),  
+                        'quote' => $qR->repoQuoteLoadedquery((string)$this->session->get('quote_id')),   
+                        'partial_item_table' => $this->view_renderer->renderPartialAsString('/invoice/quote/partial_item_table',[
+                            'invEdit' => $this->user_service->hasPermission('editInv') ? true : false,    
+                            'numberhelper' => new NumberHelper($this->sR),
+                            'piR' => $piR,
+                            'products' => $pR->findAllPreloaded(),
+                            'quote_items' => $qiR->repoQuotequery((string)$this->session->get('quote_id')),
+                            'quote_item_amount' => $qiaR,
+                            'quote_tax_rates' => $quote_tax_rates,
+                            'quote_amount' => $quote_amount,
+                            'quote' => $qR->repoQuoteLoadedquery((string)$this->session->get('quote_id')),  
+                            'language' => $currentRoute->getArgument('_language'),
+                            'tax_rates' => $trR->findAllPreloaded(),
+                            'units' => $uR->findAllPreloaded(),
+                        ]),
+                        'modal_choose_items' => $this->view_renderer->renderPartialAsString('/invoice/product/modal_product_lookups_quote',
+                        [
+                            'families' => $fR->findAllPreloaded(),
+                            'default_item_tax_rate' => $this->sR->get_setting('default_item_tax_rate') !== '' ?: 0,
+                            'filter_product' => '',            
+                            'filter_family' => '',
+                            'reset_table' => '',
+                            'products' => $pR->findAllPreloaded(),
+                            'partial_product_table_modal' => $this->view_renderer->renderPartialAsString('/invoice/product/_partial_product_table_modal',[
+                                'products' => $pR->findAllPreloaded()
                             ]),
-                            // Get all the fields that have been setup for this SPECIFIC quote in quote_custom. 
-                            'fields' => $qcR->repoFields((string)$this->session->get('quote_id')),
-                            // Get the standard extra custom fields built for EVERY quote. 
-                            'custom_fields' => $cfR->repoTablequery('quote_custom'),
-                            'custom_values' => $cvR->attach_hard_coded_custom_field_values_to_custom_field($cfR->repoTablequery('quote_custom')),
-                            'cvH' => new CVH($this->sR),
-                            'quote_custom_values' => $quote_custom_values,
-                            'quote_statuses' => $qR->getStatuses($this->translator),  
-                            'quote' => $qR->repoQuoteLoadedquery((string)$this->session->get('quote_id')),   
-                            'partial_item_table' => $this->view_renderer->renderPartialAsString('/invoice/quote/partial_item_table',[
-                                'invEdit' => $this->user_service->hasPermission('editInv') ? true : false,    
-                                'numberhelper' => new NumberHelper($this->sR),
-                                'piR' => $piR,
-                                'products' => $pR->findAllPreloaded(),
-                                'quote_items' => $qiR->repoQuotequery((string)$this->session->get('quote_id')),
-                                'quote_item_amount' => $qiaR,
-                                'quote_tax_rates' => $quote_tax_rates,
-                                'quote_amount' => $quote_amount,
-                                'quote' => $qR->repoQuoteLoadedquery((string)$this->session->get('quote_id')),  
-                                'language' => $currentRoute->getArgument('_language'),
-                                'tax_rates' => $trR->findAllPreloaded(),
-                                'units' => $uR->findAllPreloaded(),
-                            ]),
-                            'modal_choose_items' => $this->view_renderer->renderPartialAsString('/invoice/product/modal_product_lookups_quote',
-                            [
-                                'families' => $fR->findAllPreloaded(),
-                                'default_item_tax_rate' => $this->sR->get_setting('default_item_tax_rate') !== '' ?: 0,
-                                'filter_product' => '',            
-                                'filter_family' => '',
-                                'reset_table' => '',
-                                'products' => $pR->findAllPreloaded(),
-                                'partial_product_table_modal' => $this->view_renderer->renderPartialAsString('/invoice/product/_partial_product_table_modal',[
-                                    'products' => $pR->findAllPreloaded()
+                        ]),
+                        'modal_add_quote_tax' => $this->view_renderer->renderPartialAsString('/invoice/quote/modal_add_quote_tax',['s'=>$this->sR,'tax_rates'=>$trR->findAllPreloaded()]),
+                        //'modalhelper'=> new ModalHelper($this->sR),
+                        'modal_copy_quote' => $this->view_renderer->renderPartialAsString('/invoice/quote/modal_copy_quote',[ 's'=>$this->sR,
+                            'quote' => $qR->repoQuoteLoadedquery((string)$this->session->get('quote_id')),
+                            'clients' => $cR->findAllPreloaded(),                
+                            'groups' => $gR->findAllPreloaded(),
+                        ]),
+                        'modal_delete_quote' => $this->view_renderer->renderPartialAsString('/invoice/quote/modal_delete_quote',
+                                ['action' => ['quote/delete', ['_language' => $currentRoute->getArgument('_language'), 'id' => $this->session->get('quote_id')]],
+                        ]),            
+                        'modal_delete_items' => $this->view_renderer->renderPartialAsString('/invoice/quote/modal_delete_item',[
+                                'partial_item_table_modal' => $this->view_renderer->renderPartialAsString('/invoice/quoteitem/_partial_item_table_modal',[
+                                    'quoteitems' => $qiR->repoQuotequery((string)$this->session->get('quote_id')),
+                                    'numberhelper' => new NumberHelper($this->sR),
                                 ]),
-                            ]),
-                            'modal_add_quote_tax' => $this->view_renderer->renderPartialAsString('/invoice/quote/modal_add_quote_tax',['s'=>$this->sR,'tax_rates'=>$trR->findAllPreloaded()]),
-                            //'modalhelper'=> new ModalHelper($this->sR),
-                            'modal_copy_quote' => $this->view_renderer->renderPartialAsString('/invoice/quote/modal_copy_quote',[ 's'=>$this->sR,
-                                'quote' => $qR->repoQuoteLoadedquery((string)$this->session->get('quote_id')),
-                                'clients' => $cR->findAllPreloaded(),                
-                                'groups' => $gR->findAllPreloaded(),
-                            ]),
-                            'modal_delete_quote' => $this->view_renderer->renderPartialAsString('/invoice/quote/modal_delete_quote',
-                                    ['action' => ['quote/delete', ['_language' => $currentRoute->getArgument('_language'), 'id' => $this->session->get('quote_id')]],
-                            ]),            
-                            'modal_delete_items' => $this->view_renderer->renderPartialAsString('/invoice/quote/modal_delete_item',[
-                                    'partial_item_table_modal' => $this->view_renderer->renderPartialAsString('/invoice/quoteitem/_partial_item_table_modal',[
-                                        'quoteitems' => $qiR->repoQuotequery((string)$this->session->get('quote_id')),
-                                        'numberhelper' => new NumberHelper($this->sR),
-                                    ]),
-                            ]),
-                            'modal_quote_to_invoice' => $this->view_renderer->renderPartialAsString('/invoice/quote/modal_quote_to_invoice',[
-                                     'quote' => $quote,                        
-                                     'groups' => $gR->findAllPreloaded(),
-                            ]),
-                            'modal_quote_to_so' => $this->view_renderer->renderPartialAsString('/invoice/quote/modal_quote_to_so',[
-                                     'quote' => $quote,                        
-                                     'groups' => $gR->findAllPreloaded(),
-                            ]),
-                            'modal_quote_to_pdf' => $this->view_renderer->renderPartialAsString('/invoice/quote/modal_quote_to_pdf',[
-                                     'quote' => $quote,
-                            ]),
-                            'view_custom_fields' => $this->view_renderer->renderPartialAsString('/invoice/quote/view_custom_fields', [
-                                     'custom_fields' => $cfR->repoTablequery('quote_custom'),
-                                     'custom_values' => $cvR->attach_hard_coded_custom_field_values_to_custom_field($cfR->repoTablequery('quote_custom')),
-                                     'quote_custom_values' => $quote_custom_values,  
-                                     'cvH' => new CVH($this->sR),
-                                     'cvR' => $cvR,
-                                     'quoteCustomForm' => new QuoteCustomForm(new QuoteCustom())
-                            ]),        
-                        ];
-                        return $this->view_renderer->render('/invoice/quote/view', $parameters);
-                    } // quote_amount
-                } //quote_tax_rates
+                        ]),
+                        'modal_quote_to_invoice' => $this->view_renderer->renderPartialAsString('/invoice/quote/modal_quote_to_invoice',[
+                                 'quote' => $quote,                        
+                                 'groups' => $gR->findAllPreloaded(),
+                        ]),
+                        'modal_quote_to_so' => $this->view_renderer->renderPartialAsString('/invoice/quote/modal_quote_to_so',[
+                                 'quote' => $quote,                        
+                                 'groups' => $gR->findAllPreloaded(),
+                        ]),
+                        'modal_quote_to_pdf' => $this->view_renderer->renderPartialAsString('/invoice/quote/modal_quote_to_pdf',[
+                                 'quote' => $quote,
+                        ]),
+                        'view_custom_fields' => $this->view_renderer->renderPartialAsString('/invoice/quote/view_custom_fields', [
+                                 'custom_fields' => $cfR->repoTablequery('quote_custom'),
+                                 'custom_values' => $cvR->attach_hard_coded_custom_field_values_to_custom_field($cfR->repoTablequery('quote_custom')),
+                                 'quote_custom_values' => $quote_custom_values,  
+                                 'cvH' => new CVH($this->sR),
+                                 'cvR' => $cvR,
+                                 'quoteCustomForm' => new QuoteCustomForm(new QuoteCustom())
+                        ]),        
+                    ];
+                    return $this->view_renderer->render('/invoice/quote/view', $parameters);
+                } // quote_amount
+                $this->flash_message('info','no quote tax');
             } // null!= $quote_id    
         } //quote    
         return $this->web_service->getNotFoundResponse();
