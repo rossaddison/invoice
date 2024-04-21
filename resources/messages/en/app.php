@@ -1587,7 +1587,7 @@ return [
     'invoice.user.account' => 'Invoice User Account',
     'invoice.user.account.clients' => 'Clients with User Accounts',
     'invoice.user.api.list' => 'Pre-Invoice Users - Signed Up Users',
-    'invoice.user.client.active.no' => 'You have no clients with active user accounts',
+    'invoice.user.client.active.no' => 'You have no clients with active user accounts. Administrators assign client(s) to a signed-up user account.',
     'invoice.user.client.count' => '#',
     'invoice.user.clients.assigned.not' => 'This user has no Clients assigned to it.',
     'invoice.user.inv.active.not' => 'The User Account is not Active',

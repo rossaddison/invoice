@@ -192,10 +192,12 @@ private EntityWriter $entityWriter;
         /**
          * @var Client $client
          */
-        foreach ($this->repoUserClient($ucR->getClients_with_user_accounts()) as $client) {
-            
-            $optionsData[(int)$client->getClient_id()] = ($client->getClient_name() ?: '') . str_repeat(' ', 3). ($client->getClient_surname() ?? '');
-        }
+        if (!$ucR->getClients_with_user_accounts() == []) {
+            foreach ($this->repoUserClient($ucR->getClients_with_user_accounts()) as $client) {
+
+                $optionsData[(int)$client->getClient_id()] = ($client->getClient_name() ?: '') . str_repeat(' ', 3). ($client->getClient_surname() ?? '');
+            }
+        }    
         return $optionsData;
     }
     
