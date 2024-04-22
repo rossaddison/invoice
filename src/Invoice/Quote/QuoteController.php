@@ -794,8 +794,12 @@ final class QuoteController
             $quote_tax_rate['tax_rate_id'] = $taxrate->getTax_rate_id();
         } else {
             $quote_tax_rate['tax_rate_id'] = 1;
-        }    
-        $quote_tax_rate['include_item_tax'] = 0;
+        }  
+        /**
+         * @see Settings ... View ... Taxes ... Default Invoice Tax Rate Placement
+         * @see ..\resources\views\invoice\setting\views partial_settings_taxes.php 
+         */
+        $quote_tax_rate['include_item_tax'] = ($this->sR->get_setting('default_include_item_tax') == '1' ? 1 : 0);
         $quote_tax_rate['quote_tax_rate_amount'] = 0;
         if ($formHydrator->populate($quoteTaxRateForm, $quote_tax_rate) && $quoteTaxRateForm->isValid()) { 
           $this->quote_tax_rate_service->saveQuoteTaxRate($quoteTaxRate, $quote_tax_rate);

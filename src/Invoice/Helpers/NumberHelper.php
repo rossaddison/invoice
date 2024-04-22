@@ -437,6 +437,7 @@ public function calculate_inv(string $inv_id, ACIR $aciR, IIR $iiR, IIAR $iiaR, 
     }
 
     /**
+     * @see QuoteController function default_tax_quote
      * @param string $quote_id
      */
     public function calculate_quote_taxes(string $quote_id, QTRR $qtrR, QAR $qaR) : float
@@ -461,13 +462,13 @@ public function calculate_inv(string $inv_id, ACIR $aciR, IIR $iiR, IIAR $iiaR, 
                 foreach ($quote_tax_rates as $quote_tax_rate) {
                     // If the include item tax has been checked
                     $quote_tax_rate_amount = (
-                            (null!==$quote_tax_rate->getInclude_item_tax())
-                            ? 
-                                // The quote tax rate should include the applied item tax
-                                (($quote_amount->getItem_subtotal() ?? 0.00) + ($quote_amount->getItem_tax_total() ?? 0.00) * (($quote_tax_rate->getTaxRate()?->getTax_rate_percent() ?? 0.00)  / 100))
-                            :
-                                // The quote tax rate should not include the applied item tax so get the general tax rate from Tax Rate table
-                                (($quote_amount->getItem_subtotal() ?? 0.00) * (($quote_tax_rate->getTaxRate()?->getTax_rate_percent() ?? 0.00) / 100))
+                        (null!==$quote_tax_rate->getInclude_item_tax() && $quote_tax_rate->getInclude_item_tax() === 1)
+                        ? 
+                            // The quote tax rate should include the applied item tax
+                            ((($quote_amount->getItem_subtotal() ?? 0.00) + ($quote_amount->getItem_tax_total() ?? 0.00)) * (($quote_tax_rate->getTaxRate()?->getTax_rate_percent() ?? 0.00)  / 100))
+                        :
+                            // The quote tax rate should not include the applied item tax so get the general tax rate from Tax Rate table
+                            (($quote_amount->getItem_subtotal() ?? 0.00) * (($quote_tax_rate->getTaxRate()?->getTax_rate_percent() ?? 0.00) / 100))
                     );
                     // Update the quote tax rate amount                    
                     $quote_tax_rate->setQuote_tax_rate_amount($quote_tax_rate_amount);
@@ -480,6 +481,7 @@ public function calculate_inv(string $inv_id, ACIR $aciR, IIR $iiR, IIAR $iiaR, 
     }
 
     /**
+     * @see InvController function default_tax_inv
      * @param $inv_id
      */
     public function calculate_inv_taxes(string $inv_id, ITRR $itrR, IAR $iaR) : float
@@ -504,13 +506,13 @@ public function calculate_inv(string $inv_id, ACIR $aciR, IIR $iiR, IIAR $iiaR, 
                 foreach ($inv_tax_rates as $inv_tax_rate) {
                     // If the include item tax has been checked ie. value is 1
                     $inv_tax_rate_amount = (
-                            null!==($inv_tax_rate->getInclude_item_tax())
-                            ? 
-                                // The inv tax rate should include the applied item tax
-                                (($inv_amount->getItem_subtotal() ?: 0.00) + (($inv_amount->getItem_tax_total() ?: 0.00) * (($inv_tax_rate->getTaxRate()?->getTax_rate_percent() ?? 0.00) / 100)))
-                            :
-                                // The invoice tax rate should not include the applied item tax so get the general tax rate from Tax Rate table
-                                (($inv_amount->getItem_subtotal() ?: 0.00) * (($inv_tax_rate->getTaxRate()?->getTax_rate_percent() ?? 0.00) / 100))
+                        (null!==($inv_tax_rate->getInclude_item_tax()) && $inv_tax_rate->getInclude_item_tax() === 1)
+                        ? 
+                            // 'Apply after item tax' => The inv tax rate should include the applied item tax
+                            ((($inv_amount->getItem_subtotal() ?: 0.00) + ($inv_amount->getItem_tax_total() ?: 0.00)) * ($inv_tax_rate->getTaxRate()?->getTax_rate_percent() ?? 0.00) / 100)
+                        :
+                            // The invoice tax rate should not include the applied item tax so get the general tax rate from Tax Rate table
+                            (($inv_amount->getItem_subtotal() ?: 0.00) * (($inv_tax_rate->getTaxRate()?->getTax_rate_percent() ?? 0.00) / 100))
                     ); 
                     // Update the invoice tax rate amount                    
                     $inv_tax_rate->setInv_tax_rate_amount($inv_tax_rate_amount);

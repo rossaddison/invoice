@@ -836,7 +836,12 @@ final class InvController {
         $inv_tax_rate = [];
         $inv_tax_rate['inv_id'] = $inv->getId();
         $inv_tax_rate['tax_rate_id'] = $taxrate->getTax_rate_id();
-        $inv_tax_rate['include_item_tax'] = 0;
+         /**
+         * @see Settings ... View ... Taxes ... Default Invoice Tax Rate Placement
+         * @see ..\resources\views\invoice\setting\views partial_settings_taxes.php 
+         */
+        $inv_tax_rate['include_item_tax'] = ($this->sR->get_setting('default_include_item_tax') == '1' ? 1 : 0);
+        
         $inv_tax_rate['inv_tax_rate_amount'] = 0;
         ($formHydrator->populate($invTaxRateForm, $inv_tax_rate) && $invTaxRateForm->isValid()) ?
                         $this->inv_tax_rate_service->saveInvTaxRate(new InvTaxRate(), $inv_tax_rate) : '';
