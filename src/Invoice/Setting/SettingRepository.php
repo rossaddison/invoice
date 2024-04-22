@@ -1486,6 +1486,10 @@ final class SettingRepository extends Select\Repository
           'why'=>'If a user, or client, do not have a country linked to them, this is the default country used',
           'where'=>'ClientController/Edit and UserInvController'
         ],
+        'default_include_item_tax' => [
+            'why'=>'If true: Add item tax to item subtotal to work out e.g Quote Tax. Not applicable to VAT',
+            'where'=>'InvController function default_tax_inv and QuoteController function default_tax_quote and NumberHelper calculate_quote_taxes calculate_inv_taxes'
+        ],    
         'default_language' => [
           'why'=>'This is the language used if the session print language or the locale dropdown language are not set',
           'where'=>'setting/get_folder_language'

@@ -1525,6 +1525,7 @@ final class QuoteController
             $quote_statuses = $quoteRepo->getStatuses($this->translator);
             $parameters = [
                 'status' => $status,
+                'decimal_places' => (int)$this->sR->get_setting('tax_rate_decimal_places'),
                 'paginator' => $paginator,
                 'sortOrder' => $query_params['sort'] ?? '', 
                 'alert' => $this->alert(),
@@ -2803,6 +2804,8 @@ final class QuoteController
                         'quote_statuses' => $qR->getStatuses($this->translator),  
                         'quote' => $qR->repoQuoteLoadedquery((string)$this->session->get('quote_id')),   
                         'partial_item_table' => $this->view_renderer->renderPartialAsString('/invoice/quote/partial_item_table',[
+                            'included' => $this->translator->translate('invoice.invoice.item.tax.included'),
+                            'excluded' => $this->translator->translate('invoice.invoice.item.tax.excluded'),  
                             'invEdit' => $this->user_service->hasPermission('editInv') ? true : false,    
                             'numberhelper' => new NumberHelper($this->sR),
                             'piR' => $piR,

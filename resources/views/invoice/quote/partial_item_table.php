@@ -178,14 +178,6 @@ $vat = $s->get_setting('enable_vat_registration');
                         </div>
                     </td>
                     <td>
-                    <?php
-                       //get the percentage
-                       $percentage = '';
-                       foreach ($tax_rates as $tax_rate) {
-                       if ($item->getTax_rate_id() == $tax_rate->getTax_rate_id()){
-                          $percentage = $numberhelper->format_amount($tax_rate->getTax_rate_percent()) . '% - ' . Html::encode($tax_rate->getTax_rate_name());
-                       } 
-                    }?>
                         <div class="input-group">
                             <span class="input-group-text"><?= $vat === '0' ? $translator->translate('i.tax_rate') : $translator->translate('invoice.invoice.vat.rate') ?></span>
                             <select disabled name="item_tax_rate_id" class="form-control" data-bs-toggle = "tooltip" title="quote_item->tax_rate_id">
@@ -300,18 +292,20 @@ $vat = $s->get_setting('enable_vat_registration');
                     <td>
                         <?php if ($quote_tax_rates) {
                             foreach ($quote_tax_rates as $quote_tax_rate) { ?>
-                                    <input type="hidden" name="_csrf" value="<?= $csrf ?>">
-                                    <?php if ($invEdit) { ?>
-                                    <span type="submit" class="btn btn-xs btn-link" onclick="return confirm('<?= $translator->translate('i.delete_tax_warning'); ?>');">
-                                        <a href="<?= $urlGenerator->generate('quote/delete_quote_tax_rate',['id'=>$quote_tax_rate->getId()]) ?>"><i class="fa fa-trash"></i></a>
-                                    </span>
-                                    <?php } ?>
-                                    <span class="text-muted">
-                                        <?= Html::encode($quote_tax_rate->getTaxRate()->getTax_rate_name()) . ' ' . $numberhelper->format_amount($quote_tax_rate->getTaxRate()->getTax_rate_percent()) . '%' ?>
-                                    </span>
-                                    <span class="amount" data-bs-toggle = "tooltip" title="quote_tax_rate->quote_tax_rate_amount">
-                                        <?php echo $numberhelper->format_currency($quote_tax_rate->getQuote_tax_rate_amount()); ?>
-                                    </span>                                
+                            <div data-bs-toggle="tooltip" title="<?= $quote_tax_rate->getInclude_item_tax() == '1' ? $included : $excluded; ?>"> 
+                                <input type="hidden" name="_csrf" value="<?= $csrf ?>">
+                                <?php if ($invEdit) { ?>
+                                <span type="submit" class="btn btn-xs btn-link" onclick="return confirm('<?= $translator->translate('i.delete_tax_warning'); ?>');">
+                                    <a href="<?= $urlGenerator->generate('quote/delete_quote_tax_rate',['id'=>$quote_tax_rate->getId()]) ?>"><i class="fa fa-trash"></i></a>
+                                </span>
+                                <?php } ?>
+                                <span class="text-muted">
+                                    <?= Html::encode($quote_tax_rate->getTaxRate()->getTax_rate_name()) . ' ' . $numberhelper->format_amount($quote_tax_rate->getTaxRate()->getTax_rate_percent()) . '%' ?>
+                                </span>
+                                <span class="amount" data-bs-toggle = "tooltip" title="quote_tax_rate->quote_tax_rate_amount">
+                                    <?php echo $numberhelper->format_currency($quote_tax_rate->getQuote_tax_rate_amount()); ?>
+                                </span>
+                            </div>        
                             <?php }
                         } else {
                             echo $numberhelper->format_currency('0');

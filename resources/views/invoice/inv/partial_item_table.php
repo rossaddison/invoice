@@ -348,10 +348,14 @@ $vat = $s->get_setting('enable_vat_registration');
                     <td>
                         <?php if ($inv_tax_rates) {
                             foreach ($inv_tax_rates as $inv_tax_rate) { ?>
+                            <div data-bs-toggle="tooltip" title="<?= $inv_tax_rate->getInclude_item_tax() == '1' ? $included : $excluded; ?>">
                                     <input type="hidden" name="_csrf" value="<?= $csrf ?>">
                                     <?php if ($show_buttons === true && $user_can_edit === true) { ?>
                                     <span  class="btn btn-xs btn-link" onclick="return confirm('<?= $translator->translate('i.delete_tax_warning'); ?>');">
-                                        <a href="<?= $urlGenerator->generate('inv/delete_inv_tax_rate',['_language'=>$currentRoute->getArgument('_language'), 'id'=>$inv_tax_rate->getId()]) ?>"><i class="fa fa-trash"></i></a>
+                                        <a  href="<?= $urlGenerator->generate('inv/delete_inv_tax_rate',
+                                                ['_language'=>$currentRoute->getArgument('_language'), 
+                                                        'id'=>$inv_tax_rate->getId()]) ?>">
+                                        <i class="fa fa-trash"></i></a>
                                     </span>
                                     <?php } ?>
                                     <span class="text-muted">
@@ -361,6 +365,7 @@ $vat = $s->get_setting('enable_vat_registration');
                                         <?php echo $numberhelper->format_currency($inv_tax_rate->getInv_tax_rate_amount()); ?>
                                     </span>
                                     <br>
+                            </div>        
                             <?php }
                         } else {
                             echo $numberhelper->format_currency('0');

@@ -14,9 +14,6 @@ use Yiisoft\Html\Tag\I;
 use Yiisoft\Html\Tag\Label;
 use Yiisoft\Yii\DataView\Column\DataColumn;
 use Yiisoft\Yii\DataView\GridView;
-use Yiisoft\Yii\DataView\OffsetPagination;
-use Yiisoft\Yii\DataView\UrlConfig;
-use Yiisoft\Yii\DataView\YiiRouter\UrlCreator;
 use Yiisoft\Router\CurrentRoute;
 
 /**
@@ -166,11 +163,11 @@ $toolbar = Div::tag();
             field: 'id',
             property: 'filterQuoteAmountTotal',
             header: $translator->translate('i.total') . ' ( '. $s->get_setting('currency_symbol'). ' ) ',
-            content: static function ($model) : string|null {
+            content: static function ($model) use ($decimal_places) : string|null {
                return  
                     Label::tag()
                         ->attributes(['class' => $model->getQuoteAmount()->getTotal() > 0.00 ? 'label label-success' : 'label label-warning'])
-                        ->content(Html::encode(null!==$model->getQuoteAmount()->getTotal() ? $model->getQuoteAmount()->getTotal() : 0.00))
+                        ->content(Html::encode(null!==$model->getQuoteAmount()->getTotal() ? number_format($model->getQuoteAmount()->getTotal(), $decimal_places) : number_format(0, $decimal_places)))
                         ->render();
             },
             filter: true

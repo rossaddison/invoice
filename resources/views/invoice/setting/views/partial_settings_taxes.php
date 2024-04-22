@@ -53,7 +53,7 @@
                     <div class="col-xs-12 col-md-6">
 
                         <div class="form-group">
-                            <label for="settings[default_include_item_tax]">
+                            <label for="settings[default_include_item_tax]" <?= $s->where('default_include_item_tax'); ?>>
                                 <?= $translator->translate('i.default_invoice_tax_rate_placement'); ?>
                             </label>
                             <?php $body['settings[default_include_item_tax]'] = $s->get_setting('default_include_item_tax');?>

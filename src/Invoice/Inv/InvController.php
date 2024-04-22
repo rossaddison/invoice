@@ -3641,6 +3641,8 @@ final class InvController {
               'draft' => $draft,
               'piR' => $piR,
               'show_buttons' => $show_buttons,
+              'included' => $this->translator->translate('invoice.invoice.item.tax.included'),
+              'excluded' => $this->translator->translate('invoice.invoice.item.tax.excluded'),  
               'numberhelper' => $this->number_helper,
               'products' => $pR->findAllPreloaded(),
               // Only tasks with complete or status of 3 are made available for selection

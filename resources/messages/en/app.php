@@ -1220,6 +1220,8 @@ return [
     'invoice.invoice.enable.vat.warning.line.3' => '3. Create VAT quotes/invoices on a separate database.',
     'invoice.invoice.enable.vat.warning.line.4' => '4. All new VAT invoice line items are flagged with the belongs_to_vat_invoice flag.',
     'invoice.invoice.form.error' => 'Form errors',
+    'invoice.invoice.item.tax.included' => '(SubTotal + Item Tax) x Tax Percentage',
+    'invoice.invoice.item.tax.excluded' => 'SubTotal x Tax Percentage (Item Tax has been excluded)',
     'invoice.invoice.mark.sent.off' => 'Mark invoices as sent on copying invoices ... is currently OFF. Only set to ON during development. Click here to turn it ON',
     'invoice.invoice.mark.sent.on' => 'Mark invoices as sent on copying invoices ... is currently ON. Always have it on OFF during production. Click here to turn it OFF',
     'invoice.invoice.max' => 'Max',
