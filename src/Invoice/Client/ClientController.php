@@ -499,14 +499,17 @@ final class ClientController
         return ($ccR->repoClientCustomCount($client_id, (string)$custom_field_id) > 0 ? false : true);        
     }
     
-    /**
+     /**
      * @param string $level
      * @param string $message
-     * @return Flash
+     * @return Flash|null
      */
-    private function flash_message(string $level, string $message): Flash{
-        $this->flash->add($level, $message, true); 
-        return $this->flash;
+    private function flash_message(string $level, string $message): Flash|null {
+        if (strlen($message) > 0) {
+            $this->flash->add($level, $message, true);
+            return $this->flash;
+        }
+        return null;
     }
     
     public function index(CurrentRoute $currentRoute, Request $request, cR $cR, iaR $iaR, iR $iR, sR $sR, cpR $cpR, ucR $ucR): 

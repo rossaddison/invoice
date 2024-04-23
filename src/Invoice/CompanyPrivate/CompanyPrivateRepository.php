@@ -88,8 +88,20 @@ private EntityWriter $entityWriter;
      *
      * @psalm-return TEntity|null
      */
-    public function repoCompanyPrivatequery(string $id):CompanyPrivate|null    {
+    public function repoCompanyPrivatequery(string $id): CompanyPrivate|null    {
         $query = $this->select()->load('company')->where(['id' =>$id]);
+        return  $query->fetchOne() ?: null;        
+    }
+    
+    /**
+     * @return CompanyPrivate|null
+     *
+     * @psalm-return TEntity|null
+     */
+    public function repoCompanyquery(string $id): CompanyPrivate|null    {
+        $query = $this->select()
+                      ->load('company')
+                      ->where(['company_id' =>$id]);
         return  $query->fetchOne() ?: null;        
     }
 }

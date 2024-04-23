@@ -1723,11 +1723,14 @@ final class InvController {
     /**
      * @param string $level
      * @param string $message
-     * @return Flash
+     * @return Flash|null
      */
-    private function flash_message(string $level, string $message): Flash {
-      $this->flash->add($level, $message, true);
-      return $this->flash;
+    private function flash_message(string $level, string $message): Flash|null {
+        if (strlen($message) > 0) {
+            $this->flash->add($level, $message, true);
+            return $this->flash;
+        }
+        return null;
     }
 
    /**
@@ -2873,7 +2876,6 @@ final class InvController {
                                 'inv_item_amount' => $iiaR,
                                 'is_overdue' => $is_overdue,
                                 'items' => ($inv_id > 0) ? $iiR->repoInvquery($inv_id) : new InvItem(),
-                                'logo' => '',
                                 'payment_method' => $payment_method,
                                 'paymentTermsArray' => $this->sR->get_payment_term_array($this->translator),
                                 'userinv' => $uiR->repoUserInvUserIdcount($user_id) > 0 ? $uiR->repoUserInvUserIdquery($user_id) : null,

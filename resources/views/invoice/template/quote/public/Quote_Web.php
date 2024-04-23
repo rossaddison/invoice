@@ -3,6 +3,7 @@
 declare(strict_types=1);
 
 use Yiisoft\Html\Html;
+use Yiisoft\Html\Tag\Img;
 use App\Invoice\Helpers\NumberHelper;
 
 /**
@@ -76,8 +77,19 @@ $vat = $s->get_setting('enable_vat_registration');
 
         <div class="invoice">
 
-            <?php if ($logo) {echo $logo . '<br><br>'; } ?>
-
+            <?php
+                    // if a company logo has not been setup in companyprivate => use the site default logo
+                    $logoPath = ((null!==$companyLogoFileName) 
+                                      ? '/logo/'. $companyLogoFileName 
+                                      : '/site/'. $s->public_logo().'.png'
+                    );
+                    echo Img::tag()
+                         ->width(80)
+                         ->height(60)
+                         ->src($logoPath)   
+            ?>
+            <br>
+            <br>
             <?= Html::openTag('div', ['class' => 'row']); ?>
                 <div class="col-xs-12 col-md-6 col-lg-5">
 

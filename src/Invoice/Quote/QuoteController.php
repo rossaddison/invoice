@@ -121,7 +121,7 @@ use Yiisoft\Http\Method;
 use Yiisoft\Json\Json;
 use Yiisoft\Mailer\MailerInterface;
 use Yiisoft\Router\FastRoute\UrlGenerator;
-use Yiisoft\Router\CurrentRoute;
+use Yiisoft\Router\HydratorAttribute\RouteArgument;
 use Yiisoft\Session\SessionInterface as Session;
 use Yiisoft\Session\Flash\Flash;
 use Yiisoft\FormModel\FormHydrator;
@@ -285,9 +285,8 @@ final class QuoteController
     }
     
     /**
-     * Note: Similar to add function in InvController.php
      * @param Request $request
-     * @param CurrentRoute $currentRoute
+     * @param string $origin
      * @param FormHydrator $formHydrator
      * @param CR $clientRepository
      * @param GR $gR
@@ -297,18 +296,18 @@ final class QuoteController
      * @param UIR $uiR
      * @return \Yiisoft\DataResponse\DataResponse|Response
      */
-    public function add(Request $request,
-                        CurrentRoute $currentRoute,
-                        FormHydrator $formHydrator,
-                        CR $clientRepository,
-                        GR $gR,
-                        TRR $trR,
-                        UR $uR,
-                        UCR $ucR,  
-                        UIR $uiR
+    public function add(
+        Request $request,
+        #[RouteArgument('origin')] string $origin,
+        FormHydrator $formHydrator,
+        CR $clientRepository,
+        GR $gR,
+        TRR $trR,
+        UR $uR,
+        UCR $ucR,  
+        UIR $uiR
     ) : \Yiisoft\DataResponse\DataResponse|Response
     {
-        $origin = $currentRoute->getArgument('origin') ?? '';
         $quote = new Quote();
         $errors = [];
         $form = new QuoteForm($quote);
@@ -359,7 +358,7 @@ final class QuoteController
         // 2. Client Menu e.g. /invoice/client/view/25
         // 3. Quote Menu e.g. /invoice/quote
         // 4. Dashboard e.g. /invoice/dashboard
-        // Use the currentRoute's origin argument to return to correct origin
+        // Use the RouteArgument's origin argument to return to correct origin
         if ($request->getMethod() === Method::POST) {
             if ($formHydrator->populateFromPostAndValidate($form, $request)) {
                 // Only clients that were assigned to user accounts were made available in dropdown 
@@ -460,11 +459,14 @@ final class QuoteController
     /**
      * @param string $level
      * @param string $message
-     * @return Flash
+     * @return Flash|null
      */
-    private function flash_message(string $level, string $message): Flash {
-      $this->flash->add($level, $message, true);
-      return $this->flash;
+    private function flash_message(string $level, string $message): Flash|null {
+        if (strlen($message) > 0) {
+            $this->flash->add($level, $message, true);
+            return $this->flash;
+        }
+        return null;
     }
     
     /**
@@ -567,14 +569,12 @@ final class QuoteController
     } // approve_with    
     
     /**
-     * 
-     * @param CurrentRoute $currentRoute
+     * @param string $url_key
      * @param QR $qR
      * @return Response
      */
-    public function reject(CurrentRoute $currentRoute, QR $qR) : Response {
-        $url_key = $currentRoute->getArgument('url_key');
-        if (null!==$url_key) {
+    public function reject(#[RouteArgument('url_key')] string $url_key, QR $qR) : Response {
+        if ($url_key) {
             if ($qR->repoUrl_key_guest_count($url_key) > 0) { 
                 $quote = $qR->repoUrl_key_guest_loaded($url_key);
                 if ($quote) {
@@ -807,8 +807,7 @@ final class QuoteController
     }
    
     /**
-     * 
-     * @param CurrentRoute $currentRoute
+     * @param int $id
      * @param QuoteRepository $quoteRepo
      * @param QCR $qcR
      * @param QuoteCustomService $qcS
@@ -820,11 +819,11 @@ final class QuoteController
      * @param QuoteAmountService $qaS
      * @return Response
      */
-    public function delete(CurrentRoute $currentRoute, QuoteRepository $quoteRepo, 
+    public function delete(#[RouteArgument('id')] int $id, QuoteRepository $quoteRepo, 
                            QCR $qcR, QuoteCustomService $qcS, QIR $qiR, QuoteItemService $qiS, QTRR $qtrR,
                            QuoteTaxRateService $qtrS, QAR $qaR, QuoteAmountService $qaS): Response {
         try {
-            $quote = $this->quote($currentRoute, $quoteRepo);
+            $quote = $this->quote($id, $quoteRepo);
             if ($quote) {
                 $this->quote_service->deleteQuote($quote, $qcR, $qcS, $qiR, $qiS, $qtrR, $qtrS, $qaR, $qaS); 
                 $this->flash_message('success', $this->translator->translate('i.record_successfully_deleted'));
@@ -839,14 +838,15 @@ final class QuoteController
     }
     
     /**
-     * @param CurrentRoute $currentRoute
+     * @param int $id
      * @param QIR $qiR
+     * @return \Yiisoft\DataResponse\DataResponse|Response
      */
-    public function delete_quote_item(CurrentRoute $currentRoute, QIR $qiR)
+    public function delete_quote_item(#[RouteArgument('id')] int $id, QIR $qiR)
                                           : \Yiisoft\DataResponse\DataResponse|Response {
         $quote_id = (string)$this->session->get('quote_id');
         try {            
-            $quoteItem = $this->quote_item($currentRoute,$qiR);
+            $quoteItem = $this->quote_item($id,$qiR);
             
             if ($quoteItem) {
                 $this->quote_item_service->deleteQuoteItem($quoteItem);
@@ -865,13 +865,13 @@ final class QuoteController
     }
     
     /**
-     * @param CurrentRoute $currentRoute
+     * @param int $id
      * @param QTRR $quotetaxrateRepository
+     * @return \Yiisoft\DataResponse\DataResponse
      */
-    public function delete_quote_tax_rate(CurrentRoute $currentRoute, QTRR $quotetaxrateRepository)
-                                          : \Yiisoft\DataResponse\DataResponse {
+    public function delete_quote_tax_rate(#[RouteArgument('id')] int $id, QTRR $quotetaxrateRepository) : \Yiisoft\DataResponse\DataResponse {
         try {            
-            $this->quote_tax_rate_service->deleteQuoteTaxRate($this->quotetaxrate($currentRoute,$quotetaxrateRepository));
+            $this->quote_tax_rate_service->deleteQuoteTaxRate($this->quotetaxrate($id, $quotetaxrateRepository));
         } catch (\Exception $e) {
             unset($e);
             $this->flash_message('danger', $this->translator->translate('invoice.quote.tax.rate.cannot.delete'));
@@ -883,7 +883,7 @@ final class QuoteController
         
     /**
      * @param Request $request
-     * @param CurrentRoute $currentRoute
+     * @param int $id
      * @param FormHydrator $formHydrator
      * @param QR $quoteRepo
      * @param IR $invRepo
@@ -897,8 +897,10 @@ final class QuoteController
      * @param UR $uR
      * @param UCR $ucR
      * @param UIR $uiR
+     * @return \Yiisoft\DataResponse\DataResponse|Response
      */
-    public function edit(Request $request, CurrentRoute $currentRoute,
+    public function edit(Request $request, 
+                        #[RouteArgument('id')] int $id,
                         FormHydrator $formHydrator,
                         QR $quoteRepo,                        
                         IR $invRepo,
@@ -913,7 +915,7 @@ final class QuoteController
                         UCR $ucR,
                         UIR $uiR
     ): \Yiisoft\DataResponse\DataResponse|Response {
-        $quote = $this->quote($currentRoute, $quoteRepo, true);
+        $quote = $this->quote($id, $quoteRepo, true);
         if (null!==$quote) {
             $form = new QuoteForm($quote);
             $quoteCustom = new QuoteCustom();
@@ -951,7 +953,7 @@ final class QuoteController
             ];
             if ($request->getMethod() === Method::POST) {   
                 $body = (array)$request->getParsedBody();
-                $quote = $this->quote($currentRoute, $quoteRepo, false);
+                $quote = $this->quote($id, $quoteRepo, false);
                 if ($quote) {
                     $form = new QuoteForm($quote);
                     $client_id = $quote->getClient_id();
@@ -1025,9 +1027,8 @@ final class QuoteController
     }
     
     /**
-     * 
      * @param ViewRenderer $head
-     * @param CurrentRoute $currentRoute
+     * @param int $id
      * @param CCR $ccR
      * @param CFR $cfR
      * @param CVR $cvR
@@ -1041,7 +1042,7 @@ final class QuoteController
      * @return Response
      */
     public function email_stage_0(ViewRenderer $head, 
-                                  CurrentRoute $currentRoute, 
+                                  #[RouteArgument('id')] int $id,  
                                   CCR $ccR, CFR $cfR, CVR $cvR, 
                                   ETR $etR, ICR $icR, 
                                   QR $qR, PCR $pcR, SOCR $socR, QCR $qcR, UIR $uiR) : Response {
@@ -1051,7 +1052,7 @@ final class QuoteController
             $this->flash_message('warning',$this->translator->translate('i.email_not_configured'));
             return $this->web_service->getRedirectResponse('quote/index');
         }
-        $quote_entity = $this->quote($currentRoute, $qR, true);
+        $quote_entity = $this->quote($id, $qR, true);
         if ($quote_entity) {
             $quote_id = $quote_entity->getId();
             $quote = $qR->repoQuoteUnLoadedquery((string)$quote_id);
@@ -1241,7 +1242,7 @@ final class QuoteController
     
     /**
      * @param Request $request
-     * @param CurrentRoute $currentRoute
+     * @param int $quote_id
      * @param CR $cR
      * @param CCR $ccR
      * @param CFR $cfR
@@ -1254,22 +1255,22 @@ final class QuoteController
      * @param IR $iR
      * @param QTRR $qtrR
      * @param PCR $pcR
+     * @param SOCR $socR
      * @param QR $qR
      * @param QAR $qaR
      * @param QCR $qcR
+     * @param SOR $soR
      * @param UIR $uiR
      * @return Response
-     */
-    
+     */ 
     public function email_stage_2(Request $request, 
-                                  CurrentRoute $currentRoute, 
+                                  #[RouteArgument('id')] int $quote_id, 
                                   CR $cR, CCR $ccR, CFR $cfR, CVR $cvR, 
                                   GR $gR, 
                                   IAR $iaR, QIAR $qiaR, ICR $icR, QIR $qiR, IR $iR, QTRR $qtrR, 
                                   PCR $pcR, SOCR $socR, QR $qR, QAR $qaR, QCR $qcR, SOR $soR, UIR $uiR) : Response 
     {
-        $quote_id = $currentRoute->getArgument('id'); 
-        if (null!==$quote_id) {
+        if ($quote_id) {
             $mailer_helper = new MailerHelper($this->sR, $this->session, $this->translator,  $this->logger, $this->mailer, $ccR, $qcR, $icR, $pcR, $socR, $cfR, $cvR);
             $body = $request->getParsedBody() ?? [];
             if (is_array($body)) {
@@ -1320,10 +1321,10 @@ final class QuoteController
 
                 $attachFiles = $request->getUploadedFiles();
 
-                $this->generate_quote_number_if_applicable($quote_id, $qR, $this->sR, $gR);
+                $this->generate_quote_number_if_applicable((string)$quote_id, $qR, $this->sR, $gR);
                 // Custom fields are automatically included on the quote
-                if ($this->email_stage_1($quote_id, $from, $to, $subject, $email_body, $cc, $bcc, $attachFiles, $cR, $ccR, $cfR,  $cvR, $iaR, $icR, $qiaR, $qiR, $iR, $qtrR, $pcR, $socR, $qR, $qaR, $qcR, $soR, $uiR, $this->view_renderer)) {
-                    $this->sR->quote_mark_sent($quote_id, $qR);            
+                if ($this->email_stage_1((string)$quote_id, $from, $to, $subject, $email_body, $cc, $bcc, $attachFiles, $cR, $ccR, $cfR,  $cvR, $iaR, $icR, $qiaR, $qiR, $iR, $qtrR, $pcR, $socR, $qR, $qaR, $qcR, $soR, $uiR, $this->view_renderer)) {
+                    $this->sR->quote_mark_sent((string)$quote_id, $qR);            
                     $this->flash_message('success', $this->translator->translate('i.email_successfully_sent'));
                     return $this->web_service->getRedirectResponse('quote/view', ['id' => $quote_id]);                     
                 }
@@ -1359,20 +1360,24 @@ final class QuoteController
     /**
      * @param Request $request
      * @param QAR $qaR
-     * @param CurrentRoute $currentRoute
      * @param QR $qR
      * @param UCR $ucR
      * @param UIR $uiR
+     * @param int $page
+     * @param int $status 
+     * @return \Yiisoft\DataResponse\DataResponse|Response
+     * @throws NoClientsAssignedToUserException
      */
-    public function guest(Request $request, QAR $qaR, CurrentRoute $currentRoute,
-                          QR $qR, UCR $ucR, UIR $uiR) : \Yiisoft\DataResponse\DataResponse|Response {
+    public function guest(
+            Request $request, QAR $qaR, QR $qR, UCR $ucR, UIR $uiR,
+            #[RouteArgument('page')] int $page = 1, #[RouteArgument('status')] int $status = 0,
+    ) : \Yiisoft\DataResponse\DataResponse|Response {
         $query_params = $request->getQueryParams();
         /**
          * @var string $query_params['page']
          */
-        $page = $query_params['page'] ?? $currentRoute->getArgument('page', '1');
-         //status 0 => 'all';
-        $status = (int)$currentRoute->getArgument('status', '0');
+        $pageMixed = $query_params['page'] ?? $page;
+        
         /**
          * @var string|null $query_params['sort']
          */
@@ -1413,9 +1418,9 @@ final class QuoteController
                     } 
                     $paginator = (new DataOffsetPaginator($quotes))
                     ->withPageSize((int)$this->sR->get_setting('default_list_limit'))
-                    ->withCurrentPage((int)$page)
+                    ->withCurrentPage((int)$pageMixed)
                     ->withSort($sort)            
-                    ->withToken(PageToken::next((string)$page));            
+                    ->withToken(PageToken::next((string)$pageMixed));            
                     $quote_statuses = $qR->getStatuses($this->translator);
                     $parameters = [            
                         'alert'=> $this->alert(),
@@ -1434,7 +1439,7 @@ final class QuoteController
                                                         ? (int)$this->sR->get_setting('default_list_limit') : 1,
                         'quote_statuses' => $quote_statuses,            
                         'max' => (int) $this->sR->get_setting('default_list_limit'),
-                        'page'=> $page,
+                        'page'=> (string) $pageMixed,
                         'paginator' => $paginator,
                         'sortOrder' => $sort_string, 
                         'status'=> $status,
@@ -1456,12 +1461,18 @@ final class QuoteController
      * @param CR $clientRepo
      * @param GR $groupRepo
      * @param SOR $soR
-     * @param CurrentRoute $currentRoute
      * @param sR $sR
      * @param UCR $ucR
+     * @param string $_language
+     * @param string $page
+     * @param string $status
      * @return \Yiisoft\DataResponse\DataResponse|Response
      */
-    public function index(Request $request, QAR $qaR, QR $quoteRepo, CR $clientRepo, GR $groupRepo, SOR $soR, CurrentRoute $currentRoute, sR $sR, UCR $ucR)
+    public function index(
+            Request $request, QAR $qaR, QR $quoteRepo, CR $clientRepo, GR $groupRepo, SOR $soR,  sR $sR, UCR $ucR,
+            #[RouteArgument('_language')] string $_language, 
+            #[RouteArgument('page')] string $page = '1', 
+            #[RouteArgument('status')] string $status = '0')
             : \Yiisoft\DataResponse\DataResponse|Response
     {
         // build the quote
@@ -1477,7 +1488,7 @@ final class QuoteController
             $quoteForm
         );    
         // If the language dropdown changes
-        $this->session->set('_language', $currentRoute->getArgument('_language'));
+        $this->session->set('_language', $_language);
         $active_clients = $ucR->getClients_with_user_accounts();
         if (!$active_clients == []) {
             $clients = $clientRepo->repoUserClient($active_clients);
@@ -1495,9 +1506,9 @@ final class QuoteController
             /**
              * @var string $query_params['page']
              */
-            $page = $query_params['page'] ?? $currentRoute->getArgument('page', '1');
+            $page = $query_params['page'] ?? $page;
             //status 0 => 'all';
-            $status = (int)$currentRoute->getArgument('status','0');
+            $status = (int)$status;
            /** @var string $query_params['sort'] */
             $sort_string = $query_params['sort'] ?? '-id';
             $order =  OrderHelper::stringToArray($sort_string);
@@ -1521,7 +1532,7 @@ final class QuoteController
             ->withPageSize((int)$this->sR->get_setting('default_list_limit'))
             ->withCurrentPage((int)$page)
             ->withSort($sort)            
-            ->withToken(PageToken::next((string)$page));    
+            ->withToken(PageToken::next($page));    
             $quote_statuses = $quoteRepo->getStatuses($this->translator);
             $parameters = [
                 'status' => $status,
@@ -1554,7 +1565,6 @@ final class QuoteController
     }
         
     /**
-     * 
      * @param string $items
      * @param FormHydrator $formHydrator
      * @param string $quote_id
@@ -1655,7 +1665,8 @@ final class QuoteController
     // Called from quote.js quote_to_pdf_confirm_with_custom_fields
     
     /**
-     * @param CurrentRoute $currentRoute
+     * 
+     * @param int $include
      * @param CR $cR
      * @param CVR $cvR
      * @param CFR $cfR
@@ -1668,17 +1679,15 @@ final class QuoteController
      * @param QTRR $qtrR
      * @param SR $sR
      * @param UIR $uiR
-     * @param Request $request
      * @return \Yiisoft\DataResponse\DataResponse|Response
      */
-    public function pdf(CurrentRoute $currentRoute, CR $cR, CVR $cvR, CFR $cfR, GR $gR, QAR $qaR, QCR $qcR, QIR $qiR, QIAR $qiaR, QR $qR, QTRR $qtrR, SR $sR, UIR $uiR) : \Yiisoft\DataResponse\DataResponse|Response {
+    public function pdf(#[RouteArgument('include')] int $include, CR $cR, CVR $cvR, CFR $cfR, GR $gR, QAR $qaR, QCR $qcR, QIR $qiR, QIAR $qiaR, QR $qR, QTRR $qtrR, SR $sR, UIR $uiR) : \Yiisoft\DataResponse\DataResponse|Response {
         // include is a value of 0 or 1 passed from quote.js function quote_to_pdf_with(out)_custom_fields indicating whether the user
         // wants custom fields included on the quote or not.
-        $include = $currentRoute->getArgument('include');        
         $quote_id = (string)$this->session->get('quote_id');
         $quote_amount = (($qaR->repoQuoteAmountCount($quote_id) > 0) ? $qaR->repoQuotequery($quote_id) : null);
         if ($quote_amount) {
-            $custom = (($include===(string)1) ? true : false);
+            $custom = (($include===1) ? true : false);
             $quote_custom_values = $this->quote_custom_values((string)$this->session->get('quote_id'),$qcR);
             // session is passed to the pdfHelper and will be used for the locale ie. $session->get('_language') or the print_language ie $session->get('print_language')
             $pdfhelper = new PdfHelper($sR, $this->session);
@@ -1700,9 +1709,9 @@ final class QuoteController
         return $this->web_service->getNotFoundResponse();
     }
     
+   
     /**
-     * 
-     * @param CurrentRoute $currentRoute
+     * @param int $quote_id
      * @param CR $cR
      * @param CVR $cvR
      * @param CFR $cfR
@@ -1717,33 +1726,30 @@ final class QuoteController
      * @param UIR $uiR
      * @return void
      */
-    
-    public function pdf_dashboard_include_cf(CurrentRoute $currentRoute, CR $cR, CVR $cvR, CFR $cfR, GR $gR, QAR $qaR, QCR $qcR, QIR $qiR, QIAR $qiaR, QR $qR, QTRR $qtrR, SR $sR, UIR $uiR) : void {
-        $quote_id = $currentRoute->getArgument('id');
-        if (null!==$quote_id) {
-            $quote_amount = (($qaR->repoQuoteAmountCount($quote_id) > 0) ? $qaR->repoQuotequery($quote_id) : null);
+    public function pdf_dashboard_include_cf(#[RouteArgument('id')] int $quote_id, CR $cR, CVR $cvR, CFR $cfR, GR $gR, QAR $qaR, QCR $qcR, QIR $qiR, QIAR $qiaR, QR $qR, QTRR $qtrR, SR $sR, UIR $uiR) : void {
+        if ($quote_id) {
+            $quote_amount = (($qaR->repoQuoteAmountCount((string)$quote_id) > 0) ? $qaR->repoQuotequery((string)$quote_id) : null);
             if ($quote_amount) {
-                $quote_custom_values = $this->quote_custom_values($quote_id,$qcR);
+                $quote_custom_values = $this->quote_custom_values((string)$quote_id,$qcR);
                 // session is passed to the pdfHelper and will be used for the locale ie. $session->get('_language') or the print_language ie $session->get('print_language')
                 $pdfhelper = new PdfHelper($sR, $this->session);
                 // The quote will be streamed ie. shown, and not archived
                 $stream = true;
                 // If we are required to mark quotes as 'sent' when sent.
                 if ($sR->get_setting('mark_quotes_sent_pdf') == 1) {
-                    $this->generate_quote_number_if_applicable($quote_id, $qR, $sR, $gR);
-                    $sR->quote_mark_sent($quote_id, $qR);
+                    $this->generate_quote_number_if_applicable((string)$quote_id, $qR, $sR, $gR);
+                    $sR->quote_mark_sent((string)$quote_id, $qR);
                 }
-                $quote = $qR->repoQuoteUnloadedquery($quote_id);        
+                $quote = $qR->repoQuoteUnloadedquery((string)$quote_id);        
                 if ($quote) {
-                    $pdfhelper->generate_quote_pdf($quote_id, $quote->getUser_id(), $stream, true, $quote_amount, $quote_custom_values, $cR, $cvR, $cfR, $qiR, $qiaR, $qR, $qtrR, $uiR, $this->view_renderer);        
+                    $pdfhelper->generate_quote_pdf((string)$quote_id, $quote->getUser_id(), $stream, true, $quote_amount, $quote_custom_values, $cR, $cvR, $cfR, $qiR, $qiaR, $qR, $qtrR, $uiR, $this->view_renderer);        
                 }    
             }    
         } //quote_id    
     }
     
     /**
-     * 
-     * @param CurrentRoute $currentRoute
+     * @param int $quote_id
      * @param CR $cR
      * @param CVR $cvR
      * @param CFR $cfR
@@ -1758,44 +1764,40 @@ final class QuoteController
      * @param UIR $uiR
      * @return void
      */
-    
-    public function pdf_dashboard_exclude_cf(CurrentRoute $currentRoute, CR $cR, CVR $cvR, CFR $cfR, GR $gR, QAR $qaR, QCR $qcR, QIR $qiR, QIAR $qiaR, QR $qR, QTRR $qtrR, SR $sR, UIR $uiR) : void {
-        $quote_id = $currentRoute->getArgument('id');
-        if (null!==$quote_id) {
-            $quote_amount = (($qaR->repoQuoteAmountCount($quote_id) > 0) ? $qaR->repoQuotequery($quote_id) : null);
+    public function pdf_dashboard_exclude_cf(#[RouteArgument('id')] int $quote_id, CR $cR, CVR $cvR, CFR $cfR, GR $gR, QAR $qaR, QCR $qcR, QIR $qiR, QIAR $qiaR, QR $qR, QTRR $qtrR, SR $sR, UIR $uiR) : void {
+        if ($quote_id) {
+            $quote_amount = (($qaR->repoQuoteAmountCount((string)$quote_id) > 0) ? $qaR->repoQuotequery((string)$quote_id) : null);
             if ($quote_amount) {
-                $quote_custom_values = $this->quote_custom_values($quote_id,$qcR);
+                $quote_custom_values = $this->quote_custom_values((string)$quote_id, $qcR);
                 // session is passed to the pdfHelper and will be used for the locale ie. $session->get('_language') or the print_language ie $session->get('print_language')
                 $pdfhelper = new PdfHelper($sR, $this->session);
                 // The quote will be streamed ie. shown, and not archived
                 $stream = true;
                 // If we are required to mark quotes as 'sent' when sent.
                 if ($sR->get_setting('mark_quotes_sent_pdf') == 1) {
-                    $this->generate_quote_number_if_applicable($quote_id, $qR, $sR, $gR);
-                    $sR->quote_mark_sent($quote_id, $qR);
+                    $this->generate_quote_number_if_applicable((string)$quote_id, $qR, $sR, $gR);
+                    $sR->quote_mark_sent((string)$quote_id, $qR);
                 }
-                $quote = $qR->repoQuoteUnloadedquery($quote_id);        
+                $quote = $qR->repoQuoteUnloadedquery((string)$quote_id);        
                 if ($quote) {
-                    $pdfhelper->generate_quote_pdf($quote_id, $quote->getUser_id(), $stream, false, $quote_amount, $quote_custom_values, $cR, $cvR, $cfR, $qiR, $qiaR, $qR, $qtrR, $uiR, $this->view_renderer);      
+                    $pdfhelper->generate_quote_pdf((string)$quote_id, $quote->getUser_id(), $stream, false, $quote_amount, $quote_custom_values, $cR, $cvR, $cfR, $qiR, $qiaR, $qR, $qtrR, $uiR, $this->view_renderer);      
                 }    
             }    
         } // quote_id    
     }
     
     /**
-     * @param CurrentRoute $currentRoute
+     * @param int $id
      * @param QuoteRepository $quoteRepo
      * @param bool $unloaded
      * @return Quote|null
      */
-    
-    private function quote(CurrentRoute $currentRoute, 
+    private function quote(int $id, 
                            QuoteRepository $quoteRepo, 
                            bool $unloaded = false): Quote|null 
     {
-        $id = $currentRoute->getArgument('id');
-        if (null!==$id) {
-            $quote = ($unloaded ? $quoteRepo->repoQuoteUnLoadedquery($id) : $quoteRepo->repoQuoteLoadedquery($id));
+        if ($id) {
+            $quote = ($unloaded ? $quoteRepo->repoQuoteUnLoadedquery((string)$id) : $quoteRepo->repoQuoteLoadedquery((string)$id));
             return $quote;
         }
         return null;
@@ -1844,7 +1846,6 @@ final class QuoteController
     }
     
     /**
-     * 
      * @param string $quote_id
      * @param qcR $qcR
      * @return array
@@ -1868,15 +1869,14 @@ final class QuoteController
     }
     
     /**
-     * @param CurrentRoute $currentRoute
+     * @param int $id
      * @param QIR $quoteitemRepository
      * @return QuoteItem|null
      */
-    private function quote_item(CurrentRoute $currentRoute,QIR $quoteitemRepository): QuoteItem|null 
+    private function quote_item(int $id,QIR $quoteitemRepository): QuoteItem|null 
     {
-        $id = $currentRoute->getArgument('id');       
-        if (null!==$id) {
-            $quoteitem = $quoteitemRepository->repoQuoteItemquery($id);
+        if ($id) {
+            $quoteitem = $quoteitemRepository->repoQuoteItemquery((string)$id);
             if (null!==$quoteitem) {
                 return $quoteitem;
             }
@@ -1985,7 +1985,6 @@ final class QuoteController
     }
     
     /**
-     * 
      * @param Request $request
      * @param FormHydrator $formHydrator
      * @param CFR $cfR
@@ -2084,7 +2083,6 @@ final class QuoteController
     }
             
     /**
-     * 
      * @param string $quote_id
      * @param string $inv_id
      * @param IIAR $iiaR
@@ -2541,16 +2539,14 @@ final class QuoteController
     }
     
     /**
-     * 
-     * @param CurrentRoute $currentRoute
+     * @param int $id
      * @param QTRR $quotetaxrateRepository
      * @return QuoteTaxRate|null
-     */    
-    private function quotetaxrate(CurrentRoute $currentRoute, QTRR $quotetaxrateRepository): QuoteTaxRate|null 
+     */
+    private function quotetaxrate(int $id, QTRR $quotetaxrateRepository): QuoteTaxRate|null 
     {
-        $id = $currentRoute->getArgument('id');       
-        if (null!==$id) {
-            $quotetaxrate = $quotetaxrateRepository->repoQuoteTaxRatequery($id);
+        if ($id) {
+            $quotetaxrate = $quotetaxrateRepository->repoQuoteTaxRatequery((string)$id);
             if (null!==$quotetaxrate) {
                 return $quotetaxrate;
             }
@@ -2636,36 +2632,21 @@ final class QuoteController
     // Use this url_key to test what the customer will experience eg. invoice/quote/url_key/{url_key}
     // config/routes accesschecker ensures client has viewInv permission
     
-    /**
-     * @param CurrentRoute $currentRoute
-     * @param CurrentUser $currentUser
-     * @param CFR $cfR
-     * @param QAR $qaR
-     * @param QIR $qiR
-     * @param QIAR $qiaR
-     * @param QR $qR
-     * @param QTRR $qtrR
-     * @param UIR $uiR
-     * @param PMR $pmR
-     * @return Response
-     */
-    public function url_key(CurrentRoute $currentRoute, CurrentUser $currentUser, CFR $cfR, QAR $qaR, QIR $qiR, QIAR $qiaR, QR $qR, QTRR $qtrR, UIR $uiR, UCR $ucR, PMR $pmR): Response 
+    
+    public function url_key(#[RouteArgument('url_key')] string $urlKey, CurrentUser $currentUser, CFR $cfR, QAR $qaR, QIR $qiR, QIAR $qiaR, QR $qR, QTRR $qtrR, UIR $uiR, UCR $ucR, PMR $pmR): Response 
     {
-        // Get the url key from the browser
-        $url_key = $currentRoute->getArgument('url_key');
-        
         // If there is no quote with such a url_key, issue a not found response
-        if ($url_key === null) {
+        if ($urlKey === '') {
             return $this->web_service->getNotFoundResponse();
         }
         
         // If there is a quote with the url key ... continue or else issue not found response
-        if ($qR->repoUrl_key_guest_count($url_key) < 1) {
+        if ($qR->repoUrl_key_guest_count($urlKey) < 1) {
             return $this->web_service->getNotFoundResponse();
         }
         
         // If this quote has a status id that falls into the category of (just)sent, viewed(in the past), approved(in the past) then continue
-        $quote = $qR->repoUrl_key_guest_loaded($url_key);
+        $quote = $qR->repoUrl_key_guest_loaded($urlKey);
         $quote_tax_rates = null;
         if ($quote) {
             $quote_id = $quote->getId();
@@ -2714,7 +2695,7 @@ final class QuoteController
                                             'items' => $qiR->repoQuotequery($quote_id),
                                             // Get all the quote tax rates that have been setup for this quote
                                             'quote_tax_rates' => $quote_tax_rates,
-                                            'quote_url_key' => $url_key,
+                                            'quote_url_key' => $urlKey,
                                             'flash_message' => $this->flash_message('info', ''),
                                             //'attachments' => $attachments,
                                             'custom_fields' => $custom_fields,
@@ -2722,10 +2703,10 @@ final class QuoteController
                                             'datehelper' => new DateHelper($this->sR),
                                             'numberhelper' => new NumberHelper($this->sR),
                                             'has_expired' => new \DateTimeImmutable('now') > $quote->getDate_expires() ? true : false,
-                                            'client'=>$quote->getClient(),
+                                            'client'=> $quote->getClient(),
                                             // Get the details of the user of this quote
                                             'userinv'=> $uiR->repoUserInvUserIdcount($user_id) > 0 ? $uiR->repoUserInvUserIdquery($user_id) : null,                
-                                            'modal_purchase_order_number' => $this->view_renderer->renderPartialAsString('/invoice/quote/modal_purchase_order_number',['url_key'=>$url_key])
+                                            'modal_purchase_order_number' => $this->view_renderer->renderPartialAsString('/invoice/quote/modal_purchase_order_number',['url_key'=>$urlKey])
                                         ]),        
                                     ];        
                                     return $this->view_renderer->render('/invoice/quote/url_key', $parameters);
@@ -2740,7 +2721,9 @@ final class QuoteController
     }
     
     /**
-     * @param CurrentRoute $currentRoute
+     * 
+     * @param int $id
+     * @param string $_language
      * @param CFR $cfR
      * @param CVR $cvR
      * @param PIR $piR
@@ -2756,11 +2739,13 @@ final class QuoteController
      * @param CR $cR
      * @param GR $gR
      * @param QCR $qcR
+     * @param SOR $soR
+     * @return \Yiisoft\DataResponse\DataResponse|Response
      */
-    public function view(CurrentRoute $currentRoute, 
+    public function view( #[RouteArgument('id')] int $id, #[RouteArgument('_language')] string $_language, 
                          CFR $cfR, CVR $cvR, PIR $piR, PR $pR, QAR $qaR, QIAR  $qiaR, QIR $qiR, QR $qR, QTRR $qtrR, TRR $trR, FR $fR,  UNR $uR, CR $cR, GR $gR, QCR $qcR, SOR $soR)
                          : \Yiisoft\DataResponse\DataResponse|Response {
-        $quote = $this->quote($currentRoute, $qR, false);
+        $quote = $this->quote($id, $qR, false);
         if (null!==$quote) {
             $quote_id = $quote->getId();
             if (null!==$quote_id) {
@@ -2785,10 +2770,10 @@ final class QuoteController
                         'quote_amount_total' => $quote_amount->getTotal(), 
                         'sales_order_number' => $sales_order_number,
                         'add_quote_item' => $this->view_renderer->renderPartialAsString('/invoice/quoteitem/_item_form',[
-                            'action' => ['quoteitem/add',['_language' => $currentRoute->getArgument('_language')]],
+                            'action' => ['quoteitem/add',['_language' => $_language]],
                             'errors' => [],
                             'form' => new QuoteItemForm(new QuoteItem(), $quote_id),
-                            'quote_id' => $this->quote($currentRoute, $qR, true),
+                            'quote_id' => $this->quote($id, $qR, true),
                             'tax_rates' => $trR->findAllPreloaded(),
                             'products' => $pR->findAllPreloaded(),
                             'units' => $uR->findAllPreloaded(),
@@ -2815,7 +2800,7 @@ final class QuoteController
                             'quote_tax_rates' => $quote_tax_rates,
                             'quote_amount' => $quote_amount,
                             'quote' => $qR->repoQuoteLoadedquery((string)$this->session->get('quote_id')),  
-                            'language' => $currentRoute->getArgument('_language'),
+                            'language' => $_language,
                             'tax_rates' => $trR->findAllPreloaded(),
                             'units' => $uR->findAllPreloaded(),
                         ]),
@@ -2839,7 +2824,7 @@ final class QuoteController
                             'groups' => $gR->findAllPreloaded(),
                         ]),
                         'modal_delete_quote' => $this->view_renderer->renderPartialAsString('/invoice/quote/modal_delete_quote',
-                                ['action' => ['quote/delete', ['_language' => $currentRoute->getArgument('_language'), 'id' => $this->session->get('quote_id')]],
+                                ['action' => ['quote/delete', ['_language' => $_language, 'id' => $this->session->get('quote_id')]],
                         ]),            
                         'modal_delete_items' => $this->view_renderer->renderPartialAsString('/invoice/quote/modal_delete_item',[
                                 'partial_item_table_modal' => $this->view_renderer->renderPartialAsString('/invoice/quoteitem/_partial_item_table_modal',[

@@ -130,13 +130,15 @@ final class PaymentInformationController
     /**
      * @param string $level
      * @param string $message
-     * @return Flash
+     * @return Flash|null
      */
-    private function flash_message(string $level, string $message): Flash {
-      $this->flash->add($level, $message, true);
-      return $this->flash;
+    private function flash_message(string $level, string $message): Flash|null {
+        if (strlen($message) > 0) {
+            $this->flash->add($level, $message, true);
+            return $this->flash;
+        }
+        return null;
     }
-    
     // https://developer.amazon.com/docs/amazon-pay-api-v2/checkout-session.html#create-checkout-session
     
     /**

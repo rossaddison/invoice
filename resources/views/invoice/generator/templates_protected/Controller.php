@@ -211,14 +211,17 @@ final class <?= $generator->getCamelcase_capital_name(); ?>Controller
         return $this->webService->getRedirectResponse('<?= $generator->getSmall_singular_name(); ?>/index');
     }
     
-    /**
+     /**
      * @param string $level
      * @param string $message
-     * @return Flash
+     * @return Flash|null
      */
-    private function flash_message(string $level, string $message): Flash{
-        $this->flash->add($level, $message, true); 
-        return $this->flash;
+    private function flash_message(string $level, string $message): Flash|null {
+        if (strlen($message) > 0) {
+            $this->flash->add($level, $message, true);
+            return $this->flash;
+        }
+        return null;
     }
     
     //For rbac refer to AccessChecker    

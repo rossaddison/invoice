@@ -8,20 +8,26 @@ use Yiisoft\Router\UrlGeneratorInterface;
 use Yiisoft\Translator\TranslatorInterface as Translator;
 use Yiisoft\Yii\View\CommonParametersInjectionInterface;
 use App\Invoice\Entity\Company;
+use App\Invoice\Entity\CompanyPrivate;
 use App\Invoice\Company\CompanyRepository;
+use App\Invoice\CompanyPrivate\CompanyPrivateRepository;
+
 
 final class CommonViewInjection implements CommonParametersInjectionInterface
 {
     private CompanyRepository $companyRepository;
+    private CompanyPrivateRepository $companyPrivateRepository;
     private Translator $translator;
     
     public function __construct(
             private UrlGeneratorInterface $url,
             CompanyRepository $companyRepository,
+            CompanyPrivateRepository $companyPrivateRepository,
             Translator $translator
     )
     {
         $this->companyRepository = $companyRepository;
+        $this->companyPrivateRepository = $companyPrivateRepository;
         $this->translator = $translator;
     }
 
@@ -32,6 +38,7 @@ final class CommonViewInjection implements CommonParametersInjectionInterface
     public function getCommonParameters(): array
     {
         $companies = $this->companyRepository->findAllPreloaded();
+        $companyPrivates = $this->companyPrivateRepository->findAllPreloaded();
         $companyAddress1 = '';
         $companyAddress2 = '';
         $companyCity = '';
@@ -39,6 +46,7 @@ final class CommonViewInjection implements CommonParametersInjectionInterface
         $companyZip = '';
         $companyPhone = '';
         $companyEmail = '';
+        $companyLogoFileName = '';
         /**
          * @var Company $company
          */
@@ -51,6 +59,18 @@ final class CommonViewInjection implements CommonParametersInjectionInterface
                 $companyZip = $company->getZip();
                 $companyPhone = $company->getPhone();
                 $companyEmail = $company->getEmail();
+                /**
+                 * @var CompanyPrivate $private
+                 */
+                foreach ($companyPrivates as $private) {
+                    if ($private->getCompany_id() == (string)$company->getId()) {
+                        // site's logo: take the first logo where the current date falls within the logo's start and end dates
+                        if (($private->getStart_date()?->format('Y-m-d') < (new \DateTimeImmutable('now'))->format('Y-m-d')) && ($private->getEnd_date()?->format('Y-m-d') > (new \DateTimeImmutable('now'))->format('Y-m-d'))) {
+                                $companyLogoFileName = $private->getLogo_filename();
+                              //  break;
+                        }    
+                    }
+                }
             }
         }
         return [
@@ -62,6 +82,7 @@ final class CommonViewInjection implements CommonParametersInjectionInterface
             'companyZip' => $companyZip ?? '',
             'companyPhone' => $companyPhone ?? '',
             'companyEmail' => $companyEmail ?? '',
+            'companyLogoFileName' => $companyLogoFileName ?? '',
             /**
              * @see \invoice\resources\messages\en\app.php 
              * @see \invoice\vendor\yiisoft\yii-view\src\ViewRenderer.php function getCommonParameters

@@ -260,14 +260,15 @@ $vat = $s->get_setting('enable_vat_registration');
             <?php $count = $count + 1;} ?> 
         </table>
     </div>
-     <br>
-     
+    <br>
+    <?php 
+        /***********************/
+        /*   Totals start here */
+        /***********************/
+    ?> 
     <?= Html::openTag('div', ['class' => 'row']); ?>
-        <div class="col-xs-12 col-md-4" quote_tax_rates="<?php $quote_tax_rates; ?>">
-           
-        </div>
+        <div class="col-xs-12 col-md-4" quote_tax_rates="<?php $quote_tax_rates; ?>"></div>
         <div class="col-xs-12 visible-xs visible-sm"><br></div>
-
         <div class="col-xs-12 col-md-6 col-md-offset-2 col-lg-4 col-lg-offset-4">
             <table class="table table-bordered text-right">
                 <tr>

@@ -336,7 +336,14 @@ $vat = $s->get_setting('enable_vat_registration');
                 <tr>
                     <td style="width: 40%;"><?= $translator->translate('i.subtotal'); ?></td>
                     <td style="width: 60%;" class="amount" id="amount_subtotal" data-bs-toggle = "tooltip" title="inv_amount->item_subtotal =  inv_item(s)->subtotal - inv_item(s)->discount + inv_item(s)->charge"><?php echo $numberhelper->format_currency($inv_amount->getItem_subtotal() ?? 0.00); ?></td>
-                </tr>                
+                </tr>
+                <tr>
+                    <td>
+                    <span><?= $vat === '1' ? $translator->translate('invoice.invoice.vat.break.down') : $translator->translate('i.item_tax'); ?>
+                    </span>    
+                    </td>
+                    <td class="amount" data-bs-toggle = "tooltip" id="amount_item_tax_total" title="inv_amount->item_tax_total"><?php echo $numberhelper->format_currency($inv_amount->getItem_tax_total()  ?? 0.00); ?></td>
+                </tr>  
                 <?php if ($vat === '0') { ?>
                 <tr>
                     <td>
@@ -412,13 +419,6 @@ $vat = $s->get_setting('enable_vat_registration');
                   </tr> 
                   <?php } ?>
                 <?php } ?>
-                <tr>
-                    <td>
-                    <span><?= $vat === '1' ? $translator->translate('invoice.invoice.vat.break.down') : $translator->translate('i.item_tax'); ?>
-                    </span>    
-                    </td>
-                    <td class="amount" data-bs-toggle = "tooltip" id="amount_item_tax_total" title="inv_amount->item_tax_total"><?php echo $numberhelper->format_currency($inv_amount->getItem_tax_total()  ?? 0.00); ?></td>
-                </tr>  
                 <tr>
                     <td><b><?= $translator->translate('i.total'); ?></b></td>
                     <td class="amount" id="amount_inv_total" data-bs-toggle = "tooltip" title="inv_amount->total"><b><?php echo $numberhelper->format_currency($inv_amount->getTotal() ?? 0.00); ?></b></td>
