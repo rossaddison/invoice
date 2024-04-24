@@ -247,10 +247,13 @@ return [
       // Store generated Schema in the file
       PhpFileSchemaProvider::class => [
         // >>>>>>>>>>  To update a table structure and related schema use MODE_WRITE_ONLY ...then revert back to MODE_READ_AND_WRITE
-        //'mode' => PhpFileSchemaProvider::MODE_WRITE_ONLY,
-        // yii-invoice
-        // For faster performance use MODE_READ_AND_WRITE => 0
-        'mode' => PhpFileSchemaProvider::MODE_READ_AND_WRITE,
+        // For faster performance use MODE_READ_AND_WRITE 
+        //'mode' => $_ENV['BUILD_DATABASE'] ? PhpFileSchemaProvider::MODE_WRITE_ONLY : PhpFileSchemaProvider::MODE_READ_AND_WRITE,
+        /**
+         * Note: Performance degrades if you insert a $_ENV into the 'false' value
+         * @see \.env.php file that contains the $_ENV['BUILD_DATABASE'] setting 
+         */  
+        'mode' => false ? PhpFileSchemaProvider::MODE_WRITE_ONLY : PhpFileSchemaProvider::MODE_READ_AND_WRITE,
         'file' => 'runtime/schema.php',
       ],
       FromConveyorSchemaProvider::class => [

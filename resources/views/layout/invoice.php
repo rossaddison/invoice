@@ -35,6 +35,7 @@ use Yiisoft\Yii\Bootstrap5\NavBar;
 use Yiisoft\Yii\Bootstrap5\Offcanvas;
 
 /**
+ * @see ..\ViewInjection\LayoutViewInjection
  * @var Psr\Http\Message\ServerRequestInterface $request
  * @var \Yiisoft\Router\UrlGeneratorInterface $urlGenerator
  * @var \Yiisoft\Router\CurrentRoute $currentRoute
@@ -42,13 +43,8 @@ use Yiisoft\Yii\Bootstrap5\Offcanvas;
  * @var \Yiisoft\Assets\AssetManager $assetManager
  * @var \Yiisoft\Config\Config $config
  * @var \Yiisoft\Config\ConfigPaths $configPaths
- * @var \App\Invoice\Setting\SettingRepository $s
- * @var \App\Invoice\Helpers\DateHelper $datehelper
- * @see \App\ApplicationViewInjection
- * @var \App\User\User|null $user
  * @var string $csrf
  * @var string $content
- * @var string $brandLabel
  */
 $assetManager->register(AppAsset::class);
 $assetManager->register(InvoiceAsset::class);
@@ -127,20 +123,10 @@ $this->addJsFiles($assetManager->getJsFiles());
 $this->addJsStrings($assetManager->getJsStrings());
 $this->addJsVars($assetManager->getJsVars());
 
-$currentRouteName = $currentRoute->getName() ?? '';
-
-$isGuest = $user === null || $user->getId() === null;
-
-$xdebug = extension_loaded('xdebug') ? 'php.ini zend_extension Installed : Performance compromised!' : 'php.ini zend_extension Commented out: Performance NOT compromised';
-
 // Platform, Performance, and Clear Assets Cache, and links Menu will disappear if set to false;
 /**
  * @see src\ViewInjection\LayoutViewInjection.php $debugMode
  */
-$s->debugMode($debugMode);
-// 0 => fast Read and Write, // 1 => slower Write Only
-$read_write = $s->getSchemaProvidersMode();
-
 $this->beginPage();
 ?>
 <!DOCTYPE html>
@@ -160,9 +146,7 @@ $this->beginPage();
         ?>
         
         <?php
-        $this->beginBody();
-        $logoPath = ((null!==$companyLogoFileName) ? '/logo/'. $companyLogoFileName : '/site/logo/logo.png');  
-        
+        $this->beginBody();        
         $offcanvas = new Offcanvas();
         $offcanvas->title($s->get_setting('custom_title') ?: 'Yii-Invoice');
 
@@ -204,6 +188,7 @@ $this->beginPage();
                   ['options' => ['class' => 'nav fs-4'], 'label' => $translator->translate('invoice.peppol.store.cove.1.1.4'), 'url' => $urlGenerator->generate('invoice/store_cove_send_test_json_invoice')],
                 ],
               ],
+// Client                  
               ['label' => '',
                'linkOptions' => [
                     'class' => 'bi bi-people',
@@ -219,17 +204,20 @@ $this->beginPage();
                   ['options' => ['class' => 'nav fs-4'], 'label' => $translator->translate('invoice.invoice.delivery.location'), 'url' => $urlGenerator->generate('del/index')],
                 ],
               ],
+// Quote                  
               ['label' => $translator->translate('i.quote'),
                 'items' => [
                   ['options' => ['class' => 'nav fs-4'], 'label' => $translator->translate('i.create_quote'), 'url' => $urlGenerator->generate('quote/add', ['origin' => 'main'])],  
                   ['options' => ['class' => 'nav fs-4 ajax-loader'], 'label' => $translator->translate('i.view'), 'url' => $urlGenerator->generate('quote/index')],
                 ],
               ],
+// SalesOrder                  
               ['label' => $translator->translate('invoice.salesorder'),
                 'items' => [
                   ['options' => ['class' => 'nav fs-4'], 'label' => $translator->translate('i.view'), 'url' => $urlGenerator->generate('salesorder/index')],
                 ],
               ],
+// Invoice                  
               ['label' => $translator->translate('i.invoice'),
                 'items' => [
                   ['options' => ['class' => 'nav fs-4'], 'label' => $translator->translate('i.create_invoice'), 'url' => $urlGenerator->generate('inv/add', ['origin' => 'main'])],
@@ -237,6 +225,7 @@ $this->beginPage();
                   ['options' => ['class' => 'nav fs-4'], 'label' => $translator->translate('i.recurring'), 'url' => $urlGenerator->generate('invrecurring/index')],
                 ],
               ],
+// Payment                  
               ['label' => '',
                'linkOptions' => [
                     'class' => 'bi bi-coin',
@@ -250,6 +239,7 @@ $this->beginPage();
                   ['options' => ['class' => 'nav fs-4'], 'label' => $translator->translate('i.payment_logs'), 'url' => $urlGenerator->generate('payment/online_log')]
                 ],
               ],
+// Product                  
               ['label' => $translator->translate('i.product'),
                 'items' => [
                   ['options' => ['class' => 'nav fs-4'], 'label' => $translator->translate('i.add_product'), 'url' => $urlGenerator->generate('product/add')],
@@ -260,18 +250,21 @@ $this->beginPage();
                   
                 ],
               ],
+// Tasks                  
               ['label' => $translator->translate('i.tasks'),
                 'items' => [
                   ['options' => ['class' => 'nav fs-4'], 'label' => $translator->translate('i.add_task'), 'url' => $urlGenerator->generate('task/add')],
                   ['options' => ['class' => 'nav fs-4 ajax-loader'], 'label' => $translator->translate('i.view'), 'url' => $urlGenerator->generate('task/index')],
                 ],
               ],
+// Projects                  
               ['label' => $translator->translate('i.projects'),
                 'items' => [
                   ['options' => ['class' => 'nav fs-4'], 'label' => $translator->translate('i.create_project'), 'url' => $urlGenerator->generate('project/add')],
                   ['options' => ['class' => 'nav fs-4'], 'label' => $translator->translate('i.view'), 'url' => $urlGenerator->generate('project/index')],
                 ],
               ],
+// Reports                  
               ['label' => $translator->translate('i.reports'),
                 'items' => [
                   ['options' => ['class' => 'nav fs-4'], 'label' => $translator->translate('i.sales_by_client'), 'url' => $urlGenerator->generate('report/sales_by_client_index')],
@@ -282,6 +275,7 @@ $this->beginPage();
                   ['options' => ['class' => 'nav fs-4'], 'label' => $translator->translate('i.invoice_aging'), 'url' => $urlGenerator->generate('report/invoice_aging_index')],
                 ],
               ],
+// Settings                  
               ['label' => '',
                 'linkOptions' => [
                     'class' => 'fa fa-cogs',
@@ -313,6 +307,7 @@ $this->beginPage();
                   ['options' => ['class' => 'nav fs-4'], 'label' => $translator->translate('invoice.setting.company.profile'), 'url' => $urlGenerator->generate('profile/index')],
                 ],
               ],
+// Platform                  
               ['label' => $translator->translate('invoice.platform'), 'options' => ['style' => 'background-color: #ffcccb'], 'visible' => $debugMode,
                 'items' => [
                   ['label' => 'WAMP'],
@@ -387,18 +382,28 @@ $this->beginPage();
                   ['label' => $translator->translate('invoice.platform.server') . ': Ubuntu LTS 22.04 64 bit'],
                   ['label' => 'Apache: 2.4.52 64 bit'],
                   ['label' => $translator->translate('invoice.platform.mySqlVersion') . ': 5.7.31 || 8.0.31 '],
-                  ['label' => $translator->translate('invoice.platform.PhpVersion') . ': 8.2.1 (Compatable with PhpAdmin 5.2.0)'],
+                  ['label' => $translator->translate('invoice.platform.PhpVersion') . ': '.phpversion()],
                   ['label' => $translator->translate('invoice.platform.PhpMyAdmin') . ': 5.2.1 (Compatable with php 8.2.1)'],
                   ['label' => $translator->translate('invoice.development.progress'), 'url' => $urlGenerator->generate('invoice/ubuntu')],
                 ],
               ],
+// FAQ                  
               ['label' => $translator->translate('invoice.faq'), 'options' => ['style' => 'background-color: #ffcccb'], 'visible' => $debugMode,
                 'items' => [
-                  ['label' => $translator->translate('invoice.faq.taxpoint'), 'url' => $urlGenerator->generate('invoice/faq', ['topic' => 'tp'])],
-                  ['label' => $translator->translate('invoice.faq.shared.hosting'), 'url' => $urlGenerator->generate('invoice/faq', ['topic' => 'shared'])],
-                  ['label' => $translator->translate('invoice.faq.payment.provider'), 'url' => $urlGenerator->generate('invoice/faq', ['topic' => 'paymentprovider'])],  
-                ]],
+                  ['label' => $translator->translate('invoice.faq.taxpoint'), 'url' => $urlGenerator->generate('invoice/faq', ['topic' => 'tp', 'selection' => '' ])],
+                  ['label' => $translator->translate('invoice.faq.shared.hosting'), 'url' => $urlGenerator->generate('invoice/faq', ['topic' => 'shared', 'selection' => ''])],
+                  ['label' => $translator->translate('invoice.faq.payment.provider'), 'url' => $urlGenerator->generate('invoice/faq', ['topic' => 'paymentprovider', 'selection' => ''])], 
+                  ['label' => $translator->translate('invoice.faq.php.info.all'), 'url' => $urlGenerator->generate('invoice/faq', ['topic' => 'phpinfo', 'selection' => '-1'])],
+                  ['label' => $translator->translate('invoice.faq.php.info.general'), 'url' => $urlGenerator->generate('invoice/faq', ['topic' => 'phpinfo', 'selection' => '1'])],
+                  ['label' => $translator->translate('invoice.faq.php.info.credits'), 'url' => $urlGenerator->generate('invoice/faq', ['topic' => 'phpinfo', 'selection' => '2'])],
+                  ['label' => $translator->translate('invoice.faq.php.info.configuration'), 'url' => $urlGenerator->generate('invoice/faq', ['topic' => 'phpinfo', 'selection' => '4'])],
+                  ['label' => $translator->translate('invoice.faq.php.info.modules'), 'url' => $urlGenerator->generate('invoice/faq', ['topic' => 'phpinfo', 'selection' => '8'])],
+                  ['label' => $translator->translate('invoice.faq.php.info.environment'), 'url' => $urlGenerator->generate('invoice/faq', ['topic' => 'phpinfo', 'selection' => '16'])],
+                  ['label' => $translator->translate('invoice.faq.php.info.variables'), 'url' => $urlGenerator->generate('invoice/faq', ['topic' => 'phpinfo', 'selection' => '32'])],
+                  ['label' => $translator->translate('invoice.faq.php.info.license'), 'url' => $urlGenerator->generate('invoice/faq', ['topic' => 'phpinfo', 'selection' => '64'])],
+              ]],
               ['label' => $translator->translate('invoice.vat'), 'options' => ['style' => $vat ? 'background-color: #ffcccb' : 'background-color: #90EE90'], 'visible' => $debugMode],
+// Performance              
               ['label' => $translator->translate('invoice.performance'), 'options' => ['style' => $read_write ? 'background-color: #ffcccb' : 'background-color: #90EE90','data-bs-toggle'=>'tooltip','title' => $read_write ? $translator->translate('invoice.performance.label.switch.on') : $translator->translate('invoice.performance.label.switch.off')], 'visible' => $debugMode,
                 'items' => [
                   ['label' => $translator->translate('invoice.platform.xdebug') . ' ' . $xdebug, 'options' => ['class' => 'nav fs-4', 'data-bs-toggle' => 'tooltip', 'title' => 'Via Wampserver Menu: Icon..Php 8.1.8-->Php extensions-->xdebug 3.1.5(click)-->Allow php command prompt to restart automatically-->(click)Restart All Services-->No typing in or editing of a php.ini file!!']],
@@ -413,6 +418,7 @@ $this->beginPage();
                   ['label' => 'config.params: yiisoft/yii-debug-api: enabled, disable for improved performance'],
                 ],
               ],
+// Generator                  
               ['label' => $translator->translate('invoice.generator'), 'options' => ['style' => 'background-color: #ffcccb'], 'visible' => $debugMode,
                 'items' => [
                   ['options' => ['class' => 'nav fs-4'], 'label' => $translator->translate('invoice.generator'), 'url' => $urlGenerator->generate('generator/index')],
@@ -436,6 +442,7 @@ $this->beginPage();
                     'options' => ['class' => 'nav fs-4', 'data-bs-toggle' => 'tooltip', 'title' => $translator->translate('invoice.test.remove.tooltip')]]
                 ],
               ],
+// Assets Clear                  
               ['label' => $translator->translate('invoice.utility.assets.clear'),
                 'url' => $urlGenerator->generate('setting/clear'), 'options' => ['class' => 'nav fs-4', 'data-bs-toggle' => 'tooltip',
                   'title' => 'Clear the assets cache which resides in /public/assets.', 'style' => 'background-color: #ffcccb'],
@@ -563,7 +570,7 @@ $this->beginPage();
                 ->open()
                 . '<div class="mb-1">'
                 . Button::submit(
-                  $translator->translate('menu.logout', ['login' => Html::encode($user->getLogin())])
+                  $translator->translate('menu.logout', ['login' => Html::encode($userLogin)])
                 )
                 ->class('btn btn-primary')
                 . '</div>'
@@ -613,19 +620,7 @@ $this->beginPage();
 </html>
 
 <?php
-// https://api.jqueryui.com/datepicker
-$js1 = "$(function () {" .
-  '$(".form-control.input-sm.datepicker").datepicker({dateFormat:"' . $datehelper->datepicker_dateFormat()
-  . '", firstDay:' . $datehelper->datepicker_firstDay()
-  . ', changeMonth: true'
-  . ', changeYear: true'
-  . ', yearRange: "-110:+10"'
-  . ', clickInput: true'
-  . ', constrainInput: false'
-  . ', highlightWeek: true'
-  . ' });' .
-  '});';
-echo Html::script($js1)->type('module');
+echo Html::script($javascriptJqueryDateHelper)->type('module');
 ?>
 <?php
 $this->endPage();

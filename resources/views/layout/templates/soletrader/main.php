@@ -87,7 +87,7 @@ $this->setTitle($title);
                 [
                     [
                         'label' => '',
-                        'visible' => $s->get_setting('debug_mode') == '1',
+                        'visible' => $debugMode,
                         'linkOptions' => [
                             'class' => 'bi bi-info-circle',
                             'style' => 'font-size: 1rem; color: cornflowerblue;',
@@ -136,13 +136,13 @@ $this->setTitle($title);
                     [
                         'label' => str_repeat(' ',1).$translator->translate('i.login'),
                         'url' => $urlGenerator->generate('auth/login'),
-                        'visible' => $isGuest,
+                        'visible' => $isGuest && !$stopLoggingIn,
                         'linkOptions' => ['class' => 'bi bi-door-open-fill text-success']
                     ],
                     [
                         'label' => '',
                         'url' => $urlGenerator->generate('auth/signup'),
-                        'visible' => $isGuest,
+                        'visible' => $isGuest && !$stopSigningUp,
                         'linkOptions' => [
                             'class' => 'bi bi-person-plus-fill',
                             'data-bs-toggle' => 'tooltip',

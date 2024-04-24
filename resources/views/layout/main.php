@@ -149,12 +149,12 @@ $this->beginPage();
                     [
                         'label' => $translator->translate('i.login'),
                         'url' => $urlGenerator->generate('auth/login'),
-                        'visible' => $isGuest,
+                        'visible' => $isGuest && !$stopLoggingIn,
                     ],
                     [
                         'label' => $translator->translate('i.setup_create_user'),
                         'url' => $urlGenerator->generate('auth/signup'),
-                        'visible' => $isGuest,
+                        'visible' => $isGuest && !$stopSigningUp,
                     ],
                     $isGuest ? '' : Form::tag()
                             ->post($urlGenerator->generate('auth/logout'))

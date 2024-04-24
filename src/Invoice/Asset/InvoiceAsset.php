@@ -16,7 +16,7 @@ class InvoiceAsset extends AssetBundle
     
     public array $css = [
         'invoice/css/style.css',
-        'invoice/css/yii3i.css',        
+        'yii3i/yii3i.css',        
         'jquery-ui-1.13.2/jquery-ui.min.css',
         'jquery-ui-1.13.2/jquery-ui.structure.min.css',
         'jquery-ui-1.13.2/jquery-ui.theme.min.css',

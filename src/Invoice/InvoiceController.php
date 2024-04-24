@@ -43,6 +43,7 @@ use Psr\Http\Message\ResponseInterface as Response;
 
 use Yiisoft\FormModel\FormHydrator;
 use Yiisoft\Router\CurrentRoute;
+use Yiisoft\Router\HydratorAttribute\RouteArgument;
 use Yiisoft\Security\Random;
 use Yiisoft\Session\SessionInterface;
 use Yiisoft\Session\Flash\Flash;
@@ -119,15 +120,13 @@ final class InvoiceController
          'errors' => [],
        ]);
      }
-    
-    /**
-     * 
-     * @param CurrentRoute $currentRoute
-     * @return Response
-     */
-    public function faq(CurrentRoute $currentRoute) : Response 
+     
+    public function faq(#[RouteArgument('topic')] string $topic, #[RouteArgument('selection')] string $selection = '') : Response 
     {
-        switch ($currentRoute->getArgument('topic')) {
+        switch ($topic) {
+            case 'phpinfo':
+                $view = $this->viewRenderer->renderPartialAsString('/invoice/info/phpinfo', ['selection' => (int)$selection]);
+                break;
             case 'tp':
                 $view = $this->viewRenderer->renderPartialAsString('/invoice/info/taxpoint');
                 break;
@@ -870,16 +869,16 @@ final class InvoiceController
             'default_sales_order_group' => 3,
             'default_language' => $sR->get_folder_language() ?: 'English', 
             //paginator list limit
-            'default_list_limit'=>120, 
+            'default_list_limit' => 120, 
             // Prevent documents from being made non-editable. By default documents are made non-editable
-            // according to the read_only_toggle which is set at sent ie 2.
+            // according to the read_only_toggle (listed below) which is set at sent ie 2. So when a document is sent it becomes non-editable i.e. read_only
             // By default this setting is on 0 ie. Invoices can be made read-only (through the 
             // read_only_toggle)
-            'disable_read_only'=> 0,
-            'disable_sidebar' => 1,
-            // Invoice deletion by Law is not allowed. Invoices have to be cancelled with a credit invoice.
-            'enable_invoice_deletion'=>true,
-            'enable_peppol_client_defaults'=> 1,
+            'disable_read_only'=>0,
+            'disable_sidebar'=>1,
+            // Invoice deletion by Law is not allowed. Invoices have to be cancelled with a credit invoice/note.
+            'enable_invoice_deletion' => true,
+            'enable_peppol_client_defaults' => 1,
             'enable_vat_registration'=> 0,
             // Archived pdfs are automatically sent to customers from view/invoice...Options...Send
             // The pdf is sent along with the attachment to the invoice on the view/invoice.

@@ -46,8 +46,17 @@
 <p>Introducing Paypal.</p>
 <p>Introducing India's PayTm payment gateway's QR code method of payment and comparing this with Stripe's method.</p>
 <p>A General Sales Tax (GST) Tax System will have to be implemented first for this purpose.</p>
-<p><b>What's next?</b></p>
 <p>Testing Credit Notes against Invoices with refunds (if payment made) linked to each of the payment gateways.</p>
+<p><b>24th April 2024</b></p>
+<p>Include stopLoggingIn and stopSigningUp variable into the LayoutViewInjection</p>
+<p>Include these variables into main.php</p> 
+<p>Replace currentRoute with RouteArguments in InvoiceController.php</p>
+<p>The $debugMode variable now is linked to the .env file. Alter the debugMode in the .env file now instead of the LayoutViewInjection.
+   If the $_ENV['BUILD_DATABASE']  environment variable is linked directly in the config/common params.php file it results in performance degradation so leave the setitng on 'false' for the moment.
+</p>
+<p><b>What's next?</b></p>
+<p>Next: Adjusting the logo height and width parameters in the companyPrivate Entity.
+   The logo has been incorporated under the Invoice_web and the Quote_web files. Now to incorporate a qrCode image.</p>
 <p><b>13th April 2024</b></p>
 <p>1. Create a function userinv/guestlimit which stores a guest user's page size limiter selector's last choice.</p>
 <p>2. This value is then specific to the user and separate from the default_page_size limiter.</p>

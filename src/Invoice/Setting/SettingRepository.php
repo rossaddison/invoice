@@ -1993,7 +1993,11 @@ final class SettingRepository extends Select\Repository
         return $locales;
     }
     
-    // Record the debug_mode in a setting.
+    /**
+     * @see ..\src\ViewInjection\LayoutViewInjection
+     * @param bool $debugMode
+     * @return void
+     */
     public function debugMode(bool $debugMode) : void {
         if ($debugMode == true)  {
             $count = $this->repoCount('debug_mode');

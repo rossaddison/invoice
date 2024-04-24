@@ -5,10 +5,15 @@ declare(strict_types=1);
 namespace App\ViewInjection;
 
 use App\Auth\Identity;
+// Entities
 use App\Invoice\Entity\Company;
 use App\Invoice\Entity\CompanyPrivate;
+// Repositories
 use App\Invoice\Company\CompanyRepository;
+use App\Invoice\Setting\SettingRepository;
 use App\Invoice\CompanyPrivate\CompanyPrivateRepository;
+use App\Invoice\Helpers\DateHelper;
+// Yiisoft
 use Yiisoft\User\CurrentUser;
 use Yiisoft\Yii\View\LayoutParametersInjectionInterface;
 
@@ -22,14 +27,17 @@ final class LayoutViewInjection implements LayoutParametersInjectionInterface
 {
     private CompanyRepository $companyRepository;
     private CompanyPrivateRepository $companyPrivateRepository;
+    private SettingRepository $settingRepository;
     
     public function __construct(private CurrentUser $currentUser, 
                                 CompanyRepository $companyRepository,
-                                CompanyPrivateRepository $companyPrivateRepository    
+                                CompanyPrivateRepository $companyPrivateRepository,
+                                SettingRepository $settingRepository
     )
     {
         $this->companyRepository = $companyRepository;
         $this->companyPrivateRepository = $companyPrivateRepository;
+        $this->settingRepository = $settingRepository;
     }
     
     /**
@@ -80,12 +88,42 @@ final class LayoutViewInjection implements LayoutParametersInjectionInterface
                 }
             }
         }
-        
+        $stopSigningUp = false;
+        $stopLoggingIn = false;
+        $debugMode = $_ENV['YII_DEBUG'] == 'true' ? true : false;
+        // Record the debugMode in a setting so that 'debug_mode' can be used in e.g. salesorder\guest.php`
+        $this->settingRepository->debugMode($debugMode);
+        $user = $identity instanceof Identity ? $identity->getUser() : null;
+        $isGuest = ($user === null || $user->getId() === null);
+        $userLogin = (null!==$user ? $user->getLogin() : null);
+        $logoPath = ((null!==$companyLogoFileName) ? '/logo/'. $companyLogoFileName : '/site/logo/logo.png');
+        // https://api.jqueryui.com/datepicker
+        $dateHelper = new DateHelper($this->settingRepository);
+        $javascriptJqueryDateHelper = "$(function () {" .
+          '$(".form-control.input-sm.datepicker").datepicker({dateFormat:"' . $dateHelper->datepicker_dateFormat()
+          . '", firstDay:' . $dateHelper->datepicker_firstDay()
+          . ', changeMonth: true'
+          . ', changeYear: true'
+          . ', yearRange: "-110:+10"'
+          . ', clickInput: true'
+          . ', constrainInput: false'
+          . ', highlightWeek: true'
+          . ' });' .
+          '});';
         return [
             'title' => 'Home',
-            'debugMode' => true,
+            'logoPath' => $logoPath,
+            'debugMode' => $debugMode,
+            'stopSigningUp' => $stopSigningUp,
+            'stopLoggingIn' => $stopLoggingIn,
+            'isGuest' => $isGuest,
+            'user' => $user,
+            'userLogin' => $userLogin,
+            'xdebug' => $xdebug = (extension_loaded('xdebug') ? 'php.ini zend_extension xdebug Installed : Performance compromised!' 
+                                                              : 'php.ini zend_extension Commented out: Performance NOT compromised'),
+            // 0 => fast Read and Write, // 1 => slower Write Only
+            'read_write' => $this->settingRepository->getSchemaProvidersMode(),
             'brandLabel' => $brandLabel ?? 'Yii3-i',
-            'user' => $identity instanceof Identity ? $identity->getUser() : null,
             'companyWeb' => $companyWeb ?? 'https://www.web.com',
             'companySlack' => $companySlack ?? 'https://www.slack.com',
             'companyFaceBook' => $companyFaceBook ?? 'https://www.facebook.com',
@@ -93,7 +131,8 @@ final class LayoutViewInjection implements LayoutParametersInjectionInterface
             'companyLinkedIn' => $companyLinkedIn ?? 'https://www.linkedin.com',
             'companyWhatsApp' => $companyWhatsApp ?? 'https://www.whatsapp.com',
             'companyEmail' => $companyEmail ?? 'mailto:js@example.com',
-            'companyLogoFileName' => $companyLogoFileName ?? ''
+            'companyLogoFileName' => $companyLogoFileName ?? '',
+            'javascriptJqueryDateHelper' => $javascriptJqueryDateHelper    
         ];
     }
 }

@@ -262,7 +262,7 @@ return [
       ->middleware(Authentication::class)
       ->action([InvoiceController::class, 'dashboard'])
       ->name('invoice/dashboard'),
-      Route::get('/faq/{topic}')
+      Route::get('/faq/{topic}/{selection}')
       ->middleware(fn(AccessChecker $checker) => $checker->withPermission('editInv'))
       ->middleware(Authentication::class)
       ->action([InvoiceController::class, 'faq'])
