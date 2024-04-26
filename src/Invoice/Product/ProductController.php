@@ -68,7 +68,7 @@ use Yiisoft\Data\Paginator\PageToken;
 use Yiisoft\FormModel\FormHydrator;
 use Yiisoft\Http\Method;
 use Yiisoft\Json\Json;
-use Yiisoft\Router\CurrentRoute;
+use Yiisoft\Router\HydratorAttribute\RouteArgument;
 use Yiisoft\Session\SessionInterface;
 use Yiisoft\Session\Flash\Flash;
 use Yiisoft\Translator\TranslatorInterface;
@@ -220,13 +220,13 @@ class ProductController
     
     /**
      * @param pR $pR
-     * @param CurrentRoute $currentRoute
+     * @param string $id
      * @return Response
      */
-    public function delete(pR $pR, CurrentRoute $currentRoute) : Response 
+    public function delete(pR $pR, #[RouteArgument('id')] string $id) : Response 
     {
         try {
-            $product = $this->product($currentRoute, $pR);
+            $product = $this->product($id, $pR);
             if ($product) { 
                 $this->productService->deleteProduct($product);  
                 $this->flash_message('info', $this->translator->translate('i.record_successfully_deleted'));
@@ -254,7 +254,7 @@ class ProductController
     
     /**
      * @param Request $request
-     * @param CurrentRoute $currentRoute
+     * @param string $id
      * @param FormHydrator $formHydrator
      * @param pR $pR
      * @param sR $sR
@@ -267,12 +267,12 @@ class ProductController
      * @param Validator $validator
      * @return Response
      */
-    public function edit(Request $request, CurrentRoute $currentRoute, FormHydrator $formHydrator,
+    public function edit(Request $request, #[RouteArgument('id')] string $id, FormHydrator $formHydrator,
                     pR $pR, sR $sR, fR $fR, uR $uR, trR $trR, cvR $cvR, cfR $cfR, pcR $pcR, upR $upR, Validator $validator 
     ): Response {
         $countries = new CountryHelper();
         $peppolarrays = new PeppolArrays();
-        $product = $this->product($currentRoute, $pR);
+        $product = $this->product($id, $pR);
         if ($product) {
             $product_id = $product->getProduct_id();
             $form = new ProductForm($product);
@@ -441,20 +441,22 @@ class ProductController
     }
     
     /**
+     * @param Request $request
      * @param pR $pR
      * @param sR $sR
-     * @param CurrentRoute $currentRoute
-     * @param Request $request
+     * @param string $page
+     * @return \Yiisoft\DataResponse\DataResponse
      */
-    public function index(pR $pR, sR $sR, CurrentRoute $currentRoute, Request $request): \Yiisoft\DataResponse\DataResponse
+    public function index(Request $request, pR $pR, sR $sR, #[RouteArgument('page')] string $page = '1'): \Yiisoft\DataResponse\DataResponse
     {
         $canEdit = $this->rbac();
         $this->flash_message('info', $this->translator->translate('invoice.productimage.view'));
         $query_params = $request->getQueryParams();
+        
         /**
          * @var string $query_params['page']
          */
-        $page = $query_params['page'] ?? $currentRoute->getArgument('page', '1');
+        $currentPage = $query_params['page'] ?? $page;
         
         /** @var string $query_params['sort'] */
         $sort_string = $query_params['sort'] ?? '-id';
@@ -477,8 +479,8 @@ class ProductController
         }  
         $paginator = (new DataOffsetPaginator($products))
         ->withPageSize((int)$sR->get_setting('default_list_limit'))
-        ->withCurrentPage((int)$page)
-        ->withToken(PageToken::next((string)$page)); 
+        ->withCurrentPage((int)$currentPage)
+        ->withToken(PageToken::next($currentPage)); 
         $parameters = [
             'alert' => $this->alert(),
             'paginator' => $paginator,
@@ -716,13 +718,12 @@ class ProductController
     }   
     
     /**
-     * @param CurrentRoute $currentRoute
+     * @param string $id
      * @param pR $pR
      * @return Product|null
      */
-    private function product(CurrentRoute $currentRoute, pR $pR): Product|null {        
-        $id = $currentRoute->getArgument('id');
-        if (null!==$id) {
+    private function product(#[RouteArgument('id')] string $id, pR $pR): Product|null {        
+        if ($id) {
             $product = $pR->repoProductquery($id);
             return $product;
         }
@@ -786,11 +787,14 @@ class ProductController
      * @param trR $trR
      * @param uR $uR
      * @param upR $upR
-     * @param CurrentRoute $currentRoute
+     * @param string $id
      */
-    public function view(cfR $cfR, cvR $cvR, fR $fR, pR $pR, pcR $pcR, ppR $ppR, sR $sR, piR $piR, trR $trR, uR $uR, upR $upR, CurrentRoute $currentRoute
+    public function view(cfR $cfR, cvR $cvR, fR $fR, pR $pR, 
+                         pcR $pcR, ppR $ppR, sR $sR, piR $piR, 
+                         trR $trR, uR $uR, upR $upR, 
+                         #[RouteArgument('id')] string $id,
     ): \Yiisoft\DataResponse\DataResponse|Response {
-        $product = $this->product($currentRoute, $pR);
+        $product = $this->product($id, $pR);
         $language = (string)$this->session->get('_language');
         $peppolarrays = new PeppolArrays();
         if ($product) {
@@ -830,7 +834,7 @@ class ProductController
                 ]) 
               ]
             ),
-            'partial_product_images' => $this->view_partial_product_image($currentRoute, (int) $product_id, $piR, $sR),
+            'partial_product_images' => $this->view_partial_product_image($language, (int) $product_id, $piR, $sR),
             'partial_product_gallery' => $this->viewRenderer->renderPartialAsString('/invoice/product/views/partial_product_gallery', [
               'product' => $product,
               'product_images' => $product_images,             
@@ -879,18 +883,18 @@ class ProductController
     /**
      * Upload a product image file
      *
-     * @param CurrentRoute $currentRoute
+     * @param string $id
      * @param PR $pR
      * @param PIR $piR
      * @param sR $sR
      */
-    public function image_attachment(CurrentRoute $currentRoute, PR $pR, PIR $piR, sR $sR): \Yiisoft\DataResponse\DataResponse|Response {
+    public function image_attachment(#[RouteArgument('id')] string $id, PR $pR, PIR $piR, sR $sR): \Yiisoft\DataResponse\DataResponse|Response {
         $aliases = $sR->get_productimages_files_folder_aliases();
         // https://github.com/yiisoft/yii2/issues/3566
         // Save the image directly to the web accessible folder - assets/publc/product
         $targetPath = $aliases->get('@public_product_images');
-        $product_id = $currentRoute->getArgument('id');
-        if (null !== $product_id) {
+        $product_id = $id;
+        if ($product_id) {
             if (!is_writable($targetPath)) {
                 return $this->responseFactory->createResponse($this->image_attachment_not_writable((int) $product_id));
             }
@@ -924,13 +928,13 @@ class ProductController
     
     /**
      *
-     * @param CurrentRoute $currentRoute
+     * @param string $_language
      * @param int $product_id
      * @param piR $piR
      * @param sR $sR
      * @return string
      */
-    private function view_partial_product_image(CurrentRoute $currentRoute, int $product_id, piR $piR, sR $sR): string {
+    private function view_partial_product_image(string $_language, int $product_id, piR $piR, sR $sR): string {
         $productimages = $piR->repoProductImageProductquery($product_id);
         $paginator = new DataOffsetPaginator($productimages);
         $invEdit = $this->userService->hasPermission('editInv');
@@ -945,7 +949,7 @@ class ProductController
             'paginator' => $paginator,
             'invEdit' => $invEdit
           ]),
-          'action' => ['product/image_attachment', ['id' => $product_id, '_language' => $currentRoute->getArgument('_language')]]
+          'action' => ['product/image_attachment', ['id' => $product_id, '_language' => $_language]]
         ]);
     }
     
@@ -989,13 +993,13 @@ class ProductController
     }
     
     /**
-     * @param CurrentRoute $currentRoute
+     * @param string $product_image_id
      * @param piR $piR
      * @return void
      */
-    public function download_image_file(CurrentRoute $currentRoute, piR $piR, sR $sR) : void {
-        $product_image_id = $currentRoute->getArgument('product_image_id');
-        if (null !== $product_image_id) {
+    public function download_image_file(#[RouteArgument('product_image_id')] string $product_image_id, 
+                                        piR $piR, sR $sR) : void {
+        if ($product_image_id) {
             $product_image = $piR->repoProductImagequery($product_image_id);
             if (null !== $product_image) {
                 $aliases = $sR->get_productimages_files_folder_aliases();
