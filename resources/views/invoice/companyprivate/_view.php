@@ -75,11 +75,22 @@ use Yiisoft\Html\Tag\Form;
                         <?= Html::openTag('div', ['class' => 'mb3 form-group']); ?>
                             <?= Field::image()
                                ->src('/logo/'. $form->getLogo_filename())
-                               ->height(150)
-                               ->width(150); ?>
+                               ->height($form->getLogo_height())
+                               ->width($form->getLogo_width()); ?>
                         <?= Html::closeTag('div'); ?>
                     <?= Html::closeTag('div'); ?>  
-                <?= Html::Tag('br'); ?>    
+                <?= Html::Tag('br'); ?> 
+                <?= Html::openTag('div', ['class' => 'mb3 form-group']); ?>
+                    <?= Field::text($form, 'logo_width')
+                        ->readonly(true); ?>
+                <?= Html::closeTag('div'); ?>
+                <?= Html::openTag('div', ['class' => 'mb3 form-group']); ?>
+                    <?= Field::text($form, 'logo_height')
+                        ->readonly(true); ?>
+                <?= Html::closeTag('div'); ?>
+                <?= Html::openTag('div', ['class' => 'mb3 form-group']); ?>
+                    <?= Field::text($form, 'logo_margin')
+                        ->readonly(true); ?>
                 <?= Html::closeTag('div'); ?>
                 <?= Html::openTag('div', ['class' => 'mb3 form-group has-feedback']); ?>
                     <?= Html::openTag('div', ['class' => 'input-group']); ?>               

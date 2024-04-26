@@ -56,7 +56,13 @@ final class LayoutViewInjection implements LayoutParametersInjectionInterface
         $companyLinkedIn = '';
         $companyWhatsApp = '';
         $companyEmail = '';
-        $companyLogoFileName = ''; 
+        $companyLogoFileName = '';
+        /**
+         * @see src/Invoice/Entity/CompanyPrivate for default values 80, 40, 10 respectively
+         */
+        $companyLogoWidth = 80;
+        $companyLogoHeight = 40;
+        $companyLogoMargin = 10;
         $identity = $this->currentUser->getIdentity();
         // Iterate through the companies to find which one is active
         $companies = $this->companyRepository->findAllPreloaded();
@@ -82,6 +88,9 @@ final class LayoutViewInjection implements LayoutParametersInjectionInterface
                         // site's logo: take the first logo where the current date falls within the logo's start and end dates
                         if (($private->getStart_date()?->format('Y-m-d') < (new \DateTimeImmutable('now'))->format('Y-m-d')) && ($private->getEnd_date()?->format('Y-m-d') > (new \DateTimeImmutable('now'))->format('Y-m-d'))) {
                                 $companyLogoFileName = $private->getLogo_filename();
+                                $companyLogoWidth = $private->getLogo_width();
+                                $companyLogoHeight = $private->getLogo_height();
+                                $companyLogoMargin = $private->getLogo_margin();
                               //  break;
                         }    
                     }
@@ -90,6 +99,9 @@ final class LayoutViewInjection implements LayoutParametersInjectionInterface
         }
         $stopSigningUp = false;
         $stopLoggingIn = false;
+        /**
+         * @see .env.php $_ENV['YII_DEBUG'] located in the root (first) folder
+         */
         $debugMode = $_ENV['YII_DEBUG'] == 'true' ? true : false;
         // Record the debugMode in a setting so that 'debug_mode' can be used in e.g. salesorder\guest.php`
         $this->settingRepository->debugMode($debugMode);
@@ -132,6 +144,9 @@ final class LayoutViewInjection implements LayoutParametersInjectionInterface
             'companyWhatsApp' => $companyWhatsApp ?? 'https://www.whatsapp.com',
             'companyEmail' => $companyEmail ?? 'mailto:js@example.com',
             'companyLogoFileName' => $companyLogoFileName ?? '',
+            'companyLogoWidth' => $companyLogoWidth ?? '',
+            'companyLogoHeight' => $companyLogoHeight ?? '',
+            'companyLogoMargin' => $companyLogoMargin ?? '',
             'javascriptJqueryDateHelper' => $javascriptJqueryDateHelper    
         ];
     }

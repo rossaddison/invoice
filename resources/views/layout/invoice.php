@@ -153,7 +153,7 @@ $this->beginPage();
         echo NavBar::widget()
           // public folder represented by first forward slash ie. root
           ->brandImage($logoPath)              
-          ->brandImageAttributes(['margin' => 10, 'width' => 80, 'height' => 40])
+          ->brandImageAttributes(['margin' => $companyLogoMargin, 'width' => $companyLogoWidth, 'height' => $companyLogoHeight])
           //->brandText(str_repeat('&nbsp;', 7).$brandLabel)      
           ->brandUrl($urlGenerator->generate('invoice/index'))
           ->withWidget(
@@ -430,8 +430,8 @@ $this->beginPage();
                   // ..resources/views/generator/templates_protected
                   // Your Json file must be located in src/Invoice/google_translate_unique folder
                   // Get your downloaded Json file from
-                  ['options' => ['class' => 'nav fs-4', 'data-bs-toggle' => 'tooltip', 'title' => $s->where('google_translate_json_filename')],
-                    'label' => $translator->translate('invoice.generator.google.translate.ip'), 'url' => $urlGenerator->generate('generator/google_translate_lang', ['type' => 'ip'])],
+                  ['options' => ['class' => 'nav fs-4'],
+                    'label' => $translator->translate('invoice.generator.google.translate.ip'), 'linkOptions' => ['data-bs-toggle' => 'tooltip', 'title' => $s->where('google_translate_json_filename')], 'url' => $urlGenerator->generate('generator/google_translate_lang', ['type' => 'ip'])],
                   ['options' => ['class' => 'nav fs-4'], 'label' => $translator->translate('invoice.generator.google.translate.gateway'), 'url' => $urlGenerator->generate('generator/google_translate_lang', ['type' => 'gateway'])],
                   ['options' => ['class' => 'nav fs-4'], 'label' => $translator->translate('invoice.generator.google.translate.latest'), 'url' => $urlGenerator->generate('generator/google_translate_lang', ['type' => 'latest'])],
                   ['label' => $translator->translate('invoice.test.reset.setting'), 'url' => $urlGenerator->generate('invoice/setting_reset'),

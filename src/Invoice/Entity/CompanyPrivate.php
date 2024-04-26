@@ -40,7 +40,16 @@ use App\Invoice\Entity\Company;
     
     #[Column(type: 'string(150)', nullable: true)]
     private ?string $logo_filename =  '';
+    
+    #[Column(type: 'int', nullable: false, default: 80)]
+    private ?int $logo_width = null;
      
+    #[Column(type: 'int', nullable: false, default: 40)]
+    private ?int $logo_height = null;
+    
+    #[Column(type: 'int', nullable: false, default: 10)]
+    private ?int $logo_margin = null;
+    
     #[Column(type: 'datetime')]
     private DateTimeImmutable $date_created;
      
@@ -61,7 +70,10 @@ use App\Invoice\Entity\Company;
          string $iban = '',
          string $gln = '',
          string $rcc = '',
-         string $logo_filename = '', 
+         string $logo_filename = '',
+         int $logo_width = null,
+         int $logo_height = null,
+         int $logo_margin = null,   
          mixed $start_date = null,
          mixed $end_date = null,
      )
@@ -74,6 +86,9 @@ use App\Invoice\Entity\Company;
          $this->gln=$gln;
          $this->rcc=$rcc;
          $this->logo_filename=$logo_filename;
+         $this->logo_width=$logo_width;
+         $this->logo_height=$logo_height;
+         $this->logo_margin=$logo_margin;
          $this->date_created= new \DateTimeImmutable();
          $this->date_modified= new \DateTimeImmutable();
          $this->start_date = $start_date;
@@ -170,6 +185,36 @@ use App\Invoice\Entity\Company;
     public function setLogo_filename(string $logo_filename) : void
     {
       $this->logo_filename = $logo_filename;
+    }
+    
+    public function getLogo_width(): int|null
+    {
+       return $this->logo_width;
+    }
+    
+    public function setLogo_width(int $logo_width) : void
+    {
+      $this->logo_width = $logo_width;
+    }
+    
+    public function getLogo_height(): int|null
+    {
+       return $this->logo_height;
+    }
+    
+    public function setLogo_height(int $logo_height) : void
+    {
+      $this->logo_height = $logo_height;
+    }
+    
+    public function getLogo_Margin(): int|null
+    {
+       return $this->logo_margin;
+    }
+    
+    public function setLogo_margin(int $logo_margin) : void
+    {
+      $this->logo_margin = $logo_margin;
     }
     
     public function getDate_created(): DateTimeImmutable

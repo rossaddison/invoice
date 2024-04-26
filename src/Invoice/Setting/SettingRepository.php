@@ -1731,7 +1731,6 @@ final class SettingRepository extends Select\Repository
         $why = '';
         $where = '';
         $reference = '';
-        $menu = null;
         /** 
          * @var array $value 
          * @var string $key
@@ -1752,14 +1751,10 @@ final class SettingRepository extends Select\Repository
                     if ($_key === 'reference') {
                         $reference = $_value;
                     }
-                    if ($_key === 'menu') {
-                        $menu = $_value;
-                    }
                 }
             }
         }
-        $information = (null==$menu ? 'data-bs-toggle = "tooltip" data-bs-placement= "bottom" '.' '.'title = "' : ''). 
-                        $why .' and is used in '.$where.'"';
+        $information = $why .' and is used in '.$where.'"';
         $build = $debug_mode ? $information : '';
         return $build;
     }

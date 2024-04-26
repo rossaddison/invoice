@@ -36,6 +36,9 @@ final class CompanyPrivateService
        isset($array['gln']) ? $model->setGln((string)$array['gln']) : '';
        isset($array['rcc']) ? $model->setRcc((string)$array['rcc']) : '';
        isset($array['logo_filename']) ? $model->setLogo_filename((string)$array['logo_filename']) : '';
+       isset($array['logo_width']) ? $model->setLogo_width((int)$array['logo_width']) : '';
+       isset($array['logo_height']) ? $model->setLogo_height((int)$array['logo_height']) : '';
+       isset($array['logo_margin']) ? $model->setLogo_margin((int)$array['logo_margin']) : '';
        
        $datehelper = new DateHelper($s);
        

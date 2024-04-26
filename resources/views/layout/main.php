@@ -57,9 +57,9 @@ $this->beginPage();
         ?>
         <?= NavBar::widget()
             ->brandImage($logoPath)
-            ->brandImageAttributes(['margin' => 10, 
-                                    'width' => 80, 
-                                    'height' => 40])    
+            ->brandImageAttributes(['margin' => $companyLogoMargin, 
+                                    'width' => $companyLogoWidth, 
+                                    'height' => $companyLogoHeight])    
             ->brandText(str_repeat('&nbsp;', 7).$brandLabel)
             ->brandUrl($urlGenerator->generate('site/index'))
             ->options(['class' => 'navbar navbar-light bg-light navbar-expand-sm text-white'])

@@ -104,6 +104,24 @@ use Yiisoft\Html\Tag\Form;
                         ->value(Html::encode($form->getLogo_filename())); ?>
                 <?= Html::closeTag('div'); ?>
                 <?= Html::openTag('div', ['class' => 'mb3 form-group']); ?>
+                    <?= Field::text($form, 'logo_width')
+                        ->addInputAttributes(['class' => 'form-control'])
+                        ->label($translator->translate('invoice.company.private.logo.width'))
+                        ->value(Html::encode($form->getLogo_width() ??  '')); ?>
+                <?= Html::closeTag('div'); ?>
+                <?= Html::openTag('div', ['class' => 'mb3 form-group']); ?>
+                    <?= Field::text($form, 'logo_height')
+                        ->addInputAttributes(['class' => 'form-control'])
+                        ->label($translator->translate('invoice.company.private.logo.height'))
+                        ->value(Html::encode($form->getLogo_height() ??  '')); ?>
+                <?= Html::closeTag('div'); ?>
+                <?= Html::openTag('div', ['class' => 'mb3 form-group']); ?>
+                    <?= Field::text($form, 'logo_margin')
+                        ->addInputAttributes(['class' => 'form-control'])
+                        ->label($translator->translate('invoice.company.private.logo.margin'))
+                        ->value(Html::encode($form->getLogo_margin() ??  '')); ?>
+                <?= Html::closeTag('div'); ?>
+                <?= Html::openTag('div', ['class' => 'mb3 form-group']); ?>
                     <?= $startdate = $datehelper->get_or_set_with_style($form->getStart_date() 
                                    ?? new \DateTimeImmutable('now')); ?>
                     <?= Html::openTag('div', ['class' => 'input-group']); ?>               

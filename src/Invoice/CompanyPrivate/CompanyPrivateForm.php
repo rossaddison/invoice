@@ -29,6 +29,10 @@ final class CompanyPrivateForm extends FormModel
     #[Required, Length(exactly: null, min: 1, max:150)]
     private ?string $logo_filename='';
     
+    private ?string $logo_width = '';
+    private ?string $logo_height = '';
+    private ?string $logo_margin = '';
+    
     // start_date mixed to accomodate null|string|DateTimeImmutable
     private mixed $start_date='';
     private mixed $end_date='';
@@ -44,6 +48,9 @@ final class CompanyPrivateForm extends FormModel
         $this->gln = $company_private->getGln();
         $this->rcc = $company_private->getRcc();
         $this->logo_filename = $company_private->getLogo_filename();
+        $this->logo_width = (string)$company_private->getLogo_width();
+        $this->logo_height = (string)$company_private->getLogo_height();
+        $this->logo_margin = (string)$company_private->getLogo_margin();
         $this->start_date = $company_private->getStart_date();
         $this->end_date = $company_private->getEnd_date();
     }
@@ -81,6 +88,21 @@ final class CompanyPrivateForm extends FormModel
     public function getLogo_filename() : string|null
     {
       return $this->logo_filename;
+    }
+    
+    public function getLogo_width() : string|null
+    {
+      return $this->logo_width;
+    }
+    
+    public function getLogo_height() : string|null
+    {
+      return $this->logo_height;
+    }
+    
+    public function getLogo_margin() : string|null
+    {
+      return $this->logo_margin;
     }
     
     public function getRcc() : string|null
