@@ -144,13 +144,17 @@ $toolbar = Div::tag();
         new DataColumn(
             header: '🔍', 
             content: static function ($model) use ($urlGenerator): string {
-                return Html::a('🔍', $urlGenerator->generate('inv/view', ['id' => $model->getId()]), [])->render();
+                return Html::a('🔍', $urlGenerator->generate('inv/view', 
+                               ['id' => $model->getId()]), ['style' => 'text-decoration:none'])->render();
             }  
         ),        
         new DataColumn(
             header: '🖉',
             content: static function ($model) use ($s, $urlGenerator): string {
-                return $model->getIs_read_only() === false && $s->get_setting('disable_read_only') === (string) 0 ? Html::a('🖉', $urlGenerator->generate('inv/edit', ['id' => $model->getId()]), [])->render() : '';
+                return $model->getIs_read_only() === false && $s->get_setting('disable_read_only') === (string) 0 
+                       ? Html::a('🖉', $urlGenerator->generate('inv/edit', 
+                               ['id' => $model->getId()]), ['style' => 'text-decoration:none'])->render() 
+                       : '';
             }     
         ),
         new DataColumn(

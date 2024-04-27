@@ -61,13 +61,7 @@ $this->setTitle($title);
     </head>
     <body class="cover-container-fluid d-flex w-100 h-100 mx-auto flex-column">
     <header class="mb-auto">
-        <?php $this->beginBody();
-              // if a company logo has not been setup in companyprivate => use the site default logo
-              $logoPath = ((null!==$companyLogoFileName) 
-                                ? '/logo/'. $companyLogoFileName 
-                                : '/site/'. $s->public_logo().'.png'
-              );  
-        ?>
+        <?php $this->beginBody(); ?>
         <?= NavBar::widget()
             ->brandImage($logoPath)
             ->brandImageAttributes(['margin' => $companyLogoMargin, 

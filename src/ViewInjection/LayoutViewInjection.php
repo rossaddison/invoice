@@ -108,7 +108,8 @@ final class LayoutViewInjection implements LayoutParametersInjectionInterface
         $user = $identity instanceof Identity ? $identity->getUser() : null;
         $isGuest = ($user === null || $user->getId() === null);
         $userLogin = (null!==$user ? $user->getLogin() : null);
-        $logoPath = ((null!==$companyLogoFileName) ? '/logo/'. $companyLogoFileName : '/site/logo/logo.png');
+        // Show the default logo if the logo applicable dates have expired under CompanyPrivate
+        $logoPath = ((isset($companyLogoFileName) && !empty($companyLogoFileName)) ? '/logo/'. $companyLogoFileName : '/site/logo.png');
         // https://api.jqueryui.com/datepicker
         $dateHelper = new DateHelper($this->settingRepository);
         $javascriptJqueryDateHelper = "$(function () {" .
@@ -149,5 +150,5 @@ final class LayoutViewInjection implements LayoutParametersInjectionInterface
             'companyLogoMargin' => $companyLogoMargin ?? '',
             'javascriptJqueryDateHelper' => $javascriptJqueryDateHelper    
         ];
-    }
+    }    
 }

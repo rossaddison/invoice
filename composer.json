@@ -19,6 +19,7 @@
     "require": {
         "php": "^8.1",
         "cebe/markdown": "^1.2@dev",
+        "chillerlan/php-qrcode":  "^5.0", 
         "cycle/database": "^2.0",
         "cycle/entity-behavior": "^1.0",
         "cycle/orm": "^2.0",
