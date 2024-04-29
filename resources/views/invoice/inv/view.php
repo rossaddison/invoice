@@ -5,7 +5,6 @@ use Yiisoft\Html\Html;
 use Yiisoft\Html\Tag\I;
 use App\Invoice\Helpers\ClientHelper;
 use App\Invoice\Helpers\CountryHelper;
-use App\Invoice\Helpers\DateHelper;
 
 /**
  * @var \Yiisoft\View\WebView $this
@@ -467,8 +466,9 @@ if (($invEdit && $inv->getStatus_id() === 1 || ($s->get_setting('enable_invoice_
                                         <div class="input-group">
                                             <input id="date_created" disabled
                                                    class="form-control input-sm datepicker"
-<?php $dc_datehelper = new DateHelper($s); ?>
-                                                   value="<?= $dc_datehelper->date_from_mysql($inv->getDate_created()); ?>"/>
+                                                   value="<?=
+                                                             $inv->getDate_created()->format($dateHelper->style()); 
+                                                          ?>"/>
                                             <span class="input-group-text">
                                                 <i class="fa fa-calendar fa-fw"></i>
                                             </span>
@@ -481,8 +481,7 @@ if (($invEdit && $inv->getStatus_id() === 1 || ($s->get_setting('enable_invoice_
                                         <div class="input-group">
                                             <input id="date_supplied" disabled
                                                    class="form-control input-sm datepicker"
-                                            <?php $ds_datehelper = new DateHelper($s); ?>
-                                                   value="<?= $ds_datehelper->date_from_mysql($inv->getDate_supplied()); ?>"/>
+                                                   value="<?= $inv->getDate_supplied()->format($dateHelper->style()); ?>"/>
                                             <span class="input-group-text">
                                                 <i class="fa fa-calendar fa-fw"></i>
                                             </span>
@@ -496,8 +495,7 @@ if (($invEdit && $inv->getStatus_id() === 1 || ($s->get_setting('enable_invoice_
                                             <div class="input-group">
                                                 <input id="date_tax_point" disabled
                                                        class="form-control input-sm datepicker"
-                                                <?php $dtp_datehelper = new DateHelper($s); ?>
-                                                       value="<?= $dtp_datehelper->date_from_mysql($inv->getDate_tax_point()); ?>"/>
+                                                       value="<?= $inv->getDate_tax_point()->format($dateHelper->style()); ?>"/>
                                                 <span class="input-group-text">
                                                     <i class="fa fa-calendar fa-fw"></i>
                                                 </span>
@@ -511,7 +509,7 @@ if (($invEdit && $inv->getStatus_id() === 1 || ($s->get_setting('enable_invoice_
                                         <div class="input-group">
                                             <input name="inv_date_due" id="inv_date_due" disabled
                                                    class="form-control input-sm datepicker"
-                                                   value="<?php echo $datehelper->date_from_mysql($inv->getDate_due()); ?>">
+                                                   value="<?= $inv->getDate_due()->format($dateHelper->style()); ?>">
                                             <span class="input-group-text">
                                                 <i class="fa fa-calendar fa-fw"></i>
                                             </span>
@@ -664,7 +662,6 @@ if (($invEdit && $inv->getStatus_id() === 1 || ($s->get_setting('enable_invoice_
             </div>
             <div id="view_partial_inv_delivery_location" class="col-xs-12 col-md-6">
 <?= $partial_inv_delivery_location; ?>
-            </div>
+            </div>           
 <?php  echo $modal_add_allowance_charge; ?>
-
-       
+        <?= Html::closeTag('div'); ?>

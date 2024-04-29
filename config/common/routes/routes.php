@@ -262,11 +262,16 @@ return [
       ->middleware(Authentication::class)
       ->action([InvoiceController::class, 'dashboard'])
       ->name('invoice/dashboard'),
-      Route::get('/faq/{topic}/{selection}')
+      Route::get('/faq/{topic}')
       ->middleware(fn(AccessChecker $checker) => $checker->withPermission('editInv'))
       ->middleware(Authentication::class)
       ->action([InvoiceController::class, 'faq'])
       ->name('invoice/faq'),
+      Route::get('/phpinfo/{selection')
+      ->middleware(fn(AccessChecker $checker) => $checker->withPermission('editInv'))
+      ->middleware(Authentication::class)
+      ->action([InvoiceController::class, 'phpinfo'])
+      ->name('invoice/phpinfo'),      
       Route::get('/test_data_remove')
       ->middleware(fn(AccessChecker $checker) => $checker->withPermission('editInv'))
       ->middleware(Authentication::class)

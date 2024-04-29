@@ -11,23 +11,26 @@ use App\Invoice\Entity\Company;
 use App\Invoice\Entity\CompanyPrivate;
 use App\Invoice\Company\CompanyRepository;
 use App\Invoice\CompanyPrivate\CompanyPrivateRepository;
-
+use App\Invoice\Setting\SettingRepository;
 
 final class CommonViewInjection implements CommonParametersInjectionInterface
 {
     private CompanyRepository $companyRepository;
     private CompanyPrivateRepository $companyPrivateRepository;
     private Translator $translator;
+    private SettingRepository $settingRepository;
     
     public function __construct(
-            private UrlGeneratorInterface $url,
-            CompanyRepository $companyRepository,
-            CompanyPrivateRepository $companyPrivateRepository,
-            Translator $translator
+        private UrlGeneratorInterface $url,
+        CompanyRepository $companyRepository,
+        CompanyPrivateRepository $companyPrivateRepository,
+        SettingRepository $settingRepository,
+        Translator $translator
     )
     {
         $this->companyRepository = $companyRepository;
         $this->companyPrivateRepository = $companyPrivateRepository;
+        $this->settingRepository = $settingRepository;
         $this->translator = $translator;
     }
 
@@ -67,12 +70,19 @@ final class CommonViewInjection implements CommonParametersInjectionInterface
                         // site's logo: take the first logo where the current date falls within the logo's start and end dates
                         if (($private->getStart_date()?->format('Y-m-d') < (new \DateTimeImmutable('now'))->format('Y-m-d')) && ($private->getEnd_date()?->format('Y-m-d') > (new \DateTimeImmutable('now'))->format('Y-m-d'))) {
                                 $companyLogoFileName = $private->getLogo_filename();
+                                $companyLogoWidth = $private->getLogo_width();
+                                $companyLogoHeight = $private->getLogo_height();
                               //  break;
                         }    
                     }
                 }
             }
         }
+        $logoPath = ((isset($companyLogoFileName) && !empty($companyLogoFileName)) 
+                                      ? '/logo/'. $companyLogoFileName 
+                                      : '/site/'. $this->settingRepository->public_logo().'.png'
+                    );
+        
         return [
             'url' => $this->url,
             'companyAddress1' => $companyAddress1 ?? '',
@@ -83,6 +93,9 @@ final class CommonViewInjection implements CommonParametersInjectionInterface
             'companyPhone' => $companyPhone ?? '',
             'companyEmail' => $companyEmail ?? '',
             'companyLogoFileName' => $companyLogoFileName ?? '',
+            'companyLogoWidth' => $companyLogoWidth ?? 80,
+            'companyLogoHeight' => $companyLogoHeight ?? 40,
+            'logoPath' => $logoPath,
             /**
              * @see \invoice\resources\messages\en\app.php 
              * @see \invoice\vendor\yiisoft\yii-view\src\ViewRenderer.php function getCommonParameters

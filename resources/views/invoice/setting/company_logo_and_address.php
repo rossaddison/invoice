@@ -2,11 +2,12 @@
 declare(strict_types=1);
 
 use Yiisoft\Html\Html;
+use App\Widget\QrCode as QrCodeWidget;
 ?>
 <div style="width:100%;height:175px;overflow:auto;">
     <table style="width:100%">
         <tr> 
-            <td style="width:60%;text-align:left">
+            <td style="width:33%;text-align:left">
                 <div id="logo">
                     <?php 
                         /**
@@ -22,7 +23,16 @@ use Yiisoft\Html\Html;
                     <?php } ?>
                 </div>
             </td>
-            <td style="width:40%;text-align:left">
+            <td style="width:33%;text-align:left">
+                <?= Html::openTag('div', ['id' => 'qr_code']);
+                        QrCodeWidget::absoluteUrl($urlGenerator->generateAbsolute('inv/view', [
+                            'id' => $inv_id, 
+                            '_language' => $_language
+                        ]), $translator->translate('invoice.invoice.qr.code'), 150);
+                    Html::closeTag('div');
+                ?>
+            </td>    
+            <td style="width:33%;text-align:left">
                 <?php 
                     if ($s->get_setting('enable_vat_registration') === '1' && $isInvoice) { 
                         echo '<div><b>'.Html::encode($translator->translate('invoice.invoice.vat.invoice')). '</b></div>';

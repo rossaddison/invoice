@@ -387,7 +387,7 @@ final class SettingRepository extends Select\Repository
                         } 
                     }
             }
-            $company_array['logo_path'] = '/logo' . ($companyLogoFileName ?: '');
+            $company_array['logo_path'] = (!empty($companyLogoFileName) ? '/logo/'. $companyLogoFileName : '/site/logo.png');
             return $company_array;
         }
         return [];

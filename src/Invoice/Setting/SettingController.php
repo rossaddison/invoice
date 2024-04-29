@@ -238,6 +238,8 @@ final class SettingController
             'invoiceplane'=>$this->viewRenderer->renderPartialAsString('/invoice/setting/views/partial_settings_invoiceplane',[
                 'actionTestConnection' => ['import/testconnection',['_language' => 'en']],
                 'actionImport' => ['import/invoiceplane',['_language' => 'en']],
+            ]),
+            'qrcode' => $this->viewRenderer->renderPartialAsString('/invoice/setting/views/partial_settings_qr_code',[
             ])
         ];
         if ($request->getMethod() === Method::POST) {

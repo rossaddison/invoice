@@ -62,6 +62,9 @@ echo $alert;
     <li>
         <a data-toggle="tab" href="#settings-invoiceplane" style="text-decoration: none"><?= $translator->translate('invoice.invoice.invoiceplane'); ?></a>
     </li>
+    <li>
+        <a data-toggle="tab" href="#settings-qrcode" style="text-decoration: none"><?= $translator->translate('invoice.invoice.qr.code'); ?></a>
+    </li>
 </ul>
 
 <form method="post" id="form-settings" action="<?= $urlGenerator->generate(...$action) ?>"  enctype="multipart/form-data">
@@ -126,6 +129,10 @@ echo $alert;
             
             <div id="settings-invoiceplane" class="tab-pane">
                 <?= $invoiceplane; ?>
+            </div>
+            
+            <div id="settings-qrcode" class="tab-pane">
+                <?= $qrcode; ?>
             </div>
 
         </div>

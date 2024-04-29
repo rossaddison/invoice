@@ -327,8 +327,19 @@ Class PdfHelper
      * @param \Yiisoft\Yii\View\ViewRenderer $viewrenderer
      * @return string
      */
-    public function generate_inv_html(string|null $inv_id, string $user_id, bool $custom, SalesOrder|null $so, InvAmount|null $inv_amount, array $inv_custom_values,\App\Invoice\Client\ClientRepository $cR, \App\Invoice\CustomValue\CustomValueRepository $cvR, \App\Invoice\CustomField\CustomFieldRepository $cfR, \App\Invoice\InvItem\InvItemRepository $iiR, \App\Invoice\InvItemAmount\InvItemAmountRepository $iiaR, Inv $inv, \App\Invoice\InvTaxRate\InvTaxRateRepository $itrR, \App\Invoice\UserInv\UserInvRepository $uiR, SumexRepository $sumexR,
-                                \Yiisoft\Yii\View\ViewRenderer $viewrenderer) : string {
+    public function generate_inv_html(string|null $inv_id, string $user_id, bool $custom, SalesOrder|null $so, 
+            InvAmount|null $inv_amount, 
+            array $inv_custom_values,
+            \App\Invoice\Client\ClientRepository $cR, 
+            \App\Invoice\CustomValue\CustomValueRepository $cvR, 
+            \App\Invoice\CustomField\CustomFieldRepository $cfR, 
+            \App\Invoice\InvItem\InvItemRepository $iiR, 
+            \App\Invoice\InvItemAmount\InvItemAmountRepository $iiaR, 
+            Inv $inv, \App\Invoice\InvTaxRate\InvTaxRateRepository $itrR, 
+            \App\Invoice\UserInv\UserInvRepository $uiR, 
+            SumexRepository $sumexR,
+            \Yiisoft\Yii\View\ViewRenderer $viewrenderer,
+        ) : string {
         if (null!==$inv_id) {
             // If userinv details have been filled, use these details
             $userinv = ($uiR->repoUserInvcount($user_id)>0 ? $uiR->repoUserInvquery($user_id) : null);
@@ -342,6 +353,7 @@ Class PdfHelper
             //$client_number = $inv->getClient()?->getClient_number();
             $client_purchase_order_number = ($so ? $so->getClient_po_number() : '');
             $date_helper = new DateHelper($this->s);
+            $_language = $this->session->get('_language');
             $show_item_discounts = false;
             // Determine if any of the items have a discount, if so then the discount amount row will have to be shown.
             if (null!==$items) {
@@ -372,7 +384,6 @@ Class PdfHelper
                     'cvR'=>$cvR, 
                     'inv_custom_values'=> $inv_custom_values,  
                     'cvH'=> new CVH($this->s),
-                    's'=>$this->s,   
                 ]),    
                 // Custom fields appearing at the bottom of the invoice
                 'view_custom_fields'=>$viewrenderer->renderPartialAsString('/invoice/template/invoice/pdf/view_custom_fields', [
@@ -380,15 +391,13 @@ Class PdfHelper
                     'cvR'=>$cvR,
                     'inv_custom_values'=> $inv_custom_values,  
                     'cvH'=> new CVH($this->s),
-                    's'=>$this->s,   
-                ]),        
-                's'=>$this->s,
+                ]),
                 'sumex'=> $sumex, 
                 'userinv'=>$userinv,
                 'company_logo_and_address'=>$viewrenderer->renderPartialAsString('/invoice/setting/company_logo_and_address.php',
                     [
                      // if there is no active company with private details, use the config params company details   
-                     'company'=> !$this->s->get_private_company_details() 
+                     'company'=> !$this->s->get_private_company_details() == []
                                  ? $this->s->get_private_company_details()
                                  : $this->s->get_config_company_details(), 
                      'document_number'=> $inv->getNumber(),
@@ -396,10 +405,12 @@ Class PdfHelper
                      'client_purchase_order_number' => $client_purchase_order_number,
                      'date_tax_point'=> $date_helper->date_from_mysql($inv->getDate_tax_point()),   
                      'countryhelper'=> $this->countryhelper,
+                     '_language' => $_language,
+                     'inv_id' => $inv_id,   
                      'isInvoice'=> true,
                      'isQuote' => false,
                      'isSalesOrder' => false  
-                    ]),
+                    ]),               
                 'countryhelper'=>$this->countryhelper,
                 'client'=>$cR->repoClientquery((string)$inv->getClient()?->getClient_id()),
                 'inv_amount'=>$inv_amount,            

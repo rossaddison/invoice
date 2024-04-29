@@ -121,12 +121,9 @@ final class InvoiceController
        ]);
      }
      
-    public function faq(#[RouteArgument('topic')] string $topic, #[RouteArgument('selection')] string $selection = '') : Response 
+    public function faq(#[RouteArgument('topic')] string $topic) : Response 
     {
         switch ($topic) {
-            case 'phpinfo':
-                $view = $this->viewRenderer->renderPartialAsString('/invoice/info/phpinfo', ['selection' => (int)$selection]);
-                break;
             case 'tp':
                 $view = $this->viewRenderer->renderPartialAsString('/invoice/info/taxpoint');
                 break;
@@ -141,6 +138,12 @@ final class InvoiceController
                 break;
         }
         return $this->viewRenderer->render('/invoice/info/view',['topic'=> $view]);
+    }
+    
+    public function phpinfo(#[RouteArgument('selection')] string $selection = '-1') : Response 
+    {
+        $view = $this->viewRenderer->renderPartialAsString('/invoice/info/phpinfo', ['selection' => (int)$selection]);
+        return $this->viewRenderer->render('/invoice/info/view', ['topic'=> $view]);
     }
     
     /**

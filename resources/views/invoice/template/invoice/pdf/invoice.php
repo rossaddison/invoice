@@ -17,7 +17,7 @@ $vat = $s->get_setting('enable_vat_registration');
 </head>    
 <body>
 <header class="clearfix">
-    <?= $company_logo_and_address; ?>
+    <?= $company_logo_and_address; ?>    
     <div id="client">
         <div>
             <b><?= Html::encode($inv->getClient()->getClient_name()); ?></b>
@@ -122,7 +122,8 @@ $vat = $s->get_setting('enable_vat_registration');
                 <th class="item-discount text-right"><?= Html::encode($translator->translate('i.discount')); ?></th>
             <?php endif; ?>
             <?php if ($vat === '0') { ?>     
-            <th class="item-price text-right"><?= Html::encode($translator->translate('i.tax')); ?></th>    
+            <th class="item-price text-right"><?= Html::encode($translator->translate('i.tax')); ?></th>
+            <th class="item-price text-right">%</th>
             <?php } else { ?>
                 <th class="item-price text-right"><?= Html::encode($translator->translate('invoice.invoice.vat.abbreviation')); ?></th>    
                 <th class="item-price text-right">%</th>

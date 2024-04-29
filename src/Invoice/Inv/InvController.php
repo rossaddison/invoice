@@ -104,6 +104,7 @@ use App\Invoice\Helpers\Peppol\PeppolHelper;
 use App\Invoice\Helpers\Peppol\PeppolArrays;
 use App\Invoice\Helpers\StoreCove\StoreCoveHelper;
 use App\Invoice\Helpers\TemplateHelper;
+// Widgets
 use App\Widget\Bootstrap5ModalInv;
 use App\Widget\Bootstrap5ModalTranslatorMessageWithoutAction;
 // Libraries
@@ -2876,6 +2877,7 @@ final class InvController {
                                 'inv_item_amount' => $iiaR,
                                 'is_overdue' => $is_overdue,
                                 'items' => ($inv_id > 0) ? $iiR->repoInvquery($inv_id) : new InvItem(),
+                                '_language' => $_language,
                                 'payment_method' => $payment_method,
                                 'paymentTermsArray' => $this->sR->get_payment_term_array($this->translator),
                                 'userinv' => $uiR->repoUserInvUserIdcount($user_id) > 0 ? $uiR->repoUserInvUserIdquery($user_id) : null,

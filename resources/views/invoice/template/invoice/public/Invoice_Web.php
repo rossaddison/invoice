@@ -74,16 +74,12 @@ $vat = $s->get_setting('enable_vat_registration');
             <div class="invoice">
                 <?php
                     // if a company logo has not been setup in companyprivate => use the site default logo
-                    $logoPath = ((null!==$companyLogoFileName) 
-                                      ? '/logo/'. $companyLogoFileName 
-                                      : '/site/'. $s->public_logo().'.png'
-                    );
                     echo Img::tag()
-                         ->width(80)
-                         ->height(60)
-                         ->size()
+                         ->width($companyLogoWidth)
+                         ->height($companyLogoHeight)
                          ->src($logoPath);   
                 ?>
+                
                 <br>
                 <br>
                 <?= Html::openTag('div', ['class' => 'row']); ?>
@@ -91,10 +87,10 @@ $vat = $s->get_setting('enable_vat_registration');
 
                         <h4><?= Html::encode($userinv->getName()); ?></h4>
                         <p><?php if ($userinv->getVat_id()) {
-                                echo $s->lang("vat_id_short") . ": " . $userinv->getVat_id() . '<br>';
+                                echo $translator->translate('i.vat_id_short') . ": " . $userinv->getVat_id() . '<br>';
                             } ?>
                             <?php if ($userinv->getTax_code()) {
-                                echo $s->lang("tax_code_short") . ": " . $userinv->getTax_code() . '<br>';
+                                echo $translator->translate('i.tax_code_short') . ": " . $userinv->getTax_code() . '<br>';
                             } ?>
                             <?php if ($userinv->getAddress_1()) {
                                 echo Html::encode($userinv->getAddress_1()) . '<br>';
@@ -122,10 +118,10 @@ $vat = $s->get_setting('enable_vat_registration');
 
                         <h4><?= Html::encode($clienthelper->format_client($client)); ?></h4>
                         <p><?php if ($client->getClient_vat_id()) {
-                                echo $s->lang("vat_id_short") . ": " . $client->getClient_vat_id() . '<br>';
+                                echo $translator->translate('i.vat_id_short') . ": " . $client->getClient_vat_id() . '<br>';
                             } ?>
                             <?php if ($client->getClient_tax_code()) {
-                                echo $s->lang("tax_code_short") . ": " . $client->getClient_tax_code() . '<br>';
+                                echo $translator->translate('i.tax_code_short') . ": " . $client->getClient_tax_code() . '<br>';
                             } ?>
                             <?php if ($client->getClient_address_1()) {
                                 echo Html::encode($client->getClient_address_1()) . '<br>';
@@ -154,12 +150,12 @@ $vat = $s->get_setting('enable_vat_registration');
                             <tbody>
                             <tr>
                                 <td><?= $translator->translate('i.invoice_date'); ?></td>
-                                <td style="text-align:right;"><?= $datehelper->date_from_mysql($inv->getDate_created()); ?></td>
+                                <td style="text-align:right;"><?= $inv->getDate_created()->format($dateHelper->style()); ?></td>
                             </tr>
                             <tr class="<?=($is_overdue ? 'overdue' : '') ?>">
                                 <td><?= $translator->translate('i.due_date'); ?></td>
                                 <td class="text-right">
-                                    <?= $datehelper->date_from_mysql($inv->getDate_due()); ?>
+                                    <?= $inv->getDate_due()->format($dateHelper->style()); ?>
                                 </td>
                             </tr>
                             <tr class="<?=($is_overdue ? 'overdue' : '') ?>">
@@ -191,7 +187,6 @@ $vat = $s->get_setting('enable_vat_registration');
                                 <th class="text-right"><?= $translator->translate('i.price'); ?></th>
                                 <th class="text-right"><?= $translator->translate('i.discount'); ?></th>
                                 <th class="text-right"><?= $translator->translate('i.total'); ?></th>
-                                <th class="text-right"><?= $vat === '0' ? $translator->translate('i.item_tax') : $translator->translate('invoice.invoice.vat.abbreviation'); ?></th>
                             </tr>
                             </thead>
                             <tbody>
@@ -208,8 +203,7 @@ $vat = $s->get_setting('enable_vat_registration');
                                     </td>
                                     <td class="amount"><?= $numberhelper->format_currency($item->getPrice() ?? 0.00); ?></td>
                                     <td class="amount"><?= $numberhelper->format_currency($item->getDiscount_amount() ?? 0.00); ?></td>
-                                    <td class="amount"><?= $numberhelper->format_currency($inv_item_amount->repoInvItemAmountquery((string)$item->getId())->getSubtotal() ?? 0.00); ?></td>
-                                    <td class="amount"><?= $numberhelper->format_currency($inv_item_amount->repoInvItemAmountquery((string)$item->getId())->getInvItem()?->getTaxRate()?->getTax_rate_percent() ??  0.00); ?></td>
+                                    <td class="amount"><?= $numberhelper->format_currency($inv_item_amount->repoInvItemAmountquery((string)$item->getId())->getSubtotal() ?? 0.00); ?></td>                                   
                                 </tr>
                             <?php endforeach ?>
                             <tr>
@@ -218,10 +212,12 @@ $vat = $s->get_setting('enable_vat_registration');
                                 <td class="amount"><?= $numberhelper->format_currency($inv_amount->getItem_subtotal() ?? 0.00); ?></td>
                             </tr>
 
-                            <?php if ($inv_amount->getItem_tax_total() > 0) { ?>
+                            <?php if ($inv_amount->getItem_tax_total() > 0) { 
+                                $percentage = (float)$inv_item_amount->repoInvItemAmountquery((string)$item->getId())->getInvItem()?->getTaxRate()?->getTax_rate_percent() ??  0.00;
+                                ?>
                                 <tr>
                                     <td class="no-bottom-border" colspan="4"></td>
-                                    <td class="text-right"><?= $vat === '0' ? $translator->translate('i.item_tax') : $translator->translate('invoice.invoice.vat.abbreviation') ?></td>
+                                    <td class="text-right"><?= $vat === '0' ? $translator->translate('i.item_tax').' ('. $percentage .'%)' : $translator->translate('invoice.invoice.vat.abbreviation') ?></td>
                                     <td class="amount"><?= $numberhelper->format_currency($inv_amount->getItem_tax_total() ?? 0.00)?></td>
                                 </tr>
                             <?php } ?>
