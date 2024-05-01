@@ -2,6 +2,7 @@
 
 declare(strict_types=1);
 
+use App\Widget\Button;
 use Yiisoft\Data\Paginator\OffsetPaginator;
 use Yiisoft\Html\Html;
 use Yiisoft\Translator\TranslatorInterface;
@@ -108,6 +109,7 @@ $toolbar = Div::tag();
             'id',
             header: $translator->translate('i.id'),
             content: static fn (object $model) => $model->getId(),
+            withSorting: false
         ),
         new DataColumn(
             'status_id',
@@ -121,7 +123,8 @@ $toolbar = Div::tag();
                     $label = $translator->translate('i.recurring'). ' 🔄';
                 }
                 return Html::tag('span', $inv_statuses[(string) $model->getStatus_id()]['emoji']. $label, ['class' => 'label label-' . $inv_statuses[(string) $model->getStatus_id()]['class']]);
-            }    
+            },
+            withSorting: false
         ),
         new DataColumn(
             field: 'number',
@@ -130,16 +133,19 @@ $toolbar = Div::tag();
             content: static function ($model) use ($urlGenerator): string {
                return Html::a($model->getNumber(), $urlGenerator->generate('inv/view',['id'=>$model->getId()]),['style'=>'text-decoration:none'])->render();
             },
-            filter: $optionsDataInvNumberDropDownFilter
+            filter: $optionsDataInvNumberDropDownFilter,
+            withSorting: false        
         ),
         new DataColumn(
             'client_id',                
-            content: static fn ($model): string => $model->getClient()->getClient_name()                        
+            content: static fn ($model): string => $model->getClient()->getClient_name(),
+            withSorting: false    
         ),
         new DataColumn(                
             'date_created',
             header: $translator->translate('i.date_created'),    
-            content: static fn ($model): string => ($model->getDate_created())->format($datehelper->style())                        
+            content: static fn ($model): string => ($model->getDate_created())->format($datehelper->style()),
+            withSorting: false    
         ),
         new DataColumn(
             'date_due',
@@ -149,7 +155,8 @@ $toolbar = Div::tag();
                         ->attributes(['class' => $model->getDate_due() > $now ? 'label label-success' : 'label label-warning'])
                         ->content(Html::encode($model->getDate_due()->format($datehelper->style())))
                         ->render();
-            }   
+            },
+            withSorting: false        
         ),        
         new DataColumn(
             field: 'id',
@@ -164,7 +171,8 @@ $toolbar = Div::tag();
                                 : number_format(0, $decimal_places)))
                         ->render();
             },
-            filter: true
+            filter: true,
+            withSorting: false        
         ),        
         new DataColumn(
             'id',
@@ -176,7 +184,8 @@ $toolbar = Div::tag();
                                 ? number_format($model->getInvAmount()->getPaid(),  $decimal_places) 
                                 : number_format(0, $decimal_places)))
                         ->render();
-            }     
+            },
+            withSorting: false           
         ),        
         new DataColumn(
             'id',
@@ -188,7 +197,8 @@ $toolbar = Div::tag();
                                 ? number_format($model->getInvAmount()->getBalance(), $decimal_places) 
                                 : number_format(0, $decimal_places)))
                         ->render();
-            }     
+            },
+            withSorting: false     
         ),
     ]            
 ?>
@@ -212,6 +222,10 @@ $toolbar = Div::tag();
         ->toolbar(
             Form::tag()->post($urlGenerator->generate('inv/guest'))->csrf($csrf)->open() .
             Div::tag()->addClass('float-end m-3')->content($toolbarReset)->encode(false)->render() .
+            Div::tag()->addClass('float-end m-3')->content(Button::ascDesc($urlGenerator, 'date_due', 'danger', $translator->translate('i.expires')))->encode(false)->render().    
+            Div::tag()->addClass('float-end m-3')->content(Button::ascDesc($urlGenerator, 'client_id', 'warning', $translator->translate('i.client')))->encode(false)->render().    
+            Div::tag()->addClass('float-end m-3')->content(Button::ascDesc($urlGenerator, 'status_id', 'success', $translator->translate('i.status')))->encode(false)->render().    
+            Div::tag()->addClass('float-end m-3')->content(Button::ascDesc($urlGenerator, 'id', 'info', $translator->translate('i.id')))->encode(false)->render().   
             Form::tag()->close()
         );
 ?>

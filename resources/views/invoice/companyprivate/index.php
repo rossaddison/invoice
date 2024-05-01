@@ -9,6 +9,7 @@ use Yiisoft\Html\Tag\Div;
 use Yiisoft\Html\Tag\Form;
 use Yiisoft\Html\Tag\H5;
 use Yiisoft\Html\Tag\I;
+use Yiisoft\Yii\DataView\Column\ActionColumn;
 use Yiisoft\Yii\DataView\Column\DataColumn;
 use Yiisoft\Yii\DataView\GridView;
 use Yiisoft\Yii\DataView\OffsetPagination;
@@ -69,52 +70,49 @@ echo $alert;
             'logo_filename',
             content: static fn (object $model) => Html::encode($model->getLogo_filename())
         ),
-        new DataColumn(
-            header: $translator->translate('i.view'),    
-            content: static function ($model) use ($urlGenerator): string {
-               return Html::a(
-                       Html::tag('i','',['class'=>'fa fa-eye fa-margin']),
-                       $urlGenerator->generate('companyprivate/view',['id'=>$model->getId()]),[])
-                       ->render();
-            }
-        ),
-        new DataColumn(
-            header: $translator->translate('i.edit'),    
-            content: static function ($model) use ($urlGenerator): string {
-               return Html::a(
-                       Html::tag('i','',['class'=>'fa fa-edit fa-margin']),
-                       $urlGenerator->generate('companyprivate/edit',['id'=>$model->getId()]),[])
-                       ->render();
-            }
-        ),
-        new DataColumn(
-            header: $translator->translate('i.delete'),    
-            content: static function ($model) use ($translator, $urlGenerator): string {
-               return Html::a( Html::tag('button',
-                    Html::tag('i','',['class'=>'fa fa-trash fa-margin']),
-                    [
-                        'type'=>'submit', 
-                        'class'=>'dropdown-button',
-                        'onclick'=>"return confirm("."'".$translator->translate('invoice.company.private.logo.will.be.removed.from.uploads.and.public.folder')."');"
-                    ]
-                    ),
-                    $urlGenerator->generate('companyprivate/delete',['id'=>$model->getId()]),[]                                         
-                )->render();
-            }
+        new ActionColumn(
+            content: static fn($model): string => Html::openTag('div', ['class' => 'btn-group']) .
+            Html::a()
+            ->addAttributes([
+                'class' => 'dropdown-button text-decoration-none', 
+                'title' => $translator->translate('i.view')
+            ])
+            ->content('🔎')
+            ->encode(false)
+            ->href('/invoice/companyprivate/view/'. $model->getId())
+            ->render() .
+            Html::a()
+            ->addAttributes([
+                'class' => 'dropdown-button text-decoration-none', 
+                'title' => $translator->translate('i.edit')
+            ])
+            ->content('✎')
+            ->encode(false)
+            ->href('/invoice/companyprivate/edit/'. $model->getId())
+            ->render() .
+            Html::a()
+            ->addAttributes([
+                'class'=>'dropdown-button text-decoration-none', 
+                'title' => $translator->translate('i.delete'),
+                'type'=>'submit', 
+                'onclick'=>"return confirm("."'".$translator->translate('i.delete_record_warning')."');"
+            ])
+            ->content('❌')
+            ->encode(false)
+            ->href('/invoice/companyprivate/delete/'. $model->getId())
+            ->render() . Html::closeTag('div')
         ),          
     ];
     echo GridView::widget()    
     ->columns(...$columns)
     ->dataReader($paginator)    
     ->headerRowAttributes(['class'=>'card-header bg-info text-black'])
-    //->filterPosition('header')
-    //->filterModelName('companyprivate')
     ->header($header)
     ->id('w53-grid')
     ->pagination(
     OffsetPagination::widget()
         ->paginator($paginator)
-         ->render(),
+        ->render(),
     )
     ->rowAttributes(['class' => 'align-middle'])
     ->summaryAttributes(['class' => 'mt-3 me-3 summary text-end'])

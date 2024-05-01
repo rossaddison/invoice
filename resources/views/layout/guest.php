@@ -115,7 +115,6 @@ $this->beginPage();
 ?>
 <?php
 $this->beginBody();
-$logoPath = ((null!==$companyLogoFileName) ? '/logo/'. $companyLogoFileName : '/site/logo/logo.png');
 
 echo NavBar::widget()
 ->brandImage($logoPath)
