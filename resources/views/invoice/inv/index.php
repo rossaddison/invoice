@@ -1,6 +1,7 @@
 <?php
 declare(strict_types=1);
 
+use App\Widget\Button;
 use Yiisoft\Data\Paginator\OffsetPaginator;
 use Yiisoft\Html\Html;
 use Yiisoft\Translator\TranslatorInterface;
@@ -137,19 +138,19 @@ $toolbar = Div::tag();
      */
     $columns = [
         new DataColumn(
-            'id',
+            'id',    
             header: $translator->translate('i.id'),
-            content: static fn(object $any) => $any->getId()    
+            content: static fn(object $any) => $any->getId(),
+            // remove the hyperlinked sort header. Using customized sort button    
+            withSorting: false
         ),
         new DataColumn(
-            header: '🔍', 
             content: static function ($model) use ($urlGenerator): string {
                 return Html::a('🔍', $urlGenerator->generate('inv/view', 
                                ['id' => $model->getId()]), ['style' => 'text-decoration:none'])->render();
             }  
         ),        
         new DataColumn(
-            header: '🖉',
             content: static function ($model) use ($s, $urlGenerator): string {
                 return $model->getIs_read_only() === false && $s->get_setting('disable_read_only') === (string) 0 
                        ? Html::a('🖉', $urlGenerator->generate('inv/edit', 
@@ -169,7 +170,8 @@ $toolbar = Div::tag();
                     $label = $translator->translate('i.recurring'). ' 🔄';
                 }
                 return Html::tag('span', $inv_statuses[(string) $model->getStatus_id()]['emoji']. $label, ['class' => 'label label-' . $inv_statuses[(string) $model->getStatus_id()]['class']]);
-            }    
+            },
+            withSorting: false
         ),
         new DataColumn(
             field: 'number',
@@ -193,28 +195,32 @@ $toolbar = Div::tag();
                         ])->render() . 
                         $creditInvoiceUrl;
             },
-            filter: $optionsDataInvNumberDropDownFilter            
+            filter: $optionsDataInvNumberDropDownFilter,
+            withSorting: false        
         ),      
         new DataColumn(
             field: 'client_id',
             property: 'filterClient',
             header: $translator->translate('i.client'),
             content: static fn($model): string => $model->getClient()->getClient_name() . str_repeat(' ', 2).$model->getClient()->getClient_surname(),
-            filter: $optionsDataClientsDropdownFilter    
+            filter: $optionsDataClientsDropdownFilter,
+            withSorting: false
         ),
         new DataColumn(
             field: 'client_id',
             property: 'filterClientGroup', 
             header: $translator->translate('invoice.client.group'),
             content: static fn($model): string => $model->getClient()->getClient_group() ?? '',
-            filter: $optionsDataClientGroupDropDownFilter  
+            filter: $optionsDataClientGroupDropDownFilter,
+            withSorting: false    
         ), 
         new DataColumn(
             field: 'date_created',
             property: 'filterDateCreatedYearMonth',  
             header: $translator->translate('invoice.datetime.immutable.date.created.mySql.format.year.month.filter'),
             content: static fn($model): string => ($model->getDate_created())->format('Y-m-d'),
-            filter: $optionsDataYearMonthDropDownFilter
+            filter: $optionsDataYearMonthDropDownFilter,
+            withSorting: false    
         ),           
         new DataColumn(
             'time_created',
@@ -240,14 +246,16 @@ $toolbar = Div::tag();
             } 
         ), 
         new DataColumn(
-            'date_due',
+            'date_due',    
+            header: $translator->translate('i.expires'),              
             content: static function($model) use ($datehelper) : string {
                 $now = new \DateTimeImmutable('now');
                 return Label::tag()
                         ->attributes(['class' => $model->getDate_due() > $now ? 'label label-success' : 'label label-warning'])
                         ->content(Html::encode($model->getDate_due()->format($datehelper->style())))
                         ->render();
-            }   
+            },
+            withSorting: false
         ),        
         new DataColumn(
             field: 'id',
@@ -262,7 +270,8 @@ $toolbar = Div::tag();
                                 : number_format(0, $decimal_places)))
                         ->render();
             },
-            filter: true
+            filter: true,
+            withSorting: false
         ),        
         new DataColumn(
             'id',
@@ -274,7 +283,8 @@ $toolbar = Div::tag();
                                 ? number_format($model->getInvAmount()->getPaid(),  $decimal_places) 
                                 : number_format(0, $decimal_places)))
                         ->render();
-            }     
+            },
+            withSorting: false        
         ),        
         new DataColumn(
             'id',
@@ -286,7 +296,8 @@ $toolbar = Div::tag();
                                 ? number_format($model->getInvAmount()->getBalance(), $decimal_places) 
                                 : number_format(0, $decimal_places)))
                         ->render();
-            }     
+            },
+            withSorting: false
         ),
         new DataColumn(
             header: '🚚',
@@ -305,7 +316,8 @@ $toolbar = Div::tag();
                     'action' => 'index'
                 ]))->render();
             },
-            visible: $visible        
+            visible: $visible,
+            withSorting: false        
         ),
         new DataColumn(
             'quote_id',
@@ -319,7 +331,8 @@ $toolbar = Div::tag();
                     return '';
                 }
             },
-            visible: $visible        
+            visible: $visible,
+            withSorting: false        
         ),
         new DataColumn(
             'so_id',
@@ -333,7 +346,8 @@ $toolbar = Div::tag();
                     return '';
                 }
             },
-            visible: $visible        
+            visible: $visible,
+            withSorting: false        
         ), 
         new DataColumn(
             'delivery_location_id',
@@ -343,7 +357,8 @@ $toolbar = Div::tag();
                 $delivery_location = (($dlR->repoCount($delivery_location_id) > 0) ? $dlR->repoDeliveryLocationquery($delivery_location_id) : null);
                 return null !== $delivery_location ? $delivery_location->getGlobal_location_number() : '';
             },
-            visible: $visible
+            visible: $visible,
+            withSorting: false        
         ),
         new DataColumn(
             header: $translator->translate('i.delete'),
@@ -359,7 +374,8 @@ $toolbar = Div::tag();
                         $urlGenerator->generate('inv/delete', ['id' => $model->getId()]), []
                 )->render() : '';
             },
-            visible: $visible
+            visible: $visible,
+            withSorting: false        
         )   
     ];
 ?>
@@ -386,6 +402,10 @@ $toolbar = Div::tag();
         Form::tag()->post($urlGenerator->generate('inv/index'))->csrf($csrf)->open() .
         Div::tag()->addClass('float-end m-3')->content($allVisible)->encode(false)->render() .  
         Div::tag()->addClass('float-end m-3')->content($toolbarReset)->encode(false)->render() .
+        Div::tag()->addClass('float-end m-3')->content(Button::ascDesc($urlGenerator, 'date_due', 'danger', $translator->translate('i.expires')))->encode(false)->render().    
+        Div::tag()->addClass('float-end m-3')->content(Button::ascDesc($urlGenerator, 'client_id', 'warning', $translator->translate('i.client')))->encode(false)->render().    
+        Div::tag()->addClass('float-end m-3')->content(Button::ascDesc($urlGenerator, 'status_id', 'success', $translator->translate('i.status')))->encode(false)->render().    
+        Div::tag()->addClass('float-end m-3')->content(Button::ascDesc($urlGenerator, 'id', 'info', $translator->translate('i.id')))->encode(false)->render().
         Form::tag()->close()    
     )    
 ?>

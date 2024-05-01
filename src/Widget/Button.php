@@ -6,6 +6,7 @@ namespace App\Widget;
 use Yiisoft\Router\UrlGeneratorInterface as UrlGenerator;
 use Yiisoft\FormModel\Field;
 use Yiisoft\Html\Html;
+use Yiisoft\Html\Tag\A;
 use Yiisoft\Html\Tag\Span;
 use Yiisoft\Router\CurrentRoute;
 use Yiisoft\Translator\TranslatorInterface as Translator;
@@ -114,5 +115,19 @@ final class Button
                     )
                 )
                 ->render();
-    }        
+    } 
+    
+    public static function ascDesc(UrlGenerator $generator, string $field, string $class, string $translated) : string {
+        return A::tag()
+        ->addClass('btn btn-'.$class)
+        ->content('⬆️')
+        ->href($generator->generate('inv/index', [], ['sort' => $field]))
+        ->id('btn-'. $field. '-asc')
+        ->render().' '.$translated.' '.A::tag()
+        ->addClass('btn btn-'.$class)
+        ->content('⬇')
+        ->href($generator->generate('inv/index', [], ['sort' => '-'.$field]))
+        ->id('btn-'. $field. '-desc')
+        ->render();
+    }
 }
