@@ -117,6 +117,7 @@ use Yiisoft\Data\Reader\OrderHelper;
 use Yiisoft\DataResponse\DataResponseFactoryInterface;
 use Yiisoft\Http\Method;
 use Yiisoft\Html\Html;
+use Yiisoft\Input\Http\Attribute\Parameter\Query;
 use Yiisoft\Json\Json;
 use Yiisoft\Mailer\MailerInterface;
 use Yiisoft\Router\FastRoute\UrlGenerator;
@@ -1734,31 +1735,32 @@ final class InvController {
         return null;
     }
 
-   /**
-     * @see Route::get('/client_invoices[/page/{page:\d+}[/status/{status:\d+}]]') status and page are decimals
-     * @param Request $request
+    /**
+     * @see Route::get('/client_invoices[/page/{page:\d+}[/status/{status:\d+}]]') status and page are digits
      * @param IAR $iaR
      * @param IRR $irR
      * @param IR $iR
      * @param UCR $ucR
      * @param UIR $uiR
-     * @param int $page
-     * @param int $status 
+     * @param string $page
+     * @param string $status
+     * @param string $queryPage
+     * @param string $querySort
+     * @param string $queryFilterInvNumber
+     * @param string $queryFilterInvAmountTotal
+     * @return \Yiisoft\DataResponse\DataResponse|Response
+     * @throws NoClientsAssignedToUserException
      */
-    public function guest(Request $request, IAR $iaR, IRR $irR, IR $iR, UCR $ucR, UIR $uiR, 
-        #[RouteArgument('page')] $page = 1, #[RouteArgument('status')] $status = 0): \Yiisoft\DataResponse\DataResponse|Response {
-        $query_params = $request->getQueryParams();
-        /**
-         * @var string $query_params['page']
-         */
-        $pageMixed = $query_params['page'] ?? $page;
-        
-        /**
-         * @var string|null $query_params['sort']
-         */
-        $sort_string = $query_params['sort'] ?? '-id';
-        $sort = Sort::only(['status_id', 'number', 'date_created', 'date_due', 'id', 'client_id'])->withOrderString($sort_string);
-
+    public function guest(IAR $iaR, IRR $irR, IR $iR, UCR $ucR, UIR $uiR, 
+        #[RouteArgument('page')] string $page = '1', 
+        #[RouteArgument('status')] string $status = '0',
+        #[Query('page')] string $queryPage = null,
+        #[Query('sort')] string $querySort = null,    
+        #[Query('filterInvNumber')] string $queryFilterInvNumber = null,
+        #[Query('filterInvAmountTotal')] string $queryFilterInvAmountTotal = null): \Yiisoft\DataResponse\DataResponse|Response {
+        $pageString = $queryPage ?? $page;
+        $sortString = $querySort ?? '-id';
+        $sort = Sort::only(['status_id', 'number', 'date_created', 'date_due', 'id', 'client_id'])->withOrderString($sortString);
         // Get the current user and determine from (@see Settings...User Account) whether they have been given
         // either guest or admin rights. These rights are unrelated to rbac and serve as a second
         // 'line of defense' to support role based admin control.
@@ -1781,22 +1783,22 @@ final class InvController {
                 if (!empty($user_clients)) {
                     $invs = $this->invs_status_with_sort_guest($iR, $status, $user_clients, $sort);
                     $preFilterInvs = $invs;
-                    if (isset($query_params['filterInvNumber']) && !empty($query_params['filterInvNumber'])) {
-                        $invs = $iR->filterInvNumber((string)$query_params['filterInvNumber']);
+                    if (isset($queryFilterInvNumber) && !empty($queryFilterInvNumber)) {
+                        $invs = $iR->filterInvNumber($queryFilterInvNumber);
                     }
-                    if (isset($query_params['filterInvAmountTotal']) && !empty($query_params['filterInvAmountTotal'])) {
-                        $invs = $iR->filterInvAmountTotal((string)$query_params['filterInvAmountTotal']);
+                    if (isset($queryFilterInvAmountTotal) && !empty($queryFilterInvAmountTotal)) {
+                        $invs = $iR->filterInvAmountTotal($queryFilterInvAmountTotal);
                     }
-                    if ((isset($query_params['filterInvNumber']) && !empty($query_params['filterInvNumber'])) && 
-                       (isset($query_params['filterInvAmountTotal']) && !empty($query_params['filterInvAmountTotal']))) {
-                        $invs = $iR->filterInvNumberAndInvAmountTotal((string)$query_params['filterInvNumber'], (float)$query_params['filterInvAmountTotal']);
+                    if ((isset($queryFilterInvNumber) && !empty($queryFilterInvNumber)) && 
+                       (isset($queryFilterInvAmountTotal) && !empty($queryFilterInvAmountTotal))) {
+                        $invs = $iR->filterInvNumberAndInvAmountTotal($queryFilterInvNumber, (float)$queryFilterInvAmountTotal);
                     }
                     $paginator = (new DataOffsetPaginator($invs))
                         ->withPageSize(null!== $userInvListLimit ? $userInvListLimit : 10)
-                        ->withCurrentPage((int)$pageMixed)
-                        ->withToken(PageToken::next((string)$pageMixed));   
+                        ->withCurrentPage((int)$pageString)
+                        ->withToken(PageToken::next($pageString));   
                     $inv_statuses = $iR->getStatuses($this->translator);
-                    $label = $iR->getSpecificStatusArrayLabel((string)$status);
+                    $label = $iR->getSpecificStatusArrayLabel($status);
                     $parameters = [
                         'alert' => $this->alert(),
                         'decimal_places' => (int)$this->sR->get_setting('tax_rate_decimal_places'),
@@ -1819,10 +1821,10 @@ final class InvController {
                         // numbered tiles between the arrrows                
                         'maxNavLinkCount' => 10,
                         'inv_statuses' => $inv_statuses,
-                        'page' => (string) $pageMixed,
+                        'page' => $pageString,
                         'paginator' => $paginator,
                         // Clicking on a grid column sort hyperlink will generate a url query_param eg. ?sort=
-                        'sortOrder' => $query_params['sort'] ?? '',
+                        'sortOrder' => $querySort ?? '',
                         'status' => $status,
                     ];
                     return $this->view_renderer->render('/invoice/inv/guest', $parameters);
@@ -1886,7 +1888,7 @@ final class InvController {
     }
 
     /**
-     * @param Request $request
+     * 
      * @param IR $invRepo
      * @param IRR $irR
      * @param CR $clientRepo
@@ -1898,9 +1900,25 @@ final class InvController {
      * @param string $_language
      * @param string $page
      * @param string $status
+     * @param string $queryPage
+     * @param string $querySort
+     * @param string $queryFilterInvNumber
+     * @param string $queryFilterInvAmountTotal
+     * @param string $queryFilterClientGroup
+     * @param string $queryFilterDateCreatedYearMonth
      * @return \Yiisoft\DataResponse\DataResponse|Response
      */
-    public function index(Request $request, IR $invRepo, IRR $irR, CR $clientRepo, GR $groupRepo, QR $qR, SOR $soR, DLR $dlR, UCR $ucR, #[RouteArgument('_language')] string $_language, #[RouteArgument('page')] string $page = '1', #[RouteArgument('status')] string $status = '0'): \Yiisoft\DataResponse\DataResponse|Response {
+    public function index(IR $invRepo, IRR $irR, CR $clientRepo, GR $groupRepo, QR $qR, SOR $soR, DLR $dlR, UCR $ucR, 
+            #[RouteArgument('_language')] string $_language, 
+            #[RouteArgument('page')] string $page = '1', 
+            #[RouteArgument('status')] string $status = '0',
+            #[Query('page')] string $queryPage = null,
+            #[Query('sort')] string $querySort = null,
+            #[Query('filterInvNumber')] string $queryFilterInvNumber = null,
+            #[Query('filterInvAmountTotal')] string $queryFilterInvAmountTotal = null,
+            #[Query('filterClientGroup')] string $queryFilterClientGroup = null,
+            #[Query('filterDateCreatedYearMonth')] string $queryFilterDateCreatedYearMonth = null
+        ): \Yiisoft\DataResponse\DataResponse|Response {
         // build the inv and hasOne InvAmount table
         $visible = $this->sR->get_setting('columns_all_visible');
         $inv = new Inv();
@@ -1920,44 +1938,37 @@ final class InvController {
         $this->disable_read_only_status_message();
         $active_clients = $ucR->getClients_with_user_accounts();
         if ($active_clients) {
-            $query_params = $request->getQueryParams();
             // All, Draft, Sent ... filter governed by routes eg. invoice.myhost/invoice/inv/page/1/status/1 => #[RouteArgument('page')] string $page etc 
             // Paginator ... governed by query params format eg. invoice.myhost/invoice/inv?page=1&pagesize=1 => $query_params
             
-            /**
-             * @var string $query_params['page']
-             */
-            $page = $query_params['page'] ?? $page;
+            $page = $queryPage ?? $page;
             //status 0 => 'all';
             $status = (int) $status;
-            /**
-             * @var string|null $query_params['sort']
-             */
-            $sort_string = $query_params['sort'] ?? '-id';
-            $order =  OrderHelper::stringToArray($sort_string);
+            $sortString = $querySort ?? '-id';
+            $order =  OrderHelper::stringToArray($sortString);
             $sort = Sort::only(['id', 'status_id', 'number', 'date_created', 'date_due', 'client_id'])
                     // (@see vendor\yiisoft\data\src\Reader\Sort
                     // - => 'desc'  so -id => default descending on id
                     // Show the latest quotes first => -id
                     ->withOrder($order);
             $invs = $this->invs_status_with_sort($invRepo, $status, $sort);
-            if (isset($query_params['filterInvNumber']) && !empty($query_params['filterInvNumber'])) {
-                $invs = $invRepo->filterInvNumber((string)$query_params['filterInvNumber']);
+            if (isset($queryFilterInvNumber) && !empty($queryFilterInvNumber)) {
+                $invs = $invRepo->filterInvNumber($queryFilterInvNumber);
             }
-            if (isset($query_params['filterInvAmountTotal']) && !empty($query_params['filterInvAmountTotal'])) {
-                $invs = $invRepo->filterInvAmountTotal((string)$query_params['filterInvAmountTotal']);
+            if (isset($queryFilterInvAmountTotal) && !empty($queryFilterInvAmountTotal)) {
+                $invs = $invRepo->filterInvAmountTotal($queryFilterInvAmountTotal);
             }
-            if ((isset($query_params['filterInvNumber']) && !empty($query_params['filterInvNumber'])) && 
-               (isset($query_params['filterInvAmountTotal']) && !empty($query_params['filterInvAmountTotal']))) {
-                $invs = $invRepo->filterInvNumberAndInvAmountTotal((string)$query_params['filterInvNumber'], (float)$query_params['filterInvAmountTotal']);
+            if ((isset($queryFilterInvNumber) && !empty($queryFilterInvNumber)) && 
+               (isset($queryFilterInvAmountTotal) && !empty($queryFilterInvAmountTotal))) {
+                $invs = $invRepo->filterInvNumberAndInvAmountTotal($queryFilterInvNumber, (float)$queryFilterInvAmountTotal);
             }
-            if (isset($query_params['filterClientGroup']) && !empty($query_params['filterClientGroup'])) {
-                $invs = $invRepo->filterClientGroup((string)$query_params['filterClientGroup']);
+            if (isset($queryFilterClientGroup) && !empty($queryFilterClientGroup)) {
+                $invs = $invRepo->filterClientGroup($queryFilterClientGroup);
             }
-            if (isset($query_params['filterDateCreatedYearMonth']) && !empty($query_params['filterDateCreatedYearMonth']))
+            if (isset($queryFilterDateCreatedYearMonth) && !empty($queryFilterDateCreatedYearMonth))
             {
                 // Use the mySql format 'Y-m'
-                $invs = $invRepo->filterDateCreatedLike('Y-m', (string)$query_params['filterDateCreatedYearMonth']);
+                $invs = $invRepo->filterDateCreatedLike('Y-m', $queryFilterDateCreatedYearMonth);
             }
             $paginator = (new DataOffsetPaginator($invs))
                 ->withPageSize((int) $this->sR->get_setting('default_list_limit'))

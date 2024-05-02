@@ -267,7 +267,7 @@ return [
       ->middleware(Authentication::class)
       ->action([InvoiceController::class, 'faq'])
       ->name('invoice/faq'),
-      Route::get('/phpinfo/{selection')
+      Route::get('/phpinfo/{selection}')
       ->middleware(fn(AccessChecker $checker) => $checker->withPermission('editInv'))
       ->middleware(Authentication::class)
       ->action([InvoiceController::class, 'phpinfo'])

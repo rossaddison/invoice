@@ -827,7 +827,7 @@ final class InvoiceController
                 && $pR->repoTestDataCount() == 0
                 // The setting install_test_data has been set to Yes in Settings...View
                 && $sR->get_setting('install_test_data') === '1') {
-                $this->install_test_data($trR, $uR, $fR, $pR, $cR, $sR);
+                $this->install_test_data($trR, $uR, $fR, $pR, $cR);
         } else {
                 // Test Data Already exists => Settings...View install_test_data must be set back to No
                 $this->flash_message('warning', $this->translator->translate('invoice.install.test.data.exists.already'));
@@ -971,11 +971,10 @@ final class InvoiceController
      * @param FamilyRepository $fR
      * @param ProductRepository $pR
      * @param ClientRepository $cR
-     * @param SettingRepository $sR
      * @return void
      */
-    private function install_test_data(TaxRateRepository $trR, UnitRepository $uR, FamilyRepository $fR, ProductRepository $pR, ClientRepository $cR, SettingRepository $sR) : void {
-        $this->install($trR, $uR, $fR, $pR, $cR, $sR);
+    private function install_test_data(TaxRateRepository $trR, UnitRepository $uR, FamilyRepository $fR, ProductRepository $pR, ClientRepository $cR) : void {
+        $this->install($trR, $uR, $fR, $pR, $cR);
     }
     
     /**
@@ -985,10 +984,9 @@ final class InvoiceController
      * @param FamilyRepository $fR
      * @param ProductRepository $pR
      * @param ClientRepository $cR
-     * @param SettingRepository $sR
      * @return void
      */
-    private function install(TaxRateRepository $trR, UnitRepository $uR, FamilyRepository $fR, ProductRepository $pR, ClientRepository $cR, SettingRepository $sR) : void {
+    private function install(TaxRateRepository $trR, UnitRepository $uR, FamilyRepository $fR, ProductRepository $pR, ClientRepository $cR) : void {
         // Tax
         $this->install_zero_rate($trR);
         $this->install_standard_rate($trR);
@@ -999,11 +997,11 @@ final class InvoiceController
         $this->install_product_family($fR);
         $this->install_service_family($fR);
         // Product
-        $this->install_product($trR, $uR, $fR, $pR);
-        $this->install_service($trR, $uR, $fR, $pR);
+        $this->install_product($pR);
+        $this->install_service($pR);
         // Client
-        $this->install_foreign_client($cR, $sR);
-        $this->install_non_foreign_client($cR, $sR);
+        $this->install_foreign_client($cR);
+        $this->install_non_foreign_client($cR);
     }
     
     /**
@@ -1087,14 +1085,10 @@ final class InvoiceController
     }
     
     /**
-     * 
-     * @param TaxRateRepository $trR
-     * @param UnitRepository $uR
-     * @param FamilyRepository $fR
      * @param ProductRepository $pR
      * @return void
      */
-    private function install_product(TaxRateRepository $trR, UnitRepository $uR, FamilyRepository $fR, ProductRepository $pR) : void {
+    private function install_product(ProductRepository $pR) : void {
         $product = new Product();
         $product->setProduct_sku('12345678rgfyr');
         $product->setProduct_name('Tuch Padd');
@@ -1110,14 +1104,10 @@ final class InvoiceController
     }
     
     /**
-     * 
-     * @param TaxRateRepository $trR
-     * @param UnitRepository $uR
-     * @param FamilyRepository $fR
      * @param ProductRepository $pR
      * @return void
      */
-    private function install_service(TaxRateRepository $trR, UnitRepository $uR, FamilyRepository $fR, ProductRepository $pR) : void {
+    private function install_service(ProductRepository $pR) : void {
         $service = new Product();
         $service->setProduct_sku('d234ds678rgfyr');
         $service->setProduct_name('Cleen Screans');
@@ -1136,12 +1126,10 @@ final class InvoiceController
     }
     
     /**
-     * 
      * @param ClientRepository $cR
-     * @param SettingRepository $s
      * @return void
      */
-    private function install_foreign_client(ClientRepository $cR, SettingRepository $s) : void {
+    private function install_foreign_client(ClientRepository $cR) : void {
         $client = new Client();
         $client->setClient_active(true);
         $client->setClient_name('Foreign');
@@ -1154,12 +1142,10 @@ final class InvoiceController
     }
     
     /**
-     * 
      * @param ClientRepository $cR
-     * @param SettingRepository $s
      * @return void
      */
-    private function install_non_foreign_client(ClientRepository $cR, SettingRepository $s) : void {
+    private function install_non_foreign_client(ClientRepository $cR) : void {
         $client = new Client();
         $client->setClient_active(true);
         $client->setClient_name('Non');
@@ -1338,7 +1324,7 @@ final class InvoiceController
                 $flash = $this->translator->translate('invoice.first.reset');
             } else {
                 $this->test_data_delete($uR, $fR, $pR, $cR); 
-                $this->install_test_data($trR, $uR, $fR, $pR, $cR, $sR);
+                $this->install_test_data($trR, $uR, $fR, $pR, $cR);
                 $flash = $this->translator->translate('i.reset');
             }
         } else {
