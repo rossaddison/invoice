@@ -14,6 +14,7 @@ use App\Invoice\Asset\i18nAsset\fr_FR_Asset;
 use App\Invoice\Asset\i18nAsset\id_Asset;
 use App\Invoice\Asset\i18nAsset\ja_Asset;
 use App\Invoice\Asset\i18nAsset\nl_Asset;
+use App\Invoice\Asset\i18nAsset\pt_BR_Asset;
 use App\Invoice\Asset\i18nAsset\ru_Asset;
 use App\Invoice\Asset\i18nAsset\sk_Asset;
 use App\Invoice\Asset\i18nAsset\uk_UA_Asset;
@@ -70,6 +71,7 @@ switch ($session->get('_language')) {
     case 'id' : $assetManager->register(id_Asset::class); $locale = 'Indonesian'; break;
     case 'it' : $assetManager->register(id_Asset::class); $locale = 'Italian'; break;
     case 'ja' : $assetManager->register(ja_Asset::class); $locale = 'Japanese'; break;
+    case 'pt-BR' : $assetManager->register(pt_BR_Asset::class); $locale = 'PortugeseBrazil'; break;
     case 'nl' : $assetManager->register(nl_Asset::class); $locale = 'Dutch'; break;
     case 'ru' : $assetManager->register(ru_Asset::class); $locale = 'Russian'; break;
     case 'sk' : $assetManager->register(sk_Asset::class); $locale = 'Slovensky'; break;    
@@ -231,6 +233,10 @@ echo Nav::widget()
                     'label' => 'Japanese / 日本',
                     'url' => $urlGenerator->generateFromCurrent(['_language' => 'ja'], fallbackRouteName: 'site/index'),
                 ],
+                [
+                    'label' => 'Portugese / Português Brasileiro',
+                    'url' => $urlGenerator->generateFromCurrent(['_language' => 'pt-BR'], fallbackRouteName: 'invoice/index'),
+                ],  
                 [
                     'label' => 'Russian / Русский',
                     'url' => $urlGenerator->generateFromCurrent(['_language' => 'ru'], fallbackRouteName: 'site/index'),

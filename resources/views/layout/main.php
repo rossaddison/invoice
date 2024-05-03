@@ -119,6 +119,10 @@ $this->beginPage();
                         'url' => $urlGenerator->generateFromCurrent(['_language' => 'ja'], fallbackRouteName: 'site/index'),
                     ],
                     [
+                        'label' => 'Portugese / Português Brasileiro',
+                        'url' => $urlGenerator->generateFromCurrent(['_language' => 'pt-BR'], fallbackRouteName: 'site/index'),
+                    ],        
+                    [
                         'label' => 'Russian / Русский',
                         'url' => $urlGenerator->generateFromCurrent(['_language' => 'ru'], fallbackRouteName: 'site/index'),
                     ],

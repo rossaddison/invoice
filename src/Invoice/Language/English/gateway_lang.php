@@ -9,7 +9,7 @@ $lang =  [
     'g.online_payment_for_invoice'         => 'Online Payment for Invoice',
     'g.online_payment_method'              => 'Online Payment Method',
     'g.online_payment_creditcard_hint'     => 'If you want to pay via credit card please enter the information below.<br/>The credit card information are not stored on our servers and will be transferred to the online payment gateway using a secure connection.',
-    'g.online_payment_version'             => 'Omnipay Version',
+    'g.online_payment_version'             => 'Omnipay Version (checked) / PCI Compliant (No credit card details stored on this database) (unchecked)',
     'g.enable_online_payments'             => 'Enable Online Payments',
     'g.payment_provider'                   => 'Payment Provider',
     'g.provider_response'                  => 'Provider Response',
@@ -78,6 +78,10 @@ $lang =  [
     'g.online_payment_region'              => 'Region',
     // Paypal Checkout v2 4th March 2023 - Notifications
     'g.online_payment_webhookId'           => 'Webhook Id',
+    // Mollie ClientAPI 15 March 2024
+    'g.online_payment_testOrLiveApiKey' => 'Test or Live Api Key i.e starts with test_ or live_',
+    'g.online_payment_partnerID' => 'Partner ID',
+    'g.online_payment_profileID' => 'Profile ID',
 
     // Status / Error Messages
     'g.online_payment_payment_cancelled'   => 'Payment cancelled.',

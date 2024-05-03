@@ -625,6 +625,7 @@ final class SettingRepository extends Select\Repository
             'it'=>'Italian',
             'ja'=>'Japanese',
             'nl'=>'Dutch',
+            'pt-Br'=> 'PortugeseBrazilian',
             'ru'=>'Russian',
             'sk'=>'Slovakian',            
             'uk'=>'Ukrainian',
@@ -1571,7 +1572,11 @@ final class SettingRepository extends Select\Repository
             '---Step--4: Add Key'."\r\n".
             '---Step--5: Choose the Json File option and Download the file to src/Invoice/Google_translate_unique_folder'."\r\n".
             '---Step--6: You will have to enable the Cloud Translation API and provide your billing details. You will be charged 0 currency. '."\r\n".
-            '---Step--7: Move the file from views/generator/output_overwrite to eg. src/Invoice/Language/{your language}',
+            '---Step--7: Adjust the php.ini [apache_module] by means of the wampserver icon or by clicking on the symlink in the directory.'."\r\n".
+            '---Step--8: Edit this symlink file manually at [curl] with eg. "c:/wamp64/bin/php/php8.1.13/cacert.pem   Note the forward slashes.'."\r\n".
+            '---Step--9: Reboot your server'."\r\n".
+            '---Step--10: After generating the file, move the file from views/generator/output_overwrite to eg. src/Invoice/Language/{your language}. Use all three array sections to build one language array file i.e. app.php',
+            
             'where'=>'GeneratorController/google_translate_lang',
             //'menu' => true,
         ],

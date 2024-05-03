@@ -15,6 +15,7 @@ use App\Invoice\Asset\i18nAsset\id_Asset;
 use App\Invoice\Asset\i18nAsset\it_Asset;
 use App\Invoice\Asset\i18nAsset\ja_Asset;
 use App\Invoice\Asset\i18nAsset\nl_Asset;
+use App\Invoice\Asset\i18nAsset\pt_BR_Asset;
 use App\Invoice\Asset\i18nAsset\ru_Asset;
 use App\Invoice\Asset\i18nAsset\sk_Asset;
 use App\Invoice\Asset\i18nAsset\uk_UA_Asset;
@@ -90,6 +91,9 @@ switch ($session->get('_language') ?? $session->set('_language', $currentRoute->
   case 'nl' : $assetManager->register(nl_Asset::class);
     $locale = 'Dutch';
     break;
+  case 'pt-BR' : $assetManager->register(pt_BR_Asset::class);
+    $locale = 'PortugeseBrazilian';
+    break; 
   case 'ru' : $assetManager->register(ru_Asset::class);
     $locale = 'Russian';
     break;
@@ -523,13 +527,17 @@ $this->beginPage();
                     'url' => $urlGenerator->generateFromCurrent(['_language' => 'id'], fallbackRouteName: 'invoice/index'),
                   ],
                   [
-                        'label' => 'Italian / Italiano',
-                        'url' => $urlGenerator->generateFromCurrent(['_language' => 'it'], fallbackRouteName: 'invoice/index'),
+                    'label' => 'Italian / Italiano',
+                    'url' => $urlGenerator->generateFromCurrent(['_language' => 'it'], fallbackRouteName: 'invoice/index'),
                   ],       
                   [
                     'label' => 'Japanese / 日本',
                     'url' => $urlGenerator->generateFromCurrent(['_language' => 'ja'], fallbackRouteName: 'invoice/index'),
                   ],
+                  [
+                    'label' => 'Portugese / Português Brasileiro',
+                    'url' => $urlGenerator->generateFromCurrent(['_language' => 'pt-BR'], fallbackRouteName: 'invoice/index'),
+                  ],        
                   [
                     'label' => 'Russian / Русский',
                     'url' => $urlGenerator->generateFromCurrent(['_language' => 'ru'], fallbackRouteName: 'invoice/index'),

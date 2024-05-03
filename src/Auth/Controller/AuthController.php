@@ -63,6 +63,6 @@ final class AuthController
     
     private function redirectToInvoiceIndex(): ResponseInterface
     {
-        return $this->webService->getRedirectResponse('invoice/index', ['_language'=>'en']);
+        return $this->webService->getRedirectResponse('invoice/index');
     }
 }
