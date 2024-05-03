@@ -666,7 +666,7 @@ final class ClientController
        $custom_field_body = [            
             'custom'=>$custom,            
        ];
-       if (!empty($custom_field_body['custom'])) {
+       if (!($custom_field_body['custom']) == []) {
             $db_array = [];
             $values = [];
              /**
