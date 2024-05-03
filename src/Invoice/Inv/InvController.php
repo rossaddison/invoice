@@ -1754,12 +1754,12 @@ final class InvController {
     public function guest(IAR $iaR, IRR $irR, IR $iR, UCR $ucR, UIR $uiR, 
         #[RouteArgument('page')] string $page = '1', 
         #[RouteArgument('status')] string $status = '0',
-        #[Query('page')] string $queryPage = '',
-        #[Query('sort')] string $querySort = '',    
+        #[Query('page')] string $queryPage = null,
+        #[Query('sort')] string $querySort = null,    
         #[Query('filterInvNumber')] string $queryFilterInvNumber = null,
         #[Query('filterInvAmountTotal')] string $queryFilterInvAmountTotal = null): \Yiisoft\DataResponse\DataResponse|Response {
-        $pageString = $queryPage ?: $page;
-        $sortString = $querySort ?: '-id';
+        $pageString = $queryPage ?? $page;
+        $sortString = $querySort ?? '-id';
         $sort = Sort::only(['status_id', 'number', 'date_created', 'date_due', 'id', 'client_id'])->withOrderString($sortString);
         // Get the current user and determine from (@see Settings...User Account) whether they have been given
         // either guest or admin rights. These rights are unrelated to rbac and serve as a second
@@ -1824,7 +1824,7 @@ final class InvController {
                         'page' => $pageString,
                         'paginator' => $paginator,
                         // Clicking on a grid column sort hyperlink will generate a url query_param eg. ?sort=
-                        'sortOrder' => $querySort ?: '',
+                        'sortOrder' => $querySort ?? '',
                         'status' => $status,
                     ];
                     return $this->view_renderer->render('/invoice/inv/guest', $parameters);
@@ -1912,8 +1912,8 @@ final class InvController {
             #[RouteArgument('_language')] string $_language, 
             #[RouteArgument('page')] string $page = '1', 
             #[RouteArgument('status')] string $status = '0',
-            #[Query('page')] string $queryPage = '',
-            #[Query('sort')] string $querySort = '',
+            #[Query('page')] string $queryPage = null,
+            #[Query('sort')] string $querySort = null,
             #[Query('filterInvNumber')] string $queryFilterInvNumber = null,
             #[Query('filterInvAmountTotal')] string $queryFilterInvAmountTotal = null,
             #[Query('filterClientGroup')] string $queryFilterClientGroup = null,
@@ -1941,10 +1941,10 @@ final class InvController {
             // All, Draft, Sent ... filter governed by routes eg. invoice.myhost/invoice/inv/page/1/status/1 => #[RouteArgument('page')] string $page etc 
             // Paginator ... governed by query params format eg. invoice.myhost/invoice/inv?page=1&pagesize=1 => $query_params
             
-            $page = $queryPage ?: $page;
+            $page = $queryPage ?? $page;
             //status 0 => 'all';
             $status = (int) $status;
-            $sortString = $querySort ?: '-id';
+            $sortString = $querySort ?? '-id';
             $order =  OrderHelper::stringToArray($sortString);
             $sort = Sort::only(['id', 'status_id', 'number', 'date_created', 'date_due', 'client_id'])
                     // (@see vendor\yiisoft\data\src\Reader\Sort

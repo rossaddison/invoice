@@ -9,11 +9,11 @@ require_once __DIR__ . '/vendor/autoload.php';
 $dotenv = Dotenv::createImmutable(__DIR__);
 $dotenv->load();
 
-$_ENV['YII_ENV'] = empty($_ENV['YII_ENV']) ? null : $_ENV['YII_ENV'];
+$_ENV['YII_ENV'] = strlen(($_ENV['YII_ENV'])) == 0 ? null : $_ENV['YII_ENV'];
 $_SERVER['YII_ENV'] = $_ENV['YII_ENV'];
 
 $_ENV['YII_DEBUG'] = filter_var(
-    !empty($_ENV['YII_DEBUG']) ? $_ENV['YII_DEBUG'] : true,
+    !strlen($_ENV['YII_DEBUG']) == 0 ? $_ENV['YII_DEBUG'] : true,
     FILTER_VALIDATE_BOOLEAN,
     FILTER_NULL_ON_FAILURE
 ) ?? true;
