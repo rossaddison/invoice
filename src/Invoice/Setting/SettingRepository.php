@@ -1602,9 +1602,9 @@ final class SettingRepository extends Select\Repository
           'why'=>'This is used by Generator..Reset Data and Generator..Remove Data during the testing of data',
           'where'=>'invoice/test_data_reset and invoice/test_data_remove'
         ], 
-        'invoice_default_payment_method'=>[
-            'why'=>'Default: 1 => None, 2 => Cash, 3 => Cheque, 4 => Card/Direct Debit - Succeeded ' .
-                 '5 => Card/Direct Debit - Processing 6 => Card/Direct Debit - Customer Ready.',
+        'invoice_default_payment_method' => [
+            'why'=>'Default: 1  None, 2 Cash, 3 Cheque, 4 Card/Direct Debit - Succeeded ' .
+                 '5 Card/Direct Debit - Processing 6 Card/Direct Debit - Customer Ready.',
             'where'=>'InvoiceController/install_default_settings_on_first_run and '.
                    'InvController/create_confirm function which assigns the default of 1 to all invoices when created. ' .
                    'See src/Invoice/Asset/rebuild-1.13/js/inv.js #inv_create_confirm function and '.
@@ -1676,7 +1676,7 @@ final class SettingRepository extends Select\Repository
         ],
         'pdf_stream_inv'=>[
             'why'=>'To stream is to present in the browser normally as xml, html, or a pdf. Not to stream is to print to a file. Hence the use of the The Google sign located under settings ... Views ... Invoices... ',
-            'where'=>'resources/views/invoice/setting/views/partial_settings_invoices with InvController/email_stage_1 variable $stream ... pdfHelper->generate_inv_pdf ... mpdfHelper->pdfCreate', 
+            'where'=>'resources/views/invoice/setting/views/partial_settings_invoices with InvController/email_stage_1 variable $stream ... pdfHelper..generate_inv_pdf ... mpdfHelper..pdfCreate', 
         ],
         'quote_overview_period'=>[
             'why'=>'This setting is used on the dashboard so that the quotes that are shown will either be this-month, last-month, this-quarter, last-quarter, this-year, or last-year',
@@ -1754,7 +1754,7 @@ final class SettingRepository extends Select\Repository
                 }
             }
         }
-        $information = $why .' and is used in '.$where.'"';
+        $information = 'data-bs-toggle = "tooltip" data-bs-placement= "bottom" '.' '.'title = "' . $why .' and is used in '.$where.'"';
         $build = $debug_mode ? $information : '';
         return $build;
     }
