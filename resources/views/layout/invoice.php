@@ -535,7 +535,7 @@ $this->beginPage();
                     'url' => $urlGenerator->generateFromCurrent(['_language' => 'ja'], fallbackRouteName: 'invoice/index'),
                   ],
                   [
-                    'label' => 'Portugese / Português Brasileiro',
+                    'label' => 'Portugese Brazilian / Português Brasileiro',
                     'url' => $urlGenerator->generateFromCurrent(['_language' => 'pt-BR'], fallbackRouteName: 'invoice/index'),
                   ],        
                   [

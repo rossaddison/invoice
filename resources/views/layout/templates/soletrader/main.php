@@ -198,7 +198,7 @@ $this->setTitle($title);
                         'url' => $urlGenerator->generateFromCurrent(['_language' => 'ja'], fallbackRouteName: 'site/index'),
                     ],
                     [
-                        'label' => 'Portugese / Português Brasileiro',
+                        'label' => 'Portugese Brazilian / Português Brasileiro',
                         'url' => $urlGenerator->generateFromCurrent(['_language' => 'pt-BR'], fallbackRouteName: 'site/index'),
                     ],      
                     [
