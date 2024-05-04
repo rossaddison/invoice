@@ -15,7 +15,7 @@
                 <p><b>Problem:</b> This en\app.php file is too big for Google to Translate. </p>
                 <p><b>Step 1:</b> Copy the 'i.account_information' .. 'i.false' to src\Invoice\English\ip_lang.php file</p>
                 <p><b>Step 2:</b> Copy the 'g.online_payment' .. 'g.online_payment_3dauth_redirect' to src\Invoice\English\gateway_lang.php file</p>
-                <p><b>Step 3:</b> Copy the 'invoice.add' .. 'validator.user.exist.not' to src\Invoice\English\latest.php file</p>
+                <p><b>Step 3:</b> Copy the 'invoice.add' .. 'validator.user.exist.not' to src\Invoice\English\latest_lang.php file</p>
                 <p><b>Step 4:</b> Run the Generator ... Translate English sub programs to translate the above files from English into the language of your choice.</p>
                 <p><b>Step 5:</b> You will have to combine these 3 parts into one array called app.php in the language of your choice and place it into a suitable folder in Step 1's folder.</p>
                 <p><b>Step 6:</b> Adjust the \resources\views\layout files.</p>
