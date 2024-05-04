@@ -88,7 +88,7 @@ $this->beginPage();
                     ], 
                     [
                         'label' => 'Chinese Simplified / 简体中文',
-                        'url' => $urlGenerator->generateFromCurrent(['_language' => 'zh'], fallbackRouteName: 'site/index'),
+                        'url' => $urlGenerator->generateFromCurrent(['_language' => 'zh-CN'], fallbackRouteName: 'site/index'),
                     ],
                     [
                         'label' => 'English',

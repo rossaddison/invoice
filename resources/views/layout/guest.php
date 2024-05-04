@@ -78,7 +78,7 @@ switch ($session->get('_language')) {
     case 'es' : $assetManager->register(es_ES_Asset::class); $locale = 'Spanish'; break;
     case 'uk' : $assetManager->register(uk_UA_Asset::class); $locale = 'Ukrainian'; break;
     case 'uz' : $assetManager->register(uz_UZ_Asset::class); $locale = 'Uzbek'; break;
-    case 'zh' : $assetManager->register(zh_CN_Asset::class); $locale = 'Chinese Simplified'; break;
+    case 'zh-CN' : $assetManager->register(zh_CN_Asset::class); $locale = 'Chinese Simplified'; break;
     default   : $assetManager->register(en_GB_Asset::class); $locale = 'English'; break;
 }
 
@@ -207,7 +207,7 @@ echo Nav::widget()
                 ], 
                 [
                     'label' => 'Chinese Simplified / 简体中文',
-                    'url' => $urlGenerator->generateFromCurrent(['_language' => 'zh'], fallbackRouteName: 'site/index'),
+                    'url' => $urlGenerator->generateFromCurrent(['_language' => 'zh-CN'], fallbackRouteName: 'site/index'),
                 ],
                 [
                     'label' => 'English',

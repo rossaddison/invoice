@@ -15,6 +15,10 @@ use Yiisoft\Yii\Sentry\SentryMiddleware;
 return [
     'locale' => [
         'locales' => [
+            /**
+             * Note: key affects RouteArgument _language, value matches locale
+             * @see key => value
+             */
             'af' => 'af', 
             'ar' => 'ar-BH', 
             'az' => 'az-AZ', 
@@ -32,7 +36,7 @@ return [
             'uk' => 'uk-UA', 
             'uz' => 'uz-UZ',
             'vi' => 'vi-VN', 
-            'zh' => 'zh-CN'
+            'zh-CN' => 'zh-CN'
         ],
         'ignoredRequests' => [
             '/debug**',

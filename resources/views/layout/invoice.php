@@ -109,7 +109,7 @@ switch ($session->get('_language') ?? $session->set('_language', $currentRoute->
   case 'uz' : $assetManager->register(uz_UZ_Asset::class);
     $locale = 'Uzbek';
     break;
-  case 'zh' : $assetManager->register(zh_CN_Asset::class);
+  case 'zh-CN' : $assetManager->register(zh_CN_Asset::class);
     $locale = 'Chinese Simplified';
     break;
   default : $assetManager->register(en_GB_Asset::class);
@@ -117,8 +117,8 @@ switch ($session->get('_language') ?? $session->set('_language', $currentRoute->
     break;
 }
 
-// If the dropdown locale has not been set on login => use the cldr setting value. If the cldr does not exist => use the 'en' value
-$s->save_session_locale_to_cldr($session->get('_language') ?? ($s->get_setting('cldr') ?: 'en'));
+// If the dropdown locale has not been set on login => use the current route's locale argument. If the cldr does not exist => use the 'en'
+$s->save_session_locale_to_cldr($session->get('_language') ?? ($currentRoute->getArgument('_language') ?: 'en'));
 
 $this->addCssFiles($assetManager->getCssFiles());
 $this->addCssStrings($assetManager->getCssStrings());
@@ -504,7 +504,7 @@ $this->beginPage();
                   ],
                   [
                     'label' => 'Chinese Simplified / 简体中文',
-                    'url' => $urlGenerator->generateFromCurrent(['_language' => 'zh'], fallbackRouteName: 'invoice/index'),
+                    'url' => $urlGenerator->generateFromCurrent(['_language' => 'zh-CN'], fallbackRouteName: 'invoice/index'),
                   ],
                   [
                     'label' => 'English',
