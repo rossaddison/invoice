@@ -38,13 +38,16 @@ $error = $error ?? null;
                         ->open() ?>
                     <?= Field::text($formModel, 'login')
                         ->inputClass('form-control')
+                        ->label($translator->translate('layout.login'))
                         ->autofocus() ?>
                     <?= Field::password($formModel, 'password')
                         ->inputClass('form-control')
+                        ->label($translator->translate('layout.password'))
                     ?>
                     <?= Field::checkbox($formModel, 'rememberMe')
                         ->containerClass('form-check form-switch text-start mt-2')
                         ->inputClass('form-check-input form-control')
+                        ->label($translator->translate('layout.remember'))
                         ->inputLabelClass('form-check-label') ?>
                     <?= Field::submitButton()
                         ->buttonId('login-button')

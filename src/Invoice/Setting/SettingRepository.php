@@ -633,7 +633,7 @@ final class SettingRepository extends Select\Repository
             'vi'=>'Vietnamese',
             // Use camelcase here => remove the space between Chinese and Simplified and in the original folder otherwise it will not be 
             // retrieved
-            'zh'=>'ChineseSimplified',                
+            'zh->CN'=>'ChineseSimplified',                
         ];
         return $language_list;
     }

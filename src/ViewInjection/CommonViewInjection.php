@@ -17,8 +17,8 @@ final class CommonViewInjection implements CommonParametersInjectionInterface
 {
     private CompanyRepository $companyRepository;
     private CompanyPrivateRepository $companyPrivateRepository;
+    private SettingRepository $settingRepository;    
     private Translator $translator;
-    private SettingRepository $settingRepository;
     
     public function __construct(
         private UrlGeneratorInterface $url,

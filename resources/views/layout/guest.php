@@ -61,7 +61,7 @@ $s->get_setting('gateway_braintree_version') == '0' ? $assetManager->register(br
 // The InvoiceController/index receives the $session->get('_language') or 'drop-down' locale user selection and saves it into a setting called 'cldr'
 // The $s value is configured for the layout in config/params.php yii-soft/view Reference::to and NOT by means of the InvoiceController
 
-switch ($session->get('_language')) {
+switch ($currentRoute->getArgument('_language', $session->get('_language') ?? 'en')) {
     case 'af' : $assetManager->register(af_Asset::class); $locale = 'Afrikaans'; break;
     case 'ar' : $assetManager->register(ar_Asset::class); $locale = 'Arabic'; break;
     case 'az' : $assetManager->register(az_Asset::class); $locale = 'Azerbaijani'; break;
@@ -82,9 +82,6 @@ switch ($session->get('_language')) {
     default   : $assetManager->register(en_GB_Asset::class); $locale = 'English'; break;
 }
 
-// If the dropdown locale has not been set on login => use the cldr setting value. If the cldr does not exist => use the 'en' value
-$s->save_session_locale_to_cldr($session->get('_language') ?? ($s->get_setting('cldr') ?: 'en'));
-
 $this->addCssFiles($assetManager->getCssFiles());
 $this->addCssStrings($assetManager->getCssStrings());
 $this->addJsFiles($assetManager->getJsFiles());
@@ -95,12 +92,11 @@ $this->addJsVars($assetManager->getJsVars());
 $currentRouteName = $currentRoute->getName() ?? '';
 
 $isGuest = $user === null || $user->getId() === null;
-
 $this->beginPage();
 ?>
 
 <!DOCTYPE html>
-<html lang="<?= $s->get_setting('cldr') !== $session->get('_language')  ? $session->get('_language') : $s->get_setting('cldr'); ?>">
+<html lang="<?= $currentRoute->getArgument('_language', 'en'); ?>">
 <head>
     <?= Meta::documentEncoding('utf-8')?>
     <?= Meta::pragmaDirective('X-UA-Compatible', 'IE=edge,chrome=1') ?>

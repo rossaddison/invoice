@@ -1053,6 +1053,7 @@ return [
     'invoice.generator.google.translate.gateway' => 'Translate English\gateway_lang.php',
     'invoice.generator.google.translate.app' => 'Translate English\app_lang.php',
     'invoice.generator.google.translate.latest' =>'Translate English\latest_lang.php',
+    'invoice.generator.google.translate.common' =>'Translate English\common_lang.php',
     'invoice.generator.history' => 'This record has existing Generator Relations so it cannot be deleleted. Delete these relations first.',
     'invoice.generator.relation.form' => 'Generator Relation Form',
     'invoice.generator.relations' => 'Generator Relations',

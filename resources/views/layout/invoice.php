@@ -56,11 +56,9 @@ $s->get_setting('gateway_stripe_version') == '0' ? $assetManager->register(strip
 $s->get_setting('gateway_amazon_pay_version') == '0' ? $assetManager->register(amazon_pay_v2_4_Asset::class) : '';
 $s->get_setting('gateway_braintree_version') == '0' ? $assetManager->register(braintree_dropin_1_33_7_Asset::class) : '';
 $vat = ($s->get_setting('enable_vat_registration') == '0');
-// The InvoiceController/index receives the $session->get('_language') or 'drop-down' locale user selection and saves it into a setting called 'cldr'
-// The $s value is configured for the layout in config/common/params.php yii-soft/view Reference::to and NOT by means of the InvoiceController
 // NOTE: $locale must correspond with SettingRepository/locale_language_array and
 // ALSO: src/Invoice/Language/{folder_name}
-switch ($session->get('_language') ?? $session->set('_language', $currentRoute->getArgument('_language'))) {
+switch ($currentRoute->getArgument('_language') ?? 'en') {
   case 'af' : $assetManager->register(af_Asset::class);
     $locale = 'Afrikaans';
     break;
@@ -110,15 +108,14 @@ switch ($session->get('_language') ?? $session->set('_language', $currentRoute->
     $locale = 'Uzbek';
     break;
   case 'zh-CN' : $assetManager->register(zh_CN_Asset::class);
-    $locale = 'Chinese Simplified';
+    $locale = 'ChineseSimplified';
     break;
   default : $assetManager->register(en_GB_Asset::class);
     $locale = 'English';
     break;
 }
 
-// If the dropdown locale has not been set on login => use the current route's locale argument. If the cldr does not exist => use the 'en'
-$s->save_session_locale_to_cldr($session->get('_language') ?? ($currentRoute->getArgument('_language') ?: 'en'));
+$s->save_session_locale_to_cldr($session->get('_language') ?? ($currentRoute->getArgument('_language') ?: ($s->get_setting('cldr') ?? 'en')));
 
 $this->addCssFiles($assetManager->getCssFiles());
 $this->addCssStrings($assetManager->getCssStrings());
@@ -134,7 +131,7 @@ $this->addJsVars($assetManager->getJsVars());
 $this->beginPage();
 ?>
 <!DOCTYPE html>
-<html class="h-100" lang="<?= $s->get_setting('cldr') !== $session->get('_language') ? $session->get('_language') : $s->get_setting('cldr'); ?>">
+<html class="h-100" lang="<?= $currentRoute->getArgument('_language', $s->get_setting('cldr') ?? 'en'); ?>">
     <head>
         <?= Meta::documentEncoding('utf-8') ?>
         <?= Meta::pragmaDirective('X-UA-Compatible', 'IE=edge') ?>
@@ -440,6 +437,7 @@ $this->beginPage();
                     'label' => $translator->translate('invoice.generator.google.translate.ip'), 'linkOptions' => ['data-bs-toggle' => 'tooltip', 'title' => $s->where('google_translate_json_filename')], 'url' => $urlGenerator->generate('generator/google_translate_lang', ['type' => 'ip'])],
                   ['options' => ['class' => 'nav fs-4'], 'label' => $translator->translate('invoice.generator.google.translate.gateway'), 'url' => $urlGenerator->generate('generator/google_translate_lang', ['type' => 'gateway'])],
                   ['options' => ['class' => 'nav fs-4'], 'label' => $translator->translate('invoice.generator.google.translate.latest'), 'url' => $urlGenerator->generate('generator/google_translate_lang', ['type' => 'latest'])],
+                   ['options' => ['class' => 'nav fs-4'], 'label' => $translator->translate('invoice.generator.google.translate.common'), 'url' => $urlGenerator->generate('generator/google_translate_lang', ['type' => 'common'])],  
                   ['label' => $translator->translate('invoice.test.reset.setting'), 'url' => $urlGenerator->generate('invoice/setting_reset'),
                     'options' => ['class' => 'nav fs-4', 'data-bs-toggle' => 'tooltip', 'title' => $translator->translate('invoice.test.reset.setting.tooltip')]],
                   ['label' => $translator->translate('invoice.test.reset'), 'url' => $urlGenerator->generate('invoice/test_data_reset'),

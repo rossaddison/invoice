@@ -16,13 +16,15 @@
                 <p><b>Step 1:</b> Copy the <pre>'i.account_information' .. 'i.false'</pre> to <pre>src\Invoice\Language\English\<b>ip_lang.php</b></pre></p>
             <p><b>Step 2:</b> Copy the <pre>'g.online_payment' .. 'g.online_payment_3dauth_redirect'</pre> to <pre>src\Invoice\Language\English\<b>gateway_lang.php</b></pre></p>
                 <p><b>Step 3:</b> Copy the <pre>'invoice.add' .. 'validator.user.exist.not'</pre> to <pre>src\Invoice\Language\English\<b>latest_lang.php</b></pre></p>
-            <p><b>Step 4:</b> Run the Generator ... Translate English sub programs to translate the above files from English into the language of your choice into<pre><label>...\resources\views\invoice\generator\output_overwrite</label></pre>.</p>
-                <p><b>Step 5:</b> You will have to combine these 3 parts into one array called <code>app.php</code> in the language of your choice and place it into a folder <code>..resources\messages\{locale}</code> folder</p>
-                <p><b>Step 6:</b> Adjust the <code>\resources\views\layout</code> files.</p>
-                <p><b>Step 7:</b> Create a suitable <code>\invoice\src\Invoice\Asset\i18nAsset</code> file under this folder.</p>
-                <p><b>Step 8:</b> Create a separate folder under <code>\invoice\src\Invoice\Language</code>. This will be used by View...Settings...General...Language</p>
-                <p><b>Step 9:</b> Adjust the <code>SettingsRepository locale_language_array()</code> to include your language. e.g. 'pt-BR'</p>
-                <p><b>Step 10:</b> Adjust the <code>config\web\params.php</code> locales array to include your language. e.g. 'pt-BR'</p>
+                <p><b>Step 4:</b> Copy the <pre>'site.soletrader.about.we' .. 'site.soletrader.contact.phone'</pre> to <pre>src\Invoice\Language\English\<b>common_lang.php</b></pre></p>
+            
+            <p><b>Step 5:</b> Run the Generator ... Translate English sub programs to translate the above files from English into the language of your choice into<pre><label>...\resources\views\invoice\generator\output_overwrite</label></pre>.</p>
+                <p><b>Step 6:</b> You will have to combine these 3 parts into one array called <code>app.php</code> in the language of your choice and place it into a folder <code>..resources\messages\{locale}</code> folder</p>
+                <p><b>Step 7:</b> Adjust the <code>\resources\views\layout</code> files.</p>
+                <p><b>Step 8:</b> Create a suitable <code>\invoice\src\Invoice\Asset\i18nAsset</code> file under this folder.</p>
+                <p><b>Step 9:</b> Create a separate folder under <code>\invoice\src\Invoice\Language</code>. This will be used by View...Settings...General...Language</p>
+                <p><b>Step 10:</b> Adjust the <code>SettingsRepository locale_language_array()</code> to include your language. e.g. 'pt-BR'</p>
+                <p><b>Step 11:</b> Adjust the <code>config\web\params.php</code> locales array to include your language. e.g. 'pt-BR'</p>
                 
             </div>
             <div class="panel-body">

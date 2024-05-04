@@ -75,6 +75,9 @@ final class GeneratorController
     // e.g. invoice.invoice.this.is.a.sentence 
     const _LATEST = '_latest_lang.php';
     
+    // e.g. site.soletrader.contact.address
+    const _COMMON = '_common_lang.php';
+    
     public function __construct(
         DataResponseFactoryInterface $factory,    
         GeneratorService $generatorService,
@@ -769,6 +772,9 @@ final class GeneratorController
                 break;
             case 'latest':
                 $file = self::_LATEST;
+                break;
+             case 'common':
+                $file = self::_COMMON;
                 break;
             default:
                 break;

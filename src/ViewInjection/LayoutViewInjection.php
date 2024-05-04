@@ -14,6 +14,7 @@ use App\Invoice\Setting\SettingRepository;
 use App\Invoice\CompanyPrivate\CompanyPrivateRepository;
 use App\Invoice\Helpers\DateHelper;
 // Yiisoft
+use Yiisoft\Translator\TranslatorInterface as Translator;
 use Yiisoft\User\CurrentUser;
 use Yiisoft\Yii\View\LayoutParametersInjectionInterface;
 
@@ -28,16 +29,19 @@ final class LayoutViewInjection implements LayoutParametersInjectionInterface
     private CompanyRepository $companyRepository;
     private CompanyPrivateRepository $companyPrivateRepository;
     private SettingRepository $settingRepository;
+    private Translator $translator;
     
     public function __construct(private CurrentUser $currentUser, 
-                                CompanyRepository $companyRepository,
-                                CompanyPrivateRepository $companyPrivateRepository,
-                                SettingRepository $settingRepository
+        CompanyRepository $companyRepository,
+        CompanyPrivateRepository $companyPrivateRepository,
+        SettingRepository $settingRepository,
+        Translator $translator,
     )
     {
         $this->companyRepository = $companyRepository;
         $this->companyPrivateRepository = $companyPrivateRepository;
         $this->settingRepository = $settingRepository;
+        $this->translator = $translator;
     }
     
     /**
@@ -87,11 +91,11 @@ final class LayoutViewInjection implements LayoutParametersInjectionInterface
                     if ($private->getCompany_id() == (string)$company->getId()) {
                         // site's logo: take the first logo where the current date falls within the logo's start and end dates
                         if (($private->getStart_date()?->format('Y-m-d') < (new \DateTimeImmutable('now'))->format('Y-m-d')) && ($private->getEnd_date()?->format('Y-m-d') > (new \DateTimeImmutable('now'))->format('Y-m-d'))) {
-                                $companyLogoFileName = $private->getLogo_filename();
-                                $companyLogoWidth = $private->getLogo_width();
-                                $companyLogoHeight = $private->getLogo_height();
-                                $companyLogoMargin = $private->getLogo_margin();
-                              //  break;
+                            $companyLogoFileName = $private->getLogo_filename();
+                            $companyLogoWidth = $private->getLogo_width();
+                            $companyLogoHeight = $private->getLogo_height();
+                            $companyLogoMargin = $private->getLogo_margin();
+                            //  break;
                         }    
                     }
                 }
