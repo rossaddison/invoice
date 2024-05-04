@@ -13,16 +13,16 @@
             <div class="panel-body">
                 <p><b>Objective:</b> Rebuild a \www\invoice\resources\messages\en\app.php language file and insert it into e.g. pt_BR\app.php. </p>
                 <p><b>Problem:</b> This en\app.php file is too big for Google to Translate. </p>
-                <p><b>Step 1:</b> Copy the 'i.account_information' .. 'i.false' to src\Invoice\English\ip_lang.php file</p>
-                <p><b>Step 2:</b> Copy the 'g.online_payment' .. 'g.online_payment_3dauth_redirect' to src\Invoice\English\gateway_lang.php file</p>
-                <p><b>Step 3:</b> Copy the 'invoice.add' .. 'validator.user.exist.not' to src\Invoice\English\latest_lang.php file</p>
+                <p><b>Step 1:</b> Copy the <pre>'i.account_information' .. 'i.false'</pre> to <pre>src\Invoice\Language\English\<b>ip_lang.php</b></pre></p>
+            <p><b>Step 2:</b> Copy the <pre>'g.online_payment' .. 'g.online_payment_3dauth_redirect'</pre> to <pre>src\Invoice\Language\English\<b>gateway_lang.php</b></pre></p>
+                <p><b>Step 3:</b> Copy the <pre>'invoice.add' .. 'validator.user.exist.not'</pre> to <pre>src\Invoice\Language\English\<b>latest_lang.php</b></pre></p>
                 <p><b>Step 4:</b> Run the Generator ... Translate English sub programs to translate the above files from English into the language of your choice.</p>
-                <p><b>Step 5:</b> You will have to combine these 3 parts into one array called app.php in the language of your choice and place it into a suitable folder in Step 1's folder.</p>
-                <p><b>Step 6:</b> Adjust the \resources\views\layout files.</p>
-                <p><b>Step 7:</b> Create a suitable \invoice\src\Invoice\Asset\i18nAsset file under this folder.</p>
-                <p><b>Step 8:</b> Create a separate folder under \invoice\src\Invoice\Language. This will be used by View...Settings...General...Language</p>
-                <p><b>Step 9:</b> Adjust the SettingsRepository locale_language_array() to include your language. e.g. 'pt-BR'</p>
-                <p><b>Step 10:</b> Adjust the config\web\params.php locales array to include your language. e.g. 'pt-BR'</p>
+                <p><b>Step 5:</b> You will have to combine these 3 parts into one array called <code>app.php</code> in the language of your choice and place it into a folder <code>..resources\messages\{locale}</code> folder</p>
+                <p><b>Step 6:</b> Adjust the <code>\resources\views\layout</code> files.</p>
+                <p><b>Step 7:</b> Create a suitable <code>\invoice\src\Invoice\Asset\i18nAsset</code> file under this folder.</p>
+                <p><b>Step 8:</b> Create a separate folder under <code>\invoice\src\Invoice\Language</code>. This will be used by View...Settings...General...Language</p>
+                <p><b>Step 9:</b> Adjust the <code>SettingsRepository locale_language_array()</code> to include your language. e.g. 'pt-BR'</p>
+                <p><b>Step 10:</b> Adjust the <code>config\web\params.php</code> locales array to include your language. e.g. 'pt-BR'</p>
                 
             </div>
             <div class="panel-body">
