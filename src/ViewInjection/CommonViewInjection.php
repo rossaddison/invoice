@@ -137,6 +137,8 @@ final class CommonViewInjection implements CommonParametersInjectionInterface
             'testimonial' => [
                 'we' => $this->translator->translate('site.soletrader.testimonial.we'),
                 'worker1' => $this->translator->translate('site.soletrader.testimonial.worker1'),
+                'worker2' => $this->translator->translate('site.soletrader.testimonial.worker2'),
+                'worker3' => $this->translator->translate('site.soletrader.testimonial.worker3'),
             ],
             'contact' => [
                 'touch' => $this->translator->translate('site.soletrader.contact.touch'),

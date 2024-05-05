@@ -78,6 +78,9 @@ final class GeneratorController
     // e.g. site.soletrader.contact.address
     const _COMMON = '_common_lang.php';
     
+    // e.g miscellaneous
+    const _ANY = '_any_lang.php';
+    
     public function __construct(
         DataResponseFactoryInterface $factory,    
         GeneratorService $generatorService,
@@ -773,8 +776,11 @@ final class GeneratorController
             case 'latest':
                 $file = self::_LATEST;
                 break;
-             case 'common':
+            case 'common':
                 $file = self::_COMMON;
+                break;
+            case 'any':
+                $file = self::_ANY;
                 break;
             default:
                 break;

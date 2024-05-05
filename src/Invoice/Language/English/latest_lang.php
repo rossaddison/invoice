@@ -1,6 +1,6 @@
 <?php
 declare(strict_types=1);
-// as at 6th January 2024. Note this file has been built using copy paste from resources/messages/en/app.php
+// as at 5th May 2024. Note this file has been built using copy paste from resources/messages/en/app.php
 // Remember to adjust the app.php file with '$lang =' as seen below 
 $lang =  [
     'invoice.add' => 'Add',
@@ -210,6 +210,8 @@ $lang =  [
     'invoice.generator.google.translate.gateway' => 'Translate English\gateway_lang.php',
     'invoice.generator.google.translate.app' => 'Translate English\app_lang.php',
     'invoice.generator.google.translate.latest' =>'Translate English\latest_lang.php',
+    'invoice.generator.google.translate.common' => 'Translate English\common_lang.php',
+    'invoice.generator.google.translate.any' => 'Translate English\any_lang.php',
     'invoice.generator.history' => 'This record has existing Generator Relations so it cannot be deleleted. Delete these relations first.',
     'invoice.generator.relation.form' => 'Generator Relation Form',
     'invoice.generator.relations' => 'Generator Relations',

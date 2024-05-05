@@ -514,7 +514,7 @@ $lang = [
 'setup_user_password_info' => 'Nezabudnite použiť silné heslo. Odporúča sa kombinácia veľkých a malých písmen, číslic a symbolov. Minimálna dĺžka: 8 znakov',
 'setup_user_password_verify_info' => 'Overte svoje heslo opätovným zadaním rovnakého hesla.',
 'setup_v120_alert' => '<strong>Pozor!</strong><br> Je veľmi dôležité, aby ste si prečítali <a href="https://go.invoiceplane.com/v120update" target="_blank">toto oznámenie o aktualizácii</a> o niektorých významných zmenách v aplikácii InvoicePlane.',
-'setup_v147_alert' => '<strong>Pozor!</strong><br> Otvorte súbor <code>application/config/config.php</code> a zmeňte riadok <code>$config[&#39;sess_use_database&#39;] = false;</code> to <code>$config[&#39;sess_use_database&#39;] = true;</code> .<br> Viac podrobností nájdete <a href="https://go.invoiceplane.com/v147update" target="_blank">tu</a>',
+'setup_v147_alert' => '<strong>Pozor!</strong><br> Otvorte súbor <code>application/config/config.php</code> a zmeňte riadok <code>$config[\'sess_use_database\'] = false;</code> to <code>$config[\'sess_use_database\'] = true;</code> .<br> Viac podrobností nájdete <a href="https://go.invoiceplane.com/v147update" target="_blank">tu</a>',
 'set_to_read_only' => 'Nastavte Faktúru len na čítanie',
 'single_choice' => 'Single Choice',
 'six_months' => 'Šesť mesiacov',

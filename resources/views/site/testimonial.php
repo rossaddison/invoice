@@ -66,7 +66,9 @@
                                 'src' => '/img/soletrader/testimonial/testimonial-img-2.jpg', 
                                 'alt' => 'Papa Quana']); ?>    
                             <?= Html::openTag('figcaption'); ?>
-                                <?= Html::openTag('blockquote', ['class' => 'mb-4']); ?>This is our testimonial<?= Html::closeTag('blockquote'); ?>
+                                <?= Html::openTag('blockquote', ['class' => 'mb-4']); ?>
+                                    <?= $testimonial['worker2']; ?>
+                                <?= Html::closeTag('blockquote'); ?>
                                 <?= H4::tag()
                                     ->addClass('mb-2')
                                     ->content('')
@@ -90,7 +92,9 @@
                                 'src' => '/img/soletrader/testimonial/testimonial-img-3.jpg', 
                                 'alt' => 'Rara Sasa']); ?>    
                             <?= Html::openTag('figcaption'); ?>
-                                <?= Html::openTag('blockquote', ['class' => 'mb-4']); ?>This is our testimonial<?= Html::closeTag('blockquote'); ?>
+                                <?= Html::openTag('blockquote', ['class' => 'mb-4']); ?>
+                                    <?= $testimonial['worker3']; ?>
+                                <?= Html::closeTag('blockquote'); ?>
                                 <?= H4::tag()
                                     ->addClass('mb-2')
                                     ->content('')
