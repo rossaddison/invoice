@@ -11,7 +11,7 @@
                 <?= 'Google Translate'; ?>
             </div>
             <div class="panel-body">
-                <p><b>Objective:</b> Rebuild a \www\invoice\resources\messages\en\app.php language file and insert it into e.g. pt_BR\app.php. </p>
+                <p><b>Objective:</b> Rebuild a \www\invoice\resources\messages\en\app.php language file and insert it into e.g. <a href="https://github.com/rossaddison/invoice/commit/28188010c7965092f92484871712bf8347f0f5ed">zu_ZA\app.php</a></p>
                 <p><b>Problem:</b> This en\app.php file is too big for Google to Translate. </p>
                 <p><b>Step 1:</b> Copy the <pre>'i.account_information' .. 'i.false'</pre> to <pre>src\Invoice\Language\English\<b>ip_lang.php</b></pre></p>
             <p><b>Step 2:</b> Copy the <pre>'g.online_payment' .. 'g.online_payment_3dauth_redirect'</pre> to <pre>src\Invoice\Language\English\<b>gateway_lang.php</b></pre></p>
