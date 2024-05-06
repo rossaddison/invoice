@@ -25,12 +25,12 @@ final class ChangePasswordController
       private Session $session,
       private Flash $flash,
       private Translator $translator,
-      private CurrentUser $current_user,
+      private CurrentUser $currentUser,
       private WebControllerService $webService, 
       private ViewRenderer $viewRenderer,
     )
     {
-      $this->current_user = $current_user;
+      $this->currentUser = $currentUser;
       $this->session = $session;      
       $this->flash = new Flash($session);
       $this->translator = $translator;
@@ -47,36 +47,38 @@ final class ChangePasswordController
     ): ResponseInterface {
       if ($authService->isGuest()) {
           return $this->redirectToMain();
-      }  
-      // permit an authenticated user, ie. not a guest, only and null!== current user
-      if (!$authService->isGuest()) {
-        if ($this->current_user->can('viewInv',[])) {
-          // readonly the login detail on the change form
-          $identity_id = $this->current_user->getIdentity()->getId();
-          if (null!==$identity_id) {
-            $identity = $identityRepository->findIdentity($identity_id);
-            if (null!==$identity) {
-              // Identity and User are in a HasOne relationship so no null value
-              $login = $identity->getUser()?->getLogin();
-              if ($request->getMethod() === Method::POST
-                && $formHydrator->populate($changePasswordForm, $request->getParsedBody())
-                && $changePasswordForm->change() 
-              ) {
-                // Identity implements CookieLoginIdentityInterface: ensure the regeneration of the cookie auth key by means of $authService->logout();
-                // @see vendor\yiisoft\user\src\Login\Cookie\CookieLoginIdentityInterface 
-
-                // Specific note: "Make sure to invalidate earlier issued keys when you implement force user logout,
-                // PASSWORD CHANGE and other scenarios, that require forceful access revocation for old sessions.
-                // The authService logout function will regenerate the auth key here => overwriting any auth key
-                $authService->logout();
-                $this->flash_message('success', $this->translator->translate('validator.password.change'));
-                return $this->redirectToMain();
-              }
-              return $this->viewRenderer->render('change', ['formModel' => $changePasswordForm, 'login' => $login]);
-            } // identity
-          } // identity_id 
-        } // current user
-      } // auth service 
+      }
+      
+      $identity_id = $this->currentUser->getIdentity()->getId();
+      if (null!==$identity_id) {
+        $identity = $identityRepository->findIdentity($identity_id);
+        if (null!==$identity) {
+          // Identity and User are in a HasOne relationship so no null value
+          $login = $identity->getUser()?->getLogin();
+          if ($request->getMethod() === Method::POST
+            && $formHydrator->populate($changePasswordForm, $request->getParsedBody())
+            && $changePasswordForm->change() 
+          ) {
+            // Identity implements CookieLoginIdentityInterface: ensure the regeneration of the cookie auth key by means of $authService->logout();
+            // @see vendor\yiisoft\user\src\Login\Cookie\CookieLoginIdentityInterface 
+            // Specific note: "Make sure to invalidate earlier issued keys when you implement force user logout,
+            // PASSWORD CHANGE and other scenarios, that require forceful access revocation for old sessions.
+            // The authService logout function will regenerate the auth key here => overwriting any auth key
+            $authService->logout();
+            $this->flash_message('success', $this->translator->translate('validator.password.change'));
+            return $this->redirectToMain();
+          }
+          return $this->viewRenderer->render('change', [
+              'formModel' => $changePasswordForm, 
+              'login' => $login,
+              /**
+               * @see resources\rbac\items.php
+               * @see https://github.com/yiisoft/demo/pull/602
+               */
+              'changePasswordForAnyUser' => $this->currentUser->can('changePasswordForAnyUser') 
+          ]);
+        } // identity
+      } // identity_id 
       return $this->redirectToMain();
     } // reset
     

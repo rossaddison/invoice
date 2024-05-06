@@ -34,10 +34,14 @@ $this->setTitle($translator->translate('password.change'));
                         ->csrf($csrf)
                         ->id('changePasswordForm')
                         ->open() ?>
-                    <?= Field::text($formModel, 'login')->addInputAttributes(
+                    <?= $changePasswordForAnyUser ? Field::text($formModel, 'login')->addInputAttributes(
                             [
-                                'value'=> $login ?? '', 
-                                'readonly'=>'readonly'
+                                'value' => $login ?? ''
+                            ]
+                        ) : Field::text($formModel, 'login')->addInputAttributes(
+                            [
+                                'value' => $login ?? '', 
+                                'readonly' => 'readonly'
                             ]
                         ); ?>
                     <?= Field::password($formModel, 'password') ?>

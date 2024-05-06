@@ -12,7 +12,8 @@ return [
             'viewPayment',
             'editPayment',
             'editUser',
-            'editClientPeppol'
+            'editClientPeppol',
+            'canChangePasswordForAnyUser'
         ],
     ],
     
@@ -87,6 +88,13 @@ return [
     
     'editClientPeppol'=>[
         'name' => 'editClientPeppol',
+        'type' => 'permission',
+        'updatedAt' => 1599036348,
+        'createdAt' => 1599036348,
+    ],
+    
+    'changePasswordForAnyUser' => [
+        'name' => 'changePasswordForAnyUser',
         'type' => 'permission',
         'updatedAt' => 1599036348,
         'createdAt' => 1599036348,
