@@ -4,7 +4,6 @@ declare(strict_types=1);
 namespace App\Invoice\UserInv;
 
 use App\Invoice\Client\ClientRepository;
-use App\Invoice\Entity\UserClient;
 use App\Invoice\Entity\UserInv;
 use App\Invoice\Helpers\CountryHelper;
 use App\Invoice\Setting\SettingRepository;
@@ -24,11 +23,12 @@ use Yiisoft\Data\Reader\Sort;
 use Yiisoft\DataResponse\DataResponseFactoryInterface;
 use Yiisoft\FormModel\FormHydrator;
 use Yiisoft\Http\Method;
+use Yiisoft\Input\Http\Attribute\Parameter\Query;
 use Yiisoft\Rbac\AssignmentsStorageInterface as Assignment;
 use Yiisoft\Rbac\ItemsStorageInterface as ItemStorage;
 use Yiisoft\Rbac\Manager as Manager;
 use Yiisoft\Rbac\RuleFactoryInterface as Rule;
-use Yiisoft\Router\CurrentRoute;
+use Yiisoft\Router\HydratorAttribute\RouteArgument;
 use Yiisoft\Session\Flash\Flash;
 use Yiisoft\Session\SessionInterface as Session;
 use Yiisoft\Translator\TranslatorInterface;
@@ -73,7 +73,6 @@ final class UserInvController
         Session $session,    
     )    
     {
-        
         $this->assignment = $assignment;
         $this->itemstorage = $itemstorage;
         
@@ -103,58 +102,58 @@ final class UserInvController
     // UserInv  is the extension Table of User
     // Users that have been signed up through the demo must be added
     // to the invoicing system 
-    // using Setting...User Account
+    // using Setting...Invoice User Account
     
     /**
-     * 
-     * @param Request $request
-     * @param CurrentRoute $currentRoute
      * @param UserInvRepository $uiR
      * @param UserClientRepository $ucR
      * @param SettingRepository $sR
      * @param TranslatorInterface $translator
+     * @param string $_language
+     * @param string $page
+     * @param string $active
+     * @param string $queryPage
+     * @param string $querySort
      * @return \Yiisoft\DataResponse\DataResponse
      */
-    public function index(Request $request, 
-                          CurrentRoute $currentRoute, 
-                          UserInvRepository $uiR,
-                          UserClientRepository $ucR,
-                          SettingRepository $sR, 
-                          TranslatorInterface $translator): \Yiisoft\DataResponse\DataResponse
+    public function index(UserInvRepository $uiR, UserClientRepository $ucR, SettingRepository $sR, 
+                          TranslatorInterface $translator,
+                          #[RouteArgument('_language')] string $_language, 
+                          #[RouteArgument('page')] string $page = '1',
+                          #[RouteArgument('active')] string $active = '2',
+                          #[Query('page')] string $queryPage = null,
+                          #[Query('sort')] string $querySort = null,
+    ): \Yiisoft\DataResponse\DataResponse
     {      
         $canEdit = $this->rbac();
-        $query_params = $request->getQueryParams();
-        /**
-         * @var string $query_params['page'] 
-         */
-        $page = $query_params['page'] ?? $currentRoute->getArgument('page', '1');        
-        $active = (int)$currentRoute->getArgument('active', '2');         
-        /** @var string $query_params['sort'] */
+        $pageString = $queryPage ?? $page;
+        $activeInt = (int)$active;
+        $sortString = $querySort ?? '-user_id';
         $sort = Sort::only(['user_id', 'name', 'email'])          
-            ->withOrderString($query_params['sort'] ?? '-user_id');
-        $repo = $this->userinvs_active_with_sort($uiR,$active,$sort); 
+            ->withOrderString($sortString);
+        $repo = $this->userinvs_active_with_sort($uiR, $activeInt, $sort); 
         /**
          * @psalm-suppress PossiblyInvalidArgument
          */
         $paginator = (new OffsetPaginator($repo))        
         ->withPageSize((int)$sR->get_setting('default_list_limit'))
-        ->withCurrentPage((int)$page)               
-        ->withToken(PageToken::next((string)$page));   
+        ->withCurrentPage((int)$pageString)               
+        ->withToken(PageToken::next($pageString));   
         $parameters = [
-          'uiR'=>$uiR,
+          'uiR' => $uiR,
           // get a count of clients allocated to the user
-          'ucR'=>$ucR,  
-          'active'=>$active,   
-          'paginator'=>$paginator,
-          'translator'=>$translator,
+          'ucR' => $ucR,  
+          'active' => $activeInt,   
+          'paginator' => $paginator,
+          'translator' => $translator,
           'canEdit' => $canEdit,
           'grid_summary'=> $sR->grid_summary($paginator, $this->translator, (int)$sR->get_setting('default_list_limit'), $this->translator->translate('invoice.payments'), ''),
           'userinvs' => $repo,
-          'locale'=>$this->session->get('_language'),
-          'alert'=>$this->alert(),
+          'locale' => $_language,
+          'alert' => $this->alert(),
           // Parameters for GridView->requestArguments
-          'page'=> $page,
-          'sortOrder' => $query_params['sort'] ?? '',
+          'page' => $pageString,
+          'sortOrder' => $querySort ?? '',
           'manager' => $this->manager
         ];
         return $this->viewRenderer->render('index', $parameters);        
@@ -216,27 +215,31 @@ final class UserInvController
     /**
      * @see src\Widget\PageSizeLimiter buttonsGuest function
      * @see ..\resources\views\invoice\inv\guest.php
-     * @see InvController\guest 
-     * @param CurrentRoute $currentRoute
+     * @see InvController\guest
+     * @param string $userInvId
+     * @param string $origin
+     * @param string $limit
      * @param UserInvRepository $uiR
      * @return Response
      */
-    public function guestlimit(CurrentRoute $currentRoute, UserInvRepository $uiR) : Response {
-        $userInvId = $currentRoute->getArgument('userinv_id');
-        // $origin => 'inv' or 'quote'
-        $origin = $currentRoute->getArgument('origin');
-        if (null!=$userInvId && null!==$origin) {
-            $limit = (int)$currentRoute->getArgument('limit');
+    public function guestlimit(
+            #[RouteArgument('userinv_id')] string $userInvId,
+            #[RouteArgument('origin')] string $origin,
+            #[RouteArgument('limit')] string $limit,
+            UserInvRepository $uiR
+        ) : Response {
+        if (strlen($userInvId) > 0 && strlen($origin) > 0) {
+            $limitInt = (int)$limit;
             $userInv = $uiR->repoUserInvquery($userInvId);
             if (null!==$userInv) {
-                $userInv->setListLimit($limit);
+                $userInv->setListLimit($limitInt);
                 $uiR->save($userInv);
             }
         }    
         /**
          * @see config/common/routes.php Route::get('/client_invoices[/page/{page:\d+}[/status/{status:\d+}]]')
          */
-        return $this->webService->getRedirectResponse(null!==$origin ? $origin.'/guest' : 'client/guest');
+        return $this->webService->getRedirectResponse(strlen($origin) > 0 ? $origin.'/guest' : 'client/guest');
     }
     
     /**
@@ -264,12 +267,14 @@ final class UserInvController
     
     /**
      * @param Request $request
+     * @param string $_language
      * @param FormHydrator $formHydrator
      * @param SettingRepository $sR
      * @param uR $uR
      * @return Response
      */
-    public function add(Request $request, 
+    public function add(Request $request,
+                        #[RouteArgument('_language')] string $_language, 
                         FormHydrator $formHydrator,
                         SettingRepository $sR,
                         uR $uR, 
@@ -289,7 +294,7 @@ final class UserInvController
             'users'=>$uR->findAllUsers(),
             'selected_country' => $sR->get_setting('default_country'),            
             'selected_language' => $sR->get_setting('default_language'),
-            'countries'=> $countries->get_country_list($sR->get_setting('cldr'))
+            'countries'=> $countries->get_country_list($_language)
         ];
         
         if ($request->getMethod() === Method::POST) {            
@@ -350,13 +355,11 @@ final class UserInvController
     }
     
     /**
-     * 
-     * @param CurrentRoute $currentRoute
+     * @param string $user_id
      * @return Response
      */
-    public function assignObserverRole(CurrentRoute $currentRoute) : Response {
-      $user_id = $currentRoute->getArgument('user_id');
-      if (null!==$user_id) {
+    public function assignObserverRole(#[RouteArgument('user_id')] string $user_id) : Response {
+      if (strlen($user_id) > 0) {
         $this->manager->revokeAll($user_id);
         $this->manager->assign('observer', $user_id);
         $this->flash_message('info', $this->translator->translate('invoice.user.inv.role.observer.assigned'));
@@ -365,13 +368,11 @@ final class UserInvController
     }
     
     /**
-     * 
-     * @param CurrentRoute $currentRoute
+     * @param string $user_id
      * @return Response
      */
-    public function assignAccountantRole(CurrentRoute $currentRoute) : Response {
-      $user_id = $currentRoute->getArgument('user_id');
-      if (null!==$user_id) {
+    public function assignAccountantRole(#[RouteArgument('user_id')] string $user_id) : Response {
+      if (strlen($user_id) > 0) {
         $this->manager->revokeAll($user_id);
         $this->manager->assign('accountant', $user_id);
         $this->flash_message('info', $this->translator->translate('invoice.user.inv.role.accountant.assigned'));
@@ -382,22 +383,21 @@ final class UserInvController
     
     /**
      * @param Request $request
-     * @param CurrentRoute $currentRoute
+     * @param int $id
      * @param FormHydrator $formHydrator
      * @param UserInvRepository $userinvRepository
-     * @param SettingRepository $settingRepository
      * @param uR $uR
      * @return Response
-     */
-    public function edit(Request $request, CurrentRoute $currentRoute, 
+     */   
+    public function edit(Request $request, 
+                        #[RouteArgument('id')] int $id, 
                         FormHydrator $formHydrator,
                         UserInvRepository $userinvRepository,
-                        SettingRepository $settingRepository,
                         uR $uR,
     ): Response {
         $aliases = new Aliases(['@invoice' => dirname(__DIR__), 
                                 '@language' => dirname(__DIR__). DIRECTORY_SEPARATOR. 'Language']);
-        $userinv = $this->userinv($currentRoute, $userinvRepository);
+        $userinv = $this->userinv($id, $userinvRepository);
         if ($userinv) {
             $form = new UserInvForm($userinv);
             $parameters = [
@@ -466,15 +466,16 @@ final class UserInvController
     }
     
     /**
-     * @param CurrentRoute $currentRoute
+     * @param int $id
      * @param ClientRepository $cR
      * @param UserClientRepository $ucR
      * @param UserInvRepository $uiR
+     * @return \Yiisoft\DataResponse\DataResponse|Response
      */
-    public function client(CurrentRoute $currentRoute, ClientRepository $cR, UserClientRepository $ucR, UserInvRepository $uiR) 
+    public function client(#[RouteArgument('id')] int $id, ClientRepository $cR, UserClientRepository $ucR, UserInvRepository $uiR) 
         : \Yiisoft\DataResponse\DataResponse|Response {
         // Use the primary key 'id' passed in userinv/index's urlGenerator to retrieve the user_id
-        $userinv = $this->userinv($currentRoute, $uiR);
+        $userinv = $this->userinv($id, $uiR);
         if (null!==$userinv) {
             $user_id = $userinv->getUser_Id();
             if ($user_id) {
@@ -494,14 +495,15 @@ final class UserInvController
     }
     
     /**
+     * 
      * @param TranslatorInterface $translator
-     * @param CurrentRoute $currentRoute
+     * @param int $id
      * @param UserInvRepository $userinvRepository
      * @return Response
      */
-    public function delete(TranslatorInterface $translator, CurrentRoute $currentRoute,UserInvRepository $userinvRepository 
+    public function delete(TranslatorInterface $translator, #[RouteArgument('id')] int $id, UserInvRepository $userinvRepository 
     ): Response {
-        $userinv = $this->userinv($currentRoute,$userinvRepository); 
+        $userinv = $this->userinv($id, $userinvRepository); 
         if ($userinv) {
             $this->userinvService->deleteUserInv($userinv);               
             $this->flash_message('info', $translator->translate('invoice.deleted'));
@@ -511,14 +513,15 @@ final class UserInvController
     }
     
     /**
-     * @param CurrentRoute $currentRoute
+     * @param int $id
      * @param UserInvRepository $userinvRepository
      * @param uR $uR
+     * @return \Yiisoft\DataResponse\DataResponse|Response
      */
-    public function view(CurrentRoute $currentRoute,UserInvRepository $userinvRepository, uR $uR): \Yiisoft\DataResponse\DataResponse|Response {
+    public function view(#[RouteArgument('id')] int $id, UserInvRepository $userinvRepository, uR $uR): \Yiisoft\DataResponse\DataResponse|Response {
         $aliases = new Aliases(['@invoice' => dirname(__DIR__), 
                                 '@language' => dirname(__DIR__). DIRECTORY_SEPARATOR. 'Language']);
-        $userinv = $this->userinv($currentRoute, $userinvRepository);
+        $userinv = $this->userinv($id, $userinvRepository);
         if ($userinv) {
             $form = new UserInvForm($userinv);
             $parameters = [
@@ -564,37 +567,16 @@ final class UserInvController
     }
     
     /**
-     * @param CurrentRoute $currentRoute
+     * @param int $id
      * @param UserInvRepository $userinvRepository
      * @return UserInv|null
      */
-    private function userinv(CurrentRoute $currentRoute, UserInvRepository $userinvRepository): UserInv|null
+    private function userinv(int $id, UserInvRepository $userinvRepository): UserInv|null
     {
-        $id = $currentRoute->getArgument('id');       
-        if (null!==$id) {
-            $userinv = $userinvRepository->repoUserInvquery($id);
+        if ($id) {
+            $userinv = $userinvRepository->repoUserInvquery((string)$id);
             return $userinv;
         }
         return null;
-    }
-    
-    /**
-     * 
-     * @param CurrentRoute $currentRoute
-     * @param UserClientRepository $userclientRepository
-     * @return UserClient|null
-     */
-    private function userclient(CurrentRoute $currentRoute, UserClientRepository $userclientRepository) : UserClient|null
-    {
-        $id = $currentRoute->getArgument('id');       
-        if (null!==$id) {
-            $userclient = $userclientRepository->repoUserClientquery($id);
-            if (null!==$userclient) {
-                return $userclient;
-            }
-            return null;
-        }
-        return null;
-    }
+    }    
 }
-
