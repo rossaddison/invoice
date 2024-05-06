@@ -633,7 +633,8 @@ final class SettingRepository extends Select\Repository
             'vi'=>'Vietnamese',
             // Use camelcase here => remove the space between Chinese and Simplified and in the original folder otherwise it will not be 
             // retrieved
-            'zh->CN'=>'ChineseSimplified',                
+            'zh-CN'=>'ChineseSimplified', 
+            'zu-ZA'=>'ZuluSouthAfrican'
         ];
         return $language_list;
     }
@@ -1568,7 +1569,7 @@ final class SettingRepository extends Select\Repository
         ],       
         'google_translate_locale'=>[
             'why'=>'To save time manually translating an ip_lang file using Google Translate Online, the Google Translate API https://github.com/googleapis/google-cloud-php-translate can be used to translate to your chosen locale. eg. es / Spanish',
-            'where'=>'GeneratorController/google_translate_lang'
+            'where'=>'GeneratorController/google_translate_lang and this dropdown box is built with SettingRepository locales function'
         ],
         'include_delivery_period'=>[
             'why'=>'A group of business terms providing information on the invoice period. Also called delivery period. If the group is used, the invoiceing period start date and/or end date must be used. ',
@@ -1967,8 +1968,7 @@ final class SettingRepository extends Select\Repository
             'tg', 'th', 'tr', 
             'uk', 'uz', 
             'vi', 
-            'zh-CN', 
-            'zh-TW'
+            'zh-CN', 'zh-TW', 'zu-ZA'
         ];
         return $locales;
     }

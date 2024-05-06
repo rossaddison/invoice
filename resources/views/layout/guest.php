@@ -19,7 +19,9 @@ use App\Invoice\Asset\i18nAsset\ru_Asset;
 use App\Invoice\Asset\i18nAsset\sk_Asset;
 use App\Invoice\Asset\i18nAsset\uk_UA_Asset;
 use App\Invoice\Asset\i18nAsset\uz_UZ_Asset;
+use App\Invoice\Asset\ii18nAsset\vi_VN_Asset;
 use App\Invoice\Asset\i18nAsset\zh_CN_Asset;
+use App\Invoice\Asset\i18nAsset\zu_ZA_Asset;
 
 // PCI Compliant Payment Gateway Assets
 use App\Invoice\Asset\pciAsset\stripe_v10_Asset;
@@ -78,7 +80,9 @@ switch ($currentRoute->getArgument('_language')) {
     case 'es' : $assetManager->register(es_ES_Asset::class); $locale = 'Spanish'; break;
     case 'uk' : $assetManager->register(uk_UA_Asset::class); $locale = 'Ukrainian'; break;
     case 'uz' : $assetManager->register(uz_UZ_Asset::class); $locale = 'Uzbek'; break;
-    case 'zh-CN' : $assetManager->register(zh_CN_Asset::class); $locale = 'Chinese Simplified'; break;
+    case 'vi' : $assetManager->register(vi_VN_Asset::class); $locale = 'Vietnamese'; break;
+    case 'zh-CN' : $assetManager->register(zh_CN_Asset::class); $locale = 'ChineseSimplified'; break;
+    case 'zu-ZA' : $assetManager->register(zu_ZA_Asset::class); $locale = 'ZuluSouthAfrican'; break;
     default   : $assetManager->register(en_GB_Asset::class); $locale = 'English'; break;
 }
 
@@ -257,7 +261,11 @@ echo Nav::widget()
                     'label' => 'Vietnamese / Tiếng Việt',
                     'url' => $urlGenerator->generateFromCurrent(['_language' => 'vi'], fallbackRouteName: 'site/index'),
                 ],
-        ],
+                [
+                    'label' => 'Zulu / Zulu',
+                    'url' => $urlGenerator->generateFromCurrent(['_language' => 'zu-ZA'], fallbackRouteName: 'site/index'),
+                ],   
+            ],
         ],
     ],
 );        

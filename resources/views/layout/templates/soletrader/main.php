@@ -225,6 +225,10 @@ $this->setTitle($title);
                         'label' => 'Vietnamese / Tiếng Việt',
                         'url' => $urlGenerator->generateFromCurrent(['_language' => 'vi'], fallbackRouteName: 'site/index'),
                     ],
+                    [
+                        'label' => 'Zulu / Zulu',
+                        'url' => $urlGenerator->generateFromCurrent(['_language' => 'zu-ZA'], fallbackRouteName: 'site/index'),
+                    ],           
                         ],
                     ],
                     $isGuest ? '' : Form::tag()

@@ -36,7 +36,8 @@ return [
             'uk' => 'uk-UA', 
             'uz' => 'uz-UZ',
             'vi' => 'vi-VN', 
-            'zh-CN' => 'zh-CN'
+            'zh-CN' => 'zh-CN',
+            'zu-ZA' => 'zu-ZA',     
         ],
         'ignoredRequests' => [
             '/debug**',

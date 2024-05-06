@@ -20,7 +20,9 @@ use App\Invoice\Asset\i18nAsset\ru_Asset;
 use App\Invoice\Asset\i18nAsset\sk_Asset;
 use App\Invoice\Asset\i18nAsset\uk_UA_Asset;
 use App\Invoice\Asset\i18nAsset\uz_UZ_Asset;
+use App\Invoice\Asset\i18nAsset\vi_VN_Asset;
 use App\Invoice\Asset\i18nAsset\zh_CN_Asset;
+use App\Invoice\Asset\i18nAsset\zu_ZA_Asset;
 // PCI Compliant Payment Gateway Assets
 use App\Invoice\Asset\pciAsset\stripe_v10_Asset;
 use App\Invoice\Asset\pciAsset\amazon_pay_v2_4_Asset;
@@ -107,8 +109,14 @@ switch ($currentRoute->getArgument('_language') ?? 'en') {
   case 'uz' : $assetManager->register(uz_UZ_Asset::class);
     $locale = 'Uzbek';
     break;
+  case 'vi' : $assetManager->register(vi_VN_Asset::class);
+    $locale = 'Vietnamese';
+    break;
   case 'zh-CN' : $assetManager->register(zh_CN_Asset::class);
     $locale = 'ChineseSimplified';
+    break;
+  case 'zu-ZA' : $assetManager->register(zu_ZA_Asset::class);
+    $locale = 'ZuluSouthAfrican';
     break;
   default : $assetManager->register(en_GB_Asset::class);
     $locale = 'English';
@@ -559,6 +567,10 @@ $this->beginPage();
                     'label' => 'Vietnamese / Tiếng Việt',
                     'url' => $urlGenerator->generateFromCurrent(['_language' => 'vi'], fallbackRouteName: 'invoice/index'),
                   ],
+                  [
+                    'label' => 'Zulu / Zulu',
+                    'url' => $urlGenerator->generateFromCurrent(['_language' => 'zu-ZA'], fallbackRouteName: 'site/index'),
+                  ],   
                 ],
               ],
               [
