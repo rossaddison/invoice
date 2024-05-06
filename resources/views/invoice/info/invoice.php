@@ -594,7 +594,7 @@ $s->get_setting('gateway_amazon_pay_version') == '0' ? $assetManager->register(a
 <p>Invoice/Layout/main.php has been moved to @views/layout/invoice.php. The cldr setting value is given the $session->get('_language') value by means of the locale dropdown.</p>
 <p>The $s value is configured for the @views/layout/invoice.php. (different to the demo layout ie. views/layout/main.php) in config/params.php yii-soft/view Reference::to and NOT by means of the InvoiceController .
    The $s value is necessary in this layout to record the current locale in the cldr setting if it is selected BEFORE login. ie. 
-<code>$s->save_session_locale_to_cldr($session->get('_language') ?? ($s->get_setting('cldr') ? $s->get_setting('cldr') : 'en'));</code>
+   <code><s>$s->save_session_locale_to_cldr($session->get('_language') ?? ($s->get_setting('cldr') ? $s->get_setting('cldr') : 'en'));</s></code>
 <p></p>
 <p>jquery 1.13.2 which has just been released is now the default. jquery 1.13.0 has been removed. </p>
 <p>In demo mode, the menu now includes the ability to test data with pre-setup clients, products, groups, tax rates. A deinstall feature of demo clients(2), products(2) is available. </p><!-- comment -->
