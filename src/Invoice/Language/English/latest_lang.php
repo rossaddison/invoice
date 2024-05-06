@@ -870,5 +870,5 @@ $lang =  [
     'validator.password.reset' => 'Your Password has been reset',
     'validator.password.change' => 'Your Password has been changed',
     'validator.user.exist' => 'A User with this login already exists',
-    'valiadator.user.exist.not' => 'A User with this login does not exist'
+    'validator.user.exist.not' => 'A User with this login does not exist'
 ];
