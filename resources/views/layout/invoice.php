@@ -431,9 +431,9 @@ $this->beginPage();
                   // ..resources/views/generator/templates_protected
                   // Your Json file must be located in src/Invoice/google_translate_unique folder
                   // Get your downloaded Json file from
+                                    ['options' => ['class' => 'nav fs-4'], 'label' => $translator->translate('invoice.generator.google.translate.gateway'), 'url' => $urlGenerator->generate('generator/google_translate_lang', ['type' => 'gateway'])],  
                   ['options' => ['class' => 'nav fs-4'],
                     'label' => $translator->translate('invoice.generator.google.translate.ip'), 'linkOptions' => ['data-bs-toggle' => 'tooltip', 'title' => $s->where('google_translate_json_filename')], 'url' => $urlGenerator->generate('generator/google_translate_lang', ['type' => 'ip'])],
-                  ['options' => ['class' => 'nav fs-4'], 'label' => $translator->translate('invoice.generator.google.translate.gateway'), 'url' => $urlGenerator->generate('generator/google_translate_lang', ['type' => 'gateway'])],
                   ['options' => ['class' => 'nav fs-4'], 'label' => $translator->translate('invoice.generator.google.translate.latest'), 'url' => $urlGenerator->generate('generator/google_translate_lang', ['type' => 'latest'])],
                    ['options' => ['class' => 'nav fs-4'], 'label' => $translator->translate('invoice.generator.google.translate.common'), 'url' => $urlGenerator->generate('generator/google_translate_lang', ['type' => 'common'])],
                   ['options' => ['class' => 'nav fs-4'], 'label' => $translator->translate('invoice.generator.google.translate.any'), 'linkOptions' => ['data-bs-toggle' => 'tooltip', 'title' => 'src\Invoice\Language\English\any_lang.php'], 'url' => $urlGenerator->generate('generator/google_translate_lang', ['type' => 'any'])],   
