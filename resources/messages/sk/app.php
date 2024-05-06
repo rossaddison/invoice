@@ -1621,7 +1621,7 @@ return [
 'layout.add.random-content' => 'Pridajte náhodný obsah',
 'layout.add.tag' => 'Pridať značku',
 'layout.add' => 'Pridať',
-'layout.archive.for-year' => 'Archivovať za {rok}',
+'layout.archive.for-year' => 'Archivovať za {year}',
 'layout.archive' => 'Archív',
 'layout.blog' => 'Blog',
 'layout.change-language' => 'Zmeniť jazyk',

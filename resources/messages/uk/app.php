@@ -1620,7 +1620,7 @@ return [
 'layout.add.random-content' => 'Додайте випадковий вміст',
 'layout.add.tag' => 'Додати тег',
 'layout.add' => 'додати',
-'layout.archive.for-year' => 'Архів за {рік}',
+'layout.archive.for-year' => 'Архів за {year}',
 'layout.archive' => 'Архів',
 'layout.blog' => 'Блог',
 'layout.change-language' => 'Змінити мову',

@@ -1621,7 +1621,7 @@ return [
 'layout.add.random-content' => 'Voeg ewekansige inhoud by',
 'layout.add.tag' => 'Voeg merker by',
 'layout.add' => 'Voeg by',
-'layout.archive.for-year' => 'Argief vir {jaar}',
+'layout.archive.for-year' => 'Argief vir {year}',
 'layout.archive' => 'Argief',
 'layout.blog' => 'Blog',
 'layout.change-language' => 'Verander taal',

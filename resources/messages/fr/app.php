@@ -1621,7 +1621,7 @@ return [
 'layout.add.random-content' => 'Ajouter du contenu aléatoire',
 'layout.add.tag' => 'Ajouter une étiquette',
 'layout.add' => 'Ajouter',
-'layout.archive.for-year' => 'Archiver pour {année}',
+'layout.archive.for-year' => 'Archiver pour {year}',
 'layout.archive' => 'Archive',
 'layout.blog' => 'Blog',
 'layout.change-language' => 'Changer de langue',

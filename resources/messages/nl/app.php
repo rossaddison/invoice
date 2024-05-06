@@ -1621,7 +1621,7 @@ return [
 'layout.add.random-content' => 'Voeg willekeurige inhoud toe',
 'layout.add.tag' => 'Label toevoegen',
 'layout.add' => 'Toevoegen',
-'layout.archive.for-year' => 'Archief voor {jaar}',
+'layout.archive.for-year' => 'Archief voor {year}',
 'layout.archive' => 'Archief',
 'layout.blog' => 'Bloggen',
 'layout.change-language' => 'Taal wijzigen',

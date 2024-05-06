@@ -1621,7 +1621,7 @@ return [
 'layout.add.random-content' => 'Təsadüfi məzmun əlavə edin',
 'layout.add.tag' => 'Etiket əlavə edin',
 'layout.add' => 'əlavə et',
-'layout.archive.for-year' => '{il} üçün arxiv',
+'layout.archive.for-year' => '{year} üçün arxiv',
 'layout.archive' => 'Arxiv',
 'layout.blog' => 'Bloq',
 'layout.change-language' => 'Dili dəyişdirin',

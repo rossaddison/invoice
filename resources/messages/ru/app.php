@@ -1616,7 +1616,7 @@ return [
 'layout.add.random-content' => 'Добавить случайный контент',
 'layout.add.tag' => 'Добавить метку',
 'layout.add' => 'Добавлять',
-'layout.archive.for-year' => 'Архив за {год}',
+'layout.archive.for-year' => 'Архив за {year}',
 'layout.archive' => 'Архив',
 'layout.blog' => 'Блог',
 'layout.change-language' => 'Изменить язык',

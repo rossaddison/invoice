@@ -1621,7 +1621,7 @@ return [
 'layout.add.random-content' => 'Tambahkan konten acak',
 'layout.add.tag' => 'Tambahkan tanda',
 'layout.add' => 'Menambahkan',
-'layout.archive.for-year' => 'Arsip untuk {tahun}',
+'layout.archive.for-year' => 'Arsip untuk {year}',
 'layout.archive' => 'Arsip',
 'layout.blog' => 'Blog',
 'layout.change-language' => 'Ganti BAHASA',

@@ -1629,7 +1629,7 @@ return [
 'layout.add.random-content' => 'Aggiungi contenuti casuali',
 'layout.add.tag' => 'Aggiungi Tag',
 'layout.add' => 'Aggiungere',
-'layout.archive.for-year' => 'Archivio per {anno}',
+'layout.archive.for-year' => 'Archivio per {year}',
 'layout.archive' => 'Archivio',
 'layout.blog' => 'Blog',
 'layout.change-language' => 'Cambia lingua',
