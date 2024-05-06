@@ -233,7 +233,12 @@ final class ClientController
             'optionsDataClientFrequencyDropdownFilter' => $this->optionsDataClientFrequencyDropDownFilter(),
             'postal_address_count' => 0,
             'postaladdresses' => null,
-            'countries' => $countries->get_country_list($sR->get_setting('cldr')),
+            /**
+             * Default to en so that all country names are in English if route language not found
+             * TODO: rebuild country list to match currently available languages
+             * @see src\Invoice\Helpers\Country-list\en
+             */ 
+            'countries' => $countries->get_country_list($currentRoute->getArgument('_language') ?? 'en'),
             'custom_fields' => $cfR->repoTablequery('client_custom'),
             'custom_values' => $cvR->attach_hard_coded_custom_field_values_to_custom_field($cfR->repoTablequery('client_custom')),
             'cvH' => new CVH($sR),
@@ -409,10 +414,15 @@ final class ClientController
                'aliases' => new Aliases(['@invoice' => dirname(__DIR__), '@language' => dirname(__DIR__). DIRECTORY_SEPARATOR.'Language']),
                'selected_country' => null!==$selected_country ? $selected_country : $sR->get_setting('default_country'),            
                'selected_language' => null!==$selected_language ? $selected_language : $sR->get_setting('default_language'),
-               'datepicker_dropdown_locale_cldr' => $this->session->get('_language') ?? 'en',
+               'datepicker_dropdown_locale_cldr' => $currentRoute->getArgument('_language', 'en'),
                'postal_address_count' => $paR->repoClientCount((string)$client_id),
                'postaladdresses' => $this->optionsDataPostalAddress($postaladdresses),
-               'countries' => $countries->get_country_list($sR->get_setting('cldr')),
+               /**
+                * Default to en so that all country names are in English if route language not found
+                * TODO: rebuild country list to match currently available languages
+                * @see src\Invoice\Helpers\Country-list\en
+                */ 
+               'countries' => $countries->get_country_list($currentRoute->getArgument('_language') ?? 'en'),
                'custom_fields' => $cfR->repoTablequery('client_custom'),
                'custom_values' => $cvR->attach_hard_coded_custom_field_values_to_custom_field($cfR->repoTablequery('client_custom')),
                'cvH' => new CVH($sR),

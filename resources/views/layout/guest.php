@@ -61,7 +61,7 @@ $s->get_setting('gateway_braintree_version') == '0' ? $assetManager->register(br
 // The InvoiceController/index receives the $session->get('_language') or 'drop-down' locale user selection and saves it into a setting called 'cldr'
 // The $s value is configured for the layout in config/params.php yii-soft/view Reference::to and NOT by means of the InvoiceController
 
-switch ($currentRoute->getArgument('_language', $session->get('_language') ?? 'en')) {
+switch ($currentRoute->getArgument('_language')) {
     case 'af' : $assetManager->register(af_Asset::class); $locale = 'Afrikaans'; break;
     case 'ar' : $assetManager->register(ar_Asset::class); $locale = 'Arabic'; break;
     case 'az' : $assetManager->register(az_Asset::class); $locale = 'Azerbaijani'; break;
@@ -96,7 +96,7 @@ $this->beginPage();
 ?>
 
 <!DOCTYPE html>
-<html lang="<?= $currentRoute->getArgument('_language', 'en'); ?>">
+<html lang="<?= $currentRoute->getArgument('_language') ?? 'en'; ?>">
 <head>
     <?= Meta::documentEncoding('utf-8')?>
     <?= Meta::pragmaDirective('X-UA-Compatible', 'IE=edge,chrome=1') ?>

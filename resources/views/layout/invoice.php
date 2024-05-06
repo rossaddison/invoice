@@ -115,8 +115,6 @@ switch ($currentRoute->getArgument('_language') ?? 'en') {
     break;
 }
 
-$s->save_session_locale_to_cldr($session->get('_language') ?? ($currentRoute->getArgument('_language') ?: ($s->get_setting('cldr') ?? 'en')));
-
 $this->addCssFiles($assetManager->getCssFiles());
 $this->addCssStrings($assetManager->getCssStrings());
 $this->addJsFiles($assetManager->getJsFiles());
@@ -131,7 +129,7 @@ $this->addJsVars($assetManager->getJsVars());
 $this->beginPage();
 ?>
 <!DOCTYPE html>
-<html class="h-100" lang="<?= $currentRoute->getArgument('_language', $s->get_setting('cldr') ?? 'en'); ?>">
+<html class="h-100" lang="<?= $currentRoute->getArgument('_language') ?? 'en'; ?>">
     <head>
         <?= Meta::documentEncoding('utf-8') ?>
         <?= Meta::pragmaDirective('X-UA-Compatible', 'IE=edge') ?>
@@ -460,7 +458,7 @@ $this->beginPage();
                 'url' => '',
                 'options' => ['class' => 'nav fs-4', 'data-bs-toggle' => 'tooltip', 'title' => 'Storage: session/runtime file.', 'style' => 'background-color: #90EE90'],
                 'visible' => $debugMode],
-              ['label' => 'cldr => ' . $s->get_setting('cldr'),
+              ['label' => 'cldr => ' . $currentRoute->getArgument('_language'),
                 'url' => '',
                 'options' => ['class' => 'nav fs-4', 'data-bs-toggle' => 'tooltip', 'title' => 'Storage: database', 'style' => 'background-color: #ffffe0'],
                 'visible' => $debugMode],

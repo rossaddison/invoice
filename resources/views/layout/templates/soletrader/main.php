@@ -42,7 +42,7 @@ $this->addJsVars($assetManager->getJsVars());
 
 $currentRouteName = $currentRoute->getName() ?? '';
 $isGuest = $user === null || $user->getId() === null;
-$session->set('_language', $currentRoute->getArgument('_language', 'en'));
+$session->set('_language', $currentRoute->getArgument('_language'));
 $this->beginPage();
 /**
  * @see ./src/ViewInjection/LayoutViewInjection getLayoutParameters
@@ -51,7 +51,7 @@ $this->beginPage();
 $this->setTitle($title);
 ?>
     <!DOCTYPE html>
-    <html class="h-100" lang="<?= $currentRoute->getArgument('_language', $s->get_setting('cldr') ?? 'en'); ?>">
+    <html class="h-100" lang="<?= $currentRoute->getArgument('_language') ?? 'en'; ?>">
     <head>
         <meta charset="utf-8">
         <meta http-equiv="X-UA-Compatible" content="IE=edge">

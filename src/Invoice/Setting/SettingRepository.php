@@ -637,27 +637,7 @@ final class SettingRepository extends Select\Repository
         ];
         return $language_list;
     }
-    
-    /**
-     * 
-     * @param string $session_language
-     * @return void
-     */
-    public function save_session_locale_to_cldr(string $session_language) : void {
-        if ($this->repoCount('cldr') > 0) {
-            $cldr = $this->withKey('cldr');
-            if ($cldr instanceof Setting) {
-                $cldr->setSetting_value($session_language);
-                $this->save($cldr);
-            }
-        } else {
-            $cldr = new Setting();
-            $cldr->setSetting_key('cldr');
-            $cldr->setSetting_value($session_language);
-            $this->save($cldr);
-        }
-    }
-    
+        
     // The default_language setting is a setting of last resort and should be set infrequently 
     // If the locale is set, and it exists in the above language array, then use it in preference to the default_language
     // Return: string eg. "English"

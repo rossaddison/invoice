@@ -793,10 +793,6 @@ final class InvoiceController
         // If you want to reinstall the default settings, remove the default_settings_exist setting => its count will be zero
         $sR->repoCount('default_settings_exist') === 0 ? $this->install_default_settings_on_first_run($session, $sR) : '';
         $this->install_check_for_preexisting_test_data($sR, $fR, $uR, $pR, $trR, $cR); 
-        // The cldr is saved from the $session->get('_language') parameter in the Invoice/Layout/main.php file as soon as the user changes the locale.
-        // The below line is an additional line of code to ensure that the locale (session runtime file) is saved to database 'cldr' and may be removed in future. 
-        // The cldr setting is not accessible in non debug mode by means of the tab-index
-        //$sR->repoCount('cldr') === 1 && $sR->get_setting('cldr') !== (string)$session->get('_language') ? $this->cldr((string)$session->get('_language') ?: $currentRoute->getArgument('_language'),$sR) : '';
         $session->set('_language', $currentRoute->getArgument('_language'));
         $parameters = [
             'alerts'=> $this->alert(),
@@ -854,8 +850,7 @@ final class InvoiceController
             // whether this setting exists. If not THIS function will be run.                      //
             // CAUTION: THIS WILL ALSO REMOVE ALL THE SETTINGS INCLUDING SECRET KEYS
             //*************************************************************************************//
-            'default_settings_exist'=> '1',                  
-            'cldr'=> $session->get('_language') ?? 'en',
+            'default_settings_exist'=> '1',
             'cron_key' => Random::string(32),
             'currency_symbol' => '£',
             'currency_symbol_placement' => 'before',
