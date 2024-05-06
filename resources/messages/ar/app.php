@@ -1653,7 +1653,7 @@ return [
 'menu.contact.soon' => 'شكرًا لتواصلك معنا، سنتواصل معك في أقرب وقت ممكن.',
 'menu.language' => 'لغة',
 'menu.login' => 'تسجيل الدخول',
-'menu.logout' => 'تسجيل الخروج ({تسجيل الدخول})',
+'menu.logout' => 'تسجيل الخروج ({login})',
 'menu.signup' => 'اشتراك',
 'menu.swagger' => 'اختيال',
 'menu.team' => 'فريق',
