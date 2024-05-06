@@ -1660,7 +1660,7 @@ return [
 'menu.swagger' => 'Swagger',
 'menu.team' => 'Komanda',
 'menu.pricing' => 'Qiymətləndirmə',
-'menu.testimonial' => 'Testimonial',
+'menu.testimonial' => 'şəhadətnamə',
 'menu.users' => 'İstifadəçilər',
 'password.reset' => 'Parolu sıfırlamak',
 'password.change' => 'Parolun dəyişdirilməsi',
