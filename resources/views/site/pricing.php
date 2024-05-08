@@ -46,7 +46,7 @@
                                             ->render(); ?>
                                         <?= H4::tag()
                                             ->addClass('display-3 fw-bold text-primary mb-0')
-                                            ->content($s->get_setting('currency_symbol'). '50')
+                                            ->content($s->format_currency(50))
                                             ->render(); ?>
                                         <?= P::tag()
                                             ->addClass('text-secondary mb-4')
@@ -82,7 +82,7 @@
                                             ->content($pricing['pro']); ?>
                                         <?= H4::tag()
                                             ->addClass('display-3 fw-bold text-primary mb-0')
-                                            ->content($s->get_setting('currency_symbol').'100')
+                                            ->content($s->format_currency(50))
                                             ->render(); ?>
                                         <?= P::tag()
                                             ->addClass('text-secondary')
