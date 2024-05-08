@@ -75,7 +75,7 @@ $this->beginPage();
                         'url' => '#',
                         'items' => [
                             [
-                        'label' => 'Afrikaans',                                
+                        'label' => 'Afrikaans South African',                                
                         'url' => $urlGenerator->generateFromCurrent(['_language' => 'af-ZA'], fallbackRouteName: 'site/index'),
                     ],
                     [
@@ -90,6 +90,10 @@ $this->beginPage();
                         'label' => 'Chinese Simplified / 简体中文',
                         'url' => $urlGenerator->generateFromCurrent(['_language' => 'zh-CN'], fallbackRouteName: 'site/index'),
                     ],
+                    [
+                        'label' => 'Tiawanese Mandarin / 简体中文',
+                        'url' => $urlGenerator->generateFromCurrent(['_language' => 'zh-TW'], fallbackRouteName: 'site/index'),
+                    ],        
                     [
                         'label' => 'English',
                         'url' => $urlGenerator->generateFromCurrent(['_language' => 'en'], fallbackRouteName: 'site/index'),

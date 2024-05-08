@@ -38,6 +38,7 @@ return [
             'uz' => 'uz-UZ',
             'vi' => 'vi-VN', 
             'zh-CN' => 'zh-CN',
+            'zh-TW' => 'zh-TW',
             'zu-ZA' => 'zu-ZA',     
         ],
         'ignoredRequests' => [

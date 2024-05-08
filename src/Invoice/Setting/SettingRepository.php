@@ -635,6 +635,7 @@ final class SettingRepository extends Select\Repository
             // Use camelcase here => remove the space between Chinese and Simplified and in the original folder otherwise it will not be 
             // retrieved
             'zh-CN'=>'ChineseSimplified', 
+            'zh-TW'=>'TaiwaneseMandarin',
             'zu-ZA'=>'ZuluSouthAfrican'
         ];
         return $language_list;

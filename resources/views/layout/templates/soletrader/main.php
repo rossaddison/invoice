@@ -170,6 +170,10 @@ $this->setTitle($title);
                         'url' => $urlGenerator->generateFromCurrent(['_language' => 'zh-CN'], fallbackRouteName: 'site/index'),
                     ],
                     [
+                        'label' => 'Tiawanese Mandarin / 简体中文',
+                        'url' => $urlGenerator->generateFromCurrent(['_language' => 'zh-TW'], fallbackRouteName: 'site/index'),
+                    ],           
+                    [
                         'label' => 'English',
                         'url' => $urlGenerator->generateFromCurrent(['_language' => 'en'], fallbackRouteName: 'site/index'),
                     ],                    

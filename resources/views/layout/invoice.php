@@ -23,6 +23,7 @@ use App\Invoice\Asset\i18nAsset\uk_UA_Asset;
 use App\Invoice\Asset\i18nAsset\uz_UZ_Asset;
 use App\Invoice\Asset\i18nAsset\vi_VN_Asset;
 use App\Invoice\Asset\i18nAsset\zh_CN_Asset;
+use App\Invoice\Asset\i18nAsset\zh_TW_Asset;
 use App\Invoice\Asset\i18nAsset\zu_ZA_Asset;
 // PCI Compliant Payment Gateway Assets
 use App\Invoice\Asset\pciAsset\stripe_v10_Asset;
@@ -123,6 +124,9 @@ switch ($currentRoute->getArgument('_language') ?? 'en') {
   case 'zh-CN' : $assetManager->register(zh_CN_Asset::class);
     $locale = 'ChineseSimplified';
     break;
+  case 'zh-TW' : $assetManager->register(zh_TW_Asset::class);
+    $locale = 'TiawaneseMandarin';
+    break;      
   case 'zu-ZA' : $assetManager->register(zu_ZA_Asset::class);
     $locale = 'ZuluSouthAfrican';
     break;
@@ -522,6 +526,10 @@ $this->beginPage();
                     'label' => 'Chinese Simplified / 简体中文',
                     'url' => $urlGenerator->generateFromCurrent(['_language' => 'zh-CN'], fallbackRouteName: 'invoice/index'),
                   ],
+                  [
+                    'label' => 'Tiawanese Mandarin / 简体中文',
+                    'url' => $urlGenerator->generateFromCurrent(['_language' => 'zh-TW'], fallbackRouteName: 'invoice/index'),
+                  ],       
                   [
                     'label' => 'English',
                     'url' => $urlGenerator->generateFromCurrent(['_language' => 'en'], fallbackRouteName: 'invoice/index'),
