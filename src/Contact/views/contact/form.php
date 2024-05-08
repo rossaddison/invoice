@@ -38,11 +38,19 @@ $this->setTitle($translator->translate('menu.contact.us'));
                         ->id('form-contact')
                         ->open()
                     ?>
-
-                    <?= Field::text($form, 'name') ?>
-                    <?= Field::email($form, 'email') ?>
-                    <?= Field::text($form, 'subject') ?>
-                    <?= Field::textarea($form, 'body')->addInputAttributes(['style' => 'height: 100px']) ?>
+                    <?= Field::text($form, 'name')
+                        ->label($translator->translate('view.contact.form.name'))
+                    ?>
+                    <?= Field::email($form, 'email')
+                        ->label($translator->translate('view.contact.form.email'))
+                    ?>
+                    <?= Field::text($form, 'subject') 
+                        ->label($translator->translate('view.contact.form.subject'))
+                    ?>
+                    <?= Field::textarea($form, 'body')
+                        ->addInputAttributes(['style' => 'height: 100px'])
+                        ->label($translator->translate('view.contact.form.body'))    
+                    ?>
                     <?= Field::file($form, 'attachFiles[]')
                         ->containerClass('mb-3')
                         ->multiple()
