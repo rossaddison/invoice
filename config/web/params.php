@@ -19,8 +19,8 @@ return [
              * Note: key affects RouteArgument _language, value matches locale
              * @see key => value
              */
-            'af' => 'af', 
-            'ar' => 'ar-BH', 
+            'af-ZA' => 'af-ZA', 
+            'ar-BH' => 'ar-BH', 
             'az' => 'az-AZ', 
             'de' => 'de-DE', 
             'en' => 'en-US', 
@@ -30,6 +30,7 @@ return [
             'it' => 'it-IT',
             'ja' => 'ja-JP', 
             'nl' => 'nl-NL',
+            'pl' => 'pl-PL',
             'pt-BR' => 'pt-BR',
             'ru' => 'ru-RU', 
             'sk' => 'sk-SK',

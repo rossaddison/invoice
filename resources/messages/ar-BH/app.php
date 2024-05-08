@@ -1707,4 +1707,8 @@ return [
 'validator.password.change' => 'تم تغيير كلمة السر الخاصة بك',
 'validator.user.exist' => 'يوجد بالفعل مستخدم لديه تسجيل الدخول هذا',
 'validator.user.exist.not' => 'المستخدم الذي لديه تسجيل الدخول هذا غير موجود',
+'view.contact.form.name' => 'اسم',
+'view.contact.form.email' => 'بريد إلكتروني',
+'view.contact.form.subject' => 'موضوع',
+'view.contact.form.body' => 'جسم',    
 ];

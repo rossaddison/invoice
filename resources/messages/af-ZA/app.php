@@ -1708,5 +1708,9 @@ return [
 'validator.password.reset' => 'Jou wagwoord is teruggestel',
 'validator.password.change' => 'Jou wagwoord is verander',
 'validator.user.exist' => '\'n Gebruiker met hierdie aanmelding bestaan ​​reeds',
-'validator.user.exist.not' => '\'n Gebruiker met hierdie aanmelding bestaan ​​nie', 
+'validator.user.exist.not' => '\'n Gebruiker met hierdie aanmelding bestaan ​​nie',
+'view.contact.form.name' => 'Naam',
+'view.contact.form.email' => 'E-pos',
+'view.contact.form.subject' => 'Onderwerp',
+'view.contact.form.body' => 'Liggaam',
 ];
