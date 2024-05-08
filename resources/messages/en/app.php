@@ -1706,8 +1706,7 @@ return [
     'menu.users' => 'Users',
     'password.reset' => 'Reset Password',
     'password.change' => 'Change Password',
-    'signup' => 'Signup',
-    
+    'signup' => 'Signup',    
     /**
      * @see ..\invoice\src\ViewInjection\CommonViewInjection.php
      */
@@ -1755,5 +1754,9 @@ return [
     'validator.password.reset' => 'Your Password has been reset',
     'validator.password.change' => 'Your Password has been changed',
     'validator.user.exist' => 'A User with this login already exists',
-    'valiadator.user.exist.not' => 'A User with this login does not exist'
+    'validator.user.exist.not' => 'A User with this login does not exist',
+    'view.contact.form.name' => 'Name',
+    'view.contact.form.email' => 'Email',
+    'view.contact.form.subject' => 'Subject',
+    'view.contact.form.body' => 'Body',
 ];
