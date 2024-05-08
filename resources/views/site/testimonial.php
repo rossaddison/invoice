@@ -49,7 +49,7 @@
                                     ->render(); ?>
                                 <?= H5::tag()
                                     ->addClass('fs-6 text-secondary mb-0')
-                                    ->content('Worker')
+                                    ->content('👷')
                                     ->render(); ?>
                             <?= Html::closeTag('figcaption'); ?>
                         <?= Html::closeTag('figure'); ?>
@@ -71,11 +71,11 @@
                                 <?= Html::closeTag('blockquote'); ?>
                                 <?= H4::tag()
                                     ->addClass('mb-2')
-                                    ->content('')
+                                    ->content('️')
                                     ->render(); ?>
                                 <?= H5::tag()
                                     ->addClass('fs-6 text-secondary mb-0')
-                                    ->content('Worker')
+                                    ->content('👷‍♀')
                                     ->render(); ?>
                             <?= Html::closeTag('figcaption'); ?>
                         <?= Html::closeTag('figure'); ?>
@@ -101,7 +101,7 @@
                                     ->render(); ?>
                                 <?= H5::tag()
                                     ->addClass('fs-6 text-secondary mb-0')
-                                    ->content('Worker')
+                                    ->content('👨‍🏭')
                                     ->render(); ?>
                             <?= Html::closeTag('figcaption'); ?>
                         <?= Html::closeTag('figure'); ?>
