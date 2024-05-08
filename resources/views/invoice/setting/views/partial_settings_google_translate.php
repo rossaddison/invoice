@@ -13,8 +13,8 @@
             <div class="panel-body">
                 <p><b>Objective:</b> Rebuild a \www\invoice\resources\messages\en\app.php language file and insert it into e.g. <a href="https://github.com/rossaddison/invoice/commit/28188010c7965092f92484871712bf8347f0f5ed">zu_ZA\app.php</a></p>
                 <p><b>Problem:</b> This en\app.php file is too big for Google to Translate. </p>
-                <p><b>Step 1:</b> Copy the <pre>'i.account_information' .. 'i.false'</pre> to <pre>src\Invoice\Language\English\<b>ip_lang.php</b></pre></p>
-            <p><b>Step 2:</b> Copy the <pre>'g.online_payment' .. 'g.online_payment_3dauth_redirect'</pre> to <pre>src\Invoice\Language\English\<b>gateway_lang.php</b></pre></p>
+                <p><b>Step 1:</b> Copy the <pre>'g.online_payment' .. 'g.online_payment_3dauth_redirect'</pre> to <pre>src\Invoice\Language\English\<b>gateway_lang.php</b></pre></p>
+                <p><b>Step 2:</b> Copy the <pre>'i.account_information' .. 'i.false'</pre> to <pre>src\Invoice\Language\English\<b>ip_lang.php</b></pre></p>
                 <p><b>Step 3:</b> Copy the <pre>'invoice.add' .. 'validator.user.exist.not'</pre> to <pre>src\Invoice\Language\English\<b>latest_lang.php</b></pre></p>
                 <p><b>Step 4:</b> Copy the <pre>'site.soletrader.about.we' .. 'site.soletrader.contact.phone'</pre> to <pre>src\Invoice\Language\English\<b>common_lang.php</b></pre></p>
                 <p><b>Step 5:</b> Optional: Copy any loose <pre>'x.x.x.x' .. 'x.x.x.y'</pre> to <pre>src\Invoice\Language\English\<b>any_lang.php</b></pre></p>
