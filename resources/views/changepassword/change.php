@@ -34,19 +34,28 @@ $this->setTitle($translator->translate('password.change'));
                         ->csrf($csrf)
                         ->id('changePasswordForm')
                         ->open() ?>
-                    <?= $changePasswordForAnyUser ? Field::text($formModel, 'login')->addInputAttributes(
-                            [
-                                'value' => $login ?? ''
-                            ]
-                        ) : Field::text($formModel, 'login')->addInputAttributes(
-                            [
-                                'value' => $login ?? '', 
-                                'readonly' => 'readonly'
-                            ]
-                        ); ?>
-                    <?= Field::password($formModel, 'password') ?>
-                    <?= Field::password($formModel, 'newPassword') ?>
-                    <?= Field::password($formModel, 'newPasswordVerify') ?>
+                    <?= $changePasswordForAnyUser  
+                            ?   Field::text($formModel, 'login')
+                                ->label($translator->translate('layout.login'))
+                                ->addInputAttributes([
+                                    'value' => $login ?? ''
+                                ]) 
+                            :   Field::text($formModel, 'login')
+                                ->label($translator->translate('layout.login'))
+                                ->addInputAttributes([
+                                    'value' => $login ?? '', 
+                                    'readonly' => 'readonly'
+                                ]); 
+                    ?>
+                    <?= Field::password($formModel, 'password')
+                        ->label($translator->translate('layout.password'));        
+                    ?>
+                    <?= Field::password($formModel, 'newPassword') 
+                        ->label($translator->translate('layout.password.new'));    
+                    ?>
+                    <?= Field::password($formModel, 'newPasswordVerify')
+                        ->label($translator->translate('layout.password-verify.new'))    
+                    ?>
                     <?= Field::submitButton()
                         ->buttonId('change-button')
                         ->name('change-button')
