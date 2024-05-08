@@ -1709,4 +1709,8 @@ return [
 'validator.password.change' => 'Kata sandi Anda telah diubah',
 'validator.user.exist' => 'Pengguna dengan login ini sudah ada',
 'validator.user.exist.not' => 'Pengguna dengan login ini tidak ada',
+'view.contact.form.name' => 'Nama',
+'view.contact.form.email' => 'Surel',
+'view.contact.form.subject' => 'Subjek',
+'view.contact.form.body' => 'Tubuh',    
 ];

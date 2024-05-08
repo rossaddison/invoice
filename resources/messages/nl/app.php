@@ -1709,4 +1709,8 @@ return [
 'validator.password.change' => 'Je wachtwoord is gewijzigd',
 'validator.user.exist' => 'Er bestaat al een gebruiker met deze login',
 'validator.user.exist.not' => 'Er bestaat geen gebruiker met deze login',
+'view.contact.form.name' => 'Naam',
+'view.contact.form.email' => 'E-mail',
+'view.contact.form.subject' => 'Onderwerp',
+'view.contact.form.body' => 'Lichaam',    
 ];

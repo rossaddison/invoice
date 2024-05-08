@@ -1709,4 +1709,8 @@ return [
 'validator.password.change' => '您的密码已被更改',
 'validator.user.exist' => '具有此登录名的用户已存在',
 'validator.user.exist.not' => '具有此登录名的用户不存在',
+'view.contact.form.name' => '姓名',
+'view.contact.form.email' => '电子邮件',
+'view.contact.form.subject' => '主题',
+'view.contact.form.body' => '身体',    
 ];

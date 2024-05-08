@@ -1707,5 +1707,9 @@ return [
 'validator.password.reset' => 'Sua senha foi alterada',
 'validator.password.change' => 'Sua senha foi mudada',
 'validator.user.exist' => 'Já existe um usuário com este login',
-'valiadator.user.exist.not' => 'Não existe um usuário com este login,'
+'validator.user.exist.not' => 'Não existe um usuário com este login',
+'view.contact.form.name' => 'Nome',
+'view.contact.form.email' => 'E-mail',
+'view.contact.form.subject' => 'Assunto',
+'view.contact.form.body' => 'Corpo',    
 ];

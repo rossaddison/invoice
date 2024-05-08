@@ -1708,4 +1708,8 @@ return [
 'validator.password.change' => 'Mật khẩu của bạn đã được thay đổi',
 'validator.user.exist' => 'Người dùng có thông tin đăng nhập này đã tồn tại',
 'validator.user.exist.not' => 'Người dùng có thông tin đăng nhập này không tồn tại',
+'view.contact.form.name' => 'Tên',
+'view.contact.form.email' => 'E-mail',
+'view.contact.form.subject' => 'Chủ thể',
+'view.contact.form.body' => 'Thân hình',    
 ];

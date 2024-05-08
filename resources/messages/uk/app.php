@@ -1707,5 +1707,9 @@ return [
 'validator.password.reset' => 'Ваш пароль скинуто',
 'validator.password.change' => 'Ваш пароль був змінений',
 'validator.user.exist' => 'Користувач із цим логіном вже існує',
-'validator.user.exist.not' => 'Користувача з таким логіном не існує'
+'validator.user.exist.not' => 'Користувача з таким логіном не існує',
+'view.contact.form.name' => 'Ім\'я',
+'view.contact.form.email' => 'Електронна пошта',
+'view.contact.form.subject' => 'Тема',
+'view.contact.form.body' => 'Тіло',    
 ];

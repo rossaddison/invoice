@@ -1704,4 +1704,8 @@ return [
 'validator.password.change' => 'Ваш пароль был изменен',
 'validator.user.exist' => 'Пользователь с таким логином уже существует',
 'validator.user.exist.not' => 'Пользователь с таким логином не существует',
+'view.contact.form.name' => 'Имя',
+'view.contact.form.email' => 'Электронная почта',
+'view.contact.form.subject' => 'Предмет',
+'view.contact.form.body' => 'Тело',    
 ];

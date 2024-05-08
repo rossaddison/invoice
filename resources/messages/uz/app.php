@@ -1709,4 +1709,8 @@ return [
 'validator.password.change' => 'Parolingiz o\'zgartirildi',
 'validator.user.exist' => 'Bu loginga ega foydalanuvchi allaqachon mavjud',
 'validator.user.exist.not' => 'Bunday loginga ega foydalanuvchi mavjud emas',
+'view.contact.form.name' => 'Ism',
+'view.contact.form.email' => 'Elektron pochta',
+'view.contact.form.subject' => 'Mavzu',
+'view.contact.form.body' => 'Tana',    
 ];

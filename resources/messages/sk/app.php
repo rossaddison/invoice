@@ -1708,5 +1708,9 @@ return [
 'validator.password.reset' => 'Vaše heslo bolo obnovené',
 'validator.password.change' => 'Vaše heslo bolo zmenené',
 'validator.user.exist' => 'Používateľ s týmto prihlásením už existuje',
-'validator.user.exist.not' => 'Používateľ s týmto prihlásením neexistuje',    
+'validator.user.exist.not' => 'Používateľ s týmto prihlásením neexistuje', 
+'view.contact.form.name' => 'názov',
+'view.contact.form.email' => 'Email',
+'view.contact.form.subject' => 'Predmet',
+'view.contact.form.body' => 'Telo',    
 ];

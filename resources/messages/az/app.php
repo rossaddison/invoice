@@ -1709,4 +1709,8 @@ return [
 'validator.password.change' => 'Parolunuz dəyişdirilib',
 'validator.user.exist' => 'Bu girişi olan İstifadəçi artıq mövcuddur',
 'validator.user.exist.not' => 'Bu girişi olan İstifadəçi mövcud deyil',
+'view.contact.form.name' => 'ad',
+'view.contact.form.email' => 'E-poçt',
+'view.contact.form.subject' => 'Mövzu',
+'view.contact.form.body' => 'Bədən',    
 ];

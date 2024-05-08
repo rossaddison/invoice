@@ -1717,4 +1717,8 @@ return [
 'validator.password.change' => 'Iphasiwedi yakho ishintshiwe',
 'validator.user.exist' => 'Umsebenzisi onalokhu kungena ngemvume usevele ekhona',
 'validator.user.exist.not' => 'Umsebenzisi onalokhu kungena akekho',
+'view.contact.form.name' => 'Igama',
+'view.contact.form.email' => 'I-imeyili',
+'view.contact.form.subject' => 'Isihloko',
+'view.contact.form.body' => 'Umzimba',    
 ];

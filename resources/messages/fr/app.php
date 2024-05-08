@@ -1709,4 +1709,8 @@ return [
 'validator.password.change' => 'Votre mot de passe a été changé',
 'validator.user.exist' => 'Un utilisateur avec cette connexion existe déjà',
 'validator.user.exist.not' => 'Un utilisateur avec cette connexion n\'existe pas',
+'view.contact.form.name' => 'Nom',
+'view.contact.form.email' => 'E-mail',
+'view.contact.form.subject' => 'Sujet',
+'view.contact.form.body' => 'Corps',    
 ];

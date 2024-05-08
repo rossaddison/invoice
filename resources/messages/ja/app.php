@@ -1710,4 +1710,8 @@ return [
 'validator.password.change' => 'あなたのパスワードは変更されました',
 'validator.user.exist' => 'このログインを持つユーザーは既に存在します',
 'validator.user.exist.not' => 'このログインを持つユーザーは存在しません',
+'view.contact.form.name' => '名前',
+'view.contact.form.email' => 'Eメール',
+'view.contact.form.subject' => '主題',
+'view.contact.form.body' => '体',    
 ];
