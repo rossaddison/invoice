@@ -34,9 +34,16 @@ $this->setTitle($translator->translate('signup'));
                         ->id('signupForm')
                         ->open() ?>
 
-                    <?= Field::text($formModel, 'login')->autofocus() ?>
-                    <?= Field::password($formModel, 'password') ?>
-                    <?= Field::password($formModel, 'passwordVerify') ?>
+                    <?= Field::text($formModel, 'login')
+                        ->label($translator->translate('layout.login'))
+                        ->autofocus()
+                    ?>
+                    <?= Field::password($formModel, 'password')
+                        ->label($translator->translate('layout.password'))
+                    ?>
+                    <?= Field::password($formModel, 'passwordVerify')
+                        ->label($translator->translate('layout.password-verify.new'))
+                    ?>
                     <?= Field::submitButton()
                         ->buttonId('register-button')
                         ->name('register-button')
