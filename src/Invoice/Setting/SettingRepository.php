@@ -614,7 +614,7 @@ final class SettingRepository extends Select\Repository
     public function locale_language_array() : array {
         // locale => src/Invoice/Language/{language folder name}    
         $language_list = [
-            'af'=>'Afrikaans',
+            'af'=>'AfrikaansSouthAfrican',
             'ar'=>'Arabic',
             'az'=>'Azerbaijani',
             'fr'=>'French',
@@ -625,6 +625,7 @@ final class SettingRepository extends Select\Repository
             'it'=>'Italian',
             'ja'=>'Japanese',
             'nl'=>'Dutch',
+            'pl'=>'Polish',
             'pt-Br'=> 'PortugeseBrazilian',
             'ru'=>'Russian',
             'sk'=>'Slovakian',            
@@ -637,6 +638,37 @@ final class SettingRepository extends Select\Repository
             'zu-ZA'=>'ZuluSouthAfrican'
         ];
         return $language_list;
+    }
+    
+    /**
+     * @return array
+     */
+    public function locales(): array {
+        $locales = [
+            'af-ZA',
+            'ar', 'az', 
+            'be', 'bg', 'bs', 
+            'ca', 'cs', 
+            'da', 'de', 
+            'el', 'es', 'et', 
+            'fa', 'fi', 'fr', 
+            'he', 'hr', 'hu', 'hy', 
+            'id', 'it', 
+            'ja', 
+            'ka', 'kk', 'ko', 'kz', 
+            'lt', 'lv', 
+            'ms', 
+            'nb-NO', 'nl', 
+            'pl', 'pt', 'pt-BR', 
+            'ro', 'ru', 
+            'sk', 'sl', 'sr', 'sr-Latn', 'sv', 
+            'tg', 'th', 'tr',
+            'uk', 'uz', 
+            'vi', 
+            'zh-CN', 'zh-TW', 
+            'zu-ZA'
+        ];
+        return $locales;
     }
         
     // The default_language setting is a setting of last resort and should be set infrequently 
@@ -1940,38 +1972,7 @@ final class SettingRepository extends Select\Repository
             $translator->translate('invoice.payment.term.pia'),
         ];
         return $array;
-    }
-    
-    /**
-     * @return string[]
-     *
-     * @psalm-return list{'af', 'ar', 'az', 'be', 'bg', 'bs', 'ca', 'cs', 'da', 'de', 'el', 'es', 'et', 'fa', 'fi', 'fr', 'he', 'hr', 'hu', 'hy', 'id', 'it', 'ja', 'ka', 'kk', 'ko', 'kz', 'lt', 'lv', 'ms', 'nb-NO', 'nl', 'pl', 'pt', 'pt-BR', 'ro', 'ru', 'sk', 'sl', 'sr', 'sr-Latn', 'sv', 'tg', 'th', 'tr', 'uk', 'uz', 'vi', 'zh-CN', 'zh-TW', 'zu-ZA'}
-     */
-    public function locales(): array {
-        $locales = [
-            'af', 'ar', 'az', 
-            'be', 'bg', 'bs', 
-            'ca', 'cs', 
-            'da', 'de', 
-            'el', 'es', 'et', 
-            'fa', 'fi', 'fr', 
-            'he', 'hr', 'hu', 'hy', 
-            'id', 'it', 
-            'ja', 
-            'ka', 'kk', 'ko', 'kz', 
-            'lt', 'lv', 
-            'ms', 
-            'nb-NO', 'nl', 
-            'pl', 'pt', 'pt-BR', 
-            'ro', 'ru', 
-            'sk', 'sl', 'sr', 'sr-Latn', 'sv', 
-            'tg', 'th', 'tr', 
-            'uk', 'uz', 
-            'vi', 
-            'zh-CN', 'zh-TW', 'zu-ZA'
-        ];
-        return $locales;
-    }
+    }  
     
     /**
      * @see ..\src\ViewInjection\LayoutViewInjection
