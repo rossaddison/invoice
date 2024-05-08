@@ -4,8 +4,8 @@ declare(strict_types=1);
 use App\Invoice\Asset\InvoiceAsset;
 use App\Invoice\Asset\MonospaceAsset;
 // DatePicker Assets available for dropdown locale/cldr selection
-use App\Invoice\Asset\i18nAsset\af_Asset;
-use App\Invoice\Asset\i18nAsset\ar_Asset;
+use App\Invoice\Asset\i18nAsset\af_ZA_Asset;
+use App\Invoice\Asset\i18nAsset\ar_BH_Asset;
 use App\Invoice\Asset\i18nAsset\az_Asset;
 use App\Invoice\Asset\i18nAsset\de_DE_Asset;
 use App\Invoice\Asset\i18nAsset\en_GB_Asset;
@@ -14,6 +14,7 @@ use App\Invoice\Asset\i18nAsset\fr_FR_Asset;
 use App\Invoice\Asset\i18nAsset\id_Asset;
 use App\Invoice\Asset\i18nAsset\ja_Asset;
 use App\Invoice\Asset\i18nAsset\nl_Asset;
+use App\Invoice\Asset\i18nAsset\pl_Asset;
 use App\Invoice\Asset\i18nAsset\pt_BR_Asset;
 use App\Invoice\Asset\i18nAsset\ru_Asset;
 use App\Invoice\Asset\i18nAsset\sk_Asset;
@@ -64,8 +65,8 @@ $s->get_setting('gateway_braintree_version') == '0' ? $assetManager->register(br
 // The $s value is configured for the layout in config/params.php yii-soft/view Reference::to and NOT by means of the InvoiceController
 
 switch ($currentRoute->getArgument('_language')) {
-    case 'af' : $assetManager->register(af_Asset::class); $locale = 'Afrikaans'; break;
-    case 'ar' : $assetManager->register(ar_Asset::class); $locale = 'Arabic'; break;
+    case 'af-ZA' : $assetManager->register(af_ZA_Asset::class); $locale = 'AfrikaansSouthAfrican'; break;
+    case 'ar-BH' : $assetManager->register(ar_BH_Asset::class); $locale = 'ArabicBahrainian'; break;
     case 'az' : $assetManager->register(az_Asset::class); $locale = 'Azerbaijani'; break;
     case 'de' : $assetManager->register(de_DE_Asset::class); $locale = 'German'; break;
     case 'en' : $assetManager->register(en_GB_Asset::class); $locale = 'English'; break;
@@ -73,6 +74,7 @@ switch ($currentRoute->getArgument('_language')) {
     case 'id' : $assetManager->register(id_Asset::class); $locale = 'Indonesian'; break;
     case 'it' : $assetManager->register(id_Asset::class); $locale = 'Italian'; break;
     case 'ja' : $assetManager->register(ja_Asset::class); $locale = 'Japanese'; break;
+    case 'pl-PL' : $assetManager->register(pl_Asset::class); $locale = 'Polish'; break;
     case 'pt-BR' : $assetManager->register(pt_BR_Asset::class); $locale = 'PortugeseBrazil'; break;
     case 'nl' : $assetManager->register(nl_Asset::class); $locale = 'Dutch'; break;
     case 'ru' : $assetManager->register(ru_Asset::class); $locale = 'Russian'; break;
@@ -194,12 +196,15 @@ echo Nav::widget()
             'url' => '#',
             'items' => [
                 [
-                    'label' => 'Afrikaans',
-                    'url' => $urlGenerator->generateFromCurrent(['_language' => 'af'], fallbackRouteName: 'site/index'),
+                    'label' => 'Afrikaans South African',
+                    /**
+                     * Note: _language => config\web\params.php locale key (NOT value) i.e. left of '=>'
+                     */  
+                    'url' => $urlGenerator->generateFromCurrent(['_language' => 'af-ZA'], fallbackRouteName: 'site/index'),
                 ],
                 [
-                    'label' => 'Arabic / عربي',
-                    'url' => $urlGenerator->generateFromCurrent(['_language' => 'ar'], fallbackRouteName: 'site/index'),
+                    'label' => 'Arabic Bahrainian / عربي',
+                    'url' => $urlGenerator->generateFromCurrent(['_language' => 'ar-BH'], fallbackRouteName: 'site/index'),
                 ],
                 [
                     'label' => 'Azerbaijani / Azərbaycan',
@@ -233,6 +238,10 @@ echo Nav::widget()
                     'label' => 'Japanese / 日本',
                     'url' => $urlGenerator->generateFromCurrent(['_language' => 'ja'], fallbackRouteName: 'site/index'),
                 ],
+                [
+                    'label' => 'Polish / Polski',
+                    'url' => $urlGenerator->generateFromCurrent(['_language' => 'pl'], fallbackRouteName: 'invoice/index'),
+                ],  
                 [
                     'label' => 'Portugese Brazilian/ Português Brasileiro',
                     'url' => $urlGenerator->generateFromCurrent(['_language' => 'pt-BR'], fallbackRouteName: 'invoice/index'),

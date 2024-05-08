@@ -4,8 +4,8 @@ declare(strict_types=1);
 use App\Invoice\Asset\InvoiceAsset;
 use App\Invoice\Asset\MonospaceAsset;
 // DatePicker Assets available for dropdown locale/cldr selection
-use App\Invoice\Asset\i18nAsset\af_Asset;
-use App\Invoice\Asset\i18nAsset\ar_Asset;
+use App\Invoice\Asset\i18nAsset\af_ZA_Asset;
+use App\Invoice\Asset\i18nAsset\ar_BH_Asset;
 use App\Invoice\Asset\i18nAsset\az_Asset;
 use App\Invoice\Asset\i18nAsset\de_DE_Asset;
 use App\Invoice\Asset\i18nAsset\en_GB_Asset;
@@ -15,6 +15,7 @@ use App\Invoice\Asset\i18nAsset\id_Asset;
 use App\Invoice\Asset\i18nAsset\it_Asset;
 use App\Invoice\Asset\i18nAsset\ja_Asset;
 use App\Invoice\Asset\i18nAsset\nl_Asset;
+use App\Invoice\Asset\i18nAsset\pl_Asset;
 use App\Invoice\Asset\i18nAsset\pt_BR_Asset;
 use App\Invoice\Asset\i18nAsset\ru_Asset;
 use App\Invoice\Asset\i18nAsset\sk_Asset;
@@ -61,11 +62,15 @@ $vat = ($s->get_setting('enable_vat_registration') == '0');
 // NOTE: $locale must correspond with SettingRepository/locale_language_array and
 // ALSO: src/Invoice/Language/{folder_name}
 switch ($currentRoute->getArgument('_language') ?? 'en') {
-  case 'af' : $assetManager->register(af_Asset::class);
-    $locale = 'Afrikaans';
+  /**
+   * Note: case 'x' must follow config/web/params locale => ['locales' => [ 'x' => 'x-XX'] format i.e. use key and NOT value i.e. use 'x' and NOT 'x-XX' 
+   * Note: If there is more than one official language in the country use the format x-YY for 'case' which should correspond with above locales array
+   */  
+  case 'af-ZA' : $assetManager->register(af_ZA_Asset::class);
+    $locale = 'AfrikaansSouthAfrican';
     break;
-  case 'ar' : $assetManager->register(ar_Asset::class);
-    $locale = 'Arabic';
+  case 'ar-BH' : $assetManager->register(ar_BH_Asset::class);
+    $locale = 'ArabicBahrainian';
     break;
   case 'az' : $assetManager->register(az_Asset::class);
     $locale = 'Azerbaijani';
@@ -90,6 +95,9 @@ switch ($currentRoute->getArgument('_language') ?? 'en') {
     break;
   case 'nl' : $assetManager->register(nl_Asset::class);
     $locale = 'Dutch';
+    break;
+  case 'pl' : $assetManager->register(pl_Asset::class);
+    $locale = 'Polish';
     break;
   case 'pt-BR' : $assetManager->register(pt_BR_Asset::class);
     $locale = 'PortugeseBrazilian';
@@ -496,12 +504,15 @@ $this->beginPage();
                 //'visible' => $isGuest,
                 'items' => [
                   [
-                    'label' => 'Afrikaans',
-                    'url' => $urlGenerator->generateFromCurrent(['_language' => 'af'], fallbackRouteName: 'invoice/index'),
+                    'label' => 'Afrikaans South African',
+                    /**
+                     * Note: _language => config\web\params.php locale key (NOT value) i.e. left of '=>'
+                     */  
+                    'url' => $urlGenerator->generateFromCurrent(['_language' => 'af-ZA'], fallbackRouteName: 'invoice/index'),
                   ],
                   [
-                    'label' => 'Arabic / عربي',
-                    'url' => $urlGenerator->generateFromCurrent(['_language' => 'ar'], fallbackRouteName: 'invoice/index'),
+                    'label' => 'Arabic Bahrainian / عربي',
+                    'url' => $urlGenerator->generateFromCurrent(['_language' => 'ar-BH'], fallbackRouteName: 'invoice/index'),
                   ],
                   [
                     'label' => 'Azerbaijani / Azərbaycan',
@@ -540,9 +551,13 @@ $this->beginPage();
                     'url' => $urlGenerator->generateFromCurrent(['_language' => 'ja'], fallbackRouteName: 'invoice/index'),
                   ],
                   [
+                    'label' => 'Polish / Polski',
+                    'url' => $urlGenerator->generateFromCurrent(['_language' => 'pl'], fallbackRouteName: 'invoice/index'),
+                  ],      
+                  [
                     'label' => 'Portugese Brazilian / Português Brasileiro',
                     'url' => $urlGenerator->generateFromCurrent(['_language' => 'pt-BR'], fallbackRouteName: 'invoice/index'),
-                  ],        
+                  ],
                   [
                     'label' => 'Russian / Русский',
                     'url' => $urlGenerator->generateFromCurrent(['_language' => 'ru'], fallbackRouteName: 'invoice/index'),
@@ -568,7 +583,7 @@ $this->beginPage();
                     'url' => $urlGenerator->generateFromCurrent(['_language' => 'vi'], fallbackRouteName: 'invoice/index'),
                   ],
                   [
-                    'label' => 'Zulu / Zulu',
+                    'label' => 'Zulu South African / Zulu South African',
                     'url' => $urlGenerator->generateFromCurrent(['_language' => 'zu-ZA'], fallbackRouteName: 'site/index'),
                   ],   
                 ],

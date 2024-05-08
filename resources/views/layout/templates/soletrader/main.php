@@ -154,12 +154,12 @@ $this->setTitle($title);
                         ],    
                         'items' => [
                             [
-                        'label' => 'Afrikaans',                                
-                        'url' => $urlGenerator->generateFromCurrent(['_language' => 'af'], fallbackRouteName: 'site/index'),
+                        'label' => 'Afrikaans South African',                                
+                        'url' => $urlGenerator->generateFromCurrent(['_language' => 'af-ZA'], fallbackRouteName: 'site/index'),
                     ],
                     [
-                        'label' => 'Arabic / عربي',
-                        'url' => $urlGenerator->generateFromCurrent(['_language' => 'ar'], fallbackRouteName: 'site/index'),
+                        'label' => 'Arabic Bahrainian/ عربي',
+                        'url' => $urlGenerator->generateFromCurrent(['_language' => 'ar-BH'], fallbackRouteName: 'site/index'),
                     ],
                     [
                         'label' => 'Azerbaijani / Azərbaycan',
@@ -198,6 +198,10 @@ $this->setTitle($title);
                         'url' => $urlGenerator->generateFromCurrent(['_language' => 'ja'], fallbackRouteName: 'site/index'),
                     ],
                     [
+                        'label' => 'Polish / Polski',
+                        'url' => $urlGenerator->generateFromCurrent(['_language' => 'pl'], fallbackRouteName: 'site/index'),
+                    ],        
+                    [
                         'label' => 'Portugese Brazilian / Português Brasileiro',
                         'url' => $urlGenerator->generateFromCurrent(['_language' => 'pt-BR'], fallbackRouteName: 'site/index'),
                     ],      
@@ -226,7 +230,7 @@ $this->setTitle($title);
                         'url' => $urlGenerator->generateFromCurrent(['_language' => 'vi'], fallbackRouteName: 'site/index'),
                     ],
                     [
-                        'label' => 'Zulu / Zulu',
+                        'label' => 'Zulu South African/ Zulu South African',
                         'url' => $urlGenerator->generateFromCurrent(['_language' => 'zu-ZA'], fallbackRouteName: 'site/index'),
                     ],           
                         ],

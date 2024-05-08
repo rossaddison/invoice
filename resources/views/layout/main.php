@@ -76,11 +76,11 @@ $this->beginPage();
                         'items' => [
                             [
                         'label' => 'Afrikaans',                                
-                        'url' => $urlGenerator->generateFromCurrent(['_language' => 'af'], fallbackRouteName: 'site/index'),
+                        'url' => $urlGenerator->generateFromCurrent(['_language' => 'af-ZA'], fallbackRouteName: 'site/index'),
                     ],
                     [
-                        'label' => 'Arabic / عربي',
-                        'url' => $urlGenerator->generateFromCurrent(['_language' => 'ar'], fallbackRouteName: 'site/index'),
+                        'label' => 'Arabic Bahrainian / عربي',
+                        'url' => $urlGenerator->generateFromCurrent(['_language' => 'ar-BH'], fallbackRouteName: 'site/index'),
                     ],
                     [
                         'label' => 'Azerbaijani / Azərbaycan',
@@ -118,6 +118,10 @@ $this->beginPage();
                         'label' => 'Japanese / 日本',
                         'url' => $urlGenerator->generateFromCurrent(['_language' => 'ja'], fallbackRouteName: 'site/index'),
                     ],
+                    [
+                        'label' => 'Polish / Polski',
+                        'url' => $urlGenerator->generateFromCurrent(['_language' => 'pl'], fallbackRouteName: 'site/index'),
+                    ],               
                     [
                         'label' => 'Portugese Brazilian / Português Brasileiro',
                         'url' => $urlGenerator->generateFromCurrent(['_language' => 'pt-BR'], fallbackRouteName: 'site/index'),
