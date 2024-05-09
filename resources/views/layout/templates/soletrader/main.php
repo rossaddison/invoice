@@ -176,7 +176,11 @@ $this->setTitle($title);
                     [
                         'label' => 'English',
                         'url' => $urlGenerator->generateFromCurrent(['_language' => 'en'], fallbackRouteName: 'site/index'),
-                    ],                    
+                    ],
+                    [
+                        'label' => 'Filipino / Filipino',
+                        'url' => $urlGenerator->generateFromCurrent(['_language' => 'fil'], fallbackRouteName: 'site/index'),
+                    ],         
                     [
                         'label' => 'French / Français',
                         'url' => $urlGenerator->generateFromCurrent(['_language' => 'fr'], fallbackRouteName: 'site/index'),
@@ -200,7 +204,7 @@ $this->setTitle($title);
                     [
                         'label' => 'Japanese / 日本',
                         'url' => $urlGenerator->generateFromCurrent(['_language' => 'ja'], fallbackRouteName: 'site/index'),
-                    ],
+                    ],       
                     [
                         'label' => 'Polish / Polski',
                         'url' => $urlGenerator->generateFromCurrent(['_language' => 'pl'], fallbackRouteName: 'site/index'),

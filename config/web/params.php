@@ -25,6 +25,7 @@ return [
             'de' => 'de-DE', 
             'en' => 'en-US', 
             'es' => 'es-ES',
+            'fil' => 'fil-PH',          
             'fr' => 'fr-FR',
             'id' => 'id-ID',
             'it' => 'it-IT',

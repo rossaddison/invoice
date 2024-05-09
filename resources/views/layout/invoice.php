@@ -10,6 +10,7 @@ use App\Invoice\Asset\i18nAsset\az_Asset;
 use App\Invoice\Asset\i18nAsset\de_DE_Asset;
 use App\Invoice\Asset\i18nAsset\en_GB_Asset;
 use App\Invoice\Asset\i18nAsset\es_ES_Asset;
+use App\Invoice\Asset\i18nAsset\fil_PH_Asset;
 use App\Invoice\Asset\i18nAsset\fr_FR_Asset;
 use App\Invoice\Asset\i18nAsset\id_Asset;
 use App\Invoice\Asset\i18nAsset\it_Asset;
@@ -81,6 +82,9 @@ switch ($currentRoute->getArgument('_language') ?? 'en') {
     break;
   case 'en' : $assetManager->register(en_GB_Asset::class);
     $locale = 'English';
+    break;
+  case 'fil' : $assetManager->register(fil_PH_Asset::class);
+    $locale = 'Filipino';
     break;
   case 'fr' : $assetManager->register(fr_FR_Asset::class);
     $locale = 'French';
@@ -534,6 +538,10 @@ $this->beginPage();
                     'label' => 'English',
                     'url' => $urlGenerator->generateFromCurrent(['_language' => 'en'], fallbackRouteName: 'invoice/index'),
                   ],
+                  [
+                    'label' => 'Filipino / Filipino',
+                    'url' => $urlGenerator->generateFromCurrent(['_language' => 'fil'], fallbackRouteName: 'invoice/index'),
+                  ],      
                   [
                     'label' => 'French / Français',
                     'url' => $urlGenerator->generateFromCurrent(['_language' => 'fr'], fallbackRouteName: 'invoice/index'),

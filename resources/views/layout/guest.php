@@ -10,6 +10,7 @@ use App\Invoice\Asset\i18nAsset\az_Asset;
 use App\Invoice\Asset\i18nAsset\de_DE_Asset;
 use App\Invoice\Asset\i18nAsset\en_GB_Asset;
 use App\Invoice\Asset\i18nAsset\es_ES_Asset;
+use App\Invoice\Asset\i18nAsset\fil_PH_Asset;
 use App\Invoice\Asset\i18nAsset\fr_FR_Asset;
 use App\Invoice\Asset\i18nAsset\id_Asset;
 use App\Invoice\Asset\i18nAsset\ja_Asset;
@@ -71,6 +72,7 @@ switch ($currentRoute->getArgument('_language')) {
     case 'az' : $assetManager->register(az_Asset::class); $locale = 'Azerbaijani'; break;
     case 'de' : $assetManager->register(de_DE_Asset::class); $locale = 'German'; break;
     case 'en' : $assetManager->register(en_GB_Asset::class); $locale = 'English'; break;
+    case 'fil' : $assetManager->register(fil_PH_Asset::class); $locale = 'Filipino'; break;
     case 'fr' : $assetManager->register(fr_FR_Asset::class); $locale = 'French'; break;
     case 'id' : $assetManager->register(id_Asset::class); $locale = 'Indonesian'; break;
     case 'it' : $assetManager->register(id_Asset::class); $locale = 'Italian'; break;
@@ -224,6 +226,10 @@ echo Nav::widget()
                     'label' => 'English',
                     'url' => $urlGenerator->generateFromCurrent(['_language' => 'en'], fallbackRouteName: 'site/index'),
                 ],
+                [
+                    'label' => 'Filipino / Filipino',
+                    'url' => $urlGenerator->generateFromCurrent(['_language' => 'fil'], fallbackRouteName: 'site/index'),
+                ],    
                 [
                     'label' => 'French / Français',
                     'url' => $urlGenerator->generateFromCurrent(['_language' => 'fr'], fallbackRouteName: 'site/index'),
