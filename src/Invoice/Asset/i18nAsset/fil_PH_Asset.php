@@ -6,7 +6,7 @@ namespace App\Invoice\Asset\i18nAsset;
 
 use App\Invoice\Asset\i18nAsset\__Asset;
 
-class fr_FR_Asset extends __Asset
+class fil_PH_Asset extends __Asset
 {
     public array $js = [
         'jquery-ui-1.13.2/ui/i18n/datepicker-en.js', 
