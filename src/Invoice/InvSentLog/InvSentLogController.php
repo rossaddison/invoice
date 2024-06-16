@@ -287,11 +287,11 @@ final class InvSentLogController
          * @var InvSentLog $invsentlog
          */
         foreach ($invsentlogs as $invsentlog) {
-            //$clientFullName = $invsentlog->getInv()?->getClient()?->getClient_full_name();
+            $clientFullName = $invsentlog->getInv()?->getClient()?->getClient_full_name();
             $clientId = $invsentlog->getInv()?->getClient()?->getClient_id();
-            if (null!==$clientId) {
-                if (!in_array($clientId, $optionsDataClients)) {
-                    $optionsDataClients[$clientId] = $clientId;
+            if (null!==$clientFullName && null!==$clientId) {
+                if (!in_array($clientFullName, $optionsDataClients)) {
+                    $optionsDataClients[$clientId] = $clientFullName;
                 }
             }
         }
