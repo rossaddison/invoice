@@ -859,7 +859,8 @@ final class InvoiceController
             'currency_code_from' => 'GBP',
             'currency_code_to' => 'GBP',
             'custom_title' => 'Yii-invoice',
-            'date_format' => 'd/m/Y', 
+            // Use the mySql Y-m-d date format as  default 
+            'date_format' => 'Y-m-d', 
             'decimal_point' => '.',
             'default_invoice_group' => 1,
             'default_quote_group' => 2,

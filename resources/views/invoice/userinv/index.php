@@ -7,9 +7,12 @@ use Yiisoft\Html\Tag\Div;
 use Yiisoft\Html\Tag\Form;
 use Yiisoft\Html\Tag\H5;
 use Yiisoft\Html\Tag\I;
-use Yiisoft\Yii\DataView\OffsetPagination;
 use Yiisoft\Yii\DataView\Column\DataColumn;
 use Yiisoft\Yii\DataView\GridView;
+use Yiisoft\Yii\DataView\OffsetPagination;
+use Yiisoft\Yii\DataView\UrlConfig;
+use Yiisoft\Yii\DataView\YiiRouter\UrlCreator;
+use Yiisoft\VarDumper\VarDumper; 
 
 /**
  * @var \App\Invoice\Entity\UserInv $userinv
@@ -94,10 +97,15 @@ echo $alert;
             }
         ),
         new DataColumn(
-            'user_id',
+            field: 'user_id',
+            header: $translator->translate('gridview.login'),       
+            property: 'filterUser',   
             content: static function ($model) use ($urlGenerator) : string {
-            return (string)Html::a($model->getUser()?->getLogin(),$urlGenerator->generate('user/profile',['login'=>$model->getUser()?->getLogin()]),[]);
-        }),     
+                return (string)Html::a($model->getUser()?->getLogin(),$urlGenerator->generate('user/profile',['login'=>$model->getUser()?->getLogin()]),[]);
+            },
+            filter: $optionsDataFilterUserInvLoginDropDown,
+            withSorting: false,        
+        ),     
         new DataColumn(
             'name',
             content: static function ($model): string {
@@ -114,6 +122,27 @@ echo $alert;
             ];  
             return $user_types[$model->getType()];
         }),
+        new DataColumn(
+            'user_id',
+            header:  $translator->translate('invoice.user.inv.role.observer'),
+            content: static function ($model) use ($manager, $translator, $urlGenerator): string {
+            if ($manager->getPermissionsByUserId($model->getUser_id()) 
+              === $manager->getPermissionsByRoleName('observer')) { 
+              return Html::tag('span', $translator->translate('invoice.general.yes'),['class'=>'label active'])->render(); 
+            } else {
+              return $model->getUser_id() !== '1' ? Html::a(
+                Html::tag('button',
+                Html::tag('span', $translator->translate('invoice.general.no'),['class'=>'label inactive'])
+                ,[
+                   'type'=>'submit', 
+                   'class'=>'dropdown-button',
+                   'onclick'=>"return confirm("."'".$translator->translate('invoice.user.inv.role.warning.role') ."');"
+                ]),
+                $urlGenerator->generate('userinv/observer',['user_id'=>$model->getUser_id()],[]),
+               )->render() : '';
+            }
+            },
+        ),        
         new DataColumn(
             'user_id',
             header:  $translator->translate('invoice.user.inv.role.accountant'),
@@ -134,7 +163,7 @@ echo $alert;
                )->render() : '';
             }
             }
-        ),
+        ),       
         new DataColumn(
             'user_id',
             header:  $translator->translate('invoice.user.inv.role.administrator'),
@@ -159,6 +188,27 @@ echo $alert;
                 } // else
             }
         ),
+        
+        new DataColumn(
+            'user_id',
+            header:  $translator->translate('invoice.user.inv.role.revoke.all'),
+            content: static function ($model) use ($manager, $translator, $urlGenerator) : string {
+                if (!empty($manager->getPermissionsByUserId($model->getUser_id()) && $model->getUser_id() !== '1')) { 
+                    return Html::a(
+                    Html::tag('button',
+                    Html::tag('span', $translator->translate('invoice.user.inv.role.revoke.all'), ['class'=>'label inactive'])
+                    ,[
+                       'type' => 'submit', 
+                       'class' => 'dropdown-button',
+                       'onclick' => "return confirm("."'".$translator->translate('invoice.user.inv.role.warning.revoke.all') ."');"
+                    ]),
+                    $urlGenerator->generate('userinv/revoke',['user_id'=>$model->getUser_id()],[]),
+                    )->render();
+                } else {
+                    return '';
+                } 
+            },    
+        ),           
         new DataColumn(
             'email',
             content: static function ($model): string {
@@ -169,24 +219,22 @@ echo $alert;
             header:  $translator->translate('i.assigned_clients'),                
             content: static function ($model) use ($urlGenerator, $ucR): string { 
                 return Html::a(
-                                Html::tag('i', str_repeat(' ',1).(string)count($ucR->get_assigned_to_user($model->getUser_id())),
-                                ['class'=>'fa fa-list fa-margin']),
-                                $urlGenerator->generate('userinv/client',['id'=>$model->getId()]),
-                                ['class'=> count($ucR->get_assigned_to_user($model->getUser_id())) > 0 
-                                        ? 'btn btn-success' 
-                                        : 'btn btn-danger']            
-                            )->render();
+                    Html::tag('i', str_repeat(' ',1).(string)count($ucR->get_assigned_to_user($model->getUser_id())),
+                    ['class'=>'fa fa-list fa-margin']),
+                    $urlGenerator->generate('userinv/client',['id'=>$model->getId()]),
+                    ['class'=> count($ucR->get_assigned_to_user($model->getUser_id())) > 0 
+                            ? 'btn btn-success' 
+                            : 'btn btn-danger']            
+                )->render();
         }),      
         new DataColumn(            
             'type',
             header:  $translator->translate('i.edit'),                
             content: static function ($model) use ($urlGenerator, $canEdit): string {
                         return $canEdit ? Html::a(
-                                                            Html::tag('i','',['class'=>'fa fa-edit fa-margin']),
-                                                        $urlGenerator->generate('userinv/edit',['id'=>$model->getId()]),[]                                         
-                                                        )->render() : '';
-
-
+                            Html::tag('i','',['class'=>'fa fa-edit fa-margin']),
+                        $urlGenerator->generate('userinv/edit',['id'=>$model->getId()]),[]                                         
+                        )->render() : '';
         }),
         new DataColumn(            
             'type',
@@ -211,18 +259,32 @@ echo $alert;
     ->columns(...$columns)
     ->dataReader($paginator)        
     ->headerRowAttributes(['class'=>'card-header bg-info text-black'])
-    //->filterPosition('header')
-    //->filterModelName('userinv')
+    ->enableMultisort(true)        
     ->header($header)
     ->id('w5-grid')
     ->pagination(
-    OffsetPagination::widget()
-        ->paginator($paginator)
-         ->render(),
+        OffsetPagination::widget()
+            /**
+             * @link https://getbootstrap.com/docs/5.0/components/pagination/
+             */    
+            ->listTag('ul')    
+            ->listAttributes(['class' => 'pagination'])
+            ->itemTag('li')
+            ->itemAttributes(['class' => 'page-item'])
+            ->linkAttributes(['class' => 'page-link'])
+            ->currentItemClass('active')
+            ->currentLinkClass('page-link')
+            ->disabledItemClass('disabled')
+            ->disabledLinkClass('disabled')
+            ->defaultPageSize($defaultPageSizeOffsetPaginator)
+            ->urlConfig(new UrlConfig()) 
+            ->urlCreator(new UrlCreator($urlGenerator))        
+            ->paginator($paginator)
+            ->render()
     )
     ->rowAttributes(['class' => 'align-middle'])
     ->summaryAttributes(['class' => 'mt-3 me-3 summary text-end'])
-    ->summaryTemplate($grid_summary)
+    ->summaryTemplate($pageSizeLimiter::buttons($currentRoute, $s, $urlGenerator, 'userinv').' '.$grid_summary)
     ->emptyTextAttributes(['class' => 'card-header bg-warning text-black'])
     ->emptyText((string)$translator->translate('invoice.invoice.no.records'))
     ->tableAttributes(['class' => 'table table-striped text-center h-75','id'=>'table-user-inv'])

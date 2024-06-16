@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace App\Widget;
 
 use App\Invoice\Entity\Client;
+use App\Invoice\Entity\Inv;
 use Yiisoft\Data\Paginator\OffsetPaginator as DataOffsetPaginator;
 use Yiisoft\Html\Html;
 use Yiisoft\Html\Tag\A;
@@ -121,6 +122,49 @@ final class GridComponents
                                              ? $invBalance
                                              : '')
                     )
+                    ->render(). 
+                Html::closeTag('td'); 
+            $item_count++;
+        }
+        $string .= Html::closeTag('tr');
+        $string .= Html::closeTag('table'); 
+        return $string;
+    }
+    
+    /**
+     * @param Inv $model
+     * @param int $max_per_row
+     * @param UrlGenerator $urlGenerator
+     * @return string
+     */
+    public function gridMiniTableOfInvSentLogsForInv(Inv $model, int $max_per_row, UrlGenerator $urlGenerator) : string {
+        $item_count = 0;
+        $string = Html::openTag('table');
+        $string .= Html::openTag('tr', [
+            'class' => 'card-header bg-info text-black'
+        ]);
+        $invSentLogs = $model->getInvSentLogs()->toArray();
+        // Work with the Array Collection to build an output string
+        /**
+         * @var \App\Invoice\Entity\InvSentLog $invSentLog 
+         */
+        foreach ($invSentLogs as $invSentLog) 
+        {
+            if ($item_count == $max_per_row)
+            {
+                $string .= Html::closeTag('tr');
+                $string .= Html::openTag('tr', ['class' => 'card-header bg-info text-black']);
+                $item_count = 0;
+            }
+            $invSentLogId = $invSentLog->getId();
+            $string .= Html::openTag('td'). 
+                A::tag()
+                    ->addAttributes([
+                        'style' => 'text-decoration:none', 
+                        'data-bs-toggle' => 'tooltip', 
+                        'title' => $invSentLog->getDate_sent()->format('m-d')])
+                    ->href($urlGenerator->generate('invsentlog/view', ['id' => $invSentLogId]))
+                    ->content((string)$invSentLogId)
                     ->render(). 
                 Html::closeTag('td'); 
             $item_count++;

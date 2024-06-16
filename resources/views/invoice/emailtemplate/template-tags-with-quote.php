@@ -149,7 +149,6 @@
                 -->
             </select>
         </div>
-        <?= $template_tags_inv; ?>
         <?= $template_tags_quote; ?>
         <div class="form-group">
             <label for="tags_sumex"><?= $translator->translate('i.invoice_sumex'); ?></label>

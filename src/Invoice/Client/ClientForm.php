@@ -12,6 +12,7 @@ use \DateTimeImmutable;
 
 final class ClientForm extends FormModel
 {
+    private ?string $client_title='';
     private ?string $client_name='';
     private ?string $client_group='';
     private ?string $client_frequency='';
@@ -46,6 +47,7 @@ final class ClientForm extends FormModel
     private ?int $postaladdress_id=null;
     
     public function __construct(Client $client) { 
+        $this->client_title = $client->getClient_title();
         $this->client_name = $client->getClient_name();
         $this->client_group = $client->getClient_group();
         $this->client_frequency = $client->getClient_frequency();
@@ -78,9 +80,7 @@ final class ClientForm extends FormModel
     
     public function getAttributeLabels(): array
     {
-        return [
-            
-        ];
+        return [];
     }
         
     public function getClient_active() : bool|null
@@ -93,6 +93,11 @@ final class ClientForm extends FormModel
         return $this->client_age;
     }    
 
+    public function getClient_title() : string|null
+    {
+      return $this->client_title;
+    }
+    
     public function getClient_name() : string|null
     {
       return $this->client_name;

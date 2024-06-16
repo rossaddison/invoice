@@ -316,6 +316,7 @@ $this->beginPage();
                                                           'visible' => ($s->get_setting('install_test_data') == '1' && $s->get_setting('use_test_data') == '1')],         
                   ['options' => ['class' => 'nav fs-4'], 'label' => $translator->translate('i.email_template'), 'url' => $urlGenerator->generate('emailtemplate/index')],
                   ['options' => ['class' => 'nav fs-4'], 'label' => $translator->translate('invoice.email.from.dropdown'), 'url' => $urlGenerator->generate('from/index')],
+                  ['options' => ['class' => 'nav fs-4'], 'label' => $translator->translate('invoice.email.log'), 'url' => $urlGenerator->generate('invsentlog/index')],
                   ['options' => ['class' => 'nav fs-4'], 'label' => $translator->translate('i.custom_fields'), 'url' => $urlGenerator->generate('customfield/index')],
                   ['options' => ['class' => 'nav fs-4'], 'label' => $translator->translate('i.invoice_group'), 'url' => $urlGenerator->generate('group/index')],
                   ['options' => ['class' => 'nav fs-4'], 'label' => $translator->translate('i.invoice_archive'), 'url' => $urlGenerator->generate('inv/archive')],
@@ -392,7 +393,7 @@ $this->beginPage();
                   ['label' => ' Ecosio Xml Validator',
                      //open up in a new window 
                      'url' => '', 
-                     'linkOptions' =>['class' => 'fa fa-window-restore', 'onclick'=>"window.open('". 'https://ecosio.com/en/peppol-and-xml-document-validator-button/?pk_abe=EN_Peppol_XML_Validator_Page&pk_abv=With_CTA' . "')" ]
+                     'linkOptions' =>['class' => 'fa fa-window-restore', 'onclick'=>"window.open('". 'https://ecosio.com/en/peppol-and-xml-document-validator/' . "')" ]
                   ],
                   ['label' => 'Xml Code Lists', 'url' => 'https://github.com/OpenPEPPOL/peppol-bis-invoice-3/tree/master/structure/codelist'],
                   ['label' => 'Convert XML to PHP Array Online', 'url' => 'https://wtools.io/convert-xml-to-php-array'],
@@ -670,6 +671,9 @@ $this->beginPage();
 </html>
 
 <?php
+/**
+ * @see invoice/src/ViewInjection/LayoutViewInjection.php
+ */
 echo Html::script($javascriptJqueryDateHelper)->type('module');
 ?>
 <?php

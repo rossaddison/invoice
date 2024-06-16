@@ -53,6 +53,24 @@ use Yiisoft\Arrays\ArrayHelper;
         Html::closeTag('div'),
     Html::closeTag('div')    
 ?>
+
+<?= Field::select($form, 'client_title')
+    ->label($translator->translate('invoice.client.title'))
+    ->addInputAttributes([
+        'class' => 'form-control'
+    ])
+    ->value($form->getClient_title())
+    ->prompt($translator->translate('i.none'))
+    ->optionsData([
+        $translator->translate('invoice.client.title.mr'),
+        $translator->translate('invoice.client.title.mrs'),
+        $translator->translate('invoice.client.title.miss'),
+        $translator->translate('invoice.client.title.doctor'),
+        $translator->translate('invoice.client.title.professor'),
+    ])                
+    ->required(false)    
+    ->hint($translator->translate('invoice.hint.this.field.is.not.required')); 
+?>
     
 <?= Field::text($form, 'client_name')
     ->label($translator->translate('i.client_name'))

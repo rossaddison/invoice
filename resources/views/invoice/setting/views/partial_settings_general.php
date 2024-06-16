@@ -235,11 +235,11 @@
 
                     <div class="col-xs-12 col-md-6">
                         <div class="form-group">
-                            <label for="tax_rate_decimal_places" <?= $s->where('tax_rate_decimal_places'); ?>>
+                            <label for="settings[tax_rate_decimal_places]" <?= $s->where('tax_rate_decimal_places'); ?>>
                                 <?= $translator->translate('i.tax_rate_decimal_places'); ?>
                             </label>
                             <?php   $body['settings[tax_rate_decimal_places]'] = $s->get_setting('tax_rate_decimal_places'); ?>
-                            <select name="settings[tax_rate_decimal_places]" class="form-control">
+                            <select name="settings[tax_rate_decimal_places]" id="settings[tax_rate_decimal_places]" class="form-control">
                                 <option value="0"><?= $translator->translate('i.none'); ?></option>
                                 <option value="2" 
                                     <?php 
@@ -387,11 +387,11 @@
                 <?= Html::openTag('div', ['class' => 'row']); ?>
                     <div class="col-xs-12 col-md-6">
                         <div class="form-group">
-                            <label for="disable_sidebar" <?= $s->where('disable_sidebar'); ?>>
+                            <label for="settings[disable_sidebar]" <?= $s->where('disable_sidebar'); ?>>
                                 <?= $translator->translate('i.disable_sidebar'); ?>
                             </label>
                             <?php   $body['settings[disable_sidebar]'] = $s->get_setting('disable_sidebar'); ?>
-                            <select name="settings[disable_sidebar]" class="form-control">
+                            <select name="settings[disable_sidebar]" id="settings[disable_sidebar]" class="form-control">
                                 <option value="0">
                                     <?= $translator->translate('i.no'); ?>
                                 </option>

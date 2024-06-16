@@ -281,7 +281,8 @@ final class SettingRepository extends Select\Repository
      */
     public function check_select(mixed $value1, mixed $value2, string $operator = '==', bool $checked = false) : void
     {
-        $select = $checked ? 'checked="checked"' : 'selected="selected"';
+        //$select = $checked ? 'checked="checked"' : 'selected="selected"';
+        $select = $checked ? 'checked' : 'selected';
 
         // Instant-validate if $value1 is a bool value
         if (is_bool($value1) && $value2 === null) {

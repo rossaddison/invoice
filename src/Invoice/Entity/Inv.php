@@ -18,13 +18,15 @@ use App\Invoice\Entity\Client;
 use App\Invoice\Entity\DeliveryLocation;
 use App\Invoice\Entity\InvItem;
 use App\Invoice\Entity\InvAmount;
+use App\Invoice\Entity\InvSentLog;
+
 use \DateTimeImmutable;
 
 #[Entity(repository: \App\Invoice\Inv\InvRepository::class)]
 #[Behavior\CreatedAt(field: 'date_created', column: 'date_created')]
 #[Behavior\UpdatedAt(field: 'date_modified', column: 'date_modified')]
-class Inv {
     
+class Inv {
     // Users
     #[BelongsTo(target: User::class, nullable: false)]
     private ?User $user = null;
@@ -61,6 +63,12 @@ class Inv {
      */
     #[HasMany(target: InvItem::class)]
     private ArrayCollection $items;
+    
+    /**
+     * @var ArrayCollection<array-key, InvSentLog>
+     */
+    #[HasMany(target: InvSentLog::class)]
+    private ArrayCollection $invsentlogs;
 
     #[Column(type: 'primary')]
     private ?int $id = null;
@@ -141,7 +149,7 @@ class Inv {
 
     #[Column(type: 'integer(11)', nullable: true)]
     private ?int $creditinvoice_parent_id = null;
-
+    
     public function __construct(
             int $client_id = null,
             int $user_id = null,
@@ -198,6 +206,7 @@ class Inv {
         $this->delivery_id = $delivery_id;
         $this->delivery_location_id = $delivery_location_id;
         $this->contract_id = $contract_id;
+        $this->invsentlogs = new ArrayCollection();
     }
 
     public function setUser(User $user): void {
@@ -231,7 +240,19 @@ class Inv {
     public function getClient(): ?Client {
         return $this->client;
     }
+    
+    public function setInvSentLogs() : void {
+        $this->invsentlogs = new ArrayCollection();
+    }
 
+    public function getInvSentLogs(): ArrayCollection {
+        return $this->invsentlogs;
+    }
+    
+    public function addInvSentLog(InvSentLog $invSentLog) : void {
+        $this->invsentlogs[] = $invSentLog;
+    }
+    
     public function getItems(): ArrayCollection {
         return $this->items;
     }
@@ -314,28 +335,6 @@ class Inv {
 
     public function setContract_id(int $contract_id): void {
         $this->contract_id = $contract_id;
-    }
-
-    public function getStatus(int $status_id): string {
-        $status = '';
-        switch ($status_id) {
-            case 1:
-                $status = 'Draft';
-                break;
-            case 2:
-                $status = 'Sent';
-                break;
-            case 3:
-                $status = 'Viewed';
-                break;
-            case 4:
-                $status = 'Paid';
-                break;
-            case 5:
-                $status = 'Overdue';
-                break;
-        }
-        return $status;
     }
 
     public function getStatus_id(): int|null {

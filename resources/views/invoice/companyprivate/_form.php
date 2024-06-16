@@ -125,7 +125,7 @@ use Yiisoft\Html\Tag\Form;
                     <?= $startdate = $datehelper->get_or_set_with_style($form->getStart_date() 
                                    ?? new \DateTimeImmutable('now')); ?>
                     <?= Html::openTag('div', ['class' => 'input-group']); ?>               
-                        <?= Field::datetime($form, 'start_date')
+                        <?= Field::date($form, 'start_date')
                             ->addInputAttributes(
                                 [
                                     'class' => 'form-control input-sm datepicker',
@@ -143,7 +143,7 @@ use Yiisoft\Html\Tag\Form;
                     <?= $enddate = $datehelper->get_or_set_with_style($form->getEnd_date() 
                                    ?? new \DateTimeImmutable('now')); ?>
                     <?= Html::openTag('div', ['class' => 'input-group']); ?>               
-                        <?= Field::datetime($form, 'end_date')
+                        <?= Field::date($form, 'end_date')
                             ->addInputAttributes(
                                 [
                                     'class' => 'form-control input-sm datepicker',

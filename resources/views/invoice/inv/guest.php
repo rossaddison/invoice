@@ -129,15 +129,31 @@ $toolbar = Div::tag();
         new DataColumn(
             field: 'number',
             property: 'filterInvNumber',       
-            header: '#',
-            content: static function ($model) use ($urlGenerator): string {
-               return Html::a($model->getNumber(), $urlGenerator->generate('inv/view',['id'=>$model->getId()]),['style'=>'text-decoration:none'])->render();
+            header: $translator->translate('invoice.invoice.number'),    
+            content: static function ($model) use ($urlGenerator, $iR): string {
+                $creditInvoiceUrl = '';
+                if ((int)$model->getCreditinvoice_parent_id() > 0)  {
+                        // include a path to the parent invoice as well as the credit note/invoice
+                        $inv = $iR->repoInvUnLoadedquery($model->getCreditinvoice_parent_id());
+                        $creditInvoiceUrl = '⬅️'.Html::a($inv->getNumber(), $urlGenerator->generate('inv/view', 
+                                                       ['id' => $model->getCreditinvoice_parent_id()]
+                                                    ),
+                                                    [
+                                                       'style' => 'text-decoration:none'
+                                                    ])->render();
+                }
+                return  Html::a($model->getNumber(), $urlGenerator->generate('inv/view', ['id' => $model->getId()]),
+                        [
+                           'style' => 'text-decoration:none'
+                        ])->render() . 
+                        $creditInvoiceUrl;
             },
             filter: $optionsDataInvNumberDropDownFilter,
             withSorting: false        
-        ),
+        ),  
         new DataColumn(
-            'client_id',                
+            'client_id',
+            header: $translator->translate('i.client'),    
             content: static fn ($model): string => $model->getClient()->getClient_name(),
             withSorting: false    
         ),
@@ -149,6 +165,7 @@ $toolbar = Div::tag();
         ),
         new DataColumn(
             'date_due',
+            header: $translator->translate('i.due_date'),           
             content: static function($model) use ($datehelper) : string {
                 $now = new \DateTimeImmutable('now');
                 return Label::tag()
@@ -222,10 +239,10 @@ $toolbar = Div::tag();
         ->toolbar(
             Form::tag()->post($urlGenerator->generate('inv/guest'))->csrf($csrf)->open() .
             Div::tag()->addClass('float-end m-3')->content($toolbarReset)->encode(false)->render() .
-            Div::tag()->addClass('float-end m-3')->content(Button::ascDesc($urlGenerator, 'date_due', 'danger', $translator->translate('i.expires')))->encode(false)->render().    
-            Div::tag()->addClass('float-end m-3')->content(Button::ascDesc($urlGenerator, 'client_id', 'warning', $translator->translate('i.client')))->encode(false)->render().    
-            Div::tag()->addClass('float-end m-3')->content(Button::ascDesc($urlGenerator, 'status_id', 'success', $translator->translate('i.status')))->encode(false)->render().    
-            Div::tag()->addClass('float-end m-3')->content(Button::ascDesc($urlGenerator, 'id', 'info', $translator->translate('i.id')))->encode(false)->render().   
+            Div::tag()->addClass('float-end m-3')->content(Button::ascDesc($urlGenerator, 'date_due', 'danger', $translator->translate('i.due_date'), true))->encode(false)->render().    
+            Div::tag()->addClass('float-end m-3')->content(Button::ascDesc($urlGenerator, 'client_id', 'warning', $translator->translate('i.client'), true))->encode(false)->render().    
+            Div::tag()->addClass('float-end m-3')->content(Button::ascDesc($urlGenerator, 'status_id', 'success', $translator->translate('i.status'), true))->encode(false)->render().    
+            Div::tag()->addClass('float-end m-3')->content(Button::ascDesc($urlGenerator, 'id', 'info', $translator->translate('i.id'), true))->encode(false)->render().   
             Form::tag()->close()
         );
 ?>

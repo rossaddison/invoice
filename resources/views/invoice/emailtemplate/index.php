@@ -3,6 +3,7 @@
       
    use App\Widget\OffsetPagination;
    use Yiisoft\Html\Html;
+   
    /**    
     * @var \Yiisoft\Router\UrlGeneratorInterface $urlGenerator
     */
@@ -11,8 +12,13 @@
 <div id="headerbar">
     <h1 class="headerbar-title"><?= $translator->translate('i.email_templates'); ?></h1>
     <div class="headerbar-item pull-right">
-        <a class="btn btn-sm btn-primary" href="<?php echo $urlGenerator->generate('emailtemplate/add'); ?>">
-            <i class="fa fa-plus"></i> <?= $translator->translate('i.new'); ?>
+        <a class="btn btn-sm btn-primary" href="<?php echo $urlGenerator->generate('emailtemplate/add_invoice'); ?>">
+            <i class="fa fa-plus"></i> <?= $translator->translate('i.invoice'); ?>
+        </a>
+        <br>
+        <br>
+        <a class="btn btn-sm btn-secondary" href="<?php echo $urlGenerator->generate('emailtemplate/add_quote'); ?>">
+            <i class="fa fa-plus"></i> <?= $translator->translate('i.quote'); ?>
         </a>
     </div>
     <div class="headerbar-item pull-right">
@@ -48,7 +54,7 @@
                                     class="fa fa-cog"></i> <?= $translator->translate('i.options'); ?></a>
                         <ul class="dropdown-menu">
                             <li>
-                                <a href="<?= $urlGenerator->generate('emailtemplate/edit',['email_template_id'=>$email_template->getEmail_template_id()]); ?>" style="text-decoration: none ">
+                                <a href="<?= $urlGenerator->generate('emailtemplate/edit'.($email_template->getEmail_template_type() == 'Invoice' ? '_invoice' : '_quote'),['email_template_id'=>$email_template->getEmail_template_id()]); ?>" style="text-decoration: none ">
                                     <i class="fa fa-edit fa-margin"></i><?= $translator->translate('i.edit'); ?>
                                 </a>
                             </li>

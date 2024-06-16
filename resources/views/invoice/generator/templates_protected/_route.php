@@ -7,13 +7,7 @@ use App\Invoice\<?= $generator->getCamelcase_capital_name(); ?>\<?= $generator->
 Group::create('/invoice')
     ->routes(
     // <?= $generator->getCamelcase_capital_name()."\n" ?>
-    Route::get('/<?= $generator->getRoute_suffix(); ?>')
-         <?php if ($generator->isOffset_paginator_include() && empty($generator->getFilter_field())) {
-             echo '[/page/{page:\d+}]';
-         } ?>
-         <?php if ($generator->isOffset_paginator_include() && !empty($generator->getFilter_field())) {
-             echo '[/page/{page:\d+}[/'.$generator->getFilter_field().'/{'.$generator->getFilter_field().':\d+}]]'."'";
-         } ?>
+    Route::get('/<?= $generator->getRoute_suffix(); ?>[/page/{page:\d+}]')
         ->middleware(Authentication::class)
         ->action([<?= $generator->getCamelcase_capital_name(); ?>Controller::class, 'index'])
         ->name('<?= $generator->getRoute_suffix(); ?>/index'),    

@@ -8,7 +8,7 @@
 
         <div class="panel panel-default">
             <div class="panel-heading" >
-                <label><?= $translator->translate('invoice.invoice.mpdf') ?></label>
+                <h6><?= $translator->translate('invoice.invoice.mpdf') ?></h6>
             </div>
             <div class="panel-body">
 

@@ -47,6 +47,17 @@
 <p>Introducing India's PayTm payment gateway's QR code method of payment and comparing this with Stripe's method.</p>
 <p>A General Sales Tax (GST) Tax System will have to be implemented first for this purpose.</p>
 <p>Testing Credit Notes against Invoices with refunds (if payment made) linked to each of the payment gateways.</p>
+<p><b>14th June 2024</b></p>
+<p>1. The form for creating email templates i.e. resources/views/invoice/emailtemplate/form.php has been split into form_invoice and form_quote</p>
+<p>2. All the form inputs have been html encoded and the forms have been converted to using Yiisoft php code instead of the HTML. </p>
+<p>3. The generator has been used to help develop the new InvSentLog Entity and has been upgraded. Further refinements will naturally occur with continued use of the Generator. </p>
+<p>4. Purpose of InvSentLog: Log or record all invoices that have been sent by email to a specific customer. The index can be filtered according to invoice number on both the Client and Admin side. </p>
+<p>5. The Admin side can also filter the emails according to client name. The user associated with this client is also shown.</p>
+<p>6. An additional field has been created for Client i.e. Title. The dropdown for this is built from the language folder invoice\resources\messages\en\app.php.</p>
+<p>7. jQuery has been upgraded to the latest. i.e. ui 1.13.2 to 1.13.3. and 3.6.0 to 3.7.1</p>
+<p>8. The UserInv index now includes the function revoke all roles i.e. revoke the Accountant and Observer role . Excludes the Administrator role. 
+<p>9. A few temporary forks i.e. rossaddison/... have been created whilst vjik is busy with the upgrades. These will be removed later.
+<p>10. The mailer had a bug which has been fixed and has been tested with a few emails. </p>
 <p><b>24th April 2024</b></p>
 <p>Include stopLoggingIn and stopSigningUp variable into the LayoutViewInjection</p>
 <p>Include these variables into main.php</p> 

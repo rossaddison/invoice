@@ -23,17 +23,24 @@ Yii3 Invoice
 * Step 1: Download node.js at https://nodejs.org/en/download
 * Step 2: Ensure C:\ProgramFiles\nodejs is in environment variable path. Search ... edit the system environment variables
 * Step 3: Run ````npm i```` in ````c:\wamp64\invoice```` folder.
+* Step 4: Keep your npm up to date by running e.g. ````npm install -g npm@10.8.1````
 
 **Recommended php.ini settings**
 * Step 1: Wampserver ... Php {version} ... Php Settings ... xdebug.mode = off
 * Step 2:                                               ... Maximum Execution = 240
 
-Adjust c:\wamp64\yii3-i\config\common\params.php file line approx. 193 to **MODE_WRITE_ONLY** for installation.
-This will automatically build up the tables under database yii3-i.
+** Note as at 15/06/2024: If you have adjusted any Entity file you will have to always make two adjustments to**
+** ensure the database is updated with the new changes and relevent fields: **
+* 1. Change the false here immediately below to true i.e. 'mode' => true ? ...
+* 2. Change the BUILD_DATABASE = false in the .env file at the root to BUILD_DATABASE = true
+* 3. Once the changes have been reflected and you have checked them via e.g. phpMyAdmin revert back to the original settings
 
-````'mode' => PhpFileSchemaProvider::MODE_WRITE_ONLY,````
+Adjust c:\wamp64\yii3-i\config\common\params.php file line approx. 193 to **'mode' => true** for installation.
+This will automatically build up the tables under database yii3-i. 
 
-After installing, ensure mode is on **MODE_READ_AND_WRITE** for faster performance.
+````'mode' => false ? PhpFileSchemaProvider::MODE_WRITE_ONLY : PhpFileSchemaProvider::MODE_READ_AND_WRITE,````
+
+After installing, ensure mode is on **'mode' => false** for faster performance and **BUILD_DATABASE = false**
 
 Signup your first user using **Create User Account**
 

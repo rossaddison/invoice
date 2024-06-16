@@ -141,6 +141,16 @@ private EntityWriter $entityWriter;
         return $this->prepareDataReader($query);              
     }
     
+    /**
+     * @return EntityReader
+     */
+    public function filterUserInvs(string $login) : EntityReader {
+        $query = $this->select()
+                      ->load('user')  
+                      ->where(['user.login' => $login]);
+        return $this->prepareDataReader($query);        
+    }
+    
     // Find users that have access to all clients
     public function countAllWithAllClients() : int
     {

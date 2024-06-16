@@ -59,6 +59,7 @@ use Yiisoft\Html\Tag\Form;
     ])
     ->prompt($translator->translate('i.none'))        
     ->optionsData($optionsDataGenerators)
+    ->required(true)        
     ->hint($translator->translate('invoice.hint.this.field.is.required')); 
 ?>
 <?= Html::closeTag('div'); ?>
@@ -72,7 +73,8 @@ use Yiisoft\Html\Tag\Form;
         'id' => 'lowercasename'
     ])
     ->value(Html::encode($form->getLowercase_name()))
-    ->hint($translator->translate('invoice.hint.this.field.is.not.required')); 
+    ->required(true)
+    ->hint($translator->translate('invoice.hint.this.field.is.required')); 
 ?>
 <?= Html::closeTag('div'); ?>
 
@@ -85,7 +87,8 @@ use Yiisoft\Html\Tag\Form;
         'id' => 'camelcasename'
     ])
     ->value(Html::encode($form->getCamelcase_name()))
-    ->hint($translator->translate('invoice.hint.this.field.is.not.required')); 
+    ->required(true)    
+    ->hint($translator->translate('invoice.hint.this.field.is.required')); 
 ?>
 <?= Html::closeTag('div'); ?>
 
@@ -98,7 +101,8 @@ use Yiisoft\Html\Tag\Form;
         'id' => 'view_field_name'
     ])
     ->value(Html::encode($form->getView_field_name()))
-    ->hint($translator->translate('invoice.hint.this.field.is.not.required')); 
+    ->required(true)    
+    ->hint($translator->translate('invoice.hint.this.field.is.required')); 
 ?>
 <?= Html::closeTag('div'); ?>
 

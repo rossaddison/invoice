@@ -6,7 +6,6 @@ namespace App\Service;
 
 use Psr\Http\Message\ResponseFactoryInterface;
 use Psr\Http\Message\ResponseInterface;
-use Yiisoft\Router\CurrentRoute;
 use Yiisoft\Http\Header;
 use Yiisoft\Http\Status;
 use Yiisoft\Router\UrlGeneratorInterface;

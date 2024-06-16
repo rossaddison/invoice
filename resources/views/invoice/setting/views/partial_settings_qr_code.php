@@ -3,8 +3,8 @@
     
     use Yiisoft\Html\Html;
     use Yiisoft\Html\Tag\A;
+    use Yiisoft\Html\Tag\H6;
     use Yiisoft\Html\Tag\Img;
-    use Yiisoft\Html\Tag\Label;
     use Yiisoft\Html\Tag\Table;
     use Yiisoft\Html\Tag\Tr;
     
@@ -17,12 +17,12 @@
     <div class="col-xs-12 col-md-8 col-md-offset-2">
         <div class="panel panel-default">
             <div class="panel-heading">
-                <label>
+                <h6>
                     <?= A::tag()
                            ->attributes(['style' => 'text-decoration:none'])  
                            ->href('https://php-qrcode.readthedocs.io/en/main/')
                            ->content($translator->translate('invoice.invoice.qr.code')); ?>
-                </label>
+                </h6>
             </div>
             <div class="row">
                 <div class="panel-body">
@@ -32,7 +32,7 @@
                                 <?= $translator->translate('invoice.invoice.qr.version'); ?>
                             </label>
                             <?php $body['settings[qr_version]'] = $s->get_setting('qr_version') ?? '40';?>
-                           <input type="text" name="settings[qr_version]" id="qr_version"
+                           <input type="text" name="settings[qr_version]" id="settings[qr_version]"
                                 class="form-control" 
                                 value="<?= $body['settings[qr_version]'] ?? (string)Version::AUTO; ?>">
                         </div>
@@ -79,14 +79,14 @@
                                 <?= $translator->translate('invoice.invoice.qr.height.and.width'); ?>
                             </label>
                             <?php $body['settings[qr_height_and_width]'] = $s->get_setting('qr_height_and_width');?>
-                           <input type="text" name="settings[qr_height_and_width]" id="qr_height_and_width"
+                           <input type="text" name="settings[qr_height_and_width]" id="settings[qr_height_and_width]"
                                 class="form-control" 
                                 value="<?= isset($body['settings[qr_height_and_width]']) && !empty($body['settings[qr_height_and_width]']) 
                                         ? (int)$body['settings[qr_height_and_width]'] : 60; ?>">
                         </div>
                         <div class="panel-heading">
                         <?=    
-                           Label::tag()
+                           H6::tag()
                            ->attributes(['class' => 'label label-info'])
                            ->content($translator->translate('invoice.invoice.qr.code.1'));
                         ?>

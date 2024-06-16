@@ -30,7 +30,7 @@ final class <?= $generator->getCamelcase_capital_name();?>Form extends FormModel
         $init = '';
         switch ($column->getType()) {
             case 'string':
-                // ''
+                // Display as two single quotes i.e. ''
                 $init = '\'\'';
                 break;
             case 'float':
@@ -53,8 +53,14 @@ final class <?= $generator->getCamelcase_capital_name();?>Form extends FormModel
                    }
                 }
         }
+        // Ignore the id field
         if ($column->getAbstractType() <> 'primary') {
-           echo '    private ?'.$column->getType()." $".$column->getName(). '='.$init.';'."\n";
+            if (($column->getAbstractType() === 'date') || ($column->getAbstractType() === 'datetime'))  {
+                // mixed => null, or string, or DateTimeImmutable
+                echo '    private mixed' ." $".$column->getName(). ' = '.$init.';'."\n";
+            } else {
+                echo '    private ?'.$column->getType()." $".$column->getName(). ' = '.$init.';'."\n";
+            }
         }
     }
     ?>
@@ -65,7 +71,10 @@ final class <?= $generator->getCamelcase_capital_name();?>Form extends FormModel
         echo "\n";
         $bo = '';
         foreach ($orm_schema->getColumns() as $column) {
-            $bo .= '        $this->'.$column->getName()." = $".$generator->getSmall_singular_name()."->get".ucfirst($column->getName())."();\n";
+            // Ignore the id field
+            if ($column->getAbstractType() <> 'primary') { 
+                $bo .= '        $this->'.$column->getName()." = $".$generator->getSmall_singular_name()."->get".ucfirst($column->getName())."();\n";
+            }
         }
         echo rtrim($bo,",\n")."\n";        
     ?>
@@ -80,7 +89,7 @@ final class <?= $generator->getCamelcase_capital_name();?>Form extends FormModel
         echo '      return $this->'.$column->getName().';'."\n";
         echo '    }'."\n";
       }
-      if ($column->getAbstractType() === 'date') {
+      if (($column->getAbstractType() === 'date') || ($column->getAbstractType() === 'datetime')){
         echo "\n";
         echo '    public function get'.ucfirst($column->getName()).'() : '.($column->isNullable() ? 'null|' : ''). 'string|DateTimeImmutable'."\n";
         echo '    {'."\n";

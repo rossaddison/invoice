@@ -16,7 +16,7 @@
                         <div class="form-group">
                             <div class="checkbox">
                                 <?php $body['settings[enable_peppol]'] = $s->get_setting('enable_peppol');?>
-                                <label for="settings[enable_peppol]" <?= $s->where('enable_peppol'); ?>">
+                                <label <?= $s->where('enable_peppol'); ?>">
                                     <input type="hidden" name="settings[enable_peppol]" value="0">
                                     <input type="checkbox" name="settings[enable_peppol]" value="1"
                                         <?php $s->check_select($body['settings[enable_peppol]'], 1, '==', true) ?>>
@@ -29,7 +29,7 @@
                         <div class="form-group">
                             <div class="checkbox">
                                 <?php $body['settings[enable_client_peppol_defaults]'] = $s->get_setting('enable_client_peppol_defaults');?>
-                                <label for="settings[enable_client_peppol_defaults]">
+                                <label>
                                     <input type="hidden" name="settings[enable_client_peppol_defaults]" value="0">
                                     <input type="checkbox" name="settings[enable_client_peppol_defaults]" value="1"
                                         <?php $s->check_select($body['settings[enable_client_peppol_defaults]'], 1, '==', true) ?>>
@@ -101,7 +101,7 @@
                         <div class="form-group">
                             <div class="checkbox">
                                 <?php $body['settings[include_delivery_period]'] = ($s->get_setting('include_delivery_period') ?: '0');?>
-                                <label for="settings[include_delivery_period]" <?= $s->where('include_delivery_period'); ?>>
+                                <label <?= $s->where('include_delivery_period'); ?>>
                                     <input type="hidden" name="settings[include_delivery_period]" value="0">
                                     <input type="checkbox" name="settings[include_delivery_period]" value="1"
                                         <?php $s->check_select($body['settings[include_delivery_period]'], 1, '==', true) ?>>

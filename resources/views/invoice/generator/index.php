@@ -250,8 +250,6 @@ use Yiisoft\Router\CurrentRoute;
     ->columns(...$columns)
     ->dataReader($paginator)
     ->headerRowAttributes(['class'=>'card-header bg-info text-black'])
-    //->filterPosition('header')
-    //->filterModelName('generator')            
     ->header($header)
     ->id('w21-grid')
     ->pagination(

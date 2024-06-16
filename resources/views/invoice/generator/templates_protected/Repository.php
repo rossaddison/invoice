@@ -40,7 +40,7 @@ private EntityWriter $entityWriter;
         <?php if (!empty($relations)) {
             $echo = '$query = $this->select()';
             foreach ($relations as $relation) {
-                    $echo .= "->load('".$relation->getLowercase_name()."')";
+                $echo .= "->load('".$relation->getLowercase_name()."')";
             }
             echo $echo.";";
         } else {

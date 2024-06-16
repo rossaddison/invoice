@@ -16,14 +16,15 @@ class InvoiceAsset extends AssetBundle
     
     public array $css = [
         'invoice/css/style.css',
-        'yii3i/yii3i.css',        
-        'jquery-ui-1.13.2/jquery-ui.min.css',
-        'jquery-ui-1.13.2/jquery-ui.structure.min.css',
-        'jquery-ui-1.13.2/jquery-ui.theme.min.css',
+        'yii3i/yii3i.css', 
+        // Upgraded from 1.13.2 to 1.13.3 on 2024/06/15
+        'jquery-ui-1.13.3/jquery-ui.min.css',
+        'jquery-ui-1.13.3/jquery-ui.structure.min.css',
+        'jquery-ui-1.13.3/jquery-ui.theme.min.css',
         
         // bootstrapicons
         '//cdn.jsdelivr.net/npm/bootstrap-icons@1.7.2/font/bootstrap-icons.min.css',        
-        '//cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css',        
+        '//cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css',
         
         //'//unpkg.com/dropzone@5/dist/min/dropzone.min.css',
         'rebuild-1.13/css/dropzone.5.min.css',
@@ -35,10 +36,12 @@ class InvoiceAsset extends AssetBundle
         'rebuild-1.13/css/form.css',
     ];
 
-    public array $js = [         
-        'rebuild-1.13/js/jquery-3.6.0.min.js',
+    public array $js = [  
+        // Upgraded from 3.6.0 to 3.7.1 on 2024/06/15
+        'rebuild-1.13/js/jquery-3.7.1.min.js',
         
         //modals use the following file which is available in unminified form
+        // e.g. the settings tabs with general, invoice, quote etc depend on this file
         'rebuild-1.13/js/dependencies.min.js',
         
         //'//unpkg.com/dropzone@5/dist/min/dropzone.min.js',
@@ -58,9 +61,11 @@ class InvoiceAsset extends AssetBundle
         'rebuild-1.13/js/modal-product-lookups.js',
         'rebuild-1.13/js/modal-task-lookups-inv.js',
         //'rebuild-1.13/js/dropzone-quote-scripts.js', 
-        'jquery-ui-1.13.2/jquery-ui.min.js',
+        // Upgraded from 1.13.2 to 1.13.3 on 2024/06/15
+        'jquery-ui-1.13.3/jquery-ui.min.js',
         
         // bootstrap lightbox
-        '//cdn.jsdelivr.net/npm/bs5-lightbox@1.8.3/dist/index.bundle.min.js',
+        '//cdn.jsdelivr.net/npm/bs5-lightbox@1.8.3/dist/index.bundle.min.js',        
+        '//cdn.jsdelivr.net/npm/clipboard@2.0.11/dist/clipboard.min.js',
     ];
 }

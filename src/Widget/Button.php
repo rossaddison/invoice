@@ -117,16 +117,16 @@ final class Button
                 ->render();
     } 
     
-    public static function ascDesc(UrlGenerator $generator, string $field, string $class, string $translated) : string {
+    public static function ascDesc(UrlGenerator $generator, string $field, string $class, string $translated, bool $guest = false) : string {
         return A::tag()
         ->addClass('btn btn-'.$class)
         ->content('⬆️')
-        ->href($generator->generate('inv/index', [], ['sort' => $field]))
+        ->href($generator->generate('inv/'. ($guest ? 'guest' : 'index'), [], ['sort' => $field]))
         ->id('btn-'. $field. '-asc')
         ->render().' '.$translated.' '.A::tag()
         ->addClass('btn btn-'.$class)
         ->content('⬇')
-        ->href($generator->generate('inv/index', [], ['sort' => '-'.$field]))
+        ->href($generator->generate('inv/'. ($guest ? 'guest' : 'index'), [], ['sort' => '-'.$field]))
         ->id('btn-'. $field. '-desc')
         ->render();
     }

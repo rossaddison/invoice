@@ -84,7 +84,7 @@ use Yiisoft\Html\Tag\Form;
                     ->addInputAttributes([
                         'placeholder' => $translator->translate('invoice.generator.route.prefix'),
                     ])
-                    ->value(Html::encode(Html::encode($body['route_prefix'] ?? 'invoice')))
+                    ->value(Html::encode(Html::encode($form->getRoute_prefix() ?? 'invoice')))
                 ?>
             <?= Html::closeTag('div'); ?>
             <?= Html::openTag('div', ['class' => 'col mb-3']); ?>
@@ -93,7 +93,7 @@ use Yiisoft\Html\Tag\Form;
                     ->addInputAttributes([
                         'placeholder' => $translator->translate('invoice.generator.route.suffix'),
                     ])
-                    ->value(Html::encode(Html::encode($body['route_suffix'] ?? 'product')))
+                    ->value(Html::encode(Html::encode($form->getRoute_suffix() ?? 'product')))
                 ?>
             <?= Html::closeTag('div'); ?>
             <?= Html::openTag('div', ['class' => 'col mb-3']); ?>

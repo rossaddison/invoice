@@ -18,7 +18,7 @@
                         <div class="form-group">
                             <div class="checkbox">
                                 <?php $body['settings[enable_vat_registration]'] = $s->get_setting('enable_vat_registration');?>
-                                <label for="settings[enable_vat_registration]" <?= $s->where('enable_vat_registration'); ?>">
+                                <label <?= $s->where('enable_vat_registration'); ?>">
                                     <input type="hidden" name="settings[enable_vat_registration]" value="0">
                                     <input type="checkbox" name="settings[enable_vat_registration]" value="1"
                                         <?php $s->check_select($body['settings[enable_vat_registration]'], 1, '==', true) ?>>
@@ -27,9 +27,9 @@
                             </div>
                             <div class="checkbox">
                                 <?php $body['settings[display_vat_enabled_message]'] = $s->get_setting('display_vat_enabled_message');?>
-                                <label for="settings[display_vat_enabled_message]">
-                                    <input type="hidden" name="settings[display_vat_enabled_message]" value="0">
-                                    <input type="checkbox" name="settings[display_vat_enabled_message]" value="1"
+                                <label>
+                                    <input type="hidden" name="settings[display_vat_enabled_message]" id="dvem_hidden" value="0">
+                                    <input type="checkbox" name="settings[display_vat_enabled_message]" id="dvem_checkbox" value="1"
                                         <?php $s->check_select($body['settings[display_vat_enabled_message]'], 1, '==', true) ?>>
                                     <?= $translator->translate('invoice.invoice.enable.vat.message'); ?>
                                 </label>

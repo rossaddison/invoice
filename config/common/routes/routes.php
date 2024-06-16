@@ -50,6 +50,7 @@ use App\Invoice\InvCustom\InvCustomController;
 use App\Invoice\InvItem\InvItemController;
 use App\Invoice\InvItemAllowanceCharge\InvItemAllowanceChargeController;
 use App\Invoice\InvRecurring\InvRecurringController;
+use App\Invoice\InvSentLog\InvSentLogController;
 use App\Invoice\ItemLookup\ItemLookupController;
 use App\Invoice\Merchant\MerchantController;
 use App\Invoice\Payment\PaymentController;
@@ -629,16 +630,26 @@ return [
       ->middleware(Authentication::class)
       ->action([EmailTemplateController::class, 'index'])
       ->name('emailtemplate/index'),
-      Route::methods([Method::GET, Method::POST], '/emailtemplate/add')
+      Route::methods([Method::GET, Method::POST], '/emailtemplate/add_invoice')
       ->middleware(fn(AccessChecker $checker) => $checker->withPermission('editInv'))
       ->middleware(Authentication::class)
-      ->action([EmailTemplateController::class, 'add'])
-      ->name('emailtemplate/add'),
-      Route::methods([Method::GET, Method::POST], '/emailtemplate/edit/{email_template_id}')
-      ->name('emailtemplate/edit')
+      ->action([EmailTemplateController::class, 'add_invoice'])
+      ->name('emailtemplate/add_invoice'),
+      Route::methods([Method::GET, Method::POST], '/emailtemplate/edit_invoice/{email_template_id}')
+      ->name('emailtemplate/edit_invoice')
       ->middleware(fn(AccessChecker $checker) => $checker->withPermission('editInv'))
       ->middleware(Authentication::class)
-      ->action([EmailTemplateController::class, 'edit']),
+      ->action([EmailTemplateController::class, 'edit_invoice']),
+      Route::methods([Method::GET, Method::POST], '/emailtemplate/add_quote')
+      ->middleware(fn(AccessChecker $checker) => $checker->withPermission('editInv'))
+      ->middleware(Authentication::class)
+      ->action([EmailTemplateController::class, 'add_quote'])
+      ->name('emailtemplate/add_quote'),
+      Route::methods([Method::GET, Method::POST], '/emailtemplate/edit_quote/{email_template_id}')
+      ->name('emailtemplate/edit_quote')
+      ->middleware(fn(AccessChecker $checker) => $checker->withPermission('editInv'))
+      ->middleware(Authentication::class)
+      ->action([EmailTemplateController::class, 'edit_quote']),      
       Route::methods([Method::GET, Method::POST], '/emailtemplate/delete/{email_template_id}')
       ->name('emailtemplate/delete')
       ->middleware(fn(AccessChecker $checker) => $checker->withPermission('editInv'))
@@ -1168,6 +1179,21 @@ return [
       ->middleware(fn(AccessChecker $checker) => $checker->withPermission('editInv'))
       ->middleware(Authentication::class)
       ->action([InvAmountController::class, 'view']),
+      Route::get('/invsentlog/guest')
+      ->middleware(fn(AccessChecker $checker) => $checker->withPermission('viewInv'))
+      ->middleware(Authentication::class)
+      ->action([InvSentLogController::class, 'guest'])
+      ->name('invsentlog/guest'),      
+      Route::get('/invsentlog')
+      ->middleware(fn(AccessChecker $checker) => $checker->withPermission('editInv'))
+      ->middleware(Authentication::class)
+      ->action([InvSentLogController::class, 'index'])
+      ->name('invsentlog/index'), 
+      Route::methods([Method::GET, Method::POST], '/invsentlog/view/{id}')
+      ->name('invsentlog/view')
+      ->middleware(fn(AccessChecker $checker) => $checker->withPermission('viewInv'))
+      ->middleware(Authentication::class)
+      ->action([InvSentLogController::class, 'view']),      
       Route::get('/invcustom')
       ->middleware(fn(AccessChecker $checker) => $checker->withPermission('viewInv'))
       ->middleware(Authentication::class)
@@ -2099,10 +2125,15 @@ return [
       ->action([SettingController::class, 'clear'])
       ->name('setting/clear'),
       Route::methods([Method::GET, Method::POST], '/setting/listlimit/{setting_id}/{limit}/{origin}')
-      ->middleware(fn(AccessChecker $checker) => $checker->withPermission('editClientPeppol'))
+      ->middleware(fn(AccessChecker $checker) => $checker->withPermission('viewInv'))
       ->middleware(Authentication::class)
       ->action([SettingController::class, 'listlimit'])
-      ->name('setting/listlimit'), 
+      ->name('setting/listlimit'),
+      Route::methods([Method::GET, Method::POST], '/setting/toggleinvsentlogcolumn')
+      ->name('setting/toggleinvsentlogcolumn')
+      ->middleware(fn(AccessChecker $checker) => $checker->withPermission('editInv'))
+      ->middleware(Authentication::class)
+      ->action([SettingController::class, 'unhideOrHideToggleInvSentLogColumn']),             
       Route::methods([Method::GET, Method::POST], '/setting/visible')
       ->name('setting/visible')
       ->middleware(fn(AccessChecker $checker) => $checker->withPermission('editInv'))
@@ -2322,6 +2353,11 @@ return [
       ->middleware(fn(AccessChecker $checker) => $checker->withPermission('editInv'))
       ->middleware(Authentication::class)
       ->action([UserInvController::class, 'assignAccountantRole']),
+      Route::methods([Method::GET, Method::POST], '/userinv/revoke/{user_id}')
+      ->name('userinv/revoke')
+      ->middleware(fn(AccessChecker $checker) => $checker->withPermission('editInv'))
+      ->middleware(Authentication::class)
+      ->action([UserInvController::class, 'revokeAllRoles']),
       Route::methods([Method::GET, Method::POST], '/userinv/observer/{user_id}')
       ->name('userinv/observer')
       ->middleware(fn(AccessChecker $checker) => $checker->withPermission('editInv'))

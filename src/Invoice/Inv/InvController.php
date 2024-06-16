@@ -16,6 +16,7 @@ use App\Invoice\Entity\InvAllowanceCharge;
 use App\Invoice\Entity\InvItem;
 use App\Invoice\Entity\InvAmount;
 use App\Invoice\Entity\InvCustom;
+use App\Invoice\Entity\InvSentLog;
 use App\Invoice\Entity\InvTaxRate;
 use App\Invoice\Entity\PaymentMethod;
 use App\Invoice\Entity\PostalAddress;
@@ -66,6 +67,7 @@ use App\Invoice\InvItemAllowanceCharge\InvItemAllowanceChargeRepository as ACIIR
 use App\Invoice\InvAmount\InvAmountRepository as IAR;
 use App\Invoice\InvItemAmount\InvItemAmountRepository as IIAR;
 use App\Invoice\InvRecurring\InvRecurringRepository as IRR;
+use App\Invoice\InvSentLog\InvSentLogRepository as ISLR;
 use App\Invoice\InvTaxRate\InvTaxRateRepository as ITRR;
 use App\Invoice\Payment\PaymentRepository as PYMR;
 use App\Invoice\PaymentCustom\PaymentCustomRepository as PCR;
@@ -115,6 +117,7 @@ use Yiisoft\Data\Paginator\PageToken;
 use Yiisoft\Data\Reader\Sort;
 use Yiisoft\Data\Reader\OrderHelper;
 use Yiisoft\DataResponse\DataResponseFactoryInterface;
+use Yiisoft\FormModel\FormHydrator;
 use Yiisoft\Http\Method;
 use Yiisoft\Html\Html;
 use Yiisoft\Input\Http\Attribute\Parameter\Query;
@@ -127,7 +130,6 @@ use Yiisoft\Session\SessionInterface;
 use Yiisoft\Session\Flash\Flash;
 use Yiisoft\Translator\TranslatorInterface;
 use Yiisoft\User\CurrentUser;
-use Yiisoft\FormModel\FormHydrator;
 use Yiisoft\Yii\View\ViewRenderer;
 // Psr\Http
 use Psr\Log\LoggerInterface;
@@ -1632,6 +1634,8 @@ final class InvController {
      * @param QCR $qcR
      * @param SOR $soR
      * @param UIR $uiR
+     * @param SumexR $sumexR
+     * @param ISLR $islR
      * @return Response
      */
     public function email_stage_2(Request $request,
@@ -1639,7 +1643,7 @@ final class InvController {
             CR $cR, CCR $ccR, CFR $cfR, CVR $cvR,
             GR $gR,
             IAR $iaR, IIAR $iiaR, ICR $icR, IIR $iiR, IR $iR, ITRR $itrR,
-            PCR $pcR, SOCR $socR, QR $qR, QAR $qaR, QCR $qcR, SOR $soR, UIR $uiR, SumexR $sumexR): Response {
+            PCR $pcR, SOCR $socR, QR $qR, QAR $qaR, QCR $qcR, SOR $soR, UIR $uiR, SumexR $sumexR, ISLR $islR): Response {
         if ($inv_id) {
             $mailer_helper = new MailerHelper($this->sR, $this->session, $this->translator, $this->logger, $this->mailer, $ccR, $qcR, $icR, $pcR, $socR, $cfR, $cvR);
             $body = $request->getParsedBody() ?? [];
@@ -1691,10 +1695,12 @@ final class InvController {
                     $qR, $qaR, $qcR, $soR, $uiR, $sumexR, $this->view_renderer)) {
                     $invoice = $iR->repoInvUnloadedquery((string)$inv_id);
                     if ($invoice) {
-                      //draft->sent->view->paid
-                      //set the invoice to sent ie. 2                                    
-                      $invoice->setStatus_id(2);
-                      $iR->save($invoice);
+                        //draft->sent->view->paid
+                        //set the invoice to sent ie. 2                                    
+                        $invoice->setStatus_id(2);
+                        //keep a record of all the times this invoice is sent
+                        $this->emailedThereforeAddLog($invoice, $islR);
+                        $iR->save($invoice);
                     }
                     return $this->factory->createResponse($this->view_renderer->renderPartialAsString('/invoice/setting/inv_message',
 // EMAIL SENT
@@ -1718,6 +1724,19 @@ final class InvController {
         return $this->factory->createResponse($this->view_renderer->renderPartialAsString('/invoice/setting/inv_message',
                                 ['heading' => '', 'message' => $this->translator->translate('i.email_not_sent'),
                                     'url' => 'inv/view', 'id' => $inv_id]));
+    }
+    
+    /**
+     * @param Inv $invoice
+     * @param ISLR $islR
+     * @return void
+     */
+    private function emailedThereforeAddLog(Inv $invoice, ISLR $islR) : void {
+        $invSentLog = new InvSentLog();
+        $invSentLog->setClient_id((int)$invoice->getClient_id());
+        $invSentLog->setInv_id((int)$invoice->getId());
+        $invSentLog->setDate_sent(new \DateTimeImmutable('now'));
+        $islR->save($invSentLog);
     }
 
 // email_stage_2
@@ -1804,6 +1823,7 @@ final class InvController {
                         'decimal_places' => (int)$this->sR->get_setting('tax_rate_decimal_places'),
                         'optionsDataInvNumberDropDownFilter' => $this->optionsDataInvNumberGuestFilter($preFilterInvs),
                         'iaR' => $iaR,
+                        'iR' => $iR,
                         'irR' => $irR,
                         'invs' => $invs,
                         'grid_summary' => $this->sR->grid_summary(
@@ -1891,6 +1911,7 @@ final class InvController {
      * 
      * @param IR $invRepo
      * @param IRR $irR
+     * @param ISLR $islR
      * @param CR $clientRepo
      * @param GR $groupRepo
      * @param QR $qR
@@ -1904,23 +1925,26 @@ final class InvController {
      * @param string $querySort
      * @param string $queryFilterInvNumber
      * @param string $queryFilterInvAmountTotal
+     * @param string $queryFilterClient
      * @param string $queryFilterClientGroup
      * @param string $queryFilterDateCreatedYearMonth
      * @return \Yiisoft\DataResponse\DataResponse|Response
      */
-    public function index(IR $invRepo, IRR $irR, CR $clientRepo, GR $groupRepo, QR $qR, SOR $soR, DLR $dlR, UCR $ucR, 
+    public function index(IR $invRepo, IRR $irR, ISLR $islR, CR $clientRepo, GR $groupRepo, QR $qR, SOR $soR, DLR $dlR, UCR $ucR, 
             #[RouteArgument('_language')] string $_language, 
             #[RouteArgument('page')] string $page = '1', 
             #[RouteArgument('status')] string $status = '0',
             #[Query('page')] string $queryPage = null,
             #[Query('sort')] string $querySort = null,
             #[Query('filterInvNumber')] string $queryFilterInvNumber = null,
+            #[Query('filterClient')] string $queryFilterClient = null,
             #[Query('filterInvAmountTotal')] string $queryFilterInvAmountTotal = null,
             #[Query('filterClientGroup')] string $queryFilterClientGroup = null,
             #[Query('filterDateCreatedYearMonth')] string $queryFilterDateCreatedYearMonth = null
         ): \Yiisoft\DataResponse\DataResponse|Response {
         // build the inv and hasOne InvAmount table
         $visible = $this->sR->get_setting('columns_all_visible');
+        $visibleToggleInvSentLogColumn = $this->sR->get_setting('column_inv_sent_log_visible');
         $inv = new Inv();
         $invForm = new InvForm($inv);
         $bootstrap5ModalInv = new Bootstrap5ModalInv(
@@ -1962,6 +1986,9 @@ final class InvController {
                (isset($queryFilterInvAmountTotal) && !empty($queryFilterInvAmountTotal))) {
                 $invs = $invRepo->filterInvNumberAndInvAmountTotal($queryFilterInvNumber, (float)$queryFilterInvAmountTotal);
             }
+            if (isset($queryFilterClient) && !empty($queryFilterClient)) {
+                $invs = $invRepo->filterClient($queryFilterClient);
+            }
             if (isset($queryFilterClientGroup) && !empty($queryFilterClientGroup)) {
                 $invs = $invRepo->filterClientGroup($queryFilterClientGroup);
             }
@@ -1983,7 +2010,8 @@ final class InvController {
                 'paginator' => $paginator,
                 'alert' => $this->alert(), 'client_count' => $clientRepo->count(),
                 'decimal_places' => (int)$this->sR->get_setting('tax_rate_decimal_places'),
-                'visible' => $visible == '0' ? false : true, 
+                'visible' => $visible == '0' ? false : true,
+                'visibleToggleInvSentLogColumn' => $visibleToggleInvSentLogColumn == '0' ? false : true,
                 'optionsDataClientsDropdownFilter' => $this->optionsDataClientsFilter($invRepo),
                 'optionsDataClientGroupDropDownFilter' => $this->optionsDataClientGroupFilter($clientRepo),
                 'optionsDataInvNumberDropDownFilter' => $this->optionsDataInvNumberFilter($invRepo),
@@ -2010,6 +2038,7 @@ final class InvController {
                 // that a credit note has been generated from
                 'iR' => $invRepo,
                 'irR' => $irR,
+                'islR' => $islR,
                 'modal_add_inv' => $bootstrap5ModalInv->renderPartialLayoutWithFormAsString('inv', [])
             ];
             return $this->view_renderer->render('/invoice/inv/index', $parameters);
@@ -3751,7 +3780,7 @@ final class InvController {
             if (null!==$client) {
                 if (strlen($client->getClient_full_name()) > 0) {
                     $fullName = $client->getClient_full_name();
-                    $optionsDataClients[$fullName]  =  !empty($fullName) ? $fullName : '';
+                    $optionsDataClients[$client->getClient_full_name()]  =  !empty($fullName) ? $fullName : '';
                 }    
             }
         }

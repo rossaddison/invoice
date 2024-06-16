@@ -229,7 +229,10 @@ Class MailerHelper
             $this->flash_message('info', $this->translator->translate('i.email_successfully_sent'));
             return true;
         } catch (\Exception $e) {
-            $this->flash_message('warning', $this->translator->translate('invoice.invoice.email.not.sent.successfully')); 
+            $this->flash_message('warning', $this->translator->translate('invoice.invoice.email.not.sent.successfully').
+                                            "\n".
+                                            $this->translator->translate('invoice.email.exception'). 
+                                            "\n"); 
             $this->logger->error($e->getMessage());            
         } 
         return false;

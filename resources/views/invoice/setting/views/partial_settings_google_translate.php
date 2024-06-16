@@ -18,7 +18,7 @@
                 <p><b>Step 3:</b> Copy the <pre>'invoice.add' .. 'validator.user.exist.not'</pre> to <pre>src\Invoice\Language\English\<b>latest_lang.php</b></pre></p>
                 <p><b>Step 4:</b> Copy the <pre>'site.soletrader.about.we' .. 'site.soletrader.contact.phone'</pre> to <pre>src\Invoice\Language\English\<b>common_lang.php</b></pre></p>
                 <p><b>Step 5:</b> Optional: Copy any loose <pre>'x.x.x.x' .. 'x.x.x.y'</pre> to <pre>src\Invoice\Language\English\<b>any_lang.php</b></pre></p>
-            <p><b>Step 6:</b> Run the Generator ... Translate English sub programs to translate the above files from English into the language of your choice into<pre><label>...\resources\views\invoice\generator\output_overwrite</label></pre>.</p>
+            <p><b>Step 6:</b> Run the Generator ... Translate English sub programs to translate the above files from English into the language of your choice into<pre><h6>...\resources\views\invoice\generator\output_overwrite</h6></pre>.</p>
                 <p><b>Step 7:</b> You will have to combine these 3 parts into one array called <code>app.php</code> in the language of your choice and place it into a folder <code>..resources\messages\{locale}</code> folder</p>
                 <p><b>Step 8:</b> Adjust the <code>\resources\views\layout</code> files.</p>
                 <p><b>Step 9:</b> Create a suitable <code>\invoice\src\Invoice\Asset\i18nAsset</code> file under this folder.</p>

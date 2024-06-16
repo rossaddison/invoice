@@ -50,6 +50,13 @@ $allVisible = A::tag()
         ->id('btn-all-visible')
         ->render();
 
+$toggleColumnInvSentLog = A::tag()
+        ->addAttributes(['type' => 'reset', 'data-bs-toggle' => 'tooltip', 'title' => $translator->translate('invoice.hide.or.unhide.columns')])
+        ->addClass('btn btn-info me-1 ajax-loader')
+        ->content('↔️')
+        ->href($urlGenerator->generate('setting/toggleinvsentlogcolumn'))
+        ->id('btn-all-visible')
+        ->render();
 
 $toolbar = Div::tag();
 ?>
@@ -159,6 +166,42 @@ $toolbar = Div::tag();
             }     
         ),
         new DataColumn(
+            'invsentlogs',
+            header: $translator->translate('invoice.email.logs.with.filter'),    
+            content: static function ($model) use ($islR, $toggleColumnInvSentLog, $urlGenerator, $translator) : string {
+                $count = $islR->repoInvSentLogEmailedCountForEachInvoice($model->getId());
+                $linkToInvSentLogWithFilterInv = A::tag()
+                ->addAttributes(['type' => 'reset', 'data-bs-toggle' => 'tooltip', 'title' => $translator->translate('invoice.email.logs')])
+                ->addClass('btn btn-success me-1')
+                ->content((string)$count)
+                ->href($urlGenerator->generate('invsentlog/index', [], ['filterInvNumber' => $model->getNumber()]))
+                ->id('btn-all-visible')
+                ->render();
+                if ($count > 0) {
+                    return $toggleColumnInvSentLog.$linkToInvSentLogWithFilterInv;
+                } else {
+                    return '';
+                }
+            }    
+        ),        
+        new DataColumn(
+            'invsentlogs',
+            header: '',    
+            content: static function ($model) use ($islR, $urlGenerator, $gridComponents) : string {
+                $invsentlogs = $islR->repoInvSentLogForEachInvoice($model->getId());
+                $model->setInvSentLogs();
+                foreach ($invsentlogs as $invsentlog) {
+                    $model->addInvSentLog($invsentlog);
+                }
+                return $gridComponents->gridMiniTableOfInvSentLogsForInv(
+                    $model, 
+                    $min_invsentlogs_per_row = 4, 
+                    $urlGenerator
+                );
+            },
+            visible: $visibleToggleInvSentLogColumn,        
+        ),
+        new DataColumn(
             'status_id',
             header: $translator->translate('i.status'),
             content: static function ($model) use ($s, $irR, $inv_statuses, $translator): Yiisoft\Html\Tag\CustomTag {
@@ -202,7 +245,7 @@ $toolbar = Div::tag();
             field: 'client_id',
             property: 'filterClient',
             header: $translator->translate('i.client'),
-            content: static fn($model): string => $model->getClient()->getClient_name() . str_repeat(' ', 2).$model->getClient()->getClient_surname(),
+            content: static fn($model): string => (string)$model->getClient()->getClient_full_name(),
             filter: $optionsDataClientsDropdownFilter,
             withSorting: false
         ),
@@ -247,7 +290,7 @@ $toolbar = Div::tag();
         ), 
         new DataColumn(
             'date_due',    
-            header: $translator->translate('i.expires'),              
+            header: $translator->translate('i.due_date'),              
             content: static function($model) use ($datehelper) : string {
                 $now = new \DateTimeImmutable('now');
                 return Label::tag()
@@ -402,10 +445,10 @@ $toolbar = Div::tag();
         Form::tag()->post($urlGenerator->generate('inv/index'))->csrf($csrf)->open() .
         Div::tag()->addClass('float-end m-3')->content($allVisible)->encode(false)->render() .  
         Div::tag()->addClass('float-end m-3')->content($toolbarReset)->encode(false)->render() .
-        Div::tag()->addClass('float-end m-3')->content(Button::ascDesc($urlGenerator, 'date_due', 'danger', $translator->translate('i.expires')))->encode(false)->render().    
-        Div::tag()->addClass('float-end m-3')->content(Button::ascDesc($urlGenerator, 'client_id', 'warning', $translator->translate('i.client')))->encode(false)->render().    
-        Div::tag()->addClass('float-end m-3')->content(Button::ascDesc($urlGenerator, 'status_id', 'success', $translator->translate('i.status')))->encode(false)->render().    
-        Div::tag()->addClass('float-end m-3')->content(Button::ascDesc($urlGenerator, 'id', 'info', $translator->translate('i.id')))->encode(false)->render().
+        Div::tag()->addClass('float-end m-3')->content(Button::ascDesc($urlGenerator, 'date_due', 'danger', $translator->translate('i.due_date'), false))->encode(false)->render().    
+        Div::tag()->addClass('float-end m-3')->content(Button::ascDesc($urlGenerator, 'client_id', 'warning', $translator->translate('i.client'), false))->encode(false)->render().    
+        Div::tag()->addClass('float-end m-3')->content(Button::ascDesc($urlGenerator, 'status_id', 'success', $translator->translate('i.status'), false))->encode(false)->render().    
+        Div::tag()->addClass('float-end m-3')->content(Button::ascDesc($urlGenerator, 'id', 'info', $translator->translate('i.id'), false))->encode(false)->render().
         Form::tag()->close()    
     )    
 ?>

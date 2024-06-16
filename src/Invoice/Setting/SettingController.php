@@ -176,18 +176,7 @@ final class SettingController
                 'payment_methods'=>$pm->findAllPreloaded(),
                 'public_invoice_templates'=>$this->s->get_invoice_templates('public'),
                 'pdf_invoice_templates'=>$this->s->get_invoice_templates('pdf'),
-                'email_templates_invoice'=>$eR->repoEmailTemplateType('invoice'),
-                'email_template_tags' => $this->viewRenderer->renderPartialAsString('/invoice/emailtemplate/template-tags', [
-                        'template_tags_quote'=>$this->viewRenderer->renderPartialAsString('/invoice/emailtemplate/template-tags-quote', [
-                            'custom_fields_quote_custom'=>$cfR->repoTablequery('quote_custom'),
-                        ]),
-                        'template_tags_inv'=>$this->viewRenderer->renderPartialAsString('/invoice/emailtemplate/template-tags-inv', [
-                            'custom_fields_inv_custom'=>$cfR->repoTablequery('inv_custom'),
-                        ]), 
-                        'custom_fields' => [                        
-                            'client_custom'=>$cfR->repoTablequery('client_custom')
-                        ],            
-                ]),      
+                'email_templates_invoice'=>$eR->repoEmailTemplateType('invoice'),                
                 'roles' => Sumex::ROLES,
                 'places' => Sumex::PLACES,
                 'cantons' => Sumex::CANTONS,
@@ -462,6 +451,34 @@ final class SettingController
         } else {
             $new_setting = new Setting();
             $new_setting->setSetting_key('columns_all_visible');
+            $this->s->save($new_setting);
+        }
+        return $this->webService->getRedirectResponse('inv/index');
+    }
+    
+    /**
+     * Used in: inv/index. User clicks on button to unhide column with invsentlogs table 
+     * @return Response
+     */
+    public function unhideOrHideToggleInvSentLogColumn() : Response {
+        $setting = $this->s->withKey('column_inv_sent_log_visible');
+        if ($setting) {
+            if ($setting->getSetting_value() == '0') {
+               $setting->setSetting_value('1');
+               $this->s->save($setting);
+               return $this->webService->getRedirectResponse('inv/index');
+            }
+            if ($setting->getSetting_value() == '1') {
+               $setting->setSetting_value('0');
+               $this->s->save($setting);
+               return $this->webService->getRedirectResponse('inv/index');
+            }
+            $setting->setSetting_value('0');
+            $this->s->save($setting);
+            return $this->webService->getRedirectResponse('inv/index');
+        } else {
+            $new_setting = new Setting();
+            $new_setting->setSetting_key('column_inv_sent_log_visible');
             $this->s->save($new_setting);
         }
         return $this->webService->getRedirectResponse('inv/index');

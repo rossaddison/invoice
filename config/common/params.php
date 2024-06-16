@@ -252,7 +252,14 @@ return [
         /**
          * Note: Performance degrades if you insert a $_ENV into the 'false' value
          * @see \.env.php file that contains the $_ENV['BUILD_DATABASE'] setting 
-         */  
+         */
+          
+        /** Note as at 15/06/2024: If you have adjusted any Entity file you will have to always make two adjustments to
+         * ensure the database is updated with the new changes and relevent fields:
+         * 1. Change the false here immediately below to true i.e. 'mode' => true ? ...
+         * 2. Change the BUILD_DATABASE = false in the .env file at the root to BUILD_DATABASE = true
+         * 3. Once the changes have been reflected and you have checked them via e.g. phpMyAdmin revert back to the original settings
+          */  
         'mode' => false ? PhpFileSchemaProvider::MODE_WRITE_ONLY : PhpFileSchemaProvider::MODE_READ_AND_WRITE,
         'file' => 'runtime/schema.php',
       ],
@@ -295,11 +302,11 @@ return [
     'fileMailer' => [
       'fileMailerStorage' => '@runtime/mail',
     ],
-    'useSendmail' => false,
+    'useSendmail' => 0,
     'writeToFiles' => false,
   ],
   'symfony/mailer' => [
-    'esmtpTransport' => [
+   'esmtpTransport' => [
       'scheme' => 'smtp', // "smtps": using TLS, "smtp": without using TLS.
       'host' => 'mail.yourinternet.com',
       'port' => 25,

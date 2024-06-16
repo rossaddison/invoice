@@ -108,21 +108,21 @@ final class UserInvController
      * @param UserInvRepository $uiR
      * @param UserClientRepository $ucR
      * @param SettingRepository $sR
-     * @param TranslatorInterface $translator
      * @param string $_language
      * @param string $page
      * @param string $active
      * @param string $queryPage
      * @param string $querySort
+     * @param string $queryFilterUser
      * @return \Yiisoft\DataResponse\DataResponse
      */
     public function index(UserInvRepository $uiR, UserClientRepository $ucR, SettingRepository $sR, 
-                          TranslatorInterface $translator,
-                          #[RouteArgument('_language')] string $_language, 
-                          #[RouteArgument('page')] string $page = '1',
-                          #[RouteArgument('active')] string $active = '2',
-                          #[Query('page')] string $queryPage = null,
-                          #[Query('sort')] string $querySort = null,
+        #[RouteArgument('_language')] string $_language, 
+        #[RouteArgument('page')] string $page = '1',
+        #[RouteArgument('active')] string $active = '2',
+        #[Query('page')] string $queryPage = null,
+        #[Query('sort')] string $querySort = null,
+        #[Query('filterUser')] string $queryFilterUser = null,
     ): \Yiisoft\DataResponse\DataResponse
     {      
         $canEdit = $this->rbac();
@@ -131,30 +131,34 @@ final class UserInvController
         $sortString = $querySort ?? '-user_id';
         $sort = Sort::only(['user_id', 'name', 'email'])          
             ->withOrderString($sortString);
-        $repo = $this->userinvs_active_with_sort($uiR, $activeInt, $sort); 
+        $userinvs = $this->userinvs_active_with_sort($uiR, $activeInt, $sort); 
+        if (isset($queryFilterUser) && !empty($queryFilterUser)) {
+            $userinvs = $uiR->filterUserInvs($queryFilterUser);
+        }
         /**
          * @psalm-suppress PossiblyInvalidArgument
          */
-        $paginator = (new OffsetPaginator($repo))        
+        $paginator = (new OffsetPaginator($userinvs))        
         ->withPageSize((int)$sR->get_setting('default_list_limit'))
         ->withCurrentPage((int)$pageString)               
         ->withToken(PageToken::next($pageString));   
         $parameters = [
-          'uiR' => $uiR,
-          // get a count of clients allocated to the user
-          'ucR' => $ucR,  
-          'active' => $activeInt,   
-          'paginator' => $paginator,
-          'translator' => $translator,
-          'canEdit' => $canEdit,
-          'grid_summary'=> $sR->grid_summary($paginator, $this->translator, (int)$sR->get_setting('default_list_limit'), $this->translator->translate('invoice.payments'), ''),
-          'userinvs' => $repo,
-          'locale' => $_language,
-          'alert' => $this->alert(),
-          // Parameters for GridView->requestArguments
-          'page' => $pageString,
-          'sortOrder' => $querySort ?? '',
-          'manager' => $this->manager
+            'uiR' => $uiR,
+            // get a count of clients allocated to the user
+            'ucR' => $ucR,  
+            'active' => $activeInt,   
+            'paginator' => $paginator,
+            'canEdit' => $canEdit,
+            'defaultPageSizeOffsetPaginator' => (int)$sR->get_setting('default_list_limit'),  
+            'grid_summary'=> $sR->grid_summary($paginator, $this->translator, (int)$sR->get_setting('default_list_limit'), $this->translator->translate('invoice.user.accounts'), ''),
+            'userinvs' => $userinvs,
+            'locale' => $_language,
+            'alert' => $this->alert(),
+            // Parameters for GridView->requestArguments
+            'page' => $pageString,
+            'sortOrder' => $querySort ?? '',
+            'manager' => $this->manager,
+            'optionsDataFilterUserInvLoginDropDown' => $this->optionsDataFilterUserInvLogin($uiR)
         ];
         return $this->viewRenderer->render('index', $parameters);        
     }
@@ -382,6 +386,22 @@ final class UserInvController
     }
     
     /**
+     * @param string $user_id
+     * @return Response
+     */
+    public function revokeAllRoles(#[RouteArgument('user_id')] string $user_id) : Response {
+      if (strlen($user_id) > 0) {
+        $this->manager->revokeAll($user_id);
+        $this->flash_message('info', $this->translator->translate('invoice.user.inv.role.revoke.all'));
+      }
+      return $this->webService->getRedirectResponse('userinv/index');
+    }
+    
+    private function getRolesByUserId(string $userId) : array {
+        return $this->manager->getRolesByUserId($userId);
+    }
+    
+    /**
      * @param Request $request
      * @param int $id
      * @param FormHydrator $formHydrator
@@ -578,5 +598,27 @@ final class UserInvController
             return $userinv;
         }
         return null;
-    }    
+    } 
+    
+    /**
+     * @param UserInvRepository $uiR
+     * @return array
+     */
+    public function optionsDataFilterUserInvLogin(UserInvRepository $uiR) : array
+    {
+        $optionsDataUserInvs = [];
+        $userInvs = $uiR->findAllPreloaded();
+        /**
+         * @var UserInv $userInv
+         */
+        foreach ($userInvs as $userInv) {
+            if (null!==$userInv->getUser()) {
+                $login = $userInv->getUser()?->getLogin();
+                if (null!==$login) {
+                    $optionsDataUserInvs[$login]  =  $login;
+                }
+            }
+        }
+        return $optionsDataUserInvs;
+    }
 }

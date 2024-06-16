@@ -182,6 +182,9 @@ echo Nav::widget()
                      ['options' => ['class' => 'nav fs-4'], 
                       'label' => $translator->translate('password.change'), 
                       'url' => $urlGenerator->generate('auth/change')],
+                     ['options' => ['class' => 'nav fs-4'], 
+                      'label' => $translator->translate('invoice.email.log'), 
+                      'url' => $urlGenerator->generate('invsentlog/guest')], 
                     ],
          ],
                  
