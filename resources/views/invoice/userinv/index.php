@@ -12,8 +12,6 @@ use Yiisoft\Yii\DataView\GridView;
 use Yiisoft\Yii\DataView\OffsetPagination;
 use Yiisoft\Yii\DataView\UrlConfig;
 use Yiisoft\Yii\DataView\YiiRouter\UrlCreator;
-use Yiisoft\VarDumper\VarDumper; 
-
 /**
  * @var \App\Invoice\Entity\UserInv $userinv
  * @var string $csrf
