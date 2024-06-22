@@ -143,8 +143,6 @@
         "roave/infection-static-analysis-plugin": "^1.25",
         "roave/security-advisories": "dev-master",
         "spatie/phpunit-watcher": "^1.23",
-        "spiral/profiler": "^3.2",
-        "symfony/console": "^6.0||^7.1",
         "vimeo/psalm": "^5.25",
         "yiisoft/translator-extractor": "^2.0",
         "yiisoft/yii-gii": "^3.0@dev",
