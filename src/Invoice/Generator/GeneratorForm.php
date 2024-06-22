@@ -11,23 +11,23 @@ final class GeneratorForm extends FormModel
 {
     private ?int $id = null;
     #[Required]
-    private ?string $route_prefix = '';
+    private string $route_prefix = '';
     #[Required]
-    private ?string $route_suffix = '';
+    private string $route_suffix = '';
     #[Required]
-    private ?string $camelcase_capital_name = '';
+    private string $camelcase_capital_name = '';
     #[Required]
-    private ?string $small_singular_name = '';
+    private string $small_singular_name = '';
     #[Required]
-    private ?string $small_plural_name = '';
+    private string $small_plural_name = '';
     #[Required]
-    private ?string $namespace_path = '';
+    private string $namespace_path = '';
     #[Required]
-    private ?string $controller_layout_dir = '';
+    private string $controller_layout_dir = '';
     #[Required]
-    private ?string $controller_layout_dir_dot_path = '';
+    private string $controller_layout_dir_dot_path = '';
     #[Required]
-    private ?string $pre_entity_table = '';
+    private string $pre_entity_table = '';
     
     private bool $flash_include = true;
     private bool $created_include = true;
@@ -52,47 +52,47 @@ final class GeneratorForm extends FormModel
          $this->deleted_include = $generator->isDeleted_include();
     }        
         
-    public function getRoute_prefix(): string|null
+    public function getRoute_prefix(): string
     {
         return $this->route_prefix;
     }
 
-    public function getRoute_suffix(): string|null
+    public function getRoute_suffix(): string
     {
         return $this->route_suffix;
     }
     
-    public function getCamelcase_capital_name(): string|null
+    public function getCamelcase_capital_name(): string
     {
         return $this->camelcase_capital_name;
     }
     
-    public function getSmall_singular_name(): string|null
+    public function getSmall_singular_name(): string
     {
         return $this->small_singular_name;
     }
     
-    public function getSmall_plural_name(): string|null
+    public function getSmall_plural_name(): string
     {
         return $this->small_plural_name;
     }
     
-    public function getNamespace_path(): string|null
+    public function getNamespace_path(): string
     {
         return $this->namespace_path;
     }
     
-    public function getController_layout_dir(): string|null
+    public function getController_layout_dir(): string
     {
         return $this->controller_layout_dir;
     }
     
-    public function getController_layout_dir_dot_path(): string|null
+    public function getController_layout_dir_dot_path(): string
     {
         return $this->controller_layout_dir_dot_path;
     }
     
-    public function getPre_entity_table(): string|null
+    public function getPre_entity_table(): string
     {
         return $this->pre_entity_table;
     }

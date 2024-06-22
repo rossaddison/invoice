@@ -127,7 +127,7 @@ use Yiisoft\Html\Tag\Form;
                 echo '    ->addInputAttributes([';
                 echo "        'class' => 'form-control'";
                 echo '    ])';
-                echo '    ->value(Html::encode(' .'$'.'form->get'.$column->getName().'))';
+                echo '    ->value(Html::encode(' .'$'.'form->get'.$column->getName().'()'.'))';
                 echo '    ->placeholder($'.'translator->translate('."'".$column->getName().'))';    
                 echo '?>';
                 echo '<?= Html::closeTag(\'div\'); ?>';

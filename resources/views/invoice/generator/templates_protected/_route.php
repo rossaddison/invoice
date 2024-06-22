@@ -4,35 +4,33 @@
 
 use App\Invoice\<?= $generator->getCamelcase_capital_name(); ?>\<?= $generator->getCamelcase_capital_name().'Controller;'; ?>
 
-Group::create('/invoice')
-    ->routes(
-    // <?= $generator->getCamelcase_capital_name()."\n" ?>
     Route::get('/<?= $generator->getRoute_suffix(); ?>[/page/{page:\d+}]')
-        ->middleware(Authentication::class)
-        ->action([<?= $generator->getCamelcase_capital_name(); ?>Controller::class, 'index'])
-        ->name('<?= $generator->getRoute_suffix(); ?>/index'),    
+    ->middleware(fn (AccessChecker $checker) => $checker->withPermission('editInv'))
+    ->middleware(Authentication::class)
+    ->action([<?= $generator->getCamelcase_capital_name(); ?>Controller::class, 'index'])
+    ->name('<?= $generator->getRoute_suffix(); ?>/index'),    
     // Add
     Route::methods([Method::GET, Method::POST], '/<?= $generator->getRoute_suffix(); ?>/add')
-        ->middleware(Authentication::class)
-        ->action([<?= $generator->getCamelcase_capital_name(); ?>Controller::class, 'add'])
-        ->name('<?= $generator->getRoute_suffix(); ?>/add'),
+    ->middleware(fn (AccessChecker $checker) => $checker->withPermission('editInv'))
+    ->middleware(Authentication::class)
+    ->action([<?= $generator->getCamelcase_capital_name(); ?>Controller::class, 'add'])
+    ->name('<?= $generator->getRoute_suffix(); ?>/add'),
     // Edit 
     Route::methods([Method::GET, Method::POST], '/<?= $generator->getRoute_suffix(); ?>/edit/{id}')
-        ->name('<?= $generator->getRoute_suffix(); ?>/edit')
-        ->middleware(fn (AccessChecker $checker) => $checker->withPermission('editInv'))
-        ->middleware(Authentication::class)
-        ->action([<?= $generator->getCamelcase_capital_name(); ?>Controller::class, 'edit']), 
+    ->middleware(fn (AccessChecker $checker) => $checker->withPermission('editInv'))
+    ->middleware(Authentication::class)
+    ->action([<?= $generator->getCamelcase_capital_name(); ?>Controller::class, 'edit'])
+    ->name('<?= $generator->getRoute_suffix(); ?>/edit'), 
     Route::methods([Method::GET, Method::POST], '/<?= $generator->getRoute_suffix(); ?>/delete/{id}')
-        ->name('<?= $generator->getRoute_suffix(); ?>/delete')
-        ->middleware(fn (AccessChecker $checker) => $checker->withPermission('editInv'))
-        ->middleware(Authentication::class)
-        ->action([<?= $generator->getCamelcase_capital_name(); ?>Controller::class, 'delete']),
+    ->middleware(fn (AccessChecker $checker) => $checker->withPermission('editInv'))
+    ->middleware(Authentication::class)
+    ->action([<?= $generator->getCamelcase_capital_name(); ?>Controller::class, 'delete'])
+    ->name('<?= $generator->getRoute_suffix(); ?>/delete'),
     Route::methods([Method::GET, Method::POST], '/<?= $generator->getRoute_suffix(); ?>/view/{id}')
-        ->name('<?= $generator->getRoute_suffix(); ?>/view')
-        ->middleware(fn (AccessChecker $checker) => $checker->withPermission('editInv'))
-        ->middleware(Authentication::class)
-        ->action([<?= $generator->getCamelcase_capital_name(); ?>Controller::class, 'view']),
-    )
+    ->middleware(fn (AccessChecker $checker) => $checker->withPermission('editInv'))
+    ->middleware(Authentication::class)
+    ->action([<?= $generator->getCamelcase_capital_name(); ?>Controller::class, 'view'])
+    ->name('<?= $generator->getRoute_suffix(); ?>/view'),    
 <?php  
      echo "?>";             
 ?>        

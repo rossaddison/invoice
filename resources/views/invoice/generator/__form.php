@@ -84,7 +84,7 @@ use Yiisoft\Html\Tag\Form;
                     ->addInputAttributes([
                         'placeholder' => $translator->translate('invoice.generator.route.prefix'),
                     ])
-                    ->value(Html::encode(Html::encode($form->getRoute_prefix() ?? 'invoice')))
+                    ->value(Html::encode($form->getRoute_prefix() ?? 'invoice'))
                 ?>
             <?= Html::closeTag('div'); ?>
             <?= Html::openTag('div', ['class' => 'col mb-3']); ?>
@@ -93,7 +93,7 @@ use Yiisoft\Html\Tag\Form;
                     ->addInputAttributes([
                         'placeholder' => $translator->translate('invoice.generator.route.suffix'),
                     ])
-                    ->value(Html::encode(Html::encode($form->getRoute_suffix() ?? 'product')))
+                    ->value(Html::encode($form->getRoute_suffix() ?? 'product'))
                 ?>
             <?= Html::closeTag('div'); ?>
             <?= Html::openTag('div', ['class' => 'col mb-3']); ?>
@@ -111,7 +111,7 @@ use Yiisoft\Html\Tag\Form;
                     ->addInputAttributes([
                         'placeholder' => $translator->translate('invoice.generator.small.singular.name.product'),
                     ])
-                    ->value(Html::encode(Html::encode($form->getSmall_singular_name() ?? '')))
+                    ->value(Html::encode($form->getSmall_singular_name() ?? ''))
                 ?>
             <?= Html::closeTag('div'); ?>
             <?= Html::openTag('div', ['class' => 'col mb-3']); ?>
@@ -120,7 +120,7 @@ use Yiisoft\Html\Tag\Form;
                     ->addInputAttributes([
                         'placeholder' => $translator->translate('invoice.generator.small.plural.name.products'),
                     ])
-                    ->value(Html::encode(Html::encode($form->getSmall_plural_name() ?? '')))
+                    ->value(Html::encode($form->getSmall_plural_name() ?? ''))
                 ?>
             <?= Html::closeTag('div'); ?>
             <?= Html::openTag('div', ['class' => 'col mb-3']); ?>
@@ -142,7 +142,7 @@ use Yiisoft\Html\Tag\Form;
                     ->addInputAttributes([
                         'placeholder' => $translator->translate('invoice.generator.controller.layout.directory.placeholder'),
                     ])
-                    ->value(Html::encode(Html::encode($form->getController_layout_dir() ?? 'dirname(dirname(__DIR__))')))
+                    ->value(Html::encode($form->getController_layout_dir() ?? 'dirname(dirname(__DIR__))'))
                 ?>
             <?= Html::closeTag('div'); ?>
             <?= Html::openTag('div', ['class' => 'col mb-3']); ?>
@@ -151,7 +151,7 @@ use Yiisoft\Html\Tag\Form;
                     ->addInputAttributes([
                         'placeholder' => $translator->translate('invoice.generator.controller.layout.directory.dot.path.placeholder'),
                     ])
-                    ->value(Html::encode(Html::encode($form->getController_layout_dir_dot_path() ?? 'views/layout/invoice.php')))
+                    ->value(Html::encode($form->getController_layout_dir_dot_path() ?? '@views/layout/invoice.php'))
                 ?>
             <?= Html::closeTag('div'); ?>
             <?= Html::openTag('div', ['class' => 'col mb-3']); ?>

@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 <p><b>How do I host yii3i on shared hosting?</b></p>
 
-<p><b>Method</b><br>
+
 Insert the following code at your root. So if all the files relating to your site are located in a folder yii3i, the .htaccess file should be located in the root that holds this yii3i folder ie. at the top of the tree.</p>
 
 <p><b>Purpose</b><br>
@@ -19,4 +19,8 @@ RewriteBase /yii3i<br>
 RewriteCond %{THE_REQUEST} /public/([^\s?]*) [NC]<br>
 RewriteRule ^ %1 [L,NE,R=302]<br>
 RewriteRule ^((?!public/).*)$ public/$1 [L,NC]<br></p>
+<br>
+<p><b>No access to composer update</b><br>
+More than often on shared hosting you will not be able to run a composer update. 
+   Your focus will be on replacing your vendor folder through SFTP/FTP e.g. filezilla, and your /config/.merge-plan.php file from your localhost setup.</p>
 

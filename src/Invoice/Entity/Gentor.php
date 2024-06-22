@@ -14,31 +14,31 @@ class Gentor
     private ?int $id = null;
     
     #[Column(type: 'string(20)')]
-    private ?string $route_prefix = '';
+    private string $route_prefix = '';
     
     #[Column(type: 'string(20)')]
-    private ?string $route_suffix = '';
+    private string $route_suffix = '';
     
     #[Column(type: 'string(50)')]
-    private ?string $camelcase_capital_name = '';
+    private string $camelcase_capital_name = '';
     
     #[Column(type: 'string(20)')]
-    private ?string $small_singular_name = '';
+    private string $small_singular_name = '';
     
     #[Column(type: 'string(20)')]
-    private ?string $small_plural_name = '';
+    private string $small_plural_name = '';
     
     #[Column(type: 'string(100)')]
-    private ?string $namespace_path = '';
+    private string $namespace_path = '';
     
     #[Column(type: 'string(100)')]
-    private ?string $controller_layout_dir = '';
+    private string $controller_layout_dir = '';
     
     #[Column(type: 'string(100)')]
-    private ?string $controller_layout_dir_dot_path = '';  
+    private string $controller_layout_dir_dot_path = '';  
         
     #[Column(type: 'string(50)')]
-    private ?string $pre_entity_table = '';
+    private string $pre_entity_table = '';
     
     #[Column(type: 'bool', default: false)]
     private bool $modified_include = false;
@@ -63,7 +63,7 @@ class Gentor
       string $small_plural_name ='',
       string $namespace_path ='',
       string $controller_layout_dir = 'dirname(dirname(__DIR__)',
-      string $controller_layout_dir_dot_path = '/Invoice/Layout/main.php',
+      string $controller_layout_dir_dot_path = '@invoice/layout/main.php',
       string $pre_entity_table = '',      
       bool $created_include = false,
       bool $updated_include = false,
@@ -92,7 +92,7 @@ class Gentor
         return (string)$this->id;
     }    
     
-    public function getRoute_prefix(): string|null
+    public function getRoute_prefix(): string
     {
         return $this->route_prefix;
     }
@@ -102,7 +102,7 @@ class Gentor
         $this->route_prefix = $route_prefix;
     }
     
-    public function getRoute_suffix(): string|null
+    public function getRoute_suffix(): string
     {
         return $this->route_suffix;
     }
@@ -112,7 +112,7 @@ class Gentor
         $this->route_suffix = $route_suffix;
     }
     
-    public function getCamelcase_capital_name(): string|null
+    public function getCamelcase_capital_name(): string
     {
         return $this->camelcase_capital_name;
     }
@@ -122,7 +122,7 @@ class Gentor
         $this->camelcase_capital_name = $camelcase_capital_name;     
     }
     
-    public function getSmall_singular_name(): string|null
+    public function getSmall_singular_name(): string
     {
         return $this->small_singular_name;
     }
@@ -132,7 +132,7 @@ class Gentor
         $this->small_singular_name = $small_singular_name;
     }
     
-    public function getSmall_plural_name(): string|null
+    public function getSmall_plural_name(): string
     {
         return $this->small_plural_name;
     }
@@ -142,7 +142,7 @@ class Gentor
         $this->small_plural_name = $small_plural_name;
     }
     
-    public function getNamespace_path(): string|null
+    public function getNamespace_path(): string
     {
         return $this->namespace_path;
     }
@@ -152,7 +152,7 @@ class Gentor
         $this->namespace_path = $namespace_path;
     }
     
-    public function getController_layout_dir(): string|null
+    public function getController_layout_dir(): string
     {
         return $this->controller_layout_dir;
     }
@@ -162,7 +162,7 @@ class Gentor
         $this->controller_layout_dir = $controller_layout_dir;
     }
     
-    public function getController_layout_dir_dot_path(): string|null
+    public function getController_layout_dir_dot_path(): string
     {
         return $this->controller_layout_dir_dot_path;
     }
@@ -172,7 +172,7 @@ class Gentor
         $this->controller_layout_dir_dot_path = $controller_layout_dir_dot_path;
     }
             
-    public function getPre_entity_table(): string|null
+    public function getPre_entity_table(): string
     {
         return $this->pre_entity_table;
     }

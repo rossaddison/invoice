@@ -1028,6 +1028,7 @@ return [
     'invoice.faq.php.info.environment' => 'Php details? Environment',
     'invoice.faq.php.info.variables' => 'Php details? Variables',
     'invoice.faq.php.info.license' => 'Php details? License',
+    'invoice.faq.yii.requirement.checker' => 'Yii Application Requirement Checker', 
     'invoice.first.reset' => 'First delete the test quotes and invoices that you created for testing. Then the test data can be deleted.',
     'invoice.flash.messages.appear.here' => 'Flash messages appear here.',
     'invoice.from.include.in.dropdown' => 'Include this email in the dropdown list',

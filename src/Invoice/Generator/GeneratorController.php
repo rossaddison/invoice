@@ -49,6 +49,7 @@ final class GeneratorController
     private UserService $userService;
     private ViewRenderer $viewRenderer;
     private WebControllerService $webService;
+    private Aliases $aliases;
     const ENTITY = 'Entity.php';
     const REPO = 'Repository.php';
     const FORM = 'Form.php';
@@ -99,6 +100,7 @@ final class GeneratorController
         $this->viewRenderer = $viewRenderer->withControllerName('invoice/generator')
                                            ->withLayout('@views/layout/invoice.php');
         $this->webService = $webService;
+        $this->aliases = $this->setAliases();
     }
     
     /**
@@ -318,9 +320,10 @@ final class GeneratorController
     public function entity(CurrentRoute $currentRoute, GeneratorRepository $gr, GeneratorRelationRepository $grr,
                            DatabaseManager $dbal, View $view): Response {
         $file = self::ENTITY;
-        $path = $this->getAliases();
         /** @var Gentor $g */
         $g = $this->generator($currentRoute, $gr);
+        $camelcaseFileName = $g->getCamelcase_capital_name(). '.php';
+        $viewPath = $this->aliases->get('@Entity');
         $table_name = $g->getPre_entity_table();
         if (null==$table_name) {
             return $this->webService->getRedirectResponse('generator/index');
@@ -329,17 +332,19 @@ final class GeneratorController
         $relations = $grr->findRelations($id);
         $orm = $dbal->database('default')
                     ->table($table_name);
-        $content = $this->getContent($view,$g,$relations,$orm,$file);
-        $this->flash_message('success',($g->getCamelcase_capital_name() ?? '').$file.$this->translator->translate('invoice.generator.generated').$path.'/'.($g->getCamelcase_capital_name() ?? '').$file);
-        $build_file = $this->build_and_save($path,$content,$file,($g->getCamelcase_capital_name() ?? ''));
+        $content = $this->getContent($view, $g, $relations, $orm, $file);
+        
+        $build_file = $this->build_and_save($viewPath, $content, '.php', $g->getCamelcase_capital_name());
+        $this->flash_message('success', $camelcaseFileName.$this->translator->translate('invoice.generator.generated'). $viewPath.'/'.$camelcaseFileName);
+        
         $parameters = [
-            'canEdit'=>$this->rbac(),
+            'canEdit' => $this->rbac(),
             'title' => $this->translator->translate('invoice.generator.generate') .$file,
-            'generator'=> $g,
-            'orm_schema'=>$orm,
-            'relations'=>$relations,
+            'generator' => $g,
+            'orm_schema' =>$orm,
+            'relations' => $relations,
             'alert'=> $this->alert(),
-            'generated'=>$build_file,
+            'generated' => $build_file,
         ];
         return $this->viewRenderer->render('__results', $parameters);
     }
@@ -355,9 +360,10 @@ final class GeneratorController
                              DatabaseManager $dbal, View $view
                             ): Response {
         $file = self::REPO;
-        $path = $this->getAliases();
         /** @var Gentor $g */
         $g = $this->generator($currentRoute, $gr);
+        $camelcaseFileName = $g->getCamelcase_capital_name(). $file;
+        $viewPath = $this->aliases->get('@Invoice').DIRECTORY_SEPARATOR.$g->getCamelcase_capital_name();
         $table_name = $g->getPre_entity_table();
         if (null==$table_name) {
             return $this->webService->getRedirectResponse('generator/index');
@@ -367,8 +373,10 @@ final class GeneratorController
         $orm = $dbal->database('default')
                     ->table($table_name);
         $content = $this->getContent($view,$g,$relations,$orm,$file);
-        $this->flash_message('success',($g->getCamelcase_capital_name() ?? '').$file.$this->translator->translate('invoice.generator.generated').$path.'/'.($g->getCamelcase_capital_name() ?? '').$file);
-        $build_file = $this->build_and_save($path,$content,$file,$g->getCamelcase_capital_name() ?? '');
+        
+        $build_file = $this->build_and_save($viewPath, $content, $camelcaseFileName, '');
+        $this->flash_message('success', $camelcaseFileName.$this->translator->translate('invoice.generator.generated').$viewPath.'/'.$camelcaseFileName);
+        
         $parameters = [
             'canEdit'=>$this->rbac(),
             'title' => $this->translator->translate('invoice.generator.generate').$file,
@@ -392,9 +400,10 @@ final class GeneratorController
                              DatabaseManager $dbal, View $view
                             ): Response {
         $file = self::SERVICE;
-        $path = $this->getAliases();
         /** @var Gentor $g */
         $g = $this->generator($currentRoute, $gr);
+        $camelcaseFileName = $g->getCamelcase_capital_name().$file;
+        $viewPath = $this->aliases->get('@Invoice').DIRECTORY_SEPARATOR.$g->getCamelcase_capital_name();
         $table_name = $g->getPre_entity_table();
         if (null==$table_name) {
             return $this->webService->getRedirectResponse('generator/index');
@@ -404,8 +413,10 @@ final class GeneratorController
         $orm = $dbal->database('default')
                     ->table($table_name);
         $content = $this->getContent($view,$g,$relations,$orm,$file);
-        $this->flash_message('success',($g->getCamelcase_capital_name() ?? '').$file.$this->translator->translate('invoice.generator.generated').$path.'/'.($g->getCamelcase_capital_name() ?? '').$file);
-        $build_file = $this->build_and_save($path,$content,$file,($g->getCamelcase_capital_name() ?? ''));
+        
+        $build_file = $this->build_and_save($viewPath, $content, $camelcaseFileName, '');
+        $this->flash_message('success', $camelcaseFileName.$this->translator->translate('invoice.generator.generated').$viewPath.'/'.$camelcaseFileName);
+        
         $parameters = [
             'canEdit'=>$this->rbac(),
             'title' => $this->translator->translate('invoice.generator.generate').$file,
@@ -429,9 +440,10 @@ final class GeneratorController
                              DatabaseManager $dbal, View $view
                             ): Response {
         $file = self::FORM;
-        $path = $this->getAliases();
         /** @var Gentor $g */
         $g = $this->generator($currentRoute, $gr);
+        $camelcaseFileName = $g->getCamelcase_capital_name().$file;
+        $viewPath = $this->aliases->get('@Invoice').DIRECTORY_SEPARATOR.$g->getCamelcase_capital_name();
         $table_name = $g->getPre_entity_table();
         if (null==$table_name) {
             return $this->webService->getRedirectResponse('generator/index');
@@ -442,8 +454,10 @@ final class GeneratorController
         $orm = $dbal->database('default')
                     ->table($table_name);
         $content = $this->getContent($view,$g,$relations,$orm,$file);
-        $this->flash_message('success',($g->getCamelcase_capital_name() ?? '').$file.$this->translator->translate('invoice.generator.generated').$path.'/'.($g->getCamelcase_capital_name() ?? '').$file);
-        $build_file = $this->build_and_save($path,$content,$file,($g->getCamelcase_capital_name() ?? 'Unknown' ));
+        
+        $build_file = $this->build_and_save($viewPath, $content, $camelcaseFileName, '');
+        $this->flash_message('success', $camelcaseFileName.$this->translator->translate('invoice.generator.generated').$viewPath.'/'.$camelcaseFileName);
+        
         $parameters = [
             'canEdit'=>$this->rbac(),
             'title' => $this->translator->translate('invoice.generator.generate').$file,
@@ -467,33 +481,33 @@ final class GeneratorController
                              DatabaseManager $dbal, View $view
                             ): Response {
         $file = self::CONTROLLER;
-        $path = $this->getAliases();
+        /** @var Gentor $g */
         $g = $this->generator($currentRoute, $gr);
-        if (null!==$g) {
-            $table_name = $g->getPre_entity_table();
-            if (null==$table_name) {
-                return $this->webService->getRedirectResponse('generator/index');
-            }
-            $id = $g->getGentor_id();
-            $relations = $grr->findRelations($id);
-            /** @psalm-suppress ArgumentTypeCoercion $g->getPre_entity_table() */
-            $orm = $dbal->database('default')
-                        ->table($table_name);
-            $content = $this->getContent($view,$g,$relations,$orm,$file);
-            $this->flash_message('success',($g->getCamelcase_capital_name() ?? '').$file. $this->translator->translate('invoice.generator.generated').$path.'/'.($g->getCamelcase_capital_name() ?? '').$file);
-            $build_file = $this->build_and_save($path,$content,$file,($g->getCamelcase_capital_name() ?? ''));
-            $parameters = [
-                'canEdit'=>$this->rbac(),
-                'title' => $this->translator->translate('invoice.generator.generate').$file,
-                'generator'=> $g,
-                'orm_schema'=>$orm,
-                'relations'=>$relations,
-                'alert'=> $this->alert(),
-                'generated'=>$build_file,
-            ];
-            return $this->viewRenderer->render('__results', $parameters);
+        $viewPath = $this->aliases->get('@Invoice').DIRECTORY_SEPARATOR.$g->getCamelcase_capital_name();
+        $camelcaseFileName = $g->getCamelcase_capital_name().$file;
+        $table_name = $g->getPre_entity_table();
+        if (null==$table_name) {
+            return $this->webService->getRedirectResponse('generator/index');
         }
-        return $this->webService->getNotFoundResponse();
+        $id = $g->getGentor_id();
+        $relations = $grr->findRelations($id);
+        /** @psalm-suppress ArgumentTypeCoercion $g->getPre_entity_table() */
+        $orm = $dbal->database('default')
+                    ->table($table_name);
+        $content = $this->getContent($view, $g, $relations, $orm, $file);
+
+        $build_file = $this->build_and_save($viewPath, $content, $camelcaseFileName, '');
+        $this->flash_message('success',  $camelcaseFileName.$this->translator->translate('invoice.generator.generated').$viewPath.'/'. $camelcaseFileName);
+        $parameters = [
+            'canEdit'=>$this->rbac(),
+            'title' => $this->translator->translate('invoice.generator.generate').$file,
+            'generator'=> $g,
+            'orm_schema' => $orm,
+            'relations' => $relations,
+            'alert'=> $this->alert(),
+            'generated' => $build_file,
+        ];
+        return $this->viewRenderer->render('__results', $parameters);
     }
     
     /**
@@ -508,9 +522,9 @@ final class GeneratorController
                            DatabaseManager $dbal, View $view): Response 
     {
         $file = self::INDEX;
-        $path = $this->getAliases();
         /** @var Gentor $g */
         $g = $this->generator($currentRoute, $gr);
+        $viewPath = $this->aliases->get('@invoice').DIRECTORY_SEPARATOR.$g->getSmall_singular_name();
         $table_name = $g->getPre_entity_table();
         if (null==$table_name) {
             return $this->webService->getRedirectResponse('generator/index');
@@ -521,16 +535,18 @@ final class GeneratorController
         $orm = $dbal->database('default')
                     ->table($table_name);
         $content = $this->getContent($view,$g,$relations,$orm,$file);
-        $this->flash_message('success',$file.$this->translator->translate('invoice.generator.generated').$path.'/'.$file);
-        $build_file = $this->build_and_save($path,$content,$file,'');
+        
+        $build_file = $this->build_and_save($viewPath, $content, $file, '');
+        $this->flash_message('success', $file.$this->translator->translate('invoice.generator.generated').$viewPath.'/'.$file);
+        
         $parameters = [
-            'canEdit'=>$this->rbac(),
+            'canEdit' => $this->rbac(),
             'title' => $this->translator->translate('invoice.generator.generate').$file,
-            'generator'=> $g,
-            'orm_schema'=>$orm,
-            'relations'=>$relations,
-            'alert'=> $this->alert(),
-            'generated'=>$build_file,
+            'generator' => $g,
+            'orm_schema' => $orm,
+            'relations' => $relations,
+            'alert' => $this->alert(),
+            'generated' =>$build_file,
         ];
         return $this->viewRenderer->render('__results', $parameters);
     }
@@ -547,9 +563,9 @@ final class GeneratorController
                              DatabaseManager $dbal, View $view
                             ): Response {
         $file = self::_FORM;
-        $path = $this->getAliases();
         /** @var Gentor $g */
         $g = $this->generator($currentRoute, $gr);
+        $viewPath = $this->aliases->get('@invoice').DIRECTORY_SEPARATOR.$g->getSmall_singular_name();
         $table_name = $g->getPre_entity_table();
         if (null==$table_name) {
             return $this->webService->getRedirectResponse('generator/index');
@@ -559,16 +575,18 @@ final class GeneratorController
         $orm = $dbal->database('default')
                     ->table($table_name);
         $content = $this->getContent($view,$g,$relations,$orm,$file);
-        $this->flash_message('success',$file.$this->translator->translate('invoice.generator.generated').$path.'/'.$file);
-        $build_file = $this->build_and_save($path,$content,$file,'');
+        
+        $build_file = $this->build_and_save($viewPath, $content, $file, '');
+        $this->flash_message('success', $file.$this->translator->translate('invoice.generator.generated').$viewPath.'/'.$file);
+        
         $parameters = [
-            'canEdit'=>$this->rbac(),
+            'canEdit' => $this->rbac(),
             'title' => $this->translator->translate('invoice.generator.generate').$file,
-            'generator'=> $g,
-            'orm_schema'=>$orm,
-            'relations'=>$relations,
-            'alert'=> $this->alert(),
-            'generated'=>$build_file,
+            'generator' => $g,
+            'orm_schema' => $orm,
+            'relations' => $relations,
+            'alert' => $this->alert(),
+            'generated' => $build_file,
         ];
         return $this->viewRenderer->render('__results', $parameters);
     }
@@ -585,9 +603,9 @@ final class GeneratorController
                             ): 
         Response {
         $file = self::_VIEW;
-        $path = $this->getAliases();
         /** @var Gentor $g */
         $g = $this->generator($currentRoute, $gr);
+        $viewPath = $this->aliases->get('@invoice').DIRECTORY_SEPARATOR.$g->getSmall_singular_name();
         $table_name = $g->getPre_entity_table();
         if (null==$table_name) {
             return $this->webService->getRedirectResponse('generator/index');
@@ -596,17 +614,20 @@ final class GeneratorController
         $relations = $grr->findRelations($id);
         $orm = $dbal->database('default')
                     ->table($table_name);
-        $content = $this->getContent($view,$g,$relations,$orm,$file);
-        $this->flash_message('success',$file.$this->translator->translate('invoice.generator.generated').$path.'/'.$file);
-        $build_file = $this->build_and_save($path,$content,$file,'');
+        $content = $this->getContent($view, $g, $relations, $orm, $file);
+        
+        // also generate a file into the folder created for this view
+        $build_file = $this->build_and_save($viewPath, $content, $file, '');
+        $this->flash_message('success', $file.$this->translator->translate('invoice.generator.generated').$viewPath.'/'.$file);
+        
         $parameters = [
-            'canEdit'=>$this->rbac(),
+            'canEdit' => $this->rbac(),
             'title' => $this->translator->translate('invoice.generator.generate').$file,
-            'generator'=> $g,
-            'orm_schema'=>$orm,
-            'relations'=>$relations,
-            'alert'=> $this->alert(),
-            'generated'=>$build_file,
+            'generator' => $g,
+            'orm_schema' => $orm,
+            'relations' => $relations,
+            'alert' => $this->alert(),
+            'generated' => $build_file,
         ];
         return $this->viewRenderer->render('__results', $parameters);        
     }
@@ -624,7 +645,7 @@ final class GeneratorController
                              DatabaseManager $dbal, View $view
                            ): Response {
         $file = self::_ROUTE;
-        $path = $this->getAliases();
+        $path = $this->aliases->get('@generated');
         /** @var Gentor $g */
         $g = $this->generator($currentRoute, $gr);
         $table_name = $g->getPre_entity_table();
@@ -739,7 +760,7 @@ final class GeneratorController
             }
             $combined_array = array_combine($content_keys_array, $result_array);
             $file = $this->google_translate_get_file_from_type($type);
-            $path = $this->getAliases();
+            $path = $this->aliases->get('@generated');
             $content_params = [
                 'combined_array' => $combined_array
             ];
@@ -788,14 +809,17 @@ final class GeneratorController
         return $file;
     }
     
-   /**
-    * @return string
-    */    
-    private function getAliases(): string{
-         $view_generator_dir_path = new Aliases([
+    /**
+     * @return Aliases
+     */
+    private function setAliases(): Aliases {
+        return new Aliases([
             '@generators' => dirname(dirname(dirname(__DIR__))).'/resources/views/invoice/generator/templates_protected',
-            '@generated' => dirname(dirname(dirname(__DIR__))).'/resources/views/invoice/generator/output_overwrite']);            
-         return $view_generator_dir_path->get('@generated');
+            '@generated' => dirname(dirname(dirname(__DIR__))).'/resources/views/invoice/generator/output_overwrite',            
+            '@Entity' => dirname(dirname(dirname(__DIR__))).'/src/Invoice/Entity',
+            '@Invoice' => dirname(dirname(dirname(__DIR__))).'/src/Invoice',
+            '@invoice' => dirname(dirname(dirname(__DIR__))).'/resources/views/invoice' 
+        ]); 
     }
     
     /**
@@ -820,7 +844,7 @@ final class GeneratorController
      * @param string $name
      * @return GenerateCodeFileHelper
      */
-    private function build_and_save(string $generated_dir_path,string $content, string $file,string $name): GenerateCodeFileHelper{
+    private function build_and_save(string $generated_dir_path, string $content, string $file, string $name): GenerateCodeFileHelper{
         //echo $generated_dir_path;
         $build_file = new GenerateCodeFileHelper("$generated_dir_path/$name$file", $content); 
         $build_file->save();

@@ -172,7 +172,7 @@ $this->beginPage();
         $this->beginBody();        
         $offcanvas = new Offcanvas();
         $offcanvas->title($s->get_setting('custom_title') ?: 'Yii-Invoice');
-
+        
         echo NavBar::widget()
           // public folder represented by first forward slash ie. root
           ->brandImage($logoPath)              
@@ -203,7 +203,7 @@ $this->beginPage();
               ],
               ['label' => $translator->translate('invoice.peppol.abbreviation'),
                   
-                'items' => [
+                'items' => [   
                   ['options' => ['class' => 'nav fs-4'], 'label' => $translator->translate('invoice.invoice.allowance.or.charge.add'), 'url' => $urlGenerator->generate('allowancecharge/index')],
                   ['options' => ['class' => 'nav fs-4'], 'label' => $translator->translate('invoice.peppol.store.cove.1.1.1'), 'url' => 'https://www.storecove.com/register/'],
                   ['options' => ['class' => 'nav fs-4'], 'label' => $translator->translate('invoice.peppol.store.cove.1.1.2'), 'url' => $urlGenerator->generate('setting/tab_index')],
@@ -427,6 +427,7 @@ $this->beginPage();
                   ['label' => $translator->translate('invoice.faq.php.info.environment'), 'url' => $urlGenerator->generate('invoice/phpinfo', ['selection' => '16'])],
                   ['label' => $translator->translate('invoice.faq.php.info.variables'), 'url' => $urlGenerator->generate('invoice/phpinfo', ['selection' => '32'])],
                   ['label' => $translator->translate('invoice.faq.php.info.license'), 'url' => $urlGenerator->generate('invoice/phpinfo', ['selection' => '64'])],
+                  ['label' => $translator->translate('invoice.faq.yii.requirement.checker'), 'url' => $urlGenerator->generate('invoice/requirements')],
               ]],
               ['label' => $translator->translate('invoice.vat'), 'options' => ['style' => $vat ? 'background-color: #ffcccb' : 'background-color: #90EE90'], 'visible' => $debugMode],
 // Performance              
@@ -434,12 +435,13 @@ $this->beginPage();
                 'items' => [
                   ['label' => $translator->translate('invoice.platform.xdebug') . ' ' . $xdebug, 'options' => ['class' => 'nav fs-4', 'data-bs-toggle' => 'tooltip', 'title' => 'Via Wampserver Menu: Icon..Php 8.1.8-->Php extensions-->xdebug 3.1.5(click)-->Allow php command prompt to restart automatically-->(click)Restart All Services-->No typing in or editing of a php.ini file!!']],
                   ['label' => '...config/common/params.php SyncTable currently not commented out and PhpFileSchemaProvider::MODE_READ_AND_WRITE...fast....MODE_WRITE_ONLY...slower'],
-                  ['label' => 'php.ini: opcache.memory_consumption=128'],
-                  ['label' => 'php.ini: oopcache.interned_strings_buffer=8'],
-                  ['label' => 'php.ini: opcache.max_accelerated_files=4000'],
-                  ['label' => 'php.ini: opcache.revalidate_freq=60'],
-                  ['label' => 'php.ini: opcache.enable=1'],
-                  ['label' => 'php.ini: opcache.enable_cli=1'],
+                  ['label' => 'php.ini: opcache.memory_consumption (pref 128) = '. (ini_get('opcache.memory_consumption')), 'options' => ['data-bs-toggle' => 'tooltip', 'title' => 'e.g. change manually in C:\wamp64\bin\php\php8.1.13\phpForApache.ini and restart all services.']],
+                  ['label' => 'php.ini: oopcache.interned_strings_buffer (pref 8) = '. (ini_get('opcache.interned_strings_buffer'))],
+                  ['label' => 'php.ini: opcache.max_accelerated_files (pref 4000) = '. (ini_get('opcache.max_accelerated_files'))],
+                  ['label' => 'php.ini: opcache.revalidate_freq (pref 60) = '. (ini_get('opcache.revalidate_freq'))],
+                  ['label' => 'php.ini: opcache.enable (pref 1) = ' . (ini_get('opcache.enable'))],
+                  ['label' => 'php.ini: opcache.enable_cli (pref 1) = ' .(ini_get('opcache.enable_cli'))],
+                  ['label' => 'php.ini: opcache.jit (pref ) = '. (ini_get('opcache.jit'))],  
                   ['label' => 'config.params: yiisoft/yii-debug: enabled , disable for improved performance'],
                   ['label' => 'config.params: yiisoft/yii-debug-api: enabled, disable for improved performance'],
                 ],
@@ -456,7 +458,7 @@ $this->beginPage();
                   // ..resources/views/generator/templates_protected
                   // Your Json file must be located in src/Invoice/google_translate_unique folder
                   // Get your downloaded Json file from
-                                    ['options' => ['class' => 'nav fs-4'], 'label' => $translator->translate('invoice.generator.google.translate.gateway'), 'url' => $urlGenerator->generate('generator/google_translate_lang', ['type' => 'gateway'])],  
+                  ['options' => ['class' => 'nav fs-4'], 'label' => $translator->translate('invoice.generator.google.translate.gateway'), 'url' => $urlGenerator->generate('generator/google_translate_lang', ['type' => 'gateway'])],  
                   ['options' => ['class' => 'nav fs-4'],
                     'label' => $translator->translate('invoice.generator.google.translate.ip'), 'linkOptions' => ['data-bs-toggle' => 'tooltip', 'title' => $s->where('google_translate_json_filename')], 'url' => $urlGenerator->generate('generator/google_translate_lang', ['type' => 'ip'])],
                   ['options' => ['class' => 'nav fs-4'], 'label' => $translator->translate('invoice.generator.google.translate.latest'), 'url' => $urlGenerator->generate('generator/google_translate_lang', ['type' => 'latest'])],
@@ -490,10 +492,10 @@ $this->beginPage();
               ['label' => 'File Location',
                 'url' => '',
                 'options' => ['class' => 'nav fs-4', 'data-bs-toggle' => 'tooltip', 'title' => $s->debug_mode_file_location(0), 'style' => 'background-color: #ffcccb'],
-                'visible' => $debugMode],
+                'visible' => $debugMode],               
               ]
         );
-
+        
         echo Nav::widget()
           ->currentPath($currentRoute
             ->getUri()
@@ -662,7 +664,7 @@ $this->beginPage();
             </div>
         </div>
         <footer class="container py-4">
-            <?= PerformanceMetrics::widget() ?>
+            <?= PerformanceMetrics::widget() ?>           
         </footer>
         <?php
         $this->endBody();

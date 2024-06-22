@@ -146,6 +146,11 @@ final class InvoiceController
         return $this->viewRenderer->render('/invoice/info/view', ['topic'=> $view]);
     }
     
+    public function requirements() : Response  {
+        $view = $this->viewRenderer->renderPartialAsString('/invoice/info/requirements');
+        return $this->viewRenderer->render('/invoice/info/view', ['topic'=> $view]);
+    }
+    
     /**
      * Use curL to call the store_cove api ... 1.1.3. Make your first API call
      * Tab: ERP or Accounting System, NOT: Individual Company, NOT: Reseller or Systems Integrator

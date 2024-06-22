@@ -57,7 +57,10 @@ class GenerateCodeFileHelper
     public function __construct($path, $content)
     {
         $this->path = strtr($path, '/\\', DIRECTORY_SEPARATOR . DIRECTORY_SEPARATOR);
+        
+        // $this->basepath used in function relativepath
         $this->basepath = dirname(dirname(dirname(__DIR__)));
+        
         $this->content = $content;
         $this->id = md5($this->path);
         if (is_file($path)) {
@@ -99,7 +102,6 @@ class GenerateCodeFileHelper
         if (strpos($this->path, $this->basepath) === 0) {
             return substr($this->path, strlen($this->basepath) + 1);
         }
-
         return $this->path;
     }
 

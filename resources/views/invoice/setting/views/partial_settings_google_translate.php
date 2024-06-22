@@ -23,8 +23,8 @@
                 <p><b>Step 8:</b> Adjust the <code>\resources\views\layout</code> files.</p>
                 <p><b>Step 9:</b> Create a suitable <code>\invoice\src\Invoice\Asset\i18nAsset</code> file under this folder.</p>
                 <p><b>Step 10:</b> Create a separate folder under <code>\invoice\src\Invoice\Language</code>. This will be used by View...Settings...General...Language</p>
-                <p><b>Step 12:</b> Adjust the <code>SettingsRepository locale_language_array()</code> to include your language. e.g. 'pt-BR' and also the <code>locales</code> function.</p>
-                <p><b>Step 13:</b> Adjust the <code>config\web\params.php</code> locales array to include your language. e.g. 'pt-BR'</p>
+                <p><b>Step 11:</b> Adjust the <code>SettingsRepository locale_language_array()</code> to include your language. e.g. 'pt-BR' and also the <code>locales</code> function.</p>
+                <p><b>Step 12:</b> Adjust the <code>config\web\params.php</code> locales array to include your language. e.g. 'pt-BR'</p>
                 
             </div>
             <div class="panel-body">

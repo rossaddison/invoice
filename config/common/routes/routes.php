@@ -272,7 +272,12 @@ return [
       ->middleware(fn(AccessChecker $checker) => $checker->withPermission('editInv'))
       ->middleware(Authentication::class)
       ->action([InvoiceController::class, 'phpinfo'])
-      ->name('invoice/phpinfo'),      
+      ->name('invoice/phpinfo'), 
+      Route::get('/requirements')
+      ->middleware(fn(AccessChecker $checker) => $checker->withPermission('editInv'))
+      ->middleware(Authentication::class)
+      ->action([InvoiceController::class, 'requirements'])
+      ->name('invoice/requirements'),            
       Route::get('/test_data_remove')
       ->middleware(fn(AccessChecker $checker) => $checker->withPermission('editInv'))
       ->middleware(Authentication::class)

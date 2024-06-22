@@ -47,6 +47,13 @@
 <p>Introducing India's PayTm payment gateway's QR code method of payment and comparing this with Stripe's method.</p>
 <p>A General Sales Tax (GST) Tax System will have to be implemented first for this purpose.</p>
 <p>Testing Credit Notes against Invoices with refunds (if payment made) linked to each of the payment gateways.</p>
+<p><b>22nd June 2024</b></p>
+<p>1. Include a requirements checker under FAQ's using newish repo 'yiisoft/requirements'.</p>
+<p>2. Tested the Generator with a dummy Entity and updated the Generator with a few additional fixes.</p>
+<p>3. Included actual ini_get values under the performance section on the main menu.</p>
+<p>4. Alphabetical reordering of composer .json. (Except Payment Providers and rossaddison/ temporary
+ forks which will be removed later).</p>
+<p>5. docker-compose.yml does not require the version number anymore.</p>
 <p><b>14th June 2024</b></p>
 <p>1. The form for creating email templates i.e. resources/views/invoice/emailtemplate/form.php has been split into form_invoice and form_quote</p>
 <p>2. All the form inputs have been html encoded and the forms have been converted to using Yiisoft php code instead of the HTML. </p>
@@ -65,9 +72,6 @@
 <p>The $debugMode variable now is linked to the .env file. Alter the debugMode in the .env file now instead of the LayoutViewInjection.
    If the $_ENV['BUILD_DATABASE']  environment variable is linked directly in the config/common params.php file it results in performance degradation so leave the setitng on 'false' for the moment.
 </p>
-<p><b>What's next?</b></p>
-<p>Next: Adjusting the logo height and width parameters in the companyPrivate Entity.
-   The logo has been incorporated under the Invoice_web and the Quote_web files. Now to incorporate a qrCode image.</p>
 <p><b>13th April 2024</b></p>
 <p>1. Create a function userinv/guestlimit which stores a guest user's page size limiter selector's last choice.</p>
 <p>2. This value is then specific to the user and separate from the default_page_size limiter.</p>
