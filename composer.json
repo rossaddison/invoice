@@ -61,13 +61,14 @@
         "rossaddison/yii-view": "*",
         "sabre/xml": "^4.0",
         "setasign/fpdf": "^1.8",
-        "stripe/stripe-php": "*",
+        "symfony/console": "^6.0||^7.1",
         
         "amzn/amazon-pay-api-sdk-php": "*",
         "braintree/braintree_php": "*",
         "google/cloud-translate": "*",
         "mollie/mollie-api-php": "*",
-                
+        "stripe/stripe-php": "*",
+        
         "vjik/cycle-typecast": "*",
         "vlucas/phpdotenv": "^5.6",    
         "yiisoft/access": "^1.0",
@@ -140,10 +141,10 @@
         "codeception/module-cli": "^2.0",
         "codeception/module-phpbrowser": "^3.0",
         "phpunit/phpunit": "^9.6.3",
+        "roave/better-reflection":"^6.5",
         "roave/infection-static-analysis-plugin": "^1.25",
         "roave/security-advisories": "dev-master",
         "spatie/phpunit-watcher": "^1.23",
-        "symfony/console":"*",
         "vimeo/psalm": "^5.25",
         "yiisoft/translator-extractor": "^2.0",
         "yiisoft/yii-gii": "^3.0@dev",
