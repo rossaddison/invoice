@@ -38,7 +38,7 @@ use Yiisoft\Http\Method;
 use Yiisoft\Session\SessionInterface as Session;
 use Yiisoft\Session\Flash\Flash;
 use Yiisoft\Translator\TranslatorInterface;
-use Yiisoft\Yii\View\ViewRenderer;
+use Yiisoft\Yii\View\Renderer\ViewRenderer;
 
 class ReportController
 {
@@ -70,7 +70,7 @@ class ReportController
      * @return string
      */
     private function alert(): string {
-      return $this->viewRenderer->renderPartialAsString('/invoice/layout/alert',
+      return $this->viewRenderer->renderPartialAsString('//invoice/layout/alert',
       [ 
         'flash' => $this->flash
       ]);
@@ -122,20 +122,21 @@ class ReportController
         $parameters = [
             'head'=> $head,
             'alert' => $this->alert(),
-            'action' => ['report/invoice_aging_index'],
+            'actionName' => 'report/invoice_aging_index',
+            'actionArguments' => []
         ];
         if ($request->getMethod() === Method::POST) { 
             $data = [
                 'results' => $this->invoice_aging_report($cR, $iaR, $sR) ?: [],
-                'numberhelper' => new NumberHelper($sR),
-                'due_invoices' => $this->invoice_aging_due_invoices($iaR, $sR) ?: [],
+                'numberHelper' => new NumberHelper($sR),
+                'dueInvoices' => $this->invoice_aging_due_invoices($iaR, $sR) ?: [],
             ];
             $mpdfhelper = new MpdfHelper(); 
             // Forth parameter $password is empty because these reports are intended for management only
             // Sixth parameter $isInvoice is false because reports and not Invoices are being generated            
             // Last parameter $quote_or_invoice is false because reports are being generated which are not meant for clients
             /** @psalm-suppress MixedReturnStatement */
-            return $mpdfhelper->pdf_create($this->viewRenderer->renderPartialAsString('/invoice/report/invoice_aging', $data), 
+            return $mpdfhelper->pdf_create($this->viewRenderer->renderPartialAsString('invoice_aging', $data), 
                    $this->translator->translate('i.invoice_aging'), true, '', $sR, null, null, false, false, [], null);             
         }
         return $this->viewRenderer->render('invoice_aging_index', $parameters);
@@ -269,7 +270,6 @@ class ReportController
     }
     
     /**
-     * 
      * @param Request $request
      * @param ViewRenderer $head
      * @param PaymentRepository $pymtR
@@ -283,13 +283,14 @@ class ReportController
       PaymentRepository $pymtR,
       SettingRepository $sR) : Response|\Mpdf\Mpdf|array|string
     {        
-        $datehelper = new DateHelper($sR);
+        $dateHelper = new DateHelper($sR);
         $parameters = [
             'head'=> $head,
             'alert' => $this->alert(),
-            'action' => ['report/payment_history_index'],            
-            'datehelper' => $datehelper,
-            'start_tax_year' => $datehelper->tax_year_to_immutable(),
+            'actionName' => 'report/payment_history_index',
+            'actionArguments' => [],
+            'dateHelper' => $dateHelper,
+            'startTaxYear' => $dateHelper->tax_year_to_immutable()->format($dateHelper->style()),
         ];
         if ($request->getMethod() === Method::POST) { 
             $body = $request->getParsedBody();
@@ -300,14 +301,14 @@ class ReportController
                     'from_date' => $from_date,
                     'to_date' => $to_date,
                     //Date Invoice Client Payment Method Note Amount
-                    'results' => $this->payment_history_report($pymtR, $datehelper->date_to_mysql($from_date), $datehelper->date_to_mysql($to_date), $sR) 
+                    'results' => $this->payment_history_report($pymtR, $from_date, $to_date, $sR) 
                              ?: [],
-                    'datehelper'=>$datehelper,
-                    'numberhelper' => new NumberHelper($sR),
+                    'dateHelper'=>$dateHelper,
+                    'numberHelper' => new NumberHelper($sR),
                 ];
-                $mpdfhelper = new MpdfHelper();
+                $mpdfHelper = new MpdfHelper();
                 /** @psalm-suppress MixedReturnStatement */
-                return $mpdfhelper->pdf_create($this->viewRenderer->renderPartialAsString('/invoice/report/payment_history', $data), 
+                return $mpdfHelper->pdf_create($this->viewRenderer->renderPartialAsString('payment_history', $data), 
                                                $this->translator->translate('i.payment_history'), true, '', $sR, null, null, false, false, [], null);            
             } //is_array body
             return $this->webService->getNotFoundResponse();
@@ -377,13 +378,14 @@ class ReportController
       InvAmountRepository $iaR,
       SettingRepository $sR) : Response|\Mpdf\Mpdf|array|string
     {
-        $datehelper = new DateHelper($sR);
+        $dateHelper = new DateHelper($sR);
         $parameters = [
             'head'=> $head,
             'alert' => $this->alert(),
-            'action' => ['report/sales_by_client_index'],
-            'datehelper'=> $datehelper,
-            'start_tax_year' => $datehelper->tax_year_to_immutable(),
+            'actionName' => 'report/sales_by_client_index',
+            'actionArguments' => [],
+            'dateHelper'=> $dateHelper,
+            'startTaxYear' => ($dateHelper->tax_year_to_immutable())->format($dateHelper->style())
         ];
         if ($request->getMethod() === Method::POST) { 
             $body = $request->getParsedBody();
@@ -393,14 +395,14 @@ class ReportController
                 $data = [
                     'from_date' => $from_date,
                     'to_date' => $to_date,
-                    'results' => $this->sales_by_client_report($cR, $iR, $datehelper->date_to_mysql($from_date), $datehelper->date_to_mysql($to_date), $iaR, $sR),
-                    'numberhelper' => new NumberHelper($sR),
-                    'clienthelper' => new ClientHelper($sR),
+                    'results' => $this->sales_by_client_report($cR, $iR, $dateHelper->date_to_mysql($from_date), $dateHelper->date_to_mysql($to_date), $iaR, $sR),
+                    'numberHelper' => new NumberHelper($sR),
+                    'clientHelper' => new ClientHelper($sR),
                 ];
                 $mpdfhelper = new MpdfHelper(); 
                 /** @psalm-suppress MixedReturnStatement */
                 return $mpdfhelper->pdf_create(
-                         $this->viewRenderer->renderPartialAsString('/invoice/report/sales_by_client', $data), 
+                         $this->viewRenderer->renderPartialAsString('sales_by_client', $data), 
                          $this->translator->translate('i.sales_by_client'), true, '', $sR, null, null, false, false, [], null
                 );
             } // is_array body
@@ -495,13 +497,14 @@ class ReportController
       SettingRepository $sR) : Response|\Mpdf\Mpdf|array|string
     {
       $this->flash_message('info', $this->translator->translate('invoice.report.sales.by.product.info'));
-      $datehelper = new DateHelper($sR);
+      $dateHelper = new DateHelper($sR);
       $parameters = [
         'head'=> $head,
         'alert' => $this->alert(),
-        'action' => ['report/sales_by_product_index'],
-        'datehelper'=> $datehelper,
-        'start_tax_year' => $datehelper->tax_year_to_immutable(),
+        'actionName' => 'report/sales_by_product_index',
+        'actionArguments' => [],  
+        'dateHelper'=> $dateHelper,
+        'startTaxYear' => $dateHelper->tax_year_to_immutable(),
       ];
       if ($request->getMethod() === Method::POST) { 
           $body = $request->getParsedBody();
@@ -511,13 +514,13 @@ class ReportController
               $data = [
                 'from_date' => $from_date,
                 'to_date' => $to_date,
-                'results' => $this->sales_by_product_report($pR, $iR, $datehelper->date_to_mysql($from_date), $datehelper->date_to_mysql($to_date), $iiaR),
-                'numberhelper' => new NumberHelper($sR),
+                'results' => $this->sales_by_product_report($pR, $iR, $dateHelper->date_to_mysql($from_date), $dateHelper->date_to_mysql($to_date), $iiaR),
+                'numberHelper' => new NumberHelper($sR),
               ];
               $mpdfhelper = new MpdfHelper(); 
               /** @psalm-suppress MixedReturnStatement */
               return $mpdfhelper->pdf_create(
-                       $this->viewRenderer->renderPartialAsString('/invoice/report/sales_by_product', $data), 
+                       $this->viewRenderer->renderPartialAsString('sales_by_product', $data), 
                        $this->translator->translate('invoice.report.sales.by.product'), true, '', $sR, null, null, false, false, [], null
               );
           } // is_array body
@@ -597,13 +600,16 @@ class ReportController
       SettingRepository $sR) : Response|\Mpdf\Mpdf|array|string
     {
       $this->flash_message('info', $this->translator->translate('invoice.report.sales.by.task.info'));
-      $datehelper = new DateHelper($sR);
+      $dateHelper = new DateHelper($sR);
+      $body = $request->getParsedBody();
       $parameters = [
-        'head'=> $head,
+        'head' => $head,
+        'body' => $body,
         'alert' => $this->alert(),
-        'action' => ['report/sales_by_task_index'],
-        'datehelper'=> $datehelper,
-        'start_tax_year' => $datehelper->tax_year_to_immutable(),
+        'actionName' => 'report/sales_by_task_index',
+        'actionArguments' => [],  
+        'dateHelper' => $dateHelper,
+        'startTaxYear' => ($dateHelper->tax_year_to_immutable())->format($dateHelper->style())
       ];
       if ($request->getMethod() === Method::POST) { 
           $body = $request->getParsedBody();
@@ -613,13 +619,13 @@ class ReportController
               $data = [
                 'from_date' => $from_date,
                 'to_date' => $to_date,
-                'results' => $this->sales_by_task_report($taskR, $iR, $datehelper->date_to_mysql($from_date), $datehelper->date_to_mysql($to_date), $iiaR),
-                'numberhelper' => new NumberHelper($sR),
+                'results' => $this->sales_by_task_report($taskR, $iR, $dateHelper->date_to_mysql($from_date), $dateHelper->date_to_mysql($to_date), $iiaR),
+                'numberHelper' => new NumberHelper($sR),
               ];
               $mpdfhelper = new MpdfHelper(); 
               /** @psalm-suppress MixedReturnStatement */
               return $mpdfhelper->pdf_create(
-                       $this->viewRenderer->renderPartialAsString('/invoice/report/sales_by_task', $data), 
+                       $this->viewRenderer->renderPartialAsString('sales_by_task', $data), 
                        $this->translator->translate('invoice.report.sales.by.task'), true, '', $sR, null, null, false, false, [], null
               );
           } // is_array body
@@ -695,13 +701,16 @@ class ReportController
       InvAmountRepository $iaR,
       SettingRepository $sR) : Response|\Mpdf\Mpdf|array|string
     {       
-        $datehelper = new DateHelper($sR);
+        $dateHelper = new DateHelper($sR);
+        $body = $request->getParsedBody();
         $parameters = [
-            'head'=> $head,
+            'head' => $head,
+            'body' => $body,
             'alert' => $this->alert(),
-            'action' => ['report/sales_by_year_index'],            
-            'datehelper' => $datehelper,
-            'start_tax_year' => $datehelper->tax_year_to_immutable(),
+            'actionName' => 'report/sales_by_year_index',
+            'actionArguments' => [],
+            'dateHelper' => $dateHelper,
+            'startTaxYear' => ($dateHelper->tax_year_to_immutable())->format($dateHelper->style()),
         ];
         if ($request->getMethod() === Method::POST) { 
             $body = $request->getParsedBody();
@@ -711,7 +720,7 @@ class ReportController
                 $data = [
                     'from_date' => $from_date,
                     'to_date' => $to_date,
-                    'results' => $this->sales_by_year_report($cR, $iR, $datehelper->date_to_mysql($from_date), $datehelper->date_to_mysql($to_date), $iaR, $sR) 
+                    'results' => $this->sales_by_year_report($cR, $iR, $dateHelper->date_to_mysql($from_date), $dateHelper->date_to_mysql($to_date), $iaR, $sR) 
                              ?: [],
                     'n' => new NumberHelper($sR),
                     'clienthelper' => new ClientHelper($sR),
@@ -722,7 +731,7 @@ class ReportController
                 // Last parameter $quote_or_invoice is false because reports are being generated which are not meant for clients
                 /** @psalm-suppress MixedReturnStatement */
                 return $mpdfhelper->pdf_create(
-                                               $this->viewRenderer->renderPartialAsString('/invoice/report/sales_by_year', $data),
+                                               $this->viewRenderer->renderPartialAsString('sales_by_year', $data),
                                                $this->translator->translate('i.sales_by_date'), true, '', $sR, null, null, false, false, [], null
                 );
             } // is_array body
@@ -790,24 +799,21 @@ class ReportController
                 ]
             ],
         ];
-        
-        $clienthelper = new ClientHelper($sR);
-        $datehelper = new DateHelper($sR);
+        $clientHelper = new ClientHelper($sR);
+        $dateHelper = new DateHelper($sR);
         $clients = $cR->count() > 0 ? $cR->findAllPreloaded() : null;
         if (null!==$clients){
             /** @var Client $client */
             foreach ($clients as $client) {
                 // Convert the mysql $from which is a string into an immutable so that we can use the add function 
                 // associated with immutable dates
-
-                $immutable_from = $datehelper->ymd_to_immutable($from);
-                $immutable_to = $datehelper->ymd_to_immutable($to);
-
+                $immutable_from = $dateHelper->ymd_to_immutable($from);
+                $immutable_to = $dateHelper->ymd_to_immutable($to);
                 $interval = new \DateInterval('P1Y'); 
                 $daterange = new \DatePeriod($immutable_from, $interval, $immutable_to);
                 $client_id = (int)$client->getClient_id();
                 foreach($daterange as $current_year){
-                    $additional_year = $this->quarters($year,  $immutable_from, $current_year, $client,  $clienthelper, $client_id, $iR, $iaR);   
+                    $additional_year = $this->quarters($year,  $immutable_from, $current_year, $client,  $clientHelper, $client_id, $iR, $iaR);   
                     array_push($results, $additional_year);
                     $immutable_from = $immutable_from->add(new \DateInterval('P1Y'));
                 }   

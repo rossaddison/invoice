@@ -1205,7 +1205,7 @@ return [
 'invoice.invoice.qr.code.settings.effect' => 'Какое влияние оказывают вышеуказанные настройки на этот Qr-код?',
 'invoice.invoice.qr.code.settings.effect.explanation' => 'В реальном коде... нет. Используются все значения по умолчанию, поскольку используется самый простой фактический код, приведенный выше.',
 'invoice.invoice.qr.code.source' => 'Источник QR-кода',
-'invoice.invoice.qr.code.source.path' => 'ресурсы\представления\счета\настройки\company_logo_and_address.php',
+'invoice.invoice.qr.code.source.path' => 'resources\views\invoice\setting\company_logo_and_address.php',
 'invoice.invoice.qr.code.type' => 'Тип QR-кода',
 'invoice.invoice.qr.code.type.absolute.url' => 'Абсолютный (весь) URL на основе',
 'invoice.invoice.qr.code.widget.used' => 'Виджет используется',

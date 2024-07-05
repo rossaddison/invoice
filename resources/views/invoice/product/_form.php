@@ -9,7 +9,6 @@ use Yiisoft\Html\Tag\Form;
 
 /**
  * @var \Yiisoft\View\View $this
- * @var \Yiisoft\Router\UrlGeneratorInterface $urlGenerator
  * @var array $body
  * @var string $csrf
  * @var string $action

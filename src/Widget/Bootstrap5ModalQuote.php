@@ -10,7 +10,7 @@ use App\Invoice\UserClient\UserClientRepository;
 use App\Invoice\Quote\QuoteForm;
 use Yiisoft\Security\Random;
 use Yiisoft\Translator\TranslatorInterface as Translator;
-use Yiisoft\Yii\View\ViewRenderer;
+use Yiisoft\Yii\View\Renderer\ViewRenderer;
 
 final class Bootstrap5ModalQuote
 {
@@ -69,9 +69,9 @@ final class Bootstrap5ModalQuote
         ];
         $this->layoutParameters = [
             'type' => 'quote',
-            'form' => $this->viewRenderer->renderPartialAsString('/invoice/quote/modal_add_quote_form', $this->formParameters),
+            'form' => $this->viewRenderer->renderPartialAsString('quote/modal_add_quote_form', $this->formParameters),
         ];    
-        return $this->viewRenderer->renderPartialAsString('/invoice/quote/modal_layout', $this->layoutParameters);
+        return $this->viewRenderer->renderPartialAsString('quote/modal_layout', $this->layoutParameters);
     }
     
     /**

@@ -2,6 +2,13 @@
     declare(strict_types=1);
     
     use Yiisoft\Html\Html;
+    
+    /**
+     * @var App\Invoice\Setting\SettingRepository $s 
+     * @var Yiisoft\Translator\TranslatorInterface $translator
+     * @var array $body
+     * @var array $locales
+     */
 ?>
 <?= Html::openTag('div', ['class' => 'row']); ?>
     <div class="col-xs-12 col-md-8 col-md-offset-2">
@@ -51,7 +58,12 @@
                             <select name="settings[google_translate_locale]" id="settings[google_translate_locale]"
                                 class="form-control">
                                 <option value=""><?= $translator->translate('i.none'); ?></option>
-                                <?php foreach ($locales as $key => $value) { ?>
+                                <?php
+                                    /**
+                                     * @var string $key
+                                     * @var string $value
+                                     */
+                                    foreach ($locales as $key => $value) { ?>
                                     <option value="<?= $value; ?>"
                                         <?php $s->check_select($body['settings[google_translate_locale]'], $value); ?>>
                                         <?= $value; ?>

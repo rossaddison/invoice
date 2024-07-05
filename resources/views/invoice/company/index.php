@@ -101,7 +101,7 @@ use Yiisoft\Yii\DataView\OffsetPagination;
                 ])
                 ->content('🔎')
                 ->encode(false)
-                ->href('/invoice/company/view/'. $model->getId())
+                ->href('company/view/'. $model->getId())
                 ->render() .
                 Html::a()
                 ->addAttributes([
@@ -110,7 +110,7 @@ use Yiisoft\Yii\DataView\OffsetPagination;
                 ])
                 ->content('✎')
                 ->encode(false)
-                ->href('/invoice/company/edit/'. $model->getId())
+                ->href('company/edit/'. $model->getId())
                 ->render() .
                 Html::a()
                 ->addAttributes([
@@ -121,12 +121,19 @@ use Yiisoft\Yii\DataView\OffsetPagination;
                 ])
                 ->content('❌')
                 ->encode(false)
-                ->href('/invoice/company/delete/'. $model->getId())
+                ->href('company/delete/'. $model->getId())
                 ->render() . Html::closeTag('div')
             ),
         ];
     ?>
-    <?= GridView::widget()    
+    <?php 
+        $grid_summary = $s->grid_summary(
+            $paginator, 
+            $translator, 
+            (int)$s->get_setting('default_list_limit'), 
+            $translator->translate('invoice.company.public'), '');  
+        echo GridView::widget()
+        ->rowAttributes(['class' => 'align-middle'])    
         ->columns(...$columns)
         ->dataReader($paginator)    
         ->headerRowAttributes(['class'=>'card-header bg-info text-black'])
@@ -139,7 +146,6 @@ use Yiisoft\Yii\DataView\OffsetPagination;
              ->paginator($paginator)
              ->render(),
         )
-        ->rowAttributes(['class' => 'align-middle'])
         ->summaryAttributes(['class' => 'mt-3 me-3 summary text-end'])
         ->summaryTemplate($grid_summary)
         ->emptyTextAttributes(['class' => 'card-header bg-warning text-black'])

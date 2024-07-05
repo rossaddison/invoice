@@ -1210,7 +1210,7 @@ return [
 'invoice.invoice.qr.code.settings.effect' => 'Yuxarıdakı parametrlərin bu Qr koduna hansı təsiri var?',
 'invoice.invoice.qr.code.settings.effect.explanation' => 'Faktiki kodda ... heç biri. Yuxarıdakı ən əsas faktiki kod istifadə edildiyi üçün bütün standart parametrlər istifadə olunur.',
 'invoice.invoice.qr.code.source' => 'Qr kodu mənbəyi',
-'invoice.invoice.qr.code.source.path' => 'resurslar\views\invoice\setting\company_logo_and_address.php',
+'invoice.invoice.qr.code.source.path' => 'resources\views\invoice\setting\company_logo_and_address.php',
 'invoice.invoice.qr.code.type' => 'QR kodu növü',
 'invoice.invoice.qr.code.type.absolute.url' => 'Mütləq (bütün) Url Əsaslıdır',
 'invoice.invoice.qr.code.widget.used' => 'İstifadə olunan widget',

@@ -2,6 +2,15 @@
 declare(strict_types=1);
 
 use Yiisoft\Html\Html;
+
+/**
+ * @var App\Invoice\Helpers\DateHelper $dateHelper
+ * @var App\Invoice\Helpers\NumberHelper $numberHelper
+ * @var App\Invoice\Project\ProjectRepository $prjctR
+ * @var App\Invoice\Task\TaskRepository $taskR
+ * @var Yiisoft\Translator\TranslatorInterface $translator
+ * @var DateTimeImmutable|string|null $fDate
+ */
 ?>
 
 <div class="table-responsive">
@@ -16,26 +25,42 @@ use Yiisoft\Html\Html;
                 <?= $translator->translate('i.task_price'); ?></th>
         </tr>
 
-        <?php foreach ($tasks as $task) { ?>
+        <?php
+            /**
+             * @var App\Invoice\Entity\Task $task
+             */
+            foreach ($taskR->repoTaskStatusquery(3) as $task) { ?>
             <tr class="task-row">
                 <td class="text-left">
                     <input type="checkbox" class="modal-task-id" name="task_ids[]"
                            id="task-id-<?= $task->getId() ?>" value="<?= $task->getId(); ?>">
                 </td>
                 <td nowrap class="text-left">
-                    <b><?= ($prjct->count($task->getProject_id()) > 0 ? $prjct->repoProjectquery($task->getProject_id())->getName() : '') ?></b>
+                    <b><?= ($prjctR->count($task->getProject_id()) > 0 ? $prjctR->repoProjectquery($task->getProject_id())?->getName() : '') ?></b>
                 </td>
                 <td>
                     <b><?= Html::encode($task->getName()); ?></b>
                 </td>
                 <td>
-                    <b><?= $datehelper->date_from_mysql($task->getFinish_date()); ?></b>
+                    <?php
+                        $finishDate = $task->getFinish_date();
+                        if ($finishDate instanceof \DateTimeImmutable) {
+                            $fDate = $finishDate->format('Y-m-d');
+                        }
+                        if (is_string($finishDate)) {
+                            $fDate = $finishDate;
+                        }
+                        if (null==$finishDate) {
+                            $fDate = $finishDate;
+                        }
+                    ?>
+                    <b><?= Html::encode($fDate); ?></b>
                 </td>
                 <td>
                     <?= nl2br(Html::encode($task->getDescription())); ?>
                 </td>
                 <td class="amount">
-                    <?= $numberhelper->format_currency($task->getPrice()); ?>
+                    <?= $numberHelper->format_currency($task->getPrice()); ?>
                 </td>
             </tr>
         <?php } ?>

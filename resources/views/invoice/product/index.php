@@ -47,7 +47,7 @@ use Yiisoft\Yii\DataView\YiiRouter\UrlCreator;
         ->addAttributes(['type' => 'reset'])
         ->addClass('btn btn-danger me-1 ajax-loader')
         ->content(I::tag()->addClass('bi bi-bootstrap-reboot'))
-        ->href($urlGenerator->generate($currentRoute->getName()))
+        ->href($urlGenerator->generate($currentRoute?->getName()))
         ->id('btn-reset')
         ->render();
     
@@ -152,7 +152,7 @@ use Yiisoft\Yii\DataView\YiiRouter\UrlCreator;
             ->addAttributes(['class' => 'dropdown-button text-decoration-none', 'title' => $translator->translate('i.view')])
             ->content('🔎')
             ->encode(false)
-            ->href('/invoice/product/view/'. $model->getProduct_id())
+            ->href('product/view/'. $model->getProduct_id())
             ->render(),
         ),
         new ActionColumn(
@@ -161,7 +161,7 @@ use Yiisoft\Yii\DataView\YiiRouter\UrlCreator;
             ->addAttributes(['class' => 'dropdown-button text-decoration-none', 'title' => $translator->translate('i.edit')])
             ->content('✎')
             ->encode(false)
-            ->href('/invoice/product/edit/'. $model->getProduct_id())
+            ->href('product/edit/'. $model->getProduct_id())
             ->render(),
         ),
         new ActionColumn(
@@ -175,12 +175,13 @@ use Yiisoft\Yii\DataView\YiiRouter\UrlCreator;
             ])
             ->content('❌')
             ->encode(false)
-            ->href('/invoice/product/delete/'. $model->getProduct_id())
+            ->href('product/delete/'. $model->getProduct_id())
             ->render(),
         )
     ];       
 ?>
 <?= GridView::widget()
+    ->rowAttributes(['class' => 'align-middle'])
     ->columns(...$columns)
     ->dataReader($paginator)
     ->headerRowAttributes(['class'=>'card-header bg-info text-black'])
@@ -208,7 +209,6 @@ use Yiisoft\Yii\DataView\YiiRouter\UrlCreator;
         ->paginator($paginator)
         ->render()
     )
-    ->rowAttributes(['class' => 'align-middle'])
     ->summaryAttributes(['class' => 'mt-3 me-3 summary text-end'])
     ->summaryTemplate($pageSizeLimiter::buttons($currentRoute, $s, $urlGenerator, 'product').' '.$grid_summary)
     ->emptyTextAttributes(['class' => 'card-header bg-warning text-black'])

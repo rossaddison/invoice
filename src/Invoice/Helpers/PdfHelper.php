@@ -87,7 +87,7 @@ Class PdfHelper
      * @param \App\Invoice\Quote\QuoteRepository $qR
      * @param \App\Invoice\QuoteTaxRate\QuoteTaxRateRepository $qtrR
      * @param \App\Invoice\UserInv\UserInvRepository $uiR
-     * @param \Yiisoft\Yii\View\ViewRenderer $viewrenderer
+     * @param \Yiisoft\Yii\View\Renderer\ViewRenderer $viewrenderer
      * @return string 
      */
     public function generate_quote_pdf(string|null $quote_id, 
@@ -104,7 +104,7 @@ Class PdfHelper
                                        \App\Invoice\Quote\QuoteRepository $qR, 
                                        \App\Invoice\QuoteTaxRate\QuoteTaxRateRepository $qtrR, 
                                        \App\Invoice\UserInv\UserInvRepository $uiR,
-                                       \Yiisoft\Yii\View\ViewRenderer $viewrenderer)
+                                       \Yiisoft\Yii\View\Renderer\ViewRenderer $viewrenderer)
     {       
             if (null!==$quote_id) {
             
@@ -149,7 +149,7 @@ Class PdfHelper
                     'cvH' => new CVH($this->s),
                     'cvR' => $cvR,
                     'quote_custom_values' => $quote_custom_values,
-                    'top_custom_fields' =>$viewrenderer->renderPartialAsString('/invoice/template/quote/pdf/top_custom_fields', [
+                    'top_custom_fields' =>$viewrenderer->renderPartialAsString('template/quote/pdf/top_custom_fields', [
                         'custom_fields'=>$cfR->repoTablequery('quote_custom'),
                         'cvR'=>$cvR, 
                         'quote_custom_values'=> $quote_custom_values,  
@@ -157,7 +157,7 @@ Class PdfHelper
                         's'=>$this->s,   
                     ]),    
                     // Custom fields appearing at the bottom of the quote
-                    'view_custom_fields'=>$viewrenderer->renderPartialAsString('/invoice/template/quote/pdf/view_custom_fields', [
+                    'view_custom_fields'=>$viewrenderer->renderPartialAsString('template/quote/pdf/view_custom_fields', [
                         'custom_fields'=>$cfR->repoTablequery('quote_custom'),
                         'cvR'=>$cvR,
                         'quote_custom_values'=> $quote_custom_values,  
@@ -165,11 +165,11 @@ Class PdfHelper
                         's'=>$this->s,   
                     ]),        
                     's'=>$this->s,
-                    'company_logo_and_address'=>$viewrenderer->renderPartialAsString('/invoice/setting/company_logo_and_address.php',
-                        ['company'=>$company = $this->s->get_config_company_details(), 
+                    'company_logo_and_address'=>$viewrenderer->renderPartialAsString('setting/company_logo_and_address.php',
+                        ['company'=> $company = $this->s->get_config_company_details(), 
                          'document_number'=>$quote->getNumber(),
                          'client_number' => $client_number,
-                         'countryhelper'=> $this->countryhelper,
+                         'countryHelper'=> $this->countryhelper,
                          'isInvoice' => false,
                          'isQuote' => true,
                          'isSalesOrder' => false   
@@ -182,7 +182,7 @@ Class PdfHelper
                     'cldr'=> array_keys($this->s->locale_language_array(), $this->get_print_language($quote)),
                 ];        
                 // Quote Template will be either 'quote' or a custom designed quote in the folder.
-                $html = $viewrenderer->renderPartialAsString('/invoice/template/quote/pdf/'.$quote_template, $data);
+                $html = $viewrenderer->renderPartialAsString('template/quote/pdf/'.$quote_template, $data);
                 if ($this->s->get_setting('pdf_html_quote') === '1') {
                     return $html;
                 }
@@ -212,12 +212,12 @@ Class PdfHelper
      * @param \App\Invoice\SalesOrder\SalesOrderRepository $soR
      * @param \App\Invoice\SalesOrderTaxRate\SalesOrderTaxRateRepository $sotrR
      * @param \App\Invoice\UserInv\UserInvRepository $uiR
-     * @param \Yiisoft\Yii\View\ViewRenderer $viewrenderer
+     * @param \Yiisoft\Yii\View\Renderer\ViewRenderer $viewrenderer
      * @param Translator $translator
      * @return string
      */
     public function generate_salesorder_pdf(string|null $so_id, string $user_id, bool $stream, bool $custom, object|null $so_amount, array $so_custom_values,\App\Invoice\Client\ClientRepository $cR, \App\Invoice\CustomValue\CustomValueRepository $cvR, \App\Invoice\CustomField\CustomFieldRepository $cfR, \App\Invoice\SalesOrderItem\SalesOrderItemRepository $soiR, \App\Invoice\SalesOrderItemAmount\SalesOrderItemAmountRepository $soiaR, \App\Invoice\SalesOrder\SalesOrderRepository $soR, \App\Invoice\SalesOrderTaxRate\SalesOrderTaxRateRepository $sotrR, \App\Invoice\UserInv\UserInvRepository $uiR,
-                                \Yiisoft\Yii\View\ViewRenderer $viewrenderer, Translator $translator) : string
+                                \Yiisoft\Yii\View\Renderer\ViewRenderer $viewrenderer, Translator $translator) : string
     {       
           if (null!==$so_id) {
             
@@ -260,7 +260,7 @@ Class PdfHelper
                     'custom_values'=>$cvR->attach_hard_coded_custom_field_values_to_custom_field($cfR->repoTablequery('salesorder_custom')),
                     'cvH'=> new CVH($this->s),
                     'salesorder_custom_values' => $so_custom_values,
-                    'top_custom_fields' =>$viewrenderer->renderPartialAsString('/invoice/template/salesorder/pdf/top_custom_fields', [
+                    'top_custom_fields' =>$viewrenderer->renderPartialAsString('template/salesorder/pdf/top_custom_fields', [
                         'custom_fields'=>$cfR->repoTablequery('salesorder_custom'),
                         'cvR'=>$cvR, 
                         'salesorder_custom_values'=> $so_custom_values,  
@@ -268,7 +268,7 @@ Class PdfHelper
                         's'=>$this->s,   
                     ]),    
                     // Custom fields appearing at the bottom of the salesorder 
-                    'view_custom_fields'=>$viewrenderer->renderPartialAsString('/invoice/template/salesorder/pdf/view_custom_fields', [
+                    'view_custom_fields'=>$viewrenderer->renderPartialAsString('template/salesorder/pdf/view_custom_fields', [
                         'custom_fields'=>$cfR->repoTablequery('salesorder_custom'),
                         'cvR'=>$cvR,
                         'salesorder_custom_values'=> $so_custom_values,  
@@ -276,11 +276,11 @@ Class PdfHelper
                         's'=>$this->s,   
                     ]),        
                     's'=>$this->s,
-                    'company_logo_and_address'=>$viewrenderer->renderPartialAsString('/invoice/setting/company_logo_and_address.php',
+                    'company_logo_and_address'=>$viewrenderer->renderPartialAsString('setting/company_logo_and_address.php',
                         ['company'=>$company = $this->s->get_config_company_details(), 
                          'document_number'=> $so->getNumber(),
                          'client_number'=> $client_number,   
-                         'countryhelper'=> $this->countryhelper,
+                         'countryHelper'=> $this->countryhelper,
                          'isInvoice' => false,
                          'isQuote' => false,
                          'isSalesOrder' => true   
@@ -293,7 +293,7 @@ Class PdfHelper
                     'cldr'=> array_keys($this->s->locale_language_array(), $this->get_print_language($so)),
                 ];        
                 // Sales Order Template will be either 'salesorder' or a custom designed salesorder in the folder.
-                $html = $viewrenderer->renderPartialAsString('/invoice/template/salesorder/pdf/'.$salesorder_template, $data);
+                $html = $viewrenderer->renderPartialAsString('template/salesorder/pdf/'.$salesorder_template, $data);
                 if ($this->s->get_setting('pdf_html_salesorder') === '1') {
                     return $html;
                 }
@@ -324,7 +324,7 @@ Class PdfHelper
      * @param \App\Invoice\InvTaxRate\InvTaxRateRepository $itrR
      * @param \App\Invoice\UserInv\UserInvRepository $uiR
      * @param SumexRepository $sumexR
-     * @param \Yiisoft\Yii\View\ViewRenderer $viewrenderer
+     * @param \Yiisoft\Yii\View\Renderer\ViewRenderer $viewrenderer
      * @return string
      */
     public function generate_inv_html(string|null $inv_id, string $user_id, bool $custom, SalesOrder|null $so, 
@@ -338,7 +338,7 @@ Class PdfHelper
             Inv $inv, \App\Invoice\InvTaxRate\InvTaxRateRepository $itrR, 
             \App\Invoice\UserInv\UserInvRepository $uiR, 
             SumexRepository $sumexR,
-            \Yiisoft\Yii\View\ViewRenderer $viewrenderer,
+            \Yiisoft\Yii\View\Renderer\ViewRenderer $viewrenderer,
         ) : string {
         if (null!==$inv_id) {
             // If userinv details have been filled, use these details
@@ -379,14 +379,14 @@ Class PdfHelper
                 'custom_values'=>$cvR->attach_hard_coded_custom_field_values_to_custom_field($cfR->repoTablequery('inv_custom')),
                 'cvH'=> new CVH($this->s),
                 'inv_custom_values' => $inv_custom_values,
-                'top_custom_fields' =>$viewrenderer->renderPartialAsString('/invoice/template/invoice/pdf/top_custom_fields', [
+                'top_custom_fields' =>$viewrenderer->renderPartialAsString('template/invoice/pdf/top_custom_fields', [
                     'custom_fields'=>$cfR->repoTablequery('inv_custom'),
                     'cvR'=>$cvR, 
                     'inv_custom_values'=> $inv_custom_values,  
                     'cvH'=> new CVH($this->s),
                 ]),    
                 // Custom fields appearing at the bottom of the invoice
-                'view_custom_fields'=>$viewrenderer->renderPartialAsString('/invoice/template/invoice/pdf/view_custom_fields', [
+                'view_custom_fields'=>$viewrenderer->renderPartialAsString('template/invoice/pdf/view_custom_fields', [
                     'custom_fields'=>$cfR->repoTablequery('inv_custom'),
                     'cvR'=>$cvR,
                     'inv_custom_values'=> $inv_custom_values,  
@@ -394,7 +394,7 @@ Class PdfHelper
                 ]),
                 'sumex'=> $sumex, 
                 'userinv'=>$userinv,
-                'company_logo_and_address'=>$viewrenderer->renderPartialAsString('/invoice/setting/company_logo_and_address.php',
+                'company_logo_and_address'=>$viewrenderer->renderPartialAsString('setting/company_logo_and_address.php',
                     [
                      // if there is no active company with private details, use the config params company details   
                      'company'=> !$this->s->get_private_company_details() == []
@@ -404,7 +404,7 @@ Class PdfHelper
                      //'client_number'=> $client_number,
                      'client_purchase_order_number' => $client_purchase_order_number,
                      'date_tax_point'=> $date_helper->date_from_mysql($inv->getDate_tax_point()),   
-                     'countryhelper'=> $this->countryhelper,
+                     'countryHelper'=> $this->countryhelper,
                      '_language' => $_language,
                      'inv_id' => $inv_id,   
                      'isInvoice'=> true,
@@ -418,7 +418,7 @@ Class PdfHelper
                 'cldr'=> array_keys($this->s->locale_language_array(), $this->get_print_language($inv)),
             ];        
             // Inv Template will be either 'inv' or a custom designed inv in the folder.
-            return $viewrenderer->renderPartialAsString('/invoice/template/invoice/pdf/'.$inv_template,$data);
+            return $viewrenderer->renderPartialAsString('template/invoice/pdf/'.$inv_template,$data);
         }
         return '';
     }
@@ -439,11 +439,11 @@ Class PdfHelper
      * @param \App\Invoice\Inv\InvRepository $iR
      * @param \App\Invoice\InvTaxRate\InvTaxRateRepository $itrR
      * @param \App\Invoice\UserInv\UserInvRepository $uiR
-     * @param \Yiisoft\Yii\View\ViewRenderer $viewrenderer
+     * @param \Yiisoft\Yii\View\Renderer\ViewRenderer $viewrenderer
      * @return string
      */
     public function generate_inv_pdf(string|null $inv_id, string $user_id, bool $stream, bool $custom, SalesOrder|null $so, InvAmount|null $inv_amount, array $inv_custom_values,\App\Invoice\Client\ClientRepository $cR, \App\Invoice\CustomValue\CustomValueRepository $cvR, \App\Invoice\CustomField\CustomFieldRepository $cfR, \App\Invoice\InvItem\InvItemRepository $iiR, \App\Invoice\InvItemAmount\InvItemAmountRepository $iiaR, \App\Invoice\Inv\InvRepository $iR, \App\Invoice\InvTaxRate\InvTaxRateRepository $itrR, \App\Invoice\UserInv\UserInvRepository $uiR, SumexRepository $sumexR,
-                                \Yiisoft\Yii\View\ViewRenderer $viewrenderer) : string
+                                \Yiisoft\Yii\View\Renderer\ViewRenderer $viewrenderer) : string
     {       
        if (null!==$inv_id) { 
             $inv = $iR->repoCount($inv_id) > 0 ? $iR->repoInvLoadedquery($inv_id) : null;

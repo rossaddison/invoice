@@ -1,17 +1,27 @@
 <?php
 declare(strict_types=1);
 
-use Yiisoft\Html\Html;
 use Yiisoft\Html\Tag\A;
+
+/**
+ * @var App\Invoice\Setting\SettingRepository $s 
+ * @var Yiisoft\Translator\TranslatorInterface $translator
+ * @var \Yiisoft\Router\UrlGeneratorInterface $urlGenerator 
+ * @var string $actionTestConnectionName
+ * @var string $actionImportName
+ * @var array $body
+ * @psalm-var array<string, Stringable|null|scalar> $actionTestConnectionArguments
+ * @psalm-var array<string, Stringable|null|scalar> $actionImportArguments
+ */
 ?>
-<?= Html::openTag('div', ['class' => 'row']); ?>
+<div class ="row">
     <div class="col-xs-12 col-md-8 col-md-offset-2">
         <div class="panel panel-default">
             <div class="panel-heading">
                 <?= $translator->translate('invoice.invoice.invoiceplane.tables'); ?>
             </div>
             <div class="panel-body">
-                <?= Html::openTag('div', ['class' => 'row']); ?>
+                <div class="row">
                     <div class="col-xs-8 col-md-4">
                         <div class="form-group">
                             <label for="settings[invoiceplane_database_name]"><?= $translator->translate('invoice.invoice.invoiceplane.database.name'); ?></label>
@@ -41,7 +51,7 @@ use Yiisoft\Html\Tag\A;
                     </div>
                     <div>
                         <?= A::tag()
-                            ->href($urlGenerator->generate(...$actionTestConnection))
+                            ->href($urlGenerator->generate($actionTestConnectionName, $actionTestConnectionArguments))
                             ->id('btn-reset')
                             ->addAttributes(['type' => 'reset'])
                             ->addClass('btn btn-primary me-1')                   
@@ -53,7 +63,7 @@ use Yiisoft\Html\Tag\A;
                     <br>
                     <div>
                         <?= A::tag()
-                            ->href($urlGenerator->generate(...$actionImport))
+                            ->href($urlGenerator->generate($actionImportName, $actionImportArguments))
                             ->id('btn-reset')
                             ->addAttributes([
                                 'type' => 'submit',
@@ -64,7 +74,7 @@ use Yiisoft\Html\Tag\A;
                             ->render();
                         ?>
                     </div>
-                <?= Html::closeTag('div', ['class' => 'row']); ?>
+                </div>
             </div>
         </div>
     </div>

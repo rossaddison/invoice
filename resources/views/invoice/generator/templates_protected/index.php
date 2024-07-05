@@ -73,7 +73,7 @@ use Yiisoft\Yii\DataView\OffsetPagination;
             ])
             ->content('🔎')
             ->encode(false)
-            ->href('/invoice/<?= $generator->getSmall_singular_name(); ?>/view/'. $model->getId())
+            ->href('<?= $generator->getSmall_singular_name(); ?>/view/'. $model->getId())
             ->render() .
             Html::a()
             ->addAttributes([
@@ -82,7 +82,7 @@ use Yiisoft\Yii\DataView\OffsetPagination;
             ])
             ->content('✎')
             ->encode(false)
-            ->href('/invoice/<?= $generator->getSmall_singular_name(); ?>/edit/'. $model->getId())
+            ->href('<?= $generator->getSmall_singular_name(); ?>/edit/'. $model->getId())
             ->render() .
             Html::a()
             ->addAttributes([
@@ -93,12 +93,13 @@ use Yiisoft\Yii\DataView\OffsetPagination;
             ])
             ->content('❌')
             ->encode(false)
-            ->href('/invoice/<?= $generator->getSmall_singular_name(); ?>/delete/'. $model->getId())
+            ->href('<?= $generator->getSmall_singular_name(); ?>/delete/'. $model->getId())
             ->render() . Html::closeTag('div')
         ), 
     ];
     
     echo GridView::widget()
+      ->rowAttributes(['class' => 'align-middle'])
       ->columns(...$columns)
       ->dataReader($paginator)
       ->headerRowAttributes(['class' => 'card-header bg-info text-black'])      
@@ -107,7 +108,6 @@ use Yiisoft\Yii\DataView\OffsetPagination;
       ->pagination(
         $gridComponents->offsetPaginationWidget($defaultPageSizeOffsetPaginator, $paginator)
       )
-      ->rowAttributes(['class' => 'align-middle'])
       ->summaryAttributes(['class' => 'mt-3 me-3 summary text-end'])
       ->summaryTemplate($grid_summary)
       ->emptyTextAttributes(['class' => 'card-header bg-warning text-black'])

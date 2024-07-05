@@ -7,10 +7,19 @@ use Yiisoft\Html\Html;
 use Yiisoft\Html\Tag\Form;
 
 /**
+ * @var App\Invoice\Task\TaskForm $form 
+ * @var App\Invoice\Setting\SettingRepository $s
+ * @var App\Widget\Button $button
  * @var \Yiisoft\View\View $this
- * @var \Yiisoft\Router\UrlGeneratorInterface $urlGenerator
+ * @var Yiisoft\Translator\TranslatorInterface $translator
+ * @var Yiisoft\Router\UrlGeneratorInterface $urlGenerator
  * @var string $csrf
- * @var string $action
+ * @var string $actionName
+ * @var array $statuses
+ * @psalm-var array<string, Stringable|null|scalar> $actionArguments
+ * @psalm-var array<array-key, array<array-key, string>|string> $projects
+ * @psalm-var array<array-key, array<array-key, string>|string> $taxRates
+ * @psalm-var array<array-key, array<array-key, string>|string> $optionsDataStatus
  */
 ?>
 <?= Html::openTag('div',['class'=>'container py-5 h-100']); ?>
@@ -22,7 +31,7 @@ use Yiisoft\Html\Tag\Form;
 <?= $translator->translate('i.tasks_form'); ?>
 <?= Html::closeTag('h1'); ?>
 <?= Form::tag()
-    ->post($urlGenerator->generate(...$action))
+    ->post($urlGenerator->generate($actionName, $actionArguments))
     ->enctypeMultipartFormData()
     ->csrf($csrf)
     ->id('TaskForm')
@@ -79,21 +88,48 @@ use Yiisoft\Html\Tag\Form;
             'readonly' => 'readonly',
             'disabled' => 'disabled'
         ])
-        ->value($s->format_amount((float)($form->getPrice() ?? 0.00)))    
+        ->value($s->format_amount(($form->getPrice() ?? 0.00)))    
         ->placeholder($translator->translate('i.price'))    
         ->hint($translator->translate('invoice.hint.this.field.is.required')); ?>         
     <?= Html::tag('br'); ?>
-    <?= Field::date($form, 'finish_date')
+    <?=                 
+        Field::date($form, 'finish_date')
         ->label($translator->translate('i.task_finish_date'))
         ->addInputAttributes([
             'readonly' => 'readonly',
             'disabled' => 'disabled'
         ])
-        ->value(Html::encode($form->getFinish_date($s) ? ($form->getFinish_date($s))->format('Y-m-d') : ''))
+        ->value(Html::encode($form->getFinish_date() instanceof \DateTimeImmutable ? 
+                             $form->getFinish_date()->format('Y-m-d') : (is_string(
+                             $form->getFinish_date()) ? 
+                             $form->getFinish_date() : '')))
     ?>    
     <?= Html::tag('br'); ?>
     <?php 
         $optionsDataStatus = [];
+        $statuses = [
+            1 => [
+                'label' => $translator->translate('i.not_started'),
+                'class' => 'draft'
+            ],
+            2 => [
+                'label' => $translator->translate('i.in_progress'),
+                'class' => 'viewed'
+            ],
+            3 => [
+                'label' => $translator->translate('i.complete'),
+                'class' => 'sent'
+            ],
+            4 => [
+                'label' => $translator->translate('i.invoiced'),
+                'class' => 'paid'
+            ]
+        ];
+        /**
+         * @var int $key
+         * @var array $status
+         * @var string $status['label']
+         */
         foreach ($statuses as $key => $status) {
             if ($form->getStatus() !== 4 && $key === 4) {
                 continue;
@@ -111,7 +147,7 @@ use Yiisoft\Html\Tag\Form;
         ->value($form->getStatus())   
     ?>
 <?= Html::closeTag('div'); ?>     
-<?= $button::back($translator); ?>
+<?= $button::back(); ?>
 <?= Form::tag()->close(); ?>
 <?= Html::closeTag('div'); ?>
 <?= Html::closeTag('div'); ?>

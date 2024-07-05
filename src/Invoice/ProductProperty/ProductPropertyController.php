@@ -24,7 +24,7 @@ use Yiisoft\Session\SessionInterface;
 use Yiisoft\Session\Flash\Flash;
 use Yiisoft\Translator\TranslatorInterface;
 use Yiisoft\FormModel\FormHydrator;
-use Yiisoft\Yii\View\ViewRenderer;
+use Yiisoft\Yii\View\Renderer\ViewRenderer;
 
 use \Exception;
 
@@ -101,7 +101,7 @@ final class ProductPropertyController
      * @return string
      */
     private function alert(): string {
-      return $this->viewRenderer->renderPartialAsString('/invoice/layout/alert',
+      return $this->viewRenderer->renderPartialAsString('//invoice/layout/alert',
       [ 
         'flash' => $this->flash
       ]);
@@ -128,7 +128,7 @@ final class ProductPropertyController
         'max' => (int) $settingRepository->get_setting('default_list_limit'),
         'grid_summary' => $settingRepository->grid_summary($paginator, $this->translator, (int) $settingRepository->get_setting('default_list_limit'), $this->translator->translate('invoice.profile.plural'), ''),
     ];
-    return $this->viewRenderer->render('/invoice/productproperty/index', $parameters);
+    return $this->viewRenderer->render('productproperty/index', $parameters);
     }
         
     /**

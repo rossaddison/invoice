@@ -6,7 +6,6 @@ namespace App\Invoice\Task;
 use App\Invoice\Entity\Task;
 use App\Invoice\Entity\InvItem;
 
-use App\Invoice\Helpers\DateHelper;
 use App\Invoice\Helpers\NumberHelper;
 
 use App\Invoice\InvAllowanceCharge\InvAllowanceChargeRepository as ACIR;
@@ -41,7 +40,7 @@ use Yiisoft\Router\CurrentRoute;
 use Yiisoft\Session\SessionInterface as Session;
 use Yiisoft\Session\Flash\Flash;
 use Yiisoft\Translator\TranslatorInterface;
-use Yiisoft\Yii\View\ViewRenderer;
+use Yiisoft\Yii\View\Renderer\ViewRenderer;
 use Yiisoft\FormModel\FormHydrator;
 
 final class TaskController
@@ -82,10 +81,9 @@ final class TaskController
     /**
      * @param Request $request
      * @param tR $tR
-     * @param DateHelper $dateHelper
      * @param prjctR $prjctR
      */
-    public function index(Request $request, tR $tR, DateHelper $dateHelper, prjctR $prjctR, sR $sR) : \Yiisoft\DataResponse\DataResponse
+    public function index(Request $request, tR $tR, prjctR $prjctR, sR $sR) : \Yiisoft\DataResponse\DataResponse
     {            
         $pageNum = (int)$request->getAttribute('page','1');
         $paginator = (new OffsetPaginator($this->tasks($tR)))
@@ -96,12 +94,7 @@ final class TaskController
             'paginator' => $paginator,
             'canEdit' => $canEdit,
             'alert' => $this->alert(),
-            'prjct' => $prjctR,
-            'grid_summary' => $sR->grid_summary($paginator, 
-                                                $this->translator, 
-                                                (int)$sR->get_setting('default_list_limit'), 
-                                                $this->translator->translate('invoice.products'), ''),
-            'statuses' => $this->getStatuses($this->translator),
+            'prjctR' => $prjctR,
             'tasks' => $this->tasks($tR),
         ];    
         return $this->viewRenderer->render('index', $parameters);  
@@ -126,12 +119,12 @@ final class TaskController
         $form = new TaskForm($task);
         $parameters = [
             'title' => $this->translator->translate('invoice.add'),
-            'action' => ['task/add'],
+            'actionName' => 'task/add',
+            'actionArguments' => [],
             'alert' => $this->alert(),
             'form' => $form,
             'errors' => [],
             'numberhelper'=>new NumberHelper($sR),
-            'statuses' => $this->getStatuses($this->translator),
             'taxRates' => $trR->optionsDataTaxRates(),
             'projects' => $pR->optionsDataProjects()     
         ];
@@ -175,11 +168,11 @@ final class TaskController
             $form = new TaskForm($task);    
             $parameters = [
                 'title' => $this->translator->translate('i.edit'),
-                'action' => ['task/edit', ['id' => $task->getId()]],
+                'actionName' => 'task/edit',
+                'actionArguments' => ['id' => $task->getId()],
                 'alert' => $this->alert(),
                 'form' => $form,
                 'errors' => [],
-                'statuses' => $this->getStatuses($this->translator),
                 'taxRates' => $trR->optionsDataTaxRates(),
                 'projects' => $pR->optionsDataProjects()     
             ];
@@ -329,10 +322,10 @@ final class TaskController
             $taskForm = new TaskForm($task);
             $parameters = [
                'title' => $this->translator->translate('i.view'),
-               'action' => ['task/view', ['id' => $task->getId()]],
+               'actionName' => 'task/view',
+               'actionArguments' => ['id' => $task->getId()],
                'errors' => [],
-               'form' => $taskForm,
-               'statuses' => $this->getStatuses($this->translator), 
+               'form' => $taskForm, 
                'task' => $tR->repoTaskquery($task->getId()),
                'taxRates' => $trR->optionsDataTaxRates(),
                'projects' => $pR->optionsDataProjects()   
@@ -385,7 +378,7 @@ final class TaskController
      * @return string
      */
     private function alert(): string {
-        return $this->viewRenderer->renderPartialAsString('/invoice/layout/alert',
+        return $this->viewRenderer->renderPartialAsString('//invoice/layout/alert',
         [ 
             'flash' => $this->flash
         ]);

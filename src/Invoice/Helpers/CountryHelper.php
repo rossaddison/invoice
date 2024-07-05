@@ -40,9 +40,9 @@ public function get_country_list(string $cldr) : mixed
  *
  * @param string $cldr
  * @param string $countrycode
- * @return mixed
+ * @return string
  */
-public function get_country_name(string $cldr, string $countrycode) : mixed
+public function get_country_name(string $cldr, string $countrycode) : string
 {
     /** @var array $countries */
     $countries = $this->get_country_list($cldr);

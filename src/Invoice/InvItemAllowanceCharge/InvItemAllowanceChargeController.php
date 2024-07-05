@@ -25,7 +25,7 @@ use Yiisoft\Session\SessionInterface;
 use Yiisoft\Session\Flash\Flash;
 use Yiisoft\Translator\TranslatorInterface;
 use Yiisoft\FormModel\FormHydrator;
-use Yiisoft\Yii\View\ViewRenderer;
+use Yiisoft\Yii\View\Renderer\ViewRenderer;
 
 final class InvItemAllowanceChargeController
 {
@@ -154,7 +154,7 @@ final class InvItemAllowanceChargeController
                     } //allowance_charge
                 } // is_array    
             }   // request 
-            return $this->viewRenderer->render('/invoice/invitemallowancecharge/_form', $parameters);
+            return $this->viewRenderer->render('invitemallowancecharge/_form', $parameters);
         } // if inv_item
         return $this->webService->getNotFoundResponse();
     }    
@@ -163,7 +163,7 @@ final class InvItemAllowanceChargeController
    * @return string
    */
    private function alert(): string {
-     return $this->viewRenderer->renderPartialAsString('/invoice/layout/alert',
+     return $this->viewRenderer->renderPartialAsString('//invoice/layout/alert',
      [ 
        'flash' => $this->flash
      ]);
@@ -206,7 +206,7 @@ final class InvItemAllowanceChargeController
           'paginator' => $paginator,
           'grid_summary' => $settingRepository->grid_summary($paginator, $this->translator, (int)$settingRepository->get_setting('default_list_limit'), $this->translator->translate('invoice.invoice.allowance.or.charge.item'), ''),    
       ];
-      return $this->viewRenderer->render('/invoice/invitemallowancecharge/index', $parameters);
+      return $this->viewRenderer->render('invitemallowancecharge/index', $parameters);
     }
         
     /**
@@ -324,7 +324,7 @@ final class InvItemAllowanceChargeController
                 } // allowance_charge_id
                 $parameters['form'] = $form;
             } // request
-            return $this->viewRenderer->render('/invoice/invitemallowancecharge/_form', $parameters);
+            return $this->viewRenderer->render('invitemallowancecharge/_form', $parameters);
         } // if acii
         return $this->webService->getRedirectResponse('acii/index');
     }
@@ -379,7 +379,7 @@ final class InvItemAllowanceChargeController
                 'form' => $form,
                 'acii' => $acii,
             ];        
-            return $this->viewRenderer->render('/invoice/invitemallowancecharge/_view', $parameters);
+            return $this->viewRenderer->render('invitemallowancecharge/_view', $parameters);
         }
         return $this->webService->getRedirectResponse('acii/index');
     }

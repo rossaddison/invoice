@@ -1,13 +1,17 @@
 <?php
 declare(strict_types=1);
 
-use App\Asset\ReportAsset;
+use App\Invoice\Asset\ReportAsset;
 use Yiisoft\Html\Html;
 
 /**
- * @var \Yiisoft\Assets\AssetManager $assetManager 
- * @var \DateTimeImmutable $from_date
- * @var \DateTimeImmutable $to_date 
+ * @var App\Invoice\Helpers\NumberHelper $numberHelper
+ * @var App\Invoice\Setting\SettingRepository $s
+ * @var Yiisoft\Assets\AssetManager $assetManager
+ * @var Yiisoft\Translator\TranslatorInterface $translator
+ * @var Yiisoft\View\WebView $this
+ * @var string $from_date
+ * @var string $to_date 
  * @var array $results 
  */
 
@@ -21,10 +25,10 @@ $this->beginPage();
     <title><?= Html::encode($translator->translate('i.payment_history')); ?></title>
 </head>
 <body>
-<?php $this->beginBody() ?> 
+<?php $this->beginBody(); ?> 
 <h3 class="report_title">
-    <?= Html::encode($translator->translate('i.payment_history')); ?><br/>
-    <small><?= $from_date . ' - ' . $to_date ?></small>
+    <?= Html::encode($translator->translate('i.payment_history')); ?><br>
+    <small><?= $from_date . ' - ' . $to_date; ?></small>
 </h3>
 
 <table>
@@ -38,7 +42,15 @@ $this->beginPage();
     </tr>
     <?php
     $sum = 0.00;
-
+    /**
+     * @var DateTimeImmutable $result['payment_date']
+     * @var string $result['payment_invoice']
+     * @var string $result['payment_client']
+     * @var string $result['payment_method'
+     * @var string $result['payment_note']
+     * @var float $result['payment_amount']
+     * @var array $result
+     */
     foreach ($results as $result) {
         ?>
         <tr>
@@ -47,8 +59,8 @@ $this->beginPage();
             <td style="width:15%;"><?= $result['payment_client']; ?></td>
             <td style="width:15%;"><?= Html::encode($result['payment_method']); ?></td>
             <td style="width:15%;"><?= nl2br(Html::encode($result['payment_note'])); ?></td>
-            <td style="width:15%;text-align:right;border-bottom: 0px solid black;"><?= $numberhelper->format_currency($result['payment_amount']);
-                $sum = $sum + (float)$result['payment_amount']; ?></td>
+            <td style="width:15%;text-align:right;border-bottom: 0px solid black;"><?= $numberHelper->format_currency($result['payment_amount']);
+                $sum = $sum + $result['payment_amount']; ?></td>
         </tr>
         <?php
     }
@@ -57,7 +69,7 @@ $this->beginPage();
         ?>
         <tr>
             <td colspan=5><?= $translator->translate('i.total'); ?></td>
-            <td style="width:15%;text-align:right;border-bottom: 0px solid black;"><?= $numberhelper->format_currency($sum); ?></td>
+            <td style="width:15%;text-align:right;border-bottom: 0px solid black;"><?= $numberHelper->format_currency($sum); ?></td>
         </tr>
     <?php } ?>
 </table>

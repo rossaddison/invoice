@@ -7,16 +7,24 @@ use Yiisoft\Html\Html;
 use Yiisoft\Html\Tag\Form;
 
 /**
- * @var \Yiisoft\View\View $this
+ * @var App\Widget\Button $button
+ * @var App\Invoice\UnitPeppol\UnitPeppolForm $form
+ * @var \Yiisoft\Translator\TranslatorInterface $translator
  * @var \Yiisoft\Router\UrlGeneratorInterface $urlGenerator
+ * @var \Yiisoft\View\View $this
+ * @var array $eneces
+ * @var string $actionName
  * @var string $csrf
- * @var string $action
  * @var string $title
+ * @var string $actionName
+ * @psalm-var array<string, Stringable|null|scalar> $actionArguments
+ * @psalm-var array<string,list<string>> $errors
+ * @psalm-var array<array-key, array<array-key, string>|string> $optionsDataUnits
+ * @psalm-var array<array-key, array<array-key, string>|string> $optionsDataEneces
  */
 ?>
-
 <?= Form::tag()
-    ->post($urlGenerator->generate(...$action))
+    ->post($urlGenerator->generate($actionName, $actionArguments))
     ->enctypeMultipartFormData()
     ->csrf($csrf)
     ->id('UnitPeppolForm')
@@ -50,21 +58,21 @@ use Yiisoft\Html\Tag\Form;
                 <?= Html::closeTag('div'); ?>
                 <?= Html::openTag('div', ['class' => 'mb-3 form-group']); ?>
                     <?= Field::select($form, 'unit_id')
-                        ->label($translator->translate('i.id'), ['class' => 'form-label'])
+                        ->label($translator->translate('i.id'))
                         ->optionsData($optionsDataUnits)
                         ->value(Html::encode($form->getUnit_id() ?? ''))
                     ?>
                 <?= Html::closeTag('div'); ?>
                 <?= Html::openTag('div', ['class' => 'mb-3 form-group']); ?>
                     <?= Field::text($form, 'name')
-                        ->label($translator->translate('i.name'), ['class' => 'form-label'])
+                        ->label($translator->translate('i.name'))
                         ->value(Html::encode($form->getName() ?? ''))
                         ->hint($translator->translate('invoice.hint.this.field.is.required')); 
                     ?>
                 <?= Html::closeTag('div'); ?>
                 <?= Html::openTag('div', ['class' => 'mb-3 form-group']); ?>
                     <?= Field::select($form, 'code')
-                        ->label($translator->translate('invoice.unit.peppol.code'), ['class' => 'form-label'])
+                        ->label($translator->translate('invoice.unit.peppol.code'))
                         ->optionsData($optionsDataEneces)
                         ->value(Html::encode($form->getCode() ?? ''))
                         ->hint($translator->translate('invoice.hint.this.field.is.required')); 
@@ -72,7 +80,7 @@ use Yiisoft\Html\Tag\Form;
                 <?= Html::closeTag('div'); ?>
                 <?= Html::openTag('div', ['class' => 'mb-3 form-group']); ?>
                     <?= Field::text($form, 'description')
-                        ->label($translator->translate('i.description'), ['class' => 'form-label'])
+                        ->label($translator->translate('i.description'))
                         ->value(Html::encode($form->getDescription() ?? ''))
                         ->hint($translator->translate('invoice.hint.this.field.is.required')); 
                     ?>
@@ -96,16 +104,25 @@ use Yiisoft\Html\Tag\Form;
                             <?= Html::closeTag('tr'); ?>
                         <?= Html::closeTag('thead'); ?>
                         <?= Html::openTag('tbody'); ?>
-                            <?php foreach ($eneces as $key => $value) {
+                            <?php 
+                            /**
+                             * @var string $key
+                             * @var string $value
+                             */
+                             foreach ($eneces as $key => $value) {
+                                /**
+                                 * @var array $eneces[$key] 
+                                 * @var string $eneces[$key]['Description']
+                                 */ 
                                 $description = (array_key_exists('Description', $eneces[$key]) ? $eneces[$key]['Description'] : '');
                                 echo Html::openTag('tr');
                                     echo Html::openTag('td');
-                                        echo $eneces[$key]['Id'];
+                                        echo (string)$eneces[$key]['Id'];
                                     echo Html::closeTag('td');
                                 echo Html::closeTag('tr');
                                 echo Html::openTag('tr');
                                     echo Html::openTag('td');
-                                        echo $eneces[$key]['Name'];
+                                        echo (string)$eneces[$key]['Name'];
                                     echo Html::closeTag('td');
                                 echo Html::closeTag('tr');
                                 echo Html::openTag('tr');

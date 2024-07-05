@@ -110,6 +110,7 @@ $toolbar = Div::tag();
     ]
 ?>
 <?= GridView::widget()
+        ->rowAttributes(['class' => 'align-middle'])
         ->columns(...$columns)
         ->dataReader($paginator)
         ->headerRowAttributes(['class'=>'card-header bg-info text-black'])
@@ -118,7 +119,6 @@ $toolbar = Div::tag();
         ->pagination(
             $gridComponents->offsetPaginationWidget(10, $paginator)
         )
-        ->rowAttributes(['class' => 'align-middle'])
         ->summaryAttributes(['class' => 'mt-3 me-3 summary text-end'])
         ->emptyTextAttributes(['class' => 'card-header bg-warning text-black'])
         ->emptyText((string)$translator->translate('invoice.invoice.no.records'))                         

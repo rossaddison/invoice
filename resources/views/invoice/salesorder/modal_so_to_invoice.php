@@ -2,7 +2,15 @@
 declare(strict_types=1);
 
 use Yiisoft\Html\Html;
-// id="so-to-invoice" triggered by <a href="#so-to-invoice" data-toggle="modal"  style="text-decoration:none"> on views/salesorder/view.php line 86
+
+/**
+ * @see id="so-to-invoice" triggered by <a href="#so-to-invoice" data-toggle="modal"  style="text-decoration:none"> on views/salesorder/view.php line 86
+ * @var App\Invoice\Group\GroupRepository $gR
+ * @var App\Invoice\Entity\SalesOrder $so
+ * @var App\Invoice\Setting\SettingRepository $s
+ * @var Yiisoft\Translator\TranslatorInterface $translator
+ * */
+
 ?>
 <div id="so-to-invoice" class="modal modal-lg" role="dialog" aria-labelledby="modal_so_to_invoice" aria-hidden="true">
     <form class="modal-content">
@@ -28,9 +36,13 @@ use Yiisoft\Html\Html;
                     <?= $translator->translate('i.invoice_group'); ?>
                 </label>
                 <select name="group_id" id="group_id" class="form-control">
-                    <?php foreach ($groups as $group) { ?>
+                    <?php
+                        /**
+                         * @var App\Invoice\Entity\Group $group
+                         */
+                        foreach ($gR->findAllPreloaded() as $group) { ?>
                         <option value="<?= $group->getId(); ?>"
-                            <?= $s->check_select($s->get_setting('default_invoice_group'), $group->getId()); ?>>
+                            <?php $s->check_select($s->get_setting('default_invoice_group'), $group->getId()); ?>>
                             <?= Html::encode($group->getName()); ?></option>
                     <?php } ?>
                 </select>

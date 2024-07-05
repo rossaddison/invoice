@@ -2,6 +2,12 @@
     declare(strict_types=1);
     
     use Yiisoft\Html\Html;
+    
+    /**
+     * @var App\Invoice\Setting\SettingRepository $s 
+     * @var Yiisoft\Translator\TranslatorInterface $translator
+     * @var array $body
+     */
 ?>
 <?= Html::openTag('div', ['class' => 'row']); ?>
     <div class="col-xs-12 col-md-8 col-md-offset-2">

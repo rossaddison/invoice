@@ -1,12 +1,30 @@
 <?php
 declare(strict_types=1);
 
-
-use Yiisoft\Html\Html;
-
- /**
+/**
+ * @var App\Widget\Button $button
+ * @var Yiisoft\Translator\TranslatorInterface $translator
  * @var \Yiisoft\Router\UrlGeneratorInterface $urlGenerator
+ * @var string $alert
+ * @var string $actionName
  * @var string $csrf
+ * @var string $general
+ * @var string $invoices
+ * @var string $quotes
+ * @var string $salesorders
+ * @var string $taxes
+ * @var string $email
+ * @var string $online_payment
+ * @var string $projects_tasks
+ * @var string $google_translate
+ * @var string $vat_registered
+ * @var string $mpdf
+ * @var string $peppol_electronic_invoicing
+ * @var string $storecove
+ * @var string $invoiceplane
+ * @var string $qrcode
+ * @psalm-var array<string, Stringable|null|scalar> $actionArguments
+ * 
  */
 
 echo $alert;
@@ -67,7 +85,7 @@ echo $alert;
     </li>
 </ul>
 
-<form method="post" id="form-settings" action="<?= $urlGenerator->generate(...$action) ?>"  enctype="multipart/form-data">
+<form method="post" id="form-settings" action="<?= $urlGenerator->generate($actionName, $actionArguments) ?>"  enctype="multipart/form-data">
 
     <input type="hidden" id="_csrf" name="_csrf" value="<?= $csrf ?>">   
 

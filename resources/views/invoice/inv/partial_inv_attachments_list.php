@@ -73,14 +73,14 @@ use Yiisoft\Yii\DataView\Column\DataColumn;
         ];
     ?>
     <?=
-            GridView::widget()
-            ->columns(...$columns)
-            ->dataReader($dataReader)
-            ->rowAttributes(['class' => 'align-middle'])
-            ->summaryAttributes(['class' => 'mt-3 me-3 summary text-end'])
-            ->summaryTemplate($grid_summary)
-            ->emptyTextAttributes(['class' => 'card-header bg-warning text-black'])
-            ->emptyText((string) $translator->translate('invoice.invoice.no.attachments'))
-            ->tableAttributes(['class' => 'table table-striped text-center h-75', 'id' => 'table-inv-attachments-list'])
+        GridView::widget()
+        ->rowAttributes(['class' => 'align-middle'])
+        ->columns(...$columns)
+        ->dataReader($dataReader)
+        ->summaryAttributes(['class' => 'mt-3 me-3 summary text-end'])
+        ->summaryTemplate($grid_summary)
+        ->emptyTextAttributes(['class' => 'card-header bg-warning text-black'])
+        ->emptyText((string) $translator->translate('invoice.invoice.no.attachments'))
+        ->tableAttributes(['class' => 'table table-striped text-center h-75', 'id' => 'table-inv-attachments-list'])
     ?>
 </div>

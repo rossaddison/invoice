@@ -23,8 +23,8 @@ final class Button
         $this->generator = $generator;
     }
     
-    public static function back() : void {
-        echo Html::openTag('div', ['class' => 'headerbar-item pull-right']);
+    public static function back() : string {
+        $string = Html::openTag('div', ['class' => 'headerbar-item pull-right']);
         $buttonsDataArray = [
             [
                 //$translator->translate('i.back'),
@@ -37,13 +37,13 @@ final class Button
                 'value' => '1'
             ],
         ];
-        echo Field::buttongroup()
+        $string.= Field::buttongroup()
             ->buttonsData($buttonsDataArray);
-        echo Html::closeTag('div'); 
+        return $string.= Html::closeTag('div'); 
     }
     
-    public static function back_save() : void {
-        echo Html::openTag('div', ['class' => 'headerbar-item pull-right']);
+    public static function back_save() : string {
+        $string = Html::openTag('div', ['class' => 'headerbar-item pull-right']);
         $buttonsDataArray = [
             [
                 //$translator->translate('i.back'),
@@ -65,9 +65,9 @@ final class Button
                 'value' => '1'
         ],
         ];
-        echo Field::buttongroup()
+        $string.= Field::buttongroup()
             ->buttonsData($buttonsDataArray);
-        echo Html::closeTag('div'); 
+        return $string.= Html::closeTag('div'); 
     }
     
     public static function save() : void {

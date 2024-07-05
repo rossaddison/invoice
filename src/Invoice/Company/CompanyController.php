@@ -20,7 +20,7 @@ use Yiisoft\Session\SessionInterface;
 use Yiisoft\Session\Flash\Flash;
 use Yiisoft\Translator\TranslatorInterface;
 use Yiisoft\FormModel\FormHydrator;
-use Yiisoft\Yii\View\ViewRenderer;
+use Yiisoft\Yii\View\Renderer\ViewRenderer;
 
 final class CompanyController
 {
@@ -54,10 +54,9 @@ final class CompanyController
     /**
      * @param CompanyRepository $companyRepository
      * @param SettingRepository $sR
-     * @param CompanyService $service
      * @return \Yiisoft\DataResponse\DataResponse
      */
-    public function index(CompanyRepository $companyRepository, SettingRepository $sR, CompanyService $service): \Yiisoft\DataResponse\DataResponse
+    public function index(CompanyRepository $companyRepository, SettingRepository $sR): \Yiisoft\DataResponse\DataResponse
     {      
         $canEdit = $this->rbac();
         $companies = $this->companies($companyRepository);
@@ -66,12 +65,8 @@ final class CompanyController
         $parameters = [
          'canEdit' => $canEdit,
          'paginator' => $paginator,   
-         'company_public'=>$this->translator->translate('invoice.company.public'),   
-         'alert'=> $this->alert(),
-         'grid_summary' => $sR->grid_summary($paginator, 
-                                              $this->translator, 
-                                              (int)$sR->get_setting('default_list_limit'), 
-                                              $this->translator->translate('invoice.invoice.contracts'), ''),   
+         'company_public' => $this->translator->translate('invoice.company.public'),   
+         'alert' => $this->alert(),         
         ];
         return $this->viewRenderer->render('index', $parameters);
     }
@@ -232,7 +227,7 @@ final class CompanyController
   * @return string
   */
    private function alert(): string {
-     return $this->viewRenderer->renderPartialAsString('/invoice/layout/alert',
+     return $this->viewRenderer->renderPartialAsString('//invoice/layout/alert',
      [ 
        'flash' => $this->flash,
        'errors' => [],

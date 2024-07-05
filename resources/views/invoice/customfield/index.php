@@ -101,7 +101,7 @@ $translator->translate('i.custom_fields');
                 ])
                 ->content('🔎')
                 ->encode(false)
-                ->href('/invoice/customfield/view/'. $model->getId())
+                ->href('customfield/view/'. $model->getId())
                 ->render() .
                 Html::a()
                 ->addAttributes([
@@ -110,7 +110,7 @@ $translator->translate('i.custom_fields');
                 ])
                 ->content('✎')
                 ->encode(false)
-                ->href('/invoice/customfield/edit/'. $model->getId())
+                ->href('customfield/edit/'. $model->getId())
                 ->render() .
                 Html::a()
                 ->addAttributes([
@@ -121,13 +121,14 @@ $translator->translate('i.custom_fields');
                 ])
                 ->content('❌')
                 ->encode(false)
-                ->href('/invoice/customfield/delete/'. $model->getId())
+                ->href('customfield/delete/'. $model->getId())
                 ->render() . Html::closeTag('div')
             ),
     ];
         
  ?>
  <?= GridView::widget()
+    ->rowAttributes(['class' => 'align-middle'])
     ->columns(...$columns)
     ->dataReader($paginator)
     ->headerRowAttributes(['class'=>'card-header bg-info text-black'])
@@ -137,7 +138,6 @@ $translator->translate('i.custom_fields');
     ->pagination(
         $gridComponents->offsetPaginationWidget($defaultPageSizeOffsetPaginator, $paginator) 
     )
-    ->rowAttributes(['class' => 'align-middle'])
     ->summaryAttributes(['class' => 'mt-3 me-3 summary text-end'])
     ->summaryTemplate($pageSizeLimiter::buttons($currentRoute, $s, $urlGenerator, 'customfield').' '.$grid_summary)
     ->emptyTextAttributes(['class' => 'card-header bg-warning text-black'])

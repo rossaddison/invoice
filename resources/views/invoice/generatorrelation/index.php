@@ -86,7 +86,7 @@ use Yiisoft\Router\CurrentRoute;
             ])
             ->content('🔎')
             ->encode(false)
-            ->href('/invoice/generatorrelation/view/'. $model->getRelation_id())
+            ->href('generatorrelation/view/'. $model->getRelation_id())
             ->render(),
         ),
         new ActionColumn(
@@ -98,7 +98,7 @@ use Yiisoft\Router\CurrentRoute;
             ])
             ->content('✎')
             ->encode(false)
-            ->href('/invoice/generatorrelation/edit/'. $model->getRelation_id())
+            ->href('generatorrelation/edit/'. $model->getRelation_id())
             ->render(),
         ),
         new ActionColumn(
@@ -112,12 +112,13 @@ use Yiisoft\Router\CurrentRoute;
             ])
             ->content('❌')
             ->encode(false)
-            ->href('/invoice/generatorrelation/delete/'. $model->getRelation_id())
+            ->href('generatorrelation/delete/'. $model->getRelation_id())
             ->render(),
         ),
     ];       
 ?>
 <?= GridView::widget()
+    ->rowAttributes(['class' => 'align-middle'])
     ->columns(...$columns)
     ->dataReader($paginator)
     ->headerRowAttributes(['class'=>'card-header bg-info text-black'])
@@ -130,7 +131,6 @@ use Yiisoft\Router\CurrentRoute;
         ->paginator($paginator)
          ->render(),
     )
-    ->rowAttributes(['class' => 'align-middle'])
     ->summaryAttributes(['class' => 'mt-3 me-3 summary text-end'])
     ->summaryTemplate($grid_summary)
     ->emptyTextAttributes(['class' => 'card-header bg-warning text-black'])

@@ -1,8 +1,26 @@
+<?php
+    declare(strict_types=1);
+
+    /**
+     * @var Yiisoft\Translator\TranslatorInterface $translator
+     * @var Yiisoft\Router\UrlGeneratorInterface $urlGenerator
+     * @var string $csrf
+     * @var string $heading
+     * @var string $id
+     * @var string $message
+     * @var string $url
+     * @psalm-var array<string, Stringable|null|scalar> $actionArguments
+     */ 
+?>
+
 <!doctype html>
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title><?php echo $heading; ?>Invoice</title>
+    <title>
+        <?= $heading; ?>
+        <?= $translator->translate('invoice.invoice'); ?>
+    </title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <style>
 
@@ -52,23 +70,12 @@
 
     </style>
 </head>
-<body>
-<?php
- /**
- * @var \Yiisoft\View\WebView $this
- * @var \Yiisoft\Router\UrlGeneratorInterface $urlGenerator
- * @var array $body
- * @var string $csrf
- * @var string $action
- * @var string $title 
- * @var \Yiisoft\Session\Flash\FlashInterface $flash
- */
- ?>       
+<body>  
 <h1><?php echo $heading; ?></h1>
 <?php echo $message; ?>
-<form method="POST" class="form-inline" action="<?= $urlGenerator->generate($url,['id'=> $id]); ?>">
+<form method="POST" class="form-inline" action="<?= $urlGenerator->generate($url, $actionArguments = ['id'=> $id]); ?>">
        <input type="hidden" name="_csrf" value="<?= $csrf ?>">
-       <button type="submit" class="btn btn-xs btn-link">Ok</button>
+       <button type="submit" class="btn btn-xs btn-link">✅</button>
 </form>
 </body>
 </html>

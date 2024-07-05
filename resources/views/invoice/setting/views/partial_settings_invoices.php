@@ -1,7 +1,20 @@
 <?php
     declare(strict_types=1);
     
-    use Yiisoft\Html\Html;
+    /**
+     * @var App\Invoice\Setting\SettingRepository $s 
+     * @var Yiisoft\Translator\TranslatorInterface $translator
+     * @var array $body
+     * @var array $invoice_groups
+     * @var array $payment_methods
+     * @var array $pdf_invoice_templates
+     * @var array $public_invoice_templates
+     * @var array $public_pdf_templates
+     * @var array $email_templates_invoice
+     * @var array $roles
+     * @var array $places
+     * @var array $cantons
+     */
 ?>
 <div class="row">
     <div class="col-xs-12 col-md-8 col-md-offset-2">
@@ -23,7 +36,11 @@
                             <select name="settings[default_invoice_group]" id="settings[default_invoice_group]"
                                 class="form-control" >
                                 <option value=""><?= $translator->translate('i.none'); ?></option>
-                                <?php foreach ($invoice_groups as $invoice_group) { ?>
+                                <?php
+                                /**
+                                 * @var App\Invoice\Entity\Group $invoice_group
+                                 */
+                                foreach ($invoice_groups as $invoice_group) { ?>
                                     <option value="<?= $invoice_group->getId(); ?>"
                                         <?php $s->check_select($body['settings[default_invoice_group]'], $invoice_group->getId()); ?>>
                                         <?= $invoice_group->getName(); ?>
@@ -36,7 +53,7 @@
                             <label for="settings[default_invoice_terms]" <?= $s->where('default_terms'); ?>>
                                 <?= $translator->translate('i.default_terms'); ?>
                             </label>
-                            <?php $body['settings[default_invoice_terms]'] = $s->get_setting('default_invoice_terms', '', true);?>
+                            <?php $body['settings[default_invoice_terms]'] = $s->get_setting('default_invoice_terms');?>
                             <textarea name="settings[default_invoice_terms]" id="settings[default_invoice_terms]"
                                 class="form-control" rows="4"
                                 ><?= $body['settings[default_invoice_terms]']; ?></textarea>
@@ -53,6 +70,9 @@
                             <select name="settings[invoice_default_payment_method]" class="form-control"
                                 id="settings[invoice_default_payment_method]" >
                                 <?php
+                                /**
+                                 * @var App\Invoice\Entity\PaymentMethod $payment_method
+                                 */
                                 foreach ($payment_methods as $payment_method) { ?>
                                     <option value="<?= $payment_method->getId(); ?>"
                                         <?php $s->check_select($payment_method->getId(), $body['settings[invoice_default_payment_method]']) ?>>
@@ -117,7 +137,7 @@
                             <label for="settings[invoice_pre_password]">
                                 <?= $translator->translate('i.invoice_pre_password'); ?>
                             </label>
-                            <?php $body['settings[invoice_pre_password]'] = $s->get_setting('invoice_pre_password', '', true);?>
+                            <?php $body['settings[invoice_pre_password]'] = $s->get_setting('invoice_pre_password');?>
                             <input type="text" name="settings[invoice_pre_password]" id="settings[invoice_pre_password]"
                                 class="form-control"
                                 value="<?= $body['settings[invoice_pre_password]']; ?>">
@@ -224,8 +244,12 @@
                             <select name="settings[pdf_invoice_template]" id="settings[pdf_invoice_template]"
                                 class="form-control">
                                 <option value=""><?= $translator->translate('i.none'); ?></option>
-                                <?php foreach ($pdf_invoice_templates as $invoice_template) { ?>
-                                    <option value="<?= $invoice_template; ?>"
+                                <?php 
+                                    /**
+                                     * @var string $invoice_template
+                                     */
+                                    foreach ($pdf_invoice_templates as $invoice_template) { ?>
+                                        <option value="<?= $invoice_template; ?>"
                                         <?php $s->check_select($body['settings[pdf_invoice_template]'], $invoice_template); ?>>
                                         <?= ucfirst($invoice_template); ?>
                                     </option>
@@ -241,7 +265,11 @@
                             <select name="settings[pdf_invoice_template_paid]" id="settings[pdf_invoice_template_paid]"
                                 class="form-control">
                                 <option value=""><?= $translator->translate('i.none'); ?></option>
-                                <?php foreach ($pdf_invoice_templates as $invoice_template) { ?>
+                                <?php
+                                    /**
+                                     * @var string $invoice_template
+                                     */
+                                    foreach ($pdf_invoice_templates as $invoice_template) { ?>
                                     <option value="<?= $invoice_template; ?>"
                                         <?php $s->check_select($body['settings[pdf_invoice_template_paid]'], $invoice_template); ?>>
                                         <?= ucfirst($invoice_template); ?>
@@ -258,7 +286,11 @@
                             <select name="settings[pdf_invoice_template_overdue]" class="form-control"
                                 id="settings[pdf_invoice_template_overdue]" >
                                 <option value=""><?= $translator->translate('i.none'); ?></option>
-                                <?php foreach ($pdf_invoice_templates as $invoice_template) { ?>
+                                <?php
+                                    /**
+                                     * @var string $invoice_template
+                                     */
+                                    foreach ($pdf_invoice_templates as $invoice_template) { ?>
                                     <option value="<?= $invoice_template; ?>"
                                         <?php $s->check_select($body['settings[pdf_invoice_template_overdue]'], $invoice_template); ?>>
                                         <?= ucfirst($invoice_template); ?>
@@ -275,7 +307,11 @@
                             <select name="settings[public_invoice_template]" id="settings[public_invoice_template]"
                                 class="form-control">
                                 <option value=""><?= $translator->translate('i.none'); ?></option>
-                                <?php foreach ($public_invoice_templates as $invoice_template) { ?>
+                                <?php
+                                    /**
+                                     * @var string $invoice_template
+                                     */
+                                    foreach ($public_invoice_templates as $invoice_template) { ?>
                                     <option value="<?= $invoice_template; ?>"
                                         <?php $s->check_select($body['settings[public_invoice_template]'], $invoice_template); ?>>
                                         <?= ucfirst($invoice_template); ?>
@@ -295,7 +331,11 @@
                             <select name="settings[email_invoice_template]" id="settings[email_invoice_template]"
                                 class="form-control">
                                 <option value=""><?= $translator->translate('i.none'); ?></option>
-                                <?php foreach ($email_templates_invoice as $email_template) { ?>
+                                <?php
+                                    /**
+                                     * @var App\Invoice\Entity\EmailTemplate $email_template
+                                     */
+                                    foreach ($email_templates_invoice as $email_template) { ?>
                                     <option value="<?= $email_template->GetEmail_template_id(); ?>"
                                         <?php $s->check_select($body['settings[email_invoice_template]'], $email_template->getEmail_template_id()); ?>>
                                         <?= $email_template->getEmail_template_title(); ?>
@@ -312,7 +352,11 @@
                             <select name="settings[email_invoice_template_paid]" id="settings[email_invoice_template_paid]"
                                 class="form-control">
                                 <option value=""><?= $translator->translate('i.none'); ?></option>
-                                <?php foreach ($email_templates_invoice as $email_template) { ?>
+                                <?php
+                                    /**
+                                     * @var App\Invoice\Entity\EmailTemplate $email_template
+                                     */
+                                    foreach ($email_templates_invoice as $email_template) { ?>
                                     <option value="<?= $email_template->getEmail_template_id(); ?>"
                                         <?php $s->check_select($body['settings[email_invoice_template_paid]'], $email_template->getEmail_template_id()); ?>>
                                         <?= $email_template->getEmail_template_title(); ?>
@@ -329,7 +373,11 @@
                             <select name="settings[email_invoice_template_overdue]" class="form-control"
                                 id="settings[email_invoice_template_overdue]">
                                 <option value=""><?= $translator->translate('i.none'); ?></option>
-                                <?php foreach ($email_templates_invoice as $email_template) { ?>
+                                <?php
+                                    /**
+                                     * @var App\Invoice\Entity\EmailTemplate $email_template
+                                     */
+                                    foreach ($email_templates_invoice as $email_template) { ?>
                                     <option value="<?= $email_template->getEmail_template_id(); ?>"
                                         <?php $s->check_select($body['settings[email_invoice_template_overdue]'], $email_template->getEmail_template_id()); ?>>
                                         <?= $email_template->getEmail_template_title(); ?>
@@ -348,7 +396,7 @@
                             <label for="settings[pdf_invoice_footer]">
                                 <?= $translator->translate('i.pdf_invoice_footer'); ?>
                             </label>                                                                   
-                            <?php $body['settings[pdf_invoice_footer]'] = $s->get_setting('pdf_invoice_footer', '', true);?>
+                            <?php $body['settings[pdf_invoice_footer]'] = $s->get_setting('pdf_invoice_footer');?>
                             <textarea name="settings[pdf_invoice_footer]" id="settings[pdf_invoice_footer]"
                                 class="form-control no-margin"><?= $body['settings[pdf_invoice_footer]']; ?></textarea>
                             <p class="help-block"><?= $translator->translate('i.pdf_invoice_footer_hint'); ?></p>
@@ -373,7 +421,7 @@
                             <label for="settings[automatic_email_on_recur]">
                                 <?= $translator->translate('i.automatic_email_on_recur'); ?>
                             </label>                                                                                               
-                            <?php $body['settings[automatic_email_on_recur]'] = $s->get_setting('automatic_email_on_recur', '', true);?>
+                            <?php $body['settings[automatic_email_on_recur]'] = $s->get_setting('automatic_email_on_recur');?>
                             <select name="settings[automatic_email_on_recur]" id="settings[automatic_email_on_recur]"
                                 class="form-control">
                                 <option value="0">
@@ -475,6 +523,10 @@
                                 class="form-control">
                                 <?php
                                 $slipTypes = array("esr9", "esrRed");
+                                /**
+                                 * @var string $k
+                                 * @var string $v
+                                 */
                                 foreach ($slipTypes as $k => $v): ?>
                                     <option value="<?= $k; ?>" <?php $s->check_select($body['settings[sumex_sliptype]'], $k) ?>>
                                         <?= $translator->translate('i.invoice_sumex_sliptype-' . $v); ?>
@@ -492,8 +544,12 @@
                             <?php $body['settings[sumex_role]'] = $s->get_setting('sumex_role');?>
                             <select name="settings[sumex_role]" id="settings[sumex_role]"
                                 class="form-control">
-                                <?php                               
-                                foreach ($roles as $k => $v): ?>
+                                <?php
+                                    /**
+                                     * @var string $k
+                                     * @var string $v
+                                     */
+                                    foreach ($roles as $k => $v): ?>
                                     <option value="<?= $k; ?>" <?php $s->check_select($body['settings[sumex_role]'], $k) ?>>
                                         <?= $translator->translate('i.invoice_sumex_role_' . $v); ?>
                                     </option>
@@ -509,7 +565,11 @@
                             <select name="settings[sumex_place]" id="settings[sumex_place]"
                                 class="form-control">
                                 <?php
-                                foreach ($places as $k => $v): ?>
+                                    /**
+                                     * @var string $k
+                                     * @var string $v
+                                     */
+                                    foreach ($places as $k => $v): ?>
                                     <option value="<?= $k; ?>" <?php $s->check_select($body['settings[sumex_place]'], $k); ?>>
                                         <?= $translator->translate('i.invoice_sumex_place_' . $v); ?>
                                     </option>
@@ -525,7 +585,11 @@
                             <select name="settings[sumex_canton]" id="settings[sumex_canton]"
                                 class="form-control">
                                 <?php
-                                foreach ($cantons as $k => $v): ?>
+                                    /**
+                                     * @var string $k
+                                     * @var string $v
+                                     */
+                                    foreach ($cantons as $k => $v): ?>
                                     <option value="<?= $k; ?>" <?php $s->check_select($body['settings[sumex_canton]'], $k); ?>>
                                         <?= $v; ?>
                                     </option>

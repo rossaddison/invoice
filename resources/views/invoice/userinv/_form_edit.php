@@ -2,17 +2,25 @@
 
 declare(strict_types=1); 
 
-
 use Yiisoft\Arrays\ArrayHelper;
 use Yiisoft\FormModel\Field;
 use Yiisoft\Html\Html;
 use Yiisoft\Html\Tag\Form;
 
 /**
- * @var \Yiisoft\View\View $this
- * @var \Yiisoft\Router\UrlGeneratorInterface $urlGenerator
+ * @var App\Invoice\UserInv\UserInvForm $form
+ * @var App\Invoice\Setting\SettingRepository $s
+ * @var App\User\UserRepository $uR
+ * @var App\Invoice\UserInv\UserInvRepository $uiR
+ * @var App\Widget\Button $button
+ * @var Yiisoft\Aliases\Aliases $aliases
+ * @var Yiisoft\Translator\TranslatorInterface $translator 
+ * @var Yiisoft\View\View $this
+ * @var Yiisoft\Router\UrlGeneratorInterface $urlGenerator
+ * @var string $actionName 
+ * @psalm-var array<string, Stringable|null|scalar> $actionArguments
  * @var string $csrf
- * @var string $action
+ * @psalm-var array<string,list<string>> $errors
  * @var string $title
  */
 
@@ -25,7 +33,7 @@ use Yiisoft\Html\Tag\Form;
 <?= Html::openTag('div',['class'=>'card-header']); ?>
 
 <?= Form::tag()
-    ->post($urlGenerator->generate(...$action))
+    ->post($urlGenerator->generate($actionName, $actionArguments))
     ->enctypeMultipartFormData()
     ->csrf($csrf)
     ->id('UserInvForm')
@@ -49,17 +57,13 @@ use Yiisoft\Html\Tag\Form;
         <?= Html::closeTag('div'); ?>
         <?= Html::openTag('div', ['class' => 'mb-3 form-group no-margin']); ?>
             <?php 
-                $optionsDataUser = [];
-                foreach ($users as $user) {
-                    $optionsDataUser[$user->getId()] = ucfirst($user->getLogin());
-                }
-                echo Field::select($form, 'user_id')
+               echo Field::text($form, 'user_id')
                 ->label($translator->translate('i.users'))    
                 ->addInputAttributes([
                     'class' => 'form-control',
                     'id' => 'user_id'
                 ])
-                ->optionsData($optionsDataUser)
+                ->readonly(true)       
                 ->value(Html::encode($form->getUser_id() ?? ''))
                 ->hint($translator->translate('invoice.hint.this.field.is.required'));        
             ?>
@@ -83,7 +87,7 @@ use Yiisoft\Html\Tag\Form;
                     'id' => 'type'
                 ])
                 ->optionsData($optionsDataType)
-                ->value(Html::encode($form->getType()))
+                ->value(Html::encode($form->getType() ?? 1))
                 ->hint($translator->translate('invoice.hint.this.field.is.required'));        
             ?>
         <?= Html::closeTag('div'); ?>
@@ -108,6 +112,7 @@ use Yiisoft\Html\Tag\Form;
         <?= Html::openTag('div', ['class' => 'mb-3 form-group no-margin']); ?>
             <?php 
                 $optionsDataLanguage = [];
+                /** @var string $language */
                 foreach (ArrayHelper::map($s->expandDirectoriesMatrix($aliases->get('@language'), 0),'name','name') as $language)  {
                     $optionsDataLanguage[$language] = ucfirst($language);
                 }
@@ -118,7 +123,7 @@ use Yiisoft\Html\Tag\Form;
                     'id' => 'language'
                 ])
                 ->optionsData($optionsDataLanguage)
-                ->value(Html::encode($form->getLanguage()))
+                ->value(Html::encode($form->getLanguage() ?? ''))
                 ->hint($translator->translate('invoice.hint.this.field.is.required'));        
             ?>
         <?= Html::closeTag('div'); ?>   

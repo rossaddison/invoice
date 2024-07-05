@@ -2,18 +2,25 @@
 
 declare(strict_types=1); 
 
-
 use Yiisoft\Arrays\ArrayHelper;
 use Yiisoft\FormModel\Field;
 use Yiisoft\Html\Html;
 use Yiisoft\Html\Tag\Form;
 
 /**
- * @var \Yiisoft\View\View $this
- * @var \Yiisoft\Router\UrlGeneratorInterface $urlGenerator
+ * @var App\Invoice\UserInv\UserInvForm $form
+ * @var App\Invoice\Setting\SettingRepository $s
+ * @var App\User\UserRepository $uR
+ * @var App\Widget\Button $button
+ * @var Yiisoft\Aliases\Aliases $aliases
+ * @var Yiisoft\Data\Cycle\Reader\EntityReader $users
+ * @var Yiisoft\Translator\TranslatorInterface $translator
+ * @var Yiisoft\Router\UrlGeneratorInterface $urlGenerator
+ * @var Yiisoft\View\View $this
  * @var string $csrf
- * @var string $action
  * @var string $title
+ * @var string $actionName
+ * @psalm-var array<string, Stringable|null|scalar> $actionArguments
  */
 
 ?>
@@ -25,7 +32,7 @@ use Yiisoft\Html\Tag\Form;
 <?= Html::openTag('div',['class'=>'card-header']); ?>
 
 <?= Form::tag()
-    ->post($urlGenerator->generate(...$action))
+    ->post($urlGenerator->generate($actionName, $actionArguments))
     ->enctypeMultipartFormData()
     ->csrf($csrf)
     ->id('UserInvForm')
@@ -35,15 +42,23 @@ use Yiisoft\Html\Tag\Form;
         <?= Html::openTag('h1', ['class' => 'headerbar-title']); ?>
             <?= Html::encode($title) ?>
         <?= Html::closeTag('h1'); ?>
-        <?= $button::back($translator); ?>
+        <?= $button::back(); ?>
 <?= Html::closeTag('div'); ?>
 <?= Html::openTag('div', ['id' => 'content']); ?>
     <?= Html::openTag('div', ['class' => 'row']); ?>        
         <?= Html::openTag('div', ['class' => 'mb-3 form-group no-margin']); ?>
             <?php 
                 $optionsDataUser = [];
-                foreach ($users as $user) {
-                    $optionsDataUser[$user->getId()] = ucfirst($user->getLogin());
+                /**
+                 * @var App\User\User $user
+                 */
+                foreach ($uR->findAllPreloaded() as $user) {
+                    if (null!==$user->getId()) {
+                        /**
+                         * @psalm-suppress PossiblyNullArrayOffset $user->getId()
+                         */
+                        $optionsDataUser[$user->getId()] = ucfirst($user->getLogin());
+                    }
                 }
                 echo Field::select($form, 'user_id')
                 ->label($translator->translate('i.users'))    
@@ -100,6 +115,9 @@ use Yiisoft\Html\Tag\Form;
         <?= Html::openTag('div', ['class' => 'mb-3 form-group no-margin']); ?>
             <?php 
                 $optionsDataLanguage = [];
+                /**
+                 * @var string $language 
+                 */
                 foreach (ArrayHelper::map($s->expandDirectoriesMatrix($aliases->get('@language'), 0),'name','name') as $language)  {
                     $optionsDataLanguage[$language] = ucfirst($language);
                 }

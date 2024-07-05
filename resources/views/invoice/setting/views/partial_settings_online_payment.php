@@ -2,6 +2,17 @@
     declare(strict_types=1);
     
     use Yiisoft\Html\Html;
+    
+    /**
+     * @var App\Invoice\Libraries\Crypt $crypt
+     * @var App\Invoice\Setting\SettingRepository $s 
+     * @var Yiisoft\Translator\TranslatorInterface $translator
+     * @var array $body
+     * @var array $gateway_drivers
+     * @var array $gateway_currency_codes
+     * @var array $gateway_regions
+     * @var array $payment_methods
+     */
 ?>
 <?= Html::openTag('div', ['class' => 'row']); ?>
 <div class="col-xs-12 col-md-8 col-md-offset-2">
@@ -28,7 +39,12 @@
             </label>
             <select id="online-payment-select" class="form-control">
                 <option value=""><?= $translator->translate('i.none'); ?></option>
-                <?php foreach ($gateway_drivers as $driver => $fields) {
+                <?php
+                    /**
+                     * @var string $driver
+                     * @var array $fields
+                     */
+                    foreach ($gateway_drivers as $driver => $fields) {
                     $d = strtolower($driver);
                     ?>
                     <option value="<?= $d; ?>">
@@ -42,31 +58,11 @@
 </div>
 
 <?php 
-// see SettingRepository payment_gateways
-// $d = stripe, $fields = ['apiKey, publishableKey, secretKey, version]
-// eg. 'Stripe' => array(
-//                'apiKey' => array(
-//                    'type' => 'password',
-//                    'label' => 'Api Key',
-//                ),
-//             @see src/Invoice/Language/English/gateway_lang
-//             Not server-side ie. client-side                
-//             'publishableKey' => array(
-//                 'type' => 'password',
-//                 'label' => 'Publishable Key',
-//              ),
-//              server-side @see https://dashboard.stripe.com/test/dashboard
-//              'secretKey' => array(
-//                  'type' => 'password',
-//                  'label' => 'Secret Key',
-//              ),
-//              'version' => array(
-//                  'type' => 'checkbox',
-//                  'label' => 'Omnipay Version'
-//                  'tooltip' => 'This is a tooltip'                    
-//              ),
-// ),
 
+/**
+ * @var string $driver
+ * @var array $fields
+ */
 foreach ($gateway_drivers as $driver => $fields) :
     $d = strtolower($driver);
     ?>
@@ -90,18 +86,16 @@ foreach ($gateway_drivers as $driver => $fields) :
         </div>
         
         <div class="panel-body small">
-
-             
-                <!-- 'AuthorizeNet_AIM' => array(
-                            'version' => array(
-                                'type' => 'checkbox',
-                                'label' => 'Omnipay Version'                    
-                      ) 
-                -->
-            
-                <?php // 'driver' => 'AuthorizeNet_AIM'      
-                   // foreach 'version' as 'type' => 'checkbox'
-                      foreach ($fields as $key => $setting) { ?>
+          
+                <?php 
+                    /**
+                     * @var string $key
+                     * @var array $setting
+                     * @var string $setting['label']
+                     * @var string $setting['password']
+                     * @var string $setting['type']
+                     */    
+                    foreach ($fields as $key => $setting) { ?>
                 <?php $body['settings[gateway_' . $d . '_'.$key.']'] = $s->get_setting('gateway_' . $d . '_' . $key);?>
                 <?php if ($setting['type'] == 'checkbox') : ?>
 
@@ -126,11 +120,11 @@ foreach ($gateway_drivers as $driver => $fields) :
                             id="settings[gateway_<?= $d; ?>_<?= $key ?>]" 
                                     <?php
                                         if ($setting['type'] == 'password') : ?>
-                                        value="<?= strlen($body['settings[gateway_' . $d . '_'.$key.']']) > 0 
-                                                ? $crypt->decode($body['settings[gateway_' . $d . '_'.$key.']']) 
-                                                : ''; ?>"
+                                        value="<?= (string)(strlen((string)$body['settings[gateway_' . $d . '_'.$key.']']) > 0 
+                                                ? $crypt->decode((string)$body['settings[gateway_' . $d . '_'.$key.']']) 
+                                                : ''); ?>"
                                     <?php else : ?>
-                                        value="<?= $body['settings[gateway_' . $d . '_'.$key.']']; ?>"
+                                        value="<?= (string)$body['settings[gateway_' . $d . '_'.$key.']']; ?>"
                                     <?php endif; ?>
                                 >
                         <?php if ($setting['type'] == 'password') : ?>
@@ -156,7 +150,12 @@ foreach ($gateway_drivers as $driver => $fields) :
                 <select name="settings[gateway_<?= $d; ?>_region]"
                     id="settings[gateway_<?= $d; ?>_region]"
                     class="input-sm form-control">
-                    <?php foreach ($gateway_regions as $val => $key) { ?>
+                    <?php
+                        /**
+                         * @var string $val
+                         * @var string $key
+                         */
+                        foreach ($gateway_regions as $val => $key) { ?>
                         <option value="<?= $val; ?>"
                             <?php $s->check_select($body['settings[gateway_' . $d . '_region]'], $val); ?>>
                             <?= $val; ?>
@@ -174,7 +173,12 @@ foreach ($gateway_drivers as $driver => $fields) :
                 <select name="settings[gateway_<?= $d; ?>_currency]"
                     id="settings[gateway_<?= $d; ?>_currency]"
                     class="input-sm form-control">
-                    <?php foreach ($gateway_currency_codes as $val => $key) { ?>
+                    <?php
+                        /**
+                         * @var string $val
+                         * @var string $key
+                         */
+                        foreach ($gateway_currency_codes as $val => $key) { ?>
                         <option value="<?= $val; ?>"
                             <?php $s->check_select($body['settings[gateway_' . $d . '_currency]'], $val); ?>>
                             <?= $val; ?>
@@ -194,6 +198,11 @@ foreach ($gateway_drivers as $driver => $fields) :
                     class="input-sm form-control">
                     <?php 
                         $locales = $s->mollieSupportedLocaleArray();
+                        /**
+                         * @var array $locales
+                         * @var string $key
+                         * @var string $value
+                         */
                         foreach ($locales as $key => $value) { ?>
                         <option value="<?= $value; ?>"
                             <?php $s->check_select($body['settings[gateway_mollie_locale]'], $value); ?>>
@@ -212,7 +221,11 @@ foreach ($gateway_drivers as $driver => $fields) :
                 <select name="settings[gateway_<?= $d; ?>_payment_method]"
                     id="settings[gateway_<?= $d; ?>_payment_method]"
                     class="input-sm form-control">
-                    <?php foreach ($payment_methods as $payment_method) { ?>
+                    <?php
+                        /**
+                         * @var App\Invoice\Entity\PaymentMethod $payment_method
+                         */
+                        foreach ($payment_methods as $payment_method) { ?>
                         <option value="<?= $payment_method->getId(); ?>"
                             <?php $s->check_select($body['settings[gateway_' . $d . '_payment_method]'], $payment_method->getId()) ?>>
                             <?= $payment_method->getName(); ?>

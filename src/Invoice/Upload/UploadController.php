@@ -25,7 +25,7 @@ use Yiisoft\Session\SessionInterface;
 use Yiisoft\Session\Flash\Flash;
 use Yiisoft\Translator\TranslatorInterface;
 use Yiisoft\FormModel\FormHydrator;
-use Yiisoft\Yii\View\ViewRenderer;
+use Yiisoft\Yii\View\Renderer\ViewRenderer;
 use Yiisoft\Data\Cycle\Reader\EntityReader;
 
 use \Exception;
@@ -101,7 +101,6 @@ final class UploadController {
 
         $parameters = [
             'paginator' => $paginator,
-            'grid_summary' => $this->s->grid_summary($paginator, $this->translator, (int) $this->s->get_setting('default_list_limit'), $this->translator->translate('invoice.upload.plural'), ''),
             'uploads' => $this->uploads($uploadRepository),
             'alert' => $this->alert()
         ];
@@ -122,7 +121,8 @@ final class UploadController {
         $form = new UploadForm($upload);
         $parameters = [
             'title' => $this->translator->translate('invoice.add'),
-            'action' => ['upload/add'],
+            'actionName' => 'upload/add', 
+            'actionArguments' => [],
             'form' => $form,
             'errors' => [],
             'optionsDataClients' => $this->optionsDataClients($clientRepository->findAllPreloaded()),
@@ -147,7 +147,7 @@ final class UploadController {
      * @return string
      */
     private function alert(): string {
-      return $this->viewRenderer->renderPartialAsString('/invoice/layout/alert',
+      return $this->viewRenderer->renderPartialAsString('//invoice/layout/alert',
       [ 
         'flash' => $this->flash
       ]);
@@ -182,7 +182,7 @@ final class UploadController {
                 $this->uploadService->deleteUpload($upload, $settingRepository);
                 $inv_id = (string) $this->session->get('inv_id');
                 $this->flash_message('info', $this->translator->translate('i.record_successfully_deleted'));
-                return $this->factory->createResponse($this->viewRenderer->renderPartialAsString('/invoice/setting/inv_message',
+                return $this->factory->createResponse($this->viewRenderer->renderPartialAsString('setting/inv_message',
                                         ['heading' => '', 'message' => $this->translator->translate('i.record_successfully_deleted'), 'url' => 'inv/view', 'id' => $inv_id]));
             }
             return $this->webService->getRedirectResponse('upload/index');
@@ -211,7 +211,8 @@ final class UploadController {
             $form = new UploadForm($upload);
             $parameters = [
                 'title' => $this->translator->translate('i.edit'),
-                'action' => ['upload/edit', ['id' => $upload->getId()]],
+                'actionName' => 'upload/edit', 
+                'actionArguments' => ['id' => $upload->getId()],
                 'errors' => [],
                 'form' => $form,
                 'optionsDataClients' => $this->optionsDataClients($clientRepository->findAllPreloaded()),
@@ -245,7 +246,8 @@ final class UploadController {
             $form = new UploadForm($upload);
             $parameters = [
                 'title' => $this->translator->translate('i.view'),
-                'action' => ['upload/view', ['id' => $upload->getId()]],
+                'actionName' => 'upload/view', 
+                'actionArguments' => ['id' => $upload->getId()],
                 'form' => $form,
                 'optionsDataClients' => $this->optionsDataClients($clientRepository->findAllPreloaded()),
             ];

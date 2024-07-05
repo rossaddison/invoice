@@ -3,7 +3,7 @@
     
     /**
      * @see App\Invoice\PaymentInformation\PaymentInformationController function renderPartialAsStringCompanyLogo
-     * @var string $src e.g. ? '/invoice/public/logo/'.$companyLogoFileName : '/site/logo.png'
+     * @var string $src e.g. ? 'public/logo/'.$companyLogoFileName : '/site/logo.png'
      */
     
     use Yiisoft\Html\Tag\A;

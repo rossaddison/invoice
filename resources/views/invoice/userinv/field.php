@@ -4,13 +4,22 @@ declare(strict_types=1);
 use App\Invoice\Helpers\ClientHelper;
 use Yiisoft\Html\Html;
 
-$client_helper = new ClientHelper($s);
 /**
- * @var \Yiisoft\Router\UrlGeneratorInterface $urlGenerator
- * @var Yiisoft\Yii\View\Csrf $csrf 
+ * @var App\Invoice\Entity\UserClient $userClient 
+ * @var App\Invoice\Entity\UserInv $userInv
+ * @var App\Invoice\Client\ClientRepository $cR
+ * @var App\Invoice\Setting\SettingRepository $s
+ * @var App\Invoice\UserClient\UserClientRepository $ucR
+ * @var Yiisoft\Data\Cycle\Reader\EntityReader $users;
+ * @var Yiisoft\Router\UrlGeneratorInterface $urlGenerator
+ * @var Yiisoft\Translator\TranslatorInterface $translator
+ * @var Yiisoft\Yii\View\Csrf $csrf
+ * @var string $alert
  */
 
 echo $alert;
+$client_helper = new ClientHelper($s);
+
 ?>
 <div id="headerbar">
     <h1 class="headerbar-title"><?= $translator->translate('i.assigned_clients'); ?></h1>
@@ -20,7 +29,7 @@ echo $alert;
             <a class="btn btn-default" href="<?= $urlGenerator->generate('userinv/index'); ?>">
                 <i class="fa fa-arrow-left"></i> <?= $translator->translate('i.back'); ?>
             </a>
-            <a class="btn btn-primary" href="<?= $urlGenerator->generate('userclient/new',['user_id'=>$user_id]); ?>">
+            <a class="btn btn-primary" href="<?= $urlGenerator->generate('userclient/new', ['user_id' => $userInv->getUser_id()]); ?>">
                 <i class="fa fa-plus"></i> <?= $translator->translate('i.new'); ?>
             </a>
         </div>
@@ -33,7 +42,7 @@ echo $alert;
 
             <div class="panel panel-default">
                 <div class="panel-heading">
-                    <?= $translator->translate('i.user') . ': ' . Html::encode($userinv->getName()); ?>
+                    <?= $translator->translate('i.user') . ': ' . Html::encode($userInv->getName()); ?>
                 </div>
 
                 <div class="panel-body table-content">
@@ -48,19 +57,23 @@ echo $alert;
                             </thead>
 
                             <tbody>
-                            <?php foreach ($user_clients as $user_client) { ?>
+                            <?php
+                                /**
+                                 * @var App\Invoice\Entity\UserClient $userClient
+                                 */
+                                foreach ($ucR->repoClientquery($userInv->getUser_id()) as $userClient) { ?>
                                 <tr>
                                     <td>
-                                        <a href="<?= $urlGenerator->generate('client/view',['id'=> $user_client->getClient_id()]); ?>" style="text-decoration:none">
+                                        <a href="<?= $urlGenerator->generate('client/view', ['id' => $userClient->getClient_id()]); ?>" style="text-decoration:none">
                                             <?php
-                                                $client = $cR->repoClientquery((string)$user_client->getClient_id());
+                                                $client = $cR->repoClientquery($userClient->getClient_id());
                                                 echo $client_helper->format_client($client); 
                                             ?>
                                         </a>
                                     </td>
                                     <td>
                                         <form
-                                            action="<?= $urlGenerator->generate('userclient/delete', ['id'=>$user_client->getId()]); ?>"
+                                            action="<?= $urlGenerator->generate('userclient/delete', ['id' => $userClient->getId()]); ?>"
                                             method="POST" enctype="multipart/form-data">
                                             <input type="hidden" name="_csrf" value="<?= $csrf ?>">
                                             <button type="submit" class="btn btn-default btn-sm"

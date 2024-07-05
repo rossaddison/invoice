@@ -2,8 +2,9 @@
 
 declare(strict_types=1);
 
-use Yiisoft\Html\Html;
+use App\Invoice\Entity\UnitPeppol;
 use Yiisoft\Data\Paginator\OffsetPaginator;
+use Yiisoft\Html\Html;
 use Yiisoft\Translator\TranslatorInterface;
 use Yiisoft\View\WebView;
 use Yiisoft\Html\Tag\A;
@@ -21,10 +22,12 @@ use Yiisoft\Router\CurrentRoute;
 
 /**
  * @var \App\Invoice\Entity\UnitPeppol $unitpeppol
+ * @var \App\Invoice\Setting\SettingRepository $s
+ * @var string $alert
  * @var string $csrf
  * @var CurrentRoute $currentRoute 
  * @var OffsetPaginator $paginator
- * @var \Yiisoft\Router\UrlGeneratorInterface $urlGenerator 
+ * @var \Yiisoft\Router\FastRoute\UrlGenerator $urlGenerator 
  * @var TranslatorInterface $translator
  * @var WebView $this
  */ 
@@ -47,7 +50,7 @@ use Yiisoft\Router\CurrentRoute;
         ->addAttributes(['type' => 'reset'])
         ->addClass('btn btn-danger me-1 ajax-loader')
         ->content(I::tag()->addClass('bi bi-bootstrap-reboot'))
-        ->href($urlGenerator->generate($currentRoute->getName()))
+        ->href($urlGenerator->generate($currentRoute->getName() ?? 'unitpeppol/index'))
         ->id('btn-reset')
         ->render();
     $toolbar = Div::tag();
@@ -66,48 +69,48 @@ use Yiisoft\Router\CurrentRoute;
             new DataColumn(
                 'id',
                 header: $translator->translate('i.id'),
-                content: static fn (object $model) => Html::encode($model->getId())
+                content: static fn (UnitPeppol $model) => Html::encode($model->getId())
             ),
             new DataColumn(
                 'unit_id',
                 header:  $translator->translate('i.unit_name'),
-                content: static fn (object $model) => Html::encode($model->getUnit()->getUnit_name())
+                content: static fn (UnitPeppol $model) => Html::encode($model->getUnit()?->getUnit_name())
             ),
             new DataColumn(
                 'unit_id',
                 header:  $translator->translate('i.unit_name_plrl'),    
-                content: static fn (object $model) => Html::encode($model->getUnit()->getUnit_name_plrl())
+                content: static fn (UnitPeppol $model) => Html::encode($model->getUnit()?->getUnit_name_plrl())
             ),
             new DataColumn(
                 'code',
                 header:  $translator->translate('i.code'),
-                content: static fn (object $model) => Html::encode($model->getCode())
+                content: static fn (UnitPeppol $model) => Html::encode($model->getCode())
             ),
             new DataColumn(
                 'name',
                 header:  $translator->translate('i.name'),
-                content: static fn (object $model) => Html::encode($model->getName())
+                content: static fn (UnitPeppol $model) => Html::encode($model->getName())
             ),
             new DataColumn(
                 'description',
                 header:  $translator->translate('i.description'),
-                content: static fn (object $model) => Html::encode($model->getDescription())
+                content: static fn (UnitPeppol $model) => Html::encode($model->getDescription())
             ),
             new DataColumn(
                 header:  $translator->translate('i.view'),    
-                content: static function ($model) use ($urlGenerator): string {
+                content: static function (UnitPeppol $model) use ($urlGenerator): string {
                    return Html::a(Html::tag('i','',['class'=>'fa fa-eye fa-margin']), $urlGenerator->generate('unitpeppol/view',['id'=>$model->getId()]),[])->render();
                 }
             ),
             new DataColumn(
                 header:  $translator->translate('i.edit'),    
-                content: static function ($model) use ($urlGenerator): string {
+                content: static function (UnitPeppol $model) use ($urlGenerator): string {
                    return Html::a(Html::tag('i','',['class'=>'fa fa-edit fa-margin']), $urlGenerator->generate('unitpeppol/edit',['id'=>$model->getId()]),[])->render();
                 }
             ),
             new DataColumn(
                 header:  $translator->translate('i.delete'),    
-                content: static function ($model) use ($translator, $urlGenerator): string {
+                content: static function (UnitPeppol $model) use ($translator, $urlGenerator): string {
                    return Html::a( Html::tag('button',
                             Html::tag('i','',['class'=>'fa fa-trash fa-margin']),
                             [
@@ -122,30 +125,32 @@ use Yiisoft\Router\CurrentRoute;
             ),
         ];
     ?>
-    <?= GridView::widget()
+    <?php
+        $grid_summary = $s->grid_summary(
+            $paginator, 
+            $translator, 
+            (int)$s->get_setting('default_list_limit'), 
+            $translator->translate('invoice.unit.peppol'),
+            ''
+        );
+        $toolbarString = Form::tag()->post($urlGenerator->generate('unitpeppol/index'))->csrf($csrf)->open() .
+            Div::tag()->addClass('float-end m-3')->content($toolbarReset)->encode(false)->render() .
+            Form::tag()->close();
+        echo GridView::widget()
         ->columns(...$columns)
-        ->dataReader($paginator)    
+        ->dataReader($paginator)
+        ->tableAttributes(['class' => 'table table-striped text-center h-81','id'=>'table-unitpeppol'])        
         ->headerRowAttributes(['class'=>'card-header bg-info text-black'])
-        //->filterPosition('header')
-        //->filterModelName('unitpeppol')
         ->header($header)
         ->id('w44-grid')
         ->pagination(
         OffsetPagination::widget()
-             //->menuClass('pagination justify-content-center')
              ->paginator($paginator)
-             //->urlArguments([])
              ->render(),
         )
-        ->rowAttributes(['class' => 'align-middle'])
         ->summaryAttributes(['class' => 'mt-3 me-3 summary text-end'])
         ->summaryTemplate($grid_summary)
         ->emptyTextAttributes(['class' => 'card-header bg-warning text-black'])
-        ->emptyText((string)$translator->translate('invoice.invoice.no.records'))
-        ->tableAttributes(['class' => 'table table-striped text-center h-81','id'=>'table-unitpeppol'])
-        ->toolbar(
-            Form::tag()->post($urlGenerator->generate('unitpeppol/index'))->csrf($csrf)->open() .
-            Div::tag()->addClass('float-end m-3')->content($toolbarReset)->encode(false)->render() .
-            Form::tag()->close()
-        );
+        ->emptyText($translator->translate('invoice.invoice.no.records'))       
+        ->toolbar($toolbarString);
     ?>

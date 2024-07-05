@@ -5,7 +5,6 @@ namespace App\Invoice\Setting;
 
 // App
 use App\Invoice\Entity\Setting;
-use App\Invoice\CustomField\CustomFieldRepository as CFR;
 use App\Invoice\Setting\SettingRepository;
 use App\Invoice\Setting\SettingForm;
 use App\Invoice\EmailTemplate\EmailTemplateRepository as ER;
@@ -34,6 +33,7 @@ use Yiisoft\Db\Mysql\Connection;
 use Yiisoft\Db\Mysql\Driver;
 use Yiisoft\Db\Mysql\Dsn;
 use Yiisoft\Files\FileHelper;
+use Yiisoft\FormModel\FormHydrator;
 use Yiisoft\Http\Method;
 use Yiisoft\Json\Json;
 use Yiisoft\Router\CurrentRoute;
@@ -41,8 +41,7 @@ use Yiisoft\Security\Random;
 use Yiisoft\Session\SessionInterface as Session;
 use Yiisoft\Session\Flash\Flash;
 use Yiisoft\Translator\TranslatorInterface as Translator;
-use Yiisoft\FormModel\FormHydrator;
-use Yiisoft\Yii\View\ViewRenderer;
+use Yiisoft\Yii\View\Renderer\ViewRenderer;
 // Psr
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
@@ -87,7 +86,7 @@ final class SettingController
      * @return string
      */
     private function alert(): string {
-      return $this->viewRenderer->renderPartialAsString('/invoice/layout/alert',
+      return $this->viewRenderer->renderPartialAsString('//invoice/layout/alert',
       [ 
         'flash' => $this->flash
       ]);
@@ -110,7 +109,7 @@ final class SettingController
           'alert' => $this->alert(),
           'canEdit' => $canEdit,
           'settings' => $this->settings($this->s),
-          'session'=>$this->session
+          'session' => $this->session
         ];
         return $this->viewRenderer->render('debug_index', $parameters);
     }
@@ -129,7 +128,6 @@ final class SettingController
      */
     public function tab_index(Request $request,
                               ViewRenderer $head,
-                              CFR $cfR,
                               ER $eR, 
                               GR $gR, 
                               PM $pm, 
@@ -151,63 +149,64 @@ final class SettingController
         $languages = ArrayHelper::map($matrix,'name','name'); 
         $body = $request->getParsedBody();
         $parameters = [
-            'defat'=> $sR->withKey('default_language'),
-            'action'=>['setting/tab_index'],
+            'defat' => $sR->withKey('default_language'),
+            'actionName' => 'setting/tab_index',
+            'actionArguments' => [],
             'alert' => $this->alert(),
             'head' => $head,
-            'body'=> $body,
-            'general'=>$this->viewRenderer->renderPartialAsString('/invoice/setting/views/partial_settings_general',[
+            'body' => $body,
+            'general'=>$this->viewRenderer->renderPartialAsString('setting/views/partial_settings_general',[
                 /**
                  * @psalm-suppress PossiblyInvalidArgument
                  */
-                'languages'=> $languages,
+                'languages' => $languages,
                 'first_days_of_weeks'=>['0' => $this->s->lang('i.sunday'), '1' => $this->s->lang('i.monday')],
-                'date_formats'=>$datehelper->date_formats(),
+                'date_formats' =>$datehelper->date_formats(),
                 // Used in ClientForm
-                'time_zones'=> DateTimeZone::listIdentifiers(),
-                'countries'=>$countries->get_country_list((string)$this->session->get('_language')),
-                'gateway_currency_codes'=>CurrencyHelper::all(),
-                'number_formats'=>$this->s->number_formats(),
-                'current_date'=>new \DateTime(),
-                'icon'=>$aliases->get('@icon')
+                'time_zones' => DateTimeZone::listIdentifiers(),
+                'countries' => $countries->get_country_list((string)$this->session->get('_language')),
+                'gateway_currency_codes' => CurrencyHelper::all(),
+                'number_formats' => $this->s->number_formats(),
+                'current_date' => new \DateTime(),
+                'icon' => $aliases->get('@icon')
             ]),
-            'invoices'=>$this->viewRenderer->renderPartialAsString('/invoice/setting/views/partial_settings_invoices',[
-                'invoice_groups'=>$gR->findAllPreloaded(),
-                'payment_methods'=>$pm->findAllPreloaded(),
-                'public_invoice_templates'=>$this->s->get_invoice_templates('public'),
-                'pdf_invoice_templates'=>$this->s->get_invoice_templates('pdf'),
-                'email_templates_invoice'=>$eR->repoEmailTemplateType('invoice'),                
+            'invoices'=>$this->viewRenderer->renderPartialAsString('setting/views/partial_settings_invoices',[
+                'invoice_groups' => $gR->findAllPreloaded(),
+                'payment_methods' => $pm->findAllPreloaded(),
+                'public_invoice_templates' => $this->s->get_invoice_templates('public'),
+                'pdf_invoice_templates' => $this->s->get_invoice_templates('pdf'),
+                'email_templates_invoice' => $eR->repoEmailTemplateType('invoice'),                
                 'roles' => Sumex::ROLES,
                 'places' => Sumex::PLACES,
                 'cantons' => Sumex::CANTONS,
             ]),
-            'quotes'=>$this->viewRenderer->renderPartialAsString('/invoice/setting/views/partial_settings_quotes',[
-                'invoice_groups'=>$gR->findAllPreloaded(),
-                'public_quote_templates'=>$this->s->get_quote_templates('public'),
-                'pdf_quote_templates'=>$this->s->get_quote_templates('pdf'),
-                'email_templates_quote'=>$eR->repoEmailTemplateType('quote'),
+            'quotes' => $this->viewRenderer->renderPartialAsString('setting/views/partial_settings_quotes',[
+                'invoice_groups' => $gR->findAllPreloaded(),
+                'public_quote_templates' => $this->s->get_quote_templates('public'),
+                'pdf_quote_templates' => $this->s->get_quote_templates('pdf'),
+                'email_templates_quote' => $eR->repoEmailTemplateType('quote'),
             ]),
-            'salesorders'=>$this->viewRenderer->renderPartialAsString('/invoice/setting/views/partial_settings_client_purchase_orders',[
-                'invoice_groups'=>$gR->findAllPreloaded(),
+            'salesorders'=>$this->viewRenderer->renderPartialAsString('setting/views/partial_settings_client_purchase_orders',[
+                'gR'=>$gR,
             ]),
-            'taxes'=>$this->viewRenderer->renderPartialAsString('/invoice/setting/views/partial_settings_taxes',[
+            'taxes'=>$this->viewRenderer->renderPartialAsString('setting/views/partial_settings_taxes',[
                 'tax_rates'=>$tR->findAllPreloaded(),
             ]),
-            'email'=>$this->viewRenderer->renderPartialAsString('/invoice/setting/views/partial_settings_email'),
-            'google_translate'=>$this->viewRenderer->renderPartialAsString('/invoice/setting/views/partial_settings_google_translate',[
+            'email'=>$this->viewRenderer->renderPartialAsString('setting/views/partial_settings_email'),
+            'google_translate'=>$this->viewRenderer->renderPartialAsString('setting/views/partial_settings_google_translate',[
                 'locales'=>$this->s->locales(),
             ]),
-            'online_payment'=>$this->viewRenderer->renderPartialAsString('/invoice/setting/views/partial_settings_online_payment',[
+            'online_payment'=>$this->viewRenderer->renderPartialAsString('setting/views/partial_settings_online_payment',[
                 'gateway_drivers' => $this->s->active_payment_gateways(),
                 'gateway_currency_codes' => CurrencyHelper::all(),
                 'gateway_regions' => $this->s->amazon_regions(),
                 'payment_methods' =>  $pm->findAllPreloaded(),                
                 'crypt'=> $crypt
             ]),
-            'mpdf' => $this->viewRenderer->renderPartialAsString('/invoice/setting/views/partial_settings_mpdf'),            
-            'projects_tasks'=>$this->viewRenderer->renderPartialAsString('/invoice/setting/views/partial_settings_projects_tasks'),            
-            'vat_registered'=>$this->viewRenderer->renderPartialAsString('/invoice/setting/views/partial_settings_vat_registered'),
-            'peppol_electronic_invoicing'=>$this->viewRenderer->renderPartialAsString('/invoice/setting/views/partial_settings_peppol',[
+            'mpdf' => $this->viewRenderer->renderPartialAsString('setting/views/partial_settings_mpdf'),            
+            'projects_tasks'=>$this->viewRenderer->renderPartialAsString('setting/views/partial_settings_projects_tasks'),            
+            'vat_registered'=>$this->viewRenderer->renderPartialAsString('setting/views/partial_settings_vat_registered'),
+            'peppol_electronic_invoicing'=>$this->viewRenderer->renderPartialAsString('setting/views/partial_settings_peppol',[
                 'config_tax_currency' => $this->s->get_config_peppol()['TaxCurrencyCode'] ?: $this->s->get_config_company_details()['tax_currency'],
                 'gateway_currency_codes'=>CurrencyHelper::all(),
                 // if delivery/invoice periods are used, a tax point date cannot be determined
@@ -220,15 +219,17 @@ final class SettingController
                 // use crypt to decode the store cove api key
                 'crypt' => $crypt    
             ]),
-            'storecove'=>$this->viewRenderer->renderPartialAsString('/invoice/setting/views/partial_settings_storecove',[
+            'storecove'=>$this->viewRenderer->renderPartialAsString('setting/views/partial_settings_storecove',[
                 'countries'=>$countries->get_country_list((string)$this->session->get('_language')),
                 'sender_identifier_array'=>StoreCoveArrays::store_cove_sender_identifier_array(),
             ]),
-            'invoiceplane'=>$this->viewRenderer->renderPartialAsString('/invoice/setting/views/partial_settings_invoiceplane',[
-                'actionTestConnection' => ['import/testconnection',['_language' => 'en']],
-                'actionImport' => ['import/invoiceplane',['_language' => 'en']],
+            'invoiceplane'=>$this->viewRenderer->renderPartialAsString('setting/views/partial_settings_invoiceplane',[
+                'actionTestConnectionName' => 'import/testconnection',
+                'actionTestConnectionArguments' => ['_language' => 'en'],
+                'actionImportName' => 'import/invoiceplane',
+                'actionImportArguments' => ['_language' => 'en'],
             ]),
-            'qrcode' => $this->viewRenderer->renderPartialAsString('/invoice/setting/views/partial_settings_qr_code',[
+            'qrcode' => $this->viewRenderer->renderPartialAsString('setting/views/partial_settings_qr_code',[
             ])
         ];
         if ($request->getMethod() === Method::POST) {
@@ -360,7 +361,8 @@ final class SettingController
         $form = new SettingForm($setting);
         $parameters = [
             'title' => $this->translator->translate('i.add'),
-            'action' => ['setting/add'],
+            'actionName' => 'setting/add',
+            'actionArguments' => [],
             'alert' => $this->alert(),
             'errors' => [],
             'form' => $form,
@@ -511,7 +513,8 @@ final class SettingController
             $form = new SettingForm($setting);
             $parameters = [
                 'title' => $this->translator->translate('i.edit'),
-                'action' => ['setting/edit', ['setting_id' => $setting->getSetting_id()]],
+                'actionName' => 'setting/edit',
+                'actionArguments' => ['setting_id' => $setting->getSetting_id()],
                 'alert' => $this->alert(),
                 'form' => $form, 
                 'errors' => []
@@ -578,41 +581,7 @@ final class SettingController
         }
         return null;
     }
-    
-    /**
-     * @param Request $request
-     * @param CurrentRoute $currentRoute
-     * @param FormHydrator $formHydrator
-     * @return Response
-     */
-    public function save_form(Request $request, CurrentRoute $currentRoute, 
-             FormHydrator $formHydrator): Response 
-    {
-        $setting = $this->setting($currentRoute, $this->s);
-        if ($setting) {
-            $form = new SettingForm($setting);
-            $parameters = [
-                'title' => $this->translator->translate('i.edit'),
-                'action' => ['setting/edit', ['setting_id' => $setting->getSetting_id()]],
-                'errors' => [],
-            ];
-            if ($request->getMethod() === Method::POST) {
-                if ($formHydrator->populateFromPostAndValidate($form,  $request)) {
-                    $body = $request->getParsedBody() ?? [];
-                    /**
-                     * @psalm-suppress PossiblyInvalidArgument $body
-                     */
-                    $this->settingService->saveSetting($setting, $body);
-                    return $this->webService->getRedirectResponse('setting/index');
-                }
-                $parameters['form'] = $form;
-                $parameters['error'] = $form->getValidationResult()->getErrorMessagesIndexedByAttribute();
-            }
-            return $this->viewRenderer->render('__form', $parameters);
-        }
-        return $this->webService->getRedirectResponse('setting/index');
-    }
-    
+        
     /**
      * @param CurrentRoute $currentRoute
      */
@@ -623,7 +592,8 @@ final class SettingController
             $form = new SettingForm($setting);
             $parameters = [
                 'title' => $this->translator->translate('i.view'),
-                'action' => ['setting/edit', ['setting_id' => $setting->getSetting_id()]],
+                'actionName' => 'setting/view',
+                'actionArguments' => ['setting_id' => $setting->getSetting_id()],
                 'setting' => $setting,
                 'form' => $form
             ];
@@ -682,20 +652,23 @@ final class SettingController
             $filehelper = new FileHelper;
             $filehelper->clearDirectory($directory);
             $this->flash_message('info', $this->translator->translate('invoice.setting.assets.cleared.at').$directory);
-            return $this->factory->createResponse($this->viewRenderer->renderPartialAsString('/invoice/setting/successful',
+            return $this->factory->createResponse($this->viewRenderer->renderPartialAsString('setting/successful',
             ['heading'=>$this->translator->translate('invoice.successful'),'message' => $this->translator->translate('invoice.setting.you.have.cleared.the.cache')])); 
         } catch (\Exception $e) {            
             $this->flash_message('warning', $this->translator->translate('invoice.setting.assets.were.not.cleared.at') .$directory. $this->translator->translate('invoice.setting.as.a.result.of').$e->getMessage());            
-            return $this->factory->createResponse($this->viewRenderer->renderPartialAsString('/invoice/setting/unsuccessful',
+            return $this->factory->createResponse($this->viewRenderer->renderPartialAsString('setting/unsuccessful',
             ['heading'=>$this->translator->translate('invoice.unsuccessful'),'message' => $this->translator->translate('invoice.setting.you.have.not.cleared.the.cache.due.to.a') . $e->getMessage(). $this->translator->translate('invoice.setting.error.on.the.public.assets.folder')])); 
         }
     }
     
+    /**
+     * @return \Yiisoft\DataResponse\DataResponse
+     */
     public function get_cron_key() : \Yiisoft\DataResponse\DataResponse
     {       
         $parameters = [
-               'success'=>1,
-               'cronkey'=>Random::string(32)
+               'success' => 1,
+               'cronkey' => Random::string(32)
         ];
         return $this->factory->createResponse(Json::encode($parameters));     
     }

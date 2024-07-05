@@ -253,9 +253,10 @@ final class SettingRepository extends Select\Repository
      * 
      * @param string $base_dir
      * @param int $level
-     * @return array
+     * @return iterable
+     * @psalm-return iterable<mixed, array<array-key, mixed>|object>
      */
-    public function expandDirectoriesMatrix(string $base_dir, int $level): array {
+    public function expandDirectoriesMatrix(string $base_dir, int $level): iterable {
         $directories = [];
         foreach(scandir($base_dir) as $file) {
             if($file == '.' || $file == '..') continue;
@@ -1008,7 +1009,7 @@ final class SettingRepository extends Select\Repository
      */
     public function get_invoice_archived_folder_aliases(): Aliases {
         $aliases = new Aliases(['@base' => dirname(dirname(dirname(__DIR__))), 
-                                '@archive_invoice' => '@base/src/Invoice/Uploads'.$this->getUploadsArchiveholderRelativeUrl().'/Invoice/'
+                                '@archive_invoice' => '@base/src/Invoice/Uploads'.$this->getUploadsArchiveholderRelativeUrl().''
         ]);
         return $aliases;
     }

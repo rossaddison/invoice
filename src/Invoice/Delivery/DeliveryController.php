@@ -26,7 +26,7 @@ use Yiisoft\Session\SessionInterface;
 use Yiisoft\Session\Flash\Flash;
 use Yiisoft\Translator\TranslatorInterface;
 use Yiisoft\FormModel\FormHydrator;
-use Yiisoft\Yii\View\ViewRenderer;
+use Yiisoft\Yii\View\Renderer\ViewRenderer;
 use \Exception;
 
 final class DeliveryController {
@@ -108,7 +108,7 @@ final class DeliveryController {
                 $parameters['errors'] = $form->getValidationResult()->getErrorMessagesIndexedByAttribute();
                 $parameters['form'] = $form;
             }
-            return $this->viewRenderer->render('/invoice/delivery/_form', $parameters);
+            return $this->viewRenderer->render('delivery/_form', $parameters);
         }
         return $this->webService->getNotFoundResponse();
     }
@@ -117,7 +117,7 @@ final class DeliveryController {
   * @return string
   */
    private function alert(): string {
-     return $this->viewRenderer->renderPartialAsString('/invoice/layout/alert',
+     return $this->viewRenderer->renderPartialAsString('//invoice/layout/alert',
      [ 
        'flash' => $this->flash,
        'errors' => [],
@@ -168,7 +168,7 @@ final class DeliveryController {
             'deliveries' => $this->deliveries($dR),
             'max' =>(int) $sR->get_setting('default_list_limit'),
         ];
-        return $this->viewRenderer->render('/invoice/delivery/index', $parameters);
+        return $this->viewRenderer->render('delivery/index', $parameters);
     }
 
     /**
@@ -252,7 +252,7 @@ final class DeliveryController {
                 $parameters['form'] = $form;
                 
             }
-            return $this->viewRenderer->render('/invoice/delivery/_form', $parameters);
+            return $this->viewRenderer->render('delivery/_form', $parameters);
           } // null!==$inv  
         }
         return $this->webService->getRedirectResponse('delivery/index');

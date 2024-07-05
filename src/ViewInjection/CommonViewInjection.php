@@ -6,7 +6,7 @@ namespace App\ViewInjection;
 
 use Yiisoft\Router\UrlGeneratorInterface;
 use Yiisoft\Translator\TranslatorInterface as Translator;
-use Yiisoft\Yii\View\CommonParametersInjectionInterface;
+use Yiisoft\Yii\View\Renderer\CommonParametersInjectionInterface;
 use App\Invoice\Entity\Company;
 use App\Invoice\Entity\CompanyPrivate;
 use App\Invoice\Company\CompanyRepository;

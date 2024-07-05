@@ -77,15 +77,29 @@ $vat = $s->get_setting('enable_vat_registration') === '1' ? true : false;
                                 <?php if (null!==$form->getDelivery_location_id() && !empty($form->getDelivery_location_id())) { ?>
                                 <span class="input-group-text">
                                     <!-- Remember second set of square brackets in urlGenerator are query Parameters NOT currentRoute arguments -->
-                                    <a href="<?= $urlGenerator->generate('del/edit', ['id'=> $form->getDelivery_location_id()], ['origin' => 'quote', 'origin_id' => $quote->getId(), 'action' => 'edit']); ?>"><i class="fa fa-pencil fa-fw"></i><?php echo $translator->translate('invoice.invoice.delivery.location'); ?></a>
+                                    <a href="<?= $urlGenerator->generate('del/edit', 
+                                            // Argument Parameters
+                                            [
+                                                'id'=> $form->getDelivery_location_id()
+                                            ], 
+                                            // Query Parameters
+                                            [
+                                                'origin' => 'quote', 
+                                                'origin_id' => $quote->getId(), 
+                                                'action' => 'edit'
+                                            ]); ?>"><i class="fa fa-pencil fa-fw"></i><?php echo $translator->translate('invoice.invoice.delivery.location'); ?></a>
                                 </span>  
                                 <?php } ?>
                                 <?php
                             } else {
                                 echo Html::a($translator->translate('invoice.invoice.delivery.location.add'), 
                                              $urlGenerator->generate('del/add', 
+                                             // Argument Parameters
                                              [
-                                                 'client_id' => $quote->getClient_id(), 
+                                                 'client_id' => $quote->getClient_id()
+                                             ], 
+                                             // Query Parameters        
+                                             [ 
                                                  'origin' => 'quote', 
                                                  'origin_id' => $quote->getId(), 
                                                  'action' => $return_url_action

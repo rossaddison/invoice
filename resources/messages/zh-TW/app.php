@@ -1287,7 +1287,7 @@ return [
 'invoice.invoice.qr.code.settings.effect' => '上述設定對該二維碼有何影響？',
 'invoice.invoice.qr.code.settings.effect.explanation' => '在實際的程式碼中......沒有。使用所有預設值是因為使用了上面非常基本的實際程式碼。',
 'invoice.invoice.qr.code.source' => 'QR 圖碼來源',
-'invoice.invoice.qr.code.source.path' => '資源\視圖\發票\設定\company_logo_and_address.php',
+'invoice.invoice.qr.code.source.path' => 'resources\views\invoice\setting\company_logo_and_address.php',
 'invoice.invoice.qr.code.type' => 'QR 圖碼類型',
 'invoice.invoice.qr.code.type.absolute.url' => '基於絕對（整體）Url',
 'invoice.invoice.qr.code.widget.used' => '使用的小部件',

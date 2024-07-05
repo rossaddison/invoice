@@ -79,7 +79,7 @@ echo $alert;
             ])
             ->content('🔎')
             ->encode(false)
-            ->href('/invoice/companyprivate/view/'. $model->getId())
+            ->href('companyprivate/view/'. $model->getId())
             ->render() .
             Html::a()
             ->addAttributes([
@@ -88,7 +88,7 @@ echo $alert;
             ])
             ->content('✎')
             ->encode(false)
-            ->href('/invoice/companyprivate/edit/'. $model->getId())
+            ->href('companyprivate/edit/'. $model->getId())
             ->render() .
             Html::a()
             ->addAttributes([
@@ -99,11 +99,12 @@ echo $alert;
             ])
             ->content('❌')
             ->encode(false)
-            ->href('/invoice/companyprivate/delete/'. $model->getId())
+            ->href('companyprivate/delete/'. $model->getId())
             ->render() . Html::closeTag('div')
         ),          
     ];
-    echo GridView::widget()    
+    echo GridView::widget()
+    ->rowAttributes(['class' => 'align-middle'])
     ->columns(...$columns)
     ->dataReader($paginator)    
     ->headerRowAttributes(['class'=>'card-header bg-info text-black'])
@@ -114,7 +115,6 @@ echo $alert;
         ->paginator($paginator)
         ->render(),
     )
-    ->rowAttributes(['class' => 'align-middle'])
     ->summaryAttributes(['class' => 'mt-3 me-3 summary text-end'])
     ->summaryTemplate($grid_summary)
     ->emptyTextAttributes(['class' => 'card-header bg-warning text-black'])

@@ -21,7 +21,7 @@ use Yiisoft\Router\CurrentRoute;
 use Yiisoft\Session\SessionInterface as Session;
 use Yiisoft\Session\Flash\Flash;
 use Yiisoft\Translator\TranslatorInterface;
-use Yiisoft\Yii\View\ViewRenderer;
+use Yiisoft\Yii\View\Renderer\ViewRenderer;
 use Yiisoft\FormModel\FormHydrator;
 
 final class SumexController
@@ -74,11 +74,6 @@ final class SumexController
         $paginator = (new OffsetPaginator($sumexs));
         $parameters = [
             'canEdit' => $canEdit,
-            'grid_summary'=> $s->grid_summary(
-                $paginator,
-                $this->translator, 
-                (int)$s->get_setting('default_list_limit'), 
-                $this->translator->translate('i.invoice_sumex'), ''), 
             'sumexs' => $sumexs, 
             'paginator' => $paginator,   
             'alert'=> $this->alert()
@@ -90,7 +85,7 @@ final class SumexController
    * @return string
    */
    private function alert(): string {
-     return $this->viewRenderer->renderPartialAsString('/invoice/layout/alert',
+     return $this->viewRenderer->renderPartialAsString('//invoice/layout/alert',
      [ 
        'flash' => $this->flash
      ]);
@@ -113,12 +108,10 @@ final class SumexController
      * @param CurrentRoute $currentRoute
      * @param Request $request
      * @param FormHydrator $formHydrator
-     * @param SettingRepository $settingRepository
      * @return Response
      */    
     public function add(CurrentRoute $currentRoute, Request $request, 
-                        FormHydrator $formHydrator,
-                        SettingRepository $settingRepository
+                        FormHydrator $formHydrator
     ): Response
     {
         $inv_id = $currentRoute->getArgument('inv_id');
@@ -126,7 +119,8 @@ final class SumexController
         $form = new SumexForm($model);
         $parameters = [
             'title' => $this->translator->translate('invoice.add'),
-            'action' => ['sumex/add', ['inv_id' => $inv_id]],
+            'actionName' => 'sumex/add',
+            'actionArguments' => ['inv_id' => $inv_id],
             'inv_id' => $inv_id,
             'form' => $form,
             'optionsDataReasons' => $this->optionsDataReasons(),
@@ -164,7 +158,8 @@ final class SumexController
             $form = new SumexForm($sumex);
             $parameters = [
                 'title' => $this->translator->translate('i.edit'),
-                'action' => ['sumex/edit', ['id' => $sumex->getId()]],
+                'actionName' => 'sumex/edit',
+                'actionArguments' => ['id' => $sumex->getId()],
                 'form' => $form,
                 'optionsDataReasons' => $this->optionsDataReasons(),
                 'errors' => [],
@@ -217,7 +212,8 @@ final class SumexController
             $form = new SumexForm($sumex);
             $parameters = [
                 'title' => $this->translator->translate('i.view'),
-                'action' => ['sumex/edit', ['id' => $sumex->getId()]],
+                'actionName' => 'sumex/view',
+                'actionArguments' => ['id' => $sumex->getId()],
                 'optionsDataReasons' => $this->optionsDataReasons(),
                 'errors' => [],
                 'form' => $form

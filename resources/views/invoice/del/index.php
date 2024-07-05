@@ -159,22 +159,17 @@ $toolbar = Div::tag();
 ?>
 <?=
     GridView::widget()
+    ->rowAttributes(['class' => 'align-middle'])
     ->columns(...$columns)
     ->dataReader($paginator)          
     ->headerRowAttributes(['class' => 'card-header bg-info text-black'])
-    //->filterPosition('header')
-    //->filterModelName('del')
     ->header($header)
     ->id('w341-grid')
     ->pagination(
       OffsetPagination::widget()
-      //->menuClass('pagination justify-content-center')
       ->paginator($paginator)
-      // No need to use page argument since built-in. Use status bar value passed from urlGenerator to inv/guest
-      //->urlArguments(['status'=>$status])
       ->render(),
     )
-    ->rowAttributes(['class' => 'align-middle'])
     ->summaryAttributes(['class' => 'mt-3 me-3 summary text-end'])
     ->summaryTemplate($grid_summary)
     ->emptyTextAttributes(['class' => 'card-header bg-warning text-black'])

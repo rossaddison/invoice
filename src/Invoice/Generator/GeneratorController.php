@@ -35,7 +35,7 @@ use Yiisoft\Translator\TranslatorInterface;
 use Yiisoft\User\CurrentUser;
 use Yiisoft\FormModel\FormHydrator;
 use Yiisoft\View\View;
-use Yiisoft\Yii\View\ViewRenderer;
+use Yiisoft\Yii\View\Renderer\ViewRenderer;
 use Yiisoft\Json\Json;
 use Yiisoft\Files\FileHelper;
 
@@ -291,7 +291,7 @@ final class GeneratorController
      * @return string
      */
      private function alert(): string {
-      return $this->viewRenderer->renderPartialAsString('/invoice/layout/alert',
+      return $this->viewRenderer->renderPartialAsString('//invoice/layout/alert',
       [ 
         'flash' => $this->flash
       ]);
@@ -765,7 +765,7 @@ final class GeneratorController
                 'combined_array' => $combined_array
             ];
             $file_content = $this->viewRenderer->renderPartialAsString(
-            '/invoice/generator/templates_protected/'.$file, $content_params);
+            'generator/templates_protected/'.$file, $content_params);
             $this->flash_message('success', $file.$this->translator->translate('invoice.generator.generated'). $path .'/'.$file);
             $this->build_and_save($path, $file_content, $file, $type);
             $parameters = [

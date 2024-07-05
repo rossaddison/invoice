@@ -1,8 +1,18 @@
 <?php
     declare(strict_types=1);
+    
     use Yiisoft\Html\Html;
+    
+    /**
+     * @var App\Invoice\Setting\SettingRepository $s 
+     * @var Yiisoft\Translator\TranslatorInterface $translator
+     * @var array $body
+     * @var array $stand_in_codes
+     * @var array $gateway_currency_codes
+     * @var string $config_tax_currency
+     */
 ?>
-<?= Html::openTag('div', ['class' => 'row']); ?>
+<div class='row'>
     <div class="col-xs-12 col-md-8 col-md-offset-2">
         
         <div class="panel panel-default">
@@ -10,8 +20,7 @@
                 <?= $translator->translate('invoice.peppol'); ?>
             </div>
             <div class="panel-body">
-                
-                <?= Html::openTag('div', ['class' => 'row']); ?>
+                <div class='row'>
                     <div class="col-xs-12 col-md-6">
                         <div class="form-group">
                             <div class="checkbox">
@@ -42,12 +51,17 @@
                         <label for="settings[currency_code_from]" >
                             <?= $translator->translate('invoice.peppol.currency.code.from'); ?>
                         </label>
-                        <?php $body['settings[currency_code_from]'] = $s->get_setting('currency_code_from', '', true) ?: $config_tax_currency; ?>
+                        <?php $body['settings[currency_code_from]'] = $s->get_setting('currency_code_from') ?: $config_tax_currency; ?>
                         <select name="settings[currency_code_from]" disabled
                             id="settings[currency_code_from]"
                             class="input-sm form-control">
                             <option value="0"><?= $translator->translate('i.none'); ?></option>
-                            <?php foreach ($gateway_currency_codes as $val => $key) { ?>
+                            <?php
+                                /**
+                                 * @var string $val
+                                 * @var string $key
+                                 */
+                                foreach ($gateway_currency_codes as $val => $key) { ?>
                                 <option value="<?= $val; ?>"
                                     <?php
                                         $s->check_select($body['settings[currency_code_from]'], $val); 
@@ -61,12 +75,17 @@
                         <label for="settings[currency_code_to]" >
                             <?= $translator->translate('invoice.peppol.currency.code.to'); ?>
                         </label>
-                        <?php $body['settings[currency_code_to]'] = $s->get_setting('currency_code_to', '', true) ?: $config_tax_currency; ?>
+                        <?php $body['settings[currency_code_to]'] = $s->get_setting('currency_code_to') ?: $config_tax_currency; ?>
                         <select name="settings[currency_code_to]"
                             id="settings[currency_code_to]"
                             class="input-sm form-control">
                             <option value="0"><?= $translator->translate('i.none'); ?></option>
-                            <?php foreach ($gateway_currency_codes as $val => $key) { ?>
+                            <?php
+                                /**
+                                 * @var string $val
+                                 * @var string $key
+                                 */
+                                foreach ($gateway_currency_codes as $val => $key) { ?>
                                 <option value="<?= $val; ?>"
                                     <?php
                                         $s->check_select($body['settings[currency_code_to]'], $val); 
@@ -81,7 +100,7 @@
                             <?= $translator->translate('invoice.peppol.currency.from.to'); ?>
                             <?= '('. Html::a('xe.com' ,'https://www.xe.com/') . ')'; ?>
                         </label>
-                        <?php $body['settings[currency_from_to]'] = $s->get_setting('currency_from_to', '', true) ?: '1.00'; ?>
+                        <?php $body['settings[currency_from_to]'] = $s->get_setting('currency_from_to') ?: '1.00'; ?>
                         <input type="text" name="settings[currency_from_to]" id="settings[currency_from_to]"
                                 class="form-control"
                                 value="<?= $body['settings[currency_from_to]']; ?>">
@@ -91,7 +110,7 @@
                         <label for="settings[currency_to_from]" >
                             <?= $translator->translate('invoice.peppol.currency.to.from'); ?>
                         </label>
-                        <?php $body['settings[currency_to_from]'] = $s->get_setting('currency_to_from', '', true) ?: '1.00'; ?>
+                        <?php $body['settings[currency_to_from]'] = $s->get_setting('currency_to_from') ?: '1.00'; ?>
                         <input type="text" name="settings[currency_to_from]" id="settings[currency_to_from]"
                                 class="form-control"
                                 value="<?= $body['settings[currency_to_from]']; ?>">
@@ -116,16 +135,23 @@
                             <?= Html::a($translator->translate('invoice.peppol.stand.in.code'),'https://docs.peppol.eu/poacc/billing/3.0/syntax/ubl-invoice/cac-InvoicePeriod/cbc-DescriptionCode/',['style'=>'text-decoration:none']); ?>
                         </label>
                         <div class="input-group">
-                            <?php $body['settings[stand_in_code]'] = $s->get_setting('stand_in_code', '', true) ?: ''; ?>
+                            <?php $body['settings[stand_in_code]'] = $s->get_setting('stand_in_code') ?: ''; ?>
                             <select name="settings[stand_in_code]"
                                 id="settings[stand_in_code]"
                                 class="input-sm form-control">
-                                <?php foreach ($stand_in_codes as $key => $value) { ?>
+                                <?php
+                                    /**
+                                     * @var array $value
+                                     * @var string $key
+                                     * @var string $value['rdf:value']
+                                     * @var string $value['rdf:comment']
+                                     */
+                                    foreach ($stand_in_codes as $key => $value) { ?>
                                     <option value="<?= $value['rdf:value']; ?>"
                                         <?php
                                             $s->check_select($body['settings[stand_in_code]'] ?? '', $value['rdf:value']); 
                                         ?>>
-                                        <?= $value['rdf:value']. ' '. $value['rdfs:comment']; ?>
+                                        <?= $value['rdf:value']. ' '. (string)$value['rdfs:comment']; ?>
                                     </option>
                                 <?php } ?>
                             </select>

@@ -44,7 +44,7 @@ use Yiisoft\Html\Tag\Form;
                 ?>
             <?= Html::closeTag('div'); ?>
             <?= Html::openTag('div'); ?>
-                <?= Field::datetime($form, 'date_created')
+                <?= Field::text($form, 'date_created')
                     ->label($translator->translate('invoice.common.date.created'), ['form-label'])
                     ->value(Html::encode(($form->getDate_created())->format('Y-m-d') ?? ''))
                     ->addInputAttributes([
@@ -54,7 +54,7 @@ use Yiisoft\Html\Tag\Form;
                 ?>
             <?= Html::closeTag('div'); ?>
             <?= Html::openTag('div'); ?>
-                <?= Field::datetime($form, 'date_modified')
+                <?= Field::text($form, 'date_modified')
                     ->label($translator->translate('invoice.common.date.modified'), ['form-label'])
                     ->value(Html::encode(($form->getDate_modified())->format('Y-m-d') ?? ''))
                     ->addInputAttributes([

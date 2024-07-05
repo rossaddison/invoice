@@ -22,7 +22,7 @@ use Yiisoft\Router\CurrentRoute;
 use Yiisoft\Session\SessionInterface;
 use Yiisoft\Session\Flash\Flash;
 use Yiisoft\Translator\TranslatorInterface;
-use Yiisoft\Yii\View\ViewRenderer;
+use Yiisoft\Yii\View\Renderer\ViewRenderer;
 
 use \Exception;
 
@@ -178,7 +178,7 @@ final class DeliveryPartyController
   * @return string
   */
    private function alert(): string {
-     return $this->viewRenderer->renderPartialAsString('/invoice/layout/alert',
+     return $this->viewRenderer->renderPartialAsString('//invoice/layout/alert',
      [ 
        'flash' => $this->flash
      ]);

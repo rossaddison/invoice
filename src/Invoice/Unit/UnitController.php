@@ -17,11 +17,12 @@ use Psr\Http\Message\ServerRequestInterface as Request;
 use Yiisoft\Data\Paginator\OffsetPaginator;
 use Yiisoft\Http\Method;
 use Yiisoft\Router\CurrentRoute;
+use Yiisoft\Router\HydratorAttribute\RouteArgument;
 use Yiisoft\Session\SessionInterface as Session;
 use Yiisoft\Session\Flash\Flash;
 use Yiisoft\Translator\TranslatorInterface;
 use Yiisoft\FormModel\FormHydrator;
-use Yiisoft\Yii\View\ViewRenderer;
+use Yiisoft\Yii\View\Renderer\ViewRenderer;
 
 final class UnitController
 {
@@ -65,13 +66,7 @@ final class UnitController
             ->withPageSize((int)$settingRepository->get_setting('default_list_limit'))
             ->withCurrentPage($pageNum);
         $parameters = [
-            'alert'=> $this->alert(),
-            'grid_summary'=> $settingRepository->grid_summary(
-                    $paginator, 
-                    $this->translator, 
-                    (int)$settingRepository->get_setting('default_list_limit'), 
-                    $this->translator->translate('i.units'), ''
-            ),
+            'alert'=> $this->alert(),           
             'paginator'=> $paginator,
             'upR'=>$upR,
             'units' => $units, 
@@ -84,13 +79,14 @@ final class UnitController
      * @param FormHydrator $formHydrator
      * @return Response
      */
-    public function add(Request $request, FormHydrator $formHydrator): Response
+    public function add(Request $request, FormHydrator $formHydrator) : Response
     {
         $unit = new Unit();
         $form = new UnitForm($unit);
         $parameters = [
             'title' => $this->translator->translate('i.add'),
-            'action' => ['unit/add'],
+            'actionName' => 'unit/add',
+            'actionArguments' => [],
             'form' => $form,
             'errors' => []
         ];
@@ -112,25 +108,26 @@ final class UnitController
     
     /**
      * @param Request $request
-     * @param CurrentRoute $currentRoute
+     * @param string $unit_id
      * @param UnitRepository $unitRepository
      * @param FormHydrator $formHydrator
      * @return Response
      */
-    public function edit(Request $request, CurrentRoute $currentRoute,
-      UnitRepository $unitRepository, FormHydrator $formHydrator): Response 
+    public function edit(Request $request, #[RouteArgument('unit_id')] string $unit_id, 
+      UnitRepository $unitRepository, FormHydrator $formHydrator) : Response 
     {
-        $unit = $this->unit($currentRoute, $unitRepository);
+        $unit = $this->unit($unit_id, $unitRepository);
         if ($unit) {
             $form = new UnitForm($unit);
             $parameters = [
                 'title' => $this->translator->translate('invoice.unit.edit'),
-                'action' => ['unit/edit', ['unit_id' => $unit->getUnit_id()]],
+                'actionName' => 'unit/edit',
+                'actionArguments' => ['unit_id' => $unit_id],
                 'form' => $form,
                 'errors' => []
             ];
             if ($request->getMethod() === Method::POST) {
-                if ($formHydrator->populateFromPostAndValidate($form,  $request)) {
+                if ($formHydrator->populateFromPostAndValidate($form, $request)) {
                     $body = $request->getParsedBody();
                     /**
                      * @psalm-suppress PossiblyInvalidArgument $body
@@ -148,15 +145,15 @@ final class UnitController
     }
     
     /**
-     * @param CurrentRoute $currentRoute
+     * @param string $unit_id
      * @param UnitRepository $unitRepository
      * @return Response
      */
-    public function delete(CurrentRoute $currentRoute, UnitRepository $unitRepository): Response 
+    public function delete(#[RouteArgument('unit_id')] string $unit_id, UnitRepository $unitRepository): Response 
     {
         try {
           /** @var Unit $unit */
-          $unit = $this->unit($currentRoute, $unitRepository);              
+          $unit = $this->unit($unit_id, $unitRepository);              
           $this->unitService->deleteUnit($unit);
           $this->flash_message('success', $this->translator->translate('i.record_successfully_deleted'));
           return $this->webService->getRedirectResponse('unit/index');
@@ -168,17 +165,18 @@ final class UnitController
     }
     
     /**
-     * @param CurrentRoute $currentRoute
+     * @param string $unit_id
      * @param UnitRepository $unitRepository
      */
-    public function view(CurrentRoute $currentRoute, UnitRepository $unitRepository)
+    public function view(#[RouteArgument('unit_id')] string $unit_id, UnitRepository $unitRepository)
     : \Yiisoft\DataResponse\DataResponse|Response {
-        $unit = $this->unit($currentRoute, $unitRepository);
+        $unit = $this->unit($unit_id, $unitRepository);
         if ($unit) {
             $form = new UnitForm($unit);
             $parameters = [
                 'title' => $this->translator->translate('i.view'),
-                'action' => ['unit/view', ['unit_id' => $unit->getUnit_id()]],
+                'actionName' => 'unit/view',
+                'actionArguments' => ['unit_id' => $unit_id],
                 'form' => $form
             ];
             return $this->viewRenderer->render('__view', $parameters);
@@ -187,14 +185,13 @@ final class UnitController
     } 
     
     /**
-     * @param CurrentRoute $currentRoute
+     * @param string $unit_id
      * @param UnitRepository $unitRepository
      * @return Unit|null
      */
-    private function unit(CurrentRoute $currentRoute, UnitRepository $unitRepository): Unit|null
+    private function unit(string $unit_id, UnitRepository $unitRepository): Unit|null
     {
-        $unit_id = $currentRoute->getArgument('unit_id');
-        if (null!==$unit_id) {
+        if ($unit_id) {
             $unit = $unitRepository->repoUnitquery($unit_id);
             return $unit; 
         }
@@ -216,7 +213,7 @@ final class UnitController
      * @return string
      */
      private function alert(): string {
-      return $this->viewRenderer->renderPartialAsString('/invoice/layout/alert',
+      return $this->viewRenderer->renderPartialAsString('//invoice/layout/alert',
       [ 
         'flash' => $this->flash
       ]);

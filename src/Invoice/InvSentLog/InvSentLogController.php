@@ -22,7 +22,7 @@ use Yiisoft\Input\Http\Attribute\Parameter\Query;
 use Yiisoft\Session\SessionInterface as Session;
 use Yiisoft\Session\Flash\Flash;
 use Yiisoft\Translator\TranslatorInterface;
-use Yiisoft\Yii\View\ViewRenderer;
+use Yiisoft\Yii\View\Renderer\ViewRenderer;
 
 final class InvSentLogController
 {
@@ -65,7 +65,7 @@ final class InvSentLogController
      * @return string
      */
     private function alert() : string {
-        return $this->viewRenderer->renderPartialAsString('/invoice/layout/alert',
+        return $this->viewRenderer->renderPartialAsString('//invoice/layout/alert',
         [
             'flash'=>$this->flash,
             'errors' => [],
@@ -132,7 +132,7 @@ final class InvSentLogController
                     // Get all the clients that have been assigned to this user
                     'optionsDataGuestClientDropDownFilter' => $this->optionsDataGuestClientsFilter($islR, $userId),
                 ];
-                return $this->viewRenderer->render('/invoice/invsentlog/guest', $parameters);
+                return $this->viewRenderer->render('invsentlog/guest', $parameters);
             }
         } 
         return $this->webService->getNotFoundResponse();
@@ -182,7 +182,7 @@ final class InvSentLogController
             'optionsDataInvNumberDropDownFilter' => $this->optionsDataInvNumberFilter($islR),
             'optionsDataClientsDropDownFilter' => $this->optionsDataClientsFilter($islR),
         ];
-        return $this->viewRenderer->render('/invoice/invsentlog/index', $parameters);
+        return $this->viewRenderer->render('invsentlog/index', $parameters);
     }
     
     /**

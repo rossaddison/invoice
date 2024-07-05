@@ -96,7 +96,7 @@ use Yiisoft\Router\CurrentRoute;
             ])
             ->content('🔎')
             ->encode(false)
-            ->href('/invoice/itemlookup/view/'. $model->getId())
+            ->href('itemlookup/view/'. $model->getId())
             ->render()
         ),
         new ActionColumn(
@@ -108,7 +108,7 @@ use Yiisoft\Router\CurrentRoute;
             ])
             ->content('✎')
             ->encode(false)
-            ->href('/invoice/itemlookup/edit/'. $model->getId())
+            ->href('itemlookup/edit/'. $model->getId())
             ->render()
         ),
         new ActionColumn(
@@ -122,12 +122,13 @@ use Yiisoft\Router\CurrentRoute;
             ])
             ->content('❌')
             ->encode(false)
-            ->href('/invoice/itemlookup/delete/'. $model->getId())
+            ->href('itemlookup/delete/'. $model->getId())
             ->render()
         )
     ];       
 ?>
 <?= GridView::widget()
+    ->rowAttributes(['class' => 'align-middle'])
     ->columns(...$columns)
     ->dataReader($paginator)
     ->headerRowAttributes(['class'=>'card-header bg-info text-black'])
@@ -140,7 +141,6 @@ use Yiisoft\Router\CurrentRoute;
         ->paginator($paginator)
          ->render(),
     )
-    ->rowAttributes(['class' => 'align-middle'])
     ->summaryAttributes(['class' => 'mt-3 me-3 summary text-end'])
     ->summaryTemplate($grid_summary)
     ->emptyTextAttributes(['class' => 'card-header bg-warning text-black'])

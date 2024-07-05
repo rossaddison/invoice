@@ -31,7 +31,7 @@ use Yiisoft\Router\HydratorAttribute\RouteArgument;
 use Yiisoft\Session\SessionInterface as Session;
 use Yiisoft\Session\Flash\Flash;
 use Yiisoft\Translator\TranslatorInterface;
-use Yiisoft\Yii\View\ViewRenderer;
+use Yiisoft\Yii\View\Renderer\ViewRenderer;
 
 use \Exception;
 
@@ -115,7 +115,7 @@ final class <?= $generator->getCamelcase_capital_name(); ?>Controller
      * @return string
      */
     private function alert() : string {
-        return $this->viewRenderer->renderPartialAsString('/invoice/layout/alert',
+        return $this->viewRenderer->renderPartialAsString('//invoice/layout/alert'
         [
             'flash'=>$this->flash,
             'errors' => [],
@@ -138,7 +138,7 @@ final class <?= $generator->getCamelcase_capital_name(); ?>Controller
                                                     ? (int)$settingRepository->get_setting('default_list_limit') : 1,
       'grid_summary' => $settingRepository->grid_summary($paginator, $this->translator, (int) $settingRepository->get_setting('default_list_limit'), $this->translator->translate('plural'), ''),
     ];
-    return $this->viewRenderer->render('/invoice/<?= $generator->getSmall_singular_name(); ?>/index', $parameters);
+    return $this->viewRenderer->render('<?= $generator->getSmall_singular_name(); ?>/index', $parameters);
     }
     
     /**

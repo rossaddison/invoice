@@ -23,7 +23,7 @@ use Yiisoft\Session\SessionInterface as Session;
 use Yiisoft\Session\Flash\Flash;
 use Yiisoft\Translator\TranslatorInterface;
 use Yiisoft\FormModel\FormHydrator;
-use Yiisoft\Yii\View\ViewRenderer;
+use Yiisoft\Yii\View\Renderer\ViewRenderer;
 
 final class UserClientController
 {
@@ -116,7 +116,7 @@ final class UserClientController
             if (null!==$user_inv) {
                 $this->flash_message('info', $this->translator->translate('i.record_successfully_deleted'));
                 return $this->factory->createResponse(
-                        $this->viewRenderer->renderPartialAsString('/invoice/setting/userclient_successful',
+                        $this->viewRenderer->renderPartialAsString('setting/userclient_successful',
                         [
                             'heading'=>$this->translator->translate('i.client'),
                             'message'=> $this->translator->translate('i.record_successfully_deleted'),
@@ -184,14 +184,15 @@ final class UserClientController
         $user_id = $currentRoute->getArgument('user_id');
         if (null!==$user_id) {
             // Get possible client ids as an array that can be presented to this user
-            $available_client_id_list = $ucR->get_not_assigned_to_user($user_id, $cR);
+            $availableClientIdList = $ucR->get_not_assigned_to_user($user_id, $cR);
             $user_client = new UserClient();
             $form = new UserClientForm($user_client);
             $parameters = [
                 'errors' => [],
                 'userinv'=>$this->user($currentRoute, $uiR),
                 // Only provide clients NOT already included ie. available
-                'clients'=>!empty($available_client_id_list) ? $cR->repoUserClient($available_client_id_list) : [],
+                'availableClientIdList' => $availableClientIdList,
+                'cR' => $cR,
                 // Initialize the checkbox to zero so that both 'all_clients' and dropdownbox is presented on userclient/new.php
                 'form' => $form
             ];
@@ -317,7 +318,7 @@ final class UserClientController
      * @return string
      */
     private function alert(): string {
-      return $this->viewRenderer->renderPartialAsString('/invoice/layout/alert',
+      return $this->viewRenderer->renderPartialAsString('//invoice/layout/alert',
       [ 
         'flash' => $this->flash
       ]);

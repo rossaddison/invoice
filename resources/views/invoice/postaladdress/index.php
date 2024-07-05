@@ -90,6 +90,7 @@ $toolbar = Div::tag();
     ];
 ?>
 <?= GridView::widget()
+    ->rowAttributes(['class' => 'align-middle'])
     ->columns(...$columns)
     ->dataReader($paginator)
     ->headerRowAttributes(['class'=>'card-header bg-info text-black'])
@@ -102,7 +103,6 @@ $toolbar = Div::tag();
          ->paginator($paginator)
          ->render(),
     )
-    ->rowAttributes(['class' => 'align-middle'])
     ->summaryAttributes(['class' => 'mt-3 me-3 summary text-end'])
     ->tableAttributes(['class' => 'table table-striped text-center h-85','id'=>'table-postaladdress'])
     ->toolbar(

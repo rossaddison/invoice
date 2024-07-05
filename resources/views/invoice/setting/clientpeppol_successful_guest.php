@@ -1,4 +1,16 @@
 <!doctype html>
+<?php
+ /**
+ * @var \Yiisoft\View\WebView $this
+ * @var \Yiisoft\Router\UrlGeneratorInterface $urlGenerator
+ * @var array $body
+ * @var string $csrf
+ * @var string $heading
+ * @var string $message
+ * @var string $url
+ * @var string $title 
+ */
+ ?>
 <html lang="en">
 <head>
     <meta charset="utf-8">
@@ -52,22 +64,12 @@
 
     </style>
 </head>
-<body>
-<?php
- /**
- * @var \Yiisoft\View\WebView $this
- * @var \Yiisoft\Router\UrlGeneratorInterface $urlGenerator
- * @var array $body
- * @var string $csrf
- * @var string $action
- * @var string $title 
- */
- ?>       
+<body>       
 <h1><?php echo $heading; ?></h1>
 <?php echo $message; ?>
 <form method="POST" class="form-inline" action="<?= $urlGenerator->generate($url); ?>">
        <input type="hidden" name="_csrf" value="<?= $csrf ?>">
-       <button type="submit" class="btn btn-xs btn-link">Ok</button>
+       <button type="submit" class="btn btn-xs btn-link">✅</button>
 </form>
 </body>
 </html>

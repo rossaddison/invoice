@@ -31,7 +31,7 @@ use Yiisoft\Session\SessionInterface;
 use Yiisoft\Session\Flash\Flash;
 use Yiisoft\Translator\TranslatorInterface;
 use Yiisoft\FormModel\FormHydrator;
-use Yiisoft\Yii\View\ViewRenderer;
+use Yiisoft\Yii\View\Renderer\ViewRenderer;
 
 final class SalesOrderItemController
 {
@@ -79,7 +79,7 @@ final class SalesOrderItemController
      * @return string
      */
     private function alert(): string {
-        return $this->viewRenderer->renderPartialAsString('/invoice/layout/alert',
+        return $this->viewRenderer->renderPartialAsString('//invoice/layout/alert',
         [ 
             'flash' => $this->flash
         ]);
@@ -92,7 +92,8 @@ final class SalesOrderItemController
             $form = new SalesOrderItemForm($so_item);  
             $parameters = [
                 'title' => $this->translator->translate('invoice.edit'),
-                'action' => ['salesorderitem/edit', ['id' => $currentRoute->getArgument('id')]],
+                'actionName' => 'salesorderitem/edit', 
+                'actionArguments' => ['id' => $currentRoute->getArgument('id')],
                 'errors' => [],
                 'form' => $form,
                 'so_id' => $so_item->getSales_order_id(),
@@ -100,7 +101,7 @@ final class SalesOrderItemController
                 'products' => $pR->findAllPreloaded(),
                 'quotes' => $qR->findAllPreloaded(),            
                 'units' => $uR->findAllPreloaded(),
-                'numberhelper' => new NumberHelper($sR)
+                'numberHelper' => new NumberHelper($sR)
             ];
             if ($request->getMethod() === Method::POST) {
                 if ($formHydrator->populateFromPostAndValidate($form, $request)) {
@@ -114,7 +115,7 @@ final class SalesOrderItemController
                      * @psalm-suppress PossiblyInvalidArgument $body
                      */
                     $this->salesorderitemService->savePeppol_po_lineid($so_item, $body);
-                    return $this->factory->createResponse($this->viewRenderer->renderPartialAsString('/invoice/setting/salesorder_successful',
+                    return $this->factory->createResponse($this->viewRenderer->renderPartialAsString('setting/salesorder_successful',
                     [
                         'heading' => $this->translator->translate('invoice.successful'), 
                         'message' => $this->translator->translate('i.record_successfully_updated'),

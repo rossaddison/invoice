@@ -7,16 +7,23 @@ use Yiisoft\Html\Html;
 use Yiisoft\Html\Tag\Form;
 
 /**
- * @var \Yiisoft\View\View $this
+ * @var App\Invoice\Setting\SettingRepository $s
+ * @var App\Invoice\Upload\UploadForm $form
+ * @var App\Widget\Button $button 
+ * @var \Yiisoft\View\View $this 
+ * @var \Yiisoft\Translator\TranslatorInterface $translator 
  * @var \Yiisoft\Router\UrlGeneratorInterface $urlGenerator
+ * @var string $actionName 
+ * @psalm-var array<string, Stringable|null|scalar> $actionArguments
  * @var string $csrf
- * @var string $action
+ * @psalm-var array<string,list<string>> $errors
+ * @psalm-var array<array-key, array<array-key, string>|string> $optionsDataClients
  * @var string $title
  */
 ?>
 
 <?= Form::tag()
-    ->post($urlGenerator->generate(...$action))
+    ->post($urlGenerator->generate($actionName, $actionArguments))
     ->enctypeMultipartFormData()
     ->csrf($csrf)
     ->id('UploadForm')
@@ -53,37 +60,37 @@ use Yiisoft\Html\Tag\Form;
             <?= Html::closeTag('div'); ?>
             <?= Html::openTag('div', ['class' => 'mb-3 form-group']); ?>
                 <?= Field::text($form, 'url_key')
-                    ->label($translator->translate('invoice.upload.url.key'), ['class' => 'form-label'])
-                    ->value(Html::encode($form->getUrl_key() ?? ''))
+                    ->label($translator->translate('invoice.upload.url.key'))
+                    ->value(Html::encode($form->getUrl_key()))
                     ->hint($translator->translate('invoice.hint.this.field.is.required')); 
                 ?>
             <?= Html::closeTag('div'); ?>
             <?= Html::openTag('div', ['class' => 'mb-3 form-group']); ?>
                 <?= Field::text($form, 'file_name_original')
-                    ->label($translator->translate('invoice.upload.filename.original'), ['class' => 'form-label'])
-                    ->value(Html::encode($form->getFile_name_original() ?? ''))
+                    ->label($translator->translate('invoice.upload.filename.original'))
+                    ->value(Html::encode($form->getFile_name_original()))
                     ->hint($translator->translate('invoice.hint.this.field.is.required')); 
                 ?>
             <?= Html::closeTag('div'); ?>
             <?= Html::openTag('div', ['class' => 'mb-3 form-group']); ?>
                 <?= Field::text($form, 'file_name_new')
-                    ->label($translator->translate('invoice.upload.filename.new'), ['class' => 'form-label'])
-                    ->value(Html::encode($form->getFile_name_new() ?? ''))
+                    ->label($translator->translate('invoice.upload.filename.new'))
+                    ->value(Html::encode($form->getFile_name_new()))
                     ->hint($translator->translate('invoice.hint.this.field.is.required')); 
                 ?>
             <?= Html::closeTag('div'); ?>
             <?= Html::openTag('div', ['class' => 'mb-3 form-group']); ?>
                 <?= Field::text($form, 'description')
-                    ->label($translator->translate('invoice.upload.description'), ['class' => 'form-label'])
-                    ->value(Html::encode($form->getDescription() ?? ''))
+                    ->label($translator->translate('invoice.upload.description'))
+                    ->value(Html::encode($form->getDescription()))
                     ->hint($translator->translate('invoice.hint.this.field.is.required')); 
                 ?>
             <?= Html::closeTag('div'); ?>
             <?= Html::openTag('div', ['class' => 'mb-3 form-group']); ?>
                 <?= Field::date($form, 'uploaded_date')
-                    ->label($translator->translate('i.date'), ['class' => 'form-label'])
+                    ->label($translator->translate('i.date'))
                     ->required(true)
-                    ->value($form->getUploaded_date() ? ($form->getUploaded_date())->format('Y-m-d') : '')
+                    ->value($form->getUploaded_date() instanceof \DateTimeImmutable ? ($form->getUploaded_date())->format('Y-m-d') : '')
                     ->hint($translator->translate('invoice.hint.this.field.is.required')); 
                 ?>
             <?= Html::closeTag('div'); ?>

@@ -94,7 +94,7 @@ use Yiisoft\Router\CurrentRoute;
             ->addAttributes(['class' => 'dropdown-button text-decoration-none', 'title' => $translator->translate('i.profile')])
             ->content('🔎')
             ->encode(false)
-            ->href('/invoice/profile/view/'. $model->getId())
+            ->href('profile/view/'. $model->getId())
             ->render(),
         ),
         new ActionColumn(
@@ -103,7 +103,7 @@ use Yiisoft\Router\CurrentRoute;
             ->addAttributes(['class' => 'dropdown-button text-decoration-none', 'title' => $translator->translate('i.edit')])
             ->content('✎')
             ->encode(false)
-            ->href('/invoice/profile/edit/'. $model->getId())
+            ->href('profile/edit/'. $model->getId())
             ->render(),
         ),
         new ActionColumn(
@@ -117,12 +117,13 @@ use Yiisoft\Router\CurrentRoute;
             ])
             ->content('❌')
             ->encode(false)
-            ->href('/invoice/profile/delete/'. $model->getId())
+            ->href('profile/delete/'. $model->getId())
             ->render(),
         )
     ];       
 ?>
 <?= GridView::widget()
+    ->rowAttributes(['class' => 'align-middle'])
     ->columns(...$columns)
     ->dataReader($paginator)
     ->headerRowAttributes(['class'=>'card-header bg-info text-black'])
@@ -135,7 +136,6 @@ use Yiisoft\Router\CurrentRoute;
         ->paginator($paginator)
          ->render(),
     )
-    ->rowAttributes(['class' => 'align-middle'])
     ->summaryAttributes(['class' => 'mt-3 me-3 summary text-end'])
     ->summaryTemplate($grid_summary)
     ->emptyTextAttributes(['class' => 'card-header bg-warning text-black'])

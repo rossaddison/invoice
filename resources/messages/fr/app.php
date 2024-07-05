@@ -1210,7 +1210,7 @@ return [
 'invoice.invoice.qr.code.settings.effect' => 'Quel effet les paramètres ci-dessus ont-ils sur ce Qr Code ?',
 'invoice.invoice.qr.code.settings.effect.explanation' => 'Dans le code actuel... aucun. Toutes les valeurs par défaut sont utilisées car le code réel très basique ci-dessus est utilisé.',
 'invoice.invoice.qr.code.source' => 'Source du code QR',
-'invoice.invoice.qr.code.source.path' => 'ressources\views\invoice\setting\company_logo_and_address.php',
+'invoice.invoice.qr.code.source.path' => 'resources\views\invoice\setting\company_logo_and_address.php',
 'invoice.invoice.qr.code.type' => 'Type de code QR',
 'invoice.invoice.qr.code.type.absolute.url' => 'Absolu (l\'ensemble) basé sur une URL',
 'invoice.invoice.qr.code.widget.used' => 'Widget utilisé',

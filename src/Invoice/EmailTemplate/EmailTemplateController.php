@@ -26,7 +26,7 @@ use Yiisoft\Json\Json;
 use Yiisoft\Router\CurrentRoute;
 use Yiisoft\Session\SessionInterface;
 use Yiisoft\Session\Flash\Flash;
-use Yiisoft\Translator\TranslatorInterface;use Yiisoft\Yii\View\ViewRenderer;
+use Yiisoft\Translator\TranslatorInterface;use Yiisoft\Yii\View\Renderer\ViewRenderer;
 
 final class EmailTemplateController
 {
@@ -100,8 +100,8 @@ final class EmailTemplateController
             'action' => ['emailtemplate/add_invoice'],
             'errors' => [],
             'form' => $form,
-            'email_template_tags' => $this->viewRenderer->renderPartialAsString('/invoice/emailtemplate/template-tags-with-inv', [
-              'template_tags_inv'=>$this->viewRenderer->renderPartialAsString('/invoice/emailtemplate/template-tags-inv', [
+            'email_template_tags' => $this->viewRenderer->renderPartialAsString('emailtemplate/template-tags-with-inv', [
+              'template_tags_inv'=>$this->viewRenderer->renderPartialAsString('emailtemplate/template-tags-inv', [
                   'custom_fields_inv_custom'=>$customfieldRepository->repoTablequery('inv_custom'),
               ]), 
               'custom_fields' => [                        
@@ -155,8 +155,8 @@ final class EmailTemplateController
             'action' => ['emailtemplate/add_quote'],
             'errors' => [],
             'form' => $form,
-            'email_template_tags' => $this->viewRenderer->renderPartialAsString('/invoice/emailtemplate/template-tags-with-quote', [
-              'template_tags_quote'=>$this->viewRenderer->renderPartialAsString('/invoice/emailtemplate/template-tags-quote', [
+            'email_template_tags' => $this->viewRenderer->renderPartialAsString('emailtemplate/template-tags-with-quote', [
+              'template_tags_quote'=>$this->viewRenderer->renderPartialAsString('emailtemplate/template-tags-quote', [
                   'custom_fields_quote_custom'=>$customfieldRepository->repoTablequery('quote_custom'),
               ]),
               'custom_fields' => [                        
@@ -191,7 +191,7 @@ final class EmailTemplateController
    * @return string
    */
    private function alert(): string {
-     return $this->viewRenderer->renderPartialAsString('/invoice/layout/alert',
+     return $this->viewRenderer->renderPartialAsString('//invoice/layout/alert',
      [ 
        'flash' => $this->flash
      ]);
@@ -237,8 +237,8 @@ final class EmailTemplateController
                 'email_template'=> $email_template,
                 'form' => $form,
                 'aliases'=> new Aliases(['@invoice' => dirname(__DIR__), '@language' => dirname(__DIR__). DIRECTORY_SEPARATOR. 'Language']),
-                'email_template_tags' => $this->viewRenderer->renderPartialAsString('/invoice/emailtemplate/template-tags-with-inv', [
-                        'template_tags_inv'=>$this->viewRenderer->renderPartialAsString('/invoice/emailtemplate/template-tags-inv', [
+                'email_template_tags' => $this->viewRenderer->renderPartialAsString('emailtemplate/template-tags-with-inv', [
+                        'template_tags_inv'=>$this->viewRenderer->renderPartialAsString('emailtemplate/template-tags-inv', [
                             'custom_fields_inv_custom'=>$customfieldRepository->repoTablequery('inv_custom'),
                         ]), 
                         'custom_fields' => [                        
@@ -299,8 +299,8 @@ final class EmailTemplateController
                 'email_template'=> $email_template,
                 'form' => $form,
                 'aliases'=> new Aliases(['@invoice' => dirname(__DIR__), '@language' => dirname(__DIR__). DIRECTORY_SEPARATOR. 'Language']),
-                'email_template_tags' => $this->viewRenderer->renderPartialAsString('/invoice/emailtemplate/template-tags-with-quote', [
-                        'template_tags_quote'=>$this->viewRenderer->renderPartialAsString('/invoice/emailtemplate/template-tags-quote', [
+                'email_template_tags' => $this->viewRenderer->renderPartialAsString('emailtemplate/template-tags-with-quote', [
+                        'template_tags_quote'=>$this->viewRenderer->renderPartialAsString('emailtemplate/template-tags-quote', [
                             'custom_fields_quote_custom'=>$customfieldRepository->repoTablequery('quote_custom'),
                         ]),
                         'custom_fields' => [                        

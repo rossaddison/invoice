@@ -1,8 +1,23 @@
+<?php
+    declare(strict_types=1);
+    
+    use Yiisoft\Html\Html;
+
+    /**
+     * @var Yiisoft\Translator\TranslatorInterface $translator
+     * @var string $heading
+     * @var string $message
+     */ 
+?>
+
 <!doctype html>
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title><?php echo $heading; ?>Yii - Invoice</title>
+    <title>
+        <?= $heading; ?>
+        <?= $translator->translate('invoice.invoice'); ?>
+    </title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <style>
 
@@ -53,19 +68,9 @@
     </style>
 </head>
 <body>
-<?php
- /**
- * @var \Yiisoft\View\WebView $this
- * @var \Yiisoft\Router\UrlGeneratorInterface $urlGenerator
- * @var array $body
- * @var string $csrf
- * @var string $action
- * @var string $title 
- * @var \Yiisoft\Session\Flash\FlashInterface $flash
- */
- ?>       
 <h1><?php echo $heading; ?></h1>
-<?php echo $message; ?><button onclick="history.back()"><?= $translator->translate('invoice.back'); ?></button>
+<?php echo $message; ?>
+<?= Html::button($translator->translate('invoice.back'),['onclick'=>'history.back()']); ?>
 </body>
 </html>
 

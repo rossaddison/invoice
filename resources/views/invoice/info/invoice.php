@@ -47,6 +47,27 @@
 <p>Introducing India's PayTm payment gateway's QR code method of payment and comparing this with Stripe's method.</p>
 <p>A General Sales Tax (GST) Tax System will have to be implemented first for this purpose.</p>
 <p>Testing Credit Notes against Invoices with refunds (if payment made) linked to each of the payment gateways.</p>
+<p><b>5th July 2024</b></p>
+<p>Apply backward compatibility for new yiisoft/yii-view-renderer:</p>
+<p>1. config/common/params adjusted and namespace <code>use Yiisoft\Yii\View\ViewRenderer;</code> changed to <code>use Yiisoft\Yii\View\Renderer\ViewRenderer;</code></p>
+<p>Redundant routes removed...config/common/routes/routes.php </p>
+<p>Psalm level 1 testing of invoice/config folder</p>
+<p>Psalm level 1 testing of all invoice/resources/views/invoice folder started.</p>
+<p>1. Folders z to r completed.</p>
+<p>Psalm Level 1 file future psalm.xml</p>
+<p><code><plugins><pluginClass class="Psalm\SymfonyPsalmPlugin\Plugin"/></plugins>    
+    <projectFiles>
+        <directory name="config" />
+        <directory name="resources/views/invoice" />
+        <directory name="src" />
+        <file name="public/index.php"/>
+        <file name="yii"/>
+        <file name="autoload.php"/>
+    </projectFiles>    
+</code>
+</p>
+<p>What's next: Psalm Level 1 testing of views q to ...</p>
+<p>What's after Psalm Testing: Integrating vjiks Telegram Api for hopefully client invoice payment notifications.</p>
 <p><b>22nd June 2024</b></p>
 <p>1. Include a requirements checker under FAQ's using newish repo 'yiisoft/requirements'.</p>
 <p>2. Tested the Generator with a dummy Entity and updated the Generator with a few additional fixes.</p>

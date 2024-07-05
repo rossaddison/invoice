@@ -23,7 +23,7 @@ use Yiisoft\Session\Flash\Flash;
 use Yiisoft\Translator\TranslatorInterface;
 use Yiisoft\FormModel\FormHydrator;
 
-use Yiisoft\Yii\View\ViewRenderer;
+use Yiisoft\Yii\View\Renderer\ViewRenderer;
 
 final class GroupController
 {
@@ -123,7 +123,7 @@ final class GroupController
             $parameters['errors'] = $form->getValidationResult()->getErrorMessagesIndexedByAttribute();
             $parameters['form'] = $form;
         }
-        return $this->viewRenderer->render('/invoice/group/_form', $parameters);
+        return $this->viewRenderer->render('group/_form', $parameters);
     }
     
     /**
@@ -157,7 +157,7 @@ final class GroupController
                 $parameters['errors'] = $form->getValidationResult()->getErrorMessagesIndexedByAttribute();
                 $parameters['form'] = $form;
             }
-            return $this->viewRenderer->render('/invoice/group/_form', $parameters);
+            return $this->viewRenderer->render('group/_form', $parameters);
         }
         return $this->webService->getRedirectResponse('group/index');
     }
@@ -200,7 +200,7 @@ final class GroupController
                 'form' => $form,      
                 'group' => $groupRepository->repoGroupquery($group->getId()),
             ];
-            return $this->viewRenderer->render('/invoice/group/_view', $parameters);
+            return $this->viewRenderer->render('group/_view', $parameters);
         }
         return $this->webService->getRedirectResponse('group/index');  
     }
@@ -248,7 +248,7 @@ final class GroupController
      * @return string
      */
      private function alert(): string {
-       return $this->viewRenderer->renderPartialAsString('/invoice/layout/alert',
+       return $this->viewRenderer->renderPartialAsString('//invoice/layout/alert',
        [ 
          'flash' => $this->flash
        ]);

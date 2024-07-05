@@ -2,14 +2,17 @@
 
 declare(strict_types=1);
 
-use Yiisoft\Html\Html;
 use App\Widget\OffsetPagination;
+use Yiisoft\Html\Html;
+use Yiisoft\Data\Paginator\OffsetPaginator;
 
 /**
- * @var \App\Invoice\Entity\Setting $setting
- * @var \Yiisoft\Router\UrlGeneratorInterface $urlGenerator
- * @var \Yiisoft\Session\Flash\FlashInterface $flash
- * @var \Yiisoft\Translator\TranslatorInterface $translator 
+ * @var App\Widget\Button $button
+ * @var App\Invoice\Entity\Setting $setting
+ * @var Yiisoft\Router\UrlGeneratorInterface $urlGenerator
+ * @var Yiisoft\Translator\TranslatorInterface $translator 
+ * @var string $alert
+ * @var OffsetPaginator $paginator
  */
 
 echo $alert;
@@ -25,7 +28,7 @@ echo $alert;
 <?php
 $pagination = OffsetPagination::widget()
 ->paginator($paginator)
-->urlGenerator(fn ($page) => $urlGenerator->generate('setting/debug_index', ['page' => $page]));
+->urlGenerator(fn (int $page) => $urlGenerator->generate('setting/debug_index', ['page' => $page]));
 
 ?>
 
@@ -48,7 +51,11 @@ $pagination = OffsetPagination::widget()
    </thead>
 <tbody>
 
-<?php foreach ($paginator->read() as $setting) { ?>
+<?php
+     /**
+      * @var App\Invoice\Entity\Setting $setting
+      */
+     foreach ($paginator->read() as $setting) { ?>
      <tr>
       <td>
           <div class="options btn-group">

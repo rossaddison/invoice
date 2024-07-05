@@ -218,6 +218,7 @@ $this->setTitle($translator->translate('i.clients'));
  <?= GridView::widget()
     ->columns(...$columns)
     ->dataReader($paginator)
+    ->rowAttributes(['class' => 'align-middle'])
     ->headerRowAttributes(['class'=>'card-header bg-info text-black'])
     ->enableMultisort(true)
     //->urlQueryParameters(['filter_product_sku', 'filter_product_price'])            
@@ -226,7 +227,6 @@ $this->setTitle($translator->translate('i.clients'));
     ->pagination(
         $gridComponents->offsetPaginationWidget($defaultPageSizeOffsetPaginator, $paginator) 
     )
-    ->rowAttributes(['class' => 'align-middle'])
     ->summaryAttributes(['class' => 'mt-3 me-3 summary text-end'])
     ->summaryTemplate($pageSizeLimiter::buttons($currentRoute, $s, $urlGenerator, 'client').' '.$grid_summary)
     ->emptyTextAttributes(['class' => 'card-header bg-warning text-black'])
@@ -247,3 +247,4 @@ $this->setTitle($translator->translate('i.clients'));
         echo $modal_create_client;
     ?>
 </div>
+<?php echo \Yiisoft\VarDumper\VarDumper::dump($query_params); ?>

@@ -2,15 +2,25 @@
 declare(strict_types=1);
 
 use Yiisoft\Html\Html;
+
+/**
+ * @var App\Invoice\Setting\SettingRepository $s 
+ * @var Yiisoft\Translator\TranslatorInterface $translator
+ * @var array $body
+ * @var array $countries
+ * @var array $sender_identifier_array
+ * @var string $cldr
+ * @var string $country
+ */
 ?>
-<?= Html::openTag('div', ['class' => 'row']); ?>
+<div class='row'>
     <div class="col-xs-12 col-md-8 col-md-offset-2">
         <div class="panel panel-default">
             <div class="panel-heading">
                 <?= $translator->translate('invoice.invoice.storecove'); ?>
             </div>
             <div class="panel-body">
-                <?= Html::openTag('div', ['class' => 'row']); ?>
+                <div class='row'>
                     <div class="col-xs-12 col-md-6">
                         <div class="form-group">
                             <label for="settings[storecove_country]" <?= $s->where('storecove_country'); ?>>
@@ -19,7 +29,12 @@ use Yiisoft\Html\Html;
                             <?php $body['settings[storecove_country]'] = $s->get_setting('storecove_country'); ?>
                             <select name="settings[storecove_country]" id="settings[storecove_country]"
                                     class="form-control">
-                                        <?php foreach ($countries as $cldr => $country) { ?>
+                                        <?php
+                                        /**
+                                         * @var string $cldr
+                                         * @var string $country
+                                         */
+                                        foreach ($countries as $cldr => $country) { ?>
                                     <option value="<?= $cldr; ?>"
                                     <?php $s->check_select($body['settings[storecove_country]'], $cldr); ?>>
                                             <?= $cldr . str_repeat("&nbsp;", 2) . str_repeat("-", 10) . str_repeat("&nbsp;", 2) . $country ?>
@@ -49,8 +64,12 @@ use Yiisoft\Html\Html;
 
                                 <?php
                                 /**
-                                 * @var int $key
                                  * @var array $value
+                                 * @var string $key
+                                 * @var string $value['Region']
+                                 * @var string $value['Country']
+                                 * @var string $value['Legal']
+                                 * @var string $value['Tax']
                                  */
                                 foreach ($sender_identifier_array as $key => $value) {
                                     ?>
@@ -93,7 +112,6 @@ use Yiisoft\Html\Html;
                                 </option>
                             </select>
                         </div>
-
                     </div>
                 </div>
             </div>

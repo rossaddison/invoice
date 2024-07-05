@@ -25,7 +25,7 @@ use Yiisoft\Session\SessionInterface;
 use Yiisoft\Session\Flash\Flash;
 use Yiisoft\Translator\TranslatorInterface;
 use Yiisoft\FormModel\FormHydrator;
-use Yiisoft\Yii\View\ViewRenderer;
+use Yiisoft\Yii\View\Renderer\ViewRenderer;
 use \Exception;
 
 final class ClientPeppolController {
@@ -104,7 +104,7 @@ final class ClientPeppolController {
              * @psalm-suppress PossiblyInvalidArgument $body
              */  
             $this->clientpeppolService->saveClientPeppol($client_peppol, $body);
-            return $this->factory->createResponse($this->viewRenderer->renderPartialAsString('/invoice/setting/clientpeppol_successful_guest',
+            return $this->factory->createResponse($this->viewRenderer->renderPartialAsString('setting/clientpeppol_successful_guest',
                 [
                     'url' => $this->userService->hasPermission('editClientPeppol') 
                              && $this->userService->hasPermission('viewInv') 
@@ -120,7 +120,7 @@ final class ClientPeppolController {
         $parameters['errors'] = $form->getValidationResult()->getErrorMessagesIndexedByAttribute();
         $parameters['form'] = $form;
       } // if
-      return $this->viewRenderer->render('/invoice/clientpeppol/_form', $parameters);
+      return $this->viewRenderer->render('clientpeppol/_form', $parameters);
     } // null !== $client
     return $this->webService->getNotFoundResponse();
   }
@@ -253,7 +253,7 @@ final class ClientPeppolController {
       $parameters = [
         'title' => $this->translator->translate('i.edit'),
         'action' => ['clientpeppol/edit', ['client_id' => $clientpeppol->getClient_id()]],
-        'buttons' => $this->viewRenderer->renderPartialAsString('/invoice/layout/header_buttons', ['s' => $settingRepository, 'hide_submit_button' => false, 'hide_cancel_button' => false]),
+        'buttons' => $this->viewRenderer->renderPartialAsString('//invoice/layout/header_buttons', ['s' => $settingRepository, 'hide_submit_button' => false, 'hide_cancel_button' => false]),
         'errors' => [],
         'form' => $form,  
         'head' => $head,
@@ -278,7 +278,7 @@ final class ClientPeppolController {
           $this->clientpeppolService->saveClientPeppol($clientpeppol, $body);
           // Guest user's return url to see user's clients
           if ($this->userService->hasPermission('editClientPeppol') && $this->userService->hasPermission('viewInv') && !$this->userService->hasPermission('editInv')) {
-            return $this->factory->createResponse($this->viewRenderer->renderPartialAsString('/invoice/setting/clientpeppol_successful_guest',
+            return $this->factory->createResponse($this->viewRenderer->renderPartialAsString('setting/clientpeppol_successful_guest',
                   ['url' => 'client/guest', 'heading' => $this->translator->translate('invoice.client.peppol'), 'message' => $this->translator->translate('i.record_successfully_updated')]));
           }
           // Administrator's return url to see all clients
@@ -298,7 +298,7 @@ final class ClientPeppolController {
     * @return string
     */
    private function alert(): string {
-     return $this->viewRenderer->renderPartialAsString('/invoice/layout/alert',
+     return $this->viewRenderer->renderPartialAsString('//invoice/layout/alert',
      [ 
        'flash' => $this->flash,
        'errors' => [],

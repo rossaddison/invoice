@@ -1,22 +1,29 @@
 <?php
 
-declare(strict_types=1); 
+declare(strict_types=1);
 
 use Yiisoft\FormModel\Field;
 use Yiisoft\Html\Html;
 use Yiisoft\Html\Tag\Form;
 
 /**
- * @var \Yiisoft\View\View $this
- * @var \Yiisoft\Router\UrlGeneratorInterface $urlGenerator
+ * @var App\Invoice\TaxRate\TaxRateForm $form
+ * @var App\Widget\Button $button
+ * @var Yiisoft\View\View $this
+ * @var Yiisoft\Translator\TranslatorInterface $translator 
+ * @var Yiisoft\Router\UrlGeneratorInterface $urlGenerator
+ * @var string $actionName 
  * @var string $csrf
- * @var string $action
  * @var string $title
+ * @psalm-var array<string, Stringable|null|scalar> $actionArguments
+ * @psalm-var array<string,list<string>> $errors
+ * @psalm-var array<array-key, array<array-key, string>|string> $optionsDataPeppolTaxRateCode
+ * @psalm-var array<array-key, array<array-key, string>|string> $optionsDataStoreCoveTaxType
  */
 ?>
 
 <?= Form::tag()
-    ->post($urlGenerator->generate(...$action))
+    ->post($urlGenerator->generate($actionName, $actionArguments))
     ->enctypeMultipartFormData()
     ->csrf($csrf)
     ->id('TaxRateForm')
@@ -45,14 +52,14 @@ use Yiisoft\Html\Tag\Form;
             <?= Html::openTag('div'); ?>
                 <?= Html::openTag('div', ['class' => 'mb-3 form-group']); ?>
                     <?= Field::text($form, 'tax_rate_name')
-                        ->label($translator->translate('i.tax_rate_name'), ['class' => 'form-label'])
+                        ->label($translator->translate('i.tax_rate_name'))
                         ->value(Html::encode($form->getTax_rate_name() ?? ''))
                         ->hint($translator->translate('invoice.hint.this.field.is.required')); 
                     ?>
                 <?= Html::closeTag('div'); ?>
                 <?= Html::openTag('div', ['class' => 'mb-3 form-group']); ?>
                     <?= Field::text($form, 'tax_rate_percent')
-                        ->label($translator->translate('invoice.tax.rate.percent'), ['class' => 'form-label'])
+                        ->label($translator->translate('invoice.tax.rate.percent'))
                         ->value(Html::encode($form->getTax_rate_percent() ?? ''))
                         ->hint($translator->translate('invoice.hint.this.field.is.required')); 
                     ?>
@@ -67,14 +74,14 @@ use Yiisoft\Html\Tag\Form;
                 <?= Html::closeTag('div'); ?>
                 <?= Html::openTag('div', ['class' => 'mb-3 form-group']); ?>
                     <?= Field::text($form, 'tax_rate_code')
-                        ->label($translator->translate('invoice.invoice.tax.rate.code'), ['class' => 'form-label'])
+                        ->label($translator->translate('invoice.invoice.tax.rate.code'))
                         ->value(Html::encode($form->getTax_rate_code() ?? ''))
                         ->hint($translator->translate('invoice.hint.this.field.is.not.required')); 
                     ?>
                 <?= Html::closeTag('div'); ?>
                 <?= Html::openTag('div', ['class' => 'mb-3 form-group']); ?>
                     <?= Field::select($form, 'peppol_tax_rate_code')
-                        ->label($translator->translate('invoice.peppol.tax.rate.code'), ['class' => 'form-label'])
+                        ->label($translator->translate('invoice.peppol.tax.rate.code'))
                         ->optionsData($optionsDataPeppolTaxRateCode)
                         ->value(Html::encode($form->getPeppol_tax_rate_code() ?? ''))
                         ->hint($translator->translate('invoice.hint.this.field.is.not.required')); 
@@ -82,7 +89,7 @@ use Yiisoft\Html\Tag\Form;
                 <?= Html::closeTag('div'); ?>
                 <?= Html::openTag('div', ['class' => 'mb-3 form-group']); ?>
                     <?= Field::select($form, 'storecove_tax_type')
-                        ->label($translator->translate('invoice.storecove.tax.rate.code'), ['class' => 'form-label'])
+                        ->label($translator->translate('invoice.storecove.tax.rate.code'))
                         ->optionsData($optionsDataStoreCoveTaxType)
                         ->value(Html::encode($form->getStorecove_tax_type() ?? ''))
                         ->hint($translator->translate('invoice.hint.this.field.is.not.required')); 

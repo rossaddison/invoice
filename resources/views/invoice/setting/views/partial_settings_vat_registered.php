@@ -1,20 +1,21 @@
 <?php
     declare(strict_types=1);
     
-    use Yiisoft\Html\Html;
+    /**
+     * @var App\Invoice\Setting\SettingRepository $s 
+     * @var Yiisoft\Translator\TranslatorInterface $translator
+     * @var array $body
+     */
 ?>
-<?= Html::openTag('div', ['class' => 'row']); ?>
+<div class = 'row'>
     <div class="col-xs-12 col-md-8 col-md-offset-2">
-        
         <div class="panel panel-default">
             <div class="panel-heading">
                 <?= $translator->translate('invoice.invoice.vat'); ?>
             </div>
             <div class="panel-body">
-                
-                <?= Html::openTag('div', ['class' => 'row']); ?>
+                <div class = 'row'>
                     <div class="col-xs-12 col-md-6">
-                        
                         <div class="form-group">
                             <div class="checkbox">
                                 <?php $body['settings[enable_vat_registration]'] = $s->get_setting('enable_vat_registration');?>

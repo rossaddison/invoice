@@ -1210,7 +1210,7 @@ return [
 'invoice.invoice.qr.code.settings.effect' => '上述设置对此二维码有什么影响？',
 'invoice.invoice.qr.code.settings.effect.explanation' => '在实际代码中...无。所有都使用默认值，因为使用了上面非常基本的实际代码。',
 'invoice.invoice.qr.code.source' => '二维码来源',
-'invoice.invoice.qr.code.source.path' => '资源\视图\发票\设置\company_logo_and_address.php',
+'invoice.invoice.qr.code.source.path' => 'resources\views\invoice\setting\company_logo_and_address.php',
 'invoice.invoice.qr.code.type' => '二维码类型',
 'invoice.invoice.qr.code.type.absolute.url' => '基于绝对（整个）Urban',
 'invoice.invoice.qr.code.widget.used' => '使用的小工具',

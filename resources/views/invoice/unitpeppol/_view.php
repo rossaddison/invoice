@@ -7,16 +7,24 @@ use Yiisoft\Html\Html;
 use Yiisoft\Html\Tag\Form;
 
 /**
- * @var \Yiisoft\View\View $this
+ * @var App\Widget\Button $button
+ * @var App\Invoice\UnitPeppol\UnitPeppolForm $form
+ * @var \Yiisoft\Translator\TranslatorInterface $translator
  * @var \Yiisoft\Router\UrlGeneratorInterface $urlGenerator
- * @var string $csrf
+ * @var \Yiisoft\View\View $this
+ * @var array $eneces
+ * @var string $actionName
  * @var string $action
+ * @var string $csrf
  * @var string $title
+ * @psalm-var array<string, Stringable|null|scalar> $actionArguments
+ * @psalm-var array<array-key, array<array-key, string>|string> $optionsDataUnits
+ * @psalm-var array<array-key, array<array-key, string>|string> $optionsDataEneces
  */
 ?>
 
 <?= Form::tag()
-    ->post($urlGenerator->generate(...$action))
+    ->post($urlGenerator->generate($actionName, $actionArguments))
     ->enctypeMultipartFormData()
     ->csrf($csrf)
     ->id('UnitPeppolForm')
@@ -32,7 +40,7 @@ use Yiisoft\Html\Tag\Form;
     <?= Html::encode($title) ?>
 <?= Html::closeTag('h1'); ?>
 <?= Html::openTag('div', ['id' => 'headerbar']); ?>
-    <?= $button::back($translator); ?>
+    <?= $button::back(); ?>
     <?= Html::openTag('div', ['id' => 'content']); ?>
         <?= Html::openTag('div', ['class' => 'row']); ?>
             <?= Html::openTag('div'); ?>
@@ -43,7 +51,7 @@ use Yiisoft\Html\Tag\Form;
                 <?= Html::closeTag('div'); ?>
                 <?= Html::openTag('div', ['class' => 'mb-3 form-group']); ?>
                     <?= Field::select($form, 'unit_id')
-                        ->label($translator->translate('i.id'), ['class' => 'form-label'])
+                        ->label($translator->translate('i.id'))
                         ->optionsData($optionsDataUnits)
                         ->value(Html::encode($form->getUnit_id() ?? ''))
                         ->disabled(true)
@@ -51,14 +59,14 @@ use Yiisoft\Html\Tag\Form;
                 <?= Html::closeTag('div'); ?>
                 <?= Html::openTag('div', ['class' => 'mb-3 form-group']); ?>
                     <?= Field::text($form, 'name')
-                        ->label($translator->translate('i.name'), ['class' => 'form-label'])
+                        ->label($translator->translate('i.name'))
                         ->value(Html::encode($form->getName() ?? ''))
                         ->disabled(true); 
                     ?>
                 <?= Html::closeTag('div'); ?>
                 <?= Html::openTag('div', ['class' => 'mb-3 form-group']); ?>
                     <?= Field::select($form, 'code')
-                        ->label($translator->translate('invoice.unit.peppol.code'), ['class' => 'form-label'])
+                        ->label($translator->translate('invoice.unit.peppol.code'))
                         ->optionsData($optionsDataEneces)
                         ->value(Html::encode($form->getCode() ?? ''))
                         ->disabled(true); 
@@ -66,7 +74,7 @@ use Yiisoft\Html\Tag\Form;
                 <?= Html::closeTag('div'); ?>
                 <?= Html::openTag('div', ['class' => 'mb-3 form-group']); ?>
                     <?= Field::text($form, 'description')
-                        ->label($translator->translate('i.description'), ['class' => 'form-label'])
+                        ->label($translator->translate('i.description'))
                         ->value(Html::encode($form->getDescription() ?? ''))
                         ->disabled(true);  
                     ?>
@@ -90,16 +98,25 @@ use Yiisoft\Html\Tag\Form;
                             <?= Html::closeTag('tr'); ?>
                         <?= Html::closeTag('thead'); ?>
                         <?= Html::openTag('tbody'); ?>
-                            <?php foreach ($eneces as $key => $value) {
-                                $description = (array_key_exists('Description', $eneces[$key]) ? $eneces[$key]['Description'] : '');
+                            <?php
+                            /**
+                             * @var string $key
+                             * @var string $value
+                             */
+                            foreach ($eneces as $key => $value) {
+                                /**
+                                 * @var array $eneces[$key]
+                                 */
+                                $enece = $eneces[$key];
+                                $description = (string)(array_key_exists('Description', $enece) ? $enece['Description'] : '');
                                 echo Html::openTag('tr');
                                     echo Html::openTag('td');
-                                        echo $eneces[$key]['Id'];
+                                        echo (string)$enece['Id'];
                                     echo Html::closeTag('td');
                                 echo Html::closeTag('tr');
                                 echo Html::openTag('tr');
                                     echo Html::openTag('td');
-                                        echo $eneces[$key]['Name'];
+                                        echo (string)$enece['Name'];
                                     echo Html::closeTag('td');
                                 echo Html::closeTag('tr');
                                 echo Html::openTag('tr');

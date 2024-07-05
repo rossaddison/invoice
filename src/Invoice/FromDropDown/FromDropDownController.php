@@ -23,7 +23,7 @@ use Yiisoft\Session\SessionInterface as Session;
 use Yiisoft\Session\Flash\Flash;
 use Yiisoft\Translator\TranslatorInterface;
 use Yiisoft\FormModel\FormHydrator;
-use Yiisoft\Yii\View\ViewRenderer;
+use Yiisoft\Yii\View\Renderer\ViewRenderer;
 
 use \Exception;
 
@@ -91,7 +91,7 @@ final class FromDropDownController
      * @return string
      */
     private function alert() : string {
-        return $this->viewRenderer->renderPartialAsString('/invoice/layout/alert',
+        return $this->viewRenderer->renderPartialAsString('//invoice/layout/alert',
         [
             'flash' => $this->flash
         ]);
@@ -112,7 +112,7 @@ final class FromDropDownController
       'max' => (int) $settingRepository->get_setting('default_list_limit'),
       'grid_summary' => $settingRepository->grid_summary($paginator, $this->translator, (int) $settingRepository->get_setting('default_list_limit'), $this->translator->translate('plural'), ''),
     ];
-    return $this->viewRenderer->render('/invoice/from/index', $parameters);
+    return $this->viewRenderer->render('from/index', $parameters);
     }
     
     /**

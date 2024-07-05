@@ -571,7 +571,7 @@ if (($invEdit && $inv->getStatus_id() === 1 || ($s->get_setting('enable_invoice_
                                             <div class="form-group">
                                                 <label for="guest-url"><?= Html::encode($translator->translate('i.guest_url')); ?></label>
                                                 <div class="input-group">
-                                                    <input type="text" id="guest-url" name="guest-url" readonly class="form-control" value="<?= '/invoice/inv/url_key/' . $inv->getUrl_key(); ?>">
+                                                    <input type="text" id="guest-url" name="guest-url" readonly class="form-control" value="<?= 'inv/url_key/' . $inv->getUrl_key(); ?>">
                                                     <span class="input-group-text to-clipboard cursor-pointer"
                                                           data-clipboard-target="#guest-url">
                                                         <i class="fa fa-clipboard fa-fw"></i>

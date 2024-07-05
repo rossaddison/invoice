@@ -88,6 +88,7 @@ use Yiisoft\Yii\DataView\GridView;
     
     echo '<br>';
     echo GridView::widget()
+      ->rowAttributes(['class' => 'align-middle'])
       ->columns(...$columns)
       ->dataReader($paginator)
       ->headerRowAttributes(['class' => 'card-header bg-info text-black'])
@@ -96,7 +97,6 @@ use Yiisoft\Yii\DataView\GridView;
       ->pagination(
         $gridComponents->offsetPaginationWidget($defaultPageSizeOffsetPaginator, $paginator)
       )
-      ->rowAttributes(['class' => 'align-middle'])
       ->summaryAttributes(['class' => 'mt-3 me-3 summary text-end'])
       ->summaryTemplate(($viewInv ? 
                            $pageSizeLimiter::buttonsGuest($userinv, $urlGenerator, $translator, 'invsentlog', $defaultPageSizeOffsetPaginator) : '').' '.

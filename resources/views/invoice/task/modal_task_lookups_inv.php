@@ -1,5 +1,11 @@
 <?php
 declare(strict_types=1);
+
+/**
+ * @var string $partial_task_table_modal
+ * @var Yiisoft\Translator\TranslatorInterface $translator
+ */
+
 ?>
 
 <div id="modal-choose-tasks" class="modal col-xs-12 col-sm-10 col-sm-offset-1 col-md-8 col-md-offset-2"

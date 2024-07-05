@@ -43,7 +43,7 @@ use Yiisoft\Router\FastRoute\UrlGenerator;
 use Yiisoft\Session\SessionInterface as Session;
 use Yiisoft\Session\Flash\Flash;
 use Yiisoft\Translator\TranslatorInterface as Translator;
-use Yiisoft\Yii\View\ViewRenderer;
+use Yiisoft\Yii\View\Renderer\ViewRenderer;
 use Mollie\Api\Resources\Payment as MolliePayment;
 use Mollie\Api\MollieApiClient as MollieClient;
 use Mollie\Api\Exceptions\ApiException as MollieException;
@@ -120,7 +120,7 @@ final class PaymentInformationController
    * @return string
    */
    private function alert(): string {
-     return $this->viewRenderer->renderPartialAsString('/invoice/layout/alert',
+     return $this->viewRenderer->renderPartialAsString('//invoice/layout/alert',
      [ 
        'flash' => $this->flash,
        'errors' => [],
@@ -200,7 +200,7 @@ final class PaymentInformationController
                     if ($checkout_session_id) {
                         $view_data = [
                             'render' => $this->viewRenderer->renderPartialAsString(
-                            '/invoice/setting/payment_message', [
+                            'setting/payment_message', [
                                 'heading'=> $this->translator->translate('invoice.payment.information.amazon.payment.session.complete') .$checkout_session_id,
                                 'message'=> $this->translator->translate('i.payment').':'.$this->translator->translate('i.complete'), 
                                 'url' => 'inv/url_key',
@@ -212,7 +212,7 @@ final class PaymentInformationController
                     } else {            
                         $view_data = [
                             'render' => $this->viewRenderer->renderPartialAsString(
-                            '/invoice/setting/payment_message', [
+                            'setting/payment_message', [
                                 'heading' => $this->translator->translate('invoice.payment.information.amazon.payment.session.incomplete'),
                                 'message' => $this->translator->translate('i.payment').':'.$this->translator->translate('i.complete'), 
                                 'url' => 'inv/url_key',
@@ -409,7 +409,7 @@ final class PaymentInformationController
                                     'inv_url_key' => $url_key,
                                     'is_overdue' => $is_overdue,
                                     'partial_client_address' => $this->viewRenderer
-                                        ->renderPartialAsString('/invoice/client/partial_client_address',
+                                        ->renderPartialAsString('client/partial_client_address',
                                         ['client' => $cR->repoClientquery($invoice->getClient_id())]),
                                     'payment_method' => null!==$payment_method_for_this_invoice->getName() ? $payment_method_for_this_invoice->getName() : $this->translator->translate('invoice.payment.information.none'),
                                     'total' => $total,
@@ -503,7 +503,7 @@ public function amazonInForm(
     $aliases = $this->sR->get_amazon_pem_file_folder_aliases();
     if (!file_exists($aliases->get('@pem_file_unique_folder').'/private.pem')){
         $this->flash_message('warning','Amazon_Pay private.pem File Not Downloaded from Amazon and saved in Pem_unique_folder as private.pem'); 
-        return $this->viewRenderer->render('/invoice/setting/payment_message', ['heading' => '',
+        return $this->viewRenderer->render('setting/payment_message', ['heading' => '',
                 'message' => 'Amazon_Pay private.pem File Not Downloaded from Amazon and saved in Pem_unique_folder as private.pem',  
                 'url' =>'inv/url_key',
                 'url_key' => $url_key, 
@@ -547,7 +547,7 @@ public function amazonInForm(
         'json_encoded_items' => Json::encode($items_array),
         'companyLogo' => $this->renderPartialAsStringCompanyLogo(),
         'partial_client_address' => $this->viewRenderer
-                                         ->renderPartialAsString('/invoice/client/partial_client_address',
+                                         ->renderPartialAsString('client/partial_client_address',
                                          ['client'=>$cR->repoClientquery($invoice->getClient_id())]),
         'payment_method' => $payment_method_for_this_invoice,
         'return_url' => ['paymentinformation/amazon_complete',['url_key'=>$url_key]],
@@ -609,7 +609,7 @@ public function braintreeInForm(
             'inv_url_key' => $url_key,
             'is_overdue' => $is_overdue,
             'partial_client_address' => $this->viewRenderer
-                                             ->renderPartialAsString('/invoice/client/partial_client_address',
+                                             ->renderPartialAsString('client/partial_client_address',
                                              ['client'=>$cR->repoClientquery($invoice->getClient_id())]),
             'payment_method' => $payment_method_for_this_invoice,
             'total' => $total,
@@ -656,7 +656,7 @@ public function braintreeInForm(
                 } //null!==$invoice
             }    
             $view_data = [
-                'render' => $this->viewRenderer->renderPartialAsString('/invoice/setting/payment_message', ['heading' => '',
+                'render' => $this->viewRenderer->renderPartialAsString('setting/payment_message', ['heading' => '',
                 //https://developer.paypal.com/braintree/docs/reference/general/result-objects
                 'message' => $result->success ? sprintf($this->translator->translate('g.online_payment_payment_successful'), $invoice->getNumber() ?? '') 
                                               : sprintf($this->translator->translate('g.online_payment_payment_failed'), $invoice->getNumber() ?? ''), 
@@ -726,7 +726,7 @@ public function mollieInForm(
             'is_overdue' => $is_overdue,
             'partial_client_address' => 
                 $this->viewRenderer->renderPartialAsString(
-                        '/invoice/client/partial_client_address',
+                        'client/partial_client_address',
                         [
                             'client'=>$cR->repoClientquery($invoice->getClient_id())
                         ]),                                
@@ -906,7 +906,7 @@ public function mollie_complete(CurrentRoute $currentRoute) : \Yiisoft\DataRespo
 
                     $view_data = [
                         'render' => $this->viewRenderer->renderPartialAsString(
-                            '/invoice/paymentinformation/payment_message', [
+                            'paymentinformation/payment_message', [
                                 'heading' => $heading,
                                 'message' => $this->translator->translate('i.payment').':'.$this->translator->translate('i.complete') . 'Payment Id: '. $paymentId, 
                                 'url' => 'inv/url_key',
@@ -935,7 +935,7 @@ public function mollie_complete(CurrentRoute $currentRoute) : \Yiisoft\DataRespo
                 $this->iR->save($invoice);
                 $view_data = [
                     'render' => $this->viewRenderer->renderPartialAsString(
-                        '/invoice/paymentinformation/payment_message', [
+                        'paymentinformation/payment_message', [
                             'heading' => $heading,
                             'message' => $this->translator->translate('i.payment').':'.$this->translator->translate('i.complete'), 
                             'url' => 'inv/url_key',
@@ -983,7 +983,7 @@ public function stripeInForm(
         'inv_url_key' => $url_key,
         'is_overdue' => $is_overdue,
         'partial_client_address' => $this->viewRenderer
-                                         ->renderPartialAsString('/invoice/client/partial_client_address',
+                                         ->renderPartialAsString('client/partial_client_address',
                                          ['client'=>$cR->repoClientquery($invoice->getClient_id())]),
         'payment_method' => $payment_method_for_this_invoice ?: "None" ,
         'total' => $total,
@@ -1072,7 +1072,7 @@ public function stripe_complete(Request $request, CurrentRoute $currentRoute) : 
             
             $view_data = [
                 'render' => $this->viewRenderer->renderPartialAsString(
-                    '/invoice/paymentinformation/payment_message', [
+                    'paymentinformation/payment_message', [
                         'heading'=> $heading,
                         'message'=> $this->translator->translate('i.payment').':'.$this->translator->translate('i.complete'), 
                         'url'=> 'inv/url_key',
@@ -1265,7 +1265,7 @@ private function omnipay(string $driver,
                     $this->translator->translate('g.online_payment_card_invalid') . '<br/>' . $e->getMessage());
                 return $this->factory
                     ->createResponse($this->viewRenderer
-                                          ->renderPartialAsString('/invoice/setting/payment_message',
+                                          ->renderPartialAsString('setting/payment_message',
                     [
                         'heading' => '',
                         'message' => $this->translator->translate('g.online_payment_card_invalid') . '<br/>' . $e->getMessage(),
@@ -1381,7 +1381,7 @@ private function record_online_payments_and_merchant_for_omnipay(
         $this->flash_message('success', $payment_success_msg);
         return $this->factory->createResponse(
                $this->viewRenderer->renderPartialAsString(
-               '/invoice/setting/payment_message', [
+               'setting/payment_message', [
                'heading'=>'',
                'message'=>$payment_success_msg, 
                'url'=>'inv/url_key','url_key'=>$invoice_url_key,
@@ -1416,7 +1416,7 @@ private function record_online_payments_and_merchant_for_omnipay(
         $this->flash_message('warning', $payment_failure_msg);
         return $this->factory->createResponse(
                $this->viewRenderer->renderPartialAsString(
-               '/invoice/setting/payment_message', [
+               'setting/payment_message', [
                'heading' => '',
                'message' => $payment_failure_msg . ' Response: '. (string)$response->getMessage(), 
                'url' => 'inv/url_key',
@@ -1490,7 +1490,7 @@ private function record_online_payments_and_merchant_for_non_omnipay(
         $this->flash_message('success', $payment_success_msg);
         return $this->factory->createResponse(
                $this->viewRenderer->renderPartialAsString(
-               '/invoice/setting/payment_message', [
+               'setting/payment_message', [
                     'heading'=>'',
                     'message'=>$payment_success_msg, 
                     'url'=>'inv/url_key','url_key'=>$invoice_url_key,
@@ -1521,7 +1521,7 @@ private function record_online_payments_and_merchant_for_non_omnipay(
         $this->flash_message('warning', $payment_failure_msg);
         return $this->factory->createResponse(
                $this->viewRenderer->renderPartialAsString(
-               '/invoice/setting/payment_message', [
+               'setting/payment_message', [
                    'heading'=>'',
                    'message'=>$payment_failure_msg, 
                    'url'=>'inv/url_key',
@@ -1640,7 +1640,7 @@ public function omnipay_payment_return(string $invoice_url_key, string $driver) 
        // Redirect to guest invoice view with flash message
        return $this->factory->createResponse(
             $this->viewRenderer->renderPartialAsString(
-            '/invoice/inv/payment_message', [
+            'inv/payment_message', [
                 'heading' => '',
                 'message' => $payment_msg, 
                 'url' => 'inv/url_key',
@@ -1729,7 +1729,7 @@ public function omnipay_payment_cancel(string $invoice_url_key, string $driver):
    // Redirect to guest invoice view with flash message
    return $this->factory->createResponse(
         $this->viewRenderer->renderPartialAsString(
-            '/invoice/inv/payment_message', [
+            'inv/payment_message', [
                 'heading' => '',
                 'message'=>$this->translator->translate('g.online_payment_payment_cancelled'), 
                 'url' => 'inv/url_key',
@@ -1764,7 +1764,7 @@ public function renderPartialAsStringCompanyLogo() : string
         }
     }
     $src = (null!==$companyLogoFileName ? '/logo/'.$companyLogoFileName : '/site/logo.png');
-    return $this->viewRenderer->renderPartialAsString('/invoice/paymentinformation/logo/companyLogo', [
+    return $this->viewRenderer->renderPartialAsString('paymentinformation/logo/companyLogo', [
         'src' => $src,
         // if debug_mode == '1' => reveal the source in the tooltip
         'tooltipTitle' => $this->sR->get_setting('debug_mode') == '1' ? $src : ''
@@ -1777,7 +1777,7 @@ public function renderPartialAsStringCompanyLogo() : string
  */
 public function renderPartialAsStringBraintreeLogo(string $merchantId) : string
 {
-    return $this->viewRenderer->renderPartialAsString('/invoice/paymentinformation/logo/brainTreeLogo', [
+    return $this->viewRenderer->renderPartialAsString('paymentinformation/logo/brainTreeLogo', [
         'merchantId' => $merchantId
     ]);
 }
@@ -1787,7 +1787,7 @@ public function renderPartialAsStringBraintreeLogo(string $merchantId) : string
  */
 public function renderPartialAsStringMollieLogo() : string
 {
-    return $this->viewRenderer->renderPartialAsString('/invoice/paymentinformation/logo/mollieLogo');
+    return $this->viewRenderer->renderPartialAsString('paymentinformation/logo/mollieLogo');
 }
 
 }    

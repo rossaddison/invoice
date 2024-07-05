@@ -48,7 +48,7 @@ use Yiisoft\Security\Random;
 use Yiisoft\Session\SessionInterface;
 use Yiisoft\Session\Flash\Flash;
 use Yiisoft\Translator\TranslatorInterface;
-use Yiisoft\Yii\View\ViewRenderer;
+use Yiisoft\Yii\View\Renderer\ViewRenderer;
 
 use App\Invoice\Libraries\Crypt;
 
@@ -114,7 +114,7 @@ final class InvoiceController
     * @return string
     */
      private function alert(): string {
-       return $this->viewRenderer->renderPartialAsString('/invoice/layout/alert',
+       return $this->viewRenderer->renderPartialAsString('//invoice/layout/alert',
        [ 
          'flash' => $this->flash,
          'errors' => [],
@@ -125,30 +125,30 @@ final class InvoiceController
     {
         switch ($topic) {
             case 'tp':
-                $view = $this->viewRenderer->renderPartialAsString('/invoice/info/taxpoint');
+                $view = $this->viewRenderer->renderPartialAsString('info/taxpoint');
                 break;
             case 'shared':
-                $view = $this->viewRenderer->renderPartialAsString('/invoice/info/shared_hosting');
+                $view = $this->viewRenderer->renderPartialAsString('info/shared_hosting');
                 break;
             case 'paymentprovider':
-                $view = $this->viewRenderer->renderPartialAsString('/invoice/info/payment_provider');
+                $view = $this->viewRenderer->renderPartialAsString('info/payment_provider');
                 break;
             default:
                 $view = '';
                 break;
         }
-        return $this->viewRenderer->render('/invoice/info/view',['topic'=> $view]);
+        return $this->viewRenderer->render('info/view',['topic'=> $view]);
     }
     
     public function phpinfo(#[RouteArgument('selection')] string $selection = '-1') : Response 
     {
-        $view = $this->viewRenderer->renderPartialAsString('/invoice/info/phpinfo', ['selection' => (int)$selection]);
-        return $this->viewRenderer->render('/invoice/info/view', ['topic'=> $view]);
+        $view = $this->viewRenderer->renderPartialAsString('info/phpinfo', ['selection' => (int)$selection]);
+        return $this->viewRenderer->render('info/view', ['topic'=> $view]);
     }
     
     public function requirements() : Response  {
-        $view = $this->viewRenderer->renderPartialAsString('/invoice/info/requirements');
-        return $this->viewRenderer->render('/invoice/info/view', ['topic'=> $view]);
+        $view = $this->viewRenderer->renderPartialAsString('info/requirements');
+        return $this->viewRenderer->render('info/view', ['topic'=> $view]);
     }
     
     /**
@@ -185,7 +185,7 @@ final class InvoiceController
            'message' => $message,
            'status' => curl_error($site) ? 'warning' : 'success'
         ];
-        return $this->viewRenderer->render('/invoice/curl/api_result', $parameters);
+        return $this->viewRenderer->render('curl/api_result', $parameters);
     }
     
     /**
@@ -218,7 +218,7 @@ final class InvoiceController
            'message' => $message,
            'status' => curl_error($site) ? 'warning' : 'success'
         ];
-        return $this->viewRenderer->render('/invoice/curl/api_result', $parameters);
+        return $this->viewRenderer->render('curl/api_result', $parameters);
     }
     
     /**
@@ -260,7 +260,7 @@ final class InvoiceController
            'message' => $message,
            'status' => curl_error($site) ? 'warning' : 'success'
         ];
-        return $this->viewRenderer->render('/invoice/curl/api_result', $parameters);
+        return $this->viewRenderer->render('curl/api_result', $parameters);
     }
     
     /**
@@ -361,7 +361,7 @@ final class InvoiceController
            'message' => $message,
            'status' => curl_error($site) ? 'warning' : 'success'
         ];
-        return $this->viewRenderer->render('/invoice/curl/api_result', $parameters);
+        return $this->viewRenderer->render('curl/api_result', $parameters);
     }
     
     public function store_cove_send_actual_json_invoice() : \Yiisoft\DataResponse\DataResponse 
@@ -667,7 +667,7 @@ final class InvoiceController
            'message' => $message,
            'status' => curl_error($site) ? 'warning' : 'success'
         ];
-        return $this->viewRenderer->render('/invoice/curl/api_result', $parameters);
+        return $this->viewRenderer->render('curl/api_result', $parameters);
     }
         
     /**
@@ -733,12 +733,12 @@ final class InvoiceController
             
             'task_statuses'=>$taskR->getTask_statuses($translator),
             
-            'modal_create_client'=>$this->viewRenderer->renderPartialAsString('/invoice/client/modal_create_client',[
+            'modal_create_client'=>$this->viewRenderer->renderPartialAsString('client/modal_create_client',[
                 'datehelper'=> new DateHelper($sR)
             ]),
             'client_count' =>$cR->count(), 
         ];
-        return $this->viewRenderer->render('/invoice/dashboard/index',$data);
+        return $this->viewRenderer->render('dashboard/index',$data);
     }
     
     /**
@@ -791,7 +791,7 @@ final class InvoiceController
                           GroupRepository $gR
                          ): \Yiisoft\DataResponse\DataResponse {
         if (($sR->get_setting('debug_mode') == '1') && ($this->userService->hasPermission('editInv'))) {
-            $this->flash_message('info' , $this->viewRenderer->renderPartialAsString('/invoice/info/invoice'));
+            $this->flash_message('info' , $this->viewRenderer->renderPartialAsString('info/invoice'));
         }    
         $gR->repoCountAll() === 0 ? $this->install_default_invoice_and_quote_group($gR) : '';
         $pmR->count() === 0 ? $this->install_default_payment_methods($pmR) : '';

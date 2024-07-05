@@ -25,7 +25,7 @@ use Yiisoft\Session\SessionInterface;
 use Yiisoft\Session\Flash\Flash;
 use Yiisoft\Translator\TranslatorInterface;
 use Yiisoft\FormModel\FormHydrator;
-use Yiisoft\Yii\View\ViewRenderer;
+use Yiisoft\Yii\View\Renderer\ViewRenderer;
 
 final class CustomFieldController
 {
@@ -77,7 +77,7 @@ final class CustomFieldController
         ->withCurrentPage((int)$page)
         ->withToken(PageToken::next((string)$page));          
         $canEdit = $this->rbac();
-        $this->flash_message('info' , $this->viewRenderer->renderPartialAsString('/invoice/info/custom_field'));
+        $this->flash_message('info' , $this->viewRenderer->renderPartialAsString('info/custom_field'));
         $parameters = [
             'page' => $page,
             'paginator' => $paginator, 
@@ -283,7 +283,7 @@ final class CustomFieldController
   * @return string
   */
    private function alert(): string {
-     return $this->viewRenderer->renderPartialAsString('/invoice/layout/alert',
+     return $this->viewRenderer->renderPartialAsString('//invoice/layout/alert',
      [ 
        'flash' => $this->flash,
        'errors' => [],

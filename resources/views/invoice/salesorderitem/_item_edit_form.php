@@ -5,15 +5,29 @@ use Yiisoft\Html\Html;
 use Yiisoft\Yii\Bootstrap5\Alert;
 
 /**
- * @var \Yiisoft\View\View $this
- * @var \Yiisoft\Router\UrlGeneratorInterface $urlGenerator
+ * @see App\Invoice\SalesOrderItem\SalesOrderItemController
+ * @var App\Invoice\Helpers\NumberHelper $numberHelper
+ * @var App\Invoice\Setting\SettingRepository $s
+ * @var App\Invoice\SalesOrderItem\SalesOrderItemForm $form
+ * @var Yiisoft\View\View $this
+ * @var Yiisoft\Translator\TranslatorInterface $translator
+ * @var Yiisoft\Router\UrlGeneratorInterface $urlGenerator
  * @var array $body
+ * @var array $errors
+ * @var array $products
+ * @var array $quotes   
+ * @var array $tax_rates        
+ * @var array $units
+ * @var string $actionName
  * @var string $csrf
- * @var string $action
  * @var string $title
+ * @psalm-var array<string, Stringable|null|scalar> $actionArguments
  */
 
-if (isset($errors)) {
+if ($errors) {
+    /**
+     * @var string $error
+     */
     foreach ($errors as $field => $error) {
         echo Alert::widget()->options(['class' => 'alert-danger'])->body(Html::encode($field . ':' . $error));
     }
@@ -24,7 +38,7 @@ $vat = $s->get_setting('enable_vat_registration') === '1' ? true : false;
 <div class="panel-heading">
         <?= $translator->translate('i.item'); ?>
 </div>
-<form id="SalesOrderItemForm" method="POST" action="<?= $urlGenerator->generate(...$action)?>" enctype="multipart/form-data">
+<form id="SalesOrderItemForm" method="POST" action="<?= $urlGenerator->generate($actionName, $actionArguments)?>" enctype="multipart/form-data">
 <input type="hidden" name="_csrf" value="<?= $csrf ?>">
 <div class="table-striped">
 <table id="item_table" class="items table-primary table table-bordered no-margin">
@@ -57,8 +71,12 @@ $vat = $s->get_setting('enable_vat_registration') === '1' ? true : false;
                         <span class="input-group-text"><?= $translator->translate('i.item'); ?></span>
                         <select name="product_id" id="product_id" class="form-control has-feedback" required disabled>
                             <option value="0"><?= $translator->translate('i.none'); ?></option>
-                             <?php foreach ($products as $product) { ?>
-                              <option value="<?= $product->getProduct_id() ?? ''; ?>"
+                             <?php 
+                             /**
+                              * @var App\Invoice\Entity\Product $product
+                              */
+                             foreach ($products as $product) { ?>
+                              <option value="<?= $product->getProduct_id() ?: ''; ?>"
                                <?php $s->check_select(Html::encode($body['product_id'] ?? ''), $product->getProduct_id()) ?>
                                ><?= $product->getProduct_name(); ?></option>
                              <?php } ?>
@@ -68,13 +86,13 @@ $vat = $s->get_setting('enable_vat_registration') === '1' ? true : false;
             <td class="td-amount td-quantity">
                 <div class="input-group">
                     <span class="input-group-text"><?= $translator->translate('i.quantity'); ?></span>
-                    <input type="text" name="quantity" class="input-sm form-control amount has-feedback" required disabled value="<?= $numberhelper->format_amount($body['quantity'] ?? ''); ?>">
+                    <input type="text" name="quantity" class="input-sm form-control amount has-feedback" required disabled value="<?= $numberHelper->format_amount($body['quantity'] ?? ''); ?>">
                 </div>
             </td>
             <td class="td-amount">
                 <div class="input-group">
                     <span class="input-group-text"><?= $translator->translate('i.price'); ?></span>
-                    <input type="number" name="price" class="input-sm form-control amount has-feedback" required disabled value="<?= $numberhelper->format_amount($body['price'] ?? ''); ?>">
+                    <input type="number" name="price" class="input-sm form-control amount has-feedback" required disabled value="<?= $numberHelper->format_amount($body['price'] ?? ''); ?>">
                 </div>
             </td>
             <td class="td-amount">
@@ -82,7 +100,7 @@ $vat = $s->get_setting('enable_vat_registration') === '1' ? true : false;
                      <span class="input-group-text"><?= $vat === false ? $translator->translate('i.item_discount') : $translator->translate('invoice.invoice.cash.discount'); ?></span>
                     <input type="number" name="discount_amount" class="input-sm form-control amount has-feedback" required disabled
                            data-bs-toggle = "tooltip" data-placement="bottom"
-                           title="<?= $s->get_setting('currency_symbol') . ' ' . $translator->translate('i.per_item'); ?>" value="<?= $numberhelper->format_amount($body['discount_amount'] ?? ''); ?>">
+                           title="<?= $s->get_setting('currency_symbol') . ' ' . $translator->translate('i.per_item'); ?>" value="<?= $numberHelper->format_amount($body['discount_amount'] ?? ''); ?>">
                 </div>
             </td>
             <td td-vert-middle>
@@ -90,9 +108,24 @@ $vat = $s->get_setting('enable_vat_registration') === '1' ? true : false;
                     <span class="input-group-text"><?= $vat === false ? $translator->translate('i.tax_rate') : $translator->translate('invoice.invoice.vat.rate') ?></span>
                     <select name="tax_rate_id" class="form-control has-feedback" required disabled>
                         <option value=""> <?= $translator->translate('i.tax_rate'); ?></option>
-                        <?php foreach ($tax_rates as $tax_rate) { ?>
+                        <?php
+                            /**
+                             * @var App\Invoice\Entity\TaxRate $tax_rate
+                             */    
+                            foreach ($tax_rates as $tax_rate) { ?>
                             <option value="<?= $tax_rate->getTax_rate_id(); ?>" <?php $s->check_select(Html::encode($body['tax_rate_id'] ?? ''), $tax_rate->getTax_rate_id()) ?>>
-                                <?php echo $numberhelper->format_amount($tax_rate->getTax_rate_percent()) . '% - ' . $tax_rate->getTax_rate_name(); ?>
+                                <?php
+                                    $taxRatePercent = $tax_rate->getTax_rate_percent();
+                                    $taxRateName = $tax_rate->getTax_rate_name();
+                                    if (null!==$taxRatePercent && null!==$taxRateName) {
+                                        $formattedPercent = $numberHelper->format_amount($taxRatePercent);
+                                        if (null!==$formattedPercent) {
+                                            echo  $formattedPercent. '% - ' .$taxRateName;
+                                        }
+                                    } else {
+                                        echo '%';
+                                    }    
+                                ?>
                             </option>
                         <?php } ?>
                     </select>
@@ -114,7 +147,11 @@ $vat = $s->get_setting('enable_vat_registration') === '1' ? true : false;
                         <span class="input-group-text"><?= $translator->translate('i.product_unit'); ?></span>
                         <select name="product_unit_id" class="form-control has-feedback" required disabled>
                             <option value="0"><?= $translator->translate('i.none'); ?></option>
-                            <?php foreach ($units as $unit) { ?>
+                            <?php
+                                /**
+                                 * @var App\Invoice\Entity\Unit $unit
+                                 */
+                                foreach ($units as $unit) { ?>
                                 <option value="<?= $unit->getUnit_id(); ?>" <?php $s->check_select(Html::encode($body['product_unit_id'] ?? ''), $unit->getUnit_id()) ?>>
                                     <?= Html::encode($unit->getUnit_name()) . "/" . Html::encode($unit->getUnit_name_plrl()); ?>
                                 </option>

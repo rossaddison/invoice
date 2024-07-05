@@ -20,7 +20,7 @@ use Yiisoft\Session\SessionInterface as Session;
 use Yiisoft\Session\Flash\Flash;
 use Yiisoft\Translator\TranslatorInterface;
 use Yiisoft\FormModel\FormHydrator;
-use Yiisoft\Yii\View\ViewRenderer;
+use Yiisoft\Yii\View\Renderer\ViewRenderer;
 
 final class ItemLookupController
 {
@@ -221,7 +221,7 @@ final class ItemLookupController
      * @return string
      */
      private function alert(): string {
-       return $this->viewRenderer->renderPartialAsString('/invoice/layout/alert',
+       return $this->viewRenderer->renderPartialAsString('//invoice/layout/alert',
        [ 
          'flash' => $this->flash
        ]);

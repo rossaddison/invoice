@@ -1218,7 +1218,7 @@ return [
 'invoice.invoice.qr.code.settings.effect' => 'Izilungiselelo ezingenhla zinamuphi umphumela kule Khodi ye-Qr?',
 'invoice.invoice.qr.code.settings.effect.explanation' => 'Kwikhodi yangempela ... akukho. Konke okumisiwe kusetshenziswa ngoba ikhodi yangempela eyisisekelo ngenhla isetshenziswa.',
 'invoice.invoice.qr.code.source' => 'Umthombo wekhodi ye-Qr',
-'invoice.invoice.qr.code.source.path' => 'izinsiza\ukubuka\i-invoyisi\setting\company_logo_and_address.php',
+'invoice.invoice.qr.code.source.path' => 'resources\views\invoice\setting\company_logo_and_address.php',
 'invoice.invoice.qr.code.type' => 'Uhlobo lwekhodi ye-QR',
 'invoice.invoice.qr.code.type.absolute.url' => 'I-Absolute (yonke) Isekelwe ku-Url',
 'invoice.invoice.qr.code.widget.used' => 'Iwijethi esetshenzisiwe',

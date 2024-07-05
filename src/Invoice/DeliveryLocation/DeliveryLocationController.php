@@ -26,7 +26,7 @@ use Yiisoft\Session\SessionInterface;
 use Yiisoft\Session\Flash\Flash;
 use Yiisoft\Translator\TranslatorInterface;
 use Yiisoft\FormModel\FormHydrator;
-use Yiisoft\Yii\View\ViewRenderer;
+use Yiisoft\Yii\View\Renderer\ViewRenderer;
 use \Exception;
 
 final class DeliveryLocationController {
@@ -91,13 +91,20 @@ final class DeliveryLocationController {
       'canEdit' => $this->userService->hasPermission('editInv'),
       'grid_summary' => $sR->grid_summary($paginator, $this->translator, (int) $sR->get_setting('default_list_limit'), $this->translator->translate('invoice.delivery.location.plural'), ''),
     ];
-    return $this->viewRenderer->render('/invoice/del/index', $parameters);
+    return $this->viewRenderer->render('del/index', $parameters);
   }
   
   public function add_in_invoice_flash() : void {
     $this->flash_message('info', $this->translator->translate('invoice.invoice.delivery.location.add.in.invoice'));
   }
 
+  /**
+   * 
+   * @param CurrentRoute $currentRoute
+   * @param Request $request
+   * @param FormHydrator $formHydrator
+   * @return Response
+   */
   public function add(CurrentRoute $currentRoute, Request $request,
     FormHydrator $formHydrator,
   ): Response {
@@ -169,7 +176,7 @@ final class DeliveryLocationController {
       $parameters['errors'] = $form->getValidationResult()->getErrorMessagesIndexedByAttribute();
       $parameters['form'] = $form;
     }
-    return $this->viewRenderer->render('/invoice/del/_form', $parameters);
+    return $this->viewRenderer->render('del/_form', $parameters);
   }
 
   /**
@@ -240,7 +247,7 @@ final class DeliveryLocationController {
         $parameters['errors'] = $form->getValidationResult()->getErrorMessagesIndexedByAttribute();
         $parameters['form'] = $form;
       }
-      return $this->viewRenderer->render('/invoice/del/_form', $parameters);
+      return $this->viewRenderer->render('del/_form', $parameters);
     }
     return $this->webService->getRedirectResponse('del/index');
   }
@@ -317,7 +324,7 @@ final class DeliveryLocationController {
   * @return string
   */
    private function alert(): string {
-     return $this->viewRenderer->renderPartialAsString('/invoice/layout/alert',
+     return $this->viewRenderer->renderPartialAsString('//invoice/layout/alert',
      [ 
        'flash' => $this->flash
      ]);

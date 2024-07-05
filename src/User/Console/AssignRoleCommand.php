@@ -19,6 +19,10 @@ use Yiisoft\Rbac\Role;
 use Yiisoft\Yii\Console\ExitCode;
 use Yiisoft\Yii\Cycle\Command\CycleDependencyProxy;
 
+/**
+ * e.g > yii user/assignRole admin 1
+ */
+
 final class AssignRoleCommand extends Command
 {
     protected static $defaultName = 'user/assignRole';

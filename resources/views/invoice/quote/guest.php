@@ -136,23 +136,23 @@ $toolbar = Div::tag();
     ];                
 ?>
 <?= GridView::widget()
-        ->columns(...$columns) 
-        ->dataReader($paginator)
-        ->header($header)         
-        ->headerRowAttributes(['class'=>'card-header bg-info text-black'])        
-        ->id('w7-grid')
-        ->pagination(
-           $gridComponents->offsetPaginationWidget($defaultPageSizeOffsetPaginator, $paginator)
-        )
-        ->rowAttributes(['class' => 'align-middle'])
-        ->summaryAttributes(['class' => 'mt-3 me-3 summary text-end'])
-        ->summaryTemplate(($editInv ? $pageSizeLimiter::buttons($currentRoute, $s, $urlGenerator, 'quote') : '').' '.$grid_summary)
-        ->emptyTextAttributes(['class' => 'card-header bg-warning text-black'])
-        ->emptyText((string)$translator->translate('invoice.invoice.no.records'))
-        ->tableAttributes(['class' => 'table table-striped text-center h-75','id'=>'table-quote-guest'])
-        ->toolbar(
-            Form::tag()->post($urlGenerator->generate('quote/guest'))->csrf($csrf)->open() .
-            Div::tag()->addClass('float-end m-3')->content($toolbarReset)->encode(false)->render() .
-            Form::tag()->close()
-        );          
+    ->rowAttributes(['class' => 'align-middle'])
+    ->columns(...$columns) 
+    ->dataReader($paginator)
+    ->header($header)         
+    ->headerRowAttributes(['class'=>'card-header bg-info text-black'])        
+    ->id('w7-grid')
+    ->pagination(
+       $gridComponents->offsetPaginationWidget($defaultPageSizeOffsetPaginator, $paginator)
+    )
+    ->summaryAttributes(['class' => 'mt-3 me-3 summary text-end'])
+    ->summaryTemplate(($editInv ? $pageSizeLimiter::buttons($currentRoute, $s, $urlGenerator, 'quote') : '').' '.$grid_summary)
+    ->emptyTextAttributes(['class' => 'card-header bg-warning text-black'])
+    ->emptyText((string)$translator->translate('invoice.invoice.no.records'))
+    ->tableAttributes(['class' => 'table table-striped text-center h-75','id'=>'table-quote-guest'])
+    ->toolbar(
+        Form::tag()->post($urlGenerator->generate('quote/guest'))->csrf($csrf)->open() .
+        Div::tag()->addClass('float-end m-3')->content($toolbarReset)->encode(false)->render() .
+        Form::tag()->close()
+    );          
 ?>

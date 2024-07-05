@@ -7,16 +7,20 @@ use Yiisoft\Html\Html;
 use Yiisoft\Html\Tag\Form;
 
 /**
+ * @var App\Invoice\Unit\UnitForm $form
  * @var \Yiisoft\View\View $this
+ * @var App\Widget\Button $button
+ * @var \Yiisoft\Translator\TranslatorInterface $translator
  * @var \Yiisoft\Router\UrlGeneratorInterface $urlGenerator
  * @var string $csrf
- * @var string $action
+ * @var string $actionName
+ * @psalm-var array<string, Stringable|null|scalar> $actionArguments
  * @var string $title
  */
 ?>
 
 <?= Form::tag()
-    ->post($urlGenerator->generate(...$action))
+    ->post($urlGenerator->generate($actionName, $actionArguments))
     ->enctypeMultipartFormData()
     ->csrf($csrf)
     ->id('UnitForm')
@@ -32,27 +36,27 @@ use Yiisoft\Html\Tag\Form;
     <?= Html::encode($title) ?>
 <?= Html::closeTag('h1'); ?>
 <?= Html::openTag('div', ['id' => 'headerbar']); ?>
-    <?= $button::back($translator); ?>
+    <?= $button::back(); ?>
     <?= Html::openTag('div', ['id' => 'content']); ?>
         <?= Html::openTag('div', ['class' => 'row']); ?>
             <?= Html::openTag('div'); ?>
                 <?= Html::openTag('div', ['class' => 'mb-3 form-group']); ?>
                     <?= Field::text($form, 'unit_id')
-                        ->label($translator->translate('i.unit_id'), ['class' => 'form-label'])
+                        ->label($translator->translate('i.unit_id'))
                         ->value(Html::encode($form->getUnit_id() ?? ''))
                         ->disabled(true); 
                     ?>
                 <?= Html::closeTag('div'); ?>
                 <?= Html::openTag('div', ['class' => 'mb-3 form-group']); ?>
                     <?= Field::text($form, 'unit_name')
-                        ->label($translator->translate('i.unit_name'), ['class' => 'form-label'])
+                        ->label($translator->translate('i.unit_name'))
                         ->value(Html::encode($form->getUnit_name() ?? ''))
                         ->disabled(true); 
                     ?>
                 <?= Html::closeTag('div'); ?>
                 <?= Html::openTag('div', ['class' => 'mb-3 form-group']); ?>
                     <?= Field::text($form, 'unit_name_plrl')
-                        ->label($translator->translate('i.unit_name_plrl'), ['class' => 'form-label'])
+                        ->label($translator->translate('i.unit_name_plrl'))
                         ->value(Html::encode($form->getUnit_name_plrl() ?? ''))
                         ->disabled(true); 
                     ?>

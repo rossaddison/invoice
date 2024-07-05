@@ -101,6 +101,7 @@ echo $alert;
     ];            
 ?>
 <?= GridView::widget()
+    ->rowAttributes(['class' => 'align-middle'])
     ->columns(...$columns)
     ->dataReader($paginator)    
     ->headerRowAttributes(['class'=>'card-header bg-info text-black'])
@@ -113,7 +114,6 @@ echo $alert;
              //->urlArguments([])
              ->render(),
     )
-    ->rowAttributes(['class' => 'align-middle'])
     ->summaryAttributes(['class' => 'mt-3 me-3 summary text-end'])
     ->summaryTemplate($grid_summary)
     ->emptyTextAttributes(['class' => 'card-header bg-warning text-black'])

@@ -2,7 +2,11 @@
 
 declare(strict_types=1);
 
-// id="so-to-pdf" triggered by <a href="#so-to-pdf" data-toggle="modal"  style="text-decoration:none"> on views/salesorder/view.php 
+/**
+ * @see id="so-to-pdf" triggered by <a href="#so-to-pdf" data-toggle="modal"  style="text-decoration:none"> on views/salesorder/view.php 
+ * @var App\Invoice\Entity\SalesOrder $so
+ * @var Yiisoft\Translator\TranslatorInterface $translator
+ * */
 ?>
 <div id="so-to-pdf" class="modal modal-lg" role="dialog" aria-labelledby="modal_salesorder_to_pdf" aria-hidden="true">
     <form class="modal-content">

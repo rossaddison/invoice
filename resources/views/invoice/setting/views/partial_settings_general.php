@@ -2,6 +2,20 @@
     declare(strict_types=1);
     
     use Yiisoft\Html\Html;
+    
+    /**
+     * @var App\Invoice\Setting\SettingRepository $s 
+     * @var Yiisoft\Translator\TranslatorInterface $translator
+     * @var array $body
+     * @var array $languages
+     * @var array $time_zones
+     * @var array $first_days_of_weeks
+     * @var array $date_formats
+     * @var array $countries
+     * @var array $gateway_currency_codes
+     * @var array $number_formats
+     * @var DateTime $current_date
+     */
 ?>
 <?= Html::openTag('div', ['class' => 'row']); ?>
     <div class="col-xs-12 col-md-8 col-md-offset-2">
@@ -57,7 +71,11 @@
                             <?php $body['settings[default_language]'] = $s->get_setting('default_language'); ?>
                             <select name="settings[default_language]" id="settings[default_language]" class="form-control">
                                 <option value="0"><?= $translator->translate('i.none'); ?></option>
-                                <?php foreach ($languages as $language) { ?>
+                                <?php
+                                    /**
+                                     * @var string $language
+                                     */
+                                    foreach ($languages as $language) { ?>
                                     <option value="<?= $language; ?>" <?php $s->check_select($body['settings[default_language]'], $language) ?>>
                                         <?= ucfirst($language); ?>
                                     </option>
@@ -73,7 +91,11 @@
                             <?php   $body['settings[time_zone]'] = $s->get_setting('time_zone'); ?>
                             <select name="settings[time_zone]" id="settings[time_zone]" class="form-control">
                                  <option value="0"><?= $translator->translate('i.none'); ?></option>
-                                <?php foreach ($time_zones as $key => $value) { ?>
+                                <?php
+                                    /**
+                                     * @var string $value
+                                     */
+                                    foreach ($time_zones as $key => $value) { ?>
                                     <option value="<?=  $value; ?>"
                                         <?php  $s->check_select($body['settings[time_zone]'], $value); ?>>
                                         <?= $value; ?>
@@ -84,7 +106,7 @@
                     </div>
                 </div>
 
-                <?= Html::openTag('div', ['class' => 'row']); ?>
+                <div class = "row">
                     <div class="col-xs-12 col-md-6">
                         <div class="form-group">
                             <label for="settings[first_day_of_week]" <?= $s->where('first_day_of_week'); ?>>
@@ -94,7 +116,12 @@
                             <select name="settings[first_day_of_week]" id="settings[first_day_of_week]"
                                 class="form-control">
                                 <option value="0"><?= $translator->translate('i.none'); ?></option>
-                                <?php foreach ($first_days_of_weeks as $first_day_of_week_id => $first_day_of_week_name) { ?>
+                                <?php 
+                                    /**
+                                     * @var string $first_day_of_week_id
+                                     * @var string $first_day_of_week_name
+                                     */
+                                    foreach ($first_days_of_weeks as $first_day_of_week_id => $first_day_of_week_name) { ?>
                                     <option value="<?= $first_day_of_week_id; ?>"
                                         <?php
                                             $s->check_select($body['settings[first_day_of_week]'], $first_day_of_week_id); 
@@ -114,7 +141,12 @@
                             <select name="settings[date_format]" id="settings[date_format]"
                                 class="form-control">
                                 <option value="0"><?= $translator->translate('i.none'); ?></option>
-                                <?php foreach ($date_formats as $date_format) { ?>
+                                <?php
+                                    /**
+                                     * @var array $date_format
+                                     * @var string $date_format['setting']
+                                     */
+                                    foreach ($date_formats as $date_format) { ?>
                                     <option value="<?= $date_format['setting']; ?>"
                                         <?php  $s->check_select($body['settings[date_format]'], $date_format['setting']); ?>>
                                         <?= $current_date->format($date_format['setting']); ?>
@@ -125,7 +157,7 @@
                         </div>
                     </div>
                 </div>
-                <?= Html::openTag('div', ['class' => 'row']); ?>
+                <div class="row">
                     <div class="col-xs-12 col-md-6">
                         <div class="form-group">
                             <label for="settings[default_country]" <?= $s->where('default_country'); ?>>
@@ -136,7 +168,13 @@
                                 class="form-control">
                                 <option value="0"><?= $translator->translate('i.none'); ?></option>
                                 <option value=""><?= $translator->translate('i.none'); ?></option>
-                                <?php foreach ($countries as $cldr => $country) { ?>
+                                <?php
+                                    /**
+                                     * @var array $countries
+                                     * @var string $cldr
+                                     * @var string $country
+                                     */
+                                    foreach ($countries as $cldr => $country) { ?>
                                     <option value="<?= $cldr; ?>" 
                                         <?php
                                             $s->check_select($body['settings[default_country]'], $cldr); ?>>
@@ -163,7 +201,6 @@
             </div>
         </div>
 
-
         <div class="panel panel-default">
             <div class="panel-heading">
                 <?= $translator->translate('i.amount_settings'); ?>
@@ -177,7 +214,7 @@
                                 <?= $translator->translate('i.currency_symbol'); ?>
                             </label>
                             <?php 
-                                $body['settings[currency_symbol]'] = $s->get_setting('currency_symbol', '', true);
+                                $body['settings[currency_symbol]'] = $s->get_setting('currency_symbol');
                             ?>
                             <input type="text" name="settings[currency_symbol]" id="settings[currency_symbol]"
                                 class="form-control"
@@ -216,17 +253,22 @@
                             <label for="settings[currency_code]" <?= $s->where('currency_code'); ?>>
                                 <?= $translator->translate('i.currency_code'); ?>
                             </label>
-                            <?php $body['settings[currency_code]'] = $s->get_setting('currency_code', '', true); ?>
+                            <?php $body['settings[currency_code]'] = $s->get_setting('currency_code'); ?>
                             <select name="settings[currency_code]"
                                 id="settings[currency_code]"
                                 class="input-sm form-control">
                                 <option value="0"><?= $translator->translate('i.none'); ?></option>
-                                <?php foreach ($gateway_currency_codes as $val => $key) { ?>
-                                    <option value="<?= $val; ?>"
+                                <?php
+                                    /**
+                                     * @var string $key
+                                     * @var string $val
+                                     */
+                                    foreach ($gateway_currency_codes as $key => $val) { ?>
+                                    <option value="<?= $key; ?>"
                                         <?php
-                                            $s->check_select($body['settings[currency_code]'], $val); 
+                                            $s->check_select($body['settings[currency_code]'], $key); 
                                         ?>>
-                                        <?= $val; ?>
+                                        <?= $key; ?>
                                     </option>
                                 <?php } ?>
                             </select>
@@ -268,7 +310,13 @@
                             <select name="settings[number_format]" id="settings[number_format]" 
                                 class="form-control">
                                 <option value="0"><?= $translator->translate('i.none'); ?></option>
-                                <?php foreach ($number_formats as $key => $value) { ?>
+                                <?php
+                                    /**
+                                     * @var string $key
+                                     * @var array $value
+                                     * @var string $value['label']
+                                     */
+                                    foreach ($number_formats as $key => $value) { ?>
                                     <option value="<?php print($key); ?>"
                                         <?php
                                             $s->check_select($body['settings[number_format]'], $value['label']); 
@@ -290,8 +338,7 @@
                 <?= $translator->translate('i.dashboard'); ?>
             </div>
             <div class="panel-body">
-
-                <?= Html::openTag('div', ['class' => 'row']); ?>
+                <div class="row">
                     <div class="col-xs-12 col-md-6">
                         <div class="form-group">
                             <label for="settings[quote_overview_period]" <?= $s->where('quote_overview_period'); ?>>
@@ -444,7 +491,7 @@
                             <?php  $body['settings[open_reports_in_new_tab]'] = $s->get_setting('open_reports_in_new_tab'); ?>
                             <select name="settings[open_reports_in_new_tab]" id="settings[open_reports_in_new_tab]" class="form-control">
                                 <option value="0"><?= $translator->translate('i.no'); ?></option>
-                                <option value="1" <?= $s->check_select($body['settings[open_reports_in_new_tab]'], '1'); ?>>
+                                <option value="1" <?php $s->check_select($body['settings[open_reports_in_new_tab]'], '1'); ?>>
                                     <?= $translator->translate('i.yes'); ?>
                                 </option>
                             </select>
@@ -459,7 +506,7 @@
                 <?= $translator->translate('i.system_settings'); ?>
             </div>
             <div class="panel-body">
-                <?= Html::openTag('div', ['class' => 'row']); ?>
+                <div class="row">
                     <div class="col-xs-12 col-md-6">
                         <div class="form-group">
                             <label for="settings[bcc_mails_to_admin]" <?= $s->where('bcc_mails_to_admin'); ?>>
@@ -473,19 +520,23 @@
                                     <?= $translator->translate('i.yes'); ?>
                                 </option>
                             </select>
-                            <p class="help-block"><?= $translator->translate('i.bcc_mails_to_admin_hint'); ?></p>
                         </div>
                     </div>
                     <div class="col-xs-12 col-md-6">
-
                         <div class="form-group">
                             <label for="settings[cron_key]" <?= $s->where('cron_key'); ?>>
                                 <?= $translator->translate('i.cron_key'); ?>
                             </label>
                             <div class="input-group">
                                 <input type="text" name="settings[cron_key]" id="settings[cron_key]" class="cron_key form-control" 
-                                    value="<?= $body['settings[cron_key]'] ?? $s->get_setting('cron_key'); ?>">
+                                    value="<?= (string)($body['settings[cron_key]'] ?? $s->get_setting('cron_key')); ?>">
                                 <div class="input-group-text">
+                                    <?php
+                                        /**
+                                         * @see ..\src\Invoice\Asset\rebuild-1.13\js\setting.js 
+                                         * @see $(document).on('click', '#btn_generate_cron_key', function ()
+                                         */
+                                    ?>
                                     <button id="btn_generate_cron_key" type="button" class="btn_generate_cron_key btn btn-primary btn-block">
                                         <i class="fa fa-recycle fa-margin"></i>
                                     </button>

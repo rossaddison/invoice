@@ -1208,7 +1208,7 @@ return [
 'invoice.invoice.qr.code.settings.effect' => 'ما تأثير الإعدادات المذكورة أعلاه على رمز الاستجابة السريعة هذا؟',
 'invoice.invoice.qr.code.settings.effect.explanation' => 'في الكود الفعلي... لا شيء. يتم استخدام جميع الإعدادات الافتراضية لأنه يتم استخدام الكود الفعلي الأساسي أعلاه.',
 'invoice.invoice.qr.code.source' => 'مصدر رمز الاستجابة السريعة',
-'invoice.invoice.qr.code.source.path' => 'Resources\views\invoice\setting\company_logo_and_address.php',
+'invoice.invoice.qr.code.source.path' => 'resources\views\invoice\setting\company_logo_and_address.php',
 'invoice.invoice.qr.code.type' => 'نوع رمز الاستجابة السريعة',
 'invoice.invoice.qr.code.type.absolute.url' => 'المطلق (الكامل) على أساس عنوان URL',
 'invoice.invoice.qr.code.widget.used' => 'القطعة المستخدمة',

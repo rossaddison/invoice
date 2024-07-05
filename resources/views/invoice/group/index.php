@@ -94,7 +94,7 @@ use Yiisoft\Router\CurrentRoute;
             ])
             ->content('🔎')
             ->encode(false)
-            ->href('/invoice/group/view/'. $model->getId())
+            ->href('group/view/'. $model->getId())
             ->render(),
         ),
         new ActionColumn(
@@ -106,7 +106,7 @@ use Yiisoft\Router\CurrentRoute;
             ])
             ->content('✎')
             ->encode(false)
-            ->href('/invoice/group/edit/'. $model->getId())
+            ->href('group/edit/'. $model->getId())
             ->render(),
         ),
         new ActionColumn(
@@ -120,12 +120,13 @@ use Yiisoft\Router\CurrentRoute;
             ])
             ->content('❌')
             ->encode(false)
-            ->href('/invoice/group/delete/'. $model->getId())
+            ->href('group/delete/'. $model->getId())
             ->render(),
         )
     ];       
 ?>
 <?= GridView::widget()
+    ->rowAttributes(['class' => 'align-middle'])
     ->columns(...$columns)
     ->dataReader($paginator)
     ->headerRowAttributes(['class'=>'card-header bg-info text-black'])
@@ -134,7 +135,6 @@ use Yiisoft\Router\CurrentRoute;
     ->pagination(
         $gridComponents->offsetPaginationWidget($defaultPageSizeOffsetPaginator, $paginator)   
     )
-    ->rowAttributes(['class' => 'align-middle'])
     ->summaryAttributes(['class' => 'mt-3 me-3 summary text-end'])
     ->summaryTemplate($pageSizeLimiter::buttons($currentRoute, $s, $urlGenerator, 'group').' '.$grid_summary)
     ->emptyTextAttributes(['class' => 'card-header bg-warning text-black'])

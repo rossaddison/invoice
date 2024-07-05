@@ -2,18 +2,22 @@
 
 declare(strict_types=1);
 
-
 use Yiisoft\FormModel\Field;
 use Yiisoft\Html\Html;
 use Yiisoft\Html\Tag\Form;
 
-/**
- * @var \Yiisoft\View\View $this
- * @var \Yiisoft\Router\UrlGeneratorInterface $urlGenerator
+/** 
+ * @var App\Invoice\Setting\SettingForm $form
+ * @var App\Widget\Button $button
+ * @var Yiisoft\Translator\TranslatorInterface $translator
+ * @var Yiisoft\Router\UrlGeneratorInterface $urlGenerator
  * @var array $body
  * @var string $csrf
- * @var string $action
+ * @var string $actionName
+ * @var string $alert
  * @var string $title
+ * @psalm-var array<string, Stringable|null|scalar> $actionArguments
+ * @psalm-var array<string,list<string>> $errors
  */
 ?>
 
@@ -28,7 +32,7 @@ use Yiisoft\Html\Tag\Form;
 <?= Html::closeTag('h1'); ?>
 <?=
     Form::tag()
-    ->post($urlGenerator->generate(...$action))
+    ->post($urlGenerator->generate($actionName, $actionArguments))
     ->enctypeMultipartFormData()
     ->csrf($csrf)
     ->id('SettingForm')

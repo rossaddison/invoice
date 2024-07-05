@@ -7,12 +7,12 @@ use App\Widget\FlashMessage;
 use Yiisoft\FormModel\Field;
 use Yiisoft\Html\Html;
 use Yiisoft\Html\Tag\Form;
-use Yiisoft\Router\UrlGeneratorInterface;
 use Yiisoft\Translator\TranslatorInterface;
+use Yiisoft\Router\UrlGeneratorInterface;
 use Yiisoft\View\WebView;
 
 /**
- * @var Yiisoft\Yii\View\Csrf $csrf
+ * @var Yiisoft\Yii\View\Renderer\Csrf $csrf
  * @var ContactForm           $form
  * @var UrlGeneratorInterface $url
  * @var WebView               $this

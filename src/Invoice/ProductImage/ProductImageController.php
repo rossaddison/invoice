@@ -23,7 +23,7 @@ use Yiisoft\Session\SessionInterface;
 use Yiisoft\Session\Flash\Flash;
 use Yiisoft\Translator\TranslatorInterface;
 use Yiisoft\FormModel\FormHydrator;
-use Yiisoft\Yii\View\ViewRenderer;
+use Yiisoft\Yii\View\Renderer\ViewRenderer;
 use \Exception;
 
 final class ProductImageController {
@@ -139,7 +139,7 @@ final class ProductImageController {
      * @return string
      */
     private function alert(): string {
-      return $this->viewRenderer->renderPartialAsString('/invoice/layout/alert',
+      return $this->viewRenderer->renderPartialAsString('//invoice/layout/alert',
       [ 
         'flash' => $this->flash
       ]);
@@ -174,7 +174,7 @@ final class ProductImageController {
                 $this->productimageService->deleteProductImage($productimage, $settingRepository);
                 $product_id = (string) $productimage->getProduct()?->getProduct_id();
                 $this->flash_message('info', $this->translator->translate('i.record_successfully_deleted'));
-                return $this->factory->createResponse($this->viewRenderer->renderPartialAsString('/invoice/setting/inv_message',
+                return $this->factory->createResponse($this->viewRenderer->renderPartialAsString('setting/inv_message',
                 [
                     'heading' => '', 
                     'message' => $this->translator->translate('i.record_successfully_deleted'), 

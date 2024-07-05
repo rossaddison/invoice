@@ -1209,7 +1209,7 @@ return [
 'invoice.invoice.qr.code.settings.effect' => 'Các cài đặt trên có ảnh hưởng gì đến Mã Qr này?',
 'invoice.invoice.qr.code.settings.effect.explanation' => 'Trong mã thực tế ... không có. Tất cả các giá trị mặc định đều được sử dụng vì mã thực tế rất cơ bản ở trên được sử dụng.',
 'invoice.invoice.qr.code.source' => 'Nguồn mã Qr',
-'invoice.invoice.qr.code.source.path' => 'tài nguyên\lượt xem\invoice\setting\company_logo_and_address.php',
+'invoice.invoice.qr.code.source.path' => 'resources\views\invoice\setting\company_logo_and_address.php',
 'invoice.invoice.qr.code.type' => 'Loại mã QR',
 'invoice.invoice.qr.code.type.absolute.url' => 'Dựa trên Url tuyệt đối (toàn bộ)',
 'invoice.invoice.qr.code.widget.used' => 'Tiện ích được sử dụng',

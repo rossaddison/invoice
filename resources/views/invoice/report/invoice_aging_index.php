@@ -1,7 +1,16 @@
 <?php
+
     declare(strict_types=1); 
-    
-    use Yiisoft\Html\Html;
+        
+   /**
+    * @var App\Invoice\Setting\SettingRepository $s
+    * @var Yiisoft\Translator\TranslatorInterface $translator
+    * @var Yiisoft\Router\UrlGeneratorInterface $urlGenerator
+    * @var string $actionName
+    * @var string $alert
+    * @var string $csrf
+    * @psalm-var array<string, Stringable|null|scalar> $actionArguments
+    */
 ?> 
 
 <div id="headerbar">
@@ -10,7 +19,7 @@
 
 <div id="content">
 
-    <?= Html::openTag('div', ['class' => 'row']); ?>
+    <div class='row'>
         <div class="col-xs-12 col-md-6 col-md-offset-3">
 
             <?= $alert; ?>
@@ -23,20 +32,16 @@
                 </div>
 
                 <div class="panel-body">
-                    <form method="post" action="<?= $urlGenerator->generate(...$action); ?>"
+                    <form method="post" action="<?= $urlGenerator->generate($actionName, $actionArguments); ?>"
                         <?php echo ($s->get_setting('open_reports_in_new_tab') === '1' ? 'target="_blank"' : ''); ?>>
 
                         <input type="hidden" name="_csrf" value="<?= $csrf ?>">
 
                         <input type="submit" class="btn btn-success"
                                name="btn_submit" value="<?= $translator->translate('i.run_report'); ?>">
-
                     </form>
                 </div>
-
             </div>
-
         </div>
     </div>
-
 </div>

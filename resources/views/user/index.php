@@ -128,6 +128,7 @@ $toolbar = Div::tag();
     ];
 ?>
 <?= GridView::widget()
+    ->rowAttributes(['class' => 'align-middle'])
     ->dataReader($paginator)    
     ->columns(...$columns)
     ->header($header)
@@ -137,7 +138,6 @@ $toolbar = Div::tag();
             ->paginator($paginator)
             ->render(),
     )
-    ->rowAttributes(['class' => 'align-middle'])
     ->summaryAttributes(['class' => 'summary text-end mb-5'])
     ->tableAttributes(['class' => 'table table-hover'])
     ->toolbar(

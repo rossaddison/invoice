@@ -7,7 +7,20 @@ use Yiisoft\FormModel\Field;
 use Yiisoft\Html\Html;
 
 /**
+ * @var App\Invoice\Entity\UserInv $userinv
+ * @var App\Invoice\Entity\Client $client
+ * @var App\Invoice\Setting\SettingRepository $s
+ * @var App\Invoice\Client\ClientRepository $cR
+ * @var App\Invoice\UserClient\UserClientForm $form 
+ * @var App\Widget\Button $button
+ * @var Yiisoft\Translator\TranslatorInterface $translator 
+ * @var Yiisoft\Router\UrlGeneratorInterface $urlGenerator
  * @var Yiisoft\Yii\View\Csrf $csrf 
+ * @var array $availableClientIdList
+ * @var string $actionName
+ * @psalm-var array<string, Stringable|null|scalar> $actionArguments
+ * @psalm-var array<string, list<string>> $errors 
+ * @psalm-var array<array-key, array<array-key, string>|string> $optionsDataClient
  */
 
 $client_helper = new ClientHelper($s);
@@ -52,11 +65,19 @@ $client_helper = new ClientHelper($s);
                         <?= Html::closeTag('div'); ?>
 
                         <?= Html::openTag('div', ['id' => 'list_client']); ?>
-                            <?php if ($clients) { 
-                               
+                            <?php 
+                               $clients = !empty($availableClientIdList) ? $cR->repoUserClient($availableClientIdList) : []; 
+                               if ($clients) { 
                                     $optionsDataClient = [];
+                                    /**
+                                     * @var Yiisoft\Data\Cycle\Reader\EntityReader|array $clients
+                                     * @var App\Invoice\Entity\Client $client
+                                     */
                                     foreach ($clients as $client) { 
-                                        $optionsDataClient[$client->getClient_id()] = Html::encode($client_helper->format_client($client));                    
+                                        $clientId = $client->getClient_id();
+                                        if (null!==$clientId) {
+                                            $optionsDataClient[$clientId] = Html::encode($client_helper->format_client($client));
+                                        }    
                                     }
                                     echo Field::select($form, 'client_id')
                                     ->label($translator->translate('i.client'))
@@ -79,7 +100,6 @@ $client_helper = new ClientHelper($s);
                                         'autofocus' => 'autofocus',
                                     ])    
                                     ->optionsData($optionsDataClient);
-                                      
                             } ?>
                         <?= Html::closeTag('div'); ?>
                     <?= Html::closeTag('div'); ?>

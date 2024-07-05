@@ -1,14 +1,22 @@
 <?php
 declare(strict_types=1);
 
-use App\Asset\ReportAsset;
+use App\Invoice\Asset\ReportAsset;
 use Yiisoft\Html\Html;
 
 /**
- * @var \Yiisoft\Assets\AssetManager $assetManager 
- * @var \DateTimeImmutable $from_date
- * @var \DateTimeImmutable $to_date 
- * @var array $results 
+ * @var App\Invoice\Helpers\NumberHelper $n
+ * @var Yiisoft\Assets\AssetManager $assetManager  
+ * @var Yiisoft\Translator\TranslatorInterface $translator
+ * @var Yiisoft\View\WebView $this
+ * @var string $from_date
+ * @var string $to_date 
+ * @var array $results
+ * @var array $result['quarters']
+ * @var array $result['quarters']['first']
+ * @var array $result['quarters']['second']
+ * @var array $result['quarters']['third']
+ * @var array $result['quarters']['fourth'] 
  */
 
 $assetManager->register(ReportAsset::class);
@@ -24,7 +32,7 @@ $this->beginPage();
 <h3 class="report_title">
     <?= Html::encode($translator->translate('i.sales_by_date')); ?>
     <br/>
-    <small><?= Html::encode($from_date . ' - ' . $to_date); ?></small>
+    <small><?= Html::encode($from_date  . ' - ' . $to_date); ?></small>
 </h3>
 
 <table>
@@ -37,7 +45,11 @@ $this->beginPage();
         <th style="width:20%;text-align:center;border-bottom: 1px solid black;"> <?= Html::encode($translator->translate('i.sales_with_tax')); ?></th>
         <th style="width:20%;text-align:center;border-bottom: 1px solid black;"> <?= Html::encode($translator->translate('i.paid')); ?></th>
     </tr>
-    <?php foreach ($results as $result) { ?>
+    <?php 
+        /**
+         * @var array $result
+         */
+        foreach ($results as $result) { ?>
     <tr>
         <td style="width:15%;text-align:right;border-bottom: 1px solid black;"><b>
             <?= Html::encode($result['VAT_ID'] ?? ''); ?></b>
@@ -63,7 +75,7 @@ $this->beginPage();
     </tr>
     <tr>
         <td style="width:20%;text-align:left;border-bottom: 1px solid black;">
-            <?= Html::encode($translator->translate('i.Q1'). '/'.$result['year']); ?></td>
+            <?= Html::encode($translator->translate('i.Q1'). '/'.(string)$result['year']); ?></td>
         <td style="width:20%;text-align:right;border-bottom: 1px solid black;"></td>
         <td style="width:20%;text-align:right;border-bottom: 1px solid black;">
             <?= Html::encode($n->format_currency($result['quarters']['first']['sales_no_tax'] ?? 0.00)); ?></td>
@@ -78,7 +90,7 @@ $this->beginPage();
     </tr>
     <tr>
         <td style="width:20%;text-align:left;border-bottom: 1px solid black;">
-            <?= Html::encode($translator->translate('i.Q2').'/'.$result['year']); ?>
+            <?= Html::encode($translator->translate('i.Q2').'/'.(string)$result['year']); ?>
         </td>
         <td style="width:20%;text-align:right;border-bottom: 1px solid black;"></td>
         <td style="width:20%;text-align:right;border-bottom: 1px solid black;">
@@ -94,7 +106,7 @@ $this->beginPage();
     </tr>
     <tr>
         <td style="width:20%;text-align:left;border-bottom: 1px solid black;">
-            <?= Html::encode($translator->translate('i.Q3').'/'.$result['year']); ?>
+            <?= Html::encode($translator->translate('i.Q3').'/'.(string)$result['year']); ?>
         </td>
         <td style="width:20%;text-align:right;border-bottom: 1px solid black;"></td>
         <td style="width:20%;text-align:right;border-bottom: 1px solid black;">
@@ -110,11 +122,11 @@ $this->beginPage();
     </tr>
     <tr>
         <td  style="width:20%;text-align:left;border-bottom: 1px solid black;">
-            <?= Html::encode($translator->translate('i.Q4').'/'.$result['year']); ?>
+            <?= Html::encode($translator->translate('i.Q4').'/'.(string)$result['year']); ?>
         </td>
         <td  style="width:20%;text-align:right;border-bottom: 1px solid black;"></td>
         <td  style="width:20%;text-align:right;border-bottom: 1px solid black;">
-            <?= Html::encode($n->format_currency($result['quarters']['fourth']['sales_no_tax']) ?? 0.00); ?></td>
+            <?= Html::encode($n->format_currency($result['quarters']['fourth']['sales_no_tax']) ?: 0.00); ?></td>
         <td  style="width:20%;text-align:right;border-bottom: 1px solid black;">
             <?= Html::encode($n->format_currency($result['quarters']['fourth']['item_tax_total'] ?? 0.00)); ?></td>
         <td  style="width:20%;text-align:right;border-bottom: 1px solid black;">

@@ -1,8 +1,21 @@
+<?php
+    declare(strict_types=1);
+    
+    /**
+     * @var Yiisoft\Translator\TranslatorInterface $translator
+     * @var string $heading
+     * @var string $message
+     */ 
+?>
+
 <!doctype html>
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title><?php echo $heading; ?>Invoice</title>
+    <title>
+        <?= $heading; ?>
+        <?= $translator->translate('invoice.invoice'); ?>
+    </title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <style>
 

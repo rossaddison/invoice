@@ -22,7 +22,7 @@ use Yiisoft\Session\Flash\Flash;
 use Yiisoft\Session\SessionInterface as Session;
 use Yiisoft\Translator\TranslatorInterface as Translator; 
 use Yiisoft\FormModel\FormHydrator;
-use Yiisoft\Yii\View\ViewRenderer;
+use Yiisoft\Yii\View\Renderer\ViewRenderer;
 
 final class TaxRateController
 {
@@ -66,7 +66,6 @@ final class TaxRateController
       
         $canEdit = $this->rbac();
         $parameters = [
-              'grid_summary'=> $settingRepository->grid_summary($paginator, $this->translator, (int)$settingRepository->get_setting('default_list_limit'), $this->translator->translate('i.tax_rates'), ''),
               'paginator' => $paginator,
               'canEdit' => $canEdit,
               'alert' => $this->alert()
@@ -86,7 +85,8 @@ final class TaxRateController
         $form = new TaxRateForm($taxRate);
         $parameters = [
             'title' => $this->translator->translate('invoice.tax.rate.add'),
-            'action' => ['taxrate/add'],
+            'actionName' => 'taxrate/add',
+            'actionArguments' => [],
             'form' => $form,
             'errors' => [],
             'optionsDataPeppolTaxRateCode' => $this->optionsDataPeppolTaxRateCode($peppol_arrays->getUncl5305()),
@@ -128,7 +128,8 @@ final class TaxRateController
             $form = new TaxRateForm($taxRate);
             $parameters = [
                 'title' => $this->translator->translate('i.edit'),
-                'action' => ['taxrate/edit', ['tax_rate_id' => $taxRate->getTax_rate_id()]],
+                'actionName' => 'taxrate/edit',
+                'actionArguments' => ['tax_rate_id' => $taxRate->getTax_rate_id()],
                 'form' => $form,
                 'errors' => [],
                 'optionsDataPeppolTaxRateCode' => $this->optionsDataPeppolTaxRateCode($peppol_arrays->getUncl5305()),
@@ -185,7 +186,8 @@ final class TaxRateController
             $form = new TaxRateForm($taxRate);
             $parameters = [
                 'title' =>  $this->translator->translate('invoice.tax.rate.edit'),
-                'action' => ['taxrate/edit', ['tax_rate_id' => $taxRate->getTax_rate_id()]],
+                'actionName' => 'taxrate/view',
+                'actionArguments' => ['tax_rate_id' => $taxRate->getTax_rate_id()],
                 'form' => $form,
                 'optionsDataPeppolTaxRateCode' => $this->optionsDataPeppolTaxRateCode($peppol_arrays->getUncl5305()),
                 'optionsDataStoreCoveTaxType' => $this->optionsDataStoreCoveTaxType()
@@ -238,7 +240,7 @@ final class TaxRateController
      * @return string
      */
     private function alert(): string {
-      return $this->viewRenderer->renderPartialAsString('/invoice/layout/alert',
+      return $this->viewRenderer->renderPartialAsString('//invoice/layout/alert',
       [ 
         'flash' => $this->flash
       ]);

@@ -331,6 +331,19 @@ $this->beginPage();
                   ['options' => ['class' => 'nav fs-4'], 'label' => $translator->translate('invoice.setting.company.profile'), 'url' => $urlGenerator->generate('profile/index')],
                 ],
               ],
+// Php Watch  
+              ['label' => '🐘', 'options' => ['style' => 'background-color: #ffcccb'], 'visible' => $debugMode,
+                'linkOptions' => [
+                    'style' => 'font-size: 2rem; color: cornflowerblue;',
+                    'data-bs-toggle' => 'dropdown',
+                ],
+                'items' => [
+                  ['options' => ['class' => 'nav fs-4', 'style' => 'background-color: #ffcccb'], 'label' => '8.1', 'url' => 'https://php.watch/versions/8.1'],
+                  ['options' => ['class' => 'nav fs-4', 'style' => 'background-color: #ffcccb'], 'label' => '8.2', 'url' => 'https://php.watch/versions/8.2'],
+                  ['options' => ['class' => 'nav fs-4', 'style' => 'background-color: #ffcccb'], 'label' => '8.3', 'url' => 'https://php.watch/versions/8.3'],
+                  ['options' => ['class' => 'nav fs-4', 'style' => 'background-color: #ffcccb'], 'label' => '8.4', 'url' => 'https://php.watch/versions/8.4'],  
+                ],  
+               ], 
 // Platform                  
               ['label' => $translator->translate('invoice.platform'), 'options' => ['style' => 'background-color: #ffcccb'], 'visible' => $debugMode,
                 'items' => [
@@ -441,7 +454,7 @@ $this->beginPage();
                   ['label' => 'php.ini: opcache.revalidate_freq (pref 60) = '. (ini_get('opcache.revalidate_freq'))],
                   ['label' => 'php.ini: opcache.enable (pref 1) = ' . (ini_get('opcache.enable'))],
                   ['label' => 'php.ini: opcache.enable_cli (pref 1) = ' .(ini_get('opcache.enable_cli'))],
-                  ['label' => 'php.ini: opcache.jit (pref ) = '. (ini_get('opcache.jit'))],  
+                  ['label' => 'php.ini: opcache.jit (pref see nothing) = '. (ini_get('opcache.jit'))],  
                   ['label' => 'config.params: yiisoft/yii-debug: enabled , disable for improved performance'],
                   ['label' => 'config.params: yiisoft/yii-debug-api: enabled, disable for improved performance'],
                 ],
@@ -638,7 +651,7 @@ $this->beginPage();
             <?php
 // Display the sidebar if enabled
             if ($s->get_setting('disable_sidebar') !== (string) 1) {
-              include dirname(__DIR__) . '/invoice/layout/sidebar.php';
+              include dirname(__DIR__) . 'layout/sidebar.php';
             }
             ?>
             <main class="container py-4">

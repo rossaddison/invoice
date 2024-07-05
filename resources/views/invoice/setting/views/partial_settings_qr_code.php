@@ -12,6 +12,11 @@
     use chillerlan\QRCode\Common\Version;
     use chillerlan\QRCode\QRCode;
     
+    /**
+     * @var App\Invoice\Setting\SettingRepository $s 
+     * @var Yiisoft\Translator\TranslatorInterface $translator
+     * @var array $body
+     */    
 ?>
 <?= Html::openTag('div', ['class' => 'row']); ?>
     <div class="col-xs-12 col-md-8 col-md-offset-2">
@@ -31,7 +36,7 @@
                             <label for="settings[qr_version]" <?= $s->where('qr_version'); ?>>
                                 <?= $translator->translate('invoice.invoice.qr.version'); ?>
                             </label>
-                            <?php $body['settings[qr_version]'] = $s->get_setting('qr_version') ?? '40';?>
+                            <?php $body['settings[qr_version]'] = $s->get_setting('qr_version') ?: '40';?>
                            <input type="text" name="settings[qr_version]" id="settings[qr_version]"
                                 class="form-control" 
                                 value="<?= $body['settings[qr_version]'] ?? (string)Version::AUTO; ?>">
@@ -47,31 +52,6 @@
                                 <option value="1" <?php $s->check_select($body['settings[qr_ecc_level]'], '1'); ?>><?= 'M'; ?></option>
                                 <option value="2" <?php $s->check_select($body['settings[qr_ecc_level]'], '2'); ?>><?= 'Q'; ?></option>
                                 <option value="3" <?php $s->check_select($body['settings[qr_ecc_level]'], '3'); ?>><?= 'H'; ?></option>
-                            </select>
-                        </div>
-                        <div class="form-group">
-                            <label for="settings[qr_output_type]">
-                                <?= $translator->translate('invoice.invoice.qr.output.type'); ?>
-                            </label>
-                            <?php 
-                                $body['settings[qr_output_type]'] =  $s->get_setting('qr_output_type');
-                            ?>
-                            <select name="settings[qr_output_type]" id="settings[qr_output_type]"
-                                class="form-control">
-                                <option value="0" <?php $s->check_select($body['settings[qr_output_type]'], '0'); ?>><?= QROutputInterface::MARKUP_HTML; ?></option>
-                                <option value="1" <?php $s->check_select($body['settings[qr_output_type]'], '1'); ?>><?= QROutputInterface::MARKUP_SVG; ?></option>
-                                <option value="2" <?php $s->check_select($body['settings[qr_output_type]'], '2'); ?>><?= QROutputInterface::GDIMAGE_BMP; ?></option>
-                                <option value="3" <?php $s->check_select($body['settings[qr_output_type]'], '3'); ?>><?= QROutputInterface::GDIMAGE_GIF; ?></option>
-                                <option value="4" <?php $s->check_select($body['settings[qr_output_type]'], '4'); ?>><?= QROutputInterface::GDIMAGE_JPG; ?></option>
-                                <option value="5" <?php $s->check_select($body['settings[qr_output_type]'], '5') ||
-                                                        // default to png
-                                                        $s->check_select($body['settings[qr_output_type]'], null); ?>><?= QROutputInterface::GDIMAGE_PNG; ?></option>
-                                <option value="6" <?php $s->check_select($body['settings[qr_output_type]'], '6'); ?>><?= QROutputInterface::GDIMAGE_WEBP; ?></option>
-                                <option value="7" <?php $s->check_select($body['settings[qr_output_type]'], '7'); ?>><?= QROutputInterface::STRING_JSON; ?></option>
-                                <option value="8" <?php $s->check_select($body['settings[qr_output_type]'], '8'); ?>><?= QROutputInterface::STRING_TEXT; ?></option>
-                                <option value="9" <?php $s->check_select($body['settings[qr_output_type]'], '9'); ?>><?= QROutputInterface::IMAGICK; ?></option>
-                                <option value="10" <?php $s->check_select($body['settings[qr_output_type]'], '10'); ?>><?= QROutputInterface::FPDF; ?></option>
-                                <option value="11" <?php $s->check_select($body['settings[qr_output_type]'], '11'); ?>><?= QROutputInterface::EPS; ?></option>
                             </select>
                         </div>
                         <div class="form-group">
@@ -109,7 +89,7 @@
                                     ->height($pixels)
                                     ->src('%s')
                                     ->alt($translator->translate('invoice.invoice.qr.code'))
-                                    ->render(), (new QRCode)->render('http://invoice.myhost/invoice/inv/view/6'));
+                                    ->render(), (string)(new QRCode)->render('http://invoice.myhost/invoice/inv/view/6'));
                                     echo Table::tag()    
                                     ->attributes([ 'class' => 'table table-info table-striped table-bordered'])  
                                     ->rows(

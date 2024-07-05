@@ -7,11 +7,36 @@ use Yiisoft\Html\Html;
 use Yiisoft\Html\Tag\Form;
 
 /**
- * @var \Yiisoft\View\View $this
- * @var \Yiisoft\Router\UrlGeneratorInterface $urlGenerator
+ * @see App\Invoice\SalesOrder\SalesOrderController function add()
+ * @var App\Invoice\CustomField\CustomFieldRepository $cfR
+ * @var App\Invoice\CustomValue\CustomValueRepository $cvR
+ * @var App\Invoice\Helpers\CustomValuesHelper $cvH
+ * @var App\Invoice\SalesOrder\SalesOrderForm $form
+ * @var App\Invoice\SalesOrderCustom\SalesOrderCustomForm $salesOrderCustomForm
+ * @var App\Invoice\Setting\SettingRepository $s
+ * @var App\Widget\Button $button
+ * @var Yiisoft\Translator\TranslatorInterface $translator
+ * @var Yiisoft\Router\UrlGeneratorInterface $urlGenerator
+ * @var array $dels
+ * @var array $errors
+ * @var array $so_custom_values
+ * @var array $custom_values
+ * @var int $delCount
+ * @var string $actionName
  * @var string $csrf
- * @var string $action
+ * @var string $defaultGroupId
+ * @var string $invNumber
+ * @var string $terms_and_conditions_file
  * @var string $title
+ * @psalm-var array<string, Stringable|null|scalar> $actionArguments
+ * @psalm-var array<string, Stringable|null|scalar> $actionArgumentsDelAdd
+ * @psalm-var array<array-key, mixed> $editInputAttributesUrlKey 
+ * @psalm-var array<string,list<string>> $errors 
+ * @psalm-var array<array<array-key, array<array-key, string>|string>> $optionsData
+ * @psalm-var array<array-key, array<array-key, string>|string> $optionsData['client']
+ * @psalm-var array<array-key, array<array-key, string>|string> $optionsData['deliveryLocation']
+ * @psalm-var array<array-key, array<array-key, string>|string> $optionsData['group']
+ * @psalm-var array<array-key, array<array-key, string>|string> $optionsData['salesOrderStatus']
  */
 $vat = $s->get_setting('enable_vat_registration') === '1' ? true : false;
 
@@ -21,8 +46,8 @@ $vat = $s->get_setting('enable_vat_registration') === '1' ? true : false;
 <?= Html::openTag('div',['class'=>'col-12 col-md-8 col-lg-6 col-xl-8']); ?>
 <?= Html::openTag('div',['class'=>'card border border-dark shadow-2-strong rounded-3']); ?>
 <?= Html::openTag('div',['class'=>'card-header']); ?>
-    <?= Html::openTag('h1',['class'=>'fw-normal h3 text-center']); ?><?= $translator->translate('i.add'); ?><?= Html::closeTag('h1'); ?>
-        <?= Form::tag()->post($urlGenerator->generate(...$action))
+    <?= Html::openTag('h1',['class'=>'fw-normal h3 text-center']); ?><?= $title; ?><?= Html::closeTag('h1'); ?>
+        <?= Form::tag()->post($urlGenerator->generate($actionName, $actionArguments))
                        ->enctypeMultipartFormData()
                        ->csrf($csrf)
                        ->id('SalesOrderForm')
@@ -31,6 +56,13 @@ $vat = $s->get_setting('enable_vat_registration') === '1' ? true : false;
                     <?= Html::openTag('div', ['class' => 'row']); ?>
                         <?= Html::openTag('div', ['class' => 'col card mb-3']); ?>
                             <?= Html::openTag('div',['class' => 'card-header']); ?>
+                                <?= Html::openTag('div'); ?>
+                                    <?= Field::errorSummary($form)
+                                        ->errors($errors)
+                                        ->header($translator->translate('invoice.error.summary'))
+                                        ->onlyCommonErrors()
+                                    ?>
+                                <?= Html::closeTag('div'); ?>        
                                 <?= Html::openTag('div'); ?>
                                      <?= Field::hidden($form,'number')
                                          ->hideLabel(false)
@@ -63,42 +95,53 @@ $vat = $s->get_setting('enable_vat_registration') === '1' ? true : false;
                                     ?>
                                 <?= Html::closeTag('div'); ?>   
                             
-                            <?php if ($del_count > 0) { ?>
-                                <?= Html::openTag('div'); ?>
-                                    <?= Field::select($form, 'delivery_location_id')
-                                        ->label($translator->translate('invoice.invoice.delivery.location'))
-                                        ->addInputAttributes(['class' => 'form-control'])
-                                        ->value($form->getDelivery_location_id())
-                                        ->prompt($translator->translate('i.none'))
-                                        ->optionsData($optionsData['deliveryLocation'])
-                                        ->hint($translator->translate('invoice.hint.this.field.is.not.required')); 
-                                    ?>
-                                <?= Html::closeTag('div'); ?>           
-                                <?php if (null!==$form->getDelivery_location_id()) { ?>
-                                <span class="input-group-text">
-                                    <a href="<?= $urlGenerator->generate('del/edit', ['id'=> $form->getDelivery_location_id()]); ?>"><i class="fa fa-pencil fa-fw"></i><?php echo $translator->translate('invoice.invoice.delivery.location'); ?></a>
-                                </span>  
-                                <?php } ?>
-                                <?php
-                            } else {
+                            <?php 
+                            // If there is no delivery location for this client, create the delivery location now for later use by invoice construction
+                            // and to avoid undeliverable locations
+                            if ($delCount == 0) { 
                                 echo Html::a($translator->translate('invoice.invoice.delivery.location.add'), 
-                                $urlGenerator->generate('del/add', 
-                                [
-                                    'client_id' => $client_id ?? '', 
-                                    'origin' => 'salesorder', 
-                                    'origin_id' => $client_id ?? '', 
-                                    'action' => $return_url_action
-                                ]), [
-                                    'class' => 'btn btn-danger btn-lg mt-3'
-                                ]);
-                            }
-                            ?>
+                                $urlGenerator->generate('del/add', $actionArgumentsDelAdd, ['class' => 'btn btn-danger btn-lg mt-3']));
+                            } else { ?>
+                               <div class="form-group">
+                                    <div class="col-xs-12 col-sm-2 text-right text-left-xs">
+                                        <label for="delivery_location_id"><?= $translator->translate('invoice.invoice.delivery.location'); ?>: </label>
+                                    </div>        
+                                    <div class="col-xs-12 col-sm-6">
+                                        <div class="input-group">  
+                                            <select name="delivery_location_id" id="delivery_location_id"
+                                                    class="form-control" disabled>
+                                                <?php
+                                                    /**
+                                                     * @var App\Invoice\Entity\DeliveryLocation $del
+                                                     */
+                                                    foreach ($dels as $del) { ?>
+                                                    <option value="<?php echo $del->getId(); ?>"
+                                                        <?php $s->check_select(Html::encode($del->getId() ?? $del->getId()), $del->getId()); ?>>
+                                                        <?php $delAddress1 =  $del->getAddress_1();
+                                                              $delAddress2 = $del->getAddress_2();
+                                                              $delCity = $del->getCity();
+                                                              $delZip = $del->getZip();
+                                                              echo (null!==$delAddress1 ? $delAddress1 : ''). ', '.
+                                                                   (null!==$delAddress2 ? $delAddress2 : ''). ', '. 
+                                                                   (null!==$delCity     ? $delCity      : ''). ', '. 
+                                                                   (null!==$delZip      ? $delZip       : ''); ?>
+                                                    </option>
+                                                <?php } ?>
+                                            </select>
+                                        </div>
+                                    </div>    
+                                </div> 
+                        <?php } ?>
                         <?= Html::openTag('br'); ?>    
                         <?= Html::openTag('br'); ?>    
                         <?= Html::openTag('div'); ?>
                             <?= Field::date($form,'date_created')
                                 ->label($translator->translate('invoice.invoice.date.issued'))
-                                ->value($form->getDate_created() ? ($form->getDate_created())->format('Y-m-d') : '')
+                                ->value(Html::encode($form->getDate_created() instanceof \DateTimeImmutable ? 
+                                    $form->getDate_created()->format('Y-m-d') : (is_string(
+                                    $form->getDate_created()) ? 
+                                    $form->getDate_created() : ''))
+                                )
                                 ->hint($translator->translate('invoice.hint.this.field.is.required')); 
                             ?>
                         <?= Html::closeTag('div'); ?>
@@ -131,7 +174,7 @@ $vat = $s->get_setting('enable_vat_registration') === '1' ? true : false;
                         <?php if ($form->getStatus_id() > 1) { ?>
                             <?= Field::text($form,'url_key')
                                 ->hideLabel(false)
-                                ->label(($form->getStatus_id() ?? 1) > 1 ? $translator->translate('i.guest_url') : '') 
+                                ->label($translator->translate('i.guest_url')) 
                                 ->addInputAttributes($editInputAttributesUrlKey);
                             ?>
                         <?php } ?>
@@ -142,7 +185,7 @@ $vat = $s->get_setting('enable_vat_registration') === '1' ? true : false;
                                 ->hideLabel(false)
                                 ->label($translator->translate('i.discount').' '. $s->get_setting('currency_symbol'))
                                 ->addInputAttributes(['class' => 'form-control'])
-                                ->value($s->format_amount((float)($form->getDiscount_amount() ?? 0.00)))
+                                ->value($s->format_amount(($form->getDiscount_amount() ?? 0.00)))
                                 ->placeholder($translator->translate('i.discount')); 
                             ?>
                         <?= Html::closeTag('div'); ?>
@@ -150,7 +193,7 @@ $vat = $s->get_setting('enable_vat_registration') === '1' ? true : false;
                             <?= Field::text($form,'discount_percent')
                                 ->label($translator->translate('i.discount_percentage'))
                                 ->addInputAttributes(['class' => 'form-control'])
-                                ->value(Html::encode($s->format_amount((float)($form->getDiscount_percent() ?? 0.00))))
+                                ->value(Html::encode($s->format_amount(($form->getDiscount_percent() ?? 0.00))))
                                 ->placeholder($translator->translate('i.discount_percentage')); 
                             ?>
                         <?= Html::closeTag('div'); ?>
@@ -159,10 +202,33 @@ $vat = $s->get_setting('enable_vat_registration') === '1' ? true : false;
                             <?= Field::hidden($form, 'inv_id')
                                 ->hideLabel(); ?>
                         <?= Html::closeTag('div'); ?>
+                    <?php
+                        /**
+                         * @var App\Invoice\Entity\CustomField $customField
+                         */
+                        foreach ($cfR->repoTablequery('sales_order_custom') as $customField) {
+                          $custom_values = $cvR->attach_hard_coded_custom_field_values_to_custom_field($cfR->repoTablequery('salesorder_custom'));
+                          $cvH->print_field_for_form($customField, $salesOrderCustomForm, $translator, $so_custom_values, $custom_values);
+                        }
+                    ?>
+                        <?= Html::openTag('div'); ?>
+                            <div class="col-xs-12 col-sm-2 text-right text-left-xs">   
+                                <label for="terms_and_conditions_file" class="control-label"><?= $translator->translate('invoice.term') ?></label>
+                            </div>
+                            <div class="col-xs-12 col-sm-6">
+                                <div class="input-group">
+                                    <textarea  class="form-control" rows="20" cols="20"><?= $terms_and_conditions_file; ?></textarea>
+                                </div>
+                            </div>
+                            <div class="col-xs-12 col-sm-2 text-right text-left-xs">  
+                                <label for="inv_id" class="control-label"><?= $translator->translate('invoice.salesorder.invoice.number'); ?></label>
+                            </div>
+                            <div class="col-xs-12 col-sm-6">  
+                                <div clsss="input-group">  
+                                    <input type="text" name="inv_number" id="inv_number" class="form-control" required disabled value="<?= $invNumber; ?>">
+                                </div>
+                            </div>
                         <?= Html::closeTag('div'); ?>
-                    <?php foreach ($custom_fields as $custom_field): ?>
-                        <?php echo $cvH->print_field_for_form($custom_field, $quoteCustomForm, $translator, $quote_custom_values, $custom_values); ?>
-                    <?php endforeach; ?>
                     <?= Html::closeTag('div'); ?>
                 <?= Html::closeTag('div'); ?>    
             <?= Html::closeTag('div'); ?>
@@ -178,4 +244,5 @@ $vat = $s->get_setting('enable_vat_registration') === '1' ? true : false;
 <?= Html::closeTag('div'); ?>
 <?= Html::closeTag('div'); ?>
 <?= Html::closeTag('div'); ?>
-<?= Html::closeTag('div'); ?>  
+<?= Html::closeTag('div'); ?>
+

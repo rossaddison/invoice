@@ -106,7 +106,7 @@ use Yiisoft\Router\CurrentRoute;
             ])
             ->content('🔎')
             ->encode(false)
-            ->href('/invoice/merchant/view/'. $model->getId())
+            ->href('merchant/view/'. $model->getId())
             ->render() .
             Html::a()
             ->addAttributes([
@@ -115,7 +115,7 @@ use Yiisoft\Router\CurrentRoute;
             ])
             ->content('✎')
             ->encode(false)
-            ->href('/invoice/merchant/edit/'. $model->getId())
+            ->href('merchant/edit/'. $model->getId())
             ->render() .
             Html::a()
             ->addAttributes([
@@ -126,12 +126,13 @@ use Yiisoft\Router\CurrentRoute;
             ])
             ->content('❌')
             ->encode(false)
-            ->href('/invoice/merchant/delete/'. $model->getId())
+            ->href('merchant/delete/'. $model->getId())
             ->render() . Html::closeTag('div')
         ),
     ];       
 ?>
 <?= GridView::widget()
+    ->rowAttributes(['class' => 'align-middle'])
     ->columns(...$columns)
     ->dataReader($paginator)
     ->headerRowAttributes(['class'=>'card-header bg-info text-black'])
@@ -144,7 +145,6 @@ use Yiisoft\Router\CurrentRoute;
         ->paginator($paginator)
          ->render(),
     )
-    ->rowAttributes(['class' => 'align-middle'])
     ->summaryAttributes(['class' => 'mt-3 me-3 summary text-end'])
     ->summaryTemplate($grid_summary)
     ->emptyTextAttributes(['class' => 'card-header bg-warning text-black'])

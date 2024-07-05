@@ -16,7 +16,7 @@ use App\Invoice\Helpers\DateHelper;
 // Yiisoft
 use Yiisoft\Translator\TranslatorInterface as Translator;
 use Yiisoft\User\CurrentUser;
-use Yiisoft\Yii\View\LayoutParametersInjectionInterface;
+use Yiisoft\Yii\View\Renderer\LayoutParametersInjectionInterface;
 
 /**
  * @see ./views/layout/main.php or alternative(s)

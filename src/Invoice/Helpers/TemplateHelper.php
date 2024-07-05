@@ -264,7 +264,7 @@ Class TemplateHelper {
                         break;
                     case 'quote_guest_url':
                         $quote = $qR->repoCount($pk) > 0 ? $qR->repoQuoteUnloadedquery($pk) : null;
-                        if ($quote) {$replace = '/invoice/quote/url_key/'. $quote->getUrl_key();}
+                        if ($quote) {$replace = 'quote/url_key/'. $quote->getUrl_key();}
                         break;
                     case 'quote_number':
                         $quote = $qR->repoCount($pk) > 0 ? $qR->repoQuoteUnloadedquery($pk) : null;
@@ -279,7 +279,7 @@ Class TemplateHelper {
                     // invoice    
                     case 'invoice_guest_url':                        
                         $invoice = $iR->repoCount($pk) > 0 ? $iR->repoInvUnloadedquery($pk) : null;
-                        if ($invoice) {$replace = '/invoice/inv/url_key/'. $invoice->getUrl_key();}
+                        if ($invoice) {$replace = 'inv/url_key/'. $invoice->getUrl_key();}
                         break;
                     case 'invoice_date_due':
                         $invoice = $iR->repoCount($pk) > 0 ? $iR->repoInvUnloadedquery($pk) : null;

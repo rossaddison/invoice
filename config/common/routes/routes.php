@@ -25,7 +25,6 @@ use Yiisoft\Yii\RateLimiter\LimitRequestsMiddleware;
 use Yiisoft\Yii\RateLimiter\Storage\StorageInterface;
 use App\Invoice\AllowanceCharge\AllowanceChargeController;
 use App\Invoice\Client\ClientController;
-use App\Invoice\ClientCustom\ClientCustomController;
 use App\Invoice\ClientNote\ClientNoteController;
 use App\Invoice\ClientPeppol\ClientPeppolController;
 use App\Invoice\Company\CompanyController;
@@ -45,8 +44,6 @@ use App\Invoice\Group\GroupController;
 use App\Invoice\InvoiceController;
 use App\Invoice\Inv\InvController;
 use App\Invoice\InvAllowanceCharge\InvAllowanceChargeController;
-use App\Invoice\InvAmount\InvAmountController;
-use App\Invoice\InvCustom\InvCustomController;
 use App\Invoice\InvItem\InvItemController;
 use App\Invoice\InvItemAllowanceCharge\InvItemAllowanceChargeController;
 use App\Invoice\InvRecurring\InvRecurringController;
@@ -54,11 +51,9 @@ use App\Invoice\InvSentLog\InvSentLogController;
 use App\Invoice\ItemLookup\ItemLookupController;
 use App\Invoice\Merchant\MerchantController;
 use App\Invoice\Payment\PaymentController;
-use App\Invoice\PaymentCustom\PaymentCustomController;
 use App\Invoice\PaymentInformation\PaymentInformationController;
 use App\Invoice\PaymentPeppol\PaymentPeppolController;
 use App\Invoice\PaymentMethod\PaymentMethodController;
-use App\Invoice\PaymentTerm\PaymentTermController;
 use App\Invoice\PostalAddress\PostalAddressController;
 use App\Invoice\Product\ProductController;
 use App\Invoice\ProductImage\ProductImageController;
@@ -67,10 +62,7 @@ use App\Invoice\Project\ProjectController;
 use App\Invoice\Profile\ProfileController;
 // Quote
 use App\Invoice\Quote\QuoteController;
-use App\Invoice\QuoteAmount\QuoteAmountController;
-use App\Invoice\QuoteCustom\QuoteCustomController;
 use App\Invoice\QuoteItem\QuoteItemController;
-use App\Invoice\QuoteItemAmount\QuoteItemAmountController;
 use App\Invoice\Report\ReportController;
 use App\Invoice\SalesOrder\SalesOrderController;
 use App\Invoice\SalesOrderItem\SalesOrderItemController;
@@ -163,8 +155,7 @@ return [
       ->middleware(fn(AccessChecker $checker) => $checker->withPermission('editInv'))  
       ->middleware(FormatDataResponseAsJson::class)
       ->action([ApiUserController::class, 'profile'])
-    ),
-        
+    ),  
     Group::create('/invoice')
     ->routes(
       Route::get('')
@@ -479,31 +470,6 @@ return [
       ->middleware(fn(AccessChecker $checker) => $checker->withPermission('viewInv'))
       ->middleware(Authentication::class)
       ->action([CustomValueController::class, 'view']),
-      Route::get('/clientcustom')
-      ->middleware(fn(AccessChecker $checker) => $checker->withPermission('viewInv'))
-      ->middleware(Authentication::class)
-      ->action([ClientCustomController::class, 'index'])
-      ->name('clientcustom/index'),
-      Route::methods([Method::GET, Method::POST], '/clientcustom/add')
-      ->middleware(fn(AccessChecker $checker) => $checker->withPermission('editInv'))
-      ->middleware(Authentication::class)
-      ->action([ClientCustomController::class, 'add'])
-      ->name('clientcustom/add'),
-      Route::methods([Method::GET, Method::POST], '/clientcustom/edit/{id}')
-      ->name('clientcustom/edit')
-      ->middleware(fn(AccessChecker $checker) => $checker->withPermission('editInv'))
-      ->middleware(Authentication::class)
-      ->action([ClientCustomController::class, 'edit']),
-      Route::methods([Method::GET, Method::POST], '/clientcustom/delete/{id}')
-      ->name('clientcustom/delete')
-      ->middleware(fn(AccessChecker $checker) => $checker->withPermission('editInv'))
-      ->middleware(Authentication::class)
-      ->action([ClientCustomController::class, 'delete']),
-      Route::methods([Method::GET, Method::POST], '/clientcustom/view/{id}')
-      ->name('clientcustom/view')
-      ->middleware(fn(AccessChecker $checker) => $checker->withPermission('viewInv'))
-      ->middleware(Authentication::class)
-      ->action([ClientCustomController::class, 'view']),
       Route::get('/clientnote')
       ->middleware(fn(AccessChecker $checker) => $checker->withPermission('viewInv'))
       ->middleware(Authentication::class)
@@ -1159,31 +1125,6 @@ return [
       ->middleware(fn(AccessChecker $checker) => $checker->withPermission('editInv'))
       ->middleware(Authentication::class)
       ->action([InvRecurringController::class, 'view']),
-      Route::get('/invamount')
-      ->middleware(fn(AccessChecker $checker) => $checker->withPermission('viewInv'))
-      ->middleware(Authentication::class)
-      ->action([InvAmountController::class, 'index'])
-      ->name('invamount/index'),
-      Route::methods([Method::GET, Method::POST], '/invamount/add')
-      ->middleware(fn(AccessChecker $checker) => $checker->withPermission('editInv'))
-      ->middleware(Authentication::class)
-      ->action([InvAmountController::class, 'add'])
-      ->name('invamount/add'),
-      Route::methods([Method::GET, Method::POST], '/invamount/edit/{id}')
-      ->name('invamount/edit')
-      ->middleware(fn(AccessChecker $checker) => $checker->withPermission('editInv'))
-      ->middleware(Authentication::class)
-      ->action([InvAmountController::class, 'edit']),
-      Route::methods([Method::GET, Method::POST], '/invamount/delete/{id}')
-      ->name('invamount/delete')
-      ->middleware(fn(AccessChecker $checker) => $checker->withPermission('editInv'))
-      ->middleware(Authentication::class)
-      ->action([InvAmountController::class, 'delete']),
-      Route::methods([Method::GET, Method::POST], '/invamount/view/{id}')
-      ->name('invamount/view')
-      ->middleware(fn(AccessChecker $checker) => $checker->withPermission('editInv'))
-      ->middleware(Authentication::class)
-      ->action([InvAmountController::class, 'view']),
       Route::get('/invsentlog/guest')
       ->middleware(fn(AccessChecker $checker) => $checker->withPermission('viewInv'))
       ->middleware(Authentication::class)
@@ -1199,31 +1140,6 @@ return [
       ->middleware(fn(AccessChecker $checker) => $checker->withPermission('viewInv'))
       ->middleware(Authentication::class)
       ->action([InvSentLogController::class, 'view']),      
-      Route::get('/invcustom')
-      ->middleware(fn(AccessChecker $checker) => $checker->withPermission('viewInv'))
-      ->middleware(Authentication::class)
-      ->action([InvCustomController::class, 'index'])
-      ->name('invcustom/index'),
-      Route::methods([Method::GET, Method::POST], '/invcustom/add')
-      ->middleware(fn(AccessChecker $checker) => $checker->withPermission('editInv'))
-      ->middleware(Authentication::class)
-      ->action([InvCustomController::class, 'add'])
-      ->name('invcustom/add'),
-      Route::methods([Method::GET, Method::POST], '/invcustom/edit/{id}')
-      ->name('invcustom/edit')
-      ->middleware(fn(AccessChecker $checker) => $checker->withPermission('editInv'))
-      ->middleware(Authentication::class)
-      ->action([InvCustomController::class, 'edit']),
-      Route::methods([Method::GET, Method::POST], '/invcustom/delete/{id}')
-      ->name('invcustom/delete')
-      ->middleware(fn(AccessChecker $checker) => $checker->withPermission('editInv'))
-      ->middleware(Authentication::class)
-      ->action([InvCustomController::class, 'delete']),
-      Route::methods([Method::GET, Method::POST], '/invcustom/view/{id}')
-      ->name('invcustom/view')
-      ->middleware(fn(AccessChecker $checker) => $checker->withPermission('editInv'))
-      ->middleware(Authentication::class)
-      ->action([InvCustomController::class, 'view']),
       Route::methods([Method::POST], '/invitem/add_product')
       ->middleware(fn(AccessChecker $checker) => $checker->withPermission('editInv'))
       ->middleware(Authentication::class)
@@ -1639,56 +1555,6 @@ return [
       ->middleware(fn(AccessChecker $checker) => $checker->withPermission('editInv'))
       ->middleware(Authentication::class)
       ->action([PaymentMethodController::class, 'view']),
-      Route::get('/paymentcustom')
-      ->middleware(fn(AccessChecker $checker) => $checker->withPermission('editInv'))
-      ->middleware(Authentication::class)
-      ->action([PaymentCustomController::class, 'index'])
-      ->name('paymentcustom/index'),
-      Route::methods([Method::GET, Method::POST], '/paymentcustom/add')
-      ->middleware(fn(AccessChecker $checker) => $checker->withPermission('editInv'))
-      ->middleware(Authentication::class)
-      ->action([PaymentCustomController::class, 'add'])
-      ->name('paymentcustom/add'),
-      Route::methods([Method::GET, Method::POST], '/paymentcustom/edit/{id}')
-      ->name('paymentcustom/edit')
-      ->middleware(fn(AccessChecker $checker) => $checker->withPermission('editInv'))
-      ->middleware(Authentication::class)
-      ->action([PaymentCustomController::class, 'edit']),
-      Route::methods([Method::GET, Method::POST], '/paymentcustom/delete/{id}')
-      ->name('paymentcustom/delete')
-      ->middleware(fn(AccessChecker $checker) => $checker->withPermission('editInv'))
-      ->middleware(Authentication::class)
-      ->action([PaymentCustomController::class, 'delete']),
-      Route::methods([Method::GET, Method::POST], '/paymentcustom/view/{id}')
-      ->name('paymentcustom/view')
-      ->middleware(fn(AccessChecker $checker) => $checker->withPermission('editInv'))
-      ->middleware(Authentication::class)
-      ->action([PaymentCustomController::class, 'view']),
-      Route::get('/paymentterm')
-      ->middleware(fn(AccessChecker $checker) => $checker->withPermission('editInv'))
-      ->middleware(Authentication::class)
-      ->action([PaymentTermController::class, 'index'])
-      ->name('paymentterm/index'),
-      Route::methods([Method::GET, Method::POST], '/paymentterm/add')
-      ->middleware(fn(AccessChecker $checker) => $checker->withPermission('editInv'))
-      ->middleware(Authentication::class)
-      ->action([PaymentTermController::class, 'add'])
-      ->name('paymentterm/add'),
-      Route::methods([Method::GET, Method::POST], '/paymentterm/edit/{id}')
-      ->name('paymentterm/edit')
-      ->middleware(fn(AccessChecker $checker) => $checker->withPermission('editInv'))
-      ->middleware(Authentication::class)
-      ->action([PaymentTermController::class, 'edit']),
-      Route::methods([Method::GET, Method::POST], '/paymentterm/delete/{id}')
-      ->name('paymentterm/delete')
-      ->middleware(fn(AccessChecker $checker) => $checker->withPermission('editInv'))
-      ->middleware(Authentication::class)
-      ->action([PaymentTermController::class, 'delete']),
-      Route::methods([Method::GET, Method::POST], '/paymentterm/view/{id}')
-      ->name('paymentterm/view')
-      ->middleware(fn(AccessChecker $checker) => $checker->withPermission('editInv'))
-      ->middleware(Authentication::class)
-      ->action([PaymentTermController::class, 'view']),
       Route::methods([Method::GET, Method::POST], '/quote/add/{origin}')
       ->middleware(fn(AccessChecker $checker) => $checker->withPermission('editInv'))
       ->middleware(Authentication::class)
@@ -1838,57 +1704,7 @@ return [
       ->name('quote/generate_quote_pdf')
       ->middleware(fn(AccessChecker $checker) => $checker->withPermission('editInv'))
       ->middleware(Authentication::class)
-      ->action([QuoteController::class, 'generate_quote_pdf']),
-      Route::get('/quoteamount')
-      ->middleware(fn(AccessChecker $checker) => $checker->withPermission('editInv'))
-      ->middleware(Authentication::class)
-      ->action([QuoteAmountController::class, 'index'])
-      ->name('quoteamount/index'),
-      Route::methods([Method::GET, Method::POST], '/quoteamount/add')
-      ->middleware(fn(AccessChecker $checker) => $checker->withPermission('editInv'))
-      ->middleware(Authentication::class)
-      ->action([QuoteAmountController::class, 'add'])
-      ->name('quoteamount/add'),
-      Route::methods([Method::GET, Method::POST], '/quoteamount/edit/{id}')
-      ->name('quoteamount/edit')
-      ->middleware(fn(AccessChecker $checker) => $checker->withPermission('editInv'))
-      ->middleware(Authentication::class)
-      ->action([QuoteAmountController::class, 'edit']),
-      Route::methods([Method::GET, Method::POST], '/quoteamount/delete/{id}')
-      ->name('quoteamount/delete')
-      ->middleware(fn(AccessChecker $checker) => $checker->withPermission('editInv'))
-      ->middleware(Authentication::class)
-      ->action([QuoteAmountController::class, 'delete']),
-      Route::methods([Method::GET, Method::POST], '/quoteamount/view/{id}')
-      ->name('quoteamount/view')
-      ->middleware(fn(AccessChecker $checker) => $checker->withPermission('editInv'))
-      ->middleware(Authentication::class)
-      ->action([QuoteAmountController::class, 'view']),
-      Route::get('/quotecustom')
-      ->middleware(fn(AccessChecker $checker) => $checker->withPermission('viewInv'))
-      ->middleware(Authentication::class)
-      ->action([QuoteCustomController::class, 'index'])
-      ->name('quotecustom/index'),
-      Route::methods([Method::GET, Method::POST], '/quotecustom/add')
-      ->middleware(fn(AccessChecker $checker) => $checker->withPermission('editInv'))
-      ->middleware(Authentication::class)
-      ->action([QuoteCustomController::class, 'add'])
-      ->name('quotecustom/add'),
-      Route::methods([Method::GET, Method::POST], '/quotecustom/edit/{id}')
-      ->name('quotecustom/edit')
-      ->middleware(fn(AccessChecker $checker) => $checker->withPermission('editInv'))
-      ->middleware(Authentication::class)
-      ->action([QuoteCustomController::class, 'edit']),
-      Route::methods([Method::GET, Method::POST], '/quotecustom/delete/{id}')
-      ->name('quotecustom/delete')
-      ->middleware(fn(AccessChecker $checker) => $checker->withPermission('editInv'))
-      ->middleware(Authentication::class)
-      ->action([QuoteCustomController::class, 'delete']),
-      Route::methods([Method::GET, Method::POST], '/quotecustom/view/{id}')
-      ->name('quotecustom/view')
-      ->middleware(fn(AccessChecker $checker) => $checker->withPermission('editInv'))
-      ->middleware(Authentication::class)
-      ->action([QuoteCustomController::class, 'view']),
+      ->action([QuoteController::class, 'generate_quote_pdf']),      
       Route::get('/quoteitem')
       ->middleware(fn(AccessChecker $checker) => $checker->withPermission('editInv'))
       ->middleware(Authentication::class)
@@ -1919,31 +1735,6 @@ return [
       ->middleware(fn(AccessChecker $checker) => $checker->withPermission('editInv'))
       ->middleware(Authentication::class)
       ->action([QuoteItemController::class, 'view']),
-      Route::get('/quoteitemamount')
-      ->middleware(fn(AccessChecker $checker) => $checker->withPermission('editInv'))
-      ->middleware(Authentication::class)
-      ->action([QuoteItemAmountController::class, 'index'])
-      ->name('quoteitemamount/index'),
-      Route::methods([Method::GET, Method::POST], '/quoteitemamount/add')
-      ->middleware(fn(AccessChecker $checker) => $checker->withPermission('editInv'))
-      ->middleware(Authentication::class)
-      ->action([QuoteItemAmountController::class, 'add'])
-      ->name('quoteitemamount/add'),
-      Route::methods([Method::GET, Method::POST], '/quoteitemamount/edit/{id}')
-      ->name('quoteitemamount/edit')
-      ->middleware(fn(AccessChecker $checker) => $checker->withPermission('editInv'))
-      ->middleware(Authentication::class)
-      ->action([QuoteItemAmountController::class, 'edit']),
-      Route::methods([Method::GET, Method::POST], '/quoteitemamount/delete/{id}')
-      ->name('quoteitemamount/delete')
-      ->middleware(fn(AccessChecker $checker) => $checker->withPermission('editInv'))
-      ->middleware(Authentication::class)
-      ->action([QuoteItemAmountController::class, 'delete']),
-      Route::methods([Method::GET, Method::POST], '/quoteitemamount/view/{id}')
-      ->name('quoteitemamount/view')
-      ->middleware(fn(AccessChecker $checker) => $checker->withPermission('editInv'))
-      ->middleware(Authentication::class)
-      ->action([QuoteItemAmountController::class, 'view']),
       Route::get('/report')
       ->middleware(fn(AccessChecker $checker) => $checker->withPermission('editInv'))
       ->middleware(Authentication::class)

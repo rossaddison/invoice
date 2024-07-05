@@ -1218,7 +1218,7 @@ return [
 'invoice.invoice.qr.code.settings.effect' => 'Jaki wpływ mają powyższe ustawienia na ten kod Qr?',
 'invoice.invoice.qr.code.settings.effect.explanation' => 'W rzeczywistym kodzie... żaden. Używane są wszystkie wartości domyślne, ponieważ używany jest bardzo podstawowy kod powyżej.',
 'invoice.invoice.qr.code.source' => 'Źródło kodu Qr',
-'invoice.invoice.qr.code.source.path' => 'zasoby\views\invoice\setting\company_logo_and_address.php',
+'invoice.invoice.qr.code.source.path' => 'resources\views\invoice\setting\company_logo_and_address.php',
 'invoice.invoice.qr.code.type' => 'Typ kodu QR',
 'invoice.invoice.qr.code.type.absolute.url' => 'Absolutny (cały) oparty na adresie URL',
 'invoice.invoice.qr.code.widget.used' => 'Widżet używany',

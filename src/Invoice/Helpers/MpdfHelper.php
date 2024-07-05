@@ -186,7 +186,7 @@ Class MpdfHelper
         {
             $sR->load_settings();
             $aliases = $this->ensure_uploads_folder_exists($sR);  
-            $archived_file = $aliases->get('@uploads').$sR::getUploadsArchiveholderRelativeUrl() .'/Invoice/'. date('Y-m-d') . '_' . $filename . '.pdf';
+            $archived_file = $aliases->get('@uploads').$sR::getUploadsArchiveholderRelativeUrl() .''. date('Y-m-d') . '_' . $filename . '.pdf';
             $title = $sR->get_setting('pdf_archive_inv') == '1' ? $archived_file : $filename . '.pdf';
             $start_mpdf = $this->initialize_pdf($password, $sR, $title, $quote_or_invoice, $iiaR, $inv_amount, $aliases, $zugferd_invoice, $associated_files);
             $css = $this->get_css_file($aliases);
@@ -199,16 +199,16 @@ Class MpdfHelper
                 // send the file inline to the browser. The plug-in is used if available.
                 $mpdf->Output($filename . '.pdf', self::DEST_BROWSER);
                 if ($sR->get_setting('pdf_archive_inv') === '1') {
-                    $mpdf->Output($aliases->get('@uploads').$sR::getUploadsArchiveholderRelativeUrl() .'/Invoice/'. date('Y-m-d') . '_' . $filename . '.pdf', self::DEST_FILE);
-                    return $aliases->get('@uploads').$sR::getUploadsArchiveholderRelativeUrl() .'/Invoice/'. date('Y-m-d') . '_' . $filename . '.pdf';
+                    $mpdf->Output($aliases->get('@uploads').$sR::getUploadsArchiveholderRelativeUrl() .''. date('Y-m-d') . '_' . $filename . '.pdf', self::DEST_FILE);
+                    return $aliases->get('@uploads').$sR::getUploadsArchiveholderRelativeUrl() .''. date('Y-m-d') . '_' . $filename . '.pdf';
                 } else {
                     return 'streamed_not_saved';
                 }
             } else
             {    // save to a local file with the name given by $filename (may include a path).
                 if ($sR->get_setting('pdf_archive_inv') === '1') {
-                    $mpdf->Output($aliases->get('@uploads').$sR::getUploadsArchiveholderRelativeUrl() .'/Invoice/'. date('Y-m-d') . '_' . $filename . '.pdf', self::DEST_FILE);
-                    return $aliases->get('@uploads').$sR::getUploadsArchiveholderRelativeUrl() .'/Invoice/'. date('Y-m-d') . '_' . $filename . '.pdf';
+                    $mpdf->Output($aliases->get('@uploads').$sR::getUploadsArchiveholderRelativeUrl() .''. date('Y-m-d') . '_' . $filename . '.pdf', self::DEST_FILE);
+                    return $aliases->get('@uploads').$sR::getUploadsArchiveholderRelativeUrl() .''. date('Y-m-d') . '_' . $filename . '.pdf';
                 }    
             }
             return '';
@@ -227,7 +227,7 @@ Class MpdfHelper
             // Archive the file if it is an invoice
             if ($sR->get_setting('pdf_archive_inv') === '1') {
                 $archive_folder = $aliases->get('@uploads').$sR::getUploadsArchiveholderRelativeUrl() .'/Invoice';
-                $archived_file = $aliases->get('@uploads').$sR::getUploadsArchiveholderRelativeUrl() .'/Invoice/'. date('Y-m-d') . '_' . $filename . '.pdf';
+                $archived_file = $aliases->get('@uploads').$sR::getUploadsArchiveholderRelativeUrl() .''. date('Y-m-d') . '_' . $filename . '.pdf';
                 if (!is_dir($archive_folder)){
                     FileHelper::ensureDirectory($archive_folder, 0775);
                 }

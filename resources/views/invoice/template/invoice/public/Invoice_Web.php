@@ -9,7 +9,6 @@ use App\Invoice\Helpers\NumberHelper;
 /**
  * @var \App\Invoice\Entity\Inv $inv
  * @var \Yiisoft\Router\UrlGeneratorInterface $urlGenerator
- * @var \Yiisoft\Session\Flash\FlashInterface $flash_interface
  */
 
 $numberhelper = new NumberHelper($s);

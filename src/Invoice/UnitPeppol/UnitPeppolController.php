@@ -27,7 +27,7 @@ use Yiisoft\Session\Flash\Flash;
 use Yiisoft\Translator\TranslatorInterface;
 use Yiisoft\FormModel\FormHydrator;
 use Yiisoft\Data\Cycle\Reader\EntityReader;
-use Yiisoft\Yii\View\ViewRenderer;
+use Yiisoft\Yii\View\Renderer\ViewRenderer;
 
 use \Exception;
 
@@ -80,7 +80,8 @@ final class UnitPeppolController
         $form = new UnitPeppolForm($unitPeppol);
         $parameters = [
             'title' => $this->translator->translate('invoice.unit.peppol.add'),
-            'action' => ['unitpeppol/add'],
+            'actionName' => 'unitpeppol/add',
+            'actionArguments' => [],
             'form' => $form,
             'errors' => [],
             'eneces' => $enece_array,
@@ -90,8 +91,6 @@ final class UnitPeppolController
         
         if ($request->getMethod() === Method::POST) {
             $body = $request->getParsedBody();
-            //echo \Yiisoft\VarDumper\VarDumper::dump($body);
-            //echo \Yiisoft\VarDumper\VarDumper::dump($enece_array);
             /** 
              * @var string $body['code']
              */
@@ -128,7 +127,7 @@ final class UnitPeppolController
      * @return string
      */
     private function alert(): string {
-      return $this->viewRenderer->renderPartialAsString('/invoice/layout/alert',
+      return $this->viewRenderer->renderPartialAsString('//invoice/layout/alert',
       [ 
         'flash' => $this->flash
       ]);
@@ -208,8 +207,11 @@ final class UnitPeppolController
             $form = new UnitPeppolForm($unitPeppol);
             $parameters = [
                 'title' => $this->translator->translate('i.edit'),
-                'action' => ['unitpeppol/edit', ['id' => $unitPeppol->getId()]],
+                'actionName' => 'unitpeppol/edit', 
+                'actionArguments' => ['id' => $unitPeppol->getId()],
+                'eneces' => $enece_array,
                 'errors' => [],
+                'form' => $form,
                 'optionsDataEneces' => $this->optionsDataEneces($enece_array),
                 'optionsDataUnits' => $this->optionsDataUnits($units)
             ];
@@ -275,7 +277,8 @@ final class UnitPeppolController
             $form = new UnitPeppolForm($unitPeppol);
             $parameters = [
                 'title' => $this->translator->translate('i.view'),
-                'action' => ['unitpeppol/view', ['id' => $unitPeppol->getId()]],
+                'actionName' => 'unitpeppol/view',
+                'actionArguments' => ['id' => $unitPeppol->getId()],
                 'form' => $form,
                 'eneces' => $eneceArray,
                 'optionsDataEneces' => $this->optionsDataEneces($eneceArray),

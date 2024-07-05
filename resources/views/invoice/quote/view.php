@@ -317,7 +317,7 @@ $vat = $s->get_setting('enable_vat_registration');
                                     <div class="quote-properties">
                                         <label for="quote_guest_url" hidden><?php echo $translator->translate('i.guest_url'); ?></label>
                                         <div class="input-group" hidden>
-                                            <input type="text" id="quote_guest_url" readonly class="form-control" value="<?=  '/invoice/quote/url_key/'.$quote->getUrl_key(); ?>" hidden>
+                                            <input type="text" id="quote_guest_url" readonly class="form-control" value="<?=  'quote/url_key/'.$quote->getUrl_key(); ?>" hidden>
                                             <span class="input-group-text to-clipboard cursor-pointer"
                                                   data-clipboard-target="#quote_guest_url">
                                                 <i class="fa fa-clipboard fa-fw"></i>

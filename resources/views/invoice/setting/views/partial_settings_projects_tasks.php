@@ -1,9 +1,13 @@
 <?php
     declare(strict_types=1);
     
-    use Yiisoft\Html\Html;
+    /**
+     * @var App\Invoice\Setting\SettingRepository $s 
+     * @var Yiisoft\Translator\TranslatorInterface $translator
+     * @var array $body
+     */
 ?>
-<?= Html::openTag('div', ['class' => 'row']); ?>
+<div class='row'>
     <div class="col-xs-12 col-md-8 col-md-offset-2">
 
         <div class="panel panel-default">
@@ -12,7 +16,7 @@
             </div>
             <div class="panel-body">
 
-                <?= Html::openTag('div', ['class' => 'row']); ?>
+                <div class='row'>
                     <div class="col-xs-12 col-md-6">
 
                         <div class="form-group">
@@ -41,7 +45,7 @@
                             <div class="input-group">
                                 <input type="text" name="settings[default_hourly_rate]" id="settings[default_hourly_rate]"
                                     class="form-control amount"
-                                    value="<?= $body['settings[default_hourly_rate]'] ? format_amount($body['settings[default_hourly_rate]']) : $body['settings[default_hourly_rate]']; ?>">
+                                    value="<?= $body['settings[default_hourly_rate]'] ? $s->format_amount((float)$body['settings[default_hourly_rate]']) : $body['settings[default_hourly_rate]']; ?>">
                                 <span class="input-group-addon"><?= $s->get_setting('currency_symbol'); ?></span>
                                 <input type="hidden" name="settings[default_hourly_rate_field_is_amount]" value="1">
                             </div>

@@ -1210,7 +1210,7 @@ return [
 'invoice.invoice.qr.code.settings.effect' => 'Yuqoridagi sozlamalar ushbu Qr kodiga qanday ta\'sir qiladi?',
 'invoice.invoice.qr.code.settings.effect.explanation' => 'Haqiqiy kodda ... yo\'q. Barcha standart sozlamalar ishlatiladi, chunki yuqoridagi asosiy haqiqiy kod ishlatiladi.',
 'invoice.invoice.qr.code.source' => 'Qr kod manbai',
-'invoice.invoice.qr.code.source.path' => 'resurslar\views\invoice\setting\company_logo_and_address.php',
+'invoice.invoice.qr.code.source.path' => 'resources\views\invoice\setting\company_logo_and_address.php',
 'invoice.invoice.qr.code.type' => 'QR kod turi',
 'invoice.invoice.qr.code.type.absolute.url' => 'Mutlaq (butun) URL asosida',
 'invoice.invoice.qr.code.widget.used' => 'Vidjet ishlatilgan',

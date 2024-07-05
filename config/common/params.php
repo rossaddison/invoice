@@ -14,15 +14,17 @@ use Yiisoft\FormModel\ValidationRulesEnricher;
 use Yiisoft\Router\CurrentRoute;
 use Yiisoft\Router\UrlGeneratorInterface;
 use Yiisoft\Translator\TranslatorInterface;
-use Yiisoft\Yii\Cycle\Schema\Conveyor\AttributedSchemaConveyor;
+use Yiisoft\Yii\Cycle\Schema\Conveyor\MetadataSchemaConveyor;
 use Yiisoft\Yii\Cycle\Schema\Provider\FromConveyorSchemaProvider;
 use Cycle\Schema\Provider\PhpFileSchemaProvider;
 use Yiisoft\Yii\DataView\OffsetPagination;
 use Yiisoft\Yii\DataView\Column\DataColumn;
-use Yiisoft\Yii\View\CsrfViewInjection;
+use Yiisoft\Yii\View\Renderer\CsrfViewInjection;
 // yii3-i
 use App\Invoice\Helpers\DateHelper;
 use App\Invoice\Helpers\NumberHelper;
+use App\Invoice\Helpers\Peppol\Peppol_UNECERec20_11e;
+use App\Invoice\Client\ClientRepository;
 use App\Invoice\Setting\SettingRepository;
 use App\Widget\Button;
 use App\Widget\PageSizeLimiter;
@@ -138,6 +140,7 @@ return [
   ],
   'yiisoft/router-fastroute' => [
     'enableCache' => false,
+    'encodeRaw' => true,  
   ],
   'yiisoft/translator' => [
     'locale' => 'en',
@@ -162,7 +165,9 @@ return [
       'dateHelper' => Reference::to(DateHelper::class),  
       'numberHelper' => Reference::to(NumberHelper::class),
       'pageSizeLimiter' => Reference::to(PageSizeLimiter::class),
-      'gridComponents' => Reference::to(GridComponents::class)  
+      'peppolUNECERec2011e' => Reference::to(Peppol_UNECERec20_11e::class),  
+      'gridComponents' => Reference::to(GridComponents::class),
+      'cR' => Reference::to(ClientRepository::class)
     ],
   ],
   'yiisoft/cookies' => [
@@ -173,7 +178,7 @@ return [
   'yiisoft/yii-debug' => [
     'enabled' => false,  
   ],  
-  'yiisoft/yii-view' => [
+  'yiisoft/yii-view-renderer' => [
     'viewPath' => '@views',
     //'layout' => '@views/layout/main.php',  
     'layout' => '@views/layout/templates/soletrader/main.php',
@@ -209,9 +214,9 @@ return [
         // yii-invoice
         'mysql' => new \Cycle\Database\Config\MySQLDriverConfig(
           connection:
-          new \Cycle\Database\Config\MySQL\DsnConnectionConfig('mysql:host=localhost;dbname=yii3-i',
+          new \Cycle\Database\Config\MySQL\DsnConnectionConfig('mysql:host=localhost;dbname=yii3-i', 
             'root',
-            ''),
+            null),
           driver: \Cycle\Database\Driver\MySQL\MySQLDriver::class,
         ),
       ],
@@ -256,12 +261,13 @@ return [
           
         /** Note as at 15/06/2024: If you have adjusted any Entity file you will have to always make two adjustments to
          * ensure the database is updated with the new changes and relevent fields:
-         * 1. Change the false here immediately below to true i.e. 'mode' => true ? ...
+         * 1. Change the mode immediately below
          * 2. Change the BUILD_DATABASE = false in the .env file at the root to BUILD_DATABASE = true
          * 3. Once the changes have been reflected and you have checked them via e.g. phpMyAdmin revert back to the original settings
-          */  
-        'mode' => false ? PhpFileSchemaProvider::MODE_WRITE_ONLY : PhpFileSchemaProvider::MODE_READ_AND_WRITE,
-        'file' => 'runtime/schema.php',
+         * Mode: PhpFileSchemaProvider::MODE_WRITE_ONLY : PhpFileSchemaProvider::MODE_READ_AND_WRITE  
+         */
+        'mode' => PhpFileSchemaProvider::MODE_READ_AND_WRITE,
+        'file' => 'runtime/schema.php'
       ],
       FromConveyorSchemaProvider::class => [
         'generators' => [
@@ -277,7 +283,7 @@ return [
     'entity-paths' => [
       '@src',
     ],
-    'conveyor' => AttributedSchemaConveyor::class,
+    'conveyor' => MetadataSchemaConveyor::class,
   ],
   'yiisoft/yii-swagger' => [
     'annotation-paths' => [

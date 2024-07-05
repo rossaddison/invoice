@@ -1,3 +1,18 @@
+<?php
+
+    declare(strict_types=1);
+
+    /**
+     * @var Yiisoft\Translator\TranslatorInterface $translator
+     * @var Yiisoft\Router\UrlGeneratorInterface $urlGenerator
+     * @var string $csrf
+     * @var string $heading
+     * @var string $id
+     * @var string $message
+     * @var string $url
+     * @psalm-var array<string, Stringable|null|scalar> $actionArguments
+     */ 
+?>
 <!doctype html>
 <html lang="en">
     <head>
@@ -55,24 +70,12 @@
 
         </style>
     </head>
-    <body>
-        <?php
-        /**
-         * @var \Yiisoft\View\WebView $this
-         * @var \Yiisoft\Router\UrlGeneratorInterface $urlGenerator
-         * @var array $body
-         * @var string $csrf
-         * @var string $action
-         * @var string $title
-         * @var string $cldr
-         * @var \Yiisoft\Session\Flash\FlashInterface $flash
-         */
-        ?>
+    <body>        
         <h1><?php echo $heading; ?></h1>
         <?php echo $message; ?>
-        <form method="POST" class="form-inline" action="<?= $urlGenerator->generate($url, ['id' => $id, '_language' => 'en']); ?>">
+        <form method="POST" class="form-inline" action="<?= $urlGenerator->generate($url, $actionArguments = ['id' => $id, '_language' => 'en']); ?>">
             <input type="hidden" name="_csrf" value="<?= $csrf ?>">
-            <button type="submit" class="btn btn-xs btn-link">Ok</button>
+            <button type="submit" class="btn btn-xs btn-link">✅</button>
         </form>
     </body>
 </html>
