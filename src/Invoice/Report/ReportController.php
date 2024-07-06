@@ -504,7 +504,7 @@ class ReportController
         'actionName' => 'report/sales_by_product_index',
         'actionArguments' => [],  
         'dateHelper'=> $dateHelper,
-        'startTaxYear' => $dateHelper->tax_year_to_immutable(),
+        'startTaxYear' => ($dateHelper->tax_year_to_immutable())->format($dateHelper->style())
       ];
       if ($request->getMethod() === Method::POST) { 
           $body = $request->getParsedBody();
