@@ -77,7 +77,7 @@ final class CustomFieldController
         ->withCurrentPage((int)$page)
         ->withToken(PageToken::next((string)$page));          
         $canEdit = $this->rbac();
-        $this->flash_message('info' , $this->viewRenderer->renderPartialAsString('info/custom_field'));
+        $this->flash_message('info' , $this->viewRenderer->renderPartialAsString('//invoice/info/custom_field'));
         $parameters = [
             'page' => $page,
             'paginator' => $paginator, 

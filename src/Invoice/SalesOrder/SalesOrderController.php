@@ -290,7 +290,7 @@ final class SalesOrderController
                      *  @var string $so_label 
                      */
                     $so_label = $so_statuses[$status_id]['label'];
-                    return $this->factory->createResponse($this->viewRenderer->renderPartialAsString('setting/salesorder_successful',
+                    return $this->factory->createResponse($this->viewRenderer->renderPartialAsString('//invoice/setting/salesorder_successful',
                     [
                         'heading' => $so_label, 
                         'message' => $this->translator->translate('i.record_successfully_updated'),
@@ -319,7 +319,7 @@ final class SalesOrderController
                     $so->setStatus_id(9);
                     $soR->save($so);
                     return $this->factory->createResponse(
-                        $this->viewRenderer->renderPartialAsString('setting/salesorder_successful',
+                        $this->viewRenderer->renderPartialAsString('//invoice/setting/salesorder_successful',
                         [
                             'heading' => $soR->getSpecificStatusArrayLabel((string)9), 
                             'message'=> $this->translator->translate('i.record_successfully_updated'),
@@ -432,7 +432,7 @@ final class SalesOrderController
                 // if the delivery location is zero present the link to delivery locations add
                 'del_count' => $delRepo->repoClientCount($so->getClient_id()),
                 'dels' => $dels,
-                'terms_and_conditions_file' => $this->viewRenderer->renderPartialAsString('salesorder/terms_and_conditions_file'),
+                'terms_and_conditions_file' => $this->viewRenderer->renderPartialAsString('//invoice/salesorder/terms_and_conditions_file'),
                 'terms_and_conditions' => $settingRepository->getTermsAndConditions(),
                 // if there are no delivery locations add a flash message
                 'no_delivery_locations' => $delRepo->repoClientCount($so->getClient_id()) > 0 ? '' : $this->flash_message('warning', $this->translator->translate('invoice.quote.delivery.location.none')),
@@ -602,7 +602,7 @@ final class SalesOrderController
                         'terms_and_conditions' => $settingRepository->getTermsAndConditions(),
                         'soStatuses' => $soR->getStatuses($this->translator),  
                         'salesOrderCustomValues' => $salesorder_custom_values,
-                        'partial_item_table' => $this->viewRenderer->renderPartialAsString('salesorder/partial_item_table',[
+                        'partial_item_table' => $this->viewRenderer->renderPartialAsString('//invoice/salesorder/partial_item_table',[
                             'invEdit' => $this->userService->hasPermission('editInv') ? true : false,    
                             'invView' => $this->userService->hasPermission('viewInv') ? true : false,
                             'numberhelper' => new NumberHelper($settingRepository),          
@@ -614,14 +614,14 @@ final class SalesOrderController
                             'trR' => $trR,
                             'uR' => $uR,
                         ]),
-                        'modal_salesorder_to_pdf' => $this->viewRenderer->renderPartialAsString('salesorder/modal_salesorder_to_pdf',[
+                        'modal_salesorder_to_pdf' => $this->viewRenderer->renderPartialAsString('//invoice/salesorder/modal_salesorder_to_pdf',[
                             'so' => $so,                        
                         ]),
-                        'modal_so_to_invoice'=>$this->viewRenderer->renderPartialAsString('salesorder/modal_so_to_invoice',[
+                        'modal_so_to_invoice'=>$this->viewRenderer->renderPartialAsString('//invoice/salesorder/modal_so_to_invoice',[
                             'so' => $so,                        
                             'gR' => $gR,
                         ]),
-                        'view_custom_fields'=>$this->viewRenderer->renderPartialAsString('salesorder/view_custom_fields', [
+                        'view_custom_fields'=>$this->viewRenderer->renderPartialAsString('//invoice/salesorder/view_custom_fields', [
                             'customFields' => $cfR->repoTablequery('salesorder_custom'),
                             'customValues' => $cvR->attach_hard_coded_custom_field_values_to_custom_field($cfR->repoTablequery('salesorder_custom')),
                             'form' => $form,
@@ -980,9 +980,9 @@ final class SalesOrderController
                                 $salesorder_amount = (($soaR->repoSalesOrderAmountCount($salesorder_id) > 0) ? $soaR->repoSalesOrderquery($salesorder_id) : null);
                                 if ($salesorder_amount) {
                                     $parameters = [            
-                                        'render'=> $this->viewRenderer->renderPartialAsString('template/salesorder/public/' . ($this->sR->get_setting('public_salesorder_template') ?: 'SalesOrder_Web'), [
+                                        'render'=> $this->viewRenderer->renderPartialAsString('//invoice/template/salesorder/public/' . ($this->sR->get_setting('public_salesorder_template') ?: 'SalesOrder_Web'), [
                                             'isGuest' => $currentUser->isGuest(),
-                                            'terms_and_conditions_file'=>$this->viewRenderer->renderPartialAsString('salesorder/terms_and_conditions_file'),
+                                            'terms_and_conditions_file'=>$this->viewRenderer->renderPartialAsString('//invoice/salesorder/terms_and_conditions_file'),
                                             // TODO logo
                                             'logo'=> '',
                                             'alert' => $this->alert(),

@@ -69,22 +69,6 @@ final class QuoteItemController
         $this->translator = $translator;
     }
     
-    /**
-     * @param QIR $qiR
-     */
-    public function index(QIR $qiR): \Yiisoft\DataResponse\DataResponse
-    {       
-         $canEdit = $this->rbac();
-         $parameters = [ 
-          'quote_id'=>$this->session->get('quote_id'),
-          'canEdit' => $canEdit,
-          'quoteitems' => $this->quoteitems($qiR),
-          'alert' => $this->alert() 
-         ];
-        
-        return $this->viewRenderer->render('index', $parameters);
-    }
-    
     // Quoteitem/add accessed from quote/view renderpartialasstring add_quote_item
     // Triggered by clicking on the save button on the item view appearing above the quote view
     

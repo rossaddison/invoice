@@ -116,7 +116,7 @@ final class UserClientController
             if (null!==$user_inv) {
                 $this->flash_message('info', $this->translator->translate('i.record_successfully_deleted'));
                 return $this->factory->createResponse(
-                        $this->viewRenderer->renderPartialAsString('setting/userclient_successful',
+                        $this->viewRenderer->renderPartialAsString('//invoice/setting/userclient_successful',
                         [
                             'heading'=>$this->translator->translate('i.client'),
                             'message'=> $this->translator->translate('i.record_successfully_deleted'),

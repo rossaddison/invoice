@@ -804,7 +804,7 @@ class ProductController
           $parameters = [
             'title' => $this->translator->translate('i.view'),
             'action' => ['product/view', ['id' => $product_id]],
-            'partial_product_details' => $this->viewRenderer->renderPartialAsString('product/views/partial_product_details',
+            'partial_product_details' => $this->viewRenderer->renderPartialAsString('//invoice/product/views/partial_product_details',
             [
                 'form' => $productForm,
                 'standard_item_identification_schemeids' => $peppolarrays->getIso_6523_icd(),
@@ -822,18 +822,18 @@ class ProductController
                 //load Entity\Product BelongTo relations ie. $family, $tax_rate, $unit by means of repoProductQuery             
                 'product' => $pR->repoProductquery($product_id),
             ]),
-            'partial_product_properties' => $this->viewRenderer->renderPartialAsString('product/views/partial_product_properties',
+            'partial_product_properties' => $this->viewRenderer->renderPartialAsString('//invoice/product/views/partial_product_properties',
               [
                 'product'=>$pR->repoProductquery($product_id),
                 'language'=>$language,
-                'productpropertys' => $this->viewRenderer->renderPartialAsString('product/views/property_index', [
+                'productpropertys' => $this->viewRenderer->renderPartialAsString('//invoice/product/views/property_index', [
                   'all' => $ppR->findAllProduct($product_id),
                   'language' => $language
                 ]) 
               ]
             ),
             'partial_product_images' => $this->view_partial_product_image($language, (int) $product_id, $piR, $sR),
-            'partial_product_gallery' => $this->viewRenderer->renderPartialAsString('product/views/partial_product_gallery', [
+            'partial_product_gallery' => $this->viewRenderer->renderPartialAsString('//invoice/product/views/partial_product_gallery', [
               'product' => $product,
               'product_images' => $product_images,             
               'invEdit' => $this->userService->hasPermission('editInv'),
@@ -937,12 +937,12 @@ class ProductController
         $paginator = new DataOffsetPaginator($productimages);
         $invEdit = $this->userService->hasPermission('editInv');
         $invView = $this->userService->hasPermission('viewInv');
-        return $this->viewRenderer->renderPartialAsString('product/views/partial_product_image', [
+        return $this->viewRenderer->renderPartialAsString('//invoice/product/views/partial_product_image', [
           'form' => new ImageAttachForm(),
           'invEdit' => $invEdit,
           'invView' => $invView,
-          'partial_product_image_info' => $this->viewRenderer->renderPartialAsString('product/views/partial_product_image_info'),
-          'partial_product_image_list' => $this->viewRenderer->renderPartialAsString('product/views/partial_product_image_list', [
+          'partial_product_image_info' => $this->viewRenderer->renderPartialAsString('//invoice/product/views/partial_product_image_info'),
+          'partial_product_image_list' => $this->viewRenderer->renderPartialAsString('//invoice/product/views/partial_product_image_list', [
             'grid_summary' => $sR->grid_summary($paginator, $this->translator, (int) $sR->get_setting('default_list_limit'), $this->translator->translate('invoice.productimage.list'), ''),
             'paginator' => $paginator,
             'invEdit' => $invEdit
@@ -956,7 +956,7 @@ class ProductController
      * @return string
      */
     private function image_attachment_not_writable(int $product_id): string {
-        return $this->viewRenderer->renderPartialAsString('setting/inv_message',
+        return $this->viewRenderer->renderPartialAsString('//invoice/setting/inv_message',
         [
             'heading' => $this->translator->translate('i.errors'), 
             'message' => $this->translator->translate('i.path') . $this->translator->translate('i.is_not_writable'),
@@ -969,7 +969,7 @@ class ProductController
      * @return string
      */
     private function image_attachment_successfully_created(int $product_id): string {
-        return $this->viewRenderer->renderPartialAsString('setting/inv_message',
+        return $this->viewRenderer->renderPartialAsString('//invoice/setting/inv_message',
         [
             'heading' => '', 
             'message' => $this->translator->translate('i.record_successfully_created'),
@@ -982,7 +982,7 @@ class ProductController
      * @return string
      */
     private function image_attachment_no_file_uploaded(int $product_id): string {
-        return $this->viewRenderer->renderPartialAsString('setting/inv_message',
+        return $this->viewRenderer->renderPartialAsString('//invoice/setting/inv_message',
         [
             'heading' => $this->translator->translate('i.errors'), 
             'message' => $this->translator->translate('invoice.productimage.no.file.uploaded'),

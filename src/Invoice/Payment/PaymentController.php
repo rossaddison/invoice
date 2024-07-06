@@ -992,7 +992,7 @@ final class PaymentController
      * @return string
      */
     private function view_custom_fields(CustomFieldRepository $cfR, CustomValueRepository $cvR, array $payment_custom_values, SettingRepository $settingRepository): string {
-        return $this->viewRenderer->renderPartialAsString('payment/view_custom_fields', [
+        return $this->viewRenderer->renderPartialAsString('//invoice/payment/view_custom_fields', [
             'custom_fields' => $cfR->repoTablequery('payment_custom'),
             'custom_values' => $cvR->attach_hard_coded_custom_field_values_to_custom_field($cfR->repoTablequery('payment_custom')),
             'payment_custom_values' => $payment_custom_values,

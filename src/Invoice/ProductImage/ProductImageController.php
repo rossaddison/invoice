@@ -174,7 +174,7 @@ final class ProductImageController {
                 $this->productimageService->deleteProductImage($productimage, $settingRepository);
                 $product_id = (string) $productimage->getProduct()?->getProduct_id();
                 $this->flash_message('info', $this->translator->translate('i.record_successfully_deleted'));
-                return $this->factory->createResponse($this->viewRenderer->renderPartialAsString('setting/inv_message',
+                return $this->factory->createResponse($this->viewRenderer->renderPartialAsString('//invoice/setting/inv_message',
                 [
                     'heading' => '', 
                     'message' => $this->translator->translate('i.record_successfully_deleted'), 

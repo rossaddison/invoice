@@ -69,9 +69,9 @@ final class Bootstrap5ModalInv
         ];
         $this->layoutParameters = [
             'type' => 'inv',
-            'form' => $this->viewRenderer->renderPartialAsString('inv/modal_add_inv_form', $this->formParameters),
+            'form' => $this->viewRenderer->renderPartialAsString('//invoice/inv/modal_add_inv_form', $this->formParameters),
         ];    
-        return $this->viewRenderer->renderPartialAsString('inv/modal_layout', $this->layoutParameters);
+        return $this->viewRenderer->renderPartialAsString('//invoice/inv/modal_layout', $this->layoutParameters);
     }
 
     /**

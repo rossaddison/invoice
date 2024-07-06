@@ -573,7 +573,7 @@ final class ClientController
             'grid_summary' => $sR->grid_summary($paginator, $this->translator, (int)$sR->get_setting('default_list_limit'), $this->translator->translate('invoice.clients'), ''),
             'defaultPageSizeOffsetPaginator' => $sR->get_setting('default_list_limit')
                                                     ? (int)$sR->get_setting('default_list_limit') : 1,
-            'modal_create_client' => $this->viewRenderer->renderPartialAsString('modal_create_client',[
+            'modal_create_client' => $this->viewRenderer->renderPartialAsString('//invoice/client/modal_create_client',[
                 'datehelper' => new DateHelper($sR)
             ]),
             'optionsDataClientNameDropdownFilter' => $this->optionsDataClientNameDropdownFilter($cR),
@@ -624,7 +624,7 @@ final class ClientController
                         'grid_summary' => $sR->grid_summary($paginator, $this->translator, (int)$sR->get_setting('default_list_limit'), $this->translator->translate('invoice.clients'), ''),                
                         'defaultPageSizeOffsetPaginator' => $sR->get_setting('default_list_limit')
                                                             ? (int)$sR->get_setting('default_list_limit') : 1,
-                        'modal_create_client' => $this->viewRenderer->renderPartialAsString('modal_create_client',[
+                        'modal_create_client' => $this->viewRenderer->renderPartialAsString('//invoice/modal_create_client',[
                             'datehelper'=> new DateHelper($sR)
                         ])
                     ];    
@@ -1002,14 +1002,14 @@ final class ClientController
                     'client_custom_values'=>$this->client_custom_values((string)$client_id, $ccR),
                     'client' => $client,            
                     'client_notes' => $cnR->repoClientNoteCount($client_id) > 0 ? $cnR->repoClientquery((string)$client_id) : [],
-                    'partial_client_address' => $this->viewRenderer->renderPartialAsString('client/partial_client_address', [
+                    'partial_client_address' => $this->viewRenderer->renderPartialAsString('//invoice/client/partial_client_address', [
                         'client' => $client,            
                         'countryhelper' => new CountryHelper(),
                     ]),
                     // Note here the client_id is presented as the 'origin'. Origin could be 'quote', 'main', 'dashboard'
                     'client_modal_layout_quote' => $bootstrap5ModalQuote->renderPartialLayoutWithFormAsString((string)$client_id, []),
                     'client_modal_layout_inv'=> $bootstrap5ModalInv->renderPartialLayoutWithFormAsString((string)$client_id, []),  
-                    'quote_table' => $this->viewRenderer->renderPartialAsString('quote/partial_quote_table', [
+                    'quote_table' => $this->viewRenderer->renderPartialAsString('//invoice/quote/partial_quote_table', [
                         'qaR'=> $qaR,
                         'quote_count' => $qR->repoCountByClient($client_id),
                         'quotes' => $qR->repoClient($client_id),
@@ -1017,7 +1017,7 @@ final class ClientController
                         'datehelper' => new DateHelper($sR),
                         'quote_statuses' => $qR->getStatuses($this->translator),
                     ]),
-                    'quote_draft_table'=>$this->viewRenderer->renderPartialAsString('quote/partial_quote_table', [
+                    'quote_draft_table'=>$this->viewRenderer->renderPartialAsString('//invoice/quote/partial_quote_table', [
                         'qaR'=> $qaR,
                         'quote_count' => $qR->by_client_quote_status_count($client_id,1),
                         'quotes' => $qR->by_client_quote_status($client_id,1),
@@ -1025,7 +1025,7 @@ final class ClientController
                         'datehelper' => new DateHelper($sR),
                         'quote_statuses' => $qR->getStatuses($this->translator),
                     ]),
-                    'quote_sent_table'=>$this->viewRenderer->renderPartialAsString('quote/partial_quote_table', [
+                    'quote_sent_table'=>$this->viewRenderer->renderPartialAsString('//invoice/quote/partial_quote_table', [
                         'qaR'=> $qaR,
                         'quote_count' => $qR->by_client_quote_status_count($client_id,2),
                         'quotes' => $qR->by_client_quote_status($client_id,2),
@@ -1033,7 +1033,7 @@ final class ClientController
                         'datehelper' => new DateHelper($sR),
                         'quote_statuses' => $qR->getStatuses($this->translator),
                     ]),
-                    'quote_viewed_table'=>$this->viewRenderer->renderPartialAsString('quote/partial_quote_table', [
+                    'quote_viewed_table'=>$this->viewRenderer->renderPartialAsString('//invoice/quote/partial_quote_table', [
                         'qaR'=> $qaR,
                         'quote_count' => $qR->by_client_quote_status_count($client_id,3),
                         'quotes' => $qR->by_client_quote_status($client_id,3),
@@ -1041,7 +1041,7 @@ final class ClientController
                         'datehelper' => new DateHelper($sR),
                         'quote_statuses' => $qR->getStatuses($this->translator),
                     ]),
-                    'quote_approved_table'=>$this->viewRenderer->renderPartialAsString('quote/partial_quote_table', [
+                    'quote_approved_table'=>$this->viewRenderer->renderPartialAsString('//invoice/quote/partial_quote_table', [
                         'qaR'=> $qaR,
                         'quote_count' => $qR->by_client_quote_status_count($client_id,4),
                         'quotes' => $qR->by_client_quote_status($client_id,4),
@@ -1049,7 +1049,7 @@ final class ClientController
                         'datehelper' => new DateHelper($sR),
                         'quote_statuses' => $qR->getStatuses($this->translator),
                     ]),
-                    'quote_rejected_table'=>$this->viewRenderer->renderPartialAsString('quote/partial_quote_table', [
+                    'quote_rejected_table'=>$this->viewRenderer->renderPartialAsString('//invoice/quote/partial_quote_table', [
                         'qaR'=> $qaR,
                         'quote_count' => $qR->by_client_quote_status_count($client_id,5),
                         'quotes' => $qR->by_client_quote_status($client_id,5),
@@ -1057,7 +1057,7 @@ final class ClientController
                         'datehelper' => new DateHelper($sR),
                         'quote_statuses' => $qR->getStatuses($this->translator),
                     ]),
-                    'quote_cancelled_table'=>$this->viewRenderer->renderPartialAsString('quote/partial_quote_table', [
+                    'quote_cancelled_table'=>$this->viewRenderer->renderPartialAsString('//invoice/quote/partial_quote_table', [
                         'qaR'=> $qaR,
                         'quote_count' => $qR->by_client_quote_status_count($client_id,6),
                         'quotes' => $qR->by_client_quote_status($client_id,6),
@@ -1065,7 +1065,7 @@ final class ClientController
                         'datehelper' => new DateHelper($sR),
                         'quote_statuses' => $qR->getStatuses($this->translator),
                     ]),
-                    'invoice_table'=>$this->viewRenderer->renderPartialAsString('inv/partial_inv_table', [
+                    'invoice_table'=>$this->viewRenderer->renderPartialAsString('//invoice/inv/partial_inv_table', [
                         'iaR'=> $iaR,
                         'irR'=> $irR,
                         'invoice_count'=>$iR->repoCountByClient($client_id),
@@ -1075,7 +1075,7 @@ final class ClientController
                         'inv_statuses' => $iR->getStatuses($this->translator),
                         'session' => $session,
                     ]),
-                    'invoice_draft_table'=>$this->viewRenderer->renderPartialAsString('inv/partial_inv_table', [
+                    'invoice_draft_table'=>$this->viewRenderer->renderPartialAsString('//invoice/inv/partial_inv_table', [
                         'iaR'=> $iaR,
                         'irR'=> $irR,
                         'invoice_count' => $iR->by_client_inv_status_count($client_id,1),    
@@ -1084,7 +1084,7 @@ final class ClientController
                         'datehelper' => new DateHelper($sR),
                         'inv_statuses' => $iR->getStatuses($this->translator)
                     ]),
-                    'invoice_sent_table'=>$this->viewRenderer->renderPartialAsString('inv/partial_inv_table', [
+                    'invoice_sent_table'=>$this->viewRenderer->renderPartialAsString('//invoice/inv/partial_inv_table', [
                         'iaR'=> $iaR,
                         'irR'=> $irR,
                         'invoice_count' => $iR->by_client_inv_status_count($client_id,2),    
@@ -1093,7 +1093,7 @@ final class ClientController
                         'datehelper' => new DateHelper($sR),
                         'inv_statuses' => $iR->getStatuses($this->translator)
                     ]),
-                    'invoice_viewed_table'=>$this->viewRenderer->renderPartialAsString('inv/partial_inv_table', [
+                    'invoice_viewed_table'=>$this->viewRenderer->renderPartialAsString('//invoice/inv/partial_inv_table', [
                         'iaR'=> $iaR,
                         'irR'=> $irR,
                         'invoice_count' => $iR->by_client_inv_status_count($client_id,3),    
@@ -1102,7 +1102,7 @@ final class ClientController
                         'datehelper' => new DateHelper($sR),
                         'inv_statuses' => $iR->getStatuses($this->translator)
                     ]),
-                    'invoice_paid_table'=>$this->viewRenderer->renderPartialAsString('inv/partial_inv_table', [
+                    'invoice_paid_table'=>$this->viewRenderer->renderPartialAsString('//invoice/inv/partial_inv_table', [
                         'iaR'=> $iaR,
                         'irR'=> $irR,
                         'invoice_count' => $iR->by_client_inv_status_count($client_id,4),    
@@ -1111,18 +1111,18 @@ final class ClientController
                         'datehelper' => new DateHelper($sR),
                         'inv_statuses' => $iR->getStatuses($this->translator)
                     ]),
-                    'partial_notes'=>$this->viewRenderer->renderPartialAsString('clientnote/partial_notes', [
+                    'partial_notes'=>$this->viewRenderer->renderPartialAsString('//invoice/clientnote/partial_notes', [
                         'client_notes' => $cnR->repoClientquery((string)$client_id),
                         'datehelper' => new DateHelper($sR),
                     ]),
-                    'payment_table'=>$this->viewRenderer->renderPartialAsString('payment/partial_payment_table', [
+                    'payment_table'=>$this->viewRenderer->renderPartialAsString('//invoice/payment/partial_payment_table', [
                         'client'=> $client,
                         // All payments from the client are loaded and filtered in the view with 
                         // if ($payment->getInv()->getClient_id() === $client->getClient_id())
                         'payments'=> $pymtR->repoPaymentInvLoadedAll((int)$sR->get_setting('payment_list_limit') ?: 10),
                         'clienthelper' => new ClientHelper($sR),
                     ]), 
-                    'delivery_locations'=>$this->viewRenderer->renderPartialAsString('client/client_delivery_location_list', [
+                    'delivery_locations'=>$this->viewRenderer->renderPartialAsString('//invoice/client/client_delivery_location_list', [
                         'client'=> $client,
                         'locations'=> $delR->repoClientquery((string)$client->getClient_id()),
                         'clienthelper' => new ClientHelper($sR),

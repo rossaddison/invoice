@@ -115,7 +115,7 @@ final class SalesOrderItemController
                      * @psalm-suppress PossiblyInvalidArgument $body
                      */
                     $this->salesorderitemService->savePeppol_po_lineid($so_item, $body);
-                    return $this->factory->createResponse($this->viewRenderer->renderPartialAsString('setting/salesorder_successful',
+                    return $this->factory->createResponse($this->viewRenderer->renderPartialAsString('//invoice/setting/salesorder_successful',
                     [
                         'heading' => $this->translator->translate('invoice.successful'), 
                         'message' => $this->translator->translate('i.record_successfully_updated'),

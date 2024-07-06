@@ -155,7 +155,7 @@ final class SettingController
             'alert' => $this->alert(),
             'head' => $head,
             'body' => $body,
-            'general'=>$this->viewRenderer->renderPartialAsString('setting/views/partial_settings_general',[
+            'general'=>$this->viewRenderer->renderPartialAsString('//invoice/setting/views/partial_settings_general',[
                 /**
                  * @psalm-suppress PossiblyInvalidArgument
                  */
@@ -170,7 +170,7 @@ final class SettingController
                 'current_date' => new \DateTime(),
                 'icon' => $aliases->get('@icon')
             ]),
-            'invoices'=>$this->viewRenderer->renderPartialAsString('setting/views/partial_settings_invoices',[
+            'invoices'=>$this->viewRenderer->renderPartialAsString('//invoice/setting/views/partial_settings_invoices',[
                 'invoice_groups' => $gR->findAllPreloaded(),
                 'payment_methods' => $pm->findAllPreloaded(),
                 'public_invoice_templates' => $this->s->get_invoice_templates('public'),
@@ -180,33 +180,33 @@ final class SettingController
                 'places' => Sumex::PLACES,
                 'cantons' => Sumex::CANTONS,
             ]),
-            'quotes' => $this->viewRenderer->renderPartialAsString('setting/views/partial_settings_quotes',[
+            'quotes' => $this->viewRenderer->renderPartialAsString('//invoice/setting/views/partial_settings_quotes',[
                 'invoice_groups' => $gR->findAllPreloaded(),
                 'public_quote_templates' => $this->s->get_quote_templates('public'),
                 'pdf_quote_templates' => $this->s->get_quote_templates('pdf'),
                 'email_templates_quote' => $eR->repoEmailTemplateType('quote'),
             ]),
-            'salesorders'=>$this->viewRenderer->renderPartialAsString('setting/views/partial_settings_client_purchase_orders',[
+            'salesorders'=>$this->viewRenderer->renderPartialAsString('//invoice/setting/views/partial_settings_client_purchase_orders',[
                 'gR'=>$gR,
             ]),
-            'taxes'=>$this->viewRenderer->renderPartialAsString('setting/views/partial_settings_taxes',[
+            'taxes'=>$this->viewRenderer->renderPartialAsString('//invoice/setting/views/partial_settings_taxes',[
                 'tax_rates'=>$tR->findAllPreloaded(),
             ]),
-            'email'=>$this->viewRenderer->renderPartialAsString('setting/views/partial_settings_email'),
-            'google_translate'=>$this->viewRenderer->renderPartialAsString('setting/views/partial_settings_google_translate',[
+            'email'=>$this->viewRenderer->renderPartialAsString('//invoice/setting/views/partial_settings_email'),
+            'google_translate'=>$this->viewRenderer->renderPartialAsString('//invoice/setting/views/partial_settings_google_translate',[
                 'locales'=>$this->s->locales(),
             ]),
-            'online_payment'=>$this->viewRenderer->renderPartialAsString('setting/views/partial_settings_online_payment',[
+            'online_payment'=>$this->viewRenderer->renderPartialAsString('//invoice/setting/views/partial_settings_online_payment',[
                 'gateway_drivers' => $this->s->active_payment_gateways(),
                 'gateway_currency_codes' => CurrencyHelper::all(),
                 'gateway_regions' => $this->s->amazon_regions(),
                 'payment_methods' =>  $pm->findAllPreloaded(),                
                 'crypt'=> $crypt
             ]),
-            'mpdf' => $this->viewRenderer->renderPartialAsString('setting/views/partial_settings_mpdf'),            
-            'projects_tasks'=>$this->viewRenderer->renderPartialAsString('setting/views/partial_settings_projects_tasks'),            
-            'vat_registered'=>$this->viewRenderer->renderPartialAsString('setting/views/partial_settings_vat_registered'),
-            'peppol_electronic_invoicing'=>$this->viewRenderer->renderPartialAsString('setting/views/partial_settings_peppol',[
+            'mpdf' => $this->viewRenderer->renderPartialAsString('//invoice/setting/views/partial_settings_mpdf'),            
+            'projects_tasks'=>$this->viewRenderer->renderPartialAsString('//invoice/setting/views/partial_settings_projects_tasks'),            
+            'vat_registered'=>$this->viewRenderer->renderPartialAsString('//invoice/setting/views/partial_settings_vat_registered'),
+            'peppol_electronic_invoicing'=>$this->viewRenderer->renderPartialAsString('//invoice/setting/views/partial_settings_peppol',[
                 'config_tax_currency' => $this->s->get_config_peppol()['TaxCurrencyCode'] ?: $this->s->get_config_company_details()['tax_currency'],
                 'gateway_currency_codes'=>CurrencyHelper::all(),
                 // if delivery/invoice periods are used, a tax point date cannot be determined
@@ -219,17 +219,17 @@ final class SettingController
                 // use crypt to decode the store cove api key
                 'crypt' => $crypt    
             ]),
-            'storecove'=>$this->viewRenderer->renderPartialAsString('setting/views/partial_settings_storecove',[
+            'storecove'=>$this->viewRenderer->renderPartialAsString('//invoice/setting/views/partial_settings_storecove',[
                 'countries'=>$countries->get_country_list((string)$this->session->get('_language')),
                 'sender_identifier_array'=>StoreCoveArrays::store_cove_sender_identifier_array(),
             ]),
-            'invoiceplane'=>$this->viewRenderer->renderPartialAsString('setting/views/partial_settings_invoiceplane',[
+            'invoiceplane'=>$this->viewRenderer->renderPartialAsString('//invoice/setting/views/partial_settings_invoiceplane',[
                 'actionTestConnectionName' => 'import/testconnection',
                 'actionTestConnectionArguments' => ['_language' => 'en'],
                 'actionImportName' => 'import/invoiceplane',
                 'actionImportArguments' => ['_language' => 'en'],
             ]),
-            'qrcode' => $this->viewRenderer->renderPartialAsString('setting/views/partial_settings_qr_code',[
+            'qrcode' => $this->viewRenderer->renderPartialAsString('//invoice/setting/views/partial_settings_qr_code',[
             ])
         ];
         if ($request->getMethod() === Method::POST) {

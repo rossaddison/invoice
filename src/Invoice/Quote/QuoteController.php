@@ -581,7 +581,7 @@ final class QuoteController
                     $quote_id = $quote->getId();
                     $quote->setStatus_id(5);
                     $qR->save($quote);
-                    return $this->factory->createResponse($this->view_renderer->renderPartialAsString('setting/quote_successful',
+                    return $this->factory->createResponse($this->view_renderer->renderPartialAsString('//invoice/setting/quote_successful',
                     ['heading' => $this->translator->translate('i.record_successfully_updated'),'url'=>'quote/view','id'=>$quote_id]));  
                 }    
                 return $this->web_service->getNotFoundResponse();
@@ -860,7 +860,7 @@ final class QuoteController
             unset($e);
             $this->flash_message('danger', $this->translator->translate('invoice.quote.item.cannot.delete'));
         }
-        return $this->factory->createResponse($this->view_renderer->renderPartialAsString('setting/quote_successful',
+        return $this->factory->createResponse($this->view_renderer->renderPartialAsString('//invoice/setting/quote_successful',
         ['heading' => '','message' => $this->translator->translate('i.record_successfully_deleted'),'url' => 'quote/view','id'=>$quote_id]));  
     }
     
@@ -877,7 +877,7 @@ final class QuoteController
             $this->flash_message('danger', $this->translator->translate('invoice.quote.tax.rate.cannot.delete'));
         }
         $quote_id = (string)$this->session->get('quote_id');
-        return $this->factory->createResponse($this->view_renderer->renderPartialAsString('setting/inv_message',
+        return $this->factory->createResponse($this->view_renderer->renderPartialAsString('//invoice/setting/inv_message',
         ['heading' => $this->translator->translate('i.quote_tax_rate'),'message'=>$this->translator->translate('i.record_successfully_deleted'),'url'=>'quote/view','id'=>$quote_id]));  
     }
         
@@ -1096,10 +1096,10 @@ final class QuoteController
                     'userinv' => $uiR->repoUserInvUserIdcount($quote->getUser_id()) > 0 ? $uiR->repoUserInvUserIdquery($quote->getUser_id()) : null,
                     'quote' => $quote,
                     'pdf_templates' => $this->email_get_quote_templates('pdf'),
-                    'template_tags' => $this->view_renderer->renderPartialAsString('emailtemplate/template-tags',[
+                    'template_tags' => $this->view_renderer->renderPartialAsString('//invoice/emailtemplate/template-tags',[
                             'custom_fields'=> $custom_fields,                                         
                             'template_tags_inv'=>'',  
-                            'template_tags_quote'=>$this->view_renderer->renderPartialAsString('emailtemplate/template-tags-quote', [
+                            'template_tags_quote'=>$this->view_renderer->renderPartialAsString('//invoice/emailtemplate/template-tags-quote', [
                                 'custom_fields_quote_custom'=>$custom_fields['quote_custom']
                             ]),
                     ]),
@@ -1285,7 +1285,7 @@ final class QuoteController
                  */
                 $to = (string)$body['MailerQuoteForm']['to_email'] ?: '';
                 if (empty($to)) {
-                    return $this->factory->createResponse($this->view_renderer->renderPartialAsString('setting/quote_message',
+                    return $this->factory->createResponse($this->view_renderer->renderPartialAsString('//invoice/setting/quote_message',
                     ['heading'=>'','message'=>$this->translator->translate('i.email_to_address_missing'),'url'=>'quote/view','id'=>$quote_id]));  
                 }
                                 
@@ -1299,7 +1299,7 @@ final class QuoteController
                 
                 
                 if (empty($from[0])) {
-                    return $this->factory->createResponse($this->view_renderer->renderPartialAsString('setting/quote_message',
+                    return $this->factory->createResponse($this->view_renderer->renderPartialAsString('//invoice/setting/quote_message',
                     ['heading'=>'','message'=> $this->translator->translate('i.email_to_address_missing'),'url'=>'quote/view','id'=>$quote_id]));  
                 }
 
@@ -2684,7 +2684,7 @@ final class QuoteController
                                 $quote_amount = (($qaR->repoQuoteAmountCount($quote_id) > 0) ? $qaR->repoQuotequery($quote_id) : null);
                                 if ($quote_amount) {
                                     $parameters = [            
-                                        'render'=> $this->view_renderer->renderPartialAsString('template/quote/public/' . ($this->sR->get_setting('public_quote_template') ?: 'Quote_Web'), [
+                                        'render'=> $this->view_renderer->renderPartialAsString('//invoice/template/quote/public/' . ($this->sR->get_setting('public_quote_template') ?: 'Quote_Web'), [
                                             'isGuest' => $currentUser->isGuest(),
                                             // TODO logo
                                             'logo'=> '',
@@ -2706,7 +2706,7 @@ final class QuoteController
                                             'client'=> $quote->getClient(),
                                             // Get the details of the user of this quote
                                             'userinv'=> $uiR->repoUserInvUserIdcount($user_id) > 0 ? $uiR->repoUserInvUserIdquery($user_id) : null,                
-                                            'modal_purchase_order_number' => $this->view_renderer->renderPartialAsString('quote/modal_purchase_order_number',['url_key'=>$urlKey])
+                                            'modal_purchase_order_number' => $this->view_renderer->renderPartialAsString('//invoice/quote/modal_purchase_order_number',['url_key'=>$urlKey])
                                         ]),        
                                     ];        
                                     return $this->view_renderer->render('quote/url_key', $parameters);
@@ -2769,7 +2769,7 @@ final class QuoteController
                         // if the quote amount total is greater than zero show the buttons eg. Send email
                         'quote_amount_total' => $quote_amount->getTotal(), 
                         'sales_order_number' => $sales_order_number,
-                        'add_quote_item' => $this->view_renderer->renderPartialAsString('quoteitem/_item_form',[
+                        'add_quote_item' => $this->view_renderer->renderPartialAsString('//invoice/quoteitem/_item_form',[
                             'action' => ['quoteitem/add',['_language' => $_language]],
                             'errors' => [],
                             'form' => new QuoteItemForm(new QuoteItem(), $quote_id),
@@ -2788,7 +2788,7 @@ final class QuoteController
                         'quote_custom_values' => $quote_custom_values,
                         'quote_statuses' => $qR->getStatuses($this->translator),  
                         'quote' => $qR->repoQuoteLoadedquery((string)$this->session->get('quote_id')),   
-                        'partial_item_table' => $this->view_renderer->renderPartialAsString('quote/partial_item_table',[
+                        'partial_item_table' => $this->view_renderer->renderPartialAsString('//invoice/quote/partial_item_table',[
                             'included' => $this->translator->translate('invoice.invoice.item.tax.included'),
                             'excluded' => $this->translator->translate('invoice.invoice.item.tax.excluded'),  
                             'invEdit' => $this->user_service->hasPermission('editInv') ? true : false,    
@@ -2804,7 +2804,7 @@ final class QuoteController
                             'tax_rates' => $trR->findAllPreloaded(),
                             'units' => $uR->findAllPreloaded(),
                         ]),
-                        'modal_choose_items' => $this->view_renderer->renderPartialAsString('product/modal_product_lookups_quote',
+                        'modal_choose_items' => $this->view_renderer->renderPartialAsString('//invoice/product/modal_product_lookups_quote',
                         [
                             'families' => $fR->findAllPreloaded(),
                             'default_item_tax_rate' => $this->sR->get_setting('default_item_tax_rate') !== '' ?: 0,
@@ -2812,38 +2812,38 @@ final class QuoteController
                             'filter_family' => '',
                             'reset_table' => '',
                             'products' => $pR->findAllPreloaded(),
-                            'partial_product_table_modal' => $this->view_renderer->renderPartialAsString('product/_partial_product_table_modal',[
+                            'partial_product_table_modal' => $this->view_renderer->renderPartialAsString('//invoice/product/_partial_product_table_modal',[
                                 'products' => $pR->findAllPreloaded()
                             ]),
                         ]),
-                        'modal_add_quote_tax' => $this->view_renderer->renderPartialAsString('quote/modal_add_quote_tax',['s'=>$this->sR,'tax_rates'=>$trR->findAllPreloaded()]),
+                        'modal_add_quote_tax' => $this->view_renderer->renderPartialAsString('//invoice/quote/modal_add_quote_tax',['s'=>$this->sR,'tax_rates'=>$trR->findAllPreloaded()]),
                         //'modalhelper'=> new ModalHelper($this->sR),
-                        'modal_copy_quote' => $this->view_renderer->renderPartialAsString('quote/modal_copy_quote',[ 's'=>$this->sR,
+                        'modal_copy_quote' => $this->view_renderer->renderPartialAsString('//invoice/quote/modal_copy_quote',[ 's'=>$this->sR,
                             'quote' => $qR->repoQuoteLoadedquery((string)$this->session->get('quote_id')),
                             'clients' => $cR->findAllPreloaded(),                
                             'groups' => $gR->findAllPreloaded(),
                         ]),
-                        'modal_delete_quote' => $this->view_renderer->renderPartialAsString('quote/modal_delete_quote',
+                        'modal_delete_quote' => $this->view_renderer->renderPartialAsString('//invoice/quote/modal_delete_quote',
                                 ['action' => ['quote/delete', ['_language' => $_language, 'id' => $this->session->get('quote_id')]],
                         ]),            
-                        'modal_delete_items' => $this->view_renderer->renderPartialAsString('quote/modal_delete_item',[
+                        'modal_delete_items' => $this->view_renderer->renderPartialAsString('//invoice/quote/modal_delete_item',[
                                 'partial_item_table_modal' => $this->view_renderer->renderPartialAsString('quoteitem/_partial_item_table_modal',[
                                     'quoteitems' => $qiR->repoQuotequery((string)$this->session->get('quote_id')),
                                     'numberhelper' => new NumberHelper($this->sR),
                                 ]),
                         ]),
-                        'modal_quote_to_invoice' => $this->view_renderer->renderPartialAsString('quote/modal_quote_to_invoice',[
+                        'modal_quote_to_invoice' => $this->view_renderer->renderPartialAsString('//invoice/quote/modal_quote_to_invoice',[
                                  'quote' => $quote,                        
                                  'groups' => $gR->findAllPreloaded(),
                         ]),
-                        'modal_quote_to_so' => $this->view_renderer->renderPartialAsString('quote/modal_quote_to_so',[
+                        'modal_quote_to_so' => $this->view_renderer->renderPartialAsString('//invoice/quote/modal_quote_to_so',[
                                  'quote' => $quote,                        
                                  'groups' => $gR->findAllPreloaded(),
                         ]),
-                        'modal_quote_to_pdf' => $this->view_renderer->renderPartialAsString('quote/modal_quote_to_pdf',[
+                        'modal_quote_to_pdf' => $this->view_renderer->renderPartialAsString('//invoice/quote/modal_quote_to_pdf',[
                                  'quote' => $quote,
                         ]),
-                        'view_custom_fields' => $this->view_renderer->renderPartialAsString('quote/view_custom_fields', [
+                        'view_custom_fields' => $this->view_renderer->renderPartialAsString('//invoice/quote/view_custom_fields', [
                                  'custom_fields' => $cfR->repoTablequery('quote_custom'),
                                  'custom_values' => $cvR->attach_hard_coded_custom_field_values_to_custom_field($cfR->repoTablequery('quote_custom')),
                                  'quote_custom_values' => $quote_custom_values,  

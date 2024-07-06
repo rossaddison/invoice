@@ -136,7 +136,7 @@ class ReportController
             // Sixth parameter $isInvoice is false because reports and not Invoices are being generated            
             // Last parameter $quote_or_invoice is false because reports are being generated which are not meant for clients
             /** @psalm-suppress MixedReturnStatement */
-            return $mpdfhelper->pdf_create($this->viewRenderer->renderPartialAsString('invoice_aging', $data), 
+            return $mpdfhelper->pdf_create($this->viewRenderer->renderPartialAsString('//invoice/report/invoice_aging', $data), 
                    $this->translator->translate('i.invoice_aging'), true, '', $sR, null, null, false, false, [], null);             
         }
         return $this->viewRenderer->render('invoice_aging_index', $parameters);
@@ -308,7 +308,7 @@ class ReportController
                 ];
                 $mpdfHelper = new MpdfHelper();
                 /** @psalm-suppress MixedReturnStatement */
-                return $mpdfHelper->pdf_create($this->viewRenderer->renderPartialAsString('payment_history', $data), 
+                return $mpdfHelper->pdf_create($this->viewRenderer->renderPartialAsString('//invoice/report/payment_history', $data), 
                                                $this->translator->translate('i.payment_history'), true, '', $sR, null, null, false, false, [], null);            
             } //is_array body
             return $this->webService->getNotFoundResponse();
@@ -402,7 +402,7 @@ class ReportController
                 $mpdfhelper = new MpdfHelper(); 
                 /** @psalm-suppress MixedReturnStatement */
                 return $mpdfhelper->pdf_create(
-                         $this->viewRenderer->renderPartialAsString('sales_by_client', $data), 
+                         $this->viewRenderer->renderPartialAsString('//invoice/report/sales_by_client', $data), 
                          $this->translator->translate('i.sales_by_client'), true, '', $sR, null, null, false, false, [], null
                 );
             } // is_array body
@@ -520,7 +520,7 @@ class ReportController
               $mpdfhelper = new MpdfHelper(); 
               /** @psalm-suppress MixedReturnStatement */
               return $mpdfhelper->pdf_create(
-                       $this->viewRenderer->renderPartialAsString('sales_by_product', $data), 
+                       $this->viewRenderer->renderPartialAsString('///invoice/report/sales_by_product', $data), 
                        $this->translator->translate('invoice.report.sales.by.product'), true, '', $sR, null, null, false, false, [], null
               );
           } // is_array body
@@ -625,7 +625,7 @@ class ReportController
               $mpdfhelper = new MpdfHelper(); 
               /** @psalm-suppress MixedReturnStatement */
               return $mpdfhelper->pdf_create(
-                       $this->viewRenderer->renderPartialAsString('sales_by_task', $data), 
+                       $this->viewRenderer->renderPartialAsString('//invoice/report/sales_by_task', $data), 
                        $this->translator->translate('invoice.report.sales.by.task'), true, '', $sR, null, null, false, false, [], null
               );
           } // is_array body
@@ -731,7 +731,7 @@ class ReportController
                 // Last parameter $quote_or_invoice is false because reports are being generated which are not meant for clients
                 /** @psalm-suppress MixedReturnStatement */
                 return $mpdfhelper->pdf_create(
-                                               $this->viewRenderer->renderPartialAsString('sales_by_year', $data),
+                                               $this->viewRenderer->renderPartialAsString('//invoice/report/sales_by_year', $data),
                                                $this->translator->translate('i.sales_by_date'), true, '', $sR, null, null, false, false, [], null
                 );
             } // is_array body

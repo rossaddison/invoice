@@ -125,13 +125,13 @@ final class InvoiceController
     {
         switch ($topic) {
             case 'tp':
-                $view = $this->viewRenderer->renderPartialAsString('info/taxpoint');
+                $view = $this->viewRenderer->renderPartialAsString('//invoice/info/taxpoint');
                 break;
             case 'shared':
-                $view = $this->viewRenderer->renderPartialAsString('info/shared_hosting');
+                $view = $this->viewRenderer->renderPartialAsString('//invoice/info/shared_hosting');
                 break;
             case 'paymentprovider':
-                $view = $this->viewRenderer->renderPartialAsString('info/payment_provider');
+                $view = $this->viewRenderer->renderPartialAsString('//invoice/info/payment_provider');
                 break;
             default:
                 $view = '';
@@ -142,12 +142,12 @@ final class InvoiceController
     
     public function phpinfo(#[RouteArgument('selection')] string $selection = '-1') : Response 
     {
-        $view = $this->viewRenderer->renderPartialAsString('info/phpinfo', ['selection' => (int)$selection]);
+        $view = $this->viewRenderer->renderPartialAsString('//invoice/info/phpinfo', ['selection' => (int)$selection]);
         return $this->viewRenderer->render('info/view', ['topic'=> $view]);
     }
     
     public function requirements() : Response  {
-        $view = $this->viewRenderer->renderPartialAsString('info/requirements');
+        $view = $this->viewRenderer->renderPartialAsString('//invoice/info/requirements');
         return $this->viewRenderer->render('info/view', ['topic'=> $view]);
     }
     
@@ -733,7 +733,7 @@ final class InvoiceController
             
             'task_statuses'=>$taskR->getTask_statuses($translator),
             
-            'modal_create_client'=>$this->viewRenderer->renderPartialAsString('client/modal_create_client',[
+            'modal_create_client'=>$this->viewRenderer->renderPartialAsString('//invoice/client/modal_create_client',[
                 'datehelper'=> new DateHelper($sR)
             ]),
             'client_count' =>$cR->count(), 
@@ -791,7 +791,7 @@ final class InvoiceController
                           GroupRepository $gR
                          ): \Yiisoft\DataResponse\DataResponse {
         if (($sR->get_setting('debug_mode') == '1') && ($this->userService->hasPermission('editInv'))) {
-            $this->flash_message('info' , $this->viewRenderer->renderPartialAsString('info/invoice'));
+            $this->flash_message('info' , $this->viewRenderer->renderPartialAsString('//invoice/info/invoice'));
         }    
         $gR->repoCountAll() === 0 ? $this->install_default_invoice_and_quote_group($gR) : '';
         $pmR->count() === 0 ? $this->install_default_payment_methods($pmR) : '';

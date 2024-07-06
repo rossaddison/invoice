@@ -409,7 +409,7 @@ final class PaymentInformationController
                                     'inv_url_key' => $url_key,
                                     'is_overdue' => $is_overdue,
                                     'partial_client_address' => $this->viewRenderer
-                                        ->renderPartialAsString('client/partial_client_address',
+                                        ->renderPartialAsString('//invoice/client/partial_client_address',
                                         ['client' => $cR->repoClientquery($invoice->getClient_id())]),
                                     'payment_method' => null!==$payment_method_for_this_invoice->getName() ? $payment_method_for_this_invoice->getName() : $this->translator->translate('invoice.payment.information.none'),
                                     'total' => $total,
@@ -547,7 +547,7 @@ public function amazonInForm(
         'json_encoded_items' => Json::encode($items_array),
         'companyLogo' => $this->renderPartialAsStringCompanyLogo(),
         'partial_client_address' => $this->viewRenderer
-                                         ->renderPartialAsString('client/partial_client_address',
+                                         ->renderPartialAsString('//invoice/client/partial_client_address',
                                          ['client'=>$cR->repoClientquery($invoice->getClient_id())]),
         'payment_method' => $payment_method_for_this_invoice,
         'return_url' => ['paymentinformation/amazon_complete',['url_key'=>$url_key]],
@@ -609,7 +609,7 @@ public function braintreeInForm(
             'inv_url_key' => $url_key,
             'is_overdue' => $is_overdue,
             'partial_client_address' => $this->viewRenderer
-                                             ->renderPartialAsString('client/partial_client_address',
+                                             ->renderPartialAsString('//invoice/client/partial_client_address',
                                              ['client'=>$cR->repoClientquery($invoice->getClient_id())]),
             'payment_method' => $payment_method_for_this_invoice,
             'total' => $total,
@@ -656,7 +656,7 @@ public function braintreeInForm(
                 } //null!==$invoice
             }    
             $view_data = [
-                'render' => $this->viewRenderer->renderPartialAsString('setting/payment_message', ['heading' => '',
+                'render' => $this->viewRenderer->renderPartialAsString('//invoice/setting/payment_message', ['heading' => '',
                 //https://developer.paypal.com/braintree/docs/reference/general/result-objects
                 'message' => $result->success ? sprintf($this->translator->translate('g.online_payment_payment_successful'), $invoice->getNumber() ?? '') 
                                               : sprintf($this->translator->translate('g.online_payment_payment_failed'), $invoice->getNumber() ?? ''), 
@@ -983,7 +983,7 @@ public function stripeInForm(
         'inv_url_key' => $url_key,
         'is_overdue' => $is_overdue,
         'partial_client_address' => $this->viewRenderer
-                                         ->renderPartialAsString('client/partial_client_address',
+                                         ->renderPartialAsString('//invoice/client/partial_client_address',
                                          ['client'=>$cR->repoClientquery($invoice->getClient_id())]),
         'payment_method' => $payment_method_for_this_invoice ?: "None" ,
         'total' => $total,
@@ -1265,7 +1265,7 @@ private function omnipay(string $driver,
                     $this->translator->translate('g.online_payment_card_invalid') . '<br/>' . $e->getMessage());
                 return $this->factory
                     ->createResponse($this->viewRenderer
-                                          ->renderPartialAsString('setting/payment_message',
+                                          ->renderPartialAsString('//invoice/setting/payment_message',
                     [
                         'heading' => '',
                         'message' => $this->translator->translate('g.online_payment_card_invalid') . '<br/>' . $e->getMessage(),
@@ -1764,7 +1764,7 @@ public function renderPartialAsStringCompanyLogo() : string
         }
     }
     $src = (null!==$companyLogoFileName ? '/logo/'.$companyLogoFileName : '/site/logo.png');
-    return $this->viewRenderer->renderPartialAsString('paymentinformation/logo/companyLogo', [
+    return $this->viewRenderer->renderPartialAsString('//invoice/paymentinformation/logo/companyLogo', [
         'src' => $src,
         // if debug_mode == '1' => reveal the source in the tooltip
         'tooltipTitle' => $this->sR->get_setting('debug_mode') == '1' ? $src : ''
@@ -1777,7 +1777,7 @@ public function renderPartialAsStringCompanyLogo() : string
  */
 public function renderPartialAsStringBraintreeLogo(string $merchantId) : string
 {
-    return $this->viewRenderer->renderPartialAsString('paymentinformation/logo/brainTreeLogo', [
+    return $this->viewRenderer->renderPartialAsString('//invoice/paymentinformation/logo/brainTreeLogo', [
         'merchantId' => $merchantId
     ]);
 }
@@ -1787,7 +1787,7 @@ public function renderPartialAsStringBraintreeLogo(string $merchantId) : string
  */
 public function renderPartialAsStringMollieLogo() : string
 {
-    return $this->viewRenderer->renderPartialAsString('paymentinformation/logo/mollieLogo');
+    return $this->viewRenderer->renderPartialAsString('//invoice/paymentinformation/logo/mollieLogo');
 }
 
 }    

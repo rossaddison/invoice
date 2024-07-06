@@ -182,7 +182,7 @@ final class UploadController {
                 $this->uploadService->deleteUpload($upload, $settingRepository);
                 $inv_id = (string) $this->session->get('inv_id');
                 $this->flash_message('info', $this->translator->translate('i.record_successfully_deleted'));
-                return $this->factory->createResponse($this->viewRenderer->renderPartialAsString('setting/inv_message',
+                return $this->factory->createResponse($this->viewRenderer->renderPartialAsString('//invoice/setting/inv_message',
                                         ['heading' => '', 'message' => $this->translator->translate('i.record_successfully_deleted'), 'url' => 'inv/view', 'id' => $inv_id]));
             }
             return $this->webService->getRedirectResponse('upload/index');
