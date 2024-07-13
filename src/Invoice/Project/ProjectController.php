@@ -71,7 +71,6 @@ final class ProjectController
               'paginator' => $paginator,  
               'canEdit' => $canEdit,
               'projects' => $this->projects($projectRepository),
-              'grid_summary' => $sR->grid_summary($paginator, $this->translator, (int)$sR->get_setting('default_list_limit'), $this->translator->translate('invoice.products'), ''),
               'alert'=> $this->alert()
         ];  
         return $this->viewRenderer->render('index', $parameters);
@@ -92,7 +91,8 @@ final class ProjectController
         $form = new ProjectForm($project);
         $parameters = [
             'title' => $this->translator->translate('invoice.add'),
-            'action' => ['project/add'],
+            'actionName' => 'project/add',
+            'actionArguments' => [],
             'errors' => [],
             'form' => $form,
             'clients' => $clientRepository->findAllPreloaded(),
@@ -155,7 +155,8 @@ final class ProjectController
             $form = new ProjectForm($project);
             $parameters = [
                 'title' => $this->translator->translate('i.edit'),
-                'action' => ['project/edit', ['id' => $project->getId()]],
+                'actionName' => 'project/edit', 
+                'actionArguments' => ['id' => $project->getId()],
                 'errors' => [],
                 'form' => $form,
                 'clients' => $clientRepository->findAllPreloaded()
@@ -203,11 +204,10 @@ final class ProjectController
             $form = new ProjectForm($project);
             $parameters = [
                 'title' => $this->translator->translate('i.view'),
-                'action' => ['project/view', ['id' => $project->getId()]],
-                'errors' => [],
+                'actionName' => 'project/view', 
+                'actionArguments' => ['id' => $project->getId()],
                 'form' => $form,
-                'clients' => $clientRepository->findAllPreloaded(),
-                'project' => $projectRepository->repoProjectquery($project->getId()),
+                'clients' => $clientRepository->findAllPreloaded()
             ];
             return $this->viewRenderer->render('_view', $parameters);
         }

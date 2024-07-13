@@ -1,6 +1,16 @@
 <?php
+
 declare(strict_types=1); 
-use Yiisoft\Html\Html;
+
+ use Yiisoft\Html\Html;
+
+/**
+ * @see QuoteController function view $parameters['model_delete_items']
+ * @var App\Invoice\Helpers\NumberHelper $numberHelper
+ * @var Yiisoft\Translator\TranslatorInterface $translator
+ * @var array $quoteItems
+ */
+
 ?>
 <div class="table-responsive">
     <table class="table table-hover table-bordered table-striped">
@@ -13,28 +23,32 @@ use Yiisoft\Html\Html;
             <th class="text-right"><?= $translator->translate('i.product_price'); ?></th>
             <th class="text-right"><?= $translator->translate('i.quantity'); ?></th>
         </tr>
-        <?php foreach ($quoteitems as $quoteitem) { ?>
+        <?php
+            /**
+             * @var App\Invoice\Entity\QuoteItem $quoteItem
+             */
+            foreach ($quoteItems as $quoteItem) { ?>
             <tr class="product">
                 <td class="text-left">
-                    <input type="checkbox" name="item_ids[]" value="<?php echo $quoteitem->getId();?>">
+                    <input type="checkbox" name="item_ids[]" value="<?php echo $quoteItem->getId();?>">
                 </td>
                 <td nowrap class="text-left">
-                    <b><?= Html::encode($quoteitem->getId()); ?></b>
+                    <b><?= Html::encode($quoteItem->getId()); ?></b>
                 </td>
                 <td nowrap class="text-left">
-                    <b><?= Html::encode($quoteitem->getProduct()->getProduct_sku()); ?></b>
+                    <b><?= Html::encode($quoteItem->getProduct()?->getProduct_sku()); ?></b>
                 </td>
                 <td>
-                    <b><?= Html::encode($quoteitem->getProduct()->getProduct_name()); ?></b>
+                    <b><?= Html::encode($quoteItem->getProduct()?->getProduct_name()); ?></b>
                 </td>
                 <td>
-                    <?= nl2br(Html::encode($quoteitem->getProduct()->getProduct_description())); ?>
+                    <?= nl2br(Html::encode($quoteItem->getProduct()?->getProduct_description())); ?>
                 </td>
                 <td class="text-right">
-                    <?= $numberhelper->format_currency($quoteitem->getProduct()->getProduct_price()); ?>
+                    <?= $numberHelper->format_currency($quoteItem->getProduct()?->getProduct_price()); ?>
                 </td>
                 <td class="text-right">
-                    <?= $quoteitem->getQuantity(); ?>
+                    <?= $quoteItem->getQuantity(); ?>
                 </td>
             </tr>
         <?php } ?>

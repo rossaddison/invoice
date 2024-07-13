@@ -12,7 +12,6 @@ use App\Invoice\Entity\PaymentCustom;
 use App\Invoice\Entity\Inv;
 use App\Invoice\Helpers\CustomValuesHelper;
 use App\Invoice\Helpers\NumberHelper;
-use App\Invoice\Helpers\ClientHelper;
 use App\Invoice\Inv\InvRepository;
 use App\Invoice\InvAllowanceCharge\InvAllowanceChargeRepository as ACIR;
 use App\Invoice\InvAmount\InvAmountRepository;
@@ -147,35 +146,34 @@ final class PaymentController
                 $invoice_payment_methods['invoice' . $open_invoice_id] = $open_invoice->getPayment_method();            
             }    
         }
-        $number_helper = new NumberHelper($settingRepository);
+        $numberHelper = new NumberHelper($settingRepository);
         $payment = new Payment();
         $form = new PaymentForm($payment);
         $paymentCustom = new PaymentCustom();
         $paymentCustomForm = new PaymentCustomForm($paymentCustom);
         $parameters = [
-            'action' => ['payment/add'],            
+            'actionName' => 'payment/add',
+            'actionArguments' => [],
             'alert' => $this->alert(),
             'errors' => [],
-            'errors_custom'=> [],
+            'errorsCustom'=> [],
             'form' => $form,
-            'numberhelper'=> $number_helper,
-            'clienthelper'=> new ClientHelper($settingRepository),
-            'open_invs_count' => $invRepository->open_count(),
-            'open_invs' => $open,
+            'openInvsCount' => $invRepository->open_count(),
+            'openInvs' => $open,
             // jquery script at bottom of _from to load all amounts
             'amounts' => Json::encode($amounts),
-            'invoice_payment_methods' => Json::encode($invoice_payment_methods),
+            'invoicePaymentMethods' => Json::encode($invoice_payment_methods),
             'paymentMethods' => $payment_methodRepository->count() > 0 ? 
                                 $payment_methodRepository->findAllPreloaded() : null,
             'cR' => $cR,
             'iaR' => $iaR,
             'cvH'=> new CustomValuesHelper($settingRepository),
-            'custom_fields' => $cfR->repoTablequery('payment_custom'),
+            'customFields' => $cfR->repoTablequery('payment_custom'),
             // Applicable to normally building up permanent selection lists eg. dropdowns
-            'custom_values' => $cvR->attach_hard_coded_custom_field_values_to_custom_field($cfR->repoTablequery('payment_custom')),
+            'customValues' => $cvR->attach_hard_coded_custom_field_values_to_custom_field($cfR->repoTablequery('payment_custom')),
             // There will initially be no custom_values attached to this payment until they are filled in the field on the form
             //'payment_custom_values' => $this->payment_custom_values($payment_id,$pcR),
-            'payment_custom_values' => [],            
+            'paymentCustomValues' => [],            
             'paymentCustomForm' => $paymentCustomForm
         ];
         if ($request->getMethod() === Method::POST) {
@@ -190,7 +188,7 @@ final class PaymentController
                 $payment_id = $payment->getId();
                 $inv_id = $payment->getInv_id();
                 // Recalculate the invoice
-                $number_helper->calculate_inv($inv_id, $aciR, $iiR, $iiaR, $itrR, $iaR, $invRepository, $pmtR);
+                $numberHelper->calculate_inv($inv_id, $aciR, $iiR, $iiaR, $itrR, $iaR, $invRepository, $pmtR);
                 $this->flash_message('info', $this->translator->translate('i.record_successfully_created')); 
                 if (isset($body['custom'])) {
                     // Retrieve the custom array
@@ -213,10 +211,10 @@ final class PaymentController
                             && $this->add_custom_field($payment_id, $custom_field_id, $pcR)) {
                             $this->paymentCustomService->savePaymentCustom($paymentCustom, $paymentCustomInput);
                         }
-                        $parameters['errors_custom'] = $paymentCustomForm->getValidationResult()->getErrorMessagesIndexedByAttribute();
+                        $parameters['errorsCustom'] = $paymentCustomForm->getValidationResult()->getErrorMessagesIndexedByAttribute();
                         $parameters['paymentCustomForm'] = $paymentCustomForm;
                     } // foreach
-                    if (count($parameters['errors_custom']) > 0) {
+                    if (count($parameters['errorsCustom']) > 0) {
                             return $this->viewRenderer->render('_form', $parameters);
                     } 
                 } // isset body['custom'] 
@@ -414,25 +412,24 @@ final class PaymentController
             $number_helper = new NumberHelper($settingRepository);
             $parameters = [
                 'title' => $this->translator->translate('i.edit'),
-                'action' => ['payment/edit', ['id' => $payment_id]],
+                'actionName' => 'payment/edit',
+                'actionArguments' => ['id' => $payment_id],
                 'alert' => $this->alert(),
                 'form' => $form, 
                 'errors' => [],
-                'errors_custom' => [],
-                'numberhelper' => $number_helper,
-                'clienthelper' => new ClientHelper($settingRepository),
-                'open_invs' => $open,            
-                'open_invs_count' => $invRepository->open_count(),
+                'errorsCustom' => [],
+                'openInvs' => $open,            
+                'openInvsCount' => $invRepository->open_count(),
                 'paymentMethods' => $payment_methodRepository->findAllPreloaded(),
                 'cR' => $cR,
                 'iaR' => $iaR,
                 'cvH' => new CustomValuesHelper($settingRepository),
-                'custom_fields' => $cfR->repoTablequery('payment_custom'),
+                'customFields' => $cfR->repoTablequery('payment_custom'),
                 // Applicable to normally building up permanent selection lists eg. dropdowns
-                'custom_values' => $cvR->attach_hard_coded_custom_field_values_to_custom_field($cfR->repoTablequery('payment_custom')),
+                'customValues' => $cvR->attach_hard_coded_custom_field_values_to_custom_field($cfR->repoTablequery('payment_custom')),
                 // There will initially be no custom_values attached to this payment until they are filled in the field on the form
                 //'payment_custom_values' => $this->payment_custom_values($payment_id,$pcR),
-                'payment_custom_values' => $this->payment_custom_values($payment_id, $pcR),
+                'paymentCustomValues' => $this->payment_custom_values($payment_id, $pcR),
                 'edit'=>true,
                 'paymentCustomForm' => $paymentCustomForm
            ];
@@ -450,11 +447,11 @@ final class PaymentController
                         if ($pcR->repoPaymentCount($payment_id) > 0) {
                             $formCustom =  $this->save_custom_fields($custom, $formHydrator, $pcR, $payment_id);
                             if (null!==$formCustom) {
-                                // $parameters['errors_custom'] can be used to provide customized labels if ->required(true) not used 
+                                // $parameters['errorsCustom'] can be used to provide customized labels if ->required(true) not used 
                                 // currently not used
-                                $parameters['errors_custom'] = $formCustom->getValidationResult()->getErrorMessagesIndexedByAttribute();
-                                $parameters['form_custom'] = $formCustom;
-                                if (count($parameters['errors_custom']) > 0) {
+                                $parameters['errorsCustom'] = $formCustom->getValidationResult()->getErrorMessagesIndexedByAttribute();
+                                $parameters['formCustom'] = $formCustom;
+                                if (count($parameters['errorsCustom']) > 0) {
                                      return $this->viewRenderer->render('_form', $parameters);
                                 }
                            }
@@ -600,15 +597,15 @@ final class PaymentController
                 $canEdit = $this->userService->hasPermission('editPayment');
                 $canView = $this->userService->hasPermission('viewPayment');
                 $parameters = [
-                    'alert'=>$this->alert(),
-                    'canEdit'=>$canEdit,
-                    'canView'=>$canView, 
-                    'page'=>$page,
+                    'alert' => $this->alert(),
+                    'canEdit' => $canEdit,
+                    'canView' => $canView, 
+                    'page' => $page,
                     'paginator' => $paginator,
                     'sortOrder' => $query_params['sort'] ?? '', 
-                    'iaR'=>$iaR,
-                    'payments'=>$this->payments($paymentRepository),
-                    'max'=>(int)$settingRepository->get_setting('default_list_limit'),
+                    'iaR' => $iaR,
+                    'payments' => $this->payments($paymentRepository),
+                    'max' => (int)$settingRepository->get_setting('default_list_limit'),
                 ];
                 return $this->viewRenderer->render('guest', $parameters);
             } 
@@ -716,14 +713,7 @@ final class PaymentController
         $parameters = [
             'alert' => $this->alert(),
             'canEdit' => $canEdit,
-            'canView' => $canView,
-            'grid_summary' => $settingRepository->grid_summary(
-                $paginator, 
-                $this->translator, 
-                (int)$settingRepository->get_setting('default_list_limit'), 
-                $this->translator->translate('invoice.payments'), 
-                ''
-            ),
+            'canView' => $canView,            
             'defaultPageSizeOffsetPaginator' => $settingRepository->get_setting('default_list_limit')
                                                     ? (int)$settingRepository->get_setting('default_list_limit') : 1,
             'page' => $page,
@@ -818,14 +808,7 @@ final class PaymentController
         $parameters = [
             'alert' => $this->alert(),
             'page' => $page,
-            'paginator' => $paginator,
-            'grid_summary' => $settingRepository->grid_summary(
-                $paginator,
-                $this->translator,
-                (int) $settingRepository->get_setting('default_list_limit'),
-                $this->translator->translate('i.payment_logs'),
-                ''
-            ),
+            'paginator' => $paginator,            
             'defaultPageSizeOffsetPaginator' => $settingRepository->get_setting('default_list_limit')
                                                     ? (int)$settingRepository->get_setting('default_list_limit') : 1,
             'merchants'=> $this->merchants($merchantRepository),
@@ -966,13 +949,12 @@ final class PaymentController
             $form = new PaymentForm($payment);
             $parameters = [
                 'title' => $this->translator->translate('i.view'),
-                'action' => ['payment/edit', ['id' => $paymentId]],
+                'actionName' => 'payment/edit', 
+                'actionArguments' => ['id' => $paymentId],
                 'errors' => [],
                 'form' => $form,
                 'paymentMethods' => $paymentMethodRepository->findAllPreloaded(),
-                'payment' => $paymentRepository->repoPaymentquery($paymentId),
-                'cvH'=> new CustomValuesHelper($settingRepository),
-                'view_custom_fields' => $this->view_custom_fields(
+                'viewCustomFields' => $this->view_custom_fields(
                     $cfR,
                     $cvR, 
                     $this->payment_custom_values($paymentId, $pcR),
@@ -993,9 +975,9 @@ final class PaymentController
      */
     private function view_custom_fields(CustomFieldRepository $cfR, CustomValueRepository $cvR, array $payment_custom_values, SettingRepository $settingRepository): string {
         return $this->viewRenderer->renderPartialAsString('//invoice/payment/view_custom_fields', [
-            'custom_fields' => $cfR->repoTablequery('payment_custom'),
-            'custom_values' => $cvR->attach_hard_coded_custom_field_values_to_custom_field($cfR->repoTablequery('payment_custom')),
-            'payment_custom_values' => $payment_custom_values,
+            'customFields' => $cfR->repoTablequery('payment_custom'),
+            'customValues' => $cvR->attach_hard_coded_custom_field_values_to_custom_field($cfR->repoTablequery('payment_custom')),
+            'paymentCustomValues' => $payment_custom_values,
             'cvH' => new CustomValuesHelper($settingRepository),
             'paymentCustomForm' => new PaymentCustomForm(new PaymentCustom()),
         ]);

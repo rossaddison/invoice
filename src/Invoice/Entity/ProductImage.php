@@ -11,8 +11,8 @@ use DateTimeImmutable;
 use App\Invoice\Entity\Product;
 
 #[Entity(repository: \App\Invoice\ProductImage\ProductImageRepository::class)]
-class ProductImage {
 
+class ProductImage {
     #[Column(type: 'primary')]
     private ?int $id = null;
 

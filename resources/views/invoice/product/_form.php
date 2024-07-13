@@ -1,6 +1,6 @@
 <?php
-declare(strict_types=1);
 
+declare(strict_types=1);
 
 use Yiisoft\FormModel\Field;
 use Yiisoft\Html\Html;
@@ -8,10 +8,25 @@ use Yiisoft\Html\Tag\A;
 use Yiisoft\Html\Tag\Form;
 
 /**
- * @var \Yiisoft\View\View $this
- * @var array $body
+ * @var App\Invoice\Helpers\CustomValuesHelper $cvH
+ * @var App\Invoice\Product\ProductForm $form
+ * @var App\Invoice\ProductCustom\ProductCustomForm $productCustomForm
+ * @var App\Invoice\Setting\SettingRepository $s
+ * @var App\Widget\Button $button
+ * @var Yiisoft\Translator\TranslatorInterface $translator
+ * @var Yiisoft\Router\UrlGeneratorInterface $urlGenerator
+ * @var array $customValues
+ * @var array $customFields
+ * @var array $productCustomValues
  * @var string $csrf
- * @var string $action
+ * @var string $actionName
+ * @var string $title
+ * @psalm-var array<string, Stringable|null|scalar> $actionArguments
+ * @psalm-var array<string,list<string>> $errors
+ * @psalm-var array<array-key, array<array-key, string>|string> $taxRates
+ * @psalm-var array<array-key, array<array-key, string>|string> $families
+ * @psalm-var array<array-key, array<array-key, string>|string> $units
+ * @psalm-var array<array-key, array<array-key, string>|string> $unitPeppols 
  */
 ?>
 
@@ -24,7 +39,7 @@ use Yiisoft\Html\Tag\Form;
 <?= $translator->translate('i.products_form'); ?>
 <?= Html::closeTag('h1'); ?>
 <?= Form::tag()
-    ->post($urlGenerator->generate(...$action))
+    ->post($urlGenerator->generate($actionName, $actionArguments))
     ->enctypeMultipartFormData()
     ->csrf($csrf)
     ->id('ProductForm')
@@ -119,7 +134,7 @@ use Yiisoft\Html\Tag\Form;
                 ->addInputAttributes([
                     'class' => 'form-control  alert alert-warning'
                 ])
-                ->optionsData($tax_rates)
+                ->optionsData($taxRates)
                 ->value($form->getTax_rate_id())                
                 ->prompt($translator->translate('i.none'))    
                 ->hint($translator->translate('invoice.hint.this.field.is.required'));    
@@ -140,7 +155,8 @@ use Yiisoft\Html\Tag\Form;
                 ->addInputAttributes([
                     'class' => 'form-control  alert alert-warning'
                 ])
-                ->value($s->format_amount((float)($form->getPurchase_price() ?? 0.00)))    
+                ->value($s->format_amount(($form->getPurchase_price() >= 0.00 ?
+                                           $form->getPurchase_price() : 0.00)))    
                 ->placeholder($translator->translate('i.purchase_price'))    
                 ->hint($translator->translate('invoice.hint.this.field.is.required')); ?>         
             <?= Html::tag('br'); ?>
@@ -150,7 +166,8 @@ use Yiisoft\Html\Tag\Form;
                 ->addInputAttributes([
                     'class' => 'form-control  alert alert-warning'
                 ])
-                ->value($s->format_amount((float)($form->getProduct_price() ?? 0.00)))    
+                ->value($s->format_amount($form->getProduct_price() >= 0.00 ?
+                                          $form->getProduct_price() : 0.00))    
                 ->placeholder($translator->translate('i.product_price'))    
                 ->hint($translator->translate('invoice.hint.this.field.is.required')); ?>         
             <?= Html::tag('br'); ?>
@@ -160,7 +177,8 @@ use Yiisoft\Html\Tag\Form;
                 ->addInputAttributes([
                     'class' => 'form-control  alert alert-warning'
                 ])
-                ->value($s->format_amount((float)($form->getProduct_price_base_quantity()  ?? 0.00)))        
+                ->value($s->format_amount($form->getProduct_price_base_quantity() >= 0.00  ?
+                                          $form->getProduct_price_base_quantity() : 0.00))        
                 ->placeholder($translator->translate('i.product_price_base_quantity'))    
                 ->hint($translator->translate('invoice.hint.this.field.is.required')); ?>
             <?= Html::tag('br'); ?>
@@ -170,7 +188,8 @@ use Yiisoft\Html\Tag\Form;
                 ->addInputAttributes([
                     'class' => 'form-control  alert alert-warning'
                 ])
-                ->value($s->format_amount((float)($form->getProduct_tariff() ?? 0.00)))    
+                ->value($s->format_amount(($form->getProduct_tariff() >= 0.00 ?
+                                           $form->getProduct_tariff() : 0.00)))    
                 ->placeholder($translator->translate('i.product_tariff'))    
                 ->hint($translator->translate('invoice.hint.this.field.is.required')); ?>
         <?= Html::closeTag('div'); ?>
@@ -183,7 +202,7 @@ use Yiisoft\Html\Tag\Form;
                     'class' => 'form-control  alert alert-success'
                 ])
                 ->prompt($translator->translate('i.none'))        
-                ->optionsData($unit_peppols)
+                ->optionsData($unitPeppols)
                 ->value(Html::encode($form->getUnit_peppol_id()))        
                 ->hint($translator->translate('invoice.hint.this.field.is.not.required')); ?> 
             <?= Html::tag('br'); ?>
@@ -276,8 +295,12 @@ use Yiisoft\Html\Tag\Form;
         <?= $translator->translate('invoice.product.custom.fields'); ?>
     <?= Html::closeTag('div'); ?>
     <?= Html::openTag('div',['class'=>'panel-body']); ?>
-      <?php foreach ($custom_fields as $custom_field): ?>
-          <?= $cvH->print_field_for_form($custom_field, $productCustomForm, $translator, $product_custom_values, $custom_values); ?>
+      <?php 
+            /**
+             * @var App\Invoice\Entity\CustomField
+             */
+            foreach ($customFields as $customField): ?>
+          <?php $cvH->print_field_for_form($customField, $productCustomForm, $translator, $productCustomValues, $customValues); ?>
       <?php endforeach; ?>
     <?= Html::closeTag('div'); ?>
 <?= Html::closeTag('div'); ?>

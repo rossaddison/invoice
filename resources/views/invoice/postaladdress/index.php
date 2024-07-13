@@ -2,6 +2,7 @@
 
 declare(strict_types=1);
 
+use App\Invoice\Entity\PostalAddress;
 use Yiisoft\Html\Html;
 use Yiisoft\Html\Tag\A;
 use Yiisoft\Html\Tag\Div;
@@ -13,8 +14,17 @@ use Yiisoft\Yii\DataView\GridView;
 use Yiisoft\Yii\DataView\OffsetPagination;
 
 /**
- * @var \App\Invoice\Entity\PostalAddress $postaladdress
- * @var \Yiisoft\Router\UrlGeneratorInterface $urlGenerator
+ * @var App\Invoice\Entity\PostalAddress $postaladdress
+ * @var App\Invoice\Client\ClientRepository $cR
+ * @var App\Invoice\Setting\SettingRepository $s 
+ * @var App\Widget\PageSizeLimiter $pageSizeLimiter
+ * @var Yiisoft\Data\Paginator\OffsetPaginator $paginator
+ * @var Yiisoft\Translator\TranslatorInterface $translator
+ * @var Yiisoft\Router\CurrentRoute $routeCurrent
+ * @var Yiisoft\Router\UrlGeneratorInterface $urlGenerator 
+ * @var Yiisoft\Router\FastRoute\UrlGenerator $urlFastRouteGenerator
+ * @var string $alert  
+ * @var string $csrf
  * @var bool $canEdit
  * @var string $id
  */
@@ -38,7 +48,7 @@ $toolbarReset = A::tag()
     ->addAttributes(['type' => 'reset'])
     ->addClass('btn btn-danger me-1 ajax-loader')
     ->content(I::tag()->addClass('bi bi-bootstrap-reboot'))
-    ->href($urlGenerator->generate($currentRoute->getName()))
+    ->href($urlGenerator->generate(($routeCurrent->getName() ?? 'postaladdress/index')))
     ->id('btn-reset')
     ->render();
 
@@ -50,31 +60,31 @@ $toolbar = Div::tag();
         new DataColumn(
             'id',
             header:  $translator->translate('i.id'),
-            content: static fn ($model) => $model->getId()
+            content: static fn (PostalAddress $model) => $model->getId()
         ),        
         new DataColumn(
             'client_id',         
             header:  $translator->translate('i.client'),
-            content: static function ($model) use ($cR) : string {
+            content: static function (PostalAddress $model) use ($cR) : string {
                 $client = ($cR->repoClientCount($model->getClient_id()) > 0 ? ($cR->repoClientquery($model->getClient_id()))->getClient_name() : '');
-                return (string)$client;
+                return $client;
             } 
         ),
         new DataColumn(
             header:  $translator->translate('i.view'), 
-            content: static function ($model) use ($urlGenerator): string {
+            content: static function (PostalAddress $model) use ($urlGenerator): string {
                return Html::a(Html::tag('i','',['class'=>'fa fa-eye fa-margin']), $urlGenerator->generate('postaladdress/view',['id'=>$model->getId()]),[])->render();
             }                        
         ),
         new DataColumn(
             header:  $translator->translate('i.edit'), 
-            content: static function ($model) use ($urlGenerator): string {
+            content: static function (PostalAddress $model) use ($urlGenerator): string {
                return Html::a(Html::tag('i','',['class'=>'fa fa-eye fa-margin']), $urlGenerator->generate('postaladdress/edit',['id'=>$model->getId()]),[])->render();
             }                        
         ),
         new DataColumn(
             header:  $translator->translate('i.delete'), 
-            content: static function ($model) use ($translator, $urlGenerator): string {
+            content: static function (PostalAddress $model) use ($translator, $urlGenerator): string {
                 return Html::a( Html::tag('button',
                     Html::tag('i','',['class'=>'fa fa-trash fa-margin']),
                     [
@@ -89,13 +99,23 @@ $toolbar = Div::tag();
         ),
     ];
 ?>
-<?= GridView::widget()
+<?php
+    $grid_summary = $s->grid_summary(
+        $paginator, 
+        $translator, 
+        (int)$s->get_setting('default_list_limit'), 
+        $translator->translate('invoice.postaladdresses'),
+        ''
+    );
+    $toolbarString = Form::tag()->post($urlGenerator->generate('postaladdress/index'))->csrf($csrf)->open() .
+        Div::tag()->addClass('float-end m-3')->content($toolbarReset)->encode(false)->render() .
+        Form::tag()->close();
+    echo GridView::widget()
     ->rowAttributes(['class' => 'align-middle'])
+    ->tableAttributes(['class' => 'table table-striped text-center h-85','id'=>'table-postaladdress'])
     ->columns(...$columns)
     ->dataReader($paginator)
     ->headerRowAttributes(['class'=>'card-header bg-info text-black'])
-    //->filterPosition('header')
-    //->filterModelName('postaladdress')
     ->header($header)
     ->id('w3-grid')
     ->pagination(
@@ -103,20 +123,6 @@ $toolbar = Div::tag();
          ->paginator($paginator)
          ->render(),
     )
+    ->summaryTemplate($pageSizeLimiter::buttons($routeCurrent, $s, $urlFastRouteGenerator, 'postaladdress').' '.$grid_summary)
     ->summaryAttributes(['class' => 'mt-3 me-3 summary text-end'])
-    ->tableAttributes(['class' => 'table table-striped text-center h-85','id'=>'table-postaladdress'])
-    ->toolbar(
-        Form::tag()->post($urlGenerator->generate('postaladdress/index'))->csrf($csrf)->open() .
-        Div::tag()->addClass('float-end m-3')->content($toolbarReset)->encode(false)->render() .
-        Form::tag()->close()
-    );
-
-$pageSize = $paginator->getCurrentPageSize();
-if ($pageSize > 0) {
-  echo Html::p(
-    sprintf($translator->translate('invoice.index.footer.showing').' invoices: Max '. $max . ' invoices per page: Total Invs '.$paginator->getTotalItems() , $pageSize, $paginator->getTotalItems()),
-    ['class' => 'text-muted']
-);
-} else {
-  echo Html::p($translator->translate('invoice.records.no'));
-}
+    ->toolbar($toolbarString);

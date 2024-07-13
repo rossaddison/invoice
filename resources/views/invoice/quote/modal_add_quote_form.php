@@ -2,6 +2,7 @@
 declare(strict_types=1); 
 
 /**
+ * @see src\Widget\Bootstrap5ModalQuote renderPartialLayoutWithFormAsString $this->formParameters
  * @see quote\modal_layout which accepts this form via 'quote\add' controller action
  */
 
@@ -9,10 +10,23 @@ use Yiisoft\FormModel\Field;
 use Yiisoft\Html\Html;
 use Yiisoft\Html\Tag\Form;
 
-
+/**
+ * @var App\Invoice\Quote\QuoteForm $form
+ * @var App\Widget\Button $button
+ * @var Yiisoft\Translator\TranslatorInterface $translator
+ * @var Yiisoft\Router\UrlGeneratorInterface $urlGenerator
+ * @var string $actionName
+ * @var string $alert
+ * @var string $csrf
+ * @var string $urlKey
+ * @psalm-var array<string,list<string>> $errors
+ * @psalm-var array<array-key, array<array-key, string>|string> $clients
+ * @psalm-var array<array-key, array<array-key, string>|string> $groups
+ * @psalm-var array<string, Stringable|null|scalar> $actionArguments
+ */
 
 echo Form::tag()
-    ->post($urlGenerator->generate(...$action))
+    ->post($urlGenerator->generate($actionName, $actionArguments))
     ->enctypeMultipartFormData()
     ->csrf($csrf)
     ->id('QuoteForm')
@@ -57,7 +71,7 @@ echo Form::tag()
                 <?= Field::select($form, 'group_id')
                     ->label($translator->translate('i.quote_group'))
                     ->addInputAttributes(['class' => 'form-control'])
-                    ->value(Html::encode($form->getGroup_id() ?? $defaultGroupId))
+                    ->value(Html::encode($form->getGroup_id() ?? 2))
                     ->prompt($translator->translate('i.none'))
                     ->optionsData($groups)
                     ->tabIndex(2)

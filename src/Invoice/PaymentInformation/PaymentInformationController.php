@@ -413,14 +413,9 @@ final class PaymentInformationController
                                         ['client' => $cR->repoClientquery($invoice->getClient_id())]),
                                     'payment_method' => null!==$payment_method_for_this_invoice->getName() ? $payment_method_for_this_invoice->getName() : $this->translator->translate('invoice.payment.information.none'),
                                     'total' => $total,
-                                    'action' => [
-                                        'paymentinformation/make_payment_omnipay', 
-                                        [
-                                            'url_key' => $url_key
-                                        ]
-                                    ],
-                                    //TODO: Logo implementation 
-                                    'logo' => '',            
+                                    'actionName' => 'paymentinformation/make_payment_omnipay',
+                                    'actionArguments' => ['url_key' => $url_key],
+                                    'companyLogo' => $this->renderPartialAsStringCompanyLogo(),    
                                     'title' => $this->translator->translate('invoice.payment.information.omnipay.driver.being.used')
                                 ];
                                 return $this->viewRenderer->render('payment_information_omnipay', $omnipay_view_data);
@@ -453,35 +448,39 @@ public function pciCompliantGatewayInForms(string $d,
     bool $disable_form, bool $is_overdue, string $payment_method_for_this_invoice,
     float $total, array $sandbox_url_array    
 ) : Response {
-    if ($this->sR->get_setting('gateway_'.$d.'_enabled') === '1') {
-        switch ($client_chosen_gateway) {
-            case 'Amazon_Pay':
-               return $this->amazonInForm(
-                    $client_chosen_gateway, $url_key, $balance, $cR, $invoice, $items_array,
-                    $disable_form, $is_overdue, $payment_method_for_this_invoice, $total
-                );
-            case 'Stripe':
-                return $this->stripeInForm($client_chosen_gateway, $url_key, $balance, $cR, $invoice, 
-                           $items_array, $yii_invoice_array, $disable_form, $is_overdue, 
-                           $payment_method_for_this_invoice, $total
-                );
-            case 'Braintree':
-                return $this->brainTreeInForm(
-                    $request, $client_chosen_gateway, $url_key, $balance, $cR, $invoice, $invoice_id,    
-                    $items_array, $disable_form, $is_overdue, $payment_method_for_this_invoice,
-                    $total, $sandbox_url_array       
-                );
-            case 'Mollie':
-                // locale is in the format en_GB as opposed to default en
-                $mollie_locale = $this->sR->get_setting('gateway_mollie_locale');
-                return $this->mollieInForm(
-                    $client_chosen_gateway, $url_key, $balance, $cR, $invoice, $items_array,
-                    $yii_invoice_array, 
-                    $payment_method = 'creditcard', 
-                    $mollie_locale, $disable_form, $is_overdue,
-                    $payment_method_for_this_invoice, $total    
-                ); 
-        }
+    if (null!==$invoice->getNumber()) {
+        if ($this->sR->get_setting('gateway_'.$d.'_enabled') === '1') {
+            switch ($client_chosen_gateway) {
+                case 'Amazon_Pay':
+                   return $this->amazonInForm(
+                        $client_chosen_gateway, $url_key, $balance, $cR, $invoice, $items_array,
+                        $disable_form, $is_overdue, $payment_method_for_this_invoice, $total
+                    );
+                case 'Stripe':
+                    return $this->stripeInForm($client_chosen_gateway, $url_key, $balance, $cR, $invoice, 
+                        $items_array, $yii_invoice_array, $disable_form, $is_overdue, 
+                        $payment_method_for_this_invoice, $total
+                    );
+                case 'Braintree':
+                    return $this->brainTreeInForm(
+                        $request, $client_chosen_gateway, $url_key, $balance, $cR, $invoice, $invoice_id,    
+                        $items_array, $disable_form, $is_overdue, $payment_method_for_this_invoice,
+                        $total, $sandbox_url_array       
+                    );
+                case 'Mollie':
+                    // locale is in the format en_GB as opposed to default en
+                    $mollie_locale = $this->sR->get_setting('gateway_mollie_locale');
+                    return $this->mollieInForm(
+                        $client_chosen_gateway, $url_key, $balance, $cR, $invoice, $items_array,
+                        $yii_invoice_array, 
+                        $payment_method = 'creditcard', 
+                        $mollie_locale, $disable_form, $is_overdue,
+                        $payment_method_for_this_invoice, $total    
+                    ); 
+            }
+        }    
+    } else {
+        $this->flash_message('danger', $this->translator->translate('invoice.invoice.number.no'));
     }
     return $this->webService->getNotFoundResponse();
 }
@@ -503,11 +502,13 @@ public function amazonInForm(
     $aliases = $this->sR->get_amazon_pem_file_folder_aliases();
     if (!file_exists($aliases->get('@pem_file_unique_folder').'/private.pem')){
         $this->flash_message('warning','Amazon_Pay private.pem File Not Downloaded from Amazon and saved in Pem_unique_folder as private.pem'); 
-        return $this->viewRenderer->render('setting/payment_message', ['heading' => '',
-                'message' => 'Amazon_Pay private.pem File Not Downloaded from Amazon and saved in Pem_unique_folder as private.pem',  
-                'url' =>'inv/url_key',
-                'url_key' => $url_key, 
-                'gateway'=>'Amazon_Pay'
+        return $this->viewRenderer->render('setting/payment_message', 
+        [
+            'heading' => '',
+            'message' => 'Amazon_Pay private.pem File Not Downloaded from Amazon and saved in Pem_unique_folder as private.pem',  
+            'url' =>'inv/url_key',
+            'url_key' => $url_key, 
+            'gateway'=>'Amazon_Pay'
         ]);
     }
     $client_language = $invoice->getClient()?->getClient_language();
@@ -517,7 +518,6 @@ public function amazonInForm(
     $client_in_language = $amazon_languages[$client_language];
     } 
     $amazon_pci_view_data = [
-        'action' => ['paymentinformation/make_payment_amazon_pci', ['url_key' => $url_key]],
         'alert' => $this->alert(),
         // https://developer.amazon.com/docs/amazon-pay-checkout/add-the-amazon-pay-button.html#2-generate-the-create-checkout-session-payload 
         'amazonPayButton' => [
@@ -912,7 +912,7 @@ public function mollie_complete(CurrentRoute $currentRoute) : \Yiisoft\DataRespo
                                 'url' => 'inv/url_key',
                                 'url_key' => $metadataInvoiceUrlKey, 'gateway' => 'Mollie',
                                 'sandbox_url' => $sandbox_url_array['mollie']                
-                        ])
+                            ])
                     ];
                     return $this->viewRenderer->render('payment_completion_page', $view_data);
                 } //null!==$balance   

@@ -69,6 +69,7 @@ use Yiisoft\FormModel\FormHydrator;
 use Yiisoft\Http\Method;
 use Yiisoft\Json\Json;
 use Yiisoft\Router\HydratorAttribute\RouteArgument;
+use Yiisoft\Router\FastRoute\UrlGenerator as FastRouteGenerator;
 use Yiisoft\Session\SessionInterface;
 use Yiisoft\Session\Flash\Flash;
 use Yiisoft\Translator\TranslatorInterface;
@@ -145,22 +146,22 @@ class ProductController
         $productCustomForm = new ProductCustomForm($productCustom);
         $parameters = [
             'title' => $this->translator->translate('i.add'),
-            'action' => ['product/add'],
+            'actionName' => 'product/add',
             'countries' => $countries->get_country_list((string)$this->session->get('_language')),
             'alert' => $this->alert(),
             'form' => $form,
             'errors' => [],
-            'errors_custom' => [],
+            'errorsCustom' => [],
             'standard_item_identification_schemeids' => $peppolarrays->getIso_6523_icd(),
             'item_classification_code_listids' => $peppolarrays->getUncl7143(),
             'families' => $this->families($fR->findAllPreloaded()),
             'units' => $this->units($uR->findAllPreloaded()),
-            'tax_rates' => $this->tax_rates($trR->findAllPreloaded()),
-            'unit_peppols' => $this->unit_peppols($upR->findAllPreloaded()),
-            'custom_fields' => $cfR->repoTablequery('product_custom'),
-            'custom_values' => $cvR->attach_hard_coded_custom_field_values_to_custom_field($cfR->repoTablequery('product_custom')),
+            'taxRates' => $this->tax_rates($trR->findAllPreloaded()),
+            'unitPeppols' => $this->unit_peppols($upR->findAllPreloaded()),
+            'customFields' => $cfR->repoTablequery('product_custom'),
+            'customValues' => $cvR->attach_hard_coded_custom_field_values_to_custom_field($cfR->repoTablequery('product_custom')),
             'cvH' => new CVH($sR),
-            'product_custom_values' => [],
+            'productCustomValues' => [],
             'productCustomForm' => $productCustomForm
         ];
         if ($request->getMethod() === Method::POST) {  
@@ -192,7 +193,7 @@ class ProductController
                             // These two can be used to create customised labels for custom field error validation on the form
                             // Currently not used.
                             $parameters['formProductCustom'] = $formProductCustom; 
-                            $parameters['errors_custom'] = $formProductCustom->getValidationResult()->getErrorMessagesIndexedByAttribute();
+                            $parameters['errorsCustom'] = $formProductCustom->getValidationResult()->getErrorMessagesIndexedByAttribute();
                         }
                     }
                     $this->flash_message('info', $this->translator->translate('i.record_successfully_created'));
@@ -279,7 +280,8 @@ class ProductController
             if ($product_id) {
                 $parameters = [
                     'title' => $this->translator->translate('i.edit'),
-                    'action' => ['product/edit', ['id' => $product_id]],
+                    'actionName' => 'product/edit', 
+                    'actionArguments' => ['id' => $product_id],
                     'alert' => $this->alert(),
                     'countries' => $countries->get_country_list((string)$this->session->get('_language')),
                     'form' => $form,
@@ -439,13 +441,15 @@ class ProductController
     }
     
     /**
+     * 
+     * @param FastRouteGenerator $urlFastRouteGenerator
      * @param Request $request
      * @param pR $pR
      * @param sR $sR
      * @param string $page
      * @return \Yiisoft\DataResponse\DataResponse
      */
-    public function index(Request $request, pR $pR, sR $sR, #[RouteArgument('page')] string $page = '1'): \Yiisoft\DataResponse\DataResponse
+    public function index(FastRouteGenerator $urlFastRouteGenerator, Request $request, pR $pR, sR $sR, #[RouteArgument('page')] string $page = '1'): \Yiisoft\DataResponse\DataResponse
     {
         $canEdit = $this->rbac();
         $this->flash_message('info', $this->translator->translate('invoice.productimage.view'));
@@ -484,8 +488,8 @@ class ProductController
             'paginator' => $paginator,
             'defaultPageSizeOffsetPaginator' => (int)$sR->get_setting('default_list_limit'),
             'canEdit' => $canEdit,
-            'grid_summary' => $sR->grid_summary($paginator, $this->translator, (int)$sR->get_setting('default_list_limit'), $this->translator->translate('invoice.products'), ''),
-            'optionsDataProductsDropdownFilter' => $this->optionsDataProducts($pR)
+            'optionsDataProductsDropdownFilter' => $this->optionsDataProducts($pR),
+            'urlFastRouteGenerator' => $urlFastRouteGenerator
         ]; 
         return $this->viewRenderer->render('index', $parameters);
     }
@@ -514,9 +518,10 @@ class ProductController
         return $this->responseFactory->createResponse(Json::encode($parameters));
     }
     
-    // queryparams coming from modal_product_lookups.js ---> line 165 filter_button_inv
+   
     
     /**
+     * @see  ...\src\Invoice\Asset\rebuild-1.13\js\modal_product_lookups.js 
      * @param ViewRenderer $head
      * @param Request $request
      * @param fR $fR
@@ -535,14 +540,14 @@ class ProductController
         /** @var string $rt */
         $rt = $queryparams[$this->rtc] ?? '';
         $parameters = [
-            'numberhelper'=>new NumberHelper($sR),
-            'families'=> $fR->findAllPreloaded(),
-            'filter_product'=> $fp,            
-            'filter_family'=> $ff,
-            'reset_table'=> $rt,
-            'head'=> $head,
-            'products'=> $rt || ($ff=='' && $fp=='') ? $pR->findAllPreloaded() : $pR->repoProductwithfamilyquery($fp, $ff),
-            'default_item_tax_rate'=> $sR->get_setting('default_item_tax_rate') !== '' ?: 0,
+            'numberhelper' => new NumberHelper($sR),
+            'families' => $fR->findAllPreloaded(),
+            'filter_product' => $fp,            
+            'filter_family' => $ff,
+            'reset_table' => $rt,
+            'head' => $head,
+            'products' => $rt || ($ff=='' && $fp=='') ? $pR->findAllPreloaded() : $pR->repoProductwithfamilyquery($fp, $ff),
+            'default_item_tax_rate' => $sR->get_setting('default_item_tax_rate') !== '' ?: 0,
         ];
         return $this->viewRenderer->renderPartial('_partial_product_table_modal', $parameters);        
     }
@@ -638,9 +643,10 @@ class ProductController
            }      
     }
     
-    //views/invoice/product/modal-product-lookups-quote.php => modal_product_lookups.js $(document).on('click', '.select-items-confirm-quote', function () => selection_quote
-    
     /**
+     * @see  ...resources/views/invoice/product/modal-product-lookups-quote.php 
+     * @see  ...src\Invoice\Asset\rebuild-1.13\js modal_product_lookups.js $(document).on('click',
+     *      '.select-items-confirm-quote', function () => selection_quote
      * @param FormHydrator $formHydrator
      * @param Request $request
      * @param pR $pR
@@ -677,9 +683,9 @@ class ProductController
         return $this->responseFactory->createResponse(Json::encode($products));
 }
     
-    //views/invoice/product/modal-product-lookups-inv.php => modal_product_lookups.js $(document).on('click', '.select-items-confirm-inv', function () 
-    
     /**
+     * @see ...views\invoice\product\modal-product-lookups-inv.php 
+     * @see ... src\Invoice\Asset\rebuild-1.13\js\modal_product_lookups.js $(document).on('click', '.select-items-confirm-inv', function () 
      * @param FormHydrator $formHydrator
      * @param Request $request
      * @param pR $pR
@@ -803,7 +809,8 @@ class ProductController
           $product_images = $piR->repoProductImageProductquery((int)$product_id);
           $parameters = [
             'title' => $this->translator->translate('i.view'),
-            'action' => ['product/view', ['id' => $product_id]],
+            'actionName' => 'product/view', 
+            'actionArguments' => ['id' => $product_id],
             'partial_product_details' => $this->viewRenderer->renderPartialAsString('//invoice/product/views/partial_product_details',
             [
                 'form' => $productForm,
@@ -835,7 +842,7 @@ class ProductController
             'partial_product_images' => $this->view_partial_product_image($language, (int) $product_id, $piR, $sR),
             'partial_product_gallery' => $this->viewRenderer->renderPartialAsString('//invoice/product/views/partial_product_gallery', [
               'product' => $product,
-              'product_images' => $product_images,             
+              'productImages' => $product_images,             
               'invEdit' => $this->userService->hasPermission('editInv'),
               'invView' => $this->userService->hasPermission('viewInv')
             ])
@@ -943,11 +950,11 @@ class ProductController
           'invView' => $invView,
           'partial_product_image_info' => $this->viewRenderer->renderPartialAsString('//invoice/product/views/partial_product_image_info'),
           'partial_product_image_list' => $this->viewRenderer->renderPartialAsString('//invoice/product/views/partial_product_image_list', [
-            'grid_summary' => $sR->grid_summary($paginator, $this->translator, (int) $sR->get_setting('default_list_limit'), $this->translator->translate('invoice.productimage.list'), ''),
             'paginator' => $paginator,
             'invEdit' => $invEdit
           ]),
-          'action' => ['product/image_attachment', ['id' => $product_id, '_language' => $_language]]
+          'actionName' => 'product/image_attachment', 
+          'actionArguments' => ['id' => $product_id, '_language' => $_language]
         ]);
     }
     

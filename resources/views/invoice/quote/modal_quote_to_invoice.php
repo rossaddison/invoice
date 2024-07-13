@@ -2,7 +2,16 @@
 declare(strict_types=1);
 
 use Yiisoft\Html\Html;
-// id="quote-to-invoice" triggered by <a href="#quote-to-invoice" data-toggle="modal"  style="text-decoration:none"> on views/quote/view.php line 86
+
+/**
+ * @see id="quote-to-invoice" triggered by <a href="#quote-to-invoice" data-toggle="modal"  style="text-decoration:none">
+ * @see views/quote/view.php
+ * @var App\Invoice\Entity\Quote $quote
+ * @var App\Invoice\Setting\SettingRepository $s
+ * @var Yiisoft\Translator\TranslatorInterface $translator
+ * @var array $groups
+ */
+
 ?>
 <div id="quote-to-invoice" class="modal modal-lg" role="dialog" aria-labelledby="modal_quote_to_invoice" aria-hidden="true">
     <form class="modal-content">
@@ -11,11 +20,11 @@ use Yiisoft\Html\Html;
                 <button type="button" class="close" data-dismiss="modal"><i class="fa fa-times-circle"></i></button>
             </div>       
             <div class="modal-header">
-                <h5 class="col-12 modal-title text-center"><?php echo $translator->translate('i.quote_to_invoice'); ?></h5>
+                <h5 class="col-12 modal-title text-center"><?= $translator->translate('i.quote_to_invoice'); ?></h5>
                 <br>
             </div>
-            <input type="hidden" name="client_id" id="client_id" value="<?php echo $quote->getClient_id(); ?>">            
-            <input type="hidden" name="user_id" id="user_id" value="<?php echo $quote->getUser_id(); ?>">
+            <input type="hidden" name="client_id" id="client_id" value="<?= $quote->getClient_id(); ?>">            
+            <input type="hidden" name="user_id" id="user_id" value="<?= $quote->getUser_id(); ?>">
             <div class="form-group">
                 <label for="password"><?= $translator->translate('i.invoice_password'); ?></label>
                 <input type="text" name="password" id="invoice_password" class="form-control"
@@ -27,9 +36,13 @@ use Yiisoft\Html\Html;
                     <?= $translator->translate('i.invoice_group'); ?>
                 </label>
                 <select name="group_id" id="group_id" class="form-control">
-                    <?php foreach ($groups as $group) { ?>
+                    <?php
+                        /**
+                         * @var App\Invoice\Entity\Group $group
+                         */
+                        foreach ($groups as $group) { ?>
                         <option value="<?= $group->getId(); ?>"
-                            <?= $s->check_select($s->get_setting('default_invoice_group'), $group->getId()); ?>>
+                            <?php $s->check_select($s->get_setting('default_invoice_group'), $group->getId()); ?>>
                             <?= Html::encode($group->getName()); ?></option>
                     <?php } ?>
                 </select>

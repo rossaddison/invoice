@@ -1,7 +1,15 @@
 <?php
+
 declare(strict_types=1);
-// delete-items triggered by #delete-items on quote\view.php
+
+/**
+ * @see delete-items triggered by #delete-items on quote\view.php 
+ * @var Yiisoft\Translator\TranslatorInterface $translator
+ * @var string $partial_item_table_modal
+ */
+
 ?>
+
 <div id="delete-items" class="modal modal-lg" role="dialog" aria-labelledby="modal_delete_item" aria-hidden="true">
     <form class="modal-content">
         <div class="modal-body">
@@ -25,7 +33,7 @@ declare(strict_types=1);
             </div>
         </div>
         <div>
-            <?php echo $partial_item_table_modal; ?>
+            <?= $partial_item_table_modal; ?>
         </div>  
     </form>
 </div>

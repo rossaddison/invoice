@@ -1,13 +1,14 @@
 <?php
     declare(strict_types=1);
     
-    /**
-     * @see App\Invoice\PaymentInformation\PaymentInformationController function renderPartialAsStringCompanyLogo
-     * @var string $src e.g. ? 'public/logo/'.$companyLogoFileName : '/site/logo.png'
-     */
-    
     use Yiisoft\Html\Tag\A;
     use Yiisoft\Html\Tag\Img;
+    
+    /**
+     * @see App\Invoice\PaymentInformation\PaymentInformationController function renderPartialAsStringCompanyLogo
+     * @see $src e.g. ? 'public/logo/'.$companyLogoFileName : '/site/logo.png'
+     * @var string $src 
+     */
     
     echo A::tag()
         ->href('')

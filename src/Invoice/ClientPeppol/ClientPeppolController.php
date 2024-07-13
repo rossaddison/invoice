@@ -120,7 +120,7 @@ final class ClientPeppolController {
         $parameters['errors'] = $form->getValidationResult()->getErrorMessagesIndexedByAttribute();
         $parameters['form'] = $form;
       } // if
-      return $this->viewRenderer->render('clientpeppol/_form', $parameters);
+      return $this->viewRenderer->render('_form', $parameters);
     } // null !== $client
     return $this->webService->getNotFoundResponse();
   }

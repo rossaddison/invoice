@@ -2,22 +2,47 @@
 
 declare(strict_types=1);
 
-use App\Invoice\Helpers\NumberHelper;
-use App\Invoice\Helpers\ClientHelper;
-
 use Yiisoft\FormModel\Field;
 use Yiisoft\Html\Html;
 use Yiisoft\Html\Tag\Form;
 
 /**
- * @var \Yiisoft\View\View $this
- * @var \Yiisoft\Router\UrlGeneratorInterface $urlGenerator
+ * 
+ * @var App\Invoice\Entity\Client $client_on_invoice
+ * @var App\Invoice\Entity\Inv $invoice
+ * @var App\Invoice\PaymentInformation\PaymentInformationForm $form
+ * 
+ * @see config\common\params 'yiisoft/view' => ['parameters' => ['clientHelper' => Reference::to(ClientHelper::class)]]
+ * @var App\Invoice\Helpers\ClientHelper $clientHelper
+ * 
+ * @see config\common\params 'yiisoft/view' => ['parameters' => ['dateHelper' => Reference::to(DateHelper::class)]]
+ * @var App\Invoice\Helpers\DateHelper $dateHelper
+ * 
+ * @see config\common\params 'yiisoft/view' => ['parameters' => ['numberHelper' => Reference::to(NumberHelper::class)]]
+ * @var App\Invoice\Helpers\NumberHelper $numberHelper
+ * 
+ * @see config\common\params 'yiisoft/view' => ['parameters' => ['s' => Reference::to(SettingRepository::class)]]
+ * @var App\Invoice\Setting\SettingRepository $s 
+ * 
+ * @var Yiisoft\Translator\TranslatorInterface $translator
+ * @var Yiisoft\Router\UrlGeneratorInterface $urlGenerator
+ * @var array $body
+ * @var bool $disable_form
+ * @var bool $is_overdue
+ * @var float $balance
+ * @var float $total
+ * @var string $actionName
+ * @var string $alert
  * @var string $csrf
- * @var string $action
+ * @var string $client_chosen_gateway
+ * @var string $companyLogo
+ * @var string $inv_url_key
+ * @var string $partial_client_address
+ * @var string $payment_method
+ * @var string $title
+ * @psalm-var array<string, Stringable|null|scalar> $actionArguments
+ * 
  */
-
-$numberhelper = new NumberHelper($s);
-$clienthelper = new ClientHelper($s);
 ?>
 <?php if ($disable_form === false) { ?>
 <div class="container py-5 h-100">
@@ -26,10 +51,11 @@ $clienthelper = new ClientHelper($s);
 <div class="card border border-dark shadow-2-strong rounded-3">
     <div class="card-header bg-dark text-white">
         <h2 class="fw-normal h3 text-center"><?= $translator->translate('g.online_payment_for_invoice'); ?> #
-                                             <?= $invoice->getNumber(). ' => '.
-                                                 $invoice->getClient()->getClient_name() . ' '.
-                                                 $invoice->getClient()->getClient_surname() . ' '.
-                                                 $numberhelper->format_currency($balance); ?>
+            <?php echo Html::tag('br'); echo $companyLogo; ?><?= $translator->translate('g.online_payment_for_invoice'); ?> #
+            <?= ($invoice->getNumber() ?? ''). ' => '.
+                ($invoice->getClient()?->getClient_name() ?? '' ). ' '.
+                ($invoice->getClient()?->getClient_surname() ?? '' ). ' '.
+                 $numberHelper->format_currency($balance); ?>
         </h2>
         <a href="<?= $urlGenerator->generate('inv/pdf_download_include_cf', ['url_key' => $inv_url_key]); ?>" class="btn btn-sm btn-primary fw-normal h3 text-center" style="text-decoration:none">
             <i class="fa fa-file-pdf-o"></i> <?= $translator->translate('i.download_pdf').'=>'.$translator->translate('i.yes').' '.$translator->translate('i.custom_fields'); ?>
@@ -42,8 +68,7 @@ $clienthelper = new ClientHelper($s);
 <div class="card-body p-5 text-center">    
     <?=                    
     Form::tag()
-    // $action => 'action' => ['paymentinformation/make_payment', ['url_key' => $url_key]],
-    ->post($urlGenerator->generate(...$action))
+    ->post($urlGenerator->generate($actionName, $actionArguments))
     ->enctypeMultipartFormData()
     ->csrf($csrf)
     ->id('PaymentInformationForm')
@@ -53,10 +78,10 @@ $clienthelper = new ClientHelper($s);
     <?= Html::input('hidden','invoice_url_key', Html::encode($inv_url_key)); ?>
     <?= Html::label($translator->translate('g.online_payment_method'),'gateway-select'); ?>
     <?= Field::text($form, 'gateway_driver')
-    ->addInputAttributes(['class'=>'input-sm form-control'])
-    ->addInputAttributes(['value'=>$body['gateway_driver'] ?? $client_chosen_gateway ])
-    ->addInputAttributes(['readonly'=>true])
-    ->hideLabel()
+        ->addInputAttributes(['class'=>'input-sm form-control'])
+        ->addInputAttributes(['value'=>$body['gateway_driver'] ?? $client_chosen_gateway ])
+        ->addInputAttributes(['readonly'=>true])
+        ->hideLabel()
     ?>
     <?= $translator->translate('g.creditcard_details'); ?>
     <?= $translator->translate('g.online_payment_creditcard_hint'); ?>
@@ -91,13 +116,13 @@ $clienthelper = new ClientHelper($s);
     ->addContainerClass('btn-group btn-toolbar float-end')
     ->buttonsData([
     [
-        ' '.$translator->translate('i.pay_now') . ': ' . $numberhelper->format_currency($balance),
+        ' '.$translator->translate('i.pay_now') . ': ' . $numberHelper->format_currency($balance),
         'type' => 'submit',
         'class' => 'btn btn-lg btn-success fa fa-credit-card fa-margin',
         'name' => 'btn_send'
     ],
     ]) ?>
-<?= Html::encode($clienthelper->format_client($client_on_invoice)) ?>
+<?= Html::encode($clientHelper->format_client($client_on_invoice)) ?>
 <?= $partial_client_address; ?>
 <br>
 <br>
@@ -107,21 +132,21 @@ $clienthelper = new ClientHelper($s);
     <tbody>
     <tr>
         <td><?= $translator->translate('i.invoice_date'); ?></td>
-        <td class="text-right"><?= Html::encode($invoice->getDate_created()->format($datehelper->style())); ?></td>
+        <td class="text-right"><?= Html::encode($invoice->getDate_created()->format($dateHelper->style())); ?></td>
     </tr>
     <tr class="<?= ($is_overdue ? 'overdue' : '') ?>">
         <td><?= $translator->translate('i.due_date'); ?></td>
         <td class="text-right">
-            <?= Html::encode($invoice->getDate_due()->format($datehelper->style())); ?>
+            <?= Html::encode($invoice->getDate_due()->format($dateHelper->style())); ?>
         </td>
     </tr>
     <tr class="<?php echo($is_overdue ? 'overdue' : '') ?>">
         <td><?= $translator->translate('i.total'); ?></td>
-        <td class="text-right"><?= Html::encode($numberhelper->format_currency($total)); ?></td>
+        <td class="text-right"><?= Html::encode($numberHelper->format_currency($total)); ?></td>
     </tr>
     <tr class="<?= ($is_overdue ? 'overdue' : '') ?>">
         <td><?= $translator->translate('i.balance'); ?></td>
-        <td class="text-right"><?= Html::encode($numberhelper->format_currency($balance)); ?></td>
+        <td class="text-right"><?= Html::encode($numberHelper->format_currency($balance)); ?></td>
     </tr>
     <?php if ($payment_method): ?>
         <tr>

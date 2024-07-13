@@ -2,22 +2,26 @@
 
 declare(strict_types=1); 
 
-
 use Yiisoft\FormModel\Field;
 use Yiisoft\Html\Html;
 use Yiisoft\Html\Tag\Form;
 
 /**
- * @var \Yiisoft\View\View $this
- * @var \Yiisoft\Router\UrlGeneratorInterface $urlGenerator
+ * @var App\Invoice\Project\ProjectForm $form
+ * @var App\Widget\Button $button
+ * @var Yiisoft\Translator\TranslatorInterface $translator
+ * @var Yiisoft\Router\UrlGeneratorInterface $urlGenerator
+ * @var array $clients
  * @var string $csrf
- * @var string $action
+ * @var string $actionName
  * @var string $title
+ * @psalm-var array<string, Stringable|null|scalar> $actionArguments
+ * @psalm-var array<string,list<string>> $errors
  */
 ?>
 
 <?= Form::tag()
-    ->post($urlGenerator->generate(...$action))
+    ->post($urlGenerator->generate($actionName, $actionArguments))
     ->enctypeMultipartFormData()
     ->csrf($csrf)
     ->id('ProjectForm')
@@ -44,11 +48,20 @@ use Yiisoft\Html\Tag\Form;
                 ?>
                 <?php
                     $optionsDataClient = [];
+                    /**
+                     * @var App\Invoice\Entity\Client $client
+                     */
                     foreach ($clients as $client) { 
-                        $optionsDataClient[$client->getClient_id()] = $client->getClient_name() . ' '. $client->getClient_surname();                    
+                        $clientName = $client->getClient_name();
+                        $clientSurname = $client->getClient_surname() ?? '';
+                        $clientId = $client->getClient_id();
+                        // Only add to the dropdown if the following conditions are satisfied
+                        if ((strlen($clientName) > 0) && (strlen(($clientSurname)) > 0) && (null!==$clientId)) {
+                            $optionsDataClient[$clientId] = $clientName . ' '. $clientSurname;
+                        }
                     }
                     echo Field::select($form, 'client_id')
-                    ->label($translator->translate('i.client'),['control-label'])
+                    ->label($translator->translate('i.client'))
                     ->addInputAttributes([
                         'id' => 'client_id', 
                         'class' => 'form-control',
@@ -60,7 +73,7 @@ use Yiisoft\Html\Tag\Form;
                 <?= Html::closeTag('div'); ?>
                 <?= Html::openTag('div'); ?>
                 <?= Field::text($form, 'name')
-                    ->label($translator->translate('i.project_name'), ['form-label'])
+                    ->label($translator->translate('i.project_name'))
                     ->addInputAttributes([
                         'id' => 'name',
                         'class' => 'form-control',

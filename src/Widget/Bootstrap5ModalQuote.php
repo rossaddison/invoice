@@ -59,7 +59,8 @@ final class Bootstrap5ModalQuote
         $this->formParameters = [
             'origin' => $origin,
             'title' => $this->translator->translate('i.add'),
-            'action' => ['quote/add', ['origin' => $origin]],
+            'actionName' => 'quote/add',
+            'actionArguments' => ['origin' => $origin],
             'errors' => $errors,
             'form' => $this->quoteForm,
             'clients' => $this->cR->optionsData($this->ucR),

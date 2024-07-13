@@ -5,14 +5,23 @@ declare(strict_types=1);
 use Yiisoft\FormModel\Field;
 use Yiisoft\Html\Html;
 use Yiisoft\Html\Tag\Form;
-use Yiisoft\View\WebView;
 
 /**
- * @var Yiisoft\Yii\View\Csrf $csrf
- * @var \Yiisoft\Router\UrlGeneratorInterface $urlGenerator
- * @var WebView $this
- * @var \Yiisoft\Translator\TranslatorInterface $translator
+ * @see ...src\Invoice\Product\ProductController function view_partial_product_image 
+ * @var App\Invoice\Product\ImageAttachForm $form
+ * @var App\Invoice\Setting\SettingRepository $s
+ * @var Yiisoft\Router\UrlGeneratorInterface $urlGenerator
+ * @var Yiisoft\Translator\TranslatorInterface $translator
+ * @var Yiisoft\View\WebView $this
+ * @var string $actionName
+ * @var string $csrf
+ * @var bool $invEdit
+ * @var bool $invView
+ * @var string $partial_product_image_info
+ * @var string $partial_product_image_list
+ * @psalm-var array<string, Stringable|null|scalar> $actionArguments
  */
+
  if ($invEdit && $invView) { 
     $this->setTitle($translator->translate('i.add_files'));
  }
@@ -33,7 +42,7 @@ use Yiisoft\View\WebView;
                     </div>
                     <div>
                         <?= Form::tag()
-                            ->post($urlGenerator->generate(...$action))
+                            ->post($urlGenerator->generate($actionName, $actionArguments))
                             ->enctypeMultipartFormData()
                             ->csrf($csrf)
                             ->id('ImageAttachForm')

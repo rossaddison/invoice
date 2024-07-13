@@ -1,6 +1,15 @@
 <?php
-declare(strict_types=1); 
+
+declare(strict_types=1);
+
 use Yiisoft\Html\Html;
+
+/**
+ * @var App\Invoice\Helpers\NumberHelper $numberHelper
+ * @var Yiisoft\Translator\TranslatorInterface $translator
+ * @var array $products
+ */
+
 ?>
 <div class="table-responsive">
     <table class="table table-hover table-bordered table-striped">
@@ -12,7 +21,11 @@ use Yiisoft\Html\Html;
             <th><?= $translator->translate('i.product_description'); ?></th>
             <th class="text-right"><?= $translator->translate('i.product_price'); ?></th>
         </tr>
-        <?php foreach ($products as $product) { ?>
+        <?php 
+            /**
+             * @var App\Invoice\Entity\Product $product
+             */
+            foreach ($products as $product) { ?>
             <tr class="product">
                 <td class="text-left">
                     <input type="checkbox" name="product_ids[]"
@@ -22,7 +35,7 @@ use Yiisoft\Html\Html;
                     <b><?= Html::encode($product->getProduct_sku()); ?></b>
                 </td>
                 <td>
-                    <b><?= Html::encode($product->getFamily()->getFamily_name()); ?></b>
+                    <b><?= Html::encode($product->getFamily()?->getFamily_name()); ?></b>
                 </td>
                 <td>
                     <b><?= Html::encode($product->getProduct_name()); ?></b>
@@ -35,6 +48,5 @@ use Yiisoft\Html\Html;
                 </td>
             </tr>
         <?php } ?>
-
     </table>
 </div>

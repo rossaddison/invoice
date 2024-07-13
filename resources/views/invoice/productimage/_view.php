@@ -8,16 +8,19 @@ use Yiisoft\Html\Html;
 use Yiisoft\Html\Tag\Form;
 
 /**
- * @var \Yiisoft\View\View $this
- * @var \Yiisoft\Router\UrlGeneratorInterface $urlGenerator
+ * @var App\Invoice\ProductImage\ProductImageForm $form
+ * @var App\Widget\Button $button
+ * @var Yiisoft\Translator\TranslatorInterface $translator
+ * @var Yiisoft\Router\UrlGeneratorInterface $urlGenerator
  * @var string $csrf
- * @var string $action
+ * @var string $actionName
  * @var string $title
+ * @psalm-var array<string, Stringable|null|scalar> $actionArguments
  */
 ?>
 
 <?= Form::tag()
-    ->post($urlGenerator->generate(...$action))
+    ->post($urlGenerator->generate($actionName, $actionArguments))
     ->enctypeMultipartFormData()
     ->csrf($csrf)
     ->id('ProductImageForm')
@@ -33,7 +36,7 @@ use Yiisoft\Html\Tag\Form;
     <?= Html::encode($title) ?>
 <?= Html::closeTag('h1'); ?>
 <?= Html::openTag('div', ['id' => 'headerbar']); ?>
-    <?= $button::back($translator); ?>
+    <?= $button::back(); ?>
     <?= Html::openTag('div', ['id' => 'content']); ?>
         <?= Html::openTag('div', ['class' => 'row']); ?>
             <?= Html::openTag('div', ['class' => 'mb-3 form-group']); ?>
@@ -50,9 +53,9 @@ use Yiisoft\Html\Tag\Form;
                             'readonly' => 'readonly',
                             'disabled' => 'disabled'
                         ])    
-                        ->label($translator->translate('i.date'), ['class' => 'form-label'])
+                        ->label($translator->translate('i.date'))
                         ->required(true)
-                        ->value($form->getUploaded_date() ? ($form->getUploaded_date())->format('Y-m-d') : '')
+                        ->value($form->getUploaded_date() instanceof DateTimeImmutable ? ($form->getUploaded_date())->format('Y-m-d') : '')
                     ?>
                 <?= Html::closeTag('div'); ?>
                 <?= Html::openTag('div', ['class' => 'mb-3 form-group']); ?>

@@ -21,6 +21,7 @@ use Yiisoft\Yii\DataView\OffsetPagination;
 use Yiisoft\Yii\DataView\Column\DataColumn;
 use Yiisoft\Yii\View\Renderer\CsrfViewInjection;
 // yii3-i
+use App\Invoice\Helpers\ClientHelper;
 use App\Invoice\Helpers\DateHelper;
 use App\Invoice\Helpers\NumberHelper;
 use App\Invoice\Helpers\Peppol\Peppol_UNECERec20_11e;
@@ -161,6 +162,7 @@ return [
       's' => Reference::to(SettingRepository::class),
       'button' => Reference::to(Button::class), 
       'session' => Reference::to(SessionInterface::class),
+      'clientHelper' => Reference::to(ClientHelper::class),
       'datehelper' => Reference::to(DateHelper::class),
       'dateHelper' => Reference::to(DateHelper::class),  
       'numberHelper' => Reference::to(NumberHelper::class),

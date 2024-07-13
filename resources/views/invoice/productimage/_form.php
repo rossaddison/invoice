@@ -2,22 +2,25 @@
 
 declare(strict_types=1); 
 
-
 use Yiisoft\FormModel\Field;
 use Yiisoft\Html\Html;
 use Yiisoft\Html\Tag\Form;
 
 /**
- * @var \Yiisoft\View\View $this
- * @var \Yiisoft\Router\UrlGeneratorInterface $urlGenerator
+ * @var App\Invoice\ProductImage\ProductImageForm $form
+ * @var App\Widget\Button $button
+ * @var Yiisoft\Translator\TranslatorInterface $translator
+ * @var Yiisoft\Router\UrlGeneratorInterface $urlGenerator
  * @var string $csrf
- * @var string $action
+ * @var string $actionName
  * @var string $title
+ * @psalm-var array<string, Stringable|null|scalar> $actionArguments
+ * @psalm-var array<string,list<string>> $errors
  */
 ?>
 
 <?= Form::tag()
-    ->post($urlGenerator->generate(...$action))
+    ->post($urlGenerator->generate($actionName, $actionArguments))
     ->enctypeMultipartFormData()
     ->csrf($csrf)
     ->id('ProductImageForm')
@@ -51,9 +54,10 @@ use Yiisoft\Html\Tag\Form;
                 <?= Html::openTag('div'); ?>
                 <?= Html::openTag('div', ['class' => 'mb-3 form-group']); ?>
                     <?= Field::date($form, 'uploaded_date')
-                    ->label($translator->translate('i.date'), ['class' => 'form-label'])
+                    ->label($translator->translate('i.date'))
                     ->required(true)
-                    ->value($form->getUploaded_date() ? ($form->getUploaded_date())->format('Y-m-d') : '')
+                    ->value($form->getUploaded_date() instanceof DateTimeImmutable ?  
+                            $form->getUploaded_date()->format('Y-m-d') : '')
                     ->hint($translator->translate('invoice.hint.this.field.is.required')); 
                 ?>
                 <?= Html::closeTag('div'); ?>

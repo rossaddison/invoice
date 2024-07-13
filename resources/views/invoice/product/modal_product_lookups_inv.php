@@ -1,20 +1,41 @@
+<?php
+
+declare(strict_types=1);
+
+use Yiisoft\Html\Tag\Button;
+
+/**
+ * @see ...src\Invoice\Inv\InvController function view $parameters['modal_choose_items']
+ * @see ...\resources\views\invoice\product\_partial_product_table_modal.php
+ * @var App\Invoice\Helpers\NumberHelper $numberHelper
+ * @var Yiisoft\Translator\TranslatorInterface $translator
+ * @var array $families
+ * @var array $products
+ * @var string $filter_product
+ * @var string $default_item_tax_rate
+ * @var string $partial_product_table_modal
+ */
+
+?>
+
 <div id="modal-choose-items" class="modal modal-lg" role="dialog" aria-labelledby="modal_choose_items" aria-hidden="true">
-    <form class="modal-content">
-        <div class="modal-header">
-            <button type="button" class="close" data-dismiss="modal"><i class="fa fa-times-circle"></i></button>
-        </div>
+    <form class="modal-content">        
         <div class="modal-body">
             <div class="form-group">
                 <label for="filter_family_inv"><?= $translator->translate('i.any_family'); ?></label>
                 <div class="form-group">
                     <select name="filter_family_inv" id="filter_family_inv" class="form-control">
                         <option value="0"><?= $translator->translate('i.any_family'); ?></option>
-                        <?php foreach ($families as $family) { ?>
+                        <?php
+                            /**
+                             * @var App\Invoice\Entity\Family $family
+                             */
+                            foreach ($families as $family) { ?>
                             <option value="<?= $family->getFamily_id(); ?>"
                                 <?php if (isset($filter_family) && $family->getFamily_id() == $filter_family) {
                                     echo ' selected="selected"';
                                 } ?>>
-                                <?= $family->getFamily_name(); ?>
+                                <?= $family->getFamily_name() ?? ''; ?>
                             </option>
                         <?php } ?>
                     </select>
@@ -41,13 +62,18 @@
             </div>
             <div id="product-lookup-table">
                 <?php  
-                    $response = $head->renderPartial('invoice/product/_partial_product_table_modal', [
-                        'products' => $products,
-                        'numberhelper' => $numberHelper,
-                    ]);
-                    echo (string)$response->getBody();
+                   echo $partial_product_table_modal
                 ?>     
             </div>
+        </div>
+        <div class="modal-footer">
+        <?php    
+            echo Button::tag()
+            ->addClass('btn btn-danger')
+            ->content($translator->translate('i.close'))
+            ->addAttributes(['data-dismiss' => 'modal'])
+            ->render();
+        ?>    
         </div>
     </form>
     <div id="default_item_tax_rate" value="<?= $default_item_tax_rate; ?>"></div>

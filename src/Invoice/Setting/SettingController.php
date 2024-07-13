@@ -652,11 +652,11 @@ final class SettingController
             $filehelper = new FileHelper;
             $filehelper->clearDirectory($directory);
             $this->flash_message('info', $this->translator->translate('invoice.setting.assets.cleared.at').$directory);
-            return $this->factory->createResponse($this->viewRenderer->renderPartialAsString('setting/successful',
+            return $this->factory->createResponse($this->viewRenderer->renderPartialAsString('//invoice/setting/successful',
             ['heading'=>$this->translator->translate('invoice.successful'),'message' => $this->translator->translate('invoice.setting.you.have.cleared.the.cache')])); 
         } catch (\Exception $e) {            
             $this->flash_message('warning', $this->translator->translate('invoice.setting.assets.were.not.cleared.at') .$directory. $this->translator->translate('invoice.setting.as.a.result.of').$e->getMessage());            
-            return $this->factory->createResponse($this->viewRenderer->renderPartialAsString('setting/unsuccessful',
+            return $this->factory->createResponse($this->viewRenderer->renderPartialAsString('//invoice/setting/unsuccessful',
             ['heading'=>$this->translator->translate('invoice.unsuccessful'),'message' => $this->translator->translate('invoice.setting.you.have.not.cleared.the.cache.due.to.a') . $e->getMessage(). $this->translator->translate('invoice.setting.error.on.the.public.assets.folder')])); 
         }
     }

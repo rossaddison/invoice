@@ -82,13 +82,12 @@ final class PaymentMethodController
      */
     public function index(PaymentMethodRepository $paymentmethodRepository, Request $request, PaymentMethodService $service): \Yiisoft\DataResponse\DataResponse
     {
-         $canEdit = $this->rbac();
-         $parameters = [
-          'canEdit' => $canEdit,
-          'payment_methods' => $this->paymentmethods($paymentmethodRepository),
-          'alert' => $this->alert()
-         ];
-        
+        $canEdit = $this->rbac();
+        $parameters = [
+            'canEdit' => $canEdit,
+            'payment_methods' => $this->paymentmethods($paymentmethodRepository),
+            'alert' => $this->alert()
+        ];
         return $this->viewRenderer->render('index', $parameters);
     }
     
@@ -102,7 +101,8 @@ final class PaymentMethodController
         $form = new PaymentMethodForm(new PaymentMethod());
         $parameters = [
             'title' => $this->translator->translate('invoice.add'),
-            'action' => ['paymentmethod/add'],
+            'actionName' => 'paymentmethod/add',
+            'actionArguments' => [],
             'errors' => [],
             'form' => $form
         ];
@@ -138,7 +138,8 @@ final class PaymentMethodController
             $form = new PaymentMethodForm($payment_method);
             $parameters = [
                 'title' => $this->translator->translate('i.edit'),
-                'action' => ['paymentmethod/edit', ['id' => $payment_method->getId()]],
+                'actionName' => 'paymentmethod/edit',
+                'actionArguments' => ['id' => $payment_method->getId()],
                 'errors' => [],
                 'form' => $form
             ];
@@ -180,7 +181,6 @@ final class PaymentMethodController
     }
     
     /**
-     * 
      * @param CurrentRoute $currentRoute
      * @param PaymentMethodRepository $paymentmethodRepository
      * @return \Yiisoft\DataResponse\DataResponse|Response
@@ -193,7 +193,8 @@ final class PaymentMethodController
             $form = new PaymentMethodForm($payment_method);
             $parameters = [
                 'title' => $this->translator->translate('i.view'),
-                'action' => ['paymentmethod/edit', ['id' => $payment_method->getId()]],
+                'actionName' => 'paymentmethod/view', 
+                'actionArguments' => ['id' => $payment_method->getId()],
                 'form' => $form,
                 'paymentmethod' => $paymentmethodRepository->repoPaymentMethodquery($payment_method->getId()),
             ];

@@ -2,13 +2,17 @@
 
 declare(strict_types=1);
 
-use Yiisoft\Html\Html;
-use Yiisoft\View\WebView;
-
 /**
- * @var WebView $this
- * @var \Yiisoft\Translator\TranslatorInterface $translator
+ * @see ...src\Invoice\Product\ProductController function view $parameters['partial_product_gallery']
+ * @var App\Invoice\Entity\Product $product
+ * @var App\Invoice\Setting\SettingRepository $s
+ * @var Yiisoft\Translator\TranslatorInterface $translator
+ * @var Yiisoft\View\WebView $this
+ * @var array $productImages
+ * @var bool $invEdit
+ * @var bool $invView
  */
+
  if ($invEdit && $invView) { 
     $this->setTitle($translator->translate('invoice.productimage.gallery'));
  }
@@ -16,18 +20,24 @@ use Yiisoft\View\WebView;
 
 <div class="panel panel-default no-margin">
   <div class="panel-heading">
-      <i tooltip="data-bs-toggle" title="<?= $s->isDebugMode(9);?>"><?= $translator->translate('invoice.productimage.gallery'); ?><?= $product->getProduct_name(); ?></i>
+      <i tooltip="data-bs-toggle" title="<?= $s->isDebugMode(9);?>">
+        <?= $translator->translate('invoice.productimage.gallery'); ?>
+        <?= $product->getProduct_name(); ?></i>
   </div>
   <div class="panel-body clearfix">
     <div class="container">
         <?php if ($invView && $invEdit) { ?> 
-          <?= Html::openTag('div', ['class' => 'row']); ?>
-            <?php foreach ($product_images as $productimage) { ?>
+        <div class='row'>
+            <?php
+                /**
+                 * @var App\Invoice\Entity\ProductImage $productImage
+                 */
+                foreach ($productImages as $productImage) { ?>
                 <a data-toggle="lightbox" data-gallery="example-gallery" class="col-sm-4">
-                    <img src="<?= '/products/'. $productimage->getFile_name_original(); ?>"   class="img-fluid">
+                    <img src="<?= '/products/'. $productImage->getFile_name_original(); ?>"   class="img-fluid">
                 </a>
              <?php } ?> 
-          </div>
+        </div>
         <?php } ?>
     </div>
   </div>

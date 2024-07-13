@@ -1,10 +1,19 @@
 <?php
+
 declare(strict_types=1);
 
-  use Yiisoft\Html\Html;
-  use Yiisoft\Html\Tag\Button;
-  use Yiisoft\Yii\Bootstrap5\Modal;
-  echo  Modal::widget() 
+use Yiisoft\Html\Html;
+use Yiisoft\Html\Tag\Button;
+use Yiisoft\Yii\Bootstrap5\Modal;
+
+/**
+ * @see App\Widget\Bootstrap5ModalQuote $this->layoutParameters['form']
+ * @var Yiisoft\Translator\TranslatorInterface $translator
+ * @var string $form
+ * @var string $type 
+ */
+
+echo  Modal::widget() 
     // display the show button with true at the bottom
     ->withToggle(false)    
     ->withoutCloseButton()
@@ -24,8 +33,8 @@ declare(strict_types=1);
             ->addClass('btn btn-danger')
             ->content($translator->translate('i.close'))
             ->addAttributes(['data-dismiss' => 'modal'])
-            ->render())      
-    //->footer('<button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>')      
+            ->render()) 
+        
     /**
      * @link https://getbootstrap.com/docs/5.1/components/modal/#optional-sizes
      */        
@@ -51,7 +60,8 @@ declare(strict_types=1);
      */        
     ->fullscreen('modal-fullscreen-lg-down')
     ->begin();
-    echo (string)$form;
+
+    echo $form;
     echo Modal::end();
     echo Html::br(); 
    

@@ -76,7 +76,8 @@ final class ProductPropertyController
         $form = new ProductPropertyForm($productProperty, (int)$product_id);
         $parameters = [
           'title' => $this->translator->translate('invoice.add'),
-          'action' => ['productproperty/add', ['product_id' => $product_id]],
+          'actionName' => 'productproperty/add',
+          'actionArguments' => ['product_id' => $product_id],
           'errors' => [],
           'form' => $form, 
           'products' => $productRepository->findAllPreloaded(),
@@ -125,10 +126,9 @@ final class ProductPropertyController
         'productpropertys' => $this->productpropertys($productpropertyRepository),
         'paginator' => $paginator,
         'alert' => $this->alert(),
-        'max' => (int) $settingRepository->get_setting('default_list_limit'),
-        'grid_summary' => $settingRepository->grid_summary($paginator, $this->translator, (int) $settingRepository->get_setting('default_list_limit'), $this->translator->translate('invoice.profile.plural'), ''),
+        'max' => (int) $settingRepository->get_setting('default_list_limit')
     ];
-    return $this->viewRenderer->render('productproperty/index', $parameters);
+    return $this->viewRenderer->render('index', $parameters);
     }
         
     /**
@@ -170,7 +170,8 @@ final class ProductPropertyController
             $form = new ProductPropertyForm($productProperty, (int)$productProperty->getProduct_id());
             $parameters = [
               'title' => $this->translator->translate('i.edit'),
-              'action' => ['productproperty/edit', ['id' => $productProperty->getProperty_id()]],
+              'actionName' => 'productproperty/edit', 
+              'actionArguments' => ['id' => $productProperty->getProperty_id()],
               'errors' => [],
               'form' => $form,
               'products' => $productRepository->findAllPreloaded()
@@ -246,7 +247,8 @@ final class ProductPropertyController
             $form = new ProductPropertyForm($productProperty, (int)$productProperty->getProduct_id());  
             $parameters = [
                 'title' => $this->translator->translate('i.view'),
-                'action' => ['productproperty/view', ['id' => $productProperty->getProperty_id()]],
+                'actionName' => 'productproperty/view',
+                'actionArguments' => ['id' => $productProperty->getProperty_id()],
                 'form' => $form,
                 'productproperty' => $productProperty,
             ];        

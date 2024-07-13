@@ -1,19 +1,40 @@
 <?php
+
 declare(strict_types=1);
 
-use App\Invoice\Helpers\NumberHelper;
-use App\Invoice\Helpers\ClientHelper;
 use Yiisoft\Html\Html;
 
 /**
- * @var \Yiisoft\View\View $this
- * @var \Yiisoft\Router\UrlGeneratorInterface $urlGenerator
- * @var string $csrf
- * @var string $action
+ * @see PaymentInformationController function braintreeInForm
+ * @var App\Invoice\Entity\Client $client_on_invoice
+ * @var App\Invoice\Entity\Inv $invoice
+ * 
+ * @see config\common\params 'yiisoft/view' => ['parameters' => ['clientHelper' => Reference::to(ClientHelper::class)]]
+ * @var App\Invoice\Helpers\ClientHelper $clientHelper
+ * 
+ * @see config\common\params 'yiisoft/view' => ['parameters' => ['dateHelper' => Reference::to(DateHelper::class)]]
+ * @var App\Invoice\Helpers\DateHelper $dateHelper
+ * 
+ * @see config\common\params 'yiisoft/view' => ['parameters' => ['numberHelper' => Reference::to(NumberHelper::class)]]
+ * @var App\Invoice\Helpers\NumberHelper $numberHelper
+ * 
+ * @see config\common\params 'yiisoft/view' => ['parameters' => ['s' => Reference::to(SettingRepository::class)]]
+ * @var App\Invoice\Setting\SettingRepository $s 
+ * 
+ * @var Yiisoft\Translator\TranslatorInterface $translator
+ * @var Yiisoft\Router\UrlGeneratorInterface $urlGenerator
+ * @var bool $disable_form
+ * @var bool $is_overdue
+ * @var float $balance
+ * @var float $total
+ * @var string $alert
+ * @var string $client_token
+ * @var string $companyLogo
+ * @var string $inv_url_key
+ * @var string $partial_client_address
+ * @var string $payment_method
+ * @var string $title
  */
-
-$numberhelper = new NumberHelper($s);
-$clienthelper = new ClientHelper($s);
 ?>
 
 <?php if ($disable_form === false) { ?>
@@ -30,10 +51,10 @@ $clienthelper = new ClientHelper($s);
                 </div>    
                 <div class="col-8">
                     <?= $translator->translate('g.online_payment_for_invoice'); ?> #
-                    <?= $invoice->getNumber(). ' => '.
-                        $invoice->getClient()->getClient_name() . ' '.
-                        $invoice->getClient()->getClient_surname() . ' '.
-                        $numberhelper->format_currency($balance); ?>
+                    <?= ($invoice->getNumber() ?? ''). ' => '.
+                     ($invoice->getClient()?->getClient_name() ?? '' ). ' '.
+                     ($invoice->getClient()?->getClient_surname() ?? '' ). ' '.
+                     $numberHelper->format_currency($balance); ?>
                 </div>
             </div>    
         </h2>
@@ -51,14 +72,10 @@ $clienthelper = new ClientHelper($s);
     <div id="dropin-container"></div>
     <input type="submit" />
     <input type="hidden" id="nonce" name="payment_method_nonce"/>
-<?php            
-    if (null!==$companyLogo) {
-        echo $companyLogo;
-    }
-?>
+    <?= $companyLogo; ?>
     <br>
 <br>    
-<?= Html::encode($clienthelper->format_client($client_on_invoice)) ?>
+<?= Html::encode($clientHelper->format_client($client_on_invoice)) ?>
 <?= $partial_client_address; ?>
 <br>
 <div class="table-responsive">
@@ -66,21 +83,21 @@ $clienthelper = new ClientHelper($s);
     <tbody>
     <tr>
         <td><?= $translator->translate('i.invoice_date'); ?></td>
-        <td class="text-right"><?= Html::encode($invoice->getDate_created()->format($datehelper->style())); ?></td>
+        <td class="text-right"><?= Html::encode($invoice->getDate_created()->format($dateHelper->style())); ?></td>
     </tr>
     <tr class="<?= ($is_overdue ? 'overdue' : '') ?>">
         <td><?= $translator->translate('i.due_date'); ?></td>
         <td class="text-right">
-            <?= Html::encode($invoice->getDate_due()->format($datehelper->style())); ?>
+            <?= Html::encode($invoice->getDate_due()->format($dateHelper->style())); ?>
         </td>
     </tr>
     <tr class="<?php echo($is_overdue ? 'overdue' : '') ?>">
         <td><?= $translator->translate('i.total'); ?></td>
-        <td class="text-right"><?= Html::encode($numberhelper->format_currency($total)); ?></td>
+        <td class="text-right"><?= Html::encode($numberHelper->format_currency($total)); ?></td>
     </tr>
     <tr class="<?= ($is_overdue ? 'overdue' : '') ?>">
         <td><?= $translator->translate('i.balance'); ?></td>
-        <td class="text-right"><?= Html::encode($numberhelper->format_currency($balance)); ?></td>
+        <td class="text-right"><?= Html::encode($numberHelper->format_currency($balance)); ?></td>
     </tr>
     <?php if ($payment_method): ?>
         <tr>

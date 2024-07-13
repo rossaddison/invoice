@@ -1,18 +1,42 @@
 <?php
-declare(strict_types=1); 
 
-use App\Invoice\Entity\CustomField;
+declare(strict_types=1);
 
 use Yiisoft\FormModel\Field;
 use Yiisoft\Html\Html;
 use Yiisoft\Html\Tag\Form;
 
 /**
- * @var \Yiisoft\View\View $this
- * @var \Yiisoft\Router\UrlGeneratorInterface $urlGenerator
+ * 
+ * @var App\Invoice\Client\ClientRepository $cR
+ * @var App\Invoice\Entity\InvAmount $invAmount
+ * @var App\Invoice\Helpers\ClientHelper $clientHelper
+ * @var App\Invoice\Helpers\CustomValuesHelper $cvH
+ * @var App\Invoice\Helpers\NumberHelper $numberHelper
+ * @var App\Invoice\InvAmount\InvAmountRepository $iaR
+ * @var App\Invoice\Payment\PaymentForm $form
+ * @var App\Invoice\PaymentCustom\PaymentCustomForm $paymentCustomForm
+ * @var App\Invoice\Setting\SettingRepository $s
+ * @var App\Widget\Button $button
+ * @var Yiisoft\Translator\TranslatorInterface $translator
+ * @var Yiisoft\Router\UrlGeneratorInterface $urlGenerator
+ * @var array $customFields
+ * @var array $customValues
+ * @var array $errorsCustom
+ * @var array $openInvs
+ * @var array $paymentCustomValues
+ * @var array $paymentMethods
+ * @var int $openInvsCount
+ * @var string $alert
  * @var string $csrf
- * @var string $action
+ * @var string $actionName
  * @var string $title
+ * @psalm-var array<string, Stringable|null|scalar> $actionArguments
+ * @psalm-var array<string,list<string>> $errors
+ * @psalm-var array<string,list<string>> $errorsCustom
+ * @psalm-var array<array-key, array<array-key, string>|string> $optionsDataPaymentMethod
+ * @psalm-var array<array-key, array<array-key, string>|string> $optionsDataInvId
+ * 
  */
 
 // If there are no invoices to make payment against give a warning
@@ -20,7 +44,7 @@ echo $alert;
 ?>
 
 <?= Form::tag()
-    ->post($urlGenerator->generate(...$action))
+    ->post($urlGenerator->generate($actionName, $actionArguments))
     ->enctypeMultipartFormData()
     ->csrf($csrf)
     ->id('PaymentForm')
@@ -46,31 +70,44 @@ echo $alert;
                     ->onlyCommonErrors()
                 ?>
                 <?= Field::errorSummary($form)
-                    ->errors($errors_custom)
+                    ->errors($errorsCustom)
                     ->header($translator->translate('invoice.error.summary'))
                     ->onlyCommonErrors()
                 ?>
                 <?php 
                     $optionsDataPaymentMethod = [];
-                    foreach ($paymentMethods as $paymentMethod) { 
-                        $optionsDataPaymentMethod[(int)$paymentMethod->getId()] = $paymentMethod->getName();                    
+                    /**
+                     * @var App\Invoice\Entity\PaymentMethod $paymentMethod
+                     */
+                    foreach ($paymentMethods as $paymentMethod) {
+                        $paymentMethodId = $paymentMethod->getId();
+                        $paymentMethodName = $paymentMethod->getName();
+                        if ((strlen($paymentMethodId) > 0) 
+                            && (strlen(($paymentMethodName ?? '')) > 0) && (null!==$paymentMethodName))  {
+                            $optionsDataPaymentMethod[$paymentMethodId] = $paymentMethodName;
+                        }
                     }
                     echo Field::select($form, 'payment_method_id')
-                    ->label($translator->translate('i.payment_method'),['control-label'])
+                    ->label($translator->translate('i.payment_method'))
                     ->optionsData($optionsDataPaymentMethod)
                     ->hint($translator->translate('invoice.hint.this.field.is.required')); 
                 ?>
                 <?php
                     $optionsDataInvId = [];
-                    if ($open_invs_count > 0) {
-                        foreach ($open_invs as $inv) { 
-                            $inv_amount = $iaR->repoInvquery((int)$inv->getId());
-                            $optionsDataInvId[(int)$inv->getId()] = 
-                               $inv->getNumber() . 
-                               ' - ' . 
-                               $clienthelper->format_client($cR->repoClientquery($inv->getClient_id())) . 
-                               ' - ' . 
-                               $numberhelper->format_currency($inv_amount->getBalance());
+                    if ($openInvsCount > 0) {
+                        /**
+                         * @var App\Invoice\Entity\Inv $inv
+                         */
+                        foreach ($openInvs as $inv) { 
+                            $invAmount = $iaR->repoInvquery((int)$inv->getId());
+                            if (null!==$invAmount) {
+                                $optionsDataInvId[(int)$inv->getId()] = 
+                                   ($inv->getNumber() ?? $translator->translate('invoice.invoice.number.no')) . 
+                                   ' - ' . 
+                                   ($clientHelper->format_client($cR->repoClientquery($inv->getClient_id()))) . 
+                                   ' - ' . 
+                                   ($numberHelper->format_currency($invAmount->getBalance()));
+                            }
                         }                
                     } else {
                         $optionsDataInvId[0] = $translator->translate('i.none');
@@ -79,22 +116,22 @@ echo $alert;
                 <?= Html::openTag('div', ['class' => 'mb-3 form-group']); ?>
                     <?= 
                         Field::select($form, 'inv_id') 
-                        ->label($translator->translate('invoice.invoice'),['control-label'])
+                        ->label($translator->translate('invoice.invoice'))
                         ->optionsData($optionsDataInvId)
                         ->hint($translator->translate('invoice.hint.this.field.is.required'))
                     ?>
                 <?= Html::closeTag('div'); ?>    
                 <?= Html::openTag('div', ['class' => 'mb-3 form-group']); ?>
                     <?= Field::date($form, 'payment_date')
-                        ->label($translator->translate('i.date'), ['class' => 'form-label'])
+                        ->label($translator->translate('i.date'))
                         ->required(true)
-                        ->value($form->getPayment_date() ? ($form->getPayment_date())->format('Y-m-d') : '')
+                        ->value($form->getPayment_date() instanceof DateTimeImmutable ? $form->getPayment_date()->format('Y-m-d') : '')
                         ->hint($translator->translate('invoice.hint.this.field.is.required')); 
                     ?>
                 <?= Html::closeTag('div'); ?>
                 <?= Html::openTag('div', ['class' => 'mb-3 form-group']); ?>
                     <?= Field::textarea($form, 'note')
-                        ->label($translator->translate('i.note'), ['form-label'])
+                        ->label($translator->translate('i.note'))
                         ->addInputAttributes([
                             'placeholder' => $translator->translate('i.note'),
                             'value' => Html::encode($form->getNote() ?? ''),
@@ -106,7 +143,7 @@ echo $alert;
                 <?= Html::closeTag('div'); ?>
                 <?= Html::openTag('div', ['class' => 'mb-3 form-group']); ?>
                     <?= Field::text($form, 'amount')
-                        ->label($translator->translate('i.amount'), ['form-label'])
+                        ->label($translator->translate('i.amount'))
                         ->placeholder($translator->translate('i.amount'))
                         ->value(Html::encode($form->getAmount() ?? ''))
                         ->hint($translator->translate('invoice.hint.this.field.is.required')); 
@@ -114,10 +151,12 @@ echo $alert;
                 <?= Html::closeTag('div'); ?>
             <?= Html::closeTag('div'); ?>
             <?= Html::openTag('div'); ?>
-                <?php foreach ($custom_fields as $custom_field): ?>  
-                    <?php if ($custom_field instanceof CustomField) { ?>
-                    <?= $cvH->print_field_for_form($custom_field, $paymentCustomForm, $translator, $payment_custom_values, $custom_values); ?>
-                    <?php } ?>                        
+                <?php
+                    /**
+                     * @var App\Invoice\Entity\CustomField $customField
+                     */
+                    foreach ($customFields as $customField): ?>  
+                        <?php $cvH->print_field_for_form($customField, $paymentCustomForm, $translator, $paymentCustomValues, $customValues); ?>
                 <?php endforeach; ?>
             <?= Html::closeTag('div'); ?>    
         <?= Html::closeTag('div'); ?>
@@ -127,7 +166,3 @@ echo $alert;
 <?= Html::closeTag('div'); ?>
 <?= Html::closeTag('div'); ?>
 <?= Form::tag()->close() ?>
-<?php foreach ($errors_custom as $error_custom) {
-  echo \Yiisoft\VarDumper\VarDumper::dump($errors_custom);
-}
-?>

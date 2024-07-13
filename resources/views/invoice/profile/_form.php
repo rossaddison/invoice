@@ -8,16 +8,21 @@ use Yiisoft\Html\Html;
 use Yiisoft\Html\Tag\Form;
 
 /**
- * @var \Yiisoft\View\View $this
- * @var \Yiisoft\Router\UrlGeneratorInterface $urlGenerator
+ * @var App\Invoice\Profile\ProfileForm $form
+ * @var App\Widget\Button $button
+ * @var Yiisoft\Translator\TranslatorInterface $translator
+ * @var Yiisoft\Router\UrlGeneratorInterface $urlGenerator
+ * @var array $companies
  * @var string $csrf
- * @var string $action
+ * @var string $actionName
  * @var string $title
+ * @psalm-var array<string, Stringable|null|scalar> $actionArguments
+ * @psalm-var array<string,list<string>> $errors
  */
 ?>
 
 <?= Form::tag()
-    ->post($urlGenerator->generate(...$action))
+    ->post($urlGenerator->generate($actionName, $actionArguments))
     ->enctypeMultipartFormData()
     ->csrf($csrf)
     ->id('ProfileForm')
@@ -53,8 +58,15 @@ use Yiisoft\Html\Tag\Form;
                 <?= Html::openTag('div', ['class' => 'mb-3 form-group']); ?>
                     <?php 
                         $optionsDataCompany = [];
+                        /**
+                         * @var App\Invoice\Entity\Company $company
+                         */
                         foreach ($companies as $company) {
-                            $optionsDataCompany[$company->getId()] = $company->getName();
+                            $companyId = (string)$company->getId();
+                            $companyName = $company->getName();
+                            if (strlen($companyId) > 0 && null!==$companyName) {
+                                $optionsDataCompany[$companyId] = $companyName;
+                            }
                         }
                     ?>
                     <?= Field::select($form, 'company_id')      

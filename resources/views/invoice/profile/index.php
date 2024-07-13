@@ -1,10 +1,10 @@
 <?php
+
 declare(strict_types=1);
 
+use App\Invoice\Entity\Profile;
 use Yiisoft\Data\Paginator\OffsetPaginator;
 use Yiisoft\Html\Html;
-use Yiisoft\Translator\TranslatorInterface;
-use Yiisoft\View\WebView;
 use Yiisoft\Html\Tag\A;
 use Yiisoft\Html\Tag\Div;
 use Yiisoft\Html\Tag\Form;
@@ -17,13 +17,15 @@ use Yiisoft\Yii\DataView\OffsetPagination;
 use Yiisoft\Router\CurrentRoute;
 
 /**
- * @var \App\Invoice\Entity\Profile $profile
+ * @var App\Invoice\Entity\Profile $profile
+ * @var App\Invoice\Setting\SettingRepository $s
+ * @var App\Widget\Button $button
+ * @var string $alert
  * @var string $csrf
  * @var CurrentRoute $currentRoute 
  * @var OffsetPaginator $paginator
- * @var \Yiisoft\Router\UrlGeneratorInterface $urlGenerator 
- * @var TranslatorInterface $translator 
- * @var WebView $this
+ * @var Yiisoft\Translator\TranslatorInterface $translator
+ * @var Yiisoft\Router\UrlGeneratorInterface $urlGenerator
  */ 
  
  echo $alert;
@@ -45,7 +47,7 @@ use Yiisoft\Router\CurrentRoute;
         ->addAttributes(['type' => 'reset'])
         ->addClass('btn btn-danger me-1 ajax-loader')
         ->content(I::tag()->addClass('bi bi-bootstrap-reboot'))
-        ->href($urlGenerator->generate($currentRoute->getName()))
+        ->href($urlGenerator->generate($currentRoute->getName() ?? 'profile/index'))
         ->id('btn-reset')
         ->render();
     
@@ -70,44 +72,43 @@ use Yiisoft\Router\CurrentRoute;
         new DataColumn(
             'id',
             header: $translator->translate('i.id'),
-            content: static fn (object $model) => Html::encode($model->getId())
+            content: static fn (Profile $model) => Html::encode($model->getId())
         ),
-        
         new DataColumn(
             'company_id',
             header: $translator->translate('i.company'),                
-            content: static fn ($model): string => Html::encode($model->getCompany()->getName())                  
+            content: static fn (Profile $model): string => Html::encode($model->getCompany()?->getName() ?? '')                  
         ),
         new DataColumn(
             'email',    
             header: $translator->translate('i.email_address'),                
-            content: static fn ($model): string => Html::encode(ucfirst($model->getEmail())) 
+            content: static fn (Profile $model): string => Html::encode(ucfirst($model->getEmail() ?? '')) 
         ),
         new DataColumn(
             'description',    
             header: $translator->translate('i.description'),                
-            content: static fn ($model): string => Html::encode(ucfirst($model->getDescription())) 
+            content: static fn (Profile $model): string => Html::encode(ucfirst($model->getDescription() ?? '')) 
         ),
         new ActionColumn(
-            content: static fn($model): string => 
+            content: static fn(Profile $model): string => null!== ($id = $model->getId()) ? 
             Html::a()
             ->addAttributes(['class' => 'dropdown-button text-decoration-none', 'title' => $translator->translate('i.profile')])
             ->content('🔎')
             ->encode(false)
-            ->href('profile/view/'. $model->getId())
-            ->render(),
+            ->href('profile/view/'. $id)
+            ->render() : '',
         ),
         new ActionColumn(
-            content: static fn($model): string => 
+            content: static fn(Profile $model): string => null!== ($id = $model->getId()) ?
             Html::a()
             ->addAttributes(['class' => 'dropdown-button text-decoration-none', 'title' => $translator->translate('i.edit')])
             ->content('✎')
             ->encode(false)
-            ->href('profile/edit/'. $model->getId())
-            ->render(),
+            ->href('profile/edit/'. $id)
+            ->render() : '',
         ),
         new ActionColumn(
-            content: static fn($model): string => 
+            content: static fn(Profile $model): string => null!== ($id = $model->getId()) ?
             Html::a()
             ->addAttributes([
                 'class'=>'dropdown-button text-decoration-none', 
@@ -117,18 +118,28 @@ use Yiisoft\Router\CurrentRoute;
             ])
             ->content('❌')
             ->encode(false)
-            ->href('profile/delete/'. $model->getId())
-            ->render(),
+            ->href('profile/delete/'. $id)
+            ->render() : '',
         )
     ];       
 ?>
-<?= GridView::widget()
+<?php
+    $grid_summary = $s->grid_summary(
+        $paginator, 
+        $translator, 
+        (int)$s->get_setting('default_list_limit'), 
+        $translator->translate('invoice.profiles'),
+        ''
+    );
+    $toolbarString = Form::tag()->post($urlGenerator->generate('profile/index'))->csrf($csrf)->open() .
+            Div::tag()->addClass('float-end m-3')->content($toolbarReset)->encode(false)->render() .
+            Form::tag()->close();
+    echo GridView::widget()
     ->rowAttributes(['class' => 'align-middle'])
+    ->tableAttributes(['class' => 'table table-striped text-center h-75','id'=>'table-profile'])
     ->columns(...$columns)
     ->dataReader($paginator)
     ->headerRowAttributes(['class'=>'card-header bg-info text-black'])
-    //->filterPosition('header')
-    //->filterModelName('clientnote')            
     ->header($header)
     ->id('w122-grid')
     ->pagination(
@@ -139,13 +150,8 @@ use Yiisoft\Router\CurrentRoute;
     ->summaryAttributes(['class' => 'mt-3 me-3 summary text-end'])
     ->summaryTemplate($grid_summary)
     ->emptyTextAttributes(['class' => 'card-header bg-warning text-black'])
-    ->emptyText((string)$translator->translate('invoice.invoice.no.records'))
-    ->tableAttributes(['class' => 'table table-striped text-center h-75','id'=>'table-profile'])
-    ->toolbar(
-        Form::tag()->post($urlGenerator->generate('profile/index'))->csrf($csrf)->open() .    
-        Div::tag()->addClass('float-end m-3')->content($toolbarReset)->encode(false)->render() .
-        Form::tag()->close()
-    );
+    ->emptyText($translator->translate('invoice.invoice.no.records'))
+    ->toolbar($toolbarString);
 ?>
 </div>
 

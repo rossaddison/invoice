@@ -69,9 +69,14 @@ final class PaymentPeppolController
         $form = new PaymentPeppolForm($paymentPeppol);
         $parameters = [
             'title' => $this->translator->translate('invoice.add'),
-            'action' => ['paymentpeppol/add'],
+            'actionName' => 'paymentpeppol/add',
             'errors' => [],
             'form' => $form,
+            'response' => $this->viewRenderer->renderPartial('//invoice/layout/header_buttons',
+            [
+                'hide_submit_button' => false ,
+                'hide_cancel_button' => false
+            ])        
         ];
         
         if ($request->getMethod() === Method::POST) {
@@ -113,14 +118,14 @@ final class PaymentPeppolController
     }
     
     /**
-     * @param CurrentRoute $currentRoute
+     * @param CurrentRoute $routeCurrent
      * @param PaymentPeppolRepository $paymentpeppolRepository
      * @param SettingRepository $settingRepository
      * @return Response
      */
-    public function index(CurrentRoute $currentRoute, PaymentPeppolRepository $paymentpeppolRepository, SettingRepository $settingRepository): Response
+    public function index(CurrentRoute $routeCurrent, PaymentPeppolRepository $paymentpeppolRepository, SettingRepository $settingRepository): Response
     {      
-      $page = $currentRoute->getArgument('page', '1');
+      $page = $routeCurrent->getArgument('page', '1');
       $paymentpeppols = $paymentpeppolRepository->findAllPreloaded();
       $paginator = (new OffsetPaginator($paymentpeppols))
       ->withPageSize((int) $settingRepository->get_setting('default_list_limit'))
@@ -130,8 +135,7 @@ final class PaymentPeppolController
       'paymentpeppols' => $this->paymentpeppols($paymentpeppolRepository),
       'paginator' => $paginator,
       'alert' => $this->alert(),
-      'max' => (int) $settingRepository->get_setting('default_list_limit'),
-      'grid_summary' => $settingRepository->grid_summary($paginator, $this->translator, (int) $settingRepository->get_setting('default_list_limit'), $this->translator->translate('invoice.paymentpeppol.reference.plural'), ''),
+      'routeCurrent' => $routeCurrent
     ];
     return $this->viewRenderer->render('paymentpeppol/index', $parameters);
     }
@@ -172,9 +176,15 @@ final class PaymentPeppolController
             $form = new PaymentPeppolForm($paymentPeppol);
             $parameters = [
                 'title' => $this->translator->translate('invoice.edit'),
-                'action' => ['paymentpeppol/edit', ['id' => $paymentPeppol->getId()]],
+                'actionName' => 'paymentpeppol/edit', 
+                'actionArguments' => ['id' => $paymentPeppol->getId()],
                 'errors' => [],
                 'form' => $form,
+                'response' => $this->viewRenderer->renderPartial('//invoice/layout/header_buttons',
+                [
+                    'hide_submit_button' => false ,
+                    'hide_cancel_button' => false
+                ])      
             ];
             if ($request->getMethod() === Method::POST) {
                 $body = $request->getParsedBody();
@@ -234,9 +244,15 @@ final class PaymentPeppolController
             $form = new PaymentPeppolForm($paymentPeppol);
             $parameters = [
                 'title' => $this->translator->translate('i.view'),
-                'action' => ['paymentpeppol/view', ['id' => $paymentPeppol->getId()]],
+                'actionName' => 'paymentpeppol/view', 
+                'actionArguments' => ['id' => $paymentPeppol->getId()],
                 'form' => $form,
                 'paymentpeppol' => $paymentPeppol,
+                'response' => $this->viewRenderer->renderPartial('//invoice/layout/header_buttons',
+                [
+                    'hide_submit_button' => false ,
+                    'hide_cancel_button' => false
+                ])      
             ];        
             return $this->viewRenderer->render('_view', $parameters);
         }

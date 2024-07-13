@@ -3,11 +3,11 @@
 declare(strict_types=1);
 
 /**
- * @var \Yiisoft\View\WebView $this
+ * @see id="purchase-order-number" triggered by <a href="#purchase-order-number" class="btn btn-success" data-toggle="modal"  style="text-decoration:none">  
+ * @see Quote/url_key controller/function and ...\resources\views\invoice\quote\url_key
+ * @var Yiisoft\Translator\TranslatorInterface $translator 
+ * @var string $urlKey
  */
-
-// id="purchase-order-number" triggered by <a href="#purchase-order-number" class="btn btn-success" data-toggle="modal"  style="text-decoration:none"> with 
-// quote/url_key controller/function and ...\resources\views\invoice\quote\url_key 
 
 ?>
 <div id="purchase-order-number" class="modal modal-lg" role="dialog" aria-labelledby="modal_purchase_order_number" aria-hidden="true">
@@ -22,7 +22,7 @@ declare(strict_types=1);
         </div>
         <div>
             <input type="text" name="url_key" id="url_key" class="form-control"
-                   value="<?= $url_key; ?>" hidden>
+                   value="<?= $urlKey; ?>" hidden>
         </div>
         <div>
             <label for="quote_with_purchase_order_number"><?= $translator->translate('invoice.quote.with.purchase.order.number') ?></label>

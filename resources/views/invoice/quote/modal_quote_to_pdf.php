@@ -2,7 +2,13 @@
 
 declare(strict_types=1);
 
-// id="quote-to-pdf" triggered by <a href="#quote-to-pdf" data-toggle="modal"  style="text-decoration:none"> on views/quote/view.php 
+/**
+ * @see id="quote-to-pdf" triggered by <a href="#quote-to-pdf" data-toggle="modal"  style="text-decoration:none">  
+ * @see views/quote/view.php
+ * @var App\Invoice\Entity\Quote $quote
+ * @var Yiisoft\Translator\TranslatorInterface $translator
+ */
+
 ?>
 <div id="quote-to-pdf" class="modal modal-lg" role="dialog" aria-labelledby="modal_quote_to_pdf" aria-hidden="true">
     <form class="modal-content">

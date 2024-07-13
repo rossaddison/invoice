@@ -3439,7 +3439,9 @@ final class InvController {
                         'filter_family' => '',
                         'reset_table' => '',
                         'products' => $pR->findAllPreloaded(),
-                        'head' => $head,
+                        'partial_product_table_modal' => $this->view_renderer->renderPartialAsString('//invoice/product/_partial_product_table_modal',[
+                            'products' => $pR->findAllPreloaded()
+                        ]),
                     ]),
                     'modal_choose_tasks' => $this->view_renderer->renderPartialAsString('//invoice/task/modal_task_lookups_inv',
                     [

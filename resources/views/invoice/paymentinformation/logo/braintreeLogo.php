@@ -6,6 +6,7 @@
     
     /**
      * @link https://www.braintreepayments.com/gb/badge
+     * @var string $merchantId
      */
     
     echo A::tag()

@@ -185,7 +185,7 @@ final class TaxRateController
         if ($taxRate) {
             $form = new TaxRateForm($taxRate);
             $parameters = [
-                'title' =>  $this->translator->translate('invoice.tax.rate.edit'),
+                'title' =>  $this->translator->translate('i.view'),
                 'actionName' => 'taxrate/view',
                 'actionArguments' => ['tax_rate_id' => $taxRate->getTax_rate_id()],
                 'form' => $form,

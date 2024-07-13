@@ -100,10 +100,10 @@ final class QuoteItemController
             'errors' => [],
             'form' => $form,
             'quote_id' => $quote_id,
-            'tax_rates' => $trR->findAllPreloaded(),
+            'taxRates' => $trR->findAllPreloaded(),
             'products' => $pR->findAllPreloaded(),
             'units' => $uR->findAllPreloaded(),
-            'numberhelper' => new NumberHelper($sR)
+            'numberHelper' => new NumberHelper($sR)
         ];
         if ($request->getMethod() === Method::POST) {
             if ($formHydrator->populateFromPostAndValidate($form, $request)) {
@@ -165,15 +165,16 @@ final class QuoteItemController
             $form = new QuoteItemForm($quoteItem, $quote_id);
             $parameters = [
                 'title' => $this->translator->translate('invoice.edit'),
-                'action' => ['quoteitem/edit', ['id' => $currentRoute->getArgument('id')]],
+                'actionName' => 'quoteitem/edit',
+                'actionArguments' => ['id' => $currentRoute->getArgument('id')],
                 'errors' => [],
                 'form' => $form,
                 'quote_id' => $quote_id,
-                'tax_rates' => $trR->findAllPreloaded(),
+                'taxRates' => $trR->findAllPreloaded(),
                 'products' => $pR->findAllPreloaded(),
                 'quotes' => $qR->findAllPreloaded(),            
                 'units' => $uR->findAllPreloaded(),
-                'numberhelper' => new NumberHelper($sR)
+                'numberHelper' => new NumberHelper($sR)
             ];
             if ($request->getMethod() === Method::POST) {
                 if ($formHydrator->populateFromPostAndValidate($form, $request)) {
@@ -304,7 +305,11 @@ final class QuoteItemController
      * @param CurrentRoute $currentRoute
      * @param QIR $qiR
      */
-    public function view(CurrentRoute $currentRoute, QIR $qiR): \Yiisoft\DataResponse\DataResponse|Response 
+    public function view(CurrentRoute $currentRoute,
+                         PR $pR,
+                         UR $uR,                                                
+                         TRR $trR,   
+                         QIR $qiR): \Yiisoft\DataResponse\DataResponse|Response 
     {
         $quoteItem = $this->quoteitem($currentRoute, $qiR);
         if ($quoteItem) {
@@ -314,6 +319,9 @@ final class QuoteItemController
                 'action' => ['quoteitem/edit', ['id' => $quoteItem->getId()]],
                 'errors' => [],
                 'form' => $form,
+                'tax_rates' => $trR->findAllPreloaded(),
+                'products' => $pR->findAllPreloaded(),
+                'units' => $uR->findAllPreloaded(),
                 'quoteitem' => $qiR->repoQuoteItemquery($quoteItem->getId()),
             ];
             return $this->viewRenderer->render('_view', $parameters);

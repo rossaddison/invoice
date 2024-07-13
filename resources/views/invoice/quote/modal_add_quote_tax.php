@@ -2,11 +2,14 @@
   declare(strict_types=1); 
   
   use Yiisoft\Html\Html;
-  use App\Invoice\Helpers\NumberHelper;
   
-  $numberhelper = new NumberHelper($s);
-  
-  // id="add-quote-tax" triggered by <a href="#add-quote-tax" data-toggle="modal"  style="text-decoration:none"> on views/quote/view.php line 67
+  /**
+   * @see views/quote/view.php line 67: id="add-quote-tax" triggered by 
+   *      <a href="#add-quote-tax" data-toggle="modal"  style="text-decoration:none">
+   * @var App\Invoice\Helpers\NumberHelper $numberHelper
+   * @var Yiisoft\Translator\TranslatorInterface $translator
+   * @var array $taxRates
+   */
 ?>
 
 <div id="add-quote-tax" class="modal modal-lg" role="dialog" aria-labelledby="modal_add_quote_tax" aria-hidden="true">
@@ -24,9 +27,19 @@
                 </label>
                 <div>
                     <select name="tax_rate_id" id="tax_rate_id" class="form-control" required>
-                        <?php foreach ($tax_rates as $tax_rate) { ?>
-                            <option value="<?= $tax_rate->getTax_rate_id(); ?>">
-                                <?= $numberhelper->format_amount($tax_rate->getTax_rate_percent()) . '% - ' . Html::encode($tax_rate->getTax_rate_name()); ?>
+                        <?php 
+                            /**
+                             * @var App\Invoice\Entity\TaxRate $taxRate
+                             */
+                            foreach ($taxRates as $taxRate) { ?>
+                            <option value="<?= $taxRate->getTax_rate_id(); ?>">
+                                <?= $percent = $numberHelper->format_amount($taxRate->getTax_rate_percent());
+                                    $name = Html::encode($taxRate->getTax_rate_name());
+                                    if ($percent >= 0.00 && null!==$percent && strlen($name) > 0) {
+                                        $percent . '% - ' . $name;
+                                    } else {
+                                        '#%';
+                                    } ?>
                             </option>
                         <?php } ?>
                     </select>
@@ -61,7 +74,5 @@
                 </button>
             </div>
         </div>
-
     </form>
-
 </div>

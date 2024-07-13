@@ -4,18 +4,24 @@ declare(strict_types=1);
 
 use Yiisoft\Html\Html;
 use Yiisoft\Yii\Bootstrap5\Alert;
-use App\Invoice\Helpers\DateHelper;
 
 /**
- * @var \Yiisoft\View\View $this
- * @var \Yiisoft\Router\UrlGeneratorInterface $urlGenerator
+ * @var Yiisoft\DataResponse\DataResponse $response
+ * @var Yiisoft\Translator\TranslatorInterface $translator
+ * @var Yiisoft\Router\UrlGeneratorInterface $urlGenerator
  * @var array $body
  * @var string $csrf
- * @var string $action
+ * @var string $actionName
  * @var string $title
+ * @psalm-var array<string, Stringable|null|scalar> $actionArguments
+ * @psalm-var array<string,list<string>> $errors
  */
 
-if (isset($errors)) {
+if (!empty($errors)) {
+    /**
+     * @var string $field
+     * @var string $error
+     */
     foreach ($errors as $field => $error) {
         echo Alert::widget()->options(['class' => 'alert-danger'])->body(Html::encode($field . ':' . $error));
     }
@@ -23,31 +29,28 @@ if (isset($errors)) {
 
 ?>
 <?= Html::openTag('h1'); ?><?= Html::encode($title) ?><?= Html::closeTag('h1'); ?>
-<form id="PaymentPeppolForm" method="POST" action="<?= $urlGenerator->generate(...$action) ?>" enctype="multipart/form-data">
+<form id="PaymentPeppolForm" method="POST" action="<?= $urlGenerator->generate($actionName, $actionArguments); ?>" enctype="multipart/form-data">
 <input type="hidden" name="_csrf" value="<?= $csrf ?>">
-<div id="headerbar">
-<h1 class="headerbar-title"><?= $translator->translate('i.paymentpeppols_form'); ?></h1>
-<?php $response = $head->renderPartial('invoice/layout/header_buttons',['s'=>$s, 'hide_submit_button'=>false ,'hide_cancel_button'=>false]); ?>        
-<?php echo (string)$response->getBody(); ?><div id="content">
-<?= Html::openTag('div', ['class' => 'row']); ?>
- <div class="mb3 form-group">
-   <input type="hidden" name="id" id="id" class="form-control"
- value="<?= Html::encode($body['id'] ??  ''); ?>">
- </div>
- <div class="mb3 form-group">
-   <label for="auto_reference"><?= $translator->translate('i.auto_reference'); ?></label>
-   <input type="text" name="auto_reference" id="auto_reference" class="form-control"
- value="<?= Html::encode($body['auto_reference'] ??  ''); ?>">
- </div>
- <div class="mb3 form-group">
-   <label for="provider"><?= $translator->translate('i.provider'); ?></label>
-   <input type="text" name="provider" id="provider" class="form-control"
- value="<?= Html::encode($body['provider'] ??  ''); ?>">
- </div>
-
-</div>
-
-</div>
-
+    <div id="headerbar">
+    <h1 class="headerbar-title"><?= $translator->translate('i.paymentpeppols_form'); ?></h1>
+    <?= (string)$response->getBody(); ?>
+    <div id="content">
+        <div class = 'row'>
+           <div class="mb3 form-group">
+             <input type="hidden" name="id" id="id" class="form-control"
+           value="<?= Html::encode($body['id'] ??  ''); ?>">
+           </div>
+           <div class="mb3 form-group">
+             <label for="auto_reference"><?= $translator->translate('i.auto_reference'); ?></label>
+             <input type="text" name="auto_reference" id="auto_reference" class="form-control"
+           value="<?= Html::encode($body['auto_reference'] ??  ''); ?>">
+           </div>
+           <div class="mb3 form-group">
+             <label for="provider"><?= $translator->translate('i.provider'); ?></label>
+             <input type="text" name="provider" id="provider" class="form-control"
+           value="<?= Html::encode($body['provider'] ??  ''); ?>">
+           </div>
+       </div>
+    </div>
 </div>
 </form>

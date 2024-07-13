@@ -8,11 +8,24 @@ use Yiisoft\Html\Tag\Form;
 use Yiisoft\Html\Tag\I;
 
 /**
- * @var \Yiisoft\View\View $this
- * @var \Yiisoft\Router\UrlGeneratorInterface $urlGenerator
+ * @see QuoteController function view $parameters['add_quote_item']['actionName' => 'quoteitem/add']
+ * @see QuoteItemController function add 
+ * @var App\Invoice\QuoteItem\QuoteItemForm $form
+ * @var App\Invoice\Helpers\NumberHelper $numberHelper
+ * @var App\Invoice\Setting\SettingRepository $s
+ * @var Yiisoft\Translator\TranslatorInterface $translator 
+ * @var Yiisoft\Router\UrlGeneratorInterface $urlGenerator
+ * @var array $products
+ * @var array $taxRates
+ * @var array $units
+ * @var int $taxRateId
  * @var string $csrf
- * @var string $action
+ * @var string $actionName
  * @var string $title
+ * @psalm-var array<string, Stringable|null|scalar> $actionArguments
+ * @psalm-var array<string, null|string> $optionsDataProduct
+ * @psalm-var array<array-key, array<array-key, string>|string> $optionsDataTaxRate
+ * @psalm-var array<array-key, array<array-key, string>|string> $optionsDataProductUnit
  */
 
 $vat = $s->get_setting('enable_vat_registration') === '1' ? true : false;
@@ -28,7 +41,7 @@ $vat = $s->get_setting('enable_vat_registration') === '1' ? true : false;
         ?>
     <?= Html::closeTag('div'); ?>    
     <?= Form::tag()
-        ->post($urlGenerator->generate(...$action))
+        ->post($urlGenerator->generate($actionName, $actionArguments))
         ->enctypeMultipartFormData()
         ->csrf($csrf)
         ->id('QuoteItemForm')
@@ -44,9 +57,16 @@ $vat = $s->get_setting('enable_vat_registration') === '1' ? true : false;
                             <?= Html::openTag('div' , ['class' => 'input-group', 'id' => 'product-quote']); ?>    
                                 <?php
                                     $optionsDataProduct = [];
+                                    /**
+                                     * @var App\Invoice\Entity\Product $product
+                                     */
                                     foreach ($products as $product) 
                                     {
-                                        $optionsDataProduct[$product->getProduct_id()] = $product->getProduct_name();
+                                        $productId = $product->getProduct_id();
+                                        $productName = $product->getProduct_name();
+                                        if (!empty($productId) && null!==$productName) {
+                                            $optionsDataProduct[$productId] = $productName;
+                                        }
                                     }
                                 ?>
                                 <?= Field::select($form, 'product_id')   
@@ -90,9 +110,19 @@ $vat = $s->get_setting('enable_vat_registration') === '1' ? true : false;
                             <?= Html::openTag('div', ['class' => 'input-group']); ?>
                                 <?php
                                     $optionsDataTaxRate = [];
-                                    foreach ($tax_rates as $tax_rate) 
+                                    /**
+                                     * @var App\Invoice\Entity\TaxRate $taxRate
+                                     */
+                                    foreach ($taxRates as $taxRate) 
                                     {
-                                        $optionsDataTaxRate[$tax_rate->getTax_rate_id()] = $numberHelper->format_amount($tax_rate->getTax_rate_percent()) . '% - ' . $tax_rate->getTax_rate_name();
+                                        $taxRateId = $taxRate->getTax_rate_id();
+                                        $taxRatePercent = $taxRate->getTax_rate_percent();
+                                        $taxRatePercentNumber = $numberHelper->format_amount($taxRatePercent);
+                                        $taxRateName = $taxRate->getTax_rate_name();
+                                        // Only build the drop down item if all values are present
+                                        if (null!==$taxRatePercentNumber && null!==$taxRateName) {
+                                            $optionsDataTaxRate[$taxRateId] =  $taxRatePercentNumber. '% - ' . $taxRateName;
+                                        }
                                     }
                                 ?>    
                                 <?= Field::select($form, 'tax_rate_id')
@@ -132,9 +162,17 @@ $vat = $s->get_setting('enable_vat_registration') === '1' ? true : false;
                             <?= Html::openTag('div', ['class' => 'input-group']); ?>
                                 <?php
                                     $optionsDataProductUnit = [];
+                                    /**
+                                     * @var App\Invoice\Entity\Unit $unit
+                                     */
                                     foreach ($units as $unit) 
                                     {
-                                        $optionsDataProductUnit[$unit->getUnit_id()] = Html::encode($unit->getUnit_name()) . "/" . Html::encode($unit->getUnit_name_plrl());
+                                        $unitId = $unit->getUnit_id();
+                                        $unitName = $unit->getUnit_name();
+                                        $unitPlrl = $unit->getUnit_name_plrl();
+                                        if (null!==$unitId && !empty($unitName) && !empty($unitPlrl)) {
+                                            $optionsDataProductUnit[$unitId] = Html::encode($unitName) . "/" . Html::encode($unitPlrl);
+                                        }
                                     }
                                 ?>    
                                 <?= Field::select($form, 'product_unit_id')

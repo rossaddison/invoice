@@ -71,11 +71,6 @@ final class ProfileController
             'paginator' => $paginator,   
             'profiles' => $this->profiles($profileRepository),
             'alert'=> $this->alert(),
-            'grid_summary' => $settingRepository->grid_summary(
-                                $paginator, 
-                                $this->translator, 
-                                (int)$settingRepository->get_setting('default_list_limit'), 
-                                $this->translator->translate('invoice.profile.plural'), ''),
         ];
         return $this->viewRenderer->render('index', $parameters);
     }
@@ -94,7 +89,8 @@ final class ProfileController
         $form = new ProfileForm(new Profile(), $this->translator);
         $parameters = [
             'title' => $this->translator->translate('invoice.add'),
-            'action' => ['profile/add'],
+            'actionName' => 'profile/add',
+            'actionArguments' => [],
             'errors' => [],
             'form' => $form,        
             'companies' => $companyRepository->findAllPreloaded(),
@@ -143,7 +139,8 @@ final class ProfileController
             $form = new ProfileForm($profile, $this->translator);
             $parameters = [
                 'title' => $this->translator->translate('i.edit'),
-                'action' => ['profile/edit', ['id' => $profile->getId()]],
+                'actionName' => 'profile/edit', 
+                'actionArguments' => ['id' => $profile->getId()],
                 'form' => $form,
                 'errors' => [],
                 'companies' => $companyRepository->findAllPreloaded()
@@ -200,7 +197,8 @@ final class ProfileController
             $form = new ProfileForm($profile, $this->translator);
             $parameters = [
                 'title' => $this->translator->translate('i.view'),
-                'action' => ['profile/view', ['id' => $profile->getId()]],
+                'actionName' => 'profile/view', 
+                'actionArguments' => ['id' => $profile->getId()],
                 'companies' => $companyRepository->findAllPreloaded(),
                 'form' => $form,
                 'errors' => [],

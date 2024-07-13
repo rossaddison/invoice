@@ -7,13 +7,39 @@ use Yiisoft\Html\Html;
 use Yiisoft\Html\Tag\Form;
 
 /**
- * @var \Yiisoft\View\View $this
- * @var \Yiisoft\Router\UrlGeneratorInterface $urlGenerator
+ * @var App\Invoice\Entity\Quote $quote
+ * @var App\Invoice\Helpers\CustomValuesHelper $cvH
+ * @var App\Invoice\Quote\QuoteForm $form
+ * @var App\Invoice\QuoteCustom\QuoteCustomForm $quoteCustomForm
+ * @var App\Invoice\Setting\SettingRepository $s
+ * @var App\Widget\Button $button
+ * @var Yiisoft\Translator\TranslatorInterface $translator
+ * @var Yiisoft\Router\UrlGeneratorInterface $urlGenerator
+ * @var array $customFields
+ * @var array $optionsData
+ * @var array $quoteCustomValues
+ * @var array $customValues
+ * @var string $alert
  * @var string $csrf
- * @var string $action
+ * @var string $actionName
+ * @var string $returnUrlAction
  * @var string $title
+ * @var int $delCount
+ * @psalm-var array<string, Stringable|null|scalar> $actionArguments
+ * @psalm-var array<array-key, array<array-key, string>|string> $optionsData['client']
+ * @psalm-var array<array-key, array<array-key, string>|string> $optionsData['contract']
+ * @psalm-var array<array-key, array<array-key, string>|string> $optionsData['group']
+ * @psalm-var array<array-key, array<array-key, string>|string> $optionsData['deliveryLocation']
+ * @psalm-var array<array-key, array<array-key, string>|string> $optionsData['quoteStatus']
+ * 
  */
+
 $vat = $s->get_setting('enable_vat_registration') === '1' ? true : false;
+
+/**
+ * @see alert if there are no delivery locations associated with this quote
+ */
+echo $alert;
 
 ?>
 <?= Html::openTag('div',['class'=>'container py-5 h-100']); ?>
@@ -22,7 +48,7 @@ $vat = $s->get_setting('enable_vat_registration') === '1' ? true : false;
 <?= Html::openTag('div',['class'=>'card border border-dark shadow-2-strong rounded-3']); ?>
 <?= Html::openTag('div',['class'=>'card-header']); ?>
     <?= Html::openTag('h1',['class'=>'fw-normal h3 text-center']); ?><?= $translator->translate('i.edit'); ?><?= Html::closeTag('h1'); ?>
-        <?= Form::tag()->post($urlGenerator->generate(...$action))
+        <?= Form::tag()->post($urlGenerator->generate($actionName, $actionArguments))
                        ->enctypeMultipartFormData()
                        ->csrf($csrf)
                        ->id('QuoteForm')
@@ -56,14 +82,14 @@ $vat = $s->get_setting('enable_vat_registration') === '1' ? true : false;
                                     <?= Field::select($form, 'group_id')
                                         ->label($translator->translate('i.quote_group'))
                                         ->addInputAttributes(['class' => 'form-control'])
-                                        ->value($form->getGroup_id() ?? $defaultGroupId)
+                                        ->value($form->getGroup_id() ?? 2)
                                         ->prompt($translator->translate('i.none'))
                                         ->optionsData($optionsData['group'])
                                         ->hint($translator->translate('invoice.hint.this.field.is.required')); 
                                     ?>
                                 <?= Html::closeTag('div'); ?>   
                             
-                            <?php if ($del_count > 0) { ?>
+                            <?php if ($delCount > 0) { ?>
                                 <?= Html::openTag('div'); ?>
                                     <?= Field::select($form, 'delivery_location_id')
                                         ->label($translator->translate('invoice.invoice.delivery.location'))
@@ -102,7 +128,7 @@ $vat = $s->get_setting('enable_vat_registration') === '1' ? true : false;
                                              [ 
                                                  'origin' => 'quote', 
                                                  'origin_id' => $quote->getId(), 
-                                                 'action' => $return_url_action
+                                                 'action' => $returnUrlAction
                                              ]), [
                                                  'class' => 'btn btn-danger btn-lg mt-3'
                                              ]);
@@ -113,7 +139,7 @@ $vat = $s->get_setting('enable_vat_registration') === '1' ? true : false;
                         <?= Html::openTag('div'); ?>
                             <?= Field::date($form,'date_created')
                                 ->label($translator->translate('invoice.invoice.date.issued'))
-                                ->value($form->getDate_created() ? ($form->getDate_created())->format('Y-m-d') : '')
+                                ->value($form->getDate_created() instanceof DateTimeImmutable ? ($form->getDate_created())->format('Y-m-d') : '')
                                 ->hint($translator->translate('invoice.hint.this.field.is.required')); 
                             ?>
                         <?= Html::closeTag('div'); ?>
@@ -146,8 +172,7 @@ $vat = $s->get_setting('enable_vat_registration') === '1' ? true : false;
                         <?php if ($form->getStatus_id() > 1) { ?>
                             <?= Field::text($form,'url_key')
                                 ->hideLabel(false)
-                                ->label(($form->getStatus_id() ?? 1) > 1 ? $translator->translate('i.guest_url') : '') 
-                                ->addInputAttributes($editInputAttributesUrlKey);
+                                ->label(($form->getStatus_id()) > 1 ? $translator->translate('i.guest_url') : '');
                             ?>
                         <?php } ?>
                         <?= Html::closeTag('div'); ?>
@@ -157,7 +182,7 @@ $vat = $s->get_setting('enable_vat_registration') === '1' ? true : false;
                                 ->hideLabel(false)
                                 ->label($translator->translate('i.discount').' '. $s->get_setting('currency_symbol'))
                                 ->addInputAttributes(['class' => 'form-control'])
-                                ->value($s->format_amount((float)($form->getDiscount_amount() ?? 0.00)))
+                                ->value($s->format_amount(($form->getDiscount_amount() ?? 0.00)))
                                 ->placeholder($translator->translate('i.discount')); 
                             ?>
                         <?= Html::closeTag('div'); ?>
@@ -165,7 +190,7 @@ $vat = $s->get_setting('enable_vat_registration') === '1' ? true : false;
                             <?= Field::text($form,'discount_percent')
                                 ->label($translator->translate('i.discount_percentage'))
                                 ->addInputAttributes(['class' => 'form-control'])
-                                ->value(Html::encode($s->format_amount((float)($form->getDiscount_percent() ?? 0.00))))
+                                ->value(Html::encode($s->format_amount($form->getDiscount_percent() ?? 0.00)))
                                 ->placeholder($translator->translate('i.discount_percentage')); 
                             ?>
                         <?= Html::closeTag('div'); ?>
@@ -175,8 +200,12 @@ $vat = $s->get_setting('enable_vat_registration') === '1' ? true : false;
                                 ->hideLabel(); ?>
                         <?= Html::closeTag('div'); ?>
                         <?= Html::closeTag('div'); ?>
-                    <?php foreach ($custom_fields as $custom_field): ?>
-                        <?php echo $cvH->print_field_for_form($custom_field, $quoteCustomForm, $translator, $quote_custom_values, $custom_values); ?>
+                    <?php
+                        /**
+                         * @var App\Invoice\Entity\CustomField $customField
+                         */
+                        foreach ($customFields as $customField): ?>
+                        <?php $cvH->print_field_for_form($customField, $quoteCustomForm, $translator, $quoteCustomValues, $customValues); ?>
                     <?php endforeach; ?>
                     <?= Html::closeTag('div'); ?>
                 <?= Html::closeTag('div'); ?>    

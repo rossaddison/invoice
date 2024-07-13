@@ -1,16 +1,15 @@
 <?php
+
 declare(strict_types=1);
 
-use Yiisoft\Data\Paginator\OffsetPaginator;
+use App\Invoice\Entity\Product;
 use Yiisoft\Html\Html;
-use Yiisoft\Translator\TranslatorInterface;
 use Yiisoft\Html\Tag\A;
 use Yiisoft\Html\Tag\Div;
 use Yiisoft\Html\Tag\Form;
 use Yiisoft\Html\Tag\H5;
 use Yiisoft\Html\Tag\I;
 use Yiisoft\Router\CurrentRoute;
-use Yiisoft\View\WebView;
 use Yiisoft\Yii\DataView\Column\DataColumn;
 use Yiisoft\Yii\DataView\Column\ActionColumn;
 use Yiisoft\Yii\DataView\GridView;
@@ -19,16 +18,23 @@ use Yiisoft\Yii\DataView\UrlConfig;
 use Yiisoft\Yii\DataView\YiiRouter\UrlCreator;
 
 /**
- * @var \App\Invoice\Entity\Product $product
- * @var string $csrf
+ * @var App\Invoice\Entity\Product $product
+ * @var App\Invoice\Setting\SettingRepository $s
+ * @var App\Widget\PageSizeLimiter $pageSizeLimiter
  * @var CurrentRoute $currentRoute 
- * @var OffsetPaginator $paginator
- * @var \Yiisoft\Router\UrlGeneratorInterface $urlGenerator 
- * @var TranslatorInterface $translator 
- * @var WebView $this
+ * @var Yiisoft\Data\Paginator\OffsetPaginator $paginator
+ * @var Yiisoft\Translator\TranslatorInterface $translator 
+ * @var Yiisoft\Router\UrlGeneratorInterface $urlGenerator
+ * @var Yiisoft\Router\FastRoute\UrlGenerator $urlFastRouteGenerator  
+ * @var bool $canEdit
+ * @var int $defaultPageSizeOffsetPaginator
+ * @var string $alert
+ * @var string $csrf 
+ * @psalm-var array<array-key, array<array-key, string>|string>  $optionsDataProductsDropdownFilter
  */ 
  
  echo $alert;
+ 
 ?>
 <?php
     $header = Div::tag()
@@ -47,7 +53,7 @@ use Yiisoft\Yii\DataView\YiiRouter\UrlCreator;
         ->addAttributes(['type' => 'reset'])
         ->addClass('btn btn-danger me-1 ajax-loader')
         ->content(I::tag()->addClass('bi bi-bootstrap-reboot'))
-        ->href($urlGenerator->generate($currentRoute?->getName()))
+        ->href($urlGenerator->generate($currentRoute->getName() ?? 'product/index'))
         ->id('btn-reset')
         ->render();
     
@@ -83,13 +89,13 @@ use Yiisoft\Yii\DataView\YiiRouter\UrlCreator;
         new DataColumn(
             'id',
             header: $translator->translate('i.id'),
-            content: static fn (object $model) => Html::encode($model->getProduct_id()),
+            content: static fn (Product $model) => Html::encode($model->getProduct_id()),
             withSorting: true,    
         ),        
         new DataColumn(
             'family_id',
             header: $translator->translate('i.family'),                
-            content: static fn ($model): string => Html::encode($model->getFamily()->getFamily_name())                  
+            content: static fn (Product $model): string => Html::encode($model->getFamily()?->getFamily_name() ?? '')                  
         ),
         new DataColumn(
             /**
@@ -100,7 +106,7 @@ use Yiisoft\Yii\DataView\YiiRouter\UrlCreator;
             property: 'filter_product_sku',
             header:  $translator->translate('i.product_sku'),
             encodeHeader: true,
-            content: static fn ($model): string => Html::encode($model->getProduct_sku()),
+            content: static fn (Product $model): string => Html::encode($model->getProduct_sku()),
             // bool|array   bool => TextInputFilter e.g. filter: true; array => DropDownFilter e.g. as below     
             filter: $optionsDataProductsDropdownFilter,
             visible: true
@@ -108,64 +114,64 @@ use Yiisoft\Yii\DataView\YiiRouter\UrlCreator;
         new DataColumn(
             'product_description',    
             header: $translator->translate('i.product_description'),                
-            content: static fn ($model): string => Html::encode(ucfirst($model->getProduct_description())) 
+            content: static fn (Product $model): string => Html::encode(ucfirst($model->getProduct_description() ?? '')) 
         ),
         new DataColumn(
             field: 'product_price',
             property: 'filter_product_price',    
             header: $translator->translate('i.product_price'). ' ( '. $s->get_setting('currency_symbol'). ' ) ',   
-            content: static fn ($model): string => Html::encode($model->getProduct_price()),
+            content: static fn (Product $model): string => Html::encode($model->getProduct_price()),
             filter: true    
         ),
         new DataColumn(
             'product_price_base_quantity',    
             header: $translator->translate('invoice.product.price.base.quantity'),
-            content: static fn ($model): string => Html::encode($model->getProduct_price_base_quantity())                        
+            content: static fn (Product $model): string => Html::encode($model->getProduct_price_base_quantity())                        
         ),
         new DataColumn(
             'product_unit',     
             header: $translator->translate('i.product_unit'),                
-            content: static fn ($model): string => Html::encode((ucfirst($model->getUnit()->getUnit_name())))                        
+            content: static fn (Product $model): string => Html::encode((ucfirst($model->getUnit()?->getUnit_name() ?? '')))                        
         ),
         new DataColumn(
             'tax_rate_id',    
             header: $translator->translate('i.tax_rate'),
-            content: static fn ($model): string => ($model->getTaxrate()->getTax_rate_id()) ? Html::encode($model->getTaxrate()->getTax_rate_name()) : $translator->translate('i.none')                       
+            content: static fn (Product $model): string => ($model->getTaxrate()?->getTax_rate_id() > 0) ? Html::encode($model->getTaxrate()?->getTax_rate_name()) : $translator->translate('i.none')                       
         ),
         new DataColumn(
             'product_tariff',                    
             header: $s->get_setting('sumex') ? $translator->translate('i.product_tariff'). '('. $s->get_setting('currency_symbol'). ')' : '',                
-            content: static fn ($model): string => ($s->get_setting('sumex') ? Html::encode($model->getProduct_tariff()) : Html::encode($translator->translate('i.none'))),                       
+            content: static fn (Product $model): string => ($s->get_setting('sumex') ? Html::encode($model->getProduct_tariff()) : Html::encode($translator->translate('i.none'))),                       
             visible: $s->get_setting('sumex') ? true : false
         ),
         new DataColumn(
             header: $translator->translate('invoice.product.property.add'),    
-            content: static function ($model) use ($urlGenerator): string {
+            content: static function (Product $model) use ($urlGenerator): string {
                return Html::a(
                        Html::tag('i','',['class'=>'fa fa-plus fa-margin dropdown-button text-decoration-none']), 
                        $urlGenerator->generate('productproperty/add',['product_id'=>$model->getProduct_id()]),[])->render();
             },
         ),
         new ActionColumn(
-            content: static fn($model): string => 
+            content: static fn(Product $model): string => !empty($productId = $model->getProduct_id()) ? 
             Html::a()
             ->addAttributes(['class' => 'dropdown-button text-decoration-none', 'title' => $translator->translate('i.view')])
             ->content('🔎')
             ->encode(false)
-            ->href('product/view/'. $model->getProduct_id())
-            ->render(),
+            ->href('product/view/'. $productId)
+            ->render() : '',
         ),
         new ActionColumn(
-            content: static fn($model): string => 
+            content: static fn(Product $model): string => !empty($productId = $model->getProduct_id()) ?
             Html::a()
             ->addAttributes(['class' => 'dropdown-button text-decoration-none', 'title' => $translator->translate('i.edit')])
             ->content('✎')
             ->encode(false)
-            ->href('product/edit/'. $model->getProduct_id())
-            ->render(),
+            ->href('product/edit/'. $productId)
+            ->render() : '',
         ),
         new ActionColumn(
-            content: static fn($model): string => 
+            content: static fn(Product $model): string => !empty($productId = $model->getProduct_id()) ?
             Html::a()
             ->addAttributes([
                 'class'=>'dropdown-button text-decoration-none', 
@@ -175,13 +181,26 @@ use Yiisoft\Yii\DataView\YiiRouter\UrlCreator;
             ])
             ->content('❌')
             ->encode(false)
-            ->href('product/delete/'. $model->getProduct_id())
-            ->render(),
+            ->href('product/delete/'. $productId)
+            ->render() : '',
         )
     ];       
 ?>
-<?= GridView::widget()
+<?php
+    $grid_summary = $s->grid_summary(
+        $paginator, 
+        $translator, 
+        (int)$s->get_setting('default_list_limit'), 
+        $translator->translate('invoice.products'),
+        ''
+    );
+    $toolbarString = Form::tag()->post($urlGenerator->generate('product/index'))->csrf($csrf)->open() .
+        Div::tag()->addClass('float-end m-3')->content($toolbarFilter)->encode(false)->render() .    
+        Div::tag()->addClass('float-end m-3')->content($toolbarReset)->encode(false)->render() .
+        Form::tag()->close();
+    echo GridView::widget()
     ->rowAttributes(['class' => 'align-middle'])
+    ->tableAttributes(['class' => 'table table-striped text-center h-75','id'=>'table-product'])
     ->columns(...$columns)
     ->dataReader($paginator)
     ->headerRowAttributes(['class'=>'card-header bg-info text-black'])
@@ -210,16 +229,10 @@ use Yiisoft\Yii\DataView\YiiRouter\UrlCreator;
         ->render()
     )
     ->summaryAttributes(['class' => 'mt-3 me-3 summary text-end'])
-    ->summaryTemplate($pageSizeLimiter::buttons($currentRoute, $s, $urlGenerator, 'product').' '.$grid_summary)
+    ->summaryTemplate($pageSizeLimiter::buttons($currentRoute, $s, $urlFastRouteGenerator, 'product').' '.$grid_summary)
     ->emptyTextAttributes(['class' => 'card-header bg-warning text-black'])
-    ->emptyText((string)$translator->translate('invoice.invoice.no.records'))
-    ->tableAttributes(['class' => 'table table-striped text-center h-75','id'=>'table-product'])
-    ->toolbar(
-        Form::tag()->post($urlGenerator->generate('product/index'))->csrf($csrf)->open() .
-        Div::tag()->addClass('float-end m-3')->content($toolbarFilter)->encode(false)->render() .    
-        Div::tag()->addClass('float-end m-3')->content($toolbarReset)->encode(false)->render() .
-        Form::tag()->close()
-    );
+    ->emptyText($translator->translate('invoice.invoice.no.records'))
+    ->toolbar($toolbarString);
 ?>
 </div>
 

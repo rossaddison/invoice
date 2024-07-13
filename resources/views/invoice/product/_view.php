@@ -1,16 +1,18 @@
 <?php
+
 declare(strict_types=1);
 
 use Yiisoft\Html\Html;
 
-
-/**
- * @var \Yiisoft\View\View $this
- * @var \Yiisoft\Router\UrlGeneratorInterface $urlGenerator
- * @var array $body
- * @var string $csrf
- * @var string $action
+/** 
+ * @var App\Widget\Button $button
+ * @var Yiisoft\Translator\TranslatorInterface $translator
+ * @var Yiisoft\Router\UrlGeneratorInterface $urlGenerator
  * @var string $title
+ * @var string $partial_product_details
+ * @var string $partial_product_properties
+ * @var string $partial_product_images
+ * @var string $partial_product_gallery
  */
 
 ?>
@@ -32,7 +34,7 @@ use Yiisoft\Html\Html;
         <a data-toggle="tab" href="#product-gallery" style="text-decoration: none"><?= $translator->translate('invoice.product.view.tab.gallery'); ?> </a>
     </li>
     <li>
-        <?= $button::back($translator); ?>
+        <?= $button::back(); ?>
     </li>    
 </ul>
 
@@ -41,19 +43,19 @@ use Yiisoft\Html\Html;
     <div class="tab-content">
 
         <div id="product-details" class="tab-pane active">
-            <?= $partial_product_details; ?>
+            <?= $partial_product_details ?: ''; ?>
         </div>
 
         <div id="product-properties" class="tab-pane">
-            <?= $partial_product_properties; ?>
+            <?= $partial_product_properties ?: ''; ?>
         </div>
 
         <div id="product-images" class="tab-pane">
-            <?= $partial_product_images; ?>
+            <?= $partial_product_images ?: ''; ?>
         </div>
         
         <div id="product-gallery" class="tab-pane">
-            <?= $partial_product_gallery; ?>
+            <?= $partial_product_gallery ?: ''; ?>
         </div>
 
     </div>

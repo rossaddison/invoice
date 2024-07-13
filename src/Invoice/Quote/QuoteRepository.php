@@ -316,6 +316,16 @@ final class QuoteRepository extends Select\Repository
         return $statuses_array[$key]['label'];
     }
     
+    public function getSpecificStatusArrayClass(string $key) : string
+    {
+        $statuses_array = $this->getStatuses($this->translator);
+        /**
+         * @var array $statuses_array[$key]
+         * @var string $statuses_array[$key]['class']
+         */
+        return $statuses_array[$key]['class'];
+    }
+    
     /**
      * @param string $group_id
      * @return mixed

@@ -89,7 +89,6 @@ final class ProductImageController {
         
         $parameters = [
             'paginator' => $paginator,
-            'grid_summary' => $this->s->grid_summary($paginator, $this->translator, (int) $this->s->get_setting('default_list_limit'), $this->translator->translate('invoice.productimage.plural'), ''),
             'productimages' => $this->productimages($productimageRepository),
             'alert' => $this->alert()
         ];
@@ -114,7 +113,8 @@ final class ProductImageController {
         $productImageForm = new ProductImageForm($productImage, (int)$product_id);
         $parameters = [
             'title' => $this->translator->translate('invoice.add'),
-            'action' => ['productimage/add'],
+            'actionName' => 'productimage/add',
+            'actionArguments' => [],
             'errors' => [],
             'form' => $productImageForm,
             'products' => $productRepository->findAllPreloaded(),
@@ -209,7 +209,8 @@ final class ProductImageController {
             $form = new ProductImageForm($productImage, (int)$product_id);
             $parameters = [
                 'title' => $this->translator->translate('i.edit'),
-                'action' => ['productimage/edit', ['id' => $productImage->getId()]],
+                'actionName' => 'productimage/edit', 
+                'actionArguments' => ['id' => $productImage->getId()],
                 'errors' => [],
                 'form' => $form,
                 'products' => $productRepository->findAllPreloaded()
@@ -242,7 +243,8 @@ final class ProductImageController {
         if ($productImage) {
             $parameters = [
                 'title' => $this->translator->translate('i.view'),
-                'action' => ['productimage/view', ['id' => $productImage->getId()]],
+                'actionName' => 'productimage/view', 
+                'actionArguments' => ['id' => $productImage->getId()],
                 'form' => new ProductImageForm($productImage, (int)$productImage->getProduct_id()),
                 'productimage' => $productimageRepository->repoProductImagequery($productImage->getId()),
             ];

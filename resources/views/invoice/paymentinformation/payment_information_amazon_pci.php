@@ -1,22 +1,41 @@
 <?php
-declare(strict_types=1);
 
-use App\Invoice\Helpers\NumberHelper;
-use App\Invoice\Helpers\ClientHelper;
+declare(strict_types=1);
 
 use Yiisoft\Html\Html;
 
 /**
- * @var \Yiisoft\View\View $this
- * @var \Yiisoft\Router\UrlGeneratorInterface $urlGenerator
- * @var string $csrf
- * @var string $action
+ * @link https://developer.amazon.com/docs/amazon-pay-checkout/add-the-amazon-pay-button.html#4-render-the-button
+ * @see PaymentInformationController function amazonInForm
+ * @var App\Invoice\Entity\Client $client_on_invoice
+ * @var App\Invoice\Entity\Inv $invoice
+ * 
+ * @see config\common\params 'yiisoft/view' => ['parameters' => ['clientHelper' => Reference::to(ClientHelper::class)]]
+ * @var App\Invoice\Helpers\ClientHelper $clientHelper
+ * 
+ * @see config\common\params 'yiisoft/view' => ['parameters' => ['dateHelper' => Reference::to(DateHelper::class)]]
+ * @var App\Invoice\Helpers\DateHelper $dateHelper
+ * 
+ * @see config\common\params 'yiisoft/view' => ['parameters' => ['numberHelper' => Reference::to(NumberHelper::class)]]
+ * @var App\Invoice\Helpers\NumberHelper $numberHelper
+ * 
+ * @see config\common\params 'yiisoft/view' => ['parameters' => ['s' => Reference::to(SettingRepository::class)]]
+ * @var App\Invoice\Setting\SettingRepository $s 
+ * 
+ * @var Yiisoft\Translator\TranslatorInterface $translator
+ * @var Yiisoft\Router\UrlGeneratorInterface $urlGenerator
+ * @var array $amazonPayButton
+ * @var bool $disable_form
+ * @var bool $is_overdue
+ * @var float $balance
+ * @var float $total
+ * @var string $alert
+ * @var string $companyLogo
+ * @var string $inv_url_key
+ * @var string $partial_client_address
+ * @var string $payment_method
+ * @var string $title
  */
-
-// see https://developer.amazon.com/docs/amazon-pay-checkout/add-the-amazon-pay-button.html#4-render-the-button
-
-$numberhelper = new NumberHelper($s);
-$clienthelper = new ClientHelper($s);
 ?>
 
 <?php if ($disable_form === false) { ?>
@@ -32,11 +51,11 @@ $clienthelper = new ClientHelper($s);
                     <?= $companyLogo; ?>
                 </div>    
                 <div class="col-8">
-                    <?= $translator->translate('g.online_payment_for_invoice'); ?> #
-                    <?= $invoice->getNumber(). ' => '.
-                     $invoice->getClient()->getClient_name() . ' '.
-                     $invoice->getClient()->getClient_surname() . ' '.
-                     $numberhelper->format_currency($balance); ?>
+                    <?= $translator->translate('g.online_payment_for_invoice'); ?> #                    
+                    <?= ($invoice->getNumber() ?? ''). ' => '.
+                     ($invoice->getClient()?->getClient_name() ?? '' ). ' '.
+                     ($invoice->getClient()?->getClient_surname() ?? '' ). ' '.
+                     $numberHelper->format_currency($balance); ?>
                 </div>
             </div>
         </h2>
@@ -64,10 +83,10 @@ $clienthelper = new ClientHelper($s);
     <button type="submit" id="submit" class="btn btn-lg btn-success fa fa-credit-card fa-margin">
         <div class="spinner hidden" id="spinner"></div>
         <span id="button-text">
-            <?= ' '.$translator->translate('i.pay_now') . ': ' . $numberhelper->format_currency($balance) ?>
+            <?= ' '.$translator->translate('i.pay_now') . ': ' . $numberHelper->format_currency($balance) ?>
         </span>
     </button>
-<?= Html::encode($clienthelper->format_client($client_on_invoice)) ?>
+<?= Html::encode($clientHelper->format_client($client_on_invoice)) ?>
 <?= $partial_client_address; ?>
 <br>
 <div class="table-responsive">
@@ -75,21 +94,21 @@ $clienthelper = new ClientHelper($s);
     <tbody>
     <tr>
         <td><?= $translator->translate('i.invoice_date'); ?></td>
-        <td class="text-right"><?= Html::encode($invoice->getDate_created()->format($datehelper->style())); ?></td>
+        <td class="text-right"><?= Html::encode($invoice->getDate_created()->format($dateHelper->style())); ?></td>
     </tr>
     <tr class="<?= ($is_overdue ? 'overdue' : '') ?>">
         <td><?= $translator->translate('i.due_date'); ?></td>
         <td class="text-right">
-            <?= Html::encode($invoice->getDate_due()->format($datehelper->style())); ?>
+            <?= Html::encode($invoice->getDate_due()->format($dateHelper->style())); ?>
         </td>
     </tr>
     <tr class="<?php echo($is_overdue ? 'overdue' : '') ?>">
         <td><?= $translator->translate('i.total'); ?></td>
-        <td class="text-right"><?= Html::encode($numberhelper->format_currency($total)); ?></td>
+        <td class="text-right"><?= Html::encode($numberHelper->format_currency($total)); ?></td>
     </tr>
     <tr class="<?= ($is_overdue ? 'overdue' : '') ?>">
         <td><?= $translator->translate('i.balance'); ?></td>
-        <td class="text-right"><?= Html::encode($numberhelper->format_currency($balance)); ?></td>
+        <td class="text-right"><?= Html::encode($numberHelper->format_currency($balance)); ?></td>
     </tr>
     <?php if ($payment_method): ?>
         <tr>
@@ -117,13 +136,13 @@ $clienthelper = new ClientHelper($s);
     $js20 =
     "const amazonPayButton = amazon.Pay.renderButton('#AmazonPayButton', {"         
     // set checkout environment
-    . 'merchantId: "'. $amazonPayButton['merchantId']. '",'
+    . 'merchantId: "'. (string)$amazonPayButton['merchantId']. '",'
     // SANDBOX-xxxxxxxxxx
-    . 'publicKeyId: "'.$amazonPayButton['publicKeyId'].'",'
+    . 'publicKeyId: "'. (string)$amazonPayButton['publicKeyId'].'",'
     // eg. Currency shortcode eg. GBP        
-    . 'ledgerCurrency: "'.$amazonPayButton['ledgerCurrency'].'",'           
+    . 'ledgerCurrency: "'. (string)$amazonPayButton['ledgerCurrency'].'",'           
     // customize the buyer experience eg. en_GB
-    . 'checkoutLanguage: "'.$amazonPayButton['checkoutLanguage']. '",'
+    . 'checkoutLanguage: "'. (string)$amazonPayButton['checkoutLanguage']. '",'
     // 'PayAndShip' - Offer checkout using buyer's Amazon wallet and address book. 
     //              Select this product type if you need the buyer's shipping details
     // 'PayOnly' - Offer checkout using only the buyer's Amazon wallet. 
@@ -131,7 +150,7 @@ $clienthelper = new ClientHelper($s);
     // 'SignIn' - Offer Amazon Sign-in. Select this product type if you need buyer details 
     //              before the buyer starts Amazon Pay checkout. See Amazon Sign-in 
     //              for more information.       
-    . 'productType: "'.$amazonPayButton['productType'].'",'
+    . 'productType: "'. (string)$amazonPayButton['productType'].'",'
     //'Home' - Initial or main page
     //'Product' - Product details page
     //'Cart' - Cart review page before buyer starts checkout
@@ -140,13 +159,13 @@ $clienthelper = new ClientHelper($s);
     . 'placement: "Other",'
     . 'buttonColor: "Gold",'
     // Currency shortcode eg. GBP
-    . 'estimatedOrderAmount: { "amount": "'.$amazonPayButton['amount'].'", "currencyCode": "'.$amazonPayButton['ledgerCurrency'].'"},'
+    . 'estimatedOrderAmount: { "amount": "'. (string)$amazonPayButton['amount'].'", "currencyCode": "'. (string)$amazonPayButton['ledgerCurrency'].'"},'
     // configure Create Checkout Session request
     . 'createCheckoutSessionConfig: {'
     // json encoded string generated in step 2
-    . "           payloadJSON: '". $amazonPayButton['payloadJSON']."'," 
+    . "           payloadJSON: '". (string)$amazonPayButton['payloadJSON']."'," 
     // signature generated in step 3
-    . "signature: '". $amazonPayButton['signature']."'"  
+    . "signature: '". (string)$amazonPayButton['signature']."'"  
     . '}'    
     . '});';               
     echo Html::script($js20)->type('module')

@@ -21,6 +21,8 @@ use Yiisoft\Data\Paginator\OffsetPaginator;
 use Yiisoft\Data\Paginator\PageToken;
 use Yiisoft\Http\Method;
 use Yiisoft\Router\CurrentRoute;
+use Yiisoft\Router\FastRoute\UrlGenerator as FastRouteGenerator;
+use Yiisoft\Router\HydratorAttribute\RouteArgument;
 use Yiisoft\Session\SessionInterface;
 use Yiisoft\Session\Flash\Flash;
 use Yiisoft\Translator\TranslatorInterface;
@@ -84,7 +86,8 @@ final class PostalAddressController
             'canEdit' => ($this->userService->hasPermission('viewInv') && $this->userService->hasPermission('editInv')) ? true : false,
             'client_id' => $client_id,
             'title' => $this->translator->translate('invoice.add'),
-            'action' => ['postaladdress/add', ['client_id' => $client_id]],
+            'actionName' => 'postaladdress/add', 
+            'actionArguments' => ['client_id' => $client_id],
             'errors' => [],
             'form' => $form
         ];
@@ -128,27 +131,36 @@ final class PostalAddressController
     }
     
     /**
-     * @param CurrentRoute $currentRoute
+     * @param FastRouteGenerator $urlFastRouteGenerator
+     * @param CurrentRoute $routeCurrent
      * @param PostalAddressRepository $postaladdressRepository
      * @param SettingRepository $settingRepository
      * @param ClientRepository $cR
+     * @param string $page 
      * @return Response
      */
-    public function index(CurrentRoute $currentRoute, PostalAddressRepository $postaladdressRepository, SettingRepository $settingRepository, ClientRepository $cR): Response
+    public function index(FastRouteGenerator $urlFastRouteGenerator,
+                          CurrentRoute $routeCurrent,
+                          PostalAddressRepository $postaladdressRepository, 
+                          SettingRepository $settingRepository, 
+                          ClientRepository $cR,
+                          #[RouteArgument('page')] string $page= '1' 
+            ): Response
     {      
-        $page = $currentRoute->getArgument('page', '1');
         $postaladdresses = $this->postaladdresses($postaladdressRepository); 
         $paginator = (new OffsetPaginator($postaladdresses))
         ->withPageSize((int)$settingRepository->get_setting('default_list_limit'))
         ->withCurrentPage((int)$page)        
-        ->withToken(PageToken::next((string)$page)); 
+        ->withToken(PageToken::next($page)); 
       $parameters = [
         'canEdit' => ($this->userService->hasPermission('viewInv') && $this->userService->hasPermission('editInv')) ? true : false,  
         'postaladdresses' => $postaladdresses,
         'alert' => $this->alert(),
         'paginator' => $paginator,
         'max' => (int)$settingRepository->get_setting('default_list_limit'),  
-        'cR' => $cR
+        'cR' => $cR,
+        'routeCurrent' => $routeCurrent,  
+        'urlFastRouteGenerator' => $urlFastRouteGenerator  
       ];         
       return $this->viewRenderer->render('index', $parameters);
     }
@@ -192,7 +204,8 @@ final class PostalAddressController
             $form = new PostalAddressForm($this->translator, $postalAddress, (int)$postalAddress->getClient_id());
             $parameters = [
                 'title' => $this->translator->translate('i.edit'),
-                'action' => ['postaladdress/edit', ['id' => $postalAddress->getId()]],
+                'actionName' => 'postaladdress/edit', 
+                'actionArguments' => ['id' => $postalAddress->getId()],
                 'errors' => [],
                 'form' => $form
             ];
@@ -256,9 +269,10 @@ final class PostalAddressController
             $form = new PostalAddressForm($this->translator, $postalAddress, (int)$postalAddress->getClient_id());
             $parameters = [
                 'title' => $this->translator->translate('i.view'),
-                'action' => ['postaladdress/view', ['id' => $postalAddress->getId()]],
+                'actionName' => 'postaladdress/view', 
+                'actionArguments' => ['id' => $postalAddress->getId()],
                 'form' => $form,
-                'postaladdress'=>$postalAddress,
+                'postaladdress' => $postalAddress,
             ];        
         return $this->viewRenderer->render('_view', $parameters);
         }
