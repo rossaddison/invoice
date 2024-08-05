@@ -1,16 +1,45 @@
 <?php
+
     declare(strict_types=1);
+    
     use Yiisoft\Html\Html;
     
-    /*
-     * @var \App\Invoice\InvAmount\InvAmountRepository $iaR 
+    /**
+     * @see src\Invoice\InvoiceController function dashboard
+     * @see App\Invoice\Inv\InvRepository function getStatuses
+     * 
+     * @var App\Invoice\Helpers\ClientHelper $clientHelper
+     * @var App\Invoice\Helpers\DateHelper $dateHelper
+     * @var App\Invoice\Inv\InvRepository $iR
+     * @var App\Invoice\InvAmount\InvAmountRepository $iaR
+     * @var App\Invoice\InvRecurring\InvRecurringRepository $irR
+     * @var App\Invoice\Quote\QuoteRepository $qR
+     * @var App\Invoice\QuoteAmount\QuoteAmountRepository $qaR
+     * @var App\Invoice\Setting\SettingRepository $s
+     * @var App\Invoice\Task\TaskRepository $taskR
+     * @var Yiisoft\Translator\TranslatorInterface $translator
+     * @var Yiisoft\Router\FastRoute\UrlGenerator $urlGenerator
+     * @var array $invoice_status_totals
+     * @var array $invoices
+     * @var array $projects
+     * @var array $quotes
+     * @var array $quote_status_totals
+     * @var array $overdueInvoices
+     * @var array $tasks
+     * @var array $task_statuses
+     * @var int $client_count 
+     * @var string $alerts
+     * @var string $modal_create_client
+     * @var string $invoice_status_period
+     * @var string $quote_status_period
      */
 ?>
 
 <div id="content">
+
 <?= $alerts; ?>
 
-    <div class="row <?= ($s->get_setting('disable_quickactions') === 1 ? 'hidden' : ''); ?>">
+    <div class="row <?= ($s->get_setting('disable_quickactions') == '1' ? 'hidden' : ''); ?>">
         <div class="col-xs-12">
 
             <div id="panel-quick-actions" class="panel panel-default quick-actions">
@@ -59,7 +88,7 @@
 <?php 
     // Quote Overview 
 ?>
-    <?= Html::openTag('div', ['class' => 'row']); ?>
+    <div class = 'row'>
         <div class="col-xs-12 col-md-6">
             <div id="panel-quote-overview" class="panel panel-default overview">
                 <div class="panel-heading">
@@ -67,16 +96,20 @@
                     <span class="pull-right text-muted"><?= $s->lang($quote_status_period); ?></span>
                 </div>
                 <table class="table table-hover table-bordered table-condensed no-margin">
-                    <?php foreach ($quote_status_totals as $total) { ?>
+                    <?php
+                        /**
+                         * @var array $total
+                         */
+                        foreach ($quote_status_totals as $total) { ?>
                         <tr>
                              <td>
-                                <a href="<?= $urlGenerator->generate('quote/index', ['page'=>1, 'status'=>$total['href']]); ?>">
-                                    <?= $total['label']; ?>
+                                <a href="<?= $urlGenerator->generate('quote/index', ['page'=>1, 'status'=> (int)$total['href']]); ?>">
+                                    <?php echo (string)$total['label']; ?>
                                 </a>
                             </td>
                             <td class="amount">
-                        <span class="<?= $total['class']; ?>">
-                            <?= $s->format_currency($total['sum_total']); ?>
+                        <span class="<?php echo (string)$total['class']; ?>">
+                            <?php echo $s->format_currency($total['sum_total']); ?>
                         </span>
                             </td>
                         </tr>
@@ -98,15 +131,19 @@
                 </div>
 
                 <table class="table table-hover table-bordered table-condensed no-margin">
-                    <?php foreach ($invoice_status_totals as $total) { ?>
+                    <?php
+                        /**
+                         * @var array $total
+                         */
+                        foreach ($invoice_status_totals as $total) { ?>
                         <tr>
                             <td>
-                                <a href="<?= $urlGenerator->generate('inv/index', ['page'=>1, 'status'=>$total['href']]); ?>">
-                                    <?= $total['label']; ?>
+                                <a href="<?= $urlGenerator->generate('inv/index', ['page'=>1, 'status' => (int)$total['href']]); ?>">
+                                    <?php echo (string)$total['label']; ?>
                                 </a>
                             </td>
                             <td class="amount">
-                        <span class="<?= $total['class']; ?>">
+                        <span class="<?php echo (string)$total['class']; ?>">
                             <?= $s->format_currency($total['sum_total']); ?>
                         </span>
                             </td>
@@ -114,31 +151,10 @@
                     <?php } ?>
                 </table>
             </div>
-<?php 
-    // Overdue Invoices 
-?>
-
-            <?php if (empty($overdue_invoices)) { ?>
-                <div class="panel panel-default panel-heading">
-                    <span class="text-muted"><?= $translator->translate('i.no_overdue_invoices'); ?></span>
-                </div>
-            <?php } else {
-                $overdue_invoices_total = 0;
-                foreach ($overdue_invoices as $invoice) {
-                    $overdue_invoices_total += $invoice->getBalance();
-                }
-                ?>
-                <div class="panel panel-danger panel-heading">
-                    <a href="<?= $urlGenerator->generate('inv/status',['status'=>'overdue', 'class'=>'text-danger']); ?>">
-                        <i class="fa fa-external-link"></i><?= $translator->translate('i.overdue_invoices'); ?>
-                        <span class="pull-right text-danger"><?= $s->format_currency($overdue_invoices_total); ?></span>
-                    </a>
-                </div>
-            <?php } ?>
         </div>
     </div>
 
-    <?= Html::openTag('div', ['class' => 'row']); ?>
+    <div class = 'row'>
         <div class="col-xs-12 col-md-6">
             <div id="panel-recent-quotes" class="panel panel-default">
                 <div class="panel-heading">
@@ -158,22 +174,28 @@
                         </tr>
                         </thead>
                         <tbody>
-                        <?php foreach ($quotes as $quote) { ?>
+                        <?php
+                            /**
+                             * @var App\Invoice\Entity\Quote $quote
+                             */
+                            foreach ($quotes as $quote) { ?>
                             <tr>
                                 <td>
-                                <span class="label label-
-                                <?= $quote_statuses[$quote->getStatus_id()]['class']; ?>">
-                                    <?= $quote_statuses[$quote->getStatus_id()]['label']; ?>
-                                </span>
+                                <?php if (null!==$statusId = $quote->getStatus_id()) { ?>    
+                                    <span class="label label-
+                                    <?= $qR->getSpecificStatusArrayClass((string)$statusId); ?>">
+                                        <?= $qR->getSpecificStatusArrayLabel((string)$statusId); ?>
+                                    </span>
+                                <?php } ?>    
                                 </td>
                                 <td>
-                                    <?= $datehelper->date_from_mysql($quote->getDate_created()); ?>
+                                    <?= $quote->getDate_created()->format($dateHelper->style()); ?>
                                 </td>
                                 <td>
-                                    <a href="<?= $urlGenerator->generate('quote/view', ['id'=>$quote->getId()]); ?>" title="<?= ($quote->getNumber() ?: $quote->getId()); ?>" class="btn btn-default" style="text-decoration:none"><?= ($quote->getNumber() ?: $quote->getId()); ?></a>
+                                    <a href="<?= $urlGenerator->generate('quote/view', ['id'=>$quote->getId()]); ?>" title="<?=  (($quote->getNumber() ?? '#') ? : ($quote->getId() ?? '#')); ?>" class="btn btn-default" style="text-decoration:none"><?= (($quote->getNumber() ?? '#') ? : ($quote->getId() ?? '#')); ?></a>
                                 </td>
                                 <td>
-                                    <a href="<?= $urlGenerator->generate('client/view', ['id'=>$quote->getClient_id()]); ?>" title="<?= ($quote->getNumber() ?: $quote->getId()); ?>" class="btn btn-default" style="text-decoration:none"><?= Html::encode($clienthelper->format_client($quote->getClient())); ?></a>                                   
+                                    <a href="<?= $urlGenerator->generate('client/view', ['id'=>$quote->getClient_id()]); ?>" title="<?=  (($quote->getNumber() ?? '#') ? : ($quote->getId() ?? '#')); ?>" class="btn btn-default" style="text-decoration:none"><?= Html::encode($clientHelper->format_client($quote->getClient())); ?></a>                                   
                                 </td>
                                 <td class="amount">
 <?php $quote_amount = (($qaR->repoQuoteAmountCount((string)$quote->getId()) > 0) ? $qaR->repoQuotequery((string)$quote->getId()) : null) ?>
@@ -225,38 +247,46 @@
                         </thead>
                         <tbody>
 
-                        <?php foreach ($invoices as $invoice) {
-                            if ($s->get_setting('disable_read_only') === true) {
-                                $invoice->setIs_read_only(false);
-                            } ?>
+                        <?php
+                            /**
+                             * @var App\Invoice\Entity\Inv $invoice
+                             */
+                            foreach ($invoices as $invoice) {
+                                if ($s->get_setting('disable_read_only') == '1') {
+                                    $invoice->setIs_read_only(false);
+                                } ?>
                             <tr>
                                 <td>
-                                    <span class="label label-<?= $invoice_statuses[$invoice->getStatus_id()]['class']; ?>">
-                                        <?= $invoice_statuses[$invoice->getStatus_id()]['label'];
-                                        if (null!==$iaR->repoCreditInvoicequery((string)$invoice->getId())) { ?>
-                                            &nbsp;<i class="fa fa-credit-invoice" title="<?= $translator->translate('i.credit_invoice') ?>"></i>
-                                        <?php } ?>
-                                        <?php if ($invoice->getIs_read_only()) { ?>
-                                            &nbsp;<i class="fa fa-read-only" title="<?= $translator->translate('i.read_only') ?>"></i>
-                                        <?php } ?>
-                                        <?php if (($irR->repoCount((string)$invoice->getId()) > 0)) { ?>
-                                            &nbsp;<i class="fa fa-refresh" title="<? $translator->translate('i.recurring') ?>"></i>
-                                        <?php } ?>
-                                    </span>
+                                    <?php if (null!==($statusId = $invoice->getStatus_id())) { ?>
+                                        <span class="label label-<?= $iR->getSpecificStatusArrayClass($statusId); ?>">
+
+                                            <?= $iR->getSpecificStatusArrayLabel((string)$statusId);
+                                            if (null!==$iaR->repoCreditInvoicequery((string)$invoice->getId())) { ?>
+                                                &nbsp;<i class="fa fa-credit-invoice" title="<?= $translator->translate('i.credit_invoice') ?>"></i>
+                                            <?php } ?>
+
+                                            <?php if ($invoice->getIs_read_only()) { ?>
+                                                &nbsp;<i class="fa fa-read-only" title="<?= $translator->translate('i.read_only') ?>"></i>
+                                            <?php } ?>
+                                            <?php if (($irR->repoCount((string)$invoice->getId()) > 0)) { ?>
+                                                &nbsp;<i class="fa fa-refresh" title="<? $translator->translate('i.recurring') ?>"></i>
+                                            <?php } ?>
+                                        </span>
+                                    <?php } ?>
                                 </td>
                                 <td>
-                                    <span class="<?= $invoice->isOverdue() ? font-overdue : ''; ?>">
-                                        <?= $datehelper->date_from_mysql($invoice->getDate_due()); ?>
+                                    <span class="<?= $invoice->isOverdue() ? 'font-overdue' : ''; ?>">
+                                        <?= $invoice->getDate_due()->format($dateHelper->style()); ?>
                                     </span>
                                 </td>
                                 <td>
                                     <a href="<?= $urlGenerator->generate('inv/view',['id'=>$invoice->getId()]); ?>" class="btn btn-default" style="text-decoration:none">
-                                        <?= ($invoice->getNumber() ?: $invoice->getId()) ;?>
+                                        <?= ($invoice->getNumber() ?? '#'.($invoice->getId() ?? '#')) ;?>
                                     </a>                
                                 </td>
                                 <td>
                                     <a href="<?= $urlGenerator->generate('client/view',['id'=>$invoice->getClient_id()]); ?>" class="btn btn-default" style="text-decoration:none">
-                                        <?= (Html::encode($clienthelper->format_client($invoice->getClient()))); ?>
+                                        <?= (Html::encode($clientHelper->format_client($invoice->getClient()))); ?>
                                     </a>
                                 </td>
                                 <td class="amount">
@@ -292,7 +322,7 @@
     // Projects 
 ?>
     <?php if ($s->get_setting('projects_enabled') == 1) : ?>
-        <?= Html::openTag('div', ['class' => 'row']); ?>
+        <div class = 'row'>
             <div class="col-xs-12 col-md-6">
 
                 <div id="panel-projects" class="panel panel-default">
@@ -310,7 +340,11 @@
                             </thead>
 
                             <tbody>
-                            <?php foreach ($projects as $project) { ?>
+                            <?php
+                                /**
+                                 * @var App\Invoice\Entity\Project $project
+                                 */
+                                foreach ($projects as $project) { ?>
                                 <tr>
                                     <td>
                                         <a href="<?= $urlGenerator->generate('project/view', ['id'=> $project->getId()]); ?>">
@@ -319,7 +353,7 @@
                                     </td>
                                     <td>
                                         <a href="<?= $urlGenerator->generate('client/view', ['id'=> $project->getClient_id()]); ?>">
-                                            <?= Html::encode($clienthelper->format_client($project->getClient())); ?>
+                                            <?= Html::encode($clientHelper->format_client($project->getClient())); ?>
                                         </a>
                                     </td>
                                 </tr>
@@ -362,12 +396,15 @@
                             </thead>
 
                             <tbody>
-                            <?php foreach ($tasks as $task) { ?>
-                                <?php $task_status = $task->getStatus(); ?>
+                            <?php
+                                /**
+                                 * @var App\Invoice\Entity\Task $task
+                                 */
+                                foreach ($taskR->findAllPreloaded() as $task) { ?>
                                 <tr>
                                     <td>
-                                    <span class="label <?= $task_statuses["$task_status"]['class']; ?>">
-                                        <?= $task_statuses["$task_status"]['label']; ?>
+                                    <span class="label <?= $taskR->getSpecificStatusArrayClass($task->getStatus() ?? 1); ?>">
+                                        <?= $taskR->getSpecificStatusArrayLabel((string)($task->getStatus() ?? 1)); ?>
                                     </span>
                                     </td>
                                     <td>
@@ -377,7 +414,7 @@
                                     </td>
                                     <td>
                                     <span class="<?php if ($task->Is_overdue()) { ?>font-overdue<?php } ?>">
-                                        <?= $datehelper->date_from_mysql($task->getFinish_date()); ?>
+                                        <?= !is_string($taskFinishDate = $task->getFinish_date()) ? $taskFinishDate->format($dateHelper->style()) : ''; ?>
                                     </span>
                                     </td>
                                     <td>

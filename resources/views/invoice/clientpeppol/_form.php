@@ -1,26 +1,55 @@
 <?php
+
 declare(strict_types=1);
 
 use Yiisoft\Html\Html;
 use App\Widget\LabelSwitch;
 
 /**
- * @var \Yiisoft\View\View $this
- * @var \Yiisoft\Router\UrlGeneratorInterface $urlGenerator
+ * @see App\Invoice\ClientPeppol\ClientPeppolController.php function add and function edit
+ * 
+ * @var App\Invoice\ClientPeppol\ClientPeppolForm $form
+ * @var App\Invoice\Setting\SettingRepository $s
+ * @var App\Widget\Button $button
+ * @var Yiisoft\Router\UrlGeneratorInterface $urlGenerator
+ * @var Yiisoft\Translator\TranslatorInterface $translator
+ * @var array $electronic_address_scheme
+ * @var array $iso_6523_array
+ * @var array $pep
+ * @var array $pep['endpointid']
+ * @var array $pep['endpointid_schemeid']
+ * @var array $pep['identificationid']
+ * @var array $pep['identificationid_schemeid']
+ * @var array $pep['taxschemecompanyid']
+ * @var array $pep['taxschemeid']
+ * @var array $pep['legal_entity_registration_name']
+ * @var array $pep['legal_entity_companyid']
+ * @var array $pep['legal_entity_companyid_schemeid']
+ * @var array $pep['legal_entity_company_legal_form']
+ * @var array $pep['financial_institution_branchid']
+ * @var array $pep['accounting_cost']
+ * @var array $pep['buyer_reference']
+ * @var array $pep['supplier_assigned_accountid']
+ * @var array $receiver_identifier_array
+ * @var bool $defaults
+ * @var int $client_id
+ * @var string $actionName
  * @var string $csrf
- * @var string $action
- * @var string $title
+ * @var string $setting
+ * @var string $title 
+ * @psalm-var array<string, Stringable|null|scalar> $actionArguments
+ * @psalm-var array<string,list<string>> $errors
  */
 
 ?>
 
 <?= Html::openTag('h1'); ?><?= Html::encode($title) ?><?= Html::closeTag('h1'); ?>
-<form id="ClientPeppolForm" method="POST" action="<?= $urlGenerator->generate(...$action) ?>" enctype="multipart/form-data">
+<form id="ClientPeppolForm" method="POST" action="<?= $urlGenerator->generate($actionName, $actionArguments) ?>" enctype="multipart/form-data">
     <input type="hidden" name="_csrf" value="<?= $csrf ?>">
     <div id="headerbar">
         <h1 class="headerbar-title"><?= Html::a($translator->translate('invoice.client.peppol.clientpeppols_form'), 'https://docs.peppol.eu/poacc/billing/3.0/syntax/ubl-invoice/cac-AccountingCustomerParty/'); ?></h1>
         <?= $button::back_save(); ?><div id="content">
-        <?=
+        <?php
         LabelSwitch::checkbox(
           'client-peppol-label-switch',
           $setting,
@@ -54,6 +83,8 @@ use App\Widget\LabelSwitch;
                          * @see https://docs.peppol.eu/poacc/billing/3.0/syntax/ubl-invoice/cac-AccountingCustomerParty/cac-Party/cbc-EndpointID/schemeID/
                          * @var int $key
                          * @var array $value
+                         * @var string $value['code']
+                         * @var string $value['description']
                          */
                         foreach ($electronic_address_scheme as $key => $value) {
                           ?>
@@ -86,6 +117,9 @@ use App\Widget\LabelSwitch;
                         /**
                          * @var int $key
                          * @var array $value
+                         * @var string $value['region']
+                         * @var string $value['country']
+                         * @var string $value['tax']
                          */
                         foreach ($receiver_identifier_array as $key => $value) {
                           ?>
@@ -119,6 +153,9 @@ use App\Widget\LabelSwitch;
                         /**
                          * @var int $key
                          * @var array $value
+                         * @var string $value['Id']
+                         * @var string $value['Name']
+                         * @var string $value['Description']
                          */
                         foreach ($iso_6523_array as $key => $value) {
                           ?>
@@ -146,6 +183,9 @@ use App\Widget\LabelSwitch;
                         /**
                          * @var int $key
                          * @var array $value
+                         * @var string $value['Id']
+                         * @var string $value['Name']
+                         * @var string $value['Description']
                          */
                         foreach ($iso_6523_array as $key => $value) {
                           ?>

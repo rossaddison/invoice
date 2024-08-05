@@ -2,28 +2,41 @@
 
 declare(strict_types=1); 
 
-
 use Yiisoft\FormModel\Field;
 use Yiisoft\Html\Html;
+use Yiisoft\Html\Tag\Form;
 
 /**
- * @var \Yiisoft\View\View $this
+ * @var App\Invoice\Entity\CustomField $custom_field
+ * @var App\Invoice\CustomValue\CustomValueForm $form
+ * @var App\Widget\Button $button
+ * @var Yiisoft\Translator\TranslatorInterface $translator
+ * @var Yiisoft\Router\FastRoute\UrlGenerator $urlGenerator
+ * @var string $actionName
  * @var string $csrf
+ * @var string $custom_field_id
+ * @psalm-var array<string, Stringable|null|scalar> $actionArguments
+ * @psalm-var array<string,list<string>> $errors
  */
 ?>
-<?= Html::openTag('form', ['method' => 'post']); ?>
-    <?= Html::tag('input','',['type' => 'hidden', 'name' => '_csrf', 'value' => $csrf]); ?>
     
-    <?= Html::openTag('div'); ?>
-    <?= Html::openTag('div',['class'=>'container py-5 h-100']); ?>
-    <?= Html::openTag('div',['class'=>'row d-flex justify-content-center align-items-center h-100']); ?>
-    <?= Html::openTag('div',['class'=>'col-12 col-md-8 col-lg-6 col-xl-8']); ?>
-    <?= Html::openTag('div',['class'=>'card border border-dark shadow-2-strong rounded-3']); ?>
+<?= Form::tag()
+    ->post($urlGenerator->generate($actionName, $actionArguments))
+    ->enctypeMultipartFormData()
+    ->csrf($csrf)
+    ->id('CustomValueForm')
+    ->open()
+?> 
+
+<?= Html::openTag('div'); ?>
+<?= Html::openTag('div',['class'=>'container py-5 h-100']); ?>
+<?= Html::openTag('div',['class'=>'row d-flex justify-content-center align-items-center h-100']); ?>
+<?= Html::openTag('div',['class'=>'col-12 col-md-8 col-lg-6 col-xl-8']); ?>
+<?= Html::openTag('div',['class'=>'card border border-dark shadow-2-strong rounded-3']); ?>
     <?= Html::openTag('div',['class'=>'card-header']); ?>
-    <?= Html::openTag('h1',['class'=>'fw-normal h3 text-center']); ?>
-    <?= $translator->translate('i.custom_values_new'); ?>
-    <?= Html::closeTag('h1'); ?>
-        <?= $button::back_save(); ?>
+        <?= Html::openTag('h1',['class'=>'fw-normal h3 text-center']); ?>
+        <?= $translator->translate('i.custom_values_new'); ?>
+        <?= Html::closeTag('h1'); ?>        
     <?= Html::closeTag('div'); ?>
 
     <?= Html::openTag('div',['id' => 'content']); ?>
@@ -63,7 +76,7 @@ use Yiisoft\Html\Html;
                         'class' => 'form-control', 
                         'disabled' => 'disabled', 
                         'id' => 'type',
-                        'value' => Html::encode($translator->translate('i.'.$alpha.'') ?? '') 
+                        'value' => Html::encode($translator->translate('i.'.$alpha.'')) 
                         ]);
                     ?>
                 <?= Html::closeTag('div'); ?>
@@ -108,4 +121,5 @@ use Yiisoft\Html\Html;
 <?= Html::closeTag('div'); ?>
 <?= Html::closeTag('div'); ?>
 <?= Html::closeTag('div'); ?>
-<?= Html::closeTag('form'); ?>
+<?= $button::back_save(); ?>
+<?= Form::tag()->close(); ?>

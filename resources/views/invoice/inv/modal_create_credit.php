@@ -1,7 +1,20 @@
 <?php
-    declare(strict_types=1);
-    use Yiisoft\Html\Html;
+
+declare(strict_types=1);
+
+use Yiisoft\Html\Html;
+
+/**
+ * @see InvController function view_modal_create_credit
+ * @var App\Invoice\Entity\Inv $inv
+ * @var App\Invoice\Helpers\DateHelper $dateHelper
+ * @var App\Invoice\Setting\SettingRepository $s
+ * @var Yiisoft\Translator\TranslatorInterface $translator
+ * @var array $invoice_groups
+ */
+
 ?>
+
 <div id="create-credit-inv" class="modal modal-lg" role="dialog" aria-labelledby="modal-create-credit-invoice"
      aria-hidden="true">
     <form class="modal-content">
@@ -25,7 +38,9 @@
                    value="<?= $inv->getClient_id(); ?>">
 
             <input type="hidden" name="inv_date_created" id="inv_date_created"
-                   value="<?= $credit_date = $datehelper->date_from_mysql(new DateTimeImmutable('now')); echo $credit_date; ?>">
+                   value="<?= 
+                   $credit_date = (new DateTimeImmutable('now'))->format($dateHelper->style()); 
+                   echo $credit_date; ?>">
 
             <div class="form-group">
                 <label for="inv_password"><?= $translator->translate('i.invoice_password'); ?></label>
@@ -37,11 +52,15 @@
             <div>
             <?php $credit_invoice_group = ''; ?>
                 <select name="inv_group_id" id="inv_group_id" class="hidden">
-                    <?php foreach ($invoice_groups as $invoice_group) { ?>
+                    <?php
+                        /**
+                         * @var App\Invoice\Entity\Group $invoice_group
+                         */
+                        foreach ($invoice_groups as $invoice_group) { ?>
                         <option value="<?= $invoice_group->getId(); ?>"
                             <?php if ($s->get_setting('default_invoice_group') === $invoice_group->getId()) {
                                 echo 'selected="selected"';
-                                $credit_invoice_group = Html::encode($invoice_group->getName()) ?? '';
+                                $credit_invoice_group = Html::encode($invoice_group->getName() ?? '');
                             } ?>>
                             <?php if ($s->get_setting('default_invoice_group') === $invoice_group->getId()) { 
                                 echo $credit_invoice_group;                                
@@ -54,9 +73,9 @@
             <p><strong><?= $translator->translate('i.credit_invoice_details'); ?></strong></p>
 
             <ul>
-                <li><?= $translator->translate('i.client') . ': ' . Html::encode($inv->getClient()->getClient_name()); ?></li>
+                <li><?= $translator->translate('i.client') . ': ' . Html::encode($inv->getClient()?->getClient_name()); ?></li>
                 <li><?= $translator->translate('i.credit_invoice_date') . ': ' . $credit_date; ?></li>
-                <li><?= $translator->translate('i.invoice_group') . ': ' . (null!== $credit_invoice_group ? $credit_invoice_group : ''); ?></li>
+                <li><?= $translator->translate('i.invoice_group') . ': ' . (!empty($credit_invoice_group) ? $credit_invoice_group : ''); ?></li>
             </ul>
 
             <div class="alert alert-danger no-margin">

@@ -1,24 +1,34 @@
 <?php
-    declare(strict_types=1); 
-    
-    use Yiisoft\Html\Html;
-    use App\Invoice\Helpers\CountryHelper;
-    $countryhelper = new CountryHelper();
+
+declare(strict_types=1); 
+
+use Yiisoft\Html\Html;
+
+/**
+ * @var App\Invoice\Helpers\CountryHelper $countryHelper
+ * @var Yiisoft\Translator\TranslatorInterface $translator
+ * @var array $locations
+ */
+
 ?>   
-<?php foreach ($locations as $delivery_location) { ?>
+<?php
+    /**
+     * @var App\Invoice\Entity\DeliveryLocation $delivery_location
+     */
+    foreach ($locations as $delivery_location) { ?>
     <span class="client-address-street-line">
-        <?=($delivery_location->getAddress_1() ? Html::encode($delivery_location->getAddress_1()) . '<br>' : ''); ?>
+        <?=(strlen($deliveryAddress1 = $delivery_location->getAddress_1() ?? '') > 0 ? Html::encode($deliveryAddress1) . '<br>' : ''); ?>
     </span>
     <span class="client-address-street-line">
-        <?=($delivery_location->getAddress_2() ? Html::encode($delivery_location->getAddress_2()) . '<br>' : ''); ?>
+        <?=(strlen($deliveryAddress2 = $delivery_location->getAddress_2() ?? '') > 0 ? Html::encode($deliveryAddress2) . '<br>' : ''); ?>
     </span>
     <span class="client-adress-town-line">
-        <?=($delivery_location->getCity() ? Html::encode($delivery_location->getCity()) . ' ' : ''); ?>
-        <?=($delivery_location->getState() ? Html::encode($delivery_location->getState()) . ' ' : ''); ?>
-        <?=($delivery_location->getZip() ? Html::encode($delivery_location->getZip()) : ''); ?>
+        <?=(strlen($deliveryCity = $delivery_location->getCity() ?? '') > 0 ? Html::encode($deliveryCity) . ' ' : ''); ?>
+        <?=(strlen($deliveryState = $delivery_location->getState() ?? '') > 0 ? Html::encode($deliveryState) . ' ' : ''); ?>
+        <?=(strlen($deliveryZip = $delivery_location->getZip() ?? '') > 0 ? Html::encode($deliveryZip) : ''); ?>
     </span>
     <span class="client-adress-country-line">
-        <?=($delivery_location->getCountry() ? '<br>' . $countryhelper->get_country_name($translator->translate('i.cldr'), $delivery_location->getCountry()) : ''); ?>
+        <?=(strlen($deliveryCountry = $delivery_location->getCountry() ?? '') > 0 ? '<br>' . $countryHelper->get_country_name($translator->translate('i.cldr'), $deliveryCountry) : ''); ?>
     </span>
     <br>
     <br>

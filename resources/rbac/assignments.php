@@ -7,7 +7,4 @@ return [
     2 => [
         'observer',
     ],
-    0 => [
-        'observer',
-    ],
 ];

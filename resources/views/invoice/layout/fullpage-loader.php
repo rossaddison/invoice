@@ -1,3 +1,13 @@
+<?php
+
+declare(strict_types=1);
+
+/**
+ * @var Yiisoft\Translator\TranslatorInterface $translator
+ */
+
+?>
+
 <div id="fullpage-loader" style="display: none">
     <div class="loader-content">
         <i id="loader-icon" class="fa fa-cog fa-spin"></i>

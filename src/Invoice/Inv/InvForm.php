@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace App\Invoice\Inv;
 
 use App\Invoice\Entity\Inv;
+use App\Invoice\Entity\Client;
 use Yiisoft\FormModel\FormModel;
 use Yiisoft\Validator\Rule\Required;
 
@@ -23,6 +24,7 @@ final class InvForm extends FormModel
     // stand_in_code/description_code
     private ?string $stand_in_code=''; 
     private ?string $quote_id='';
+    private ?Client $client = null;
     
     #[Required]
     private ?string $group_id='';
@@ -34,6 +36,7 @@ final class InvForm extends FormModel
     private ?int $creditinvoice_parent_id=null;
     private ?int $delivery_id=null;
     private ?int $delivery_location_id=null;
+    private ?int $postal_address_id=null;
     private ?int $contract_id=null;
     private ?int $status_id=1;
     private ?float $discount_amount=0.00;
@@ -58,6 +61,7 @@ final class InvForm extends FormModel
         $this->contract_id = (int)$inv->getContract_id();
         $this->delivery_id = (int)$inv->getDelivery_id();
         $this->delivery_location_id = (int)$inv->getDelivery_location_id();
+        $this->postal_address_id = (int)$inv->getPostal_address_id();
         $this->so_id = $inv->getSo_id();
         $this->quote_id = $inv->getQuote_id();
         $this->is_read_only = $inv->getIs_read_only();
@@ -76,11 +80,22 @@ final class InvForm extends FormModel
         $this->url_key = $inv->getUrl_key();
         $this->payment_method = $inv->getPayment_method();
         $this->creditinvoice_parent_id = (int)$inv->getCreditinvoice_parent_id();
+        /**
+         * @see App\Invoice\Entity\Client 
+                #[BelongsTo(target: Client::class, nullable: false, fkAction: 'NO ACTION')]
+                private ?Client $client = null;
+         */
+        $this->client = $inv->getClient();
     }
     
     public function getId() : string|null
     {
         return $this->id;
+    }   
+    
+    public function getClient() : Client|null 
+    {
+        return $this->client;
     }    
 
     public function getDate_created() : string|null|DateTimeImmutable 
@@ -177,6 +192,11 @@ final class InvForm extends FormModel
     public function getDelivery_location_id() : int|null
     {
         return $this->delivery_location_id;
+    }
+    
+    public function getPostal_address_id() : int|null
+    {
+        return $this->postal_address_id;
     }
     
     public function getContract_id() : int|null

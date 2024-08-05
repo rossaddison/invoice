@@ -5,9 +5,12 @@ declare(strict_types=1);
 use Yiisoft\Html\Html;
 
 /**
- * @var \App\Invoice\Entity\PaymentMethod $paymentmethod
- * @var \Yiisoft\Router\UrlGeneratorInterface $urlGenerator
+ * @var App\Invoice\Entity\PaymentMethod $paymentmethod
+ * @var Yiisoft\Router\UrlGeneratorInterface $urlGenerator
+ * @var Yiisoft\Translator\TranslatorInterface $translator
+ * @var array $payment_methods
  * @var bool $canEdit
+ * @var string $alert
  * @var string $id 
  */
 
@@ -31,7 +34,11 @@ echo $alert;
             </tr>
             </thead>
             <tbody>
-            <?php foreach ($payment_methods as $payment_method) { ?>
+            <?php
+                /**
+                 * @var App\Invoice\Entity\PaymentMethod $payment_method
+                 */
+                foreach ($payment_methods as $payment_method) { ?>
                 <tr>
                     <td><?= Html::encode($payment_method->getName()); ?></td>
                     <td>

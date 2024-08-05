@@ -2,20 +2,33 @@
 
 declare(strict_types=1);
 
-/**
- * @var \App\Invoice\Entity\Client $client
- * @var \App\Invoice\Setting\SettingRepository $s
- * @var \Yiisoft\Router\UrlGeneratorInterface $urlGenerator 
- * @var \Yiisoft\Data\Paginator\OffsetPaginator $paginator
- * @var \Yiisoft\Session\Flash\FlashInterface $flash 
- * @var \Yiisoft\View\WebView $this
- */
-
 use Yiisoft\Html\Html;
 
-echo $alert;
+/**
+ * @var App\Invoice\Entity\Client $client
+ * @var App\Invoice\Entity\UserInv $userInv
+ * @var App\Invoice\ClientPeppol\ClientPeppolRepository $cpR
+ * @var App\Invoice\Inv\InvRepository $iR
+ * @var App\Invoice\InvAmount\InvAmountRepository $iaR
+ * @var App\Invoice\Setting\SettingRepository $s
+ * @var App\Invoice\UserClient\UserClientRepository $ucR
+ * @var App\Widget\GridComponents $gridComponents
+ * @var App\Widget\PageSizeLimiter $pageSizeLimiter 
+ * @var Yiisoft\Data\Paginator\OffsetPaginator $paginator
+ * @var Yiisoft\Router\CurrentRoute $currentRoute
+ * @var Yiisoft\Router\FastRoute\UrlGenerator $urlGenerator
+ * @var Yiisoft\Translator\TranslatorInterface $translator
+ * @var array $invoices
+ * @var bool $editInv
+ * @var int $defaultPageSizeOffsetPaginator
+ * @var string $active
+ * @var string $alert
+ * @var string $csrf
+ * @var string $modal_create_client
+ */
 
-$this->setTitle($translator->translate('i.clients'));
+
+echo $alert;
 
 ?>
 
@@ -26,7 +39,7 @@ $this->setTitle($translator->translate('i.clients'));
 </div>
 
 <div>
-    <h5><?= Html::encode($this->getTitle()); ?></h5>
+    <h5><?= Html::encode($translator->translate('i.clients')); ?></h5>
     <br>
 </div>
 <div id="content" class="table-content">
@@ -45,7 +58,11 @@ $this->setTitle($translator->translate('i.clients'));
         </tr>
         </thead>
         <tbody>
-            <?php foreach ($paginator->read() as $client) { ?>
+            <?php
+            /**
+             * @var App\Invoice\Entity\Client $client
+             */
+            foreach ($paginator->read() as $client) { ?>
             <tr>
 		<td>
 		    <?= ($client->getClient_active()) ? '<span class="label active">' . $translator->translate('i.yes') . '</span>' : '<span class="label inactive">' . $translator->translate('i.no') . '</span>'; ?>
@@ -53,10 +70,11 @@ $this->setTitle($translator->translate('i.clients'));
                 <td>
 		    <?= ($cpR->repoClientCount((string)$client->getClient_id()) !== 0 ) ? '<span class="label active">' . $translator->translate('i.yes') . '</span>' : '<span class="label inactive">' . $translator->translate('i.no') . '</span>'; ?>
 		</td>
-                <td><?= Html::a($client->getClient_name()." ".$client->getClient_surname(),$urlGenerator->generate('client/view',['id' => $client->getClient_id()]),['class' => 'btn btn-warning ms-2']);?></td>
+                <td><?= Html::a($client->getClient_name()." ".($client->getClient_surname() ?? '#'),$urlGenerator->generate('client/view',['id' => $client->getClient_id()]),['class' => 'btn btn-warning ms-2']);?></td>
                 <td><?= Html::encode($client->getClient_email()); ?></td>
-                <td><?= Html::encode($client->getClient_phone() ? $client->getClient_phone() : ($client->getClient_mobile() ? $client->getClient_mobile() : '')); ?></td>
-                <td class="amount"><?= $s->format_currency($iR->with_total($client->getClient_id(), $iaR)); ?></td>
+                <td><?= Html::encode(strlen($client->getClient_phone() ?? '') > 0 ? $client->getClient_phone() : (strlen($clientMobile = $client->getClient_mobile() ?? '' ) > 0  ? $clientMobile : '')); ?></td>
+                <td class="amount"><?php (null!==($clientId = $client->getClient_id())) ? 
+                    Html::encode($s->format_currency($iR->with_total_balance($clientId, $iaR))) : ''; ?></td>
                 <td>
                     <div class="options btn-group">
                         <a class="btn btn-default dropdown-toggle" data-toggle="dropdown" href="#" style="text-decoration:none">
@@ -103,6 +121,17 @@ $this->setTitle($translator->translate('i.clients'));
             <?php } ?>            
         </tbody>
     </table>
-        
+    <div>
+        <?php 
+            $grid_summary = $s->grid_summary(
+                $paginator, 
+                $translator, 
+                10,
+                $translator->translate('invoice.clients'), 
+            '');
+            echo $pageSizeLimiter::buttonsGuest($userInv, $urlGenerator, $translator, 'client', $defaultPageSizeOffsetPaginator).' '.$grid_summary;
+            echo $gridComponents->offsetPaginationWidget($defaultPageSizeOffsetPaginator, $paginator);        
+        ?>        
+    </div>    
 </div>
 </div>

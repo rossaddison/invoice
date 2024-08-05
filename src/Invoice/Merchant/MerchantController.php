@@ -8,7 +8,6 @@ use App\Invoice\Entity\Merchant;
 use App\Invoice\Inv\InvRepository;
 use App\Invoice\Merchant\MerchantService;
 use App\Invoice\Merchant\MerchantRepository;
-use App\Invoice\Setting\SettingRepository;
 use App\User\UserService;
 use App\Service\WebControllerService;
 
@@ -55,10 +54,8 @@ final class MerchantController
     
     /**
      * @param MerchantRepository $merchantRepository
-     * @param SettingRepository $sR
-     * @param MerchantService $service
      */
-    public function index(MerchantRepository $merchantRepository, SettingRepository $sR, MerchantService $service): \Yiisoft\DataResponse\DataResponse
+    public function index(MerchantRepository $merchantRepository): \Yiisoft\DataResponse\DataResponse
     {
          $canEdit = $this->rbac();
          $merchants = $this->merchants($merchantRepository);
@@ -66,12 +63,7 @@ final class MerchantController
          $parameters = [ 
           'canEdit' => $canEdit,
           'paginator' => $paginator,   
-          'merchants' => $this->merchants($merchantRepository),
-          'grid_summary'=> $sR->grid_summary(
-               $paginator, 
-               $this->translator, 
-               (int)$sR->get_setting('default_list_limit'), 
-               $this->translator->translate('invoice.merchant'), ''),      
+          'merchants' => $this->merchants($merchantRepository),            
           'alert'=> $this->alert()
          ];      
         return $this->viewRenderer->render('index', $parameters);
@@ -80,13 +72,11 @@ final class MerchantController
     /**
      * @param Request $request
      * @param FormHydrator $formHydrator
-     * @param SettingRepository $settingRepository
      * @param InvRepository $invRepository
      * @return Response
      */
     public function add(Request $request, 
-                        FormHydrator $formHydrator,
-                        SettingRepository $settingRepository,                        
+                        FormHydrator $formHydrator,               
                         InvRepository $invRepository
     ): Response
     {
@@ -94,7 +84,8 @@ final class MerchantController
         $form = new MerchantForm($merchant);
         $parameters = [
             'title' => $this->translator->translate('invoice.add'),
-            'action' => ['merchant/add'],
+            'actionName' => 'merchant/add',
+            'actionArguments' => [],
             'errors' => [],
             'form' => $form,
             'invs'=>$invRepository->findAllPreloaded(),
@@ -120,14 +111,12 @@ final class MerchantController
      * @param CurrentRoute $currentRoute
      * @param FormHydrator $formHydrator
      * @param MerchantRepository $merchantRepository
-     * @param SettingRepository $sR
      * @param InvRepository $invRepository
      * @return Response
      */
     public function edit(Request $request, CurrentRoute $currentRoute,
                         FormHydrator $formHydrator,
                         MerchantRepository $merchantRepository,
-                        SettingRepository $sR,
                         InvRepository $invRepository
     ): Response {
         $merchant = $this->merchant($currentRoute, $merchantRepository);
@@ -135,7 +124,8 @@ final class MerchantController
             $form = new MerchantForm($merchant);
             $parameters = [
                 'title' => $this->translator->translate('i.edit'),
-                'action' => ['merchant/edit', ['id' => $merchant->getId()]],
+                'actionName' => 'merchant/edit', 
+                'actionArguments' => ['id' => $merchant->getId()],
                 'errors' => [],
                 'form' => $form,
                 'invs' => $invRepository->findAllPreloaded()
@@ -186,7 +176,8 @@ final class MerchantController
             $form = new MerchantForm($merchant);
             $parameters = [
                 'title' => $this->translator->translate('i.view'),
-                'action' => ['merchant/view', ['id' =>$merchant->getId()]],
+                'actionName' => 'merchant/view', 
+                'actionArguments' => ['id' =>$merchant->getId()],
                 'form' => $form,
                 'invs' => $invRepository->findAllPreloaded(),
             ];
@@ -197,9 +188,8 @@ final class MerchantController
     
     /**
      * @param MerchantRepository $mR
-     * @param SettingRepository $sR
      */
-    public function online_log(MerchantRepository $mR, SettingRepository $sR): \Yiisoft\DataResponse\DataResponse {
+    public function online_log(MerchantRepository $mR): \Yiisoft\DataResponse\DataResponse {
         $parameters = [
             'payment_logs'=>$mR->findAllPreloaded(),
         ];

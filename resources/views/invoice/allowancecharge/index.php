@@ -1,10 +1,9 @@
 <?php
+
 declare(strict_types=1);
 
-use Yiisoft\Data\Paginator\OffsetPaginator;
+use App\Invoice\Entity\AllowanceCharge;
 use Yiisoft\Html\Html;
-use Yiisoft\Translator\TranslatorInterface;
-use Yiisoft\View\WebView;
 use Yiisoft\Html\Tag\A;
 use Yiisoft\Html\Tag\Div;
 use Yiisoft\Html\Tag\Form;
@@ -13,17 +12,19 @@ use Yiisoft\Html\Tag\I;
 use Yiisoft\Yii\DataView\Column\DataColumn;
 use Yiisoft\Yii\DataView\GridView;
 use Yiisoft\Yii\DataView\OffsetPagination;
-use Yiisoft\Router\CurrentRoute;
 
-/**
- * @var \App\Invoice\Entity\AllowanceCharge $allowancecharge 
+/** 
+ * @var App\Invoice\Setting\SettingRepository $s 
+ * @var Yiisoft\Data\Paginator\OffsetPaginator $paginator
+ * @var Yiisoft\Router\CurrentRoute $currentRoute
+ * @var Yiisoft\Router\FastRoute\UrlGenerator $urlGenerator
+ * @var Yiisoft\Translator\TranslatorInterface $translator
+ * @var bool $canEdit
+ * @var int $defaultPageSizeOffsetPaginator
+ * @var string $alert
  * @var string $csrf
- * @var CurrentRoute $currentRoute 
- * @var OffsetPaginator $paginator
- * @var \Yiisoft\Router\UrlGeneratorInterface $urlGenerator 
- * @var TranslatorInterface $translator
- * @var WebView $this
  */
+
 ?>
 <?php
 $header = Div::tag()
@@ -41,7 +42,7 @@ $toolbarReset = A::tag()
     ->addAttributes(['type' => 'reset'])
     ->addClass('btn btn-danger me-1 ajax-loader')
     ->content(I::tag()->addClass('bi bi-bootstrap-reboot'))
-    ->href($urlGenerator->generate($currentRoute->getName()))
+    ->href($urlGenerator->generate($currentRoute->getName() ?? 'allowancecharge/index'))
     ->id('btn-reset')
     ->render();
 
@@ -54,13 +55,13 @@ $toolbar = Div::tag();
     <?= Html::openTag('div',['class' => 'btn-group']);?>
     <?php     
         if ($canEdit) {
-        echo Html::a('Add Allowance',
-        $urlGenerator->generate('allowancecharge/add_allowance'),
-            ['class' => 'btn btn-outline-secondary btn-md-12 mb-3']
+            echo Html::a('Add Allowance',
+            $urlGenerator->generate('allowancecharge/add_allowance'),
+                ['class' => 'btn btn-outline-secondary btn-md-12 mb-3']
         );
-        echo Html::a('Add Charge',
-        $urlGenerator->generate('allowancecharge/add_charge'),
-            ['class' => 'btn btn-outline-secondary btn-md-12 mb-3']
+            echo Html::a('Add Charge',
+            $urlGenerator->generate('allowancecharge/add_charge'),
+                ['class' => 'btn btn-outline-secondary btn-md-12 mb-3']
         );
     } ?>    
     <?= Html::closeTag('div');?>
@@ -75,31 +76,39 @@ $toolbar = Div::tag();
         new DataColumn(
             'id',
             header: $translator->translate('i.id'),
-            content:static fn (object $model) => $model->getId()
+            content: static fn (AllowanceCharge $model) => $model->getId()
         ),        
         new DataColumn(
             header: $translator->translate('i.view'), 
-            content: static function ($model) use ($urlGenerator): string {
-               return Html::a(Html::tag('i','',['class'=>'fa fa-eye fa-margin']), $urlGenerator->generate('allowancecharge/view',['id'=>$model->getId()]),[])->render();
+            content: static function (AllowanceCharge $model) use ($urlGenerator): string {
+                return Html::a(Html::tag('i', '', ['class'=>'fa fa-eye fa-margin']), 
+                               $urlGenerator->generate('allowancecharge/view', ['id' => $model->getId()]),[])
+                                            ->render();                
             }                        
         ),
         new DataColumn(
             'identifier',     
             header: $translator->translate('invoice.invoice.allowance.or.charge.edit.allowance'), 
-            content:static function ($model) use ($urlGenerator): string {
-               return !$model->getIdentifier() ? Html::a(Html::tag('i','',['class'=>'fa fa-edit fa-margin']), $urlGenerator->generate('allowancecharge/edit_allowance',['id'=>$model->getId()]),[])->render() : ''; 
+            content:static function (AllowanceCharge $model) use ($urlGenerator): string {
+                return !$model->getIdentifier() ? 
+                      Html::a(Html::tag('i','',['class'=>'fa fa-edit fa-margin']), 
+                              $urlGenerator->generate('allowancecharge/edit_allowance',
+                              ['id' => $model->getId()]),[])->render() : '';                
             }                        
         ),
         new DataColumn(
             'identifier',    
             header: $translator->translate('invoice.invoice.allowance.or.charge.edit.charge'), 
-            content:static function ($model) use ($urlGenerator): string {
-               return $model->getIdentifier() ? Html::a(Html::tag('i','',['class'=>'fa fa-edit fa-margin']), $urlGenerator->generate('allowancecharge/edit_charge',['id'=>$model->getId()]),[])->render() : ''; 
+            content:static function (AllowanceCharge $model) use ($urlGenerator): string {
+                return $model->getIdentifier() ? 
+                    Html::a(Html::tag('i','',['class'=>'fa fa-edit fa-margin']),
+                          $urlGenerator->generate('allowancecharge/edit_charge',
+                                  ['id' => $model->getId()]),[])->render() : '';                
             }                        
         ),        
         new DataColumn(
             header: $translator->translate('i.delete'), 
-            content:static function ($model) use ($translator, $urlGenerator): string {
+            content: static function (AllowanceCharge $model) use ($translator, $urlGenerator): string {
                 return Html::a( Html::tag('button',
                     Html::tag('i','',['class'=>'fa fa-trash fa-margin']),
                     [
@@ -108,20 +117,31 @@ $toolbar = Div::tag();
                         'onclick'=>"return confirm("."'".$translator->translate('i.delete_record_warning')."');"
                     ]
                     ),
-                    $urlGenerator->generate('allowancecharge/delete',['id'=>$model->getId()]),[]                                         
-                )->render();
+                    $urlGenerator->generate('allowancecharge/delete',['id' => $model->getId()]),[]                                         
+                )->render();                
             }                        
         ),
     ]                
 ?>
 <?= $alert; ?>
-<?= GridView::widget()
+<?php
+    $grid_summary = $s->grid_summary(
+        $paginator, 
+        $translator, 
+        (int)$s->get_setting('default_list_limit'), 
+        $translator->translate('invoice.invoice.allowance.or.charge'), 
+        ''
+    );    
+    $toolbarString =
+        Form::tag()->post($urlGenerator->generate('allowancecharge/index'))->csrf($csrf)->open() .
+        Div::tag()->addClass('float-end m-3')->content($toolbarReset)->encode(false)->render() .
+        Form::tag()->close();
+    echo GridView::widget()
         ->columns(...$columns)
         ->dataReader($paginator)        
         ->rowAttributes(['class' => 'align-middle'])
+        ->tableAttributes(['class' => 'table table-striped text-center h-75','id'=>'table-allowancecharge'])
         ->headerRowAttributes(['class'=>'card-header bg-info text-black'])
-        //->filterPosition('header')
-        //->filterModelName('allowancecharge')
         ->header($header)
         ->id('w3-grid')
         ->pagination(
@@ -132,11 +152,6 @@ $toolbar = Div::tag();
         ->summaryAttributes(['class' => 'mt-3 me-3 summary text-end'])
         ->summaryTemplate($grid_summary)
         ->emptyTextAttributes(['class' => 'card-header bg-warning text-black'])
-        ->emptyText((string)$translator->translate('invoice.invoice.no.records'))            
-        ->tableAttributes(['class' => 'table table-striped text-center h-75','id'=>'table-allowancecharge'])
-        ->toolbar(
-            Form::tag()->post($urlGenerator->generate('allowancecharge/index'))->csrf($csrf)->open() .
-            Div::tag()->addClass('float-end m-3')->content($toolbarReset)->encode(false)->render() .
-            Form::tag()->close()
-        );
+        ->emptyText($translator->translate('invoice.invoice.no.records'))            
+        ->toolbar($toolbarString);
 ?>

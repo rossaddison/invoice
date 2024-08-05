@@ -2,6 +2,13 @@
 
 declare(strict_types=1);
 
+/**
+ * @see id="inv-to-html" triggered by <a href="#inv-to-html" data-toggle="modal"  style="text-decoration:none"> views/inv/view.php 
+ * @var App\Invoice\Entity\Inv $inv
+ * @var App\Invoice\Setting\SettingRepository $s
+ * @var Yiisoft\Translator\TranslatorInterface $translator 
+ */
+
 // id="inv-to-html" triggered by <a href="#inv-to-html" data-toggle="modal"  style="text-decoration:none"> on views/inv/view.php 
 ?>
 <div id="inv-to-html" class="modal modal-lg" role="dialog" aria-labelledby="modal_inv_to_html" aria-hidden="true">
@@ -26,7 +33,7 @@ declare(strict_types=1);
                 <button type="button" data-bs-toggle = "tooltip" title="html">
                 <div>
                     <i class="fa fa-code"></i>
-                    <?php if ((null!==$s->get_setting('pdf_html_inv')) && ($s->get_setting('pdf_html_inv') === '1')) { ?>
+                    <?php if ((!empty($s->get_setting('pdf_html_inv'))) && ($s->get_setting('pdf_html_inv') === '1')) { ?>
                         <i class="fa fa-check"></i>
                     <?php } else {?>
                         <i class="fa fa-times"></i>

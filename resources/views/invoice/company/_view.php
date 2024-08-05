@@ -2,31 +2,37 @@
 
 declare(strict_types=1); 
 
-
-
 use Yiisoft\FormModel\Field;
 use Yiisoft\Html\Html;
 use Yiisoft\Html\Tag\Form;
 
-/**
- * @var \Yiisoft\View\View $this
- * @var \Yiisoft\Router\UrlGeneratorInterface $urlGenerator
+/** 
+ * @var App\Invoice\Company\CompanyForm $form
+ * @var App\Widget\Button $button
+ * @var Yiisoft\Router\UrlGeneratorInterface $urlGenerator
+ * @var Yiisoft\Translator\TranslatorInterface $translator
+ * @var string $company_public
  * @var string $csrf
- * @var string $action
+ * @var string $actionName
  * @var string $title
+ * @psalm-var array<string, Stringable|null|scalar> $actionArguments
  */
-
 ?>
 
+<?= Html::openTag('h1'); ?>
+    <?= Html::encode($title.' '. $company_public); ?>
+<?= Html::closeTag('h1'); ?>
+
+
 <?= Form::tag()
-    ->post($urlGenerator->generate(...$action))
+    ->post($urlGenerator->generate($actionName, $actionArguments))
     ->enctypeMultipartFormData()
     ->csrf($csrf)
     ->id('CompanyForm')
     ->open() ?>
 
     <?= Html::openTag('div', ['class' => 'headerbar']); ?>
-        <?= $button::back($translator); ?> 
+        <?= $button::back(); ?> 
         <?= Html::openTag('div',['id' => 'content']); ?>
             <?= Html::openTag('div', ['class' => 'row']); ?>
                 <?= Html::closeTag('div'); ?>    

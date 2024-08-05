@@ -154,7 +154,6 @@ Class PdfHelper
                         'cvR'=>$cvR, 
                         'quote_custom_values'=> $quote_custom_values,  
                         'cvH'=> new CVH($this->s),
-                        's'=>$this->s,   
                     ]),    
                     // Custom fields appearing at the bottom of the quote
                     'view_custom_fields'=>$viewrenderer->renderPartialAsString('//invoice/template/quote/pdf/view_custom_fields', [
@@ -162,24 +161,20 @@ Class PdfHelper
                         'cvR'=>$cvR,
                         'quote_custom_values'=> $quote_custom_values,  
                         'cvH'=> new CVH($this->s),
-                        's'=>$this->s,   
                     ]),        
-                    's'=>$this->s,
                     'company_logo_and_address'=>$viewrenderer->renderPartialAsString('//invoice/setting/company_logo_and_address.php',
                         ['company'=> $company = $this->s->get_config_company_details(), 
                          'document_number'=>$quote->getNumber(),
                          'client_number' => $client_number,
-                         'countryHelper'=> $this->countryhelper,
                          'isInvoice' => false,
                          'isQuote' => true,
                          'isSalesOrder' => false   
                         ]),
-                    'countryhelper'=>$this->countryhelper,
-                    'userinv'=>$userinv,
-                    'client'=>$cR->repoClientquery((string)$quote->getClient()?->getClient_id()),
-                    'quote_amount'=>$quote_amount,            
+                    'userInv' => $userinv,
+                    'client' => $cR->repoClientquery((string)$quote->getClient()?->getClient_id()),
+                    'quote_amount' => $quote_amount,            
                     // Use the temporary print language to define cldr            
-                    'cldr'=> array_keys($this->s->locale_language_array(), $this->get_print_language($quote)),
+                    'cldr' => array_keys($this->s->locale_language_array(), $this->get_print_language($quote)),
                 ];        
                 // Quote Template will be either 'quote' or a custom designed quote in the folder.
                 $html = $viewrenderer->renderPartialAsString('//invoice/template/quote/pdf/'.$quote_template, $data);
@@ -189,7 +184,7 @@ Class PdfHelper
                 // Set the print language to null for future use
                 $this->session->set('print_language','');
                 $mpdfhelper = new MpdfHelper(); 
-                $filename = $this->s->trans('quote') . '_' . str_replace(['\\', '/'], '_', ($quote->getNumber() ?? (string)rand(0, 10)));
+                $filename = $this->s->get_setting('i.quote') . '_' . str_replace(['\\', '/'], '_', ($quote->getNumber() ?? (string)rand(0, 10)));
                 return $mpdfhelper->pdf_create($html, $filename, $stream, $quote->getPassword(), $this->s, null, null,  false, false, [], $quote);
             }    
         } 
@@ -250,47 +245,41 @@ Class PdfHelper
                     'salesorder' => $so,
                     'salesorder_tax_rates' => (($sotrR->repoCount((string)$this->session->get('so_id')) > 0) ? $sotrR->repoSalesOrderquery((string)$this->session->get('so_id')) : null), 
                     'items' => $items,
-                    'soiaR'=>$soiaR,
+                    'soiaR' => $soiaR,
                     'output_type' => 'pdf',
                     'show_item_discounts' => $show_item_discounts,
                     // Show the custom fields if the user has answered yes on the modal ie $custom = true
                     'show_custom_fields' => $custom,
                     // Custom fields appearing near the top of the quote
-                    'custom_fields'=>$cfR->repoTablequery('salesorder_custom'),
-                    'custom_values'=>$cvR->attach_hard_coded_custom_field_values_to_custom_field($cfR->repoTablequery('salesorder_custom')),
-                    'cvH'=> new CVH($this->s),
+                    'custom_fields' => $cfR->repoTablequery('salesorder_custom'),
+                    'custom_values' => $cvR->attach_hard_coded_custom_field_values_to_custom_field($cfR->repoTablequery('salesorder_custom')),
                     'salesorder_custom_values' => $so_custom_values,
-                    'top_custom_fields' =>$viewrenderer->renderPartialAsString('//invoice/template/salesorder/pdf/top_custom_fields', [
-                        'custom_fields'=>$cfR->repoTablequery('salesorder_custom'),
-                        'cvR'=>$cvR, 
-                        'salesorder_custom_values'=> $so_custom_values,  
-                        'cvH'=> new CVH($this->s),
-                        's'=>$this->s,   
+                    'top_custom_fields' => $viewrenderer->renderPartialAsString('//invoice/template/salesorder/pdf/top_custom_fields', [
+                        'custom_fields' => $cfR->repoTablequery('salesorder_custom'),
+                        'cvR' => $cvR, 
+                        'salesorder_custom_values' => $so_custom_values,  
+                        'cvH' => new CVH($this->s)
                     ]),    
                     // Custom fields appearing at the bottom of the salesorder 
-                    'view_custom_fields'=>$viewrenderer->renderPartialAsString('//invoice/template/salesorder/pdf/view_custom_fields', [
-                        'custom_fields'=>$cfR->repoTablequery('salesorder_custom'),
-                        'cvR'=>$cvR,
-                        'salesorder_custom_values'=> $so_custom_values,  
-                        'cvH'=> new CVH($this->s),
-                        's'=>$this->s,   
-                    ]),        
-                    's'=>$this->s,
-                    'company_logo_and_address'=>$viewrenderer->renderPartialAsString('//invoice/setting/company_logo_and_address.php',
-                        ['company'=>$company = $this->s->get_config_company_details(), 
-                         'document_number'=> $so->getNumber(),
-                         'client_number'=> $client_number,   
-                         'countryHelper'=> $this->countryhelper,
+                    'view_custom_fields' => $viewrenderer->renderPartialAsString('//invoice/template/salesorder/pdf/view_custom_fields', [
+                        'custom_fields' => $cfR->repoTablequery('salesorder_custom'),
+                        'cvR' => $cvR,
+                        'salesorder_custom_values' => $so_custom_values,  
+                        'cvH' => new CVH($this->s)
+                    ]),  
+                    'company_logo_and_address' => $viewrenderer->renderPartialAsString('//invoice/setting/company_logo_and_address.php',
+                        ['company' => $company = $this->s->get_config_company_details(), 
+                         'document_number' => $so->getNumber(),
+                         'client_number' => $client_number,
                          'isInvoice' => false,
                          'isQuote' => false,
                          'isSalesOrder' => true   
                         ]),
-                    'countryhelper'=>$this->countryhelper,
-                    'userinv'=>$userinv,
-                    'client'=>$cR->repoClientquery((string)$so->getClient()?->getClient_id()),
-                    'so_amount'=>$so_amount,            
+                    'userInv' => $userinv,
+                    'client' => $cR->repoClientquery((string)$so->getClient()?->getClient_id()),
+                    'so_amount' => $so_amount,            
                     // Use the temporary print language to define cldr            
-                    'cldr'=> array_keys($this->s->locale_language_array(), $this->get_print_language($so)),
+                    'cldr' => array_keys($this->s->locale_language_array(), $this->get_print_language($so)),
                 ];        
                 // Sales Order Template will be either 'salesorder' or a custom designed salesorder in the folder.
                 $html = $viewrenderer->renderPartialAsString('//invoice/template/salesorder/pdf/'.$salesorder_template, $data);
@@ -375,25 +364,25 @@ Class PdfHelper
                 // Show the custom fields if the user has answered yes on the modal ie $custom = true
                 'show_custom_fields' => $custom,
                 // Custom fields appearing near the top of the quote
-                'custom_fields'=> $cfR->repoTablequery('inv_custom'),
-                'custom_values'=>$cvR->attach_hard_coded_custom_field_values_to_custom_field($cfR->repoTablequery('inv_custom')),
-                'cvH'=> new CVH($this->s),
+                'custom_fields' => $cfR->repoTablequery('inv_custom'),
+                'custom_values' => $cvR->attach_hard_coded_custom_field_values_to_custom_field($cfR->repoTablequery('inv_custom')),
+                'cvH' => new CVH($this->s),
                 'inv_custom_values' => $inv_custom_values,
-                'top_custom_fields' =>$viewrenderer->renderPartialAsString('//invoice/template/invoice/pdf/top_custom_fields', [
-                    'custom_fields'=>$cfR->repoTablequery('inv_custom'),
-                    'cvR'=>$cvR, 
+                'top_custom_fields' => $viewrenderer->renderPartialAsString('//invoice/template/invoice/pdf/top_custom_fields', [
+                    'custom_fields' => $cfR->repoTablequery('inv_custom'),
+                    'cvR' => $cvR, 
                     'inv_custom_values'=> $inv_custom_values,  
-                    'cvH'=> new CVH($this->s),
+                    'cvH' => new CVH($this->s),
                 ]),    
                 // Custom fields appearing at the bottom of the invoice
-                'view_custom_fields'=>$viewrenderer->renderPartialAsString('//invoice/template/invoice/pdf/view_custom_fields', [
-                    'custom_fields'=>$cfR->repoTablequery('inv_custom'),
+                'view_custom_fields' => $viewrenderer->renderPartialAsString('//invoice/template/invoice/pdf/view_custom_fields', [
+                    'custom_fields' => $cfR->repoTablequery('inv_custom'),
                     'cvR'=>$cvR,
                     'inv_custom_values'=> $inv_custom_values,  
                     'cvH'=> new CVH($this->s),
                 ]),
-                'sumex'=> $sumex, 
-                'userinv'=>$userinv,
+                'sumex' => $sumex, 
+                'userinv' => $userinv,
                 'company_logo_and_address'=>$viewrenderer->renderPartialAsString('//invoice/setting/company_logo_and_address.php',
                     [
                      // if there is no active company with private details, use the config params company details   
@@ -403,19 +392,17 @@ Class PdfHelper
                      'document_number'=> $inv->getNumber(),
                      //'client_number'=> $client_number,
                      'client_purchase_order_number' => $client_purchase_order_number,
-                     'date_tax_point'=> $date_helper->date_from_mysql($inv->getDate_tax_point()),   
-                     'countryHelper'=> $this->countryhelper,
+                     'date_tax_point'=> $date_helper->date_from_mysql($inv->getDate_tax_point()),
                      '_language' => $_language,
                      'inv_id' => $inv_id,   
                      'isInvoice'=> true,
                      'isQuote' => false,
                      'isSalesOrder' => false  
-                    ]),               
-                'countryhelper'=>$this->countryhelper,
-                'client'=>$cR->repoClientquery((string)$inv->getClient()?->getClient_id()),
-                'inv_amount'=>$inv_amount,            
+                    ]),
+                'client' => $cR->repoClientquery((string)$inv->getClient()?->getClient_id()),
+                'inv_amount' => $inv_amount,            
                 // Use the temporary print language to define cldr            
-                'cldr'=> array_keys($this->s->locale_language_array(), $this->get_print_language($inv)),
+                'cldr' => array_keys($this->s->locale_language_array(), $this->get_print_language($inv)),
             ];        
             // Inv Template will be either 'inv' or a custom designed inv in the folder.
             return $viewrenderer->renderPartialAsString('//invoice/template/invoice/pdf/'.$inv_template,$data);

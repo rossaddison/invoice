@@ -19,16 +19,18 @@ use Yiisoft\Translator\TranslatorInterface as Translator;
  */
 final class TaskRepository extends Select\Repository
 {
-private EntityWriter $entityWriter;
+    private EntityWriter $entityWriter;
+    private Translator $translator;
     
      /**
      * 
      * @param Select<TEntity> $select     
      * @param EntityWriter $entityWriter
      */
-    public function __construct(Select $select, EntityWriter $entityWriter)
+    public function __construct(Select $select, EntityWriter $entityWriter, Translator $translator)
     {
         $this->entityWriter = $entityWriter;
+        $this->translator = $translator;
         parent::__construct($select);
     }
 
@@ -141,7 +143,7 @@ private EntityWriter $entityWriter;
      * @param Translator $translator
      * @return array
      */
-    public function getTask_statuses(Translator $translator): array
+    public function getTaskStatuses(Translator $translator): array
     {
         return [
             '1' => [
@@ -161,5 +163,35 @@ private EntityWriter $entityWriter;
                 'class' => 'paid'
             ]
         ];
+    }
+    
+    /**
+     * 
+     * @param string $key
+     * @return string
+     */
+    public function getSpecificStatusArrayLabel(string $key) : string
+    {
+        $statuses_array = $this->getTaskStatuses($this->translator);
+        /**
+         * @var array $statuses_array[$key]
+         * @var string $statuses_array[$key]['label']
+         */
+        return $statuses_array[$key]['label'];
+    }
+    
+    /**
+     * 
+     * @param int $status
+     * @return string
+     */
+    public function getSpecificStatusArrayClass(int $status) : string
+    {
+        $statuses_array = $this->getTaskStatuses($this->translator);
+        /**
+         * @var array $statuses_array[$status]
+         * @var string $statuses_array[$status]['class']
+         */
+        return $statuses_array[$status]['class'];
     }
 }    

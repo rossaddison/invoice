@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 use App\ViewInjection\CommonViewInjection;
@@ -13,6 +14,7 @@ use Yiisoft\Form\Field\ErrorSummary;
 use Yiisoft\FormModel\ValidationRulesEnricher;
 use Yiisoft\Router\CurrentRoute;
 use Yiisoft\Router\UrlGeneratorInterface;
+use Yiisoft\Session\SessionInterface;
 use Yiisoft\Translator\TranslatorInterface;
 use Yiisoft\Yii\Cycle\Schema\Conveyor\MetadataSchemaConveyor;
 use Yiisoft\Yii\Cycle\Schema\Provider\FromConveyorSchemaProvider;
@@ -22,15 +24,21 @@ use Yiisoft\Yii\DataView\Column\DataColumn;
 use Yiisoft\Yii\View\Renderer\CsrfViewInjection;
 // yii3-i
 use App\Invoice\Helpers\ClientHelper;
+use App\Invoice\Helpers\CountryHelper;
+use App\Invoice\Helpers\CustomValuesHelper;
 use App\Invoice\Helpers\DateHelper;
 use App\Invoice\Helpers\NumberHelper;
 use App\Invoice\Helpers\Peppol\Peppol_UNECERec20_11e;
 use App\Invoice\Client\ClientRepository;
+use App\Invoice\Inv\InvRepository;
+use App\Invoice\InvAmount\InvAmountRepository;
+use App\Invoice\InvRecurring\InvRecurringRepository;
+use App\Invoice\Quote\QuoteRepository;
+use App\Invoice\QuoteAmount\QuoteAmountRepository;
 use App\Invoice\Setting\SettingRepository;
 use App\Widget\Button;
 use App\Widget\PageSizeLimiter;
 use App\Widget\GridComponents;
-use Yiisoft\Session\SessionInterface;
 
 return [
   'mailer' => [
@@ -163,13 +171,21 @@ return [
       'button' => Reference::to(Button::class), 
       'session' => Reference::to(SessionInterface::class),
       'clientHelper' => Reference::to(ClientHelper::class),
+      'countryHelper' => Reference::to(CountryHelper::class), 
+      'cvH' => Reference::to(CustomValuesHelper::class),  
       'datehelper' => Reference::to(DateHelper::class),
       'dateHelper' => Reference::to(DateHelper::class),  
       'numberHelper' => Reference::to(NumberHelper::class),
       'pageSizeLimiter' => Reference::to(PageSizeLimiter::class),
       'peppolUNECERec2011e' => Reference::to(Peppol_UNECERec20_11e::class),  
       'gridComponents' => Reference::to(GridComponents::class),
-      'cR' => Reference::to(ClientRepository::class)
+      // Appear in client/view.php and duplication taken out of ClientController function view  
+      'cR' => Reference::to(ClientRepository::class),
+      'iR' => Reference::to(InvRepository::class),
+      'iaR' => Reference::to(InvAmountRepository::class),
+      'irR' => Reference::to(InvRecurringRepository::class),  
+      'qR' => Reference::to(QuoteRepository::class),
+      'qaR' => Reference::to(QuoteAmountRepository::class),  
     ],
   ],
   'yiisoft/cookies' => [

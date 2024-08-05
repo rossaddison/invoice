@@ -22,8 +22,6 @@ use App\Invoice\TaxRate\TaxRateRepository aS TRR;
 use App\Invoice\Unit\UnitRepository as UR;
 use App\Service\WebControllerService;
 use App\User\UserService;
-// Helpers
-use App\Invoice\Helpers\NumberHelper;
 // Psr
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
@@ -101,12 +99,12 @@ final class InvItemController
         $form = new InvItemForm($invitem, (int)$inv_id);
         $parameters = [
             'title' => $this->translator->translate('invoice.add'),
-            'action' => ['invitem/add_product'],
+            'actionName' => 'invitem/add_product',
             'errors' => [],
             'form' => $form,
             'inv_id' => $inv_id,
-            'is_recurring'=> $is_recurring,
-            'tax_rates'=>$trR->findAllPreloaded(),
+            'isRecurring'=> $is_recurring,
+            'taxRates'=>$trR->findAllPreloaded(),
               // Only tasks that are complete are put on the invoice
             'products'=>$pR->findAllPreloaded(),
             'units'=>$uR->findAllPreloaded()
@@ -156,16 +154,15 @@ final class InvItemController
         $form = new InvItemForm($invitem, (int)$inv_id);
         $parameters = [
             'title' => $this->translator->translate('invoice.add'),
-            'action' => ['invitem/add_task'],
+            'actionName' => 'invitem/add_task',
             'errors' => [],
             'form' => $form,
             'inv_id' => $inv_id,
-            'is_recurring' => $is_recurring,
-            'tax_rates' => $trR->findAllPreloaded(),
+            'isRecurring' => $is_recurring,
+            'taxRrates' => $trR->findAllPreloaded(),
               // Only tasks that are complete are put on the invoice
             'tasks' => $taskR->repoTaskStatusquery(3),
-            'units' => $uR->findAllPreloaded(),
-            'numberhelper' => new NumberHelper($sR)
+            'units' => $uR->findAllPreloaded()
         ];
         
         if ($request->getMethod() === Method::POST) {
@@ -257,16 +254,19 @@ final class InvItemController
             $inv_item_allowances_charges = $aciiR->repoInvItemquery((string)$inv_item_id);
             $parameters = [
                 'title' => $this->translator->translate('invoice.product.edit'),
-                'action' => ['invitem/edit_product', ['id' => $currentRoute->getArgument('id')]],
-                'add_item_action' => ['acii/add', ['inv_item_id'=> $inv_item_id], ['inv_item_id'=> $inv_item_id] ],
-                'index_item_action' => ['acii/index', ['inv_item_id'=> $inv_item_id], ['inv_item_id'=> $inv_item_id]],
+                'actionName' => 'invitem/edit_product',
+                'actionArguments' => ['id' => $currentRoute->getArgument('id')],
+                'addItemActionName' => 'invitemallowancecharge/add',
+                'addItemActionArguments' => ['inv_item_id'=> $inv_item_id],
+                'indexItemActionName' => 'invitemallowancecharge/index',
+                'indexItemActionArguments' => ['inv_item_id'=> $inv_item_id],
                 'errors' => [],
                 'form' => $form,
                 'inv_id'=>$inv_id,
-                'inv_item_allowances_charges_count' => $inv_item_allowances_charges_count,
-                'inv_item_allowances_charges' => $inv_item_allowances_charges,
-                'is_recurring' => $is_recurring,
-                'tax_rates' => $trR->findAllPreloaded(),
+                'invItemAllowancesChargesCount' => $inv_item_allowances_charges_count,
+                'invItemAllowancesCharges' => $inv_item_allowances_charges,
+                'isRecurring' => $is_recurring,
+                'taxRates' => $trR->findAllPreloaded(),
                 'products' => $pR->findAllPreloaded(),
                 'invs' => $iR->findAllPreloaded(),                  
                 'units' => $uR->findAllPreloaded()
@@ -402,18 +402,18 @@ final class InvItemController
             $form = new InvItemForm($inv_item, (int)$inv_id);
             $parameters = [
                 'title' =>  $this->translator->translate('i.edit'),
-                'action' => ['invitem/edit_task', ['id' => $currentRoute->getArgument('id')]],
+                'actionName' => 'invitem/edit_task',
+                'actionArguments' => ['id' => $currentRoute->getArgument('id')],
                 'errors' => [],
                 // if null inv_item, initialize it => prevent psalm PossiblyNullArgument error
                 'form' => $form,
                 'inv_id' => $inv_id,
-                'is_recurring' => $is_recurring,
-                'tax_rates' => $trR->findAllPreloaded(),
+                'isRecurring' => $is_recurring,
+                'taxRates' => $trR->findAllPreloaded(),
                 // Only tasks that are complete are put on the invoice
                 'tasks' => $taskR->repoTaskStatusquery(3),
                 'invs' => $iR->findAllPreloaded(),                  
-                'units' => $uR->findAllPreloaded(),
-                'numberhelper' => new NumberHelper($sR)
+                'units' => $uR->findAllPreloaded()
             ];
             if ($request->getMethod() === Method::POST) {
                 $body = $request->getParsedBody();

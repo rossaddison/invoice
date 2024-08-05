@@ -2,18 +2,25 @@
 
 declare(strict_types=1); 
 
-use App\Widget\Button;
 use Yiisoft\FormModel\Field;
 use Yiisoft\Html\Html;
 use Yiisoft\Html\Tag\Form;
 
 /**
- * @var \Yiisoft\View\View $this
- * @var \Yiisoft\Router\UrlGeneratorInterface $urlGenerator
- * @var \App\Invoice\CompanyPrivate\CompanyPrivateForm $form
+ * @var App\Invoice\CompanyPrivate\CompanyPrivateForm $form
+ * @var App\Invoice\Helpers\DateHelper $dateHelper 
+ * @var App\Widget\Button $button
+ * @var Yiisoft\View\View $this
+ * @var Yiisoft\Router\UrlGeneratorInterface $urlGenerator
+ * @var Yiisoft\Translator\TranslatorInterface $translator
+ * @var array $companies
+ * @var string $company_public
  * @var string $csrf
- * @var string $action
+ * @var string $actionName
  * @var string $title
+ * @psalm-var array<string, Stringable|null|scalar> $actionArguments
+ * @psalm-var array<array-key, array<array-key, string>|string> $optionsDataCompany
+ * @psalm-var array<string,list<string>> $errors
  */
 
 ?>
@@ -27,7 +34,7 @@ use Yiisoft\Html\Tag\Form;
 <?= Html::closeTag('h1'); ?>
 
 <?= Form::tag()
-    ->post($urlGenerator->generate(...$action))
+    ->post($urlGenerator->generate($actionName, $actionArguments))
     ->enctypeMultipartFormData()
     ->csrf($csrf)
     ->id('CompanyPrivateForm')
@@ -49,13 +56,18 @@ use Yiisoft\Html\Tag\Form;
                 <?= Html::openTag('div', ['class' => 'mb3 form-group']); ?>
                     <?php
                         $optionsDataCompany = [];
+                        /**
+                         * @var App\Invoice\Entity\Company $company
+                         */
                         foreach ($companies as $company) {
-                            $optionsDataCompany[$company->getId()] = $company->getName();
+                            if (null!==($companyId = $company->getId()) && null!==($companyName = $company->getName())) {
+                                $optionsDataCompany[(string)$companyId] = $companyName;
+                            }
                         }
                     ?>
                     <?=
                         Field::select($form, 'company_id')
-                        ->label($company_public, ['control-label'])
+                        ->label($company_public)
                         ->addInputAttributes([
                             'class' => 'form-control',
                             'id' => 'company_id'
@@ -122,45 +134,39 @@ use Yiisoft\Html\Tag\Form;
                         ->value(Html::encode($form->getLogo_margin() ??  '')); ?>
                 <?= Html::closeTag('div'); ?>
                 <?= Html::openTag('div', ['class' => 'mb3 form-group']); ?>
-                    <?= $startdate = $datehelper->get_or_set_with_style($form->getStart_date() 
-                                   ?? new \DateTimeImmutable('now')); ?>
                     <?= Html::openTag('div', ['class' => 'input-group']); ?>               
                         <?= Field::date($form, 'start_date')
                             ->addInputAttributes(
                                 [
                                     'class' => 'form-control input-sm datepicker',
-                                    'placeholder' => ' ('.$datehelper->display().')',
+                                    'placeholder' => ' ('.$dateHelper->display().')',
                                     'readonly' => 'readonly'
                                 ])
-                            ->value(Html::encode($startdate instanceof \DateTimeImmutable 
-                                               ||$startdate instanceof \DateTime 
-                                                ? $startdate->format($datehelper->style()) 
-                                                : $startdate)); 
+                            ->value(Html::encode(!is_string($startdate = $form->getStart_date()) && null!==$startdate 
+                                                ? $startdate->format($dateHelper->style()) 
+                                                : (new \DateTimeImmutable('now'))->format($dateHelper->style()))); 
                         ?>
                     <?= Html::closeTag('div'); ?>                                
                 <?= Html::closeTag('div'); ?>
                 <?= Html::openTag('div', ['class' => 'mb3 form-group']); ?>
-                    <?= $enddate = $datehelper->get_or_set_with_style($form->getEnd_date() 
-                                   ?? new \DateTimeImmutable('now')); ?>
                     <?= Html::openTag('div', ['class' => 'input-group']); ?>               
                         <?= Field::date($form, 'end_date')
                             ->addInputAttributes(
                                 [
                                     'class' => 'form-control input-sm datepicker',
-                                    'placeholder' => ' ('.$datehelper->display().')',
+                                    'placeholder' => ' ('.$dateHelper->display().')',
                                     'readonly' => 'readonly'
                                 ])
-                            ->value(Html::encode($enddate instanceof \DateTimeImmutable 
-                                               ||$enddate instanceof \DateTime 
-                                                ? $enddate->format($datehelper->style()) 
-                                                : $enddate)); 
+                            ->value(Html::encode(!is_string($enddate = $form->getEnd_date()) && null!==$enddate 
+                                                ? $enddate->format($dateHelper->style()) 
+                                                : (new \DateTimeImmutable('now'))->format($dateHelper->style()))); 
                         ?>
                     <?= Html::closeTag('div'); ?>                                
                 <?= Html::closeTag('div'); ?>
             <?= Html::closeTag('div'); ?>
         <?= Html::closeTag('div'); ?>    
     <?= Html::closeTag('div'); ?>
-<?= Button::back_save($translator); ?>
+<?= $button::back_save(); ?>
 <?= Form::tag()->close() ?>
 <?= Html::closeTag('div'); ?>
 <?= Html::closeTag('div'); ?>

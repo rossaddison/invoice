@@ -1,22 +1,28 @@
 <?php
 declare(strict_types=1); 
 
-
 use Yiisoft\FormModel\Field;
 use Yiisoft\Html\Html;
 use Yiisoft\Html\Tag\Form;
 
 /**
- * @var \Yiisoft\View\View $this
- * @var \Yiisoft\Router\UrlGeneratorInterface $urlGenerator
+ * @var App\Invoice\Merchant\MerchantForm $form
+ * @var App\Invoice\Setting\SettingRepository $s
+ * @var App\Widget\Button $button
+ * @var Yiisoft\Translator\TranslatorInterface $translator
+ * @var Yiisoft\Router\UrlGeneratorInterface $urlGenerator
+ * @var array $invs
  * @var string $csrf
- * @var string $action
+ * @var string $actionName
  * @var string $title
+ * @psalm-var array<string, Stringable|null|scalar> $actionArguments
+ * @psalm-var array<string,list<string>> $errors
+ * @psalm-var array<array-key, array<array-key, string>|string> $optionsDataInv
  */
 ?>
 
 <?= Form::tag()
-    ->post($urlGenerator->generate(...$action))
+    ->post($urlGenerator->generate($actionName, $actionArguments))
     ->enctypeMultipartFormData()
     ->csrf($csrf)
     ->id('MerchantForm')
@@ -32,7 +38,7 @@ use Yiisoft\Html\Tag\Form;
     <?= Html::encode($title) ?>
 <?= Html::closeTag('h1'); ?>
 <?= Html::openTag('div', ['id' => 'headerbar']); ?>
-    <?= $button::back($translator); ?>
+    <?= $button::back(); ?>
     <?= Html::openTag('div', ['id' => 'content']); ?>
         <?= Html::openTag('div', ['class' => 'row']); ?>
             <?= Html::openTag('div', ['class' => 'mb-3 form-group']); ?>
@@ -44,7 +50,7 @@ use Yiisoft\Html\Tag\Form;
                 <?= Html::closeTag('div'); ?>
                 <?= Html::openTag('div', ['class' => 'mb-3 form-group']); ?>
                 <?= Field::text($form, 'inv')
-                    ->label($translator->translate('invoice.invoice.number'), ['form-label'])
+                    ->label($translator->translate('invoice.invoice.number'))
                     ->addInputAttributes([
                         'readonly' => 'readonly',
                         'disabled' => 'disabled'
@@ -67,17 +73,17 @@ use Yiisoft\Html\Tag\Form;
                 <?= Html::closeTag('div'); ?>
                 <?= Html::openTag('div', ['class' => 'mb-3 form-group']); ?>
                     <?= Field::date($form, 'date')
-                    ->label($translator->translate('i.date'), ['class' => 'form-label'])
+                    ->label($translator->translate('i.date'))
                     ->addInputAttributes([
                         'readonly' => 'readonly',
                         'disabled' => 'disabled'
                     ])    
-                    ->value($form->getDate() ? ($form->getDate())->format('Y-m-d') : '') 
+                    ->value(!is_string($form->getDate()) ? ($form->getDate())->format('Y-m-d') : '') 
                 ?>
                 <?= Html::closeTag('div'); ?>
                 <?= Html::openTag('div', ['class' => 'mb-3 form-group']); ?>
                 <?= Field::text($form, 'driver')
-                    ->label($translator->translate('invoice.merchant.driver'), ['form-label'])
+                    ->label($translator->translate('invoice.merchant.driver'))
                     ->placeholder($translator->translate('invoice.merchant.driver'))
                     ->addInputAttributes([
                         'readonly' => 'readonly',
@@ -88,7 +94,7 @@ use Yiisoft\Html\Tag\Form;
                 <?= Html::closeTag('div'); ?>
                 <?= Html::openTag('div', ['class' => 'mb-3 form-group']); ?>
                 <?= Field::text($form, 'response')
-                    ->label($translator->translate('invoice.merchant.response'), ['form-label'])
+                    ->label($translator->translate('invoice.merchant.response'))
                     ->placeholder($translator->translate('invoice.merchant.response'))
                     ->addInputAttributes([
                         'readonly' => 'readonly',
@@ -99,7 +105,7 @@ use Yiisoft\Html\Tag\Form;
                 <?= Html::closeTag('div'); ?>
                 <?= Html::openTag('div', ['class' => 'mb-3 form-group']); ?>
                 <?= Field::text($form, 'reference')
-                    ->label($translator->translate('invoice.merchant.reference'), ['form-label'])
+                    ->label($translator->translate('invoice.merchant.reference'))
                     ->placeholder($translator->translate('invoice.merchant.reference'))
                     ->addInputAttributes([
                         'readonly' => 'readonly',

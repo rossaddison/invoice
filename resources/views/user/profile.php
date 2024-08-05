@@ -2,17 +2,16 @@
 
 declare(strict_types=1);
 
-/**
- * @var User    $item
- * @var WebView $this
- */
-
-use App\User\User;
 use Yiisoft\Html\Html;
 use Yiisoft\Html\Tag\H2;
-use Yiisoft\View\WebView;
 use Yiisoft\Yii\DataView\DetailView;
 use Yiisoft\Yii\DataView\Field\DataField;
+
+/**
+ * @var App\User\User $item  
+ * @var Yiisoft\Translator\TranslatorInterface $translator
+ * @var Yiisoft\View\WebView $this
+ */
 
 $this->setTitle('Profile');
 

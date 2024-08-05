@@ -6,8 +6,13 @@ use Yiisoft\Html\Html;
 use Yiisoft\FormModel\Field;
 
 /**
- * @var \Yiisoft\View\View $this
- * @var \Yiisoft\Router\UrlGeneratorInterface $urlGenerator
+ * @var App\Invoice\CustomField\CustomFieldForm $field_form
+ * @var App\Invoice\Entity\CustomField $custom_field
+ * @var App\Widget\Button $button
+ * @var Yiisoft\Translator\TranslatorInterface $translator
+ * @var Yiisoft\Router\FastRoute\UrlGenerator $urlGenerator
+ * @var array $custom_values
+ * @var array $custom_values_types
  * @var string $csrf
  */
 ?>
@@ -61,6 +66,9 @@ use Yiisoft\FormModel\Field;
 
                     <?php
                         $optionsDataType = [];
+                        /**
+                         * @var string $type 
+                         */
                         foreach ($custom_values_types as $type) {
                             $alpha = str_replace('-', '_', strtolower($type));
                             $optionsDataType[$type] = $translator->translate('i.'.$alpha.'');
@@ -69,7 +77,7 @@ use Yiisoft\FormModel\Field;
                     <?= Html::openTag('div',['class' => 'form-group']); ?>    
                         <?=
                             Field::select($field_form, 'type')
-                            ->label($translator->translate('i.type'),['control-label'])
+                            ->label($translator->translate('i.type'))
                             ->addInputAttributes([
                                 'class' => 'form-control',
                                 'id' => 'type',
@@ -90,7 +98,11 @@ use Yiisoft\FormModel\Field;
                             <?= Html::closeTag('thead'); ?>
 
                             <?= Html::openTag('tbody'); ?>
-                            <?php foreach ($custom_values as $custom_value) { ?>
+                            <?php
+                                /**
+                                 * @var App\Invoice\Entity\CustomValue $custom_value
+                                 */
+                                foreach ($custom_values as $custom_value) { ?>
                                 <?= Html::openTag('tr'); ?>
                                     <?= Html::openTag('td'); ?><?= $custom_value->getId(); ?><?= Html::closeTag('td'); ?>
                                     <?= Html::openTag('td'); ?><?= Html::encode($custom_value->getvalue()); ?><?= Html::closeTag('td'); ?>
@@ -103,6 +115,18 @@ use Yiisoft\FormModel\Field;
                                                 <i class="fa fa-cog"></i> <?= $translator->translate('i.options'); ?>
                                             <?= Html::closeTag('a'); ?>
                                             <?= Html::openTag('ul', ['class' => 'dropdown-menu']); ?>
+                                                <?= Html::openTag('li'); ?>
+                                                    <?= Html::openTag('a', [
+                                                                                'href' => $urlGenerator->generate('customvalue/view',['id'=>$custom_value->getId()]),
+                                                                                'style' => 'text-decoration:none',
+                                                                                'class' => 'btn'
+                                                                            ]
+                                                                    ); ?>
+                                                        <?= Html::openTag('p', ['style' =>'font-size:10px']); ?>            
+                                                            <i class="fa fa-eye fa-margin"></i><?= $translator->translate('i.view'); ?>
+                                                        <?= Html::closeTag('p'); ?>
+                                                    <?= Html::closeTag('a'); ?>
+                                                <?= Html::closeTag('li'); ?>
                                                 <?= Html::openTag('li'); ?>
                                                     <?= Html::openTag('a', [
                                                                                 'href' => $urlGenerator->generate('customvalue/edit',['id'=>$custom_value->getId()]),

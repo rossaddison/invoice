@@ -2,24 +2,20 @@
 
 declare(strict_types=1);
 
-use App\Auth\Form\LoginForm;
 use Yiisoft\FormModel\Field;
 use Yiisoft\Html\Html;
 use Yiisoft\Html\Tag\Form;
-use Yiisoft\Router\UrlGeneratorInterface;
-use Yiisoft\Translator\TranslatorInterface;
-use Yiisoft\View\WebView;
 
 /**
- * @var WebView               $this
- * @var TranslatorInterface   $translator
- * @var UrlGeneratorInterface $urlGenerator
- * @var string                $csrf
- * @var LoginForm             $formModel
+ * @var App\Auth\Form\LoginForm $formModel 
+ * @var Yiisoft\Router\UrlGeneratorInterface $urlGenerator
+ * @var Yiisoft\Translator\TranslatorInterface $translator
+ * @var Yiisoft\View\WebView $this
+ * @var string $csrf
  */
+
 $this->setTitle($translator->translate('i.login'));
 
-$error = $error ?? null;
 ?>
 
 <div class="container py-5 h-100">
@@ -27,7 +23,7 @@ $error = $error ?? null;
         <div class="col-12 col-md-8 col-lg-6 col-xl-5">
             <div class="card border border-dark shadow-2-strong rounded-3">
                 <div class="card-header bg-dark text-white">
-                    <h1 class="fw-normal h3 text-center"><?= Html::encode($this->getTitle()) ?></h1>
+                    <h1 class="fw-normal h3 text-center"><?= Html::encode($this->getTitle()); ?></h1>
                 </div>
                 <div class="card-body p-5 text-center">
                     <?= Form::tag()

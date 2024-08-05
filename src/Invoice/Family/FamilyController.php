@@ -67,8 +67,9 @@ final class FamilyController
             ->withCurrentPage($pageNum);
         $parameters = [
             'alert'=>$this->alert(),      
-            'paginator'=> $paginator,
             'familys' => $familys, 
+            'paginator' => $paginator,
+            'defaultPageSizeOffsetPaginator' => (int)$settingRepository->get_setting('default_list_limit'),
         ]; 
         return $this->viewRenderer->render('index', $parameters);
     }
@@ -84,7 +85,8 @@ final class FamilyController
         $form = new FamilyForm($family);
         $parameters = [
             'title' => $this->translator->translate('i.add_family'),
-            'action' => ['family/add'],
+            'actionName' => 'family/add',
+            'actionArguments' => [],
             'errors' => [],
             'form' => $form
         ];        
@@ -117,7 +119,8 @@ final class FamilyController
             $form = new FamilyForm($family);
             $parameters = [
                 'title' => $this->translator->translate('i.edit'),
-                'action' => ['family/edit', ['id' => $family->getFamily_id()]],
+                'actionName' => 'family/edit', 
+                'actionArguments' => ['id' => $family->getFamily_id()],
                 'errors' => [],
                 'form' => $form
             ];
@@ -173,7 +176,8 @@ final class FamilyController
             $form = new FamilyForm($family);
             $parameters = [
                 'title' => $this->translator->translate('i.view'), 
-                'action' => ['family/view', ['id' => $family->getFamily_id()]],
+                'actionName' => 'family/view', 
+                'actionArguments' => ['id' => $family->getFamily_id()],
                 'errors' => [],
                 'family' => $family,
                 'form' => $form,

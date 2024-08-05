@@ -4,15 +4,35 @@ declare(strict_types=1);
 
 use Yiisoft\Html\Html;
 use Yiisoft\Html\Tag\Img;
-use App\Invoice\Helpers\NumberHelper;
 
 /**
- * @var \App\Invoice\Entity\Quote $quote
- * @var \Yiisoft\Router\UrlGeneratorInterface $urlGenerator
- * @var \Yiisoft\Session\Flash\FlashInterface $flash_interface
+ * @see QuoteController function url_key 
+ * @var App\Invoice\Entity\Client $client 
+ * @var App\Invoice\Entity\Quote $quote
+ * @var App\Invoice\Entity\QuoteAmount $quote_amount
+ * @var App\Invoice\Entity\UserInv $userInv
+ * @var App\Invoice\Helpers\ClientHelper $clientHelper
+ * @var App\Invoice\Helpers\DateHelper $dateHelper
+ * @var App\Invoice\Helpers\NumberHelper $numberHelper
+ * @var App\Invoice\QuoteItemAmount\QuoteItemAmountRepository $qiaR
+ * @var App\Invoice\Setting\SettingRepository $s
+ * @var Yiisoft\Router\UrlGeneratorInterface $urlGenerator
+ * @var Yiisoft\Translator\TranslatorInterface $translator
+ * 
+ * @var array $items
+ * @var array $quote_tax_rates
+ * @var bool $has_expired
+ * 
+ * @see src\ViewInjection\LayoutViewInjection
+ * @var string $companyLogoFileName
+ * @var string $logoPath
+ * @var int $companyLogoWidth
+ * @var int $companyLogoHeight
+ * 
+ * @var string $alert
+ * @var string $modal_purchase_order_number
  */
 
-$numberhelper = new NumberHelper($s);
 $vat = $s->get_setting('enable_vat_registration');
 ?>
 
@@ -23,7 +43,7 @@ $vat = $s->get_setting('enable_vat_registration');
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
 
     <title>
-        <?= $s->get_setting('custom_title', 'yii-invoice', true); ?>
+        <?= $s->get_setting('custom_title'); ?>
         - <?= $translator->translate('i.quote'); ?> <?= $quote->getNumber(); ?>
     </title>
 
@@ -72,97 +92,93 @@ $vat = $s->get_setting('enable_vat_registration');
         </div>
 
         <hr>
-
+        
         <?= $alert; ?>
 
         <div class="invoice">
 
             <?php
-                    // if a company logo has not been setup in companyprivate => use the site default logo
-                    $logoPath = ((null!==$companyLogoFileName) 
-                                      ? '/logo/'. $companyLogoFileName 
-                                      : '/site/'. $s->public_logo().'.png'
-                    );
-                    echo Img::tag()
-                         ->width(80)
-                         ->height(60)
-                         ->src($logoPath)   
+                /**
+                 * @see src\ViewInjection\LayoutViewInjection.php $logoPath, $companyLogoWidth, $companyLogoHeight
+                 */
+                echo Img::tag()
+                    ->width($companyLogoWidth)
+                    ->height($companyLogoHeight)
+                    ->src($logoPath)   
             ?>
             <br>
             <br>
-            <?= Html::openTag('div', ['class' => 'row']); ?>
+            <div class='row'>
                 <div class="col-xs-12 col-md-6 col-lg-5">
-
-                    <h4><?= Html::encode($userinv->getName()); ?></h4>
-                    <p><?php if ($userinv->getVat_id()) {
-                            echo $s->lang("vat_id_short") . ": " . $userinv->getVat_id() . '<br>';
+                    <h4><?= Html::encode($userInv->getName()); ?></h4>
+                    <p><?php if (strlen($userInv->getVat_id() ?: '') > 0) {
+                            echo $translator->translate('i.vat_id_short') . ": " . ($userInv->getVat_id() ?: '') . '<br>';
                         } ?>
-                        <?php if ($userinv->getTax_code()) {
-                            echo $s->lang("tax_code_short") . ": " . $userinv->getTax_code() . '<br>';
+                        <?php if (strlen($userInv->getTax_code() ?? '') > 0) {
+                            echo $translator->translate('i.tax_code_short') . ": " . ($userInv->getTax_code() ?? '' ) . '<br>';
                         } ?>
-                        <?php if ($userinv->getAddress_1()) {
-                            echo Html::encode($userinv->getAddress_1()) . '<br>';
+                        <?php if (strlen($userInv->getAddress_1() ?? '') > 0) {
+                            echo Html::encode($userInv->getAddress_1()) . '<br>';
                         } ?>
-                        <?php if ($userinv->getAddress_2()) {
-                            echo Html::encode($userinv->getAddress_2()) . '<br>';
+                        <?php if (strlen($userInv->getAddress_2() ?? '') > 0) {
+                            echo Html::encode($userInv->getAddress_2()) . '<br>';
                         } ?>
-                        <?php if ($userinv->getCity()) {
-                            echo Html::encode($userinv->getCity()) . ' ';
+                        <?php if (strlen($userInv->getCity() ?? '') > 0) {
+                            echo Html::encode($userInv->getCity()) . ' ';
                         } ?>
-                        <?php if ($userinv->getState()) {
-                            echo Html::encode($userinv->getState()) . ' ';
+                        <?php if (strlen($userInv->getState() ?? '') > 0) {
+                            echo Html::encode($userInv->getState()) . ' ';
                         } ?>
-                        <?php if ($userinv->getZip()) {
-                            echo Html::encode($userinv->getZip()) . '<br>';
+                        <?php if (strlen($userInv->getZip() ?? '') > 0) {
+                            echo Html::encode($userInv->getZip()) . '<br>';
                         } ?>
-                        <?php if ($userinv->getPhone()) { ?><?= $translator->translate('i.phone_abbr'); ?>: <?= Html::encode($userinv->getPhone()); ?>
+                        <?php if (strlen($userInv->getPhone() ?? '') > 0) { ?><?= $translator->translate('i.phone_abbr'); ?>: <?= Html::encode($userInv->getPhone()); ?>
                             <br><?php } ?>
-                        <?php if ($userinv->getFax()) { ?><?= $translator->translate('i.fax_abbr'); ?>: <?= Html::encode($userinv->getFax()); ?><?php } ?>
+                        <?php if (strlen($userInv->getFax() ?? '') > 0) { ?><?= $translator->translate('i.fax_abbr'); ?>: <?= Html::encode($userInv->getFax()); ?><?php } ?>
                     </p>
-
                 </div>
                 <div class="col-lg-2"></div>
                 <div class="col-xs-12 col-md-6 col-lg-5 text-right">
 
-                    <h4><?= Html::encode($clienthelper->format_client($client)); ?></h4>
-                   <p><?php if ($client->getClient_vat_id()) {
-                            echo $s->lang("vat_id_short") . ": " . $client->getClient_vat_id() . '<br>';
-                        } ?>
-                        <?php if ($client->getClient_tax_code()) {
-                            echo $s->lang("tax_code_short") . ": " . $client->getClient_tax_code() . '<br>';
-                        } ?>
-                        <?php if ($client->getClient_address_1()) {
-                            echo Html::encode($client->getClient_address_1()) . '<br>';
-                        } ?>
-                        <?php if ($client->getClient_address_2()) {
-                            echo Html::encode($client->getClient_address_2()) . '<br>';
-                        } ?>
-                        <?php if ($client->getClient_city()) {
-                            echo Html::encode($client->getClient_city()) . ' ';
-                        } ?>
-                        <?php if ($client->getClient_state()) {
-                            echo Html::encode($client->getClient_state()) . ' ';
-                        } ?>
-                        <?php if ($client->getClient_zip()) {
-                            echo Html::encode($client->getClient_zip()) . '<br>';
-                        } ?>
-                        <?php if ($client->getClient_phone()) {
-                            echo $translator->translate('i.phone_abbr') . ': ' . Html::encode($client->getClient_phone()); ?>
-                            <br>
-                        <?php } ?>
-                    </p>
+                    <h4><?= Html::encode($clientHelper->format_client($client)); ?></h4>
+                        <p><?php if (strlen($client->getClient_vat_id()) > 0) {
+                                echo $translator->translate('i.vat_id_short') . ": " . ($client->getClient_vat_id()) . '<br>';
+                            } ?>
+                            <?php if (strlen($client->getClient_tax_code() ?? '') > 0) {
+                                echo $translator->translate('i.tax_code_short') . ": " . ($client->getClient_tax_code() ?? '') . '<br>';
+                            } ?>
+                            <?php if (strlen($client->getClient_address_1() ?? '') > 0) {
+                                echo Html::encode($client->getClient_address_1()) . '<br>';
+                            } ?>
+                            <?php if (strlen($client->getClient_address_2() ?? '') > 0) {
+                                echo Html::encode($client->getClient_address_2()) . '<br>';
+                            } ?>
+                            <?php if (strlen($client->getClient_city() ?? '') > 0) {
+                                echo Html::encode($client->getClient_city()) . ' ';
+                            } ?>
+                            <?php if (strlen($client->getClient_state() ?? '') > 0) {
+                                echo Html::encode($client->getClient_state()) . ' ';
+                            } ?>
+                            <?php if (strlen($client->getClient_zip() ?? '') > 0) {
+                                echo Html::encode($client->getClient_zip()) . '<br>';
+                            } ?>
+                            <?php if (strlen($clientPhone = $client->getClient_phone() ?? '') > 0) {
+                                echo $translator->translate('i.phone_abbr') . ': ' . Html::encode($clientPhone); ?>
+                                <br>
+                            <?php } ?>
+                        </p>
 
                     <br>
                     <table class="table table-condensed">
                         <tbody>
                         <tr>
                             <td><?= $vat == '1' ? $translator->translate('invoice.invoice.date.issued') : $translator->translate('i.quote_date'); ?></td>
-                            <td style="text-align:right;"><?= $datehelper->date_from_mysql($quote->getDate_created()); ?></td>
+                            <td style="text-align:right;"><?= $quote->getDate_created()->format($dateHelper->style()); ?></td>
                         </tr>
                         <tr class="<?= ($has_expired ? 'overdue' : '') ?>">
                             <td><?= $translator->translate('i.expires'); ?></td>
                             <td class="text-right">
-                                <?= $datehelper->date_from_mysql($quote->getDate_expires()); ?>
+                                <?= $quote->getDate_expires()->format($dateHelper->style()) ?>
                             </td>
                         </tr>
                         </tbody>
@@ -187,44 +203,67 @@ $vat = $s->get_setting('enable_vat_registration');
                         </tr>
                         </thead>
                         <tbody>
-                        <?php foreach ($items as $item) : ?>
+                        <?php
+                            
+                            /**
+                             * @var App\Invoice\Entity\InvItem $item
+                             */
+                            foreach ($items as $item) : ?>
                             <tr>
                                 <td><?= Html::encode($item->getName()); ?></td>
                                 <td><?= nl2br(Html::encode($item->getDescription())); ?></td>
                                 <td class="amount">
-                                    <?= $numberhelper->format_amount($item->getQuantity()); ?>
-                                    <?php if ($item->getProduct_unit()) : ?>
+                                    <?= $numberHelper->format_amount($item->getQuantity()); ?>
+                                    <?php if (strlen($item->getProduct_unit() ?? '') > 0) : ?>
                                         <br>
                                         <small><?= Html::encode($item->getProduct_unit()); ?></small>
                                     <?php endif; ?>
                                 </td>
-                                <td class="amount"><?= $numberhelper->format_currency($item->getPrice()); ?></td>
-                                <td class="amount"><?= $numberhelper->format_currency($item->getDiscount_amount()); ?></td>
-                                <td class="amount"><?= $numberhelper->format_currency($quote_item_amount->repoQuoteItemAmountquery((int)$item->getId())->getSubtotal() ?? 0.00); ?></td>
+                                <td class="amount"><?= $numberHelper->format_currency($item->getPrice()); ?></td>
+                                <td class="amount"><?= $numberHelper->format_currency($item->getDiscount_amount()); ?></td>
+                                <?php $query = $qiaR->repoQuoteItemAmountquery((int)$item->getId()); ?>
+                                <td class="amount"><?= $numberHelper->format_currency(null!==$query ? $query->getSubtotal() : 0.00); ?></td>
+                                
+                                
+                                
                             </tr>
                         <?php endforeach ?>
                         <tr>
                             <td colspan="4"></td>
                             <td class="text-right"><?= $translator->translate('i.subtotal'); ?>:</td>
-                            <td class="amount"><?= $numberhelper->format_currency($quote_amount->getItem_subtotal()); ?></td>
+                            <td class="amount"><?= $numberHelper->format_currency($quote_amount->getItem_subtotal()); ?></td>
                         </tr>
                         <?php if ($quote_amount->getItem_tax_total() > 0) { ?>
                             <tr>
                                 <td class="no-bottom-border" colspan="4"></td>
                                 <td class="text-right"><?= $vat === '1' ? $translator->translate('invoice.invoice.vat.break.down') : $translator->translate('i.item_tax'); ?></td>
-                                <td class="amount"><?= $numberhelper->format_currency($quote_amount->getItem_tax_total()); ?></td>
+                                <td class="amount"><?= $numberHelper->format_currency($quote_amount->getItem_tax_total()); ?></td>
                             </tr>
                         <?php } ?>
                         <?php 
-                            if (null!== $quote_tax_rates && $vat == '0') {
+                            if (!empty($quote_tax_rates) && $vat == '0') {
+                                /**
+                                 * @var App\Invoice\Entity\QuoteTaxRate $quote_tax_rate
+                                 */
                                 foreach ($quote_tax_rates as $quote_tax_rate) : ?>
                                 <tr>
                                     <td class="no-bottom-border" colspan="4"></td>
                                     <td class="text-right">
-                                        <?= Html::encode($quote_tax_rate->getTaxRate()->getTax_rate_name()) . ' ' . $numberhelper->format_amount($quote_tax_rate->getTaxRate()->getTax_rate_percent()); ?>
-                                        %
+                                        <?php 
+                                            $taxRatePercent = $quote_tax_rate->getTaxRate()?->getTax_rate_percent();
+                                            $taxRateName = $quote_tax_rate->getTaxRate()?->getTax_rate_name();
+                                            if (($taxRatePercent >= 0.00) && (strlen($taxRateName ?? '') > 0)) {
+                                                echo Html::encode(($taxRateName ?? '#') . ' ' . ($numberHelper->format_amount($taxRatePercent) ?? '#'));
+                                            }
+                                        ?>%
                                     </td>
-                                    <td class="amount"><?= $numberhelper->format_currency($quote_tax_rate->getQuote_tax_rate_amount()); ?></td>
+                                    <td class="amount">
+                                        <?php 
+                                        $quoteTaxRate = $quote_tax_rate->getQuote_tax_rate_amount();
+                                        if ($quoteTaxRate >= 0.00) {
+                                            echo $numberHelper->format_currency($quoteTaxRate);
+                                        } ?>
+                                    </td>
                                 </tr>
                             <?php endforeach; } ?>
                         <?php if ($vat === '0') { ?>          
@@ -233,11 +272,15 @@ $vat = $s->get_setting('enable_vat_registration');
                             <td class="text-right"><?= $translator->translate('i.discount'); ?>:</td>
                             <td class="amount">
                                 <?php
-                                if ($quote->getDiscount_percent() > 0) {
-                                    echo $numberhelper->format_amount($quote->getDiscount_percent()) . ' %';
-                                } else {
-                                    echo $numberhelper->format_amount($quote->getDiscount_amount());
-                                }
+                                    $percent = $quote->getDiscount_percent();
+                                    if ($percent >= 0.00) {
+                                        echo (string)$numberHelper->format_amount($percent) . ' %';
+                                    } else {
+                                        $discountAmount = $quote->getDiscount_amount();
+                                        if ($discountAmount >= 0.00) { 
+                                            echo $numberHelper->format_amount($discountAmount);
+                                        }
+                                    }
                                 ?>
                             </td>
                         </tr>
@@ -245,7 +288,7 @@ $vat = $s->get_setting('enable_vat_registration');
                         <tr>
                             <td class="no-bottom-border" colspan="4"></td>
                             <td class="text-right"><?= $translator->translate('i.total'); ?>:</td>
-                            <td class="amount"><?= $numberhelper->format_currency($quote_amount->getTotal()); ?></td>
+                            <td class="amount"><?= $numberHelper->format_currency($quote_amount->getTotal()); ?></td>
                         </tr>
                         </tbody>
                     </table>
@@ -253,9 +296,8 @@ $vat = $s->get_setting('enable_vat_registration');
             </div><!-- .invoice-items -->
 
             <hr>
-
-            <?= Html::openTag('div', ['class' => 'row']); ?>
-                <?php if ($quote->getNotes()) { ?>
+            <div class="row">
+                <?php if (strlen($quote->getNotes() ?? '') > 0) { ?>
                     <div class="col-xs-12 col-md-6">
                         <h4><?= $translator->translate('i.notes'); ?></h4>
                         <p><?= nl2br(Html::encode($quote->getNotes())); ?></p>

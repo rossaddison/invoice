@@ -5,13 +5,6 @@ $(function () {
      if (typeof data === 'string') return JSON.parse(data);
      return {};
     };
-
-    if ($('#discount_percent').val()) {
-        $('#discount_amount').prop('disabled', true);
-    }
-    if ($('#discount_amount').val()) {
-        $('#discount_percent').prop('disabled', true);
-    }
     
     // Used in userclient/new
     $('#user_all_clients').click(function () {
@@ -248,23 +241,23 @@ $(function () {
             var url = $(location).attr('origin') + "/invoice/inv/html/0";    
             window.location.reload;
             window.open(url, '_blank');
-    });    
-       
-    
+    });
 
-    $('#discount_amount').keyup(function () {
+    $('#inv_discount_amount').keyup(function () {
     if (this.value.length > 0) {
-        $('#discount_percent').prop('disabled', true);
+        $('#inv_discount_percent').prop('value', 0.00);
+        $('#inv_discount_percent').prop('disabled', true);
     } else {
-        $('#discount_percent').prop('disabled', false);
+        $('#inv_discount_percent').prop('disabled', false);
     }
     });
     
-    $('#discount_percent').keyup(function () {
+    $('#inv_discount_percent').keyup(function () {
     if (this.value.length > 0) {
-        $('discount_amount').prop('disabled', true);
+        $('#inv_discount_amount').prop('value', 0.00);
+        $('#inv_discount_amount').prop('disabled', true);
     } else {
-        $('#discount_amount').prop('disabled', false);
+        $('#inv_discount_amount').prop('disabled', false);
     }
     });
 

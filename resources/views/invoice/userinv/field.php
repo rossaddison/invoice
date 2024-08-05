@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 use App\Invoice\Helpers\ClientHelper;
@@ -13,7 +14,7 @@ use Yiisoft\Html\Html;
  * @var Yiisoft\Data\Cycle\Reader\EntityReader $users;
  * @var Yiisoft\Router\UrlGeneratorInterface $urlGenerator
  * @var Yiisoft\Translator\TranslatorInterface $translator
- * @var Yiisoft\Yii\View\Csrf $csrf
+ * @var string $csrf
  * @var string $alert
  */
 

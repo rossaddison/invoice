@@ -4,10 +4,13 @@ declare(strict_types=1);
 
 use Yiisoft\Html\Html;
 use Yiisoft\VarDumper\VarDumper;
+
 /**
- * @var \App\Invoice\Entity\Generator $generators
- * @var \Yiisoft\Router\UrlGeneratorInterface $urlGenerator
+ * @var App\Invoice\Helpers\GenerateCodeFileHelper $generated
+ * @var Yiisoft\Translator\TranslatorInterface $translator  
  * @var bool $canEdit
+ * @var bool $highlight
+ * @var string $alert
  * @var string $id
  */
 

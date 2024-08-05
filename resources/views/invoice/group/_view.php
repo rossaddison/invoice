@@ -7,10 +7,14 @@ use Yiisoft\Html\Html;
 use Yiisoft\Html\Tag\Form;
 
 /**
- * @var \Yiisoft\View\View $this
- * @var \Yiisoft\Router\UrlGeneratorInterface $urlGenerator
+ * @var App\Invoice\Group\GroupForm $form
+ * @var App\Widget\Button $button
+ * @var Yiisoft\Translator\TranslatorInterface $translator
+ * @var Yiisoft\Router\UrlGeneratorInterface $urlGenerator
+ * @var string $actionName
  * @var string $csrf
- * @var string $action
+ * @psalm-var array<string,list<string>> $errors
+ * @psalm-var array<string, Stringable|null|scalar> $actionArguments
  */
 ?>
 
@@ -23,7 +27,7 @@ use Yiisoft\Html\Tag\Form;
     <?= $translator->translate('invoice.group.form'); ?>
 <?= Html::closeTag('h1'); ?>
 <?= Form::tag()
-    ->post($urlGenerator->generate(...$action))
+    ->post($urlGenerator->generate($actionName, $actionArguments))
     ->enctypeMultipartFormData()
     ->csrf($csrf)
     ->id('GroupForm')
@@ -80,7 +84,7 @@ use Yiisoft\Html\Tag\Form;
                 ->hint($translator->translate('invoice.hint.this.field.is.required')); ?>    
             <?= Html::tag('br'); ?>
             <?= Html::closeTag('div'); ?>         
-            <?= $button::back($translator); ?>
+            <?= $button::back(); ?>
         <?= Html::closeTag('div'); ?>
     <?= Html::closeTag('div'); ?>
 <?= Html::closeTag('div'); ?>

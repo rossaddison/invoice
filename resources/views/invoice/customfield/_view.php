@@ -4,15 +4,32 @@ declare(strict_types=1);
 
 use Yiisoft\FormModel\Field;
 use Yiisoft\Html\Html;
+use Yiisoft\Html\Tag\Form;
 
 /**
- * @var \Yiisoft\View\View $this
- * @var \Yiisoft\Router\UrlGeneratorInterface $urlGenerator
+ * @var App\Invoice\CustomField\CustomFieldForm $form
+ * @var App\Invoice\Setting\SettingRepository $s
+ * @var App\Widget\Button $button
+ * @var Yiisoft\Translator\TranslatorInterface $translator 
+ * @var Yiisoft\Router\UrlGeneratorInterface $urlGenerator
+ * @var array $custom_tables
+ * @var string $actionName
  * @var string $csrf
  * @var string $title
+ * @psalm-var array<string, Stringable|null|scalar> $actionArguments
  */
 
 ?>
+
+<?=
+    Form::tag()
+    ->post($urlGenerator->generate($actionName, $actionArguments))
+    ->enctypeMultipartFormData()
+    ->csrf($csrf)
+    ->id('CustomFieldForm')
+    ->open()
+    ?>
+
 <?= Html::openTag('h1'); ?>
     <?= Html::encode($title) ?>
 <?= Html::closeTag('h1'); ?>
@@ -33,7 +50,7 @@ use Yiisoft\Html\Html;
                 <?= Field::text($form, 'table')
                     ->addInputAttributes(['style' => 'background:lightblue'])     
                     ->label($translator->translate('i.table'))
-                    ->value(Html::encode(ucfirst($s->lang($custom_tables[$form->getTable()] ?? ''))))     
+                    ->value(Html::encode(strlen($table = $form->getTable() ?? '') > 0 ? ucfirst($s->lang((string)$custom_tables[$table])) : ''))    
                     ->readonly(true);
                 ?>
             <?= Html::closeTag('div'); ?>
@@ -51,7 +68,7 @@ use Yiisoft\Html\Html;
                 <?= Field::text($form, 'type')
                     ->addInputAttributes(['style' => 'background:lightblue'])     
                     ->label($translator->translate('i.type'))
-                    ->value(Html::encode($translator->translate('i.'.str_replace("-", "_", strtolower($form->getType())).'')))     
+                    ->value(Html::encode($translator->translate('i.'.str_replace("-", "_", strtolower($form->getType() ?? '')).'')))     
                     ->readonly(true);
                 ?>
             <?= Html::closeTag('div'); ?>
@@ -76,3 +93,5 @@ use Yiisoft\Html\Html;
         <?= Html::closeTag('div'); ?>
     <?= Html::closeTag('div'); ?>    
 <?= Html::closeTag('div'); ?>
+<?= $button::back(); ?>
+<?= Form::tag()->close(); ?>

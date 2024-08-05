@@ -2,22 +2,32 @@
 
 declare(strict_types=1); 
 
-
 use Yiisoft\FormModel\Field;
 use Yiisoft\Html\Html;
 use Yiisoft\Html\Tag\Form;
 
 /**
- * @var \Yiisoft\View\View $this
- * @var \Yiisoft\Router\UrlGeneratorInterface $urlGenerator
+ * @var App\Invoice\InvRecurring\InvRecurringForm $form
+ * @var App\Invoice\Helpers\DateHelper $dateHelper 
+ * @var App\Invoice\Helpers\NumberHelper $numberHelper
+ * @var App\Widget\Button $button
+ * @var DateTimeImmutable $invDateCreated 
+ * @var Yiisoft\Translator\TranslatorInterface $translator
+ * @var Yiisoft\Router\UrlGeneratorInterface $urlGenerator
  * @var string $csrf
- * @var string $action
+ * @var string $actionName
  * @var string $title
+ * @psalm-var array<string, Stringable|null|scalar> $actionArguments
+ * @psalm-var array<string,list<string>> $errors
  */
 ?>
 
-<form id="InvRecurringForm" method="POST" action="<?= $urlGenerator->generate(...$action) ?>" enctype="multipart/form-data">
-<input type="hidden" name="_csrf" value="<?= $csrf ?>">
+<?= Form::tag()
+    ->post($urlGenerator->generate($actionName, $actionArguments))
+    ->enctypeMultipartFormData()
+    ->csrf($csrf)
+    ->id('InvRecurringForm')
+    ->open() ?>
 
 <?= Html::openTag('div',['class'=>'container py-5 h-100']); ?>
 <?= Html::openTag('div',['class'=>'row d-flex justify-content-center align-items-center h-100']); ?>
@@ -40,8 +50,8 @@ use Yiisoft\Html\Tag\Form;
             <?= Html::closeTag('div'); ?>
             <?= Html::openTag('div'); ?>
                 <?= Html::openTag('p'); ?>
-                    <?= $translator->translate('invoice.recurring.original.invoice.date').'('.$datehelper->display().')'; ?>
-                    <?= $immutable_invoice_date->format($datehelper->style()); ?>
+                    <?= $translator->translate('invoice.recurring.original.invoice.date').'('.$dateHelper->display().')'; ?>
+                    <?= $invDateCreated->format($dateHelper->style()); ?>
                 <?= Html::closeTag('p'); ?>
                 <?= Html::openTag('div', ['class' => 'mb-3 form-group']); ?>
                     <?= Field::hidden($form, 'inv_id')
@@ -51,6 +61,10 @@ use Yiisoft\Html\Tag\Form;
                 <?= Html::openTag('div', ['class' => 'mb-3 form-group']); ?>
                     <?php 
                         $optionsDataFrequency = [];
+                        /**
+                         * @var string $key
+                         * @var string $value
+                         */
                         foreach ($numberHelper->recur_frequencies() as $key => $value) {
                             $optionsDataFrequency[$key] = $translator->translate($value);
                         }
@@ -62,7 +76,7 @@ use Yiisoft\Html\Tag\Form;
                          * @see C:\wamp64\www\invoice\src\Invoice\Asset\rebuild-1.13\js\inv.js $('#frequency').change(function () {
                          */
                         Field::select($form, 'frequency')
-                        ->label($translator->translate('invoice.recurring.frequency'), ['class' => 'form-label'])
+                        ->label($translator->translate('invoice.recurring.frequency') )
                         ->value($form->getFrequency() ?? '')
                         ->optionsData($optionsDataFrequency)    
                         ->hint($translator->translate('invoice.hint.this.field.is.required')); 
@@ -71,16 +85,14 @@ use Yiisoft\Html\Tag\Form;
                 <?= Html::openTag('div', ['class' => 'mb-3 form-group']); ?>
                     <?= Field::hidden($form, 'start')
                         ->hideLabel(true)
-                        ->label($translator->translate('i.start') ." (".  $datehelper->display().") ", ['class' => 'form-label'])
-                        //->required(false)
-                        ->value($form->getStart() ? ($form->getStart())->format('Y-m-d') : '')
-                        //->hint($translator->translate('invoice.hint.this.field.is.required')); 
+                        ->label($translator->translate('i.start') ." (".  $dateHelper->display().") ")
+                        ->value(!is_string($start = $form->getStart()) ? $start?->format('Y-m-d') : '');
                     ?>
                 <?= Html::closeTag('div'); ?>                
                 <?= Html::openTag('div', ['class' => 'mb-3 form-group']); ?>
                     <?= Field::date($form, 'next')
-                        ->label($translator->translate('i.next') ." (".  $datehelper->display().") ", ['class' => 'form-label'])
-                        ->value($form->getNext() ? ($form->getNext())->format('Y-m-d') : '')
+                        ->label($translator->translate('i.next') ." (".  $dateHelper->display().") ")
+                        ->value(!is_string($next = $form->getNext()) ? $next?->format('Y-m-d') : '')
                         ->addInputAttributes([                            
                             'data-bs-toggle' => 'tooltip',
                             'title' => $translator->translate('invoice.recurring.tooltip.next')
@@ -89,8 +101,8 @@ use Yiisoft\Html\Tag\Form;
                 <?= Html::closeTag('div'); ?>                
                 <?= Html::openTag('div', ['class' => 'mb-3 form-group']); ?>
                     <?= Field::date($form, 'end')
-                        ->label($translator->translate('i.end') ." (".  $datehelper->display().") ", ['class' => 'form-label'])
-                        ->value($form->getEnd() ? ($form->getEnd())->format('Y-m-d') : '')
+                        ->label($translator->translate('i.end') ." (".  $dateHelper->display().") ")
+                        ->value(!is_string($end = $form->getEnd()) ? $end?->format('Y-m-d') : '')
                 ?>
                 <?= Html::closeTag('div'); ?>
                 <?= $button::back_save(); ?>

@@ -1,13 +1,28 @@
 <?php
-declare(strict_types=1);
 
+declare(strict_types=1);
 
 use Yiisoft\FormModel\Field;
 use Yiisoft\Html\Html;
 use Yiisoft\Html\Tag\Form;
 
+/**
+ * @var App\Invoice\Helpers\NumberHelper $numberHelper
+ * @var App\Invoice\InvAllowanceCharge\InvAllowanceChargeForm $form
+ * @var App\Invoice\Setting\SettingRepository $s
+ * @var App\Widget\Button $button
+ * @var Yiisoft\Translator\TranslatorInterface $translator
+ * @var Yiisoft\Router\UrlGeneratorInterface $urlGenerator
+ * @var string $alert
+ * @var string $csrf
+ * @var string $actionName
+ * @var string $title
+ * @psalm-var array<string, Stringable|null|scalar> $actionArguments
+ * @psalm-var array<array-key, array<array-key, string>|string> $optionsDataAllowanceCharges
+ */
+
 echo Form::tag()
-    ->post($urlGenerator->generate(...$action))
+    ->post($urlGenerator->generate($actionName, $actionArguments))
     ->enctypeMultipartFormData()
     ->csrf($csrf)
     ->id('InvAllowanceChargeForm')
@@ -23,12 +38,12 @@ echo Form::tag()
     <?= Html::encode($title) ?>
 <?= Html::closeTag('h1'); ?>
 <?= Html::openTag('div', ['id' => 'headerbar']); ?>
-    <?= $button::back($translator); ?>
+    <?= $button::back(); ?>
     <?= Html::openTag('div', ['id' => 'content']); ?>
         <?= Html::openTag('div', ['class' => 'row']); ?>
             <?= Html::openTag('div', ['class' => 'mb-3 form-group']); ?>
                 <?= Field::select($form, 'allowance_charge_id')
-                    ->label($translator->translate('invoice.invoice.allowance.or.charge'),['control-label'])
+                    ->label($translator->translate('invoice.invoice.allowance.or.charge'))
                     ->addInputAttributes([
                         'readonly' => 'readonly',
                         'disabled' => 'disabled'
@@ -39,7 +54,7 @@ echo Form::tag()
             <?= Html::openTag('div'); ?>
                 <?= Html::openTag('div', ['class' => 'mb-3 form-group']); ?>
                     <?= Field::text($form, 'amount')
-                    ->label($translator->translate('invoice.invoice.allowance.or.charge.amount'), ['class' => 'form-label'])
+                    ->label($translator->translate('invoice.invoice.allowance.or.charge.amount'))
                     ->addInputAttributes([
                         'readonly' => 'readonly',
                         'disabled' => 'disabled'
@@ -51,7 +66,7 @@ echo Form::tag()
             <?= Html::openTag('div'); ?>
                 <?= Html::openTag('div', ['class' => 'mb-3 form-group']); ?>
                     <?= Field::text($form, 'vat')
-                    ->label($translator->translate('invoice.invoice.vat.abbreviation'), ['class' => 'form-label'])
+                    ->label($translator->translate('invoice.invoice.vat.abbreviation'))
                     ->addInputAttributes([
                         'readonly' => 'readonly',
                         'disabled' => 'disabled'

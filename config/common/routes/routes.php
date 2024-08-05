@@ -163,30 +163,30 @@ return [
       ->action([InvoiceController::class, 'index'])
       ->name('invoice/index'),   
       // InvItemAllowanceCharge
-      Route::get('/acii')
+      Route::get('/invitemallowancecharge')
       ->middleware(fn(AccessChecker $checker) => $checker->withPermission('editInv'))
       ->middleware(Authentication::class)
       ->action([InvItemAllowanceChargeController::class, 'index'])
-      ->name('acii/index'),
+      ->name('invitemallowancecharge/index'),
       // Add
-      Route::methods([Method::GET, Method::POST], '/acii/add/{inv_item_id}')
+      Route::methods([Method::GET, Method::POST], '/invitemallowancecharge/add/{inv_item_id}')
       ->middleware(fn(AccessChecker $checker) => $checker->withPermission('editInv'))
       ->middleware(Authentication::class)
       ->action([InvItemAllowanceChargeController::class, 'add'])
-      ->name('acii/add'),
+      ->name('invitemallowancecharge/add'),
       // Edit
-      Route::methods([Method::GET, Method::POST], '/acii/edit/{id}')
+      Route::methods([Method::GET, Method::POST], '/invitemallowancecharge/edit/{id}')
       ->middleware(fn(AccessChecker $checker) => $checker->withPermission('editInv'))
       ->middleware(Authentication::class)
       ->action([InvItemAllowanceChargeController::class, 'edit'])
-      ->name('acii/edit'),
-      Route::methods([Method::GET, Method::POST], '/acii/delete/{id}')
-      ->name('acii/delete')
+      ->name('invitemallowancecharge/edit'),
+      Route::methods([Method::GET, Method::POST], '/invitemallowancecharge/delete/{id}')
+      ->name('invitemallowancecharge/delete')
       ->middleware(fn(AccessChecker $checker) => $checker->withPermission('editInv'))
       ->middleware(Authentication::class)
       ->action([InvItemAllowanceChargeController::class, 'delete']),
-      Route::methods([Method::GET, Method::POST], '/acii/view/{id}')
-      ->name('acii/view')
+      Route::methods([Method::GET, Method::POST], '/invitemallowancecharge/view/{id}')
+      ->name('invitemallowancecharge/view')
       ->middleware(fn(AccessChecker $checker) => $checker->withPermission('editInv'))
       ->middleware(Authentication::class)
       ->action([InvItemAllowanceChargeController::class, 'view']),
@@ -284,11 +284,6 @@ return [
       ->middleware(Authentication::class)
       ->action([InvoiceController::class, 'setting_reset'])
       ->name('invoice/setting_reset'),
-      Route::get('/ubuntu')
-      ->middleware(fn(AccessChecker $checker) => $checker->withPermission('editInv'))
-      ->middleware(Authentication::class)
-      ->action([InvoiceController::class, 'ubuntu'])
-      ->name('invoice/ubuntu'),
       Route::get('/client[/page/{page:\d+}[/active/{active}]]')
       ->middleware(fn(AccessChecker $checker) => $checker->withPermission('editInv'))
       ->middleware(Authentication::class)
@@ -521,19 +516,19 @@ return [
       ->middleware(Authentication::class)
       ->action([ContractController::class, 'view']),
       Route::get('/del[/page/{page:\d+}]')
-      ->middleware(fn(AccessChecker $checker) => $checker->withPermission('viewInv'))
+      ->middleware(fn(AccessChecker $checker) => $checker->withPermission('editInv'))
       ->middleware(Authentication::class)
       ->action([DeliveryLocationController::class, 'index'])
       ->name('del/index'),
       Route::methods([Method::GET, Method::POST], '/del/add/{client_id}[/{origin}/{origin_id}/{action}]')
       ->name('del/add')
-      ->middleware(fn(AccessChecker $checker) => $checker->withPermission('viewInv'))
+      ->middleware(fn(AccessChecker $checker) => $checker->withPermission('editInv'))
       ->middleware(Authentication::class)
       ->action([DeliveryLocationController::class, 'add']),
       // arguments eg. {id},[query parameters to build a varying return url i.e. {origin}, {origin_id}, {action}]      
       Route::methods([Method::GET, Method::POST], '/del/edit/{id}[/{origin}/{origin_id}/{action}]')
       ->name('del/edit')
-      ->middleware(fn(AccessChecker $checker) => $checker->withPermission('viewInv'))
+      ->middleware(fn(AccessChecker $checker) => $checker->withPermission('editInv'))
       ->middleware(Authentication::class)
       ->action([DeliveryLocationController::class, 'edit']),
       Route::methods([Method::GET, Method::POST], '/del/delete/{id}')
@@ -780,17 +775,7 @@ return [
       ->name('generator/_route')
       ->middleware(fn(AccessChecker $checker) => $checker->withPermission('editInv'))
       ->middleware(Authentication::class)
-      ->action([GeneratorController::class, '_route']),
-      Route::methods([Method::GET, Method::POST], '/generator/_form_modal_field/{id}')
-      ->name('generator/_form_modal_field')
-      ->middleware(fn(AccessChecker $checker) => $checker->withPermission('editInv'))
-      ->middleware(Authentication::class)
-      ->action([GeneratorController::class, '_form_modal_field']),
-      Route::methods([Method::GET, Method::POST], '/generator/_form_modal_create/{id}')
-      ->name('generator/_form_modal_create')
-      ->middleware(fn(AccessChecker $checker) => $checker->withPermission('editInv'))
-      ->middleware(Authentication::class)
-      ->action([GeneratorController::class, '_form_modal_create']),
+      ->action([GeneratorController::class, '_route']),      
       Route::methods([Method::GET, Method::POST], '/generator/quick_view_schema')
       ->name('generator/quick_view_schema')
       ->middleware(fn(AccessChecker $checker) => $checker->withPermission('editInv'))
@@ -1284,13 +1269,13 @@ return [
       ->action([PostalAddressController::class, 'index'])
       ->name('postaladdress/index'),
       // Add
-      Route::methods([Method::GET, Method::POST], '/postaladdress/add/{client_id}')
+      Route::methods([Method::GET, Method::POST], '/postaladdress/add/{client_id}[/{origin}/{origin_id}/{action}]')
       ->middleware(fn(AccessChecker $checker) => $checker->withPermission('editInv'))
       ->middleware(Authentication::class)
       ->action([PostalAddressController::class, 'add'])
       ->name('postaladdress/add'),
       // Edit
-      Route::methods([Method::GET, Method::POST], '/postaladdress/edit/{id}')
+      Route::methods([Method::GET, Method::POST], '/postaladdress/edit/{id}[/{origin}/{origin_id}/{action}]') 
       ->name('postaladdress/edit')
       ->middleware(fn(AccessChecker $checker) => $checker->withPermission('editInv'))
       ->middleware(Authentication::class)

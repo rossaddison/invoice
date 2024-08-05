@@ -1,17 +1,27 @@
 <?php
-declare(strict_types=1);
 
+declare(strict_types=1);
 
 use Yiisoft\FormModel\Field;
 use Yiisoft\Html\Html;
 use Yiisoft\Html\Tag\Form;
 
 /**
- * @see This form is inserted in resources\views\invoice\inv\modal_add_allowance_charge.php
+ * @var App\Invoice\InvAllowanceCharge\InvAllowanceChargeForm $form
+ * @var App\Widget\Button $button
+ * @var Yiisoft\Translator\TranslatorInterface $translator
+ * @var Yiisoft\Router\UrlGeneratorInterface $urlGenerator
+ * @var string $alert
+ * @var string $csrf
+ * @var string $actionName
+ * @var string $title
+ * @psalm-var array<string, Stringable|null|scalar> $actionArguments
+ * @psalm-var array<string,list<string>> $errors
+ * @psalm-var array<array-key, array<array-key, string>|string> $optionsDataAllowanceCharges
  */
 
 echo Form::tag()
-    ->post($urlGenerator->generate(...$action))
+    ->post($urlGenerator->generate($actionName, $actionArguments))
     ->enctypeMultipartFormData()
     ->csrf($csrf)
     ->id('InvAllowanceChargeForm')
@@ -26,8 +36,7 @@ echo Form::tag()
 <?= Html::openTag('h1',['class'=>'fw-normal h3 text-center']); ?>    
     <?= Html::encode($title) ?>
 <?= Html::closeTag('h1'); ?>
-
-<?= Html::openTag('div', ['id' => 'headerbar-modal-add-allowance-charge-form']); ?>
+<?= Html::openTag('div', ['id' => 'headerbar']); ?>
     <?= $button::back_save(); ?>
     <?= Html::openTag('div', ['id' => 'content']); ?>
         <?= Html::openTag('div', ['class' => 'row']); ?>
@@ -39,7 +48,7 @@ echo Form::tag()
                 ?>
                 <?php 
                     echo Field::select($form, 'allowance_charge_id')
-                    ->label($translator->translate('invoice.invoice.allowance.or.charge'),['control-label'])
+                    ->label($translator->translate('invoice.invoice.allowance.or.charge'))
                     ->optionsData($optionsDataAllowanceCharges)
                     ->hint($translator->translate('invoice.hint.this.field.is.required')); 
                 ?>
@@ -47,7 +56,7 @@ echo Form::tag()
             <?= Html::openTag('div'); ?>
                 <?= Html::openTag('div', ['class' => 'mb-3 form-group']); ?>
                     <?= Field::text($form, 'amount')
-                    ->label($translator->translate('invoice.invoice.allowance.or.charge.amount'), ['class' => 'form-label'])
+                    ->label($translator->translate('invoice.invoice.allowance.or.charge.amount'))
                     ->value(Html::encode($form->getAmount() ?? ''))
                     ->hint($translator->translate('invoice.hint.this.field.is.required')); 
                 ?>
@@ -56,11 +65,7 @@ echo Form::tag()
         <?= Html::closeTag('div'); ?>
     <?= Html::closeTag('div'); ?>
 <?= Html::closeTag('div'); ?>
-
 <?= Html::closeTag('div'); ?>
 <?= Html::closeTag('div'); ?>
 <?= Html::closeTag('div'); ?>
-<?= Html::closeTag('div'); ?>
-<?= Html::closeTag('div'); ?>
-
 <?= Form::tag()->close() ?>

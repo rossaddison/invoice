@@ -3,24 +3,20 @@
 declare(strict_types=1);
 
 use App\Asset\AppAsset;
-use App\User\User;
 use App\Widget\PerformanceMetrics;
-use Yiisoft\Assets\AssetManager;
 use Yiisoft\Html\Html;
 use Yiisoft\Html\Tag\Button;
 use Yiisoft\Html\Tag\Form;
-use Yiisoft\Router\CurrentRoute;
-use Yiisoft\Router\UrlGeneratorInterface;
-use Yiisoft\View\WebView;
 use Yiisoft\Yii\Bootstrap5\Nav;
 use Yiisoft\Yii\Bootstrap5\NavBar;
 
 /**
- * @var UrlGeneratorInterface $urlGenerator
- * @var CurrentRoute          $currentRoute
- * @var WebView               $this
- * @var AssetManager          $assetManager
- * @var string                $content
+ * @var Yiisoft\Assets\AssetManager $assetManager
+ * @var Yiisoft\Router\CurrentRoute $currentRoute 
+ * @var Yiisoft\Router\UrlGeneratorInterface $urlGenerator
+ * @var Yiisoft\Session\SessionInterface $session
+ * @var Yiisoft\Translator\TranslatorInterface $translator
+ * @var Yiisoft\View\WebView  $this
  *
  * @see ..\config\common\params.php 
  *         'yiisoft/yii-view' => [
@@ -28,9 +24,24 @@ use Yiisoft\Yii\Bootstrap5\NavBar;
  *              //'layout' => '@views/layout/main.php',  
  *              'layout' => '@views/layout/templates/soletrader/main.php'
  *          ],
- * @var User|null $user
- * @var string    $csrf
- * @var string    $brandLabel
+ * @var App\User\User|null $user
+ * @var bool $debugMode
+ * @var bool $stopLoggingIn
+ * @var bool $stopSigningUp
+ * @var string $content
+ * @var string $companyFaceBook
+ * @var string $companyLinkedIn
+ * @var string $companyLogoHeight
+ * @var string $companyLogoMargin
+ * @var string $companyLogoWidth
+ * @var string $companySlack
+ * @var string $companyTwitter
+ * @var string $companyWeb
+ * @var string $companyWhatsApp
+ * @var string $csrf
+ * @var string $brandLabel
+ * @var string $logoPath
+ * @var string $title
  */
 $assetManager->register(AppAsset::class);
 
@@ -71,11 +82,11 @@ $this->setTitle($title);
             ->brandUrl($urlGenerator->generate('site/index'))
             ->options(['class' => 'navbar navbar-light bg-light navbar-expand-sm text-white'])
             ->begin() ?>
-
-        <?= Nav::widget()
-            ->currentPath($currentRoute
-                ->getUri()
-                ->getPath())
+        <?php 
+            $currentPath = $currentRoute->getUri()?->getPath();
+        ?> 
+        <?= null!==$currentPath ? Nav::widget()
+            ->currentPath($currentPath)
             ->options(['class' => 'navbar-nav'])
             ->items(
                 [
@@ -249,13 +260,13 @@ $this->setTitle($title);
                             ->open()
                         . '<div class="mb-1">'
                         . Button::submit(
-                            $translator->translate('i.logout', ['login' => Html::encode($user->getLogin())])
+                            $translator->translate('i.logout', ['login' => Html::encode(null!==$user ? $user->getLogin() : '')])
                         )
                             ->class('btn btn-primary')
                         . '</div>'
                         . Form::tag()->close(),
                 ],
-            ) ?>
+            ) : ''; ?>
         <?= NavBar::end() ?>
     </header>
 

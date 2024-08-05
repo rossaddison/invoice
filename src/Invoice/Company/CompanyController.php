@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1); 
 
 namespace App\Invoice\Company;
@@ -58,15 +59,14 @@ final class CompanyController
      */
     public function index(CompanyRepository $companyRepository, SettingRepository $sR): \Yiisoft\DataResponse\DataResponse
     {      
-        $canEdit = $this->rbac();
+        $this->rbac();
         $companies = $this->companies($companyRepository);
         $paginator = (new OffsetPaginator($companies))
                          ->withPageSize((int)$sR->get_setting('default_list_limit'));
         $parameters = [
-         'canEdit' => $canEdit,
-         'paginator' => $paginator,   
-         'company_public' => $this->translator->translate('invoice.company.public'),   
-         'alert' => $this->alert(),         
+            'paginator' => $paginator,   
+            'company_public' => $this->translator->translate('invoice.company.public'),   
+            'alert' => $this->alert(),         
         ];
         return $this->viewRenderer->render('index', $parameters);
     }
@@ -84,7 +84,8 @@ final class CompanyController
         $form = new CompanyForm(new Company());
         $parameters = [
             'title' => $this->translator->translate('invoice.add'),
-            'action' => ['company/add'],
+            'actionName' => 'company/add',
+            'actionArguments' => [],
             'errors' => [],
             'form' => $form,
             'company_public' => $this->translator->translate('invoice.company.public'),
@@ -121,7 +122,8 @@ final class CompanyController
             $form = new CompanyForm($company);
             $parameters = [
                 'title' => $this->translator->translate('i.edit'),
-                'action' => ['company/edit', ['id' => $company->getId()]],
+                'actionName' => 'company/edit', 
+                'actionArgumens' => ['id' => $company->getId()],
                 'errors' => [],
                 'form' => $form,
                 'company_public' => $this->translator->translate('invoice.company.public'),
@@ -172,10 +174,9 @@ final class CompanyController
            $form = new CompanyForm($company);
             $parameters = [
                 'title' => $this->translator->translate('i.view'),
-                'action' => ['company/view', ['id' => $company->getId()]],
-                'form' => $form,
-                'errors' => [],    
-                'company' => $companyRepository->repoCompanyquery((string)$company->getId()),
+                'actionName' => 'company/view', 
+                'actionArgumens' => ['id' => $company->getId()],
+                'form' => $form
             ];
             return $this->viewRenderer->render('_view', $parameters);
         } else {

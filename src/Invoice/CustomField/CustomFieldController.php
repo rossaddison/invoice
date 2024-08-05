@@ -76,21 +76,13 @@ final class CustomFieldController
         ->withPageSize((int)$settingRepository->get_setting('default_list_limit'))
         ->withCurrentPage((int)$page)
         ->withToken(PageToken::next((string)$page));          
-        $canEdit = $this->rbac();
+        $this->rbac();
         $this->flash_message('info' , $this->viewRenderer->renderPartialAsString('//invoice/info/custom_field'));
         $parameters = [
             'page' => $page,
             'paginator' => $paginator, 
-            'canEdit' => $canEdit,
-            'grid_summary' => $settingRepository->grid_summary(
-                $paginator, 
-                $this->translator, 
-                (int)$settingRepository->get_setting('default_list_limit'), 
-                $this->translator->translate('i.custom_fields'
-            ), ''),
             'defaultPageSizeOffsetPaginator' => $settingRepository->get_setting('default_list_limit')
                                                   ? (int)$settingRepository->get_setting('default_list_limit') : 1,
-            'customfields' => $this->customfields($customfieldRepository),
             'custom_tables' => $this->custom_tables(),            
             'custom_value_fields' => $this->custom_value_fields(),
             'alert' => $this->alert(),
@@ -128,15 +120,16 @@ final class CustomFieldController
         $form = new CustomFieldForm($custom_field);
         $parameters = [
             'title' => $this->translator->translate('invoice.add'),
-            'action' => ['customfield/add'],
+            'actionName' => 'customfield/add',
+            'actionArguments' => [],
             'errors' => [],
             'form' => $form,
             'tables' => $this->custom_tables(),
-            'user_input_types'=>['NUMBER','TEXT','DATE','BOOLEAN'],
-            'custom_value_fields'=>['SINGLE-CHOICE','MULTIPLE-CHOICE'],
+            'user_input_types' => ['NUMBER','TEXT','DATE','BOOLEAN'],
+            'custom_value_fields' => ['SINGLE-CHOICE','MULTIPLE-CHOICE'],
             // Create an array for "moduled" ES6 jquery script. The script is "moduled" and therefore deferred by default to avoid
             // the $ undefined reference error in the DOM.
-            'positions'=>$this->positions($settingRepository)
+            'positions' => $this->positions($settingRepository)
         ];
         
         if ($request->getMethod() === Method::POST) {
@@ -172,7 +165,8 @@ final class CustomFieldController
             $form = new CustomFieldForm($custom_field);
             $parameters = [
                 'title' => $this->translator->translate('invoice.edit'),
-                'action' => ['customfield/edit', ['id' => $custom_field->getId()]],
+                'actionName' => 'customfield/edit', 
+                'actionArguments' => ['id' => $custom_field->getId()],
                 'errors' => [],
                 'form' => $form,
                 'tables' => $this->custom_tables(),
@@ -228,11 +222,11 @@ final class CustomFieldController
             $form = new CustomFieldForm($custom_field);
             $parameters = [
                 'title' => $this->translator->translate('i.view'),
-                'action' => ['customfield/edit', ['id' => $custom_field->getId()]],
+                'actionName' => 'customfield/edit', 
+                'actionArguments' => ['id' => $custom_field->getId()],
                 'errors' => [],
                 'form' => $form,
-                'custom_tables' => $this->custom_tables(),                   
-                'customfield' => $custom_field->getId(),
+                'custom_tables' => $this->custom_tables()
             ];
             return $this->viewRenderer->render('_view', $parameters);
         } else {

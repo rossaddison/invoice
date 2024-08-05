@@ -2,8 +2,7 @@
 
 declare(strict_types=1);
 
-use Yiisoft\Data\Paginator\OffsetPaginator;
-use Yiisoft\Translator\TranslatorInterface;
+use App\Invoice\Entity\InvSentLog;
 use Yiisoft\Html\Html;
 use Yiisoft\Html\Tag\A;
 use Yiisoft\Html\Tag\Div;
@@ -14,11 +13,19 @@ use Yiisoft\Yii\DataView\Column\DataColumn;
 use Yiisoft\Yii\DataView\GridView;
 
 /**
- * @var \App\Invoice\Entity\InvSentLog $invsentlog
- * @var \Yiisoft\Router\UrlGeneratorInterface $urlGenerator
- * @var TranslatorInterface $translator
- * @var OffsetPaginator $paginator
- * @var string $id
+ * @var App\Invoice\Entity\UserInv $userInv
+ * @var App\Invoice\Setting\SettingRepository $s
+ * @var App\Widget\GridComponents $gridComponents
+ * @var App\Widget\PageSizeLimiter $pageSizeLimiter 
+ * @var Yiisoft\Data\Paginator\OffsetPaginator $paginator
+ * @var Yiisoft\Router\CurrentRoute $currentRoute
+ * @var Yiisoft\Translator\TranslatorInterface $translator
+ * @var Yiisoft\Router\FastRoute\UrlGenerator $urlGenerator
+ * @var bool $viewInv
+ * @var int $defaultPageSizeOffsetPaginator
+ * @var string $alert
+ * @var string $csrf
+ * @psalm-var array<array-key, array<array-key, string>|string> $optionsDataGuestInvNumberDropDownFilter
  */
  
  echo $alert;
@@ -46,7 +53,7 @@ use Yiisoft\Yii\DataView\GridView;
       ->addAttributes(['type' => 'reset'])
       ->addClass('btn btn-danger me-1 ajax-loader')
       ->content(I::tag()->addClass('bi bi-bootstrap-reboot'))
-      ->href($urlGenerator->generate($currentRoute->getName()))
+      ->href($urlGenerator->generate($currentRoute->getName() ?? 'invsentlog/guest'))
       ->id('btn-reset')
       ->render();
 
@@ -56,15 +63,15 @@ use Yiisoft\Yii\DataView\GridView;
         new DataColumn(
             'id',
             header: $translator->translate('i.id'),
-            content: static fn($model) => $model->getId()
+            content: static fn(InvSentLog $model) => $model->getId()
         ),
         new DataColumn(
             field: 'inv_id',
             property: 'filterInvNumber',
             header: $translator->translate('invoice.invoice.number'),
-            content: static function ($model) use ($urlGenerator): string {
-                return Html::a($model->getInv()->getNumber().' 🔍', $urlGenerator->generate('inv/view', 
-                               ['id' => $model->getId()]), ['style' => 'text-decoration:none'])->render();
+            content: static function (InvSentLog $model) use ($urlGenerator): string {
+                return Html::a(($model->getInv()?->getNumber() ?? '#').' 🔍', $urlGenerator->generate('inv/view', 
+                    ['id' => $model->getId()]), ['style' => 'text-decoration:none'])->render();
             },    
             filter: $optionsDataGuestInvNumberDropDownFilter,
             withSorting: false            
@@ -72,23 +79,34 @@ use Yiisoft\Yii\DataView\GridView;
         new DataColumn(
             'inv_id',
             header: $translator->translate('i.setup_db_username_info'),
-            content: static fn($model) => $model->getInv()->getUser()->getLogin()
+            content: static fn(InvSentLog $model) => $model->getInv()?->getUser()->getLogin()
         ),
         new DataColumn(
             'client_id',
             header: $translator->translate('i.client'),
-            content: static fn($model): string => $model->getClient()->getClient_full_name()
+            content: static fn(InvSentLog $model): string => $model->getClient()?->getClient_full_name() ?? ''
         ),
         new DataColumn(
             'date_sent',
             header: $translator->translate('invoice.email.date'),
-            content: static fn($model): string => ($model->getDate_sent())->format('l, d-M-Y H:i:s T'),
+            content: static fn(InvSentLog $model): string => ($model->getDate_sent())->format('l, d-M-Y H:i:s T'),
         ),   
     ];
     
     echo '<br>';
+    $grid_summary = $s->grid_summary(
+        $paginator,
+        $translator,
+        $defaultPageSizeOffsetPaginator,
+        $translator->translate('invoice.email.logs'),
+        ''
+    );
+    $toolbarString = Form::tag()->post($urlGenerator->generate('invsentlog/guest'))->csrf($csrf)->open() .
+                     Div::tag()->addClass('float-end m-3')->content($toolbarReset)->encode(false)->render() .
+                     Form::tag()->close();
     echo GridView::widget()
       ->rowAttributes(['class' => 'align-middle'])
+      ->tableAttributes(['class' => 'table table-striped text-center h-10463', 'id' => 'table-invsentlog'])
       ->columns(...$columns)
       ->dataReader($paginator)
       ->headerRowAttributes(['class' => 'card-header bg-info text-black'])
@@ -99,12 +117,7 @@ use Yiisoft\Yii\DataView\GridView;
       )
       ->summaryAttributes(['class' => 'mt-3 me-3 summary text-end'])
       ->summaryTemplate(($viewInv ? 
-                           $pageSizeLimiter::buttonsGuest($userinv, $urlGenerator, $translator, 'invsentlog', $defaultPageSizeOffsetPaginator) : '').' '.
+                           $pageSizeLimiter::buttonsGuest($userInv, $urlGenerator, $translator, 'invsentlog', $defaultPageSizeOffsetPaginator) : '').' '.
                            $grid_summary)->emptyTextAttributes(['class' => 'card-header bg-warning text-black'])
-      ->emptyText((string) $translator->translate('invoice.invoice.no.records'))
-      ->tableAttributes(['class' => 'table table-striped text-center h-10463', 'id' => 'table-invsentlog'])
-      ->toolbar(
-        Form::tag()->post($urlGenerator->generate('invsentlog/guest'))->csrf($csrf)->open() .
-        Div::tag()->addClass('float-end m-3')->content($toolbarReset)->encode(false)->render() .
-        Form::tag()->close()
-    );
+      ->emptyText($translator->translate('invoice.invoice.no.records'))
+      ->toolbar($toolbarString);

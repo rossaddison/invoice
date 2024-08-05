@@ -3,7 +3,7 @@
 declare(strict_types=1);
 
 /**
- * @var \Yiisoft\Session\Flash\FlashInterface $flash
+ * @var string $alerts
  */
 
 echo $alerts;

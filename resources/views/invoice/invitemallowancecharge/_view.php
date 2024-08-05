@@ -2,18 +2,24 @@
 
 declare(strict_types=1); 
 
-
-
 use Yiisoft\FormModel\Field;
 use Yiisoft\Html\Html;
 use Yiisoft\Html\Tag\Form;
 
 /**
- * @var \Yiisoft\View\View $this
- * @var \Yiisoft\Router\UrlGeneratorInterface $urlGenerator
+ * @var App\Invoice\InvItemAllowanceCharge\InvItemAllowanceChargeForm $form
+ * @var App\Invoice\Setting\SettingRepository $s
+ * @var App\Widget\Button $button
+ * @var Yiisoft\Translator\TranslatorInterface $translator
+ * @var Yiisoft\Router\UrlGeneratorInterface $urlGenerator
+ * @var array $allowance_charges
+ * @var string $alert
  * @var string $csrf
- * @var string $action
+ * @var string $actionName
  * @var string $title
+ * @psalm-var array<string, Stringable|null|scalar> $actionArguments
+ * @psalm-var array<string,list<string>> $errors
+ * @psalm-var array<array-key, array<array-key, string>|string> $optionsDataAllowanceCharge
  */
 ?>
 
@@ -24,7 +30,7 @@ use Yiisoft\Html\Tag\Form;
 <?= Html::openTag('div',['class'=>'card-header']); ?>
 <?= Html::openTag('h1',['class'=>'fw-normal h3 text-center']); ?>
 <?= Form::tag()
-    ->post($urlGenerator->generate(...$action))
+    ->post($urlGenerator->generate($actionName, $actionArguments))
     ->enctypeMultipartFormData()
     ->csrf($csrf)
     ->id('InvItemAllowanceChargeForm')
@@ -42,20 +48,23 @@ use Yiisoft\Html\Tag\Form;
         <?= Html::openTag('div', ['class' => 'input-group']); ?>
             <?php 
                 $optionsDataAllowanceCharge = [];
+                /**
+                 * @var App\Invoice\Entity\AllowanceCharge $allowance_charge
+                 */
                 foreach ($allowance_charges as $allowance_charge) 
-                {
-                    $optionsDataAllowanceCharge[$allowance_charge->getId()] =
-                    ($allowance_charge->getIdentifier() 
-                    ? $translator->translate('invoice.invoice.allowance.or.charge.charge')
-                    : $translator->translate('invoice.invoice.allowance.or.charge.allowance')) 
-                    . ' ' . $allowance_charge->getReason()
-                    . ' ' . $allowance_charge->getReason_code()
-                    . ' '. $allowance_charge->getTaxRate()->getTax_rate_name()
-                    . ' ' . $translator->translate('invoice.invoice.allowance.or.charge.allowance');        
-                }
+            {
+                $optionsDataAllowanceCharge[$allowance_charge->getId()] =
+                ($allowance_charge->getIdentifier() 
+                ? $translator->translate('invoice.invoice.allowance.or.charge.charge')
+                : $translator->translate('invoice.invoice.allowance.or.charge.allowance')) 
+                . ' ' . ($allowance_charge->getReason())
+                . ' ' . ($allowance_charge->getReason_code())
+                . ' '. ($allowance_charge->getTaxRate()?->getTax_rate_name() ?? '')
+                . ' ' . ($translator->translate('invoice.invoice.allowance.or.charge.allowance'));        
+            }
             ?>
             <?= Field::select($form, 'allowance_charge_id')
-                ->label($translator->translate('invoice.invoice.allowance.or.charge.item'), [''])    
+                ->label($translator->translate('invoice.invoice.allowance.or.charge.item'))    
                 ->addInputAttributes([
                     'class' => 'form-control',
                     'readonly' => 'readonly',
@@ -72,12 +81,12 @@ use Yiisoft\Html\Tag\Form;
                     'readonly' => 'readonly',
                     'disabled' => 'disabled'
                 ])    
-                ->value($s->format_amount((float)($form->getAmount() ?? 0.00)));
+                ->value($s->format_amount($form->getAmount() ?? 0.00));
             ?>    
         <?= Html::closeTag('div'); ?>
     <?= Html::closeTag('div'); ?>
 <?= Html::closeTag('div'); ?>         
-<?= $button::back($translator); ?>
+<?= $button::back(); ?>
 <?= Form::tag()->close(); ?>
 <?= Html::closeTag('div'); ?>
 <?= Html::closeTag('div'); ?>

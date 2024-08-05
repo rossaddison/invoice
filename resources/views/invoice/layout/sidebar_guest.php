@@ -1,5 +1,12 @@
 <?php
-    declare(strict_types=1); 
+
+declare(strict_types=1); 
+
+/**
+ * @var Yiisoft\Translator\TranslatorInterface $translator
+ * @var Yiisoft\Router\UrlGeneratorInterface $urlGenerator
+ */
+
 ?>
 
 <div class="sidebar hidden-xs">

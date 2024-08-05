@@ -2,21 +2,28 @@
 
 declare(strict_types=1); 
 
-
 use Yiisoft\FormModel\Field;
 use Yiisoft\Html\Html;
 use Yiisoft\Html\Tag\Form;
 
 /**
- * @var \Yiisoft\View\View $this
- * @var \Yiisoft\Router\UrlGeneratorInterface $urlGenerator
+ * @see App\Invoice\DeliveryLocation\DeliveryLocationController function view
+ * @var App\Invoice\DeliveryLocation\DeliveryLocationForm $form
+ * @var App\Widget\Button $button
+ * @var Yiisoft\Translator\TranslatorInterface $translator
+ * @var Yiisoft\Router\UrlGeneratorInterface $urlGenerator
+ * @var array $actionQueryParameters
+ * @var array $electronic_address_scheme
+ * @var string $actionName
  * @var string $csrf
- * @var string $action
  * @var string $title
+ * @psalm-var array<string, Stringable|null|scalar> $actionArguments
+ * @psalm-var array<string,list<string>> $errors
+ * @psalm-var array<array-key, array<array-key, string>|string> $optionsDataEAS
  */
 ?>
 <?= Form::tag()
-    ->post($urlGenerator->generate(...$action))
+    ->post($urlGenerator->generate($actionName, $actionArguments))
     ->enctypeMultipartFormData()
     ->csrf($csrf)
     ->id('DeliveryLocationForm')
@@ -32,32 +39,32 @@ use Yiisoft\Html\Tag\Form;
     <?= Html::encode($title) ?>
 <?= Html::closeTag('h1'); ?>
 <?= Html::openTag('div', ['id' => 'headerbar']); ?>
-    <?= $button::back($translator); ?>
+    <?= $button::back(); ?>
     <?= Html::openTag('div', ['id' => 'content']); ?>
         <?= Html::openTag('div', ['class' => 'row']); ?>
             <?= Html::openTag('div'); ?>
-                <?= Field::datetime($form, 'date_created')
-                    ->label($translator->translate('invoice.common.date.created'), ['form-label'])
-                    ->value(Html::encode(($form->getDate_created())?->format($datehelper->style()) ?? ''))
+                <?= Field::text($form, 'date_created')
+                    ->label($translator->translate('invoice.common.date.created'))
+                    ->value(Html::encode(($form->getDate_created())->format('Y-m-d')))
                     ->addInputAttributes([
                         'placeholder' => $translator->translate('invoice.common.date.created'),
-                        'disabled' => 'disabled'
+                        'readonly' => 'readonly' 
                     ])
                 ?>
             <?= Html::closeTag('div'); ?>
             <?= Html::openTag('div'); ?>
-                <?= Field::datetime($form, 'date_modified')
-                    ->label($translator->translate('invoice.common.date.modified'), ['form-label'])
-                    ->value(Html::encode(($form->getDate_modified())?->format($datehelper->style()) ?? ''))
+                <?= Field::text($form, 'date_modified')
+                    ->label($translator->translate('invoice.common.date.modified'))
+                    ->value(Html::encode(($form->getDate_modified())->format('Y-m-d')))
                     ->addInputAttributes([
                         'placeholder' => $translator->translate('invoice.common.date.modified'),
-                        'disabled' => 'disabled'
+                        'readonly' => 'readonly'
                     ])
                 ?>
             <?= Html::closeTag('div'); ?>
             <?= Html::openTag('div'); ?>
                 <?= Field::text($form, 'name')
-                    ->label($translator->translate('i.name'), ['form-label'])
+                    ->label($translator->translate('i.name'))
                     ->addInputAttributes([
                         'placeholder' => $translator->translate('i.name'),
                         'disabled' => 'disabled'
@@ -67,71 +74,72 @@ use Yiisoft\Html\Tag\Form;
             <?= Html::closeTag('div'); ?>
             <?= Html::openTag('div'); ?>
                 <?= Field::text($form, 'building_number')
-                    ->label($translator->translate('invoice.delivery.location.building.number'), ['form-label'])
+                    ->label($translator->translate('invoice.delivery.location.building.number'))
                     ->addInputAttributes([
                         'placeholder' => $translator->translate('invoice.delivery.location.building.number'),
                         'disabled' => 'disabled'
                     ])
                     ->value(Html::encode($form->getBuildingNumber() ?? ''))
                 ?>
-            <?= Html::closeTag('div'); ?>
+            <?= Html::closeTag('div'); ?>    
             <?= Html::openTag('div'); ?>
                 <?= Field::text($form, 'address_1')
-                    ->label($translator->translate('i.street_address'), ['form-label'])
+                    ->label($translator->translate('i.street_address'))
                     ->addInputAttributes([
                         'placeholder' => $translator->translate('i.street_address'),
-                        'disabled' => 'disabled'
+                        'disabled' => 'disabled'    
                     ])
-                    ->value(Html::encode($form->getAddress_1() ?? ''))
+                    ->value(Html::encode($form->getAddress_1() ?? '')); 
                 ?>
             <?= Html::closeTag('div'); ?>
             <?= Html::openTag('div'); ?>
                 <?= Field::text($form, 'address_2')
-                    ->label($translator->translate('i.street_address_2'), ['form-label'])
+                    ->label($translator->translate('i.street_address_2'))
                     ->addInputAttributes([
                         'placeholder' => $translator->translate('i.street_address_2'),
+                        'disabled' => 'disabled',
                         'value' => Html::encode($form->getAddress_2() ?? ''),
-                    ]) 
-                    ->disabled(true)
+                    ]); 
                 ?>
             <?= Html::closeTag('div'); ?>
             <?= Html::openTag('div'); ?>
                 <?= Field::text($form, 'city')
-                    ->label($translator->translate('i.city'), ['form-label'])
+                    ->label($translator->translate('i.city'))
                     ->addInputAttributes([
                         'placeholder' => $translator->translate('i.city'),
+                        'disabled' => 'disabled',
                         'value' => Html::encode($form->getCity() ?? ''),
-                    ]) 
-                    ->disabled(true)
+                    ]); 
                 ?>
             <?= Html::closeTag('div'); ?>
             <?= Html::openTag('div'); ?>
                 <?= Field::text($form, 'state')
-                    ->label($translator->translate('i.state'), ['form-label'])
+                    ->label($translator->translate('i.state'))
                     ->addInputAttributes([
                         'placeholder' => $translator->translate('i.state'),
+                        'disabled' => 'disabled',
                         'value' => Html::encode($form->getState() ?? ''),
-                    ]) 
-                    ->disabled(true)
+                    ]); 
                 ?>
             <?= Html::closeTag('div'); ?>
             <?= Html::openTag('div'); ?>
                 <?= Field::text($form, 'zip')
-                    ->label($translator->translate('i.zip'), ['form-label'])
+                    ->label($translator->translate('i.zip'))
                     ->addInputAttributes([
                         'placeholder' => $translator->translate('i.zip'),
+                        'disabled' => 'disabled',
                         'value' => Html::encode($form->getZip() ?? ''),
-                    ])
-                    ->disabled(true)
+                    ]); 
                 ?>
             <?= Html::closeTag('div'); ?>
             <?= Html::openTag('div'); ?>
                 <?= Field::text($form, 'country')
-                    ->label($translator->translate('i.country'), ['form-label'])
+                    ->label($translator->translate('i.country'))
                     ->addInputAttributes([
                         'placeholder' => $translator->translate('i.country'),
-                    ]) 
-                    ->disabled(true)
+                        'disabled' => 'disabled'
+                    ])
+                    ->value(Html::encode($form->getCountry() ?? '')); 
                 ?>
             <?= Html::closeTag('div'); ?>
             <?= Html::openTag('div'); ?>
@@ -142,9 +150,9 @@ use Yiisoft\Html\Tag\Form;
                     ->label($translator->translate('invoice.delivery.location.global.location.number'))
                     ->addInputAttributes([
                         'placeholder' => $translator->translate('invoice.delivery.location.global.location.number'),
+                        'disabled' => 'disabled',
                         'value' => Html::encode($form->getGlobal_location_number() ?? ''),
-                    ]) 
-                    ->disabled(true)            
+                    ]); 
                 ?>
             <?= Html::closeTag('div'); ?>
             <?= Html::openTag('div'); ?>
@@ -157,14 +165,14 @@ use Yiisoft\Html\Tag\Form;
                      * @var array $value
                      */
                     foreach ($electronic_address_scheme as $key => $value) {
-                        $optionsDataEAS[$value['code']] = $value['code'] . str_repeat("-", 10) . $value['description'];
+                        $optionsDataEAS[(string)$value['code']] = (string)$value['code'] . str_repeat("-", 10) . (string)$value['description'];
                     } 
                 ?>
                 <?= Html::a('EAS','https://docs.peppol.eu/poacc/upgrade-3/codelist/eas'); ?>
-                <?= Field::select($form, 'electronic_address_scheme')
+                <?php Field::select($form, 'electronic_address_scheme')
                     ->label($translator->translate('invoice.delivery.location.electronic.address.scheme'))
                     ->optionsData($optionsDataEAS)
-                    ->disabled(true)    
+                    ->disabled(true);
                 ?>
             <?= Html::closeTag('div'); ?>
         <?= Html::closeTag('div'); ?>

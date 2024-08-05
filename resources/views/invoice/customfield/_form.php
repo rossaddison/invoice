@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1); 
 
 use Yiisoft\FormModel\Field;
@@ -6,15 +7,25 @@ use Yiisoft\Html\Html;
 use Yiisoft\Html\Tag\Form;
 
 /**
- * @var \Yiisoft\View\View $this
- * @var \Yiisoft\Router\UrlGeneratorInterface $urlGenerator
+ * @var App\Invoice\CustomField\CustomFieldForm $form
+ * @var App\Widget\Button $button
+ * @var Yiisoft\Translator\TranslatorInterface $translator 
+ * @var Yiisoft\Router\UrlGeneratorInterface $urlGenerator
+ * @var array $custom_value_fields
+ * @var array $user_input_types
+ * @var string $actionName
  * @var string $csrf
+ * @var string $positions
+ * @var string $title
+ * @psalm-var array<string, Stringable|null|scalar> $actionArguments
+ * @psalm-var array<string,list<string>> $errors
+ * @psalm-var array<array-key, array<array-key, string>|string> $tables
  */
 ?>
 
 <?=
     Form::tag()
-    ->post($urlGenerator->generate(...$action))
+    ->post($urlGenerator->generate($actionName, $actionArguments))
     ->enctypeMultipartFormData()
     ->csrf($csrf)
     ->id('CustomFieldForm')
@@ -63,9 +74,9 @@ use Yiisoft\Html\Tag\Form;
 
             <?= Html::openTag('div',['class' => 'form-group']); ?>
                 <?= Field::text($form, 'label')
-                    ->label($translator->translate('i.label'), ['class' => 'form-label'])
+                    ->label($translator->translate('i.label'))
                     ->addInputAttributes([
-                        'placeholder' => $translator->translate('i.label') ?? 'Label',
+                        'placeholder' => $translator->translate('i.label'),
                         'class' => 'form-control',
                         'id' => 'label',
                     ])
@@ -77,14 +88,17 @@ use Yiisoft\Html\Tag\Form;
                 $arrays = [$user_input_types, $custom_value_fields];
                 $types = array_merge(...$arrays);
                 $optionsDataType = [];
+                /**
+                 * @var string $type
+                 */
                 foreach ($types as $type) { 
                         $alpha = str_replace("-", "_", strtolower($type)); 
-                        $optionsDataType[$type] = (null!==($translator->translate('i.'.$alpha)) ? $translator->translate('i.'.$alpha) : $translator->translate('invoice.custom.field.number'));
+                        $optionsDataType[$type] = ($translator->translate('i.'.$alpha));
                 }        
             ?>    
             <?= Html::openTag('div',['class' => 'form-group']); ?>
                 <?= Field::select($form, 'type')
-                        ->label($translator->translate('i.type') , ['class' => 'form-label'])
+                        ->label($translator->translate('i.type'))
                         ->addInputAttributes([
                             'placeholder' => $translator->translate('i.type'),
                             'class' => 'form-control',

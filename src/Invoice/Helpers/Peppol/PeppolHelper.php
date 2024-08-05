@@ -89,6 +89,7 @@ use \DateTime;
 Class PeppolHelper {
 
   private SRepo $s;
+  private DelRepo $delRepo;
   private IIAR $iiaR;
   private InvAmount $inv_amount;
   private DL $delivery_location;
@@ -101,6 +102,7 @@ Class PeppolHelper {
 
   public function __construct(
     SRepo $s,
+    DelRepo $delRepo,      
     IIAR $iiaR,
     InvAmount $inv_amount,
     DL $delivery_location,
@@ -111,6 +113,7 @@ Class PeppolHelper {
     string $to_from_manual_input,
   ) {
     $this->s = $s;
+    $this->delRepo = $delRepo;
     $this->iiaR = $iiaR;
     $this->inv_amount = $inv_amount;
     // client's delivery location
@@ -126,7 +129,6 @@ Class PeppolHelper {
   }
 
   /**
-   *
    * @param SRepo $sR
    * @return Aliases
    */
@@ -1765,7 +1767,7 @@ Class PeppolHelper {
       $description_code = '';
     }
     // if the invoice has a delivery period use the delivery period's begin and end date
-    $start_end_array = $datehelper->invoice_period_start_end($invoice, $input_date);
+    $start_end_array = $datehelper->invoice_period_start_end($invoice, $input_date, $this->delRepo);
     $startDate = (string) $start_end_array['StartDate'];
     $endDate = (string) $start_end_array['EndDate'];
     return new InvoicePeriod($startDate, $endDate, $description_code);

@@ -1,9 +1,29 @@
 <?php
+
 declare(strict_types=1);
 
-use App\Invoice\Helpers\DateHelper;
-use App\Invoice\Entity\Sumex;
 use Yiisoft\Html\Html;
+
+/**
+ * @see App\Invoice\Helpers\PdfHelper function generate_inv_html 
+ * 
+ * @var App\Invoice\Entity\InvAmount $inv_amount
+ * @var App\Invoice\Entity\Inv $inv
+ * @var App\Invoice\Entity\InvTaxRate $inv_tax_rate
+ * @var App\Invoice\Entity\Sumex|null $sumex
+ * @var App\Invoice\Helpers\CountryHelper $countryHelper
+ * @var App\Invoice\Helpers\DateHelper $dateHelper
+ * @var App\Invoice\InvItemAmount\InvItemAmountRepository $iiaR
+ * @var App\Invoice\Setting\SettingRepository $s
+ * @var Yiisoft\Router\UrlGeneratorInterface $urlGenerator
+ * @var Yiisoft\Translator\TranslatorInterface $translator
+ * @var array $items
+ * @var bool $show_custom_fields            show both top_custom_fields and view_custom_fields
+ * @var bool $show_item_discounts
+ * @var string $company_logo_and_address    setting/company_logo_and_address.php
+ * @var string $top_custom_fields           appear at the top of quote.pdf
+ * @var string $view_custom_fields          appear at the bottom of quote.pdf
+ */
 
 $vat = $s->get_setting('enable_vat_registration');
 ?>
@@ -20,40 +40,43 @@ $vat = $s->get_setting('enable_vat_registration');
     <?= $company_logo_and_address; ?>    
     <div id="client">
         <div>
-            <b><?= Html::encode($inv->getClient()->getClient_name()); ?></b>
+            <b><?= Html::encode($inv->getClient()?->getClient_name()); ?></b>
         </div>
-        <?php if ($inv->getClient()->getClient_vat_id()) {
-            echo '<div>' .$translator->translate('invoice.invoice.vat.reg.no') . ': ' . $inv->getClient()->getClient_vat_id() . '</div>';
+        <?php if (strlen($clientVatId = $inv->getClient()?->getClient_vat_id() ?? '') > 0) {
+            echo '<div>' .$translator->translate('invoice.invoice.vat.reg.no') 
+                         .': ' 
+                         . $clientVatId 
+                         . '</div>';
         }
-        if ($inv->getClient()->getClient_tax_code()) {
-            echo '<div>' .$translator->translate('i.tax_code_short') . ': ' . $inv->getClient()->getClient_tax_code() . '</div>';
+        if (strlen($clientTaxCode = $inv->getClient()?->getClient_tax_code() ?? '') > 0) {
+            echo '<div>' .$translator->translate('i.tax_code_short') . ': ' . $clientTaxCode . '</div>';
         }
-        echo '<div>' . Html::encode($inv->getClient()->getClient_address_1() ?: $translator->translate('i.street_address')) . '</div>';        
-        echo '<div>' . Html::encode($inv->getClient()->getClient_address_2() ?: $translator->translate('i.street_address_2')) . '</div>';        
-        if ($inv->getClient()->getClient_city() || $inv->getClient()->getClient_state() || $inv->getClient()->getClient_zip()) {
+        echo '<div>' . Html::encode(strlen($inv->getClient()?->getClient_address_1() ?? '') > 0 ?: $translator->translate('i.street_address')) . '</div>';        
+        echo '<div>' . Html::encode(strlen($inv->getClient()?->getClient_address_2() ?? '') > 0 ?: $translator->translate('i.street_address_2')) . '</div>';        
+        if (strlen($inv->getClient()?->getClient_city() ?? '') > 0 || strlen($inv->getClient()?->getClient_state() ?? '') > 0 || strlen($inv->getClient()?->getClient_zip() ?? '') > 0) {
             echo '<div>';
-            if ($inv->getClient()->getClient_city()) {
-                echo Html::encode($inv->getClient()->getClient_city()) . ' ';
+            if (strlen($inv->getClient()?->getClient_city() ?? '') > 0) {
+                echo Html::encode($inv->getClient()?->getClient_city()) . ' ';
             }
-            if ($inv->getClient()->getClient_state()) {
-                echo Html::encode($inv->getClient()->getClient_state()) . ' ';
+            if (strlen($inv->getClient()?->getClient_state() ?? '') > 0) {
+                echo Html::encode($inv->getClient()?->getClient_state()) . ' ';
             }
-            if ($inv->getClient()->getClient_zip()) {
-                echo Html::encode($inv->getClient()->getClient_zip());
+            if (strlen($inv->getClient()?->getClient_zip() ?? '') > 0) {
+                echo Html::encode($inv->getClient()?->getClient_zip());
             }
             echo '</div>';
         }
-        if ($inv->getClient()->getClient_state()) {
-            echo '<div>' . Html::encode($inv->getClient()->getClient_state()) . '</div>';
+        if (strlen($inv->getClient()?->getClient_state() ?? '') > 0) {
+            echo '<div>' . Html::encode($inv->getClient()?->getClient_state()) . '</div>';
         }
-        if ($inv->getClient()->getClient_country()) {
-            echo '<div>' . $countryhelper->get_country_name($translator->translate('i.cldr'), $inv->getClient()->getClient_country()) . '</div>';
+        if (strlen($clientCountry = $inv->getClient()?->getClient_country() ?? '') > 0) {
+            echo '<div>' . $countryHelper->get_country_name($translator->translate('i.cldr'), $clientCountry) . '</div>';
         }
 
         echo '<br/>';
 
-        if ($inv->getClient()->getClient_phone()) {
-            echo '<div>' .$translator->translate('i.phone_abbr') . ': ' . Html::encode($inv->getClient()->getClient_phone()) . '</div>';
+        if (strlen($inv->getClient()?->getClient_phone() ?? '') > 0) {
+            echo '<div>' .$translator->translate('i.phone_abbr') . ': ' . Html::encode($inv->getClient()?->getClient_phone()) . '</div>';
         } ?>
 
     </div>
@@ -63,53 +86,27 @@ $vat = $s->get_setting('enable_vat_registration');
         <table>
             <tr>
                 <td><?php echo $translator->translate('invoice.invoice.date.issued') . ':'; ?></td>
-                    <?php
-                        $date = $inv->getDate_created();
-                        if ($date && $date != "0000-00-00") {
-                            //use the DateHelper
-                            $datehelper = new DateHelper($s);
-                            $date = $datehelper->date_from_mysql($date);
-                        } else {
-                            $date = null;
-                        }
-                    ?> 
-                <td><?php echo Html::encode($date); ?></td>
+                     
+                <td><?php echo Html::encode(!is_string($dateCreated = $inv->getDate_created()) ? 
+                                                       $dateCreated->format($dateHelper->style()) : ''); ?></td>
             </tr>
             <?php if ($vat === '1') { ?>
             <tr>
                 <td><?php echo $translator->translate('invoice.invoice.date.supplied') . ':'; ?></td>
-                    <?php
-                        $date_sp = $inv->getDate_supplied();
-                        if ($date_sp && $date_sp != "0000-00-00") {
-                            //use the DateHelper
-                            $datehelper = new DateHelper($s);
-                            $date = $datehelper->date_from_mysql($date_sp);
-                        } else {
-                            $date = null;
-                        }
-                    ?> 
-                <td><?php echo Html::encode($date); ?></td>
+                <td><?php echo Html::encode(!is_string($dateSupplied = $inv->getDate_supplied()) ? 
+                                                       $dateSupplied->format($dateHelper->style()) : ''); ?></td>
             </tr>
             <?php } ?>
             <tr>
                 <td><?php echo $translator->translate('i.expires') . ': '; ?></td>
-                <?php
-                        $date_due = $inv->getDate_due();
-                        if ($date_due && $date_due != "0000-00-00") {
-                            //use the DateHelper
-                            $datehelper = new DateHelper($s);
-                            $date_due_next = $datehelper->date_from_mysql($date_due);
-                        } else {
-                            $date_due_next = null;
-                        }
-                    ?> 
-                <td><?php echo Html::encode($date_due_next); ?></td>
+                <td><?php echo Html::encode(!is_string($dateDueNext = $inv->getDate_due()) ? 
+                                                       $dateDueNext->format($dateHelper->style()) : ''); ?></td>
             </tr>
             <tr><?= $show_custom_fields ? $top_custom_fields : ''; ?></tr>    
         </table>
     </div>
 
-    <h3 class="invoice-title"><b><?= $vat === '0' ? Html::encode($translator->translate('i.invoice') . ' ' . $inv->getNumber()) : ''; ?></b></h3>
+    <h3 class="invoice-title"><b><?= $vat === '0' ? Html::encode($translator->translate('i.invoice') . ' ' . ($inv->getNumber() ?? '#')) : ''; ?></b></h3>
 
     <table class="items table-primary table table-borderless no-margin">
         <thead style="display: none">
@@ -134,7 +131,10 @@ $vat = $s->get_setting('enable_vat_registration');
         <tbody>
 
         <?php
-        if (null!==$items) {
+        if ($items) {
+        /**
+         * @var App\Invoice\Entity\InvItem $item
+         */    
         foreach ($items as $item) { 
             $inv_item_amount = $iiaR->repoInvItemAmountquery((string)$item->getId());
             ?>
@@ -143,7 +143,7 @@ $vat = $s->get_setting('enable_vat_registration');
                 <td><?php echo nl2br(Html::encode($item->getDescription())); ?></td>
                 <td class="text-right">
                     <?php echo Html::encode($s->format_amount($item->getQuantity())); ?>
-                    <?php if ($item->getProduct_unit()) : ?>
+                    <?php if (strlen($item->getProduct_unit() ?? '') > 0) : ?>
                         <br>
                         <small><?= Html::encode($item->getProduct_unit()); ?></small>
                     <?php endif; ?>
@@ -204,10 +204,16 @@ $vat = $s->get_setting('enable_vat_registration');
         <?php } ?>
             
         <?php if (!empty($inv_tax_rates) && ($vat === '0')) { ?>    
-        <?php  foreach ($inv_tax_rates as $inv_tax_rate) : ?>
+        <?php
+            /**
+             * @var App\Invoice\Entity\InvTaxRate $inv_tax_rate
+             */
+            foreach ($inv_tax_rates as $inv_tax_rate) : ?>
             <tr>
                 <td <?php echo ($show_item_discounts ? 'colspan="7"' : 'colspan="6"'); ?> class="text-right">
-                    <?php echo Html::encode($inv_tax_rate->getTaxRate()->getTax_rate_name()) . ' (' . Html::encode($s->format_amount($inv_tax_rate->getTaxRate()->getTax_rate_percent())) . '%)'; ?>
+                    <?php echo Html::encode($inv_tax_rate->getTaxRate()?->getTax_rate_name()) . 
+                               ' (' . 
+                               Html::encode($s->format_amount($inv_tax_rate->getTaxRate()?->getTax_rate_percent())) . '%)'; ?>
                 </td>
                 <td class="text-right">
                     <?php echo Html::encode($s->format_currency($inv_tax_rate->getInv_tax_rate_amount())); ?>
@@ -258,41 +264,39 @@ $vat = $s->get_setting('enable_vat_registration');
     <br>
     <?php } ?>
     <div>
-    <?php if ($show_custom_fields) {        
-        echo $view_custom_fields; 
-    } ?>
+    <?= $show_custom_fields ? $view_custom_fields : ''; ?>
     </div>    
-    <?php if (($s->get_setting('sumex') == '1') && ($sumex instanceof Sumex)) { ?>
+    <?php if ($s->get_setting('sumex') == '1') { ?>
     <div>
         <?php            
             $reason = ['disease','accident','maternity','prevention','birthdefect','unknown']; 
         ?>
         <b><?= Html::encode($translator->translate('i.reason')); ?></b><br>
-        <p><?= Html::encode($translator->translate('i.reason_'.(string)$reason[$sumex->getReason() ?: 5])); ?></p>       
+        <p><?= Html::encode($translator->translate('i.reason_'. $reason[is_int($sumexReason = $sumex?->getReason()) ? $sumexReason : 5])); ?></p>       
     </div>
     <div>            
         <b><?= Html::encode($translator->translate('i.sumex_observations')); ?></b><br>
-        <p><?= $sumex->getObservations() ?: ''; ?></p>
+        <p><?= $sumex?->getObservations() ?? ''; ?></p>
     </div>    
     <div>            
         <b><?= Html::encode($translator->translate('i.invoice_sumex_diagnosis')); ?></b><br>
-        <p><?= $sumex->getDiagnosis() ?: ''; ?></p>
+        <p><?= $sumex?->getDiagnosis() ?? ''; ?></p>
     </div>
     <div>            
         <b><?= Html::encode($translator->translate('i.case_date')); ?></b><br>
-        <p><?= $sumex->getCasedate()->format($datehelper->style()) ?: ''; ?></p>
+        <p><?= !is_string($caseDate = $sumex?->getCasedate()) ? $caseDate?->format($dateHelper->style()) : ''; ?></p>
     </div>
     <div>            
         <b><?= Html::encode($translator->translate('i.case_number')); ?></b><br>
-        <p><?= $sumex->getCasenumber() ?: ''; ?></p>
+        <p><?= strlen($sumex?->getCasenumber() ?? '') > 0 ? $sumex?->getCaseNumber(): ''; ?></p>
     </div>
     <div>
         <b><?= Html::encode($translator->translate('i.treatment_start')); ?></b><br>
-        <p><?= $sumex->getTreatmentstart()->format($datehelper->style()) ?: ''; ?></p>
+        <p><?= !is_string($treatmentStart = $sumex?->getTreatmentstart()) ? $treatmentStart?->format($dateHelper->style()) : ''; ?></p>
     </div> 
     <div>    
         <b><?= Html::encode($translator->translate('i.treatment_end')); ?></b><br>
-        <p><?= $sumex->getTreatmentend()->format($datehelper->style()) ?: ''; ?></p>
+        <p><?= !is_string($treatmentEnd = $sumex?->getTreatmentend()) ? $treatmentEnd?->format($dateHelper->style()) : ''; ?></p>
     </div>
     <?php } ?>
 </footer>

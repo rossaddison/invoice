@@ -4,8 +4,7 @@ declare(strict_types=1);
 namespace App\Invoice\ClientNote;
 
 use App\Invoice\Entity\ClientNote;
-use App\Invoice\Setting\SettingRepository;
-
+use DateTime;
 
 final class ClientNoteService
 {
@@ -25,7 +24,12 @@ final class ClientNoteService
         * @var string $array['date_note']
         */
        $date = $array['date_note'] ?? '';
-       $model->setDate_note($datetime::createFromFormat('Y-m-d', $date));
+       /**
+        * @see https://www.php.net/manual/en/datetime.createfromformat
+        * @var bool|DateTime $result
+        */
+       $result = $datetime::createFromFormat('Y-m-d', $date);
+       $model->setDate_note(!is_bool($result) ? $result : $datetime);
        
        isset($array['note']) ? $model->setNote((string)$array['note']) : '';
        $this->repository->save($model);
@@ -49,7 +53,12 @@ final class ClientNoteService
         * @var string $array['date_note']
         */
        $date = $array['date_note'] ?? '';
-       $model->setDate_note($datetime::createFromFormat('Y-m-d' , $date));
+       /**
+        * @see https://www.php.net/manual/en/datetime.createfromformat
+        * @var bool|DateTime $result
+        */
+       $result = $datetime::createFromFormat('Y-m-d', $date);
+       $model->setDate_note(!is_bool($result) ? $result : $datetime);
        
        isset($array['note']) ? $model->setNote((string)$array['note']) : '';
        $this->repository->save($model);

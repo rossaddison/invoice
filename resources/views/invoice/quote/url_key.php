@@ -3,8 +3,9 @@
 declare(strict_types=1);
 
 /**
- * @see quote/url_key controller/function and search for 'render'=>
- * @var string $render
+ * @see views/invoice/template/quote/public/Quote_Web or a custom designed quote.
+ * @see quote/url_key controller/function and search for 'renderTemplate'=>
+ * @var string $renderTemplate
  */
 
-echo $render; 
+echo $renderTemplate; 

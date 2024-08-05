@@ -120,7 +120,7 @@ $vat = $s->get_setting('enable_vat_registration') === '1' ? true : false;
                                         $taxRatePercentNumber = $numberHelper->format_amount($taxRatePercent);
                                         $taxRateName = $taxRate->getTax_rate_name();
                                         // Only build the drop down item if all values are present
-                                        if (null!==$taxRatePercentNumber && null!==$taxRateName) {
+                                        if (null!==$taxRatePercentNumber && null!==$taxRateName && null!==$taxRateId) {
                                             $optionsDataTaxRate[$taxRateId] =  $taxRatePercentNumber. '% - ' . $taxRateName;
                                         }
                                     }

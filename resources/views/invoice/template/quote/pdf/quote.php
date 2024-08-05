@@ -1,8 +1,29 @@
 <?php
+
 declare(strict_types=1);
 
-use App\Invoice\Helpers\DateHelper;
 use Yiisoft\Html\Html;
+
+/**
+ * @see App\Invoice\Helpers\PdfHelper function generate_quote_pdf 
+ * 
+ * @var App\Invoice\Entity\QuoteAmount $quote_amount
+ * @var App\Invoice\Entity\Quote $quote
+ * @var App\Invoice\Entity\QuoteTaxRate $quote_tax_rate
+ * @var App\Invoice\Helpers\CountryHelper $countryHelper
+ * @var App\Invoice\Helpers\DateHelper $dateHelper
+ * @var App\Invoice\QuoteItemAmount\QuoteItemAmountRepository $qiaR
+ * @var App\Invoice\Setting\SettingRepository $s
+ * @var Yiisoft\Router\UrlGeneratorInterface $urlGenerator
+ * @var Yiisoft\Translator\TranslatorInterface $translator
+ * @var array $items
+ * @var bool $show_custom_fields            show both top_custom_fields and view_custom_fields
+ * @var bool $show_item_discounts
+ * @var string $company_logo_and_address    setting/company_logo_and_address.php
+ * 
+ * @var string $top_custom_fields           appear at the top of quote.pdf
+ * @var string $view_custom_fields          appear at the bottom of quote.pdf
+ */
 
 $vat = $s->get_setting('enable_vat_registration');
 ?>
@@ -19,44 +40,43 @@ $vat = $s->get_setting('enable_vat_registration');
     <?= $company_logo_and_address; ?>
     <div id="client">
         <div>
-            <b><?= Html::encode($quote->getClient()->getClient_name()); ?></b>
+            <b><?= Html::encode($quote->getClient()?->getClient_name()); ?></b>
         </div>
-        <?php if ($quote->getClient()->getClient_vat_id()) {
-            echo '<div>' .$translator->translate('i.vat_id_short') . ': ' . $quote->getClient()->getClient_vat_id() . '</div>';
+        <?php if (strlen($clientVatId = $quote->getClient()?->getClient_vat_id() ?? '') > 0) {
+            echo '<div>' .$translator->translate('invoice.invoice.vat.reg.no') 
+                         .': ' 
+                         . $clientVatId 
+                         . '</div>';
         }
-        if ($quote->getClient()->getClient_tax_code()) {
-            echo '<div>' .$translator->translate('i.tax_code_short') . ': ' . $quote->getClient()->getClient_tax_code() . '</div>';
+        if (strlen($clientTaxCode = $quote->getClient()?->getClient_tax_code() ?? '') > 0) {
+            echo '<div>' .$translator->translate('i.tax_code_short') . ': ' . $clientTaxCode . '</div>';
         }
-        if ($quote->getClient()->getClient_address_1()) {
-            echo '<div>' . Html::encode($quote->getClient()->getClient_address_1()) . '</div>';
-        }
-        if ($quote->getClient()->getClient_address_2()) {
-            echo '<div>' . Html::encode($quote->getClient()->getClient_address_2()) . '</div>';
-        }
-        if ($quote->getClient()->getClient_city() || $quote->getClient()->getClient_state() || $quote->getClient()->getClient_zip()) {
+        echo '<div>' . Html::encode(strlen($quote->getClient()?->getClient_address_1() ?? '') > 0 ?: $translator->translate('i.street_address')) . '</div>';        
+        echo '<div>' . Html::encode(strlen($quote->getClient()?->getClient_address_2() ?? '') > 0 ?: $translator->translate('i.street_address_2')) . '</div>';        
+        if (strlen($quote->getClient()?->getClient_city() ?? '') > 0 || strlen($quote->getClient()?->getClient_state() ?? '') > 0 || strlen($quote->getClient()?->getClient_zip() ?? '') > 0) {
             echo '<div>';
-            if ($quote->getClient()->getClient_city()) {
-                echo Html::encode($quote->getClient()->getClient_city()) . ' ';
+            if (strlen($quote->getClient()?->getClient_city() ?? '') > 0) {
+                echo Html::encode($quote->getClient()?->getClient_city()) . ' ';
             }
-            if ($quote->getClient()->getClient_state()) {
-                echo Html::encode($quote->getClient()->getClient_state()) . ' ';
+            if (strlen($quote->getClient()?->getClient_state() ?? '') > 0) {
+                echo Html::encode($quote->getClient()?->getClient_state()) . ' ';
             }
-            if ($quote->getClient()->getClient_zip()) {
-                echo Html::encode($quote->getClient()->getClient_zip());
+            if (strlen($quote->getClient()?->getClient_zip() ?? '') > 0) {
+                echo Html::encode($quote->getClient()?->getClient_zip());
             }
             echo '</div>';
         }
-        if ($quote->getClient()->getClient_state()) {
-            echo '<div>' . Html::encode($quote->getClient()->getClient_state()) . '</div>';
+        if (strlen($quote->getClient()?->getClient_state() ?? '') > 0) {
+            echo '<div>' . Html::encode($quote->getClient()?->getClient_state()) . '</div>';
         }
-        if ($quote->getClient()->getClient_country()) {
-            echo '<div>' . $countryhelper->get_country_name($translator->translate('i.cldr'), $quote->getClient()->getClient_country()) . '</div>';
+        if (strlen($clientCountry = $quote->getClient()?->getClient_country() ?? '') > 0) {
+            echo '<div>' . $countryHelper->get_country_name($translator->translate('i.cldr'), $clientCountry) . '</div>';
         }
 
         echo '<br/>';
 
-        if ($quote->getClient()->getClient_phone()) {
-            echo '<div>' .$translator->translate('i.phone_abbr') . ': ' . Html::encode($quote->getClient()->getClient_phone()) . '</div>';
+        if (strlen($clientPhone = $quote->getClient()?->getClient_phone() ?? '') > 0) {
+            echo '<div>' .$translator->translate('i.phone_abbr') . ': ' . Html::encode($clientPhone) . '</div>';
         } ?>
 
     </div>
@@ -67,38 +87,21 @@ $vat = $s->get_setting('enable_vat_registration');
             <tr>
                 <!-- date issued -->
                 <td><?php echo $translator->translate('invoice.invoice.date.issued') . ':'; ?></td>
-                    <?php
-                        $date = $client->getClient_date_created();
-                        if ($date && $date != "0000-00-00") {
-                            //use the DateHelper
-                            $datehelper = new DateHelper($s);
-                            $date = $datehelper->date_from_mysql($date);
-                        } else {
-                            $date = null;
-                        }
-                    ?> 
-                <td><?php echo Html::encode($date); ?></td>
+                <td><?php echo Html::encode(!is_string($dateCreated = $quote->getDate_created()) ? 
+                                                       $dateCreated->format($dateHelper->style()) : ''); ?></td>
             </tr>
             <tr>
                 <td><?php echo $translator->translate('i.expires') . ': '; ?></td>
-                <?php
-                        $date_expires = $quote->getDate_expires();
-                        if ($date_expires && $date_expires != "0000-00-00") {
-                            //use the DateHelper
-                            $datehelper = new DateHelper($s);
-                            $date_expired = $datehelper->date_from_mysql($date_expires);
-                        } else {
-                            $date_expired = null;
-                        }
-                    ?> 
-                <td><?php echo Html::encode($date_expired); ?></td>
+                <td>
+                    <?= $quote->getDate_expires()->format($dateHelper->style()); ?>
+                </td>
             </tr>
             <tr><?= $show_custom_fields ? $top_custom_fields : ''; ?></tr>    
             }
         </table>
     </div>
 
-    <h3 class="invoice-title"><b><?php echo Html::encode($translator->translate('i.quote') . ' ' . $quote->getNumber()); ?></b></h3>
+    <h3 class="invoice-title"><b><?php echo Html::encode($translator->translate('i.quote') . ' ' . ($quote->getNumber() ?? '')); ?></b></h3>
 
     <table class="items table-primary table table-borderless no-margin">
         <thead style="display: none">
@@ -122,7 +125,10 @@ $vat = $s->get_setting('enable_vat_registration');
         <tbody>
 
         <?php
-        if (null!==$items) {
+        if ($items) {
+        /**
+         * @var App\Invoice\Entity\InvItem $item
+         */    
         foreach ($items as $item) { 
             $quote_item_amount = $qiaR->repoQuoteItemAmountquery((int)$item->getId());
             ?>
@@ -131,7 +137,7 @@ $vat = $s->get_setting('enable_vat_registration');
                 <td><?php echo nl2br(Html::encode($item->getDescription())); ?></td>
                 <td class="text-right">
                     <?php echo Html::encode($s->format_amount($item->getQuantity())); ?>
-                    <?php if ($item->getProduct_unit()) : ?>
+                    <?php if (strlen($item->getProduct_unit() ?? '') > 0) : ?>
                         <br>
                         <small><?= Html::encode($item->getProduct_unit()); ?></small>
                     <?php endif; ?>
@@ -192,10 +198,14 @@ $vat = $s->get_setting('enable_vat_registration');
 
             
         <?php if (!empty($quote_tax_rates) && ($vat === '0')) { ?>    
-        <?php  foreach ($quote_tax_rates as $quote_tax_rate) : ?>
+        <?php
+            /**
+             * @var App\Invoice\Entity\QuoteTaxRate $quote_tax_rate
+             */
+            foreach ($quote_tax_rates as $quote_tax_rate) : ?>
             <tr>
                 <td <?php echo ($show_item_discounts ? 'colspan="7"' : 'colspan="6"'); ?> class="text-right">
-                    <?php echo Html::encode($quote_tax_rate->getTaxRate()->getTax_rate_name()) . ' (' . Html::encode($s->format_amount($quote_tax_rate->getTaxRate()->getTax_rate_percent())) . '%)'; ?>
+                    <?php echo Html::encode($quote_tax_rate->getTaxRate()?->getTax_rate_name()) . ' (' . Html::encode($s->format_amount($quote_tax_rate->getTaxRate()?->getTax_rate_percent())) . '%)'; ?>
                 </td>
                 <td class="text-right">
                     <?php echo Html::encode($s->format_currency($quote_tax_rate->getQuote_tax_rate_amount())); ?>
@@ -204,7 +214,7 @@ $vat = $s->get_setting('enable_vat_registration');
         <?php endforeach ?>
         <?php } ?>
         <?php if ($vat == '0') { ?>    
-        <?php if ($quote->getDiscount_percent() !== '0.00') : ?>
+        <?php if ($quote->getDiscount_percent() !== 0.00) : ?>
             <tr>
                 <td <?php echo($show_item_discounts ? 'colspan="7"' : 'colspan="6"'); ?> class="text-right">
                     <?= Html::encode($translator->translate('i.discount')); ?>
@@ -214,7 +224,7 @@ $vat = $s->get_setting('enable_vat_registration');
                 </td>
             </tr>
         <?php endif; ?>
-        <?php if ($quote->getDiscount_amount() !== '0.00') : ?>
+        <?php if ($quote->getDiscount_amount() !== 0.00) : ?>
             <tr>
                 <td <?php echo($show_item_discounts ? 'colspan="7"' : 'colspan="6"'); ?> class="text-right">
                     <?= Html::encode($translator->translate('i.discount')); ?>
@@ -239,16 +249,13 @@ $vat = $s->get_setting('enable_vat_registration');
 </main>
 
 <footer>
-    <?php if ($quote->getNotes()) : ?>
+    <?php if (strlen($quote->getNotes() ?? '') > 0) : ?>
         <div class="notes">
             <b><?= Html::encode($translator->translate('i.notes')); ?></b><br/>
             <?php echo nl2br(Html::encode($quote->getNotes())); ?>
         </div>
     <?php endif; ?>
-    <?php if ($show_custom_fields) {
-        echo $view_custom_fields;
-    }
-    ?>   
+    <?= $show_custom_fields ? $view_custom_fields : ''; ?>
 </footer>
 </body>
 </html>

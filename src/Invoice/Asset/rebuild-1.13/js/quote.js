@@ -5,13 +5,6 @@ $(function () {
      if (typeof data === 'string') return JSON.parse(data);
      return {};
     };
-
-    if ($('#discount_percent').val()) {
-        $('#discount_amount').prop('disabled', true);
-    }
-    if ($('#discount_amount').val()) {
-        $('#discount_percent').prop('disabled', true);
-    }
     
      // class="btn_delete_item" on views/product/partial_item_table.php
     $('.btn_delete_item').click(function () {
@@ -366,18 +359,21 @@ $(function () {
             window.open(url, '_blank');
     });
 
-    $('#discount_amount').keyup(function () {
+    $('#quote_discount_amount').keyup(function () {
     if (this.value.length > 0) {
-        $('#discount_percent').prop('disabled', true);
+        $('#quote_discount_percent').prop('value', 0.00);
+        $('#quote_discount_percent').prop('disabled', true);
     } else {
-        $('#discount_percent').prop('disabled', false);
+        $('#quote_discount_percent').prop('disabled', false);
     }
     });
-    $('#discount_percent').keyup(function () {
+    
+    $('#quote_discount_percent').keyup(function () {
     if (this.value.length > 0) {
-        $('#discount_amount').prop('disabled', true);
+        $('#quote_discount_amount').prop('value', 0.00);
+        $('#quote_discount_amount').prop('disabled', true);
     } else {
-        $('#discount_amount').prop('disabled', false);
+        $('#quote_discount_amount').prop('disabled', false);
     }
     });
 

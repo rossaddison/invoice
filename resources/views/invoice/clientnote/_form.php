@@ -2,22 +2,28 @@
 
 declare(strict_types=1); 
 
-
 use Yiisoft\FormModel\Field;
 use Yiisoft\Html\Html;
 use Yiisoft\Html\Tag\Form;
 
 /**
- * @var \Yiisoft\View\View $this
- * @var \Yiisoft\Router\UrlGeneratorInterface $urlGenerator
+ * @var App\Invoice\ClientNote\ClientNoteForm $form
+ * @var App\Invoice\Helpers\DateHelper $dateHelper
+ * @var App\Widget\Button $button
+ * @var Yiisoft\Translator\TranslatorInterface $translator
+ * @var Yiisoft\Router\UrlGeneratorInterface $urlGenerator
+ * @var string $actionName 
+ * @var array $clients
  * @var string $csrf
- * @var string $action
  * @var string $title
+ * @psalm-var array<string, Stringable|null|scalar> $actionArguments
+ * @psalm-var array<string,list<string>> $errors
+ * @psalm-var array<array-key, array<array-key, string>|string> $optionsDataClient
  */
 ?>
 
 <?= Form::tag()
-    ->post($urlGenerator->generate(...$action))
+    ->post($urlGenerator->generate($actionName, $actionArguments))
     ->enctypeMultipartFormData()
     ->csrf($csrf)
     ->id('ClientNoteForm')
@@ -44,11 +50,17 @@ use Yiisoft\Html\Tag\Form;
                     ->onlyCommonErrors()
                 ?>
                 <?php 
+                    $optionsDataClient = [];
+                    /**
+                     * @var App\Invoice\Entity\Client $client
+                     */
                     foreach ($clients as $client) { 
-                        $optionsDataClient[$client->getClient_id()] = $client->getClient_name() . ' '. $client->getClient_surname();                    
+                        if (null!==($clientId = $client->getClient_id())) {
+                            $optionsDataClient[$clientId] = $client->getClient_name().' '.($client->getClient_surname() ?? '#');                    
+                        }
                     }
                     echo Field::select($form, 'client_id')
-                    ->label($translator->translate('i.client'),['control-label'])
+                    ->label($translator->translate('i.client'))
                     ->addInputAttributes([
                         'id' => 'client_id', 
                         'class' => 'form-control',
@@ -60,15 +72,15 @@ use Yiisoft\Html\Tag\Form;
             <?= Html::openTag('div'); ?>
                 <?= Html::openTag('div', ['class' => 'mb-3 form-group']); ?>
                     <?= Field::date($form, 'date_note')
-                    ->label($translator->translate('i.date'), ['class' => 'form-label'])
+                    ->label($translator->translate('i.date'))
                     ->required(true)
-                    ->value($form->getDate_note() ? ($form->getDate_note())->format('Y-m-d') : '')
+                    ->value(!is_string($dateNote = $form->getDate_note()) ? $dateNote->format($dateHelper->style()) : '')
                     ->hint($translator->translate('invoice.hint.this.field.is.required')); 
                 ?>
                 <?= Html::closeTag('div'); ?>
                 <?= Html::openTag('div', ['class' => 'mb-3 form-group']); ?>
                 <?= Field::textarea($form, 'note')
-                    ->label($translator->translate('i.note'), ['form-label'])
+                    ->label($translator->translate('i.note'))
                     ->addInputAttributes([
                         'placeholder' => $translator->translate('i.note'),
                         'value' => Html::encode($form->getNote() ?? ''),

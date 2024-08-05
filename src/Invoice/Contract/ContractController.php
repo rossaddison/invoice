@@ -74,7 +74,7 @@ final class ContractController
      */
     public function index(CurrentRoute $currentRoute, contractR $contractR, Request $request, cR $cR, iR $iR, sR $sR): \Yiisoft\DataResponse\DataResponse
     {
-        $canEdit = $this->rbac(); 
+        $this->rbac(); 
         $query_params = $request->getQueryParams();
         /**
          * @var string $query_params['page']
@@ -95,15 +95,9 @@ final class ContractController
         $parameters = [
             'alert' => $this->alert(),
             'paginator'=>$paginator,
-            'canEdit' => $canEdit,
             'cR' => $cR,
             // Use the invoice Repository to retrieve all invoices associated with this contract
-            'iR' => $iR,
-            'grid_summary'=> $sR->grid_summary($paginator, 
-                                               $this->translator, 
-                                               (int)$sR->get_setting('default_list_limit'), 
-                                               $this->translator->translate('invoice.invoice.contracts'), ''),
-            'contracts' => $this->contracts($contractR),
+            'iR' => $iR
         ]; 
         return $this->viewRenderer->render('index', $parameters);
     }
@@ -133,7 +127,8 @@ final class ContractController
             'title' => $this->translator->translate('invoice.invoice.contract.add') 
                        .': '
                        . $title,
-            'action' => ['contract/add', ['client_id' => $client_id]],
+            'actionName' => 'contract/add', 
+            'actionArguments' => ['client_id' => $client_id],
             'errors' => [],
             'form' => $form,
             'client_id' => $client_id
@@ -171,7 +166,8 @@ final class ContractController
             $form = new ContractForm($contract);
             $parameters = [
                 'title' => $this->translator->translate('i.edit'),
-                'action' => ['contract/edit', ['id' => $contract->getId()]],
+                'actionName' => 'contract/edit', 
+                'actionArguments' => ['id' => $contract->getId()],
                 'errors' => [],
                 'form' => $form 
             ];
@@ -235,10 +231,10 @@ final class ContractController
             $form = new ContractForm($contract);
             $parameters = [
                 'title' => $this->translator->translate('i.view'),
-                'action' => ['contract/view', ['id' => $contract->getId()]],
+                'actionName' => 'contract/view', 
+                'actionArguments' => ['id' => $contract->getId()],
                 'errors' => [],
-                'form' => $form,
-                'contract' => $contract,
+                'form' => $form
             ];        
         return $this->viewRenderer->render('_view', $parameters);
         }

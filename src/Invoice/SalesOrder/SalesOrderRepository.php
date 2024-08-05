@@ -305,6 +305,11 @@ final class SalesOrderRepository extends Select\Repository
         );       
     }
     
+    /**
+     * 
+     * @param string $key
+     * @return string
+     */
     public function getSpecificStatusArrayLabel(string $key) : string
     {
         $statuses_array = $this->getStatuses($this->translator);
@@ -315,14 +320,19 @@ final class SalesOrderRepository extends Select\Repository
         return $statuses_array[$key]['label'];
     }
     
-    public function getSpecificStatusArrayClass(string $key) : string
+    /**
+     * 
+     * @param int $status
+     * @return string
+     */
+    public function getSpecificStatusArrayClass(int $status) : string
     {
         $statuses_array = $this->getStatuses($this->translator);
         /**
-         * @var array $statuses_array[$key]
-         * @var string $statuses_array[$key]['class']
+         * @var array $statuses_array[$status]
+         * @var string $statuses_array[$status]['class']
          */
-        return $statuses_array[$key]['class'];
+        return $statuses_array[$status]['class'];
     }
     
     /**

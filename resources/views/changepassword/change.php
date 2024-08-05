@@ -2,20 +2,22 @@
 
 declare(strict_types=1);
 
-use App\Auth\Form\ChangePasswordForm;
 use Yiisoft\FormModel\Field;
 use Yiisoft\Html\Html;
 use Yiisoft\Html\Tag\Form;
-use Yiisoft\Router\UrlGeneratorInterface;
-use Yiisoft\Translator\TranslatorInterface;
-use Yiisoft\View\WebView;
 
 /**
- * @var WebView               $this
- * @var TranslatorInterface   $translator
- * @var UrlGeneratorInterface $urlGenerator
- * @var string                $csrf
- * @var ChangePasswordForm             $formModel
+ * @see App\Auth\Controller\ChangePasswordController function change
+ * 
+ * @var App\Auth\Form\ChangePasswordForm $formModel 
+ * @var Yiisoft\Router\UrlGeneratorInterface $urlGenerator
+ * @var Yiisoft\Translator\TranslatorInterface $translator
+ * @var Yiisoft\View\WebView $this
+ * 
+ * @see resources\rbac\items.php admin permissions 
+ * @var bool $changePasswordForAnyUser
+ * 
+ * @var string $csrf
  */
 $this->setTitle($translator->translate('password.change'));
 ?>
@@ -29,7 +31,7 @@ $this->setTitle($translator->translate('password.change'));
                 </div>
                 <div class="card-body p-5 text-center">
                     <?= Form::tag()
-                        // note: the chagne function actually appears in the ChangePasswordController
+                        // note: the change function actually appears in the ChangePasswordController
                         ->post($urlGenerator->generate('auth/change'))
                         ->csrf($csrf)
                         ->id('changePasswordForm')

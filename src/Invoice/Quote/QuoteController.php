@@ -1,4 +1,5 @@
 <?php 
+
 declare(strict_types=1); 
 
 namespace App\Invoice\Quote;
@@ -2682,19 +2683,15 @@ final class QuoteController
                                //'user' => $cfR->repoTablequery('user_custom'),  
                             ];
 
-                            //TODO 
-                            // $attachments;
                             if (null!==$quote_id) {
                                 $quote_amount = (($qaR->repoQuoteAmountCount($quote_id) > 0) ? $qaR->repoQuotequery($quote_id) : null);
                                 if ($quote_amount) {
                                     $parameters = [            
-                                        'render'=> $this->view_renderer->renderPartialAsString('//invoice/template/quote/public/' . ($this->sR->get_setting('public_quote_template') ?: 'Quote_Web'), [
+                                        'renderTemplate'=> $this->view_renderer->renderPartialAsString('//invoice/template/quote/public/' . ($this->sR->get_setting('public_quote_template') ?: 'Quote_Web'), [
                                             'isGuest' => $currentUser->isGuest(),
-                                            // TODO logo
-                                            'logo'=> '',
                                             'alert' => $this->alert(),
                                             'quote' => $quote,
-                                            'quote_item_amount'=>$qiaR,
+                                            'qiaR'=>$qiaR,
                                             'quote_amount' => $quote_amount,
                                             'items' => $qiR->repoQuotequery($quote_id),
                                             // Get all the quote tax rates that have been setup for this quote
@@ -2703,13 +2700,10 @@ final class QuoteController
                                             'flash_message' => $this->flash_message('info', ''),
                                             //'attachments' => $attachments,
                                             'custom_fields' => $custom_fields,
-                                            'clienthelper' => new ClientHelper($this->sR),
-                                            'datehelper' => new DateHelper($this->sR),
-                                            'numberhelper' => new NumberHelper($this->sR),
                                             'has_expired' => new \DateTimeImmutable('now') > $quote->getDate_expires() ? true : false,
                                             'client'=> $quote->getClient(),
                                             // Get the details of the user of this quote
-                                            'userinv'=> $uiR->repoUserInvUserIdcount($user_id) > 0 ? $uiR->repoUserInvUserIdquery($user_id) : null,                
+                                            'userInv'=> $uiR->repoUserInvUserIdcount($user_id) > 0 ? $uiR->repoUserInvUserIdquery($user_id) : null,                
                                             'modal_purchase_order_number' => $this->view_renderer->renderPartialAsString('//invoice/quote/modal_purchase_order_number',['urlKey' => $urlKey])
                                         ]),        
                                     ];        

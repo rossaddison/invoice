@@ -16,6 +16,7 @@ use App\Invoice\InvCustom\InvCustomRepository as ICR;
 use App\Invoice\InvItem\InvItemRepository as IIR;
 use App\Invoice\InvTaxRate\InvTaxRateRepository as ITRR;
 use App\Invoice\Inv\InvRepository as IR;
+use App\Invoice\PostalAddress\PostalAddressRepository as PAR;
 use App\Invoice\Setting\SettingRepository as SR;
 // Helpers
 use App\Invoice\Helpers\DateHelper;
@@ -25,6 +26,7 @@ use App\Invoice\InvAmount\InvAmountService as IAS;
 use App\Invoice\InvCustom\InvCustomService as ICS;
 use App\Invoice\InvItem\InvItemService as IIS;
 use App\Invoice\InvTaxRate\InvTaxRateService as ITRS;
+use App\Invoice\PostalAddress\PostalAddressService as PAS;
 // Ancillary
 use Yiisoft\Session\Flash\Flash;
 use Yiisoft\Session\SessionInterface;
@@ -81,9 +83,10 @@ final class InvService
        
        isset($array['client_id']) ? $model->setClient_id((int)$array['client_id']) : '';
        isset($array['group_id']) ? $model->setGroup_id((int)$array['group_id']) : '';
-       isset($array['status_id']) ? $model->setStatus_id((int)$array['status_id']) : '';
+       isset($array['status_id']) ? $model->setStatus_id((int)$array['status_id']) : '';       
        isset($array['delivery_id']) ? $model->setDelivery_id((int)$array['delivery_id']) : '';
        isset($array['delivery_location_id']) ? $model->setDelivery_location_id((int)$array['delivery_location_id']) : '';
+       isset($array['postal_address_id']) ? $model->setPostal_address_id((int)$array['postal_address_id']) : '';
        isset($array['discount_percent']) ? $model->setDiscount_percent((float)$array['discount_percent']) : '';
        isset($array['discount_amount']) ? $model->setDiscount_amount((float)$array['discount_amount']) : '';
        isset($array['url_key']) ? $model->setUrl_key((string)$array['url_key']) : '';
@@ -111,8 +114,10 @@ final class InvService
               $model->setNumber('');
             }
             isset($array['so_id']) ? $model->setSo_id((int)$array['so_id']) : ''; 
+            isset($array['delivery_id']) ? $model->setDelivery_id((int)$array['delivery_id']) : '';
             isset($array['quote_id']) ? $model->setQuote_id((int)$array['quote_id']) : '';
             isset($array['delivery_location_id']) ? $model->setDelivery_location_id((int)$array['delivery_location_id']) : '';
+            isset($array['postal_address_id']) ? $model->setPostal_address_id((int)$array['postal_address_id']) : '';
             isset($array['contract_id']) ? $model->setContract_id((int)$array['contract_id']) : '';            
             $model->setUser_id((int)$user->getId());
             $model->setUrl_key(Random::string(32));            
@@ -179,13 +184,18 @@ final class InvService
      * @param IAR $iaR
      * @param IAS $iaS
      * @param DLR $dlR
+     * @param PAR $paR
      * @param DLS $dlS
+     * @param PAS $paS
      * @return void
      */
-    public function deleteInv(Inv $model, ICR $icR, ICS $icS, IIR $iiR, IIS $iiS, ITRR $itrR, ITRS $itrS, IAR $iaR, IAS $iaS, DLR $dlR, DLS $dlS) : void
+    public function deleteInv(Inv $model, ICR $icR, ICS $icS, IIR $iiR, 
+                              IIS $iiS, ITRR $itrR, ITRS $itrS, IAR $iaR, 
+                              IAS $iaS, DLR $dlR, PAR $paR, DLS $dlS, PAS $paS) : void
     {
         $inv_id = $model->getId();
         $delivery_location_id = $model->getDelivery_location_id();
+        $postal_address_id = $model->getPostal_address_id();
         // Invs with no items: If there are no invoice items there will be no invoice amount record
         // so check if there is a invoice amount otherwise null error will occur.
         if (null!==$inv_id){
@@ -207,16 +217,17 @@ final class InvService
                 $icS->deleteInvCustom($inv_custom);
             }
         }
-        if ($delivery_location_id) {
+        
+        if ($postal_address_id >  0) {
             /**
-             * @var \Yiisoft\Data\Cycle\Reader\EntityReader $deliveryLocations
+             * @var \Yiisoft\Data\Cycle\Reader\EntityReader $postalAddresses
              */
-            $deliveryLocations = $dlR->repoDeliveryLocationquery($delivery_location_id);
+            $postalAddresses = $paR->repoPostalAddressLoadedquery($postal_address_id);
             /**
-             * @var \App\Invoice\Entity\DeliveryLocation $delivery_location
+             * @var \App\Invoice\Entity\PostalAddress $postal_address
              */
-            foreach ($deliveryLocations as $delivery_location) {
-                $dlS->deleteDeliveryLocation($delivery_location);
+            foreach ($postalAddresses as $postal_address) {
+                $paS->deletePostalAddress($postal_address);
             }
         }
         $this->repository->delete($model);
@@ -256,6 +267,10 @@ final class InvService
        $model->setPayment_method((int)$details['payment_method']);
        $model->setTerms((string)$details['terms']); 
        $model->setCreditinvoice_parent_id((int)$details['creditinvoice_parent_id'] ?: 0);
+       $model->setDelivery_id((int)$details['delivery_id'] ?: 0);
+       $model->setDelivery_location_id((int)$details['delivery_location_id'] ?: 0);
+       $model->setPostal_address_id((int)$details['postal_address_id'] ?: 0);
+       $model->setContract_id((int)$details['contract_id'] ?: 0);
        if ($model->isNewRecord()) {
             $model->setStatus_id(1);            
             $model->setNumber((string)$details['number']);

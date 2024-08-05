@@ -5,13 +5,11 @@ declare(strict_types=1);
 use Yiisoft\Html\Html;
 use Yiisoft\Html\Tag\Label;
 use Yiisoft\Yii\Bootstrap5\Carousel;
-use Yiisoft\View\WebView;
 
 /**
- * @var TranslatorInterface $translator
- * @var WebView             $this
+ * @var App\Invoice\Setting\SettingRepository $s
+ * @var Yiisoft\Translator\TranslatorInterface $translator
  */
-$this->setTitle('Home');
 $tooltipTitle = $translator->translate('home.caption.slides.location.debug.mode');
 ?>
 

@@ -3,8 +3,16 @@ declare(strict_types=1);
 
   use Yiisoft\Html\Html;
   use Yiisoft\Html\Tag\Button;
-  use Yiisoft\Html\Tag\I;
   use Yiisoft\Yii\Bootstrap5\Modal;
+  
+  /**
+   * This is a layout which will hold the form passed to it
+   * @see App\Widget\Bootstrap5ModalTranslatorMessageWithoutAction                                                                                                
+   * @var Yiisoft\Translator\TranslatorInterface $translator
+   * @var Yiisoft\Router\UrlGeneratorInterface $urlGenerator
+   * @var string $form
+   * @var string $type 
+   */
   
   echo  Modal::widget() 
     // display the show button with true at the bottom
@@ -52,6 +60,6 @@ declare(strict_types=1);
      */        
     ->fullscreen('modal-fullscreen-lg-down')
     ->begin();
-    echo (string)$form;
+    echo $form;
     echo Modal::end();    
     echo Html::br();

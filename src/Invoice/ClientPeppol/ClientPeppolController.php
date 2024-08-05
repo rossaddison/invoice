@@ -9,7 +9,6 @@ use App\Invoice\ClientPeppol\ClientPeppolForm;
 use App\Invoice\ClientPeppol\ClientPeppolService;
 use App\Invoice\ClientPeppol\ClientPeppolRepository;
 use App\Invoice\Setting\SettingRepository;
-use App\Invoice\Client\ClientRepository;
 use App\Invoice\Helpers\Peppol\PeppolArrays;
 use App\Invoice\Helpers\StoreCove\StoreCoveArrays;
 use App\User\UserService;
@@ -86,7 +85,8 @@ final class ClientPeppolController {
     if (null !== $client_id) {
       $parameters = [
         'title' => $this->translator->translate('invoice.add'),
-        'action' => ['clientpeppol/add', ['client_id' => $client_id]],
+        'actionName' => 'clientpeppol/add', 
+        'actionArguments' =>  ['client_id' => $client_id],
         'errors' => [],  
         'form' => $form,  
         'pep' => $this->pep(),
@@ -194,12 +194,11 @@ final class ClientPeppolController {
   /**
    * 
    * @param ClientPeppolRepository $clientpeppolRepository
-   * @param SettingRepository $settingRepository
    * @param Request $request
    * @param ClientPeppolService $service
    * @return Response
    */
-  public function index(ClientPeppolRepository $clientpeppolRepository, SettingRepository $settingRepository, Request $request, ClientPeppolService $service): Response {
+  public function index(ClientPeppolRepository $clientpeppolRepository, Request $request, ClientPeppolService $service): Response {
     $parameters = [
       'clientpeppols' => $this->clientpeppols($clientpeppolRepository),
       'alert' => $this->alert()
@@ -229,21 +228,17 @@ final class ClientPeppolController {
   }
 
   /**
-   * 
-   * @param ViewRenderer $head
    * @param Request $request
    * @param CurrentRoute $currentRoute
    * @param FormHydrator $formHydrator
    * @param ClientPeppolRepository $clientpeppolRepository
    * @param SettingRepository $settingRepository
-   * @param ClientRepository $clientRepository
    * @return Response
    */
-  public function edit(ViewRenderer $head, Request $request, CurrentRoute $currentRoute,
+  public function edit(Request $request, CurrentRoute $currentRoute,
     FormHydrator $formHydrator,
     ClientPeppolRepository $clientpeppolRepository,
-    SettingRepository $settingRepository,
-    ClientRepository $clientRepository
+    SettingRepository $settingRepository
   ): Response {
     $clientpeppol = $this->clientpeppol($currentRoute, $clientpeppolRepository);
     $body = $request->getParsedBody() ?? [];
@@ -252,17 +247,16 @@ final class ClientPeppolController {
       $form = new ClientPeppolForm($clientpeppol);
       $parameters = [
         'title' => $this->translator->translate('i.edit'),
-        'action' => ['clientpeppol/edit', ['client_id' => $clientpeppol->getClient_id()]],
-        'buttons' => $this->viewRenderer->renderPartialAsString('//invoice/layout/header_buttons', ['s' => $settingRepository, 'hide_submit_button' => false, 'hide_cancel_button' => false]),
+        'actionName' => 'clientpeppol/edit', 
+        'actionArguments' => ['client_id' => $clientpeppol->getClient_id()],
+        'buttons' => $this->viewRenderer->renderPartialAsString('//invoice/layout/header_buttons', 
+                ['hide_submit_button' => false, 'hide_cancel_button' => false]),
         'errors' => [],
-        'form' => $form,  
-        'head' => $head,
+        'form' => $form,
         'pep' => $this->pep(),
         'setting' => $settingRepository->get_setting('enable_client_peppol_defaults'),
         'defaults' => $settingRepository->get_setting('enable_client_peppol_defaults') == '1' ? true : false,
         'client_id' => $clientpeppol->getClient_id(),
-        's' => $settingRepository,
-        'clients' => $clientRepository->findAllPreloaded(),
         'receiver_identifier_array' => StoreCoveArrays::store_cove_receiver_identifier_array(),
         'electronic_address_scheme' => PeppolArrays::electronic_address_scheme(),
         'iso_6523_array' => $peppolarrays->getIso_6523_icd()
@@ -340,26 +334,4 @@ final class ClientPeppolController {
     $clientpeppols = $clientpeppolRepository->findAllPreloaded();
     return $clientpeppols;
   }
-
-  /**
-   * @param CurrentRoute $currentRoute
-   * @param ClientPeppolRepository $clientpeppolRepository
-   * @return \Yiisoft\DataResponse\DataResponse|Response
-   */
-  public function view(CurrentRoute $currentRoute, ClientPeppolRepository $clientpeppolRepository): \Yiisoft\DataResponse\DataResponse|Response {
-    $clientpeppol = $this->clientpeppol($currentRoute, $clientpeppolRepository);
-    if ($clientpeppol) {
-      $form = new ClientPeppolForm($clientpeppol);  
-      $parameters = [
-        'title' => $this->translator->translate('i.view'),
-        'action' => ['clientpeppol/view', ['id' => $clientpeppol->getId()]],
-        'errors' => [],
-        'form' => $form,
-        'clientpeppol' => $clientpeppol,
-      ];
-      return $this->viewRenderer->render('_view', $parameters);
-    }
-    return $this->webService->getRedirectResponse('clientpeppol/index');
-  }
-
 }

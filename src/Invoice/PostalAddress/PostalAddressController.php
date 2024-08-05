@@ -80,6 +80,13 @@ final class PostalAddressController
     ) : Response
     {
         $client_id = $currentRoute->getArgument('client_id');
+        $queryParams = $request->getQueryParams();
+        /**
+         * @var array $queryParams
+         */
+        $origin = (string)$queryParams['origin'];
+        $origin_id = (int)$queryParams['origin_id'];
+        $action = (string)$queryParams['action'];
         $postalAddress = new PostalAddress();
         $form = new PostalAddressForm($this->translator, $postalAddress, (int)$client_id);
         $parameters = [
@@ -88,6 +95,12 @@ final class PostalAddressController
             'title' => $this->translator->translate('invoice.add'),
             'actionName' => 'postaladdress/add', 
             'actionArguments' => ['client_id' => $client_id],
+            'actionQueryParameters' => [    
+                'origin' => $origin, 
+                'origin_id' => $origin_id,
+                // origin form action e.g. normally 'add', or 'edit
+                'action' => $action
+            ],
             'errors' => [],
             'form' => $form
         ];
@@ -99,7 +112,18 @@ final class PostalAddressController
                  * @psalm-suppress PossiblyInvalidArgument $body
                  */
                 $this->postaladdressService->savePostalAddress($postalAddress, $body);
-                return $this->webService->getRedirectResponse('postaladdress/index');
+                $this->flash_message('success', $this->translator->translate('i.record_successfully_created'));
+                $url = $origin.'/'.$action;
+                if ($origin_id) {
+                    /**
+                     * @psalm-suppress MixedArgumentTypeCoercion 
+                     */
+                    return $this->webService->getRedirectResponse($url, [
+                        'id' => $origin_id
+                    ]);
+                } else {
+                    return $this->webService->getRedirectResponse($url);
+                }
             }
             $parameters['errors'] = $form->getValidationResult()->getErrorMessagesIndexedByAttribute();
             $parameters['form'] = $form;
@@ -201,11 +225,24 @@ final class PostalAddressController
     ): Response {
         $postalAddress = $this->postaladdress($currentRoute, $postalAddressRepository);
         if ($postalAddress){
+            $queryParams = $request->getQueryParams();  
+            /**
+             * @see config/common/routes/routes.php '/postaladdress/edit/{id}[/{origin}/{origin_id}/{action}]'
+             * @var array $queryParams
+             */
+            $origin = (string)$queryParams['origin'];
+            $origin_id = (int)$queryParams['origin_id'];
+            $action = (string)$queryParams['action'];
             $form = new PostalAddressForm($this->translator, $postalAddress, (int)$postalAddress->getClient_id());
             $parameters = [
                 'title' => $this->translator->translate('i.edit'),
                 'actionName' => 'postaladdress/edit', 
                 'actionArguments' => ['id' => $postalAddress->getId()],
+                'actionQueryParameters' => [    
+                    'origin' => $origin, 
+                    'origin_id' => $origin_id, 
+                    'action' => $action
+                ],
                 'errors' => [],
                 'form' => $form
             ];
@@ -216,7 +253,21 @@ final class PostalAddressController
                      * @psalm-suppress PossiblyInvalidArgument $body
                      */
                     $this->postaladdressService->savePostalAddress($postalAddress, $body);
-                    return $this->webService->getRedirectResponse('postaladdress/index');
+                    $this->flash_message('success', $this->translator->translate('i.record_successfully_created'));
+                    $url = $origin.'/'.$action;
+                    // Route::methods([Method::GET, Method::POST], '/postaladdress/edit/{client_id}[/{origin}/{origin_id}/{action}]')
+                    if ($origin_id) {
+                        /**
+                         * @see http://invoice.myhost/invoice/postaladdress/edit/1?origin=inv&origin_id=1&action=edit
+                         * @psalm-suppress MixedArgumentTypeCoercion 
+                         */
+                        return $this->webService->getRedirectResponse($url, [
+                            'id' => $origin_id
+                        ]);
+                    } else {
+                        // Redirect to inv/index
+                        return $this->webService->getRedirectResponse($url);
+                    }
                 }
                 $parameters['errors'] = $form->getValidationResult()->getErrorMessagesIndexedByAttribute();
                 $parameters['form'] = $form;

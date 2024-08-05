@@ -14,13 +14,14 @@ use Yiisoft\Html\Tag\Form;
  * @var string $csrf
  * @var string $actionName
  * @var string $title
- * @psalm-var array<string, Stringable|null|scalar> $actionArguments 
+ * @psalm-var array<string, Stringable|null|scalar> $actionArguments
+ * @psalm-var array<string, Stringable|null|scalar> $actionQueryParameters  
  * @psalm-var array<string,list<string>> $errors
  */
 ?>
 
 <?= Form::tag()
-    ->post($urlGenerator->generate($actionName, $actionArguments))
+    ->post($urlGenerator->generate($actionName, $actionArguments, $actionQueryParameters))
     ->enctypeMultipartFormData()
     ->csrf($csrf)
     ->id('PostalAddressForm')

@@ -119,29 +119,6 @@ final class InvRecurringController
     }
     
     /**
-     * 
-     * @param CurrentRoute $currentRoute
-     * @param IRR $invrecurringRepository
-     * @return \Yiisoft\DataResponse\DataResponse|Response
-     */
-    public function view(CurrentRoute $currentRoute,IRR $invrecurringRepository): \Yiisoft\DataResponse\DataResponse|Response {
-        $inv_recurring = $this->invrecurring($currentRoute, $invrecurringRepository);
-        if ($inv_recurring) {
-            $invRecurringId = $inv_recurring->getId();
-            $form = new InvRecurringForm($inv_recurring, (int)$invRecurringId);
-            $parameters = [
-                'title' => $this->translator->translate('i.view'),
-                'action' => ['invrecurring/view', ['id' => $invRecurringId]],
-                'errors' => [],
-                'form' => $form,        
-                'invrecurring' => $invrecurringRepository->repoInvRecurringquery($invRecurringId),
-            ];
-            return $this->viewRenderer->render('_view', $parameters);
-        }
-        return $this->webService->getNotFoundResponse();
-    }
-    
-    /**
      * @param CurrentRoute $currentRoute
      * @param IRR $irR
      */
@@ -180,12 +157,13 @@ final class InvRecurringController
         if (null!==$inv_id) {
             $base_invoice = $iR->repoInvUnloadedquery($inv_id);
             if (null!==$base_invoice) {
-                $immutable_invoice_date = $base_invoice->getDate_created();
+                $invDateCreated = $base_invoice->getDate_created();
                 $parameters = [
                     'title' => $this->translator->translate('invoice.add'),
-                    'action' => ['invrecurring/add', ['inv_id' => $inv_id]], 
+                    'actionName' => 'invrecurring/add', 
+                    'actionArguments' => ['inv_id' => $inv_id], 
                     'errors' => [],
-                    'immutable_invoice_date' => $immutable_invoice_date,
+                    'invDateCreated' => $invDateCreated,
                     'form' => $form,
                 ];
                 if ($request->getMethod() === Method::POST) {
@@ -200,7 +178,7 @@ final class InvRecurringController
                     $parameters['errors'] = $form->getValidationResult()->getErrorMessagesIndexedByAttribute();
                     $parameters['form'] = $form;
                 }
-                return $this->viewRenderer->render('_form_add', $parameters);
+                return $this->viewRenderer->render('_form', $parameters);
             }
         }    
         return $this->webService->getNotFoundResponse();
@@ -280,12 +258,13 @@ final class InvRecurringController
             $form = new InvRecurringForm($inv_recurring, (int)$inv_recurring->getInv_id());
             $base_invoice = $iR->repoInvUnloadedquery($inv_recurring->getInv_id());
             if (null!==$base_invoice) {
-                $immutable_invoice_date = $base_invoice->getDate_created();
+                $invDateCreated = $base_invoice->getDate_created();
                 $parameters = [
                     'title' => $this->translator->translate('i.edit'),
-                    'action' => ['invrecurring/edit', ['id' => $inv_recurring->getId()]],
+                    'actionName' => 'invrecurring/edit', 
+                    'actionArguments' => ['id' => $inv_recurring->getId()],
                     'errors' => [],
-                    'immutable_invoice_date' => $immutable_invoice_date,
+                    'invDateCreated' => $invDateCreated,
                     'form' => $form,
                 ];
                 if ($request->getMethod() === Method::POST) {
@@ -300,7 +279,7 @@ final class InvRecurringController
                     $parameters['errors'] = $form->getValidationResult()->getErrorMessagesIndexedByAttribute();
                     $parameters['form'] = $form;
                 }
-                return $this->viewRenderer->render('_form_edit', $parameters);
+                return $this->viewRenderer->render('_form', $parameters);
             } // null!== $base_invoice     
         }
         return $this->webService->getNotFoundResponse();
@@ -396,5 +375,36 @@ final class InvRecurringController
         return $this->factory->createResponse(Json::encode([
             'success' => 0]
         ));
+    }
+    
+    /**
+     * 
+     * @param CurrentRoute $currentRoute
+     * @param IRR $invrecurringRepository
+     * @param IR $iR
+     * @return \Yiisoft\DataResponse\DataResponse|Response
+     */
+    public function view(CurrentRoute $currentRoute,IRR $invrecurringRepository, IR $iR): \Yiisoft\DataResponse\DataResponse|Response {
+        $inv_recurring = $this->invrecurring($currentRoute, $invrecurringRepository);
+        if ($inv_recurring) {
+            $invRecurringId = $inv_recurring->getId();
+            $form = new InvRecurringForm($inv_recurring, (int)$invRecurringId);
+            $invId = $inv_recurring->getInv_id();
+            $base_invoice = $iR->repoInvUnloadedquery($invId);
+            if (null!==$base_invoice) {
+                $invDateCreated = $base_invoice->getDate_created();
+                $parameters = [
+                    'title' => $this->translator->translate('i.view'),
+                    'actionName' => 'invrecurring/view',
+                    'actionArguments' => ['id' => $invRecurringId],
+                    'errors' => [],
+                    'form' => $form,
+                    'invDateCreated' => $invDateCreated,
+                    'invrecurring' => $invrecurringRepository->repoInvRecurringquery($invRecurringId),
+                ];
+                return $this->viewRenderer->render('_view', $parameters);
+            }    
+        }
+        return $this->webService->getNotFoundResponse();
     }
 }

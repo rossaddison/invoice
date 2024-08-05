@@ -1,7 +1,7 @@
 <?php
+
 declare(strict_types=1);
 
-use App\Invoice\Helpers\ClientHelper;
 
 use Yiisoft\FormModel\Field;
 use Yiisoft\Html\Html;
@@ -11,11 +11,12 @@ use Yiisoft\Html\Html;
  * @var App\Invoice\Entity\Client $client
  * @var App\Invoice\Setting\SettingRepository $s
  * @var App\Invoice\Client\ClientRepository $cR
+ * @var App\Invoice\Helpers\ClientHelper $clientHelper
  * @var App\Invoice\UserClient\UserClientForm $form 
  * @var App\Widget\Button $button
  * @var Yiisoft\Translator\TranslatorInterface $translator 
  * @var Yiisoft\Router\UrlGeneratorInterface $urlGenerator
- * @var Yiisoft\Yii\View\Csrf $csrf 
+ * @var string $csrf 
  * @var array $availableClientIdList
  * @var string $actionName
  * @psalm-var array<string, Stringable|null|scalar> $actionArguments
@@ -23,7 +24,6 @@ use Yiisoft\Html\Html;
  * @psalm-var array<array-key, array<array-key, string>|string> $optionsDataClient
  */
 
-$client_helper = new ClientHelper($s);
 ?>
 <?= Html::openTag('form', ['method' => 'post']); ?>
 <?= Html::openTag('input', ['type' => 'hidden', 'name' => '_csrf', 'value' => $csrf]); ?>
@@ -76,7 +76,7 @@ $client_helper = new ClientHelper($s);
                                     foreach ($clients as $client) { 
                                         $clientId = $client->getClient_id();
                                         if (null!==$clientId) {
-                                            $optionsDataClient[$clientId] = Html::encode($client_helper->format_client($client));
+                                            $optionsDataClient[$clientId] = Html::encode($clientHelper->format_client($client));
                                         }    
                                     }
                                     echo Field::select($form, 'client_id')

@@ -1,5 +1,13 @@
 <?php
-   echo "<?php\n";             
+
+    declare(strict_types=1);
+
+    /**
+     * @var App\Invoice\Entity\Gentor $generator
+     * @var array $relations
+     */
+    
+    echo "<?php\n";             
 ?>
 
 declare(strict_types=1); 
@@ -39,8 +47,11 @@ private EntityWriter $entityWriter;
     {
         <?php if (!empty($relations)) {
             $echo = '$query = $this->select()';
+           /**
+            * @var App\Invoice\Entity\GentorRelation $relation
+            */
             foreach ($relations as $relation) {
-                $echo .= "->load('".$relation->getLowercase_name()."')";
+                $echo .= "->load('".($relation->getLowercase_name() ?? '#')."')";
             }
             echo $echo.";";
         } else {
@@ -111,8 +122,11 @@ private EntityWriter $entityWriter;
     {
         <?php if (!empty($relations)) {
             echo '$query = $this->select()';
+            /**
+             * @var App\Invoice\Entity\GentorRelation $relation
+             */
             foreach ($relations as $relation) {
-                    echo "->load('".$relation->getLowercase_name()."')"."\n";                   
+                    echo "->load('".($relation->getLowercase_name() ?? '#')."')"."\n";                   
             }
             echo "->where(['id' =>".'$id]);';
         } else {

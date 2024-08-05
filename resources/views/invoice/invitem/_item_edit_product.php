@@ -8,11 +8,32 @@ use Yiisoft\Html\Tag\Form;
 use Yiisoft\Html\Tag\I;
 
 /**
- * @var \Yiisoft\View\View $this
- * @var \Yiisoft\Router\UrlGeneratorInterface $urlGenerator
+ * @var App\Invoice\Helpers\NumberHelper $numberHelper
+ * @var App\Invoice\InvItem\InvItemForm $form
+ * @var App\Invoice\Setting\SettingRepository $s
+ * @var App\Widget\Button $button
+ * @var Yiisoft\Translator\TranslatorInterface $translator
+ * @var Yiisoft\Router\UrlGeneratorInterface $urlGenerator
+ * @var array $products
+ * @var array $units
+ * @var array $taxRates
+ * @var bool $isRecurring
+ * @var string $alert
  * @var string $csrf
- * @var string $action
+ * @var string $actionName
+ * @var string $addItemActionName
+ * @var string $indexItemActionName
  * @var string $title
+ * @var int $invItemAllowancesChargesCount
+ * @var int $invItemAllowancesCharges
+ * @psalm-var array<string, Stringable|null|scalar> $actionArguments
+ * @psalm-var array<string, Stringable|null|scalar> $addItemActionArguments
+ * @psalm-var array<string, Stringable|null|scalar> $indexItemActionArguments
+ * @psalm-var array<string,list<string>> $error
+ * @psalm-var array<array-key, array<array-key, string>|string> $optionsDataProduct
+ * @psalm-var array<array-key, array<array-key, string>|string> $optionsDataTaxRate
+ * @psalm-var array<array-key, array<array-key, string>|string> $optionsDataProductUnit
+ * 
  */
 
 $vat = $s->get_setting('enable_vat_registration') === '1' ? true : false;
@@ -29,7 +50,7 @@ $vat = $s->get_setting('enable_vat_registration') === '1' ? true : false;
         ?>
     <?= Html::closeTag('div'); ?>    
     <?= Form::tag()
-        ->post($urlGenerator->generate(...$action))
+        ->post($urlGenerator->generate($actionName, $actionArguments))
         ->enctypeMultipartFormData()
         ->csrf($csrf)
         ->id('InvItemForm')
@@ -42,7 +63,7 @@ $vat = $s->get_setting('enable_vat_registration') === '1' ? true : false;
                         <?= Html::openTag('td', ['rowspan' => '2', 'class' => 'td-icon']); ?>
                             <?= I::tag()
                                 ->addClass('fa fa-arrows cursor-move'); ?> 
-                                <?php if ($is_recurring) : ?>
+                                <?php if ($isRecurring) : ?>
                                     <?= Html::tag('br'); ?>
                                         <?= I::tag()
                                             ->addAttributes([
@@ -64,9 +85,16 @@ $vat = $s->get_setting('enable_vat_registration') === '1' ? true : false;
                             <?= Html::openTag('div' , ['class' => 'input-group', 'id' => 'product-no-task']); ?>    
                                 <?php
                                     $optionsDataProduct = [];
+                                    /**
+                                     * @var App\Invoice\Entity\Product $product
+                                     */
                                     foreach ($products as $product) 
                                     {
-                                        $optionsDataProduct[$product->getProduct_id()] = $product->getProduct_name();
+                                        $productId = $product->getProduct_id();
+                                        $productName = $product->getProduct_name() ?? '';
+                                        if (!empty($productId) && strlen($productName) > 0) {
+                                            $optionsDataProduct[$productId] = $productName;
+                                        }
                                     }
                                 ?>
                                 <?= Field::select($form, 'product_id')   
@@ -107,10 +135,10 @@ $vat = $s->get_setting('enable_vat_registration') === '1' ? true : false;
                             <?= Html::closeTag('div'); ?>
                         <?= Html::closeTag('td'); ?>
                         <?php 
-    // if no allowance or charge is associated with this item show the add button
-                            if ($inv_item_allowances_charges_count == 0) { 
+                            // if no allowance or charge is associated with this item show the add button
+                            if ($invItemAllowancesChargesCount == 0) { 
                                 $add = $translator->translate('invoice.invoice.allowance.or.charge.item.add');
-                                $url =$urlGenerator->generate(...$add_item_action);
+                                $url =$urlGenerator->generate($addItemActionName, $addItemActionArguments);
                             ?>
                             <?= Html::openTag('td', ['class' => 'td-amount']); ?>
                                 <?= Html::openTag('div', ['class' => 'input-group']); ?>
@@ -126,10 +154,10 @@ $vat = $s->get_setting('enable_vat_registration') === '1' ? true : false;
                             <?php // == 0 
                             } ?>
                              <?php 
-    // if one or more allowance/charge is associated with this item show the index button
-                             if ($inv_item_allowances_charges_count > 0) { 
+                             // if one or more allowance/charge is associated with this item show the index button
+                             if ($invItemAllowancesChargesCount > 0) { 
                                 $add = $translator->translate('invoice.invoice.allowance.or.charge');
-                                $url =$urlGenerator->generate(...$index_item_action);
+                                $url = $urlGenerator->generate($indexItemActionName, $indexItemActionArguments);
                             ?>
                             <?= Html::openTag('td', ['class' => 'td-amount']); ?>
                                 <?= Html::openTag('div', ['class' => 'input-group']); ?>
@@ -149,9 +177,18 @@ $vat = $s->get_setting('enable_vat_registration') === '1' ? true : false;
                             <?= Html::openTag('div', ['class' => 'input-group']); ?>
                                 <?php
                                     $optionsDataTaxRate = [];
-                                    foreach ($tax_rates as $tax_rate) 
+                                    /**
+                                     * @var App\Invoice\Entity\TaxRate $taxRate
+                                     */
+                                    foreach ($taxRates as $taxRate) 
                                     {
-                                        $optionsDataTaxRate[$tax_rate->getTax_rate_id()] = $numberHelper->format_amount($tax_rate->getTax_rate_percent()) . '% - ' . $tax_rate->getTax_rate_name();
+                                        $taxRateId = $taxRate->getTax_rate_id();
+                                        $taxRatePercent = $taxRate->getTax_rate_percent() ?? 0.00;
+                                        $taxRateName = $taxRate->getTax_rate_name() ?? '';
+                                        $formattedNumber = $numberHelper->format_amount($taxRatePercent);
+                                        if ((null!==$taxRateId) && ($taxRatePercent >= 0.00) && (strlen($taxRateName) > 0) && $formattedNumber >= 0.00) {
+                                            $optionsDataTaxRate[$taxRateId] = (string)$formattedNumber . '% - ' . $taxRateName;
+                                        }
                                     }
                                 ?>    
                                 <?= Field::select($form, 'tax_rate_id')
@@ -196,9 +233,17 @@ $vat = $s->get_setting('enable_vat_registration') === '1' ? true : false;
                             <?= Html::openTag('div', ['class' => 'input-group']); ?>
                                 <?php
                                     $optionsDataProductUnit = [];
+                                    /**
+                                     * @var App\Invoice\Entity\Unit $unit
+                                     */
                                     foreach ($units as $unit) 
                                     {
-                                        $optionsDataProductUnit[$unit->getUnit_id()] = Html::encode($unit->getUnit_name()) . "/" . Html::encode($unit->getUnit_name_plrl());
+                                        $unitId = $unit->getUnit_id();
+                                        $unitName = $unit->getUnit_name();
+                                        $unitNamePlrl = $unit->getUnit_name_plrl();
+                                        if ((null!==$unitId) && (strlen($unitName) > 0) && (strlen($unitNamePlrl) > 0)) {
+                                            $optionsDataProductUnit[$unitId] = Html::encode($unitName) . "/" . Html::encode($unitNamePlrl);
+                                        }
                                     }
                                 ?>    
                                 <?= Field::select($form, 'product_unit_id')

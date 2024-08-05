@@ -30,9 +30,6 @@ use App\Invoice\Task\TaskRepository;
 use App\Invoice\TaxRate\TaxRateRepository;
 use App\Invoice\Unit\UnitRepository;
 
-// Helpers
-use App\Invoice\Helpers\ClientHelper;
-use App\Invoice\Helpers\DateHelper;
 // Services and forms
 use App\Invoice\Setting\SettingService;
 use App\Service\WebControllerService;
@@ -145,12 +142,7 @@ final class InvoiceController
         $view = $this->viewRenderer->renderPartialAsString('//invoice/info/phpinfo', ['selection' => (int)$selection]);
         return $this->viewRenderer->render('info/view', ['topic'=> $view]);
     }
-    
-    public function requirements() : Response  {
-        $view = $this->viewRenderer->renderPartialAsString('//invoice/info/requirements');
-        return $this->viewRenderer->render('info/view', ['topic'=> $view]);
-    }
-    
+       
     /**
      * Use curL to call the store_cove api ... 1.1.3. Make your first API call
      * Tab: ERP or Accounting System, NOT: Individual Company, NOT: Reseller or Systems Integrator
@@ -673,7 +665,6 @@ final class InvoiceController
     /**
      * @param SessionInterface $session
      * @param ClientRepository $cR
-     * @param GroupRepository $gR
      * @param InvRepository $iR
      * @param InvAmountRepository $iaR
      * @param InvRecurringRepository $irR
@@ -686,7 +677,6 @@ final class InvoiceController
      */
     public function dashboard (
                                ClientRepository $cR,
-                               GroupRepository $gR,
                                InvRepository $iR,
                                InvAmountRepository $iaR,
                                InvRecurringRepository $irR,
@@ -699,15 +689,17 @@ final class InvoiceController
                               ) : \Yiisoft\DataResponse\DataResponse {
         $data = [
             'alerts'=>$this->alert(),
-            'clienthelper'=>new ClientHelper($sR),
             // Repositories
+            'iR'=>$iR,
             'irR'=>$irR,
+            'qR'=>$qR,
             'qaR'=>$qaR,
             'iaR'=>$iaR,
             
             // All invoices and quotes
-            'invoices'=>$iR->findAllPreloaded(),
-            'quotes'=>$qR->findAllPreloaded(),
+            'invoices' =>$iR->findAllPreloaded(),
+            'overdueInvoices' => $iR->is_overdue(),
+            'quotes' => $qR->findAllPreloaded(),
             
             // Totals for status eg. draft, sent, viewed...
             'invoice_status_totals'=>$iaR->get_status_totals($iR, $sR, $translator, $sR->get_setting('invoice_overview_period') ?: 'this-month'),
@@ -729,18 +721,15 @@ final class InvoiceController
             'projects'=>$prjctR->findAllPreloaded(),
             
             // Current tasks
-            'tasks'=>$taskR->findAllPreloaded(),
+            'taskR'=>$taskR,
             
-            'task_statuses'=>$taskR->getTask_statuses($translator),
+            'modal_create_client'=>$this->viewRenderer->renderPartialAsString('//invoice/client/modal_create_client'),
             
-            'modal_create_client'=>$this->viewRenderer->renderPartialAsString('//invoice/client/modal_create_client',[
-                'datehelper'=> new DateHelper($sR)
-            ]),
             'client_count' =>$cR->count(), 
         ];
         return $this->viewRenderer->render('dashboard/index',$data);
     }
-    
+        
     /**
      * 
      * @param string $drop_down_locale

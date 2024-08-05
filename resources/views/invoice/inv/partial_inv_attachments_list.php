@@ -1,17 +1,22 @@
 <?php
+
 declare(strict_types=1);
 
-use Yiisoft\Data\Paginator\OffsetPaginator;
+use App\Invoice\Entity\Upload;
 use Yiisoft\Html\Html;
 use Yiisoft\Yii\DataView\GridView;
 use Yiisoft\Yii\DataView\Column\DataColumn;
 
 /**
- * @var OffsetPaginator $paginator
- * @var \Yiisoft\Router\UrlGeneratorInterface $urlGenerator
- * @var TranslatorInterface $translator
- * @var WebView $this
+ * @var App\Invoice\Inv\InvAttachmentsForm $form
+ * @var App\Invoice\Helpers\DateHelper $dateHelper
+ * @var App\Invoice\Setting\SettingRepository $s
+ * @var Yiisoft\Data\Paginator\OffsetPaginator $paginator
+ * @var Yiisoft\Translator\TranslatorInterface $translator
+ * @var Yiisoft\Router\UrlGeneratorInterface $urlGenerator
+ * @var bool $invEdit
  */
+
 ?>
 
 <div>
@@ -20,21 +25,21 @@ use Yiisoft\Yii\DataView\Column\DataColumn;
             new DataColumn(
                 'file_name_original',
                 header:  $translator->translate('i.name'),
-                content: static fn($model): string => ($model->getFile_name_original())),
+                content: static fn(Upload $model): string => ($model->getFile_name_original())),
             new DataColumn(
                 'uploaded_date',
                 header:  $translator->translate('i.date'),
-                content: static fn($model): string => ($model->getUploaded_date())->format($datehelper->style())
+                content: static fn(Upload $model): string => ($model->getUploaded_date())->format($dateHelper->style())
             ),
             new DataColumn(
                 header:  $translator->translate('i.download'),
-                content: static function ($model) use ($urlGenerator): string {
+                content: static function (Upload $model) use ($urlGenerator): string {
                     return Html::a(Html::tag('button',
-                                  Html::tag('i', '', ['class' => 'fa fa-download fa-margin']),
-                                    [
-                                        'type' => 'submit',
-                                        'class' => 'dropdown-button'
-                                    ]
+                        Html::tag('i', '', ['class' => 'fa fa-download fa-margin']),
+                          [
+                              'type' => 'submit',
+                              'class' => 'dropdown-button'
+                          ]
                     ),
                     $urlGenerator->generate('inv/download_file', ['upload_id' => $model->getId(), '_language' => 'en']), []
                 )->render();
@@ -42,7 +47,7 @@ use Yiisoft\Yii\DataView\Column\DataColumn;
             new DataColumn(
                 visible: $invEdit,
                 header:  $translator->translate('i.edit'),
-                content: static function ($model) use ($urlGenerator): string {
+                content: static function (Upload $model) use ($urlGenerator): string {
                     return Html::a(Html::tag('button',
                                     Html::tag('i', '', ['class' => 'fa fa-pencil fa-margin']),
                                     [
@@ -57,7 +62,7 @@ use Yiisoft\Yii\DataView\Column\DataColumn;
             new DataColumn(
                 visible: $invEdit,
                 header:  $translator->translate('i.delete'),
-                content: static function ($model) use ($translator, $urlGenerator): string {
+                content: static function (Upload $model) use ($translator, $urlGenerator): string {
                     return Html::a(Html::tag('button',
                                     Html::tag('i', '', ['class' => 'fa fa-trash fa-margin']),
                                     [
@@ -72,15 +77,22 @@ use Yiisoft\Yii\DataView\Column\DataColumn;
             ),
         ];
     ?>
-    <?=
-        GridView::widget()
+    <?php
+        $grid_summary = $s->grid_summary(
+            $paginator, 
+            $translator, 
+            (int) $s->get_setting('default_list_limit'), 
+            $translator->translate('invoice.invoice.attachment.list'),
+            ''
+        );  
+        echo GridView::widget()
         ->rowAttributes(['class' => 'align-middle'])
+        ->tableAttributes(['class' => 'table table-striped text-center h-75', 'id' => 'table-inv-attachments-list'])
         ->columns(...$columns)
-        ->dataReader($dataReader)
+        ->dataReader($paginator)
         ->summaryAttributes(['class' => 'mt-3 me-3 summary text-end'])
         ->summaryTemplate($grid_summary)
         ->emptyTextAttributes(['class' => 'card-header bg-warning text-black'])
-        ->emptyText((string) $translator->translate('invoice.invoice.no.attachments'))
-        ->tableAttributes(['class' => 'table table-striped text-center h-75', 'id' => 'table-inv-attachments-list'])
-    ?>
+        ->emptyText($translator->translate('invoice.invoice.no.attachments'))
+        ?>
 </div>

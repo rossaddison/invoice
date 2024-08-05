@@ -106,28 +106,19 @@ final class GeneratorController
     /**
      * @param GeneratorRepository $generatorRepository
      * @param SettingRepository $sR
-     * @param GeneratorRelationRepository $grr
+     * @param GeneratorRelationRepository $grR
      */
     public function index(
             GeneratorRepository $generatorRepository,
-            SettingRepository $sR,
-            GeneratorRelationRepository $grr): \Yiisoft\DataResponse\DataResponse
+            GeneratorRelationRepository $grR): \Yiisoft\DataResponse\DataResponse
     {
-        $canEdit = $this->rbac();
+        $this->rbac();
         $generators = $this->generators($generatorRepository);
         $paginator = (new OffsetPaginator($generators));
         $parameters = [
-            'canEdit' => $canEdit,
-            'grid_summary'=> $sR->grid_summary(
-                $paginator, 
-                $this->translator, 
-                (int)$sR->get_setting('default_list_limit'), 
-                $this->translator->translate('invoice.generators'), 
-                ''
-            ),
-            'grr'=>$grr,
-            'alert'=> $this->alert(),
-            'paginator'=>$paginator 
+            'grR' => $grR,
+            'alert' => $this->alert(),
+            'paginator' => $paginator 
         ]; 
         return $this->viewRenderer->render('index', $parameters);
     }
@@ -144,11 +135,12 @@ final class GeneratorController
         $form = new GeneratorForm($gentor);
         $parameters = [
             'title' => $this->translator->translate('i.add'),
-            'action' => ['generator/add'],
+            'actionName' => 'generator/add',
+            'actionArguments' => [],
             'errors' => [],
             'form' => $form,
-            'tables'=> $dbal->database('default')->getTables(),
-            'selected_table'=>'',
+            'tables' => $dbal->database('default')->getTables(),
+            'selected_table' => '',
         ];
         if ($request->getMethod() === Method::POST) {
             $body = $request->getParsedBody();
@@ -162,7 +154,7 @@ final class GeneratorController
             $parameters['errors'] = $form->getValidationResult()->getErrorMessagesIndexedByAttribute();
             $parameters['form'] = $form;
         }
-        return $this->viewRenderer->render('__form', $parameters);
+        return $this->viewRenderer->render('_form', $parameters);
     }
     
     /**
@@ -180,11 +172,12 @@ final class GeneratorController
             $form = new GeneratorForm($generator);
             $parameters = [
                 'title' => $this->translator->translate('i.edit'),
-                'action' => ['generator/edit', ['id' => $generator->getGentor_id()]],
+                'actionName' => 'generator/edit', 
+                'actionArguments' => ['id' => $generator->getGentor_id()],
                 'errors' => [],
                 'form' => $form,
-                'tables'=> $dbal->database('default')->getTables(),
-                'selected_table'=> $generator->getPre_entity_table(),
+                'tables' => $dbal->database('default')->getTables(),
+                'selected_table' => $generator->getPre_entity_table(),
             ];
             if ($request->getMethod() === Method::POST) {
                 $body = $request->getParsedBody();
@@ -199,7 +192,7 @@ final class GeneratorController
                 $parameters['errors'] = $form->getValidationResult()->getErrorMessagesIndexedByAttribute();
                 $parameters['form'] = $form;
             }
-            return $this->viewRenderer->render('__form', $parameters);
+            return $this->viewRenderer->render('_form', $parameters);
         } else {
             return $this->webService->getRedirectResponse('generator/index');
         }    
@@ -242,11 +235,12 @@ final class GeneratorController
             $form = new GeneratorForm($generator);
             $parameters = [
                 'title' => $this->translator->translate('i.view'),
-                'action' => ['generator/view', ['id' => $generator->getGentor_id()]],
+                'actionName' => 'generator/view', 
+                'actionArguments' => ['id' => $generator->getGentor_id()],
                 'generator' => $generator,
                 'form' => $form, 
             ];
-            return $this->viewRenderer->render('__view', $parameters);
+            return $this->viewRenderer->render('_view', $parameters);
         }
         return $this->webService->getRedirectResponse('generator/index');   
     }
@@ -346,7 +340,7 @@ final class GeneratorController
             'alert'=> $this->alert(),
             'generated' => $build_file,
         ];
-        return $this->viewRenderer->render('__results', $parameters);
+        return $this->viewRenderer->render('_results', $parameters);
     }
     
     /**
@@ -378,15 +372,15 @@ final class GeneratorController
         $this->flash_message('success', $camelcaseFileName.$this->translator->translate('invoice.generator.generated').$viewPath.'/'.$camelcaseFileName);
         
         $parameters = [
-            'canEdit'=>$this->rbac(),
+            'canEdit' => $this->rbac(),
             'title' => $this->translator->translate('invoice.generator.generate').$file,
-            'generator'=> $g,
-            'orm_schema'=>$orm,
-            'relations'=>$relations,
-            'alert'=> $this->alert(),
-            'generated'=>$build_file,
+            'generator' => $g,
+            'orm_schema' =>$orm,
+            'relations' => $relations,
+            'alert' => $this->alert(),
+            'generated' =>$build_file,
         ];
-        return $this->viewRenderer->render('__results', $parameters);
+        return $this->viewRenderer->render('_results', $parameters);
     }
     
     /**
@@ -426,7 +420,7 @@ final class GeneratorController
             'alert'=> $this->alert(),
             'generated'=>$build_file,
         ];
-        return $this->viewRenderer->render('__results', $parameters);
+        return $this->viewRenderer->render('_results', $parameters);
     }
     
     /**
@@ -459,15 +453,15 @@ final class GeneratorController
         $this->flash_message('success', $camelcaseFileName.$this->translator->translate('invoice.generator.generated').$viewPath.'/'.$camelcaseFileName);
         
         $parameters = [
-            'canEdit'=>$this->rbac(),
+            'canEdit' => $this->rbac(),
             'title' => $this->translator->translate('invoice.generator.generate').$file,
-            'generator'=> $g,
-            'orm_schema'=>$orm,
-            'relations'=>$relations,
-            'alert'=> $this->alert(),
-            'generated'=>$build_file,
+            'generator' => $g,
+            'orm_schema' => $orm,
+            'relations' => $relations,
+            'alert' => $this->alert(),
+            'generated' => $build_file,
         ];
-        return $this->viewRenderer->render('__results', $parameters);
+        return $this->viewRenderer->render('_results', $parameters);
     }
     
     /**
@@ -507,7 +501,7 @@ final class GeneratorController
             'alert'=> $this->alert(),
             'generated' => $build_file,
         ];
-        return $this->viewRenderer->render('__results', $parameters);
+        return $this->viewRenderer->render('_results', $parameters);
     }
     
     /**
@@ -548,7 +542,7 @@ final class GeneratorController
             'alert' => $this->alert(),
             'generated' =>$build_file,
         ];
-        return $this->viewRenderer->render('__results', $parameters);
+        return $this->viewRenderer->render('_results', $parameters);
     }
     
     
@@ -588,7 +582,7 @@ final class GeneratorController
             'alert' => $this->alert(),
             'generated' => $build_file,
         ];
-        return $this->viewRenderer->render('__results', $parameters);
+        return $this->viewRenderer->render('_results', $parameters);
     }
     
     /**
@@ -629,7 +623,7 @@ final class GeneratorController
             'alert' => $this->alert(),
             'generated' => $build_file,
         ];
-        return $this->viewRenderer->render('__results', $parameters);        
+        return $this->viewRenderer->render('_results', $parameters);        
     }
     
     //generate this individual route. Append to config/routes file.  
@@ -668,7 +662,7 @@ final class GeneratorController
             'alert'=> $this->alert(),
             'generated'=>$build_file,
         ];
-        return $this->viewRenderer->render('__results', $parameters);
+        return $this->viewRenderer->render('_results', $parameters);
     }
     
     /**
@@ -681,7 +675,7 @@ final class GeneratorController
             'isGuest' => $currentUser->isGuest(),
             'tables' => $dba->database('default')->getTables(),
         ];
-        return $this->viewRenderer->render('__schema', $parameters);
+        return $this->viewRenderer->render('_schema', $parameters);
     }
     
     /**
@@ -772,7 +766,7 @@ final class GeneratorController
                'alert' => $this->alert(),
                'combined_array' => $combined_array
             ];      
-            return $this->viewRenderer->render('__google_translate_lang', $parameters);
+            return $this->viewRenderer->render('_google_translate_lang', $parameters);
         }
         $this->flash_message('info', $this->translator->translate('invoice.generator.file.type.not.found'));
         return $this->webService->getRedirectResponse('site/index');
@@ -845,7 +839,6 @@ final class GeneratorController
      * @return GenerateCodeFileHelper
      */
     private function build_and_save(string $generated_dir_path, string $content, string $file, string $name): GenerateCodeFileHelper{
-        //echo $generated_dir_path;
         $build_file = new GenerateCodeFileHelper("$generated_dir_path/$name$file", $content); 
         $build_file->save();
         return $build_file;

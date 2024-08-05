@@ -66,21 +66,18 @@ final class EmailTemplateController
      */
     public function index(CurrentRoute $currentRoute, EmailTemplateRepository $emailtemplateRepository, SettingRepository $settingRepository): \Yiisoft\DataResponse\DataResponse
     {
-        $canEdit = $this->rbac(); 
+        $this->rbac(); 
         $parameters = [              
             'paginator' => (new OffsetPaginator($this->emailtemplates($emailtemplateRepository)))
                             ->withPageSize((int)$settingRepository->get_setting('default_list_limit'))
                             ->withCurrentPage((int)$currentRoute->getArgument('page', '1')),
             'alert' => $this->alert(),
-            'canEdit' => $canEdit,
             'email_templates' => $this->emailtemplates($emailtemplateRepository),
         ];    
         return $this->viewRenderer->render('index', $parameters);
     }
     
     /**
-     * 
-     * @param ViewRenderer $tag
      * @param Request $request
      * @param FormHydrator $formHydrator
      * @param SettingRepository $settingRepository
@@ -88,7 +85,7 @@ final class EmailTemplateController
      * @param FromDropDownRepository $fromR
      * @return Response
      */
-    public function add_invoice(ViewRenderer $tag, Request $request, FormHydrator $formHydrator, 
+    public function add_invoice(Request $request, FormHydrator $formHydrator, 
                         SettingRepository $settingRepository, 
                         CustomFieldRepository $customfieldRepository,
                         FromDropDownRepository $fromR
@@ -97,24 +94,24 @@ final class EmailTemplateController
         $email_template = new EmailTemplate();
         $form = new EmailTemplateForm($email_template);
         $parameters = [
-            'action' => ['emailtemplate/add_invoice'],
+            'actionName' => 'emailtemplate/add_invoice',
+            'actionArguments' => [],
             'errors' => [],
             'form' => $form,
             'email_template_tags' => $this->viewRenderer->renderPartialAsString('//invoice/emailtemplate/template-tags-with-inv', [
-              'template_tags_inv'=>$this->viewRenderer->renderPartialAsString('//invoice/emailtemplate/template-tags-inv', [
-                  'custom_fields_inv_custom'=>$customfieldRepository->repoTablequery('inv_custom'),
+              'template_tags_inv' => $this->viewRenderer->renderPartialAsString('//invoice/emailtemplate/template-tags-inv', [
+                  'custom_fields_inv_custom' => $customfieldRepository->repoTablequery('inv_custom'),
               ]), 
               'custom_fields' => [                        
-                  'client_custom'=>$customfieldRepository->repoTablequery('client_custom')
+                  'client_custom' => $customfieldRepository->repoTablequery('client_custom')
               ],
             ]),
              //Email templates can be built for either a quote or an invoice.
-            'invoice_templates'=>$settingRepository->get_invoice_templates('pdf'),
-            'tag'=>$tag,
+            'invoiceTemplates' => $settingRepository->get_invoice_templates('pdf'),
             // see src\Invoice\Asset\rebuild-1.13\js\mailer_ajax_email_addresses
-            'admin_email'=>$settingRepository->getConfigAdminEmail(),
-            'sender_email'=>$settingRepository->getConfigSenderEmail(),
-            'from_email'=> null!==$fromR->getDefault()?->getEmail() ? $fromR->getDefault()?->getEmail() : $this->translator->translate('invoice.email.default.none.set')
+            'admin_email' => $settingRepository->getConfigAdminEmail(),
+            'sender_email' => $settingRepository->getConfigSenderEmail(),
+            'from_email' => null!==$fromR->getDefault()?->getEmail() ? $fromR->getDefault()?->getEmail() : $this->translator->translate('invoice.email.default.none.set')
         ];
         
         if ($request->getMethod() === Method::POST) {
@@ -134,8 +131,6 @@ final class EmailTemplateController
     }
     
     /**
-     * 
-     * @param ViewRenderer $tag
      * @param Request $request
      * @param FormHydrator $formHydrator
      * @param SettingRepository $settingRepository
@@ -143,7 +138,7 @@ final class EmailTemplateController
      * @param FromDropDownRepository $fromR
      * @return Response
      */
-    public function add_quote(ViewRenderer $tag, Request $request, FormHydrator $formHydrator, 
+    public function add_quote(Request $request, FormHydrator $formHydrator, 
                         SettingRepository $settingRepository, 
                         CustomFieldRepository $customfieldRepository,
                         FromDropDownRepository $fromR
@@ -152,7 +147,8 @@ final class EmailTemplateController
         $email_template = new EmailTemplate();
         $form = new EmailTemplateForm($email_template);
         $parameters = [
-            'action' => ['emailtemplate/add_quote'],
+            'actionName' => 'emailtemplate/add_quote',
+            'actionArguments' => [],
             'errors' => [],
             'form' => $form,
             'email_template_tags' => $this->viewRenderer->renderPartialAsString('//invoice/emailtemplate/template-tags-with-quote', [
@@ -163,8 +159,7 @@ final class EmailTemplateController
                   'client_custom'=>$customfieldRepository->repoTablequery('client_custom')
               ],
             ]),
-            'quote_templates'=>$settingRepository->get_quote_templates('pdf'),
-            'tag'=>$tag,
+            'quoteTemplates'=>$settingRepository->get_quote_templates('pdf'),
             // see src\Invoice\Asset\rebuild-1.13\js\mailer_ajax_email_addresses
             'admin_email'=>$settingRepository->getConfigAdminEmail(),
             'sender_email'=>$settingRepository->getConfigSenderEmail(),
@@ -232,7 +227,8 @@ final class EmailTemplateController
             $form = new EmailTemplateForm($email_template);
             $parameters = [
                 'title' => $this->translator->translate('i.edit'),
-                'action' => ['emailtemplate/edit_invoice', ['email_template_id' => $email_template->getEmail_template_id()]],
+                'actionName' => 'emailtemplate/edit_invoice', 
+                'actionArguments' => ['email_template_id' => $email_template->getEmail_template_id()],
                 'errors' => [],
                 'email_template'=> $email_template,
                 'form' => $form,
@@ -245,7 +241,7 @@ final class EmailTemplateController
                             'client_custom'=>$customfieldRepository->repoTablequery('client_custom')
                         ],            
                 ]),    
-                'invoice_templates'=>$settingRepository->get_invoice_templates('pdf'),
+                'invoiceTemplates'=>$settingRepository->get_invoice_templates('pdf'),
                 'selected_pdf_template'=>$email_template->getEmail_template_pdf_template(),
                 // see src\Invoice\Asset\rebuild-1.13\js\mailer_ajax_email_addresses
                 'admin_email'=>$settingRepository->getConfigAdminEmail(),
@@ -294,7 +290,8 @@ final class EmailTemplateController
             $form = new EmailTemplateForm($email_template);
             $parameters = [
                 'title' => $this->translator->translate('i.edit'),
-                'action' => ['emailtemplate/edit_quote', ['email_template_id' => $email_template->getEmail_template_id()]],
+                'actionName' => 'emailtemplate/edit_quote', 
+                'actionArguments' => ['email_template_id' => $email_template->getEmail_template_id()],
                 'errors' => [],
                 'email_template'=> $email_template,
                 'form' => $form,
@@ -307,7 +304,7 @@ final class EmailTemplateController
                             'client_custom'=>$customfieldRepository->repoTablequery('client_custom')
                         ],            
                 ]),    
-                'quote_templates'=>$settingRepository->get_quote_templates('pdf'),
+                'quoteTemplates'=>$settingRepository->get_quote_templates('pdf'),
                 'selected_pdf_template'=>$email_template->getEmail_template_pdf_template(),
                 // see src\Invoice\Asset\rebuild-1.13\js\mailer_ajax_email_addresses
                 'admin_email'=>$settingRepository->getConfigAdminEmail(),
@@ -385,7 +382,8 @@ final class EmailTemplateController
             $form = new EmailTemplateForm($email_template);
             $parameters = [
                 'title' => $this->translator->translate('i.view'),
-                'action' => ['emailtemplate/edit', ['email_template_id' => $email_template->getEmail_template_id()]],
+                'actionName' => 'emailtemplate/view', 
+                'actionArguments' => ['email_template_id' => $email_template->getEmail_template_id()],
                 'errors' => [],
                 'emailtemplate'=> $email_template,
                 'form' => $form,
@@ -393,7 +391,7 @@ final class EmailTemplateController
                     '@invoice' => dirname(__DIR__), 
                     '@language' => dirname(__DIR__). DIRECTORY_SEPARATOR.'Language']),
             ];
-            return $this->viewRenderer->render('__view', $parameters); 
+            return $this->viewRenderer->render('_view', $parameters); 
         }
         return $this->webService->getRedirectResponse('emailtemplate/index');
     }

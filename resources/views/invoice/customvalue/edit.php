@@ -2,23 +2,37 @@
 
 declare(strict_types=1); 
 
-use App\Invoice\Button;
 use Yiisoft\FormModel\Field;
 use Yiisoft\Html\Html;
+use Yiisoft\Html\Tag\Form;
 
 /**
- * @var \Yiisoft\View\View $this
+ * @var App\Invoice\Entity\CustomField $custom_field
+ * @var App\Invoice\CustomValue\CustomValueForm $form
+ * @var App\Widget\Button $button
+ * @var Yiisoft\Translator\TranslatorInterface $translator
+ * @var Yiisoft\Router\FastRoute\UrlGenerator $urlGenerator
+ * @var string $actionName
  * @var string $csrf
+ * @var string $custom_field_id
+ * @var string $title
+ * @psalm-var array<string, Stringable|null|scalar> $actionArguments
+ * @psalm-var array<string,list<string>> $errors
  */
 ?>
-<?= Html::openTag('form', ['method' => 'post']); ?>
-    <?= Html::tag('input','',['type' => 'hidden', 'name' => '_csrf', 'value' => $csrf]); ?>
+
+<?= Form::tag()
+    ->post($urlGenerator->generate($actionName, $actionArguments))
+    ->enctypeMultipartFormData()
+    ->csrf($csrf)
+    ->id('CustomValueForm')
+    ->open()
+?> 
     
     <?= Html::openTag('div',['id' => 'headerbar']); ?>
         <?= Html::openTag('h1',['class' => 'headerbar-title']); ?>
             <?= $translator->translate('i.custom_values_new'); ?>
         <?= Html::closeTag('h1'); ?>
-        <?= $button::back_save(); ?>
     <?= Html::closeTag('div'); ?>
 
     <?= Html::openTag('div',['id' => 'content']); ?>
@@ -58,7 +72,7 @@ use Yiisoft\Html\Html;
                         'class' => 'form-control', 
                         'disabled' => 'disabled', 
                         'id' => 'type',
-                        'value' => Html::encode($translator->translate('i.'.$alpha.'') ?? '') 
+                        'value' => Html::encode($translator->translate('i.'.$alpha.'')) 
                         ]);
                     ?>
                 <?= Html::closeTag('div'); ?>
@@ -70,7 +84,7 @@ use Yiisoft\Html\Html;
                         ->addInputAttributes([
                             'class' => 'form-control',
                             'id' => 'custom_field_id'])
-                        ->value($custom_field->getId())
+                        ->value(Html::encode($custom_field->getId()))
                         ->hideLabel(); 
                     ?>  
                 <?= Html::closeTag('div'); ?>
@@ -98,4 +112,5 @@ use Yiisoft\Html\Html;
             <?= Html::closeTag('div'); ?>
         <?= Html::closeTag('div'); ?>
     <?= Html::closeTag('div'); ?>
-<?= Html::closeTag('form'); ?>
+<?= $button::back_save(); ?>
+<?= Form::tag()->close(); ?>

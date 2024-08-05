@@ -1,22 +1,29 @@
 <?php
-    declare(strict_types=1); 
-    
-    use Yiisoft\Html\Html;
-    use App\Invoice\Helpers\CountryHelper;
-    $countryhelper = new CountryHelper();
+
+declare(strict_types=1); 
+
+use Yiisoft\Html\Html;
+
+/**
+ * @see client\view.php and PaymentInformationController function inform search partial_client_address
+ * @var App\Invoice\Entity\Client $client
+ * @var App\Invoice\Helpers\CountryHelper $countryHelper
+ * @var Yiisoft\Translator\TranslatorInterface $translator
+ */
+
 ?>   
 
 <span class="client-address-street-line">
-    <?=($client->getClient_address_1() ? Html::encode($client->getClient_address_1()) . '<br>' : ''); ?>
+    <?=(strlen($client->getClient_address_1() ?? '') > 0 ? Html::encode($client->getClient_address_1()) . '<br>' : ''); ?>
 </span>
 <span class="client-address-street-line">
-    <?=($client->getClient_address_2() ? Html::encode($client->getClient_address_2()) . '<br>' : ''); ?>
+    <?=(strlen($client->getClient_address_2() ?? '') > 0 ? Html::encode($client->getClient_address_2()) . '<br>' : ''); ?>
 </span>
 <span class="client-adress-town-line">
-    <?=($client->getClient_city() ? Html::encode($client->getClient_city()) . ' ' : ''); ?>
-    <?=($client->getClient_state() ? Html::encode($client->getClient_state()) . ' ' : ''); ?>
-    <?=($client->getClient_zip() ? Html::encode($client->getClient_zip()) : ''); ?>
+    <?=(strlen($client->getClient_city() ?? '') > 0 ? Html::encode($client->getClient_city()) . ' ' : ''); ?>
+    <?=(strlen($client->getClient_state() ?? '') > 0 ? Html::encode($client->getClient_state()) . ' ' : ''); ?>
+    <?=(strlen($client->getClient_zip() ?? '') > 0 ? Html::encode($client->getClient_zip()) : ''); ?>
 </span>
 <span class="client-adress-country-line">
-    <?=($client->getClient_country() ? '<br>' . $countryhelper->get_country_name($translator->translate('i.cldr'), $client->getClient_country()) : ''); ?>
+    <?=(strlen($clientCountry = $client->getClient_country() ?? '') > 0 ? '<br>' . $countryHelper->get_country_name($translator->translate('i.cldr'), $clientCountry) : ''); ?>
 </span>

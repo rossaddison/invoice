@@ -55,22 +55,16 @@ final class CompanyPrivateController
     
     /**
      * @param CompanyPrivateRepository $companyprivateRepository
-     * @param SettingRepository $settingRepository
      */
-    public function index(CompanyPrivateRepository $companyprivateRepository, SettingRepository $settingRepository): \Yiisoft\DataResponse\DataResponse
+    public function index(CompanyPrivateRepository $companyprivateRepository): \Yiisoft\DataResponse\DataResponse
     {      
           $canEdit = $this->rbac();
           $paginator = new OffsetPaginator($this->companyprivates($companyprivateRepository));
           $parameters = [
             'canEdit' => $canEdit,
-            'companyprivates' => $this->companyprivates($companyprivateRepository),
             'company_private'=>$this->translator->translate('invoice.setting.company.private'),
-            'grid_summary'=> $settingRepository->grid_summary($paginator, 
-                                               $this->translator, 
-                                               (int)$settingRepository->get_setting('default_list_limit'), 
-                                               $this->translator->translate('invoice.setting.company.private'), ''),  
             'paginator' => $paginator,
-            'alert'=>$this->alert()
+            'alert' => $this->alert()
          ];
         
         return $this->viewRenderer->render('index', $parameters);
@@ -94,10 +88,11 @@ final class CompanyPrivateController
         $body = $request->getParsedBody() ?? [];
         $parameters = [
             'title' => $this->translator->translate('invoice.add'),
-            'action' => ['companyprivate/add'],
+            'actionName' => 'companyprivate/add',
+            'actionArguments' => [],
             'errors' => [],
             'form' => $form,
-            'companies'=>$companyRepository->findAllPreloaded(),            
+            'companies' => $companyRepository->findAllPreloaded(),            
             'company_public'=>$this->translator->translate('invoice.company.public'),
         ];
         $aliases = $settingRepository->get_company_private_logos_folder_aliases();
@@ -223,7 +218,8 @@ final class CompanyPrivateController
             $form = new CompanyPrivateForm($company_private);
             $parameters = [
                 'title' => $this->translator->translate('i.edit'),
-                'action' => ['companyprivate/edit', ['id' => $company_private->getId()]],
+                'actionName' => 'companyprivate/edit', 
+                'actionArguments' => ['id' => $company_private->getId()],
                 'errors' => [],
                 'form' => $form,
                 'companies' => $companyRepository->findAllPreloaded(),
@@ -340,8 +336,8 @@ final class CompanyPrivateController
             $form = new CompanyPrivateForm($company_private);
             $parameters = [
                 'title' => $this->translator->translate('i.view'),
-                'action' => ['companyprivate/view', ['id' => $company_private->getId()]],
-                'errors' => [],
+                'actionName' => 'companyprivate/view', 
+                'actionArguments' => ['id' => $company_private->getId()],
                 'form' => $form,
                 'companies' => $companyRepository->findAllPreloaded(),
                 'companyprivate' => $company_private,

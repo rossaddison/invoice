@@ -2,86 +2,159 @@
 
 declare(strict_types=1);
 
+use App\Invoice\Entity\Family;
 use Yiisoft\Html\Html;
-use App\Widget\OffsetPagination;
+use Yiisoft\Html\Tag\A;
+use Yiisoft\Html\Tag\Div;
+use Yiisoft\Html\Tag\Form;
+use Yiisoft\Html\Tag\H5;
+use Yiisoft\Html\Tag\I;
+use Yiisoft\Yii\DataView\Column\DataColumn;
+use Yiisoft\Yii\DataView\Column\ActionColumn;
+use Yiisoft\Yii\DataView\GridView;
+use Yiisoft\Yii\DataView\OffsetPagination;
 
 /**
- * @var \App\Invoice\Entity\Family $familys
- * @var \Yiisoft\Router\UrlGeneratorInterface $urlGenerator
  * @var App\Invoice\Setting\SettingRepository $s
- * @var Yiisoft\Yii\View\Csrf $csrf
- */
+ * @var App\Widget\PageSizeLimiter $pageSizeLimiter
+ * @var Yiisoft\Router\CurrentRoute $currentRoute 
+ * @var Yiisoft\Data\Paginator\OffsetPaginator $paginator
+ * @var Yiisoft\Translator\TranslatorInterface $translator 
+ * @var Yiisoft\Router\UrlGeneratorInterface $urlGenerator
+ * @var int $defaultPageSizeOffsetPaginator
+ * @var string $alert
+ * @var string $csrf 
+ */ 
+ 
+ echo $alert;
+ 
+?>
+<?php
+    $header = Div::tag()
+        ->addClass('row')
+        ->content(
+            H5::tag()
+                ->addClass('bg-primary text-white p-3 rounded-top')
+                ->content(
+                    I::tag()->addClass('bi bi-receipt')
+                            ->content(' ' . Html::encode($translator->translate('i.family')))
+                )
+        )
+        ->render();
 
-echo $alert;
+    $toolbarReset = A::tag()
+        ->addAttributes(['type' => 'reset'])
+        ->addClass('btn btn-danger me-1 ajax-loader')
+        ->content(I::tag()->addClass('bi bi-bootstrap-reboot'))
+        ->href($urlGenerator->generate($currentRoute->getName() ?? 'family/index'))
+        ->id('btn-reset')
+        ->render();
+    
+    $toolbarFilter = A::tag()
+        ->addAttributes(['type' => 'reset'])
+        ->addClass('family_filters_submit')    
+        ->addClass('btn btn-info me-1')
+        ->content(I::tag()->addClass('bi bi-bootstrap-reboot'))
+        ->href('#family_filters_submit')
+        ->id('family_filters_submit')
+        ->render();
+
+    $toolbar = Div::tag();
 ?>
 
-
-<div id="headerbar">
-    <h1 class="headerbar-title"><?= $translator->translate('i.families'); ?></h1>
-
-    <div class="headerbar-item pull-right">
-        <a class="btn btn-sm btn-primary" href="<?= $urlGenerator->generate('family/add'); ?>">
-            <i class="fa fa-plus"></i> <?= $translator->translate('i.new'); ?>
+<div>
+    <h5><?= $translator->translate('i.families'); ?></h5>
+    <div class="btn-group">
+        <a class="btn btn-success" href="<?= $urlGenerator->generate('family/add'); ?>">
+            <i class="fa fa-plus"></i> <?= Html::encode($translator->translate('i.new')); ?>
         </a>
     </div>
-    
-    <?php
-      $pagination = OffsetPagination::widget()
-      ->paginator($paginator)
-      ->urlGenerator(fn ($page) => $urlGenerator->generate('family/index', ['page' => $page]));
-    ?>
-    <?php 
-      if ($pagination->isPaginationRequired()) {
-         echo $pagination;
-      }
-    ?> 
+</div>
+<br>
+<div>
+
+</div>
+<div>
+<?php 
+    $columns = [
+        new DataColumn(
+            'id',
+            header: $translator->translate('i.id'),
+            content: static fn (Family $model) => Html::encode($model->getFamily_id()),
+            withSorting: true,    
+        ),        
+        new DataColumn(
+            'id',
+            header: $translator->translate('i.family'),                
+            content: static fn (Family $model): string => Html::encode($model->getFamily_name() ?? '')                  
+        ),
+        new ActionColumn(
+            content: static fn(Family $model): string => null!==($familyId = $model->getFamily_id()) ? 
+            Html::a()
+            ->addAttributes(['class' => 'dropdown-button text-decoration-none', 'title' => $translator->translate('i.view')])
+            ->content('🔎')
+            ->encode(false)
+            ->href('family/view/'. $familyId)
+            ->render() : '',
+        ),
+        new ActionColumn(
+            content: static fn(Family $model): string => null!==($familyId = $model->getFamily_id()) ?
+            Html::a()
+            ->addAttributes(['class' => 'dropdown-button text-decoration-none', 'title' => $translator->translate('i.edit')])
+            ->content('✎')
+            ->encode(false)
+            ->href('family/edit/'. $familyId)
+            ->render() : '',
+        ),
+        new ActionColumn(
+            content: static fn(Family $model): string => null!==($familyId = $model->getFamily_id()) ?
+            Html::a()
+            ->addAttributes([
+                'class'=>'dropdown-button text-decoration-none', 
+                'title' => $translator->translate('i.delete'),
+                'type'=>'submit', 
+                'onclick'=>"return confirm("."'".$translator->translate('i.delete_record_warning')."');"
+            ])
+            ->content('❌')
+            ->encode(false)
+            ->href('family/delete/'. $familyId)
+            ->render() : '',
+        )
+    ];       
+?>
+<?php
+    $grid_summary = $s->grid_summary(
+        $paginator, 
+        $translator, 
+        (int)$s->get_setting('default_list_limit'), 
+        $translator->translate('i.families'),
+        ''
+    );
+    $toolbarString = Form::tag()->post($urlGenerator->generate('product/index'))->csrf($csrf)->open() .
+        Div::tag()->addClass('float-end m-3')->content($toolbarFilter)->encode(false)->render() .    
+        Div::tag()->addClass('float-end m-3')->content($toolbarReset)->encode(false)->render() .
+        Form::tag()->close();
+    echo GridView::widget()
+    ->rowAttributes(['class' => 'align-middle'])
+    ->tableAttributes(['class' => 'table table-striped text-center h-75','id'=>'table-product'])
+    ->columns(...$columns)
+    ->dataReader($paginator)
+    ->headerRowAttributes(['class'=>'card-header bg-info text-black'])
+    ->enableMultisort(true)
+    ->urlQueryParameters(['filter_product_sku', 'filter_product_price'])            
+    ->header($header)
+    ->id('w4-grid')
+    ->pagination(
+    OffsetPagination::widget()
+        ->defaultPageSize($defaultPageSizeOffsetPaginator)
+        ->paginator($paginator)
+        ->render()
+    )
+    ->summaryAttributes(['class' => 'mt-3 me-3 summary text-end'])
+    ->summaryTemplate($grid_summary)
+    ->emptyTextAttributes(['class' => 'card-header bg-warning text-black'])
+    ->emptyText($translator->translate('invoice.invoice.no.records'))
+    ->toolbar($toolbarString);
+?>
 </div>
 
-<div id="content" class="table-content">
-
-    <div class="table-responsive">
-        <table class="table table-hover table-striped">
-
-            <thead>
-            <tr>
-                <th><?= $translator->translate('i.family_name'); ?></th>
-                <th><?= $translator->translate('i.options'); ?></th>
-            </tr>
-            </thead>
-
-            <tbody>
-            <?php foreach ($familys as $family) { ?>
-                <tr>
-                    <td><?= Html::encode($family->getFamily_name()); ?></td>
-                    <td>
-                        <div class="options btn-group">
-                            <a class="btn btn-default btn-sm dropdown-toggle"
-                               data-toggle="dropdown" href="#">
-                                <i class="fa fa-cog"></i> <?= $translator->translate('i.options'); ?>
-                            </a>
-                            <ul class="dropdown-menu">
-                                <li>
-                                    <a href="<?= $urlGenerator->generate('family/edit', ['id' => $family->getFamily_id()]); ?>" style="text-decoration:none">
-                                        <i class="fa fa-edit fa-margin"></i> <?= $translator->translate('i.edit'); ?>
-                                    </a>
-                                </li>
-                                <li>
-                                    <form action="<?= $urlGenerator->generate('family/delete',['id' => $family->getFamily_id()]); ?>"
-                                          method="POST">
-                                        <input type="hidden" name="_csrf" value="<?= $csrf; ?>">
-                                        <button type="submit" class="dropdown-button"
-                                                onclick="return confirm('<?= $translator->translate('i.delete_record_warning'); ?>');">
-                                            <i class="fa fa-trash-o fa-margin"></i> <?= $translator->translate('i.delete'); ?>
-                                        </button>
-                                    </form>
-                                </li>
-                            </ul>
-                        </div>
-                    </td>
-                </tr>
-            <?php } ?>
-            </tbody>
-
-        </table>
-    </div>
-</div>

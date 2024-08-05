@@ -4,15 +4,30 @@ declare(strict_types=1);
 
 use Yiisoft\FormModel\Field;
 use Yiisoft\Html\Html;
+use Yiisoft\Html\Tag\Form;
 
 /**
- * @var \Yiisoft\View\View $this
+ * @var App\Invoice\AllowanceCharge\AllowanceChargeForm $form
+ * @var App\Widget\Button $button
+ * @var Yiisoft\Router\UrlGeneratorInterface $urlGenerator
+ * @var Yiisoft\Translator\TranslatorInterface $translator
+ * @var string $csrf
+ * @var string $actionName
  * @var string $title
+ * @psalm-var array<string, Stringable|null|scalar> $actionArguments
  */
 ?>
+
 <?= Html::openTag('h1'); ?>
     <?= Html::encode($title) ?>
 <?= Html::closeTag('h1'); ?>
+
+<?= Form::tag()
+    ->post($urlGenerator->generate($actionName, $actionArguments))
+    ->enctypeMultipartFormData()
+    ->csrf($csrf)
+    ->id('AllowanceChargeForm')
+    ->open(); ?>
 <?= Html::openTag('div'); ?>
     <?= Html::openTag('div',['class' => 'mb-3 form-group']); ?>
         <?= Html::openTag('div',['class' => 'row']); ?>
@@ -20,7 +35,7 @@ use Yiisoft\Html\Html;
                 <?= Field::text($form, 'identifier')
                     ->addInputAttributes(['style' => 'background:lightblue'])     
                     ->label($translator->translate('invoice.invoice.allowance.or.charge'))
-                    ->value(Html::encode($form->getIdentifier() === '1' 
+                    ->value(Html::encode($form->getIdentifier() == true 
                     ? $translator->translate('invoice.invoice.allowance.or.charge.charge') 
                     : $translator->translate('invoice.invoice.allowance.or.charge.allowance')))     
                     ->readonly(true);
@@ -61,3 +76,5 @@ use Yiisoft\Html\Html;
         <?= Html::closeTag('div'); ?>    
     <?= Html::closeTag('div'); ?>
 <?= Html::closeTag('div'); ?>
+<?= $button::back(); ?>
+<?= Form::tag()->close(); ?>

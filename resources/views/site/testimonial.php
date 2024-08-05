@@ -1,4 +1,5 @@
 <?php
+
     declare(strict_types=1);
     
     use Yiisoft\Html\Html;
@@ -10,7 +11,9 @@
     * @see This wavelite template has been adjusted to accomodate 
     * @see ..\invoice\src\ViewInjection\CommonViewInjection.php
     * @see ..\invoice\resources\messages\en\app.php
+    * @var array $testimonial
     */
+    
 ?>
 
 <?= Html::openTag('section', ['id' => 'Testimonial', 'class' => 'py-5 py-xl-8']); ?>
@@ -18,7 +21,7 @@
         <?= Html::openTag('div', ['class' => 'row justify-content-md-center']); ?> 
             <?= Html::openTag('div', ['class' => 'col-12 col-md-10 col-lg-9 col-xl-8 col-xxl-7 text-center']); ?>
                 <?= Html::openTag('h2', ['class' => 'display-3 fw-bolder mb-4']);?>
-                    <?= $testimonial['we']; ?>
+                    <?= (string)$testimonial['we']; ?>
                 <?= Html::closeTag('h2'); ?>
             <?= Html::closeTag('div'); ?>
         <?= Html::closeTag('div'); ?>                    
@@ -40,7 +43,7 @@
                                 <?= Html::closeTag('div'); ?>
                                     <?= Html::openTag('blockquote', ['class' => 'mb-3']); ?>
                                         <?= Html::openTag('blockquote', ['class' => 'mb-4']); ?>
-                                            <?= $testimonial['worker1']; ?>
+                                            <?= (string)$testimonial['worker1']; ?>
                                         <?= Html::closeTag('blockquote'); ?>
                                     <?= Html::openTag('blockquote'); ?>
                                 <?= H4::tag()
@@ -67,7 +70,7 @@
                                 'alt' => 'Papa Quana']); ?>    
                             <?= Html::openTag('figcaption'); ?>
                                 <?= Html::openTag('blockquote', ['class' => 'mb-4']); ?>
-                                    <?= $testimonial['worker2']; ?>
+                                    <?= (string)$testimonial['worker2']; ?>
                                 <?= Html::closeTag('blockquote'); ?>
                                 <?= H4::tag()
                                     ->addClass('mb-2')
@@ -93,7 +96,7 @@
                                 'alt' => 'Rara Sasa']); ?>    
                             <?= Html::openTag('figcaption'); ?>
                                 <?= Html::openTag('blockquote', ['class' => 'mb-4']); ?>
-                                    <?= $testimonial['worker3']; ?>
+                                    <?= (string)$testimonial['worker3']; ?>
                                 <?= Html::closeTag('blockquote'); ?>
                                 <?= H4::tag()
                                     ->addClass('mb-2')

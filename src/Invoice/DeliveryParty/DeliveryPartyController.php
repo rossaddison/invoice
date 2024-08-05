@@ -57,14 +57,12 @@ final class DeliveryPartyController
     }
     
     /**
-     * 
-     * @param ViewRenderer $head
      * @param Request $request
      * @param FormHydrator $formHydrator
      * @param SettingRepository $settingRepository
      * @return Response
      */
-    public function add(ViewRenderer $head, Request $request, 
+    public function add(Request $request, 
                         FormHydrator $formHydrator) : Response
     {
         $deliveryParty = new DeliveryParty();
@@ -72,7 +70,8 @@ final class DeliveryPartyController
         $parameters = [
             'canEdit' => $this->rbac(),
             'title' => $this->translator->translate('i.add'),
-            'action' => ['deliveryparty/add'],
+            'actionName' => 'deliveryparty/add',
+            'actionArguments' => [],
             'errors' => [],
             'form' => $form,
         ];
@@ -93,22 +92,18 @@ final class DeliveryPartyController
        
     /**
      * @param DeliveryPartyRepository $deliverypartyRepository
-     * @param SettingRepository $settingRepository
      * @param DeliveryPartyService $service
      * @return Response
      */
-    public function index(DeliveryPartyRepository $deliverypartyRepository, 
-                          SettingRepository $settingRepository): Response
+    public function index(DeliveryPartyRepository $deliverypartyRepository): Response
     {      
         $deliveryparties = $this->deliveryparties($deliverypartyRepository);
         $paginator = (new OffsetPaginator($deliveryparties));
         $parameters = [
           'canEdit' => $this->rbac(),
-          'grid_summary' => $settingRepository->grid_summary($paginator, $this->translator, (int)$settingRepository->get_setting('default_list_limit'),
-                  $this->translator->translate('invoice.invoice.delivery.party'), ''),  
           'paginator' => $paginator,  
           'deliveryparties' => $deliveryparties,
-          'alert'=> $this->alert()
+          'alert' => $this->alert()
         ];
         return $this->viewRenderer->render('index', $parameters);
     }
@@ -154,7 +149,8 @@ final class DeliveryPartyController
                 'canEdit' => $this->rbac(),
                 'form' => $form,
                 'title' => $this->translator->translate('i.edit'),
-                'action' => ['deliveryparty/edit', ['id' => $deliveryparty->getId()]],
+                'actionName' => 'deliveryparty/edit', 
+                'actionArguments' => ['id' => $deliveryparty->getId()],
                 'errors' => [],
             ];
             if ($request->getMethod() === Method::POST) {
@@ -249,7 +245,8 @@ final class DeliveryPartyController
             $form = new DeliveryPartyForm($deliveryparty);
             $parameters = [
                 'title' => $this->translator->translate('i.view'),
-                'action' => ['deliveryparty/view', ['id' => $deliveryparty->getId()]],
+                'actionName' => 'deliveryparty/view', 
+                'actionArguments' => ['id' => $deliveryparty->getId()],
                 'form' => $form,
                 'deliveryparty'=>$deliveryparty,
             ];        

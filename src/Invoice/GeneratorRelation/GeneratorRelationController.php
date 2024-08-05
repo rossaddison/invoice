@@ -7,7 +7,6 @@ namespace App\Invoice\GeneratorRelation;
 use App\Invoice\Entity\GentorRelation;
 use App\Invoice\GeneratorRelation\GeneratorRelationForm;
 use App\Invoice\Generator\GeneratorRepository;
-use App\Invoice\Setting\SettingRepository;
 use App\Service\WebControllerService;
 use App\User\UserService;
 
@@ -54,26 +53,15 @@ final class GeneratorRelationController
     
     /**
      * @param GeneratorRelationRepository $generatorrelationRepository
-     * @param SettingRepository $sR
      */
-    public function index(GeneratorRelationRepository $generatorrelationRepository, SettingRepository $sR): \Yiisoft\DataResponse\DataResponse
+    public function index(GeneratorRelationRepository $generatorrelationRepository): \Yiisoft\DataResponse\DataResponse
     {
-        $canEdit = $this->rbac();
+        $this->rbac();
         $generatorrelations = $this->generatorrelations($generatorrelationRepository);
         $paginator = (new OffsetPaginator($generatorrelations));
         $parameters = [
-            'canEdit' => $canEdit,
             'alert' => $this->alert(),
-            'grid_summary'=> $sR->grid_summary(
-                $paginator, 
-                $this->translator, 
-                (int)$sR->get_setting('default_list_limit'), 
-                $this->translator->translate('invoice.generator.relations'), 
-                ''
-            ),
             'paginator' => $paginator,
-            
-                
         ]; 
         return $this->viewRenderer->render('index', $parameters);
     }
@@ -91,7 +79,8 @@ final class GeneratorRelationController
         $form = new GeneratorRelationForm($generatorrelation);
         $parameters = [
             'title' => $this->translator->translate('invoice.generator.relation.form'),
-            'action' => ['generatorrelation/add'],
+            'actionName' => 'generatorrelation/add',
+            'actionArguments' => [],
             'form' => $form,
             'errors' => [],
             'generators' => $generatorRepository->findAllPreloaded()
@@ -109,7 +98,7 @@ final class GeneratorRelationController
             $parameters['errors'] = $form->getValidationResult()->getErrorMessagesIndexedByAttribute();
             $parameters['form'] = $form;
         }
-        return $this->viewRenderer->render('__form', $parameters);
+        return $this->viewRenderer->render('_form', $parameters);
     }
     
     /**
@@ -133,7 +122,8 @@ final class GeneratorRelationController
             $form = new GeneratorRelationForm($generatorrelation);
             $parameters = [
                 'title' => $this->translator->translate('i.edit'),
-                'action' => ['generatorrelation/edit', ['id' => $generatorrelation->getRelation_id()]],
+                'actionName' => 'generatorrelation/edit', 
+                'actionArguments' => ['id' => $generatorrelation->getRelation_id()],
                 'errors' => [],
                 'form' => $form,
                 //relation generator
@@ -154,7 +144,7 @@ final class GeneratorRelationController
                 $parameters['errors'] = $form->getValidationResult()->getErrorMessagesIndexedByAttribute();
                 $parameters['form'] = $form;
             }
-            return $this->viewRenderer->render('__form', $parameters);
+            return $this->viewRenderer->render('_form', $parameters);
         }
         return $this->webService->getRedirectResponse('generatorrelation/index');
     }
@@ -191,14 +181,15 @@ final class GeneratorRelationController
             $form = new GeneratorRelationForm($generatorrelation);
             $parameters = [
                 'title' => $this->translator->translate('i.view'),
-                'action' => ['generatorrelation/view', ['id' => $generatorrelation->getRelation_id()]],
+                'actionName' => 'generatorrelation/view', 
+                'actionArguments' => ['id' => $generatorrelation->getRelation_id()],
                 'errors' => [],
                 'form' => $form,  
                 'generatorrelation' => $generatorrelation,
                 'generators' => $generatorRepository->findAllPreloaded(),
                 'egrs' => $generatorrelationRepository->repoGeneratorRelationquery($generatorrelation->getRelation_id()),
             ];
-            return $this->viewRenderer->render('__view', $parameters);
+            return $this->viewRenderer->render('_view', $parameters);
         }
         return $this->webService->getRedirectResponse('generatorrelation/index');        
     }

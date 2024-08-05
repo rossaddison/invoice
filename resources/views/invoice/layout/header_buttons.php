@@ -1,8 +1,14 @@
 <?php
-    declare(strict_types=1);
+
+declare(strict_types=1);
+   
+use Yiisoft\FormModel\Field;
+use Yiisoft\Html\Html;
     
-    use Yiisoft\FormModel\Field;
-    use Yiisoft\Html\Html;
+/**
+ * @var Yiisoft\Translator\TranslatorInterface $translator 
+ */
+
 ?>
 <?= Html::openTag('div', ['class' => 'headerbar-item pull-right']); ?>
     <?= Html::openTag('div', ['class' => 'headerbar-item pull-right']); ?>

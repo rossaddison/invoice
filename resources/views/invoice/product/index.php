@@ -9,7 +9,6 @@ use Yiisoft\Html\Tag\Div;
 use Yiisoft\Html\Tag\Form;
 use Yiisoft\Html\Tag\H5;
 use Yiisoft\Html\Tag\I;
-use Yiisoft\Router\CurrentRoute;
 use Yiisoft\Yii\DataView\Column\DataColumn;
 use Yiisoft\Yii\DataView\Column\ActionColumn;
 use Yiisoft\Yii\DataView\GridView;
@@ -18,15 +17,13 @@ use Yiisoft\Yii\DataView\UrlConfig;
 use Yiisoft\Yii\DataView\YiiRouter\UrlCreator;
 
 /**
- * @var App\Invoice\Entity\Product $product
  * @var App\Invoice\Setting\SettingRepository $s
  * @var App\Widget\PageSizeLimiter $pageSizeLimiter
- * @var CurrentRoute $currentRoute 
+ * @var Yiisoft\Router\CurrentRoute $currentRoute 
  * @var Yiisoft\Data\Paginator\OffsetPaginator $paginator
  * @var Yiisoft\Translator\TranslatorInterface $translator 
  * @var Yiisoft\Router\UrlGeneratorInterface $urlGenerator
- * @var Yiisoft\Router\FastRoute\UrlGenerator $urlFastRouteGenerator  
- * @var bool $canEdit
+ * @var Yiisoft\Router\FastRoute\UrlGenerator $urlFastRouteGenerator
  * @var int $defaultPageSizeOffsetPaginator
  * @var string $alert
  * @var string $csrf 

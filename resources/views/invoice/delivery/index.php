@@ -1,8 +1,9 @@
 <?php
+
 declare(strict_types=1);
 
+use App\Invoice\Entity\Delivery;
 use Yiisoft\Html\Html;
-use Yiisoft\Translator\TranslatorInterface;
 use Yiisoft\Html\Tag\A;
 use Yiisoft\Html\Tag\Div;
 use Yiisoft\Html\Tag\Form;
@@ -11,14 +12,19 @@ use Yiisoft\Html\Tag\I;
 use Yiisoft\Yii\DataView\Column\DataColumn;
 use Yiisoft\Yii\DataView\GridView;
 use Yiisoft\Yii\DataView\OffsetPagination;
-use Yiisoft\Router\CurrentRoute;
 
 /**
+ * @var App\Invoice\Helpers\DateHelper $dateHelper
+ * @var App\Invoice\Setting\SettingRepository $s
+ * @var App\Widget\GridComponents $gridComponents
+ * @var Yiisoft\Data\Paginator\OffsetPaginator $paginator
+ * @var Yiisoft\Router\CurrentRoute $currentRoute
+ * @var Yiisoft\Translator\TranslatorInterface $translator
+ * @var Yiisoft\Router\FastRoute\UrlGenerator $urlGenerator
+ * @var int $max
+ * @var string $alert
  * @var string $csrf
- * @var CurrentRoute $currentRoute
- * @var \Yiisoft\Data\Paginator\OffsetPaginator $paginator
- * @var \Yiisoft\Router\UrlGeneratorInterface $urlGenerator
- * @var TranslatorInterface $translator
+ * @var string $label
  */
 
   echo $alert;
@@ -41,7 +47,7 @@ $toolbarReset = A::tag()
   ->addAttributes(['type' => 'reset'])
   ->addClass('btn btn-danger me-1 ajax-loader')
   ->content(I::tag()->addClass('bi bi-bootstrap-reboot'))
-  ->href($urlGenerator->generate($currentRoute->getName()))
+  ->href($urlGenerator->generate($currentRoute->getName() ?? 'delivery/index'))
   ->id('btn-reset')
   ->render();
 
@@ -53,62 +59,64 @@ $toolbar = Div::tag();
         new DataColumn(
             'id',
             header:  $translator->translate('i.id'),
-            content: static fn(object $model) => Html::encode($model->getId())
+            content: static fn(Delivery $model) => Html::encode($model->getId())
         ),
         new DataColumn(
             'start_date',
             header:  $translator->translate('i.start_date'),
-            content: static fn(object $model) => Html::encode(($model->getStart_date())?->format($datehelper->style()) ?? '')
+            content: static fn(Delivery $model) => Html::encode(($model->getStart_date())?->format($dateHelper->style()) ?? '')
         ),
         new DataColumn(
             'actual_delivery_date',
             header:  $translator->translate('invoice.delivery.actual.delivery.date'),
-            content: static fn(object $model) => Html::encode(($model->getActual_delivery_date())?->format($datehelper->style()) ?? '')
+            content: static fn(Delivery $model) => Html::encode(($model->getActual_delivery_date())?->format($dateHelper->style()) ?? '')
         ),
         new DataColumn(
             'end_date',
             header:  $translator->translate('i.end_date'),
-            content: static fn(object $model) => Html::encode(($model->getEnd_date())?->format($datehelper->style()) ?? '')
+            content: static fn(Delivery $model) => Html::encode(($model->getEnd_date())?->format($dateHelper->style()) ?? '')
         ),
         new DataColumn( 
-            content: static function ($model) use ($urlGenerator, $translator): string {
+            content: static function (Delivery $model) use ($urlGenerator, $translator): string {
                 return Html::a($translator->translate('invoice.back'), $urlGenerator->generate('inv/edit', ['id' => $model->getInv_id()]), ['style' => 'text-decoration:none'])->render();
             }
         ),
         new DataColumn(
             'delivery_location_id',    
             header:  $translator->translate('invoice.delivery.location.global.location.number'),
-            content: static fn($model): string => Html::encode($model->getDelivery_location()?->getGlobal_location_number())
+            content: static fn(Delivery $model): string => Html::encode($model->getDelivery_location()?->getGlobal_location_number())
         ),
     ];
 ?>
-<?=
-    GridView::widget()
+<?php
+    $grid_summary = $s->grid_summary(
+                    $paginator, 
+                    $translator, 
+                    (int) $s->get_setting('default_list_limit'), 
+                    $translator->translate('invoice.deliveries'),
+    '');
+    $toolbarString = 
+        Form::tag()->post($urlGenerator->generate('delivery/index'))->csrf($csrf)->open() .
+        Div::tag()->addClass('float-end m-3')->content($toolbarReset)->encode(false)->render() .
+        Form::tag()->close();
+    echo GridView::widget()
     ->rowAttributes(['class' => 'align-middle'])
+    ->tableAttributes(['class' => 'table table-striped text-center h-191', 'id' => 'table-delivery'])
     ->columns(...$columns)
     ->dataReader($paginator)
     ->headerRowAttributes(['class' => 'card-header bg-info text-black'])
-    //->filterPosition('header')
-    //->filterModelName('delivery')
     ->header($header)
     ->id('w14-grid')
     ->pagination(
       OffsetPagination::widget()
-      ->menuClass('pagination justify-content-center')
       ->paginator($paginator)
-      ->urlArguments([])
       ->render(),
     )
     ->summaryAttributes(['class' => 'mt-3 me-3 summary text-end'])
     ->summaryTemplate($grid_summary)
     ->emptyTextAttributes(['class' => 'card-header bg-warning text-black'])
-    ->emptyText((string) $translator->translate('invoice.invoice.no.records'))
-    ->tableAttributes(['class' => 'table table-striped text-center h-191', 'id' => 'table-delivery'])
-    ->toolbar(
-      Form::tag()->post($urlGenerator->generate('delivery/index'))->csrf($csrf)->open() .
-      Div::tag()->addClass('float-end m-3')->content($toolbarReset)->encode(false)->render() .
-      Form::tag()->close()
-  );
+    ->emptyText($translator->translate('invoice.invoice.no.records'))
+    ->toolbar($toolbarString);
 
   $pageSize = $paginator->getCurrentPageSize();
   if ($pageSize > 0) {

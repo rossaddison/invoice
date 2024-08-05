@@ -1,14 +1,21 @@
 <?php 
-   use Yiisoft\Strings\Inflector;
-   echo "<?php\n";
-   $random = 99999999999999999;
+   
+    declare(strict_types=1);
+    
+    use Yiisoft\Strings\Inflector;
+   
+    /**
+     * @var App\Invoice\Entity\Gentor $generator
+     */
+    
+    echo "<?php\n";
+    $random = 99999999999999999;
 ?>
 
 declare(strict_types=1);
 
+use App\Invoice\Entity\<?= $generator->getCamelcase_capital_name(); ?>
 use Yiisoft\Html\Html;
-use Yiisoft\Data\Paginator\OffsetPaginator;
-use Yiisoft\Translator\TranslatorInterface;
 use Yiisoft\Html\Tag\A;
 use Yiisoft\Html\Tag\Div;
 use Yiisoft\Html\Tag\Form;
@@ -20,11 +27,15 @@ use Yiisoft\Yii\DataView\GridView;
 use Yiisoft\Yii\DataView\OffsetPagination;
 
 /**
- * @var \App\Invoice\Entity\<?= $generator->getCamelcase_capital_name(); ?> $<?= $generator->getSmall_singular_name()."\n"; ?>
- * @var \Yiisoft\Router\UrlGeneratorInterface $urlGenerator
- * @var TranslatorInterface $translator
- * @var OffsetPaginator $paginator
- * @var string $id
+ * @var App\Invoice\Entity\<?= $generator->getCamelcase_capital_name(); ?> $<?= $generator->getSmall_singular_name()."\n"; ?>
+ * @var App\Invoice\Setting\SettingRepository $s
+ * @var Yiisoft\Data\Paginator\OffsetPaginator $paginator
+ * @var Yiisoft\Router\CurrentRoute $currentRoute
+ * @var Yiisoft\Router\UrlGeneratorInterface $urlGenerator
+ * @var Yiisoft\Translator\TranslatorInterface $translator 
+ * @var int $defaultPageSizeOffsetPaginator
+ * @var string $alert
+ * @var string $csrf 
  */
  
  echo $alert;
@@ -32,7 +43,7 @@ use Yiisoft\Yii\DataView\OffsetPagination;
 ?>
 <?php 
         $inf = new Inflector();
-        echo '<h1>'.$inf->toSentence($generator->getPre_entity_table(),'UTF-8').'</h1>'."\n"; 
+        echo '<h1>'.$inf->toSentence($generator->getPre_entity_table(), false).'</h1>'."\n"; 
         echo "<?= Html::a(Html::tag('"."i','',['class'=>'fa fa-plus btn btn-primary fa-margin']),".'$urlGenerator->generate('."'". $generator->getSmall_singular_name()."/add'),[]); ?>";
 ?>
 
@@ -52,7 +63,7 @@ use Yiisoft\Yii\DataView\OffsetPagination;
       ->addAttributes(['type' => 'reset'])
       ->addClass('btn btn-danger me-1 ajax-loader')
       ->content(I::tag()->addClass('bi bi-bootstrap-reboot'))
-      ->href($urlGenerator->generate($currentRoute->getName()))
+      ->href($urlGenerator->generate($currentRoute->getName() ?? '<?= $generator->getSmall_singular_name(); ?>/index'))
       ->id('btn-reset')
       ->render();
 
@@ -62,10 +73,10 @@ use Yiisoft\Yii\DataView\OffsetPagination;
         new DataColumn(
             'id',
             header: $translator->translate('i.id'),
-            content: static fn($model) => $model->getId()
+            content: static fn(<?= $generator->getCamelcase_capital_name(); ?> $model) => $model->getId()
         ),
         new ActionColumn(
-            content: static fn($model): string => Html::openTag('div', ['class' => 'btn-group']) .
+            content: static fn(<?= $generator->getCamelcase_capital_name(); ?> $model): string => Html::openTag('div', ['class' => 'btn-group']) .
             Html::a()
             ->addAttributes([
                 'class' => 'dropdown-button text-decoration-none', 
@@ -97,9 +108,13 @@ use Yiisoft\Yii\DataView\OffsetPagination;
             ->render() . Html::closeTag('div')
         ), 
     ];
-    
+    $toolbarString = Form::tag()->post($urlGenerator->generate('<?= $generator->getSmall_singular_name(); ?>/index'))->csrf($csrf)->open() .
+        Div::tag()->addClass('float-end m-3')->content($toolbarReset)->encode(false)->render() .
+        Form::tag()->close();
+    $grid_summary = $s->grid_summary($paginator, $translator, (int) $s->get_setting('default_list_limit'), $translator->translate('plural'), '');    
     echo GridView::widget()
       ->rowAttributes(['class' => 'align-middle'])
+      ->tableAttributes(['class' => 'table table-striped text-center h-<?= $random; ?>', 'id' => 'table-<?= $generator->getSmall_singular_name(); ?>'])
       ->columns(...$columns)
       ->dataReader($paginator)
       ->headerRowAttributes(['class' => 'card-header bg-info text-black'])      
@@ -111,10 +126,5 @@ use Yiisoft\Yii\DataView\OffsetPagination;
       ->summaryAttributes(['class' => 'mt-3 me-3 summary text-end'])
       ->summaryTemplate($grid_summary)
       ->emptyTextAttributes(['class' => 'card-header bg-warning text-black'])
-      ->emptyText((string) $translator->translate('invoice.invoice.no.records'))
-      ->tableAttributes(['class' => 'table table-striped text-center h-<?= $random; ?>', 'id' => 'table-<?= $generator->getSmall_singular_name(); ?>'])
-      ->toolbar(
-        Form::tag()->post($urlGenerator->generate('<?= $generator->getSmall_singular_name(); ?>/index'))->csrf($csrf)->open() .
-        Div::tag()->addClass('float-end m-3')->content($toolbarReset)->encode(false)->render() .
-        Form::tag()->close()
-    );
+      ->emptyText($translator->translate('invoice.invoice.no.records'))
+      ->toolbar($toolbarString);

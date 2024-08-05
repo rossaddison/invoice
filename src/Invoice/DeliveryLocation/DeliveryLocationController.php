@@ -70,6 +70,17 @@ final class DeliveryLocationController {
     $this->factory = $factory;
   }
 
+  /**
+   * @see config/common/routes/routes.php 'del/index'
+   * @see Currently the accesschecker only allows an administrator for delivery locations i.e. no viewInv permissions granted
+   * @param CurrentRoute $currentRoute
+   * @param DeliveryLocationRepository $delRepository
+   * @param SettingRepository $sR
+   * @param CR $cR
+   * @param IR $iR
+   * @param QR $qR
+   * @return Response
+   */
   public function index(CurrentRoute $currentRoute, DeliveryLocationRepository $delRepository, SettingRepository $sR, CR $cR, IR $iR, QR $qR): Response {
     $page = $currentRoute->getArgument('page', '1');
     $dels = $delRepository->findAllPreloaded();
@@ -88,8 +99,6 @@ final class DeliveryLocationController {
       'qR' => $qR,  
       'alerts' => $this->alert(),
       'max' => (int) $sR->get_setting('default_list_limit'),
-      'canEdit' => $this->userService->hasPermission('editInv'),
-      'grid_summary' => $sR->grid_summary($paginator, $this->translator, (int) $sR->get_setting('default_list_limit'), $this->translator->translate('invoice.delivery.location.plural'), ''),
     ];
     return $this->viewRenderer->render('del/index', $parameters);
   }
@@ -131,18 +140,13 @@ final class DeliveryLocationController {
     
     $parameters = [
       'title' => $this->translator->translate('invoice.invoice.delivery.location.add'),
-      'action' => [
-          'del/add', [
-          // First array: Arguments
-              'client_id' => $client_id
-          ],
-          // Second array: Query parameters
-          [    
+      'actionName' => 'del/add',
+      'actionArguments' => ['client_id' => $client_id],
+      'actionQueryParameters' => [    
             'origin' => $origin, 
             'origin_id' => $origin_id,
             // origin form action e.g. normally 'add', or 'edit
             'action' => $action
-          ]
       ],
       'errors' => [],
       'form' => $form,
@@ -204,16 +208,9 @@ final class DeliveryLocationController {
       $form = new DeliveryLocationForm($del);
       $parameters = [
         'title' => $this->translator->translate('i.edit'),
-        'action' => ['del/edit', 
-            [
-                'id' => $del->getId()
-            ],
-            [    
-                'origin' => $origin, 
-                'origin_id' => $origin_id, 
-                'action' => $action
-            ]
-        ],
+        'actionName' => 'del/edit',
+        'actionArguments' => ['id' => $del->getId()],
+        'actionQueryParameters' => ['origin' => $origin, 'origin_id' => $origin_id, 'action' => $action],
         'errors' => [],
         'form' => $form,  
         'electronic_address_scheme' => PeppolArrays::electronic_address_scheme()
@@ -284,7 +281,8 @@ final class DeliveryLocationController {
       $form = new DeliveryLocationForm($del);  
       $parameters = [
         'title' => $this->translator->translate('i.view'),
-        'action' => ['del/view', ['id' => $del->getId()]],
+        'actionName' => 'del/view', 
+        'actionArguments' => ['id' => $del->getId()],
         'form' => $form,
         'del' => $delRepository->repoDeliveryLocationquery((string) $del->getId()),
         'electronic_address_scheme' => PeppolArrays::electronic_address_scheme()  

@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 use Yiisoft\Form\Theme\ThemeContainer;
@@ -11,13 +12,21 @@ use Yiisoft\Html\Tag\Select;
 use Yiisoft\Html\Tag\Span;
 
 /**
- * @var \Yiisoft\View\View $this
- * @var \Yiisoft\Router\UrlGeneratorInterface $urlGenerator
- * @var array $body
+ * @var App\Invoice\EmailTemplate\EmailTemplateForm $form
+ * @var App\Invoice\Setting\SettingRepository $s
+ * @var App\Widget\Button $button
+ * @var Yiisoft\Translator\TranslatorInterface $translator
+ * @var Yiisoft\Router\UrlGeneratorInterface $urlGenerator
+ * @var string $actionName
+ * @var string $admin_email
  * @var string $csrf
- * @var string $action
+ * @var string $email_template_tags
+ * @var string $from_email
+ * @var string $sender_email
+ * @psalm-var array<string, Stringable|null|scalar> $actionArguments
+ * @psalm-var array<string,list<string>> $errors
+ * @psalm-var array<array-key, array<array-key, string>|string> $invoiceTemplates
  */
-$this->addJsFiles($assetManager->getJsFiles());
 ?>
 
 <?= Html::openTag('div',['class'=>'container py-5 h-100']); ?>
@@ -30,14 +39,14 @@ $this->addJsFiles($assetManager->getJsFiles());
     <?= $translator->translate('i.email_template_form'); ?>
 <?= Html::closeTag('h1'); ?>
 <?= Form::tag()
-    ->post($urlGenerator->generate(...$action))
+    ->post($urlGenerator->generate($actionName, $actionArguments))
     ->enctypeMultipartFormData()
     ->csrf($csrf)
     ->id('EmailTemplateForm')
     ->open()
 ?>
 
-<?= ThemeContainer::initialize([
+<?php ThemeContainer::initialize([
             'A' => [
                 'containerClass' => 'mb-3',
                 'hintClass' => 'text-danger h6',
@@ -198,7 +207,7 @@ $this->addJsFiles($assetManager->getJsFiles());
             ->name('email_template_pdf_template')
             ->value(Html::encode($form->getEmail_template_pdf_template() ?? 'invoice'))
             ->form('EmailTemplateForm')
-            ->optionsData($invoice_templates)
+            ->optionsData($invoiceTemplates)
             ->prompt($translator->translate('i.none'))
             ->required(true)    
             ->disabled(false)
@@ -287,7 +296,7 @@ $this->addJsFiles($assetManager->getJsFiles());
                 'class' => 'email-template-body form-control taggable',
                 'rows' => '20'
             ])
-            ->value(Html::encode($form->getEmail_template_body() ?? ''))   
+            ->value($form->getEmail_template_body() ?? '')   
             ->hint($translator->translate('invoice.hint.this.field.is.required')); ?>
     <?= Html::closeTag('div'); ?>
     <?= Html::openTag('div', ['class' => 'panel panel-default']); ?>

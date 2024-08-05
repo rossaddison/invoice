@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1); 
 
 namespace App\Invoice\InvItemAllowanceCharge;
@@ -52,11 +53,11 @@ final class InvItemAllowanceChargeController
         $this->webService = $webService;
         $this->userService = $userService;
         if ($this->userService->hasPermission('viewInv') && !$this->userService->hasPermission('editInv')) {
-            $this->viewRenderer = $viewRenderer->withControllerName('invoice/acii')
+            $this->viewRenderer = $viewRenderer->withControllerName('invoice/invitemallowancecharge')
                                                ->withLayout('@views/layout/guest.php');
         }
         if ($this->userService->hasPermission('viewInv') && $this->userService->hasPermission('editInv')) {
-            $this->viewRenderer = $viewRenderer->withControllerName('invoice/acii')
+            $this->viewRenderer = $viewRenderer->withControllerName('invoice/invitemallowancecharge')
                                                ->withLayout('@views/layout/invoice.php');
         }
         $this->aciiService = $aciiService;
@@ -91,7 +92,8 @@ final class InvItemAllowanceChargeController
             $inv_id = $inv_item->getInv_id();
             $parameters = [
                 'title' => $this->translator->translate('invoice.add'),
-                'action' => ['acii/add', ['inv_item_id'=> $inv_item_id]],
+                'actionName' => 'invitemallowancecharge/add',
+                'actionArguments' => ['inv_item_id'=> $inv_item_id],
                 'errors' => [],
                 'form' => $form,
                 'allowance_charges' => $acR->findAllPreloaded(),
@@ -154,7 +156,7 @@ final class InvItemAllowanceChargeController
                     } //allowance_charge
                 } // is_array    
             }   // request 
-            return $this->viewRenderer->render('invitemallowancecharge/_form', $parameters);
+            return $this->viewRenderer->render('_form', $parameters);
         } // if inv_item
         return $this->webService->getNotFoundResponse();
     }    
@@ -202,11 +204,10 @@ final class InvItemAllowanceChargeController
       $paginator = (new OffsetPaginator($invoice_item_allowances_or_charges));
       $parameters = [
           'alert'=> $this->alert(),
-          'inv_item_id'=>$inv_item_id,
-          'paginator' => $paginator,
-          'grid_summary' => $settingRepository->grid_summary($paginator, $this->translator, (int)$settingRepository->get_setting('default_list_limit'), $this->translator->translate('invoice.invoice.allowance.or.charge.item'), ''),    
+          'inv_item_id' => $inv_item_id,
+          'paginator' => $paginator,    
       ];
-      return $this->viewRenderer->render('invitemallowancecharge/index', $parameters);
+      return $this->viewRenderer->render('index', $parameters);
     }
         
     /**
@@ -253,7 +254,8 @@ final class InvItemAllowanceChargeController
             $form = new InvItemAllowanceChargeForm($acii, (int)$inv_item_id);
             $parameters = [
                 'title' => $this->translator->translate('invoice.edit'),
-                'action' => ['acii/edit', ['id'=> $acii->getId()]],
+                'actionName' => 'invitemallowancecharge/edit',
+                'actionArguments' => ['id'=> $acii->getId()],
                 'errors' => [],
                 'form' => $form,
                 'allowance_charges' => $acR->findAllPreloaded(),
@@ -324,9 +326,9 @@ final class InvItemAllowanceChargeController
                 } // allowance_charge_id
                 $parameters['form'] = $form;
             } // request
-            return $this->viewRenderer->render('invitemallowancecharge/_form', $parameters);
+            return $this->viewRenderer->render('_form', $parameters);
         } // if acii
-        return $this->webService->getRedirectResponse('acii/index');
+        return $this->webService->getRedirectResponse('index');
     }
     
     //For rbac refer to AccessChecker    
@@ -374,12 +376,13 @@ final class InvItemAllowanceChargeController
             $form = new InvItemAllowanceChargeForm($acii, (int)$inv_item_id);
             $parameters = [
                 'title' => $this->translator->translate('i.view'),
-                'action' => ['acii/view', ['id' => $acii->getId()]],
+                'actionName' => 'invitemallowancecharge/view', 
+                'actionArguments' => ['id' => $acii->getId()],
                 'allowance_charges' => $acR->findAllPreloaded(),
                 'form' => $form,
                 'acii' => $acii,
             ];        
-            return $this->viewRenderer->render('invitemallowancecharge/_view', $parameters);
+            return $this->viewRenderer->render('_view', $parameters);
         }
         return $this->webService->getRedirectResponse('acii/index');
     }

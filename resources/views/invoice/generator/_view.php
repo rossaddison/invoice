@@ -8,11 +8,17 @@ use Yiisoft\Html\Html;
 use Yiisoft\Html\Tag\Form;
 
 /**
- * @var \Yiisoft\View\View $this
- * @var \Yiisoft\Router\UrlGeneratorInterface $urlGenerator
+ * @var App\Invoice\Generator\GeneratorForm $form
+ * @var App\Invoice\Setting\SettingRepository $s
+ * @var App\Widget\Button $button
+ * @var Yiisoft\Translator\TranslatorInterface $translator
+ * @var Yiisoft\Router\UrlGeneratorInterface $urlGenerator
+ * @var array $tables
  * @var string $csrf
- * @var string $action
+ * @var string $actionName
  * @var string $title
+ * @psalm-var array<string, Stringable|null|scalar> $actionArguments
+ * @psalm-var array<string,list<string>> $errors 
  */
 
 ?>
@@ -28,17 +34,20 @@ use Yiisoft\Html\Tag\Form;
 <?= Html::closeTag('h1'); ?>
 
 <?= Form::tag()
-    ->post($urlGenerator->generate(...$action))
+    ->post($urlGenerator->generate($actionName, $actionArguments))
     ->enctypeMultipartFormData()
     ->csrf($csrf)
     ->id('GeneratorForm')
     ->open()
-?> 
+?>
+<?= $button::back() ?>
 <?= Html::openTag('div', ['class' => 'container']); ?>
     <?= Html::openTag('div', ['class' => 'row']); ?>
         <?= Html::openTag('div', ['class' => 'col card mb-3']); ?> 
             <?= Html::openTag('div',['class' => 'card-header']); ?>
-                    <?= Html::openTag('h5'); ?><?= $translator->translate('invoice.generator.table'); ?><?= Html::closeTag('h5'); ?>
+                    <?= Html::openTag('h5'); ?>
+                        <?= $translator->translate('invoice.generator.table'); ?>
+                    <?= Html::closeTag('h5'); ?>
             <?= Html::closeTag('div'); ?> 
             <?= Html::openTag('div', ['class' => 'col mb-3']); ?>
                 <?= Field::text($form, 'pre_entity_table'); ?>
@@ -123,4 +132,5 @@ use Yiisoft\Html\Tag\Form;
         <?= Html::closeTag('div'); ?>
     <?= Html::closeTag('div'); ?>
 <?= Html::closeTag('div'); ?>
+
 <?= Html::closeTag('form'); ?>

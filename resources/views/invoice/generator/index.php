@@ -1,10 +1,9 @@
 <?php
+
 declare(strict_types=1);
 
-use Yiisoft\Data\Paginator\OffsetPaginator;
+use App\Invoice\Entity\Gentor;
 use Yiisoft\Html\Html;
-use Yiisoft\Translator\TranslatorInterface;
-use Yiisoft\View\WebView;
 use Yiisoft\Html\Tag\A;
 use Yiisoft\Html\Tag\Div;
 use Yiisoft\Html\Tag\Form;
@@ -14,16 +13,20 @@ use Yiisoft\Yii\DataView\Column\DataColumn;
 use Yiisoft\Yii\DataView\Column\ActionColumn;
 use Yiisoft\Yii\DataView\GridView;
 use Yiisoft\Yii\DataView\OffsetPagination;
-use Yiisoft\Router\CurrentRoute;
 
 /**
+ * @var App\Invoice\GeneratorRelation\GeneratorRelationRepository $grR
+ * @var App\Invoice\Setting\SettingRepository $s
+ * @var App\Widget\PageSizeLimiter $pageSizeLimiter
+ * @var Yiisoft\Router\CurrentRoute $currentRoute 
+ * @var Yiisoft\Data\Paginator\OffsetPaginator $paginator
+ * @var Yiisoft\Translator\TranslatorInterface $translator 
+ * @var Yiisoft\Router\UrlGeneratorInterface $urlGenerator
+ * @var Yiisoft\Router\FastRoute\UrlGenerator $urlFastRouteGenerator
+ * @var int $defaultPageSizeOffsetPaginator
+ * @var string $alert
  * @var string $csrf
- * @var CurrentRoute $currentRoute 
- * @var OffsetPaginator $paginator
- * @var \Yiisoft\Router\UrlGeneratorInterface $urlGenerator 
- * @var TranslatorInterface $translator 
- * @var WebView $this
- */ 
+ */
  
  echo $alert;
 ?>
@@ -44,7 +47,7 @@ use Yiisoft\Router\CurrentRoute;
         ->addAttributes(['type' => 'reset'])
         ->addClass('btn btn-danger me-1 ajax-loader')
         ->content(I::tag()->addClass('bi bi-bootstrap-reboot'))
-        ->href($urlGenerator->generate($currentRoute->getName()))
+        ->href($urlGenerator->generate($currentRoute->getName() ?? 'generator/index'))
         ->id('btn-reset')
         ->render();
     
@@ -63,12 +66,12 @@ use Yiisoft\Router\CurrentRoute;
         new DataColumn(
             'id',
             header: $translator->translate('i.id'),
-            content: static fn (object $model) => Html::encode($model->getGentor_id(). '->'.$model->getCamelcase_capital_name())
+            content: static fn (Gentor $model) => Html::encode($model->getGentor_id(). '->'.$model->getCamelcase_capital_name())
         ),  
         new DataColumn(
             'id',
             header: $translator->translate('invoice.generator.relations'),
-            content: static function ($model) use ($urlGenerator, $translator, $grr) : string {
+            content: static function (Gentor $model) use ($urlGenerator, $translator, $grR) : string {
                 $div_open_tag = Html::openTag('div', ['class' => 'btn-group']);
                 
                     $entity_name_render = Html::a(
@@ -78,10 +81,13 @@ use Yiisoft\Router\CurrentRoute;
                                     ['class' => 'btn btn-primary btn-sm active','aria-current' => 'page']
                     )->render();
                 
-                    $relations = $grr->repoGeneratorquery($model->getGentor_id());
+                    $relations = $grR->repoGeneratorquery($model->getGentor_id());
                     $relations_content_render = '';
+                    /**
+                     * @var App\Invoice\Entity\GentorRelation $relation
+                     */
                     foreach ($relations as $relation) {
-                        $relations_content_render .= Html::a($relation->getLowercase_name(),
+                        $relations_content_render .= Html::a($relation->getLowercase_name() ?? '#',
                                 $urlGenerator->generate('generatorrelation/edit',
                                 ['id' => $relation->getRelation_id()]),
                                 ['class' => 'btn btn-primary btn-sm'])->render();
@@ -100,7 +106,7 @@ use Yiisoft\Router\CurrentRoute;
         ),
         
         new ActionColumn(
-            content: static fn($model): string => 
+            content: static fn(Gentor $model): string => 
             Html::a()
             ->addAttributes([
                 'class' => 'dropdown-button text-decoration-none', 
@@ -112,7 +118,7 @@ use Yiisoft\Router\CurrentRoute;
             ->render(),
         ),
         new ActionColumn(
-            content: static fn($model): string => 
+            content: static fn(Gentor $model): string => 
             Html::a()
             ->addAttributes([
                 'class' => 'dropdown-button text-decoration-none', 
@@ -124,7 +130,7 @@ use Yiisoft\Router\CurrentRoute;
             ->render(),
         ),
         new ActionColumn(
-            content: static fn($model): string => 
+            content: static fn(Gentor $model): string => 
             Html::a()
             ->addAttributes([
                 'class'=>'dropdown-button text-decoration-none', 
@@ -140,7 +146,7 @@ use Yiisoft\Router\CurrentRoute;
         new DataColumn(
             'id',
             header : 'Entity',
-            content: static function ($model) use ($urlGenerator) : string {
+            content: static function (Gentor $model) use ($urlGenerator) : string {
                 return 
                 
                 Html::a(
@@ -152,7 +158,7 @@ use Yiisoft\Router\CurrentRoute;
         new DataColumn(
             'id', 
             header: 'Controller',    
-            content: static function ($model) use ($urlGenerator) : string {
+            content: static function (Gentor $model) use ($urlGenerator) : string {
                 return 
                 
                 Html::a(
@@ -164,7 +170,7 @@ use Yiisoft\Router\CurrentRoute;
         new DataColumn(
             'id', 
             header: 'Form',    
-            content: static function ($model) use ($urlGenerator) : string {
+            content: static function (Gentor $model) use ($urlGenerator) : string {
                 return 
                 
                 Html::a(
@@ -176,7 +182,7 @@ use Yiisoft\Router\CurrentRoute;
         new DataColumn(
             'id',
             header: 'Repository',
-            content: static function ($model) use ($urlGenerator) : string {
+            content: static function (Gentor $model) use ($urlGenerator) : string {
                 return 
                 
                 Html::a(
@@ -188,7 +194,7 @@ use Yiisoft\Router\CurrentRoute;
         new DataColumn(
             'id',
             header: 'Service',
-            content: static function ($model) use ($urlGenerator) : string {
+            content: static function (Gentor $model) use ($urlGenerator) : string {
                 return 
                 
                 Html::a(
@@ -200,7 +206,7 @@ use Yiisoft\Router\CurrentRoute;
         new DataColumn(
             'id',
             header: 'index',
-            content: static function ($model) use ($urlGenerator) : string {
+            content: static function (Gentor $model) use ($urlGenerator) : string {
                 return 
                 
                 Html::a(
@@ -212,9 +218,8 @@ use Yiisoft\Router\CurrentRoute;
         new DataColumn(
             'id',
             header: '_view',
-            content: static function ($model) use ($urlGenerator) : string {
+            content: static function (Gentor $model) use ($urlGenerator) : string {
                 return 
-                
                 Html::a(
                     '_view',
                     $urlGenerator->generate('generator/_view',['id' => $model->getGentor_id()]),
@@ -224,7 +229,7 @@ use Yiisoft\Router\CurrentRoute;
         new DataColumn(
             'id',
             header: '_form',
-            content: static function ($model) use ($urlGenerator) : string {
+            content: static function (Gentor $model) use ($urlGenerator) : string {
                 return 
                 
                 Html::a(
@@ -236,7 +241,7 @@ use Yiisoft\Router\CurrentRoute;
         new DataColumn(
             'id',
             header: '_route',
-            content: static function ($model) use ($urlGenerator) : string {
+            content: static function (Gentor $model) use ($urlGenerator) : string {
                 return 
                 
                 Html::a('_route', $urlGenerator->generate('generator/_route',['id' => $model->getGentor_id()]),
@@ -246,8 +251,21 @@ use Yiisoft\Router\CurrentRoute;
         ),
     ];       
 ?>
-<?= GridView::widget()
+<?php
+    $toolbarString = 
+        Form::tag()->post($urlGenerator->generate('generator/index'))->csrf($csrf)->open() .    
+        Div::tag()->addClass('float-end m-3')->content($toolbarReset)->encode(false)->render() .
+        Form::tag()->close();
+    $grid_summary = $s->grid_summary(
+        $paginator, 
+        $translator, 
+        (int)$s->get_setting('default_list_limit'), 
+        $translator->translate('invoice.generators'), 
+        ''
+    );
+    echo GridView::widget()
     ->rowAttributes(['class' => 'align-middle'])
+    ->tableAttributes(['class' => 'table table-striped text-center h-75','id'=>'table-generator'])
     ->columns(...$columns)
     ->dataReader($paginator)
     ->headerRowAttributes(['class'=>'card-header bg-info text-black'])
@@ -261,12 +279,7 @@ use Yiisoft\Router\CurrentRoute;
     ->summaryAttributes(['class' => 'mt-3 me-3 summary text-end'])
     ->summaryTemplate($grid_summary)
     ->emptyTextAttributes(['class' => 'card-header bg-warning text-black'])
-    ->emptyText((string)$translator->translate('invoice.invoice.no.records'))
-    ->tableAttributes(['class' => 'table table-striped text-center h-75','id'=>'table-generator'])
-    ->toolbar(
-        Form::tag()->post($urlGenerator->generate('generator/index'))->csrf($csrf)->open() .    
-        Div::tag()->addClass('float-end m-3')->content($toolbarReset)->encode(false)->render() .
-        Form::tag()->close()
-    );
+    ->emptyText($translator->translate('invoice.invoice.no.records'))
+    ->toolbar($toolbarString);
 ?>
 

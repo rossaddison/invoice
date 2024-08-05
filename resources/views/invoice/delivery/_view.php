@@ -2,17 +2,26 @@
 
 declare(strict_types=1); 
 
-
 use Yiisoft\FormModel\Field;
 use Yiisoft\Html\Html;
 use Yiisoft\Html\Tag\Form;
 
 /**
- * @var \Yiisoft\View\View $this
- * @var \Yiisoft\Router\UrlGeneratorInterface $urlGenerator
+ * @var App\Invoice\Entity\Inv $inv
+ * @var App\Invoice\Delivery\DeliveryForm $form
+ * @var App\Invoice\Helpers\DateHelper $dateHelper
+ * @var App\Invoice\Setting\SettingRepository $s
+ * @var App\Widget\Button $button
+ * @var Yiisoft\Translator\TranslatorInterface $translator
+ * @var Yiisoft\Router\UrlGeneratorInterface $urlGenerator
+ * @var array $dels
+ * @var int $del_count
+ * @var string $actionName
  * @var string $csrf
- * @var string $action
  * @var string $title
+ * @psalm-var array<string, Stringable|null|scalar> $actionArguments
+ * @psalm-var array<string,list<string>> $errors
+ * @psalm-var array<array-key, array<array-key, string>|string> $optionsDataDel
  */
 
 ?>
@@ -28,7 +37,7 @@ use Yiisoft\Html\Tag\Form;
 <?= Html::closeTag('h1'); ?>
 
 <?= Form::tag()
-    ->post($urlGenerator->generate(...$action))
+    ->post($urlGenerator->generate($actionName, $actionArguments))
     ->enctypeMultipartFormData()
     ->csrf($csrf)
     ->id('DeliveryForm')
@@ -38,73 +47,52 @@ use Yiisoft\Html\Tag\Form;
         <?= Html::openTag('h1', ['class' => 'headerbar-title']); ?>
             <?= Html::encode($title) ?>
         <?= Html::closeTag('h1'); ?>
-        <?= $button::back_save(); ?>
+        <?= $button::back(); ?>
     <?= Html::closeTag('div'); ?>
     <?= Html::openTag('div', ['id' => 'content']); ?>
         <?= Html::openTag('div', ['class' => 'mb-3 form-group has-feedback']); ?>
-            <?=
-                $date = $datehelper->get_or_set_with_style($form->getDate_created() ?? new \DateTimeImmutable('now'));
-                Field::datetime($form, 'date_created')
-                ->label($translator->translate('invoice.invoice.delivery.date.created') . ' (' . $datehelper->display() . ')')
+            <?php
+                Field::hidden($form, 'date_created')
+                ->label($translator->translate('invoice.invoice.delivery.date.created') . ' (' . $dateHelper->display() . ')')
                 ->addInputAttributes([
-                    'class' => 'form-control input-sm datepicker',
+                    'placeholder' => $translator->translate('invoice.invoice.delivery.date.created') . ' (' . $dateHelper->display() . ')',
                     'id' => 'date_created',
                     'role' => 'presentation',
                     'autocomplete' => 'off'
                 ])
-                ->value($date)
-                ->readonly(true)   
+                ->value(!is_string($createdDate = $form->getDate_created()) ? $createdDate->format('Y-m-d') : '');
             ?>
             <?=
-                $datem = $datehelper->get_or_set_with_style($form->getDate_modified() ?? new \DateTimeImmutable('now'));
-                Field::datetime($form, 'date_modified')
-                ->label($translator->translate('invoice.invoice.delivery.date.modified') . ' (' . $datehelper->display() . ')')
+                Field::hidden($form, 'date_modified')
+                ->label($translator->translate('invoice.invoice.delivery.date.modified') . ' (' . $dateHelper->display() . ')')
                 ->addInputAttributes([
-                    'class' => 'form-control input-sm datepicker',
+                    'placeholder' => $translator->translate('invoice.invoice.delivery.date.modified') . ' (' . $dateHelper->display() . ')',
                     'id' => 'date_modified',
                     'role' => 'presentation',
                     'autocomplete' => 'off'
                 ])
-                ->value($datem)
-                ->readonly(true)   
+                ->value(!is_string($modifiedDate = $form->getDate_modified()) ? $modifiedDate->format('Y-m-d') : '') 
+            ?>
+            
+            <?=
+                Field::date($form, 'start_date')
+                ->label($translator->translate('invoice.invoice.delivery.start.date') . ' (' . $dateHelper->display() . ')')
+                ->required(true)
+                ->value(!is_string($startDate = $form->getStart_date()) ? $startDate->format('Y-m-d') : '')
+                ->readonly(true);
+            ?>    
+           
+            <?= 
+                Field::date($form, 'actual_delivery_date')
+                ->label($translator->translate('invoice.invoice.delivery.actual.delivery.date') . ' (' . $dateHelper->display() . ')')
+                ->value(Html::encode(!is_string($actualDeliveryDate = $form->getActual_delivery_date()) ? $actualDeliveryDate->format('Y-m-d') : ''))        
+                ->hint($translator->translate('invoice.hint.this.field.is.not.required'))   
+                ->readonly(true);   
             ?>
             <?=
-                $sdate = $datehelper->get_or_set_with_style($form->getEnd_date() ?? new \DateTimeImmutable('now'));
-                Field::datetime($form, 'start_date')
-                ->label($translator->translate('invoice.invoice.delivery.start.date') . ' (' . $datehelper->display() . ')')
-                ->addInputAttributes([
-                     'class' => 'form-control input-sm datepicker',
-                     'id' => 'start_date',
-                     'role' => 'presentation',
-                     'autocomplete' => 'off'
-                ])
-                ->value($sdate)
-                ->readonly(true)    
-            ?>
-            <?=
-                $datea = $datehelper->get_or_set_with_style($form->getActual_delivery_datae() ?? new \DateTimeImmutable('now'));
-                Field::datetime($form, 'actual_delivery_date')
-                ->label($translator->translate('invoice.invoice.delivery.actual.delivery.date') . ' (' . $datehelper->display() . ')')
-                ->addInputAttributes([
-                    'class' => 'form-control input-sm datepicker',
-                    'id' => 'actual_delivery_date',
-                    'role' => 'presentation',
-                    'autocomplete' => 'off'
-                ])
-                ->value($datea)
-                ->readonly(true)   
-            ?>
-            <?=
-                $edate = $datehelper->get_or_set_with_style($form->getEnd_date() ?? new \DateTimeImmutable('now'));
-                Field::datetime($form, 'end_date')
-                ->label($translator->translate('invoice.invoice.delivery.end.date') . ' (' . $datehelper->display() . ')')
-                ->addInputAttributes([
-                     'class' => 'form-control input-sm datepicker',
-                     'id' => 'end_date',
-                     'role' => 'presentation',
-                     'autocomplete' => 'off'
-                ])
-                ->value($edate)
+                Field::date($form, 'end_date')
+                ->label($translator->translate('invoice.invoice.delivery.end.date') . ' (' . $dateHelper->display() . ')')
+                ->value(Html::encode(!is_string($endDate = $form->getEnd_date()) ? $endDate->format('Y-m-d') : ''))
                 ->readonly(true)     
             ?>
             <?= Field::hidden($form, 'id')
@@ -124,11 +112,16 @@ use Yiisoft\Html\Tag\Form;
             <?php 
                 if ($del_count > 0) { 
                     $optionsDataDel = [];
+                    /**
+                     * @var App\Invoice\Entity\DeliveryLocation $del
+                     */
                     foreach ($dels as $del) {
-                        $optionsDataDel[$del->getId()] = $del->getAddress_1(). ', '.$del->getAddress_2() .', '. $del->getCity() .', '. $del->getZip();
+                        if (null!==$delId = $del->getId()) {
+                            $optionsDataDel[$delId] = ($del->getAddress_1() ?? ''). ', '. ($del->getAddress_2() ?? '') .', '. ($del->getCity() ?? '').', '. ($del->getZip() ?? '');
+                        }
                     }
                     echo Field::select($form, 'delivery_location_id')
-                    ->label($translator->translate('invoice.invoice.delivery.location'),['class' => 'form-label'])    
+                    ->label($translator->translate('invoice.invoice.delivery.location'))    
                     ->addInputAttributes([
                         'class' => 'form-control',
                         'id' => 'delivery_location_id'

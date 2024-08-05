@@ -1,17 +1,22 @@
 <?php
-declare(strict_types=1);
 
+declare(strict_types=1);
 
 use Yiisoft\FormModel\Field;
 use Yiisoft\Html\Html;
 use Yiisoft\Html\Tag\Form;
 
 /**
- * @var \Yiisoft\View\View $this
- * @var \Yiisoft\Router\UrlGeneratorInterface $urlGenerator
+ * @var App\Invoice\Group\GroupForm $form
+ * @var App\Widget\Button $button
+ * @var Yiisoft\Translator\TranslatorInterface $translator
+ * @var Yiisoft\Router\UrlGeneratorInterface $urlGenerator
+ * @var string $actionName
  * @var string $csrf
- * @var string $action
+ * @psalm-var array<string,list<string>> $errors
+ * @psalm-var array<string, Stringable|null|scalar> $actionArguments
  */
+
 ?>
 
 <?= Html::openTag('div',['class'=>'container py-5 h-100']); ?>
@@ -23,7 +28,7 @@ use Yiisoft\Html\Tag\Form;
     <?= $translator->translate('invoice.group.form'); ?>
 <?= Html::closeTag('h1'); ?>
 <?= Form::tag()
-    ->post($urlGenerator->generate(...$action))
+    ->post($urlGenerator->generate($actionName, $actionArguments))
     ->enctypeMultipartFormData()
     ->csrf($csrf)
     ->id('GroupForm')

@@ -7,11 +7,14 @@ use Yiisoft\Html\Tag\Form;
 use Yiisoft\FormModel\Field;
 
 /**
- * @var \Yiisoft\View\View $this
- * @var \Yiisoft\Router\UrlGeneratorInterface $urlGenerator
+ * @var App\Invoice\InvSentLog\InvSentLogForm $form
+ * @var App\Widget\Button $button
+ * @var Yiisoft\Translator\TranslatorInterface $translator
+ * @var Yiisoft\Router\UrlGeneratorInterface $urlGenerator
  * @var string $csrf
- * @var string $action
+ * @var string $actionName
  * @var string $title
+ * @psalm-var array<string, Stringable|null|scalar> $actionArguments
  */
 
 ?>
@@ -21,7 +24,7 @@ use Yiisoft\FormModel\Field;
 <?= Html::openTag('div',['class'=>'col-12 col-md-8 col-lg-6 col-xl-8']); ?>
 <?= Html::openTag('div',['class'=>'card border border-dark shadow-2-strong rounded-3']); ?><?= Html::openTag('div',['class'=>'card-header']); ?>
 <?= Form::tag()
-    ->post($urlGenerator->generate(...$action))
+    ->post($urlGenerator->generate($actionName, $actionArguments))
     ->enctypeMultipartFormData()
     ->csrf($csrf)
     ->id('InvSentLogForm')
@@ -49,7 +52,7 @@ use Yiisoft\FormModel\Field;
             ->addInputAttributes([
                 'class' => 'form-control'
             ])
-            ->value(Html::encode($invsentlog->getInv()->getNumber()))
+            ->value(Html::encode($form->getInv()?->getNumber() ?? '#'))
             ->placeholder($translator->translate('invoice.invoice.number'))
             ->readonly(true)
          ?>
@@ -60,7 +63,7 @@ use Yiisoft\FormModel\Field;
             ->addInputAttributes([
                 'class' => 'form-control'
             ])
-            ->value(Html::encode($form->getDate_sent()->format('l, d-M-y H:i:s T')))
+            ->value(Html::encode(!is_string($form->getDate_sent()) ? $form->getDate_sent()?->format('l, d-M-y H:i:s T') : ''))
             ->placeholder($translator->translate('date_sent'))
             ->readonly(true)
          ?>

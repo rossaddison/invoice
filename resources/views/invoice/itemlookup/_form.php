@@ -8,16 +8,22 @@ use Yiisoft\Html\Html;
 use Yiisoft\Html\Tag\Form;
 
 /**
- * @var \Yiisoft\View\View $this
- * @var \Yiisoft\Router\UrlGeneratorInterface $urlGenerator
+ * @var App\Invoice\ItemLookup\ItemLookupForm $form
+ * @var App\Invoice\Setting\SettingRepository $s
+ * @var App\Widget\Button $button
+ * @var Yiisoft\Translator\TranslatorInterface $translator
+ * @var Yiisoft\Router\UrlGeneratorInterface $urlGenerator
  * @var string $csrf
- * @var string $action
+ * @var string $actionName
  * @var string $title
+ * @psalm-var array<string, Stringable|null|scalar> $actionArguments
+ * @psalm-var array<string,list<string>> $errors
+ * 
  */
 ?>
 
 <?= Form::tag()
-    ->post($urlGenerator->generate(...$action))
+    ->post($urlGenerator->generate($actionName, $actionArguments))
     ->enctypeMultipartFormData()
     ->csrf($csrf)
     ->id('ItemLookupForm')
@@ -47,7 +53,7 @@ use Yiisoft\Html\Tag\Form;
             <?= Html::openTag('div'); ?>
                 <?= Html::openTag('div', ['class' => 'mb-3 form-group']); ?>
                 <?= Field::text($form, 'name')
-                    ->label($translator->translate('i.name'), ['form-label'])
+                    ->label($translator->translate('i.name'))
                     ->placeholder($translator->translate('i.name'))    
                     ->value(Html::encode($form->getName() ?? ''))    
                     ->hint($translator->translate('invoice.hint.this.field.is.required')); 
@@ -55,7 +61,7 @@ use Yiisoft\Html\Tag\Form;
                 <?= Html::closeTag('div'); ?>
                 <?= Html::openTag('div', ['class' => 'mb-3 form-group']); ?>
                 <?= Field::textarea($form, 'description')
-                    ->label($translator->translate('i.description'), ['form-label'])
+                    ->label($translator->translate('i.description'))
                     ->placeholder($translator->translate('i.description'))    
                     ->value(Html::encode($form->getDescription() ?? ''))    
                     ->hint($translator->translate('invoice.hint.this.field.is.required')); 
@@ -63,7 +69,7 @@ use Yiisoft\Html\Tag\Form;
                 <?= Html::closeTag('div'); ?>
                 <?= Html::openTag('div', ['class' => 'mb-3 form-group']); ?>
                 <?= Field::text($form, 'price')
-                    ->label($translator->translate('i.price'), ['form-label'])
+                    ->label($translator->translate('i.price'))
                     ->placeholder($translator->translate('i.price'))    
                     ->value(Html::encode($s->format_amount($form->getPrice() ?? 0.00)))    
                     ->hint($translator->translate('invoice.hint.this.field.is.required')); 

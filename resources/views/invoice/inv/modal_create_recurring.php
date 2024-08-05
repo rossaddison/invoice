@@ -1,6 +1,16 @@
 <?php
-    declare(strict_types=1);
-    use Yiisoft\Html\Html;
+
+declare(strict_types=1);
+
+use Yiisoft\Html\Html;
+
+/**
+* @var App\Invoice\Helpers\DateHelper $dateHelper
+* @var Yiisoft\Translator\TranslatorInterface $translator
+* @var Yiisoft\Router\UrlGeneratorInterface $urlGenerator
+* @var array $recur_frequencies
+*/
+    
 ?>
 <div id="create-recurring-inv" class="modal modal-lg"
      role="dialog" aria-labelledby="modal_create_recurring" aria-hidden="true">
@@ -18,7 +28,12 @@
             <div class="form-group">
                 <label for="recur_frequency"><?= $translator->translate('i.every'); ?></label>
                 <select name="recur_frequency" id="recur_frequency" class="form-control">
-                    <?php foreach ($recur_frequencies as $key => $lang) { ?>
+                    <?php
+                        /**
+                         * @var string $key
+                         * @var string $lang
+                         */
+                        foreach ($recur_frequencies as $key => $lang) { ?>
                         <option value="<?php echo $key; ?>">
                             <?= $translator->translate($lang); ?>
                         </option>
@@ -59,7 +74,7 @@
 </div>
 <div>     
 <?php $js14 = "$(function () {".
-        '$("#recur_end_date.form-control.input-sm.datepicker").datepicker({dateFormat:"'.$datehelper->display().'"});'.
+        '$("#recur_end_date.form-control.input-sm.datepicker").datepicker({dateFormat:"'.$dateHelper->display().'"});'.
       '});';
       echo Html::script($js14)->type('module');
 ?>

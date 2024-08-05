@@ -1,15 +1,18 @@
 <?php
 
   declare(strict_types=1); 
+ 
+  /**
+   * @see InvController function view, search modal_add_inv_tax
+   * @see id="add-inv-tax" triggered by <a href="#add-inv-tax" data-toggle="modal"  style="text-decoration:none"> on views/inv/view.php line 67
+   * @see Invoice/Asset/rebuild-1.13/js/inv.js/$(document).on('click', '#inv_tax_submit', function () {
+   * @see InvController/save_inv_tax_rate
+   * @var App\Invoice\Helpers\NumberHelper $numberHelper
+   * @var App\Invoice\Setting\SettingRepository $s
+   * @var Yiisoft\Translator\TranslatorInterface $translator 
+   * @var array $taxRates
+   */
   
-  use Yiisoft\Html\Html;
-  use App\Invoice\Helpers\NumberHelper;
-  
-  $numberhelper = new NumberHelper($s);
-  
-  // id="add-inv-tax" triggered by <a href="#add-inv-tax" data-toggle="modal"  style="text-decoration:none"> on views/inv/view.php line 67
-  // see also Invoice/Asset/rebuild-1.13/js/inv.js/$(document).on('click', '#inv_tax_submit', function () {
-  // see also InvController/save_inv_tax_rate
 ?>
 
 <div id="add-inv-tax" class="modal modal-lg" role="dialog" aria-labelledby="modal_add_inv_tax" aria-hidden="true">
@@ -28,9 +31,19 @@
                 <div>
                     <select name="inv_tax_rate_id" id="inv_tax_rate_id" class="form-control" required>
                         <option value="0"><?= $translator->translate('i.none'); ?></option>
-                        <?php foreach ($tax_rates as $tax_rate) { ?>
-                            <option value="<?= $tax_rate->getTax_rate_id(); ?>">
-                                <?= $numberhelper->format_amount($tax_rate->getTax_rate_percent()) . '% - ' . Html::encode($tax_rate->getTax_rate_name()); ?>
+                        <?php
+                            /**
+                             * @var App\Invoice\Entity\TaxRate $taxRate
+                             */
+                            foreach ($taxRates as $taxRate) { ?>
+                            <option value="<?= $taxRate->getTax_rate_id(); ?>">
+                                <?php 
+                                        $taxRatePercent = $numberHelper->format_amount($taxRate->getTax_rate_percent());
+                                        $taxRateName = $taxRate->getTax_rate_name();
+                                        if ($taxRatePercent >= 0.00 && null!==$taxRatePercent && null!==$taxRateName) {
+                                            echo $taxRatePercent . '% - ' . ($taxRateName); 
+                                        }
+                                ?>s
                             </option>
                         <?php } ?>
                     </select>

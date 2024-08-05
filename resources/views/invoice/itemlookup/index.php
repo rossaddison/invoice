@@ -1,10 +1,8 @@
 <?php
 declare(strict_types=1);
 
-use Yiisoft\Data\Paginator\OffsetPaginator;
+use App\Invoice\Entity\ItemLookup;
 use Yiisoft\Html\Html;
-use Yiisoft\Translator\TranslatorInterface;
-use Yiisoft\View\WebView;
 use Yiisoft\Html\Tag\A;
 use Yiisoft\Html\Tag\Div;
 use Yiisoft\Html\Tag\Form;
@@ -14,17 +12,16 @@ use Yiisoft\Yii\DataView\Column\DataColumn;
 use Yiisoft\Yii\DataView\Column\ActionColumn;
 use Yiisoft\Yii\DataView\GridView;
 use Yiisoft\Yii\DataView\OffsetPagination;
-use Yiisoft\Router\CurrentRoute;
 
 /**
- * @var \App\Invoice\Entity\ItemLookup $itemLookup
+ * @var App\Invoice\Setting\SettingRepository $s
+ * @var Yiisoft\Data\Paginator\OffsetPaginator $paginator
+ * @var Yiisoft\Router\CurrentRoute $currentRoute
+ * @var Yiisoft\Translator\TranslatorInterface $translator
+ * @var Yiisoft\Router\FastRoute\UrlGenerator $urlGenerator
+ * @var string $alert
  * @var string $csrf
- * @var CurrentRoute $currentRoute 
- * @var OffsetPaginator $paginator
- * @var \Yiisoft\Router\UrlGeneratorInterface $urlGenerator 
- * @var TranslatorInterface $translator 
- * @var WebView $this
- */ 
+ */
  
  echo $alert;
 ?>
@@ -45,7 +42,7 @@ use Yiisoft\Router\CurrentRoute;
         ->addAttributes(['type' => 'reset'])
         ->addClass('btn btn-danger me-1 ajax-loader')
         ->content(I::tag()->addClass('bi bi-bootstrap-reboot'))
-        ->href($urlGenerator->generate($currentRoute->getName()))
+        ->href($urlGenerator->generate($currentRoute->getName() ?? 'itemlookup/index'))
         ->id('btn-reset')
         ->render();
     
@@ -70,25 +67,25 @@ use Yiisoft\Router\CurrentRoute;
         new DataColumn(
             'id',
             header: $translator->translate('i.id'),
-            content: static fn (object $model) => Html::encode($model->getId())
+            content: static fn (ItemLookup $model) => Html::encode($model->getId())
         ),        
         new DataColumn(
             'name',
             header: $translator->translate('i.name'),                
-            content: static fn ($model): string => Html::encode($model->getName())                  
+            content: static fn (ItemLookup $model): string => Html::encode($model->getName())                  
         ),
         new DataColumn(
             'description',
             header: $translator->translate('i.description'),                
-            content: static fn ($model): string => Html::encode($model->getDescription())                  
+            content: static fn (ItemLookup $model): string => Html::encode($model->getDescription())                  
         ),
         new DataColumn(
             'price',    
             header: $translator->translate('i.price'),                
-            content: static fn ($model): string => Html::encode($model->getPrice()) 
+            content: static fn (ItemLookup $model): string => Html::encode($model->getPrice()) 
         ),
         new ActionColumn(
-            content: static fn($model): string => 
+            content: static fn(ItemLookup $model): string => 
             Html::a()
             ->addAttributes([
                 'class' => 'dropdown-button text-decoration-none', 
@@ -100,7 +97,7 @@ use Yiisoft\Router\CurrentRoute;
             ->render()
         ),
         new ActionColumn(
-            content: static fn($model): string => 
+            content: static fn(ItemLookup $model): string => 
             Html::a()
             ->addAttributes([
                 'class' => 'dropdown-button text-decoration-none', 
@@ -112,7 +109,7 @@ use Yiisoft\Router\CurrentRoute;
             ->render()
         ),
         new ActionColumn(
-            content: static fn($model): string => 
+            content: static fn(ItemLookup $model): string => 
             Html::a()
             ->addAttributes([
                 'class'=>'dropdown-button text-decoration-none', 
@@ -127,13 +124,22 @@ use Yiisoft\Router\CurrentRoute;
         )
     ];       
 ?>
-<?= GridView::widget()
+<?php
+    $grid_summary = $s->grid_summary(
+        $paginator, 
+        $translator, 
+        (int)$s->get_setting('default_list_limit'), 
+        $translator->translate('invoice.item.lookup'), '');
+    $toolbarString = 
+        Form::tag()->post($urlGenerator->generate('itemlookup/index'))->csrf($csrf)->open() .    
+        Div::tag()->addClass('float-end m-3')->content($toolbarReset)->encode(false)->render() .
+        Form::tag()->close();
+    echo GridView::widget()
     ->rowAttributes(['class' => 'align-middle'])
+    ->tableAttributes(['class' => 'table table-striped text-center h-75','id'=>'table-itemlookup'])
     ->columns(...$columns)
     ->dataReader($paginator)
     ->headerRowAttributes(['class'=>'card-header bg-info text-black'])
-    //->filterPosition('header')
-    //->filterModelName('clientnote')            
     ->header($header)
     ->id('w31-grid')
     ->pagination(
@@ -144,12 +150,7 @@ use Yiisoft\Router\CurrentRoute;
     ->summaryAttributes(['class' => 'mt-3 me-3 summary text-end'])
     ->summaryTemplate($grid_summary)
     ->emptyTextAttributes(['class' => 'card-header bg-warning text-black'])
-    ->emptyText((string)$translator->translate('invoice.invoice.no.records'))
-    ->tableAttributes(['class' => 'table table-striped text-center h-75','id'=>'table-itemlookup'])
-    ->toolbar(
-        Form::tag()->post($urlGenerator->generate('itemlookup/index'))->csrf($csrf)->open() .    
-        Div::tag()->addClass('float-end m-3')->content($toolbarReset)->encode(false)->render() .
-        Form::tag()->close()
-    );
+    ->emptyText($translator->translate('invoice.invoice.no.records'))
+    ->toolbar($toolbarString);
 ?>
 </div>

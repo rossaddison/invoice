@@ -1,8 +1,8 @@
 <?php
+
 declare(strict_types=1); 
 
 use App\Invoice\Entity\UserInv;
-use Yiisoft\Data\Paginator\OffsetPaginator;
 use Yiisoft\Html\Html;
 use Yiisoft\Html\Tag\A;
 use Yiisoft\Html\Tag\Div;
@@ -16,15 +16,14 @@ use Yiisoft\Yii\DataView\UrlConfig;
 use Yiisoft\Yii\DataView\YiiRouter\UrlCreator;
 
 /**
- * @var App\Invoice\Entity\UserInv $userinv
  * @var App\Invoice\Setting\SettingRepository $s
  * @var App\Invoice\UserClient\UserClientRepository $ucR
  * @var App\Widget\PageSizeLimiter $pageSizeLimiter
  * @var string $active
  * @var string $alert
  * @var string $csrf
- * @var bool $canEdit 
- * @var OffsetPaginator $paginator
+ * @var bool $canEdit  
+ * @var Yiisoft\Data\Paginator\OffsetPaginator $paginator
  * @var Yiisoft\Rbac\Manager $manager
  * @var Yiisoft\Router\CurrentRoute $currentRoute
  * @var Yiisoft\Router\FastRoute\UrlGenerator $urlGenerator 
@@ -285,13 +284,13 @@ echo $alert
     /**
      * @see vendor\yiisoft\yii-dataview\src\GridView.php for the sequence of functions which can effect rendering
      */
-    echo GridView::widget()
-    ->enableMultisort(true)                
-    ->columns(...$columns)
-    ->dataReader($paginator)    
+    echo GridView::widget()    
     ->rowAttributes(['class' => 'align-middle'])        
-    ->tableAttributes(['class' => 'table table-striped text-center h-75','id'=>'table-user-inv'])        
+    ->tableAttributes(['class' => 'table table-striped text-center h-75','id'=>'table-user-inv'])  
+    ->columns(...$columns) 
+    ->dataReader($paginator)
     ->headerRowAttributes(['class'=>'card-header bg-info text-black'])
+    ->enableMultisort(true)                
     ->header($header)
     ->id('w5-grid')
     ->pagination(

@@ -1,6 +1,14 @@
 <?php
+
 declare(strict_types=1);
-// id="modal-change-client" triggered by <a href="#modal-change-client"> on inv\view
+
+/**
+ * @see id="modal-change-client" triggered by <a href="#modal-change-client"> inv\view
+ * @var App\Invoice\Entity\Inv $inv
+ * @var Yiisoft\Router\UrlGeneratorInterface $urlGenerator
+ * @var Yiisoft\Translator\TranslatorInterface $translator
+ * @var array $clients
+ */
 
 ?>
 <div id="modal-change-client" class="modal modal-lg" role="dialog" aria-labelledby="modal_change_client" aria-hidden="true">
@@ -16,9 +24,13 @@ declare(strict_types=1);
                 <label for="change_client_id"><?= $translator->translate('i.client'); ?></label>
                 <select name="change_client_id" id="change_client_id" class="form-control">
                     <option value="0"><?= $translator->translate('i.none'); ?></option>
-                        <?php foreach ($clients as $client) { ?>
+                        <?php
+                            /**
+                             * @var App\Invoice\Entity\Client $client
+                             */
+                            foreach ($clients as $client) { ?>
                             <option value="<?= $client->getClient_id(); ?>">
-                                <?= $client->getClient_name(); ?>
+                                <?= $client->getClient_name() ?: '#'; ?>
                             </option>
                         <?php } ?>
                 </select>

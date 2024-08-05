@@ -4,7 +4,7 @@ require_once('vendor/yiisoft/requirements/src/RequirementsChecker.php');
 
 use Yiisoft\Requirements\RequirementsChecker;
 
-$requirementsChecker = new RequirementsChecker;
+$requirementsChecker = new RequirementsChecker();
 
 // Add here the conditions that must be verified
 $config = [

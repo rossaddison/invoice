@@ -1,22 +1,66 @@
 <?php
+
 declare(strict_types=1);
 
 use Yiisoft\Html\Html;
 use Yiisoft\Html\Tag\I;
-use App\Invoice\Helpers\ClientHelper;
-use App\Invoice\Helpers\CountryHelper;
 
 /**
- * @var \Yiisoft\View\WebView $this
- * @var \Yiisoft\Router\UrlGeneratorInterface $urlGenerator
- * @var array $body
+ * @var App\Invoice\Entity\Inv $inv
+ * @var App\Invoice\Entity\Sumex|null $sumex
+ * @var App\Invoice\Inv\InvForm $form
+ * @var App\Invoice\InvAmount\InvAmountRepository $iaR
+ * @var App\Invoice\Helpers\ClientHelper $clientHelper
+ * @var App\Invoice\Helpers\DateHelper $dateHelper
+ * @var App\Invoice\Helpers\CountryHelper $countryHelper
+ * @var App\Invoice\Helpers\CustomValuesHelper $cvH
+ * @var App\Invoice\Helpers\NumberHelper $numberHelper
+ * @var App\Invoice\Setting\SettingRepository $s
+ * @var App\Widget\Button $button
+ * @var Yiisoft\Translator\TranslatorInterface $translator
+ * @var Yiisoft\Router\UrlGeneratorInterface $urlGenerator
+ * @var array $custom_fields
+ * @var array $custom_values
+ * @var array $enabled_gateways
+ * @var array $inv_custom_values
+ * @var array $inv_items
+ * @var array $inv_statuses 
+ * @var array $payments
+ * @var array $payment_methods
+ * @var bool $invEdit
+ * @var bool $isRecurring
+ * @var bool $paymentView
+ * @var bool $paymentCfExist
+ * @var bool $readOnly
+ * @var bool $showButtons
+ * @var string $alert
  * @var string $csrf
+ * @var string $add_inv_item_product
+ * @var string $add_inv_item_task
+ * @var string $modal_add_inv_tax
+ * @var string $modal_add_allowance_charge
+ * @var string $modal_change_client
+ * @var string $modal_choose_items
+ * @var string $modal_choose_tasks
+ * @var string $modal_copy_inv
+ * @var string $modal_create_recurring
+ * @var string $modal_create_credit
+ * @var string $modal_delete_inv
+ * @var string $modal_delete_items
+ * @var string $modal_inv_to_pdf
+ * @var string $modal_inv_to_html
+ * @var string $modal_message_no_payment_method
+ * @var string $partial_inv_delivery_location
+ * @var string $partial_inv_attachments
+ * @var string $partial_item_table
+ * @var string $peppol_stream_toggle
+ * @var string $sales_order_number
  * @var string $title
+ * @var string $view_custom_fields
  */
 
-        $vat = $s->get_setting('enable_vat_registration');
-        $clienthelper = new ClientHelper($s);
-        $countryhelper = new CountryHelper();
+$vat = $s->get_setting('enable_vat_registration');
+
 ?>
 <div class="panel panel-default">
     <div class="panel-heading">
@@ -44,7 +88,7 @@ use App\Invoice\Helpers\CountryHelper;
 </div>    
 
    
-<?php if ($payments) { ?>
+<?php if (!empty($payments)) { ?>
         <br>
         <br>
         <div class="panel-heading">
@@ -60,10 +104,14 @@ use App\Invoice\Helpers\CountryHelper;
                     </tr>
                 </thead>
                 <tbody>
-    <?php foreach ($payments as $payment) { ?>
+    <?php   
+            /**
+             * @var App\Invoice\Entity\Payment $payment
+             */
+            foreach ($payments as $payment) { ?>
                 <tr>
-                    <td><?= Html::encode($payment->getPayment_date()->format($datehelper->style())); ?></td>
-                    <td><?= Html::encode($s->format_currency($payment->getAmount())); ?></td>
+                    <td><?= Html::encode(!is_string($paymentDate = $payment->getPayment_date()) ? $paymentDate->format($dateHelper->style()) : ''); ?></td>
+                    <td><?= Html::encode($s->format_currency($payment->getAmount() >= 0.00 ? $payment->getAmount() : 0.00)); ?></td>
                     <td><?= Html::encode($payment->getNote()); ?></td>
                 </tr>
     <?php } ?>
@@ -71,7 +119,7 @@ use App\Invoice\Helpers\CountryHelper;
             </table>
         </div>
 <?php } ?>
-<?php if ($read_only === false && $invEdit) { ?>
+<?php if ($readOnly === false && $invEdit) { ?>
         <br>
         <br>
         <div class="panel-heading">
@@ -115,7 +163,7 @@ use App\Invoice\Helpers\CountryHelper;
         <h1 class="headerbar-title">
 <?php
 echo Html::encode($translator->translate('i.invoice')) . ' ';
-echo(Html::encode($inv->getNumber() ? '#' . $inv->getNumber() : $inv->getId()));
+echo(Html::encode(strlen($inv->getNumber()?? '') == 0 ? '#' . ($inv->getNumber() ?? '#'): $inv->getId()));
 ?>
         </h1>
         <div class="headerbar-item pull-right <?php if ($inv->getIs_read_only() === false || $inv->getStatus_id() !== 4) { ?>btn-group<?php } ?>">
@@ -126,7 +174,7 @@ echo(Html::encode($inv->getNumber() ? '#' . $inv->getNumber() : $inv->getId()));
                 <ul class="dropdown-menu dropdown-menu-right">
 <?php
 // Options...Edit
-if ($show_buttons && $invEdit) {
+if ($showButtons && $invEdit) {
     ?>
                         <li>
                             <a href="<?= $urlGenerator->generate('inv/edit', ['id' => $inv->getId()]) ?>" style="text-decoration:none">
@@ -138,12 +186,12 @@ if ($show_buttons && $invEdit) {
 // Options...Add Invoice Tax
     if ($vat === '0') {
         ?>
-                            <li>
-                                <a href="#add-inv-tax" data-toggle="modal"  style="text-decoration:none">
-                                    <i class="fa fa-plus fa-margin"></i>
-                                    <?= Html::encode($translator->translate('i.add_invoice_tax')); ?>
-                                </a>
-                            </li>
+                        <li>
+                            <a href="#add-inv-tax" data-toggle="modal"  style="text-decoration:none">
+                                <i class="fa fa-plus fa-margin"></i>
+                                <?= Html::encode($translator->translate('i.add_invoice_tax')); ?>
+                            </a>
+                        </li>
                         <?php } ?>
                         <li>
                             <a href="#add-inv-allowance-charge" data-bs-toggle="modal"  style="text-decoration:none">
@@ -154,7 +202,7 @@ if ($show_buttons && $invEdit) {
                     <?php } ?>
                     <?php
 // Options ... Peppol UBL 2.1 Invoice
-                    if ($show_buttons && $invEdit && $inv->getSo_id()) {
+                    if ($showButtons && $invEdit && $inv->getSo_id()) {
                         ?>
                         <li>
                             <a href="" style="text-decoration:none" onclick="window.open('<?= $urlGenerator->generate('inv/peppol', ['id' => $inv->getId()]) ?>')">
@@ -201,7 +249,7 @@ if ($show_buttons && $invEdit) {
                      * @see Modal string activated with #create-credit-inv. Modal string from InvController/index output to $modal_create_credit
                      * @see InvController/create_credit_confirm run from src\Invoice\Asset\rebuild-1.1.3\inv.js create-credit-confirm
                      */
-                    if (( $read_only === true || $inv->getStatus_id() === 4) && $invEdit) {
+                    if (( $readOnly === true || $inv->getStatus_id() === 4) && $invEdit) {
                         ?>
                         <li>
                             <a href="#create-credit-inv" data-toggle="modal" data-invoice-id="<?= $inv->getId(); ?>" style="text-decoration:none">
@@ -211,16 +259,20 @@ if ($show_buttons && $invEdit) {
                     <?php } ?>
                     <?php
 // Options ... Enter Payment
+                    /**
+                     * @var App\Invoice\Entity\InvAmount $inv_amount
+                     */
                     $inv_amount = ($iaR->repoInvAmountcount((int) $inv->getId()) > 0 ? $iaR->repoInvquery((int) $inv->getId()) : '');
                     // If there is a balance outstanding and the invoice is not a draft ie. at least sent, allow a payment to be allocated against it.
-                    if (!empty($inv_amount) && $inv_amount->getBalance() > 0 && $inv->getStatus_id() !== 1 && $invEdit) :
+                    $invAmountBalance = $inv_amount->getBalance();
+                    if ($invAmountBalance >= 0.00 && $inv->getStatus_id() !== 1 && $invEdit) :
                         ?>
                         <li>
                             <a href="<?= $urlGenerator->generate('payment/add'); ?>" style="text-decoration:none" class="invoice-add-payment"
                                data-invoice-id="<?= Html::encode($inv->getId()); ?>"
-                               data-invoice-balance="<?= Html::encode($inv_amount->getBalance() ?? 0.00); ?>"
+                               data-invoice-balance="<?= Html::encode($invAmountBalance); ?>"
                                data-invoice-payment-method="<?= Html::encode($inv->getPayment_method()); ?>"
-                               data-payment-cf-exisst="<?= Html::encode($payment_cf_exist); ?>">
+                               data-payment-cf-exisst="<?= Html::encode($paymentCfExist); ?>">
                                 <i class="fa fa-credit-card fa-margin"></i>
                         <?= Html::encode($translator->translate('i.enter_payment')); ?>
                             </a>
@@ -229,9 +281,14 @@ if ($show_buttons && $invEdit) {
                     <?php
 // Options ... Pay Now
                     // Show the pay now button if not a draft and the user has viewPayment permission ie. not editPayment permission
-                    if (($read_only === false && in_array($inv->getStatus_id(), [2, 3]) && $inv_amount->getBalance() > 0) && $paymentView) {
-                        ?>
-    <?php foreach ($enabled_gateways as $gateway) { ?>                        
+                    if (($readOnly === false && in_array($inv->getStatus_id(), [2, 3]) && $invAmountBalance > 0) && $paymentView) {
+                     ?>
+    <?php
+        /**
+         * @var array $enabled_gateways
+         * @var string $gateway
+         */
+        foreach ($enabled_gateways as $gateway) { ?>                        
         <li>
             <?php if ($inv->getPayment_method() !== 0) {
                 // Because there is a payment method there is no need to show a message modal
@@ -256,7 +313,7 @@ if ($show_buttons && $invEdit) {
                         <!-- null!==$sumex There is a sumex extension record linked to the current invoice_id
                              and the sumex setting under View...Settings...Invoice...Sumex Settings is set at Yes.
                         -->
-                            <?php if (null !== $sumex && $s->get_setting('sumex') === '1') { ?>
+                            <?php if ($s->get_setting('sumex') === '1') { ?>
                             <a href="#inv-to-pdf"  data-toggle="modal" style="text-decoration:none">
                                 <i class="fa fa-print fa-margin"></i>
                             <?= Html::encode($translator->translate('i.generate_sumex')); ?>
@@ -302,13 +359,13 @@ if ($invEdit) {
 
                             if (null !== $sumex) {
                                 if (null !== $sumex->getInvoice()) {
-                                    ?>
-                                    <a href="<?= $urlGenerator->generate('sumex/edit', ['id' => $inv->getId()]); ?>" style="text-decoration:none">
-                                        <i class="fa fa-edit fa-margin"></i>
-            <?= $translator->translate('invoice.sumex.edit'); ?>
-                                    </a>
-                                    <?php } ?>
-                                <?php } ?>
+                                ?>
+                                <a href="<?= $urlGenerator->generate('sumex/edit', ['id' => $inv->getId()]); ?>" style="text-decoration:none">
+                                    <i class="fa fa-edit fa-margin"></i>
+                                        <?= $translator->translate('invoice.sumex.edit'); ?>
+                                </a>
+                            <?php } ?>
+                        <?php } ?>
                         </li>
                         <li>
                             <a href="<?= $urlGenerator->generate('inv/email_stage_0', ['id' => $inv->getId()]); ?>" style="text-decoration:none">
@@ -322,13 +379,15 @@ if ($invEdit) {
                         <li>
                             <a href="#inv-to-inv" data-toggle="modal"  style="text-decoration:none">
                                 <i class="fa fa-copy fa-margin"></i>
-    <?= Html::encode($translator->translate('i.copy_invoice')); ?>
+    <?= 
+ // Options ... Copy Invoice                           
+    Html::encode($translator->translate('i.copy_invoice')); ?>
                             </a>
                         </li>
                         <li>
                             <?php
 // Options ... Invoice to HTML with Sumex
-                            if (null !== $sumex && $s->get_setting('sumex') === '1') {
+                            if ($s->get_setting('sumex') === '1') {
                                 ?>
                                 <a href="#inv-to-html"  data-toggle="modal" style="text-decoration:none">
                                     <i class="fa fa-print fa-margin"></i>
@@ -360,7 +419,7 @@ if ($invEdit) {
 // the system has been overridden and the invoices read only status has been set to false
 // and a sales order has not been generated ie. invoice not based on sales order
 // Options ... Delete Invoice
-if (($invEdit && $inv->getStatus_id() === 1 || ($s->get_setting('enable_invoice_deletion') === true && $inv->getIs_read_only() === false)) && !$inv->getSo_id()) {
+if (($inv->getStatus_id() === 1 || ($s->get_setting('enable_invoice_deletion') === '1' && $inv->getIs_read_only() === false)) && !$inv->getSo_id() && $invEdit) {
     ?>
                         <li>
                             <a href="#delete-inv" data-toggle="modal"  style="text-decoration:none">
@@ -377,7 +436,7 @@ if (($invEdit && $inv->getStatus_id() === 1 || ($s->get_setting('enable_invoice_
                 </ul>
             </div>
             <div class="headerbar-item invoice-labels pull-right">
-                <?php if ($is_recurring) { ?>
+                <?php if ($isRecurring) { ?>
                     <span class="label label-info">
                         <i class="fa fa-refresh"></i>
     <?= Html::encode($translator->translate('i.recurring')); ?>
@@ -398,45 +457,45 @@ if (($invEdit && $inv->getStatus_id() === 1 || ($s->get_setting('enable_invoice_
                 <?= Html::openTag('div', ['class' => 'row']); ?>
                     <div class="col-xs-12 col-sm-6 col-md-5">
                         <h3>
-                            <a href="<?= $urlGenerator->generate('client/view', ['id' => $inv->getClient()->getClient_id()]); ?>">
-                                <?= Html::encode($clienthelper->format_client($inv->getClient())) ?>
+                            <a href="<?= $urlGenerator->generate('client/view', ['id' => $inv->getClient()?->getClient_id()]); ?>">
+                                <?= Html::encode($clientHelper->format_client($inv->getClient())) ?>
                             </a>
                         </h3>
                         <br>
-                        <div id="pre_save_client_id" value="<?php echo $inv->getClient()->getClient_id(); ?>" hidden></div>
+                        <div id="pre_save_client_id" value="<?php echo $inv->getClient()?->getClient_id(); ?>" hidden></div>
                         <div class="client-address">
                             <span class="client-address-street-line-1">
-                                <?php echo($inv->getClient()->getClient_address_1() ? Html::encode($inv->getClient()->getClient_address_1()) . '<br>' : ''); ?>
+                                <?php echo(strlen($inv->getClient()?->getClient_address_1() ?? '') > 0 ? Html::encode($inv->getClient()?->getClient_address_1()) . '<br>' : ''); ?>
                             </span>
                             <span class="client-address-street-line-2">
-<?php echo($inv->getClient()->getClient_address_2() ? Html::encode($inv->getClient()->getClient_address_2()) . '<br>' : ''); ?>
+                            <?php echo(strlen($inv->getClient()?->getClient_address_2() ?? '') > 0 ? Html::encode($inv->getClient()?->getClient_address_2()) . '<br>' : ''); ?>
                             </span>
                             <span class="client-address-town-line">
-                            <?php echo($inv->getClient()->getClient_city() ? Html::encode($inv->getClient()->getClient_city()) . '<br>' : ''); ?>
-                            <?php echo($inv->getClient()->getClient_state() ? Html::encode($inv->getClient()->getClient_state()) . '<br>' : ''); ?>
-                            <?php echo($inv->getClient()->getClient_zip() ? Html::encode($inv->getClient()->getClient_zip()) : ''); ?>
+                            <?php echo(strlen($inv->getClient()?->getClient_city() ?? '') > 0 ? Html::encode($inv->getClient()?->getClient_city()) . '<br>' : ''); ?>
+                            <?php echo(strlen($inv->getClient()?->getClient_state() ?? '') > 0 ? Html::encode($inv->getClient()?->getClient_state()) . '<br>' : ''); ?>
+                            <?php echo(strlen($inv->getClient()?->getClient_zip() ?? '') > 0 ? Html::encode($inv->getClient()?->getClient_zip()) : ''); ?>
                             </span>
                             <span class="client-address-country-line">
-                        <?php echo($inv->getClient()->getClient_country() ? '<br>' . $countryhelper->get_country_name($translator->translate('i.cldr'), $inv->getClient()->getClient_country()) : ''); ?>
+                        <?php echo(strlen($inv->getClient()?->getClient_country() ?? '') > 0 ? '<br>' . $countryHelper->get_country_name($translator->translate('i.cldr'), ($inv->getClient()?->getClient_country() ?? '')) : ''); ?>
                             </span>
                         </div>
                         <hr>
-                        <?php if ($inv->getClient()->getClient_phone()): ?>
+                        <?php if (strlen($inv->getClient()?->getClient_phone() ?? '') > 0): ?>
                             <div class="client-phone">
                             <?= $translator->translate('i.phone'); ?>:&nbsp;
-                                <?= Html::encode($inv->getClient()->getClient_phone()); ?>
+                                <?= Html::encode($inv->getClient()?->getClient_phone() ?? ''); ?>
                             </div>
                             <?php endif; ?>
-                        <?php if ($inv->getClient()->getClient_mobile()): ?>
+                        <?php if ($inv->getClient()?->getClient_mobile() ?? ''): ?>
                             <div class="client-mobile">
     <?= $translator->translate('i.mobile'); ?>:&nbsp;
-    <?= Html::encode($inv->getClient()->getClient_mobile()); ?>
+    <?= Html::encode($inv->getClient()?->getClient_mobile()); ?>
                             </div>
 <?php endif; ?>
-<?php if ($inv->getClient()->getClient_email()): ?>
+<?php if (null!==$inv->getClient()?->getClient_email()): ?>
                             <div class='client-email'>
     <?= $translator->translate('i.email'); ?>:&nbsp;
-    <?php echo $inv->getClient()->getClient_email(); ?>
+    <?php echo $inv->getClient()?->getClient_email(); ?>
                             </div>
 <?php endif; ?>
                         <br>
@@ -455,7 +514,7 @@ if (($invEdit && $inv->getStatus_id() === 1 || ($s->get_setting('enable_invoice_
 <?= $translator->translate('i.invoice'); ?> #
                                         </label>
                                         <input type="text" id="inv_number" class="form-control input-sm" readonly
-                                                   <?php if ($inv->getNumber()) : ?> value="<?= $inv->getNumber(); ?>"
+                                                   <?php if (strlen($inv->getNumber() ?? '') > 0) : ?> value="<?= $inv->getNumber(); ?>"
                                                    <?php else : ?> placeholder="<?= Html::encode($translator->translate('i.not_set')); ?>"
 <?php endif; ?>>
                                     </div>
@@ -509,19 +568,23 @@ if (($invEdit && $inv->getStatus_id() === 1 || ($s->get_setting('enable_invoice_
                                         <div class="input-group">
                                             <input name="inv_date_due" id="inv_date_due" disabled
                                                    class="form-control input-sm datepicker"
-                                                   value="<?= $inv->getDate_due()->format($dateHelper->style()); ?>">
+                                                   value="<?= !is_string($dateDue = $inv->getDate_due()) ? $dateDue->format($dateHelper->style()) : ''; ?>">
                                             <span class="input-group-text">
                                                 <i class="fa fa-calendar fa-fw"></i>
                                             </span>
                                         </div>
                                     </div>
                                     <div>
-                                            <?php foreach ($custom_fields as $custom_field): ?>
-    <?php if ($custom_field->getLocation() !== 1) {
-        continue;
-    } ?>
-                                                        <?php $cvH->print_field_for_view($inv_custom_values, $custom_field, $custom_values); ?>
-                                                <?php endforeach; ?>
+                                        <?php   
+                                                /**
+                                                 * @var App\Invoice\Entity\CustomField $custom_field
+                                                 */
+                                                foreach ($custom_fields as $custom_field): ?>
+                                                     <?php if ($custom_field->getLocation() !== 1) {
+                                                         continue;
+                                                     } ?>
+                                                     <?php $cvH->print_field_for_view($custom_field, $form, $inv_custom_values, $custom_values); ?>
+                                         <?php endforeach; ?>
                                     </div>
                                 </div>
                                 <div class="col-xs-12 col-md-6">
@@ -532,9 +595,15 @@ if (($invEdit && $inv->getStatus_id() === 1 || ($s->get_setting('enable_invoice_
                                         </label>
                                         <select name="inv_status_id" id="inv_status_id" disabled
                                                 class="form-control">
-                                            <?php foreach ($inv_statuses as $key => $status) { ?>
-                                                <option value="<?php echo $key; ?>" <?php if ($key === $body['status_id']) {
-                                                $s->check_select(Html::encode($body['status_id'] ?? ''), $key);
+                                            <?php 
+                                                /**
+                                                 * @var array $inv_statuses
+                                                 * @var string $key
+                                                 * @var array $status
+                                                 */
+                                                foreach ($inv_statuses as $key => $status) { ?>
+                                                <option value="<?php echo $key; ?>" <?php if ($key == (string)$form->getStatus_id()) {
+                                                $s->check_select((string)$form->getStatus_id(), $key);
                                             } ?>>
                                                         <?= Html::encode($status['label']); ?>
                                                 </option>
@@ -546,12 +615,16 @@ if (($invEdit && $inv->getStatus_id() === 1 || ($s->get_setting('enable_invoice_
 <?php if ($inv->getPayment_method() !== 0) { ?>
                                             <select name="payment_method" id="payment_method" class="form-control" disabled="disabled">
                                                 <option value="0"><?= Html::encode($translator->translate('i.select_payment_method')); ?></option>
-                                        <?php foreach ($payment_methods as $payment_method) { ?>
+                                        <?php
+                                            /**
+                                             * @var App\Invoice\Entity\PaymentMethod $payment_method
+                                             */
+                                            foreach ($payment_methods as $payment_method) { ?>
                                                     <option <?php $s->check_select((string) $inv->getPayment_method(),
                                                     $payment_method->getId())
                                             ?>
                                                         value="<?= $payment_method->getId(); ?>">
-        <?= $payment_method->getName(); ?>
+        <?= $payment_method->getName() ?? ''; ?>
                                                     </option>
     <?php } ?>
                                             </select>
@@ -565,7 +638,7 @@ if (($invEdit && $inv->getStatus_id() === 1 || ($s->get_setting('enable_invoice_
 <?php if (($inv->getStatus_id() !== 1) && ($invEdit)) { ?>
                                         <div class="invoice-properties">
                                             <label for="inv_password"><?= Html::encode($translator->translate('i.password')); ?></label>
-                                            <input type="text" id="inv_password" class="form-control input-sm" disabled value="<?= Html::encode($body['password'] ?? ''); ?>">
+                                            <input type="text" id="inv_password" class="form-control input-sm" disabled value="<?= Html::encode($form->getPassword() ?? ''); ?>">
                                         </div>
                                         <div class="invoice-properties">
                                             <div class="form-group">
@@ -614,7 +687,7 @@ if (($invEdit && $inv->getStatus_id() === 1 || ($s->get_setting('enable_invoice_
                                             <img src="/img/writtenoff.png">
 <?php } ?>
                                     </div>
-<?php if (null!==$inv->getSo_id()) { 
+<?php if (!empty($inv->getSo_id())) { 
     Html::openTag('div');
         $translator->translate('invoice.salesorder'); 
     Html::closeTag('div');
@@ -626,7 +699,7 @@ if (($invEdit && $inv->getStatus_id() === 1 || ($s->get_setting('enable_invoice_
     ); 
     Html::closeTag('div');
  } ?>
-                                    <input type="text" id="dropzone_client_id" readonly class="form-control" value="<?= $inv->getClient()->getClient_id(); ?>" hidden>
+                                    <input type="text" id="dropzone_client_id" readonly class="form-control" value="<?= $inv->getClient()?->getClient_id(); ?>" hidden>
                                 </div>
                             </div>
                         </div>
@@ -634,7 +707,7 @@ if (($invEdit && $inv->getStatus_id() === 1 || ($s->get_setting('enable_invoice_
                 </div>
             </div>
         </div>
-        <div id="partial_item_table_parameters" inv_items="<?php $inv_items; ?>" disabled>
+        <div id="partial_item_table_parameters" disabled>
 <?= $partial_item_table; ?>
         </div>
 
@@ -643,11 +716,13 @@ if (($invEdit && $inv->getStatus_id() === 1 || ($s->get_setting('enable_invoice_
                 <div class="panel panel-default no-margin">
                     <div class="panel-heading">
                 <?= Html::encode($translator->translate('i.terms')); ?>
-                <?php $paymentTermArray = $s->get_payment_term_array($translator); ?>         
+                <?php 
+                    $paymentTermArray = $s->get_payment_term_array($translator);  
+                ?>         
                     </div>
                     <div class="panel-body">
                         <textarea name="terms" id="terms" rows="3" disabled
-                                  class="input-sm form-control"><?= Html::encode($paymentTermArray[$body['terms']] ?? ''); ?></textarea>
+                            class="input-sm form-control"><?= Html::encode($inv->getTerms() ?: $paymentTermArray[0]); ?></textarea>
                     </div>
                 </div>
 

@@ -47,6 +47,44 @@
 <p>Introducing India's PayTm payment gateway's QR code method of payment and comparing this with Stripe's method.</p>
 <p>A General Sales Tax (GST) Tax System will have to be implemented first for this purpose.</p>
 <p>Testing Credit Notes against Invoices with refunds (if payment made) linked to each of the payment gateways.</p>
+<p><b>3rd August 2024</b></p>
+<p>Psalm Level 1 Testing Completed using below file format.</p>
+<p><pre><xmp>
+    <plugins><pluginClass class="Psalm\SymfonyPsalmPlugin\Plugin"/></plugins>    
+    <projectFiles>
+        <directory name="config" />
+        <directory name="resources/views" />
+        <directory name="src" />
+        <file name="public/index.php"/>
+        <file name="yii"/>
+        <file name="autoload.php"/>
+        <ignoreFiles>
+            <directory name="vendor/yiisoft/requirements/src" />
+        </ignoreFiles>
+    </projectFiles></xmp></pre></p>
+    <p>Requirements checker can be run at the command prompt e.g. C:\wamp64\www\invoice>php requirements.php</p>
+    <p>The requirements.php file sits in the root folder.</p>
+    <pre>Requirements Checker
+        This script checks if your server configuration meets the requirements
+        for running Yii application.
+        It checks if the server is running the right version of PHP,
+        if appropriate PHP extensions have been loaded, and if php.ini file settings are correct.
+
+        Check conclusion:
+        -----------------
+
+        PHP version: OK
+
+        PDO MySQL extension: OK
+
+        Intl extension: OK
+
+        -----------------------------------------
+        Errors: 0   Warnings: 0   Total checks: 3
+    </pre>
+    <p>The nullable: true relations getPostalAddress, getDelivery, and getDeliveryLocation have been removed in favour of using</p>
+    <p>repository access to the inv related tables in order to retrieve relevant information.</p> 
+<p>What's next: Telegram integration</p>
 <p><b>13th July 2024</b></p>
 <p>2. Folders p and q completed.</p>
 <p><b>5th July 2024</b></p>

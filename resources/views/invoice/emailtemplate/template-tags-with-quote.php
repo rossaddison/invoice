@@ -1,5 +1,13 @@
 <?php
+    
     declare(strict_types=1);
+    
+    /**
+     * @var Yiisoft\Translator\TranslatorInterface $translator 
+     * @var array $custom_fields
+     * @var array $custom_fields['client_custom']
+     * @var string $template_tags_quote
+     */
 ?>
 
 <div class="panel panel-default">
@@ -70,9 +78,13 @@
                     </option>
                 </optgroup>
                 <optgroup label="<?= $translator->translate('i.custom_fields'); ?>">
-                    <?php foreach ($custom_fields['client_custom'] as $custom) { ?>
+                    <?php
+                       /**
+                        * @var App\Invoice\Entity\CustomField $custom
+                        */
+                        foreach ($custom_fields['client_custom'] as $custom) { ?>
                         <option value="{{{<?= 'cf_' . $custom->getId(); ?>}}}">
-                            <?= $custom->getLabel() . ' (ID ' . $custom->getId() . ')'; ?>
+                            <?= ($custom->getLabel() ?? '#') . ' (ID ' . $custom->getId() . ')'; ?>
                         </option>
                     <?php } ?>
                 </optgroup>

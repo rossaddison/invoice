@@ -59,7 +59,8 @@ final class Bootstrap5ModalInv
         $this->formParameters = [
             'origin' => $origin,
             'title' => $this->translator->translate('i.add'),
-            'action' => ['inv/add', ['origin' => $origin]],
+            'actionName' => 'inv/add', 
+            'actionArguments' => ['origin' => $origin],
             'errors' => $errors,
             'form' => $this->invForm,
             'clients' => $this->cR->optionsData($this->ucR),

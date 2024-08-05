@@ -64,10 +64,35 @@ $toolbar = Div::tag();
         ),        
         new DataColumn(
             'client_id',         
-            header:  $translator->translate('i.client'),
+            header:  $translator->translate('i.client_name'),
             content: static function (PostalAddress $model) use ($cR) : string {
-                $client = ($cR->repoClientCount($model->getClient_id()) > 0 ? ($cR->repoClientquery($model->getClient_id()))->getClient_name() : '');
-                return $client;
+                $clientName = ($cR->repoClientCount($model->getClient_id()) > 0 ? ($cR->repoClientquery($model->getClient_id()))->getClient_name() : '');
+                return $clientName;
+            } 
+        ),
+        new DataColumn(
+            'client_id',         
+            header:  $translator->translate('i.client_surname'),
+            content: static function (PostalAddress $model) use ($cR) : null|string {
+                $clientId = $model->getClient_id();
+                if ($clientId) {
+                    $clientSurname = ($cR->repoClientCount($clientId) > 0 ? ($cR->repoClientquery($clientId))->getClient_surname() : '');
+                    return $clientSurname;
+                }
+                return '';
+            } 
+        ),
+        new DataColumn(
+            'client_id',         
+            header:  $translator->translate('i.active'),
+            content: static function (PostalAddress $model) use ($cR, $urlGenerator) : Yiisoft\Html\Tag\A|string {
+                $client = $cR->repoClientquery($model->getClient_id());
+                if (null!==$client->getPostaladdress_id() && $client->getPostaladdress_id() > 0) {
+                    return 'used';
+                } else {
+                    return Html::a('Not used - assign postal address to client', $urlGenerator->generate('client/edit', ['id' => $model->getClient_id(), 'origin' => 'inv']));
+                }
+                return 'no client assigned to postal address';
             } 
         ),
         new DataColumn(

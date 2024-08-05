@@ -7,16 +7,20 @@ use Yiisoft\Html\Html;
 use Yiisoft\Html\Tag\Form;
 
 /**
- * @var \Yiisoft\View\View $this
- * @var \Yiisoft\Router\UrlGeneratorInterface $urlGenerator
+ * @var App\Invoice\DeliveryParty\DeliveryPartyForm $form
+ * @var App\Widget\Button $button
+ * @var Yiisoft\Router\UrlGeneratorInterface $urlGenerator
+ * @var Yiisoft\Translator\TranslatorInterface $translator
+ * @var string $actionName
  * @var string $csrf
- * @var string $action
  * @var string $title
+ * @psalm-var array<string, Stringable|null|scalar> $actionArguments
+ * @psalm-var array<string,list<string>> $errors
  */
 
 ?>
 <?= Form::tag()
-    ->post($urlGenerator->generate(...$action))
+    ->post($urlGenerator->generate($actionName, $actionArguments))
     ->enctypeMultipartFormData()
     ->csrf($csrf)
     ->id('DeliveryPartyForm')
@@ -28,23 +32,6 @@ use Yiisoft\Html\Tag\Form;
         <?= Html::closeTag('h1'); ?>
     <?= Html::closeTag('div'); ?>
     <?= Html::openTag('div'); ?>
-        <?= Field::buttonGroup()
-            ->addContainerClass('btn-group btn-toolbar float-end')
-            ->buttonsData([
-                [
-                    $translator->translate('invoice.cancel'),
-                    'type' => 'reset',
-                    'class' => 'btn btn-sm btn-danger',
-                    'name'=> 'btn_cancel'
-                ],
-                [
-                    $translator->translate('invoice.submit'),
-                    'type' => 'submit',
-                    'class' => 'btn btn-sm btn-primary',
-                    'name' => 'btn_send'
-                ],
-        ]) ?>
-       
         <?= Field::errorSummary($form)
             ->errors($errors)
             ->header($translator->translate('invoice.error.summary'))
@@ -62,4 +49,5 @@ use Yiisoft\Html\Tag\Form;
             ?>
         <?= Html::closeTag('div'); ?>
     <?= Html::closeTag('div'); ?>
+<?= $button::back_save(); ?>
 <?= Form::tag()->close() ?>

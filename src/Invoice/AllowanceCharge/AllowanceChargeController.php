@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1); 
 
 namespace App\Invoice\AllowanceCharge;
@@ -52,11 +53,11 @@ final class AllowanceChargeController
         $this->viewRenderer = $viewRenderer;
         if ($this->userService->hasPermission('viewInv') && !$this->userService->hasPermission('editInv')) {
             $this->viewRenderer = $viewRenderer->withControllerName('invoice/allowancecharge')
-                                                 ->withLayout('@views/layout/guest.php');
+                                               ->withLayout('@views/layout/guest.php');
         }
         if ($this->userService->hasPermission('viewInv') && $this->userService->hasPermission('editInv')) {
             $this->viewRenderer = $viewRenderer->withControllerName('invoice/allowancecharge')
-                                                 ->withLayout('@views/layout/invoice.php');
+                                               ->withLayout('@views/layout/invoice.php');
         }
         $this->allowancechargeService = $allowancechargeService;
         $this->translator = $translator;
@@ -79,7 +80,8 @@ final class AllowanceChargeController
         $allowances = $peppol_arrays->get_allowances_subset_array();
         $parameters = [
             'title' => $this->translator->translate('invoice.invoice.allowance.or.charge.add'),
-            'action' => ['allowancecharge/add_allowance'],
+            'actionName' => 'allowancecharge/add_allowance',
+            'actionArguments' => [],
             'allowances' => $allowances,
             'errors' => [],
             'form' => $form,
@@ -142,11 +144,12 @@ final class AllowanceChargeController
         $charges = $peppol_arrays->get_charges_array();
         $parameters = [
             'title' => $this->translator->translate('invoice.invoice.allowance.or.charge.add'),
-            'action' => ['allowancecharge/add_charge'],
+            'actionName' => 'allowancecharge/add_charge',
+            'actionArguments' => [],
             'errors' => [],
             'form' => $form,
             'charges' => $charges,       
-            'tax_rates'=>$tR->findAllPreloaded()
+            'tax_rates' => $tR->findAllPreloaded()
         ];
         /**
          * @var array $body
@@ -214,7 +217,6 @@ final class AllowanceChargeController
           'canEdit' => $this->userService->hasPermission('editInv') ? true : false,    
           'allowancecharges' => $this->allowancecharges($allowancechargeRepository),
           'alert' => $this->alert(),
-          'grid_summary'=> $settingRepository->grid_summary($paginator, $this->translator, (int)$settingRepository->get_setting('default_list_limit'), $this->translator->translate('invoice.invoice.allowance.or.charge'), ''), 
           'paginator'=>$paginator 
        ];
        return $this->viewRenderer->render('index', $parameters);
@@ -263,7 +265,8 @@ final class AllowanceChargeController
             $allowances = $peppol_arrays->get_allowances_subset_array();
             $parameters = [
                 'title' => $this->translator->translate('invoice.invoice.allowance.or.charge.edit.allowance'),
-                'action' => ['allowancecharge/edit_allowance', ['id' => $allowancecharge->getId()]],
+                'actionName' => 'allowancecharge/edit_allowance', 
+                'actionArguments' => ['id' => $allowancecharge->getId()],
                 'errors' => [],
                 'form' => $form,
                 'tax_rates'=> $tR->findAllPreloaded(),
@@ -311,11 +314,12 @@ final class AllowanceChargeController
             $charges = $peppol_arrays->get_charges_array();
             $parameters = [
                 'title' => $this->translator->translate('invoice.invoice.allowance.or.charge.edit.charge'),
-                'action' => ['allowancecharge/edit_allowance', ['id' => $allowancecharge->getId()]],
+                'actionName' => 'allowancecharge/edit_allowance', 
+                'actionArguments' => ['id' => $allowancecharge->getId()],
                 'errors' => [],
                 'form' => $form,
-                'tax_rates'=>$tR->findAllPreloaded(),
-                'charges'=>$charges,
+                'tax_rates' => $tR->findAllPreloaded(),
+                'charges' => $charges,
             ];
             if ($request->getMethod() === Method::POST) {
                 $form = new AllowanceChargeForm($allowancecharge);
@@ -391,9 +395,10 @@ final class AllowanceChargeController
             $form = new AllowanceChargeForm($allowancecharge);
             $parameters = [
                 'title' => $this->translator->translate('i.view'),
-                'action' => ['allowancecharge/view', ['id' => $allowancecharge->getId()]],
+                'actionName' => 'allowancecharge/view', 
+                'actionArguments' => ['id' => $allowancecharge->getId()],
                 'form' => $form,
-                'allowancecharge'=>$allowancecharge,
+                'allowancecharge' => $allowancecharge,
             ];        
         return $this->viewRenderer->render('_view', $parameters);
         }

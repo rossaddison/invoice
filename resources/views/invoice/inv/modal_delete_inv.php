@@ -3,13 +3,14 @@
 declare(strict_types=1); 
 
 /**
- * @var \Yiisoft\View\View $this
- * @var \Yiisoft\Router\UrlGeneratorInterface $urlGenerator
+ * @see InvController function view_modal_delete_inv
+ * @see inv/view.php id="delete-inv" triggered by <a href="#delete-inv" data-toggle="modal"  style="text-decoration:none">
+ * @var Yiisoft\Router\UrlGeneratorInterface $urlGenerator
+ * @var Yiisoft\Translator\TranslatorInterface $translator
+ * @var string $actionName
  * @var string $csrf
- * @var string $action
+ * @psalm-var array<string, Stringable|null|scalar> $actionArguments 
  */
-
-// id="delete-inv" triggered by <a href="#delete-inv" data-toggle="modal"  style="text-decoration:none"> on views/inv/view.php
 
 ?>
 
@@ -23,7 +24,7 @@ declare(strict_types=1);
             <div class="alert alert-danger"><?= $translator->translate('i.delete_invoice_warning'); ?></div>
         </div>
         <div class="modal-footer">
-            <form action="<?= $urlGenerator->generate(...$action) ?>" method="POST">
+            <form action="<?= $urlGenerator->generate($actionName, $actionArguments) ?>" method="POST">
                 <input type="hidden" name="_csrf" value="<?= $csrf ?>">
                 <div class="btn-group">
                     <button type="submit" class="btn btn-danger">
@@ -36,6 +37,5 @@ declare(strict_types=1);
             </form>
         </div>
     </div>
-
 </div>
 

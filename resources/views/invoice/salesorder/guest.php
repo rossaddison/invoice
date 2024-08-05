@@ -67,35 +67,35 @@ $toolbar = Div::tag();
                 </a>
                 <a href="<?= $urlGenerator->generate('salesorder/guest',['page'=>1,'status'=>2]); ?>" style="text-decoration:none"
                    data-bs-toggle = "tooltip" title="<?= $s->get_setting('debug_mode') === '1' ? $translator->translate('invoice.payment.term.add.additional.terms.at.setting.repository') : ''; ?>"
-                   class="btn  <?php echo $status == 2 ? 'btn-primary' : 'label '. $soR->getSpecificStatusArrayClass('2'); ?>">
+                   class="btn  <?php echo $status == 2 ? 'btn-primary' : 'label '. $soR->getSpecificStatusArrayClass(2); ?>">
                     <?= $soR->getSpecificStatusArrayLabel('2'); ?>
                 </a>
                 <a href="<?= $urlGenerator->generate('salesorder/guest',['page'=>1,'status'=>3]); ?>" style="text-decoration:none"
-                   class="btn  <?php echo $status == 3 ? 'btn-primary' : 'label '.$soR->getSpecificStatusArrayClass('3');  ?>">
+                   class="btn  <?php echo $status == 3 ? 'btn-primary' : 'label '.$soR->getSpecificStatusArrayClass(3);  ?>">
                     <?= $soR->getSpecificStatusArrayLabel('3'); ?>
                 </a>
                 <a href="<?= $urlGenerator->generate('salesorder/guest',['page'=>1,'status'=>4]); ?>" style="text-decoration:none"
-                   class="btn  <?php echo $status == 4 ? 'btn-primary' : 'label '.$soR->getSpecificStatusArrayClass('4'); ?>">
+                   class="btn  <?php echo $status == 4 ? 'btn-primary' : 'label '.$soR->getSpecificStatusArrayClass(4); ?>">
                     <?= $soR->getSpecificStatusArrayLabel('4'); ?>
                 </a>
                 <a href="<?= $urlGenerator->generate('salesorder/guest',['page'=>1,'status'=>5]); ?>" style="text-decoration:none"
-                   class="btn  <?php echo $status == 5 ? 'btn-primary' : 'label '.$soR->getSpecificStatusArrayClass('5');  ?>">
+                   class="btn  <?php echo $status == 5 ? 'btn-primary' : 'label '.$soR->getSpecificStatusArrayClass(5);  ?>">
                     <?= $soR->getSpecificStatusArrayLabel('5'); ?>
                 </a>
                 <a href="<?= $urlGenerator->generate('salesorder/guest',['page'=>1,'status'=>6]); ?>" style="text-decoration:none"
-                   class="btn  <?php echo $status == 6 ? 'btn-primary' : 'label '.$soR->getSpecificStatusArrayClass('6');  ?>">
+                   class="btn  <?php echo $status == 6 ? 'btn-primary' : 'label '.$soR->getSpecificStatusArrayClass(6);  ?>">
                     <?= $soR->getSpecificStatusArrayLabel('6'); ?>
                 </a>
                 <a href="<?= $urlGenerator->generate('salesorder/guest',['page'=>1,'status'=>7]); ?>" style="text-decoration:none"
-                   class="btn  <?php echo $status == 7 ? 'btn-primary' : 'label '.$soR->getSpecificStatusArrayClass('7');  ?>">
+                   class="btn  <?php echo $status == 7 ? 'btn-primary' : 'label '.$soR->getSpecificStatusArrayClass(7);  ?>">
                     <?= $soR->getSpecificStatusArrayLabel('7'); ?>
                 </a>
                 <a href="<?= $urlGenerator->generate('salesorder/guest',['page'=>1,'status'=>8]); ?>" style="text-decoration:none"
-                   class="btn  <?php echo $status == 8 ? 'btn-primary' : 'label '.$soR->getSpecificStatusArrayClass('8');  ?>">
+                   class="btn  <?php echo $status == 8 ? 'btn-primary' : 'label '.$soR->getSpecificStatusArrayClass(8);  ?>">
                     <?= $soR->getSpecificStatusArrayLabel('8'); ?>
                 </a>
                 <a href="<?= $urlGenerator->generate('salesorder/guest',['page'=>1,'status'=>9]); ?>" style="text-decoration:none"
-                   class="btn  <?php echo $status == 9 ? 'btn-primary' : 'label '.$soR->getSpecificStatusArrayClass('9');  ?>">
+                   class="btn  <?php echo $status == 9 ? 'btn-primary' : 'label '.$soR->getSpecificStatusArrayClass(9);  ?>">
                     <?= $soR->getSpecificStatusArrayLabel('9'); ?>
                 </a>
             </div>
@@ -117,7 +117,7 @@ $toolbar = Div::tag();
             content: static function (SalesOrder $model) use ($soR): Yiisoft\Html\Tag\CustomTag|string {
                 if (null!==$model->getStatus_id()) {
                     $span = $soR->getSpecificStatusArrayLabel((string)$model->getStatus_id());
-                    $class = $soR->getSpecificStatusArrayClass((string)$model->getStatus_id());
+                    $class = $soR->getSpecificStatusArrayClass((int)$model->getStatus_id());
                     return (string)Html::tag('span', $span,['id'=>'#so-to-invoice','class'=>'label '. $class]);
                 }
                 return '';

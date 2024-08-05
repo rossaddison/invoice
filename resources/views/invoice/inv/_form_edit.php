@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 use Yiisoft\FormModel\Field;
@@ -6,14 +7,48 @@ use Yiisoft\Html\Html;
 use Yiisoft\Html\Tag\Form;
 
 /**
- * @var \Yiisoft\View\View $this
- * @var \Yiisoft\Router\UrlGeneratorInterface $urlGenerator
+ * @var App\Invoice\Entity\Inv $inv
+ * @var App\Invoice\Helpers\CustomValuesHelper $cvH
+ * @var App\Invoice\Inv\InvForm $form
+ * @var App\Invoice\InvCustom\InvCustomForm $invCustomForm
+ * @var App\Invoice\PostalAddress\PostalAddressRepository $paR
+ * @var App\Invoice\Setting\SettingRepository $s
+ * @var App\Widget\Button $button
+ * @var Yiisoft\Translator\TranslatorInterface $translator
+ * @var Yiisoft\Router\UrlGeneratorInterface $urlGenerator
+ * @var array $customFields
+ * @var array $customValues
+ * @var array $editInputAttributesPaymentMethod
+ * @var array $editInputAttributesUrlKey
+ * @var array $invCustomValues
+ * @var array $invs
+ * @var array $users
+ * @var int $contractCount
+ * @var int $defaultGroupId
+ * @var int $delCount
+ * @var int $deliveryCount
+ * @var int $postalAddressCount
+ * @var string $alert
  * @var string $csrf
- * @var string $action
+ * @var string $actionName
+ * @var string $noteOnTaxPoint
  * @var string $title
+ * @psalm-var array<string, Stringable|null|scalar> $actionArguments
+ * @psalm-var array<string,list<string>> $errors
+ * @psalm-var array<array-key, array<array-key, string>|string> $optionsData
+ * @psalm-var array<array-key, array<array-key, string>|string> $optionsData['client']
+ * @psalm-var array<array-key, array<array-key, string>|string> $optionsData['contract']
+ * @psalm-var array<array-key, array<array-key, string>|string> $optionsData['delivery']
+ * @psalm-var array<array-key, array<array-key, string>|string> $optionsData['deliveryLocation']
+ * @psalm-var array<array-key, array<array-key, string>|string> $optionsData['invoiceStatus']
+ * @psalm-var array<array-key, array<array-key, string>|string> $optionsData['group']
+ * @psalm-var array<array-key, array<array-key, string>|string> $optionsData['paymentMethod']
+ * @psalm-var array<array-key, array<array-key, string>|string> $optionsData['paymentTerm']
+ * @psalm-var array<array-key, array<array-key, string>|string> $optionsData['postalAddress']
  */
-$vat = $s->get_setting('enable_vat_registration') === '1' ? true : false;
-echo $note_on_tax_point;
+
+$vat = $s->get_setting('enable_vat_registration') == '1' ? true : false;
+if ($vat) {  echo $noteOnTaxPoint;}
 
 ?>
 <?= Html::openTag('div',['class'=>'container py-5 h-100']); ?>
@@ -22,7 +57,12 @@ echo $note_on_tax_point;
 <?= Html::openTag('div',['class'=>'card border border-dark shadow-2-strong rounded-3']); ?>
 <?= Html::openTag('div',['class'=>'card-header']); ?>
     <?= Html::openTag('h1',['class'=>'fw-normal h3 text-center']); ?><?= $translator->translate('i.edit'); ?><?= Html::closeTag('h1'); ?>
-        <?= Form::tag()->post($urlGenerator->generate(...$action))->enctypeMultipartFormData()->csrf($csrf)->id('InvForm')->open()?>
+        <?= Form::tag()
+            ->post($urlGenerator->generate($actionName, $actionArguments))
+            ->enctypeMultipartFormData()
+            ->csrf($csrf)
+            ->id('InvForm')
+            ->open()?>
                 <?= Html::openTag('div', ['class' => 'container']); ?>
                     <?= Html::openTag('div', ['class' => 'row']); ?>
                         <?= Html::openTag('div', ['class' => 'col card mb-3']); ?>
@@ -60,7 +100,7 @@ echo $note_on_tax_point;
                                     ?>
                                 <?= Html::closeTag('div'); ?>   
 
-                            <?php if ($delivery_count > 0) { ?>
+                            <?php if ($deliveryCount > 0) { ?>
                                 <?= Html::openTag('div'); ?>
                                     <?= Field::select($form, 'delivery_id')
                                         ->label($translator->translate('invoice.invoice.delivery'))
@@ -71,9 +111,11 @@ echo $note_on_tax_point;
                                         ->hint($translator->translate('invoice.hint.this.field.is.required')); 
                                     ?>
                                 <?= Html::closeTag('div'); ?>            
-                                <?php if (null!==$inv->getDelivery()?->getId()) { ?>
+                                <?php if (!empty($inv->getDelivery_id())) { ?>
                                 <span class="input-group-text">
-                                    <a href="<?= $urlGenerator->generate('delivery/edit', ['id'=> $inv->getDelivery()?->getId()]); ?>"><i class="fa fa-pencil fa-fw"></i></a>
+                                    <a href="<?= $urlGenerator->generate('delivery/edit', ['id'=> $inv->getDelivery_id()]); ?>"><i class="fa fa-pencil fa-fw"></i>
+                                        <?= $translator->translate('invoice.delivery'); ?>
+                                    </a>
                                 </span>  
                                 <?php } ?>
                                 <span class="input-group-text">
@@ -86,13 +128,14 @@ echo $note_on_tax_point;
                             ?>
                             <?= html::br(); ?>
                             <?= html::br(); ?>
-                            <?php if ($del_count > 0) { ?>
+                            <?php if ($delCount > 0) { ?>
                                 <?= Html::openTag('div'); ?>
                                     <?= Field::select($form, 'delivery_location_id')
                                         ->label($translator->translate('invoice.invoice.delivery.location'))
                                         ->addInputAttributes(['class' => 'form-control'])
                                         ->value($form->getDelivery_location_id())
                                         ->prompt($translator->translate('i.none'))
+                                        ->disabled(false)
                                         ->optionsData($optionsData['deliveryLocation'])
                                         ->hint($translator->translate('invoice.hint.this.field.is.not.required')); 
                                     ?>
@@ -131,7 +174,7 @@ echo $note_on_tax_point;
                                         ]), ['class' => 'btn btn-danger btn-lg mt-3']);
                             }
                             ?>
-                        <?php if ($contract_count > 0) { ?>
+                        <?php if ($contractCount > 0) { ?>
                             <?= Html::openTag('div'); ?>
                                 <?= Field::select($form, 'contract_id')
                                     ->label($form->getContract_id() === null 
@@ -148,49 +191,78 @@ echo $note_on_tax_point;
                         } else {
                             echo Html::a($translator->translate('invoice.invoice.contract.add'), $urlGenerator->generate('contract/add', ['client_id' => $inv->getClient_id()]), ['class' => 'btn btn-info btn-lg mt-3']);
                         }
-                        ?>
-                        <?php if ($postal_address_count > 0) { ?>
-                            <?= Html::openTag('div'); ?>
-                                <?= Field::select($form, 'postaladdress_id')
-                                    ->label($translator->translate('invoice.client.postaladdress.available'))
-                                    ->addInputAttributes(['class' => 'form-control'])
-                                    ->value($form->getPostal_address_id())
-                                    ->prompt($translator->translate('i.none'))
-                                    ->optionsData($optionsData['postalAddress'])
-                                    ->hint($translator->translate('invoice.hint.this.field.is.not.required')); 
-                                ?>
-                            <?= Html::closeTag('div'); ?>                         
-                            <?php
-                        } else {
-                            echo Html::a($translator->translate('invoice.client.postaladdress.add'), $urlGenerator->generate('postaladdress/add', ['client_id' => $inv->getClient_id()]), ['class' => 'btn btn-warning btn-lg mt-3']);
-                        }
-                        ?>
+                        ?>                        
+                        <?php if ($postalAddressCount > 0) { ?>
+                                <?= Html::openTag('div'); ?>
+                                    <?= Field::select($form, 'postal_address_id')
+                                        ->label($translator->translate('invoice.client.postaladdress.available'))
+                                        ->addInputAttributes(['class' => 'form-control'])
+                                        ->value($form->getPostal_address_id())
+                                        ->prompt($translator->translate('i.none'))
+                                        ->optionsData($optionsData['postalAddress'])
+                                        ->disabled(false)
+                                        ->hint($translator->translate('invoice.hint.this.field.is.not.required')); 
+                                    ?>
+                                <?= Html::closeTag('div'); ?> 
+                                <?php if (null!==$form->getPostal_address_id() && $form->getPostal_address_id() <> '0') { ?>
+                                    <span class="input-group-text">
+                                    <a href="<?= $urlGenerator->generate('postaladdress/edit', [
+                                                'id' => $form->getPostal_address_id()
+                                            ], 
+                                            [
+                                                /**
+                                                 * Query parameters used to build a return url back to this form 
+                                                 * in PostalAddressController edit function
+                                                 * once the postal address location has been edited
+                                                 * @see vendor\yiisoft\router\UrlGeneratorInterface;
+                                                 */
+                                                'origin' => 'inv', 
+                                                'origin_id' => $form->getId(), 
+                                                'action' => 'edit'
+                                            ]); ?>"><i class="fa fa-pencil fa-fw"></i><?= $translator->translate('invoice.client.postaladdress') ?>
+                                    </a>
+                                </span>  
+                                <?php } ?>
+                                <?php
+                            } else {
+                                echo Html::a($translator->translate('invoice.client.postaladdress.add'), 
+                                        $urlGenerator->generate('postaladdress/add', 
+                                        [
+                                            'client_id' => $inv->getClient_id()
+                                        ],
+                                        [
+                                            'origin' => 'inv',
+                                            'origin_id' => $inv->getId(),
+                                            'action' => 'edit'    
+                                        ]), ['class' => 'btn btn-danger btn-lg mt-3']);
+                            }
+                            ?>
                         <?= Html::openTag('div'); ?>
                             <?= Field::hidden($form,'creditinvoice_parent_id')
                                 ->hideLabel(true)
                                 ->addInputAttributes(['class' => 'form-control'])
-                                ->value(Html::encode($form->getCreditinvoice_parent_id()) ?? 0)
+                                ->value(Html::encode($form->getCreditinvoice_parent_id()) ?: 0)
                             ?>
                         <?= Html::closeTag('div'); ?>
                         <?= Html::Tag('br'); ?>
                         <?= Html::openTag('div'); ?>
                             <?= Field::date($form,'date_created')
                                 ->label($translator->translate('invoice.invoice.date.issued'))
-                                ->value($form->getDate_created() ? ($form->getDate_created())->format('Y-m-d') : '')
+                                ->value(!is_string($form->getDate_created()) ? $form->getDate_created()?->format('Y-m-d') : '')
                                 ->hint($translator->translate('invoice.hint.this.field.is.required')); 
                             ?>
                         <?= Html::closeTag('div'); ?>
                         <?= Html::openTag('div'); ?>
                             <?= Field::date($form,'date_supplied')
                                 ->label($translator->translate('invoice.invoice.date.supplied'))
-                                ->value($form->getDate_supplied() ? ($form->getDate_supplied())->format('Y-m-d') : '')
+                                ->value(!is_string($form->getDate_supplied()) ? $form->getDate_supplied()?->format('Y-m-d') : '')
                                 ->hint($translator->translate('invoice.hint.this.field.is.not.required'));
                             ?>    
                         <?= Html::closeTag('div'); ?>
                         <?= Html::openTag('div'); ?>
                             <?= Field::date($form,'date_tax_point')
                                 ->label($translator->translate('invoice.invoice.tax.point'))
-                                ->value($form->getDate_tax_point() ? ($form->getDate_tax_point())->format('Y-m-d') : '')
+                                ->value(!is_string($form->getDate_tax_point()) ? $form->getDate_tax_point()?->format('Y-m-d') : '')
                                 ->hint($translator->translate('invoice.hint.this.field.is.not.required'));
                             ?>    
                         <?= Html::closeTag('div'); ?>
@@ -234,17 +306,19 @@ echo $note_on_tax_point;
                         <?= Html::openTag('div'); ?>
                             <?= Field::text($form,'discount_amount')
                                 ->hideLabel(false)
+                                ->disabled($form->getDiscount_percent() > 0.00 && $form->getDiscount_amount() == 0.00 ? true : false)
                                 ->label($translator->translate('i.discount_amount').' '. $s->get_setting('currency_symbol'))
-                                ->addInputAttributes(['class' => 'form-control'])
-                                ->value($s->format_amount((float)($form->getDiscount_amount() ?? 0.00)))
+                                ->addInputAttributes(['class' => 'form-control', 'id' => 'inv_discount_amount'])
+                                ->value(Html::encode($s->format_amount(($form->getDiscount_amount() ?? 0.00))))
                                 ->placeholder($translator->translate('i.discount_amount')); 
                             ?>
                         <?= Html::closeTag('div'); ?>
                         <?= Html::openTag('div'); ?>
                             <?= Field::text($form,'discount_percent')
                                 ->label($translator->translate('i.discount_percent'))
-                                ->addInputAttributes(['class' => 'form-control'])
-                                ->value(Html::encode($s->format_amount((float)($form->getDiscount_percent() ?? 0.00))))
+                                ->disabled(($form->getDiscount_amount() > 0.00 && $form->getDiscount_percent() == 0.00) ? true : false)
+                                ->addInputAttributes(['class' => 'form-control', 'id' => 'inv_discount_percent'])
+                                ->value(Html::encode($s->format_amount(($form->getDiscount_percent() ?? 0.00))))
                                 ->placeholder($translator->translate('i.discount_percent')); 
                             ?>
                         <?= Html::closeTag('div'); ?>
@@ -277,8 +351,12 @@ echo $note_on_tax_point;
                                 ->hint($translator->translate('invoice.hint.this.field.is.not.required')) 
                             ?>
                         <?= Html::closeTag('div'); ?>
-                    <?php foreach ($custom_fields as $custom_field): ?>
-                        <?php echo $cvH->print_field_for_form($custom_field, $invCustomForm, $translator, $inv_custom_values, $custom_values); ?>
+                    <?php
+                        /**
+                         * @var App\Invoice\Entity\CustomField $customField 
+                         */
+                        foreach ($customFields as $customField): ?>
+                        <?php $cvH->print_field_for_form($customField, $invCustomForm, $translator, $invCustomValues, $customValues); ?>
                     <?php endforeach; ?>
                     <?= Html::closeTag('div'); ?>
                 <?= Html::closeTag('div'); ?>    

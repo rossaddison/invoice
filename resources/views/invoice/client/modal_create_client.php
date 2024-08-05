@@ -5,11 +5,10 @@ declare(strict_types=1);
 use Yiisoft\Html\Html;
 
 /**
- * @var \Yiisoft\View\WebView $this
+ * @see id="create-client" triggered by <a href="#create-client" class="btn btn-success" data-toggle="modal"  style="text-decoration:none"> on 
+ * @see views/client/index.php
+ * @var Yiisoft\Translator\TranslatorInterface $translator
  */
-
-// id="create-client" triggered by <a href="#create-client" class="btn btn-success" data-toggle="modal"  style="text-decoration:none"> on 
-// views/client/index.php
 
 ?>
 <div id="create-client" class="modal modal-lg" role="dialog" aria-labelledby="modal_create_client" aria-hidden="true">

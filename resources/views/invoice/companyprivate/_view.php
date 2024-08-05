@@ -7,12 +7,18 @@ use Yiisoft\Html\Html;
 use Yiisoft\Html\Tag\Form;
 
 /**
- * @var \Yiisoft\View\View $this
- * @var \Yiisoft\Router\UrlGeneratorInterface $urlGenerator
- * @var \App\Invoice\CompanyPrivate\CompanyPrivateForm $form
+ * @var App\Invoice\CompanyPrivate\CompanyPrivateForm $form
+ * @var App\Invoice\Helpers\DateHelper $dateHelper 
+ * @var App\Widget\Button $button
+ * @var Yiisoft\Router\UrlGeneratorInterface $urlGenerator
+ * @var Yiisoft\Translator\TranslatorInterface $translator
+ * @var string $company_public
  * @var string $csrf
- * @var string $action
+ * @var string $actionName
  * @var string $title
+ * @psalm-var array<string, Stringable|null|scalar> $actionArguments
+ * @psalm-var array<array-key, array<array-key, string>|string> $optionsDataCompany
+ * @psalm-var array<string,list<string>> $errors
  */
 
 ?>
@@ -29,7 +35,7 @@ use Yiisoft\Html\Tag\Form;
 <?= Html::closeTag('h1'); ?>
 
 <?= Form::tag()
-    ->post($urlGenerator->generate(...$action))
+    ->post($urlGenerator->generate($actionName, $actionArguments))
     ->enctypeMultipartFormData()
     ->csrf($csrf)
     ->id('CompanyPrivateForm')
@@ -74,7 +80,7 @@ use Yiisoft\Html\Tag\Form;
                         <?= Html::closeTag('div'); ?>
                         <?= Html::openTag('div', ['class' => 'mb3 form-group']); ?>
                             <?= Field::image()
-                               ->src('/logo/'. $form->getLogo_filename())
+                               ->src('/logo/'. ($form->getLogo_filename() ?? '#'))
                                ->height($form->getLogo_height())
                                ->width($form->getLogo_width()); ?>
                         <?= Html::closeTag('div'); ?>
@@ -92,23 +98,42 @@ use Yiisoft\Html\Tag\Form;
                     <?= Field::text($form, 'logo_margin')
                         ->readonly(true); ?>
                 <?= Html::closeTag('div'); ?>
-                <?= Html::openTag('div', ['class' => 'mb3 form-group has-feedback']); ?>
+                <?= Html::openTag('div', ['class' => 'mb3 form-group']); ?>
                     <?= Html::openTag('div', ['class' => 'input-group']); ?>               
-                        <?= Field::datetime($form, 'start_date')
-                            ->readonly(true)
-                            ->value(Html::encode(($form->getStart_date())?->format($datehelper->style()))); ?>
+                        <?= Field::date($form, 'start_date')
+                            ->addInputAttributes(
+                                [
+                                    'class' => 'form-control input-sm datepicker',
+                                    'placeholder' => ' ('.$dateHelper->display().')',
+                                    'readonly' => 'readonly',
+                                    'disabled' => 'disabled'
+                                ])
+                            ->value(Html::encode(!is_string($startdate = $form->getStart_date()) && null!==$startdate 
+                                                ? $startdate->format($dateHelper->style()) 
+                                                : (new \DateTimeImmutable('now'))->format($dateHelper->style()))); 
+                        ?>
                     <?= Html::closeTag('div'); ?>                                
                 <?= Html::closeTag('div'); ?>
-                <?= Html::openTag('div', ['class' => 'mb3 form-group has-feedback']); ?>
+                <?= Html::openTag('div', ['class' => 'mb3 form-group']); ?>
                     <?= Html::openTag('div', ['class' => 'input-group']); ?>               
-                        <?= Field::datetime($form, 'end_date')
-                            ->readonly(true)
-                            ->value(Html::encode(($form->getEnd_date())?->format($datehelper->style()))); ?>
+                        <?= Field::date($form, 'end_date')
+                            ->addInputAttributes(
+                                [
+                                    'class' => 'form-control input-sm datepicker',
+                                    'placeholder' => ' ('.$dateHelper->display().')',
+                                    'readonly' => 'readonly',
+                                    'disabled' => 'disabled'
+                                ])
+                            ->value(Html::encode(!is_string($enddate = $form->getEnd_date()) && null!==$enddate 
+                                                ? $enddate->format($dateHelper->style()) 
+                                                : (new \DateTimeImmutable('now'))->format($dateHelper->style()))); 
+                        ?>
                     <?= Html::closeTag('div'); ?>                                
                 <?= Html::closeTag('div'); ?>
             <?= Html::closeTag('div'); ?>
         <?= Html::closeTag('div'); ?>    
     <?= Html::closeTag('div'); ?>
+<?= $button::back(); ?>
 <?= Form::tag()->close() ?>
 <?= Html::closeTag('div'); ?>
 <?= Html::closeTag('div'); ?>

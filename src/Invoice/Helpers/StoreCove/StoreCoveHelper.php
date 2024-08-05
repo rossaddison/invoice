@@ -81,6 +81,7 @@ use \DateTimeImmutable;
 Class StoreCoveHelper {
 
     private SRepo $s;
+    private DelRepo $delRepo;
     private IIAR $iiaR;
     private InvAmount $inv_amount;
     private DL $delivery_location;
@@ -94,6 +95,7 @@ Class StoreCoveHelper {
 
     public function __construct(
             SRepo $s,
+            DelRepo $delRepo,
             IIAR $iiaR,
             InvAmount $inv_amount,
             DL $delivery_location,
@@ -105,6 +107,7 @@ Class StoreCoveHelper {
             Crypt $crypt
     ) {
         $this->s = $s;
+        $this->delRepo = $delRepo;
         $this->iiaR = $iiaR;
         $this->inv_amount = $inv_amount;
         $this->delivery_location = $delivery_location;
@@ -290,7 +293,7 @@ Class StoreCoveHelper {
             $description_code = '';
         }
         // if the invoice has a delivery period use it's dates in preference
-        $start_end_array = $datehelper->invoice_period_start_end($invoice, $input_date);
+        $start_end_array = $datehelper->invoice_period_start_end($invoice, $input_date, $this->delRepo);
         $startDate = (string) $start_end_array['StartDate'];
         $endDate = (string) $start_end_array['EndDate'];
         // TODO: Investigate why storecove does not use a description code here
@@ -1304,7 +1307,7 @@ Class StoreCoveHelper {
             $input_date = DateTime::createFromImmutable($date_tax_point);
             $description_code = '';
         }
-        $start_end_array = $datehelper->invoice_period_start_end($invoice, $input_date);
+        $start_end_array = $datehelper->invoice_period_start_end($invoice, $input_date, $this->delRepo);
         $startDate = (string) $start_end_array['StartDate'];
         $endDate = (string) $start_end_array['EndDate'];
         return new InvoicePeriod($startDate, $endDate, $description_code);

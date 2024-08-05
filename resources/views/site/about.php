@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 use Yiisoft\Html\Html;
@@ -11,6 +12,8 @@ use Yiisoft\Html\Tag\Button;
  * @see This wavelite template has been adjusted to accomodate 
  * @see ..\invoice\src\ViewInjection\CommonViewInjection.php
  * @see ..\invoice\resources\messages\en\app.php
+ * @var App\Invoice\Setting\SettingRepository $s
+ * @var array $about
  */
 ?>
 
@@ -31,11 +34,11 @@ use Yiisoft\Html\Tag\Button;
                         <?= Html::openTag('h3', ['class' => 'display-3 fw-bolder mb-4']);?>
                             <?=
 // We diligently apply our skills to the best of our ability                    
-                               $about['we']; ?>
+                               (string)$about['we']; ?>
                         <?= Html::closeTag('h3'); ?>
                         <?= P::tag()
                             ->addClass('fs-4 mb-5')
-                            ->content($about['choose'])
+                            ->content((string)$about['choose'])
                             ->render(); ?>    
                         <?= Html::openTag('div', ['class' => 'accordion accordion-flush', 'id' => 'accordionExample']); ?>
                             <?= Html::openTag('div', ['class' => 'accordion-item']); ?>   
@@ -51,14 +54,14 @@ use Yiisoft\Html\Tag\Button;
                                                     'aria-controls' => 'collapseOne'
                                                  ])
 // Competitive rates                                        
-                                        ->content($about['competitive'])
+                                        ->content((string)$about['competitive'])
                                         ->render(); ?>
                                 <?= Html::closeTag('h2'); ?>
                                 <?= Html::openTag('div', ['id' => 'collapseOne', 'class' => 'accordion-collapse collapse show', 'aria-labelledby' => 'headingOne', 'data-bs-parent' => '#accordionExample']); ?>    
                                     <?= Html::openTag('div', ['class' => 'accordion-body']); ?>
                                         <?= 
 // Without sacrificing quality                                
-                                            $about['quality']; ?>
+                                            (string)$about['quality']; ?>
                                     <?= Html::closeTag('div'); ?>
                                 <?= Html::closeTag('div'); ?>
                             <?= Html::closeTag('div'); ?>
@@ -75,12 +78,12 @@ use Yiisoft\Html\Tag\Button;
                                             'aria-controls' => 'collapseTwo'
                                         ])
 // Contemporary skills                                        
-                                        ->content($about['contemporary'])
+                                        ->content((string)$about['contemporary'])
                                         ->render(); ?>
                                 <?= Html::closeTag('h2'); ?>
                                 <?= Html::openTag('div', ['id' => 'collapseTwo', 'class' => 'accordion-collapse collapse', 'aria-labelledby' => 'headingTwo', 'data-bs-parent' => '#accordionExample']); ?>    
                                     <?= Html::openTag('div', ['class' => 'accordion-body']); ?>
-                                        <?= $about['trained']; ?>
+                                        <?= (string)$about['trained']; ?>
                                     <?= Html::closeTag('div'); ?>
                                 <?= Html::closeTag('div'); ?>
                             <?= Html::closeTag('div'); ?>
@@ -97,12 +100,12 @@ use Yiisoft\Html\Tag\Button;
                                             'aria-controls' => 'collapseThree'
                                         ])
 // Willing Return Support                                        
-                                        ->content($about['willing'])
+                                        ->content((string)$about['willing'])
                                         ->render(); ?>
                                 <?= Html::closeTag('h2'); ?>
                                 <?= Html::openTag('div', ['id' => 'collapseThree', 'class' => 'accordion-collapse collapse', 'aria-labelledby' => 'headingThree', 'data-bs-parent' => '#accordionExample']); ?>    
                                     <?= Html::openTag('div', ['class' => 'accordion-body']); ?>
-                                        <?= $about['dissatisfaction']; ?>. <?= $about['simply']; ?>
+                                        <?= (string)$about['dissatisfaction']; ?>. <?= (string)$about['simply']; ?>
                                     <?= Html::closeTag('div'); ?>
                                 <?= Html::closeTag('div'); ?>
                             <?= Html::closeTag('div'); ?>
@@ -129,7 +132,7 @@ use Yiisoft\Html\Tag\Button;
                         <?= P::tag()
                             ->addClass('fs-5 mb-0')
 // Happy Customers                                
-                            ->content($about['happy'])
+                            ->content((string)$about['happy'])
                             ->render(); ?>    
                     <?= Html::closeTag('div'); ?>
                 <?= Html::closeTag('div'); ?>
@@ -150,7 +153,7 @@ use Yiisoft\Html\Tag\Button;
                         <?= P::tag()
                                 ->addClass('fs-5 mb-0 text-secondary')
 // Issues Solved                                
-                                ->content($about['solved'])
+                                ->content((string)$about['solved'])
                                 ->render(); ?>
                     <?= Html::closeTag('div'); ?>
                 <?= Html::closeTag('div'); ?>
@@ -170,7 +173,7 @@ use Yiisoft\Html\Tag\Button;
                         <?= P::tag()
                             ->addClass('fs-5 mb-0 text-secondary')
 // Finished Projects                                
-                            ->content($about['finished'])
+                            ->content((string)$about['finished'])
                             ->render(); ?>
                     <?= Html::closeTag('div'); ?>                    
                 <?= Html::closeTag('div'); ?>
@@ -190,7 +193,7 @@ use Yiisoft\Html\Tag\Button;
                         <?= P::tag()
                             ->addClass('fs-5 mb-0 text-secondary')
 // Return Customers                                 
-                            ->content($about['return'])
+                            ->content((string)$about['return'])
                             ->render(); ?>
                      <?= Html::closeTag('div'); ?>                    
                 <?= Html::closeTag('div'); ?>

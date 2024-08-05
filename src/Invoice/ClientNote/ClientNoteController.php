@@ -61,15 +61,11 @@ final class ClientNoteController
      */
     public function index(ClientNoteRepository $clientnoteRepository, SettingRepository $settingRepository, Request $request, ClientNoteService $service): \Yiisoft\DataResponse\DataResponse
     {
-        $canEdit = $this->rbac();
-        $clientnotes = $clientnoteRepository->findAllPreloaded(); 
-        $paginator = (new OffsetPaginator($clientnotes));
+        $this->rbac();
+        $paginator = (new OffsetPaginator($clientnoteRepository->findAllPreloaded()));
         $parameters = [
-            'canEdit' => $canEdit,
-            'clientnotes' => $this->clientnotes($clientnoteRepository),
             'alert' => $this->alert(),
-            'grid_summary'=> $settingRepository->grid_summary($paginator, $this->translator, (int)$settingRepository->get_setting('default_list_limit'), $this->translator->translate('invoice.client.notes'), ''),
-            'paginator'=>$paginator,   
+            'paginator' => $paginator,   
         ];
         return $this->viewRenderer->render('index', $parameters);
     }
@@ -89,7 +85,8 @@ final class ClientNoteController
         $form = new ClientNoteForm($clientnote);
         $parameters = [
             'title' => $this->translator->translate('invoice.add'),
-            'action' => ['clientnote/add'],
+            'actionName' => 'clientnote/add',
+            'actionArguments' => [],
             'errors' => [],
             'form' => $form,
             'clients' => $clientRepository->findAllPreloaded(),
@@ -130,7 +127,8 @@ final class ClientNoteController
             $form = new ClientNoteForm($client_note);
             $parameters = [
                 'title' => $this->translator->translate('i.edit'),
-                'action' => ['clientnote/edit', ['id' => $client_note->getId()]],
+                'actionName' => 'clientnote/edit', 
+                'actionArguments' => ['id' => $client_note->getId()],
                 'errors' => [],
                 'form' => $form,
                 'clients' => $clientRepository->findAllPreloaded()
@@ -172,7 +170,6 @@ final class ClientNoteController
     }
     
     /**
-     * 
      * @param CurrentRoute $currentRoute
      * @param ClientNoteRepository $clientnoteRepository
      * @param ClientRepository $clientRepository
@@ -185,11 +182,10 @@ final class ClientNoteController
             $form = new ClientNoteForm($client_note);
             $parameters = [
                 'title' => $this->translator->translate('i.view'),
-                'action' => ['clientnote/edit', ['id' => $client_note->getId()]],
-                'errors' => [],
+                'actionName' => 'clientnote/edit', 
+                'actionArguments' => ['id' => $client_note->getId()],
                 'form' => $form,
-                'clients'=>$clientRepository->findAllPreloaded(),
-                'clientnote'=>$client_note,
+                'clients' => $clientRepository->findAllPreloaded(),
             ];
             return $this->viewRenderer->render('_view', $parameters);
         } else {

@@ -1,10 +1,23 @@
 <?php
-  declare(strict_types=1);  
-  use Yiisoft\Html\Html;
+
+declare(strict_types=1);
+
+use Yiisoft\Html\Html;
+
+/**
+ * @see InvController view function partial_inv_delivery_location
+ * @var App\Invoice\Setting\SettingRepository $s
+ * @var Yiisoft\Router\UrlGeneratorInterface $urlGenerator
+ * @var Yiisoft\Translator\TranslatorInterface $translator
+ * @var string $actionName 
+ * @var string $title 
+ * @psalm-var array<string, Stringable|null|scalar> $actionArguments 
+ */
 ?>
 <div class="panel panel-default no-margin">
     <div class="panel-heading">
-      <i tooltip="data-bs-toggle" title="<?= $s->isDebugMode(6);?>"><?= Html::a($title, $delivery_location_url,['style'=>'text-decoration:none']); ?></i>
+      <i tooltip="data-bs-toggle" title="<?= $s->isDebugMode(6);?>">
+              <?= Html::a($title, $urlGenerator->generate($actionName, $actionArguments), ['style'=>'text-decoration:none']); ?></i>
     </div>
     <div class="panel-body clearfix">
         <div class="container">

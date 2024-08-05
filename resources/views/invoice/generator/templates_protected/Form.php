@@ -1,7 +1,18 @@
-<?php         
-   //interal type = eg. appearing in mysql
-   //abstract type = eg. doctrine/cycle appearing IN annotation
-   //type = eg. doctrine/cycle appearing BELOW annotation
+<?php  
+
+    declare(strict_types=1);
+    
+    /**
+     * @see interal type e.g. appearing in mysql
+     * @see abstract type e.g. doctrine/cycle appearing IN annotation
+     * @see type e.g. doctrine/cycle appearing BELOW annotation
+     * 
+     * @var App\Invoice\Entity\Gentor $generator
+     * @var Cycle\Database\Table $orm_schema
+     * @var array $relations
+     */
+   
+    
    echo "<?php\n";             
 ?>
 
@@ -42,6 +53,9 @@ final class <?= $generator->getCamelcase_capital_name();?>Form extends FormModel
             case 'bool':
                 {
                    if ($column->hasDefaultValue()) {
+                      /**
+                       * @var mixed $init
+                       */ 
                       $init  = $column->getDefaultValue();
                       if ($init === 1) {$init = 'true';}
                       if ($init === 0) {$init = 'false';}
@@ -57,9 +71,9 @@ final class <?= $generator->getCamelcase_capital_name();?>Form extends FormModel
         if ($column->getAbstractType() <> 'primary') {
             if (($column->getAbstractType() === 'date') || ($column->getAbstractType() === 'datetime'))  {
                 // mixed => null, or string, or DateTimeImmutable
-                echo '    private mixed' ." $".$column->getName(). ' = '.$init.';'."\n";
+                echo '    private mixed' ." $".$column->getName(). ' = '.(string)$init.';'."\n";
             } else {
-                echo '    private ?'.$column->getType()." $".$column->getName(). ' = '.$init.';'."\n";
+                echo '    private ?'.$column->getType()." $".$column->getName(). ' = '.(string)$init.';'."\n";
             }
         }
     }
@@ -70,6 +84,9 @@ final class <?= $generator->getCamelcase_capital_name();?>Form extends FormModel
     <?php
         echo "\n";
         $bo = '';
+        /**
+         * @var Cycle\Database\Schema\AbstractColumn $column
+         */
         foreach ($orm_schema->getColumns() as $column) {
             // Ignore the id field
             if ($column->getAbstractType() <> 'primary') { 
@@ -81,6 +98,9 @@ final class <?= $generator->getCamelcase_capital_name();?>Form extends FormModel
     }
     
     <?php
+    /**
+     * @var Cycle\Database\Schema\AbstractColumn $column
+     */
     foreach ($orm_schema->getColumns() as $column) {
       if (($column->getAbstractType() <> 'primary') && ($column->getAbstractType() <> 'date') && ($column->getAbstractType() <> 'time')) {
         echo "\n";

@@ -208,7 +208,7 @@ final class SalesOrderController
                         'so_statuses' => $so_statuses,            
                         'paginator' => $paginator,
                     ];    
-                    return $this->viewRenderer->render('salesorder/guest', $parameters);
+                    return $this->viewRenderer->render('guest', $parameters);
                 } 
                 throw new NoClientsAssignedToUserException($this->translator);
             } // userinv
@@ -259,7 +259,7 @@ final class SalesOrderController
             'paginator' => $paginator,
             'client_count' => $clientRepo->count()
         ]; 
-        return $this->viewRenderer->render('salesorder/index', $parameters);
+        return $this->viewRenderer->render('index', $parameters);
     }
     
     // Sales Orders are created from Quotes see quote/approve
@@ -974,34 +974,25 @@ final class SalesOrderController
                                'client' => $cfR->repoTablequery('client_custom'),
                                'sales_order' => $cfR->repoTablequery('sales_order'),  
                             ];
-                            //TODO 
-                            // $attachments;
                             if (null!==$salesorder_id) {
                                 $salesorder_amount = (($soaR->repoSalesOrderAmountCount($salesorder_id) > 0) ? $soaR->repoSalesOrderquery($salesorder_id) : null);
                                 if ($salesorder_amount) {
                                     $parameters = [            
-                                        'render'=> $this->viewRenderer->renderPartialAsString('//invoice/template/salesorder/public/' . ($this->sR->get_setting('public_salesorder_template') ?: 'SalesOrder_Web'), [
+                                        'renderTemplate' => $this->viewRenderer->renderPartialAsString('//invoice/template/salesorder/public/' . ($this->sR->get_setting('public_salesorder_template') ?: 'SalesOrder_Web'), [
                                             'isGuest' => $currentUser->isGuest(),
-                                            'terms_and_conditions_file'=>$this->viewRenderer->renderPartialAsString('//invoice/salesorder/terms_and_conditions_file'),
-                                            // TODO logo
-                                            'logo'=> '',
+                                            'terms_and_conditions_file' => $this->viewRenderer->renderPartialAsString('//invoice/salesorder/terms_and_conditions_file'),
                                             'alert' => $this->alert(),
                                             'salesorder' => $salesorder,
-                                            'salesorder_item_amount' => $soiaR,
+                                            'soiaR' => $soiaR,
                                             'salesorder_amount' => $salesorder_amount,
                                             'items' => $soiR->repoSalesOrderquery($salesorder_id),
                                             // Get all the salesorder tax rates that have been setup for this salesorder
                                             'salesorder_tax_rates' => $salesorder_tax_rates,
                                             'salesorder_url_key' => $url_key,
-                                            'flash_message' => $this->flash_message('info', ''),
-                                            //'attachments' => $attachments,
                                             'custom_fields' => $custom_fields,
-                                            'clienthelper' => new ClientHelper($this->sR),
-                                            'datehelper' => new DateHelper($this->sR),
-                                            'numberhelper' => new NumberHelper($this->sR),
-                                            'client'=>$salesorder->getClient(),
+                                            'client' => $salesorder->getClient(),
                                             // Get the details of the user of this quote
-                                            'userinv'=> $uiR->repoUserInvUserIdcount($salesorder->getUser_id()) > 0 ? $uiR->repoUserInvUserIdquery($salesorder->getUser_id()) : null,
+                                            'userInv' => $uiR->repoUserInvUserIdcount($salesorder->getUser_id()) > 0 ? $uiR->repoUserInvUserIdquery($salesorder->getUser_id()) : null,
                                         ]),        
                                     ];        
                                     return $this->viewRenderer->render('salesorder/url_key', $parameters);

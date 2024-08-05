@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 use App\Invoice\Asset\InvoiceAsset;
@@ -21,7 +22,7 @@ use App\Invoice\Asset\i18nAsset\ru_Asset;
 use App\Invoice\Asset\i18nAsset\sk_Asset;
 use App\Invoice\Asset\i18nAsset\uk_UA_Asset;
 use App\Invoice\Asset\i18nAsset\uz_UZ_Asset;
-use App\Invoice\Asset\ii18nAsset\vi_VN_Asset;
+use App\Invoice\Asset\i18nAsset\vi_VN_Asset;
 use App\Invoice\Asset\i18nAsset\zh_CN_Asset;
 use App\Invoice\Asset\i18nAsset\zh_TW_Asset;
 use App\Invoice\Asset\i18nAsset\zu_ZA_Asset;
@@ -43,16 +44,21 @@ use Yiisoft\Yii\Bootstrap5\Nav;
 use Yiisoft\Yii\Bootstrap5\NavBar;
 
 /**
- * @var \Yiisoft\Router\UrlGeneratorInterface $urlGenerator
- * @var \Yiisoft\Router\CurrentRoute $currentRoute
- * @var \Yiisoft\Assets\AssetManager $assetManager
- * @var \Yiisoft\Translator\TranslatorInterface $translator
- * @var \App\Invoice\Setting\SettingRepository $s
- * @var \App\Invoice\Helpers\DateHelper $datehelper
- * @var \App\User\User|null $user
+ * @var App\Invoice\Helpers\DateHelper $dateHelper
+ * @var App\Invoice\Setting\SettingRepository $s
+ * @var App\User\User|null $user
+ * @var Yiisoft\Router\UrlGeneratorInterface $urlGenerator
+ * @var Yiisoft\Router\CurrentRoute $currentRoute
+ * @var Yiisoft\Assets\AssetManager $assetManager
+ * @var Yiisoft\Translator\TranslatorInterface $translator
+ * @var Yiisoft\View\WebView $this
  * @var string $csrf 
  * @var string $content
  * @var string $brandLabel
+ * @var string $companyLogoHeight 
+ * @var string $companyLogoMargin
+ * @var string $companyLogoWidth
+ * @var string $logoPath
  */
 
 $assetManager->register(AppAsset::class);
@@ -133,198 +139,199 @@ echo NavBar::widget()
 ->brandUrl($urlGenerator->generate('site/index'))
 ->begin();
 
-echo Nav::widget()
-->currentPath($currentRoute->getUri()->getPath())        
-->options(['class'=>'navbar fs-4']) 
-->items( 
-    $isGuest
-        ? [
-        ['label' => $translator->translate('invoice.invoice'), 'url' => $urlGenerator->generate('invoice/index'),],
-    ] :
-    [               
-         ['label' => $translator->translate('invoice.client'), 
-          'items' => [
-                     ['options'=>['class'=>'nav fs-4'],'label' => $translator->translate('invoice.view'),
-                      'url'=>$urlGenerator->generate('client/guest')],
-                    ],
-         ],
-         ['label' => $translator->translate('invoice.quote'), 
-          'items' => [
-                     ['options'=>['class'=>'nav fs-4'],'label' => $translator->translate('invoice.view'),
-                      'url'=>$urlGenerator->generate('quote/guest')],
-                    ],
-         ],
-         ['label' => $translator->translate('invoice.salesorder'), 
-          'items' => [
-                     ['options'=>['class'=>'nav fs-4'], 'label' => $translator->translate('invoice.view'),
-                      'url'=>$urlGenerator->generate('salesorder/guest')],
-                    ],
-         ],
-         ['label' => $translator->translate('invoice.invoice'), 
-          'items' => [
-                     ['options'=>['class'=>'nav fs-4'], 'label' => $translator->translate('invoice.view'),
-                      'url'=>$urlGenerator->generate('inv/guest')],
-                    ],
-         ],
-         ['label' => $translator->translate('invoice.payment'), 
-          'items' => [
-                     ['options'=>['class'=>'nav fs-4'],'label' => $translator->translate('invoice.view'),
-                      'url'=>$urlGenerator->generate('payment/guest')],
-                     ['options'=>['class'=>'nav fs-4'],'label' => $translator->translate('invoice.online.log'),
-                      'url'=>$urlGenerator->generate('payment/guest_online_log')] 
-                    ],
-         ],
-         ['label' => $translator->translate('invoice.setting'), 
-          'items' => [
-                     ['options'=>['class'=>'nav fs-4'],
-                      'label' => $translator->translate('invoice.view'),
-                      'url'=>$urlGenerator->generate('userinv/guest')],
-                     ['options' => ['class' => 'nav fs-4'], 
-                      'label' => $translator->translate('password.change'), 
-                      'url' => $urlGenerator->generate('auth/change')],
-                     ['options' => ['class' => 'nav fs-4'], 
-                      'label' => $translator->translate('invoice.email.log'), 
-                      'url' => $urlGenerator->generate('invsentlog/guest')], 
-                    ],
-         ],
-                 
-    ]       
-);
+$currentPath = $currentRoute->getUri()?->getPath();
+if (null!== $currentPath) { 
+    echo Nav::widget()
+    ->currentPath($currentPath)        
+    ->options(['class'=>'navbar fs-4']) 
+    ->items( 
+        $isGuest
+            ? [
+            ['label' => $translator->translate('invoice.invoice'), 'url' => $urlGenerator->generate('invoice/index'),],
+        ] :
+        [               
+             ['label' => $translator->translate('invoice.client'), 
+              'items' => [
+                         ['options'=>['class'=>'nav fs-4'],'label' => $translator->translate('invoice.view'),
+                          'url'=>$urlGenerator->generate('client/guest')],
+                        ],
+             ],
+             ['label' => $translator->translate('invoice.quote'), 
+              'items' => [
+                         ['options'=>['class'=>'nav fs-4'],'label' => $translator->translate('invoice.view'),
+                          'url'=>$urlGenerator->generate('quote/guest')],
+                        ],
+             ],
+             ['label' => $translator->translate('invoice.salesorder'), 
+              'items' => [
+                         ['options'=>['class'=>'nav fs-4'], 'label' => $translator->translate('invoice.view'),
+                          'url'=>$urlGenerator->generate('salesorder/guest')],
+                        ],
+             ],
+             ['label' => $translator->translate('invoice.invoice'), 
+              'items' => [
+                         ['options'=>['class'=>'nav fs-4'], 'label' => $translator->translate('invoice.view'),
+                          'url'=>$urlGenerator->generate('inv/guest')],
+                        ],
+             ],
+             ['label' => $translator->translate('invoice.payment'), 
+              'items' => [
+                         ['options'=>['class'=>'nav fs-4'],'label' => $translator->translate('invoice.view'),
+                          'url'=>$urlGenerator->generate('payment/guest')],
+                         ['options'=>['class'=>'nav fs-4'],'label' => $translator->translate('invoice.online.log'),
+                          'url'=>$urlGenerator->generate('payment/guest_online_log')] 
+                        ],
+             ],
+             ['label' => $translator->translate('invoice.setting'), 
+              'items' => [
+                         ['options'=>['class'=>'nav fs-4'],
+                          'label' => $translator->translate('invoice.view'),
+                          'url'=>$urlGenerator->generate('userinv/guest')],
+                         ['options' => ['class' => 'nav fs-4'], 
+                          'label' => $translator->translate('password.change'), 
+                          'url' => $urlGenerator->generate('auth/change')],
+                         ['options' => ['class' => 'nav fs-4'], 
+                          'label' => $translator->translate('invoice.email.log'), 
+                          'url' => $urlGenerator->generate('invsentlog/guest')], 
+                        ],
+             ],
 
-echo Nav::widget()
-->currentPath($currentRoute
-    ->getUri()
-    ->getPath())
-->options(['class' => 'navbar-nav'])
-->items(
-    [
+        ]       
+    );
+
+    echo Nav::widget()
+    ->currentPath($currentPath)
+    ->options(['class' => 'navbar-nav'])
+    ->items(
         [
-            'label' => $translator->translate('menu.language'),
-            'url' => '#',
-            'items' => [
-                [
-                    'label' => 'Afrikaans South African',
-                    /**
-                     * Note: _language => config\web\params.php locale key (NOT value) i.e. left of '=>'
-                     */  
-                    'url' => $urlGenerator->generateFromCurrent(['_language' => 'af-ZA'], fallbackRouteName: 'site/index'),
+            [
+                'label' => $translator->translate('menu.language'),
+                'url' => '#',
+                'items' => [
+                    [
+                        'label' => 'Afrikaans South African',
+                        /**
+                         * Note: _language => config\web\params.php locale key (NOT value) i.e. left of '=>'
+                         */  
+                        'url' => $urlGenerator->generateFromCurrent(['_language' => 'af-ZA'], fallbackRouteName: 'site/index'),
+                    ],
+                    [
+                        'label' => 'Arabic Bahrainian / عربي',
+                        'url' => $urlGenerator->generateFromCurrent(['_language' => 'ar-BH'], fallbackRouteName: 'site/index'),
+                    ],
+                    [
+                        'label' => 'Azerbaijani / Azərbaycan',
+                        'url' => $urlGenerator->generateFromCurrent(['_language' => 'az'], fallbackRouteName: 'site/index'),
+                    ], 
+                    [
+                        'label' => 'Chinese Simplified / 简体中文',
+                        'url' => $urlGenerator->generateFromCurrent(['_language' => 'zh-CN'], fallbackRouteName: 'site/index'),
+                    ],
+                    [
+                        'label' => 'Tiawanese Mandarin / 简体中文',
+                        'url' => $urlGenerator->generateFromCurrent(['_language' => 'zh-TW'], fallbackRouteName: 'site/index'),
+                    ],   
+                    [
+                        'label' => 'English',
+                        'url' => $urlGenerator->generateFromCurrent(['_language' => 'en'], fallbackRouteName: 'site/index'),
+                    ],
+                    [
+                        'label' => 'Filipino / Filipino',
+                        'url' => $urlGenerator->generateFromCurrent(['_language' => 'fil'], fallbackRouteName: 'site/index'),
+                    ],    
+                    [
+                        'label' => 'French / Français',
+                        'url' => $urlGenerator->generateFromCurrent(['_language' => 'fr'], fallbackRouteName: 'site/index'),
+                    ],
+                    [
+                        'label' => 'Dutch / Nederlands',
+                        'url' => $urlGenerator->generateFromCurrent(['_language' => 'nl'], fallbackRouteName: 'site/index'),
+                    ],
+                    [
+                        'label' => 'German / Deutsch',
+                        'url' => $urlGenerator->generateFromCurrent(['_language' => 'de'], fallbackRouteName: 'site/index'),
+                    ],
+                    [
+                        'label' => 'Indonesian / bahasa Indonesia',
+                        'url' => $urlGenerator->generateFromCurrent(['_language' => 'id'], fallbackRouteName: 'site/index'),
+                    ],
+                    [
+                        'label' => 'Japanese / 日本',
+                        'url' => $urlGenerator->generateFromCurrent(['_language' => 'ja'], fallbackRouteName: 'site/index'),
+                    ],
+                    [
+                        'label' => 'Polish / Polski',
+                        'url' => $urlGenerator->generateFromCurrent(['_language' => 'pl'], fallbackRouteName: 'invoice/index'),
+                    ],  
+                    [
+                        'label' => 'Portugese Brazilian/ Português Brasileiro',
+                        'url' => $urlGenerator->generateFromCurrent(['_language' => 'pt-BR'], fallbackRouteName: 'invoice/index'),
+                    ],  
+                    [
+                        'label' => 'Russian / Русский',
+                        'url' => $urlGenerator->generateFromCurrent(['_language' => 'ru'], fallbackRouteName: 'site/index'),
+                    ],
+                    [
+                        'label' => 'Slovakian / Slovenský',
+                        'url' => $urlGenerator->generateFromCurrent(['_language' => 'sk'], fallbackRouteName: 'site/index'),
+                    ],
+                    [
+                        'label' => 'Spanish / Española x',
+                        'url' => $urlGenerator->generateFromCurrent(['_language' => 'es'], fallbackRouteName: 'site/index'),
+                    ],
+                    [
+                        'label' => 'Ukrainian / українська',
+                        'url' => $urlGenerator->generateFromCurrent(['_language' => 'uk'], fallbackRouteName: 'site/index'),
+                    ],
+                    [
+                        'label' => 'Uzbek / o'."'".'zbek',
+                        'url' => $urlGenerator->generateFromCurrent(['_language' => 'uz'], fallbackRouteName: 'site/index'),
+                    ],
+                    [
+                        'label' => 'Vietnamese / Tiếng Việt',
+                        'url' => $urlGenerator->generateFromCurrent(['_language' => 'vi'], fallbackRouteName: 'site/index'),
+                    ],
+                    [
+                        'label' => 'Zulu / Zulu',
+                        'url' => $urlGenerator->generateFromCurrent(['_language' => 'zu-ZA'], fallbackRouteName: 'site/index'),
+                    ],   
                 ],
-                [
-                    'label' => 'Arabic Bahrainian / عربي',
-                    'url' => $urlGenerator->generateFromCurrent(['_language' => 'ar-BH'], fallbackRouteName: 'site/index'),
-                ],
-                [
-                    'label' => 'Azerbaijani / Azərbaycan',
-                    'url' => $urlGenerator->generateFromCurrent(['_language' => 'az'], fallbackRouteName: 'site/index'),
-                ], 
-                [
-                    'label' => 'Chinese Simplified / 简体中文',
-                    'url' => $urlGenerator->generateFromCurrent(['_language' => 'zh-CN'], fallbackRouteName: 'site/index'),
-                ],
-                [
-                    'label' => 'Tiawanese Mandarin / 简体中文',
-                    'url' => $urlGenerator->generateFromCurrent(['_language' => 'zh-TW'], fallbackRouteName: 'site/index'),
-                ],   
-                [
-                    'label' => 'English',
-                    'url' => $urlGenerator->generateFromCurrent(['_language' => 'en'], fallbackRouteName: 'site/index'),
-                ],
-                [
-                    'label' => 'Filipino / Filipino',
-                    'url' => $urlGenerator->generateFromCurrent(['_language' => 'fil'], fallbackRouteName: 'site/index'),
-                ],    
-                [
-                    'label' => 'French / Français',
-                    'url' => $urlGenerator->generateFromCurrent(['_language' => 'fr'], fallbackRouteName: 'site/index'),
-                ],
-                [
-                    'label' => 'Dutch / Nederlands',
-                    'url' => $urlGenerator->generateFromCurrent(['_language' => 'nl'], fallbackRouteName: 'site/index'),
-                ],
-                [
-                    'label' => 'German / Deutsch',
-                    'url' => $urlGenerator->generateFromCurrent(['_language' => 'de'], fallbackRouteName: 'site/index'),
-                ],
-                [
-                    'label' => 'Indonesian / bahasa Indonesia',
-                    'url' => $urlGenerator->generateFromCurrent(['_language' => 'id'], fallbackRouteName: 'site/index'),
-                ],
-                [
-                    'label' => 'Japanese / 日本',
-                    'url' => $urlGenerator->generateFromCurrent(['_language' => 'ja'], fallbackRouteName: 'site/index'),
-                ],
-                [
-                    'label' => 'Polish / Polski',
-                    'url' => $urlGenerator->generateFromCurrent(['_language' => 'pl'], fallbackRouteName: 'invoice/index'),
-                ],  
-                [
-                    'label' => 'Portugese Brazilian/ Português Brasileiro',
-                    'url' => $urlGenerator->generateFromCurrent(['_language' => 'pt-BR'], fallbackRouteName: 'invoice/index'),
-                ],  
-                [
-                    'label' => 'Russian / Русский',
-                    'url' => $urlGenerator->generateFromCurrent(['_language' => 'ru'], fallbackRouteName: 'site/index'),
-                ],
-                [
-                    'label' => 'Slovakian / Slovenský',
-                    'url' => $urlGenerator->generateFromCurrent(['_language' => 'sk'], fallbackRouteName: 'site/index'),
-                ],
-                [
-                    'label' => 'Spanish / Española x',
-                    'url' => $urlGenerator->generateFromCurrent(['_language' => 'es'], fallbackRouteName: 'site/index'),
-                ],
-                [
-                    'label' => 'Ukrainian / українська',
-                    'url' => $urlGenerator->generateFromCurrent(['_language' => 'uk'], fallbackRouteName: 'site/index'),
-                ],
-                [
-                    'label' => 'Uzbek / o'."'".'zbek',
-                    'url' => $urlGenerator->generateFromCurrent(['_language' => 'uz'], fallbackRouteName: 'site/index'),
-                ],
-                [
-                    'label' => 'Vietnamese / Tiếng Việt',
-                    'url' => $urlGenerator->generateFromCurrent(['_language' => 'vi'], fallbackRouteName: 'site/index'),
-                ],
-                [
-                    'label' => 'Zulu / Zulu',
-                    'url' => $urlGenerator->generateFromCurrent(['_language' => 'zu-ZA'], fallbackRouteName: 'site/index'),
-                ],   
             ],
         ],
-    ],
-);        
+    );        
 
-echo Nav::widget()
-->currentPath($currentRoute->getUri()->getPath())
-->options(['class' => 'navbar-nav'])
-->items(
-    [
+    echo Nav::widget()
+    ->currentPath($currentPath)
+    ->options(['class' => 'navbar-nav'])
+    ->items(
         [
-            'label' => $translator->translate('menu.login'),
-            'url' => $urlGenerator->generate('auth/login'),
-            'visible' => $isGuest,
+            [
+                'label' => $translator->translate('menu.login'),
+                'url' => $urlGenerator->generate('auth/login'),
+                'visible' => $isGuest,
+            ],
+            [
+                'label' => $translator->translate('menu.signup'),
+                'url' => $urlGenerator->generate('auth/signup'),
+                'visible' => $isGuest,
+            ],
+            $isGuest ? '' : Form::tag()
+                    ->post($urlGenerator->generate('auth/logout'))
+                    ->csrf($csrf)
+                    ->open()
+                . '<div class="mb-1">'
+                . Button::submit(
+                    $translator->translate('menu.logout', ['login' => Html::encode(null!==$user ? $user->getLogin() : '')])
+                )
+                    ->class('btn btn-primary')
+                . '</div>'
+                . Form::tag()->close()
         ],
-        [
-            'label' => $translator->translate('menu.signup'),
-            'url' => $urlGenerator->generate('auth/signup'),
-            'visible' => $isGuest,
-        ],
-        $isGuest ? '' : Form::tag()
-                ->post($urlGenerator->generate('auth/logout'))
-                ->csrf($csrf)
-                ->open()
-            . '<div class="mb-1">'
-            . Button::submit(
-                $translator->translate('menu.logout', ['login' => Html::encode($user->getLogin())])
-            )
-                ->class('btn btn-primary')
-            . '</div>'
-            . Form::tag()->close()
-    ],
-);
+    );
 
-echo NavBar::end();
+    echo NavBar::end();
 
+} // if null!==$currentPath
 ?>
 
 <div id="main-area">
@@ -360,8 +367,8 @@ echo NavBar::end();
  
 <?php 
     $js1 = "$(function () {".
-       '$(".form-control.input-sm.datepicker").datepicker({dateFormat:"'.$datehelper->datepicker_dateFormat()
-                                                        .'", firstDay:'.$datehelper->datepicker_firstDay()
+       '$(".form-control.input-sm.datepicker").datepicker({dateFormat:"'.$dateHelper->datepicker_dateFormat()
+                                                        .'", firstDay:'.$dateHelper->datepicker_firstDay()
                                                         .', changeMonth: true'
                                                         .', changeYear: true'
                                                         .', yearRange: "-50:+10"'

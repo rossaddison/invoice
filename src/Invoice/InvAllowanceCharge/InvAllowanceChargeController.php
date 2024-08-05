@@ -7,7 +7,6 @@ use App\Invoice\Entity\InvAllowanceCharge;
 use App\Invoice\InvAllowanceCharge\InvAllowanceChargeService;
 use App\Invoice\InvAllowanceCharge\InvAllowanceChargeRepository;
 
-use App\Invoice\Setting\SettingRepository;
 use App\Invoice\AllowanceCharge\AllowanceChargeRepository;
 use App\User\UserService;
 use App\Service\WebControllerService;
@@ -80,7 +79,8 @@ final class InvAllowanceChargeController
         $form = new InvAllowanceChargeForm($invAllowanceCharge, (int)$inv_id);
         $parameters = [
             'title' => $this->translator->translate('invoice.add'),
-            'action' => ['invallowancecharge/add', ['inv_id' => $inv_id]],
+            'actionName' => 'invallowancecharge/add', 
+            'actionArguments' => ['inv_id' => $inv_id],
             'errors' => [],
             'form' => $form,
             'optionsDataAllowanceCharges' => $allowanceChargeRepository->optionsDataAllowanceCharges(),
@@ -129,16 +129,14 @@ final class InvAllowanceChargeController
     
     /**
      * @param InvAllowanceChargeRepository $invallowancechargeRepository
-     * @param SettingRepository $settingRepository
      * @return Response
      */
-    public function index(InvAllowanceChargeRepository $invallowancechargeRepository, SettingRepository $settingRepository): Response
+    public function index(InvAllowanceChargeRepository $invallowancechargeRepository): Response
     {      
       $invallowancecharges = $this->invallowancecharges($invallowancechargeRepository);
       $paginator = (new OffsetPaginator($invallowancecharges));
        $parameters = [
          'paginator' => $paginator,
-         'grid_summary'=> $settingRepository->grid_summary($paginator, $this->translator, (int)$settingRepository->get_setting('default_list_limit'), $this->translator->translate('invoice.invoice.allowance.or.charge'), ''),    
          'alert'=> $this->alert()
         ];
         return $this->viewRenderer->render('index', $parameters);

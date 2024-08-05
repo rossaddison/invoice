@@ -9,9 +9,14 @@
 >
 <plugins><pluginClass class="Psalm\SymfonyPsalmPlugin\Plugin"/></plugins>    
     <projectFiles>
+        <directory name="config" />
+        <directory name="resources/views" />
         <directory name="src" />
         <file name="public/index.php"/>
         <file name="yii"/>
         <file name="autoload.php"/>
+        <ignoreFiles>
+            <directory name="vendor/yiisoft/requirements/src" />
+        </ignoreFiles>        
     </projectFiles>    
 </psalm>

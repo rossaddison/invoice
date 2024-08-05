@@ -1,12 +1,18 @@
 <?php
+
    declare(strict_types=1);
       
    use App\Widget\OffsetPagination;
    use Yiisoft\Html\Html;
    
-   /**    
-    * @var \Yiisoft\Router\UrlGeneratorInterface $urlGenerator
-    */
+   /**
+    * @var Yiisoft\Data\Paginator\OffsetPaginator $paginator
+    * @var Yiisoft\Translator\TranslatorInterface $translator 
+    * @var Yiisoft\Router\UrlGeneratorInterface $urlGenerator
+    * @var array $email_templates
+    * @var string $alert
+    * @var string $csrf 
+    */ 
    echo $alert;
 ?>
 <div id="headerbar">
@@ -25,7 +31,7 @@
         <?php
             $pagination = OffsetPagination::widget()
             ->paginator($paginator)
-            ->urlGenerator(fn ($page) => $urlGenerator->generate('emailtemplate/index', ['page' => $page]));
+            ->urlGenerator(fn (string $page) => $urlGenerator->generate('emailtemplate/index', ['page' => $page]));
         ?>
         <?php
             if ($pagination->isPaginationRequired()) {
@@ -44,22 +50,31 @@
         </tr>
         </thead>
         <tbody>
-        <?php foreach ($email_templates as $email_template) { ?>
+        <?php
+            /**
+             * @var App\Invoice\Entity\EmailTemplate $email_template
+             */
+            foreach ($email_templates as $email_template) { ?>
             <tr>
                 <td><?= Html::encode($email_template->getEmail_template_title()); ?></td>
-                <td><?= ucfirst($email_template->getEmail_template_type()); ?></td>
+                <td><?= ucfirst($email_template->getEmail_template_type() ?? 'invoice'); ?></td>
                 <td>
                     <div class="options btn-group">
                         <a class="btn btn-default btn-sm dropdown-toggle" data-toggle="dropdown" href="#"><i
                                     class="fa fa-cog"></i> <?= $translator->translate('i.options'); ?></a>
                         <ul class="dropdown-menu">
                             <li>
+                                <a href="<?= $urlGenerator->generate('emailtemplate/view',['email_template_id' => $email_template->getEmail_template_id()]); ?>" style="text-decoration: none ">
+                                    <i class="fa fa-eye fa-margin"></i><?= $translator->translate('i.view'); ?>
+                                </a>
+                            </li>
+                            <li>
                                 <a href="<?= $urlGenerator->generate('emailtemplate/edit'.($email_template->getEmail_template_type() == 'Invoice' ? '_invoice' : '_quote'),['email_template_id'=>$email_template->getEmail_template_id()]); ?>" style="text-decoration: none ">
                                     <i class="fa fa-edit fa-margin"></i><?= $translator->translate('i.edit'); ?>
                                 </a>
                             </li>
                             <li>
-                                <a href="<?= $urlGenerator->generate('emailtemplate/delete',['email_template_id'=>$email_template->getEmail_template_id()]); ?>" style="text-decoration: none ">
+                                <a href="<?= $urlGenerator->generate('emailtemplate/delete',['email_template_id' => $email_template->getEmail_template_id()]); ?>" style="text-decoration: none ">
                                     <i class="fa fa-trash fa-margin"></i><?= $translator->translate('i.delete'); ?>
                                 </a>
                             </li>

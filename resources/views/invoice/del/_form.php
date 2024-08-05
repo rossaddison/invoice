@@ -8,15 +8,23 @@ use Yiisoft\Html\Html;
 use Yiisoft\Html\Tag\Form;
 
 /**
- * @var \Yiisoft\View\View $this
- * @var \Yiisoft\Router\UrlGeneratorInterface $urlGenerator
+ * @see App\Invoice\DeliveryLocation\DeliveryLocationController function form
+ * @var App\Invoice\DeliveryLocation\DeliveryLocationForm $form
+ * @var App\Widget\Button $button
+ * @var Yiisoft\Translator\TranslatorInterface $translator
+ * @var Yiisoft\Router\UrlGeneratorInterface $urlGenerator
+ * @var array $actionQueryParameters
+ * @var array $electronic_address_scheme
+ * @var string $actionName
  * @var string $csrf
- * @var string $action
  * @var string $title
+ * @psalm-var array<string, Stringable|null|scalar> $actionArguments
+ * @psalm-var array<string,list<string>> $errors
+ * @psalm-var array<array-key, array<array-key, string>|string> $optionsDataEAS
  */
 ?>
 <?= Form::tag()
-    ->post($urlGenerator->generate(...$action))
+    ->post($urlGenerator->generate($actionName, $actionArguments, $actionQueryParameters))
     ->enctypeMultipartFormData()
     ->csrf($csrf)
     ->id('DeliveryLocationForm')
@@ -45,8 +53,8 @@ use Yiisoft\Html\Tag\Form;
             <?= Html::closeTag('div'); ?>
             <?= Html::openTag('div'); ?>
                 <?= Field::text($form, 'date_created')
-                    ->label($translator->translate('invoice.common.date.created'), ['form-label'])
-                    ->value(Html::encode(($form->getDate_created())->format('Y-m-d') ?? ''))
+                    ->label($translator->translate('invoice.common.date.created'))
+                    ->value(Html::encode(($form->getDate_created())->format('Y-m-d')))
                     ->addInputAttributes([
                         'placeholder' => $translator->translate('invoice.common.date.created'),
                         'readonly' => 'readonly' 
@@ -55,8 +63,8 @@ use Yiisoft\Html\Tag\Form;
             <?= Html::closeTag('div'); ?>
             <?= Html::openTag('div'); ?>
                 <?= Field::text($form, 'date_modified')
-                    ->label($translator->translate('invoice.common.date.modified'), ['form-label'])
-                    ->value(Html::encode(($form->getDate_modified())->format('Y-m-d') ?? ''))
+                    ->label($translator->translate('invoice.common.date.modified'))
+                    ->value(Html::encode(($form->getDate_modified())->format('Y-m-d')))
                     ->addInputAttributes([
                         'placeholder' => $translator->translate('invoice.common.date.modified'),
                         'readonly' => 'readonly'
@@ -65,7 +73,7 @@ use Yiisoft\Html\Tag\Form;
             <?= Html::closeTag('div'); ?>
             <?= Html::openTag('div'); ?>
                 <?= Field::text($form, 'name')
-                    ->label($translator->translate('i.name'), ['form-label'])
+                    ->label($translator->translate('i.name'))
                     ->addInputAttributes([
                         'placeholder' => $translator->translate('i.name')
                     ])
@@ -75,7 +83,7 @@ use Yiisoft\Html\Tag\Form;
             <?= Html::closeTag('div'); ?>
             <?= Html::openTag('div'); ?>
                 <?= Field::text($form, 'building_number')
-                    ->label($translator->translate('invoice.delivery.location.building.number'), ['form-label'])
+                    ->label($translator->translate('invoice.delivery.location.building.number'))
                     ->addInputAttributes([
                         'placeholder' => $translator->translate('invoice.delivery.location.building.number'),
                     ])
@@ -84,7 +92,7 @@ use Yiisoft\Html\Tag\Form;
             <?= Html::closeTag('div'); ?>    
             <?= Html::openTag('div'); ?>
                 <?= Field::text($form, 'address_1')
-                    ->label($translator->translate('i.street_address'), ['form-label'])
+                    ->label($translator->translate('i.street_address'))
                     ->addInputAttributes([
                         'placeholder' => $translator->translate('i.street_address')
                     ])
@@ -94,7 +102,7 @@ use Yiisoft\Html\Tag\Form;
             <?= Html::closeTag('div'); ?>
             <?= Html::openTag('div'); ?>
                 <?= Field::text($form, 'address_2')
-                    ->label($translator->translate('i.street_address_2'), ['form-label'])
+                    ->label($translator->translate('i.street_address_2'))
                     ->addInputAttributes([
                         'placeholder' => $translator->translate('i.street_address_2'),
                         'value' => Html::encode($form->getAddress_2() ?? ''),
@@ -104,7 +112,7 @@ use Yiisoft\Html\Tag\Form;
             <?= Html::closeTag('div'); ?>
             <?= Html::openTag('div'); ?>
                 <?= Field::text($form, 'city')
-                    ->label($translator->translate('i.city'), ['form-label'])
+                    ->label($translator->translate('i.city'))
                     ->addInputAttributes([
                         'placeholder' => $translator->translate('i.city'),
                         'value' => Html::encode($form->getCity() ?? ''),
@@ -114,7 +122,7 @@ use Yiisoft\Html\Tag\Form;
             <?= Html::closeTag('div'); ?>
             <?= Html::openTag('div'); ?>
                 <?= Field::text($form, 'state')
-                    ->label($translator->translate('i.state'), ['form-label'])
+                    ->label($translator->translate('i.state'))
                     ->addInputAttributes([
                         'placeholder' => $translator->translate('i.state'),
                         'value' => Html::encode($form->getState() ?? ''),
@@ -124,7 +132,7 @@ use Yiisoft\Html\Tag\Form;
             <?= Html::closeTag('div'); ?>
             <?= Html::openTag('div'); ?>
                 <?= Field::text($form, 'zip')
-                    ->label($translator->translate('i.zip'), ['form-label'])
+                    ->label($translator->translate('i.zip'))
                     ->addInputAttributes([
                         'placeholder' => $translator->translate('i.zip'),
                         'value' => Html::encode($form->getZip() ?? ''),
@@ -134,7 +142,7 @@ use Yiisoft\Html\Tag\Form;
             <?= Html::closeTag('div'); ?>
             <?= Html::openTag('div'); ?>
                 <?= Field::text($form, 'country')
-                    ->label($translator->translate('i.country'), ['form-label'])
+                    ->label($translator->translate('i.country'))
                     ->addInputAttributes([
                         'placeholder' => $translator->translate('i.country'),
                     ])
@@ -165,7 +173,7 @@ use Yiisoft\Html\Tag\Form;
                      * @var array $value
                      */
                     foreach ($electronic_address_scheme as $key => $value) {
-                        $optionsDataEAS[$value['code']] = $value['code'] . str_repeat("-", 10) . $value['description'];
+                        $optionsDataEAS[(string)$value['code']] = (string)$value['code'] . str_repeat("-", 10) . (string)$value['description'];
                     } 
                 ?>
                 <?= Html::a('EAS','https://docs.peppol.eu/poacc/upgrade-3/codelist/eas'); ?>

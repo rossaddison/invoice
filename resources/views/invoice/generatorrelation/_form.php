@@ -1,18 +1,22 @@
 <?php
-declare(strict_types=1);
 
+declare(strict_types=1);
 
 use Yiisoft\FormModel\Field;
 use Yiisoft\Html\Html;
 use Yiisoft\Html\Tag\Form;
 
 /**
- * @var \Yiisoft\View\View $this
- * @var \App\Invoice\Entity\GentorRelation $gentorRelation
- * @var \Yiisoft\Router\UrlGeneratorInterface $urlGenerator
+ * @var App\Invoice\GeneratorRelation\GeneratorRelationForm $form
+ * @var App\Widget\Button $button
+ * @var Yiisoft\Translator\TranslatorInterface $translator 
+ * @var Yiisoft\Router\UrlGeneratorInterface $urlGenerator
+ * @var array $generators
+ * @var string $actionName
  * @var string $csrf
- * @var string $action
  * @var string $title
+ * @psalm-var array<string, Stringable|null|scalar> $actionArguments
+ * @psalm-var array<string,list<string>> $errors
  */
 ?>
 
@@ -28,7 +32,7 @@ use Yiisoft\Html\Tag\Form;
 
 <?=
     Form::tag()
-    ->post($urlGenerator->generate(...$action))
+    ->post($urlGenerator->generate($actionName, $actionArguments))
     ->enctypeMultipartFormData()
     ->csrf($csrf)
     ->id('GeneratorRelationForm')
@@ -36,11 +40,19 @@ use Yiisoft\Html\Tag\Form;
 ?>
 
 <?= Html::openTag('div', ['class' => 'col mb-3']); ?>
+<?= Field::errorSummary($form)
+    ->errors($errors)
+    ->header($translator->translate('invoice.error.summary'))
+    ->onlyCommonErrors()
+?>
 <?= Html::closeTag('div'); ?>
 
 <?= Html::openTag('div', ['class' => 'col mb-3']); ?>
 <?php
     $optionsDataGenerators = [];
+    /**
+     * @var App\Invoice\Entity\Gentor $generator
+     */
     foreach ($generators as $generator)
     {
         $optionsDataGenerators[$generator->getGentor_id()] = $generator->getCamelcase_capital_name();
@@ -50,12 +62,12 @@ use Yiisoft\Html\Tag\Form;
     ->label($translator->translate('invoice.generator.relation.form.entity.generator'))
     ->addInputAttributes([
         'class' => 'form-control',
-        'id' => 'gentor_id',
-        'readonly' => 'readonly',
-        'disabled' => 'disabled'
+        'id' => 'gentor_id'
     ])
     ->prompt($translator->translate('i.none'))        
     ->optionsData($optionsDataGenerators)
+    ->required(true)        
+    ->hint($translator->translate('invoice.hint.this.field.is.required')); 
 ?>
 <?= Html::closeTag('div'); ?>
 
@@ -65,11 +77,11 @@ use Yiisoft\Html\Tag\Form;
     ->addInputAttributes([
         'placeholder' => $translator->translate('invoice.generator.relation.form.lowercase.name'),
         'class' => 'form-control',
-        'id' => 'lowercasename',
-        'readonly' => 'readonly',
-        'disabled' => 'disabled'
+        'id' => 'lowercasename'
     ])
     ->value(Html::encode($form->getLowercase_name()))
+    ->required(true)
+    ->hint($translator->translate('invoice.hint.this.field.is.required')); 
 ?>
 <?= Html::closeTag('div'); ?>
 
@@ -79,11 +91,11 @@ use Yiisoft\Html\Tag\Form;
     ->addInputAttributes([
         'placeholder' => $translator->translate('invoice.generator.relation.form.camelcase.name'),
         'class' => 'form-control',
-        'id' => 'camelcasename',
-        'readonly' => 'readonly',
-        'disabled' => 'disabled'
+        'id' => 'camelcasename'
     ])
     ->value(Html::encode($form->getCamelcase_name()))
+    ->required(true)    
+    ->hint($translator->translate('invoice.hint.this.field.is.required')); 
 ?>
 <?= Html::closeTag('div'); ?>
 
@@ -93,11 +105,11 @@ use Yiisoft\Html\Tag\Form;
     ->addInputAttributes([
         'placeholder' => $translator->translate('invoice.generator.relation.form.view.field.name'),
         'class' => 'form-control',
-        'id' => 'view_field_name',
-        'readonly' => 'readonly',
-        'disabled' => 'disabled'
+        'id' => 'view_field_name'
     ])
     ->value(Html::encode($form->getView_field_name()))
+    ->required(true)    
+    ->hint($translator->translate('invoice.hint.this.field.is.required')); 
 ?>
 <?= Html::closeTag('div'); ?>
 
@@ -109,5 +121,3 @@ use Yiisoft\Html\Tag\Form;
 <?= Html::closeTag('div'); ?>
 <?= Html::closeTag('div'); ?>
 <?= Html::closeTag('div'); ?>
-
-

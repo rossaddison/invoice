@@ -10,6 +10,7 @@
     * @see This wavelite template has been adjusted to accomodate 
     * @see ..\invoice\src\ViewInjection\CommonViewInjection.php
     * @see ..\invoice\resources\messages\en\app.php
+    * @var array $team
     */
 ?>
 
@@ -19,7 +20,7 @@
             <?= Html::openTag('div', ['class' => 'col-12 col-md-10 col-lg-9 col-xl-8 col-xxl-7 text-center']); ?>
                 <?= Html::openTag('h2', ['class' => 'display-3 fw-bolder mb-4']);?>
                     <?=                    
-                       $team['we']; ?>
+                       (string)$team['we']; ?>
                 <?= Html::closeTag('h2'); ?>
             <?= Html::closeTag('div'); ?>
         <?= Html::closeTag('div'); ?>                    
@@ -43,7 +44,7 @@
                                 ->render(); ?>
                             <?= P::tag()
                                 ->addClass('text-secondary mb-0')
-                                ->content($team['coordinator'])
+                                ->content((string)$team['coordinator'])
                                 ->render(); ?>     
                         <?= Html::closeTag('figcaption'); ?>
                     <?= Html::closeTag('figure'); ?>
@@ -62,7 +63,7 @@
                                 ->render(); ?>
                             <?= P::tag()
                                 ->addClass('text-secondary mb-0')
-                                ->content($team['assistant'])
+                                ->content((string)$team['assistant'])
                                 ->render(); ?>
                         <?= Html::closeTag('figcaption'); ?>
                     <?= Html::closeTag('figure'); ?>        
@@ -81,7 +82,7 @@
                                 ->render(); ?>
                             <?= P::tag()
                                 ->addClass('text-secondary mb-0')
-                                ->content($team['assistant'])
+                                ->content((string)$team['assistant'])
                                 ->render(); ?>
                         <?= Html::closeTag('figcaption'); ?>
                     <?= Html::closeTag('figure'); ?>        
@@ -100,7 +101,7 @@
                                 ->render(); ?>
                             <?= P::tag()
                                 ->addClass('text-secondary mb-0')
-                                ->content($team['assistant'])
+                                ->content((string)$team['assistant'])
                                 ->render(); ?>
                         <?= Html::closeTag('figcaption'); ?>
                     <?= Html::closeTag('figure'); ?>        

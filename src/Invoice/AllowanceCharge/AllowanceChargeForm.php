@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace App\Invoice\AllowanceCharge;
@@ -13,7 +14,9 @@ final class AllowanceChargeForm extends FormModel
     private string $id;
     #[Required]
     private ?bool $identifier=false;
-    #[Required]
+    /**
+     * @see Not required because determined from value 'reason' in array using AllowanceChargeContoller
+     */
     private ?string $reason_code='';
     #[Required]
     private ?string $reason='';
@@ -41,7 +44,7 @@ final class AllowanceChargeForm extends FormModel
     public function getIdentifier() : bool|null
     {
       return $this->identifier;
-    }
+    }    
 
     public function getReason_code() : string|null
     {

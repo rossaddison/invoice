@@ -9,14 +9,14 @@ use Yiisoft\Html\Tag\Form;
 /**
  * @var App\Invoice\Unit\UnitForm $form
  * @var App\Widget\Button $button
- * @var \Yiisoft\View\View $this
- * @var \Yiisoft\Translator\TranslatorInterface $translator
- * @var \Yiisoft\Router\UrlGeneratorInterface $urlGenerator 
- * @var string $actionName 
- * @psalm-var array<string, Stringable|null|scalar> $actionArguments
+ * @var Yiisoft\View\View $this
+ * @var Yiisoft\Translator\TranslatorInterface $translator
+ * @var Yiisoft\Router\UrlGeneratorInterface $urlGenerator 
+ * @var string $actionName
  * @var string $csrf 
- * @psalm-var array<string,list<string>> $errors
  * @var string $title
+ * @psalm-var array<string,list<string>> $errors
+ * @psalm-var array<string, Stringable|null|scalar> $actionArguments
  */
 ?>
 

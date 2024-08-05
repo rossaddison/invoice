@@ -556,6 +556,35 @@ final class InvRepository extends Select\Repository
     }
     
     /**
+     * 
+     * @param int $status
+     * @return string
+     */
+    public function getSpecificStatusArrayClass(int $status) : string
+    {
+        $statuses_array = $this->getStatuses($this->translator);
+        /**
+         * @var array $statuses_array[$status]
+         * @var string $statuses_array[$status]['class']
+         */
+        return $statuses_array[$status]['class'];
+    }
+    
+    /**
+     * @param int $status
+     * @return string
+     */
+    public function getSpecificStatusArrayEmoji(int $status) : string
+    {
+        $statuses_array = $this->getStatuses($this->translator);
+        /**
+         * @var array $statuses_array[$status]
+         * @var string $statuses_array[$status]['emoji']
+         */
+        return $statuses_array[$status]['emoji'];
+    }
+    
+    /**
      * @param string $invoice_date_created
      * @param SR $sR
      * @return string

@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-use Yiisoft\Data\Paginator\OffsetPaginator;
+use App\User\User;
 use Yiisoft\Html\Html;
 use Yiisoft\Html\Tag\A;
 use Yiisoft\Html\Tag\Button;
@@ -11,22 +11,19 @@ use Yiisoft\Html\Tag\Form;
 use Yiisoft\Html\Tag\H5;
 use Yiisoft\Html\Tag\I;
 use Yiisoft\Html\Tag\Select;
-use Yiisoft\Router\CurrentRoute;
-use Yiisoft\Router\UrlGeneratorInterface;
-use Yiisoft\Translator\TranslatorInterface;
-use Yiisoft\View\WebView;
 use Yiisoft\Yii\DataView\Column\DataColumn;
 use Yiisoft\Yii\DataView\GridView;
 use Yiisoft\Yii\DataView\OffsetPagination;
 
-/**
- * @var string                $csrf
- * @var CurrentRoute          $currentRoute
- * @var OffsetPaginator       $paginator
- * @var TranslatorInterface   $translator
- * @var UrlGeneratorInterface $urlGenerator
- * @var WebView               $this
+/** 
+ * @var Yiisoft\Data\Paginator\OffsetPaginator $paginator
+ * @var Yiisoft\Router\CurrentRoute $currentRoute  
+ * @var Yiisoft\Router\UrlGeneratorInterface $urlGenerator 
+ * @var Yiisoft\Translator\TranslatorInterface $translator
+ * @var Yiisoft\View\WebView $this
+ * @var string $csrf
  */
+
 $this->setTitle($translator->translate('menu.users'));
 
 // Define header gridview
@@ -52,7 +49,7 @@ $toolbarReset = A::tag()
     ->addAttributes(['type' => 'reset'])
     ->addClass('btn btn-danger me-1 ajax-loader')
     ->content(I::tag()->addClass('bi bi-bootstrap-reboot'))
-    ->href($urlGenerator->generate($currentRoute->getName()))
+    ->href($urlGenerator->generate($currentRoute->getName() ?? 'user/index'))
     ->id('btn-reset')
     ->render();
 
@@ -87,21 +84,21 @@ $toolbar = Div::tag();
     $columns = [
         new DataColumn(
             'id',
-            content: static fn (object $data) => $data->getId()
+            content: static fn (User $data) => $data->getId()
         ),
         new DataColumn(
             'login',
-            content: static fn (object $data) => $data->getLogin(),    
+            content: static fn (User $data) => $data->getLogin(),    
             header:  $translator->translate('gridview.login')
         ),
         new DataColumn(
             'create_at',
-            content: static fn (object $data) => $data->getCreatedAt()->format('r'),    
+            content: static fn (User $data) => $data->getCreatedAt()->format('r'),    
             header:  $translator->translate('gridview.create.at')
         ),
         new DataColumn(
             'api',
-            content: static function (object $data) use ($urlGenerator): string {
+            content: static function (User $data) use ($urlGenerator): string {
                     return Html::a(
                         'API User Data',
                         $urlGenerator->generate('api/user/profile',
@@ -113,7 +110,7 @@ $toolbar = Div::tag();
         ),
         new DataColumn(
             'profile',
-            content: static function (object $data) use ($urlGenerator): string {
+            content: static function (User $data) use ($urlGenerator): string {
                     return Html::a(
                         Html::tag('i', '', [
                             'class' => 'bi bi-person-fill ms-1',
@@ -127,8 +124,15 @@ $toolbar = Div::tag();
         ),
     ];
 ?>
-<?= GridView::widget()
+<?php
+    $toolbarString = 
+        Form::tag()->post($urlGenerator->generate('user/index'))->csrf($csrf)->open() .
+        Div::tag()->addClass('float-start m-3')->content($toolbarSelect)->encode(false)->render() .
+        Div::tag()->addClass('float-end m-3')->content($toolbarApplyChange . $toolbarReset)->encode(false)->render() .
+        Form::tag()->close();
+    echo GridView::widget()
     ->rowAttributes(['class' => 'align-middle'])
+    ->tableAttributes(['class' => 'table table-hover'])
     ->dataReader($paginator)    
     ->columns(...$columns)
     ->header($header)
@@ -139,11 +143,5 @@ $toolbar = Div::tag();
             ->render(),
     )
     ->summaryAttributes(['class' => 'summary text-end mb-5'])
-    ->tableAttributes(['class' => 'table table-hover'])
-    ->toolbar(
-        Form::tag()->post($urlGenerator->generate('user/index'))->csrf($csrf)->open() .
-        Div::tag()->addClass('float-start m-3')->content($toolbarSelect)->encode(false)->render() .
-        Div::tag()->addClass('float-end m-3')->content($toolbarApplyChange . $toolbarReset)->encode(false)->render() .
-        Form::tag()->close()
-    );
+    ->toolbar($toolbarString);
 ?>

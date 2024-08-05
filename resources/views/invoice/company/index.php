@@ -1,8 +1,9 @@
 <?php
+
 declare(strict_types=1);
 
+use App\Invoice\Entity\Company;
 use Yiisoft\Html\Html;
-use Yiisoft\View\WebView;
 use Yiisoft\Html\Tag\A;
 use Yiisoft\Html\Tag\Div;
 use Yiisoft\Html\Tag\Form;
@@ -14,13 +15,14 @@ use Yiisoft\Yii\DataView\GridView;
 use Yiisoft\Yii\DataView\OffsetPagination;
 
 /**
- * @var \App\Invoice\Entity\Company $company
+ * @var App\Invoice\Entity\Company $company
+ * @var App\Invoice\Setting\SettingRepository $s 
+ * @var Yiisoft\Data\Paginator\OffsetPaginator $paginator
+ * @var Yiisoft\Router\CurrentRoute $currentRoute
+ * @var Yiisoft\Translator\TranslatorInterface $translator
+ * @var Yiisoft\Router\FastRoute\UrlGenerator $urlGenerator 
+ * @var string $alert
  * @var string $csrf
- * @var CurrentRoute $currentRoute 
- * @var OffsetPaginator $paginator
- * @var \Yiisoft\Router\UrlGeneratorInterface $urlGenerator 
- * @var TranslatorInterface $translator
- * @var WebView $this
  */ 
 
  echo $alert;
@@ -42,7 +44,7 @@ use Yiisoft\Yii\DataView\OffsetPagination;
         ->addAttributes(['type' => 'reset'])
         ->addClass('btn btn-danger me-1 ajax-loader')
         ->content(I::tag()->addClass('bi bi-bootstrap-reboot'))
-        ->href($urlGenerator->generate($currentRoute->getName()))
+        ->href($urlGenerator->generate($currentRoute->getName() ?? 'company/index'))
         ->id('btn-reset')
         ->render();
     $toolbar = Div::tag();
@@ -70,30 +72,30 @@ use Yiisoft\Yii\DataView\OffsetPagination;
             new DataColumn(
                 'id',
                 header: $translator->translate('i.id'),
-                content: static fn (object $model) => Html::encode($model->getId())
+                content: static fn (Company $model) => Html::encode($model->getId())
             ),
             new DataColumn(
                 'current',
                 header: $translator->translate('i.active'),
-                content: static fn (object $model) => Html::encode($model->getCurrent() == '1' ? ($translator->translate('i.active').' '.'✔️' ) : $translator->translate('i.inactive').' '.'❌')
+                content: static fn (Company $model) => Html::encode($model->getCurrent() == '1' ? ($translator->translate('i.active').' '.'✔️' ) : $translator->translate('i.inactive').' '.'❌')
             ),
             new DataColumn(
                 'name',
                 header: $translator->translate('i.name'),
-                content: static fn (object $model) => Html::encode($model->getName())
+                content: static fn (Company $model) => Html::encode($model->getName())
             ),
             new DataColumn(
                 'email',
                 header: $translator->translate('i.email_address'),
-                content: static fn (object $model) => Html::encode($model->getEmail())
+                content: static fn (Company $model) => Html::encode($model->getEmail())
             ),
             new DataColumn(
                 'phone',
                 header: $translator->translate('i.phone'),
-                content: static fn (object $model) => Html::encode($model->getPhone())
+                content: static fn (Company $model) => Html::encode($model->getPhone())
             ),
             new ActionColumn(
-                content: static fn($model): string => Html::openTag('div', ['class' => 'btn-group']) .
+                content: static fn(Company $model): string => null!==($modelId = $model->getId()) ? Html::openTag('div', ['class' => 'btn-group']) .
                 Html::a()
                 ->addAttributes([
                     'class' => 'dropdown-button text-decoration-none', 
@@ -101,7 +103,7 @@ use Yiisoft\Yii\DataView\OffsetPagination;
                 ])
                 ->content('🔎')
                 ->encode(false)
-                ->href('company/view/'. $model->getId())
+                ->href('company/view/'. $modelId)
                 ->render() .
                 Html::a()
                 ->addAttributes([
@@ -110,7 +112,7 @@ use Yiisoft\Yii\DataView\OffsetPagination;
                 ])
                 ->content('✎')
                 ->encode(false)
-                ->href('company/edit/'. $model->getId())
+                ->href('company/edit/'. $modelId)
                 ->render() .
                 Html::a()
                 ->addAttributes([
@@ -121,24 +123,27 @@ use Yiisoft\Yii\DataView\OffsetPagination;
                 ])
                 ->content('❌')
                 ->encode(false)
-                ->href('company/delete/'. $model->getId())
-                ->render() . Html::closeTag('div')
+                ->href('company/delete/'. $modelId)
+                ->render() . Html::closeTag('div') : '' 
             ),
         ];
     ?>
     <?php 
+        $toolbarString = 
+            Form::tag()->post($urlGenerator->generate('company/index'))->csrf($csrf)->open() .
+            Div::tag()->addClass('float-end m-3')->content($toolbarReset)->encode(false)->render() .
+            Form::tag()->close();
         $grid_summary = $s->grid_summary(
             $paginator, 
             $translator, 
             (int)$s->get_setting('default_list_limit'), 
             $translator->translate('invoice.company.public'), '');  
         echo GridView::widget()
-        ->rowAttributes(['class' => 'align-middle'])    
+        ->rowAttributes(['class' => 'align-middle'])
+        ->tableAttributes(['class' => 'table table-striped text-center h-75','id'=>'table-contract'])
         ->columns(...$columns)
         ->dataReader($paginator)    
         ->headerRowAttributes(['class'=>'card-header bg-info text-black'])
-        ////->filterPosition('header')
-        //->filterModelName('company')
         ->header($header)
         ->id('w163-grid')
         ->pagination(
@@ -149,11 +154,6 @@ use Yiisoft\Yii\DataView\OffsetPagination;
         ->summaryAttributes(['class' => 'mt-3 me-3 summary text-end'])
         ->summaryTemplate($grid_summary)
         ->emptyTextAttributes(['class' => 'card-header bg-warning text-black'])
-        ->emptyText((string)$translator->translate('invoice.invoice.no.records'))
-        ->tableAttributes(['class' => 'table table-striped text-center h-75','id'=>'table-contract'])
-        ->toolbar(
-            Form::tag()->post($urlGenerator->generate('company/index'))->csrf($csrf)->open() .
-            Div::tag()->addClass('float-end m-3')->content($toolbarReset)->encode(false)->render() .
-            Form::tag()->close()
-        );
+        ->emptyText($translator->translate('invoice.invoice.no.records'))
+        ->toolbar($toolbarString);
     ?>

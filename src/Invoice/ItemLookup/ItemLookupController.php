@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1); 
 
 namespace App\Invoice\ItemLookup;
@@ -61,12 +62,7 @@ final class ItemLookupController
       $paginator = (new OffsetPaginator($itemLookups));
       $parameters = [
        'paginator' => $paginator,   
-       'canEdit' => $canEdit,
-       'grid_summary'=> $sR->grid_summary(
-               $paginator, 
-               $this->translator, 
-               (int)$sR->get_setting('default_list_limit'), 
-               $this->translator->translate('invoice.item.lookup'), ''),   
+       'canEdit' => $canEdit, 
        'alert'=> $this->alert()
       ];
       return $this->viewRenderer->render('index', $parameters);
@@ -85,7 +81,8 @@ final class ItemLookupController
         $form = new ItemLookupForm($itemLookup);
         $parameters = [
           'title' => $this->translator->translate('invoice.add'),
-          'action' => ['itemlookup/add'],
+          'actionName' => 'itemlookup/add',
+          'actionArguments' => [],  
           'errors' => [],
           'form' => $form
         ];
@@ -120,7 +117,8 @@ final class ItemLookupController
             $form = new ItemLookupForm($lookup);
             $parameters = [
               'title' => $this->translator->translate('i.edit'),
-              'action' => ['itemlookup/edit', ['id' => $lookup->getId()]],
+              'actionName' => 'itemlookup/edit', 
+              'actionArguments' => ['id' => $lookup->getId()],
               'errors' => [],
               'form' => $form      
             ];
@@ -169,7 +167,8 @@ final class ItemLookupController
             $form = new ItemLookupForm($itemLookup);
             $parameters = [
               'title' => $this->translator->translate('i.view'),
-              'action' => ['itemlookup/view', ['id' => $itemLookup->getId()]],
+              'actionName' => 'itemlookup/view', 
+              'actionArguments' => ['id' => $itemLookup->getId()],
               'form' => $form, 
             ];
             return $this->viewRenderer->render('_view', $parameters);
@@ -180,7 +179,7 @@ final class ItemLookupController
     /**
      * @return Response|true
      */
-    private function rbac(): bool|Response 
+    private function rbac(): bool|Response
     {
       $canEdit = $this->userService->hasPermission('editInv');
       if (!$canEdit){

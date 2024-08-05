@@ -68,7 +68,8 @@ final class FromDropDownController
         $form = new FromDropDownForm($entity);
         $parameters = [
             'title' => $this->translator->translate('i.add'),
-            'action' => ['from/add'],
+            'actionName' => 'from/add',
+            'actionArguments' => [],
             'errors' => [],
             'form' => $form
         ];
@@ -109,8 +110,7 @@ final class FromDropDownController
       'froms' => $this->froms($fromRepository),
       'paginator' => $paginator,
       'alert' => $this->alert(),
-      'max' => (int) $settingRepository->get_setting('default_list_limit'),
-      'grid_summary' => $settingRepository->grid_summary($paginator, $this->translator, (int) $settingRepository->get_setting('default_list_limit'), $this->translator->translate('plural'), ''),
+      'max' => (int) $settingRepository->get_setting('default_list_limit')
     ];
     return $this->viewRenderer->render('from/index', $parameters);
     }
@@ -152,7 +152,8 @@ final class FromDropDownController
             $form = new FromDropDownForm($from);
             $parameters = [
                 'title' => $this->translator->translate('invoice.edit'),
-                'action' => ['from/edit', ['id' => $from->getId()]],
+                'actionName' => 'from/edit', 
+                'actionArguments' => ['id' => $from->getId()],
                 'errors' => [],
                 'form' => $form
             ];
@@ -225,7 +226,8 @@ final class FromDropDownController
             $form = new FromDropDownForm($from);
             $parameters = [
                 'title' => $this->translator->translate('i.view'),
-                'action' => ['from/view', ['id' => $from->getId()]],
+                'actionName' => 'from/view', 
+                'actionArguments' => ['id' => $from->getId()],
                 'errors' => [],
                 'form' => $form,
                 'from'=>$from

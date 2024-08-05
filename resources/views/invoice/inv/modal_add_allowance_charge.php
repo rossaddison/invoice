@@ -1,12 +1,20 @@
 <?php
+
 declare(strict_types=1);
 
-  use Yiisoft\Html\Html;
-  use Yiisoft\Yii\Bootstrap5\Modal;
-    // id="add-inv-allowance-charge" triggered by <a href="#add-inv-allowance-charge" data-toggle="modal"  style="text-decoration:none"> on views/inv/view.php 
-    // see also InvController/save_inv_allowance_charge
-    // see echo $modal_add_allowance_charge; at BOTTOM resources/views/invoice/inv/view.php 
-  echo  Modal::widget() 
+use Yiisoft\Html\Html;
+use Yiisoft\Yii\Bootstrap5\Modal;
+
+/**
+ * @see id="add-inv-allowance-charge" triggered by <a href="#add-inv-allowance-charge" data-toggle="modal"  style="text-decoration:none"> on views/inv/view.php 
+ * @see InvController/save_inv_allowance_charge
+ * @see echo $modal_add_allowance_charge; at BOTTOM resources/views/invoice/inv/view.php
+ * @var Yiisoft\Translator\TranslatorInterface $translator
+ * @var string $modal_add_allowance_charge_form
+ * @var string $type     
+ */
+
+echo  Modal::widget() 
     // display the show button with true at the bottom of inv/view.php       
     ->withToggle(false)        
     ->options([
@@ -46,7 +54,7 @@ declare(strict_types=1);
      */        
     ->fullscreen('modal-fullscreen-lg-down')
     ->begin();
-    echo (string)$modal_add_allowance_charge_form;
+    echo $modal_add_allowance_charge_form;
     echo Modal::end();
     echo Html::br(); 
    

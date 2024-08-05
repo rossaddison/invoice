@@ -7,11 +7,19 @@ use Yiisoft\Html\Html;
 use Yiisoft\Html\Tag\Form;
 
 /**
- * @var \Yiisoft\View\View $this
- * @var \Yiisoft\Router\UrlGeneratorInterface $urlGenerator
+ * @var App\Invoice\AllowanceCharge\AllowanceChargeForm $form
+ * @var App\Widget\Button $button
+ * @var Yiisoft\Router\UrlGeneratorInterface $urlGenerator
+ * @var Yiisoft\Translator\TranslatorInterface $translator
+ * @var array $charges
+ * @var array $tax_rates
  * @var string $csrf
- * @var string $action
+ * @var string $actionName
  * @var string $title
+ * @psalm-var array<string, Stringable|null|scalar> $actionArguments
+ * @psalm-var array<string,list<string>> $errors
+ * @psalm-var array<array-key, array<array-key, string>|string> $optionsDataReason
+ * @psalm-var array<array-key, array<array-key, string>|string> $optionsDataTax
  */
 
 ?>
@@ -20,7 +28,7 @@ use Yiisoft\Html\Tag\Form;
 <?= Html::closeTag('h1'); ?>
 
 <?= Form::tag()
-    ->post($urlGenerator->generate(...$action))
+    ->post($urlGenerator->generate($actionName, $actionArguments))
     ->enctypeMultipartFormData()
     ->csrf($csrf)
     ->id('AllowanceChargeForm')
@@ -31,28 +39,10 @@ use Yiisoft\Html\Tag\Form;
             <?= $title; ?>
         <?= Html::closeTag('h1'); ?>
     <?= Html::closeTag('div'); ?>
-    <?= Html::openTag('div'); ?>
-        <?= Field::buttonGroup()
-            ->addContainerClass('btn-group btn-toolbar float-end')
-            ->buttonsData([
-                [
-                    $translator->translate('invoice.cancel'),
-                    'type' => 'reset',
-                    'class' => 'btn btn-sm btn-danger',
-                    'name'=> 'btn_cancel'
-                ],
-                [
-                    $translator->translate('invoice.submit'),
-                    'type' => 'submit',
-                    'class' => 'btn btn-sm btn-primary',
-                    'name' => 'btn_send'
-                ],
-        ]) ?>
-        
+    <?= Html::openTag('div'); ?>        
         <?= Field::errorSummary($form)
             ->errors($errors)
             ->header($translator->translate('invoice.error.summary'))
-            //->onlyProperties(...[])     
             ->onlyCommonErrors()
         ?>    
         <?= Html::openTag('div',['class' => 'row']); ?>
@@ -62,12 +52,15 @@ use Yiisoft\Html\Tag\Form;
                     'class' => 'form-control'
                 ])
                 ->hideLabel()
-                ->value(Html::encode($form->getId() ?? '')); 
+                ->value(Html::encode($form->getId())); 
             ?>
         <?= Html::closeTag('div'); ?>
         <?= Html::openTag('div',['class' => 'mb3 form-group']); ?>
             <?php
                 $optionsDataReason = [];
+                /**
+                 * @var string $value
+                 */
                 foreach ($charges as $key => $value) {
                     $optionsDataReason[$value[0]] = ucfirst((string)$key).' '.$value[0];
                 }
@@ -87,7 +80,7 @@ use Yiisoft\Html\Tag\Form;
         <?= Html::openTag('div',['class' => 'mb3 form-group']); ?>
             <?=
                 Field::text($form, 'multiplier_factor_numeric')
-                ->label($translator->translate('invoice.invoice.allowance.or.charge.multiplier.factor.numeric'), ['class' => 'form-label'])
+                ->label($translator->translate('invoice.invoice.allowance.or.charge.multiplier.factor.numeric'))
                 ->addInputAttributes([
                     'placeholder' => $translator->translate('invoice.invoice.allowance.or.charge.multiplier.factor.numeric'),
                     'class' => 'form-control',
@@ -101,7 +94,7 @@ use Yiisoft\Html\Tag\Form;
         <?= Html::openTag('div',['class' => 'mb3 form-group']); ?>
             <?=
                 Field::text($form, 'amount')
-                ->label($translator->translate('invoice.invoice.allowance.or.charge.amount'), ['class' => 'form-label'])
+                ->label($translator->translate('invoice.invoice.allowance.or.charge.amount'))
                 ->addInputAttributes([
                     'placeholder' => $translator->translate('invoice.invoice.allowance.or.charge.amount'),
                     'class' => 'form-control',
@@ -115,7 +108,7 @@ use Yiisoft\Html\Tag\Form;
         <?= Html::openTag('div',['class' => 'mb3 form-group']); ?>
             <?=
                 Field::text($form, 'base_amount')
-                ->label($translator->translate('invoice.invoice.allowance.or.charge.base.amount'), ['class' => 'form-label'])
+                ->label($translator->translate('invoice.invoice.allowance.or.charge.base.amount'))
                 ->addInputAttributes([
                     'placeholder' => $translator->translate('invoice.invoice.allowance.or.charge.base.amount'),
                     'class' => 'form-control',
@@ -129,11 +122,18 @@ use Yiisoft\Html\Tag\Form;
         <?= Html::openTag('div',['class' => 'mb3 form-group']); ?>
             <?php
                 $optionsDataTax = [];
+                /**
+                 * @var App\Invoice\Entity\TaxRate $tax_rate
+                 */
                 foreach ($tax_rates as $tax_rate) {
-                    $optionsDataTax[$tax_rate->getTax_rate_id()] = $tax_rate->getTax_rate_id().':  '
-                                                                   . $tax_rate->getTax_rate_name()
-                                                                   . ' '
-                                                                   . $tax_rate->getTax_rate_percent();
+                    $taxRateId = $tax_rate->getTax_rate_id();
+                    if (null!==$taxRateId) {
+                        $optionsDataTax[$taxRateId] = $taxRateId
+                            .':  '
+                            . ($tax_rate->getTax_rate_name() ?? '')
+                            . ' '
+                            . ($tax_rate->getTax_rate_percent() ?? '');
+                    }    
                 }
             ?>
             <?= Field::select($form, 'tax_rate_id')
@@ -149,4 +149,5 @@ use Yiisoft\Html\Tag\Form;
             ?>
         <?= Html::closeTag('div'); ?>
     <?= Html::closeTag('div'); ?>
+<?= $button::back_save(); ?>
 <?= Form::tag()->close() ?>

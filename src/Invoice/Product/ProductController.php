@@ -147,6 +147,7 @@ class ProductController
         $parameters = [
             'title' => $this->translator->translate('i.add'),
             'actionName' => 'product/add',
+            'actionArguments' => [],
             'countries' => $countries->get_country_list((string)$this->session->get('_language')),
             'alert' => $this->alert(),
             'form' => $form,
@@ -208,6 +209,103 @@ class ProductController
     }
     
     /**
+     * @param Request $request
+     * @param string $id
+     * @param FormHydrator $formHydrator
+     * @param pR $pR
+     * @param sR $sR
+     * @param fR $fR
+     * @param uR $uR
+     * @param trR $trR
+     * @param cvR $cvR
+     * @param cfR $cfR
+     * @param pcR $pcR
+     * @param upR $upR
+     * @return Response
+     */
+    public function edit(Request $request, #[RouteArgument('id')] string $id, FormHydrator $formHydrator,
+                    pR $pR, sR $sR, fR $fR, uR $uR, trR $trR, cvR $cvR, cfR $cfR, pcR $pcR, upR $upR) : Response {
+        $countries = new CountryHelper();
+        $peppolarrays = new PeppolArrays();
+        $product = $this->product($id, $pR);
+        if ($product) {
+            $product_id = $product->getProduct_id();
+            $form = new ProductForm($product);
+            $productCustom = new ProductCustom();
+            $productCustomForm = new ProductCustomForm($productCustom);
+            if ($product_id) {
+                $parameters = [
+                    'title' => $this->translator->translate('i.edit'),
+                    'actionName' => 'product/edit', 
+                    'actionArguments' => ['id' => $product_id],
+                    'alert' => $this->alert(),
+                    'countries' => $countries->get_country_list((string)$this->session->get('_language')),
+                    'form' => $form,
+                    'errors' => [],
+                    'errorsCustom' => [],
+                    'standard_item_identification_schemeids' => $peppolarrays->getIso_6523_icd(),
+                    'item_classification_code_listids' => $peppolarrays->getUncl7143(),
+                    'families' => $this->families($fR->findAllPreloaded()),
+                    'units' => $this->units($uR->findAllPreloaded()),
+                    'taxRates' => $this->tax_rates($trR->findAllPreloaded()),
+                    'unitPeppols' => $this->unit_peppols($upR->findAllPreloaded()),
+                    'customFields' => $cfR->repoTablequery('product_custom'),
+                    'customValues' => $cvR->attach_hard_coded_custom_field_values_to_custom_field($cfR->repoTablequery('product_custom')),
+                    'cvH'=> new CVH($sR),
+                    'productCustomValues' => $this->product_custom_values($product_id, $pcR),
+                    'productCustomForm' => $productCustomForm
+                ];
+                if ($request->getMethod() === Method::POST) {
+                    $body = $request->getParsedBody() ?? [];
+                    if (is_array($body)) {
+                        $returned_form = $this->save_form_fields($body, $form, $product, $formHydrator);
+                        $parameters['body'] = $body;
+                        if (!$returned_form->isValid()) {
+                            $parameters['form'] = $returned_form;
+                            $parameters['errors'] = $returned_form->getValidationResult()->getErrorMessagesIndexedByAttribute();
+                            return $this->viewRenderer->render('_form', $parameters);
+                        } 
+                        // Only save custom fields if they exist
+                        if ($cfR->repoTableCountquery('product_custom') > 0) { 
+                             if (isset($body['custom'])) {
+                                 $custom = (array)$body['custom'];
+                                 /** @var string|array $value */
+                                 foreach ($custom as $custom_field_id => $value) {
+                                     $product_custom = $pcR->repoFormValuequery($product_id, (string)$custom_field_id);
+                                     if (null!==$product_custom) {
+                                         $product_custom_input = [
+                                             'product_id' => $product_id,
+                                             'custom_field_id' => (int)$custom_field_id,
+                                             'value' => is_array($value) ? serialize($value) : $value 
+                                         ];
+                                         $productCustomForm = new ProductCustomForm($product_custom);
+                                         if ($formHydrator->populate($productCustomForm, $product_custom_input) 
+                                            && $productCustomForm->isValid()
+                                         )
+                                         {
+                                             $this->productCustomService->saveProductCustom($product_custom, $product_custom_input);     
+                                         }
+                                         $parameters['errorsCustom'] = $productCustomForm->getValidationResult()->getErrorMessagesIndexedByAttribute();
+                                         $parameters['productCustomForm'] = $productCustomForm;
+                                     }
+                                 } //foreach
+                                 $errors_custom = $parameters['errorsCustom'];
+                                 if (count($errors_custom) > 0) {
+                                     return $this->viewRenderer->render('_form', $parameters);
+                                 }
+                             } //isset  
+                        } // cfR
+                    } // is_array    
+                    $this->flash_message('info', $this->translator->translate('i.record_successfully_updated'));
+                    return $this->webService->getRedirectResponse('product/index');
+                }
+                return $this->viewRenderer->render('_form', $parameters);
+            } // null!==product_id
+        } // product    
+        return $this->webService->getRedirectResponse('product/index');   
+    }
+    
+    /**
      * @return string
      */
     private function alert(): string {
@@ -252,102 +350,7 @@ class ProductController
         return null;
     }
     
-    /**
-     * @param Request $request
-     * @param string $id
-     * @param FormHydrator $formHydrator
-     * @param pR $pR
-     * @param sR $sR
-     * @param fR $fR
-     * @param uR $uR
-     * @param trR $trR
-     * @param cvR $cvR
-     * @param cfR $cfR
-     * @param pcR $pcR
-     * @param upR $upR
-     * @return Response
-     */
-    public function edit(Request $request, #[RouteArgument('id')] string $id, FormHydrator $formHydrator,
-                    pR $pR, sR $sR, fR $fR, uR $uR, trR $trR, cvR $cvR, cfR $cfR, pcR $pcR, upR $upR) : Response {
-        $countries = new CountryHelper();
-        $peppolarrays = new PeppolArrays();
-        $product = $this->product($id, $pR);
-        if ($product) {
-            $product_id = $product->getProduct_id();
-            $form = new ProductForm($product);
-            $productCustom = new ProductCustom();
-            $productCustomForm = new ProductCustomForm($productCustom);
-            if ($product_id) {
-                $parameters = [
-                    'title' => $this->translator->translate('i.edit'),
-                    'actionName' => 'product/edit', 
-                    'actionArguments' => ['id' => $product_id],
-                    'alert' => $this->alert(),
-                    'countries' => $countries->get_country_list((string)$this->session->get('_language')),
-                    'form' => $form,
-                    'errors' => [],
-                    'errors_custom' => [],
-                    'standard_item_identification_schemeids' => $peppolarrays->getIso_6523_icd(),
-                    'item_classification_code_listids' => $peppolarrays->getUncl7143(),
-                    'families' => $this->families($fR->findAllPreloaded()),
-                    'units' => $this->units($uR->findAllPreloaded()),
-                    'tax_rates' => $this->tax_rates($trR->findAllPreloaded()),
-                    'unit_peppols' => $this->unit_peppols($upR->findAllPreloaded()),
-                    'custom_fields' => $cfR->repoTablequery('product_custom'),
-                    'custom_values' => $cvR->attach_hard_coded_custom_field_values_to_custom_field($cfR->repoTablequery('product_custom')),
-                    'cvH'=> new CVH($sR),
-                    'product_custom_values' => $this->product_custom_values($product_id, $pcR),
-                    'productCustomForm' => $productCustomForm
-                ];
-                if ($request->getMethod() === Method::POST) {
-                    $body = $request->getParsedBody() ?? [];
-                    if (is_array($body)) {
-                        $returned_form = $this->save_form_fields($body, $form, $product, $formHydrator);
-                        $parameters['body'] = $body;
-                        if (!$returned_form->isValid()) {
-                            $parameters['form'] = $returned_form;
-                            $parameters['errors'] = $returned_form->getValidationResult()->getErrorMessagesIndexedByAttribute();
-                            return $this->viewRenderer->render('_form', $parameters);
-                        } 
-                        // Only save custom fields if they exist
-                        if ($cfR->repoTableCountquery('product_custom') > 0) { 
-                             if (isset($body['custom'])) {
-                                 $custom = (array)$body['custom'];
-                                 /** @var string|array $value */
-                                 foreach ($custom as $custom_field_id => $value) {
-                                     $product_custom = $pcR->repoFormValuequery($product_id, (string)$custom_field_id);
-                                     if (null!==$product_custom) {
-                                         $product_custom_input = [
-                                             'product_id' => $product_id,
-                                             'custom_field_id' => (int)$custom_field_id,
-                                             'value' => is_array($value) ? serialize($value) : $value 
-                                         ];
-                                         $productCustomForm = new ProductCustomForm($product_custom);
-                                         if ($formHydrator->populate($productCustomForm, $product_custom_input) 
-                                            && $productCustomForm->isValid()
-                                         )
-                                         {
-                                             $this->productCustomService->saveProductCustom($product_custom, $product_custom_input);     
-                                         }
-                                         $parameters['errors_custom'] = $productCustomForm->getValidationResult()->getErrorMessagesIndexedByAttribute();
-                                         $parameters['productCustomForm'] = $productCustomForm;
-                                     }
-                                 } //foreach
-                                 $errors_custom = $parameters['errors_custom'];
-                                 if (count($errors_custom) > 0) {
-                                     return $this->viewRenderer->render('__form', $parameters);
-                                 }
-                             } //isset  
-                        } // cfR
-                    } // is_array    
-                    $this->flash_message('info', $this->translator->translate('i.record_successfully_updated'));
-                    return $this->webService->getRedirectResponse('product/index');
-                }
-                return $this->viewRenderer->render('_form', $parameters);
-            } // null!==product_id
-        } // product    
-        return $this->webService->getRedirectResponse('product/index');   
-    }
+    
     
     /**
      * Prepare optionsData $data value for ...resources/view/product/_form select
@@ -451,7 +454,7 @@ class ProductController
      */
     public function index(FastRouteGenerator $urlFastRouteGenerator, Request $request, pR $pR, sR $sR, #[RouteArgument('page')] string $page = '1'): \Yiisoft\DataResponse\DataResponse
     {
-        $canEdit = $this->rbac();
+        $this->rbac();
         $this->flash_message('info', $this->translator->translate('invoice.productimage.view'));
         $query_params = $request->getQueryParams();
         
@@ -487,7 +490,6 @@ class ProductController
             'alert' => $this->alert(),
             'paginator' => $paginator,
             'defaultPageSizeOffsetPaginator' => (int)$sR->get_setting('default_list_limit'),
-            'canEdit' => $canEdit,
             'optionsDataProductsDropdownFilter' => $this->optionsDataProducts($pR),
             'urlFastRouteGenerator' => $urlFastRouteGenerator
         ]; 

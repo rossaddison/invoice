@@ -6,6 +6,7 @@ namespace App\Invoice\Helpers;
 
 use App\Invoice\Entity\Inv;
 use App\Invoice\Setting\SettingRepository as SRepo;
+use App\Invoice\Delivery\DeliveryRepository as delRepo;
 use \DateTime;
 use \DateInterval;
 
@@ -339,15 +340,28 @@ Class DateHelper {
      * @see https://docs.peppol.eu/poacc/billing/3.0/syntax/ubl-invoice/cac-InvoicePeriod/
      * @param Inv $invoice
      * @param DateTime $datetime
+     * @param delRepo $delRepo
      * @return array
      */
-    public function invoice_period_start_end(Inv $invoice, DateTime $datetime): array {
+    public function invoice_period_start_end(Inv $invoice, DateTime $datetime, delRepo $delRepo): array {
         // If invoice's Delivery period setup => use it and not beginning and end of month values
-        if ($invoice->getDelivery_id()) {
-            return [
-                'StartDate' => ($invoice->getDelivery()?->getStart_date())->format('Y-m-d'),
-                'EndDate' => ($invoice->getDelivery()?->getEnd_date())->format('Y-m-d')
-            ];
+        $deliveryId = $invoice->getDelivery_id();
+        if ($deliveryId) {
+            $delivery = $delRepo->repoDeliveryquery($deliveryId);
+            if (null!==$delivery) {
+                $deliveryStartDate = $delivery->getStart_date();
+                $deliveryEndDate = $delivery->getEnd_date();
+                return [
+                    'StartDate' => null!==$deliveryStartDate ? $deliveryStartDate->format('Y-m-d') : '',
+                    'EndDate' => null!==$deliveryEndDate ? $deliveryEndDate->format('Y-m-d') : ''
+                ];
+            } else {
+                return [
+                    //
+                    'StartDate' => $datetime->format("Y-m-01"),
+                    'EndDate' => $datetime->format("Y-m-t")
+                ];
+            }
         } else {
             return [
                 //

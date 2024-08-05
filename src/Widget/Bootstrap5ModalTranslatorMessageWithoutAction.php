@@ -19,7 +19,14 @@ final class Bootstrap5ModalTranslatorMessageWithoutAction
         $this->layoutParameters = [];
         $this->formParameters = [];
     }
-        
+    
+    /**
+     * 
+     * @param string $translatedHeading
+     * @param string $translatedMessage
+     * @param string $origin
+     * @return string
+     */    
     public function renderPartialLayoutWithTranslatorMessageAsString(
             string $translatedHeading,
             string $translatedMessage,

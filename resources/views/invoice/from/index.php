@@ -2,9 +2,8 @@
 
 declare(strict_types=1);
 
+use App\Invoice\Entity\FromDropDown;
 use Yiisoft\Html\Html;
-use Yiisoft\Data\Paginator\OffsetPaginator;
-use Yiisoft\Translator\TranslatorInterface;
 use Yiisoft\Html\Tag\A;
 use Yiisoft\Html\Tag\Div;
 use Yiisoft\Html\Tag\Form;
@@ -15,11 +14,13 @@ use Yiisoft\Yii\DataView\GridView;
 use Yiisoft\Yii\DataView\OffsetPagination;
 
 /**
- * @var \App\Invoice\Entity\FromDropDown $from
- * @var \Yiisoft\Router\UrlGeneratorInterface $urlGenerator
- * @var TranslatorInterface $translator
- * @var OffsetPaginator $paginator
- * @var string $id
+ * @var App\Invoice\Setting\SettingRepository $s
+ * @var Yiisoft\Router\CurrentRoute $currentRoute 
+ * @var Yiisoft\Data\Paginator\OffsetPaginator $paginator
+ * @var Yiisoft\Translator\TranslatorInterface $translator 
+ * @var Yiisoft\Router\UrlGeneratorInterface $urlGenerator
+ * @var string $alert
+ * @var string $csrf
  */
  
  echo $alert;
@@ -45,7 +46,7 @@ use Yiisoft\Yii\DataView\OffsetPagination;
       ->addAttributes(['type' => 'reset'])
       ->addClass('btn btn-danger me-1 ajax-loader')
       ->content(I::tag()->addClass('bi bi-bootstrap-reboot'))
-      ->href($urlGenerator->generate($currentRoute->getName()))
+      ->href($urlGenerator->generate($currentRoute->getName() ?? 'from/index'))
       ->id('btn-reset')
       ->render();
 
@@ -55,28 +56,28 @@ use Yiisoft\Yii\DataView\OffsetPagination;
         new DataColumn(
             'id',
             header:  $translator->translate('i.id'),
-            content: static fn($model) => $model->getId()
+            content: static fn(FromDropDown $model) => $model->getId()
         ),
         new DataColumn(
             'default_email',
             header:  $translator->translate('invoice.email.default'),
-            content: static fn($model) => $model->getDefault_email() == 'true' ? $translator->translate('i.yes') : $translator->translate('i.no')
+            content: static fn(FromDropDown $model) => $model->getDefault_email() == 'true' ? $translator->translate('i.yes') : $translator->translate('i.no')
         ),
         new DataColumn(
             header:  $translator->translate('i.view'),
-            content: static function ($model) use ($urlGenerator): string {
+            content: static function (FromDropDown $model) use ($urlGenerator): string {
                 return Html::a(Html::tag('i', '', ['class' => 'fa fa-eye fa-margin']), $urlGenerator->generate('from/view', ['id' => $model->getId()]), [])->render();
             }
         ),
         new DataColumn(
             header:  $translator->translate('i.edit'),
-            content: static function ($model) use ($urlGenerator): string {
+            content: static function (FromDropDown $model) use ($urlGenerator): string {
             return Html::a(Html::tag('i', '', ['class' => 'fa fa-pencil fa-margin']), $urlGenerator->generate('from/edit', ['id' => $model->getId()]), [])->render();
         }
         ),
         new DataColumn(
             header:  $translator->translate('i.delete'),
-            content: static function ($model) use ($translator, $urlGenerator): string {
+            content: static function (FromDropDown $model) use ($translator, $urlGenerator): string {
             return Html::a(Html::tag('button',
                   Html::tag('i', '', ['class' => 'fa fa-trash fa-margin']),
                   [
@@ -90,31 +91,26 @@ use Yiisoft\Yii\DataView\OffsetPagination;
             }
         ),
     ];
-    
+    $toolbarString = 
+        Form::tag()->post($urlGenerator->generate('from/index'))->csrf($csrf)->open() .
+        Div::tag()->addClass('float-end m-3')->content($toolbarReset)->encode(false)->render() .
+        Form::tag()->close();
+    $grid_summary = $s->grid_summary($paginator, $translator, (int) $s->get_setting('default_list_limit'), $translator->translate('plural'), '');
     echo GridView::widget()
       ->rowAttributes(['class' => 'align-middle'])
+      ->tableAttributes(['class' => 'table table-striped text-center h-99999999999999999', 'id' => 'table-from'])
       ->columns(...$columns)
       ->dataReader($paginator)          
       ->headerRowAttributes(['class' => 'card-header bg-info text-black'])
-      //->filterPosition('header')
-      //->filterModelName('from')
       ->header($header)
-      ->id('w99999999999999999-grid')
+      ->id('w3197-grid')
       ->pagination(
         OffsetPagination::widget()
-        //->menuClass('pagination justify-content-center')
         ->paginator($paginator)
-        // No need to use page argument since built-in. Use status bar value passed from urlGenerator to inv/guest
-        //->urlArguments(['status'=>$status])
         ->render(),
       )
       ->summaryAttributes(['class' => 'mt-3 me-3 summary text-end'])
       ->summaryTemplate($grid_summary)
       ->emptyTextAttributes(['class' => 'card-header bg-warning text-black'])
-      ->emptyText((string) $translator->translate('invoice.invoice.no.records'))
-      ->tableAttributes(['class' => 'table table-striped text-center h-99999999999999999', 'id' => 'table-from'])
-      ->toolbar(
-        Form::tag()->post($urlGenerator->generate('from/index'))->csrf($csrf)->open() .
-        Div::tag()->addClass('float-end m-3')->content($toolbarReset)->encode(false)->render() .
-        Form::tag()->close()
-    );
+      ->emptyText($translator->translate('invoice.invoice.no.records'))
+      ->toolbar($toolbarString);

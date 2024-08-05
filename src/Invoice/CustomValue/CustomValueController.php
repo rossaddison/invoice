@@ -56,13 +56,12 @@ final class CustomValueController
      */
     public function index(SessionInterface $session, CustomValueRepository $customvalueRepository, CustomFieldRepository $customfieldRepository, SettingRepository $settingRepository): Response
     {
-         $canEdit = $this->rbac($session);
+         $this->rbac($session);
          $custom_field_id = (string)$session->get('custom_field_id');
          $custom_values = $customvalueRepository->repoCustomFieldquery((int)$custom_field_id);
          $parameters = [
           'custom_field' => $customfieldRepository->repoCustomFieldquery($custom_field_id),
           'custom_field_id' => $custom_field_id,
-          'canEdit' => $canEdit,
           'custom_values' => $custom_values,
           'custom_values_types'=> array_merge($this->user_input_types(), $this->custom_value_fields()),
         ];
@@ -80,7 +79,7 @@ final class CustomValueController
      */
     public function field(SessionInterface $session, CustomFieldRepository $customfieldRepository, CustomValueRepository $customvalueRepository, SettingRepository $settingRepository, CurrentRoute $currentRoute, CustomValueService $service): Response
     {      
-        $canEdit = $this->rbac($session);
+        $this->rbac($session);
         $id = $currentRoute->getArgument('id');
         if (null!==$id) {
             null!==($session->get('custom_field_id')) ?: $session->set('custom_field_id', $id);
@@ -89,11 +88,10 @@ final class CustomValueController
             if ($custom_field) {
                 $field_form = new CustomFieldForm($custom_field);
                 $parameters = [
-                    'canEdit' => $canEdit,
                     'field_form' => $field_form,
                     'custom_field' => $custom_field,
                     'custom_values_types' => array_merge($this->user_input_types(), $this->custom_value_fields()), 
-                    'custom_values'=> $customvalues,
+                    'custom_values'  => $customvalues,
                 ];
                 return $this->viewRenderer->render('field', $parameters);
             }
@@ -122,12 +120,12 @@ final class CustomValueController
             if ($custom_field){
                 $form = new CustomValueForm($custom_value);
                 $parameters = [
-                    'title' => $this->translator->translate('invoice.add'),
-                    'action' => ['customvalue/add'],
+                    'actionName' => 'customvalue/new',
+                    'actionArguments' => ['id' => $field_id],
                     'errors' => [],
                     'form' => $form,
-                    'custom_field'=>$custom_field, 
-                    'custom_fields'=>$custom_fieldRepository->findAllPreloaded()
+                    'custom_field' => $custom_field, 
+                    'custom_fields' => $custom_fieldRepository->findAllPreloaded()
                 ];
 
                 if ($request->getMethod() === Method::POST) {
@@ -168,8 +166,8 @@ final class CustomValueController
         if ($custom_field && $custom_value) {
             $form = new CustomValueForm($custom_value);
             $parameters = [
-                'title' =>  $this->translator->translate('invoice.edit'),
-                'action' => ['customvalue/edit', ['id' => $custom_value->getId()]],
+                'actionName' => 'customvalue/edit', 
+                'actionArguments' => ['id' => $custom_value->getId()],
                 'errors' => [],
                 'form' => $form,
                 'custom_field' => $custom_field,
@@ -223,9 +221,9 @@ final class CustomValueController
             $form = new CustomValueForm($custom_value);
             $parameters = [
                 'title' => $this->translator->translate('i.view'),
-                'action' => ['customvalue/view', ['id' => $custom_value->getId()]],
-                'form' => $form,
-                'customvalue' => $custom_value->getId(),
+                'actionName' => 'customvalue/view', 
+                'actionArguments' => ['id' => $custom_value->getId()],
+                'form' => $form
             ];
             return $this->viewRenderer->render('_view', $parameters);
         }

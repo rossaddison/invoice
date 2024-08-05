@@ -89,7 +89,8 @@ final class DeliveryController {
             $form = new DeliveryForm($delivery);
             $parameters = [
                 'title' => $this->translator->translate('invoice.invoice.delivery.add'),
-                'action' => ['delivery/add', ['inv_id' => $inv->getId()]],
+                'actionName' => 'delivery/add', 
+                'actionArguments' => ['inv_id' => $inv->getId()],
                 'errors' => [],
                 'form' => $form,
                 'del_count' => $delRepo->repoClientCount($inv->getClient_id()),
@@ -164,7 +165,6 @@ final class DeliveryController {
         $parameters = [
             'alert' => $this->alert(),
             'paginator' => $paginator,
-            'grid_summary' => $sR->grid_summary($paginator, $this->translator, (int) $sR->get_setting('default_list_limit'), $this->translator->translate('invoice.deliveries'), ''),
             'deliveries' => $this->deliveries($dR),
             'max' =>(int) $sR->get_setting('default_list_limit'),
         ];
@@ -232,7 +232,8 @@ final class DeliveryController {
             $dels = $delRepo->repoClientquery($inv->getClient_id());
             $parameters = [
                 'title' => $this->translator->translate('i.edit'),
-                'action' => ['delivery/edit', ['id' => $delivery->getId()]],
+                'actionName' => 'delivery/edit', 
+                'actionArguments' => ['id' => $delivery->getId()],
                 'errors' => [],
                 'form' => $form,
                 'inv' => $inv,
@@ -295,7 +296,8 @@ final class DeliveryController {
             $form = new DeliveryForm($delivery);
             $parameters = [
                 'title' => $this->translator->translate('i.view'),
-                'action' => ['delivery/view', ['id' => $delivery->getId()]],
+                'actionName' => 'delivery/view', 
+                'actionArguments' => ['id' => $delivery->getId()],
                 'errors' => [],
                 'form' => $form,
                 'delivery' => $delivery,

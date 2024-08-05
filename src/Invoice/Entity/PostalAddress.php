@@ -150,4 +150,8 @@ use Cycle\Annotated\Annotation\Entity;
     {
       $this->country =  $country;
     }
+    
+    public function getFullAddress() : string {
+      return $this->street_name.' '. $this->building_number. ', '.$this->additional_street_name.', '.$this->postalzone;
+    }
 }

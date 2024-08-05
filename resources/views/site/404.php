@@ -21,14 +21,15 @@ $this->setTitle($translator->translate('layout.not-found'));
     <div class="card-body text-center ">
         <h1 class="card-title display-1 fw-bold">404</h1>
         <p class="card-text">
-            <?= $translator->translate('layout.page.not-found', [
-                'url' => Html::span(
-                    Html::encode($currentRoute
-                        ->getUri()
-                        ->getPath()),
-                    ['class' => 'text-muted']
-                ),
-            ])
+            <?= 
+                $currentPath = $currentRoute->getUri()?->getPath();
+                null!==$currentPath ?
+                    $translator->translate('layout.page.not-found', [
+                    'url' => Html::span(
+                        Html::encode($currentPath),
+                        ['class' => 'text-muted']
+                    ),
+                    ]) : '';
             ?>
         </p>
         <p>

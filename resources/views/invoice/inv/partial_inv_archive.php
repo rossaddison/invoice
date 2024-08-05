@@ -1,8 +1,16 @@
 <?php
+
 declare(strict_types=1);
 
 /**
- * @var \Yiisoft\Router\UrlGeneratorInterface $urlGenerator
+ * @see main menu Settings...Invoice Archive  inv/archive
+ * @see views\layout\invoice.php
+ * @see resources\views\invoice\inv\archive.php
+ * @see App\Invoice\Setting\SettingRepository function get_invoice_archived_files_with_filter($inv_number)
+ * @var App\Invoice\Setting\SettingRepository $s
+ * @var Yiisoft\Translator\TranslatorInterface $translator 
+ * @var Yiisoft\Router\UrlGeneratorInterface $urlGenerator
+ * @var array $invoices_archive
  */
 
 ?>
@@ -16,7 +24,11 @@ declare(strict_types=1);
         </tr>
         </thead>
         <tbody>
-        <?php foreach ($invoices_archive as $invoice) {
+        <?php 
+            /**
+             * @var string $invoice
+             */
+            foreach ($invoices_archive as $invoice) {
             ?>
             <tr>
                 <td>

@@ -1,18 +1,22 @@
 <?php
 
 declare(strict_types=1); 
-
 use Yiisoft\Html\Html;
-use Yiisoft\Yii\Bootstrap5\Alert;
-use App\Invoice\Entity\CustomField;
 
 /**
- * @var \Yiisoft\View\View $this
- * @var \Yiisoft\Router\UrlGeneratorInterface $urlGenerator
+ * @var App\Invoice\Entity\CustomField|null $custom_field
+ * @var App\Invoice\Setting\SettingRepository $s
+ * @var Yiisoft\Translator\TranslatorInterface $translator
+ * @var Yiisoft\Router\UrlGeneratorInterface $urlGenerator
  * @var array $body
+ * @var array $custom_values
+ * @var array $custom_values_types
  * @var string $csrf
+ * @var string $custom_field_id
+ * @var string $title
  */
 ?>
+
 <form method="post">
 
     <input type="hidden" name="_csrf" value="<?= $csrf; ?>">
@@ -33,31 +37,29 @@ use App\Invoice\Entity\CustomField;
     </div>
 
     <div id="content">
-
-        <?php 
-                    if (isset($errors)) {
-                        foreach ($errors as $field => $error) {
-                            echo Alert::widget()->options(['class' => 'alert-danger'])->body(Html::encode($field . ':' . $error));
-                        }
-                    } 
-        ?>
-        <?php if (null!==$custom_field && $custom_field instanceof CustomField) { ?>
+        <?php if (null!==$custom_field) { ?>
         <?= Html::openTag('div', ['class' => 'row']); ?>
             <div class="col-xs-12 col-md-6 col-md-offset-3">
 
                 <div class="form-group">
                     <label for="label"><?= $translator->translate('i.field'); ?>: </label>
                     <input type="text" name="label" id="label" class="form-control"
-                           value="<?= Html::encode($custom_field->getLabel() ?: ''); ?>" disabled="disabled">
+                           value="<?= Html::encode(strlen($customFieldLabel = ($custom_field->getLabel() ?? '')) > 0 
+                                                        ? $customFieldLabel 
+                                                        : ''); ?>" disabled="disabled">
                 </div>
 
                 <div class="form-group">
                     <label for="types"><?= $translator->translate('i.type'); ?>: </label>
                     <select name="types" id="types" class="form-control"
                             disabled="disabled">
-                        <?php foreach ($custom_values_types as $type): ?>
+                        <?php
+                            /**
+                             * @var string $type 
+                             */
+                            foreach ($custom_values_types as $type): ?>
                             <?= $alpha = str_replace('-', '_', strtolower($type)); ?>
-                            <option value="<?= $type; ?>" <?= $s->check_select($custom_field->getType(), $type); ?>>
+                            <option value="<?= $type; ?>" <?php $s->check_select($custom_field->getType(), $type); ?>>
                                 <?= $translator->translate('i'.$alpha.''); ?>
                             </option>
                         <?php endforeach; ?>
@@ -74,7 +76,11 @@ use App\Invoice\Entity\CustomField;
                         </tr>
                         </thead>
                         <tbody>
-                        <?php foreach ($custom_values as $custom_value) { ?>
+                        <?php
+                            /**
+                             * @var App\Invoice\Entity\CustomValue $custom_value
+                             */ 
+                            foreach ($custom_values as $custom_value) { ?>
                             <tr>
                                 <td><?= $custom_value->getId(); ?></td>
                                 <td><?= Html::encode($custom_value->getValue()); ?></td>

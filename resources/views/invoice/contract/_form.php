@@ -7,11 +7,17 @@ use Yiisoft\Html\Html;
 use Yiisoft\Html\Tag\Form;
 
 /**
- * @var \Yiisoft\View\View $this
- * @var \Yiisoft\Router\UrlGeneratorInterface $urlGenerator
+ * @var App\Invoice\Contract\ContractForm $form
+ * @var App\Invoice\Helpers\DateHelper $dateHelper
+ * @var App\Widget\Button $button
+ * @var Yiisoft\Translator\TranslatorInterface $translator
+ * @var Yiisoft\Router\UrlGeneratorInterface $urlGenerator
+ * @var int $client_id
  * @var string $csrf
- * @var string $action
+ * @var string $actionName
  * @var string $title
+ * @psalm-var array<string, Stringable|null|scalar> $actionArguments
+ * @psalm-var array<string,list<string>> $errors
  */
 ?>
 <?= Html::openTag('div',['class'=>'container py-5 h-100']); ?>
@@ -24,7 +30,7 @@ use Yiisoft\Html\Tag\Form;
 <?= Html::closeTag('h1'); ?>
 <?=
     Form::tag()
-    ->post($urlGenerator->generate(...$action))
+    ->post($urlGenerator->generate($actionName, $actionArguments))
     ->enctypeMultipartFormData()
     ->csrf($csrf)
     ->id('ContractForm')
@@ -38,7 +44,7 @@ use Yiisoft\Html\Tag\Form;
     ?>
     <?= Field::text($form, 'client_id')
         ->readonly(true)
-        ->value(Html::encode($form->getClient_id()) ?? $client_id)
+        ->value(Html::encode($form->getClient_id() ?? $client_id))
     ?>    
     <?= Field::text($form, 'reference')
        ->label($translator->translate('invoice.invoice.contract.reference'))
@@ -62,7 +68,7 @@ use Yiisoft\Html\Tag\Form;
             'role' => 'presentation',
             'autocomplete' => 'off',
         ])
-        ->value(Html::encode(Html::encode($form->getPeriod_start() ? $form->getPeriod_end()->format('Y-m-d') : '')))
+        ->value(Html::encode(Html::encode($form->getPeriod_start()->format($dateHelper->style()))))
         ->required(true)            
         ->hint($translator->translate('invoice.hint.this.field.is.required')); 
     ?>
@@ -71,7 +77,7 @@ use Yiisoft\Html\Tag\Form;
         ->addInputAttributes([
             'autocomplete' => 'off',
         ])
-        ->value(Html::encode(Html::encode(($form->getPeriod_end() ? $form->getPeriod_end()->format('Y-m-d') : ''))))
+        ->value(Html::encode(Html::encode($form->getPeriod_end()->format($dateHelper->style()))))
         ->required(true)
         ->hint($translator->translate('invoice.hint.this.field.is.required')); 
     ?>

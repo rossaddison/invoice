@@ -8,11 +8,25 @@ use Yiisoft\Html\Tag\Form;
 use Yiisoft\Html\Tag\I;
 
 /**
- * @var \Yiisoft\View\View $this
- * @var \Yiisoft\Router\UrlGeneratorInterface $urlGenerator
+ * @var App\Invoice\Helpers\NumberHelper $numberHelper
+ * @var App\Invoice\InvItem\InvItemForm $form
+ * @var App\Invoice\Setting\SettingRepository $s
+ * @var App\Widget\Button $button
+ * @var Yiisoft\Translator\TranslatorInterface $translator
+ * @var Yiisoft\Router\UrlGeneratorInterface $urlGenerator
+ * @var array $tasks
+ * @var array $units
+ * @var array $taxRates
+ * @var bool $isRecurring
+ * @var string $alert
  * @var string $csrf
- * @var string $action
+ * @var string $actionName
  * @var string $title
+ * @psalm-var array<string, Stringable|null|scalar> $actionArguments
+ * @psalm-var array<string,list<string>> $error
+ * @psalm-var array<array-key, array<array-key, string>|string> $optionsDataTask
+ * @psalm-var array<array-key, array<array-key, string>|string> $optionsDataTaxRate
+ * 
  */
 
 $vat = $s->get_setting('enable_vat_registration') === '1' ? true : false;
@@ -29,7 +43,7 @@ $vat = $s->get_setting('enable_vat_registration') === '1' ? true : false;
         ?>
     <?= Html::closeTag('div'); ?>    
     <?= Form::tag()
-        ->post($urlGenerator->generate(...$action))
+        ->post($urlGenerator->generate($actionName, $actionArguments))
         ->enctypeMultipartFormData()
         ->csrf($csrf)
         ->id('InvItemForm')
@@ -42,7 +56,7 @@ $vat = $s->get_setting('enable_vat_registration') === '1' ? true : false;
                         <?= Html::openTag('td', ['rowspan' => '2', 'class' => 'td-icon']); ?>
                             <?= I::tag()
                                 ->addClass('fa fa-arrows cursor-move'); ?> 
-                                <?php if ($is_recurring) : ?>
+                                <?php if ($isRecurring) : ?>
                                     <?= Html::tag('br'); ?>
                                         <?= I::tag()
                                             ->addAttributes([
@@ -64,9 +78,16 @@ $vat = $s->get_setting('enable_vat_registration') === '1' ? true : false;
                             <?= Html::openTag('div' , ['class' => 'input-group', 'id' => 'task-no-product']); ?>    
                                 <?php
                                     $optionsDataTask = [];
+                                    /**
+                                     * @var App\Invoice\Entity\Task $task
+                                     */
                                     foreach ($tasks as $task) 
                                     {
-                                        $optionsDataTask[$task->getId()] = $task->getName();
+                                        $taskId = $task->getId();
+                                        $taskName = $task->getName() ?? '';
+                                        if (!empty($taskId) && strlen($taskName) > 0) {
+                                            $optionsDataTask[$taskId] = $taskName;
+                                        }
                                     }
                                 ?>
                                 <?= Field::select($form, 'task_id')   
@@ -110,9 +131,18 @@ $vat = $s->get_setting('enable_vat_registration') === '1' ? true : false;
                             <?= Html::openTag('div', ['class' => 'input-group']); ?>
                                 <?php
                                     $optionsDataTaxRate = [];
-                                    foreach ($tax_rates as $tax_rate) 
+                                    /**
+                                     * @var App\Invoice\Entity\TaxRate $taxRate
+                                     */
+                                    foreach ($taxRates as $taxRate) 
                                     {
-                                        $optionsDataTaxRate[$tax_rate->getTax_rate_id()] = $numberHelper->format_amount($tax_rate->getTax_rate_percent()) . '% - ' . $tax_rate->getTax_rate_name();
+                                        $taxRateId = $taxRate->getTax_rate_id();
+                                        $taxRatePercent = $taxRate->getTax_rate_percent() ?? 0.00;
+                                        $taxRateName = $taxRate->getTax_rate_name() ?? '';
+                                        $formattedNumber = $numberHelper->format_amount($taxRatePercent);
+                                        if ((null!==$taxRateId) && ($taxRatePercent >= 0.00) && (strlen($taxRateName) > 0) && $formattedNumber >= 0.00) {
+                                            $optionsDataTaxRate[$taxRateId] = (string)$formattedNumber . '% - ' . $taxRateName;
+                                        }
                                     }
                                 ?>    
                                 <?= Field::select($form, 'tax_rate_id')

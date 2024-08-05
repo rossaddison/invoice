@@ -16,6 +16,7 @@ final class DeliveryForm extends FormModel
     private mixed $start_date;
     private mixed $actual_delivery_date;
     private mixed $end_date;
+    private ?int $id=null;
     private ?int $delivery_location_id=null;
     private ?int $delivery_party_id=null;
     private ?int $inv_id=null;
@@ -23,6 +24,7 @@ final class DeliveryForm extends FormModel
     
     public function __construct(Delivery $delivery)
     {
+        $this->id = $delivery->getId();
         $this->date_created = $delivery->getDate_created();
         $this->date_modified = $delivery->getDate_modified();
         $this->start_date = $delivery->getStart_date();
@@ -32,6 +34,10 @@ final class DeliveryForm extends FormModel
         $this->delivery_party_id = (int)$delivery->getDelivery_party_id();
         $this->inv_id = $delivery->getInv_id();
         $this->inv_item_id = $delivery->getInv_item_id();
+    }
+    
+    public function getId() :  int|null {
+        return $this->id;
     }
 
     public function getDate_created() : string|DateTimeImmutable

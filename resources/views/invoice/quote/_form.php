@@ -180,18 +180,20 @@ echo $alert;
                         <?= Html::openTag('div'); ?>
                             <?= Field::text($form,'discount_amount')
                                 ->hideLabel(false)
-                                ->label($translator->translate('i.discount').' '. $s->get_setting('currency_symbol'))
-                                ->addInputAttributes(['class' => 'form-control'])
-                                ->value($s->format_amount(($form->getDiscount_amount() ?? 0.00)))
-                                ->placeholder($translator->translate('i.discount')); 
+                                ->disabled($form->getDiscount_percent() > 0.00 && $form->getDiscount_amount() == 0.00 ? true : false)
+                                ->label($translator->translate('i.discount_amount').' '. $s->get_setting('currency_symbol'))
+                                ->addInputAttributes(['class' => 'form-control', 'id' => 'inv_discount_amount'])
+                                ->value(Html::encode($s->format_amount($form->getDiscount_amount() ?? 0.00)))
+                                ->placeholder($translator->translate('i.discount_amount')); 
                             ?>
                         <?= Html::closeTag('div'); ?>
                         <?= Html::openTag('div'); ?>
                             <?= Field::text($form,'discount_percent')
-                                ->label($translator->translate('i.discount_percentage'))
-                                ->addInputAttributes(['class' => 'form-control'])
+                                ->label($translator->translate('i.discount_percent'))
+                                ->disabled(($form->getDiscount_amount() > 0.00 && $form->getDiscount_percent() == 0.00) ? true : false)
+                                ->addInputAttributes(['class' => 'form-control', 'id' => 'inv_discount_percent'])
                                 ->value(Html::encode($s->format_amount($form->getDiscount_percent() ?? 0.00)))
-                                ->placeholder($translator->translate('i.discount_percentage')); 
+                                ->placeholder($translator->translate('i.discount_percent')); 
                             ?>
                         <?= Html::closeTag('div'); ?>
                     <?php } ?>

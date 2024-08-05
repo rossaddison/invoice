@@ -1,12 +1,36 @@
 <?php
+
 declare(strict_types=1); 
+
+/**
+ * @see src\Widget\Bootstrap5ModalInv renderPartialLayoutWithFormAsString $this->formParameters
+ * @see inv\modal_layout which accepts this form via 'inv\add' controller action
+ */
 
 use Yiisoft\FormModel\Field;
 use Yiisoft\Html\Html;
 use Yiisoft\Html\Tag\Form;
 
+/**
+ * @var App\Invoice\Helpers\DateHelper $dateHelper
+ * @var App\Invoice\Inv\InvForm $form
+ * @var App\Invoice\Setting\SettingRepository $s
+ * @var App\Widget\Button $button
+ * @var Yiisoft\Translator\TranslatorInterface $translator
+ * @var Yiisoft\Router\UrlGeneratorInterface $urlGenerator
+ * @var int $defaultGroupId
+ * @var string $actionName
+ * @var string $alert
+ * @var string $csrf
+ * @var string $urlKey
+ * @psalm-var array<string,list<string>> $errors
+ * @psalm-var array<array-key, array<array-key, string>|string> $clients
+ * @psalm-var array<array-key, array<array-key, string>|string> $groups
+ * @psalm-var array<string, Stringable|null|scalar> $actionArguments
+ */
+
 echo Form::tag()
-    ->post($urlGenerator->generate(...$action))
+    ->post($urlGenerator->generate($actionName, $actionArguments))
     ->enctypeMultipartFormData()
     ->csrf($csrf)
     ->id('InvForm')
@@ -59,7 +83,8 @@ echo Form::tag()
                 <?= Field::date($form,'date_created')
                     ->label($translator->translate('i.date_created'))
                     ->addInputAttributes(['class' => 'form-control'])
-                    ->value(Html::encode(($form->getDate_created())->format($datehelper->style())))
+                    ->value(Html::encode(!is_string($form->getDate_created()) && null!==$form->getDate_created() ? 
+                                                    $form->getDate_created()->format($dateHelper->style()) : ''))
                     ->hint($translator->translate('invoice.hint.this.field.is.required')); 
                 ?>
             <?= Html::closeTag('div'); ?>
@@ -68,9 +93,9 @@ echo Form::tag()
                     ->hideLabel()
                     ->label($translator->translate('i.date_modified'))
                     ->addInputAttributes(['class' => 'form-control'])
-                    ->value(Html::encode(($form->getDate_modified())->format($datehelper->style())))
-                    //->hint($translator->translate('invoice.hint.this.field.is.required')); 
-               ?>
+                    ->value(Html::encode(!is_string($form->getDate_modified()) && null!==$form->getDate_modified() ? 
+                                                    $form->getDate_modified()->format($dateHelper->style()) : ''))
+                ?>
             <?= Html::closeTag('div'); ?>
             <?= Html::openTag('div'); ?>
                 <?= Field::password($form,'password')
@@ -85,8 +110,8 @@ echo Form::tag()
                 <?= Field::text($form,'time_created')
                     ->label($translator->translate('invoice.time.created'))
                     ->addInputAttributes(['class' => 'form-control'])
-                    ->value(Html::encode(date('h:i:s',($form->getTime_created())->getTimestamp())))
-                    //->placeholder($translator->translate('invoice.time.created')); 
+                    ->value(Html::encode(date('h:i:s',(!is_string($form->getTime_created()) && null!==$form->getTime_created() ? 
+                                                              $form->getTime_created()->getTimestamp() : null))))
                 ?>
             <?= Html::closeTag('div'); ?>
             <?= Html::openTag('div'); ?>
@@ -94,8 +119,8 @@ echo Form::tag()
                     ->hideLabel(true)
                     ->label($translator->translate('invoice.invoice.tax.point'))
                     ->addInputAttributes(['class' => 'form-control'])
-                    ->value(Html::encode(($form->getDate_tax_point())->format($datehelper->style())))
-                    //->placeholder($translator->translate('invoice.invoice.tax.point')); 
+                    ->value(Html::encode(!is_string($form->getDate_tax_point()) && null!==$form->getDate_tax_point() ? 
+                                                    $form->getDate_tax_point()->format($dateHelper->style()) : ''));
                 ?>
             <?= Html::closeTag('div'); ?>
             <?= Html::openTag('div'); ?>
@@ -110,9 +135,8 @@ echo Form::tag()
                     ->hideLabel(true)
                     ->label($translator->translate('i.date_supplied'))
                     ->addInputAttributes(['class' => 'form-control'])
-                    ->value(Html::encode(($form->getDate_supplied())->format($datehelper->style())))
-                    //->placeholder($translator->translate('i.date_supplied')); 
-                    //->hint($translator->translate('invoice.hint.this.field.is.not.required'));
+                    ->value(Html::encode(!is_string($form->getDate_supplied()) && null!==$form->getDate_supplied() ? 
+                                                    $form->getDate_supplied()->format($dateHelper->style()) : ''));
                 ?>    
             <?= Html::closeTag('div'); ?>
             <?= Html::openTag('div'); ?>
@@ -120,8 +144,8 @@ echo Form::tag()
                     ->hideLabel(true)
                     ->label($translator->translate('i.date_due'))
                     ->addInputAttributes(['class' => 'form-control'])
-                    ->value(Html::encode(($form->getDate_due())->format($datehelper->style())))
-                    //->placeholder($translator->translate('i.date_due')); 
+                    ->value(Html::encode(!is_string($form->getDate_due()) && null!==$form->getDate_due() ? 
+                                                    $form->getDate_due()->format($dateHelper->style()) : ''));
                 ?>
             <?= Html::closeTag('div'); ?>
             <?= Html::openTag('div'); ?>
@@ -129,8 +153,7 @@ echo Form::tag()
                     ->hideLabel(true)
                     ->label($translator->translate('i.number'))
                     ->addInputAttributes(['class' => 'form-control'])
-                    ->value(Html::encode($form->getNumber()))
-                    //->placeholder($translator->translate('i.number')); 
+                    ->value(Html::encode($form->getNumber()));
                 ?>
             <?= Html::closeTag('div'); ?>
             <?= Html::openTag('div'); ?>
@@ -138,8 +161,7 @@ echo Form::tag()
                     ->hideLabel(true)
                     ->label($translator->translate('i.discount_amount'))
                     ->addInputAttributes(['class' => 'form-control'])
-                    ->value(Html::encode($s->format_amount((float)($form->getDiscount_amount() ?? 0.00))))
-                    //->placeholder($translator->translate('i.discount_amount')); 
+                    ->value(Html::encode($s->format_amount(($form->getDiscount_amount() ?? 0.00))))
                 ?>
             <?= Html::closeTag('div'); ?>
             <?= Html::openTag('div'); ?>
@@ -147,8 +169,7 @@ echo Form::tag()
                     ->hideLabel(true)
                     ->label($translator->translate('i.discount_percent'))
                     ->addInputAttributes(['class' => 'form-control'])
-                    ->value(Html::encode($s->format_amount((float)($form->getDiscount_percent() ?? 0.00))))
-                    //->placeholder($translator->translate('i.discount_percent')); 
+                    ->value(Html::encode($s->format_amount(($form->getDiscount_percent() ?? 0.00))))
                 ?>
             <?= Html::closeTag('div'); ?>
             <?= Html::openTag('div'); ?>
@@ -156,8 +177,7 @@ echo Form::tag()
                     ->hideLabel(true)
                     ->label($translator->translate('i.terms'))
                     ->addInputAttributes(['class' => 'form-control'])
-                    ->value(Html::encode($form->getTerms() ?? $s->get_setting('default_invoice_terms') ?: $translator->translate('invoice.payment.term.general')))
-                    //->placeholder($translator->translate('i.terms'));
+                    ->value(Html::encode($form->getTerms() ?? $s->get_setting('default_invoice_terms') ?: $translator->translate('invoice.payment.term.general')));                   
                 ?>
             <?= Html::closeTag('div'); ?>
             <?= Html::openTag('div'); ?>
@@ -183,8 +203,7 @@ echo Form::tag()
                     ->hideLabel(true)
                     ->label($translator->translate('i.url_key'))
                     ->addInputAttributes(['class' => 'form-control'])
-                    ->value(Html::encode($form->getUrl_key() ?? $urlKey))
-                    //->placeholder($translator->translate('i.url_key'));
+                    ->value(Html::encode($form->getUrl_key() ?? $urlKey));
                 ?>
             <?= Html::closeTag('div'); ?>
             <?= Html::openTag('div'); ?>
@@ -193,7 +212,6 @@ echo Form::tag()
                     ->label($translator->translate('i.payment_method'))
                     ->addInputAttributes(['class' => 'form-control'])
                     ->value(Html::encode($form->getPayment_method() ?? ($s->get_setting('invoice_default_payment_method') ?: 1)))
-                    //->placeholder($translator->translate('i.payment_method'));
                 ?>
             <?= Html::closeTag('div'); ?>
             <?= Html::openTag('div'); ?>
@@ -202,7 +220,30 @@ echo Form::tag()
                     ->label($translator->translate('invoice.contract.id'))
                     ->addInputAttributes(['class' => 'form-control'])
                     ->value(Html::encode($form->getContract_id() ?? 0))
-                    //->placeholder($translator->translate('i.payment_method'));
+                ?>
+            <?= Html::closeTag('div'); ?>
+            <?= Html::openTag('div'); ?>
+                <?= Field::hidden($form,'delivery_id')
+                    ->hideLabel(true)
+                    ->label($translator->translate('invoice.delivery'))
+                    ->addInputAttributes(['class' => 'form-control'])
+                    ->value(Html::encode($form->getDelivery_id() ?? 0))
+                ?>
+            <?= Html::closeTag('div'); ?>
+            <?= Html::openTag('div'); ?>
+                <?= Field::hidden($form,'delivery_location_id')
+                    ->hideLabel(true)
+                    ->label($translator->translate('invoice.delivery.location'))
+                    ->addInputAttributes(['class' => 'form-control'])
+                    ->value(Html::encode($form->getDelivery_location_id() ?? 0))
+                ?>
+            <?= Html::closeTag('div'); ?>
+            <?= Html::openTag('div'); ?>
+                <?= Field::hidden($form,'postal_address_id')
+                    ->hideLabel(true)
+                    ->label($translator->translate('invoice.postal.address'))
+                    ->addInputAttributes(['class' => 'form-control'])
+                    ->value(Html::encode($form->getPostal_address_id() ?? 0))
                 ?>
             <?= Html::closeTag('div'); ?>
         <?= Html::closeTag('div'); ?>

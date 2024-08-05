@@ -6,16 +6,23 @@ use Yiisoft\FormModel\Field;
 use Yiisoft\Html\Html;
 use Yiisoft\Html\Tag\Form;
 use Yiisoft\Html\Tag\I;
-use Yiisoft\View\WebView;
 
 /**
- * @var Yiisoft\Yii\View\Csrf $csrf
- * @var \Yiisoft\Router\UrlGeneratorInterface $urlGenerator
- * @var WebView $this
- * @var \Yiisoft\Translator\TranslatorInterface $translator
+ * @var App\Invoice\Inv\InvAttachmentsForm $form
+ * @var App\Invoice\Setting\SettingRepository $s
+ * @var Yiisoft\Router\UrlGeneratorInterface $urlGenerator
+ * @var Yiisoft\Translator\TranslatorInterface $translator
+ * @var bool $invEdit
+ * @var bool $invView
+ * @var string $actionName
+ * @var string $csrf
+ * @var string $partial_inv_attachments_list
+ * @var string $title
+ * @psalm-var array<string, Stringable|null|scalar> $actionArguments
  */
+
  if ($invEdit && $invView) { 
-    $this->setTitle($translator->translate('i.add_files'));
+    $title = $translator->translate('i.add_files');
  }
  ?>
 
@@ -36,11 +43,11 @@ use Yiisoft\View\WebView;
             <?= Html::openTag('div', ['class' => 'row']); ?>
                 <div>
                     <div>
-                        <h5><?= Html::encode($this->getTitle()) ?></h5>
+                        <h5><?= Html::encode($title) ?></h5>
                     </div>
                     <div>
                         <?= Form::tag()
-                            ->post($urlGenerator->generate(...$action))
+                            ->post($urlGenerator->generate($actionName, $actionArguments))
                             ->enctypeMultipartFormData()
                             ->csrf($csrf)
                             ->id('InvAttachmentsForm')

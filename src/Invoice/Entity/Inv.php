@@ -12,10 +12,8 @@ use Cycle\Annotated\Annotation\Relation\HasOne;
 use Cycle\ORM\Entity\Behavior;
 use Doctrine\Common\Collections\ArrayCollection;
 use App\User\User;
-use App\Invoice\Entity\Delivery;
 use App\Invoice\Entity\Group;
 use App\Invoice\Entity\Client;
-use App\Invoice\Entity\DeliveryLocation;
 use App\Invoice\Entity\InvItem;
 use App\Invoice\Entity\InvAmount;
 use App\Invoice\Entity\InvSentLog;
@@ -48,10 +46,6 @@ class Inv {
     #[Column(type: 'integer(11)', nullable: false)]
     private ?int $client_id = null;
 
-    //Delivery
-    #[BelongsTo(target: Delivery::class, nullable: true, fkAction: 'NO ACTION')]
-    private ?Delivery $delivery = null;
-    
     #[Column(type: 'integer(11)', nullable: true)]
     private ?int $delivery_id = null;
 
@@ -65,6 +59,7 @@ class Inv {
     private ArrayCollection $items;
     
     /**
+     * @see Used to determine how many times an email has been sent for this specific invoice to the client
      * @var ArrayCollection<array-key, InvSentLog>
      */
     #[HasMany(target: InvSentLog::class)]
@@ -78,12 +73,13 @@ class Inv {
 
     #[Column(type: 'integer(11)', nullable: true, default: 0)]
     private ?int $contract_id = null;
-
+    
     #[Column(type: 'integer(11)', nullable: true, default: 0)]
     private ?int $delivery_location_id = null;
-    #[BelongsTo(target: DeliveryLocation::class, nullable: true, fkAction: 'NO ACTION', fkOnDelete: 'NO ACTION')]
-    private ?DeliveryLocation $deliveryLocation = null;
-
+    
+    #[Column(type: 'integer(11)', nullable: true, default: 0)]
+    private ?int $postal_address_id = null;
+    
     #[Column(type: 'integer(11)', nullable: true)]
     private ?int $so_id = null;
 
@@ -172,6 +168,7 @@ class Inv {
             int $creditinvoice_parent_id = null,
             int $delivery_id = null,
             int $delivery_location_id = null,
+            int $postal_address_id = null,
             int $contract_id = null,
             //https://docs.peppol.eu/poacc/billing/3.0/syntax/ubl-invoice/cac-InvoicePeriod/cbc-DescriptionCode/
             string $stand_in_code = ''
@@ -205,6 +202,7 @@ class Inv {
         $this->creditinvoice_parent_id = $creditinvoice_parent_id;
         $this->delivery_id = $delivery_id;
         $this->delivery_location_id = $delivery_location_id;
+        $this->postal_address_id = $postal_address_id;
         $this->contract_id = $contract_id;
         $this->invsentlogs = new ArrayCollection();
     }
@@ -215,14 +213,6 @@ class Inv {
 
     public function getUser(): ?User {
         return $this->user;
-    }
-
-    public function setDelivery(?Delivery $delivery): void {
-        $this->delivery = $delivery;
-    }
-
-    public function getDelivery(): ?Delivery {
-        return $this->delivery;
     }
 
     public function setGroup(?Group $group): void {
@@ -323,12 +313,7 @@ class Inv {
     public function setDelivery_location_id(int $delivery_location_id): void {
         $this->delivery_location_id = $delivery_location_id;
     }
-    
-    public function getDeliveryLocation() : ?DeliveryLocation
-    {
-        return $this->deliveryLocation;
-    }    
-
+     
     public function getContract_id(): string {
         return (string) $this->contract_id;
     }
@@ -479,7 +464,15 @@ class Inv {
     public function setPayment_method(int $payment_method): void {
         $this->payment_method = $payment_method;
     }
+    
+    public function getPostal_address_id(): string {
+        return (string) $this->postal_address_id;
+    }
 
+    public function setPostal_address_id(int $postal_address_id): void {
+        $this->postal_address_id = $postal_address_id;
+    }
+    
     public function getCreditinvoice_parent_id(): string {
         return (string) $this->creditinvoice_parent_id;
     }

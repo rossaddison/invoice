@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 // Note this is the only file that gets adjusted during development and ultimately gets copied to 
@@ -172,7 +173,7 @@ return [
     'i.calendar_year_4'                              => '4 Years',
     'i.calendar_year_5'                              => '5 Years',
     'i.cancel'                                       => 'Cancel',
-    'i.canceled'                                     => 'Canceled',
+    'i.canceled'                                     => 'Cancelled',
     'i.can_be_changed'                               => 'Can be changed',
     'i.cc'                                           => 'CC',
     'i.change_password'                              => 'Change Password',

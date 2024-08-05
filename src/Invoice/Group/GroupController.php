@@ -74,19 +74,12 @@ final class GroupController
         ->withPageSize((int)$settingRepository->get_setting('default_list_limit'))
         ->withCurrentPage($page)
         ->withToken(PageToken::next((string)$page));
-        $canEdit = $this->rbac();
+        // Generate a flash message in the index if the user does not have permission 
+        $this->rbac();
         $parameters = [
             'defaultPageSizeOffsetPaginator' => $settingRepository->get_setting('default_list_limit')
                                                     ? (int)$settingRepository->get_setting('default_list_limit') : 1,            
-            'grid_summary'=> $settingRepository->grid_summary(
-                $paginator, 
-                $this->translator, 
-                (int)$settingRepository->get_setting('default_list_limit'), 
-                $this->translator->translate('invoice.groups'), 
-                ''
-            ),
             'paginator' => $paginator,
-            'canEdit' => $canEdit,
             'groups' => $this->groups($groupRepository),
             'alert'=> $this->alert()
         ];  
@@ -106,7 +99,8 @@ final class GroupController
         $form = new GroupForm($group);
         $parameters = [
             'title' => $this->translator->translate('invoice.add'),
-            'action' => ['group/add'],
+            'actionName' => 'group/add',
+            'actionArguments' => [],
             'errors' => [],
             'form' => $form
         ];
@@ -141,7 +135,8 @@ final class GroupController
             $form = new GroupForm($group);
             $parameters = [
                 'title' => $this->translator->translate('i.edit'),
-                'action' => ['group/edit', ['id' => $group->getId()]],
+                'actionName' => 'group/edit', 
+                'actionArguments' => ['id' => $group->getId()],
                 'errors' => [],
                 'form' => $form
             ];
@@ -195,7 +190,8 @@ final class GroupController
             $form = new GroupForm($group);
             $parameters = [
                 'title' => $this->translator->translate('i.view'),
-                'action' => ['group/view', ['id' => $group->getId()]],
+                'actionName' => 'group/view', 
+                'actionArguments' => ['id' => $group->getId()],
                 'errors' => [],
                 'form' => $form,      
                 'group' => $groupRepository->repoGroupquery($group->getId()),

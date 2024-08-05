@@ -148,7 +148,7 @@ $toolbar = Div::tag();
                                 $number. ' '. $soR->getSpecificStatusArrayLabel((string)$statusId),
                                 $urlGenerator->generate('salesorder/view',['id' => $so_id]),
                                                                           ['style' => 'text-decoration:none',
-                                'class'=> 'label '. $soR->getSpecificStatusArrayClass((string)$statusId)]);
+                                'class'=> 'label '. $soR->getSpecificStatusArrayClass($statusId)]);
                     }
                     if ($model->getSo_id() === '0' && $model->getStatus_id() === 7 ) {
                         if ($statusId > 0) {

@@ -1,5 +1,11 @@
 <?php
+
     declare(strict_types=1);
+    
+    /**
+     * @var Yiisoft\Translator\TranslatorInterface $translator
+     * @var array $custom_fields_quote_custom
+     */
 ?>
         <div class="form-group">
             <label for="tags_quote"><?= $translator->translate('i.quotes'); ?></label>
@@ -37,9 +43,13 @@
                 </optgroup>
 
                 <optgroup label="<?= $translator->translate('i.custom_fields'); ?>">
-                    <?php foreach ($custom_fields_quote_custom as $custom) { ?>
+                    <?php
+                        /**
+                        * @var App\Invoice\Entity\CustomField $custom
+                        */
+                        foreach ($custom_fields_quote_custom as $custom) { ?>
                         <option value="{{{<?= 'cf_' . $custom->getId(); ?>}}}">
-                            <?= $custom->getLabel() . ' (ID ' . $custom->getId() . ')'; ?>
+                            <?= ($custom->getLabel() ?? '') . ' (ID ' . $custom->getId() . ')'; ?>
                         </option>
                     <?php } ?>
                 </optgroup>

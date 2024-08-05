@@ -1,5 +1,15 @@
-<?php  
-   echo "<?php\n";             
+<?php 
+
+    declare(strict_types=1);
+
+    /**
+     * @var App\Invoice\Entity\Gentor $generator
+     * @var Cycle\Database\Table $orm_schema
+     * @var array $relations
+     * @var string $typecast
+     */
+    
+    echo "<?php\n";             
 ?>
 
 declare(strict_types=1); 
@@ -23,6 +33,9 @@ final class <?= $generator->getCamelcase_capital_name(); ?>Service
     {
         <?php
             echo "\n";
+            /**
+             * @var Cycle\Database\Schema\AbstractColumn $column
+             */
             foreach ($orm_schema->getColumns() as $column) { 
                 if (($column->getAbstractType() <> 'primary')) {
                     switch ($column->getAbstractType()) {

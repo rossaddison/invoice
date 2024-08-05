@@ -115,24 +115,16 @@ final class InvSentLogController
                 ->withCurrentPage((int)$finalPage)
                 ->withToken(PageToken::next($finalPage));
                 $parameters = [
-                    'invsentlogs' => $this->invsentlogs($islR),
                     'paginator' => $paginator,
                     'alert' => $this->alert(),
                     'viewInv' => $this->userService->hasPermission('viewInv'),
-                    'userinv' => $userinv,
+                    'userInv' => $userinv,
                     'defaultPageSizeOffsetPaginator' => null!==$userinv->getListLimit() ? $userinv->getListLimit(): 10,
-                    'grid_summary' => $settingRepository->grid_summary(
-                        $paginator,
-                        $this->translator,
-                        null!== $userInvListLimit ? $userInvListLimit : 10,
-                        $this->translator->translate('invoice.email.logs'),
-                        ''
-                    ),
                     'optionsDataGuestInvNumberDropDownFilter' => $this->optionsDataGuestInvNumberFilter($islR, (int)$userId),
                     // Get all the clients that have been assigned to this user
                     'optionsDataGuestClientDropDownFilter' => $this->optionsDataGuestClientsFilter($islR, $userId),
                 ];
-                return $this->viewRenderer->render('invsentlog/guest', $parameters);
+                return $this->viewRenderer->render('guest', $parameters);
             }
         } 
         return $this->webService->getNotFoundResponse();
@@ -173,16 +165,14 @@ final class InvSentLogController
         ->withCurrentPage((int)$finalPage)
         ->withToken(PageToken::next($finalPage));
         $parameters = [
-            'invsentlogs' => $this->invsentlogs($islR),
             'paginator' => $paginator,
             'alert' => $this->alert(),
             'defaultPageSizeOffsetPaginator' => $settingRepository->get_setting('default_list_limit')
                                                     ? (int)$settingRepository->get_setting('default_list_limit') : 1,
-            'grid_summary' => $settingRepository->grid_summary($paginator, $this->translator, (int) $settingRepository->get_setting('default_list_limit'), $this->translator->translate('invoice.email.logs'), ''),
             'optionsDataInvNumberDropDownFilter' => $this->optionsDataInvNumberFilter($islR),
             'optionsDataClientsDropDownFilter' => $this->optionsDataClientsFilter($islR),
         ];
-        return $this->viewRenderer->render('invsentlog/index', $parameters);
+        return $this->viewRenderer->render('index', $parameters);
     }
     
     /**
@@ -242,9 +232,9 @@ final class InvSentLogController
             $form = new InvSentLogForm($invsentlog);
             $parameters = [
                 'title' => $this->translator->translate('i.view'),
-                'action' => ['invsentlog/view', ['id' => $id]],
-                'form' => $form,
-                'invsentlog' => $invsentlog
+                'actionName' => 'invsentlog/view', 
+                'actionArguments' => ['id' => $id],
+                'form' => $form
             ];        
         return $this->viewRenderer->render('view', $parameters);
         }

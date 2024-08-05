@@ -3,11 +3,16 @@ declare(strict_types=1);
 
 use Yiisoft\Html\Html;
 use Yiisoft\Html\Tag\I;
+
 /**
  * @see .\resources\views\invoice\inv\modal_message_layout.php
  * @see .\src\widget\Bootstrap5ModalTranslatorMessageWithAction.php
  * @see example .\src\Invoice\Inv\InvController.php action view
  * @see example .\resources\views\invoice\inv\view.php
+ * 
+ * @var App\Invoice\Setting\SettingRepository $s
+ * @var string $translatedHeading
+ * @var string $translatedMessage
  */
 ?>
 <?= I::tag()
