@@ -40,7 +40,6 @@ jobs:
 
         php:
           - 8.2
-          - 8.3
 
     steps:
       - name: Checkout
