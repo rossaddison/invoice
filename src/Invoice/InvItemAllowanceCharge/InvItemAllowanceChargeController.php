@@ -151,7 +151,7 @@ final class InvItemAllowanceChargeController
                             $iiaR->save($inv_item_amount);
                             return $this->webService->getRedirectResponse('inv/view',['id'=>$inv_id]);
                         }
-                        $parameters['errors'] = $form->getValidationResult()->getErrorMessagesIndexedByAttribute();
+                        $parameters['errors'] = $form->getValidationResult()->getErrorMessagesIndexedByProperty();
                         $parameters['form'] = $form;
                     } //allowance_charge
                 } // is_array    

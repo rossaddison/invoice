@@ -137,7 +137,7 @@ final class UploadController {
                 $this->uploadService->saveUpload($upload, $body);
                 return $this->webService->getRedirectResponse('upload/index');
             }
-            $parameters['errors'] = $form->getValidationResult()->getErrorMessagesIndexedByAttribute();
+            $parameters['errors'] = $form->getValidationResult()->getErrorMessagesIndexedByProperty();
             $parameters['form'] = $form;
         }
         return $this->viewRenderer->render('_form', $parameters);
@@ -226,7 +226,7 @@ final class UploadController {
                     $this->uploadService->saveUpload($upload, $body);
                     return $this->webService->getRedirectResponse('upload/index');
                 }
-                $parameters['errors'] = $form->getValidationResult()->getErrorMessagesIndexedByAttribute();
+                $parameters['errors'] = $form->getValidationResult()->getErrorMessagesIndexedByProperty();
                 $parameters['form'] = $form;
             }
             return $this->viewRenderer->render('_form', $parameters);

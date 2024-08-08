@@ -100,7 +100,7 @@ final class MerchantController
                 $this->merchantService->saveMerchant($merchant, $body);
                 return $this->webService->getRedirectResponse('merchant/index');
             }
-            $parameters['errors'] = $form->getValidationResult()->getErrorMessagesIndexedByAttribute();
+            $parameters['errors'] = $form->getValidationResult()->getErrorMessagesIndexedByProperty();
             $parameters['form'] = $form;
         }
         return $this->viewRenderer->render('_form', $parameters);
@@ -139,7 +139,7 @@ final class MerchantController
                     $this->merchantService->saveMerchant($merchant, $body);
                     return $this->webService->getRedirectResponse('merchant/index');
                 }
-                $parameters['errors'] = $form->getValidationResult()->getErrorMessagesIndexedByAttribute();
+                $parameters['errors'] = $form->getValidationResult()->getErrorMessagesIndexedByProperty();
                 $parameters['form'] = $form;
             }
             return $this->viewRenderer->render('_form', $parameters);

@@ -614,7 +614,7 @@ final class InvController {
                     return $this->web_service->getRedirectResponse('client/view', ['id' => $origin]);
                 }    
             }
-            $errors = $form->getValidationResult()->getErrorMessagesIndexedByAttribute();
+            $errors = $form->getValidationResult()->getErrorMessagesIndexedByProperty();
         } // POST
         // show the form without a modal when using the main menu
         if (($origin == 'main') || ($origin == 'dashboard')) {
@@ -753,7 +753,7 @@ final class InvController {
                   }
                   return $this->web_service->getRedirectResponse('inv/index');
             }
-            $parameters['errors'] = $form->getValidationResult()->getErrorMessagesIndexedByAttribute();
+            $parameters['errors'] = $form->getValidationResult()->getErrorMessagesIndexedByProperty();
             $parameters['form'] = $form;
         }
         return $this->view_renderer->render('inv/_form_create_confirm', $parameters);
@@ -881,19 +881,17 @@ final class InvController {
      * @param InvTaxRateService $itrS
      * @param IAR $iaR
      * @param InvAmountService $iaS
-     * @param DLR $dlR
-     * @param DLS $dlS
      * @param PAR $paR
      * @param PAS $paS
      * @return Response
      */
     public function delete(#[RouteArgument('id')] int $id, InvRepository $invRepo,
             ICR $icR, InvCustomService $icS, IIR $iiR, InvItemService $iiS, ITRR $itrR,
-            InvTaxRateService $itrS, IAR $iaR, InvAmountService $iaS, DLR $dlR, DLS $dlS, PAR $paR, PAS $paS): Response {
+            InvTaxRateService $itrS, IAR $iaR, InvAmountService $iaS, PAR $paR, PAS $paS): Response {
         try {
             $inv = $this->inv($id, $invRepo);
             if ($inv) {
-                $this->inv_service->deleteInv($inv, $icR, $icS, $iiR, $iiS, $itrR, $itrS, $iaR, $iaS, $dlR, $paR, $dlS, $paS);
+                $this->inv_service->deleteInv($inv, $icR, $icS, $iiR, $iiS, $itrR, $itrS, $iaR, $iaS, $paR, $paS);
                 $this->flash_message('info', $this->translator->translate('i.record_successfully_deleted'));
                 return $this->web_service->getRedirectResponse('inv/index');
             }
@@ -1289,7 +1287,7 @@ final class InvController {
                     if ($returned_form instanceof InvForm) {
                         if (!$returned_form->isValid()) {
                             $parameters['form'] = $returned_form;
-                            $parameters['errors'] = $returned_form->getValidationResult()->getErrorMessagesIndexedByAttribute();
+                            $parameters['errors'] = $returned_form->getValidationResult()->getErrorMessagesIndexedByProperty();
                             return $this->view_renderer->render('inv/_form_edit', $parameters);
                         }
                         $this->edit_save_custom_fields($body, $formHydrator, $icR, $inv_id);
@@ -1936,8 +1934,8 @@ final class InvController {
      * @param string $queryPage
      * @param string $querySort
      * @param string $queryFilterInvNumber
-     * @param string $queryFilterInvAmountTotal
      * @param string $queryFilterClient
+     * @param string $queryFilterInvAmountTotal
      * @param string $queryFilterClientGroup
      * @param string $queryFilterDateCreatedYearMonth
      * @return \Yiisoft\DataResponse\DataResponse|Response
@@ -2085,7 +2083,7 @@ final class InvController {
                 ->withSort($sort);
         return $invs;
     }
-
+    
     // Called from inv.js inv_to_pdf_confirm_with_custom_fields
 
     /**

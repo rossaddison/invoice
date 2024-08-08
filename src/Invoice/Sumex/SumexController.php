@@ -136,7 +136,7 @@ final class SumexController
                 $this->sumexService->saveSumex($model, $body);
                 return $this->webService->getRedirectResponse('sumex/index');
             }
-            $parameters['errors'] = $form->getValidationResult()->getErrorMessagesIndexedByAttribute();
+            $parameters['errors'] = $form->getValidationResult()->getErrorMessagesIndexedByProperty();
             $parameters['form'] = $form;
         }
         return $this->viewRenderer->render('_form', $parameters);
@@ -177,7 +177,7 @@ final class SumexController
                         return $this->webService->getRedirectResponse('inv/view', ['id' => $id]);
                     }
                 }
-                $parameters['errors'] = $form->getValidationResult()->getErrorMessagesIndexedByAttribute();
+                $parameters['errors'] = $form->getValidationResult()->getErrorMessagesIndexedByProperty();
                 $parameters['form'] = $form;                
             }
             return $this->viewRenderer->render('_form', $parameters);

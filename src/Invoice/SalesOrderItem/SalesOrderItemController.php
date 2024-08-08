@@ -123,7 +123,7 @@ final class SalesOrderItemController
                         'id' => $so_item->getSales_order_id()
                     ])); 
                 }
-                $parameters['errors'] = $form->getValidationResult()->getErrorMessagesIndexedByAttribute();
+                $parameters['errors'] = $form->getValidationResult()->getErrorMessagesIndexedByProperty();
                 $parameters['form'] = $form;
             } 
             return $this->viewRenderer->render('_item_edit_form', $parameters);

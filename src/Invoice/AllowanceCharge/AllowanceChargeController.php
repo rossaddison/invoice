@@ -122,7 +122,7 @@ final class AllowanceChargeController
                 return $this->webService->getRedirectResponse('allowancecharge/index');
             }
             $parameters['form'] = $form;
-            $parameters['errors'] = $form->getValidationResult()->getErrorMessagesIndexedByAttribute();
+            $parameters['errors'] = $form->getValidationResult()->getErrorMessagesIndexedByProperty();
         }
         return $this->viewRenderer->render('_form_allowance', $parameters);
     }
@@ -187,7 +187,7 @@ final class AllowanceChargeController
                 return $this->webService->getRedirectResponse('allowancecharge/index');
             }
             $parameters['form'] = $form;
-            $parameters['errors'] = $form->getValidationResult()->getErrorMessagesIndexedByAttribute();
+            $parameters['errors'] = $form->getValidationResult()->getErrorMessagesIndexedByProperty();
         }
         return $this->viewRenderer->render('_form_charge', $parameters);
     }
@@ -285,7 +285,7 @@ final class AllowanceChargeController
                     return $this->webService->getRedirectResponse('allowancecharge/index');
                 }
                 $parameters['form'] = $form;
-                $parameters['errors'] = $form->getValidationResult()->getErrorMessagesIndexedByAttribute();
+                $parameters['errors'] = $form->getValidationResult()->getErrorMessagesIndexedByProperty();
             }
             return $this->viewRenderer->render('_form_allowance', $parameters);
         }
@@ -335,7 +335,7 @@ final class AllowanceChargeController
                     return $this->webService->getRedirectResponse('allowancecharge/index');
                 }
                 $parameters['form'] = $form;
-                $parameters['errors'] = $form->getValidationResult()->getErrorMessagesIndexedByAttribute();
+                $parameters['errors'] = $form->getValidationResult()->getErrorMessagesIndexedByProperty();
             }
             return $this->viewRenderer->render('_form_charge', $parameters);
         }

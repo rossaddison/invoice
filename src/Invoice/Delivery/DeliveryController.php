@@ -106,7 +106,7 @@ final class DeliveryController {
                     $this->deliveryService->saveDelivery($delivery, $body, $settingRepository);
                     return $this->webService->getRedirectResponse('inv/edit', ['id' => $inv_id]);
                 }
-                $parameters['errors'] = $form->getValidationResult()->getErrorMessagesIndexedByAttribute();
+                $parameters['errors'] = $form->getValidationResult()->getErrorMessagesIndexedByProperty();
                 $parameters['form'] = $form;
             }
             return $this->viewRenderer->render('delivery/_form', $parameters);
@@ -249,7 +249,7 @@ final class DeliveryController {
                     $this->deliveryService->saveDelivery($delivery, $body, $settingRepository);
                     return $this->webService->getRedirectResponse('delivery/index');
                 }
-                $parameters['errors'] = $form->getValidationResult()->getErrorMessagesIndexedByAttribute();
+                $parameters['errors'] = $form->getValidationResult()->getErrorMessagesIndexedByProperty();
                 $parameters['form'] = $form;
                 
             }

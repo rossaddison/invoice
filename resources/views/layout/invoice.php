@@ -444,7 +444,8 @@ $this->beginPage();
                   ],
     // FAQ                  
                   ['label' => $translator->translate('invoice.faq'), 'options' => ['style' => 'background-color: #ffcccb'], 'visible' => $debugMode,
-                    'items' => [
+                    'items' => [        
+                      ['label' => 'Console Commands', 'url' => $urlGenerator->generate('invoice/faq', ['topic' => 'consolecommands', 'selection' => ''])],  
                       ['label' => $translator->translate('invoice.faq.taxpoint'), 'url' => $urlGenerator->generate('invoice/faq', ['topic' => 'tp', 'selection' => '' ])],
                       ['label' => $translator->translate('invoice.faq.shared.hosting'), 'url' => $urlGenerator->generate('invoice/faq', ['topic' => 'shared', 'selection' => ''])],
                       ['label' => $translator->translate('invoice.faq.payment.provider'), 'url' => $urlGenerator->generate('invoice/faq', ['topic' => 'paymentprovider', 'selection' => ''])], 

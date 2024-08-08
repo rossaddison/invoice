@@ -144,7 +144,7 @@ final class ContractController
                 return $this->webService->getRedirectResponse('contract/index');
             }
             $parameters['form'] = $form;
-            $parameters['errors'] = $form->getValidationResult()->getErrorMessagesIndexedByAttribute();
+            $parameters['errors'] = $form->getValidationResult()->getErrorMessagesIndexedByProperty();
         }
         return $this->viewRenderer->render('_form', $parameters);
     }
@@ -181,7 +181,7 @@ final class ContractController
                     return $this->webService->getRedirectResponse('contract/index');
                 }
                 $parameters['form'] = $form;
-                $parameters['errors'] = $form->getValidationResult()->getErrorMessagesIndexedByAttribute();
+                $parameters['errors'] = $form->getValidationResult()->getErrorMessagesIndexedByProperty();
             }
             return $this->viewRenderer->render('_form', $parameters);
         }

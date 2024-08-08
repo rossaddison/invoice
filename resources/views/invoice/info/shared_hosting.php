@@ -1,5 +1,6 @@
 <?php 
-declare(strict_types=1); 
+declare(strict_types=1);
+
 ?>
 
 <p><b>How do I host yii3i on shared hosting?</b></p>

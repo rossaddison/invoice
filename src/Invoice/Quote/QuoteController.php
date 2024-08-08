@@ -415,7 +415,7 @@ final class QuoteController
                     }    
                 }    
             }
-            $errors = $form->getValidationResult()->getErrorMessagesIndexedByAttribute();
+            $errors = $form->getValidationResult()->getErrorMessagesIndexedByProperty();
         } // POST
         // show the form without a modal when using the main menu or dashboard
         if ($origin == 'main' || $origin == 'dashboard') {
@@ -968,7 +968,7 @@ final class QuoteController
                             return $this->web_service->getRedirectResponse('quote/view', ['id' => $quote_id]);
                         } else {
                             $parameters['form'] = $form;
-                            $parameters['errors'] = $form->getValidationResult()->getErrorMessagesIndexedByAttribute();
+                            $parameters['errors'] = $form->getValidationResult()->getErrorMessagesIndexedByProperty();
                             return $this->view_renderer->render('quote/_form', $parameters);
                         }
                     }

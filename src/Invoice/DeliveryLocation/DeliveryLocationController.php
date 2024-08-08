@@ -177,7 +177,7 @@ final class DeliveryLocationController {
             return $this->webService->getRedirectResponse($url);
         }
       }
-      $parameters['errors'] = $form->getValidationResult()->getErrorMessagesIndexedByAttribute();
+      $parameters['errors'] = $form->getValidationResult()->getErrorMessagesIndexedByProperty();
       $parameters['form'] = $form;
     }
     return $this->viewRenderer->render('del/_form', $parameters);
@@ -241,7 +241,7 @@ final class DeliveryLocationController {
                return $this->webService->getRedirectResponse($url);
            }
         }
-        $parameters['errors'] = $form->getValidationResult()->getErrorMessagesIndexedByAttribute();
+        $parameters['errors'] = $form->getValidationResult()->getErrorMessagesIndexedByProperty();
         $parameters['form'] = $form;
       }
       return $this->viewRenderer->render('del/_form', $parameters);

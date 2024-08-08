@@ -116,7 +116,7 @@ final class PaymentMethodController
                 return $this->webService->getRedirectResponse('paymentmethod/index');
             }
             $parameters['form'] = $form;
-            $parameters['errors'] = $form->getValidationResult()->getErrorMessagesIndexedByAttribute();
+            $parameters['errors'] = $form->getValidationResult()->getErrorMessagesIndexedByProperty();
         }
         return $this->viewRenderer->render('_form', $parameters);
     }
@@ -152,7 +152,7 @@ final class PaymentMethodController
                     return $this->webService->getRedirectResponse('paymentmethod/index');
                 }
                 $parameters['form'] = $form;
-                $parameters['errors'] = $form->getValidationResult()->getErrorMessagesIndexedByAttribute();
+                $parameters['errors'] = $form->getValidationResult()->getErrorMessagesIndexedByProperty();
             }
             return $this->viewRenderer->render('_form', $parameters);
         } // if payment_method

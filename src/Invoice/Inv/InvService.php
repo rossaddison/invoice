@@ -9,7 +9,6 @@ use App\Invoice\Entity\InvTaxRate;
 use App\Invoice\Entity\InvCustom;
 use App\User\User;
 // Repositories
-use App\Invoice\DeliveryLocation\DeliveryLocationRepository as DLR;
 use App\Invoice\Group\GroupRepository as GR;
 use App\Invoice\InvAmount\InvAmountRepository as IAR;
 use App\Invoice\InvCustom\InvCustomRepository as ICR;
@@ -183,18 +182,15 @@ final class InvService
      * @param ITRS $itrS
      * @param IAR $iaR
      * @param IAS $iaS
-     * @param DLR $dlR
      * @param PAR $paR
-     * @param DLS $dlS
      * @param PAS $paS
      * @return void
      */
     public function deleteInv(Inv $model, ICR $icR, ICS $icS, IIR $iiR, 
                               IIS $iiS, ITRR $itrR, ITRS $itrS, IAR $iaR, 
-                              IAS $iaS, DLR $dlR, PAR $paR, DLS $dlS, PAS $paS) : void
+                              IAS $iaS, PAR $paR, PAS $paS) : void
     {
         $inv_id = $model->getId();
-        $delivery_location_id = $model->getDelivery_location_id();
         $postal_address_id = $model->getPostal_address_id();
         // Invs with no items: If there are no invoice items there will be no invoice amount record
         // so check if there is a invoice amount otherwise null error will occur.

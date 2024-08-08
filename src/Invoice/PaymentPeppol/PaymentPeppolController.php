@@ -88,7 +88,7 @@ final class PaymentPeppolController
                 $this->paymentpeppolService->savePaymentPeppol($paymentPeppol, $body);
                 return $this->webService->getRedirectResponse('paymentpeppol/index');
             }
-            $parameters['errors'] = $form->getValidationResult()->getErrorMessagesIndexedByAttribute();
+            $parameters['errors'] = $form->getValidationResult()->getErrorMessagesIndexedByProperty();
             $parameters['form'] = $form;
         }
         return $this->viewRenderer->render('_form', $parameters);
@@ -195,7 +195,7 @@ final class PaymentPeppolController
                     $this->paymentpeppolService->savePaymentPeppol($paymentPeppol, $body);
                     return $this->webService->getRedirectResponse('paymentpeppol/index');
                 }
-                $parameters['errors'] = $form->getValidationResult()->getErrorMessagesIndexedByAttribute();
+                $parameters['errors'] = $form->getValidationResult()->getErrorMessagesIndexedByProperty();
                 $parameters['form'] = $form;
             }
             return $this->viewRenderer->render('_form', $parameters);

@@ -453,7 +453,7 @@ final class SalesOrderController
                     $this->flash_message('success', $this->translator->translate('i.record_successfully_updated'));
                     return $this->webService->getRedirectResponse('salesorder/index');
                 }
-                $parameters['errors'] = $form->getValidationResult()->getErrorMessagesIndexedByAttribute();
+                $parameters['errors'] = $form->getValidationResult()->getErrorMessagesIndexedByProperty();
                 $parameters['form'] = $form;
             }
             return $this->viewRenderer->render('_form_edit', $parameters);

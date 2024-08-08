@@ -130,6 +130,12 @@ final class InvoiceController
             case 'paymentprovider':
                 $view = $this->viewRenderer->renderPartialAsString('//invoice/info/payment_provider');
                 break;
+            case 'consolecommands':
+                $view = $this->viewRenderer->renderPartialAsString('//invoice/info/console_commands');
+                break;
+            case 'ipaddress':
+                $view = $this->viewRenderer->renderPartialAsString('//invoice/info/ip_address');
+                break;
             default:
                 $view = '';
                 break;

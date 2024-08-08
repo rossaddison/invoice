@@ -124,7 +124,7 @@ final class EmailTemplateController
                 $this->flash_message('info', $this->translator->translate('invoice.email.template.successfully.added'));
                 return $this->webService->getRedirectResponse('emailtemplate/index');
             }
-            $parameters['errors'] = $form->getValidationResult()->getErrorMessagesIndexedByAttribute();
+            $parameters['errors'] = $form->getValidationResult()->getErrorMessagesIndexedByProperty();
             $parameters['form'] = $form;
         }
         return $this->viewRenderer->render('_form_invoice', $parameters, );
@@ -176,7 +176,7 @@ final class EmailTemplateController
                 $this->flash_message('info', $this->translator->translate('invoice.email.template.successfully.added'));
                 return $this->webService->getRedirectResponse('emailtemplate/index');
             }
-            $parameters['errors'] = $form->getValidationResult()->getErrorMessagesIndexedByAttribute();
+            $parameters['errors'] = $form->getValidationResult()->getErrorMessagesIndexedByProperty();
             $parameters['form'] = $form;
         }
         return $this->viewRenderer->render('_form_quote', $parameters, );
@@ -260,7 +260,7 @@ final class EmailTemplateController
                     $this->flash_message('info', $this->translator->translate('invoice.email.template.successfully.edited'));
                     return $this->webService->getRedirectResponse('emailtemplate/index');
                 }
-                $parameters['errors'] = $form->getValidationResult()->getErrorMessagesIndexedByAttribute();
+                $parameters['errors'] = $form->getValidationResult()->getErrorMessagesIndexedByProperty();
                 $parameters['form'] = $form;
             }
             return $this->viewRenderer->render('_form_invoice', $parameters);
@@ -323,7 +323,7 @@ final class EmailTemplateController
                     $this->flash_message('info', $this->translator->translate('invoice.email.template.successfully.edited'));
                     return $this->webService->getRedirectResponse('emailtemplate/index');
                 }
-                $parameters['errors'] = $form->getValidationResult()->getErrorMessagesIndexedByAttribute();
+                $parameters['errors'] = $form->getValidationResult()->getErrorMessagesIndexedByProperty();
                 $parameters['form'] = $form;
             }
             return $this->viewRenderer->render('_form_quote', $parameters);

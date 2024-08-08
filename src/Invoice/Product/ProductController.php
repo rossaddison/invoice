@@ -194,14 +194,14 @@ class ProductController
                             // These two can be used to create customised labels for custom field error validation on the form
                             // Currently not used.
                             $parameters['formProductCustom'] = $formProductCustom; 
-                            $parameters['errorsCustom'] = $formProductCustom->getValidationResult()->getErrorMessagesIndexedByAttribute();
+                            $parameters['errorsCustom'] = $formProductCustom->getValidationResult()->getErrorMessagesIndexedByProperty();
                         }
                     }
                     $this->flash_message('info', $this->translator->translate('i.record_successfully_created'));
                     return $this->webService->getRedirectResponse('product/index');
                 }
             } else {
-                $parameters['errors'] = $form->getValidationResult()->getErrorMessagesIndexedByAttribute();
+                $parameters['errors'] = $form->getValidationResult()->getErrorMessagesIndexedByProperty();
             }    
         }
         $parameters['form'] = $form;
@@ -262,7 +262,7 @@ class ProductController
                         $parameters['body'] = $body;
                         if (!$returned_form->isValid()) {
                             $parameters['form'] = $returned_form;
-                            $parameters['errors'] = $returned_form->getValidationResult()->getErrorMessagesIndexedByAttribute();
+                            $parameters['errors'] = $returned_form->getValidationResult()->getErrorMessagesIndexedByProperty();
                             return $this->viewRenderer->render('_form', $parameters);
                         } 
                         // Only save custom fields if they exist
@@ -285,7 +285,7 @@ class ProductController
                                          {
                                              $this->productCustomService->saveProductCustom($product_custom, $product_custom_input);     
                                          }
-                                         $parameters['errorsCustom'] = $productCustomForm->getValidationResult()->getErrorMessagesIndexedByAttribute();
+                                         $parameters['errorsCustom'] = $productCustomForm->getValidationResult()->getErrorMessagesIndexedByProperty();
                                          $parameters['productCustomForm'] = $productCustomForm;
                                      }
                                  } //foreach

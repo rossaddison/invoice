@@ -17,7 +17,7 @@
     "minimum-stability": "dev",
     "prefer-stable": true,
     "require": {
-        "php": "^8.1",
+        "php": "^8.2",
         "brick/money": "*",
         "brick/math": "*",
         "cebe/markdown": "^1.2@dev",
@@ -70,6 +70,7 @@
         "stripe/stripe-php": "*",
         
         "vjik/cycle-typecast": "*",
+        "vjik/telegram-bot-api": "*",
         "vlucas/phpdotenv": "^5.6",    
         "yiisoft/access": "^1.0",
         "yiisoft/aliases": "^3.0",
@@ -94,7 +95,7 @@
         "yiisoft/form": "dev-master",
         "yiisoft/form-model": "dev-master",
         "yiisoft/friendly-exception": "*",
-        "yiisoft/html": "^3.0",
+        "yiisoft/html": "^3.3",
         "yiisoft/http": "^1.2",
         "yiisoft/injector": "^1.0",
         "yiisoft/input-http": "^1.0",
@@ -115,7 +116,7 @@
         "yiisoft/translator": "^3.0",
         "yiisoft/translator-message-php": "^1.1.1",
         "yiisoft/user": "^2.0",
-        "yiisoft/validator": "^1.0",
+        "yiisoft/validator": "^2.0",
         "yiisoft/var-dumper": "^1.0",               
         "yiisoft/view": "^10.0",
         "yiisoft/widget": "^2.1",
@@ -127,7 +128,7 @@
         "yiisoft/yii-debug": "*",
         "yiisoft/yii-event": "^2.0",
         "yiisoft/yii-http": "^1.0",
-        "yiisoft/yii-middleware": "^1.0",
+        "rossaddison/yii-middleware": "*",
         "yiisoft/yii-runner": "*",
         "yiisoft/yii-runner-console": "^2.0",
         "yiisoft/yii-runner-http": "^2.0",
@@ -147,7 +148,7 @@
         "spatie/phpunit-watcher": "^1.23",
         "vimeo/psalm": "^5.25",
         "yiisoft/translator-extractor": "^2.0",
-        "yiisoft/yii-gii": "^3.0@dev",
+        "rossaddison/yii-gii": "^3.0@dev",
         "yiisoft/yii-testing": "dev-master"
     },
     "autoload": {

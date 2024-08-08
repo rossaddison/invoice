@@ -101,7 +101,7 @@ final class ClientNoteController
                 $this->clientnoteService->addClientNote($clientnote, $body);
                 return $this->webService->getRedirectResponse('clientnote/index');
             }
-            $parameters['errors'] = $form->getValidationResult()->getErrorMessagesIndexedByAttribute();
+            $parameters['errors'] = $form->getValidationResult()->getErrorMessagesIndexedByProperty();
             $parameters['form'] = $form;
         }
         return $this->viewRenderer->render('_form', $parameters);
@@ -146,7 +146,7 @@ final class ClientNoteController
                     return $this->webService->getRedirectResponse('clientnote/index');
                 }
                 $parameters['form'] = $form;
-                $parameters['error'] = $form->getValidationResult()->getErrorMessagesIndexedByAttribute();
+                $parameters['error'] = $form->getValidationResult()->getErrorMessagesIndexedByProperty();
             }
             return $this->viewRenderer->render('_form', $parameters);
         } //client note

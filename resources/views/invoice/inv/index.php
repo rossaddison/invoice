@@ -9,10 +9,13 @@ use Yiisoft\Html\Tag\A;
 use Yiisoft\Html\Tag\Div;
 use Yiisoft\Html\Tag\Form;
 use Yiisoft\Html\Tag\I;
+use Yiisoft\Html\Tag\Input\Checkbox;
 use Yiisoft\Html\Tag\Label;
-use Yiisoft\Yii\DataView\GridView;
-use Yiisoft\Yii\DataView\Column\DataColumn;
+use Yiisoft\Yii\DataView\Column\Base\DataContext;
+use Yiisoft\Yii\DataView\Column\CheckboxColumn;
 use Yiisoft\Yii\DataView\Column\ColumnInterface;
+use Yiisoft\Yii\DataView\Column\DataColumn;
+use Yiisoft\Yii\DataView\GridView;
 
 /**
  * @see config/common/params.php 'yiisoft/view => ['gridComponents' => Reference::to(GridComponents::class)]',
@@ -95,6 +98,13 @@ $toolbar = Div::tag();
         <?php } ?>
     </div>
     <br>
+    <?php 
+        /**
+         * Mark the invoice as Sent
+         * @see $button::statusMark($generator, $iR, $status, $translated, $guest) 
+         */
+        //echo $button::statusMark($urlGenerator, $iR, 2, $translator->translate('i.sent'), false);
+    ?>
     <br>
     <div class="submenu-row">
         <!--  Route::get('/inv[/page/{page:\d+}[/status/{status:\d+}]]') -->
@@ -164,7 +174,17 @@ $toolbar = Div::tag();
     /**
      * @var ColumnInterface[] $columns
      */
-    $columns = [
+    $columns = [ 
+        new CheckboxColumn(
+            content: static function(Checkbox $input, DataContext $context) : string {
+                $inv = $context->data;
+                if (($inv instanceof Inv) && (null!==($id = $inv->getId()))) {
+                    return '<input type="checkbox" name="checkbox" value="'.$id.'">';
+                }
+                return '';
+            },
+            multiple: true           
+        ),      
         new DataColumn(
             'id',    
             header: $translator->translate('i.id'),

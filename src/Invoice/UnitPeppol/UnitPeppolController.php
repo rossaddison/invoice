@@ -117,7 +117,7 @@ final class UnitPeppolController
                 $this->unitpeppolService->saveUnitPeppol($unitPeppol, $body);
                 return $this->webService->getRedirectResponse('unitpeppol/index');
             }
-            $parameters['errors'] = $form->getValidationResult()->getErrorMessagesIndexedByAttribute();
+            $parameters['errors'] = $form->getValidationResult()->getErrorMessagesIndexedByProperty();
             $parameters['form'] = $form;
         }
         return $this->viewRenderer->render('_form', $parameters);
@@ -224,7 +224,7 @@ final class UnitPeppolController
                     $this->unitpeppolService->saveUnitPeppol($unitPeppol, $body);
                     return $this->webService->getRedirectResponse('unitpeppol/index');
                 }
-                $parameters['errors'] = $form->getValidationResult()->getErrorMessagesIndexedByAttribute();
+                $parameters['errors'] = $form->getValidationResult()->getErrorMessagesIndexedByProperty();
                 $parameters['form'] = $form;
             }
             return $this->viewRenderer->render('_form', $parameters);

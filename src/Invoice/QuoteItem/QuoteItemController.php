@@ -116,7 +116,7 @@ final class QuoteItemController
                 return $this->webService->getRedirectResponse('quote/view', ['id'=>$quote_id]);  
             }    
             $parameters['form'] = $form;
-            $parameters['errors'] = $form->getValidationResult()->getErrorMessagesIndexedByAttribute();
+            $parameters['errors'] = $form->getValidationResult()->getErrorMessagesIndexedByProperty();
         }
         return $this->viewRenderer->render('_item_form', $parameters);
     }
@@ -198,7 +198,7 @@ final class QuoteItemController
                         return $this->webService->getRedirectResponse('quote/view', ['id' => $quote_id]);
                     }
                 }    
-                $parameters['errors'] = $form->getValidationResult()->getErrorMessagesIndexedByAttribute();
+                $parameters['errors'] = $form->getValidationResult()->getErrorMessagesIndexedByProperty();
                 $parameters['form'] = $form;
             } 
             return $this->viewRenderer->render('_item_edit_form', $parameters);

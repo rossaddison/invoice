@@ -103,7 +103,7 @@ final class TaxRateController
                 $this->flash_message('success', $this->translator->translate('i.record_successfully_created'));
                 return $this->webService->getRedirectResponse('taxrate/index');
             }
-            $parameters['errors'] = $form->getValidationResult()->getErrorMessagesIndexedByAttribute();
+            $parameters['errors'] = $form->getValidationResult()->getErrorMessagesIndexedByProperty();
             $parameters['form'] = $form;
         }
         return $this->viewRenderer->render('__form', $parameters);
@@ -145,7 +145,7 @@ final class TaxRateController
                     $this->flash_message('success', $this->translator->translate('i.record_successfully_updated'));
                     return $this->webService->getRedirectResponse('taxrate/index');
                 }
-                $parameters['errors'] = $form->getValidationResult()->getErrorMessagesIndexedByAttribute();
+                $parameters['errors'] = $form->getValidationResult()->getErrorMessagesIndexedByProperty();
                 $parameters['form'] = $form;
             }
             return $this->viewRenderer->render('__form', $parameters);
