@@ -859,6 +859,11 @@ return [
       ->middleware(Authentication::class)
       ->action([InvController::class, 'index'])
       ->name('inv/index'),
+      Route::get('/inv/[/status/{status:\d+}]')
+      ->middleware(fn(AccessChecker $checker) => $checker->withPermission('editInv'))
+      ->middleware(Authentication::class)
+      ->action([InvController::class, 'indexMark'])
+      ->name('inv/indexmark'),      
       Route::methods([Method::GET, Method::POST], '/inv/pdf_dashboard_include_cf/{id}')
       ->middleware(fn(AccessChecker $checker) => $checker->withPermission('editInv'))
       ->middleware(Authentication::class)
