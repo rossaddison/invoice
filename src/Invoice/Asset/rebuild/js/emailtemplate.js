@@ -227,7 +227,7 @@ $(function () {
 
     function update_email_template_preview() {
         var html = $('.email-template-body').val();
-        $('#email-template-preview').contents().find("body").html.find(html);
+        $('#email-template-preview').contents().find("body").html(html);
     }
 
     // Insert HTML tags into textarea
