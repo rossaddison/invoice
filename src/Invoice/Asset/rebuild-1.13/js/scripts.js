@@ -40,9 +40,9 @@ function insert_at_caret(areaId, text) {
     }    
 }
 
-
 function update_email_template_preview() {
-    $('#email-template-preview').contents().find("body").html($('.email-template-body').val());
+    var html = $('.email-template-body').val();
+    $('#email-template-preview').contents().find("body").html.find(html);
 }
 
 // Insert HTML tags into textarea
