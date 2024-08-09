@@ -9,6 +9,6 @@ use App\Invoice\Asset\i18nAsset\__Asset;
 class vi_VN_Asset extends __Asset
 {
     public array $js = [
-        'jquery-ui-1.13.2/ui/i18n/datepicker-vi.js', 
+        'jquery-ui-1.14.0/ui/i18n/datepicker-vi.js', 
     ];
 }
