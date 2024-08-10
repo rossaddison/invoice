@@ -35,7 +35,9 @@ class InvoiceAsset extends AssetBundle
 
     public array $js = [  
         // Upgraded from 3.6.0 to 3.7.1 on 2024/06/15
-        'rebuild/js/jquery-3.7.1.min.js',
+        //'rebuild/js/jquery-3.7.1.min.js',
+        // no cdn: link directly to the newest jquery beta https://blog.jquery.com/2024/02/06/jquery-4-0-0-beta/
+        '//code.jquery.com/jquery-4.0.0-beta.min.js',
         
         //modals use the following file which is available in unminified form
         // e.g. the settings tabs with general, invoice, quote etc depend on this file
