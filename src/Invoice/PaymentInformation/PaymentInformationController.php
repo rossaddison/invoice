@@ -817,7 +817,14 @@ public function mollieApiClientCreatePayment(
         // they will be redirected to the redirectUrl above
         return $payment;
     } catch (MollieException $e) {
-        echo "API call failed here in function paymentinformation/mollieApiClientCreatePayment ". htmlspecialchars($e->getMessage());
+        /**
+         * Previously: echo "API call failed here in function paymentinformation/mollieApiClientCreatePayment ". htmlspecialchars($e->getMessage());
+         * @see https://cwe.mitre.org/data/definitions/200.html
+         * An exception object flows to the echo statement and is leaked to the attacker. 
+         * This may disclose important information about the application to an attacker. 
+         * Courtesy of Snyk 
+         */
+        throw $e;
     } 
     return $this->webService->getNotFoundResponse();
 }
@@ -951,6 +958,21 @@ public function mollie_complete(CurrentRoute $currentRoute) : \Yiisoft\DataRespo
     return $this->webService->getNotFoundResponse();
 }
 
+/**
+ * 
+ * @param string $client_chosen_gateway
+ * @param string $url_key
+ * @param float $balance
+ * @param cR $cR
+ * @param Inv $invoice
+ * @param array $items_array
+ * @param array $yii_invoice_array
+ * @param bool $disable_form
+ * @param bool $is_overdue
+ * @param string $payment_method_for_this_invoice
+ * @param float $total
+ * @return Response
+ */
 public function stripeInForm(
     string $client_chosen_gateway,
     string $url_key,

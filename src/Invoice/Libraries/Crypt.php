@@ -1,18 +1,12 @@
 <?php
+
 declare(strict_types=1);
 
 Namespace App\Invoice\Libraries;
 
-/*
- * InvoicePlane
- *
- * @author		InvoicePlane Developers & Contributors
- * @copyright	Copyright (c) 2012 - 2018 InvoicePlane.com
- * @license		https://invoiceplane.com/license.txt
- * @link		https://invoiceplane.com
- */
-
 /**
+ * @see https://github.com/InvoicePlane/InvoicePlane/blob/development/application/libraries/Crypt.php
+ * 
  * Class Crypt
  */
 class Crypt
@@ -20,9 +14,31 @@ class Crypt
     private const DECRYPT_KEY = 'base64:3iqxXZEG5aR0NPvmE4qubcE/sn6nuzXKLrZVRMP3/Ak=';
     private string $decrypt_key = self::DECRYPT_KEY;
     
+    /**
+     * Snyk: What is Salting?
+     * A salt is a random string that gets attached to a plaintext password before it gets hashed. 
+     * A hash cannot be reversed but it can be compared with existing generated hash outputs.
+     * If a user is using a weak password, that password may have been hashed and stored somewhere for
+     * potential hackers to compare against. By adding a salt to the password, the hash output is no 
+     * longer predictable. This is because it is increasing the uniqueness of the password, thus, 
+     * the uniqueness of the hash itself.
+     */
+    
+    /**
+     * A salt now must be added to a hash to prevent hash table lookups used by attackers
+     * @see https://cwe.mitre.org/data/definitions/916.html
+     * @return string
+     */
     public function salt(): string
     {
-        return substr(sha1((string)mt_rand()), 0, 22);
+        /**
+         * Previously: return substr(sha1((string)mt_rand()), 0, 22);
+         * Use of Password Hash With Insufficient Computational Effort
+         * @see https://www.php.net/manual/en/function.hash-algos.php
+         */
+        $random = (string)mt_rand();
+        $hash = hash('256', $random);
+        return substr($hash, 0, 22);
     }
 
     /**
@@ -30,7 +46,7 @@ class Crypt
      * @param string $salt
      * @return string
      */
-    public function generate_password($password, $salt)
+    public function generate_password($password, $salt) : string
     {
         return crypt($password, '$2a$10$' . $salt);
     }
@@ -40,7 +56,7 @@ class Crypt
      * @param string $password
      * @return bool
      */
-    public function check_password($hash, $password)
+    public function check_password($hash, $password) : bool
     {
         $new_hash = crypt($password, $hash);
 
@@ -82,6 +98,5 @@ class Crypt
         /** @var mixed $decrypted */
         $decrypted = Cryptor::Decrypt($data, $key);
         return $decrypted;
-
     }
 }

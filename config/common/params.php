@@ -334,8 +334,14 @@ return [
       'scheme' => 'smtp', // "smtps": using TLS, "smtp": without using TLS.
       'host' => 'mail.yourinternet.com',
       'port' => 25,
-      'username' => 'your.name@yourinternet.com',
-      'password' => 'yourpassword',
+      'username' => $_ENV['SYMFONY_MAILER_USERNAME'] ?? '',
+      /**
+       * Avoid the use of hard-coded credentials
+       * @see https://cwe.mitre.org/data/definitions/798.html
+       * @see The .env file in the root folder
+       * @see https://stackoverflow.com/questions/97984/how-to-secure-database-passwords-in-php
+       */ 
+      'password' => $_ENV['SYMFONY_MAILER_PASSWORD'] ?? '',
       'options' => [], // See: https://symfony.com/doc/current/mailer.html#tls-peer-verification
     ],
   ],

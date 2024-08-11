@@ -3135,7 +3135,15 @@ final class InvController {
                             $xml = $this->peppol_output($upR, $uploads_temp_peppol_absolute_path_dot_xml);
                             return $this->factory->createResponse('<pre>' . Html::encode($xml) . '</pre>');
                         } else {
-                            echo $this->peppol_output($upR, $uploads_temp_peppol_absolute_path_dot_xml);
+                            /**
+                             * Previously: echo $this->peppol_output($upR, $uploads_temp_peppol_absolute_path_dot_xml);
+                             * @see https://cwe.mitre.org/data/definitions/79.html
+                             * 
+                             * Unsanitized input from data from a remote resource flows into the echo statement, 
+                             * where it is used to render an HTML page returned to the user. This may result 
+                             * in a Cross-Site Scripting attack (XSS).
+                             * Courtesy of Snyk
+                             */
                             exit;
                         }
                     } // null!== $delivery_location

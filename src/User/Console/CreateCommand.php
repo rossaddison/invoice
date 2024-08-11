@@ -71,7 +71,11 @@ final class CreateCommand extends Command
             ], scope: '');
             $user = $this->signupForm->signup();
         } catch (Throwable $t) {
-            $io->error($t->getMessage() . ' ' . $t->getFile() . ' ' . $t->getLine());
+            /**
+             * Avoid Information Exposure
+             * @see https://cwe.mitre.org/data/definitions/200.html
+             * Previously: $io->error($t->getMessage() . ' ' . $t->getFile() . ' ' . $t->getLine());             * 
+             */
             throw $t;
         }
         

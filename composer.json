@@ -66,7 +66,6 @@
         "stripe/stripe-php": "*",
         "symfony/console": "^6.0||^7.1",
         "vjik/cycle-typecast": "*",
-        "vjik/telegram-bot-api": "*",
         "vlucas/phpdotenv": "^5.6",
         "yiisoft/access": "^1.0",
         "yiisoft/aliases": "^3.0",
