@@ -824,7 +824,6 @@ public function mollieApiClientCreatePayment(
          * This may disclose important information about the application to an attacker. 
          * Courtesy of Snyk 
          */
-        throw $e;
     } 
     return $this->webService->getNotFoundResponse();
 }
