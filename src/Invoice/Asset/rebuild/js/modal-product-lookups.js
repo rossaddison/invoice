@@ -42,6 +42,7 @@ $(function () {
                         //https://stackoverflow.com/questions/38380462/syntaxerror-unexpected-token-o-in-json-at-position-1
                         var products = parsedata(data);                        
                         for (var key in products) {
+                            
                             // Set default tax rate id if empty
                             if (!products[key].tax_rate_id) {products[key].tax_rate_id = $("#default_item_tax_rate").attr('value');}                            
                             var last_item_row = $('#item_table tbody:last');
@@ -81,16 +82,23 @@ $(function () {
                      dataType: 'json',
                      success: function(data){
                         //https://stackoverflow.com/questions/38380462/syntaxerror-unexpected-token-o-in-json-at-position-1
-                        var products = parsedata(data);                        
+                        var products = parsedata(data);
+                        var productDefaultTaxRateId = new Object(null);
+                        var currentTaxRateId = new Object(null);
                         for (var key in products) {
                             // Set default tax rate id if empty
-                            if (!products[key].tax_rate_id) {products[key].tax_rate_id = $("#default_item_tax_rate").attr('value');}                            
+                            currentTaxRateId = products[key].tax_rate_id;
+                            if (!currentTaxRateId) {
+                                productDefaultTaxRateId = $("#default_item_tax_rate").attr('value');
+                            } else {
+                                productDefaultTaxRateId = currentTaxRateId;
+                            }                            
                             var last_item_row = $('#item_table tbody:last');
                             last_item_row.find('input[name=item_name]').val(products[key].product_name);
                             last_item_row.find('textarea[name=item_description]').val(products[key].product_description);
                             last_item_row.find('input[name=item_price]').val(products[key].product_price);
                             last_item_row.find('input[name=item_quantity]').val('1');
-                            last_item_row.find('select[name=item_tax_rate_id]').val(products[key].tax_rate_id);
+                            last_item_row.find('select[name=item_tax_rate_id]').val(productDefaultTaxRateId);
                             //assign the modally selected entity product's id
                             //For relation purposes, remember product_id had to be changed to id
                             last_item_row.find('input[name=item_product_id]').val(products[key].id);
