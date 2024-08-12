@@ -53,7 +53,6 @@ class InvoiceAsset extends AssetBundle
         'rebuild/js/setting.js',
         'rebuild/js/emailtemplate.js',
         'rebuild/js/scripts.js',
-        'rebuild/js/client_custom_fields.js',
         'rebuild/js/mailer_ajax_email_addresses.js',
         'rebuild/js/modal-product-lookups.js',
         'rebuild/js/modal-task-lookups-inv.js',

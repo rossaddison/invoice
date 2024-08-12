@@ -241,7 +241,6 @@ final class ClientController
             'countries' => $countries->get_country_list($currentRoute->getArgument('_language') ?? 'en'),
             'customFields' => $cfR->repoTablequery('client_custom'),
             'customValues' => $cvR->attach_hard_coded_custom_field_values_to_custom_field($cfR->repoTablequery('client_custom')),
-            'cvH' => new CVH($sR),
             'clientCustomValues' => [],
             'clientCustomForm' => $clientCustomForm,
         ];
@@ -343,7 +342,6 @@ final class ClientController
                'countries' => $countries->get_country_list($currentRoute->getArgument('_language') ?? 'en'),
                'customFields' => $cfR->repoTablequery('client_custom'),
                'customValues' => $cvR->attach_hard_coded_custom_field_values_to_custom_field($cfR->repoTablequery('client_custom')),
-               'cvH' => new CVH($sR),
                'clientCustomValues' => $this->client_custom_values((string)$client_id, $ccR),
                'clientCustomForm' => $clientCustomForm 
             ];
@@ -658,71 +656,6 @@ final class ClientController
         return $canEdit;
     }
     
-    /**
-     * 
-     * @param FormHydrator $formHydrator
-     * @param ccR $ccR
-     * @param string $client_id
-     * @param array $body
-     * @return \Yiisoft\DataResponse\DataResponse
-     */
-    public function save_client_custom_fields(FormHydrator $formHydrator, ccR $ccR, string $client_id, array $body)
-                    : \Yiisoft\DataResponse\DataResponse
-    {  
-       $custom = (array)$body['custom'];
-       $custom_field_body = [            
-            'custom'=>$custom,            
-       ];
-       if (!($custom_field_body['custom']) == []) {
-            $db_array = [];
-            $values = [];
-             /**
-             * @var array $custom 
-             * @var string $custom['name']
-             */
-            foreach ($custom_field_body['custom'] as $custom) {
-                if (preg_match("/^(.*)\[\]$/i", $custom['name'], $matches)) {
-                    /** @var string $custom['value'] */
-                    $values[$matches[1]][] = $custom['value'];
-                } else {
-                    /** @var string $custom['value']  */
-                    $values[$custom['name']] = $custom['value'];
-                }
-            }            
-            foreach ($values as $key => $value) {
-                preg_match("/^custom\[(.*?)\](?:\[\]|)$/", $key, $matches);
-                if ($matches) {
-                    $db_array[$matches[1]] = $value;
-                }
-            }
-            /**
-             * @var string $value
-             */
-            foreach ($db_array as $key => $value){
-                $client_custom = [];
-                $client_custom['client_id']=$client_id;
-                $client_custom['custom_field_id']=$key;
-                $client_custom['value']=$value; 
-                $model = ($ccR->repoClientCustomCount($client_id,$key) == 1 ? $ccR->repoFormValuequery($client_id, $key) : new ClientCustom());
-                if (null!==$model) {
-                    $form = new ClientCustomForm($model);
-                    if ($formHydrator->populate($form, $client_custom) && $form->isValid()) {
-                        $this->clientCustomService->saveClientCustom($model, $client_custom);
-                    }
-                }    
-            }
-            $parameters = [
-                'success'=>1,
-                'clientid'=>$client_id,
-            ];
-            return $this->factory->createResponse(Json::encode($parameters)); 
-        } else {
-            $parameters = [
-                'success'=>0,
-            ];           
-            return $this->factory->createResponse(Json::encode($parameters)); 
-        }
-    }
     
     /**
      * 

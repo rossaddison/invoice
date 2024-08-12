@@ -319,11 +319,6 @@ return [
       ->middleware(Authentication::class)
       ->action([ClientController::class, 'save_client_note_new'])
       ->name('client/save_client_note_new'),
-      Route::methods([Method::GET, Method::POST], '/client/save_custom_fields')
-      ->middleware(fn(AccessChecker $checker) => $checker->withPermission('editInv'))
-      ->middleware(Authentication::class)
-      ->action([ClientController::class, 'save_custom_fields'])
-      ->name('client/save_custom_fields'),
       Route::methods([Method::GET, Method::POST], '/client/view/{id}[/page/{page:\d+}[/status/{status}]]')
       ->name('client/view')
       ->middleware(fn(AccessChecker $checker) => $checker->withPermission('editInv'))
