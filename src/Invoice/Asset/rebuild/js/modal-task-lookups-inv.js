@@ -54,16 +54,41 @@ $(function () {
                      cache: false,
                      dataType: 'json',
                      success: function(data){
-                        var tasks = parsedata(data);                        
+                        var tasks = parsedata(data);
+                        var taskDefaultTaxRateId = new Object(null);
+                        var currentTaxRateId = new Object(null);
                         for (var key in tasks) {
-                            // Set default tax rate id if empty
-                            if (!tasks[key].tax_rate_id) {tasks[key].tax_rate_id = $("#default_item_tax_rate").attr('value');}                            
+                            /**
+                             * @see resources\views\invoice\task\modal_task_lookups_inv.php
+                             * Only Completed Tasks (not in-progress Tasks) are only included on invoices and not quotes
+                             * @see App\Invoice\Entity\Task 
+                             * #[Column(type: 'integer(11)', nullable: false)]
+                             * private ?int $tax_rate_id = null;
+                             * Every task must have a tax rate id even if it represents a 0 percentage
+                             * Previously:
+                             * if (!tasks[key].tax_rate_id) {tasks[key].tax_rate_id = $("#default_item_tax_rate").attr('value');}                            
+                             * 
+                             * @see https://cwe.mitre.org/data/definitions/1321.html
+                             * Prevent 'prototype pollution' by setting  the prototype of the created object 
+                             * directly via the first argument passed to Object.create(). If we pass null, the
+                             * created object will not have a prototype and therefore cannot be polluted. i.e. new Object(null)
+                             * Courtesy of Snyk
+                             */
+                            currentTaxRateId = tasks[key].tax_rate_id;
+                            if (!currentTaxRateId) {
+                                taskDefaultTaxRateId = $("#default_item_tax_rate").attr('value');
+                            } else {
+                                taskDefaultTaxRateId = currentTaxRateId;
+                            }
+                            var last_item_row = $('#item_table tbody:last');                           
                             var last_item_row = $('#item_table tbody:last');
                             last_item_row.find('input[name=item_name]').val(tasks[key].name);
                             last_item_row.find('textarea[name=item_description]').val(tasks[key].description);
                             last_item_row.find('input[name=item_price]').val(tasks[key].price);
                             last_item_row.find('input[name=item_quantity]').val('1');
-                            last_item_row.find('select[name=item_tax_rate_id]').val(tasks[key].tax_rate_id);
+                            
+                            last_item_row.find('select[name=item_tax_rate_id]').val(taskDefaultTaxRateId);
+                            
                             last_item_row.find('input[name=item_task_id]').val(tasks[key].id);
                             btn.html('<h2 class="text-center"><i class="fa fa-check"></i></h2>');
                         }

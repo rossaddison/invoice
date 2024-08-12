@@ -45,17 +45,36 @@ $(function () {
                         var currentTaxRateId = new Object(null);
                         var products = parsedata(data);                        
                         for (var key in products) {
+                            /**
+                             * @see resources\views\invoice\product\modal_product_lookups_inv.php
+                             * @see resources\views\invoice\product\modal_product_lookups_quote.php
+                             * @see App\Invoice\Entity\Product 
+                             * #[Column(type: 'integer(11)', nullable: false)]
+                             * private ?int $tax_rate_id = null;
+                             * Every product must have a tax rate id even if it represents a 0 percentage
+                             * Previously:
+                             * if (!products[key].tax_rate_id) {products[key].tax_rate_id = $("#default_item_tax_rate").attr('value');}                            
+                             * 
+                             * @see https://cwe.mitre.org/data/definitions/1321.html
+                             * Prevent 'prototype pollution' by setting  the prototype of the created object 
+                             * directly via the first argument passed to Object.create(). If we pass null, the
+                             * created object will not have a prototype and therefore cannot be polluted. i.e. new Object(null)
+                             * Courtesy of Snyk
+                             */
                             currentTaxRateId = products[key].tax_rate_id;
                             if (!currentTaxRateId) {
                                 productDefaultTaxRateId = $("#default_item_tax_rate").attr('value');
                             } else {
                                 productDefaultTaxRateId = currentTaxRateId;
                             }        var last_item_row = $('#item_table tbody:last');
+                            
                             last_item_row.find('input[name=item_name]').val(products[key].product_name);
                             last_item_row.find('textarea[name=item_description]').val(products[key].product_description);
                             last_item_row.find('input[name=item_price]').val(products[key].product_price);
                             last_item_row.find('input[name=item_quantity]').val('1');
+                            
                             last_item_row.find('select[name=item_tax_rate_id]').val(productDefaultTaxRateId);
+                            
                             //assign the modally selected entity product's id
                             //For relation purposes, remember product_id had to be changed to id
                             last_item_row.find('input[name=item_product_id]').val(products[key].id);
