@@ -39,49 +39,49 @@ echo $alert;
 
 <ul id="settings-tabs" class="nav nav-tabs nav-tabs-noborder">
     <!-- https://getbootstrap.com/docs/5.0/components/navs-tabs/#using-data-attributes -->
-    <li class="active">
-        <button class="nav-link" data-bs-toggle="tab" data-bs-target="#settings-general" style="text-decoration: none"><?= $translator->translate('i.general'); ?> </button>
+    <li class="nav-item active" role="presentation" >
+        <button class="nav-link active" data-bs-toggle="tab" data-bs-target="#settings-general" style="text-decoration: none"><?= $translator->translate('i.general'); ?> </button>
     </li>
-    <li>
+    <li class="nav-item" role="presentation">
         <button class="nav-link" data-bs-toggle="tab" data-bs-target="#settings-invoices" style="text-decoration: none"><?= $translator->translate('i.invoices'); ?></button>
     </li>
-    <li>
+    <li class="nav-item" role="presentation">
         <button class="nav-link" data-bs-toggle="tab" data-bs-target="#settings-quotes" style="text-decoration: none"><?= $translator->translate('i.quotes'); ?></button>
     </li>
-    <li>
+    <li class="nav-item" role="presentation">
         <button class="nav-link" data-bs-toggle="tab" data-bs-target="#settings-client-purchase-orders" style="text-decoration: none"><?= $translator->translate('invoice.salesorders'); ?></button>
     </li>
-    <li>
+    <li class="nav-item" role="presentation">
         <button class="nav-link" data-bs-toggle="tab" data-bs-target="#settings-taxes" style="text-decoration: none"><?= $translator->translate('i.taxes'); ?></button>
     </li>
-    <li>
+    <li class="nav-item" role="presentation">
         <button class="nav-link" data-bs-toggle="tab" data-bs-target="#settings-email" style="text-decoration: none"><?= $translator->translate('i.email'); ?></button>
     </li>
-    <li>
+    <li class="nav-item" role="presentation">
         <button class="nav-link" data-bs-toggle="tab" data-bs-target="#settings-online-payment" style="text-decoration: none"><?= $translator->translate('g.online_payment'); ?></button>
     </li>
-    <li>
+    <li class="nav-item" role="presentation">
         <button class="nav-link" data-bs-toggle="tab" data-bs-target="#settings-projects-tasks" style="text-decoration: none"><?= $translator->translate('i.projects'); ?></button>
     </li>
-    <li>
+    <li class="nav-item" role="presentation">
         <button class="nav-link" data-bs-toggle="tab" data-bs-target="#settings-google-translate" style="text-decoration: none"><?= 'Google Translate' ?></button>
     </li>
-    <li>
+    <li class="nav-item" role="presentation">
         <button class="nav-link" data-bs-toggle="tab" data-bs-target="#settings-vat-registered" style="text-decoration: none"><?= $translator->translate('invoice.invoice.vat'); ?></button>
     </li>
-    <li>
+    <li class="nav-item" role="presentation">
         <button class="nav-link" data-bs-toggle="tab" data-bs-target="#settings-mpdf" style="text-decoration: none"><?= $translator->translate('invoice.invoice.mpdf'); ?></button>
     </li>
-    <li>
+    <li class="nav-item" role="presentation">
         <button class="nav-link" data-bs-toggle="tab" data-bs-target="#settings-peppol" style="text-decoration: none"><?= $translator->translate('invoice.invoice.peppol'); ?></button>
     </li>
-    <li>
+    <li class="nav-item" role="presentation">
         <button class="nav-link" data-bs-toggle="tab" data-bs-target="#settings-storecove" style="text-decoration: none"><?= $translator->translate('invoice.invoice.storecove'); ?></button>
     </li>
-    <li>
+    <li class="nav-item" role="presentation">
         <button class="nav-link" data-bs-toggle="tab" data-bs-target="#settings-invoiceplane" style="text-decoration: none"><?= $translator->translate('invoice.invoice.invoiceplane'); ?></button>
     </li>
-    <li>
+    <li class="nav-item" role="presentation">
         <button class="nav-link" data-bs-toggle="tab" data-bs-target="#settings-qrcode" style="text-decoration: none"><?= $translator->translate('invoice.invoice.qr.code'); ?></button>
     </li>
 </ul>
