@@ -18,6 +18,9 @@ echo  Modal::widget()
     ->withToggle(false)    
     ->withoutCloseButton()
     ->options([
+        /**
+         * @see resources\views\invoice\client\view.php <a href="#modal-add-quote" data-bs-toggle="modal"
+         */
         'id' => 'modal-add-'.$type,
         'aria-labelledby' => 'modal_add_'.$type,
         'aria-hidden' => 'true',
@@ -32,7 +35,10 @@ echo  Modal::widget()
     ->footer(Button::tag()
             ->addClass('btn btn-danger')
             ->content($translator->translate('i.close'))
-            ->addAttributes(['data-dismiss' => 'modal'])
+            /**
+             * @see Bootstrap 5  data-bs-dismiss    vs. Bootstrap 4 data-dismiss
+             */
+            ->addAttributes(['data-bs-dismiss' => 'modal'])
             ->render()) 
         
     /**

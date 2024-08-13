@@ -76,10 +76,10 @@
 
     <div class="headerbar-item pull-right">
         <div class="btn-group btn-group-sm">
-                <a href="#modal-add-quote" data-toggle="modal" class="btn btn-success" style="text-decoration:none">
+                <a href="#modal-add-quote" data-bs-toggle="modal" class="btn btn-success" style="text-decoration:none">
                     <i class="fa fa-file-text"></i><?= $translator->translate('i.create_quote'); ?>
                 </a>
-                <a href="#modal-add-inv" data-toggle="modal" class="btn btn-success"  style="text-decoration:none">
+                <a href="#modal-add-inv" data-bs-toggle="modal" class="btn btn-success"  style="text-decoration:none">
                    <i class="fa fa-file-text"></i><?= $translator->translate('i.create_invoice'); ?>
                 </a>
                 <?php if ($cpR->repoClientCount($clientId = (string)$client->getClient_id()) === 0 && strlen($clientId) > 0) { ?>
@@ -117,31 +117,30 @@
 </div>
 
 <ul id="submenu" class="nav nav-tabs nav-tabs-noborder">
-    <li class="active">
-        <a data-toggle="tab" href="#clientDetails"  style="text-decoration:none"><?= $translator->translate('i.details'); ?></a>
-    </li>
-    <li><a data-toggle="tab" href="#clientQuotes" style="text-decoration:none;background-color: lightgreen"><?= $translator->translate('i.quotes'); ?></a></li>
-    <li><a data-toggle="tab" href="#clientQuotesDraft" style="text-decoration:none"><?= $translator->translate('i.draft'); ?></a></li>
-    <li><a data-toggle="tab" href="#clientQuotesSent" style="text-decoration:none"><?= $translator->translate('i.sent'); ?></a></li>
-    <li><a data-toggle="tab" href="#clientQuotesViewed" style="text-decoration:none"><?= $translator->translate('i.viewed'); ?></a></li>
-    <li><a data-toggle="tab" href="#clientQuotesApproved" style="text-decoration:none"><?= $translator->translate('i.approved'); ?></a></li>
-    <li><a data-toggle="tab" href="#clientQuotesCancelled" style="text-decoration:none"><?= $translator->translate('i.canceled'); ?></a></li>
-    <li><a data-toggle="tab" href="#clientQuotesRejected" style="text-decoration:none"><?= $translator->translate('i.rejected'); ?></a></li>
-    <li><a data-toggle="tab" href="#clientInvoices" style="text-decoration:none;background-color: lightpink"><?= $translator->translate('i.invoices'); ?></a></li>
-    <li><a data-toggle="tab" href="#clientInvoicesDraft" style="text-decoration:none"><?= $translator->translate('i.draft'); ?></a></li>
-    <li><a data-toggle="tab" href="#clientInvoicesSent" style="text-decoration:none"><?= $translator->translate('i.sent'); ?></a></li>
-    <li><a data-toggle="tab" href="#clientInvoicesViewed" style="text-decoration:none"><?= $translator->translate('i.viewed'); ?></a></li>
-    <li><a data-toggle="tab" href="#clientInvoicesPaid" style="text-decoration:none"><?= $translator->translate('i.paid'); ?></a></li>
-    <li><a data-toggle="tab" href="#clientInvoicesOverdue" style="text-decoration:none"><?= $translator->translate('i.overdue'); ?></a></li>
-    <li><a data-toggle="tab" href="#clientInvoicesUnpaid" style="text-decoration:none"><?= $translator->translate('i.unpaid'); ?></a></li>
-    <li><a data-toggle="tab" href="#clientInvoicesReminderSent" style="text-decoration:none"><?= $translator->translate('i.reminder'); ?></a></li>
-    <li><a data-toggle="tab" href="#clientInvoicesSevenDay" style="text-decoration:none"><?= $translator->translate('i.letter'); ?></a></li>
-    <li><a data-toggle="tab" href="#clientInvoicesLegalClaim" style="text-decoration:none"><?= $translator->translate('i.claim'); ?></a></li>
-    <li><a data-toggle="tab" href="#clientInvoicesJudgement" style="text-decoration:none"><?= $translator->translate('i.judgement'); ?></a></li>
-    <li><a data-toggle="tab" href="#clientInvoicesOfficer" style="text-decoration:none"><?= $translator->translate('i.enforcement'); ?></a></li>
-    <li><a data-toggle="tab" href="#clientInvoicesCredit" style="text-decoration:none"><?= $translator->translate('i.credit_invoice_for_invoice'); ?></a></li>
-    <li><a data-toggle="tab" href="#clientInvoicesWrittenOff" style="text-decoration:none"><?= $translator->translate('i.loss'); ?></a></li>
-    <li><a data-toggle="tab" href="#clientPayments" style="text-decoration:none;background-color: lightblue"><?= $translator->translate('i.payments'); ?></a></li>
+    <!== https://getbootstrap.com/docs/5.0/components/navs-tabs/#using-data-attributes -->
+    <li class="active"><button class="nav-link" id="client-details-tab" data-bs-toggle="tab" data-bs-target="#clientDetails"  style="text-decoration:none"><?= $translator->translate('i.details'); ?></button></li>
+    <li><button class="nav-link" id="client-quotes-tab" data-bs-toggle="tab" data-bs-target="#clientQuotes" style="text-decoration:none;background-color: lightgreen"><?= $translator->translate('i.quotes'); ?></button></li>
+    <li><button class="nav-link" id="client-quotes-draft-tab" data-bs-toggle="tab" data-bs-target="#clientQuotesDraft" style="text-decoration:none"><?= $translator->translate('i.draft'); ?></button></li>
+    <li><button class="nav-link" id="client-quotes-sent-tab" data-bs-toggle="tab" data-bs-target="#clientQuotesSent" style="text-decoration:none"><?= $translator->translate('i.sent'); ?></button></li>
+    <li><button class="nav-link" id="client-quotes-viewed-tab" data-bs-toggle="tab" data-bs-target="#clientQuotesViewed" style="text-decoration:none"><?= $translator->translate('i.viewed'); ?></button></li>
+    <li><button class="nav-link" id="client-quotes-approved-tab" data-bs-toggle="tab" data-bs-target="#clientQuotesApproved" style="text-decoration:none"><?= $translator->translate('i.approved'); ?></button></li>
+    <li><button class="nav-link" id="client-quotes-cancelled-tab" data-bs-toggle="tab" data-bs-target="#clientQuotesCancelled" style="text-decoration:none"><?= $translator->translate('i.canceled'); ?></button></li>
+    <li><button class="nav-link" id="client-quotes-rejected-tab" data-bs-toggle="tab" data-bs-target="#clientQuotesRejected" style="text-decoration:none"><?= $translator->translate('i.rejected'); ?></button></li>
+    <li><button class="nav-link" id="client-invoices-tab" data-bs-toggle="tab" data-bs-target="#clientInvoices" style="text-decoration:none;background-color: lightpink"><?= $translator->translate('i.invoices'); ?></button></li>
+    <li><button class="nav-link" id="client-invoices-draft-tab" data-bs-toggle="tab" data-bs-target="#clientInvoicesDraft" style="text-decoration:none"><?= $translator->translate('i.draft'); ?></button></li>
+    <li><button class="nav-link" id="client-invoices-sent-tab" data-bs-toggle="tab" data-bs-target="#clientInvoicesSent" style="text-decoration:none"><?= $translator->translate('i.sent'); ?></button></li>
+    <li><button class="nav-link" id="client-invoices-viewed-tab" data-bs-toggle="tab" data-bs-target="#clientInvoicesViewed" style="text-decoration:none"><?= $translator->translate('i.viewed'); ?></button></li>
+    <li><button class="nav-link" id="client-invoices-paid-tab" data-bs-toggle="tab" data-bs-target="#clientInvoicesPaid" style="text-decoration:none"><?= $translator->translate('i.paid'); ?></button></li>
+    <li><button class="nav-link" id="client-invoices-overdue-tab" data-bs-toggle="tab" data-bs-target="#clientInvoicesOverdue" style="text-decoration:none"><?= $translator->translate('i.overdue'); ?></button></li>
+    <li><button class="nav-link" id="client-invoices-unpaid-tab" data-bs-toggle="tab" data-bs-target="#clientInvoicesUnpaid" style="text-decoration:none"><?= $translator->translate('i.unpaid'); ?></button></li>
+    <li><button class="nav-link" id="client-invoices-reminder-tab" data-bs-toggle="tab" data-bs-target="#clientInvoicesReminderSent" style="text-decoration:none"><?= $translator->translate('i.reminder'); ?></button></li>
+    <li><button class="nav-link" id="client-invoices-seven-day-tab" data-bs-toggle="tab" data-bs-target="#clientInvoicesSevenDay" style="text-decoration:none"><?= $translator->translate('i.letter'); ?></button></li>
+    <li><button class="nav-link" id="client-invoices-legal-claim-tab" data-bs-toggle="tab" data-bs-target="#clientInvoicesLegalClaim" style="text-decoration:none"><?= $translator->translate('i.claim'); ?></button></li>
+    <li><button class="nav-link" id="client-invoices-judgement-tab" data-bs-toggle="tab" data-bs-target="#clientInvoicesJudgement" style="text-decoration:none"><?= $translator->translate('i.judgement'); ?></button></li>
+    <li><button class="nav-link" id="client-invoices-officer-tab" data-bs-toggle="tab" data-bs-target="#clientInvoicesOfficer" style="text-decoration:none"><?= $translator->translate('i.enforcement'); ?></button></li>
+    <li><button class="nav-link" id="client-invoices-credit-tab" data-bs-toggle="tab" data-bs-target="#clientInvoicesCredit" style="text-decoration:none"><?= $translator->translate('i.credit_invoice_for_invoice'); ?></button></li>
+    <li><button class="nav-link" id="client-invoices-written-off-tab" data-bs-toggle="tab" data-bs-target="#clientInvoicesWrittenOff" style="text-decoration:none"><?= $translator->translate('i.loss'); ?></button></li>
+    <li><button class="nav-link" id="client-payments-tab" data-bs-toggle="tab" data-bs-target="#clientPayments" style="text-decoration:none;background-color: lightblue"><?= $translator->translate('i.payments'); ?></button></li>
 </ul>
 
 <div id="content" class="tabbable tabs-below no-padding">
@@ -445,91 +444,91 @@
 
         </div>
 
-        <div id="clientQuotes" class="tab-pane table-content">
+        <div id="clientQuotes" class="tab-pane table-content" role="tabpanel" aria-labelledby="client-quotes-tab">
             <?php echo $quote_table; ?>
         </div>
         
-        <div id="clientQuotesDraft" class="tab-pane table-content">
+        <div id="clientQuotesDraft" class="tab-pane table-content" role="tabpanel" aria-labelledby="client-quotes-draft-tab">
             <?php echo $quote_draft_table; ?>
         </div>
         
-        <div id="clientQuotesSent" class="tab-pane table-content">
+        <div id="clientQuotesSent" class="tab-pane table-content" role="tabpanel" aria-labelledby="client-quotes-sent-tab">
             <?php echo $quote_sent_table; ?>
         </div>
         
-        <div id="clientQuotesViewed" class="tab-pane table-content">
+        <div id="clientQuotesViewed" class="tab-pane table-content" role="tabpanel" aria-labelledby="client-quotes-viewed-tab">
             <?php echo $quote_viewed_table; ?>
         </div>
         
-        <div id="clientQuotesApproved" class="tab-pane table-content">
+        <div id="clientQuotesApproved" class="tab-pane table-content" role="tabpanel" aria-labelledby="client-quotes-approved-tab">
             <?php echo $quote_approved_table; ?>
         </div>
         
-        <div id="clientQuotesCancelled" class="tab-pane table-content">
+        <div id="clientQuotesCancelled" class="tab-pane table-content" role="tabpanel" aria-labelledby="client-quotes-cancelled-tab">
             <?php echo $quote_cancelled_table; ?>
         </div>
         
-        <div id="clientQuotesRejected" class="tab-pane table-content">
+        <div id="clientQuotesRejected" class="tab-pane table-content" role="tabpanel" aria-labelledby="client-quotes-rejected-tab">
             <?php echo $quote_rejected_table; ?>
         </div>
         
-        <div id="clientInvoices" class="tab-pane table-content">
+        <div id="clientInvoices" class="tab-pane table-content" role="tabpanel" aria-labelledby="client-invoices-tab">
             <?php echo $invoice_table; ?>
         </div>
         
-        <div id="clientInvoicesDraft" class="tab-pane table-content">
+        <div id="clientInvoicesDraft" class="tab-pane table-content" role="tabpanel" aria-labelledby="client-invoices-draft-tab">
             <?php echo $invoice_draft_table; ?>
         </div>
         
-        <div id="clientInvoicesSent" class="tab-pane table-content">
+        <div id="clientInvoicesSent" class="tab-pane table-content" role="tabpanel" aria-labelledby="client-invoices-sent-tab">
             <?php echo $invoice_sent_table; ?>
         </div>
         
-        <div id="clientInvoicesViewed" class="tab-pane table-content">
+        <div id="clientInvoicesViewed" class="tab-pane table-content" role="tabpanel" aria-labelledby="client-invoices-viewed-tab">
             <?php echo $invoice_viewed_table; ?>
         </div>
         
-        <div id="clientInvoicesPaid" class="tab-pane table-content">
+        <div id="clientInvoicesPaid" class="tab-pane table-content" role="tabpanel" aria-labelledby="client-invoices-paid-tab">
             <?php echo $invoice_paid_table; ?>
         </div>
         
-        <div id="clientInvoicesOverdue" class="tab-pane table-content">
+        <div id="clientInvoicesOverdue" class="tab-pane table-content" role="tabpanel" aria-labelledby="client-invoices-overdue-tab">
             <?php echo $invoice_overdue_table; ?>
         </div>
         
-        <div id="clientInvoicesUnpaid" class="tab-pane table-content">
+        <div id="clientInvoicesUnpaid" class="tab-pane table-content role="tabpanel" aria-labelledby="client-invoices-unpaid-tab"">
             <?php echo $invoice_unpaid_table; ?>
         </div>
         
-        <div id="clientInvoicesReminderSent" class="tab-pane table-content">
+        <div id="clientInvoicesReminderSent" class="tab-pane table-content" role="tabpanel" aria-labelledby="client-invoices-reminder-sent-tab">
             <?php echo $invoice_reminder_sent_table; ?>
         </div>
         
-        <div id="clientInvoicesSevenDay" class="tab-pane table-content">
+        <div id="clientInvoicesSevenDay" class="tab-pane table-content role="tabpanel" aria-labelledby="client-invoices-seven-day-tab"">
             <?php echo $invoice_seven_day_table; ?>
         </div>
         
-        <div id="clientInvoicesLegalClaim" class="tab-pane table-content">
+        <div id="clientInvoicesLegalClaim" class="tab-pane table-content" role="tabpanel" aria-labelledby="client-invoices-legal-claim-tab">
             <?php echo $invoice_legal_claim_table; ?>
         </div>
         
-        <div id="clientInvoicesJudgement" class="tab-pane table-content">
+        <div id="clientInvoicesJudgement" class="tab-pane table-content" role="tabpanel" aria-labelledby="client-invoices-judgement-tab">
             <?php echo $invoice_judgement_table; ?>
         </div>
         
-        <div id="clientInvoicesOfficer" class="tab-pane table-content">
+        <div id="clientInvoicesOfficer" class="tab-pane table-content" role="tabpanel" aria-labelledby="client-invoices-officer-tab">
             <?php echo $invoice_officer_table; ?>
         </div>
         
-        <div id="clientInvoicesCredit" class="tab-pane table-content">
+        <div id="clientInvoicesCredit" class="tab-pane table-content" role="tabpanel" aria-labelledby="client-invoices-credit-tab">
             <?php echo $invoice_credit_table; ?>
         </div>
         
-        <div id="clientInvoicesWrittenOff" class="tab-pane table-content">
+        <div id="clientInvoicesWrittenOff" class="tab-pane table-content" role="tabpanel" aria-labelledby="client-invoices-written-off-tab">
             <?php echo $invoice_written_off_table; ?>
         </div>
         
-        <div id="clientPayments" class="tab-pane table-content">
+        <div id="clientPayments" class="tab-pane table-content" role="tabpanel" aria-labelledby="client-payments-tab">
             <?php echo $payment_table; ?>
         </div>
     </div>

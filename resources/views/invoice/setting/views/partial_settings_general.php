@@ -17,14 +17,14 @@
      * @var DateTime $current_date
      */
 ?>
-<?= Html::openTag('div', ['class' => 'row']); ?>
+<div class = 'row'>
     <div class="col-xs-12 col-md-8 col-md-offset-2">
         <div class="panel panel-default">
             <div class="panel-heading">
                 <?= $translator->translate('i.general'); ?>
             </div>
             <div class="panel-body">
-                <?= Html::openTag('div', ['class' => 'row']); ?>
+                <div class = 'row'>
                     <div class="col-xs-12 col-md-6">
                         <div class="form-group">
                             <label for="settings[install_test_data]" <?= $s->where('install_test_data'); ?>>

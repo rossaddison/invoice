@@ -33,15 +33,20 @@ class InvoiceAsset extends AssetBundle
         'rebuild/css/form.css',
     ];
 
-    public array $js = [  
-        // Upgraded from 3.6.0 to 3.7.1 on 2024/06/15
-        //'rebuild/js/jquery-3.7.1.min.js',
-        // no cdn: link directly to the newest jquery beta https://blog.jquery.com/2024/02/06/jquery-4-0-0-beta/
-        '//code.jquery.com/jquery-4.0.0-beta.min.js',
+    public array $js = [
+        /**
+         * As of 13/08/2024:
+         * Modals use the following file which is available in unminified form
+         * @see e.g. https:\\code.jquery.com/jquery-3.7.1.js
+         * Modals use the following file which is available in minified form
+         * @see e.g. https:\\code.jquery.com/jquery-3.7.1-min.js 
+         */ 
         
-        //modals use the following file which is available in unminified form
-        // e.g. the settings tabs with general, invoice, quote etc depend on this file
-        'rebuild/js/dependencies.min.js',
+        // e.g. the settings tabs with general, invoice, quote etc depend on this file and also
+        // the create quote and create invoice buttons on the client view
+        // Renamed the dependencies.js file to a more specific name and load with lastest using
+        // https:\\code.jquery.com/{latest file} which is below:        
+        'rebuild/js/jquery-4.0.0-beta.2.min.js',
         
         //'//cdn.jsdelivr.net/npm/select2@4.1.0-beta.1/dist/js/select2.min.js',
         'rebuild/js/select2.min.js',        
