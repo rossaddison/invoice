@@ -37,9 +37,9 @@ class InvoiceAsset extends AssetBundle
         /**
          * As of 13/08/2024:
          * Modals use the following file which is available in unminified form
-         * @see e.g. https:\\code.jquery.com/jquery-3.7.1.js
+         * @see e.g. https:\\code.jquery.com/jquery-4.0.0-beta.2.min.js
          * Modals use the following file which is available in minified form
-         * @see e.g. https:\\code.jquery.com/jquery-3.7.1-min.js 
+         * @see e.g. https:\\code.jquery.com/jquery-4.0.0-beta.2.min.js 
          */ 
         
         // e.g. the settings tabs with general, invoice, quote etc depend on this file and also
