@@ -226,9 +226,9 @@ $(function () {
     }
 
     function update_email_template_preview() {
-        html = new Object(null);
         html = $('.email-template-body').val();
-        $('#email-template-preview').contents().find("body").html(html).freeze().seal();
+        body = $('#email-template-preview').contents().find("body");
+        body.html(html);
     }
 
     // Insert HTML tags into textarea

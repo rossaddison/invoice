@@ -707,5 +707,5 @@ $this->beginPage();
 echo Html::script($javascriptJqueryDateHelper)->type('module');
 ?>
 <?php
-$this->endPage();
+    $this->endPage();
 ?>

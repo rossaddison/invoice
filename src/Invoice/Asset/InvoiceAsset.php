@@ -66,6 +66,6 @@ class InvoiceAsset extends AssetBundle
         
         // bootstrap lightbox
         '//cdn.jsdelivr.net/npm/bs5-lightbox@1.8.3/dist/index.bundle.min.js',        
-        '//cdn.jsdelivr.net/npm/clipboard@2.0.11/dist/clipboard.min.js',
+        '//cdn.jsdelivr.net/npm/clipboard@2.0.11/dist/clipboard.min.js',      
     ];
 }

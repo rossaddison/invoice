@@ -377,19 +377,6 @@ $(function () {
     }
     });
 
-    var fixHelper = function (e, tr) {
-    var $originals = tr.children();
-    var $helper = tr.clone();
-    $helper.children().each(function (index) {
-        $(this).width($originals.eq(index).width());
-    });
-    return $helper;
-    };
-    $('#item_table').sortable({
-    helper: fixHelper,
-    items: 'tbody'
-    });  
-
     $('#datepicker').on('focus', function () {
             $(this).datepicker({               
                 changeMonth: true,
@@ -414,7 +401,7 @@ $(function () {
     window.lastTaggableClicked = this;
     });
     
-    $('[data-toggle="tooltip"]').tooltip();
+    $('[data-bs-toggle="tooltip"]').tooltip();
 
     // Template Tag handling
     $('.tag-select').select2().on('change', function (event) {

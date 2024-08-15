@@ -152,7 +152,7 @@ final class LayoutViewInjection implements LayoutParametersInjectionInterface
             'companyLogoWidth' => $companyLogoWidth ?? '',
             'companyLogoHeight' => $companyLogoHeight ?? '',
             'companyLogoMargin' => $companyLogoMargin ?? '',
-            'javascriptJqueryDateHelper' => $javascriptJqueryDateHelper    
+            'javascriptJqueryDateHelper' => $javascriptJqueryDateHelper
         ];
     }    
 }
