@@ -107,7 +107,7 @@ final class Button
     public static function inactiveWithAddUserAccount(UrlGenerator $generator, Translator $translator) : string {
         return Span::tag()
                 ->content(
-                    Html::a('', $generator->generate('userinv/add'),
+                    Html::a('', $generator->generate('userinv/index'),
                         [
                             'class' => 'fa fa-plus',
                             'style' => 'text-decoration:none',

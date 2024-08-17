@@ -215,6 +215,33 @@ final class UserClientRepository extends Select\Repository
     }
     
     /**
+     * @param CR $cR
+     *
+     * @return (int|null)[]
+     *
+     * @psalm-return array<int<0, max>, int|null>
+     */
+    public function get_not_assigned_to_any_user(CR $cR) : array
+    {
+        // Get all existing clients including non-active ones
+        $all_clients = $cR->findAllPreloaded();
+        $unassigned_client_ids = [];
+        /** @var Client $client */
+        foreach ($all_clients as $client) {
+            $client_id = $client->getClient_id();
+            // Exclude clients, that already have user accounts, from the dropdown box
+            // if the client id does not appear in the user client table as a client
+            // => this client has not been already assigned therefore it can be made available
+            if (!$this->repoUserquerycount((string)$client_id) > 0) {
+               $unassigned_client_ids[] = $client_id;
+            }   
+        }
+        return $unassigned_client_ids;
+    }
+    
+    
+    
+    /**
      * 
      * @param UIR $uiR
      * @param CR $cR

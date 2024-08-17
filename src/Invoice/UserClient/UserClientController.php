@@ -62,7 +62,8 @@ final class UserClientController
      */
     public function index(UserClientRepository $userclientRepository) : \Yiisoft\DataResponse\DataResponse
     {      
-        $canEdit = $this->rbac();$parameters = [
+        $canEdit = $this->rbac();
+        $parameters = [
           'canEdit' => $canEdit,
           'userclients' => $this->userclients($userclientRepository),
           'alert'=> $this->alert(),

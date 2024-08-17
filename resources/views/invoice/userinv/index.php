@@ -7,8 +7,11 @@ use Yiisoft\Html\Html;
 use Yiisoft\Html\Tag\A;
 use Yiisoft\Html\Tag\Div;
 use Yiisoft\Html\Tag\Form;
+use Yiisoft\Html\Tag\H4;
 use Yiisoft\Html\Tag\H5;
 use Yiisoft\Html\Tag\I;
+use Yiisoft\Html\Tag\Td;
+use Yiisoft\Html\Tag\Th;
 use Yiisoft\Yii\DataView\Column\DataColumn;
 use Yiisoft\Yii\DataView\GridView;
 use Yiisoft\Yii\DataView\OffsetPagination;
@@ -16,6 +19,7 @@ use Yiisoft\Yii\DataView\UrlConfig;
 use Yiisoft\Yii\DataView\YiiRouter\UrlCreator;
 
 /**
+ * @var App\Invoice\Client\ClientRepository $cR
  * @var App\Invoice\Setting\SettingRepository $s
  * @var App\Invoice\UserClient\UserClientRepository $ucR
  * @var App\Widget\PageSizeLimiter $pageSizeLimiter
@@ -59,6 +63,40 @@ echo $alert
 ?>
 <br>
 <div>
+<?php
+    echo A::tag()->content(H4::tag()->content($translator->translate('invoice.client.has.not.assigned')))->href($urlGenerator->generate('client/index'))->render(); 
+    echo '<table class="table table-responsive">';
+    echo '<thead>';
+    echo '<tr><th scope="row">'. $translator->translate('i.client_name').' '.
+                                 $translator->translate('i.client_surname'). 
+         '</th><th scope="row">'. $translator->translate('i.phone').'</th>'.   
+         '<th scope="row">'. $translator->translate('i.email_address').'</th></tr>';
+    echo '</thead>';
+    echo '<tbody>';    
+?> 
+<?php 
+    $unAssignedClientIds = $ucR->get_not_assigned_to_any_user($cR);      
+    foreach ($unAssignedClientIds as $clientId) {
+         echo '<tr>';
+        $client = $cR->repoClientquery((string)$clientId);
+        echo Td::tag()
+        ->content($client->getClient_full_name())
+        ->render();
+        echo Td::tag()
+        ->content($client->getClient_phone() ?? '')
+        ->render();
+        echo Td::tag()
+        ->content($client->getClient_email())
+        ->render();
+        echo '</tr>';
+    }
+    echo '</tbody>';
+    echo '</table>';
+    echo '<br>'
+?>    
+    
+</div>    
+<div>
     <h5><?= $translator->translate('i.users'); ?></h5>
     <div class="btn-group index-options">
         <a href="<?= $urlGenerator->generate('userinv/index',['page'=>1, 'active'=>2]); ?>"
@@ -84,7 +122,6 @@ echo $alert
     </div>
 </div>
 <br>
-
 <div id="content" class="table-content">  
 <div class="card shadow">
 <?php 

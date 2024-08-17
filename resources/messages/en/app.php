@@ -874,11 +874,12 @@ return [
     'invoice.client.group' => 'Client Group',
     'invoice.client.import.list.blank' => 'Client Import List Blank',
     'invoice.client.has.user.account' => 'User Account',
-    'invoice.client.has.not.user.account' => 'This client does not have a user account. '."\r\n"
-      .' 1. Ensure Client is Signed up. '."\r\n"
-      .' 2. Settings ... User Account ... Add a User Account'."\r\n"
+    'invoice.client.has.not.assigned' => 'These clients have not been assigned to a user account. One or more clients per user account.',
+    'invoice.client.has.not.user.account' => 'This client does not have a user account or is not currently assigned to a user. '."\r\n"
+      .' 1. Ensure Client is Signed up i.e has a user account or assign this client to a user currently registered. '."\r\n"
+      .' 2. Settings ... Invoice User Account ... Add a User Account'."\r\n"
       .' 3. Assign this client to the user account' ."\r\n"
-      .' 4. Invoices and Quotes will not be able to be created for this Client',
+      .' 4. Invoices and Quotes will not be able to be created for this Client in this current state.',
     'invoice.client.note' => 'Client Note',
     'invoice.client.notes' => 'Client Notes',
     'invoice.client.note.date' => 'Client Date',  

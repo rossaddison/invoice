@@ -98,11 +98,28 @@
                    class="btn btn-danger" style="text-decoration:none">
                     <i class="fa fa-edit"></i><?= $translator->translate('i.edit'); ?>
                 </a>
-                <a href="<?= null!==($clientIdPostalAdd = $client->getClient_id()) ? $urlGenerator->generate('postaladdress/add', ['client_id' => $clientIdPostalAdd]) : ''; ?>"
+                <a href="<?= null!==($clientIdPostalAdd = $client->getClient_id()) ? 
+                            $urlGenerator->generate('postaladdress/add',
+                            // Argument parameters        
+                            ['client_id' => $clientIdPostalAdd],
+                            // Query parameters used to generate return url        
+                            [
+                                /**
+                                 * @see Yiisoft\Router\UrlGeneratorInterface function generate $queryParameters
+                                 * Purpose: Use origin and origin_id to generate return url to client view after user has 
+                                 * created the new postal address for the client 
+                                 * e.g  {origin}/view, ['client_id' => {origin_id}],
+                                 */
+                                'origin' => 'client',
+                                'origin_id' => $clientIdPostalAdd,
+                                
+                                'action' => 'add']) : ''; ?>"
                    class="btn btn-primary" style="text-decoration:none">
                     <i class="fa fa-plus"></i><?= $translator->translate('invoice.client.postaladdress.add'); ?>
                 </a>
-                <a href="<?= null!==($clientIdDelAdd = $client->getClient_id()) ? $urlGenerator->generate('del/add',['client_id' => $clientIdDelAdd], ['origin' => 'client', 'origin_id' => $clientIdDelAdd, 'action' => 'view']) : ''; ?>"
+                <a href="<?= null!==($clientIdDelAdd = $client->getClient_id()) ? $urlGenerator->generate('del/add',
+                            ['client_id' => $clientIdDelAdd], 
+                            ['origin' => 'client', 'origin_id' => $clientIdDelAdd, 'action' => 'view']) : ''; ?>"
                    class="btn btn-success" style="text-decoration:none">
                    <i class="fa fa-plus fa-margin"></i><?= $translator->translate('invoice.invoice.delivery.location.add'); ?>
                 </a>
@@ -548,7 +565,7 @@
      * @see ClientController/view function 'client_modal_layout_quote' => [ .... ]
      * @see views\invoice\quote\modal_layout.php
      * @see views\invoice\quote\modal_add_quote_form.php contained in above file.
-     * Note: 'action' is equivalent to $urlGenerator->generate('quote/add', ['origin' => $client->getClient_id() or 'quote' or 'main'])
+     * Note: 'action' is equivalent to $urlGenerator->generate('quote/add', [], ['origin' => $client->getClient_id() or 'quote' or 'main'])
      * Note: If origin is a client number, quote/add/{origin} route will return to url client/view/{origin}
      * Note: If origin is 'quote', quote/add/{origin} route will return to url quote/index
      * Note: If origin is 'main', quote/add/{origin} route will return to url invoice/

@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace App\Invoice\UserInv;
 
+use App\Invoice\Client\ClientRepository as cR;
 use App\Invoice\Entity\UserInv;
 use App\Invoice\Helpers\CountryHelper;
 use App\Invoice\Setting\SettingRepository;
@@ -199,6 +200,7 @@ final class UserInvController
     // using Setting...Invoice User Account
     
     /**
+     * @param cR $cR
      * @param uiR $uiR
      * @param UserClientRepository $ucR
      * @param SettingRepository $sR
@@ -210,7 +212,7 @@ final class UserInvController
      * @param string $queryFilterUser
      * @return \Yiisoft\DataResponse\DataResponse
      */
-    public function index(uiR $uiR, UserClientRepository $ucR, SettingRepository $sR, 
+    public function index(cR $cR, uiR $uiR, UserClientRepository $ucR, SettingRepository $sR, 
         #[RouteArgument('_language')] string $_language, 
         #[RouteArgument('page')] string $page = '1',
         #[RouteArgument('active')] string $active = '2',
@@ -237,6 +239,7 @@ final class UserInvController
         ->withCurrentPage((int)$pageString)               
         ->withToken(PageToken::next($pageString));   
         $parameters = [
+            'cR' => $cR,
             'uiR' => $uiR, 
             // get a count of clients allocated to the user
             'ucR' => $ucR,  
