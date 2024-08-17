@@ -376,6 +376,27 @@ final class EmailTemplateController
      * @param CurrentRoute $currentRoute
      * @param EmailTemplateRepository $emailtemplateRepository
      */
+    public function preview(CurrentRoute $currentRoute, EmailTemplateRepository $emailtemplateRepository): Response {
+        $email_template = $this->emailtemplate($currentRoute, $emailtemplateRepository);
+        if ($email_template) {
+            $form = new EmailTemplateForm($email_template);
+            $parameters = [
+                'title' => $this->translator->translate('i.preview'),
+                'actionName' => 'emailtemplate/preview', 
+                'actionArguments' => ['email_template_id' => $email_template->getEmail_template_id()],
+                'errors' => [],
+                'emailtemplate'=> $email_template,
+                'form' => $form,
+            ];
+            return $this->viewRenderer->render('_pre_view', $parameters); 
+        }
+        return $this->webService->getRedirectResponse('emailtemplate/index');
+    }
+    
+    /**
+     * @param CurrentRoute $currentRoute
+     * @param EmailTemplateRepository $emailtemplateRepository
+     */
     public function view(CurrentRoute $currentRoute, EmailTemplateRepository $emailtemplateRepository): Response {
         $email_template = $this->emailtemplate($currentRoute, $emailtemplateRepository);
         if ($email_template) {
@@ -386,10 +407,7 @@ final class EmailTemplateController
                 'actionArguments' => ['email_template_id' => $email_template->getEmail_template_id()],
                 'errors' => [],
                 'emailtemplate'=> $email_template,
-                'form' => $form,
-                'aliases'=> new Aliases([
-                    '@invoice' => dirname(__DIR__), 
-                    '@language' => dirname(__DIR__). DIRECTORY_SEPARATOR.'Language']),
+                'form' => $form
             ];
             return $this->viewRenderer->render('_view', $parameters); 
         }

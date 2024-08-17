@@ -91,11 +91,7 @@ $(function () {
         
         $('#btn-submit').click(function () {
             $('#form-settings').submit();
-        });
-        
-        $(document).ajaxComplete(function () {
-            $('[name="_csrf"]').val(Cookies.get('_csrf'));
-        });
+        });              
 
         // Correct the height of the content area
         var $content = $('#content'),
@@ -109,17 +105,6 @@ $(function () {
         if ($content.outerHeight() < contentHeight) {
             $content.outerHeight(contentHeight);
         }
-
-        // Dropdown Datepicker fix
-        $html.click(function () {
-            $('.dropdown-menu:visible').not('.datepicker').removeAttr('style');
-        });
-
-        // Tooltips
-        $('[data-toggle="tooltip"]').tooltip();    
-
-        // Enable clipboard toggles
-        var clipboards = new ClipboardJS('.to-clipboard');
 
         // Keep track of the last "taggable" input/textarea
         $('.taggable').on('focus', function () {
@@ -146,22 +131,7 @@ $(function () {
             var tag_type = $(this).data('tagType');
             var body_id = $('.email-template-body').attr('id');
             insert_html_tag(tag_type, body_id);
-        });
-
-        // Email Template Preview handling
-        var email_template_body_id = $('.email-template-body').attr('id');
-
-        if ($('#email_template_preview').empty()) {
-            update_email_template_preview();
-        }
-
-        $(email_template_body_id).bind('input propertychange', function () {
-            update_email_template_preview();
-        });
-
-        $('#email-template-preview-reload').click(function () {
-            update_email_template_preview();
-        });
+        });       
 
         var password_input = $('.passwordmeter-input');
         if (password_input) {
@@ -223,12 +193,6 @@ $(function () {
             }
             txtarea.scrollTop = scrollPos;
         }    
-    }
-
-    function update_email_template_preview() {
-        html = $('.email-template-body').val();
-        body = $('#email-template-preview').contents().find("body");
-        body.html(html);
     }
 
     // Insert HTML tags into textarea

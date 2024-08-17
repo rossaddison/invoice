@@ -621,6 +621,11 @@ return [
       ->middleware(fn(AccessChecker $checker) => $checker->withPermission('editInv'))
       ->middleware(Authentication::class)
       ->action([EmailTemplateController::class, 'get_content']),
+      Route::methods([Method::GET, Method::POST], '/emailtemplate/preview/{email_template_id}')
+      ->name('emailtemplate/preview')
+      ->middleware(fn(AccessChecker $checker) => $checker->withPermission('editInv'))
+      ->middleware(Authentication::class)
+      ->action([EmailTemplateController::class, 'preview']),      
       Route::methods([Method::GET, Method::POST], '/emailtemplate/view/{email_template_id}')
       ->name('emailtemplate/view')
       ->middleware(fn(AccessChecker $checker) => $checker->withPermission('editInv'))

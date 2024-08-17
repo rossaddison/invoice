@@ -21,9 +21,9 @@ final class EmailTemplateForm extends FormModel
     private ?string $email_template_from_name = null;
     #[Required]
     private ?string $email_template_from_email = null;
-    #[Required]
+    
     private ?string $email_template_cc = null;
-    #[Required]
+    
     private ?string $email_template_bcc = null;
     #[Required]
     private ?string $email_template_pdf_template = null;

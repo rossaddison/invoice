@@ -4,6 +4,7 @@
       
    use App\Widget\OffsetPagination;
    use Yiisoft\Html\Html;
+   use Yiisoft\Html\Tag\A;
    
    /**
     * @var Yiisoft\Data\Paginator\OffsetPaginator $paginator
@@ -46,6 +47,7 @@
         <tr>
             <th><?= $translator->translate('i.title'); ?></th>
             <th><?= $translator->translate('i.type'); ?></th>
+            <th><?= Html::openTag('h5'); ?><?= $translator->translate('i.preview'); ?><?= Html::closeTag('h5'); ?></th>
             <th><?= $translator->translate('i.options'); ?></th>
         </tr>
         </thead>
@@ -58,24 +60,44 @@
             <tr>
                 <td><?= Html::encode($email_template->getEmail_template_title()); ?></td>
                 <td><?= ucfirst($email_template->getEmail_template_type() ?? 'invoice'); ?></td>
+                <td><?= A::tag()
+                        ->href($urlGenerator->generate('emailtemplate/preview',
+                                ['email_template_id' => $email_template->getEmail_template_id()]
+                               )
+                            )
+                        ->content('🖼️');    
+                    ?>
+                </td>
                 <td>
-                    <div class="options btn-group">
-                        <a class="btn btn-default btn-sm dropdown-toggle" data-toggle="dropdown" href="#"><i
-                                    class="fa fa-cog"></i> <?= $translator->translate('i.options'); ?></a>
+                    <?php
+                        /**
+                         * @see https://getbootstrap.com/docs/5.3/components/dropdowns/
+                         */
+                    ?>
+                    <div class="btn-group">
+                        <button type="button" class="btn btn-success dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
+                             <i class="fa fa-cog"></i>               
+                        </button>
                         <ul class="dropdown-menu">
                             <li>
-                                <a href="<?= $urlGenerator->generate('emailtemplate/view',['email_template_id' => $email_template->getEmail_template_id()]); ?>" style="text-decoration: none ">
-                                    <i class="fa fa-eye fa-margin"></i><?= $translator->translate('i.view'); ?>
+                                <a class="dropdown-item" href="
+                                    <?= $urlGenerator->generate('emailtemplate/view',
+                                            ['email_template_id' => $email_template->getEmail_template_id()]); ?>" style="text-decoration: none ">
+                                            <i class="fa fa-eye fa-margin"></i><?= $translator->translate('i.view'); ?>
                                 </a>
                             </li>
                             <li>
-                                <a href="<?= $urlGenerator->generate('emailtemplate/edit'.($email_template->getEmail_template_type() == 'Invoice' ? '_invoice' : '_quote'),['email_template_id'=>$email_template->getEmail_template_id()]); ?>" style="text-decoration: none ">
-                                    <i class="fa fa-edit fa-margin"></i><?= $translator->translate('i.edit'); ?>
+                                <a class="dropdown-item" href="
+                                    <?= $urlGenerator->generate('emailtemplate/edit'.($email_template->getEmail_template_type() == 'Invoice' ? '_invoice' : '_quote'),
+                                            ['email_template_id'=>$email_template->getEmail_template_id()]); ?>" style="text-decoration: none ">
+                                            <i class="fa fa-edit fa-margin"></i><?= $translator->translate('i.edit'); ?>
                                 </a>
                             </li>
                             <li>
-                                <a href="<?= $urlGenerator->generate('emailtemplate/delete',['email_template_id' => $email_template->getEmail_template_id()]); ?>" style="text-decoration: none ">
-                                    <i class="fa fa-trash fa-margin"></i><?= $translator->translate('i.delete'); ?>
+                                <a class="dropdown-item" href="
+                                    <?= $urlGenerator->generate('emailtemplate/delete',
+                                            ['email_template_id' => $email_template->getEmail_template_id()]); ?>" style="text-decoration: none ">
+                                            <i class="fa fa-trash fa-margin"></i><?= $translator->translate('i.delete'); ?>
                                 </a>
                             </li>
                         </ul>

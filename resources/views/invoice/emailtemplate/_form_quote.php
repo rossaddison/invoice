@@ -298,21 +298,12 @@ use Yiisoft\Html\Tag\Span;
             ->value($form->getEmail_template_body() ?? '')   
             ->hint($translator->translate('invoice.hint.this.field.is.required')); ?>
     <?= Html::closeTag('div'); ?>
-    <?= Html::openTag('div', ['class' => 'panel panel-default']); ?>
-        <?= Html::openTag('div', ['class' => 'panel-heading']); ?>
-            <?= $translator->translate('i.preview'); ?>
-            <?= Span::tag()
-                ->addClass('pull-right cursor-pointer')
-                ->addAttributes(['id' => 'email-template-preview-reload'])
-                ->content(I::tag()->addClass('fa fa-refresh'))
-                ->render();
-            ?>
-        <?= Html::closeTag('div'); ?>
-        <?= Html::openTag('div', ['class' => 'panel panel-body']); ?>
-            <?= Html::openTag('iframe', ['id' => 'email-template-preview']); ?>
-            <?= Html::closeTag('iframe'); ?>
-        <?= Html::closeTag('div'); ?>
-    <?= Html::closeTag('div'); ?>
+    <?php
+        /**
+         * Templates can be viewed from the Email Template index i.e. preview
+         * @see https://github.com/rossaddison/invoice/issues/12
+         */
+    ?>
     <?= Html::openTag('div', ['class' => 'mb-3 form-group']); ?>
        <?=
             $email_template_tags;
