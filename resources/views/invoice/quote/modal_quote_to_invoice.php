@@ -4,7 +4,7 @@ declare(strict_types=1);
 use Yiisoft\Html\Html;
 
 /**
- * @see id="quote-to-invoice" triggered by <a href="#quote-to-invoice" data-toggle="modal"  style="text-decoration:none">
+ * @see id="quote-to-invoice" triggered by <a href="#quote-to-invoice" data-bs-toggle="modal"  style="text-decoration:none">
  * @see views/quote/view.php
  * @var App\Invoice\Entity\Quote $quote
  * @var App\Invoice\Setting\SettingRepository $s

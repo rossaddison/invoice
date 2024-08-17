@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 /**
  * @see InvController function view_modal_delete_inv
- * @see inv/view.php id="delete-inv" triggered by <a href="#delete-inv" data-toggle="modal"  style="text-decoration:none">
+ * @see inv/view.php id="delete-inv" triggered by <a href="#delete-inv" data-bs-toggle="modal"  style="text-decoration:none">
  * @var Yiisoft\Router\UrlGeneratorInterface $urlGenerator
  * @var Yiisoft\Translator\TranslatorInterface $translator
  * @var string $actionName

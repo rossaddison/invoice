@@ -73,7 +73,7 @@ $vat = $s->get_setting('enable_vat_registration');
     </h1>
         <div class="headerbar-item pull-right">
         <div class="options btn-group">
-            <a class="btn btn-default" data-toggle="dropdown" href="#">
+            <a class="btn btn-default" data-bs-toggle="dropdown" href="#">
                 <i class="fa fa-chevron-down"></i><?= $translator->translate('i.options'); ?>
             </a>
             <ul class="dropdown-menu dropdown-menu-right">
@@ -87,7 +87,7 @@ $vat = $s->get_setting('enable_vat_registration');
                 </li>
                 <?php } ?>
                 <li>
-                    <a href="#so-to-pdf"  data-toggle="modal" style="text-decoration:none">
+                    <a href="#so-to-pdf"  data-bs-toggle="modal" style="text-decoration:none">
                         <i class="fa fa-print fa-margin"></i>
                         <?= $translator->translate('i.download_pdf'); ?>
                     </a>
@@ -99,7 +99,7 @@ $vat = $s->get_setting('enable_vat_registration');
                 if (null!==$so->getInv_id() || (in_array($so->getStatus_id(),[1,2,3,4,5]))) {} else {?> 
                     <?php if ($invEdit) { ?> 
                         <li>
-                            <a href="#so-to-invoice" data-toggle="modal"  style="text-decoration:none">
+                            <a href="#so-to-invoice" data-bs-toggle="modal"  style="text-decoration:none">
                                 <i class="fa fa-refresh fa-margin"></i>
                                 <?= $translator->translate('invoice.salesorder.to.invoice'); ?>
                             </a>

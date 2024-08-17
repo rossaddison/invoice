@@ -86,7 +86,7 @@ use Yiisoft\Html\Html;
                                 <td><?= Html::encode($custom_value->getValue()); ?></td>
                                 <td>
                                     <div class="options btn-group">
-                                        <a class="btn btn-default btn-sm dropdown-toggle" data-toggle="dropdown"
+                                        <a class="btn btn-default btn-sm dropdown-toggle" data-bs-toggle="dropdown"
                                            href="#">
                                             <i class="fa fa-cog"></i> <?= $translator->translate('i.options'); ?>
                                         </a>

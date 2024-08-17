@@ -135,7 +135,7 @@
 
                 <td>
                     <div class="options btn-group<?= $dropup ? ' dropup' : ''; ?>">
-                        <a class="btn btn-default btn-sm dropdown-toggle" data-toggle="dropdown" href="#" style="text-decoration:none">
+                        <a class="btn btn-default btn-sm dropdown-toggle" data-bs-toggle="dropdown" href="#" style="text-decoration:none">
                             <i class="fa fa-cog"></i> <?= $translator->translate('i.options'); ?>
                         </a>
                         <ul class="dropdown-menu">

@@ -59,7 +59,7 @@ $vat = $s->get_setting('enable_vat_registration');
                 <?php 
                     if (in_array($quote->getStatus_id(), array(2, 3, 5)) && $quote->getSo_id() === '0') : ?>
                     <?= $modal_purchase_order_number; ?>
-                    <a href="#purchase-order-number" data-toggle="modal" 
+                    <a href="#purchase-order-number" data-bs-toggle="modal" 
                        class="btn btn-warning">
                         <i class="fa fa-check"></i><?= $translator->translate('invoice.quote.approve'); ?>
                     </a>

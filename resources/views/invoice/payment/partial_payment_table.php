@@ -65,7 +65,7 @@ use Yiisoft\Html\Html;
                 <td><?= Html::encode($payment->getNote() ?: ''); ?></td>
                 <td>
                     <div class="options btn-group">
-                        <a class="btn btn-default btn-sm dropdown-toggle" data-toggle="dropdown" href="#">
+                        <a class="btn btn-default btn-sm dropdown-toggle" data-bs-toggle="dropdown" href="#">
                             <i class="fa fa-cog"></i> <?= $translator->translate('i.options'); ?>
                         </a>
                         <ul class="dropdown-menu">

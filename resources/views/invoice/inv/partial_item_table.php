@@ -293,7 +293,7 @@ $vat = $s->get_setting('enable_vat_registration');
                                         */
                                        foreach ($productImages as $productImage) { ?>
                                        <?php if (!empty($productImage->getFile_name_original())) { ?> 
-                                          <a data-toggle="modal" class="col-sm-4">
+                                          <a data-bs-toggle="modal" class="col-sm-4">
                                              <img src="<?= '/products/'. $productImage->getFile_name_original(); ?>"  class="img-fluid">
                                           </a>
                                        <?php } ?> 
@@ -402,7 +402,7 @@ $vat = $s->get_setting('enable_vat_registration');
                 <tr>
                     <td>
                         <?php if ($showButtons === true && $userCanEdit === true) { ?>
-                            <a href="#add-inv-tax" data-toggle="modal" class="btn-xs"> <i class="fa fa-plus-circle"></i></a>
+                            <a href="#add-inv-tax" data-bs-toggle="modal" class="btn-xs"> <i class="fa fa-plus-circle"></i></a>
                         <?php } ?>
                         <?= $translator->translate('i.invoice_tax'); ?>
                     </td>

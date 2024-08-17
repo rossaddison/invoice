@@ -77,7 +77,7 @@ echo $alert;
                     Html::encode($s->format_currency($iR->with_total_balance($clientId, $iaR))) : ''; ?></td>
                 <td>
                     <div class="options btn-group">
-                        <a class="btn btn-default dropdown-toggle" data-toggle="dropdown" href="#" style="text-decoration:none">
+                        <a class="btn btn-default dropdown-toggle" data-bs-toggle="dropdown" href="#" style="text-decoration:none">
                             <i class="fa fa-cog"></i> <?= $translator->translate('i.options'); ?>
                         </a>
                         <ul class="dropdown-menu">

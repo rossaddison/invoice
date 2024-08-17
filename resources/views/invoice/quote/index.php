@@ -69,11 +69,11 @@ $toolbar = Div::tag();
     <h5><?= $translator->translate('i.quote'); ?></h5>
     <div class="btn-group">
         <?php if ($clientCount === 0) { ?>
-        <a href="#modal-add-quote" class="btn btn-success" data-toggle="modal" disabled data-bs-toggle = "tooltip" title="<?= $translator->translate('i.add_client'); ?>">
+        <a href="#modal-add-quote" class="btn btn-success" data-bs-toggle="modal" disabled data-bs-toggle = "tooltip" title="<?= $translator->translate('i.add_client'); ?>">
             <i class="fa fa-plus"></i><?= $translator->translate('i.new'); ?>
         </a>
         <?php } else { ?>
-        <a href="#modal-add-quote" class="btn btn-success" data-toggle="modal">
+        <a href="#modal-add-quote" class="btn btn-success" data-bs-toggle="modal">
             <i class="fa fa-plus"></i><?= $translator->translate('i.new'); ?>
         </a>
         <?php } ?>

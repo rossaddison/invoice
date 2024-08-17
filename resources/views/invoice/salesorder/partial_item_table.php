@@ -317,7 +317,7 @@ $vat = $s->get_setting('enable_vat_registration');
                 <tr>
                     <td>
                         <?php if ($invEdit) { ?>    
-                            <a href="#add-quote-tax" data-toggle="modal" class="btn-xs"><i class="fa fa-plus-circle"></i></a>
+                            <a href="#add-quote-tax" data-bs-toggle="modal" class="btn-xs"><i class="fa fa-plus-circle"></i></a>
                         <?php } ?>
                         <span>$translator->translate('i.quote_tax_rate'); ?></span>
                     </td>                    

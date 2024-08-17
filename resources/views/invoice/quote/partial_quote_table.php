@@ -88,7 +88,7 @@ use Yiisoft\Html\Html;
                 </td>
                 <td>
                     <div class="options btn-group<?= $dropup ? ' dropup' : ''; ?>">
-                        <a class="btn btn-sm btn-default dropdown-toggle" data-toggle="dropdown"
+                        <a class="btn btn-sm btn-default dropdown-toggle" data-bs-toggle="dropdown"
                            href="#" style="text-decoration:none">
                             <i class="fa fa-cog"></i> <?= $translator->translate('i.options'); ?>
                         </a>

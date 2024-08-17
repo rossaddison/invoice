@@ -122,7 +122,7 @@ $vat = $s->get_setting('enable_vat_registration');
             ) : '';
         ?>    
         <div class="options btn-group">
-            <a class="btn btn-default" data-toggle="dropdown" href="#">
+            <a class="btn btn-default" data-bs-toggle="dropdown" href="#">
                 <i class="fa fa-chevron-down"></i><?= $translator->translate('i.options'); ?>
             </a>
             <ul class="dropdown-menu dropdown-menu-right">
@@ -136,7 +136,7 @@ $vat = $s->get_setting('enable_vat_registration');
                 </li>
                 <li>
                     <?php if ($vat === '0') { ?>
-                    <a href="#add-quote-tax" data-toggle="modal"  style="text-decoration:none">
+                    <a href="#add-quote-tax" data-bs-toggle="modal"  style="text-decoration:none">
                         <i class="fa fa-plus fa-margin"></i>
                         <?= $translator->translate('i.add_quote_tax'); ?>
                     </a>
@@ -144,7 +144,7 @@ $vat = $s->get_setting('enable_vat_registration');
                 </li>
                 <?php } ?>
                 <li>
-                    <a href="#quote-to-pdf"  data-toggle="modal" style="text-decoration:none">
+                    <a href="#quote-to-pdf"  data-bs-toggle="modal" style="text-decoration:none">
                         <i class="fa fa-print fa-margin"></i>
                         <!-- 
                             views/invoice/quote/modal_quote_to_pdf   ... include custom fields or not on pdf
@@ -166,31 +166,31 @@ $vat = $s->get_setting('enable_vat_registration');
                 <?php // if quote has been approved (ie status 4) by the client without po number do not show quote to sales order again   
                      if ($quote->getSo_id() === '0' && $quote->getStatus_id() === 4) { ?>
                 <li>
-                    <a href="#quote-to-so" data-toggle="modal"  style="text-decoration:none">
+                    <a href="#quote-to-so" data-bs-toggle="modal"  style="text-decoration:none">
                         <i class="fa fa-refresh fa-margin"></i>
                         <?= $translator->translate('invoice.quote.to.so'); ?>
                     </a>
                 </li>
                 <?php } ?>
                 <li>
-                    <a href="#quote-to-invoice" data-toggle="modal"  style="text-decoration:none">
+                    <a href="#quote-to-invoice" data-bs-toggle="modal"  style="text-decoration:none">
                         <i class="fa fa-refresh fa-margin"></i>
                         <?= $translator->translate('i.quote_to_invoice'); ?>
                     </a>
                 </li>
                 <li>                    
-                    <a href="#quote-to-quote" data-toggle="modal"  style="text-decoration:none">
+                    <a href="#quote-to-quote" data-bs-toggle="modal"  style="text-decoration:none">
                         <i class="fa fa-copy fa-margin"></i>
                          <?= $translator->translate('i.copy_quote'); ?>
                     </a>
                 </li>
                 <li>
-                    <a href="#delete-quote" data-toggle="modal"  style="text-decoration:none">
+                    <a href="#delete-quote" data-bs-toggle="modal"  style="text-decoration:none">
                         <i class="fa fa-trash fa-margin"></i> <?= $translator->translate('i.delete_quote'); ?>
                     </a>
                 </li>
                 <li>      
-                    <a href="#delete-items"  data-toggle="modal" style="text-decoration:none">
+                    <a href="#delete-items"  data-bs-toggle="modal" style="text-decoration:none">
                         <i class="fa fa-trash fa-margin"></i>
                         <?= $translator->translate('i.delete')." ".$translator->translate('i.item'); ?>
                     </a>

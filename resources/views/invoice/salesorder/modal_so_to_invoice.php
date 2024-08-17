@@ -4,7 +4,7 @@ declare(strict_types=1);
 use Yiisoft\Html\Html;
 
 /**
- * @see id="so-to-invoice" triggered by <a href="#so-to-invoice" data-toggle="modal"  style="text-decoration:none"> on views/salesorder/view.php line 86
+ * @see id="so-to-invoice" triggered by <a href="#so-to-invoice" data-bs-toggle="modal"  style="text-decoration:none"> on views/salesorder/view.php line 86
  * @var App\Invoice\Group\GroupRepository $gR
  * @var App\Invoice\Entity\SalesOrder $so
  * @var App\Invoice\Setting\SettingRepository $s

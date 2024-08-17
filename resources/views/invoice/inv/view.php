@@ -168,7 +168,7 @@ echo(Html::encode(strlen($inv->getNumber()?? '') == 0 ? '#' . ($inv->getNumber()
         </h1>
         <div class="headerbar-item pull-right <?php if ($inv->getIs_read_only() === false || $inv->getStatus_id() !== 4) { ?>btn-group<?php } ?>">
             <div class="options btn-group">
-                <a class="btn btn-default" data-toggle="dropdown" href="#">
+                <a class="btn btn-default" data-bs-toggle="dropdown" href="#">
                     <i class="fa fa-chevron-down"></i><?= $translator->translate('i.options'); ?>
                 </a>
                 <ul class="dropdown-menu dropdown-menu-right">
@@ -187,7 +187,7 @@ if ($showButtons && $invEdit) {
     if ($vat === '0') {
         ?>
                         <li>
-                            <a href="#add-inv-tax" data-toggle="modal"  style="text-decoration:none">
+                            <a href="#add-inv-tax" data-bs-toggle="modal"  style="text-decoration:none">
                                 <i class="fa fa-plus fa-margin"></i>
                                 <?= Html::encode($translator->translate('i.add_invoice_tax')); ?>
                             </a>
@@ -252,7 +252,7 @@ if ($showButtons && $invEdit) {
                     if (( $readOnly === true || $inv->getStatus_id() === 4) && $invEdit) {
                         ?>
                         <li>
-                            <a href="#create-credit-inv" data-toggle="modal" data-invoice-id="<?= $inv->getId(); ?>" style="text-decoration:none">
+                            <a href="#create-credit-inv" data-bs-toggle="modal" data-invoice-id="<?= $inv->getId(); ?>" style="text-decoration:none">
                                 <i class="fa fa-minus fa-margin"></i> <?= Html::encode($translator->translate('i.create_credit_invoice')); ?>
                             </a>
                         </li>
@@ -302,7 +302,7 @@ if ($showButtons && $invEdit) {
              // show a message modal if there is no payment method
              // resources/views/invoice/inv/modal_message_layout has the ... 'id' => 'modal-message-'.$type which matches the #modal-message-inv below ?>
             <?php if ($inv->getPayment_method() === 0) { ?>
-            <a href="#modal-message-inv" data-toggle="modal" style="text-decoration:none">
+            <a href="#modal-message-inv" data-bs-toggle="modal" style="text-decoration:none">
                 <i class="fa fa-minus fa-margin"></i> <?= Html::encode($translator->translate('i.pay_now') . '-' . ucfirst($gateway)); ?>
             </a>
             <?php } ?>
@@ -314,7 +314,7 @@ if ($showButtons && $invEdit) {
                              and the sumex setting under View...Settings...Invoice...Sumex Settings is set at Yes.
                         -->
                             <?php if ($s->get_setting('sumex') === '1') { ?>
-                            <a href="#inv-to-pdf"  data-toggle="modal" style="text-decoration:none">
+                            <a href="#inv-to-pdf"  data-bs-toggle="modal" style="text-decoration:none">
                                 <i class="fa fa-print fa-margin"></i>
                             <?= Html::encode($translator->translate('i.generate_sumex')); ?>
                             </a>
@@ -322,7 +322,7 @@ if ($showButtons && $invEdit) {
 // Options ... Download PDF
 } else {
     ?>
-                            <a href="#inv-to-pdf"  data-toggle="modal" style="text-decoration:none">
+                            <a href="#inv-to-pdf"  data-bs-toggle="modal" style="text-decoration:none">
                                 <i class="fa fa-print fa-margin"></i>
     <?= Html::encode($translator->translate('i.download_pdf')); ?>
                             </a>
@@ -341,7 +341,7 @@ if ($showButtons && $invEdit) {
 if ($invEdit) {
     ?>
                         <li>
-                            <a href="<?= $urlGenerator->generate('invrecurring/add', ['inv_id' => $inv->getId()]); ?>" data-toggle="modal"  style="text-decoration:none">
+                            <a href="<?= $urlGenerator->generate('invrecurring/add', ['inv_id' => $inv->getId()]); ?>" data-bs-toggle="modal"  style="text-decoration:none">
                                 <i class="fa fa-refresh fa-margin"></i>
                             <?= Html::encode($translator->translate('i.create_recurring')); ?>
                             </a>
@@ -377,7 +377,7 @@ if ($invEdit) {
                             </a>
                         </li>
                         <li>
-                            <a href="#inv-to-inv" data-toggle="modal"  style="text-decoration:none">
+                            <a href="#inv-to-inv" data-bs-toggle="modal"  style="text-decoration:none">
                                 <i class="fa fa-copy fa-margin"></i>
     <?= 
  // Options ... Copy Invoice                           
@@ -389,7 +389,7 @@ if ($invEdit) {
 // Options ... Invoice to HTML with Sumex
                             if ($s->get_setting('sumex') === '1') {
                                 ?>
-                                <a href="#inv-to-html"  data-toggle="modal" style="text-decoration:none">
+                                <a href="#inv-to-html"  data-bs-toggle="modal" style="text-decoration:none">
                                     <i class="fa fa-print fa-margin"></i>
                                 <?= Html::encode($translator->translate('invoice.invoice.html.sumex.yes')); ?>
                                 </a>
@@ -397,7 +397,7 @@ if ($invEdit) {
 // Options ... Invoice to HTML without Sumex
     } else {
         ?>
-                                <a href="#inv-to-html"  data-toggle="modal" style="text-decoration:none">
+                                <a href="#inv-to-html"  data-bs-toggle="modal" style="text-decoration:none">
                                     <i class="fa fa-print fa-margin"></i>
         <?= Html::encode($translator->translate('invoice.invoice.html.sumex.no')); ?>
                                 </a>
@@ -422,12 +422,12 @@ if ($invEdit) {
 if (($inv->getStatus_id() === 1 || ($s->get_setting('enable_invoice_deletion') === '1' && $inv->getIs_read_only() === false)) && !$inv->getSo_id() && $invEdit) {
     ?>
                         <li>
-                            <a href="#delete-inv" data-toggle="modal"  style="text-decoration:none">
+                            <a href="#delete-inv" data-bs-toggle="modal"  style="text-decoration:none">
                                 <i class="fa fa-trash fa-margin"></i> <?= Html::encode($translator->translate('i.delete')); ?>
                             </a>
                         </li>
                         <li>
-                            <a href="#delete-items"  data-toggle="modal" style="text-decoration:none">
+                            <a href="#delete-items"  data-bs-toggle="modal" style="text-decoration:none">
                                 <i class="fa fa-trash fa-margin"></i>
                         <?= Html::encode($translator->translate('i.delete') . " " . $translator->translate('i.item')); ?>
                             </a>

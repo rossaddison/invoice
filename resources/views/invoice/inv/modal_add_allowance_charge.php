@@ -6,7 +6,7 @@ use Yiisoft\Html\Html;
 use Yiisoft\Yii\Bootstrap5\Modal;
 
 /**
- * @see id="add-inv-allowance-charge" triggered by <a href="#add-inv-allowance-charge" data-toggle="modal"  style="text-decoration:none"> on views/inv/view.php 
+ * @see id="add-inv-allowance-charge" triggered by <a href="#add-inv-allowance-charge" data-bs-toggle="modal"  style="text-decoration:none"> on views/inv/view.php 
  * @see InvController/save_inv_allowance_charge
  * @see echo $modal_add_allowance_charge; at BOTTOM resources/views/invoice/inv/view.php
  * @var Yiisoft\Translator\TranslatorInterface $translator

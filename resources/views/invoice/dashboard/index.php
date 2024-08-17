@@ -51,7 +51,7 @@
                         echo $modal_create_client;
                     ?>
                     <?php if ($client_count === 0) { ?>
-                    <a href="#create-client" class="btn btn-success" data-toggle="modal" disabled data-bs-toggle = "tooltip" title="<?= $translator->translate('i.add_client'); ?>" style="text-decoration:none">
+                    <a href="#create-client" class="btn btn-success" data-bs-toggle="modal" disabled data-bs-toggle = "tooltip" title="<?= $translator->translate('i.add_client'); ?>" style="text-decoration:none">
                         <i class="fa fa-plus"></i><?= $translator->translate('i.client'); ?>
                     </a>
                     <?php } else { ?>
@@ -60,7 +60,7 @@
                     </a>
                     <?php } ?>
                     <?php if ($client_count === 0) { ?>
-                    <a href="#create-quote" class="btn btn-success" data-toggle="modal" disabled data-bs-toggle = "tooltip" title="<?= $translator->translate('i.add_client'); ?>" style="text-decoration:none">
+                    <a href="#create-quote" class="btn btn-success" data-bs-toggle="modal" disabled data-bs-toggle = "tooltip" title="<?= $translator->translate('i.add_client'); ?>" style="text-decoration:none">
                         <i class="fa fa-plus"></i><?= $translator->translate('i.quote'); ?>
                     </a>
                     <?php } else { ?>
@@ -69,11 +69,11 @@
                     </a>
                     <?php } ?>
                     <?php if ($client_count === 0) { ?>
-                    <a href="#create-inv" class="btn btn-success" data-toggle="modal" disabled data-bs-toggle = "tooltip" title="<?= $translator->translate('i.add_client'); ?>" style="text-decoration:none">
+                    <a href="#create-inv" class="btn btn-success" data-bs-toggle="modal" disabled data-bs-toggle = "tooltip" title="<?= $translator->translate('i.add_client'); ?>" style="text-decoration:none">
                         <i class="fa fa-plus"></i><?= $translator->translate('i.invoice'); ?>
                     </a>
                     <?php } else { ?>
-                    <a href="<?= $urlGenerator->generate('inv/add', ['origin' => 'dashboard']);?>" class="btn btn-success" data-toggle="modal" style="text-decoration:none">
+                    <a href="<?= $urlGenerator->generate('inv/add', ['origin' => 'dashboard']);?>" class="btn btn-success" data-bs-toggle="modal" style="text-decoration:none">
                         <i class="fa fa-plus"></i><?= $translator->translate('i.invoice'); ?>
                     </a>
                     <?php } ?>

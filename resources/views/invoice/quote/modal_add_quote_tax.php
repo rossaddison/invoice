@@ -5,7 +5,7 @@
   
   /**
    * @see views/quote/view.php line 67: id="add-quote-tax" triggered by 
-   *      <a href="#add-quote-tax" data-toggle="modal"  style="text-decoration:none">
+   *      <a href="#add-quote-tax" data-bs-toggle="modal"  style="text-decoration:none">
    * @var App\Invoice\Helpers\NumberHelper $numberHelper
    * @var Yiisoft\Translator\TranslatorInterface $translator
    * @var array $taxRates

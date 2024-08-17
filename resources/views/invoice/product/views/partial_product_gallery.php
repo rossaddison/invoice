@@ -33,7 +33,7 @@ declare(strict_types=1);
                  * @var App\Invoice\Entity\ProductImage $productImage
                  */
                 foreach ($productImages as $productImage) { ?>
-                <a data-toggle="lightbox" data-gallery="example-gallery" class="col-sm-4">
+                <a data-bs-toggle="lightbox" data-gallery="example-gallery" class="col-sm-4">
                     <img src="<?= '/products/'. $productImage->getFile_name_original(); ?>"   class="img-fluid">
                 </a>
              <?php } ?> 
