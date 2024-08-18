@@ -57,6 +57,16 @@ use Yiisoft\Yii\DataView\GridView;
 ?>
 <?= $alert; ?>
 <?php
+/**
+ * Use with the checkbox column to mark invoices as sent.
+ * @see \invoice\src\Invoice\Asset\rebuild\js\iinv.js $(document).on('click', '#btn-mark-as-sent', function () {
+ */
+$markAsSent = A::tag()
+        ->addAttributes(['type' => 'reset', 'data-bs-toggle' => 'tooltip', 'title' => $translator->translate('i.sent')])
+        ->addClass('btn btn-success')
+        ->content($iR->getSpecificStatusArrayEmoji(2))
+        ->id('btn-mark-as-sent')
+        ->render();
 
 $toolbarReset = A::tag()
         ->addAttributes(['type' => 'reset'])
@@ -176,10 +186,13 @@ $toolbar = Div::tag();
      */
     $columns = [ 
         new CheckboxColumn(
+            /**
+             * @see header checkbox: name: 'checkbox-selection-all'
+             */    
             content: static function(Checkbox $input, DataContext $context) : string {
                 $inv = $context->data;
                 if (($inv instanceof Inv) && (null!==($id = $inv->getId()))) {
-                    return '<input type="checkbox" name="checkbox" value="'.$id.'">';
+                    return '<input type="checkbox" id="'.$id.'" name="checkbox[]" value="'.$id.'">';
                 }
                 return '';
             },
@@ -496,12 +509,14 @@ $toolbar = Div::tag();
 <?php
     $toolbarString = 
         Form::tag()->post($urlGenerator->generate('inv/index'))->csrf($csrf)->open() .
-        Div::tag()->addClass('float-end m-3')->content($allVisible)->encode(false)->render() .  
+        Div::tag()->addClass('float-end m-3')->content($allVisible)->encode(false)->render() .   
         Div::tag()->addClass('float-end m-3')->content($toolbarReset)->encode(false)->render() .
         Div::tag()->addClass('float-end m-3')->content(Button::ascDesc($urlGenerator, 'date_due', 'danger', $translator->translate('i.due_date'), false))->encode(false)->render().    
         Div::tag()->addClass('float-end m-3')->content(Button::ascDesc($urlGenerator, 'client_id', 'warning', $translator->translate('i.client'), false))->encode(false)->render().    
         Div::tag()->addClass('float-end m-3')->content(Button::ascDesc($urlGenerator, 'status_id', 'success', $translator->translate('i.status'), false))->encode(false)->render().    
         Div::tag()->addClass('float-end m-3')->content(Button::ascDesc($urlGenerator, 'id', 'info', $translator->translate('i.id'), false))->encode(false)->render().
+        // use the checkboxcolumn to mark invoices as sent
+        Div::tag()->addClass('float-end m-3')->content($markAsSent)->encode(false)->render() .      
         Form::tag()->close();
     $grid_summary = $s->grid_summary(
         $paginator,

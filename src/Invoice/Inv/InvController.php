@@ -2696,6 +2696,39 @@ final class InvController {
         }
         return null;
     }
+    
+    /**
+     * 
+     * @param Request $request
+     * @param IR $iR
+     * @return \Yiisoft\DataResponse\DataResponse
+     */
+    public function mark_as_sent(Request $request, IR $iR): \Yiisoft\DataResponse\DataResponse {
+        $data = $request->getQueryParams();
+        $parameters = ['success' => 0];
+        /**
+         * @var array $data['keylist']
+         */
+        $keyList = $data['keylist'] ?? [];
+        if (!empty($keyList)){
+            /**
+             * @var string $key
+             * @var string $value
+             */
+            foreach ($keyList as $key => $value)
+            {
+                /**
+                 * @var \App\Invoice\Entity\Inv $inv
+                 */
+                $inv = $iR->repoInvUnLoadedquery($value);
+                $inv->setStatus_id(2);
+                $iR->save($inv);
+            }
+            $this->flash_message('info', $this->translator->translate('i.record_successfully_updated'));
+            $parameters['success'] = 1;
+        }
+        return $this->factory->createResponse(Json::encode($parameters));
+    }
 
     /**
      * @param array $files

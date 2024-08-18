@@ -934,6 +934,11 @@ return [
       ->middleware(Authentication::class)
       ->action([InvController::class, 'email_stage_2'])
       ->name('inv/email_stage_2'),
+      Route::methods([Method::GET, Method::POST], '/inv/mark_as_sent')
+      ->middleware(fn(AccessChecker $checker) => $checker->withPermission('editInv'))
+      ->middleware(Authentication::class)
+      ->action([InvController::class, 'mark_as_sent'])
+      ->name('inv/mark_as_sent'),      
       Route::methods([Method::GET, Method::POST], '/inv/modal_change_client')
       ->middleware(fn(AccessChecker $checker) => $checker->withPermission('editInv'))
       ->middleware(Authentication::class)

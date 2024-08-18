@@ -73,6 +73,48 @@ $(function () {
         });
     });
     
+    // Used in inv/index to select invoices that are to be marked as sent instead of literally sending them by email
+    // The invoices will not be in the email log but they will be on the clients guest index
+    // 
+    // Refer to: resources/views/invoice/inv/index.php 
+    // $markAsSent = A::tag()
+    //    ->addAttributes(['type' => 'reset', 'data-bs-toggle' => 'tooltip', 'title' => $translator->translate('i.sent')])
+    //    ->addClass('btn btn-success')
+    //    ->content($iR->getSpecificStatusArrayEmoji(2))
+    //    -> NO HREF i.e ->href($urlGenerator etc..) necessary here because the javascript url below will handle this
+    //    ->id('btn-mark-as-sent')
+    //    ->render();
+    $(document).on('click', '#btn-mark-as-sent', function () {
+        var btn = $('#btn-mark-as-sent');
+        var selected = [];
+        btn.html('<h2 class="text-center"><i class="fa fa-spin fa-spinner"></i></h2>');
+        // see inv/index GridView::widget()->tableAttributes(['class' => 'table table-striped h-75', 'id' => 'table-invoice'])
+        $('#table-invoice input[type="checkbox"]:checked').each(function() {
+            selected.push($(this).attr('id'));
+        });
+        var url = $(location).attr('origin') + "/invoice/inv/mark_as_sent";
+        $.ajax({ type: "GET",
+            contentType: "application/json; charset=utf-8",
+            data: {
+                keylist: selected
+            },
+            url: url,
+            cache: false,
+            dataType: 'json',
+            success: function (data) {
+                var response = parsedata(data);
+                if (response.success === 1) {
+                    btn.html('<h2 class="text-center"><i class="fa fa-check"></i></h2>');
+                    window.location.reload(true);
+                }    
+                if (response.success === 0) { 
+                    btn.html('<h2 class="text-center"><i class="fa fa-times"></i></h2>');
+                    window.location.reload(true);                                                
+                }
+            }
+        });
+    });
+        
     $(document).ready(function() {
        $("[required]").after("<span class='required'>*</span>");
     });
@@ -93,7 +135,7 @@ $(function () {
     $('#new_row').clone().appendTo('#item_table').removeAttr('id').addClass('item').show();            
     });
     
-    // id="inv_tax_submit" in drop down menu on views/inv/view.php
+    // id="inv_tax_submit" in drop down menu on views/inv/modal_add_inv_tax.php
     $(document).on('click', '#inv_tax_submit', function () {
     var url = $(location).attr('origin') + "/invoice/inv/save_inv_tax_rate";
     var btn = $('.inv_tax_submit');
@@ -120,7 +162,7 @@ $(function () {
                        }
                        if (response.success === 0) {                                   
                           window.location = absolute_url;
-                          btn.html('<h6 class="text-center"><i class="fa fa-check"></i></h6>');
+                          btn.html('<h6 class="text-center"><i class="fa fa-times"></i></h6>');
                           window.location.reload();                                                
                        }
             },
