@@ -10,39 +10,45 @@ declare(strict_types=1);
  */
 
 ?>
-<div id="purchase-order-number" class="modal modal-lg" role="dialog" aria-labelledby="modal_purchase_order_number" aria-hidden="true">
-    <form class="modal-content">
-      <div class="modal-body">  
-         <div class="modal-header">
-            <button type="button" class="close" data-dismiss="modal"><i class="fa fa-times-circle"></i></button>
-        </div>        
-        <div class="modal-header">
-            <h5 class="col-12 modal-title text-center"><?= $translator->translate('invoice.salesorder') ?></h5>
-            <br>
-        </div>
-        <div>
-            <input type="text" name="url_key" id="url_key" class="form-control"
-                   value="<?= $urlKey; ?>" hidden>
-        </div>
-        <div>
-            <label for="quote_with_purchase_order_number"><?= $translator->translate('invoice.quote.with.purchase.order.number') ?></label>
-            <input type="text" name="quote_with_purchase_order_number" id="quote_with_purchase_order_number" class="form-control"
-                   value="" autocomplete="off">
-        </div> 
-        <div>
-            <label for="quote_with_purchase_order_person"><?= $translator->translate('invoice.quote.with.purchase.order.person') ?></label>
-            <input type="text" name="quote_with_purchase_order_person" id="quote_with_purchase_order_person" class="form-control"
-                   value="" autocomplete="off">
-        </div>   
-        <div class="modal-header">
-            <div class="btn-group">
-                <button class="quote_with_purchase_order_number_confirm btn btn-success" id="quote_with_purchase_order_number_confirm" type="button">
-                    <i class="fa fa-check"></i>
-                    <?= $translator->translate('i.submit'); ?>
-                </button>
+
+<div id="purchase-order-number" class="modal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+           <div class="modal-header">
+               <h5 class="modal-title"><?= $translator->translate('invoice.salesorder') ?></h5>
+               <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form>
+                    <input type="hidden" name="_csrf" value="<?= $csrf ?>">
+                    <div>
+                        <input type="text" name="url_key" id="url_key" class="form-control"
+                               value="<?= $urlKey; ?>" hidden>
+                    </div>
+                    <div>
+                        <label for="quote_with_purchase_order_number"><?= $translator->translate('invoice.quote.with.purchase.order.number') ?></label>
+                        <input type="text" name="quote_with_purchase_order_number" id="quote_with_purchase_order_number" class="form-control"
+                               value="" autocomplete="off">
+                    </div> 
+                    <div>
+                        <label for="quote_with_purchase_order_person"><?= $translator->translate('invoice.quote.with.purchase.order.person') ?></label>
+                        <input type="text" name="quote_with_purchase_order_person" id="quote_with_purchase_order_person" class="form-control"
+                               value="" autocomplete="off">
+                    </div>   
+                </form>    
+            </div>
+            <div class="modal-footer">
+                <div class="btn-group">
+                    <button class="quote_with_purchase_order_number_confirm btn btn-success" id="quote_with_purchase_order_number_confirm" type="button">
+                        <i class="fa fa-check"></i>
+                        <?= $translator->translate('i.submit'); ?>
+                    </button>
+                    <button class="btn btn-danger" type="button" data-bs-dismiss="modal">
+                        <i class="fa fa-times"></i> <?= $translator->translate('i.cancel'); ?>
+                    </button>
+                </div>
             </div>
         </div>
-      </div>    
-    </form>
+    </div>
 </div>
 

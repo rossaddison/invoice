@@ -15,7 +15,7 @@ use Yiisoft\Html\Html;
     <form class="modal-content">
       <div class="modal-body">  
         <div class="modal-header">
-            <button type="button" class="close" data-dismiss="modal"><i class="fa fa-times-circle"></i></button>
+            <button type="button" class="close" data-bs-dismiss"modal"><i class="fa fa-times-circle"></i></button>
         </div>        
         <div class="modal-header">
             <h5 class="col-12 modal-title text-center"><?php echo $translator->translate('i.add_client'); ?></h5>

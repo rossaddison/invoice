@@ -236,7 +236,7 @@ $toolbar = Div::tag();
                         ->render();
                         return $toggleColumnInvSentLog.$linkToInvSentLogWithFilterInv;
                     } else {
-                        return '';
+                        return '❌';
                     }
                 }
                 return '';

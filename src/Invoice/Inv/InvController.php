@@ -2721,11 +2721,16 @@ final class InvController {
                  * @var \App\Invoice\Entity\Inv $inv
                  */
                 $inv = $iR->repoInvUnLoadedquery($value);
-                $inv->setStatus_id(2);
-                $iR->save($inv);
+                if (null!==$inv->getInvAmount()->getTotal()&&$inv->getInvAmount()->getTotal() > 0) {
+                    $inv->setStatus_id(2);
+                    $iR->save($inv);
+                    $parameters['success'] = 1;
+                } else {
+                    $parameters['success'] = 0;    
+                }
             }
             $this->flash_message('info', $this->translator->translate('i.record_successfully_updated'));
-            $parameters['success'] = 1;
+            
         }
         return $this->factory->createResponse(Json::encode($parameters));
     }

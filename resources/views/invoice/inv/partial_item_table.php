@@ -283,7 +283,7 @@ $vat = $s->get_setting('enable_vat_registration');
                             <div id="view-product-<?= $item->getId(); ?>" class="modal modal-lg" tabindex="-1" role="dialog" aria-labelledby="modal_view_product_<?= $item->getId(); ?>" aria-hidden="true">
                                 <div class="modal-content">
                                     <div class="modal-header">
-                                      <button type="button" class="close" data-dismiss="modal"><i class="fa fa-times-circle"></i></button>
+                                      <button type="button" class="close" data-bs-dismiss"modal"><i class="fa fa-times-circle"></i></button>
                                     </div>    
                                     <div>
                                       <?php $productImages = $piR->repoProductImageProductquery((int)$item->getProduct_id()); ?>

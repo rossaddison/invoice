@@ -12,7 +12,7 @@ declare(strict_types=1);
      role="dialog" aria-labelledby="modal-choose-tasks" aria-hidden="true">
     <form class="modal-content">
         <div class="modal-header">
-            <button type="button" class="close" data-dismiss="modal"><i class="fa fa-times-circle"></i></button>
+            <button type="button" class="close" data-bs-dismiss"modal"><i class="fa fa-times-circle"></i></button>
         </div>
         <div class="modal-body">
             <?= $partial_task_table_modal; ?>
@@ -24,7 +24,7 @@ declare(strict_types=1);
                     <i class="fa fa-check"></i>
                     <?= $translator->translate('i.submit'); ?>
                 </button>
-                <button class="btn btn-danger" type="button" data-dismiss="modal">
+                <button class="btn btn-danger" type="button" data-bs-dismiss"modal">
                     <i class="fa fa-times"></i>
                     <?= $translator->translate('i.cancel'); ?>
                 </button>
