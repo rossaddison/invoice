@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace App\Invoice\Helpers;
@@ -11,6 +12,7 @@ use App\Invoice\Helpers\DateHelper as DHelp;
 use Yiisoft\FormModel\Field;
 use Yiisoft\FormModel\FormModel;
 use Yiisoft\Html\Html;
+use Yiisoft\Html\Tag\B;
 use Yiisoft\Html\Tag\Br;
 use Yiisoft\Html\Tag\Div;
 use Yiisoft\Html\Tag\Label;
@@ -349,12 +351,11 @@ Class CustomValuesHelper {
      */
     public function print_field_for_pdf(Translator $translator, array $entity_custom_values, CustomField $custom_field, cvR $cvR): void 
     {
-        echo Html::openTag('div');
-            echo Html::openTag('div');
-                echo Label::tag()
-                ->content("   ".Html::encode($custom_field->getLabel()));
-            echo Html::closeTag('div');
-        echo Html::closeTag('div');    
+        echo Br::tag();
+        $content = Label::tag()->content(Html::encode($custom_field->getLabel()));
+        echo B::tag()
+             ->content($content)
+             ->render();
 
         $fieldValue = null!==$this->form_value($entity_custom_values, $custom_field->getId()) 
                       ? $this->form_value($entity_custom_values, $custom_field->getId())
@@ -382,8 +383,13 @@ Class CustomValuesHelper {
                          * @var string $value
                          */
                         foreach( $array as $key => $value) { 
-                            echo Label::tag()
-                            ->content((string)$this->selected_value($entity_custom_values, $value, $cvR));
+                            $custom_value = $cvR->repoCustomValuequery($value);
+                            if (null!==$custom_value) {
+                                $customValue = $custom_value->getValue();
+                                echo Label::tag()
+                                ->content($customValue);   
+                                echo Br::tag();
+                            }    
                         }
                     }
                     break;
@@ -393,19 +399,16 @@ Class CustomValuesHelper {
                                       ? $translator->translate('i.true') 
                                       : $translator->translate('i.false')));
                     echo Br::tag();
-                    echo Br::tag();
                     break;
                 case 'NUMBER':
                     echo Div::tag()
                     ->content(Html::encode($fieldValue)); 
                     echo Br::tag();
-                    echo Br::tag();
                     break;
                 default:
                     echo Div::tag()
                     ->content(Html::encode($fieldValue)); 
-                    echo Br::tag();
-                    echo Br::tag();     
+                    echo Br::tag(); 
             } 
         echo Html::closeTag('div');
     }
@@ -504,8 +507,8 @@ Class CustomValuesHelper {
       if (($form_custom_value !== '') && (null!==$form_custom_value)) {
         $custom_value = $cvR->repoCustomValuequery((string)$form_custom_value);
         /** @var CustomValue $custom_value */
-        return $selected_value = $custom_value->getValue();
+        return $custom_value->getValue();
       } 
-      return $selected_value = '';
+      return '';
     }
 }

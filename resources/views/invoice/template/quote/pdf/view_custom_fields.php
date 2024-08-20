@@ -4,7 +4,7 @@ declare(strict_types=1);
     
 /**
  * @see This will appear at the bottom of pdf\quote.php
- * @see App\Invoice\Helpers\PdfHelper function generate_inv_html 
+ * @see App\Invoice\Helpers\PdfHelper function generate_quote_html 
  * @var App\Invoice\Helpers\CustomValuesHelper $cvH
  * @var App\Invoice\CustomValue\CustomValueRepository $cvR
  * @var Yiisoft\Translator\TranslatorInterface $translator
@@ -20,7 +20,7 @@ declare(strict_types=1);
      */
     foreach ($custom_fields as $custom_field): ?>
     <?php if ($custom_field->getLocation() == 1) {continue;} ?>
-    <div class="col-md-4">
+    <div>
           <?php $cvH->print_field_for_pdf($translator, $quote_custom_values, $custom_field, $cvR); ?>
     </div>    
     <?php endforeach; ?>        

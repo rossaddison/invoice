@@ -196,6 +196,13 @@ echo $alert;
                                 ->placeholder($translator->translate('i.discount_percent')); 
                             ?>
                         <?= Html::closeTag('div'); ?>
+                        <?= Html::openTag('div'); ?>
+                            <?= Field::textarea($form,'notes')
+                                ->label($translator->translate('i.notes'))
+                                ->value(Html::encode($form->getNotes() ?? ''))
+                                ->hint($translator->translate('invoice.hint.this.field.is.not.required')); 
+                            ?>
+                        <?= Html::closeTag('div'); ?>    
                     <?php } ?>
                         <?= Html::openTag('div'); ?>
                             <?= Field::hidden($form, 'inv_id')

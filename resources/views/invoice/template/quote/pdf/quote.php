@@ -110,6 +110,7 @@ $vat = $s->get_setting('enable_vat_registration');
             <th class="item-desc"><?= Html::encode($translator->translate('i.description')); ?></th>
             <th class="item-amount text-right"><?= Html::encode($translator->translate('i.qty')); ?></th>
             <th class="item-price text-right"><?= Html::encode($translator->translate('i.price')); ?></th>
+            <th></th>
             <?php if ($show_item_discounts) : ?>
                 <th class="item-discount text-right"><?= Html::encode($translator->translate('i.discount')); ?></th>
             <?php endif; ?>
@@ -255,6 +256,7 @@ $vat = $s->get_setting('enable_vat_registration');
             <?php echo nl2br(Html::encode($quote->getNotes())); ?>
         </div>
     <?php endif; ?>
+        
     <?= $show_custom_fields ? $view_custom_fields : ''; ?>
 </footer>
 </body>
