@@ -10,6 +10,7 @@ use Yiisoft\Html\Html;
  * @var App\Invoice\Entity\SalesOrder $so
  * @var App\Invoice\Setting\SettingRepository $s
  * @var Yiisoft\Translator\TranslatorInterface $translator
+ * @var string $csrf
  * */
 
 ?>

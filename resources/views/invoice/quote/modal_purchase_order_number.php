@@ -6,6 +6,7 @@ declare(strict_types=1);
  * @see id="purchase-order-number" triggered by <a href="#purchase-order-number" class="btn btn-success" data-bs-toggle="modal"  style="text-decoration:none">  
  * @see Quote/url_key controller/function and ...\resources\views\invoice\quote\url_key
  * @var Yiisoft\Translator\TranslatorInterface $translator 
+ * @var string $csrf
  * @var string $urlKey
  */
 

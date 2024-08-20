@@ -11,7 +11,7 @@
    * @var App\Invoice\Setting\SettingRepository $s
    * @var Yiisoft\Translator\TranslatorInterface $translator 
    * @var array $taxRates
-   * @var stromg $csrf
+   * @var string $csrf
    */
   
 ?>

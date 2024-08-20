@@ -11,6 +11,7 @@ use Yiisoft\Html\Html;
  * @var App\Invoice\Setting\SettingRepository $s
  * @var Yiisoft\Translator\TranslatorInterface $translator
  * @var array $groups
+ * @var string $csrf
  */
 
 ?>
