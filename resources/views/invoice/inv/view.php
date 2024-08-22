@@ -150,7 +150,7 @@ $vat = $s->get_setting('enable_vat_registration');
                     'class' => 'btn btn-primary bi bi-ui-checks', 
                     'href' => '#modal-choose-tasks', 
                     'id' => 'modal-choose-tasks', 
-                    'data-toggle' => 'modal']); 
+                    'data-bs-toggle' => 'modal']); 
                 ?>
                 <?= $translator->translate('i.add_task'); ?>
                 <?= Html::closeTag('button'); ?>
