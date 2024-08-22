@@ -527,7 +527,7 @@ final class QuoteController
                   $this->flash_message('info', $this->translator->translate('invoice.salesorder.agree.to.terms'));  
                   $new_so = new SoEntity();
                   $form = new SoForm($new_so);
-                  if (($formHydrator->populate($form, $so_body) && $form->isValid()) && ($quote->getSo_id()===(string)0))
+                  if (($formHydrator->populateAndValidate($form, $so_body)) && ($quote->getSo_id()===(string)0))
                   {   
                     $quote_id = $so_body['quote_id']; 
                     $client_id = $so_body['client_id'];
@@ -961,7 +961,7 @@ final class QuoteController
                     $client_id = $quote->getClient_id();
                     $user = $this->active_user($client_id, $uR, $ucR, $uiR);
                     if (null!==$user) { 
-                        if ($formHydrator->populate($form, $body) && $form->isValid()) {
+                        if ($formHydrator->populateAndValidate($form, $body)) {
                             $this->quote_service->saveQuote($user, $quote, $body, $this->sR, $groupRepo);
                             $this->edit_save_custom_fields($body, $formHydrator, $qcR, $quote_id);            
                             $this->flash_message('success', $this->translator->translate('i.record_successfully_updated'));
@@ -998,7 +998,7 @@ final class QuoteController
                     'value' => is_array($value) ? serialize($value) : $value 
                 ];
                 $form = new QuoteCustomForm($quoteCustom);
-                if ($formHydrator->populate($form, $quote_custom_input) && $form->isValid())
+                if ($formHydrator->populateAndValidate($form, $quote_custom_input))
                 {
                     $this->quote_custom_service->saveQuoteCustom($quoteCustom, $quote_custom_input);     
                 }
@@ -1011,7 +1011,7 @@ final class QuoteController
                         'value' => is_array($value) ? serialize($value) : $value
                     ];
                     $form = new QuoteCustomForm($quote_custom);
-                    if ($formHydrator->populate($form, $quote_custom_input) && $form->isValid())
+                    if ($formHydrator->populateAndValidate($form, $quote_custom_input))
                     {
                         $this->quote_custom_service->saveQuoteCustom($quote_custom, $quote_custom_input);     
                     }
@@ -1940,7 +1940,7 @@ final class QuoteController
             ];
             $inv = new Inv();
             $form = new InvForm($inv); 
-            if (($formHydrator->populate($form, $ajax_body) && $form->isValid()) &&
+            if (($formHydrator->populateAndValidate($form, $ajax_body)) &&
                     // Quote has not been copied before:  inv_id = 0
                     (($quote->getInv_id()===(string)0))
                 ) {
@@ -2039,9 +2039,7 @@ final class QuoteController
             ];
             $new_so = new SoEntity();
             $form = new SoForm($new_so);
-            if (($formHydrator->populate($form, $so_body)  
-                && $form->isValid()) 
-                && ($quote->getSo_id()===(string)0))
+            if (($formHydrator->populateAndValidate($form, $so_body)) && ($quote->getSo_id()===(string)0))
             {
             /**
              * @var string $so_body['client_id']
@@ -2124,7 +2122,7 @@ final class QuoteController
             // Create an equivalent invoice item for the quote item
             $invItem = new InvItem();
             $form = new InvItemForm($invItem, (int)$inv_id);
-            if ($formHydrator->populate($form, $inv_item) && $form->isValid()) {
+            if ($formHydrator->populateAndValidate($form, $inv_item)) {
               $this->inv_item_service->addInvItem_product($invItem, $inv_item, $inv_id, $pR, $trR , $iiaS, $iiaR, $sR, $unR);
             }
         } // items
@@ -2150,8 +2148,7 @@ final class QuoteController
             ];
             $entity = new InvTaxRate();
             $form = new InvTaxRateForm($entity);
-            if ($formHydrator->populate($form, $inv_tax_rate) && $form->isValid()
-            ) {    
+            if ($formHydrator->populateAndValidate($form, $inv_tax_rate)) {    
                $this->inv_tax_rate_service->saveInvTaxRate($entity, $inv_tax_rate);
             }
         } // foreach        
@@ -2178,8 +2175,7 @@ final class QuoteController
             ];
             $entity = new SoTaxRate();
             $form = new SoTaxRateForm($entity);
-            if ($formHydrator->populate($form, $so_tax_rate) && $form->isValid()
-            ) {    
+            if ($formHydrator->populateAndValidate($form, $so_tax_rate)) {    
               $this->so_tax_rate_service->saveSoTaxRate($entity, $so_tax_rate);
             }
         } // foreach        
@@ -2223,7 +2219,7 @@ final class QuoteController
                 ];
                 $entity = new InvCustom();
                 $form = new InvCustomForm($entity);
-                if ($formHydrator->populate($form, $inv_custom) && $form->isValid()) {    
+                if ($formHydrator->populateAndValidate($form, $inv_custom)) {    
                   $this->inv_custom_service->saveInvCustom($entity, $inv_custom);            
                 }
             } // existing_custom_field    
@@ -2268,7 +2264,7 @@ final class QuoteController
                 ];
                 $entity = new SoCustom();
                 $form = new SoCustomForm($entity);
-                if ($formHydrator->populate($form, $so_custom) && $form->isValid()) {    
+                if ($formHydrator->populateAndValidate($form, $so_custom)) {    
                   $this->so_custom_service->saveSoCustom($entity, $so_custom);            
                 }
             }   // existing_custom_field    
@@ -2300,7 +2296,7 @@ final class QuoteController
         }    
         $entity = new InvAmount();
         $form = new InvAmountForm($entity);
-        if ($formHydrator->populate($form, $inv_amount) && $form->isValid()) {    
+        if ($formHydrator->populateAndValidate($form, $inv_amount)) {    
           $this->inv_amount_service->saveInvAmount($entity, $inv_amount);            
         }
     }
@@ -2369,7 +2365,7 @@ final class QuoteController
         ];
         $copy = new Quote();
         $form = new QuoteForm($copy);
-        if (($formHydrator->populate($form, $quote_body) && $form->isValid())) {    
+        if (($formHydrator->populateAndValidate($form, $quote_body))) {    
           /**
            * @var string $quote_body['client_id']
            */
@@ -2402,7 +2398,7 @@ final class QuoteController
               } // null!==$user_inv && $user_inv->getActive()
             } // null!== $user 
           } // null!==$user_client && $user_client_count==1
-        } // $formHydrator->populate($form, $body) && $form->isValid())
+        } // $formHydrator->populateAndValidate($form, $body)
       } else {
               $parameters = [
                  'success'=>0,
@@ -2432,7 +2428,7 @@ final class QuoteController
             ];
             $entity = new QuoteCustom();
             $form = new QuoteCustomForm($entity);
-            if ($formHydrator->populate($form, $copy_custom) && $form->isValid()) {    
+            if ($formHydrator->populateAndValidate($form, $copy_custom)) {    
               $this->quote_custom_service->saveQuoteCustom($entity, $copy_custom);            
             }
         }        
@@ -2476,7 +2472,7 @@ final class QuoteController
             // Create an equivalent invoice item for the quote item
             $copyItem = new QuoteItem();
             $form = new QuoteItemForm($copyItem, $copy_id);
-            if ($formHydrator->populate($form, $copy_item) && $form->isValid()) {
+            if ($formHydrator->populateAndValidate($form, $copy_item)) {
               $this->quote_item_service->addQuoteItem($copyItem, $copy_item, $copy_id, $pR, $qiaR, $qiaS, $unR, $trR, $this->translator);
             }
         } // items as quote_item
@@ -2510,7 +2506,7 @@ final class QuoteController
             // Create an equivalent purchase order item for the quote item
             $soItem = new SoItem();
             $form = new SoItemForm($soItem);
-            if ($formHydrator->populate($form, $so_item) && $form->isValid()) {
+            if ($formHydrator->populateAndValidate($form, $so_item)) {
               $this->so_item_service->addSoItem($soItem, $so_item, $so_id, $pR, $soiaR, $soiaS, $unR, $trR);
             }
         } // items as quote_item
@@ -2537,7 +2533,7 @@ final class QuoteController
           ];
           $entity = new QuoteTaxRate();
           $form = new QuoteTaxRateForm($entity);
-          if ($formHydrator->populate($form, $copy_tax_rate) && $form->isValid()) {    
+          if ($formHydrator->populateAndValidate($form, $copy_tax_rate)) {    
             $this->quote_tax_rate_service->saveQuoteTaxRate($entity, $copy_tax_rate);
           }
         }        

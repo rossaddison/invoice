@@ -202,7 +202,7 @@ final class InvRecurringController
             // The next invoice date is the new recur start date
             'next' => $body['recur_start_date'] ?? null
         ];
-        if ($formHydrator->populate($form, $body_array) && $form->isValid()) {    
+        if ($formHydrator->populateAndValidate($form, $body_array)) {    
                 $this->invrecurringService->saveInvRecurring($invRecurring, $body_array);
                 $parameters = [
                     'success' => 1

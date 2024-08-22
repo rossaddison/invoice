@@ -485,7 +485,7 @@ final class PaymentController
         $payment = $this->payment($currentRoute, $pmtR);
         if (null!==$payment) {
             $form = new PaymentForm($payment);
-            if ($formHydrator->populate($form, $body) && $form->isValid()) {
+            if ($formHydrator->populateAndValidate($form, $body)) {
                 /**
                  * @psalm-suppress PossiblyInvalidArgument $body
                  */
@@ -518,7 +518,7 @@ final class PaymentController
                     'custom_field_id' =>(int)$custom_field_id,
                     'value' => is_array($value) ? serialize($value) : $value 
                 ];
-                if ($formHydrator->populate($form, $payment_custom_input) && $form->isValid())
+                if ($formHydrator->populateAndValidate($form, $payment_custom_input))
                 {
                     $this->paymentCustomService->savePaymentCustom($paymentCustom, $payment_custom_input);     
                 } else {

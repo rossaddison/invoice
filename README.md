@@ -22,7 +22,7 @@ Yii3 Invoice
 **Installing npm_modules folder containing bootstrap as mentioned in package.json**
 * Step 1: Download node.js at https://nodejs.org/en/download
 * Step 2: Ensure C:\ProgramFiles\nodejs is in environment variable path. Search ... edit the system environment variables
-* Step 3: Run ````npm i```` in ````c:\wamp64\invoice```` folder.
+* Step 3: Run ````npm i```` in ````c:\wamp64\invoice```` folder. This will install @popperjs and bootstrap 5.
 * Step 4: Keep your npm up to date by running e.g. ````npm install -g npm@10.8.1````
 
 **Recommended php.ini settings**

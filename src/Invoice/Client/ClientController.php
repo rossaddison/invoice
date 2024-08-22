@@ -268,7 +268,7 @@ final class ClientController
                             $client_custom['custom_field_id'] = $custom_field_id;                    
                             // Note: There are no Required rules for value under ClientCustomForm
                             $client_custom['value'] = is_array($value) ? serialize($value) : $value;                    
-                            if ($formHydrator->populate($clientCustomForm, $client_custom) && $clientCustomForm->isValid()) {
+                            if ($formHydrator->populateAndValidate($clientCustomForm, $client_custom)) {
                               $this->clientCustomService->saveClientCustom($clientCustom, $client_custom);
                             }
                             // These two can be used to create customised labels for custom field error validation on the form
@@ -447,7 +447,7 @@ final class ClientController
                 $model = ($ccR->repoClientCustomCount($client_id,$key) == 1 ? $ccR->repoFormValuequery($client_id,$key) : new ClientCustom());
                 if ($model instanceof ClientCustom) {
                    $form = new ClientCustomForm($model); 
-                   if ($formHydrator->populate($form, $client_custom) && $form->isValid()) { 
+                   if ($formHydrator->populateAndValidate($form, $client_custom)) { 
                         $this->clientCustomService->saveClientCustom($model, $client_custom);
                    }     
                 }
@@ -486,7 +486,7 @@ final class ClientController
      * @return ClientForm
      */
     public function save_form_fields(array $body, ClientForm $form, Client $client, FormHydrator $formHydrator, sR $sR) : ClientForm {
-        if ($formHydrator->populate($form, $body) &&  $form->isValid()) {
+        if ($formHydrator->populateAndValidate($form, $body)) {
            $this->clientService->saveClient($client, $body, $sR);
         }
         return $form;
@@ -711,7 +711,7 @@ final class ClientController
                 $client_custom['value']=$value; 
                 $model = ($ccR->repoClientCustomCount($client_id, $key) == 1 ? $ccR->repoFormValuequery($client_id, $key) : new ClientCustom());
                 if (null!==$model) {
-                    if ($formHydrator->populate($form, $client_custom) && $form->isValid()) {
+                    if ($formHydrator->populateAndValidate($form, $client_custom)) {
                         $this->clientCustomService->saveClientCustom($model, $client_custom);                
                     }
                 }    
@@ -756,7 +756,7 @@ final class ClientController
             'note'=>$note,
         ];
         $form = new ClientNoteForm(new ClientNote());        
-        if ($formHydrator->populate($form, $data) && $form->isValid()) {    
+        if ($formHydrator->populateAndValidate($form, $data)) {    
             $cnS->addClientNote(new ClientNote(), $data);
             $parameters = [
                 'success' => 1,

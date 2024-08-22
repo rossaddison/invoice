@@ -280,7 +280,7 @@ final class UserClientRepository extends Select\Repository
                     ];
                     $model = new UserClient();
                     $form = new UserClientForm($model);
-                    ($formHydrator->populate($form, $user_client) && $form->isValid()) ? $ucS->saveUserClient($model, $user_client) : '';
+                    ($formHydrator->populateAndValidate($form, $user_client)) ? $ucS->saveUserClient($model, $user_client) : '';
         }
     }
     

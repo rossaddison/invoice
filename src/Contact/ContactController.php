@@ -34,8 +34,7 @@ final class ContactController
         $body = $request->getParsedBody();
         $form = new ContactForm();
         if (($request->getMethod() === Method::POST) 
-           && $formHydrator->populate($form, (array) $body) 
-           && $form->isValid()) {
+           && $formHydrator->populateAndValidate($form, (array) $body)) {
             $this->mailer->send($form, $request);
             return $this->responseFactory
                 ->createResponse(Status::FOUND)

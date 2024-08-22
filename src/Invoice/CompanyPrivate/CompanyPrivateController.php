@@ -119,8 +119,7 @@ final class CompanyPrivateController
             // Move the logo to the private folder for storage and the publicly viewable folder for online viewing
             if (!$this->file_uploading_errors($tmp, $target_file_name, $target_public_logo)) {
                 // echo \Yiisoft\VarDumper\VarDumper::dump($body);
-                if ($formHydrator->populate($form, $body) && $form->isValid()
-                ) {
+                if ($formHydrator->populateAndValidate($form, $body)) {
                    /**
                     * @psalm-suppress PossiblyInvalidArgument $body
                     */ 
@@ -244,9 +243,7 @@ final class CompanyPrivateController
                  * @var string $body['logo_filename']
                  */
                 $body['logo_filename'] = $_FILES['logo_filename']['name'];
-                if ($formHydrator->populate($form, $body) 
-                    && $form->isValid()
-                ) {
+                if ($formHydrator->populateAndValidate($form, $body)) {
                     // Replace filename's spaces with underscore and add random string preventing overwrites
                     $modified_original_file_name = Random::string(4).'_'.preg_replace('/\s+/', '_', $body['logo_filename']);
                     // Build a unique target file name

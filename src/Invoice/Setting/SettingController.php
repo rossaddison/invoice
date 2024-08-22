@@ -371,7 +371,7 @@ final class SettingController
             /**
              * @psalm-suppress PossiblyInvalidArgument
              */
-            if ($formHydrator->populate($form, $request->getParsedBody()) && $form->isValid()) {
+            if ($formHydrator->populateAndValidate($form, $request->getParsedBody())) {
                 $this->settingService->saveSetting($setting, $request->getParsedBody());
                 $this->flash_message('info', $this->translator->translate('i.record_successfully_updated'));
                 return $this->webService->getRedirectResponse('setting/debug_index');
@@ -523,7 +523,7 @@ final class SettingController
                 /**
                  * @psalm-suppress PossiblyInvalidArgument
                  */
-                if ($formHydrator->populate($form, $request->getParsedBody()) && $form->isValid()) {
+                if ($formHydrator->populateAndValidate($form, $request->getParsedBody())) {
                     $body = $request->getParsedBody();
                     /**
                      * @psalm-suppress PossiblyInvalidArgument

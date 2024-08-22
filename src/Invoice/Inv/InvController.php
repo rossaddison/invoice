@@ -799,7 +799,7 @@ final class InvController {
         $iR->save($basis_inv);
         $new_inv = new Inv();
         $form = new InvForm($new_inv);
-        if ($formHydrator->populate($form, $ajax_body) && $form->isValid()) {
+        if ($formHydrator->populateAndValidate($form, $ajax_body)) {
           /**
            * @var string $ajax_body['client_id']
            */
@@ -1340,7 +1340,7 @@ final class InvController {
             if (null!==$user) {
                 $form = new InvForm($inv);
                 if (null!==$body && is_array($body)) {
-                    if ($formHydrator->populate($form, $body) && $form->isValid()) {
+                    if ($formHydrator->populateAndValidate($form, $body)) {
                       $this->inv_service->saveInv($user, $inv, $body, $this->sR, $groupRepo);
                     } 
                 }
@@ -1372,7 +1372,7 @@ final class InvController {
                     'value' => is_array($value) ? serialize($value) : $value 
                 ];
                 $form = new InvCustomForm($inv_custom);
-                if ($formHydrator->populate($form, $inv_custom_input) && $form->isValid()) {
+                if ($formHydrator->populateAndValidate($form, $inv_custom_input)) {
                     $this->inv_custom_service->saveInvCustom($inv_custom, $inv_custom_input);
                 }
             } else {
@@ -1384,7 +1384,7 @@ final class InvController {
                         'value' => is_array($value) ? serialize($value) : $value 
                     ];
                     $form = new InvCustomForm($inv_custom);
-                    if ($formHydrator->populate($form, $inv_custom_input) && $form->isValid()) {
+                    if ($formHydrator->populateAndValidate($form, $inv_custom_input)) {
                         $this->inv_custom_service->saveInvCustom($inv_custom, $inv_custom_input);
                     }
                 } // inv_custom
@@ -2562,7 +2562,7 @@ final class InvController {
         ];
         $copy = new Inv();
         $form = new InvForm($copy);
-        if (($formHydrator->populate($form, $ajax_body) && $form->isValid())) {
+        if (($formHydrator->populateAndValidate($form, $ajax_body))) {
           /**
            * @var string $ajax_body['client_id']
            */
@@ -2610,7 +2610,7 @@ final class InvController {
             ];
             $invCustom = new InvCustom();
             $form = new InvCustomForm($invCustom);
-            if ($formHydrator->populate($form, $copyCustom) && $form->isValid()) {
+            if ($formHydrator->populateAndValidate($form, $copyCustom)) {
                 $this->inv_custom_service->saveInvCustom($invCustom, $copyCustom);
             }
         }
@@ -2647,7 +2647,7 @@ final class InvController {
             // Create an equivalent invoice item for the invoice item
             $invItem = new InvItem();
             $form = new InvItemForm($invItem, (int)$inv_id);
-            if ($formHydrator->populate($form, $copy_item) && $form->isValid()) {
+            if ($formHydrator->populateAndValidate($form, $copy_item)) {
                 if (!empty($inv_item->getProduct_id()) && empty($inv_item->getTask_id())) {
                     // (InvItem $model, InvItemForm $form, string $inv_id,PR $pr, SR $s, UNR $unR)
                     $this->inv_item_service->addInvItem_product($invItem, $copy_item, $copy_id, $pR, $trR, $iiaS, $iiaR, $this->sR, $unR);
@@ -2676,7 +2676,7 @@ final class InvController {
             ];
             $invTaxRate = new InvTaxRate();
             $form = new InvTaxRateForm($invTaxRate);
-            if ($formHydrator->populate($form, $copy_tax_rate) && $form->isValid()) {
+            if ($formHydrator->populateAndValidate($form, $copy_tax_rate)) {
                 $this->inv_tax_rate_service->saveInvTaxRate($invTaxRate, $copy_tax_rate);
             }
         }
@@ -2842,7 +2842,7 @@ final class InvController {
         ];
         $invTaxRate = new InvTaxRate();
         $form = new InvTaxRateForm($invTaxRate);
-        if ($formHydrator->populate($form, $ajax_body) && $form->isValid()) {
+        if ($formHydrator->populateAndValidate($form, $ajax_body)) {
             $this->inv_tax_rate_service->saveInvTaxRate($invTaxRate, $ajax_body);
             $parameters = [
                 'success' => 1,

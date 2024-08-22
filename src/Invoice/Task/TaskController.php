@@ -303,7 +303,7 @@ final class TaskController
            'discount_amount'=>floatval(0),
            'order'=> $order
       ];
-      if ($formHydrator->populate($form, $ajax_content) && $form->isValid()) {
+      if ($formHydrator->populateAndValidate($form, $ajax_content)) {
            $this->invitemService->addInvItem_task($invItem, $ajax_content, $inv_id, $taskR, $trR, new iiaS($iiaR), $iiaR, $sR);                 
       }
     }

@@ -437,7 +437,7 @@ class ProductController
      * @reclsturn ProductForm
      */
     public function save_form_fields(array $body, ProductForm $form, Product $product, FormHydrator $formHydrator) : ProductForm {
-        if ($formHydrator->populate($form, $body) && $form->isValid()) {
+        if ($formHydrator->populateAndValidate($form, $body)) {
           $this->productService->saveProduct($product, $body);
         } 
         return $form;
@@ -600,7 +600,7 @@ class ProductController
             'product_unit' => $unR->singular_or_plural_name($product->getUnit_id(),1),
             'product_unit_id' => $product->getUnit_id(),
         ];
-        if ($formHydrator->populate($form, $ajax_content) && $form->isValid()) {
+        if ($formHydrator->populateAndValidate($form, $ajax_content)) {
             $this->quoteitemService->addQuoteItem($quoteItem, $ajax_content, $quote_id, $pR, $qiaR, $qiaS, $unR, $trR, $this->translator);
         }      
     }
@@ -640,7 +640,7 @@ class ProductController
                 'product_unit' => $unR->singular_or_plural_name($product->getUnit_id(),1),
                 'product_unit_id' => $product->getUnit_id(),
            ];
-           if ($formHydrator->populate($form, $ajax_content) && $form->isValid()) {
+           if ($formHydrator->populateAndValidate($form, $ajax_content)) {
                 $this->invitemService->addInvItem_product($invItem, $ajax_content, $inv_id, $pR, $trR, new iiaS($iiaR),$iiaR, $sR, $uR);                 
            }      
     }

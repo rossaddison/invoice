@@ -116,7 +116,7 @@ final class EmailTemplateController
         
         if ($request->getMethod() === Method::POST) {
             $body = $request->getParsedBody();
-            if (null!==$this->userService->getUser() && $formHydrator->populate($form, $body) && $form->isValid()) {
+            if (null!==$this->userService->getUser() && $formHydrator->populateAndValidate($form, $body)) {
                 /**
                  * @psalm-suppress PossiblyInvalidArgument $body 
                  */
@@ -168,7 +168,7 @@ final class EmailTemplateController
         
         if ($request->getMethod() === Method::POST) {
             $body = $request->getParsedBody();
-            if (null!==$this->userService->getUser() && $formHydrator->populate($form, $body) && $form->isValid()) {
+            if (null!==$this->userService->getUser() && $formHydrator->populateAndValidate($form, $body)) {
                 /**
                  * @psalm-suppress PossiblyInvalidArgument $body 
                  */

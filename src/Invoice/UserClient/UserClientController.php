@@ -216,7 +216,7 @@ final class UserClientController
                                 'user_id'=>$user_id,    
                                 'client_id'=>$value
                             ];
-                            if ($formHydrator->populate($form, $form_array) && $form->isValid()
+                            if ($formHydrator->populateAndValidate($form, $form_array)
                                 // Check that the user client does not exist    
                                                          && !$ucR->repoUserClientqueryCount($user_id, $value) > 0){
                                 $this->userclientService->saveUserClient($user_client, $form_array);

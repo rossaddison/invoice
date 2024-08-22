@@ -715,7 +715,7 @@ final class SalesOrderController
             ];
             $inv = new Inv();
             $form = new InvForm($inv);
-            if (($formHydrator->populate($form, $inv_body) && $form->isValid()) &&
+            if (($formHydrator->populateAndValidate($form, $inv_body)) &&
                   // Salesorder has not been copied before:  inv_id = 0
                   (($so->getInv_id()===(string)0))
               ) 
@@ -810,7 +810,7 @@ final class SalesOrderController
             // Create an equivalent invoice item for the so item
             $invItem = new InvItem();
             $form = new InvItemForm($invItem, (int)$inv_id);
-            if ($formHydrator->populate($form, $inv_item) && $form->isValid()) {
+            if ($formHydrator->populateAndValidate($form, $inv_item)) {
                 $this->invItemService->addInvItem_product($invItem, $inv_item, $inv_id, $pR, $trR, $iiaS, $iiaR, $sR, $unR);
             }
         } // items
@@ -836,8 +836,7 @@ final class SalesOrderController
             ];
             $entity = new InvTaxRate();
             $form = new InvTaxRateForm($entity);
-            if ($formHydrator->populate($form, $inv_tax_rate) && $form->isValid()
-            ) {    
+            if ($formHydrator->populateAndValidate($form, $inv_tax_rate)) {    
                $this->invTaxRateService->saveInvTaxRate($entity, $inv_tax_rate);
             }
         } // foreach        
@@ -882,7 +881,7 @@ final class SalesOrderController
                 ];
                 $entity = new InvCustom();
                 $form = new InvCustomForm($entity);
-                if ($formHydrator->populate($form, $inv_custom) && $form->isValid()) {    
+                if ($formHydrator->populateAndValidate($form, $inv_custom)) {    
                     $this->inv_custom_service->saveInvCustom($entity, $inv_custom);            
                 }
             } // existing_custom_field    
@@ -913,7 +912,7 @@ final class SalesOrderController
         }    
         $entity = new InvAmount();
         $form = new InvAmountForm($entity);
-        if ($formHydrator->populate($form, $inv_amount) && $form->isValid()) {    
+        if ($formHydrator->populateAndValidate($form, $inv_amount)) {    
           $this->invAmountService->saveInvAmount($entity, $inv_amount);            
         }
     }
