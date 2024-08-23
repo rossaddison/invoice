@@ -73,7 +73,7 @@
                         <i class="fa fa-plus"></i><?= $translator->translate('i.invoice'); ?>
                     </a>
                     <?php } else { ?>
-                    <a href="<?= $urlGenerator->generate('inv/add', ['origin' => 'dashboard']);?>" class="btn btn-success" data-bs-toggle="modal" style="text-decoration:none">
+                    <a href="<?= $urlGenerator->generate('inv/add', ['origin' => 'dashboard']);?>" class="btn btn-success" style="text-decoration:none">
                         <i class="fa fa-plus"></i><?= $translator->translate('i.invoice'); ?>
                     </a>
                     <?php } ?>
