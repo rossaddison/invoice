@@ -108,4 +108,5 @@ outputting it to ````resources/views/generator/output_overwrite.````
 ![Psalm Level](https://img.shields.io/static/v1?label=Psalm%20Level&message=1&color=66ff00)
 [![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/rossaddison/invoice/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/rossaddison/invoice/?branch=main)
 [![Code Coverage](https://scrutinizer-ci.com/g/rossaddison/invoice/badges/coverage.png?b=main)](https://scrutinizer-ci.com/g/rossaddison/invoice/?branch=main)
+[![Build](https://scrutinizer-ci.com/g/rossaddison/invoice/badges/build.png?b=main))](https://scrutinizer-ci.com/g/rossaddison/invoice/?branch=main)
 [![type-coverage](https://shepherd.dev/github/rossaddison/invoice/coverage.svg)](https://shepherd.dev/github/rossaddison/invoice)
