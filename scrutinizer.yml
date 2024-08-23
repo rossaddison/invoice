@@ -15,13 +15,13 @@ checks:
   
   javascript: true
   
-  coding_style:
-    php:
-      spaces:
-        around_operators:
-          bitwise: false
-        other:
-          after_type_cast: false
+coding_style:
+  php:
+    spaces:
+      around_operators:
+        bitwise: false
+      other:
+        after_type_cast: false
           
 filter:
   paths:
