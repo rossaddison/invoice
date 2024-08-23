@@ -237,17 +237,3 @@ build:
             command: phpcs-run
             use_website_config: true            
           - js-scrutinizer-run
-          
-    phpunit:
-      dependencies:
-        override:
-          - composer self-update
-          - composer update --prefer-dist --no-interaction --no-progress --optimize-autoloader --ansi
-
-      tests:
-        override:
-          - command: "./vendor/bin/phpunit --coverage-clover ./coverage.xml"
-            on_node: 1
-            coverage:
-              file: coverage.xml
-              format: php-clover
