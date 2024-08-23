@@ -1,5 +1,7 @@
 checks:
-  php: true
+  php:
+    duplication: true
+    unused_parameters: true
 
 filter:
   paths:
