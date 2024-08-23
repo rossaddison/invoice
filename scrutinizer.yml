@@ -7,7 +7,7 @@ filter:
   paths:
     - src/Invoice
 
-excluded_paths:
+  excluded_paths:
     - 'src/Invoice/Helpers/Country-list/*'
     - 'src/Invoice/Helpers/StoreCove/Exceptions/*'
     - 'config/console/*'
