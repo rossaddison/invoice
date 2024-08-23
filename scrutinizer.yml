@@ -2,6 +2,7 @@ checks:
   php:
     duplication: true
     unused_parameters: true
+    properties_in_camelcaps: true
 
 filter:
   paths:
