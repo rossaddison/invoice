@@ -62,6 +62,7 @@ use Yiisoft\Yii\Bootstrap5\Offcanvas;
  * @var string $javascriptJqueryDateHelper
  * @var string $logoPath 
  * @var string $read_write
+ * @var string $scrutinizerRepository
  * 
  * @see ...src\ViewInjection\LayoutViewInjection.php
  * @var string $userLogin
