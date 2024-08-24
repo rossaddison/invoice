@@ -152,7 +152,12 @@ final class LayoutViewInjection implements LayoutParametersInjectionInterface
             'companyLogoWidth' => $companyLogoWidth ?? '',
             'companyLogoHeight' => $companyLogoHeight ?? '',
             'companyLogoMargin' => $companyLogoMargin ?? '',
-            'javascriptJqueryDateHelper' => $javascriptJqueryDateHelper
+            'javascriptJqueryDateHelper' => $javascriptJqueryDateHelper,
+            /**
+             * @see Use the repository name to build a quick link to scrutinizer php and javascript code checks 
+             * in invoice/layout under debug mode
+             */
+            'scrutinizerRepository' => 'rossaddison/invoice',
         ];
     }    
 }

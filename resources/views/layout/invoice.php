@@ -440,6 +440,12 @@ $this->beginPage();
                       ['label' => $translator->translate('invoice.platform.mySqlVersion') . ': 5.7.31 || 8.0.31 '],
                       ['label' => $translator->translate('invoice.platform.PhpVersion') . ': '.phpversion()],
                       ['label' => $translator->translate('invoice.platform.PhpMyAdmin') . ': 5.2.1 (Compatable with php 8.2.1)'],
+                      ['label' => $translator->translate('invoice.platform.scrutinizer.config.checks.php'), 
+                         'url' => 'https://scrutinizer-ci.com/g/'. $scrutinizerRepository. '/settings/build-config/editor?language=php'],
+                      ['label' => $translator->translate('invoice.platform.scrutinizer.config.checks.javascript'), 
+                         'url' => 'https://scrutinizer-ci.com/g/'. $scrutinizerRepository. '/settings/build-config/editor?language=javascript'],
+                      ['label' => $translator->translate('invoice.platform.scrutinizer.config.build'), 
+                         'url' => 'https://scrutinizer-ci.com/g/'. $scrutinizerRepository. '/settings/build-config'],  
                     ],
                   ],
     // FAQ                  
