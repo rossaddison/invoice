@@ -21,7 +21,9 @@ final class AuthService
     public function login(string $login, string $password): bool
     {
         $user = $this->userRepository->findByLoginWithAuthIdentity($login);
-
+        /**
+         * Use Password Hashing to validate the password
+         */
         if ($user === null || !$user->validatePassword($password)) {
             return false;
         }

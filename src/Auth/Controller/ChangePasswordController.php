@@ -49,11 +49,15 @@ final class ChangePasswordController
           return $this->redirectToMain();
       }
       
-      $identity_id = $this->currentUser->getIdentity()->getId();
-      if (null!==$identity_id) {
-        $identity = $identityRepository->findIdentity($identity_id);
+      $identityId = $this->currentUser->getIdentity()->getId();
+      if (null!==$identityId) {
+        $identity = $identityRepository->findIdentity($identityId);
         if (null!==$identity) {
-          // Identity and User are in a HasOne relationship so no null value
+          /**
+           *  Identity and User are in a HasOne relationship so no null value
+           *  Get the username or emailaddress of the current user
+           *  @see src\User\User function getLogin()
+           */            
           $login = $identity->getUser()?->getLogin();
           if ($request->getMethod() === Method::POST
             && $formHydrator->populate($changePasswordForm, $request->getParsedBody())
@@ -65,7 +69,7 @@ final class ChangePasswordController
             // PASSWORD CHANGE and other scenarios, that require forceful access revocation for old sessions.
             // The authService logout function will regenerate the auth key here => overwriting any auth key
             $authService->logout();
-            $this->flash_message('success', $this->translator->translate('validator.password.change'));
+            $this->flashMessage('success', $this->translator->translate('validator.password.change'));
             return $this->redirectToMain();
           }
           return $this->viewRenderer->render('change', [
@@ -78,16 +82,19 @@ final class ChangePasswordController
               'changePasswordForAnyUser' => $this->currentUser->can('changePasswordForAnyUser') 
           ]);
         } // identity
-      } // identity_id 
+      } // identityId 
       return $this->redirectToMain();
     } // reset
     
-     /**
+    /**
      * @param string $level
      * @param string $message
      * @return Flash|null
      */
-    private function flash_message(string $level, string $message): Flash|null {
+    private function flashMessage(string $level, string $message): Flash|null {
+        /**
+         * @see Prevent empty messages from being added to the queue
+         */
         if (strlen($message) > 0) {
             $this->flash->add($level, $message, true);
             return $this->flash;
