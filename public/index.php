@@ -54,9 +54,9 @@ $yiiDebug = filter_var(
 $runner = new HttpApplicationRunner(
     rootPath: dirname(__DIR__),
     // e.g. true or false    
-    debug: $yiiDebug,
+    debug: (bool)$yiiDebug,
     // e.g. true or false    
-    checkEvents: $yiiDebug,
+    checkEvents: (bool)$yiiDebug,
     // e.g. 'prod' or 'dev' or ''    
     environment: $yiiEnv  
 );
