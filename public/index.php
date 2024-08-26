@@ -43,20 +43,15 @@ $filterYiiEnv = filter_input(INPUT_ENV, 'YII_ENV', FILTER_DEFAULT);
 $yiiEnv = (null!==$filterYiiEnv && $filterYiiEnv !== false) ? $filterYiiEnv : '';
 
 $filterYiiDebug = filter_input(INPUT_ENV, 'YII_DEBUG', FILTER_DEFAULT);
-$yiiDebug = filter_var(
-    // $filterYiiDebug: variable has been set (i.e. variable not null). If the filter fails allow $filterYiiDebug to be false.    
-    null!==$filterYiiDebug ? $filterYiiDebug : true,
-    FILTER_VALIDATE_BOOLEAN,
-    FILTER_NULL_ON_FAILURE
-) ?? true;
+$yiiDebug = (null!==$filterYiiDebug && $filterYiiDebug !== false) ? $filterYiiDebug : false;
 
 // Run HTTP application runner
 $runner = new HttpApplicationRunner(
     rootPath: dirname(__DIR__),
     // e.g. true or false    
-    debug: (bool)$yiiDebug,
+    debug: $yiiDebug,
     // e.g. true or false    
-    checkEvents: (bool)$yiiDebug,
+    checkEvents: $yiiDebug,
     // e.g. 'prod' or 'dev' or ''    
     environment: $yiiEnv  
 );
