@@ -140,13 +140,14 @@
         "codeception/module-cli": "^2.0",
         "codeception/module-phpbrowser": "^3.0",
         "phpunit/phpunit": "^9.6.3",
-        "roave/better-reflection":"^6.5",
+        "roave/better-reflection": "^6.5",
         "roave/infection-static-analysis-plugin": "^1.25",
         "roave/security-advisories": "dev-master",
+        "rossaddison/yii-gii": "^3.0@dev",
         "spatie/phpunit-watcher": "^1.23",
+        "styleci/cli": "1.5",
         "vimeo/psalm": "^5.25",
         "yiisoft/translator-extractor": "^2.0",
-        "rossaddison/yii-gii": "^3.0@dev",
         "yiisoft/yii-testing": "dev-master"
     },
     "autoload": {
