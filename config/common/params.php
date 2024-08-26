@@ -315,8 +315,8 @@ return [
       // Set to `null` to disable error sending (note that in case of web application errors it only prevents
       // sending them via HTTP). To disable interactions with Sentry SDK completely, remove middleware and the
       // rest of the config.
-      'dsn' => $_ENV['SENTRY_DSN'] ?? null,
-      'environment' => $_ENV['YII_ENV'] ?? null, // Add to separate "production" / "staging" environment errors.
+      'dsn' => filter_input(INPUT_ENV, 'SENTRY_DSN' , FILTER_DEFAULT) ?? null,
+      'environment' => filter_input(INPUT_ENV, 'YII_ENV', FILTER_DEFAULT) ?? null, // Add to separate "production" / "staging" environment errors.
     ],
   ],
   'yiisoft/mailer' => [
@@ -334,14 +334,14 @@ return [
       'scheme' => 'smtp', // "smtps": using TLS, "smtp": without using TLS.
       'host' => 'mail.yourinternet.com',
       'port' => 25,
-      'username' => $_ENV['SYMFONY_MAILER_USERNAME'] ?? '',
+      'username' => filter_input(INPUT_ENV, 'SYMFONY_MAILER_USERNAME') ?? '',
       /**
        * Avoid the use of hard-coded credentials
        * @see https://cwe.mitre.org/data/definitions/798.html
        * @see The .env file in the root folder
        * @see https://stackoverflow.com/questions/97984/how-to-secure-database-passwords-in-php
        */ 
-      'password' => $_ENV['SYMFONY_MAILER_PASSWORD'] ?? '',
+      'password' => filter_input(INPUT_ENV, 'SYMFONY_MAILER_PASSWORD') ?? '',
       'options' => [], // See: https://symfony.com/doc/current/mailer.html#tls-peer-verification
     ],
   ],
