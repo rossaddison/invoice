@@ -341,7 +341,7 @@ if ($showButtons && $invEdit) {
 if ($invEdit) {
     ?>
                         <li>
-                            <a href="<?= $urlGenerator->generate('invrecurring/add', ['inv_id' => $inv->getId()]); ?>" data-bs-toggle="modal"  style="text-decoration:none">
+                            <a href="<?= $urlGenerator->generate('invrecurring/add', ['inv_id' => $inv->getId()]); ?>" style="text-decoration:none">
                                 <i class="fa fa-refresh fa-margin"></i>
                             <?= Html::encode($translator->translate('i.create_recurring')); ?>
                             </a>

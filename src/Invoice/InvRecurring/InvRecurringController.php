@@ -211,9 +211,9 @@ final class InvRecurringController
             return $this->factory->createResponse(Json::encode($parameters));          
         } else {
             $parameters = [
-               'success'=>0,
+               'success' => 0,
             ];
-            //return response to quote.js to reload page at location
+            //return response to inv.js to reload page at location
             return $this->factory->createResponse(Json::encode($parameters));          
         } 
     }

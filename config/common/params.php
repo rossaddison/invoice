@@ -280,7 +280,7 @@ return [
         /** Note as at 15/06/2024: If you have adjusted any Entity file you will have to always make two adjustments to
          * ensure the database is updated with the new changes and relevent fields:
          * 1. Change the mode immediately below
-         * 2. Change the BUILD_DATABASE = false in the .env file at the root to BUILD_DATABASE = true
+         * 2. Change the BUILD_DATABASE=  in the .env file at the root to BUILD_DATABASE=true
          * 3. Once the changes have been reflected and you have checked them via e.g. phpMyAdmin revert back to the original settings
          * Mode: PhpFileSchemaProvider::MODE_WRITE_ONLY : PhpFileSchemaProvider::MODE_READ_AND_WRITE  
          */
@@ -315,8 +315,8 @@ return [
       // Set to `null` to disable error sending (note that in case of web application errors it only prevents
       // sending them via HTTP). To disable interactions with Sentry SDK completely, remove middleware and the
       // rest of the config.
-      'dsn' => filter_input(INPUT_ENV, 'SENTRY_DSN' , FILTER_DEFAULT) ?? null,
-      'environment' => filter_input(INPUT_ENV, 'YII_ENV', FILTER_DEFAULT) ?? null, // Add to separate "production" / "staging" environment errors.
+      'dsn' => $_ENV['SENTRY_DSN'] ?? null,
+      'environment' => $_ENV['YII_ENV'] ?? null, // Add to separate "production" / "staging" environment errors.
     ],
   ],
   'yiisoft/mailer' => [

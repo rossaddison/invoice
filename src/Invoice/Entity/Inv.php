@@ -12,10 +12,11 @@ use Cycle\Annotated\Annotation\Relation\HasOne;
 use Cycle\ORM\Entity\Behavior;
 use Doctrine\Common\Collections\ArrayCollection;
 use App\User\User;
-use App\Invoice\Entity\Group;
 use App\Invoice\Entity\Client;
-use App\Invoice\Entity\InvItem;
+use App\Invoice\Entity\Group;
 use App\Invoice\Entity\InvAmount;
+use App\Invoice\Entity\InvItem;
+use App\Invoice\Entity\InvRecurring;
 use App\Invoice\Entity\InvSentLog;
 
 use \DateTimeImmutable;
@@ -64,7 +65,15 @@ class Inv {
      */
     #[HasMany(target: InvSentLog::class)]
     private ArrayCollection $invsentlogs;
-
+    
+    
+    /**
+     * @see Used to determine the number of recurring invoices that have been made out for this particular invoice.
+     * @var ArrayCollection<array-key, InvRecurring>
+     */
+    #[HasMany(target: InvRecurring::class)]
+    private ArrayCollection $invRecurring;
+    
     #[Column(type: 'primary')]
     private ?int $id = null;
 
@@ -205,6 +214,7 @@ class Inv {
         $this->postal_address_id = $postal_address_id;
         $this->contract_id = $contract_id;
         $this->invsentlogs = new ArrayCollection();
+        $this->invRecurring = new ArrayCollection();
     }
 
     public function setUser(User $user): void {
@@ -231,6 +241,18 @@ class Inv {
         return $this->client;
     }
     
+    public function setInvRecurring() : void {
+        $this->invRecurring = new ArrayCollection();
+    }
+    
+    public function getInvRecurring(): ArrayCollection {
+        return $this->invRecurring;
+    }
+    
+    public function addInvRecurring(InvRecurring $invRecurring) : void {
+        $this->invRecurring[] = $invRecurring;
+    }
+        
     public function setInvSentLogs() : void {
         $this->invsentlogs = new ArrayCollection();
     }

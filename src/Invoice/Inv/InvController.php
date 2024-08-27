@@ -826,7 +826,7 @@ final class InvController {
           'success' => 0, 
           'message' => $this->translator->translate('invoice.invoice.credit.note.creation.unsuccessful')
       ]));
-    } 
+    }
     /**
      *
      * @param Inv $inv
@@ -2518,9 +2518,10 @@ final class InvController {
         $this->inv_amount_service->initializeCopyInvAmount(new InvAmount(), (int) $inv_id, $copy_id);
     }
 
-    // Data fed from inv.js->$(document).on('click', '#inv_to_inv_confirm', function () {
+    
 
     /**
+     * @see Data fed from inv.js->$(document).on('click', '#inv_to_inv_confirm', function () {
      * @param Request $request
      * @param FormHydrator $formHydrator
      * @param GR $gR

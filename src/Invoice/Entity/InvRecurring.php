@@ -3,9 +3,10 @@ declare(strict_types=1);
 
 namespace App\Invoice\Entity;
 
+use App\Invoice\Entity\Inv;
 use Cycle\Annotated\Annotation\Column;
 use Cycle\Annotated\Annotation\Entity;
-use Cycle\Annotated\Annotation\Relation\BelongsTo;
+use Cycle\Annotated\Annotation\Relation\HasOne;
 use \DateTime;
 use \DateTimeImmutable;  
 #[Entity(repository: \App\Invoice\InvRecurring\InvRecurringRepository::class)]
@@ -15,8 +16,12 @@ class InvRecurring
     #[Column(type:'primary')]
     private ?int $id =  null;
 
-    #[BelongsTo(target:\App\Invoice\Entity\Inv::class, nullable: false, fkAction: 'NO ACTION')]
-    private ?Inv $inv = null;
+    /**
+     * Every Recurring Invoice record only has one related Invoice
+     * @var Inv $inv
+     */
+    #[HasOne(target:Inv::class, nullable: false)]
+    private Inv $inv;
     
     #[Column(type:'integer(11)', nullable: false)]
     private ?int $inv_id =  null;
@@ -43,6 +48,7 @@ class InvRecurring
     )
     {
         $this->id=$id;
+        $this->inv=new Inv();
         $this->inv_id=$inv_id;
         $this->start=$start;
         $this->end=$end;
@@ -60,7 +66,7 @@ class InvRecurring
         $this->id =  $id;
     }
     
-    public function getInv(): Inv|null
+    public function getInv(): Inv
     {
         return $this->inv;
     }

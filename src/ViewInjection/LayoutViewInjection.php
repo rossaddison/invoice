@@ -105,8 +105,9 @@ final class LayoutViewInjection implements LayoutParametersInjectionInterface
         $stopLoggingIn = false;
         /**
          * @see .env.php $_ENV['YII_DEBUG'] located in the root (first) folder
+         * @see {root} autoload.php 
          */
-        $debugMode = $_ENV['YII_DEBUG'] == 'true' ? true : false;
+        $debugMode = $_SERVER['YII_DEBUG'] == '1' ? true : false;
         // Record the debugMode in a setting so that 'debug_mode' can be used in e.g. salesorder\guest.php`
         $this->settingRepository->debugMode($debugMode);
         $user = $identity instanceof Identity ? $identity->getUser() : null;

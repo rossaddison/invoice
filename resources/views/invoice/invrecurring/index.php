@@ -66,8 +66,8 @@ $pagination = OffsetPagination::widget()
                             <?= $no_next ? $translator->translate('i.inactive') : $translator->translate('i.active') ?>
             </span>
       </td>      
-      <td><a href="<?= $urlGenerator->generate('inv/view',['id'=>$invRecurring->getInv_id()]); ?>"  title="<?= $translator->translate('i.edit'); ?>" style="text-decoration:none"><?php echo(strlen($invRecurring->getInv()?->getNumber() ?? '') > 0 ? $invRecurring->getInv()?->getNumber() : $invRecurring->getInv_id()); ?></a></td>   
-      <td><?= Html::a($invRecurring->getInv()?->getClient()?->getClient_name() ?? '#',$urlGenerator->generate('client/view',['id'=>$invRecurring->getInv()?->getClient()?->getClient_id()])); ?></td>         
+      <td><a href="<?= $urlGenerator->generate('inv/view',['id'=>$invRecurring->getInv_id()]); ?>"  title="<?= $translator->translate('i.edit'); ?>" style="text-decoration:none"><?php echo(strlen($invRecurring->getInv()->getNumber() ?? '') > 0 ? $invRecurring->getInv()->getNumber() : $invRecurring->getInv_id()); ?></a></td>   
+      <td><?= Html::a($invRecurring->getInv()->getClient()?->getClient_name() ?? '#',$urlGenerator->generate('client/view',['id'=>$invRecurring->getInv()->getClient()?->getClient_id()])); ?></td>         
       <td><?= Html::encode(!is_string($recurringStart = $invRecurring->getStart()) ? $recurringStart->format($dateHelper->style()) : ''); ?></td>
       <td><?= Html::encode(!is_string($recurringEnd = $invRecurring->getEnd()) ? $recurringEnd->format($dateHelper->style()) : ''); ?></td>
       <td><?= Html::encode($translator->translate((string)$recur_frequencies[$invRecurring->getFrequency()])); ?></td>
