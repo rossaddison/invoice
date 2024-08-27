@@ -87,7 +87,7 @@
         "yiisoft/error-handler": "^3.0",
         "yiisoft/factory": "^1.0",
         "yiisoft/files": "^2.0",
-        "yiisoft/form": "dev-master",
+        "yiisoft/form": "^1.0",
         "yiisoft/form-model": "dev-master",
         "yiisoft/friendly-exception": "*",
         "yiisoft/html": "^3.3",
