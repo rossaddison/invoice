@@ -15,10 +15,14 @@ use App\Invoice\Entity\Inv;
 use App\Invoice\Entity\InvItemAllowanceCharge;
 use App\Invoice\Entity\InvAllowanceCharge;
 use App\Invoice\Entity\InvItem;
+use App\Invoice\Entity\InvItemAmount;
 use App\Invoice\Entity\InvAmount;
 use App\Invoice\Entity\InvCustom;
+use App\Invoice\Entity\InvRecurring;
 use App\Invoice\Entity\InvSentLog;
 use App\Invoice\Entity\InvTaxRate;
+use App\Invoice\Entity\Payment;
+use App\Invoice\Entity\PaymentCustom;
 use App\Invoice\Entity\PaymentMethod;
 use App\Invoice\Entity\PostalAddress;
 use App\Invoice\Entity\Setting;
@@ -613,6 +617,7 @@ final class InvController {
                     return $this->web_service->getRedirectResponse('client/view', ['id' => $origin]);
                 }    
             }
+            $this->flash_message('warning', $this->translator->translate('invoice.invoice.creation.unsuccessful'));
             $errors = $form->getValidationResult()->getErrorMessagesIndexedByProperty();
         } // POST
         // show the form without a modal when using the main menu
@@ -864,7 +869,7 @@ final class InvController {
         $inv_tax_rate['include_item_tax'] = ($this->sR->get_setting('default_include_item_tax') == '1' ? 1 : 0);
         
         $inv_tax_rate['inv_tax_rate_amount'] = 0;
-        ($formHydrator->populate($invTaxRateForm, $inv_tax_rate) && $invTaxRateForm->isValid()) ?
+        ($formHydrator->populateAndValidate($invTaxRateForm, $inv_tax_rate)) ?
                         $this->inv_tax_rate_service->saveInvTaxRate(new InvTaxRate(), $inv_tax_rate) : '';
     }
 
@@ -872,6 +877,9 @@ final class InvController {
      * 
      * @param int $id
      * @param InvRepository $invRepo
+     * @param ACIR $aciR
+     * @param ACIIR $aciiR
+     * @param IIAR $iiaR
      * @param ICR $icR
      * @param InvCustomService $icS
      * @param IIR $iiR
@@ -884,13 +892,13 @@ final class InvController {
      * @param PAS $paS
      * @return Response
      */
-    public function delete(#[RouteArgument('id')] int $id, InvRepository $invRepo,
+    public function delete(#[RouteArgument('id')] int $id, InvRepository $invRepo, ACIR $aciR, ACIIR $aciiR, IIAR $iiaR,
             ICR $icR, InvCustomService $icS, IIR $iiR, InvItemService $iiS, ITRR $itrR,
             InvTaxRateService $itrS, IAR $iaR, InvAmountService $iaS, PAR $paR, PAS $paS): Response {
         try {
             $inv = $this->inv($id, $invRepo);
             if ($inv) {
-                $this->inv_service->deleteInv($inv, $icR, $icS, $iiR, $iiS, $itrR, $itrS, $iaR, $iaS, $paR, $paS);
+                $this->inv_service->deleteInv($inv, $aciR, $aciiR, $iiaR, $icR, $icS, $iiR, $iiS, $itrR, $itrS, $iaR, $iaS);
                 $this->flash_message('info', $this->translator->translate('i.record_successfully_deleted'));
                 return $this->web_service->getRedirectResponse('inv/index');
             }
@@ -903,10 +911,17 @@ final class InvController {
     }
 
     /**
+     * 
      * @param int $id
+     * @param IAR $iaR
      * @param IIR $iiR
+     * @param ACIIR $aciiR
+     * @param IIAR $iiaR
+     * @param ITRR $itrR
+     * @param SR $sR
+     * @return \Yiisoft\DataResponse\DataResponse|Response
      */
-    public function delete_inv_item(#[RouteArgument('id')] int $id, IIR $iiR, ACIIR $aciiR, IIAR $iiaR): \Yiisoft\DataResponse\DataResponse|Response {
+    public function delete_inv_item(#[RouteArgument('id')] int $id, IAR $iaR, IIR $iiR, ACIIR $aciiR, IIAR $iiaR, ITRR $itrR, SR $sR): \Yiisoft\DataResponse\DataResponse|Response {
         try {
             $invItem = $this->inv_item($id, $iiR);
             if ($invItem) {
@@ -916,7 +931,7 @@ final class InvController {
                     $aciis = $aciiR->repoInvItemquery((string) $invItem->getId());
                     /** @var InvItemAllowanceCharge $acii */
                     foreach ($aciis as $acii) {
-                        $this->aciis->deleteInvItemAllowanceCharge($acii, $iiaR);
+                        $this->aciis->deleteInvItemAllowanceCharge($acii, $iaR, $iiaR, $itrR, $aciiR, $sR);
                     }
                     $this->inv_item_service->deleteInvItem($invItem);
                     $this->flash_message('info', $this->translator->translate('i.record_successfully_deleted'));
@@ -2042,6 +2057,8 @@ final class InvController {
                 'optionsDataInvNumberDropDownFilter' => $this->optionsDataInvNumberFilter($invRepo),
                 'optionsDataYearMonthDropDownFilter' => $this->optionsDataYearMonthFilter(),
                 'modal_add_inv' => $bootstrap5ModalInv->renderPartialLayoutWithFormAsString('inv', []),
+                'modal_create_recurring_multiple' =>  $this->index_modal_create_recurring_multiple($irR),
+                'modal_copy_inv_multiple' => $this->index_modal_copy_inv_multiple(),
                 'visible' => $visible == '0' ? false : true,
                 'visibleToggleInvSentLogColumn' => $visibleToggleInvSentLogColumn == '0' ? false : true
             ];
@@ -2383,6 +2400,39 @@ final class InvController {
         } // url_key
         exit;
     }
+    
+    /**
+     * @param ISLR $islR
+     * @param IRR $irR
+     * @param IIAR $iiaR
+     * @param IAR $iaR
+     * @param ITRR $itrR
+     * @param IIR $iiR
+     * @param ICR $icR
+     * @param ACIIR $aciiR
+     * @param ACIR $aciR
+     * @param PCR $pcR
+     * @param PYMR $pymR
+     * @param IR $iR
+     * @return Response
+     */
+    public function flush(ISLR $islR, IRR $irR, IIAR $iiaR, IAR $iaR, ITRR $itrR, IIR $iiR, ICR $icR, ACIIR $aciiR, 
+                          ACIR $aciR, PCR $pcR, PYMR $pymR, IR $iR) : Response {
+        /** @var InvSentLog $isl */ foreach ($islR->findAllPreloaded() as $isl) {$islR->delete($isl);}
+        /** @var InvRecurring $ir */ foreach ($irR->findAllPreloaded() as $ir) {$irR->delete($ir);}
+        /** @var InvItemAmount $iia */ foreach ($iiaR->findAllPreloaded() as $iia) {$iiaR->delete($iia);}
+        /** @var InvAmount $ia */ foreach ($iaR->findAllPreloaded() as $ia) {$iaR->delete($ia);}
+        /** @var InvTaxRate $itr */ foreach ($itrR->findAllPreloaded() as $itr) {$itrR->delete($itr);}
+        /** @var InvItemAllowanceCharge $iiac */foreach ($aciiR->findAllPreloaded() as $iiac) {$aciiR->delete($iiac);}
+        /** @var InvItem $ii */ foreach ($iiR->findAllPreloaded() as $ii) {$iiR->delete($ii);}
+        /** @var InvCustom $ic */ foreach ($icR->findAllPreloaded() as $ic) {$icR->delete($ic);}
+        /** @var InvAllowanceCharge $iac */ foreach ($aciR->findAllPreloaded() as $iac) {$aciR->delete($iac);}
+        /** @var PaymentCustom $pc */ foreach ($pcR->findAllPreloaded() as $pc) {$pcR->delete($pc);}
+        /** @var Payment $pym */ foreach ($pymR->findAllPreloaded() as $pym) {$pymR->delete($pym);}
+        /** @var Inv $i */ foreach ($iR->findAllPreloaded() as $i) {$iR->delete($i);}
+        $this->flash_message('danger', $this->translator->translate('invoice.invoice.caution.deleted.invoices'));
+        return $this->web_service->getRedirectResponse('inv/index');
+    }
 
     ///**
     // * This function has not been tested
@@ -2510,24 +2560,40 @@ final class InvController {
         }
         return null;
     }
-
-    /**
-     * @param string $copy_id
-     */
-    private function inv_to_inv_inv_amount(string $inv_id, string $copy_id): void {
-        $this->inv_amount_service->initializeCopyInvAmount(new InvAmount(), (int) $inv_id, $copy_id);
-    }
-
     
+    /**
+     * 
+     * @param int $invId
+     * @param int $copiedId
+     * @param IAR $iaR
+     * @return void
+     */
+    private function inv_to_inv_inv_amount(int $invId, int $copiedId, IAR $iaR) : void {
+        $original = $iaR->repoInvquery($invId);
+        if (null!==$original) {
+            $array = [];
+            $array['inv_id'] = $original->getInv_id();
+            $array['item_subtotal'] = $original->getItem_subtotal();
+            $array['item_taxtotal'] = $original->getItem_tax_total();
+            $array['tax_total'] = $original->getTax_total();
+            $array['total'] = $original->getTotal();
+            $array['paid'] = 0;
+            $array['balance'] = $original->getBalance();
+            $copied = $iaR->repoInvquery($copiedId);
+            null!==$copied ? $this->inv_amount_service->saveInvAmountViaCalculations($copied, $array) : '';
+        }    
+    } 
 
     /**
      * @see Data fed from inv.js->$(document).on('click', '#inv_to_inv_confirm', function () {
      * @param Request $request
      * @param FormHydrator $formHydrator
+     * @param ACIIR $aciiR
      * @param GR $gR
      * @param IIAS $iiaS
      * @param PR $pR
      * @param TASKR $taskR
+     * @param IAR $iaR
      * @param ICR $icR
      * @param IIAR $iiaR
      * @param IIR $iiR
@@ -2540,7 +2606,7 @@ final class InvController {
      * @param UNR $unR
      */
     public function inv_to_inv_confirm(Request $request, FormHydrator $formHydrator,
-            GR $gR, IIAS $iiaS, PR $pR, TASKR $taskR, ICR $icR,
+            ACIIR $aciiR, GR $gR, IIAS $iiaS, PR $pR, TASKR $taskR, IAR $iaR, ICR $icR,
             IIAR $iiaR, IIR $iiR, IR $iR, ITRR $itrR, TRR $trR, UR $uR, UCR $ucR, UIR $uiR, UNR $unR): \Yiisoft\DataResponse\DataResponse|Response {
       $data_inv_js = $request->getQueryParams();
       $inv_id = (string) $data_inv_js['inv_id'];
@@ -2574,9 +2640,10 @@ final class InvController {
             // Transfer each inv_item to inv_item and the corresponding inv_item_amount to inv_item_amount for each item
             $copy_id = $copy->getId();
             if (null !== $copy_id) {
-              $this->inv_to_inv_inv_items($inv_id, $copy_id, $iiaR, $iiaS, $pR, $taskR, $iiR, $trR, $formHydrator, $unR);
+              $this->inv_to_inv_inv_items($inv_id, $copy_id, $iiaR, $iiaS, $pR, $taskR, $iiR, $trR, $aciiR, $formHydrator, $unR);
               $this->inv_to_inv_inv_tax_rates($inv_id, $copy_id, $itrR, $formHydrator);
               $this->inv_to_inv_inv_custom($inv_id, $copy_id, $icR, $formHydrator);
+              $this->inv_to_inv_inv_amount((int)$inv_id, (int)$copy_id, $iaR);
               $iR->save($copy);
               $parameters = ['success' => 1];
               //return response to inv.js to reload page at location
@@ -2616,47 +2683,122 @@ final class InvController {
             }
         }
     }
-
+    
     /**
+     * This procedure is used solely for making identical copies of invoices
+     * and is used in inv_to_inv_confirm
      * @param string $copy_id
      */
-    private function inv_to_inv_inv_items(string $inv_id, string $copy_id, IIAR $iiaR, IIAS $iiaS, PR $pR, TASKR $taskR, IIR $iiR, TRR $trR, FormHydrator $formHydrator, UNR $unR): void {
+    private function inv_to_inv_inv_items(string $inv_id, string $copy_id, 
+            IIAR $iiaR, IIAS $iiaS, PR $pR, TASKR $taskR, IIR $iiR, TRR $trR, ACIIR $aciiR, 
+            FormHydrator $formHydrator, UNR $unR): void {
         // Get all items that belong to the original invoice
         $items = $iiR->repoInvItemIdquery($inv_id);
         /**
          * @var InvItem $inv_item
          */
         foreach ($items as $inv_item) {
+            $copy_item = [];
             $copy_item = [
-                'inv_id' => $copy_id,
-                'tax_rate_id' => $inv_item->getTax_rate_id(),
-                'product_id' => $inv_item->getProduct_id(),
+                // Follow sequence of InvItem construct
+                //id
+                'date added' => new \DateTimeImmutable(),                
                 'task_id' => $inv_item->getTask_id(),
                 'name' => $inv_item->getName(),
                 'description' => $inv_item->getDescription(),
+                /**
+                 * @see quantity #[GreaterThan(0.00)]. See InvItemForm
+                 */
                 'quantity' => $inv_item->getQuantity(),
                 'price' => $inv_item->getPrice(),
                 'discount_amount' => $inv_item->getDiscount_amount(),
                 'order' => $inv_item->getOrder(),
-                'is_recurring' => $inv_item->getIs_recurring(),
+                'is_recurring' => $inv_item->getIs_recurring(), 
+                /**
+                 * @see Not required since will conflict with task which does not require a product_unit i.e. service/product
+                 */
                 'product_unit' => $inv_item->getProduct_unit(),
+                'inv_id' => $copy_id,                
+                'so_item_id' => $inv_item->getSo_item_id(),
+                /**
+                 * @see tax_rate_id #[Required]. See InvItemForm
+                 */
+                'tax_rate_id' => $inv_item->getTax_rate_id(),
+                'product_id' => $inv_item->getProduct_id(),
                 'product_unit_id' => $inv_item->getProduct_unit_id(),
-                // Recurring date
-                'date' => ''
+                // recurring date
+                'date' => $inv_item->getDate(),
+                'belongs_to_vat_invoice' => $inv_item->getBelongs_to_vat_invoice(), 
+                'delivery_id' => $inv_item->getDelivery_id(),
+                'note' => $inv_item->getNote(),
             ];
-
-            // Create an equivalent invoice item for the invoice item
-            $invItem = new InvItem();
-            $form = new InvItemForm($invItem, (int)$inv_id);
-            if ($formHydrator->populateAndValidate($form, $copy_item)) {
-                if (!empty($inv_item->getProduct_id()) && empty($inv_item->getTask_id())) {
-                    // (InvItem $model, InvItemForm $form, string $inv_id,PR $pr, SR $s, UNR $unR)
-                    $this->inv_item_service->addInvItem_product($invItem, $copy_item, $copy_id, $pR, $trR, $iiaS, $iiaR, $this->sR, $unR);
+            $originalInvItemId = $inv_item->getId();
+            if (null!==$originalInvItemId) {
+                // Create an equivalent invoice item for the invoice item
+                $invItem = new InvItem();
+                $form = new InvItemForm($invItem, (int)$inv_id);
+                if ($formHydrator->populateAndValidate($form, $copy_item)) {
+                    $productId = (int)$inv_item->getProduct_id();
+                    if ($productId > 0)  {
+                        $newInvItemId = $this->inv_item_service->addInvItem_product($invItem, $copy_item, $copy_id, $pR, $trR, $iiaS, $iiaR, $this->sR, $unR);
+                        if (null!==$newInvItemId) {
+                            $this->inv_item_service->addInvItem_allowance_charges($copy_id, $originalInvItemId, $newInvItemId, $aciiR);
+                            // build a total of the existing inv item allowance or charges to be included in the new copy's inv item amount record
+                            $accumulativeChargeTotal = $this->inv_item_service->accumulativeChargeTotal($newInvItemId, $aciiR);
+                            $accumulativeAllowanceTotal = $this->inv_item_service->accumulativeAllowanceTotal($newInvItemId, $aciiR);
+                            if (($invItem->getQuantity() >=  0.00) && 
+                                ($invItem->getPrice() >= 0.00) && 
+                                ($invItem->getDiscount_amount() >= 0.00) &&
+                                ($inv_item->getTaxRate()?->getTax_rate_percent() >= 0.00)) {
+                                    $this->inv_item_service->saveInvItemAmount(
+                                        $newInvItemId, 
+                                        $invItem->getQuantity() ?? 0.00,
+                                        $invItem->getPrice() ?? 0.00, 
+                                        $invItem->getDiscount_amount() ?? 0.00,
+                                        $accumulativeChargeTotal,
+                                        $accumulativeAllowanceTotal,
+                                        $inv_item->getTaxRate()?->getTax_rate_percent() ?? 0.00,
+                                        $iiaS,
+                                        $iiaR,
+                                        $this->sR
+                                    );
+                            }
+                        }    
+                    } 
+                    $taskId = (int)$inv_item->getTask_id();
+                    if ($taskId > 0) {
+                        $newInvItemId = $this->inv_item_service->addInvItem_task($invItem, $copy_item, $copy_id, $taskR, $trR, $iiaS, $iiaR, $this->sR);
+                        if (null!==$newInvItemId) {
+                            $this->inv_item_service->addInvItem_allowance_charges($copy_id, $originalInvItemId, $newInvItemId, $aciiR);
+                            // build a total of the existing inv item allowance or charges to be included in the new copy's inv item amount record
+                            $accumulativeChargeTotal = $this->inv_item_service->accumulativeChargeTotal($newInvItemId, $aciiR);
+                            $accumulativeAllowanceTotal = $this->inv_item_service->accumulativeAllowanceTotal($newInvItemId, $aciiR);
+                            if (($invItem->getQuantity() >=  0.00) && 
+                                ($invItem->getPrice() >= 0.00) && 
+                                ($invItem->getDiscount_amount() >= 0.00) &&
+                                ($inv_item->getTaxRate()?->getTax_rate_percent() >= 0.00)) {
+                                    $this->inv_item_service->saveInvItemAmount(
+                                        $newInvItemId, 
+                                        $invItem->getQuantity() ?? 0.00,
+                                        $invItem->getPrice() ?? 0.00, 
+                                        $invItem->getDiscount_amount() ?? 0.00,
+                                        $accumulativeChargeTotal,
+                                        $accumulativeAllowanceTotal,
+                                        $inv_item->getTaxRate()?->getTax_rate_percent() ?? 0.00,
+                                        $iiaS,
+                                        $iiaR,
+                                        $this->sR
+                                    );
+                            }
+                        }
+                    } 
                 } else {
-                    $this->inv_item_service->addInvItem_task($invItem, $copy_item, $copy_id, $taskR, $trR, $iiaS, $iiaR, $this->sR);
+                    if (!empty($errors = $form->getValidationResult()->getErrorMessagesIndexedByProperty())) {
+                        $this->flash_message('danger', 'You have validation errors on '. ($inv_item->getId() ?? ''));
+                    }
                 }
-            } 
-        } // foreach
+            } // null!==originalItemId    
+        } // foreach   
     }
 
     /**
@@ -2734,6 +2876,94 @@ final class InvController {
             
         }
         return $this->factory->createResponse(Json::encode($parameters));
+    }
+    
+    /**
+     * @param Request $request
+     * @param FormHydrator $formHydrator
+     */
+    public function multiplecopy(Request $request, FormHydrator $formHydrator, ACIIR $aciiR, GR $gR, IIAS $iiaS, PR $pR, TASKR $taskR, ICR $icR, IAR $iaR,
+            IIAR $iiaR, IIR $iiR, IR $iR, ITRR $itrR, TRR $trR, UR $uR, UCR $ucR, UIR $uiR, UNR $unR) : \Yiisoft\DataResponse\DataResponse {
+        $data = $request->getQueryParams();
+        /**
+         * Purpose: Provide a list of ids from inv/index checkbox column as an array
+         * @var array $data['keylist']
+         */
+        $keyList = $data['keylist'] ?? [];
+        $datetimeCreated = new \DateTimeImmutable();
+        if (!empty($keyList)) {
+            /**
+             * @var string $key
+             * @var string $value
+             */
+            foreach ($keyList as $key => $value) {
+                $invId = $value;
+                $original = $iR->repoInvUnloadedquery($invId);
+                if ($original) {
+                    $group_id = $original->getGroup_id();
+                    $invoice_body = [
+                        'client_id' => $original->getClient_id(),
+                        'group_id' => $original->getGroup_id(),
+                        'so_id' => $original->getSo_id(),
+                        'quote_id' => $original->getQuote_id(),
+                        // user_id below                      
+                        'status_id' => $this->sR->get_setting('mark_invoices_sent_copy') === '1' ? 2 : 1,
+                        'is_read_only' => $this->sR->get_setting('mark_invoices_sent_copy') === '1' ? true: false,
+                        'password' => '',
+                        // date_supplied and date_tax_point will change as soon as goods are supplied and a supplied/service date is recorded
+                        'date_supplied' => new \DateTimeImmutable('now'),
+                        'date_tax_point' => new \DateTimeImmutable('now'),
+                        'time_created' => (new \DateTimeImmutable('now'))->format('H:i:s'),
+                        // the company will be registered for their own personal peppol stand-in-code
+                        'stand_in_code' => $this->sR->get_setting('stand_in_code'),
+                        // if draft invoices must get invoice numbers
+                        'number' => $this->sR->get_setting('generate_invoice_number_for_draft') === '1' ? (string)$gR->generate_number((int)$original->getGroup_id(), true) : '',
+                        'discount_amount' => floatval($original->getDiscount_amount()),
+                        'discount_percent' => floatval($original->getDiscount_percent()),
+                        'terms' => $original->getTerms(),
+                        'note' => $original->getNote(),
+                        'document_description' => $original->getDocumentDescription(),
+                        'url_key' => Random::string(32),
+                        'payment_method' => $original->getPayment_method(),
+                        // a copied invoice will not have a credit note
+                        'creditinvoice_parent_id' => null,
+                        'delivery_id' => $original->getDelivery_id(),
+                        'delivery_location_id' => $original->getDelivery_location_id(),
+                        'postal_address_id' => $original->getPostal_address_id(),
+                        'contract_id' => $original->getContract_id(),
+                    ];
+                    $copy = new Inv();
+                    $form = new InvForm($copy);
+                    if (($formHydrator->populateAndValidate($form, $invoice_body))) {
+                        /**
+                         * @var string $invoice_body['client_id']
+                         */
+                        $client_id = $invoice_body['client_id'];
+                        $user = $this->active_user($client_id, $uR, $ucR, $uiR);
+                        if (null!==$user) {  
+                            $copied = $this->inv_service->copyInv($user, $copy, $invoice_body, $this->sR, $gR);
+                            /**
+                             * Note: Reset the immutable date_created outside the inv_service
+                             */
+                            $copied->setDate_created((string)$data['modal_created_date']);
+                            $copied_id = $copied->getId();
+                            $iR->save($copied);
+                            // Transfer each inv_item to inv_item and the corresponding inv_item_amount to inv_item_amount for each item
+                            
+                            if (null!== $copied_id) {
+                                $this->inv_to_inv_inv_items($invId, $copied_id, $iiaR, $iiaS, $pR, $taskR, $iiR, $trR, $aciiR, $formHydrator, $unR);
+                                $this->inv_to_inv_inv_tax_rates($invId, $copied_id, $itrR, $formHydrator);
+                                $this->inv_to_inv_inv_custom($invId, $copied_id, $icR, $formHydrator);
+                                $this->inv_to_inv_inv_amount((int)$invId, (int)$copied_id, $iaR);
+                                $iR->save($copy);
+                            }
+                        }
+                    }
+                } // original               
+            } // foreach $keyList            
+            return $this->factory->createResponse(Json::encode(['success' => 1]));
+        } // !empty($keyList)
+        return $this->factory->createResponse(Json::encode(['success' => 0]));
     }
 
     /**
@@ -3532,7 +3762,7 @@ final class InvController {
                         'inv' => $iR->repoInvLoadedquery((string) $this->session->get('inv_id')),
                         'clients' => $cR->repoUserClient($ucR->getClients_with_user_accounts()),
                         'groups' => $gR->findAllPreloaded(),
-                    ]),
+                    ]), 
                     // Partial item table: Used to build items either products/tasks that make up the invoice
                     // Partial item table: Items and Grand Totals
                     'partial_item_table' => $this->view_partial_item_table($show_buttons, $id, $aciR, $aciiR, $pR, $piR, $taskR, $iiR, $iiaR, $iR, $trR, $uR,
@@ -3542,7 +3772,6 @@ final class InvController {
                     'modal_change_client' => $this->view_modal_change_client($id, $cR, $iR),
                     'modal_inv_to_pdf' => $this->view_modal_inv_to_pdf($id, $iR),
                     'modal_inv_to_html' => $this->view_modal_inv_to_html($id, $iR),
-                    'modal_create_recurring' => $this->view_modal_create_recurring($irR),
                     'modal_create_credit' => $this->view_modal_create_credit($id, $gR, $iR),
                     'view_custom_fields' => $this->view_custom_fields($cfR, $cvR, $inv_custom_values),
                     'partial_inv_attachments' => $this->view_partial_inv_attachments($_language, $url_key, (int) $client_id, $upR),
@@ -3552,13 +3781,30 @@ final class InvController {
                         $this->translator->translate('invoice.payment.method'),
                         $this->translator->translate('invoice.payment.information.payment.method.required'),
                         'inv'
-                    )  
+                    )
                 ];
                 return $this->view_renderer->render('inv/view', $parameters);
             } // if $inv_amount
             return $this->web_service->getNotFoundResponse();
         } // if $inv
         return $this->web_service->getNotFoundResponse();
+    }
+    
+    /**
+     * @param IRR $irR
+     * @return string
+     */
+    private function index_modal_create_recurring_multiple(IRR $irR): string {
+        return $this->view_renderer->renderPartialAsString('//invoice/inv/modal_create_recurring_multiple', [
+            'recur_frequencies' => $irR->recur_frequencies()
+        ]);
+    }
+    
+    /**
+     * @return string
+     */
+    private function index_modal_copy_inv_multiple(): string {
+        return $this->view_renderer->renderPartialAsString('//invoice/inv/modal_copy_inv_multiple');
     }
 
     /**
@@ -3601,17 +3847,7 @@ final class InvController {
             'invoice_groups' => $gR->repoCountAll() > 0 ? $gR->findAllPreloaded() : null,
             'inv' => $this->inv($id, $iR, false)
         ]);
-    }
-
-    /**
-     * @param IRR $irR
-     * @return string
-     */
-    private function view_modal_create_recurring(IRR $irR): string {
-        return $this->view_renderer->renderPartialAsString('//invoice/inv/modal_create_recurring', [
-            'recur_frequencies' => $irR->recur_frequencies()
-        ]);
-    }
+    }    
 
     /**
      * @param string $_language

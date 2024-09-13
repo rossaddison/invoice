@@ -5,7 +5,12 @@ declare(strict_types=1);
 namespace App\Invoice\InvAmount;
 
 use App\Invoice\Entity\InvAmount;
-
+use App\Invoice\Entity\InvItem;
+use App\Invoice\Helpers\NumberHelper;
+use App\Invoice\InvAmount\InvAmountRepository as IAR;
+use App\Invoice\InvItemAmount\InvItemAmountRepository as IIAR;
+use App\Invoice\InvTaxRate\InvTaxRateRepository as ITRR;
+use Doctrine\Common\Collections\ArrayCollection;
 
 final class InvAmountService
 {
@@ -113,6 +118,60 @@ final class InvAmountService
        $model->setPaid((float)$array['paid']);
        $model->setBalance((float)$array['balance']);
        $this->repository->save($model);
+    }
+    
+    
+    /**
+     * Update the Invoice Amounts when an inv item allowance or charge is added to an invoice item.
+     * Also update the Invoice totals using Numberhelper calculate inv_taxes function
+     * @see InvItemAllowanceChargeController functions add and edit
+     * @param int $inv_id
+     * @param IAR $iaR
+     * @param IIAR $iiaR
+     * @param ITRR $itrR
+     * @param NumberHelper $numberHelper
+     * @return void
+     */
+    public function updateInvAmount(int $inv_id, IAR $iaR, IIAR $iiaR, ITRR $itrR, NumberHelper $numberHelper) : void {
+        $model = $this->repository->repoInvquery($inv_id);
+        if (null!==$model) {
+            $inv = $model->getInv();
+            if (null!==$inv) {
+                /** 
+                 * @see Entity\Inv #[HasMany(target: InvItem::class)] private ArrayCollection $items;
+                 * @var  
+                 */
+                $items = $inv->getItems();
+                $subtotal = 0.00;
+                $taxTotal = 0.00;
+                $discount = 0.00;
+                $charge = 0.00;
+                $allowance = 0.00;
+                /**
+                 * @var InvItem $item
+                 */
+                foreach ($items as $item) {
+                    $invItemId = $item->getId();
+                    if (null!== $invItemId) {
+                        $invItemAmount = $iiaR->repoInvItemAmountquery((string)$invItemId);
+                        if ($invItemAmount) {
+                            $subtotal += $invItemAmount->getSubtotal() ?? 0.00; 
+                            $taxTotal += $invItemAmount->getTax_total() ?? 0.00;
+                            $discount += $invItemAmount->getDiscount() ?? 0.00;
+                            $charge += $invItemAmount->getCharge() ?? 0.00;
+                            $allowance += $invItemAmount->getAllowance() ?? 0.00;
+                        }
+                    } 
+                }
+                $model->setSign(1);
+                $model->setItem_subtotal($subtotal);
+                $model->setItem_tax_total($taxTotal);
+                $additionalTaxTotal = $numberHelper->calculate_inv_taxes((string)$inv_id, $itrR, $iaR);
+                $model->setTax_total($additionalTaxTotal);
+                $model->setTotal($subtotal+$taxTotal+$additionalTaxTotal);               
+                $this->repository->save($model);
+            }
+        }    
     }
     
     /**

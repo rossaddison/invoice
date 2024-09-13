@@ -5,8 +5,11 @@ declare(strict_types=1);
 namespace App\Invoice\InvItemAllowanceCharge;
 
 use App\Invoice\Entity\InvItemAllowanceCharge;
-
+use App\Invoice\InvAmount\InvAmountRepository as IAR;
+use App\Invoice\InvItemAllowanceCharge\InvItemAllowanceChargeRepository as ACIIR;
 use App\Invoice\InvItemAmount\InvItemAmountRepository as IIAR;
+use App\Invoice\InvTaxRate\InvTaxRateRepository as ITRR;
+use App\Invoice\Setting\SettingRepository as SR;
 
 
 final class InvItemAllowanceChargeService
@@ -34,33 +37,53 @@ final class InvItemAllowanceChargeService
         $model->setVat($vat);
         $this->repository->save($model);
     }
-    
-    public function deleteInvItemAllowanceCharge(InvItemAllowanceCharge $model, IIAR $iiaR): void
+        
+    public function deleteInvItemAllowanceCharge(InvItemAllowanceCharge $model, IAR $iaR, IIAR $iiaR, ITRR $itrR, ACIIR $aciiR, SR $sR): void
     {
+        // before deleting the allowance/charge, record its related inv_item_id so that we can update the inv_item_amount record
         $inv_item_id = $model->getInv_item_id();
+        // delete the allowance / charge
+        $this->repository->delete($model);
         $inv_item_amount = $iiaR->repoInvItemAmountquery($inv_item_id);
+        // rebuild the accumulative totals for the inv_item_amount
         if (null!==$inv_item_amount) {
-            $all_charges = $inv_item_amount->getCharge() ?? 0.00;
-            $all_allowances = $inv_item_amount->getAllowance() ?? 0.00;
-            $old_tax_total = $inv_item_amount->getTax_total() ?? 0.00;
-            $amount = (float)$model->getAmount();
-            $vat = (float)$model->getVat();
-            $old_total = $inv_item_amount->getTotal() ?? 0.00;
-            if ($model->getAllowanceCharge()?->getIdentifier() == true) {
-                 // deleting a charge will reduce the total
-                 $new_total = $old_total - $amount - $vat;
-                 $inv_item_amount->setCharge($all_charges-$amount);
-                 $inv_item_amount->setTax_total($old_tax_total-$vat);
-                 $inv_item_amount->setTotal($new_total);
-            } else {
-                 // deleting an allowance will increase the total
-                 $new_total = $old_total + $amount + $vat;
-                 $inv_item_amount->setAllowance($all_allowances-$amount);
-                 $inv_item_amount->setTax_total($old_tax_total+$vat);
-                 $inv_item_amount->setTotal($new_total);
+            $all_charges = 0.00;
+            $all_charges_vat = 0.00;                        
+            $all_allowances = 0.00;
+            $all_allowances_vat = 0.00;
+            $aciis = $aciiR->repoInvItemquery($inv_item_id);   
+            /** @var InvItemAllowanceCharge $acii */
+            foreach ($aciis as $acii) {
+                // charge add
+                if ($acii->getAllowanceCharge()?->getIdentifier() == '1') {
+                    $all_charges += (float)$acii->getAmount();
+                    $all_charges_vat += (float)$acii->getVat();
+                } else {
+                    // allowance subtract
+                    $all_allowances += (float)$acii->getAmount();
+                    $all_allowances_vat += (float)$acii->getVat();
+                }
             }
-            $iiaR->save($inv_item_amount);
-            $this->repository->delete($model);
+            // Record the rebuilt accumulative charges and allowances totals in the InvItemAmount Entity
+            $inv_item_amount->setCharge($all_charges);
+            $inv_item_amount->setAllowance($all_allowances);
+            $all_vat = $all_charges_vat - $all_allowances_vat;
+            $current_item_quantity = $inv_item_amount->getInvItem()?->getQuantity() ?? 0.00;
+            $current_item_price = $inv_item_amount->getInvItem()?->getPrice() ?? 0.00;
+            $discount_per_item = $inv_item_amount->getInvItem()?->getDiscount_amount() ?? 0.00;
+            $quantity_price = $current_item_quantity * $current_item_price;
+            $current_discount_item_total = $current_item_quantity * $discount_per_item;
+            $tax_percent = $inv_item_amount->getInvItem()?->getTaxRate()?->getTax_rate_percent();
+            $qpIncAc = $quantity_price + $all_charges - $all_allowances;
+            $current_tax_total = ($qpIncAc - $current_discount_item_total) * ($tax_percent ?? 0.00) / 100;
+            $new_tax_total = $current_tax_total + ($sR->get_setting('enable_vat_registration') == '0' ? 0.00 : $all_vat);
+            // include all item allowance charges in the subtotal
+            $inv_item_amount->setSubtotal($qpIncAc);
+            $inv_item_amount->setDiscount($current_discount_item_total);
+            $inv_item_amount->setTax_total($new_tax_total);
+            $overall_total = $qpIncAc - $current_discount_item_total + $new_tax_total; 
+            $inv_item_amount->setTotal($overall_total);
+            $iiaR->save($inv_item_amount);     
         }
-    }    
+    }
 }

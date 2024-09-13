@@ -9,6 +9,7 @@ use Yiisoft\Html\Tag\A;
 use Yiisoft\Html\Tag\Div;
 use Yiisoft\Html\Tag\Form;
 use Yiisoft\Html\Tag\I;
+use Yiisoft\Html\Tag\Input;
 use Yiisoft\Html\Tag\Input\Checkbox;
 use Yiisoft\Html\Tag\Label;
 use Yiisoft\Yii\DataView\Column\Base\DataContext;
@@ -47,6 +48,8 @@ use Yiisoft\Yii\DataView\GridView;
  * @var string $csrf
  * @var string $label
  * @var string $modal_add_inv
+ * @var string $modal_copy_inv_multiple
+ * @var string $modal_create_recurring_multiple
  * @var string $status
  * @psalm-var array<array-key, array<array-key, string>|string> $optionsDataInvNumberDropDownFilter
  * @psalm-var array<array-key, array<array-key, string>|string> $optionsDataClientsDropdownFilter
@@ -58,14 +61,45 @@ use Yiisoft\Yii\DataView\GridView;
 <?= $alert; ?>
 <?php
 /**
+ * Use with the checkbox column to copy invoices according to date.
+ */
+
+$copyInvoiceMultiple = A::tag()
+        ->addAttributes(['type' => 'reset', 'data-bs-toggle' => 'modal', 'title' => Html::encode($translator->translate('i.copy_invoice'))])
+        ->addClass('btn btn-success')
+        /**
+         * Purpose: Trigger modal_copy_inv_multiple.php to pop up
+         * @see id="modal-copy-inv-multiple" class="modal" on resources/views/invoice/inv/modal_copy_inv_multiple.php
+         */
+        ->href('#modal-copy-inv-multiple')
+        ->content('☑️'.$translator->translate('i.copy_invoice'))
+        ->id('btn-modal-copy-inv-multipe')
+        ->render();
+
+/**
  * Use with the checkbox column to mark invoices as sent.
- * @see \invoice\src\Invoice\Asset\rebuild\js\iinv.js $(document).on('click', '#btn-mark-as-sent', function () {
+ * @see \invoice\src\Invoice\Asset\rebuild\js\inv.js $(document).on('click', '#btn-mark-as-sent', function () {
  */
 $markAsSent = A::tag()
-        ->addAttributes(['type' => 'reset', 'data-bs-toggle' => 'tooltip', 'title' => $translator->translate('i.sent')])
+        ->addAttributes(['type' => 'reset', 'data-bs-toggle' => 'tooltip', 'title' => Html::encode($translator->translate('i.sent'))])
         ->addClass('btn btn-success')
-        ->content($iR->getSpecificStatusArrayEmoji(2))
+        ->content('☑️'.$translator->translate('i.sent').$iR->getSpecificStatusArrayEmoji(2))
         ->id('btn-mark-as-sent')
+        ->render();
+
+/**
+ * Used with the checkbox column to use resources/views/invoice/inv/modal_create_recurring_multiple.php
+ * @see https://emojipedia.org/recycling-symbol
+ */
+$markAsRecurringMultiple = A::tag()
+        ->addAttributes(['type' => 'reset', 'data-bs-toggle' => 'modal'])
+        ->addClass('btn btn-info')
+        /**
+         * Purpose: Trigger modal_create_recurring_modal.php to pop up
+         * @see id="create-recurring-multiple" class="modal" on resources/views/invoice/inv/modal_create_recurring_multiple.php
+         */
+        ->href('#create-recurring-multiple')
+        ->content('☑️'.$translator->translate('i.recurring').'♻️')        
         ->render();
 
 $toolbarReset = A::tag()
@@ -107,14 +141,6 @@ $toolbar = Div::tag();
             </a>
         <?php } ?>
     </div>
-    <br>
-    <?php 
-        /**
-         * Mark the invoice as Sent
-         * @see $button::statusMark($generator, $iR, $status, $translated, $guest) 
-         */
-        //echo $button::statusMark($urlGenerator, $iR, 2, $translator->translate('i.sent'), false);
-    ?>
     <br>
     <div class="submenu-row">
         <!--  Route::get('/inv[/page/{page:\d+}[/status/{status:\d+}]]') -->
@@ -189,10 +215,20 @@ $toolbar = Div::tag();
             /**
              * @see header checkbox: name: 'checkbox-selection-all'
              */    
-            content: static function(Checkbox $input, DataContext $context) : string {
+            content: static function(Checkbox $input, DataContext $context) use ($translator) : string {
                 $inv = $context->data;
                 if (($inv instanceof Inv) && (null!==($id = $inv->getId()))) {
-                    return '<input type="checkbox" id="'.$id.'" name="checkbox[]" value="'.$id.'">';
+                    return Input::tag()
+                           ->type('checkbox')
+                           ->addAttributes([
+                               'id'=> $id, 
+                               'name' => 'checkbox[]', 
+                               'data-bs-toggle' => 'tooltip', 
+                               'title' => $inv->getInvAmount()->getTotal() == 0 ? 
+                                   $translator->translate('invoice.invoice.index.checkbox.add.some.items.to.enable') : ''])
+                           ->value($id) 
+                           ->disabled($inv->getInvAmount()->getTotal() > 0 ? false : true)
+                           ->render(); 
                 }
                 return '';
             },
@@ -204,13 +240,35 @@ $toolbar = Div::tag();
             content: static fn(Inv $model) => $model->getId(),
             // remove the hyperlinked sort header. Using customized sort button    
             withSorting: false
-        ),
+        ), 
         new DataColumn(
-            content: static function (Inv $model) use ($urlGenerator): string {
-                return Html::a('🔍', $urlGenerator->generate('inv/view', 
-                               ['id' => $model->getId()]), ['style' => 'text-decoration:none'])->render();
-            }  
-        ),        
+            field: 'number',
+            property: 'filterInvNumber',       
+            header: $translator->translate('invoice.invoice.number'),    
+            content: static function (Inv $model) use ($urlGenerator, $iR): string {
+                $creditInvoiceUrl = '';
+                if ((int)$model->getCreditinvoice_parent_id() > 0)  {
+                        // include a path to the parent invoice as well as the credit note/invoice
+                        $inv = $iR->repoInvUnLoadedquery($model->getCreditinvoice_parent_id());
+                        if ($inv) {
+                            $creditInvoiceUrl = '⬅️'.Html::a($inv->getNumber() ?? '#', $urlGenerator->generate('inv/view', 
+                                                       ['id' => $model->getCreditinvoice_parent_id()]
+                                                    ),
+                                                    [
+                                                       'style' => 'text-decoration:none'
+                                                    ])->render();
+                        }
+                        $creditInvoiceUrl = '';
+                }
+                return  Html::a(($model->getNumber() ?? '#'). ' 🔍', $urlGenerator->generate('inv/view', ['id' => $model->getId()]),
+                        [
+                           'style' => 'text-decoration:none'
+                        ])->render() . 
+                        $creditInvoiceUrl;
+            },
+            filter: $optionsDataInvNumberDropDownFilter,
+            withSorting: false        
+        ),           
         new DataColumn(
             content: static function (Inv $model) use ($s, $urlGenerator): string {
                 return $model->getIs_read_only() === false && $s->get_setting('disable_read_only') === (string) 0 
@@ -283,35 +341,7 @@ $toolbar = Div::tag();
                 return Html::tag('span', $iR->getSpecificStatusArrayEmoji((int)$model->getStatus_id()). $label, ['class' => 'label label-' . $iR->getSpecificStatusArrayClass((int)$model->getStatus_id())]);
             },
             withSorting: false
-        ),
-        new DataColumn(
-            field: 'number',
-            property: 'filterInvNumber',       
-            header: $translator->translate('invoice.invoice.number'),    
-            content: static function (Inv $model) use ($urlGenerator, $iR): string {
-                $creditInvoiceUrl = '';
-                if ((int)$model->getCreditinvoice_parent_id() > 0)  {
-                        // include a path to the parent invoice as well as the credit note/invoice
-                        $inv = $iR->repoInvUnLoadedquery($model->getCreditinvoice_parent_id());
-                        if ($inv) {
-                            $creditInvoiceUrl = '⬅️'.Html::a($inv->getNumber() ?? '#', $urlGenerator->generate('inv/view', 
-                                                       ['id' => $model->getCreditinvoice_parent_id()]
-                                                    ),
-                                                    [
-                                                       'style' => 'text-decoration:none'
-                                                    ])->render();
-                        }
-                        $creditInvoiceUrl = '';
-                }
-                return  Html::a($model->getNumber() ?? '#', $urlGenerator->generate('inv/view', ['id' => $model->getId()]),
-                        [
-                           'style' => 'text-decoration:none'
-                        ])->render() . 
-                        $creditInvoiceUrl;
-            },
-            filter: $optionsDataInvNumberDropDownFilter,
-            withSorting: false        
-        ),      
+        ),           
         new DataColumn(
             field: 'client_id',
             property: 'filterClient',
@@ -515,8 +545,12 @@ $toolbar = Div::tag();
         Div::tag()->addClass('float-end m-3')->content(Button::ascDesc($urlGenerator, 'client_id', 'warning', $translator->translate('i.client'), false))->encode(false)->render().    
         Div::tag()->addClass('float-end m-3')->content(Button::ascDesc($urlGenerator, 'status_id', 'success', $translator->translate('i.status'), false))->encode(false)->render().    
         Div::tag()->addClass('float-end m-3')->content(Button::ascDesc($urlGenerator, 'id', 'info', $translator->translate('i.id'), false))->encode(false)->render().
+        // use the checkboxcolumn to copy multiple invoices accrding to a new date
+        Div::tag()->addClass('float-end m-3')->content($copyInvoiceMultiple)->encode(false)->render() .  
         // use the checkboxcolumn to mark invoices as sent
-        Div::tag()->addClass('float-end m-3')->content($markAsSent)->encode(false)->render() .      
+        Div::tag()->addClass('float-end m-3')->content($markAsSent)->encode(false)->render() .  
+        // use the checkboxcolumn to mark invoices as recurring
+        Div::tag()->addClass('float-end m-3')->content($markAsRecurringMultiple)->encode(false)->render() .     
         Form::tag()->close();
     $grid_summary = $s->grid_summary(
         $paginator,
@@ -545,3 +579,5 @@ $toolbar = Div::tag();
 ?>
 
 <?php echo $modal_add_inv; ?>
+<?php echo $modal_create_recurring_multiple; ?>
+<?php echo $modal_copy_inv_multiple; ?>

@@ -175,14 +175,13 @@ public function calculate_inv(string $inv_id, ACIR $aciR, IIR $iiR, IIAR $iiaR, 
         // Invoice Subtotal + Item Tax
         // -------------------------    
         $inv_item_amounts = $this->inv_calculateTotalsofItemTotals($inv_id, $iiR, $iiaR);    
-        $inv_item_subtotal_discount_and_charge_inclusive = 
+        $inv_item_subtotal_discount = 
+        // individual inv_item_amount['subtotal'] already includes charges and allowances        
         (float)$inv_item_amounts['subtotal']
-        -(float)$inv_item_amounts['discount']
-        +(float)$inv_item_amounts['charge']
-        -(float)$inv_item_amounts['allowance'];
+        -(float)$inv_item_amounts['discount'];
         
         $inv_subtotal_discount_and_charge_and_tax_included = 
-        $inv_item_subtotal_discount_and_charge_inclusive
+        $inv_item_subtotal_discount
         +(float)$inv_item_amounts['tax_total'];
         
         //----------
@@ -228,7 +227,7 @@ public function calculate_inv(string $inv_id, ACIR $aciR, IIR $iiR, IIAR $iiaR, 
             $inv_amount = $iaR->repoInvquery((int)$inv_id);
             if ($inv_amount) {
                 $inv_amount->setInv_id((int)$inv_id);
-                $inv_amount->setItem_subtotal($inv_item_subtotal_discount_and_charge_inclusive ?: 0.00);
+                $inv_amount->setItem_subtotal($inv_item_subtotal_discount ?: 0.00);
                 $inv_amount->setItem_tax_total((float)$inv_item_amounts['tax_total'] ?: 0.00);
                 $inv_amount->setTax_total($inv_tax_rate_total ?: 0.00);
                 $inv_amount->setTotal($inv_total ?: 0.00);

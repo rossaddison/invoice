@@ -18,7 +18,7 @@
                         <div class="mb-3 form-group">
                             <div class="panel panel-default">
                                 <div class="panel-heading">
-                                    <i tooltip="data-toggle" title="<?= $s->isDebugMode(4)?>"><?= $translator->translate('i.custom_fields'); ?></i>
+                                    <i tooltip="data-toggle" title="<?= $s->isDebugMode(4)?>"><b><?= $translator->translate('i.custom_fields'); ?></b></i>
                                 </div>
                                 <div>
                                     <div class="row">

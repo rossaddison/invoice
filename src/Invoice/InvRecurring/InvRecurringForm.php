@@ -18,12 +18,8 @@ final class InvRecurringForm extends FormModel
     #[Required]
     private ?string $frequency='';    
     
-    // setting the frequency dropdown sets the start date relative to the current invoice date
-    
     private mixed $start='';
     
-    // https://github.com/yiisoft/validator/blob/master/docs/guide/en/built-in-rules-required.md
-    #[Required(emptyCondition: new WhenNull())]
     private mixed $next='';
     
     private mixed $end='';    
@@ -39,7 +35,7 @@ final class InvRecurringForm extends FormModel
     
     public function getInv_id() : ?int
     {
-      return $this->inv_id;
+        return $this->inv_id;
     }
 
     public function getStart() : null|string|DateTimeImmutable
@@ -78,6 +74,6 @@ final class InvRecurringForm extends FormModel
      */
     public function getFormName(): string
     {
-      return '';
+        return '';
     }
 }

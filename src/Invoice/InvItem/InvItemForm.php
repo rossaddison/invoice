@@ -39,9 +39,13 @@ final class InvItemForm extends FormModel
     private ?float $discount_amount=null;
     
     private ?string $order=null;
-    private ?string $product_unit='';
+    private ?string $product_unit='';    
     
-    #[Required]
+    /**
+     * Not Required because will conflict with a task which does not require a product unit id.
+     * To cause an error and test the InvController function inv_to_inv_items use the inv/index checkbox Copy Invoice button
+     * on an invoice that has both a task and a product and input a #[Required] here. Result: danger flash message in inv/index 
+     */   
     private ?int $product_unit_id=null;
     
     #[Required]

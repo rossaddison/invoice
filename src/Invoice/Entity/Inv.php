@@ -72,7 +72,7 @@ class Inv {
      * @var ArrayCollection<array-key, InvRecurring>
      */
     #[HasMany(target: InvRecurring::class)]
-    private ArrayCollection $invRecurring;
+    private ArrayCollection $inv_recurring;
     
     #[Column(type: 'primary')]
     private ?int $id = null;
@@ -101,7 +101,7 @@ class Inv {
     #[Column(type: 'string(90)', nullable: true)]
     private ?string $password = '';
 
-    #[Column(type: 'datetime', nullable: false)]
+    #[Column(type: 'datetime')]
     private DateTimeImmutable $date_created;
 
     #[Column(type: 'time', nullable: false)]
@@ -193,7 +193,7 @@ class Inv {
         $this->status_id = $status_id;
         $this->is_read_only = $is_read_only;
         $this->password = $password;
-        $this->date_created = new \DateTimeImmutable('now');
+        $this->date_created = new \DateTimeImmutable();
         $this->date_modified = new \DateTimeImmutable('now');
         $this->date_due = new \DateTimeImmutable('2024/01/01');
         $this->date_supplied = new \DateTimeImmutable('2024/01/01');
@@ -214,7 +214,7 @@ class Inv {
         $this->postal_address_id = $postal_address_id;
         $this->contract_id = $contract_id;
         $this->invsentlogs = new ArrayCollection();
-        $this->invRecurring = new ArrayCollection();
+        $this->inv_recurring = new ArrayCollection();
     }
 
     public function setUser(User $user): void {
@@ -242,15 +242,15 @@ class Inv {
     }
     
     public function setInvRecurring() : void {
-        $this->invRecurring = new ArrayCollection();
+        $this->inv_recurring = new ArrayCollection();
     }
     
     public function getInvRecurring(): ArrayCollection {
-        return $this->invRecurring;
+        return $this->inv_recurring;
     }
     
-    public function addInvRecurring(InvRecurring $invRecurring) : void {
-        $this->invRecurring[] = $invRecurring;
+    public function addInvRecurring(InvRecurring $inv_recurring) : void {
+        $this->inv_recurring[] = $inv_recurring;
     }
         
     public function setInvSentLogs() : void {
@@ -373,13 +373,14 @@ class Inv {
      * @return DateTimeImmutable
      */
     public function getDate_created(): DateTimeImmutable {
+        /** @var DateTimeImmutable $this->date_created */
         return $this->date_created;
     }
 
-    public function setDate_created(DateTimeImmutable $date_created): void {
-        $this->date_created = $date_created;
+    public function setDate_created(string $date_created) : void {
+        $this->date_created = (new \DateTimeImmutable())->createFromFormat('Y-m-d', $date_created) ?: new \DateTimeImmutable('now');
     }
-
+    
     public function setTime_created(string $time_created): void {
         $this->time_created = $time_created;
     }

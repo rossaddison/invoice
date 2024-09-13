@@ -73,6 +73,59 @@ $(function () {
         });
     });
     
+    $(document).on('click', '[name="checkbox-selection-all"]', function () {
+        var c = this.checked;
+        $(':checkbox').prop('checked', c);
+    });
+    
+    // Used in inv/index to select checkboxed invoices that are to be marked as recurring instead of individually marking them as recurring
+    // The invoices will appear in the invrecurring/index
+    // search class(.)create_recurring_confirm_multiple on inv/modal_create_recurring_multiple.php
+    $(document).on('click', '.create_recurring_confirm_multiple', function () {
+        /**
+         * Purpose: To rotate the recycle/recurring symbol on create_recurring_confirm_multiple until below url completed
+         * search 'create_recurring_confirm_multiple' on inv/modal_create_recurring_multiple.php
+         * # => use id=...
+         */
+        var btn = $('#create_recurring_confirm_multiple');
+        var selected = [];
+        btn.html('<h2 class="text-center"><i class="fa fa-spin fa-spinner"></i></h2>');
+        /**
+         * Purpose: To retrieve all the checked checkboxes
+         * @see inv/index GridView::widget()->tableAttributes(['class' => 'table table-striped h-75', 'id' => 'table-invoice'])
+         */
+        $('#table-invoice input[type="checkbox"]:checked').each(function() {
+            selected.push($(this).attr('id'));
+        });
+        recur_frequency = $('#recur_frequency').val();
+        recur_start_date = $('#recur_start_date').val();
+        recur_end_date = $('#recur_end_date').val();
+        var url = $(location).attr('origin') + "/invoice/invrecurring/multiple";
+        $.ajax({ type: "GET",
+            contentType: "application/json; charset=utf-8",
+            data: {
+                keylist: selected,
+                recur_start_date: recur_start_date,
+                recur_end_date: recur_end_date,
+                recur_frequency: recur_frequency
+            },
+            url: url,
+            cache: false,
+            dataType: 'json',
+            success: function (data) {
+                var response = parsedata(data);
+                if (response.success === 1) {
+                    btn.html('<h2 class="text-center"><i class="fa fa-check"></i></h2>');
+                    window.location.reload(true);
+                }    
+                if (response.success === 0) { 
+                    btn.html('<h2 class="text-center"><i class="fa fa-times"></i></h2>');
+                    window.location.reload(true);
+                }
+            }
+        });
+    });
+    
     // Used in inv/index to select invoices that are to be marked as sent instead of literally sending them by email
     // The invoices will not be in the email log but they will be on the clients guest index
     // 
@@ -114,7 +167,46 @@ $(function () {
             }
         });
     });
-        
+    
+    $(document).on('click', '.modal_copy_inv_multiple_confirm', function () {
+        /**
+         * Purpose: To rotate the symbol on modal_copy_inv_multiple_confirm.php until below url completed
+         */
+        var btn = $('.modal_copy_inv_multiple_confirm');
+        var modal_created_date = $('#modal_created_date').val();
+        var selected = [];
+        btn.html('<h2 class="text-center"><i class="fa fa-spin fa-spinner"></i></h2>');
+        /**
+         * Purpose: To retrieve all the checked checkboxes
+         * @see inv/index GridView::widget()->tableAttributes(['class' => 'table table-striped h-75', 'id' => 'table-invoice'])
+         */
+        $('#table-invoice input[type="checkbox"]:checked').each(function() {
+            selected.push($(this).attr('id'));
+        });
+        var url = $(location).attr('origin') + "/invoice/inv/multiplecopy";
+        $.ajax({ type: "GET",
+            contentType: "application/json; charset=utf-8",
+            data: {
+                keylist: selected,
+                modal_created_date: modal_created_date
+            },
+            url: url,
+            cache: false,
+            dataType: 'json',
+            success: function (data) {
+                var response = parsedata(data);
+                if (response.success === 1) {
+                    btn.html('<h2 class="text-center"><i class="fa fa-check"></i></h2>');
+                    window.location.reload(true);
+                }    
+                if (response.success === 0) { 
+                    btn.html('<h2 class="text-center"><i class="fa fa-times"></i></h2>');
+                    window.location.reload(true);
+                }
+            }
+        });
+    });
+    
     $(document).ready(function() {
        $("[required]").after("<span class='required'>*</span>");
     });
@@ -327,7 +419,7 @@ $(function () {
     window.lastTaggableClicked = this;
     });
     
-    $('[data-toggle="tooltip"]').tooltip();
+    $('[data-bs-toggle="tooltip"]').tooltip();
 
     // Template Tag handling
     $('.tag-select').select2().on('change', function (event) {

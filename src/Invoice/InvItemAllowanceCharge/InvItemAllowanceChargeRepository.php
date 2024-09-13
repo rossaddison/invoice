@@ -154,7 +154,21 @@ private EntityWriter $entityWriter;
     public function repoInvItemquery(string $inv_item_id) : EntityReader 
     {
         $query = $this->select()
+                      ->load('allowance_charge') 
                       ->where(['inv_item_id'=>$inv_item_id]);
         return $this->prepareDataReader($query);
+    }
+    
+    /**
+     * Used in InvController function multiplecopy
+     * @return InvItemAllowanceCharge|null
+     *
+     * @psalm-return TEntity|null
+     */
+    public function repoInvItemOriginalquery(string $inv_item_id) : InvItemAllowanceCharge|null {
+        $query = $this->select()
+                      ->load('allowance_charge')   
+                      ->where(['inv_item_id'=>$inv_item_id]);
+        return  $query->fetchOne() ?: null;        
     }
 }

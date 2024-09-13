@@ -5,11 +5,13 @@ namespace App\Invoice\Entity;
 
 use Cycle\Annotated\Annotation\Column;
 use Cycle\Annotated\Annotation\Entity;
+use Cycle\Annotated\Annotation\Relation\HasMany;
 use App\Invoice\Entity\Inv;
 use App\Invoice\Entity\TaxRate;
 use App\Invoice\Entity\Product;
 use App\Invoice\Entity\Task;
 use Cycle\Annotated\Annotation\Relation\BelongsTo;
+use Doctrine\Common\Collections\ArrayCollection;
 use \DateTime;
 use \DateTimeImmutable;
   
@@ -76,6 +78,12 @@ class InvItem
     #[BelongsTo(target: \App\Invoice\Entity\Inv::class, nullable: false, fkAction: 'NO ACTION')]
     private ?Inv $inv = null; 
     
+    /**
+     * @var ArrayCollection<array-key, InvItemAllowanceCharge>
+     */
+    #[HasMany(target: InvItemAllowanceCharge::class)]
+    private ArrayCollection $invitemallowancecharges;
+    
     #[Column(type: 'integer(2)', nullable: true, default:0)]
     private ?int $belongs_to_vat_invoice =  null;
 
@@ -126,6 +134,7 @@ class InvItem
         $this->belongs_to_vat_invoice=$belongs_to_vat_invoice;
         $this->delivery_id=$delivery_id;
         $this->note=$note;
+        $this->invitemallowancecharges = new ArrayCollection();
     }
      
     public function getId(): int|null
@@ -136,6 +145,18 @@ class InvItem
     public function setId(int $id) : void
     {
       $this->id =  $id;
+    }
+    
+    public function setInvItemAllowanceCharges() : void {
+        $this->invitemallowancecharges = new ArrayCollection();
+    }
+    
+    public function getInvItemAllowanceCharges() : ArrayCollection {
+        return $this->invitemallowancecharges;
+    }
+    
+    public function addInvItemAllowanceCharge(InvItemAllowanceCharge $invItemAllowanceCharge) : void {
+        $this->invitemallowancecharges[] = $invItemAllowanceCharge;
     }
     
     public function getTaxRate() : TaxRate|null {
@@ -218,9 +239,9 @@ class InvItem
       $this->date_added = $date_added;
     }
     
-    public function getProduct_id(): string
+    public function getProduct_id(): string|null
     {
-     return (string)$this->product_id;
+     return null!== $this->product_id ? (string)$this->product_id : null;
     }
     
     public function setProduct_id(int $product_id) : void
@@ -228,9 +249,9 @@ class InvItem
       $this->product_id = $product_id;
     }
     
-    public function getTask_id(): string
+    public function getTask_id(): string|null
     {
-      return (string)$this->task_id;
+      return null!== $this->task_id ? (string)$this->task_id : null;
     }
     
     public function setTask_id(int $task_id) : void

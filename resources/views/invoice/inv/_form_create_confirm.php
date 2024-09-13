@@ -63,7 +63,7 @@ use Yiisoft\Html\Tag\Form;
                                     ?>
                                 <?= Html::closeTag('div'); ?>                                       
                                  <?= Html::openTag('div'); ?>
-                                    <?= Field::date($form,'date_created')
+                                     <?= Field::date($form,'date_created')
                                         ->label($translator->translate('i.date_created'))
                                         ->addInputAttributes(['class' => 'form-control'])
                                         ->value(Html::encode(!is_string($form->getDate_created()) && null!==$form->getDate_created() ? 

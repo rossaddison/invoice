@@ -326,6 +326,7 @@ $this->beginPage();
                     ],  
                     'items' => [['options' => ['class' => 'nav fs-4 ajax-loader', 'style' => 'background-color: #ffcccb'], 'label' => $translator->translate('i.view'), 'url' => $urlGenerator->generate('setting/debug_index'), 'visible' => $debugMode],
                       ['options' => ['class' => 'nav fs-4', 'style' => 'background-color: #ffcccb'], 'label' => $translator->translate('invoice.setting.add'), 'url' => $urlGenerator->generate('setting/add'), 'visible' => $debugMode],
+                      ['options' => ['class' => 'nav fs-4', 'style' => 'background-color: #ffcccb'], 'label' => $translator->translate('invoice.invoice.caution.delete.invoices'), 'url' => $urlGenerator->generate('inv/flush'), 'visible' => $debugMode],  
                       ['options' => ['class' => 'nav fs-4'], 'label' => $translator->translate('i.view'), 'url' => $urlGenerator->generate('setting/tab_index')],
                       ['options' => ['class' => 'nav fs-4'], 'label' => $translator->translate((($s->get_setting('install_test_data') == '1') && ($s->get_setting('use_test_data') == '1')) 
                                                                        ? 'invoice.install.test.data' : 'invoice.install.test.data.goto.tab.index'), 

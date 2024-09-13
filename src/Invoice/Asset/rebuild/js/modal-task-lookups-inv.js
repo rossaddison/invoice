@@ -35,6 +35,16 @@ $(function () {
             }
         });
         
+        $("input[name='task_ids[]']").click(function() {
+            var at_least_one_checked;
+            if ($("input[name='task_ids[]']").is(':checked')) {at_least_one_checked = true; } else {at_least_one_checked = false;}
+            if ((at_least_one_checked)){                
+                $('.select-items-confirm-task').removeAttr('disabled');
+            } else {
+                $('.select-items-confirm-task').attr('disabled', true);
+            }
+        });
+        
         $(document).on('click', '.select-items-confirm-task', function () {
             var absolute_url = new URL($(location).attr('href'));
             var btn = $('.select-items-confirm-task');

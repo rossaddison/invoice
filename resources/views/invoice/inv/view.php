@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 use Yiisoft\Html\Html;
 use Yiisoft\Html\Tag\I;
+use Yiisoft\Html\Tag\A;
 
 /**
  * @var App\Invoice\Entity\Inv $inv
@@ -64,7 +65,7 @@ $vat = $s->get_setting('enable_vat_registration');
 ?>
 <div class="panel panel-default">
     <div class="panel-heading">
-        <i tooltip="data-toggle" title="<?= $s->isDebugMode(1); ?>"><?= $translator->translate('i.invoice'); ?></i>
+        <i tooltip="data-bs-toggle" title="<?= $s->isDebugMode(1); ?>"><?= $translator->translate('i.invoice'); ?></i>
     </div>
     <?php        
         echo $alert;
@@ -81,7 +82,6 @@ $vat = $s->get_setting('enable_vat_registration');
         echo $modal_inv_to_html;
         echo $modal_copy_inv;
         echo $modal_delete_items;
-        echo $modal_create_recurring;
         echo $modal_create_credit;
         echo $modal_message_no_payment_method;
     ?>
@@ -95,7 +95,7 @@ $vat = $s->get_setting('enable_vat_registration');
             <b><h2><?= Html::encode($translator->translate('i.payments')); ?></h2></b>
         </div>
         <div class="table-responsive">
-            <table class="table table-hover table-striped">
+            <table class="table table-hover">
                 <thead>
                     <tr>
                         <th><?= Html::encode($translator->translate('i.date')); ?></th>
@@ -122,42 +122,80 @@ $vat = $s->get_setting('enable_vat_registration');
 <?php if ($readOnly === false && $invEdit) { ?>
         <br>
         <br>
-        <div class="panel-heading">
-            <?= Html::openTag('div'); ?>
-                <?= Html::openTag('button', 
-                    [
-                        'class' => 'btn btn-primary', 
-                        'href' => '#modal-choose-items', 
-                        'id' => 'modal-choose-items', 
-                        'data-bs-toggle' => 'modal'
-                    ]); 
-                ?>
-                <?= I::tag()
-                    ->addClass('fa fa-list')
-                    ->addAttributes([
-                        'data-bs-toggle' => 'tooltip', 
-                        'title' => $translator->translate('i.add_product')
-                    ]);
-                ?>
-                <?= $translator->translate('i.add_product'); ?>
-                <?= Html::closeTag('button'); ?>
+        
+    <?= Html::openTag('ul', ['id' => 'product-tabs', 'class' => 'nav nav-tabs nav-tabs-noborder']); ?>
+    <?= Html::openTag('li', ['class' => 'active']); ?>
+        <?= A::tag()
+            ->addAttributes([
+                'data-bs-toggle' => 'tab',
+                'style' => 'text-decoration:none'
+            ])
+            ->addClass('btn btn-info me-1')
+            ->content(Html::b($translator->translate('i.add_product')))
+            ->href('#add-product-tab')
+            ->id('btn-reset')
+            ->render(); 
+        ?>
+    <?= Html::closeTag('li'); ?>
+    <?= Html::openTag('li'); ?>
+        <?= A::tag()
+            ->addAttributes([
+                'data-bs-toggle' => 'tab',
+                'style' => 'text-decoration:none'
+            ])
+            ->addClass('btn btn-info me-1')
+            ->content(Html::b($translator->translate('i.add_task')))
+            ->href('#add-task-tab')
+            ->id('btn-reset')
+            ->render(); 
+        ?>
+    <?= Html::closeTag('li'); ?>    
+<?= Html::closeTag('ul'); ?>
+    
+    <?= Html::openTag('div', ['class' => 'tabbable tabs-below']); ?>
+        <?= Html::openTag('div', ['class' => 'tab-content']); ?>
+            <?= Html::openTag('div', ['id' => 'add-product-tab', 'class' => 'tab-pane active']); ?>
+                    <div class="panel-heading">
+                        <?= Html::openTag('div'); ?>
+                            <?= Html::openTag('button', 
+                                [
+                                    'class' => 'btn btn-primary', 
+                                    'href' => '#modal-choose-items', 
+                                    'id' => 'modal-choose-items', 
+                                    'data-bs-toggle' => 'modal'
+                                ]); 
+                            ?>
+                            <?= I::tag()
+                                ->addClass('fa fa-list')
+                                ->addAttributes([
+                                    'data-bs-toggle' => 'tooltip', 
+                                    'title' => $translator->translate('i.add_product')
+                                ]);
+                            ?>
+                            <?= $translator->translate('i.add_product'); ?>
+                            <?= Html::closeTag('button'); ?>
+                        <?= Html::closeTag('div'); ?>
+                <?= $add_inv_item_product; ?>
+                    </div>
             <?= Html::closeTag('div'); ?>
-    <?= $add_inv_item_product; ?>
-        </div>
-        <div class="panel-heading">
-            <?= Html::openTag('td'); ?>
-                <?= Html::openTag('button', [
-                    'class' => 'btn btn-primary bi bi-ui-checks', 
-                    'href' => '#modal-choose-tasks', 
-                    'id' => 'modal-choose-tasks', 
-                    'data-bs-toggle' => 'modal']); 
-                ?>
-                <?= $translator->translate('i.add_task'); ?>
-                <?= Html::closeTag('button'); ?>
-            <?= Html::closeTag('td'); ?>           
-    <?= $add_inv_item_task; ?>
-        </div>
-        <?php } ?>
+            <?= Html::openTag('div', ['id' => 'add-task-tab', 'class' => 'tab-pane']); ?>
+                    <div class="panel-heading">
+                        <?= Html::openTag('td'); ?>
+                            <?= Html::openTag('button', [
+                                'class' => 'btn btn-primary bi bi-ui-checks', 
+                                'href' => '#modal-choose-tasks', 
+                                'id' => 'modal-choose-tasks', 
+                                'data-bs-toggle' => 'modal']); 
+                            ?>
+                            <?= $translator->translate('i.add_task'); ?>
+                            <?= Html::closeTag('button'); ?>
+                        <?= Html::closeTag('td'); ?>           
+                <?= $add_inv_item_task; ?>
+                    </div>
+            <?= Html::closeTag('div'); ?>
+        <?= Html::closeTag('div'); ?>
+    <?= Html::closeTag('div'); ?>    
+<?php } ?>
     <input type="hidden" id="_csrf" name="_csrf" value="<?= $csrf ?>">
     <div id="headerbar">
         <h1 class="headerbar-title">
@@ -165,7 +203,7 @@ $vat = $s->get_setting('enable_vat_registration');
 echo Html::encode($translator->translate('i.invoice')) . ' ';
 echo(Html::encode(strlen($inv->getNumber()?? '') == 0 ? '#' . ($inv->getNumber() ?? '#'): $inv->getId()));
 ?>
-        </h1>
+        </h1>        
         <div class="headerbar-item pull-right <?php if ($inv->getIs_read_only() === false || $inv->getStatus_id() !== 4) { ?>btn-group<?php } ?>">
             <div class="options btn-group">
                 <a class="btn btn-default" data-bs-toggle="dropdown" href="#">
@@ -380,7 +418,11 @@ if ($invEdit) {
                             <a href="#inv-to-inv" data-bs-toggle="modal"  style="text-decoration:none">
                                 <i class="fa fa-copy fa-margin"></i>
     <?= 
- // Options ... Copy Invoice                           
+ /**
+  * @see resources/views/invoice/inv/modal_copy_inv.php
+  * Options ... Copy Invoice
+  */
+                                                        
     Html::encode($translator->translate('i.copy_invoice')); ?>
                             </a>
                         </li>
@@ -511,7 +553,7 @@ if (($inv->getStatus_id() === 1 || ($s->get_setting('enable_invoice_deletion') =
 
                                     <div class="invoice-properties">
                                         <label for="inv_number">
-<?= $translator->translate('i.invoice'); ?> #
+                                            <b><?= $translator->translate('i.invoice'); ?> #</b>
                                         </label>
                                         <input type="text" id="inv_number" class="form-control input-sm" readonly
                                                    <?php if (strlen($inv->getNumber() ?? '') > 0) : ?> value="<?= $inv->getNumber(); ?>"
@@ -520,7 +562,7 @@ if (($inv->getStatus_id() === 1 || ($s->get_setting('enable_invoice_deletion') =
                                     </div>
                                     <div class="invoice-properties has-feedback">
                                         <label for="date_created">
-<?= $translator->translate('invoice.invoice.date.issued'); ?>
+                                            <b><?= $translator->translate('invoice.invoice.date.issued'); ?></b>
                                         </label>
                                         <div class="input-group">
                                             <input id="date_created" disabled
@@ -535,7 +577,7 @@ if (($inv->getStatus_id() === 1 || ($s->get_setting('enable_invoice_deletion') =
                                     </div>
                                     <div class="invoice-properties has-feedback">
                                         <label for="date_supplied">
-<?= $translator->translate('invoice.invoice.date.supplied'); ?>
+                                            <b><?= $translator->translate('invoice.invoice.date.supplied'); ?></b>
                                         </label>
                                         <div class="input-group">
                                             <input id="date_supplied" disabled
@@ -549,7 +591,7 @@ if (($inv->getStatus_id() === 1 || ($s->get_setting('enable_invoice_deletion') =
 <?php if ($vat === '1') { ?>
                                         <div class="invoice-properties has-feedback">
                                             <label for="date_tax_point">
-    <?= $translator->translate('invoice.invoice.tax.point'); ?>
+                                                <b><?= $translator->translate('invoice.invoice.tax.point'); ?></b>
                                             </label>
                                             <div class="input-group">
                                                 <input id="date_tax_point" disabled
@@ -563,7 +605,7 @@ if (($inv->getStatus_id() === 1 || ($s->get_setting('enable_invoice_deletion') =
 <?php } ?>
                                     <div class="invoice-properties has-feedback">
                                         <label for="inv_date_due">
-<?= $translator->translate('i.expires'); ?>
+                                            <b><?= $translator->translate('i.expires'); ?></b>
                                         </label>
                                         <div class="input-group">
                                             <input name="inv_date_due" id="inv_date_due" disabled
@@ -588,10 +630,9 @@ if (($inv->getStatus_id() === 1 || ($s->get_setting('enable_invoice_deletion') =
                                     </div>
                                 </div>
                                 <div class="col-xs-12 col-md-6">
-
                                     <div class="invoice-properties">
                                         <label for="inv_status_id">
-                                        <?= $translator->translate('i.status'); ?>
+                                            <b><?= $translator->translate('i.status'); ?></b>
                                         </label>
                                         <select name="inv_status_id" id="inv_status_id" disabled
                                                 class="form-control">
@@ -611,7 +652,9 @@ if (($inv->getStatus_id() === 1 || ($s->get_setting('enable_invoice_deletion') =
                                         </select>
                                     </div>
                                     <div class="invoice-properties">
-                                        <label for="payment_method"><?= $translator->translate('i.payment_method'); ?></label>
+                                        <label for="payment_method">
+                                            <b><?= $translator->translate('i.payment_method'); ?></b>
+                                        </label>
 <?php if ($inv->getPayment_method() !== 0) { ?>
                                             <select name="payment_method" id="payment_method" class="form-control" disabled="disabled">
                                                 <option value="0"><?= Html::encode($translator->translate('i.select_payment_method')); ?></option>
@@ -637,12 +680,16 @@ if (($inv->getStatus_id() === 1 || ($s->get_setting('enable_invoice_deletion') =
                                     </div>
 <?php if (($inv->getStatus_id() !== 1) && ($invEdit)) { ?>
                                         <div class="invoice-properties">
-                                            <label for="inv_password"><?= Html::encode($translator->translate('i.password')); ?></label>
+                                            <label for="inv_password">
+                                                <b><?= Html::encode($translator->translate('i.password')); ?></b>
+                                            </label>
                                             <input type="text" id="inv_password" class="form-control input-sm" disabled value="<?= Html::encode($form->getPassword() ?? ''); ?>">
                                         </div>
                                         <div class="invoice-properties">
                                             <div class="form-group">
-                                                <label for="guest-url"><?= Html::encode($translator->translate('i.guest_url')); ?></label>
+                                                <label for="guest-url">
+                                                    <b><?= Html::encode($translator->translate('i.guest_url')); ?></b>
+                                                </label>
                                                 <div class="input-group">
                                                     <input type="text" id="guest-url" name="guest-url" readonly class="form-control" value="<?= 'inv/url_key/' . $inv->getUrl_key(); ?>">
                                                     <span class="input-group-text to-clipboard cursor-pointer"
@@ -715,10 +762,12 @@ if (($inv->getStatus_id() === 1 || ($s->get_setting('enable_invoice_deletion') =
             <div class="col-xs-12 col-md-6">
                 <div class="panel panel-default no-margin">
                     <div class="panel-heading">
-                <?= Html::encode($translator->translate('i.terms')); ?>
-                <?php 
-                    $paymentTermArray = $s->get_payment_term_array($translator);  
-                ?>         
+                        <b>
+                            <?= Html::encode($translator->translate('i.terms')); ?>
+                            <?php 
+                                $paymentTermArray = $s->get_payment_term_array($translator);  
+                            ?>         
+                        </b>        
                     </div>
                     <div class="panel-body">
                         <textarea name="terms" id="terms" rows="3" disabled

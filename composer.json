@@ -129,8 +129,7 @@
         "yiisoft/yii-runner-console": "^2.0",
         "yiisoft/yii-runner-http": "^2.0",
         "yiisoft/yii-sentry": "dev-master",
-        "yiisoft/yii-swagger": "*",
-        "yiisoft/yii-view": "*"
+        "yiisoft/yii-swagger": "*"
     },
     
     "require-dev": {

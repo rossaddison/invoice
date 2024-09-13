@@ -46,6 +46,7 @@ use Yiisoft\Html\Html;
             </div>
             <div class="modal-footer">
                  <button type="button" class="btn btn-secondary" data-bs-dismiss="modal"><?= $translator->translate('i.cancel'); ?></button>
+                 <!-- inv.js inv_to_inv_confirm, InvController function inv_to_inv_confirm -->
                  <button type="button" class="inv_to_inv_confirm btn btn-success" id="inv_to_inv_confirm">
                     <i class="fa fa-check"></i> <?= $translator->translate('i.submit'); ?>
                  </button>

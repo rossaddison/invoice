@@ -160,7 +160,7 @@ $vat = $s->get_setting('enable_vat_registration') === '1' ? true : false;
                                 'type' => 'submit',
                                 'class' => 'btn btn-info fa fa-plus',  
                                 'data-bs-toggle' => 'tooltip',
-                                'title' => 'invitem/add_task']); 
+                                'title' => 'invitem/edit_task']); 
                             ?>
                                 <?= $translator->translate('i.save'); ?>
                             <?= Html::closeTag('button'); ?>

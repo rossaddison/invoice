@@ -20,8 +20,8 @@ class InvRecurring
      * Every Recurring Invoice record only has one related Invoice
      * @var Inv $inv
      */
-    #[HasOne(target:Inv::class, nullable: false)]
-    private Inv $inv;
+    #[HasOne(target:Inv::class, nullable: false, fkAction: "NO ACTION")]
+    private ?Inv $inv = null;
     
     #[Column(type:'integer(11)', nullable: false)]
     private ?int $inv_id =  null;
@@ -47,12 +47,11 @@ class InvRecurring
         mixed $next = '',
     )
     {
-        $this->id=$id;
-        $this->inv=new Inv();
-        $this->inv_id=$inv_id;
-        $this->start=$start;
-        $this->end=$end;
-        $this->frequency=$frequency;
+        $this->id = $id;
+        $this->inv_id = $inv_id; 
+        $this->start = $start;
+        $this->end = $end;
+        $this->frequency = $frequency;
         $this->next=$next;
     }
 
@@ -66,7 +65,7 @@ class InvRecurring
         $this->id =  $id;
     }
     
-    public function getInv(): Inv
+    public function getInv(): ?Inv
     {
         return $this->inv;
     }
@@ -87,29 +86,29 @@ class InvRecurring
         return $this->start;
     }    
     
-    public function setStart(DateTime $start): void
+    public function setStart(string|DateTime $start): void
     {
         $this->start = $start;
     }
     
-    public function getEnd() : string|DateTimeImmutable  
+    public function getEnd() : string|null|DateTimeImmutable  
     {
-        /** @var string|DateTimeImmutable $this->end */
+        /** @var string|null|DateTimeImmutable $this->end */
         return $this->end;
     }    
     
-    public function setEnd(DateTime $end): void
+    public function setEnd(?DateTime $end): void
     {
         $this->end = $end;
     }
     
-    public function getNext() : string|DateTimeImmutable|null  
+    public function getNext() : string|null|DateTimeImmutable 
     {
-        /** @var string|DateTimeImmutable $this->next */
+        /** @var string|null|DateTimeImmutable $this->next */
         return $this->next;
     }    
     
-    public function setNext(DateTime $next): void 
+    public function setNext(?DateTime $next): void 
     {
         $this->next = $next;
     }

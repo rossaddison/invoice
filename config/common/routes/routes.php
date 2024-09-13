@@ -844,7 +844,7 @@ return [
       ->middleware(fn(AccessChecker $checker) => $checker->withPermission('editInv'))
       ->middleware(Authentication::class)
       ->action([ImportController::class, 'index']),
-       Route::methods([Method::GET, Method::POST], '/import/testconnection')
+      Route::methods([Method::GET, Method::POST], '/import/testconnection')
       ->name('import/testconnection')
       ->middleware(fn(AccessChecker $checker) => $checker->withPermission('editInv'))
       ->middleware(Authentication::class)
@@ -954,6 +954,11 @@ return [
       ->middleware(fn(AccessChecker $checker) => $checker->withPermission('editInv'))
       ->middleware(Authentication::class)
       ->action([InvController::class, 'edit']),
+      Route::methods([Method::GET, Method::POST], '/inv/flush')
+      ->name('inv/flush')
+      ->middleware(fn(AccessChecker $checker) => $checker->withPermission('editInv'))
+      ->middleware(Authentication::class)
+      ->action([InvController::class, 'flush']),      
       Route::methods([Method::GET, Method::POST], '/inv/peppol/{id}')
       ->middleware(fn(AccessChecker $checker) => $checker->withPermission('editInv'))
       ->middleware(Authentication::class)
@@ -1018,6 +1023,11 @@ return [
       ->middleware(Authentication::class)
       ->action([InvController::class, 'modalcreate'])
       ->name('inv/modalcreate'),
+      Route::methods([Method::GET, Method::POST], '/inv/multiplecopy')
+      ->middleware(fn(AccessChecker $checker) => $checker->withPermission('editInv'))
+      ->middleware(Authentication::class)
+      ->action([InvController::class, 'multiplecopy'])
+      ->name('inv/multiplecopy'),      
       Route::methods([Method::GET, Method::POST], '/inv/confirm')
       ->middleware(fn(AccessChecker $checker) => $checker->withPermission('editInv'))
       ->middleware(Authentication::class)
@@ -1089,22 +1099,22 @@ return [
       ->action([InvRecurringController::class, 'add'])
       ->name('invrecurring/add'),
       // Create via inv.js create_recurring_confirm
-      Route::methods([Method::GET, Method::POST], '/invrecurring/create_recurring_confirm')
+      Route::methods([Method::GET, Method::POST], '/invrecurring/multiple')
       ->middleware(fn(AccessChecker $checker) => $checker->withPermission('editInv'))
       ->middleware(Authentication::class)
-      ->action([InvRecurringController::class, 'create_recurring_confirm'])
-      ->name('invrecurring/create_recurring_confirm'),
+      ->action([InvRecurringController::class, 'multiple'])
+      ->name('invrecurring/multiple'),
       Route::methods([Method::GET, Method::POST], '/invrecurring/get_recur_start_date')
       ->middleware(fn(AccessChecker $checker) => $checker->withPermission('editInv'))
       ->middleware(Authentication::class)
       ->action([InvRecurringController::class, 'get_recur_start_date'])
       ->name('invrecurring/get_recur_start_date'),
       // Edit
-      Route::methods([Method::GET, Method::POST], '/invrecurring/edit/{id}')
-      ->name('invrecurring/edit')
+      Route::methods([Method::GET, Method::POST], '/invrecurring/start/{id}')
+      ->name('invrecurring/start')
       ->middleware(fn(AccessChecker $checker) => $checker->withPermission('editInv'))
       ->middleware(Authentication::class)
-      ->action([InvRecurringController::class, 'edit']),
+      ->action([InvRecurringController::class, 'start']),
       Route::methods([Method::GET, Method::POST], '/invrecurring/delete/{id}')
       ->name('invrecurring/delete')
       ->middleware(fn(AccessChecker $checker) => $checker->withPermission('editInv'))

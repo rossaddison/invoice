@@ -47,6 +47,16 @@ $toolbarReset = A::tag()
     ->id('btn-reset')
     ->render();
 
+$backButton = A::tag()
+    ->addAttributes([
+        'type' => 'reset', 
+        'onclick' => 'window.history.back()',
+        'class' => 'btn btn-primary me-1',
+        'id' => 'btn-cancel',
+    ])    
+    ->content('⬅ ️'.$translator->translate('i.back'))
+    ->render();
+
 $toolbar = Div::tag();
 ?>
 <div>
@@ -146,6 +156,7 @@ $toolbar = Div::tag();
     $toolbarString = 
             Form::tag()->post($urlGenerator->generate('invitemallowancecharge/index'))->csrf($csrf)->open() .
             Div::tag()->addClass('float-end m-3')->content($toolbarReset)->encode(false)->render() .
+            Div::tag()->addClass('float-end m-3')->content($backButton)->encode(false)->render() .
             Form::tag()->close();
     echo GridView::widget()
         ->rowAttributes(['class' => 'align-middle'])

@@ -34,7 +34,7 @@ private EntityWriter $entityWriter;
     public function findAllPreloaded(): EntityReader
     {
         $query = $this->select()
-                      ->load(['tax_rate','product','inv']);
+                      ->load(['tax_rate','product', 'task', 'inv']);
         return $this->prepareDataReader($query);
     }
     
@@ -97,7 +97,7 @@ private EntityWriter $entityWriter;
      */
     public function repoInvItemquery(string $id): InvItem|null {
         $query = $this->select()
-                      ->load(['tax_rate','product','inv'])
+                      ->load(['tax_rate','product', 'task', 'inv'])
                       ->where(['id' => $id]);
         return  $query->fetchOne() ?: null;        
     }
@@ -108,7 +108,7 @@ private EntityWriter $entityWriter;
      */
     public function repoInvItemIdquery(string $inv_id):  EntityReader {
         $query = $this->select()
-                      ->load(['tax_rate','product','inv'])
+                     // ->load(['tax_rate','product', 'task', 'inv'])
                       ->where(['inv_id' => $inv_id]);
         return $this->prepareDataReader($query); 
     }
@@ -120,7 +120,7 @@ private EntityWriter $entityWriter;
      */
     public function repoInvquery(string $inv_id): EntityReader { 
         $query = $this->select()
-                      ->load(['tax_rate','product','inv'])
+                      ->load(['tax_rate','product', 'task', 'inv'])
                       ->where(['inv_id' => $inv_id]);                                
         return $this->prepareDataReader($query);        
     }

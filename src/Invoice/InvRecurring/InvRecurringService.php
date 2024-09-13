@@ -28,39 +28,49 @@ final class InvRecurringService
     }
 
     /**
+     * 
      * @param InvRecurring $model
-     * @param array $array 
+     * @param array $array
      * @return void
-     */
+     */    
     public function saveInvRecurring(InvRecurring $model, array $array): void
     {
-       $model->setInv_id((int)$array['inv_id']);
-       
-       isset($array['frequency']) ? $model->setFrequency((string)$array['frequency']) : '';
-       
-       $base_invoice = $this->invR->repoInvUnloadedquery((string)$array['inv_id']);
-       if (null!== $base_invoice) {
-            $immutable_invoice_date = $base_invoice->getDate_created();
-       
+        $model->setInv_id((int)$array['inv_id']);
+
+        isset($array['frequency']) ? $model->setFrequency((string)$array['frequency']) : '';
+
+        $baseInvoice = $this->invR->repoInvUnloadedquery((string)$array['inv_id']);
+        if (null!== $baseInvoice) {
+
             $dateHelper = new DateHelper($this->s);
-            $start_date = $dateHelper->add_to_immutable($immutable_invoice_date, (string)$array['frequency']);
-       
-            $model->setStart(new \DateTime($start_date));
-       }
-       
-       /**
-        * @var null|string $array['next']
-        */
-       $next = isset($array['next']) ? new \DateTime($array['next']) : null;
-       $next ? $model->setNext($next) : '';       
-       
-       /**
-        * @var null|string $array['end']
-        */
-       $end = isset($array['end']) ? new \DateTime($array['end']) : null;
-       $end ? $model->setEnd($end) : '';
-       
-       $this->repository->save($model);
+
+            // Next is not null because currently running
+            // The start has been adjusted
+            // A new next = start + frequency
+            $invNext = $model->getNext();
+            if (null!==$invNext && !is_string($invNext) && isset($array['start'])) {
+                $nextDate = $dateHelper->incrementDateStringToDateTime((string)$array['start'], (string)$array['frequency']);
+                $model->setNext($nextDate);
+                $model->setStart(new \DateTime((string)$array['start']));
+            }
+            
+            // Next is null because it has stopped
+            // Restart => allow new start and new next
+            // A new next = start + frequency
+            if (null==$invNext && isset($array['start'])) {
+                $nextDate = $dateHelper->incrementDateStringToDateTime((string)$array['start'], (string)$array['frequency']);
+                $model->setNext($nextDate);
+                $model->setStart(new \DateTime((string)$array['start']));
+            }
+
+            /**
+             * @var null|string $array['end']
+             */
+            $end = isset($array['end']) ? new \DateTime($array['end']) : null;
+            $end ? $model->setEnd($end) : '';
+
+            $this->repository->save($model);
+        }    
     }
     
     /**
@@ -69,7 +79,7 @@ final class InvRecurringService
      * @return void
      */
     public function deleteInvRecurring(InvRecurring $model): void
-    {
+    {   
         $this->repository->delete($model);
     }
 }

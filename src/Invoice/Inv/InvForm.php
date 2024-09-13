@@ -101,7 +101,7 @@ final class InvForm extends FormModel
     public function getDate_created() : string|null|DateTimeImmutable 
     {
         /**
-         * @var string|DateTimeImmutable $this->date_created 
+         * @var string|null|DateTimeImmutable $this->date_created 
          */
         return $this->date_created;
     }

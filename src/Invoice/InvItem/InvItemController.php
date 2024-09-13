@@ -7,8 +7,11 @@ namespace App\Invoice\InvItem;
 use App\Invoice\Entity\InvItem;
 use App\Invoice\Entity\InvItemAmount;
 use App\Invoice\Entity\InvItemAllowanceCharge;
+use App\Invoice\Helpers\NumberHelper;
 use App\Invoice\Product\ProductRepository as PR; 
 use App\Invoice\Inv\InvRepository as IR;
+use App\Invoice\InvAllowanceCharge\InvAllowanceChargeRepository as ACIR;
+use App\Invoice\InvAmount\InvAmountRepository as IAR;
 use App\Invoice\InvItemAllowanceCharge\InvItemAllowanceChargeRepository as ACIIR;
 use App\Invoice\InvItem\InvItemService;
 use App\Invoice\InvItem\InvItemForm;
@@ -16,6 +19,8 @@ use App\Invoice\InvItem\InvItemRepository as IIR;
 use App\Invoice\InvItemAmount\InvItemAmountRepository as IIAR;
 use App\Invoice\InvItemAmount\InvItemAmountService as IIAS;
 use App\Invoice\InvRecurring\InvRecurringRepository as IRR;
+use App\Invoice\InvTaxRate\InvTaxRateRepository as ITRR;
+use App\Invoice\Payment\PaymentRepository as PYMR;
 use App\Invoice\Setting\SettingRepository as SR;
 use App\Invoice\Task\TaskRepository as TaskR;
 use App\Invoice\TaxRate\TaxRateRepository aS TRR;
@@ -192,7 +197,7 @@ final class InvItemController
         /** @var InvItemAllowanceCharge $acii */
         foreach ($inv_item_allowances_charges as $acii)
         {
-            if ($acii->getAllowanceCharge()?->getIdentifier() === true)
+            if ($acii->getAllowanceCharge()?->getIdentifier() == '0')
             {
                 $allowances +=(float)$acii->getAmount();
             }
@@ -211,7 +216,7 @@ final class InvItemController
         /** @var InvItemAllowanceCharge $acii */
         foreach ($inv_item_allowances_charges as $acii)
         {
-            if ($acii->getAllowanceCharge()?->getIdentifier() === false)
+            if ($acii->getAllowanceCharge()?->getIdentifier() == '1')
             {
                 $charges += (float)$acii->getAmount();
             }
@@ -228,20 +233,24 @@ final class InvItemController
      * @param IIR $iiR
      * @param SR $sR
      * @param TRR $trR
+     * @param PYMR $pymR
      * @param PR $pR
      * @param UR $uR
+     * @param IAR $iaR
      * @param IR $iR
      * @param IIAS $iias
      * @param IRR $irR
-     * @param IIAR $iiar
+     * @param IIAR $iiaR    
+     * @param ITRR $itrR 
+     * @param ACIR $aciR
      * @param ACIIR $aciiR
      * @return \Yiisoft\DataResponse\DataResponse|\Psr\Http\Message\ResponseInterface
      */
     public function edit_product(CurrentRoute $currentRoute, Request $request, FormHydrator $formHydrator,
                         IIR $iiR, 
-                        SR $sR, TRR $trR, PR $pR, UR $uR, 
-                        IR $iR, IIAS $iias, IRR $irR, IIAR $iiar,  
-                        ACIIR $aciiR): \Yiisoft\DataResponse\DataResponse|\Psr\Http\Message\ResponseInterface  {
+                        SR $sR, TRR $trR, PYMR $pymR, PR $pR, UR $uR, 
+                        IAR $iaR, IR $iR, IIAS $iias, IRR $irR, IIAR $iiaR, ITRR $itrR, 
+                        ACIR $aciR, ACIIR $aciiR): \Yiisoft\DataResponse\DataResponse|\Psr\Http\Message\ResponseInterface  {
         $inv_id = (string)$this->session->get('inv_id');
         $inv_item = $this->invitem($currentRoute, $iiR);
         $is_recurring = ($irR->repoCount((string) $this->session->get('inv_id')) > 0 ? true : false);
@@ -279,11 +288,11 @@ final class InvItemController
                     // to build invitemamount->discount=(quantity*form[discount])
                     // Preparation here: Collect the data for this purpose
                     // form[quantity]
-                    $quantity = $form->getQuantity() ?? 0.00;
+                    $quantity = (float)($body['quantity'] ?? 0.00);
                     // form[price]
-                    $price = $form->getPrice() ?? 0.00;
+                    $price = (float)($body['price'] ?? 0.00);
                     // form[discount]
-                    $discount = $form->getDiscount_amount() ?? 0.00;
+                    $discount = (float)($body['discount_amount'] ?? 0.00);
                     // Goal: Accumulate all charges from invitemallowancecharge 
                     // and save in invitemamount->charge
                     $charge = $this->accumulative_charges($inv_item_allowances_charges) ?: 0.00;
@@ -301,7 +310,9 @@ final class InvItemController
                          */
                         $request_inv_item = (int)$this->invitem($currentRoute, $iiR)->getId();
                         $this->saveInvItemAmount($request_inv_item, 
-                                                 $quantity, $price, $discount, $charge, $allowance, $tax_rate_percentage, $iias, $iiar, $sR);
+                                                 $quantity, $price, $discount, $charge, $allowance, $tax_rate_percentage, $iias, $iiaR, $sR);
+                        $numberHelper = new NumberHelper($sR);
+                        $numberHelper->calculate_inv($inv_id, $aciR, $iiR, $iiaR, $itrR, $iaR, $iR, $pymR);
                         $this->flash_message('info', $this->translator->translate('i.record_successfully_updated'));
                         return $this->webService->getRedirectResponse('inv/view', ['id' => $inv_id]);
                     }    
@@ -331,6 +342,12 @@ final class InvItemController
     }
     
     /**
+     * If an item is edited, these changes will have to be shown in the InvItemAmount table
+     * The subtotal on the line item is inclusive of any peppol allowances or charges for the item.
+     * 
+     * Any adjustments to this function should be reflected also in the similar InvItemService function saveInvItemAmount 
+     * which is used for duplicating or copying invoices. 
+     * 
      * @param int $inv_item_id
      * @param float $quantity
      * @param float $price
@@ -354,22 +371,24 @@ final class InvItemController
        $tax_total = 0.00;
        // NO VAT
        if ($s->get_setting('enable_vat_registration') === '0') { 
-        $tax_total = (($sub_total * ($tax_rate_percentage/100)));
+        $tax_total = ((($sub_total - $discount_total + $charge_total-$allowance_total) * ($tax_rate_percentage/100)));
        }
        // VAT
        if ($s->get_setting('enable_vat_registration') === '1') { 
         // EARLY SETTLEMENT CASH DISCOUNT MUST BE REMOVED BEFORE VAT DETERMINED
         // @see https://informi.co.uk/finance/how-vat-affected-discounts
-        $tax_total = ((($sub_total-$discount_total+$charge_total-$allowance_total) * ($tax_rate_percentage/100)));
+        $tax_total = ((($sub_total - $discount_total+$charge_total) * ($tax_rate_percentage/100)));
        }
        $iias_array['discount'] = $discount_total;
        $iias_array['charge'] = $charge_total;
        $iias_array['allowance'] = $allowance_total;
-       $iias_array['subtotal'] = $sub_total;
+       // show the peppol allowances and charges in the sub total
+       $iias_array['subtotal'] = $sub_total - $allowance_total + $charge_total;
        $iias_array['taxtotal'] = $tax_total;
        $iias_array['total'] = ($sub_total - $discount_total + $charge_total - $allowance_total + $tax_total);       
        if ($iiar->repoCount((string)$inv_item_id) === 0) {
-         $iias->saveInvItemAmountNoForm(new InvItemAmount(), $iias_array);} else {
+         $iias->saveInvItemAmountNoForm(new InvItemAmount(), $iias_array);
+       } else {
          $inv_item_amount = $iiar->repoInvItemAmountquery((string)$inv_item_id);    
          if ($inv_item_amount) {
             $iias->saveInvItemAmountNoForm($inv_item_amount, $iias_array);     
@@ -381,20 +400,26 @@ final class InvItemController
      * @param CurrentRoute $currentRoute
      * @param Request $request
      * @param FormHydrator $formHydrator
+     * @param ACIR $aciR
+     * @param ACIIR $aciiR
+     * @param IAR $iaR
      * @param IIR $iiR
      * @param IRR $irR
+     * @param ITRR $itrR
+     * @param PYMR $pymR 
      * @param SR $sR
-     * @param TRR $trR
+     * @param TRR $trR     
      * @param PR $pR
      * @param TaskR $taskR
      * @param UR $uR
      * @param IR $iR
      * @param IIAS $iias
-     * @param IIAR $iiar
+     * @param IIAR $iiaR
      * @return \Yiisoft\DataResponse\DataResponse|\Psr\Http\Message\ResponseInterface
      */
-    public function edit_task(CurrentRoute $currentRoute, Request $request, FormHydrator $formHydrator,
-                        IIR $iiR, IRR $irR, SR $sR, TRR $trR, TaskR $taskR, UR $uR, IR $iR, IIAS $iias, IIAR $iiar) : \Yiisoft\DataResponse\DataResponse|\Psr\Http\Message\ResponseInterface {
+    public function edit_task(CurrentRoute $currentRoute, Request $request, FormHydrator $formHydrator, 
+                        ACIR $aciR, ACIIR $aciiR,
+                        IAR $iaR, IIR $iiR, IRR $irR, ITRR $itrR, PYMR $pymR, SR $sR, TRR $trR, TaskR $taskR, UR $uR, IR $iR, IIAS $iias, IIAR $iiaR) : \Yiisoft\DataResponse\DataResponse|\Psr\Http\Message\ResponseInterface {
         $inv_id = (string)$this->session->get('inv_id');
         $inv_item = $this->invitem($currentRoute, $iiR);
         if ($inv_item) {
@@ -418,9 +443,16 @@ final class InvItemController
             if ($request->getMethod() === Method::POST) {
                 $body = $request->getParsedBody();
                 if ($formHydrator->populateFromPostAndValidate($form,  $request)) {
-                    $quantity = $form->getQuantity() ?? 0.00;
-                    $price = $form->getPrice() ?? 0.00;
-                    $discount = $form->getDiscount_amount() ?? 0.00;
+                    $quantity = (float)($body['quantity'] ?? 0.00);
+                    $price = (float)($body['price'] ?? 0.00);
+                    $discount = (float)($body['discount_amount'] ?? 0.00);
+                    // Goal: Accumulate all charges from invitemallowancecharge 
+                    // and save in invitemamount->charge
+                    $inv_item_allowances_charges = $aciiR->repoInvItemquery((string)$inv_item->getId());
+                    $charge = $this->accumulative_charges($inv_item_allowances_charges) ?: 0.00;
+                    // Goal: Accumulate all allowances from invitemallowancecharge 
+                    // and save in invitemamount->allowance
+                    $allowance = $this->accumulative_allowances($inv_item_allowances_charges) ?: 0.00;
                     /**
                      * @psalm-suppress PossiblyInvalidArgument $body
                      */
@@ -431,7 +463,9 @@ final class InvItemController
                          * @psalm-suppress PossiblyNullReference getId
                          */
                         $request_inv_item = (int)$this->invitem($currentRoute, $iiR)->getId();
-                        $this->saveInvItemAmount($request_inv_item, $quantity, $price, $discount, 0.00, 0.00, $tax_rate_percentage, $iias, $iiar, $sR);
+                        $this->saveInvItemAmount($request_inv_item, $quantity, $price, $discount, $charge, $allowance, $tax_rate_percentage, $iias, $iiaR, $sR);
+                        $numberHelper = new NumberHelper($sR);
+                        $numberHelper->calculate_inv($inv_id, $aciR, $iiR, $iiaR, $itrR, $iaR, $iR, $pymR);
                         $this->flash_message('info', $this->translator->translate('i.record_successfully_updated'));
                         return $this->webService->getRedirectResponse('inv/view', ['id' => $inv_id]);
                     }

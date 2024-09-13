@@ -315,6 +315,18 @@ Class DateHelper {
         $new_date->add(new DateInterval('P' . $increment));
         return $new_date->format('Y-m-d');
     }
+    
+    /**
+     * 
+     * @param string $date
+     * @param string $increment
+     * @return \DateTime
+     */
+    public function incrementDateStringToDateTime(string $date, string $increment): \DateTime {
+        $new_date = new \DateTime($date);
+        $new_date->add(new DateInterval('P' . $increment));
+        return $new_date;
+    }
 
     /**
      * @param mixed $input

@@ -28,14 +28,16 @@ use Yiisoft\Html\Tag\I;
 
 <div class="panel panel-default no-margin">
     <div class="panel-heading">
-        <?= I::tag()
-            ->addClass('bi bi-info-circle')
-            ->addAttributes([
-                'tooltip' => 'data-bs-toggle', 
-                'title' => $s->isDebugMode(5)
-            ])
-            ->content(' '.$translator->translate('i.attachments')); 
-        ?>
+        <b>
+            <?= I::tag()
+                ->addClass('bi bi-info-circle')
+                ->addAttributes([
+                    'tooltip' => 'data-bs-toggle', 
+                    'title' => $s->isDebugMode(5)
+                ])
+                ->content(' '.$translator->translate('i.attachments')); 
+            ?>
+        </b>    
     </div>
     <div class="panel-body clearfix">
         <div class="container">
