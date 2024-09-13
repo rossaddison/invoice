@@ -44,7 +44,7 @@
         "kartik-v/yii2-bootstrap4-dropdown": "*",
         "league/iso3166": "*",
         "league/omnipay": "^3.0",
-        "maglnet/composer-require-checker": "*",
+        "maglnet/composer-require-checker": "^4.7",
         "mollie/mollie-api-php": "*",
         "mpdf/mpdf": "^8.0||^8.1||^8.2",
         "nyholm/psr7": "^1.8",
@@ -60,7 +60,6 @@
         "psr/http-server-handler": "^1.0",
         "psr/http-server-middleware": "^1.0",
         "psr/log": "^3.0",
-        "yiisoft/yii-middleware": "*",
         "sabre/xml": "^4.0",
         "setasign/fpdf": "^1.8",
         "stripe/stripe-php": "*",
@@ -124,12 +123,14 @@
         "yiisoft/yii-dataview": "^3.0",
         "yiisoft/yii-debug": "*",
         "yiisoft/yii-event": "^2.0",
-        "yiisoft/yii-http": "^1.0",
+        "yiisoft/yii-http": "^1.0",        
+        "yiisoft/yii-middleware": "^1.0",
         "yiisoft/yii-runner": "*",
         "yiisoft/yii-runner-console": "^2.0",
         "yiisoft/yii-runner-http": "^2.0",
         "yiisoft/yii-sentry": "dev-master",
-        "yiisoft/yii-swagger": "*"
+        "yiisoft/yii-swagger": "*",
+        "yiisoft/yii-view-renderer": "^7.1"
     },
     
     "require-dev": {

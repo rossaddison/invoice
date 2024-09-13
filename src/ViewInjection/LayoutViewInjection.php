@@ -21,7 +21,7 @@ use Yiisoft\Yii\View\Renderer\LayoutParametersInjectionInterface;
 /**
  * @see ./views/layout/main.php or alternative(s)
  * @see ./views/layout/templates/soletrader/main.php
- * @see ./invoice/config/common/params.php 'yiisoft/yii-view' 
+ * @see ./invoice/config/common/params.php 'yiisoft/yii-view-renderer' 
  */
 
 final class LayoutViewInjection implements LayoutParametersInjectionInterface
