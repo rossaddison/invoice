@@ -82,9 +82,9 @@ return [
     Route::get('/')
     ->action([SiteController::class, 'index'])
     ->name('site/index'),
-    Route::methods([Method::GET, Method::POST], '/fill')
-    ->action([ContactController::class, 'fill'])
-    ->name('contact/fill'),
+    Route::methods([Method::GET, Method::POST], '/interest')
+    ->action([ContactController::class, 'interest'])
+    ->name('contact/interest'),
     Route::methods([Method::GET, Method::POST], '/about')
     ->action([SiteController::class, 'about'])
     ->name('site/about'),

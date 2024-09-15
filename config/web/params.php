@@ -43,6 +43,7 @@ return [
             'zu-ZA' => 'zu-ZA',     
         ],
         'ignoredRequests' => [
+            '/gii**',
             '/debug**',
             '/inspect**',
         ],

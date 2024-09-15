@@ -32,7 +32,7 @@ $this->setTitle($translator->translate('menu.contact.us'));
                 </div>
                 <div class="card-body p-5 text-center">
                     <?= Form::tag()
-                        ->post($url->generate('contact/fill'))
+                        ->post($url->generate('contact/interest'))
                         ->enctypeMultipartFormData()
                         ->csrf($csrf)
                         ->id('form-contact')

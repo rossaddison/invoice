@@ -5,9 +5,8 @@ declare(strict_types=1);
 namespace App\Contact;
 
 use Exception;
-use Psr\Http\Message\ServerRequestInterface;
+use App\Contact\ContactForm;
 use Psr\Log\LoggerInterface;
-use Yiisoft\FormModel\FormModelInterface;
 use Yiisoft\Mailer\File;
 use Yiisoft\Mailer\MailerInterface;
 use Yiisoft\Mailer\MessageBodyTemplate;
@@ -35,7 +34,7 @@ final class ContactMailer
         $this->translator = $translator;
     }
 
-    public function send(FormModelInterface $form, ServerRequestInterface $request): void
+    public function send(ContactForm $form): void
     {
         $message = $this->mailer
             ->compose(
@@ -45,13 +44,12 @@ final class ContactMailer
                 ]
             )
             ->withSubject((string)$form->getPropertyValue('subject'))
-            ->withFrom((string)$form->getPropertyValue('email'))
+            ->withFrom([(string)$form->getPropertyValue('email') => (string)$form->getPropertyValue('name')])
             ->withSender($this->sender)
             ->withTo($this->to);
                 
-        $attachFiles = $request->getUploadedFiles();
         /** @var array $attachFile */
-        foreach ($attachFiles as $attachFile) {
+        foreach ($form->getPropertyValue('attachFiles') as $attachFile) {
             /** 
              * @var array $file 
              * @psalm-suppress MixedMethodCall 

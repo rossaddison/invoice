@@ -19,8 +19,8 @@ use Yiisoft\Translator\TranslatorInterface;
 use Yiisoft\Yii\Cycle\Schema\Conveyor\MetadataSchemaConveyor;
 use Yiisoft\Yii\Cycle\Schema\Provider\FromConveyorSchemaProvider;
 use Cycle\Schema\Provider\PhpFileSchemaProvider;
-use Yiisoft\Yii\DataView\OffsetPagination;
 use Yiisoft\Yii\DataView\Column\DataColumn;
+use Yiisoft\Yii\DataView\OffsetPagination;
 use Yiisoft\Yii\View\Renderer\CsrfViewInjection;
 // yii3-i
 use App\Invoice\Helpers\ClientHelper;
@@ -66,39 +66,43 @@ return [
     'themes' => [
         'defaultTheme' => 'bootstrap5-vertical',
         'validationRulesEnricher' => new ValidationRulesEnricher(),
+        // currently being used
         'default' => [
-        'containerClass' => 'form-floating mb-3',
-        'inputClass' => 'form-control h3',
-        'invalidClass' => 'is-invalid',
-        'validClass' => 'is-valid',
-        'template' => '{input}{label}{hint}{error}',
-        'labelClass' => 'floatingInput h6',
-        'errorClass' => 'fw-bold fst-italic', 
-        'hintClass' => 'text-danger h6',
-        'fieldConfigs' => [
-            SubmitButton::class => [
-              'buttonClass()' => ['btn btn-primary btn-sm mt-3'],
-              'containerClass()' => ['d-grid gap-2 form-floating'],
-            ],
-            // if this Checkbox class is not used then the checkbox ends up floating 
-            // because of the default containerClass above;
-            // refer to client form with active client checkbox  
-            Checkbox::class => [
-              'containerClass()' => ['form-group']    
-            ],
-            DataColumn::class => [
-              'containerClass()' => ['form-group']  
-            ],
-            OffsetPagination::class => [
-                'listTag()' => ['ul'],
-                'listAttributes()' => [['class' => 'pagination']],
-                'itemTag()' => ['li'],
-                'itemAttributes()' => [['class' => 'page-item']],
-                'linkAttributes()' => [['class' => 'page-link']],
-                'currentItemClass()' => ['active'],
-                'disabledItemClass()' => ['disabled'],
-            ], 
-        ],  
+            'containerClass' => 'form-floating mb-3',
+            'inputClass' => 'form-control h3',
+            'invalidClass' => 'is-invalid',
+            'validClass' => 'is-valid',
+            'template' => '{input}{label}{hint}{error}',
+            'labelClass' => 'floatingInput h6',
+            'errorClass' => 'fw-bold fst-italic', 
+            /**
+             * @see resources/views/invoice/product/_form.php and adjust the h6 below to h1 and see the effect
+             */
+            'hintClass' => 'text-danger h6',
+            'fieldConfigs' => [            
+                SubmitButton::class => [
+                    'buttonClass()' => ['btn btn-primary btn-sm mt-3'],
+                    'containerClass()' => ['d-grid gap-2 form-floating'],
+                ],
+                // if this Checkbox class is not used then the checkbox ends up floating 
+                // because of the default containerClass above;
+                // refer to client form with active client checkbox  
+                Checkbox::class => [
+                    'containerClass()' => ['form-group']    
+                ],
+                DataColumn::class => [
+                    'containerClass()' => ['form-group']  
+                ],
+                OffsetPagination::class => [
+                    'listTag()' => ['ul'],
+                    'listAttributes()' => [['class' => 'pagination']],
+                    'itemTag()' => ['li'],
+                    'itemAttributes()' => [['class' => 'page-item']],
+                    'linkAttributes()' => [['class' => 'page-link']],
+                    'currentItemClass()' => ['active'],
+                    'disabledItemClass()' => ['disabled'],
+                ], 
+            ],  
         ],
         'bootstrap5-vertical' => [
             'template' => "{label}\n{input}\n{hint}\n{error}",

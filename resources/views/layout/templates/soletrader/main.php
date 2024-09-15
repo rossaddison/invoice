@@ -134,7 +134,7 @@ $this->setTitle($title);
                     ],
                     [
                         'label' => str_repeat(' ',1).$translator->translate('menu.contact.us'),
-                        'url' => $urlGenerator->generate('contact/fill'),
+                        'url' => $urlGenerator->generate('contact/interest'),
                         'visible' => $isGuest,
                         'linkOptions' => ['class' => 'bi bi-person-fill-add text-primary']
                     ],

@@ -233,13 +233,12 @@ $toolbar = Div::tag();
                 return '';
             },
             multiple: true           
-        ),      
+        ),         
         new DataColumn(
             'id',    
-            header: $translator->translate('i.id'),
+            header: '',
             content: static fn(Inv $model) => $model->getId(),
-            // remove the hyperlinked sort header. Using customized sort button    
-            withSorting: false
+            withSorting: true
         ), 
         new DataColumn(
             field: 'number',
@@ -544,7 +543,6 @@ $toolbar = Div::tag();
         Div::tag()->addClass('float-end m-3')->content(Button::ascDesc($urlGenerator, 'date_due', 'danger', $translator->translate('i.due_date'), false))->encode(false)->render().    
         Div::tag()->addClass('float-end m-3')->content(Button::ascDesc($urlGenerator, 'client_id', 'warning', $translator->translate('i.client'), false))->encode(false)->render().    
         Div::tag()->addClass('float-end m-3')->content(Button::ascDesc($urlGenerator, 'status_id', 'success', $translator->translate('i.status'), false))->encode(false)->render().    
-        Div::tag()->addClass('float-end m-3')->content(Button::ascDesc($urlGenerator, 'id', 'info', $translator->translate('i.id'), false))->encode(false)->render().
         // use the checkboxcolumn to copy multiple invoices accrding to a new date
         Div::tag()->addClass('float-end m-3')->content($copyInvoiceMultiple)->encode(false)->render() .  
         // use the checkboxcolumn to mark invoices as sent
@@ -565,7 +563,32 @@ $toolbar = Div::tag();
     ->tableAttributes(['class' => 'table table-striped h-75', 'id' => 'table-invoice'])
     ->columns(...$columns)
     ->dataReader($paginator)
-    ->headerRowAttributes(['class' => 'card-header bg-info text-black'])         
+    ->headerTableEnabled(true)        
+    ->headerRowAttributes(['class' => 'card-header bg-info text-black'])
+    ->footerEnabled(true)    
+    ->footerRowAttributes(['id' => 'this is for id'])
+    ->emptyCell($translator->translate('i.not_set'))
+    ->emptyCellAttributes(['style' => 'color:red'])        
+    ->sortableHeaderPrepend('<div class="float-end text-secondary text-opacity-50">⭥</div>')        
+    ->sortableHeaderDescAppend(A::tag()
+        ->content('⬆')
+        ->href($urlGenerator->generate('inv/index', [], ['sort' => 'id']))
+        ->id('btn-id-desc-append')
+        ->render())
+    ->sortableHeaderDescPrepend(A::tag()
+        ->content('⬇')
+        ->href($urlGenerator->generate('inv/index', [], ['sort' => '-id']))
+        ->id('btn-id-desc-prepend')
+        ->render())
+    ->sortableHeaderAscAppend(A::tag()
+        ->content('⬆')
+        ->href($urlGenerator->generate('inv/index', [], ['sort' => 'id']))
+        ->render())                
+    ->sortableHeaderAscPrepend(A::tag()
+        ->content('⬇')
+        ->href($urlGenerator->generate('inv/index', [], ['sort' => '-id']))
+        ->id('btn-id-asc-prepend')
+        ->render())        
     ->header($gridComponents->header(' ' . $translator->translate('i.invoice')))
     ->id('w3-grid') 
     ->pagination(
@@ -575,7 +598,7 @@ $toolbar = Div::tag();
     ->summaryTemplate($pageSizeLimiter::buttons($currentRoute, $s, $urlGenerator, 'inv').' '.$grid_summary)
     ->emptyTextAttributes(['class' => 'card-header bg-warning text-black'])
     ->emptyText($translator->translate('invoice.invoice.no.records'))
-    ->toolbar($toolbarString);    
+    ->toolbar($toolbarString);     
 ?>
 
 <?php echo $modal_add_inv; ?>
