@@ -134,6 +134,9 @@ use Yiisoft\Session\SessionInterface;
 use Yiisoft\Session\Flash\Flash;
 use Yiisoft\Translator\TranslatorInterface;
 use Yiisoft\User\CurrentUser;
+use Yiisoft\Yii\DataView\UrlConfig;
+use Yiisoft\Yii\DataView\UrlParameterType;
+use Yiisoft\Yii\DataView\YiiRouter\UrlCreator;
 use Yiisoft\Yii\View\Renderer\ViewRenderer;
 // Psr\Http
 use Psr\Log\LoggerInterface;
@@ -1993,7 +1996,9 @@ final class InvController {
             //status 0 => 'all';
             $status = (int) $status;
             $sortString = $querySort ?? '-id';
+            $urlCreator = new UrlCreator($this->url_generator);
             $order =  OrderHelper::stringToArray($sortString);
+            $urlCreator->__invoke([], $order);
             $sort = Sort::only(['id', 'status_id', 'number', 'date_created', 'date_due', 'client_id'])
                     // (@see vendor\yiisoft\data\src\Reader\Sort
                     // - => 'desc'  so -id => default descending on id
@@ -2059,6 +2064,7 @@ final class InvController {
                 'modal_add_inv' => $bootstrap5ModalInv->renderPartialLayoutWithFormAsString('inv', []),
                 'modal_create_recurring_multiple' =>  $this->index_modal_create_recurring_multiple($irR),
                 'modal_copy_inv_multiple' => $this->index_modal_copy_inv_multiple(),
+                'urlCreator' => $urlCreator,
                 'visible' => $visible == '0' ? false : true,
                 'visibleToggleInvSentLogColumn' => $visibleToggleInvSentLogColumn == '0' ? false : true
             ];

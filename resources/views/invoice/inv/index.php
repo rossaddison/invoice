@@ -13,6 +13,7 @@ use Yiisoft\Html\Tag\Input;
 use Yiisoft\Html\Tag\Input\Checkbox;
 use Yiisoft\Html\Tag\Label;
 use Yiisoft\Yii\DataView\Column\Base\DataContext;
+use Yiisoft\Yii\DataView\Column\ActionColumn;
 use Yiisoft\Yii\DataView\Column\CheckboxColumn;
 use Yiisoft\Yii\DataView\Column\ColumnInterface;
 use Yiisoft\Yii\DataView\Column\DataColumn;
@@ -39,6 +40,7 @@ use Yiisoft\Yii\DataView\GridView;
  * @var Yiisoft\Router\CurrentRoute $currentRoute
  * @var Yiisoft\Translator\TranslatorInterface $translator
  * @var Yiisoft\Router\FastRoute\UrlGenerator $urlGenerator
+ * @var Yiisoft\Yii\DataView\YiiRouter\UrlCreator $urlCreator
  * @var bool $visible
  * @var bool $visibleToggleInvSentLogColumn
  * @var int $clientCount
@@ -236,7 +238,7 @@ $toolbar = Div::tag();
         ),         
         new DataColumn(
             'id',    
-            header: '',
+            header: 'id',
             content: static fn(Inv $model) => $model->getId(),
             withSorting: true
         ), 
@@ -339,7 +341,7 @@ $toolbar = Div::tag();
                 }
                 return Html::tag('span', $iR->getSpecificStatusArrayEmoji((int)$model->getStatus_id()). $label, ['class' => 'label label-' . $iR->getSpecificStatusArrayClass((int)$model->getStatus_id())]);
             },
-            withSorting: false
+            withSorting: true
         ),           
         new DataColumn(
             field: 'client_id',
@@ -398,7 +400,7 @@ $toolbar = Div::tag();
                         ->content(Html::encode(!is_string($dateDue = $model->getDate_due())? $dateDue->format($dateHelper->style()) : ''))
                         ->render();
             },
-            withSorting: false        
+            withSorting: true        
         ),  
         new DataColumn(
             field: 'id',
@@ -535,14 +537,12 @@ $toolbar = Div::tag();
         )   
     ];
 ?>
-<?php
+<?php     
     $toolbarString = 
         Form::tag()->post($urlGenerator->generate('inv/index'))->csrf($csrf)->open() .
         Div::tag()->addClass('float-end m-3')->content($allVisible)->encode(false)->render() .   
         Div::tag()->addClass('float-end m-3')->content($toolbarReset)->encode(false)->render() .
-        Div::tag()->addClass('float-end m-3')->content(Button::ascDesc($urlGenerator, 'date_due', 'danger', $translator->translate('i.due_date'), false))->encode(false)->render().    
         Div::tag()->addClass('float-end m-3')->content(Button::ascDesc($urlGenerator, 'client_id', 'warning', $translator->translate('i.client'), false))->encode(false)->render().    
-        Div::tag()->addClass('float-end m-3')->content(Button::ascDesc($urlGenerator, 'status_id', 'success', $translator->translate('i.status'), false))->encode(false)->render().    
         // use the checkboxcolumn to copy multiple invoices accrding to a new date
         Div::tag()->addClass('float-end m-3')->content($copyInvoiceMultiple)->encode(false)->render() .  
         // use the checkboxcolumn to mark invoices as sent
@@ -563,32 +563,19 @@ $toolbar = Div::tag();
     ->tableAttributes(['class' => 'table table-striped h-75', 'id' => 'table-invoice'])
     ->columns(...$columns)
     ->dataReader($paginator)
+    ->urlCreator($urlCreator)
+    // the up and down symbol will appear at first indicating that the column can be sorted 
+    // Ir also appears in this state if another column has been sorted        
+    ->sortableHeaderPrepend('<div class="float-end text-secondary text-opacity-50">⭥</div>')
+    // the up arrow will appear if column values are ascending          
+    ->sortableHeaderAscPrepend('<div class="float-end fw-bold">⭡</div>')
+    // the down arrow will appear if column values are descending        
+    ->sortableHeaderDescPrepend('<div class="float-end fw-bold">⭣</div>')        
     ->headerTableEnabled(true)        
     ->headerRowAttributes(['class' => 'card-header bg-info text-black'])
-    ->footerEnabled(true)    
-    ->footerRowAttributes(['id' => 'this is for id'])
+    ->footerEnabled(true) 
     ->emptyCell($translator->translate('i.not_set'))
-    ->emptyCellAttributes(['style' => 'color:red'])        
-    ->sortableHeaderPrepend('<div class="float-end text-secondary text-opacity-50">⭥</div>')        
-    ->sortableHeaderDescAppend(A::tag()
-        ->content('⬆')
-        ->href($urlGenerator->generate('inv/index', [], ['sort' => 'id']))
-        ->id('btn-id-desc-append')
-        ->render())
-    ->sortableHeaderDescPrepend(A::tag()
-        ->content('⬇')
-        ->href($urlGenerator->generate('inv/index', [], ['sort' => '-id']))
-        ->id('btn-id-desc-prepend')
-        ->render())
-    ->sortableHeaderAscAppend(A::tag()
-        ->content('⬆')
-        ->href($urlGenerator->generate('inv/index', [], ['sort' => 'id']))
-        ->render())                
-    ->sortableHeaderAscPrepend(A::tag()
-        ->content('⬇')
-        ->href($urlGenerator->generate('inv/index', [], ['sort' => '-id']))
-        ->id('btn-id-asc-prepend')
-        ->render())        
+    ->emptyCellAttributes(['style' => 'color:red'])  
     ->header($gridComponents->header(' ' . $translator->translate('i.invoice')))
     ->id('w3-grid') 
     ->pagination(
