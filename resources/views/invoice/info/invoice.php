@@ -50,7 +50,7 @@
 <p><b>18th September 2024</b></p>
 <p>A 'stop logging in' and 'stop signing up' setting appear in the settings...view tab and is related to the src\ViewInjection\LayoutViewInjection.php</p>
 <p>Grids Quote, Inv, Product, Client can be sorted on the index.php and the guest.php side</p>
-<p><a href="https://github.com/yiisoft/demo/pull/624"> Apply propertyTranslatorProviderInterface to Login and SignUp Form</p>
+<p><a href="https://github.com/yiisoft/demo/pull/624"> Apply propertyTranslatorProviderInterface to Login and SignUp Form</a></p>
 <p>Invoices can be marked as 'sent' using single button on inv/index so that invoice appears on client side.</p>
 <p>A selection of invoices can be copied which is useful for batch invoice processing from inv/index.php.</p>
 <p>CodeQL has been included in workflow actions and the Snyke bot is being used to check for security vulnerabilities.</p>
