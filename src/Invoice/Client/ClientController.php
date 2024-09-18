@@ -68,6 +68,8 @@ use Yiisoft\Translator\TranslatorInterface;
 use Yiisoft\User\CurrentUser;
 use Yiisoft\FormModel\FormHydrator;
 use Yiisoft\Data\Cycle\Reader\EntityReader;
+use Yiisoft\Router\FastRoute\UrlGenerator;
+use Yiisoft\Yii\DataView\YiiRouter\UrlCreator;
 use Yiisoft\Yii\View\Renderer\ViewRenderer;
 // Miscellaneous
 
@@ -516,8 +518,21 @@ final class ClientController
         return null;
     }
     
+    /**
+     * 
+     * @param CurrentRoute $currentRoute
+     * @param Request $request
+     * @param UrlGenerator $urlGenerator
+     * @param cR $cR
+     * @param iaR $iaR
+     * @param iR $iR
+     * @param sR $sR
+     * @param cpR $cpR
+     * @param ucR $ucR
+     * @return \Yiisoft\DataResponse\DataResponse
+     */
     public function index(CurrentRoute $currentRoute, 
-                          Request $request, cR $cR, iaR $iaR, iR $iR, sR $sR, cpR $cpR, ucR $ucR): 
+                          Request $request, UrlGenerator $urlGenerator, cR $cR, iaR $iaR, iR $iR, sR $sR, cpR $cpR, ucR $ucR): 
         \Yiisoft\DataResponse\DataResponse
     {
         /**
@@ -532,9 +547,11 @@ final class ClientController
         $page = $query_params['page'] ?? $currentRoute->getArgument('page', '1');        
         $active = (int)$currentRoute->getArgument('active', '2');
         /** @var string $query_params['sort'] */
-        $sort_string = $query_params['sort'] ?? '-id';
-        $order =  OrderHelper::stringToArray($sort_string);
-        $sort = Sort::only(['id', 'client_name', 'client_surname'])
+        $sortString = $query_params['sort'] ?? '-id';
+        $urlCreator = new UrlCreator($urlGenerator);
+        $order =  OrderHelper::stringToArray($sortString);
+        $urlCreator->__invoke([], $order);
+        $sort = Sort::only(['id', 'client_birthdate', 'client_mobile', 'client_phone'])
                     // (@see vendor\yiisoft\data\src\Reader\Sort
                     // - => 'desc'  so -id => default descending on id
                     // Show the latest products first => -id
@@ -569,6 +586,7 @@ final class ClientController
             'modal_create_client' => $this->viewRenderer->renderPartialAsString('//invoice/client/modal_create_client'),
             'optionsDataClientNameDropdownFilter' => $this->optionsDataClientNameDropdownFilter($cR),
             'optionsDataClientSurnameDropdownFilter' => $this->optionsDataClientSurnameDropdownFilter($cR),
+            'urlCreator' => $urlCreator
         ];    
         return $this->viewRenderer->render('index', $parameters);
     }

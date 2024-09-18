@@ -47,6 +47,23 @@
 <p>Introducing India's PayTm payment gateway's QR code method of payment and comparing this with Stripe's method.</p>
 <p>A General Sales Tax (GST) Tax System will have to be implemented first for this purpose.</p>
 <p>Testing Credit Notes against Invoices with refunds (if payment made) linked to each of the payment gateways.</p>
+<p><b>18th September 2024</b></p>
+<p>A 'stop logging in' and 'stop signing up' setting appear in the settings...view tab and is related to the src\ViewInjection\LayoutViewInjection.php</p>
+<p>Grids Quote, Inv, Product, Client can be sorted on the index.php and the guest.php side</p>
+<p><a href="https://github.com/yiisoft/demo/pull/624"> Apply propertyTranslatorProviderInterface to Login and SignUp Form</p>
+<p>Invoices can be marked as 'sent' using single button on inv/index so that invoice appears on client side.</p>
+<p>A selection of invoices can be copied which is useful for batch invoice processing from inv/index.php.</p>
+<p>CodeQL has been included in workflow actions and the Snyke bot is being used to check for security vulnerabilities.</p>
+<p>40 security vulnerabilities were removed. Responsible files have been removed.</p>
+<p>jQuery is to be informed of 12 security vulnerabilities using their latest beta version.
+   All responsible files have been removed from the directory ...src\Invoice\Asset\jquery-ui-1.14.0</p>
+<p>Set .env YII_DEBUG default value to non-empty. If the value is not empty so there is a value after the = sign it will be 
+evaluated as a string first and then as true. YII_DEBUG= equates to false whereas YII_DEBUG=false equates to true because it is not empty.</p>
+<p>Scrutinizer used for code analysis. scrutinizer.yml appears at the root.</p>
+<p>bootstrap 4 data-toggle to bootstrap 5 data-bs-toggle.</p>
+<p>javascript vulnerability in emailtemplate.js removed with separate view grid linked to the emailtemplate index.</p>
+<p>yiisoft-yii-view-renderer replaces yiisoft/yii-view</p>
+
 <p><b>3rd August 2024</b></p>
 <p>Psalm Level 1 Testing Completed using below file format.</p>
 <p><pre><xmp>

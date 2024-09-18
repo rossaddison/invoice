@@ -30,6 +30,7 @@ use Yiisoft\Yii\DataView\Column\ColumnInterface;
  * @var Yiisoft\Router\CurrentRoute $currentRoute
  * @var Yiisoft\Translator\TranslatorInterface $translator
  * @var Yiisoft\Router\FastRoute\UrlGenerator $urlGenerator
+ * @var Yiisoft\Yii\DataView\YiiRouter\UrlCreator $urlCreator
  * @var int $defaultPageSizeOffsetPaginator
  * @var bool $viewInv
  * @var int $decimalPlaces
@@ -127,7 +128,7 @@ echo $alert;
             'id',
             header: $translator->translate('i.id'),
             content: static fn (Inv $model) => $model->getId(),
-            withSorting: false
+            withSorting: true
         ),
         new DataColumn(
             'status_id',
@@ -142,7 +143,7 @@ echo $alert;
                 }
                 return Html::tag('span', $iR->getSpecificStatusArrayEmoji((int)$model->getStatus_id()). $label, ['class' => 'label label-' . $iR->getSpecificStatusArrayClass((int)$model->getStatus_id())]);
             },
-            withSorting: false
+            withSorting: true
         ),
         new DataColumn(
             field: 'number',
@@ -194,7 +195,7 @@ echo $alert;
                         ->content(Html::encode(!is_string($dateDue = $model->getDate_due())? $dateDue->format($dateHelper->style()) : ''))
                         ->render();
             },
-            withSorting: false        
+            withSorting: true        
         ),        
         new DataColumn(
             field: 'id',
@@ -246,10 +247,7 @@ echo $alert;
 <?php
     $toolbarString = Form::tag()->post($urlGenerator->generate('inv/guest'))->csrf($csrf)->open() .
             Div::tag()->addClass('float-end m-3')->content($toolbarReset)->encode(false)->render() .
-            Div::tag()->addClass('float-end m-3')->content(Button::ascDesc($urlGenerator, 'date_due', 'danger', $translator->translate('i.due_date'), true))->encode(false)->render().    
             Div::tag()->addClass('float-end m-3')->content(Button::ascDesc($urlGenerator, 'client_id', 'warning', $translator->translate('i.client'), true))->encode(false)->render().    
-            Div::tag()->addClass('float-end m-3')->content(Button::ascDesc($urlGenerator, 'status_id', 'success', $translator->translate('i.status'), true))->encode(false)->render().    
-            Div::tag()->addClass('float-end m-3')->content(Button::ascDesc($urlGenerator, 'id', 'info', $translator->translate('i.id'), true))->encode(false)->render().   
             Form::tag()->close();
     $grid_summary = $s->grid_summary(
         $paginator,
@@ -263,7 +261,19 @@ echo $alert;
         ->tableAttributes(['class' => 'table table-striped text-center h-75','id'=>'table-invoice-guest'])
         ->columns(...$columns)        
         ->dataReader($paginator)
+        ->urlCreator($urlCreator)
+        // the up and down symbol will appear at first indicating that the column can be sorted 
+        // Ir also appears in this state if another column has been sorted        
+        ->sortableHeaderPrepend('<div class="float-end text-secondary text-opacity-50">⭥</div>')
+        // the up arrow will appear if column values are ascending          
+        ->sortableHeaderAscPrepend('<div class="float-end fw-bold">⭡</div>')
+        // the down arrow will appear if column values are descending        
+        ->sortableHeaderDescPrepend('<div class="float-end fw-bold">⭣</div>')
+        ->headerTableEnabled(true)        
         ->headerRowAttributes(['class'=>'card-header bg-info text-black'])
+        ->footerEnabled(true) 
+        ->emptyCell($translator->translate('i.not_set'))
+        ->emptyCellAttributes(['style' => 'color:red'])  
         ->header($gridComponents->header(' ' . $translator->translate('i.invoice')))
         ->id('w9-grid')
         ->pagination(

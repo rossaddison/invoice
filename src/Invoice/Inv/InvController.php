@@ -134,8 +134,6 @@ use Yiisoft\Session\SessionInterface;
 use Yiisoft\Session\Flash\Flash;
 use Yiisoft\Translator\TranslatorInterface;
 use Yiisoft\User\CurrentUser;
-use Yiisoft\Yii\DataView\UrlConfig;
-use Yiisoft\Yii\DataView\UrlParameterType;
 use Yiisoft\Yii\DataView\YiiRouter\UrlCreator;
 use Yiisoft\Yii\View\Renderer\ViewRenderer;
 // Psr\Http
@@ -1811,7 +1809,11 @@ final class InvController {
         #[Query('filterInvAmountTotal')] string $queryFilterInvAmountTotal = null): \Yiisoft\DataResponse\DataResponse|Response {
         $pageString = $queryPage ?? $page;
         $sortString = $querySort ?? '-id';
-        $sort = Sort::only(['status_id', 'number', 'date_created', 'date_due', 'id', 'client_id'])->withOrderString($sortString);
+        $urlCreator = new UrlCreator($this->url_generator);
+        $order =  OrderHelper::stringToArray($sortString);
+        $urlCreator->__invoke([], $order);
+        $sort = Sort::only(['status_id', 'number', 'date_created', 'date_due', 'id', 'client_id'])
+                ->withOrderString($sortString);
         // Get the current user and determine from (@see Settings...User Account) whether they have been given
         // either guest or admin rights. These rights are unrelated to rbac and serve as a second
         // 'line of defense' to support role based admin control.
@@ -1873,6 +1875,7 @@ final class InvController {
                         // Clicking on a grid column sort hyperlink will generate a url query_param eg. ?sort=
                         'sortOrder' => $querySort ?? '',
                         'status' => $status,
+                        'urlCreator' => $urlCreator
                     ];
                     return $this->view_renderer->render('inv/guest', $parameters);
                 } // no clients assigned to this user    

@@ -74,6 +74,7 @@ use Yiisoft\Session\SessionInterface;
 use Yiisoft\Session\Flash\Flash;
 use Yiisoft\Translator\TranslatorInterface;
 use Yiisoft\Data\Cycle\Reader\EntityReader;
+use Yiisoft\Yii\DataView\YiiRouter\UrlCreator;
 use Yiisoft\Yii\View\Renderer\ViewRenderer;
 
 class ProductController
@@ -464,9 +465,13 @@ class ProductController
         $currentPage = $query_params['page'] ?? $page;
         
         /** @var string $query_params['sort'] */
-        $sort_string = $query_params['sort'] ?? '-id';
-        $order =  OrderHelper::stringToArray($sort_string);
-        $sort = Sort::only(['id', 'family_id', 'unit_id', 'tax_rate_id', 'product_name', 'product_sku', 'product_price'])
+        $sortString = $query_params['sort'] ?? '-id';
+        $urlCreator = new UrlCreator($urlFastRouteGenerator);
+        $order =  OrderHelper::stringToArray($sortString);
+        $urlCreator->__invoke([], $order);
+        $sort = Sort::only(['id', 'family_id', 'unit_id', 'tax_rate_id', 
+                            'product_name', 'product_sku', 'product_price', 'product_description', 'product_price_base_quantity'
+                           ])
                     // (@see vendor\yiisoft\data\src\Reader\Sort
                     // - => 'desc'  so -id => default descending on id
                     // Show the latest products first => -id
@@ -491,7 +496,8 @@ class ProductController
             'paginator' => $paginator,
             'defaultPageSizeOffsetPaginator' => (int)$sR->get_setting('default_list_limit'),
             'optionsDataProductsDropdownFilter' => $this->optionsDataProducts($pR),
-            'urlFastRouteGenerator' => $urlFastRouteGenerator
+            'urlFastRouteGenerator' => $urlFastRouteGenerator,
+            'urlCreator' => $urlCreator
         ]; 
         return $this->viewRenderer->render('index', $parameters);
     }

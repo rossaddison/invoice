@@ -27,6 +27,7 @@ use Yiisoft\Yii\DataView\GridView;
  * @var Yiisoft\Router\CurrentRoute $currentRoute
  * @var Yiisoft\Translator\TranslatorInterface $translator
  * @var Yiisoft\Router\FastRoute\UrlGenerator $urlGenerator
+ * @var Yiisoft\Yii\DataView\YiiRouter\UrlCreator $urlCreator
  * @var int $defaultPageSizeOffsetPaginator
  * @var array $quoteStatuses
  * @var array $quoteStatuses[$status]
@@ -120,7 +121,36 @@ $toolbar = Div::tag();
         new DataColumn(
             'id',
             header: $translator->translate('i.id'),
-            content: static fn (Quote $model) => $model->getId()
+            content: static fn (Quote $model) => $model->getId(),
+            withSorting: true    
+        ), new DataColumn(
+            header: $translator->translate('i.view'),
+            content: static function (Quote $model) use ($urlGenerator): string {
+               return Html::a(Html::tag('i','',['class'=>'fa fa-eye fa-margin']), $urlGenerator->generate('quote/view',['id'=>$model->getId()]),[])->render();
+            }
+        ),
+        new DataColumn(
+            header: $translator->translate('i.edit'),
+            content: static function (Quote $model) use ($urlGenerator): string {
+               return Html::a(Html::tag('i','',['class'=>'fa fa-edit fa-margin']), $urlGenerator->generate('quote/edit',['id'=>$model->getId()]),[])->render();
+            }
+        ),
+        new DataColumn(
+            header: $translator->translate('i.delete'), 
+            content: static function (Quote $model) use ($translator, $urlGenerator): string {
+                if ($model->getStatus_id() == '1') {
+                    return Html::a( Html::tag('button',
+                        Html::tag('i','',['class'=>'fa fa-trash fa-margin']),
+                        [
+                            'type'=>'submit', 
+                            'class'=>'dropdown-button',
+                            'onclick'=>"return confirm("."'".$translator->translate('i.delete_record_warning')."');"
+                        ]
+                        ),
+                        $urlGenerator->generate('quote/delete',['id'=>$model->getId()]),[]                                         
+                    )->render();
+                } else { return ''; }
+            }
         ),        
         new DataColumn(
             'status_id',
@@ -132,7 +162,8 @@ $toolbar = Div::tag();
                     return (string)Html::tag('span', $span, ['id'=>'#quote-index','class'=>'label '. $class]);
                 }
                 return '';
-            }      
+            },
+            withSorting: true          
         ),
         new DataColumn(
             'so_id',
@@ -173,11 +204,13 @@ $toolbar = Div::tag();
         new DataColumn(
             'date_created',    
             header: $translator->translate('i.date_created'),
-            content: static fn (Quote $model): string => ($model->getDate_created())->format($dateHelper->style())                        
+            content: static fn (Quote $model): string => ($model->getDate_created())->format($dateHelper->style()),
+            withSorting: true                            
         ),
         new DataColumn(
             'date_expires',
-            content: static fn (Quote $model): string => ($model->getDate_expires())->format($dateHelper->style())                        
+            content: static fn (Quote $model): string => ($model->getDate_expires())->format($dateHelper->style()),
+            withSorting: true                            
         ),
         new DataColumn(
             'date_required',
@@ -195,7 +228,8 @@ $toolbar = Div::tag();
                 }
                 return '';
             },  
-            filter: $optionsDataClientsDropdownFilter    
+            filter: $optionsDataClientsDropdownFilter,
+            withSorting: false        
         ),
         new DataColumn(
             field: 'id',
@@ -209,37 +243,9 @@ $toolbar = Div::tag();
                         ->content(Html::encode(null!==$quoteTotal ? number_format($quoteTotal, $decimalPlaces) : number_format(0, $decimalPlaces)))
                         ->render();
             },
-            filter: true
-        ),        
-        new DataColumn(
-            header: $translator->translate('i.view'),
-            content: static function (Quote $model) use ($urlGenerator): string {
-               return Html::a(Html::tag('i','',['class'=>'fa fa-eye fa-margin']), $urlGenerator->generate('quote/view',['id'=>$model->getId()]),[])->render();
-            }
-        ),
-        new DataColumn(
-            header: $translator->translate('i.edit'),
-            content: static function (Quote $model) use ($urlGenerator): string {
-               return Html::a(Html::tag('i','',['class'=>'fa fa-edit fa-margin']), $urlGenerator->generate('quote/edit',['id'=>$model->getId()]),[])->render();
-            }
-        ),
-        new DataColumn(
-            header: $translator->translate('i.delete'), 
-            content: static function (Quote $model) use ($translator, $urlGenerator): string {
-                if ($model->getStatus_id() == '1') {
-                    return Html::a( Html::tag('button',
-                        Html::tag('i','',['class'=>'fa fa-trash fa-margin']),
-                        [
-                            'type'=>'submit', 
-                            'class'=>'dropdown-button',
-                            'onclick'=>"return confirm("."'".$translator->translate('i.delete_record_warning')."');"
-                        ]
-                        ),
-                        $urlGenerator->generate('quote/delete',['id'=>$model->getId()]),[]                                         
-                    )->render();
-                } else { return ''; }
-            }
-        )
+            filter: true,
+            withSorting: false
+        ),      
     ];
 ?>
 <?php 
@@ -259,7 +265,17 @@ $toolbar = Div::tag();
     ->tableAttributes(['class' => 'table table-striped text-center h-75','id'=>'table-quote'])
     ->dataReader($paginator)
     ->columns(...$columns)
+    ->urlCreator($urlCreator)
+    // the up and down symbol will appear at first indicating that the column can be sorted 
+    // Ir also appears in this state if another column has been sorted        
+    ->sortableHeaderPrepend('<div class="float-end text-secondary text-opacity-50">⭥</div>')
+    // the up arrow will appear if column values are ascending          
+    ->sortableHeaderAscPrepend('<div class="float-end fw-bold">⭡</div>')
+    // the down arrow will appear if column values are descending        
+    ->sortableHeaderDescPrepend('<div class="float-end fw-bold">⭣</div>')        
     ->headerRowAttributes(['class'=>'card-header bg-info text-black'])
+    ->emptyCell($translator->translate('i.not_set'))
+    ->emptyCellAttributes(['style' => 'color:red'])         
     ->header($header)
     ->id('w2-grid')
     ->pagination(

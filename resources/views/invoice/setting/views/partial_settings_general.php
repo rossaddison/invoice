@@ -1,4 +1,5 @@
 <?php
+
     declare(strict_types=1);
     
     use Yiisoft\Html\Html;
@@ -25,6 +26,44 @@
             </div>
             <div class="panel-body">
                 <div class = 'row'>
+                    <div class="col-xs-12 col-md-6">
+                        <div class="form-group">
+                            <label for="settings[stop_logging_in]">
+                                <?= $translator->translate('invoice.stop.logging.in'); ?>
+                            </label>
+                            <?php $body['settings[stop_logging_in]'] = $s->get_setting('stop_logging_in'); ?>
+                            <select name="settings[allow_logging_in]" id="settings[allow_logging_in]" class="form-control">
+                                <option value="0">
+                                    <?= $translator->translate('i.no'); ?>
+                                </option>
+                                <option value="1" 
+                                    <?php
+                                        $s->check_select($body['settings[stop_logging_in]'], '1'); 
+                                    ?>>
+                                    <?= $translator->translate('i.yes'); ?>
+                                </option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="col-xs-12 col-md-6">
+                        <div class="form-group">
+                            <label for="settings[stop_signing_up]">
+                                <?= $translator->translate('invoice.stop.signing.up'); ?>
+                            </label>
+                            <?php $body['settings[stop_signing_up]'] = $s->get_setting('stop_signing_up'); ?>
+                            <select name="settings[stop_signing_up]" id="settings[stop_signing_up]" class="form-control">
+                                <option value="0">
+                                    <?= $translator->translate('i.no'); ?>
+                                </option>
+                                <option value="1" 
+                                    <?php
+                                        $s->check_select($body['settings[stop_signing_up]'], '1'); 
+                                    ?>>
+                                    <?= $translator->translate('i.yes'); ?>
+                                </option>
+                            </select>
+                        </div>
+                    </div> 
                     <div class="col-xs-12 col-md-6">
                         <div class="form-group">
                             <label for="settings[install_test_data]" <?= $s->where('install_test_data'); ?>>

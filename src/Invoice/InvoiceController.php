@@ -929,6 +929,8 @@ final class InvoiceController
             // Set the invoice to read-only on sent by default;  
             'read_only_toggle' => 2,
             'reports_in_new_tab' => true,
+            'stop_logging_in' => false,
+            'stop_signing_up' => false,
             'sumex_canton' => 1,
             'sumex_role' => 1,
             'sumex_place' => 1,

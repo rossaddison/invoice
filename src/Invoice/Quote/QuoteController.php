@@ -127,9 +127,10 @@ use Yiisoft\Router\HydratorAttribute\RouteArgument;
 use Yiisoft\Session\SessionInterface as Session;
 use Yiisoft\Session\Flash\Flash;
 use Yiisoft\FormModel\FormHydrator;
-use Yiisoft\Yii\View\Renderer\ViewRenderer;
 use Yiisoft\Translator\TranslatorInterface as Translator;
 use Yiisoft\User\CurrentUser;
+use Yiisoft\Yii\DataView\YiiRouter\UrlCreator;
+use Yiisoft\Yii\View\Renderer\ViewRenderer;
 // Psr\Http
 use Psr\Log\LoggerInterface;
 use Psr\Http\Message\ResponseInterface as Response;
@@ -1384,8 +1385,11 @@ final class QuoteController
         /**
          * @var string|null $query_params['sort']
          */
-        $sort_string = $query_params['sort'] ?? '-id';
-        $sort = Sort::only(['status_id','number','date_created','date_expires','id','client_id'])->withOrderString($sort_string); 
+        $sortString = $query_params['sort'] ?? '-id';
+        $urlCreator = new UrlCreator($this->url_generator);
+        $order =  OrderHelper::stringToArray($sortString);
+        $urlCreator->__invoke([], $order);
+        $sort = Sort::only(['status_id','number','date_created','date_expires','id','client_id'])->withOrderString($sortString); 
                 
         // Get the current user and determine from (@see Settings...User Account) whether they have been given 
         // either guest or admin rights. These rights are unrelated to rbac and serve as a second
@@ -1445,8 +1449,9 @@ final class QuoteController
                         'max' => (int) $this->sR->get_setting('default_list_limit'),
                         'page'=> (string) $pageMixed,
                         'paginator' => $paginator,
-                        'sortOrder' => $sort_string, 
-                        'status'=> $status,
+                        'sortOrder' => $sortString, 
+                        'status' => $status,
+                        'urlCreator' => $urlCreator
                     ];    
                     return $this->view_renderer->render('quote/guest', $parameters);
                 } // empty user client 
@@ -1514,8 +1519,9 @@ final class QuoteController
             //status 0 => 'all';
             $status = (int)$status;
            /** @var string $query_params['sort'] */
-            $sort_string = $query_params['sort'] ?? '-id';
-            $order =  OrderHelper::stringToArray($sort_string);
+            $sortString = $query_params['sort'] ?? '-id';$urlCreator = new UrlCreator($this->url_generator);
+            $order =  OrderHelper::stringToArray($sortString);
+            $urlCreator->__invoke([], $order);
             $sort = Sort::only(['id','status_id','number','date_created','date_expires','client_id'])
                         // (@see vendor\yiisoft\data\src\Reader\Sort
                         // - => 'desc'  so -id => default descending on id
@@ -1560,7 +1566,8 @@ final class QuoteController
                 'qR' => $quoteRepo,
                 'qaR' => $qaR,
                 'soR' => $soR,
-                'modal_add_quote' => $bootstrap5ModalQuote->renderPartialLayoutWithFormAsString('quote', [])
+                'modal_add_quote' => $bootstrap5ModalQuote->renderPartialLayoutWithFormAsString('quote', []),
+                'urlCreator' => $urlCreator
             ];  
             return $this->view_renderer->render('quote/index', $parameters);
         } else {

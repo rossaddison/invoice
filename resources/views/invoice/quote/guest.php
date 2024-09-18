@@ -25,6 +25,7 @@ use Yiisoft\Yii\DataView\GridView;
  * @var Yiisoft\Router\CurrentRoute $currentRoute
  * @var Yiisoft\Translator\TranslatorInterface $translator
  * @var Yiisoft\Router\FastRoute\UrlGenerator $urlGenerator
+ * @var Yiisoft\Yii\DataView\YiiRouter\UrlCreator $urlCreator
  * @var int $defaultPageSizeOffsetPaginator
  * @var array $quoteStatuses
  * @var array $quoteStatuses[$status]
@@ -95,8 +96,9 @@ $toolbar = Div::tag();
     $columns = [
         new DataColumn(
             'id',
-            $translator->translate('i.id'),
-            content: static fn (Quote $model) => $model->getId()
+            header: $translator->translate('i.id'),
+            content: static fn (Quote $model) => $model->getId(),
+            withSorting: true    
         ),        
         new DataColumn(
             'status_id',
@@ -108,14 +110,16 @@ $toolbar = Div::tag();
                     return (string)Html::tag('span', $span, ['id'=>'#quote-guest','class'=>'label '. $class]);
                 }
                 return '';
-            }       
+            },
+            withSorting: true           
         ),
         new DataColumn(
             'number',
             header: '#',
             content: static function (Quote $model) use ($urlGenerator): string {
                return Html::a($model->getNumber() ?? '#', $urlGenerator->generate('quote/view',['id'=>$model->getId()]),['style'=>'text-decoration:none'])->render();
-            }
+            },
+            withSorting: true        
         ),
         new DataColumn(
             'client_id',
@@ -125,11 +129,13 @@ $toolbar = Div::tag();
         new DataColumn(
             'date_created',
             header: $translator->translate('i.date_created'),
-            content: static fn (Quote $model): string => ($model->getDate_created())->format($dateHelper->style())
+            content: static fn (Quote $model): string => ($model->getDate_created())->format($dateHelper->style()),
+            withSorting: true    
         ),                    
         new DataColumn(
             'date_expires',
-            content: static fn (Quote $model): string => ($model->getDate_expires())->format($dateHelper->style())
+            content: static fn (Quote $model): string => ($model->getDate_expires())->format($dateHelper->style()),            
+            withSorting: true        
         ),
         new DataColumn(
             'date_required',
@@ -166,7 +172,17 @@ $toolbar = Div::tag();
     ->tableAttributes(['class' => 'table table-striped text-center h-75','id'=>'table-quote-guest'])
     ->dataReader($paginator)        
     ->columns(...$columns)
-    ->headerRowAttributes(['class'=>'card-header bg-info text-black'])         
+    ->urlCreator($urlCreator)
+    // the up and down symbol will appear at first indicating that the column can be sorted 
+    // Ir also appears in this state if another column has been sorted        
+    ->sortableHeaderPrepend('<div class="float-end text-secondary text-opacity-50">⭥</div>')
+    // the up arrow will appear if column values are ascending          
+    ->sortableHeaderAscPrepend('<div class="float-end fw-bold">⭡</div>')
+    // the down arrow will appear if column values are descending        
+    ->sortableHeaderDescPrepend('<div class="float-end fw-bold">⭣</div>')        
+    ->headerRowAttributes(['class'=>'card-header bg-info text-black']) 
+    ->emptyCell($translator->translate('i.not_set'))
+    ->emptyCellAttributes(['style' => 'color:red'])         
     ->header($header)        
     ->id('w7-grid')
     ->pagination(

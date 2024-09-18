@@ -1572,6 +1572,8 @@ return [
     'invoice.setting.translator.key' => 'Translator Key',
     'invoice.setting.you.have.cleared.the.cache' => 'You have cleared the cache.',
     'invoice.setting.you.have.not.cleared.the.cache.due.to.a' => 'You have not cleared the cache  to a ',
+    'invoice.stop.logging.in' => 'Stop logging in',
+    'invoice.stop.signing.up' => 'Stop signing up',
     'invoice.storecove.advisory.to.developer.field.easily.missed' => 'Field easily missed by customer',
     'invoice.storecove.create.a.sender.legal.entity.country' => '1.1.4. Create a sender - Legal Entity Country',
     'invoice.storecove.invoice.json.encoded' => 'StoreCove Json Encoded Invoice',

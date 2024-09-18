@@ -25,6 +25,7 @@ use Yiisoft\Yii\DataView\Column\DataColumn;
  * @var Yiisoft\Router\CurrentRoute $currentRoute
  * @var Yiisoft\Router\FastRoute\UrlGenerator $urlGenerator
  * @var Yiisoft\Translator\TranslatorInterface $translator
+ * @var Yiisoft\Yii\DataView\YiiRouter\UrlCreator $urlCreator
  * @var array $invoices
  * @var bool $canEdit
  * @var int $active
@@ -69,6 +70,12 @@ echo $alert;
     $gridComponents->header('i.client');
     $columns = [
         new DataColumn(
+            'id',    
+            header: 'id',
+            content: static fn(Client $model) => $model->getClient_id(),
+            withSorting: true
+        ), 
+        new DataColumn(
             'client_active',
             header: $translator->translate('i.active'),
             content: static function (Client $model) use ($button, $translator) : string {
@@ -76,22 +83,24 @@ echo $alert;
             }      
         ),
         new DataColumn(
-            'client_id',
+            'id',
             header: 'Peppol',
             content: static function (Client $model) use ($cpR, $button, $translator) : string {
                 return ($cpR->repoClientCount((string)$model->getClient_id()) !== 0 ) 
                         ? $button::activeLabel($translator) 
                         : $button::inactiveLabel($translator);
-            }     
+            },
+            withSorting: false
         ),        
         new DataColumn(
-            'client_id',
+            'id',
             header: $translator->translate('invoice.client.has.user.account'),
             content: static function (Client $model) use ($canEdit, $ucR, $button, $translator, $urlGenerator) : string {
                 return ($ucR->repoUserqueryCount((string)$model->getClient_id()) !== 0  && $canEdit) 
                        ? $button::activeLabel($translator) 
                        : $button::inactiveWithAddUserAccount($urlGenerator, $translator);
-            } 
+            },
+            withSorting: false        
         ),
         new DataColumn(
             field: 'client_name',
@@ -104,7 +113,8 @@ echo $alert;
                         ->addClass('btn btn-warning ms-2')
                         ->render();
             },
-            filter: $optionsDataClientNameDropdownFilter        
+            filter: $optionsDataClientNameDropdownFilter,
+            withSorting: false        
         ),
         new DataColumn(
             field:  'client_surname',
@@ -117,7 +127,8 @@ echo $alert;
                         ->addClass('btn btn-warning ms-2')
                         ->render();
             },
-            filter: $optionsDataClientSurnameDropdownFilter        
+            filter: $optionsDataClientSurnameDropdownFilter,
+            withSorting: false        
             
         ),        
         new DataColumn(
@@ -132,21 +143,24 @@ echo $alert;
                     return Html::encode($clientBirthDate->format($dateHelper->style()));
                 }
                 return '';
-            }
+            },
+            withSorting: true
         ),        
         new DataColumn(
             'client_phone',
             header: $translator->translate('i.phone'),
             content: static function (Client $model) : string {
                 return Html::encode($model->getClient_phone() ?? '');
-            }    
+            },
+            withSorting: true        
         ),
         new DataColumn(
             'client_mobile',
             header: $translator->translate('i.mobile_number'),
             content: static function (Client $model) : string {
                 return Html::encode($model->getClient_mobile() ?? '');
-            }    
+            },
+            withSorting: true
         ),
         new DataColumn(
             'invs',
@@ -276,9 +290,18 @@ echo $alert;
     ->rowAttributes(['class' => 'align-middle'])
     ->tableAttributes(['class' => 'table table-striped text-center h-75','id' => 'table-client'])
     ->columns(...$columns)
-    ->dataReader($paginator)        
+    ->dataReader($paginator) 
+    ->urlCreator($urlCreator)
+    // the up and down symbol will appear at first indicating that the column can be sorted 
+    // Ir also appears in this state if another column has been sorted        
+    ->sortableHeaderPrepend('<div class="float-end text-secondary text-opacity-50">⭥</div>')
+    // the up arrow will appear if column values are ascending          
+    ->sortableHeaderAscPrepend('<div class="float-end fw-bold">⭡</div>')
+    // the down arrow will appear if column values are descending        
+    ->sortableHeaderDescPrepend('<div class="float-end fw-bold">⭣</div>')                        
     ->headerRowAttributes(['class'=>'card-header bg-info text-black'])
-    ->enableMultisort(true)            
+    ->emptyCell($translator->translate('i.not_set'))
+    ->emptyCellAttributes(['style' => 'color:red']) 
     ->header($gridComponents->header('i.client'))
     ->id('w34-grid')
     ->pagination(

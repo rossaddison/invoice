@@ -24,6 +24,7 @@ use Yiisoft\Yii\DataView\YiiRouter\UrlCreator;
  * @var Yiisoft\Translator\TranslatorInterface $translator 
  * @var Yiisoft\Router\UrlGeneratorInterface $urlGenerator
  * @var Yiisoft\Router\FastRoute\UrlGenerator $urlFastRouteGenerator
+ * @var Yiisoft\Yii\DataView\YiiRouter\UrlCreator $urlCreator
  * @var int $defaultPageSizeOffsetPaginator
  * @var string $alert
  * @var string $csrf 
@@ -92,7 +93,8 @@ use Yiisoft\Yii\DataView\YiiRouter\UrlCreator;
         new DataColumn(
             'family_id',
             header: $translator->translate('i.family'),                
-            content: static fn (Product $model): string => Html::encode($model->getFamily()?->getFamily_name() ?? '')                  
+            content: static fn (Product $model): string => Html::encode($model->getFamily()?->getFamily_name() ?? '') ,
+            withSorting: true
         ),
         new DataColumn(
             /**
@@ -111,19 +113,22 @@ use Yiisoft\Yii\DataView\YiiRouter\UrlCreator;
         new DataColumn(
             'product_description',    
             header: $translator->translate('i.product_description'),                
-            content: static fn (Product $model): string => Html::encode(ucfirst($model->getProduct_description() ?? '')) 
+            content: static fn (Product $model): string => Html::encode(ucfirst($model->getProduct_description() ?? '')), 
+            withSorting: true    
         ),
         new DataColumn(
             field: 'product_price',
             property: 'filter_product_price',    
             header: $translator->translate('i.product_price'). ' ( '. $s->get_setting('currency_symbol'). ' ) ',   
             content: static fn (Product $model): string => Html::encode($model->getProduct_price()),
-            filter: true    
+            filter: true,
+            withSorting: false
         ),
         new DataColumn(
             'product_price_base_quantity',    
             header: $translator->translate('invoice.product.price.base.quantity'),
-            content: static fn (Product $model): string => Html::encode($model->getProduct_price_base_quantity())                        
+            content: static fn (Product $model): string => Html::encode($model->getProduct_price_base_quantity()), 
+            withSorting: true    
         ),
         new DataColumn(
             'product_unit',     
@@ -133,12 +138,17 @@ use Yiisoft\Yii\DataView\YiiRouter\UrlCreator;
         new DataColumn(
             'tax_rate_id',    
             header: $translator->translate('i.tax_rate'),
-            content: static fn (Product $model): string => ($model->getTaxrate()?->getTax_rate_id() > 0) ? Html::encode($model->getTaxrate()?->getTax_rate_name()) : $translator->translate('i.none')                       
+            content: static fn (Product $model): string => ($model->getTaxrate()?->getTax_rate_id() > 0) 
+                        ? Html::encode($model->getTaxrate()?->getTax_rate_name()) 
+                        : $translator->translate('i.none'),                       
+            withSorting: true    
         ),
         new DataColumn(
             'product_tariff',                    
             header: $s->get_setting('sumex') ? $translator->translate('i.product_tariff'). '('. $s->get_setting('currency_symbol'). ')' : '',                
-            content: static fn (Product $model): string => ($s->get_setting('sumex') ? Html::encode($model->getProduct_tariff()) : Html::encode($translator->translate('i.none'))),                       
+            content: static fn (Product $model): string => ($s->get_setting('sumex') 
+                        ? Html::encode($model->getProduct_tariff()) 
+                        : Html::encode($translator->translate('i.none'))),                       
             visible: $s->get_setting('sumex') ? true : false
         ),
         new DataColumn(
@@ -199,10 +209,19 @@ use Yiisoft\Yii\DataView\YiiRouter\UrlCreator;
     ->rowAttributes(['class' => 'align-middle'])
     ->tableAttributes(['class' => 'table table-striped text-center h-75','id'=>'table-product'])
     ->columns(...$columns)
-    ->dataReader($paginator)
+    ->dataReader($paginator)    
+    ->urlCreator($urlCreator)
+    // the up and down symbol will appear at first indicating that the column can be sorted 
+    // Ir also appears in this state if another column has been sorted        
+    ->sortableHeaderPrepend('<div class="float-end text-secondary text-opacity-50">⭥</div>')
+    // the up arrow will appear if column values are ascending          
+    ->sortableHeaderAscPrepend('<div class="float-end fw-bold">⭡</div>')
+    // the down arrow will appear if column values are descending        
+    ->sortableHeaderDescPrepend('<div class="float-end fw-bold">⭣</div>')                
     ->headerRowAttributes(['class'=>'card-header bg-info text-black'])
-    ->enableMultisort(true)
-    ->urlQueryParameters(['filter_product_sku', 'filter_product_price'])            
+    ->urlQueryParameters(['filter_product_sku', 'filter_product_price'])
+    ->emptyCell($translator->translate('i.not_set'))
+    ->emptyCellAttributes(['style' => 'color:red'])         
     ->header($header)
     ->id('w4-grid')
     ->pagination(
