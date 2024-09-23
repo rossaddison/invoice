@@ -5,7 +5,8 @@ namespace App\Widget;
 
 use App\Invoice\Entity\Client;
 use App\Invoice\Entity\Inv;
-use Yiisoft\Data\Paginator\OffsetPaginator as DataOffsetPaginator;
+use Yiisoft\Data\Paginator\OffsetPaginator;
+use Yiisoft\Data\Reader\Sort;
 use Yiisoft\Html\Html;
 use Yiisoft\Html\Tag\A;
 use Yiisoft\Html\Tag\Div;
@@ -45,7 +46,7 @@ final class GridComponents
                 ->render();
     }
      
-    public function offsetPaginationWidget(int $pageSize, DataOffsetPaginator $paginator) : string
+    public function offsetPaginationWidget(int $pageSize, OffsetPaginator $sortedAndPagedPaginator) : string
     {
         return OffsetPagination::widget()
         ->listTag('ul')    
@@ -58,9 +59,7 @@ final class GridComponents
         ->disabledItemClass('disabled')
         ->disabledLinkClass('disabled')
         ->defaultPageSize($pageSize)
-        ->urlConfig(new UrlConfig()) 
-        ->urlCreator(new UrlCreator($this->generator))    
-        ->paginator($paginator)
+        ->paginator($sortedAndPagedPaginator)
         ->render();
     } 
     

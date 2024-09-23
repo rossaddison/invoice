@@ -116,7 +116,7 @@ use App\Widget\Bootstrap5ModalTranslatorMessageWithoutAction;
 // Libraries
 use App\Invoice\Libraries\Crypt;
 // Yii
-use Yiisoft\Data\Paginator\OffsetPaginator as DataOffsetPaginator;
+use Yiisoft\Data\Paginator\OffsetPaginator;
 use Yiisoft\Data\Paginator\PageToken;
 use Yiisoft\Data\Reader\Sort;
 use Yiisoft\Data\Reader\OrderHelper;
@@ -135,6 +135,7 @@ use Yiisoft\Session\Flash\Flash;
 use Yiisoft\Translator\TranslatorInterface;
 use Yiisoft\User\CurrentUser;
 use Yiisoft\Yii\DataView\YiiRouter\UrlCreator;
+use Yiisoft\Yii\DataView\UrlConfig;
 use Yiisoft\Yii\View\Renderer\ViewRenderer;
 // Psr\Http
 use Psr\Log\LoggerInterface;
@@ -1807,13 +1808,8 @@ final class InvController {
         #[Query('sort')] string $querySort = null,    
         #[Query('filterInvNumber')] string $queryFilterInvNumber = null,
         #[Query('filterInvAmountTotal')] string $queryFilterInvAmountTotal = null): \Yiisoft\DataResponse\DataResponse|Response {
-        $pageString = $queryPage ?? $page;
-        $sortString = $querySort ?? '-id';
-        $urlCreator = new UrlCreator($this->url_generator);
-        $order =  OrderHelper::stringToArray($sortString);
-        $urlCreator->__invoke([], $order);
-        $sort = Sort::only(['status_id', 'number', 'date_created', 'date_due', 'id', 'client_id'])
-                ->withOrderString($sortString);
+        $page = $queryPage ?? $page;
+        $sortString = $querySort ?? '-id';        
         // Get the current user and determine from (@see Settings...User Account) whether they have been given
         // either guest or admin rights. These rights are unrelated to rbac and serve as a second
         // 'line of defense' to support role based admin control.
@@ -1834,7 +1830,7 @@ final class InvController {
                 // they can view their invoices and make payment
                 $user_clients = $ucR->get_assigned_to_user($user_id);
                 if (!empty($user_clients)) {
-                    $invs = $this->invs_status_with_sort_guest($iR, $status, $user_clients, $sort);
+                    $invs = $this->invs_status_guest($iR, $status, $user_clients);
                     $preFilterInvs = $invs;
                     if (isset($queryFilterInvNumber) && !empty($queryFilterInvNumber)) {
                         $invs = $iR->filterInvNumber($queryFilterInvNumber);
@@ -1846,10 +1842,6 @@ final class InvController {
                        (isset($queryFilterInvAmountTotal) && !empty($queryFilterInvAmountTotal))) {
                         $invs = $iR->filterInvNumberAndInvAmountTotal($queryFilterInvNumber, (float)$queryFilterInvAmountTotal);
                     }
-                    $paginator = (new DataOffsetPaginator($invs))
-                        ->withPageSize(null!== $userInvListLimit ? $userInvListLimit : 10)
-                        ->withCurrentPage((int)$pageString)
-                        ->withToken(PageToken::next($pageString));   
                     $inv_statuses = $iR->getStatuses($this->translator);
                     $label = $iR->getSpecificStatusArrayLabel($status);
                     $parameters = [
@@ -1870,12 +1862,11 @@ final class InvController {
                         // numbered tiles between the arrrows                
                         'maxNavLinkCount' => 10,
                         'invStatuses' => $inv_statuses,
-                        'page' => $pageString,
-                        'paginator' => $paginator,
+                        'page' => $page,
                         // Clicking on a grid column sort hyperlink will generate a url query_param eg. ?sort=
                         'sortOrder' => $querySort ?? '',
+                        'sortString' => $sortString,
                         'status' => $status,
-                        'urlCreator' => $urlCreator
                     ];
                     return $this->view_renderer->render('inv/guest', $parameters);
                 } // no clients assigned to this user    
@@ -1993,21 +1984,12 @@ final class InvController {
         $active_clients = $ucR->getClients_with_user_accounts();
         if ($active_clients) {
             // All, Draft, Sent ... filter governed by routes eg. invoice.myhost/invoice/inv/page/1/status/1 => #[RouteArgument('page')] string $page etc 
-            // Paginator ... governed by query params format eg. invoice.myhost/invoice/inv?page=1&pagesize=1 => $query_params
-            
             $page = $queryPage ?? $page;
             //status 0 => 'all';
             $status = (int) $status;
-            $sortString = $querySort ?? '-id';
-            $urlCreator = new UrlCreator($this->url_generator);
-            $order =  OrderHelper::stringToArray($sortString);
-            $urlCreator->__invoke([], $order);
-            $sort = Sort::only(['id', 'status_id', 'number', 'date_created', 'date_due', 'client_id'])
-                    // (@see vendor\yiisoft\data\src\Reader\Sort
-                    // - => 'desc'  so -id => default descending on id
-                    // Show the latest quotes first => -id
-                    ->withOrder($order);
-            $invs = $this->invs_status_with_sort($invRepo, $status, $sort);
+            $urlCreator = new UrlCreator($this->url_generator);  
+            $urlCreator->__invoke([], ['default' => 'desc']);
+            $invs = $this->invs_status($invRepo, $status);
             if (isset($queryFilterInvNumber) && !empty($queryFilterInvNumber)) {
                 $invs = $invRepo->filterInvNumber($queryFilterInvNumber);
             }
@@ -2028,12 +2010,7 @@ final class InvController {
             {
                 // Use the mySql format 'Y-m'
                 $invs = $invRepo->filterDateCreatedLike('Y-m', $queryFilterDateCreatedYearMonth);
-            }
-            $paginator = (new DataOffsetPaginator($invs))
-                ->withPageSize((int) $this->sR->get_setting('default_list_limit'))
-                ->withCurrentPage((int)$page)
-                ->withSort($sort)    
-                ->withToken(PageToken::next($page));
+            }            
             $inv_statuses = $invRepo->getStatuses($this->translator);
             $label = $invRepo->getSpecificStatusArrayLabel((string) $status);
             $this->draft_flash($_language);
@@ -2046,7 +2023,8 @@ final class InvController {
                                                     ? (int)$this->sR->get_setting('default_list_limit') : 1,
                 // numbered tiles between the arrrows                
                 'maxNavLinkCount' => 10,
-                'paginator' => $paginator,
+                //'sortedAndPagedPaginator' => $paginator,
+                'invs' => $invs,
                 'inv_statuses' => $inv_statuses,
                 'max' => (int) $this->sR->get_setting('default_list_limit'),
                 'page' => $page,
@@ -2067,6 +2045,7 @@ final class InvController {
                 'modal_add_inv' => $bootstrap5ModalInv->renderPartialLayoutWithFormAsString('inv', []),
                 'modal_create_recurring_multiple' =>  $this->index_modal_create_recurring_multiple($irR),
                 'modal_copy_inv_multiple' => $this->index_modal_copy_inv_multiple(),
+                'sortString' => $querySort ?? '-id',
                 'urlCreator' => $urlCreator,
                 'visible' => $visible == '0' ? false : true,
                 'visibleToggleInvSentLogColumn' => $visibleToggleInvSentLogColumn == '0' ? false : true
@@ -2087,9 +2066,8 @@ final class InvController {
      *
      * @psalm-return \Yiisoft\Data\Cycle\Reader\EntityReader<array-key, array<array-key, mixed>|object>
      */
-    private function invs_status_with_sort(IR $iR, int $status, Sort $sort): \Yiisoft\Data\Reader\DataReaderInterface {
-        $invs = $iR->findAllWithStatus($status)
-                ->withSort($sort);
+    private function invs_status(IR $iR, int $status): \Yiisoft\Data\Reader\DataReaderInterface {
+        $invs = $iR->findAllWithStatus($status);
         return $invs;
     }
 
@@ -2103,9 +2081,8 @@ final class InvController {
      *
      * @psalm-return \Yiisoft\Data\Reader\SortableDataInterface&\Yiisoft\Data\Reader\DataReaderInterface<int, Inv>
      */
-    private function invs_status_with_sort_guest(IR $iR, mixed $status, array $user_clients, Sort $sort): \Yiisoft\Data\Reader\SortableDataInterface {
-        $invs = $iR->repoGuest_Clients_Post_Draft((int)$status, $user_clients)
-                ->withSort($sort);
+    private function invs_status_guest(IR $iR, mixed $status, array $user_clients): \Yiisoft\Data\Reader\SortableDataInterface {
+        $invs = $iR->repoGuest_Clients_Post_Draft((int)$status, $user_clients);
         return $invs;
     }
     
@@ -3912,7 +3889,7 @@ final class InvController {
      */
     private function view_partial_inv_attachments(string $_language, string $url_key, int $client_id, UPR $upR): string {
         $uploads = $upR->repoUploadUrlClientquery($url_key, $client_id);
-        $paginator = new DataOffsetPaginator($uploads);
+        $paginator = new OffsetPaginator($uploads);
         $invEdit = $this->user_service->hasPermission('editPayment');
         $invView = $this->user_service->hasPermission('viewPayment');
         return $this->view_renderer->renderPartialAsString('//invoice/inv/partial_inv_attachments', [

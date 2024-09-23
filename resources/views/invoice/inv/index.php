@@ -4,6 +4,9 @@ declare(strict_types=1);
 
 use App\Invoice\Entity\Inv;
 use App\Widget\Button;
+use Yiisoft\Data\Paginator\OffsetPaginator;
+use Yiisoft\Data\Paginator\PageToken;
+use Yiisoft\Data\Reader\Sort;
 use Yiisoft\Html\Html;
 use Yiisoft\Html\Tag\A;
 use Yiisoft\Html\Tag\Div;
@@ -18,6 +21,7 @@ use Yiisoft\Yii\DataView\Column\CheckboxColumn;
 use Yiisoft\Yii\DataView\Column\ColumnInterface;
 use Yiisoft\Yii\DataView\Column\DataColumn;
 use Yiisoft\Yii\DataView\GridView;
+use Yiisoft\Yii\DataView\YiiRouter\UrlCreator;
 
 /**
  * @see config/common/params.php 'yiisoft/view => ['gridComponents' => Reference::to(GridComponents::class)]',
@@ -36,11 +40,13 @@ use Yiisoft\Yii\DataView\GridView;
  * @var App\Invoice\Setting\SettingRepository $s
  * @var App\Widget\GridComponents $gridComponents
  * @var App\Widget\PageSizeLimiter $pageSizeLimiter 
- * @var Yiisoft\Data\Paginator\OffsetPaginator $paginator
+ * @var Yiisoft\Data\Paginator\OffsetPaginator $sortedAndPagedPaginator
+ * @var Yiisoft\Data\Reader\Sort $sort
  * @var Yiisoft\Router\CurrentRoute $currentRoute
  * @var Yiisoft\Translator\TranslatorInterface $translator
  * @var Yiisoft\Router\FastRoute\UrlGenerator $urlGenerator
  * @var Yiisoft\Yii\DataView\YiiRouter\UrlCreator $urlCreator
+ * @var Yiisoft\Data\Cycle\Reader\EntityReader $invs
  * @var bool $visible
  * @var bool $visibleToggleInvSentLogColumn
  * @var int $clientCount
@@ -52,6 +58,8 @@ use Yiisoft\Yii\DataView\GridView;
  * @var string $modal_add_inv
  * @var string $modal_copy_inv_multiple
  * @var string $modal_create_recurring_multiple
+ * @var string $page
+ * @var string $sortString
  * @var string $status
  * @psalm-var array<array-key, array<array-key, string>|string> $optionsDataInvNumberDropDownFilter
  * @psalm-var array<array-key, array<array-key, string>|string> $optionsDataClientsDropdownFilter
@@ -243,8 +251,8 @@ $toolbar = Div::tag();
             withSorting: true
         ), 
         new DataColumn(
-            field: 'number',
             property: 'filterInvNumber',       
+            field: 'number',
             header: $translator->translate('invoice.invoice.number'),    
             content: static function (Inv $model) use ($urlGenerator, $iR): string {
                 $creditInvoiceUrl = '';
@@ -342,26 +350,29 @@ $toolbar = Div::tag();
                 return Html::tag('span', $iR->getSpecificStatusArrayEmoji((int)$model->getStatus_id()). $label, ['class' => 'label label-' . $iR->getSpecificStatusArrayClass((int)$model->getStatus_id())]);
             },
             withSorting: true
-        ),           
+        ), 
+        /**
+         * @see https://github.com/rossaddison/yii-dataview/commit/9e908d87cddd0661b440cb989429e1652e00a9fe
+         */            
         new DataColumn(
-            field: 'client_id',
             property: 'filterClient',
+            field: 'client_id',
             header: $translator->translate('i.client'),
             content: static fn(Inv $model): string => (string)$model->getClient()?->getClient_full_name(),
             filter: $optionsDataClientsDropdownFilter,
             withSorting: false
         ),
         new DataColumn(
-            field: 'client_id',
             property: 'filterClientGroup', 
+            field: 'client_id',
             header: $translator->translate('invoice.client.group'),
             content: static fn(Inv $model): string => $model->getClient()?->getClient_group() ?? '',
             filter: $optionsDataClientGroupDropDownFilter,
             withSorting: false    
         ), 
         new DataColumn(
-            field: 'date_created',
             property: 'filterDateCreatedYearMonth',  
+            field: 'date_created',
             header: $translator->translate('invoice.datetime.immutable.date.created.mySql.format.year.month.filter'),
             content: static fn(Inv $model): string => ($model->getDate_created())->format('Y-m-d'),
             filter: $optionsDataYearMonthDropDownFilter,
@@ -403,8 +414,8 @@ $toolbar = Div::tag();
             withSorting: true        
         ),  
         new DataColumn(
+            property: 'filterInvAmountTotal',    
             field: 'id',
-            property: 'filterInvAmountTotal',
             header: $translator->translate('i.total') . ' ( '. $s->get_setting('currency_symbol'). ' ) ',
             content: static function (Inv $model) use ($decimalPlaces) : string {
                 $invAmountTotal = $model->getInvAmount()->getTotal();
@@ -550,19 +561,34 @@ $toolbar = Div::tag();
         // use the checkboxcolumn to mark invoices as recurring
         Div::tag()->addClass('float-end m-3')->content($markAsRecurringMultiple)->encode(false)->render() .     
         Form::tag()->close();
+    
+    $sort = Sort::only(['id', 'status_id', 'number', 'date_created', 'date_due', 'client_id'])
+                    // (@see vendor\yiisoft\data\src\Reader\Sort
+                    // - => 'desc'  so -id => default descending on id
+                    ->withOrderString($sortString); 
+    
+    $sortedAndPagedPaginator = (new OffsetPaginator($invs))
+                ->withPageSize((int) $s->get_setting('default_list_limit'))
+                ->withCurrentPage((int)$page)
+                ->withSort($sort)    
+                ->withToken(PageToken::next($page));
+    
     $grid_summary = $s->grid_summary(
-        $paginator,
+        $sortedAndPagedPaginator,
         $translator,
         (int) $s->get_setting('default_list_limit'),
         $translator->translate('invoice.invoice.invoices'),
         $label
     );
+    
+    $urlCreator = new UrlCreator($urlGenerator);  
+    $urlCreator->__invoke([], ['default' => 'desc']);
     echo GridView::widget()
     // unpack the contents within the array using the three dot splat operator
     ->rowAttributes(['class' => 'align-left'])
     ->tableAttributes(['class' => 'table table-striped h-75', 'id' => 'table-invoice'])
     ->columns(...$columns)
-    ->dataReader($paginator)
+    ->dataReader($sortedAndPagedPaginator)
     ->urlCreator($urlCreator)
     // the up and down symbol will appear at first indicating that the column can be sorted 
     // Ir also appears in this state if another column has been sorted        
@@ -577,9 +603,9 @@ $toolbar = Div::tag();
     ->emptyCell($translator->translate('i.not_set'))
     ->emptyCellAttributes(['style' => 'color:red'])  
     ->header($gridComponents->header(' ' . $translator->translate('i.invoice')))
-    ->id('w3-grid') 
+    ->id('w3-grid')     
     ->pagination(
-        $gridComponents->offsetPaginationWidget($defaultPageSizeOffsetPaginator, $paginator)
+        $gridComponents->offsetPaginationWidget($defaultPageSizeOffsetPaginator, $sortedAndPagedPaginator)
     )
     ->summaryAttributes(['class' => 'mt-3 me-3 summary text-end'])    
     ->summaryTemplate($pageSizeLimiter::buttons($currentRoute, $s, $urlGenerator, 'inv').' '.$grid_summary)

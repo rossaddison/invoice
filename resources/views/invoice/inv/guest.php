@@ -10,9 +10,14 @@ use Yiisoft\Html\Tag\Div;
 use Yiisoft\Html\Tag\Form;
 use Yiisoft\Html\Tag\I;
 use Yiisoft\Html\Tag\Label;
+use Yiisoft\Data\Paginator\OffsetPaginator;
+use Yiisoft\Data\Paginator\PageToken;
+use Yiisoft\Data\Reader\Sort;
+use Yiisoft\Data\Reader\OrderHelper;
 use Yiisoft\Yii\DataView\GridView;
 use Yiisoft\Yii\DataView\Column\DataColumn;
 use Yiisoft\Yii\DataView\Column\ColumnInterface;
+use Yiisoft\Yii\DataView\YiiRouter\UrlCreator;
 
 /**
  * @var App\Invoice\Entity\Inv $inv
@@ -25,20 +30,24 @@ use Yiisoft\Yii\DataView\Column\ColumnInterface;
  * @var App\Invoice\Setting\SettingRepository $s
  * @var App\Widget\Button $button
  * @var App\Widget\GridComponents $gridComponents
- * @var App\Widget\PageSizeLimiter $pageSizeLimiter 
- * @var Yiisoft\Data\Paginator\OffsetPaginator $paginator
+ * @var App\Widget\PageSizeLimiter $pageSizeLimiter  
+ * @var Yiisoft\Data\Paginator\OffsetPaginator $sortedAndPagedPaginator
+ * @var Yiisoft\Data\Reader\Sort $sort
  * @var Yiisoft\Router\CurrentRoute $currentRoute
  * @var Yiisoft\Translator\TranslatorInterface $translator
  * @var Yiisoft\Router\FastRoute\UrlGenerator $urlGenerator
  * @var Yiisoft\Yii\DataView\YiiRouter\UrlCreator $urlCreator
- * @var int $defaultPageSizeOffsetPaginator
+ * @var Yiisoft\Data\Cycle\Reader\EntityReader $invs 
  * @var bool $viewInv
  * @var int $decimalPlaces
+ * @var int $defaultPageSizeOffsetPaginator
  * @var int $userInvListLimit
  * @var string $alert
  * @var string $csrf
  * @var string $label
  * @var string $modal_add_quote
+ * @var string $page
+ * @var string $sortString
  * @var string $status
  * @psalm-var array<array-key, array<array-key, string>|string> $optionsDataInvNumberDropDownFilter
  */
@@ -245,22 +254,38 @@ echo $alert;
     ]            
 ?>
 <?php
+    $sort = Sort::only(['status_id', 'number', 'date_created', 'date_due', 'id', 'client_id'])
+            ->withOrderString($sortString);
+    
+    $sortedAndPagedPaginator = (new OffsetPaginator($invs))
+                        ->withPageSize($userInvListLimit ?: 10)
+                        ->withCurrentPage((int)$page)
+                        ->withSort($sort)  
+                        ->withToken(PageToken::next($page));   
+    
+          
     $toolbarString = Form::tag()->post($urlGenerator->generate('inv/guest'))->csrf($csrf)->open() .
             Div::tag()->addClass('float-end m-3')->content($toolbarReset)->encode(false)->render() .
             Div::tag()->addClass('float-end m-3')->content(Button::ascDesc($urlGenerator, 'client_id', 'warning', $translator->translate('i.client'), true))->encode(false)->render().    
             Form::tag()->close();
+    
     $grid_summary = $s->grid_summary(
-        $paginator,
+        $sortedAndPagedPaginator,
         $translator,
         !empty($userInvListLimit) ? $userInvListLimit : 10,
         $translator->translate('invoice.invoice.invoices'),
         $label
     );
+    
+    $urlCreator = new UrlCreator($urlGenerator);
+    $order =  OrderHelper::stringToArray($sortString);
+    $urlCreator->__invoke([], $order); 
+    
     echo GridView::widget()
         ->rowAttributes(['class' => 'align-middle'])
         ->tableAttributes(['class' => 'table table-striped text-center h-75','id'=>'table-invoice-guest'])
         ->columns(...$columns)        
-        ->dataReader($paginator)
+        ->dataReader($sortedAndPagedPaginator)
         ->urlCreator($urlCreator)
         // the up and down symbol will appear at first indicating that the column can be sorted 
         // Ir also appears in this state if another column has been sorted        
@@ -277,7 +302,7 @@ echo $alert;
         ->header($gridComponents->header(' ' . $translator->translate('i.invoice')))
         ->id('w9-grid')
         ->pagination(
-           $gridComponents->offsetPaginationWidget($defaultPageSizeOffsetPaginator, $paginator)
+           $gridComponents->offsetPaginationWidget($defaultPageSizeOffsetPaginator, $sortedAndPagedPaginator)
         )
         ->summaryAttributes(['class' => 'mt-3 me-3 summary text-end'])
         ->summaryTemplate(($viewInv ? 

@@ -146,7 +146,7 @@
         "yiisoft/yii-gii": "dev-master",
         "spatie/phpunit-watcher": "^1.23",
         "styleci/cli": "1.5",
-        "vimeo/psalm": "^5.25",
+        "vimeo/psalm": "^5.26",
         "yiisoft/translator-extractor": "^2.0",
         "yiisoft/yii-testing": "dev-master"
     },

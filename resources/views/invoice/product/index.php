@@ -108,7 +108,8 @@ use Yiisoft\Yii\DataView\YiiRouter\UrlCreator;
             content: static fn (Product $model): string => Html::encode($model->getProduct_sku()),
             // bool|array   bool => TextInputFilter e.g. filter: true; array => DropDownFilter e.g. as below     
             filter: $optionsDataProductsDropdownFilter,
-            visible: true
+            visible: true,
+            withSorting: false    
         ),
         new DataColumn(
             'product_description',    

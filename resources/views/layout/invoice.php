@@ -447,7 +447,11 @@ $this->beginPage();
                       ['label' => $translator->translate('invoice.platform.scrutinizer.config.checks.javascript'), 
                          'url' => 'https://scrutinizer-ci.com/g/'. $scrutinizerRepository. '/settings/build-config/editor?language=javascript'],
                       ['label' => $translator->translate('invoice.platform.scrutinizer.config.build'), 
-                         'url' => 'https://scrutinizer-ci.com/g/'. $scrutinizerRepository. '/settings/build-config'],  
+                         'url' => 'https://scrutinizer-ci.com/g/'. $scrutinizerRepository. '/settings/build-config'],
+                      ['label' => 'Yiisoft Dev Panel - Chrome - Allow CORS', 
+                         'url' => 'https://chromewebstore.google.com/detail/allow-cors-access-control/lhobafahddgcelffkeicbaginigeejlf'],
+                      ['label' => 'Test CORS', 
+                         'url' => 'https://webbrowsertools.com/test-cors/'],  
                     ],
                   ],
     // FAQ                  
