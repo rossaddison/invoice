@@ -22,7 +22,7 @@ use DOMElement;
 
 class Sumex
 {
-    const ROLES = [
+    const array ROLES = [
         'physician',
         'physiotherapist',
         'chiropractor',
@@ -44,14 +44,14 @@ class Sumex
         'naturopathicdoctor',
         'naturopathictherapist',
         'other'];
-    const PLACES = [
+    const array PLACES = [
         'practice',
         'hospital',
         'lab',
         'association',
         'company'
     ];
-    const CANTONS = [
+    const array CANTONS = [
         "AG",
         "AI",
         "AR",

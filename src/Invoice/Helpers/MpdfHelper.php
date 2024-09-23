@@ -34,71 +34,71 @@ Class MpdfHelper
         /**
          * Blank default mode
          */
-        const MODE_BLANK = '';
+        const string MODE_BLANK = '';
         /**
          * Core fonts mode
          */
-        const MODE_CORE = 'c';
+        const string MODE_CORE = 'c';
         /**
          * Unicode UTF-8 encoded mode
          */
-        const MODE_UTF8 = 'UTF-8';
+        const string MODE_UTF8 = 'UTF-8';
         /**
          * Asian fonts mode
          */
-        const MODE_ASIAN = '+aCJK';
+        const string MODE_ASIAN = '+aCJK';
         /**
          * A3 page size format
          */
-        const FORMAT_A3 = 'A3';
+        const string FORMAT_A3 = 'A3';
         /**
          * A4 page size format
          */
-        const FORMAT_A4 = 'A4';
+        const string FORMAT_A4 = 'A4';
         /**
          * Letter page size format
          */
-        const FORMAT_LETTER = 'Letter';
+        const string FORMAT_LETTER = 'Letter';
         /**
          * Legal page size format
          */
-        const FORMAT_LEGAL = 'Legal';
+        const string FORMAT_LEGAL = 'Legal';
         /**
          * Folio page size format
          */
-        const FORMAT_FOLIO = 'Folio';
+        const string FORMAT_FOLIO = 'Folio';
         /**
          * Ledger page size format
          */
-        const FORMAT_LEDGER = 'Ledger-L';
+        const string FORMAT_LEDGER = 'Ledger-L';
         /**
          * Tabloid page size format
          */
-        const FORMAT_TABLOID = 'Tabloid';
+        const string FORMAT_TABLOID = 'Tabloid';
         /**
          * Portrait orientation
          */
-        const ORIENT_PORTRAIT = 'P';
+        const string ORIENT_PORTRAIT = 'P';
         /**
          * Landscape orientation
          */        
-        const ORIENT_LANDSCAPE = 'L';
+        const string ORIENT_LANDSCAPE = 'L';
         /**
          * File output sent to browser inline
          */
-        const DEST_BROWSER = 'I';
+        const string DEST_BROWSER = 'I';
         /**
          * File output sent for direct download
          */
-        const DEST_DOWNLOAD = 'D';
+        const string DEST_DOWNLOAD = 'D';
         /**
          * File output sent to a file
          */
-        const DEST_FILE = 'F';
+        const string DEST_FILE = 'F';
         /**
          * File output sent as a string
          */
-        const DEST_STRING = 'S';
+        const string DEST_STRING = 'S';
         /**
          * @var string
          */

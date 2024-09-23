@@ -9,8 +9,8 @@ namespace App\Invoice\Ubl;
  */
 class InvoiceTypeCode
 {
-    const INVOICE = 380;
-    const CORRECTED_INVOICE = 384;
-    const SELF_BILLING_INVOICE = 389;
-    const CREDIT_NOTE = 381;
+    const int INVOICE = 380;
+    const int CORRECTED_INVOICE = 384;
+    const int SELF_BILLING_INVOICE = 389;
+    const int CREDIT_NOTE = 381;
 }

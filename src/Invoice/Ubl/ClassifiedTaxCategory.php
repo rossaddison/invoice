@@ -30,7 +30,7 @@ class ClassifiedTaxCategory implements XmlSerializable
         $this->schemeName = $schemeName;
     }
 
-    public const UNCL5305 = 'UNCL5305';
+    public const string UNCL5305 = 'UNCL5305';
 
     /**
      * 

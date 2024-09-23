@@ -9,24 +9,24 @@ namespace App\Invoice\Ubl;
  */
 class UnitCode
 {
-    const UNIT = 'C62';
-    const PIECE = 'H87';
+    const string UNIT = 'C62';
+    const string PIECE = 'H87';
 
-    const ARE = 'ARE';
-    const HECTARE = 'HAR';
+    const string ARE = 'ARE';
+    const string HECTARE = 'HAR';
 
-    const SQUARE_METRE = 'MTK';
-    const SQUARE_KILOMETRE = 'KMK';
-    const SQUARE_FOOT = 'FTK';
-    const SQUARE_YARD = 'YDK';
-    const SQUARE_MILE = 'MIK';
+    const string SQUARE_METRE = 'MTK';
+    const string SQUARE_KILOMETRE = 'KMK';
+    const string SQUARE_FOOT = 'FTK';
+    const string SQUARE_YARD = 'YDK';
+    const string SQUARE_MILE = 'MIK';
 
-    const LITRE = 'LTR';
+    const string LITRE = 'LTR';
 
-    const SECOND = 'SEC';
-    const MINUTE = 'MIN';
-    const HOUR = 'HUR';
-    const DAY = 'DAY';
-    const MONTH = 'MON';
-    const YEAR = 'ANN';
+    const string SECOND = 'SEC';
+    const string MINUTE = 'MIN';
+    const string HOUR = 'HUR';
+    const string DAY = 'DAY';
+    const string MONTH = 'MON';
+    const string YEAR = 'ANN';
 }

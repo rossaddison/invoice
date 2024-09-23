@@ -21,7 +21,7 @@ class TaxCategory implements XmlSerializable
     private TaxScheme $taxScheme;
     private string $taxExemptionReason = '';
     private string $taxExemptionReasonCode = '';
-    public const UNCL5305 = 'UNCL5305';
+    public const string UNCL5305 = 'UNCL5305';
     
     public function __construct(array $array, TaxScheme $taxScheme) {
       $this->taxScheme = $taxScheme;

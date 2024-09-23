@@ -18,15 +18,15 @@ class GenerateCodeFileHelper
     /**
      * The code file is new.
      */
-    const OP_CREATE = 'create';
+    const string OP_CREATE = 'create';
     /**
      * The code file already exists, and the new one may need to overwrite it.
      */
-    const OP_OVERWRITE = 'overwrite';
+    const string OP_OVERWRITE = 'overwrite';
     /**
      * The new code file and the existing one are identical.
      */
-    const OP_SKIP = 'skip';
+    const string OP_SKIP = 'skip';
 
     /**
      * @var string an ID that uniquely identifies this code file.

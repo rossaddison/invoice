@@ -79,9 +79,9 @@ use Yiisoft\Yii\View\Renderer\ViewRenderer;
 
 class ProductController
 {
-    private const FILTER_FAMILY = 'ff';
-    private const FILTER_PRODUCT = 'fp';
-    private const RESET_TRUE = 'rt';
+    private const string FILTER_FAMILY = 'ff';
+    private const string FILTER_PRODUCT = 'fp';
+    private const string RESET_TRUE = 'rt';
     public  ViewRenderer $viewRenderer;
     private WebControllerService $webService;
     private ProductService $productService;

@@ -37,9 +37,9 @@ class Cryptor
     private int $iv_num_bytes = 0;
     private int $format;
 
-    const FORMAT_RAW = 0;
-    const FORMAT_B64 = 1;
-    const FORMAT_HEX = 2;
+    const int FORMAT_RAW = 0;
+    const int FORMAT_B64 = 1;
+    const int FORMAT_HEX = 2;
 
     public function __construct(string $cipher_algo = 'aes-256-ctr', string $hash_algo = 'sha256', int $fmt = Cryptor::FORMAT_B64)
     {
