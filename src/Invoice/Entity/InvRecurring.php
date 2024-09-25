@@ -6,7 +6,7 @@ namespace App\Invoice\Entity;
 use App\Invoice\Entity\Inv;
 use Cycle\Annotated\Annotation\Column;
 use Cycle\Annotated\Annotation\Entity;
-use Cycle\Annotated\Annotation\Relation\HasOne;
+use Cycle\Annotated\Annotation\Relation\BelongsTo;
 use \DateTime;
 use \DateTimeImmutable;  
 #[Entity(repository: \App\Invoice\InvRecurring\InvRecurringRepository::class)]
@@ -17,10 +17,10 @@ class InvRecurring
     private ?int $id =  null;
 
     /**
-     * Every Recurring Invoice record only has one related Invoice
+     * Every Recurring Invoice record belongs to one related Invoice
      * @var Inv $inv
      */
-    #[HasOne(target:Inv::class, nullable: false, fkAction: "NO ACTION")]
+    #[BelongsTo(target:Inv::class, nullable: false, fkAction: "NO ACTION")]
     private ?Inv $inv = null;
     
     #[Column(type:'integer(11)', nullable: false)]

@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "bee26a9ee3c688d942b059f96468b352",
+    "content-hash": "19c5f4c430f8a5dc1fef82396d9c6faa",
     "packages": [
         {
             "name": "alexkart/curl-builder",
@@ -726,16 +726,16 @@
         },
         {
             "name": "composer/ca-bundle",
-            "version": "1.5.1",
+            "version": "1.5.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/composer/ca-bundle.git",
-                "reference": "063d9aa8696582f5a41dffbbaf3c81024f0a604a"
+                "reference": "48a792895a2b7a6ee65dd5442c299d7b835b6137"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/composer/ca-bundle/zipball/063d9aa8696582f5a41dffbbaf3c81024f0a604a",
-                "reference": "063d9aa8696582f5a41dffbbaf3c81024f0a604a",
+                "url": "https://api.github.com/repos/composer/ca-bundle/zipball/48a792895a2b7a6ee65dd5442c299d7b835b6137",
+                "reference": "48a792895a2b7a6ee65dd5442c299d7b835b6137",
                 "shasum": ""
             },
             "require": {
@@ -745,8 +745,8 @@
             },
             "require-dev": {
                 "phpstan/phpstan": "^1.10",
+                "phpunit/phpunit": "^8 || ^9",
                 "psr/log": "^1.0 || ^2.0 || ^3.0",
-                "symfony/phpunit-bridge": "^4.2 || ^5",
                 "symfony/process": "^4.0 || ^5.0 || ^6.0 || ^7.0"
             },
             "type": "library",
@@ -782,7 +782,7 @@
             "support": {
                 "irc": "irc://irc.freenode.org/composer",
                 "issues": "https://github.com/composer/ca-bundle/issues",
-                "source": "https://github.com/composer/ca-bundle/tree/1.5.1"
+                "source": "https://github.com/composer/ca-bundle/tree/1.5.2"
             },
             "funding": [
                 {
@@ -798,7 +798,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2024-07-08T15:28:20+00:00"
+            "time": "2024-09-25T07:49:53+00:00"
         },
         {
             "name": "composer/pcre",
@@ -5108,16 +5108,16 @@
         },
         {
             "name": "php-http/client-common",
-            "version": "2.7.1",
+            "version": "2.7.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/php-http/client-common.git",
-                "reference": "1e19c059b0e4d5f717bf5d524d616165aeab0612"
+                "reference": "0cfe9858ab9d3b213041b947c881d5b19ceeca46"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/php-http/client-common/zipball/1e19c059b0e4d5f717bf5d524d616165aeab0612",
-                "reference": "1e19c059b0e4d5f717bf5d524d616165aeab0612",
+                "url": "https://api.github.com/repos/php-http/client-common/zipball/0cfe9858ab9d3b213041b947c881d5b19ceeca46",
+                "reference": "0cfe9858ab9d3b213041b947c881d5b19ceeca46",
                 "shasum": ""
             },
             "require": {
@@ -5171,9 +5171,9 @@
             ],
             "support": {
                 "issues": "https://github.com/php-http/client-common/issues",
-                "source": "https://github.com/php-http/client-common/tree/2.7.1"
+                "source": "https://github.com/php-http/client-common/tree/2.7.2"
             },
-            "time": "2023-11-30T10:31:25+00:00"
+            "time": "2024-09-24T06:21:48+00:00"
         },
         {
             "name": "php-http/discovery",
@@ -5496,6 +5496,62 @@
             },
             "abandoned": "psr/http-factory",
             "time": "2023-04-14T14:16:17+00:00"
+        },
+        {
+            "name": "php-http/multipart-stream-builder",
+            "version": "1.4.2",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/php-http/multipart-stream-builder.git",
+                "reference": "10086e6de6f53489cca5ecc45b6f468604d3460e"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/php-http/multipart-stream-builder/zipball/10086e6de6f53489cca5ecc45b6f468604d3460e",
+                "reference": "10086e6de6f53489cca5ecc45b6f468604d3460e",
+                "shasum": ""
+            },
+            "require": {
+                "php": "^7.1 || ^8.0",
+                "php-http/discovery": "^1.15",
+                "psr/http-factory-implementation": "^1.0"
+            },
+            "require-dev": {
+                "nyholm/psr7": "^1.0",
+                "php-http/message": "^1.5",
+                "php-http/message-factory": "^1.0.2",
+                "phpunit/phpunit": "^7.5.15 || ^8.5 || ^9.3"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Http\\Message\\MultipartStream\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Tobias Nyholm",
+                    "email": "tobias.nyholm@gmail.com"
+                }
+            ],
+            "description": "A builder class that help you create a multipart stream",
+            "homepage": "http://php-http.org",
+            "keywords": [
+                "factory",
+                "http",
+                "message",
+                "multipart stream",
+                "stream"
+            ],
+            "support": {
+                "issues": "https://github.com/php-http/multipart-stream-builder/issues",
+                "source": "https://github.com/php-http/multipart-stream-builder/tree/1.4.2"
+            },
+            "time": "2024-09-04T13:22:54+00:00"
         },
         {
             "name": "php-http/promise",
@@ -11332,6 +11388,70 @@
             "time": "2024-06-17T12:21:20+00:00"
         },
         {
+            "name": "vjik/telegram-bot-api",
+            "version": "0.4.3",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/vjik/telegram-bot-api.git",
+                "reference": "772070c9eb9b9ebabdbc080e854a51921d80a473"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/vjik/telegram-bot-api/zipball/772070c9eb9b9ebabdbc080e854a51921d80a473",
+                "reference": "772070c9eb9b9ebabdbc080e854a51921d80a473",
+                "shasum": ""
+            },
+            "require": {
+                "php": "^8.2",
+                "php-http/multipart-stream-builder": "^1.4.2",
+                "psr/http-client": "^1.0",
+                "psr/http-factory": "^1.1",
+                "psr/http-message": "^1.1|^2.0"
+            },
+            "require-dev": {
+                "friendsofphp/php-cs-fixer": "^3.59",
+                "httpsoft/http-message": "^1.1",
+                "maglnet/composer-require-checker": "^4.11",
+                "php-http/curl-client": "^2.3",
+                "phpunit/phpunit": "^10.5",
+                "psr/log": "^3.0",
+                "roave/infection-static-analysis-plugin": "^1.35",
+                "vimeo/psalm": "^5.25",
+                "yiisoft/test-support": "^3.0"
+            },
+            "suggest": {
+                "psr/log": "To log requests to Telegram Bot API and response handling errors."
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Vjik\\TelegramBot\\Api\\": "src"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "BSD-3-Clause"
+            ],
+            "authors": [
+                {
+                    "name": "Sergei Predvoditelev",
+                    "homepage": "https://predvoditelev.ru"
+                }
+            ],
+            "description": "PHP library for working with Telegram API",
+            "keywords": [
+                "api",
+                "bot",
+                "telegram"
+            ],
+            "support": {
+                "chat": "https://t.me/predvoditelev_chat",
+                "issues": "https://github.com/vjik/telegram-bot-api/issues?state=open",
+                "source": "https://github.com/vjik/telegram-bot-api"
+            },
+            "time": "2024-09-06T18:09:55+00:00"
+        },
+        {
             "name": "vlucas/phpdotenv",
             "version": "v5.6.1",
             "source": {
@@ -12275,12 +12395,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/yiisoft/data.git",
-                "reference": "714ca834858bea280ce8781fc5915fa8775f780b"
+                "reference": "16f14150be121ace61793003b73802c1ac5db133"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/yiisoft/data/zipball/714ca834858bea280ce8781fc5915fa8775f780b",
-                "reference": "714ca834858bea280ce8781fc5915fa8775f780b",
+                "url": "https://api.github.com/repos/yiisoft/data/zipball/16f14150be121ace61793003b73802c1ac5db133",
+                "reference": "16f14150be121ace61793003b73802c1ac5db133",
                 "shasum": ""
             },
             "require": {
@@ -12335,7 +12455,7 @@
                     "type": "opencollective"
                 }
             ],
-            "time": "2024-09-10T17:50:47+00:00"
+            "time": "2024-09-25T12:18:30+00:00"
         },
         {
             "name": "yiisoft/data-cycle",
@@ -12343,12 +12463,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/yiisoft/data-cycle.git",
-                "reference": "708074a77942ab1d7f424bc21a6912b7d62641da"
+                "reference": "817029d77942794be309f16f13c96aad60fd9957"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/yiisoft/data-cycle/zipball/708074a77942ab1d7f424bc21a6912b7d62641da",
-                "reference": "708074a77942ab1d7f424bc21a6912b7d62641da",
+                "url": "https://api.github.com/repos/yiisoft/data-cycle/zipball/817029d77942794be309f16f13c96aad60fd9957",
+                "reference": "817029d77942794be309f16f13c96aad60fd9957",
                 "shasum": ""
             },
             "require": {
@@ -12404,7 +12524,7 @@
                     "type": "opencollective"
                 }
             ],
-            "time": "2024-09-11T18:58:59+00:00"
+            "time": "2024-09-25T10:47:35+00:00"
         },
         {
             "name": "yiisoft/data-response",
@@ -22984,12 +23104,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/yiisoft/yii-gii.git",
-                "reference": "cf2f56d5d3a0a8fb00636da24ba13df3a1082350"
+                "reference": "cce28a999f171edb3eac47fe844bbc95f6859d47"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/yiisoft/yii-gii/zipball/cf2f56d5d3a0a8fb00636da24ba13df3a1082350",
-                "reference": "cf2f56d5d3a0a8fb00636da24ba13df3a1082350",
+                "url": "https://api.github.com/repos/yiisoft/yii-gii/zipball/cce28a999f171edb3eac47fe844bbc95f6859d47",
+                "reference": "cce28a999f171edb3eac47fe844bbc95f6859d47",
                 "shasum": ""
             },
             "require": {
@@ -23083,7 +23203,7 @@
                     "type": "opencollective"
                 }
             ],
-            "time": "2024-09-19T05:22:18+00:00"
+            "time": "2024-09-23T21:20:49+00:00"
         },
         {
             "name": "yiisoft/yii-testing",
@@ -23238,7 +23358,7 @@
     "prefer-stable": true,
     "prefer-lowest": false,
     "platform": {
-        "php": "8.2.*",
+        "php": "8.3.*",
         "ext-curl": "*",
         "ext-dom": "*",
         "ext-fileinfo": "*",

@@ -72,7 +72,7 @@ class Inv {
      * @var ArrayCollection<array-key, InvRecurring>
      */
     #[HasMany(target: InvRecurring::class)]
-    private ArrayCollection $inv_recurring;
+    private ArrayCollection $invrecurring;  
     
     #[Column(type: 'primary')]
     private ?int $id = null;
@@ -214,7 +214,7 @@ class Inv {
         $this->postal_address_id = $postal_address_id;
         $this->contract_id = $contract_id;
         $this->invsentlogs = new ArrayCollection();
-        $this->inv_recurring = new ArrayCollection();
+        $this->invrecurring = new ArrayCollection();
     }
 
     public function setUser(User $user): void {
@@ -242,15 +242,15 @@ class Inv {
     }
     
     public function setInvRecurring() : void {
-        $this->inv_recurring = new ArrayCollection();
+        $this->invrecurring = new ArrayCollection();
     }
     
     public function getInvRecurring(): ArrayCollection {
-        return $this->inv_recurring;
+        return $this->invrecurring;
     }
     
-    public function addInvRecurring(InvRecurring $inv_recurring) : void {
-        $this->inv_recurring[] = $inv_recurring;
+    public function addInvRecurring(InvRecurring $invrecurring) : void {
+        $this->invrecurring[] = $invrecurring;
     }
         
     public function setInvSentLogs() : void {

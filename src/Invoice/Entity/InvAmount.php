@@ -42,6 +42,7 @@ class InvAmount
     private ?float $balance = 0.00;
     
     public function __construct(
+         int $id = null,   
          int $inv_id = null,
          int $sign = 1,
          float $item_subtotal = 0.00,
@@ -52,6 +53,7 @@ class InvAmount
          float $balance = 0.00
     )
     {
+        $this->id=$id;
         $this->inv_id=$inv_id;
         $this->sign=$sign;
         // The sum of all line item's subtotals
