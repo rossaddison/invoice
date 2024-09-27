@@ -868,7 +868,9 @@ final class InvoiceController
             'default_sales_order_group' => 3,
             'default_language' => $sR->get_folder_language() ?: 'English', 
             //paginator list limit
-            'default_list_limit' => 120, 
+            'default_list_limit' => 120,
+            'disable_flash_messages_inv' => 0,
+            'disable_flash_messages_quote' => 0,
             // Prevent documents from being made non-editable. By default documents are made non-editable
             // according to the read_only_toggle (listed below) which is set at sent ie 2. So when a document is sent it becomes non-editable i.e. read_only
             // By default this setting is on 0 ie. Invoices can be made read-only (through the 

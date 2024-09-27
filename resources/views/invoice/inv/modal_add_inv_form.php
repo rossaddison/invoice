@@ -73,7 +73,7 @@ echo Form::tag()
                 <?= Field::select($form, 'group_id')
                     ->label($translator->translate('i.invoice_group'))
                     ->addInputAttributes(['class' => 'form-control'])
-                    ->value(Html::encode($form->getGroup_id() ?? $defaultGroupId))
+                    ->value(Html::encode($form->getGroup_id() >= 0 ? $form->getGroup_id() : $defaultGroupId))
                     ->prompt($translator->translate('i.none'))
                     ->optionsData($groups)
                     ->hint($translator->translate('invoice.hint.this.field.is.required')); 

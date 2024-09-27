@@ -1778,7 +1778,7 @@ final class InvController {
      * @return Flash|null
      */
     private function flash_message(string $level, string $message): Flash|null {
-        if (strlen($message) > 0) {
+        if (strlen($message) > 0 && $this->sR->get_setting('disable_flash_messages_inv') == '0') {
             $this->flash->add($level, $message, true);
             return $this->flash;
         }

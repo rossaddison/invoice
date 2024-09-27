@@ -235,6 +235,47 @@
                                 value="<?= $body['settings[default_list_limit]']; ?>">
                         </div>
                     </div>
+                    
+                    <div class="col-xs-12 col-md-6">
+                        <div class="form-group">
+                            <label for="disable_flash_messages_quote">
+                                <?= $translator->translate('invoice.quote.disable.flash.messages'); ?>
+                            </label>
+                            <?php $body['settings[disable_flash_messages_quote]'] = $s->get_setting('disable_flash_messages_quote'); ?>
+                            <select name="settings[disable_flash_messages_quote]" id="settings[disable_flash_messages_quote]" class="form-control">
+                                <option value="0">
+                                    <?= $translator->translate('i.no'); ?>
+                                </option>
+                                <option value="1" 
+                                    <?php
+                                        $s->check_select($body['settings[disable_flash_messages_quote]'], '1'); 
+                                    ?>>
+                                    <?= $translator->translate('i.yes'); ?>
+                                </option>
+                            </select>    
+                        </div>
+                    </div>
+                    
+                    <div class="col-xs-12 col-md-6">
+                        <div class="form-group">
+                            <label for="disable_flash_messages_inv">
+                                <?= $translator->translate('invoice.invoice.disable.flash.messages'); ?>
+                            </label>
+                            <?php $body['settings[disable_flash_messages_inv]'] = $s->get_setting('disable_flash_messages_inv'); ?>
+                            <select name="settings[disable_flash_messages_inv]" id="settings[disable_flash_messages_inv]" class="form-control">
+                                <option value="0">
+                                    <?= $translator->translate('i.no'); ?>
+                                </option>
+                                <option value="1" 
+                                    <?php
+                                        $s->check_select($body['settings[disable_flash_messages_inv]'], '1'); 
+                                    ?>>
+                                    <?= $translator->translate('i.yes'); ?>
+                                </option>
+                            </select>    
+                        </div>
+                    </div>
+                    
                 </div>
 
             </div>

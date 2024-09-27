@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "19c5f4c430f8a5dc1fef82396d9c6faa",
+    "content-hash": "8f99a7f24f65ac4632ecb6629c77a49e",
     "packages": [
         {
             "name": "alexkart/curl-builder",
@@ -2278,16 +2278,16 @@
         },
         {
             "name": "felixfbecker/language-server-protocol",
-            "version": "v1.5.2",
+            "version": "v1.5.3",
             "source": {
                 "type": "git",
                 "url": "https://github.com/felixfbecker/php-language-server-protocol.git",
-                "reference": "6e82196ffd7c62f7794d778ca52b69feec9f2842"
+                "reference": "a9e113dbc7d849e35b8776da39edaf4313b7b6c9"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/felixfbecker/php-language-server-protocol/zipball/6e82196ffd7c62f7794d778ca52b69feec9f2842",
-                "reference": "6e82196ffd7c62f7794d778ca52b69feec9f2842",
+                "url": "https://api.github.com/repos/felixfbecker/php-language-server-protocol/zipball/a9e113dbc7d849e35b8776da39edaf4313b7b6c9",
+                "reference": "a9e113dbc7d849e35b8776da39edaf4313b7b6c9",
                 "shasum": ""
             },
             "require": {
@@ -2328,9 +2328,9 @@
             ],
             "support": {
                 "issues": "https://github.com/felixfbecker/php-language-server-protocol/issues",
-                "source": "https://github.com/felixfbecker/php-language-server-protocol/tree/v1.5.2"
+                "source": "https://github.com/felixfbecker/php-language-server-protocol/tree/v1.5.3"
             },
-            "time": "2022-03-02T22:36:06+00:00"
+            "time": "2024-04-30T00:40:11+00:00"
         },
         {
             "name": "fidry/cpu-core-counter",
@@ -5498,62 +5498,6 @@
             "time": "2023-04-14T14:16:17+00:00"
         },
         {
-            "name": "php-http/multipart-stream-builder",
-            "version": "1.4.2",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/php-http/multipart-stream-builder.git",
-                "reference": "10086e6de6f53489cca5ecc45b6f468604d3460e"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/php-http/multipart-stream-builder/zipball/10086e6de6f53489cca5ecc45b6f468604d3460e",
-                "reference": "10086e6de6f53489cca5ecc45b6f468604d3460e",
-                "shasum": ""
-            },
-            "require": {
-                "php": "^7.1 || ^8.0",
-                "php-http/discovery": "^1.15",
-                "psr/http-factory-implementation": "^1.0"
-            },
-            "require-dev": {
-                "nyholm/psr7": "^1.0",
-                "php-http/message": "^1.5",
-                "php-http/message-factory": "^1.0.2",
-                "phpunit/phpunit": "^7.5.15 || ^8.5 || ^9.3"
-            },
-            "type": "library",
-            "autoload": {
-                "psr-4": {
-                    "Http\\Message\\MultipartStream\\": "src/"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "Tobias Nyholm",
-                    "email": "tobias.nyholm@gmail.com"
-                }
-            ],
-            "description": "A builder class that help you create a multipart stream",
-            "homepage": "http://php-http.org",
-            "keywords": [
-                "factory",
-                "http",
-                "message",
-                "multipart stream",
-                "stream"
-            ],
-            "support": {
-                "issues": "https://github.com/php-http/multipart-stream-builder/issues",
-                "source": "https://github.com/php-http/multipart-stream-builder/tree/1.4.2"
-            },
-            "time": "2024-09-04T13:22:54+00:00"
-        },
-        {
             "name": "php-http/promise",
             "version": "1.3.1",
             "source": {
@@ -6167,16 +6111,16 @@
         },
         {
             "name": "phpstan/phpdoc-parser",
-            "version": "1.31.0",
+            "version": "1.32.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/phpstan/phpdoc-parser.git",
-                "reference": "249f15fb843bf240cf058372dad29e100cee6c17"
+                "reference": "6ca22b154efdd9e3c68c56f5d94670920a1c19a4"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/phpstan/phpdoc-parser/zipball/249f15fb843bf240cf058372dad29e100cee6c17",
-                "reference": "249f15fb843bf240cf058372dad29e100cee6c17",
+                "url": "https://api.github.com/repos/phpstan/phpdoc-parser/zipball/6ca22b154efdd9e3c68c56f5d94670920a1c19a4",
+                "reference": "6ca22b154efdd9e3c68c56f5d94670920a1c19a4",
                 "shasum": ""
             },
             "require": {
@@ -6208,9 +6152,9 @@
             "description": "PHPDoc parser with support for nullable, intersection and generic types",
             "support": {
                 "issues": "https://github.com/phpstan/phpdoc-parser/issues",
-                "source": "https://github.com/phpstan/phpdoc-parser/tree/1.31.0"
+                "source": "https://github.com/phpstan/phpdoc-parser/tree/1.32.0"
             },
-            "time": "2024-09-22T11:32:18+00:00"
+            "time": "2024-09-26T07:23:32+00:00"
         },
         {
             "name": "psalm/plugin-symfony",
@@ -11388,70 +11332,6 @@
             "time": "2024-06-17T12:21:20+00:00"
         },
         {
-            "name": "vjik/telegram-bot-api",
-            "version": "0.4.3",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/vjik/telegram-bot-api.git",
-                "reference": "772070c9eb9b9ebabdbc080e854a51921d80a473"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/vjik/telegram-bot-api/zipball/772070c9eb9b9ebabdbc080e854a51921d80a473",
-                "reference": "772070c9eb9b9ebabdbc080e854a51921d80a473",
-                "shasum": ""
-            },
-            "require": {
-                "php": "^8.2",
-                "php-http/multipart-stream-builder": "^1.4.2",
-                "psr/http-client": "^1.0",
-                "psr/http-factory": "^1.1",
-                "psr/http-message": "^1.1|^2.0"
-            },
-            "require-dev": {
-                "friendsofphp/php-cs-fixer": "^3.59",
-                "httpsoft/http-message": "^1.1",
-                "maglnet/composer-require-checker": "^4.11",
-                "php-http/curl-client": "^2.3",
-                "phpunit/phpunit": "^10.5",
-                "psr/log": "^3.0",
-                "roave/infection-static-analysis-plugin": "^1.35",
-                "vimeo/psalm": "^5.25",
-                "yiisoft/test-support": "^3.0"
-            },
-            "suggest": {
-                "psr/log": "To log requests to Telegram Bot API and response handling errors."
-            },
-            "type": "library",
-            "autoload": {
-                "psr-4": {
-                    "Vjik\\TelegramBot\\Api\\": "src"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "BSD-3-Clause"
-            ],
-            "authors": [
-                {
-                    "name": "Sergei Predvoditelev",
-                    "homepage": "https://predvoditelev.ru"
-                }
-            ],
-            "description": "PHP library for working with Telegram API",
-            "keywords": [
-                "api",
-                "bot",
-                "telegram"
-            ],
-            "support": {
-                "chat": "https://t.me/predvoditelev_chat",
-                "issues": "https://github.com/vjik/telegram-bot-api/issues?state=open",
-                "source": "https://github.com/vjik/telegram-bot-api"
-            },
-            "time": "2024-09-06T18:09:55+00:00"
-        },
-        {
             "name": "vlucas/phpdotenv",
             "version": "v5.6.1",
             "source": {
@@ -12395,12 +12275,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/yiisoft/data.git",
-                "reference": "16f14150be121ace61793003b73802c1ac5db133"
+                "reference": "8005e042be397425f3266dc3e1871e7ba66e07d0"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/yiisoft/data/zipball/16f14150be121ace61793003b73802c1ac5db133",
-                "reference": "16f14150be121ace61793003b73802c1ac5db133",
+                "url": "https://api.github.com/repos/yiisoft/data/zipball/8005e042be397425f3266dc3e1871e7ba66e07d0",
+                "reference": "8005e042be397425f3266dc3e1871e7ba66e07d0",
                 "shasum": ""
             },
             "require": {
@@ -12455,7 +12335,7 @@
                     "type": "opencollective"
                 }
             ],
-            "time": "2024-09-25T12:18:30+00:00"
+            "time": "2024-09-26T16:26:54+00:00"
         },
         {
             "name": "yiisoft/data-cycle",
@@ -13193,22 +13073,22 @@
         },
         {
             "name": "yiisoft/form",
-            "version": "1.0.0",
+            "version": "1.1.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/yiisoft/form.git",
-                "reference": "9679b95b239598d2391de291ab2ce14b5e074271"
+                "reference": "592c2a2bb878c34329c8f1d2cfd1235bfece479b"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/yiisoft/form/zipball/9679b95b239598d2391de291ab2ce14b5e074271",
-                "reference": "9679b95b239598d2391de291ab2ce14b5e074271",
+                "url": "https://api.github.com/repos/yiisoft/form/zipball/592c2a2bb878c34329c8f1d2cfd1235bfece479b",
+                "reference": "592c2a2bb878c34329c8f1d2cfd1235bfece479b",
                 "shasum": ""
             },
             "require": {
                 "php": "^8.1",
                 "yiisoft/friendly-exception": "^1.0",
-                "yiisoft/html": "^3.6",
+                "yiisoft/html": "^3.7",
                 "yiisoft/widget": "^2.2"
             },
             "require-dev": {
@@ -13262,7 +13142,7 @@
                     "type": "open_collective"
                 }
             ],
-            "time": "2024-08-26T18:54:52+00:00"
+            "time": "2024-09-26T06:47:14+00:00"
         },
         {
             "name": "yiisoft/form-model",
@@ -20422,12 +20302,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/Roave/SecurityAdvisories.git",
-                "reference": "4d2e39c44028ba729fe50efdf731d3d2ede4046b"
+                "reference": "e575df03927277be35e76086cdf41d54f4340767"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/Roave/SecurityAdvisories/zipball/4d2e39c44028ba729fe50efdf731d3d2ede4046b",
-                "reference": "4d2e39c44028ba729fe50efdf731d3d2ede4046b",
+                "url": "https://api.github.com/repos/Roave/SecurityAdvisories/zipball/e575df03927277be35e76086cdf41d54f4340767",
+                "reference": "e575df03927277be35e76086cdf41d54f4340767",
                 "shasum": ""
             },
             "conflict": {
@@ -20438,7 +20318,7 @@
                 "aimeos/ai-admin-graphql": ">=2022.04.1,<2022.10.10|>=2023.04.1,<2023.10.6|>=2024.04.1,<2024.04.6",
                 "aimeos/ai-admin-jsonadm": "<2020.10.13|>=2021.04.1,<2021.10.6|>=2022.04.1,<2022.10.3|>=2023.04.1,<2023.10.4|==2024.04.1",
                 "aimeos/ai-client-html": ">=2020.04.1,<2020.10.27|>=2021.04.1,<2021.10.22|>=2022.04.1,<2022.10.13|>=2023.04.1,<2023.10.15|>=2024.04.1,<2024.04.7",
-                "aimeos/ai-controller-frontend": "<2020.10.15|>=2021.04.1,<2021.10.8|>=2022.04.1,<2022.10.8|>=2023.04.1,<2023.10.9",
+                "aimeos/ai-controller-frontend": "<2020.10.15|>=2021.04.1,<2021.10.8|>=2022.04.1,<2022.10.8|>=2023.04.1,<2023.10.9|==2024.04.1",
                 "aimeos/aimeos-core": ">=2022.04.1,<2022.10.17|>=2023.04.1,<2023.10.17|>=2024.04.1,<2024.04.7",
                 "aimeos/aimeos-typo3": "<19.10.12|>=20,<20.10.5",
                 "airesvsg/acf-to-rest-api": "<=3.1",
@@ -21239,7 +21119,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2024-09-23T20:04:53+00:00"
+            "time": "2024-09-26T18:06:24+00:00"
         },
         {
             "name": "roave/signature",
@@ -23370,5 +23250,8 @@
         "ext-pdo_sqlite": "*"
     },
     "platform-dev": [],
+    "platform-overrides": {
+        "php": "8.3.11"
+    },
     "plugin-api-version": "2.6.0"
 }
