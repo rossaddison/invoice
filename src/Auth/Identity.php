@@ -22,13 +22,23 @@ class Identity implements CookieLoginIdentityInterface
 
     #[BelongsTo(target: User::class, nullable: false, load: 'eager')]
     private ?User $user = null;
+    /**
+     * A #[HasOne(target: Identity::class)] relationship exists in the User table so no need for a user_id column here as
+     * it gets built automatically by the User's HasOne Identity relationship
+     */
 
-    public function __construct()
+    public function __construct(
+        User $user = null
+    )
     {
         $this->authKey = $this->regenerateCookieLoginKey();
     }
+    
+    public function getId() : ?string {
+        return (string)$this->id;
+    }
 
-    public function getId(): ?string
+    public function getUser_id(): ?string
     {
         if ($this->user) {
           return $this->user->getId();

@@ -38,6 +38,10 @@ $this->setTitle($translator->translate('signup'));
                         ->label($translator->translate('layout.login'))
                         ->autofocus()
                     ?>
+                    <?= Field::email($formModel, 'email')
+                        ->label($translator->translate('i.email'))
+                        ->autofocus()
+                    ?>
                     <?= Field::password($formModel, 'password')
                         ->label($translator->translate('layout.password'))
                     ?>

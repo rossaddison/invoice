@@ -276,6 +276,46 @@
                         </div>
                     </div>
                     
+                    <div class="col-xs-12 col-md-6">
+                        <div class="form-group">
+                            <label for="signup_automatically_assign_client">
+                                <?= $translator->translate('invoice.invoice.assign.client.on.signup'); ?>
+                            </label>
+                            <?php $body['settings[signup_automatically_assign_client]'] = $s->get_setting('signup_automatically_assign_client'); ?>
+                            <select name="settings[signup_automatically_assign_client]" id="settings[signup_automatically_assign_client]" class="form-control">
+                                <option value="0">
+                                    <?= $translator->translate('i.no'); ?>
+                                </option>
+                                <option value="1" 
+                                    <?php
+                                        $s->check_select($body['settings[signup_automatically_assign_client]'], '1'); 
+                                    ?>>
+                                    <?= $translator->translate('i.yes'); ?>
+                                </option>
+                            </select>    
+                        </div>
+                    </div>
+                    
+                    <div class="col-xs-12 col-md-6">
+                        <div class="form-group">
+                            <label for="signup_default_age_minimum_eighteen">
+                                <?= $translator->translate('invoice.invoice.assign.client.on.signup.default.age.minimum.eighteen'); ?>
+                            </label>
+                            <?php $body['settings[signup_default_age_minimum_eighteen]'] = $s->get_setting('signup_default_age_minimum_eighteen'); ?>
+                            <select name="settings[signup_default_age_minimum_eighteen]" id="settings[signup_default_age_minimum_eighteen]" class="form-control">
+                                <option value="0">
+                                    <?= $translator->translate('i.no'); ?>
+                                </option>
+                                <option value="1" 
+                                    <?php
+                                        $s->check_select($body['settings[signup_default_age_minimum_eighteen]'], '1'); 
+                                    ?>>
+                                    <?= $translator->translate('i.yes'); ?>
+                                </option>
+                            </select>    
+                        </div>
+                    </div>
+                    
                 </div>
 
             </div>

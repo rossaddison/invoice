@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace App\Invoice\Setting;
@@ -317,7 +318,7 @@ final class SettingRepository extends Select\Repository
    /**
      * @return (mixed|string)[]
      *
-     * @psalm-return array{esmtp_scheme: mixed, esmtp_host: mixed, esmtp_port: mixed, use_send_mail: string}
+     * @psalm-return array{esmtp_enabled: bool, esmtp_scheme: mixed, esmtp_host: mixed, esmtp_port: mixed, use_send_mail: string}
      */
     public function config_params() : array {     
         $config = $this->get_config_params();
@@ -325,17 +326,23 @@ final class SettingRepository extends Select\Repository
         /**
          * @var array $params['symfony/mailer']
          * @var string $params['yiisoft/mailer']['useSendmail']
+         * @var bool $params['symfony/mailer']['esmtpTransport']['enabled']
          * @var string $params['symfony/mailer']['esmtpTransport']['scheme']
          * @var string $params['symfony/mailer']['esmtpTransport']['host']
          * @var string $params['symfony/mailer']['esmtpTransport']['port']
          */
         $config_array = [
-            'esmtp_scheme' =>$params['symfony/mailer']['esmtpTransport']['scheme'],
-            'esmtp_host'=>$params['symfony/mailer']['esmtpTransport']['host'],
-            'esmtp_port'=>$params['symfony/mailer']['esmtpTransport']['port'],
-            'use_send_mail'=>$params['yiisoft/mailer']['useSendmail'] == 1 ? $this->translator->translate('i.true') : $this->translator->translate('i.false'),           
+            'esmtp_enabled' => $params['symfony/mailer']['esmtpTransport']['enabled'],
+            'esmtp_scheme' => $params['symfony/mailer']['esmtpTransport']['scheme'],
+            'esmtp_host' => $params['symfony/mailer']['esmtpTransport']['host'],
+            'esmtp_port' => $params['symfony/mailer']['esmtpTransport']['port'],
+            'use_send_mail' => $params['yiisoft/mailer']['useSendmail'] == 1 ? $this->translator->translate('i.true') : $this->translator->translate('i.false'),           
         ];
         return $config_array;
+    }
+    
+    public function mailerEnabled() : bool {
+        return $this->config_params()['esmtp_enabled'] == true;
     }
     
     /**
@@ -344,7 +351,7 @@ final class SettingRepository extends Select\Repository
      */
     public function get_private_company_details() : array
     {
-        $companyLogoFileName = '';
+        $companyLogoFileNameWithSuffix = '';
         $company = $this->getActiveCompany();
         $config = $this->get_config_params();
         $params = $config->get('params');
@@ -384,12 +391,14 @@ final class SettingRepository extends Select\Repository
                         // site's logo: take the first logo where the current date falls within the logo's start and end dates
                         if ($private->getStart_date()?->format('Y-m-d') < (new \DateTimeImmutable('now'))->format('Y-m-d') 
                         && ($private->getEnd_date()?->format('Y-m-d') > (new \DateTimeImmutable('now'))->format('Y-m-d'))) {
-                            $companyLogoFileName = (string)$private->getLogo_filename();
+                            $companyLogoFileNameWithSuffix = (string)$private->getLogo_filename();
                           //  break;
                         } 
                     }
             }
-            $company_array['logo_path'] = (!empty($companyLogoFileName) ? '/logo/'. $companyLogoFileName : '/site/logo.png');
+            $company_array['logofilenamewithsuffix'] = (!empty($companyLogoFileNameWithSuffix) ? $companyLogoFileNameWithSuffix : 'logo.png');
+            
+            $company_array['logopublicsource'] = (!empty($companyLogoFileNameWithSuffix) ? 'destination.public.logo' : 'default.public.site');
             return $company_array;
         }
         return [];
@@ -2010,6 +2019,44 @@ final class SettingRepository extends Select\Repository
             } else {
                 $setting = new Setting();
                 $setting->setSetting_key('debug_mode');
+                $setting->setSetting_value('0');
+                $this->save($setting);    
+            }            
+        }
+    }
+    
+    /**
+     * @see ..\src\ViewInjection\LayoutViewInjection
+     * @param bool $signupAutomaticallyAssignClient
+     * @return void
+     */
+    public function signupAutomaticallyAssignClient(bool $signupAutomaticallyAssignClient) : void {
+        if ($signupAutomaticallyAssignClient == true)  {
+            $count = $this->repoCount('signup_automatically_assign_client');
+            if ($count == 1) {
+                $setting = $this->withKey('signup_automatically_assign_client');
+                if (null!==$setting) {
+                    $setting->setSetting_value('1');
+                    $this->save($setting);
+                }
+            } else {
+                $setting = new Setting();
+                $setting->setSetting_key('signup_automatically_assign_client');
+                $setting->setSetting_value('1');
+                $this->save($setting);
+            }
+        }
+        if ($signupAutomaticallyAssignClient == false)  {
+            $count = $this->repoCount('signup_automatically_assign_client');
+            if ($count == 1) {
+                $setting = $this->withKey('signup_automatically_assign_client');
+                if (null!==$setting) {
+                    $setting->setSetting_value('0');
+                    $this->save($setting);
+                }
+            } else {
+                $setting = new Setting();
+                $setting->setSetting_key('signup_automatically_assign_client');
                 $setting->setSetting_value('0');
                 $this->save($setting);    
             }            

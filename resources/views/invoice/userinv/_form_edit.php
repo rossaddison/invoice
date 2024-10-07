@@ -247,6 +247,19 @@ use Yiisoft\Html\Tag\Form;
                 ->hint($translator->translate('invoice.hint.this.field.is.not.required')); 
             ?>
         <?= Html::closeTag('div'); ?>
+         <?= Html::openTag('div',['class' => 'mb-3 form-group']); ?>
+            <?= Field::email($form, 'email')
+                ->label($translator->translate('i.email'))
+                ->addInputAttributes([
+                    'placeholder' => $translator->translate('i.email'),
+                    'class' => 'form-control',
+                    'id' => 'email'
+                ])
+                ->disabled(true)
+                ->value(Html::encode($form->getUser()?->getEmail() ?? '#'))
+                ->hint($translator->translate('invoice.hint.this.field.is.not.required')); 
+            ?>
+        <?= Html::closeTag('div'); ?>
         <?= Html::openTag('div',['class' => 'mb-3 form-group']); ?>
            <?= Field::telephone($form, 'mobile')
                 ->label($translator->translate('i.mobile'))
@@ -256,30 +269,6 @@ use Yiisoft\Html\Tag\Form;
                     'id' => 'mobile'
                 ])
                 ->value(Html::encode($form->getMobile() ?? ''))
-                ->hint($translator->translate('invoice.hint.this.field.is.not.required')); 
-            ?>
-        <?= Html::closeTag('div'); ?>
-        <?= Html::openTag('div',['class' => 'mb-3 form-group']); ?>
-            <?= Field::email($form, 'email')
-                ->label($translator->translate('i.email') . str_repeat(' ', 2). $translator->translate('invoice.email.template.user.account.leave.blank'))
-                ->addInputAttributes([
-                    'placeholder' => $translator->translate('i.email'),
-                    'class' => 'form-control',
-                    'id' => 'email'
-                ])
-                ->value(Html::encode($form->getEmail() ?? ''))
-                ->hint($translator->translate('invoice.hint.this.field.is.not.required')); 
-            ?>
-        <?= Html::closeTag('div'); ?>
-        <?= Html::openTag('div',['class' => 'mb-3 form-group']); ?>
-            <?= Field::password($form, 'password')
-                ->label($translator->translate('i.password'))
-                ->addInputAttributes([
-                    'placeholder' => $translator->translate('i.password'),
-                    'class' => 'form-control',
-                    'id' => 'password'
-                ])
-                ->value(Html::encode($form->getPassword() ?? ''))
                 ->hint($translator->translate('invoice.hint.this.field.is.not.required')); 
             ?>
         <?= Html::closeTag('div'); ?>

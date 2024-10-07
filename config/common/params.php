@@ -286,9 +286,10 @@ return [
          * 1. Change the mode immediately below
          * 2. Change the BUILD_DATABASE=  in the .env file at the root to BUILD_DATABASE=true
          * 3. Once the changes have been reflected and you have checked them via e.g. phpMyAdmin revert back to the original settings
-         * Mode: PhpFileSchemaProvider::MODE_WRITE_ONLY : PhpFileSchemaProvider::MODE_READ_AND_WRITE  
+         * Mode: PhpFileSchemaProvider::MODE_WRITE_ONLY : PhpFileSchemaProvider::MODE_READ_AND_WRITE \ 
          */
         'mode' => PhpFileSchemaProvider::MODE_READ_AND_WRITE,
+        //'mode' => PhpFileSchemaProvider::MODE_WRITE_ONLY,  
         'file' => 'runtime/schema.php'
       ],
       FromConveyorSchemaProvider::class => [
@@ -335,6 +336,7 @@ return [
   ],
   'symfony/mailer' => [
    'esmtpTransport' => [
+      'enabled' => true, 
       'scheme' => 'smtp', // "smtps": using TLS, "smtp": without using TLS.
       'host' => 'mail.yourinternet.com',
       'port' => 25,
@@ -354,6 +356,8 @@ return [
   // see settingRepository->get_config_company_details() function
   // see also src\Invoice\Helpers\PeppolHelper
   'company' => [
+    'logopublicsource' => 'site',  
+    'logofilenamewithsuffix' => 'logo.png',  
     'name' => 'MyCompanyName',
     'address_1' => '1 MyCompany Street',
     'address_2' => 'MyCompany Area',

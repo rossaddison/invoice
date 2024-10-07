@@ -40,32 +40,9 @@ use Yiisoft\Yii\DataView\Column\DataColumn;
 echo $alert;
 
 ?>
-
 <div>
     <h5><?= Html::encode($translator->translate('i.clients')); ?></h5>
-    <div class="btn-group">
-        <a href="<?= $urlGenerator->generate('client/add', ['origin' => 'add']);?>" class="btn btn-success" style="text-decoration:none"><i class="fa fa-plus"></i> <?= $translator->translate('i.new'); ?></a>
-    </div>
-    <br>
-    <br>
-    <div class="submenu-row">
-            <div class="btn-group index-options">
-                <a href="<?= $urlGenerator->generate('client/index',['page'=>1, 'active'=>2]); ?>"
-                   class="btn <?= $active == 2 ? 'btn-primary' : 'btn-default' ?>">
-                    <?= $translator->translate('i.all'); ?>
-                </a>
-                <a href="<?= $urlGenerator->generate('client/index',['page'=>1, 'active'=>1]); ?>" style="text-decoration:none"
-                   class="btn  <?= $active == 1 ? 'btn-primary' : 'btn-default' ?>">
-                    <?= $translator->translate('i.active'); ?>
-                </a>
-                <a href="<?= $urlGenerator->generate('client/index',['page'=>1, 'active'=>0]); ?>" style="text-decoration:none"
-                   class="btn  <?= $active == 0 ? 'btn-primary' : 'btn-default' ?>">
-                    <?= $translator->translate('i.inactive'); ?>
-                </a>    
-            </div>
-    </div>
-    <br>
-</div>
+</div>    
 <?php
     $gridComponents->header('i.client');
     $columns = [
@@ -102,6 +79,22 @@ echo $alert;
             },
             withSorting: false        
         ),
+        new DataColumn(
+            'client_email',
+            header: $translator->translate('i.email'),
+            content: static function (Client $model) : string {
+                return Html::encode($model->getClient_email() ?: '');
+            },
+            withSorting: false
+        ),            
+        new DataColumn(
+            'client_mobile',
+            header: $translator->translate('i.mobile_number'),
+            content: static function (Client $model) : string {
+                return Html::encode($model->getClient_mobile() ?? '');
+            },
+            withSorting: true
+        ),            
         new DataColumn(
             field: 'client_name',
             property: 'filter_client_name',    
@@ -153,15 +146,7 @@ echo $alert;
                 return Html::encode($model->getClient_phone() ?? '');
             },
             withSorting: true        
-        ),
-        new DataColumn(
-            'client_mobile',
-            header: $translator->translate('i.mobile_number'),
-            content: static function (Client $model) : string {
-                return Html::encode($model->getClient_mobile() ?? '');
-            },
-            withSorting: true
-        ),
+        ),        
         new DataColumn(
             'invs',
             content: static function (Client $model) use ($iR, $iaR) : int {
@@ -282,8 +267,29 @@ echo $alert;
     $toolbarString = 
         Form::tag()->post($urlGenerator->generate('client/index'))->csrf($csrf)->open() .  
         Div::tag()
-            ->addClass('float-end m-3')
-            ->content($gridComponents->toolbarReset($urlGenerator))
+            ->addClass('btn-group')
+            ->content($gridComponents->toolbarReset($urlGenerator).
+                A::tag()
+                ->href($urlGenerator->generate('client/index',['page'=>1, 'active'=>2]))
+                ->addClass('btn '.($active == 2 ? 'btn-primary' : 'btn-info'))
+                ->content($translator->translate('i.all'))
+                ->render().
+                A::tag()
+                ->href($urlGenerator->generate('client/index',['page'=>1, 'active'=>1]))
+                ->addClass('btn '.($active == 1 ? 'btn-primary' : 'btn-info'))
+                ->content($translator->translate('i.active'))
+                ->render().
+                A::tag()
+                ->href($urlGenerator->generate('client/index',['page'=>1, 'active'=>0]))
+                ->addClass('btn '.($active == 0 ? 'btn-primary' : 'btn-info'))
+                ->content($translator->translate('i.inactive'))
+                ->render().
+                A::tag()
+                ->href($urlGenerator->generate('client/add', ['origin' => 'add']))
+                ->addClass('btn btn-info')
+                ->content('➕')
+                ->render()
+            )
             ->encode(false)->render() .
         Form::tag()->close();
     echo GridView::widget()    
@@ -302,7 +308,6 @@ echo $alert;
     ->headerRowAttributes(['class'=>'card-header bg-info text-black'])
     ->emptyCell($translator->translate('i.not_set'))
     ->emptyCellAttributes(['style' => 'color:red']) 
-    ->header($gridComponents->header('i.client'))
     ->id('w34-grid')
     ->pagination(
         $gridComponents->offsetPaginationWidget($defaultPageSizeOffsetPaginator, $paginator) 

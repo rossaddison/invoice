@@ -122,6 +122,31 @@ use Yiisoft\Arrays\ArrayHelper;
     ->hint($translator->translate('invoice.hint.this.field.is.required'));
 ?>
 
+
+<?= Field::email($form, 'client_email')
+    ->label($translator->translate('i.email'))
+    ->addInputAttributes([
+        'placeholder' => $translator->translate('i.email'),
+        'value' =>  Html::encode($form->getClient_email() ?? ''),
+        'class' => 'form-control',
+        'id' => 'client_email'
+    ])
+    ->required(true)    
+    ->hint($translator->translate('invoice.hint.this.field.is.required')); 
+?>
+
+<?= Field::telephone($form, 'client_mobile')
+    ->label($translator->translate('i.mobile'))
+    ->addInputAttributes([
+        'placeholder' => $translator->translate('i.mobile'),
+        'value' => Html::encode($form->getClient_mobile() ?? ''),
+        'class' => 'form-control', 
+        'id' => 'client_mobile'
+    ])
+    ->required(true)    
+    ->hint($translator->translate('invoice.hint.this.field.is.required')); 
+?>
+
 <?= Field::text($form, 'client_group')
     ->label($translator->translate('invoice.client.group'))
     ->addInputAttributes([
@@ -322,29 +347,7 @@ use Yiisoft\Arrays\ArrayHelper;
                 ])
                 ->required(false)    
                 ->hint($translator->translate('invoice.hint.this.field.is.not.required')); 
-            ?>
-            <?= Field::telephone($form, 'client_mobile')
-                ->label($translator->translate('i.mobile'))
-                ->addInputAttributes([
-                    'placeholder' => $translator->translate('i.mobile'),
-                    'value' => Html::encode($form->getClient_mobile() ?? ''),
-                    'class' => 'form-control', 
-                    'id' => 'client_mobile'
-                ])
-                ->required(true)    
-                ->hint($translator->translate('invoice.hint.this.field.is.required')); 
-            ?>
-            <?= Field::email($form, 'client_email')
-                ->label($translator->translate('i.email'))
-                ->addInputAttributes([
-                    'placeholder' => $translator->translate('i.email'),
-                    'value' =>  Html::encode($form->getClient_email() ?? ''),
-                    'class' => 'form-control',
-                    'id' => 'client_email'
-                ])
-                ->required(true)    
-                ->hint($translator->translate('invoice.hint.this.field.is.required')); 
-            ?>
+            ?>            
             <?= Field::text($form, 'client_web')
                 ->label($translator->translate('i.web'))
                 ->addInputAttributes([

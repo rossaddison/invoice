@@ -39,13 +39,9 @@ final class UserInvService
        isset($array['phone']) ? $model->setPhone((string)$array['phone']) : '';
        isset($array['fax']) ? $model->setFax((string)$array['fax']) : '';
        isset($array['mobile']) ? $model->setMobile((string)$array['mobile']) : '';
-       isset($array['email']) ? $model->setEmail((string)$array['email']) : '';
-       isset($array['password']) ? $model->setPassword((string)$array['password']) : '';
        isset($array['web']) ? $model->setWeb((string)$array['web']) : '';
        isset($array['vat_id']) ? $model->setVat_id((string)$array['vat_id']) : '';
        isset($array['tax_code']) ? $model->setTax_code((string)$array['tax_code']) : '';
-       isset($array['salt']) ? $model->setSalt((string)$array['salt']) : '';
-       isset($array['passwordreset_token']) ? $model->setPasswordreset_token((string)$array['passwordreset_token']) : '';
        isset($array['subscribernumber']) ? $model->setSubscribernumber((string)$array['subscribernumber']) : '';
        isset($array['iban']) ? $model->setIban((string)$array['iban']) : '';
        isset($array['gln']) ? $model->setGln((int)$array['gln']) : '';

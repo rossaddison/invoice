@@ -1006,12 +1006,6 @@ return [
     'invoice.email.template.successfully.added' => 'Email Template Successfully Added',
     'invoice.email.template.successfully.deleted' => 'Email Template Successfully Deleted',
     'invoice.email.template.successfully.edited' => 'Email Template Successfully Edited',
-    'invoice.email.template.from.email.leave.blank' => ': If you leave this field blank, the User\'s account email address will be'.
-                                                       ' inserted as an editable value on the mailer form. '.
-                                                       ' eg. An accountant\'s server email address.' .
-                                                       ' Preferably use a server related email address here.',
-    'invoice.email.template.user.account.leave.blank' => ': If you leave this field blank, the Email Template\'s From email address will be'.
-                                                       ' inserted as an editable value on the mailer form. ',
     'invoice.enter' => 'Enter',
     'invoice.errors' => 'Errors',
     'invoice.family' => 'Family',
@@ -1135,6 +1129,9 @@ return [
     'invoice.invoice.amount.add' => 'Invoice Item Amount Add',
     'invoice.invoice.amount.no' => 'There is no Invoice Amount',
     'invoice.invoice.archive' => 'Archive the pdf at Uploads/Archive',
+    'invoice.invoice.assign.client.on.signup' => 'Assign a client to user upon signing up.',
+    'invoice.invoice.assign.client.on.signup.done' => 'Assigned a client to user upon signing up.',
+    'invoice.invoice.assign.client.on.signup.default.age.minimum.eighteen' => 'Assign a client with default minimum age of eighteen to the user upon signing up.',
     'invoice.invoice.attachment.list' => 'Attachment List',
     'invoice.invoice.caution.delete.invoices' => 'Testing Only: Delete all invoices and related records. (See function inv/flush)',
     'invoice.invoice.caution.deleted.invoices' => 'Testing Only: All invoice and related fields have been deleted.',
@@ -1183,6 +1180,7 @@ return [
     'invoice.invoice.item.charge' => 'Item Charge',
     'invoice.invoice.item.allowance' => 'Item Allowance',
     'invoice.invoice.index.checkbox.add.some.items.to.enable' => 'Invoice has no items. Add items to enable checkbox', 
+    'invoice.invoice.email.link.click.confirm' => 'Please confirm your email address by clicking this link',
     'invoice.invoice.tax.rate' => 'Invoice Tax Rate',
     'invoice.invoice.recurring' => 'Invoice Recurring',
     'invoice.invoice.item.lookup' => 'Item Lookup',

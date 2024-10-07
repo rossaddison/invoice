@@ -875,8 +875,9 @@ final class InvoiceController
             // according to the read_only_toggle (listed below) which is set at sent ie 2. So when a document is sent it becomes non-editable i.e. read_only
             // By default this setting is on 0 ie. Invoices can be made read-only (through the 
             // read_only_toggle)
-            'disable_read_only'=>0,
-            'disable_sidebar'=>1,
+            'disable_read_only' => 0,
+            'disable_sidebar' =>1,
+            'email_send_method' => 'symfony',
             // Invoice deletion by Law is not allowed. Invoices have to be cancelled with a credit invoice/note.
             'enable_invoice_deletion' => true,
             'enable_peppol_client_defaults' => 1,
@@ -931,6 +932,8 @@ final class InvoiceController
             // Set the invoice to read-only on sent by default;  
             'read_only_toggle' => 2,
             'reports_in_new_tab' => true,
+            'signup_automatically_assign_client' => 0,
+            'signup_default_age_minimum_eighteen' => 1,
             'stop_logging_in' => false,
             'stop_signing_up' => false,
             'sumex_canton' => 1,

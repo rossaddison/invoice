@@ -98,7 +98,7 @@ private EntityWriter $entityWriter;
         return  $query->count();
     }
     
-    public function repoUserInvUserIdquery(string $user_id): UserInv|null    {
+    public function repoUserInvUserIdquery(string $user_id): UserInv|null {
         $query = $this->select()
                       ->where(['user_id'=>$user_id]);
         return  $query->fetchOne() ?: null;        

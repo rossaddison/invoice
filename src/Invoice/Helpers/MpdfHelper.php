@@ -15,7 +15,7 @@ use Yiisoft\Files\FileHelper;
 // ********************************************************
 // \Mpdf\Output\Destination::INLINE, or "I"
 // send the file inline to the browser. The plug-in is used if available. 
-// The name given by $filename is used when one selects the �Save as� option on the link generating the PDF.
+// The name given by $filename is used when one selects the Save as option on the link generating the PDF.
 // 
 // \Mpdf\Output\Destination::DOWNLOAD, or "D"
 // send to the browser and force a file download with the name given by $filename.

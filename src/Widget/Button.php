@@ -145,4 +145,20 @@ final class Button
         ->id('btn-'. $iR->getSpecificStatusArrayClass($status))
         ->render().' '.$translated.' ';
     }
+    
+    /**
+     * @see src\Auth\Controller\SignupController.php
+     * @see src\Invoice\UserInv\UserInvController function signup
+     * @param UrlGenerator $generator
+     * @param string $_language
+     * @return string
+     */
+    public static function setOrUnsetAssignClientToUserAutomatically(UrlGenerator $generator, string $_language) : string {
+        return A::tag()
+        ->addClass('btn btn-primary')
+        ->content('✎️')
+        ->href($generator->generate('setting/auto_client', ['_language' => $_language]))
+        ->id('btn-primary')
+        ->render();        
+    }
 }

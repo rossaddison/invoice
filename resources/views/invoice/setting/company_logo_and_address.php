@@ -3,6 +3,7 @@
 declare(strict_types=1);
 
 use Yiisoft\Html\Html;
+use Yiisoft\Html\Tag\Img;
 use App\Widget\QrCode as QrCodeWidget;
 
 /**
@@ -37,22 +38,44 @@ use App\Widget\QrCode as QrCodeWidget;
         <tr> 
             <td style="width:33%;text-align:left">
                 <div id="logo">
-                    <?php 
-                        /**
-                         * Use the default site logo unless the CompanyPrivate details logo linked to a CompanyPublic
-                         * details has been set
-                         * @see src\Invoice\Helpers\PdfHelper public function generate_quote/inv_pdf 
-                         */
-                    ?>
                     <?php
-                         /**
-                          * @var string $company['logo_path']
-                          */
-                         if (isset($company['logo_path']) && !empty($company['logo_path'])) { ?> 
-                        <img src="<?= $company['logo_path']; ?>" height="100" width="150"/>
-                    <?php } else { ?>
-                        <img src="<?= '/site/'. $s->public_logo().'.png'; ?>" height="100" width="150"/>
-                    <?php } ?>
+                        /**
+                         * @see src/Invoice/Setting/SettingRepository function get_company_private_logos_folder_aliases()
+                         * @see CompanyPrivateController function add()
+                         * 
+                         * The private logo filename which exists between a start and end date is modified with Random::string(4)
+                         * and transferred to the public logo location i.e destination.public.logo
+                         * 
+                         * If the destination.public.logo does not exist, the default.public.site logo will take precedence
+                         * 
+                         * Aliases @base, @company_private_logos, @public, @public\logo
+                         */
+                        $aliases = $s->get_company_private_logos_folder_aliases();
+                        /**
+                         * @var string $company['logofilenamewithsuffix']
+                         */
+                        $filenameWithSuffix = $company['logofilenamewithsuffix'] ?? 'logo.png';
+                        $destinationPublicLogo = $aliases->get('@public_logo').DIRECTORY_SEPARATOR.$filenameWithSuffix;
+                        $destinationPublicSite = $aliases->get('@public').DIRECTORY_SEPARATOR.'site'.DIRECTORY_SEPARATOR.$filenameWithSuffix;
+                        /**
+                         * The public folder source can be either the 'site' folder ('default') or the 'logo' folder ('private')
+                         * @var string $company['logopublicsource']
+                         * @var string $logoPublicSource]
+                         */
+                        $logoPublicSource = $company['logopublicsource'] ?? 'default.public.site';
+                        $logoFileNameWithPath = match($logoPublicSource) {
+                            // default public site folder i.e. permanent 'globe' logo sitting in @base/public/site
+                            'default.public.site' => $destinationPublicSite,
+                            // public logo folder i.e. modified private logo transferred from @company_private_logos to
+                            // @base/public/logo
+                            'destination.public.logo' => $destinationPublicLogo,
+                        };
+                        echo Img::tag()
+                        ->height(100)
+                        ->width(150)        
+                        ->src($logoFileNameWithPath)
+                        ->render();
+                    ?>    
                 </div>
             </td>
             <?php if ($isInvoice) { ?>

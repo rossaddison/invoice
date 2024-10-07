@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Invoice\UserInv;
 
+use App\User\User;
 use App\Invoice\Entity\UserInv;
 use Yiisoft\FormModel\FormModel;
 use Yiisoft\Validator\Rule\Required;
@@ -13,6 +14,9 @@ final class UserInvForm extends FormModel
     #[Required]
     private ?int $user_id=null;
     
+    /**
+     * @see Dropdown 0 = Admin, 1 = Not Admin i.e. User with viewInv permission (not editInv Permission)
+     */
     #[Required]
     private ?int $type=null;
     
@@ -34,19 +38,17 @@ final class UserInvForm extends FormModel
     private ?string $phone='';
     private ?string $fax='';
     private ?string $mobile='';
-    private ?string $email='';
-    private ?string $password='';
     private ?string $web='';
     private ?string $vat_id='';
     private ?string $tax_code='';
     private ?bool $all_clients=false;
-    private ?string $salt='';
-    private ?string $passwordreset_token='';
     private ?string $subscribernumber='';
     private ?string $iban='';
     private ?int $gln=null;
     private ?string $rcc='';
     private ?int $listLimit=10;
+    
+    private ?User $user;
     
     public function __construct(UserInv $userinv)
     {
@@ -65,24 +67,25 @@ final class UserInvForm extends FormModel
         $this->phone = $userinv->getPhone();
         $this->fax = $userinv->getFax();
         $this->mobile = $userinv->getMobile();
-        $this->email = $userinv->getEmail();
-        $this->password = $userinv->getPassword();
         $this->web = $userinv->getWeb();
         $this->vat_id = $userinv->getVat_id();
         $this->tax_code = $userinv->getTax_code();
         $this->all_clients = $userinv->getAll_clients();
-        $this->salt = $userinv->getSalt();
-        $this->passwordreset_token = $userinv->getPasswordreset_token();
         $this->subscribernumber = $userinv->getSubscribernumber();
         $this->iban = $userinv->getIban();
         $this->gln = $userinv->getGln();
         $this->rcc = $userinv->getRcc();
         $this->listLimit = $userinv->getListLimit();
+        $this->user = $userinv->getUser();
     }        
     
     public function getUser_id() : int|null
     {
       return $this->user_id;
+    }
+    
+    public function getUser() : ?User {
+       return $this->user; 
     }
 
     public function getType() : int|null
@@ -154,17 +157,7 @@ final class UserInvForm extends FormModel
     {
       return $this->mobile;
     }
-
-    public function getEmail() : string|null
-    {
-      return $this->email;
-    }
-
-    public function getPassword() : string|null
-    {
-      return $this->password;
-    }
-
+    
     public function getWeb() : string|null
     {
       return $this->web;
@@ -183,16 +176,6 @@ final class UserInvForm extends FormModel
     public function getAll_clients() : bool|null
     {
       return $this->all_clients;
-    }
-
-    public function getSalt() : string|null
-    {
-      return $this->salt;
-    }
-
-    public function getPasswordreset_token() : string|null
-    {
-      return $this->passwordreset_token;
     }
 
     public function getSubscribernumber() : string|null

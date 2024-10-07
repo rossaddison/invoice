@@ -73,6 +73,17 @@ final class UserRepository extends Select\Repository
             ->where($scope)
             ->orderBy($orderBy));
     }
+    
+    /**
+     * @param string $email
+     *
+     * @return User|null
+     * @psalm-return TEntity|null
+     */
+    public function findByEmail(string $email) : User|null
+    {
+        return $this->findBy('email', $email);
+    }    
 
     /**
      * @param string $id
@@ -127,5 +138,14 @@ final class UserRepository extends Select\Repository
     private function findBy(string $field, string $value): User|null
     {
         return $this->findOne([$field => $value]);
-    }           
+    }  
+    
+     /**
+     * @return int
+     */
+    public function repoCount() : int {
+        $count = $this->select()                               
+                      ->count();
+        return $count; 
+    }
 }

@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1); 
 
 namespace App\Invoice\Entity;
@@ -24,7 +25,13 @@ class UserInv
     
     #[Column(type: 'integer(11)', nullable:false)]
     private ?int $user_id =  null;
+         
+    #[Column(type:"string(254)", nullable:true)]
+    private ?string $email =  '';
     
+    /**
+     * @see src/Invoice/UserInv/UserInvForm 0 => Admin, 1 => Not Admin
+     */
     #[Column(type:"integer(11)", nullable:false, default:0)]
     private ?int $type = null;
     
@@ -40,62 +47,50 @@ class UserInv
     #[Column(type:"string(191)", nullable:true, default:'system')]
     private ?string $language =  '';
     
-    #[Column(type:"text", nullable:true)]
+    #[Column(type:"string(151)", nullable:true)]
     private ?string $name =  '';
      
-    #[Column(type:"text", nullable:true)]
+    #[Column(type:"string(50)", nullable:true)]
     private ?string $company =  '';
      
-    #[Column(type:"text", nullable:true)]
+    #[Column(type:"string(50)", nullable:true)]
     private ?string $address_1 =  '';
      
-    #[Column(type:"text", nullable:true)]
+    #[Column(type:"string(50)", nullable:true)]
     private ?string $address_2 =  '';
      
-    #[Column(type:"text", nullable:true)]
+    #[Column(type:"string(50)", nullable:true)]
     private ?string $city =  '';
      
-    #[Column(type:"text", nullable:true)]
+    #[Column(type:"string(50)", nullable:true)]
     private ?string $state =  '';
      
-    #[Column(type:"text", nullable:true)]
+    #[Column(type:"string(10)", nullable:true)]
     private ?string $zip =  '';
      
-    #[Column(type:"text", nullable:true)]
+    #[Column(type:"string(50)", nullable:true)]
     private ?string $country =  '';
      
-    #[Column(type:"text", nullable:true)]
+    #[Column(type:"string(20)", nullable:true)]
     private ?string $phone =  '';
      
-    #[Column(type:"text", nullable:true)]
+    #[Column(type:"string(20)", nullable:true)]
     private ?string $fax =  '';
      
-    #[Column(type:"text", nullable:true)]
-    private ?string $mobile =  '';
-     
-    #[Column(type:"text", nullable:true)]
-    private ?string $email =  '';
-     
-    #[Column(type:"string(60)",nullable:false)]
-    private string $password =  '';
-     
-    #[Column(type:"text", nullable:true)]
+    #[Column(type:"string(20)", nullable:true)]
+    private ?string $mobile =  '';    
+    
+    #[Column(type:"string(100)", nullable:true)]
     private ?string $web =  '';
      
-    #[Column(type:"text", nullable:true)]
+    #[Column(type:"string(20)", nullable:true)]
     private ?string $vat_id =  '';
      
-    #[Column(type:"text", nullable:true)]
+    #[Column(type:"string(15)", nullable:true)]
     private ?string $tax_code =  '';
         
     #[Column(type:'bool', typecast:'bool', default:false)]
     private ?bool $all_clients = false;
-    
-    #[Column(type:"string(100)",nullable:true)]
-    private ?string $salt =  '';
-     
-    #[Column(type:"string(100)",nullable:true)]
-    private ?string $passwordreset_token =  '';
      
     #[Column(type:"string(40)",nullable:true)]
     private ?string $subscribernumber =  '';
@@ -115,6 +110,7 @@ class UserInv
     public function __construct(
         int $id = null,
         int $user_id = null,
+        string $email = '',     
         int $type = null,
         bool $active = false,
         string $language = '',
@@ -129,14 +125,10 @@ class UserInv
         string $phone = '',
         string $fax = '',
         string $mobile = '',
-        string $email = '',
-        string $password = '',
         string $web = '',
         string $vat_id = '',
         string $tax_code = '',
         bool $all_clients = false,
-        string $salt = '',
-        string $passwordreset_token = '',
         string $subscribernumber = '',
         string $iban = '',
         int $gln = null,
@@ -146,6 +138,7 @@ class UserInv
      {
         $this->id=$id;
         $this->user_id=$user_id;
+        $this->email=$email;
         $this->type=$type;
         $this->active=$active;        
         $this->date_created=new \DateTimeImmutable();
@@ -162,14 +155,10 @@ class UserInv
         $this->phone=$phone;
         $this->fax=$fax;
         $this->mobile=$mobile;
-        $this->email=$email;
-        $this->password=$password;
         $this->web=$web;
         $this->vat_id=$vat_id;
         $this->tax_code=$tax_code;
         $this->all_clients=$all_clients;
-        $this->salt=$salt;
-        $this->passwordreset_token=$passwordreset_token;
         $this->subscribernumber=$subscribernumber;
         $this->iban=$iban;
         $this->gln=$gln;
@@ -205,6 +194,16 @@ class UserInv
     public function setUser_id(int $user_id) : void
     {
       $this->user_id =  $user_id;
+    }
+    
+    public function setEmail(string $email) : void
+    {
+       $this->email = $email;
+    }
+        
+    public function getWeb(): ?string
+    {
+       return $this->web;
     }
     
     public function getType(): int|null
@@ -367,26 +366,6 @@ class UserInv
        return $this->email;
     }
     
-    public function setEmail(string $email) : void
-    {
-       $this->email = $email;
-    }
-    
-    public function getPassword(): string
-    {
-       return $this->password;
-    }
-    
-    public function setPassword(string $password) : void
-    {
-       $this->password = $password;
-    }
-    
-    public function getWeb(): ?string
-    {
-       return $this->web;
-    }
-    
     public function setWeb(string $web) : void
     {
       $this->web = $web;
@@ -420,28 +399,8 @@ class UserInv
     public function setAll_clients(bool $all_clients) : void
     {
       $this->all_clients = $all_clients;
-    }
-    
-    public function getSalt(): ?string
-    {
-       return $this->salt;
-    }
-    
-    public function setSalt(string $salt) : void
-    {
-      $this->salt =  $salt;
-    }
-    
-    public function getPasswordreset_token(): ?string
-    {
-       return $this->passwordreset_token;
-    }
-    
-    public function setPasswordreset_token(string $passwordreset_token) : void
-    {
-      $this->passwordreset_token = $passwordreset_token;
-    }
-    
+    }    
+        
     public function getSubscribernumber(): ?string
     {
        return $this->subscribernumber;

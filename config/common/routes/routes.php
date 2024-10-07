@@ -108,6 +108,7 @@ return [
     Route::post('/logout')
     ->action([AuthController::class, 'logout'])
     ->name('auth/logout'),
+    // email-verification token is masked before sending by email and must be unmasked after inbox click. Refer to userinv/signup
     Route::methods([Method::GET, Method::POST], '/signup')
     ->middleware(fn(
       ResponseFactoryInterface $responseFactory,
@@ -1890,6 +1891,11 @@ return [
       ->middleware(fn(AccessChecker $checker) => $checker->withPermission('editInv'))
       ->middleware(Authentication::class)
       ->action([SettingController::class, 'inv_draft_has_number_switch']),
+      Route::methods([Method::GET, Method::POST], '/setting/auto_client')
+      ->name('setting/auto_client')
+      ->middleware(fn(AccessChecker $checker) => $checker->withPermission('editInv'))
+      ->middleware(Authentication::class)
+      ->action([SettingController::class, 'auto_client']),            
       Route::methods([Method::GET, Method::POST], '/setting/mark_sent/{setting_id}')
       ->name('setting/mark_sent')
       ->middleware(fn(AccessChecker $checker) => $checker->withPermission('editInv'))
@@ -2169,5 +2175,9 @@ return [
       ->middleware(fn(AccessChecker $checker) => $checker->withPermission('editInv'))
       ->middleware(Authentication::class)
       ->action([UserInvController::class, 'assignAdminRole']),
+      // email-verification-token has to be unmasked      
+      Route::methods([Method::GET, Method::POST], '/userinv/signup/{language}/{token}')
+      ->name('userinv/signup')
+      ->action([UserInvController::class, 'signup']),      
     ), //invoice
 ];

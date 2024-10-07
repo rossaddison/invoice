@@ -24,7 +24,10 @@ class User
 
     #[Column(type: 'string(48)')]
     private string $login;
-
+    
+    #[Column(type: 'string(254)')]
+    private string $email;
+    
     #[Column(type: 'string')]
     private string $passwordHash = '';
 
@@ -37,9 +40,10 @@ class User
     #[HasOne(target: Identity::class)]
     private Identity $identity;
 
-    public function __construct(string $login, string $password)
+    public function __construct(string $login, string $email, string $password)
     {
         $this->login = $login;
+        $this->email = $email;
         $this->created_at = new DateTimeImmutable();
         $this->updated_at = new DateTimeImmutable();
         $this->setPassword($password);
@@ -58,6 +62,11 @@ class User
     public function getLogin(): string
     {
         return $this->login;
+    }
+    
+    public function getEmail(): string
+    {
+        return $this->email;
     }
 
     public function setLogin(string $login): void

@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Auth\Form;
 
+use App\Auth\IdentityRepository;
 use App\User\User;
 use App\User\UserRepository;
 use Yiisoft\FormModel\FormModel;
@@ -13,6 +14,7 @@ use Yiisoft\Validator\PropertyTranslatorInterface;
 use Yiisoft\Validator\PropertyTranslatorProviderInterface;
 use Yiisoft\Validator\Result;
 use Yiisoft\Validator\Rule\Equal;
+use Yiisoft\Validator\Rule\Email;
 use Yiisoft\Validator\Rule\Length;
 use Yiisoft\Validator\Rule\Required;
 use Yiisoft\Validator\RulesProviderInterface;
@@ -20,24 +22,27 @@ use Yiisoft\Validator\RulesProviderInterface;
 final class SignupForm extends FormModel implements RulesProviderInterface, PropertyTranslatorProviderInterface
 {
     private string $login = '';
+    private string $email = '';
     private string $password = '';
     private string $passwordVerify = '';
 
     public function __construct(
         private readonly TranslatorInterface $translator,
         private readonly UserRepository $userRepository,
+        private readonly IdentityRepository $identityRepository    
     ) {
     }
 
     /**
      * @return string[]
      *
-     * @psalm-return array{login: string, password: string, passwordVerify: string}
+     * @psalm-return array{login: string, email: string, password: string, passwordVerify: string}
      */
     public function getAttributeLabels(): array
     {
         return [
             'login' => $this->translator->translate('layout.login'),
+            'email' => $this->translator->translate('i.email'),
             'password' => $this->translator->translate('layout.password'),
             'passwordVerify' => $this->translator->translate('layout.password-verify'),
         ];
@@ -72,18 +77,25 @@ final class SignupForm extends FormModel implements RulesProviderInterface, Prop
     {
         return $this->password;
     }
+    
+    public function getEmail(): string
+    {
+        return $this->email;
+    }    
 
     public function signup(): User
     {
-        $user = new User($this->getLogin(), $this->getPassword());
-        $this->userRepository->save($user);
+        // In the constuct of a new User, a new Identity is created. 
+        // In the contruct of the new Identity, a new auth key is created.
+        $user = new User($this->getLogin(), $this->getEmail(), $this->getPassword());
+        $this->userRepository->save($user); 
         return $user;
     }
 
     /**
-     * @return (Equal|Length|Required|\Closure)[][]
+     * @return (Equal|Length|Email|Required|\Closure)[][]
      *
-     * @psalm-return array{login: list{Required, Length, \Closure(mixed):Result}, password: list{Required, Length}, passwordVerify: list{Required, Equal}}
+     * @psalm-return array{login: list{Required, Length, \Closure(mixed):Result}, email: list{Required, Email, \Closure(mixed):Result}, password: list{Required}, passwordVerify: list{Required, Equal}}
      */
     public function getRules(): array
     {
@@ -99,9 +111,19 @@ final class SignupForm extends FormModel implements RulesProviderInterface, Prop
                     return $result;
                 },
             ],
-            'password' => [
+            'email' => [
                 new Required(),
-                new Length(min: 8),
+                new Email(),
+                function (mixed $value): Result {
+                    $result = new Result();
+                    if ($this->userRepository->findByEmail((string)$value) !== null) {
+                        $result->addError($this->translator->translate('validator.user.exist'));
+                    }
+                    return $result;
+                },
+            ],
+            'password' => [
+                new Required()
             ],
             'passwordVerify' => [
                 new Required(),

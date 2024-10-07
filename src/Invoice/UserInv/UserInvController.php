@@ -1,19 +1,26 @@
 <?php
+
 declare(strict_types=1); 
 
 namespace App\Invoice\UserInv;
 
+use App\Auth\Identity;
+use App\Auth\Token;
+use App\Auth\TokenRepository as tR;
 use App\Invoice\Client\ClientRepository as cR;
+use App\Invoice\Entity\Client;
+use App\Invoice\Entity\UserClient;
 use App\Invoice\Entity\UserInv;
 use App\Invoice\Helpers\CountryHelper;
-use App\Invoice\Setting\SettingRepository;
-use App\Invoice\UserClient\UserClientRepository;
+use App\Invoice\Setting\SettingRepository as sR;
+use App\Invoice\UserClient\UserClientRepository as ucR;
 use App\Invoice\UserInv\UserInvForm;
 use App\Invoice\UserInv\UserInvRepository as uiR;
 use App\Invoice\UserInv\UserInvService;
 use App\Service\WebControllerService;
 use App\User\UserService;
 use App\User\UserRepository as uR;
+use App\Widget\Button;
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
 use Yiisoft\Aliases\Aliases;
@@ -28,7 +35,9 @@ use Yiisoft\Rbac\AssignmentsStorageInterface as Assignment;
 use Yiisoft\Rbac\ItemsStorageInterface as ItemStorage;
 use Yiisoft\Rbac\Manager as Manager;
 use Yiisoft\Rbac\RuleFactoryInterface as Rule;
+use Yiisoft\Router\FastRoute\UrlGenerator;
 use Yiisoft\Router\HydratorAttribute\RouteArgument;
+use Yiisoft\Security\TokenMask;
 use Yiisoft\Session\Flash\Flash;
 use Yiisoft\Session\SessionInterface as Session;
 use Yiisoft\Translator\TranslatorInterface;
@@ -36,6 +45,7 @@ use Yiisoft\Yii\View\Renderer\ViewRenderer;
 
 final class UserInvController
 {
+    const string EMAIL_VERIFICATION_TOKEN = 'email-verification';    
     private Assignment $assignment;
     private ItemStorage $itemstorage;
     private Manager $manager;
@@ -45,6 +55,7 @@ final class UserInvController
     private DataResponseFactoryInterface $factory;
     private ViewRenderer $viewRenderer;
     private WebControllerService $webService;
+    private UrlGenerator $urlGenerator;
     private UserService $userService;
     private UserInvService $userinvService;
     private TranslatorInterface $translator;
@@ -67,6 +78,7 @@ final class UserInvController
         DataResponseFactoryInterface $factory,
         ViewRenderer $viewRenderer,
         WebControllerService $webService,
+        UrlGenerator $urlGenerator,
         UserService $userService,
         UserInvService $userinvService,
         TranslatorInterface $translator,
@@ -83,6 +95,7 @@ final class UserInvController
         $this->factory = $factory;
         $this->viewRenderer = $viewRenderer; 
         $this->webService = $webService;
+        $this->urlGenerator = $urlGenerator;
         $this->userService = $userService;
         $this->userinvService = $userinvService;
         $this->viewRenderer = $viewRenderer;
@@ -104,7 +117,7 @@ final class UserInvController
      * @param Request $request
      * @param string $_language
      * @param FormHydrator $formHydrator
-     * @param SettingRepository $sR
+     * @param sR $sR
      * @param uR $uR
      * @param uiR $uiR
      * @return Response
@@ -112,7 +125,7 @@ final class UserInvController
     public function add(Request $request,
                         #[RouteArgument('_language')] string $_language, 
                         FormHydrator $formHydrator,
-                        SettingRepository $sR,
+                        sR $sR,
                         uR $uR,
                         uiR $uiR
     ) : Response
@@ -202,8 +215,8 @@ final class UserInvController
     /**
      * @param cR $cR
      * @param uiR $uiR
-     * @param UserClientRepository $ucR
-     * @param SettingRepository $sR
+     * @param ucR $ucR
+     * @param sR $sR
      * @param string $_language
      * @param string $page
      * @param string $active
@@ -212,7 +225,7 @@ final class UserInvController
      * @param string $queryFilterUser
      * @return \Yiisoft\DataResponse\DataResponse
      */
-    public function index(cR $cR, uiR $uiR, UserClientRepository $ucR, SettingRepository $sR, 
+    public function index(cR $cR, uiR $uiR, ucR $ucR, sR $sR, 
         #[RouteArgument('_language')] string $_language, 
         #[RouteArgument('page')] string $page = '1',
         #[RouteArgument('active')] string $active = '2',
@@ -490,11 +503,11 @@ final class UserInvController
     
     /**
      * @param int $id
-     * @param UserClientRepository $ucR
-     * @param UserInvRepository $uiR
+     * @param ucR $ucR
+     * @param uiR $uiR
      * @return \Yiisoft\DataResponse\DataResponse|Response
      */
-    public function client(#[RouteArgument('id')] int $id, UserClientRepository $ucR, UserInvRepository $uiR) 
+    public function client(#[RouteArgument('id')] int $id, ucR $ucR, UserInvRepository $uiR) 
         : \Yiisoft\DataResponse\DataResponse|Response {
         // Use the primary key 'id' passed in userinv/index's urlGenerator to retrieve the user_id
         $userinv = $this->userinv($id, $uiR);
@@ -531,6 +544,89 @@ final class UserInvController
         }
         return $this->webService->getRedirectResponse('userinv/index');
     }
+    
+    
+    public function signup(   
+            // cldr e.g. 'en'
+            #[RouteArgument('_language')] string $_language,
+            // language e.g. 'English'
+            #[RouteArgument('language')] string $language,
+            #[RouteArgument('token')] string $token,
+            cR $cR,
+            uiR $uiR,
+            ucR $ucR,
+            sR $sR,
+            tR $tR
+            ) : Response {
+        // A token consists of a random 32 length string concatenated with a timestamp and then Masked.
+        $unMaskedToken = TokenMask::remove($token);
+        $positionFromUnderscore = strrpos($unMaskedToken, '_');
+        if ($positionFromUnderscore > -1) {
+            $timestamp = substr($unMaskedToken, $positionFromUnderscore + 1);
+            $lengthTimeStamp = strlen($timestamp);
+            $token = substr($unMaskedToken, 0, -($lengthTimeStamp + 1));
+            if ((int)$timestamp + 3600 >= time()) {
+                $identity = $tR->findIdentityByToken($token,  self::EMAIL_VERIFICATION_TOKEN);
+                if (null!==$identity) {
+                    $userId = $identity->getUser()?->getId();
+                    if (null!==$userId) {
+                        $userInv = $uiR->repoUserInvUserIdquery($userId);
+                        if (null!==($userInv)) {
+                            $userInv->setActive(true);
+                            $uiR->save($userInv);
+                            $userId = $userInv->getUser_id();
+                            // $email address field in signup form and a field in the user table
+                            $email = $identity->getUser()?->getEmail();
+                            if (null!==$email) {
+                                /**
+                                 * The client will have to be assigned to the user by the admin manually if this is not set
+                                 * @see InvoiceController 'signup_automatically_assign_client' => 0 
+                                 */
+                                if ($sR->get_setting('signup_automatically_assign_client') == '1') {
+                                    $client = new Client();
+                                    // set the client as active so that invoices can be created for the client
+                                    $client->setClient_active(true);
+                                    $client->setClient_email($email);
+                                    $client->setClient_language($language);
+                                    $client->setClient_age($sR->get_setting('signup_default_age_minimum_eighteen') == '1' ? 18 : 0);
+                                    $cR->save($client);
+                                    $this->flash_message('info',  $this->translator->translate('invoice.invoice.assign.client.on.signup.done'));
+                                    if (null!==($clientId = $client->getClient_id())) {
+                                        $userClient = new UserClient();
+                                        $userClient->setUser_id((int)$userInv->getUser_id());
+                                        $userClient->setClient_id($clientId);
+                                        $ucR->save($userClient);
+                                    }
+                                    if (strlen($userId) > 0 && $userId > 1) {
+                                        $this->manager->revokeAll($userId);
+                                        $this->manager->assign('observer', $userId);
+                                        $this->flash_message('info', $this->translator->translate('invoice.user.inv.role.observer.assigned'));
+                                    }
+                                    if (strlen($userId) > 0 && $userId == 1) {
+                                        $this->manager->revokeAll($userId);
+                                        $this->manager->assign('admin', $userId);
+                                        $this->flash_message('info', $this->translator->translate('invoice.user.inv.role.admin.assigned'));
+                                    }
+                                } else {
+                                    $this->flash_message('warning', 'Client not signed up automatically because setting not on. As Admin you should click on this button to enable clients to be assigned to users automatically.' .' '.
+                                        Button::setOrUnsetAssignClientToUserAutomatically($this->urlGenerator, $_language));
+                                }
+                            }    
+                        } else {
+                            $this->flash_message('warning', 'No User Inv');
+                        }
+                    } else {
+                        $this->flash_message('warning', 'No User');
+                    }    
+                } else {
+                    $this->flash_message('warning', 'No token');
+                }
+            }
+        } else {
+            $this->flash_message('warning', 'No separating underscore in token');
+        }    
+        return $this->webService->getRedirectResponse('site/index');        
+    }    
     
     /**
      * @param int $id
@@ -611,12 +707,10 @@ final class UserInvController
          * @var UserInv $userInv
          */
         foreach ($userInvs as $userInv) {
-            if (null!==$userInv->getUser()) {
-                $login = $userInv->getUser()?->getLogin();
-                if (null!==$login) {
-                    $optionsDataUserInvs[$login] = $login;
-                }
-            }    
+            $login = $userInv->getUser()?->getLogin();
+            if (null!==$login) {
+                $optionsDataUserInvs[$login] = $login;
+            }
         }
         return $optionsDataUserInvs;
     }

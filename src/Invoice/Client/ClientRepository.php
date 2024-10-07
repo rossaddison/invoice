@@ -195,7 +195,7 @@ private EntityWriter $entityWriter;
              */
             foreach ($this->repoUserClient($ucR->getClients_with_user_accounts()) as $client) {
 
-                $optionsData[(int)$client->getClient_id()] = ($client->getClient_name() ?: '') . str_repeat(' ', 3). ($client->getClient_surname() ?? '');
+                $optionsData[(int)$client->getClient_id()] = ($client->getClient_name() ?: '??') . str_repeat(' ', 3). ($client->getClient_surname() ?? '??');
             }
         }    
         return $optionsData;

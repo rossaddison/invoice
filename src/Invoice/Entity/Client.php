@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1); 
 
 namespace App\Invoice\Entity;
@@ -19,7 +20,13 @@ use \DateTimeImmutable;
 class Client
  {
     #[Column(type: 'primary')]
-    public ?int $id = null;
+    public ?int $id = null;    
+     
+    #[Column(type: 'string(254)', nullable: true)]
+    private string $client_email =  '';
+    
+    #[Column(type: 'string(20)', nullable: true)]
+    private ?string $client_mobile =  '';
     
     #[Column(type: 'integer(11)', nullable:true)]
     private ?int $postaladdress_id =  null;
@@ -31,7 +38,7 @@ class Client
     private DateTimeImmutable $client_date_modified;
     
     // treat as first name
-    #[Column(type: 'text')]
+    #[Column(type: 'string(50)')]
     private string $client_name = '';
     
     // treat as last name
@@ -50,46 +57,40 @@ class Client
     #[Column(type: 'string(15)', nullable: true)]
     private ?string $client_frequency = '';
     
-    #[Column(type: 'text', nullable: true)]
+    #[Column(type: 'string(100)', nullable: true)]
     private ?string $client_address_1 =  '';
      
-    #[Column(type: 'text', nullable: true)]
+    #[Column(type: 'string(100)', nullable: true)]
     private ?string $client_address_2 =  '';
     
-    #[Column(type: 'string(50)', nullable: true)]
+    #[Column(type: 'string(10)', nullable: true)]
     private ?string $client_building_number = '';
     
-    #[Column(type: 'text', nullable: true)]
+    #[Column(type: 'string(100)', nullable: true)]
     private ?string $client_city =  '';
      
-    #[Column(type: 'text', nullable: true)]
+    #[Column(type: 'string(30)', nullable: true)]
     private ?string $client_state =  '';
      
-    #[Column(type: 'text', nullable: true)]
+    #[Column(type: 'string(10)', nullable: true)]
     private ?string $client_zip =  '';
      
-    #[Column(type: 'text', nullable: true)]
+    #[Column(type: 'string(30)', nullable: true)]
     private ?string $client_country =  '';
      
-    #[Column(type: 'text', nullable: true)]
+    #[Column(type: 'string(30)', nullable: true)]
     private ?string $client_phone =  '';
      
-    #[Column(type: 'text', nullable: true)]
+    #[Column(type: 'string(20)', nullable: true)]
     private ?string $client_fax =  '';
-     
-    #[Column(type: 'text', nullable: true)]
-    private ?string $client_mobile =  '';
-     
-    #[Column(type: 'text', nullable: true)]
-    private string $client_email =  '';
-     
-    #[Column(type: 'text', nullable: true)]
+         
+    #[Column(type: 'string(50)', nullable: true)]
     private ?string $client_web =  '';
      
-    #[Column(type: 'text', nullable: true)]
+    #[Column(type: 'string(30)', nullable: true)]
     private ?string $client_vat_id =  '';
      
-    #[Column(type: 'text', nullable: true)]
+    #[Column(type: 'string(20)', nullable: true)]
     private ?string $client_tax_code =  '';
      
     #[Column(type: 'string(151)', nullable: true)]
@@ -131,7 +132,9 @@ class Client
     #[HasMany(target: Inv::class)]
     private ArrayCollection $invs;
      
-    public function __construct(
+    public function __construct(            
+            string $client_email ='', 
+            string $client_mobile='', 
             string $client_title = '',
             // treat as firstname
             string $client_name ='',             
@@ -148,8 +151,6 @@ class Client
             string $client_country='',
             string $client_phone='',
             string $client_fax='',
-            string $client_mobile='', 
-            string $client_email ='', 
             string $client_web='', 
             string $client_vat_id='', 
             string $client_tax_code='',
@@ -163,6 +164,8 @@ class Client
             int $client_gender=0, 
             int $postaladdress_id = null)
     {
+        $this->client_email = $client_email;
+        $this->client_mobile = $client_mobile;
         $this->client_title = $client_title;
         $this->client_name = $client_name;        
         $this->client_surname = $client_surname;
@@ -179,8 +182,6 @@ class Client
         $this->client_country = $client_country;
         $this->client_phone = $client_phone;
         $this->client_fax = $client_fax;
-        $this->client_mobile = $client_mobile;
-        $this->client_email = $client_email;
         $this->client_web = $client_web;
         $this->client_vat_id = $client_vat_id;
         $this->client_tax_code = $client_tax_code;
@@ -202,6 +203,27 @@ class Client
     public function getClient_id(): ?int
     {
         return $this->id;
+    }
+    
+    public function getClient_email(): string
+    {
+        return $this->client_email;
+    }
+    
+    public function setClient_email(string $client_email) : void
+    {
+        $this->client_email =  $client_email;
+    }
+    
+    
+    public function getClient_mobile(): ?string
+    {
+        return $this->client_mobile;
+    }
+    
+    public function setClient_mobile(string $client_mobile) : void
+    {
+        $this->client_mobile =  $client_mobile;
     }
     
     public function setClient_date_created(string $client_date_created) : void
@@ -387,26 +409,6 @@ class Client
     public function setClient_fax(string $client_fax) : void
     {
         $this->client_fax =  $client_fax;
-    }
-    
-    public function getClient_mobile(): ?string
-    {
-        return $this->client_mobile;
-    }
-    
-    public function setClient_mobile(string $client_mobile) : void
-    {
-        $this->client_mobile =  $client_mobile;
-    }
-    
-    public function getClient_email(): string
-    {
-        return $this->client_email;
-    }
-    
-    public function setClient_email(string $client_email) : void
-    {
-        $this->client_email =  $client_email;
     }
     
     public function getClient_web(): ?string

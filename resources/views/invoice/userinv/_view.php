@@ -252,28 +252,6 @@ use Yiisoft\Html\Tag\Form;
             ?>
         <?= Html::closeTag('div'); ?>
         <?= Html::openTag('div',['class' => 'mb-3 form-group']); ?>
-            <?= Field::email($form, 'email')
-                ->label($translator->translate('i.email') . str_repeat(' ', 2). $translator->translate('invoice.email.template.user.account.leave.blank'))
-                ->addInputAttributes([
-                    'class' => 'form-control',
-                    'id' => 'email',                    
-                    'readonly' => 'readonly'
-                ])
-                ->value(Html::encode($form->getEmail() ?? ''))
-            ?>
-        <?= Html::closeTag('div'); ?>
-        <?= Html::openTag('div',['class' => 'mb-3 form-group']); ?>
-            <?= Field::password($form, 'password')
-                ->label($translator->translate('i.password'))
-                ->addInputAttributes([
-                    'class' => 'form-control',
-                    'id' => 'password',                    
-                    'readonly' => 'readonly'
-                ])
-                ->value(Html::encode($form->getPassword() ?? ''))
-            ?>
-        <?= Html::closeTag('div'); ?>
-        <?= Html::openTag('div',['class' => 'mb-3 form-group']); ?>
             <?= Field::text($form, 'web')
                 ->label($translator->translate('i.web_address'))
                 ->addInputAttributes([

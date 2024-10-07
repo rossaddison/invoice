@@ -1491,7 +1491,7 @@ final class InvController {
                     'invoice' => $invoice,
                     // All templates ie. overdue, paid, invoice
                     'pdfTemplates' => $this->email_get_invoice_templates('pdf'),
-                    'templateTags' => $this->view_renderer->renderPartialAsString('//invoice/emailtemplate/template-tags', [
+                    'templateTags' => $this->view_renderer->renderPartialAsString('//invoice/emailtemplate/template-tags-with-inv', [
                         'custom_fields' => $custom_fields,
                         'template_tags_quote' => '',
                         'template_tags_inv' => $this->view_renderer->renderPartialAsString('//invoice/emailtemplate/template-tags-inv', [

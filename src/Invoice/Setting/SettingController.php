@@ -434,6 +434,30 @@ final class SettingController
         return $this->webService->getRedirectResponse('inv/index');
     }
     
+    /**
+     * Purpose: Save the users toggle button choice on flash message: 'Assign a client to a user automatically after signup'
+     * @see App\Widget\Button static function setOrUnsetAssignClientToUserAutomatically
+     * @see src\Invoice\UserInv\UserInvController function signup
+     * @return Response
+     */
+    public function auto_client(): Response 
+    {
+        $setting = $this->s->withKey('signup_automatically_assign_client');
+        if ($setting) {
+            if ($setting->getSetting_value() == '0') {
+               $setting->setSetting_value('1');
+               $this->s->save($setting);
+               return $this->webService->getRedirectResponse('site/index');
+            }
+            if ($setting->getSetting_value() == '1') {
+               $setting->setSetting_value('0');
+               $this->s->save($setting);
+               return $this->webService->getRedirectResponse('site/index');
+            }
+        }
+        return $this->webService->getRedirectResponse('site/index');
+    }
+    
     public function visible() : Response {
         $setting = $this->s->withKey('columns_all_visible');
         if ($setting) {

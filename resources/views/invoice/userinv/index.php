@@ -150,7 +150,7 @@ echo $alert
                 if (null!==$user) {
                     if (!empty($user->getLogin())) {
                         return (string)Html::a($user->getLogin(), $urlGenerator->generate('user/profile', ['login' => $user->getLogin()]),[]);
-                    }    
+                    }
                 }
                 return '';
             },
@@ -264,7 +264,7 @@ echo $alert
         new DataColumn(
             'email',
             content: static function (UserInv $model): ?string {
-                return $model->getEmail();
+                return $model->getUser()?->getEmail();
         }),         
         new DataColumn(
             'type',

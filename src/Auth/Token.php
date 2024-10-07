@@ -15,19 +15,18 @@ use Yiisoft\Security\Random;
  
  class Token
  {
-    #[BelongsTo(target:Identity::class, nullable: false, fkAction:'NO ACTION')]
-    private ?Identity $identity = null;
-        
     #[Column(type:'primary')]
     private ?int $id =  null;
      
+    #[BelongsTo(target:Identity::class, nullable: false, fkAction:'NO ACTION')]
+    private ?Identity $identity = null;    
     #[Column(type:'integer(11)', nullable: false)]
     private ?int $identity_id =  null;
      
     #[Column(type:'string(32)', nullable: false)]
     private ?string $token =  null;
         
-    #[Column(type:'integer(11)', nullable: false)]
+    #[Column(type:'string(50)', nullable: false)]
     private ?string $type =  null;
      
     #[Column(type:'datetime)', nullable: false)]
@@ -91,11 +90,12 @@ use Yiisoft\Security\Random;
         
     public function getCreated_at(): DateTimeImmutable
     {
-      return $this->created_at;
+       /** @var DateTimeImmutable $this->created_at */
+       return $this->created_at;
     }
     
-    public function setCreated_at(DateTimeImmutable $created_at) : void
+    public function setCreated_at(string $created_at) : void
     {
-      $this->created_at = $created_at;
+      $this->created_at = (new \DateTimeImmutable())->createFromFormat('Y-m-d h:i:s', $created_at) ?: new \DateTimeImmutable('now');
     }
 }

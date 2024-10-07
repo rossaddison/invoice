@@ -24,11 +24,8 @@ $tooltipTitle = $translator->translate('home.caption.slides.location.debug.mode'
 
 <?= Html::openTag('div', ['class' => 'container-fluid p-5 bg-primary text-white text-center']); ?>
     <?= Html::openTag('h1'); ?>
-        My First Bootstrap Page
+            Structured on yiisoft/demo/blog developments
     <?= Html::closeTag('h1'); ?>
-    <?= Html::openTag('p'); ?>
-        Resize this responsive page to see the effect!    
-    <?= Html::closeTag('p'); ?>    
 <?= Html::closeTag('div'); ?>
 
 <?= Carousel::widget()
