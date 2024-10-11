@@ -3930,16 +3930,16 @@
         },
         {
             "name": "mollie/mollie-api-php",
-            "version": "v2.72.0",
+            "version": "v2.73.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/mollie/mollie-api-php.git",
-                "reference": "cdfb298ff61737a077554c001e936e6134e7ed8e"
+                "reference": "0a26175492d4c55bb461e44fe3e63546539b81c1"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/mollie/mollie-api-php/zipball/cdfb298ff61737a077554c001e936e6134e7ed8e",
-                "reference": "cdfb298ff61737a077554c001e936e6134e7ed8e",
+                "url": "https://api.github.com/repos/mollie/mollie-api-php/zipball/0a26175492d4c55bb461e44fe3e63546539b81c1",
+                "reference": "0a26175492d4c55bb461e44fe3e63546539b81c1",
                 "shasum": ""
             },
             "require": {
@@ -3953,7 +3953,7 @@
                 "eloquent/liberator": "^2.0||^3.0",
                 "friendsofphp/php-cs-fixer": "^3.0",
                 "guzzlehttp/guzzle": "^6.3 || ^7.0",
-                "phpstan/phpstan": "^1.4",
+                "phpstan/phpstan": "^1.12",
                 "phpunit/phpunit": "^8.5 || ^9.5"
             },
             "suggest": {
@@ -4016,9 +4016,9 @@
             ],
             "support": {
                 "issues": "https://github.com/mollie/mollie-api-php/issues",
-                "source": "https://github.com/mollie/mollie-api-php/tree/v2.72.0"
+                "source": "https://github.com/mollie/mollie-api-php/tree/v2.73.0"
             },
-            "time": "2024-09-11T15:06:31+00:00"
+            "time": "2024-09-30T13:16:57+00:00"
         },
         {
             "name": "moneyphp/money",
