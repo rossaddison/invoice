@@ -54,8 +54,7 @@ use Yiisoft\Html\Tag\Form;
                 <?= Html::closeTag('div'); ?>
                 <?= Html::openTag('div', ['class' => 'form-check form-switch']); ?>
                     <?= Field::checkbox($form, 'current')
-                        ->inputLabelAttributes(['class' => 'form-check-label'])    
-                        ->enclosedByLabel(true)
+                        ->inputLabelAttributes(['class' => 'form-check-label'])   
                         ->inputClass('form-check-input')
                         ->ariaDescribedBy($translator->translate('i.active'))
                     ?>    

@@ -50,8 +50,7 @@ use Yiisoft\Html\Tag\Form;
             <?= Html::closeTag('div'); ?>
             <?= Html::openTag('div', ['class' => 'mb-3 form-group']); ?>
                 <?= Field::checkbox($form, 'include')
-                    ->inputLabelAttributes(['class' => 'form-check-label'])    
-                    ->enclosedByLabel(true)
+                    ->inputLabelAttributes(['class' => 'form-check-label'])  
                     ->inputClass('form-check-input')
                     ->ariaDescribedBy($translator->translate('invoice.from.include.in.dropdown'))
                 ?>       
@@ -59,8 +58,7 @@ use Yiisoft\Html\Tag\Form;
             <?= Html::openTag('div'); ?>
                 <?= Html::openTag('div', ['class' => 'mb-3 form-group']); ?>
                 <?= Field::checkbox($form, 'default_email')
-                    ->inputLabelAttributes(['class' => 'form-check-label'])    
-                    ->enclosedByLabel(true)
+                    ->inputLabelAttributes(['class' => 'form-check-label'])   
                     ->inputClass('form-check-input')
                     ->ariaDescribedBy($translator->translate('invoice.from.default.in.dropdown'))
                 ?>     

@@ -139,8 +139,7 @@ use Yiisoft\Html\Tag\Form;
             <?= Html::closeTag('div'); ?>
             <?= Html::openTag('div', ['class' => 'col mb-3']); ?>
                 <?= Field::checkbox($form, 'flash_include')
-                    ->inputLabelAttributes(['class' => 'form-check-label'])    
-                    ->enclosedByLabel(true)
+                    ->inputLabelAttributes(['class' => 'form-check-label'])   
                     ->inputClass('form-check-input')
                     ->ariaDescribedBy($translator->translate('invoice.generator.flash.include'))
                 ?>
@@ -170,8 +169,7 @@ use Yiisoft\Html\Tag\Form;
             <?= Html::closeTag('div'); ?>
             <?= Html::openTag('div', ['class' => 'col mb-3']); ?>
                 <?= Field::checkbox($form, 'created_include')
-                    ->inputLabelAttributes(['class' => 'form-check-label'])    
-                    ->enclosedByLabel(true)
+                    ->inputLabelAttributes(['class' => 'form-check-label']) 
                     ->inputClass('form-check-input')
                     ->ariaDescribedBy($translator->translate('invoice.generator.created.at.include'))
                 ?>
@@ -179,24 +177,21 @@ use Yiisoft\Html\Tag\Form;
             
             <?= Html::openTag('div', ['class' => 'col mb-3']); ?>
                 <?= Field::checkbox($form, 'modified_include')
-                    ->inputLabelAttributes(['class' => 'form-check-label'])    
-                    ->enclosedByLabel(true)
+                    ->inputLabelAttributes(['class' => 'form-check-label'])  
                     ->inputClass('form-check-input')
                     ->ariaDescribedBy($translator->translate('invoice.generator.modified.at.include'))
                 ?>
             <?= Html::closeTag('div'); ?>
             <?= Html::openTag('div', ['class' => 'col mb-3']); ?>
                 <?= Field::checkbox($form, 'updated_include')
-                    ->inputLabelAttributes(['class' => 'form-check-label'])    
-                    ->enclosedByLabel(true)
+                    ->inputLabelAttributes(['class' => 'form-check-label']) 
                     ->inputClass('form-check-input')
                     ->ariaDescribedBy($translator->translate('invoice.generator.updated.at.include'))
                 ?>
             <?= Html::closeTag('div'); ?>
             <?= Html::openTag('div', ['class' => 'col mb-3']); ?>
                 <?= Field::checkbox($form, 'deleted_include')
-                    ->inputLabelAttributes(['class' => 'form-check-label'])    
-                    ->enclosedByLabel(true)
+                    ->inputLabelAttributes(['class' => 'form-check-label']) 
                     ->inputClass('form-check-input')
                     ->ariaDescribedBy($translator->translate('invoice.generator.deleted.at.include'))
                 ?>

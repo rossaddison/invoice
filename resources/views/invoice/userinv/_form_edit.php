@@ -94,8 +94,7 @@ use Yiisoft\Html\Tag\Form;
         <?= Html::openTag('div', ['class' => 'mb-3 form-group']); ?>
             <?= Html::openTag('div', ['class' => 'p-2']); ?> 
                 <?= Field::checkbox($form, 'active')
-                    ->inputLabelAttributes(['class' => 'form-check-label'])    
-                    ->enclosedByLabel(true)
+                    ->inputLabelAttributes(['class' => 'form-check-label'])   
                     ->inputClass('form-check-input')
                     ->ariaDescribedBy($translator->translate('i.active'));
                 ?>
@@ -103,8 +102,7 @@ use Yiisoft\Html\Tag\Form;
         <?= Html::closeTag('div'); ?><?= Html::closeTag('div'); ?>
         <?= Html::openTag('div', ['class' => 'mb-3 form-group']); ?>
             <?= Field::checkbox($form, 'all_clients')
-                    ->inputLabelAttributes(['class' => 'form-check-label'])    
-                    ->enclosedByLabel(true)
+                    ->inputLabelAttributes(['class' => 'form-check-label'])   
                     ->inputClass('form-check-input')
                     ->ariaDescribedBy($translator->translate('i.user_all_clients'));
             ?>

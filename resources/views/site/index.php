@@ -24,7 +24,7 @@ $tooltipTitle = $translator->translate('home.caption.slides.location.debug.mode'
 
 <?= Html::openTag('div', ['class' => 'container-fluid p-5 bg-primary text-white text-center']); ?>
     <?= Html::openTag('h1'); ?>
-            Structured on yiisoft/demo/blog developments
+            yiisoft/demo/blog
     <?= Html::closeTag('h1'); ?>
 <?= Html::closeTag('div'); ?>
 

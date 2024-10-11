@@ -187,7 +187,6 @@ Class CustomValuesHelper {
                 'id' => $custom_field->getId()    
             ])
             ->disabled(false)
-            ->enclosedByLabel(true)
             ->inputClass('form-check-input')
             ->inputLabelAttributes(['class' => 'form-check-label']) 
             ->inputLabel($custom_field->getLabel())
@@ -322,7 +321,6 @@ Class CustomValuesHelper {
                 'id' => $custom_field->getId(),
             ])    
             ->disabled(true)
-            ->enclosedByLabel(true)
             ->inputLabelAttributes(['class' => 'form-check-label']) 
             ->inputLabel($custom_field->getLabel())
             ->inputClass('form-check-input')

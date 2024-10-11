@@ -54,8 +54,7 @@ use Yiisoft\Html\Html;
                             <?= Field::checkbox($form, 'user_all_clients')
                                 ->inputLabelAttributes([
                                     'class' => 'form-check-label'
-                                ])    
-                                ->enclosedByLabel(true)
+                                ])  
                                 ->inputClass('form-check-input')
                                 ->ariaDescribedBy($translator->translate('i.user_all_clients'))
                             ?>    

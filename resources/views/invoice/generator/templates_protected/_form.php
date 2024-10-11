@@ -95,8 +95,7 @@ use Yiisoft\Html\Tag\Form;
             if (($column->getType() === 'bool') && ($column->getAbstractType() === 'bool' )) {  
                 echo "<?= Html::openTag('div'); ?>";
                 echo '<?= Field::checkbox($form,'. "'". $column->getName()."')";
-                echo "    ->inputLabelAttributes(['class' => 'form-check-label'])";    
-                echo "    ->enclosedByLabel(true)";
+                echo "    ->inputLabelAttributes(['class' => 'form-check-label'])"; 
                 echo "    ->inputClass('form-check-input')";
                 echo '    ->ariaDescribedBy($translator->translate('."'".$column->getName().'))';
                 echo '?>'; 

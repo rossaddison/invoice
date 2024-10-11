@@ -58,8 +58,7 @@ use Yiisoft\Html\Tag\Form;
                 <?= Html::closeTag('div'); ?>
                 <?= Html::openTag('div', ['class' => 'mb-3 form-group']); ?>
                     <?= Field::checkbox($form, 'tax_rate_default')
-                        ->inputLabelAttributes(['class' => 'form-check-label'])    
-                        ->enclosedByLabel(true)
+                        ->inputLabelAttributes(['class' => 'form-check-label'])  
                         ->inputClass('form-check-input')
                         ->ariaDescribedBy($translator->translate('i.tax_rate_default'))
                         ->disabled(true);

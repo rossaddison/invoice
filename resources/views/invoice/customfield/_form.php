@@ -110,8 +110,7 @@ use Yiisoft\Html\Tag\Form;
             <?= Html::closeTag('div'); ?>    
             <?= Html::openTag('div',['class' => 'form-group']); ?>
                 <?= Field::checkbox($form, 'required')
-                    ->inputLabelAttributes(['class' => 'form-check-label'])    
-                    ->enclosedByLabel(true)
+                    ->inputLabelAttributes(['class' => 'form-check-label'])  
                     ->inputClass('form-check-input')
                     ->ariaDescribedBy($translator->translate('invoice.custom.field.required'));
                 ?>

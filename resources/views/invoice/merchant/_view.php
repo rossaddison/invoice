@@ -61,8 +61,7 @@ use Yiisoft\Html\Tag\Form;
                 <?= Html::closeTag('div'); ?>    
                 <?= Html::openTag('div', ['class' => 'mb-3 form-group']); ?>
                 <?= Field::checkbox($form, 'successful')
-                    ->inputLabelAttributes(['class' => 'form-check-label'])    
-                    ->enclosedByLabel(true)
+                    ->inputLabelAttributes(['class' => 'form-check-label'])  
                     ->addInputAttributes([
                             'readonly' => 'readonly',
                             'disabled' => 'disabled'

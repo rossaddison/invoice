@@ -74,8 +74,7 @@ use Yiisoft\Arrays\ArrayHelper;
             $translator->translate('i.personal_information'),
             Html::openTag('div', ['class' => 'p-2']), 
                 Field::checkbox($form, 'client_active')
-                ->inputLabelAttributes(['class' => 'form-check-label'])    
-                ->enclosedByLabel(true)
+                ->inputLabelAttributes(['class' => 'form-check-label'])  
                 ->inputClass('form-check-input')
                 ->ariaDescribedBy($translator->translate('i.client_active')),
             Html::closeTag('div'),

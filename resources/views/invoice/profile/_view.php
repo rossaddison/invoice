@@ -43,7 +43,6 @@ use Yiisoft\Html\Tag\Form;
                 <?= Html::openTag('div', ['class' => 'mb-3 form-group']); ?>
                     <?= Field::checkbox($form, 'current')
                         ->inputLabelAttributes(['class' => 'form-check-label'])    
-                        ->enclosedByLabel(true)
                         ->disabled(true)
                         ->inputClass('form-check-input')
                         ->ariaDescribedBy($translator->translate('i.active'))
