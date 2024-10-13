@@ -43,7 +43,12 @@ use App\Widget\GridComponents;
 return [
   'mailer' => [
     'adminEmail' => 'admin@example.com',
-    'senderEmail' => 'sender@example.com',
+    /**
+     * Note: This setting is critical to the sending of emails since it is used in SettingsRepository getConfigSenderEmail()
+     * Used in critical function e.g src/Auth/Controller/SignUpController function signup amd 
+     * src/Auth/Controller/ForgotController function forgot 
+     */  
+    'senderEmail' => 'sender@your.web.site.domain.com',
   ],
   'yiisoft/aliases' => [
     'aliases' => [
@@ -172,7 +177,7 @@ return [
       'translator' => Reference::to(TranslatorInterface::class),
       // yii-invoice - Below parameters are specifically used in views/layout/invoice
       's' => Reference::to(SettingRepository::class),
-      'button' => Reference::to(Button::class), 
+      'button' => Reference::to(Button::class),  
       'session' => Reference::to(SessionInterface::class),
       'clientHelper' => Reference::to(ClientHelper::class),
       'countryHelper' => Reference::to(CountryHelper::class), 

@@ -13,7 +13,7 @@
 <p><s>7. Improve Generator index template using Yiisoft functions.</s></p>
 <p><s>8. Include Product images</s></p>
 <p>9. Integrate <code>https://github.com/php-finance/double-entry</code></p>
-<p>10. Remove all $s variables passed to views since the variable is definded under config/params.php</p>
+<p>10. Remove all $s variables passed to views since the variable is defined under config/params.php</p>
 <p>11. Upskilling on Docker. </p>
 <br>
 <code>
@@ -47,6 +47,28 @@
 <p>Introducing India's PayTm payment gateway's QR code method of payment and comparing this with Stripe's method.</p>
 <p>A General Sales Tax (GST) Tax System will have to be implemented first for this purpose.</p>
 <p>Testing Credit Notes against Invoices with refunds (if payment made) linked to each of the payment gateways.</p>
+<p><b>13th October 2024</b></p>
+<p><b>Forgot Password</b></p>
+<p>1. User clicks on 'I forgot my password' on login form. </p>
+<p>2. src/Auth/Controller/ForgotPasswordController. function forgot - Request Password Reset Token Form is presented for User to enter email address</p>
+<p>3. When the form is submitted, an email with a masked link is sent to the user's inbox.</p>
+<p>4a. A viewInjection site/forgotalert is presented encouraging the user to click on the link in their inbox.</p>
+<p>4b. A viewInjection site/forgotfailed is presented, if the sites senderEmail has not been setup encouraging the user to setup their config/common/params.php senderEmail.</p>
+<p>5. When the masked link is clicked, the src/Auth/ResetPasswordController.php function resetpassword unmasks the token.</p>
+<p>6. A form with a 'new password' field and a 'verify new password' field is presented if the now unmasked token matches the 32bit string in Token->token with type 'request-password-reset'</p>
+<p>7. As soon as this form is submitted, the following algorithm 
+       https://github.com/yiisoft/yii2-app-advanced/blob/master/frontend/models/ResetPasswordForm.php ia followed:</p> 
+<pre>
+   1.) setPassword in User 
+   2.) nullify PasswordResetToken by setting the Token:token to null but retaining the Token:type 
+       so that the token can no longer be used.  
+   3.) generateAuthKey in Identity
+</pre>
+<p>8. A viewInjection site/resetpasswordsuccess 'Password Reset' is shown if the password has changed.</p>
+<p>9. A viewInjection site/resetpasswordfailed 'An error occurred while trying to send your password reset email. 
+      Please review the application logs or contact the system administrator.' is shown if the password has failed.</p>
+<p>10. A logger interface records the failed error messages.</p>
+<p>11. Testing site one.com settings have been included in the shared hosting FAQ</P>
 <p><b>7th October 2024</b></p>
 <p><b>User signup: </b></p>
 <p>1. src/Auth/Controller/SignUpController function signup - Signup Form is hydrated or filled with login i.e. username, password, and email address</p>

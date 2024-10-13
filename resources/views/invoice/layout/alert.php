@@ -12,7 +12,6 @@ use Yiisoft\Yii\Bootstrap5\Alert;
 ?>
 
 <?php
-
 /**
  * @var array $flash->getAll()
  * @var array|string $value

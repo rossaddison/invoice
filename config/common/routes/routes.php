@@ -4,8 +4,10 @@ declare(strict_types=1);
 
 use App\Contact\ContactController;
 use App\Auth\Controller\AuthController;
-use App\Auth\Controller\SignupController;
 use App\Auth\Controller\ChangePasswordController;
+use App\Auth\Controller\ForgotPasswordController;
+use App\Auth\Controller\ResetPasswordController;
+use App\Auth\Controller\SignupController;
 use App\Controller\SiteController;
 use App\Controller\Actions\ApiInfo;
 use App\Middleware\AccessChecker;
@@ -100,6 +102,27 @@ return [
     Route::methods([Method::GET, Method::POST], '/contact')
     ->action([SiteController::class, 'contact'])
     ->name('site/contact'),
+    Route::methods([Method::GET, Method::POST], '/forgotalert')
+    ->action([SiteController::class, 'forgotalert'])
+    ->name('site/forgotalert'),
+    Route::methods([Method::GET, Method::POST], '/forgotemailfailed')
+    ->action([SiteController::class, 'forgotemailfailed'])
+    ->name('site/forgotemailfailed'),
+    Route::methods([Method::GET, Method::POST], '/forgotusernotfound')
+    ->action([SiteController::class, 'forgotusernotfound'])
+    ->name('site/forgotusernotfound'),
+    Route::methods([Method::GET, Method::POST], '/resetpasswordfailed')
+    ->action([SiteController::class, 'resetpasswordfailed'])
+    ->name('site/resetpasswordfailed'),
+    Route::methods([Method::GET, Method::POST], '/resetpasswordsuccess')
+    ->action([SiteController::class, 'resetpasswordsuccess'])
+    ->name('site/resetpasswordsuccess'),    
+    Route::methods([Method::GET, Method::POST], '/signupfailed')
+    ->action([SiteController::class, 'signupfailed'])
+    ->name('site/signupfailed'),
+    Route::methods([Method::GET, Method::POST], '/signupsuccess')
+    ->action([SiteController::class, 'signupsuccess'])
+    ->name('site/signupuccess')    ,
     // Auth
     Route::methods([Method::GET, Method::POST], '/login')
     ->middleware(LimitRequestsMiddleware::class)
@@ -108,6 +131,16 @@ return [
     Route::post('/logout')
     ->action([AuthController::class, 'logout'])
     ->name('auth/logout'),
+    Route::methods([Method::GET, Method::POST], '/forgotpassword')
+    ->middleware(fn(
+      ResponseFactoryInterface $responseFactory,
+      StorageInterface $storage
+      ) => new LimitRequestsMiddleware(new Counter($storage, 3, 3), $responseFactory))
+    ->action([ForgotPasswordController::class, 'forgot'])
+    ->name('auth/forgotpassword'), 
+    Route::methods([Method::GET, Method::POST], '/resetpassword/resetpassword/{token}')
+      ->action([ResetPasswordController::class, 'resetpassword'])
+      ->name('auth/resetpassword'),
     // email-verification token is masked before sending by email and must be unmasked after inbox click. Refer to userinv/signup
     Route::methods([Method::GET, Method::POST], '/signup')
     ->middleware(fn(
@@ -117,10 +150,6 @@ return [
     ->action([SignupController::class, 'signup'])
     ->name('auth/signup'),
     Route::methods([Method::GET, Method::POST], '/change')
-    ->middleware(fn(
-      ResponseFactoryInterface $responseFactory,
-      StorageInterface $storage
-      ) => new LimitRequestsMiddleware(new Counter($storage, 10, 10), $responseFactory))
     ->action([ChangePasswordController::class, 'change'])
     ->name('auth/change'),
     Group::create('/user')

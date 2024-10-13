@@ -17,10 +17,9 @@ use App\Service\WebControllerService;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Log\LoggerInterface;
-use Yiisoft\Html\Html;
+use Yiisoft\FormModel\FormHydrator;
 use Yiisoft\Html\Tag\A;
 use Yiisoft\Html\Tag\Body;
-use Yiisoft\FormModel\FormHydrator;
 use Yiisoft\Mailer\MailerInterface;
 use Yiisoft\Mailer\MessageBodyTemplate;
 use Yiisoft\Rbac\AssignmentsStorageInterface as Assignment;
@@ -29,10 +28,7 @@ use Yiisoft\Rbac\Manager as Manager;
 use Yiisoft\Rbac\RuleFactoryInterface as Rule;
 use Yiisoft\Router\CurrentRoute;
 use Yiisoft\Router\FastRoute\UrlGenerator;
-use Yiisoft\Security\Random;
 use Yiisoft\Security\TokenMask;
-use Yiisoft\Session\Flash\Flash;
-use Yiisoft\Session\SessionInterface as Session;
 use Yiisoft\Translator\TranslatorInterface as Translator;
 use Yiisoft\Yii\View\Renderer\ViewRenderer;
 
@@ -58,8 +54,6 @@ final class SignupController
         private Translator $translator,
         private UrlGenerator $urlGenerator, 
         private CurrentRoute $currentRoute,
-        private Session $session,    
-        private Flash $flash,
         private LoggerInterface $logger
     )
     {
@@ -76,12 +70,12 @@ final class SignupController
         $this->translator = $translator;
         $this->urlGenerator = $urlGenerator;
         $this->currentRoute = $currentRoute;
-        $this->session = $session;
-        $this->flash = new Flash($session);
         $this->logger = $logger;
     }
 
     /**
+     * @see src\ViewInjection\CommonViewInjection.php
+     * @see resources\views\site\signupfailed.php and signupsuccess.php
      * 
      * @param AuthService $authService
      * @param CurrentRoute $currentRoute
@@ -104,7 +98,11 @@ final class SignupController
         uR $uR    
     ): ResponseInterface {
         if (!$authService->isGuest()) {
-            return $this->redirectToMain();
+            return $this->webService->getRedirectResponse('site/index');
+        }
+        // check that symfony under Settings ... Email and the config/common/params.php mailer->senderEmail have been setup
+        if (($this->sR->get_setting('email_send_method') !== 'symfony') || ($this->sR->mailerEnabled() == false) || empty($this->sR->getConfigSenderEmail()))  {
+           return $this->webService->getRedirectResponse('site/forgotemailfailed'); 
         }
         if ($formHydrator->populateFromPostAndValidate($signupForm, $request)) {
             $user = $signupForm->signup();
@@ -135,7 +133,7 @@ final class SignupController
                 /**
                  * @see A new UserInv (extension table of user) for the user is created.
                  */
-                $htmlBody = $this->htmlBody($user, $uiR, $language, $_language, $randomAndTimeToken);
+                $htmlBody = $this->htmlBodyWithMaskedRandomAndTimeTokenLink($user, $uiR, $language, $_language, $randomAndTimeToken);
                 if (($this->sR->get_setting('email_send_method') == 'symfony') || ($this->sR->mailerEnabled() == true))  {
                     $email = $this->mailer
                     ->compose()
@@ -147,23 +145,18 @@ final class SignupController
                     ->withHtmlBody($htmlBody);    
                     try {
                         $this->mailer->send($email);
-                        $this->flash_message('info', $this->translator->translate('i.email_successfully_sent'));
-                    } catch (\Exception $e) {
-                        $this->flash_message('warning', $this->translator->translate('invoice.invoice.email.not.sent.successfully').
-                                                        "\n".
-                                                        $this->translator->translate('invoice.email.exception'). 
-                                                        "\n"); 
-                        $this->logger->error($e->getMessage());            
+                    } catch (\Exception $e) {                        
+                        $this->logger->error($e->getMessage());  
+                        return $this->webService->getRedirectResponse('site/signupfailed');
                     }
                 }    
             }
-            return $this->redirectToMain();
+            return $this->webService->getRedirectResponse('site/signupsuccess');
         }
         return $this->viewRenderer->render('signup', ['formModel' => $signupForm]);
     }
     
     /**
-     * 
      * @param User $user
      * @param uiR $uiR
      * @param string $language
@@ -171,7 +164,7 @@ final class SignupController
      * @param string $randomAndTimeToken
      * @return string
      */
-    private function htmlBody(User $user, uiR $uiR, string $language, string $_language, string $randomAndTimeToken) : string {
+    private function htmlBodyWithMaskedRandomAndTimeTokenLink(User $user, uiR $uiR, string $language, string $_language, string $randomAndTimeToken) : string {
         $tokenWithMask = TokenMask::apply($randomAndTimeToken);
         $userInv = new UserInv();
         if (null!==($userId = $user->getId())) {
@@ -197,6 +190,11 @@ final class SignupController
         return '';
     }
     
+    /**
+     * @param User $user
+     * @param tR $tR
+     * @return string
+     */
     private function getEmailVerificationToken(User $user, tR $tR) : string 
     {        
         $identity = $user->getIdentity();
@@ -208,23 +206,5 @@ final class SignupController
         $timeString = (string)($token->getCreated_at())->getTimestamp();
         // build the token
         return $emailVerificationToken = null!==$tokenString ? ($tokenString. '_' . $timeString) : '';
-    }
-
-    private function redirectToMain(): ResponseInterface
-    {
-        return $this->webService->getRedirectResponse('site/index');
-    }
-    
-    /**
-     * @param string $level
-     * @param string $message
-     * @return Flash|null
-     */
-    private function flash_message(string $level, string $message): Flash|null {
-        if (strlen($message) > 0 && $this->sR->get_setting('disable_flash_messages_inv') == '0') {
-            $this->flash->add($level, $message, true);
-            return $this->flash;
-        }
-        return null;
     }
 }

@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 use Yiisoft\FormModel\Field;
 use Yiisoft\Html\Html;
+use Yiisoft\Html\Tag\A;
 use Yiisoft\Html\Tag\Form;
 
 /**
@@ -51,6 +52,14 @@ $this->setTitle($translator->translate('i.login'));
                         ->name('login-button')
                         ->content($translator->translate('layout.submit')) ?>
                     <?= Form::tag()->close() ?>
+                    <?= Html::br(); ?>
+                    <?= A::tag()
+                        ->attribute('style', 'color:#999;text-decoration:none')
+                        ->addClass('my-1 mx-0')    
+                        ->href($urlGenerator->generate('auth/forgotpassword'))
+                        ->content($translator->translate('i.forgot_your_password'))
+                        ->render();
+                    ?>
                 </div>
             </div>
         </div>

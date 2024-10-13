@@ -468,7 +468,7 @@ return [
     'i.password'                                     => 'Password',
     'i.password_changed'                             => 'Password successfully changed',
     'i.password_reset'                               => 'Password Reset',
-    'i.password_reset_email'                         => 'You requested a new password for your Installation of InvoicePlane. Please click the following link to reset your password:',
+    'i.password_reset_email'                         => 'You requested a new password for your installation. Please click the link in your inbox to reset your password.',
     'i.password_reset_info'                          => 'You will get an Email with a link to reset your password.',
     'i.password_reset_failed'                        => 'An error occurred while trying to send your password reset email. Please review the application logs or contact the system administrator.',
     'i.pay_now'                                      => 'Pay Now',
@@ -1733,6 +1733,7 @@ return [
     'menu.testimonial' => 'Testimonial',
     'menu.users' => 'Users',
     'password.reset' => 'Reset Password',
+    'password.reset.request.token' => 'Request Password Reset Token',
     'password.change' => 'Change Password',
     'signup' => 'Signup',    
     /**

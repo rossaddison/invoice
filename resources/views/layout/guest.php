@@ -39,7 +39,6 @@ use Yiisoft\Html\Html;
 use Yiisoft\Html\Tag\Button;
 use Yiisoft\Html\Tag\Form;
 use Yiisoft\Html\Tag\Meta;
-
 use Yiisoft\Yii\Bootstrap5\Nav;
 use Yiisoft\Yii\Bootstrap5\NavBar;
 
@@ -335,7 +334,7 @@ if (null!== $currentPath) {
 ?>
 
 <div id="main-area">
-    <main class="container py-4">
+    <main class="container py-4">        
         <?php echo $content; ?>
         <div id="fullpage-loader" style="display: none">
             <div class="loader-content">

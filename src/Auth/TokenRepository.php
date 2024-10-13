@@ -25,15 +25,25 @@ final class TokenRepository extends Select\Repository implements IdentityWithTok
     }
     
     /**
-     * 
      * @param string $token
      * @param string $type 
      * @return Identity|null
      */
     public function findIdentityByToken(string $token, string $type = null): ?Identity
     {
-        $token_record =  $this->findOne(['token'=>$token, 'type' => $type]);
-        return null!==$token_record ? $token_record->getIdentity() : null;        
+        $tokenRecord =  $this->findOne(['token' => $token, 'type' => $type]);
+        return null!==$tokenRecord ? $tokenRecord->getIdentity() : null;        
+    }
+    
+    /**
+     * @param string $identityId
+     * @param string $type
+     * @return Token|null
+     */
+    public function findTokenByIdentityIdAndType(string $identityId, string $type = null) : ?Token
+    {
+        $tokenRecord = $this->findOne(['identity_id' => $identityId, 'type' => $type]);
+        return null!==$tokenRecord ? $tokenRecord : null;
     }
     
     /**
@@ -45,5 +55,4 @@ final class TokenRepository extends Select\Repository implements IdentityWithTok
     {
         $this->entityWriter->write([$token]);
     }
-    
 }

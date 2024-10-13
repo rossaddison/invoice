@@ -24,4 +24,38 @@ RewriteRule ^((?!public/).*)$ public/$1 [L,NC]<br></p>
 <p><b>No access to composer update</b><br>
 More than often on shared hosting you will not be able to run a composer update. 
    Your focus will be on replacing your vendor folder through SFTP/FTP e.g. filezilla, and your /config/.merge-plan.php file from your localhost setup.</p>
-
+<p><b>One.com Shared Hosting for testing rossaddison/invoice yii3i.co.uk</b></p>
+<p>config/common/params.php</p>
+<p><pre>
+'mailer' => [
+    'adminEmail' => 'admin@example.com',
+    /**
+     * Note: This setting is critical to the sending of emails since it is used in SettingsRepository getConfigSenderEmail()
+     * Used in critical function e.g src/Auth/Controller/SignUpController function signup amd 
+     * src/Auth/Controller/ForgotController function forgot 
+     */  
+    'senderEmail' => 'sender@your.web.site.domain.com'
+],
+'symfony/mailer' => [
+    'esmtpTransport' => [
+       'enabled' => true, 
+       'scheme' => 'smtp', // "smtps": using TLS, "smtp": without using TLS.
+       'host' => 'send.one.com',
+       'port' => 465,
+       'username' => --------------> same as senderEmail i.e sender@your.web.site.domain.com,
+       'password' => 'YourPasswordHere',
+       'options' => [], // See: https://symfony.com/doc/current/mailer.html#tls-peer-verification
+    ],
+],
+'yiisoft/yii-cycle => [
+    'connections' => [
+        'mysql' => new \Cycle\Database\Config\MySQLDriverConfig(
+            connection:
+            new \Cycle\Database\Config\MySQL\DsnConnectionConfig('mysql:host=localhost;dbname=domain_com',
+              'user_domain_com',   -------------> localhost 'root'
+              'password_domain_com'),    ----------------> localhost ''
+            driver: \Cycle\Database\Driver\MySQL\MySQLDriver::class,
+        ),
+    ],
+]    
+</pre></p>

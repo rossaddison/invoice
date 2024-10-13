@@ -41,5 +41,40 @@ final class SiteController
     public function contact(): \Yiisoft\DataResponse\DataResponse
     {
         return $this->viewRenderer->render('contact');
-    }    
+    }
+
+    public function forgotalert(): \Yiisoft\DataResponse\DataResponse
+    {
+        return $this->viewRenderer->render('forgotalert'); 
+    }
+    
+    public function forgotemailfailed(): \Yiisoft\DataResponse\DataResponse
+    {
+        return $this->viewRenderer->render('forgotemailfailed'); 
+    }
+    
+    public function forgotusernotfound(): \Yiisoft\DataResponse\DataResponse
+    {
+        return $this->viewRenderer->render('forgotusernotfound'); 
+    }
+
+    public function resetpasswordfailed(): \Yiisoft\DataResponse\DataResponse
+    {
+        return $this->viewRenderer->render('resetpasswordfailed'); 
+    }
+    
+    public function resetpasswordsuccess(): \Yiisoft\DataResponse\DataResponse
+    {
+        return $this->viewRenderer->render('resetpasswordsuccess'); 
+    }
+    
+    public function signupfailed(): \Yiisoft\DataResponse\DataResponse
+    {
+        return $this->viewRenderer->render('signupfailed'); 
+    }
+    
+    public function signupsuccess(): \Yiisoft\DataResponse\DataResponse
+    {
+        return $this->viewRenderer->render('signupsuccess'); 
+    }
 }

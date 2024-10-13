@@ -11,9 +11,9 @@ $config = [
     [
         'name' => 'PHP version',
         'mandatory' => true,
-        'condition' => version_compare(PHP_VERSION, '7.4.0', '>='),
+        'condition' => version_compare(PHP_VERSION, '8.3.0', '>='),
         'by' => '<a href="https://www.yiiframework.com">Yii Framework</a>',
-        'memo' => 'PHP 7.4.0 or higher is required.',
+        'memo' => 'PHP 8.3.0 or higher is required.',
     ],
     [
         'name' => 'PDO MySQL extension',

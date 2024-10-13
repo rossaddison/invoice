@@ -45,7 +45,11 @@ class Identity implements CookieLoginIdentityInterface
         }
         return null;
     }
-
+    
+    public function generateAuthKey() : void {
+        $this->authKey = Random::string(32);
+    }
+    
     public function getCookieLoginKey(): string
     {
         return $this->authKey;
@@ -60,9 +64,9 @@ class Identity implements CookieLoginIdentityInterface
     {
         return $this->authKey === $key;
     }
-    
+        
     /**
-     * Regenerate after logout
+     * Regenerate after logout / new Identity() after signing up 
      * @see src\Auth\AuthService logout function 
      * @return string
      */

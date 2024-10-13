@@ -84,6 +84,7 @@ final class CommonViewInjection implements CommonParametersInjectionInterface
                     );
         
         return [
+            'translator' => $this->translator,
             'url' => $this->url,
             'companyAddress1' => $companyAddress1 ?? '',
             'companyAddress2' => $companyAddress2 ?? '',
@@ -146,6 +147,29 @@ final class CommonViewInjection implements CommonParametersInjectionInterface
                 'address' => $this->translator->translate('site.soletrader.contact.address'),
                 'email' => $this->translator->translate('site.soletrader.contact.email'),
                 'phone' => $this->translator->translate('site.soletrader.contact.phone'),
+            ],
+            'forgotalert' => [
+                'passwordResetEmail' => $this->translator->translate('i.password_reset_email'),                
+            ],
+            'forgotemailfailed' => [
+                'passwordResetFailed' => $this->translator->translate('i.password_reset_failed'),
+                'invoiceEmailException' => $this->translator->translate('invoice.email.exception')
+            ],
+            'forgotusernotfound' => [
+                'loginAlertUserNotFound' => $this->translator->translate('i.loginalert_user_not_found'),
+            ],
+            'resetpasswordfailed' => [
+                'resetPasswordFailed' => $this->translator->translate('i.password_reset_failed')
+            ],
+            'resetpasswordsuccess' => [
+                'resetPasswordSuccess' => $this->translator->translate('i.password_reset')
+            ],
+            'signupfailed' => [
+                'emailNotSentSuccessfully' => $this->translator->translate('invoice.invoice.email.not.sent.successfully'),
+                'invoieEmailException' => $this->translator->translate('invoice.email.exception')
+            ],
+            'signupsuccess' => [
+                'emailSuccessfullySent' => $this->translator->translate('i.email.successfully.sent'),
             ]
         ];
     }
