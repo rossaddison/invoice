@@ -17,5 +17,6 @@ $alert =  Alert::widget()
         ->body((string)$forgotalert['passwordResetEmail'], true)
         ->type(AlertType::INFO)
         ->addClass('shadow')
+        ->dismissable(true)
         ->render();
 echo $alert;

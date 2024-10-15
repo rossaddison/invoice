@@ -36,7 +36,8 @@ final class FlashMessage extends Widget
                 $html[] = Alert::widget()
                     ->body((string)$message['body'], true)    
                     ->type($matchedType)
-                    ->addClass('shadow');
+                    ->addClass('shadow')
+                    ->dismissable(true);
             }
         }
         return implode($html);

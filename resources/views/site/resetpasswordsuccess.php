@@ -18,5 +18,6 @@ $alert = Alert::widget()
         ->body((string)$resetpasswordsuccess['resetPasswordSuccess'], true)
         ->type(AlertType::SUCCESS)
         ->addClass('shadow')
+        ->dismissable(true)
         ->render();
 echo $alert;

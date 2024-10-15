@@ -18,5 +18,6 @@ $alert = Alert::widget()
         ->body((string)$signupsuccess['emailSuccessfullySent'])
         ->type(AlertType::SUCCESS)
         ->addClass('shadow')
+        ->dismissable(true)
         ->render();
 echo $alert;

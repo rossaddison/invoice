@@ -20,5 +20,6 @@ $alert =  Alert::widget()
                "\n", true)
         ->type(AlertType::INFO)
         ->addClass('shadow')
+        ->dismissable(true)
         ->render();
 echo $alert;   

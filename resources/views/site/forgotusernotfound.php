@@ -17,5 +17,6 @@ $alert = Alert::widget()
         ->body((string)$forgotusernotfound['loginAlertUserNotFound'], true)
         ->type(AlertType::WARNING)
         ->addClass('shadow')
+        ->dismissable(true)
         ->render();
 echo $alert;

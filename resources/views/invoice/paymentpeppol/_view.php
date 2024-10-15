@@ -25,6 +25,7 @@ if (!empty($errors)) {
         echo Alert::widget()
              ->type(AlertType::DANGER)
              ->addClass('shadow')
+             ->dismissable(true)   
              ->body($field . ':' . $error, true);
     }
 }

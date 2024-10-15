@@ -38,6 +38,7 @@ foreach ($flash->getAll() as $key => $value) {
                 ->body($body, false)
                 ->addClass('shadow')
                 ->type($matchedKey)
+                ->dismissable(true)
                 ->render();
         echo $alert;
     }
