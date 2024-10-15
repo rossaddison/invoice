@@ -1,8 +1,10 @@
 <?php
+
 declare(strict_types=1); 
 
 use Yiisoft\Html\Html;
 use Yiisoft\Yii\Bootstrap5\Alert;
+use Yiisoft\Yii\Bootstrap5\AlertType;
 
 /**
  * @see App\Invoice\SalesOrderItem\SalesOrderItemController
@@ -29,7 +31,9 @@ if ($errors) {
      * @var string $error
      */
     foreach ($errors as $field => $error) {
-        echo Alert::widget()->options(['class' => 'alert-danger'])->body(Html::encode($field . ':' . $error));
+        echo Alert::widget()
+             ->type(AlertType::DANGER)
+             ->body($field . ':' . $error, true);
     }
 }
 $vat = $s->get_setting('enable_vat_registration') === '1' ? true : false;

@@ -3,6 +3,7 @@
 declare(strict_types=1);
 
 use Yiisoft\Yii\Bootstrap5\Alert;
+use Yiisoft\Yii\Bootstrap5\AlertType;
 
 /**
  * 
@@ -17,8 +18,7 @@ $alert = Alert::widget()
             "\n".
                (string)$signupfailed['invoiceEmailException']. 
             "\n")
-        ->options([
-            'class' => ['alert-warning shadow'],
-        ])
+        ->type(AlertType::DANGER)
+        ->addClass('shadow')
         ->render();
 echo $alert;

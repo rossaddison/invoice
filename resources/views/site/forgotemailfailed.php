@@ -3,6 +3,7 @@
 declare(strict_types=1);
 
 use Yiisoft\Yii\Bootstrap5\Alert;
+use Yiisoft\Yii\Bootstrap5\AlertType;
 
 /** * 
  * @see \src\ViewInjection\CommonViewInjection.php
@@ -16,9 +17,8 @@ $alert =  Alert::widget()
         ->body((string)$forgotemailfailed['passwordResetFailed'].
                "\n".
                (string)$forgotemailfailed['invoiceEmailException']. ' Check your config/common/params.php mailer senderEmail configuration'.
-               "\n")
-        ->options([
-            'class' => ['alert-warning shadow'],
-        ])
+               "\n", true)
+        ->type(AlertType::INFO)
+        ->addClass('shadow')
         ->render();
 echo $alert;   

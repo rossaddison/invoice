@@ -3,6 +3,7 @@
 declare(strict_types=1);
 
 use Yiisoft\Yii\Bootstrap5\Alert;
+use Yiisoft\Yii\Bootstrap5\AlertType;
 
 /**
  * @see \src\ViewInjection\CommonViewInjection.php
@@ -13,9 +14,8 @@ use Yiisoft\Yii\Bootstrap5\Alert;
  */
 
 $alert = Alert::widget()
-        ->body((string)$forgotusernotfound['loginAlertUserNotFound'])
-        ->options([
-            'class' => ['alert-warning shadow'],
-        ])
+        ->body((string)$forgotusernotfound['loginAlertUserNotFound'], true)
+        ->type(AlertType::WARNING)
+        ->addClass('shadow')
         ->render();
 echo $alert;
