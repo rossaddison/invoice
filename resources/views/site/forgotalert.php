@@ -14,9 +14,9 @@ use Yiisoft\Yii\Bootstrap5\AlertType;
  */
 
 $alert =  Alert::widget()
-        ->body((string)$forgotalert['passwordResetEmail'], true)
-        ->type(AlertType::INFO)
         ->addClass('shadow')
+        ->type(AlertType::INFO)
+        ->body((string)$forgotalert['passwordResetEmail'], true)
         ->dismissable(true)
         ->render();
 echo $alert;

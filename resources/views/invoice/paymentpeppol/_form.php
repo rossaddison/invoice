@@ -26,8 +26,9 @@ if (!empty($errors)) {
     foreach ($errors as $field => $error) {
         echo Alert::widget()
                 ->type(AlertType::DANGER)
+                ->body($field . ':' . $error, true)
                 ->dismissable(true)
-                ->body($field . ':' . $error, true);
+                ->render();
     }
 }
 

@@ -14,11 +14,11 @@ use Yiisoft\Yii\Bootstrap5\AlertType;
  */
 
 $alert = Alert::widget()
+        ->addClass('shadow')
+        ->type(AlertType::DANGER)
         ->body((string)$signupfailed['emailNotSentSuccessfully']. ' config/common/params.php mailer senderEmail check'.
             "\n".
                (string)$signupfailed['invoiceEmailException']. 
             "\n")
-        ->type(AlertType::DANGER)
-        ->addClass('shadow')
         ->render();
 echo $alert;

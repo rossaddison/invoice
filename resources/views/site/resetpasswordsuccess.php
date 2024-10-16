@@ -15,9 +15,9 @@ use Yiisoft\Yii\Bootstrap5\AlertType;
  */
 
 $alert = Alert::widget()
-        ->body((string)$resetpasswordsuccess['resetPasswordSuccess'], true)
-        ->type(AlertType::SUCCESS)
         ->addClass('shadow')
+        ->type(AlertType::SUCCESS)
+        ->body((string)$resetpasswordsuccess['resetPasswordSuccess'], true)
         ->dismissable(true)
         ->render();
 echo $alert;

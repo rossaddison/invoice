@@ -14,9 +14,9 @@ use Yiisoft\Yii\Bootstrap5\AlertType;
  */
 
 $alert = Alert::widget()
-        ->body((string)$forgotusernotfound['loginAlertUserNotFound'], true)
-        ->type(AlertType::WARNING)
         ->addClass('shadow')
+        ->type(AlertType::WARNING)
+        ->body((string)$forgotusernotfound['loginAlertUserNotFound'], true)
         ->dismissable(true)
         ->render();
 echo $alert;

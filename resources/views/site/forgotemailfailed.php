@@ -14,12 +14,12 @@ use Yiisoft\Yii\Bootstrap5\AlertType;
  */
 
 $alert =  Alert::widget()
+        ->addClass('shadow')
+        ->type(AlertType::INFO)
         ->body((string)$forgotemailfailed['passwordResetFailed'].
                "\n".
                (string)$forgotemailfailed['invoiceEmailException']. ' Check your config/common/params.php mailer senderEmail configuration'.
                "\n", true)
-        ->type(AlertType::INFO)
-        ->addClass('shadow')
         ->dismissable(true)
         ->render();
 echo $alert;   

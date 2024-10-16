@@ -18,7 +18,6 @@ final class FlashMessage extends Widget
     public function render(): string
     {
         $flashes = $this->flash->getAll();
-
         $html = [];
         /** @var array $data */
         foreach ($flashes as $type => $data) {
@@ -34,10 +33,11 @@ final class FlashMessage extends Widget
                     'default' => AlertType::INFO
                 };
                 $html[] = Alert::widget()
-                    ->body((string)$message['body'], true)    
-                    ->type($matchedType)
                     ->addClass('shadow')
-                    ->dismissable(true);
+                    ->type($matchedType)
+                    ->body((string)$message['body'], true)    
+                    ->dismissable(true)
+                   ->render();
             }
         }
         return implode($html);

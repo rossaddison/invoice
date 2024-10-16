@@ -33,8 +33,9 @@ if ($errors) {
     foreach ($errors as $field => $error) {
         echo Alert::widget()
              ->type(AlertType::DANGER)
-             ->dismissable(true)    
-             ->body($field . ':' . $error, true);
+             ->body($field . ':' . $error, true)   
+             ->dismissable(true)
+             ->render();
     }
 }
 $vat = $s->get_setting('enable_vat_registration') === '1' ? true : false;

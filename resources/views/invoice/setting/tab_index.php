@@ -23,6 +23,7 @@ declare(strict_types=1);
  * @var string $storecove
  * @var string $invoiceplane
  * @var string $qrcode
+ * @var string $telegram
  * @psalm-var array<string, Stringable|null|scalar> $actionArguments
  * 
  */
@@ -83,6 +84,9 @@ echo $alert;
     </li>
     <li class="nav-item" role="presentation">
         <button class="nav-link" data-bs-toggle="tab" data-bs-target="#settings-qrcode" style="text-decoration: none"><?= $translator->translate('invoice.invoice.qr.code'); ?></button>
+    </li>
+    <li class="nav-item" role="presentation">
+        <button class="nav-link" data-bs-toggle="tab" data-bs-target="#settings-telegram" style="text-decoration: none"><i class="bi bi-telegram"><?= $translator->translate('invoice.invoice.telegram'); ?></i></button>
     </li>
 </ul>
 
@@ -152,6 +156,10 @@ echo $alert;
             
             <div id="settings-qrcode" class="tab-pane" role="tabpanel" aria-labelledby="settings-qrcode">
                 <?= $qrcode; ?>
+            </div>
+            
+            <div id="settings-telegram" class="tab-pane" role="tabpanel" aria-labelledby="settings-telegram">
+                <?= $telegram; ?>
             </div>
 
         </div>
