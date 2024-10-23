@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 use Yiisoft\Html\Html;
 use Yiisoft\Yii\Bootstrap5\Alert;
-use Yiisoft\Yii\Bootstrap5\AlertType;
+use Yiisoft\Yii\Bootstrap5\AlertVariant;
 
 /**
  * @var Yiisoft\DataResponse\DataResponse $response
@@ -25,7 +25,7 @@ if (!empty($errors)) {
      */
     foreach ($errors as $field => $error) {
         echo Alert::widget()
-                ->type(AlertType::DANGER)
+                ->variant(AlertVariant::DANGER)
                 ->body($field . ':' . $error, true)
                 ->dismissable(true)
                 ->render();

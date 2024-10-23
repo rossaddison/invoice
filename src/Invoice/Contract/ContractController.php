@@ -80,6 +80,8 @@ final class ContractController
          * @var string $query_params['page']
          */
         $page = $query_params['page'] ?? $currentRoute->getArgument('page', '1');
+        /** @psalm-var positive-int $currentPageNeverZero */
+        $currentPageNeverZero = $page > 0 ? $page : 1; 
         /** @var string $query_params['sort'] */
         $sort = Sort::only(['id', 'client_id', 'name', 'reference'])
             // (@see vendor\yiisoft\data\src\Reader\Sort
@@ -90,7 +92,7 @@ final class ContractController
         $this->flash_message('info',$this->translator->translate('invoice.invoice.contract.create'));
         $paginator = (new OffsetPaginator($contracts))
         ->withPageSize((int)$sR->get_setting('default_list_limit'))
-        ->withCurrentPage((int)$page)
+        ->withCurrentPage($currentPageNeverZero)
         ->withToken(PageToken::next((string)$page)); 
         $parameters = [
             'alert' => $this->alert(),

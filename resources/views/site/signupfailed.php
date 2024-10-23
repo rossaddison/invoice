@@ -3,7 +3,7 @@
 declare(strict_types=1);
 
 use Yiisoft\Yii\Bootstrap5\Alert;
-use Yiisoft\Yii\Bootstrap5\AlertType;
+use Yiisoft\Yii\Bootstrap5\AlertVariant;
 
 /**
  * 
@@ -15,7 +15,7 @@ use Yiisoft\Yii\Bootstrap5\AlertType;
 
 $alert = Alert::widget()
         ->addClass('shadow')
-        ->type(AlertType::DANGER)
+        ->variant(AlertVariant::DANGER)
         ->body((string)$signupfailed['emailNotSentSuccessfully']. ' config/common/params.php mailer senderEmail check'.
             "\n".
                (string)$signupfailed['invoiceEmailException']. 

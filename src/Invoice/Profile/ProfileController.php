@@ -60,11 +60,13 @@ final class ProfileController
     public function index(CurrentRoute $currentRoute, ProfileRepository $profileRepository, SettingRepository $settingRepository): \Yiisoft\DataResponse\DataResponse
     {      
         $page = (int)$currentRoute->getArgument('page', '1');
+        /** @psalm-var positive-int $currentPageNeverZero */
+        $currentPageNeverZero = $page > 0 ? $page : 1;
         $canEdit = $this->rbac();
         $this->flash_message('info', $this->translator->translate('invoice.profile.new'));
         $paginator = (new OffsetPaginator($this->profiles($profileRepository)))
         ->withPageSize((int) $settingRepository->get_setting('default_list_limit'))
-        ->withCurrentPage($page);
+        ->withCurrentPage($currentPageNeverZero);
         
         $parameters = [
             'canEdit' => $canEdit,

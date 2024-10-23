@@ -68,13 +68,15 @@ final class CustomFieldController
          * @var string $query_params['page']
          */
         $page = $query_params['page'] ?? 1;
+        /** @psalm-var positive-int $currentPageNeverZero */
+        $currentPageNeverZero = $page > 0 ? $page : 1;
          /** @var string $query_params['sort'] */
         $sort = Sort::only(['id'])
                 ->withOrderString($query_params['sort'] ?? '-id');
         $customFields = $this->customFieldsWithSort($customfieldRepository, $sort);
         $paginator = (new DataOffsetPaginator($customFields))
         ->withPageSize((int)$settingRepository->get_setting('default_list_limit'))
-        ->withCurrentPage((int)$page)
+        ->withCurrentPage($currentPageNeverZero)
         ->withToken(PageToken::next((string)$page));          
         $this->rbac();
         $this->flash_message('info' , $this->viewRenderer->renderPartialAsString('//invoice/info/custom_field'));

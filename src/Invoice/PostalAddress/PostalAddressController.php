@@ -171,10 +171,12 @@ final class PostalAddressController
                           #[RouteArgument('page')] string $page= '1' 
             ): Response
     {      
+        /** @psalm-var positive-int $currentPageNeverZero */
+        $currentPageNeverZero = $page > 0 ? $page : 1;
         $postaladdresses = $this->postaladdresses($postaladdressRepository); 
         $paginator = (new OffsetPaginator($postaladdresses))
         ->withPageSize((int)$settingRepository->get_setting('default_list_limit'))
-        ->withCurrentPage((int)$page)        
+        ->withCurrentPage($currentPageNeverZero)        
         ->withToken(PageToken::next($page)); 
       $parameters = [
         'canEdit' => ($this->userService->hasPermission('viewInv') && $this->userService->hasPermission('editInv')) ? true : false,  

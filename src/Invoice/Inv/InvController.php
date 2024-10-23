@@ -1862,7 +1862,7 @@ final class InvController {
                         // numbered tiles between the arrrows                
                         'maxNavLinkCount' => 10,
                         'invStatuses' => $inv_statuses,
-                        'page' => $page,
+                        'page' => (int)$page > 0 ? (int)$page : 1,
                         // Clicking on a grid column sort hyperlink will generate a url query_param eg. ?sort=
                         'sortOrder' => $querySort ?? '',
                         'sortString' => $sortString,
@@ -2027,7 +2027,7 @@ final class InvController {
                 'invs' => $invs,
                 'inv_statuses' => $inv_statuses,
                 'max' => (int) $this->sR->get_setting('default_list_limit'),
-                'page' => $page,
+                'page' => (int)$page > 0 ? (int)$page : 1,
                 'status' => $status,
                 'qR' => $qR,
                 'dlR' => $dlR,

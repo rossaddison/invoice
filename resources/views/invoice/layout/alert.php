@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 use Stringable;
 use Yiisoft\Yii\Bootstrap5\Alert;
-use Yiisoft\Yii\Bootstrap5\AlertType;
+use Yiisoft\Yii\Bootstrap5\AlertVariant;
 use Yiisoft\Html\Tag\Body;
 
 /**
@@ -26,17 +26,19 @@ foreach ($flash->getAll() as $key => $value) {
          */  
         foreach ($value as $key2 => $body) {
             $matchedKey = match ($key) {
-                'danger' => AlertType::DANGER,
-                'info' => AlertType::INFO,
-                'primary' => AlertType::PRIMARY,
-                'secondary' => AlertType::SECONDARY,
-                'success' => AlertType::SUCCESS,
-                'warning' => AlertType::WARNING,
-                'default' => AlertType::INFO
+                'danger' => AlertVariant::DANGER,
+                'info' => AlertVariant::INFO,
+                'primary' => AlertVariant::PRIMARY,
+                'secondary' => AlertVariant::SECONDARY,
+                'success' => AlertVariant::SUCCESS,
+                'warning' => AlertVariant::WARNING,
+                'light' => AlertVariant::LIGHT,
+                'dark' => AlertVariant::DARK,
+                'default' => AlertVariant::INFO
             };
             $alert = Alert::widget()
                      ->addClass('shadow')
-                     ->type($matchedKey)
+                     ->variant($matchedKey)
                      // do not html encode since not user-generted code.
                      ->body($body, false)
                      ->dismissable(true)

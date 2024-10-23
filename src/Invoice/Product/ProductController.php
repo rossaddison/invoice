@@ -463,6 +463,8 @@ class ProductController
          * @var string $query_params['page']
          */
         $currentPage = $query_params['page'] ?? $page;
+        /** @psalm-var positive-int $currentPageNeverZero */
+        $currentPageNeverZero = (int)$currentPage > 0 ? (int)$currentPage : 1;
         
         /** @var string $query_params['sort'] */
         $sortString = $query_params['sort'] ?? '-id';
@@ -489,7 +491,7 @@ class ProductController
         }  
         $paginator = (new DataOffsetPaginator($products))
         ->withPageSize((int)$sR->get_setting('default_list_limit'))
-        ->withCurrentPage((int)$currentPage)
+        ->withCurrentPage($currentPageNeverZero)
         ->withToken(PageToken::next($currentPage)); 
         $parameters = [
             'alert' => $this->alert(),

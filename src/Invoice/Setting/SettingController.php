@@ -100,9 +100,11 @@ final class SettingController
     public function debug_index(CurrentRoute $currentRoute): \Yiisoft\DataResponse\DataResponse
     {  
         $pageNum = (int)$currentRoute->getArgument('page', '1');
+        /** @psalm-var positive-int $currentPageNeverZero */
+        $currentPageNeverZero = $pageNum > 0 ? $pageNum : 1;
         $paginator = (new OffsetPaginator($this->settings($this->s)))
         ->withPageSize((int)$this->s->get_setting('default_list_limit'))
-        ->withCurrentPage($pageNum);
+        ->withCurrentPage($currentPageNeverZero);
         $canEdit = $this->rbac(); 
         $parameters = [
           'paginator' => $paginator,
@@ -230,6 +232,8 @@ final class SettingController
                 'actionImportArguments' => ['_language' => 'en'],
             ]),
             'qrcode' => $this->viewRenderer->renderPartialAsString('//invoice/setting/views/partial_settings_qr_code',[
+            ]),
+            'telegram' => $this->viewRenderer->renderPartialAsString('//invoice/setting/views/partial_settings_telegram',[
             ])
         ];
         if ($request->getMethod() === Method::POST) {

@@ -3,7 +3,7 @@
 declare(strict_types=1);
 
 use Yiisoft\Yii\Bootstrap5\Alert;
-use Yiisoft\Yii\Bootstrap5\AlertType;
+use Yiisoft\Yii\Bootstrap5\AlertVariant;
 
 /**
  * @see \src\ViewInjection\CommonViewInjection.php
@@ -15,7 +15,7 @@ use Yiisoft\Yii\Bootstrap5\AlertType;
 
 $alert =  Alert::widget()
         ->addClass('shadow')
-        ->type(AlertType::INFO)
+        ->variant(AlertVariant::INFO)
         ->body((string)$forgotalert['passwordResetEmail'], true)
         ->dismissable(true)
         ->render();

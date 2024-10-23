@@ -87,6 +87,8 @@ final class UploadController {
          * @var string $query_params['page']
          */
         $page = $query_params['page'] ?? $currentRoute->getArgument('page', '1');
+        /** @psalm-var positive-int $currentPageNeverZero */
+        $currentPageNeverZero = (int)$page > 0 ? (int)$page : 1;
         /** @var string $query_params['sort'] */
         $sort = Sort::only(['id', 'client_id', 'file_name_original'])
                 // (@see vendor\yiisoft\data\src\Reader\Sort
@@ -95,8 +97,8 @@ final class UploadController {
                 ->withOrderString($query_params['sort'] ?? '-id');
         $uploads = $this->uploads_with_sort($uploadRepository, $sort);
         $paginator = (new OffsetPaginator($uploads))
-                ->withPageSize((int) $this->s->get_setting('default_list_limit'))
-                ->withCurrentPage((int)$page)
+                ->withPageSize((int)$this->s->get_setting('default_list_limit'))
+                ->withCurrentPage($currentPageNeverZero)
                 ->withToken(PageToken::next((string)$page));
 
         $parameters = [
