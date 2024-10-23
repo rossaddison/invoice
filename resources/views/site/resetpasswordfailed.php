@@ -3,7 +3,7 @@
 declare(strict_types=1);
 
 use Yiisoft\Yii\Bootstrap5\Alert;
-use Yiisoft\Yii\Bootstrap5\AlertType;
+use Yiisoft\Yii\Bootstrap5\AlertVariant;
 
 /**
  * 
@@ -16,7 +16,7 @@ use Yiisoft\Yii\Bootstrap5\AlertType;
 
 $alert = Alert::widget()
         ->addClass('shadow')
-        ->type(AlertType::WARNING)
+        ->variant(AlertVariant::WARNING)
         ->body((string)$resetpasswordfailed['resetPasswordFailed'], true)
         ->dismissable(true)
         ->render();

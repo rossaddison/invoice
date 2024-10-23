@@ -881,6 +881,7 @@ final class InvoiceController
             // Invoice deletion by Law is not allowed. Invoices have to be cancelled with a credit invoice/note.
             'enable_invoice_deletion' => true,
             'enable_peppol_client_defaults' => 1,
+            'enable_telegram' => 0,
             'enable_vat_registration'=> 0,
             // Archived pdfs are automatically sent to customers from view/invoice...Options...Send
             // The pdf is sent along with the attachment to the invoice on the view/invoice.
@@ -939,7 +940,12 @@ final class InvoiceController
             'sumex_canton' => 1,
             'sumex_role' => 1,
             'sumex_place' => 1,
-            'tax_rate_decimal_places' => 2, 
+            'tax_rate_decimal_places' => 2,
+            'telegram_chat_id' => '',
+            'telegram_payment_notifications' => 0,
+            'telegram_token' => '',
+            'telegram_webhook_secret_token' => '',
+            'telegram_test_message_use' => 1,
             'thousands_separator' => ',',
             'time_zone' => 'Europe/London'
         ]; 

@@ -236,6 +236,8 @@ final class UserInvController
     {      
         $canEdit = $this->rbac();
         $pageString = $queryPage ?? $page;
+        /** @psalm-var positive-int $currentPageNeverZero */
+        $currentPageNeverZero = (int)$pageString > 0 ? (int)$pageString : 1;
         $activeInt = (int)$active;
         $sortString = $querySort ?? '-user_id';
         $sort = Sort::only(['user_id', 'name', 'email'])          
@@ -249,7 +251,7 @@ final class UserInvController
          */
         $paginator = (new OffsetPaginator($userinvs))        
         ->withPageSize((int)$sR->get_setting('default_list_limit'))
-        ->withCurrentPage((int)$pageString)               
+        ->withCurrentPage($currentPageNeverZero)               
         ->withToken(PageToken::next($pageString));   
         $parameters = [
             'cR' => $cR,

@@ -1381,7 +1381,8 @@ final class QuoteController
          * @var string $query_params['page']
          */
         $pageMixed = $query_params['page'] ?? $page;
-        
+        /** @psalm-var positive-int $currentPageNeverZero */
+        $currentPageNeverZero = (int)$pageMixed > 0 ? (int)$pageMixed : 1;
         /**
          * @var string|null $query_params['sort']
          */
@@ -1425,7 +1426,7 @@ final class QuoteController
                     } 
                     $paginator = (new DataOffsetPaginator($quotes))
                     ->withPageSize((int)$this->sR->get_setting('default_list_limit'))
-                    ->withCurrentPage((int)$pageMixed)
+                    ->withCurrentPage($currentPageNeverZero)
                     ->withSort($sort)            
                     ->withToken(PageToken::next((string)$pageMixed));            
                     $quote_statuses = $qR->getStatuses($this->translator);
@@ -1516,9 +1517,11 @@ final class QuoteController
              * @var string $query_params['page']
              */
             $page = $query_params['page'] ?? $page;
+            /** @psalm-var positive-int $currentPageNeverZero */
+            $currentPageNeverZero = (int)$page > 0 ? (int)$page : 1;
             //status 0 => 'all';
             $status = (int)$status;
-           /** @var string $query_params['sort'] */
+            /** @var string $query_params['sort'] */
             $sortString = $query_params['sort'] ?? '-id';$urlCreator = new UrlCreator($this->url_generator);
             $order =  OrderHelper::stringToArray($sortString);
             $urlCreator->__invoke([], $order);
@@ -1540,7 +1543,7 @@ final class QuoteController
             } 
             $paginator = (new DataOffsetPaginator($quotes))
             ->withPageSize((int)$this->sR->get_setting('default_list_limit'))
-            ->withCurrentPage((int)$page)
+            ->withCurrentPage($currentPageNeverZero)
             ->withSort($sort)            
             ->withToken(PageToken::next($page));    
             $quote_statuses = $quoteRepo->getStatuses($this->translator);
@@ -1554,7 +1557,7 @@ final class QuoteController
                 'optionsDataClientsDropdownFilter' => $this->optionsDataClients($quoteRepo),
                 'grid_summary' => $sR->grid_summary(
                     $paginator, 
-                    $this->translator, 
+                    $this->translator,
                     (int)$sR->get_setting('default_list_limit'), 
                     $this->translator->translate('invoice.quotes'), 
                     $quoteRepo->getSpecificStatusArrayLabel((string)$status)

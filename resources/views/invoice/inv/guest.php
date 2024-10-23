@@ -46,9 +46,9 @@ use Yiisoft\Yii\DataView\YiiRouter\UrlCreator;
  * @var string $csrf
  * @var string $label
  * @var string $modal_add_quote
- * @var string $page
  * @var string $sortString
- * @var string $status
+ * @var string $status 
+ * @psalm-var positive-int $page 
  * @psalm-var array<array-key, array<array-key, string>|string> $optionsDataInvNumberDropDownFilter
  */
 
@@ -259,9 +259,9 @@ echo $alert;
     
     $sortedAndPagedPaginator = (new OffsetPaginator($invs))
                         ->withPageSize($userInvListLimit ?: 10)
-                        ->withCurrentPage((int)$page)
+                        ->withCurrentPage($page)
                         ->withSort($sort)  
-                        ->withToken(PageToken::next($page));   
+                        ->withToken(PageToken::next((string)$page));   
     
           
     $toolbarString = Form::tag()->post($urlGenerator->generate('inv/guest'))->csrf($csrf)->open() .

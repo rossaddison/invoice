@@ -70,9 +70,11 @@ final class GroupController
     public function index(GroupRepository $groupRepository, SettingRepository $settingRepository, Request $request, GroupService $service): \Yiisoft\DataResponse\DataResponse
     {    
         $page = (int)$request->getAttribute('page', '1');
+        /** @psalm-var positive-int $currentPageNeverZero */
+        $currentPageNeverZero = $page > 0 ? $page : 1;
         $paginator = (new DataOffsetPaginator($this->groups($groupRepository)))
         ->withPageSize((int)$settingRepository->get_setting('default_list_limit'))
-        ->withCurrentPage($page)
+        ->withCurrentPage($currentPageNeverZero)
         ->withToken(PageToken::next((string)$page));
         // Generate a flash message in the index if the user does not have permission 
         $this->rbac();

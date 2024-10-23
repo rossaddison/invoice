@@ -116,11 +116,13 @@ final class ProductPropertyController
      */    
     public function index(CurrentRoute $currentRoute, ProductPropertyRepository $productpropertyRepository, SettingRepository $settingRepository): Response
     {      
-      $page = (int) $currentRoute->getArgument('page', '1');
+      $page = (int)$currentRoute->getArgument('page', '1');
+      /** @psalm-var positive-int $currentPageNeverZero */
+      $currentPageNeverZero = $page > 0 ? $page : 1;
       $productproperty = $productpropertyRepository->findAllPreloaded();
       $paginator = (new OffsetPaginator($productproperty))
       ->withPageSize((int) $settingRepository->get_setting('default_list_limit'))
-      ->withCurrentPage($page)
+      ->withCurrentPage($currentPageNeverZero)
       ->withToken(PageToken::next((string)$page));
       $parameters = [
         'productpropertys' => $this->productpropertys($productpropertyRepository),

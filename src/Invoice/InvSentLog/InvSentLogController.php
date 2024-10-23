@@ -100,6 +100,8 @@ final class InvSentLogController
                 $userInvListLimit = $userinv->getListLimit();   
                 $invsentlogs = $islR->withUser($userId);
                 $finalPage = $queryPage ?? $page;
+                /** @psalm-var positive-int $currentPageNeverZero */
+                $currentPageNeverZero = (int)$finalPage > 0 ? (int)$finalPage : 1;
                 if (isset($queryFilterInvNumber) && !empty($queryFilterInvNumber)) {
                     $invsentlogs = $islR->filterInvNumber($queryFilterInvNumber);
                 }
@@ -112,7 +114,7 @@ final class InvSentLogController
                 }
                 $paginator = (new OffsetPaginator($invsentlogs))
                 ->withPageSize(null!== $userInvListLimit ? $userInvListLimit : 10)
-                ->withCurrentPage((int)$finalPage)
+                ->withCurrentPage($currentPageNeverZero)
                 ->withToken(PageToken::next($finalPage));
                 $parameters = [
                     'paginator' => $paginator,
@@ -150,6 +152,8 @@ final class InvSentLogController
     {      
         $invsentlogs = $islR->findAllPreloaded();
         $finalPage = $queryPage ?? $page;
+        /** @psalm-var positive-int $currentPageNeverZero */
+        $currentPageNeverZero = (int)$finalPage > 0 ? (int)$finalPage : 1;
         if (isset($queryFilterInvNumber) && !empty($queryFilterInvNumber)) {
             $invsentlogs = $islR->filterInvNumber($queryFilterInvNumber);
         }
@@ -162,7 +166,7 @@ final class InvSentLogController
         }
         $paginator = (new OffsetPaginator($invsentlogs))
         ->withPageSize((int)$settingRepository->get_setting('default_list_limit'))
-        ->withCurrentPage((int)$finalPage)
+        ->withCurrentPage($currentPageNeverZero)
         ->withToken(PageToken::next($finalPage));
         $parameters = [
             'paginator' => $paginator,

@@ -23,6 +23,13 @@ $config = [
         'memo' => 'Required for MySQL database.',
     ],
     [
+        'name' => 'cURL',
+        'mandatory' => false,
+        'condition' => extension_loaded('curl'),
+        'by' => '<a href="https://github.com/php-http/curl-client">cURL </a>',
+        'memo' => 'Required for the Telegram Bot Api for sending payment notification messages to an admin mobile when clients pay online.',
+    ],
+    [
         'name' => 'Intl extension',
         'mandatory' => false,
         'condition' => $requirementsChecker->checkPhpExtensionVersion('intl', '1.0.2', '>='),

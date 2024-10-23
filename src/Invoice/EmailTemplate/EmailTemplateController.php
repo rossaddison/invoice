@@ -66,11 +66,14 @@ final class EmailTemplateController
      */
     public function index(CurrentRoute $currentRoute, EmailTemplateRepository $emailtemplateRepository, SettingRepository $settingRepository): \Yiisoft\DataResponse\DataResponse
     {
+        $page = (int)$currentRoute->getArgument('page', '1');
+        /** @psalm-var positive-int $currentPageNeverZero */
+        $currentPageNeverZero = $page > 0 ? $page : 1;
         $this->rbac(); 
         $parameters = [              
             'paginator' => (new OffsetPaginator($this->emailtemplates($emailtemplateRepository)))
                             ->withPageSize((int)$settingRepository->get_setting('default_list_limit'))
-                            ->withCurrentPage((int)$currentRoute->getArgument('page', '1')),
+                            ->withCurrentPage($currentPageNeverZero),
             'alert' => $this->alert(),
             'email_templates' => $this->emailtemplates($emailtemplateRepository),
         ];    

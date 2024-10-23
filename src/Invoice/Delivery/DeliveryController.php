@@ -151,6 +151,8 @@ final class DeliveryController {
          * @var string $query_params['page']
          */
         $page = $query_params['page'] ?? $currentRoute->getArgument('page', '1');
+        /** @psalm-var positive-int $currentPageNeverZero */
+        $currentPageNeverZero = (int)$page > 0 ? (int)$page : 1;
         /** @var string $query_params['sort'] */
         $sort = Sort::only(['id', 'delivery_location_id'])
                 // (@see vendor\yiisoft\data\src\Reader\Sort
@@ -160,7 +162,7 @@ final class DeliveryController {
         $deliveries = $this->deliveries_with_sort($dR, $sort);
         $paginator = (new OffsetPaginator($deliveries))
                 ->withPageSize((int) $sR->get_setting('default_list_limit'))
-                ->withCurrentPage((int)$page)
+                ->withCurrentPage($currentPageNeverZero)
                 ->withToken(PageToken::next((string)$page));
         $parameters = [
             'alert' => $this->alert(),

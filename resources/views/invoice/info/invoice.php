@@ -47,6 +47,26 @@
 <p>Introducing India's PayTm payment gateway's QR code method of payment and comparing this with Stripe's method.</p>
 <p>A General Sales Tax (GST) Tax System will have to be implemented first for this purpose.</p>
 <p>Testing Credit Notes against Invoices with refunds (if payment made) linked to each of the payment gateways.</p>
+<p><b>23rd October 2024</b></p>
+<p><b>Telegram</b></p>
+<p>1. 10 step instructions for using Telegram under Settings ... View ... Telegram tab to setup client/customer payment notifications</p> 
+<p>2. getUpdates tested and functional</p>
+<p>3. A webhook is currently not being used because payment notifications are being sent to the admin only. No messages are being sent from customers.</p>
+<p>4. Currently messages from the admin's telegram account to the bot can be retrieved using the manual getUpdates</p>
+<pre>
+    $settingRepositoryTelegramToken = $settingRepository->get_setting('telegram_token');
+    // chat id of first message (usually admin's personal non-bot telegram chat id) sent to bot
+    // since the admin will be receiving payment notification messages from the bot
+    $telegramChatId = $settingRepository->get_setting('telegram_chat_id');
+    $telegramHelper = new TelegramHelper(
+        $settingRepositoryTelegramToken, 
+        $this->logger
+    );
+    $this->telegramBotApi = $telegramHelper->getBotApi();
+    $sendMessage = $this->telegramBotApi->sendMessage($telegramChatId, 'Hello World');
+</pre>
+</p>
+<p>5. Next: Use Telegram to automatically send a Telegram Invoice to any client that is in the chat group.</p>
 <p><b>13th October 2024</b></p>
 <p><b>Forgot Password</b></p>
 <p>1. User clicks on 'I forgot my password' on login form. </p>
@@ -57,7 +77,7 @@
 <p>5. When the masked link is clicked, the src/Auth/ResetPasswordController.php function resetpassword unmasks the token.</p>
 <p>6. A form with a 'new password' field and a 'verify new password' field is presented if the now unmasked token matches the 32bit string in Token->token with type 'request-password-reset'</p>
 <p>7. As soon as this form is submitted, the following algorithm 
-       https://github.com/yiisoft/yii2-app-advanced/blob/master/frontend/models/ResetPasswordForm.php ia followed:</p> 
+       https://github.com/yiisoft/yii2-app-advanced/blob/master/frontend/models/ResetPasswordForm.php is followed:</p> 
 <pre>
    1.) setPassword in User 
    2.) nullify PasswordResetToken by setting the Token:token to null but retaining the Token:type 

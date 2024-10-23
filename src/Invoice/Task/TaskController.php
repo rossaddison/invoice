@@ -86,9 +86,11 @@ final class TaskController
     public function index(Request $request, tR $tR, prjctR $prjctR, sR $sR) : \Yiisoft\DataResponse\DataResponse
     {            
         $pageNum = (int)$request->getAttribute('page','1');
+        /** @psalm-var positive-int $currentPageNeverZero */
+        $currentPageNeverZero = $pageNum > 0 ? $pageNum : 1;
         $paginator = (new OffsetPaginator($this->tasks($tR)))
         ->withPageSize((int)$sR->get_setting('default_list_limit'))
-        ->withCurrentPage($pageNum);      
+        ->withCurrentPage($currentPageNeverZero);      
         $canEdit = $this->rbac();
         $parameters = [
             'paginator' => $paginator,

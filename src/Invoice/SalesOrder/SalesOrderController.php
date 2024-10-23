@@ -163,6 +163,8 @@ final class SalesOrderController
          * @var string $query_params['page']
          */
         $pageNum = $query_params['page'] ?? $currentRoute->getArgument('page', '1');
+        /** @psalm-var positive-int $currentPageNeverZero */
+        $currentPageNeverZero = (int)$pageNum > 0 ? (int)$pageNum : 1;
          //status 0 => 'all';
         $status = (int)$currentRoute->getArgument('status', '0');
         /** @psalm-suppress MixedAssignment $sort_string */
@@ -193,7 +195,7 @@ final class SalesOrderController
                     $salesOrders = $this->salesorders_status_with_sort_guest($soR, $status, $user_clients, $sort);
                     $paginator = (new OffsetPaginator($salesOrders))
                     ->withPageSize((int)$this->sR->get_setting('default_list_limit'))
-                    ->withCurrentPage((int)$pageNum);
+                    ->withCurrentPage($currentPageNeverZero);
                     /**
                      * @var array $so_statuses
                      */
@@ -232,6 +234,8 @@ final class SalesOrderController
         $this->session->set('_language', $currentRoute->getArgument('_language'));
         $query_params = $request->getQueryParams();
         $page = (int)$currentRoute->getArgument('page','1');
+        /** @psalm-var positive-int $currentPageNeverZero */
+        $currentPageNeverZero = $page > 0 ? $page : 1;
         //status 0 => 'all';
         $status = (int)$currentRoute->getArgument('status','0');
         /** @psalm-suppress MixedAssignment $sort_string */
@@ -245,8 +249,8 @@ final class SalesOrderController
         $salesorders = $this->salesorders_status_with_sort($soR, $status, $sort);
         $paginator = (new OffsetPaginator($salesorders))
         ->withPageSize((int)$sR->get_setting('default_list_limit'))
-        ->withCurrentPage($page)
-        ->withToken(PageToken::next((string) $page));   
+        ->withCurrentPage($currentPageNeverZero)
+        ->withToken(PageToken::next((string)$page));   
         $so_statuses = $soR->getStatuses($this->translator);
         $parameters = [
             'alert' => $this->alert(),

@@ -544,7 +544,9 @@ final class ClientController
         /**
          * @var string $query_params['page']
          */
-        $page = $query_params['page'] ?? $currentRoute->getArgument('page', '1');        
+        $page = $query_params['page'] ?? $currentRoute->getArgument('page', '1');
+        /** @psalm-var positive-int $currentPageNeverZero */
+        $currentPageNeverZero = (int)$page > 0 ? (int)$page : 1;  
         $active = (int)$currentRoute->getArgument('active', '2');
         /** @var string $query_params['sort'] */
         $sortString = $query_params['sort'] ?? '-id';
@@ -566,11 +568,10 @@ final class ClientController
         if ((isset($query_params['filter_client_name']) && !empty($query_params['filter_client_name'])) && 
            (isset($query_params['filter_client_surname']) && !empty($query_params['filter_client_surname']))) {
             $clients = $cR->filter_client_name_surname((string)$query_params['filter_client_name'], (string)$query_params['filter_client_surname']);
-        }  
-        
+        } 
         $paginator = (new DataOffsetPaginator($clients))
             ->withPageSize((int)$sR->get_setting('default_list_limit'))
-            ->withCurrentPage((int)$page)
+            ->withCurrentPage($currentPageNeverZero)
             ->withToken(PageToken::next((string)$page));     
         $parameters = [
             'paginator' => $paginator,
@@ -609,7 +610,9 @@ final class ClientController
     public function guest(CurrentRoute $currentRoute, cR $cR, iaR $iaR, iR $iR, sR $sR, cpR $cpR, ucR $ucR, uiR $uiR): 
         Response
     {
-        $pageNum = (int)$currentRoute->getArgument('page', '1');        
+        $pageNum = (int)$currentRoute->getArgument('page', '1');
+        /** @psalm-var positive-int $currentPageNeverZero */
+        $currentPageNeverZero = $pageNum > 0 ? $pageNum : 1;  
         $active = (int)$currentRoute->getArgument('active', '2');
         $user = $this->userService->getUser();
         if (null!==$user) {
@@ -624,7 +627,7 @@ final class ClientController
                         $clients = $cR->repoUserClient($client_array);
                         $paginator = (new DataOffsetPaginator($clients))
                             ->withPageSize((int)$sR->get_setting('default_list_limit'))
-                            ->withCurrentPage($pageNum);
+                            ->withCurrentPage($currentPageNeverZero);
                         $parameters = [
                             'paginator' => $paginator,
                             'alert' => $this->alert(),

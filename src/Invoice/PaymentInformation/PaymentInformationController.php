@@ -16,9 +16,11 @@ use App\Invoice\Entity\InvItem;
 use App\Invoice\Entity\Merchant;
 use App\Invoice\Entity\Payment;
 use App\Invoice\Entity\Setting;
+use App\Invoice\Helpers\Telegram\TelegramHelper;
 // Libraries
 use App\Invoice\Libraries\Crypt;
 //Psr
+use Psr\Log\LoggerInterface as Logger;
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
 // Repositories
@@ -35,6 +37,8 @@ use App\Invoice\Setting\SettingRepository as sR;
 use App\Invoice\Merchant\MerchantService;
 use App\Invoice\Payment\PaymentService;
 use App\Service\WebControllerService;
+use Vjik\TelegramBot\Api\FailResult;
+use Vjik\TelegramBot\Api\TelegramBotApi;
 // Yiisoft
 use Yiisoft\DataResponse\DataResponseFactoryInterface;
 use Yiisoft\Json\Json;
@@ -51,38 +55,26 @@ use Mollie\Api\Exceptions\ApiException as MollieException;
 
 final class PaymentInformationController
 {
-    private Crypt $crypt;    
-    private DataResponseFactoryInterface $factory;
-    private Flash $flash;    
-    private MerchantService $merchantService;
-    private PaymentService $paymentService;
-    private Session $session;
-    private iaR $iaR;
-    private iR $iR;
-    private sR $sR;
-    private UrlGenerator $urlGenerator;        
-    private UserService $userService;
-    private Translator $translator;
-    private ViewRenderer $viewRenderer;
-    private WebControllerService $webService;
-    private compR $compR;
-    private cPR $cPR;
+    private Crypt $crypt;
     
     public function __construct(
-        DataResponseFactoryInterface $factory,
-        MerchantService $merchantService,        
-        PaymentService $paymentService,        
-        Session $session,
-        iaR $iaR,
-        iR $iR,
-        sR $sR,    
-        UrlGenerator $urlGenerator,
-        UserService $userService,
-        Translator $translator,
-        ViewRenderer $viewRenderer,
-        WebControllerService $webService,
-        compR $compR,
-        cPR $cPR    
+        private DataResponseFactoryInterface $factory,
+        private Flash $flash,    
+        private MerchantService $merchantService,        
+        private PaymentService $paymentService,        
+        private Session $session,
+        private iaR $iaR,
+        private iR $iR,
+        private sR $sR,    
+        private UrlGenerator $urlGenerator,
+        private UserService $userService,
+        private Translator $translator,
+        private ViewRenderer $viewRenderer,
+        private WebControllerService $webService,
+        private compR $compR,
+        private cPR $cPR,
+        private Logger $logger,
+        private string $telegramToken,
     )    
     {
         $this->factory = $factory;
@@ -109,6 +101,8 @@ final class PaymentInformationController
         $this->crypt = new Crypt();
         $this->compR = $compR;
         $this->cPR = $cPR;
+        $this->logger = $logger;
+        $this->telegramToken = $this->sR->get_setting('telegram_token');
     }
     
     // If the checkbox 'Omnipay version' has been checked under Setting...View...Online Payment
@@ -1381,7 +1375,31 @@ private function record_online_payments_and_merchant_for_omnipay(
 
         $payment = new Payment();
         $this->paymentService->addPayment_via_payment_handler($payment, $payment_array);
-
+                
+        $inv = $this->iR->repoInvLoadedquery($invoice_id);
+        if (null!==$inv) {
+            $invClient = $inv->getClient();
+            if (null!==$invClient) {
+                $clientFullName = $invClient->getClient_full_name();
+                if (strlen($this->telegramToken) > 0) {
+                    $telegramHelper = new TelegramHelper($this->telegramToken, $this->logger);
+                    $telegramBotApi = $telegramHelper->getBotApi();                   
+                    $chatId = $this->sR->get_setting('telegram_chat_id');
+                    $telegramToken = $this->sR->get_setting('telegram_token');
+                    // send the  successful payment note via telegram bot to the settings ... view... telegram ... chat id including the client's full name and balance
+                    if ((strlen($chatId) > 0) && strlen($telegramToken) > 0) {
+                        $failResultSendMessage = $telegramBotApi->sendMessage($chatId, $clientFullName.': '.$balance. ' : '.$payment_note);
+                        if (!$failResultSendMessage instanceof FailResult) {
+                            $this->flash_message('success', $this->translator->translate('invoice.invoice.telegram.bot.api.payment.notification.success'));
+                        } 
+                    }
+                } else {
+                    if ($this->sR->get_setting('enable_telegram') == '1') {
+                        $this->flash_message('danger', $this->translator->translate('invoice.invoice.telegram.bot.api.token.not.set'));
+                    }
+                }
+            }
+        }    
         $payment_success_msg = sprintf($this->translator->translate('g.online_payment_payment_successful'), $invoice_number);
 
         // Save gateway response

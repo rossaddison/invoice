@@ -125,9 +125,11 @@ final class InvRecurringController
     public function index(CurrentRoute $currentRoute, IRR $irR): \Yiisoft\DataResponse\DataResponse
     {
         $pageNum = (int)$currentRoute->getArgument('page', '1');
+        /** @psalm-var positive-int $currentPageNeverZero */
+        $currentPageNeverZero = $pageNum > 0 ? $pageNum : 1;
         $paginator = (new OffsetPaginator($this->invrecurrings($irR)))
         ->withPageSize((int)$this->s->get_setting('default_list_limit'))
-        ->withCurrentPage($pageNum);
+        ->withCurrentPage($currentPageNeverZero);
         $numberhelper = new NumberHelper($this->s);
         $canEdit = $this->rbac();
         $parameters = [        

@@ -58,9 +58,9 @@ use Yiisoft\Yii\DataView\YiiRouter\UrlCreator;
  * @var string $modal_add_inv
  * @var string $modal_copy_inv_multiple
  * @var string $modal_create_recurring_multiple
- * @var string $page
  * @var string $sortString
  * @var string $status
+ * @psalm-var positive-int $page
  * @psalm-var array<array-key, array<array-key, string>|string> $optionsDataInvNumberDropDownFilter
  * @psalm-var array<array-key, array<array-key, string>|string> $optionsDataClientsDropdownFilter
  * @psalm-var array<array-key, array<array-key, string>|string> $optionsDataClientGroupDropDownFilter
@@ -87,7 +87,8 @@ $copyInvoiceMultiple = A::tag()
         ->render();
 
 /**
- * Use with the checkbox column to mark invoices as sent.
+ * Use with the checkbox column to mark invoices as sent. Note an email is not sent. The invoices appear on the client's guest index
+ * NB: Only invoices marked as sent can appear on the client's side. i.e no 'draft' invoices can appear on the client guest index
  * @see \invoice\src\Invoice\Asset\rebuild\js\inv.js $(document).on('click', '#btn-mark-as-sent', function () {
  */
 $markAsSent = A::tag()
@@ -569,9 +570,9 @@ $toolbar = Div::tag();
     
     $sortedAndPagedPaginator = (new OffsetPaginator($invs))
                 ->withPageSize((int) $s->get_setting('default_list_limit'))
-                ->withCurrentPage((int)$page)
+                ->withCurrentPage($page)
                 ->withSort($sort)    
-                ->withToken(PageToken::next($page));
+                ->withToken(PageToken::next((string)$page));
     
     $grid_summary = $s->grid_summary(
         $sortedAndPagedPaginator,

@@ -73,6 +73,7 @@ use App\Invoice\Import\ImportController;
 use App\Invoice\Sumex\SumexController;
 use App\Invoice\Task\TaskController;
 use App\Invoice\TaxRate\TaxRateController;
+use App\Invoice\Telegram\TelegramController;
 use App\Invoice\Unit\UnitController;
 use App\Invoice\UnitPeppol\UnitPeppolController;
 use App\Invoice\UserClient\UserClientController;
@@ -1249,10 +1250,7 @@ return [
       ->middleware(fn(AccessChecker $checker) => $checker->withPermission('viewPayment'))
       ->middleware(Authentication::class)
       ->action([PaymentInformationController::class, 'mollie_complete'])
-      ->name('paymentinformation/mollie_complete'),      
-      Route::methods([Method::POST], '/paymentinformation/mollie_webhook')
-      ->action([PaymentInformationController::class, 'mollie_webhook'])
-      ->name('paymentinformation/mollie_webhook'),      
+      ->name('paymentinformation/mollie_complete'), 
       Route::methods([Method::GET, Method::POST], '/paymentinformation/stripe_complete/{url_key}')
       ->middleware(fn(AccessChecker $checker) => $checker->withPermission('viewPayment'))
       ->middleware(Authentication::class)
@@ -2030,6 +2028,29 @@ return [
       ->middleware(fn(AccessChecker $checker) => $checker->withPermission('editInv'))
       ->middleware(Authentication::class)
       ->action([TaxRateController::class, 'view']),
+      Route::get('/telegram')
+      ->middleware(fn(AccessChecker $checker) => $checker->withPermission('editInv'))
+      ->middleware(Authentication::class)
+      ->action([TelegramController::class, 'index'])
+      ->name('telegram/index'),
+      Route::get('/telegram/delete_webhook')
+      ->middleware(fn(AccessChecker $checker) => $checker->withPermission('editInv'))
+      ->middleware(Authentication::class)
+      ->action([TelegramController::class, 'delete_webhook'])
+      ->name('telegram/delete_webhook'),
+      Route::get('/telegram/set_webhook')
+      ->middleware(fn(AccessChecker $checker) => $checker->withPermission('editInv'))
+      ->middleware(Authentication::class)
+      ->action([TelegramController::class, 'set_webhook'])
+      ->name('telegram/set_webhook'),        
+      Route::get('/telegram/get_updates')
+      ->middleware(fn(AccessChecker $checker) => $checker->withPermission('editInv'))
+      ->middleware(Authentication::class)
+      ->action([TelegramController::class, 'get_updates'])
+      ->name('telegram/get_updates'),             
+      Route::get('/telegram/webhook')
+      ->action([TelegramController::class, 'webhook'])
+      ->name('telegram/webhook'),      
       Route::get('/unit')
       ->middleware(fn(AccessChecker $checker) => $checker->withPermission('editInv'))
       ->middleware(Authentication::class)

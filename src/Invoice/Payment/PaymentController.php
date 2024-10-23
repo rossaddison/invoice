@@ -556,6 +556,8 @@ final class PaymentController
          * @var string $query_params['page']
          */
         $page = $query_params['page'] ?? $currentRoute->getArgument('page','1');
+        /** @psalm-var positive-int $currentPageNeverZero */
+        $currentPageNeverZero = (int)$page > 0 ? (int)$page : 1;
         // Clicking on the gridview's Inv_id column hyperlink generates 
         // the query_param called 'sort' 
         // Clicking on the paginator does not generate the query_param 'sort'
@@ -592,7 +594,7 @@ final class PaymentController
                 $payments = $this->payments_with_sort_guest($paymentRepository, $client_id_array, $sort_by); 
                 $paginator = (new OffsetPaginator($payments))
                  ->withPageSize($userInvListLimit ?? 10)
-                 ->withCurrentPage((int)$page)
+                 ->withCurrentPage($currentPageNeverZero)
                  ->withToken(PageToken::next((string)$page));
                 $canEdit = $this->userService->hasPermission('editPayment');
                 $canView = $this->userService->hasPermission('viewPayment');
@@ -630,6 +632,8 @@ final class PaymentController
     {   
         $query_params = $request->getQueryParams();
         $page = (int)$currentRoute->getArgument('page','1');
+        /** @psalm-var positive-int $currentPageNeverZero */
+        $currentPageNeverZero = $page > 0 ? $page : 1;
         /** @psalm-suppress MixedAssignment $sort */
         $sort = $query_params['sort'] ?? '-inv_id';
         $sort_by = Sort::only(['inv_id','date', 'successful', 'driver'])
@@ -648,7 +652,7 @@ final class PaymentController
             $merchants = $this->merchant_with_sort_guest($merchantRepository, $client_id_array, $sort_by); 
             $paginator = (new OffsetPaginator($merchants))
              ->withPageSize(10)
-             ->withCurrentPage($page)
+             ->withCurrentPage($currentPageNeverZero)
              ->withToken(PageToken::next((string)$page));
             // No need for rbac here since the route accessChecker for payment/online_log
             // includes 'viewPayment' @see config/routes.php
@@ -679,6 +683,8 @@ final class PaymentController
                           InvAmountRepository $iaR) : \Yiisoft\DataResponse\DataResponse {
         $query_params = $request->getQueryParams();
         $page = (int)$currentRoute->getArgument('page','1');
+        /** @psalm-var positive-int $currentPageNeverZero */
+        $currentPageNeverZero = $page > 0 ? $page : 1;
         // Clicking on the gridview's Inv_id column hyperlink generates 
         // the query_param called 'sort' which is seen in the url
         // Clicking on the paginator does not generate the query_param 'sort'
@@ -705,7 +711,7 @@ final class PaymentController
         }
         $paginator = (new OffsetPaginator($payments))
          ->withPageSize((int)$settingRepository->get_setting('default_list_limit'))
-         ->withCurrentPage($page)
+         ->withCurrentPage($currentPageNeverZero)
          ->withSort($sort)           
          ->withToken(PageToken::next((string)$page));
         $canEdit = $this->userService->hasPermission('editPayment');
@@ -780,6 +786,8 @@ final class PaymentController
     {   
         $query_params = $request->getQueryParams();
         $page = (int)$currentRoute->getArgument('page','1');
+        /** @psalm-var positive-int $currentPageNeverZero */
+        $currentPageNeverZero = $page > 0 ? $page : 1;
         /**
          * @var string|null $query_params['sort']
          */
@@ -801,7 +809,7 @@ final class PaymentController
         }
         $paginator = (new OffsetPaginator($merchants))
          ->withPageSize((int)$settingRepository->get_setting('default_list_limit'))
-         ->withCurrentPage($page)
+         ->withCurrentPage($currentPageNeverZero)
          ->withToken(PageToken::next((string) $page));
         // No need for rbac here since the route accessChecker for payment/online_log
         // includes 'viewPayment' @see config/routes.php

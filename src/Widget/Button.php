@@ -161,4 +161,20 @@ final class Button
         ->id('btn-primary')
         ->render();        
     }
+    
+    /**
+     * @see TelegramController function delete_webhook
+     * @see ..config/common/routes/routes.php
+     * @param UrlGenerator $generator
+     * @param Translator $translator
+     * @return string
+     */
+    public static function deleteWebhook(UrlGenerator $generator, Translator $translator) : string {
+        return A::tag()
+        ->addClass('btn btn-primary')
+        ->content($translator->translate('invoice.invoice.telegram.bot.api.webhook.delete'). ' '. '️❌')
+        ->href($generator->generate('telegram/delete_webhook', ['_language' => 'en']))
+        ->id('btn-primary')
+        ->render();
+    }
 }

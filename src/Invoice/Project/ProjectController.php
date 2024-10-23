@@ -63,9 +63,11 @@ final class ProjectController
     public function index(ProjectRepository $projectRepository, SettingRepository $sR, Request $request, ProjectService $service): \Yiisoft\DataResponse\DataResponse
     {            
         $pageNum = (int)$request->getAttribute('page', '1');
+        /** @psalm-var positive-int $currentPageNeverZero */
+        $currentPageNeverZero = $pageNum > 0 ? $pageNum : 1;
         $paginator = (new OffsetPaginator($this->projects($projectRepository)))
         ->withPageSize((int)$sR->get_setting('default_list_limit'))
-        ->withCurrentPage($pageNum);      
+        ->withCurrentPage($currentPageNeverZero);      
         $canEdit = $this->rbac();
         $parameters = [
               'paginator' => $paginator,  
