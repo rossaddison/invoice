@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "a0a818d94da222f2c3807a2546bba377",
+    "content-hash": "d5841a94ade2ea4dbd6df3574589b138",
     "packages": [
         {
             "name": "alexkart/curl-builder",
@@ -5184,17 +5184,82 @@
             "time": "2024-09-24T06:21:48+00:00"
         },
         {
-            "name": "php-http/discovery",
-            "version": "1.19.4",
+            "name": "php-http/curl-client",
+            "version": "2.3.2",
             "source": {
                 "type": "git",
-                "url": "https://github.com/php-http/discovery.git",
-                "reference": "0700efda8d7526335132360167315fdab3aeb599"
+                "url": "https://github.com/php-http/curl-client.git",
+                "reference": "0b869922458b1cde9137374545ed4fff7ac83623"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/php-http/discovery/zipball/0700efda8d7526335132360167315fdab3aeb599",
-                "reference": "0700efda8d7526335132360167315fdab3aeb599",
+                "url": "https://api.github.com/repos/php-http/curl-client/zipball/0b869922458b1cde9137374545ed4fff7ac83623",
+                "reference": "0b869922458b1cde9137374545ed4fff7ac83623",
+                "shasum": ""
+            },
+            "require": {
+                "ext-curl": "*",
+                "php": "^7.4 || ^8.0",
+                "php-http/discovery": "^1.6",
+                "php-http/httplug": "^2.0",
+                "php-http/message": "^1.2",
+                "psr/http-client": "^1.0",
+                "psr/http-factory-implementation": "^1.0",
+                "symfony/options-resolver": "^3.4 || ^4.0 || ^5.0 || ^6.0 || ^7.0"
+            },
+            "provide": {
+                "php-http/async-client-implementation": "1.0",
+                "php-http/client-implementation": "1.0",
+                "psr/http-client-implementation": "1.0"
+            },
+            "require-dev": {
+                "guzzlehttp/psr7": "^2.0",
+                "laminas/laminas-diactoros": "^2.0",
+                "php-http/client-integration-tests": "^3.0",
+                "php-http/message-factory": "^1.1",
+                "phpunit/phpunit": "^7.5 || ^9.4"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Http\\Client\\Curl\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Михаил Красильников",
+                    "email": "m.krasilnikov@yandex.ru"
+                }
+            ],
+            "description": "PSR-18 and HTTPlug Async client with cURL",
+            "homepage": "http://php-http.org",
+            "keywords": [
+                "curl",
+                "http",
+                "psr-18"
+            ],
+            "support": {
+                "issues": "https://github.com/php-http/curl-client/issues",
+                "source": "https://github.com/php-http/curl-client/tree/2.3.2"
+            },
+            "time": "2024-03-03T08:21:07+00:00"
+        },
+        {
+            "name": "php-http/discovery",
+            "version": "1.20.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/php-http/discovery.git",
+                "reference": "82fe4c73ef3363caed49ff8dd1539ba06044910d"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/php-http/discovery/zipball/82fe4c73ef3363caed49ff8dd1539ba06044910d",
+                "reference": "82fe4c73ef3363caed49ff8dd1539ba06044910d",
                 "shasum": ""
             },
             "require": {
@@ -5258,9 +5323,9 @@
             ],
             "support": {
                 "issues": "https://github.com/php-http/discovery/issues",
-                "source": "https://github.com/php-http/discovery/tree/1.19.4"
+                "source": "https://github.com/php-http/discovery/tree/1.20.0"
             },
-            "time": "2024-03-29T13:00:05+00:00"
+            "time": "2024-10-02T11:20:13+00:00"
         },
         {
             "name": "php-http/guzzle7-adapter",
@@ -5383,16 +5448,16 @@
         },
         {
             "name": "php-http/message",
-            "version": "1.16.1",
+            "version": "1.16.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/php-http/message.git",
-                "reference": "5997f3289332c699fa2545c427826272498a2088"
+                "reference": "06dd5e8562f84e641bf929bfe699ee0f5ce8080a"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/php-http/message/zipball/5997f3289332c699fa2545c427826272498a2088",
-                "reference": "5997f3289332c699fa2545c427826272498a2088",
+                "url": "https://api.github.com/repos/php-http/message/zipball/06dd5e8562f84e641bf929bfe699ee0f5ce8080a",
+                "reference": "06dd5e8562f84e641bf929bfe699ee0f5ce8080a",
                 "shasum": ""
             },
             "require": {
@@ -5446,9 +5511,9 @@
             ],
             "support": {
                 "issues": "https://github.com/php-http/message/issues",
-                "source": "https://github.com/php-http/message/tree/1.16.1"
+                "source": "https://github.com/php-http/message/tree/1.16.2"
             },
-            "time": "2024-03-07T13:22:09+00:00"
+            "time": "2024-10-02T11:34:13+00:00"
         },
         {
             "name": "php-http/message-factory",
@@ -5504,6 +5569,62 @@
             },
             "abandoned": "psr/http-factory",
             "time": "2023-04-14T14:16:17+00:00"
+        },
+        {
+            "name": "php-http/multipart-stream-builder",
+            "version": "1.4.2",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/php-http/multipart-stream-builder.git",
+                "reference": "10086e6de6f53489cca5ecc45b6f468604d3460e"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/php-http/multipart-stream-builder/zipball/10086e6de6f53489cca5ecc45b6f468604d3460e",
+                "reference": "10086e6de6f53489cca5ecc45b6f468604d3460e",
+                "shasum": ""
+            },
+            "require": {
+                "php": "^7.1 || ^8.0",
+                "php-http/discovery": "^1.15",
+                "psr/http-factory-implementation": "^1.0"
+            },
+            "require-dev": {
+                "nyholm/psr7": "^1.0",
+                "php-http/message": "^1.5",
+                "php-http/message-factory": "^1.0.2",
+                "phpunit/phpunit": "^7.5.15 || ^8.5 || ^9.3"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Http\\Message\\MultipartStream\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Tobias Nyholm",
+                    "email": "tobias.nyholm@gmail.com"
+                }
+            ],
+            "description": "A builder class that help you create a multipart stream",
+            "homepage": "http://php-http.org",
+            "keywords": [
+                "factory",
+                "http",
+                "message",
+                "multipart stream",
+                "stream"
+            ],
+            "support": {
+                "issues": "https://github.com/php-http/multipart-stream-builder/issues",
+                "source": "https://github.com/php-http/multipart-stream-builder/tree/1.4.2"
+            },
+            "time": "2024-09-04T13:22:54+00:00"
         },
         {
             "name": "php-http/promise",
@@ -11340,6 +11461,70 @@
             "time": "2024-06-17T12:21:20+00:00"
         },
         {
+            "name": "vjik/telegram-bot-api",
+            "version": "0.4.3",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/vjik/telegram-bot-api.git",
+                "reference": "772070c9eb9b9ebabdbc080e854a51921d80a473"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/vjik/telegram-bot-api/zipball/772070c9eb9b9ebabdbc080e854a51921d80a473",
+                "reference": "772070c9eb9b9ebabdbc080e854a51921d80a473",
+                "shasum": ""
+            },
+            "require": {
+                "php": "^8.2",
+                "php-http/multipart-stream-builder": "^1.4.2",
+                "psr/http-client": "^1.0",
+                "psr/http-factory": "^1.1",
+                "psr/http-message": "^1.1|^2.0"
+            },
+            "require-dev": {
+                "friendsofphp/php-cs-fixer": "^3.59",
+                "httpsoft/http-message": "^1.1",
+                "maglnet/composer-require-checker": "^4.11",
+                "php-http/curl-client": "^2.3",
+                "phpunit/phpunit": "^10.5",
+                "psr/log": "^3.0",
+                "roave/infection-static-analysis-plugin": "^1.35",
+                "vimeo/psalm": "^5.25",
+                "yiisoft/test-support": "^3.0"
+            },
+            "suggest": {
+                "psr/log": "To log requests to Telegram Bot API and response handling errors."
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Vjik\\TelegramBot\\Api\\": "src"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "BSD-3-Clause"
+            ],
+            "authors": [
+                {
+                    "name": "Sergei Predvoditelev",
+                    "homepage": "https://predvoditelev.ru"
+                }
+            ],
+            "description": "PHP library for working with Telegram API",
+            "keywords": [
+                "api",
+                "bot",
+                "telegram"
+            ],
+            "support": {
+                "chat": "https://t.me/predvoditelev_chat",
+                "issues": "https://github.com/vjik/telegram-bot-api/issues?state=open",
+                "source": "https://github.com/vjik/telegram-bot-api"
+            },
+            "time": "2024-09-06T18:09:55+00:00"
+        },
+        {
             "name": "vlucas/phpdotenv",
             "version": "v5.6.1",
             "source": {
@@ -14001,40 +14186,47 @@
         },
         {
             "name": "yiisoft/mailer",
-            "version": "5.1.0",
+            "version": "6.0.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/yiisoft/mailer.git",
-                "reference": "dcb71779d946c75c9163a28d0a2c3c6f9d7f319a"
+                "reference": "01c86173f1f4b6aad7434049b3b627e2c5735266"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/yiisoft/mailer/zipball/dcb71779d946c75c9163a28d0a2c3c6f9d7f319a",
-                "reference": "dcb71779d946c75c9163a28d0a2c3c6f9d7f319a",
+                "url": "https://api.github.com/repos/yiisoft/mailer/zipball/01c86173f1f4b6aad7434049b3b627e2c5735266",
+                "reference": "01c86173f1f4b6aad7434049b3b627e2c5735266",
                 "shasum": ""
             },
             "require": {
-                "php": "^8.1",
-                "psr/event-dispatcher": "^1.0",
-                "yiisoft/view": "^10.0.0"
+                "php": "^8.1"
             },
             "require-dev": {
                 "maglnet/composer-require-checker": "^4.4",
                 "phpunit/phpunit": "^10",
+                "psr/event-dispatcher": "^1.0",
                 "rector/rector": "^1.2",
                 "roave/infection-static-analysis-plugin": "^1.25",
                 "spatie/phpunit-watcher": "^1.23",
                 "vimeo/psalm": "^5.24",
+                "yiisoft/aliases": "^3.0",
+                "yiisoft/definitions": "^3.3",
+                "yiisoft/di": "^1.2",
                 "yiisoft/files": "^2.0",
-                "yiisoft/psr-dummy-provider": "^1.0",
                 "yiisoft/test-support": "^3.0"
             },
             "suggest": {
+                "psr/event-dispatcher": "Use PSR Event Dispatcher implementation for process before/after send events",
                 "yiisoft/event-dispatcher": "Yii Event Dispatcher",
-                "yiisoft/mailer-swiftmailer": "Yii Mailer Library - Swift Mailer Extension",
-                "yiisoft/mailer-symfony": "Yii Mailer Library - Symfony Mailer Extension"
+                "yiisoft/mailer-symfony": "`symfony/mailer` based driver for send emails"
             },
             "type": "library",
+            "extra": {
+                "config-plugin": {
+                    "params": "config/params.php",
+                    "di": "config/di.php"
+                }
+            },
             "autoload": {
                 "psr-4": {
                     "Yiisoft\\Mailer\\": "src"
@@ -14044,7 +14236,7 @@
             "license": [
                 "BSD-3-Clause"
             ],
-            "description": "Yii Mailer Library",
+            "description": "Sending email abstraction",
             "homepage": "https://www.yiiframework.com/",
             "keywords": [
                 "mailer",
@@ -14068,42 +14260,45 @@
                     "type": "opencollective"
                 }
             ],
-            "time": "2024-07-02T14:35:38+00:00"
+            "time": "2024-10-18T07:32:43+00:00"
         },
         {
             "name": "yiisoft/mailer-symfony",
-            "version": "3.0.1",
+            "version": "4.0.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/yiisoft/mailer-symfony.git",
-                "reference": "6dba87a57e2b08cf56afd260cebb33b4ee607eb7"
+                "reference": "3ef6b343137817d81def7437855bbebba14eb976"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/yiisoft/mailer-symfony/zipball/6dba87a57e2b08cf56afd260cebb33b4ee607eb7",
-                "reference": "6dba87a57e2b08cf56afd260cebb33b4ee607eb7",
+                "url": "https://api.github.com/repos/yiisoft/mailer-symfony/zipball/3ef6b343137817d81def7437855bbebba14eb976",
+                "reference": "3ef6b343137817d81def7437855bbebba14eb976",
                 "shasum": ""
             },
             "require": {
-                "php": "^8.0",
-                "psr/event-dispatcher": "^1.0",
+                "php": "^8.1",
                 "symfony/mailer": "^5.3|^6.0|^7.0",
                 "symfony/mime": "^5.4|^6.2|^7.0",
-                "yiisoft/mailer": "^5.0"
+                "yiisoft/mailer": "^6.0"
             },
             "require-dev": {
+                "ext-openssl": "*",
                 "maglnet/composer-require-checker": "^4.2",
-                "phpunit/phpunit": "^9.5",
-                "rector/rector": "^1.0.0",
+                "phpunit/phpunit": "^10.5",
+                "psr/event-dispatcher": "^1.0",
+                "rector/rector": "^1.2",
                 "roave/infection-static-analysis-plugin": "^1.25",
                 "spatie/phpunit-watcher": "^1.23",
-                "vimeo/psalm": "^4.30|^5.4",
+                "vimeo/psalm": "^5.4",
                 "yiisoft/aliases": "^3.0",
                 "yiisoft/di": "^1.2",
                 "yiisoft/files": "^2.0",
                 "yiisoft/psr-dummy-provider": "^1.0",
-                "yiisoft/test-support": "^3.0",
-                "yiisoft/view": "^8.0"
+                "yiisoft/test-support": "^3.0"
+            },
+            "suggest": {
+                "psr/event-dispatcher": "Use PSR Event Dispatcher implementation for process before/after send events"
             },
             "type": "library",
             "extra": {
@@ -14124,7 +14319,7 @@
             "license": [
                 "BSD-3-Clause"
             ],
-            "description": "Yii Mailer Library - Symfony Mailer Extension",
+            "description": "Adapter for `yiisoft/mailer` relying on `symfony/mailer`",
             "homepage": "https://www.yiiframework.com/",
             "keywords": [
                 "email",
@@ -14150,7 +14345,7 @@
                     "type": "opencollective"
                 }
             ],
-            "time": "2024-05-24T11:18:35+00:00"
+            "time": "2024-10-18T08:28:32+00:00"
         },
         {
             "name": "yiisoft/middleware-dispatcher",
