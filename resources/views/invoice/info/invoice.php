@@ -47,6 +47,16 @@
 <p>Introducing India's PayTm payment gateway's QR code method of payment and comparing this with Stripe's method.</p>
 <p>A General Sales Tax (GST) Tax System will have to be implemented first for this purpose.</p>
 <p>Testing Credit Notes against Invoices with refunds (if payment made) linked to each of the payment gateways.</p>
+<p><b>24th October 2024</b></p>
+<p>1. yiisoft/mailer backward compatibility corrections. pull requests 104 - 109</p>
+<p>2. MessageBodyTemplate(s) removed.</p>
+<p>3. ->withCharSet('UTF-8') added to messages</p>
+<p>4. yiisoft/bootstrap5 dev-master used in an attempt to remove  composer-dependency-checker Yiisoft\Yii\Bootstrap5\AlertType unknown sybmol error https://github.com/rossaddison/invoice/actions/runs/11365127873/job/31612623182</p>
+<p>5. Previous MessageBodyTemplates moved into ->withTextBody</p>
+<p>6. Slight adjustment/improvement to resources/views/layout/alert with AlertVariants assigned to variables outside the match statement.</p>
+<p>7. mailert->withAttached changed to withAttachments</p>
+<p>8. self-imposed more disciplined approach to using branches and pull requests</p>
+<p>Testing of above changes on one.com and beging yii3 discussion on webhooks use with Telegram and testing with one.com</p>
 <p><b>23rd October 2024</b></p>
 <p><b>Telegram</b></p>
 <p>1. 10 step instructions for using Telegram under Settings ... View ... Telegram tab to setup client/customer payment notifications</p> 

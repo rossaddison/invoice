@@ -59,8 +59,7 @@ Class MailerHelper
         $this->templatehelper = new TemplateHelper($s, $ccR, $qcR, $icR, $pcR, $socR, $cfR, $cvR);
         $this->invoicehelper = new InvoiceHelper($s, $session);
         $this->logger = $logger;
-        // yii-mailer: Not using yii's contact-email template but ...mail/invoice/invoice.php 
-        $this->mailer = $this->mailer->withTemplate(new MessageBodyTemplate(dirname(dirname(dirname(__DIR__))). '/src/Contact/mail/invoice'));    
+        $this->mailer = $mailer;
         $this->flash = new Flash($session);
     }
     
@@ -161,15 +160,8 @@ Class MailerHelper
                 is_array($bcc) && $email!=='' ? array_unshift($bcc, $email) : '';
             }
         }
-              
-        $email = $this->mailer
-            ->compose(
-                'contact-email',
-                [
-                    'content' => $html_body,
-                ]
-            )
-            ->withCharSet('UTF-8')
+        $email = (new \Yiisoft\Mailer\Message()) 
+            ->withCharSet('UTF-8')             
             ->withSubject($subject)
             ->withDate(new \DateTimeImmutable('now'))
             ->withFrom([$from_email=>$from_name])
@@ -189,7 +181,7 @@ Class MailerHelper
             foreach ($attachFile as $file) {
                 if ($file[0]?->getError() === UPLOAD_ERR_OK && (null!==$file[0]?->getStream())) {
                     /** @psalm-suppress MixedAssignment $email */
-                    $email = $email->withAttached(
+                    $email = $email->withAttachments(
                         File::fromContent(
                             (string)$file[0]?->getStream(),
                             (string)$file[0]?->getClientFilename(),
@@ -205,7 +197,7 @@ Class MailerHelper
         if (null!==($pdf_template_target_path)) { 
             $path_info = pathinfo($pdf_template_target_path);
             $path_info_file_name = $path_info['filename'];
-            $email_attachments_with_pdf_template = $email->withAttached(File::fromPath(FileHelper::normalizePath($pdf_template_target_path), 
+            $email_attachments_with_pdf_template = $email->withAttachments(File::fromPath(FileHelper::normalizePath($pdf_template_target_path), 
                                                     $path_info_file_name, 
                                                     'application/pdf')
             );

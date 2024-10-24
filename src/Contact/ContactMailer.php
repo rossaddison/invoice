@@ -30,23 +30,19 @@ final class ContactMailer
     ) {
         $this->flash = New Flash($session);
         $this->session = $session;
-        $this->mailer = $this->mailer->withTemplate(new MessageBodyTemplate(__DIR__ . '/mail/'));
+        $this->mailer = $mailer;
         $this->translator = $translator;
     }
 
     public function send(ContactForm $form): void
     {
-        $message = $this->mailer
-            ->compose(
-                'contact-email',
-                [
-                    'content' => $form->getPropertyValue('body'),
-                ]
-            )
+            $message = (new \Yiisoft\Mailer\Message())
+            ->withCharSet('UTF-8')        
             ->withSubject((string)$form->getPropertyValue('subject'))
             ->withFrom([(string)$form->getPropertyValue('email') => (string)$form->getPropertyValue('name')])
             ->withSender($this->sender)
-            ->withTo($this->to);
+            ->withTo($this->to)
+            ->withTextBody((string)$form->getPropertyValue('body'));
                 
         /** @var array $attachFile */
         foreach ($form->getPropertyValue('attachFiles') as $attachFile) {
@@ -57,7 +53,7 @@ final class ContactMailer
             foreach ($attachFile as $file) {
                 if ($file[0]?->getError() === UPLOAD_ERR_OK && (null!==$file[0]?->getStream())) {
                     /** @psalm-suppress MixedAssignment $message */
-                    $message = $message->withAttached(
+                    $message = $message->withAttachments(
                         File::fromContent(
                             (string)$file[0]?->getStream(),
                             (string)$file[0]?->getClientFilename(),
@@ -69,7 +65,7 @@ final class ContactMailer
         }
         try {
             $this->mailer->send($message);
-            $this->flash_message('info', $this->translator->translate('menu.contact.soon'));
+            $this->flashMessage('info', $this->translator->translate('menu.contact.soon'));
         } catch (Exception $e) {
             $flashMsg = $e->getMessage();
             $this->logger->error($flashMsg);
@@ -81,7 +77,7 @@ final class ContactMailer
      * @param string $message
      * @return Flash|null
      */
-    private function flash_message(string $level, string $message): Flash|null {
+    private function flashMessage(string $level, string $message): Flash|null {
         if (strlen($message) > 0) {
             $this->flash->add($level, $message, true);
             return $this->flash;

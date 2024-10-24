@@ -14,6 +14,16 @@ use Yiisoft\Html\Tag\Body;
 ?>
 
 <?php
+
+$danger =  AlertVariant::DANGER;
+$info = AlertVariant::INFO;
+$primary =  AlertVariant::PRIMARY;
+$secondary = AlertVariant::SECONDARY;
+$success = AlertVariant::SUCCESS;
+$warning = AlertVariant::WARNING;
+$light = AlertVariant::LIGHT;
+$dark = AlertVariant::DARK;
+
 /**
  * @var array $flash->getAll()
  * @var array|string $value
@@ -26,15 +36,15 @@ foreach ($flash->getAll() as $key => $value) {
          */  
         foreach ($value as $key2 => $body) {
             $matchedKey = match ($key) {
-                'danger' => AlertVariant::DANGER,
-                'info' => AlertVariant::INFO,
-                'primary' => AlertVariant::PRIMARY,
-                'secondary' => AlertVariant::SECONDARY,
-                'success' => AlertVariant::SUCCESS,
-                'warning' => AlertVariant::WARNING,
-                'light' => AlertVariant::LIGHT,
-                'dark' => AlertVariant::DARK,
-                'default' => AlertVariant::INFO
+                'danger' => $danger,
+                'info' => $info,
+                'primary' => $primary,
+                'secondary' => $secondary,
+                'success' => $success,
+                'warning' => $warning,
+                'light' => $light,
+                'dark' => $dark,
+                'default' => $info
             };
             $alert = Alert::widget()
                      ->addClass('shadow')

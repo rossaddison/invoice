@@ -330,11 +330,8 @@ return [
     ],
   ],
   'yiisoft/mailer' => [
-    'messageBodyTemplate' => [
-      'viewPath' => '@src/Contact/mail',
-    ],
     'fileMailer' => [
-      'fileMailerStorage' => '@runtime/mail',
+      'path' => '@runtime/mail',
     ],
     'useSendmail' => 0,
     'writeToFiles' => false,

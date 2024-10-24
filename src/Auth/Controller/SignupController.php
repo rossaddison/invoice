@@ -64,8 +64,7 @@ final class SignupController
         $this->manager = new Manager($itemstorage, $assignment, $rule);
         $this->rule = $rule;
         $this->viewRenderer = $viewRenderer->withControllerName('signup');
-        // yii-mailer: Not using demo's contact-email template but ...mail/invoice/invoice.php 
-        $this->mailer = $this->mailer->withTemplate(new MessageBodyTemplate(dirname(dirname(dirname(__DIR__))). '/src/Contact/mail/invoice')); 
+        $this->mailer = $mailer;
         $this->sR = $sR;
         $this->translator = $translator;
         $this->urlGenerator = $urlGenerator;
@@ -135,9 +134,8 @@ final class SignupController
                  */
                 $htmlBody = $this->htmlBodyWithMaskedRandomAndTimeTokenLink($user, $uiR, $language, $_language, $randomAndTimeToken);
                 if (($this->sR->get_setting('email_send_method') == 'symfony') || ($this->sR->mailerEnabled() == true))  {
-                    $email = $this->mailer
-                    ->compose()
-                    ->withCharSet('UTF-8')
+                    $email = (New \Yiisoft\Mailer\Message())
+                    ->withCharSet('UTF-8')                
                     ->withSubject($login. ': <'.$to.'>')
                     ->withDate(new \DateTimeImmutable('now'))
                     ->withFrom([$this->sR->getConfigAdminEmail() => $this->translator->translate('i.administrator')])

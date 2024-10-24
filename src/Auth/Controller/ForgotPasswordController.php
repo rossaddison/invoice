@@ -43,7 +43,7 @@ final class ForgotPasswordController
     )
     {
         $this->viewRenderer = $viewRenderer->withControllerName('forgotpassword');
-        $this->mailer = $this->mailer->withTemplate(new MessageBodyTemplate(dirname(dirname(dirname(__DIR__))). '/src/Contact/mail/invoice')); 
+        $this->mailer = $mailer;
         $this->sR = $sR;
         $this->translator = $translator;
         $this->urlGenerator = $urlGenerator;
@@ -127,9 +127,7 @@ final class ForgotPasswordController
                          */
                         $htmlBody = $this->htmlBodyWithMaskedRandomAndTimeTokenLink($user, $_language,  $requestPasswordResetToken);
                         if (($this->sR->get_setting('email_send_method') == 'symfony') || ($this->sR->mailerEnabled() == true))  {
-                            $email = $this->mailer
-                            ->compose()
-                            ->withCharSet('UTF-8')
+                           $email = (new \Yiisoft\Mailer\Message())
                             ->withSubject($login. ': <'.$to.'>')
                             ->withDate(new \DateTimeImmutable('now'))
                             ->withFrom([$this->sR->getConfigAdminEmail() => $this->translator->translate('i.administrator')])
