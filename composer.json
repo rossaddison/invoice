@@ -128,7 +128,7 @@
         "yiisoft/yii-http": "^1.0",        
         "yiisoft/yii-middleware": "^1.0.4",
         "yiisoft/yii-runner-console": "^2.0",
-        "yiisoft/yii-runner-http": "^2.0",
+        "yiisoft/yii-runner-http": "^3.0",
         "yiisoft/yii-sentry": "^2.0.1",
         "yiisoft/yii-swagger": "^2.1.1",
         "yiisoft/yii-view-renderer": "^7.1",
