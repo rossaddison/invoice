@@ -444,7 +444,11 @@ $this->beginPage();
                       ['label' => 'Yiisoft Dev Panel - Chrome - Allow CORS', 
                          'url' => 'https://chromewebstore.google.com/detail/allow-cors-access-control/lhobafahddgcelffkeicbaginigeejlf'],
                       ['label' => 'Test CORS', 
-                         'url' => 'https://webbrowsertools.com/test-cors/'],  
+                         'url' => 'https://webbrowsertools.com/test-cors/'],
+                      ['label' => 'Using ngrok and Wampserver VirtualHosts', 
+                         'url' => 'https://ngrok.com/docs/using-ngrok-with/virtualHosts/'],
+                      ['label' => 'Using ngrok and webhook testing', 
+                         'url' => 'https://ngrok.com/use-cases/webhook-testing'],  
                     ],
                   ],
     // FAQ                  
