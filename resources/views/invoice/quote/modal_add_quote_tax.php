@@ -35,9 +35,9 @@
                                      * @var App\Invoice\Entity\TaxRate $taxRate
                                      */
                                     foreach ($taxRates as $taxRate) { ?>
-                                    <option value="<?= $taxRate->getTax_rate_id(); ?>">
-                                        <?= $percent = $numberHelper->format_amount($taxRate->getTax_rate_percent());
-                                            $name = Html::encode($taxRate->getTax_rate_name());
+                                    <option value="<?= $taxRate->getTaxRateId(); ?>">
+                                        <?= $percent = $numberHelper->format_amount($taxRate->getTaxRatePercent());
+                                            $name = Html::encode($taxRate->getTaxRateName());
                                             if ($percent >= 0.00 && null!==$percent && strlen($name) > 0) {
                                                 $percent . '% - ' . $name;
                                             } else {
@@ -56,7 +56,7 @@
 
                         <div>
                             <select name="include_item_tax" id="include_item_tax" class="form-control">
-                                <?php if ($s->get_setting('enable_vat_registration') === '0') { ?>
+                                <?php if ($s->getSetting('enable_vat_registration') === '0') { ?>
                                 <option value="0">
                                     <?php echo $translator->translate('i.apply_before_item_tax'); ?>
                                 </option>

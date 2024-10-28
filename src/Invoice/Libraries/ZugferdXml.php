@@ -42,7 +42,7 @@ class ZugferdXml
         $this->invoice = $inv;
         $this->items = $inv->getItems();
         $this->sR = $sR;
-        $this->currencyCode = $sR->get_setting('currency_code');
+        $this->currencyCode = $sR->getSetting('currency_code');
         $this->company = $sR->get_config_company_details();
         // Use in function itemsSubtotalGroupedByTaxPercent()
         $this->iiaR = $iiaR;
@@ -291,10 +291,10 @@ class ZugferdXml
          * @var \App\Invoice\Entity\InvItem $item
          */
         foreach ($this->invoice->getItems() as $item) {
-            if ($item->getTaxRate()?->getTax_rate_percent() == 0) {
+            if ($item->getTaxRate()?->getTaxRatePercent() == 0) {
                 continue;
             }
-            $key = (int)$item->getTaxRate()?->getTax_rate_percent(); 
+            $key = (int)$item->getTaxRate()?->getTaxRatePercent(); 
             if (!isset($result[$key])) {
                 $result[$key] = 0;
             }
@@ -452,10 +452,10 @@ class ZugferdXml
         $node = $doc->createElement('ram:SpecifiedSupplyChainTradeSettlement');
 
         // ApplicableTradeTax
-        if ($item->getTaxRate()?->getTax_rate_percent() > 0) {
+        if ($item->getTaxRate()?->getTaxRatePercent() > 0) {
             $taxNode = $doc->createElement('ram:ApplicableTradeTax');
             $taxNode->appendChild($doc->createElement('ram:TypeCode', 'VAT'));
-            $taxNode->appendChild($doc->createElement('ram:ApplicablePercent', (string)$item->getTaxRate()?->getTax_rate_percent()));
+            $taxNode->appendChild($doc->createElement('ram:ApplicablePercent', (string)$item->getTaxRate()?->getTaxRatePercent()));
             $node->appendChild($taxNode);
         }
 

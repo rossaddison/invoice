@@ -47,7 +47,7 @@ final class Bootstrap5ModalQuote
     
     public function renderPartialLayoutWithFormAsString(string $origin, array $errors) : string
     {
-        $defaultGroupId = $this->sR->get_setting('default_quote_group');
+        $defaultGroupId = $this->sR->getSetting('default_quote_group');
         $optionsGroupData = [];
         $groups = $this->gR->findAllPreloaded();
         /**

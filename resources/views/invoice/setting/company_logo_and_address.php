@@ -91,19 +91,19 @@ use App\Widget\QrCode as QrCodeWidget;
             <?php } ?>
             <td style="width:33%;text-align:left">
                 <?php 
-                    if ($s->get_setting('enable_vat_registration') === '1' && $isInvoice) { 
+                    if ($s->getSetting('enable_vat_registration') === '1' && $isInvoice) { 
                         echo '<div><b>'.Html::encode($translator->translate('invoice.invoice.vat.invoice')). '</b></div>';
                         echo '<div><br><b>'. $translator->translate('invoice.invoice.number').'</b> : '.Html::encode($document_number) .'</div>';
                        // echo '<div><br><b>'. $translator->translate('invoice.client.number').'</b> : '.Html::encode($client_number) .'</div>';
                         echo '<div><b>'. $translator->translate('invoice.client.purchase.order.number').'</b> : '.Html::encode($client_purchase_order_number) .'</div>';
                         echo '<div><br><b>'. $translator->translate('invoice.invoice.tax.point').'</b> : '.Html::encode($date_tax_point) .'</div>';
                     }
-                    if ($s->get_setting('enable_vat_registration') === '1' && $isQuote) { 
+                    if ($s->getSetting('enable_vat_registration') === '1' && $isQuote) { 
                         echo '<div><b>'.Html::encode($translator->translate('invoice.quote.vat.quote')). '</b></div>';
                         echo '<div><br><b>'. $translator->translate('invoice.quote.number').'</b> : '.Html::encode($document_number) .'</div>';
                         echo '<div><b>'. $translator->translate('invoice.client.number').'</b> : '.Html::encode($client_number) .'</div>';
                     } 
-                    if ($s->get_setting('enable_vat_registration') === '1' && $isSalesOrder) {
+                    if ($s->getSetting('enable_vat_registration') === '1' && $isSalesOrder) {
                         echo '<div><b>'.Html::encode($translator->translate('invoice.salesorder.vat.salesorder')). '</b></div>';
                         echo '<div><br><b>'. $translator->translate('invoice.salesorder.number').'</b> : '.Html::encode($document_number) .'</div>';
                         echo '<div><b>'. $translator->translate('invoice.client.number').'</b> : '.Html::encode($client_number) .'</div>';

@@ -128,7 +128,7 @@ $toolbar = Div::tag();
     $grid_summary = $s->grid_summary(
         $paginator, 
         $translator, 
-        (int)$s->get_setting('default_list_limit'), 
+        (int)$s->getSetting('default_list_limit'), 
         $translator->translate('invoice.invoice.allowance.or.charge'), 
         ''
     );    

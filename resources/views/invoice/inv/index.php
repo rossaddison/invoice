@@ -281,7 +281,7 @@ $toolbar = Div::tag();
         ),           
         new DataColumn(
             content: static function (Inv $model) use ($s, $urlGenerator): string {
-                return $model->getIs_read_only() === false && $s->get_setting('disable_read_only') === (string) 0 
+                return $model->getIs_read_only() === false && $s->getSetting('disable_read_only') === (string) 0 
                        ? Html::a('🖉', $urlGenerator->generate('inv/edit', 
                                ['id' => $model->getId()]), ['style' => 'text-decoration:none'])->render() 
                        : '';
@@ -342,7 +342,7 @@ $toolbar = Div::tag();
             header: $translator->translate('i.status'),
             content: static function (Inv $model) use ($s, $iR, $irR, $translator): Yiisoft\Html\Tag\CustomTag {
                 $label = $iR->getSpecificStatusArrayLabel((string)$model->getStatus_id());
-                if (($model->getIs_read_only()) && $s->get_setting('disable_read_only') === (string) 0) {
+                if (($model->getIs_read_only()) && $s->getSetting('disable_read_only') === (string) 0) {
                     $label =  $translator->translate('i.paid'). ' 🚫';
                 }
                 if ($irR->repoCount((string) $model->getId()) > 0) {
@@ -417,7 +417,7 @@ $toolbar = Div::tag();
         new DataColumn(
             property: 'filterInvAmountTotal',    
             field: 'id',
-            header: $translator->translate('i.total') . ' ( '. $s->get_setting('currency_symbol'). ' ) ',
+            header: $translator->translate('i.total') . ' ( '. $s->getSetting('currency_symbol'). ' ) ',
             content: static function (Inv $model) use ($decimalPlaces) : string {
                 $invAmountTotal = $model->getInvAmount()->getTotal();
                 return
@@ -433,7 +433,7 @@ $toolbar = Div::tag();
         ),       
         new DataColumn(
             'id',
-            header: $translator->translate('i.paid') . ' ( '. $s->get_setting('currency_symbol'). ' ) ',
+            header: $translator->translate('i.paid') . ' ( '. $s->getSetting('currency_symbol'). ' ) ',
             content: static function (Inv $model) use ($decimalPlaces) : string {
                 $invAmountPaid = $model->getInvAmount()->getPaid();
                 return Label::tag()
@@ -447,7 +447,7 @@ $toolbar = Div::tag();
         ),         
          new DataColumn(
             'id',
-            header: $translator->translate('i.balance')  . ' ( '. $s->get_setting('currency_symbol'). ' ) ',
+            header: $translator->translate('i.balance')  . ' ( '. $s->getSetting('currency_symbol'). ' ) ',
             content: static function (Inv $model) use ($decimalPlaces) : string {
                 $invAmountBalance = $model->getInvAmount()->getBalance(); 
                 return  Label::tag()
@@ -533,7 +533,7 @@ $toolbar = Div::tag();
         new DataColumn(
             header: $translator->translate('i.delete'),
             content: static function (Inv $model) use ($s, $translator, $urlGenerator): string {
-                return $model->getIs_read_only() === false && $s->get_setting('disable_read_only') === (string) 0 && $model->getSo_id() === '0' && $model->getQuote_id() === '0' ? Html::a(Html::tag('button',
+                return $model->getIs_read_only() === false && $s->getSetting('disable_read_only') === (string) 0 && $model->getSo_id() === '0' && $model->getQuote_id() === '0' ? Html::a(Html::tag('button',
                         Html::tag('i', '', ['class' => 'fa fa-trash fa-margin']),
                         [
                             'type' => 'submit',
@@ -569,7 +569,7 @@ $toolbar = Div::tag();
                     ->withOrderString($sortString); 
     
     $sortedAndPagedPaginator = (new OffsetPaginator($invs))
-                ->withPageSize((int) $s->get_setting('default_list_limit'))
+                ->withPageSize((int) $s->getSetting('default_list_limit'))
                 ->withCurrentPage($page)
                 ->withSort($sort)    
                 ->withToken(PageToken::next((string)$page));
@@ -577,7 +577,7 @@ $toolbar = Div::tag();
     $grid_summary = $s->grid_summary(
         $sortedAndPagedPaginator,
         $translator,
-        (int) $s->get_setting('default_list_limit'),
+        (int) $s->getSetting('default_list_limit'),
         $translator->translate('invoice.invoice.invoices'),
         $label
     );

@@ -14,7 +14,7 @@ $tooltipTitle = $translator->translate('home.caption.slides.location.debug.mode'
 ?>
 
 <?= Html::openTag('header'); ?>
-    <?= ($s->get_setting('debug_mode') == '1') 
+    <?= ($s->getSetting('debug_mode') == '1') 
         ?   Html::openTag('a', ['data-bs-toggle' => 'tooltip', 'title' => $tooltipTitle]).
                 Html::openTag('i', ['class' => 'bi bi-info-circle']).           
                 Html::closeTag('i').

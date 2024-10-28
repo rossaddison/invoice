@@ -234,7 +234,7 @@ $toolbar = Div::tag();
         new DataColumn(
             field: 'id',
             property: 'filterQuoteAmountTotal',
-            header: $translator->translate('i.total') . ' ( '. $s->get_setting('currency_symbol'). ' ) ',
+            header: $translator->translate('i.total') . ' ( '. $s->getSetting('currency_symbol'). ' ) ',
             content: static function (Quote $model) use ($decimalPlaces) : string {
                 $quoteTotal = $model->getQuoteAmount()->getTotal();
                 return  
@@ -252,7 +252,7 @@ $toolbar = Div::tag();
     $grid_summary = $s->grid_summary(
         $paginator, 
         $translator, 
-        (int)$s->get_setting('default_list_limit'), 
+        (int)$s->getSetting('default_list_limit'), 
         $translator->translate('invoice.quotes'),
         ''
     );

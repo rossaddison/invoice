@@ -50,8 +50,8 @@ final class TelegramController
     }
     
     public function index(Request $request, UrlGenerator $urlGenerator) : \Yiisoft\DataResponse\DataResponse|Response {
-        $settingRepositoryTelegramToken = $this->sR->get_setting('telegram_token');
-        $chatId = $this->sR->get_setting('telegram_chat_id');
+        $settingRepositoryTelegramToken = $this->sR->getSetting('telegram_token');
+        $chatId = $this->sR->getSetting('telegram_chat_id');
         $ipAddress = null;
         $maxConnections = null;
         $allowUpdates = null;
@@ -65,9 +65,9 @@ final class TelegramController
         $messageEffectId = null;
         $replyParameters = null;
         $replyMarkup = null;
-        $secretToken = $this->sR->get_setting('telegram_webhook_secret_token') ?: '';
+        $secretToken = $this->sR->getSetting('telegram_webhook_secret_token') ?: '';
         try {
-            $telegramEnabled = $this->sR->get_setting('enable_telegram');
+            $telegramEnabled = $this->sR->getSetting('enable_telegram');
             if ($telegramEnabled == '1') { 
                 if (strlen($settingRepositoryTelegramToken) > 1) {
                     $telegramHelper = new TelegramHelper(
@@ -88,7 +88,7 @@ final class TelegramController
                         if (!$failResult instanceof \Vjik\TelegramBot\Api\FailResult) {
                             $user = $this->telegramBotApi->getMe();
                             if (($user instanceof \Vjik\TelegramBot\Api\Type\User) && 
-                                ($this->sR->get_setting('telegram_test_message_use') == '1')) {
+                                ($this->sR->getSetting('telegram_test_message_use') == '1')) {
                                 $text = $this->translator->translate('invoice.invoice.telegram.bot.api.hello.world.test.message');
                                 $sendMessageResult = $this->telegramBotApi->sendMessage(
                                     $chatId,
@@ -153,8 +153,8 @@ final class TelegramController
     }
     
     public function webhook(Request $request) : \Yiisoft\DataResponse\DataResponse|Response {
-        $settingRepositoryTelegramToken = $this->sR->get_setting('telegram_token');
-        $telegramChatId = $this->sR->get_setting('telegram_chat_id');
+        $settingRepositoryTelegramToken = $this->sR->getSetting('telegram_token');
+        $telegramChatId = $this->sR->getSetting('telegram_chat_id');
         try {
             if (strlen($settingRepositoryTelegramToken) > 1) {
                 $telegramHelper = new TelegramHelper(
@@ -181,12 +181,12 @@ final class TelegramController
         ]);
     }
     
-    public function getwebhookinfo(Request $request, UrlGenerator $urlGenerator) : \Yiisoft\DataResponse\DataResponse|Response 
+    public function get_webhookinfo(Request $request, UrlGenerator $urlGenerator) : \Yiisoft\DataResponse\DataResponse|Response 
     {
-        $settingRepositoryTelegramToken = $this->sR->get_setting('telegram_token');
+        $settingRepositoryTelegramToken = $this->sR->getSetting('telegram_token');
         $failResultWebhookInfo = '';
         try {
-            $telegramEnabled = $this->sR->get_setting('enable_telegram');
+            $telegramEnabled = $this->sR->getSetting('enable_telegram');
             if ($telegramEnabled == '1') { 
                 if (strlen($settingRepositoryTelegramToken) > 1) {
                     $telegramHelper = new TelegramHelper(
@@ -214,10 +214,10 @@ final class TelegramController
     
     public function set_webhook(Request $request, UrlGenerator $urlGenerator) : \Yiisoft\DataResponse\DataResponse|Response 
     {
-        $settingRepositoryTelegramToken = $this->sR->get_setting('telegram_token');
+        $settingRepositoryTelegramToken = $this->sR->getSetting('telegram_token');
         $failResultWebhookInfo = '';
         try {
-            $telegramEnabled = $this->sR->get_setting('enable_telegram');
+            $telegramEnabled = $this->sR->getSetting('enable_telegram');
             if ($telegramEnabled == '1') { 
                 if (strlen($settingRepositoryTelegramToken) > 1) {
                     $telegramHelper = new TelegramHelper(
@@ -264,9 +264,9 @@ final class TelegramController
     
     public function delete_webhook(Request $request, UrlGenerator $urlGenerator) : \Yiisoft\DataResponse\DataResponse|Response 
     {
-        $settingRepositoryTelegramToken = $this->sR->get_setting('telegram_token');
+        $settingRepositoryTelegramToken = $this->sR->getSetting('telegram_token');
         try {
-            $telegramEnabled = $this->sR->get_setting('enable_telegram');
+            $telegramEnabled = $this->sR->getSetting('enable_telegram');
             if ($telegramEnabled == '1') { 
                 if (strlen($settingRepositoryTelegramToken) > 1) {
                     $telegramHelper = new TelegramHelper(
@@ -306,14 +306,14 @@ final class TelegramController
     
     public function get_updates(Request $request, UrlGenerator $urlGenerator) : \Yiisoft\DataResponse\DataResponse|Response 
     {
-        $settingRepositoryTelegramToken = $this->sR->get_setting('telegram_token');
+        $settingRepositoryTelegramToken = $this->sR->getSetting('telegram_token');
         $offset = null;
         $limit = null;
         $timeout = null;
         $allowedUpdates = null;
         $failResultUpdates = [];
         try {
-            $telegramEnabled = $this->sR->get_setting('enable_telegram');
+            $telegramEnabled = $this->sR->getSetting('enable_telegram');
             if ($telegramEnabled == '1') { 
                 if (strlen($settingRepositoryTelegramToken) > 1) {
                     $telegramHelper = new TelegramHelper(

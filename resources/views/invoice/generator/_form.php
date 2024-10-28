@@ -39,7 +39,7 @@ use Yiisoft\Html\Tag\Form;
     ->id('GeneratorForm')
     ->open()
 ?> 
-<?= $button::back_save() ?>
+<?= $button::backSave() ?>
 <?= Html::openTag('div', ['class' => 'container']); ?>
     <?= Html::openTag('div', ['class' => 'row']); ?>
         <?= Html::openTag('div', ['class' => 'col card mb-3']); ?> 

@@ -128,15 +128,15 @@ final class InvRecurringController
         /** @psalm-var positive-int $currentPageNeverZero */
         $currentPageNeverZero = $pageNum > 0 ? $pageNum : 1;
         $paginator = (new OffsetPaginator($this->invrecurrings($irR)))
-        ->withPageSize((int)$this->s->get_setting('default_list_limit'))
+        ->withPageSize((int)$this->s->getSetting('default_list_limit'))
         ->withCurrentPage($currentPageNeverZero);
         $numberhelper = new NumberHelper($this->s);
         $canEdit = $this->rbac();
         $parameters = [        
           'paginator' => $paginator,
           'canEdit' => $canEdit,
-          'defaultPageSizeOffsetPaginator' => $this->s->get_setting('default_list_limit')
-                                                    ? (int)$this->s->get_setting('default_list_limit') : 1,  
+          'defaultPageSizeOffsetPaginator' => $this->s->getSetting('default_list_limit')
+                                                    ? (int)$this->s->getSetting('default_list_limit') : 1,  
           'recur_frequencies' => $numberhelper->recur_frequencies(), 
           'invrecurrings' => $this->invrecurrings($irR),
           'alert' => $this->alert()

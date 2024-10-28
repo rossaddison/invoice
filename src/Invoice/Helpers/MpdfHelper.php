@@ -187,7 +187,7 @@ Class MpdfHelper
             $sR->load_settings();
             $aliases = $this->ensure_uploads_folder_exists($sR);  
             $archived_file = $aliases->get('@uploads').$sR::getUploadsArchiveholderRelativeUrl() .''. date('Y-m-d') . '_' . $filename . '.pdf';
-            $title = $sR->get_setting('pdf_archive_inv') == '1' ? $archived_file : $filename . '.pdf';
+            $title = $sR->getSetting('pdf_archive_inv') == '1' ? $archived_file : $filename . '.pdf';
             $start_mpdf = $this->initialize_pdf($password, $sR, $title, $quote_or_invoice, $iiaR, $inv_amount, $aliases, $zugferd_invoice, $associated_files);
             $css = $this->get_css_file($aliases);
             $mpdf = $this->write_html_to_pdf($css,$html,$start_mpdf);            
@@ -198,7 +198,7 @@ Class MpdfHelper
             {
                 // send the file inline to the browser. The plug-in is used if available.
                 $mpdf->Output($filename . '.pdf', self::DEST_BROWSER);
-                if ($sR->get_setting('pdf_archive_inv') === '1') {
+                if ($sR->getSetting('pdf_archive_inv') === '1') {
                     $mpdf->Output($aliases->get('@uploads').$sR::getUploadsArchiveholderRelativeUrl() .''. date('Y-m-d') . '_' . $filename . '.pdf', self::DEST_FILE);
                     return $aliases->get('@uploads').$sR::getUploadsArchiveholderRelativeUrl() .''. date('Y-m-d') . '_' . $filename . '.pdf';
                 } else {
@@ -206,7 +206,7 @@ Class MpdfHelper
                 }
             } else
             {    // save to a local file with the name given by $filename (may include a path).
-                if ($sR->get_setting('pdf_archive_inv') === '1') {
+                if ($sR->getSetting('pdf_archive_inv') === '1') {
                     $mpdf->Output($aliases->get('@uploads').$sR::getUploadsArchiveholderRelativeUrl() .''. date('Y-m-d') . '_' . $filename . '.pdf', self::DEST_FILE);
                     return $aliases->get('@uploads').$sR::getUploadsArchiveholderRelativeUrl() .''. date('Y-m-d') . '_' . $filename . '.pdf';
                 }    
@@ -225,7 +225,7 @@ Class MpdfHelper
         private function isInvoice(string $filename, \Mpdf\Mpdf $mpdf, Aliases $aliases, SR $sR) : string
         {
             // Archive the file if it is an invoice
-            if ($sR->get_setting('pdf_archive_inv') === '1') {
+            if ($sR->getSetting('pdf_archive_inv') === '1') {
                 $archive_folder = $aliases->get('@uploads').$sR::getUploadsArchiveholderRelativeUrl() .'/Invoice';
                 $archived_file = $aliases->get('@uploads').$sR::getUploadsArchiveholderRelativeUrl() .''. date('Y-m-d') . '_' . $filename . '.pdf';
                 if (!is_dir($archive_folder)){
@@ -267,14 +267,14 @@ Class MpdfHelper
             $mpdf = new \Mpdf\Mpdf($this->options);
             // mPDF configuration
             $mpdf->SetDirectionality('ltr');
-            $mpdf->useAdobeCJK = ($sR->get_setting('mpdf_cjk') === '1' ? true : false);
-            $mpdf->autoScriptToLang = ($sR->get_setting('mpdf_auto_script_to_lang') === '1' ? true : false);
-            $mpdf->autoVietnamese = ($sR->get_setting('mpdf_auto_vietnamese') === '1' ? true : false);
-            $mpdf->allow_charset_conversion = ($sR->get_setting('mpdf_allow_charset_conversion') === '0' ? false : true);
-            $mpdf->autoArabic = ($sR->get_setting('mpdf_auto_arabic') === '1' ? true : false);
-            $mpdf->autoLangToFont = ($sR->get_setting('mpdf_auto_language_to_font') === '1' ? true : false);
+            $mpdf->useAdobeCJK = ($sR->getSetting('mpdf_cjk') === '1' ? true : false);
+            $mpdf->autoScriptToLang = ($sR->getSetting('mpdf_auto_script_to_lang') === '1' ? true : false);
+            $mpdf->autoVietnamese = ($sR->getSetting('mpdf_auto_vietnamese') === '1' ? true : false);
+            $mpdf->allow_charset_conversion = ($sR->getSetting('mpdf_allow_charset_conversion') === '0' ? false : true);
+            $mpdf->autoArabic = ($sR->getSetting('mpdf_auto_arabic') === '1' ? true : false);
+            $mpdf->autoLangToFont = ($sR->getSetting('mpdf_auto_language_to_font') === '1' ? true : false);
             $mpdf->SetTitle($title);
-            $mpdf->showImageErrors = ($sR->get_setting('mpdf_show_image_errors') === '1' ? true : false); 
+            $mpdf->showImageErrors = ($sR->getSetting('mpdf_show_image_errors') === '1' ? true : false); 
             
             // Include zugferd if enabled
             if ($zugferd_invoice === true && null!==$inv_amount && null!==$iiaR) {
@@ -297,13 +297,13 @@ Class MpdfHelper
             $mpdf->SetHTMLHeader('<div style="text-align: right; font-size: 8px; font-weight: lighter;">'.$content.'</div>');
 
             // Set the footer if is invoice and if set in settings
-            if (!empty($sR->get_setting('pdf_invoice_footer'))) {
+            if (!empty($sR->getSetting('pdf_invoice_footer'))) {
                 $mpdf->setAutoBottomMargin = 'stretch';
-                $mpdf->SetHTMLFooter('<div id="footer">' . $sR->get_setting('pdf_invoice_footer') . '</div>');
+                $mpdf->SetHTMLFooter('<div id="footer">' . $sR->getSetting('pdf_invoice_footer') . '</div>');
             }
 
             // Watermark
-            if (!empty($sR->get_setting('pdf_watermark'))) {
+            if (!empty($sR->getSetting('pdf_watermark'))) {
                 $mpdf->showWatermarkText = true;
                 $mpdf->showWatermarkImage = true;
             }

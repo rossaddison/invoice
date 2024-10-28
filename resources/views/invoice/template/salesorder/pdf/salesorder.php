@@ -24,7 +24,7 @@ use Yiisoft\Html\Html;
  * @var string $view_custom_fields          appear at the bottom of quote.pdf
  */
 
-$vat = $s->get_setting('enable_vat_registration');
+$vat = $s->getSetting('enable_vat_registration');
 ?>
 
 <!DOCTYPE html>
@@ -199,7 +199,7 @@ $vat = $s->get_setting('enable_vat_registration');
             foreach ($so_tax_rates as $salesorder_tax_rate) : ?>
             <tr>
                 <td <?php echo ($show_item_discounts ? 'colspan="6"' : 'colspan="5"'); ?> class="text-right">
-                    <?php echo Html::encode($salesorder_tax_rate->getTaxRate()?->getTax_rate_name()) . ' (' . Html::encode($s->format_amount($salesorder_tax_rate->getTaxRate()?->getTax_rate_percent())) . '%)'; ?>
+                    <?php echo Html::encode($salesorder_tax_rate->getTaxRate()?->getTaxRateName()) . ' (' . Html::encode($s->format_amount($salesorder_tax_rate->getTaxRate()?->getTaxRatePercent())) . '%)'; ?>
                 </td>
                 <td class="text-right">
                     <?php echo Html::encode($s->format_currency($salesorder_tax_rate->getSo_tax_rate_amount())); ?>

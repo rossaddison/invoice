@@ -25,7 +25,7 @@ use Yiisoft\Html\Html;
  * @var string $view_custom_fields
  */
 
-$vat = $s->get_setting('enable_vat_registration');
+$vat = $s->getSetting('enable_vat_registration');
 ?>
 
 <!DOCTYPE html>
@@ -161,7 +161,7 @@ $vat = $s->get_setting('enable_vat_registration');
                 <?php endif; ?>
                 <td class="text-right">
                     <?php  
-                        echo Html::encode($item->getTaxRate()?->getTax_rate_percent()); 
+                        echo Html::encode($item->getTaxRate()?->getTaxRatePercent()); 
                     ?>
                 </td>    
                 <td class="text-right">
@@ -215,9 +215,9 @@ $vat = $s->get_setting('enable_vat_registration');
             foreach ($inv_tax_rates as $inv_tax_rate) : ?>
             <tr>
                 <td <?php echo ($show_item_discounts ? 'colspan="7"' : 'colspan="6"'); ?> class="text-right">
-                    <?php echo Html::encode($inv_tax_rate->getTaxRate()?->getTax_rate_name()) . 
+                    <?php echo Html::encode($inv_tax_rate->getTaxRate()?->getTaxRateName()) . 
                                ' (' . 
-                               Html::encode($s->format_amount($inv_tax_rate->getTaxRate()?->getTax_rate_percent())) . '%)'; ?>
+                               Html::encode($s->format_amount($inv_tax_rate->getTaxRate()?->getTaxRatePercent())) . '%)'; ?>
                 </td>
                 <td class="text-right">
                     <?php echo Html::encode($s->format_currency($inv_tax_rate->getInv_tax_rate_amount())); ?>
@@ -277,7 +277,7 @@ $vat = $s->get_setting('enable_vat_registration');
         echo $view_custom_fields; 
     } ?>
     </div>    
-    <?php if ($s->get_setting('sumex') == '1') { ?>
+    <?php if ($s->getSetting('sumex') == '1') { ?>
     <div>
         <?php            
             $reason = ['disease','accident','maternity','prevention','birthdefect','unknown']; 
@@ -314,3 +314,4 @@ $vat = $s->get_setting('enable_vat_registration');
 </body>
 </html>
 
+                        

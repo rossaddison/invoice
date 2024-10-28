@@ -38,7 +38,7 @@ if ($errors) {
              ->render();
     }
 }
-$vat = $s->get_setting('enable_vat_registration') === '1' ? true : false;
+$vat = $s->getSetting('enable_vat_registration') === '1' ? true : false;
 ?>
 <div class="panel panel-default">
 <div class="panel-heading">
@@ -106,7 +106,7 @@ $vat = $s->get_setting('enable_vat_registration') === '1' ? true : false;
                      <span class="input-group-text"><?= $vat === false ? $translator->translate('i.item_discount') : $translator->translate('invoice.invoice.cash.discount'); ?></span>
                     <input type="number" name="discount_amount" class="input-sm form-control amount has-feedback" required disabled
                            data-bs-toggle = "tooltip" data-placement="bottom"
-                           title="<?= $s->get_setting('currency_symbol') . ' ' . $translator->translate('i.per_item'); ?>" value="<?= $numberHelper->format_amount($body['discount_amount'] ?? ''); ?>">
+                           title="<?= $s->getSetting('currency_symbol') . ' ' . $translator->translate('i.per_item'); ?>" value="<?= $numberHelper->format_amount($body['discount_amount'] ?? ''); ?>">
                 </div>
             </td>
             <td td-vert-middle>
@@ -116,13 +116,13 @@ $vat = $s->get_setting('enable_vat_registration') === '1' ? true : false;
                         <option value=""> <?= $translator->translate('i.tax_rate'); ?></option>
                         <?php
                             /**
-                             * @var App\Invoice\Entity\TaxRate $tax_rate
+                             * @var App\Invoice\Entity\TaxRate $taxRate
                              */    
-                            foreach ($tax_rates as $tax_rate) { ?>
-                            <option value="<?= $tax_rate->getTax_rate_id(); ?>" <?php $s->check_select(Html::encode($body['tax_rate_id'] ?? ''), $tax_rate->getTax_rate_id()) ?>>
+                            foreach ($tax_rates as $taxRate) { ?>
+                            <option value="<?= $taxRate->getTaxRateId(); ?>" <?php $s->check_select(Html::encode($body['tax_rate_id'] ?? ''), $taxRate->getTaxRateId()) ?>>
                                 <?php
-                                    $taxRatePercent = $tax_rate->getTax_rate_percent();
-                                    $taxRateName = $tax_rate->getTax_rate_name();
+                                    $taxRatePercent = $taxRate->getTaxRatePercent();
+                                    $taxRateName = $taxRate->getTaxRateName();
                                     if (null!==$taxRatePercent && null!==$taxRateName) {
                                         $formattedPercent = $numberHelper->format_amount($taxRatePercent);
                                         if (null!==$formattedPercent) {

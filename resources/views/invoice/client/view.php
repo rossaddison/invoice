@@ -357,7 +357,7 @@
                                         <td><?= null!==($clientGender = $client->getClient_gender()) ? 
                                                 $clientHelper->format_gender($clientGender, $translator) : ''; ?></td>
                                     </tr>
-                                    <?php if ($s->get_setting('sumex') == '1'): ?>
+                                    <?php if ($s->getSetting('sumex') == '1'): ?>
                                         <tr>
                                             <th><?= $translator->translate('i.sumex_ssn'); ?></th>
                                             <td><?= null!==($clientAvs = $client->getClient_avs()) ? $cvH->format_avs($clientAvs) : ''; ?></td>

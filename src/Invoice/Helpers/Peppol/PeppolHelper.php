@@ -766,7 +766,7 @@ Class PeppolHelper {
    */
   public function DescriptionCode(Inv $invoice, DelRepo $delRepo): string {
     $description_code = '';
-    if ($this->s->get_setting('include_delivery_period') == '1' && !empty($this->s->get_setting('stand_in_code'))) {
+    if ($this->s->getSetting('include_delivery_period') == '1' && !empty($this->s->getSetting('stand_in_code'))) {
       if ($invoice->getDelivery_location_id() > 0) {
         $delivery = $delRepo->repoInvoicequery((string) $invoice->getId());
         if ((null !== $delivery) && (!empty($invoice->getStand_in_code()))) {
@@ -803,10 +803,10 @@ Class PeppolHelper {
         foreach ($allowances_or_charges as $ac) {
           $array[] = [
             'chargeIndicator' => $ac->getAllowanceCharge()?->getIdentifier(),
-            'allowanceChargeReasonCode' => $ac->getAllowanceCharge()?->getReason_code(),
+            'allowanceChargeReasonCode' => $ac->getAllowanceCharge()?->getReasonCode(),
             'allowanceChargeReason' => $ac->getAllowanceCharge()?->getReason(),
-            'multiplierFactorNumeric' => $ac->getAllowanceCharge()?->getMultiplier_factor_numeric(),
-            'baseAmount' => $ac->getAllowanceCharge()?->getBase_amount(),
+            'multiplierFactorNumeric' => $ac->getAllowanceCharge()?->getMultiplierFactorNumeric(),
+            'baseAmount' => $ac->getAllowanceCharge()?->getBaseAmount(),
             'amount' => $ac->getAmount(),
             // if chosen document currency (settings...view...peppol electronic invoicing...) different
             // to local supplier's currency,
@@ -817,12 +817,12 @@ Class PeppolHelper {
               'doc_cc_tax_amount' => $ac->getVat(),
               // document currency code
               // views/invoice/setting/views/partial_settings_peppol
-              'doc_cc' => $this->s->get_setting('currency_code_to'),
+              'doc_cc' => $this->s->getSetting('currency_code_to'),
               // supplier tax currency code tax amount
               'supp_tax_cc_tax_amount' => $ac->getVat(),
               // supplier currency code
               // views/invoice/setting/views/partial_settings_peppol
-              'supp_cc' => $this->s->get_setting('currency_code_from')
+              'supp_cc' => $this->s->getSetting('currency_code_from')
             ],
             'taxCategory' => [
               'taxScheme' => [
@@ -1148,8 +1148,8 @@ Class PeppolHelper {
                       ],
                       ["name" => "{$a}ClassifiedTaxCategory", "value" => 
                         [
-                          ["name" => "{$b}ID", "value" => $item->getTaxRate()?->getPeppol_tax_rate_code()],
-                          ["name" => "{$b}Percent", "value" => $item->getTaxRate()?->getTax_rate_percent()],
+                          ["name" => "{$b}ID", "value" => $item->getTaxRate()?->getPeppolTaxRateCode()],
+                          ["name" => "{$b}Percent", "value" => $item->getTaxRate()?->getTaxRatePercent()],
                           ["name" => "{$a}TaxScheme", "value" => 
                             [ 
                               ["name" => "{$b}ID", "value" => 'VAT'],
@@ -1167,7 +1167,7 @@ Class PeppolHelper {
                   ],        
                   ["name" => "{$a}Price", "value" => 
                     [
-                      ["name" => "{$b}PriceAmount", "value" => $this->currency_converter($price), "attributes" => ["currencyID" => $this->s->get_setting('currency_code_to')]],
+                      ["name" => "{$b}PriceAmount", "value" => $this->currency_converter($price), "attributes" => ["currencyID" => $this->s->getSetting('currency_code_to')]],
                       ["name" => "{$b}BaseQuantity", "value" => $item->getQuantity(), "attributes" => ["unitCode" => $unit_peppol->getCode()]],
                       // This is an allowance/discount that is specific to price
                       ["name" => "{$a}AllowanceCharge", "value" => 
@@ -1176,10 +1176,10 @@ Class PeppolHelper {
                           // Mandatory false:  discount on the price => An allowance or discount => ChargeIndicator = false
                           // If there is a reduction of the price, the discount must be shown here
                           ["name" => "{$b}ChargeIndicator", "value" => 'false'],
-                          ["name" => "{$b}Amount", "value" => $this->currency_converter($discount), "attributes" => ["currencyID" => $this->s->get_setting('currency_code_to')]],
+                          ["name" => "{$b}Amount", "value" => $this->currency_converter($discount), "attributes" => ["currencyID" => $this->s->getSetting('currency_code_to')]],
                           // Item gross price
                           // Base Amount: The unit price, exclusive of VAT, before subtracting Item price discount, can not be negative
-                          ["name" => "{$b}BaseAmount", "value" => $this->currency_converter($price), "attributes" => ["currencyID" => $this->s->get_setting('currency_code_to')]],
+                          ["name" => "{$b}BaseAmount", "value" => $this->currency_converter($price), "attributes" => ["currencyID" => $this->s->getSetting('currency_code_to')]],
                         ],
                       ],
                      ],
@@ -1204,11 +1204,11 @@ Class PeppolHelper {
                     $item_line['AllowancesCharges'][] = [
                       ["name" => "{$a}AllowanceCharge", "value" => [
                           ["name" => "{$b}ChargeIndicator", "value" => $acii->getAllowanceCharge()?->getIdentifier()],
-                          ["name" => "{$b}AllowanceChargeReasonCode", "value" => $acii->getAllowanceCharge()?->getReason_code()],
+                          ["name" => "{$b}AllowanceChargeReasonCode", "value" => $acii->getAllowanceCharge()?->getReasonCode()],
                           ["name" => "{$b}AllowanceChargeReason", "value" => $acii->getAllowanceCharge()?->getReason()],
                           ["name" => "{$b}MultiplierFactorNumeric", "value" => ''],
-                          ["name" => "{$b}Amount", "value" => $acii->getAllowanceCharge()?->getMultiplier_factor_numeric()],
-                          ["name" => "{$b}BaseAmount", "value" => $acii->getAllowanceCharge()?->getBase_amount()],
+                          ["name" => "{$b}Amount", "value" => $acii->getAllowanceCharge()?->getMultiplierFactorNumeric()],
+                          ["name" => "{$b}BaseAmount", "value" => $acii->getAllowanceCharge()?->getBaseAmount()],
                         ]],
                     ];
                   } // inv item allowance charge
@@ -1319,7 +1319,7 @@ Class PeppolHelper {
 
   /**
    * Default config document currency code
-   * Subjective to $s->get_setting('currency_code_to')
+   * Subjective to $s->getSetting('currency_code_to')
    * @return string
    */
   public function DocumentCurrencyCode(): string {
@@ -1614,8 +1614,8 @@ Class PeppolHelper {
     foreach ($item_tax_rates as $id) {
       $taxRate = $trR->repoTaxRatequery($id);
       if (null!==$taxRate) {
-        $tax_category = $taxRate->getPeppol_tax_rate_code();
-        $tax_percent = $taxRate->getTax_rate_percent();
+        $tax_category = $taxRate->getPeppolTaxRateCode();
+        $tax_percent = $taxRate->getTaxRatePercent();
         // Throw an exception if any Tax Category does not have a code
         if (null === ($tax_category)) {
           throw new PeppolTaxCategoryCodeNotFoundException($this->t);
@@ -1633,7 +1633,7 @@ Class PeppolHelper {
           foreach ($items as $item) {
             $item_id = $item->getId();
             if (null !== $item_id) {
-              if ($id == $item->getTaxRate()?->getTax_rate_id()) {
+              if ($id == $item->getTaxRate()?->getTaxRateId()) {
                 $item_amount = $iiaR->repoInvItemAmountquery((string) $item_id);
                 if (null !== $item_amount) {
                   $item_sub_total = $item_amount->getSubtotal();

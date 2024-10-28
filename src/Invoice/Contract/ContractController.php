@@ -91,7 +91,7 @@ final class ContractController
         $contracts = $this->contracts_with_sort($contractR, $sort); 
         $this->flash_message('info',$this->translator->translate('invoice.invoice.contract.create'));
         $paginator = (new OffsetPaginator($contracts))
-        ->withPageSize((int)$sR->get_setting('default_list_limit'))
+        ->withPageSize((int)$sR->getSetting('default_list_limit'))
         ->withCurrentPage($currentPageNeverZero)
         ->withToken(PageToken::next((string)$page)); 
         $parameters = [

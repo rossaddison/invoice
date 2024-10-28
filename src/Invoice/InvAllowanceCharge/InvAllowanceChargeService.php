@@ -39,7 +39,7 @@ final class InvAllowanceChargeService
                 } else {
                     $amount = (float)$array['amount'];
                 }
-                $vat = $amount * ($allowanceChargeTaxRate->getTax_rate_percent() ?? 0.00) / 100;
+                $vat = $amount * ($allowanceChargeTaxRate->getTaxRatePercent() ?? 0.00) / 100;
                 $model->setVat($vat);
             }    
         }    

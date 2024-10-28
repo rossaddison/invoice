@@ -84,9 +84,9 @@ final class ImportController
         
     private function invoiceplaneConnected() : Connection|null
     {
-        $settingInvoiceplaneName = $this->sR->get_setting('invoiceplane_database_name');
-        $settingInvoiceplaneUsername = $this->sR->get_setting('invoiceplane_database_username');
-        $settingInvoiceplanePassword = $this->sR->get_setting('invoiceplane_database_password') ?: '';
+        $settingInvoiceplaneName = $this->sR->getSetting('invoiceplane_database_name');
+        $settingInvoiceplaneUsername = $this->sR->getSetting('invoiceplane_database_username');
+        $settingInvoiceplanePassword = $this->sR->getSetting('invoiceplane_database_password') ?: '';
         if (strlen($settingInvoiceplaneName) > 0 && strlen($settingInvoiceplaneUsername) > 0)
         {
             $dsn = (new Dsn(
@@ -120,8 +120,8 @@ final class ImportController
         
     public function invoiceplane() : Response
     {
-        if (strlen($this->sR->get_setting('invoiceplane_database_name')) > 0
-            && strlen($this->sR->get_setting('invoiceplane_database_username')) > 0) {
+        if (strlen($this->sR->getSetting('invoiceplane_database_name')) > 0
+            && strlen($this->sR->getSetting('invoiceplane_database_username')) > 0) {
             $db = $this->invoiceplaneConnected();
             if (count($this->uR->findAllPreloaded()) == 0 
              && count($this->fR->findAllPreloaded()) == 0
@@ -198,17 +198,17 @@ final class ImportController
          * @var TaxRate $taxRateService 
          */
         $taxRateService = new TaxRate();
-        $taxRateService->setTax_rate_name('Zero');
-        $taxRateService->setTax_rate_percent(0);
-        $taxRateService->setTax_rate_default(false);
+        $taxRateService->setTaxRateName('Zero');
+        $taxRateService->setTaxRatePercent(0);
+        $taxRateService->setTaxRateDefault(false);
         $this->trR->save($taxRateService);
         /**
          * @var TaxRate $taxRateStandard 
          */
         $taxRateStandard = new TaxRate();
-        $taxRateStandard->setTax_rate_name('Standard');
-        $taxRateStandard->setTax_rate_percent(20);
-        $taxRateStandard->setTax_rate_default(true);
+        $taxRateStandard->setTaxRateName('Standard');
+        $taxRateStandard->setTaxRatePercent(20);
+        $taxRateStandard->setTaxRateDefault(true);
         $this->trR->save($taxRateStandard);
     }
     
@@ -318,8 +318,8 @@ final class ImportController
          */
         foreach ($taxRates as $taxRate) {
             $newTaxRate = new \App\Invoice\Entity\TaxRate();
-            $newTaxRate->setTax_rate_name((string)$taxRate['tax_rate_name']);
-            $newTaxRate->setTax_rate_default(false);
+            $newTaxRate->setTaxRateName((string)$taxRate['tax_rate_name']);
+            $newTaxRate->setTaxRateDefault(false);
             $this->trR->save($newTaxRate);
         }
         $this->flash_message('info', $this->translator->translate('invoice.invoice.invoiceplane.taxrates'));

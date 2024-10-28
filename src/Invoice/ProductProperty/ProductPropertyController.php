@@ -121,14 +121,14 @@ final class ProductPropertyController
       $currentPageNeverZero = $page > 0 ? $page : 1;
       $productproperty = $productpropertyRepository->findAllPreloaded();
       $paginator = (new OffsetPaginator($productproperty))
-      ->withPageSize((int) $settingRepository->get_setting('default_list_limit'))
+      ->withPageSize((int) $settingRepository->getSetting('default_list_limit'))
       ->withCurrentPage($currentPageNeverZero)
       ->withToken(PageToken::next((string)$page));
       $parameters = [
         'productpropertys' => $this->productpropertys($productpropertyRepository),
         'paginator' => $paginator,
         'alert' => $this->alert(),
-        'max' => (int) $settingRepository->get_setting('default_list_limit')
+        'max' => (int) $settingRepository->getSetting('default_list_limit')
     ];
     return $this->viewRenderer->render('index', $parameters);
     }

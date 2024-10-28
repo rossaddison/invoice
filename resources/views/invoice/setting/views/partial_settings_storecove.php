@@ -26,7 +26,7 @@ use Yiisoft\Html\Html;
                             <label for="settings[storecove_country]" <?= $s->where('storecove_country'); ?>>
                                 <?= Html::a($translator->translate('invoice.storecove.create.a.sender.legal.entity.country'), 'https://www.storecove.com/docs/#_create_a_sender', ['style' => 'text-decoration:none']); ?>
                             </label>
-                            <?php $body['settings[storecove_country]'] = $s->get_setting('storecove_country'); ?>
+                            <?php $body['settings[storecove_country]'] = $s->getSetting('storecove_country'); ?>
                             <select name="settings[storecove_country]" id="settings[storecove_country]"
                                     class="form-control">
                                         <?php
@@ -48,7 +48,7 @@ use Yiisoft\Html\Html;
                             <label for="storecove_legal_entity_id">
                                 <?= $translator->translate('invoice.storecove.legal.entity.id.for.json'); ?>
                             </label>
-                            <?php $body['settings[storecove_legal_entity_id]'] = $s->get_setting('storecove_legal_entity_id'); ?>
+                            <?php $body['settings[storecove_legal_entity_id]'] = $s->getSetting('storecove_legal_entity_id'); ?>
                             <input type="text" name="settings[storecove_legal_entity_id]" id="storecove_legal_entity_id"
                                    class="form-control" required
                                    value="<?= $body['settings[storecove_legal_entity_id]']; ?>">
@@ -59,7 +59,7 @@ use Yiisoft\Html\Html;
                             <label for="settings[storecove_sender_identifier]" <?= $s->where('storecove_sender_identifier'); ?> >
                                 <?= $translator->translate('invoice.storecove.sender.identifier'); ?>
                             </label>
-                            <?php $body['settings[storecove_sender_identifier]'] = $s->get_setting('storecove_sender_identifier'); ?>
+                            <?php $body['settings[storecove_sender_identifier]'] = $s->getSetting('storecove_sender_identifier'); ?>
                             <select name="settings[storecove_sender_identifier]" id="settings[storecove_sender_identifier]" class="form-control">
 
                                 <?php
@@ -98,7 +98,7 @@ use Yiisoft\Html\Html;
                             <label for="storecove_sender_identifier_basis" <?= $s->where('storecove_sender_identifier_basis'); ?>>
                                 <?= $translator->translate('invoice.storecove.sender.identifier.basis'); ?>
                             </label>
-                            <?php $body['settings[storecove_sender_identifier_basis]'] = $s->get_setting('storecove_sender_identifier_basis'); ?>
+                            <?php $body['settings[storecove_sender_identifier_basis]'] = $s->getSetting('storecove_sender_identifier_basis'); ?>
                             <select name="settings[storecove_sender_identifier_basis]" class="form-control"
                                     id="storecove_sender_identifier_basis" data-minimum-results-for-search="Infinity">
                                 <option value="Legal">

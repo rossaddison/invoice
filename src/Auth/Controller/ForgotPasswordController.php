@@ -84,7 +84,7 @@ final class ForgotPasswordController
            return $this->webService->getRedirectResponse('site/index');    
         }
         // check that symfony and the config/common/params.php mailer->senderEmail have been setup
-        if (($this->sR->get_setting('email_send_method') !== 'symfony') || ($this->sR->mailerEnabled() == false) || empty($this->sR->getConfigSenderEmail()))  {
+        if (($this->sR->getSetting('email_send_method') !== 'symfony') || ($this->sR->mailerEnabled() == false) || empty($this->sR->getConfigSenderEmail()))  {
            return $this->webService->getRedirectResponse('site/forgotemailfailed'); 
         }
         $requestPasswordResetToken = '';
@@ -126,7 +126,7 @@ final class ForgotPasswordController
                          * @var string $_language
                          */
                         $htmlBody = $this->htmlBodyWithMaskedRandomAndTimeTokenLink($user, $_language,  $requestPasswordResetToken);
-                        if (($this->sR->get_setting('email_send_method') == 'symfony') || ($this->sR->mailerEnabled() == true))  {
+                        if (($this->sR->getSetting('email_send_method') == 'symfony') || ($this->sR->mailerEnabled() == true))  {
                            $email = (new \Yiisoft\Mailer\Message())
                             ->withSubject($login. ': <'.$to.'>')
                             ->withDate(new \DateTimeImmutable('now'))

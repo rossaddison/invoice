@@ -121,12 +121,12 @@ class Invoice implements XmlSerializable {
    * @return Invoice
    */
   public function setDocumentCurrencyCode(): Invoice {
-    $this->documentCurrencyCode = $this->settingRepository->get_setting('currency_code_to');
+    $this->documentCurrencyCode = $this->settingRepository->getSetting('currency_code_to');
     return $this;
   }
 
   public function getDocumentCurrencyCode(): string {
-    return $this->settingRepository->get_setting('currency_code_to');
+    return $this->settingRepository->getSetting('currency_code_to');
   }
 
   /**

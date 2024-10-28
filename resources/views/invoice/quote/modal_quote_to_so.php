@@ -38,7 +38,7 @@ use Yiisoft\Html\Html;
                     <div class="form-group">
                         <label for="password"><?= $translator->translate('invoice.quote.to.so.password'); ?></label>
                         <input type="text" name="password" id="password" class="form-control"
-                               value="<?= $s->get_setting('so_pre_password') == '' ? '' : $s->get_setting('so_pre_password') ?>"
+                               value="<?= $s->getSetting('so_pre_password') == '' ? '' : $s->getSetting('so_pre_password') ?>"
                                autocomplete="off">
                     </div>
                     <div class="form-group">
@@ -52,7 +52,7 @@ use Yiisoft\Html\Html;
                                  */
                                 foreach ($groups as $group) { ?>
                                 <option value="<?php echo $group->getId(); ?>"
-                                    <?php $s->check_select($s->get_setting('default_sales_order_group'), $group->getId()); ?>>
+                                    <?php $s->check_select($s->getSetting('default_sales_order_group'), $group->getId()); ?>>
                                     <?= Html::encode($group->getName()); ?></option>
                             <?php } ?>
                         </select>

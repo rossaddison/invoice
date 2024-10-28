@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace App\Invoice\Entity;
@@ -47,78 +48,78 @@ class TaxRate
         $this->tax_rate_default = $tax_rate_default;
     }
     
-    public function setTax_rate_id(int $tax_rate_id): void
+    public function setTaxRateId(int $tax_rate_id): void
     {
         $this->id = $tax_rate_id;
     }
     
-    public function getTax_rate_id(): ?int
+    public function getTaxRateId(): ?int
     {
         return $this->id;
     }
 
-    public function getTax_rate_name(): ?string
+    public function getTaxRateName(): ?string
     {
         return $this->tax_rate_name;
     }
 
-    public function setTax_rate_name(string $tax_rate_name): void
+    public function setTaxRateName(string $tax_rate_name): void
     {
         $this->tax_rate_name = $tax_rate_name;
     }
     
-    public function getTax_rate_code(): ?string
+    public function getTaxRateCode(): ?string
     {
         return $this->tax_rate_code;
     }
 
-    public function setTax_rate_code(string $tax_rate_code): void
+    public function setTaxRateCode(string $tax_rate_code): void
     {
         $this->tax_rate_code = $tax_rate_code;
     }
     
-    public function getPeppol_tax_rate_code(): ?string
+    public function getPeppolTaxRateCode(): ?string
     {
         return $this->peppol_tax_rate_code;
     }
 
-    public function setPeppol_tax_rate_code(string $peppol_tax_rate_code): void
+    public function setPeppolTaxRateCode(string $peppol_tax_rate_code): void
     {
         $this->peppol_tax_rate_code = $peppol_tax_rate_code;
     }
     
-    public function getStorecove_tax_type() : string  
+    public function getStorecoveTaxType() : string  
     {
         return $this->storecove_tax_type;
     }
     
-    public function setStorecove_tax_type(string $storecove_tax_type): void
+    public function setStorecoveTaxType(string $storecove_tax_type): void
     {
         $this->storecove_tax_type = $storecove_tax_type;
     }  
         
-    public function getTax_rate_percent(): ?float
+    public function getTaxRatePercent(): ?float
     {
         return $this->tax_rate_percent;
     }
     
-    public function setTax_rate_percent(float $tax_rate_percent): void
+    public function setTaxRatePercent(float $tax_rate_percent): void
     {
         $this->tax_rate_percent = $tax_rate_percent; 
     }
     
-    public function getTax_rate_default(): bool
+    public function getTaxRateDefault(): bool
     {
         return $this->tax_rate_default;
     }
     
-    public function setTax_rate_default(bool $tax_rate_default): void 
+    public function setTaxRateDefault(bool $tax_rate_default): void 
     {
         $this->tax_rate_default = $tax_rate_default;
     }
     
     public function isNewRecord(): bool
     {
-        return $this->getTax_rate_id() === null;
+        return $this->getTaxRateId() === null;
     }
 }

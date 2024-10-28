@@ -31,7 +31,7 @@ use Yiisoft\Html\Html;
     <?= Html::openTag('h1', ['class' => 'headerbar-title']); ?>
         <?= $translator->translate('i.assign_client'); ?>
     <?= Html::closeTag('h1'); ?>
-    <?= $button::back_save(); ?>
+    <?= $button::backSave(); ?>
 <?= Html::closeTag('div'); ?>
 
 <?= Html::openTag('div', ['id' => 'content']); ?>

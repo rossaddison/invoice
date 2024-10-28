@@ -135,7 +135,7 @@ use Yiisoft\Yii\DataView\OffsetPagination;
     $grid_summary = $s->grid_summary(
         $paginator, 
         $translator, 
-        (int)$s->get_setting('default_list_limit'), 
+        (int)$s->getSetting('default_list_limit'), 
         $translator->translate('invoice.merchant'), '');    
     $toolbarString = Form::tag()->post($urlGenerator->generate('merchant/index'))->csrf($csrf)->open() .    
         Div::tag()->addClass('float-end m-3')->content($toolbarReset)->encode(false)->render() .

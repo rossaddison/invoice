@@ -21,8 +21,8 @@ use Yiisoft\Html\Html;
  <div class="mb3 form-group">
    <label for="tax_rate_id" class="form-label" style="background:lightblue"><?= $translator->translate('i.tax_rate'); ?></label>
    <?php  $actionNameTax = 'taxrate/view';
-        $actionArgumentsTax = ['tax_rate_id' => $quoteitem->getTaxRate()?->getTax_rate_id()];
-        $taxRateName = $quoteitem->getTaxRate()?->getTax_rate_name();
+        $actionArgumentsTax = ['tax_rate_id' => $quoteitem->getTaxRate()?->getTaxRateId()];
+        $taxRateName = $quoteitem->getTaxRate()?->getTaxRateName();
         if (null!==$taxRateName) {
             echo Html::a($taxRateName, $urlGenerator->generate($actionNameTax, $actionArgumentsTax))->render();
         } 

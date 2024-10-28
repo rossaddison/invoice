@@ -335,7 +335,7 @@ final class InvItemController
     {
         $taxrate = $trr->repoTaxRatequery((string)$id);
         if ($taxrate) {
-            $percentage = $taxrate->getTax_rate_percent();        
+            $percentage = $taxrate->getTaxRatePercent();        
             return $percentage;
         }
         return null;
@@ -370,11 +370,11 @@ final class InvItemController
        $allowance_total = $allowance;
        $tax_total = 0.00;
        // NO VAT
-       if ($s->get_setting('enable_vat_registration') === '0') { 
+       if ($s->getSetting('enable_vat_registration') === '0') { 
         $tax_total = ((($sub_total - $discount_total + $charge_total-$allowance_total) * ($tax_rate_percentage/100)));
        }
        // VAT
-       if ($s->get_setting('enable_vat_registration') === '1') { 
+       if ($s->getSetting('enable_vat_registration') === '1') { 
         // EARLY SETTLEMENT CASH DISCOUNT MUST BE REMOVED BEFORE VAT DETERMINED
         // @see https://informi.co.uk/finance/how-vat-affected-discounts
         $tax_total = ((($sub_total - $discount_total+$charge_total) * ($tax_rate_percentage/100)));

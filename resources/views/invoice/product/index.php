@@ -120,7 +120,7 @@ use Yiisoft\Yii\DataView\YiiRouter\UrlCreator;
         new DataColumn(
             field: 'product_price',
             property: 'filter_product_price',    
-            header: $translator->translate('i.product_price'). ' ( '. $s->get_setting('currency_symbol'). ' ) ',   
+            header: $translator->translate('i.product_price'). ' ( '. $s->getSetting('currency_symbol'). ' ) ',   
             content: static fn (Product $model): string => Html::encode($model->getProduct_price()),
             filter: true,
             withSorting: false
@@ -139,18 +139,18 @@ use Yiisoft\Yii\DataView\YiiRouter\UrlCreator;
         new DataColumn(
             'tax_rate_id',    
             header: $translator->translate('i.tax_rate'),
-            content: static fn (Product $model): string => ($model->getTaxrate()?->getTax_rate_id() > 0) 
-                        ? Html::encode($model->getTaxrate()?->getTax_rate_name()) 
+            content: static fn (Product $model): string => ($model->getTaxrate()?->getTaxRateId() > 0) 
+                        ? Html::encode($model->getTaxrate()?->getTaxRateName()) 
                         : $translator->translate('i.none'),                       
             withSorting: true    
         ),
         new DataColumn(
             'product_tariff',                    
-            header: $s->get_setting('sumex') ? $translator->translate('i.product_tariff'). '('. $s->get_setting('currency_symbol'). ')' : '',                
-            content: static fn (Product $model): string => ($s->get_setting('sumex') 
+            header: $s->getSetting('sumex') ? $translator->translate('i.product_tariff'). '('. $s->getSetting('currency_symbol'). ')' : '',                
+            content: static fn (Product $model): string => ($s->getSetting('sumex') 
                         ? Html::encode($model->getProduct_tariff()) 
                         : Html::encode($translator->translate('i.none'))),                       
-            visible: $s->get_setting('sumex') ? true : false
+            visible: $s->getSetting('sumex') ? true : false
         ),
         new DataColumn(
             header: $translator->translate('invoice.product.property.add'),    
@@ -198,7 +198,7 @@ use Yiisoft\Yii\DataView\YiiRouter\UrlCreator;
     $grid_summary = $s->grid_summary(
         $paginator, 
         $translator, 
-        (int)$s->get_setting('default_list_limit'), 
+        (int)$s->getSetting('default_list_limit'), 
         $translator->translate('invoice.products'),
         ''
     );

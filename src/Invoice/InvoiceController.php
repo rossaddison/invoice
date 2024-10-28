@@ -163,7 +163,7 @@ final class InvoiceController
         /** 
          * @var mixed $api_key_here
          */
-        $api_key_here = $this->crypt->decode($this->s->get_setting('gateway_storecove_apiKey')); 
+        $api_key_here = $this->crypt->decode($this->s->getSetting('gateway_storecove_apiKey')); 
         $site = curl_init();
         curl_setopt($site, CURLOPT_URL, $store_cove);
         curl_setopt($site, CURLOPT_POST, true);
@@ -198,7 +198,7 @@ final class InvoiceController
         /** 
          * @var mixed $api_key_here
          */
-        $api_key_here = $this->crypt->decode($this->s->get_setting('gateway_storecove_apiKey'));
+        $api_key_here = $this->crypt->decode($this->s->getSetting('gateway_storecove_apiKey'));
         $site = curl_init();
         curl_setopt($site, CURLOPT_URL, $store_cove);
         curl_setopt($site, CURLOPT_POST, true);
@@ -231,7 +231,7 @@ final class InvoiceController
         // store-cove regex: ^GB(\d{9}(\d{3})?$|^[A-Z]{2}\d{3})$ will match eg. GB000123456
         
         // eg. GB obtained from setting view storecove
-        $legal = $this->s->get_setting('storecove_country');
+        $legal = $this->s->getSetting('storecove_country');
         // Must be a 9 digit number including preceding zeros or a 12 digit number
         // eg. 000217688
         $id = '000217793';
@@ -241,7 +241,7 @@ final class InvoiceController
         /** 
          * @var mixed $api_key_here
          */
-        $api_key_here = $this->crypt->decode($this->s->get_setting('gateway_storecove_apiKey'));
+        $api_key_here = $this->crypt->decode($this->s->getSetting('gateway_storecove_apiKey'));
         $site = curl_init();
         curl_setopt($site, CURLOPT_URL, $store_cove);
         curl_setopt($site, CURLOPT_POST, true);
@@ -270,11 +270,11 @@ final class InvoiceController
     {
         $store_cove = "https://api.storecove.com/api/v2/document_submissions";
         // Remove zeros from '000217668' => integer'
-        $legal_entity_id_as_integer = (int)$this->s->get_setting('storecove_legal_entity_id');
+        $legal_entity_id_as_integer = (int)$this->s->getSetting('storecove_legal_entity_id');
         /** 
          * @var mixed $api_key_here
          */
-        $api_key_here = $this->crypt->decode($this->s->get_setting('gateway_storecove_apiKey'));
+        $api_key_here = $this->crypt->decode($this->s->getSetting('gateway_storecove_apiKey'));
         $site = curl_init();
         curl_setopt($site, CURLOPT_URL, $store_cove);
         curl_setopt($site, CURLOPT_POST, true);
@@ -366,11 +366,11 @@ final class InvoiceController
     {
         $store_cove = "https://api.storecove.com/api/v2/document_submissions";
         // Remove zeros from '000217668' => integer'
-        $legal_entity_id_as_integer = (int)$this->s->get_setting('storecove_legal_entity_id');
+        $legal_entity_id_as_integer = (int)$this->s->getSetting('storecove_legal_entity_id');
         /** 
          * @var mixed $api_key_here
          */
-        $api_key_here = $this->crypt->decode($this->s->get_setting('gateway_storecove_apiKey'));
+        $api_key_here = $this->crypt->decode($this->s->getSetting('gateway_storecove_apiKey'));
         $site = curl_init();
         curl_setopt($site, CURLOPT_URL, $store_cove);
         curl_setopt($site, CURLOPT_POST, true);
@@ -708,8 +708,8 @@ final class InvoiceController
             'quotes' => $qR->findAllPreloaded(),
             
             // Totals for status eg. draft, sent, viewed...
-            'invoice_status_totals'=>$iaR->get_status_totals($iR, $sR, $translator, $sR->get_setting('invoice_overview_period') ?: 'this-month'),
-            'quote_status_totals'=>$qaR->get_status_totals($qR, $sR, $translator, $sR->get_setting('quote_status_period') ?: 'this-month'),
+            'invoice_status_totals'=>$iaR->get_status_totals($iR, $sR, $translator, $sR->getSetting('invoice_overview_period') ?: 'this-month'),
+            'quote_status_totals'=>$qaR->get_status_totals($qR, $sR, $translator, $sR->getSetting('quote_status_period') ?: 'this-month'),
             
             // Array of statuses: draft, sent, viewed, paid, cancelled
             'invoice_statuses'=>$iR->getStatuses($this->translator),
@@ -718,10 +718,10 @@ final class InvoiceController
             'quote_statuses'=>$qR->getStatuses($this->translator),
             
             // this-month, last-month, this-quarter, lsat-quarter, this-year, last-year
-            'invoice_status_period'=>str_replace('-', '_', $sR->get_setting('invoice_overview_period')),
+            'invoice_status_period'=>str_replace('-', '_', $sR->getSetting('invoice_overview_period')),
             
             // this-month, last-month, this-quarter, lsat-quarter, this-year, last-year
-            'quote_status_period'=>str_replace('-', '_', $sR->get_setting('quote_overview_period')),
+            'quote_status_period'=>str_replace('-', '_', $sR->getSetting('quote_overview_period')),
             
             // Projects
             'projects'=>$prjctR->findAllPreloaded(),
@@ -785,7 +785,7 @@ final class InvoiceController
                           ClientRepository $cR,
                           GroupRepository $gR
                          ): \Yiisoft\DataResponse\DataResponse {
-        if (($sR->get_setting('debug_mode') == '1') && ($this->userService->hasPermission('editInv'))) {
+        if (($sR->getSetting('debug_mode') == '1') && ($this->userService->hasPermission('editInv'))) {
             $this->flash_message('info' , $this->viewRenderer->renderPartialAsString('//invoice/info/invoice'));
         }    
         $gR->repoCountAll() === 0 ? $this->install_default_invoice_and_quote_group($gR) : '';
@@ -822,7 +822,7 @@ final class InvoiceController
                 && $uR->repoTestDataCount() == 0
                 && $pR->repoTestDataCount() == 0
                 // The setting install_test_data has been set to Yes in Settings...View
-                && $sR->get_setting('install_test_data') === '1') {
+                && $sR->getSetting('install_test_data') === '1') {
                 $this->install_test_data($trR, $uR, $fR, $pR, $cR);
         } else {
                 // Test Data Already exists => Settings...View install_test_data must be set back to No
@@ -1023,9 +1023,9 @@ final class InvoiceController
         // These tax rates will not be deleted when test data is reset because they are defaults
         if ($trR->repoCountAll() < 2) {
             $tax_rate = new TaxRate();
-            $tax_rate->setTax_rate_name('Zero');
-            $tax_rate->setTax_rate_percent(0);
-            $tax_rate->setTax_rate_default(false);
+            $tax_rate->setTaxRateName('Zero');
+            $tax_rate->setTaxRatePercent(0);
+            $tax_rate->setTaxRateDefault(false);
             $trR->save($tax_rate);
         }    
     }
@@ -1040,9 +1040,9 @@ final class InvoiceController
         // These tax rates will not be deleted when test data is reset because they are defaults
         if ($trR->repoCountAll() < 2) {
             $tax_rate = new TaxRate();
-            $tax_rate->setTax_rate_name('Standard');
-            $tax_rate->setTax_rate_percent(20);
-            $tax_rate->setTax_rate_default(true);
+            $tax_rate->setTaxRateName('Standard');
+            $tax_rate->setTaxRatePercent(20);
+            $tax_rate->setTaxRateDefault(true);
             $trR->save($tax_rate);
         }    
     }
@@ -1287,7 +1287,7 @@ final class InvoiceController
                                     InvRepository $iR,
                                    ): \Yiisoft\DataResponse\DataResponse {
         $flash =  '';
-        if (($sR->repoCount('use_test_data') > 0 && $sR->get_setting('use_test_data') == '0')) {
+        if (($sR->repoCount('use_test_data') > 0 && $sR->getSetting('use_test_data') == '0')) {
             // Only remove the test data if the user's test quotes and invoices have been removed FIRST else integrity constraint violations
             if (($qR->repoCountAll() > 0) || ($iR->repoCountAll() > 0)) {
                 $flash = $this->translator->translate('invoice.first.reset');
@@ -1327,7 +1327,7 @@ final class InvoiceController
                                     TaxRateRepository $trR
                                    ): \Yiisoft\DataResponse\DataResponse {        
         $flash =  '';
-        if ($sR->repoCount('install_test_data') > 0 && $sR->get_setting('install_test_data') == 1) {
+        if ($sR->repoCount('install_test_data') > 0 && $sR->getSetting('install_test_data') == 1) {
             // Only remove the test data if the user's test quotes and invoices have been removed FIRST else integrity constraint violations
             if (($qR->repoCountAll() > 0) || ($iR->repoCountAll() > 0)) {
                 $flash = $this->translator->translate('invoice.first.reset');

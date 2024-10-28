@@ -174,7 +174,7 @@ final class SalesOrderItemController
     {
         $taxrate = $trr->repoTaxRatequery((string)$id);
         if ($taxrate) {
-            $percentage = $taxrate->getTax_rate_percent();        
+            $percentage = $taxrate->getTaxRatePercent();        
             return $percentage;
         }
         return null;
@@ -201,11 +201,11 @@ final class SalesOrderItemController
             $discount_total = ($quantity*$discount);
             $tax_total = 0.00;
             // NO VAT
-            if ($sR->get_setting('enable_vat_registration') === '0') { 
+            if ($sR->getSetting('enable_vat_registration') === '0') { 
              $tax_total = (($sub_total * ($tax_rate_percentage/100)));
             }
             // VAT
-            if ($sR->get_setting('enable_vat_registration') === '1') { 
+            if ($sR->getSetting('enable_vat_registration') === '1') { 
              // EARLY SETTLEMENT CASH DISCOUNT MUST BE REMOVED BEFORE VAT DETERMINED
              // @see https://informi.co.uk/finance/how-vat-affected-discounts
              $tax_total = ((($sub_total-$discount_total) * ($tax_rate_percentage/100)));

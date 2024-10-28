@@ -33,7 +33,7 @@
 
                 <div class="panel-body">
                     <form method="post" action="<?= $urlGenerator->generate($actionName, $actionArguments); ?>"
-                        <?php echo ($s->get_setting('open_reports_in_new_tab') === '1' ? 'target="_blank"' : ''); ?>>
+                        <?php echo ($s->getSetting('open_reports_in_new_tab') === '1' ? 'target="_blank"' : ''); ?>>
 
                         <input type="hidden" name="_csrf" value="<?= $csrf ?>">
 

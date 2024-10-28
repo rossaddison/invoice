@@ -607,7 +607,7 @@ final class PaymentController
                     'sortOrder' => $query_params['sort'] ?? '', 
                     'iaR' => $iaR,
                     'payments' => $this->payments($paymentRepository),
-                    'max' => (int)$settingRepository->get_setting('default_list_limit'),
+                    'max' => (int)$settingRepository->getSetting('default_list_limit'),
                 ];
                 return $this->viewRenderer->render('guest', $parameters);
             } 
@@ -710,7 +710,7 @@ final class PaymentController
                     (string)$query_params['paymentDateFilter']);
         }
         $paginator = (new OffsetPaginator($payments))
-         ->withPageSize((int)$settingRepository->get_setting('default_list_limit'))
+         ->withPageSize((int)$settingRepository->getSetting('default_list_limit'))
          ->withCurrentPage($currentPageNeverZero)
          ->withSort($sort)           
          ->withToken(PageToken::next((string)$page));
@@ -720,14 +720,14 @@ final class PaymentController
             'alert' => $this->alert(),
             'canEdit' => $canEdit,
             'canView' => $canView,            
-            'defaultPageSizeOffsetPaginator' => $settingRepository->get_setting('default_list_limit')
-                                                    ? (int)$settingRepository->get_setting('default_list_limit') : 1,
+            'defaultPageSizeOffsetPaginator' => $settingRepository->getSetting('default_list_limit')
+                                                    ? (int)$settingRepository->getSetting('default_list_limit') : 1,
             'page' => $page,
             'paginator' => $paginator,
             'sortOrder' => $query_params['sort'] ?? '', 
             'iaR' => $iaR,
             'payments' => $this->payments($paymentRepository),
-            'max' => (int)$settingRepository->get_setting('default_list_limit'),
+            'max' => (int)$settingRepository->getSetting('default_list_limit'),
         ];
         return $this->viewRenderer->render('index', $parameters);  
     }
@@ -808,7 +808,7 @@ final class PaymentController
             $merchants = $merchantRepository->repoMerchantInvNumberWithPaymentProvider((string)$query_params['filterInvNumber'], (string)$query_params['filterPaymentProvider']);
         }
         $paginator = (new OffsetPaginator($merchants))
-         ->withPageSize((int)$settingRepository->get_setting('default_list_limit'))
+         ->withPageSize((int)$settingRepository->getSetting('default_list_limit'))
          ->withCurrentPage($currentPageNeverZero)
          ->withToken(PageToken::next((string) $page));
         // No need for rbac here since the route accessChecker for payment/online_log
@@ -817,8 +817,8 @@ final class PaymentController
             'alert' => $this->alert(),
             'page' => $page,
             'paginator' => $paginator,            
-            'defaultPageSizeOffsetPaginator' => $settingRepository->get_setting('default_list_limit')
-                                                    ? (int)$settingRepository->get_setting('default_list_limit') : 1,
+            'defaultPageSizeOffsetPaginator' => $settingRepository->getSetting('default_list_limit')
+                                                    ? (int)$settingRepository->getSetting('default_list_limit') : 1,
             'merchants'=> $this->merchants($merchantRepository),
         ];
         return $this->viewRenderer->render('online_log', $parameters);  

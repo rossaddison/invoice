@@ -390,11 +390,11 @@ return [
       'InvoiceTypeCode' => '380',
       'Note' => 'Please use our latest telephone number',
       /**
-       * @see $settingRepository->get_setting('currency_code_to')
+       * @see $settingRepository->getSetting('currency_code_to')
        */
       //'DocumentCurrencyCode' => 'EUR',
       /**
-       * @see $settingRepository->get_setting('currency_code_from')
+       * @see $settingRepository->getSetting('currency_code_from')
        */
       'TaxCurrencyCode' => 'GBP',
       'AccountingSupplierParty' => [

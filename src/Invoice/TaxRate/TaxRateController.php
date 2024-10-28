@@ -30,7 +30,7 @@ final class TaxRateController
     private Session $session;
     private ViewRenderer $viewRenderer;
     private WebControllerService $webService;
-    private TaxRateService $taxrateService;       
+    private TaxRateService $taxRateService;       
     private UserService $userService;
     private Translator $translator;
 
@@ -38,7 +38,7 @@ final class TaxRateController
         Session $session,
         ViewRenderer $viewRenderer,
         WebControllerService $webService,
-        TaxRateService $taxrateService,
+        TaxRateService $taxRateService,
         UserService $userService,
         Translator $translator,
     ) {
@@ -47,23 +47,23 @@ final class TaxRateController
         $this->viewRenderer = $viewRenderer->withControllerName('invoice/taxrate')
                                            ->withLayout('@views/layout/invoice.php');
         $this->webService = $webService;
-        $this->taxrateService = $taxrateService;        
+        $this->taxRateService = $taxRateService;        
         $this->userService = $userService;
         $this->translator = $translator;
     }
     
     /**
-     * @param TaxRateRepository $taxrateRepository
+     * @param TaxRateRepository $taxRateRepository
      * @param SettingRepository $settingRepository
      * @param Request $request
      */
-    public function index(TaxRateRepository $taxrateRepository, SettingRepository $settingRepository, Request $request): \Yiisoft\DataResponse\DataResponse
+    public function index(TaxRateRepository $taxRateRepository, SettingRepository $settingRepository, Request $request): \Yiisoft\DataResponse\DataResponse
     {      
         $pageNum = (int)$request->getAttribute('page', '1');
         /** @psalm-var positive-int $currentPageNeverZero */
         $currentPageNeverZero = $pageNum > 0 ? $pageNum : 1;
-        $paginator = (new OffsetPaginator($this->taxrates($taxrateRepository)))
-        ->withPageSize((int)$settingRepository->get_setting('default_list_limit'))
+        $paginator = (new OffsetPaginator($this->taxrates($taxRateRepository)))
+        ->withPageSize((int)$settingRepository->getSetting('default_list_limit'))
         ->withCurrentPage($currentPageNeverZero);
       
         $canEdit = $this->rbac();
@@ -82,7 +82,7 @@ final class TaxRateController
      */
     public function add(Request $request, FormHydrator $formHydrator): Response
     {
-        $peppol_arrays = new PeppolArrays();
+        $peppolArrays = new PeppolArrays();
         $taxRate = new TaxRate();
         $form = new TaxRateForm($taxRate);
         $parameters = [
@@ -91,18 +91,16 @@ final class TaxRateController
             'actionArguments' => [],
             'form' => $form,
             'errors' => [],
-            'optionsDataPeppolTaxRateCode' => $this->optionsDataPeppolTaxRateCode($peppol_arrays->getUncl5305()),
+            'optionsDataPeppolTaxRateCode' => $this->optionsDataPeppolTaxRateCode($peppolArrays->getUncl5305()),
             'optionsDataStoreCoveTaxType' => $this->optionsDataStoreCoveTaxType()
-        ];
-        
+        ];        
         if ($request->getMethod() === Method::POST) {
             if ($formHydrator->populateFromPostAndValidate($form, $request)) {
                 $body = $request->getParsedBody();
-                /**
-                 * @psalm-suppress PossiblyInvalidArgument $body
-                 */
-                $this->taxrateService->saveTaxRate($taxRate, $body);
-                $this->flash_message('success', $this->translator->translate('i.record_successfully_created'));
+                if (is_array($body)) {
+                    $this->taxRateService->saveTaxRate($taxRate, $body);
+                    $this->flashMessage('success', $this->translator->translate('i.record_successfully_created'));
+                }
                 return $this->webService->getRedirectResponse('taxrate/index');
             }
             $parameters['errors'] = $form->getValidationResult()->getErrorMessagesIndexedByProperty();
@@ -121,30 +119,29 @@ final class TaxRateController
      */
     public function edit(Request $request, 
                          CurrentRoute $currentRoute,
-                         TaxRateRepository $taxrateRepository, 
+                         TaxRateRepository $taxRateRepository, 
                          FormHydrator $formHydrator): Response 
     {
-        $taxRate = $this->taxrate($currentRoute, $taxrateRepository);
-        $peppol_arrays = new PeppolArrays();
+        $taxRate = $this->taxRate($currentRoute, $taxRateRepository);
+        $peppolArrays = new PeppolArrays();
         if ($taxRate) {
             $form = new TaxRateForm($taxRate);
             $parameters = [
                 'title' => $this->translator->translate('i.edit'),
                 'actionName' => 'taxrate/edit',
-                'actionArguments' => ['tax_rate_id' => $taxRate->getTax_rate_id()],
+                'actionArguments' => ['tax_rate_id' => $taxRate->getTaxRateId()],
                 'form' => $form,
                 'errors' => [],
-                'optionsDataPeppolTaxRateCode' => $this->optionsDataPeppolTaxRateCode($peppol_arrays->getUncl5305()),
+                'optionsDataPeppolTaxRateCode' => $this->optionsDataPeppolTaxRateCode($peppolArrays->getUncl5305()),
                 'optionsDataStoreCoveTaxType' => $this->optionsDataStoreCoveTaxType()
             ];
             if ($request->getMethod() === Method::POST) {
                 if ($formHydrator->populateFromPostAndValidate($form, $request)) {
                     $body = $request->getParsedBody();
-                    /**
-                     * @psalm-suppress PossiblyInvalidArgument $body
-                     */
-                    $this->taxrateService->saveTaxRate($taxRate, $body);                
-                    $this->flash_message('success', $this->translator->translate('i.record_successfully_updated'));
+                    if (is_array($body)) {
+                        $this->taxRateService->saveTaxRate($taxRate, $body);                
+                        $this->flashMessage('success', $this->translator->translate('i.record_successfully_updated'));
+                    }
                     return $this->webService->getRedirectResponse('taxrate/index');
                 }
                 $parameters['errors'] = $form->getValidationResult()->getErrorMessagesIndexedByProperty();
@@ -157,41 +154,41 @@ final class TaxRateController
     
     /**
      * @param CurrentRoute $currentRoute
-     * @param TaxRateRepository $taxrateRepository
+     * @param TaxRateRepository $taxRateRepository
      * @return Response
      */
-    public function delete(CurrentRoute $currentRoute, TaxRateRepository $taxrateRepository): Response 
+    public function delete(CurrentRoute $currentRoute, TaxRateRepository $taxRateRepository): Response 
     {
         try {
-            $taxrate = $this->taxrate($currentRoute, $taxrateRepository);
-            if ($taxrate) {
-                $this->taxrateService->deleteTaxRate($taxrate);               
+            $taxRate = $this->taxrate($currentRoute, $taxRateRepository);
+            if ($taxRate) {
+                $this->taxRateService->deleteTaxRate($taxRate);               
             }
             return $this->webService->getRedirectResponse('taxrate/index'); 
 	} catch (\Exception $e) {
             unset($e);
-            $this->flash_message('danger', $this->translator->translate('invoice.tax.rate.history.exists'));
+            $this->flashMessage('danger', $this->translator->translate('invoice.tax.rate.history.exists'));
             return $this->webService->getRedirectResponse('taxrate/index');
         } 
     }
     
     /**
      * @param CurrentRoute $currentRoute
-     * @param TaxRateRepository $taxrateRepository
+     * @param TaxRateRepository $taxRateRepository
      */
     public function view(CurrentRoute $currentRoute, 
-                         TaxRateRepository $taxrateRepository)
+                         TaxRateRepository $taxRateRepository)
         : \Yiisoft\DataResponse\DataResponse|Response {
-        $taxRate = $this->taxrate($currentRoute, $taxrateRepository);
-        $peppol_arrays = new PeppolArrays();
+        $taxRate = $this->taxRate($currentRoute, $taxRateRepository);
+        $peppolArrays = new PeppolArrays();
         if ($taxRate) {
             $form = new TaxRateForm($taxRate);
             $parameters = [
                 'title' =>  $this->translator->translate('i.view'),
                 'actionName' => 'taxrate/view',
-                'actionArguments' => ['tax_rate_id' => $taxRate->getTax_rate_id()],
+                'actionArguments' => ['tax_rate_id' => $taxRate->getTaxRateId()],
                 'form' => $form,
-                'optionsDataPeppolTaxRateCode' => $this->optionsDataPeppolTaxRateCode($peppol_arrays->getUncl5305()),
+                'optionsDataPeppolTaxRateCode' => $this->optionsDataPeppolTaxRateCode($peppolArrays->getUncl5305()),
                 'optionsDataStoreCoveTaxType' => $this->optionsDataStoreCoveTaxType()
             ];
             return $this->viewRenderer->render('__view', $parameters);
@@ -205,7 +202,7 @@ final class TaxRateController
     private function rbac(): bool|Response {
         $canEdit = $this->userService->hasPermission('editInv');
         if (!$canEdit){
-            $this->flash_message('warning', $this->translator->translate('invoice.permission'));
+            $this->flashMessage('warning', $this->translator->translate('invoice.permission'));
             return $this->webService->getRedirectResponse('taxrate/index');
         }
         return $canEdit;
@@ -213,29 +210,27 @@ final class TaxRateController
     
     /**
      * @param CurrentRoute $currentRoute
-     * @param TaxRateRepository $taxrateRepository
+     * @param TaxRateRepository $taxRateRepository
      * @return TaxRate|null
      */
-    private function taxrate(CurrentRoute $currentRoute, TaxRateRepository $taxrateRepository): TaxRate|null
+    private function taxrate(CurrentRoute $currentRoute, TaxRateRepository $taxRateRepository): TaxRate|null
     {
         $tax_rate_id = $currentRoute->getArgument('tax_rate_id');
         if (null!==$tax_rate_id) {
-            $taxrate = $taxrateRepository->repoTaxRatequery($tax_rate_id);
-            return $taxrate; 
+            $taxRate = $taxRateRepository->repoTaxRatequery($tax_rate_id);
+            return $taxRate; 
         }
         return null;
     }
-    
-    //$taxrates = $this->taxrates();
     
     /**
      * @return \Yiisoft\Data\Cycle\Reader\EntityReader
      *
      * @psalm-return \Yiisoft\Data\Cycle\Reader\EntityReader
      */
-    private function taxrates(TaxRateRepository $taxrateRepository): \Yiisoft\Data\Cycle\Reader\EntityReader{
-        $taxrates = $taxrateRepository->findAllPreloaded();
-        return $taxrates;
+    private function taxRates(TaxRateRepository $taxRateRepository): \Yiisoft\Data\Cycle\Reader\EntityReader{
+        $taxRates = $taxRateRepository->findAllPreloaded();
+        return $taxRates;
     }
     
     /**
@@ -253,7 +248,7 @@ final class TaxRateController
      * @param string $message
      * @return Flash|null
      */
-    private function flash_message(string $level, string $message): Flash|null {
+    private function flashMessage(string $level, string $message): Flash|null {
         if (strlen($message) > 0) {
             $this->flash->add($level, $message, true);
             return $this->flash;

@@ -48,7 +48,7 @@ use App\Widget\LabelSwitch;
     <input type="hidden" name="_csrf" value="<?= $csrf ?>">
     <div id="headerbar">
         <h1 class="headerbar-title"><?= Html::a($translator->translate('invoice.client.peppol.clientpeppols_form'), 'https://docs.peppol.eu/poacc/billing/3.0/syntax/ubl-invoice/cac-AccountingCustomerParty/'); ?></h1>
-        <?= $button::back_save(); ?><div id="content">
+        <?= $button::backSave(); ?><div id="content">
         <?php
         LabelSwitch::checkbox(
           'client-peppol-label-switch',

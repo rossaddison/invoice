@@ -12,7 +12,7 @@ Class PeppolArrays {
    * @see https://docs.peppol.eu/poacc/billing/3.0/codelist/UNCL5189/
    * @return array
    */
-  public function get_allowances_subset_array(): array {
+  public function getAllowancesSubsetArray(): array {
     $array = [
       '41' => 'Bonus for works ahead of schedule',
       '42' => 'Other Bonus',
@@ -41,7 +41,7 @@ Class PeppolArrays {
    * @see https://docs.peppol.eu/poacc/billing/3.0/codelist/UNCL7161/
    * @return array
    */
-  public function get_charges_array(): array {
+  public function getChargesArray(): array {
     $array = [
       'AA' => ['Advertising',
         'The service of providing advertising.'],
@@ -2615,7 +2615,7 @@ Class PeppolArrays {
        * @var string $value['rdf:value']
        */
       $rdf_value = $value['rdf:value'];
-      if ($s->get_setting('stand_in_code') == $rdf_value) {
+      if ($s->getSetting('stand_in_code') == $rdf_value) {
         /**
          * @var string $value['rdfs:comment']
          */

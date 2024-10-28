@@ -87,7 +87,7 @@ $toolbar = Div::tag();
         ),        
         new DataColumn(
             header:  $translator->translate('invoice.invoice.allowance.or.charge.reason.code'),
-            content: static fn (InvItemAllowanceCharge $model) => $model->getAllowanceCharge()?->getReason_code() ?? ''
+            content: static fn (InvItemAllowanceCharge $model) => $model->getAllowanceCharge()?->getReasonCode() ?? ''
         ),
         new DataColumn(
             content: static function (InvItemAllowanceCharge $model) use ($translator) : string 
@@ -150,7 +150,7 @@ $toolbar = Div::tag();
 <?php
     $grid_summary =  $s->grid_summary(
         $paginator, $translator, 
-        (int)$s->get_setting('default_list_limit'), 
+        (int)$s->getSetting('default_list_limit'), 
         $translator->translate('invoice.invoice.allowance.or.charge.item'), 
     '');
     $toolbarString = 

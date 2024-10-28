@@ -24,7 +24,7 @@
                     <div class="col-xs-12 col-md-6">
                         <div class="form-group">
                             <div class="checkbox">
-                                <?php $body['settings[enable_peppol]'] = $s->get_setting('enable_peppol');?>
+                                <?php $body['settings[enable_peppol]'] = $s->getSetting('enable_peppol');?>
                                 <label <?= $s->where('enable_peppol'); ?>">
                                     <input type="hidden" name="settings[enable_peppol]" value="0">
                                     <input type="checkbox" name="settings[enable_peppol]" value="1"
@@ -37,7 +37,7 @@
                     <div class="col-xs-12 col-md-6">
                         <div class="form-group">
                             <div class="checkbox">
-                                <?php $body['settings[enable_client_peppol_defaults]'] = $s->get_setting('enable_client_peppol_defaults');?>
+                                <?php $body['settings[enable_client_peppol_defaults]'] = $s->getSetting('enable_client_peppol_defaults');?>
                                 <label>
                                     <input type="hidden" name="settings[enable_client_peppol_defaults]" value="0">
                                     <input type="checkbox" name="settings[enable_client_peppol_defaults]" value="1"
@@ -51,7 +51,7 @@
                         <label for="settings[currency_code_from]" >
                             <?= $translator->translate('invoice.peppol.currency.code.from'); ?>
                         </label>
-                        <?php $body['settings[currency_code_from]'] = $s->get_setting('currency_code_from') ?: $config_tax_currency; ?>
+                        <?php $body['settings[currency_code_from]'] = $s->getSetting('currency_code_from') ?: $config_tax_currency; ?>
                         <select name="settings[currency_code_from]" disabled
                             id="settings[currency_code_from]"
                             class="input-sm form-control">
@@ -75,7 +75,7 @@
                         <label for="settings[currency_code_to]" >
                             <?= $translator->translate('invoice.peppol.currency.code.to'); ?>
                         </label>
-                        <?php $body['settings[currency_code_to]'] = $s->get_setting('currency_code_to') ?: $config_tax_currency; ?>
+                        <?php $body['settings[currency_code_to]'] = $s->getSetting('currency_code_to') ?: $config_tax_currency; ?>
                         <select name="settings[currency_code_to]"
                             id="settings[currency_code_to]"
                             class="input-sm form-control">
@@ -100,7 +100,7 @@
                             <?= $translator->translate('invoice.peppol.currency.from.to'); ?>
                             <?= '('. Html::a('xe.com' ,'https://www.xe.com/') . ')'; ?>
                         </label>
-                        <?php $body['settings[currency_from_to]'] = $s->get_setting('currency_from_to') ?: '1.00'; ?>
+                        <?php $body['settings[currency_from_to]'] = $s->getSetting('currency_from_to') ?: '1.00'; ?>
                         <input type="text" name="settings[currency_from_to]" id="settings[currency_from_to]"
                                 class="form-control"
                                 value="<?= $body['settings[currency_from_to]']; ?>">
@@ -110,7 +110,7 @@
                         <label for="settings[currency_to_from]" >
                             <?= $translator->translate('invoice.peppol.currency.to.from'); ?>
                         </label>
-                        <?php $body['settings[currency_to_from]'] = $s->get_setting('currency_to_from') ?: '1.00'; ?>
+                        <?php $body['settings[currency_to_from]'] = $s->getSetting('currency_to_from') ?: '1.00'; ?>
                         <input type="text" name="settings[currency_to_from]" id="settings[currency_to_from]"
                                 class="form-control"
                                 value="<?= $body['settings[currency_to_from]']; ?>">
@@ -119,7 +119,7 @@
                      <div class="col-xs-12 col-md-6">
                         <div class="form-group">
                             <div class="checkbox">
-                                <?php $body['settings[include_delivery_period]'] = ($s->get_setting('include_delivery_period') ?: '0');?>
+                                <?php $body['settings[include_delivery_period]'] = ($s->getSetting('include_delivery_period') ?: '0');?>
                                 <label <?= $s->where('include_delivery_period'); ?>>
                                     <input type="hidden" name="settings[include_delivery_period]" value="0">
                                     <input type="checkbox" name="settings[include_delivery_period]" value="1"
@@ -135,7 +135,7 @@
                             <?= Html::a($translator->translate('invoice.peppol.stand.in.code'),'https://docs.peppol.eu/poacc/billing/3.0/syntax/ubl-invoice/cac-InvoicePeriod/cbc-DescriptionCode/',['style'=>'text-decoration:none']); ?>
                         </label>
                         <div class="input-group">
-                            <?php $body['settings[stand_in_code]'] = $s->get_setting('stand_in_code') ?: ''; ?>
+                            <?php $body['settings[stand_in_code]'] = $s->getSetting('stand_in_code') ?: ''; ?>
                             <select name="settings[stand_in_code]"
                                 id="settings[stand_in_code]"
                                 class="input-sm form-control">
@@ -164,7 +164,7 @@
                         <label for="settings[peppol_xml_stream]" <?= $s->where('peppol_xml_stream'); ?>>
                             <?= $translator->translate('invoice.peppol.xml.stream'); ?>
                         </label>
-                        <?php $body['settings[peppol_xml_stream]'] = $s->get_setting('peppol_xml_stream'); ?>
+                        <?php $body['settings[peppol_xml_stream]'] = $s->getSetting('peppol_xml_stream'); ?>
                         <select name="settings[peppol_xml_stream]" id="settings[peppol_xml_stream]" class="form-control">
                             <option value="0">
                                 <?= $translator->translate('i.no'); ?>

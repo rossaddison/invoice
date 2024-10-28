@@ -97,7 +97,7 @@ final class UploadController {
                 ->withOrderString($query_params['sort'] ?? '-id');
         $uploads = $this->uploads_with_sort($uploadRepository, $sort);
         $paginator = (new OffsetPaginator($uploads))
-                ->withPageSize((int)$this->s->get_setting('default_list_limit'))
+                ->withPageSize((int)$this->s->getSetting('default_list_limit'))
                 ->withCurrentPage($currentPageNeverZero)
                 ->withToken(PageToken::next((string)$page));
 

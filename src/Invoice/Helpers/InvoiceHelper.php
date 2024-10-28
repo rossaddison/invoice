@@ -32,8 +32,8 @@ Class InvoiceHelper
         $aliases = new Aliases(['@invoice' => dirname(__DIR__), 
                                 '@img' => dirname(__DIR__). DIRECTORY_SEPARATOR
                                           .'Asset/core/img']);
-        if (!empty($this->s->get_setting('invoice_logo'))) {
-            return '<img src="'. $aliases->get('@img') . $this->s->get_setting('invoice_logo') . '">';
+        if (!empty($this->s->getSetting('invoice_logo'))) {
+            return '<img src="'. $aliases->get('@img') . $this->s->getSetting('invoice_logo') . '">';
         }
         return '';
     }
@@ -52,8 +52,8 @@ Class InvoiceHelper
                                           'core'
                                           .DIRECTORY_SEPARATOR.  
                                           'img']);
-        if (!empty($this->s->get_setting('invoice_logo'))) {
-            return '<img src="file://' . getcwd() . $aliases->get('@img'). $this->s->get_setting('invoice_logo')  . '" id="invoice-logo">';
+        if (!empty($this->s->getSetting('invoice_logo'))) {
+            return '<img src="file://' . getcwd() . $aliases->get('@img'). $this->s->getSetting('invoice_logo')  . '" id="invoice-logo">';
         }
         return '';
     }

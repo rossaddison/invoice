@@ -23,7 +23,7 @@
                     <div class="col-xs-12 col-md-6">
                         <div class="form-group">
                             <div class="checkbox">
-                                <?php $body['settings[enable_telegram]'] = $s->get_setting('enable_telegram');?>
+                                <?php $body['settings[enable_telegram]'] = $s->getSetting('enable_telegram');?>
                                 <label>
                                     <input type="hidden" name="settings[enable_telegram]" value="0">
                                     <input type="checkbox" name="settings[enable_telegram]" value="1"
@@ -48,7 +48,7 @@
                                     <?= $translator->translate('invoice.invoice.telegram.bot.api.token'); ?>
                                 </label>
                                 <?php 
-                                    $body['settings[telegram_token]'] = $s->get_setting('telegram_token');
+                                    $body['settings[telegram_token]'] = $s->getSetting('telegram_token');
                                 ?>
                                 <input type="password" name="settings[telegram_token]" id="settings[telegram_token]"
                                     class="form-control" value="<?= Html::encode($body['settings[telegram_token]']); ?>">
@@ -61,7 +61,7 @@
                                     <?= $translator->translate('invoice.invoice.telegram.bot.api.chat.id'); ?>
                                 </label>
                                 <?php 
-                                    $body['settings[telegram_chat_id]'] = $s->get_setting('telegram_chat_id');
+                                    $body['settings[telegram_chat_id]'] = $s->getSetting('telegram_chat_id');
                                 ?>
                                 <input type="password" name="settings[telegram_chat_id]" id="settings[telegram_chat_id]"
                                     class="form-control" value="<?= Html::encode($body['settings[telegram_chat_id]']); ?>">
@@ -69,7 +69,7 @@
                             <label for="settings[telegram_test_message_use]">
                                 <b>8. </b><?= $translator->translate('invoice.invoice.telegram.bot.api.hello.world.test.message.use'); ?>
                             </label>
-                            <?php $body['settings[telegram_test_message_use]'] = $s->get_setting('telegram_test_message_use'); ?>
+                            <?php $body['settings[telegram_test_message_use]'] = $s->getSetting('telegram_test_message_use'); ?>
                             <select name="settings[telegram_test_message_use]" id="settings[telegram_test_message_use]" class="form-control">
                                 <option value="0">
                                     <?= $translator->translate('i.no'); ?>
@@ -86,7 +86,7 @@
                             <label for="settings[telegram_payment_notifications]">
                                 <b>10. </b><?= $translator->translate('invoice.invoice.telegram.bot.api.payment.notifications'); ?>
                             </label>
-                            <?php $body['settings[telegram_payment_notifications]'] = $s->get_setting('telegram_payment_notifications'); ?>
+                            <?php $body['settings[telegram_payment_notifications]'] = $s->getSetting('telegram_payment_notifications'); ?>
                             <select name="settings[telegram_payment_notifications]" id="settings[telegram_payment_notifications]" class="form-control">
                                 <option value="0">
                                     <?= $translator->translate('i.no'); ?>
@@ -115,7 +115,7 @@
                                 <?= $translator->translate('invoice.invoice.telegram.bot.api.webhook.secret.token'); ?>
                             </label>
                             <?php 
-                                $body['settings[telegram_webhook_secret_token]'] = $s->get_setting('telegram_webhook_secret_token');
+                                $body['settings[telegram_webhook_secret_token]'] = $s->getSetting('telegram_webhook_secret_token');
                             ?>
                             <input type="password" name="settings[telegram_webhook_secret_token]" id="settings[telegram_webhook_secret_token]"
                                  class="form-control" value="<?= Html::encode($body['settings[telegram_webhook_secret_token]']); ?>">

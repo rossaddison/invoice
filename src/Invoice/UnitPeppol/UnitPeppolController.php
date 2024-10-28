@@ -157,7 +157,7 @@ final class UnitPeppolController
       $parameters = [
           'alert' => $this->alert(),  
           'unitpeppols' => $this->unitpeppols($unitpeppolRepository),
-          'grid_summary'=> $settingRepository->grid_summary($paginator, $this->translator, (int)$settingRepository->get_setting('default_list_limit'), $this->translator->translate('invoice.unit.peppol'), ''),
+          'grid_summary'=> $settingRepository->grid_summary($paginator, $this->translator, (int)$settingRepository->getSetting('default_list_limit'), $this->translator->translate('invoice.unit.peppol'), ''),
           'paginator'=> $paginator
       ];
       return $this->viewRenderer->render('index', $parameters);

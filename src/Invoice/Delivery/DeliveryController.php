@@ -161,14 +161,14 @@ final class DeliveryController {
                 ->withOrderString($query_params['sort'] ?? '-id');
         $deliveries = $this->deliveries_with_sort($dR, $sort);
         $paginator = (new OffsetPaginator($deliveries))
-                ->withPageSize((int) $sR->get_setting('default_list_limit'))
+                ->withPageSize((int) $sR->getSetting('default_list_limit'))
                 ->withCurrentPage($currentPageNeverZero)
                 ->withToken(PageToken::next((string)$page));
         $parameters = [
             'alert' => $this->alert(),
             'paginator' => $paginator,
             'deliveries' => $this->deliveries($dR),
-            'max' =>(int) $sR->get_setting('default_list_limit'),
+            'max' =>(int) $sR->getSetting('default_list_limit'),
         ];
         return $this->viewRenderer->render('delivery/index', $parameters);
     }

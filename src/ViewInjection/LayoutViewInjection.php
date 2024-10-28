@@ -101,8 +101,8 @@ final class LayoutViewInjection implements LayoutParametersInjectionInterface
                 }
             }
         }
-        $stopSigningUp = $this->settingRepository->get_setting('stop_signing_up') == '1' ? true : false;
-        $stopLoggingIn = $this->settingRepository->get_setting('stop_logging_in') == '1' ? true : false;
+        $stopSigningUp = $this->settingRepository->getSetting('stop_signing_up') == '1' ? true : false;
+        $stopLoggingIn = $this->settingRepository->getSetting('stop_logging_in') == '1' ? true : false;
         /**
          * @see .env.php $_ENV['YII_DEBUG'] located in the root (first) folder
          * @see {root} autoload.php 

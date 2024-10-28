@@ -47,7 +47,7 @@ use Yiisoft\Html\Tag\Form;
  * @psalm-var array<array-key, array<array-key, string>|string> $optionsData['postalAddress']
  */
 
-$vat = $s->get_setting('enable_vat_registration') == '1' ? true : false;
+$vat = $s->getSetting('enable_vat_registration') == '1' ? true : false;
 if ($vat) {  echo $noteOnTaxPoint;}
 
 ?>
@@ -307,7 +307,7 @@ if ($vat) {  echo $noteOnTaxPoint;}
                             <?= Field::text($form,'discount_amount')
                                 ->hideLabel(false)
                                 ->disabled($form->getDiscount_percent() > 0.00 && $form->getDiscount_amount() == 0.00 ? true : false)
-                                ->label($translator->translate('i.discount_amount').' '. $s->get_setting('currency_symbol'))
+                                ->label($translator->translate('i.discount_amount').' '. $s->getSetting('currency_symbol'))
                                 ->addInputAttributes(['class' => 'form-control', 'id' => 'inv_discount_amount'])
                                 ->value(Html::encode($s->format_amount(($form->getDiscount_amount() ?? 0.00))))
                                 ->placeholder($translator->translate('i.discount_amount')); 
@@ -364,7 +364,7 @@ if ($vat) {  echo $noteOnTaxPoint;}
         <?= Html::closeTag('div'); ?>
     <?= Html::closeTag('div'); ?>
     
-    <?= $button::back_save(); ?>
+    <?= $button::backSave(); ?>
     
 <?= Html::closeTag('div'); ?>
 

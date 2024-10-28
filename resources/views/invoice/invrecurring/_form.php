@@ -110,7 +110,7 @@ use \DateTimeImmutable;
                         ->value(!is_string($end = $form->getEnd()) ? $end?->format('Y-m-d') : '')
                 ?>
                 <?= Html::closeTag('div'); ?>
-                <?= $button::back_save(); ?>
+                <?= $button::backSave(); ?>
             <?= Html::closeTag('div'); ?>
         <?= Html::closeTag('div'); ?>
     <?= Html::closeTag('div'); ?>

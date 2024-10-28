@@ -65,7 +65,7 @@ final class ProfileController
         $canEdit = $this->rbac();
         $this->flash_message('info', $this->translator->translate('invoice.profile.new'));
         $paginator = (new OffsetPaginator($this->profiles($profileRepository)))
-        ->withPageSize((int) $settingRepository->get_setting('default_list_limit'))
+        ->withPageSize((int) $settingRepository->getSetting('default_list_limit'))
         ->withCurrentPage($currentPageNeverZero);
         
         $parameters = [

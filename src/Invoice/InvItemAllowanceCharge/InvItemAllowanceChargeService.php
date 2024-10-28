@@ -73,10 +73,10 @@ final class InvItemAllowanceChargeService
             $discount_per_item = $inv_item_amount->getInvItem()?->getDiscount_amount() ?? 0.00;
             $quantity_price = $current_item_quantity * $current_item_price;
             $current_discount_item_total = $current_item_quantity * $discount_per_item;
-            $tax_percent = $inv_item_amount->getInvItem()?->getTaxRate()?->getTax_rate_percent();
+            $tax_percent = $inv_item_amount->getInvItem()?->getTaxRate()?->getTaxRatePercent();
             $qpIncAc = $quantity_price + $all_charges - $all_allowances;
             $current_tax_total = ($qpIncAc - $current_discount_item_total) * ($tax_percent ?? 0.00) / 100;
-            $new_tax_total = $current_tax_total + ($sR->get_setting('enable_vat_registration') == '0' ? 0.00 : $all_vat);
+            $new_tax_total = $current_tax_total + ($sR->getSetting('enable_vat_registration') == '0' ? 0.00 : $all_vat);
             // include all item allowance charges in the subtotal
             $inv_item_amount->setSubtotal($qpIncAc);
             $inv_item_amount->setDiscount($current_discount_item_total);

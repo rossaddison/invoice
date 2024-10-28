@@ -13,7 +13,7 @@ use Yiisoft\Translator\TranslatorInterface as Translator;
 final class PageSizeLimiter
 {
     public static function Buttons(CurrentRoute $currentRoute, sR $sR, UrlGenerator $urlGenerator, string $origin) : string {
-        $defaultListLimit = $sR->get_setting('default_list_limit');
+        $defaultListLimit = $sR->getSetting('default_list_limit');
         $setting = $sR->withKey('default_list_limit');
         $setting_id = '';
         $buttons = '';

@@ -139,7 +139,7 @@ use Yiisoft\Html\Tag\Form;
         ->hint($translator->translate('invoice.hint.this.field.is.required'));    
     ?>
 <?= Html::closeTag('div'); ?>     
-<?= $button::back_save(); ?>
+<?= $button::backSave(); ?>
 <?= Form::tag()->close(); ?>
 <?= Html::closeTag('div'); ?>
 <?= Html::closeTag('div'); ?>

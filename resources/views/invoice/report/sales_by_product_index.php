@@ -38,7 +38,7 @@
                     
                     
                     <form method="POST" action="<?= $urlGenerator->generate($actionName, $actionArguments); ?>"  enctype="multipart/form-data"
-                       <?php echo ($s->get_setting('open_reports_in_new_tab') === '1' ? 'target="_blank"' : ''); ?>>
+                       <?php echo ($s->getSetting('open_reports_in_new_tab') === '1' ? 'target="_blank"' : ''); ?>>
 
                         <input type="hidden" id="_csrf" name="_csrf" value="<?= $csrf ?>">   
 

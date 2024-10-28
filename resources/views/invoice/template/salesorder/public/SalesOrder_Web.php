@@ -34,7 +34,7 @@ use Yiisoft\Html\Tag\Img;
  * 
  */
 
-$vat = $s->get_setting('enable_vat_registration');
+$vat = $s->getSetting('enable_vat_registration');
 ?>
 
 <!DOCTYPE html>
@@ -44,7 +44,7 @@ $vat = $s->get_setting('enable_vat_registration');
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
 
     <title>
-        <?= $s->get_setting('custom_title'); ?>
+        <?= $s->getSetting('custom_title'); ?>
         - <?= $translator->translate('invoice.salesorder'); ?> <?= $salesorder->getNumber() ?? '#'; ?>
     </title>
 
@@ -238,8 +238,8 @@ $vat = $s->get_setting('enable_vat_registration');
                                     <td class="no-bottom-border" colspan="4"></td>
                                     <td class="text-right">
                                         <?php 
-                                            $taxRatePercent = $salesorder_tax_rate->getTaxRate()?->getTax_rate_percent();
-                                            $taxRateName = $salesorder_tax_rate->getTaxRate()?->getTax_rate_name();
+                                            $taxRatePercent = $salesorder_tax_rate->getTaxRate()?->getTaxRatePercent();
+                                            $taxRateName = $salesorder_tax_rate->getTaxRate()?->getTaxRateName();
                                             if (($taxRatePercent >= 0.00) && (strlen($taxRateName ?? '') > 0)) {
                                                 echo Html::encode(($taxRateName ?? '#') . ' ' . ($numberHelper->format_amount($taxRatePercent) ?? '#'));
                                             }

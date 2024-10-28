@@ -32,7 +32,7 @@ private TranslatorInterface $translator;
     }
 
     /**
-     * Get allowancecharges  without filter
+     * Get allowanceCharges  without filter
      *
      * @psalm-return EntityReader
      */
@@ -62,26 +62,26 @@ private TranslatorInterface $translator;
     
     /**
      * @see Reader/ReadableDataInterface|InvalidArgumentException
-     * @param array|AllowanceCharge|null $allowancecharge
-     * @psalm-param TEntity $allowancecharge
+     * @param array|AllowanceCharge|null $allowanceCharge
+     * @psalm-param TEntity $allowanceCharge
      * @throws Throwable 
      * @return void
      */
-    public function save(array|AllowanceCharge|null $allowancecharge): void
+    public function save(array|AllowanceCharge|null $allowanceCharge): void
     {
-        $this->entityWriter->write([$allowancecharge]);
+        $this->entityWriter->write([$allowanceCharge]);
     }
     
     /**
      * @see Reader/ReadableDataInterface|InvalidArgumentException
-     * @param array|AllowanceCharge|null $allowancecharge
+     * @param array|AllowanceCharge|null $allowanceCharge
   
      * @throws Throwable 
      * @return void
      */
-    public function delete(array|AllowanceCharge|null $allowancecharge): void
+    public function delete(array|AllowanceCharge|null $allowanceCharge): void
     {
-        $this->entityWriter->delete([$allowancecharge]);
+        $this->entityWriter->delete([$allowanceCharge]);
     }
     
     /**
@@ -131,7 +131,7 @@ private TranslatorInterface $translator;
             $key ? ($optionsDataAllowanceCharges[$key] = ($allowanceCharge->getIdentifier() 
             ? $this->translator->translate('invoice.invoice.allowance.or.charge.charge')
             : $this->translator->translate('invoice.invoice.allowance.or.charge.allowance')). 
-            '  '. $allowanceCharge->getReason_code(). 
+            '  '. $allowanceCharge->getReasonCode(). 
             ' '.
             $allowanceCharge->getReason()) : '';
         }

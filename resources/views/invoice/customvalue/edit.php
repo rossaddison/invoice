@@ -112,5 +112,5 @@ use Yiisoft\Html\Tag\Form;
             <?= Html::closeTag('div'); ?>
         <?= Html::closeTag('div'); ?>
     <?= Html::closeTag('div'); ?>
-<?= $button::back_save(); ?>
+<?= $button::backSave(); ?>
 <?= Form::tag()->close(); ?>

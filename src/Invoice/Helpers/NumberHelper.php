@@ -44,10 +44,10 @@ public function __construct(SRepo $s)
 public function format_currency(mixed $amount = null): string
 {
     $this->s->load_settings();
-    $currency_symbol = $this->s->get_setting('currency_symbol');
-    $currency_symbol_placement = $this->s->get_setting('currency_symbol_placement');
-    $thousands_separator = $this->s->get_setting('thousands_separator');
-    $decimal_point = $this->s->get_setting('decimal_point');
+    $currency_symbol = $this->s->getSetting('currency_symbol');
+    $currency_symbol_placement = $this->s->getSetting('currency_symbol_placement');
+    $thousands_separator = $this->s->getSetting('thousands_separator');
+    $decimal_point = $this->s->getSetting('decimal_point');
     if ($currency_symbol_placement == 'before') {
         return $currency_symbol. number_format((float)$amount, ($decimal_point) ? 2 : 0, $decimal_point, $thousands_separator);
     } elseif ($currency_symbol_placement == 'afterspace') {
@@ -68,8 +68,8 @@ public function format_amount(mixed $amount = null) : null|string
 {
     $this->s->load_settings();
     if (null!==$amount) {
-        $thousands_separator = $this->s->get_setting('thousands_separator');
-        $decimal_point = $this->s->get_setting('decimal_point');
+        $thousands_separator = $this->s->getSetting('thousands_separator');
+        $decimal_point = $this->s->getSetting('decimal_point');
         return number_format((float)$amount, ($decimal_point) ? 2 : 0, $decimal_point, $thousands_separator);
     }
     return null;
@@ -84,8 +84,8 @@ public function format_amount(mixed $amount = null) : null|string
 public function standardize_amount(mixed $amount)
 {
     $this->s->load_settings();
-    $thousands_separator = $this->s->get_setting('thousands_separator');
-    $decimal_point = $this->s->get_setting('decimal_point');
+    $thousands_separator = $this->s->getSetting('thousands_separator');
+    $decimal_point = $this->s->getSetting('decimal_point');
     /** @var array<array-key, float|int|string>|string $amount */
     $amt = str_replace($thousands_separator, '', $amount);
     $final_amount = str_replace($decimal_point, '.', $amt);
@@ -109,7 +109,7 @@ public function calculate_quote(string $quote_id, QIR $qiR, QIAR $qiaR, QTRR $qt
         //----------
         // Quote Tax
         // ---------
-         if ($this->s->get_setting('enable_vat_registration') === '0') {
+         if ($this->s->getSetting('enable_vat_registration') === '0') {
             $quote_tax_rate_total = $this->calculate_quote_taxes($quote_id, $qtrR, $qaR);
         } else {
             // No Quote Taxes are allowed under the VAT regime.
@@ -187,7 +187,7 @@ public function calculate_inv(string $inv_id, ACIR $aciR, IIR $iiR, IIAR $iiaR, 
         //----------
         // Invoice Tax
         // ---------  
-        if ($this->s->get_setting('enable_vat_registration') === '0') {
+        if ($this->s->getSetting('enable_vat_registration') === '0') {
             $inv_tax_rate_total = $this->calculate_inv_taxes($inv_id, $itrR, $iaR);
         } else {
             
@@ -327,7 +327,7 @@ public function calculate_inv(string $inv_id, ACIR $aciR, IIR $iiR, IIAR $iiaR, 
         // draft => 1, sent => 2, viewed => 3, paid => 4
         // As soon as the balance on the invoice is zero and the read-only-toggle is 4 ie. paid,
         // for Administrative purposes set the invoice to read-only to avoid tampering
-        if (($sR->get_setting('read_only_toggle') === (string)4) && null!==$invoice) {
+        if (($sR->getSetting('read_only_toggle') === (string)4) && null!==$invoice) {
             // Force the user to set the status to read-only manually i.e. view..edit  if it is a deliberate zero invoice
             // i.e. `paid` and `total` equaling zero .... here by only setting to read only if `paid` and `total` are greater than zero.
             if ($balance == 0.00 && ($invoice->getInvAmount()->getPaid() > 0.00) && ($invoice->getInvAmount()->getTotal() > 0.00)) {
@@ -464,10 +464,10 @@ public function calculate_inv(string $inv_id, ACIR $aciR, IIR $iiR, IIAR $iiaR, 
                         (null!==$quote_tax_rate->getInclude_item_tax() && $quote_tax_rate->getInclude_item_tax() === 1)
                         ? 
                             // The quote tax rate should include the applied item tax
-                            ((($quote_amount->getItem_subtotal() ?? 0.00) + ($quote_amount->getItem_tax_total() ?? 0.00)) * (($quote_tax_rate->getTaxRate()?->getTax_rate_percent() ?? 0.00)  / 100))
+                            ((($quote_amount->getItem_subtotal() ?? 0.00) + ($quote_amount->getItem_tax_total() ?? 0.00)) * (($quote_tax_rate->getTaxRate()?->getTaxRatePercent() ?? 0.00)  / 100))
                         :
                             // The quote tax rate should not include the applied item tax so get the general tax rate from Tax Rate table
-                            (($quote_amount->getItem_subtotal() ?? 0.00) * (($quote_tax_rate->getTaxRate()?->getTax_rate_percent() ?? 0.00) / 100))
+                            (($quote_amount->getItem_subtotal() ?? 0.00) * (($quote_tax_rate->getTaxRate()?->getTaxRatePercent() ?? 0.00) / 100))
                     );
                     // Update the quote tax rate amount                    
                     $quote_tax_rate->setQuote_tax_rate_amount($quote_tax_rate_amount);
@@ -508,10 +508,10 @@ public function calculate_inv(string $inv_id, ACIR $aciR, IIR $iiR, IIAR $iiaR, 
                         (null!==($inv_tax_rate->getInclude_item_tax()) && $inv_tax_rate->getInclude_item_tax() === 1)
                         ? 
                             // 'Apply after item tax' => The inv tax rate should include the applied item tax
-                            ((($inv_amount->getItem_subtotal() ?: 0.00) + ($inv_amount->getItem_tax_total() ?: 0.00)) * ($inv_tax_rate->getTaxRate()?->getTax_rate_percent() ?? 0.00) / 100)
+                            ((($inv_amount->getItem_subtotal() ?: 0.00) + ($inv_amount->getItem_tax_total() ?: 0.00)) * ($inv_tax_rate->getTaxRate()?->getTaxRatePercent() ?? 0.00) / 100)
                         :
                             // The invoice tax rate should not include the applied item tax so get the general tax rate from Tax Rate table
-                            (($inv_amount->getItem_subtotal() ?: 0.00) * (($inv_tax_rate->getTaxRate()?->getTax_rate_percent() ?? 0.00) / 100))
+                            (($inv_amount->getItem_subtotal() ?: 0.00) * (($inv_tax_rate->getTaxRate()?->getTaxRatePercent() ?? 0.00) / 100))
                     ); 
                     // Update the invoice tax rate amount                    
                     $inv_tax_rate->setInv_tax_rate_amount($inv_tax_rate_amount);

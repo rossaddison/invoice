@@ -190,7 +190,7 @@ final class SettingRepository extends Select\Repository
      * @param string $key
      * @return string
      */
-    public function get_setting(string $key) : string
+    public function getSetting(string $key) : string
     {
         // Build settings array
         $this->load_settings();
@@ -701,7 +701,7 @@ final class SettingRepository extends Select\Repository
         if (empty($print_lang)) {
             return (!empty($sess_lang) && (array_key_exists($sess_lang, $this->locale_language_array()))) 
                              ? (string)$this->locale_language_array()[$sess_lang] 
-            : ($this->get_setting('default_language') ?: "English");         
+            : ($this->getSetting('default_language') ?: "English");         
         } else {
             return $print_lang;
         }   
@@ -752,7 +752,7 @@ final class SettingRepository extends Select\Repository
 
             //set the invoice to 'read only' only once it has been viewed according to 'Other settings' 
             //2 sent, 3 viewed, 4 paid,
-            if ($this->get_setting('read_only_toggle') == 3)
+            if ($this->getSetting('read_only_toggle') == 3)
             {
                 $invoice = $iR->repoInvUnloadedquery($invoice_id);
                 if ($invoice) {
@@ -914,10 +914,10 @@ final class SettingRepository extends Select\Repository
     public function format_currency(mixed $amount): string
     {
         $this->load_settings();
-        $currency_symbol =$this->get_setting('currency_symbol');
-        $currency_symbol_placement = $this->get_setting('currency_symbol_placement');
-        $thousands_separator = $this->get_setting('thousands_separator');
-        $decimal_point = $this->get_setting('decimal_point');
+        $currency_symbol =$this->getSetting('currency_symbol');
+        $currency_symbol_placement = $this->getSetting('currency_symbol_placement');
+        $thousands_separator = $this->getSetting('thousands_separator');
+        $decimal_point = $this->getSetting('decimal_point');
 
         if ($currency_symbol_placement == 'before') {
             return $currency_symbol . number_format((float)$amount, ($decimal_point) ? 2 : 0, $decimal_point, $thousands_separator);
@@ -939,8 +939,8 @@ final class SettingRepository extends Select\Repository
     {
         $this->load_settings();    
         if (null!==$amount) {
-            $thousands_separator = $this->get_setting('thousands_separator');
-            $decimal_point = $this->get_setting('decimal_point');
+            $thousands_separator = $this->getSetting('thousands_separator');
+            $decimal_point = $this->getSetting('decimal_point');
             //force the rounding of amounts to 2 decimal points if the decimal point setting is filled.
             return number_format($amount, ($decimal_point) ? 2 : 0, $decimal_point, $thousands_separator);
         }
@@ -954,8 +954,8 @@ final class SettingRepository extends Select\Repository
     public function standardize_amount(float $amount): string
     {
         $this->load_settings();
-        $thousands_separator = $this->get_setting('thousands_separator');
-        $decimal_point = $this->get_setting('decimal_point');
+        $thousands_separator = $this->getSetting('thousands_separator');
+        $decimal_point = $this->getSetting('decimal_point');
         $amt = str_replace($thousands_separator, '', (string)$amount);
         $final_amt = str_replace($decimal_point, '.', $amt);
         return $final_amt;
@@ -1428,7 +1428,7 @@ final class SettingRepository extends Select\Repository
         $gateways = $this->active_payment_gateways();
         foreach ($gateways as $driver => $_fields) {
             $d = strtolower((string)$driver);
-            if ($this->get_setting('gateway_' . $d . '_enabled') === '1') {
+            if ($this->getSetting('gateway_' . $d . '_enabled') === '1') {
                 $available_drivers[] = $driver;                
             }
         }
@@ -2069,11 +2069,11 @@ final class SettingRepository extends Select\Repository
     public function isDebugMode(int $key) : string {
         // If the default has changed from true to false in the layout/main.php return false otherwise stick to default
         // Do not return the file location if not in debug mode
-        if (($this->get_setting('debug_mode') === '0')) {
+        if (($this->getSetting('debug_mode') === '0')) {
            return ''; 
         }
         // Return the file location if in debug_mode
-        if (($this->get_setting('debug_mode') === '1')) {
+        if (($this->getSetting('debug_mode') === '1')) {
            return $this->debug_mode_file_location($key);
         }
         return '';        
@@ -2131,8 +2131,8 @@ final class SettingRepository extends Select\Repository
      * @return string
      */
     public function public_logo() : string {
-        if (!empty($this->get_setting('public_logo_png_prefix'))) {
-            return $this->get_setting('public_logo_png_prefix');
+        if (!empty($this->getSetting('public_logo_png_prefix'))) {
+            return $this->getSetting('public_logo_png_prefix');
         } else {
             // If no logo has been set use the default file 'logo.png' provided in the public directory
             $logo_prefix = new Setting();
@@ -2140,7 +2140,7 @@ final class SettingRepository extends Select\Repository
             $logo_prefix->setSetting_value('logo');
             $this->save($logo_prefix);
         }
-        return $this->get_setting('public_logo_png_prefix');
+        return $this->getSetting('public_logo_png_prefix');
     }
     
     /**

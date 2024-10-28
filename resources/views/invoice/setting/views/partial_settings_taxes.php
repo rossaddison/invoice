@@ -24,21 +24,21 @@
                             <label for="settings[default_invoice_tax_rate]">
                                 <?= $translator->translate('i.default_invoice_tax_rate'); ?>
                             </label>
-                            <?php $body['settings[default_invoice_tax_rate]'] = $s->get_setting('default_invoice_tax_rate');?>
+                            <?php $body['settings[default_invoice_tax_rate]'] = $s->getSetting('default_invoice_tax_rate');?>
                             <select name="settings[default_invoice_tax_rate]" id="settings[default_invoice_tax_rate]"
                                 class="form-control">
                                 <option value=""><?= $translator->translate('i.none'); ?></option>
                                 <?php
                                     /**
-                                     * @var App\Invoice\Entity\TaxRate $tax_rate
+                                     * @var App\Invoice\Entity\TaxRate $taxRate
                                      */
-                                    foreach ($tax_rates as $tax_rate) { ?>
-                                    <option value="<?= $tax_rate->getTax_rate_id(); ?>"
-                                        <?php $s->check_select($body['settings[default_invoice_tax_rate]'], $tax_rate->getTax_rate_id()); ?>>
+                                    foreach ($tax_rates as $taxRate) { ?>
+                                    <option value="<?= $taxRate->getTaxRateId(); ?>"
+                                        <?php $s->check_select($body['settings[default_invoice_tax_rate]'], $taxRate->getTaxRateId()); ?>>
                                         <?php 
-                                           $percent = $tax_rate->getTax_rate_percent();
+                                           $percent = $taxRate->getTaxRatePercent();
                                            $sign =  '% - ';
-                                           $name = $tax_rate->getTax_rate_name();
+                                           $name = $taxRate->getTaxRateName();
                                            if ((null!==$percent) && (null!==$name)) {
                                                echo $percent.$sign.$name;
                                            } else {
@@ -54,21 +54,21 @@
                             <label for="settings[default_item_tax_rate]">
                                 <?= $translator->translate('i.default_item_tax_rate'); ?>
                             </label>                            
-                            <?php $body['settings[default_item_tax_rate]'] = $s->get_setting('default_item_tax_rate');?>
+                            <?php $body['settings[default_item_tax_rate]'] = $s->getSetting('default_item_tax_rate');?>
                             <select name="settings[default_item_tax_rate]" id="settings[default_item_tax_rate]"
                                 class="form-control">
                                 <option value=""><?= $translator->translate('i.none'); ?></option>
                                 <?php
                                     /**
-                                     * @var App\Invoice\Entity\TaxRate $tax_rate
+                                     * @var App\Invoice\Entity\TaxRate $taxRate
                                      */
-                                    foreach ($tax_rates as $tax_rate) { ?>
-                                    <option value="<?= $tax_rate->getTax_rate_id(); ?>"
-                                        <?php $s->check_select($body['settings[default_item_tax_rate]'], $tax_rate->getTax_rate_id()); ?>>
+                                    foreach ($tax_rates as $taxRate) { ?>
+                                    <option value="<?= $taxRate->getTaxRateId(); ?>"
+                                        <?php $s->check_select($body['settings[default_item_tax_rate]'], $taxRate->getTaxRateId()); ?>>
                                         <?php 
-                                           $percent = $tax_rate->getTax_rate_percent();
+                                           $percent = $taxRate->getTaxRatePercent();
                                            $sign =  '% - ';
-                                           $name = $tax_rate->getTax_rate_name();
+                                           $name = $taxRate->getTaxRateName();
                                            if ((null!==$percent) && (null!==$name)) {
                                                echo $percent.$sign.$name;
                                            } else {
@@ -87,7 +87,7 @@
                             <label for="settings[default_include_item_tax]" <?= $s->where('default_include_item_tax'); ?>>
                                 <?= $translator->translate('i.default_invoice_tax_rate_placement'); ?>
                             </label>
-                            <?php $body['settings[default_include_item_tax]'] = $s->get_setting('default_include_item_tax');?>
+                            <?php $body['settings[default_include_item_tax]'] = $s->getSetting('default_include_item_tax');?>
                             <select name="settings[default_include_item_tax]" id="settings[default_include_item_tax]"
                                 class="form-control" data-minimum-results-for-search="Infinity">
                                 <option value=""><?= $translator->translate('i.none'); ?></option>
@@ -103,7 +103,7 @@
                             <label for="settings[this_tax_year_from_date_year]">
                                 <?= $translator->translate('i.tax').' '.$translator->translate('i.start'). ' '. $translator->translate('i.date').' '.$translator->translate('i.year'); ?>
                             </label>
-                            <?php $body['settings[this_tax_year_from_date_year]'] = $s->get_setting('this_tax_year_from_date_year');?>
+                            <?php $body['settings[this_tax_year_from_date_year]'] = $s->getSetting('this_tax_year_from_date_year');?>
                             <select name="settings[this_tax_year_from_date_year]" id="settings[this_tax_year_from_date_year]"
                                 class="form-control">
                                 <option value=""><?= $translator->translate('i.none'); ?></option>                                
@@ -127,7 +127,7 @@
                             <label for="settings[this_tax_year_from_date_month]">
                                 <?= $translator->translate('i.tax').' '.$translator->translate('i.start'). ' '. $translator->translate('i.date').' '.$translator->translate('i.month'); ?>
                             </label>
-                            <?php $body['settings[this_tax_year_from_date_month]'] = $s->get_setting('this_tax_year_from_date_month');?>
+                            <?php $body['settings[this_tax_year_from_date_month]'] = $s->getSetting('this_tax_year_from_date_month');?>
                             <select name="settings[this_tax_year_from_date_month]" id="settings[this_tax_year_from_date_month]"
                                 class="form-control">
                                 <option value=""><?= $translator->translate('i.none'); ?></option>                                
@@ -144,7 +144,7 @@
                             <label for="settings[this_tax_year_from_date_day]">
                                 <?= $translator->translate('i.tax').' '.$translator->translate('i.start'). ' '. $translator->translate('i.date').' '.rtrim($translator->translate('i.days'),'s'); ?>
                             </label>
-                            <?php $body['settings[this_tax_year_from_date_day]'] = $s->get_setting('this_tax_year_from_date_day');?>
+                            <?php $body['settings[this_tax_year_from_date_day]'] = $s->getSetting('this_tax_year_from_date_day');?>
                             <select name="settings[this_tax_year_from_date_day]" id="settings[this_tax_year_from_date_day]"
                                 class="form-control">
                                 <option value=""><?= $translator->translate('i.none'); ?></option>                                

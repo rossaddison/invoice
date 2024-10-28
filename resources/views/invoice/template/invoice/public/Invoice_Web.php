@@ -45,7 +45,7 @@ use Yiisoft\Html\Tag\Img;
  * @psalm-var array<string, Stringable|null|scalar> $downloadPdfSumexActionArguments
  */
 
-$vat = $s->get_setting('enable_vat_registration');
+$vat = $s->getSetting('enable_vat_registration');
 ?>
 
 <!DOCTYPE html>
@@ -54,7 +54,7 @@ $vat = $s->get_setting('enable_vat_registration');
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
     <title>
-        <?= $s->get_setting('custom_title'); ?>
+        <?= $s->getSetting('custom_title'); ?>
         - <?= $translator->translate('i.invoice'); ?> <?= $inv->getNumber(); ?>
     </title>
     <meta name="viewport" content="width=device-width,initial-scale=1">
@@ -90,14 +90,14 @@ $vat = $s->get_setting('enable_vat_registration');
                         </a>    
                     <?php endif; ?>
 
-                    <?php if ($s->get_setting('enable_online_payments') == 1 && $inv_amount->getBalance() > 0) { ?>
+                    <?php if ($s->getSetting('enable_online_payments') == 1 && $inv_amount->getBalance() > 0) { ?>
                         <a href="<?= $urlGenerator->generate('paymentinformation/inform', 
                                 ['url_key' => $inv_url_key, 
                                  'gateway' => $client_chosen_gateway]); ?>" class="btn btn-success">
                             <i class="fa fa-credit-card"></i><?= $translator->translate('i.pay_now').' '. str_replace('_',' ',$client_chosen_gateway); ?>
                         </a>
                     <?php } ?>
-                    <?php if ($s->get_setting('enable_online_payments') == 1 && $inv_amount->getBalance() == 0) { ?>
+                    <?php if ($s->getSetting('enable_online_payments') == 1 && $inv_amount->getBalance() == 0) { ?>
                         <a href="" class="btn btn-success"><?= $translator->translate('i.paid'); ?></a>    
                     <?php } ?>
                 </div>
@@ -278,8 +278,8 @@ $vat = $s->get_setting('enable_vat_registration');
                                 <td class="no-bottom-border" colspan="4"></td>
                                 <td class="text-right">
                                     <?php 
-                                        $taxRatePercent = $inv_tax_rate->getTaxRate()?->getTax_rate_percent();
-                                        $taxRateName = $inv_tax_rate->getTaxRate()?->getTax_rate_name();
+                                        $taxRatePercent = $inv_tax_rate->getTaxRate()?->getTaxRatePercent();
+                                        $taxRateName = $inv_tax_rate->getTaxRate()?->getTaxRateName();
                                         if (($taxRatePercent >= 0.00) && (strlen($taxRateName ?? '') > 0)) {
                                             echo Html::encode(($taxRateName ?? '#') . ' ' . ($numberHelper->format_amount($taxRatePercent) ?? '#'));
                                         }

@@ -36,7 +36,7 @@ use Yiisoft\Yii\DataView\GridView;
 $grid_summary = $s->grid_summary(
     $paginator, 
     $translator, 
-    (int)$s->get_setting('default_list_limit'), 
+    (int)$s->getSetting('default_list_limit'), 
     $translator->translate('invoice.payments'), 
     ''
 );
@@ -141,7 +141,7 @@ $toolbar = Div::tag();
             visible: $canEdit,
             content: static function (Payment $model) use ($s, $urlGenerator): string {
                return $model->getInv()?->getIs_read_only() === false 
-                      && $s->get_setting('disable_read_only') === (string)0 
+                      && $s->getSetting('disable_read_only') === (string)0 
                       ? Html::a(Html::tag('i','',
                                 ['class'=>'fa fa-edit fa-margin']), 
                                 $urlGenerator->generate('payment/edit',
@@ -152,7 +152,7 @@ $toolbar = Div::tag();
             header:  $translator->translate('i.delete'),
             visible: $canEdit,
             content: static function (Payment $model) use ($translator, $s, $urlGenerator): string {
-                return $model->getInv()?->getIs_read_only() === false && $s->get_setting('disable_read_only') === (string)0 ? Html::a( Html::tag('button',
+                return $model->getInv()?->getIs_read_only() === false && $s->getSetting('disable_read_only') === (string)0 ? Html::a( Html::tag('button',
                     Html::tag('i','',['class'=>'fa fa-trash fa-margin']),
                     [
                         'type'=>'submit', 

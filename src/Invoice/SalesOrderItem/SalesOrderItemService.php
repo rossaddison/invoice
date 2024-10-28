@@ -88,7 +88,7 @@ final class SalesOrderItemService
     {        
        // This function is used in quoteitem/edit when editing an item on the quote view
        // see https://github.com/cycle/orm/issues/348
-       isset($array['tax_rate_id']) ? $model->setTaxRate($model->getTaxRate()?->getTax_rate_id() == $array['tax_rate_id'] ? $model->getTaxRate() : null): '';
+       isset($array['tax_rate_id']) ? $model->setTaxRate($model->getTaxRate()?->getTaxRateId() == $array['tax_rate_id'] ? $model->getTaxRate() : null): '';
        $tax_rate_id = ((isset($array['tax_rate_id'])) ? (int)$array['tax_rate_id'] : '');
        $model->setTax_rate_id((int)$tax_rate_id);
        
@@ -162,7 +162,7 @@ final class SalesOrderItemService
     {
         $taxrate = $trr->repoTaxRatequery((string)$id);
         if ($taxrate) {
-            $percentage = $taxrate->getTax_rate_percent();        
+            $percentage = $taxrate->getTaxRatePercent();        
             return $percentage;
         }
         return null;

@@ -395,10 +395,10 @@ class Inv {
     }
 
     public function setDate_due(\App\Invoice\Setting\SettingRepository $sR): void {
-        if (empty($sR->get_setting('invoices_due_after'))) {
+        if (empty($sR->getSetting('invoices_due_after'))) {
             $days = 30;
         } else {
-            $days = $sR->get_setting('invoices_due_after');
+            $days = $sR->getSetting('invoices_due_after');
         }
 
         $this->date_due = ($this->date_created)->add(new \DateInterval('P' . $days . 'D'));

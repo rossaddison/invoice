@@ -26,7 +26,7 @@ Class DateHelper {
      */
     public function style(): string {
         $this->s->load_settings();
-        $format = $this->s->get_setting('date_format');
+        $format = $this->s->getSetting('date_format');
         $formats = $this->date_formats();
         return $formats[$format]['setting'];
     }
@@ -36,7 +36,7 @@ Class DateHelper {
      */
     public function datepicker_dateFormat(): string {
         $this->s->load_settings();
-        $format = $this->s->get_setting('date_format');
+        $format = $this->s->getSetting('date_format');
         $formats = $this->date_formats();
         return $formats[$format]['datepicker-dateFormat'] ?? 'd-m-Y';
     }
@@ -46,7 +46,7 @@ Class DateHelper {
      */
     public function datepicker_firstDay(): string {
         $this->s->load_settings();
-        $format = $this->s->get_setting('date_format');
+        $format = $this->s->getSetting('date_format');
         $formats = $this->date_formats();
         return $formats[$format]['datepicker-firstDay'] ?? 'monday';
     }
@@ -56,7 +56,7 @@ Class DateHelper {
      */
     public function display(): string {
         $this->s->load_settings();
-        $format = $this->s->get_setting('date_format');
+        $format = $this->s->getSetting('date_format');
         $formats = $this->date_formats();
         return $formats[$format]['display'] ?? 'dd/mm/yyyy';
     }
@@ -66,7 +66,7 @@ Class DateHelper {
      */
     public function separator(): string {
         $this->s->load_settings();
-        $format = $this->s->get_setting('date_format');
+        $format = $this->s->getSetting('date_format');
         $formats = $this->date_formats();
         return $formats[$format]['separator'];
     }
@@ -81,91 +81,91 @@ Class DateHelper {
             'd/m/Y' => [
                 'setting' => 'd/m/Y',
                 'datepicker-dateFormat' => 'dd/mm/yy',
-                'datepicker-firstDay' => $this->s->get_setting('first_day_of_week'),
+                'datepicker-firstDay' => $this->s->getSetting('first_day_of_week'),
                 'display' => 'dd/mm/yyyy',
                 'separator' => '/'
             ],
             'd-m-Y' => [
                 'setting' => 'd-m-Y',
                 'datepicker-dateFormat' => 'dd-mm-yy',
-                'datepicker-firstDay' => $this->s->get_setting('first_day_of_week'),
+                'datepicker-firstDay' => $this->s->getSetting('first_day_of_week'),
                 'display' => 'dd-mm-yyyy',
                 'separator' => '-'
             ],
             'd-M-Y' => [
                 'setting' => 'd-M-Y',
                 'datepicker-dateFormat' => 'dd-M-yy',
-                'datepicker-firstDay' => $this->s->get_setting('first_day_of_week'),
+                'datepicker-firstDay' => $this->s->getSetting('first_day_of_week'),
                 'display' => 'dd-M-yyyy',
                 'separator' => '-'
             ],
             'd.m.Y' => [
                 'setting' => 'd.m.Y',
                 'datepicker-dateFormat' => 'dd.mm.yy',
-                'datepicker-firstDay' => $this->s->get_setting('first_day_of_week'),
+                'datepicker-firstDay' => $this->s->getSetting('first_day_of_week'),
                 'display' => 'dd.mm.yyyy',
                 'separator' => '.'
             ],
             'j.n.Y' => [
                 'setting' => 'j.n.Y',
                 'datepicker-dateFormat' => 'd.m.yy',
-                'datepicker-firstDay' => $this->s->get_setting('first_day_of_week'),
+                'datepicker-firstDay' => $this->s->getSetting('first_day_of_week'),
                 'display' => 'd.m.yyyy',
                 'separator' => '.'
             ],
             'd M,Y' => [
                 'setting' => 'd M,Y',
                 'datepicker-dateFormat' => 'dd M,yy',
-                'datepicker-firstDay' => $this->s->get_setting('first_day_of_week'),
+                'datepicker-firstDay' => $this->s->getSetting('first_day_of_week'),
                 'display' => 'dd M,yyyy',
                 'separator' => ','
             ],
             'm/d/Y' => [
                 'setting' => 'm/d/Y',
                 'datepicker-dateFormat' => 'mm/dd/yy',
-                'datepicker-firstDay' => $this->s->get_setting('first_day_of_week'),
+                'datepicker-firstDay' => $this->s->getSetting('first_day_of_week'),
                 'display' => 'mm/dd/yyyy',
                 'separator' => '/',
             ],
             'm-d-Y' => [
                 'setting' => 'm-d-Y',
                 'datepicker-dateFormat' => 'mm-dd-yy',
-                'datepicker-firstDay' => $this->s->get_setting('first_day_of_week'),
+                'datepicker-firstDay' => $this->s->getSetting('first_day_of_week'),
                 'display' => 'mm-dd-yyyy',
                 'separator' => '-',
             ],
             'm.d.Y' => [
                 'setting' => 'm.d.Y',
                 'datepicker-dateFormat' => 'mm.dd.yy',
-                'datepicker-firstDay' => $this->s->get_setting('first_day_of_week'),
+                'datepicker-firstDay' => $this->s->getSetting('first_day_of_week'),
                 'display' => 'mm.dd.yyyy',
                 'separator' => '.',
             ],
             'Y/m/d' => [
                 'setting' => 'Y/m/d',
                 'datepicker-dateFormat' => 'yy/mm/dd',
-                'datepicker-firstDay' => $this->s->get_setting('first_day_of_week'),
+                'datepicker-firstDay' => $this->s->getSetting('first_day_of_week'),
                 'display' => 'yyyy/mm/dd',
                 'separator' => '/'
             ],
             'Y-m-d' => [
                 'setting' => 'Y-m-d',
                 'datepicker-dateFormat' => 'yy-mm-dd',
-                'datepicker-firstDay' => $this->s->get_setting('first_day_of_week'),
+                'datepicker-firstDay' => $this->s->getSetting('first_day_of_week'),
                 'display' => 'yyyy-mm-dd',
                 'separator' => '-'
             ],
             'Y-m-d H:i:s' => [
                 'setting' => 'Y-m-d H:i:s',
                 'datepicker-dateFormat' => 'yy-mm-dd',
-                'datepicker-firstDay' => $this->s->get_setting('first_day_of_week'),
+                'datepicker-firstDay' => $this->s->getSetting('first_day_of_week'),
                 'display' => 'yyyy-mm-dd',
                 'separator' => '-'
             ],
             'Y.m.d' => [
                 'setting' => 'Y.m.d',
                 'datepicker-dateFormat' => 'yy.mm.dd',
-                'datepicker-firstDay' => $this->s->get_setting('first_day_of_week'),
+                'datepicker-firstDay' => $this->s->getSetting('first_day_of_week'),
                 'display' => 'yyyy.mm.dd',
                 'separator' => '.'
             ],
@@ -211,7 +211,7 @@ Class DateHelper {
      * @return string
      */
     function date_to_mysql(string $date): string {
-        $mydate = DateTime::createFromFormat($this->s->get_setting('date_format'), $date);
+        $mydate = DateTime::createFromFormat($this->s->getSetting('date_format'), $date);
         return $mydate->format('Y-m-d');
     }
 
@@ -232,9 +232,9 @@ Class DateHelper {
      * @return \DateTimeImmutable
      */
     function tax_year_to_immutable(): \DateTimeImmutable {
-        $year = $this->s->get_setting('this_tax_year_from_date_year') ?: (new \DateTimeImmutable('now'))->format('Y');
-        $month = $this->s->get_setting('this_tax_year_from_date_month') ?: (new \DateTimeImmutable('now'))->format('m');
-        $day = $this->s->get_setting('this_tax_year_from_date_day') ?: (new \DateTimeImmutable('now'))->format('d');
+        $year = $this->s->getSetting('this_tax_year_from_date_year') ?: (new \DateTimeImmutable('now'))->format('Y');
+        $month = $this->s->getSetting('this_tax_year_from_date_month') ?: (new \DateTimeImmutable('now'))->format('m');
+        $day = $this->s->getSetting('this_tax_year_from_date_day') ?: (new \DateTimeImmutable('now'))->format('d');
         return (new \DateTimeImmutable())->setDate((int) $year, (int) $month, (int) $day);
     }
     
@@ -270,7 +270,7 @@ Class DateHelper {
      */
     public function datetime_zone_style(string $string_date): DateTime|false {
         $datetime = new \DateTime();
-        $datetime->setTimezone(new \DateTimeZone($this->s->get_setting('time_zone') ?: 'Europe/London'));
+        $datetime->setTimezone(new \DateTimeZone($this->s->getSetting('time_zone') ?: 'Europe/London'));
         $datetime->format($this->style());
         $date = $this->date_to_mysql($string_date);
         // Prevent Failed to parse time string at position 0 error
@@ -292,7 +292,7 @@ Class DateHelper {
         $new_date = new \DateTime($mysql_date);
         $new_date->add(new DateInterval('P' . $increment));
 
-        return $new_date->format($this->s->get_setting('date_format'));
+        return $new_date->format($this->s->getSetting('date_format'));
     }
     
     /**

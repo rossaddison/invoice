@@ -151,7 +151,7 @@ $translator->translate('i.custom_fields');
         $grid_summary = $s->grid_summary(
             $paginator, 
             $translator, 
-            (int)$s->get_setting('default_list_limit'), 
+            (int)$s->getSetting('default_list_limit'), 
             $translator->translate('i.custom_fields'),
             ''
         );  

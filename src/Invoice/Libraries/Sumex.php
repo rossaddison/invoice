@@ -234,11 +234,11 @@ class Sumex
         ];
 
         $esrTypes = ["9", "red"];
-        $this->_esrType = $esrTypes[(int)$this->s->get_setting('sumex_sliptype')];
-        $this->_currency = $this->s->get_setting('currency_code');
-        $this->_role = self::ROLES[(int)$this->s->get_setting('sumex_role')];
-        $this->_place = self::PLACES[(int)$this->s->get_setting('sumex_place')];
-        $this->_canton = self::CANTONS[(int)$this->s->get_setting('sumex_canton')];
+        $this->_esrType = $esrTypes[(int)$this->s->getSetting('sumex_sliptype')];
+        $this->_currency = $this->s->getSetting('currency_code');
+        $this->_role = self::ROLES[(int)$this->s->getSetting('sumex_role')];
+        $this->_place = self::PLACES[(int)$this->s->getSetting('sumex_place')];
+        $this->_canton = self::CANTONS[(int)$this->s->getSetting('sumex_canton')];
     }
     
     /**

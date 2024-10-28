@@ -100,7 +100,7 @@ final class SignupController
             return $this->webService->getRedirectResponse('site/index');
         }
         // check that symfony under Settings ... Email and the config/common/params.php mailer->senderEmail have been setup
-        if (($this->sR->get_setting('email_send_method') !== 'symfony') || ($this->sR->mailerEnabled() == false) || empty($this->sR->getConfigSenderEmail()))  {
+        if (($this->sR->getSetting('email_send_method') !== 'symfony') || ($this->sR->mailerEnabled() == false) || empty($this->sR->getConfigSenderEmail()))  {
            return $this->webService->getRedirectResponse('site/forgotemailfailed'); 
         }
         if ($formHydrator->populateFromPostAndValidate($signupForm, $request)) {
@@ -133,7 +133,7 @@ final class SignupController
                  * @see A new UserInv (extension table of user) for the user is created.
                  */
                 $htmlBody = $this->htmlBodyWithMaskedRandomAndTimeTokenLink($user, $uiR, $language, $_language, $randomAndTimeToken);
-                if (($this->sR->get_setting('email_send_method') == 'symfony') || ($this->sR->mailerEnabled() == true))  {
+                if (($this->sR->getSetting('email_send_method') == 'symfony') || ($this->sR->mailerEnabled() == true))  {
                     $email = (New \Yiisoft\Mailer\Message())
                     ->withCharSet('UTF-8')                
                     ->withSubject($login. ': <'.$to.'>')

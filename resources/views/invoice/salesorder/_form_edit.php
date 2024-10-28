@@ -38,7 +38,7 @@ use Yiisoft\Html\Tag\Form;
  * @psalm-var array<array-key, array<array-key, string>|string> $optionsData['group']
  * @psalm-var array<array-key, array<array-key, string>|string> $optionsData['salesOrderStatus']
  */
-$vat = $s->get_setting('enable_vat_registration') === '1' ? true : false;
+$vat = $s->getSetting('enable_vat_registration') === '1' ? true : false;
 
 ?>
 <?= Html::openTag('div',['class'=>'container py-5 h-100']); ?>
@@ -183,7 +183,7 @@ $vat = $s->get_setting('enable_vat_registration') === '1' ? true : false;
                         <?= Html::openTag('div'); ?>
                             <?= Field::text($form,'discount_amount')
                                 ->hideLabel(false)
-                                ->label($translator->translate('i.discount').' '. $s->get_setting('currency_symbol'))
+                                ->label($translator->translate('i.discount').' '. $s->getSetting('currency_symbol'))
                                 ->addInputAttributes(['class' => 'form-control'])
                                 ->value($s->format_amount(($form->getDiscount_amount() ?? 0.00)))
                                 ->placeholder($translator->translate('i.discount')); 
@@ -233,7 +233,7 @@ $vat = $s->get_setting('enable_vat_registration') === '1' ? true : false;
                 <?= Html::closeTag('div'); ?>    
             <?= Html::closeTag('div'); ?>
         <?= Html::closeTag('div'); ?>
-        <?= $button::back_save(); ?>
+        <?= $button::backSave(); ?>
     <?= Html::closeTag('div'); ?>
     
 <?= Html::closeTag('div'); ?>

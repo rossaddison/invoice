@@ -44,7 +44,7 @@ use App\Widget\LabelSwitch;
 
 $this->setTitle($translator->translate('i.quote'));
 
-$vat = $s->get_setting('enable_vat_registration');
+$vat = $s->getSetting('enable_vat_registration');
 ?>
 <div class="panel panel-default">
 <div class="panel-heading">
@@ -111,10 +111,10 @@ $vat = $s->get_setting('enable_vat_registration');
 
         <?php
             // Purpose: To remind the user that VAT is enabled
-            $s->get_setting('display_vat_enabled_message') === '1' ?
+            $s->getSetting('display_vat_enabled_message') === '1' ?
             LabelSwitch::checkbox(
                     'quote-view-label-switch',
-                    $s->get_setting('enable_vat_registration'),
+                    $s->getSetting('enable_vat_registration'),
                     $translator->translate('invoice.quote.label.switch.on'),
                     $translator->translate('invoice.quote.label.switch.off'),
                     'quote-view-label-switch-id',

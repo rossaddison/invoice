@@ -42,7 +42,7 @@ declare(strict_types=1);
                 <i class="fa fa-database"></i>
             </a>
         </li>
-        <?php if ($s->get_setting('projects_enabled') == 1) : ?>
+        <?php if ($s->getSetting('projects_enabled') == 1) : ?>
             <li>
                 <a href="<?= $urlGenerator->generate('task/index'); ?>" title="<?= $translator->translate('i.tasks'); ?>"
                    class="tip" data-bs-placement="right">

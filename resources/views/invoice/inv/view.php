@@ -60,7 +60,7 @@ use Yiisoft\Html\Tag\A;
  * @var string $view_custom_fields
  */
 
-$vat = $s->get_setting('enable_vat_registration');
+$vat = $s->getSetting('enable_vat_registration');
 
 ?>
 <div class="panel panel-default">
@@ -351,7 +351,7 @@ if ($showButtons && $invEdit) {
                         <!-- null!==$sumex There is a sumex extension record linked to the current invoice_id
                              and the sumex setting under View...Settings...Invoice...Sumex Settings is set at Yes.
                         -->
-                            <?php if ($s->get_setting('sumex') === '1') { ?>
+                            <?php if ($s->getSetting('sumex') === '1') { ?>
                             <a href="#inv-to-pdf"  data-bs-toggle="modal" style="text-decoration:none">
                                 <i class="fa fa-print fa-margin"></i>
                             <?= Html::encode($translator->translate('i.generate_sumex')); ?>
@@ -429,7 +429,7 @@ if ($invEdit) {
                         <li>
                             <?php
 // Options ... Invoice to HTML with Sumex
-                            if ($s->get_setting('sumex') === '1') {
+                            if ($s->getSetting('sumex') === '1') {
                                 ?>
                                 <a href="#inv-to-html"  data-bs-toggle="modal" style="text-decoration:none">
                                     <i class="fa fa-print fa-margin"></i>
@@ -461,7 +461,7 @@ if ($invEdit) {
 // the system has been overridden and the invoices read only status has been set to false
 // and a sales order has not been generated ie. invoice not based on sales order
 // Options ... Delete Invoice
-if (($inv->getStatus_id() === 1 || ($s->get_setting('enable_invoice_deletion') === '1' && $inv->getIs_read_only() === false)) && !$inv->getSo_id() && $invEdit) {
+if (($inv->getStatus_id() === 1 || ($s->getSetting('enable_invoice_deletion') === '1' && $inv->getIs_read_only() === false)) && !$inv->getSo_id() && $invEdit) {
     ?>
                         <li>
                             <a href="#delete-inv" data-bs-toggle="modal"  style="text-decoration:none">

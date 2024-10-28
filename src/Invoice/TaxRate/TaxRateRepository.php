@@ -30,7 +30,7 @@ final class TaxRateRepository extends Select\Repository
     }
     
     /**
-     * Get taxrates without filter
+     * Get taxRates without filter
      *
      * @psalm-return EntityReader
      */
@@ -42,24 +42,24 @@ final class TaxRateRepository extends Select\Repository
             
     /**
      * @see Reader/ReadableDataInterface|InvalidArgumentException
-     * @param array|TaxRate|null $taxrate
+     * @param array|TaxRate|null $taxRate
      * @throws Throwable 
      * @return void
      */
-    public function save(array|TaxRate|null $taxrate): void
+    public function save(array|TaxRate|null $taxRate): void
     {
-        $this->entityWriter->write([$taxrate]);
+        $this->entityWriter->write([$taxRate]);
     }
     
     /**
      * @see Reader/ReadableDataInterface|InvalidArgumentException
-     * @param array|TaxRate|null $taxrate
+     * @param array|TaxRate|null $taxRate
      * @throws Throwable 
      * @return void
      */
-    public function delete(array|TaxRate|null $taxrate): void
+    public function delete(array|TaxRate|null $taxRate): void
     {
-        $this->entityWriter->delete([$taxrate]);
+        $this->entityWriter->delete([$taxRate]);
     }
 
     /**
@@ -135,9 +135,9 @@ final class TaxRateRepository extends Select\Repository
          */
         foreach ($taxRates as $taxRate)
         {
-            $taxRateId = $taxRate->getTax_rate_id();
+            $taxRateId = $taxRate->getTaxRateId();
             if (null!==$taxRateId) {
-                $optionsDataTaxRates[$taxRateId] = ($taxRate->getTax_rate_name() ?? '') . '  ' . ($taxRate->getTax_rate_percent() ?? '');
+                $optionsDataTaxRates[$taxRateId] = ($taxRate->getTaxRateName() ?? '') . '  ' . ($taxRate->getTaxRatePercent() ?? '');
             }
         }    
         return $optionsDataTaxRates;

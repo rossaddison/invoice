@@ -22,7 +22,7 @@
                             <label for="settings[email_pdf_attachment]" <?= $s->where('email_pdf_attachment'); ?>>
                                 <?= $translator->translate('i.email_pdf_attachment'); ?>
                             </label>
-                            <?php $body['settings[email_pdf_attachment]'] = $s->get_setting('email_pdf_attachment'); ?>
+                            <?php $body['settings[email_pdf_attachment]'] = $s->getSetting('email_pdf_attachment'); ?>
                             <select name="settings[email_pdf_attachment]" id="settings[email_pdf_attachment]"
                                 class="form-control" data-minimum-results-for-search="Infinity">
                                 <option value="0" <?php $s->check_select($body['settings[email_pdf_attachment]'], '0'); ?>><?= $translator->translate('i.no'); ?></option>
@@ -42,7 +42,7 @@
                 <!-- see MailerHelper mailer_configured function -->
                 <select name="settings[email_send_method]" id="email_send_method" class="form-control">
                     <option value=""><?= $translator->translate('i.none'); ?></option>
-                    <option value="symfony" <?php $s->check_select($s->get_setting('email_send_method'), 'symfony'); ?>>
+                    <option value="symfony" <?php $s->check_select($s->getSetting('email_send_method'), 'symfony'); ?>>
                         <!-- Technically we are still using php to email so retain the following translation -->
                         <!-- The settings below are configured in the config/params.php file -->
                         <?= 'eSmtp: Symfony'; ?>

@@ -44,7 +44,7 @@ use App\Invoice\Helpers\NumberHelper;
 
 $this->setTitle($translator->translate('invoice.salesorder'));
 
-$vat = $s->get_setting('enable_vat_registration');
+$vat = $s->getSetting('enable_vat_registration');
 ?>
 <div class="panel panel-default">
 <div class="panel-heading">

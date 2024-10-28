@@ -208,7 +208,7 @@ echo $alert;
         ),        
         new DataColumn(
             'client_id',    
-            header: $translator->translate('i.balance') . ' ('. $s->get_setting('currency_symbol') . ')',
+            header: $translator->translate('i.balance') . ' ('. $s->getSetting('currency_symbol') . ')',
             content: static function (Client $model) use ($iR, $iaR, $s) : string {
                 if (null!==($clientId = $model->getClient_id())) { 
                     return Html::encode($s->format_currency($iR->with_total_balance($clientId, $iaR)));
@@ -260,7 +260,7 @@ echo $alert;
     $grid_summary = $s->grid_summary(
         $paginator, 
         $translator, 
-        (int)$s->get_setting('default_list_limit'), 
+        (int)$s->getSetting('default_list_limit'), 
         $translator->translate('invoice.clients'), 
         ''
     );

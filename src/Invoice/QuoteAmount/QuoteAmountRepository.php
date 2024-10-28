@@ -192,7 +192,7 @@ private EntityWriter $entityWriter;
     public function get_status_totals(QR $qR, SR $sR, Translator $translator, string $period) : array
     {
         $return = [];
-        // $period eg. this-month, last-month derived from $sR->get_setting('invoice or quote_overview_period') 
+        // $period eg. this-month, last-month derived from $sR->getSetting('invoice or quote_overview_period') 
         $range = $sR->range($period);
         /**
          * @var int $key

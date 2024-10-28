@@ -2038,17 +2038,24 @@ return [
       ->middleware(Authentication::class)
       ->action([TelegramController::class, 'delete_webhook'])
       ->name('telegram/delete_webhook'),
+      Route::get('/telegram/get_webhookinfo')
+      ->middleware(fn(AccessChecker $checker) => $checker->withPermission('editInv'))
+      ->middleware(Authentication::class)
+      ->action([TelegramController::class, 'get_webhookinfo'])
+      ->name('telegram/get_webhookinfo'),
       Route::get('/telegram/set_webhook')
       ->middleware(fn(AccessChecker $checker) => $checker->withPermission('editInv'))
       ->middleware(Authentication::class)
       ->action([TelegramController::class, 'set_webhook'])
-      ->name('telegram/set_webhook'),        
+      ->name('telegram/set_webhook'),  
       Route::get('/telegram/get_updates')
       ->middleware(fn(AccessChecker $checker) => $checker->withPermission('editInv'))
       ->middleware(Authentication::class)
       ->action([TelegramController::class, 'get_updates'])
       ->name('telegram/get_updates'),             
-      Route::get('/telegram/webhook')
+      Route::methods([Method::GET, Method::POST], '/telegram/webhook')
+      ->middleware(fn(AccessChecker $checker) => $checker->withPermission('editInv'))      
+      ->middleware(Authentication::class)
       ->action([TelegramController::class, 'webhook'])
       ->name('telegram/webhook'),      
       Route::get('/unit')

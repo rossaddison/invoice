@@ -23,7 +23,7 @@
                             <label for="settings[projects_enabled]">
                                 <?= $translator->translate('i.enable_projects'); ?>
                             </label>
-                            <?php $body['settings[projects_enabled]'] = $s->get_setting('projects_enabled');?>
+                            <?php $body['settings[projects_enabled]'] = $s->getSetting('projects_enabled');?>
                             <select name="settings[projects_enabled]" class="form-control" id="settings[projects_enabled]">
                                 <option value="0">
                                     <?= $translator->translate('i.no'); ?>
@@ -41,12 +41,12 @@
                             <label for="settings[default_hourly_rate]">
                                 <?= $translator->translate('i.default_hourly_rate'); ?>
                             </label>
-                            <?php $body['settings[default_hourly_rate]'] = $s->get_setting('default_hourly_rate');?>
+                            <?php $body['settings[default_hourly_rate]'] = $s->getSetting('default_hourly_rate');?>
                             <div class="input-group">
                                 <input type="text" name="settings[default_hourly_rate]" id="settings[default_hourly_rate]"
                                     class="form-control amount"
                                     value="<?= $body['settings[default_hourly_rate]'] ? $s->format_amount((float)$body['settings[default_hourly_rate]']) : $body['settings[default_hourly_rate]']; ?>">
-                                <span class="input-group-addon"><?= $s->get_setting('currency_symbol'); ?></span>
+                                <span class="input-group-addon"><?= $s->getSetting('currency_symbol'); ?></span>
                                 <input type="hidden" name="settings[default_hourly_rate_field_is_amount]" value="1">
                             </div>
                         </div>

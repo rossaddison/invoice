@@ -66,7 +66,7 @@ final class ProjectController
         /** @psalm-var positive-int $currentPageNeverZero */
         $currentPageNeverZero = $pageNum > 0 ? $pageNum : 1;
         $paginator = (new OffsetPaginator($this->projects($projectRepository)))
-        ->withPageSize((int)$sR->get_setting('default_list_limit'))
+        ->withPageSize((int)$sR->getSetting('default_list_limit'))
         ->withCurrentPage($currentPageNeverZero);      
         $canEdit = $this->rbac();
         $parameters = [

@@ -57,7 +57,7 @@ class PeppolUblXml {
     $this->items = $inv->getItems();
     $this->sR = $sR;
     $this->t = $translator;
-    $this->currencyCode_to = $sR->get_setting('currency_to');
+    $this->currencyCode_to = $sR->getSetting('currency_to');
     $this->company = $sR->get_config_company_details();
     // Use in function itemsSubtotalGroupedByTaxPercent()
     $this->iiaR = $iiaR;
@@ -230,8 +230,8 @@ class PeppolUblXml {
         $taxInclusiveAmount,
         $allowanceTotalAmount,
         $payableAmount, 
-        $this->sR->get_setting('currency_code_to') ?: 
-        $this->sR->get_setting('currency_code_from')
+        $this->sR->getSetting('currency_code_to') ?: 
+        $this->sR->getSetting('currency_code_from')
       ), 
       $invoiceLines,
       $isCopyIndicator,

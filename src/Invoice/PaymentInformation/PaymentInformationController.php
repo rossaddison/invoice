@@ -102,7 +102,7 @@ final class PaymentInformationController
         $this->compR = $compR;
         $this->cPR = $cPR;
         $this->logger = $logger;
-        $this->telegramToken = $this->sR->get_setting('telegram_token');
+        $this->telegramToken = $this->sR->getSetting('telegram_token');
     }
     
     // If the checkbox 'Omnipay version' has been checked under Setting...View...Online Payment
@@ -234,9 +234,9 @@ final class PaymentInformationController
         $payload_array = [
             'webCheckoutDetails' => [
                 // Input: Setting...Views...Online Payment...Amazon Pay
-                'checkoutReviewReturnUrl' =>  $this->sR->get_setting('gateway_amazon_pay_returnUrl').'/'.$url_key
+                'checkoutReviewReturnUrl' =>  $this->sR->getSetting('gateway_amazon_pay_returnUrl').'/'.$url_key
             ],
-            'storeId' => $this->crypt->decode($this->sR->get_setting('gateway_amazon_pay_storeId')),
+            'storeId' => $this->crypt->decode($this->sR->getSetting('gateway_amazon_pay_storeId')),
             'scopes' => [
                 'name',
                 'email',
@@ -277,10 +277,10 @@ final class PaymentInformationController
      */
     private function amazon_signature(string $url_key) : string {
         $amazonpay_config = [
-            'public_key_id' => $this->crypt->decode($this->sR->get_setting('gateway_amazon_pay_publicKeyId')),
+            'public_key_id' => $this->crypt->decode($this->sR->getSetting('gateway_amazon_pay_publicKeyId')),
             'private_key' => $this->amazon_private_key_file(),            
             'region' => $this->amazon_get_region(),  
-            'sandbox' => $this->sR->get_setting('gateway_amazon_pay_sandbox') === '1' ? true : false
+            'sandbox' => $this->sR->getSetting('gateway_amazon_pay_sandbox') === '1' ? true : false
         ];
         $client = new \Amazon\Pay\API\Client($amazonpay_config);
         // For testing purposes 
@@ -299,7 +299,7 @@ final class PaymentInformationController
     public function amazon_get_region() : string {
         $regions = $this->sR->amazon_regions();
         // Region North America => na, Japan => jp, Europe => eu
-        $region = $this->sR->get_setting('gateway_amazon_pay_region');
+        $region = $this->sR->getSetting('gateway_amazon_pay_region');
         if (!in_array($region, $regions)) {
             $region_value = 'eu';
         } else {
@@ -356,7 +356,7 @@ final class PaymentInformationController
                         'customer_id'=> $invoice->getClient_id(),
                         'customer' =>($invoice->getClient()?->getClient_name() ?? ''). ' ' .($invoice->getClient()?->getClient_surname() ?? ''), 
                         // Default currency is needed to generate a payment intent 
-                        'currency'=> !empty($this->sR->get_setting('currency_code')) ? strtolower($this->sR->get_setting('currency_code'))  : 'gbp',
+                        'currency'=> !empty($this->sR->getSetting('currency_code')) ? strtolower($this->sR->getSetting('currency_code'))  : 'gbp',
                         'customer_email'=> $invoice->getClient()?->getClient_email(),
                         // Keep a record of the invoice items in description
                         'description' => Json::encode($items_array),
@@ -373,19 +373,19 @@ final class PaymentInformationController
                     if (null!==$payment_method_for_this_invoice) {
                         $is_overdue = ($balance > 0.00 && strtotime($invoice->getDate_due()->format($datehelper->style())) < time() ? true : false);
                         // Omnipay versions: 1. Stripe
-                        if ($this->sR->get_setting('gateway_'.$d.'_version') === '1') {
+                        if ($this->sR->getSetting('gateway_'.$d.'_version') === '1') {
                                 // Setup Stripe omnipay if enabled
-                                if ($this->sR->get_setting('gateway_stripe_enabled') === '1' && ($this->stripe_setApiKey() == false) && ($d=='stripe'))
+                                if ($this->sR->getSetting('gateway_stripe_enabled') === '1' && ($this->stripe_setApiKey() == false) && ($d=='stripe'))
                                 {
                                     $this->flash_message('warning', 
                                     $this->translator->translate('invoice.payment.information.stripe.api.key')); 
                                 }
-                                if ($this->sR->get_setting('gateway_amazon_pay_enabled') === '1' && ($d=='amazon_pay'))
+                                if ($this->sR->getSetting('gateway_amazon_pay_enabled') === '1' && ($d=='amazon_pay'))
                                 {
                                     $this->flash_message('warning', 
                                     $this->translator->translate('invoice.payment.information.amazon.no.omnipay.version')); 
                                 }
-                                if ($this->sR->get_setting('gateway_braintree_enabled') === '1' && ($d=='braintree'))
+                                if ($this->sR->getSetting('gateway_braintree_enabled') === '1' && ($d=='braintree'))
                                 {
                                     $this->flash_message('warning', 
                                     $this->translator->translate('invoice.payment.information.braintree.no.omnipay.version')); 
@@ -419,7 +419,7 @@ final class PaymentInformationController
                         if ($balance > 0 && $total > 0) {
                             $payment_method_name = $payment_method_for_this_invoice->getName();
                             if (null!==$payment_method_name) {
-                                if ($this->sR->get_setting('gateway_'.$d.'_version') === '0') {
+                                if ($this->sR->getSetting('gateway_'.$d.'_version') === '0') {
                                     $payment_method = $this->sR->mollieSupportedPaymentMethodArray();
                                     return $this->pciCompliantGatewayInForms($d,
                                         $request, $client_chosen_gateway, $url_key, $balance, $cR, $invoice, (int)$invoice_id,    
@@ -444,7 +444,7 @@ public function pciCompliantGatewayInForms(string $d,
     float $total, array $sandbox_url_array    
 ) : Response {
     if (null!==$invoice->getNumber()) {
-        if ($this->sR->get_setting('gateway_'.$d.'_enabled') === '1') {
+        if ($this->sR->getSetting('gateway_'.$d.'_enabled') === '1') {
             switch ($client_chosen_gateway) {
                 case 'Amazon_Pay':
                    return $this->amazonInForm(
@@ -464,7 +464,7 @@ public function pciCompliantGatewayInForms(string $d,
                     );
                 case 'Mollie':
                     // locale is in the format en_GB as opposed to default en
-                    $mollie_locale = $this->sR->get_setting('gateway_mollie_locale');
+                    $mollie_locale = $this->sR->getSetting('gateway_mollie_locale');
                     return $this->mollieInForm(
                         $client_chosen_gateway, $url_key, $balance, $cR, $invoice, $items_array,
                         $yii_invoice_array, 
@@ -522,12 +522,12 @@ public function amazonInForm(
                                            $amazon_languages) ? 
                                            $client_in_language : 'en_GB',          
             // Settings...View...General...Currency Code
-            'ledgerCurrency' => $this->sR->get_setting('currency_code'), 
-            'merchantId' => $this->crypt->decode($this->sR->get_setting('gateway_amazon_pay_merchantId')),
+            'ledgerCurrency' => $this->sR->getSetting('currency_code'), 
+            'merchantId' => $this->crypt->decode($this->sR->getSetting('gateway_amazon_pay_merchantId')),
             'payloadJSON' => $this->amazon_payload_json($url_key),
             // PayOnly / PayAndShip / SignIn 
             'productType' => 'PayOnly',
-            'publicKeyId' => $this->crypt->decode($this->sR->get_setting('gateway_amazon_pay_publicKeyId')),
+            'publicKeyId' => $this->crypt->decode($this->sR->getSetting('gateway_amazon_pay_publicKeyId')),
             'signature' => $this->amazon_signature($url_key)
         ],                
         'balance' => $balance,
@@ -569,10 +569,10 @@ public function braintreeInForm(
 ) : Response
 {        
         $gateway = new \Braintree\Gateway([
-            'environment' => $this->sR->get_setting('gateway_braintree_sandbox') === '1' ? 'sandbox' : 'production',
-            'merchantId' => $this->crypt->decode($this->sR->get_setting('gateway_braintree_merchantId')),
-            'publicKey' => $this->crypt->decode($this->sR->get_setting('gateway_braintree_publicKey')),
-            'privateKey' => $this->crypt->decode($this->sR->get_setting('gateway_braintree_privateKey'))
+            'environment' => $this->sR->getSetting('gateway_braintree_sandbox') === '1' ? 'sandbox' : 'production',
+            'merchantId' => $this->crypt->decode($this->sR->getSetting('gateway_braintree_merchantId')),
+            'publicKey' => $this->crypt->decode($this->sR->getSetting('gateway_braintree_publicKey')),
+            'privateKey' => $this->crypt->decode($this->sR->getSetting('gateway_braintree_privateKey'))
         ]);
         $customer_gateway = new \Braintree\CustomerGateway($gateway);
         // Create a new Braintree customer if not existing
@@ -588,7 +588,7 @@ public function braintreeInForm(
             ]);
         }
         $client_token_gateway = new \Braintree\ClientTokenGateway($gateway);
-        $merchantId = (string)$this->crypt->decode($this->sR->get_setting('gateway_braintree_merchantId'));
+        $merchantId = (string)$this->crypt->decode($this->sR->getSetting('gateway_braintree_merchantId'));
         // Return the view
         $braintree_pci_view_data = [
             'alert' => $this->alert(),
@@ -690,12 +690,12 @@ public function mollieInForm(
          */
         $mollieClient = new MollieClient();
         // Return the view
-        if ($this->sR->get_setting('gateway_mollie_enabled') === '1' && ($this->mollieSetTestOrLiveApiKey($mollieClient) == false))
+        if ($this->sR->getSetting('gateway_mollie_enabled') === '1' && ($this->mollieSetTestOrLiveApiKey($mollieClient) == false))
         {
             $this->flash_message('warning', $this->translator->translate('invoice.payment.gateway.mollie.api.key.needs.to.be.setup')); 
             return $this->webService->getNotFoundResponse();    
         } 
-        if ($this->sR->get_setting('gateway_mollie_enabled') === '1' && ($this->mollieSetTestOrLiveApiKey($mollieClient) == true))
+        if ($this->sR->getSetting('gateway_mollie_enabled') === '1' && ($this->mollieSetTestOrLiveApiKey($mollieClient) == true))
         {   
             $this->flash_message('success', $this->translator->translate('invoice.payment.gateway.mollie.api.key.has.been.setup')); 
         } 
@@ -711,7 +711,7 @@ public function mollieInForm(
             'return_url' => ['inv/url_key', ['url_key'=> $url_key]],
             'balance' => $balance,
             'client_on_invoice' => $cR->repoClientquery($invoice->getClient_id()),
-            'pci_client_publishable_key' => $this->crypt->decode($this->sR->get_setting('gateway_mollie_publishableKey')),
+            'pci_client_publishable_key' => $this->crypt->decode($this->sR->getSetting('gateway_mollie_publishableKey')),
             'json_encoded_items' => Json::encode($items_array),        
             'disable_form' => $disable_form,                
             'client_chosen_gateway' => $client_chosen_gateway,
@@ -737,10 +737,10 @@ public function mollieInForm(
 
 private function mollieSetTestOrLiveApiKey(MollieClient $mollieClient) : bool {
     /** @var string $testOrLiveApiKey */
-    $testOrLiveApiKey = !empty($this->sR->get_setting('gateway_mollie_testOrLiveApiKey')) ? $this->crypt->decode($this->sR->get_setting('gateway_mollie_testOrLiveApiKey'))
+    $testOrLiveApiKey = !empty($this->sR->getSetting('gateway_mollie_testOrLiveApiKey')) ? $this->crypt->decode($this->sR->getSetting('gateway_mollie_testOrLiveApiKey'))
                    : '';
-    !empty($this->sR->get_setting('gateway_mollie_testOrLiveApiKey')) ?  $mollieClient->setApiKey($testOrLiveApiKey) : '';
-    return !empty($this->sR->get_setting('gateway_mollie_testOrLiveApiKey')) ? true : false;
+    !empty($this->sR->getSetting('gateway_mollie_testOrLiveApiKey')) ?  $mollieClient->setApiKey($testOrLiveApiKey) : '';
+    return !empty($this->sR->getSetting('gateway_mollie_testOrLiveApiKey')) ? true : false;
 }
 
 private function mollieClientVersionString() : string
@@ -980,7 +980,7 @@ public function stripeInForm(
     float $total
 ) : Response {
     // Return the view
-    if ($this->sR->get_setting('gateway_stripe_enabled') === '1' && ($this->stripe_setApiKey() == false))
+    if ($this->sR->getSetting('gateway_stripe_enabled') === '1' && ($this->stripe_setApiKey() == false))
     {
         $this->flash_message('warning','Stripe Payment Gateway Secret Key/Api Key needs to be setup.'); 
         return $this->webService->getNotFoundResponse();    
@@ -990,7 +990,7 @@ public function stripeInForm(
         'return_url' => ['paymentinformation/stripe_complete',['url_key'=>$url_key]],
         'balance' => $balance,
         'client_on_invoice' => $cR->repoClientquery($invoice->getClient_id()),
-        'pci_client_publishable_key' => $this->crypt->decode($this->sR->get_setting('gateway_stripe_publishableKey')),
+        'pci_client_publishable_key' => $this->crypt->decode($this->sR->getSetting('gateway_stripe_publishableKey')),
         'json_encoded_items' => Json::encode($items_array),
         'client_secret'=> $this->get_stripe_pci_client_secret($yii_invoice_array), 
         'disable_form' => $disable_form,                
@@ -1012,10 +1012,10 @@ public function stripeInForm(
 // Omnipay and PCI Compliant versions use the same ApiKey
 private function stripe_setApiKey() : bool {
     /** @var string $sk_test */
-    $sk_test = !empty($this->sR->get_setting('gateway_stripe_secretKey')) ? $this->crypt->decode($this->sR->get_setting('gateway_stripe_secretKey'))
+    $sk_test = !empty($this->sR->getSetting('gateway_stripe_secretKey')) ? $this->crypt->decode($this->sR->getSetting('gateway_stripe_secretKey'))
                    : '';
-    !empty($this->sR->get_setting('gateway_stripe_secretKey')) ? \Stripe\Stripe::setApiKey($sk_test) : '';
-    return !empty($this->sR->get_setting('gateway_stripe_secretKey')) ? true : false;
+    !empty($this->sR->getSetting('gateway_stripe_secretKey')) ? \Stripe\Stripe::setApiKey($sk_test) : '';
+    return !empty($this->sR->getSetting('gateway_stripe_secretKey')) ? true : false;
 }
 
 /**
@@ -1178,7 +1178,7 @@ public function make_payment_omnipay(Request $payment_request,
                             $cc_expire_year = (string)$body['PaymentInformationForm']['creditcard_expiry_year'] ?: '';
                             $cc_cvv = (string)$body['PaymentInformationForm']['creditcard_cvv'] ?: '';
 
-                            $driver_currency = strtolower($this->sR->get_setting('gateway_' . $d . '_currency'));
+                            $driver_currency = strtolower($this->sR->getSetting('gateway_' . $d . '_currency'));
                             $sandbox_url_array = $this->sR->sandbox_url_array();
                             /**
                              * @var string $sandbox_url_array[$d]
@@ -1384,8 +1384,8 @@ private function record_online_payments_and_merchant_for_omnipay(
                 if (strlen($this->telegramToken) > 0) {
                     $telegramHelper = new TelegramHelper($this->telegramToken, $this->logger);
                     $telegramBotApi = $telegramHelper->getBotApi();                   
-                    $chatId = $this->sR->get_setting('telegram_chat_id');
-                    $telegramToken = $this->sR->get_setting('telegram_token');
+                    $chatId = $this->sR->getSetting('telegram_chat_id');
+                    $telegramToken = $this->sR->getSetting('telegram_token');
                     // send the  successful payment note via telegram bot to the settings ... view... telegram ... chat id including the client's full name and balance
                     if ((strlen($chatId) > 0) && strlen($telegramToken) > 0) {
                         $failResultSendMessage = $telegramBotApi->sendMessage($chatId, $clientFullName.': '.$balance. ' : '.$payment_note);
@@ -1394,7 +1394,7 @@ private function record_online_payments_and_merchant_for_omnipay(
                         } 
                     }
                 } else {
-                    if ($this->sR->get_setting('enable_telegram') == '1') {
+                    if ($this->sR->getSetting('enable_telegram') == '1') {
                         $this->flash_message('danger', $this->translator->translate('invoice.invoice.telegram.bot.api.token.not.set'));
                     }
                 }
@@ -1661,7 +1661,7 @@ public function omnipay_payment_return(string $invoice_url_key, string $driver) 
                     'inv_id' => $invoice->getId(),
                     'payment_date' => \DateTime::createFromImmutable(new \DateTimeImmutable('now')),
                     'payment_amount' => $balance,
-                    'payment_method_id' => ($this->sR->get_setting('gateway_' . $d . '_payment_method')) ? $this->sR->get_setting('gateway_' . $d . '_payment_method') : 0,
+                    'payment_method_id' => ($this->sR->getSetting('gateway_' . $d . '_payment_method')) ? $this->sR->getSetting('gateway_' . $d . '_payment_method') : 0,
                 ];
 
                 $payment = new Payment();
@@ -1807,7 +1807,7 @@ public function renderPartialAsStringCompanyLogo() : string
     return $this->viewRenderer->renderPartialAsString('//invoice/paymentinformation/logo/companyLogo', [
         'src' => $src,
         // if debug_mode == '1' => reveal the source in the tooltip
-        'tooltipTitle' => $this->sR->get_setting('debug_mode') == '1' ? $src : ''
+        'tooltipTitle' => $this->sR->getSetting('debug_mode') == '1' ? $src : ''
     ]);
 }
 

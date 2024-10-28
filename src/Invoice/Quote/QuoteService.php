@@ -81,7 +81,7 @@ final class QuoteService
             $model->setDiscount_amount(0.00);
         }
         // Regenerate quote numbers if the setting is changed
-        if (!$model->isNewRecord() && $s->get_setting('generate_quote_number_for_draft') === '1') {
+        if (!$model->isNewRecord() && $s->getSetting('generate_quote_number_for_draft') === '1') {
             null!==$array['group_id'] ? $model->setNumber((string)$gR->generate_number((int)$array['group_id'], true)) : '';  
         }
         $this->repository->save($model);

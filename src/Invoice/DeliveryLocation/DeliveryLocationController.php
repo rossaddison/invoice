@@ -87,7 +87,7 @@ final class DeliveryLocationController {
     $currentPageNeverZero = $page > 0 ? $page : 1;
     $dels = $delRepository->findAllPreloaded();
     $paginator = (new OffsetPaginator($dels))
-      ->withPageSize((int) $sR->get_setting('default_list_limit'))
+      ->withPageSize((int) $sR->getSetting('default_list_limit'))
       ->withCurrentPage($currentPageNeverZero)
       ->withToken(PageToken::next((string)$page));
     $this->add_in_invoice_flash();
@@ -100,7 +100,7 @@ final class DeliveryLocationController {
       'iR' => $iR,
       'qR' => $qR,  
       'alerts' => $this->alert(),
-      'max' => (int) $sR->get_setting('default_list_limit'),
+      'max' => (int) $sR->getSetting('default_list_limit'),
     ];
     return $this->viewRenderer->render('del/index', $parameters);
   }

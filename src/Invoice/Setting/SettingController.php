@@ -103,7 +103,7 @@ final class SettingController
         /** @psalm-var positive-int $currentPageNeverZero */
         $currentPageNeverZero = $pageNum > 0 ? $pageNum : 1;
         $paginator = (new OffsetPaginator($this->settings($this->s)))
-        ->withPageSize((int)$this->s->get_setting('default_list_limit'))
+        ->withPageSize((int)$this->s->getSetting('default_list_limit'))
         ->withCurrentPage($currentPageNeverZero);
         $canEdit = $this->rbac(); 
         $parameters = [
@@ -703,9 +703,9 @@ final class SettingController
     
     private function invoiceplaneConnected() : bool
     {
-        $settingInvoiceplaneName = $this->s->get_setting('invoiceplane_database_name');
-        $settingInvoiceplaneUsername = $this->s->get_setting('invoiceplane_database_username');
-        $settingInvoiceplanePassword = $this->s->get_setting('invoiceplane_database_password') ?: '';
+        $settingInvoiceplaneName = $this->s->getSetting('invoiceplane_database_name');
+        $settingInvoiceplaneUsername = $this->s->getSetting('invoiceplane_database_username');
+        $settingInvoiceplanePassword = $this->s->getSetting('invoiceplane_database_password') ?: '';
         if (strlen($settingInvoiceplaneName) > 0 && strlen($settingInvoiceplaneUsername) > 0)
         {
             $dsn = (new Dsn(

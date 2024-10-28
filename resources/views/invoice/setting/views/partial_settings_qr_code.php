@@ -36,7 +36,7 @@
                             <label for="settings[qr_version]" <?= $s->where('qr_version'); ?>>
                                 <?= $translator->translate('invoice.invoice.qr.version'); ?>
                             </label>
-                            <?php $body['settings[qr_version]'] = $s->get_setting('qr_version') ?: '40';?>
+                            <?php $body['settings[qr_version]'] = $s->getSetting('qr_version') ?: '40';?>
                            <input type="text" name="settings[qr_version]" id="settings[qr_version]"
                                 class="form-control" 
                                 value="<?= $body['settings[qr_version]'] ?? (string)Version::AUTO; ?>">
@@ -45,7 +45,7 @@
                             <label for="settings[qr_ecc_level]">
                                 <?= $translator->translate('invoice.invoice.qr.ecc.level'); ?>
                             </label>
-                            <?php $body['settings[qr_ecc_level]'] = $s->get_setting('qr_ecc_level');?>
+                            <?php $body['settings[qr_ecc_level]'] = $s->getSetting('qr_ecc_level');?>
                             <select name="settings[qr_ecc_level]" id="settings[qr_ecc_level]"
                                 class="form-control">
                                 <option value="0" <?php $s->check_select($body['settings[qr_ecc_level]'], '0'); ?>><?= 'L'; ?></option>
@@ -58,7 +58,7 @@
                             <label for="settings[qr_height_and_width]" <?= $s->where('qr_height_and_width'); ?>>
                                 <?= $translator->translate('invoice.invoice.qr.height.and.width'); ?>
                             </label>
-                            <?php $body['settings[qr_height_and_width]'] = $s->get_setting('qr_height_and_width');?>
+                            <?php $body['settings[qr_height_and_width]'] = $s->getSetting('qr_height_and_width');?>
                            <input type="text" name="settings[qr_height_and_width]" id="settings[qr_height_and_width]"
                                 class="form-control" 
                                 value="<?= isset($body['settings[qr_height_and_width]']) && !empty($body['settings[qr_height_and_width]']) 

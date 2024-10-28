@@ -45,7 +45,7 @@ use Yiisoft\Html\Tag\Form;
                 <?= Field::text($form, 'reason_code')
                     ->addInputAttributes(['style' => 'background:lightblue'])     
                     ->label($translator->translate('invoice.invoice.allowance.or.charge.reason.code'))
-                    ->value(Html::encode($form->getReason_code() ?? ''))     
+                    ->value(Html::encode($form->getReasonCode() ?? ''))     
                     ->readonly(true);
                 ?>
             <?= Html::closeTag('div'); ?>
@@ -61,7 +61,7 @@ use Yiisoft\Html\Tag\Form;
                 <?= Field::text($form, 'multiplier_factor_numeric')
                     ->addInputAttributes(['style' => 'background:lightblue'])     
                     ->label($translator->translate('invoice.invoice.allowance.or.charge.multiplier.factor.numeric'))
-                    ->value(Html::encode($form->getMultiplier_factor_numeric() ?? ''))     
+                    ->value(Html::encode($form->getMultiplierFactorNumeric() ?? ''))     
                     ->readonly(true);
                 ?>
             <?= Html::closeTag('div'); ?>
@@ -69,7 +69,7 @@ use Yiisoft\Html\Tag\Form;
                 <?= Field::text($form, 'base_amount')
                     ->addInputAttributes(['style' => 'background:lightblue'])     
                     ->label($translator->translate('invoice.invoice.allowance.or.charge.amount'))
-                    ->value(Html::encode($form->getBase_amount() ?? ''))     
+                    ->value(Html::encode($form->getBaseAmount() ?? ''))     
                     ->readonly(true);
                 ?>
             <?= Html::closeTag('div'); ?>

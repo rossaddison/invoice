@@ -44,7 +44,7 @@ use Yiisoft\Html\Tag\Form;
     <?= Html::openTag('h1',['class'=>'fw-normal h3 text-center']); ?>
     <?= $translator->translate('i.custom_field_form'); ?>
     <?= Html::closeTag('h1'); ?>
-        <?= $button::back_save(); ?>
+        <?= $button::backSave(); ?>
     <?= Html::closeTag('div'); ?>
 
     <?= Html::Tag('br'); ?>

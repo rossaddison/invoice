@@ -79,7 +79,7 @@ final class InvItemService
         $tax_rate_percentage = $this->taxrate_percentage((int)$tax_rate_id, $trr);
         // Users are required to enter a tax rate even if it is zero percent.
 
-        $model->setBelongs_to_vat_invoice((int)($s->get_setting('enable_vat_registration') ?: '0'));
+        $model->setBelongs_to_vat_invoice((int)($s->getSetting('enable_vat_registration') ?: '0'));
         if ($product_id > 0) {
           $this->repository->save($model);
           // Peppol Allowances / charges can only be added on an existing product => zero for allowances or charges 
@@ -268,7 +268,7 @@ final class InvItemService
     {        
        // This function is used in invitem/edit_task when editing an item on the inv view
        // see https://github.com/cycle/orm/issues/348
-       isset($array['tax_rate_id']) ? $model->setTaxRate($model->getTaxRate()?->getTax_rate_id() == (int)$array['tax_rate_id'] ? $model->getTaxRate() : null): '';
+       isset($array['tax_rate_id']) ? $model->setTaxRate($model->getTaxRate()?->getTaxRateId() == (int)$array['tax_rate_id'] ? $model->getTaxRate() : null): '';
        $tax_rate_id = ((isset($array['tax_rate_id'])) ? (int)$array['tax_rate_id'] : '');
        $model->setTax_rate_id((int)$tax_rate_id);
        
@@ -348,11 +348,11 @@ final class InvItemService
        $discount_total = ($quantity * $discount);
        $tax_total = 0.00;
        // NO VAT
-       if ($s->get_setting('enable_vat_registration') === '0') { 
+       if ($s->getSetting('enable_vat_registration') === '0') { 
            $tax_total = (($sub_total-$discount_total+$charge_total-$allowance_total) * ($tax_rate_percentage/100));
        }
        // VAT
-       if ($s->get_setting('enable_vat_registration') === '1') { 
+       if ($s->getSetting('enable_vat_registration') === '1') { 
             // EARLY SETTLEMENT CASH DISCOUNTS MUST BE REMOVED BEFORE VAT IS DETERMINED
             // @see https://informi.co.uk/finance/how-vat-affected-discounts
             $tax_total = ((($sub_total-$discount_total+$charge_total) * ($tax_rate_percentage/100)));
@@ -395,7 +395,7 @@ final class InvItemService
     {
         $taxrate = $trr->repoTaxRatequery((string)$id);
         if ($taxrate) {
-            $percentage = $taxrate->getTax_rate_percent();        
+            $percentage = $taxrate->getTaxRatePercent();        
             return $percentage;
         }
         return null;

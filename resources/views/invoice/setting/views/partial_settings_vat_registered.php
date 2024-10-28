@@ -18,7 +18,7 @@
                     <div class="col-xs-12 col-md-6">
                         <div class="form-group">
                             <div class="checkbox">
-                                <?php $body['settings[enable_vat_registration]'] = $s->get_setting('enable_vat_registration');?>
+                                <?php $body['settings[enable_vat_registration]'] = $s->getSetting('enable_vat_registration');?>
                                 <label <?= $s->where('enable_vat_registration'); ?>">
                                     <input type="hidden" name="settings[enable_vat_registration]" value="0">
                                     <input type="checkbox" name="settings[enable_vat_registration]" value="1"
@@ -27,7 +27,7 @@
                                 </label>
                             </div>
                             <div class="checkbox">
-                                <?php $body['settings[display_vat_enabled_message]'] = $s->get_setting('display_vat_enabled_message');?>
+                                <?php $body['settings[display_vat_enabled_message]'] = $s->getSetting('display_vat_enabled_message');?>
                                 <label>
                                     <input type="hidden" name="settings[display_vat_enabled_message]" id="dvem_hidden" value="0">
                                     <input type="checkbox" name="settings[display_vat_enabled_message]" id="dvem_checkbox" value="1"

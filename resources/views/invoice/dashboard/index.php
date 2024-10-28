@@ -39,7 +39,7 @@
 
 <?= $alerts; ?>
 
-    <div class="row <?= ($s->get_setting('disable_quickactions') == '1' ? 'hidden' : ''); ?>">
+    <div class="row <?= ($s->getSetting('disable_quickactions') == '1' ? 'hidden' : ''); ?>">
         <div class="col-xs-12">
 
             <div id="panel-quick-actions" class="panel panel-default quick-actions">
@@ -252,7 +252,7 @@
                              * @var App\Invoice\Entity\Inv $invoice
                              */
                             foreach ($invoices as $invoice) {
-                                if ($s->get_setting('disable_read_only') == '1') {
+                                if ($s->getSetting('disable_read_only') == '1') {
                                     $invoice->setIs_read_only(false);
                                 } ?>
                             <tr>
@@ -321,7 +321,7 @@
 <?php 
     // Projects 
 ?>
-    <?php if ($s->get_setting('projects_enabled') == 1) : ?>
+    <?php if ($s->getSetting('projects_enabled') == 1) : ?>
         <div class = 'row'>
             <div class="col-xs-12 col-md-6">
 

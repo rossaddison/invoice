@@ -228,8 +228,8 @@ final class ClientController
             'errorsCustom' => [],
             'client' => $new_client,
             'aliases' => new Aliases(['@invoice' => dirname(__DIR__), '@language' => dirname(__DIR__). DIRECTORY_SEPARATOR.'Language']),
-            'selectedCountry' => $sR->get_setting('default_country'),            
-            'selectedLanguage' => $sR->get_setting('default_language'),
+            'selectedCountry' => $sR->getSetting('default_country'),            
+            'selectedLanguage' => $sR->getSetting('default_language'),
             'datepicker_dropdown_locale_cldr' => $this->session->get('_language') ?? 'en',
             'optionsDataGender' => $this->optionsDataGender(),
             'optionsDataClientFrequencyDropdownFilter' => $this->optionsDataClientFrequencyDropDownFilter(),
@@ -249,44 +249,43 @@ final class ClientController
         if ($request->getMethod() === Method::POST) { 
             if ($formHydrator->populateFromPostAndValidate($form, $request)) {
                 $body = $request->getParsedBody() ?? [];
-                /**
-                 * @psalm-suppress PossiblyInvalidArgument $body
-                 */
-                $client_id = $this->clientService->saveClient($new_client, $body, $sR);
-                if (null!==$client_id) {
-                    if (isset($body['custom'])) {
-                        // Retrieve the custom array
-                        /** @var array $custom */
-                        $custom = $body['custom'];
-                        /** 
-                         * @var int $custom_field_id
-                         * @var string|array $value
-                         */
-                        foreach($custom as $custom_field_id => $value){
-                            $clientCustom = new ClientCustom();
-                            $clientCustomForm = new ClientCustomForm($clientCustom);
-                            $client_custom = [];
-                            $client_custom['client_id'] = $client_id;
-                            $client_custom['custom_field_id'] = $custom_field_id;                    
-                            // Note: There are no Required rules for value under ClientCustomForm
-                            $client_custom['value'] = is_array($value) ? serialize($value) : $value;                    
-                            if ($formHydrator->populateAndValidate($clientCustomForm, $client_custom)) {
-                              $this->clientCustomService->saveClientCustom($clientCustom, $client_custom);
+                if (is_array($body)) { 
+                    $client_id = $this->clientService->saveClient($new_client, $body, $sR);
+                    if (null!==$client_id) {
+                        if (isset($body['custom'])) {
+                            // Retrieve the custom array
+                            /** @var array $custom */
+                            $custom = $body['custom'];
+                            /** 
+                             * @var int $custom_field_id
+                             * @var string|array $value
+                             */
+                            foreach($custom as $custom_field_id => $value){
+                                $clientCustom = new ClientCustom();
+                                $clientCustomForm = new ClientCustomForm($clientCustom);
+                                $client_custom = [];
+                                $client_custom['client_id'] = $client_id;
+                                $client_custom['custom_field_id'] = $custom_field_id;                    
+                                // Note: There are no Required rules for value under ClientCustomForm
+                                $client_custom['value'] = is_array($value) ? serialize($value) : $value;                    
+                                if ($formHydrator->populateAndValidate($clientCustomForm, $client_custom)) {
+                                  $this->clientCustomService->saveClientCustom($clientCustom, $client_custom);
+                                }
+                                // These two can be used to create customised labels for custom field error validation on the form
+                                // Currently not used.
+                                $parameters['clientCustomForm'] = $clientCustomForm; 
+                                $parameters['errorsCustom'] = $clientCustomForm->getValidationResult()->getErrorMessagesIndexedByProperty();
                             }
-                            // These two can be used to create customised labels for custom field error validation on the form
-                            // Currently not used.
-                            $parameters['clientCustomForm'] = $clientCustomForm; 
-                            $parameters['errorsCustom'] = $clientCustomForm->getValidationResult()->getErrorMessagesIndexedByProperty();
+                        }    
+                        $this->flash_message('info', $this->translator->translate('i.record_successfully_created'));
+                        if ($origin == 'main' || $origin == 'add') {
+                            return $this->webService->getRedirectResponse('client/index');
                         }
-                    }    
-                    $this->flash_message('info', $this->translator->translate('i.record_successfully_created'));
-                    if ($origin == 'main' || $origin == 'add') {
-                        return $this->webService->getRedirectResponse('client/index');
+                        if ($origin == 'dashboard') {
+                            return $this->webService->getRedirectResponse('invoice/dashboard');
+                        }   
                     }
-                    if ($origin == 'dashboard') {
-                        return $this->webService->getRedirectResponse('invoice/dashboard');
-                    }   
-                }
+                }    
             }
             else {
                 $parameters['errors'] = $form->getValidationResult()->getErrorMessagesIndexedByProperty();
@@ -332,8 +331,8 @@ final class ClientController
                'optionsDataClientFrequencyDropdownFilter' => $this->optionsDataClientFrequencyDropDownFilter(),
                'optionsDataPostalAddresses' => $this->optionsDataPostalAddress($postaladdresses),
                'aliases' => new Aliases(['@invoice' => dirname(__DIR__), '@language' => dirname(__DIR__). DIRECTORY_SEPARATOR.'Language']),
-               'selectedCountry' => null!==$selected_country ? $selected_country : $sR->get_setting('default_country'),            
-               'selectedLanguage' => null!==$selected_language ? $selected_language : $sR->get_setting('default_language'),
+               'selectedCountry' => null!==$selected_country ? $selected_country : $sR->getSetting('default_country'),            
+               'selectedLanguage' => null!==$selected_language ? $selected_language : $sR->getSetting('default_language'),
                'datepicker_dropdown_locale_cldr' => $currentRoute->getArgument('_language', 'en'),
                'postal_address_count' => $paR->repoClientCount((string)$client_id),
                /**
@@ -570,7 +569,7 @@ final class ClientController
             $clients = $cR->filter_client_name_surname((string)$query_params['filter_client_name'], (string)$query_params['filter_client_surname']);
         } 
         $paginator = (new DataOffsetPaginator($clients))
-            ->withPageSize((int)$sR->get_setting('default_list_limit'))
+            ->withPageSize((int)$sR->getSetting('default_list_limit'))
             ->withCurrentPage($currentPageNeverZero)
             ->withToken(PageToken::next((string)$page));     
         $parameters = [
@@ -582,8 +581,8 @@ final class ClientController
             'active' => $active,
             'cpR' => $cpR,
             'ucR' => $ucR,
-            'defaultPageSizeOffsetPaginator' => $sR->get_setting('default_list_limit')
-                                                    ? (int)$sR->get_setting('default_list_limit') : 1,
+            'defaultPageSizeOffsetPaginator' => $sR->getSetting('default_list_limit')
+                                                    ? (int)$sR->getSetting('default_list_limit') : 1,
             'modal_create_client' => $this->viewRenderer->renderPartialAsString('//invoice/client/modal_create_client'),
             'optionsDataClientNameDropdownFilter' => $this->optionsDataClientNameDropdownFilter($cR),
             'optionsDataClientSurnameDropdownFilter' => $this->optionsDataClientSurnameDropdownFilter($cR),
@@ -626,7 +625,7 @@ final class ClientController
                     if (!empty($client_array)) {
                         $clients = $cR->repoUserClient($client_array);
                         $paginator = (new DataOffsetPaginator($clients))
-                            ->withPageSize((int)$sR->get_setting('default_list_limit'))
+                            ->withPageSize((int)$sR->getSetting('default_list_limit'))
                             ->withCurrentPage($currentPageNeverZero);
                         $parameters = [
                             'paginator' => $paginator,
@@ -637,8 +636,8 @@ final class ClientController
                             'active' => $active,
                             'pageNum' => $pageNum,
                             'cpR' => $cpR,
-                            'defaultPageSizeOffsetPaginator' => $sR->get_setting('default_list_limit')
-                                                                ? (int)$sR->get_setting('default_list_limit') : 1,
+                            'defaultPageSizeOffsetPaginator' => $sR->getSetting('default_list_limit')
+                                                                ? (int)$sR->getSetting('default_list_limit') : 1,
                             'modal_create_client' => $this->viewRenderer->renderPartialAsString('//invoice/client/modal_create_client'),
                             'userInv' => $userInv    
                         ];    
@@ -1058,7 +1057,7 @@ final class ClientController
                         'client'=> $client,
                         // All payments from the client are loaded and filtered in the view with 
                         // if ($payment->getInv()->getClient_id() === $client->getClient_id())
-                        'payments'=> $pymtR->repoPaymentInvLoadedAll((int)$sR->get_setting('payment_list_limit') ?: 10),
+                        'payments'=> $pymtR->repoPaymentInvLoadedAll((int)$sR->getSetting('payment_list_limit') ?: 10),
                     ]), 
                     'delivery_locations'=>$this->viewRenderer->renderPartialAsString('//invoice/client/client_delivery_location_list', [
                         'locations'=> $delR->repoClientquery((string)$client->getClient_id())

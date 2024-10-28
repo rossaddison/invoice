@@ -130,7 +130,7 @@ final class PaymentPeppolController
       $currentPageNeverZero = $page > 0 ? $page : 1;
       $paymentpeppols = $paymentpeppolRepository->findAllPreloaded();
       $paginator = (new OffsetPaginator($paymentpeppols))
-      ->withPageSize((int) $settingRepository->get_setting('default_list_limit'))
+      ->withPageSize((int) $settingRepository->getSetting('default_list_limit'))
       ->withCurrentPage($currentPageNeverZero)
       ->withToken(PageToken::next((string)$page));
       $parameters = [

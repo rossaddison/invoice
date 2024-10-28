@@ -143,8 +143,8 @@ final class UserInvController
             'errors' => [],
             'form' => $form,
             // Only include newly signed up user ids in user Table in dropdown list i.e exclude those users already added and linked with client(s)
-            'selected_country' => $sR->get_setting('default_country'),            
-            'selected_language' => $sR->get_setting('default_language'),
+            'selected_country' => $sR->getSetting('default_country'),            
+            'selected_language' => $sR->getSetting('default_language'),
             'countries' => $countries->get_country_list($_language),
             'uR' => $uR,
             'uiR' => $uiR
@@ -250,7 +250,7 @@ final class UserInvController
          * @psalm-suppress PossiblyInvalidArgument
          */
         $paginator = (new OffsetPaginator($userinvs))        
-        ->withPageSize((int)$sR->get_setting('default_list_limit'))
+        ->withPageSize((int)$sR->getSetting('default_list_limit'))
         ->withCurrentPage($currentPageNeverZero)               
         ->withToken(PageToken::next($pageString));   
         $parameters = [
@@ -584,13 +584,13 @@ final class UserInvController
                                  * The client will have to be assigned to the user by the admin manually if this is not set
                                  * @see InvoiceController 'signup_automatically_assign_client' => 0 
                                  */
-                                if ($sR->get_setting('signup_automatically_assign_client') == '1') {
+                                if ($sR->getSetting('signup_automatically_assign_client') == '1') {
                                     $client = new Client();
                                     // set the client as active so that invoices can be created for the client
                                     $client->setClient_active(true);
                                     $client->setClient_email($email);
                                     $client->setClient_language($language);
-                                    $client->setClient_age($sR->get_setting('signup_default_age_minimum_eighteen') == '1' ? 18 : 0);
+                                    $client->setClient_age($sR->getSetting('signup_default_age_minimum_eighteen') == '1' ? 18 : 0);
                                     $cR->save($client);
                                     $this->flash_message('info',  $this->translator->translate('invoice.invoice.assign.client.on.signup.done'));
                                     if (null!==($clientId = $client->getClient_id())) {

@@ -56,8 +56,8 @@ use Yiisoft\Html\Tag\Form;
                 ? $translator->translate('invoice.invoice.allowance.or.charge.charge')
                 : $translator->translate('invoice.invoice.allowance.or.charge.allowance')) 
                 . ' ' . ($allowance_charge->getReason())
-                . ' ' . ($allowance_charge->getReason_code())
-                . ' '. ($allowance_charge->getTaxRate()?->getTax_rate_name() ?? '')
+                . ' ' . ($allowance_charge->getReasonCode())
+                . ' '. ($allowance_charge->getTaxRate()?->getTaxRateName() ?? '')
                 . ' ' . ($translator->translate('invoice.invoice.allowance.or.charge.allowance'));        
             }
         ?>
@@ -70,7 +70,7 @@ use Yiisoft\Html\Tag\Form;
             ->hint($translator->translate('invoice.hint.this.field.is.required'));    
         ?>
         <?= Field::text($form, 'amount')
-            ->label($translator->translate('i.amount').'('.$s->get_setting('currency_symbol').')')
+            ->label($translator->translate('i.amount').'('.$s->getSetting('currency_symbol').')')
             ->addInputAttributes(['class' => 'form-control'])    
             ->value($s->format_amount($form->getAmount() ?? 0.00))    
             ->hint($translator->translate('invoice.hint.this.field.is.required'));
@@ -78,7 +78,7 @@ use Yiisoft\Html\Tag\Form;
     <?= Html::closeTag('div'); ?>
 <?= Html::closeTag('div'); ?> 
 
-<?= $button::back_save(); ?>
+<?= $button::backSave(); ?>
 <?= Form::tag()->close(); ?>
 <?= Html::closeTag('div'); ?>
 <?= Html::closeTag('div'); ?>

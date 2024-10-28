@@ -47,7 +47,7 @@ final class Bootstrap5ModalInv
         
     public function renderPartialLayoutWithFormAsString(string $origin, array $errors) : string
     {
-        $defaultGroupId = $this->sR->get_setting('default_invoice_group');
+        $defaultGroupId = $this->sR->getSetting('default_invoice_group');
         $optionsGroupData = [];
         $groups = $this->gR->findAllPreloaded();
         /**

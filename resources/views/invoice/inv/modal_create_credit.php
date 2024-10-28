@@ -42,7 +42,7 @@ use Yiisoft\Html\Html;
                     <div class="form-group">
                         <label for="inv_password"><?= $translator->translate('i.invoice_password'); ?></label>
                         <input type="text" name="inv_password" id="inv_password" class="form-control"
-                               value="<?= $s->get_setting('invoice_pre_password') == '' ? '' : $s->get_setting('invoice_pre_password'); ?>"
+                               value="<?= $s->getSetting('invoice_pre_password') == '' ? '' : $s->getSetting('invoice_pre_password'); ?>"
                                style="margin: 0 auto;" autocomplete="off">
                     </div>
 
@@ -55,11 +55,11 @@ use Yiisoft\Html\Html;
                                  */
                                 foreach ($invoice_groups as $invoice_group) { ?>
                                 <option value="<?= $invoice_group->getId(); ?>"
-                                    <?php if ($s->get_setting('default_invoice_group') === $invoice_group->getId()) {
+                                    <?php if ($s->getSetting('default_invoice_group') === $invoice_group->getId()) {
                                         echo 'selected="selected"';
                                         $credit_invoice_group = Html::encode($invoice_group->getName() ?? '');
                                     } ?>>
-                                    <?php if ($s->get_setting('default_invoice_group') === $invoice_group->getId()) { 
+                                    <?php if ($s->getSetting('default_invoice_group') === $invoice_group->getId()) { 
                                         echo $credit_invoice_group;                                
                                     } else { echo ''; } ?>
                                 </option>

@@ -101,7 +101,7 @@ use Yiisoft\Html\Tag\Form;
                     <?= Html::closeTag('select'); ?>
                 <?= Html::closeTag('div'); ?>    
             <?= Html::closeTag('div'); ?>            
-            <?= $button::back_save(); ?>
+            <?= $button::backSave(); ?>
         <?= Html::closeTag('div'); ?>
     <?= Html::closeTag('div'); ?>
 <?= Html::closeTag('div'); ?>

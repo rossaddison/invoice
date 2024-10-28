@@ -76,7 +76,7 @@ final class TelegramHelper
     ) : true|FailResult 
     {    
         $result = $this->botApi->setWebhook(
-            $urlGenerator->generate('telegram/webhook', ['_language' => 'en']),
+            $urlGenerator->generateAbsolute('telegram/webhook', ['_language' => 'en']),
             $ipAddress,
             $maxConnections,
             $allowUpdates,

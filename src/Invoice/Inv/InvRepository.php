@@ -592,7 +592,7 @@ final class InvRepository extends Select\Repository
     public function get_date_due(string $invoice_date_created, SR $sR) : string
     {
         $invoice_date_due = new \DateTime($invoice_date_created);
-        $invoice_date_due->add(new \DateInterval('P' . $sR->get_setting('invoices_due_after') . 'D'));
+        $invoice_date_due->add(new \DateInterval('P' . $sR->getSetting('invoices_due_after') . 'D'));
         return $invoice_date_due->format('Y-m-d');
     }
     

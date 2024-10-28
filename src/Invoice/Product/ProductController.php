@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace App\Invoice\Product;
@@ -158,7 +159,7 @@ class ProductController
             'item_classification_code_listids' => $peppolarrays->getUncl7143(),
             'families' => $this->families($fR->findAllPreloaded()),
             'units' => $this->units($uR->findAllPreloaded()),
-            'taxRates' => $this->tax_rates($trR->findAllPreloaded()),
+            'taxRates' => $this->taxRates($trR->findAllPreloaded()),
             'unitPeppols' => $this->unit_peppols($upR->findAllPreloaded()),
             'customFields' => $cfR->repoTablequery('product_custom'),
             'customValues' => $cvR->attach_hard_coded_custom_field_values_to_custom_field($cfR->repoTablequery('product_custom')),
@@ -169,38 +170,37 @@ class ProductController
         if ($request->getMethod() === Method::POST) {  
             if ($formHydrator->populateFromPostAndValidate($form, $request)) {
                 $body = $request->getParsedBody() ?? [];
-                /**
-                 * @psalm-suppress PossiblyInvalidArgument $body
-                 */
-                $product_id = $this->productService->saveProduct($product, $body);
-                if ($product_id) {
-                    if (isset($body['custom'])) {
-                        // Retrieve the custom array
-                        /** @var array $custom */
-                        $custom = $body['custom'];
-                        /** 
-                         * @var int $custom_field_id
-                         * @var string|array $value
-                         */
-                        foreach($custom as $custom_field_id => $value){
-                            $productCustom = new ProductCustom();
-                            $formProductCustom = new ProductCustomForm($productCustom);
-                            $product_custom = [];
-                            $product_custom['product_id'] = $product_id;
-                            $product_custom['custom_field_id'] = $custom_field_id;                    
-                            $product_custom['value'] = is_array($value) ? serialize($value) : $value;                    
-                            if ($formHydrator->populate($formProductCustom, $product_custom) && $formProductCustom->isValid()) {
-                              $this->productCustomService->saveProductCustom($productCustom, $product_custom);
+                if (is_array($body)) {
+                    $product_id = $this->productService->saveProduct($product, $body);
+                    if ($product_id) {
+                        if (isset($body['custom'])) {
+                            // Retrieve the custom array
+                            /** @var array $custom */
+                            $custom = $body['custom'];
+                            /** 
+                             * @var int $custom_field_id
+                             * @var string|array $value
+                             */
+                            foreach($custom as $custom_field_id => $value){
+                                $productCustom = new ProductCustom();
+                                $formProductCustom = new ProductCustomForm($productCustom);
+                                $product_custom = [];
+                                $product_custom['product_id'] = $product_id;
+                                $product_custom['custom_field_id'] = $custom_field_id;                    
+                                $product_custom['value'] = is_array($value) ? serialize($value) : $value;                    
+                                if ($formHydrator->populate($formProductCustom, $product_custom) && $formProductCustom->isValid()) {
+                                  $this->productCustomService->saveProductCustom($productCustom, $product_custom);
+                                }
+                                // These two can be used to create customised labels for custom field error validation on the form
+                                // Currently not used.
+                                $parameters['formProductCustom'] = $formProductCustom; 
+                                $parameters['errorsCustom'] = $formProductCustom->getValidationResult()->getErrorMessagesIndexedByProperty();
                             }
-                            // These two can be used to create customised labels for custom field error validation on the form
-                            // Currently not used.
-                            $parameters['formProductCustom'] = $formProductCustom; 
-                            $parameters['errorsCustom'] = $formProductCustom->getValidationResult()->getErrorMessagesIndexedByProperty();
                         }
+                        $this->flashMessage('info', $this->translator->translate('i.record_successfully_created'));
+                        return $this->webService->getRedirectResponse('product/index');
                     }
-                    $this->flash_message('info', $this->translator->translate('i.record_successfully_created'));
-                    return $this->webService->getRedirectResponse('product/index');
-                }
+                }    
             } else {
                 $parameters['errors'] = $form->getValidationResult()->getErrorMessagesIndexedByProperty();
             }    
@@ -248,7 +248,7 @@ class ProductController
                     'item_classification_code_listids' => $peppolarrays->getUncl7143(),
                     'families' => $this->families($fR->findAllPreloaded()),
                     'units' => $this->units($uR->findAllPreloaded()),
-                    'taxRates' => $this->tax_rates($trR->findAllPreloaded()),
+                    'taxRates' => $this->taxRates($trR->findAllPreloaded()),
                     'unitPeppols' => $this->unit_peppols($upR->findAllPreloaded()),
                     'customFields' => $cfR->repoTablequery('product_custom'),
                     'customValues' => $cvR->attach_hard_coded_custom_field_values_to_custom_field($cfR->repoTablequery('product_custom')),
@@ -297,7 +297,7 @@ class ProductController
                              } //isset  
                         } // cfR
                     } // is_array    
-                    $this->flash_message('info', $this->translator->translate('i.record_successfully_updated'));
+                    $this->flashMessage('info', $this->translator->translate('i.record_successfully_updated'));
                     return $this->webService->getRedirectResponse('product/index');
                 }
                 return $this->viewRenderer->render('_form', $parameters);
@@ -328,12 +328,12 @@ class ProductController
             $product = $this->product($id, $pR);
             if ($product) { 
                 $this->productService->deleteProduct($product);  
-                $this->flash_message('info', $this->translator->translate('i.record_successfully_deleted'));
+                $this->flashMessage('info', $this->translator->translate('i.record_successfully_deleted'));
             }
             return $this->webService->getRedirectResponse('product/index');
 	} catch (\Exception $e) {
            unset($e);
-           $this->flash_message('danger', $this->translator->translate('invoice.product.history'));
+           $this->flashMessage('danger', $this->translator->translate('invoice.product.history'));
            return $this->webService->getRedirectResponse('product/index');   
         }
     }
@@ -343,7 +343,7 @@ class ProductController
      * @param string $message
      * @return Flash|null
      */
-    private function flash_message(string $level, string $message): Flash|null {
+    private function flashMessage(string $level, string $message): Flash|null {
         if (strlen($message) > 0) {
             $this->flash->add($level, $message, true);
             return $this->flash;
@@ -412,19 +412,19 @@ class ProductController
     
     /**
      * Prepare optionsData $data value for ...resources/view/product/_form select
-     * @param EntityReader $tax_rates
+     * @param EntityReader $taxRates
      * @return array
      */
-    private function tax_rates(EntityReader $tax_rates) : array 
+    private function taxRates(EntityReader $taxRates) : array 
     {
         $array = [];
         /**
-         * @var TaxRate $tax_rate
+         * @var TaxRate $taxRate
          */
-        foreach ($tax_rates as $tax_rate) {
-          $tax_rate_id = $tax_rate->getTax_rate_id();   
-          if (null!==$tax_rate_id) {  
-            $array[$tax_rate_id] = $tax_rate->getTax_rate_name();
+        foreach ($taxRates as $taxRate) {
+          $taxRateId = $taxRate->getTaxRateId();   
+          if (null!==$taxRateId) {  
+            $array[$taxRateId] =  $taxRate->getTaxRateName();
           }  
         }
         return $array;
@@ -456,7 +456,7 @@ class ProductController
     public function index(FastRouteGenerator $urlFastRouteGenerator, Request $request, pR $pR, sR $sR, #[RouteArgument('page')] string $page = '1'): \Yiisoft\DataResponse\DataResponse
     {
         $this->rbac();
-        $this->flash_message('info', $this->translator->translate('invoice.productimage.view'));
+        $this->flashMessage('info', $this->translator->translate('invoice.productimage.view'));
         $query_params = $request->getQueryParams();
         
         /**
@@ -490,13 +490,13 @@ class ProductController
             $products = $pR->filter_product_sku_price((string)$query_params['filter_product_price'], (string)$query_params['filter_product_sku']);
         }  
         $paginator = (new DataOffsetPaginator($products))
-        ->withPageSize((int)$sR->get_setting('default_list_limit'))
+        ->withPageSize((int)$sR->getSetting('default_list_limit'))
         ->withCurrentPage($currentPageNeverZero)
         ->withToken(PageToken::next($currentPage)); 
         $parameters = [
             'alert' => $this->alert(),
             'paginator' => $paginator,
-            'defaultPageSizeOffsetPaginator' => (int)$sR->get_setting('default_list_limit'),
+            'defaultPageSizeOffsetPaginator' => (int)$sR->getSetting('default_list_limit'),
             'optionsDataProductsDropdownFilter' => $this->optionsDataProducts($pR),
             'urlFastRouteGenerator' => $urlFastRouteGenerator,
             'urlCreator' => $urlCreator
@@ -557,7 +557,7 @@ class ProductController
             'reset_table' => $rt,
             'head' => $head,
             'products' => $rt || ($ff=='' && $fp=='') ? $pR->findAllPreloaded() : $pR->repoProductwithfamilyquery($fp, $ff),
-            'default_item_tax_rate' => $sR->get_setting('default_item_tax_rate') !== '' ?: 0,
+            'default_item_tax_rate' => $sR->getSetting('default_item_tax_rate') !== '' ?: 0,
         ];
         return $this->viewRenderer->renderPartial('_partial_product_table_modal', $parameters);        
     }
@@ -783,7 +783,7 @@ class ProductController
     private function rbac(): bool|Response {
       $canEdit = $this->userService->hasPermission('editInv');
       if (!$canEdit){
-          $this->flash_message('warning', $this->translator->translate('invoice.permission'));
+          $this->flashMessage('warning', $this->translator->translate('invoice.permission'));
           return $this->webService->getRedirectResponse('product/index');
       }
       return $canEdit;
@@ -828,7 +828,7 @@ class ProductController
                 'item_classification_code_listids' => $peppolarrays->getUncl7143(),
                 'families' => $this->families($fR->findAllPreloaded()),
                 'units' => $this->units($uR->findAllPreloaded()),
-                'tax_rates' => $this->tax_rates($trR->findAllPreloaded()),
+                'tax_rates' => $this->taxRates($trR->findAllPreloaded()),
                 'unit_peppols' => $this->unit_peppols($upR->findAllPreloaded()),
                 'custom_fields' => $cfR->repoTablequery('product_custom'),
                 'custom_values' => $cvR->attach_hard_coded_custom_field_values_to_custom_field($cfR->repoTablequery('product_custom')),
@@ -883,14 +883,14 @@ class ProductController
                 $track_file->setFile_name_new($fileName);
                 $track_file->setUploaded_date(new \DateTimeImmutable());
                 $piR->save($track_file);
-                $this->flash_message('info', $this->translator->translate('invoice.productimage.uploaded.to') . $target);
+                $this->flashMessage('info', $this->translator->translate('invoice.productimage.uploaded.to') . $target);
                 return true;
             } else {
-                $this->flash_message('warning', $this->translator->translate('invoice.productimage.possible.file.upload.attack') . $tmp);
+                $this->flashMessage('warning', $this->translator->translate('invoice.productimage.possible.file.upload.attack') . $tmp);
                 return false;
             }
         } else {
-            $this->flash_message('warning', $this->translator->translate('i.error_duplicate_file'));
+            $this->flashMessage('warning', $this->translator->translate('i.error_duplicate_file'));
             return false;
         }
     }

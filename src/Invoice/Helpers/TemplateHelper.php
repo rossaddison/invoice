@@ -384,13 +384,13 @@ Class TemplateHelper {
     {
         if ($invoice->isOverdue()) {
             // Use the overdue template
-            return $this->s->get_setting('pdf_invoice_template_overdue');
+            return $this->s->getSetting('pdf_invoice_template_overdue');
         } elseif ($invoice->getStatus_id() === 4) {
             // Use the paid template
-            return $this->s->get_setting('pdf_invoice_template_paid');
+            return $this->s->getSetting('pdf_invoice_template_paid');
         } else {
             // Use the default template
-            return $this->s->get_setting('pdf_invoice_template');
+            return $this->s->getSetting('pdf_invoice_template');
         }
     }
 
@@ -408,13 +408,13 @@ Class TemplateHelper {
         // View: views/invoice/inv/mailer_invoice
         if ($invoice->isOverdue()) {
             // Use the overdue template
-            return $this->s->get_setting('email_invoice_template_overdue');
+            return $this->s->getSetting('email_invoice_template_overdue');
         } elseif ($invoice->getStatus_id() === 4) {
             // Use the paid template
-            return $this->s->get_setting('email_invoice_template_paid');
+            return $this->s->getSetting('email_invoice_template_paid');
         } else {
             // Use the default template
-            return $this->s->get_setting('email_invoice_template');
+            return $this->s->getSetting('email_invoice_template');
         }
     }
     
@@ -424,7 +424,7 @@ Class TemplateHelper {
     function select_pdf_quote_template() : string
     {
         // Use the default template
-        return $this->s->get_setting('pdf_quote_template');       
+        return $this->s->getSetting('pdf_quote_template');       
     }
 
     /**
@@ -433,6 +433,6 @@ Class TemplateHelper {
      */
     function select_email_quote_template() : string
     {
-        return $this->s->get_setting('email_quote_template');
+        return $this->s->getSetting('email_quote_template');
     }
     }

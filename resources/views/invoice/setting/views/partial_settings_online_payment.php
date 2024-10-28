@@ -23,7 +23,7 @@
     <div class="panel-body">
         <div class="form-group">
             <div class="checkbox">
-                <?php $body['settings[enable_online_payments]'] = $s->get_setting('enable_online_payments');?>
+                <?php $body['settings[enable_online_payments]'] = $s->getSetting('enable_online_payments');?>
                 <label>
                     <input type="hidden" name="settings[enable_online_payments]" value="0">
                     <input type="checkbox" name="settings[enable_online_payments]" value="1"
@@ -67,14 +67,14 @@ foreach ($gateway_drivers as $driver => $fields) :
     $d = strtolower($driver);
     ?>
     <div id="gateway-settings-<?= $d; ?>"
-        class="gateway-settings panel panel-default <?= $s->get_setting('gateway_' . $d . '_enabled') ? 'active-gateway' : 'hidden'; ?>">
+        class="gateway-settings panel panel-default <?= $s->getSetting('gateway_' . $d . '_enabled') ? 'active-gateway' : 'hidden'; ?>">
 
         <div class="panel-heading">
             <?= ucwords(str_replace('_', ' ', $driver)); ?>
             <div class="pull-right">
                 <div class="checkbox no-margin">
                     <label>
-                        <?php $body['settings[gateway_' . $d . '_enabled]'] = $s->get_setting('gateway_' . $d . '_enabled');?>
+                        <?php $body['settings[gateway_' . $d . '_enabled]'] = $s->getSetting('gateway_' . $d . '_enabled');?>
                         <input type="hidden" name="settings[gateway_<?= $d; ?>_enabled]" value="0">
                         <input type="checkbox" name="settings[gateway_<?= $d; ?>_enabled]" value="1"
                             id="settings[gateway_<?= $d; ?>_enabled]"
@@ -96,7 +96,7 @@ foreach ($gateway_drivers as $driver => $fields) :
                      * @var string $setting['type']
                      */    
                     foreach ($fields as $key => $setting) { ?>
-                <?php $body['settings[gateway_' . $d . '_'.$key.']'] = $s->get_setting('gateway_' . $d . '_' . $key);?>
+                <?php $body['settings[gateway_' . $d . '_'.$key.']'] = $s->getSetting('gateway_' . $d . '_' . $key);?>
                 <?php if ($setting['type'] == 'checkbox') : ?>
 
                     <div class="checkbox">
@@ -146,7 +146,7 @@ foreach ($gateway_drivers as $driver => $fields) :
                 <label for="settings[gateway_<?= $d; ?>_region]">
                     <?= $translator->translate('g.online_payment_region'); ?>
                 </label>
-                <?php $body['settings[gateway_' . $d . '_region]'] = $s->get_setting('gateway_' . $d . '_region');?>
+                <?php $body['settings[gateway_' . $d . '_region]'] = $s->getSetting('gateway_' . $d . '_region');?>
                 <select name="settings[gateway_<?= $d; ?>_region]"
                     id="settings[gateway_<?= $d; ?>_region]"
                     class="input-sm form-control">
@@ -169,7 +169,7 @@ foreach ($gateway_drivers as $driver => $fields) :
                 <label for="settings[gateway_<?= $d; ?>_currency]">
                     <?= $translator->translate('i.currency'); ?>
                 </label>
-                <?php $body['settings[gateway_' . $d . '_currency]'] = $s->get_setting('gateway_' . $d . '_currency');?>
+                <?php $body['settings[gateway_' . $d . '_currency]'] = $s->getSetting('gateway_' . $d . '_currency');?>
                 <select name="settings[gateway_<?= $d; ?>_currency]"
                     id="settings[gateway_<?= $d; ?>_currency]"
                     class="input-sm form-control">
@@ -192,7 +192,7 @@ foreach ($gateway_drivers as $driver => $fields) :
                 <label for="settings[gateway_<?= $d; ?>_locale]">
                     <?= $translator->translate('invoice.payment.gateway.default.locale'); ?>
                 </label>
-                <?php $body['settings[gateway_' . $d . '_locale]'] = $s->get_setting('gateway_' . $d . '_locale');?>
+                <?php $body['settings[gateway_' . $d . '_locale]'] = $s->getSetting('gateway_' . $d . '_locale');?>
                 <select name="settings[gateway_<?= $d; ?>_locale]"
                     id="settings[gateway_<?= $d; ?>_locale]"
                     class="input-sm form-control">
@@ -217,7 +217,7 @@ foreach ($gateway_drivers as $driver => $fields) :
                 <label for="settings[gateway_<?= $d; ?>_payment_method]">
                     <?= $translator->translate('g.online_payment_method'); ?>
                 </label>
-                <?php $body['settings[gateway_' . $d . '_payment_method]'] = $s->get_setting('gateway_' . $d . '_payment_method');?>
+                <?php $body['settings[gateway_' . $d . '_payment_method]'] = $s->getSetting('gateway_' . $d . '_payment_method');?>
                 <select name="settings[gateway_<?= $d; ?>_payment_method]"
                     id="settings[gateway_<?= $d; ?>_payment_method]"
                     class="input-sm form-control">

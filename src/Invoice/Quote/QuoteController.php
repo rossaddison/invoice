@@ -403,7 +403,7 @@ final class QuoteController
                     if (null!==$model_id) {
                       $this->default_taxes($quote, $trR, $formHydrator);
                       // Inform the user of generated quote number for draft setting
-                      $this->flash_message('info', $this->sR->get_setting('generate_quote_number_for_draft') === '1' 
+                      $this->flash_message('info', $this->sR->getSetting('generate_quote_number_for_draft') === '1' 
                       ? $this->translator->translate('i.generate_quote_number_for_draft') . '=>' . $this->translator->translate('i.yes') 
                       : $this->translator->translate('i.generate_quote_number_for_draft') . '=>' . $this->translator->translate('i.no') );
                     } //$model_id
@@ -465,7 +465,7 @@ final class QuoteController
      * @return Flash|null
      */
     private function flash_message(string $level, string $message): Flash|null {
-        if (strlen($message) > 0 && $this->sR->get_setting('disable_flash_messages_quote') == '0') {
+        if (strlen($message) > 0 && $this->sR->getSetting('disable_flash_messages_quote') == '0') {
             $this->flash->add($level, $message, true);
             return $this->flash;
         }
@@ -505,7 +505,7 @@ final class QuoteController
         if (!empty($url_key)) {
           if ($qR->repoUrl_key_guest_count($url_key) > 0) { 
             $quote = $qR->repoUrl_key_guest_loaded($url_key);
-            $number = $gR->generate_number((int)$this->sR->get_setting('default_sales_order_group'));
+            $number = $gR->generate_number((int)$this->sR->getSetting('default_sales_order_group'));
             if (null!==$number) {
                 if ($quote && null!==$quote->getId()) {
                   $quote_id =  $quote->getId(); 
@@ -513,7 +513,7 @@ final class QuoteController
                     'quote_id' => $quote_id,
                     'inv_id' => 0,
                     'client_id' => $quote->getClient_id(),
-                    'group_id' => $this->sR->get_setting('default_sales_order_group'), 
+                    'group_id' => $this->sR->getSetting('default_sales_order_group'), 
                     'status_id' => 4,
                     'client_po_number' => $purchase_order_number,
                     'client_po_person' => $purchase_order_person,
@@ -649,7 +649,7 @@ final class QuoteController
             // Generate a number based on the GroupRepository Next id value and not on a newly generated quote_id 
             // if generate_quote_number_for_draft is set to 'yes' otherwise set to empty string ie. nothing.
             // Note: Clients cannot see draft quotes
-            'number'=>$this->sR->get_setting('generate_quote_number_for_draft') === '1' ? $gR->generate_number((int)$body['quote_group_id'], true):'',
+            'number'=>$this->sR->getSetting('generate_quote_number_for_draft') === '1' ? $gR->generate_number((int)$body['quote_group_id'], true):'',
             'discount_amount'=>floatval(0),
             'discount_percent'=>floatval(0),
             'url_key'=>'',
@@ -683,7 +683,7 @@ final class QuoteController
                     $parameters = ['success'=>1];
                     // Inform the user of generated invoice number for drat setting
                     $this->flash_message('info', 
-                          $this->sR->get_setting('generate_quote_number_for_draft') === '1' 
+                          $this->sR->getSetting('generate_quote_number_for_draft') === '1' 
                           ? $this->translator->translate('i.generate_quote_number_for_draft').'=>'.$this->translator->translate('i.yes') 
                           : $this->translator->translate('i.generate_quote_number_for_draft').'=>'.$this->translator->translate('i.no') );
                   //return response to quote.js to reload page at location
@@ -777,7 +777,7 @@ final class QuoteController
             $taxrates = $trR->findAllPreloaded();
             /** @var TaxRate $taxrate */
             foreach ($taxrates as $taxrate) {
-                $taxrate->getTax_rate_default()  == 1 ? $this->default_tax_quote($taxrate, $quote, $formHydrator) : '';
+                $taxrate->getTaxRateDefault()  == 1 ? $this->default_tax_quote($taxrate, $quote, $formHydrator) : '';
             }
         }
     }
@@ -794,7 +794,7 @@ final class QuoteController
         $quote_tax_rate = [];
         $quote_tax_rate['quote_id'] = $quote->getId();
         if (null!==$taxrate) {
-            $quote_tax_rate['tax_rate_id'] = $taxrate->getTax_rate_id();
+            $quote_tax_rate['tax_rate_id'] = $taxrate->getTaxRateId();
         } else {
             $quote_tax_rate['tax_rate_id'] = 1;
         }  
@@ -802,7 +802,7 @@ final class QuoteController
          * @see Settings ... View ... Taxes ... Default Invoice Tax Rate Placement
          * @see ..\resources\views\invoice\setting\views partial_settings_taxes.php 
          */
-        $quote_tax_rate['include_item_tax'] = ($this->sR->get_setting('default_include_item_tax') == '1' ? 1 : 0);
+        $quote_tax_rate['include_item_tax'] = ($this->sR->getSetting('default_include_item_tax') == '1' ? 1 : 0);
         $quote_tax_rate['quote_tax_rate_amount'] = 0;
         if ($formHydrator->populate($quoteTaxRateForm, $quote_tax_rate) && $quoteTaxRateForm->isValid()) { 
           $this->quote_tax_rate_service->saveQuoteTaxRate($quoteTaxRate, $quote_tax_rate);
@@ -1350,7 +1350,7 @@ final class QuoteController
         $quote = $qR->repoQuoteUnloadedquery($quote_id);
         if (!empty($quote) && ($quote->getStatus_id() == 1) && ($quote->getNumber() == "")) {
                 // Generate new quote number if applicable
-                if ($sR->get_setting('generate_quote_number_for_draft') == 0) {
+                if ($sR->getSetting('generate_quote_number_for_draft') == 0) {
                     $quote_number = (string)$qR->get_quote_number($quote->getGroup_id(), $gR);
                     // Set new quote number and save
                     $quote->setNumber($quote_number);
@@ -1425,7 +1425,7 @@ final class QuoteController
                         $quotes = $qR->filterQuoteNumberAndQuoteAmountTotal((string)$query_params['filterQuoteNumber'], (float)$query_params['filterQuoteAmountTotal']);
                     } 
                     $paginator = (new DataOffsetPaginator($quotes))
-                    ->withPageSize((int)$this->sR->get_setting('default_list_limit'))
+                    ->withPageSize((int)$this->sR->getSetting('default_list_limit'))
                     ->withCurrentPage($currentPageNeverZero)
                     ->withSort($sort)            
                     ->withToken(PageToken::next((string)$pageMixed));            
@@ -1440,14 +1440,14 @@ final class QuoteController
                         'grid_summary'=> $this->sR->grid_summary(
                              $paginator, 
                              $this->translator, 
-                             (int)$this->sR->get_setting('default_list_limit'), 
+                             (int)$this->sR->getSetting('default_list_limit'), 
                              $this->translator->translate('invoice.quotes'), 
                              $qR->getSpecificStatusArrayLabel((string)$status)
                         ),
-                        'defaultPageSizeOffsetPaginator' => $this->sR->get_setting('default_list_limit')
-                                                        ? (int)$this->sR->get_setting('default_list_limit') : 1,
+                        'defaultPageSizeOffsetPaginator' => $this->sR->getSetting('default_list_limit')
+                                                        ? (int)$this->sR->getSetting('default_list_limit') : 1,
                         'quoteStatuses' => $quote_statuses,            
-                        'max' => (int) $this->sR->get_setting('default_list_limit'),
+                        'max' => (int) $this->sR->getSetting('default_list_limit'),
                         'page'=> (string) $pageMixed,
                         'paginator' => $paginator,
                         'sortOrder' => $sortString, 
@@ -1542,14 +1542,14 @@ final class QuoteController
                 $quotes = $quoteRepo->filterQuoteNumberAndQuoteAmountTotal((string)$query_params['filterQuoteNumber'], (float)$query_params['filterQuoteAmountTotal']);
             } 
             $paginator = (new DataOffsetPaginator($quotes))
-            ->withPageSize((int)$this->sR->get_setting('default_list_limit'))
+            ->withPageSize((int)$this->sR->getSetting('default_list_limit'))
             ->withCurrentPage($currentPageNeverZero)
             ->withSort($sort)            
             ->withToken(PageToken::next($page));    
             $quote_statuses = $quoteRepo->getStatuses($this->translator);
             $parameters = [
                 'status' => $status,
-                'decimalPlaces' => (int)$this->sR->get_setting('tax_rate_decimal_places'),
+                'decimalPlaces' => (int)$this->sR->getSetting('tax_rate_decimal_places'),
                 'paginator' => $paginator,
                 'sortOrder' => $query_params['sort'] ?? '', 
                 'alert' => $this->alert(),
@@ -1558,14 +1558,14 @@ final class QuoteController
                 'grid_summary' => $sR->grid_summary(
                     $paginator, 
                     $this->translator,
-                    (int)$sR->get_setting('default_list_limit'), 
+                    (int)$sR->getSetting('default_list_limit'), 
                     $this->translator->translate('invoice.quotes'), 
                     $quoteRepo->getSpecificStatusArrayLabel((string)$status)
                 ),
-                'defaultPageSizeOffsetPaginator' => $this->sR->get_setting('default_list_limit')
-                                                        ? (int)$this->sR->get_setting('default_list_limit') : 1,
+                'defaultPageSizeOffsetPaginator' => $this->sR->getSetting('default_list_limit')
+                                                        ? (int)$this->sR->getSetting('default_list_limit') : 1,
                 'quoteStatuses' => $quote_statuses,
-                'max' => (int)$sR->get_setting('default_list_limit'),
+                'max' => (int)$sR->getSetting('default_list_limit'),
                 'qR' => $quoteRepo,
                 'qaR' => $qaR,
                 'soR' => $soR,
@@ -1709,7 +1709,7 @@ final class QuoteController
             // The quote will be streamed ie. shown, and not archived
             $stream = true;
             // If we are required to mark quotes as 'sent' when sent.
-            if ($sR->get_setting('mark_quotes_sent_pdf') == 1) {
+            if ($sR->getSetting('mark_quotes_sent_pdf') == 1) {
                 $this->generate_quote_number_if_applicable($quote_id, $qR, $sR, $gR);
                 $sR->quote_mark_sent($quote_id, $qR);
             }
@@ -1751,7 +1751,7 @@ final class QuoteController
                 // The quote will be streamed ie. shown, and not archived
                 $stream = true;
                 // If we are required to mark quotes as 'sent' when sent.
-                if ($sR->get_setting('mark_quotes_sent_pdf') == 1) {
+                if ($sR->getSetting('mark_quotes_sent_pdf') == 1) {
                     $this->generate_quote_number_if_applicable((string)$quote_id, $qR, $sR, $gR);
                     $sR->quote_mark_sent((string)$quote_id, $qR);
                 }
@@ -1789,7 +1789,7 @@ final class QuoteController
                 // The quote will be streamed ie. shown, and not archived
                 $stream = true;
                 // If we are required to mark quotes as 'sent' when sent.
-                if ($sR->get_setting('mark_quotes_sent_pdf') == 1) {
+                if ($sR->getSetting('mark_quotes_sent_pdf') == 1) {
                     $this->generate_quote_number_if_applicable((string)$quote_id, $qR, $sR, $gR);
                     $sR->quote_mark_sent((string)$quote_id, $qR);
                 }
@@ -2693,7 +2693,7 @@ final class QuoteController
                                 $quote_amount = (($qaR->repoQuoteAmountCount($quote_id) > 0) ? $qaR->repoQuotequery($quote_id) : null);
                                 if ($quote_amount) {
                                     $parameters = [            
-                                        'renderTemplate'=> $this->view_renderer->renderPartialAsString('//invoice/template/quote/public/' . ($this->sR->get_setting('public_quote_template') ?: 'Quote_Web'), [
+                                        'renderTemplate'=> $this->view_renderer->renderPartialAsString('//invoice/template/quote/public/' . ($this->sR->getSetting('public_quote_template') ?: 'Quote_Web'), [
                                             'isGuest' => $currentUser->isGuest(),
                                             'alert' => $this->alert(),
                                             'quote' => $quote,
@@ -2815,7 +2815,7 @@ final class QuoteController
                         'modal_choose_items' => $this->view_renderer->renderPartialAsString('//invoice/product/modal_product_lookups_quote',
                         [
                             'families' => $fR->findAllPreloaded(),
-                            'default_item_tax_rate' => $this->sR->get_setting('default_item_tax_rate') !== '' ?: 0,
+                            'default_item_tax_rate' => $this->sR->getSetting('default_item_tax_rate') !== '' ?: 0,
                             'filter_product' => '',            
                             'filter_family' => '',
                             'reset_table' => '',

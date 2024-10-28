@@ -24,7 +24,7 @@
                             <label for="settings[default_quote_group]">
                                 <?= $translator->translate('i.default_quote_group'); ?>
                             </label>
-                            <?php $body['settings[default_quote_group]'] = $s->get_setting('default_quote_group');?>
+                            <?php $body['settings[default_quote_group]'] = $s->getSetting('default_quote_group');?>
                             <select name="settings[default_quote_group]" id="settings[default_quote_group]"
                                 class="form-control" data-minimum-results-for-search="Infinity">
                                 <option value=""><?= $translator->translate('i.none'); ?></option>
@@ -45,7 +45,7 @@
                             <label for="settings[default_quote_notes]">
                                 <?= $translator->translate('i.default_notes'); ?>
                             </label>
-                            <?php $body['settings[default_quote_notes]'] = $s->get_setting('default_quote_notes');?>
+                            <?php $body['settings[default_quote_notes]'] = $s->getSetting('default_quote_notes');?>
                             <textarea name="settings[default_quote_notes]" id="settings[default_quote_notes]" rows="3"
                                 class="form-control"><?= $body['settings[default_quote_notes]']; ?></textarea>
                         </div>
@@ -56,7 +56,7 @@
                             <label for="settings[quotes_expire_after]">
                                 <?= $translator->translate('i.quotes_expire_after'); ?>
                             </label>
-                            <?php $body['settings[quotes_expire_after]'] = $s->get_setting('quotes_expire_after');?>
+                            <?php $body['settings[quotes_expire_after]'] = $s->getSetting('quotes_expire_after');?>
                             <input type="number" name="settings[quotes_expire_after]" id="settings[quotes_expire_after]"
                                 class="form-control"
                                 value="<?= $body['settings[quotes_expire_after]']; ?>">
@@ -65,7 +65,7 @@
                             <label for="settings[generate_quote_number_for_draft]">
                                 <?= $translator->translate('i.generate_quote_number_for_draft'); ?>
                             </label>                            
-                            <?php $body['settings[generate_quote_number_for_draft]'] = $s->get_setting('generate_quote_number_for_draft');?>
+                            <?php $body['settings[generate_quote_number_for_draft]'] = $s->getSetting('generate_quote_number_for_draft');?>
                             <select name="settings[generate_quote_number_for_draft]" class="form-control"
                                 id="settings[generate_quote_number_for_draft]" data-minimum-results-for-search="Infinity">
                                 <option value="0">
@@ -92,7 +92,7 @@
                             <label for="settings[mark_quotes_sent_pdf]">
                                 <?= $translator->translate('i.mark_quotes_sent_pdf'); ?>
                             </label>
-                            <?php $body['settings[mark_quotes_sent_pdf]'] = $s->get_setting('mark_quotes_sent_pdf');?>
+                            <?php $body['settings[mark_quotes_sent_pdf]'] = $s->getSetting('mark_quotes_sent_pdf');?>
                             <select name="settings[mark_quotes_sent_pdf]" id="settings[mark_quotes_sent_pdf]"
                                 class="form-control" data-minimum-results-for-search="Infinity">
                                 <option value="0">
@@ -109,7 +109,7 @@
                             <label for="settings[quote_pre_password]">
                                 <?= $translator->translate('i.quote_pre_password'); ?>
                             </label>
-                            <?php $body['settings[quote_pre_password]'] = $s->get_setting('quote_pre_password');?>
+                            <?php $body['settings[quote_pre_password]'] = $s->getSetting('quote_pre_password');?>
                             <input type="text" name="settings[quote_pre_password]" id="settings[quote_pre_password]"
                                 class="form-control" value="<?= $body['settings[quote_pre_password]']; ?>">
                         </div>
@@ -128,7 +128,7 @@
                             <label for="settings[pdf_quote_template]">
                                 <?= $translator->translate('i.default_pdf_template'); ?>
                             </label>                            
-                            <?php $body['settings[pdf_quote_template]'] = $s->get_setting('pdf_quote_template');?>
+                            <?php $body['settings[pdf_quote_template]'] = $s->getSetting('pdf_quote_template');?>
                             <select name="settings[pdf_quote_template]" id="settings[pdf_quote_template]"
                                 class="form-control" data-minimum-results-for-search="Infinity">
                                 <option value=""><?= $translator->translate('i.none'); ?></option>
@@ -149,7 +149,7 @@
                             <label for="settings[public_quote_template]">
                                 <?= $translator->translate('i.default_public_template'); ?>
                             </label>                            
-                            <?php $body['settings[public_quote_template]'] = $s->get_setting('public_quote_template');?>
+                            <?php $body['settings[public_quote_template]'] = $s->getSetting('public_quote_template');?>
                             <select name="settings[public_quote_template]" id="settings[public_quote_template]"
                                 class="form-control" data-minimum-results-for-search="Infinity">
                                 <option value=""><?= $translator->translate('i.none'); ?></option>
@@ -173,7 +173,7 @@
                             <label for="settings[email_quote_template]">
                                 <?= $translator->translate('i.default_email_template'); ?>
                             </label>                                                        
-                            <?php $body['settings[email_quote_template]'] = $s->get_setting('email_quote_template');?>
+                            <?php $body['settings[email_quote_template]'] = $s->getSetting('email_quote_template');?>
                             <select name="settings[email_quote_template]" id="settings[email_quote_template]"
                                 class="form-control" data-minimum-results-for-search="Infinity">
                                 <option value=""><?= $translator->translate('i.none'); ?></option>
@@ -197,7 +197,7 @@
                             <label for="settings[pdf_quote_footer]">
                                 <?= $translator->translate('i.pdf_quote_footer'); ?>
                             </label>                                                                                    
-                            <?php $body['settings[pdf_quote_footer]'] = $s->get_setting('pdf_quote_footer');?>
+                            <?php $body['settings[pdf_quote_footer]'] = $s->getSetting('pdf_quote_footer');?>
                             <textarea name="settings[pdf_quote_footer]" id="settings[pdf_quote_footer]"
                                 class="form-control no-margin"><?= $body['settings[pdf_quote_footer]']; ?></textarea>
                             <p class="help-block"><?= $translator->translate('i.pdf_quote_footer_hint'); ?></p>

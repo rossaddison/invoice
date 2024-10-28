@@ -66,7 +66,7 @@ $toolbar = Div::tag();
                     <?= $translator->translate('i.all'); ?>
                 </a>
                 <a href="<?= $urlGenerator->generate('salesorder/guest',['page'=>1,'status'=>2]); ?>" style="text-decoration:none"
-                   data-bs-toggle = "tooltip" title="<?= $s->get_setting('debug_mode') === '1' ? $translator->translate('invoice.payment.term.add.additional.terms.at.setting.repository') : ''; ?>"
+                   data-bs-toggle = "tooltip" title="<?= $s->getSetting('debug_mode') === '1' ? $translator->translate('invoice.payment.term.add.additional.terms.at.setting.repository') : ''; ?>"
                    class="btn  <?php echo $status == 2 ? 'btn-primary' : 'label '. $soR->getSpecificStatusArrayClass(2); ?>">
                     <?= $soR->getSpecificStatusArrayLabel('2'); ?>
                 </a>
@@ -173,7 +173,7 @@ $toolbar = Div::tag();
     $grid_summary =
         $s->grid_summary($paginator, 
         $translator, 
-        (int)$s->get_setting('default_list_limit'), 
+        (int)$s->getSetting('default_list_limit'), 
         $translator->translate('invoice.salesorders'),
         (string)$so_statuses[$status]['label']
     );

@@ -25,7 +25,7 @@ use Yiisoft\Html\Tag\A;
                     <div class="col-xs-8 col-md-4">
                         <div class="form-group">
                             <label for="settings[invoiceplane_database_name]"><?= $translator->translate('invoice.invoice.invoiceplane.database.name'); ?></label>
-                            <?php $body['settings[invoiceplane_database_name]'] = $s->get_setting('invoiceplane_database_name'); ?>
+                            <?php $body['settings[invoiceplane_database_name]'] = $s->getSetting('invoiceplane_database_name'); ?>
                             <input type="text" name="settings[invoiceplane_database_name]" id="settings[invoiceplane_database_name]"
                                    class="form-control" required
                                    value="<?= $body['settings[invoiceplane_database_name]']; ?>">
@@ -34,7 +34,7 @@ use Yiisoft\Html\Tag\A;
                     <div class="col-xs-8 col-md-4">
                         <div class="form-group">
                             <label for="settings[invoiceplane_database_username]"><?= $translator->translate('invoice.invoice.invoiceplane.database.username'); ?></label>
-                            <?php $body['settings[invoiceplane_database_username]'] = $s->get_setting('invoiceplane_database_username'); ?>
+                            <?php $body['settings[invoiceplane_database_username]'] = $s->getSetting('invoiceplane_database_username'); ?>
                             <input type="text" name="settings[invoiceplane_database_username]" id="settings[invoiceplane_database_username]"
                                    class="form-control" required
                                    value="<?= $body['settings[invoiceplane_database_username]']; ?>">
@@ -43,7 +43,7 @@ use Yiisoft\Html\Tag\A;
                     <div class="col-xs-8 col-md-4">
                         <div class="form-group">
                             <label for="settings[invoiceplane_database_password]"><?= $translator->translate('invoice.invoice.invoiceplane.database.password'); ?></label>
-                            <?php $body['settings[invoiceplane_database_password]'] = $s->get_setting('invoiceplane_database_password'); ?>
+                            <?php $body['settings[invoiceplane_database_password]'] = $s->getSetting('invoiceplane_database_password'); ?>
                             <input type="password" name="settings[invoiceplane_database_password]" id="settings[invoiceplane_database_password]"
                                    class="form-control" required
                                    value="<?= $body['settings[invoiceplane_database_password]']; ?>">

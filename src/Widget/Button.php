@@ -44,7 +44,7 @@ final class Button
         return $string.= Html::closeTag('div'); 
     }
     
-    public static function back_save() : string {
+    public static function backSave() : string {
         $string = Html::openTag('div', ['class' => 'headerbar-item pull-right']);
         $buttonsDataArray = [
             [

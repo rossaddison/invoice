@@ -75,38 +75,38 @@ use Yiisoft\Yii\DataView\OffsetPagination;
             new DataColumn(
                 'tax_rate_id',
                 header: $translator->translate('i.id'),
-                content: static fn (TaxRate $model) => Html::encode($model->getTax_rate_id())
+                content: static fn (TaxRate $model) => Html::encode($model->getTaxRateId())
             ),
             new DataColumn(
                 'tax_rate_name',
                 header: $translator->translate('i.tax_rate_name'),
-                content: static fn (TaxRate $model) => Html::encode($model->getTax_rate_name())
+                content: static fn (TaxRate $model) => Html::encode($model->getTaxRateName())
             ),
             new DataColumn(
                 'tax_rate_percent',
                 header: $translator->translate('i.tax_rate_percent'),
-                content: static fn (TaxRate $model) => Html::encode($model->getTax_rate_percent())
+                content: static fn (TaxRate $model) => Html::encode($model->getTaxRatePercent())
             ),
             new DataColumn(
                 'peppol_tax_rate_code',
                 header: $translator->translate('invoice.peppol.tax.rate.code'),
-                content: static fn (TaxRate $model) => Html::encode($model->getPeppol_tax_rate_code())
+                content: static fn (TaxRate $model) => Html::encode($model->getPeppolTaxRateCode())
             ),
             new DataColumn(
                 'storecove_tax_type',
                 header: $translator->translate('invoice.storecove.tax.rate.code'),
-                content: static fn (TaxRate $model) => Html::encode(ucfirst(str_replace('_', ' ', $model->getStorecove_tax_type())))
+                content: static fn (TaxRate $model) => Html::encode(ucfirst(str_replace('_', ' ', $model->getStorecoveTaxType())))
             ),
             new DataColumn(
                 'tax_rate_default',
                 header: $translator->translate('invoice.default'),
-                content: static fn (TaxRate $model) => Html::encode($model->getTax_rate_default() == '1' ? 
+                content: static fn (TaxRate $model) => Html::encode($model->getTaxRateDefault() == '1' ? 
                                                                   ($translator->translate('i.active').' '.'✔️' ) : 
                                                                    $translator->translate('i.inactive').' '.'❌')
             ),
             new ActionColumn(
                 content: static function(TaxRate $model) use ($translator) : string { 
-                $taxRateId = $model->getTax_rate_id();
+                $taxRateId = $model->getTaxRateId();
                 if (null!==$taxRateId) {
                     return Html::openTag('div', ['class' => 'btn-group']) .
                         Html::a()
@@ -148,7 +148,7 @@ use Yiisoft\Yii\DataView\OffsetPagination;
     $grid_summary = $s->grid_summary(
         $paginator, 
         $translator, 
-        (int)$s->get_setting('default_list_limit'), 
+        (int)$s->getSetting('default_list_limit'), 
         $translator->translate('i.tax.rates'),
         ''
     );           

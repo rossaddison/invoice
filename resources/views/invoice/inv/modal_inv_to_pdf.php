@@ -34,13 +34,13 @@ declare(strict_types=1);
                     <button type="button" data-bs-toggle = "tooltip" title="stream/archive/html">
                     <div>
                         <i class="fa fa-google"></i>
-                        <?php if ((!empty($s->get_setting('pdf_stream_inv'))) && ($s->get_setting('pdf_stream_inv') === '1')) { ?>
+                        <?php if ((!empty($s->getSetting('pdf_stream_inv'))) && ($s->getSetting('pdf_stream_inv') === '1')) { ?>
                             <i class="fa fa-check"></i>
                         <?php } else {?>
                             <i class="fa fa-times"></i>
                         <?php } ?>    
                         <i class="fa fa-folder"></i>
-                        <?php if ((!empty($s->get_setting('pdf_archive_inv'))) && ($s->get_setting('pdf_archive_inv') === '1')) { ?>
+                        <?php if ((!empty($s->getSetting('pdf_archive_inv'))) && ($s->getSetting('pdf_archive_inv') === '1')) { ?>
                             <i class="fa fa-check"></i>
                         <?php } else {?>
                             <i class="fa fa-times"></i>

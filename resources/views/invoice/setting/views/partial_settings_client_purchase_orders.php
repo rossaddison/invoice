@@ -23,7 +23,7 @@
                             <label for="settings[default_client_purchase_order_group]" <?= $s->where('default_invoice_group'); ?>>
                                 <?= $translator->translate('invoice.salesorder.default.group'); ?>
                             </label>
-                            <?php $body['settings[default_client_purchase_order_group]'] = $s->get_setting('default_client_purchase_order_group');?>
+                            <?php $body['settings[default_client_purchase_order_group]'] = $s->getSetting('default_client_purchase_order_group');?>
                             <select name="settings[default_client_purchase_order_group]" id="settings[default_client_purchase_order_group]"
                                 class="form-control" >
                                 <option value=""><?= $translator->translate('i.none'); ?></option>

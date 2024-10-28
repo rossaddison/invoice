@@ -46,15 +46,15 @@
                             <label for="settings[google_translate_json_filename]" <?= $s->where('google_translate_json_filename'); ?>> <i class="bi bi-info-circle"></i>
                                 <?= 'Google Translate Json Filename (eg. my_json_filename.json)'; ?>
                             </label>
-                            <?php $body['settings[google_translate_json_filename]'] = $s->get_setting('google_translate_json_filename');?>
+                            <?php $body['settings[google_translate_json_filename]'] = $s->getSetting('google_translate_json_filename');?>
                             <input type="text" class="input-sm form-control" name="settings[google_translate_json_filename]" 
-                            id="settings[google_translate_json_filename]" value="<?= $s->get_setting('google_translate_json_filename'); ?>">
+                            id="settings[google_translate_json_filename]" value="<?= $s->getSetting('google_translate_json_filename'); ?>">
                         </div>
                         <div class="form-group">
                             <label for="settings[google_translate_locale]" <?= $s->where('google_translate_locale'); ?>>
                                 <?= 'Google Translate Locale'; ?>
                             </label>
-                            <?php $body['settings[google_translate_locale]'] = $s->get_setting('google_translate_locale');?>
+                            <?php $body['settings[google_translate_locale]'] = $s->getSetting('google_translate_locale');?>
                             <select name="settings[google_translate_locale]" id="settings[google_translate_locale]"
                                 class="form-control">
                                 <option value=""><?= $translator->translate('i.none'); ?></option>

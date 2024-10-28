@@ -194,7 +194,7 @@ final class SalesOrderController
                 if (!empty($user_clients)) {
                     $salesOrders = $this->salesorders_status_with_sort_guest($soR, $status, $user_clients, $sort);
                     $paginator = (new OffsetPaginator($salesOrders))
-                    ->withPageSize((int)$this->sR->get_setting('default_list_limit'))
+                    ->withPageSize((int)$this->sR->getSetting('default_list_limit'))
                     ->withCurrentPage($currentPageNeverZero);
                     /**
                      * @var array $so_statuses
@@ -205,8 +205,8 @@ final class SalesOrderController
                         'soaR' => $soaR,
                         'soR' => $soR,
                         'status' => $status,
-                        'defaultPageSizeOffsetPaginator' => $this->sR->get_setting('default_list_limit')
-                                                         ? (int)$this->sR->get_setting('default_list_limit') : 1,
+                        'defaultPageSizeOffsetPaginator' => $this->sR->getSetting('default_list_limit')
+                                                         ? (int)$this->sR->getSetting('default_list_limit') : 1,
                         'so_statuses' => $so_statuses,            
                         'paginator' => $paginator,
                     ];    
@@ -248,7 +248,7 @@ final class SalesOrderController
                     ->withOrderString((string)$sort_string);
         $salesorders = $this->salesorders_status_with_sort($soR, $status, $sort);
         $paginator = (new OffsetPaginator($salesorders))
-        ->withPageSize((int)$sR->get_setting('default_list_limit'))
+        ->withPageSize((int)$sR->getSetting('default_list_limit'))
         ->withCurrentPage($currentPageNeverZero)
         ->withToken(PageToken::next((string)$page));   
         $so_statuses = $soR->getStatuses($this->translator);
@@ -257,8 +257,8 @@ final class SalesOrderController
             'soaR' => $soaR,
             'soR' => $soR,
             'status' => $status,
-            'defaultPageSizeOffsetPaginator' => $this->sR->get_setting('default_list_limit')
-                                                         ? (int)$this->sR->get_setting('default_list_limit') : 1,                        
+            'defaultPageSizeOffsetPaginator' => $this->sR->getSetting('default_list_limit')
+                                                         ? (int)$this->sR->getSetting('default_list_limit') : 1,                        
             'so_statuses' => $so_statuses,
             'paginator' => $paginator,
             'client_count' => $clientRepo->count()
@@ -981,7 +981,7 @@ final class SalesOrderController
                                 $salesorder_amount = (($soaR->repoSalesOrderAmountCount($salesorder_id) > 0) ? $soaR->repoSalesOrderquery($salesorder_id) : null);
                                 if ($salesorder_amount) {
                                     $parameters = [            
-                                        'renderTemplate' => $this->viewRenderer->renderPartialAsString('//invoice/template/salesorder/public/' . ($this->sR->get_setting('public_salesorder_template') ?: 'SalesOrder_Web'), [
+                                        'renderTemplate' => $this->viewRenderer->renderPartialAsString('//invoice/template/salesorder/public/' . ($this->sR->getSetting('public_salesorder_template') ?: 'SalesOrder_Web'), [
                                             'isGuest' => $currentUser->isGuest(),
                                             'terms_and_conditions_file' => $this->viewRenderer->renderPartialAsString('//invoice/salesorder/terms_and_conditions_file'),
                                             'alert' => $this->alert(),

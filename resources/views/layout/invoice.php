@@ -72,12 +72,12 @@ use Yiisoft\Yii\Bootstrap5\Offcanvas;
 $assetManager->register(AppAsset::class);
 $assetManager->register(InvoiceAsset::class);
 $assetManager->register(Yiisoft\Yii\Bootstrap5\Assets\BootstrapAsset::class);
-$s->get_setting('monospace_amounts') == 1 ? $assetManager->register(MonospaceAsset::class) : '';
+$s->getSetting('monospace_amounts') == 1 ? $assetManager->register(MonospaceAsset::class) : '';
 // '0' => PCI Compliant version
-$s->get_setting('gateway_stripe_version') == '0' ? $assetManager->register(stripe_v10_Asset::class) : '';
-$s->get_setting('gateway_amazon_pay_version') == '0' ? $assetManager->register(amazon_pay_v2_4_Asset::class) : '';
-$s->get_setting('gateway_braintree_version') == '0' ? $assetManager->register(braintree_dropin_1_33_7_Asset::class) : '';
-$vat = ($s->get_setting('enable_vat_registration') == '0');
+$s->getSetting('gateway_stripe_version') == '0' ? $assetManager->register(stripe_v10_Asset::class) : '';
+$s->getSetting('gateway_amazon_pay_version') == '0' ? $assetManager->register(amazon_pay_v2_4_Asset::class) : '';
+$s->getSetting('gateway_braintree_version') == '0' ? $assetManager->register(braintree_dropin_1_33_7_Asset::class) : '';
+$vat = ($s->getSetting('enable_vat_registration') == '0');
 // NOTE: $locale must correspond with SettingRepository/locale_language_array and
 // ALSO: src/Invoice/Language/{folder_name}
 switch ($currentRoute->getArgument('_language') ?? 'en') {
@@ -176,7 +176,7 @@ $this->beginPage();
         <?= Meta::pragmaDirective('X-UA-Compatible', 'IE=edge') ?>
         <?= Meta::data('viewport', 'width=device-width, initial-scale=1') ?>
         <title>
-            <?= $s->get_setting('custom_title') ?: 'Yii-Invoice'; ?>
+            <?= $s->getSetting('custom_title') ?: 'Yii-Invoice'; ?>
         </title>
         <?php $this->head() ?>
     </head>
@@ -188,7 +188,7 @@ $this->beginPage();
         <?php
         $this->beginBody();        
         $offcanvas = new Offcanvas();
-        $offcanvas->title($s->get_setting('custom_title') ?: 'Yii-Invoice');
+        $offcanvas->title($s->getSetting('custom_title') ?: 'Yii-Invoice');
         
         echo NavBar::widget()
           // public folder represented by first forward slash ie. root
@@ -328,11 +328,11 @@ $this->beginPage();
                       ['options' => ['class' => 'nav fs-4', 'style' => 'background-color: #ffcccb'], 'label' => $translator->translate('invoice.setting.add'), 'url' => $urlGenerator->generate('setting/add'), 'visible' => $debugMode],
                       ['options' => ['class' => 'nav fs-4', 'style' => 'background-color: #ffcccb'], 'label' => $translator->translate('invoice.invoice.caution.delete.invoices'), 'url' => $urlGenerator->generate('inv/flush'), 'visible' => $debugMode],  
                       ['options' => ['class' => 'nav fs-4'], 'label' => $translator->translate('i.view'), 'url' => $urlGenerator->generate('setting/tab_index')],
-                      ['options' => ['class' => 'nav fs-4'], 'label' => $translator->translate((($s->get_setting('install_test_data') == '1') && ($s->get_setting('use_test_data') == '1')) 
+                      ['options' => ['class' => 'nav fs-4'], 'label' => $translator->translate((($s->getSetting('install_test_data') == '1') && ($s->getSetting('use_test_data') == '1')) 
                                                                        ? 'invoice.install.test.data' : 'invoice.install.test.data.goto.tab.index'), 
-                                                              'url' =>  (($s->get_setting('install_test_data') == '1' && $s->get_setting('use_test_data') == '1') 
+                                                              'url' =>  (($s->getSetting('install_test_data') == '1' && $s->getSetting('use_test_data') == '1') 
                                                                        ? $urlGenerator->generate('invoice/index') : $urlGenerator->generate('setting/tab_index')),
-                                                              'visible' => ($s->get_setting('install_test_data') == '1' && $s->get_setting('use_test_data') == '1')],         
+                                                              'visible' => ($s->getSetting('install_test_data') == '1' && $s->getSetting('use_test_data') == '1')],         
                       ['options' => ['class' => 'nav fs-4'], 'label' => $translator->translate('i.email_template'), 'url' => $urlGenerator->generate('emailtemplate/index')],
                       ['options' => ['class' => 'nav fs-4'], 'label' => $translator->translate('invoice.email.from.dropdown'), 'url' => $urlGenerator->generate('from/index')],
                       ['options' => ['class' => 'nav fs-4'], 'label' => $translator->translate('invoice.email.log'), 'url' => $urlGenerator->generate('invsentlog/index')],
@@ -448,7 +448,9 @@ $this->beginPage();
                       ['label' => 'Using ngrok and Wampserver VirtualHosts', 
                          'url' => 'https://ngrok.com/docs/using-ngrok-with/virtualHosts/'],
                       ['label' => 'Using ngrok and webhook testing', 
-                         'url' => 'https://ngrok.com/use-cases/webhook-testing'],  
+                         'url' => 'https://ngrok.com/use-cases/webhook-testing'],
+                      ['label' => 'Php Conference - Berlin and Munich', 
+                         'url' => 'https://https://phpconference.com/'],
                     ],
                   ],
     // FAQ                  
@@ -674,7 +676,7 @@ $this->beginPage();
         <div id="main-area">
             <?php
 // Display the sidebar if enabled
-            if ($s->get_setting('disable_sidebar') !== (string) 1) {
+            if ($s->getSetting('disable_sidebar') !== (string) 1) {
               include dirname(__DIR__) . '/invoice/layout/sidebar.php';
             }
             ?>

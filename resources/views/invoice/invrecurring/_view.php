@@ -99,7 +99,7 @@ use Yiisoft\Html\Tag\Form;
                         ->readonly(true)
                 ?>
                 <?= Html::closeTag('div'); ?>
-                <?= $button::back_save(); ?>
+                <?= $button::backSave(); ?>
             <?= Html::closeTag('div'); ?>
         <?= Html::closeTag('div'); ?>
     <?= Html::closeTag('div'); ?>

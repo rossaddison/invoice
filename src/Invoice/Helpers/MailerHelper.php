@@ -66,7 +66,7 @@ Class MailerHelper
     public function mailer_configured(): bool
     {
         return (
-            ($this->s->get_setting('email_send_method') == 'symfony') 
+            ($this->s->getSetting('email_send_method') == 'symfony') 
         );
     }
     
@@ -105,7 +105,7 @@ Class MailerHelper
                         $quote->getNumber() ?? '', $url
                     );
 
-                    if ($this->s->get_setting('email_send_method') == 'yiimail') {
+                    if ($this->s->getSetting('email_send_method') == 'yiimail') {
                         return $this->yii_mailer_send($from_email, $from_name, $from_email, $subject, $body, null, null, [], '', $uiR);
                     }
                 }    
@@ -153,7 +153,7 @@ Class MailerHelper
         
         // Bcc mails to admin && the admin email account has been setup under userinv which is an extension table of user
         if (null!==$uiR) { 
-            if (($this->s->get_setting('bcc_mails_to_admin') == 1) && ($uiR->repoUserInvUserIdcount((string)1) > 0)) {
+            if (($this->s->getSetting('bcc_mails_to_admin') == 1) && ($uiR->repoUserInvUserIdcount((string)1) > 0)) {
                 $user_inv = $uiR->repoUserInvUserIdquery((string)1) ?: null;
                 $email = null!==$user_inv ? $user_inv->getEmail() : '';
                 // $bcc should be an array after the explode 

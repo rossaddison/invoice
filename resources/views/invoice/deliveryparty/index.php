@@ -118,7 +118,7 @@ $toolbar = Div::tag();
             Form::tag()->post($urlGenerator->generate('deliveryparty/index'))->csrf($csrf)->open() .
             Div::tag()->addClass('float-end m-3')->content($toolbarReset)->encode(false)->render() .
             Form::tag()->close();
-    $grid_summary = $s->grid_summary($paginator, $translator, (int)$s->get_setting('default_list_limit'),
+    $grid_summary = $s->grid_summary($paginator, $translator, (int)$s->getSetting('default_list_limit'),
                   $translator->translate('invoice.invoice.delivery.party'), '');
     echo GridView::widget()
         ->rowAttributes(['class' => 'align-middle'])

@@ -12,7 +12,7 @@ use Yiisoft\Html\Tag\Form;
  * @var Yiisoft\Router\UrlGeneratorInterface $urlGenerator
  * @var Yiisoft\Translator\TranslatorInterface $translator
  * @var array $charges
- * @var array $tax_rates
+ * @var array $taxRates
  * @var string $csrf
  * @var string $actionName
  * @var string $title
@@ -86,8 +86,7 @@ use Yiisoft\Html\Tag\Form;
                     'class' => 'form-control',
                     'id' => 'multiplier_factor_numeric',
                 ])
-                ->value(Html::encode($form->getMultiplier_factor_numeric() ??  '20')) 
-                // ->required(true) not necessary ... @see #[Required] in AllowanceChargeForm
+                ->value(Html::encode($form->getMultiplierFactorNumeric() ??  '20')) 
                 ->hint($translator->translate('invoice.hint.this.field.is.required')); 
             ?>   
         <?= Html::closeTag('div'); ?>
@@ -101,7 +100,6 @@ use Yiisoft\Html\Tag\Form;
                     'id' => 'amount',
                 ])
                 ->value(Html::encode($form->getAmount() ??  '')) 
-                // ->required(true) not necessary ... @see #[Required] in AllowanceChargeForm
                 ->hint($translator->translate('invoice.hint.this.field.is.required')); 
             ?>
         <?= Html::closeTag('div'); ?>
@@ -114,8 +112,7 @@ use Yiisoft\Html\Tag\Form;
                     'class' => 'form-control',
                     'id' => 'base_amount',
                 ])
-                ->value(Html::encode($form->getBase_amount() ??  '1000')) 
-                // ->required(true) not necessary ... @see #[Required] in AllowanceChargeForm
+                ->value(Html::encode($form->getBaseAmount() ??  '1000')) 
                 ->hint($translator->translate('invoice.hint.this.field.is.required')); 
             ?>
         <?= Html::closeTag('div'); ?>
@@ -123,16 +120,16 @@ use Yiisoft\Html\Tag\Form;
             <?php
                 $optionsDataTax = [];
                 /**
-                 * @var App\Invoice\Entity\TaxRate $tax_rate
+                 * @var App\Invoice\Entity\TaxRate $taxRate
                  */
-                foreach ($tax_rates as $tax_rate) {
-                    $taxRateId = $tax_rate->getTax_rate_id();
+                foreach ($taxRates as $taxRate) {
+                    $taxRateId = $taxRate->getTaxRateId();
                     if (null!==$taxRateId) {
                         $optionsDataTax[$taxRateId] = $taxRateId
                             .':  '
-                            . ($tax_rate->getTax_rate_name() ?? '')
+                            . ($taxRate->getTaxRateName() ?? '')
                             . ' '
-                            . ($tax_rate->getTax_rate_percent() ?? '');
+                            . ($taxRate->getTaxRatePercent() ?? '');
                     }    
                 }
             ?>
@@ -142,12 +139,12 @@ use Yiisoft\Html\Tag\Form;
                     'class' => 'form-control',
                     'id' => 'tax_rate_id'
                 ])
-                ->value($form->getTax_rate_id() ?? '')
+                ->value($form->getTaxRateId() ?? '')
                 ->optionsData($optionsDataTax, true)
                 ->prompt($translator->translate('i.none'))
                 ->hint($translator->translate('invoice.hint.this.field.is.required'));    
             ?>
         <?= Html::closeTag('div'); ?>
     <?= Html::closeTag('div'); ?>
-<?= $button::back_save(); ?>
+<?= $button::backSave(); ?>
 <?= Form::tag()->close() ?>

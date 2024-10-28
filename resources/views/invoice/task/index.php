@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 use App\Invoice\Entity\Task;
@@ -153,7 +154,7 @@ use Yiisoft\Router\CurrentRoute;
         new DataColumn(
             'tax_rate_id',    
             header: $translator->translate('i.tax_rate'),
-            content: static fn (Task $model): string => ($model->getTaxrate()?->getTax_rate_id() > 0) ? Html::encode($model->getTaxrate()?->getTax_rate_name()) : $translator->translate('i.none')                       
+            content: static fn (Task $model): string => ($model->getTaxrate()?->getTaxRateId() > 0) ? Html::encode($model->getTaxrate()?->getTaxRateName()) : $translator->translate('i.none')                       
         ),
         new ActionColumn(
             content: static fn(Task $model): string => 
@@ -194,7 +195,7 @@ use Yiisoft\Router\CurrentRoute;
     $grid_summary = $s->grid_summary(
         $paginator, 
         $translator, 
-        (int)$s->get_setting('default_list_limit'), 
+        (int)$s->getSetting('default_list_limit'), 
         $translator->translate('invoice.products'),
         ''
     );

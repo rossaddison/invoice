@@ -28,7 +28,7 @@ use Yiisoft\Html\Tag\I;
  * @psalm-var array<array-key, array<array-key, string>|string> $optionsDataProductUnit
  */
 
-$vat = $s->get_setting('enable_vat_registration') === '1' ? true : false;
+$vat = $s->getSetting('enable_vat_registration') === '1' ? true : false;
 ?>
 <?= Html::openTag('div', ['class' => 'panel panel-default']); ?>
     <?= Html::openTag('div', ['class' => 'panel-heading']); ?>
@@ -101,7 +101,7 @@ $vat = $s->get_setting('enable_vat_registration') === '1' ? true : false;
                                         'class' => 'input-lg form-control amount has-feedback',
                                         'data-bs-toggle' => 'tooltip',
                                         'data-placement' => 'bottom',
-                                        'title' => $s->get_setting('currency_symbol') . ' ' . $translator->translate('i.per_item'),
+                                        'title' => $s->getSetting('currency_symbol') . ' ' . $translator->translate('i.per_item'),
                                     ])
                                     ->value($numberHelper->format_amount($form->getDiscount_amount() ?? 0.00)); ?>
                             <?= Html::closeTag('div'); ?>
@@ -115,10 +115,10 @@ $vat = $s->get_setting('enable_vat_registration') === '1' ? true : false;
                                      */
                                     foreach ($taxRates as $taxRate) 
                                     {
-                                        $taxRateId = $taxRate->getTax_rate_id();
-                                        $taxRatePercent = $taxRate->getTax_rate_percent();
+                                        $taxRateId = $taxRate->getTaxRateId();
+                                        $taxRatePercent = $taxRate->getTaxRatePercent();
                                         $taxRatePercentNumber = $numberHelper->format_amount($taxRatePercent);
-                                        $taxRateName = $taxRate->getTax_rate_name();
+                                        $taxRateName = $taxRate->getTaxRateName();
                                         // Only build the drop down item if all values are present
                                         if (null!==$taxRatePercentNumber && null!==$taxRateName && null!==$taxRateId) {
                                             $optionsDataTaxRate[$taxRateId] =  $taxRatePercentNumber. '% - ' . $taxRateName;

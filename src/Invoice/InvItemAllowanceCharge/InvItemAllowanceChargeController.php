@@ -128,7 +128,7 @@ final class InvItemAllowanceChargeController
                     $allowance_charge = $acR->repoAllowanceChargequery($allowance_charge_id);            
                     if ($allowance_charge) {
                         $amount = (float)$body['amount'];
-                        $percent = $allowance_charge->getTaxRate()?->getTax_rate_percent() ?? 0.00;
+                        $percent = $allowance_charge->getTaxRate()?->getTaxRatePercent() ?? 0.00;
                         $vat = $amount * $percent / 100;
                         if ($formHydrator->populateFromPostAndValidate($form, $request)) {
                             /**
@@ -163,10 +163,10 @@ final class InvItemAllowanceChargeController
                                 $discount_per_item = $inv_item_amount->getInvItem()?->getDiscount_amount() ?? 0.00;
                                 $quantity_price = $current_item_quantity * $current_item_price;
                                 $current_discount_item_total = $current_item_quantity * $discount_per_item;
-                                $tax_percent = $inv_item_amount->getInvItem()?->getTaxRate()?->getTax_rate_percent();
+                                $tax_percent = $inv_item_amount->getInvItem()?->getTaxRate()?->getTaxRatePercent();
                                 $qpIncAc = $quantity_price + $all_charges - $all_allowances;
                                 $current_tax_total = ($qpIncAc - $current_discount_item_total) * ($tax_percent ?? 0.00) / 100;
-                                $new_tax_total = $current_tax_total + ($this->sR->get_setting('enable_vat_registration') == '0' ? 0.00 : $all_vat);
+                                $new_tax_total = $current_tax_total + ($this->sR->getSetting('enable_vat_registration') == '0' ? 0.00 : $all_vat);
                                 // include all item allowance charges in the subtotal
                                 $inv_item_amount->setSubtotal($qpIncAc);
                                 $inv_item_amount->setDiscount($current_discount_item_total);
@@ -323,7 +323,7 @@ final class InvItemAllowanceChargeController
                 if ($allowance_charge_id) {
                     $allowance_charge = $acR->repoAllowanceChargequery($allowance_charge_id);            
                     if ($allowance_charge && null!==$body) {
-                        $percent = $allowance_charge->getTaxRate()?->getTax_rate_percent() ?? 0.00;
+                        $percent = $allowance_charge->getTaxRate()?->getTaxRatePercent() ?? 0.00;
                         $vat = $amount * $percent/100;  
                         if ($formHydrator->populateFromPostAndValidate($form,  $request)) {
                             /**
@@ -358,10 +358,10 @@ final class InvItemAllowanceChargeController
                                 $discount_per_item = $inv_item_amount->getInvItem()?->getDiscount_amount() ?? 0.00;
                                 $quantity_price = $current_item_quantity * $current_item_price;
                                 $current_discount_item_total = $current_item_quantity * $discount_per_item;
-                                $tax_percent = $inv_item_amount->getInvItem()?->getTaxRate()?->getTax_rate_percent();
+                                $tax_percent = $inv_item_amount->getInvItem()?->getTaxRate()?->getTaxRatePercent();
                                 $qpIncAc = $quantity_price + $all_charges - $all_allowances;
                                 $current_tax_total = ($qpIncAc - $current_discount_item_total) * ($tax_percent ?? 0.00) / 100;
-                                $new_tax_total = $current_tax_total + ($this->sR->get_setting('enable_vat_registration') == '0' ? 0.00 : $all_vat);
+                                $new_tax_total = $current_tax_total + ($this->sR->getSetting('enable_vat_registration') == '0' ? 0.00 : $all_vat);
                                 // include all item allowance charges in the subtotal
                                 $inv_item_amount->setSubtotal($qpIncAc);
                                 $inv_item_amount->setDiscount($current_discount_item_total);

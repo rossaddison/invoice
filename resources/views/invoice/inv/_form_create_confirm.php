@@ -161,7 +161,7 @@ use Yiisoft\Html\Tag\Form;
                                         ->hideLabel(true)
                                         ->label($translator->translate('i.terms'))
                                         ->addInputAttributes(['class' => 'form-control'])
-                                        ->value(Html::encode($form->getTerms() ?? $s->get_setting('default_invoice_terms') ?: $translator->translate('invoice.payment.term.general')))
+                                        ->value(Html::encode($form->getTerms() ?? $s->getSetting('default_invoice_terms') ?: $translator->translate('invoice.payment.term.general')))
                                         //->placeholder($translator->translate('i.terms'));
                                     ?>
                                 <?= Html::closeTag('div'); ?>
@@ -196,7 +196,7 @@ use Yiisoft\Html\Tag\Form;
                                         ->hideLabel(true)
                                         ->label($translator->translate('i.payment_method'))
                                         ->addInputAttributes(['class' => 'form-control'])
-                                        ->value(Html::encode($form->getPayment_method() ?? ($s->get_setting('invoice_default_payment_method') ?: 1)))
+                                        ->value(Html::encode($form->getPayment_method() ?? ($s->getSetting('invoice_default_payment_method') ?: 1)))
                                     ?>
                                 <?= Html::closeTag('div'); ?>
                                 <?= Html::openTag('div'); ?>
@@ -237,7 +237,7 @@ use Yiisoft\Html\Tag\Form;
                 <?= Html::closeTag('div'); ?>
             <?= Html::closeTag('div'); ?>
 
-            <?= $button::back_save(); ?>
+            <?= $button::backSave(); ?>
 
             <?= Html::closeTag('form'); ?>        
         

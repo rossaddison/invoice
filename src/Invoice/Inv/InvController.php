@@ -601,10 +601,10 @@ final class InvController {
                       // This table can be filled in via Invoice...View...Options...Edit...Sumex
                       $this->sumex_add_record($sumexR, (int) $model_id);
                       // Inform the user of generated invoice number for draft setting
-                      $this->flash_message('info', $this->sR->get_setting('generate_invoice_number_for_draft') === '1' 
+                      $this->flash_message('info', $this->sR->getSetting('generate_invoice_number_for_draft') === '1' 
                       ? $this->translator->translate('i.generate_invoice_number_for_draft') . '=>' . $this->translator->translate('i.yes') 
                       : $this->translator->translate('i.generate_invoice_number_for_draft') . '=>' . $this->translator->translate('i.no') );
-                      $this->sR->get_setting('mark_invoices_sent_copy') === '1'   
+                      $this->sR->getSetting('mark_invoices_sent_copy') === '1'   
                       ? $this->flash_message('danger', $this->translator->translate('invoice.mark.sent.copy.on')) 
                       : '';
                     } //$model_id
@@ -681,7 +681,7 @@ final class InvController {
         $inv = new Inv();
         $form = new InvForm($inv);
         $invAmount = new InvAmount();
-        $defaultGroupId = $this->sR->get_setting('default_invoice_group');
+        $defaultGroupId = $this->sR->getSetting('default_invoice_group');
         $optionsGroupData = [];
         $groups = $gR->findAllPreloaded();
         /**
@@ -745,7 +745,7 @@ final class InvController {
                       // This table can be filled in via Invoice...View...Options...Edit...Sumex
                       $this->sumex_add_record($sumexR, (int) $model_id);
                       // Inform the user of generated invoice number for draft setting
-                      $this->flash_message('info', $this->sR->get_setting('generate_invoice_number_for_draft') === '1' 
+                      $this->flash_message('info', $this->sR->getSetting('generate_invoice_number_for_draft') === '1' 
                       ? $this->translator->translate('i.generate_invoice_number_for_draft') . '=>' . $this->translator->translate('i.yes') 
                       : $this->translator->translate('i.generate_invoice_number_for_draft') . '=>' . $this->translator->translate('i.no') );
                     } //$model_id
@@ -846,7 +846,7 @@ final class InvController {
             $taxrates = $trR->findAllPreloaded();
             /** @var TaxRate $taxrate */
             foreach ($taxrates as $taxrate) {
-                $taxrate->getTax_rate_default() == 1 ? $this->default_tax_inv($taxrate, $inv, $formHydrator) : '';
+                $taxrate->getTaxRateDefault() == 1 ? $this->default_tax_inv($taxrate, $inv, $formHydrator) : '';
             }
         }
     }
@@ -863,12 +863,12 @@ final class InvController {
         $invTaxRateForm = new InvTaxRateForm($invTaxRate);
         $inv_tax_rate = [];
         $inv_tax_rate['inv_id'] = $inv->getId();
-        $inv_tax_rate['tax_rate_id'] = $taxrate->getTax_rate_id();
+        $inv_tax_rate['tax_rate_id'] = $taxrate->getTaxRateId();
          /**
          * @see Settings ... View ... Taxes ... Default Invoice Tax Rate Placement
          * @see ..\resources\views\invoice\setting\views partial_settings_taxes.php 
          */
-        $inv_tax_rate['include_item_tax'] = ($this->sR->get_setting('default_include_item_tax') == '1' ? 1 : 0);
+        $inv_tax_rate['include_item_tax'] = ($this->sR->getSetting('default_include_item_tax') == '1' ? 1 : 0);
         
         $inv_tax_rate['inv_tax_rate_amount'] = 0;
         ($formHydrator->populateAndValidate($invTaxRateForm, $inv_tax_rate)) ?
@@ -971,10 +971,10 @@ final class InvController {
     
     private function disable_read_only_status_message() : void
     {
-        if ($this->sR->get_setting('disable_read_only') == '') {
+        if ($this->sR->getSetting('disable_read_only') == '') {
             $this->flash_message('warning', $this->translator->translate('invoice.security.disable.read.only.empty'));
         }
-        if ($this->sR->get_setting('disable_read_only') == '1') {
+        if ($this->sR->getSetting('disable_read_only') == '1') {
             $this->flash_message('warning', $this->translator->translate('invoice.security.disable.read.only.warning'));
         }
     }        
@@ -1067,7 +1067,7 @@ final class InvController {
         else {
             $inputAttributesPaymentMethod = [
                 'class' => 'form-control',
-                'value' => Html::encode($form->getPayment_method() ?? ($this->sR->get_setting('invoice_default_payment_method') ?: 1))
+                'value' => Html::encode($form->getPayment_method() ?? ($this->sR->getSetting('invoice_default_payment_method') ?: 1))
             ];
         }
         return $inputAttributesPaymentMethod;
@@ -1135,7 +1135,7 @@ final class InvController {
                 . ' ----- ' 
                 . $endDate->format($this->date_helper->style()) 
                 . ' ---- ' 
-                . $this->sR->get_setting('stand_in_code') 
+                . $this->sR->getSetting('stand_in_code') 
                 . ' ---- ' 
                 .  $peppol_array->getCurrent_stand_in_code_value($this->sR);
             }    
@@ -1253,8 +1253,8 @@ final class InvController {
             $client_id = $inv->getClient_id();
             $peppol_array = new PeppolArrays();
             $note_on_tax_point = '';
-            $defaultGroupId = $this->sR->get_setting('default_invoice_group');
-            if (($this->sR->get_setting('debug_mode') == '1') && ($this->user_service->hasPermission('editInv'))) {
+            $defaultGroupId = $this->sR->getSetting('default_invoice_group');
+            if (($this->sR->getSetting('debug_mode') == '1') && ($this->user_service->hasPermission('editInv'))) {
                 $note_on_tax_point = $this->view_renderer->renderPartialAsString('//invoice/info/taxpoint');
             }
             $parameters = [
@@ -1613,7 +1613,7 @@ final class InvController {
                 // The Google sign under Invoices ... Pdf Settings
                 // The initial recommendation for testing email sending is that this be set to off ie. 1 
                 // so that a plain successful message can be output without interferance from a pdf
-                $stream = ($this->sR->get_setting('pdf_stream_inv') == '1' ? true : false);
+                $stream = ($this->sR->getSetting('pdf_stream_inv') == '1' ? true : false);
                 $so = ($inv->getSo_id() ? $soR->repoSalesOrderLoadedquery($inv->getSo_id()) : null);
                 // true => invoice ie. not quote
                 // If $stream is false => pdfhelper->generate_inv_pdf => mpdfhelper->pdf_Create => filename returned
@@ -1778,7 +1778,7 @@ final class InvController {
      * @return Flash|null
      */
     private function flash_message(string $level, string $message): Flash|null {
-        if (strlen($message) > 0 && $this->sR->get_setting('disable_flash_messages_inv') == '0') {
+        if (strlen($message) > 0 && $this->sR->getSetting('disable_flash_messages_inv') == '0') {
             $this->flash->add($level, $message, true);
             return $this->flash;
         }
@@ -1846,7 +1846,7 @@ final class InvController {
                     $label = $iR->getSpecificStatusArrayLabel($status);
                     $parameters = [
                         'alert' => $this->alert(),
-                        'decimalPlaces' => (int)$this->sR->get_setting('tax_rate_decimal_places'),
+                        'decimalPlaces' => (int)$this->sR->getSetting('tax_rate_decimal_places'),
                         'optionsDataInvNumberDropDownFilter' => $this->optionsDataInvNumberGuestFilter($preFilterInvs),
                         'iaR' => $iaR,
                         'iR' => $iR,
@@ -1964,8 +1964,8 @@ final class InvController {
             #[Query('filterDateCreatedYearMonth')] string $queryFilterDateCreatedYearMonth = null
         ): \Yiisoft\DataResponse\DataResponse|Response {
         // build the inv and hasOne InvAmount table
-        $visible = $this->sR->get_setting('columns_all_visible');
-        $visibleToggleInvSentLogColumn = $this->sR->get_setting('column_inv_sent_log_visible');
+        $visible = $this->sR->getSetting('columns_all_visible');
+        $visibleToggleInvSentLogColumn = $this->sR->getSetting('column_inv_sent_log_visible');
         $inv = new Inv();
         $invForm = new InvForm($inv);
         $bootstrap5ModalInv = new Bootstrap5ModalInv(
@@ -2018,15 +2018,15 @@ final class InvController {
             $parameters = [
                 'alert' => $this->alert(), 
                 'clientCount' => $clientRepo->count(),
-                'decimalPlaces' => (int)$this->sR->get_setting('tax_rate_decimal_places'),
-                'defaultPageSizeOffsetPaginator' => $this->sR->get_setting('default_list_limit')
-                                                    ? (int)$this->sR->get_setting('default_list_limit') : 1,
+                'decimalPlaces' => (int)$this->sR->getSetting('tax_rate_decimal_places'),
+                'defaultPageSizeOffsetPaginator' => $this->sR->getSetting('default_list_limit')
+                                                    ? (int)$this->sR->getSetting('default_list_limit') : 1,
                 // numbered tiles between the arrrows                
                 'maxNavLinkCount' => 10,
                 //'sortedAndPagedPaginator' => $paginator,
                 'invs' => $invs,
                 'inv_statuses' => $inv_statuses,
-                'max' => (int) $this->sR->get_setting('default_list_limit'),
+                'max' => (int) $this->sR->getSetting('default_list_limit'),
                 'page' => (int)$page > 0 ? (int)$page : 1,
                 'status' => $status,
                 'qR' => $qR,
@@ -2116,9 +2116,9 @@ final class InvController {
             // session is passed to the pdfHelper and will be used for the locale ie. $session->get('_language') or the print_language ie $session->get('print_language')
             $pdfhelper = new PdfHelper($this->sR, $this->session);
             // The invoice will be streamed if set under Settings...View...Invoices...Pdf Settings
-            $stream = ($this->sR->get_setting('pdf_stream_inv') == '0') ? false : true;
+            $stream = ($this->sR->getSetting('pdf_stream_inv') == '0') ? false : true;
             // If we are required to mark invoices as 'sent' when sent.
-            if ($this->sR->get_setting('mark_invoices_sent_pdf') == 1) {
+            if ($this->sR->getSetting('mark_invoices_sent_pdf') == 1) {
                 $this->generate_inv_number_if_applicable($inv_id, $iR, $this->sR, $gR);
                 $this->sR->invoice_mark_sent($inv_id, $iR);
             }
@@ -2137,7 +2137,7 @@ final class InvController {
      * @return \Yiisoft\DataResponse\DataResponse
      */
     public function pdf_archive_message(): \Yiisoft\DataResponse\DataResponse {
-        if ($this->sR->get_setting('pdf_archive_inv') == '1') {
+        if ($this->sR->getSetting('pdf_archive_inv') == '1') {
             return $this->factory->createResponse($this->view_renderer->renderPartialAsString('//invoice/setting/pdf_close',
                                     ['heading' => '', 'message' => $this->translator->translate('invoice.invoice.pdf.archived.yes')]));
         } else {
@@ -2173,7 +2173,7 @@ final class InvController {
                 // The invoice will be streamed ie. shown, and not archived
                 $stream = true;
                 // If we are required to mark invoices as 'sent' when sent.
-                if ($this->sR->get_setting('mark_invoices_sent_pdf') == 1) {
+                if ($this->sR->getSetting('mark_invoices_sent_pdf') == 1) {
                     $this->generate_inv_number_if_applicable((string)$inv_id, $iR, $this->sR, $gR);
                     $this->sR->invoice_mark_sent((string)$inv_id, $iR);
                 }
@@ -2213,7 +2213,7 @@ final class InvController {
                 // The invoice will be streamed ie. shown, and not archived
                 $stream = true;
                 // If we are required to mark invoices as 'sent' when sent.
-                if ($this->sR->get_setting('mark_invoices_sent_pdf') == 1) {
+                if ($this->sR->getSetting('mark_invoices_sent_pdf') == 1) {
                     $this->generate_inv_number_if_applicable((string)$inv_id, $iR, $this->sR, $gR);
                     $this->sR->invoice_mark_sent((string)$inv_id, $iR);
                 }
@@ -2262,7 +2262,7 @@ final class InvController {
                     $stream = false;
                     $c_f = true;
                     // If we are required to mark invoices as 'sent' when sent.
-                    if ($this->sR->get_setting('mark_invoices_sent_pdf') == 1) {
+                    if ($this->sR->getSetting('mark_invoices_sent_pdf') == 1) {
                         $this->generate_inv_number_if_applicable($inv_id, $iR, $this->sR, $gR);
                         $this->sR->invoice_mark_sent($inv_id, $iR);
                     }
@@ -2343,7 +2343,7 @@ final class InvController {
                     $stream = false;
                     $c_f = false;
                     // If we are required to mark invoices as 'sent' when sent.
-                    if ($this->sR->get_setting('mark_invoices_sent_pdf') == 1) {
+                    if ($this->sR->getSetting('mark_invoices_sent_pdf') == 1) {
                         $this->generate_inv_number_if_applicable($inv_id, $iR, $this->sR, $gR);
                         $this->sR->invoice_mark_sent($inv_id, $iR);
                     }
@@ -2471,7 +2471,7 @@ final class InvController {
      */
     public function generate_inv_get_number(string $group_id, SR $sR, IR $iR, GR $gR): mixed {
         $inv_number = '';
-        if ($sR->get_setting('generate_invoice_number_for_draft') == '0') {
+        if ($sR->getSetting('generate_invoice_number_for_draft') == '0') {
             /** @var mixed $inv_number */
             $inv_number = $iR->get_inv_number($group_id, $gR);
         }
@@ -2603,7 +2603,7 @@ final class InvController {
             'quote_id' => null,
             'client_id' => $data_inv_js['client_id'],
             'group_id' => $group_id,
-            'status_id' => $this->sR->get_setting('mark_invoices_sent_copy') === '1' ? 2 : 1,
+            'status_id' => $this->sR->getSetting('mark_invoices_sent_copy') === '1' ? 2 : 1,
             'number' => $gR->generate_number((int) $group_id),
             'creditinvoice_parent_id' => null,
             'discount_amount' => floatval($original->getDiscount_amount()),
@@ -2735,7 +2735,7 @@ final class InvController {
                             if (($invItem->getQuantity() >=  0.00) && 
                                 ($invItem->getPrice() >= 0.00) && 
                                 ($invItem->getDiscount_amount() >= 0.00) &&
-                                ($inv_item->getTaxRate()?->getTax_rate_percent() >= 0.00)) {
+                                ($inv_item->getTaxRate()?->getTaxRatePercent() >= 0.00)) {
                                     $this->inv_item_service->saveInvItemAmount(
                                         $newInvItemId, 
                                         $invItem->getQuantity() ?? 0.00,
@@ -2743,7 +2743,7 @@ final class InvController {
                                         $invItem->getDiscount_amount() ?? 0.00,
                                         $accumulativeChargeTotal,
                                         $accumulativeAllowanceTotal,
-                                        $inv_item->getTaxRate()?->getTax_rate_percent() ?? 0.00,
+                                        $inv_item->getTaxRate()?->getTaxRatePercent() ?? 0.00,
                                         $iiaS,
                                         $iiaR,
                                         $this->sR
@@ -2762,7 +2762,7 @@ final class InvController {
                             if (($invItem->getQuantity() >=  0.00) && 
                                 ($invItem->getPrice() >= 0.00) && 
                                 ($invItem->getDiscount_amount() >= 0.00) &&
-                                ($inv_item->getTaxRate()?->getTax_rate_percent() >= 0.00)) {
+                                ($inv_item->getTaxRate()?->getTaxRatePercent() >= 0.00)) {
                                     $this->inv_item_service->saveInvItemAmount(
                                         $newInvItemId, 
                                         $invItem->getQuantity() ?? 0.00,
@@ -2770,7 +2770,7 @@ final class InvController {
                                         $invItem->getDiscount_amount() ?? 0.00,
                                         $accumulativeChargeTotal,
                                         $accumulativeAllowanceTotal,
-                                        $inv_item->getTaxRate()?->getTax_rate_percent() ?? 0.00,
+                                        $inv_item->getTaxRate()?->getTaxRatePercent() ?? 0.00,
                                         $iiaS,
                                         $iiaR,
                                         $this->sR
@@ -2893,17 +2893,17 @@ final class InvController {
                         'so_id' => $original->getSo_id(),
                         'quote_id' => $original->getQuote_id(),
                         // user_id below                      
-                        'status_id' => $this->sR->get_setting('mark_invoices_sent_copy') === '1' ? 2 : 1,
-                        'is_read_only' => $this->sR->get_setting('mark_invoices_sent_copy') === '1' ? true: false,
+                        'status_id' => $this->sR->getSetting('mark_invoices_sent_copy') === '1' ? 2 : 1,
+                        'is_read_only' => $this->sR->getSetting('mark_invoices_sent_copy') === '1' ? true: false,
                         'password' => '',
                         // date_supplied and date_tax_point will change as soon as goods are supplied and a supplied/service date is recorded
                         'date_supplied' => new \DateTimeImmutable('now'),
                         'date_tax_point' => new \DateTimeImmutable('now'),
                         'time_created' => (new \DateTimeImmutable('now'))->format('H:i:s'),
                         // the company will be registered for their own personal peppol stand-in-code
-                        'stand_in_code' => $this->sR->get_setting('stand_in_code'),
+                        'stand_in_code' => $this->sR->getSetting('stand_in_code'),
                         // if draft invoices must get invoice numbers
-                        'number' => $this->sR->get_setting('generate_invoice_number_for_draft') === '1' ? (string)$gR->generate_number((int)$original->getGroup_id(), true) : '',
+                        'number' => $this->sR->getSetting('generate_invoice_number_for_draft') === '1' ? (string)$gR->generate_number((int)$original->getGroup_id(), true) : '',
                         'discount_amount' => floatval($original->getDiscount_amount()),
                         'discount_percent' => floatval($original->getDiscount_percent()),
                         'terms' => $original->getTerms(),
@@ -3081,7 +3081,7 @@ final class InvController {
      * @return void
      */
     public function sumex_add_record(SumexR $sumexR, int $inv_id): void {
-        $sumex_setting = $this->sR->get_setting('sumex');
+        $sumex_setting = $this->sR->getSetting('sumex');
         if ((int) $sumex_setting === 1) {
             $sumex = new Sumex();
             $sumex->setInvoice($inv_id);
@@ -3163,7 +3163,7 @@ final class InvController {
                     if ($inv_amount) {
                         $is_overdue = ($inv_amount->getBalance() > 0 && ($inv->getDate_due()) < (new \DateTimeImmutable('now')) ? true : false);
                         $parameters = [
-                            'renderTemplate' => $this->view_renderer->renderPartialAsString('//invoice/template/invoice/public/' . ($this->sR->get_setting('public_invoice_template') ?: 'Invoice_Web'), [
+                            'renderTemplate' => $this->view_renderer->renderPartialAsString('//invoice/template/invoice/public/' . ($this->sR->getSetting('public_invoice_template') ?: 'Invoice_Web'), [
                                 'alert' => $this->alert(),
                                 'aliases' => $this->sR->get_img(),
                                 'attachments' => $attachments,
@@ -3205,11 +3205,11 @@ final class InvController {
      * @return bool
      */
     private function display_edit_delete_buttons(bool $read_only): bool {
-        if (($read_only === false) && ($this->sR->get_setting('disable_read_only') === (string) 0)) {
+        if (($read_only === false) && ($this->sR->getSetting('disable_read_only') === (string) 0)) {
             return true;
         }
         // Override the invoice's readonly
-        if (($this->sR->get_setting('disable_read_only') === (string) 1)) {
+        if (($this->sR->getSetting('disable_read_only') === (string) 1)) {
             return true;
         }
         return false;
@@ -3361,12 +3361,12 @@ final class InvController {
                           $inv_amount,
                           $delivery_location,
                           $this->translator,
-                          $this->sR->get_setting('currency_code_from'),
-                          $this->sR->get_setting('currency_code_to'),
+                          $this->sR->getSetting('currency_code_from'),
+                          $this->sR->getSetting('currency_code_to'),
                           // one of 'from currency' converts to this of 'to currency':
-                          $this->sR->get_setting('currency_from_to'),
+                          $this->sR->getSetting('currency_from_to'),
                           // one of 'to currency' converts to this of 'from currency':
-                          $this->sR->get_setting('currency_to_from'),
+                          $this->sR->getSetting('currency_to_from'),
                         );
                         $uploads_temp_peppol_absolute_path_dot_xml = $peppolhelper->generate_invoice_peppol_ubl_xml_temp_file(
                           $soR,
@@ -3386,7 +3386,7 @@ final class InvController {
                           $soiR,
                           $trR
                         );
-                        if ($this->sR->get_setting('peppol_xml_stream') == '1') {
+                        if ($this->sR->getSetting('peppol_xml_stream') == '1') {
                             $xml = $this->peppol_output($upR, $uploads_temp_peppol_absolute_path_dot_xml);
                             return $this->factory->createResponse('<pre>' . Html::encode($xml) . '</pre>');
                         } else {
@@ -3427,7 +3427,7 @@ final class InvController {
       }
       if ($this->sR->repoCount('peppol_xml_stream') > 0) {
         $record = $this->sR->withKey('peppol_xml_stream');
-        if ($this->sR->get_setting('peppol_xml_stream') === '1') {
+        if ($this->sR->getSetting('peppol_xml_stream') === '1') {
           if ($record instanceof Setting) {
             $record->setSetting_value('0');
             $this->sR->save($record);
@@ -3505,12 +3505,12 @@ final class InvController {
                           $inv_amount,
                           $delivery_location,
                           $this->translator,
-                          $this->sR->get_setting('currency_code_from'),
-                          $this->sR->get_setting('currency_code_to'),
+                          $this->sR->getSetting('currency_code_from'),
+                          $this->sR->getSetting('currency_code_to'),
                           // one of 'from currency' converts to this of 'to currency':
-                          $this->sR->get_setting('currency_from_to'),
+                          $this->sR->getSetting('currency_from_to'),
                           // one of 'to currency' converts to this of 'from currency':
-                          $this->sR->get_setting('currency_to_from'),
+                          $this->sR->getSetting('currency_to_from'),
                           $this->crypt
                         );
                         $storecove_array = $storecovehelper->maximum_pre_json_php_object_for_an_invoice(
@@ -3668,7 +3668,7 @@ final class InvController {
                     'paymentView' => $this->user_service->hasPermission('viewPayment') ? true : false,
                     'payment_methods' => $pmR->findAllPreloaded(),
                     'payments' => $pymR->repoCount((string) $this->session->get('inv_id')) > 0 ? $pymR->repoInvquery((string) $this->session->get('inv_id')) : null,
-                    'peppol_stream_toggle' => $this->sR->get_setting('peppol_xml_stream'),
+                    'peppol_stream_toggle' => $this->sR->getSetting('peppol_xml_stream'),
                     'readOnly' => $read_only,
                     'sales_order_number' => $sales_order_number,
                     'showButtons' => $show_buttons,
@@ -3707,7 +3707,7 @@ final class InvController {
                     'modal_choose_items' => $this->view_renderer->renderPartialAsString('//invoice/product/modal_product_lookups_inv',
                     [
                         'families' => $fR->findAllPreloaded(),
-                        'default_item_tax_rate' => $this->sR->get_setting('default_item_tax_rate') !== '' ?: 0,
+                        'default_item_tax_rate' => $this->sR->getSetting('default_item_tax_rate') !== '' ?: 0,
                         'filter_product' => '',
                         'filter_family' => '',
                         'reset_table' => '',
@@ -3725,7 +3725,7 @@ final class InvController {
                             'dateHelper' => $this->date_helper,
                             'numberHelper' => $this->number_helper,
                         ]),
-                        'default_item_tax_rate' => $this->sR->get_setting('default_item_tax_rate') !== '' ?: 0,
+                        'default_item_tax_rate' => $this->sR->getSetting('default_item_tax_rate') !== '' ?: 0,
                         'tasks' => $pR->findAllPreloaded(),
                         'head' => $head,
                     ]),
@@ -3994,7 +3994,7 @@ final class InvController {
      */
     private function draft_flash(string $_language) : void {
       // Get the current draft setting
-      $draft = $this->sR->get_setting('generate_invoice_number_for_draft');
+      $draft = $this->sR->getSetting('generate_invoice_number_for_draft');
       // Get the setting_id to allow for editing
       $setting = $this->sR->withKey('generate_invoice_number_for_draft');
       $setting_url = '';
@@ -4021,7 +4021,7 @@ final class InvController {
      */
     private function mark_sent_flash(string $_language) : void {
       // Get the current mark_invoice_sent_copy setting
-      $mark_sent = $this->sR->get_setting('mark_invoices_sent_copy');
+      $mark_sent = $this->sR->getSetting('mark_invoices_sent_copy');
       // Get the setting_id to allow for editing
       $setting = $this->sR->withKey('mark_invoices_sent_copy');
       $setting_url = '';

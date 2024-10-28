@@ -54,7 +54,7 @@ final class InvService
     
     public function saveInv(User $user, Inv $model, array $array, SR $s, GR $gR): Inv 
     {  
-       if ((!$model->isNewRecord()) && ($s->get_setting('generate_invoice_number_for_draft') === '0') && (null==$model->getNumber())  && ($array['status_id'] == 2)) {
+       if ((!$model->isNewRecord()) && ($s->getSetting('generate_invoice_number_for_draft') === '0') && (null==$model->getNumber())  && ($array['status_id'] == 2)) {
           $model->setNumber((string)$gR->generate_number((int)$array['group_id'], true));  
        }
        
@@ -86,7 +86,7 @@ final class InvService
        $model->setDate_due($s);
        
        $model->setUrl_key(Random::string(32));
-       $model->setStand_in_code($s->get_setting('stand_in_code'));
+       $model->setStand_in_code($s->getSetting('stand_in_code'));
        
        /**
         * The following fields can be edited and set on the form with a value that is not null. 
@@ -113,7 +113,7 @@ final class InvService
        isset($array['contract_id']) ? $model->setContract_id((int)$array['contract_id']) : '';
        
        if ($model->isNewRecord()) {
-            if ($s->get_setting('mark_invoices_sent_copy') === '1') {
+            if ($s->getSetting('mark_invoices_sent_copy') === '1') {
                 $model->setStatus_id(2);
                 // If the read_only_toggle is set to 'sent', set this invoice to read only
                 $model->setIs_read_only(true);
@@ -122,14 +122,14 @@ final class InvService
                 $model->setIs_read_only(false);                
             }
             // if draft invoices must get invoice numbers
-            if ($s->get_setting('generate_invoice_number_for_draft') === '1') {
+            if ($s->getSetting('generate_invoice_number_for_draft') === '1') {
                 $model->setNumber((string)$gR->generate_number((int)$array['group_id'], true));  
             } else {              
                 $model->setNumber('');
             }      
             $model->setUser_id((int)$user->getId());
             $model->setTime_created((new \DateTimeImmutable('now'))->format('H:i:s'));
-            $model->setPayment_method((int)$s->get_setting('invoice_default_payment_method') ?: 4);            
+            $model->setPayment_method((int)$s->getSetting('invoice_default_payment_method') ?: 4);            
             $model->setDiscount_amount(0.00);
        }       
        $this->repository->save($model);

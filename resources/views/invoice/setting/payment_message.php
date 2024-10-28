@@ -80,7 +80,7 @@
 <form method="POST" class="form-inline" action="<?= $urlGenerator->generate($url, $actionArguments = ['url_key'=> $url_key, 'gateway'=>$gateway]); ?>">
        <input type="hidden" name="_csrf" value="<?= $csrf ?>">
        <button type="submit" class="btn btn-lg btn-link"><i class="fa fa-arrow-left"></i></button>
-       <?php if ($s->get_setting('gateway_'.lcfirst($gateway).'_sandbox') === '1') { ?>
+       <?php if ($s->getSetting('gateway_'.lcfirst($gateway).'_sandbox') === '1') { ?>
             <a href="<?= $sandbox_url; ?>"><?= $sandbox_url; ?></a>
        <?php } ?>     
 </form>

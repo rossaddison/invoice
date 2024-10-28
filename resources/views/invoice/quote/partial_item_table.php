@@ -25,7 +25,7 @@ use Yiisoft\Html\Html;
  * @var bool $invEdit
  */
 
-$vat = $s->get_setting('enable_vat_registration');
+$vat = $s->getSetting('enable_vat_registration');
 ?>
 
 <div class="table-striped table-responsive">
@@ -81,7 +81,7 @@ $vat = $s->get_setting('enable_vat_registration');
                         <span class="input-group-text"><?= $translator->translate('i.item_discount'); ?></span>
                         <input type="text" name="item_discount_amount" class="input-sm form-control amount"
                                data-bs-toggle = "tooltip" data-placement="bottom"
-                               title="<?= $s->get_setting('currency_symbol') . ' ' . $translator->translate('i.per_item'); ?>" value="0.00">
+                               title="<?= $s->getSetting('currency_symbol') . ' ' . $translator->translate('i.per_item'); ?>" value="0.00">
                     </div>
                 </td>
                 <td td-vert-middle>
@@ -94,9 +94,9 @@ $vat = $s->get_setting('enable_vat_registration');
                                  * @var App\Invoice\Entity\TaxRate $taxRate
                                  */
                                 foreach ($taxRates as $taxRate) { ?>
-                                <option value="<?php echo $taxRate->getTax_rate_id(); ?>">
-                                    <?= $percent = $numberHelper->format_amount($taxRate->getTax_rate_percent());
-                                    $name = Html::encode($taxRate->getTax_rate_name());
+                                <option value="<?php echo $taxRate->getTaxRateId(); ?>">
+                                    <?= $percent = $numberHelper->format_amount($taxRate->getTaxRatePercent());
+                                    $name = Html::encode($taxRate->getTaxRateName());
                                     if ($percent >= 0.00 && null!==$percent && strlen($name) > 0) {
                                         $percent . '% - ' . $name;
                                     } else {
@@ -216,7 +216,7 @@ $vat = $s->get_setting('enable_vat_registration');
                             <input disabled type="text" name="item_discount_amount" class="input-sm form-control amount" data-bs-toggle = "tooltip" title="quote_item->discount_amount"
                                    value="<?= $numberHelper->format_amount($item->getDiscount_amount()); ?>"
                                    data-bs-toggle = "tooltip" data-placement="bottom"
-                                   title="<?= $s->get_setting('currency_symbol') . ' ' . $translator->translate('i.per_item'); ?>">
+                                   title="<?= $s->getSetting('currency_symbol') . ' ' . $translator->translate('i.per_item'); ?>">
                         </div>
                     </td>
                     <td>
@@ -228,10 +228,10 @@ $vat = $s->get_setting('enable_vat_registration');
                                      * @var App\Invoice\Entity\TaxRate $taxRate
                                      */
                                     foreach ($taxRates as $taxRate) { ?>
-                                    <option value="<?php echo $taxRate->getTax_rate_id(); ?>"
-                                        <?php if ($item->getTax_rate_id() == $taxRate->getTax_rate_id()) { ?>selected="selected"<?php } ?>>
-                                        <?= $percent = $numberHelper->format_amount($taxRate->getTax_rate_percent());
-                                            $name = Html::encode($taxRate->getTax_rate_name());
+                                    <option value="<?php echo $taxRate->getTaxRateId(); ?>"
+                                        <?php if ($item->getTax_rate_id() == $taxRate->getTaxRateId()) { ?>selected="selected"<?php } ?>>
+                                        <?= $percent = $numberHelper->format_amount($taxRate->getTaxRatePercent());
+                                            $name = Html::encode($taxRate->getTaxRateName());
                                             if ($percent >= 0.00 && null!==$percent && strlen($name) > 0) {
                                                 $percent . '% - ' . $name;
                                             } else {
@@ -360,8 +360,8 @@ $vat = $s->get_setting('enable_vat_registration');
                                 </span>
                                 <?php } ?>
                                 <span class="text-muted">
-                                    <?= $percent = $numberHelper->format_amount($quoteTaxRate->getTaxRate()?->getTax_rate_percent());
-                                    $name = Html::encode($quoteTaxRate->getTaxRate()?->getTax_rate_name());
+                                    <?= $percent = $numberHelper->format_amount($quoteTaxRate->getTaxRate()?->getTaxRatePercent());
+                                    $name = Html::encode($quoteTaxRate->getTaxRate()?->getTaxRateName());
                                     if ($percent >= 0.00 && null!==$percent && strlen($name) > 0) {
                                           $name .' '. $percent. '%';
                                     } else {
@@ -389,7 +389,7 @@ $vat = $s->get_setting('enable_vat_registration');
                                        class="discount-option form-control input-sm amount" data-bs-toggle = "tooltip" title="quote->discount_amount" disabled
                                        value="<?= $numberHelper->format_amount($quote->getDiscount_amount() != 0 ? $quote->getDiscount_amount() : 0.00); ?>">
                                 <div
-                                    class="input-group-text"><?= $s->get_setting('currency_symbol'); ?>
+                                    class="input-group-text"><?= $s->getSetting('currency_symbol'); ?>
                                 </div>
                             </div>
                         </div>

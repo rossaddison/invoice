@@ -63,11 +63,11 @@ use Yiisoft\Yii\Bootstrap5\NavBar;
 $assetManager->register(AppAsset::class);
 $assetManager->register(InvoiceAsset::class);
 $assetManager->register(Yiisoft\Yii\Bootstrap5\Assets\BootstrapAsset::class);
-$s->get_setting('monospace_amounts') == 1 ? $assetManager->register(MonospaceAsset::class) : '';
+$s->getSetting('monospace_amounts') == 1 ? $assetManager->register(MonospaceAsset::class) : '';
 // '0' => PCI Compliant version 
-$s->get_setting('gateway_stripe_version') == '0' ? $assetManager->register(stripe_v10_Asset::class) : '';
-$s->get_setting('gateway_amazon_pay_version') == '0' ? $assetManager->register(amazon_pay_v2_4_Asset::class) : '';
-$s->get_setting('gateway_braintree_version') == '0' ? $assetManager->register(braintree_dropin_1_33_7_Asset::class) : '';
+$s->getSetting('gateway_stripe_version') == '0' ? $assetManager->register(stripe_v10_Asset::class) : '';
+$s->getSetting('gateway_amazon_pay_version') == '0' ? $assetManager->register(amazon_pay_v2_4_Asset::class) : '';
+$s->getSetting('gateway_braintree_version') == '0' ? $assetManager->register(braintree_dropin_1_33_7_Asset::class) : '';
 // The InvoiceController/index receives the $session->get('_language') or 'drop-down' locale user selection and saves it into a setting called 'cldr'
 // The $s value is configured for the layout in config/params.php yii-soft/view Reference::to and NOT by means of the InvoiceController
 
@@ -118,7 +118,7 @@ $this->beginPage();
     <?= Meta::data('viewport', 'width=device-width, initial-scale=1') ?>
     <?= Meta::data('robots', 'NOINDEX,NOFOLLOW') ?>
     <title>
-        <?= $s->get_setting('custom_title') ?: 'Yii-Invoice'; ?>
+        <?= $s->getSetting('custom_title') ?: 'Yii-Invoice'; ?>
     </title>
     <?php $this->head() ?>
 </head>

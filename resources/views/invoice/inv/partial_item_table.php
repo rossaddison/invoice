@@ -34,7 +34,7 @@ use Yiisoft\Html\Tag\A;
 
 $t_charge = $translator->translate('invoice.invoice.allowance.or.charge.charge'); 
 $t_allowance = $translator->translate('invoice.invoice.allowance.or.charge.allowance');
-$vat = $s->get_setting('enable_vat_registration');
+$vat = $s->getSetting('enable_vat_registration');
 ?>
 
 <div>
@@ -82,7 +82,7 @@ $vat = $s->get_setting('enable_vat_registration');
                         <span class="input-group-text"><?= $translator->translate('i.item_discount'); ?></span>
                         <input type="text" name="item_discount_amount" class="input-sm form-control amount"
                                data-bs-toggle = "tooltip" data-placement="bottom"
-                               title="<?= $s->get_setting('currency_symbol') . ' ' . $translator->translate('i.per_item'); ?>" value="0.00">
+                               title="<?= $s->getSetting('currency_symbol') . ' ' . $translator->translate('i.per_item'); ?>" value="0.00">
                     </div>
                 </td>
                 <td td-vert-middle>
@@ -95,10 +95,10 @@ $vat = $s->get_setting('enable_vat_registration');
                                  * @var App\Invoice\Entity\TaxRate $taxRate
                                  */
                                 foreach ($taxRates as $taxRate) { ?>
-                                <option value="<?php echo $taxRate->getTax_rate_id(); ?>">
+                                <option value="<?php echo $taxRate->getTaxRateId(); ?>">
                                     <?php 
-                                        $taxRatePercent = $numberHelper->format_amount($taxRate->getTax_rate_percent());
-                                        $taxRateName = $taxRate->getTax_rate_name();
+                                        $taxRatePercent = $numberHelper->format_amount($taxRate->getTaxRatePercent());
+                                        $taxRateName = $taxRate->getTaxRateName();
                                         if ($taxRatePercent >= 0.00 && null!==$taxRatePercent && null!==$taxRateName) {
                                             echo $taxRatePercent . '% - ' . ($taxRateName); 
                                         }
@@ -248,7 +248,7 @@ $vat = $s->get_setting('enable_vat_registration');
                             <input disabled type="text" maxlength="4" size="4" name="item_discount_amount" class="input-sm form-control amount" data-bs-toggle = "tooltip" title="inv_item->discount_amount"
                                    value="<?= $numberHelper->format_amount($item->getDiscount_amount()); ?>"
                                    data-bs-toggle = "tooltip" data-placement="bottom"
-                                   title="<?= $s->get_setting('currency_symbol') . ' ' . $translator->translate('i.per_item'); ?>">
+                                   title="<?= $s->getSetting('currency_symbol') . ' ' . $translator->translate('i.per_item'); ?>">
                         </div>
                     </td>
                     
@@ -262,11 +262,11 @@ $vat = $s->get_setting('enable_vat_registration');
                                     * @var App\Invoice\Entity\TaxRate $taxRate
                                     */
                                     foreach ($taxRates as $taxRate) { ?>
-                                    <option value="<?php echo $taxRate->getTax_rate_id(); ?>"
-                                            <?php if ($item->getTax_rate_id() == $taxRate->getTax_rate_id()) { ?>selected="selected"<?php } ?>>
+                                    <option value="<?php echo $taxRate->getTaxRateId(); ?>"
+                                            <?php if ($item->getTax_rate_id() == $taxRate->getTaxRateId()) { ?>selected="selected"<?php } ?>>
                                            <?php 
-                                                $taxRatePercent = $numberHelper->format_amount($taxRate->getTax_rate_percent());
-                                                $taxRateName = $taxRate->getTax_rate_name();
+                                                $taxRatePercent = $numberHelper->format_amount($taxRate->getTaxRatePercent());
+                                                $taxRateName = $taxRate->getTaxRateName();
                                                 if ($taxRatePercent >= 0.00 && null!==$taxRatePercent && null!==$taxRateName) {
                                                     echo $taxRatePercent . '% - ' . $taxRateName; 
                                                 }
@@ -315,7 +315,7 @@ $vat = $s->get_setting('enable_vat_registration');
                              </div>
                             <?php } ?>
                              <!-- Make sure to fill the third parameter of generate in order to use query parameters --> 
-                             <?php if ($s->get_setting('enable_peppol') == '1') { ?>
+                             <?php if ($s->getSetting('enable_peppol') == '1') { ?>
                                 <a href="<?= $urlGenerator->generate('invitemallowancecharge/index', 
                                             ['inv_item_id'=> $item->getId(), 
                                              '_language' => $currentRoute->getArgument('_language')], 
@@ -368,7 +368,7 @@ $vat = $s->get_setting('enable_vat_registration');
                     <td class="td-amount"></td>   
                 </tr>
                 <?php 
-                if ($s->get_setting('enable_peppol') == '1') { 
+                if ($s->getSetting('enable_peppol') == '1') { 
                     /**
                      * Used if Peppol is enabled in order to generate electronic invoices
                      * @var App\Invoice\Entity\InvItemAllowanceCharge $invItemAllowanceCharge
@@ -379,12 +379,12 @@ $vat = $s->get_setting('enable_vat_registration');
                                                        ? $translator->translate('invoice.invoice.allowance.or.charge.charge') 
                                                        : $translator->translate('invoice.invoice.allowance.or.charge.allowance'); ?></b></td>
                             <td class="td-amount"><b><?= $translator->translate('invoice.invoice.allowance.or.charge.reason.code').
-                                                     ': '.($invItemAllowanceCharge->getAllowanceCharge()?->getReason_code() ?? '#'); ?></b></td>
+                                                     ': '.($invItemAllowanceCharge->getAllowanceCharge()?->getReasonCode() ?? '#'); ?></b></td>
                             <td class="td-amount"><b><?= $translator->translate('invoice.invoice.allowance.or.charge.reason'). ': '.
                                                          ($invItemAllowanceCharge->getAllowanceCharge()?->getReason() ?? '#'); ?></b></td>
                             <td class="td-amount"><b><?= $numberHelper->format_currency($invItemAllowanceCharge->getAmount()); ?></b></td>
                             <td class="td-amount"></td>
-                            <td class="td-amount"><b><?= $s->get_setting('enable_vat_registration') == '1' ? $numberHelper->format_currency($invItemAllowanceCharge->getVat()) : ''; ?></b></td>   
+                            <td class="td-amount"><b><?= $s->getSetting('enable_vat_registration') == '1' ? $numberHelper->format_currency($invItemAllowanceCharge->getVat()) : ''; ?></b></td>   
                             <td class="td-amount"></td>
                         </tr>
                     <?php } ?>
@@ -481,9 +481,9 @@ $vat = $s->get_setting('enable_vat_registration');
                                     <?php } ?>
                                     <span class="text-muted">
                                         <?php 
-                                            $taxRatePercent = $invTaxRate->getTaxRate()?->getTax_rate_percent();
+                                            $taxRatePercent = $invTaxRate->getTaxRate()?->getTaxRatePercent();
                                             $numberPercent = $numberHelper->format_amount($taxRatePercent);
-                                            $taxRateName = $invTaxRate->getTaxRate()?->getTax_rate_name();
+                                            $taxRateName = $invTaxRate->getTaxRate()?->getTaxRateName();
                                             if ($taxRatePercent >= 0.00 && null!==$taxRateName && $numberPercent >= 0.00 && null!==$numberPercent) {
                                                 Html::encode($taxRateName . ' '. $numberPercent); 
                                             }
@@ -511,7 +511,7 @@ $vat = $s->get_setting('enable_vat_registration');
                                        class="discount-option form-control input-sm amount" data-bs-toggle = "tooltip" title="inv->discount_amount" disabled
                                        value="<?= $numberHelper->format_amount($inv->getDiscount_amount() != 0 ? $inv->getDiscount_amount() : ''); ?>">
                                 <div
-                                    class="input-group-text"><?= $s->get_setting('currency_symbol'); ?></div>
+                                    class="input-group-text"><?= $s->getSetting('currency_symbol'); ?></div>
                             </div>
                         </div>
                         <div class="discount-field">

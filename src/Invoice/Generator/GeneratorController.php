@@ -706,7 +706,7 @@ final class GeneratorController
             // into ..src/Invoice/Google_translate_unique_folder
             $aliases = $sR->get_google_translate_json_file_aliases();
             $targetPath = $aliases->get('@google_translate_json_file_folder');
-            $path_and_filename = $targetPath .DIRECTORY_SEPARATOR.$sR->get_setting('google_translate_json_filename');
+            $path_and_filename = $targetPath .DIRECTORY_SEPARATOR.$sR->getSetting('google_translate_json_filename');
             if (empty($path_and_filename)){
                 throw new GoogleTranslateJsonFileNotFoundException(); 
             }
@@ -728,7 +728,7 @@ final class GeneratorController
             $content_keys_array = array_keys($content);
             // Retrieve the selected new language according to locale in Settings View Google Translate
             // eg. 'es' ie. Spanish
-            $targetLanguage = $sR->get_setting('google_translate_locale');
+            $targetLanguage = $sR->getSetting('google_translate_locale');
             if (empty($targetLanguage)){
                 throw new GoogleTranslateLocaleSettingNotFoundException(); 
             }

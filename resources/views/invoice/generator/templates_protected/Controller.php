@@ -147,15 +147,15 @@ final class <?= $generator->getCamelcase_capital_name(); ?>Controller
     {      
       $<?= $generator->getSmall_singular_name(); ?> = $<?= $generator->getSmall_singular_name(); ?>Repository->findAllPreloaded();
       $paginator = (new OffsetPaginator($<?= $generator->getSmall_singular_name(); ?>))
-      ->withPageSize((int) $settingRepository->get_setting('default_list_limit'))
+      ->withPageSize((int) $settingRepository->getSetting('default_list_limit'))
       ->withCurrentPage($page)
       ->withToken(PageToken::next((string)$page));
       $parameters = [
       '<?= $generator->getSmall_singular_name(); ?>s' => $this-><?= $generator->getSmall_singular_name(); ?>s($<?= $generator->getSmall_singular_name(); ?>Repository),
       'paginator' => $paginator,
       'alert' => $this->alert(),
-      'defaultPageSizeOffsetPaginator' => $settingRepository->get_setting('default_list_limit')
-                                                    ? (int)$settingRepository->get_setting('default_list_limit') : 1
+      'defaultPageSizeOffsetPaginator' => $settingRepository->getSetting('default_list_limit')
+                                                    ? (int)$settingRepository->getSetting('default_list_limit') : 1
     ];
     return $this->viewRenderer->render('<?= $generator->getSmall_singular_name(); ?>/index', $parameters);
     }

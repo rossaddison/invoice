@@ -55,7 +55,7 @@
          */
         foreach ($invoices as $invoice) {
             // Disable read-only if not applicable
-            if ($s->get_setting('disable_read_only') === (string)1) {
+            if ($s->getSetting('disable_read_only') === (string)1) {
                 $invoice->setIs_read_only(false);
             }
             // Convert the dropdown menu to a dropup if invoice is after the invoice split
@@ -168,7 +168,7 @@
                             </li>
                             <?php if (
                                 $invoice->getStatus_id() === 1 ||
-                                ($s->get_setting('enable_invoice_deletion') == 1  && $invoice->getIs_read_only() !== true)
+                                ($s->getSetting('enable_invoice_deletion') == 1  && $invoice->getIs_read_only() !== true)
                             ) { ?>
                                 <li>
                                     <form action="<?= $urlGenerator->generate('inv/delete', $actionDeleteArguments); ?>" method="POST">

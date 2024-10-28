@@ -84,12 +84,12 @@ use Cycle\Annotated\Annotation\Relation\BelongsTo;
       $this->identifier =  $identifier;
     }
     
-    public function getReason_code(): string
+    public function getReasonCode(): string
     {
        return $this->reason_code;
     }
     
-    public function setReason_code(string $reason_code) : void
+    public function setReasonCode(string $reason_code) : void
     {
       $this->reason_code =  $reason_code;
     }
@@ -104,12 +104,12 @@ use Cycle\Annotated\Annotation\Relation\BelongsTo;
       $this->reason =  $reason;
     }
     
-    public function getMultiplier_factor_numeric(): int
+    public function getMultiplierFactorNumeric(): int
     {
        return $this->multiplier_factor_numeric;
     }
     
-    public function setMultiplier_factor_numeric(int $multiplier_factor_numeric) : void
+    public function setMultiplierFactorNumeric(int $multiplier_factor_numeric) : void
     {
       $this->multiplier_factor_numeric =  $multiplier_factor_numeric;
     }
@@ -124,12 +124,12 @@ use Cycle\Annotated\Annotation\Relation\BelongsTo;
       $this->amount =  $amount;
     }
     
-    public function getBase_amount(): int
+    public function getBaseAmount(): int
     {
        return $this->base_amount;
     }
     
-    public function setBase_amount(int $base_amount) : void
+    public function setBaseAmount(int $base_amount) : void
     {
       $this->base_amount =  $base_amount;
     }
@@ -144,12 +144,12 @@ use Cycle\Annotated\Annotation\Relation\BelongsTo;
         $this->tax_rate = $taxrate;
     }
     
-    public function getTax_rate_id(): string
+    public function getTaxRateId(): string
     {
      return (string)$this->tax_rate_id;
     }
     
-    public function setTax_rate_id(int $tax_rate_id) : void
+    public function setTaxRateId(int $tax_rate_id) : void
     {
       $this->tax_rate_id =  $tax_rate_id;
     }

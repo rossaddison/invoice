@@ -26,40 +26,40 @@ final class TaxRateForm extends FormModel
     
     public function __construct(TaxRate $taxRate)
     {
-        $this->tax_rate_name = $taxRate->getTax_rate_name();
-        $this->tax_rate_percent = $taxRate->getTax_rate_percent();
-        $this->tax_rate_default = $taxRate->getTax_rate_default();
-        $this->tax_rate_code = $taxRate->getTax_rate_code();
-        $this->peppol_tax_rate_code = $taxRate->getPeppol_tax_rate_code();
-        $this->storecove_tax_type = $taxRate->getStorecove_tax_type();
+        $this->tax_rate_name = $taxRate->getTaxRateName();
+        $this->tax_rate_percent = $taxRate->getTaxRatePercent();
+        $this->tax_rate_default = $taxRate->getTaxRateDefault();
+        $this->tax_rate_code = $taxRate->getTaxRateCode();
+        $this->peppol_tax_rate_code = $taxRate->getPeppolTaxRateCode();
+        $this->storecove_tax_type = $taxRate->getStorecoveTaxType();
     }        
     
-    public function getTax_rate_name(): string|null
+    public function getTaxRateName(): string|null
     {
         return $this->tax_rate_name;
     }
     
-    public function getTax_rate_percent() : float|null
+    public function getTaxRatePercent() : float|null
     {
         return $this->tax_rate_percent;
     }
     
-    public function getTax_rate_default() : bool|null
+    public function getTaxRateDefault() : bool|null
     {
         return $this->tax_rate_default;
     }
     
-    public function getTax_rate_code(): string|null
+    public function getTaxRateCode(): string|null
     {
         return $this->tax_rate_code;
     }
     
-    public function getPeppol_tax_rate_code(): string|null
+    public function getPeppolTaxRateCode(): string|null
     {
         return $this->peppol_tax_rate_code;
     }
     
-    public function getStorecove_tax_type(): string|null
+    public function getStorecoveTaxType(): string|null
     {
         return $this->storecove_tax_type;
     }

@@ -537,7 +537,7 @@ Class StoreCoveHelper {
               'reason' => $ac->getAllowanceCharge()?->getReason(),
               'amountExcludingTax' => $ac->getAmount(),
               // optional 'amountIncludingTax' => 3,
-              'baseAmountExcludingTax' => $ac->getAllowanceCharge()?->getBase_amount(),
+              'baseAmountExcludingTax' => $ac->getAllowanceCharge()?->getBaseAmount(),
               // optional 'baseAmountIncludingTax' => 4,
               //5.2.83 Tax https://www.storecove.com/docs/#_openapi_tax
               'tax' => [
@@ -548,11 +548,11 @@ Class StoreCoveHelper {
                   // the issueDate of this 
                   // invoice. Mandatory if 
                   // taxSystem == 'tax_line_percentages'
-                  'percentage' => $ac->getAllowanceCharge()?->getTaxRate()?->getTax_rate_percent(),
+                  'percentage' => $ac->getAllowanceCharge()?->getTaxRate()?->getTaxRatePercent(),
                   // sender country code
-                  'country' => $this->s->get_setting('currency_code_from'),
+                  'country' => $this->s->getSetting('currency_code_from'),
                   // stored in snake_case format eg. zero_rated
-                  'category' => $ac->getAllowanceCharge()?->getTaxRate()?->getStorecove_tax_type(),
+                  'category' => $ac->getAllowanceCharge()?->getTaxRate()?->getStorecoveTaxType(),
               ], // tax
             ]; // allowancecharges[]
           } // foreach 
@@ -611,9 +611,9 @@ Class StoreCoveHelper {
                   'quantity' => $item->getQuantity(),
                   'quantityUnitCode' => $this->UnitCode((string)$item->getProduct()?->getUnit()?->getUnit_id(), $unpR),
                   'tax' => [
-                      'percentage' => $item->getProduct()?->getTaxRate()?->getTax_rate_percent(),
+                      'percentage' => $item->getProduct()?->getTaxRate()?->getTaxRatePercent(),
                       'country' => $item->getProduct()?->getProduct_country_of_origin_code(),
-                      'category' => $item->getProduct()?->getTaxRate()?->getStoreCove_tax_type(),
+                      'category' => $item->getProduct()?->getTaxRate()?->getStoreCoveTaxType(),
                   ],
                   //https://docs.peppol.eu/poacc/billing/3.0/syntax/ubl-invoice/cac-InvoiceLine/cac-OrderLineReference/cbc-LineID/
                   'orderLineReferenceLineId' => null!==$peppol_po_lineid ? $peppol_po_lineid : $this->t->translate('invoice.client.') ,
@@ -653,7 +653,7 @@ Class StoreCoveHelper {
                    */
                   $item_line['allowanceCharges'][] = [
                     'reason' => $acii->getAllowanceCharge()?->getReason(),
-                    'amountExcludingTax' => $acii->getAllowanceCharge()?->getBase_amount()
+                    'amountExcludingTax' => $acii->getAllowanceCharge()?->getBaseAmount()
                   ];
                 } // inv item allowance charge              
               } // null!== $sub_total
@@ -1106,9 +1106,9 @@ Class StoreCoveHelper {
          * @var TaxRate $taxRate
          */
         foreach ($taxRates as $taxRate) {
-            $id = $taxRate->getTax_rate_id();
-            $tax_category = $taxRate->getPeppol_tax_rate_code();
-            $tax_percent = $taxRate->getTax_rate_percent();
+            $id = $taxRate->getTaxRateId();
+            $tax_category = $taxRate->getPeppolTaxRateCode();
+            $tax_percent = $taxRate->getTaxRatePercent();
             // Throw an exception if any Tax Category does not have a code
             if (null==($tax_category)) {
                 throw new PeppolTaxCategoryCodeNotFoundException($this->t);
@@ -1126,7 +1126,7 @@ Class StoreCoveHelper {
                 foreach ($items as $item) {
                     $item_id = $item->getId();
                     if (null !== $item_id) {
-                        if ($id === $item->getTaxRate()?->getTax_rate_id()) {
+                        if ($id === $item->getTaxRate()?->getTaxRateId()) {
                             $item_amount = $iiaR->repoInvItemAmountquery((string) $item_id);
                             if (null !== $item_amount) {
                                 $item_sub_total = $item_amount->getSubtotal();
@@ -1433,13 +1433,13 @@ Class StoreCoveHelper {
         /**
          * @see http://yii3-i-4.myhost/invoice/setting/tab_index 6.2 Sender identifier
          */
-        $identifier = (int) $this->s->get_setting('storecove_sender_identifier');
+        $identifier = (int) $this->s->getSetting('storecove_sender_identifier');
         // Get the complete array
         $store_cove_sender_array = StoreCoveArrays::store_cove_sender_identifier_array();
         /**
          * @see http://yii3-i/invoice/setting/tab_index 6.2 sender identifier basis
          */
-        $identifier_basis = $this->s->get_setting('storecove_sender_identifier_basis');
+        $identifier_basis = $this->s->getSetting('storecove_sender_identifier_basis');
         $routing_scheme_identifier = '';
         /**
          * Search the array for the identifier to retrieve the sub array
@@ -1514,7 +1514,7 @@ Class StoreCoveHelper {
         $percentage = $taxSubtotal['TaxCategoryPercent'] ?? 0.00;
         $amount_including_vat = $taxable_amount + $tax_amount;
         $pre_json_encode_array = [
-            'legalEntityId' => $this->s->get_setting('storecove_legal_entity_id'),
+            'legalEntityId' => $this->s->getSetting('storecove_legal_entity_id'),
             'idempotencyGuid' => '61b37456-5f9e-4d56-b63b-3b1a23fa5c73',
             'routing' => [
                 'eIdentifiers' => [
@@ -1536,7 +1536,7 @@ Class StoreCoveHelper {
                 'documentType' => 'invoice',
                 'invoice' => [
                     'taxSystem' => 'tax_line_percentages',
-                    'documentCurrency' => $this->s->get_setting('currency_code_to'),
+                    'documentCurrency' => $this->s->getSetting('currency_code_to'),
                     'invoiceNumber' => $invoice->getNumber(),
                     'issueDate' => $invoice->getDate_created(),
                     'taxPointDate' => $invoice->getDate_tax_point(),
@@ -1627,7 +1627,7 @@ Class StoreCoveHelper {
                           'taxableAmount' => $taxable_amount,
                           'taxAmount' =>  $tax_amount,
                           'percentage' => $percentage,
-                          'country' => $this->s->get_setting('currency_code_from'),                      ],
+                          'country' => $this->s->getSetting('currency_code_from'),                      ],
                     ],
                     'amountIncludingVat' => $amount_including_vat,
                     'prepaidAmount' => 1,
@@ -1645,8 +1645,8 @@ Class StoreCoveHelper {
         /**
          * @var mixed $api_key_here
          */
-        $api_key_here = $this->crypt->decode($this->s->get_setting('gateway_storecove_apiKey'));
-        $country_code_identifier = $this->s->get_setting('storecove_country');
+        $api_key_here = $this->crypt->decode($this->s->getSetting('gateway_storecove_apiKey'));
+        $country_code_identifier = $this->s->getSetting('storecove_country');
         $site = curl_init();
         curl_setopt($site, CURLOPT_URL, "https://api.storecove.com/api/v2/legal_entities");
         curl_setopt($site, CURLOPT_POST, true);

@@ -31,7 +31,7 @@
                             <label for="settings[stop_logging_in]">
                                 <?= $translator->translate('invoice.stop.logging.in'); ?>
                             </label>
-                            <?php $body['settings[stop_logging_in]'] = $s->get_setting('stop_logging_in'); ?>
+                            <?php $body['settings[stop_logging_in]'] = $s->getSetting('stop_logging_in'); ?>
                             <select name="settings[allow_logging_in]" id="settings[allow_logging_in]" class="form-control">
                                 <option value="0">
                                     <?= $translator->translate('i.no'); ?>
@@ -50,7 +50,7 @@
                             <label for="settings[stop_signing_up]">
                                 <?= $translator->translate('invoice.stop.signing.up'); ?>
                             </label>
-                            <?php $body['settings[stop_signing_up]'] = $s->get_setting('stop_signing_up'); ?>
+                            <?php $body['settings[stop_signing_up]'] = $s->getSetting('stop_signing_up'); ?>
                             <select name="settings[stop_signing_up]" id="settings[stop_signing_up]" class="form-control">
                                 <option value="0">
                                     <?= $translator->translate('i.no'); ?>
@@ -69,7 +69,7 @@
                             <label for="settings[install_test_data]" <?= $s->where('install_test_data'); ?>>
                                 <?= $translator->translate('invoice.test.data.install'); ?>
                             </label>
-                            <?php $body['settings[install_test_data]'] = $s->get_setting('install_test_data'); ?>
+                            <?php $body['settings[install_test_data]'] = $s->getSetting('install_test_data'); ?>
                             <select name="settings[install_test_data]" id="settings[install_test_data]" class="form-control">
                                 <option value="0">
                                     <?= $translator->translate('i.no'); ?>
@@ -88,7 +88,7 @@
                             <label for="settings[use_test_data]" <?= $s->where('use_test_data'); ?>">
                                 <?= $translator->translate('invoice.test.data.use'); ?>
                             </label>
-                            <?php $body['settings[use_test_data]'] = $s->get_setting('use_test_data'); ?>
+                            <?php $body['settings[use_test_data]'] = $s->getSetting('use_test_data'); ?>
                             <select name="settings[use_test_data]" id="settings[use_test_data]" class="form-control">
                                 <option value="0">
                                     <?= $translator->translate('i.no'); ?>
@@ -107,7 +107,7 @@
                             <label for="settings[default_language]" <?= $s->where('default_language'); ?> >
                                 <?= $translator->translate('i.language'); ?>
                             </label>
-                            <?php $body['settings[default_language]'] = $s->get_setting('default_language'); ?>
+                            <?php $body['settings[default_language]'] = $s->getSetting('default_language'); ?>
                             <select name="settings[default_language]" id="settings[default_language]" class="form-control">
                                 <option value="0"><?= $translator->translate('i.none'); ?></option>
                                 <?php
@@ -127,7 +127,7 @@
                             <label for="settings[time_zone]" <?= $s->where('time_zone'); ?>>
                                 <?= $translator->translate('invoice.time.zone'); ?>
                             </label>
-                            <?php   $body['settings[time_zone]'] = $s->get_setting('time_zone'); ?>
+                            <?php   $body['settings[time_zone]'] = $s->getSetting('time_zone'); ?>
                             <select name="settings[time_zone]" id="settings[time_zone]" class="form-control">
                                  <option value="0"><?= $translator->translate('i.none'); ?></option>
                                 <?php
@@ -151,7 +151,7 @@
                             <label for="settings[first_day_of_week]" <?= $s->where('first_day_of_week'); ?>>
                                 <?= $translator->translate('i.first_day_of_week'); ?>
                             </label>
-                            <?php $body['settings[first_day_of_week]'] = $s->get_setting('first_day_of_week'); ?>
+                            <?php $body['settings[first_day_of_week]'] = $s->getSetting('first_day_of_week'); ?>
                             <select name="settings[first_day_of_week]" id="settings[first_day_of_week]"
                                 class="form-control">
                                 <option value="0"><?= $translator->translate('i.none'); ?></option>
@@ -176,7 +176,7 @@
                             <label for="settings[date_format]" <?= $s->where('date_format'); ?>>
                                 <?= $translator->translate('i.date_format'); ?>
                             </label>
-                            <?php   $body['settings[date_format]'] = $s->get_setting('date_format'); ?>
+                            <?php   $body['settings[date_format]'] = $s->getSetting('date_format'); ?>
                             <select name="settings[date_format]" id="settings[date_format]"
                                 class="form-control">
                                 <option value="0"><?= $translator->translate('i.none'); ?></option>
@@ -202,7 +202,7 @@
                             <label for="settings[default_country]" <?= $s->where('default_country'); ?>>
                                 <?= $translator->translate('i.default_country'); ?>
                             </label>
-                            <?php   $body['settings[default_country]'] = $s->get_setting('default_country'); ?>
+                            <?php   $body['settings[default_country]'] = $s->getSetting('default_country'); ?>
                             <select name="settings[default_country]" id="settings[default_country]"
                                 class="form-control">
                                 <option value="0"><?= $translator->translate('i.none'); ?></option>
@@ -229,7 +229,7 @@
                             <label for="default_list_limit" <?= $s->where('default_list_limit'); ?>>
                                 <?= $translator->translate('i.default_list_limit'); ?>
                             </label>
-                            <?php $body['settings[default_list_limit]'] = $s->get_setting('default_list_limit'); ?>
+                            <?php $body['settings[default_list_limit]'] = $s->getSetting('default_list_limit'); ?>
                             <input type="number" name="settings[default_list_limit]" id="default_list_limit"
                                 class="form-control" minlength="1" min="1" required
                                 value="<?= $body['settings[default_list_limit]']; ?>">
@@ -241,7 +241,7 @@
                             <label for="disable_flash_messages_quote">
                                 <?= $translator->translate('invoice.quote.disable.flash.messages'); ?>
                             </label>
-                            <?php $body['settings[disable_flash_messages_quote]'] = $s->get_setting('disable_flash_messages_quote'); ?>
+                            <?php $body['settings[disable_flash_messages_quote]'] = $s->getSetting('disable_flash_messages_quote'); ?>
                             <select name="settings[disable_flash_messages_quote]" id="settings[disable_flash_messages_quote]" class="form-control">
                                 <option value="0">
                                     <?= $translator->translate('i.no'); ?>
@@ -261,7 +261,7 @@
                             <label for="disable_flash_messages_inv">
                                 <?= $translator->translate('invoice.invoice.disable.flash.messages'); ?>
                             </label>
-                            <?php $body['settings[disable_flash_messages_inv]'] = $s->get_setting('disable_flash_messages_inv'); ?>
+                            <?php $body['settings[disable_flash_messages_inv]'] = $s->getSetting('disable_flash_messages_inv'); ?>
                             <select name="settings[disable_flash_messages_inv]" id="settings[disable_flash_messages_inv]" class="form-control">
                                 <option value="0">
                                     <?= $translator->translate('i.no'); ?>
@@ -281,7 +281,7 @@
                             <label for="signup_automatically_assign_client">
                                 <?= $translator->translate('invoice.invoice.assign.client.on.signup'); ?>
                             </label>
-                            <?php $body['settings[signup_automatically_assign_client]'] = $s->get_setting('signup_automatically_assign_client'); ?>
+                            <?php $body['settings[signup_automatically_assign_client]'] = $s->getSetting('signup_automatically_assign_client'); ?>
                             <select name="settings[signup_automatically_assign_client]" id="settings[signup_automatically_assign_client]" class="form-control">
                                 <option value="0">
                                     <?= $translator->translate('i.no'); ?>
@@ -301,7 +301,7 @@
                             <label for="signup_default_age_minimum_eighteen">
                                 <?= $translator->translate('invoice.invoice.assign.client.on.signup.default.age.minimum.eighteen'); ?>
                             </label>
-                            <?php $body['settings[signup_default_age_minimum_eighteen]'] = $s->get_setting('signup_default_age_minimum_eighteen'); ?>
+                            <?php $body['settings[signup_default_age_minimum_eighteen]'] = $s->getSetting('signup_default_age_minimum_eighteen'); ?>
                             <select name="settings[signup_default_age_minimum_eighteen]" id="settings[signup_default_age_minimum_eighteen]" class="form-control">
                                 <option value="0">
                                     <?= $translator->translate('i.no'); ?>
@@ -334,7 +334,7 @@
                                 <?= $translator->translate('i.currency_symbol'); ?>
                             </label>
                             <?php 
-                                $body['settings[currency_symbol]'] = $s->get_setting('currency_symbol');
+                                $body['settings[currency_symbol]'] = $s->getSetting('currency_symbol');
                             ?>
                             <input type="text" name="settings[currency_symbol]" id="settings[currency_symbol]"
                                 class="form-control"
@@ -347,7 +347,7 @@
                             <label for="settings[currency_symbol_placement]" <?= $s->where('currency_symbol_placement'); ?>>
                                 <?= $translator->translate('i.currency_symbol_placement'); ?>
                             </label>
-                            <?php   $body['settings[currency_symbol_placement]'] = $s->get_setting('currency_symbol_placement'); ?>
+                            <?php   $body['settings[currency_symbol_placement]'] = $s->getSetting('currency_symbol_placement'); ?>
                             <select name="settings[currency_symbol_placement]" id="settings[currency_symbol_placement]"
                                 class="form-control" data-minimum-results-for-search="Infinity">
                                 <option value="before" 
@@ -373,7 +373,7 @@
                             <label for="settings[currency_code]" <?= $s->where('currency_code'); ?>>
                                 <?= $translator->translate('i.currency_code'); ?>
                             </label>
-                            <?php $body['settings[currency_code]'] = $s->get_setting('currency_code'); ?>
+                            <?php $body['settings[currency_code]'] = $s->getSetting('currency_code'); ?>
                             <select name="settings[currency_code]"
                                 id="settings[currency_code]"
                                 class="input-sm form-control">
@@ -400,7 +400,7 @@
                             <label for="settings[tax_rate_decimal_places]" <?= $s->where('tax_rate_decimal_places'); ?>>
                                 <?= $translator->translate('i.tax_rate_decimal_places'); ?>
                             </label>
-                            <?php   $body['settings[tax_rate_decimal_places]'] = $s->get_setting('tax_rate_decimal_places'); ?>
+                            <?php   $body['settings[tax_rate_decimal_places]'] = $s->getSetting('tax_rate_decimal_places'); ?>
                             <select name="settings[tax_rate_decimal_places]" id="settings[tax_rate_decimal_places]" class="form-control">
                                 <option value="0"><?= $translator->translate('i.none'); ?></option>
                                 <option value="2" 
@@ -426,7 +426,7 @@
                             <label for="settings[number_format]" <?= $s->where('number_format'); ?>>
                                 <?= $translator->translate('i.number_format'); ?>
                             </label>
-                            <?php   $body['settings[number_format]'] = $s->get_setting('number_format'); ?>                            
+                            <?php   $body['settings[number_format]'] = $s->getSetting('number_format'); ?>                            
                             <select name="settings[number_format]" id="settings[number_format]" 
                                 class="form-control">
                                 <option value="0"><?= $translator->translate('i.none'); ?></option>
@@ -464,7 +464,7 @@
                             <label for="settings[quote_overview_period]" <?= $s->where('quote_overview_period'); ?>>
                                 <?= $translator->translate('i.quote_overview_period'); ?>
                             </label>
-                            <?php $body['settings[quote_overview_period]'] = $s->get_setting('quote_overview_period'); ?>
+                            <?php $body['settings[quote_overview_period]'] = $s->getSetting('quote_overview_period'); ?>
                             <select name="settings[quote_overview_period]" id="settings[quote_overview_period]"
                                 class="form-control" data-minimum-results-for-search="Infinity">
                                 <option value="0"><?= $translator->translate('i.none'); ?></option>
@@ -495,7 +495,7 @@
                             <label for="settings[invoice_overview_period]" <?= $s->where('invoice_overview_period'); ?>>
                                 <?= $translator->translate('i.invoice_overview_period'); ?>
                             </label>
-                            <?php $body['settings[invoice_overview_period]'] = $s->get_setting('invoice_overview_period'); ?>
+                            <?php $body['settings[invoice_overview_period]'] = $s->getSetting('invoice_overview_period'); ?>
                             <select name="settings[invoice_overview_period]" id="settings[invoice_overview_period]"
                                 class="form-control" data-minimum-results-for-search="Infinity">
                                 <option value="0"><?= $translator->translate('i.none'); ?></option>
@@ -527,7 +527,7 @@
                             <label for="disable_quickactions" <?= $s->where('disable_quickactions'); ?>>
                                 <?= $translator->translate('i.disable_quickactions'); ?>
                             </label>
-                            <?php   $body['settings[disable_quickactions]'] = $s->get_setting('disable_quickactions'); ?>
+                            <?php   $body['settings[disable_quickactions]'] = $s->getSetting('disable_quickactions'); ?>
                             <select name="settings[disable_quickactions]" class="form-control"
                                 id="disable_quickactions" data-minimum-results-for-search="Infinity">
                                 <option value="0">
@@ -557,7 +557,7 @@
                             <label for="settings[disable_sidebar]" <?= $s->where('disable_sidebar'); ?>>
                                 <?= $translator->translate('i.disable_sidebar'); ?>
                             </label>
-                            <?php   $body['settings[disable_sidebar]'] = $s->get_setting('disable_sidebar'); ?>
+                            <?php   $body['settings[disable_sidebar]'] = $s->getSetting('disable_sidebar'); ?>
                             <select name="settings[disable_sidebar]" id="settings[disable_sidebar]" class="form-control">
                                 <option value="0">
                                     <?= $translator->translate('i.no'); ?>
@@ -576,7 +576,7 @@
                             <label for="settings[custom_title]" <?= $s->where('custom_title'); ?>>
                                 <?= $translator->translate('i.custom_title'); ?>
                             </label>
-                            <?php $body['settings[custom_title]'] = $s->get_setting('custom_title'); ?>
+                            <?php $body['settings[custom_title]'] = $s->getSetting('custom_title'); ?>
                             <input type="text" name="settings[custom_title]" id="settings[custom_title]"
                                 class="form-control"
                                 value="<?= $body['settings[custom_title]']; ?>">
@@ -590,7 +590,7 @@
                             <label for="monospace_amounts" <?= $s->where('monospace_amounts'); ?>>
                                 <?= $translator->translate('i.monospaced_font_for_amounts'); ?>
                             </label>
-                            <?php   $body['settings[monospace_amounts]'] = $s->get_setting('monospace_amounts'); ?>
+                            <?php   $body['settings[monospace_amounts]'] = $s->getSetting('monospace_amounts'); ?>
                             <select name="settings[monospace_amounts]" class="form-control" id="monospace_amounts">
                                 <option value="0"><?= $translator->translate('i.no'); ?></option>
                                 <option value="1" <?php $s->check_select($body['settings[monospace_amounts]'], '1'); ?>>
@@ -608,7 +608,7 @@
                             <label for="settings[open_reports_in_new_tab]" <?= $s->where('open_reports_in_new_tab'); ?>>
                                 <?= $translator->translate('i.open_reports_in_new_tab'); ?>
                             </label>
-                            <?php  $body['settings[open_reports_in_new_tab]'] = $s->get_setting('open_reports_in_new_tab'); ?>
+                            <?php  $body['settings[open_reports_in_new_tab]'] = $s->getSetting('open_reports_in_new_tab'); ?>
                             <select name="settings[open_reports_in_new_tab]" id="settings[open_reports_in_new_tab]" class="form-control">
                                 <option value="0"><?= $translator->translate('i.no'); ?></option>
                                 <option value="1" <?php $s->check_select($body['settings[open_reports_in_new_tab]'], '1'); ?>>
@@ -632,7 +632,7 @@
                             <label for="settings[bcc_mails_to_admin]" <?= $s->where('bcc_mails_to_admin'); ?>>
                                 <?= $translator->translate('i.bcc_mails_to_admin'); ?>
                             </label>
-                            <?php   $body['settings[bcc_mails_to_admin]'] = $s->get_setting('bcc_mails_to_admin'); ?>
+                            <?php   $body['settings[bcc_mails_to_admin]'] = $s->getSetting('bcc_mails_to_admin'); ?>
                             <select name="settings[bcc_mails_to_admin]" id="settings[bcc_mails_to_admin]"
                                 class="form-control">
                                 <option value="0"><?= $translator->translate('i.no'); ?></option>
@@ -649,7 +649,7 @@
                             </label>
                             <div class="input-group">
                                 <input type="text" name="settings[cron_key]" id="settings[cron_key]" class="cron_key form-control" 
-                                    value="<?= (string)($body['settings[cron_key]'] ?? $s->get_setting('cron_key')); ?>">
+                                    value="<?= (string)($body['settings[cron_key]'] ?? $s->getSetting('cron_key')); ?>">
                                 <div class="input-group-text">
                                     <?php
                                         /**

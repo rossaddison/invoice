@@ -48,7 +48,7 @@ echo Form::tag()
 <?= Html::closeTag('h1'); ?>
 
 <?= Html::openTag('div', ['id' => 'headerbar-modal-add-inv-form']); ?>
-    <?= $button::back_save(); ?>
+    <?= $button::backSave(); ?>
     <?= Html::openTag('div', ['class' => 'content']); ?>
         <?= Html::openTag('div', ['class' => 'row']); ?>        
             <?= Html::openTag('div', ['class' => 'mb-3 form-group' ]); ?>
@@ -177,7 +177,7 @@ echo Form::tag()
                     ->hideLabel(true)
                     ->label($translator->translate('i.terms'))
                     ->addInputAttributes(['class' => 'form-control'])
-                    ->value(Html::encode($form->getTerms() ?? $s->get_setting('default_invoice_terms') ?: $translator->translate('invoice.payment.term.general')));                   
+                    ->value(Html::encode($form->getTerms() ?? $s->getSetting('default_invoice_terms') ?: $translator->translate('invoice.payment.term.general')));                   
                 ?>
             <?= Html::closeTag('div'); ?>
             <?= Html::openTag('div'); ?>
@@ -211,7 +211,7 @@ echo Form::tag()
                     ->hideLabel(true)
                     ->label($translator->translate('i.payment_method'))
                     ->addInputAttributes(['class' => 'form-control'])
-                    ->value(Html::encode($form->getPayment_method() ?? ($s->get_setting('invoice_default_payment_method') ?: 1)))
+                    ->value(Html::encode($form->getPayment_method() ?? ($s->getSetting('invoice_default_payment_method') ?: 1)))
                 ?>
             <?= Html::closeTag('div'); ?>
             <?= Html::openTag('div'); ?>

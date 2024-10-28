@@ -311,7 +311,7 @@ echo $alert
     $grid_summary = $s->grid_summary(
         $paginator, 
         $translator, 
-        (int)$s->get_setting('default_list_limit'), 
+        (int)$s->getSetting('default_list_limit'), 
         $translator->translate('invoice.user.accounts'),
         ''
     ); 
@@ -344,7 +344,7 @@ echo $alert
             ->currentLinkClass('page-link')
             ->disabledItemClass('disabled')
             ->disabledLinkClass('disabled')
-            ->defaultPageSize((int)$s->get_setting('default_list_limit'),  )
+            ->defaultPageSize((int)$s->getSetting('default_list_limit'),  )
             ->urlConfig(new UrlConfig()) 
             ->urlCreator(new UrlCreator($urlGenerator))        
             ->paginator($paginator)

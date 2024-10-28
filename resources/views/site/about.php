@@ -21,7 +21,7 @@ use Yiisoft\Html\Tag\Button;
     <?= Html::openTag('div', ['class' => 'container']); ?>
         <?= Html::openTag('div', ['class' => 'row gy-5 gy-lg-0 align-items-lg-center']); ?> 
             <?= Html::openTag('div', ['class' => 'col-12 col-lg-6']); ?>
-                <?php if ($s->get_setting('debug_mode') == '1') { ?>  
+                <?php if ($s->getSetting('debug_mode') == '1') { ?>  
                     <?= Html::openTag('i', ['class' => 'bi bi-info-circle', 'data-bs-toggle' => 'tooltip', 'title' => 'invoice/public/img/soletrader/about/about.png']); ?>   
                     <?= Html::closeTag('i'); ?>
                 <?php } ?>

@@ -144,7 +144,7 @@ echo $alert;
             header: $translator->translate('i.status'),
             content: static function (Inv $model) use ($s, $iR, $irR, $translator): Yiisoft\Html\Tag\CustomTag {
                 $label = $iR->getSpecificStatusArrayLabel((string)$model->getStatus_id());
-                if (($model->getIs_read_only()) && $s->get_setting('disable_read_only') === (string) 0) {
+                if (($model->getIs_read_only()) && $s->getSetting('disable_read_only') === (string) 0) {
                     $label =  $translator->translate('i.paid'). ' 🚫';
                 }
                 if ($irR->repoCount((string) $model->getId()) > 0) {
@@ -209,7 +209,7 @@ echo $alert;
         new DataColumn(
             field: 'id',
             property: 'filterInvAmountTotal',
-            header: $translator->translate('i.total') . ' ( '. $s->get_setting('currency_symbol'). ' ) ',
+            header: $translator->translate('i.total') . ' ( '. $s->getSetting('currency_symbol'). ' ) ',
             content: static function (Inv $model) use ($decimalPlaces) : string {
                 $invAmountTotal = $model->getInvAmount()->getTotal();
                 return
@@ -225,7 +225,7 @@ echo $alert;
         ),        
         new DataColumn(
             'id',
-            header: $translator->translate('i.paid') . ' ( '. $s->get_setting('currency_symbol'). ' ) ',
+            header: $translator->translate('i.paid') . ' ( '. $s->getSetting('currency_symbol'). ' ) ',
             content: static function (Inv $model) use ($decimalPlaces) : string {
                 $invAmountPaid = $model->getInvAmount()->getPaid();
                 return Label::tag()
@@ -239,7 +239,7 @@ echo $alert;
         ),        
         new DataColumn(
             'id',
-            header: $translator->translate('i.balance')  . ' ( '. $s->get_setting('currency_symbol'). ' ) ',
+            header: $translator->translate('i.balance')  . ' ( '. $s->getSetting('currency_symbol'). ' ) ',
             content: static function (Inv $model) use ($decimalPlaces) : string {
                 $invAmountBalance = $model->getInvAmount()->getBalance(); 
                 return  Label::tag()

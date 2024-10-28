@@ -34,7 +34,7 @@ declare(strict_types=1);
                     <button type="button" data-bs-toggle = "tooltip" title="html">
                     <div>
                         <i class="fa fa-code"></i>
-                        <?php if ((!empty($s->get_setting('pdf_html_inv'))) && ($s->get_setting('pdf_html_inv') === '1')) { ?>
+                        <?php if ((!empty($s->getSetting('pdf_html_inv'))) && ($s->getSetting('pdf_html_inv') === '1')) { ?>
                             <i class="fa fa-check"></i>
                         <?php } else {?>
                             <i class="fa fa-times"></i>

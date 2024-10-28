@@ -115,7 +115,7 @@ Class PdfHelper
                 $userinv = ($uiR->repoUserInvcount($user_id)>0 ? $uiR->repoUserInvquery($user_id) : null);
                 // If a template has been selected in the dropdown use it otherwise use the default 'quote' template under
                 // views/invoice/template/quote/pdf/quote.pdf
-                $quote_template = (!empty($this->s->get_setting('pdf_quote_template')) ? $this->s->get_setting('pdf_quote_template') : 'quote');            
+                $quote_template = (!empty($this->s->getSetting('pdf_quote_template')) ? $this->s->getSetting('pdf_quote_template') : 'quote');            
 
                 // Determine if discounts should be displayed if there are items on the quote     
                 $items = ($qiR->repoCount($quote_id) > 0 ? $qiR->repoQuoteItemIdquery($quote_id) : null);
@@ -178,13 +178,13 @@ Class PdfHelper
                 ];        
                 // Quote Template will be either 'quote' or a custom designed quote in the folder.
                 $html = $viewrenderer->renderPartialAsString('//invoice/template/quote/pdf/'.$quote_template, $data);
-                if ($this->s->get_setting('pdf_html_quote') === '1') {
+                if ($this->s->getSetting('pdf_html_quote') === '1') {
                     return $html;
                 }
                 // Set the print language to null for future use
                 $this->session->set('print_language','');
                 $mpdfhelper = new MpdfHelper(); 
-                $filename = $this->s->get_setting('i.quote') . '_' . str_replace(['\\', '/'], '_', ($quote->getNumber() ?? (string)rand(0, 10)));
+                $filename = $this->s->getSetting('i.quote') . '_' . str_replace(['\\', '/'], '_', ($quote->getNumber() ?? (string)rand(0, 10)));
                 return $mpdfhelper->pdf_create($html, $filename, $stream, $quote->getPassword(), $this->s, null, null,  false, false, [], $quote);
             }    
         } 
@@ -223,7 +223,7 @@ Class PdfHelper
                 $userinv = ($uiR->repoUserInvcount($user_id)>0 ? $uiR->repoUserInvquery($user_id) : null);
                 // If a template has been selected in the dropdown use it otherwise use the default 'salesorder' template under
                 // views/invoice/template/salesorder/pdf/salesorder.pdf
-                $salesorder_template = (!empty($this->s->get_setting('pdf_salesorder_template')) ? $this->s->get_setting('pdf_salesorder_template') : 'salesorder');            
+                $salesorder_template = (!empty($this->s->getSetting('pdf_salesorder_template')) ? $this->s->getSetting('pdf_salesorder_template') : 'salesorder');            
 
                 // Determine if discounts should be displayed if there are items on the salesorder    
                 $items = ($soiR->repoCount($so_id) > 0 ? $soiR->repoSalesOrderItemIdquery($so_id) : null);
@@ -283,7 +283,7 @@ Class PdfHelper
                 ];        
                 // Sales Order Template will be either 'salesorder' or a custom designed salesorder in the folder.
                 $html = $viewrenderer->renderPartialAsString('//invoice/template/salesorder/pdf/'.$salesorder_template, $data);
-                if ($this->s->get_setting('pdf_html_salesorder') === '1') {
+                if ($this->s->getSetting('pdf_html_salesorder') === '1') {
                     return $html;
                 }
                 // Set the print language to null for future use
@@ -440,7 +440,7 @@ Class PdfHelper
                 $this->session->set('print_language','');
                 $mpdfhelper = new MpdfHelper(); 
                 $associatedFiles = [];
-                $include_zugferd = $this->s->get_setting('include_zugferd') === '0' ? false : true;
+                $include_zugferd = $this->s->getSetting('include_zugferd') === '0' ? false : true;
                 if ($include_zugferd && null!==$inv_amount) {
                     $z = new ZugFerdHelper($this->s, $iiaR, $inv_amount); 
                     $associatedFiles = [
@@ -472,20 +472,20 @@ Class PdfHelper
      */
     public function generate_inv_pdf_template_normal_paid_overdue_watermark(int $status_id) : string {
         switch ($status_id) {
-            case ($status_id == 4 && !empty($this->s->get_setting('pdf_invoice_template_paid'))):
-                $return =  $this->s->get_setting('pdf_invoice_template_paid');
+            case ($status_id == 4 && !empty($this->s->getSetting('pdf_invoice_template_paid'))):
+                $return =  $this->s->getSetting('pdf_invoice_template_paid');
                 break;
-            case ($status_id == 4 && empty($this->s->get_setting('pdf_invoice_template_paid'))):                
+            case ($status_id == 4 && empty($this->s->getSetting('pdf_invoice_template_paid'))):                
                 $return = 'paid';
                 break;
-            case ($status_id == 5 && !empty($this->s->get_setting('pdf_invoice_template_overdue'))):
-                $return =  $this->s->get_setting('pdf_invoice_template_overdue');
+            case ($status_id == 5 && !empty($this->s->getSetting('pdf_invoice_template_overdue'))):
+                $return =  $this->s->getSetting('pdf_invoice_template_overdue');
                 break;
-            case ($status_id == 5 && empty($this->s->get_setting('pdf_invoice_template_overdue'))):                
+            case ($status_id == 5 && empty($this->s->getSetting('pdf_invoice_template_overdue'))):                
                 $return = 'overdue';
                 break;
             default: 
-                $return =  strlen($this->s->get_setting('pdf_invoice_template')) > 0 ? $this->s->get_setting('pdf_invoice_template') : 'invoice';
+                $return =  strlen($this->s->getSetting('pdf_invoice_template')) > 0 ? $this->s->getSetting('pdf_invoice_template') : 'invoice';
                 break;
         }
         return $return;

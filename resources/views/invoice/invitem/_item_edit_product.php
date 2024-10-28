@@ -36,7 +36,7 @@ use Yiisoft\Html\Tag\I;
  * 
  */
 
-$vat = $s->get_setting('enable_vat_registration') === '1' ? true : false;
+$vat = $s->getSetting('enable_vat_registration') === '1' ? true : false;
 ?>
 <?= Html::openTag('div', ['class' => 'panel panel-default']); ?>
     <?= Html::openTag('div', ['class' => 'panel-heading']); ?>
@@ -129,7 +129,7 @@ $vat = $s->get_setting('enable_vat_registration') === '1' ? true : false;
                                         'class' => 'input-lg form-control amount has-feedback',
                                         'data-bs-toggle' => 'tooltip',
                                         'data-placement' => 'bottom',
-                                        'title' => $s->get_setting('currency_symbol') . ' ' . $translator->translate('i.per_item'),
+                                        'title' => $s->getSetting('currency_symbol') . ' ' . $translator->translate('i.per_item'),
                                     ])
                                     ->value($numberHelper->format_amount($form->getDiscount_amount() ?? 0.00)); ?>
                             <?= Html::closeTag('div'); ?>
@@ -182,9 +182,9 @@ $vat = $s->get_setting('enable_vat_registration') === '1' ? true : false;
                                      */
                                     foreach ($taxRates as $taxRate) 
                                     {
-                                        $taxRateId = $taxRate->getTax_rate_id();
-                                        $taxRatePercent = $taxRate->getTax_rate_percent() ?? 0.00;
-                                        $taxRateName = $taxRate->getTax_rate_name() ?? '';
+                                        $taxRateId = $taxRate->getTaxRateId();
+                                        $taxRatePercent = $taxRate->getTaxRatePercent() ?? 0.00;
+                                        $taxRateName = $taxRate->getTaxRateName() ?? '';
                                         $formattedNumber = $numberHelper->format_amount($taxRatePercent);
                                         if ((null!==$taxRateId) && ($taxRatePercent >= 0.00) && (strlen($taxRateName) > 0) && $formattedNumber >= 0.00) {
                                             $optionsDataTaxRate[$taxRateId] = (string)$formattedNumber . '% - ' . $taxRateName;
