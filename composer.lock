@@ -14912,16 +14912,16 @@
         },
         {
             "name": "yiisoft/request-provider",
-            "version": "1.0.0",
+            "version": "1.1.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/yiisoft/request-provider.git",
-                "reference": "667e339f307eaf3d4e4f09f05334e41761d20a81"
+                "reference": "8f1dfdd1135a95b0bbd233a7ee6fc65b735ae55a"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/yiisoft/request-provider/zipball/667e339f307eaf3d4e4f09f05334e41761d20a81",
-                "reference": "667e339f307eaf3d4e4f09f05334e41761d20a81",
+                "url": "https://api.github.com/repos/yiisoft/request-provider/zipball/8f1dfdd1135a95b0bbd233a7ee6fc65b735ae55a",
+                "reference": "8f1dfdd1135a95b0bbd233a7ee6fc65b735ae55a",
                 "shasum": ""
             },
             "require": {
@@ -14945,7 +14945,8 @@
                     "source-directory": "config"
                 },
                 "config-plugin": {
-                    "di-web": "di-web.php"
+                    "di-web": "di-web.php",
+                    "events-web": "events-web.php"
                 }
             },
             "autoload": {
@@ -14984,7 +14985,7 @@
                     "type": "opencollective"
                 }
             ],
-            "time": "2024-03-02T15:18:14+00:00"
+            "time": "2024-10-28T08:31:00+00:00"
         },
         {
             "name": "yiisoft/requirements",
@@ -23439,7 +23440,6 @@
     "minimum-stability": "dev",
     "stability-flags": {
         "cebe/markdown": 20,
-        "roave/security-advisories": 20,
         "yiisoft/data": 20,
         "yiisoft/data-cycle": 20,
         "yiisoft/db": 20,
@@ -23449,6 +23449,7 @@
         "yiisoft/yii-bootstrap5": 20,
         "yiisoft/yii-dataview": 20,
         "yiisoft/yii-debug-api": 20,
+        "roave/security-advisories": 20,
         "yiisoft/yii-gii": 20,
         "yiisoft/yii-testing": 20
     },
@@ -23466,6 +23467,6 @@
         "ext-openssl": "*",
         "ext-pdo_sqlite": "*"
     },
-    "platform-dev": {},
+    "platform-dev": [],
     "plugin-api-version": "2.6.0"
 }
