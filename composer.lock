@@ -3941,16 +3941,16 @@
         },
         {
             "name": "mollie/mollie-api-php",
-            "version": "v2.73.0",
+            "version": "v2.74.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/mollie/mollie-api-php.git",
-                "reference": "0a26175492d4c55bb461e44fe3e63546539b81c1"
+                "reference": "6401783472a2a423386e66bd4d6ab3b3173b1b73"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/mollie/mollie-api-php/zipball/0a26175492d4c55bb461e44fe3e63546539b81c1",
-                "reference": "0a26175492d4c55bb461e44fe3e63546539b81c1",
+                "url": "https://api.github.com/repos/mollie/mollie-api-php/zipball/6401783472a2a423386e66bd4d6ab3b3173b1b73",
+                "reference": "6401783472a2a423386e66bd4d6ab3b3173b1b73",
                 "shasum": ""
             },
             "require": {
@@ -4027,9 +4027,9 @@
             ],
             "support": {
                 "issues": "https://github.com/mollie/mollie-api-php/issues",
-                "source": "https://github.com/mollie/mollie-api-php/tree/v2.73.0"
+                "source": "https://github.com/mollie/mollie-api-php/tree/v2.74.1"
             },
-            "time": "2024-09-30T13:16:57+00:00"
+            "time": "2024-10-30T10:30:13+00:00"
         },
         {
             "name": "moneyphp/money",
@@ -23439,7 +23439,6 @@
     "minimum-stability": "dev",
     "stability-flags": {
         "cebe/markdown": 20,
-        "roave/security-advisories": 20,
         "yiisoft/data": 20,
         "yiisoft/data-cycle": 20,
         "yiisoft/db": 20,
@@ -23449,6 +23448,7 @@
         "yiisoft/yii-bootstrap5": 20,
         "yiisoft/yii-dataview": 20,
         "yiisoft/yii-debug-api": 20,
+        "roave/security-advisories": 20,
         "yiisoft/yii-gii": 20,
         "yiisoft/yii-testing": 20
     },
@@ -23466,6 +23466,6 @@
         "ext-openssl": "*",
         "ext-pdo_sqlite": "*"
     },
-    "platform-dev": {},
+    "platform-dev": [],
     "plugin-api-version": "2.6.0"
 }
