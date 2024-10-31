@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "82b75e287ba638360999a637f132988b",
+    "content-hash": "a72a7a923829e97b38b26fcc59dd202d",
     "packages": [
         {
             "name": "alexkart/curl-builder",
@@ -269,16 +269,16 @@
         },
         {
             "name": "braintree/braintree_php",
-            "version": "6.20.0",
+            "version": "6.21.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/braintree/braintree_php.git",
-                "reference": "f46d6d570a955561f9474e0c4e5c56ca4cc22c49"
+                "reference": "d94339d1d7ee0ccd3d45727c7b5e36af4c5583a8"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/braintree/braintree_php/zipball/f46d6d570a955561f9474e0c4e5c56ca4cc22c49",
-                "reference": "f46d6d570a955561f9474e0c4e5c56ca4cc22c49",
+                "url": "https://api.github.com/repos/braintree/braintree_php/zipball/d94339d1d7ee0ccd3d45727c7b5e36af4c5583a8",
+                "reference": "d94339d1d7ee0ccd3d45727c7b5e36af4c5583a8",
                 "shasum": ""
             },
             "require": {
@@ -312,9 +312,9 @@
             "description": "Braintree PHP Client Library",
             "support": {
                 "issues": "https://github.com/braintree/braintree_php/issues",
-                "source": "https://github.com/braintree/braintree_php/tree/6.20.0"
+                "source": "https://github.com/braintree/braintree_php/tree/6.21.0"
             },
-            "time": "2024-09-19T21:28:15+00:00"
+            "time": "2024-10-31T16:08:55+00:00"
         },
         {
             "name": "brick/math",
@@ -3941,16 +3941,16 @@
         },
         {
             "name": "mollie/mollie-api-php",
-            "version": "v2.73.0",
+            "version": "v2.74.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/mollie/mollie-api-php.git",
-                "reference": "0a26175492d4c55bb461e44fe3e63546539b81c1"
+                "reference": "6401783472a2a423386e66bd4d6ab3b3173b1b73"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/mollie/mollie-api-php/zipball/0a26175492d4c55bb461e44fe3e63546539b81c1",
-                "reference": "0a26175492d4c55bb461e44fe3e63546539b81c1",
+                "url": "https://api.github.com/repos/mollie/mollie-api-php/zipball/6401783472a2a423386e66bd4d6ab3b3173b1b73",
+                "reference": "6401783472a2a423386e66bd4d6ab3b3173b1b73",
                 "shasum": ""
             },
             "require": {
@@ -4027,9 +4027,9 @@
             ],
             "support": {
                 "issues": "https://github.com/mollie/mollie-api-php/issues",
-                "source": "https://github.com/mollie/mollie-api-php/tree/v2.73.0"
+                "source": "https://github.com/mollie/mollie-api-php/tree/v2.74.1"
             },
-            "time": "2024-09-30T13:16:57+00:00"
+            "time": "2024-10-30T10:30:13+00:00"
         },
         {
             "name": "moneyphp/money",
@@ -5188,16 +5188,16 @@
         },
         {
             "name": "php-http/curl-client",
-            "version": "2.3.2",
+            "version": "2.3.3",
             "source": {
                 "type": "git",
                 "url": "https://github.com/php-http/curl-client.git",
-                "reference": "0b869922458b1cde9137374545ed4fff7ac83623"
+                "reference": "f3eb48d266341afec0229a7a37a03521d3646b81"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/php-http/curl-client/zipball/0b869922458b1cde9137374545ed4fff7ac83623",
-                "reference": "0b869922458b1cde9137374545ed4fff7ac83623",
+                "url": "https://api.github.com/repos/php-http/curl-client/zipball/f3eb48d266341afec0229a7a37a03521d3646b81",
+                "reference": "f3eb48d266341afec0229a7a37a03521d3646b81",
                 "shasum": ""
             },
             "require": {
@@ -5217,7 +5217,7 @@
             },
             "require-dev": {
                 "guzzlehttp/psr7": "^2.0",
-                "laminas/laminas-diactoros": "^2.0",
+                "laminas/laminas-diactoros": "^2.0 || ^3.0",
                 "php-http/client-integration-tests": "^3.0",
                 "php-http/message-factory": "^1.1",
                 "phpunit/phpunit": "^7.5 || ^9.4"
@@ -5247,9 +5247,9 @@
             ],
             "support": {
                 "issues": "https://github.com/php-http/curl-client/issues",
-                "source": "https://github.com/php-http/curl-client/tree/2.3.2"
+                "source": "https://github.com/php-http/curl-client/tree/2.3.3"
             },
-            "time": "2024-03-03T08:21:07+00:00"
+            "time": "2024-10-31T07:36:58+00:00"
         },
         {
             "name": "php-http/discovery",
@@ -8509,16 +8509,16 @@
         },
         {
             "name": "stripe/stripe-php",
-            "version": "v16.1.1",
+            "version": "v16.2.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/stripe/stripe-php.git",
-                "reference": "524ae42483d7434dfaecb0076e32e5cb521f6bb7"
+                "reference": "813ae4961755af28a13bda451689f7a6ed6498cb"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/stripe/stripe-php/zipball/524ae42483d7434dfaecb0076e32e5cb521f6bb7",
-                "reference": "524ae42483d7434dfaecb0076e32e5cb521f6bb7",
+                "url": "https://api.github.com/repos/stripe/stripe-php/zipball/813ae4961755af28a13bda451689f7a6ed6498cb",
+                "reference": "813ae4961755af28a13bda451689f7a6ed6498cb",
                 "shasum": ""
             },
             "require": {
@@ -8562,9 +8562,9 @@
             ],
             "support": {
                 "issues": "https://github.com/stripe/stripe-php/issues",
-                "source": "https://github.com/stripe/stripe-php/tree/v16.1.1"
+                "source": "https://github.com/stripe/stripe-php/tree/v16.2.0"
             },
-            "time": "2024-10-18T18:42:52+00:00"
+            "time": "2024-10-29T21:15:53+00:00"
         },
         {
             "name": "swagger-api/swagger-ui",
@@ -11466,16 +11466,16 @@
         },
         {
             "name": "vjik/telegram-bot-api",
-            "version": "0.4.4",
+            "version": "0.4.5",
             "source": {
                 "type": "git",
                 "url": "https://github.com/vjik/telegram-bot-api.git",
-                "reference": "1e7b11a4a80339aec87c0c10093a9a2e6ce5bf0b"
+                "reference": "658a79c0b13c27acd9bba0e498426f4cbb34ab0b"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/vjik/telegram-bot-api/zipball/1e7b11a4a80339aec87c0c10093a9a2e6ce5bf0b",
-                "reference": "1e7b11a4a80339aec87c0c10093a9a2e6ce5bf0b",
+                "url": "https://api.github.com/repos/vjik/telegram-bot-api/zipball/658a79c0b13c27acd9bba0e498426f4cbb34ab0b",
+                "reference": "658a79c0b13c27acd9bba0e498426f4cbb34ab0b",
                 "shasum": ""
             },
             "require": {
@@ -11526,7 +11526,7 @@
                 "issues": "https://github.com/vjik/telegram-bot-api/issues?state=open",
                 "source": "https://github.com/vjik/telegram-bot-api"
             },
-            "time": "2024-10-26T08:35:31+00:00"
+            "time": "2024-10-31T18:25:47+00:00"
         },
         {
             "name": "vlucas/phpdotenv",
@@ -13271,22 +13271,22 @@
         },
         {
             "name": "yiisoft/form",
-            "version": "1.2.0",
+            "version": "1.3.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/yiisoft/form.git",
-                "reference": "7dabd47490cc3e8a74f3753c29b221f8a409c741"
+                "reference": "cff8e998bda52c00f2eb8746f52c1efabf03414b"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/yiisoft/form/zipball/7dabd47490cc3e8a74f3753c29b221f8a409c741",
-                "reference": "7dabd47490cc3e8a74f3753c29b221f8a409c741",
+                "url": "https://api.github.com/repos/yiisoft/form/zipball/cff8e998bda52c00f2eb8746f52c1efabf03414b",
+                "reference": "cff8e998bda52c00f2eb8746f52c1efabf03414b",
                 "shasum": ""
             },
             "require": {
                 "php": "^8.1",
                 "yiisoft/friendly-exception": "^1.0",
-                "yiisoft/html": "^3.7",
+                "yiisoft/html": "^3.8",
                 "yiisoft/widget": "^2.2"
             },
             "require-dev": {
@@ -13340,7 +13340,7 @@
                     "type": "open_collective"
                 }
             ],
-            "time": "2024-10-09T13:17:31+00:00"
+            "time": "2024-10-30T07:57:06+00:00"
         },
         {
             "name": "yiisoft/form-model",
@@ -13483,30 +13483,30 @@
         },
         {
             "name": "yiisoft/html",
-            "version": "3.7.0",
+            "version": "3.8.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/yiisoft/html.git",
-                "reference": "968aa8b336135242bdaef9646fa3d53c3c0731f7"
+                "reference": "e550e789243c7f8152c42cb69068a01ab1bd9db2"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/yiisoft/html/zipball/968aa8b336135242bdaef9646fa3d53c3c0731f7",
-                "reference": "968aa8b336135242bdaef9646fa3d53c3c0731f7",
+                "url": "https://api.github.com/repos/yiisoft/html/zipball/e550e789243c7f8152c42cb69068a01ab1bd9db2",
+                "reference": "e550e789243c7f8152c42cb69068a01ab1bd9db2",
                 "shasum": ""
             },
             "require": {
-                "php": "^8.0",
+                "php": "^8.1",
                 "yiisoft/arrays": "^2.0|^3.0",
                 "yiisoft/json": "^1.0"
             },
             "require-dev": {
-                "infection/infection": "^0.26.19",
-                "maglnet/composer-require-checker": "^4.4",
-                "phpunit/phpunit": "^9.5",
-                "rector/rector": "^1.0.0",
-                "spatie/phpunit-watcher": "^1.23",
-                "vimeo/psalm": "^5.25"
+                "infection/infection": "^0.27",
+                "maglnet/composer-require-checker": "^4.7",
+                "phpunit/phpunit": "^10.5",
+                "rector/rector": "^1.2",
+                "spatie/phpunit-watcher": "^1.24",
+                "vimeo/psalm": "^5.26"
             },
             "type": "library",
             "autoload": {
@@ -13541,7 +13541,7 @@
                     "type": "opencollective"
                 }
             ],
-            "time": "2024-09-18T11:48:50+00:00"
+            "time": "2024-10-29T08:10:04+00:00"
         },
         {
             "name": "yiisoft/http",
@@ -14912,16 +14912,16 @@
         },
         {
             "name": "yiisoft/request-provider",
-            "version": "1.0.0",
+            "version": "1.1.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/yiisoft/request-provider.git",
-                "reference": "667e339f307eaf3d4e4f09f05334e41761d20a81"
+                "reference": "8f1dfdd1135a95b0bbd233a7ee6fc65b735ae55a"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/yiisoft/request-provider/zipball/667e339f307eaf3d4e4f09f05334e41761d20a81",
-                "reference": "667e339f307eaf3d4e4f09f05334e41761d20a81",
+                "url": "https://api.github.com/repos/yiisoft/request-provider/zipball/8f1dfdd1135a95b0bbd233a7ee6fc65b735ae55a",
+                "reference": "8f1dfdd1135a95b0bbd233a7ee6fc65b735ae55a",
                 "shasum": ""
             },
             "require": {
@@ -14945,7 +14945,8 @@
                     "source-directory": "config"
                 },
                 "config-plugin": {
-                    "di-web": "di-web.php"
+                    "di-web": "di-web.php",
+                    "events-web": "events-web.php"
                 }
             },
             "autoload": {
@@ -14984,7 +14985,7 @@
                     "type": "opencollective"
                 }
             ],
-            "time": "2024-03-02T15:18:14+00:00"
+            "time": "2024-10-28T08:31:00+00:00"
         },
         {
             "name": "yiisoft/requirements",
@@ -15995,12 +15996,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/yiisoft/yii-bootstrap5.git",
-                "reference": "1313a48daa025b01439f1554f0f5510b7dbbe6d3"
+                "reference": "3bb6f66361b356d91a49d3d79f8853e5ec62e008"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/yiisoft/yii-bootstrap5/zipball/1313a48daa025b01439f1554f0f5510b7dbbe6d3",
-                "reference": "1313a48daa025b01439f1554f0f5510b7dbbe6d3",
+                "url": "https://api.github.com/repos/yiisoft/yii-bootstrap5/zipball/3bb6f66361b356d91a49d3d79f8853e5ec62e008",
+                "reference": "3bb6f66361b356d91a49d3d79f8853e5ec62e008",
                 "shasum": ""
             },
             "require": {
@@ -16064,7 +16065,7 @@
                     "type": "open_collective"
                 }
             ],
-            "time": "2024-10-22T19:52:37+00:00"
+            "time": "2024-10-30T12:33:18+00:00"
         },
         {
             "name": "yiisoft/yii-console",
@@ -20509,12 +20510,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/Roave/SecurityAdvisories.git",
-                "reference": "bae581ca4125f92b1ad4d316ac691fa2d5231649"
+                "reference": "e3b44e38648ef5386687032582759f9c616c8d19"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/Roave/SecurityAdvisories/zipball/bae581ca4125f92b1ad4d316ac691fa2d5231649",
-                "reference": "bae581ca4125f92b1ad4d316ac691fa2d5231649",
+                "url": "https://api.github.com/repos/Roave/SecurityAdvisories/zipball/e3b44e38648ef5386687032582759f9c616c8d19",
+                "reference": "e3b44e38648ef5386687032582759f9c616c8d19",
                 "shasum": ""
             },
             "conflict": {
@@ -20534,6 +20535,7 @@
                 "alextselegidis/easyappointments": "<1.5",
                 "alterphp/easyadmin-extension-bundle": ">=1.2,<1.2.11|>=1.3,<1.3.1",
                 "amazing/media2click": ">=1,<1.3.3",
+                "ameos/ameos_tarteaucitron": "<1.2.23",
                 "amphp/artax": "<1.0.6|>=2,<2.0.6",
                 "amphp/http": "<=1.7.2|>=2,<=2.1",
                 "amphp/http-client": ">=4,<4.4",
@@ -20691,7 +20693,7 @@
                 "ezsystems/ezpublish-legacy": "<=2017.12.7.3|>=2018.6,<=2019.03.5.1",
                 "ezsystems/platform-ui-assets-bundle": ">=4.2,<4.2.3",
                 "ezsystems/repository-forms": ">=2.3,<2.3.2.1-dev|>=2.5,<2.5.15",
-                "ezyang/htmlpurifier": "<4.1.1",
+                "ezyang/htmlpurifier": "<=4.2",
                 "facade/ignition": "<1.16.15|>=2,<2.4.2|>=2.5,<2.5.2",
                 "facturascripts/facturascripts": "<=2022.08",
                 "fastly/magento2": "<1.2.26",
@@ -20833,6 +20835,7 @@
                 "laravel/fortify": "<1.11.1",
                 "laravel/framework": "<6.20.44|>=7,<7.30.6|>=8,<8.75",
                 "laravel/laravel": ">=5.4,<5.4.22",
+                "laravel/reverb": "<1.4",
                 "laravel/socialite": ">=1,<2.0.10",
                 "latte/latte": "<2.10.8",
                 "lavalite/cms": "<=9|==10.1",
@@ -20867,7 +20870,7 @@
                 "mautic/core-lib": ">=1.0.0.0-beta,<4.4.13|>=5.0.0.0-alpha,<5.1.1",
                 "mdanter/ecc": "<2",
                 "mediawiki/cargo": "<3.6.1",
-                "mediawiki/core": "<1.36.2",
+                "mediawiki/core": "<1.39.5|==1.40",
                 "mediawiki/matomo": "<2.4.3",
                 "mediawiki/semantic-media-wiki": "<4.0.2",
                 "melisplatform/melis-asset-manager": "<5.0.1",
@@ -20966,7 +20969,7 @@
                 "phenx/php-svg-lib": "<0.5.2",
                 "php-censor/php-censor": "<2.0.13|>=2.1,<2.1.5",
                 "php-mod/curl": "<2.3.2",
-                "phpbb/phpbb": "<3.2.10|>=3.3,<3.3.1",
+                "phpbb/phpbb": "<3.3.11",
                 "phpems/phpems": ">=6,<=6.1.3",
                 "phpfastcache/phpfastcache": "<6.1.5|>=7,<7.1.2|>=8,<8.0.7",
                 "phpmailer/phpmailer": "<6.5",
@@ -21172,7 +21175,7 @@
                 "tobiasbg/tablepress": "<=2.0.0.0-RC1",
                 "topthink/framework": "<6.0.17|>=6.1,<=8.0.4",
                 "topthink/think": "<=6.1.1",
-                "topthink/thinkphp": "<=3.2.3",
+                "topthink/thinkphp": "<=3.2.3|>=6.1.3,<=8.0.4",
                 "torrentpier/torrentpier": "<=2.4.3",
                 "tpwd/ke_search": "<4.0.3|>=4.1,<4.6.6|>=5,<5.0.2",
                 "tribalsystems/zenario": "<=9.7.61188",
@@ -21243,7 +21246,7 @@
                 "xataface/xataface": "<3",
                 "xpressengine/xpressengine": "<3.0.15",
                 "yab/quarx": "<2.4.5",
-                "yeswiki/yeswiki": "<4.1",
+                "yeswiki/yeswiki": "<=4.4.4",
                 "yetiforce/yetiforce-crm": "<=6.4",
                 "yidashi/yii2cmf": "<=2",
                 "yii2mod/yii2-cms": "<1.9.2",
@@ -21334,7 +21337,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2024-10-24T22:04:53+00:00"
+            "time": "2024-10-31T18:06:19+00:00"
         },
         {
             "name": "roave/signature",

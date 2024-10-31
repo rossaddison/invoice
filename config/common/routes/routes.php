@@ -123,7 +123,7 @@ return [
     ->name('site/signupfailed'),
     Route::methods([Method::GET, Method::POST], '/signupsuccess')
     ->action([SiteController::class, 'signupsuccess'])
-    ->name('site/signupuccess')    ,
+    ->name('site/signupsuccess')    ,
     // Auth
     Route::methods([Method::GET, Method::POST], '/login')
     ->middleware(LimitRequestsMiddleware::class)

@@ -324,19 +324,19 @@ final class SettingRepository extends Select\Repository
         $config = $this->get_config_params();
         $params = $config->get('params');
         /**
-         * @var array $params['symfony/mailer']
-         * @var string $params['yiisoft/mailer']['useSendmail']
-         * @var bool $params['symfony/mailer']['esmtpTransport']['enabled']
-         * @var string $params['symfony/mailer']['esmtpTransport']['scheme']
-         * @var string $params['symfony/mailer']['esmtpTransport']['host']
-         * @var string $params['symfony/mailer']['esmtpTransport']['port']
+         * @var array $params['yiisoft/mailer-symfony']
+         * @var string $params['yiisoft/mailer-symfony']['useSendmail']
+         * @var bool $params['yiisoft/mailer-symfony']['esmtpTransport']['enabled']
+         * @var string $params['yiisoft/mailer-symfony']['esmtpTransport']['scheme']
+         * @var string $params['yiisoft/mailer-symfony']['esmtpTransport']['host']
+         * @var string $params['yiisoft/mailer-symfony']['esmtpTransport']['port']
          */
         $config_array = [
-            'esmtp_enabled' => $params['symfony/mailer']['esmtpTransport']['enabled'],
-            'esmtp_scheme' => $params['symfony/mailer']['esmtpTransport']['scheme'],
-            'esmtp_host' => $params['symfony/mailer']['esmtpTransport']['host'],
-            'esmtp_port' => $params['symfony/mailer']['esmtpTransport']['port'],
-            'use_send_mail' => $params['yiisoft/mailer']['useSendmail'] == 1 ? $this->translator->translate('i.true') : $this->translator->translate('i.false'),           
+            'esmtp_enabled' => $params['yiisoft/mailer-symfony']['esmtpTransport']['enabled'],
+            'esmtp_scheme' => $params['yiisoft/mailer-symfony']['esmtpTransport']['scheme'],
+            'esmtp_host' => $params['yiisoft/mailer-symfony']['esmtpTransport']['host'],
+            'esmtp_port' => $params['yiisoft/mailer-symfony']['esmtpTransport']['port'],
+            'use_send_mail' => $params['yiisoft/mailer-symfony']['useSendmail'] == 1 ? $this->translator->translate('i.true') : $this->translator->translate('i.false'),           
         ];
         return $config_array;
     }

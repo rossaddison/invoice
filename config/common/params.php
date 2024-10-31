@@ -332,13 +332,16 @@ return [
   'yiisoft/mailer' => [
     'fileMailer' => [
       'path' => '@runtime/mail',
-    ],
-    'useSendmail' => 0,
-    'writeToFiles' => false,
+    ]
   ],
-  'symfony/mailer' => [
+  'yiisoft/mailer-symfony' => [
    'esmtpTransport' => [
+      /**
+       * enabled => true is a setting independent of vendor/yiisoft/mailer-symfony/config/params.php
+       * @see SettingRepository function config_params()
+       */
       'enabled' => true, 
+      'useSendMail' => false, 
       'scheme' => 'smtp', // "smtps": using TLS, "smtp": without using TLS.
       'host' => 'mail.yourinternet.com',
       'port' => 25,
@@ -352,6 +355,33 @@ return [
       'password' => filter_input(INPUT_ENV, 'SYMFONY_MAILER_PASSWORD') ?? '',
       'options' => [], // See: https://symfony.com/doc/current/mailer.html#tls-peer-verification
     ],
+    'messageSettings' => [
+        'charset' => 'utf-8',
+        'from' => null,
+        'addFrom' => null,
+        'to' => null,
+        'addTo' => null,
+        'replyTo' => null,
+        'addReplyTo' => null,
+        'cc' => null,
+        'addCc' => null,
+        'bcc' => null,
+        'addBcc' => null,
+        'subject' => null,
+        'date' => null,
+        'priority' => null,
+        'returnPath' => null,
+        'sender' => null,
+        'textBody' => null,
+        'htmlBody' => null,
+        'attachments' => null,
+        'addAttachments' => null,
+        'embeddings' => null,
+        'addEmbeddings' => null,
+        'headers' => [],
+        'overwriteHeaders' => null,
+        'convertHtmlToText' => true,
+    ],  
   ],
   // These parameters appear on ZugFerdXml produced invoice
   // and also Sumex1 semi-compatible invoice and is used in App/Invoice/Libraries/Sumex class

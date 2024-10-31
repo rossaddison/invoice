@@ -65,7 +65,7 @@ final class TelegramController
         $messageEffectId = null;
         $replyParameters = null;
         $replyMarkup = null;
-        $secretToken = $this->sR->getSetting('telegram_webhook_secret_token') ?: '';
+        $secretToken = $this->sR->getSetting('telegram_webhook_secret_token') ?: null;
         try {
             $telegramEnabled = $this->sR->getSetting('enable_telegram');
             if ($telegramEnabled == '1') { 

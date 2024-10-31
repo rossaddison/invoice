@@ -47,6 +47,10 @@
 <p>Introducing India's PayTm payment gateway's QR code method of payment and comparing this with Stripe's method.</p>
 <p>A General Sales Tax (GST) Tax System will have to be implemented first for this purpose.</p>
 <p>Testing Credit Notes against Invoices with refunds (if payment made) linked to each of the payment gateways.</p>
+<p><b>31st October 2024</b></p>
+<p>1. Reconfigured config/common/params to accomodate yiisoft/mailer-symfony</p>
+<p>2. Tested SignUpController, ForgotController and are functional.</p>
+<p>3. Added additional email headers for authorisation.</p> 
 <p><b>24th October 2024</b></p>
 <p>1. yiisoft/mailer backward compatibility corrections. pull requests 104 - 109</p>
 <p>2. MessageBodyTemplate(s) removed.</p>

@@ -123,16 +123,32 @@ final class ForgotPasswordController
                         $languageArray = $this->sR->locale_language_array();
                         $_language = $currentRoute->getArgument('_language');
                         /**
-                         * @var string $_language
+                       
                          */
+                       /**
+                        * @see A new UserInv (extension table of user) for the user is created.
+                        * For additional headers to strengthen security refer to:
+                        * @see https://en.wikipedia.org/wiki/Email#Message_format
+                        * @see https://github.com/yiisoft/mailer/blob/1d3480bc26cbeba47b24e61f9ec0e717c244c0b7/tests/MessageTest.php#L217
+                        * @var string $_language
+                        */                        
                         $htmlBody = $this->htmlBodyWithMaskedRandomAndTimeTokenLink($user, $_language,  $requestPasswordResetToken);
                         if (($this->sR->getSetting('email_send_method') == 'symfony') || ($this->sR->mailerEnabled() == true))  {
-                           $email = (new \Yiisoft\Mailer\Message())
-                            ->withSubject($login. ': <'.$to.'>')
-                            ->withDate(new \DateTimeImmutable('now'))
-                            ->withFrom([$this->sR->getConfigAdminEmail() => $this->translator->translate('i.administrator')])
-                            ->withTo($to)
-                            ->withHtmlBody($htmlBody);    
+                            $messageEntity = new \Yiisoft\Mailer\Message();
+                            $email = $messageEntity
+                                    ->withHeaders(
+                                        [
+                                            'X-Origin' => ['0', '1'],
+                                            'X-Pass' => 'pass',
+                                        ]  
+                                    )
+                                    ->withCharSet('utf-8')         
+                                    ->withSubject($login. ': <'.$to.'>')
+                                    ->withDate(new \DateTimeImmutable('now'))
+                                    ->withFrom([$this->sR->getConfigAdminEmail() => $this->translator->translate('i.administrator')])
+                                    ->withTo($to)
+                                    ->withHtmlBody($htmlBody)
+                                    ->withAddedHeader('Message-ID', $this->sR->getConfigAdminEmail());
                             try {
                                 $this->mailer->send($email);
                             } catch (\Exception $e) {                                 

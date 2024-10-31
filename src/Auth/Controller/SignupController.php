@@ -100,7 +100,7 @@ final class SignupController
             return $this->webService->getRedirectResponse('site/index');
         }
         // check that symfony under Settings ... Email and the config/common/params.php mailer->senderEmail have been setup
-        if (($this->sR->getSetting('email_send_method') !== 'symfony') || ($this->sR->mailerEnabled() == false) || empty($this->sR->getConfigSenderEmail()))  {
+        if (($this->sR->getSetting('email_send_method') !== 'symfony') || empty($this->sR->getConfigSenderEmail()))  {
            return $this->webService->getRedirectResponse('site/forgotemailfailed'); 
         }
         if ($formHydrator->populateFromPostAndValidate($signupForm, $request)) {
@@ -131,16 +131,26 @@ final class SignupController
                 $randomAndTimeToken = $this->getEmailVerificationToken($user, $tR);
                 /**
                  * @see A new UserInv (extension table of user) for the user is created.
+                 * For additional headers to strengthen security refer to:
+                 * @see https://en.wikipedia.org/wiki/Email#Message_format
+                 * @see https://github.com/yiisoft/mailer/blob/1d3480bc26cbeba47b24e61f9ec0e717c244c0b7/tests/MessageTest.php#L217
                  */
                 $htmlBody = $this->htmlBodyWithMaskedRandomAndTimeTokenLink($user, $uiR, $language, $_language, $randomAndTimeToken);
                 if (($this->sR->getSetting('email_send_method') == 'symfony') || ($this->sR->mailerEnabled() == true))  {
-                    $email = (New \Yiisoft\Mailer\Message())
-                    ->withCharSet('UTF-8')                
+                    $email = (new \Yiisoft\Mailer\Message())
+                    ->withHeaders(
+                        [
+                            'X-Origin' => ['0', '1'],
+                            'X-Pass' => 'pass',
+                        ]  
+                    )
+                    ->withCharSet('utf-8')                
                     ->withSubject($login. ': <'.$to.'>')
                     ->withDate(new \DateTimeImmutable('now'))
                     ->withFrom([$this->sR->getConfigAdminEmail() => $this->translator->translate('i.administrator')])
                     ->withTo($to)
-                    ->withHtmlBody($htmlBody);    
+                    ->withHtmlBody($htmlBody)
+                    ->withAddedHeader('Message-ID', $this->sR->getConfigAdminEmail());
                     try {
                         $this->mailer->send($email);
                     } catch (\Exception $e) {                        
