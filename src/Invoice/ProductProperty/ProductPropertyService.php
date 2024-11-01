@@ -1,16 +1,14 @@
 <?php
 
-declare(strict_types=1); 
+declare(strict_types=1);
 
 namespace App\Invoice\ProductProperty;
 
 use App\Invoice\Entity\ProductProperty;
 use App\Invoice\ProductProperty\ProductPropertyRepository;
 
-
 final class ProductPropertyService
 {
-
     private ProductPropertyRepository $repository;
 
     public function __construct(ProductPropertyRepository $repository)
@@ -31,7 +29,7 @@ final class ProductPropertyService
         isset($array['value']) ? $model->setValue((string)$array['value']) : '';
         $this->repository->save($model);
     }
-    
+
     /**
      * @param ProductProperty $model
      * @return void

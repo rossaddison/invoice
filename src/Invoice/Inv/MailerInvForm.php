@@ -31,5 +31,5 @@ final class MailerInvForm extends FormModel
     {
         return 'MailerInvForm';
     }
-    
+
 }

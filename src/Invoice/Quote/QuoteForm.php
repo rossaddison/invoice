@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace App\Invoice\Quote;
@@ -6,30 +7,29 @@ namespace App\Invoice\Quote;
 use App\Invoice\Entity\Quote;
 use Yiisoft\FormModel\FormModel;
 use Yiisoft\Validator\Rule\Required;
-
 use DateTimeImmutable;
 
 final class QuoteForm extends FormModel
-{    
+{
     private ?string $number = '';
     private mixed $date_created = '';
     private ?string $inv_id = null;
     private ?string $so_id = null;
-    
+
     #[Required]
     private ?int $group_id = null;
     #[Required]
     private ?int $client_id = null;
-    
+
     private ?int $status_id = 1;
     private ?float $discount_amount = 0;
     private ?float $discount_percent = 0;
     private ?string $url_key = '';
     private ?string $password = '';
     private ?string $notes = '';
-    
+
     private ?int $delivery_location_id = null;
-    
+
     public function __construct(Quote $quote)
     {
         $this->number = $quote->getNumber();
@@ -45,76 +45,76 @@ final class QuoteForm extends FormModel
         $this->password = $quote->getPassword();
         $this->notes = $quote->getNotes();
         $this->delivery_location_id = (int)$quote->getDelivery_location_id();
-    } 
-    
-    public function getDate_created() : string|null|DateTimeImmutable 
+    }
+
+    public function getDate_created(): string|null|DateTimeImmutable
     {
-      /**
-       * @var string|null|DateTimeImmutable $this->date_created 
-       */
+        /**
+         * @var string|null|DateTimeImmutable $this->date_created
+         */
         return $this->date_created;
     }
-        
-    public function getNumber() : string|null
+
+    public function getNumber(): string|null
     {
-      return $this->number;
-    }
-    
-    public function getInv_id() : string|null
-    {
-      return $this->inv_id;
-    }
-    
-    // The Entities ie. Entity/Quote.php have return type string => return type strings in the form 
-    // get => string ; 
-    public function getSo_id() : string|null
-    {
-      return $this->so_id;
-    }
-        
-    public function getGroup_id() : int|null
-    {
-      return $this->group_id;
+        return $this->number;
     }
 
-    public function getClient_id() : int|null
+    public function getInv_id(): string|null
     {
-      return $this->client_id;
+        return $this->inv_id;
     }
 
-    public function getStatus_id() : int|null
+    // The Entities ie. Entity/Quote.php have return type string => return type strings in the form
+    // get => string ;
+    public function getSo_id(): string|null
     {
-      return $this->status_id;
-    }
-    
-    public function getDelivery_location_id() : int|null
-    {
-      return $this->delivery_location_id;
-    }
-    
-    public function getDiscount_amount() : float|null
-    {
-      return $this->discount_amount;
+        return $this->so_id;
     }
 
-    public function getDiscount_percent() : float|null
+    public function getGroup_id(): int|null
     {
-      return $this->discount_percent;
+        return $this->group_id;
     }
 
-    public function getUrl_key() : string|null
+    public function getClient_id(): int|null
     {
-      return $this->url_key;
+        return $this->client_id;
     }
 
-    public function getPassword() : string|null
+    public function getStatus_id(): int|null
     {
-      return $this->password;
+        return $this->status_id;
     }
 
-    public function getNotes() : string|null
+    public function getDelivery_location_id(): int|null
     {
-      return $this->notes;
+        return $this->delivery_location_id;
+    }
+
+    public function getDiscount_amount(): float|null
+    {
+        return $this->discount_amount;
+    }
+
+    public function getDiscount_percent(): float|null
+    {
+        return $this->discount_percent;
+    }
+
+    public function getUrl_key(): string|null
+    {
+        return $this->url_key;
+    }
+
+    public function getPassword(): string|null
+    {
+        return $this->password;
+    }
+
+    public function getNotes(): string|null
+    {
+        return $this->notes;
     }
 
     /**
@@ -124,6 +124,6 @@ final class QuoteForm extends FormModel
      */
     public function getFormName(): string
     {
-      return '';
+        return '';
     }
 }

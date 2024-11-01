@@ -17,17 +17,16 @@ final class CommonViewInjection implements CommonParametersInjectionInterface
 {
     private CompanyRepository $companyRepository;
     private CompanyPrivateRepository $companyPrivateRepository;
-    private SettingRepository $settingRepository;    
+    private SettingRepository $settingRepository;
     private Translator $translator;
-    
+
     public function __construct(
         private UrlGeneratorInterface $url,
         CompanyRepository $companyRepository,
         CompanyPrivateRepository $companyPrivateRepository,
         SettingRepository $settingRepository,
         Translator $translator
-    )
-    {
+    ) {
         $this->companyRepository = $companyRepository;
         $this->companyPrivateRepository = $companyPrivateRepository;
         $this->settingRepository = $settingRepository;
@@ -69,20 +68,21 @@ final class CommonViewInjection implements CommonParametersInjectionInterface
                     if ($private->getCompany_id() == (string)$company->getId()) {
                         // site's logo: take the first logo where the current date falls within the logo's start and end dates
                         if (($private->getStart_date()?->format('Y-m-d') < (new \DateTimeImmutable('now'))->format('Y-m-d')) && ($private->getEnd_date()?->format('Y-m-d') > (new \DateTimeImmutable('now'))->format('Y-m-d'))) {
-                                $companyLogoFileName = $private->getLogo_filename();
-                                $companyLogoWidth = $private->getLogo_width();
-                                $companyLogoHeight = $private->getLogo_height();
-                              //  break;
-                        }    
+                            $companyLogoFileName = $private->getLogo_filename();
+                            $companyLogoWidth = $private->getLogo_width();
+                            $companyLogoHeight = $private->getLogo_height();
+                            //  break;
+                        }
                     }
                 }
             }
         }
-        $logoPath = ((isset($companyLogoFileName) && !empty($companyLogoFileName)) 
-                                      ? '/logo/'. $companyLogoFileName 
+        $logoPath = (
+            (isset($companyLogoFileName) && !empty($companyLogoFileName))
+                                      ? '/logo/'. $companyLogoFileName
                                       : '/site/'. $this->settingRepository->public_logo().'.png'
-                    );
-        
+        );
+
         return [
             'translator' => $this->translator,
             'url' => $this->url,
@@ -98,7 +98,7 @@ final class CommonViewInjection implements CommonParametersInjectionInterface
             'companyLogoHeight' => $companyLogoHeight ?? 40,
             'logoPath' => $logoPath,
             /**
-             * @see \invoice\resources\messages\en\app.php 
+             * @see \invoice\resources\messages\en\app.php
              * @see \invoice\vendor\yiisoft\yii-view\src\ViewRenderer.php function getCommonParameters
              */
             'about' => [
@@ -129,10 +129,10 @@ final class CommonViewInjection implements CommonParametersInjectionInterface
                 'currencyAmount' => $this->translator->translate('site.soletrader.pricing.currencyAmount'),
                 'currencyPerMonth' => $this->translator->translate('site.soletrader.pricing.currencyPerMonth'),
                 'basic' => $this->translator->translate('site.soletrader.pricing.basic'),
-                'visits' => $this->translator->translate('site.soletrader.pricing.visits'), 
+                'visits' => $this->translator->translate('site.soletrader.pricing.visits'),
                 'pro' => $this->translator->translate('site.soletrader.pricing.pro'),
-                'proPrice' => $this->translator->translate('site.soletrader.pricing.proPrice'), 
-                'special' => $this->translator->translate('site.soletrader.pricing.special'), 
+                'proPrice' => $this->translator->translate('site.soletrader.pricing.proPrice'),
+                'special' => $this->translator->translate('site.soletrader.pricing.special'),
                 'choosePlan' => $this->translator->translate('site.soletrader.pricing.choosePlan')
             ],
             'testimonial' => [
@@ -149,7 +149,7 @@ final class CommonViewInjection implements CommonParametersInjectionInterface
                 'phone' => $this->translator->translate('site.soletrader.contact.phone'),
             ],
             'forgotalert' => [
-                'passwordResetEmail' => $this->translator->translate('i.password_reset_email'),                
+                'passwordResetEmail' => $this->translator->translate('i.password_reset_email'),
             ],
             'forgotemailfailed' => [
                 'passwordResetFailed' => $this->translator->translate('i.password_reset_failed'),

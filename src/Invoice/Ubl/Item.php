@@ -1,5 +1,6 @@
 <?php
-declare(strict_types=1); 
+
+declare(strict_types=1);
 
 namespace App\Invoice\Ubl;
 
@@ -13,8 +14,9 @@ class Item implements XmlSerializable
     private ?string $buyersItemIdentification;
     private ?string $sellersItemIdentification;
     private ?ClassifiedTaxCategory $classifiedTaxCategory;
-    
-    public function __construct(?string $description, string $name, ?string $buyersItemIdentification, ?string $sellersItemIdentification, ClassifiedTaxCategory $classifiedTaxCategory) {
+
+    public function __construct(?string $description, string $name, ?string $buyersItemIdentification, ?string $sellersItemIdentification, ClassifiedTaxCategory $classifiedTaxCategory)
+    {
         $this->description = $description;
         $this->name = $name;
         $this->buyersItemIdentification = $buyersItemIdentification;
@@ -113,13 +115,13 @@ class Item implements XmlSerializable
     }
 
     /**
-     * 
+     *
      * @param Writer $writer
      * @return void
      */
     public function xmlSerialize(Writer $writer): void
     {
-        if ($this->getDescription()!==null) {
+        if ($this->getDescription() !== null) {
             $writer->write([
                 Schema::CBC . 'Description' => $this->description
             ]);
@@ -129,7 +131,7 @@ class Item implements XmlSerializable
             Schema::CBC . 'Name' => $this->name
         ]);
 
-        if ($this->getBuyersItemIdentification()!==null) {
+        if ($this->getBuyersItemIdentification() !== null) {
             $writer->write([
                 Schema::CAC . 'BuyersItemIdentification' => [
                     Schema::CBC . 'ID' => $this->buyersItemIdentification
@@ -137,7 +139,7 @@ class Item implements XmlSerializable
             ]);
         }
 
-        if ($this->sellersItemIdentification!==null) {
+        if ($this->sellersItemIdentification !== null) {
             $writer->write([
                 Schema::CAC . 'SellersItemIdentification' => [
                     Schema::CBC . 'ID' => $this->sellersItemIdentification
@@ -145,7 +147,7 @@ class Item implements XmlSerializable
             ]);
         }
 
-        if ($this->classifiedTaxCategory!==null) {
+        if ($this->classifiedTaxCategory !== null) {
             $writer->write([
                 Schema::CAC . 'ClassifiedTaxCategory' => $this->classifiedTaxCategory
             ]);

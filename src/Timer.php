@@ -20,8 +20,8 @@ final class Timer
         if (!array_key_exists($name, $this->timers)) {
             throw new InvalidArgumentException("There is no \"$name\" timer started");
         }
-        
-        /** 
+
+        /**
          * @var string $this->timers[$name]
          */
         $subtract = microtime(true) - (float)$this->timers[$name];

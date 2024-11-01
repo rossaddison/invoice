@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=1); 
+declare(strict_types=1);
 
 namespace App\Invoice\ClientNote;
 
@@ -17,7 +17,7 @@ use Yiisoft\Data\Cycle\Writer\EntityWriter;
  */
 final class ClientNoteRepository extends Select\Repository
 {
-private EntityWriter $entityWriter;
+    private EntityWriter $entityWriter;
     /**
      * @param Select<TEntity> $select
      * @param EntityWriter $entityWriter
@@ -38,7 +38,7 @@ private EntityWriter $entityWriter;
         $query = $this->select();
         return $this->prepareDataReader($query);
     }
-    
+
     /**
      * @psalm-return EntityReader
      */
@@ -47,34 +47,34 @@ private EntityWriter $entityWriter;
         return (new EntityReader($this->select()))
             ->withSort($this->getSort());
     }
-    
+
     private function getSort(): Sort
     {
         return Sort::only(['id'])->withOrder(['id' => 'asc']);
     }
-    
+
     /**
      * @see Reader/ReadableDataInterface|InvalidArgumentException
      * @param array|ClientNote|null $clientnote
-     * @throws Throwable 
+     * @throws Throwable
      * @return void
      */
     public function save(array|ClientNote|null $clientnote): void
     {
         $this->entityWriter->write([$clientnote]);
     }
-    
+
     /**
      * @see Reader/ReadableDataInterface|InvalidArgumentException
      * @param array|ClientNote|null $clientnote
-     * @throws Throwable 
+     * @throws Throwable
      * @return void
      */
     public function delete(array|ClientNote|null $clientnote): void
     {
         $this->entityWriter->delete([$clientnote]);
     }
-    
+
     private function prepareDataReader(Select $query): EntityReader
     {
         return (new EntityReader($query))->withSort(
@@ -82,28 +82,31 @@ private EntityWriter $entityWriter;
                 ->withOrder(['id' => 'asc'])
         );
     }
-    
+
     /**
      * @return null|ClientNote
      *
      * @psalm-return TEntity|null
      */
-    public function repoClientNotequery(string $id): ClientNote|null    {
+    public function repoClientNotequery(string $id): ClientNote|null
+    {
         $query = $this->select()->load('client')->where(['id' => $id]);
-        return  $query->fetchOne() ?: null;        
-    }    
-    
+        return  $query->fetchOne() ?: null;
+    }
+
     /**
      * @psalm-return EntityReader
      */
-    public function repoClientquery(string $client_id): EntityReader    {
+    public function repoClientquery(string $client_id): EntityReader
+    {
         $query = $this->select()->load('client')->where(['client_id' => $client_id]);
         return $this->prepareDataReader($query);
     }
-    
-    public function repoClientNoteCount(int $client_id) : int {
+
+    public function repoClientNoteCount(int $client_id): int
+    {
         $count = $this->select()
-                      ->where(['client_id'=>$client_id])
+                      ->where(['client_id' => $client_id])
                       ->count();
         return $count;
     }

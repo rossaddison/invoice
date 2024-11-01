@@ -48,7 +48,7 @@ final class LoginForm extends FormModel implements RulesProviderInterface, Prope
     {
         return 'Login';
     }
-    
+
     public function getPropertyTranslator(): ?PropertyTranslatorInterface
     {
         return new ArrayPropertyTranslator($this->getPropertyLabels());
@@ -56,7 +56,7 @@ final class LoginForm extends FormModel implements RulesProviderInterface, Prope
 
     /**
      * @return array
-     * @psalm-suppress ImplementedReturnTypeMismatch 
+     * @psalm-suppress ImplementedReturnTypeMismatch
      */
     public function getRules(): array
     {
@@ -82,7 +82,7 @@ final class LoginForm extends FormModel implements RulesProviderInterface, Prope
                     if (!$this->authService->login($this->login, $this->password)) {
                         $result->addError($this->translator->translate('validator.invalid.login.password'));
                     }
-                    
+
                     return $result;
                 },
                 skipOnEmpty: true,

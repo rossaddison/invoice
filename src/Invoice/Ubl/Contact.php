@@ -1,5 +1,6 @@
 <?php
-declare(strict_types=1); 
+
+declare(strict_types=1);
 
 namespace App\Invoice\Ubl;
 
@@ -14,8 +15,9 @@ class Contact implements XmlSerializable
     private ?string $telephone;
     private ?string $telefax;
     private ?string $electronicMail;
-    
-    public function __construct(?string $name, ?string $firstname, ?string $lastname, ?string $telephone, ?string $telefax, ?string $electronicMail) {
+
+    public function __construct(?string $name, ?string $firstname, ?string $lastname, ?string $telephone, ?string $telefax, ?string $electronicMail)
+    {
         $this->name = $name;
         $this->firstname = $firstname;
         $this->lastname = $lastname;
@@ -23,43 +25,43 @@ class Contact implements XmlSerializable
         $this->telefax = $telefax;
         $this->electronicMail = $electronicMail;
     }
-    
+
     /**
      * @see StoreCoveHelper validate_supplier_contact
      * @return string|null
      */
-    public function getName() : ?string 
+    public function getName(): ?string
     {
         return $this->name;
     }
-    
-    public function getFirstName() : ?string 
+
+    public function getFirstName(): ?string
     {
         return $this->firstname;
     }
-    
-    public function getLastName() : ?string 
+
+    public function getLastName(): ?string
     {
         return $this->lastname;
     }
-    
-    public function getTelephone() : ?string 
+
+    public function getTelephone(): ?string
     {
         return $this->telephone;
     }
-    
-    public function getTelefax() : ?string 
+
+    public function getTelefax(): ?string
     {
         return $this->telefax;
     }
-    
-    public function getElectronicMail() : ?string 
+
+    public function getElectronicMail(): ?string
     {
         return $this->electronicMail;
     }
 
     /**
-     * 
+     *
      * @param Writer $writer
      * @return void
      */
@@ -70,7 +72,7 @@ class Contact implements XmlSerializable
                 Schema::CBC . 'Name' => $this->name
             ]);
         }
-        
+
         if ($this->name == null && ($this->firstname !== null || $this->lastname !== null)) {
             $writer->write([
                 Schema::CBC . 'Name' => ($this->firstname ?? '').' '. ($this->lastname ?? '')

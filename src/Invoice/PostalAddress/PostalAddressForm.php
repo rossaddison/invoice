@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace App\Invoice\PostalAddress;
@@ -9,7 +10,7 @@ use Yiisoft\Translator\TranslatorInterface as Translator;
 use Yiisoft\Validator\Rule\Required;
 
 final class PostalAddressForm extends FormModel
-{   
+{
     private ?int    $id = null;
     #[Required]
     private ?int    $client_id = null;
@@ -17,7 +18,7 @@ final class PostalAddressForm extends FormModel
     private ?string $street_name = '';
     #[Required]
     private ?string $additional_street_name = '';
-    
+
     private ?string $building_number = '';
     #[Required]
     private ?string $city_name = '';
@@ -27,17 +28,17 @@ final class PostalAddressForm extends FormModel
     private ?string $countrysubentity = '';
     #[Required]
     private ?string $country = '';
-    
+
     private Translator $translator;
-        
-    public function __construct(Translator $translator, PostalAddress $postalAddress, int $client_id) 
-    {    
+
+    public function __construct(Translator $translator, PostalAddress $postalAddress, int $client_id)
+    {
         $this->translator = $translator;
-        
+
         // two hidden fields with ->hideLabel(true) in the view
         $this->id = (int)$postalAddress->getId();
         $this->client_id = $client_id;
-        
+
         // not hidden fields
         $this->street_name = $postalAddress->getStreet_name();
         $this->additional_street_name = $postalAddress->getAdditional_street_name();
@@ -47,8 +48,8 @@ final class PostalAddressForm extends FormModel
         $this->countrysubentity = $postalAddress->getCountrysubentity();
         $this->country = $postalAddress->getCountry();
     }
-    
-    public function getPropertyLabels() : array 
+
+    public function getPropertyLabels(): array
     {
         return [
             'street_name' => $this->translator->translate('invoice.client.postaladdress.street.name'),
@@ -59,9 +60,9 @@ final class PostalAddressForm extends FormModel
             'countrysubentity' => $this->translator->translate('invoice.client.postaladdress.countrysubentity'),
             'country' => $this->translator->translate('invoice.client.postaladdress.country')
         ];
-    }  
-        
-    public function getPropertyHints() : array
+    }
+
+    public function getPropertyHints(): array
     {
         $required = 'invoice.hint.this.field.is.required';
         $not_required = 'invoice.hint.this.field.is.not.required';
@@ -74,51 +75,51 @@ final class PostalAddressForm extends FormModel
             'countrysubentity' => $this->translator->translate($required),
             'country' => $this->translator->translate($required)
         ];
-    }    
-
-    public function getId() : int|null
-    {
-      return $this->id;
-    }
-    
-    public function getClient_id() : int|null
-    {
-      return $this->client_id;
     }
 
-    public function getStreet_name() : string|null
+    public function getId(): int|null
     {
-      return $this->street_name;
+        return $this->id;
     }
 
-    public function getAdditional_street_name() : string|null
+    public function getClient_id(): int|null
     {
-      return $this->additional_street_name;
+        return $this->client_id;
     }
 
-    public function getBuilding_number() : string|null
+    public function getStreet_name(): string|null
     {
-      return $this->building_number;
+        return $this->street_name;
     }
 
-    public function getCity_name() : string|null
+    public function getAdditional_street_name(): string|null
     {
-      return $this->city_name;
+        return $this->additional_street_name;
     }
 
-    public function getPostalzone() : string|null
+    public function getBuilding_number(): string|null
     {
-      return $this->postalzone;
+        return $this->building_number;
     }
 
-    public function getCountrysubentity() : string|null
+    public function getCity_name(): string|null
     {
-      return $this->countrysubentity;
+        return $this->city_name;
     }
 
-    public function getCountry() : string|null
+    public function getPostalzone(): string|null
     {
-      return $this->country;
+        return $this->postalzone;
+    }
+
+    public function getCountrysubentity(): string|null
+    {
+        return $this->countrysubentity;
+    }
+
+    public function getCountry(): string|null
+    {
+        return $this->country;
     }
 
     /**
@@ -127,6 +128,6 @@ final class PostalAddressForm extends FormModel
      */
     public function getFormName(): string
     {
-      return '';
+        return '';
     }
 }

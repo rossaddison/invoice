@@ -10,46 +10,46 @@ use Yiisoft\FormModel\FormModel;
 use Yiisoft\Validator\Rule\Required;
 
 final class UserInvForm extends FormModel
-{       
+{
     #[Required]
-    private ?int $user_id=null;
-    
+    private ?int $user_id = null;
+
     /**
      * @see Dropdown 0 = Admin, 1 = Not Admin i.e. User with viewInv permission (not editInv Permission)
      */
     #[Required]
-    private ?int $type=null;
-    
-    private ?bool $active=false;
-    
+    private ?int $type = null;
+
+    private ?bool $active = false;
+
     #[Required]
-    private ?string $language='';
-    
+    private ?string $language = '';
+
     #[Required]
-    private ?string $name='';
-    
-    private ?string $company='';
-    private ?string $address_1='';
-    private ?string $address_2='';
-    private ?string $city='';
-    private ?string $state='';
-    private ?string $zip='';
-    private ?string $country='';
-    private ?string $phone='';
-    private ?string $fax='';
-    private ?string $mobile='';
-    private ?string $web='';
-    private ?string $vat_id='';
-    private ?string $tax_code='';
-    private ?bool $all_clients=false;
-    private ?string $subscribernumber='';
-    private ?string $iban='';
-    private ?int $gln=null;
-    private ?string $rcc='';
-    private ?int $listLimit=10;
-    
+    private ?string $name = '';
+
+    private ?string $company = '';
+    private ?string $address_1 = '';
+    private ?string $address_2 = '';
+    private ?string $city = '';
+    private ?string $state = '';
+    private ?string $zip = '';
+    private ?string $country = '';
+    private ?string $phone = '';
+    private ?string $fax = '';
+    private ?string $mobile = '';
+    private ?string $web = '';
+    private ?string $vat_id = '';
+    private ?string $tax_code = '';
+    private ?bool $all_clients = false;
+    private ?string $subscribernumber = '';
+    private ?string $iban = '';
+    private ?int $gln = null;
+    private ?string $rcc = '';
+    private ?int $listLimit = 10;
+
     private ?User $user;
-    
+
     public function __construct(UserInv $userinv)
     {
         $this->user_id = (int)$userinv->getUser_id();
@@ -77,131 +77,132 @@ final class UserInvForm extends FormModel
         $this->rcc = $userinv->getRcc();
         $this->listLimit = $userinv->getListLimit();
         $this->user = $userinv->getUser();
-    }        
-    
-    public function getUser_id() : int|null
-    {
-      return $this->user_id;
-    }
-    
-    public function getUser() : ?User {
-       return $this->user; 
     }
 
-    public function getType() : int|null
+    public function getUser_id(): int|null
     {
-      return $this->type;
+        return $this->user_id;
     }
 
-    public function getActive() : bool|null
+    public function getUser(): ?User
     {
-      return $this->active;
+        return $this->user;
     }
 
-    public function getLanguage() : string|null
+    public function getType(): int|null
     {
-      return $this->language;
+        return $this->type;
     }
 
-    public function getName() : string|null
+    public function getActive(): bool|null
     {
-      return $this->name;
+        return $this->active;
     }
 
-    public function getCompany() : string|null
+    public function getLanguage(): string|null
     {
-      return $this->company;
+        return $this->language;
     }
 
-    public function getAddress_1() : string|null
+    public function getName(): string|null
     {
-      return $this->address_1;
+        return $this->name;
     }
 
-    public function getAddress_2() : string|null
+    public function getCompany(): string|null
     {
-      return $this->address_2;
+        return $this->company;
     }
 
-    public function getCity() : string|null
+    public function getAddress_1(): string|null
     {
-      return $this->city;
+        return $this->address_1;
     }
 
-    public function getState() : string|null
+    public function getAddress_2(): string|null
     {
-      return $this->state;
+        return $this->address_2;
     }
 
-    public function getZip() : string|null
+    public function getCity(): string|null
     {
-      return $this->zip;
+        return $this->city;
     }
 
-    public function getCountry() : string|null
+    public function getState(): string|null
     {
-      return $this->country;
+        return $this->state;
     }
 
-    public function getPhone() : string|null
+    public function getZip(): string|null
     {
-      return $this->phone;
+        return $this->zip;
     }
 
-    public function getFax() : string|null
+    public function getCountry(): string|null
     {
-      return $this->fax;
+        return $this->country;
     }
 
-    public function getMobile() : string|null
+    public function getPhone(): string|null
     {
-      return $this->mobile;
-    }
-    
-    public function getWeb() : string|null
-    {
-      return $this->web;
+        return $this->phone;
     }
 
-    public function getVat_id() : string|null
+    public function getFax(): string|null
     {
-      return $this->vat_id;
+        return $this->fax;
     }
 
-    public function getTax_code() : string|null
+    public function getMobile(): string|null
     {
-      return $this->tax_code;
+        return $this->mobile;
     }
 
-    public function getAll_clients() : bool|null
+    public function getWeb(): string|null
     {
-      return $this->all_clients;
+        return $this->web;
     }
 
-    public function getSubscribernumber() : string|null
+    public function getVat_id(): string|null
     {
-      return $this->subscribernumber;
+        return $this->vat_id;
     }
 
-    public function getIban() : string|null
+    public function getTax_code(): string|null
     {
-      return $this->iban;
+        return $this->tax_code;
     }
 
-    public function getGln() : int|null
+    public function getAll_clients(): bool|null
     {
-      return $this->gln;
+        return $this->all_clients;
     }
 
-    public function getRcc() : string|null
+    public function getSubscribernumber(): string|null
     {
-      return $this->rcc;
+        return $this->subscribernumber;
     }
-    
-    public function getListLimit() : ?int
+
+    public function getIban(): string|null
     {
-      return $this->listLimit;  
-    }    
+        return $this->iban;
+    }
+
+    public function getGln(): int|null
+    {
+        return $this->gln;
+    }
+
+    public function getRcc(): string|null
+    {
+        return $this->rcc;
+    }
+
+    public function getListLimit(): ?int
+    {
+        return $this->listLimit;
+    }
 
     /**
      * @return string
@@ -210,6 +211,6 @@ final class UserInvForm extends FormModel
      */
     public function getFormName(): string
     {
-      return '';
+        return '';
     }
 }

@@ -9,38 +9,38 @@ use Yiisoft\FormModel\FormModel;
 use Yiisoft\Validator\Rule\Required;
 
 final class ClientPeppolForm extends FormModel
-{    
-    private ?int $id=null;
-    private ?int $client_id=null;       
+{
+    private ?int $id = null;
+    private ?int $client_id = null;
     #[Required]
-    private ?string $accounting_cost='';
+    private ?string $accounting_cost = '';
     #[Required]
-    private ?string $buyer_reference='';
+    private ?string $buyer_reference = '';
     #[Required]
-    private ?string $endpointid='';
+    private ?string $endpointid = '';
     #[Required]
-    private ?string $endpointid_schemeid='';
+    private ?string $endpointid_schemeid = '';
     #[Required]
-    private ?string $financial_institution_branchid='';
+    private ?string $financial_institution_branchid = '';
     #[Required]
-    private ?string $identificationid='';
+    private ?string $identificationid = '';
     #[Required]
-    private ?string $identificationid_schemeid='';
+    private ?string $identificationid_schemeid = '';
     #[Required]
-    private ?string $legal_entity_registration_name='';
+    private ?string $legal_entity_registration_name = '';
     #[Required]
-    private ?string $legal_entity_companyid='';
+    private ?string $legal_entity_companyid = '';
     #[Required]
-    private ?string $legal_entity_companyid_schemeid='';
+    private ?string $legal_entity_companyid_schemeid = '';
     #[Required]
-    private ?string $legal_entity_company_legal_form='';
+    private ?string $legal_entity_company_legal_form = '';
     #[Required]
-    private ?string $taxschemecompanyid='';
+    private ?string $taxschemecompanyid = '';
     #[Required]
-    private ?string $taxschemeid='';
+    private ?string $taxschemeid = '';
     #[Required]
-    private ?string $supplier_assigned_accountid='';
-    
+    private ?string $supplier_assigned_accountid = '';
+
     public function __construct(ClientPeppol $client_peppol)
     {
         $this->id = (int)$client_peppol->getId();
@@ -59,96 +59,96 @@ final class ClientPeppolForm extends FormModel
         $this->taxschemecompanyid = $client_peppol->getTaxschemecompanyid();
         $this->taxschemeid = $client_peppol->getTaxschemeid();
         $this->supplier_assigned_accountid = $client_peppol->getSupplierAssignedAccountId();
-    }        
-    
-    public function getId() : int|null
-    {
-      return $this->id;
     }
 
-    public function getClient_id() : int|null
+    public function getId(): int|null
     {
-      return $this->client_id;
+        return $this->id;
     }
 
-    public function getAccounting_cost() : string|null
+    public function getClient_id(): int|null
     {
-      return $this->accounting_cost;
-    }
-    
-    public function getBuyer_reference() : string|null
-    {
-      return $this->buyer_reference;
-    }
-    
-    public function getEndpointid() : string|null
-    {
-      return $this->endpointid;
+        return $this->client_id;
     }
 
-    public function getEndpointid_schemeid() : string|null
+    public function getAccounting_cost(): string|null
     {
-      return $this->endpointid_schemeid;
-    }
-    
-    public function getFinancial_institution_branchid() : string|null 
-    {
-      return $this->financial_institution_branchid;
-    }    
-    
-    
-    public function getIdentificationid() : string|null
-    {
-      return $this->identificationid;
+        return $this->accounting_cost;
     }
 
-    public function getIdentificationid_schemeid() : string|null
+    public function getBuyer_reference(): string|null
     {
-      return $this->identificationid_schemeid;
-    }
-    
-    public function getLegal_entity_registration_name() : string|null
-    {
-      return $this->legal_entity_registration_name;
+        return $this->buyer_reference;
     }
 
-    public function getLegal_entity_companyid() : string|null
+    public function getEndpointid(): string|null
     {
-      return $this->legal_entity_companyid;
+        return $this->endpointid;
     }
 
-    public function getLegal_entity_companyid_schemeid() : string|null
+    public function getEndpointid_schemeid(): string|null
     {
-      return $this->legal_entity_companyid_schemeid;
+        return $this->endpointid_schemeid;
     }
 
-    public function getLegal_entity_company_legal_form() : string|null
+    public function getFinancial_institution_branchid(): string|null
     {
-      return $this->legal_entity_company_legal_form;
-    }
-    
-    public function getTaxschemecompanyid() : string|null
-    {
-      return $this->taxschemecompanyid;
+        return $this->financial_institution_branchid;
     }
 
-    public function getTaxschemeid() : string|null
+
+    public function getIdentificationid(): string|null
     {
-      return $this->taxschemeid;
+        return $this->identificationid;
     }
-    
-    public function getSupplierAssignedAccountId() : string|null
+
+    public function getIdentificationid_schemeid(): string|null
     {
-      return $this->supplier_assigned_accountid;
+        return $this->identificationid_schemeid;
     }
-    
+
+    public function getLegal_entity_registration_name(): string|null
+    {
+        return $this->legal_entity_registration_name;
+    }
+
+    public function getLegal_entity_companyid(): string|null
+    {
+        return $this->legal_entity_companyid;
+    }
+
+    public function getLegal_entity_companyid_schemeid(): string|null
+    {
+        return $this->legal_entity_companyid_schemeid;
+    }
+
+    public function getLegal_entity_company_legal_form(): string|null
+    {
+        return $this->legal_entity_company_legal_form;
+    }
+
+    public function getTaxschemecompanyid(): string|null
+    {
+        return $this->taxschemecompanyid;
+    }
+
+    public function getTaxschemeid(): string|null
+    {
+        return $this->taxschemeid;
+    }
+
+    public function getSupplierAssignedAccountId(): string|null
+    {
+        return $this->supplier_assigned_accountid;
+    }
+
     /**
      * @return string
      * @psalm-return ''
      */
     public function getFormName(): string
     {
-      return '';
+        return '';
     }
 
 }

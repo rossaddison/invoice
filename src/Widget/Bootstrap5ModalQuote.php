@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace App\Widget;
@@ -23,17 +24,16 @@ final class Bootstrap5ModalQuote
     private QuoteForm $quoteForm;
     private array $layoutParameters;
     private array $formParameters;
-    
+
     public function __construct(
-        Translator $translator, 
-        ViewRenderer $viewRenderer, 
-        ClientRepository $cR, 
+        Translator $translator,
+        ViewRenderer $viewRenderer,
+        ClientRepository $cR,
         GroupRepository $gR,
         SettingRepository $sR,
-        UserClientRepository $ucR,    
+        UserClientRepository $ucR,
         QuoteForm $quoteForm
-    ) 
-    {
+    ) {
         $this->translator = $translator;
         $this->viewRenderer = $viewRenderer;
         $this->cR = $cR;
@@ -44,8 +44,8 @@ final class Bootstrap5ModalQuote
         $this->layoutParameters = [];
         $this->formParameters = [];
     }
-    
-    public function renderPartialLayoutWithFormAsString(string $origin, array $errors) : string
+
+    public function renderPartialLayoutWithFormAsString(string $origin, array $errors): string
     {
         $defaultGroupId = $this->sR->getSetting('default_quote_group');
         $optionsGroupData = [];
@@ -71,18 +71,18 @@ final class Bootstrap5ModalQuote
         $this->layoutParameters = [
             'type' => 'quote',
             'form' => $this->viewRenderer->renderPartialAsString('//invoice/quote/modal_add_quote_form', $this->formParameters),
-        ];    
+        ];
         return $this->viewRenderer->renderPartialAsString('//invoice/quote/modal_layout', $this->layoutParameters);
     }
-    
+
     /**
      * @return array
      */
-    public function getFormParameters() : array
+    public function getFormParameters(): array
     {
         /**
          * @var array $this->formParameters
          */
         return $this->formParameters;
-    }       
+    }
 }

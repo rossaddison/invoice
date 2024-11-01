@@ -9,20 +9,21 @@ use Yiisoft\FormModel\FormModel;
 use Yiisoft\Validator\Rule\Required;
 
 final class CustomFieldForm extends FormModel
-{   private ?int $id = null;    
+{
+    private ?int $id = null;
     #[Required]
-    private ?string $table='';
+    private ?string $table = '';
     #[Required]
-    private ?string $label='';
+    private ?string $label = '';
     #[Required]
-    private ?string $type='';
+    private ?string $type = '';
     #[Required]
-    private ?int $location=null;
+    private ?int $location = null;
     #[Required]
-    private ?int $order=null;
+    private ?int $order = null;
     #[Required]
-    private ?bool $required=false;
-    
+    private ?bool $required = false;
+
     public function __construct(CustomField $custom_field)
     {
         $this->id = (int)$custom_field->getId();
@@ -33,40 +34,40 @@ final class CustomFieldForm extends FormModel
         $this->order = $custom_field->getOrder();
         $this->required = $custom_field->getRequired();
     }
-    
-    public function getId() : int|null
-    {
-      return $this->id;  
-    }    
 
-    public function getTable() : string|null
+    public function getId(): int|null
     {
-      return $this->table;
+        return $this->id;
     }
 
-    public function getLabel() : string|null
+    public function getTable(): string|null
     {
-      return $this->label;
+        return $this->table;
     }
 
-    public function getType() : string|null
+    public function getLabel(): string|null
     {
-      return $this->type;
+        return $this->label;
     }
 
-    public function getLocation() : int|null
+    public function getType(): string|null
     {
-      return $this->location;
+        return $this->type;
     }
 
-    public function getOrder() : int|null
+    public function getLocation(): int|null
     {
-      return $this->order;
+        return $this->location;
     }
-    
-    public function getRequired() : bool|null
+
+    public function getOrder(): int|null
     {
-      return $this->required;
+        return $this->order;
+    }
+
+    public function getRequired(): bool|null
+    {
+        return $this->required;
     }
 
     /**
@@ -76,6 +77,6 @@ final class CustomFieldForm extends FormModel
      */
     public function getFormName(): string
     {
-      return '';
+        return '';
     }
 }

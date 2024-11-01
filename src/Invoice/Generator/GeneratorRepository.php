@@ -18,7 +18,7 @@ use Yiisoft\Data\Cycle\Writer\EntityWriter;
 final class GeneratorRepository extends Select\Repository
 {
     private EntityWriter $entityWriter;
-    
+
     /**
      * @param Select<TEntity> $select
      * @param EntityWriter $entityWriter
@@ -28,7 +28,7 @@ final class GeneratorRepository extends Select\Repository
         $this->entityWriter = $entityWriter;
         parent::__construct($select);
     }
-    
+
     /**
      * Get generators without filter
      *
@@ -39,22 +39,22 @@ final class GeneratorRepository extends Select\Repository
         $query = $this->select();
         return $this->prepareDataReader($query);
     }
-            
+
     /**
      * @see Reader/ReadableDataInterface|InvalidArgumentException
      * @param array|Gentor|null $generator
-     * @throws Throwable 
+     * @throws Throwable
      * @return void
      */
     public function save(array|Gentor|null $generator): void
     {
         $this->entityWriter->write([$generator]);
     }
-    
+
     /**
      * @see Reader/ReadableDataInterface|InvalidArgumentException
      * @param array|Gentor|null $generator
-     * @throws Throwable 
+     * @throws Throwable
      * @return void
      */
     public function delete(array|Gentor|null $generator): void
@@ -69,19 +69,17 @@ final class GeneratorRepository extends Select\Repository
                 ->withOrder(['small_singular_name' => 'asc'])
         );
     }
-    
+
     /**
      * @return null|Gentor
      *
      * @psalm-return TEntity|null
      */
-    public function repoGentorQuery(string $id) : Gentor|null
+    public function repoGentorQuery(string $id): Gentor|null
     {
         $query = $this
             ->select()
             ->where(['id' => $id]);
-        return  $query->fetchOne() ?: null;        
+        return  $query->fetchOne() ?: null;
     }
 }
-
-

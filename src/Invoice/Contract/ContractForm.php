@@ -10,24 +10,24 @@ use Yiisoft\Validator\Rule\Required;
 use DateTimeImmutable;
 
 final class ContractForm extends FormModel
-{    
-    private ?int $id=null;
-    
+{
+    private ?int $id = null;
+
     #[Required]
-    private ?string $reference='';
-    
+    private ?string $reference = '';
+
     #[Required]
-    private ?string $name='';
-    
+    private ?string $name = '';
+
     #[Required]
     private DateTimeImmutable $period_start;
-    
+
     #[Required]
     private DateTimeImmutable $period_end;
-    
+
     #[Required]
-    private ?string $client_id='';
-    
+    private ?string $client_id = '';
+
     public function __construct(Contract $contract)
     {
         $this->id = $contract->getId();
@@ -36,46 +36,46 @@ final class ContractForm extends FormModel
         $this->period_start = $contract->getPeriod_start();
         $this->period_end = $contract->getPeriod_end();
         $this->client_id = $contract->getClient_id();
-    }  
-    
-    public function getId() : int|null
+    }
+
+    public function getId(): int|null
     {
         return $this->id;
-    }        
-
-    public function getReference() : string|null
-    {
-      return $this->reference;
     }
 
-    public function getName() : string|null
+    public function getReference(): string|null
     {
-      return $this->name;
+        return $this->reference;
     }
-    
-    
-    public function getPeriod_start() : DateTimeImmutable
+
+    public function getName(): string|null
     {
-      return $this->period_start;
+        return $this->name;
     }
-    
-    
-    public function getPeriod_end() : DateTimeImmutable
+
+
+    public function getPeriod_start(): DateTimeImmutable
     {
-      return $this->period_end;
+        return $this->period_start;
     }
-    
-    public function getClient_id() : string|null
+
+
+    public function getPeriod_end(): DateTimeImmutable
     {
-      return $this->client_id;
+        return $this->period_end;
     }
-    
+
+    public function getClient_id(): string|null
+    {
+        return $this->client_id;
+    }
+
     /**
      * @return string
      * @psalm-return ''
      */
     public function getFormName(): string
     {
-      return '';
+        return '';
     }
 }

@@ -5,33 +5,32 @@ declare(strict_types=1);
 namespace App\Invoice\Task;
 
 use DateTimeImmutable;
-
 use App\Invoice\Entity\Task;
 use Yiisoft\FormModel\FormModel;
 use Yiisoft\Validator\Rule\Required;
 
 final class TaskForm extends FormModel
-{        
+{
     #[Required]
-    private ?int $project_id=null;
-    
+    private ?int $project_id = null;
+
     #[Required]
-    private ?string $name='';
-    
+    private ?string $name = '';
+
     #[Required]
-    private ?string $description='';
-    
+    private ?string $description = '';
+
     #[Required]
-    private ?float $price=null;
-    
-    private mixed $finish_date='';
-    
+    private ?float $price = null;
+
+    private mixed $finish_date = '';
+
     #[Required]
-    private ?int $status=null;
-    
+    private ?int $status = null;
+
     #[Required]
-    private ?int $tax_rate_id=null;
-    
+    private ?int $tax_rate_id = null;
+
     public function __construct(Task $task)
     {
         $this->project_id = (int)$task->getProject_id();
@@ -42,43 +41,43 @@ final class TaskForm extends FormModel
         $this->status = $task->getStatus();
         $this->tax_rate_id = (int)$task->getTax_rate_id();
     }
-    
-    public function getProject_id() : int|null
+
+    public function getProject_id(): int|null
     {
-      return $this->project_id;
+        return $this->project_id;
     }
 
-    public function getName() : string|null
+    public function getName(): string|null
     {
-      return $this->name;
+        return $this->name;
     }
 
-    public function getDescription() : string|null
+    public function getDescription(): string|null
     {
-      return $this->description;
+        return $this->description;
     }
 
-    public function getPrice() : float|null
+    public function getPrice(): float|null
     {
-      return $this->price;
-    }
-    
-    public function getFinish_date() : null|string|DateTimeImmutable
-    {
-      /**
-       * @var null|string|DateTimeImmutable $this->finish_date 
-       */
-      return $this->finish_date;
-    }    
-    
-    public function getStatus() : int|null
-    {
-      return $this->status;
+        return $this->price;
     }
 
-    public function getTax_rate_id() : int|null
+    public function getFinish_date(): null|string|DateTimeImmutable
     {
-      return $this->tax_rate_id;
+        /**
+         * @var null|string|DateTimeImmutable $this->finish_date
+         */
+        return $this->finish_date;
+    }
+
+    public function getStatus(): int|null
+    {
+        return $this->status;
+    }
+
+    public function getTax_rate_id(): int|null
+    {
+        return $this->tax_rate_id;
     }
 
     /**
@@ -88,6 +87,6 @@ final class TaskForm extends FormModel
      */
     public function getFormName(): string
     {
-      return '';
+        return '';
     }
 }

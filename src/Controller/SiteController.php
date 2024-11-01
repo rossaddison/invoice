@@ -12,7 +12,7 @@ final class SiteController
     {
         $this->viewRenderer = $viewRenderer->withController($this);
     }
-    
+
     public function index(): \Yiisoft\DataResponse\DataResponse
     {
         return $this->viewRenderer->render('index');
@@ -37,7 +37,7 @@ final class SiteController
     {
         return $this->viewRenderer->render('testimonial');
     }
-    
+
     public function contact(): \Yiisoft\DataResponse\DataResponse
     {
         return $this->viewRenderer->render('contact');
@@ -45,36 +45,36 @@ final class SiteController
 
     public function forgotalert(): \Yiisoft\DataResponse\DataResponse
     {
-        return $this->viewRenderer->render('forgotalert'); 
+        return $this->viewRenderer->render('forgotalert');
     }
-    
+
     public function forgotemailfailed(): \Yiisoft\DataResponse\DataResponse
     {
-        return $this->viewRenderer->render('forgotemailfailed'); 
+        return $this->viewRenderer->render('forgotemailfailed');
     }
-    
+
     public function forgotusernotfound(): \Yiisoft\DataResponse\DataResponse
     {
-        return $this->viewRenderer->render('forgotusernotfound'); 
+        return $this->viewRenderer->render('forgotusernotfound');
     }
 
     public function resetpasswordfailed(): \Yiisoft\DataResponse\DataResponse
     {
-        return $this->viewRenderer->render('resetpasswordfailed'); 
+        return $this->viewRenderer->render('resetpasswordfailed');
     }
-    
+
     public function resetpasswordsuccess(): \Yiisoft\DataResponse\DataResponse
     {
-        return $this->viewRenderer->render('resetpasswordsuccess'); 
+        return $this->viewRenderer->render('resetpasswordsuccess');
     }
-    
+
     public function signupfailed(): \Yiisoft\DataResponse\DataResponse
     {
-        return $this->viewRenderer->render('signupfailed'); 
+        return $this->viewRenderer->render('signupfailed');
     }
-    
+
     public function signupsuccess(): \Yiisoft\DataResponse\DataResponse
     {
-        return $this->viewRenderer->render('signupsuccess'); 
+        return $this->viewRenderer->render('signupsuccess');
     }
 }

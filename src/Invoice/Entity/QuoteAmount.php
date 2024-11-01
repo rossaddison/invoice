@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=1); 
+declare(strict_types=1);
 
 namespace App\Invoice\Entity;
 
@@ -13,25 +13,25 @@ use App\Invoice\Entity\Quote;
 class QuoteAmount
 {
     #[BelongsTo(target:Quote::class, nullable: false, fkAction:'NO ACTION')]
-    private ?Quote $quote = null;    
+    private ?Quote $quote = null;
     #[Column(type: 'integer(11)', nullable:false)]
     private ?int $quote_id =  null;
-    
+
     #[Column(type: 'primary')]
-    private ?int $id =  null;   
-    
+    private ?int $id =  null;
+
     #[Column(type: 'decimal(20,2)', nullable:false, default: 0.00)]
     private ?float $item_subtotal =  0.00;
-     
+
     #[Column(type: 'decimal(20,2)', nullable:false, default: 0.00)]
     private ?float $item_tax_total =  0.00;
-     
+
     #[Column(type: 'decimal(20,2)', nullable:false, default: 0.00)]
     private ?float $tax_total =  0.00;
-     
+
     #[Column(type: 'decimal(20,2)', nullable:false, default: 0.00)]
     private ?float $total =  0.00;
-     
+
     public function __construct(
         int $id = null,
         int $quote_id = null,
@@ -39,78 +39,77 @@ class QuoteAmount
         float $item_tax_total = 0.00,
         float $tax_total = 0.00,
         float $total = 0.00
-    )
-    {
-        $this->id=$id;
-        $this->quote_id=$quote_id;
-        $this->item_subtotal=$item_subtotal;
-        $this->item_tax_total=$item_tax_total;
-        $this->tax_total=$tax_total;
-        $this->total=$total;
+    ) {
+        $this->id = $id;
+        $this->quote_id = $quote_id;
+        $this->item_subtotal = $item_subtotal;
+        $this->item_tax_total = $item_tax_total;
+        $this->tax_total = $tax_total;
+        $this->total = $total;
     }
-    
-    public function getQuote() : ?Quote
+
+    public function getQuote(): ?Quote
     {
-      return $this->quote;
+        return $this->quote;
     }
-    
+
     public function getId(): string
     {
-     return (string)$this->id;
+        return (string)$this->id;
     }
-    
-    public function setId(int $id) : void
+
+    public function setId(int $id): void
     {
-      $this->id =  $id;
+        $this->id =  $id;
     }
-    
+
     public function getQuote_id(): string
     {
-     return (string)$this->quote_id;
+        return (string)$this->quote_id;
     }
-    
-    public function setQuote_id(int $quote_id) : void
+
+    public function setQuote_id(int $quote_id): void
     {
-      $this->quote_id =  $quote_id;
+        $this->quote_id =  $quote_id;
     }
-    
+
     public function getItem_subtotal(): ?float
     {
-       return $this->item_subtotal;
+        return $this->item_subtotal;
     }
-    
-    public function setItem_subtotal(float $item_subtotal) : void
+
+    public function setItem_subtotal(float $item_subtotal): void
     {
-      $this->item_subtotal =  $item_subtotal;
+        $this->item_subtotal =  $item_subtotal;
     }
-    
+
     public function getItem_tax_total(): ?float
     {
-       return $this->item_tax_total;
+        return $this->item_tax_total;
     }
-    
-    public function setItem_tax_total(float $item_tax_total) : void
+
+    public function setItem_tax_total(float $item_tax_total): void
     {
-      $this->item_tax_total =  $item_tax_total;
+        $this->item_tax_total =  $item_tax_total;
     }
-    
+
     public function getTax_total(): ?float
     {
-       return $this->tax_total;
+        return $this->tax_total;
     }
-    
-    public function setTax_total(float $tax_total) : void
+
+    public function setTax_total(float $tax_total): void
     {
-      $this->tax_total =  $tax_total;
+        $this->tax_total =  $tax_total;
     }
-    
+
     public function getTotal(): ?float
     {
-       return $this->total;
+        return $this->total;
     }
-    
-    public function setTotal(float $total) : void
+
+    public function setTotal(float $total): void
     {
-      $this->total =  $total;
+        $this->total =  $total;
     }
 }

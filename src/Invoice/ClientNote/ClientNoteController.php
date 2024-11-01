@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=1); 
+declare(strict_types=1);
 
 namespace App\Invoice\ClientNote;
 
@@ -32,16 +32,15 @@ final class ClientNoteController
     private SessionInterface $session;
     private Flash $flash;
     private TranslatorInterface $translator;
-    
+
     public function __construct(
         ViewRenderer $viewRenderer,
         WebControllerService $webService,
         UserService $userService,
         ClientNoteService $clientnoteService,
-        SessionInterface $session,      
+        SessionInterface $session,
         TranslatorInterface $translator
-    )    
-    {
+    ) {
         $this->viewRenderer = $viewRenderer->withControllerName('invoice/clientnote')
                                            ->withLayout('@views/layout/invoice.php');
         $this->webService = $webService;
@@ -51,7 +50,7 @@ final class ClientNoteController
         $this->flash = new Flash($session);
         $this->translator = $translator;
     }
-    
+
     /**
      * @param ClientNoteRepository $clientnoteRepository
      * @param SettingRepository $settingRepository
@@ -65,22 +64,22 @@ final class ClientNoteController
         $paginator = (new OffsetPaginator($clientnoteRepository->findAllPreloaded()));
         $parameters = [
             'alert' => $this->alert(),
-            'paginator' => $paginator,   
+            'paginator' => $paginator,
         ];
         return $this->viewRenderer->render('index', $parameters);
     }
-    
+
     /**
      * @param Request $request
      * @param FormHydrator $formHydrator
      * @param ClientRepository $clientRepository
      * @return Response
      */
-    public function add(Request $request, 
-                        FormHydrator $formHydrator,
-                        ClientRepository $clientRepository
-    ): Response
-    {
+    public function add(
+        Request $request,
+        FormHydrator $formHydrator,
+        ClientRepository $clientRepository
+    ): Response {
         $clientnote = new ClientNote();
         $form = new ClientNoteForm($clientnote);
         $parameters = [
@@ -91,13 +90,13 @@ final class ClientNoteController
             'form' => $form,
             'clients' => $clientRepository->findAllPreloaded(),
         ];
-        
+
         if ($request->getMethod() === Method::POST) {
             if ($formHydrator->populateFromPostAndValidate($form, $request)) {
-               $body = $request->getParsedBody(); 
-               /**
-                * @psalm-suppress PossiblyInvalidArgument $body 
-                */ 
+                $body = $request->getParsedBody();
+                /**
+                 * @psalm-suppress PossiblyInvalidArgument $body
+                 */
                 $this->clientnoteService->addClientNote($clientnote, $body);
                 return $this->webService->getRedirectResponse('clientnote/index');
             }
@@ -106,7 +105,7 @@ final class ClientNoteController
         }
         return $this->viewRenderer->render('_form', $parameters);
     }
-    
+
     /**
      * @param Request $request
      * @param FormHydrator $formHydrator
@@ -116,18 +115,19 @@ final class ClientNoteController
      * @param CurrentRoute $currentRoute
      * @return Response
      */
-    public function edit(Request $request, 
-                        FormHydrator $formHydrator,
-                        ClientNoteRepository $clientnoteRepository,                  
-                        ClientRepository $clientRepository,
-                        CurrentRoute $currentRoute
+    public function edit(
+        Request $request,
+        FormHydrator $formHydrator,
+        ClientNoteRepository $clientnoteRepository,
+        ClientRepository $clientRepository,
+        CurrentRoute $currentRoute
     ): Response {
         $client_note = $this->clientnote($currentRoute, $clientnoteRepository);
-        if (null!==$client_note) {
+        if (null !== $client_note) {
             $form = new ClientNoteForm($client_note);
             $parameters = [
                 'title' => $this->translator->translate('i.edit'),
-                'actionName' => 'clientnote/edit', 
+                'actionName' => 'clientnote/edit',
                 'actionArguments' => ['id' => $client_note->getId()],
                 'errors' => [],
                 'form' => $form,
@@ -150,39 +150,44 @@ final class ClientNoteController
             }
             return $this->viewRenderer->render('_form', $parameters);
         } //client note
-        return $this->webService->getRedirectResponse('clientnote/index');   
+        return $this->webService->getRedirectResponse('clientnote/index');
     }
-    
+
     /**
-     * 
+     *
      * @param ClientNoteRepository $clientnoteRepository
      * @param CurrentRoute $currentRoute
      * @return Response
      */
-    public function delete(ClientNoteRepository $clientnoteRepository, CurrentRoute $currentRoute
+    public function delete(
+        ClientNoteRepository $clientnoteRepository,
+        CurrentRoute $currentRoute
     ): Response {
         $client_note = $this->clientnote($currentRoute, $clientnoteRepository);
         if ($client_note) {
-            $this->clientnoteService->deleteClientNote($client_note);               
-            return $this->webService->getRedirectResponse('clientnote/index');        
+            $this->clientnoteService->deleteClientNote($client_note);
+            return $this->webService->getRedirectResponse('clientnote/index');
         }
         return $this->webService->getRedirectResponse('clientnote/index');
     }
-    
+
     /**
      * @param CurrentRoute $currentRoute
      * @param ClientNoteRepository $clientnoteRepository
      * @param ClientRepository $clientRepository
      * @return Response
      */
-    public function view(CurrentRoute $currentRoute, ClientNoteRepository $clientnoteRepository, ClientRepository $clientRepository
-        ): Response {
+    public function view(
+        CurrentRoute $currentRoute,
+        ClientNoteRepository $clientnoteRepository,
+        ClientRepository $clientRepository
+    ): Response {
         $client_note = $this->clientnote($currentRoute, $clientnoteRepository);
         if ($client_note) {
             $form = new ClientNoteForm($client_note);
             $parameters = [
                 'title' => $this->translator->translate('i.view'),
-                'actionName' => 'clientnote/edit', 
+                'actionName' => 'clientnote/edit',
                 'actionArguments' => ['id' => $client_note->getId()],
                 'form' => $form,
                 'clients' => $clientRepository->findAllPreloaded(),
@@ -190,38 +195,38 @@ final class ClientNoteController
             return $this->viewRenderer->render('_view', $parameters);
         } else {
             return $this->webService->getRedirectResponse('clientnote/index');
-        } 
+        }
     }
-    
+
     /**
      * @return Response|true
      */
-    private function rbac(): bool|Response 
+    private function rbac(): bool|Response
     {
         $canEdit = $this->userService->hasPermission('editInv');
-        if (!$canEdit){
+        if (!$canEdit) {
             $this->flash_message('warning', $this->translator->translate('invoice.permission'));
             return $this->webService->getRedirectResponse('clientnote/index');
         }
         return $canEdit;
     }
-    
+
     /**
-     * 
+     *
      * @param CurrentRoute $currentRoute
      * @param ClientNoteRepository $clientnoteRepository
      * @return ClientNote|null
      */
     private function clientnote(CurrentRoute $currentRoute, ClientNoteRepository $clientnoteRepository): ClientNote|null
     {
-        $id = $currentRoute->getArgument('id');       
-        if (null!==$id) {
+        $id = $currentRoute->getArgument('id');
+        if (null !== $id) {
             $clientnote = $clientnoteRepository->repoClientNotequery($id);
             return $clientnote;
         }
         return null;
     }
-    
+
     /**
      * @return \Yiisoft\Data\Cycle\Reader\EntityReader
      *
@@ -229,26 +234,30 @@ final class ClientNoteController
      */
     private function clientnotes(ClientNoteRepository $clientnoteRepository): \Yiisoft\Data\Cycle\Reader\EntityReader
     {
-        $clientnotes = $clientnoteRepository->findAllPreloaded();        
+        $clientnotes = $clientnoteRepository->findAllPreloaded();
         return $clientnotes;
     }
-          
-   /**
-     * @return string
-     */
-    private function alert(): string {
-      return $this->viewRenderer->renderPartialAsString('//invoice/layout/alert',
-      [ 
+
+    /**
+      * @return string
+      */
+    private function alert(): string
+    {
+        return $this->viewRenderer->renderPartialAsString(
+            '//invoice/layout/alert',
+            [
         'flash' => $this->flash
-      ]);
+      ]
+        );
     }
-    
+
     /**
      * @param string $level
      * @param string $message
      * @return Flash|null
      */
-    private function flash_message(string $level, string $message): Flash|null {
+    private function flash_message(string $level, string $message): Flash|null
+    {
         if (strlen($message) > 0) {
             $this->flash->add($level, $message, true);
             return $this->flash;

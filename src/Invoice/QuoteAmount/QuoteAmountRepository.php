@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=1); 
+declare(strict_types=1);
 
 namespace App\Invoice\QuoteAmount;
 
@@ -21,10 +21,10 @@ use Yiisoft\Data\Cycle\Writer\EntityWriter;
  */
 final class QuoteAmountRepository extends Select\Repository
 {
-private EntityWriter $entityWriter;
-    
+    private EntityWriter $entityWriter;
+
     /**
-     * @param Select<TEntity> $select     
+     * @param Select<TEntity> $select
      * @param EntityWriter $entityWriter
      */
     public function __construct(Select $select, EntityWriter $entityWriter)
@@ -43,7 +43,7 @@ private EntityWriter $entityWriter;
         $query = $this->select();
         return $this->prepareDataReader($query);
     }
-    
+
     /**
      * @psalm-return EntityReader
      */
@@ -52,34 +52,34 @@ private EntityWriter $entityWriter;
         return (new EntityReader($this->select()))
             ->withSort($this->getSort());
     }
-    
+
     private function getSort(): Sort
     {
         return Sort::only(['id'])->withOrder(['id' => 'asc']);
     }
-    
+
     /**
      * @see Reader/ReadableDataInterface|InvalidArgumentException
      * @param array|QuoteAmount|null $quoteamount
-     * @throws Throwable 
+     * @throws Throwable
      * @return void
      */
     public function save(array|QuoteAmount|null $quoteamount): void
     {
         $this->entityWriter->write([$quoteamount]);
     }
-    
+
     /**
      * @see Reader/ReadableDataInterface|InvalidArgumentException
      * @param array|QuoteAmount|null $quoteamount
-     * @throws Throwable 
+     * @throws Throwable
      * @return void
      */
     public function delete(array|QuoteAmount|null $quoteamount): void
     {
         $this->entityWriter->delete([$quoteamount]);
     }
-    
+
     private function prepareDataReader(Select $query): EntityReader
     {
         return (new EntityReader($query))->withSort(
@@ -87,116 +87,122 @@ private EntityWriter $entityWriter;
                 ->withOrder(['id' => 'asc'])
         );
     }
-    
+
     /**
      * @param string $quote_id
      */
-    public function repoQuoteAmountCount(string $quote_id) : int {
+    public function repoQuoteAmountCount(string $quote_id): int
+    {
         $count = $this->select()
                       ->where(['quote_id' => $quote_id])
                       ->count();
         return $count;
     }
-    
+
     /**
      * @return null|QuoteAmount
      *
      * @psalm-return TEntity|null
      */
-    public function repoQuoteAmountqueryTest(string $quote_id):QuoteAmount|null {
+    public function repoQuoteAmountqueryTest(string $quote_id): QuoteAmount|null
+    {
         $query = $this->select()
                       ->load('quote')
                       ->where(['quote_id' => $quote_id]);
-        return  $query->fetchOne() ?: null;        
-    }   
-    
-    /**
-     * @param string $quote_id
-     *
-     * @return null|QuoteAmount
-     *
-     * @psalm-return TEntity|null
-     */
-    public function repoQuoteAmountquery(string $quote_id):QuoteAmount|null {
-        $query = $this->select()
-                      ->load('quote')
-                      ->where(['quote_id' => $quote_id]);
-        return  $query->fetchOne() ?: null;        
-    }    
-    
-    /**
-     * @param string $quote_id
-     *
-     * @return null|QuoteAmount
-     *
-     * @psalm-return TEntity|null
-     */
-    public function repoQuotequery(string $quote_id):QuoteAmount|null {
-        $query = $this->select()
-                      ->load('quote')
-                      ->where(['quote_id' => $quote_id]);
-        return  $query->fetchOne() ?: null;        
+        return  $query->fetchOne() ?: null;
     }
-   
+
     /**
-     * 
+     * @param string $quote_id
+     *
+     * @return null|QuoteAmount
+     *
+     * @psalm-return TEntity|null
+     */
+    public function repoQuoteAmountquery(string $quote_id): QuoteAmount|null
+    {
+        $query = $this->select()
+                      ->load('quote')
+                      ->where(['quote_id' => $quote_id]);
+        return  $query->fetchOne() ?: null;
+    }
+
+    /**
+     * @param string $quote_id
+     *
+     * @return null|QuoteAmount
+     *
+     * @psalm-return TEntity|null
+     */
+    public function repoQuotequery(string $quote_id): QuoteAmount|null
+    {
+        $query = $this->select()
+                      ->load('quote')
+                      ->where(['quote_id' => $quote_id]);
+        return  $query->fetchOne() ?: null;
+    }
+
+    /**
+     *
      * @param int $key
      * @param array $range
      * @param SR $sR
      * @return EntityReader
      */
-    public function repoStatusTotals(int $key, array $range, SR $sR) : EntityReader {        
+    public function repoStatusTotals(int $key, array $range, SR $sR): EntityReader
+    {
         $datehelper = new DateHelper($sR);
-        /** 
+        /**
          * @var \DateTimeImmutable $range['lower']
          * @var \DateTimeImmutable $range['upper']
          */
         $query = $this->select()
                       ->load('quote')
                       ->where(['quote.status_id' => $key])
-                      ->andWhere('quote.date_created', '>=' ,$datehelper->date_from_mysql_without_style($range['lower']))
-                      ->andWhere('quote.date_created', '<=' ,$datehelper->date_from_mysql_without_style($range['upper']));                      
+                      ->andWhere('quote.date_created', '>=', $datehelper->date_from_mysql_without_style($range['lower']))
+                      ->andWhere('quote.date_created', '<=', $datehelper->date_from_mysql_without_style($range['upper']));
         return $this->prepareDataReader($query);
     }
-    
+
     /**
-     * 
+     *
      * @param int $key
      * @param array $range
      * @param SR $sR
      * @return int
      */
-    public function repoStatusTotals_Num_Total(int $key, array $range, SR $sR) : int {        
+    public function repoStatusTotals_Num_Total(int $key, array $range, SR $sR): int
+    {
         $datehelper = new DateHelper($sR);
-        /** 
+        /**
          * @var \DateTimeImmutable $range['lower']
          * @var \DateTimeImmutable $range['upper']
          */
         $query = $this->select()
-                      ->load('quote')                      
+                      ->load('quote')
                       ->where(['quote.status_id' => $key])
-                      ->andWhere('quote.date_created', '>=' ,$datehelper->date_from_mysql_without_style($range['lower']))
-                      ->andWhere('quote.date_created', '<=' ,$datehelper->date_from_mysql_without_style($range['upper']))
+                      ->andWhere('quote.date_created', '>=', $datehelper->date_from_mysql_without_style($range['lower']))
+                      ->andWhere('quote.date_created', '<=', $datehelper->date_from_mysql_without_style($range['upper']))
                       ->count();
         return $query;
     }
-    
+
     /**
-     * 
+     *
      * @param QR $qR
      * @param SR $sR
      * @param Translator $translator
      * @param string $period
      * @return array
      */
-    public function get_status_totals(QR $qR, SR $sR, Translator $translator, string $period) : array
+    public function get_status_totals(QR $qR, SR $sR, Translator $translator, string $period): array
     {
         $return = [];
-        // $period eg. this-month, last-month derived from $sR->getSetting('invoice or quote_overview_period') 
+        // $period eg. this-month, last-month derived from $sR->getSetting('invoice or quote_overview_period')
         $range = $sR->range($period);
         /**
          * @var int $key
-         * @var array $status 
+         * @var array $status
          */
         foreach ($qR->getStatuses($translator) as $key => $status) {
             $status_specific_quotes = $this->repoStatusTotals($key, $range, $sR);
@@ -204,7 +210,7 @@ private EntityWriter $entityWriter;
             $total = 0.00;
             /** @var QuoteAmount $quote_amount */
             foreach ($status_specific_quotes as $quote_amount) {
-                $total = $total + (float)$quote_amount->getTotal();                
+                $total = $total + (float)$quote_amount->getTotal();
             }
             $return[$key] = [
                 'quote_status_id' => $key,

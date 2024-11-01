@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=1); 
+declare(strict_types=1);
 
 namespace App\Invoice\Group;
 
@@ -17,7 +17,7 @@ use Yiisoft\Data\Cycle\Writer\EntityWriter;
  */
 final class GroupRepository extends Select\Repository
 {
-private EntityWriter $entityWriter;
+    private EntityWriter $entityWriter;
     /**
      * @param Select<TEntity> $select
      * @param EntityWriter $entityWriter
@@ -38,7 +38,7 @@ private EntityWriter $entityWriter;
         $query = $this->select();
         return $this->prepareDataReader($query);
     }
-    
+
     /**
      * @psalm-return EntityReader
      */
@@ -47,34 +47,34 @@ private EntityWriter $entityWriter;
         return (new EntityReader($this->select()))
             ->withSort($this->getSort());
     }
-    
+
     private function getSort(): Sort
     {
         return Sort::only(['id'])->withOrder(['id' => 'asc']);
     }
-    
+
     /**
      * @see Reader/ReadableDataInterface|InvalidArgumentException
      * @param array|Group|null $group
-     * @throws Throwable 
+     * @throws Throwable
      * @return void
      */
     public function save(array|Group|null $group): void
     {
         $this->entityWriter->write([$group]);
     }
-    
+
     /**
      * @see Reader/ReadableDataInterface|InvalidArgumentException
      * @param array|Group|null $group
-     * @throws Throwable 
+     * @throws Throwable
      * @return void
      */
     public function delete(array|Group|null $group): void
     {
         $this->entityWriter->delete([$group]);
     }
-    
+
     private function prepareDataReader(Select $query): EntityReader
     {
         return (new EntityReader($query))->withSort(
@@ -82,35 +82,36 @@ private EntityWriter $entityWriter;
                 ->withOrder(['id' => 'asc'])
         );
     }
-    
-  /**
-   * @param int $id
-   * @param bool $set_next
-   * @return mixed
-   */
-    public function generate_number(int $id, bool $set_next = false) : mixed
+
+    /**
+     * @param int $id
+     * @param bool $set_next
+     * @return mixed
+     */
+    public function generate_number(int $id, bool $set_next = false): mixed
     {
         /** @var Group $group */
         $group = $this->repoGroupquery((string)$id);
         $my_result = $this->parse_identifier_format(
             (string)$group->getIdentifier_format(),
             (int)$group->getNext_id(),
-            (int)$group->getLeft_pad());
+            (int)$group->getLeft_pad()
+        );
         if ($set_next) {
             $this->set_next_number($id);
         }
-        if (!empty($my_result) && gettype($my_result)){
-            return $my_result;        
-        } 
+        if (!empty($my_result) && gettype($my_result)) {
+            return $my_result;
+        }
         return '';
     }
-    
-   /**
-     * @param string $identifier_format
-     * @param int $next_id
-     * @param int $left_pad
-     * @return string
-     */
+
+    /**
+      * @param string $identifier_format
+      * @param int $next_id
+      * @param int $left_pad
+      * @return string
+      */
     private function parse_identifier_format(string $identifier_format = '', int $next_id = 1, int  $left_pad = 1): string
     {
         $template_vars = [];
@@ -142,49 +143,52 @@ private EntityWriter $entityWriter;
         }
         return '';
     }
-    
+
     /**
      * @return null|Group
      *
      * @psalm-return TEntity|null
      */
-    public function repoGroupquery(string $id): Group|null    {
+    public function repoGroupquery(string $id): Group|null
+    {
         $query = $this->select()
                       ->where(['id' => $id]);
-        return  $query->fetchOne() ?: null;        
+        return  $query->fetchOne() ?: null;
     }
-    
-    public function repoGroupcount(string $id): int {
+
+    public function repoGroupcount(string $id): int
+    {
         $count = $this->select()
                       ->where(['id' => $id])
-                      ->count();  
+                      ->count();
         return  $count;
     }
-    
-    public function repoCountAll(): int {
+
+    public function repoCountAll(): int
+    {
         $count = $this->select()
-                      ->count();  
+                      ->count();
         return  $count;
     }
-    
+
     /**
      * @param $id
      */
-    public function set_next_number(int $id) : int
+    public function set_next_number(int $id): int
     {
         $result = $this->repoGroupquery((string)$id) ?: null;
-        if (null!==$result) {
-            $current_id = $result->getNext_id();        
+        if (null !== $result) {
+            $current_id = $result->getNext_id();
             $incremented_next_id = (int)$result->getNext_id() + 1;
-            $result->setNext_id($incremented_next_id); 
+            $result->setNext_id($incremented_next_id);
             $this->save($result);
             return (int)$current_id;
         } else {
             return 0;
-        }     
+        }
     }
-    
-    public function optionsData() : array
+
+    public function optionsData(): array
     {
         $optionsData = [];
         $groups = $this->findAllPreloaded();
@@ -195,5 +199,5 @@ private EntityWriter $entityWriter;
             $optionsData[$group->getId()] = $group->getName();
         }
         return $optionsData;
-    }        
+    }
 }

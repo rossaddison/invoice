@@ -3,6 +3,7 @@
 declare(strict_types=1);
 
 namespace App\Invoice\Helpers;
+
 use Yiisoft\Html\Html;
 
 /**
@@ -18,15 +19,15 @@ class GenerateCodeFileHelper
     /**
      * The code file is new.
      */
-    const string OP_CREATE = 'create';
+    public const string OP_CREATE = 'create';
     /**
      * The code file already exists, and the new one may need to overwrite it.
      */
-    const string OP_OVERWRITE = 'overwrite';
+    public const string OP_OVERWRITE = 'overwrite';
     /**
      * The new code file and the existing one are identical.
      */
-    const string OP_SKIP = 'skip';
+    public const string OP_SKIP = 'skip';
 
     /**
      * @var string an ID that uniquely identifies this code file.
@@ -35,7 +36,7 @@ class GenerateCodeFileHelper
     /**
      * @var string the file path that the new code should be saved to.
      */
-    public $basepath;    
+    public $basepath;
     /**
      * @var string the file path that the new code should be saved to.
      */
@@ -57,18 +58,18 @@ class GenerateCodeFileHelper
     public function __construct($path, $content)
     {
         $this->path = strtr($path, '/\\', DIRECTORY_SEPARATOR . DIRECTORY_SEPARATOR);
-        
+
         // $this->basepath used in function relativepath
         $this->basepath = dirname(dirname(dirname(__DIR__)));
-        
+
         $this->content = $content;
         /**
-         *  @see GeneratorController function build_and_save 
-         *  The MD5 hash algorithm was developed in 1991 and released in 1992. 
-         *  Only a year later, researchers were already finding flaws! 
-         *  However, it continued to be used and adopted by developers around the world. 
-         *  In 2005, it was officially deemed unsuitable, yet, in 2019, it was estimated 
-         *  that 25% of content management systems still use MD5! 
+         *  @see GeneratorController function build_and_save
+         *  The MD5 hash algorithm was developed in 1991 and released in 1992.
+         *  Only a year later, researchers were already finding flaws!
+         *  However, it continued to be used and adopted by developers around the world.
+         *  In 2005, it was officially deemed unsuitable, yet, in 2019, it was estimated
+         *  that 25% of content management systems still use MD5!
          *  Recommendation: use password_hash instead ... Courtesy of Snyk
          * @see https://www.php.net/manual/en/function.md5.php
          */
@@ -90,12 +91,12 @@ class GenerateCodeFileHelper
         if ($this->operation === self::OP_CREATE) {
             $dir = dirname($this->path);
             if (!is_dir($dir)) {
-                    $mask = @umask(0);
-                    $result = @mkdir($dir, 0777, true);
-                    @umask($mask);
-                    if (!$result) {
-                        return "Unable to create the directory '$dir'.";
-                    }
+                $mask = @umask(0);
+                $result = @mkdir($dir, 0777, true);
+                @umask($mask);
+                if (!$result) {
+                    return "Unable to create the directory '$dir'.";
+                }
             }
         }
         if (@file_put_contents($this->path, $this->content) === false) {
@@ -147,5 +148,5 @@ class GenerateCodeFileHelper
         }
 
         return false;
-    }  
+    }
 }

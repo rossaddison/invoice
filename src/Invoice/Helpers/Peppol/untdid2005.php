@@ -1,4 +1,4 @@
- <?php 
+ <?php
 declare(strict_types=1);
 $array = [
     0 => [
@@ -4067,4 +4067,3 @@ $array = [
       2 => 'A code assigned within a code list to be used on an interim basis and as defined among trading partners until a precise code can be assigned to the code list.',
     ],
   ];
-  

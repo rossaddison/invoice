@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=1); 
+declare(strict_types=1);
 
 namespace App\Invoice\AllowanceCharge;
 
@@ -26,7 +26,7 @@ final class AllowanceChargeService
         isset($array['tax_rate_id']) ? $model->setTaxRateId((int)$array['tax_rate_id']) : '';
         $this->repository->save($model);
     }
-    
+
     public function deleteAllowanceCharge(AllowanceCharge $model): void
     {
         $this->repository->delete($model);

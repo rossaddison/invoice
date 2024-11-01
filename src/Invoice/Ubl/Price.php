@@ -1,5 +1,6 @@
 <?php
-declare(strict_types=1); 
+
+declare(strict_types=1);
 
 namespace App\Invoice\Ubl;
 
@@ -14,13 +15,14 @@ class Price implements XmlSerializable
     private string $unitCodeListId;
     private ?AllowanceCharge $allowanceCharge;
 
-    public function __construct(?AllowanceCharge $allowanceCharge, string $priceAmount, string $baseQuantity, string $unitCodeListId ) {
+    public function __construct(?AllowanceCharge $allowanceCharge, string $priceAmount, string $baseQuantity, string $unitCodeListId)
+    {
         $this->allowanceCharge = $allowanceCharge;
         $this->baseQuantity = $baseQuantity;
         $this->unitCodeListId = $unitCodeListId;
         $this->priceAmount = $priceAmount;
     }
-    
+
     /**
      * @see https://github.com/OpenPEPPOL/peppol-bis-invoice-3/search?p=3&q=Price
      * @param Writer $writer

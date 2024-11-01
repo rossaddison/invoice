@@ -43,7 +43,7 @@ final class AuthController
             if ($identity instanceof CookieLoginIdentityInterface && $loginForm->getPropertyValue('rememberMe')) {
                 return $cookieLogin->addCookie($identity, $this->redirectToInvoiceIndex());
             }
-            
+
             return $this->redirectToInvoiceIndex();
         }
 
@@ -57,10 +57,10 @@ final class AuthController
     }
 
     private function redirectToMain(): ResponseInterface
-    {   
-        return $this->webService->getRedirectResponse('site/index', ['_language'=>'en']);
+    {
+        return $this->webService->getRedirectResponse('site/index', ['_language' => 'en']);
     }
-    
+
     private function redirectToInvoiceIndex(): ResponseInterface
     {
         return $this->webService->getRedirectResponse('invoice/index');

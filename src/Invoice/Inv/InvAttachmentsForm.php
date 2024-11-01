@@ -8,7 +8,7 @@ use Yiisoft\FormModel\FormModel;
 
 final class InvAttachmentsForm extends FormModel
 {
-    private ?array $attachFile = null; 
+    private ?array $attachFile = null;
 
     /**
      * @return string

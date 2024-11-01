@@ -8,8 +8,8 @@ use Sabre\Xml\Writer;
 use Sabre\Xml\XmlSerializable;
 
 // Usage: Search 'new Address' under PeppolHelper
-class Address implements XmlSerializable {
-
+class Address implements XmlSerializable
+{
     private ?string $streetName;
     private ?string $additionalStreetName;
     private ?string $buildingNumber;
@@ -20,7 +20,8 @@ class Address implements XmlSerializable {
     private bool $ubl_cr_155;
     private bool $ubl_cr_218;
     private bool $ubl_cr_367;
-    public function __construct(?string $streetName, ?string $additionalStreetName, ?string $buildingNumber, ?string $cityName, ?string $postalZone, ?string $countrySubEntity, ?Country $country, bool $ubl_cr_155 = false, bool $ubl_cr_218 = false, bool $ubl_cr_367 = false) {
+    public function __construct(?string $streetName, ?string $additionalStreetName, ?string $buildingNumber, ?string $cityName, ?string $postalZone, ?string $countrySubEntity, ?Country $country, bool $ubl_cr_155 = false, bool $ubl_cr_218 = false, bool $ubl_cr_367 = false)
+    {
         $this->streetName = $streetName;
         $this->additionalStreetName = $additionalStreetName;
         $this->buildingNumber = $buildingNumber;
@@ -28,46 +29,53 @@ class Address implements XmlSerializable {
         $this->postalZone = $postalZone;
         $this->countrySubentity = $countrySubEntity;
         $this->country = $country;
-        
+
         //https://docs.peppol.eu/poacc/billing/3.0/rules/ubl-tc434/UBL-CR-155/
         //not(cac:AccountingSupplierParty/cac:Party/cac:PostalAddress/cbc:BuildingNumber)
         $this->ubl_cr_155 = $ubl_cr_155;
-                
+
         //https://docs.peppol.eu/poacc/billing/3.0/rules/ubl-tc434/UBL-CR-218/
         //not(cac:AccountingCustomerParty/cac:Party/cac:PostalAddress/cbc:BuildingNumber)
         $this->ubl_cr_218 = $ubl_cr_218;
-        
+
         //https://docs.peppol.eu/poacc/billing/3.0/rules/ubl-tc434/UBL-CR-367/
         //not(cac:Delivery/cac:DeliveryLocation/cac:Address/cbc:BuildingNumber)
         $this->ubl_cr_367 = $ubl_cr_367;
     }
 
     // The getters are used in StoreCoveHelper
-    public function getStreetName(): ?string {
+    public function getStreetName(): ?string
+    {
         return $this->streetName;
     }
 
-    public function getAdditionalStreetName(): ?string {
+    public function getAdditionalStreetName(): ?string
+    {
         return $this->additionalStreetName;
     }
 
-    public function getBuildingNumber(): ?string {
+    public function getBuildingNumber(): ?string
+    {
         return $this->buildingNumber;
     }
 
-    public function getCityName(): ?string {
+    public function getCityName(): ?string
+    {
         return $this->cityName;
     }
 
-    public function getPostalZone(): ?string {
+    public function getPostalZone(): ?string
+    {
         return $this->postalZone;
     }
 
-    public function getCountrySubEntity(): ?string {
+    public function getCountrySubEntity(): ?string
+    {
         return $this->countrySubentity;
     }
 
-    public function getCountry(): ?Country {
+    public function getCountry(): ?Country
+    {
         return $this->country;
     }
 
@@ -76,7 +84,8 @@ class Address implements XmlSerializable {
      * @param Writer $writer
      * @return void
      */
-    public function xmlSerialize(Writer $writer): void {
+    public function xmlSerialize(Writer $writer): void
+    {
         if ($this->streetName !== null) {
             $writer->write([
                 Schema::CBC . 'StreetName' => $this->streetName
@@ -87,9 +96,9 @@ class Address implements XmlSerializable {
                 Schema::CBC . 'AdditionalStreetName' => $this->additionalStreetName
             ]);
         }
-        if ($this->buildingNumber !== null 
+        if ($this->buildingNumber !== null
             && $this->ubl_cr_218 === false
-            && $this->ubl_cr_155 === false 
+            && $this->ubl_cr_155 === false
             && $this->ubl_cr_367 === false) {
             $writer->write([
                 Schema::CBC . 'BuildingNumber' => $this->buildingNumber

@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=1); 
+declare(strict_types=1);
 
 namespace App\Invoice\ItemLookup;
 
@@ -16,7 +16,7 @@ use Yiisoft\Data\Cycle\Writer\EntityWriter;
  */
 final class ItemLookupRepository extends Select\Repository
 {
-private EntityWriter $entityWriter;
+    private EntityWriter $entityWriter;
     /**
      * @param Select<TEntity> $select
      * @param EntityWriter $entityWriter
@@ -37,7 +37,7 @@ private EntityWriter $entityWriter;
         $query = $this->select();
         return $this->prepareDataReader($query);
     }
-    
+
     /**
      * @psalm-return EntityReader
      */
@@ -46,12 +46,12 @@ private EntityWriter $entityWriter;
         return (new EntityReader($this->select()))
             ->withSort($this->getSort());
     }
-    
+
     private function getSort(): Sort
     {
         return Sort::only(['id'])->withOrder(['id' => 'asc']);
     }
-    
+
     /**
      * @see Reader/ReadableDataInterface|InvalidArgumentException
      * @param array|ItemLookup|null $itemlookup
@@ -61,9 +61,9 @@ private EntityWriter $entityWriter;
     {
         $this->entityWriter->write([$itemlookup]);
     }
-    
+
     /**
-     * 
+     *
      * @param array|ItemLookup|null $itemlookup
      * @return void
      */
@@ -71,7 +71,7 @@ private EntityWriter $entityWriter;
     {
         $this->entityWriter->delete([$itemlookup]);
     }
-    
+
     private function prepareDataReader(Select $query): EntityReader
     {
         return (new EntityReader($query))->withSort(
@@ -79,14 +79,15 @@ private EntityWriter $entityWriter;
                 ->withOrder(['id' => 'asc'])
         );
     }
-    
+
     /**
-     * 
+     *
      * @param string $id
      * @return TEntity|null
      */
-    public function repoItemLookupquery(string $id):?ItemLookup {
+    public function repoItemLookupquery(string $id): ?ItemLookup
+    {
         $query = $this->select()->where(['id' => $id]);
-        return  $query->fetchOne();        
+        return  $query->fetchOne();
     }
 }

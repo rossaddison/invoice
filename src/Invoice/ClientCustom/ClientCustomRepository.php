@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=1); 
+declare(strict_types=1);
 
 namespace App\Invoice\ClientCustom;
 
@@ -17,7 +17,7 @@ use Yiisoft\Data\Cycle\Writer\EntityWriter;
  */
 final class ClientCustomRepository extends Select\Repository
 {
-private EntityWriter $entityWriter;
+    private EntityWriter $entityWriter;
     /**
      * @param Select<TEntity> $select
      * @param EntityWriter $entityWriter
@@ -40,7 +40,7 @@ private EntityWriter $entityWriter;
                 ->load('custom_field');
         return $this->prepareDataReader($query);
     }
-    
+
     /**
      * @psalm-return EntityReader
      */
@@ -49,34 +49,34 @@ private EntityWriter $entityWriter;
         return (new EntityReader($this->select()))
             ->withSort($this->getSort());
     }
-    
+
     private function getSort(): Sort
     {
         return Sort::only(['id'])->withOrder(['id' => 'asc']);
     }
-    
+
     /**
      * @see Reader/ReadableDataInterface|InvalidArgumentException
      * @param array|ClientCustom|null $clientcustom
-     * @throws Throwable 
+     * @throws Throwable
      * @return void
      */
     public function save(array|ClientCustom|null $clientcustom): void
     {
         $this->entityWriter->write([$clientcustom]);
     }
-    
+
     /**
      * @see Reader/ReadableDataInterface|InvalidArgumentException
      * @param array|ClientCustom|null $clientcustom
-     * @throws Throwable 
+     * @throws Throwable
      * @return void
      */
     public function delete(array|ClientCustom|null $clientcustom): void
     {
         $this->entityWriter->delete([$clientcustom]);
     }
-    
+
     private function prepareDataReader(Select $query): EntityReader
     {
         return (new EntityReader($query))->withSort(
@@ -84,57 +84,61 @@ private EntityWriter $entityWriter;
                 ->withOrder(['id' => 'asc'])
         );
     }
-   
-   /**
-    * 
-    * @param string $id
-    * @return ClientCustom|null
-    */
-    public function repoClientCustomquery(string $id) : ClientCustom|null{
+
+    /**
+     *
+     * @param string $id
+     * @return ClientCustom|null
+     */
+    public function repoClientCustomquery(string $id): ClientCustom|null
+    {
         $query = $this->select()
                       ->load('client')
                       ->load('custom_field')
-                      ->where(['id' =>$id]);
-        return  $query->fetchOne() ?: null;        
+                      ->where(['id' => $id]);
+        return  $query->fetchOne() ?: null;
     }
-    
+
     /**
-     * 
+     *
      * @param string $client_id
      * @return int
      */
-    public function repoClientCount(string $client_id) : int {
+    public function repoClientCount(string $client_id): int
+    {
         $query = $this->select()
-                      ->where(['client_id' =>$client_id]);
+                      ->where(['client_id' => $client_id]);
         return $query->count();
     }
-    
+
     /**
-     * 
+     *
      * @param string $client_id
      * @param string $custom_field_id
      * @return ClientCustom|null
      */
-    public function repoFormValuequery(string $client_id, string $custom_field_id): ClientCustom|null {
+    public function repoFormValuequery(string $client_id, string $custom_field_id): ClientCustom|null
+    {
         $query = $this->select()
-                      ->where(['client_id' =>$client_id])
-                      ->andWhere(['custom_field_id' =>$custom_field_id]);
-        return  $query->fetchOne() ?: null;        
+                      ->where(['client_id' => $client_id])
+                      ->andWhere(['custom_field_id' => $custom_field_id]);
+        return  $query->fetchOne() ?: null;
     }
-    
+
     /**
-     * 
+     *
      * @param string $client_id
      * @param string $custom_field_id
      * @return int
      */
-    public function repoClientCustomCount(string $client_id, string $custom_field_id) : int {
+    public function repoClientCustomCount(string $client_id, string $custom_field_id): int
+    {
         $query = $this->select()
-                      ->where(['client_id' =>$client_id])
-                      ->andWhere(['custom_field_id' =>$custom_field_id]);
+                      ->where(['client_id' => $client_id])
+                      ->andWhere(['custom_field_id' => $custom_field_id]);
         return $query->count();
-    } 
-    
+    }
+
     /**
      * Get all fields that have been setup for a particular client
      *
@@ -142,7 +146,7 @@ private EntityWriter $entityWriter;
      */
     public function repoFields(string $client_id): EntityReader
     {
-        $query = $this->select()->where(['client_id'=>$client_id]);                
+        $query = $this->select()->where(['client_id' => $client_id]);
         return $this->prepareDataReader($query);
     }
 }

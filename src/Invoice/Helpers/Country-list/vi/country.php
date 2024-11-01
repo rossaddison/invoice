@@ -1,5 +1,6 @@
-<?php 
-declare(strict_types=1); 
+<?php
+
+declare(strict_types=1);
 return array(
     'SA' => 'A-rập Xê-út',
     'EG' => 'Ai Cập',

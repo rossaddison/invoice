@@ -651,7 +651,7 @@ $this->beginPage();
                     'visible' => $isGuest,
                   ],
                   [
-                    'label' => $translator->translate('i.enter_user_account'),
+                    'label' => $translator->translate('menu.signup'),
                     'url' => $urlGenerator->generate('auth/signup'),
                     'visible' => $isGuest,
                   ],

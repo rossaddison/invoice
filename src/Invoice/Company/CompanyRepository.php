@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=1); 
+declare(strict_types=1);
 
 namespace App\Invoice\Company;
 
@@ -17,8 +17,8 @@ use Yiisoft\Data\Cycle\Writer\EntityWriter;
  */
 final class CompanyRepository extends Select\Repository
 {
-private EntityWriter $entityWriter;
-    
+    private EntityWriter $entityWriter;
+
     /**
      * @param Select<TEntity> $select
      * @param EntityWriter $entityWriter
@@ -39,7 +39,7 @@ private EntityWriter $entityWriter;
         $query = $this->select();
         return $this->prepareDataReader($query);
     }
-    
+
     /**
      * @psalm-return EntityReader
      */
@@ -48,34 +48,34 @@ private EntityWriter $entityWriter;
         return (new EntityReader($this->select()))
             ->withSort($this->getSort());
     }
-    
+
     private function getSort(): Sort
     {
         return Sort::only(['id'])->withOrder(['id' => 'asc']);
     }
-    
+
     /**
      * @see Reader/ReadableDataInterface|InvalidArgumentException
      * @param array|Company|null $company
-     * @throws Throwable 
+     * @throws Throwable
      * @return void
      */
     public function save(array|Company|null $company): void
     {
         $this->entityWriter->write([$company]);
     }
-    
+
     /**
      * @see Reader/ReadableDataInterface|InvalidArgumentException
      * @param array|Company|null $company
-     * @throws Throwable 
+     * @throws Throwable
      * @return void
      */
     public function delete(array|Company|null $company): void
     {
         $this->entityWriter->delete([$company]);
     }
-    
+
     private function prepareDataReader(Select $query): EntityReader
     {
         return (new EntityReader($query))->withSort(
@@ -83,25 +83,27 @@ private EntityWriter $entityWriter;
                 ->withOrder(['id' => 'asc'])
         );
     }
-    
+
     /**
      * @return null|Company
      *
      * @psalm-return TEntity|null
      */
-    public function repoCompanyquery(string $id): Company|null    {
-        $query = $this->select()->where(['id' =>$id]);
-        return  $query->fetchOne() ?: null;        
+    public function repoCompanyquery(string $id): Company|null
+    {
+        $query = $this->select()->where(['id' => $id]);
+        return  $query->fetchOne() ?: null;
     }
-    
+
     /**
      * @return null|Company
      *
      * @psalm-return TEntity|null
      */
-    public function repoCompanyActivequery(): Company|null    {
+    public function repoCompanyActivequery(): Company|null
+    {
         $query = $this->select()->where(['current' => '1']);
-        return  $query->fetchOne() ?: null;        
+        return  $query->fetchOne() ?: null;
     }
-    
+
 }

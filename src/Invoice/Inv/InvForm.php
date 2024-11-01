@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace App\Invoice\Inv;
@@ -7,49 +8,48 @@ use App\Invoice\Entity\Inv;
 use App\Invoice\Entity\Client;
 use Yiisoft\FormModel\FormModel;
 use Yiisoft\Validator\Rule\Required;
-
 use DateTimeImmutable;
 
 final class InvForm extends FormModel
-{    
-    private ?string $id='';
-    private ?string $number ='';
-    private mixed $date_created='';
+{
+    private ?string $id = '';
+    private ?string $number = '';
+    private mixed $date_created = '';
     // Countries with VAT systems will need these fields
-    private mixed $date_modified='';
-    private mixed $date_supplied='';    
-    private mixed $date_paid_off='';    
-    private mixed $date_tax_point='';
-    private mixed $date_due='';
+    private mixed $date_modified = '';
+    private mixed $date_supplied = '';
+    private mixed $date_paid_off = '';
+    private mixed $date_tax_point = '';
+    private mixed $date_due = '';
     // stand_in_code/description_code
-    private ?string $stand_in_code=''; 
-    private ?string $quote_id='';
+    private ?string $stand_in_code = '';
+    private ?string $quote_id = '';
     private ?Client $client = null;
-    
+
     #[Required]
-    private ?string $group_id='';
-    
+    private ?string $group_id = '';
+
     #[Required]
-    private ?string $client_id=''; 
-    
-    private ?string $so_id='';
-    private ?int $creditinvoice_parent_id=null;
-    private ?int $delivery_id=null;
-    private ?int $delivery_location_id=null;
-    private ?int $postal_address_id=null;
-    private ?int $contract_id=null;
-    private ?int $status_id=1;
-    private ?float $discount_amount=0.00;
-    private ?float $discount_percent=0.00;
-    private ?string $url_key='';
-    private ?string $password='';
-    private ?int $payment_method=0;
-    private ?string $terms='';
-    private ?string $note='';
-    private ?string $document_description='';
+    private ?string $client_id = '';
+
+    private ?string $so_id = '';
+    private ?int $creditinvoice_parent_id = null;
+    private ?int $delivery_id = null;
+    private ?int $delivery_location_id = null;
+    private ?int $postal_address_id = null;
+    private ?int $contract_id = null;
+    private ?int $status_id = 1;
+    private ?float $discount_amount = 0.00;
+    private ?float $discount_percent = 0.00;
+    private ?string $url_key = '';
+    private ?string $password = '';
+    private ?int $payment_method = 0;
+    private ?string $terms = '';
+    private ?string $note = '';
+    private ?string $document_description = '';
     private bool $is_read_only;
     private mixed $time_created = '';
-    
+
     public function __construct(Inv $inv)
     {
         $this->id = $inv->getId();
@@ -81,180 +81,180 @@ final class InvForm extends FormModel
         $this->payment_method = $inv->getPayment_method();
         $this->creditinvoice_parent_id = (int)$inv->getCreditinvoice_parent_id();
         /**
-         * @see App\Invoice\Entity\Client 
+         * @see App\Invoice\Entity\Client
                 #[BelongsTo(target: Client::class, nullable: false, fkAction: 'NO ACTION')]
                 private ?Client $client = null;
          */
         $this->client = $inv->getClient();
     }
-    
-    public function getId() : string|null
+
+    public function getId(): string|null
     {
         return $this->id;
-    }   
-    
-    public function getClient() : Client|null 
+    }
+
+    public function getClient(): Client|null
     {
         return $this->client;
-    }    
+    }
 
-    public function getDate_created() : string|null|DateTimeImmutable 
+    public function getDate_created(): string|null|DateTimeImmutable
     {
         /**
-         * @var string|null|DateTimeImmutable $this->date_created 
+         * @var string|null|DateTimeImmutable $this->date_created
          */
         return $this->date_created;
     }
-    
-    public function getDate_modified() : string|null|DateTimeImmutable 
+
+    public function getDate_modified(): string|null|DateTimeImmutable
     {
         /**
-         * @var string|DateTimeImmutable $this->date_modified 
+         * @var string|DateTimeImmutable $this->date_modified
          */
         return $this->date_modified;
     }
-    
-    public function getDate_supplied() : string|null|DateTimeImmutable 
+
+    public function getDate_supplied(): string|null|DateTimeImmutable
     {
         /**
-         * @var string|DateTimeImmutable $this->date_supplied 
+         * @var string|DateTimeImmutable $this->date_supplied
          */
         return $this->date_supplied;
     }
-    
-    public function getDate_paid_off() : string|null|DateTimeImmutable 
+
+    public function getDate_paid_off(): string|null|DateTimeImmutable
     {
         /**
-         * @var string|DateTimeImmutable $this->date_paid_off 
+         * @var string|DateTimeImmutable $this->date_paid_off
          */
         return $this->date_paid_off;
     }
-    
-    public function getDate_tax_point() : string|null|DateTimeImmutable 
+
+    public function getDate_tax_point(): string|null|DateTimeImmutable
     {
         /**
-         * @var string|DateTimeImmutable $this->date_tax_point 
+         * @var string|DateTimeImmutable $this->date_tax_point
          */
         return $this->date_tax_point;
     }
-    
-    public function getDate_due() : string|null|DateTimeImmutable 
+
+    public function getDate_due(): string|null|DateTimeImmutable
     {
         /**
-         * @var string|DateTimeImmutable $this->date_due 
+         * @var string|DateTimeImmutable $this->date_due
          */
         return $this->date_due;
     }
-    
-    public function getTime_created() : string|null|DateTimeImmutable 
+
+    public function getTime_created(): string|null|DateTimeImmutable
     {
         /**
-         * @var string|DateTimeImmutable $this->time_created 
+         * @var string|DateTimeImmutable $this->time_created
          */
         return $this->time_created;
     }
-    
-    public function getStand_in_code() : string|null 
+
+    public function getStand_in_code(): string|null
     {
         return $this->stand_in_code;
     }
-    
-    public function getQuote_id() : string|null
+
+    public function getQuote_id(): string|null
     {
         return $this->quote_id;
     }
 
-    public function getClient_id() : string|null
+    public function getClient_id(): string|null
     {
         return $this->client_id;
     }
-    
-    public function getSo_id() : string|null
+
+    public function getSo_id(): string|null
     {
         return $this->so_id;
     }
 
-    public function getGroup_id() : string|null
+    public function getGroup_id(): string|null
     {
         return $this->group_id;
     }
-    
-    public function getCreditinvoice_parent_id() : int|null
+
+    public function getCreditinvoice_parent_id(): int|null
     {
         return $this->creditinvoice_parent_id;
     }
-    
-    public function getDelivery_id() : int|null
+
+    public function getDelivery_id(): int|null
     {
         return $this->delivery_id;
     }
-    
-    public function getDelivery_location_id() : int|null
+
+    public function getDelivery_location_id(): int|null
     {
         return $this->delivery_location_id;
     }
-    
-    public function getPostal_address_id() : int|null
+
+    public function getPostal_address_id(): int|null
     {
         return $this->postal_address_id;
     }
-    
-    public function getContract_id() : int|null
+
+    public function getContract_id(): int|null
     {
         return $this->contract_id;
     }
 
-    public function getStatus_id() : int|null
+    public function getStatus_id(): int|null
     {
         return $this->status_id;
     }
-        
-    public function getNumber() : string|null
+
+    public function getNumber(): string|null
     {
         return $this->number;
     }
-    
-    public function getDiscount_amount() : float|null
+
+    public function getDiscount_amount(): float|null
     {
         return $this->discount_amount;
     }
 
-    public function getDiscount_percent() : float|null
+    public function getDiscount_percent(): float|null
     {
         return $this->discount_percent;
     }
 
-    public function getUrl_key() : string|null
+    public function getUrl_key(): string|null
     {
         return $this->url_key;
     }
 
-    public function getPassword() : string|null
+    public function getPassword(): string|null
     {
         return $this->password;
     }
-    
-    public function getPayment_method() : int|null
+
+    public function getPayment_method(): int|null
     {
         return $this->payment_method;
     }
 
-    public function getTerms() : string|null
+    public function getTerms(): string|null
     {
         return $this->terms;
     }
-    
-    public function getNote() : string|null
+
+    public function getNote(): string|null
     {
         return $this->note;
     }
-    
-    public function getDocumentDescription() : string|null
+
+    public function getDocumentDescription(): string|null
     {
         return $this->document_description;
     }
-    
-    public function getIsReadOnly() : bool
+
+    public function getIsReadOnly(): bool
     {
         return $this->is_read_only;
     }

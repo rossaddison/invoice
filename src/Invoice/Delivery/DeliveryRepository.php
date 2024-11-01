@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=1); 
+declare(strict_types=1);
 
 namespace App\Invoice\Delivery;
 
@@ -17,7 +17,7 @@ use Yiisoft\Data\Cycle\Writer\EntityWriter;
  */
 final class DeliveryRepository extends Select\Repository
 {
-private EntityWriter $entityWriter;
+    private EntityWriter $entityWriter;
     /**
      * @param Select<TEntity> $select
      * @param EntityWriter $entityWriter
@@ -35,9 +35,10 @@ private EntityWriter $entityWriter;
      */
     public function findAllPreloaded(): EntityReader
     {
-        $query = $this->select();        return $this->prepareDataReader($query);
+        $query = $this->select();
+        return $this->prepareDataReader($query);
     }
-    
+
     /**
      * @psalm-return EntityReader
      */
@@ -46,39 +47,39 @@ private EntityWriter $entityWriter;
         return (new EntityReader($this->select()))
             ->withSort($this->getSort());
     }
-    
+
     /**
      * @return Sort
      */
     private function getSort(): Sort
     {
         return Sort::only(['id'])->withOrder(['id' => 'asc']);
-    }    
-    
+    }
+
     /**
      * @see Reader/ReadableDataInterface|InvalidArgumentException
      * @param array|Delivery|null $delivery
      * @psalm-param TEntity $delivery
-     * @throws Throwable 
+     * @throws Throwable
      * @return void
      */
     public function save(array|Delivery|null $delivery): void
     {
         $this->entityWriter->write([$delivery]);
     }
-    
+
     /**
      * @see Reader/ReadableDataInterface|InvalidArgumentException
      * @param array|Delivery|null $delivery
-  
-     * @throws Throwable 
+
+     * @throws Throwable
      * @return void
      */
     public function delete(array|Delivery|null $delivery): void
     {
         $this->entityWriter->delete([$delivery]);
     }
-    
+
     /**
      * @param Select $query
      * @return EntityReader
@@ -89,8 +90,8 @@ private EntityWriter $entityWriter;
             Sort::only(['id'])
                 ->withOrder(['id' => 'asc'])
         );
-    }    
-    
+    }
+
     /**
      * @param string $id
      * @psalm-return TEntity|null
@@ -99,10 +100,10 @@ private EntityWriter $entityWriter;
     public function repoDeliveryquery(string $id): Delivery|null
     {
         $query = $this->select()
-                      ->where(['id' =>$id]);
-        return  $query->fetchOne() ?: null;        
+                      ->where(['id' => $id]);
+        return  $query->fetchOne() ?: null;
     }
-    
+
     /**
      * @param string $inv_id
      * @return Delivery|null
@@ -110,10 +111,10 @@ private EntityWriter $entityWriter;
     public function repoPartyquery(string $inv_id): Delivery|null
     {
         $query = $this->select()
-                      ->where(['inv_id' =>$inv_id]);
-        return  $query->fetchOne() ?: null;        
+                      ->where(['inv_id' => $inv_id]);
+        return  $query->fetchOne() ?: null;
     }
-    
+
     /**
      * @param string $inv_id
      * @return Delivery|null
@@ -121,28 +122,30 @@ private EntityWriter $entityWriter;
     public function repoInvoicequery(string $inv_id): Delivery|null
     {
         $query = $this->select()
-                      ->where(['inv_id' =>$inv_id]);
-        return  $query->fetchOne() ?: null;        
+                      ->where(['inv_id' => $inv_id]);
+        return  $query->fetchOne() ?: null;
     }
-    
+
     /**
-     * 
+     *
      * @param string $inv_id
      * @return int
      */
-    public function repoCountInvoice(string $inv_id) : int {
+    public function repoCountInvoice(string $inv_id): int
+    {
         $query = $this->select()
                       ->where(['inv_id' => $inv_id]);
         return $query->count();
-    }   
-    
+    }
+
     /**
      * @param string $id
      * @return int
      */
-    public function repoCount(string $id) : int {
+    public function repoCount(string $id): int
+    {
         $query = $this->select()
                       ->where(['id' => $id]);
         return $query->count();
-    }     
+    }
 }

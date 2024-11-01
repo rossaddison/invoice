@@ -1,7 +1,8 @@
 <?php
+
 declare(strict_types=1);
 // as at 6th January 2024. Note this file has been built using copy paste from resources/messages/en/app.php
-// Remember to adjust the app.php file with '$lang =' as seen below 
+// Remember to adjust the app.php file with '$lang =' as seen below
 $lang =  [
     'i.account_information'                          => 'Account Information',
     'i.active'                                       => 'Active',
@@ -208,7 +209,7 @@ $lang =  [
     'i.enable_permissive_search_clients'             => 'Enable permissive search',
     'i.end_date'                                     => 'End Date',
     'i.enter_payment'                                => 'Enter Payment',
-    'i.enforcement'                                  => 'Enforcement Officer Attending Address',    
+    'i.enforcement'                                  => 'Enforcement Officer Attending Address',
     'i.errors'                                       => 'Errors',
     'i.error_duplicate_file'                         => 'Error: Duplicate file name, please change it!',
     'i.every'                                        => 'Every',
@@ -319,10 +320,10 @@ $lang =  [
     'i.loginalert_user_not_found'                    => 'There is no account registered with this Email address.',
     'i.loginalert_wrong_auth_code'                   => 'Password reset denied. You provided an invalid auth token.',
     'i.logout'                                       => 'Logout',
-    'i.loss'                                         => 'Written off',   
+    'i.loss'                                         => 'Written off',
     'i.mark_invoices_sent_pdf'                       => 'Mark invoices as sent when PDF is generated',
     'i.mark_quotes_sent_pdf'                         => 'Mark quotes as sent when PDF is generated',
-    'i.mark_invoices_sent_copy'                      => 'Mark invoices as sent when copying an invoice',  
+    'i.mark_invoices_sent_copy'                      => 'Mark invoices as sent when copying an invoice',
     'i.max_quantity'                                 => 'Maximum Quantity',
     'i.menu'                                         => 'Menu',
     'i.min_quantity'                                 => 'Minimal Quantity',
@@ -348,7 +349,7 @@ $lang =  [
     'i.note'                                         => 'Note',
     'i.notes'                                        => 'Notes',
     'i.not_set'                                      => 'Not set yet',
-    'i.number'                                       => 'Number', 
+    'i.number'                                       => 'Number',
     'i.number_format'                                => 'Number Format',
     'i.number_format_us_uk'                          => '1,000,000.00 (US/UK format)',
     'i.number_format_european'                       => '1.000.000,00 (European format)',
@@ -435,8 +436,8 @@ $lang =  [
     'i.qr_code_settings'                             => 'QR Code Settings',
     'i.qr_code_settings_bic'                         => 'BIC',
     'i.qr_code_settings_enable'                      => 'Enable QR Code',
-    'i.qr_code_settings_enable_hint'                 => 'Enabling this option will include a QR code for invoice PDFs. '.  
-                                                        'You have to fill out the recipient, IBAN and BIC below to work correctly. '. 
+    'i.qr_code_settings_enable_hint'                 => 'Enabling this option will include a QR code for invoice PDFs. '.
+                                                        'You have to fill out the recipient, IBAN and BIC below to work correctly. '.
                                                         'Otherwise the QR code will not be displayed.',
     'i.qr_code_settings_iban'                        => 'IBAN',
     'i.qr_code_settings_recipient'                   => 'Recipient',
@@ -460,7 +461,7 @@ $lang =  [
     'i.quote_status_email_body'                      => 'The client %1$s has %2$s the quote %3$s.' . "\n\n" . 'Link to Quote: %4$s',
     'i.quote_status_email_subject'                   => 'Client %1$s %2$s quote %3$s',
     'i.quote_tax'                                    => 'Quote Tax',
-    'i.quote_tax_rate'                               => 'Quote Tax Rate', 
+    'i.quote_tax_rate'                               => 'Quote Tax Rate',
     'i.quote_template'                               => 'Quote Template',
     'i.quote_templates'                              => 'Quote Templates',
     'i.quote_to_invoice'                             => 'Quote to Invoice',
@@ -480,7 +481,7 @@ $lang =  [
     'i.reject'                                       => 'Reject',
     'i.reject_this_quote'                            => 'Reject This Quote',
     'i.rejected'                                     => 'Rejected',
-    'i.reminder'                                     => 'Reminder sent',   
+    'i.reminder'                                     => 'Reminder sent',
     'i.remove'                                       => 'Remove',
     'i.remove_logo'                                  => 'Remove Logo',
     'i.report_options'                               => 'Report Options',
@@ -598,7 +599,7 @@ $lang =  [
     'i.try_again'                                    => 'Try Again',
     'i.type'                                         => 'Type',
     'i.unknown'                                      => 'Unknown',
-    'i.unpaid'                                       => 'Unpaid',   
+    'i.unpaid'                                       => 'Unpaid',
     'i.updatecheck'                                  => 'Updatecheck',
     'i.updatecheck_failed'                           => 'Updatecheck failed! Check your network connection.',
     'i.updates'                                      => 'Updates',
@@ -748,5 +749,5 @@ $lang =  [
 
     // Types
     'i.true'                                         => 'True',
-    'i.false'                                        => 'False',  
+    'i.false'                                        => 'False',
 ];

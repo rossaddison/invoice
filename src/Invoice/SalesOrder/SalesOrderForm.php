@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace App\Invoice\SalesOrder;
@@ -6,34 +7,33 @@ namespace App\Invoice\SalesOrder;
 use App\Invoice\Entity\SalesOrder;
 use Yiisoft\FormModel\FormModel;
 use Yiisoft\Validator\Rule\Required;
-
 use DateTimeImmutable;
 
 final class SalesOrderForm extends FormModel
-{    
-    private ?string $number ='';
-    private mixed $date_created='';
-    
+{
+    private ?string $number = '';
+    private mixed $date_created = '';
+
     #[Required]
-    private ?string $quote_id=null;
-    private ?string $inv_id=null;
-    
+    private ?string $quote_id = null;
+    private ?string $inv_id = null;
+
     #[Required]
-    private ?int $group_id=null;
-    
+    private ?int $group_id = null;
+
     #[Required]
-    private ?int $client_id=null;
-    private ?string $client_po_number=null;
-    private ?string $client_po_line_number=null;
-    private ?string $client_po_person=null;
-    private ?int $status_id=1;
-    private ?float $discount_amount=0;
-    private ?float $discount_percent=0;
-    private ?string $url_key='';
-    private ?string $password='';
-    private ?string $notes='';    
-    private ?string $payment_term='';
-    
+    private ?int $client_id = null;
+    private ?string $client_po_number = null;
+    private ?string $client_po_line_number = null;
+    private ?string $client_po_person = null;
+    private ?int $status_id = 1;
+    private ?float $discount_amount = 0;
+    private ?float $discount_percent = 0;
+    private ?string $url_key = '';
+    private ?string $password = '';
+    private ?string $notes = '';
+    private ?string $payment_term = '';
+
     public function __construct(SalesOrder $salesOrder)
     {
         $this->number = $salesOrder->getNumber();
@@ -52,92 +52,92 @@ final class SalesOrderForm extends FormModel
         $this->password = $salesOrder->getPassword();
         $this->notes = $salesOrder->getNotes();
         $this->payment_term = $salesOrder->getPaymentTerm();
-    }        
-    
-    // The Entities ie. Entity/SalesOrder.php have return type string => return type strings in the form 
-    // get => string ; 
-    
-    public function getQuote_id() : string|null
-    {
-      return $this->quote_id;
-    }
-    
-    public function getInv_id() : string|null
-    {
-      return $this->inv_id;
-    }
-    
-    public function getClient_po_number() : string|null
-    {
-      return $this->client_po_number;  
-    }
-    
-    public function getClient_po_line_number() : string|null
-    {
-      return $this->client_po_line_number;  
     }
 
-    public function getClient_po_person() : string|null
+    // The Entities ie. Entity/SalesOrder.php have return type string => return type strings in the form
+    // get => string ;
+
+    public function getQuote_id(): string|null
     {
-      return $this->client_po_person;  
+        return $this->quote_id;
     }
 
-    public function getClient_id() : int|null
+    public function getInv_id(): string|null
     {
-      return $this->client_id;
+        return $this->inv_id;
     }
 
-    public function getGroup_id() : int|null
+    public function getClient_po_number(): string|null
     {
-      return $this->group_id;
+        return $this->client_po_number;
     }
 
-    public function getStatus_id() : int|null
+    public function getClient_po_line_number(): string|null
     {
-      return $this->status_id;
+        return $this->client_po_line_number;
     }
-    
-    public function getDate_created() : string|null|DateTimeImmutable 
+
+    public function getClient_po_person(): string|null
     {
-      /**
-       * @var string|null|DateTimeImmutable $this->date_created 
-       */
+        return $this->client_po_person;
+    }
+
+    public function getClient_id(): int|null
+    {
+        return $this->client_id;
+    }
+
+    public function getGroup_id(): int|null
+    {
+        return $this->group_id;
+    }
+
+    public function getStatus_id(): int|null
+    {
+        return $this->status_id;
+    }
+
+    public function getDate_created(): string|null|DateTimeImmutable
+    {
+        /**
+         * @var string|null|DateTimeImmutable $this->date_created
+         */
         return $this->date_created;
     }
-    
-    public function getNumber() : string|null
+
+    public function getNumber(): string|null
     {
-      return $this->number;
-    }
-    
-    public function getDiscount_amount() : float|null
-    {
-      return $this->discount_amount;
+        return $this->number;
     }
 
-    public function getDiscount_percent() : float|null
+    public function getDiscount_amount(): float|null
     {
-      return $this->discount_percent;
+        return $this->discount_amount;
     }
 
-    public function getUrl_key() : string|null
+    public function getDiscount_percent(): float|null
     {
-      return $this->url_key;
+        return $this->discount_percent;
     }
 
-    public function getPassword() : string|null
+    public function getUrl_key(): string|null
     {
-      return $this->password;
+        return $this->url_key;
     }
 
-    public function getNotes() : string|null
+    public function getPassword(): string|null
     {
-      return $this->notes;
+        return $this->password;
     }
-    
-    public function getPaymentTerm() : string|null
+
+    public function getNotes(): string|null
     {
-      return $this->payment_term;
+        return $this->notes;
+    }
+
+    public function getPaymentTerm(): string|null
+    {
+        return $this->payment_term;
     }
 
     /**
@@ -147,6 +147,6 @@ final class SalesOrderForm extends FormModel
      */
     public function getFormName(): string
     {
-      return '';
+        return '';
     }
 }

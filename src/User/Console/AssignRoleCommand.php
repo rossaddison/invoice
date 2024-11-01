@@ -43,14 +43,14 @@ final class AssignRoleCommand extends Command
             ->addArgument('role', InputArgument::REQUIRED, 'RBAC role')
             ->addArgument('userId', InputArgument::REQUIRED, 'User id');
     }
-    
+
     /**
      * @psalm-suppress InvalidReturnType, InvalidReturnStatement, UndefinedInterfaceMethod
      */
-    protected function execute(InputInterface $input, OutputInterface $output) 
+    protected function execute(InputInterface $input, OutputInterface $output)
     {
         $io = new SymfonyStyle($input, $output);
-        
+
         /**
          * @var mixed $input->getArgument('role')
          * @var string $roleName
@@ -89,7 +89,7 @@ final class AssignRoleCommand extends Command
                 $role = new Role($roleName);
                 $this->manager->addRole($role);
             }
-            
+
             /**
              * @var int|object|string $userId
              */

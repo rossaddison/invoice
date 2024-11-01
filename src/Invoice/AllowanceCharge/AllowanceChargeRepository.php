@@ -1,5 +1,6 @@
 <?php
-declare(strict_types=1); 
+
+declare(strict_types=1);
 
 namespace App\Invoice\AllowanceCharge;
 
@@ -17,9 +18,8 @@ use Yiisoft\Data\Cycle\Writer\EntityWriter;
  */
 final class AllowanceChargeRepository extends Select\Repository
 {
-    
-private EntityWriter $entityWriter;
-private TranslatorInterface $translator;
+    private EntityWriter $entityWriter;
+    private TranslatorInterface $translator;
     /**
      * @param Select<TEntity> $select
      * @param EntityWriter $entityWriter
@@ -38,11 +38,11 @@ private TranslatorInterface $translator;
      */
     public function findAllPreloaded(): EntityReader
     {
-        $query = $this->select()                      
-                      ->load('tax_rate');  
+        $query = $this->select()
+                      ->load('tax_rate');
         return $this->prepareDataReader($query);
     }
-    
+
     /**
      * @psalm-return EntityReader
      */
@@ -51,39 +51,39 @@ private TranslatorInterface $translator;
         return (new EntityReader($this->select()))
             ->withSort($this->getSort());
     }
-    
+
     /**
      * @return Sort
      */
     private function getSort(): Sort
     {
         return Sort::only(['id'])->withOrder(['id' => 'asc']);
-    }    
-    
+    }
+
     /**
      * @see Reader/ReadableDataInterface|InvalidArgumentException
      * @param array|AllowanceCharge|null $allowanceCharge
      * @psalm-param TEntity $allowanceCharge
-     * @throws Throwable 
+     * @throws Throwable
      * @return void
      */
     public function save(array|AllowanceCharge|null $allowanceCharge): void
     {
         $this->entityWriter->write([$allowanceCharge]);
     }
-    
+
     /**
      * @see Reader/ReadableDataInterface|InvalidArgumentException
      * @param array|AllowanceCharge|null $allowanceCharge
-  
-     * @throws Throwable 
+
+     * @throws Throwable
      * @return void
      */
     public function delete(array|AllowanceCharge|null $allowanceCharge): void
     {
         $this->entityWriter->delete([$allowanceCharge]);
     }
-    
+
     /**
      * @param Select $query
      * @return EntityReader
@@ -94,8 +94,8 @@ private TranslatorInterface $translator;
             Sort::only(['id'])
                 ->withOrder(['id' => 'asc'])
         );
-    }    
-    
+    }
+
     /**
      * @param string $id
      * @psalm-return TEntity|null
@@ -105,21 +105,22 @@ private TranslatorInterface $translator;
     {
         $query = $this->select()
                       ->load('tax_rate')
-                      ->where(['id' =>$id]);
-        return  $query->fetchOne() ?: null;        
+                      ->where(['id' => $id]);
+        return  $query->fetchOne() ?: null;
     }
-    
+
     /**
      * @param string $id
      * @return int
      */
-    public function repoCount(string $id) : int {
+    public function repoCount(string $id): int
+    {
         $query = $this->select()
                       ->where(['id' => $id]);
         return $query->count();
     }
-    
-    public function optionsDataAllowanceCharges() : array 
+
+    public function optionsDataAllowanceCharges(): array
     {
         $optionsDataAllowanceCharges = [];
         $allowanceCharges = $this->findAllPreloaded();
@@ -128,10 +129,10 @@ private TranslatorInterface $translator;
          */
         foreach ($allowanceCharges as $allowanceCharge) {
             $key = $allowanceCharge->getId();
-            $key ? ($optionsDataAllowanceCharges[$key] = ($allowanceCharge->getIdentifier() 
+            $key ? ($optionsDataAllowanceCharges[$key] = ($allowanceCharge->getIdentifier()
             ? $this->translator->translate('invoice.invoice.allowance.or.charge.charge')
-            : $this->translator->translate('invoice.invoice.allowance.or.charge.allowance')). 
-            '  '. $allowanceCharge->getReasonCode(). 
+            : $this->translator->translate('invoice.invoice.allowance.or.charge.allowance')).
+            '  '. $allowanceCharge->getReasonCode().
             ' '.
             $allowanceCharge->getReason()) : '';
         }

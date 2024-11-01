@@ -7,18 +7,20 @@ namespace App\Invoice\Ubl;
 use Sabre\Xml\Writer;
 use Sabre\Xml\XmlSerializable;
 
-class Country implements XmlSerializable {
-
+class Country implements XmlSerializable
+{
     private string $identificationCode;
     private ?string $listId;
 
-    public function __construct(string $identificationCode, ?string $listId) {
+    public function __construct(string $identificationCode, ?string $listId)
+    {
         $this->identificationCode = $identificationCode;
         $this->listId = $listId;
     }
 
-    // used in StoreCoveHelper 
-    public function getIdentificationCode(): string {
+    // used in StoreCoveHelper
+    public function getIdentificationCode(): string
+    {
         return $this->identificationCode;
     }
 
@@ -27,10 +29,11 @@ class Country implements XmlSerializable {
      * @param Writer $writer
      * @return void
      */
-    public function xmlSerialize(Writer $writer): void {
+    public function xmlSerialize(Writer $writer): void
+    {
         $attributes = [];
 
-        if (null!==$this->listId) {
+        if (null !== $this->listId) {
             // Alpha 2 => 2 digit country code
             $attributes['listID'] = 'ISO3166-1:Alpha2';
         }

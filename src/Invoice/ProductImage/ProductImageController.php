@@ -24,9 +24,10 @@ use Yiisoft\Session\Flash\Flash;
 use Yiisoft\Translator\TranslatorInterface;
 use Yiisoft\FormModel\FormHydrator;
 use Yiisoft\Yii\View\Renderer\ViewRenderer;
-use \Exception;
+use Exception;
 
-final class ProductImageController {
+final class ProductImageController
+{
     private Flash $flash;
     private SessionInterface $session;
     private SettingRepository $s;
@@ -58,11 +59,11 @@ final class ProductImageController {
         $this->productimageService = $productimageService;
         $this->translator = $translator;
     }
-    
-    /** Note: A  productimage Upload can only be viewed with editInv permission 
-     * 
+
+    /** Note: A  productimage Upload can only be viewed with editInv permission
+     *
      * Refer to: config/common/routes/routes.php ... specifically AccessChecker
-     *  
+     *
      * Route::methods([Method::GET, Method::POST], '/productimage/view/{id}')
       ->name('upload/view')
       ->middleware(fn(AccessChecker $checker) => $checker->withPermission('editInv'))
@@ -75,7 +76,8 @@ final class ProductImageController {
      * @param ProductImageRepository $productimageRepository
      * @return \Yiisoft\DataResponse\DataResponse
      */
-    public function index(Request $request, ProductImageRepository $productimageRepository): \Yiisoft\DataResponse\DataResponse {
+    public function index(Request $request, ProductImageRepository $productimageRepository): \Yiisoft\DataResponse\DataResponse
+    {
         $query_params = $request->getQueryParams();
         /** @var string $query_params['sort'] */
         $sort = Sort::only(['id', 'product_id', 'file_name_original'])
@@ -86,7 +88,7 @@ final class ProductImageController {
         $productimages = $this->productimages_with_sort($productimageRepository, $sort);
         $paginator = (new OffsetPaginator($productimages))
                 ->withPageSize((int) $this->s->getSetting('default_list_limit'));
-        
+
         $parameters = [
             'paginator' => $paginator,
             'productimages' => $this->productimages($productimageRepository),
@@ -104,9 +106,11 @@ final class ProductImageController {
      * @param ProductRepository $productRepository
      * @return Response
      */
-    public function add(Request $request, CurrentRoute $currentRoute,
-            FormHydrator $formHydrator,
-            ProductRepository $productRepository
+    public function add(
+        Request $request,
+        CurrentRoute $currentRoute,
+        FormHydrator $formHydrator,
+        ProductRepository $productRepository
     ): Response {
         $product_id = $currentRoute->getArgument('product_id');
         $productImage = new ProductImage();
@@ -138,11 +142,14 @@ final class ProductImageController {
     /**
      * @return string
      */
-    private function alert(): string {
-      return $this->viewRenderer->renderPartialAsString('//invoice/layout/alert',
-      [ 
+    private function alert(): string
+    {
+        return $this->viewRenderer->renderPartialAsString(
+            '//invoice/layout/alert',
+            [
         'flash' => $this->flash
-      ]);
+      ]
+        );
     }
 
     /**
@@ -150,7 +157,8 @@ final class ProductImageController {
      * @param string $message
      * @return Flash|null
      */
-    private function flash_message(string $level, string $message): Flash|null {
+    private function flash_message(string $level, string $message): Flash|null
+    {
         if (strlen($message) > 0) {
             $this->flash->add($level, $message, true);
             return $this->flash;
@@ -164,9 +172,10 @@ final class ProductImageController {
      * @param SettingRepository $settingRepository
      * @return Response
      */
-    public function delete(CurrentRoute $currentRoute,
-            ProductImageRepository $productimageRepository,
-            SettingRepository $settingRepository
+    public function delete(
+        CurrentRoute $currentRoute,
+        ProductImageRepository $productimageRepository,
+        SettingRepository $settingRepository
     ): Response {
         try {
             $productimage = $this->productimage($currentRoute, $productimageRepository);
@@ -174,13 +183,15 @@ final class ProductImageController {
                 $this->productimageService->deleteProductImage($productimage, $settingRepository);
                 $product_id = (string) $productimage->getProduct()?->getProduct_id();
                 $this->flash_message('info', $this->translator->translate('i.record_successfully_deleted'));
-                return $this->factory->createResponse($this->viewRenderer->renderPartialAsString('//invoice/setting/inv_message',
-                [
-                    'heading' => '', 
-                    'message' => $this->translator->translate('i.record_successfully_deleted'), 
-                    'url' => 'product/view', 
+                return $this->factory->createResponse($this->viewRenderer->renderPartialAsString(
+                    '//invoice/setting/inv_message',
+                    [
+                    'heading' => '',
+                    'message' => $this->translator->translate('i.record_successfully_deleted'),
+                    'url' => 'product/view',
                     'id' => $product_id
-                ]));
+                ]
+                ));
             }
             return $this->webService->getRedirectResponse('productimage/index');
         } catch (Exception $e) {
@@ -197,11 +208,12 @@ final class ProductImageController {
      * @param ProductRepository $productRepository
      * @return Response
      */
-    public function edit( 
-            Request $request, CurrentRoute $currentRoute,
-            FormHydrator $formHydrator,
-            ProductImageRepository $productimageRepository,
-            ProductRepository $productRepository
+    public function edit(
+        Request $request,
+        CurrentRoute $currentRoute,
+        FormHydrator $formHydrator,
+        ProductImageRepository $productimageRepository,
+        ProductRepository $productRepository
     ): Response {
         $productImage = $this->productimage($currentRoute, $productimageRepository);
         if ($productImage) {
@@ -209,7 +221,7 @@ final class ProductImageController {
             $form = new ProductImageForm($productImage, (int)$product_id);
             $parameters = [
                 'title' => $this->translator->translate('i.edit'),
-                'actionName' => 'productimage/edit', 
+                'actionName' => 'productimage/edit',
                 'actionArguments' => ['id' => $productImage->getId()],
                 'errors' => [],
                 'form' => $form,
@@ -237,13 +249,13 @@ final class ProductImageController {
      * @param ProductImageRepository $productimageRepository
      * @return \Yiisoft\DataResponse\DataResponse|Response
      */
-    public function view(CurrentRoute $currentRoute, ProductImageRepository $productimageRepository) : 
-        \Yiisoft\DataResponse\DataResponse|Response {
+    public function view(CurrentRoute $currentRoute, ProductImageRepository $productimageRepository): \Yiisoft\DataResponse\DataResponse|Response
+    {
         $productImage = $this->productimage($currentRoute, $productimageRepository);
         if ($productImage) {
             $parameters = [
                 'title' => $this->translator->translate('i.view'),
-                'actionName' => 'productimage/view', 
+                'actionName' => 'productimage/view',
                 'actionArguments' => ['id' => $productImage->getId()],
                 'form' => new ProductImageForm($productImage, (int)$productImage->getProduct_id()),
                 'productimage' => $productimageRepository->repoProductImagequery($productImage->getId()),
@@ -258,7 +270,8 @@ final class ProductImageController {
      * @param ProductImageRepository $productimageRepository
      * @return ProductImage|null
      */
-    public function productimage(CurrentRoute $currentRoute, ProductImageRepository $productimageRepository): ProductImage|null {
+    public function productimage(CurrentRoute $currentRoute, ProductImageRepository $productimageRepository): ProductImage|null
+    {
         $id = $currentRoute->getArgument('id');
         if (null !== $id) {
             $productimage = $productimageRepository->repoProductImagequery($id);
@@ -274,11 +287,12 @@ final class ProductImageController {
      *
      * @psalm-return \Yiisoft\Data\Cycle\Reader\EntityReader
      */
-    private function productimages(ProductImageRepository $productimageRepository): \Yiisoft\Data\Cycle\Reader\EntityReader {
+    private function productimages(ProductImageRepository $productimageRepository): \Yiisoft\Data\Cycle\Reader\EntityReader
+    {
         $productimages = $productimageRepository->findAllPreloaded();
         return $productimages;
     }
-    
+
     /**
      * @param ProductImageRepository $productimageRepository
      * @param Sort $sort
@@ -287,7 +301,8 @@ final class ProductImageController {
      *
      * @psalm-return \Yiisoft\Data\Reader\SortableDataInterface&\Yiisoft\Data\Reader\DataReaderInterface<int, ProductImage>
      */
-    private function productimages_with_sort(ProductImageRepository $productimageRepository, Sort $sort): \Yiisoft\Data\Reader\SortableDataInterface {
+    private function productimages_with_sort(ProductImageRepository $productimageRepository, Sort $sort): \Yiisoft\Data\Reader\SortableDataInterface
+    {
         $productimages = $productimageRepository->findAllPreloaded()
                 ->withSort($sort);
         return $productimages;

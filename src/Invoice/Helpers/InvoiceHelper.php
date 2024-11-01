@@ -1,35 +1,38 @@
 <?php
+
 declare(strict_types=1);
 
-Namespace App\Invoice\Helpers;
+namespace App\Invoice\Helpers;
 
 use App\Invoice\Setting\SettingRepository as SR;
 use Yiisoft\Aliases\Aliases;
 use Yiisoft\Session\SessionInterface;
 use Yiisoft\Session\Flash\Flash;
 
-Class InvoiceHelper
+class InvoiceHelper
 {
-    private SR $s;     
+    private SR $s;
     private SessionInterface $session;
-    
-    public function __construct(SR $s, SessionInterface $session,) {
+
+    public function __construct(SR $s, SessionInterface $session)
+    {
         $this->s = $s;
         $this->session = $session;
     }
-        
+
     /**
      * @psalm-param 'danger' $level
      */
-    private function flash(string $level, string $message): Flash{
+    private function flash(string $level, string $message): Flash
+    {
         $flash = new Flash($this->session);
-        $flash->set($level, $message); 
+        $flash->set($level, $message);
         return $flash;
     }
-    
+
     public function invoice_logo(): string
     {
-        $aliases = new Aliases(['@invoice' => dirname(__DIR__), 
+        $aliases = new Aliases(['@invoice' => dirname(__DIR__),
                                 '@img' => dirname(__DIR__). DIRECTORY_SEPARATOR
                                           .'Asset/core/img']);
         if (!empty($this->s->getSetting('invoice_logo'))) {
@@ -50,7 +53,7 @@ Class InvoiceHelper
                                           .'Asset'
                                           .DIRECTORY_SEPARATOR.
                                           'core'
-                                          .DIRECTORY_SEPARATOR.  
+                                          .DIRECTORY_SEPARATOR.
                                           'img']);
         if (!empty($this->s->getSetting('invoice_logo'))) {
             return '<img src="file://' . getcwd() . $aliases->get('@img'). $this->s->getSetting('invoice_logo')  . '" id="invoice-logo">';
@@ -105,17 +108,17 @@ Class InvoiceHelper
      *
      * @param string $in
      */
-    function invoice_recMod10($in): int
+    public function invoice_recMod10($in): int
     {
         $line = [0, 9, 4, 6, 8, 2, 7, 1, 3, 5];
         $carry = 0;
         $chars = str_split($in);
 
         foreach ($chars as $char) {
-            /** 
+            /**
              * @var int $carry
              * @psalm-suppress InvalidArrayOffset
-             */ 
+             */
             $carry = $line[($carry + intval($char)) % 10];
         }
 

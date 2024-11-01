@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=1); 
+declare(strict_types=1);
 
 namespace App\Invoice\InvRecurring;
 
@@ -18,8 +18,8 @@ use Yiisoft\Data\Cycle\Writer\EntityWriter;
  */
 final class InvRecurringRepository extends Select\Repository
 {
-private EntityWriter $entityWriter;
-    
+    private EntityWriter $entityWriter;
+
     /**
      * @param Select<TEntity> $select
      * @param EntityWriter $entityWriter
@@ -40,7 +40,7 @@ private EntityWriter $entityWriter;
         $query = $this->select();
         return $this->prepareDataReader($query);
     }
-    
+
     /**
      * @psalm-return EntityReader
      */
@@ -49,22 +49,22 @@ private EntityWriter $entityWriter;
         return (new EntityReader($this->select()))
             ->withSort($this->getSort());
     }
-    
+
     private function getSort(): Sort
     {
         return Sort::only(['id'])->withOrder(['id' => 'asc']);
     }
-    
+
     public function save(array|InvRecurring|null $invrecurring): void
     {
         $this->entityWriter->write([$invrecurring]);
     }
-    
+
     public function delete(array|InvRecurring|null $invrecurring): void
     {
         $this->entityWriter->delete([$invrecurring]);
     }
-    
+
     private function prepareDataReader(Select $query): EntityReader
     {
         return (new EntityReader($query))->withSort(
@@ -72,28 +72,30 @@ private EntityWriter $entityWriter;
                 ->withOrder(['id' => 'asc'])
         );
     }
-    
+
     // cycle/ORM/src/Select fetchOne
     /**
-     * 
+     *
      * @param string $id
      * @return TEntity|null
      */
-    public function repoInvRecurringquery(string $id): ?InvRecurring {
+    public function repoInvRecurringquery(string $id): ?InvRecurring
+    {
         $query = $this->select()
-                      ->where(['id' =>$id]);
-        return  $query->fetchOne();        
+                      ->where(['id' => $id]);
+        return  $query->fetchOne();
     }
-    
-    // The invoice is recurring if at least one id is found 
-    public function repoCount(string $inv_id) : int {
+
+    // The invoice is recurring if at least one id is found
+    public function repoCount(string $inv_id): int
+    {
         $query = $this->select()
                       ->where(['inv_id' => $inv_id]);
         return $query->count();
     }
-        
-    public function recur_frequencies() : array
-    { 
+
+    public function recur_frequencies(): array
+    {
         $recur_frequencies = [
             '1D' => 'i.calendar_day_1',
             '2D' => 'i.calendar_day_2',
@@ -126,12 +128,12 @@ private EntityWriter $entityWriter;
         ];
         return $recur_frequencies;
     }
-    
+
     // Recur invoices become active when the current date passes the recur_next_date ie. recur_next_date is less than current date
     // They remain active as long as the current date does not pass the recur_end_date or the recur_end_date has been stopped
     // ie. a zero mysql string date is inserted.
     // If they are active the button will indicate active on it. Use the base invoice hyperlink to go to the respective invoice
-    
+
     /**
      * Get invrecurrings  that are active
      *
@@ -141,19 +143,19 @@ private EntityWriter $entityWriter;
     {
         $datehelper = new DateHelper($s);
         $query = $this->select()
-                      ->where('next_date','<',date($datehelper->style()))
-                      ->orWhere('end_date','>',date($datehelper->style()))
-                      ->orWhere('end_date','=','0000-00-00');
+                      ->where('next_date', '<', date($datehelper->style()))
+                      ->orWhere('end_date', '>', date($datehelper->style()))
+                      ->orWhere('end_date', '=', '0000-00-00');
         return $this->prepareDataReader($query);
     }
-    
+
     public function CountActive(SettingRepository $s): int
     {
-        $datehelper = new DateHelper($s);        
+        $datehelper = new DateHelper($s);
         $count_active = $this->select()
-                      ->where('next_date','<',date($datehelper->style()))
-                      ->orWhere('end_date','>',date($datehelper->style()))
-                      ->orWhere('end_date','=','0000-00-00')
+                      ->where('next_date', '<', date($datehelper->style()))
+                      ->orWhere('end_date', '>', date($datehelper->style()))
+                      ->orWhere('end_date', '=', '0000-00-00')
                       ->count();
         return $count_active;
     }

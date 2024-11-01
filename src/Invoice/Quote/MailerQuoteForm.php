@@ -10,7 +10,6 @@ use Yiisoft\Validator\Rule\Required;
 
 final class MailerQuoteForm extends FormModel
 {
-    
     private string $to_email = '';
     private string $email_template = '';
     private string $from_name = '';
@@ -42,7 +41,7 @@ final class MailerQuoteForm extends FormModel
     {
         return [
             'to_email' => [new Required(), new Email()],
-            'from_name' => [new Required()],            
+            'from_name' => [new Required()],
             'from_email' => [new Required(), new Email()],
             'subject' => [new Required()],
             'body' => [new Required()],

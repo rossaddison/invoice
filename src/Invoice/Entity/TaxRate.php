@@ -12,34 +12,33 @@ class TaxRate
 {
     #[Column(type: 'primary')]
     private ?int $id = null;
-    
+
     #[Column(type: 'text', nullable: true)]
     private ?string $tax_rate_name = null;
-    
+
     #[Column(type: 'string(2)', nullable: true)]
     private ?string $tax_rate_code = null;
-    
+
     #[Column(type: 'string(2)', nullable: true)]
     private ?string $peppol_tax_rate_code = null;
-    
+
     #[Column(type: 'string(30)', nullable: false, default: 'standard')]
     private string $storecove_tax_type;
-    
-    #[Column(type: 'decimal(5,2)', nullable: false, default_value: 0.00 )]
+
+    #[Column(type: 'decimal(5,2)', nullable: false, default_value: 0.00)]
     private ?float $tax_rate_percent = null;
-    
+
     #[Column(type: 'bool', default:false)]
     private bool $tax_rate_default = false;
-    
+
     public function __construct(
-        string $tax_rate_code='',
-        string $peppol_tax_rate_code='',
-        string $storecove_tax_type='',
-        string $tax_rate_name='',
-        float $tax_rate_percent=0.00,
-        bool $tax_rate_default=false
-    )
-    {
+        string $tax_rate_code = '',
+        string $peppol_tax_rate_code = '',
+        string $storecove_tax_type = '',
+        string $tax_rate_name = '',
+        float $tax_rate_percent = 0.00,
+        bool $tax_rate_default = false
+    ) {
         $this->tax_rate_code = $tax_rate_code;
         $this->peppol_tax_rate_code = $peppol_tax_rate_code;
         $this->storecove_tax_type = $storecove_tax_type;
@@ -47,12 +46,12 @@ class TaxRate
         $this->tax_rate_percent = $tax_rate_percent;
         $this->tax_rate_default = $tax_rate_default;
     }
-    
+
     public function setTaxRateId(int $tax_rate_id): void
     {
         $this->id = $tax_rate_id;
     }
-    
+
     public function getTaxRateId(): ?int
     {
         return $this->id;
@@ -67,7 +66,7 @@ class TaxRate
     {
         $this->tax_rate_name = $tax_rate_name;
     }
-    
+
     public function getTaxRateCode(): ?string
     {
         return $this->tax_rate_code;
@@ -77,7 +76,7 @@ class TaxRate
     {
         $this->tax_rate_code = $tax_rate_code;
     }
-    
+
     public function getPeppolTaxRateCode(): ?string
     {
         return $this->peppol_tax_rate_code;
@@ -87,37 +86,37 @@ class TaxRate
     {
         $this->peppol_tax_rate_code = $peppol_tax_rate_code;
     }
-    
-    public function getStorecoveTaxType() : string  
+
+    public function getStorecoveTaxType(): string
     {
         return $this->storecove_tax_type;
     }
-    
+
     public function setStorecoveTaxType(string $storecove_tax_type): void
     {
         $this->storecove_tax_type = $storecove_tax_type;
-    }  
-        
+    }
+
     public function getTaxRatePercent(): ?float
     {
         return $this->tax_rate_percent;
     }
-    
+
     public function setTaxRatePercent(float $tax_rate_percent): void
     {
-        $this->tax_rate_percent = $tax_rate_percent; 
+        $this->tax_rate_percent = $tax_rate_percent;
     }
-    
+
     public function getTaxRateDefault(): bool
     {
         return $this->tax_rate_default;
     }
-    
-    public function setTaxRateDefault(bool $tax_rate_default): void 
+
+    public function setTaxRateDefault(bool $tax_rate_default): void
     {
         $this->tax_rate_default = $tax_rate_default;
     }
-    
+
     public function isNewRecord(): bool
     {
         return $this->getTaxRateId() === null;

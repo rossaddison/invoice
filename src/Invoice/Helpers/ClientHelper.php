@@ -2,27 +2,28 @@
 
 declare(strict_types=1);
 
-Namespace App\Invoice\Helpers;
+namespace App\Invoice\Helpers;
 
 use App\Invoice\Entity\Client;
 use App\Invoice\Setting\SettingRepository;
 use Yiisoft\Translator\TranslatorInterface as Translator;
 
-Class ClientHelper 
+class ClientHelper
 {
     private SettingRepository $s;
 
-    public function __construct(SettingRepository $s) {
+    public function __construct(SettingRepository $s)
+    {
         $this->s = $s;
     }
-    
+
     public function format_client(array|object|null $client): string
     {
         if ($client instanceof Client) {
-            if (null!==$client->getClient_surname()){
+            if (null !== $client->getClient_surname()) {
                 return rtrim($client->getClient_name() . " " . ($client->getClient_surname() ?? ''));
             } else {
-                return $client->getClient_name();        
+                return $client->getClient_name();
             }
         }
         return '';

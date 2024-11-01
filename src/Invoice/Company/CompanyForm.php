@@ -9,25 +9,25 @@ use Yiisoft\FormModel\FormModel;
 use Yiisoft\Validator\Rule\Required;
 
 final class CompanyForm extends FormModel
-{  
-    private ?int $id=null;
-    private ?int $current=0;
-    
+{
+    private ?int $id = null;
+    private ?int $current = 0;
+
     #[Required]
-    private ?string $name='';
-    private ?string $address_1='';
-    private ?string $address_2='';
-    private ?string $city='';
-    private ?string $state='';
-    private ?string $zip='';
-    private ?string $country='';
-    private ?string $phone='';
-    private ?string $fax='';
+    private ?string $name = '';
+    private ?string $address_1 = '';
+    private ?string $address_2 = '';
+    private ?string $city = '';
+    private ?string $state = '';
+    private ?string $zip = '';
+    private ?string $country = '';
+    private ?string $phone = '';
+    private ?string $fax = '';
     #[Required]
-    private ?string $email='';
-    private ?string $web='';
-    
-    public function __construct(Company $company) 
+    private ?string $email = '';
+    private ?string $web = '';
+
+    public function __construct(Company $company)
     {
         $this->id = $company->getId();
         $this->current = $company->getCurrent();
@@ -43,70 +43,70 @@ final class CompanyForm extends FormModel
         $this->email = $company->getEmail();
         $this->web = $company->getWeb();
     }
-    
-    public function getId() :int|null
+
+    public function getId(): int|null
     {
         return $this->id;
-    }        
-
-    public function getCurrent() : int|null
-    {
-      return $this->current;
     }
 
-    public function getName() : string|null
+    public function getCurrent(): int|null
     {
-      return $this->name;
+        return $this->current;
     }
 
-    public function getAddress_1() : string|null
+    public function getName(): string|null
     {
-      return $this->address_1;
+        return $this->name;
     }
 
-    public function getAddress_2() : string|null
+    public function getAddress_1(): string|null
     {
-      return $this->address_2;
+        return $this->address_1;
     }
 
-    public function getCity() : string|null
+    public function getAddress_2(): string|null
     {
-      return $this->city;
+        return $this->address_2;
     }
 
-    public function getState() : string|null
+    public function getCity(): string|null
     {
-      return $this->state;
+        return $this->city;
     }
 
-    public function getZip() : string|null
+    public function getState(): string|null
     {
-      return $this->zip;
+        return $this->state;
     }
 
-    public function getCountry() : string|null
+    public function getZip(): string|null
     {
-      return $this->country;
+        return $this->zip;
     }
 
-    public function getPhone() : string|null
+    public function getCountry(): string|null
     {
-      return $this->phone;
+        return $this->country;
     }
 
-    public function getFax() : string|null
+    public function getPhone(): string|null
     {
-      return $this->fax;
+        return $this->phone;
     }
 
-    public function getEmail() : string|null
+    public function getFax(): string|null
     {
-      return $this->email;
+        return $this->fax;
     }
 
-    public function getWeb() : string|null
+    public function getEmail(): string|null
     {
-      return $this->web;
+        return $this->email;
+    }
+
+    public function getWeb(): string|null
+    {
+        return $this->web;
     }
 
     /**
@@ -116,7 +116,7 @@ final class CompanyForm extends FormModel
      */
     public function getFormName(): string
     {
-      return '';
+        return '';
     }
 
 }

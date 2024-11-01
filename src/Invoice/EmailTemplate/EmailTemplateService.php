@@ -15,7 +15,7 @@ final class EmailTemplateService
     {
         $this->repository = $repository;
     }
-    
+
     /**
      * @param EmailTemplate $model
      * @param array $array
@@ -34,7 +34,7 @@ final class EmailTemplateService
         isset($array['email_template_pdf_template']) ? $model->setEmail_template_pdf_template((string)$array['email_template_pdf_template']) : '';
         $this->repository->save($model);
     }
-    
+
     /**
      * @param EmailTemplate $model
      * @return void

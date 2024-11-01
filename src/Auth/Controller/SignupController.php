@@ -34,32 +34,31 @@ use Yiisoft\Yii\View\Renderer\ViewRenderer;
 
 final class SignupController
 {
-    const string EMAIL_VERIFICATION_TOKEN = 'email-verification';    
+    public const string EMAIL_VERIFICATION_TOKEN = 'email-verification';
     private Assignment $assignment;
     private ItemStorage $itemstorage;
     private Manager $manager;
-    private Rule $rule;    
-    
+    private Rule $rule;
+
     public function __construct(
         // load assignments and save assignments to resources/rbac/assignment.php
         Assignment $assignment,
-        
+
         // add, save, remove, clear, children, parents
         ItemStorage $itemstorage,
-        Rule $rule,    
-        private WebControllerService $webService, 
-        private ViewRenderer $viewRenderer, 
-        private MailerInterface $mailer,    
+        Rule $rule,
+        private WebControllerService $webService,
+        private ViewRenderer $viewRenderer,
+        private MailerInterface $mailer,
         private sR $sR,
         private Translator $translator,
-        private UrlGenerator $urlGenerator, 
+        private UrlGenerator $urlGenerator,
         private CurrentRoute $currentRoute,
         private LoggerInterface $logger
-    )
-    {
+    ) {
         $this->assignment = $assignment;
         $this->itemstorage = $itemstorage;
-        
+
         // @see yiisoft/rbac-php
         $this->manager = new Manager($itemstorage, $assignment, $rule);
         $this->rule = $rule;
@@ -75,7 +74,7 @@ final class SignupController
     /**
      * @see src\ViewInjection\CommonViewInjection.php
      * @see resources\views\site\signupfailed.php and signupsuccess.php
-     * 
+     *
      * @param AuthService $authService
      * @param CurrentRoute $currentRoute
      * @param FormHydrator $formHydrator
@@ -88,20 +87,20 @@ final class SignupController
      */
     public function signup(
         AuthService $authService,
-        CurrentRoute $currentRoute,    
-        FormHydrator $formHydrator, 
+        CurrentRoute $currentRoute,
+        FormHydrator $formHydrator,
         ServerRequestInterface $request,
-        SignupForm $signupForm, 
-        tR $tR,    
+        SignupForm $signupForm,
+        tR $tR,
         uiR $uiR,
-        uR $uR    
+        uR $uR
     ): ResponseInterface {
         if (!$authService->isGuest()) {
             return $this->webService->getRedirectResponse('site/index');
         }
         // check that symfony under Settings ... Email and the config/common/params.php mailer->senderEmail have been setup
-        if (($this->sR->getSetting('email_send_method') !== 'symfony') || empty($this->sR->getConfigSenderEmail()))  {
-           return $this->webService->getRedirectResponse('site/forgotemailfailed'); 
+        if (($this->sR->getSetting('email_send_method') !== 'symfony') || empty($this->sR->getConfigSenderEmail())) {
+            return $this->webService->getRedirectResponse('site/forgotemailfailed');
         }
         if ($formHydrator->populateFromPostAndValidate($signupForm, $request)) {
             $user = $signupForm->signup();
@@ -114,7 +113,7 @@ final class SignupController
                 } else {
                     $this->manager->revokeAll($userId);
                     $this->manager->assign('observer', $userId);
-                }    
+                }
                 $to = $user->getEmail();
                 $login = $user->getLogin();
                 /**
@@ -136,15 +135,15 @@ final class SignupController
                  * @see https://github.com/yiisoft/mailer/blob/1d3480bc26cbeba47b24e61f9ec0e717c244c0b7/tests/MessageTest.php#L217
                  */
                 $htmlBody = $this->htmlBodyWithMaskedRandomAndTimeTokenLink($user, $uiR, $language, $_language, $randomAndTimeToken);
-                if (($this->sR->getSetting('email_send_method') == 'symfony') || ($this->sR->mailerEnabled() == true))  {
+                if (($this->sR->getSetting('email_send_method') == 'symfony') || ($this->sR->mailerEnabled() == true)) {
                     $email = (new \Yiisoft\Mailer\Message())
                     ->withHeaders(
                         [
                             'X-Origin' => ['0', '1'],
                             'X-Pass' => 'pass',
-                        ]  
+                        ]
                     )
-                    ->withCharSet('utf-8')                
+                    ->withCharSet('utf-8')
                     ->withSubject($login. ': <'.$to.'>')
                     ->withDate(new \DateTimeImmutable('now'))
                     ->withFrom([$this->sR->getConfigAdminEmail() => $this->translator->translate('i.administrator')])
@@ -153,17 +152,17 @@ final class SignupController
                     ->withAddedHeader('Message-ID', $this->sR->getConfigAdminEmail());
                     try {
                         $this->mailer->send($email);
-                    } catch (\Exception $e) {                        
-                        $this->logger->error($e->getMessage());  
+                    } catch (\Exception $e) {
+                        $this->logger->error($e->getMessage());
                         return $this->webService->getRedirectResponse('site/signupfailed');
                     }
-                }    
+                }
             }
             return $this->webService->getRedirectResponse('site/signupsuccess');
         }
         return $this->viewRenderer->render('signup', ['formModel' => $signupForm]);
     }
-    
+
     /**
      * @param User $user
      * @param uiR $uiR
@@ -172,10 +171,11 @@ final class SignupController
      * @param string $randomAndTimeToken
      * @return string
      */
-    private function htmlBodyWithMaskedRandomAndTimeTokenLink(User $user, uiR $uiR, string $language, string $_language, string $randomAndTimeToken) : string {
+    private function htmlBodyWithMaskedRandomAndTimeTokenLink(User $user, uiR $uiR, string $language, string $_language, string $randomAndTimeToken): string
+    {
         $tokenWithMask = TokenMask::apply($randomAndTimeToken);
         $userInv = new UserInv();
-        if (null!==($userId = $user->getId())) {
+        if (null !== ($userId = $user->getId())) {
             $userInv->setUser_id((int)$userId);
             // if the user is administrator assign 0 => 'Administrator', 1 => Not Administrator
             $userInv->setType($user->getId() == 1 ? 0 : 1);
@@ -185,10 +185,12 @@ final class SignupController
             $uiR->save($userInv);
             $content = A::tag()
                        // When the url is clicked by the user, return to userinv/signup to activate the user and assign a client to the user
-                       // depending on whether 'Assign a client to user on signup' has been chosen under View ... Settings...General. The user will be able to 
+                       // depending on whether 'Assign a client to user on signup' has been chosen under View ... Settings...General. The user will be able to
                        // edit their userinv details on the client side as well as the client record.
-                       ->href($this->urlGenerator->generateAbsolute('userinv/signup', 
-                               ['_language' => $_language, 'language' => $language, 'token' => $tokenWithMask]))
+                       ->href($this->urlGenerator->generateAbsolute(
+                           'userinv/signup',
+                           ['_language' => $_language, 'language' => $language, 'token' => $tokenWithMask]
+                       ))
                        ->content($this->translator->translate('invoice.invoice.email.link.click.confirm'));
             $htmlBody = Body::tag()
                        ->content($content)
@@ -197,14 +199,14 @@ final class SignupController
         }
         return '';
     }
-    
+
     /**
      * @param User $user
      * @param tR $tR
      * @return string
      */
-    private function getEmailVerificationToken(User $user, tR $tR) : string 
-    {        
+    private function getEmailVerificationToken(User $user, tR $tR): string
+    {
         $identity = $user->getIdentity();
         $identityId = (int)$identity->getId();
         $token = new Token($identityId, self::EMAIL_VERIFICATION_TOKEN);
@@ -213,6 +215,6 @@ final class SignupController
         $tokenString = $token->getToken();
         $timeString = (string)($token->getCreated_at())->getTimestamp();
         // build the token
-        return $emailVerificationToken = null!==$tokenString ? ($tokenString. '_' . $timeString) : '';
+        return $emailVerificationToken = null !== $tokenString ? ($tokenString. '_' . $timeString) : '';
     }
 }

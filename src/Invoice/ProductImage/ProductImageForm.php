@@ -7,22 +7,21 @@ namespace App\Invoice\ProductImage;
 use App\Invoice\Entity\ProductImage;
 use Yiisoft\FormModel\FormModel;
 use Yiisoft\Validator\Rule\Required;
-
 use DateTimeImmutable;
 
 final class ProductImageForm extends FormModel
-{    
-    private ?int $product_id=null;
+{
+    private ?int $product_id = null;
     #[Required]
-    private string $file_name_original='';
+    private string $file_name_original = '';
     #[Required]
-    private string $file_name_new='';
-    
-    private string $description='';
-    
+    private string $file_name_new = '';
+
+    private string $description = '';
+
     #[Required]
-    private mixed $uploaded_date='';
-    
+    private mixed $uploaded_date = '';
+
     public function __construct(ProductImage $productImage, int $product_id)
     {
         $this->product_id = $product_id;
@@ -30,32 +29,32 @@ final class ProductImageForm extends FormModel
         $this->file_name_new = $productImage->getFile_name_new();
         $this->description = $productImage->getDescription();
         $this->uploaded_date = $productImage->getUploaded_date();
-    }        
-
-    public function getProduct_id() : int|null
-    {
-      return $this->product_id;
     }
 
-    public function getFile_name_original() : string
+    public function getProduct_id(): int|null
     {
-      return $this->file_name_original;
+        return $this->product_id;
     }
 
-    public function getFile_name_new() : string
+    public function getFile_name_original(): string
     {
-      return $this->file_name_new;
+        return $this->file_name_original;
     }
-    
-    public function getDescription() : string
+
+    public function getFile_name_new(): string
     {
-      return $this->description;  
+        return $this->file_name_new;
     }
-    
-    public function getUploaded_date() : string|DateTimeImmutable
+
+    public function getDescription(): string
+    {
+        return $this->description;
+    }
+
+    public function getUploaded_date(): string|DateTimeImmutable
     {
         /**
-         * @var string|DateTimeImmutable $this->uploaded_date 
+         * @var string|DateTimeImmutable $this->uploaded_date
          */
         return $this->uploaded_date;
     }
@@ -67,6 +66,6 @@ final class ProductImageForm extends FormModel
      */
     public function getFormName(): string
     {
-      return '';
+        return '';
     }
 }

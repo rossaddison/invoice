@@ -10,10 +10,8 @@ use App\Invoice\Unit\UnitRepository;
 use App\Invoice\UnitPeppol\UnitPeppolRepository;
 use App\Service\WebControllerService;
 use App\User\UserService;
-
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
-
 use Yiisoft\Data\Paginator\OffsetPaginator;
 use Yiisoft\Http\Method;
 use Yiisoft\Router\CurrentRoute;
@@ -30,7 +28,7 @@ final class UnitController
     private Session $session;
     private ViewRenderer $viewRenderer;
     private WebControllerService $webService;
-    private UnitService $unitService;    
+    private UnitService $unitService;
     private UserService $userService;
     private TranslatorInterface $translator;
 
@@ -51,7 +49,7 @@ final class UnitController
         $this->userService = $userService;
         $this->translator = $translator;
     }
-    
+
     /**
      * @param CurrentRoute $currentRoute
      * @param UnitRepository $unitRepository
@@ -68,20 +66,20 @@ final class UnitController
             ->withPageSize((int)$settingRepository->getSetting('default_list_limit'))
             ->withCurrentPage($currentPageNeverZero);
         $parameters = [
-            'alert'=> $this->alert(),           
-            'paginator'=> $paginator,
-            'upR'=>$upR,
-            'units' => $units, 
-        ]; 
+            'alert' => $this->alert(),
+            'paginator' => $paginator,
+            'upR' => $upR,
+            'units' => $units,
+        ];
         return $this->viewRenderer->render('index', $parameters);
     }
-    
+
     /**
      * @param Request $request
      * @param FormHydrator $formHydrator
      * @return Response
      */
-    public function add(Request $request, FormHydrator $formHydrator) : Response
+    public function add(Request $request, FormHydrator $formHydrator): Response
     {
         $unit = new Unit();
         $form = new UnitForm($unit);
@@ -107,7 +105,7 @@ final class UnitController
         }
         return $this->viewRenderer->render('__form', $parameters);
     }
-    
+
     /**
      * @param Request $request
      * @param string $unit_id
@@ -115,9 +113,12 @@ final class UnitController
      * @param FormHydrator $formHydrator
      * @return Response
      */
-    public function edit(Request $request, #[RouteArgument('unit_id')] string $unit_id, 
-      UnitRepository $unitRepository, FormHydrator $formHydrator) : Response 
-    {
+    public function edit(
+        Request $request,
+        #[RouteArgument('unit_id')] string $unit_id,
+        UnitRepository $unitRepository,
+        FormHydrator $formHydrator
+    ): Response {
         $unit = $this->unit($unit_id, $unitRepository);
         if ($unit) {
             $form = new UnitForm($unit);
@@ -142,36 +143,36 @@ final class UnitController
                 $parameters['form'] = $form;
             }
             return $this->viewRenderer->render('__form', $parameters);
-        } 
+        }
         return $this->webService->getRedirectResponse('unit/index');
     }
-    
+
     /**
      * @param string $unit_id
      * @param UnitRepository $unitRepository
      * @return Response
      */
-    public function delete(#[RouteArgument('unit_id')] string $unit_id, UnitRepository $unitRepository): Response 
+    public function delete(#[RouteArgument('unit_id')] string $unit_id, UnitRepository $unitRepository): Response
     {
         try {
-          /** @var Unit $unit */
-          $unit = $this->unit($unit_id, $unitRepository);              
-          $this->unitService->deleteUnit($unit);
-          $this->flash_message('success', $this->translator->translate('i.record_successfully_deleted'));
-          return $this->webService->getRedirectResponse('unit/index');
+            /** @var Unit $unit */
+            $unit = $this->unit($unit_id, $unitRepository);
+            $this->unitService->deleteUnit($unit);
+            $this->flash_message('success', $this->translator->translate('i.record_successfully_deleted'));
+            return $this->webService->getRedirectResponse('unit/index');
         } catch (\Exception $e) {
-          unset($e);
-          $this->flash_message('danger', $this->translator->translate('invoice.unit.history'));
-          return $this->webService->getRedirectResponse('unit/index');
+            unset($e);
+            $this->flash_message('danger', $this->translator->translate('invoice.unit.history'));
+            return $this->webService->getRedirectResponse('unit/index');
         }
     }
-    
+
     /**
      * @param string $unit_id
      * @param UnitRepository $unitRepository
      */
-    public function view(#[RouteArgument('unit_id')] string $unit_id, UnitRepository $unitRepository)
-    : \Yiisoft\DataResponse\DataResponse|Response {
+    public function view(#[RouteArgument('unit_id')] string $unit_id, UnitRepository $unitRepository): \Yiisoft\DataResponse\DataResponse|Response
+    {
         $unit = $this->unit($unit_id, $unitRepository);
         if ($unit) {
             $form = new UnitForm($unit);
@@ -184,8 +185,8 @@ final class UnitController
             return $this->viewRenderer->render('__view', $parameters);
         }
         return $this->webService->getRedirectResponse('unit/index');
-    } 
-    
+    }
+
     /**
      * @param string $unit_id
      * @param UnitRepository $unitRepository
@@ -195,30 +196,34 @@ final class UnitController
     {
         if ($unit_id) {
             $unit = $unitRepository->repoUnitquery($unit_id);
-            return $unit; 
+            return $unit;
         }
         return null;
     }
-    
-    
+
+
     /**
      * @return \Yiisoft\Data\Cycle\Reader\EntityReader
      *
      * @psalm-return \Yiisoft\Data\Cycle\Reader\EntityReader
      */
-    private function units(UnitRepository $unitRepository): \Yiisoft\Data\Cycle\Reader\EntityReader{
+    private function units(UnitRepository $unitRepository): \Yiisoft\Data\Cycle\Reader\EntityReader
+    {
         $units = $unitRepository->findAllPreloaded();
         return $units;
     }
-    
+
     /**
      * @return string
      */
-     private function alert(): string {
-      return $this->viewRenderer->renderPartialAsString('//invoice/layout/alert',
-      [ 
+    private function alert(): string
+    {
+        return $this->viewRenderer->renderPartialAsString(
+            '//invoice/layout/alert',
+            [
         'flash' => $this->flash
-      ]);
+      ]
+        );
     }
 
     /**
@@ -226,7 +231,8 @@ final class UnitController
      * @param string $message
      * @return Flash|null
      */
-    private function flash_message(string $level, string $message): Flash|null {
+    private function flash_message(string $level, string $message): Flash|null
+    {
         if (strlen($message) > 0) {
             $this->flash->add($level, $message, true);
             return $this->flash;

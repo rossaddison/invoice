@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=1); 
+declare(strict_types=1);
 
 namespace App\Invoice\CustomField;
 
@@ -17,8 +17,8 @@ use Yiisoft\Data\Cycle\Writer\EntityWriter;
  */
 final class CustomFieldRepository extends Select\Repository
 {
-private EntityWriter $entityWriter;
-    
+    private EntityWriter $entityWriter;
+
     /**
      * @param Select<TEntity> $select
      * @param EntityWriter $entityWriter
@@ -39,7 +39,7 @@ private EntityWriter $entityWriter;
         $query = $this->select();
         return $this->prepareDataReader($query);
     }
-    
+
     /**
      * @psalm-return EntityReader
      */
@@ -48,34 +48,34 @@ private EntityWriter $entityWriter;
         return (new EntityReader($this->select()))
             ->withSort($this->getSort());
     }
-    
+
     private function getSort(): Sort
     {
         return Sort::only(['id'])->withOrder(['id' => 'asc']);
     }
-    
+
     /**
      * @see Reader/ReadableDataInterface|InvalidArgumentException
      * @param array|CustomField|null $customfield
-     * @throws Throwable 
+     * @throws Throwable
      * @return void
      */
     public function save(array|CustomField|null $customfield): void
     {
         $this->entityWriter->write([$customfield]);
     }
-    
+
     /**
      * @see Reader/ReadableDataInterface|InvalidArgumentException
      * @param array|CustomField|null $customfield
-     * @throws Throwable 
+     * @throws Throwable
      * @return void
      */
     public function delete(array|CustomField|null $customfield): void
     {
         $this->entityWriter->delete([$customfield]);
     }
-    
+
     private function prepareDataReader(Select $query): EntityReader
     {
         return (new EntityReader($query))->withSort(
@@ -83,43 +83,47 @@ private EntityWriter $entityWriter;
                 ->withOrder(['id' => 'asc'])
         );
     }
-    
+
     /**
-     * 
+     *
      * @param string $id
      * @return CustomField|null
      */
-    public function repoCustomFieldquery(string $id): CustomField|null    {
+    public function repoCustomFieldquery(string $id): CustomField|null
+    {
         $query = $this->select()
                       ->where(['id' => $id]);
-        return  $query->fetchOne() ?: null;        
+        return  $query->fetchOne() ?: null;
     }
-    
+
     /**
      * Get customfields  with table filter
      *
      * @psalm-return EntityReader
      */
-    
-    // Retrieve all custom fields built for the entity/tabel eg. quote_custom   
-    public function repoTablequery(string $table) : EntityReader {
+
+    // Retrieve all custom fields built for the entity/tabel eg. quote_custom
+    public function repoTablequery(string $table): EntityReader
+    {
         $query = $this->select()
                       ->where(['table' => $table]);
-        return $this->prepareDataReader($query); 
+        return $this->prepareDataReader($query);
     }
-    
-    public function repoTableCountquery(string $table): int {
+
+    public function repoTableCountquery(string $table): int
+    {
         $count = $this->select()
                       ->where(['table' => $table])
                       ->count();
-        return $count; 
+        return $count;
     }
-    
-    public function repoTableAndLabelCountquery(string $table, string $label): int {
+
+    public function repoTableAndLabelCountquery(string $table, string $label): int
+    {
         $count = $this->select()
                       ->where(['table' => $table])
                       ->andWhere(['label' => $label])
                       ->count();
-        return $count; 
+        return $count;
     }
 }

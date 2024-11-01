@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=1); 
+declare(strict_types=1);
 
 namespace App\Invoice\InvSentLog;
 
@@ -18,7 +18,7 @@ use Yiisoft\Data\Cycle\Writer\EntityWriter;
 final class InvSentLogRepository extends Select\Repository
 {
     private EntityWriter $entityWriter;
-    
+
     /**
      * @param Select<TEntity> $select
      * @param EntityWriter $entityWriter
@@ -40,68 +40,72 @@ final class InvSentLogRepository extends Select\Repository
                       ->load('inv');
         return $this->prepareDataReader($query);
     }
-    
+
     /**
      * Select all email logs sent by email to this user
      * One user can have more than one client e.g. Accountant paying off several client's invoices
      * @param string $user_id
      * @return EntityReader
      */
-    public function withUser(string $user_id) : EntityReader {
+    public function withUser(string $user_id): EntityReader
+    {
         $query = $this->select()
                       ->load('inv')
                       ->where(['inv.user_id' => $user_id]);
         return $this->prepareDataReader($query);
     }
-    
+
     /**
      * @return InvSentLog
      *
      * @psalm-return TEntity
      */
-    public function repoInvSentLogLoadedquery(string $id) : InvSentLog {
+    public function repoInvSentLogLoadedquery(string $id): InvSentLog
+    {
         $query = $this->select()
-                      ->load('inv')  
+                      ->load('inv')
                       ->where(['id' => $id]);
         return $query->fetchOne();
     }
-        
+
     /**
-     * 
+     *
      * @param string $inv_id
      * @return EntityReader
      */
-    public function repoInvSentLogForEachInvoice(string $inv_id) : EntityReader {
+    public function repoInvSentLogForEachInvoice(string $inv_id): EntityReader
+    {
         $query = $this->select()
                       ->load('inv')
                       ->where(['inv_id' => $inv_id]);
         return $this->prepareDataReader($query);
     }
-    
+
     /**
      * Used in: inv/index.php to determine how many emails have been sent for each invoice
      * @param string $inv_id
      * @return int
      */
-    public function repoInvSentLogEmailedCountForEachInvoice(string $inv_id) : int {
+    public function repoInvSentLogEmailedCountForEachInvoice(string $inv_id): int
+    {
         $query = $this->select()
                       ->load('inv')
                       ->where(['inv_id' => $inv_id]);
         return $query->count();
     }
-    
+
     /**
      * Load all email logs associated with this selected dropdown invoice number
      * @param string $invNumber
      * @return EntityReader
      */
-    public function filterInvNumber(string $invNumber) : EntityReader
+    public function filterInvNumber(string $invNumber): EntityReader
     {
         $select = $this->select()->load('inv');
-        $query = $select->where(['inv.number' => ltrim(rtrim($invNumber))]);        
-        return $this->prepareDataReader($query); 
+        $query = $select->where(['inv.number' => ltrim(rtrim($invNumber))]);
+        return $this->prepareDataReader($query);
     }
-    
+
     /**
      * Load all email logs associated with this selected dropdown client id
      * @param string $client_id
@@ -110,10 +114,10 @@ final class InvSentLogRepository extends Select\Repository
     public function filterClient(string $client_id): EntityReader
     {
         $select = $this->select();
-        $query = $select->where(['client_id' => $client_id]);        
-        return $this->prepareDataReader($query); 
+        $query = $select->where(['client_id' => $client_id]);
+        return $this->prepareDataReader($query);
     }
-    
+
     /**
      * Load all email logs associated with the selected invoice number and client id
      * @param string $invNumber
@@ -123,10 +127,10 @@ final class InvSentLogRepository extends Select\Repository
     public function filterInvNumberWithClient(string $invNumber, string $client_id): EntityReader
     {
         $select = $this->select()->load('inv');
-        $query = $select->where(['client_id' => $client_id])->andWhere(['inv.number' => $invNumber]);        
-        return $this->prepareDataReader($query); 
+        $query = $select->where(['client_id' => $client_id])->andWhere(['inv.number' => $invNumber]);
+        return $this->prepareDataReader($query);
     }
-        
+
     /**
      * @psalm-return EntityReader
      */
@@ -135,27 +139,27 @@ final class InvSentLogRepository extends Select\Repository
         return (new EntityReader($this->select()))
             ->withSort($this->getSort());
     }
-    
+
     /**
      * @return Sort
      */
     private function getSort(): Sort
     {
         return Sort::only(['id'])->withOrder(['id' => 'desc']);
-    }    
-    
+    }
+
     /**
      * @see Reader/ReadableDataInterface|InvalidArgumentException
      * @param array|InvSentLog|null $invsentlog
      * @psalm-param TEntity $invsentlog
-     * @throws Throwable 
+     * @throws Throwable
      * @return void
      */
     public function save(array|InvSentLog|null $invsentlog): void
     {
         $this->entityWriter->write([$invsentlog]);
     }
-    
+
     /**
      * @param array|InvSentLog|null $invsentlog
      * @return void
@@ -164,7 +168,7 @@ final class InvSentLogRepository extends Select\Repository
     {
         $this->entityWriter->delete([$invsentlog]);
     }
-    
+
     /**
      * @param Select $query
      * @return EntityReader
@@ -175,5 +179,5 @@ final class InvSentLogRepository extends Select\Repository
             Sort::only(['id'])
                 ->withOrder(['id' => 'desc'])
         );
-    } 
+    }
 }

@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=1); 
+declare(strict_types=1);
 
 namespace App\Invoice\Merchant;
 
@@ -12,7 +12,6 @@ use Cycle\ORM\Select;
 use Yiisoft\Data\Reader\Sort;
 use Yiisoft\Data\Cycle\Reader\EntityReader;
 use Yiisoft\Data\Cycle\Writer\EntityWriter;
-
 use Throwable;
 
 /**
@@ -21,8 +20,8 @@ use Throwable;
  */
 final class MerchantRepository extends Select\Repository
 {
-private EntityWriter $entityWriter;
-    
+    private EntityWriter $entityWriter;
+
     /**
      * @param Select<TEntity> $select
      * @param EntityWriter $entityWriter
@@ -43,7 +42,7 @@ private EntityWriter $entityWriter;
         $query = $this->select();
         return $this->prepareDataReader($query);
     }
-    
+
     /**
      * @psalm-return EntityReader
      */
@@ -52,34 +51,34 @@ private EntityWriter $entityWriter;
         return (new EntityReader($this->select()))
             ->withSort($this->getSort());
     }
-    
+
     private function getSort(): Sort
     {
         return Sort::only(['id'])->withOrder(['id' => 'asc']);
     }
-    
+
     /**
      * @see Reader/ReadableDataInterface|InvalidArgumentException
      * @param array|Merchant|null $merchant
-     * @throws Throwable 
+     * @throws Throwable
      * @return void
      */
     public function save(array|Merchant|null $merchant): void
     {
         $this->entityWriter->write([$merchant]);
     }
-    
+
     /**
      * @see Reader/ReadableDataInterface|InvalidArgumentException
      * @param array|Merchant|null $merchant
-     * @throws Throwable 
+     * @throws Throwable
      * @return void
      */
     public function delete(array|Merchant|null $merchant): void
     {
         $this->entityWriter->delete([$merchant]);
     }
-    
+
     private function prepareDataReader(Select $query): EntityReader
     {
         return (new EntityReader($query))->withSort(
@@ -87,51 +86,55 @@ private EntityWriter $entityWriter;
                 ->withOrder(['id' => 'asc'])
         );
     }
-    
+
     /**
      * @return null|Merchant
      *
      * @psalm-return TEntity|null
      */
-    public function repoMerchantquery(string $id):Merchant|null    {
+    public function repoMerchantquery(string $id): Merchant|null
+    {
         $query = $this->select()->load('inv')
                                 ->where(['id' => $id]);
-        return  $query->fetchOne() ?: null;        
+        return  $query->fetchOne() ?: null;
     }
-    
+
     /**
      * Retrieve all the merchants that relate to this invoice id
      * @param string $invNumber
-     * 
+     *
      * @psalm-return EntityReader
      */
-    public function repoMerchantInvNumberquery(string $invNumber): EntityReader {
+    public function repoMerchantInvNumberquery(string $invNumber): EntityReader
+    {
         $query = $this->select()
                       ->where(['inv.number' => $invNumber]);
-        return   $this->prepareDataReader($query); 
+        return   $this->prepareDataReader($query);
     }
-    
+
     /**
      * Retrieve all the merchants that relate to this invoice id
      * @param string $paymentProvider
-     * 
+     *
      * @psalm-return EntityReader
      */
-    public function repoMerchantPaymentProviderquery(string $paymentProvider): EntityReader {
+    public function repoMerchantPaymentProviderquery(string $paymentProvider): EntityReader
+    {
         $query = $this->select()
                       ->where(['driver' => $paymentProvider]);
-        return   $this->prepareDataReader($query); 
+        return   $this->prepareDataReader($query);
     }
-    
-    public function repoMerchantInvNumberWithPaymentProvider(string $invNumber, string $invPaymentProvider): EntityReader {
+
+    public function repoMerchantInvNumberWithPaymentProvider(string $invNumber, string $invPaymentProvider): EntityReader
+    {
         $query = $this->select()
                       ->where(['inv.number' => $invNumber])
                       ->andWhere(['driver' => $invPaymentProvider]);
         return   $this->prepareDataReader($query);
     }
-     
+
     // Find all merchant responses associated with a user's clients ie. their client list / client_id_array
-    
+
     /**
      * Get payments  with filter
      *
@@ -143,7 +146,7 @@ private EntityWriter $entityWriter;
     {
         $query = $this->select()
                       ->load('inv')
-                      ->where(['inv.client_id'=>['in'=> new Parameter($client_id_array)]]);        
+                      ->where(['inv.client_id' => ['in' => new Parameter($client_id_array)]]);
         return   $this->prepareDataReader($query);
     }
 }

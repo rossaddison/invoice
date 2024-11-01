@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=1); 
+declare(strict_types=1);
 
 namespace App\Invoice\Task;
 
@@ -21,12 +21,12 @@ final class TaskRepository extends Select\Repository
 {
     private EntityWriter $entityWriter;
     private Translator $translator;
-    
-     /**
-     * 
-     * @param Select<TEntity> $select     
-     * @param EntityWriter $entityWriter
-     */
+
+    /**
+    *
+    * @param Select<TEntity> $select
+    * @param EntityWriter $entityWriter
+    */
     public function __construct(Select $select, EntityWriter $entityWriter, Translator $translator)
     {
         $this->entityWriter = $entityWriter;
@@ -44,7 +44,7 @@ final class TaskRepository extends Select\Repository
         $query = $this->select()->load('tax_rate');
         return $this->prepareDataReader($query);
     }
-    
+
     /**
      * @psalm-return EntityReader
      */
@@ -53,34 +53,34 @@ final class TaskRepository extends Select\Repository
         return (new EntityReader($this->select()))
             ->withSort($this->getSort());
     }
-    
+
     private function getSort(): Sort
     {
         return Sort::only(['id'])->withOrder(['id' => 'asc']);
     }
-    
+
     /**
      * @see Reader/ReadableDataInterface|InvalidArgumentException
      * @param array|Task|null $task
-     * @throws Throwable 
+     * @throws Throwable
      * @return void
      */
     public function save(array|Task|null $task): void
     {
         $this->entityWriter->write([$task]);
     }
-    
+
     /**
      * @see Reader/ReadableDataInterface|InvalidArgumentException
      * @param array|Task|null $task
-     * @throws Throwable 
+     * @throws Throwable
      * @return void
      */
     public function delete(array|Task|null $task): void
     {
         $this->entityWriter->delete([$task]);
     }
-    
+
     /**
      * @param Select $query
      * @return EntityReader
@@ -92,53 +92,57 @@ final class TaskRepository extends Select\Repository
                 ->withOrder(['id' => 'asc'])
         );
     }
-    
+
     /**
      * @return null|Task
      *
      * @psalm-return TEntity|null
      */
-    public function repoTaskquery(string $id):Task|null    {
+    public function repoTaskquery(string $id): Task|null
+    {
         $query = $this->select()->load('tax_rate')
-                                ->where(['id' =>$id]);
-        return  $query->fetchOne() ?: null;        
+                                ->where(['id' => $id]);
+        return  $query->fetchOne() ?: null;
     }
-    
-    
+
+
     /**
      * Get tasks  with filter
      *
      * @psalm-return EntityReader
      */
-    public function repoTaskStatusquery(int $status): EntityReader {
+    public function repoTaskStatusquery(int $status): EntityReader
+    {
         $query = $this->select()->load('tax_rate')
-                                ->where(['status' =>$status]);
-        return $this->prepareDataReader($query);        
+                                ->where(['status' => $status]);
+        return $this->prepareDataReader($query);
     }
-    
+
     /**
-     * 
+     *
      * @param array $task_ids
      * @return EntityReader
-     */    
-    public function findinTasks(array $task_ids) : EntityReader {
+     */
+    public function findinTasks(array $task_ids): EntityReader
+    {
         $query = $this->select()
-                      ->where(['id'=>['in'=> new Parameter($task_ids)]]);
-        return $this->prepareDataReader($query);    
-    } 
-    
+                      ->where(['id' => ['in' => new Parameter($task_ids)]]);
+        return $this->prepareDataReader($query);
+    }
+
     /**
-     * 
+     *
      * @param string $task_id
      * @return int
      */
-    public function repoCount(string $task_id) : int {
+    public function repoCount(string $task_id): int
+    {
         $count = $this->select()
-                      ->where(['id'=>$task_id])
+                      ->where(['id' => $task_id])
                       ->count();
         return $count;
     }
-    
+
     /**
      * @param Translator $translator
      * @return array
@@ -164,13 +168,13 @@ final class TaskRepository extends Select\Repository
             ]
         ];
     }
-    
+
     /**
-     * 
+     *
      * @param string $key
      * @return string
      */
-    public function getSpecificStatusArrayLabel(string $key) : string
+    public function getSpecificStatusArrayLabel(string $key): string
     {
         $statuses_array = $this->getTaskStatuses($this->translator);
         /**
@@ -179,13 +183,13 @@ final class TaskRepository extends Select\Repository
          */
         return $statuses_array[$key]['label'];
     }
-    
+
     /**
-     * 
+     *
      * @param int $status
      * @return string
      */
-    public function getSpecificStatusArrayClass(int $status) : string
+    public function getSpecificStatusArrayClass(int $status): string
     {
         $statuses_array = $this->getTaskStatuses($this->translator);
         /**
@@ -194,4 +198,4 @@ final class TaskRepository extends Select\Repository
          */
         return $statuses_array[$status]['class'];
     }
-}    
+}

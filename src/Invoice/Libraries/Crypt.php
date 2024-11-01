@@ -2,28 +2,28 @@
 
 declare(strict_types=1);
 
-Namespace App\Invoice\Libraries;
+namespace App\Invoice\Libraries;
 
 /**
  * @see https://github.com/InvoicePlane/InvoicePlane/blob/development/application/libraries/Crypt.php
- * 
+ *
  * Class Crypt
  */
 class Crypt
 {
     private const string DECRYPT_KEY = 'base64:3iqxXZEG5aR0NPvmE4qubcE/sn6nuzXKLrZVRMP3/Ak=';
     private string $decrypt_key = self::DECRYPT_KEY;
-    
+
     /**
      * Snyk: What is Salting?
-     * A salt is a random string that gets attached to a plaintext password before it gets hashed. 
+     * A salt is a random string that gets attached to a plaintext password before it gets hashed.
      * A hash cannot be reversed but it can be compared with existing generated hash outputs.
      * If a user is using a weak password, that password may have been hashed and stored somewhere for
-     * potential hackers to compare against. By adding a salt to the password, the hash output is no 
-     * longer predictable. This is because it is increasing the uniqueness of the password, thus, 
+     * potential hackers to compare against. By adding a salt to the password, the hash output is no
+     * longer predictable. This is because it is increasing the uniqueness of the password, thus,
      * the uniqueness of the hash itself.
      */
-    
+
     /**
      * A salt now must be added to a hash to prevent hash table lookups used by attackers
      * @see https://cwe.mitre.org/data/definitions/916.html
@@ -46,7 +46,7 @@ class Crypt
      * @param string $salt
      * @return string
      */
-    public function generate_password($password, $salt) : string
+    public function generate_password($password, $salt): string
     {
         return crypt($password, '$2a$10$' . $salt);
     }
@@ -56,7 +56,7 @@ class Crypt
      * @param string $password
      * @return bool
      */
-    public function check_password($hash, $password) : bool
+    public function check_password($hash, $password): bool
     {
         $new_hash = crypt($password, $hash);
 
@@ -67,7 +67,7 @@ class Crypt
      * @param string $data
      * @return mixed $encrypted
      */
-    public function encode(string $data) : mixed
+    public function encode(string $data): mixed
     {
         $key = '';
         if (preg_match("/^base64:(.*)$/", $this->decrypt_key, $matches)) {
@@ -84,7 +84,7 @@ class Crypt
      * @param string $data
      * @return mixed $decrypted
      */
-    public function decode(string $data) : mixed
+    public function decode(string $data): mixed
     {
         $key = '';
         if (empty($data)) {

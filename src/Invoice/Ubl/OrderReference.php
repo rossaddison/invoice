@@ -1,5 +1,6 @@
 <?php
-declare(strict_types=1); 
+
+declare(strict_types=1);
 
 namespace App\Invoice\Ubl;
 
@@ -10,8 +11,9 @@ class OrderReference implements XmlSerializable
 {
     private ?string $id;
     private ?string $salesOrderId;
-    
-    public function __construct(?string $id, ?string $salesOrderId) {
+
+    public function __construct(?string $id, ?string $salesOrderId)
+    {
         $this->id = $id;
         $this->salesOrderId = $salesOrderId;
     }

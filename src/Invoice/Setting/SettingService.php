@@ -26,9 +26,9 @@ final class SettingService
         isset($body['setting_value']) ? $setting->setSetting_value((string)$body['setting_value']) : '';
         $this->repository->save($setting);
     }
-    
+
     /**
-     * 
+     *
      * @param Setting $setting
      * @return void
      */

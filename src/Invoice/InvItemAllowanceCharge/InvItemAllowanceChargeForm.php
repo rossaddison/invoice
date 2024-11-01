@@ -9,16 +9,16 @@ use Yiisoft\FormModel\FormModel;
 use Yiisoft\Validator\Rule\Required;
 
 final class InvItemAllowanceChargeForm extends FormModel
-{  
-    private ?int $inv_id=null;
-    private ?int $inv_item_id=null;
+{
+    private ?int $inv_id = null;
+    private ?int $inv_item_id = null;
     #[Required]
-    private ?int $allowance_charge_id=null;
+    private ?int $allowance_charge_id = null;
     #[Required]
-    private ?float $amount=null;
+    private ?float $amount = null;
     #[Required]
-    private ?float $vat=null;
-    
+    private ?float $vat = null;
+
     public function __construct(InvItemAllowanceCharge $invItemAllowanceCharge, int $inv_item_id)
     {
         $this->inv_id = (int)$invItemAllowanceCharge->getInv_id();
@@ -26,31 +26,31 @@ final class InvItemAllowanceChargeForm extends FormModel
         $this->allowance_charge_id = (int)$invItemAllowanceCharge->getAllowance_charge_id();
         $this->amount = (float)$invItemAllowanceCharge->getAmount();
         $this->vat = (float)$invItemAllowanceCharge->getVat();
-    }        
-
-    public function getInv_id() : int|null
-    {
-      return $this->inv_id;
     }
 
-    public function getInv_item_id() : int|null
+    public function getInv_id(): int|null
     {
-      return $this->inv_item_id;
+        return $this->inv_id;
     }
 
-    public function getAllowance_charge_id() : int|null
+    public function getInv_item_id(): int|null
     {
-      return $this->allowance_charge_id;
+        return $this->inv_item_id;
     }
 
-    public function getAmount() : float|null
+    public function getAllowance_charge_id(): int|null
     {
-      return $this->amount;
+        return $this->allowance_charge_id;
     }
 
-    public function getVat() : float|null
+    public function getAmount(): float|null
     {
-      return $this->vat;
+        return $this->amount;
+    }
+
+    public function getVat(): float|null
+    {
+        return $this->vat;
     }
 
     /**
@@ -59,7 +59,7 @@ final class InvItemAllowanceChargeForm extends FormModel
      */
     public function getFormName(): string
     {
-      return '';
+        return '';
     }
 
 }

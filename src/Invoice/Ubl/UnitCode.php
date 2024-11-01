@@ -1,5 +1,6 @@
 <?php
-declare(strict_types=1); 
+
+declare(strict_types=1);
 
 namespace App\Invoice\Ubl;
 
@@ -9,24 +10,24 @@ namespace App\Invoice\Ubl;
  */
 class UnitCode
 {
-    const string UNIT = 'C62';
-    const string PIECE = 'H87';
+    public const string UNIT = 'C62';
+    public const string PIECE = 'H87';
 
-    const string ARE = 'ARE';
-    const string HECTARE = 'HAR';
+    public const string ARE = 'ARE';
+    public const string HECTARE = 'HAR';
 
-    const string SQUARE_METRE = 'MTK';
-    const string SQUARE_KILOMETRE = 'KMK';
-    const string SQUARE_FOOT = 'FTK';
-    const string SQUARE_YARD = 'YDK';
-    const string SQUARE_MILE = 'MIK';
+    public const string SQUARE_METRE = 'MTK';
+    public const string SQUARE_KILOMETRE = 'KMK';
+    public const string SQUARE_FOOT = 'FTK';
+    public const string SQUARE_YARD = 'YDK';
+    public const string SQUARE_MILE = 'MIK';
 
-    const string LITRE = 'LTR';
+    public const string LITRE = 'LTR';
 
-    const string SECOND = 'SEC';
-    const string MINUTE = 'MIN';
-    const string HOUR = 'HUR';
-    const string DAY = 'DAY';
-    const string MONTH = 'MON';
-    const string YEAR = 'ANN';
+    public const string SECOND = 'SEC';
+    public const string MINUTE = 'MIN';
+    public const string HOUR = 'HUR';
+    public const string DAY = 'DAY';
+    public const string MONTH = 'MON';
+    public const string YEAR = 'ANN';
 }

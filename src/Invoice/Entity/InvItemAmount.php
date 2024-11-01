@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=1); 
+declare(strict_types=1);
 
 namespace App\Invoice\Entity;
 
@@ -14,31 +14,31 @@ class InvItemAmount
 {
     #[BelongsTo(target:InvItem::class, nullable: true)]
     private ?InvItem $inv_item = null;
-        
+
     #[Column(type: 'primary')]
     private ?int $id =  null;
-     
+
     #[Column(type: 'integer(11)', nullable: false)]
     private ?int $inv_item_id =  null;
-     
+
     #[Column(type: 'decimal(20,2)', nullable: false, default: 0.00)]
     private ?float $subtotal =  0.00;
-     
+
     #[Column(type: 'decimal(20,2)', nullable: false, default: 0.00)]
     private ?float $tax_total =  0.00;
-    
+
     #[Column(type: 'decimal(20,2)', nullable: false, default: 0.00)]
     private ?float $discount =  0.00;
-    
+
     #[Column(type: 'decimal(20,2)', nullable: false, default: 0.00)]
     private ?float $charge =  0.00;
-    
+
     #[Column(type: 'decimal(20,2)', nullable: false, default: 0.00)]
     private ?float $allowance =  0.00;
-     
+
     #[Column(type: 'decimal(20,2)', nullable: false, default: 0.00)]
     private ?float $total =  0.00;
-     
+
     public function __construct(
         int   $id = null,
         int   $inv_item_id = null,
@@ -48,100 +48,99 @@ class InvItemAmount
         float $charge = 0.00,
         float $allowance = 0.00,
         float $total = 0.00
-    )
-    {
-        $this->id=$id;
-        $this->inv_item_id=$inv_item_id;
-        $this->subtotal=$subtotal;
-        $this->tax_total=$tax_total;
-        $this->discount=$discount;
-        $this->charge=$charge;
-        $this->allowance=$allowance;
-        $this->total=$total;
+    ) {
+        $this->id = $id;
+        $this->inv_item_id = $inv_item_id;
+        $this->subtotal = $subtotal;
+        $this->tax_total = $tax_total;
+        $this->discount = $discount;
+        $this->charge = $charge;
+        $this->allowance = $allowance;
+        $this->total = $total;
     }
-    
-    public function getInvItem() : ?InvItem
+
+    public function getInvItem(): ?InvItem
     {
-      return $this->inv_item;
+        return $this->inv_item;
     }
-    
+
     public function getId(): string
     {
-     return (string)$this->id;
+        return (string)$this->id;
     }
-    
-    public function setId(int $id) : void
+
+    public function setId(int $id): void
     {
-      $this->id =  $id;
+        $this->id =  $id;
     }
-    
+
     public function getInv_item_id(): string
     {
-     return (string)$this->inv_item_id;
+        return (string)$this->inv_item_id;
     }
-    
-    public function setInv_item_id(int $inv_item_id) : void
+
+    public function setInv_item_id(int $inv_item_id): void
     {
-      $this->inv_item_id =  $inv_item_id;
+        $this->inv_item_id =  $inv_item_id;
     }
-    
+
     public function getSubtotal(): ?float
     {
-       return $this->subtotal;
+        return $this->subtotal;
     }
-    
-    public function setSubtotal(float $subtotal) : void
+
+    public function setSubtotal(float $subtotal): void
     {
-      $this->subtotal =  $subtotal;
+        $this->subtotal =  $subtotal;
     }
-    
+
     public function getTax_total(): ?float
     {
-       return $this->tax_total;
+        return $this->tax_total;
     }
-    
-    public function setTax_total(float $tax_total) : void
+
+    public function setTax_total(float $tax_total): void
     {
-      $this->tax_total =  $tax_total;
+        $this->tax_total =  $tax_total;
     }
-    
+
     public function getDiscount(): ?float
     {
-       return $this->discount;
+        return $this->discount;
     }
-    
-    public function setDiscount(float $discount) : void
+
+    public function setDiscount(float $discount): void
     {
-      $this->discount =  $discount;
+        $this->discount =  $discount;
     }
-    
+
     public function getCharge(): ?float
     {
-       return $this->charge;
+        return $this->charge;
     }
-    
-    public function setCharge(float $charge) : void
+
+    public function setCharge(float $charge): void
     {
-      $this->charge =  $charge;
+        $this->charge =  $charge;
     }
-    
+
     public function getAllowance(): ?float
     {
-       return $this->allowance;
+        return $this->allowance;
     }
-    
-    public function setAllowance(float $allowance) : void
+
+    public function setAllowance(float $allowance): void
     {
-       $this->allowance = $allowance;
+        $this->allowance = $allowance;
     }
-    
+
     public function getTotal(): ?float
     {
-       return $this->total;
+        return $this->total;
     }
-    
-    public function setTotal(float $total) : void
+
+    public function setTotal(float $total): void
     {
-      $this->total =  $total;
+        $this->total =  $total;
     }
 }

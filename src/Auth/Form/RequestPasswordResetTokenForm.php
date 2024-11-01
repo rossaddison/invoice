@@ -18,13 +18,13 @@ use Yiisoft\Validator\RulesProviderInterface;
 final class RequestPasswordResetTokenForm extends FormModel implements RulesProviderInterface, PropertyTranslatorProviderInterface
 {
     public string $email = '';
-    
+
     public function __construct(
         private readonly TranslatorInterface $translator,
-        private readonly UserRepository $userRepository    
+        private readonly UserRepository $userRepository
     ) {
     }
-    
+
     /**
      * @return string[]
      *
@@ -32,7 +32,7 @@ final class RequestPasswordResetTokenForm extends FormModel implements RulesProv
      */
     public function getAttributeLabels(): array
     {
-        return [           
+        return [
             'email' => $this->translator->translate('i.email'),
         ];
     }
@@ -46,20 +46,20 @@ final class RequestPasswordResetTokenForm extends FormModel implements RulesProv
     {
         return 'RequestPasswordResetToken';
     }
-    
+
     /**
-     * 
+     *
      * @return PropertyTranslatorInterface|null
      */
     public function getPropertyTranslator(): ?PropertyTranslatorInterface
     {
         return new ArrayPropertyTranslator($this->getPropertyLabels());
     }
-    
+
     public function getEmail(): string
     {
         return $this->email;
-    }    
+    }
 
     /**
      * @return (Required|Email|\Closure)[][]

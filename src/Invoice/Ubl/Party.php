@@ -9,8 +9,8 @@ use Sabre\Xml\XmlSerializable;
 use InvalidArgumentException;
 use Yiisoft\Translator\TranslatorInterface as Translator;
 
-class Party implements XmlSerializable {
-
+class Party implements XmlSerializable
+{
     private ?string $name;
     private ?string $partyIdentificationId;
     private ?string $partyIdentificationSchemeId;
@@ -21,11 +21,12 @@ class Party implements XmlSerializable {
     private ?PartyLegalEntity $partyLegalEntity;
     private ?string $endpointID;
     private Translator $translator;
-    
+
     /** @var null|string|int $endpointId_schemeID */
     private mixed $endpointID_schemeID;
 
-    public function __construct(Translator $translator, ?string $name, ?string $partyIdentificationId, ?string $partyIdentificationSchemeId, ?Address $postalAddress, ?Address $physicalLocation, ?Contact $contact, ?PartyTaxScheme $partyTaxScheme, ?PartyLegalEntity $partyLegalEntity, ?string $endpointID, mixed $endpointID_schemeID) {
+    public function __construct(Translator $translator, ?string $name, ?string $partyIdentificationId, ?string $partyIdentificationSchemeId, ?Address $postalAddress, ?Address $physicalLocation, ?Contact $contact, ?PartyTaxScheme $partyTaxScheme, ?PartyLegalEntity $partyLegalEntity, ?string $endpointID, mixed $endpointID_schemeID)
+    {
         $this->translator = $translator;
         $this->name = $name;
         $this->partyIdentificationId = $partyIdentificationId;
@@ -40,35 +41,38 @@ class Party implements XmlSerializable {
         $this->endpointID_schemeID = $endpointID_schemeID;
     }
 
-    public function getPartyName(): ?string {
+    public function getPartyName(): ?string
+    {
         return $this->name;
     }
-    
+
     /**
-     * 
+     *
      * @return void
      * @throws InvalidArgumentException
      */
-    private function validate() : void {
-      if (null==$this->endpointID) {
-        /**
-         * Error
-         * Location: invoice_8x8vShcxINV111_peppol
-         * Element/context: /:Invoice[1]/cac:AccountingCustomerParty[1]/cac:Party[1]
-         * XPath test: cbc:EndpointID
-         * Error message: Buyer electronic address MUST be provided
-         */
-        throw new InvalidArgumentException($this->translator->translate('invoice.peppol.validator.Invoice.cac.Party.cbc.EndPointID'));
-      } 
+    private function validate(): void
+    {
+        if (null == $this->endpointID) {
+            /**
+             * Error
+             * Location: invoice_8x8vShcxINV111_peppol
+             * Element/context: /:Invoice[1]/cac:AccountingCustomerParty[1]/cac:Party[1]
+             * XPath test: cbc:EndpointID
+             * Error message: Buyer electronic address MUST be provided
+             */
+            throw new InvalidArgumentException($this->translator->translate('invoice.peppol.validator.Invoice.cac.Party.cbc.EndPointID'));
+        }
     }
 
     /**
      * @param Writer $writer
      * @return void
      */
-    public function xmlSerialize(Writer $writer) : void {
+    public function xmlSerialize(Writer $writer): void
+    {
         $this->validate();
-        if (null!==($this->endpointID) && null!==($this->endpointID_schemeID)) {
+        if (null !== ($this->endpointID) && null !== ($this->endpointID_schemeID)) {
             $writer->write([
                 [
                     'name' => Schema::CBC . 'EndpointID',
@@ -87,7 +91,7 @@ class Party implements XmlSerializable {
              * For Danish Suppliers it is mandatory to use schemeID when PartyIdentification/ID is used for AccountingCustomerParty or AccountingSupplierParty
              * @see https://github.com/search?q=org%3AOpenPEPPOL+PartyIdentification&type=code
              */
-            if (null!==$this->partyIdentificationSchemeId) {
+            if (null !== $this->partyIdentificationSchemeId) {
                 $partyIdentificationAttributes['schemeID'] = $this->partyIdentificationSchemeId;
             }
 
@@ -103,13 +107,13 @@ class Party implements XmlSerializable {
         }
 
         if ($this->name !== null) {
-          $writer->write([
-              Schema::CAC . 'PartyName' => [
-                  Schema::CBC . 'Name' => $this->name
-              ]
-          ]);
+            $writer->write([
+                Schema::CAC . 'PartyName' => [
+                    Schema::CBC . 'Name' => $this->name
+                ]
+            ]);
         }
-        
+
         $writer->write([
             Schema::CAC . 'PostalAddress' => $this->postalAddress
         ]);

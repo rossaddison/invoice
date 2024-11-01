@@ -18,9 +18,9 @@ use Yiisoft\Data\Cycle\Writer\EntityWriter;
 final class TaxRateRepository extends Select\Repository
 {
     private EntityWriter $entityWriter;
-    
+
     /**
-     * @param Select<TEntity> $select     
+     * @param Select<TEntity> $select
      * @param EntityWriter $entityWriter
      */
     public function __construct(Select $select, EntityWriter $entityWriter)
@@ -28,7 +28,7 @@ final class TaxRateRepository extends Select\Repository
         $this->entityWriter = $entityWriter;
         parent::__construct($select);
     }
-    
+
     /**
      * Get taxRates without filter
      *
@@ -39,22 +39,22 @@ final class TaxRateRepository extends Select\Repository
         $query = $this->select();
         return $this->prepareDataReader($query);
     }
-            
+
     /**
      * @see Reader/ReadableDataInterface|InvalidArgumentException
      * @param array|TaxRate|null $taxRate
-     * @throws Throwable 
+     * @throws Throwable
      * @return void
      */
     public function save(array|TaxRate|null $taxRate): void
     {
         $this->entityWriter->write([$taxRate]);
     }
-    
+
     /**
      * @see Reader/ReadableDataInterface|InvalidArgumentException
      * @param array|TaxRate|null $taxRate
-     * @throws Throwable 
+     * @throws Throwable
      * @return void
      */
     public function delete(array|TaxRate|null $taxRate): void
@@ -63,7 +63,7 @@ final class TaxRateRepository extends Select\Repository
     }
 
     /**
-     * 
+     *
      * @param Select $query
      * @return EntityReader
      */
@@ -74,9 +74,9 @@ final class TaxRateRepository extends Select\Repository
                 ->withOrder(['tax_rate_name' => 'asc'])
         );
     }
-    
+
     /**
-     * 
+     *
      * @param string $tax_rate_id
      * @return null|TaxRate
      */
@@ -85,11 +85,11 @@ final class TaxRateRepository extends Select\Repository
         $query = $this
             ->select()
             ->where(['id' => $tax_rate_id]);
-        return  $query->fetchOne() ?: null;        
+        return  $query->fetchOne() ?: null;
     }
-    
+
     /**
-     * 
+     *
      * @param string $tax_rate_name
      * @return TaxRate|null
      */
@@ -100,46 +100,47 @@ final class TaxRateRepository extends Select\Repository
             ->where(['tax_rate_name' => $tax_rate_name]);
         return  $query->fetchOne() ?: null;
     }
-    
+
     /**
-     * 
+     *
      * @param string $tax_rate_id
      * @return int
      */
-    public function repoCount(string $tax_rate_id): int {
+    public function repoCount(string $tax_rate_id): int
+    {
         $count = $this->select()
                       ->where(['id' => $tax_rate_id])
                       ->count();
-        return $count;   
+        return $count;
     }
-    
+
     /**
-     * 
+     *
      * @return int
      */
-    public function repoCountAll(): int {
+    public function repoCountAll(): int
+    {
         $countall = $this->select()
                          ->count();
         return $countall;
     }
-    
+
     /**
      * @return array
      */
-    public function optionsDataTaxRates() : array
+    public function optionsDataTaxRates(): array
     {
         $taxRates = $this->findAllPreloaded();
         $optionsDataTaxRates = [];
         /**
          * @var TaxRate $taxRate
          */
-        foreach ($taxRates as $taxRate)
-        {
+        foreach ($taxRates as $taxRate) {
             $taxRateId = $taxRate->getTaxRateId();
-            if (null!==$taxRateId) {
+            if (null !== $taxRateId) {
                 $optionsDataTaxRates[$taxRateId] = ($taxRate->getTaxRateName() ?? '') . '  ' . ($taxRate->getTaxRatePercent() ?? '');
             }
-        }    
+        }
         return $optionsDataTaxRates;
-    }    
+    }
 }

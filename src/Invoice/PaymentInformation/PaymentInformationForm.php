@@ -14,9 +14,9 @@ final class PaymentInformationForm extends FormModel
     private string $creditcard_expiry_month = '';
     private string $creditcard_expiry_year = '';
     private string $creditcard_cvv = '';
-    
+
     /**
-     * Note there is no construct here for PaymentInformation i.e. No Entity called PaymentInformation, 
+     * Note there is no construct here for PaymentInformation i.e. No Entity called PaymentInformation,
      * because the above sensitive data is not to touch the server from the user
      */
 
@@ -29,7 +29,7 @@ final class PaymentInformationForm extends FormModel
     {
         return 'PaymentInformationForm';
     }
-    
+
     /**
      * @return Required[][]
      *
@@ -40,7 +40,7 @@ final class PaymentInformationForm extends FormModel
         return [
             'gateway_driver' => [new Required()],
             'creditcard_number' => [new Required()],
-            'creditcard_expiry_month' => [new Required()],            
+            'creditcard_expiry_month' => [new Required()],
             'creditcard_expiry_year' => [new Required()],
             'creditcard_cvv' => [new Required()],
         ];

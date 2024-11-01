@@ -14,7 +14,7 @@ final class FlashMessage extends Widget
     public function __construct(private FlashInterface $flash)
     {
     }
-    
+
     public function render(): string
     {
         $flashes = $this->flash->getAll();
@@ -35,7 +35,7 @@ final class FlashMessage extends Widget
                 $html[] = Alert::widget()
                     ->addClass('shadow')
                     ->variant($matchedType)
-                    ->body((string)$message['body'], true)    
+                    ->body((string)$message['body'], true)
                     ->dismissable(true)
                    ->render();
             }

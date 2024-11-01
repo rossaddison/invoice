@@ -9,27 +9,27 @@ use Yiisoft\FormModel\FormModel;
 use Yiisoft\Validator\Rule\Required;
 
 final class ProjectForm extends FormModel
-{    
+{
     #[Required]
-    private ?int $client_id=null;
-    
+    private ?int $client_id = null;
+
     #[Required]
-    private ?string $name='';
-    
-    public function __construct(Project $project) 
+    private ?string $name = '';
+
+    public function __construct(Project $project)
     {
         $this->client_id = (int)$project->getClient_id();
         $this->name = $project->getName();
-    }        
-
-    public function getClient_id() : int|null
-    {
-      return $this->client_id;
     }
 
-    public function getName() : string|null
+    public function getClient_id(): int|null
     {
-      return $this->name;
+        return $this->client_id;
+    }
+
+    public function getName(): string|null
+    {
+        return $this->name;
     }
 
     /**
@@ -39,6 +39,6 @@ final class ProjectForm extends FormModel
      */
     public function getFormName(): string
     {
-      return '';
+        return '';
     }
 }

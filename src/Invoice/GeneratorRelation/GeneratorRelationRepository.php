@@ -18,7 +18,7 @@ use Yiisoft\Data\Cycle\Writer\EntityWriter;
 final class GeneratorRelationRepository extends Select\Repository
 {
     private EntityWriter $entityWriter;
-    
+
     /**
      * @param Select<TEntity> $select
      * @param EntityWriter $entityWriter
@@ -28,7 +28,7 @@ final class GeneratorRelationRepository extends Select\Repository
         $this->entityWriter = $entityWriter;
         parent::__construct($select);
     }
-    
+
     /**
      * Get generatorrelations without filter
      *
@@ -39,29 +39,29 @@ final class GeneratorRelationRepository extends Select\Repository
         $query = $this->select();
         return $this->prepareDataReader($query);
     }
-    
-        
-    public function findRelations(string $id): EntityReader 
+
+
+    public function findRelations(string $id): EntityReader
     {
-        $query = $this->select()->load('gentor')->where('gentor_id',$id);
+        $query = $this->select()->load('gentor')->where('gentor_id', $id);
         return $this->prepareDataReader($query);
     }
-    
+
     /**
      * @see Reader/ReadableDataInterface|InvalidArgumentException
      * @param array|GentorRelation|null $generatorrelation
-     * @throws Throwable 
+     * @throws Throwable
      * @return void
      */
     public function save(array|GentorRelation|null $generatorrelation): void
     {
         $this->entityWriter->write([$generatorrelation]);
     }
-    
+
     /**
      * @see Reader/ReadableDataInterface|InvalidArgumentException
      * @param array|GentorRelation|null $generatorrelation
-     * @throws Throwable 
+     * @throws Throwable
      * @return void
      */
     public function delete(array|GentorRelation|null $generatorrelation): void
@@ -76,23 +76,23 @@ final class GeneratorRelationRepository extends Select\Repository
                 ->withOrder(['gentor_id' => 'asc'])
         );
     }
-    
+
     /**
      * @return null|GentorRelation
      *
      * @psalm-return TEntity|null
      */
-    public function repoGeneratorRelationquery(string $id):GentorRelation|null
+    public function repoGeneratorRelationquery(string $id): GentorRelation|null
     {
         $query = $this
             ->select()
             ->load('gentor')
             ->where(['id' => $id]);
-        return  $query->fetchOne() ?: null;        
+        return  $query->fetchOne() ?: null;
     }
-    
+
     /**
-     * 
+     *
      * @param string $id
      * @return array
      */
@@ -101,11 +101,11 @@ final class GeneratorRelationRepository extends Select\Repository
         $query = $this
             ->select()
             ->where(['gentor_id' => $id]);
-        return  $query->fetchAll();        
+        return  $query->fetchAll();
     }
-    
+
     /**
-     * 
+     *
      * @param string $generatorrelation_lowercase_name
      * @return object|null
      */

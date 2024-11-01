@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace App\Invoice\Entity;
@@ -8,43 +9,42 @@ use Cycle\Annotated\Annotation\Entity;
 use App\Invoice\Entity\Product;
 use Cycle\Annotated\Annotation\Relation\BelongsTo;
 
-#[Entity(repository: \App\Invoice\ProductProperty\ProductPropertyRepository::class)] 
+#[Entity(repository: \App\Invoice\ProductProperty\ProductPropertyRepository::class)]
 class ProductProperty
 {
     #[Column(type: 'primary')]
     public ?int $id = null;
-    
+
     #[BelongsTo(target:Product::class, nullable: false, fkAction: "NO ACTION")]
-    private ?Product $product = null;        
+    private ?Product $product = null;
     #[Column(type: 'integer(11)', nullable: true)]
     private ?int $product_id = null;
-    
+
     #[Column(type: 'text', nullable: true)]
     public ?string $name = null;
-    
+
     #[Column(type: 'text', nullable: true)]
     public ?string $value = null;
-    
+
     public function __construct(
-        int $product_id=null,
-        string $name='',
-        string $value=''
-    )
-    {
+        int $product_id = null,
+        string $name = '',
+        string $value = ''
+    ) {
         $this->product_id = $product_id;
         $this->name = $name;
         $this->value = $value;
     }
-        
+
     public function getProperty_id(): ?int
     {
         return $this->id;
     }
-    
+
     public function getProduct_id(): string
     {
-      return (string)$this->product_id;
-    }  
+        return (string)$this->product_id;
+    }
 
     public function setProduct_id(int $product_id): void
     {
@@ -60,7 +60,7 @@ class ProductProperty
     {
         $this->name = $name;
     }
-    
+
     public function getValue(): string|null
     {
         return $this->value;
@@ -70,13 +70,14 @@ class ProductProperty
     {
         $this->value = $value;
     }
-    
-    public function getProduct() : ?Product
+
+    public function getProduct(): ?Product
     {
         return $this->product;
     }
-    
-    public function nullifyRelationOnChange(int $product_id): void {
+
+    public function nullifyRelationOnChange(int $product_id): void
+    {
         if ($this->product_id <> $product_id) {
             $this->product = null;
         }

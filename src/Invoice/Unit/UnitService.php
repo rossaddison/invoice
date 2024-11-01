@@ -27,7 +27,7 @@ final class UnitService
         isset($array['unit_name_plrl']) ? $model->setUnit_name_plrl((string)$array['unit_name_plrl']) : '';
         $this->repository->save($model);
     }
-    
+
     /**
      * @param Unit $model
      * @return void

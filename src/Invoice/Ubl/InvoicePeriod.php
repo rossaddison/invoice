@@ -12,8 +12,9 @@ class InvoicePeriod implements XmlSerializable
     // https://docs.peppol.eu/poacc/billing/3.0/syntax/ubl-invoice/cac-InvoicePeriod
     // https://docs.peppol.eu/poacc/billing/3.0/codelist/UNCL2005/
     private string $descriptionCode;
-    
-    public function __construct(string $startDate, string $endDate, string $descriptionCode) {
+
+    public function __construct(string $startDate, string $endDate, string $descriptionCode)
+    {
         $this->startDate = $startDate;
         $this->endDate = $endDate;
         $this->descriptionCode = $descriptionCode;
@@ -34,7 +35,7 @@ class InvoicePeriod implements XmlSerializable
     {
         return $this->endDate;
     }
-    
+
     /**
      * The xmlSerialize method is called during xml writing.
      *
@@ -46,11 +47,11 @@ class InvoicePeriod implements XmlSerializable
         $writer->write([
             Schema::CBC . 'StartDate' => $this->startDate ?: '',
         ]);
-        
+
         $writer->write([
             Schema::CBC . 'EndDate' => $this->endDate ?: '',
         ]);
-        if ($this->descriptionCode !== '') {  
+        if ($this->descriptionCode !== '') {
             $writer->write([
                 Schema::CBC . 'DescriptionCode' => $this->descriptionCode ?: '',
             ]);

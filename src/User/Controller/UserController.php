@@ -19,9 +19,8 @@ use Yiisoft\Yii\View\Renderer\ViewRenderer;
 final class UserController
 {
     public function __construct(
-            private ViewRenderer $viewRenderer
-    )
-    {
+        private ViewRenderer $viewRenderer
+    ) {
         $this->viewRenderer = $viewRenderer->withControllerName('user');
     }
 
@@ -32,7 +31,7 @@ final class UserController
         #[RouteArgument('page')] int $page = 1,
         #[RouteArgument('pagesize')] int $pageSize = null,
     ): Response {
-        $order = null!== $sortOrder ? OrderHelper::stringToArray($sortOrder) : [];
+        $order = null !== $sortOrder ? OrderHelper::stringToArray($sortOrder) : [];
         $sort = Sort::only(['id', 'login'])->withOrder($order);
         /**
          * @var \Yiisoft\Data\Cycle\Reader\EntityReader $dataReader
@@ -46,12 +45,12 @@ final class UserController
         $offsetPaginator = (new OffsetPaginator($dataReader));
         $paginator = $offsetPaginator
                       ->withPageSize($pageSize)
-                      ->withSort($sort)    
+                      ->withSort($sort)
                       ->withToken(PageToken::next((string) $page));
 
         return $this->viewRenderer->render('index', ['paginator' => $paginator]);
     }
-    
+
     public function profile(
         #[RouteArgument('login')] string $login,
         ResponseFactoryInterface $responseFactory,

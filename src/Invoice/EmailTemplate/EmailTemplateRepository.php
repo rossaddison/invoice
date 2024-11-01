@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace App\Invoice\EmailTemplate;
@@ -20,7 +21,7 @@ use Yiisoft\Files\PathMatcher\PathMatcher;
 final class EmailTemplateRepository extends Select\Repository
 {
     private EntityWriter $entityWriter;
-    
+
     /**
      * @param Select<TEntity> $select
      * @param EntityWriter $entityWriter
@@ -43,18 +44,18 @@ final class EmailTemplateRepository extends Select\Repository
     /**
      * @see Reader/ReadableDataInterface|InvalidArgumentException
      * @param array|EmailTemplate|null $emailtemplate
-     * @throws Throwable 
+     * @throws Throwable
      * @return void
      */
     public function save(array|EmailTemplate|null $emailtemplate): void
     {
         $this->entityWriter->write([$emailtemplate]);
     }
-    
+
     /**
      * @see Reader/ReadableDataInterface|InvalidArgumentException
      * @param array|EmailTemplate|null $emailtemplate
-     * @throws Throwable 
+     * @throws Throwable
      * @return void
      */
     public function delete(array|EmailTemplate|null $emailtemplate): void
@@ -69,46 +70,47 @@ final class EmailTemplateRepository extends Select\Repository
                 ->withOrder(['id' => 'asc'])
         );
     }
-    
+
     /**
-     * 
+     *
      * @param string $email_template_id
      * @return int
      */
-    public function repoEmailTemplateCount(string $email_template_id) : int {
+    public function repoEmailTemplateCount(string $email_template_id): int
+    {
         $count = $this
             ->select()
             ->where(['id' => $email_template_id])
             ->count();
-        return  $count;        
-    }   
-    
+        return  $count;
+    }
+
     /**
      * @return EmailTemplate|null
      *
      * @psalm-return TEntity|null
      */
-    public function repoEmailTemplatequery(string $email_template_id):EmailTemplate|null
+    public function repoEmailTemplatequery(string $email_template_id): EmailTemplate|null
     {
         $query = $this
             ->select()
             ->where(['id' => $email_template_id]);
-        return  $query->fetchOne() ?: null;        
+        return  $query->fetchOne() ?: null;
     }
-        
-     /**
-     * @psalm-return EntityReader
-     */
+
+    /**
+    * @psalm-return EntityReader
+    */
     public function repoEmailTemplateType(string $email_template_type): EntityReader
     {
         $query = $this
             ->select()
             ->where(['email_template_type' => $email_template_type]);
-        return $this->prepareDataReader($query);      
+        return $this->prepareDataReader($query);
     }
-    
+
     /**
-     * 
+     *
      * @param SettingRepository $setting
      * @return SettingRepository
      */
@@ -117,31 +119,31 @@ final class EmailTemplateRepository extends Select\Repository
         $setting->load_settings();
         return $setting;
     }
-    
+
     // resources/views/invoice/template/public||pdf
     /**
-     * 
+     *
      * @param string $pdf_or_public
      * @return array
      */
-    public function get_invoice_templates(string $pdf_or_public) : array
+    public function get_invoice_templates(string $pdf_or_public): array
     {
-        $pdf_template_directory = dirname(dirname(dirname(__DIR__))).'/resources/views/invoice/template/invoice/pdf'; 
+        $pdf_template_directory = dirname(dirname(dirname(__DIR__))).'/resources/views/invoice/template/invoice/pdf';
         $public_template_directory = dirname(dirname(dirname(__DIR__))).'/resources/views/invoice/template/invoice/public';
         $templates = [];
         $php_only = (new PathMatcher())
         ->doNotCheckFilesystem()
         ->only('*.php');
         if ($pdf_or_public === 'pdf') {
-              $templates = FileHelper::findFiles($pdf_template_directory, [
-                                        'filter' => $php_only,
-                                        'recursive' => false,
-                                ]);
+            $templates = FileHelper::findFiles($pdf_template_directory, [
+                                      'filter' => $php_only,
+                                      'recursive' => false,
+                              ]);
         } elseif ($pdf_or_public === 'public') {
-              $templates = FileHelper::findFiles($public_template_directory, [
-                                        'filter' => $php_only,
-                                        'recursive' => false,
-                                ]);
+            $templates = FileHelper::findFiles($public_template_directory, [
+                                      'filter' => $php_only,
+                                      'recursive' => false,
+                              ]);
         }
         if (!empty($templates)) {
             $extension_remove = $this->remove_extension($templates);
@@ -150,13 +152,13 @@ final class EmailTemplateRepository extends Select\Repository
         }
         return $templates;
     }
-    
+
     /**
      * @psalm-param 'pdf' $type
      */
-    public function get_quote_templates(string $pdf_or_public) : array
+    public function get_quote_templates(string $pdf_or_public): array
     {
-        $pdf_template_directory = dirname(dirname(dirname(__DIR__))).'/resources/views/invoice/template/quote/pdf'; 
+        $pdf_template_directory = dirname(dirname(dirname(__DIR__))).'/resources/views/invoice/template/quote/pdf';
         $public_template_directory = dirname(dirname(dirname(__DIR__))).'/resources/views/invoice/template/quote/public';
         $templates = [];
         $pdf_only = (new PathMatcher())
@@ -180,15 +182,15 @@ final class EmailTemplateRepository extends Select\Repository
         }
         return $templates;
     }
-    
+
     /**
-     * 
+     *
      * @param array $files
      * @return array
      */
-    private function remove_extension(array $files) : array
+    private function remove_extension(array $files): array
     {
-        /** 
+        /**
          * @var string $key
          * @var string $file
          */
@@ -197,16 +199,16 @@ final class EmailTemplateRepository extends Select\Repository
         }
         return $files;
     }
-    
+
     /**
-     * 
+     *
      * @param array $files
      * @return array
      */
-    private function remove_path(array $files) : array
+    private function remove_path(array $files): array
     {
         //https://stackoverflow.com/questions/1418193/how-do-i-get-a-file-name-from-a-full-path-with-php
-        /** 
+        /**
          * @var string $key
          * @var string $file
          */

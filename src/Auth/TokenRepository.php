@@ -23,31 +23,31 @@ final class TokenRepository extends Select\Repository implements IdentityWithTok
     {
         parent::__construct($select);
     }
-    
+
     /**
      * @param string $token
-     * @param string $type 
+     * @param string $type
      * @return Identity|null
      */
     public function findIdentityByToken(string $token, string $type = null): ?Identity
     {
         $tokenRecord =  $this->findOne(['token' => $token, 'type' => $type]);
-        return null!==$tokenRecord ? $tokenRecord->getIdentity() : null;        
+        return null !== $tokenRecord ? $tokenRecord->getIdentity() : null;
     }
-    
+
     /**
      * @param string $identityId
      * @param string $type
      * @return Token|null
      */
-    public function findTokenByIdentityIdAndType(string $identityId, string $type = null) : ?Token
+    public function findTokenByIdentityIdAndType(string $identityId, string $type = null): ?Token
     {
         $tokenRecord = $this->findOne(['identity_id' => $identityId, 'type' => $type]);
-        return null!==$tokenRecord ? $tokenRecord : null;
+        return null !== $tokenRecord ? $tokenRecord : null;
     }
-    
+
     /**
-     * 
+     *
      * @param Token $token
      * @return void
      */

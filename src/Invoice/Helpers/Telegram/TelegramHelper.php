@@ -20,28 +20,26 @@ use Vjik\TelegramBot\Api\Type\Update\Update;
 use Vjik\TelegramBot\Api\Type\Update\WebhookInfo;
 use Yiisoft\Router\FastRoute\UrlGenerator;
 
-   /**
-    * Using the following functions currently:
-    * @see ..\vendor\vjik\telegram-bot-api\src\TelegramBotApi.php  sendInvoice
-    * @see ..\vendor\vjik\telegram-bot-api\src\TelegramBotApi.php  sendLocation
-    * @see ..\vendor\vjik\telegram-bot-api\src\TelegramBotApi.php  sendMessage
-    * @see ..\vendor\vjik\telegram-bot-api\src\TelegramBotApi.php  getUpdates
-    * @see https://core.telegram.org/bots/api#sendInvoice
-    * @see https://core.telegram.org/bots/api#sendLocation
-    * @see https://core.telegram.org/bots/api#sendMessage
-    * @see https://core.telegram.org/bots/api#getupdates
-    */
+/**
+ * Using the following functions currently:
+ * @see ..\vendor\vjik\telegram-bot-api\src\TelegramBotApi.php  sendInvoice
+ * @see ..\vendor\vjik\telegram-bot-api\src\TelegramBotApi.php  sendLocation
+ * @see ..\vendor\vjik\telegram-bot-api\src\TelegramBotApi.php  sendMessage
+ * @see ..\vendor\vjik\telegram-bot-api\src\TelegramBotApi.php  getUpdates
+ * @see https://core.telegram.org/bots/api#sendInvoice
+ * @see https://core.telegram.org/bots/api#sendLocation
+ * @see https://core.telegram.org/bots/api#sendMessage
+ * @see https://core.telegram.org/bots/api#getupdates
+ */
 
 final class TelegramHelper
 {
-    
     private TelegramBotApi $botApi;
-    
+
     public function __construct(
         private string $settingRepositoryTelegramToken,
         private Logger $logger
-    ) 
-    {
+    ) {
         $this->logger = $logger;
         $responseFactory = new ResponseFactory();
         $requestFactory = new RequestFactory();
@@ -53,19 +51,20 @@ final class TelegramHelper
                 $requestFactory,
                 $streamFactory,
             ),
-            $this->logger    
+            $this->logger
         );
     }
-    
-    public function getBotApi() : TelegramBotApi
+
+    public function getBotApi(): TelegramBotApi
     {
         return $this->botApi;
     }
-    
-    public function getWebhookInfo() : FailResult|WebhookInfo {
+
+    public function getWebhookInfo(): FailResult|WebhookInfo
+    {
         return $this->botApi->getWebhookInfo();
     }
-    
+
     public function setWebhook(
         UrlGenerator $urlGenerator,
         ?string $ipAddress = null,
@@ -73,8 +72,7 @@ final class TelegramHelper
         ?array $allowUpdates = null,
         ?bool $dropPendingUpdates = null,
         ?string $secretToken = null
-    ) : true|FailResult 
-    {    
+    ): true|FailResult {
         $result = $this->botApi->setWebhook(
             $urlGenerator->generateAbsolute('telegram/webhook', ['_language' => 'en']),
             $ipAddress,
@@ -85,53 +83,56 @@ final class TelegramHelper
         );
         return $result;
     }
-    
-    public function deleteWebhook() : true|FailResult {
+
+    public function deleteWebhook(): true|FailResult
+    {
         return $this->botApi->deleteWebhook(false);
     }
-    
+
     /**
-     * 
+     *
      * @param int|null $offset
      * @param int|null $limit
      * @param int|null $timeout
      * @param string[]|null $allowedUpdates
      * @return FailResult|Update[]
-     */    
+     */
     public function getUpdates(
         ?int $offset = null,
         ?int $limit = null,
         ?int $timeout = null,
         ?array $allowedUpdates = null
-    ) : FailResult|array {
+    ): FailResult|array {
         return $this->botApi->getUpdates($offset, $limit, $timeout, $allowedUpdates);
     }
-    
-    public static function updateFromServerRequest(Request $request, Logger $logger) : Update 
+
+    public static function updateFromServerRequest(Request $request, Logger $logger): Update
     {
         return Update::fromServerRequest($request, $logger);
     }
-    
-    public static function updateFromJsonRequest(string $jsonString, Logger $logger) : Update 
+
+    public static function updateFromJsonRequest(string $jsonString, Logger $logger): Update
     {
         return Update::fromJson($jsonString, $logger);
     }
-    
-    public static function logTypeCreateSendRequestContext(trI $request) : array 
+
+    public static function logTypeCreateSendRequestContext(trI $request): array
     {
         return LogType::createSendRequestContext($request);
     }
-    
-    public static function logTypeCreateSuccessResultContext(trI $request, TelegramResponse $response, mixed $decodedResponse) : array 
+
+    public static function logTypeCreateSuccessResultContext(trI $request, TelegramResponse $response, mixed $decodedResponse): array
     {
-        return LogType::createSuccessResultContext($request, $response, $decodedResponse);    
+        return LogType::createSuccessResultContext($request, $response, $decodedResponse);
     }
-    
-    public static function logTypeCreateFailResultContext(trI $request, TelegramResponse $response, mixed $decodedResponse): array {
+
+    public static function logTypeCreateFailResultContext(trI $request, TelegramResponse $response, mixed $decodedResponse): array
+    {
         return LogType::createFailResultContext($request, $response, $decodedResponse);
     }
-    
-    public static function logTypeCreateParseResultErrorContext(string $raw): array {
+
+    public static function logTypeCreateParseResultErrorContext(string $raw): array
+    {
         return LogType::createParseResultErrorContext($raw);
     }
 }

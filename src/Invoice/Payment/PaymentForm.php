@@ -9,24 +9,23 @@ use App\Invoice\Entity\Payment;
 use Yiisoft\FormModel\FormModel;
 use Yiisoft\Validator\Rule\Required;
 use Yiisoft\Validator\Rule\GreaterThan;
-
 use DateTimeImmutable;
 
 final class PaymentForm extends FormModel
-{    
+{
     #[Required]
-    private ?int $payment_method_id=null;
-    
-    private mixed $payment_date='';
+    private ?int $payment_method_id = null;
+
+    private mixed $payment_date = '';
     #[GreaterThan(0)]
-    private ?float $amount=null;
+    private ?float $amount = null;
     #[Required]
-    private ?string $note='';
+    private ?string $note = '';
     #[Required]
-    private ?int $inv_id=null;
-    private ?Inv $inv=null;
-    
-    public function __construct(Payment $payment) 
+    private ?int $inv_id = null;
+    private ?Inv $inv = null;
+
+    public function __construct(Payment $payment)
     {
         $this->payment_method_id = (int)$payment->getPayment_method_id();
         $this->payment_date = $payment->getPayment_date();
@@ -35,39 +34,39 @@ final class PaymentForm extends FormModel
         $this->inv_id = (int)$payment->getInv_id();
         $this->inv = $payment->getInv();
     }
-    
-    public function getPayment_method_id() : int|null
-    {
-      return $this->payment_method_id;
-    }
-    
-    public function getPayment_date() : null|string|DateTimeImmutable
-    {
-       /**
-        * @var null|string|DateTimeImmutable $this->payment_date 
-        */
-        return $this->payment_date; 
-    }        
 
-    public function getAmount() : float|null
+    public function getPayment_method_id(): int|null
     {
-      return $this->amount;
+        return $this->payment_method_id;
     }
 
-    public function getNote() : string|null
+    public function getPayment_date(): null|string|DateTimeImmutable
     {
-      return $this->note;
+        /**
+         * @var null|string|DateTimeImmutable $this->payment_date
+         */
+        return $this->payment_date;
     }
 
-    public function getInv_id() : int|null
+    public function getAmount(): float|null
     {
-      return $this->inv_id;
+        return $this->amount;
     }
-    
-    public function getInv() : Inv|null
+
+    public function getNote(): string|null
+    {
+        return $this->note;
+    }
+
+    public function getInv_id(): int|null
+    {
+        return $this->inv_id;
+    }
+
+    public function getInv(): Inv|null
     {
         return $this->inv;
-    }        
+    }
 
     /**
      * @return string
@@ -76,6 +75,6 @@ final class PaymentForm extends FormModel
      */
     public function getFormName(): string
     {
-      return '';
+        return '';
     }
 }

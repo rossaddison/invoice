@@ -14,35 +14,34 @@ class Project
 {
     #[Column(type: 'primary')]
     private ?int $id = null;
-    
+
     #[BelongsTo(target:Client::class, nullable: false, fkAction: 'NO ACTION')]
     private ?Client $client = null;
-        
+
     #[Column(type: 'integer(11)', nullable:false)]
     private ?int $client_id = null;
-        
+
     #[Column(type: 'text', nullable: true)]
     private ?string $name = null;
-    
+
     public function __construct(
-        int $client_id=null,
-        string $name=''            
-    )
-    {
+        int $client_id = null,
+        string $name = ''
+    ) {
         $this->client_id = $client_id;
         $this->name = $name;
     }
-    
+
     public function getId(): string
     {
         return (string)$this->id;
     }
-        
+
     public function getClient(): ?Client
     {
         return $this->client;
     }
-    
+
     public function setClient_id(int $client_id): void
     {
         $this->client_id = $client_id;
@@ -52,7 +51,7 @@ class Project
     {
         return $this->client_id;
     }
-    
+
     public function getName(): string|null
     {
         return $this->name;

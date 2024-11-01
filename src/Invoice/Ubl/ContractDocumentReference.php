@@ -1,5 +1,6 @@
 <?php
-declare(strict_types=1); 
+
+declare(strict_types=1);
 
 namespace App\Invoice\Ubl;
 
@@ -9,13 +10,14 @@ use Sabre\Xml\XmlSerializable;
 class ContractDocumentReference implements XmlSerializable
 {
     private ?string $id;
-    
-    public function __construct(?string $id) {
+
+    public function __construct(?string $id)
+    {
         $this->id = $id;
     }
-    
+
     /**
-     * 
+     *
      * @param Writer $writer
      * @return void
      */

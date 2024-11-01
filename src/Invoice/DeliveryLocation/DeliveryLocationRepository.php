@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=1); 
+declare(strict_types=1);
 
 namespace App\Invoice\DeliveryLocation;
 
@@ -17,7 +17,7 @@ use Yiisoft\Data\Cycle\Writer\EntityWriter;
  */
 final class DeliveryLocationRepository extends Select\Repository
 {
-private EntityWriter $entityWriter;
+    private EntityWriter $entityWriter;
     /**
      * @param Select<TEntity> $select
      * @param EntityWriter $entityWriter
@@ -33,10 +33,10 @@ private EntityWriter $entityWriter;
      */
     public function findAllPreloaded(): EntityReader
     {
-        $query = $this->select(); 
+        $query = $this->select();
         return $this->prepareDataReader($query);
     }
-    
+
     /**
      * @psalm-return EntityReader
      */
@@ -45,7 +45,7 @@ private EntityWriter $entityWriter;
         return (new EntityReader($this->select()))
             ->withSort($this->getSort());
     }
-    
+
     /**
      * @return Sort
      */
@@ -53,7 +53,7 @@ private EntityWriter $entityWriter;
     {
         return Sort::only(['id'])->withOrder(['id' => 'asc']);
     }
-    
+
     /**
      * @throws Throwable
      */
@@ -61,7 +61,7 @@ private EntityWriter $entityWriter;
     {
         $this->entityWriter->write([$del]);
     }
-    
+
     /**
      * @throws Throwable
      */
@@ -69,68 +69,73 @@ private EntityWriter $entityWriter;
     {
         $this->entityWriter->delete([$del]);
     }
-    
+
     private function prepareDataReader(Select $query): EntityReader
     {
         return (new EntityReader($query))->withSort(
             Sort::only(['id'])
                 ->withOrder(['id' => 'asc'])
         );
-    }    
-    
+    }
+
     /**
      * @param string $id
      * @psalm-return TEntity|null
      * @return DeliveryLocation|null
      */
-    public function repoDeliveryLocationquery(string $id): DeliveryLocation|null {
-        // Delivery Location id defaults to 0 in the Entity Delivery Location 
+    public function repoDeliveryLocationquery(string $id): DeliveryLocation|null
+    {
+        // Delivery Location id defaults to 0 in the Entity Delivery Location
         if ($id > 0) {
-            $query = $this->select()->where(['id' =>$id]);
-            return  $query->fetchOne() ?: null;        
+            $query = $this->select()->where(['id' => $id]);
+            return  $query->fetchOne() ?: null;
         } else {
             return null;
         }
     }
-    
+
     /**
      * Get all delivery locations associated with a Client
      * @param string $client_id
      * @return EntityReader
      */
-    public function repoClientquery(string $client_id): EntityReader { 
+    public function repoClientquery(string $client_id): EntityReader
+    {
         $query = $this->select()
-                      ->where(['client_id' => $client_id]);                                
-        return $this->prepareDataReader($query);        
+                      ->where(['client_id' => $client_id]);
+        return $this->prepareDataReader($query);
     }
-    
+
     /**
      * @param string $client_id
      * @return int
      */
-    public function repoClientCount(string $client_id) : int {
+    public function repoClientCount(string $client_id): int
+    {
         $query = $this->select()
                       ->where(['client_id' => $client_id]);
         return $query->count();
     }
-    
+
     /**
      * @param string $inv_id
      * @return int
      */
-    public function repoInvoiceCount(string $inv_id) : int {
+    public function repoInvoiceCount(string $inv_id): int
+    {
         $query = $this->select()
                       ->where(['inv_id' => $inv_id]);
         return $query->count();
     }
-    
+
     /**
      * @param string $id
      * @return int
      */
-    public function repoCount(string $id) : int {
+    public function repoCount(string $id): int
+    {
         $query = $this->select()
                       ->where(['id' => $id]);
         return $query->count();
-    }   
+    }
 }

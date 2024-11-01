@@ -11,7 +11,7 @@ use Symfony\Component\Console\Output\OutputInterface;
 use Yiisoft\Translator\TranslatorInterface;
 
 /**
- * e.g  yii translator/translate i.active af-ZA  
+ * e.g  yii translator/translate i.active af-ZA
  * Result: aktief
  */
 

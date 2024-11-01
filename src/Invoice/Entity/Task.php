@@ -1,50 +1,50 @@
 <?php
 
-declare(strict_types=1); 
+declare(strict_types=1);
 
 namespace App\Invoice\Entity;
 
 use Cycle\Annotated\Annotation\Column;
 use Cycle\Annotated\Annotation\Entity;
 use Cycle\Annotated\Annotation\Relation\BelongsTo;
-use \DateTime;
-use \DateTimeImmutable;
+use DateTime;
+use DateTimeImmutable;
 use App\Invoice\Entity\Project;
 use App\Invoice\Entity\TaxRate;
- 
+
 #[Entity(repository: \App\Invoice\Task\TaskRepository::class)]
 class Task
 {
     #[BelongsTo(target:TaxRate::class, nullable: false, fkAction: 'NO ACTION')]
     private ?TaxRate $tax_rate = null;
-    
+
     #[BelongsTo(target:Project::class, nullable: true, fkAction: 'NO ACTION')]
     private ?Project $project = null;
-    
+
     #[Column(type: 'primary')]
     private ?int $id =  null;
-     
-    #[Column(type:'integer(11)', nullable: true, default: null)] 
+
+    #[Column(type:'integer(11)', nullable: true, default: null)]
     private ?int $project_id =  null;
-     
-    #[Column(type:'text', nullable: true)] 
+
+    #[Column(type:'text', nullable: true)]
     private ?string $name =  '';
-     
-    #[Column(type:'longText', nullable: false)] 
+
+    #[Column(type:'longText', nullable: false)]
     private string $description =  '';
-     
-    #[Column(type:'decimal(20,2)', nullable: false, default: 0.00)] 
+
+    #[Column(type:'decimal(20,2)', nullable: false, default: 0.00)]
     private ?float $price =  0.00;
-    
-    #[Column(type:'date', nullable: true)] 
+
+    #[Column(type:'date', nullable: true)]
     private mixed $finish_date;
-    
-    #[Column(type:'int', nullable: false)] 
+
+    #[Column(type:'int', nullable: false)]
     private ?int $status = null;
-     
+
     #[Column(type:'integer(11)', nullable: false)]
     private ?int $tax_rate_id =  null;
-     
+
     public function __construct(
         int $id = null,
         int $project_id = null,
@@ -54,111 +54,110 @@ class Task
         mixed $finish_date = '',
         int $status = null,
         int $tax_rate_id = null
-    )
-    {
-        $this->id=$id;
-        $this->project_id=$project_id;
-        $this->name=$name;
-        $this->description=$description;
-        $this->price=$price;
-        $this->finish_date=$finish_date;
-        $this->status=$status;
-        $this->tax_rate_id=$tax_rate_id;
+    ) {
+        $this->id = $id;
+        $this->project_id = $project_id;
+        $this->name = $name;
+        $this->description = $description;
+        $this->price = $price;
+        $this->finish_date = $finish_date;
+        $this->status = $status;
+        $this->tax_rate_id = $tax_rate_id;
     }
-    
-    public function getTaxRate() : ?TaxRate
+
+    public function getTaxRate(): ?TaxRate
     {
-      return $this->tax_rate;
+        return $this->tax_rate;
     }
-    
-    public function getProject() : ?Project
+
+    public function getProject(): ?Project
     {
-      return $this->project;
+        return $this->project;
     }
-    
+
     public function getId(): string
     {
-     return (string)$this->id;
+        return (string)$this->id;
     }
-    
-    public function setId(int $id) : void
+
+    public function setId(int $id): void
     {
-      $this->id =  $id;
+        $this->id =  $id;
     }
-    
+
     public function getProject_id(): string
     {
-     return (string)$this->project_id;
+        return (string)$this->project_id;
     }
-    
-    public function setProject_id(int $project_id) : void
+
+    public function setProject_id(int $project_id): void
     {
-      $this->project_id =  $project_id;
+        $this->project_id =  $project_id;
     }
-    
+
     public function getName(): ?string
     {
-       return $this->name;
+        return $this->name;
     }
-    
-    public function setName(string $name) : void
+
+    public function setName(string $name): void
     {
-      $this->name =  $name;
+        $this->name =  $name;
     }
-    
+
     public function getDescription(): string
     {
-       return $this->description;
+        return $this->description;
     }
-    
-    public function setDescription(string $description) : void
+
+    public function setDescription(string $description): void
     {
-      $this->description =  $description;
+        $this->description =  $description;
     }
-    
+
     public function getPrice(): ?float
     {
-       return $this->price;
+        return $this->price;
     }
-    
-    public function setPrice(float $price) : void
+
+    public function setPrice(float $price): void
     {
-      $this->price =  $price;
+        $this->price =  $price;
     }
-    
+
     public function getFinish_date(): string|DateTimeImmutable
     {
-      /** @var string|DateTimeImmutable $this->finish_date */ 
-      return $this->finish_date;
+        /** @var string|DateTimeImmutable $this->finish_date */
+        return $this->finish_date;
     }
-    
-    public function setFinish_date(?DateTime $finish_date) : void
+
+    public function setFinish_date(?DateTime $finish_date): void
     {
-      $this->finish_date =  $finish_date;
+        $this->finish_date =  $finish_date;
     }
-    
+
     public function getStatus(): ?int
     {
-      return $this->status;
+        return $this->status;
     }
-    
-    public function setStatus(int $status) : void
+
+    public function setStatus(int $status): void
     {
-      $this->status =  $status;
+        $this->status =  $status;
     }
-    
+
     public function getTax_rate_id(): string
     {
-     return (string)$this->tax_rate_id;
+        return (string)$this->tax_rate_id;
     }
-    
-    public function setTax_rate_id(int $tax_rate_id) : void
+
+    public function setTax_rate_id(int $tax_rate_id): void
     {
-      $this->tax_rate_id =  $tax_rate_id;
+        $this->tax_rate_id =  $tax_rate_id;
     }
-    
-    public function Is_overdue() : bool 
+
+    public function Is_overdue(): bool
     {
-      return $this->finish_date < new DateTime(date('Y-m-d')) ? false : true;  
+        return $this->finish_date < new DateTime(date('Y-m-d')) ? false : true;
     }
 }

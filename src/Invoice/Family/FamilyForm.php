@@ -12,17 +12,17 @@ final class FamilyForm extends FormModel
 {
     #[Required]
     private ?string $family_name = '';
-    
+
     public function __construct(Family $family)
     {
         $this->family_name = $family->getFamily_name();
-    }        
-    
+    }
+
     public function getFamily_name(): ?string
     {
         return $this->family_name;
     }
-    
+
     /**
      * @return string
      *

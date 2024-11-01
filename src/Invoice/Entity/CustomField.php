@@ -1,36 +1,36 @@
 <?php
 
-declare(strict_types=1); 
+declare(strict_types=1);
 
 namespace App\Invoice\Entity;
 
 use Cycle\Annotated\Annotation\Column;
-use Cycle\Annotated\Annotation\Entity;  
+use Cycle\Annotated\Annotation\Entity;
 
-#[Entity(repository: \App\Invoice\CustomField\CustomFieldRepository::class)] 
+#[Entity(repository: \App\Invoice\CustomField\CustomFieldRepository::class)]
 class CustomField
 {
     #[Column(type: 'primary')]
     private ?int $id =  null;
-     
-    #[Column(type: 'string(50)',nullable:true)]
+
+    #[Column(type: 'string(50)', nullable:true)]
     private ?string $table =  '';
-     
-    #[Column(type: 'string(50)',nullable:true)]
+
+    #[Column(type: 'string(50)', nullable:true)]
     private ?string $label =  '';
-    
-    #[Column(type: 'string(151)',nullable:false,default: 'TEXT')]
+
+    #[Column(type: 'string(151)', nullable:false, default: 'TEXT')]
     private string $type =  '';
-     
-    #[Column(type: 'integer(11)',nullable:true, default:0)]
+
+    #[Column(type: 'integer(11)', nullable:true, default:0)]
     private ?int $location =  null;
-     
-    #[Column(type: 'integer(11)',nullable:true, default:999)] 
+
+    #[Column(type: 'integer(11)', nullable:true, default:999)]
     private ?int $order =  null;
-    
+
     #[Column(type: 'bool', default: true)]
     private bool $required = true;
-    
+
     public function __construct(
         int $id = null,
         string $table = '',
@@ -38,85 +38,84 @@ class CustomField
         string $type = '',
         int $location = null,
         int $order = null,
-        bool $required=false,     
-    )
-    {
-        $this->id=$id;
-        $this->table=$table;
-        $this->label=$label;
-        $this->type=$type;
-        $this->location=$location;
-        $this->order=$order;
-        $this->required=$required; 
+        bool $required = false,
+    ) {
+        $this->id = $id;
+        $this->table = $table;
+        $this->label = $label;
+        $this->type = $type;
+        $this->location = $location;
+        $this->order = $order;
+        $this->required = $required;
     }
-     
+
     public function getId(): string
     {
-     return (string)$this->id;
+        return (string)$this->id;
     }
-    
-    public function setId(int $id) : void
+
+    public function setId(int $id): void
     {
-      $this->id =  $id;
+        $this->id =  $id;
     }
-    
+
     public function getTable(): ?string
     {
-       return $this->table;
+        return $this->table;
     }
-    
-    public function setTable(string $table) : void
+
+    public function setTable(string $table): void
     {
-      $this->table =  $table;
+        $this->table =  $table;
     }
-    
+
     public function getLabel(): ?string
     {
-       return $this->label;
+        return $this->label;
     }
-    
-    public function setLabel(string $label) : void
+
+    public function setLabel(string $label): void
     {
-      $this->label =  $label;
+        $this->label =  $label;
     }
-    
+
     public function getType(): string
     {
-       return $this->type;
+        return $this->type;
     }
-    
-    public function setType(string $type) : void
+
+    public function setType(string $type): void
     {
-      $this->type =  $type;
+        $this->type =  $type;
     }
-    
+
     public function getLocation(): ?int
     {
-       return $this->location;
+        return $this->location;
     }
-    
-    public function setLocation(int $location) : void
+
+    public function setLocation(int $location): void
     {
-      $this->location =  $location;
+        $this->location =  $location;
     }
-    
+
     public function getOrder(): ?int
     {
-       return $this->order;
+        return $this->order;
     }
-    
-    public function setOrder(int $order) : void
+
+    public function setOrder(int $order): void
     {
-      $this->order =  $order;
+        $this->order =  $order;
     }
-    
+
     public function getRequired(): bool
     {
-       return $this->required;
+        return $this->required;
     }
-    
-    public function setRequired(bool $required) : void
+
+    public function setRequired(bool $required): void
     {
-      $this->required =  $required;
-    } 
+        $this->required =  $required;
+    }
 }

@@ -9,36 +9,35 @@ use Cycle\Annotated\Annotation\Entity;
 
 #[Entity(repository: \App\Invoice\Unit\UnitRepository::class)]
 class Unit
-{    
+{
     #[Column(type: 'primary')]
     public ?int $id = null;
-    
+
     #[Column(type: 'string(50)')]
     private string $unit_name = '';
-    
+
     #[Column(type: 'string(50)')]
     private string $unit_name_plrl = '';
-        
+
     public function __construct(
-        int $id = null,    
+        int $id = null,
         string $unit_name = '',
         string $unit_name_plrl = ''
-    )
-    {
+    ) {
         $this->id = $id;
         $this->unit_name = $unit_name;
         $this->unit_name_plrl = $unit_name_plrl;
     }
-    
+
     public function getUnit_id(): ?int
     {
         return $this->id;
     }
-    
-    public function setUnit_id(int $id) : void
+
+    public function setUnit_id(int $id): void
     {
         $this->id = $id;
-    }    
+    }
 
     public function getUnit_name(): string
     {
@@ -49,7 +48,7 @@ class Unit
     {
         $this->unit_name = $unit_name;
     }
-    
+
     public function getUnit_name_plrl(): string
     {
         return $this->unit_name_plrl;

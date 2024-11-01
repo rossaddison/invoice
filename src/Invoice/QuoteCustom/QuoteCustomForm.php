@@ -9,14 +9,13 @@ use Yiisoft\FormModel\FormModel;
 use Yiisoft\Validator\Rule\Required;
 
 final class QuoteCustomForm extends FormModel
-{    
-    
-    private ?int $quote_id=null;
-    private ?int $custom_field_id=null;
-    
+{
+    private ?int $quote_id = null;
+    private ?int $custom_field_id = null;
+
     #[Required]
-    private ?string $value='';
-    
+    private ?string $value = '';
+
     public function __construct(QuoteCustom $quoteCustom)
     {
         $this->quote_id = (int)$quoteCustom->getQuote_id();
@@ -24,19 +23,19 @@ final class QuoteCustomForm extends FormModel
         $this->value = $quoteCustom->getValue();
     }
 
-    public function getQuote_id() : int|null
+    public function getQuote_id(): int|null
     {
-      return $this->quote_id;
+        return $this->quote_id;
     }
 
-    public function getCustom_field_id() : int|null
+    public function getCustom_field_id(): int|null
     {
-      return $this->custom_field_id;
+        return $this->custom_field_id;
     }
 
-    public function getValue() : string|null
+    public function getValue(): string|null
     {
-      return $this->value;
+        return $this->value;
     }
 
     /**
@@ -46,6 +45,6 @@ final class QuoteCustomForm extends FormModel
      */
     public function getFormName(): string
     {
-      return '';
+        return '';
     }
 }

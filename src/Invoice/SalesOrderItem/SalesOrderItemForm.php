@@ -9,39 +9,39 @@ use Yiisoft\FormModel\FormModel;
 use Yiisoft\Validator\Rule\Required;
 
 final class SalesOrderItemForm extends FormModel
-{        
+{
     private ?string $id = '';
     private ?string $so_id = '';
     private ?string $peppol_po_itemid = '';
     private ?string $peppol_po_lineid = '';
-    
+
     #[Required]
     private ?string $tax_rate_id = '';
-    
+
     #[Required]
     private ?string $product_id = '';
     private mixed $date_added = '';
     private ?string $name = '';
     private ?string $description = '';
-    
+
     #[Required]
     private ?float $quantity = null;
-    
+
     #[Required]
     private ?float $price = null;
-    
+
     #[Required]
     private ?float $discount_amount = null;
-    
+
     #[Required]
     private ?float $charge_amount = null;
-    
+
     private ?int $order = null;
     private ?string $product_unit = '';
-    
+
     #[Required]
     private ?int $product_unit_id = null;
-    
+
     public function __construct(SoItem $salesOrderItem)
     {
         $this->id = $salesOrderItem->getId();
@@ -65,25 +65,25 @@ final class SalesOrderItemForm extends FormModel
         $this->product_id = $salesOrderItem->getProduct_id();
         $this->product_unit_id = (int)$salesOrderItem->getProduct_unit_id();
     }
-    
-    public function getId() : string|null
+
+    public function getId(): string|null
     {
         return $this->id;
-    }    
-    
-    public function getSo_id() : string|null
-    {
-      return $this->so_id;
     }
-    
-    public function getPeppol_po_itemid() : string|null
+
+    public function getSo_id(): string|null
     {
-      return $this->peppol_po_itemid;
+        return $this->so_id;
     }
-    
-    public function getPeppol_po_lineid() : string|null
+
+    public function getPeppol_po_itemid(): string|null
     {
-      return $this->peppol_po_lineid;
+        return $this->peppol_po_itemid;
+    }
+
+    public function getPeppol_po_lineid(): string|null
+    {
+        return $this->peppol_po_lineid;
     }
 
     public function getTax_rate_id(): string|null
@@ -91,54 +91,54 @@ final class SalesOrderItemForm extends FormModel
         return $this->tax_rate_id;
     }
 
-    public function getProduct_id() : string|null
+    public function getProduct_id(): string|null
     {
-      return $this->product_id;
+        return $this->product_id;
     }
 
-    public function getName() : string|null
+    public function getName(): string|null
     {
-      return $this->name;
+        return $this->name;
     }
 
-    public function getDescription() : string|null
+    public function getDescription(): string|null
     {
-      return $this->description;
+        return $this->description;
     }
 
-    public function getQuantity() : float|null
+    public function getQuantity(): float|null
     {
-      return $this->quantity;
+        return $this->quantity;
     }
 
-    public function getPrice() : float|null
+    public function getPrice(): float|null
     {
-      return $this->price;
+        return $this->price;
     }
 
-    public function getDiscount_amount() : float|null
+    public function getDiscount_amount(): float|null
     {
-      return $this->discount_amount;
-    }
-    
-    public function getCharge_amount() : float|null
-    {
-      return $this->charge_amount;
+        return $this->discount_amount;
     }
 
-    public function getOrder() : int|null
+    public function getCharge_amount(): float|null
     {
-      return $this->order;
+        return $this->charge_amount;
     }
 
-    public function getProduct_unit() : string|null
+    public function getOrder(): int|null
     {
-      return $this->product_unit;
+        return $this->order;
     }
 
-    public function getProduct_unit_id() : int|null
+    public function getProduct_unit(): string|null
     {
-      return $this->product_unit_id;
+        return $this->product_unit;
+    }
+
+    public function getProduct_unit_id(): int|null
+    {
+        return $this->product_unit_id;
     }
 
     /**
@@ -148,6 +148,6 @@ final class SalesOrderItemForm extends FormModel
      */
     public function getFormName(): string
     {
-      return '';
+        return '';
     }
 }

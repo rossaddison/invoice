@@ -9,18 +9,18 @@ use Yiisoft\FormModel\FormModel;
 use Yiisoft\Validator\Rule\Required;
 
 final class PaymentMethodForm extends FormModel
-{    
+{
     #[Required]
-    private ?string $name='';
-    
+    private ?string $name = '';
+
     public function __construct(PaymentMethod $paymentMethod)
     {
         $this->name = $paymentMethod->getName();
-    }        
+    }
 
-    public function getName() : string|null
+    public function getName(): string|null
     {
-      return $this->name;
+        return $this->name;
     }
 
     /**
@@ -30,6 +30,6 @@ final class PaymentMethodForm extends FormModel
      */
     public function getFormName(): string
     {
-      return '';
+        return '';
     }
 }

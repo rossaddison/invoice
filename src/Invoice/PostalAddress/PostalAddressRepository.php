@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=1); 
+declare(strict_types=1);
 
 namespace App\Invoice\PostalAddress;
 
@@ -17,8 +17,8 @@ use Yiisoft\Data\Cycle\Writer\EntityWriter;
  */
 final class PostalAddressRepository extends Select\Repository
 {
-private EntityWriter $entityWriter;
-    
+    private EntityWriter $entityWriter;
+
 
     /**
      * @param Select<TEntity> $select
@@ -37,10 +37,10 @@ private EntityWriter $entityWriter;
      */
     public function findAllPreloaded(): EntityReader
     {
-        $query = $this->select();        
+        $query = $this->select();
         return $this->prepareDataReader($query);
     }
-    
+
     /**
      * @psalm-return EntityReader
      */
@@ -49,39 +49,39 @@ private EntityWriter $entityWriter;
         return (new EntityReader($this->select()))
             ->withSort($this->getSort());
     }
-    
+
     /**
      * @return Sort
      */
     private function getSort(): Sort
     {
         return Sort::only(['id'])->withOrder(['id' => 'asc']);
-    }    
-    
+    }
+
     /**
      * @see Reader/ReadableDataInterface|InvalidArgumentException
      * @param array|PostalAddress|null $postaladdress
      * @psalm-param TEntity $postaladdress
-     * @throws Throwable 
+     * @throws Throwable
      * @return void
      */
     public function save(array|PostalAddress|null $postaladdress): void
     {
         $this->entityWriter->write([$postaladdress]);
     }
-    
+
     /**
      * @see Reader/ReadableDataInterface|InvalidArgumentException
      * @param array|PostalAddress|null $postaladdress
-  
-     * @throws Throwable 
+
+     * @throws Throwable
      * @return void
      */
     public function delete(array|PostalAddress|null $postaladdress): void
     {
         $this->entityWriter->delete([$postaladdress]);
     }
-    
+
     /**
      * @param Select $query
      * @return EntityReader
@@ -92,8 +92,8 @@ private EntityWriter $entityWriter;
             Sort::only(['id'])
                 ->withOrder(['id' => 'asc'])
         );
-    }    
-    
+    }
+
     /**
      * @param string $id
      * @psalm-return TEntity|null
@@ -102,33 +102,35 @@ private EntityWriter $entityWriter;
     public function repoPostalAddressLoadedquery(string $id): PostalAddress|null
     {
         $query = $this->select()
-                      ->where(['id' =>$id]);
-        return  $query->fetchOne() ?: null;        
+                      ->where(['id' => $id]);
+        return  $query->fetchOne() ?: null;
     }
-    
+
     /**
      * @param string $id
      * @return int
      */
-    public function repoCount(string $id) : int {
+    public function repoCount(string $id): int
+    {
         $query = $this->select()
                       ->where(['id' => $id]);
         return $query->count();
     }
-    
+
     /**
      * @psalm-return TEntity|null
      * @param string $client_id
      * @return PostalAddress|null
      */
-    public function repoClient(string $client_id) : PostalAddress|null {
+    public function repoClient(string $client_id): PostalAddress|null
+    {
         $query = $this->select()
                       ->where(['client_id' => $client_id]);
-        return $query->fetchOne() ?: null;      
+        return $query->fetchOne() ?: null;
     }
-    
+
     /**
-     * 
+     *
      * @param string $client_id
      * @return EntityReader
      */
@@ -138,14 +140,15 @@ private EntityWriter $entityWriter;
                       ->where(['client_id' => $client_id]);
         return $this->prepareDataReader($query);
     }
-    
+
     /**
      * @param string $client_id
      * @return int
      */
-    public function repoClientCount(string $client_id) : int {
+    public function repoClientCount(string $client_id): int
+    {
         $query = $this->select()
                       ->where(['client_id' => $client_id]);
-        return $query->count();      
+        return $query->count();
     }
 }

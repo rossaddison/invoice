@@ -6,13 +6,10 @@ namespace App\Invoice\Import;
 
 use App\Service\WebControllerService;
 use App\User\UserService;
-
 // Exceptions
 use App\Invoice\Helpers\InvoicePlane\Exception\NoConnectionException;
-
 //Entities
 use App\Invoice\Entity\TaxRate;
-
 // Repositories
 use App\Invoice\Client\ClientRepository;
 use App\Invoice\Family\FamilyRepository;
@@ -20,10 +17,8 @@ use App\Invoice\Product\ProductRepository;
 use App\Invoice\Setting\SettingRepository;
 use App\Invoice\TaxRate\TaxRateRepository;
 use App\Invoice\Unit\UnitRepository;
-
 // Psr
 use Psr\Http\Message\ResponseInterface as Response;
-
 /**
  * @link https://github.com/yiisoft/db-mysql
  */
@@ -33,7 +28,6 @@ use Yiisoft\Db\Mysql\Connection;
 use Yiisoft\Db\Mysql\Driver;
 use Yiisoft\Db\Mysql\Dsn;
 use Yiisoft\Db\Query\Query;
-
 use Yiisoft\Session\SessionInterface as Session;
 use Yiisoft\Session\Flash\Flash;
 use Yiisoft\Translator\TranslatorInterface;
@@ -43,7 +37,7 @@ final class ImportController
 {
     private ViewRenderer $viewRenderer;
     private WebControllerService $webService;
-    private UserService $userService;    
+    private UserService $userService;
     private Session $session;
     private Flash $flash;
     private TranslatorInterface $translator;
@@ -57,15 +51,15 @@ final class ImportController
     public function __construct(
         ViewRenderer $viewRenderer,
         WebControllerService $webService,
-        UserService $userService,        
+        UserService $userService,
         Session $session,
         TranslatorInterface $translator,
         ClientRepository $cR,
         UnitRepository $uR,
-        FamilyRepository $fR,    
-        ProductRepository $pR,    
-        SettingRepository $sR,    
-        TaxRateRepository $trR    
+        FamilyRepository $fR,
+        ProductRepository $pR,
+        SettingRepository $sR,
+        TaxRateRepository $trR
     ) {
         $this->viewRenderer = $viewRenderer->withControllerName('invoice/import')
                                            ->withLayout('@views/layout/invoice.php');
@@ -81,22 +75,22 @@ final class ImportController
         $this->sR = $sR;
         $this->trR = $trR;
     }
-        
-    private function invoiceplaneConnected() : Connection|null
+
+    private function invoiceplaneConnected(): Connection|null
     {
         $settingInvoiceplaneName = $this->sR->getSetting('invoiceplane_database_name');
         $settingInvoiceplaneUsername = $this->sR->getSetting('invoiceplane_database_username');
         $settingInvoiceplanePassword = $this->sR->getSetting('invoiceplane_database_password') ?: '';
-        if (strlen($settingInvoiceplaneName) > 0 && strlen($settingInvoiceplaneUsername) > 0)
-        {
+        if (strlen($settingInvoiceplaneName) > 0 && strlen($settingInvoiceplaneUsername) > 0) {
             $dsn = (new Dsn(
-                'mysql', 
-                '127.0.0.1', 
-                $settingInvoiceplaneName, 
-                '3306', 
+                'mysql',
+                '127.0.0.1',
+                $settingInvoiceplaneName,
+                '3306',
                 [
                     'charset' => 'utf8mb4'
-                ])
+                ]
+            )
             )->asString();
             $arrayCache = new ArrayCache();
             $schemaCache = new SchemaCache($arrayCache);
@@ -108,57 +102,59 @@ final class ImportController
         }
         return null;
     }
-    
-    public function index() : Response 
+
+    public function index(): Response
     {
         $parameters = [
-            'action'=>['import/index'],
+            'action' => ['import/index'],
             'alert' => $this->alert(),
         ];
         return $this->viewRenderer->render('index', $parameters);
     }
-        
-    public function invoiceplane() : Response
+
+    public function invoiceplane(): Response
     {
         if (strlen($this->sR->getSetting('invoiceplane_database_name')) > 0
             && strlen($this->sR->getSetting('invoiceplane_database_username')) > 0) {
             $db = $this->invoiceplaneConnected();
-            if (count($this->uR->findAllPreloaded()) == 0 
+            if (count($this->uR->findAllPreloaded()) == 0
              && count($this->fR->findAllPreloaded()) == 0
              && count($this->pR->findAllPreloaded()) == 0
              && count($this->cR->findAllPreloaded()) == 0
              && count($this->trR->findAllPreloaded()) == 0) {
-                if (null!==$db) {
-                   $units = $this->inputUnit($db);
-                   $this->InsertUnits($units);
-                   $families = $this->inputFamily($db);
-                   $this->InsertFamilies($families);
-                   $taxRates = $this->inputTaxRate($db);
-                   $this->InsertTaxRates($taxRates);
-                   $products = $this->inputProduct($db);
-                   $this->InsertProducts($products);
-                   $clients = $this->inputClient($db);
-                   $this->InsertClients($clients);
-                   $db->close();
-                   $this->flash_message('success', 
-                        $this->translator->translate('invoice.invoice.invoiceplane.import.complete.connection.closed'));
-               } else {
-                   $this->flash_message('info', $this->translator->translate('invoice.invoice.invoiceplane.no.connection'));
-               }
-             } else {
-                 $this->flash_message('warning', $this->translator->translate('invoice.invoice.invoiceplane.tables.not.empty'));
-             }
+                if (null !== $db) {
+                    $units = $this->inputUnit($db);
+                    $this->InsertUnits($units);
+                    $families = $this->inputFamily($db);
+                    $this->InsertFamilies($families);
+                    $taxRates = $this->inputTaxRate($db);
+                    $this->InsertTaxRates($taxRates);
+                    $products = $this->inputProduct($db);
+                    $this->InsertProducts($products);
+                    $clients = $this->inputClient($db);
+                    $this->InsertClients($clients);
+                    $db->close();
+                    $this->flash_message(
+                        'success',
+                        $this->translator->translate('invoice.invoice.invoiceplane.import.complete.connection.closed')
+                    );
+                } else {
+                    $this->flash_message('info', $this->translator->translate('invoice.invoice.invoiceplane.no.connection'));
+                }
+            } else {
+                $this->flash_message('warning', $this->translator->translate('invoice.invoice.invoiceplane.tables.not.empty'));
+            }
         } else {
             $this->flash_message('warning', $this->translator->translate('invoice.invoice.invoiceplane.no.username.or.password'));
         }
         return $this->webService->getRedirectResponse('import/index');
     }
-    
-    public function testConnection() : Response
+
+    public function testConnection(): Response
     {
         $db = $this->invoiceplaneConnected();
-        if (null!==$db) {
-            // Test to the Query Level on any Table to ensure a username and password validated connection 
+        if (null !== $db) {
+            // Test to the Query Level on any Table to ensure a username and password validated connection
             $this->inputProduct($db);
             $this->flash_message('info', $this->translator->translate('invoice.invoice.invoiceplane.yes.connection'));
         } else {
@@ -167,7 +163,7 @@ final class ImportController
         return $this->webService->getRedirectResponse('setting/tab_index');
     }
 
-    private function inputUnit(Connection $db) : array 
+    private function inputUnit(Connection $db): array
     {
         try {
             $units = (new Query($db))
@@ -175,12 +171,12 @@ final class ImportController
             ->from('{{%ip_units}}')
             ->all();
             return $units;
-        } catch (\Yiisoft\Db\Exception\Exception $e){
+        } catch (\Yiisoft\Db\Exception\Exception $e) {
             throw new NoConnectionException($this->translator, $e);
         }
     }
 
-    private function inputFamily(Connection $db) : array 
+    private function inputFamily(Connection $db): array
     {
         try {
             $families = (new Query($db))
@@ -188,14 +184,15 @@ final class ImportController
             ->from('{{%ip_families}}')
             ->all();
             return $families;
-        } catch (\Yiisoft\Db\Exception\Exception $e){
+        } catch (\Yiisoft\Db\Exception\Exception $e) {
             throw new NoConnectionException($this->translator, $e);
         }
     }
-    
-    private function ensureMandatoryTaxRatesInstalled() : void {
+
+    private function ensureMandatoryTaxRatesInstalled(): void
+    {
         /**
-         * @var TaxRate $taxRateService 
+         * @var TaxRate $taxRateService
          */
         $taxRateService = new TaxRate();
         $taxRateService->setTaxRateName('Zero');
@@ -203,7 +200,7 @@ final class ImportController
         $taxRateService->setTaxRateDefault(false);
         $this->trR->save($taxRateService);
         /**
-         * @var TaxRate $taxRateStandard 
+         * @var TaxRate $taxRateStandard
          */
         $taxRateStandard = new TaxRate();
         $taxRateStandard->setTaxRateName('Standard');
@@ -211,8 +208,8 @@ final class ImportController
         $taxRateStandard->setTaxRateDefault(true);
         $this->trR->save($taxRateStandard);
     }
-    
-    private function inputTaxRate(Connection $db) : array 
+
+    private function inputTaxRate(Connection $db): array
     {
         $this->ensureMandatoryTaxRatesInstalled();
         try {
@@ -221,12 +218,12 @@ final class ImportController
             ->from('{{%ip_tax_rates}}')
             ->all();
             return $taxRates;
-        } catch (\Yiisoft\Db\Exception\Exception $e){
+        } catch (\Yiisoft\Db\Exception\Exception $e) {
             throw new NoConnectionException($this->translator, $e);
         }
     }
-    
-    private function inputClient(Connection $db) : array 
+
+    private function inputClient(Connection $db): array
     {
         try {
             $clients = (new Query($db))
@@ -259,35 +256,36 @@ final class ImportController
             ->from('{{%ip_clients}}')
             ->all();
             return $clients;
-        } catch (\Yiisoft\Db\Exception\Exception $e){
+        } catch (\Yiisoft\Db\Exception\Exception $e) {
             throw new NoConnectionException($this->translator, $e);
         }
     }
-    
-    private function inputProduct(Connection $db) : array 
+
+    private function inputProduct(Connection $db): array
     {
         try {
             $products = (new Query($db))
             ->select([
-                'family_id', 
-                'product_sku', 
-                'product_name', 
-                'product_description', 
-                'product_price', 
-                'purchase_price', 
-                'provider_name', 
-                'tax_rate_id', 
-                'unit_id', 
+                'family_id',
+                'product_sku',
+                'product_name',
+                'product_description',
+                'product_price',
+                'purchase_price',
+                'provider_name',
+                'tax_rate_id',
+                'unit_id',
                 'product_tariff'])
             ->from('{{%ip_products}}')
             ->all();
             return $products;
-        } catch (\Yiisoft\Db\Exception\Exception $e){
+        } catch (\Yiisoft\Db\Exception\Exception $e) {
             throw new NoConnectionException($this->translator, $e);
         }
-    }   
-    
-    private function InsertUnits(array $units) : void {
+    }
+
+    private function InsertUnits(array $units): void
+    {
         /**
          * @var array $unit
          */
@@ -299,8 +297,9 @@ final class ImportController
         }
         $this->flash_message('info', $this->translator->translate('invoice.invoice.invoiceplane.units'));
     }
-    
-    private function InsertFamilies(array $families) : void {
+
+    private function InsertFamilies(array $families): void
+    {
         /**
          * @var array $family
          */
@@ -311,8 +310,9 @@ final class ImportController
         }
         $this->flash_message('info', $this->translator->translate('invoice.invoice.invoiceplane.families'));
     }
-    
-    private function InsertTaxRates(array $taxRates) : void {
+
+    private function InsertTaxRates(array $taxRates): void
+    {
         /**
          * @var array $taxRate
          */
@@ -324,8 +324,9 @@ final class ImportController
         }
         $this->flash_message('info', $this->translator->translate('invoice.invoice.invoiceplane.taxrates'));
     }
-    
-    private function InsertClients(array $clients) : void {
+
+    private function InsertClients(array $clients): void
+    {
         /**
          * @var array $client
          */
@@ -359,12 +360,13 @@ final class ImportController
         }
         $this->flash_message('info', $this->translator->translate('invoice.invoice.invoiceplane.clients'));
     }
-    
-    private function InsertProducts(array $products) : void {
+
+    private function InsertProducts(array $products): void
+    {
         /**
          * @var array $product
          */
-        foreach($products as $product) {
+        foreach ($products as $product) {
             $newProduct = new \App\Invoice\Entity\Product();
             $newProduct->setFamily_id((int)$product['family_id']);
             $newProduct->setProduct_sku((string)$product['product_sku']);
@@ -380,23 +382,27 @@ final class ImportController
         }
         $this->flash_message('info', $this->translator->translate('invoice.invoice.invoiceplane.products'));
     }
-    
-   /**
-   * @return string
-   */
-   private function alert(): string {
-     return $this->viewRenderer->renderPartialAsString('//invoice/layout/alert',
-     [ 
+
+    /**
+    * @return string
+    */
+    private function alert(): string
+    {
+        return $this->viewRenderer->renderPartialAsString(
+            '//invoice/layout/alert',
+            [
        'flash' => $this->flash
-     ]);
-   }
+     ]
+        );
+    }
 
     /**
      * @param string $level
      * @param string $message
      * @return Flash|null
      */
-    private function flash_message(string $level, string $message): Flash|null {
+    private function flash_message(string $level, string $message): Flash|null
+    {
         if (strlen($message) > 0) {
             $this->flash->add($level, $message, true);
             return $this->flash;

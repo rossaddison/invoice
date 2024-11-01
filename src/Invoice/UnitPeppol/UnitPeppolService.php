@@ -1,11 +1,10 @@
 <?php
 
-declare(strict_types=1); 
+declare(strict_types=1);
 
 namespace App\Invoice\UnitPeppol;
 
 use App\Invoice\Entity\UnitPeppol;
-
 
 final class UnitPeppolService
 {
@@ -25,7 +24,7 @@ final class UnitPeppolService
         isset($array['description']) ? $model->setDescription((string)$array['description']) : '';
         $this->repository->save($model);
     }
-    
+
     public function deleteUnitPeppol(UnitPeppol $model): void
     {
         $this->repository->delete($model);

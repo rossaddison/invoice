@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=1); 
+declare(strict_types=1);
 
 namespace App\Invoice\SalesOrderCustom;
 
@@ -20,16 +20,16 @@ final class SalesOrderCustomService
      * @param array $array
      * @return void
      */
-    public function saveSoCustom(SalesOrderCustom $model, array $array) : void
-    { 
-       isset($array['so_id']) ? $model->setSo_id((int)$array['so_id']) : '';
-       isset($array['custom_field_id']) ? $model->setCustom_field_id((int)$array['custom_field_id']) : '';
-       isset($array['value']) ? $model->setValue((string)$array['value']) : '';
-       $this->repository->save($model);
+    public function saveSoCustom(SalesOrderCustom $model, array $array): void
+    {
+        isset($array['so_id']) ? $model->setSo_id((int)$array['so_id']) : '';
+        isset($array['custom_field_id']) ? $model->setCustom_field_id((int)$array['custom_field_id']) : '';
+        isset($array['value']) ? $model->setValue((string)$array['value']) : '';
+        $this->repository->save($model);
     }
-    
+
     /**
-     * 
+     *
      * @param array|SalesOrderCustom|null $model
      * @return void
      */

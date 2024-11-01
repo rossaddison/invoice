@@ -17,7 +17,7 @@ use Yiisoft\Data\Cycle\Writer\EntityWriter;
 final class IdentityRepository extends Select\Repository implements IdentityRepositoryInterface
 {
     /**
-     * 
+     *
      * @param EntityWriter $entityWriter
      * @param Select<TEntity> $select
      */
@@ -25,9 +25,9 @@ final class IdentityRepository extends Select\Repository implements IdentityRepo
     {
         parent::__construct($select);
     }
-    
+
     /**
-     * 
+     *
      * @param string $id
      * @return Identity|null
      */

@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=1); 
+declare(strict_types=1);
 
 namespace App\Invoice\Entity;
 
@@ -8,109 +8,109 @@ use Cycle\Annotated\Annotation\Column;
 use Cycle\Annotated\Annotation\Entity;
 use Cycle\Annotated\Annotation\Relation\BelongsTo;
 use Cycle\ORM\Entity\Behavior;
-use \DateTimeImmutable;
+use DateTimeImmutable;
 use App\User\User;
 use Yiisoft\Translator\TranslatorInterface as Translator;
 
 #[Entity(repository:\App\Invoice\UserInv\UserInvRepository::class)]
 #[Behavior\CreatedAt(field: 'date_created', column: 'date_created')]
-#[Behavior\UpdatedAt(field: 'date_modified', column: 'date_modified')]    
+#[Behavior\UpdatedAt(field: 'date_modified', column: 'date_modified')]
 class UserInv
- {
+{
     #[Column(type:'primary')]
     private ?int $id = null;
-    
+
     #[BelongsTo(target:User::class, nullable: false)]
     private ?User $user = null;
-    
+
     #[Column(type: 'integer(11)', nullable:false)]
     private ?int $user_id =  null;
-         
+
     #[Column(type:"string(254)", nullable:true)]
     private ?string $email =  '';
-    
+
     /**
      * @see src/Invoice/UserInv/UserInvForm 0 => Admin, 1 => Not Admin
      */
     #[Column(type:"integer(11)", nullable:false, default:0)]
     private ?int $type = null;
-    
+
     #[Column(type:'bool', typecast:'bool', default:false)]
     private ?bool $active = false;
-     
+
     #[Column(type: 'datetime', nullable:false)]
     private DateTimeImmutable $date_created;
-     
+
     #[Column(type: 'datetime', nullable:false)]
     private DateTimeImmutable $date_modified;
-    
+
     #[Column(type:"string(191)", nullable:true, default:'system')]
     private ?string $language =  '';
-    
+
     #[Column(type:"string(151)", nullable:true)]
     private ?string $name =  '';
-     
+
     #[Column(type:"string(50)", nullable:true)]
     private ?string $company =  '';
-     
+
     #[Column(type:"string(50)", nullable:true)]
     private ?string $address_1 =  '';
-     
+
     #[Column(type:"string(50)", nullable:true)]
     private ?string $address_2 =  '';
-     
+
     #[Column(type:"string(50)", nullable:true)]
     private ?string $city =  '';
-     
+
     #[Column(type:"string(50)", nullable:true)]
     private ?string $state =  '';
-     
+
     #[Column(type:"string(10)", nullable:true)]
     private ?string $zip =  '';
-     
+
     #[Column(type:"string(50)", nullable:true)]
     private ?string $country =  '';
-     
+
     #[Column(type:"string(20)", nullable:true)]
     private ?string $phone =  '';
-     
+
     #[Column(type:"string(20)", nullable:true)]
     private ?string $fax =  '';
-     
+
     #[Column(type:"string(20)", nullable:true)]
-    private ?string $mobile =  '';    
-    
+    private ?string $mobile =  '';
+
     #[Column(type:"string(100)", nullable:true)]
     private ?string $web =  '';
-     
+
     #[Column(type:"string(20)", nullable:true)]
     private ?string $vat_id =  '';
-     
+
     #[Column(type:"string(15)", nullable:true)]
     private ?string $tax_code =  '';
-        
+
     #[Column(type:'bool', typecast:'bool', default:false)]
     private ?bool $all_clients = false;
-     
-    #[Column(type:"string(40)",nullable:true)]
+
+    #[Column(type:"string(40)", nullable:true)]
     private ?string $subscribernumber =  '';
-     
-    #[Column(type:"string(34))",nullable:true)]
+
+    #[Column(type:"string(34))", nullable:true)]
     private ?string $iban =  '';
-    
-    #[Column(type:"bigInteger(20)",nullable:true)]
+
+    #[Column(type:"bigInteger(20)", nullable:true)]
     private ?int $gln =  null;
-     
-    #[Column(type:"string(7)",nullable:true)]
+
+    #[Column(type:"string(7)", nullable:true)]
     private ?string $rcc =  '';
-    
+
     #[Column(type: 'integer(3)', nullable:true, default: 10)]
     private ?int $listLimit =  null;
-     
+
     public function __construct(
         int $id = null,
         int $user_id = null,
-        string $email = '',     
+        string $email = '',
         int $type = null,
         bool $active = false,
         string $language = '',
@@ -133,326 +133,325 @@ class UserInv
         string $iban = '',
         int $gln = null,
         string $rcc = '',
-        int $listLimit = 10    
-     )
-     {
-        $this->id=$id;
-        $this->user_id=$user_id;
-        $this->email=$email;
-        $this->type=$type;
-        $this->active=$active;        
-        $this->date_created=new \DateTimeImmutable();
-        $this->date_modified=new \DateTimeImmutable();
-        $this->language=$language;
-        $this->name=$name;
-        $this->company=$company;
-        $this->address_1=$address_1;
-        $this->address_2=$address_2;
-        $this->city=$city;
-        $this->state=$state;
-        $this->zip=$zip;
-        $this->country=$country;
-        $this->phone=$phone;
-        $this->fax=$fax;
-        $this->mobile=$mobile;
-        $this->web=$web;
-        $this->vat_id=$vat_id;
-        $this->tax_code=$tax_code;
-        $this->all_clients=$all_clients;
-        $this->subscribernumber=$subscribernumber;
-        $this->iban=$iban;
-        $this->gln=$gln;
-        $this->rcc=$rcc;
-        $this->listLimit=$listLimit;
-     }
-    
+        int $listLimit = 10
+    ) {
+        $this->id = $id;
+        $this->user_id = $user_id;
+        $this->email = $email;
+        $this->type = $type;
+        $this->active = $active;
+        $this->date_created = new \DateTimeImmutable();
+        $this->date_modified = new \DateTimeImmutable();
+        $this->language = $language;
+        $this->name = $name;
+        $this->company = $company;
+        $this->address_1 = $address_1;
+        $this->address_2 = $address_2;
+        $this->city = $city;
+        $this->state = $state;
+        $this->zip = $zip;
+        $this->country = $country;
+        $this->phone = $phone;
+        $this->fax = $fax;
+        $this->mobile = $mobile;
+        $this->web = $web;
+        $this->vat_id = $vat_id;
+        $this->tax_code = $tax_code;
+        $this->all_clients = $all_clients;
+        $this->subscribernumber = $subscribernumber;
+        $this->iban = $iban;
+        $this->gln = $gln;
+        $this->rcc = $rcc;
+        $this->listLimit = $listLimit;
+    }
+
     public function getId(): int|null
     {
-     return $this->id;
+        return $this->id;
     }
-    
-    public function setId(int $id) : void
+
+    public function setId(int $id): void
     {
-       $this->id = $id;
+        $this->id = $id;
     }
-    
+
     public function setUser(User $user): void
     {
         $this->user = $user;
     }
-    
-    public function getUser() : ?User
+
+    public function getUser(): ?User
     {
-      return $this->user;
+        return $this->user;
     }
-    
+
     public function getUser_id(): string
     {
-     return (string)$this->user_id;
+        return (string)$this->user_id;
     }
-    
-    public function setUser_id(int $user_id) : void
+
+    public function setUser_id(int $user_id): void
     {
-      $this->user_id =  $user_id;
+        $this->user_id =  $user_id;
     }
-    
-    public function setEmail(string $email) : void
+
+    public function setEmail(string $email): void
     {
-       $this->email = $email;
+        $this->email = $email;
     }
-        
+
     public function getWeb(): ?string
     {
-       return $this->web;
+        return $this->web;
     }
-    
+
     public function getType(): int|null
     {
-       return $this->type;
+        return $this->type;
     }
-    
-    public function setType(int $type) : void
+
+    public function setType(int $type): void
     {
-       $this->type = $type;
+        $this->type = $type;
     }
-    
+
     public function getActive(): bool|null
     {
-       return $this->active;
+        return $this->active;
     }
-    
+
     public function getActiveLabel(Translator $translator): string
     {
         return $this->active ? '<span class="label active">'.$translator->translate('i.yes').'</span>' : '<span class="label inactive">'.$translator->translate('i.no').'</span>';
     }
-    
-    public function setActive(bool $active) : void
+
+    public function setActive(bool $active): void
     {
-       $this->active = $active;
+        $this->active = $active;
     }
-    
+
     public function getDate_created(): DateTimeImmutable
     {
-       return $this->date_created;
+        return $this->date_created;
     }
-    
+
     public function getDate_modified(): DateTimeImmutable
     {
-       return $this->date_modified;
+        return $this->date_modified;
     }
-    
+
     public function getLanguage(): ?string
     {
-       return $this->language;
+        return $this->language;
     }
-    
-    public function setLanguage(string $language) : void
+
+    public function setLanguage(string $language): void
     {
-       $this->language = $language;
+        $this->language = $language;
     }
-    
+
     public function getName(): ?string
     {
-       return $this->name;
+        return $this->name;
     }
-    
-    public function setName(string $name) : void
+
+    public function setName(string $name): void
     {
-       $this->name = $name;
+        $this->name = $name;
     }
-    
+
     public function getCompany(): ?string
     {
-       return $this->company;
+        return $this->company;
     }
-    
-    public function setCompany(string $company) : void
+
+    public function setCompany(string $company): void
     {
-      $this->company = $company;
+        $this->company = $company;
     }
-    
+
     public function getAddress_1(): ?string
     {
-       return $this->address_1;
+        return $this->address_1;
     }
-    
-    public function setAddress_1(string $address_1) : void
+
+    public function setAddress_1(string $address_1): void
     {
-       $this->address_1 = $address_1;
+        $this->address_1 = $address_1;
     }
-    
+
     public function getAddress_2(): ?string
     {
-       return $this->address_2;
+        return $this->address_2;
     }
-    
-    public function setAddress_2(string $address_2) : void
+
+    public function setAddress_2(string $address_2): void
     {
-       $this->address_2 = $address_2;
+        $this->address_2 = $address_2;
     }
-    
+
     public function getCity(): ?string
     {
-       return $this->city;
+        return $this->city;
     }
-    
-    public function setCity(string $city) : void
+
+    public function setCity(string $city): void
     {
-       $this->city = $city;
+        $this->city = $city;
     }
-    
+
     public function getState(): ?string
     {
-       return $this->state;
+        return $this->state;
     }
-    
-    public function setState(string $state) : void
+
+    public function setState(string $state): void
     {
-       $this->state = $state;
+        $this->state = $state;
     }
-    
+
     public function getZip(): ?string
     {
-       return $this->zip;
+        return $this->zip;
     }
-    
-    public function setZip(string $zip) : void
+
+    public function setZip(string $zip): void
     {
-       $this->zip = $zip;
+        $this->zip = $zip;
     }
-    
+
     public function getCountry(): ?string
     {
-       return $this->country;
+        return $this->country;
     }
-    
-    public function setCountry(string $country) : void
+
+    public function setCountry(string $country): void
     {
-      $this->country = $country;
+        $this->country = $country;
     }
-    
+
     public function getPhone(): ?string
     {
-       return $this->phone;
+        return $this->phone;
     }
-    
-    public function setPhone(string $phone) : void
+
+    public function setPhone(string $phone): void
     {
-       $this->phone = $phone;
+        $this->phone = $phone;
     }
-    
+
     public function getFax(): ?string
     {
-       return $this->fax;
+        return $this->fax;
     }
-    
-    public function setFax(string $fax) : void
+
+    public function setFax(string $fax): void
     {
-      $this->fax = $fax;
+        $this->fax = $fax;
     }
-    
+
     public function getMobile(): ?string
     {
-       return $this->mobile;
+        return $this->mobile;
     }
-    
-    public function setMobile(string $mobile) : void
+
+    public function setMobile(string $mobile): void
     {
-       $this->mobile = $mobile;
+        $this->mobile = $mobile;
     }
-    
+
     public function getEmail(): ?string
     {
-       return $this->email;
+        return $this->email;
     }
-    
-    public function setWeb(string $web) : void
+
+    public function setWeb(string $web): void
     {
-      $this->web = $web;
+        $this->web = $web;
     }
-    
+
     public function getVat_id(): string
     {
-     return (string)$this->vat_id;
+        return (string)$this->vat_id;
     }
-    
-    public function setVat_id(string $vat_id) : void
+
+    public function setVat_id(string $vat_id): void
     {
-      $this->vat_id = $vat_id;
+        $this->vat_id = $vat_id;
     }
-    
+
     public function getTax_code(): ?string
     {
-       return $this->tax_code;
+        return $this->tax_code;
     }
-    
-    public function setTax_code(string $tax_code) : void
+
+    public function setTax_code(string $tax_code): void
     {
-      $this->tax_code = $tax_code;
+        $this->tax_code = $tax_code;
     }
-    
+
     public function getAll_clients(): bool|null
     {
-       return $this->all_clients;
+        return $this->all_clients;
     }
-    
-    public function setAll_clients(bool $all_clients) : void
+
+    public function setAll_clients(bool $all_clients): void
     {
-      $this->all_clients = $all_clients;
-    }    
-        
+        $this->all_clients = $all_clients;
+    }
+
     public function getSubscribernumber(): ?string
     {
-       return $this->subscribernumber;
+        return $this->subscribernumber;
     }
-    
-    public function setSubscribernumber(string $subscribernumber) : void
+
+    public function setSubscribernumber(string $subscribernumber): void
     {
-      $this->subscribernumber = $subscribernumber;
+        $this->subscribernumber = $subscribernumber;
     }
-    
+
     public function getIban(): ?string
     {
-       return $this->iban;
+        return $this->iban;
     }
-    
-    public function setIban(string $iban) : void
+
+    public function setIban(string $iban): void
     {
-      $this->iban = $iban;
+        $this->iban = $iban;
     }
-    
+
     public function getGln(): ?int
     {
-       return $this->gln;
+        return $this->gln;
     }
-    
-    public function setGln(int $gln) : void
+
+    public function setGln(int $gln): void
     {
-      $this->gln = $gln;
+        $this->gln = $gln;
     }
-    
+
     public function getRcc(): ?string
     {
-       return $this->rcc;
+        return $this->rcc;
     }
-    
-    public function setRcc(string $rcc) : void
+
+    public function setRcc(string $rcc): void
     {
-      $this->rcc = $rcc;
+        $this->rcc = $rcc;
     }
-    
-    public function getListLimit() : ?int
+
+    public function getListLimit(): ?int
     {
-       return $this->listLimit; 
-    }    
-    
-    public function setListLimit(int $listLimit) : void
+        return $this->listLimit;
+    }
+
+    public function setListLimit(int $listLimit): void
     {
-      $this->listLimit = $listLimit;  
-    }    
-    
+        $this->listLimit = $listLimit;
+    }
+
     public function isNewRecord(): bool
     {
-         return $this->getId() === null;
+        return $this->getId() === null;
     }
 }

@@ -20,13 +20,12 @@ use Yiisoft\Yii\Console\ExitCode;
 final class CreateCommand extends Command
 {
     protected static $defaultName = 'user/create';
-    
+
     public function __construct(
         private readonly SignupForm   $signupForm,
         private readonly Manager      $manager,
         private readonly FormHydrator $formHydrator
-    )
-    {
+    ) {
         parent::__construct();
     }
 
@@ -39,7 +38,7 @@ final class CreateCommand extends Command
             ->addArgument('password', InputArgument::REQUIRED, 'Password')
             ->addArgument('isAdmin', InputArgument::OPTIONAL, 'Create user as admin');
     }
-    
+
     /**
      * @param InputInterface $input
      * @param OutputInterface $output
@@ -48,7 +47,7 @@ final class CreateCommand extends Command
      * @return int
      * @throws LogicException
      */
-    protected function execute(InputInterface $input, OutputInterface $output) : int 
+    protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $io = new SymfonyStyle($input, $output);
 
@@ -56,7 +55,7 @@ final class CreateCommand extends Command
          * @psalm-suppress MixedAssignment
          */
         $login = $input->getArgument('login');
-        
+
         /**
          * @psalm-suppress MixedAssignment
          */
@@ -74,14 +73,14 @@ final class CreateCommand extends Command
             /**
              * Avoid Information Exposure
              * @see https://cwe.mitre.org/data/definitions/200.html
-             * Previously: $io->error($t->getMessage() . ' ' . $t->getFile() . ' ' . $t->getLine());             * 
+             * Previously: $io->error($t->getMessage() . ' ' . $t->getFile() . ' ' . $t->getLine());             *
              */
             throw $t;
         }
-        
+
         if (!$user instanceof User) {
             $errors = $this->signupForm->getValidationResult()->getErrorMessagesIndexedByProperty();
-            array_walk($errors, fn (string $error, string $attribute) : mixed => $io->error("$attribute: $error"));
+            array_walk($errors, fn (string $error, string $attribute): mixed => $io->error("$attribute: $error"));
             return ExitCode::DATAERR;
         }
 

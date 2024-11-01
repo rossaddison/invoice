@@ -1,5 +1,6 @@
 <?php
-declare(strict_types=1); 
+
+declare(strict_types=1);
 
 namespace App\Invoice\Ubl;
 
@@ -9,8 +10,8 @@ namespace App\Invoice\Ubl;
  */
 class InvoiceTypeCode
 {
-    const int INVOICE = 380;
-    const int CORRECTED_INVOICE = 384;
-    const int SELF_BILLING_INVOICE = 389;
-    const int CREDIT_NOTE = 381;
+    public const int INVOICE = 380;
+    public const int CORRECTED_INVOICE = 384;
+    public const int SELF_BILLING_INVOICE = 389;
+    public const int CREDIT_NOTE = 381;
 }

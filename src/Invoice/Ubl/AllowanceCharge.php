@@ -1,5 +1,6 @@
 <?php
-declare(strict_types=1); 
+
+declare(strict_types=1);
 
 namespace App\Invoice\Ubl;
 
@@ -16,17 +17,17 @@ class AllowanceCharge implements XmlSerializable
     private float $amount;
     private ?TaxTotal $taxTotal;
     private ?TaxCategory $taxCategory;
-    
+
     public function __construct(
-            bool $chargeIndicator, 
-            ?int $allowanceChargeReasonCode, 
-            ?string $allowanceChargeReason, 
-            ?int $multiplierFactorNumeric, 
-            ?float $baseAmount, 
-            float $amount, 
-            ?TaxTotal $taxTotal, 
-            ?TaxCategory $taxCategory
-        ) {
+        bool $chargeIndicator,
+        ?int $allowanceChargeReasonCode,
+        ?string $allowanceChargeReason,
+        ?int $multiplierFactorNumeric,
+        ?float $baseAmount,
+        float $amount,
+        ?TaxTotal $taxTotal,
+        ?TaxCategory $taxCategory
+    ) {
         $this->chargeIndicator = $chargeIndicator;
         $this->allowanceChargeReasonCode = $allowanceChargeReasonCode;
         $this->allowanceChargeReason = $allowanceChargeReason;
@@ -38,7 +39,7 @@ class AllowanceCharge implements XmlSerializable
     }
 
     /**
-     * 
+     *
      * @param Writer $writer
      * @return void
      */

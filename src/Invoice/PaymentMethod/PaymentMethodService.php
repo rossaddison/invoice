@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=1); 
+declare(strict_types=1);
 
 namespace App\Invoice\PaymentMethod;
 
@@ -22,10 +22,10 @@ final class PaymentMethodService
      */
     public function savePaymentMethod(PaymentMethod $model, array $array): void
     {
-       isset($array['name']) ? $model->setName((string)$array['name']) : '';
-       $this->repository->save($model);
+        isset($array['name']) ? $model->setName((string)$array['name']) : '';
+        $this->repository->save($model);
     }
-    
+
     /**
      * @param PaymentMethod $model
      * @return void

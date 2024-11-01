@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=1); 
+declare(strict_types=1);
 
 namespace App\Invoice\Profile;
 
@@ -17,11 +17,11 @@ use Yiisoft\Data\Cycle\Writer\EntityWriter;
  */
 final class ProfileRepository extends Select\Repository
 {
-private EntityWriter $entityWriter;
-     /**
-     * @param Select<TEntity> $select     
-     * @param EntityWriter $entityWriter
-     */
+    private EntityWriter $entityWriter;
+    /**
+    * @param Select<TEntity> $select
+    * @param EntityWriter $entityWriter
+    */
     public function __construct(Select $select, EntityWriter $entityWriter)
     {
         $this->entityWriter = $entityWriter;
@@ -38,7 +38,7 @@ private EntityWriter $entityWriter;
         $query = $this->select()->load('company');
         return $this->prepareDataReader($query);
     }
-    
+
     /**
      * @psalm-return EntityReader
      */
@@ -47,34 +47,34 @@ private EntityWriter $entityWriter;
         return (new EntityReader($this->select()))
             ->withSort($this->getSort());
     }
-    
+
     private function getSort(): Sort
     {
         return Sort::only(['id'])->withOrder(['id' => 'asc']);
     }
-    
+
     /**
      * @see Reader/ReadableDataInterface|InvalidArgumentException
      * @param array|Profile|null $profile
-     * @throws Throwable 
+     * @throws Throwable
      * @return void
      */
     public function save(array|Profile|null $profile): void
     {
         $this->entityWriter->write([$profile]);
     }
-    
+
     /**
      * @see Reader/ReadableDataInterface|InvalidArgumentException
      * @param array|Profile|null $profile
-     * @throws Throwable 
+     * @throws Throwable
      * @return void
      */
     public function delete(array|Profile|null $profile): void
     {
         $this->entityWriter->delete([$profile]);
     }
-    
+
     private function prepareDataReader(Select $query): EntityReader
     {
         return (new EntityReader($query))->withSort(
@@ -82,14 +82,15 @@ private EntityWriter $entityWriter;
                 ->withOrder(['id' => 'asc'])
         );
     }
-    
+
     /**
      * @return null|Profile
      *
      * @psalm-return TEntity|null
      */
-    public function repoProfilequery(string $id):Profile|null    {
-        $query = $this->select()->load('company')->where(['id' =>$id]);
-        return  $query->fetchOne() ?: null;        
+    public function repoProfilequery(string $id): Profile|null
+    {
+        $query = $this->select()->load('company')->where(['id' => $id]);
+        return  $query->fetchOne() ?: null;
     }
 }

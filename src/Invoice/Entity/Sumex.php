@@ -1,44 +1,44 @@
 <?php
 
-declare(strict_types=1); 
+declare(strict_types=1);
 
 namespace App\Invoice\Entity;
 
 use Cycle\Annotated\Annotation\Column;
 use Cycle\Annotated\Annotation\Entity;
-use \DateTime;
-use \DateTimeImmutable;
- 
+use DateTime;
+use DateTimeImmutable;
+
 #[Entity(repository: \App\Invoice\Sumex\SumexRepository::class)]
 class Sumex
-{   
+{
     #[Column(type: 'primary')]
     private ?int $id =  null;
-     
+
     #[Column(type: 'integer(11)', nullable: true)]
     private ?int $invoice =  null;
-     
+
     #[Column(type: 'integer(11)', nullable: false, default: 0)]
     private ?int $reason =  null;
-     
+
     #[Column(type: 'string(500)', nullable: false)]
     private string $diagnosis =  '';
-     
+
     #[Column(type: 'string(500)', nullable: false)]
     private string $observations =  '';
-     
+
     #[Column(type: 'date', nullable: true)]
     private mixed $treatmentstart =  '';
-     
+
     #[Column(type: 'date', nullable: true)]
     private mixed $treatmentend =  '';
-     
+
     #[Column(type: 'date', nullable: true)]
     private mixed $casedate =  '';
-     
+
     #[Column(type: 'string(35)', nullable: true)]
     private ?string $casenumber =  '';
-     
+
     public function __construct(
         int $invoice = null,
         int $reason = null,
@@ -47,109 +47,108 @@ class Sumex
         string $casenumber = '',
         mixed $treatmentstart = '',
         mixed $treatmentend = '',
-        mixed $casedate = '',    
-    )
-    {
-        $this->invoice=$invoice;
-        $this->reason=$reason;
-        $this->diagnosis=$diagnosis;
-        $this->observations=$observations;
-        $this->casenumber=$casenumber;
-        $this->treatmentstart=$treatmentstart;
-        $this->treatmentend=$treatmentend;
-        $this->casedate=$casedate;
+        mixed $casedate = '',
+    ) {
+        $this->invoice = $invoice;
+        $this->reason = $reason;
+        $this->diagnosis = $diagnosis;
+        $this->observations = $observations;
+        $this->casenumber = $casenumber;
+        $this->treatmentstart = $treatmentstart;
+        $this->treatmentend = $treatmentend;
+        $this->casedate = $casedate;
     }
-    
+
     public function getId(): string
     {
-     return (string)$this->id;
+        return (string)$this->id;
     }
-    
-    public function setId(int $id) : void
+
+    public function setId(int $id): void
     {
-      $this->id =  $id;
+        $this->id =  $id;
     }
-    
+
     public function getInvoice(): int|null
     {
-       return $this->invoice;
+        return $this->invoice;
     }
-    
-    public function setInvoice(int $invoice) : void
+
+    public function setInvoice(int $invoice): void
     {
-      $this->invoice =  $invoice;
+        $this->invoice =  $invoice;
     }
-    
+
     public function getReason(): int|null
     {
-       return $this->reason;
+        return $this->reason;
     }
-    
-    public function setReason(int $reason) : void
+
+    public function setReason(int $reason): void
     {
-      $this->reason =  $reason;
+        $this->reason =  $reason;
     }
-    
+
     public function getDiagnosis(): string
     {
-       return $this->diagnosis;
+        return $this->diagnosis;
     }
-    
-    public function setDiagnosis(string $diagnosis) : void
+
+    public function setDiagnosis(string $diagnosis): void
     {
-      $this->diagnosis =  $diagnosis;
+        $this->diagnosis =  $diagnosis;
     }
-    
+
     public function getObservations(): string
     {
-       return $this->observations;
+        return $this->observations;
     }
-    
-    public function setObservations(string $observations) : void
+
+    public function setObservations(string $observations): void
     {
-      $this->observations =  $observations;
+        $this->observations =  $observations;
     }
-    
-    public function getTreatmentstart(): DateTimeImmutable|string|null 
+
+    public function getTreatmentstart(): DateTimeImmutable|string|null
     {
-      /** @var DateTimeImmutable|string|null $this->treatmentstart */
-      return $this->treatmentstart;
+        /** @var DateTimeImmutable|string|null $this->treatmentstart */
+        return $this->treatmentstart;
     }
-    
-    public function setTreatmentstart(DateTime $treatmentstart) : void
+
+    public function setTreatmentstart(DateTime $treatmentstart): void
     {
-      $this->treatmentstart =  $treatmentstart;
+        $this->treatmentstart =  $treatmentstart;
     }
-    
-    public function getTreatmentend(): DateTimeImmutable|string|null 
+
+    public function getTreatmentend(): DateTimeImmutable|string|null
     {
-      /** @var DateTimeImmutable|string|null $this->treatmentend */
-      return $this->treatmentend;
+        /** @var DateTimeImmutable|string|null $this->treatmentend */
+        return $this->treatmentend;
     }
-    
-    public function setTreatmentend(DateTime $treatmentend) : void
+
+    public function setTreatmentend(DateTime $treatmentend): void
     {
-      $this->treatmentend =  $treatmentend;
+        $this->treatmentend =  $treatmentend;
     }
-    
-    public function getCasedate(): DateTimeImmutable|string|null 
+
+    public function getCasedate(): DateTimeImmutable|string|null
     {
-      /** @var DateTimeImmutable|string|null $this->casedate */
-      return $this->casedate;
+        /** @var DateTimeImmutable|string|null $this->casedate */
+        return $this->casedate;
     }
-    
-    public function setCasedate(DateTime $casedate) : void
+
+    public function setCasedate(DateTime $casedate): void
     {
-      $this->casedate =  $casedate;
+        $this->casedate =  $casedate;
     }
-    
+
     public function getCasenumber(): ?string
     {
-       return $this->casenumber;
+        return $this->casenumber;
     }
-    
-    public function setCasenumber(string $casenumber) : void
+
+    public function setCasenumber(string $casenumber): void
     {
-      $this->casenumber =  $casenumber;
+        $this->casenumber =  $casenumber;
     }
 }

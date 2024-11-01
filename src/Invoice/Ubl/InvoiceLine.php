@@ -1,5 +1,7 @@
 <?php
+
 // Note this UBL is not currently being used. Refer to Invoice and PeppolHelper function build_invoice_lines_array
+
 namespace App\Invoice\Ubl;
 
 use Sabre\Xml\Writer;
@@ -24,25 +26,33 @@ class InvoiceLine implements XmlSerializable
     protected bool $isCreditNoteLine = false;
 
     public function __construct(
-            string $id, float $invoicedQuantity, float $lineExtensionAmount,
-            ?string $unitCodeListId, ?TaxTotal $taxTotal, ?InvoicePeriod $invoicePeriod,
-            ?string $note, ?Item $item, ?Price $price, ?string $accountingCostCode, ?string $accountingCost
+        string $id,
+        float $invoicedQuantity,
+        float $lineExtensionAmount,
+        ?string $unitCodeListId,
+        ?TaxTotal $taxTotal,
+        ?InvoicePeriod $invoicePeriod,
+        ?string $note,
+        ?Item $item,
+        ?Price $price,
+        ?string $accountingCostCode,
+        ?string $accountingCost
     ) {
-            $this->id = $id;
-            $this->invoicedQuantity = $invoicedQuantity;
-            $this->lineExtensionAmount = $lineExtensionAmount;
-            $this->unitCodeListId = $unitCodeListId;
-            $this->taxTotal = $taxTotal;
-            $this->invoicePeriod = $invoicePeriod;
-            $this->note = $note;
-            $this->item = $item;
-            $this->price = $price;
-            $this->accountingCostCode = $accountingCostCode;
-            $this->accountingCost = $accountingCost;
+        $this->id = $id;
+        $this->invoicedQuantity = $invoicedQuantity;
+        $this->lineExtensionAmount = $lineExtensionAmount;
+        $this->unitCodeListId = $unitCodeListId;
+        $this->taxTotal = $taxTotal;
+        $this->invoicePeriod = $invoicePeriod;
+        $this->note = $note;
+        $this->item = $item;
+        $this->price = $price;
+        $this->accountingCostCode = $accountingCostCode;
+        $this->accountingCost = $accountingCost;
     }
-    
+
     /**
-     * 
+     *
      * @return string
      */
     public function getId(): string
@@ -257,7 +267,7 @@ class InvoiceLine implements XmlSerializable
         $this->accountingCost = $accountingCost;
         return $this;
     }
-    
+
     /**
      * @see https://github.com/OpenPEPPOL/peppol-bis-invoice-3/search?q=InvoiceLine
      * @param Writer $writer
@@ -269,7 +279,7 @@ class InvoiceLine implements XmlSerializable
             Schema::CBC . 'ID' => $this->id
         ]);
 
-        if (null!==($this->getNote())) {
+        if (null !== ($this->getNote())) {
             $writer->write([
                 Schema::CBC . 'Note' => $this->getNote()
             ]);

@@ -8,25 +8,24 @@ use Yiisoft\FormModel\FormModel;
 use Yiisoft\Validator\Rule\Required;
 
 final class UserCustomForm extends FormModel
-{    
-    
-    private ?int $user_id=null;
-    private ?int $fieldid=null;
-    private ?string $fieldvalue='';
+{
+    private ?int $user_id = null;
+    private ?int $fieldid = null;
+    private ?string $fieldvalue = '';
 
-    public function getUser_id() : int|null
+    public function getUser_id(): int|null
     {
-      return $this->user_id;
+        return $this->user_id;
     }
 
-    public function getFieldid() : int|null
+    public function getFieldid(): int|null
     {
-      return $this->fieldid;
+        return $this->fieldid;
     }
 
-    public function getFieldvalue() : string|null
+    public function getFieldvalue(): string|null
     {
-      return $this->fieldvalue ?? '';
+        return $this->fieldvalue ?? '';
     }
 
     /**
@@ -36,18 +35,19 @@ final class UserCustomForm extends FormModel
      */
     public function getFormName(): string
     {
-      return '';
+        return '';
     }
 
     /**
-     * @psalm-suppress ImplementedReturnTypeMismatch  
+     * @psalm-suppress ImplementedReturnTypeMismatch
      * @return array
      */
-    public function getRules(): array    {
-      return [
-        'fieldvalue' => [
-             [new Required()],
-        ],
+    public function getRules(): array
+    {
+        return [
+          'fieldvalue' => [
+               [new Required()],
+          ],
     ];
-}
+    }
 }

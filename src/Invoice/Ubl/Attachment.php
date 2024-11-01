@@ -10,12 +10,13 @@ use Sabre\Xml\XmlSerializable;
 use App\Invoice\Ubl\Schema;
 use InvalidArgumentException;
 
-class Attachment implements XmlSerializable {
-
+class Attachment implements XmlSerializable
+{
     private ?string $filePath;
     private ?string $externalReference;
 
-    public function __construct(?string $filePath, ?string $externalReference) {
+    public function __construct(?string $filePath, ?string $externalReference)
+    {
         $this->filePath = $filePath;
         $this->externalReference = $externalReference;
     }
@@ -25,7 +26,8 @@ class Attachment implements XmlSerializable {
      * @return string
      * @throws Exception
      */
-    public function getFileMimeType(): string {
+    public function getFileMimeType(): string
+    {
         if (null !== $this->filePath) {
             if (($mime_type = mime_content_type($this->filePath)) !== false) {
                 return $mime_type;
@@ -39,7 +41,8 @@ class Attachment implements XmlSerializable {
      *
      * @return string|null
      */
-    public function getFilePath(): ?string {
+    public function getFilePath(): ?string
+    {
         return $this->filePath;
     }
 
@@ -48,7 +51,8 @@ class Attachment implements XmlSerializable {
      * @param string|null $filePath
      * @return Attachment
      */
-    public function setFilePath(?string $filePath): Attachment {
+    public function setFilePath(?string $filePath): Attachment
+    {
         $this->filePath = $filePath;
         return $this;
     }
@@ -57,7 +61,8 @@ class Attachment implements XmlSerializable {
      *
      * @return string|null
      */
-    public function getExternalReference(): ?string {
+    public function getExternalReference(): ?string
+    {
         return $this->externalReference;
     }
 
@@ -66,7 +71,8 @@ class Attachment implements XmlSerializable {
      * @param string|null $externalReference
      * @return Attachment
      */
-    public function setExternalReference(?string $externalReference): Attachment {
+    public function setExternalReference(?string $externalReference): Attachment
+    {
         $this->externalReference = $externalReference;
         return $this;
     }
@@ -76,7 +82,8 @@ class Attachment implements XmlSerializable {
      * @return void
      * @throws InvalidArgumentException
      */
-    public function validate(): void {
+    public function validate(): void
+    {
         if ($this->filePath === null && $this->externalReference === null) {
             throw new InvalidArgumentException('Attachment must have a filePath or an ExternalReference');
         }
@@ -91,7 +98,8 @@ class Attachment implements XmlSerializable {
      * @param Writer $writer
      * @return void
      */
-    public function xmlSerialize(Writer $writer): void {
+    public function xmlSerialize(Writer $writer): void
+    {
         $this->validate();
 
         if (null !== $this->filePath) {
@@ -110,8 +118,8 @@ class Attachment implements XmlSerializable {
 
         if (null !== $this->externalReference) {
             $writer->writeElement(
-                    Schema::CAC . 'ExternalReference',
-                    [Schema::CBC . 'URI' => $this->externalReference]
+                Schema::CAC . 'ExternalReference',
+                [Schema::CBC . 'URI' => $this->externalReference]
             );
         }
     }

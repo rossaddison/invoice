@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=1); 
+declare(strict_types=1);
 
 namespace App\Invoice\SalesOrderCustom;
 
@@ -17,11 +17,11 @@ use Yiisoft\Data\Cycle\Writer\EntityWriter;
  */
 final class SalesOrderCustomRepository extends Select\Repository
 {
-private EntityWriter $entityWriter;
-    
+    private EntityWriter $entityWriter;
+
     /**
-     * 
-     * @param Select<TEntity> $select     
+     *
+     * @param Select<TEntity> $select
      * @param EntityWriter $entityWriter
      */
     public function __construct(Select $select, EntityWriter $entityWriter)
@@ -42,7 +42,7 @@ private EntityWriter $entityWriter;
                       ->load('quote');
         return $this->prepareDataReader($query);
     }
-    
+
     /**
      * @psalm-return EntityReader
      */
@@ -51,34 +51,34 @@ private EntityWriter $entityWriter;
         return (new EntityReader($this->select()))
             ->withSort($this->getSort());
     }
-    
+
     private function getSort(): Sort
     {
         return Sort::only(['id'])->withOrder(['id' => 'asc']);
     }
-    
+
     /**
      * @see Reader/ReadableDataInterface|InvalidArgumentException
      * @param array|SalesOrderCustom|null $quotecustom
-     * @throws Throwable 
+     * @throws Throwable
      * @return void
      */
     public function save(array|SalesOrderCustom|null $quotecustom): void
     {
         $this->entityWriter->write([$quotecustom]);
     }
-    
+
     /**
      * @see Reader/ReadableDataInterface|InvalidArgumentException
      * @param array|SalesOrderCustom|null $so_custom
-     * @throws Throwable 
+     * @throws Throwable
      * @return void
      */
     public function delete(array|SalesOrderCustom|null $so_custom): void
     {
         $this->entityWriter->delete([$so_custom]);
     }
-    
+
     private function prepareDataReader(Select $query): EntityReader
     {
         return (new EntityReader($query))->withSort(
@@ -86,45 +86,49 @@ private EntityWriter $entityWriter;
                 ->withOrder(['id' => 'asc'])
         );
     }
-    
-    public function repoSalesOrderCustomquery(string $id): SalesOrderCustom|null {
+
+    public function repoSalesOrderCustomquery(string $id): SalesOrderCustom|null
+    {
         $query = $this->select()
                       ->load('custom_field')
                       ->load('customsalesorder')
-                      ->where(['id'=>$id]);
-        return  $query->fetchOne() ?: null;        
+                      ->where(['id' => $id]);
+        return  $query->fetchOne() ?: null;
     }
-    
-    
-    public function repoFormValuequery(string $so_id, string $custom_field_id): SalesOrderCustom|null {
+
+
+    public function repoFormValuequery(string $so_id, string $custom_field_id): SalesOrderCustom|null
+    {
         $query = $this->select()
-                      ->where(['so_id' =>$so_id])
-                      ->andWhere(['custom_field_id' =>$custom_field_id]);
-        return  $query->fetchOne();        
+                      ->where(['so_id' => $so_id])
+                      ->andWhere(['custom_field_id' => $custom_field_id]);
+        return  $query->fetchOne();
     }
-    
-    public function repoSalesOrderCustomCount(string $so_id, string $custom_field_id) : int {
+
+    public function repoSalesOrderCustomCount(string $so_id, string $custom_field_id): int
+    {
         $query = $this->select()
-                      ->where(['so_id' =>$so_id])
-                      ->andWhere(['custom_field_id' =>$custom_field_id]);
+                      ->where(['so_id' => $so_id])
+                      ->andWhere(['custom_field_id' => $custom_field_id]);
         return $query->count();
-    } 
-    
-    public function repoSalesOrderCount(string $so_id) : int {
+    }
+
+    public function repoSalesOrderCount(string $so_id): int
+    {
         $query = $this->select()
-                      ->where(['so_id' =>$so_id]);
+                      ->where(['so_id' => $so_id]);
         return $query->count();
-    }   
-    
+    }
+
     /**
      * Get all fields that have been setup for a particular sales order
-     * 
+     *
      * @psalm-return EntityReader
      */
     public function repoFields(string $so_id): EntityReader
     {
         $query = $this->select()
-                      ->where(['so_id'=>$so_id]);                
+                      ->where(['so_id' => $so_id]);
         return $this->prepareDataReader($query);
     }
 }

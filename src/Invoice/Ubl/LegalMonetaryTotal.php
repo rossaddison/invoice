@@ -1,5 +1,6 @@
 <?php
-declare(strict_types=1); 
+
+declare(strict_types=1);
 
 namespace App\Invoice\Ubl;
 
@@ -9,7 +10,7 @@ use Sabre\Xml\XmlSerializable;
 /** @see https://docs.peppol.eu/poacc/billing/3.0/syntax/ubl-invoice/cac-LegalMonetaryTotal/ */
 class LegalMonetaryTotal implements XmlSerializable
 {
-    // Sum of all Invoice line net amounts in the Invoice. Must be rounded to maximum 2 decimals.    
+    // Sum of all Invoice line net amounts in the Invoice. Must be rounded to maximum 2 decimals.
     private float $lineExtensionAmount = 0.00;
     // The total amount of the Invoice without VAT. Must be rounded to maximum 2 decimals.
     private float $taxExclusiveAmount = 0.00;
@@ -20,15 +21,15 @@ class LegalMonetaryTotal implements XmlSerializable
     // The outstanding amount that is requested to be paid. Must be rounded to maximum 2 decimals.
     private float $payableAmount = 0.00;
     private string $document_currency = '';
-    
+
     public function __construct(
-        float $lineExtensionAmount, 
-        float $taxExclusiveAmount, 
-        float $taxInclusiveAmount, 
-        float $allowanceTotalAmount, 
-        float $payableAmount, 
-        string $document_currency) 
-        {
+        float $lineExtensionAmount,
+        float $taxExclusiveAmount,
+        float $taxInclusiveAmount,
+        float $allowanceTotalAmount,
+        float $payableAmount,
+        string $document_currency
+    ) {
         $this->lineExtensionAmount = $lineExtensionAmount;
         $this->taxExclusiveAmount = $taxExclusiveAmount;
         $this->taxInclusiveAmount = $taxInclusiveAmount;
@@ -38,13 +39,13 @@ class LegalMonetaryTotal implements XmlSerializable
     }
 
     /**
-     * 
+     *
      * @param Writer $writer
      * @return void
      */
     public function xmlSerialize(Writer $writer): void
     {
-        
+
         $writer->write([
             /**
              * @see https://docs.peppol.eu/poacc/billing/3.0/syntax/ubl-invoice/cac-InvoiceLine/cbc-LineExtensionAmount/

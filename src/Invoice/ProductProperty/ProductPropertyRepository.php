@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=1); 
+declare(strict_types=1);
 
 namespace App\Invoice\ProductProperty;
 
@@ -17,7 +17,7 @@ use Yiisoft\Data\Cycle\Writer\EntityWriter;
  */
 final class ProductPropertyRepository extends Select\Repository
 {
-private EntityWriter $entityWriter;
+    private EntityWriter $entityWriter;
     /**
      * @param Select<TEntity> $select
      * @param EntityWriter $entityWriter
@@ -39,7 +39,7 @@ private EntityWriter $entityWriter;
                       ->load('product');
         return $this->prepareDataReader($query);
     }
-    
+
     /**
      * @param string $product_id
      * @return EntityReader
@@ -50,7 +50,7 @@ private EntityWriter $entityWriter;
                       ->where(['product_id' => $product_id]);
         return $this->prepareDataReader($query);
     }
-    
+
     /**
      * @psalm-return EntityReader
      */
@@ -59,39 +59,39 @@ private EntityWriter $entityWriter;
         return (new EntityReader($this->select()))
             ->withSort($this->getSort());
     }
-    
+
     /**
      * @return Sort
      */
     private function getSort(): Sort
     {
         return Sort::only(['id'])->withOrder(['id' => 'asc']);
-    }    
-    
+    }
+
     /**
      * @see Reader/ReadableDataInterface|InvalidArgumentException
      * @param array|ProductProperty|null $productproperty
      * @psalm-param TEntity $productproperty
-     * @throws Throwable 
+     * @throws Throwable
      * @return void
      */
     public function save(array|ProductProperty|null $productproperty): void
     {
         $this->entityWriter->write([$productproperty]);
     }
-    
+
     /**
      * @see Reader/ReadableDataInterface|InvalidArgumentException
      * @param array|ProductProperty|null $productproperty
-  
-     * @throws Throwable 
+
+     * @throws Throwable
      * @return void
      */
     public function delete(array|ProductProperty|null $productproperty): void
     {
         $this->entityWriter->delete([$productproperty]);
     }
-    
+
     /**
      * @param Select $query
      * @return EntityReader
@@ -102,8 +102,8 @@ private EntityWriter $entityWriter;
             Sort::only(['id'])
                 ->withOrder(['id' => 'asc'])
         );
-    }    
-    
+    }
+
     /**
      * @param string $id
      * @psalm-return TEntity|null
@@ -113,17 +113,18 @@ private EntityWriter $entityWriter;
     {
         $query = $this->select()
                       ->load('product')
-                      ->where(['id' =>$id]);
-        return  $query->fetchOne() ?: null;        
+                      ->where(['id' => $id]);
+        return  $query->fetchOne() ?: null;
     }
-    
+
     /**
      * @param string $id
      * @return int
      */
-    public function repoCount(string $id) : int {
+    public function repoCount(string $id): int
+    {
         $query = $this->select()
                       ->where(['id' => $id]);
         return $query->count();
-    }   
+    }
 }

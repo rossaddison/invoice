@@ -4,14 +4,15 @@ declare(strict_types=1);
 
 namespace App\Invoice\Helpers\StoreCove;
 
-Class StoreCoveArrays {
-
+class StoreCoveArrays
+{
     /**
      * @see https://codebeautify.org/html-to-json-converter
      *
      * @return array
      */
-    public static function store_cove_sender_identifier_array(): array {
+    public static function store_cove_sender_identifier_array(): array
+    {
         $array = [
             -1 => [
                 'Region' => 'Region',
@@ -369,7 +370,8 @@ Class StoreCoveArrays {
      *
      * @return array
      */
-    public static function store_cove_receiver_identifier_array(): array {
+    public static function store_cove_receiver_identifier_array(): array
+    {
         $array = [
             -1 => [
                 'region' => 'Region',

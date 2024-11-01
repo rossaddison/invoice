@@ -10,32 +10,32 @@ use Yiisoft\Validator\Rule\Required;
 use Yiisoft\Validator\Rule\GreaterThan;
 
 final class QuoteItemForm extends FormModel
-{        
+{
     private ?string $quote_id = '';
-    
+
     #[Required]
     private ?string $tax_rate_id = '';
-    
+
     #[Required]
     private ?string $product_id = '';
     private ?string $name = '';
-    
+
     private ?string $description = '';
-    
+
     #[GreaterThan(0.00)]
     private ?float $quantity = null;
-    
+
     #[GreaterThan(0.00)]
     private ?float $price = null;
-    
+
     #[Required]
     private ?float $discount_amount = null;
-    
+
     #[Required]
     private ?int $order = null;
     private ?string $product_unit = '';
     private ?int $product_unit_id = null;
-    
+
     public function __construct(QuoteItem $quoteItem, string $quote_id)
     {
         $this->quote_id = $quote_id;
@@ -49,11 +49,11 @@ final class QuoteItemForm extends FormModel
         $this->order = $quoteItem->getOrder();
         $this->product_unit = $quoteItem->getProduct_unit();
         $this->product_unit_id = (int)$quoteItem->getProduct_unit_id();
-    }        
+    }
 
-    public function getQuote_id() : string|null
+    public function getQuote_id(): string|null
     {
-      return $this->quote_id;
+        return $this->quote_id;
     }
 
     public function getTax_rate_id(): string|null
@@ -61,49 +61,49 @@ final class QuoteItemForm extends FormModel
         return $this->tax_rate_id;
     }
 
-    public function getProduct_id() : string|null
+    public function getProduct_id(): string|null
     {
-      return $this->product_id;
+        return $this->product_id;
     }
 
-    public function getName() : string|null
+    public function getName(): string|null
     {
-      return $this->name;
+        return $this->name;
     }
 
-    public function getDescription() : string|null
+    public function getDescription(): string|null
     {
-      return $this->description;
+        return $this->description;
     }
 
-    public function getQuantity() : float|null
+    public function getQuantity(): float|null
     {
-      return $this->quantity;
+        return $this->quantity;
     }
 
-    public function getPrice() : float|null
+    public function getPrice(): float|null
     {
-      return $this->price;
+        return $this->price;
     }
 
-    public function getDiscount_amount() : float|null
+    public function getDiscount_amount(): float|null
     {
-      return $this->discount_amount;
+        return $this->discount_amount;
     }
 
-    public function getOrder() : int|null
+    public function getOrder(): int|null
     {
-      return $this->order;
+        return $this->order;
     }
 
-    public function getProduct_unit() : string|null
+    public function getProduct_unit(): string|null
     {
-      return $this->product_unit;
+        return $this->product_unit;
     }
 
-    public function getProduct_unit_id() : int|null
+    public function getProduct_unit_id(): int|null
     {
-      return $this->product_unit_id;
+        return $this->product_unit_id;
     }
 
     /**
@@ -113,6 +113,6 @@ final class QuoteItemForm extends FormModel
      */
     public function getFormName(): string
     {
-      return '';
+        return '';
     }
 }

@@ -11,28 +11,26 @@ final class Bootstrap5ModalTranslatorMessageWithAction
     private ViewRenderer $viewRenderer;
     private array $layoutParameters;
     private array $formParameters;
-    
+
     public function __construct(
-        ViewRenderer $viewRenderer, 
-    ) 
-    {
+        ViewRenderer $viewRenderer,
+    ) {
         $this->viewRenderer = $viewRenderer;
         $this->layoutParameters = [];
         $this->formParameters = [];
     }
-        
+
     public function renderPartialLayoutWithTranslatorMessageAsString(
-            string $translatedHeading,
-            string $translatedMessage,
-            string $origin,
-            string $urlString,
-            string $id
-            ) : string
-            
-    {
+        string $translatedHeading,
+        string $translatedMessage,
+        string $origin,
+        string $urlString,
+        string $id
+    ): string {
         $this->layoutParameters = [
             'type' => $origin,
-            'form' => $this->viewRenderer->renderPartialAsString('//invoice/inv/modal_message_action',
+            'form' => $this->viewRenderer->renderPartialAsString(
+                '//invoice/inv/modal_message_action',
                 [
                     'translatedHeading' => $translatedHeading,
                     'translatedMessage' => $translatedMessage,
@@ -40,7 +38,7 @@ final class Bootstrap5ModalTranslatorMessageWithAction
                     'id' => $id
                 ]
             ),
-        ];    
+        ];
         return $this->viewRenderer->renderPartialAsString('//invoice/inv/modal_message_layout', $this->layoutParameters);
-    }  
+    }
 }

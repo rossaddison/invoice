@@ -24,10 +24,10 @@ class User
 
     #[Column(type: 'string(48)')]
     private string $login;
-    
+
     #[Column(type: 'string(254)')]
     private string $email;
-    
+
     #[Column(type: 'string')]
     private string $passwordHash = '';
 
@@ -63,7 +63,7 @@ class User
     {
         return $this->login;
     }
-    
+
     public function getEmail(): string
     {
         return $this->email;

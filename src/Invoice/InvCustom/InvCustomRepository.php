@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=1); 
+declare(strict_types=1);
 
 namespace App\Invoice\InvCustom;
 
@@ -17,12 +17,12 @@ use Yiisoft\Data\Cycle\Writer\EntityWriter;
  */
 final class InvCustomRepository extends Select\Repository
 {
-private EntityWriter $entityWriter;
-    
-     /**
-     * @param Select<TEntity> $select
-     * @param EntityWriter $entityWriter
-     */
+    private EntityWriter $entityWriter;
+
+    /**
+    * @param Select<TEntity> $select
+    * @param EntityWriter $entityWriter
+    */
     public function __construct(Select $select, EntityWriter $entityWriter)
     {
         $this->entityWriter = $entityWriter;
@@ -39,7 +39,7 @@ private EntityWriter $entityWriter;
         $query = $this->select()->load('custom_field')->load('inv');
         return $this->prepareDataReader($query);
     }
-    
+
     /**
      * @psalm-return EntityReader
      */
@@ -48,34 +48,34 @@ private EntityWriter $entityWriter;
         return (new EntityReader($this->select()))
             ->withSort($this->getSort());
     }
-    
+
     private function getSort(): Sort
     {
         return Sort::only(['id'])->withOrder(['id' => 'asc']);
     }
-    
+
     /**
      * @see Reader/ReadableDataInterface|InvalidArgumentException
      * @param array|InvCustom|null $invcustom
-     * @throws Throwable 
+     * @throws Throwable
      * @return void
      */
     public function save(array|InvCustom|null $invcustom): void
     {
         $this->entityWriter->write([$invcustom]);
     }
-    
+
     /**
      * @see Reader/ReadableDataInterface|InvalidArgumentException
      * @param array|InvCustom|null $invcustom
-     * @throws Throwable 
+     * @throws Throwable
      * @return void
      */
     public function delete(array|InvCustom|null $invcustom): void
     {
         $this->entityWriter->delete([$invcustom]);
     }
-    
+
     private function prepareDataReader(Select $query): EntityReader
     {
         return (new EntityReader($query))->withSort(
@@ -83,41 +83,45 @@ private EntityWriter $entityWriter;
                 ->withOrder(['id' => 'asc'])
         );
     }
-    
+
     /**
      * @return null|InvCustom
      *
      * @psalm-return TEntity|null
      */
-    public function repoInvCustomquery(string $id): InvCustom|null    {
+    public function repoInvCustomquery(string $id): InvCustom|null
+    {
         $query = $this->select()->load('custom_field')
                                 ->load('inv')
-                                ->where(['id'=>$id]);
-        return  $query->fetchOne() ?: null;        
+                                ->where(['id' => $id]);
+        return  $query->fetchOne() ?: null;
     }
-    
+
     /**
      * @return null|InvCustom
      *
      * @psalm-return TEntity|null
      */
-    public function repoFormValuequery(string $inv_id, string $custom_field_id) : InvCustom|null {
-        $query = $this->select()->where(['inv_id' =>$inv_id])
-                                ->andWhere(['custom_field_id' =>$custom_field_id]);
-        return  $query->fetchOne();        
+    public function repoFormValuequery(string $inv_id, string $custom_field_id): InvCustom|null
+    {
+        $query = $this->select()->where(['inv_id' => $inv_id])
+                                ->andWhere(['custom_field_id' => $custom_field_id]);
+        return  $query->fetchOne();
     }
-    
-    public function repoInvCustomCount(string $inv_id, string $custom_field_id) : int {
-        $query = $this->select()->where(['inv_id' =>$inv_id])
-                                ->andWhere(['custom_field_id' =>$custom_field_id]);
+
+    public function repoInvCustomCount(string $inv_id, string $custom_field_id): int
+    {
+        $query = $this->select()->where(['inv_id' => $inv_id])
+                                ->andWhere(['custom_field_id' => $custom_field_id]);
         return $query->count();
-    } 
-    
-    public function repoInvCount(string $inv_id) : int {
-        $query = $this->select()->where(['inv_id' =>$inv_id]);
+    }
+
+    public function repoInvCount(string $inv_id): int
+    {
+        $query = $this->select()->where(['inv_id' => $inv_id]);
         return $query->count();
-    }   
-    
+    }
+
     /**
      * Get all fields that have been setup for a particular inv
      *
@@ -125,7 +129,7 @@ private EntityWriter $entityWriter;
      */
     public function repoFields(string $inv_id): EntityReader
     {
-        $query = $this->select()->where(['inv_id'=>$inv_id]);                
+        $query = $this->select()->where(['inv_id' => $inv_id]);
         return $this->prepareDataReader($query);
     }
 }

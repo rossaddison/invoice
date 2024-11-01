@@ -8,45 +8,46 @@ use App\Invoice\Entity\Client;
 use Yiisoft\FormModel\FormModel;
 use Yiisoft\Validator\Rule\Required;
 use Yiisoft\Validator\Rule\Integer;
-use \DateTimeImmutable;
+use DateTimeImmutable;
 
 final class ClientForm extends FormModel
 {
-    private ?string $client_title='';
-    private ?string $client_name='';
-    private ?string $client_group='';
-    private ?string $client_frequency='';
-    private ?string $client_number='';
-    private ?string $client_address_1='';
-    private ?string $client_address_2='';
-    private ?string $client_building_number='';
-    private ?string $client_city='';
-    private ?string $client_state='';
-    private ?string $client_zip='';
-    private ?string $client_country='';
-    private ?string $client_phone='';
-    private ?string $client_fax='';
-    private ?string $client_mobile='';
-    private ?string $client_email='';
-    private ?string $client_web='';
-    private ?string $client_vat_id='';
-    private ?string $client_tax_code='';
-    private ?string $client_language='';
-    private ?bool $client_active=false;
-    private ?string $client_surname='';
-    private ?string $client_avs='';
-    private ?string $client_insurednumber='';
-    private ?string $client_veka='';
+    private ?string $client_title = '';
+    private ?string $client_name = '';
+    private ?string $client_group = '';
+    private ?string $client_frequency = '';
+    private ?string $client_number = '';
+    private ?string $client_address_1 = '';
+    private ?string $client_address_2 = '';
+    private ?string $client_building_number = '';
+    private ?string $client_city = '';
+    private ?string $client_state = '';
+    private ?string $client_zip = '';
+    private ?string $client_country = '';
+    private ?string $client_phone = '';
+    private ?string $client_fax = '';
+    private ?string $client_mobile = '';
+    private ?string $client_email = '';
+    private ?string $client_web = '';
+    private ?string $client_vat_id = '';
+    private ?string $client_tax_code = '';
+    private ?string $client_language = '';
+    private ?bool $client_active = false;
+    private ?string $client_surname = '';
+    private ?string $client_avs = '';
+    private ?string $client_insurednumber = '';
+    private ?string $client_veka = '';
     private mixed $client_birthdate;
-    
+
     #[Required]
     #[Integer(min: 16, max:100)]
     private ?int $client_age = null;
-    
-    private ?int $client_gender=null;
-    private ?int $postaladdress_id=null;
-    
-    public function __construct(Client $client) { 
+
+    private ?int $client_gender = null;
+    private ?int $postaladdress_id = null;
+
+    public function __construct(Client $client)
+    {
         $this->client_title = $client->getClient_title();
         $this->client_name = $client->getClient_name();
         $this->client_group = $client->getClient_group();
@@ -77,158 +78,158 @@ final class ClientForm extends FormModel
         $this->client_gender = $client->getClient_gender();
         //$this->postaladdress_id = $client->getPostaladdress_id();
     }
-    
+
     public function getAttributeLabels(): array
     {
         return [];
     }
-        
-    public function getClient_active() : bool|null
+
+    public function getClient_active(): bool|null
     {
-      return $this->client_active;
+        return $this->client_active;
     }
-    
+
     public function getClient_age(): int|null
     {
         return $this->client_age;
-    }    
-
-    public function getClient_title() : string|null
-    {
-      return $this->client_title;
-    }
-    
-    public function getClient_name() : string|null
-    {
-      return $this->client_name;
-    }
-    
-    public function getClient_frequency() : string|null
-    {
-      return $this->client_frequency;
-    }
-    
-    public function getClient_group() : string|null
-    {
-      return $this->client_group;
-    }
-    
-    public function getClient_number() : string|null
-    {
-      return $this->client_number;
     }
 
-    public function getClient_address_1() : string|null
+    public function getClient_title(): string|null
     {
-      return $this->client_address_1;
+        return $this->client_title;
     }
 
-    public function getClient_address_2() : string|null
+    public function getClient_name(): string|null
     {
-      return $this->client_address_2;
-    }
-    
-    public function getClient_building_number() : string|null
-    {
-      return $this->client_building_number;
+        return $this->client_name;
     }
 
-    public function getClient_city() : string|null
+    public function getClient_frequency(): string|null
     {
-      return $this->client_city;
+        return $this->client_frequency;
     }
 
-    public function getClient_state() : string|null
+    public function getClient_group(): string|null
     {
-      return $this->client_state;
+        return $this->client_group;
     }
 
-    public function getClient_zip() : string|null
+    public function getClient_number(): string|null
     {
-      return $this->client_zip;
+        return $this->client_number;
     }
 
-    public function getClient_country() : string|null
+    public function getClient_address_1(): string|null
     {
-      return $this->client_country;
+        return $this->client_address_1;
     }
 
-    public function getClient_phone() : string|null
+    public function getClient_address_2(): string|null
     {
-      return $this->client_phone;
+        return $this->client_address_2;
     }
 
-    public function getClient_fax() : string|null
+    public function getClient_building_number(): string|null
     {
-      return $this->client_fax;
+        return $this->client_building_number;
     }
 
-    public function getClient_mobile() : string|null
+    public function getClient_city(): string|null
     {
-      return $this->client_mobile;
+        return $this->client_city;
     }
 
-    public function getClient_email() : string|null
+    public function getClient_state(): string|null
     {
-      return $this->client_email;
+        return $this->client_state;
     }
 
-    public function getClient_web() : string|null
+    public function getClient_zip(): string|null
     {
-      return $this->client_web;
+        return $this->client_zip;
     }
 
-    public function getClient_vat_id() : string|null
+    public function getClient_country(): string|null
     {
-      return $this->client_vat_id;
+        return $this->client_country;
     }
 
-    public function getClient_tax_code() : string|null
+    public function getClient_phone(): string|null
     {
-      return $this->client_tax_code;
+        return $this->client_phone;
     }
 
-    public function getClient_language() : string|null
+    public function getClient_fax(): string|null
     {
-      return $this->client_language;
+        return $this->client_fax;
     }
 
-    public function getClient_surname() : string|null
+    public function getClient_mobile(): string|null
     {
-      return $this->client_surname;
+        return $this->client_mobile;
     }
 
-    public function getClient_avs() : string|null
+    public function getClient_email(): string|null
     {
-      return $this->client_avs;
+        return $this->client_email;
     }
 
-    public function getClient_insurednumber() : string|null
+    public function getClient_web(): string|null
     {
-      return $this->client_insurednumber;
+        return $this->client_web;
     }
 
-    public function getClient_veka() : string|null
+    public function getClient_vat_id(): string|null
     {
-      return $this->client_veka;
+        return $this->client_vat_id;
     }
-        
-    public function getClient_birthdate() : string|null|DateTimeImmutable
+
+    public function getClient_tax_code(): string|null
+    {
+        return $this->client_tax_code;
+    }
+
+    public function getClient_language(): string|null
+    {
+        return $this->client_language;
+    }
+
+    public function getClient_surname(): string|null
+    {
+        return $this->client_surname;
+    }
+
+    public function getClient_avs(): string|null
+    {
+        return $this->client_avs;
+    }
+
+    public function getClient_insurednumber(): string|null
+    {
+        return $this->client_insurednumber;
+    }
+
+    public function getClient_veka(): string|null
+    {
+        return $this->client_veka;
+    }
+
+    public function getClient_birthdate(): string|null|DateTimeImmutable
     {
         /**
          * @var string|null|DateTimeImmutable $this->client_birthdate
          */
         return $this->client_birthdate;
     }
-    
-    public function getClient_gender() : int|null
+
+    public function getClient_gender(): int|null
     {
-      return $this->client_gender;
+        return $this->client_gender;
     }
-    
-    public function getPostaladdress_id() : int|null
+
+    public function getPostaladdress_id(): int|null
     {
-      return $this->postaladdress_id;
+        return $this->postaladdress_id;
     }
 
     /**
@@ -238,6 +239,6 @@ final class ClientForm extends FormModel
      */
     public function getFormName(): string
     {
-      return '';
+        return '';
     }
 }

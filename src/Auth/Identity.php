@@ -29,27 +29,28 @@ class Identity implements CookieLoginIdentityInterface
 
     public function __construct(
         User $user = null
-    )
-    {
+    ) {
         $this->authKey = $this->regenerateCookieLoginKey();
     }
-    
-    public function getId() : ?string {
+
+    public function getId(): ?string
+    {
         return (string)$this->id;
     }
 
     public function getUser_id(): ?string
     {
         if ($this->user) {
-          return $this->user->getId();
+            return $this->user->getId();
         }
         return null;
     }
-    
-    public function generateAuthKey() : void {
+
+    public function generateAuthKey(): void
+    {
         $this->authKey = Random::string(32);
     }
-    
+
     public function getCookieLoginKey(): string
     {
         return $this->authKey;
@@ -64,10 +65,10 @@ class Identity implements CookieLoginIdentityInterface
     {
         return $this->authKey === $key;
     }
-        
+
     /**
-     * Regenerate after logout / new Identity() after signing up 
-     * @see src\Auth\AuthService logout function 
+     * Regenerate after logout / new Identity() after signing up
+     * @see src\Auth\AuthService logout function
      * @return string
      */
     public function regenerateCookieLoginKey(): string

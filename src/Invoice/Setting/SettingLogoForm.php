@@ -8,7 +8,7 @@ use Yiisoft\FormModel\FormModel;
 
 final class SettingLogoForm extends FormModel
 {
-    private ?array $attachLogoFile = null; 
+    private ?array $attachLogoFile = null;
 
     /**
      * @return string

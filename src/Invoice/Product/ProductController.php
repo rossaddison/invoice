@@ -56,7 +56,6 @@ use App\Invoice\InvItemAmount\InvItemAmountRepository as iiaR;
 use App\Invoice\Payment\PaymentRepository as pymR;
 use App\Service\WebControllerService;
 use App\User\UserService;
-
 //  Psr
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
@@ -83,13 +82,13 @@ class ProductController
     private const string FILTER_FAMILY = 'ff';
     private const string FILTER_PRODUCT = 'fp';
     private const string RESET_TRUE = 'rt';
-    public  ViewRenderer $viewRenderer;
+    public ViewRenderer $viewRenderer;
     private WebControllerService $webService;
     private ProductService $productService;
     private ProductCustomService $productCustomService;
     private QuoteItemService $quoteitemService;
     private InvItemService $invitemService;
-    private UserService $userService;   
+    private UserService $userService;
     private DataResponseFactoryInterface $responseFactory;
     private Flash $flash;
     private SessionInterface $session;
@@ -97,20 +96,19 @@ class ProductController
     private string $ffc = self::FILTER_FAMILY;
     private string $fpc = self::FILTER_PRODUCT;
     private string $rtc = self::RESET_TRUE;
-    
+
     public function __construct(
-      ViewRenderer $viewRenderer,
-      WebControllerService $webService,
-      ProductService $productService,
-      ProductCustomService $productCustomService,
-      QuoteItemService $quoteitemService,
-      InvItemService $invitemService,
-      UserService $userService,
-      DataResponseFactoryInterface $responseFactory,
-      SessionInterface $session,
-      TranslatorInterface $translator
-    )
-    {
+        ViewRenderer $viewRenderer,
+        WebControllerService $webService,
+        ProductService $productService,
+        ProductCustomService $productCustomService,
+        QuoteItemService $quoteitemService,
+        InvItemService $invitemService,
+        UserService $userService,
+        DataResponseFactoryInterface $responseFactory,
+        SessionInterface $session,
+        TranslatorInterface $translator
+    ) {
         $this->viewRenderer = $viewRenderer->withControllerName('invoice/product')
                                            ->withLayout('@views/layout/invoice.php');
         $this->webService = $webService;
@@ -124,7 +122,7 @@ class ProductController
         $this->flash = new Flash($session);
         $this->translator = $translator;
     }
-    
+
     /**
      * @param Request $request
      * @param FormHydrator $formHydrator
@@ -167,7 +165,7 @@ class ProductController
             'productCustomValues' => [],
             'productCustomForm' => $productCustomForm
         ];
-        if ($request->getMethod() === Method::POST) {  
+        if ($request->getMethod() === Method::POST) {
             if ($formHydrator->populateFromPostAndValidate($form, $request)) {
                 $body = $request->getParsedBody() ?? [];
                 if (is_array($body)) {
@@ -177,38 +175,38 @@ class ProductController
                             // Retrieve the custom array
                             /** @var array $custom */
                             $custom = $body['custom'];
-                            /** 
+                            /**
                              * @var int $custom_field_id
                              * @var string|array $value
                              */
-                            foreach($custom as $custom_field_id => $value){
+                            foreach ($custom as $custom_field_id => $value) {
                                 $productCustom = new ProductCustom();
                                 $formProductCustom = new ProductCustomForm($productCustom);
                                 $product_custom = [];
                                 $product_custom['product_id'] = $product_id;
-                                $product_custom['custom_field_id'] = $custom_field_id;                    
-                                $product_custom['value'] = is_array($value) ? serialize($value) : $value;                    
+                                $product_custom['custom_field_id'] = $custom_field_id;
+                                $product_custom['value'] = is_array($value) ? serialize($value) : $value;
                                 if ($formHydrator->populate($formProductCustom, $product_custom) && $formProductCustom->isValid()) {
-                                  $this->productCustomService->saveProductCustom($productCustom, $product_custom);
+                                    $this->productCustomService->saveProductCustom($productCustom, $product_custom);
                                 }
                                 // These two can be used to create customised labels for custom field error validation on the form
                                 // Currently not used.
-                                $parameters['formProductCustom'] = $formProductCustom; 
+                                $parameters['formProductCustom'] = $formProductCustom;
                                 $parameters['errorsCustom'] = $formProductCustom->getValidationResult()->getErrorMessagesIndexedByProperty();
                             }
                         }
                         $this->flashMessage('info', $this->translator->translate('i.record_successfully_created'));
                         return $this->webService->getRedirectResponse('product/index');
                     }
-                }    
+                }
             } else {
                 $parameters['errors'] = $form->getValidationResult()->getErrorMessagesIndexedByProperty();
-            }    
+            }
         }
         $parameters['form'] = $form;
         return $this->viewRenderer->render('_form', $parameters);
     }
-    
+
     /**
      * @param Request $request
      * @param string $id
@@ -224,8 +222,20 @@ class ProductController
      * @param upR $upR
      * @return Response
      */
-    public function edit(Request $request, #[RouteArgument('id')] string $id, FormHydrator $formHydrator,
-                    pR $pR, sR $sR, fR $fR, uR $uR, trR $trR, cvR $cvR, cfR $cfR, pcR $pcR, upR $upR) : Response {
+    public function edit(
+        Request $request,
+        #[RouteArgument('id')] string $id,
+        FormHydrator $formHydrator,
+        pR $pR,
+        sR $sR,
+        fR $fR,
+        uR $uR,
+        trR $trR,
+        cvR $cvR,
+        cfR $cfR,
+        pcR $pcR,
+        upR $upR
+    ): Response {
         $countries = new CountryHelper();
         $peppolarrays = new PeppolArrays();
         $product = $this->product($id, $pR);
@@ -237,7 +247,7 @@ class ProductController
             if ($product_id) {
                 $parameters = [
                     'title' => $this->translator->translate('i.edit'),
-                    'actionName' => 'product/edit', 
+                    'actionName' => 'product/edit',
                     'actionArguments' => ['id' => $product_id],
                     'alert' => $this->alert(),
                     'countries' => $countries->get_country_list((string)$this->session->get('_language')),
@@ -252,7 +262,7 @@ class ProductController
                     'unitPeppols' => $this->unit_peppols($upR->findAllPreloaded()),
                     'customFields' => $cfR->repoTablequery('product_custom'),
                     'customValues' => $cvR->attach_hard_coded_custom_field_values_to_custom_field($cfR->repoTablequery('product_custom')),
-                    'cvH'=> new CVH($sR),
+                    'cvH' => new CVH($sR),
                     'productCustomValues' => $this->product_custom_values($product_id, $pcR),
                     'productCustomForm' => $productCustomForm
                 ];
@@ -265,171 +275,174 @@ class ProductController
                             $parameters['form'] = $returned_form;
                             $parameters['errors'] = $returned_form->getValidationResult()->getErrorMessagesIndexedByProperty();
                             return $this->viewRenderer->render('_form', $parameters);
-                        } 
+                        }
                         // Only save custom fields if they exist
-                        if ($cfR->repoTableCountquery('product_custom') > 0) { 
-                             if (isset($body['custom'])) {
-                                 $custom = (array)$body['custom'];
-                                 /** @var string|array $value */
-                                 foreach ($custom as $custom_field_id => $value) {
-                                     $product_custom = $pcR->repoFormValuequery($product_id, (string)$custom_field_id);
-                                     if (null!==$product_custom) {
-                                         $product_custom_input = [
-                                             'product_id' => $product_id,
-                                             'custom_field_id' => (int)$custom_field_id,
-                                             'value' => is_array($value) ? serialize($value) : $value 
-                                         ];
-                                         $productCustomForm = new ProductCustomForm($product_custom);
-                                         if ($formHydrator->populate($productCustomForm, $product_custom_input) 
-                                            && $productCustomForm->isValid()
-                                         )
-                                         {
-                                             $this->productCustomService->saveProductCustom($product_custom, $product_custom_input);     
-                                         }
-                                         $parameters['errorsCustom'] = $productCustomForm->getValidationResult()->getErrorMessagesIndexedByProperty();
-                                         $parameters['productCustomForm'] = $productCustomForm;
-                                     }
-                                 } //foreach
-                                 $errors_custom = $parameters['errorsCustom'];
-                                 if (count($errors_custom) > 0) {
-                                     return $this->viewRenderer->render('_form', $parameters);
-                                 }
-                             } //isset  
+                        if ($cfR->repoTableCountquery('product_custom') > 0) {
+                            if (isset($body['custom'])) {
+                                $custom = (array)$body['custom'];
+                                /** @var string|array $value */
+                                foreach ($custom as $custom_field_id => $value) {
+                                    $product_custom = $pcR->repoFormValuequery($product_id, (string)$custom_field_id);
+                                    if (null !== $product_custom) {
+                                        $product_custom_input = [
+                                            'product_id' => $product_id,
+                                            'custom_field_id' => (int)$custom_field_id,
+                                            'value' => is_array($value) ? serialize($value) : $value
+                                        ];
+                                        $productCustomForm = new ProductCustomForm($product_custom);
+                                        if ($formHydrator->populate($productCustomForm, $product_custom_input)
+                                           && $productCustomForm->isValid()
+                                        ) {
+                                            $this->productCustomService->saveProductCustom($product_custom, $product_custom_input);
+                                        }
+                                        $parameters['errorsCustom'] = $productCustomForm->getValidationResult()->getErrorMessagesIndexedByProperty();
+                                        $parameters['productCustomForm'] = $productCustomForm;
+                                    }
+                                } //foreach
+                                $errors_custom = $parameters['errorsCustom'];
+                                if (count($errors_custom) > 0) {
+                                    return $this->viewRenderer->render('_form', $parameters);
+                                }
+                            } //isset
                         } // cfR
-                    } // is_array    
+                    } // is_array
                     $this->flashMessage('info', $this->translator->translate('i.record_successfully_updated'));
                     return $this->webService->getRedirectResponse('product/index');
                 }
                 return $this->viewRenderer->render('_form', $parameters);
             } // null!==product_id
-        } // product    
-        return $this->webService->getRedirectResponse('product/index');   
+        } // product
+        return $this->webService->getRedirectResponse('product/index');
     }
-    
+
     /**
      * @return string
      */
-    private function alert(): string {
-      return $this->viewRenderer->renderPartialAsString('//invoice/layout/alert',
-      [ 
+    private function alert(): string
+    {
+        return $this->viewRenderer->renderPartialAsString(
+            '//invoice/layout/alert',
+            [
         'flash' => $this->flash
-      ]);
+      ]
+        );
     }
-    
-    
+
+
     /**
      * @param pR $pR
      * @param string $id
      * @return Response
      */
-    public function delete(pR $pR, #[RouteArgument('id')] string $id) : Response 
+    public function delete(pR $pR, #[RouteArgument('id')] string $id): Response
     {
         try {
             $product = $this->product($id, $pR);
-            if ($product) { 
-                $this->productService->deleteProduct($product);  
+            if ($product) {
+                $this->productService->deleteProduct($product);
                 $this->flashMessage('info', $this->translator->translate('i.record_successfully_deleted'));
             }
             return $this->webService->getRedirectResponse('product/index');
-	} catch (\Exception $e) {
-           unset($e);
-           $this->flashMessage('danger', $this->translator->translate('invoice.product.history'));
-           return $this->webService->getRedirectResponse('product/index');   
+        } catch (\Exception $e) {
+            unset($e);
+            $this->flashMessage('danger', $this->translator->translate('invoice.product.history'));
+            return $this->webService->getRedirectResponse('product/index');
         }
     }
-    
+
     /**
      * @param string $level
      * @param string $message
      * @return Flash|null
      */
-    private function flashMessage(string $level, string $message): Flash|null {
+    private function flashMessage(string $level, string $message): Flash|null
+    {
         if (strlen($message) > 0) {
             $this->flash->add($level, $message, true);
             return $this->flash;
         }
         return null;
     }
-    
-    
-    
+
+
+
     /**
      * Prepare optionsData $data value for ...resources/view/product/_form select
      * @param EntityReader $families
      * @return array
      */
-    private function families(EntityReader $families) : array 
+    private function families(EntityReader $families): array
     {
         $array = [];
         /**
          * @var Family $family
          */
         foreach ($families as $family) {
-          $family_id = $family->getFamily_id();  
-          if (null!==$family_id) {  
-            $array[$family_id] = $family->getFamily_name();
-          }  
+            $family_id = $family->getFamily_id();
+            if (null !== $family_id) {
+                $array[$family_id] = $family->getFamily_name();
+            }
         }
         return $array;
     }
-    
+
     /**
      * Prepare optionsData $data value for ...resources/view/product/_form select
      * @param EntityReader $units
      * @return array
      */
-    private function units(EntityReader $units) : array 
+    private function units(EntityReader $units): array
     {
         $array = [];
         /**
          * @var Unit $unit
          */
         foreach ($units as $unit) {
-          $unit_id = $unit->getUnit_id();  
-          if (null!==$unit_id) {  
-            $array[$unit_id] = $unit->getUnit_name(). ' '.$unit->getUnit_name_plrl();
-          } 
+            $unit_id = $unit->getUnit_id();
+            if (null !== $unit_id) {
+                $array[$unit_id] = $unit->getUnit_name(). ' '.$unit->getUnit_name_plrl();
+            }
         }
         return $array;
     }
-    
+
     /**
      * Prepare optionsData $data value for ...resources/view/product/_form select
      * @param EntityReader $unit_peppols
      * @return array
      */
-    private function unit_peppols(EntityReader $unit_peppols) : array 
+    private function unit_peppols(EntityReader $unit_peppols): array
     {
         $array = [];
         /**
          * @var \\App\Invoice\Entity\UnitPeppol $unit_peppol
          */
         foreach ($unit_peppols as $unit_peppol) {
-          $array[$unit_peppol->getId()] = $unit_peppol->getCode() . ' --- '. $unit_peppol->getName(). ' --- ' .$unit_peppol->getDescription();
+            $array[$unit_peppol->getId()] = $unit_peppol->getCode() . ' --- '. $unit_peppol->getName(). ' --- ' .$unit_peppol->getDescription();
         }
         return $array;
     }
-    
+
     /**
      * Prepare optionsData $data value for ...resources/view/product/_form select
      * @param EntityReader $taxRates
      * @return array
      */
-    private function taxRates(EntityReader $taxRates) : array 
+    private function taxRates(EntityReader $taxRates): array
     {
         $array = [];
         /**
          * @var TaxRate $taxRate
          */
         foreach ($taxRates as $taxRate) {
-          $taxRateId = $taxRate->getTaxRateId();   
-          if (null!==$taxRateId) {  
-            $array[$taxRateId] =  $taxRate->getTaxRateName();
-          }  
+            $taxRateId = $taxRate->getTaxRateId();
+            if (null !== $taxRateId) {
+                $array[$taxRateId] =  $taxRate->getTaxRateName();
+            }
         }
         return $array;
     }
-        
+
     /**
      * @param array $body
      * @param ProductForm $form
@@ -437,15 +450,16 @@ class ProductController
      * @param FormHydrator $formHydrator
      * @reclsturn ProductForm
      */
-    public function save_form_fields(array $body, ProductForm $form, Product $product, FormHydrator $formHydrator) : ProductForm {
+    public function save_form_fields(array $body, ProductForm $form, Product $product, FormHydrator $formHydrator): ProductForm
+    {
         if ($formHydrator->populateAndValidate($form, $body)) {
-          $this->productService->saveProduct($product, $body);
-        } 
+            $this->productService->saveProduct($product, $body);
+        }
         return $form;
     }
-    
+
     /**
-     * 
+     *
      * @param FastRouteGenerator $urlFastRouteGenerator
      * @param Request $request
      * @param pR $pR
@@ -458,20 +472,20 @@ class ProductController
         $this->rbac();
         $this->flashMessage('info', $this->translator->translate('invoice.productimage.view'));
         $query_params = $request->getQueryParams();
-        
+
         /**
          * @var string $query_params['page']
          */
         $currentPage = $query_params['page'] ?? $page;
         /** @psalm-var positive-int $currentPageNeverZero */
         $currentPageNeverZero = (int)$currentPage > 0 ? (int)$currentPage : 1;
-        
+
         /** @var string $query_params['sort'] */
         $sortString = $query_params['sort'] ?? '-id';
         $urlCreator = new UrlCreator($urlFastRouteGenerator);
         $order =  OrderHelper::stringToArray($sortString);
         $urlCreator->__invoke([], $order);
-        $sort = Sort::only(['id', 'family_id', 'unit_id', 'tax_rate_id', 
+        $sort = Sort::only(['id', 'family_id', 'unit_id', 'tax_rate_id',
                             'product_name', 'product_sku', 'product_price', 'product_description', 'product_price_base_quantity'
                            ])
                     // (@see vendor\yiisoft\data\src\Reader\Sort
@@ -485,14 +499,14 @@ class ProductController
         if (isset($query_params['filter_product_price']) && !empty($query_params['filter_product_price'])) {
             $products = $pR->filter_product_price((string)$query_params['filter_product_price']);
         }
-        if ((isset($query_params['filter_product_sku']) && !empty($query_params['filter_product_sku'])) && 
+        if ((isset($query_params['filter_product_sku']) && !empty($query_params['filter_product_sku'])) &&
            (isset($query_params['filter_product_price']) && !empty($query_params['filter_product_price']))) {
             $products = $pR->filter_product_sku_price((string)$query_params['filter_product_price'], (string)$query_params['filter_product_sku']);
-        }  
+        }
         $paginator = (new DataOffsetPaginator($products))
         ->withPageSize((int)$sR->getSetting('default_list_limit'))
         ->withCurrentPage($currentPageNeverZero)
-        ->withToken(PageToken::next($currentPage)); 
+        ->withToken(PageToken::next($currentPage));
         $parameters = [
             'alert' => $this->alert(),
             'paginator' => $paginator,
@@ -500,13 +514,13 @@ class ProductController
             'optionsDataProductsDropdownFilter' => $this->optionsDataProducts($pR),
             'urlFastRouteGenerator' => $urlFastRouteGenerator,
             'urlCreator' => $urlCreator
-        ]; 
+        ];
         return $this->viewRenderer->render('index', $parameters);
     }
-    
+
     /**
-     * @see ...\invoice\src\Invoice\Asset\rebuild-1.13\js\product.js $(document).on('click', '#product_filters_submit', function () 
-     * @see ...\product\index.php 
+     * @see ...\invoice\src\Invoice\Asset\rebuild-1.13\js\product.js $(document).on('click', '#product_filters_submit', function ()
+     * @see ...\product\index.php
      * @param Request $request
      * @return \Yiisoft\DataResponse\DataResponse
      */
@@ -524,21 +538,22 @@ class ProductController
                 'success' => 0,
                 'messeage' => $this->translator->translate('invoice.product.not.found')
             ];
-        }    
+        }
         return $this->responseFactory->createResponse(Json::encode($parameters));
     }
-    
-   
-    
+
+
+
     /**
-     * @see  ...\src\Invoice\Asset\rebuild-1.13\js\modal_product_lookups.js 
+     * @see  ...\src\Invoice\Asset\rebuild-1.13\js\modal_product_lookups.js
      * @param ViewRenderer $head
      * @param Request $request
      * @param fR $fR
      * @param sR $sR
      * @param pR $pR
      */
-    public function lookup(ViewRenderer $head, Request $request, fR $fR, sR $sR, pR $pR): \Yiisoft\DataResponse\DataResponse {
+    public function lookup(ViewRenderer $head, Request $request, fR $fR, sR $sR, pR $pR): \Yiisoft\DataResponse\DataResponse
+    {
         $queryparams = $request->getQueryParams();
         /** @var string $queryparams[$this->fpc] */
         /** @var string $queryparams[$this->ffc] */
@@ -552,16 +567,16 @@ class ProductController
         $parameters = [
             'numberhelper' => new NumberHelper($sR),
             'families' => $fR->findAllPreloaded(),
-            'filter_product' => $fp,            
+            'filter_product' => $fp,
             'filter_family' => $ff,
             'reset_table' => $rt,
             'head' => $head,
-            'products' => $rt || ($ff=='' && $fp=='') ? $pR->findAllPreloaded() : $pR->repoProductwithfamilyquery($fp, $ff),
+            'products' => $rt || ($ff == '' && $fp == '') ? $pR->findAllPreloaded() : $pR->repoProductwithfamilyquery($fp, $ff),
             'default_item_tax_rate' => $sR->getSetting('default_item_tax_rate') !== '' ?: 0,
         ];
-        return $this->viewRenderer->renderPartial('_partial_product_table_modal', $parameters);        
+        return $this->viewRenderer->renderPartial('_partial_product_table_modal', $parameters);
     }
-    
+
     /**
      * @param ProductRepository $pR
      * @param Sort $sort
@@ -570,12 +585,13 @@ class ProductController
      *
      * @psalm-return \Yiisoft\Data\Reader\SortableDataInterface&\Yiisoft\Data\Reader\DataReaderInterface<int, Product>
      */
-    private function products_with_sort(ProductRepository $pR, Sort $sort): \Yiisoft\Data\Reader\SortableDataInterface {       
+    private function products_with_sort(ProductRepository $pR, Sort $sort): \Yiisoft\Data\Reader\SortableDataInterface
+    {
         $products = $pR->findAllPreloaded()
                        ->withSort($sort);
         return $products;
     }
-    
+
     /**
      * @param int $order
      * @param Product $product
@@ -588,12 +604,13 @@ class ProductController
      * @param FormHydrator $formHydrator
      * @return void
      */
-    private function save_product_lookup_item_quote(int $order, Product $product, string $quote_id, pR $pR, trR $trR, uR $unR, QIAR $qiaR, QIAS $qiaS, FormHydrator $formHydrator) : void {
+    private function save_product_lookup_item_quote(int $order, Product $product, string $quote_id, pR $pR, trR $trR, uR $unR, QIAR $qiaR, QIAS $qiaS, FormHydrator $formHydrator): void
+    {
         $quoteItem = new QuoteItem();
         $form = new QuoteItemForm($quoteItem, $quote_id);
         $ajax_content = [
-            'name' => $product->getProduct_name(),        
-            'quote_id' => $quote_id,            
+            'name' => $product->getProduct_name(),
+            'quote_id' => $quote_id,
             'tax_rate_id' => $product->getTax_rate_id(),
             'product_id' => $product->getProduct_id(),
             'date_added' => new \DateTimeImmutable(),
@@ -605,14 +622,14 @@ class ProductController
             'discount_amount' => floatval(0),
             'order' => $order,
             // The default quantity is 1 so the singular name will be used.
-            'product_unit' => $unR->singular_or_plural_name($product->getUnit_id(),1),
+            'product_unit' => $unR->singular_or_plural_name($product->getUnit_id(), 1),
             'product_unit_id' => $product->getUnit_id(),
         ];
         if ($formHydrator->populateAndValidate($form, $ajax_content)) {
             $this->quoteitemService->addQuoteItem($quoteItem, $ajax_content, $quote_id, $pR, $qiaR, $qiaS, $unR, $trR, $this->translator);
-        }      
+        }
     }
-    
+
     /**
      * @param int $order
      * @param Product $product
@@ -626,35 +643,36 @@ class ProductController
      * @param FormHydrator $formHydrator
      * @return void
      */
-    private function save_product_lookup_item_inv(int $order, Product $product, string $inv_id, pR $pR, sR $sR, trR $trR, uR $unR, iiaR $iiaR, uR $uR, FormHydrator $formHydrator) : void {
-           $invItem = new InvItem();
-           $form = new InvItemForm($invItem, (int)$inv_id);
-           $ajax_content = [
-                'name'=> $product->getProduct_name(),        
-                'inv_id' => $inv_id,            
-                'tax_rate_id' => $product->getTax_rate_id(),
-                'product_id' => $product->getProduct_id(),
-                'task_id' => null,
-                'description' => $product->getProduct_description(),
-                // A default quantity of 1 is used to initialize the item
-                'quantity' => floatval(1),
-                'price' => $product->getProduct_price(),
-                // Vat: Early Settlement Cash Discount subtracted before VAT is calculated
-                'discount_amount' => floatval(0),
-                'charge_amount' => floatval(0),
-                'allowance_amount' => floatval(0),
-                'order' => $order,
-                // The default quantity is 1 so the singular name will be used.
-                'product_unit' => $unR->singular_or_plural_name($product->getUnit_id(),1),
-                'product_unit_id' => $product->getUnit_id(),
-           ];
-           if ($formHydrator->populateAndValidate($form, $ajax_content)) {
-                $this->invitemService->addInvItem_product($invItem, $ajax_content, $inv_id, $pR, $trR, new iiaS($iiaR),$iiaR, $sR, $uR);                 
-           }      
+    private function save_product_lookup_item_inv(int $order, Product $product, string $inv_id, pR $pR, sR $sR, trR $trR, uR $unR, iiaR $iiaR, uR $uR, FormHydrator $formHydrator): void
+    {
+        $invItem = new InvItem();
+        $form = new InvItemForm($invItem, (int)$inv_id);
+        $ajax_content = [
+             'name' => $product->getProduct_name(),
+             'inv_id' => $inv_id,
+             'tax_rate_id' => $product->getTax_rate_id(),
+             'product_id' => $product->getProduct_id(),
+             'task_id' => null,
+             'description' => $product->getProduct_description(),
+             // A default quantity of 1 is used to initialize the item
+             'quantity' => floatval(1),
+             'price' => $product->getProduct_price(),
+             // Vat: Early Settlement Cash Discount subtracted before VAT is calculated
+             'discount_amount' => floatval(0),
+             'charge_amount' => floatval(0),
+             'allowance_amount' => floatval(0),
+             'order' => $order,
+             // The default quantity is 1 so the singular name will be used.
+             'product_unit' => $unR->singular_or_plural_name($product->getUnit_id(), 1),
+             'product_unit_id' => $product->getUnit_id(),
+        ];
+        if ($formHydrator->populateAndValidate($form, $ajax_content)) {
+            $this->invitemService->addInvItem_product($invItem, $ajax_content, $inv_id, $pR, $trR, new iiaS($iiaR), $iiaR, $sR, $uR);
+        }
     }
-    
+
     /**
-     * @see  ...resources/views/invoice/product/modal-product-lookups-quote.php 
+     * @see  ...resources/views/invoice/product/modal-product-lookups-quote.php
      * @see  ...src\Invoice\Asset\rebuild-1.13\js modal_product_lookups.js $(document).on('click',
      *      '.select-items-confirm-quote', function () => selection_quote
      * @param FormHydrator $formHydrator
@@ -670,9 +688,20 @@ class ProductController
      * @param qiaR $qiaR
      * @param qiaS $qiaS
      */
-    public function selection_quote(FormHydrator $formHydrator, Request $request,
-                                   pR $pR, qaR $qaR, qiR $qiR, qR $qR, qtrR $qtrR,
-                                   sR $sR, trR $trR, uR $uR, qiaR $qiaR, qiaS $qiaS) : \Yiisoft\DataResponse\DataResponse {        
+    public function selection_quote(
+        FormHydrator $formHydrator,
+        Request $request,
+        pR $pR,
+        qaR $qaR,
+        qiR $qiR,
+        qR $qR,
+        qtrR $qtrR,
+        sR $sR,
+        trR $trR,
+        uR $uR,
+        qiaR $qiaR,
+        qiaS $qiaS
+    ): \Yiisoft\DataResponse\DataResponse {
         $select_items = $request->getQueryParams();
         /** @var array $select_items['product_ids'] */
         $product_ids = ($select_items['product_ids'] ?: []);
@@ -686,16 +715,16 @@ class ProductController
         /** @var Product $product */
         foreach ($products as $product) {
             $product->setProduct_price((float)$numberHelper->format_amount($product->getProduct_price()));
-            $this->save_product_lookup_item_quote($order, $product, $quote_id, $pR, $trR, $uR, $qiaR, $qiaS, $formHydrator);            
-            $order++;          
-        } 
-        $numberHelper->calculate_quote((string)$this->session->get('quote_id'), $qiR, $qiaR, $qtrR, $qaR, $qR); 
+            $this->save_product_lookup_item_quote($order, $product, $quote_id, $pR, $trR, $uR, $qiaR, $qiaS, $formHydrator);
+            $order++;
+        }
+        $numberHelper->calculate_quote((string)$this->session->get('quote_id'), $qiR, $qiaR, $qtrR, $qaR, $qR);
         return $this->responseFactory->createResponse(Json::encode($products));
-}
-    
+    }
+
     /**
-     * @see ...views\invoice\product\modal-product-lookups-inv.php 
-     * @see ... src\Invoice\Asset\rebuild-1.13\js\modal_product_lookups.js $(document).on('click', '.select-items-confirm-inv', function () 
+     * @see ...views\invoice\product\modal-product-lookups-inv.php
+     * @see ... src\Invoice\Asset\rebuild-1.13\js\modal_product_lookups.js $(document).on('click', '.select-items-confirm-inv', function ()
      * @param FormHydrator $formHydrator
      * @param Request $request
      * @param pR $pR
@@ -710,7 +739,8 @@ class ProductController
      * @param pymR $pymR
      * @param aciR $aciR
      */
-    public function selection_inv(FormHydrator $formHydrator, Request $request, pR $pR, sR $sR, trR $trR, uR $uR, iiaR $iiaR, iiR $iiR, itrR $itrR, iaR $iaR, iR $iR, pymR $pymR, aciR $aciR) : \Yiisoft\DataResponse\DataResponse {        
+    public function selection_inv(FormHydrator $formHydrator, Request $request, pR $pR, sR $sR, trR $trR, uR $uR, iiaR $iiaR, iiR $iiR, itrR $itrR, iaR $iaR, iR $iR, pymR $pymR, aciR $aciR): \Yiisoft\DataResponse\DataResponse
+    {
         $select_items = $request->getQueryParams();
         /** @var array $select_items['product_ids'] */
         $product_ids = ($select_items['product_ids'] ?: []);
@@ -723,45 +753,47 @@ class ProductController
         $order = 1;
         /** @var Product $product */
         foreach ($products as $product) {
-                $product->setProduct_price((float)$numberHelper->format_amount($product->getProduct_price()));
-                $this->save_product_lookup_item_inv($order, $product, $inv_id, $pR, $sR, $trR, $uR, $iiaR, $uR, $formHydrator);
-                $order++;          
+            $product->setProduct_price((float)$numberHelper->format_amount($product->getProduct_price()));
+            $this->save_product_lookup_item_inv($order, $product, $inv_id, $pR, $sR, $trR, $uR, $iiaR, $uR, $formHydrator);
+            $order++;
         }
         $numberHelper->calculate_inv((string)$this->session->get('inv_id'), $aciR, $iiR, $iiaR, $itrR, $iaR, $iR, $pymR);
-        return $this->responseFactory->createResponse(Json::encode($products));        
-    }   
-    
+        return $this->responseFactory->createResponse(Json::encode($products));
+    }
+
     /**
      * @param string $id
      * @param pR $pR
      * @return Product|null
      */
-    private function product(string $id, pR $pR): Product|null {        
+    private function product(string $id, pR $pR): Product|null
+    {
         if ($id) {
             $product = $pR->repoProductquery($id);
             return $product;
         }
         return null;
     }
-    
+
     /**
      * @return \Yiisoft\Data\Cycle\Reader\EntityReader
      *
      * @psalm-return \Yiisoft\Data\Cycle\Reader\EntityReader
      */
-    private function products(pR $pR): \Yiisoft\Data\Cycle\Reader\EntityReader{
-        $products = $pR->findAllPreloaded();        
+    private function products(pR $pR): \Yiisoft\Data\Cycle\Reader\EntityReader
+    {
+        $products = $pR->findAllPreloaded();
         return $products;
     }
-    
+
     /**
      * @param string $product_id
      * @param pcR $pcR
      * @return array
      */
-    public function product_custom_values(string $product_id, pcR $pcR) : array
+    public function product_custom_values(string $product_id, pcR $pcR): array
     {
-        // Get all the custom fields that have been registered with this product on creation, retrieve existing values via repo, and populate 
+        // Get all the custom fields that have been registered with this product on creation, retrieve existing values via repo, and populate
         // custom_field_form_values array
         $custom_field_form_values = [];
         if ($pcR->repoProductCount($product_id) > 0) {
@@ -776,19 +808,20 @@ class ProductController
         }
         return $custom_field_form_values;
     }
-    
+
     /**
      * @return Response|true
      */
-    private function rbac(): bool|Response {
-      $canEdit = $this->userService->hasPermission('editInv');
-      if (!$canEdit){
-          $this->flashMessage('warning', $this->translator->translate('invoice.permission'));
-          return $this->webService->getRedirectResponse('product/index');
-      }
-      return $canEdit;
+    private function rbac(): bool|Response
+    {
+        $canEdit = $this->userService->hasPermission('editInv');
+        if (!$canEdit) {
+            $this->flashMessage('warning', $this->translator->translate('invoice.permission'));
+            return $this->webService->getRedirectResponse('product/index');
+        }
+        return $canEdit;
     }
-    
+
     /**
      * @param cfR $cfR
      * @param cvR $cvR
@@ -803,65 +836,77 @@ class ProductController
      * @param upR $upR
      * @param string $id
      */
-    public function view(cfR $cfR, cvR $cvR, fR $fR, pR $pR, 
-                         pcR $pcR, ppR $ppR, sR $sR, piR $piR, 
-                         trR $trR, uR $uR, upR $upR, 
-                         #[RouteArgument('id')] string $id,
+    public function view(
+        cfR $cfR,
+        cvR $cvR,
+        fR $fR,
+        pR $pR,
+        pcR $pcR,
+        ppR $ppR,
+        sR $sR,
+        piR $piR,
+        trR $trR,
+        uR $uR,
+        upR $upR,
+        #[RouteArgument('id')] string $id,
     ): \Yiisoft\DataResponse\DataResponse|Response {
         $product = $this->product($id, $pR);
         $language = (string)$this->session->get('_language');
         $peppolarrays = new PeppolArrays();
         if ($product) {
-          $productForm = new ProductForm($product);
-          $productCustom = new ProductCustom();
-          $productCustomForm = new ProductCustomForm($productCustom);
-          $product_id = $product->getProduct_id();          
-          $product_images = $piR->repoProductImageProductquery((int)$product_id);
-          $parameters = [
-            'title' => $this->translator->translate('i.view'),
-            'actionName' => 'product/view', 
-            'actionArguments' => ['id' => $product_id],
-            'partial_product_details' => $this->viewRenderer->renderPartialAsString('//invoice/product/views/partial_product_details',
-            [
-                'form' => $productForm,
-                'standard_item_identification_schemeids' => $peppolarrays->getIso_6523_icd(),
-                'item_classification_code_listids' => $peppolarrays->getUncl7143(),
-                'families' => $this->families($fR->findAllPreloaded()),
-                'units' => $this->units($uR->findAllPreloaded()),
-                'tax_rates' => $this->taxRates($trR->findAllPreloaded()),
-                'unit_peppols' => $this->unit_peppols($upR->findAllPreloaded()),
-                'custom_fields' => $cfR->repoTablequery('product_custom'),
-                'custom_values' => $cvR->attach_hard_coded_custom_field_values_to_custom_field($cfR->repoTablequery('product_custom')),
-                'cvH'=> new CVH($sR),
-                'product_custom_values' => $this->product_custom_values($product_id, $pcR),
-                'productCustomForm' => $productCustomForm,  
-                'upR' => $upR,
-                //load Entity\Product BelongTo relations ie. $family, $tax_rate, $unit by means of repoProductQuery             
-                'product' => $pR->repoProductquery($product_id),
-            ]),
-            'partial_product_properties' => $this->viewRenderer->renderPartialAsString('//invoice/product/views/partial_product_properties',
-              [
-                'product'=>$pR->repoProductquery($product_id),
-                'language'=>$language,
-                'productpropertys' => $this->viewRenderer->renderPartialAsString('//invoice/product/views/property_index', [
-                  'all' => $ppR->findAllProduct($product_id),
-                  'language' => $language
-                ]) 
+            $productForm = new ProductForm($product);
+            $productCustom = new ProductCustom();
+            $productCustomForm = new ProductCustomForm($productCustom);
+            $product_id = $product->getProduct_id();
+            $product_images = $piR->repoProductImageProductquery((int)$product_id);
+            $parameters = [
+              'title' => $this->translator->translate('i.view'),
+              'actionName' => 'product/view',
+              'actionArguments' => ['id' => $product_id],
+              'partial_product_details' => $this->viewRenderer->renderPartialAsString(
+                  '//invoice/product/views/partial_product_details',
+                  [
+                  'form' => $productForm,
+                  'standard_item_identification_schemeids' => $peppolarrays->getIso_6523_icd(),
+                  'item_classification_code_listids' => $peppolarrays->getUncl7143(),
+                  'families' => $this->families($fR->findAllPreloaded()),
+                  'units' => $this->units($uR->findAllPreloaded()),
+                  'tax_rates' => $this->taxRates($trR->findAllPreloaded()),
+                  'unit_peppols' => $this->unit_peppols($upR->findAllPreloaded()),
+                  'custom_fields' => $cfR->repoTablequery('product_custom'),
+                  'custom_values' => $cvR->attach_hard_coded_custom_field_values_to_custom_field($cfR->repoTablequery('product_custom')),
+                  'cvH' => new CVH($sR),
+                  'product_custom_values' => $this->product_custom_values($product_id, $pcR),
+                  'productCustomForm' => $productCustomForm,
+                  'upR' => $upR,
+                  //load Entity\Product BelongTo relations ie. $family, $tax_rate, $unit by means of repoProductQuery
+                  'product' => $pR->repoProductquery($product_id),
+            ]
+              ),
+              'partial_product_properties' => $this->viewRenderer->renderPartialAsString(
+                  '//invoice/product/views/partial_product_properties',
+                  [
+                  'product' => $pR->repoProductquery($product_id),
+                  'language' => $language,
+                  'productpropertys' => $this->viewRenderer->renderPartialAsString('//invoice/product/views/property_index', [
+                    'all' => $ppR->findAllProduct($product_id),
+                    'language' => $language
+                  ])
               ]
-            ),
-            'partial_product_images' => $this->view_partial_product_image($language, (int) $product_id, $piR, $sR),
-            'partial_product_gallery' => $this->viewRenderer->renderPartialAsString('//invoice/product/views/partial_product_gallery', [
-              'product' => $product,
-              'productImages' => $product_images,             
-              'invEdit' => $this->userService->hasPermission('editInv'),
-              'invView' => $this->userService->hasPermission('viewInv')
-            ])
-          ];        
-          return $this->viewRenderer->render('_view', $parameters);
+              ),
+              'partial_product_images' => $this->view_partial_product_image($language, (int) $product_id, $piR, $sR),
+              'partial_product_gallery' => $this->viewRenderer->renderPartialAsString('//invoice/product/views/partial_product_gallery', [
+                'product' => $product,
+                'productImages' => $product_images,
+                'invEdit' => $this->userService->hasPermission('editInv'),
+                'invView' => $this->userService->hasPermission('viewInv')
+              ])
+            ];
+            return $this->viewRenderer->render('_view', $parameters);
         }
         return $this->webService->getRedirectResponse('product/index');
     }
-    
+
     /**
      * @param string $tmp
      * @param string $target
@@ -871,7 +916,13 @@ class ProductController
      * @param sR $sR
      * @return bool
      */
-    private function image_attachment_move_to(string $tmp, string $target, int $product_id, string $fileName, piR $piR, sR $sR
+    private function image_attachment_move_to(
+        string $tmp,
+        string $target,
+        int $product_id,
+        string $fileName,
+        piR $piR,
+        sR $sR
     ): bool {
         $file_exists = file_exists($target);
         // The file does not exist yet in the target path but it exists in the tmp folder on the server
@@ -894,7 +945,7 @@ class ProductController
             return false;
         }
     }
-    
+
     /**
      * Upload a product image file
      *
@@ -903,7 +954,8 @@ class ProductController
      * @param PIR $piR
      * @param sR $sR
      */
-    public function image_attachment(#[RouteArgument('id')] string $id, PR $pR, PIR $piR, sR $sR): \Yiisoft\DataResponse\DataResponse|Response {
+    public function image_attachment(#[RouteArgument('id')] string $id, PR $pR, PIR $piR, sR $sR): \Yiisoft\DataResponse\DataResponse|Response
+    {
         $aliases = $sR->get_productimages_files_folder_aliases();
         // https://github.com/yiisoft/yii2/issues/3566
         // Save the image directly to the web accessible folder - assets/publc/product
@@ -940,7 +992,7 @@ class ProductController
         } //null!==$product_id
         return $this->webService->getRedirectResponse('product/index');
     }
-    
+
     /**
      *
      * @param string $_language
@@ -949,7 +1001,8 @@ class ProductController
      * @param sR $sR
      * @return string
      */
-    private function view_partial_product_image(string $_language, int $product_id, piR $piR, sR $sR): string {
+    private function view_partial_product_image(string $_language, int $product_id, piR $piR, sR $sR): string
+    {
         $productimages = $piR->repoProductImageProductquery($product_id);
         $paginator = new DataOffsetPaginator($productimages);
         $invEdit = $this->userService->hasPermission('editInv');
@@ -963,57 +1016,69 @@ class ProductController
             'paginator' => $paginator,
             'invEdit' => $invEdit
           ]),
-          'actionName' => 'product/image_attachment', 
+          'actionName' => 'product/image_attachment',
           'actionArguments' => ['id' => $product_id, '_language' => $_language]
         ]);
     }
-    
+
     /**
      * @param int product_id
      * @return string
      */
-    private function image_attachment_not_writable(int $product_id): string {
-        return $this->viewRenderer->renderPartialAsString('//invoice/setting/inv_message',
-        [
-            'heading' => $this->translator->translate('i.errors'), 
+    private function image_attachment_not_writable(int $product_id): string
+    {
+        return $this->viewRenderer->renderPartialAsString(
+            '//invoice/setting/inv_message',
+            [
+            'heading' => $this->translator->translate('i.errors'),
             'message' => $this->translator->translate('i.path') . $this->translator->translate('i.is_not_writable'),
             'url' => 'product/view', 'id' => $product_id
-        ]);
+        ]
+        );
     }
 
     /**
      * @param int $product_id
      * @return string
      */
-    private function image_attachment_successfully_created(int $product_id): string {
-        return $this->viewRenderer->renderPartialAsString('//invoice/setting/inv_message',
-        [
-            'heading' => '', 
+    private function image_attachment_successfully_created(int $product_id): string
+    {
+        return $this->viewRenderer->renderPartialAsString(
+            '//invoice/setting/inv_message',
+            [
+            'heading' => '',
             'message' => $this->translator->translate('i.record_successfully_created'),
             'url' => 'product/view', 'id' => $product_id
-        ]);
+        ]
+        );
     }
 
     /**
      * @param int $product_id
      * @return string
      */
-    private function image_attachment_no_file_uploaded(int $product_id): string {
-        return $this->viewRenderer->renderPartialAsString('//invoice/setting/inv_message',
-        [
-            'heading' => $this->translator->translate('i.errors'), 
+    private function image_attachment_no_file_uploaded(int $product_id): string
+    {
+        return $this->viewRenderer->renderPartialAsString(
+            '//invoice/setting/inv_message',
+            [
+            'heading' => $this->translator->translate('i.errors'),
             'message' => $this->translator->translate('invoice.productimage.no.file.uploaded'),
             'url' => 'product/view', 'id' => $product_id
-        ]);
+        ]
+        );
     }
-    
+
     /**
      * @param string $product_image_id
      * @param piR $piR
      * @return void
      */
-    public function download_image_file(#[RouteArgument('product_image_id')] string $product_image_id, 
-                                        piR $piR, sR $sR) : void {
+    public function download_image_file(
+        #[RouteArgument('product_image_id')] string $product_image_id,
+        piR $piR,
+        sR $sR
+    ): void {
         if ($product_image_id) {
             $product_image = $piR->repoProductImagequery($product_image_id);
             if (null !== $product_image) {
@@ -1047,19 +1112,19 @@ class ProductController
         } //null!==$product_image_id
         exit;
     }
-    
+
     /**
      * @param ProductRepository $pR
      * @return array
      */
-    public function optionsDataProducts(ProductRepository $pR) : array
+    public function optionsDataProducts(ProductRepository $pR): array
     {
         $optionsDataProducts = [];
         $products = $pR->findAllPreloaded();
         /**
          * @var Product $product
          */
-        foreach ($products as $product){
+        foreach ($products as $product) {
             $productSku = $product->getProduct_sku();
             // Remove repeats
             if (!in_array($product->getProduct_sku(), $optionsDataProducts)) {
@@ -1067,11 +1132,11 @@ class ProductController
                 // picks it up.
                 // Tip: After selecting a value in the dropdown, or inputting into an input box always see
                 // how the browser's query url Parameter is being influenced by the selection or input
-                if (null!==$productSku) { 
+                if (null !== $productSku) {
                     $optionsDataProducts[$productSku] = $product->getProduct_sku();
                 }
             }
         }
         return $optionsDataProducts;
-    }   
+    }
 }

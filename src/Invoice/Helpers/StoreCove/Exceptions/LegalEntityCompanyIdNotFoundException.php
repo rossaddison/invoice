@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace App\Invoice\Helpers\StoreCove\Exceptions;
@@ -9,8 +10,9 @@ use Yiisoft\Translator\TranslatorInterface;
 class LegalEntityCompanyIdNotFoundException extends \RuntimeException implements FriendlyExceptionInterface
 {
     private TranslatorInterface $translator;
-    
-    public function __construct(TranslatorInterface $translator) {
+
+    public function __construct(TranslatorInterface $translator)
+    {
         $this->translator = $translator;
     }
 
@@ -18,7 +20,7 @@ class LegalEntityCompanyIdNotFoundException extends \RuntimeException implements
     {
         return $this->translator->translate('invoice.storecove.legal.entity.identifier.not.found');
     }
-    
+
     /**
      * @return string
      *

@@ -1,5 +1,6 @@
 <?php
-declare(strict_types=1); 
+
+declare(strict_types=1);
 
 namespace App\Invoice\Entity;
 
@@ -12,41 +13,40 @@ class DeliveryParty
 {
     #[Column(type: 'primary')]
     private ?int $id =  null;
-     
+
     #[Column(type: 'text', nullable: true)]
     private ?string $party_name =  '';
-     
+
     public function __construct(
-       int $id = null,
-       string $party_name = ''
-    )
-    {
-       $this->id=$id;
-       $this->party_name=$party_name;
+        int $id = null,
+        string $party_name = ''
+    ) {
+        $this->id = $id;
+        $this->party_name = $party_name;
     }
-    
+
     public function getId(): int|null
     {
-       return $this->id;
+        return $this->id;
     }
-    
-    public function setId(int $id) : void
+
+    public function setId(int $id): void
     {
-       $this->id =  $id;
+        $this->id =  $id;
     }
-    
+
     public function getPartyName(): string|null
     {
-       return $this->party_name;
+        return $this->party_name;
     }
-    
-    public function setPartyName(string $party_name) : void
+
+    public function setPartyName(string $party_name): void
     {
-       $this->party_name =  $party_name;
+        $this->party_name =  $party_name;
     }
-    
+
     public function isNewRecord(): bool
     {
-       return $this->getId() === null;
+        return $this->getId() === null;
     }
 }

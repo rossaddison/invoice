@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace App\Widget;
@@ -23,17 +24,16 @@ final class Bootstrap5ModalInv
     private InvForm $invForm;
     private array $layoutParameters;
     private array $formParameters;
-    
+
     public function __construct(
-        Translator $translator, 
-        ViewRenderer $viewRenderer, 
-        ClientRepository $cR, 
+        Translator $translator,
+        ViewRenderer $viewRenderer,
+        ClientRepository $cR,
         GroupRepository $gR,
         SettingRepository $sR,
-        UserClientRepository $ucR,    
+        UserClientRepository $ucR,
         InvForm $invForm
-    ) 
-    {
+    ) {
         $this->translator = $translator;
         $this->viewRenderer = $viewRenderer;
         $this->cR = $cR;
@@ -44,8 +44,8 @@ final class Bootstrap5ModalInv
         $this->layoutParameters = [];
         $this->formParameters = [];
     }
-        
-    public function renderPartialLayoutWithFormAsString(string $origin, array $errors) : string
+
+    public function renderPartialLayoutWithFormAsString(string $origin, array $errors): string
     {
         $defaultGroupId = $this->sR->getSetting('default_invoice_group');
         $optionsGroupData = [];
@@ -59,7 +59,7 @@ final class Bootstrap5ModalInv
         $this->formParameters = [
             'origin' => $origin,
             'title' => $this->translator->translate('i.add'),
-            'actionName' => 'inv/add', 
+            'actionName' => 'inv/add',
             'actionArguments' => ['origin' => $origin],
             'errors' => $errors,
             'form' => $this->invForm,
@@ -71,18 +71,18 @@ final class Bootstrap5ModalInv
         $this->layoutParameters = [
             'type' => 'inv',
             'form' => $this->viewRenderer->renderPartialAsString('//invoice/inv/modal_add_inv_form', $this->formParameters),
-        ];    
+        ];
         return $this->viewRenderer->renderPartialAsString('//invoice/inv/modal_layout', $this->layoutParameters);
     }
 
     /**
      * @return array
      */
-    public function getFormParameters() : array
+    public function getFormParameters(): array
     {
         /**
          * @var array $this->formParameters
          */
         return $this->formParameters;
-    }   
+    }
 }

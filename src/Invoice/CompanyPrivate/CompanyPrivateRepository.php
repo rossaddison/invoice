@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=1); 
+declare(strict_types=1);
 
 namespace App\Invoice\CompanyPrivate;
 
@@ -17,8 +17,8 @@ use Yiisoft\Data\Cycle\Writer\EntityWriter;
  */
 final class CompanyPrivateRepository extends Select\Repository
 {
-private EntityWriter $entityWriter;
-    
+    private EntityWriter $entityWriter;
+
     /**
      * @param Select<TEntity> $select
      * @param EntityWriter $entityWriter
@@ -38,7 +38,7 @@ private EntityWriter $entityWriter;
         $query = $this->select()->load('company');
         return $this->prepareDataReader($query);
     }
-    
+
     /**
      * @psalm-return EntityReader
      */
@@ -47,34 +47,34 @@ private EntityWriter $entityWriter;
         return (new EntityReader($this->select()))
             ->withSort($this->getSort());
     }
-    
+
     private function getSort(): Sort
     {
         return Sort::only(['id'])->withOrder(['id' => 'asc']);
     }
-    
-     /**
-     * @see Reader/ReadableDataInterface|InvalidArgumentException
-     * @param array|CompanyPrivate|null $companyprivate
-     * @throws Throwable 
-     * @return void
-     */
+
+    /**
+    * @see Reader/ReadableDataInterface|InvalidArgumentException
+    * @param array|CompanyPrivate|null $companyprivate
+    * @throws Throwable
+    * @return void
+    */
     public function save(array|CompanyPrivate|null $companyprivate): void
     {
         $this->entityWriter->write([$companyprivate]);
     }
-    
-     /**
-     * @see Reader/ReadableDataInterface|InvalidArgumentException
-     * @param array|CompanyPrivate|null $companyprivate
-     * @throws Throwable 
-     * @return void
-     */
+
+    /**
+    * @see Reader/ReadableDataInterface|InvalidArgumentException
+    * @param array|CompanyPrivate|null $companyprivate
+    * @throws Throwable
+    * @return void
+    */
     public function delete(array|CompanyPrivate|null $companyprivate): void
     {
         $this->entityWriter->delete([$companyprivate]);
     }
-    
+
     private function prepareDataReader(Select $query): EntityReader
     {
         return (new EntityReader($query))->withSort(
@@ -82,26 +82,28 @@ private EntityWriter $entityWriter;
                 ->withOrder(['id' => 'asc'])
         );
     }
-    
+
     /**
      * @return CompanyPrivate|null
      *
      * @psalm-return TEntity|null
      */
-    public function repoCompanyPrivatequery(string $id): CompanyPrivate|null    {
-        $query = $this->select()->load('company')->where(['id' =>$id]);
-        return  $query->fetchOne() ?: null;        
+    public function repoCompanyPrivatequery(string $id): CompanyPrivate|null
+    {
+        $query = $this->select()->load('company')->where(['id' => $id]);
+        return  $query->fetchOne() ?: null;
     }
-    
+
     /**
      * @return CompanyPrivate|null
      *
      * @psalm-return TEntity|null
      */
-    public function repoCompanyquery(string $id): CompanyPrivate|null    {
+    public function repoCompanyquery(string $id): CompanyPrivate|null
+    {
         $query = $this->select()
                       ->load('company')
-                      ->where(['company_id' =>$id]);
-        return  $query->fetchOne() ?: null;        
+                      ->where(['company_id' => $id]);
+        return  $query->fetchOne() ?: null;
     }
 }

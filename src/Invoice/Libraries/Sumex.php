@@ -16,13 +16,12 @@ use DateTimeImmutable;
 use Doctrine\Common\Collections\ArrayCollection;
 use Error;
 use Yiisoft\Session\SessionInterface as Session;
-
 use DOMDocument;
 use DOMElement;
 
 class Sumex
 {
-    const array ROLES = [
+    public const array ROLES = [
         'physician',
         'physiotherapist',
         'chiropractor',
@@ -44,14 +43,14 @@ class Sumex
         'naturopathicdoctor',
         'naturopathictherapist',
         'other'];
-    const array PLACES = [
+    public const array PLACES = [
         'practice',
         'hospital',
         'lab',
         'association',
         'company'
     ];
-    const array CANTONS = [
+    public const array CANTONS = [
         "AG",
         "AI",
         "AR",
@@ -129,7 +128,7 @@ class Sumex
         'rcc' => 'C000002'
     ];
 
-    public array $_insurance = [ 
+    public array $_insurance = [
         'gln' => '7634567890000',
         'name' => 'SUVA',
         'street' => 'ChangeMe 12',
@@ -141,7 +140,7 @@ class Sumex
         'copy' => "0",
         'storno' => "0"
     ];
-    
+
     public sR $s;
     public ArrayCollection $items;
     public InvAmount $invoice_amount;
@@ -149,16 +148,15 @@ class Sumex
     public UserInv $user_details;
     public EntitySumex $sumex_treatment;
     public DateHelper $date_helper;
-    
+
     public function __construct(
-        Inv $inv,              
+        Inv $inv,
         InvAmount $inv_amount,
         UserInv $user_details,
         EntitySumex $sumex_treatment,
-        sR $s, 
+        sR $s,
         Session $session,
-    )
-    {
+    ) {
         $this->invoice_helper = new InvoiceHelper($s, $session);
         $this->date_helper = new DateHelper($s);
         $this->invoice = $inv;
@@ -166,7 +164,7 @@ class Sumex
         $this->user_details = $user_details;
         $this->sumex_treatment = $sumex_treatment;
         $this->items = $inv->getItems();
-        
+
         $this->s = $s;
         /** @var string $this->_options['storno'] */
         $this->_storno = $this->_options['storno'];
@@ -182,30 +180,30 @@ class Sumex
         $this->_patient['city'] = $this->invoice->getClient()?->getClient_city();
         $this->_patient['phone'] = ($this->invoice->getClient()?->getClient_phone() == "" ? null : $this->invoice->getClient()?->getClient_phone());
         $this->_patient['avs'] = $this->invoice->getClient()?->getClient_avs();
-                
+
         $this->_company['name'] = $this->user_details->getName();
-        
+
         $this->_company['street'] = $this->user_details->getAddress_1();
-        
+
         $this->_company['zip'] = $this->user_details->getZip();
-        
+
         $this->_company['city'] = $this->user_details->getCity();
-        
+
         $this->_company['phone'] = $this->user_details->getPhone();
-        
+
         $this->_company['gln'] = $this->user_details->getGln();
-        
+
         $this->_company['rcc'] = $this->user_details->getRcc();
-        
+
         /**
-         * @see App\Invoice\Entity\Sumex public function getCasedate(): DateTimeImmutable|string|null 
+         * @see App\Invoice\Entity\Sumex public function getCasedate(): DateTimeImmutable|string|null
          */
-        
+
         $datetimeimmutable = $this->sumex_treatment->getCasedate() ?? new DateTimeImmutable('now');
-        $this->_casedate = $datetimeimmutable instanceof DateTimeImmutable 
+        $this->_casedate = $datetimeimmutable instanceof DateTimeImmutable
                          ? $datetimeimmutable->format('Y-m-d')
                          : (new DateTimeImmutable('now'))->format('Y-m-d') ;
-                
+
         /** @var string $this->sumex_treatment->getCasenumber() */
         $this->_casenumber = $this->sumex_treatment->getCasenumber() ?? 'No Case Number';
         /** @var string $this->invoice->getClient()?->getClient_insurednumber() */
@@ -229,7 +227,7 @@ class Sumex
             'reason' => $treatments[(int)$this->sumex_treatment->getReason() ?: 1],
             /** @var string $this->sumex_treatment->getDiagnosis() */
             'diagnosis' => $this->sumex_treatment->getDiagnosis(),
-            /** @var string $this->sumex_treatment->getObservations() */ 
+            /** @var string $this->sumex_treatment->getObservations() */
             'observations' => $this->sumex_treatment->getObservations(),
         ];
 
@@ -240,19 +238,19 @@ class Sumex
         $this->_place = self::PLACES[(int)$this->s->getSetting('sumex_place')];
         $this->_canton = self::CANTONS[(int)$this->s->getSetting('sumex_canton')];
     }
-    
+
     /**
      * This function can be developed later.
-     * 
-     * inv/generate_sumex_pdf   ...... calls 
-     * pdf_helper->generate_inv_sumex ......initiates 
+     *
+     * inv/generate_sumex_pdf   ...... calls
+     * pdf_helper->generate_inv_sumex ......initiates
      * $sumexPDF = $sumex->pdf() .... this function
-     * 
+     *
      * @param int $inv_id
-     * 
+     *
      * @return string|bool
      */
-    public function pdf(int $inv_id) : string|bool
+    public function pdf(int $inv_id): string|bool
     {
         // TODO
         return ($inv_id ? true : false);
@@ -261,7 +259,7 @@ class Sumex
     /**
      * @return string
      */
-    public function xml() : string
+    public function xml(): string
     {
         /** @var DOMDocument $doc */
         $doc = new DOMDocument('1.0', 'UTF-8');
@@ -276,11 +274,11 @@ class Sumex
     }
 
     /**
-     * 
+     *
      * @param DOMDocument $doc
      * @return DOMElement
      */
-    public function xmlRoot(DOMDocument $doc) : DOMElement
+    public function xmlRoot(DOMDocument $doc): DOMElement
     {
         $node = $doc->createElement('invoice:request');
         $node->setAttribute('xmlns:invoice', 'http://www.forum-datenaustausch.ch/invoice');
@@ -296,7 +294,7 @@ class Sumex
      * @param DOMDocument $doc
      * @return DOMElement
      */
-    protected function xmlInvoiceProcessing(DOMDocument $doc) : DOMElement
+    protected function xmlInvoiceProcessing(DOMDocument $doc): DOMElement
     {
         // TODO: CHECK!
         // Only to pass XML validation. This DOES NOT represent a valid TARMED file.
@@ -322,10 +320,10 @@ class Sumex
      * @param DOMDocument $doc
      * @return DOMElement
      */
-    protected function xmlInvoicePayload(DOMDocument $doc) : DOMElement
+    protected function xmlInvoicePayload(DOMDocument $doc): DOMElement
     {
         $date_helper = new DateHelper($this->s);
-        
+
         $node = $doc->createElement('invoice:payload');
         $node->setAttribute('type', 'invoice');
         $node->setAttribute('copy', $this->_copy);
@@ -345,11 +343,11 @@ class Sumex
     }
 
     /**
-     * 
+     *
      * @param DOMDocument $doc
      * @return DOMElement
      */
-    protected function xmlInvoiceBody(DOMDocument $doc) : DOMElement
+    protected function xmlInvoiceBody(DOMDocument $doc): DOMElement
     {
         $node = $doc->createElement('invoice:body');
         $node->setAttribute('role', $this->_role);
@@ -393,11 +391,11 @@ class Sumex
      * @return DOMElement
      * @throws Error
      */
-    protected function xmlInvoiceEsr9(DOMDocument $doc) : DOMElement 
+    protected function xmlInvoiceEsr9(DOMDocument $doc): DOMElement
     {
         $date_helper = new DateHelper($this->s);
-        $node = $doc->createElement('invoice:esr9');            
-        
+        $node = $doc->createElement('invoice:esr9');
+
         $subNumb = $this->user_details->getSubscribernumber();
 
         $node->setAttribute('participant_number', $subNumb ?? 'No Participating Number'); // MUST begin with 01
@@ -421,7 +419,7 @@ class Sumex
         }
 
         $slipType = "01"; // ISR in CHF
-        
+
         $amount = $this->invoice_amount->getTotal();
 
         $formattedRN = "";
@@ -449,7 +447,7 @@ class Sumex
      * @param DOMDocument $doc
      * @return DOMElement
      */
-    protected function xmlInvoiceEsrRed(DOMDocument $doc) : DOMElement
+    protected function xmlInvoiceEsrRed(DOMDocument $doc): DOMElement
     {
         $node = $doc->createElement('invoice:esrRed');
 
@@ -479,7 +477,7 @@ class Sumex
      * @param DOMDocument $doc
      * @return DOMElement
      */
-    protected function xmlInvoiceProlog(DOMDocument $doc) : DOMElement
+    protected function xmlInvoiceProlog(DOMDocument $doc): DOMElement
     {
         $node = $doc->createElement('invoice:prolog');
 
@@ -498,11 +496,11 @@ class Sumex
     }
 
     /**
-     * 
+     *
      * @param DOMDocument $doc
      * @return DOMElement
      */
-    protected function xmlInvoiceRemark(DOMDocument $doc) : DOMElement
+    protected function xmlInvoiceRemark(DOMDocument $doc): DOMElement
     {
         $node = $doc->createElement('invoice:remark');
         $node->nodeValue = (string)$this->_treatment['observations'];
@@ -513,7 +511,7 @@ class Sumex
      * @param DOMDocument $doc
      * @return DOMElement
      */
-    protected function xmlInvoiceBalance(DOMDocument $doc) : DOMElement
+    protected function xmlInvoiceBalance(DOMDocument $doc): DOMElement
     {
         $node = $doc->createElement('invoice:balance');
         $node->setAttribute('currency', $this->_currency);
@@ -528,8 +526,8 @@ class Sumex
 
         $vatRate = $doc->createElement('invoice:vat_rate');
         /** @var InvAmount $this->inv_amount */
-        $vatRate->setAttribute('vat_rate', (string)(($this->invoice_amount->getTax_total() ?? 0.00)/(($this->inv_amount->getTotal() ?? 0.00)*100)));
-//        $vatRate->setAttribute('amount', (string)(null!==$this->invoice_amount->getTax_total() ?: 0.00));
+        $vatRate->setAttribute('vat_rate', (string)(($this->invoice_amount->getTax_total() ?? 0.00) / (($this->inv_amount->getTotal() ?? 0.00) * 100)));
+        //        $vatRate->setAttribute('amount', (string)(null!==$this->invoice_amount->getTax_total() ?: 0.00));
         $vatRate->setAttribute('vat', (string)($this->invoice_amount->getTax_total() ?? 0.00));
 
         $vat->appendChild($vatRate);
@@ -537,12 +535,12 @@ class Sumex
 
         return $node;
     }
-    
+
     /**
      * @param DOMDocument $doc
      * @return DOMElement
      */
-    protected function xmlInvoiceTiersGarant(DOMDocument $doc) : DOMElement
+    protected function xmlInvoiceTiersGarant(DOMDocument $doc): DOMElement
     {
         $node = $doc->createElement('invoice:tiers_garant');
         $node->setAttribute('payment_period', $this->_paymentperiod);
@@ -600,11 +598,11 @@ class Sumex
     }
 
     /**
-     * 
+     *
      * @param DOMDocument $doc
      * @return DOMElement
      */
-    protected function xmlCompany(DOMDocument $doc) : DOMElement
+    protected function xmlCompany(DOMDocument $doc): DOMElement
     {
         // <invoice:company>
         $bcompany = $doc->createElement('invoice:company');
@@ -628,14 +626,14 @@ class Sumex
     }
 
     /**
-     * 
+     *
      * @param DOMDocument $doc
      * @param string $street
      * @param string $zip
      * @param string $city
      * @return DOMElement
      */
-    protected function generatePostal(DOMDocument $doc, string $street, string $zip, string $city) : DOMElement
+    protected function generatePostal(DOMDocument $doc, string $street, string $zip, string $city): DOMElement
     {
         $postal = $doc->createElement('invoice:postal');
 
@@ -656,7 +654,7 @@ class Sumex
     }
 
     /**
-     * 
+     *
      * @param DOMDocument $doc
      * @param string $street
      * @param string $zip
@@ -664,14 +662,14 @@ class Sumex
      * @param string $phone
      * @return DOMElement
      */
-    protected function generatePerson(DOMDocument $doc, string $street, string $zip, string $city, string $phone) : DOMElement
+    protected function generatePerson(DOMDocument $doc, string $street, string $zip, string $city, string $phone): DOMElement
     {
         $person = $doc->createElement('invoice:person');
 
         $familyName = $doc->createElement('invoice:familyname');
         /** @var string $this->_patient['familyName'] */
         $familyName->nodeValue = $this->_patient['familyName'];
-        
+
         $givenName = $doc->createElement('invoice:givenname');
         /** @var string $this->_patient['givenName'] */
         $givenName->nodeValue = $this->_patient['givenName'];
@@ -683,7 +681,7 @@ class Sumex
         } else {
             $telecom = null;
         }
-        
+
         $person->appendChild($familyName);
         $person->appendChild($givenName);
         $person->appendChild($postal);
@@ -693,13 +691,13 @@ class Sumex
 
         return $person;
     }
-    
+
     /**
      * @param DOMDocument $doc
      * @param string $phoneNr
      * @return DOMElement
      */
-    protected function generateTelecom(DOMDocument $doc, string $phoneNr) : DOMElement
+    protected function generateTelecom(DOMDocument $doc, string $phoneNr): DOMElement
     {
         $telecom = $doc->createElement('invoice:telecom');
         $phone = $doc->createElement('invoice:phone');
@@ -707,12 +705,12 @@ class Sumex
         $telecom->appendChild($phone);
         return $telecom;
     }
-    
+
     /**
      * @param DOMDocument $doc
      * @return DOMElement
      */
-    protected function xmlInvoiceOrg(DOMDocument $doc) : DOMElement
+    protected function xmlInvoiceOrg(DOMDocument $doc): DOMElement
     {
         $node = $doc->createElement('invoice:org');
         $node->setAttribute('case_date', date("Y-m-d\TH:i:s", strtotime($this->_casedate)));
@@ -728,11 +726,11 @@ class Sumex
     }
 
     /**
-     * 
+     *
      * @param DOMDocument $doc
      * @return DOMElement
      */
-    protected function xmlInvoiceTreatment(DOMDocument $doc) : DOMElement
+    protected function xmlInvoiceTreatment(DOMDocument $doc): DOMElement
     {
         $node = $doc->createElement('invoice:treatment');
         $node->setAttribute('date_begin', date("Y-m-d\TH:i:s", strtotime((string)$this->_treatment['start'])));
@@ -752,11 +750,11 @@ class Sumex
     }
 
     /**
-     * 
+     *
      * @param DOMDocument $doc
      * @return DOMElement
      */
-    protected function xmlServices(DOMDocument $doc) : DOMElement
+    protected function xmlServices(DOMDocument $doc): DOMElement
     {
         $node = $doc->createElement('services');
         $node->setAttribute('xmlns', 'http://www.forum-datenaustausch.ch/invoice');
@@ -771,13 +769,13 @@ class Sumex
     }
 
     /**
-     * 
+     *
      * @param DOMDocument $doc
      * @param int $recordId
      * @param InvItem $item
      * @return DOMElement
      */
-    protected function generateRecord(DOMDocument $doc, int $recordId, InvItem $item) : DOMElement
+    protected function generateRecord(DOMDocument $doc, int $recordId, InvItem $item): DOMElement
     {
         $date_helper = new DateHelper($this->s);
         $node = $doc->createElement('invoice:record_other');
@@ -800,15 +798,15 @@ class Sumex
         #$node->setAttribute('validate', 0);
         #$node->setAttribute('service_attributes', 0);
         #$node->setAttribute('obligation', 0);
-        $node->setAttribute('name', (string)(null!==$item->getName() ?: 'Not Available'));
+        $node->setAttribute('name', (string)(null !== $item->getName() ?: 'Not Available'));
         return $node;
     }
-    
+
     /**
      * @param DOMDocument $doc
      * @return DOMElement
      */
-    protected function xmlInvoiceTiersPayant(DOMDocument $doc) : DOMElement
+    protected function xmlInvoiceTiersPayant(DOMDocument $doc): DOMElement
     {
         $node = $doc->createElement('invoice:tiers_payant');
         $node->setAttribute('payment_period', $this->_paymentperiod);
@@ -883,7 +881,7 @@ class Sumex
      * @param DOMDocument $doc
      * @return DOMElement
      */
-    protected function xmlInsurance(DOMDocument $doc) : DOMElement
+    protected function xmlInsurance(DOMDocument $doc): DOMElement
     {
         // <invoice:company>
         $bcompany = $doc->createElement('invoice:company');
@@ -892,11 +890,12 @@ class Sumex
 
         $bcompany->appendChild($bcompany_name);
 
-        $bcompany_postal = $this->generatePostal($doc,
-                                (string)$this->_insurance['street'], 
-                                (string)$this->_insurance['zip'], 
-                                (string)$this->_insurance['city']
-                            );
+        $bcompany_postal = $this->generatePostal(
+            $doc,
+            (string)$this->_insurance['street'],
+            (string)$this->_insurance['zip'],
+            (string)$this->_insurance['city']
+        );
         $bcompany->appendChild($bcompany_postal);
 
         /*$bcompany_telecom = $this->doc->createElement('invoice:telecom');
@@ -914,7 +913,7 @@ class Sumex
      * @param DOMDocument $doc
      * @return DOMElement
      */
-    protected function xmlInvoiceMvg(DOMDocument $doc) : DOMElement
+    protected function xmlInvoiceMvg(DOMDocument $doc): DOMElement
     {
         $node = $doc->createElement('invoice:mvg');
         $node->setAttribute('ssn', (string)$this->_patient['avs']);

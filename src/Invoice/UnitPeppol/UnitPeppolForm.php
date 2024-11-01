@@ -9,7 +9,7 @@ use Yiisoft\FormModel\FormModel;
 use Yiisoft\Validator\Rule\Required;
 
 final class UnitPeppolForm extends FormModel
-{    
+{
     private ?string $id = '';
     #[Required]
     private ?string $unit_id = '';
@@ -19,7 +19,7 @@ final class UnitPeppolForm extends FormModel
     private ?string $name = '';
     #[Required]
     private ?string $description = '';
-    
+
     public function __construct(UnitPeppol $unitPeppol)
     {
         $this->id = $unitPeppol->getId();
@@ -27,29 +27,29 @@ final class UnitPeppolForm extends FormModel
         $this->code = $unitPeppol->getCode();
         $this->name = $unitPeppol->getName();
         $this->description =  $unitPeppol->getDescription();
-    }  
-    
-    public function getId() : string|null
+    }
+
+    public function getId(): string|null
     {
         return $this->id;
-    }    
-    
-    public function getUnit_id() : string|null
+    }
+
+    public function getUnit_id(): string|null
     {
         return $this->unit_id;
     }
 
-    public function getCode() : string|null
+    public function getCode(): string|null
     {
         return $this->code;
     }
 
-    public function getName() : string|null
+    public function getName(): string|null
     {
         return $this->name;
     }
 
-    public function getDescription() : string|null
+    public function getDescription(): string|null
     {
         return $this->description;
     }

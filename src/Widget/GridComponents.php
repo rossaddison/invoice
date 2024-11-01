@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace App\Widget;
@@ -24,14 +25,16 @@ final class GridComponents
     private CurrentRoute $currentRoute;
     private Translator $translator;
     private UrlGenerator $generator;
-    
-    public function __construct(CurrentRoute $currentRoute, Translator $translator, UrlGenerator $generator) {
+
+    public function __construct(CurrentRoute $currentRoute, Translator $translator, UrlGenerator $generator)
+    {
         $this->currentRoute = $currentRoute;
         $this->translator = $translator;
         $this->generator = $generator;
     }
-    
-    public function header(string $translatorString)  : string {
+
+    public function header(string $translatorString): string
+    {
         return  Div::tag()
                 ->addClass('row')
                 ->content(
@@ -41,15 +44,15 @@ final class GridComponents
                             I::tag()
                             ->addClass('bi bi-receipt')
                             ->content(' ' . $this->translator->translate($translatorString))
-                    )
+                        )
                 )
                 ->render();
     }
-     
-    public function offsetPaginationWidget(int $pageSize, OffsetPaginator $sortedAndPagedPaginator) : string
+
+    public function offsetPaginationWidget(int $pageSize, OffsetPaginator $sortedAndPagedPaginator): string
     {
         return OffsetPagination::widget()
-        ->listTag('ul')    
+        ->listTag('ul')
         ->listAttributes(['class' => 'pagination'])
         ->itemTag('li')
         ->itemAttributes(['class' => 'page-item'])
@@ -61,27 +64,28 @@ final class GridComponents
         ->defaultPageSize($pageSize)
         ->paginator($sortedAndPagedPaginator)
         ->render();
-    } 
-    
-    public function toolbarReset(UrlGenerator $generator) : string
+    }
+
+    public function toolbarReset(UrlGenerator $generator): string
     {
         $route = $this->currentRoute->getName();
-        return   null!==$route ? A::tag()
+        return   null !== $route ? A::tag()
                 ->addAttributes(['type' => 'reset'])
                 ->addClass('btn btn-danger me-1 ajax-loader')
                 ->content(I::tag()->addClass('bi bi-bootstrap-reboot'))
                 ->href($generator->generate($route))
                 ->id('btn-reset')
                 ->render() : '';
-    } 
-    
+    }
+
     /**
      * @param Client $model
      * @param int $max_per_row
      * @param UrlGenerator $urlGenerator
      * @return string
      */
-    public function gridMiniTableOfInvoicesForClient(Client $model, int $max_per_row, UrlGenerator $urlGenerator) : string {
+    public function gridMiniTableOfInvoicesForClient(Client $model, int $max_per_row, UrlGenerator $urlGenerator): string
+    {
         $item_count = 0;
         $string = Html::openTag('table');
         $string .= Html::openTag('tr', [
@@ -90,12 +94,10 @@ final class GridComponents
         $invoices = $model->getInvs()->toArray();
         // Work with the Array Collection to build an output string
         /**
-         * @var \App\Invoice\Entity\Inv $invoice 
+         * @var \App\Invoice\Entity\Inv $invoice
          */
-        foreach ($invoices as $invoice) 
-        {
-            if ($item_count == $max_per_row)
-            {
+        foreach ($invoices as $invoice) {
+            if ($item_count == $max_per_row) {
                 $string .= Html::closeTag('tr');
                 $string .= Html::openTag('tr', ['class' => 'card-header bg-info text-black']);
                 $item_count = 0;
@@ -103,40 +105,41 @@ final class GridComponents
             $invNumber = $invoice->getNumber();
             $invId = $invoice->getId();
             $invBalance = $invoice->getInvAmount()->getBalance();
-            $string .= Html::openTag('td'). 
+            $string .= Html::openTag('td').
                 A::tag()
                     ->addAttributes([
-                        'style' => 'text-decoration:none', 
-                        'data-bs-toggle' => 'tooltip', 
+                        'style' => 'text-decoration:none',
+                        'data-bs-toggle' => 'tooltip',
                         'title' => $invoice->getDate_created()->format('m-d')])
                     ->href($urlGenerator->generate('inv/view', ['id' => $invId]))
                     ->content(
-                        ((null!== $invNumber && null!==$invId)
-                              ? $invNumber 
+                        ((null !== $invNumber && null !== $invId)
+                              ? $invNumber
                               : $this->translator
-                                     ->translate('invoice.invoice.number.missing.therefore.use.invoice.id'). 
-                                       ($invId ?? '')). 
-                                       ' ' . 
-                                       (null!==$invBalance
+                                     ->translate('invoice.invoice.number.missing.therefore.use.invoice.id').
+                                       ($invId ?? '')).
+                                       ' ' .
+                                       (null !== $invBalance
                                              ? $invBalance
                                              : '')
                     )
-                    ->render(). 
-                Html::closeTag('td'); 
+                    ->render().
+                Html::closeTag('td');
             $item_count++;
         }
         $string .= Html::closeTag('tr');
-        $string .= Html::closeTag('table'); 
+        $string .= Html::closeTag('table');
         return $string;
     }
-    
+
     /**
      * @param Inv $model
      * @param int $max_per_row
      * @param UrlGenerator $urlGenerator
      * @return string
      */
-    public function gridMiniTableOfInvSentLogsForInv(Inv $model, int $max_per_row, UrlGenerator $urlGenerator) : string {
+    public function gridMiniTableOfInvSentLogsForInv(Inv $model, int $max_per_row, UrlGenerator $urlGenerator): string
+    {
         $item_count = 0;
         $string = Html::openTag('table');
         $string .= Html::openTag('tr', [
@@ -145,31 +148,29 @@ final class GridComponents
         $invSentLogs = $model->getInvSentLogs()->toArray();
         // Work with the Array Collection to build an output string
         /**
-         * @var \App\Invoice\Entity\InvSentLog $invSentLog 
+         * @var \App\Invoice\Entity\InvSentLog $invSentLog
          */
-        foreach ($invSentLogs as $invSentLog) 
-        {
-            if ($item_count == $max_per_row)
-            {
+        foreach ($invSentLogs as $invSentLog) {
+            if ($item_count == $max_per_row) {
                 $string .= Html::closeTag('tr');
                 $string .= Html::openTag('tr', ['class' => 'card-header bg-info text-black']);
                 $item_count = 0;
             }
             $invSentLogId = $invSentLog->getId();
-            $string .= Html::openTag('td'). 
+            $string .= Html::openTag('td').
                 A::tag()
                     ->addAttributes([
-                        'style' => 'text-decoration:none', 
-                        'data-bs-toggle' => 'tooltip', 
+                        'style' => 'text-decoration:none',
+                        'data-bs-toggle' => 'tooltip',
                         'title' => $invSentLog->getDate_sent()->format('m-d')])
                     ->href($urlGenerator->generate('invsentlog/view', ['id' => $invSentLogId]))
                     ->content((string)$invSentLogId)
-                    ->render(). 
-                Html::closeTag('td'); 
+                    ->render().
+                Html::closeTag('td');
             $item_count++;
         }
         $string .= Html::closeTag('tr');
-        $string .= Html::closeTag('table'); 
+        $string .= Html::closeTag('table');
         return $string;
     }
 }

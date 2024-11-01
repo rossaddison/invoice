@@ -1,5 +1,6 @@
 <?php
-declare(strict_types=1); 
+
+declare(strict_types=1);
 
 namespace App\Invoice\Ubl;
 
@@ -9,7 +10,7 @@ class CreditNote extends Invoice
     protected ?int $invoiceTypeCode = InvoiceTypeCode::CREDIT_NOTE;
 
     /**
-     * 
+     *
      * @return array|null
      */
     public function getCreditNoteLines(): ?array
@@ -18,7 +19,7 @@ class CreditNote extends Invoice
     }
 
     /**
-     * 
+     *
      * @param array $creditNoteLines
      * @return CreditNote
      */

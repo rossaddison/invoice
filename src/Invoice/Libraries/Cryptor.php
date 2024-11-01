@@ -28,7 +28,7 @@
 
 declare(strict_types=1);
 
-Namespace App\Invoice\Libraries;
+namespace App\Invoice\Libraries;
 
 class Cryptor
 {
@@ -37,9 +37,9 @@ class Cryptor
     private int $iv_num_bytes = 0;
     private int $format;
 
-    const int FORMAT_RAW = 0;
-    const int FORMAT_B64 = 1;
-    const int FORMAT_HEX = 2;
+    public const int FORMAT_RAW = 0;
+    public const int FORMAT_B64 = 1;
+    public const int FORMAT_HEX = 2;
 
     public function __construct(string $cipher_algo = 'aes-256-ctr', string $hash_algo = 'sha256', int $fmt = Cryptor::FORMAT_B64)
     {
@@ -47,13 +47,11 @@ class Cryptor
         $this->hash_algo = $hash_algo;
         $this->format = $fmt;
 
-        if (!in_array($cipher_algo, openssl_get_cipher_methods(true)))
-        {
+        if (!in_array($cipher_algo, openssl_get_cipher_methods(true))) {
             throw new \Exception("Cryptor:: - unknown cipher algo {$cipher_algo}");
         }
 
-        if (!in_array($hash_algo, openssl_get_md_methods(true)))
-        {
+        if (!in_array($hash_algo, openssl_get_md_methods(true))) {
             throw new \Exception("Cryptor:: - unknown hash algo {$hash_algo}");
         }
 
@@ -61,17 +59,16 @@ class Cryptor
     }
 
     /**
-     * 
+     *
      * @param string $in
      * @param string $key
      * @param int|null $fmt
      * @return mixed
      * @throws \Exception
      */
-    public function encryptString(string $in, string $key, int|null $fmt = null) : mixed
+    public function encryptString(string $in, string $key, int|null $fmt = null): mixed
     {
-        if ($fmt === null)
-        {
+        if ($fmt === null) {
             $fmt = $this->format;
         }
 
@@ -88,8 +85,7 @@ class Cryptor
         $opts =  OPENSSL_RAW_DATA;
         $encrypted = openssl_encrypt($in, $this->cipher_algo, $keyhash, $opts, $iv);
 
-        if ($encrypted === false)
-        {
+        if ($encrypted === false) {
             throw new \Exception('Cryptor::encryptString() - Encryption failed: ' . openssl_error_string());
         }
 
@@ -97,12 +93,9 @@ class Cryptor
         $res = $iv . $encrypted;
 
         // and format the result if required.
-        if ($fmt == Cryptor::FORMAT_B64)
-        {
+        if ($fmt == Cryptor::FORMAT_B64) {
             $res = base64_encode($res);
-        }
-        else if ($fmt == Cryptor::FORMAT_HEX)
-        {
+        } elseif ($fmt == Cryptor::FORMAT_HEX) {
             /** @var array|false|string $res */
             $res = unpack('H*', $res)[1];
         }
@@ -116,30 +109,25 @@ class Cryptor
      * @param  string $key Decryption key.
      * @param  int $fmt Optional override for the input encoding. One of FORMAT_RAW, FORMAT_B64 or FORMAT_HEX.
      * @throws \Exception
-     * @return mixed 
+     * @return mixed
      */
-    public function decryptString($in, $key, $fmt = null) : mixed
+    public function decryptString($in, $key, $fmt = null): mixed
     {
-        if ($fmt === null)
-        {
+        if ($fmt === null) {
             $fmt = $this->format;
         }
 
         $raw = $in;
 
         // Restore the encrypted data if encoded
-        if ($fmt == Cryptor::FORMAT_B64)
-        {
+        if ($fmt == Cryptor::FORMAT_B64) {
             $raw = base64_decode($in);
-        }
-        else if ($fmt == Cryptor::FORMAT_HEX)
-        {
+        } elseif ($fmt == Cryptor::FORMAT_HEX) {
             $raw = pack('H*', $in);
         }
 
         // and do an integrity check on the size.
-        if (strlen($raw) < $this->iv_num_bytes)
-        {
+        if (strlen($raw) < $this->iv_num_bytes) {
             throw new \Exception('Cryptor::decryptString() - ' .
                 'data length ' . strlen($raw) . " is less than iv length {$this->iv_num_bytes}");
         }
@@ -155,8 +143,7 @@ class Cryptor
         $opts = OPENSSL_RAW_DATA;
         $res = openssl_decrypt($raw, $this->cipher_algo, $keyhash, $opts, $iv);
 
-        if ($res === false)
-        {
+        if ($res === false) {
             throw new \Exception('Cryptor::decryptString - decryption failed: ' . openssl_error_string());
         }
 
@@ -168,9 +155,9 @@ class Cryptor
      * @param  string $in  String to encrypt.
      * @param  string $key Encryption key.
      * @param  int $fmt Optional override for the output encoding. One of FORMAT_RAW, FORMAT_B64 or FORMAT_HEX.
-     * @return mixed 
+     * @return mixed
      */
-    public static function Encrypt($in, $key, $fmt = null) : mixed
+    public static function Encrypt($in, $key, $fmt = null): mixed
     {
         $c = new Cryptor();
         return $c->encryptString($in, $key, $fmt);
@@ -181,9 +168,9 @@ class Cryptor
      * @param  string $in  String to decrypt.
      * @param  string $key Decryption key.
      * @param  int $fmt Optional override for the input encoding. One of FORMAT_RAW, FORMAT_B64 or FORMAT_HEX.
-     * @return mixed 
+     * @return mixed
      */
-    public static function Decrypt($in, $key, $fmt = null) : mixed
+    public static function Decrypt($in, $key, $fmt = null): mixed
     {
         $c = new Cryptor();
         return $c->decryptString($in, $key, $fmt);

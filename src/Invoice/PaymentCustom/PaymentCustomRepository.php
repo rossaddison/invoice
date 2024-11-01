@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=1); 
+declare(strict_types=1);
 
 namespace App\Invoice\PaymentCustom;
 
@@ -17,13 +17,13 @@ use Yiisoft\Data\Cycle\Writer\EntityWriter;
  */
 final class PaymentCustomRepository extends Select\Repository
 {
-private EntityWriter $entityWriter;
-    
-     /**
-     * @param Select<TEntity> $select
-     * 
-     * @param EntityWriter $entityWriter
-     */
+    private EntityWriter $entityWriter;
+
+    /**
+    * @param Select<TEntity> $select
+    *
+    * @param EntityWriter $entityWriter
+    */
     public function __construct(Select $select, EntityWriter $entityWriter)
     {
         $this->entityWriter = $entityWriter;
@@ -40,7 +40,7 @@ private EntityWriter $entityWriter;
         $query = $this->select()->load('payment')->load('custom_field');
         return $this->prepareDataReader($query);
     }
-    
+
     /**
      * @psalm-return EntityReader
      */
@@ -49,34 +49,34 @@ private EntityWriter $entityWriter;
         return (new EntityReader($this->select()))
             ->withSort($this->getSort());
     }
-    
+
     private function getSort(): Sort
     {
         return Sort::only(['id'])->withOrder(['id' => 'asc']);
     }
-    
+
     /**
      * @see Reader/ReadableDataInterface|InvalidArgumentException
      * @param array|PaymentCustom|null $paymentcustom
-     * @throws Throwable 
+     * @throws Throwable
      * @return void
      */
     public function save(array|PaymentCustom|null $paymentcustom): void
     {
         $this->entityWriter->write([$paymentcustom]);
     }
-    
+
     /**
      * @see Reader/ReadableDataInterface|InvalidArgumentException
      * @param array|PaymentCustom|null $paymentcustom
-     * @throws Throwable 
+     * @throws Throwable
      * @return void
      */
     public function delete(array|PaymentCustom|null $paymentcustom): void
     {
         $this->entityWriter->delete([$paymentcustom]);
     }
-    
+
     private function prepareDataReader(Select $query): EntityReader
     {
         return (new EntityReader($query))->withSort(
@@ -84,41 +84,45 @@ private EntityWriter $entityWriter;
                 ->withOrder(['id' => 'asc'])
         );
     }
-    
+
     /**
      * @return null|PaymentCustom
      *
      * @psalm-return TEntity|null
      */
-    public function repoPaymentCustomquery(string $id): PaymentCustom|null    {
+    public function repoPaymentCustomquery(string $id): PaymentCustom|null
+    {
         $query = $this->select()->load('payment')
             ->load('custom_field')
-            ->where(['id' =>$id]);
-        return  $query->fetchOne() ?: null;        
+            ->where(['id' => $id]);
+        return  $query->fetchOne() ?: null;
     }
-    
+
     /**
      * @return null|PaymentCustom
      *
      * @psalm-return TEntity|null
      */
-    public function repoFormValuequery(string $payment_id, string $custom_field_id): PaymentCustom|null {
-        $query = $this->select()->where(['payment_id' =>$payment_id])
-                                ->andWhere(['custom_field_id' =>$custom_field_id]);
-        return  $query->fetchOne() ?: null;        
+    public function repoFormValuequery(string $payment_id, string $custom_field_id): PaymentCustom|null
+    {
+        $query = $this->select()->where(['payment_id' => $payment_id])
+                                ->andWhere(['custom_field_id' => $custom_field_id]);
+        return  $query->fetchOne() ?: null;
     }
-    
-    public function repoPaymentCustomCount(string $payment_id, string $custom_field_id) : int {
-        $query = $this->select()->where(['payment_id' =>$payment_id])
-                                ->andWhere(['custom_field_id' =>$custom_field_id]);
+
+    public function repoPaymentCustomCount(string $payment_id, string $custom_field_id): int
+    {
+        $query = $this->select()->where(['payment_id' => $payment_id])
+                                ->andWhere(['custom_field_id' => $custom_field_id]);
         return $query->count();
-    } 
-    
-    public function repoPaymentCount(string $payment_id) : int {
-        $query = $this->select()->where(['payment_id' =>$payment_id]);
+    }
+
+    public function repoPaymentCount(string $payment_id): int
+    {
+        $query = $this->select()->where(['payment_id' => $payment_id]);
         return $query->count();
-    }   
-    
+    }
+
     /**
      * Get all fields that have been setup for a particular payment
      *
@@ -126,7 +130,7 @@ private EntityWriter $entityWriter;
      */
     public function repoFields(string $payment_id): EntityReader
     {
-        $query = $this->select()->where(['payment_id'=>$payment_id]);                
+        $query = $this->select()->where(['payment_id' => $payment_id]);
         return $this->prepareDataReader($query);
     }
 }

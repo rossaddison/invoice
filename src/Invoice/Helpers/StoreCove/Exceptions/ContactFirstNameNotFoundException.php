@@ -10,8 +10,9 @@ use Yiisoft\Translator\TranslatorInterface;
 class ContactFirstNameNotFoundException extends \RuntimeException implements FriendlyExceptionInterface
 {
     private TranslatorInterface $translator;
-    
-    public function __construct(TranslatorInterface $translator) {
+
+    public function __construct(TranslatorInterface $translator)
+    {
         $this->translator = $translator;
     }
 
@@ -19,7 +20,7 @@ class ContactFirstNameNotFoundException extends \RuntimeException implements Fri
     {
         return $this->translator->translate('invoice.storecove.supplier.contact.firstname.not.found');
     }
-    
+
     /**
      * @return string
      *

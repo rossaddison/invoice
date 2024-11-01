@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=1); 
+declare(strict_types=1);
 
 namespace App\Invoice\UserCustom;
 
@@ -18,23 +18,23 @@ final class UserCustomService
     }
 
     /**
-     * 
+     *
      * @param UserCustom $model
      * @param UserCustomForm $form
      * @return void
      */
     public function saveUserCustom(UserCustom $model, UserCustomForm $form): void
     {
-       if (null!==$form->getUser_id()&& null!==$form->getFieldid()) {
-        $model->setUser_id($form->getUser_id());
-        $model->setFieldid($form->getFieldid());
-        $model->setFieldvalue($form->getFieldvalue() ?? '');
-        $this->repository->save($model);
-       }
+        if (null !== $form->getUser_id() && null !== $form->getFieldid()) {
+            $model->setUser_id($form->getUser_id());
+            $model->setFieldid($form->getFieldid());
+            $model->setFieldvalue($form->getFieldvalue() ?? '');
+            $this->repository->save($model);
+        }
     }
-    
+
     /**
-     * 
+     *
      * @param UserCustom $model
      * @return void
      */

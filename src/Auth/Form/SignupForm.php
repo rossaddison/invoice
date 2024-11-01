@@ -29,7 +29,7 @@ final class SignupForm extends FormModel implements RulesProviderInterface, Prop
     public function __construct(
         private readonly TranslatorInterface $translator,
         private readonly UserRepository $userRepository,
-        private readonly IdentityRepository $identityRepository    
+        private readonly IdentityRepository $identityRepository
     ) {
     }
 
@@ -57,9 +57,9 @@ final class SignupForm extends FormModel implements RulesProviderInterface, Prop
     {
         return 'Signup';
     }
-    
+
     /**
-     * 
+     *
      * @return PropertyTranslatorInterface|null
      */
     public function getPropertyTranslator(): ?PropertyTranslatorInterface
@@ -77,18 +77,18 @@ final class SignupForm extends FormModel implements RulesProviderInterface, Prop
     {
         return $this->password;
     }
-    
+
     public function getEmail(): string
     {
         return $this->email;
-    }    
+    }
 
     public function signup(): User
     {
-        // In the constuct of a new User, a new Identity is created. 
+        // In the constuct of a new User, a new Identity is created.
         // In the contruct of the new Identity, a new auth key is created.
         $user = new User($this->getLogin(), $this->getEmail(), $this->getPassword());
-        $this->userRepository->save($user); 
+        $this->userRepository->save($user);
         return $user;
     }
 

@@ -1,5 +1,6 @@
-<?php 
-declare(strict_types=1); 
+<?php
+
+declare(strict_types=1);
 
 namespace App\Invoice\InvItemAmount;
 
@@ -16,7 +17,7 @@ use Yiisoft\Data\Cycle\Writer\EntityWriter;
  */
 final class InvItemAmountRepository extends Select\Repository
 {
-private EntityWriter $entityWriter;
+    private EntityWriter $entityWriter;
 
     /**
      * @param Select<TEntity> $select
@@ -39,7 +40,7 @@ private EntityWriter $entityWriter;
                       ->load('inv_item');
         return $this->prepareDataReader($query);
     }
-    
+
     /**
      * @psalm-return EntityReader
      */
@@ -48,62 +49,64 @@ private EntityWriter $entityWriter;
         return (new EntityReader($this->select()))
             ->withSort($this->getSort());
     }
-    
+
     private function getSort(): Sort
     {
         return Sort::only(['id'])->withOrder(['id' => 'asc']);
     }
-    
+
     /**
      * @see Reader/ReadableDataInterface|InvalidArgumentException
      * @param array|InvItemAmount|null $invitemamount
-     * @throws Throwable 
+     * @throws Throwable
      * @return void
      */
     public function save(array|InvItemAmount|null $invitemamount): void
     {
         $this->entityWriter->write([$invitemamount]);
     }
-    
+
     /**
      * @see Reader/ReadableDataInterface|InvalidArgumentException
      * @param array|InvItemAmount|null $invitemamount
-     * @throws Throwable 
+     * @throws Throwable
      * @return void
      */
     public function delete(array|InvItemAmount|null $invitemamount): void
     {
         $this->entityWriter->delete([$invitemamount]);
     }
-    
+
     private function prepareDataReader(Select $query): EntityReader
     {
         return (new EntityReader($query))->withSort(
             Sort::only(['id'])
                 ->withOrder(['id' => 'asc'])
         );
-    } 
-    
+    }
+
     /**
      * @return null|InvItemAmount
      *
      * @psalm-return TEntity|null
      */
-    public function repoInvItemAmountquery(string $inv_item_id): InvItemAmount|null {
+    public function repoInvItemAmountquery(string $inv_item_id): InvItemAmount|null
+    {
         $query = $this->select()
                       ->load(['inv_item'])
                       ->where(['inv_item_id' => $inv_item_id]);
-        return  $query->fetchOne() ?: null;        
+        return  $query->fetchOne() ?: null;
     }
-    
+
     /**
-     * 
+     *
      * @param string $inv_item_id
      * @return int
      */
-    public function repoCount(string $inv_item_id): int {
+    public function repoCount(string $inv_item_id): int
+    {
         $query = $this->select()
-                      ->where(['inv_item_id'=>$inv_item_id]);
-        return $query->count(); 
+                      ->where(['inv_item_id' => $inv_item_id]);
+        return $query->count();
     }
 }

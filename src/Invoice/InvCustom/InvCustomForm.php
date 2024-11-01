@@ -8,12 +8,11 @@ use App\Invoice\Entity\InvCustom;
 use Yiisoft\FormModel\FormModel;
 
 final class InvCustomForm extends FormModel
-{    
-    
-    private ?int $inv_id=null;
-    private ?int $custom_field_id=null;
-    private ?string $value='';
-    
+{
+    private ?int $inv_id = null;
+    private ?int $custom_field_id = null;
+    private ?string $value = '';
+
     public function __construct(InvCustom $invCustom)
     {
         $this->inv_id = (int)$invCustom->getInv_id();
@@ -21,19 +20,19 @@ final class InvCustomForm extends FormModel
         $this->value = $invCustom->getValue();
     }
 
-    public function getInv_id() : int|null
+    public function getInv_id(): int|null
     {
-      return $this->inv_id;
+        return $this->inv_id;
     }
 
-    public function getCustom_field_id() : int|null
+    public function getCustom_field_id(): int|null
     {
-      return $this->custom_field_id;
+        return $this->custom_field_id;
     }
 
-    public function getValue() : string|null
+    public function getValue(): string|null
     {
-      return $this->value;
+        return $this->value;
     }
 
     /**
@@ -43,6 +42,6 @@ final class InvCustomForm extends FormModel
      */
     public function getFormName(): string
     {
-      return '';
+        return '';
     }
 }

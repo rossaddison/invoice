@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=1); 
+declare(strict_types=1);
 
 namespace App\Invoice\ProductCustom;
 
@@ -16,21 +16,21 @@ final class ProductCustomService
     }
 
     /**
-     * 
+     *
      * @param ProductCustom $model
      * @param array $array
      * @return void
      */
     public function saveProductCustom(ProductCustom $model, array $array): void
-    { 
-       $array['product_id'] ? $model->setProduct_id((int)$array['product_id']) : '';
-       $array['custom_field_id'] ? $model->setCustom_field_id((int)$array['custom_field_id']) : '';
-       $array['value'] ? $model->setValue((string)$array['value']) : '';
-       $this->repository->save($model);
+    {
+        $array['product_id'] ? $model->setProduct_id((int)$array['product_id']) : '';
+        $array['custom_field_id'] ? $model->setCustom_field_id((int)$array['custom_field_id']) : '';
+        $array['value'] ? $model->setValue((string)$array['value']) : '';
+        $this->repository->save($model);
     }
-    
+
     /**
-     * 
+     *
      * @param ProductCustom $model
      * @return void
      */

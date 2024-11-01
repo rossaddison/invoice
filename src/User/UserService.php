@@ -16,19 +16,19 @@ final class UserService
         private AccessCheckerInterface $accessChecker
     ) {
     }
-    
+
     /**
-     * 
-     * @return User|null  
+     *
+     * @return User|null
      */
     public function getUser(): User|null
     {
         $userId = $this->currentUser->getId();
-        if (null!==$userId) {
-           return $this->repository->findById($userId); 
+        if (null !== $userId) {
+            return $this->repository->findById($userId);
         } else {
-           return null;
-        } 
+            return null;
+        }
     }
 
     public function hasPermission(string $permission): bool

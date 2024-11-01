@@ -17,7 +17,7 @@ class GoogleTranslateNetworkException extends \RuntimeException implements Frien
     {
         return 'There appears to be a Network error.';
     }
-    
+
     /**
      * @return string
      *

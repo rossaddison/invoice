@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=1); 
+declare(strict_types=1);
 
 namespace App\Invoice\SalesOrderAmount;
 
@@ -21,10 +21,10 @@ use Yiisoft\Data\Cycle\Writer\EntityWriter;
  */
 final class SalesOrderAmountRepository extends Select\Repository
 {
-private EntityWriter $entityWriter;
-    
+    private EntityWriter $entityWriter;
+
     /**
-     * @param Select<TEntity> $select     
+     * @param Select<TEntity> $select
      * @param EntityWriter $entityWriter
      */
     public function __construct(Select $select, EntityWriter $entityWriter)
@@ -43,7 +43,7 @@ private EntityWriter $entityWriter;
         $query = $this->select();
         return $this->prepareDataReader($query);
     }
-    
+
     /**
      * @psalm-return EntityReader
      */
@@ -52,34 +52,34 @@ private EntityWriter $entityWriter;
         return (new EntityReader($this->select()))
             ->withSort($this->getSort());
     }
-    
+
     private function getSort(): Sort
     {
         return Sort::only(['id'])->withOrder(['id' => 'asc']);
     }
-    
+
     /**
      * @see Reader/ReadableDataInterface|InvalidArgumentException
      * @param array|SalesOrderAmount|null $soamount
-     * @throws Throwable 
+     * @throws Throwable
      * @return void
      */
     public function save(array|SalesOrderAmount|null $soamount): void
     {
         $this->entityWriter->write([$soamount]);
     }
-    
+
     /**
      * @see Reader/ReadableDataInterface|InvalidArgumentException
      * @param array|SalesOrderAmount|null $soamount
-     * @throws Throwable 
+     * @throws Throwable
      * @return void
      */
     public function delete(array|SalesOrderAmount|null $soamount): void
     {
         $this->entityWriter->delete([$soamount]);
     }
-    
+
     private function prepareDataReader(Select $query): EntityReader
     {
         return (new EntityReader($query))->withSort(
@@ -87,99 +87,105 @@ private EntityWriter $entityWriter;
                 ->withOrder(['id' => 'asc'])
         );
     }
-    
+
     /**
      * @param string $so_id
      */
-    public function repoSalesOrderAmountCount(string $so_id) : int {
+    public function repoSalesOrderAmountCount(string $so_id): int
+    {
         $count = $this->select()
                       ->where(['so_id' => $so_id])
                       ->count();
         return $count;
     }
-    
+
     /**
      * @return null|SalesOrderAmount
      *
      * @psalm-return TEntity|null
      */
-    public function repoSalesOrderAmountqueryTest(string $so_id):SalesOrderAmount|null {
+    public function repoSalesOrderAmountqueryTest(string $so_id): SalesOrderAmount|null
+    {
         $query = $this->select()
                       ->load('so')
                       ->where(['so_id' => $so_id]);
-        return  $query->fetchOne() ?: null;        
-    }   
-    
-    /**
-     * @param string $so_id
-     *
-     * @return null|SalesOrderAmount
-     *
-     * @psalm-return TEntity|null
-     */
-    public function repoSoquery(string $so_id):SalesOrderAmount|null {
-        $query = $this->select()
-                      ->load('so')
-                      ->where(['so_id' => $so_id]);
-        return  $query->fetchOne() ?: null;        
-    }    
-    
-    /**
-     * @param string $so_id
-     *
-     * @return null|SalesOrderAmount
-     *
-     * @psalm-return TEntity|null
-     */
-    public function repoSalesOrderquery(string $so_id):SalesOrderAmount|null {
-        $query = $this->select()
-                      ->load('so')
-                      ->where(['so_id' => $so_id]);
-        return  $query->fetchOne() ?: null;        
+        return  $query->fetchOne() ?: null;
     }
-   
+
     /**
-     * 
+     * @param string $so_id
+     *
+     * @return null|SalesOrderAmount
+     *
+     * @psalm-return TEntity|null
+     */
+    public function repoSoquery(string $so_id): SalesOrderAmount|null
+    {
+        $query = $this->select()
+                      ->load('so')
+                      ->where(['so_id' => $so_id]);
+        return  $query->fetchOne() ?: null;
+    }
+
+    /**
+     * @param string $so_id
+     *
+     * @return null|SalesOrderAmount
+     *
+     * @psalm-return TEntity|null
+     */
+    public function repoSalesOrderquery(string $so_id): SalesOrderAmount|null
+    {
+        $query = $this->select()
+                      ->load('so')
+                      ->where(['so_id' => $so_id]);
+        return  $query->fetchOne() ?: null;
+    }
+
+    /**
+     *
      * @param int $key
      * @param array $range
      * @param SR $sR
      * @return EntityReader
      */
-    public function repoStatusTotals(int $key, array $range, SR $sR) : EntityReader {        
+    public function repoStatusTotals(int $key, array $range, SR $sR): EntityReader
+    {
         $datehelper = new DateHelper($sR);
-        /** 
+        /**
          * @var \DateTimeImmutable $range['lower']
          * @var \DateTimeImmutable $range['upper']
          */
         $query = $this->select()
                       ->where(['so.status_id' => $key])
-                      ->andWhere('so.date_created', '>=' ,$datehelper->date_from_mysql_without_style($range['lower']))
-                      ->andWhere('so.date_created', '<=' ,$datehelper->date_from_mysql_without_style($range['upper']));                      
+                      ->andWhere('so.date_created', '>=', $datehelper->date_from_mysql_without_style($range['lower']))
+                      ->andWhere('so.date_created', '<=', $datehelper->date_from_mysql_without_style($range['upper']));
         return $this->prepareDataReader($query);
     }
-    
+
     /**
-     * 
+     *
      * @param int $key
      * @param array $range
      * @param SR $sR
      * @return int
      */
-    public function repoStatusTotals_Num_Total(int $key, array $range, SR $sR) : int {        
+    public function repoStatusTotals_Num_Total(int $key, array $range, SR $sR): int
+    {
         $datehelper = new DateHelper($sR);
-        /** 
+        /**
          * @var \DateTimeImmutable $range['lower']
          * @var \DateTimeImmutable $range['upper']
          */
         $query = $this->select()
-                      ->load('so')                      
+                      ->load('so')
                       ->where(['so.status_id' => $key])
-                      ->andWhere('so.date_created', '>=' ,$datehelper->date_from_mysql_without_style($range['lower']))
-                      ->andWhere('so.date_created', '<=' ,$datehelper->date_from_mysql_without_style($range['upper']))
+                      ->andWhere('so.date_created', '>=', $datehelper->date_from_mysql_without_style($range['lower']))
+                      ->andWhere('so.date_created', '<=', $datehelper->date_from_mysql_without_style($range['upper']))
                       ->count();
         return $query;
     }
-    
+
     /**
      * @param SOR $soR
      * @param SR $sR
@@ -187,14 +193,14 @@ private EntityWriter $entityWriter;
      * @param string $period
      * @return array
      */
-    public function get_status_totals(SOR $soR, SR $sR, Translator $translator, string $period) : array
+    public function get_status_totals(SOR $soR, SR $sR, Translator $translator, string $period): array
     {
         $return = [];
-        // $period eg. this-month, last-month derived from $sR->getSetting('invoice or so_overview_period') 
+        // $period eg. this-month, last-month derived from $sR->getSetting('invoice or so_overview_period')
         $range = $sR->range($period);
         /**
          * @var int $key
-         * @var array $status 
+         * @var array $status
          */
         foreach ($soR->getStatuses($translator) as $key => $status) {
             $status_specific_sos = $this->repoStatusTotals($key, $range, $sR);
@@ -202,7 +208,7 @@ private EntityWriter $entityWriter;
             $total = 0.00;
             /** @var SalesOrderAmount $so_amount */
             foreach ($status_specific_sos as $so_amount) {
-                $total = $total + (float)$so_amount->getTotal();                
+                $total = $total + (float)$so_amount->getTotal();
             }
             $return[$key] = [
                 'so_status_id' => $key,

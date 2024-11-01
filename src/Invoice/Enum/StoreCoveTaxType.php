@@ -1,5 +1,6 @@
 <?php
-declare(strict_types=1); 
+
+declare(strict_types=1);
 
 namespace App\Invoice\Enum;
 
@@ -13,13 +14,13 @@ namespace App\Invoice\Enum;
 // https://www.storecove.com/docs/#_openapi_tax
 
 // Note This enum format is simply used to return a snake_case parameter
-// The values retrieved from here are stored as string and not as enum's. 
+// The values retrieved from here are stored as string and not as enum's.
 
 
 enum StoreCoveTaxType: string
 {
     case Standard = 'standard';
-    case ZeroRated = 'zero_rated';    
+    case ZeroRated = 'zero_rated';
     case Exempt = 'exempt';
     case ReverseCharge = 'reverse_charge';
     case IntraCommunity = 'intra_community';

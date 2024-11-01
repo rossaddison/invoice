@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=1); 
+declare(strict_types=1);
 
 namespace App\Invoice\InvItemAllowanceCharge;
 
@@ -11,7 +11,6 @@ use App\Invoice\InvAmount\InvAmountService;
 use App\Invoice\InvAmount\InvAmountRepository;
 use App\Invoice\InvItemAllowanceCharge\InvItemAllowanceChargeService;
 use App\Invoice\InvItemAllowanceCharge\InvItemAllowanceChargeRepository;
-
 use App\Invoice\AllowanceCharge\AllowanceChargeRepository;
 use App\Invoice\InvAllowanceCharge\InvAllowanceChargeRepository;
 use App\Invoice\InvItem\InvItemRepository;
@@ -19,13 +18,10 @@ use App\Invoice\InvItemAmount\InvItemAmountRepository;
 use App\Invoice\InvTaxRate\InvTaxRateRepository;
 use App\Invoice\Payment\PaymentRepository;
 use App\Invoice\Setting\SettingRepository;
-
 use App\User\UserService;
 use App\Service\WebControllerService;
-
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
-
 use Yiisoft\Data\Paginator\OffsetPaginator;
 use Yiisoft\Http\Method;
 use Yiisoft\Router\CurrentRoute;
@@ -47,7 +43,7 @@ final class InvItemAllowanceChargeController
     private TranslatorInterface $translator;
     private NumberHelper $numberHelper;
     private SettingRepository $sR;
-    
+
     public function __construct(
         SessionInterface $session,
         ViewRenderer $viewRenderer,
@@ -56,9 +52,8 @@ final class InvItemAllowanceChargeController
         InvItemAllowanceChargeService $aciiService,
         InvAmountService $invAmountService,
         TranslatorInterface $translator,
-        SettingRepository $sR    
-    )    
-    {
+        SettingRepository $sR
+    ) {
         $this->session = $session;
         $this->flash = new Flash($session);
         $this->viewRenderer = $viewRenderer;
@@ -78,9 +73,9 @@ final class InvItemAllowanceChargeController
         $this->sR = $sR;
         $this->numberHelper = new NumberHelper($sR);
     }
-    
+
     /**
-     * 
+     *
      * @param CurrentRoute $currentRoute
      * @param Request $request
      * @param FormHydrator $formHydrator
@@ -92,16 +87,17 @@ final class InvItemAllowanceChargeController
      * @param InvTaxRateRepository $itrR
      * @return Response
      */
-    public function add(CurrentRoute $currentRoute, Request $request, 
-                        FormHydrator $formHydrator,
-                        AllowanceChargeRepository $acR,
-                        InvItemAllowanceChargeRepository $aciiR,
-                        InvItemRepository $iiR,
-                        InvAmountRepository $iaR,
-                        InvItemAmountRepository $iiaR,
-                        InvTaxRateRepository $itrR
-    ) : Response
-    {   
+    public function add(
+        CurrentRoute $currentRoute,
+        Request $request,
+        FormHydrator $formHydrator,
+        AllowanceChargeRepository $acR,
+        InvItemAllowanceChargeRepository $aciiR,
+        InvItemRepository $iiR,
+        InvAmountRepository $iaR,
+        InvItemAmountRepository $iiaR,
+        InvTaxRateRepository $itrR
+    ): Response {
         $inv_item_id = $currentRoute->getArgument('inv_item_id');
         $inv_item = $iiR->repoInvItemquery((string)$inv_item_id);
         if ($inv_item) {
@@ -111,7 +107,7 @@ final class InvItemAllowanceChargeController
             $parameters = [
                 'title' => $this->translator->translate('invoice.add'),
                 'actionName' => 'invitemallowancecharge/add',
-                'actionArguments' => ['inv_item_id'=> $inv_item_id],
+                'actionArguments' => ['inv_item_id' => $inv_item_id],
                 'errors' => [],
                 'form' => $form,
                 'allowance_charges' => $acR->findAllPreloaded(),
@@ -125,7 +121,7 @@ final class InvItemAllowanceChargeController
                     $body['inv_item_id'] = $inv_item_id;
                     /** @var string $allowance_charge_id */
                     $allowance_charge_id = $body['allowance_charge_id'];
-                    $allowance_charge = $acR->repoAllowanceChargequery($allowance_charge_id);            
+                    $allowance_charge = $acR->repoAllowanceChargequery($allowance_charge_id);
                     if ($allowance_charge) {
                         $amount = (float)$body['amount'];
                         $percent = $allowance_charge->getTaxRate()?->getTaxRatePercent() ?? 0.00;
@@ -136,12 +132,12 @@ final class InvItemAllowanceChargeController
                              */
                             $this->aciiService->saveInvItemAllowanceCharge($inv_item_ac, $body, $vat);
                             $all_charges = 0.00;
-                            $all_charges_vat = 0.00;                        
+                            $all_charges_vat = 0.00;
                             $all_allowances = 0.00;
                             $all_allowances_vat = 0.00;
-                            $aciis = $aciiR->repoInvItemquery((string)$inv_item_id);                        
+                            $aciis = $aciiR->repoInvItemquery((string)$inv_item_id);
                             $inv_item_amount = $iiaR->repoInvItemAmountquery((string)$inv_item_id);
-                            if (null!==$inv_item_amount) {
+                            if (null !== $inv_item_amount) {
                                 /** @var InvItemAllowanceCharge $acii */
                                 foreach ($aciis as $acii) {
                                     // charge add
@@ -171,47 +167,51 @@ final class InvItemAllowanceChargeController
                                 $inv_item_amount->setSubtotal($qpIncAc);
                                 $inv_item_amount->setDiscount($current_discount_item_total);
                                 $inv_item_amount->setTax_total($new_tax_total);
-                                $overall_total = $qpIncAc - $current_discount_item_total + $new_tax_total; 
+                                $overall_total = $qpIncAc - $current_discount_item_total + $new_tax_total;
                                 $inv_item_amount->setTotal($overall_total);
                                 $iiaR->save($inv_item_amount);
                                 // update the inv amount
                                 $this->invAmountService->updateInvAmount((int)$inv_id, $iaR, $iiaR, $itrR, $this->numberHelper);
                             }
-                            return $this->webService->getRedirectResponse('inv/view', ['id'=>$inv_id]);
+                            return $this->webService->getRedirectResponse('inv/view', ['id' => $inv_id]);
                         }
                         $parameters['errors'] = $form->getValidationResult()->getErrorMessagesIndexedByProperty();
                         $parameters['form'] = $form;
                     } //allowance_charge
-                } // is_array    
-            }   // request 
+                } // is_array
+            }   // request
             return $this->viewRenderer->render('_form', $parameters);
         } // if inv_item
         return $this->webService->getNotFoundResponse();
-    }    
-    
-  /**
-   * @return string
-   */
-   private function alert(): string {
-     return $this->viewRenderer->renderPartialAsString('//invoice/layout/alert',
-     [ 
+    }
+
+    /**
+     * @return string
+     */
+    private function alert(): string
+    {
+        return $this->viewRenderer->renderPartialAsString(
+            '//invoice/layout/alert',
+            [
        'flash' => $this->flash
-     ]);
-   }
+     ]
+        );
+    }
 
     /**
      * @param string $level
      * @param string $message
      * @return Flash|null
      */
-    private function flash_message(string $level, string $message): Flash|null {
+    private function flash_message(string $level, string $message): Flash|null
+    {
         if (strlen($message) > 0) {
             $this->flash->add($level, $message, true);
             return $this->flash;
         }
         return null;
     }
-        
+
     /**
      * @param Request $request
      * @param InvItemAllowanceChargeRepository $iiacR
@@ -219,25 +219,25 @@ final class InvItemAllowanceChargeController
      * @return Response
      */
     public function index(Request $request, InvItemAllowanceChargeRepository $iiacR, SettingRepository $settingRepository): Response
-    {      
-      /**
-       * @see ...www\invoice\resources\views\invoice\inv\partial_item_table.php search ... Make sure to fill
-       */
-      $params = $request->getQueryParams();
-      /** @var string $params['inv_item_id'] */
-      $inv_item_id = $params['inv_item_id'] ?? '';
-      $this->flash_message('info', $this->translator->translate('invoice.peppol.allowance.or.charge.inherit'));
-      // retrieve all the allowances or charges associated with the inv_item_id
-      $invoice_item_allowances_or_charges = $iiacR->repoInvItemquery($inv_item_id);
-      $paginator = (new OffsetPaginator($invoice_item_allowances_or_charges));
-      $parameters = [
-          'alert'=> $this->alert(),
-          'inv_item_id' => $inv_item_id,
-          'paginator' => $paginator,    
-      ];
-      return $this->viewRenderer->render('index', $parameters);
+    {
+        /**
+         * @see ...www\invoice\resources\views\invoice\inv\partial_item_table.php search ... Make sure to fill
+         */
+        $params = $request->getQueryParams();
+        /** @var string $params['inv_item_id'] */
+        $inv_item_id = $params['inv_item_id'] ?? '';
+        $this->flash_message('info', $this->translator->translate('invoice.peppol.allowance.or.charge.inherit'));
+        // retrieve all the allowances or charges associated with the inv_item_id
+        $invoice_item_allowances_or_charges = $iiacR->repoInvItemquery($inv_item_id);
+        $paginator = (new OffsetPaginator($invoice_item_allowances_or_charges));
+        $parameters = [
+            'alert' => $this->alert(),
+            'inv_item_id' => $inv_item_id,
+            'paginator' => $paginator,
+        ];
+        return $this->viewRenderer->render('index', $parameters);
     }
-        
+
     /**
      * @param InvItemRepository $iiR
      * @param InvItemAmountRepository $iiaR
@@ -250,32 +250,33 @@ final class InvItemAllowanceChargeController
      * @param CurrentRoute $currentRoute
      * @return Response
      */
-    public function delete(InvItemRepository $iiR,
-                           InvItemAmountRepository $iiaR, 
-                           InvAllowanceChargeRepository $aciR, 
-                           InvItemAllowanceChargeRepository $aciiR,
-                           InvAmountRepository $iaR, 
-                           InvRepository $iR, 
-                           InvTaxRateRepository $itrR,
-                           PaymentRepository $pymR, 
-                           SettingRepository $sR,
-                           CurrentRoute $currentRoute 
+    public function delete(
+        InvItemRepository $iiR,
+        InvItemAmountRepository $iiaR,
+        InvAllowanceChargeRepository $aciR,
+        InvItemAllowanceChargeRepository $aciiR,
+        InvAmountRepository $iaR,
+        InvRepository $iR,
+        InvTaxRateRepository $itrR,
+        PaymentRepository $pymR,
+        SettingRepository $sR,
+        CurrentRoute $currentRoute
     ): Response {
         $acii = $this->acii($currentRoute, $aciiR);
-        if (null!==$acii) {
+        if (null !== $acii) {
             $inv_id = $acii->getInv_id();
             // delete the inv item allowance/charge and update the related inv item amount record
             $this->aciiService->deleteInvItemAllowanceCharge($acii, $iaR, $iiaR, $itrR, $aciiR, $sR);
-            // update the inv amount record 
+            // update the inv amount record
             $this->numberHelper->calculate_inv($inv_id, $aciR, $iiR, $iiaR, $itrR, $iaR, $iR, $pymR);
             $this->flash_message('info', $this->translator->translate('i.record_successfully_deleted'));
-            return $this->webService->getRedirectResponse('inv/view',['id'=>$inv_id]);
+            return $this->webService->getRedirectResponse('inv/view', ['id' => $inv_id]);
         }
         return $this->webService->getNotFoundResponse();
     }
-    
+
     /**
-     * 
+     *
      * @param CurrentRoute $currentRoute
      * @param Request $request
      * @param FormHydrator $formHydrator
@@ -287,17 +288,17 @@ final class InvItemAllowanceChargeController
      * @param InvTaxRateRepository $itrR
      * @return Response
      */
-    public function edit(CurrentRoute $currentRoute, Request $request, 
-                        FormHydrator $formHydrator,
-                        AllowanceChargeRepository $acR,
-                        InvItemAllowanceChargeRepository $aciiR,
-                        InvItemRepository $iiR,
-                        InvAmountRepository $iaR,
-                        InvItemAmountRepository $iiaR,
-                        InvTaxRateRepository $itrR
-    
-    ) : Response
-    {   
+    public function edit(
+        CurrentRoute $currentRoute,
+        Request $request,
+        FormHydrator $formHydrator,
+        AllowanceChargeRepository $acR,
+        InvItemAllowanceChargeRepository $aciiR,
+        InvItemRepository $iiR,
+        InvAmountRepository $iaR,
+        InvItemAmountRepository $iiaR,
+        InvTaxRateRepository $itrR
+    ): Response {
         $acii = $this->acii($currentRoute, $aciiR);
         if ($acii) {
             $inv_item_id = $acii->getInv_item_id();
@@ -307,7 +308,7 @@ final class InvItemAllowanceChargeController
             $parameters = [
                 'title' => $this->translator->translate('invoice.edit'),
                 'actionName' => 'invitemallowancecharge/edit',
-                'actionArguments' => ['id'=> $acii->getId()],
+                'actionArguments' => ['id' => $acii->getId()],
                 'errors' => [],
                 'form' => $form,
                 'allowance_charges' => $acR->findAllPreloaded(),
@@ -321,11 +322,11 @@ final class InvItemAllowanceChargeController
             $amount = $body['amount'] ?? 0.00;
             if ($request->getMethod() === Method::POST) {
                 if ($allowance_charge_id) {
-                    $allowance_charge = $acR->repoAllowanceChargequery($allowance_charge_id);            
-                    if ($allowance_charge && null!==$body) {
+                    $allowance_charge = $acR->repoAllowanceChargequery($allowance_charge_id);
+                    if ($allowance_charge && null !== $body) {
                         $percent = $allowance_charge->getTaxRate()?->getTaxRatePercent() ?? 0.00;
-                        $vat = $amount * $percent/100;  
-                        if ($formHydrator->populateFromPostAndValidate($form,  $request)) {
+                        $vat = $amount * $percent / 100;
+                        if ($formHydrator->populateFromPostAndValidate($form, $request)) {
                             /**
                              * @psalm-suppress PossiblyInvalidArgument $body
                              */
@@ -334,9 +335,9 @@ final class InvItemAllowanceChargeController
                             $all_allowances = 0.00;
                             $all_allowances_vat = 0.00;
                             $all_charges_vat = 0.00;
-                            $aciis = $aciiR->repoInvItemquery($inv_item_id);                        
+                            $aciis = $aciiR->repoInvItemquery($inv_item_id);
                             $inv_item_amount = $iiaR->repoInvItemAmountquery($inv_item_id);
-                            if (null!==$inv_item_amount) {
+                            if (null !== $inv_item_amount) {
                                 /** @var InvItemAllowanceCharge $acii */
                                 foreach ($aciis as $acii) {
                                     // charge add
@@ -366,18 +367,18 @@ final class InvItemAllowanceChargeController
                                 $inv_item_amount->setSubtotal($qpIncAc);
                                 $inv_item_amount->setDiscount($current_discount_item_total);
                                 $inv_item_amount->setTax_total($new_tax_total);
-                                $overall_total = $qpIncAc - $current_discount_item_total + $new_tax_total; 
+                                $overall_total = $qpIncAc - $current_discount_item_total + $new_tax_total;
                                 $inv_item_amount->setTotal($overall_total);
                                 $iiaR->save($inv_item_amount);
                                 // update the inv amount
                                 $this->invAmountService->updateInvAmount((int)$inv_id, $iaR, $iiaR, $itrR, $this->numberHelper);
-                                return $this->webService->getRedirectResponse('inv/view',['id'=>$inv_id]);
+                                return $this->webService->getRedirectResponse('inv/view', ['id' => $inv_id]);
                             } //null !==$inv_item_amount
                             return $this->webService->getNotFoundResponse();
-                        } // $form                        
-                        return $this->webService->getNotFoundResponse(); 
+                        } // $form
+                        return $this->webService->getNotFoundResponse();
                     } //allowance_charge
-                    return $this->webService->getNotFoundResponse();                        
+                    return $this->webService->getNotFoundResponse();
                 } // allowance_charge_id
                 $parameters['form'] = $form;
             } // request
@@ -385,18 +386,18 @@ final class InvItemAllowanceChargeController
         } // if acii
         return $this->webService->getRedirectResponse('index');
     }
-    
-    //For rbac refer to AccessChecker    
-    
+
+    //For rbac refer to AccessChecker
+
     /**
      * @param CurrentRoute $currentRoute
      * @param InvItemAllowanceChargeRepository $aciiRepository
      * @return InvItemAllowanceCharge|null
      */
-    private function acii(CurrentRoute $currentRoute,InvItemAllowanceChargeRepository $aciiRepository) : InvItemAllowanceCharge|null
+    private function acii(CurrentRoute $currentRoute, InvItemAllowanceChargeRepository $aciiRepository): InvItemAllowanceCharge|null
     {
-        $id = $currentRoute->getArgument('id');       
-        if (null!==$id) {
+        $id = $currentRoute->getArgument('id');
+        if (null !== $id) {
             $acii = $aciiRepository->repoInvItemAllowanceChargequery($id);
             return $acii;
         }
@@ -408,12 +409,12 @@ final class InvItemAllowanceChargeController
      *
      * @psalm-return \Yiisoft\Data\Cycle\Reader\EntityReader
      */
-    private function aciis(InvItemAllowanceChargeRepository $aciiRepository) : \Yiisoft\Data\Cycle\Reader\EntityReader
+    private function aciis(InvItemAllowanceChargeRepository $aciiRepository): \Yiisoft\Data\Cycle\Reader\EntityReader
     {
-        $aciis = $aciiRepository->findAllPreloaded();        
+        $aciis = $aciiRepository->findAllPreloaded();
         return $aciis;
     }
-        
+
     /**
      * @param CurrentRoute $currentRoute
      * @param InvItemAllowanceChargeRepository $aciiRepository
@@ -421,22 +422,22 @@ final class InvItemAllowanceChargeController
      * @return \Yiisoft\DataResponse\DataResponse|Response
      */
     public function view(
-            CurrentRoute $currentRoute, 
-            InvItemAllowanceChargeRepository $aciiRepository,
-            AllowanceChargeRepository $acR
-        ): \Yiisoft\DataResponse\DataResponse|Response {
-        $acii = $this->acii($currentRoute, $aciiRepository); 
+        CurrentRoute $currentRoute,
+        InvItemAllowanceChargeRepository $aciiRepository,
+        AllowanceChargeRepository $acR
+    ): \Yiisoft\DataResponse\DataResponse|Response {
+        $acii = $this->acii($currentRoute, $aciiRepository);
         if ($acii) {
             $inv_item_id = $acii->getInv_item_id();
             $form = new InvItemAllowanceChargeForm($acii, (int)$inv_item_id);
             $parameters = [
                 'title' => $this->translator->translate('i.view'),
-                'actionName' => 'invitemallowancecharge/view', 
+                'actionName' => 'invitemallowancecharge/view',
                 'actionArguments' => ['id' => $acii->getId()],
                 'allowance_charges' => $acR->findAllPreloaded(),
                 'form' => $form,
                 'acii' => $acii,
-            ];        
+            ];
             return $this->viewRenderer->render('_view', $parameters);
         }
         return $this->webService->getRedirectResponse('acii/index');

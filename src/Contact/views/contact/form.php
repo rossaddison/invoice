@@ -37,40 +37,40 @@ $this->setTitle($translator->translate('menu.contact.us'));
                         ->csrf($csrf)
                         ->id('form-contact')
                         ->open()
-                    ?>
+?>
                     <?= Field::text($form, 'name')
-                        ->label($translator->translate('view.contact.form.name'))
-                    ?>
+    ->label($translator->translate('view.contact.form.name'))
+?>
                     <?= Field::email($form, 'email')
-                        ->label($translator->translate('view.contact.form.email'))
-                    ?>
-                    <?= Field::text($form, 'subject') 
-                        ->label($translator->translate('view.contact.form.subject'))
-                    ?>
+    ->label($translator->translate('view.contact.form.email'))
+?>
+                    <?= Field::text($form, 'subject')
+    ->label($translator->translate('view.contact.form.subject'))
+?>
                     <?= Field::textarea($form, 'body')
-                        ->addInputAttributes(['style' => 'height: 100px'])
-                        ->label($translator->translate('view.contact.form.body'))    
-                    ?>
+    ->addInputAttributes(['style' => 'height: 100px'])
+    ->label($translator->translate('view.contact.form.body'))
+?>
                     <?= Field::file($form, 'attachFiles[]')
-                        ->containerClass('mb-3')
-                        ->multiple()
-                        ->hideLabel()
-                    ?>
+    ->containerClass('mb-3')
+    ->multiple()
+    ->hideLabel()
+?>
                     <?= Field::buttonGroup()
-                        ->addContainerClass('btn-group btn-toolbar float-end')
-                        ->buttonsData([
-                            [
-                                $translator->translate('layout.reset'),
-                                'type' => 'reset',
-                                'class' => 'btn btn-lg btn-danger',
-                            ],
-                            [
-                                $translator->translate('layout.submit'),
-                                'type' => 'submit',
-                                'class' => 'btn btn-lg btn-primary',
-                                'name' => 'contact-button',
-                            ],
-                        ]) ?>
+    ->addContainerClass('btn-group btn-toolbar float-end')
+    ->buttonsData([
+        [
+            $translator->translate('layout.reset'),
+            'type' => 'reset',
+            'class' => 'btn btn-lg btn-danger',
+        ],
+        [
+            $translator->translate('layout.submit'),
+            'type' => 'submit',
+            'class' => 'btn btn-lg btn-primary',
+            'name' => 'contact-button',
+        ],
+    ]) ?>
                     <?= Form::tag()->close() ?>
                 </div>
             </div>

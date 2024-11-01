@@ -8,35 +8,35 @@ use App\Invoice\Entity\CompanyPrivate;
 use Yiisoft\FormModel\FormModel;
 use Yiisoft\Validator\Rule\Required;
 use Yiisoft\Validator\Rule\Length;
-use \DateTimeImmutable;
+use DateTimeImmutable;
 
 final class CompanyPrivateForm extends FormModel
-{        
-    private ?int $id=null;
-    
+{
+    private ?int $id = null;
+
     #[Required]
-    private ?int $company_id=null;
-    
+    private ?int $company_id = null;
+
     // use the cycle company relation to get the name of the company
     private ?string $company_public_name = '';
-    
-    private ?string $vat_id='';
-    private ?string $tax_code='';
-    private ?string $iban='';
-    private ?string $gln='';
-    private ?string $rcc=''; 
-    
+
+    private ?string $vat_id = '';
+    private ?string $tax_code = '';
+    private ?string $iban = '';
+    private ?string $gln = '';
+    private ?string $rcc = '';
+
     #[Required, Length(exactly: null, min: 1, max:150)]
-    private ?string $logo_filename='';
-    
+    private ?string $logo_filename = '';
+
     private ?string $logo_width = '';
     private ?string $logo_height = '';
     private ?string $logo_margin = '';
-    
+
     // start_date mixed to accomodate null|string|DateTimeImmutable
-    private mixed $start_date='';
-    private mixed $end_date='';
-    
+    private mixed $start_date = '';
+    private mixed $end_date = '';
+
     public function __construct(CompanyPrivate $company_private)
     {
         $this->id = $company_private->getId();
@@ -54,78 +54,78 @@ final class CompanyPrivateForm extends FormModel
         $this->start_date = $company_private->getStart_date();
         $this->end_date = $company_private->getEnd_date();
     }
-        
-    public function getId() : int|null
+
+    public function getId(): int|null
     {
-       return $this->id;
-    }
-    
-    public function getCompany_id() : int|null
-    {
-       return $this->company_id;
-    }
-    
-    public function getVat_id() : string|null
-    {
-      return $this->vat_id;
+        return $this->id;
     }
 
-    public function getTax_code() : string|null
+    public function getCompany_id(): int|null
     {
-      return $this->tax_code;
+        return $this->company_id;
     }
 
-    public function getIban() : string|null
+    public function getVat_id(): string|null
     {
-      return $this->iban;
+        return $this->vat_id;
     }
 
-    public function getGln() : string|null
+    public function getTax_code(): string|null
     {
-      return $this->gln;
+        return $this->tax_code;
     }
 
-    public function getLogo_filename() : string|null
+    public function getIban(): string|null
     {
-      return $this->logo_filename;
-    }
-    
-    public function getLogo_width() : string|null
-    {
-      return $this->logo_width;
-    }
-    
-    public function getLogo_height() : string|null
-    {
-      return $this->logo_height;
-    }
-    
-    public function getLogo_margin() : string|null
-    {
-      return $this->logo_margin;
-    }
-    
-    public function getRcc() : string|null
-    {
-      return $this->rcc;
+        return $this->iban;
     }
 
-    public function getStart_date() : string|null|DateTimeImmutable
+    public function getGln(): string|null
     {
-      /**
-       * @var string|null|DateTimeImmutable $this->start_date 
-       */
-      return $this->start_date;
+        return $this->gln;
     }
 
-    public function getEnd_date() : string|null|DateTimeImmutable
+    public function getLogo_filename(): string|null
     {
-      /**
-       * @var string|null|DateTimeImmutable $this->end_date 
-       */
-      return $this->end_date;
+        return $this->logo_filename;
     }
-    
+
+    public function getLogo_width(): string|null
+    {
+        return $this->logo_width;
+    }
+
+    public function getLogo_height(): string|null
+    {
+        return $this->logo_height;
+    }
+
+    public function getLogo_margin(): string|null
+    {
+        return $this->logo_margin;
+    }
+
+    public function getRcc(): string|null
+    {
+        return $this->rcc;
+    }
+
+    public function getStart_date(): string|null|DateTimeImmutable
+    {
+        /**
+         * @var string|null|DateTimeImmutable $this->start_date
+         */
+        return $this->start_date;
+    }
+
+    public function getEnd_date(): string|null|DateTimeImmutable
+    {
+        /**
+         * @var string|null|DateTimeImmutable $this->end_date
+         */
+        return $this->end_date;
+    }
+
     /**
      * @return string
      *
@@ -133,6 +133,6 @@ final class CompanyPrivateForm extends FormModel
      */
     public function getFormName(): string
     {
-      return '';
+        return '';
     }
 }

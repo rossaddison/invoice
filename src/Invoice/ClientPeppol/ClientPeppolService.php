@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=1); 
+declare(strict_types=1);
 
 namespace App\Invoice\ClientPeppol;
 
@@ -35,7 +35,7 @@ final class ClientPeppolService
         isset($array['taxschemeid']) ? $model->setTaxschemeid((string)$array['taxschemeid']) : '';
         $this->repository->save($model);
     }
-    
+
     public function deleteClientPeppol(ClientPeppol $model): void
     {
         $this->repository->delete($model);

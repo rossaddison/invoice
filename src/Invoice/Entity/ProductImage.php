@@ -12,7 +12,8 @@ use App\Invoice\Entity\Product;
 
 #[Entity(repository: \App\Invoice\ProductImage\ProductImageRepository::class)]
 
-class ProductImage {
+class ProductImage
+{
     #[Column(type: 'primary')]
     private ?int $id = null;
 
@@ -50,65 +51,80 @@ class ProductImage {
     }
 
     //get relation $product
-    public function getProduct(): ?Product {
+    public function getProduct(): ?Product
+    {
         return $this->product;
     }
 
     //set relation $product
-    public function setProduct(?Product $product): void {
+    public function setProduct(?Product $product): void
+    {
         $this->product = $product;
     }
 
-    public function getId(): string {
+    public function getId(): string
+    {
         return (string) $this->id;
     }
 
-    public function setId(int $id): void {
+    public function setId(int $id): void
+    {
         $this->id = $id;
     }
 
-    public function getProduct_id(): string {
+    public function getProduct_id(): string
+    {
         return (string) $this->product_id;
     }
 
-    public function setProduct_id(int $product_id): void {
+    public function setProduct_id(int $product_id): void
+    {
         $this->product_id = $product_id;
     }
 
-    public function getFile_name_original(): string {
+    public function getFile_name_original(): string
+    {
         return $this->file_name_original;
     }
 
-    public function setFile_name_original(string $file_name_original): void {
+    public function setFile_name_original(string $file_name_original): void
+    {
         $this->file_name_original = $file_name_original;
     }
 
-    public function getDescription(): string {
+    public function getDescription(): string
+    {
         return $this->description;
     }
 
-    public function setDescription(string $description): void {
+    public function setDescription(string $description): void
+    {
         $this->description = $description;
     }
 
-    public function getFile_name_new(): string {
+    public function getFile_name_new(): string
+    {
         return $this->file_name_new;
     }
 
-    public function setFile_name_new(string $file_name_new): void {
+    public function setFile_name_new(string $file_name_new): void
+    {
         $this->file_name_new = $file_name_new;
     }
 
-    public function getUploaded_date(): DateTimeImmutable {
+    public function getUploaded_date(): DateTimeImmutable
+    {
         /** @var DateTimeImmutable $this->uploaded_date */
         return $this->uploaded_date;
     }
 
-    public function setUploaded_date(DateTimeImmutable $uploaded_date): void {
+    public function setUploaded_date(DateTimeImmutable $uploaded_date): void
+    {
         $this->uploaded_date = $uploaded_date;
     }
 
-    public function nullifyRelationOnChange(int $product_id): void {
+    public function nullifyRelationOnChange(int $product_id): void
+    {
         if ($this->product_id <> $product_id) {
             $this->product = null;
         }

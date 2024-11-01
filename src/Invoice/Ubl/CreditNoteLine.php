@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace App\Invoice\Ubl;
@@ -6,14 +7,15 @@ namespace App\Invoice\Ubl;
 class CreditNoteLine extends InvoiceLine
 {
     public string $xmlTagName = 'CreditNoteLine';
-    public float $invoicedQuantity; 
+    public float $invoicedQuantity;
     protected bool $isCreditNoteLine = true;
-    
-    public function __construct(float $invoicedQuantity, bool $isCreditNoteLine) {
+
+    public function __construct(float $invoicedQuantity, bool $isCreditNoteLine)
+    {
         $this->invoicedQuantity = $invoicedQuantity;
         $this->isCreditNoteLine = $isCreditNoteLine;
     }
-    
+
     /**
      * @return float
      */

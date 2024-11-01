@@ -17,7 +17,7 @@ class GoogleTranslateTypeNotFoundException extends \RuntimeException implements 
     {
         return 'There appears to be no language related file selected.';
     }
-    
+
     /**
      * @return string
      *

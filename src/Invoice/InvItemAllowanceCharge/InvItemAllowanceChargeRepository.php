@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=1); 
+declare(strict_types=1);
 
 namespace App\Invoice\InvItemAllowanceCharge;
 
@@ -17,7 +17,7 @@ use Yiisoft\Data\Cycle\Writer\EntityWriter;
  */
 final class InvItemAllowanceChargeRepository extends Select\Repository
 {
-private EntityWriter $entityWriter;
+    private EntityWriter $entityWriter;
     /**
      * @param Select<TEntity> $select
      * @param EntityWriter $entityWriter
@@ -38,7 +38,7 @@ private EntityWriter $entityWriter;
         $query = $this->select();
         return $this->prepareDataReader($query);
     }
-    
+
     /**
      * @psalm-return EntityReader
      */
@@ -47,39 +47,39 @@ private EntityWriter $entityWriter;
         return (new EntityReader($this->select()))
             ->withSort($this->getSort());
     }
-    
+
     /**
      * @return Sort
      */
     private function getSort(): Sort
     {
         return Sort::only(['id'])->withOrder(['id' => 'asc']);
-    }    
-    
+    }
+
     /**
      * @see Reader/ReadableDataInterface|InvalidArgumentException
      * @param array|InvItemAllowanceCharge|null $acii
      * @psalm-param TEntity $acii
-     * @throws Throwable 
+     * @throws Throwable
      * @return void
      */
     public function save(array|InvItemAllowanceCharge|null $acii): void
     {
         $this->entityWriter->write([$acii]);
     }
-    
+
     /**
      * @see Reader/ReadableDataInterface|InvalidArgumentException
      * @param array|InvItemAllowanceCharge|null $acii
-  
-     * @throws Throwable 
+
+     * @throws Throwable
      * @return void
      */
     public function delete(array|InvItemAllowanceCharge|null $acii): void
     {
         $this->entityWriter->delete([$acii]);
     }
-    
+
     /**
      * @param Select $query
      * @return EntityReader
@@ -93,17 +93,17 @@ private EntityWriter $entityWriter;
     }
 
     /**
-     * All item allowances or charges for this invoice 
+     * All item allowances or charges for this invoice
      * @param string $inv_id
      * @return EntityReader
      */
-    public function repoACIquery(string $inv_id) : EntityReader 
+    public function repoACIquery(string $inv_id): EntityReader
     {
         $query = $this->select()
-                      ->where(['inv_id'=>$inv_id]);
+                      ->where(['inv_id' => $inv_id]);
         return $this->prepareDataReader($query);
-    }        
-    
+    }
+
     /**
      * @param string $id
      * @psalm-return TEntity|null
@@ -112,63 +112,67 @@ private EntityWriter $entityWriter;
     public function repoInvItemAllowanceChargequery(string $id): InvItemAllowanceCharge|null
     {
         $query = $this->select()
-                      ->where(['id' =>$id]);
-        return  $query->fetchOne() ?: null;        
+                      ->where(['id' => $id]);
+        return  $query->fetchOne() ?: null;
     }
-    
+
     /**
      * @param string $id
      * @return int
      */
-    public function repoCount(string $id) : int {
+    public function repoCount(string $id): int
+    {
         $query = $this->select()
                       ->where(['id' => $id]);
         return $query->count();
     }
-    
+
     /**
      * @param string $inv_id
      * @return int
      */
-    public function repoInvCount(string $inv_id) : int {
+    public function repoInvCount(string $inv_id): int
+    {
         $query = $this->select()
                       ->where(['inv_id' => $inv_id]);
         return $query->count();
     }
-    
+
     /**
      * @param string $inv_item_id
      * @return int
      */
-    public function repoInvItemCount(string $inv_item_id) : int {
+    public function repoInvItemCount(string $inv_item_id): int
+    {
         $query = $this->select()
                       ->where(['inv_item_id' => $inv_item_id]);
         return $query->count();
     }
-    
+
     /**
      * All allowances and charges for this invoice item
      * @param string $inv_item_id
      * @return EntityReader
      */
-    public function repoInvItemquery(string $inv_item_id) : EntityReader 
+    public function repoInvItemquery(string $inv_item_id): EntityReader
     {
         $query = $this->select()
-                      ->load('allowance_charge') 
-                      ->where(['inv_item_id'=>$inv_item_id]);
+                      ->load('allowance_charge')
+                      ->where(['inv_item_id' => $inv_item_id]);
         return $this->prepareDataReader($query);
     }
-    
+
     /**
      * Used in InvController function multiplecopy
      * @return InvItemAllowanceCharge|null
      *
      * @psalm-return TEntity|null
      */
-    public function repoInvItemOriginalquery(string $inv_item_id) : InvItemAllowanceCharge|null {
+    public function repoInvItemOriginalquery(string $inv_item_id): InvItemAllowanceCharge|null
+    {
         $query = $this->select()
-                      ->load('allowance_charge')   
-                      ->where(['inv_item_id'=>$inv_item_id]);
-        return  $query->fetchOne() ?: null;        
+                      ->load('allowance_charge')
+                      ->where(['inv_item_id' => $inv_item_id]);
+        return  $query->fetchOne() ?: null;
     }
 }

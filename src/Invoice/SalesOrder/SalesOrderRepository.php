@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=1); 
+declare(strict_types=1);
 
 namespace App\Invoice\SalesOrder;
 
@@ -21,11 +21,11 @@ use Yiisoft\Data\Cycle\Writer\EntityWriter;
  */
 final class SalesOrderRepository extends Select\Repository
 {
-    private EntityWriter $entityWriter;    
+    private EntityWriter $entityWriter;
     private Translator $translator;
     private SR $sR;
     /**
-     * @param Select<TEntity> $select     
+     * @param Select<TEntity> $select
      * @param EntityWriter $entityWriter
      * @param Translator $translator
      * @param SR $sR
@@ -37,24 +37,24 @@ final class SalesOrderRepository extends Select\Repository
         $this->sR = $sR;
         parent::__construct($select);
     }
-    
+
     /**
      * Get SalesOrders with filter
      *
      * @psalm-return EntityReader
      */
-    public function findAllWithStatus(int $status_id) : EntityReader
+    public function findAllWithStatus(int $status_id): EntityReader
     {
         if (($status_id) > 0) {
-        $query = $this->select()
-                ->load(['client','group','user'])
-                ->where(['status_id' => $status_id]);  
-         return $this->prepareDataReader($query);
-       } else {
-         return $this->findAllPreloaded();  
-       }       
+            $query = $this->select()
+                    ->load(['client','group','user'])
+                    ->where(['status_id' => $status_id]);
+            return $this->prepareDataReader($query);
+        } else {
+            return $this->findAllPreloaded();
+        }
     }
-    
+
     /**
      * Get salesorders  without filter
      *
@@ -66,7 +66,7 @@ final class SalesOrderRepository extends Select\Repository
                       ->load(['client','group','user']);
         return $this->prepareDataReader($query);
     }
-    
+
     /**
      * @psalm-return EntityReader
      */
@@ -75,9 +75,9 @@ final class SalesOrderRepository extends Select\Repository
         return (new EntityReader($this->select()))
             ->withSort($this->getSort());
     }
-    
+
     /**
-     * 
+     *
      * @return Sort
      */
     private function getSort(): Sort
@@ -85,31 +85,31 @@ final class SalesOrderRepository extends Select\Repository
         // Provide the latest salesorder at the top of the list and order additionally according to status
         return Sort::only(['id', 'status'])->withOrder(['id' => 'desc', 'status' => 'asc']);
     }
-    
+
     /**
      * @see Reader/ReadableDataInterface|InvalidArgumentException
      * @param array|SalesOrder|null $salesorder
-     * @throws Throwable 
+     * @throws Throwable
      * @return void
      */
     public function save(array|SalesOrder|null $salesorder): void
     {
         $this->entityWriter->write([$salesorder]);
     }
-    
+
     /**
      * @see Reader/ReadableDataInterface|InvalidArgumentException
      * @param array|SalesOrder|null $salesorder
-     * @throws Throwable 
+     * @throws Throwable
      * @return void
      */
     public function delete(array|SalesOrder|null $salesorder): void
     {
         $this->entityWriter->delete([$salesorder]);
     }
-    
+
     /**
-     * 
+     *
      * @param Select $query
      * @return EntityReader
      */
@@ -120,117 +120,123 @@ final class SalesOrderRepository extends Select\Repository
                 ->withOrder(['id' => 'desc'])
         );
     }
-    
+
     /**
-     * @param string $id     
+     * @param string $id
      * @psalm-return TEntity|null
      * @return SalesOrder|null
      */
-    public function repoSalesOrderUnLoadedquery(string $id):SalesOrder|null    {
+    public function repoSalesOrderUnLoadedquery(string $id): SalesOrder|null
+    {
         $query = $this->select()
                       ->where(['id' => $id]);
-        return  $query->fetchOne() ?: null;        
+        return  $query->fetchOne() ?: null;
     }
-    
+
     /**
      * @return null|SalesOrder
      *
      * @psalm-return TEntity|null
      */
-    public function repoSalesOrderLoadedquery(string $id):SalesOrder|null    {
+    public function repoSalesOrderLoadedquery(string $id): SalesOrder|null
+    {
         $query = $this->select()
-                      ->load(['client','group','user']) 
+                      ->load(['client','group','user'])
                       ->where(['id' => $id]);
-        return  $query->fetchOne() ?: null;        
+        return  $query->fetchOne() ?: null;
     }
-    
+
     /**
-     * 
+     *
      * @param string|null $salesorder_id
      * @param int $status_id
      * @return SalesOrder|null
      */
-    public function repoSalesOrderStatusquery(string|null $salesorder_id, int $status_id) : SalesOrder|null {
+    public function repoSalesOrderStatusquery(string|null $salesorder_id, int $status_id): SalesOrder|null
+    {
         $query = $this->select()->where(['id' => $salesorder_id])
-                                ->where(['status_id'=>$status_id]);
-        return  $query->fetchOne() ?: null;        
+                                ->where(['status_id' => $status_id]);
+        return  $query->fetchOne() ?: null;
     }
-    
+
     /**
      * @psalm-param 1 $status_id
      *
      * @param null|string $salesorder_id
      */
-    public function repoSalesOrderStatuscount(string|null $salesorder_id, int $status_id): int {
+    public function repoSalesOrderStatuscount(string|null $salesorder_id, int $status_id): int
+    {
         $count = $this->select()->where(['id' => $salesorder_id])
-                                ->where(['status_id'=>$status_id])
+                                ->where(['status_id' => $status_id])
                                 ->count();
-        return  $count;      
+        return  $count;
     }
-    
+
     /**
-     * 
+     *
      * @param string $url_key
      * @return SalesOrder|null
-     */    
-    public function repoUrl_key_guest_loaded(string $url_key) : SalesOrder|null {
+     */
+    public function repoUrl_key_guest_loaded(string $url_key): SalesOrder|null
+    {
         $query = $this->select()
-                       ->load('client') 
+                       ->load('client')
                        ->where(['url_key' => $url_key]);
-        return  $query->fetchOne() ?: null;        
+        return  $query->fetchOne() ?: null;
     }
-    
+
     /**
-     * 
+     *
      * @param string $url_key
      * @return int
      */
-    public function repoUrl_key_guest_count(string $url_key) : int {
+    public function repoUrl_key_guest_count(string $url_key): int
+    {
         $count = $this->select()
                       ->where(['url_key' => $url_key])
                       ->count();
-        return  $count;        
+        return  $count;
     }
-    
+
     /**
-     * 
+     *
      * @param string $salesorder_id
      * @param array $user_client
      * @return int
      */
-    public function repoClient_guest_count(string $salesorder_id, array $user_client = []) : int {
+    public function repoClient_guest_count(string $salesorder_id, array $user_client = []): int
+    {
         $count = $this->select()
                       ->where(['id' => $salesorder_id])
-                      ->andWhere(['client_id'=>['in'=> new Parameter($user_client)]])
+                      ->andWhere(['client_id' => ['in' => new Parameter($user_client)]])
                       ->count();
-        return  $count;        
+        return  $count;
     }
-    
+
     /**
-     * 
+     *
      * @param int $status_id
      * @param array $user_client
      * @return EntityReader
      */
-    public function repoGuestStatuses(int $status_id, array $user_client = []) : EntityReader {
+    public function repoGuestStatuses(int $status_id, array $user_client = []): EntityReader
+    {
         // Get specific statuses
         if ($status_id > 0) {
             $query = $this->select()
-                          ->where(['status_id'=>$status_id])
-                          ->andWhere(['client_id'=>['in'=> new Parameter($user_client)]]);
+                          ->where(['status_id' => $status_id])
+                          ->andWhere(['client_id' => ['in' => new Parameter($user_client)]]);
             return $this->prepareDataReader($query);
-       } else
-       // Get all the salesorders according to status
-       {
+        } else { // Get all the salesorders according to status
             $query = $this->select()
-                    // Terms Agreement Required = 2, Client Confirmed Terms = 3, Assembled/Packaged/Prepared = 4, Goods/Service delivered = 5, 
-                    // Invoice Generate = 7, Invoice Generated = 8, Rejected = 9, Canceled = 10
-                    ->where(['client_id'=>['in'=> new Parameter($user_client)]])                      
-                    ->andWhere(['status_id'=>['in'=> new Parameter([2,3,4,5,6,7,8,9,10])]]);
+                         // Terms Agreement Required = 2, Client Confirmed Terms = 3, Assembled/Packaged/Prepared = 4, Goods/Service delivered = 5,
+                         // Invoice Generate = 7, Invoice Generated = 8, Rejected = 9, Canceled = 10
+                         ->where(['client_id' => ['in' => new Parameter($user_client)]])
+                         ->andWhere(['status_id' => ['in' => new Parameter([2,3,4,5,6,7,8,9,10])]]);
             return $this->prepareDataReader($query);
-       }
+        }
     }
-        
+
     /**
      * @see Invoice\Entity\SalesOrder getStatus_id in_array
      * @param Translator $translator
@@ -251,19 +257,19 @@ final class SalesOrderRepository extends Select\Repository
             ),
             '2' => array(
                 // Terms Agreement required
-                'label' => $translator->translate('invoice.salesorder.sent.to.customer'), 
+                'label' => $translator->translate('invoice.salesorder.sent.to.customer'),
                 'class' => 'sent',
                 'href' => 2
             ),
             '3' => array(
                 // Client Confirmed Terms
-                'label' => $translator->translate('invoice.salesorder.client.confirmed.terms'), 
+                'label' => $translator->translate('invoice.salesorder.client.confirmed.terms'),
                 'class' => 'viewed',
                 'href' => 3
             ),
             '4' => array(
                 // Assembled/Packaged/Prepared
-                'label' => $translator->translate('invoice.salesorder.assembled.packaged.prepared'), 
+                'label' => $translator->translate('invoice.salesorder.assembled.packaged.prepared'),
                 'class' => 'assembled',
                 'href' => 4
             ),
@@ -302,15 +308,15 @@ final class SalesOrderRepository extends Select\Repository
                 'class' => 'canceled',
                 'href' => 10
             )
-        );       
+        );
     }
-    
+
     /**
-     * 
+     *
      * @param string $key
      * @return string
      */
-    public function getSpecificStatusArrayLabel(string $key) : string
+    public function getSpecificStatusArrayLabel(string $key): string
     {
         $statuses_array = $this->getStatuses($this->translator);
         /**
@@ -319,13 +325,13 @@ final class SalesOrderRepository extends Select\Repository
          */
         return $statuses_array[$key]['label'];
     }
-    
+
     /**
-     * 
+     *
      * @param int $status
      * @return string
      */
-    public function getSpecificStatusArrayClass(int $status) : string
+    public function getSpecificStatusArrayClass(int $status): string
     {
         $statuses_array = $this->getStatuses($this->translator);
         /**
@@ -334,23 +340,23 @@ final class SalesOrderRepository extends Select\Repository
          */
         return $statuses_array[$status]['class'];
     }
-    
+
     /**
      * @param string $group_id
      * @return mixed
      */
-    public function get_salesorder_number(string $group_id, GR $gR) : mixed
-    {   
+    public function get_salesorder_number(string $group_id, GR $gR): mixed
+    {
         return $gR->generate_number((int)$group_id);
     }
-    
+
 
     /**
      * @psalm-return Select<TEntity>
      */
     public function guest_visible(): Select
     {
-        $query = $this->select()->where(['status_id'=>['in'=>new Parameter([2,3,4,5])]]);
+        $query = $this->select()->where(['status_id' => ['in' => new Parameter([2,3,4,5])]]);
         return $query ;
     }
 
@@ -362,10 +368,10 @@ final class SalesOrderRepository extends Select\Repository
     public function by_client(int $client_id): Select
     {
         $query = $this->select()
-                      ->where(['client_id'=>$client_id]);
+                      ->where(['client_id' => $client_id]);
         return $query;
     }
-    
+
     /**
      * @param $client_id
      * @param $status_id
@@ -379,9 +385,9 @@ final class SalesOrderRepository extends Select\Repository
                       ->andWhere(['status_id' => $status_id]);
         return $this->prepareDataReader($query);
     }
-    
+
     /**
-     * 
+     *
      * @param int $client_id
      * @param int $status_id
      * @return int
@@ -391,8 +397,8 @@ final class SalesOrderRepository extends Select\Repository
         $count = $this->select()
                       ->where(['client_id' => $client_id])
                       ->andWhere(['status_id' => $status_id])
-                      ->count();        
-        return $count; 
+                      ->count();
+        return $count;
     }
 
     /**
@@ -400,10 +406,11 @@ final class SalesOrderRepository extends Select\Repository
      *
      * @psalm-return Select<TEntity>
      */
-    public function approve_or_reject_salesorder_by_key(string $url_key): Select{
+    public function approve_or_reject_salesorder_by_key(string $url_key): Select
+    {
         $query = $this->select()
-                      ->where(['status_id'=>['in'=>new Parameter([2,3,4,5, 6])]])
-                      ->where(['url_key'=>$url_key]);
+                      ->where(['status_id' => ['in' => new Parameter([2,3,4,5, 6])]])
+                      ->where(['url_key' => $url_key]);
         return $query;
     }
 
@@ -411,53 +418,58 @@ final class SalesOrderRepository extends Select\Repository
      * @param string $id
      * @return Select
      */
-    public function approve_or_reject_salesorder_by_id(string $id): Select{
+    public function approve_or_reject_salesorder_by_id(string $id): Select
+    {
         $query = $this->select()
-                      ->where(['status_id'=>['in'=>new Parameter([2])]])
-                      ->where(['id'=>$id]);
+                      ->where(['status_id' => ['in' => new Parameter([2])]])
+                      ->where(['id' => $id]);
         return $query;
     }
-    
+
     /**
      * @param null|string $salesorder_id
      */
-    public function repoCount(string|null $salesorder_id) : int {
+    public function repoCount(string|null $salesorder_id): int
+    {
         $count = $this->select()
-                      ->where(['id'=>$salesorder_id])
+                      ->where(['id' => $salesorder_id])
                       ->count();
         return $count;
     }
-    
+
     /**
-     * 
+     *
      * @return int
      */
-    public function repoCountAll() : int {
+    public function repoCountAll(): int
+    {
         $count = $this->select()
                       ->count();
         return $count;
     }
-    
+
     /**
-     * 
+     *
      * @param int $client_id
      * @return int
      */
-    public function repoCountByClient(int $client_id) : int {
+    public function repoCountByClient(int $client_id): int
+    {
         $count = $this->select()
-                      ->where(['client_id'=>$client_id])  
+                      ->where(['client_id' => $client_id])
                       ->count();
         return $count;
     }
-    
+
     /**
-     * 
+     *
      * @param int $client_id
      * @return EntityReader
      */
-    public function repoClient(int $client_id) : EntityReader { 
+    public function repoClient(int $client_id): EntityReader
+    {
         $query = $this->select()
-                      ->where(['client_id' => $client_id]); 
+                      ->where(['client_id' => $client_id]);
         return $this->prepareDataReader($query);
     }
 }

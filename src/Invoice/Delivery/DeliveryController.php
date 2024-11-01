@@ -27,10 +27,10 @@ use Yiisoft\Session\Flash\Flash;
 use Yiisoft\Translator\TranslatorInterface;
 use Yiisoft\FormModel\FormHydrator;
 use Yiisoft\Yii\View\Renderer\ViewRenderer;
-use \Exception;
+use Exception;
 
-final class DeliveryController {
-
+final class DeliveryController
+{
     private SessionInterface $session;
     private Flash $flash;
     private ViewRenderer $viewRenderer;
@@ -40,7 +40,7 @@ final class DeliveryController {
     private TranslatorInterface $translator;
 
     public function __construct(
-        SessionInterface $session,            
+        SessionInterface $session,
         ViewRenderer $viewRenderer,
         WebControllerService $webService,
         UserService $userService,
@@ -63,7 +63,7 @@ final class DeliveryController {
         $this->deliveryService = $deliveryService;
         $this->translator = $translator;
     }
-    
+
     /**
      * @param CurrentRoute $currentRoute
      * @param Request $request
@@ -73,11 +73,13 @@ final class DeliveryController {
      * @param DLR $delRepo
      * @return Response
      */
-    public function add(CurrentRoute $currentRoute, Request $request,
-            FormHydrator $formHydrator,
-            SettingRepository $settingRepository,
-            InvRepository $iR,
-            DLR $delRepo
+    public function add(
+        CurrentRoute $currentRoute,
+        Request $request,
+        FormHydrator $formHydrator,
+        SettingRepository $settingRepository,
+        InvRepository $iR,
+        DLR $delRepo
     ): Response {
         $inv_id = $currentRoute->getArgument('inv_id');
         $inv = $iR->repoInvLoadedquery((string) $inv_id);
@@ -89,7 +91,7 @@ final class DeliveryController {
             $form = new DeliveryForm($delivery);
             $parameters = [
                 'title' => $this->translator->translate('invoice.invoice.delivery.add'),
-                'actionName' => 'delivery/add', 
+                'actionName' => 'delivery/add',
                 'actionArguments' => ['inv_id' => $inv->getId()],
                 'errors' => [],
                 'form' => $form,
@@ -97,9 +99,9 @@ final class DeliveryController {
                 'dels' => $dels,
                 'inv' => $inv
             ];
-            if ($request->getMethod() === Method::POST) {                
+            if ($request->getMethod() === Method::POST) {
                 $body = $request->getParsedBody();
-                if ($formHydrator->populateFromPostAndValidate($form,  $request)) {
+                if ($formHydrator->populateFromPostAndValidate($form, $request)) {
                     /**
                      * @psalm-suppress PossiblyInvalidArgument $body
                      */
@@ -114,23 +116,27 @@ final class DeliveryController {
         return $this->webService->getNotFoundResponse();
     }
 
- /**
-  * @return string
-  */
-   private function alert(): string {
-     return $this->viewRenderer->renderPartialAsString('//invoice/layout/alert',
-     [ 
+    /**
+     * @return string
+     */
+    private function alert(): string
+    {
+        return $this->viewRenderer->renderPartialAsString(
+            '//invoice/layout/alert',
+            [
        'flash' => $this->flash,
        'errors' => [],
-     ]);
-   }
+     ]
+        );
+    }
 
     /**
      * @param string $level
      * @param string $message
      * @return Flash|null
      */
-    private function flash_message(string $level, string $message): Flash|null {
+    private function flash_message(string $level, string $message): Flash|null
+    {
         if (strlen($message) > 0) {
             $this->flash->add($level, $message, true);
             return $this->flash;
@@ -145,7 +151,8 @@ final class DeliveryController {
      * @param Request $request
      * @return Response
      */
-    public function index(CurrentRoute $currentRoute, DeliveryRepository $dR, SettingRepository $sR, Request $request): Response {
+    public function index(CurrentRoute $currentRoute, DeliveryRepository $dR, SettingRepository $sR, Request $request): Response
+    {
         $query_params = $request->getQueryParams();
         /**
          * @var string $query_params['page']
@@ -168,7 +175,7 @@ final class DeliveryController {
             'alert' => $this->alert(),
             'paginator' => $paginator,
             'deliveries' => $this->deliveries($dR),
-            'max' =>(int) $sR->getSetting('default_list_limit'),
+            'max' => (int) $sR->getSetting('default_list_limit'),
         ];
         return $this->viewRenderer->render('delivery/index', $parameters);
     }
@@ -181,7 +188,8 @@ final class DeliveryController {
      *
      * @psalm-return SortableDataInterface&DataReaderInterface<int, Delivery>
      */
-    private function deliveries_with_sort(DeliveryRepository $dR, Sort $sort): SortableDataInterface {
+    private function deliveries_with_sort(DeliveryRepository $dR, Sort $sort): SortableDataInterface
+    {
         $deliveries = $dR->findAllPreloaded()
                          ->withSort($sort);
         return $deliveries;
@@ -192,7 +200,9 @@ final class DeliveryController {
      * @param DeliveryRepository $deliveryRepository
      * @return Response
      */
-    public function delete(CurrentRoute $currentRoute, DeliveryRepository $deliveryRepository
+    public function delete(
+        CurrentRoute $currentRoute,
+        DeliveryRepository $deliveryRepository
     ): Response {
         try {
             $delivery = $this->delivery($currentRoute, $deliveryRepository);
@@ -218,45 +228,47 @@ final class DeliveryController {
      * @param InvRepository $iR
      * @return Response
      */
-    public function edit(Request $request, CurrentRoute $currentRoute,
-            FormHydrator $formHydrator,
-            DeliveryRepository $deliveryRepository,
-            SettingRepository $settingRepository,
-            DLR $delRepo,
-            InvRepository $iR
+    public function edit(
+        Request $request,
+        CurrentRoute $currentRoute,
+        FormHydrator $formHydrator,
+        DeliveryRepository $deliveryRepository,
+        SettingRepository $settingRepository,
+        DLR $delRepo,
+        InvRepository $iR
     ): Response {
         $delivery = $this->delivery($currentRoute, $deliveryRepository);
         if ($delivery) {
-          $form = new DeliveryForm($delivery);  
-          $inv_id = $delivery->getInv_id();
-          $inv = $iR->repoInvLoadedquery((string) $inv_id);
-          if (null!==$inv) {
-            $dels = $delRepo->repoClientquery($inv->getClient_id());
-            $parameters = [
-                'title' => $this->translator->translate('i.edit'),
-                'actionName' => 'delivery/edit', 
-                'actionArguments' => ['id' => $delivery->getId()],
-                'errors' => [],
-                'form' => $form,
-                'inv' => $inv,
-                'del_count' => $delRepo->repoClientCount($inv->getClient_id()),
-                'dels' => $dels
-            ];
-            if ($request->getMethod() === Method::POST) {
-                $body = $request->getParsedBody();
-                if ($formHydrator->populateFromPostAndValidate($form,  $request)) {
-                /**
-                 * @psalm-suppress PossiblyInvalidArgument $body
-                 */
-                    $this->deliveryService->saveDelivery($delivery, $body, $settingRepository);
-                    return $this->webService->getRedirectResponse('delivery/index');
+            $form = new DeliveryForm($delivery);
+            $inv_id = $delivery->getInv_id();
+            $inv = $iR->repoInvLoadedquery((string) $inv_id);
+            if (null !== $inv) {
+                $dels = $delRepo->repoClientquery($inv->getClient_id());
+                $parameters = [
+                    'title' => $this->translator->translate('i.edit'),
+                    'actionName' => 'delivery/edit',
+                    'actionArguments' => ['id' => $delivery->getId()],
+                    'errors' => [],
+                    'form' => $form,
+                    'inv' => $inv,
+                    'del_count' => $delRepo->repoClientCount($inv->getClient_id()),
+                    'dels' => $dels
+                ];
+                if ($request->getMethod() === Method::POST) {
+                    $body = $request->getParsedBody();
+                    if ($formHydrator->populateFromPostAndValidate($form, $request)) {
+                        /**
+                         * @psalm-suppress PossiblyInvalidArgument $body
+                         */
+                        $this->deliveryService->saveDelivery($delivery, $body, $settingRepository);
+                        return $this->webService->getRedirectResponse('delivery/index');
+                    }
+                    $parameters['errors'] = $form->getValidationResult()->getErrorMessagesIndexedByProperty();
+                    $parameters['form'] = $form;
+
                 }
-                $parameters['errors'] = $form->getValidationResult()->getErrorMessagesIndexedByProperty();
-                $parameters['form'] = $form;
-                
-            }
-            return $this->viewRenderer->render('delivery/_form', $parameters);
-          } // null!==$inv  
+                return $this->viewRenderer->render('delivery/_form', $parameters);
+            } // null!==$inv
         }
         return $this->webService->getRedirectResponse('delivery/index');
     }
@@ -268,7 +280,8 @@ final class DeliveryController {
      * @param DeliveryRepository $deliveryRepository
      * @return Delivery|null
      */
-    private function delivery(CurrentRoute $currentRoute, DeliveryRepository $deliveryRepository): Delivery|null {
+    private function delivery(CurrentRoute $currentRoute, DeliveryRepository $deliveryRepository): Delivery|null
+    {
         $id = $currentRoute->getArgument('id');
         if (null !== $id) {
             $delivery = $deliveryRepository->repoDeliveryquery($id);
@@ -282,7 +295,8 @@ final class DeliveryController {
      *
      * @psalm-return \Yiisoft\Data\Cycle\Reader\EntityReader
      */
-    private function deliveries(DeliveryRepository $deliveryRepository): \Yiisoft\Data\Cycle\Reader\EntityReader {
+    private function deliveries(DeliveryRepository $deliveryRepository): \Yiisoft\Data\Cycle\Reader\EntityReader
+    {
         $deliveries = $deliveryRepository->findAllPreloaded();
         return $deliveries;
     }
@@ -292,13 +306,14 @@ final class DeliveryController {
      * @param DeliveryRepository $deliveryRepository
      * @return \Yiisoft\DataResponse\DataResponse|Response
      */
-    public function view(CurrentRoute $currentRoute, DeliveryRepository $deliveryRepository) : \Yiisoft\DataResponse\DataResponse|Response {
+    public function view(CurrentRoute $currentRoute, DeliveryRepository $deliveryRepository): \Yiisoft\DataResponse\DataResponse|Response
+    {
         $delivery = $this->delivery($currentRoute, $deliveryRepository);
         if ($delivery) {
             $form = new DeliveryForm($delivery);
             $parameters = [
                 'title' => $this->translator->translate('i.view'),
-                'actionName' => 'delivery/view', 
+                'actionName' => 'delivery/view',
                 'actionArguments' => ['id' => $delivery->getId()],
                 'errors' => [],
                 'form' => $form,

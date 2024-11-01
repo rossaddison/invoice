@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=1); 
+declare(strict_types=1);
 
 namespace App\Invoice\DeliveryParty;
 
@@ -17,7 +17,7 @@ use Yiisoft\Data\Cycle\Writer\EntityWriter;
  */
 final class DeliveryPartyRepository extends Select\Repository
 {
-private EntityWriter $entityWriter;
+    private EntityWriter $entityWriter;
     /**
      * @param Select<TEntity> $select
      * @param EntityWriter $entityWriter
@@ -35,9 +35,10 @@ private EntityWriter $entityWriter;
      */
     public function findAllPreloaded(): EntityReader
     {
-        $query = $this->select();        return $this->prepareDataReader($query);
+        $query = $this->select();
+        return $this->prepareDataReader($query);
     }
-    
+
     /**
      * @psalm-return EntityReader
      */
@@ -46,39 +47,39 @@ private EntityWriter $entityWriter;
         return (new EntityReader($this->select()))
             ->withSort($this->getSort());
     }
-    
+
     /**
      * @return Sort
      */
     private function getSort(): Sort
     {
         return Sort::only(['id'])->withOrder(['id' => 'asc']);
-    }    
-    
+    }
+
     /**
      * @see Reader/ReadableDataInterface|InvalidArgumentException
      * @param array|DeliveryParty|null $deliveryparty
      * @psalm-param TEntity $deliveryparty
-     * @throws Throwable 
+     * @throws Throwable
      * @return void
      */
     public function save(array|DeliveryParty|null $deliveryparty): void
     {
         $this->entityWriter->write([$deliveryparty]);
     }
-    
+
     /**
      * @see Reader/ReadableDataInterface|InvalidArgumentException
      * @param array|DeliveryParty|null $deliveryparty
-  
-     * @throws Throwable 
+
+     * @throws Throwable
      * @return void
      */
     public function delete(array|DeliveryParty|null $deliveryparty): void
     {
         $this->entityWriter->delete([$deliveryparty]);
     }
-    
+
     /**
      * @param Select $query
      * @return EntityReader
@@ -89,8 +90,8 @@ private EntityWriter $entityWriter;
             Sort::only(['id'])
                 ->withOrder(['id' => 'asc'])
         );
-    }    
-    
+    }
+
     /**
      * @param string $id
      * @psalm-return TEntity|null
@@ -99,20 +100,21 @@ private EntityWriter $entityWriter;
     public function repoDeliveryPartyquery(string $id): DeliveryParty|null
     {
         $query = $this->select()
-                      ->where(['id' =>$id]);        
-        return  $query->fetchOne() ?: null;        
+                      ->where(['id' => $id]);
+        return  $query->fetchOne() ?: null;
     }
-    
-    
-    
-    
+
+
+
+
     /**
      * @param string $id
      * @return int
      */
-    public function repoCount(string $id) : int {
+    public function repoCount(string $id): int
+    {
         $query = $this->select()
                       ->where(['id' => $id]);
         return $query->count();
-    }   
+    }
 }

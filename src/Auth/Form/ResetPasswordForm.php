@@ -19,7 +19,7 @@ final class ResetPasswordForm extends FormModel implements RulesProviderInterfac
 {
     private string $newPassword = '';
     private string $newPasswordVerify = '';
-    
+
     public function __construct(
         private TranslatorInterface $translator
     ) {
@@ -47,17 +47,17 @@ final class ResetPasswordForm extends FormModel implements RulesProviderInterfac
     {
         return 'ResetPassword';
     }
-        
+
     public function getNewPassword(): string
-    {  
+    {
         return $this->newPassword;
     }
-    
-    public function getNewPasswordVerify() : string
+
+    public function getNewPasswordVerify(): string
     {
         return $this->newPasswordVerify;
     }
-    
+
     public function getRules(): array
     {
         return [
@@ -67,11 +67,11 @@ final class ResetPasswordForm extends FormModel implements RulesProviderInterfac
                  * New Length(min: 8)
                  * @see https://github.com/yiisoft/demo/pull/602  Password length should not be limited
                  */
-            ], 
+            ],
             'newPasswordVerify' => $this->NewPasswordVerifyRules()
         ];
     }
-      
+
     private function newPasswordVerifyRules(): array
     {
         return [
@@ -80,7 +80,7 @@ final class ResetPasswordForm extends FormModel implements RulesProviderInterfac
                 callback: function (): Result {
                     $result = new Result();
                     if (!($this->newPassword === $this->newPasswordVerify)) {
-                      $result->addError($this->translator->translate('validator.password.not.match.new'));
+                        $result->addError($this->translator->translate('validator.password.not.match.new'));
                     }
                     return $result;
                 },

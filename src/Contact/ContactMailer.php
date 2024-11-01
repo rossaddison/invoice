@@ -28,7 +28,7 @@ final class ContactMailer
         private string $sender,
         private string $to
     ) {
-        $this->flash = New Flash($session);
+        $this->flash = new Flash($session);
         $this->session = $session;
         $this->mailer = $mailer;
         $this->translator = $translator;
@@ -36,22 +36,22 @@ final class ContactMailer
 
     public function send(ContactForm $form): void
     {
-            $message = (new \Yiisoft\Mailer\Message())
-            ->withCharSet('UTF-8')        
-            ->withSubject((string)$form->getPropertyValue('subject'))
-            ->withFrom([(string)$form->getPropertyValue('email') => (string)$form->getPropertyValue('name')])
-            ->withSender($this->sender)
-            ->withTo($this->to)
-            ->withTextBody((string)$form->getPropertyValue('body'));
-                
+        $message = (new \Yiisoft\Mailer\Message())
+        ->withCharSet('UTF-8')
+        ->withSubject((string)$form->getPropertyValue('subject'))
+        ->withFrom([(string)$form->getPropertyValue('email') => (string)$form->getPropertyValue('name')])
+        ->withSender($this->sender)
+        ->withTo($this->to)
+        ->withTextBody((string)$form->getPropertyValue('body'));
+
         /** @var array $attachFile */
         foreach ($form->getPropertyValue('attachFiles') as $attachFile) {
-            /** 
-             * @var array $file 
-             * @psalm-suppress MixedMethodCall 
+            /**
+             * @var array $file
+             * @psalm-suppress MixedMethodCall
              */
             foreach ($attachFile as $file) {
-                if ($file[0]?->getError() === UPLOAD_ERR_OK && (null!==$file[0]?->getStream())) {
+                if ($file[0]?->getError() === UPLOAD_ERR_OK && (null !== $file[0]?->getStream())) {
                     /** @psalm-suppress MixedAssignment $message */
                     $message = $message->withAttachments(
                         File::fromContent(
@@ -69,15 +69,16 @@ final class ContactMailer
         } catch (Exception $e) {
             $flashMsg = $e->getMessage();
             $this->logger->error($flashMsg);
-        } 
+        }
     }
-    
-     /**
-     * @param string $level
-     * @param string $message
-     * @return Flash|null
-     */
-    private function flashMessage(string $level, string $message): Flash|null {
+
+    /**
+    * @param string $level
+    * @param string $message
+    * @return Flash|null
+    */
+    private function flashMessage(string $level, string $message): Flash|null
+    {
         if (strlen($message) > 0) {
             $this->flash->add($level, $message, true);
             return $this->flash;

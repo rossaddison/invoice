@@ -1,15 +1,13 @@
 <?php
 
-declare(strict_types=1); 
+declare(strict_types=1);
 
 namespace App\Invoice\ItemLookup;
 
 use App\Invoice\Entity\ItemLookup;
 
-
 final class ItemLookupService
 {
-
     private ItemLookupRepository $repository;
 
     public function __construct(ItemLookupRepository $repository)
@@ -18,7 +16,7 @@ final class ItemLookupService
     }
 
     /**
-     * 
+     *
      * @param ItemLookup $model
      * @param array $array
      * @return void
@@ -30,7 +28,7 @@ final class ItemLookupService
         isset($array['price']) ? $model->setPrice((float)$array['price']) : 0.00;
         $this->repository->save($model);
     }
-    
+
     /**
      * @param ItemLookup $model
      * @return void

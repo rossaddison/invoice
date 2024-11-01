@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=1); 
+declare(strict_types=1);
 
 namespace App\Invoice\UserCustom;
 
@@ -17,9 +17,9 @@ use Yiisoft\Data\Cycle\Writer\EntityWriter;
  */
 final class UserCustomRepository extends Select\Repository
 {
-private EntityWriter $entityWriter;
+    private EntityWriter $entityWriter;
     /**
-     * @param Select<TEntity> $select 
+     * @param Select<TEntity> $select
      * @param EntityWriter $entityWriter
      */
     public function __construct(Select $select, EntityWriter $entityWriter)
@@ -38,7 +38,7 @@ private EntityWriter $entityWriter;
         $query = $this->select();
         return $this->prepareDataReader($query);
     }
-    
+
     /**
      * @psalm-return EntityReader
      */
@@ -47,34 +47,34 @@ private EntityWriter $entityWriter;
         return (new EntityReader($this->select()))
             ->withSort($this->getSort());
     }
-    
+
     private function getSort(): Sort
     {
         return Sort::only(['id'])->withOrder(['id' => 'asc']);
     }
-    
+
     /**
      * @see Reader/ReadableDataInterface|InvalidArgumentException
      * @param array|UserCustom|null $usercustom
-     * @throws Throwable 
+     * @throws Throwable
      * @return void
      */
     public function save(array|UserCustom|null $usercustom): void
     {
         $this->entityWriter->write([$usercustom]);
     }
-    
+
     /**
      * @see Reader/ReadableDataInterface|InvalidArgumentException
      * @param array|UserCustom|null $usercustom
-     * @throws Throwable 
+     * @throws Throwable
      * @return void
      */
     public function delete(array|UserCustom|null $usercustom): void
     {
         $this->entityWriter->delete([$usercustom]);
     }
-    
+
     private function prepareDataReader(Select $query): EntityReader
     {
         return (new EntityReader($query))->withSort(
@@ -82,14 +82,15 @@ private EntityWriter $entityWriter;
                 ->withOrder(['id' => 'asc'])
         );
     }
-    
+
     /**
      * @return null|UserCustom
      *
      * @psalm-return TEntity|null
      */
-    public function repoUserCustomquery(string $id):UserCustom|null    {
+    public function repoUserCustomquery(string $id): UserCustom|null
+    {
         $query = $this->select()->load('user')->where(['id' => $id]);
-        return  $query->fetchOne() ?: null;        
+        return  $query->fetchOne() ?: null;
     }
 }

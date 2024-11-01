@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=1); 
+declare(strict_types=1);
 
 namespace App\Invoice\ClientPeppol;
 
@@ -17,7 +17,7 @@ use Yiisoft\Data\Cycle\Writer\EntityWriter;
  */
 final class ClientPeppolRepository extends Select\Repository
 {
-private EntityWriter $entityWriter;
+    private EntityWriter $entityWriter;
     /**
      * @param Select<TEntity> $select
      * @param EntityWriter $entityWriter
@@ -39,7 +39,7 @@ private EntityWriter $entityWriter;
                       ->load('client');
         return $this->prepareDataReader($query);
     }
-    
+
     /**
      * @psalm-return EntityReader
      */
@@ -48,39 +48,39 @@ private EntityWriter $entityWriter;
         return (new EntityReader($this->select()))
             ->withSort($this->getSort());
     }
-    
+
     /**
      * @return Sort
      */
     private function getSort(): Sort
     {
         return Sort::only(['id'])->withOrder(['id' => 'asc']);
-    }    
-    
+    }
+
     /**
      * @see Reader/ReadableDataInterface|InvalidArgumentException
      * @param array|ClientPeppol|null $clientpeppol
      * @psalm-param TEntity $clientpeppol
-     * @throws Throwable 
+     * @throws Throwable
      * @return void
      */
     public function save(array|ClientPeppol|null $clientpeppol): void
     {
         $this->entityWriter->write([$clientpeppol]);
     }
-    
+
     /**
      * @see Reader/ReadableDataInterface|InvalidArgumentException
      * @param array|ClientPeppol|null $clientpeppol
-  
-     * @throws Throwable 
+
+     * @throws Throwable
      * @return void
      */
     public function delete(array|ClientPeppol|null $clientpeppol): void
     {
         $this->entityWriter->delete([$clientpeppol]);
     }
-    
+
     /**
      * @param Select $query
      * @return EntityReader
@@ -91,8 +91,8 @@ private EntityWriter $entityWriter;
             Sort::only(['id'])
                 ->withOrder(['id' => 'asc'])
         );
-    }    
-    
+    }
+
     /**
      * @param string $client_id
      * @psalm-return TEntity|null
@@ -102,25 +102,27 @@ private EntityWriter $entityWriter;
     {
         $query = $this->select()
                       ->load('client')
-                      ->where(['client_id' =>$client_id]); 
-        return  $query->fetchOne() ?: null;        
+                      ->where(['client_id' => $client_id]);
+        return  $query->fetchOne() ?: null;
     }
-    
+
     /**
      * @param string $id
      * @return int
      */
-    public function repoCount(string $id) : int {
+    public function repoCount(string $id): int
+    {
         $query = $this->select()
                       ->where(['id' => $id]);
         return $query->count();
     }
-    
+
     /**
      * @param string $client_id
      * @return int
      */
-    public function repoClientCount(string $client_id) : int {
+    public function repoClientCount(string $client_id): int
+    {
         $query = $this->select()
                       ->where(['client_id' => $client_id]);
         return $query->count();

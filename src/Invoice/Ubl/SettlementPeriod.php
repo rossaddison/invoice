@@ -1,26 +1,26 @@
 <?php
-declare(strict_types=1); 
+
+declare(strict_types=1);
 
 namespace App\Invoice\Ubl;
 
 use Sabre\Xml\Writer;
 use Sabre\Xml\XmlSerializable;
-
 use DateTime;
 
 class SettlementPeriod implements XmlSerializable
 {
     private DateTime $startDate;
     private DateTime $endDate;
-    
+
     private function __construct(DateTime $startDate, DateTime $endDate)
     {
         $this->startDate = $startDate;
         $this->endDate = $endDate;
-    } 
-    
+    }
+
     /**
-     * 
+     *
      * @param Writer $writer
      * @return void
      */

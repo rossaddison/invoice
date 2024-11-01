@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=1); 
+declare(strict_types=1);
 
 namespace App\Invoice\ClientCustom;
 
@@ -12,23 +12,23 @@ final class ClientCustomService
 
     public function __construct(ClientCustomRepository $repository)
     {
-       $this->repository = $repository;
+        $this->repository = $repository;
     }
 
     /**
-     * 
+     *
      * @param ClientCustom $model
      * @param array $array
      * @return void
      */
     public function saveClientCustom(ClientCustom $model, array $array): void
     {
-       isset($array['client_id']) ? $model->setClient_id((int)$array['client_id']) : '';
-       isset($array['custom_field_id']) ? $model->setCustom_field_id((int)$array['custom_field_id']) : '';
-       isset($array['value']) ? $model->setValue((string)$array['value']) : '';       
-       $this->repository->save($model);
+        isset($array['client_id']) ? $model->setClient_id((int)$array['client_id']) : '';
+        isset($array['custom_field_id']) ? $model->setCustom_field_id((int)$array['custom_field_id']) : '';
+        isset($array['value']) ? $model->setValue((string)$array['value']) : '';
+        $this->repository->save($model);
     }
-    
+
     /**
      * @param ClientCustom $model
      * @return void

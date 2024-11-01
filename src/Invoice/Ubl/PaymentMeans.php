@@ -1,5 +1,6 @@
 <?php
-declare(strict_types=1); 
+
+declare(strict_types=1);
 
 namespace App\Invoice\Ubl;
 
@@ -11,17 +12,18 @@ class PaymentMeans implements XmlSerializable
     private ?int $paymentMeansCode = 30;
     private array $paymentMeansCodeAttributes = [
         'name' => 'Credit Transfer'
-    ];  
+    ];
     private ?string $paymentId;
     private ?PayeeFinancialAccount $payeeFinancialAccount;
-    
+
     public function __construct(
         ?PayeeFinancialAccount $payeeFinancialAccount,
-        string $paymentId = '') {
+        string $paymentId = ''
+    ) {
         $this->payeeFinancialAccount = $payeeFinancialAccount;
         $this->paymentId = $paymentId;
     }
-    
+
     /**
      * @see https://github.com/OpenPEPPOL/peppol-bis-invoice-3/search?p=3&q=PaymentMeans
      * @param Writer $writer

@@ -9,33 +9,34 @@ use Yiisoft\FormModel\FormModel;
 use Yiisoft\Validator\Rule\Required;
 
 final class FromDropDownForm extends FormModel
-{    
+{
     #[Required]
-    private ?string $email='';
+    private ?string $email = '';
     #[Required]
-    private ?bool $include=false;
-    #[Required] 
-    private ?bool $default_email=false;
-    
-    public function __construct(FromDropDown $from) {
+    private ?bool $include = false;
+    #[Required]
+    private ?bool $default_email = false;
+
+    public function __construct(FromDropDown $from)
+    {
         $this->email = $from->getEmail();
         $this->include = $from->getInclude();
         $this->default_email = $from->getDefault_email();
     }
 
-    public function getEmail() : string|null
+    public function getEmail(): string|null
     {
-      return $this->email;
+        return $this->email;
     }
 
-    public function getInclude() : bool|null
+    public function getInclude(): bool|null
     {
-      return $this->include;
+        return $this->include;
     }
 
-    public function getDefault_email() : bool|null
+    public function getDefault_email(): bool|null
     {
-      return $this->default_email;
+        return $this->default_email;
     }
 
     /**
@@ -44,6 +45,6 @@ final class FromDropDownForm extends FormModel
      */
     public function getFormName(): string
     {
-      return '';
+        return '';
     }
 }

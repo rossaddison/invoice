@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=1); 
+declare(strict_types=1);
 
 namespace App\Invoice\Payment;
 
@@ -12,7 +12,6 @@ use Cycle\ORM\Select;
 use Yiisoft\Data\Reader\Sort;
 use Yiisoft\Data\Cycle\Reader\EntityReader;
 use Yiisoft\Data\Cycle\Writer\EntityWriter;
-
 use Throwable;
 
 /**
@@ -21,11 +20,11 @@ use Throwable;
  */
 final class PaymentRepository extends Select\Repository
 {
-private EntityWriter $entityWriter;
-     /**
-     * @param Select<TEntity> $select
-     * @param EntityWriter $entityWriter
-     */
+    private EntityWriter $entityWriter;
+    /**
+    * @param Select<TEntity> $select
+    * @param EntityWriter $entityWriter
+    */
     public function __construct(Select $select, EntityWriter $entityWriter)
     {
         $this->entityWriter = $entityWriter;
@@ -43,9 +42,9 @@ private EntityWriter $entityWriter;
                                 ->load('payment_method');
         return $this->prepareDataReader($query);
     }
-    
+
     // Find all payments associated with a user's clients ie. their client list / client_id_array
-    
+
     /**
      * Get payments  with filter
      *
@@ -57,10 +56,10 @@ private EntityWriter $entityWriter;
     {
         $query = $this->select()
                       ->load('inv')
-                      ->where(['inv.client_id'=>['in'=> new Parameter($client_id_array)]]);        
+                      ->where(['inv.client_id' => ['in' => new Parameter($client_id_array)]]);
         return   $this->prepareDataReader($query);
     }
-    
+
     /**
      * @psalm-return EntityReader
      */
@@ -69,34 +68,34 @@ private EntityWriter $entityWriter;
         return (new EntityReader($this->select()))
             ->withSort($this->getSort());
     }
-    
+
     private function getSort(): Sort
     {
         return Sort::only(['id'])->withOrder(['id' => 'asc']);
     }
-    
+
     /**
      * @see Reader/ReadableDataInterface|InvalidArgumentException
      * @param array|Payment|null $payment
-     * @throws Throwable 
+     * @throws Throwable
      * @return void
      */
     public function save(array|Payment|null $payment): void
     {
         $this->entityWriter->write([$payment]);
     }
-    
+
     /**
      * @see Reader/ReadableDataInterface|InvalidArgumentException
      * @param array|Payment|null $payment
-     * @throws Throwable 
+     * @throws Throwable
      * @return void
      */
     public function delete(array|Payment|null $payment): void
     {
         $this->entityWriter->delete([$payment]);
     }
-    
+
     private function prepareDataReader(Select $query): EntityReader
     {
         return (new EntityReader($query))->withSort(
@@ -104,98 +103,107 @@ private EntityWriter $entityWriter;
                 ->withOrder(['id' => 'desc'])
         );
     }
-    
+
     /**
      * @psalm-return EntityReader
      */
-    public function repoPaymentInvLoadedAll(int $list_limit) {
+    public function repoPaymentInvLoadedAll(int $list_limit)
+    {
         $query = $this->select()
                       ->load('inv')
                       ->limit($list_limit);
-        return  $this->prepareDataReader($query);           
+        return  $this->prepareDataReader($query);
     }
-    
+
     /**
      * @psalm-return EntityReader
      */
-    public function repoPaymentAmountFilter(string $paymentAmount) {
+    public function repoPaymentAmountFilter(string $paymentAmount)
+    {
         $query = $this->select()
                       ->where(['amount' => $paymentAmount]);
-        return  $this->prepareDataReader($query);           
+        return  $this->prepareDataReader($query);
     }
-    
+
     /**
      * @psalm-return EntityReader
      */
-    public function repoPaymentDateFilter(string $paymentDate) {
+    public function repoPaymentDateFilter(string $paymentDate)
+    {
         $query = $this->select()
                       ->where(['payment_date' => $paymentDate]);
-        return  $this->prepareDataReader($query);           
+        return  $this->prepareDataReader($query);
     }
-    
+
     /**
      * @psalm-return EntityReader
      */
-    public function repoPaymentAmountWithDateFilter(string $paymentAmount, string $paymentDate) {
+    public function repoPaymentAmountWithDateFilter(string $paymentAmount, string $paymentDate)
+    {
         $query = $this->select()
                       ->where(['payment_date' => $paymentDate])
                       ->andWhere(['amount' => $paymentAmount]);
-        return  $this->prepareDataReader($query);           
+        return  $this->prepareDataReader($query);
     }
-    
+
     /**
      * @return null|Payment
      *
      * @psalm-return TEntity|null
      */
-    public function repoPaymentquery(string $id): Payment|null    {
+    public function repoPaymentquery(string $id): Payment|null
+    {
         $query = $this->select()
                       ->load('inv')
                       ->load('payment_method')
                       ->where(['id' => $id]);
-        return  $query->fetchOne() ?: null;        
+        return  $query->fetchOne() ?: null;
     }
-    
-    public function repoPaymentLoaded_from_to_count(string $from, string $to): int {
+
+    public function repoPaymentLoaded_from_to_count(string $from, string $to): int
+    {
         $count = $this->select()
                       ->load('inv')
                       ->load('payment_method')
-                      ->where('payment_date','>=',$from)
-                      ->andWhere('payment_date','<=',$to)
+                      ->where('payment_date', '>=', $from)
+                      ->andWhere('payment_date', '<=', $to)
                       ->count();
-        return $count;        
+        return $count;
     }
-    
-    public function repoPaymentLoaded_from_to(string $from, string $to): EntityReader {
+
+    public function repoPaymentLoaded_from_to(string $from, string $to): EntityReader
+    {
         $query = $this->select()
                       ->load('inv')
                       ->load('payment_method')
-                      ->where('payment_date','>=',$from)
-                      ->andWhere('payment_date','<=',$to);
-        return $this->prepareDataReader($query);        
+                      ->where('payment_date', '>=', $from)
+                      ->andWhere('payment_date', '<=', $to);
+        return $this->prepareDataReader($query);
     }
-    
+
     /**
      * Get payments  without filter
      *
      * @psalm-return EntityReader
      */
-    public function repoInvquery(string $inv_id): EntityReader {
+    public function repoInvquery(string $inv_id): EntityReader
+    {
         $query = $this->select()
                       ->where(['inv_id' => $inv_id]);
-        return $this->prepareDataReader($query);   
+        return $this->prepareDataReader($query);
     }
-    
+
     /**
-     * 
+     *
      * @param string $inv_id
      * @return int
      */
-    public function repoCount(string $inv_id) : int {
+    public function repoCount(string $inv_id): int
+    {
         $count = $this->select()
-                      ->where(['inv_id' => $inv_id])                                
+                      ->where(['inv_id' => $inv_id])
                       ->count();
-        return $count; 
+        return $count;
     }
-    
+
 }

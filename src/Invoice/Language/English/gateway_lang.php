@@ -1,7 +1,8 @@
 <?php
+
 declare(strict_types=1);
 // as at 6th January 2024. Note this file has been built using copy paste from resources/messages/en/app.php
-// Remember to adjust the php file with '$lang =' as seen below 
+// Remember to adjust the php file with '$lang =' as seen below
 $lang =  [
     'g.online_payment'                     => 'Online Payment',
     'g.online_payments'                    => 'Online Payments',
@@ -69,8 +70,8 @@ $lang =  [
     'g.online_payment_accessKey'           => 'Access Key', // Field for CYbersource
     'g.online_payment_publishableKey'      => 'Publishable Key', // Field for Stripe 15-11-2022
     // Amazon Pay 01-12-2022 amzn/amazon-pay-api-sdk-phpmazon-pay-api-sdk-php v2.4.0
-    'g.online_payment_clientId'            => 'Client Id', 
-    'g.online_payment_clientSecret'        => 'Client Secret',  
+    'g.online_payment_clientId'            => 'Client Id',
+    'g.online_payment_clientSecret'        => 'Client Secret',
     'g.online_payment_publicKeyId'         => 'Public Key Id',
     'g.online_payment_returnUrl'           => 'Return Url',
     'g.online_payment_sandboxId'           => 'Sandbox Id',

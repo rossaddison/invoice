@@ -1,5 +1,6 @@
-<?php 
-declare(strict_types=1); 
+<?php
+
+declare(strict_types=1);
 return array(
     'BL' => 'Άγιος Βαρθολομαίος',
     'VC' => 'Άγιος Βικέντιος και Γρεναδίνες',

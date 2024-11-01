@@ -6,45 +6,44 @@ namespace App\Invoice\ProductCustom;
 
 use App\Invoice\Entity\ProductCustom;
 use Yiisoft\FormModel\FormModel;
-
 use Yiisoft\Validator\Rule\Integer;
 use Yiisoft\Validator\Rule\Required;
 use Yiisoft\Validator\Rule\StringValue;
 
 final class ProductCustomForm extends FormModel
-{    
+{
     #[Integer]
     #[Required]
-    private ?int $product_id=null;
-    
+    private ?int $product_id = null;
+
     #[Integer]
     #[Required]
-    private ?int $custom_field_id=null;
-    
+    private ?int $custom_field_id = null;
+
     #[StringValue()]
     #[Required]
-    private ?string $value='';
-    
-    public function __construct(ProductCustom $product_custom) 
+    private ?string $value = '';
+
+    public function __construct(ProductCustom $product_custom)
     {
         $this->product_id = (int)$product_custom->getProduct_id();
         $this->custom_field_id = (int)$product_custom->getCustom_field_id();
         $this->value = $product_custom->getValue();
     }
 
-    public function getProduct_id() : int|null
+    public function getProduct_id(): int|null
     {
-      return $this->product_id;
+        return $this->product_id;
     }
 
-    public function getCustom_field_id() : int|null
+    public function getCustom_field_id(): int|null
     {
-      return $this->custom_field_id;
+        return $this->custom_field_id;
     }
 
-    public function getValue() : string|null
+    public function getValue(): string|null
     {
-      return $this->value;
+        return $this->value;
     }
 
     /**
@@ -54,6 +53,6 @@ final class ProductCustomForm extends FormModel
      */
     public function getFormName(): string
     {
-      return '';
+        return '';
     }
 }

@@ -8,36 +8,36 @@ use Yiisoft\FormModel\FormModel;
 use Yiisoft\Validator\Rule\Required;
 
 final class QuoteAmountForm extends FormModel
-{       
-    private ?int $quote_id=null;
-    private ?float $item_subtotal=null;
-    private ?float $item_tax_total=null;
-    private ?float $tax_total=null;
-    private ?float $total=null;
+{
+    private ?int $quote_id = null;
+    private ?float $item_subtotal = null;
+    private ?float $item_tax_total = null;
+    private ?float $tax_total = null;
+    private ?float $total = null;
 
-    public function getQuote_id() : int|null
+    public function getQuote_id(): int|null
     {
-      return $this->quote_id;
+        return $this->quote_id;
     }
 
-    public function getItem_subtotal() : float|null
+    public function getItem_subtotal(): float|null
     {
-      return $this->item_subtotal;
+        return $this->item_subtotal;
     }
 
-    public function getItem_tax_total() : float|null
+    public function getItem_tax_total(): float|null
     {
-      return $this->item_tax_total;
+        return $this->item_tax_total;
     }
 
-    public function getTax_total() : float|null
+    public function getTax_total(): float|null
     {
-      return $this->tax_total;
+        return $this->tax_total;
     }
 
-    public function getTotal() : float|null
+    public function getTotal(): float|null
     {
-      return $this->total;
+        return $this->total;
     }
 
     /**
@@ -47,7 +47,7 @@ final class QuoteAmountForm extends FormModel
      */
     public function getFormName(): string
     {
-      return '';
+        return '';
     }
 
     /**
@@ -55,13 +55,14 @@ final class QuoteAmountForm extends FormModel
      *
      * @psalm-return array{item_subtotal: list{Required}, item_tax_total: list{Required}, tax_total: list{Required}, total: list{Required}, quote_id: list{Required}}
      */
-    public function getRules(): array    {
-      return [
-        'item_subtotal' => [new Required()],
-        'item_tax_total' => [new Required()],
-        'tax_total' => [new Required()],
-        'total' => [new Required()],
-        'quote_id' => [new Required()],
+    public function getRules(): array
+    {
+        return [
+          'item_subtotal' => [new Required()],
+          'item_tax_total' => [new Required()],
+          'tax_total' => [new Required()],
+          'total' => [new Required()],
+          'quote_id' => [new Required()],
     ];
-}
+    }
 }

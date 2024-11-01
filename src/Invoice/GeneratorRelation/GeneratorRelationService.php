@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace App\Invoice\GeneratorRelation;
@@ -15,7 +16,7 @@ final class GeneratorRelationService
     }
 
     /**
-     * 
+     *
      * @param GentorRelation $model
      * @param array $array
      * @return void
@@ -28,9 +29,9 @@ final class GeneratorRelationService
         isset($array['gentor_id']) ? $model->setGentor_id((int)$array['gentor_id']) : '';
         $this->repository->save($model);
     }
-    
+
     /**
-     * 
+     *
      * @param GentorRelation $model
      * @return void
      */

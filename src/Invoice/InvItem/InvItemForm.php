@@ -8,52 +8,51 @@ use App\Invoice\Entity\InvItem;
 use Yiisoft\FormModel\FormModel;
 use Yiisoft\Validator\Rule\Required;
 use Yiisoft\Validator\Rule\GreaterThan;
-
 use DateTimeImmutable;
 
 final class InvItemForm extends FormModel
-{        
-    private ?string $id='';
-    private ?string $inv_id='';
-    private ?string $so_item_id='';
-    
+{
+    private ?string $id = '';
+    private ?string $inv_id = '';
+    private ?string $so_item_id = '';
+
     #[Required]
-    private ?string $tax_rate_id='';
-   
-    private ?string $product_id='';
-   
-    private ?string $task_id='';
+    private ?string $tax_rate_id = '';
+
+    private ?string $product_id = '';
+
+    private ?string $task_id = '';
     // Then name of the product is retrieved using the users product_id dropdown list choice
-    private ?string $name='';
-    
-    private ?string $description='';
-    
-    private ?string $note='';
-    
+    private ?string $name = '';
+
+    private ?string $description = '';
+
+    private ?string $note = '';
+
     #[GreaterThan(0.00)]
-    private ?float $quantity=null;
-    
+    private ?float $quantity = null;
+
     #[GreaterThan(0.00)]
-    private ?float $price=null;
-    
-    private ?float $discount_amount=null;
-    
-    private ?string $order=null;
-    private ?string $product_unit='';    
-    
+    private ?float $price = null;
+
+    private ?float $discount_amount = null;
+
+    private ?string $order = null;
+    private ?string $product_unit = '';
+
     /**
      * Not Required because will conflict with a task which does not require a product unit id.
      * To cause an error and test the InvController function inv_to_inv_items use the inv/index checkbox Copy Invoice button
-     * on an invoice that has both a task and a product and input a #[Required] here. Result: danger flash message in inv/index 
-     */   
-    private ?int $product_unit_id=null;
-    
+     * on an invoice that has both a task and a product and input a #[Required] here. Result: danger flash message in inv/index
+     */
+    private ?int $product_unit_id = null;
+
     #[Required]
     private DateTimeImmutable $date;
-    
-    private ?int $belongs_to_vat_invoice=null;
-    private ?string $delivery_id='';
-    
+
+    private ?int $belongs_to_vat_invoice = null;
+    private ?string $delivery_id = '';
+
     public function __construct(InvItem $invitem, int $inv_id)
     {
         $this->id = (string)$invitem->getId();
@@ -74,96 +73,96 @@ final class InvItemForm extends FormModel
         $this->date = $invitem->getDate();
         $this->belongs_to_vat_invoice = (int)$invitem->getBelongs_to_vat_invoice();
         $this->delivery_id = $invitem->getDelivery_id();
-    } 
-    
-    public function getId() : string|null
+    }
+
+    public function getId(): string|null
     {
         return $this->id;
-    }    
-    
-    public function getDate() : DateTimeImmutable
+    }
+
+    public function getDate(): DateTimeImmutable
     {
         return $this->date;
     }
-    
-    public function getInv_id() : string|null
+
+    public function getInv_id(): string|null
     {
-      return $this->inv_id;
-    }
-    
-    public function getSo_item_id() : string|null
-    {
-      return $this->so_item_id;
+        return $this->inv_id;
     }
 
-    public function getTax_rate_id() : string|null
+    public function getSo_item_id(): string|null
     {
-      return $this->tax_rate_id;
+        return $this->so_item_id;
     }
 
-    public function getProduct_id() : string|null
+    public function getTax_rate_id(): string|null
     {
-      return $this->product_id;
-    }
-    
-    public function getTask_id() : string|null
-    {
-      return $this->task_id;
+        return $this->tax_rate_id;
     }
 
-    public function getName() : string|null
+    public function getProduct_id(): string|null
     {
-      return $this->name;
+        return $this->product_id;
     }
 
-    public function getDescription() : string|null
+    public function getTask_id(): string|null
     {
-      return $this->description;
-    }
-    
-    public function getNote() : string|null
-    {
-      return $this->note;
+        return $this->task_id;
     }
 
-    public function getQuantity() : float|null
+    public function getName(): string|null
     {
-      return $this->quantity;
+        return $this->name;
     }
 
-    public function getPrice() : float|null
+    public function getDescription(): string|null
     {
-      return $this->price;
+        return $this->description;
     }
 
-    public function getDiscount_amount() : float|null
+    public function getNote(): string|null
     {
-      return $this->discount_amount;
-    }
-        
-    public function getOrder() : string|null
-    {
-      return $this->order;
+        return $this->note;
     }
 
-    public function getProduct_unit() : string|null
+    public function getQuantity(): float|null
     {
-      return $this->product_unit;
+        return $this->quantity;
     }
 
-    public function getProduct_unit_id() : int|null
+    public function getPrice(): float|null
     {
-      return $this->product_unit_id;
+        return $this->price;
     }
-    
-    public function getBelongs_to_vat_invoice() : int|null
+
+    public function getDiscount_amount(): float|null
     {
-      return $this->belongs_to_vat_invoice;
+        return $this->discount_amount;
     }
-    
-    public function getDelivery_id() : string|null
+
+    public function getOrder(): string|null
     {
-      return $this->delivery_id;
+        return $this->order;
+    }
+
+    public function getProduct_unit(): string|null
+    {
+        return $this->product_unit;
+    }
+
+    public function getProduct_unit_id(): int|null
+    {
+        return $this->product_unit_id;
+    }
+
+    public function getBelongs_to_vat_invoice(): int|null
+    {
+        return $this->belongs_to_vat_invoice;
+    }
+
+    public function getDelivery_id(): string|null
+    {
+        return $this->delivery_id;
     }
 
     /**
@@ -173,6 +172,6 @@ final class InvItemForm extends FormModel
      */
     public function getFormName(): string
     {
-      return '';
+        return '';
     }
 }

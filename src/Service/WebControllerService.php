@@ -16,11 +16,11 @@ final class WebControllerService
     public function __construct(
         private ResponseFactoryInterface $responseFactory,
         private UrlGeneratorInterface $urlGenerator
-    ) {     
+    ) {
     }
-    
+
     /**
-     * 
+     *
      * @param string $url
      * @param array<string,scalar|Stringable|null> $arguments Argument-value set
      * @return ResponseInterface

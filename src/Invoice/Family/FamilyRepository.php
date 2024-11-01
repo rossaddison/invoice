@@ -18,7 +18,7 @@ use Yiisoft\Data\Cycle\Writer\EntityWriter;
 final class FamilyRepository extends Select\Repository
 {
     private EntityWriter $entityWriter;
-    
+
     /**
      * @param Select<TEntity> $select
      * @param EntityWriter $entityWriter
@@ -28,34 +28,34 @@ final class FamilyRepository extends Select\Repository
         $this->entityWriter = $entityWriter;
         parent::__construct($select);
     }
-    
+
     /**
      * Get families without filter
      *
      * @psalm-return EntityReader
-     * 
+     *
      */
     public function findAllPreloaded(): EntityReader
     {
         $query = $this->select();
         return $this->prepareDataReader($query);
     }
-            
+
     /**
      * @see Reader/ReadableDataInterface|InvalidArgumentException
      * @param array|Family|null $family
-     * @throws Throwable 
+     * @throws Throwable
      * @return void
      */
     public function save(array|Family|null $family): void
     {
         $this->entityWriter->write([$family]);
     }
-    
+
     /**
      * @see Reader/ReadableDataInterface|InvalidArgumentException
      * @param array|Family|null $family
-     * @throws Throwable 
+     * @throws Throwable
      * @return void
      */
     public function delete(array|Family|null $family): void
@@ -64,7 +64,7 @@ final class FamilyRepository extends Select\Repository
     }
 
     /**
-     * 
+     *
      * @param Select $query
      * @return EntityReader
      */
@@ -75,7 +75,7 @@ final class FamilyRepository extends Select\Repository
                 ->withOrder(['family_name' => 'asc'])
         );
     }
-    
+
     /**
      * @return null|Family
      *
@@ -86,9 +86,9 @@ final class FamilyRepository extends Select\Repository
         $query = $this
             ->select()
             ->where(['id' => $family_id]);
-        return  $query->fetchOne() ?: null;        
+        return  $query->fetchOne() ?: null;
     }
-    
+
     /**
      * @return null|Family
      *
@@ -101,13 +101,14 @@ final class FamilyRepository extends Select\Repository
             ->where(['family_name' => $family_name]);
         return  $query->fetchOne() ?: null;
     }
-    
+
     /**
      * @return int
      */
-    public function repoTestDataCount(): int {
+    public function repoTestDataCount(): int
+    {
         $count = $this->select()
                       ->count();
-        return $count;   
+        return $count;
     }
 }

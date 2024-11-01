@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=1); 
+declare(strict_types=1);
 
 namespace App\Invoice\UserInv;
 
@@ -17,12 +17,12 @@ use Yiisoft\Data\Cycle\Writer\EntityWriter;
  */
 final class UserInvRepository extends Select\Repository
 {
-private EntityWriter $entityWriter;
-    
+    private EntityWriter $entityWriter;
+
     /**
-     * 
+     *
      * @param Select<TEntity> $select
-     * 
+     *
      * @param EntityWriter $entityWriter
      */
     public function __construct(Select $select, EntityWriter $entityWriter)
@@ -38,10 +38,10 @@ private EntityWriter $entityWriter;
      */
     public function findAllPreloaded(): EntityReader
     {
-        $query = $this->select(); 
+        $query = $this->select();
         return $this->prepareDataReader($query);
     }
-    
+
     /**
      * @psalm-return EntityReader
      */
@@ -50,34 +50,34 @@ private EntityWriter $entityWriter;
         return (new EntityReader($this->select()))
             ->withSort($this->getSort());
     }
-    
+
     private function getSort(): Sort
     {
         return Sort::only(['user_id','name','email'])->withOrder(['user_id' => 'asc']);
     }
-    
+
     /**
      * @see Reader/ReadableDataInterface|InvalidArgumentException
      * @param array|UserInv|null $userinv
-     * @throws Throwable 
+     * @throws Throwable
      * @return void
      */
     public function save(array|UserInv|null $userinv): void
     {
         $this->entityWriter->write([$userinv]);
     }
-    
+
     /**
      * @see Reader/ReadableDataInterface|InvalidArgumentException
      * @param array|UserInv|null $userinv
-     * @throws Throwable 
+     * @throws Throwable
      * @return void
      */
     public function delete(array|UserInv|null $userinv): void
     {
         $this->entityWriter->delete([$userinv]);
     }
-    
+
     private function prepareDataReader(Select $query): EntityReader
     {
         return (new EntityReader($query))->withSort(
@@ -85,28 +85,32 @@ private EntityWriter $entityWriter;
                 ->withOrder(['user_id' => 'asc'])
         );
     }
-    
-    public function repoUserInvquery(string $id): UserInv|null {
+
+    public function repoUserInvquery(string $id): UserInv|null
+    {
         $query = $this->select()
-                      ->where(['id'=>$id]);
-        return  $query->fetchOne() ?: null;        
+                      ->where(['id' => $id]);
+        return  $query->fetchOne() ?: null;
     }
-    
-    public function repoUserInvcount(string $id): int {
+
+    public function repoUserInvcount(string $id): int
+    {
         $query = $this->select()
-                      ->where(['id' =>$id]);
+                      ->where(['id' => $id]);
         return  $query->count();
     }
-    
-    public function repoUserInvUserIdquery(string $user_id): UserInv|null {
+
+    public function repoUserInvUserIdquery(string $user_id): UserInv|null
+    {
         $query = $this->select()
-                      ->where(['user_id'=>$user_id]);
-        return  $query->fetchOne() ?: null;        
+                      ->where(['user_id' => $user_id]);
+        return  $query->fetchOne() ?: null;
     }
-    
-    public function repoUserInvUserIdcount(string $user_id): int {
+
+    public function repoUserInvUserIdcount(string $user_id): int
+    {
         $count = $this->select()
-                      ->where(['user_id' =>$user_id])
+                      ->where(['user_id' => $user_id])
                       ->count();
         return $count;
     }
@@ -116,15 +120,15 @@ private EntityWriter $entityWriter;
      *
      * @psalm-return EntityReader
      */
-    public function findAllWithActive(int $active) : EntityReader
+    public function findAllWithActive(int $active): EntityReader
     {
         if (($active) < 2) {
-         $query = $this->select()
-                ->where(['active' => $active]);  
-         return $this->prepareDataReader($query);
-       } else {
-         return $this->findAllPreloaded();  
-       }       
+            $query = $this->select()
+                   ->where(['active' => $active]);
+            return $this->prepareDataReader($query);
+        } else {
+            return $this->findAllPreloaded();
+        }
     }
 
     /**
@@ -132,30 +136,31 @@ private EntityWriter $entityWriter;
      *
      * @psalm-return EntityReader
      */
-    
+
     // Find users that have access to all clients
-    public function findAllWithAllClients() : EntityReader
+    public function findAllWithAllClients(): EntityReader
     {
         $query = $this->select()
-                      ->where(['all_clients' => 1]);  
-        return $this->prepareDataReader($query);              
+                      ->where(['all_clients' => 1]);
+        return $this->prepareDataReader($query);
     }
-    
+
     /**
      * @return EntityReader
      */
-    public function filterUserInvs(string $login) : EntityReader {
-        $query = $this->select()
-                      ->load('user')  
-                      ->where(['user.login' => $login]);
-        return $this->prepareDataReader($query);        
-    }
-    
-    // Find users that have access to all clients
-    public function countAllWithAllClients() : int
+    public function filterUserInvs(string $login): EntityReader
     {
         $query = $this->select()
-                      ->where(['all_clients' => 1]);  
-        return $query->count();              
-    }   
+                      ->load('user')
+                      ->where(['user.login' => $login]);
+        return $this->prepareDataReader($query);
+    }
+
+    // Find users that have access to all clients
+    public function countAllWithAllClients(): int
+    {
+        $query = $this->select()
+                      ->where(['all_clients' => 1]);
+        return $query->count();
+    }
 }

@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace App\Invoice\Ubl;
@@ -13,15 +14,15 @@ class PayeeFinancialAccount implements XmlSerializable
     private ?FinancialInstitutionBranch $financialInstitutionBranch;
 
     public function __construct(
-            ?FinancialInstitutionBranch $financialInstitutionBranch,            
-            ?string $id,
-            ?string $name
+        ?FinancialInstitutionBranch $financialInstitutionBranch,
+        ?string $id,
+        ?string $name
     ) {
-            $this->financialInstitutionBranch = $financialInstitutionBranch;            
-            $this->id = $id;
-            $this->name = $name;
+        $this->financialInstitutionBranch = $financialInstitutionBranch;
+        $this->id = $id;
+        $this->name = $name;
     }
-    
+
     public function xmlSerialize(Writer $writer): void
     {
         $writer->write([

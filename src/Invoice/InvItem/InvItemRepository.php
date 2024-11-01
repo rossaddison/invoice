@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=1); 
+declare(strict_types=1);
 
 namespace App\Invoice\InvItem;
 
@@ -17,7 +17,7 @@ use Yiisoft\Data\Cycle\Writer\EntityWriter;
  */
 final class InvItemRepository extends Select\Repository
 {
-private EntityWriter $entityWriter;
+    private EntityWriter $entityWriter;
     /**
      * @param Select<TEntity> $select
      * @param EntityWriter $entityWriter
@@ -37,7 +37,7 @@ private EntityWriter $entityWriter;
                       ->load(['tax_rate','product', 'task', 'inv']);
         return $this->prepareDataReader($query);
     }
-    
+
     /**
      * @psalm-return EntityReader
      */
@@ -46,18 +46,18 @@ private EntityWriter $entityWriter;
         return (new EntityReader($this->select()))
             ->withSort($this->getSort());
     }
-    
+
     /**
-     * 
+     *
      * @return Sort
      */
     private function getSort(): Sort
     {
         return Sort::only(['id'])->withOrder(['id' => 'asc']);
     }
-    
+
     /**
-     * 
+     *
      * @param array|InvItem|null $invitem
      * @return void
      */
@@ -65,9 +65,9 @@ private EntityWriter $entityWriter;
     {
         $this->entityWriter->write([$invitem]);
     }
-    
+
     /**
-     * 
+     *
      * @param array|InvItem|null $invitem
      * @return void
      */
@@ -75,9 +75,9 @@ private EntityWriter $entityWriter;
     {
         $this->entityWriter->delete([$invitem]);
     }
-    
+
     /**
-     * 
+     *
      * @param Select $query
      * @return EntityReader
      */
@@ -88,74 +88,80 @@ private EntityWriter $entityWriter;
                 ->withOrder(['id' => 'asc'])
         );
     }
-    
+
     /**
-     * 
+     *
      * @param string $id
      * @return InvItem|null
      * @psalm-return TEntity|null
      */
-    public function repoInvItemquery(string $id): InvItem|null {
+    public function repoInvItemquery(string $id): InvItem|null
+    {
         $query = $this->select()
                       ->load(['tax_rate','product', 'task', 'inv'])
                       ->where(['id' => $id]);
-        return  $query->fetchOne() ?: null;        
+        return  $query->fetchOne() ?: null;
     }
-    
+
     /**
      * @param string $inv_id
      * @return EntityReader
      */
-    public function repoInvItemIdquery(string $inv_id):  EntityReader {
+    public function repoInvItemIdquery(string $inv_id): EntityReader
+    {
         $query = $this->select()
                      // ->load(['tax_rate','product', 'task', 'inv'])
                       ->where(['inv_id' => $inv_id]);
-        return $this->prepareDataReader($query); 
+        return $this->prepareDataReader($query);
     }
-    
+
     /**
-     * 
+     *
      * @param string $inv_id
      * @return EntityReader
      */
-    public function repoInvquery(string $inv_id): EntityReader { 
+    public function repoInvquery(string $inv_id): EntityReader
+    {
         $query = $this->select()
                       ->load(['tax_rate','product', 'task', 'inv'])
-                      ->where(['inv_id' => $inv_id]);                                
-        return $this->prepareDataReader($query);        
+                      ->where(['inv_id' => $inv_id]);
+        return $this->prepareDataReader($query);
     }
-    
+
     /**
-     * 
+     *
      * @param string $inv_id
      * @return int
      */
-    public function repoCount(string $inv_id) : int {
+    public function repoCount(string $inv_id): int
+    {
         $count = $this->select()
-                      ->where(['inv_id' => $inv_id])                                
+                      ->where(['inv_id' => $inv_id])
                       ->count();
-        return $count; 
+        return $count;
     }
-    
+
     /**
-     * 
+     *
      * @param string $id
      * @return int
      */
-    public function repoInvItemCount(string $id) : int {
+    public function repoInvItemCount(string $id): int
+    {
         $count = $this->select()
-                      ->where(['id' => $id])                                
+                      ->where(['id' => $id])
                       ->count();
-        return $count; 
+        return $count;
     }
-        
+
     /**
-     * 
+     *
      * @param array $item_ids
      * @return EntityReader
      */
-    public function findinInvItems(array $item_ids) : EntityReader {
-        $query = $this->select()->where(['id'=>['in'=> new Parameter($item_ids)]]);
-        return $this->prepareDataReader($query);    
-    } 
+    public function findinInvItems(array $item_ids): EntityReader
+    {
+        $query = $this->select()->where(['id' => ['in' => new Parameter($item_ids)]]);
+        return $this->prepareDataReader($query);
+    }
 }

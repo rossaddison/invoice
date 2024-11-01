@@ -9,11 +9,10 @@ use Yiisoft\FormModel\FormModel;
 use Yiisoft\Translator\TranslatorInterface as Translator;
 use Yiisoft\Validator\Rule\Required;
 use Yiisoft\Validator\Rule\Email;
-
 use DateTimeImmutable;
 
 final class ProfileForm extends FormModel
-{    
+{
     private ?int $company_id = null;
     private ?int $current = 0;
     #[Required]
@@ -24,8 +23,8 @@ final class ProfileForm extends FormModel
     private mixed $date_created = '';
     private mixed $date_modified = '';
     private Translator $translator;
-    
-    public function __construct(Profile $profile, Translator $translator) 
+
+    public function __construct(Profile $profile, Translator $translator)
     {
         $this->company_id = (int)$profile->getCompany_id();
         $this->current = $profile->getCurrent();
@@ -36,33 +35,33 @@ final class ProfileForm extends FormModel
         $this->date_modified = $profile->getDate_modified();
         $this->translator = $translator;
     }
-    
-    public function getCompany_id() : int|null
+
+    public function getCompany_id(): int|null
     {
-      return $this->company_id;
+        return $this->company_id;
     }
 
-    public function getCurrent() : int|null
+    public function getCurrent(): int|null
     {
-      return $this->current;
+        return $this->current;
     }
 
-    public function getMobile() : string|null
+    public function getMobile(): string|null
     {
-      return $this->mobile;
+        return $this->mobile;
     }
 
-    public function getEmail() : string|null
+    public function getEmail(): string|null
     {
         return $this->email;
     }
-    
-    public function getDescription() : string|null
+
+    public function getDescription(): string|null
     {
         return $this->description;
     }
 
-    public function getDate_created() : string|null|DateTimeImmutable
+    public function getDate_created(): string|null|DateTimeImmutable
     {
         /**
          * @var string|null|DateTimeImmutable $this->date_created
@@ -70,15 +69,15 @@ final class ProfileForm extends FormModel
         return $this->date_created;
     }
 
-    public function getDate_modified() : string|null|DateTimeImmutable
+    public function getDate_modified(): string|null|DateTimeImmutable
     {
         /**
          * @var string|null|DateTimeImmutable $this->date_modified
          */
         return $this->date_modified;
     }
-    
-    public function getPropertyLabels() : array
+
+    public function getPropertyLabels(): array
     {
         return [
             'current' => $this->translator->translate('invoice.profile.property.label.current'),
@@ -86,9 +85,9 @@ final class ProfileForm extends FormModel
             'email' => $this->translator->translate('invoice.profile.property.label.email'),
             'description' => $this->translator->translate('invoice.profile.property.label.description'),
         ];
-    } 
-    
-    public function getPropertyHints() : array
+    }
+
+    public function getPropertyHints(): array
     {
         $required = 'invoice.hint.this.field.is.required';
         $not_required = 'invoice.hint.this.field.is.not.required';
@@ -98,7 +97,7 @@ final class ProfileForm extends FormModel
             'mobile' => $this->translator->translate($required),
             'description' => $this->translator->translate($not_required),
         ];
-    }    
+    }
 
     /**
      * @return string
@@ -107,6 +106,6 @@ final class ProfileForm extends FormModel
      */
     public function getFormName(): string
     {
-      return '';
+        return '';
     }
 }

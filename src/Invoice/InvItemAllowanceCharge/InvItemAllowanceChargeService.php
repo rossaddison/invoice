@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=1); 
+declare(strict_types=1);
 
 namespace App\Invoice\InvItemAllowanceCharge;
 
@@ -11,10 +11,8 @@ use App\Invoice\InvItemAmount\InvItemAmountRepository as IIAR;
 use App\Invoice\InvTaxRate\InvTaxRateRepository as ITRR;
 use App\Invoice\Setting\SettingRepository as SR;
 
-
 final class InvItemAllowanceChargeService
 {
-
     private InvItemAllowanceChargeRepository $repository;
 
     public function __construct(InvItemAllowanceChargeRepository $repository)
@@ -37,7 +35,7 @@ final class InvItemAllowanceChargeService
         $model->setVat($vat);
         $this->repository->save($model);
     }
-        
+
     public function deleteInvItemAllowanceCharge(InvItemAllowanceCharge $model, IAR $iaR, IIAR $iiaR, ITRR $itrR, ACIIR $aciiR, SR $sR): void
     {
         // before deleting the allowance/charge, record its related inv_item_id so that we can update the inv_item_amount record
@@ -46,12 +44,12 @@ final class InvItemAllowanceChargeService
         $this->repository->delete($model);
         $inv_item_amount = $iiaR->repoInvItemAmountquery($inv_item_id);
         // rebuild the accumulative totals for the inv_item_amount
-        if (null!==$inv_item_amount) {
+        if (null !== $inv_item_amount) {
             $all_charges = 0.00;
-            $all_charges_vat = 0.00;                        
+            $all_charges_vat = 0.00;
             $all_allowances = 0.00;
             $all_allowances_vat = 0.00;
-            $aciis = $aciiR->repoInvItemquery($inv_item_id);   
+            $aciis = $aciiR->repoInvItemquery($inv_item_id);
             /** @var InvItemAllowanceCharge $acii */
             foreach ($aciis as $acii) {
                 // charge add
@@ -81,9 +79,9 @@ final class InvItemAllowanceChargeService
             $inv_item_amount->setSubtotal($qpIncAc);
             $inv_item_amount->setDiscount($current_discount_item_total);
             $inv_item_amount->setTax_total($new_tax_total);
-            $overall_total = $qpIncAc - $current_discount_item_total + $new_tax_total; 
+            $overall_total = $qpIncAc - $current_discount_item_total + $new_tax_total;
             $inv_item_amount->setTotal($overall_total);
-            $iiaR->save($inv_item_amount);     
+            $iiaR->save($inv_item_amount);
         }
     }
 }

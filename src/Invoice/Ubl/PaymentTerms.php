@@ -1,5 +1,6 @@
 <?php
-declare(strict_types=1); 
+
+declare(strict_types=1);
 
 namespace App\Invoice\Ubl;
 
@@ -9,11 +10,12 @@ use Sabre\Xml\XmlSerializable;
 class PaymentTerms implements XmlSerializable
 {
     private ?string $note;
-    
-    public function __construct(?string $note) {
-            $this->note = $note;
+
+    public function __construct(?string $note)
+    {
+        $this->note = $note;
     }
-        
+
     /**
      * @see https://github.com/OpenPEPPOL/peppol-bis-invoice-3/search?p=3&q=PaymentTerms
      * @param Writer $writer

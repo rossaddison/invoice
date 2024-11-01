@@ -17,7 +17,7 @@ class GoogleTranslateLocaleSettingNotFoundException extends \RuntimeException im
     {
         return 'Settings...View...Google Translate...Locale has not been chosen.';
     }
-    
+
     /**
      * @return string
      *
