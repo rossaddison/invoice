@@ -74,7 +74,7 @@ final class ContractController
         /**
          * @var string $query_params['page']
          */
-        $page = $query_params['page'] ?? $currentRoute->getArgument('page', '1');
+        $page = (int)($query_params['page'] ?? $currentRoute->getArgument('page', '1'));
         /** @psalm-var positive-int $currentPageNeverZero */
         $currentPageNeverZero = $page > 0 ? $page : 1;
         /** @var string $query_params['sort'] */

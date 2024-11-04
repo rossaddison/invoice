@@ -133,7 +133,10 @@ $toolbar = Div::tag();
         ''
     );    
     $toolbarString =
-        Form::tag()->post($urlGenerator->generate('allowancecharge/index'))->csrf($csrf)->open() .
+        Form::tag()
+        ->post($urlGenerator->generate('allowancecharge/index'))
+        ->csrf($csrf)
+        ->open() .
         Div::tag()->addClass('float-end m-3')->content($toolbarReset)->encode(false)->render() .
         Form::tag()->close();
     echo GridView::widget()

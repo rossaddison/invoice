@@ -112,7 +112,7 @@ final class FromDropDownController
         'alert' => $this->alert(),
         'max' => (int) $settingRepository->getSetting('default_list_limit')
     ];
-        return $this->viewRenderer->render('from/index', $parameters);
+        return $this->viewRenderer->render('index', $parameters);
     }
 
     /**

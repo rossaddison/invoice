@@ -3,8 +3,10 @@
 declare(strict_types=1);
 
 use Yiisoft\Html\Html;
+use Yiisoft\Html\Tag\Form;
 
 /**
+ * A list of clients that the guest user has
  * @var App\Invoice\Entity\Client $client
  * @var App\Invoice\Entity\UserInv $userInv
  * @var App\Invoice\ClientPeppol\ClientPeppolRepository $cpR
@@ -42,6 +44,12 @@ echo $alert;
     <h5><?= Html::encode($translator->translate('i.clients')); ?></h5>
     <br>
 </div>
+<?=
+Form::tag()
+        ->post($urlGenerator->generate('client/guest'))
+        ->csrf($csrf)
+        ->open();
+?>    
 <div id="content" class="table-content">
     
         <div class="table-responsive">
@@ -135,3 +143,4 @@ echo $alert;
     </div>    
 </div>
 </div>
+<?= Form::tag()->close(); ?>

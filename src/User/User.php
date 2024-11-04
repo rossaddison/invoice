@@ -97,5 +97,5 @@ class User
     public function getIdentity(): Identity
     {
         return $this->identity;
-    }
+    }  
 }

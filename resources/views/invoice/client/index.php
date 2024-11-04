@@ -265,7 +265,10 @@ echo $alert;
         ''
     );
     $toolbarString = 
-        Form::tag()->post($urlGenerator->generate('client/index'))->csrf($csrf)->open() .  
+        Form::tag()
+        ->post($urlGenerator->generate('client/index'))
+        ->csrf($csrf)
+        ->open() .  
         Div::tag()
             ->addClass('btn-group')
             ->content($gridComponents->toolbarReset($urlGenerator).
