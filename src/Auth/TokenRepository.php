@@ -34,6 +34,17 @@ final class TokenRepository extends Select\Repository implements IdentityWithTok
         $tokenRecord =  $this->findOne(['token' => $token, 'type' => $type]);
         return null !== $tokenRecord ? $tokenRecord->getIdentity() : null;
     }
+    
+    /**
+     * @param string $token
+     * @param string $type
+     * @return Token
+     */
+    public function findTokenByTokenAndType(string $token, string $type = null): ?Token
+    {
+        $tokenRecord =  $this->findOne(['token' => $token, 'type' => $type]);
+        return null !== $tokenRecord ? $tokenRecord : null;
+    }    
 
     /**
      * @param string $identityId

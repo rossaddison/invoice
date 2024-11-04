@@ -561,7 +561,7 @@ final class UserInvController
         return $this->webService->getRedirectResponse('userinv/index');
     }
 
-
+    
     public function signup(
         // cldr e.g. 'en'
         #[RouteArgument('_language')] string $_language,
@@ -591,43 +591,52 @@ final class UserInvController
                             $userInv->setActive(true);
                             $uiR->save($userInv);
                             $userId = $userInv->getUser_id();
-                            // $email address field in signup form and a field in the user table
-                            $email = $identity->getUser()?->getEmail();
-                            if (null !== $email) {
+                            // the status is now active i.e. 1, now make sure the token cannot be used again
+                            $token = $tR->findTokenByTokenAndType($token, self::EMAIL_VERIFICATION_TOKEN);
+                            if (null !== $token) {
                                 /**
-                                 * The client will have to be assigned to the user by the admin manually if this is not set
-                                 * @see InvoiceController 'signup_automatically_assign_client' => 0
+                                 * @see https://github.com/search?q=repo%3Ayiisoft%2Fyii2-app-advanced%20already_&type=code
                                  */
-                                if ($sR->getSetting('signup_automatically_assign_client') == '1') {
-                                    $client = new Client();
-                                    // set the client as active so that invoices can be created for the client
-                                    $client->setClient_active(true);
-                                    $client->setClient_email($email);
-                                    $client->setClient_language($language);
-                                    $client->setClient_age($sR->getSetting('signup_default_age_minimum_eighteen') == '1' ? 18 : 0);
-                                    $cR->save($client);
-                                    $this->flash_message('info', $this->translator->translate('invoice.invoice.assign.client.on.signup.done'));
-                                    if (null !== ($clientId = $client->getClient_id())) {
-                                        $userClient = new UserClient();
-                                        $userClient->setUser_id((int)$userInv->getUser_id());
-                                        $userClient->setClient_id($clientId);
-                                        $ucR->save($userClient);
+                                $token->setToken('already_used_token_'.time());
+                                $tR->save($token);
+                                // $email address field in signup form and a field in the user table
+                                $email = $identity->getUser()?->getEmail();
+                                if (null !== $email) {
+                                    /**
+                                     * The client will have to be assigned to the user by the admin manually if this is not set
+                                     * @see InvoiceController 'signup_automatically_assign_client' => 0
+                                     */
+                                    if ($sR->getSetting('signup_automatically_assign_client') == '1') {
+                                        $client = new Client();
+                                        // set the client as active so that invoices can be created for the client
+                                        $client->setClient_active(true);
+                                        $client->setClient_email($email);
+                                        $client->setClient_language($language);
+                                        $client->setClient_age($sR->getSetting('signup_default_age_minimum_eighteen') == '1' ? 18 : 0);
+                                        $cR->save($client);
+                                        $this->flash_message('info', $this->translator->translate('invoice.invoice.assign.client.on.signup.done'));
+                                        if (null !== ($clientId = $client->getClient_id())) {
+                                            $userClient = new UserClient();
+                                            $userClient->setUser_id((int)$userInv->getUser_id());
+                                            $userClient->setClient_id($clientId);
+                                            $ucR->save($userClient);
+                                        }
+                                        if (strlen($userId) > 0 && $userId > 1) {
+                                            $this->manager->revokeAll($userId);
+                                            $this->manager->assign('observer', $userId);
+                                            $this->flash_message('info', $this->translator->translate('invoice.user.inv.role.observer.assigned'));
+                                        }
+                                        if (strlen($userId) > 0 && $userId == 1) {
+                                            $this->manager->revokeAll($userId);
+                                            $this->manager->assign('admin', $userId);
+                                            $this->flash_message('info', $this->translator->translate('invoice.user.inv.role.admin.assigned'));
+                                        }
+                                    } else {
+                                        $this->flash_message('warning', 'Client not signed up automatically because setting not on. As Admin you should click on this button to enable clients to be assigned to users automatically.' .' '.
+                                            Button::setOrUnsetAssignClientToUserAutomatically($this->urlGenerator, $_language));
                                     }
-                                    if (strlen($userId) > 0 && $userId > 1) {
-                                        $this->manager->revokeAll($userId);
-                                        $this->manager->assign('observer', $userId);
-                                        $this->flash_message('info', $this->translator->translate('invoice.user.inv.role.observer.assigned'));
-                                    }
-                                    if (strlen($userId) > 0 && $userId == 1) {
-                                        $this->manager->revokeAll($userId);
-                                        $this->manager->assign('admin', $userId);
-                                        $this->flash_message('info', $this->translator->translate('invoice.user.inv.role.admin.assigned'));
-                                    }
-                                } else {
-                                    $this->flash_message('warning', 'Client not signed up automatically because setting not on. As Admin you should click on this button to enable clients to be assigned to users automatically.' .' '.
-                                        Button::setOrUnsetAssignClientToUserAutomatically($this->urlGenerator, $_language));
                                 }
-                            }
+                            }    
                         } else {
                             $this->flash_message('warning', 'No User Inv');
                         }
