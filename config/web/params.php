@@ -3,6 +3,7 @@
 declare(strict_types=1);
 
 use Yiisoft\Cookies\CookieMiddleware;
+use Yiisoft\Csrf\CsrfMiddleware;
 use Yiisoft\ErrorHandler\Middleware\ErrorCatcher;
 use Yiisoft\RequestProvider\RequestCatcherMiddleware;
 use Yiisoft\Router\Middleware\Router;
@@ -53,6 +54,7 @@ return [
         ErrorCatcher::class,
         SentryMiddleware::class,
         SessionMiddleware::class,
+        CsrfMiddleware::class,
         CookieMiddleware::class,
         CookieLoginMiddleware::class,
         Locale::class,
