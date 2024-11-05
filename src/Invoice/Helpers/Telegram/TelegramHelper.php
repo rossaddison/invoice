@@ -18,6 +18,7 @@ use Vjik\TelegramBot\Api\LogType;
 use Vjik\TelegramBot\Api\TelegramBotApi;
 use Vjik\TelegramBot\Api\Type\Update\Update;
 use Vjik\TelegramBot\Api\Type\Update\WebhookInfo;
+use Yiisoft\Html\Json;
 use Yiisoft\Router\FastRoute\UrlGenerator;
 
 /**
@@ -111,7 +112,7 @@ final class TelegramHelper
         return Update::fromServerRequest($request, $logger);
     }
 
-    public static function updateFromJsonRequest(string $jsonString, Logger $logger): Update
+    public static function decodeJsonEncodedUpdatePushedToWebhookFromTelegramApi(string $jsonString, Logger $logger): Update
     {
         return Update::fromJson($jsonString, $logger);
     }
