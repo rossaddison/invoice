@@ -55,11 +55,23 @@ final class AuthController
                      * @see UserInvController function signup where the userinv active field is made active i.e. true upon a positive email verification
                      */
                     $status = $userInv->getActive();
-                    if ($status) {
+                    /** 
+                     * The admin does not automatically have a 'userinv account with status as active' IF 
+                     * signing up NOT by email e.g by localhost  . The below code, '$userId == 1', => makes allowances for this.
+                     * @see UserInvController function signup which is triggered once user's email verification link is clicked in their user account
+                     *      and the userinv account's status field is made active i.e. 1
+                     */
+                    if ($status || $userId == 1) {
                         if ($identity instanceof CookieLoginIdentityInterface && $loginForm->getPropertyValue('rememberMe')) {
                             return $cookieLogin->addCookie($identity, $this->redirectToInvoiceIndex());
                         }
                         return $this->redirectToInvoiceIndex();
+                    } else {
+                        /**
+                         * If the observer user is signing up WITHOUT email (=> userinv account status is 0), e.g. by console ... yii userinv/assignRole observer 2, 
+                         * the admin will have to make the user active via Settings Invoice User Account AND assign the user an added client
+                         */
+                        return $this->redirectToAdminMustMakeActive();
                     }
                 }
             }
@@ -84,5 +96,9 @@ final class AuthController
     private function redirectToInvoiceIndex(): ResponseInterface
     {
         return $this->webService->getRedirectResponse('invoice/index');
+    }
+    
+    private function redirectToAdminMustMakeActive() : ResponseInterface {
+        return $this->webService->getRedirectResponse('site/adminmustmakeactive', ['_language' => 'en']);
     }
 }

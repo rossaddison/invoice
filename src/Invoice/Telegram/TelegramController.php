@@ -27,19 +27,37 @@ use Yiisoft\Yii\View\Renderer\ViewRenderer;
 
 final class TelegramController
 {
+    /**
+     * Note: Yiisoft\Di\NotFoundException can occur if $factory is placed after $telegramBotApi i.e. in the wrong order
+     * @see https://github.com/rossaddison/invoice/issues/41
+     * 
+     * @param DataResponseFactoryInterface $factory
+     * @param ViewRenderer $viewRenderer
+     * @param WebControllerService $webService
+     * @param UserService $userService
+     * @param Session $session
+     * @param Flash $flash
+     * @param TranslatorInterface $translator
+     * @param Logger $logger
+     * @param sR $sR
+     * @param Update|null $update
+     * @param TelegramBotApi|null $telegramBotApi
+     */
+    
     public function __construct(
+        private DataResponseFactoryInterface $factory,
         private ViewRenderer $viewRenderer,
         private WebControllerService $webService,
-        private UserService $userService,
+        private UserService $userService,        
         private Session $session,
         private Flash $flash,
         private TranslatorInterface $translator,
         private Logger $logger,
         private sR $sR,
         private ?Update $update = null,
-        private ?TelegramBotApi $telegramBotApi = null,
-        private DataResponseFactoryInterface $factory    
+        private ?TelegramBotApi $telegramBotApi = null
     ) {
+        $this->factory = $factory;
         $this->viewRenderer = $viewRenderer->withControllerName('invoice/telegram')
                                            ->withLayout('@views/layout/invoice.php');
         $this->webService = $webService;
@@ -51,7 +69,6 @@ final class TelegramController
         $this->sR = $sR;
         $this->update = $update;
         $this->telegramBotApi = $telegramBotApi;
-        $this->factory = $factory;
     }
 
     public function index(Request $request, UrlGenerator $urlGenerator): \Yiisoft\DataResponse\DataResponse|Response
@@ -157,7 +174,14 @@ final class TelegramController
             'alert' => $this->alert()
         ]);
     }
-        
+    
+    /**
+     * Note: This function has not been tested and is still under development
+     * @param Request $request
+     * @param string $secret_token
+     * @param string $jsonString
+     * @return \Yiisoft\DataResponse\DataResponse
+     */    
     public function webhook(Request $request, 
             #[RouteArgument('secret_token')] string $secret_token, 
             #[RouteArgument('jsonString')] string $jsonString) : \Yiisoft\DataResponse\DataResponse
@@ -185,6 +209,12 @@ final class TelegramController
         return $this->factory->createResponse(Json::encode(['fali' => true]));
     }
 
+    /**
+     * Note: Tested and functional
+     * @param Request $request
+     * @param UrlGenerator $urlGenerator
+     * @return \Yiisoft\DataResponse\DataResponse|Response
+     */
     public function get_webhookinfo(Request $request, UrlGenerator $urlGenerator): \Yiisoft\DataResponse\DataResponse|Response
     {
         $settingRepositoryTelegramToken = $this->sR->getSetting('telegram_token');
@@ -216,6 +246,12 @@ final class TelegramController
         ]);
     }
     
+    /**
+     * Note: Tested and functional
+     * @param Request $request
+     * @param UrlGenerator $urlGenerator
+     * @return \Yiisoft\DataResponse\DataResponse|Response
+     */
     public function set_webhook(Request $request, UrlGenerator $urlGenerator): \Yiisoft\DataResponse\DataResponse|Response
     {
         $settingRepositoryTelegramToken = $this->sR->getSetting('telegram_token');
@@ -266,6 +302,12 @@ final class TelegramController
         ]);
     }
 
+    /**
+     * Note: Tested and functional
+     * @param Request $request
+     * @param UrlGenerator $urlGenerator
+     * @return \Yiisoft\DataResponse\DataResponse|Response
+     */
     public function delete_webhook(Request $request, UrlGenerator $urlGenerator): \Yiisoft\DataResponse\DataResponse|Response
     {
         $settingRepositoryTelegramToken = $this->sR->getSetting('telegram_token');
@@ -308,6 +350,12 @@ final class TelegramController
         ]);
     }
 
+    /**
+     * Note: Tested and functional
+     * @param Request $request
+     * @param UrlGenerator $urlGenerator
+     * @return \Yiisoft\DataResponse\DataResponse|Response
+     */
     public function get_updates(Request $request, UrlGenerator $urlGenerator): \Yiisoft\DataResponse\DataResponse|Response
     {
         $settingRepositoryTelegramToken = $this->sR->getSetting('telegram_token');

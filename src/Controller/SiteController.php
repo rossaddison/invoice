@@ -37,6 +37,11 @@ final class SiteController
     {
         return $this->viewRenderer->render('testimonial');
     }
+    
+    public function adminmustmakeactive(): \Yiisoft\DataResponse\DataResponse
+    {
+        return $this->viewRenderer->render('adminmustmakeactive');
+    }
 
     public function contact(): \Yiisoft\DataResponse\DataResponse
     {

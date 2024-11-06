@@ -21,7 +21,6 @@ use Yiisoft\FormModel\FormHydrator;
 use Yiisoft\Html\Tag\A;
 use Yiisoft\Html\Tag\Body;
 use Yiisoft\Mailer\MailerInterface;
-use Yiisoft\Mailer\MessageBodyTemplate;
 use Yiisoft\Rbac\AssignmentsStorageInterface as Assignment;
 use Yiisoft\Rbac\ItemsStorageInterface as ItemStorage;
 use Yiisoft\Rbac\Manager as Manager;
@@ -97,10 +96,6 @@ final class SignupController
     ): ResponseInterface {
         if (!$authService->isGuest()) {
             return $this->webService->getRedirectResponse('site/index');
-        }
-        // check that symfony under Settings ... Email and the config/common/params.php mailer->senderEmail have been setup
-        if (($this->sR->getSetting('email_send_method') !== 'symfony') || empty($this->sR->getConfigSenderEmail())) {
-            return $this->webService->getRedirectResponse('site/forgotemailfailed');
         }
         if ($formHydrator->populateFromPostAndValidate($signupForm, $request)) {
             $user = $signupForm->signup();

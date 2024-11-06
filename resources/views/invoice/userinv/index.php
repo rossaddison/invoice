@@ -129,16 +129,14 @@ echo $alert
         new DataColumn(
             'active',
             content: static function (UserInv $model) use($translator): string {
-                        return $model->getActive() ? Html::tag('span',$translator->translate('i.yes'),['class'=>'label active'])->render() 
-                                                   : Html::tag('span',$translator->translate('i.no'),['class'=>'label inactive'])->render();
+                        return $model->getActive() ? '✔️' : '❌';
             }
         ),
         new DataColumn(
             'all_clients',
             header:  $translator->translate('i.user_all_clients'),        
             content: static function (UserInv $model) use($translator): string {
-                        return $model->getAll_clients() ? Html::tag('span',$translator->translate('i.yes'),['class'=>'label active'])->render()
-                                                        : Html::tag('span',$translator->translate('i.no'),['class'=>'label inactive'])->render();
+                        return $model->getAll_clients() ? '✔️' : '❌';
             }
         ),
         new DataColumn(
@@ -168,8 +166,8 @@ echo $alert
             header:  $translator->translate('i.user_type'),        
             content: static function (UserInv $model) use ($translator): string {
             $user_types = [
-                0 => $translator->translate('i.administrator'),
-                1 => $translator->translate('i.guest_read_only'),
+                0 => '🧑‍⚖️',
+                1 => '🧑',
             ]; 
             // default is 'guest' which is an invoiceplane setting as denoted by the use of 'i.' and incorporates all users besides the administrator
             return $user_types[$model->getType() ?? 1];
@@ -281,31 +279,29 @@ echo $alert
         }),      
         new DataColumn(            
             'type',
-            header:  $translator->translate('i.edit'),                
+            header:  '🖉',                
             content: static function (UserInv $model) use ($urlGenerator, $canEdit): string {
-                        return $canEdit ? Html::a(
-                            Html::tag('i','',['class'=>'fa fa-edit fa-margin']),
-                        $urlGenerator->generate('userinv/edit',['id'=>$model->getId()]),[]                                         
+                        return $canEdit ? Html::a('🖉',
+                        $urlGenerator->generate('userinv/edit',['id'=>$model->getId()]), ['style' => 'text-decoration:none']                                         
                         )->render() : '';
         }),
         new DataColumn(            
             'type',
-            header:  $translator->translate('i.delete'),                
+            header:  '❌',                
             content: static function (UserInv $model) use ($translator, $urlGenerator): string {
-                        return $model->getType() == 1 ? Html::a( Html::tag('button',
-                                                            Html::tag('i','',['class'=>'fa fa-trash fa-margin']),
-                                                            [
-                                                                'type'=>'submit', 
-                                                                'class'=>'dropdown-button',
-                                                                'onclick'=>"return confirm("."'".$translator->translate('i.delete_record_warning')."');"
-                                                            ]
-                                                            ),
-                                                        $urlGenerator->generate('userinv/delete',['id'=>$model->getId()]),[]                                         
-                                                        )->render() : '';
+                        return $model->getType() == 1 ? Html::a(Html::tag('button', '❌',
+                            [
+                                'type'=>'submit', 
+                                'class'=>'dropdown-button',
+                                'onclick'=>"return confirm("."'".$translator->translate('i.delete_record_warning')."');"
+                            ]
+                            ),
+                        $urlGenerator->generate('userinv/delete',['id'=>$model->getId()]),['style' => 'text-decoration:none']                                         
+                        )->render() : '';
 
 
-            }),
-        ];
+        }),
+    ];
     ?>
     <?php 
     $grid_summary = $s->grid_summary(

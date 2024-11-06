@@ -561,7 +561,19 @@ final class UserInvController
         return $this->webService->getRedirectResponse('userinv/index');
     }
 
-    
+    /**
+     * After the user has clicked on their received email link in their email account, their hyperlink takes them to this function
+     * 
+     * @param string $_language
+     * @param string $language
+     * @param string $token
+     * @param cR $cR
+     * @param uiR $uiR
+     * @param ucR $ucR
+     * @param sR $sR
+     * @param tR $tR
+     * @return Response
+     */
     public function signup(
         // cldr e.g. 'en'
         #[RouteArgument('_language')] string $_language,

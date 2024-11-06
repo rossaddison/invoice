@@ -151,6 +151,9 @@ final class CommonViewInjection implements CommonParametersInjectionInterface
             'forgotalert' => [
                 'passwordResetEmail' => $this->translator->translate('i.password_reset_email'),
             ],
+            'adminmustmakeactive' => [
+                'adminMustMakeActive' => $this->translator->translate('i.loginalert_user_inactive'),
+            ],
             'forgotemailfailed' => [
                 'passwordResetFailed' => $this->translator->translate('i.password_reset_failed'),
                 'invoiceEmailException' => $this->translator->translate('invoice.email.exception')

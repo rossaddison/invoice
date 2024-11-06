@@ -91,6 +91,9 @@ return [
     Route::methods([Method::GET, Method::POST], '/about')
     ->action([SiteController::class, 'about'])
     ->name('site/about'),
+    Route::methods([Method::GET, Method::POST], '/adminmustmakeactive')
+    ->action([SiteController::class, 'adminmustmakeactive'])
+    ->name('site/adminmustmakeactive'),
     Route::methods([Method::GET, Method::POST], '/team')
     ->action([SiteController::class, 'team'])
     ->name('site/team'),
