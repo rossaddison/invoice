@@ -244,8 +244,8 @@ use Yiisoft\Html\Tag\Form;
                 ->value(Html::encode($form->getFax() ?? ''))
                 ->hint($translator->translate('invoice.hint.this.field.is.not.required')); 
             ?>
-        <?= Html::closeTag('div'); ?>
-         <?= Html::openTag('div',['class' => 'mb-3 form-group']); ?>
+        <?= Html::closeTag('div'); ?>        
+        <?= Html::openTag('div',['class' => 'mb-3 form-group']); ?>
             <?= Field::email($form, 'email')
                 ->label($translator->translate('i.email'))
                 ->addInputAttributes([

@@ -260,7 +260,7 @@ echo $alert
             },    
         ),           
         new DataColumn(
-            'email',
+            'user',
             content: static function (UserInv $model): ?string {
                 return $model->getUser()?->getEmail();
         }),         
