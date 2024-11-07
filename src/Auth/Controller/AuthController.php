@@ -7,6 +7,7 @@ namespace App\Auth\Controller;
 use App\Auth\AuthService;
 use App\Auth\Form\LoginForm;
 use App\Service\WebControllerService;
+use App\Auth\TokenRepository;
 use App\Invoice\UserInv\UserInvRepository;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
@@ -18,6 +19,8 @@ use Yiisoft\Yii\View\Renderer\ViewRenderer;
 
 final class AuthController
 {
+    public const string EMAIL_VERIFICATION_TOKEN = 'email-verification';
+    
     public function __construct(
         private readonly AuthService          $authService,
         private readonly WebControllerService $webService,
@@ -32,7 +35,8 @@ final class AuthController
         FormHydrator $formHydrator,
         CookieLogin $cookieLogin,
         // use the 'active' field of the extension table userinv to verify that the user has been made active through e.g. email verificaiton    
-        UserInvRepository $uiR    
+        UserInvRepository $uiR,
+        TokenRepository $tR
     ): ResponseInterface {
         if (!$this->authService->isGuest()) {
             return $this->redirectToMain();
@@ -70,7 +74,16 @@ final class AuthController
                         /**
                          * If the observer user is signing up WITHOUT email (=> userinv account status is 0), e.g. by console ... yii userinv/assignRole observer 2, 
                          * the admin will have to make the user active via Settings Invoice User Account AND assign the user an added client
+                         * Also the token that was originally assigned on signup, must now be 'disabled' because the admin is responsible for making the user active
                          */
+                        $token = $tR->findTokenByIdentityIdAndType($userId, self::EMAIL_VERIFICATION_TOKEN);
+                        if (null !== $token) {
+                            /**
+                             * @see https://github.com/search?q=repo%3Ayiisoft%2Fyii2-app-advanced%20already_&type=code
+                             */
+                            $token->setToken('already_used_token_'.time());
+                            $tR->save($token);
+                        }
                         return $this->redirectToAdminMustMakeActive();
                     }
                 }

@@ -47,6 +47,10 @@
 <p>Introducing India's PayTm payment gateway's QR code method of payment and comparing this with Stripe's method.</p>
 <p>A General Sales Tax (GST) Tax System will have to be implemented first for this purpose.</p>
 <p>Testing Credit Notes against Invoices with refunds (if payment made) linked to each of the payment gateways.</p>
+<p><b>7th November 2024</b></p>
+<p>1. Remove the email field from userinv entity/table although the relation getUser is used to retrieve the email field in the user table.</p>
+<p>2. The User entity email field is shown 'disabled' in the userinv forms.</p>
+<p>3. If the user signs up on a localhost with no connection to the internet they will be able to login provided the admin makes their account active via. userinv</p>
 <p><b>31st October 2024</b></p>
 <p>1. Reconfigured config/common/params to accomodate yiisoft/mailer-symfony</p>
 <p>2. Tested SignUpController, ForgotController and are functional.</p>

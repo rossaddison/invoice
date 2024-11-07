@@ -169,7 +169,8 @@ final class CommonViewInjection implements CommonParametersInjectionInterface
             ],
             'signupfailed' => [
                 'emailNotSentSuccessfully' => $this->translator->translate('invoice.invoice.email.not.sent.successfully'),
-                'invoiceEmailException' => $this->translator->translate('invoice.email.exception')
+                'invoiceEmailException' => $this->translator->translate('invoice.email.exception'),
+                'localhostUserCanLoginAfterAdminMakesActive' => $this->translator->translate('i.loginalert_user_inactive')
             ],
             'signupsuccess' => [
                 'emailSuccessfullySent' => $this->translator->translate('i.email_successfully_sent'),

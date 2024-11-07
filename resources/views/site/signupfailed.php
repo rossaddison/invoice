@@ -13,12 +13,19 @@ use Yiisoft\Yii\Bootstrap5\AlertVariant;
  * @see 'invoice.invoice.email.not.sent.successfully'
  */
 
-$alert = Alert::widget()
+echo Alert::widget()
         ->addClass('shadow')
         ->variant(AlertVariant::DANGER)
         ->body((string)$signupfailed['emailNotSentSuccessfully']. ' config/common/params.php mailer senderEmail check'.
             "\n".
                (string)$signupfailed['invoiceEmailException']. 
             "\n")
+        ->dismissable(true)
         ->render();
-echo $alert;
+
+echo Alert::widget()
+        ->addClass('shadow')
+        ->variant(AlertVariant::INFO)
+        ->body((string)$signupfailed['localhostUserCanLoginAfterAdminMakesActive'])
+        ->dismissable(true)
+        ->render();

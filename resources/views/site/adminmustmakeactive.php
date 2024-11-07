@@ -18,6 +18,7 @@ $alert =  Alert::widget()
         ->variant(AlertVariant::INFO)
         ->body((string)$adminmustmakeactive['adminMustMakeActive'].
                "\n", true)
+        ->closeButtonAttributes(['class' => 'btn-lg'])
         ->dismissable(true)
         ->render();
 echo $alert;   

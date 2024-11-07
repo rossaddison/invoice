@@ -26,9 +26,6 @@ class UserInv
     #[Column(type: 'integer(11)', nullable:false)]
     private ?int $user_id =  null;
 
-    #[Column(type:"string(254)", nullable:true)]
-    private ?string $email =  '';
-
     /**
      * @see src/Invoice/UserInv/UserInvForm 0 => Admin, 1 => Not Admin
      */
@@ -110,7 +107,6 @@ class UserInv
     public function __construct(
         int $id = null,
         int $user_id = null,
-        string $email = '',
         int $type = null,
         bool $active = false,
         string $language = '',
@@ -137,7 +133,6 @@ class UserInv
     ) {
         $this->id = $id;
         $this->user_id = $user_id;
-        $this->email = $email;
         $this->type = $type;
         $this->active = $active;
         $this->date_created = new \DateTimeImmutable();
@@ -179,7 +174,11 @@ class UserInv
     {
         $this->user = $user;
     }
-
+    
+    /**
+     * Use the getUser relation to retrieve the User Table email field
+     * @return User|null
+     */
     public function getUser(): ?User
     {
         return $this->user;
@@ -193,11 +192,6 @@ class UserInv
     public function setUser_id(int $user_id): void
     {
         $this->user_id =  $user_id;
-    }
-
-    public function setEmail(string $email): void
-    {
-        $this->email = $email;
     }
 
     public function getWeb(): ?string
@@ -359,12 +353,7 @@ class UserInv
     {
         $this->mobile = $mobile;
     }
-
-    public function getEmail(): ?string
-    {
-        return $this->email;
-    }
-
+ 
     public function setWeb(string $web): void
     {
         $this->web = $web;
