@@ -99,7 +99,7 @@ class MailerHelper
             $user_inv = null !== $user_id ? $uiR->repoUserInvUserIdquery($user_id) : null;
             if (null !== $user_inv) {
                 if (null !== $quote->getClient()?->getClient_name()) {
-                    $from_email = $user_inv->getEmail() ?? '';
+                    $from_email = $user_inv->getUser()?->getEmail() ?? '';
                     $from_name = $user_inv->getName() ?? '';
                     $subject = sprintf(
                         $this->translator->translate('i.quote_status_email_subject'),
@@ -164,7 +164,7 @@ class MailerHelper
         if (null !== $uiR) {
             if (($this->s->getSetting('bcc_mails_to_admin') == 1) && ($uiR->repoUserInvUserIdcount((string)1) > 0)) {
                 $user_inv = $uiR->repoUserInvUserIdquery((string)1) ?: null;
-                $email = null !== $user_inv ? $user_inv->getEmail() : '';
+                $email = null !== $user_inv ? $user_inv->getUser()?->getEmail() : '';
                 // $bcc should be an array after the explode
                 is_array($bcc) && $email !== '' ? array_unshift($bcc, $email) : '';
             }
@@ -224,7 +224,6 @@ class MailerHelper
                 // Administrator's are given a type of 0, Guests eg. Accountant 1
                 $admin->setType(0);
                 $admin->setName('Administrator');
-                $admin->setEmail('setup@your.email');
                 $uiR->save($admin);
             }
         }
