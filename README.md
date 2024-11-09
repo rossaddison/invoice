@@ -22,33 +22,41 @@ Yii3 Invoice
 **Installing npm_modules folder containing bootstrap as mentioned in package.json**
 * Step 1: Download node.js at https://nodejs.org/en/download
 * Step 2: Ensure C:\ProgramFiles\nodejs is in environment variable path. Search ... edit the system environment variables
-* Step 3: Run ````npm i```` in ````c:\wamp64\invoice```` folder. This will install @popperjs and bootstrap 5.
+* Step 3: Run ````npm i```` in ````c:\wamp64\invoice```` folder. This will install @popperjs, bootstrap5, and typescript 
+          into a new node_modules folder.
 * Step 4: Keep your npm up to date by running e.g. ````npm install -g npm@10.8.1````
 
 **Recommended php.ini settings**
 * Step 1: Wampserver ... Php {version} ... Php Settings ... xdebug.mode = off
 * Step 2:                                               ... Maximum Execution = 240
 
-** Note as at 15/06/2024: If you have adjusted any Entity file you will have to always make two adjustments to**
+Installing the database in mySql
+1. Create a database in mySql called yii3-i.
+2. The BUILD_DATABASE=true setting in the config/common/params.php file will ensure a firtrun setup of tables.
+3. After the setup of tables, ensure that this setting is changed back to false otherwise you will get performmance issues.
+
+The c:\wamp64\yii3-i\config\common\params.php file line approx. 193 will automatically build up the tables under database yii3-i. 
+
+````'mode' => $_ENV['BUILD_DATABASE'] ? PhpFileSchemaProvider::MODE_WRITE_ONLY : PhpFileSchemaProvider::MODE_READ_AND_WRITE,````
+
+
+** If you adjust any Entity file you will have to always make two adjustments to**
 ** ensure the database is updated with the new changes and relevent fields: **
-* 1. Change the false here immediately below to true i.e. 'mode' => true ? ...
-* 2. Change the BUILD_DATABASE = false in the .env file at the root to BUILD_DATABASE = true
-* 3. Once the changes have been reflected and you have checked them via e.g. phpMyAdmin revert back to the original settings
+* 1. Change the BUILD_DATABASE=false in the .env file at the root to BUILD_DATABASE=true
+* 2. Once the changes have been reflected and you have checked them via e.g. phpMyAdmin revert back to the original settings
 
-Adjust c:\wamp64\yii3-i\config\common\params.php file line approx. 193 to **'mode' => true** for installation.
-This will automatically build up the tables under database yii3-i. 
+Signup your first user using **+ Peson icon**. This user will automatically be assigned the admin role. If you do not have an internet connection you will receive an email failed message
+but you will still be able to login. 
 
-````'mode' => false ? PhpFileSchemaProvider::MODE_WRITE_ONLY : PhpFileSchemaProvider::MODE_READ_AND_WRITE,````
+You or your customer, signup the second user as your Client/Customer. They will automatically be assigned the observer role. 
+If you do not have an internet connection you will get a failed message but if your admin makes the 'Invoice User Account' status active the user
+will be able to login.
 
-After installing, ensure mode is on **'mode' => false** for faster performance and **BUILD_DATABASE = false**
+If a user signs up by email, they will automatically be assigned a client, and automatically be made active. 
 
-Signup your first user using **Create User Account**
-
-Signup your second user as your Client/Customer.
-
-**To enable your signed-up Client to make payments:** 
+**If your user has not signed up by an email verification, to enable your signed-up Client to make payments:** 
 * Step 1: Make sure you have created a client ie. Client ... View ... New
-* Step 2: Create a Settings...User Account
+* Step 2: Create a Settings...Invoice User Account
 * Step 3: Use the Assigned Client ... Burger Button ... and assign the New User Account to an existing Client.
 * Step 4: Make sure they are active.
 * Step 5: Make sure the relevant invoice has the status 'sent' either by manualy editing the status of the invoice under Invoice ... View ... Options or by actually sending the invoice to the client by email under Invoice ... View ... Options.
@@ -56,7 +64,7 @@ Signup your second user as your Client/Customer.
 **To install at least a service and a product, and a foreign and a non-foreign client automatically follow these steps please:**
 
 * Step 1: Settings ... View ... General ... Install Test Data ... Yes  AND   Use Test Date ... Yes
-* Step 2: In the main Url type: invoice and press enter. The Invoice Controller will create 2 clients and products automatically.
+* Step 2: In the settings menu, you will now see 'Test data can now be installed'. Click on it.
 
 **The package by default will not use VAT and will use the traditional Invoiceplane type installation providing both line item tax and invoice tax** 
 
