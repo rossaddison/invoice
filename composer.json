@@ -106,7 +106,7 @@
         "yiisoft/rbac-php": "^1.0",
         "yiisoft/rbac-rules-container": "^2.0",
         "yiisoft/request-provider": "^1.1",
-        "rossaddison/requirements": "^1.0",
+        "rossaddison/requirements": "dev-master",
         "yiisoft/router": "^3.0",
         "yiisoft/router-fastroute": "^3.0",
         "yiisoft/security": "^1.0",
