@@ -24,11 +24,11 @@ Yii3 Invoice
 * Step 2: Ensure C:\ProgramFiles\nodejs is in environment variable path. Search ... edit the system environment variables
 * Step 3: Run ````npm i```` in ````c:\wamp64\invoice```` folder. This will install @popperjs, bootstrap5, and typescript 
           into a new node_modules folder.
-* Step 4: Keep your npm up to date by running e.g. ````npm install -g npm@10.8.1````
+* Step 4: Keep your npm up to date by running e.g. ````npm install -g npm@10.8.1 or just npm install -g````
 
 **Recommended php.ini settings**
 * Step 1: Wampserver ... Php {version} ... Php Settings ... xdebug.mode = off
-* Step 2:                                               ... Maximum Execution = 240
+* Step 2:                                               ... Maximum Execution = 360
 
 Installing the database in mySql
 1. Create a database in mySql called yii3-i.
@@ -38,7 +38,6 @@ Installing the database in mySql
 The c:\wamp64\yii3-i\config\common\params.php file line approx. 193 will automatically build up the tables under database yii3-i. 
 
 ````'mode' => $_ENV['BUILD_DATABASE'] ? PhpFileSchemaProvider::MODE_WRITE_ONLY : PhpFileSchemaProvider::MODE_READ_AND_WRITE,````
-
 
 ** If you adjust any Entity file you will have to always make two adjustments to**
 ** ensure the database is updated with the new changes and relevent fields: **
