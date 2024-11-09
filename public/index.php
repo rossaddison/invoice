@@ -36,8 +36,8 @@ require_once dirname(__DIR__) . '/autoload.php';
 // Run HTTP application runner
 $runner = new HttpApplicationRunner(
     rootPath: dirname(__DIR__),
-    debug: $_ENV['YII_DEBUG'],
-    checkEvents: $_ENV['YII_DEBUG'],
+    debug: !empty($_ENV['YII_DEBUG']) ? $_ENV['YII_DEBUG'] : false,
+    checkEvents: !empty($_ENV['YII_DEBUG']) ? $_ENV['YII_DEBUG'] : false,
     environment: $_ENV['YII_ENV']
 );
 $runner->run();

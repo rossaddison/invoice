@@ -53,6 +53,7 @@ use Yiisoft\Yii\Bootstrap5\Offcanvas;
  * @var Yiisoft\Translator\TranslatorInterface $translator
  * @var Yiisoft\View\WebView $this
  * @var bool $isGuest
+ * @var bool $buildDatabase
  * @var bool $debugMode
  * @var string $csrf
  * @var string $companyLogoHeight 
@@ -476,12 +477,15 @@ $this->beginPage();
                       ['label' => $translator->translate('invoice.platform.xdebug') . ' ' . $xdebug, 'options' => ['class' => 'nav fs-4', 'data-bs-toggle' => 'tooltip', 'title' => 'Via Wampserver Menu: Icon..Php 8.1.8-->Php extensions-->xdebug 3.1.5(click)-->Allow php command prompt to restart automatically-->(click)Restart All Services-->No typing in or editing of a php.ini file!!']],
                       ['label' => '...config/common/params.php SyncTable currently not commented out and PhpFileSchemaProvider::MODE_READ_AND_WRITE...fast....MODE_WRITE_ONLY...slower'],
                       ['label' => 'php.ini: opcache.memory_consumption (pref 128) = '. (ini_get('opcache.memory_consumption')), 'options' => ['data-bs-toggle' => 'tooltip', 'title' => 'e.g. change manually in C:\wamp64\bin\php\php8.1.13\phpForApache.ini and restart all services.']],
+                      ['label' => 'php.ini: opcache.memory_consumption (pref 128) = '. (ini_get('opcache.memory_consumption')), 'options' => ['data-bs-toggle' => 'tooltip', 'title' => 'e.g. change manually in C:\wamp64\bin\php\php8.1.13\phpForApache.ini and restart all services.']],
                       ['label' => 'php.ini: oopcache.interned_strings_buffer (pref 8) = '. (ini_get('opcache.interned_strings_buffer'))],
                       ['label' => 'php.ini: opcache.max_accelerated_files (pref 4000) = '. (ini_get('opcache.max_accelerated_files'))],
                       ['label' => 'php.ini: opcache.revalidate_freq (pref 60) = '. (ini_get('opcache.revalidate_freq'))],
                       ['label' => 'php.ini: opcache.enable (pref 1) = ' . (ini_get('opcache.enable'))],
                       ['label' => 'php.ini: opcache.enable_cli (pref 1) = ' .(ini_get('opcache.enable_cli'))],
-                      ['label' => 'php.ini: opcache.jit (pref see nothing) = '. (ini_get('opcache.jit'))],  
+                      ['label' => 'php.ini: opcache.jit (pref see nothing) = '. (ini_get('opcache.jit'))],
+                      ['label' => 'php.ini: max_execution_time (pref 360) = '. (ini_get('max_execution_time'))],
+                      ['label' => '.env: BUILD_DATABASE= (pref see nothing) = '. ($buildDatabase ? 'You have built the database using BUILD_DATABASE=true, now assign the environment varirable to nothing i.e. BUILD_DATABASE=' : '✅')],  
                       ['label' => 'config.params: yiisoft/yii-debug: enabled , disable for improved performance'],
                       ['label' => 'config.params: yiisoft/yii-debug-api: enabled, disable for improved performance'],
                     ],

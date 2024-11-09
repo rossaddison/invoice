@@ -104,10 +104,11 @@ final class LayoutViewInjection implements LayoutParametersInjectionInterface
         $stopSigningUp = $this->settingRepository->getSetting('stop_signing_up') == '1' ? true : false;
         $stopLoggingIn = $this->settingRepository->getSetting('stop_logging_in') == '1' ? true : false;
         /**
-         * @see .env.php $_ENV['YII_DEBUG'] located in the root (first) folder
+         * @see .env.php $_ENV['YII_DEBUG'] and $_ENV['BUILD_DATABASE'] located in the root (first) folder
          * @see {root} autoload.php
          */
-        $debugMode = $_SERVER['YII_DEBUG'] == '1' ? true : false;
+        $debugMode = $_ENV['YII_DEBUG'] == '1' ? true : false;
+        $buildDatabase = $_ENV['BUILD_DATABASE'] == '1' ? true : false;
         // Record the debugMode in a setting so that 'debug_mode' can be used in e.g. salesorder\guest.php`
         $this->settingRepository->debugMode($debugMode);
         $user = $identity instanceof Identity ? $identity->getUser() : null;
@@ -131,6 +132,7 @@ final class LayoutViewInjection implements LayoutParametersInjectionInterface
         return [
             'title' => 'Home',
             'logoPath' => $logoPath,
+            'buildDatabase' => $buildDatabase,
             'debugMode' => $debugMode,
             'stopSigningUp' => $stopSigningUp,
             'stopLoggingIn' => $stopLoggingIn,
