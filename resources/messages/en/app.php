@@ -989,7 +989,7 @@ return [
     'invoice.email.default' => 'Default',
     'invoice.email.default.none.set' => 'No default has been set',
     'invoice.email.from.dropdown' => 'From Email Dropdown Email Addresses to be included in MailerQuote Form and MailerInv Form',
-    'invoice.email.exception' => 'Emailing Exception: ',
+    'invoice.email.exception' => 'Emailing Exception.',
     'invoice.email.include' => 'Include',
     'invoice.email.log' => 'Invoices Emailed Log',
     'invoice.email.logs' => 'Invoices Emailed Logs',

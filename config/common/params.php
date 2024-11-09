@@ -293,8 +293,7 @@ return [
          * 3. Once the changes have been reflected and you have checked them via e.g. phpMyAdmin revert back to the original settings
          * Mode: PhpFileSchemaProvider::MODE_WRITE_ONLY : PhpFileSchemaProvider::MODE_READ_AND_WRITE \ 
          */
-        'mode' => PhpFileSchemaProvider::MODE_READ_AND_WRITE,
-        //'mode' => PhpFileSchemaProvider::MODE_WRITE_ONLY,  
+        'mode' => $_ENV['BUILD_DATABASE'] ? PhpFileSchemaProvider::MODE_WRITE_ONLY : PhpFileSchemaProvider::MODE_READ_AND_WRITE,
         'file' => 'runtime/schema.php'
       ],
       FromConveyorSchemaProvider::class => [

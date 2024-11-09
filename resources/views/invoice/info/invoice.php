@@ -47,6 +47,12 @@
 <p>Introducing India's PayTm payment gateway's QR code method of payment and comparing this with Stripe's method.</p>
 <p>A General Sales Tax (GST) Tax System will have to be implemented first for this purpose.</p>
 <p>Testing Credit Notes against Invoices with refunds (if payment made) linked to each of the payment gateways.</p>
+<p><b>9th November 2024</b></p>
+<p>1. Retest the .env and autoload files with Psalm Level 1 and filter_var function. Changes made.<p>
+<p>2. public/index.php and yii console file at the root tested. Changes made.<p>
+<p>3. The build database boolean value appears under performance on the application's menu now and warns if it has not been set back to false after setup.<p> 
+<p>4. Include a php-space-filter-var-test.php function for testing .env values at the command line using the filter_var function.</p>
+<p>5. If signup fails due to no internet connection, token 'disabled' with: 'already_used_token' and a time value. The admin has to make the signed up userinv status active. </p>
 <p><b>7th November 2024</b></p>
 <p>1. Remove the email field from userinv entity/table although the relation getUser is used to retrieve the email field in the user table.</p>
 <p>2. The User entity email field is shown 'disabled' in the userinv forms.</p>

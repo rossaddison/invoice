@@ -66,6 +66,7 @@ final class AuthController
                      *      and the userinv account's status field is made active i.e. 1
                      */
                     if ($status || $userId == 1) {
+                        $userId == 1 ? $this->disableEmailVerificationToken($tR, '1') : '';
                         if ($identity instanceof CookieLoginIdentityInterface && $loginForm->getPropertyValue('rememberMe')) {
                             return $cookieLogin->addCookie($identity, $this->redirectToInvoiceIndex());
                         }
@@ -76,14 +77,7 @@ final class AuthController
                          * the admin will have to make the user active via Settings Invoice User Account AND assign the user an added client
                          * Also the token that was originally assigned on signup, must now be 'disabled' because the admin is responsible for making the user active
                          */
-                        $token = $tR->findTokenByIdentityIdAndType($userId, self::EMAIL_VERIFICATION_TOKEN);
-                        if (null !== $token) {
-                            /**
-                             * @see https://github.com/search?q=repo%3Ayiisoft%2Fyii2-app-advanced%20already_&type=code
-                             */
-                            $token->setToken('already_used_token_'.time());
-                            $tR->save($token);
-                        }
+                        $this->disableEmailVerificationToken($tR, $userId);
                         return $this->redirectToAdminMustMakeActive();
                     }
                 }
@@ -93,6 +87,23 @@ final class AuthController
         }
 
         return $this->viewRenderer->render('login', ['formModel' => $loginForm]);
+    }
+    
+    public function disableEmailVerificationToken(
+        TokenRepository $tR,    
+        ?string $userId = null
+    ) : void 
+    {
+        if (null !== $userId) {    
+            $token = $tR->findTokenByIdentityIdAndType($userId, self::EMAIL_VERIFICATION_TOKEN);
+            if (null !== $token) {
+                /**
+                 * @see https://github.com/search?q=repo%3Ayiisoft%2Fyii2-app-advanced%20already_&type=code
+                 */
+                $token->setToken('already_used_token_'.time());
+                $tR->save($token);
+            }
+        }    
     }
 
     public function logout(): ResponseInterface

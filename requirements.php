@@ -9,6 +9,13 @@ $requirementsChecker = new RequirementsChecker();
 // Add here the conditions that must be verified
 $config = [
     [
+        'name' => 'Maximum Execution Time of 360 is required.',
+        'mandatory' => true,
+        'condition' => $requirementsChecker->checkMaxExecutionTime('360'),
+        'by' => '<a href="https://www.php.net/manual/en/info.configuration.php#ini.max-execution-time">php.ini setting</a>',
+        'memo' => 'A php.ini max_execution_time minimum of 360 is required for installation. The autoloader will attempt to reset the maximum execution time if currently set to less than 360.',
+    ],
+    [
         'name' => 'PHP version',
         'mandatory' => true,
         'condition' => version_compare(PHP_VERSION, '8.3.0', '>='),

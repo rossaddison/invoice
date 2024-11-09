@@ -1365,16 +1365,16 @@
         },
         {
             "name": "cycle/schema-builder",
-            "version": "v2.10.0",
+            "version": "v2.11.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/cycle/schema-builder.git",
-                "reference": "32cff8ffd51d6b9b1de572dabeb28fd5b87a4fc2"
+                "reference": "5345eb43c4e2d558ec8f16e4643da98e01734fe2"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/cycle/schema-builder/zipball/32cff8ffd51d6b9b1de572dabeb28fd5b87a4fc2",
-                "reference": "32cff8ffd51d6b9b1de572dabeb28fd5b87a4fc2",
+                "url": "https://api.github.com/repos/cycle/schema-builder/zipball/5345eb43c4e2d558ec8f16e4643da98e01734fe2",
+                "reference": "5345eb43c4e2d558ec8f16e4643da98e01734fe2",
                 "shasum": ""
             },
             "require": {
@@ -1407,9 +1407,9 @@
             "description": "Cycle ORM Schema Builder",
             "support": {
                 "issues": "https://github.com/cycle/schema-builder/issues",
-                "source": "https://github.com/cycle/schema-builder/tree/v2.10.0"
+                "source": "https://github.com/cycle/schema-builder/tree/v2.11.0"
             },
-            "time": "2024-10-22T21:24:36+00:00"
+            "time": "2024-11-08T11:56:27+00:00"
         },
         {
             "name": "cycle/schema-migrations-generator",
@@ -12774,12 +12774,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/yiisoft/db.git",
-                "reference": "42181e13bf2e538ab655a91d7815d171af25b744"
+                "reference": "e29b097a29fa3e6ead3f473d7a11c94cb5c239f7"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/yiisoft/db/zipball/42181e13bf2e538ab655a91d7815d171af25b744",
-                "reference": "42181e13bf2e538ab655a91d7815d171af25b744",
+                "url": "https://api.github.com/repos/yiisoft/db/zipball/e29b097a29fa3e6ead3f473d7a11c94cb5c239f7",
+                "reference": "e29b097a29fa3e6ead3f473d7a11c94cb5c239f7",
                 "shasum": ""
             },
             "require": {
@@ -12853,7 +12853,7 @@
                     "type": "opencollective"
                 }
             ],
-            "time": "2024-10-18T19:19:16+00:00"
+            "time": "2024-11-08T01:44:05+00:00"
         },
         {
             "name": "yiisoft/db-mysql",
@@ -12861,12 +12861,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/yiisoft/db-mysql.git",
-                "reference": "ccb8b73b66f0c0687e8cc9a7085e1b94c3b82120"
+                "reference": "b8ffabc50d724a308820aea4b25e7aa1eb7e63b4"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/yiisoft/db-mysql/zipball/ccb8b73b66f0c0687e8cc9a7085e1b94c3b82120",
-                "reference": "ccb8b73b66f0c0687e8cc9a7085e1b94c3b82120",
+                "url": "https://api.github.com/repos/yiisoft/db-mysql/zipball/b8ffabc50d724a308820aea4b25e7aa1eb7e63b4",
+                "reference": "b8ffabc50d724a308820aea4b25e7aa1eb7e63b4",
                 "shasum": ""
             },
             "require": {
@@ -12929,7 +12929,7 @@
                     "type": "opencollective"
                 }
             ],
-            "time": "2024-10-18T07:49:35+00:00"
+            "time": "2024-11-08T02:29:56+00:00"
         },
         {
             "name": "yiisoft/definitions",
@@ -16079,12 +16079,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/yiisoft/yii-bootstrap5.git",
-                "reference": "1b159fe8f0e8a429bde5c3501cd164c2c643bf7d"
+                "reference": "8b574de190e057b75d115ccaffe6b8f59e8d550c"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/yiisoft/yii-bootstrap5/zipball/1b159fe8f0e8a429bde5c3501cd164c2c643bf7d",
-                "reference": "1b159fe8f0e8a429bde5c3501cd164c2c643bf7d",
+                "url": "https://api.github.com/repos/yiisoft/yii-bootstrap5/zipball/8b574de190e057b75d115ccaffe6b8f59e8d550c",
+                "reference": "8b574de190e057b75d115ccaffe6b8f59e8d550c",
                 "shasum": ""
             },
             "require": {
@@ -16148,7 +16148,7 @@
                     "type": "open_collective"
                 }
             ],
-            "time": "2024-11-06T08:55:49+00:00"
+            "time": "2024-11-08T11:06:26+00:00"
         },
         {
             "name": "yiisoft/yii-console",
