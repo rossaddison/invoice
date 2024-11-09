@@ -16,7 +16,7 @@
         <file name="yii"/>
         <file name="autoload.php"/>
         <ignoreFiles>
-            <directory name="vendor/yiisoft/requirements/src" />
+            <directory name="vendor/rossaddison/requirements/src" />
         </ignoreFiles>        
     </projectFiles>    
 </psalm>
