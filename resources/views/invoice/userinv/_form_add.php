@@ -284,7 +284,7 @@ use Yiisoft\Html\Tag\Form;
             ?>
         <?= Html::closeTag('div'); ?>
         <?= Html::openTag('div',['class' => 'mb-3 form-group']); ?>
-            <?= Field::email($form, 'email')
+            <?= Field::email($form, 'user')
                 ->label($translator->translate('i.email'))
                 ->addInputAttributes([
                     'placeholder' => $translator->translate('i.email'),

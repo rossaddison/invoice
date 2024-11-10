@@ -643,6 +643,7 @@ final class InvController
                     // otherwise return to client
                     return $this->web_service->getRedirectResponse('client/view', ['id' => $origin]);
                 }
+                $this->flash_message('warning', $this->translator->translate('invoice.user.client.active.no'));
             }
             $this->flash_message('warning', $this->translator->translate('invoice.invoice.creation.unsuccessful'));
             $errors = $form->getValidationResult()->getErrorMessagesIndexedByProperty();
