@@ -16345,12 +16345,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/yiisoft/yii-dataview.git",
-                "reference": "dca8208c27436799da3d322c40962025df277eeb"
+                "reference": "b5108c45f53b06dca6f2501733a88c15dae9f29e"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/yiisoft/yii-dataview/zipball/dca8208c27436799da3d322c40962025df277eeb",
-                "reference": "dca8208c27436799da3d322c40962025df277eeb",
+                "url": "https://api.github.com/repos/yiisoft/yii-dataview/zipball/b5108c45f53b06dca6f2501733a88c15dae9f29e",
+                "reference": "b5108c45f53b06dca6f2501733a88c15dae9f29e",
                 "shasum": ""
             },
             "require": {
@@ -16439,7 +16439,7 @@
                     "type": "opencollective"
                 }
             ],
-            "time": "2024-10-02T11:35:58+00:00"
+            "time": "2024-11-10T16:15:02+00:00"
         },
         {
             "name": "yiisoft/yii-debug",

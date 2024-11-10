@@ -4,8 +4,6 @@ declare(strict_types=1);
 
 namespace App\Invoice\UserInv;
 
-use App\Auth\Identity;
-use App\Auth\Token;
 use App\Auth\TokenRepository as tR;
 use App\Invoice\Client\ClientRepository as cR;
 use App\Invoice\Entity\Client;
@@ -241,7 +239,7 @@ final class UserInvController
         $currentPageNeverZero = (int)$pageString > 0 ? (int)$pageString : 1;
         $activeInt = (int)$active;
         $sortString = $querySort ?? '-user_id';
-        $sort = Sort::only(['user_id', 'name', 'email'])
+        $sort = Sort::only(['user_id', 'name'])
             ->withOrderString($sortString);
         $userinvs = $this->userinvs_active_with_sort($uiR, $activeInt, $sort);
         if (isset($queryFilterUser) && !empty($queryFilterUser)) {
