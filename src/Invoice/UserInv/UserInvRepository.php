@@ -53,7 +53,7 @@ final class UserInvRepository extends Select\Repository
 
     private function getSort(): Sort
     {
-        return Sort::only(['user_id','name','email'])->withOrder(['user_id' => 'asc']);
+        return Sort::only(['user_id','name'])->withOrder(['user_id' => 'asc']);
     }
 
     /**
@@ -81,7 +81,7 @@ final class UserInvRepository extends Select\Repository
     private function prepareDataReader(Select $query): EntityReader
     {
         return (new EntityReader($query))->withSort(
-            Sort::only(['user_id','name','email'])
+            Sort::only(['user_id','name'])
                 ->withOrder(['user_id' => 'asc'])
         );
     }
