@@ -1006,6 +1006,10 @@ return [
     'invoice.email.template.successfully.added' => 'Email Template Successfully Added',
     'invoice.email.template.successfully.deleted' => 'Email Template Successfully Deleted',
     'invoice.email.template.successfully.edited' => 'Email Template Successfully Edited',
+    'invoice.email.template.from.email.leave.blank' => ': If you leave this field blank, the User\'s account email address will be'.
+                                                       ' inserted as an editable value on the mailer form. '.
+                                                       ' eg. An accountant\'s server email address.' .
+                                                       ' Preferably use a server related email address here.',
     'invoice.enter' => 'Enter',
     'invoice.errors' => 'Errors',
     'invoice.family' => 'Family',
