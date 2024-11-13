@@ -11,10 +11,10 @@ use Yiisoft\Yii\Bootstrap5\Carousel;
  * @var App\Invoice\Setting\SettingRepository $s
  * @var Yiisoft\Translator\TranslatorInterface $translator
  */
-$tooltipTitle = $translator->translate('home.caption.slides.location.debug.mode');
-$w = 649;
-$h = 383;
-$divHeight = 500;
+    $tooltipTitle = $translator->translate('home.caption.slides.location.debug.mode');
+    $w = 150;
+    $h = 75;
+    $divHeight = 250;
 ?>
 
 <?= Html::openTag('header'); ?>
