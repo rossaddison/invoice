@@ -175,46 +175,45 @@ final class PaymentController
         if ($request->getMethod() === Method::POST) {
             // Default payment method is 1 => None
             if ($formHydrator->populateFromPostAndValidate($form, $request)) {
-                $body = $request->getParsedBody();
-                /**
-                 * @psalm-suppress PossiblyInvalidArgument $body
-                 */
-                $this->paymentService->savePayment($payment, $body);
-                // Once the payment has been saved, retrieve the payment id for the custom fields
-                $payment_id = $payment->getId();
-                $inv_id = $payment->getInv_id();
-                // Recalculate the invoice
-                $numberHelper->calculate_inv($inv_id, $aciR, $iiR, $iiaR, $itrR, $iaR, $invRepository, $pmtR);
-                $this->flash_message('info', $this->translator->translate('i.record_successfully_created'));
-                if (isset($body['custom'])) {
-                    // Retrieve the custom array
-                    /** @var array $custom */
-                    $custom = $body['custom'];
-                    /**
-                     * @var int $custom_field_id
-                     * @var array|string $value
-                     */
-                    foreach ($custom as $custom_field_id => $value) {
-                        $paymentCustom = new PaymentCustom();
-                        $paymentCustomForm = new PaymentCustomForm($paymentCustom);
-                        $paymentCustomInput = [
-                            'payment_id' => (int)$payment_id,
-                            'custom_field_id' => $custom_field_id,
-                            'value' => is_array($value) ? serialize($value) : $value
-                        ];
-                        if ($formHydrator->populate($paymentCustomForm, $paymentCustomInput)
-                            && $paymentCustomForm->isValid()
-                            && $this->add_custom_field($payment_id, $custom_field_id, $pcR)) {
-                            $this->paymentCustomService->savePaymentCustom($paymentCustom, $paymentCustomInput);
+                $body = $request->getParsedBody() ?? [];
+                if (is_array($body)) {
+                    $this->paymentService->savePayment($payment, $body);
+                    // Once the payment has been saved, retrieve the payment id for the custom fields
+                    $payment_id = $payment->getId();
+                    $inv_id = $payment->getInv_id();
+                    // Recalculate the invoice
+                    $numberHelper->calculate_inv($inv_id, $aciR, $iiR, $iiaR, $itrR, $iaR, $invRepository, $pmtR);
+                    $this->flash_message('info', $this->translator->translate('i.record_successfully_created'));
+                    if (isset($body['custom'])) {
+                        // Retrieve the custom array
+                        /** @var array $custom */
+                        $custom = $body['custom'];
+                        /**
+                         * @var int $custom_field_id
+                         * @var array|string $value
+                         */
+                        foreach ($custom as $custom_field_id => $value) {
+                            $paymentCustom = new PaymentCustom();
+                            $paymentCustomForm = new PaymentCustomForm($paymentCustom);
+                            $paymentCustomInput = [
+                                'payment_id' => (int)$payment_id,
+                                'custom_field_id' => $custom_field_id,
+                                'value' => is_array($value) ? serialize($value) : $value
+                            ];
+                            if ($formHydrator->populate($paymentCustomForm, $paymentCustomInput)
+                                && $paymentCustomForm->isValid()
+                                && $this->add_custom_field($payment_id, $custom_field_id, $pcR)) {
+                                $this->paymentCustomService->savePaymentCustom($paymentCustom, $paymentCustomInput);
+                            }
+                            $parameters['errorsCustom'] = $paymentCustomForm->getValidationResult()->getErrorMessagesIndexedByProperty();
+                            $parameters['paymentCustomForm'] = $paymentCustomForm;
+                        } // foreach
+                        if (count($parameters['errorsCustom']) > 0) {
+                            return $this->viewRenderer->render('_form', $parameters);
                         }
-                        $parameters['errorsCustom'] = $paymentCustomForm->getValidationResult()->getErrorMessagesIndexedByProperty();
-                        $parameters['paymentCustomForm'] = $paymentCustomForm;
-                    } // foreach
-                    if (count($parameters['errorsCustom']) > 0) {
-                        return $this->viewRenderer->render('_form', $parameters);
-                    }
-                } // isset body['custom']
-                return $this->webService->getRedirectResponse('payment/index');
+                    } // isset body['custom']
+                    return $this->webService->getRedirectResponse('payment/index');
+                } // is_array    
             } // $formHydrator
             $parameters['errors'] = $form->getValidationResult()->getErrorMessagesIndexedByProperty();
             $parameters['form'] = $form;
@@ -437,37 +436,36 @@ final class PaymentController
                 'paymentCustomForm' => $paymentCustomForm
            ];
             if ($request->getMethod() === Method::POST) {
-                $body = $request->getParsedBody();
-                /**
-                 * @psalm-suppress PossiblyInvalidArgument $body
-                 */
-                $form = $this->save_form_fields($body, $currentRoute, $formHydrator, $pmtR);
-                if (isset($parameters['errors'])) {
-                    // Recalculate the invoice
-                    if (isset($body['custom'])) {
-                        /** @var array $body['custom'] */
-                        $custom = $body['custom'];
-                        if ($pcR->repoPaymentCount($payment_id) > 0) {
-                            $formCustom =  $this->save_custom_fields($custom, $formHydrator, $pcR, $payment_id);
-                            if (null !== $formCustom) {
-                                // $parameters['errorsCustom'] can be used to provide customized labels if ->required(true) not used
-                                // currently not used
-                                $parameters['errorsCustom'] = $formCustom->getValidationResult()->getErrorMessagesIndexedByProperty();
-                                $parameters['formCustom'] = $formCustom;
-                                if (count($parameters['errorsCustom']) > 0) {
-                                    return $this->viewRenderer->render('_form', $parameters);
+                $body = $request->getParsedBody() ?? [];
+                if (is_array($body)) {
+                    $form = $this->save_form_fields($body, $currentRoute, $formHydrator, $pmtR);
+                    if (isset($parameters['errors'])) {
+                        // Recalculate the invoice
+                        if (isset($body['custom'])) {
+                            /** @var array $body['custom'] */
+                            $custom = $body['custom'];
+                            if ($pcR->repoPaymentCount($payment_id) > 0) {
+                                $formCustom =  $this->save_custom_fields($custom, $formHydrator, $pcR, $payment_id);
+                                if (null !== $formCustom) {
+                                    // $parameters['errorsCustom'] can be used to provide customized labels if ->required(true) not used
+                                    // currently not used
+                                    $parameters['errorsCustom'] = $formCustom->getValidationResult()->getErrorMessagesIndexedByProperty();
+                                    $parameters['formCustom'] = $formCustom;
+                                    if (count($parameters['errorsCustom']) > 0) {
+                                        return $this->viewRenderer->render('_form', $parameters);
+                                    }
                                 }
                             }
                         }
+                        $number_helper->calculate_inv($inv_id, $aciR, $iiR, $iiaR, $itrR, $iaR, $invRepository, $pmtR);
+                        $this->flash_message('info', $this->translator->translate('i.record_successfully_updated'));
+                        return $this->webService->getRedirectResponse('payment/index');
                     }
-                    $number_helper->calculate_inv($inv_id, $aciR, $iiR, $iiaR, $itrR, $iaR, $invRepository, $pmtR);
-                    $this->flash_message('info', $this->translator->translate('i.record_successfully_updated'));
-                    return $this->webService->getRedirectResponse('payment/index');
-                }
-                if (null !== $form) {
-                    $parameters['errors'] = $form->getValidationResult()->getErrorMessagesIndexedByProperty();
-                    $parameters['form'] = $form;
-                }
+                    if (null !== $form) {
+                        $parameters['errors'] = $form->getValidationResult()->getErrorMessagesIndexedByProperty();
+                        $parameters['form'] = $form;
+                    }
+                } // is_array    
             } // request
             return $this->viewRenderer->render('_form', $parameters);
         }
@@ -489,9 +487,6 @@ final class PaymentController
         if (null !== $payment) {
             $form = new PaymentForm($payment);
             if ($formHydrator->populateAndValidate($form, $body)) {
-                /**
-                 * @psalm-suppress PossiblyInvalidArgument $body
-                 */
                 $this->paymentService->savePayment($payment, $body);
             } else {
                 return $form;

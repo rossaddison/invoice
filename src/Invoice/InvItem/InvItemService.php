@@ -436,10 +436,7 @@ final class InvItemService
             $new_item->setOrder(0);
             // Even if an invoice is balanced with a credit invoice it will remain recurring ... unless stopped.
             // Is_recurring will be either stored as 0 or 1 in mysql. Cannot be null.
-            /**
-             * @psalm-suppress PossiblyNullArgument
-             */
-            $new_item->setIs_recurring($item->getIs_recurring());
+            $new_item->setIs_recurring($item->getIs_recurring() ?? false);
             $new_item->setProduct_unit($item->getProduct_unit() ?? '');
             $new_item->setProduct_unit_id((int)$item->getProduct_unit_id());
             $new_item->setDate($item->getDate_added());

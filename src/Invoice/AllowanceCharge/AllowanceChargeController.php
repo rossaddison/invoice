@@ -255,33 +255,32 @@ final class AllowanceChargeController
     ): Response {
         $allowanceCharge = $this->allowanceCharge($currentRoute, $allowanceChargeRepository);
         $body = $request->getParsedBody() ?? [];
-        if (null !== $allowanceCharge) {
-            $form = new AllowanceChargeForm($allowanceCharge);
-            $peppolArrays = new PeppolArrays();
-            $allowances = $peppolArrays->getAllowancesSubsetArray();
-            $parameters = [
-                'title' => $this->translator->translate('invoice.invoice.allowance.or.charge.edit.allowance'),
-                'actionName' => 'allowancecharge/edit_allowance',
-                'actionArguments' => ['id' => $allowanceCharge->getId()],
-                'errors' => [],
-                'form' => $form,
-                'taxRates' => $tR->findAllPreloaded(),
-                'allowances' => $allowances,
-            ];
-            if ($request->getMethod() === Method::POST) {
-                /**
-                 * @psalm-suppress PossiblyInvalidArgument $body
-                 */
-                if ($formHydrator->populateFromPostAndValidate($form, $request)) {
-                    $this->allowanceChargeService->saveAllowanceCharge($allowanceCharge, $body);
-                    $this->flashMessage('info', $this->translator->translate('i.record_successfully_updated'));
-                    return $this->webService->getRedirectResponse('allowancecharge/index');
+        if (is_array($body)) {
+            if (null !== $allowanceCharge) {
+                $form = new AllowanceChargeForm($allowanceCharge);
+                $peppolArrays = new PeppolArrays();
+                $allowances = $peppolArrays->getAllowancesSubsetArray();
+                $parameters = [
+                    'title' => $this->translator->translate('invoice.invoice.allowance.or.charge.edit.allowance'),
+                    'actionName' => 'allowancecharge/edit_allowance',
+                    'actionArguments' => ['id' => $allowanceCharge->getId()],
+                    'errors' => [],
+                    'form' => $form,
+                    'taxRates' => $tR->findAllPreloaded(),
+                    'allowances' => $allowances,
+                ];
+                if ($request->getMethod() === Method::POST) {
+                    if ($formHydrator->populateFromPostAndValidate($form, $request)) {
+                        $this->allowanceChargeService->saveAllowanceCharge($allowanceCharge, $body);
+                        $this->flashMessage('info', $this->translator->translate('i.record_successfully_updated'));
+                        return $this->webService->getRedirectResponse('allowancecharge/index');
+                    }
+                    $parameters['form'] = $form;
+                    $parameters['errors'] = $form->getValidationResult()->getErrorMessagesIndexedByProperty();
                 }
-                $parameters['form'] = $form;
-                $parameters['errors'] = $form->getValidationResult()->getErrorMessagesIndexedByProperty();
+                return $this->viewRenderer->render('_form_allowance', $parameters);
             }
-            return $this->viewRenderer->render('_form_allowance', $parameters);
-        }
+        }    
         return $this->webService->getRedirectResponse('allowancecharge/index');
     }
 
@@ -317,16 +316,15 @@ final class AllowanceChargeController
             ];
             if ($request->getMethod() === Method::POST) {
                 $form = new AllowanceChargeForm($allowanceCharge);
-                /**
-                 * @psalm-suppress PossiblyInvalidArgument $body
-                 */
-                if ($formHydrator->populateFromPostAndValidate($form, $request)) {
-                    $this->allowanceChargeService->saveAllowanceCharge($allowanceCharge, $body);
-                    $this->flashMessage('info', $this->translator->translate('i.record_successfully_updated'));
-                    return $this->webService->getRedirectResponse('allowancecharge/index');
-                }
-                $parameters['form'] = $form;
-                $parameters['errors'] = $form->getValidationResult()->getErrorMessagesIndexedByProperty();
+                if (is_array($body)) {
+                    if ($formHydrator->populateFromPostAndValidate($form, $request)) {
+                        $this->allowanceChargeService->saveAllowanceCharge($allowanceCharge, $body);
+                        $this->flashMessage('info', $this->translator->translate('i.record_successfully_updated'));
+                        return $this->webService->getRedirectResponse('allowancecharge/index');
+                    }
+                    $parameters['form'] = $form;
+                    $parameters['errors'] = $form->getValidationResult()->getErrorMessagesIndexedByProperty();
+                }    
             }
             return $this->viewRenderer->render('_form_charge', $parameters);
         }

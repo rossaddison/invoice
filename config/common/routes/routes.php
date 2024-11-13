@@ -106,6 +106,9 @@ return [
     Route::methods([Method::GET, Method::POST], '/contact')
     ->action([SiteController::class, 'contact'])
     ->name('site/contact'),
+    Route::methods([Method::GET, Method::POST], '/gallery')
+    ->action([SiteController::class, 'gallery'])
+    ->name('site/gallery'),
     Route::methods([Method::GET, Method::POST], '/forgotalert')
     ->action([SiteController::class, 'forgotalert'])
     ->name('site/forgotalert'),

@@ -84,14 +84,13 @@ final class GeneratorRelationController
         ];
 
         if ($request->getMethod() === Method::POST) {
-            $body = $request->getParsedBody();
+            $body = $request->getParsedBody() ?? [];
             if ($formHydrator->populateFromPostAndValidate($form, $request)) {
-                /**
-                 * @psalm-suppress PossiblyInvalidArgument $body
-                 */
-                $this->generatorrelationService->saveGeneratorRelation($generatorrelation, $body);
-                return $this->webService->getRedirectResponse('generatorrelation/index');
-            }
+                if (is_array($body)) {
+                        $this->generatorrelationService->saveGeneratorRelation($generatorrelation, $body);
+                    return $this->webService->getRedirectResponse('generatorrelation/index');
+                }
+            }    
             $parameters['errors'] = $form->getValidationResult()->getErrorMessagesIndexedByProperty();
             $parameters['form'] = $form;
         }
@@ -127,17 +126,13 @@ final class GeneratorRelationController
                 'generators' => $generatorRepository->findAllPreloaded()
             ];
             if ($request->getMethod() === Method::POST) {
-                $body = $request->getParsedBody();
-                /**
-                 * @psalm-suppress PossiblyInvalidArgument $body
-                 */
+                $body = $request->getParsedBody() ?? [];
                 if ($formHydrator->populateFromPostAndValidate($form, $request)) {
-                    /**
-                     * @psalm-suppress PossiblyInvalidArgument $body
-                     */
-                    $this->generatorrelationService->saveGeneratorRelation($generatorrelation, $body);
-                    return $this->webService->getRedirectResponse('generatorrelation/index');
-                }
+                    if (is_array($body)) {
+                        $this->generatorrelationService->saveGeneratorRelation($generatorrelation, $body);
+                        return $this->webService->getRedirectResponse('generatorrelation/index');
+                    }
+                }    
                 $parameters['errors'] = $form->getValidationResult()->getErrorMessagesIndexedByProperty();
                 $parameters['form'] = $form;
             }

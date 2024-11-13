@@ -22,6 +22,11 @@ final class SiteController
     {
         return $this->viewRenderer->render('about');
     }
+    
+    public function gallery(): \Yiisoft\DataResponse\DataResponse
+    {
+        return $this->viewRenderer->render('gallery');
+    }
 
     public function team(): \Yiisoft\DataResponse\DataResponse
     {

@@ -113,25 +113,21 @@ final class SalesOrderItemController
             ];
             if ($request->getMethod() === Method::POST) {
                 if ($formHydrator->populateFromPostAndValidate($form, $request)) {
-                    $body = $request->getParsedBody();
-                    // The only item that is different from the quote is the customer's purchase order number
-                    /**
-                     * @psalm-suppress PossiblyInvalidArgument $body
-                     */
-                    $this->salesorderitemService->savePeppol_po_itemid($so_item, $body);
-                    /**
-                     * @psalm-suppress PossiblyInvalidArgument $body
-                     */
-                    $this->salesorderitemService->savePeppol_po_lineid($so_item, $body);
-                    return $this->factory->createResponse($this->viewRenderer->renderPartialAsString(
-                        '//invoice/setting/salesorder_successful',
-                        [
-                        'heading' => $this->translator->translate('invoice.successful'),
-                        'message' => $this->translator->translate('i.record_successfully_updated'),
-                        'url' => 'salesorder/view',
-                        'id' => $so_item->getSales_order_id()
-                    ]
-                    ));
+                    $body = $request->getParsedBody() ?? [];
+                    if (is_array($body)) {
+                        // The only item that is different from the quote is the customer's purchase order number
+                        $this->salesorderitemService->savePeppol_po_itemid($so_item, $body);
+                        $this->salesorderitemService->savePeppol_po_lineid($so_item, $body);
+                        return $this->factory->createResponse($this->viewRenderer->renderPartialAsString(
+                            '//invoice/setting/salesorder_successful',
+                            [
+                            'heading' => $this->translator->translate('invoice.successful'),
+                            'message' => $this->translator->translate('i.record_successfully_updated'),
+                            'url' => 'salesorder/view',
+                            'id' => $so_item->getSales_order_id()
+                        ]
+                        ));
+                    } // is_array    
                 }
                 $parameters['errors'] = $form->getValidationResult()->getErrorMessagesIndexedByProperty();
                 $parameters['form'] = $form;

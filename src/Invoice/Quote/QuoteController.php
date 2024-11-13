@@ -366,55 +366,54 @@ final class QuoteController
             if ($formHydrator->populateFromPostAndValidate($form, $request)) {
                 // Only clients that were assigned to user accounts were made available in dropdown
                 // therefore use the 'user client' user id
-                $body = $request->getParsedBody();
-                /**
-                 * @var string $body['client_id']
-                 */
-                $client_id = $body['client_id'];
-                $client_fullname = '';
-                $user_client = $ucR->repoUserquery($client_id);
-                if (null !== $user_client && null !== $user_client->getClient()) {
-                    $client_first_name = $user_client->getClient()?->getClient_name();
-                    $client_surname = $user_client->getClient()?->getClient_surname();
-                    $client_fullname = (null !== ($client_first_name)
-                                     ? $client_first_name
-                                     : '').
-                                     ' '.
-                                     (null !== ($client_surname) ? $client_surname : '');
-                } else {
-                    $this->flash_message('danger', ($clientRepository->repoClientquery($client_id))->getClient_full_name(). ': '. $this->translator->translate('invoice.invoice.user.client.no.account'));
-                }
-                // Ensure that the client has only one (paying) user account otherwise reject this quote
-                // @see UserClientRepository function get_not_assigned_to_user which ensures that only
-                // clients that have   NOT   been assigned to a user account are presented in the dropdown box for available clients
-                // So this line is an extra measure to ensure that the quote is being made out to the correct payer
-                // ie. not more than one user is associated with the client.
-                $user = $this->active_user($client_id, $uR, $ucR, $uiR);
-                if (null !== $user) {
+                $body = $request->getParsedBody() ?? [];
+                if (is_array($body)) {
                     /**
-                     * @psalm-suppress PossiblyInvalidArgument $body
+                     * @var string $body['client_id']
                      */
-                    $saved_model = $this->quote_service->saveQuote($user, $quote, $body, $this->sR, $gR);
-                    /**
-                     * The QuoteAmount entity is created automatically during the above saveQuote
-                     * @see src\Invoice\Entity\Quote $this->quoteAmount = new QuoteAmount();
-                     */
-                    $model_id = $saved_model->getId();
-                    if (null !== $model_id) {
-                        $this->default_taxes($quote, $trR, $formHydrator);
-                        // Inform the user of generated quote number for draft setting
-                        $this->flash_message('info', $this->sR->getSetting('generate_quote_number_for_draft') === '1'
-                        ? $this->translator->translate('i.generate_quote_number_for_draft') . '=>' . $this->translator->translate('i.yes')
-                        : $this->translator->translate('i.generate_quote_number_for_draft') . '=>' . $this->translator->translate('i.no'));
-                    } //$model_id
-                    $this->flash_message('success', $this->translator->translate('i.record_successfully_created'));
-                    if ($origin == 'main' || $origin == 'quote') {
-                        return $this->web_service->getRedirectResponse('quote/index');
+                    $client_id = $body['client_id'];
+                    $client_fullname = '';
+                    $user_client = $ucR->repoUserquery($client_id);
+                    if (null !== $user_client && null !== $user_client->getClient()) {
+                        $client_first_name = $user_client->getClient()?->getClient_name();
+                        $client_surname = $user_client->getClient()?->getClient_surname();
+                        $client_fullname = (null !== ($client_first_name)
+                                         ? $client_first_name
+                                         : '').
+                                         ' '.
+                                         (null !== ($client_surname) ? $client_surname : '');
+                    } else {
+                        $this->flash_message('danger', ($clientRepository->repoClientquery($client_id))->getClient_full_name(). ': '. $this->translator->translate('invoice.invoice.user.client.no.account'));
                     }
-                    if ($origin == 'dashboard') {
-                        return $this->web_service->getRedirectResponse('invoice/dashboard');
+                    // Ensure that the client has only one (paying) user account otherwise reject this quote
+                    // @see UserClientRepository function get_not_assigned_to_user which ensures that only
+                    // clients that have   NOT   been assigned to a user account are presented in the dropdown box for available clients
+                    // So this line is an extra measure to ensure that the quote is being made out to the correct payer
+                    // ie. not more than one user is associated with the client.
+                    $user = $this->active_user($client_id, $uR, $ucR, $uiR);
+                    if (null !== $user) {
+                        $saved_model = $this->quote_service->saveQuote($user, $quote, $body, $this->sR, $gR);
+                        /**
+                         * The QuoteAmount entity is created automatically during the above saveQuote
+                         * @see src\Invoice\Entity\Quote $this->quoteAmount = new QuoteAmount();
+                         */
+                        $model_id = $saved_model->getId();
+                        if (null !== $model_id) {
+                            $this->default_taxes($quote, $trR, $formHydrator);
+                            // Inform the user of generated quote number for draft setting
+                            $this->flash_message('info', $this->sR->getSetting('generate_quote_number_for_draft') === '1'
+                            ? $this->translator->translate('i.generate_quote_number_for_draft') . '=>' . $this->translator->translate('i.yes')
+                            : $this->translator->translate('i.generate_quote_number_for_draft') . '=>' . $this->translator->translate('i.no'));
+                        } //$model_id
+                        $this->flash_message('success', $this->translator->translate('i.record_successfully_created'));
+                        if ($origin == 'main' || $origin == 'quote') {
+                            return $this->web_service->getRedirectResponse('quote/index');
+                        }
+                        if ($origin == 'dashboard') {
+                            return $this->web_service->getRedirectResponse('invoice/dashboard');
+                        }
                     }
-                }
+                }    
             }
             $errors = $form->getValidationResult()->getErrorMessagesIndexedByProperty();
         } // POST

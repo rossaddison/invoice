@@ -78,14 +78,13 @@ final class PaymentPeppolController
         ];
 
         if ($request->getMethod() === Method::POST) {
-            $body = $request->getParsedBody();
+            $body = $request->getParsedBody() ?? [];
             if ($formHydrator->populateFromPostAndValidate($form, $request)) {
-                /**
-                 * @psalm-suppress PossiblyInvalidArgument $body
-                 */
-                $this->paymentpeppolService->savePaymentPeppol($paymentPeppol, $body);
-                return $this->webService->getRedirectResponse('paymentpeppol/index');
-            }
+                if (is_array($body)) {
+                    $this->paymentpeppolService->savePaymentPeppol($paymentPeppol, $body);
+                    return $this->webService->getRedirectResponse('paymentpeppol/index');
+                }
+            }    
             $parameters['errors'] = $form->getValidationResult()->getErrorMessagesIndexedByProperty();
             $parameters['form'] = $form;
         }
@@ -196,14 +195,13 @@ final class PaymentPeppolController
                 )
             ];
             if ($request->getMethod() === Method::POST) {
-                $body = $request->getParsedBody();
+                $body = $request->getParsedBody() ?? [];
                 if ($formHydrator->populateFromPostAndValidate($form, $request)) {
-                    /**
-                     * @psalm-suppress PossiblyInvalidArgument $body
-                     */
-                    $this->paymentpeppolService->savePaymentPeppol($paymentPeppol, $body);
-                    return $this->webService->getRedirectResponse('paymentpeppol/index');
-                }
+                    if (is_array($body)) {
+                        $this->paymentpeppolService->savePaymentPeppol($paymentPeppol, $body);
+                        return $this->webService->getRedirectResponse('paymentpeppol/index');
+                    }
+                }    
                 $parameters['errors'] = $form->getValidationResult()->getErrorMessagesIndexedByProperty();
                 $parameters['form'] = $form;
             }

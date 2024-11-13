@@ -92,14 +92,13 @@ final class FamilyController
             'form' => $form
         ];
         if ($request->getMethod() === Method::POST) {
-            $body = $request->getParsedBody();
+            $body = $request->getParsedBody() ?? [];
             if ($formHydrator->populateFromPostAndValidate($form, $request)) {
-                /**
-                 * @psalm-suppress PossiblyInvalidArgument $body
-                 */
-                $this->familyService->saveFamily($family, $body);
-                return $this->webService->getRedirectResponse('family/index');
-            }
+                if (is_array($body)) {
+                    $this->familyService->saveFamily($family, $body);
+                    return $this->webService->getRedirectResponse('family/index');
+                }
+            }    
             $parameters['errors'] = $form->getValidationResult()->getErrorMessagesIndexedByProperty();
             $parameters['form'] = $form;
         }
@@ -126,17 +125,13 @@ final class FamilyController
                 'form' => $form
             ];
             if ($request->getMethod() === Method::POST) {
-                $body = $request->getParsedBody();
-                /**
-                 * @psalm-suppress PossiblyInvalidArgument $body
-                 */
+                $body = $request->getParsedBody() ?? [];
                 if ($formHydrator->populateFromPostAndValidate($form, $request)) {
-                    /**
-                     * @psalm-suppress PossiblyInvalidArgument $body
-                     */
-                    $this->familyService->saveFamily($family, $body);
-                    return $this->webService->getRedirectResponse('family/index');
-                }
+                    if (is_array($body)) {
+                        $this->familyService->saveFamily($family, $body);
+                        return $this->webService->getRedirectResponse('family/index');
+                    }
+                }    
                 $parameters['errors'] = $form->getValidationResult()->getErrorMessagesIndexedByProperty();
                 $parameters['form'] = $form;
             }

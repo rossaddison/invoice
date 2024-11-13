@@ -114,18 +114,14 @@ final class InvItemController
             'units' => $uR->findAllPreloaded()
         ];
         if ($request->getMethod() === Method::POST) {
-            $body = $request->getParsedBody();
-            /**
-             * @psalm-suppress PossiblyInvalidArgument $body
-             */
+            $body = $request->getParsedBody() ?? [];
             if ($formHydrator->populateFromPostAndValidate($form, $request)) {
-                /**
-                * @psalm-suppress PossiblyInvalidArgument $body
-                */
-                $this->invitemService->addInvItem_product($invitem, $body, $inv_id, $pR, $trR, new IIAS($iiar), $iiar, $sR, $uR);
-                $this->flash_message('info', $this->translator->translate('i.record_successfully_created'));
-                return $this->webService->getRedirectResponse('inv/view', ['id' => $inv_id]);
-            }
+                if (is_array($body)) {
+                    $this->invitemService->addInvItem_product($invitem, $body, $inv_id, $pR, $trR, new IIAS($iiar), $iiar, $sR, $uR);
+                    $this->flash_message('info', $this->translator->translate('i.record_successfully_created'));
+                    return $this->webService->getRedirectResponse('inv/view', ['id' => $inv_id]);
+                }
+            }    
             $parameters['errors'] = $form->getValidationResult()->getErrorMessagesIndexedByProperty();
             $parameters['form'] = $form;
         }
@@ -172,13 +168,12 @@ final class InvItemController
         if ($request->getMethod() === Method::POST) {
             $body = $request->getParsedBody();
             if ($formHydrator->populateFromPostAndValidate($form, $request)) {
-                /**
-                 * @psalm-suppress PossiblyInvalidArgument $body
-                 */
-                $this->invitemService->addInvItem_task($invitem, $body, $inv_id, $taskR, $trR, new IIAS($iiar), $iiar, $sR);
-                $this->flash_message('info', $this->translator->translate('i.record_successfully_created'));
-                return $this->webService->getRedirectResponse('inv/view', ['id' => $inv_id]);
-            }
+                if (is_array($body)) {
+                    $this->invitemService->addInvItem_task($invitem, $body, $inv_id, $taskR, $trR, new IIAS($iiar), $iiar, $sR);
+                    $this->flash_message('info', $this->translator->translate('i.record_successfully_created'));
+                    return $this->webService->getRedirectResponse('inv/view', ['id' => $inv_id]);
+                }
+            }    
             $parameters['errors'] = $form->getValidationResult()->getErrorMessagesIndexedByProperty();
             $parameters['form'] = $form;
         }
@@ -308,33 +303,32 @@ final class InvItemController
                     // Goal: Accumulate all allowances from invitemallowancecharge
                     // and save in invitemamount->allowance
                     $allowance = $this->accumulative_allowances($inv_item_allowances_charges) ?: 0.00;
-                    /**
-                     * @psalm-suppress PossiblyInvalidArgument $body
-                     */
-                    $tax_rate_id = $this->invitemService->saveInvItem_product($inv_item, $body, $inv_id, $pR, $sR, $uR) ?: 1;
-                    $tax_rate_percentage = $this->taxrate_percentage($tax_rate_id, $trR);
-                    if (null !== $tax_rate_percentage) {
-                        /**
-                         * @psalm-suppress PossiblyNullReference getId
-                         */
-                        $request_inv_item = (int)$this->invitem($currentRoute, $iiR)->getId();
-                        $this->saveInvItemAmount(
-                            $request_inv_item,
-                            $quantity,
-                            $price,
-                            $discount,
-                            $charge,
-                            $allowance,
-                            $tax_rate_percentage,
-                            $iias,
-                            $iiaR,
-                            $sR
-                        );
-                        $numberHelper = new NumberHelper($sR);
-                        $numberHelper->calculate_inv($inv_id, $aciR, $iiR, $iiaR, $itrR, $iaR, $iR, $pymR);
-                        $this->flash_message('info', $this->translator->translate('i.record_successfully_updated'));
-                        return $this->webService->getRedirectResponse('inv/view', ['id' => $inv_id]);
-                    }
+                    if (is_array($body)) {
+                        $tax_rate_id = $this->invitemService->saveInvItem_product($inv_item, $body, $inv_id, $pR, $sR, $uR) ?: 1;
+                        $tax_rate_percentage = $this->taxrate_percentage($tax_rate_id, $trR);
+                        if (null !== $tax_rate_percentage) {
+                            /**
+                             * @psalm-suppress PossiblyNullReference getId
+                             */
+                            $request_inv_item = (int)$this->invitem($currentRoute, $iiR)->getId();
+                            $this->saveInvItemAmount(
+                                $request_inv_item,
+                                $quantity,
+                                $price,
+                                $discount,
+                                $charge,
+                                $allowance,
+                                $tax_rate_percentage,
+                                $iias,
+                                $iiaR,
+                                $sR
+                            );
+                            $numberHelper = new NumberHelper($sR);
+                            $numberHelper->calculate_inv($inv_id, $aciR, $iiR, $iiaR, $itrR, $iaR, $iR, $pymR);
+                            $this->flash_message('info', $this->translator->translate('i.record_successfully_updated'));
+                            return $this->webService->getRedirectResponse('inv/view', ['id' => $inv_id]);
+                        }
+                    }    
                 }
                 $parameters['errors'] = $form->getValidationResult()->getErrorMessagesIndexedByProperty();
                 $parameters['form'] = $form;
@@ -476,7 +470,7 @@ final class InvItemController
                 'units' => $uR->findAllPreloaded()
             ];
             if ($request->getMethod() === Method::POST) {
-                $body = $request->getParsedBody();
+                $body = $request->getParsedBody() ?? [];
                 if ($formHydrator->populateFromPostAndValidate($form, $request)) {
                     $quantity = (float)($body['quantity'] ?? 0.00);
                     $price = (float)($body['price'] ?? 0.00);
@@ -488,22 +482,18 @@ final class InvItemController
                     // Goal: Accumulate all allowances from invitemallowancecharge
                     // and save in invitemamount->allowance
                     $allowance = $this->accumulative_allowances($inv_item_allowances_charges) ?: 0.00;
-                    /**
-                     * @psalm-suppress PossiblyInvalidArgument $body
-                     */
-                    $tax_rate_id = $this->invitemService->saveInvItem_task($inv_item, $body, $inv_id, $taskR, $sR) ?: 1;
-                    $tax_rate_percentage = $this->taxrate_percentage($tax_rate_id, $trR);
-                    if (null !== $tax_rate_percentage) {
-                        /**
-                         * @psalm-suppress PossiblyNullReference getId
-                         */
-                        $request_inv_item = (int)$this->invitem($currentRoute, $iiR)->getId();
-                        $this->saveInvItemAmount($request_inv_item, $quantity, $price, $discount, $charge, $allowance, $tax_rate_percentage, $iias, $iiaR, $sR);
-                        $numberHelper = new NumberHelper($sR);
-                        $numberHelper->calculate_inv($inv_id, $aciR, $iiR, $iiaR, $itrR, $iaR, $iR, $pymR);
-                        $this->flash_message('info', $this->translator->translate('i.record_successfully_updated'));
-                        return $this->webService->getRedirectResponse('inv/view', ['id' => $inv_id]);
-                    }
+                    if (is_array($body)) {
+                        $tax_rate_id = $this->invitemService->saveInvItem_task($inv_item, $body, $inv_id, $taskR, $sR) ?: 1;
+                        $tax_rate_percentage = $this->taxrate_percentage($tax_rate_id, $trR);
+                        if (null !== $tax_rate_percentage) {
+                            $request_inv_item = (int)$inv_item->getId();
+                            $this->saveInvItemAmount($request_inv_item, $quantity, $price, $discount, $charge, $allowance, $tax_rate_percentage, $iias, $iiaR, $sR);
+                            $numberHelper = new NumberHelper($sR);
+                            $numberHelper->calculate_inv($inv_id, $aciR, $iiR, $iiaR, $itrR, $iaR, $iR, $pymR);
+                            $this->flash_message('info', $this->translator->translate('i.record_successfully_updated'));
+                            return $this->webService->getRedirectResponse('inv/view', ['id' => $inv_id]);
+                        }    
+                    }    
                 }
                 $parameters['errors'] = $form->getValidationResult()->getErrorMessagesIndexedByProperty();
                 $parameters['form'] = $form;

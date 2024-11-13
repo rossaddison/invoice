@@ -133,12 +133,11 @@ final class ContractController
 
         if ($request->getMethod() === Method::POST) {
             if ($formHydrator->populateFromPostAndValidate($form, $request)) {
-                $body = $request->getParsedBody();
-                /**
-                 * @psalm-suppress PossiblyInvalidArgument $body
-                 */
-                $this->contractService->saveContract($contract, $body, $sR);
-                return $this->webService->getRedirectResponse('contract/index');
+                $body = $request->getParsedBody() ?? [];
+                if (is_array($body)) {
+                    $this->contractService->saveContract($contract, $body, $sR);
+                    return $this->webService->getRedirectResponse('contract/index');
+                }    
             }
             $parameters['form'] = $form;
             $parameters['errors'] = $form->getValidationResult()->getErrorMessagesIndexedByProperty();
@@ -174,11 +173,10 @@ final class ContractController
             if ($request->getMethod() === Method::POST) {
                 if ($formHydrator->populateFromPostAndValidate($form, $request)) {
                     $body = $request->getParsedBody() ?? [];
-                    /**
-                     * @psalm-suppress PossiblyInvalidArgument $body
-                     */
-                    $this->contractService->saveContract($contract, $body, $sR);
-                    return $this->webService->getRedirectResponse('contract/index');
+                    if (is_array($body)) {
+                        $this->contractService->saveContract($contract, $body, $sR);
+                        return $this->webService->getRedirectResponse('contract/index');
+                    }    
                 }
                 $parameters['form'] = $form;
                 $parameters['errors'] = $form->getValidationResult()->getErrorMessagesIndexedByProperty();

@@ -110,24 +110,19 @@ final class CompanyPrivateController
             $target_file_name = $targetPath . '/'.$modified_original_file_name;
             // Make the logo available also on the public path so that it can be viewed online
             $target_public_logo = $targetPublicPath . '/'.$modified_original_file_name;
-            /**
-             * @psalm-suppress PossiblyInvalidArrayAssignment $body
-             */
-            $body['logo_filename'] = $modified_original_file_name;
-            // Move the logo to the private folder for storage and the publicly viewable folder for online viewing
-            if (!$this->file_uploading_errors($tmp, $target_file_name, $target_public_logo)) {
-                // echo \Yiisoft\VarDumper\VarDumper::dump($body);
-                if ($formHydrator->populateAndValidate($form, $body)) {
-                    /**
-                     * @psalm-suppress PossiblyInvalidArgument $body
-                     */
-                    $this->companyprivateService->saveCompanyPrivate($company_private, $body, $settingRepository);
-                    $this->flash_message('info', $this->translator->translate('i.record_successfully_created'));
-                    return $this->webService->getRedirectResponse('companyprivate/index');
+            if (is_array($body)) {
+                $body['logo_filename'] = $modified_original_file_name;
+                // Move the logo to the private folder for storage and the publicly viewable folder for online viewing
+                if (!$this->file_uploading_errors($tmp, $target_file_name, $target_public_logo)) {
+                    if ($formHydrator->populateAndValidate($form, $body)) {
+                        $this->companyprivateService->saveCompanyPrivate($company_private, $body, $settingRepository);
+                        $this->flash_message('info', $this->translator->translate('i.record_successfully_created'));
+                        return $this->webService->getRedirectResponse('companyprivate/index');
+                    }                   
                 }
-            }
-            $parameters['form'] = $form;
-            $parameters['errors'] = $form->getValidationResult()->getErrorMessagesIndexedByProperty();
+                $parameters['form'] = $form;
+                $parameters['errors'] = $form->getValidationResult()->getErrorMessagesIndexedByProperty();
+            }    
         }
         return $this->viewRenderer->render('_form', $parameters);
     }

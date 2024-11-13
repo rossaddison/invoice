@@ -161,27 +161,26 @@ final class DeliveryLocationController
         ];
 
         if ($request->getMethod() === Method::POST) {
-            $body = $request->getParsedBody();
+            $body = $request->getParsedBody() ?? [];
             if ($formHydrator->populateFromPostAndValidate($form, $request)) {
-                /**
-                 * @psalm-suppress PossiblyInvalidArgument $body
-                 */
-                $this->delService->saveDeliveryLocation($delivery_location, $body);
-                $this->flash_message('success', $this->translator->translate('i.record_successfully_created'));
-                $url = $origin.'/'.$action;
-                // Route::methods([Method::GET, Method::POST], '/del/add/{client_id}[/{origin}/{origin_id}/{action}]')
-                if ($origin_id) {
-                    // Redirect to client/view: invoice.myhost/invoice/del/add/25/client/25/view
-                    /**
-                     * @psalm-suppress MixedArgumentTypeCoercion
-                     */
-                    return $this->webService->getRedirectResponse($url, [
-                        'id' => $origin_id
-                    ]);
-                } else {
-                    // Redirect to inv/index
-                    return $this->webService->getRedirectResponse($url);
-                }
+                if (is_array($body)) {
+                    $this->delService->saveDeliveryLocation($delivery_location, $body);
+                    $this->flash_message('success', $this->translator->translate('i.record_successfully_created'));
+                    $url = $origin.'/'.$action;
+                    // Route::methods([Method::GET, Method::POST], '/del/add/{client_id}[/{origin}/{origin_id}/{action}]')
+                    if ($origin_id) {
+                        // Redirect to client/view: invoice.myhost/invoice/del/add/25/client/25/view
+                        /**
+                         * @psalm-suppress MixedArgumentTypeCoercion
+                         */
+                        return $this->webService->getRedirectResponse($url, [
+                            'id' => $origin_id
+                        ]);
+                    } else {
+                        // Redirect to inv/index
+                        return $this->webService->getRedirectResponse($url);
+                    }
+                }    
             }
             $parameters['errors'] = $form->getValidationResult()->getErrorMessagesIndexedByProperty();
             $parameters['form'] = $form;
@@ -224,30 +223,26 @@ final class DeliveryLocationController
               'electronic_address_scheme' => PeppolArrays::electronic_address_scheme()
             ];
             if ($request->getMethod() === Method::POST) {
-                $body = $request->getParsedBody();
-                /**
-                 * @psalm-suppress PossiblyInvalidArgument $body
-                 */
-                if ($formHydrator->populateFromPostAndValidate($form, $request)) {
-                    /**
-                     * @psalm-suppress PossiblyInvalidArgument $body
-                     */
-                    $this->delService->saveDeliveryLocation($del, $body);
-                    $this->flash_message('success', $this->translator->translate('i.record_successfully_created'));
-                    $url = $origin.'/'.$action;
-                    // Route::methods([Method::GET, Method::POST], '/del/edit/{client_id}[/{origin}/{origin_id}/{action}]')
-                    if ($origin_id) {
-                        // Redirect to client/view: invoice.myhost/invoice/del/add/25/client/25/view
-                        /**
-                         * @psalm-suppress MixedArgumentTypeCoercion
-                         */
-                        return $this->webService->getRedirectResponse($url, [
-                            'id' => $origin_id
-                        ]);
-                    } else {
-                        // Redirect to inv/index
-                        return $this->webService->getRedirectResponse($url);
-                    }
+                $body = $request->getParsedBody() ?? [];
+                if (is_array($body)) {
+                    if ($formHydrator->populateFromPostAndValidate($form, $request)) {
+                        $this->delService->saveDeliveryLocation($del, $body);
+                        $this->flash_message('success', $this->translator->translate('i.record_successfully_created'));
+                        $url = $origin.'/'.$action;
+                        // Route::methods([Method::GET, Method::POST], '/del/edit/{client_id}[/{origin}/{origin_id}/{action}]')
+                        if ($origin_id) {
+                            // Redirect to client/view: invoice.myhost/invoice/del/add/25/client/25/view
+                            /**
+                             * @psalm-suppress MixedArgumentTypeCoercion
+                             */
+                            return $this->webService->getRedirectResponse($url, [
+                                'id' => $origin_id
+                            ]);
+                        } else {
+                            // Redirect to inv/index
+                            return $this->webService->getRedirectResponse($url);
+                        }
+                    }    
                 }
                 $parameters['errors'] = $form->getValidationResult()->getErrorMessagesIndexedByProperty();
                 $parameters['form'] = $form;

@@ -174,14 +174,13 @@ final class InvRecurringController
                         'form' => $form
                     ];
                     if ($request->getMethod() === Method::POST) {
-                        $body = $request->getParsedBody();
+                        $body = $request->getParsedBody() ?? [];
                         if ($formHydrator->populateFromPostAndValidate($form, $request)) {
-                            /**
-                             * @psalm-suppress PossiblyInvalidArgument $body
-                             */
-                            $this->invrecurringService->saveInvRecurring($invRecurring, $body);
-                            return $this->webService->getRedirectResponse('invrecurring/index');
-                        }
+                            if (is_array($body)) {
+                                $this->invrecurringService->saveInvRecurring($invRecurring, $body);
+                                return $this->webService->getRedirectResponse('invrecurring/index');
+                            }
+                        }    
                         $parameters['errors'] = $form->getValidationResult()->getErrorMessagesIndexedByProperty();
                         $parameters['form'] = $form;
                     }
@@ -293,14 +292,13 @@ final class InvRecurringController
                     'form' => $form,
                 ];
                 if ($request->getMethod() === Method::POST) {
-                    $body = $request->getParsedBody();
+                    $body = $request->getParsedBody() ?? [];
                     if ($formHydrator->populateFromPostAndValidate($form, $request)) {
-                        /**
-                         * @psalm-suppress PossiblyInvalidArgument $body
-                         */
-                        $this->invrecurringService->saveInvRecurring($inv_recurring, $body);
-                        return $this->webService->getRedirectResponse('invrecurring/index');
-                    }
+                        if (is_array($body)) {
+                            $this->invrecurringService->saveInvRecurring($inv_recurring, $body);
+                            return $this->webService->getRedirectResponse('invrecurring/index');
+                        }
+                    }    
                     $parameters['errors'] = $form->getValidationResult()->getErrorMessagesIndexedByProperty();
                     $parameters['form'] = $form;
                 }

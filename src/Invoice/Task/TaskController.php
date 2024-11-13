@@ -126,14 +126,13 @@ final class TaskController
         ];
         if ($request->getMethod() === Method::POST) {
             if ($formHydrator->populateFromPostAndValidate($form, $request)) {
-                $body = $request->getParsedBody();
-                /**
-                 * @psalm-suppress PossiblyInvalidArgument $body
-                 */
-                $this->taskService->saveTask($task, $body);
-                $this->flash_message('info', $this->translator->translate('i.record_successfully_created'));
-                return $this->webService->getRedirectResponse('task/index');
-            }
+                $body = $request->getParsedBody() ?? [];
+                if (is_array($body)) {
+                    $this->taskService->saveTask($task, $body);
+                    $this->flash_message('info', $this->translator->translate('i.record_successfully_created'));
+                    return $this->webService->getRedirectResponse('task/index');
+                }
+            }    
             $parameters['errors'] = $form->getValidationResult()->getErrorMessagesIndexedByProperty();
             $parameters['form'] = $form;
         }
@@ -174,14 +173,13 @@ final class TaskController
             ];
             if ($request->getMethod() === Method::POST) {
                 if ($formHydrator->populateFromPostAndValidate($form, $request)) {
-                    $body = $request->getParsedBody();
-                    /**
-                     * @psalm-suppress PossiblyInvalidArgument $body
-                     */
-                    $this->taskService->saveTask($task, $body);
-                    $this->flash_message('info', $this->translator->translate('i.record_successfully_updated'));
-                    return $this->webService->getRedirectResponse('task/index');
-                }
+                    $body = $request->getParsedBody() ?? [];
+                    if (is_array($body)) {
+                        $this->taskService->saveTask($task, $body);
+                        $this->flash_message('info', $this->translator->translate('i.record_successfully_updated'));
+                        return $this->webService->getRedirectResponse('task/index');
+                    }
+                }    
                 $parameters['errors'] = $form->getValidationResult()->getErrorMessagesIndexedByProperty();
                 $parameters['form'] = $form;
             }

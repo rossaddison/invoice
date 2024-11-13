@@ -97,13 +97,12 @@ final class ProfileController
 
         if ($request->getMethod() === Method::POST) {
             if ($formHydrator->populateFromPostAndValidate($form, $request)) {
-                $body = $request->getParsedBody();
-                /**
-                 * @psalm-suppress PossiblyInvalidArgument $body
-                 */
-                $this->profileService->saveProfile(new Profile(), $body);
-                return $this->webService->getRedirectResponse('profile/index');
-            }
+                $body = $request->getParsedBody() ?? [];
+                if (is_array($body)) {
+                    $this->profileService->saveProfile(new Profile(), $body);
+                    return $this->webService->getRedirectResponse('profile/index');
+                }
+            }    
             $parameters['errors'] = $form->getValidationResult()->getErrorMessagesIndexedByProperty();
             $parameters['form'] = $form;
         }
@@ -152,12 +151,11 @@ final class ProfileController
             if ($request->getMethod() === Method::POST) {
                 if ($formHydrator->populateFromPostAndValidate($form, $request)) {
                     $body = $request->getParsedBody() ?? [];
-                    /**
-                     * @psalm-suppress PossiblyInvalidArgument $body
-                     */
-                    $this->profileService->saveProfile($profile, $body);
-                    return $this->webService->getRedirectResponse('profile/index');
-                }
+                    if (is_array($body)) {
+                        $this->profileService->saveProfile($profile, $body);
+                        return $this->webService->getRedirectResponse('profile/index');
+                    }
+                }    
                 $parameters['errors'] = $form->getValidationResult()->getErrorMessagesIndexedByProperty();
                 $parameters['form'] = $form;
             }

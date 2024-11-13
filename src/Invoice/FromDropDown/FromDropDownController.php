@@ -69,14 +69,13 @@ final class FromDropDownController
             'form' => $form
         ];
         if ($request->getMethod() === Method::POST) {
-            $body = $request->getParsedBody();
+            $body = $request->getParsedBody() ?? [];
             if ($formHydrator->populateFromPostAndValidate($form, $request)) {
-                /**
-                 * @psalm-suppress PossiblyInvalidArgument $body
-                 */
-                $this->fromService->saveFromDropDown($entity, $body);
-                return $this->webService->getRedirectResponse('from/index');
-            }
+                if (is_array($body)) {
+                        $this->fromService->saveFromDropDown($entity, $body);
+                    return $this->webService->getRedirectResponse('from/index');
+                }
+            }    
             $parameters['errors'] = $form->getValidationResult()->getErrorMessagesIndexedByProperty();
             $parameters['form'] = $form;
         }
@@ -162,14 +161,13 @@ final class FromDropDownController
                 'form' => $form
             ];
             if ($request->getMethod() === Method::POST) {
-                $body = $request->getParsedBody();
+                $body = $request->getParsedBody() ?? [];
                 if ($formHydrator->populateFromPostAndValidate($form, $request)) {
-                    /**
-                     * @psalm-suppress PossiblyInvalidArgument $body
-                     */
-                    $this->fromService->saveFromDropDown($from, $body);
-                    return $this->webService->getRedirectResponse('from/index');
-                }
+                    if (is_array($body)) {
+                        $this->fromService->saveFromDropDown($from, $body);
+                        return $this->webService->getRedirectResponse('from/index');
+                    }
+                }    
                 $parameters['errors'] = $form->getValidationResult()->getErrorMessagesIndexedByProperty();
                 $parameters['form'] = $form;
             }

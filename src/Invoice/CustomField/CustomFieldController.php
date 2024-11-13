@@ -136,11 +136,10 @@ final class CustomFieldController
 
         if ($request->getMethod() === Method::POST) {
             if ($formHydrator->populateFromPostAndValidate($form, $request)) {
-                /**
-                 * @psalm-suppress PossiblyInvalidArgument $body
-                 */
-                $this->customfieldService->saveCustomField($custom_field, $body);
-                return $this->webService->getRedirectResponse('customfield/index');
+                if (is_array($body)) {
+                    $this->customfieldService->saveCustomField($custom_field, $body);
+                    return $this->webService->getRedirectResponse('customfield/index');
+                }    
             }
             $parameters['form'] = $form;
             $parameters['errors'] = $form->getValidationResult()->getErrorMessagesIndexedByProperty();
@@ -180,11 +179,10 @@ final class CustomFieldController
             if ($request->getMethod() === Method::POST) {
                 $body = $request->getParsedBody() ?? [];
                 if ($formHydrator->populateFromPostAndValidate($form, $request)) {
-                    /**
-                     * @psalm-suppress PossiblyInvalidArgument $body
-                     */
-                    $this->customfieldService->saveCustomField($custom_field, $body);
-                    return $this->webService->getRedirectResponse('customfield/index');
+                    if (is_array($body)) {
+                        $this->customfieldService->saveCustomField($custom_field, $body);
+                        return $this->webService->getRedirectResponse('customfield/index');
+                    }    
                 }
                 $parameters['form'] = $form;
                 $parameters['errors'] = $form->getValidationResult()->getErrorMessagesIndexedByProperty();

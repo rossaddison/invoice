@@ -99,13 +99,12 @@ final class ProjectController
 
         if ($request->getMethod() === Method::POST) {
             if ($formHydrator->populateFromPostAndValidate($form, $request)) {
-                $body = $request->getParsedBody();
-                /**
-                 * @psalm-suppress PossiblyInvalidArgument $body
-                 */
-                $this->projectService->saveProject($project, $body);
-                return $this->webService->getRedirectResponse('project/index');
-            }
+                $body = $request->getParsedBody() ?? [];
+                if (is_array($body)) {
+                    $this->projectService->saveProject($project, $body);
+                    return $this->webService->getRedirectResponse('project/index');
+                }
+            }    
             $parameters['errors'] = $form->getValidationResult()->getErrorMessagesIndexedByProperty();
             $parameters['form'] = $form;
         }
@@ -167,13 +166,12 @@ final class ProjectController
             ];
             if ($request->getMethod() === Method::POST) {
                 if ($formHydrator->populateFromPostAndValidate($form, $request)) {
-                    $body = $request->getParsedBody();
-                    /**
-                     * @psalm-suppress PossiblyInvalidArgument $body
-                     */
-                    $this->projectService->saveProject($project, $body);
-                    return $this->webService->getRedirectResponse('project/index');
-                }
+                    $body = $request->getParsedBody() ?? [];
+                    if (is_array($body)) {
+                        $this->projectService->saveProject($project, $body);
+                        return $this->webService->getRedirectResponse('project/index');
+                    }
+                }    
                 $parameters['errors'] = $form->getValidationResult()->getErrorMessagesIndexedByProperty();
                 $parameters['form'] = $form;
             }

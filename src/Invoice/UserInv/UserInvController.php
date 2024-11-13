@@ -152,50 +152,46 @@ final class UserInvController
                 // and has not been assigned the observer role
                 // form dropdown type 0 => admin, type 1 => guest
                 $body = $request->getParsedBody() ?? [];
-                /**
-                 * @var string $body['type']
-                 */
-                $type = $body['type'];
-                if (null !== $form->getUser_id()) {
-                    // the user is not admin(1) and the guest dropdown type(1) has been selected
-                    if ($form->getUser_id() <> '1' && $type == '1') {
-                        $roles = $this->manager->getRolesByUserId($form->getUser_id());
-                        if (!array_key_exists('observer', $roles)) {
-                            $this->manager->assign('observer', $form->getUser_id());
-                            $this->flash_message('info', $this->translator->translate('invoice.user.inv.role.all.new'));
-                        } else {
-                            $this->flash_message('info', $this->translator->translate('invoice.user.inv.role.observer.assigned.already'));
+                if (is_array($body)) {
+                    /**
+                     * @var string $body['type']
+                     */
+                    $type = $body['type'];
+                    if (null !== $form->getUser_id()) {
+                        // the user is not admin(1) and the guest dropdown type(1) has been selected
+                        if ($form->getUser_id() <> '1' && $type == '1') {
+                            $roles = $this->manager->getRolesByUserId($form->getUser_id());
+                            if (!array_key_exists('observer', $roles)) {
+                                $this->manager->assign('observer', $form->getUser_id());
+                                $this->flash_message('info', $this->translator->translate('invoice.user.inv.role.all.new'));
+                            } else {
+                                $this->flash_message('info', $this->translator->translate('invoice.user.inv.role.observer.assigned.already'));
+                            }
+                            $this->userinvService->saveUserInv($userinv, $body);
                         }
-                        /**
-                         * @psalm-suppress PossiblyInvalidArgument $body
-                         */
-                        $this->userinvService->saveUserInv($userinv, $body);
-                    }
-                    // the user is not admin(1) and the type administrator(0) was selected in the dropdown on the form
-                    if ($form->getUser_id() <> '1' && $type == '0') {
-                        $this->flash_message('warning', $this->translator->translate('invoice.user.inv.type.cannot.allocate.administrator.type.to.non.administrator'));
-                    }
-                    // the user is admin and the type administrator was selected in the dropdown on the form
-                    if ($form->getUser_id() == '1' && $type == '0') {
-                        // if the admin role has not yet been assigned, assign it now
-                        $roles = $this->manager->getRolesByUserId($form->getUser_id());
-                        if (!array_key_exists('admin', $roles)) {
-                            $this->manager->assign('admin', $form->getUser_id());
-                            $this->flash_message('info', $this->translator->translate('invoice.user.inv.role.administrator.assigned'));
-                        } else {
-                            $this->flash_message('info', $this->translator->translate('invoice.user.inv.role.administrator.already.assigned'));
+                        // the user is not admin(1) and the type administrator(0) was selected in the dropdown on the form
+                        if ($form->getUser_id() <> '1' && $type == '0') {
+                            $this->flash_message('warning', $this->translator->translate('invoice.user.inv.type.cannot.allocate.administrator.type.to.non.administrator'));
                         }
-                        /**
-                         * @psalm-suppress PossiblyInvalidArgument $body
-                         */
-                        $this->userinvService->saveUserInv($userinv, $body);
-                    }
-                    // the user is an admin and the type guest was selected in the dropdown on the form
-                    if ($form->getUser_id() == '1' && $type == '1') {
-                        $this->flash_message('warning', $this->translator->translate('invoice.user.inv.type.cannot.allocate.guest.type.to.administrator'));
-                    }
-                    return $this->webService->getRedirectResponse('userinv/index');
-                } // null!== $form->getUser_id()
+                        // the user is admin and the type administrator was selected in the dropdown on the form
+                        if ($form->getUser_id() == '1' && $type == '0') {
+                            // if the admin role has not yet been assigned, assign it now
+                            $roles = $this->manager->getRolesByUserId($form->getUser_id());
+                            if (!array_key_exists('admin', $roles)) {
+                                $this->manager->assign('admin', $form->getUser_id());
+                                $this->flash_message('info', $this->translator->translate('invoice.user.inv.role.administrator.assigned'));
+                            } else {
+                                $this->flash_message('info', $this->translator->translate('invoice.user.inv.role.administrator.already.assigned'));
+                            }
+                            $this->userinvService->saveUserInv($userinv, $body);
+                        }
+                        // the user is an admin and the type guest was selected in the dropdown on the form
+                        if ($form->getUser_id() == '1' && $type == '1') {
+                            $this->flash_message('warning', $this->translator->translate('invoice.user.inv.type.cannot.allocate.guest.type.to.administrator'));
+                        }
+                        return $this->webService->getRedirectResponse('userinv/index');
+                    } // null!== $form->getUser_id()
+                } // is_array    
             }
             $parameters['errors'] = $form->getValidationResult()->getErrorMessagesIndexedByProperty();
             $parameters['form'] = $form;
@@ -300,17 +296,13 @@ final class UserInvController
                         'aliases' => $aliases
                     ];
                     if ($request->getMethod() === Method::POST) {
-                        /**
-                         * @psalm-suppress PossiblyInvalidArgument $body
-                         */
-                        $body = $request->getParsedBody();
+                        $body = $request->getParsedBody() ?? [];
                         if ($formHydrator->populateFromPostAndValidate($form, $request)) {
-                            /**
-                             * @psalm-suppress PossiblyInvalidArgument $body
-                             */
-                            $this->userinvService->saveUserInv($userinv, $body);
-                            return $this->webService->getRedirectResponse('invoice/index');
-                        }
+                            if (is_array($body)) {
+                                $this->userinvService->saveUserInv($userinv, $body);
+                                return $this->webService->getRedirectResponse('invoice/index');
+                            }
+                        }    
                         $parameters['errors'] = $form->getValidationResult()->getErrorMessagesIndexedByProperty();
                         $parameters['form'] = $form;
                     }
@@ -457,53 +449,49 @@ final class UserInvController
                 'uR' => $uR
             ];
             if ($request->getMethod() === Method::POST) {
-                $body = $request->getParsedBody();
-                /**
-                 * @psalm-suppress PossiblyInvalidArgument $body
-                 */
-                if ($formHydrator->populateFromPostAndValidate($form, $request)) {
-                    /**
-                     * @var string $body['type']
-                     */
-                    $type = $body['type'];
-                    if (null !== $form->getUser_id()) {
-                        // the user is not admin(1) and the guest dropdown type(1) has been selected
-                        if ($form->getUser_id() <> '1' && $type == '1') {
-                            $roles = $this->manager->getRolesByUserId($form->getUser_id());
-                            if (!array_key_exists('observer', $roles)) {
-                                $this->manager->assign('observer', $form->getUser_id());
-                                $this->flash_message('info', $this->translator->translate('invoice.user.inv.role.all.new'));
-                            } else {
-                                $this->flash_message('warning', $this->translator->translate('invoice.user.inv.role.observer.assigned.already'));
+                $body = $request->getParsedBody() ?? [];
+                if (is_array($body)) {
+                    if ($formHydrator->populateFromPostAndValidate($form, $request)) {
+                        /**
+                         * @var string $body['type']
+                         */
+                        $type = $body['type'];
+                        if (null !== $form->getUser_id()) {
+                            // the user is not admin(1) and the guest dropdown type(1) has been selected
+                            if ($form->getUser_id() <> '1' && $type == '1') {
+                                $roles = $this->manager->getRolesByUserId($form->getUser_id());
+                                if (!array_key_exists('observer', $roles)) {
+                                    $this->manager->assign('observer', $form->getUser_id());
+                                    $this->flash_message('info', $this->translator->translate('invoice.user.inv.role.all.new'));
+                                } else {
+                                    $this->flash_message('warning', $this->translator->translate('invoice.user.inv.role.observer.assigned.already'));
+                                }
+                                $this->userinvService->saveUserInv($userinv, $body);
                             }
-                            /**
-                             * @psalm-suppress PossiblyInvalidArgument $body
-                             */
-                            $this->userinvService->saveUserInv($userinv, $body);
-                        }
-                        // the user is not admin(1) and the type administrator(0) was selected in the dropdown on the form
-                        if ($form->getUser_id() <> '1' && $type == '0') {
-                            $this->flash_message('warning', $this->translator->translate('invoice.user.inv.type.cannot.allocate.administrator.type.to.non.administrator'));
-                        }
-                        // the user is admin and the type administrator was selected in the dropdown on the form
-                        if ($form->getUser_id() == '1' && $type == '0') {
-                            // if the admin role has not yet been assigned, assign it now
-                            $roles = $this->manager->getRolesByUserId($form->getUser_id());
-                            if (!array_key_exists('admin', $roles)) {
-                                $this->manager->assign('admin', $form->getUser_id());
-                                $this->flash_message('info', $this->translator->translate('invoice.user.inv.role.administrator.assigned'));
-                            } else {
-                                $this->flash_message('warning', $this->translator->translate('invoice.user.inv.role.administrator.assigned.already'));
+                            // the user is not admin(1) and the type administrator(0) was selected in the dropdown on the form
+                            if ($form->getUser_id() <> '1' && $type == '0') {
+                                $this->flash_message('warning', $this->translator->translate('invoice.user.inv.type.cannot.allocate.administrator.type.to.non.administrator'));
                             }
-                            $this->userinvService->saveUserInv($userinv, $body);
-                        }
-                        // the user is an admin and the type guest was selected in the dropdown on the form
-                        if ($form->getUser_id() == '1' && $type == '1') {
-                            $this->flash_message('warning', $this->translator->translate('invoice.user.inv.type.cannot.allocate.guest.type.to.administrator'));
-                        }
-                        return $this->webService->getRedirectResponse('userinv/index');
-                    } // null!== user_id
-                }
+                            // the user is admin and the type administrator was selected in the dropdown on the form
+                            if ($form->getUser_id() == '1' && $type == '0') {
+                                // if the admin role has not yet been assigned, assign it now
+                                $roles = $this->manager->getRolesByUserId($form->getUser_id());
+                                if (!array_key_exists('admin', $roles)) {
+                                    $this->manager->assign('admin', $form->getUser_id());
+                                    $this->flash_message('info', $this->translator->translate('invoice.user.inv.role.administrator.assigned'));
+                                } else {
+                                    $this->flash_message('warning', $this->translator->translate('invoice.user.inv.role.administrator.assigned.already'));
+                                }
+                                $this->userinvService->saveUserInv($userinv, $body);
+                            }
+                            // the user is an admin and the type guest was selected in the dropdown on the form
+                            if ($form->getUser_id() == '1' && $type == '1') {
+                                $this->flash_message('warning', $this->translator->translate('invoice.user.inv.type.cannot.allocate.guest.type.to.administrator'));
+                            }
+                            return $this->webService->getRedirectResponse('userinv/index');
+                        } // null!== user_id
+                    }
+                } // is_array    
                 $parameters['errors'] = $form->getValidationResult()->getErrorMessagesIndexedByProperty();
                 $parameters['form'] = $form;
             }

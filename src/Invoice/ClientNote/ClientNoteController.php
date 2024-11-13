@@ -93,12 +93,11 @@ final class ClientNoteController
 
         if ($request->getMethod() === Method::POST) {
             if ($formHydrator->populateFromPostAndValidate($form, $request)) {
-                $body = $request->getParsedBody();
-                /**
-                 * @psalm-suppress PossiblyInvalidArgument $body
-                 */
-                $this->clientnoteService->addClientNote($clientnote, $body);
-                return $this->webService->getRedirectResponse('clientnote/index');
+                $body = $request->getParsedBody() ?? [];
+                if (is_array($body)) {
+                    $this->clientnoteService->addClientNote($clientnote, $body);
+                    return $this->webService->getRedirectResponse('clientnote/index');
+                }    
             }
             $parameters['errors'] = $form->getValidationResult()->getErrorMessagesIndexedByProperty();
             $parameters['form'] = $form;
@@ -134,20 +133,16 @@ final class ClientNoteController
                 'clients' => $clientRepository->findAllPreloaded()
             ];
             if ($request->getMethod() === Method::POST) {
-                /**
-                 * @psalm-suppress PossiblyInvalidArgument $body
-                 */
-                $body = $request->getParsedBody();
-                if ($formHydrator->populateFromPostAndValidate($form, $request)) {
-                    /**
-                     * @psalm-suppress PossiblyInvalidArgument $body
-                     */
-                    $this->clientnoteService->saveClientNote($client_note, $body);
-                    return $this->webService->getRedirectResponse('clientnote/index');
-                }
-                $parameters['form'] = $form;
-                $parameters['error'] = $form->getValidationResult()->getErrorMessagesIndexedByProperty();
-            }
+                $body = $request->getParsedBody() ?? [];
+                if (is_array($body)) {
+                    if ($formHydrator->populateFromPostAndValidate($form, $request)) {
+                        $this->clientnoteService->saveClientNote($client_note, $body);
+                        return $this->webService->getRedirectResponse('clientnote/index');
+                    }
+                    $parameters['form'] = $form;
+                    $parameters['error'] = $form->getValidationResult()->getErrorMessagesIndexedByProperty();
+                } 
+            }    
             return $this->viewRenderer->render('_form', $parameters);
         } //client note
         return $this->webService->getRedirectResponse('clientnote/index');

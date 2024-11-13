@@ -229,13 +229,12 @@ final class ProductImageController
             ];
             if ($request->getMethod() === Method::POST) {
                 if ($formHydrator->populateFromPostAndValidate($form, $request)) {
-                    $body = $request->getParsedBody();
-                    /**
-                     * @psalm-suppress PossiblyInvalidArgument $body
-                     */
-                    $this->productimageService->saveProductImage($productImage, $body);
-                    return $this->webService->getRedirectResponse('productimage/index');
-                }
+                    $body = $request->getParsedBody() ?? [];
+                    if (is_array($body)) {
+                        $this->productimageService->saveProductImage($productImage, $body);
+                        return $this->webService->getRedirectResponse('productimage/index');
+                    }
+                }    
                 $parameters['errors'] = $form->getValidationResult()->getErrorMessagesIndexedByProperty();
                 $parameters['form'] = $form;
             }

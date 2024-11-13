@@ -84,14 +84,13 @@ final class ItemLookupController
           'form' => $form
         ];
         if ($request->getMethod() === Method::POST) {
-            $body = $request->getParsedBody();
+            $body = $request->getParsedBody() ?? [];
             if ($formHydrator->populateFromPostAndValidate($form, $request)) {
-                /**
-                 * @psalm-suppress PossiblyInvalidArgument $body
-                 */
-                $this->itemlookupService->saveItemLookup($itemLookup, $body);
-                return $this->webService->getRedirectResponse('itemlookup/index');
-            }
+                if (is_array($body)) {
+                    $this->itemlookupService->saveItemLookup($itemLookup, $body);
+                    return $this->webService->getRedirectResponse('itemlookup/index');
+                }
+            }    
             $parameters['errors'] = $form->getValidationResult()->getErrorMessagesIndexedByProperty();
             $parameters['form'] = $form;
         }
@@ -122,14 +121,13 @@ final class ItemLookupController
               'form' => $form
             ];
             if ($request->getMethod() === Method::POST) {
-                $body = $request->getParsedBody();
+                $body = $request->getParsedBody() ?? [];
                 if ($formHydrator->populateFromPostAndValidate($form, $request)) {
-                    /**
-                     * @psalm-suppress PossiblyInvalidArgument $body
-                     */
-                    $this->itemlookupService->saveItemLookup($lookup, $body);
-                    return $this->webService->getRedirectResponse('itemlookup/index');
-                }
+                    if (is_array($body)) {
+                        $this->itemlookupService->saveItemLookup($lookup, $body);
+                        return $this->webService->getRedirectResponse('itemlookup/index');
+                    }
+                }    
                 $parameters['errors'] = $form->getValidationResult()->getErrorMessagesIndexedByProperty();
                 $parameters['form'] = $form;
             }

@@ -134,13 +134,12 @@ final class UploadController
 
         if ($request->getMethod() === Method::POST) {
             if ($formHydrator->populateFromPostAndValidate($form, $request)) {
-                $body = $request->getParsedBody();
-                /**
-                 * @psalm-suppress PossiblyInvalidArgument $body
-                 */
-                $this->uploadService->saveUpload($upload, $body);
-                return $this->webService->getRedirectResponse('upload/index');
-            }
+                $body = $request->getParsedBody() ?? [];
+                if (is_array($body)) {
+                    $this->uploadService->saveUpload($upload, $body);
+                    return $this->webService->getRedirectResponse('upload/index');
+                }
+            }    
             $parameters['errors'] = $form->getValidationResult()->getErrorMessagesIndexedByProperty();
             $parameters['form'] = $form;
         }
@@ -232,13 +231,12 @@ final class UploadController
             ];
             if ($request->getMethod() === Method::POST) {
                 if ($formHydrator->populateFromPostAndValidate($form, $request)) {
-                    $body = $request->getParsedBody();
-                    /**
-                     * @psalm-suppress PossiblyInvalidArgument $body
-                     */
-                    $this->uploadService->saveUpload($upload, $body);
-                    return $this->webService->getRedirectResponse('upload/index');
-                }
+                    $body = $request->getParsedBody() ?? [];
+                    if (is_array($body)) {
+                        $this->uploadService->saveUpload($upload, $body);
+                        return $this->webService->getRedirectResponse('upload/index');
+                    }
+                }    
                 $parameters['errors'] = $form->getValidationResult()->getErrorMessagesIndexedByProperty();
                 $parameters['form'] = $form;
             }

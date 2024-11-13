@@ -113,20 +113,16 @@ final class <?= $generator->getCamelcase_capital_name(); ?>Controller
         ];
         
         if ($request->getMethod() === Method::POST) {
-            $body = $request->getParsedBody();
+            $body = $request->getParsedBody() ?? [];
             //echo \Yiisoft\VarDumper\Vardumper::dump($body);
-            /**
-             * @psalm-suppress PossiblyInvalidArgument $body 
-             */
-            if ($formHydrator->populateFromPostAndValidate($form,  $request)) {
-                /**
-                 * @psalm-suppress PossiblyInvalidArgument $body 
-                 */
-                $this-><?= $generator->getSmall_singular_name(); ?>Service->save<?= $generator->getCamelcase_capital_name(); ?>($<?= $generator->getSmall_singular_name(); ?>, $body);
-                return $this->webService->getRedirectResponse('<?= $generator->getSmall_singular_name(); ?>/index');
-            }
-            $parameters['errors'] = $form->getValidationResult()->getErrorMessagesIndexedByProperty();
-            $parameters['form'] = $form;
+            if (is_array($body)) {
+                if ($formHydrator->populateFromPostAndValidate($form,  $request)) {
+                    $this-><?= $generator->getSmall_singular_name(); ?>Service->save<?= $generator->getCamelcase_capital_name(); ?>($<?= $generator->getSmall_singular_name(); ?>, $body);
+                    return $this->webService->getRedirectResponse('<?= $generator->getSmall_singular_name(); ?>/index');
+                }
+                $parameters['errors'] = $form->getValidationResult()->getErrorMessagesIndexedByProperty();
+                $parameters['form'] = $form;
+            } // is_array($body)   
         }
         return $this->viewRenderer->render('_form', $parameters);
     }
@@ -218,20 +214,16 @@ final class <?= $generator->getCamelcase_capital_name(); ?>Controller
                 ?>
             ];
             if ($request->getMethod() === Method::POST) {
-                $body = $request->getParsedBody();
+                $body = $request->getParsedBody() ?? [];
                 //echo \Yiisoft\VarDumper\Vardumper::dump($body);
-                /**
-                 * @psalm-suppress PossiblyInvalidArgument $body 
-                 */
-                if ($formHydrator->populateFromPostAndValidate($form,  $request)) {
-                    /**
-                     * @psalm-suppress PossiblyInvalidArgument $body 
-                     */
-                    $this-><?= $generator->getSmall_singular_name();?>Service->save<?= $generator->getCamelcase_capital_name(); ?>($<?= $generator->getSmall_singular_name();?>, $body);
-                    return $this->webService->getRedirectResponse('<?= $generator->getSmall_singular_name(); ?>/index');
-                }
-                $parameters['errors'] = $form->getValidationResult()->getErrorMessagesIndexedByProperty();
-                $parameters['form'] = $form;
+                if (is_array($body)) {
+                    if ($formHydrator->populateFromPostAndValidate($form,  $request)) {
+                        $this-><?= $generator->getSmall_singular_name();?>Service->save<?= $generator->getCamelcase_capital_name(); ?>($<?= $generator->getSmall_singular_name();?>, $body);
+                        return $this->webService->getRedirectResponse('<?= $generator->getSmall_singular_name(); ?>/index');
+                    }
+                    $parameters['errors'] = $form->getValidationResult()->getErrorMessagesIndexedByProperty();
+                    $parameters['form'] = $form;
+                }    
             }
             return $this->viewRenderer->render('_form', $parameters);
         }

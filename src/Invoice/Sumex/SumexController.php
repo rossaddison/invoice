@@ -132,13 +132,12 @@ final class SumexController
 
         if ($request->getMethod() === Method::POST) {
             if ($formHydrator->populateFromPostAndValidate($form, $request)) {
-                $body = $request->getParsedBody();
-                /**
-                 * @psalm-suppress PossiblyInvalidArgument $body
-                 */
-                $this->sumexService->saveSumex($model, $body);
-                return $this->webService->getRedirectResponse('sumex/index');
-            }
+                $body = $request->getParsedBody() ?? [];
+                if (is_array($body)) {
+                    $this->sumexService->saveSumex($model, $body);
+                    return $this->webService->getRedirectResponse('sumex/index');
+                }
+            }    
             $parameters['errors'] = $form->getValidationResult()->getErrorMessagesIndexedByProperty();
             $parameters['form'] = $form;
         }
@@ -171,11 +170,8 @@ final class SumexController
             ];
             if ($request->getMethod() === Method::POST) {
                 if ($formHydrator->populateFromPostAndValidate($form, $request)) {
-                    $body = $request->getParsedBody();
+                    $body = $request->getParsedBody() ?? [];
                     if (is_array($body) && isset($body['invoice'])) {
-                        /**
-                         * @psalm-suppress PossiblyInvalidArgument $body
-                         */
                         $this->sumexService->saveSumex($sumex, $body);
                         $this->flash_message('success', $this->translator->translate('i.record_successfully_updated'));
                         $id = (string)$body['invoice'];

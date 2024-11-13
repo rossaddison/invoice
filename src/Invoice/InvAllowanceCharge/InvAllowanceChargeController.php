@@ -83,13 +83,10 @@ final class InvAllowanceChargeController
         ];
 
         if ($request->getMethod() === Method::POST) {
-            $body = $request->getParsedBody();
+            $body = $request->getParsedBody() ?? [];
             if (is_array($body)) {
                 $body['inv_id'] = $inv_id;
                 if ($formHydrator->populateFromPostAndValidate($form, $request)) {
-                    /**
-                     * @psalm-suppress PossiblyInvalidArgument $body
-                     */
                     $this->invallowancechargeService->saveInvAllowanceCharge($invAllowanceCharge, $body);
                     return $this->webService->getRedirectResponse('invallowancecharge/index');
                 }
@@ -192,14 +189,13 @@ final class InvAllowanceChargeController
                 'optionsDataAllowanceCharges' => $allowanceChargeRepository->optionsDataAllowanceCharges(),
             ];
             if ($request->getMethod() === Method::POST) {
-                $body = $request->getParsedBody();
+                $body = $request->getParsedBody() ?? [];
                 if ($formHydrator->populateFromPostAndValidate($form, $request)) {
-                    /**
-                     * @psalm-suppress PossiblyInvalidArgument $body
-                     */
-                    $this->invallowancechargeService->saveInvAllowanceCharge($invAllowanceCharge, $body);
-                    return $this->webService->getRedirectResponse('invallowancecharge/index');
-                }
+                    if (is_array($body)) {
+                        $this->invallowancechargeService->saveInvAllowanceCharge($invAllowanceCharge, $body);
+                        return $this->webService->getRedirectResponse('invallowancecharge/index');
+                    }
+                }    
                 $parameters['errors'] = $form->getValidationResult()->getErrorMessagesIndexedByProperty();
                 $parameters['form'] = $form;
             }

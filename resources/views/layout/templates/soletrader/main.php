@@ -110,6 +110,12 @@ $this->setTitle($title);
                         ]
                     ],
                     [
+                        'label' => str_repeat(' ', 1).$translator->translate('menu.gallery'),
+                        'url' => $urlGenerator->generate('site/gallery'),
+                        'visible' => $isGuest,
+                        'linkOptions' => ['class' => 'bi bi-images']
+                    ],
+                    [
                         'label' => str_repeat(' ', 1).$translator->translate('menu.team'),
                         'url' => $urlGenerator->generate('site/team'),
                         'visible' => $isGuest,

@@ -91,11 +91,10 @@ final class CompanyController
 
         if ($request->getMethod() === Method::POST) {
             if ($formHydrator->populateFromPostAndValidate($form, $request)) {
-                /**
-                 * @psalm-suppress PossiblyInvalidArgument $body
-                 */
-                $this->companyService->saveCompany(new Company(), $body);
-                return $this->webService->getRedirectResponse('company/index');
+                if (is_array($body)) {
+                    $this->companyService->saveCompany(new Company(), $body);
+                    return $this->webService->getRedirectResponse('company/index');
+                }    
             }
             $parameters['form'] = $form;
             $parameters['errors'] = $form->getValidationResult()->getErrorMessagesIndexedByProperty();
@@ -128,13 +127,12 @@ final class CompanyController
                 'company_public' => $this->translator->translate('invoice.company.public'),
             ];
             if ($request->getMethod() === Method::POST) {
-                $body = $request->getParsedBody();
+                $body = $request->getParsedBody() ?? [];
                 if ($formHydrator->populateFromPostAndValidate($form, $request)) {
-                    /**
-                     * @psalm-suppress PossiblyInvalidArgument $body
-                     */
-                    $this->companyService->saveCompany($company, $body);
-                    return $this->webService->getRedirectResponse('company/index');
+                    if (is_array($body)) {
+                        $this->companyService->saveCompany($company, $body);
+                        return $this->webService->getRedirectResponse('company/index');
+                    }    
                 }
                 $parameters['errors'] = $form->getValidationResult()->getErrorMessagesIndexedByProperty();
                 $parameters['form'] = $form;

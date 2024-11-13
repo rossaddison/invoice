@@ -142,12 +142,11 @@ final class GeneratorController
         if ($request->getMethod() === Method::POST) {
             $body = $request->getParsedBody();
             if ($formHydrator->populateFromPostAndValidate($form, $request)) {
-                /**
-                 * @psalm-suppress PossiblyInvalidArgument $body
-                 */
-                $this->generatorService->saveGenerator($gentor, $body);
-                return $this->webService->getRedirectResponse('generator/index');
-            }
+                if (is_array($body)) {
+                    $this->generatorService->saveGenerator($gentor, $body);
+                    return $this->webService->getRedirectResponse('generator/index');
+                }
+            }    
             $parameters['errors'] = $form->getValidationResult()->getErrorMessagesIndexedByProperty();
             $parameters['form'] = $form;
         }
@@ -177,15 +176,14 @@ final class GeneratorController
                 'selected_table' => $generator->getPre_entity_table(),
             ];
             if ($request->getMethod() === Method::POST) {
-                $body = $request->getParsedBody();
+                $body = $request->getParsedBody() ?? [];
                 if ($formHydrator->populateFromPostAndValidate($form, $request)) {
-                    /**
-                     * @psalm-suppress PossiblyInvalidArgument $body
-                     */
-                    $this->generatorService->saveGenerator($generator, $body);
-                    $this->flash_message('warning', $this->translator->translate('i.record_successfully_updated'));
-                    return $this->webService->getRedirectResponse('generator/index');
-                }
+                    if (is_array($body)) {
+                        $this->generatorService->saveGenerator($generator, $body);
+                        $this->flash_message('warning', $this->translator->translate('i.record_successfully_updated'));
+                        return $this->webService->getRedirectResponse('generator/index');
+                    }
+                }    
                 $parameters['errors'] = $form->getValidationResult()->getErrorMessagesIndexedByProperty();
                 $parameters['form'] = $form;
             }

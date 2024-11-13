@@ -82,12 +82,11 @@ final class ProductPropertyController
         if ($request->getMethod() === Method::POST) {
             if ($formHydrator->populateFromPostAndValidate($form, $request)) {
                 $body = $request->getParsedBody() ?? [];
-                /**
-                 * @psalm-suppress PossiblyInvalidArgument $body
-                 */
-                $this->productpropertyService->saveProductProperty($productProperty, $body);
-                return $this->webService->getRedirectResponse('productproperty/index');
-            }
+                if (is_array($body)) {
+                    $this->productpropertyService->saveProductProperty($productProperty, $body);
+                    return $this->webService->getRedirectResponse('productproperty/index');
+                }
+            }    
             $parameters['errors'] = $form->getValidationResult()->getErrorMessagesIndexedByProperty();
             $parameters['form'] = $form;
         }
@@ -183,13 +182,12 @@ final class ProductPropertyController
             ];
             if ($request->getMethod() === Method::POST) {
                 if ($formHydrator->populateFromPostAndValidate($form, $request)) {
-                    $body = $request->getParsedBody();
-                    /**
-                    * @psalm-suppress PossiblyInvalidArgument $body
-                    */
-                    $this->productpropertyService->saveProductProperty($productProperty, $body);
-                    return $this->webService->getRedirectResponse('productproperty/index');
-                }
+                    $body = $request->getParsedBody() ?? [];
+                    if (is_array($body)) {
+                        $this->productpropertyService->saveProductProperty($productProperty, $body);
+                        return $this->webService->getRedirectResponse('productproperty/index');
+                    }
+                }    
                 $parameters['errors'] = $form->getValidationResult()->getErrorMessagesIndexedByProperty();
                 $parameters['form'] = $form;
             }

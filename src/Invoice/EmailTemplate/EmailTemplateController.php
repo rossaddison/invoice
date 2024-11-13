@@ -117,15 +117,14 @@ final class EmailTemplateController
         ];
 
         if ($request->getMethod() === Method::POST) {
-            $body = $request->getParsedBody();
+            $body = $request->getParsedBody() ?? [];
             if (null !== $this->userService->getUser() && $formHydrator->populateAndValidate($form, $body)) {
-                /**
-                 * @psalm-suppress PossiblyInvalidArgument $body
-                 */
-                $this->emailtemplateService->saveEmailTemplate(new EmailTemplate(), $body);
-                $this->flash_message('info', $this->translator->translate('invoice.email.template.successfully.added'));
-                return $this->webService->getRedirectResponse('emailtemplate/index');
-            }
+                if (is_array($body)) {
+                    $this->emailtemplateService->saveEmailTemplate(new EmailTemplate(), $body);
+                    $this->flash_message('info', $this->translator->translate('invoice.email.template.successfully.added'));
+                    return $this->webService->getRedirectResponse('emailtemplate/index');
+                }
+            }    
             $parameters['errors'] = $form->getValidationResult()->getErrorMessagesIndexedByProperty();
             $parameters['form'] = $form;
         }
@@ -170,15 +169,14 @@ final class EmailTemplateController
         ];
 
         if ($request->getMethod() === Method::POST) {
-            $body = $request->getParsedBody();
+            $body = $request->getParsedBody() ?? [];
             if (null !== $this->userService->getUser() && $formHydrator->populateAndValidate($form, $body)) {
-                /**
-                 * @psalm-suppress PossiblyInvalidArgument $body
-                 */
-                $this->emailtemplateService->saveEmailTemplate(new EmailTemplate(), $body);
-                $this->flash_message('info', $this->translator->translate('invoice.email.template.successfully.added'));
-                return $this->webService->getRedirectResponse('emailtemplate/index');
-            }
+                if (is_array($body)) {
+                    $this->emailtemplateService->saveEmailTemplate(new EmailTemplate(), $body);
+                    $this->flash_message('info', $this->translator->translate('invoice.email.template.successfully.added'));
+                    return $this->webService->getRedirectResponse('emailtemplate/index');
+                }
+            }    
             $parameters['errors'] = $form->getValidationResult()->getErrorMessagesIndexedByProperty();
             $parameters['form'] = $form;
         }
@@ -260,15 +258,14 @@ final class EmailTemplateController
                                : $this->translator->translate('invoice.email.default.none.set')),
             ];
             if ($request->getMethod() === Method::POST) {
-                $body = $request->getParsedBody();
+                $body = $request->getParsedBody() ?? [];
                 if ($formHydrator->populateFromPostAndValidate($form, $request)) {
-                    /**
-                     * @psalm-suppress PossiblyInvalidArgument $body
-                     */
-                    $this->emailtemplateService->saveEmailTemplate($email_template, $body);
-                    $this->flash_message('info', $this->translator->translate('invoice.email.template.successfully.edited'));
-                    return $this->webService->getRedirectResponse('emailtemplate/index');
-                }
+                    if (is_array($body)) {
+                        $this->emailtemplateService->saveEmailTemplate($email_template, $body);
+                        $this->flash_message('info', $this->translator->translate('invoice.email.template.successfully.edited'));
+                        return $this->webService->getRedirectResponse('emailtemplate/index');
+                    }
+                }    
                 $parameters['errors'] = $form->getValidationResult()->getErrorMessagesIndexedByProperty();
                 $parameters['form'] = $form;
             }
@@ -325,15 +322,14 @@ final class EmailTemplateController
                                : $this->translator->translate('invoice.email.default.none.set')),
             ];
             if ($request->getMethod() === Method::POST) {
-                $body = $request->getParsedBody();
+                $body = $request->getParsedBody() ?? [];
                 if ($formHydrator->populateFromPostAndValidate($form, $request)) {
-                    /**
-                     * @psalm-suppress PossiblyInvalidArgument $body
-                     */
-                    $this->emailtemplateService->saveEmailTemplate($email_template, $body);
-                    $this->flash_message('info', $this->translator->translate('invoice.email.template.successfully.edited'));
-                    return $this->webService->getRedirectResponse('emailtemplate/index');
-                }
+                    if (is_array($body)) {
+                        $this->emailtemplateService->saveEmailTemplate($email_template, $body);
+                        $this->flash_message('info', $this->translator->translate('invoice.email.template.successfully.edited'));
+                        return $this->webService->getRedirectResponse('emailtemplate/index');
+                    }
+                }    
                 $parameters['errors'] = $form->getValidationResult()->getErrorMessagesIndexedByProperty();
                 $parameters['form'] = $form;
             }

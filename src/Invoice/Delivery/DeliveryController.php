@@ -100,14 +100,13 @@ final class DeliveryController
                 'inv' => $inv
             ];
             if ($request->getMethod() === Method::POST) {
-                $body = $request->getParsedBody();
+                $body = $request->getParsedBody() ?? [];
                 if ($formHydrator->populateFromPostAndValidate($form, $request)) {
-                    /**
-                     * @psalm-suppress PossiblyInvalidArgument $body
-                     */
-                    $this->deliveryService->saveDelivery($delivery, $body, $settingRepository);
-                    return $this->webService->getRedirectResponse('inv/edit', ['id' => $inv_id]);
-                }
+                    if (is_array($body)) {
+                        $this->deliveryService->saveDelivery($delivery, $body, $settingRepository);
+                        return $this->webService->getRedirectResponse('inv/edit', ['id' => $inv_id]);
+                    }
+                }    
                 $parameters['errors'] = $form->getValidationResult()->getErrorMessagesIndexedByProperty();
                 $parameters['form'] = $form;
             }
@@ -255,14 +254,13 @@ final class DeliveryController
                     'dels' => $dels
                 ];
                 if ($request->getMethod() === Method::POST) {
-                    $body = $request->getParsedBody();
+                    $body = $request->getParsedBody() ?? [];
                     if ($formHydrator->populateFromPostAndValidate($form, $request)) {
-                        /**
-                         * @psalm-suppress PossiblyInvalidArgument $body
-                         */
-                        $this->deliveryService->saveDelivery($delivery, $body, $settingRepository);
-                        return $this->webService->getRedirectResponse('delivery/index');
-                    }
+                        if (is_array($body)) {
+                            $this->deliveryService->saveDelivery($delivery, $body, $settingRepository);
+                            return $this->webService->getRedirectResponse('delivery/index');
+                        }
+                    }    
                     $parameters['errors'] = $form->getValidationResult()->getErrorMessagesIndexedByProperty();
                     $parameters['form'] = $form;
 

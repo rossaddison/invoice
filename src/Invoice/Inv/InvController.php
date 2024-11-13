@@ -581,70 +581,66 @@ final class InvController
         // Use the RouteArgument's origin argument to return to correct origin
 
         if ($request->getMethod() === Method::POST) {
-            $body = $request->getParsedBody();
-            /**
-             * @psalm-suppress PossiblyInvalidArgument $body
-             */
-            if ($formHydrator->populateFromPostAndValidate($form, $request)) {
-                // Only clients that were assigned to user accounts were made available in dropdown
-                // therefore use the 'user client' user id
-                /**
-                 * @var string $body['client_id']
-                 */
-                $client_id = $body['client_id'];
-                $user_client = $ucR->repoUserquery($client_id);
-                if (null !== $user_client && null !== $user_client->getClient()) {
-                    $client_first_name = $user_client->getClient()?->getClient_name();
-                    $client_surname = $user_client->getClient()?->getClient_surname();
-                    $client_fullname = (null !== ($client_first_name)
-                                     ? $client_first_name
-                                     : '').
-                                     ' '.
-                                     (null !== ($client_surname) ? $client_surname : '');
-                } else {
-                    $this->flash_message('danger', ($clientRepository->repoClientquery($client_id))->getClient_full_name(). ': '. $this->translator->translate('invoice.invoice.user.client.no.account'));
-                }
-                // Ensure that the client has only one (paying) user account otherwise reject this invoice
-                // @see UserClientRepository function get_not_assigned_to_user which ensures that only
-                // clients that have   NOT   been assigned to a user account are presented in the dropdown box for available clients
-                // So this line is an extra measure to ensure that the invoice is being made out to the correct payer
-                // ie. not more than one user is associated with the client.
-                $user = $this->active_user($client_id, $uR, $ucR, $uiR);
-                if (null !== $user) {
+            $body = $request->getParsedBody() ?? [];
+            if (is_array($body)) {
+                if ($formHydrator->populateFromPostAndValidate($form, $request)) {
+                    // Only clients that were assigned to user accounts were made available in dropdown
+                    // therefore use the 'user client' user id
                     /**
-                     * @psalm-suppress PossiblyInvalidArgument $body
+                     * @var string $body['client_id']
                      */
-                    $saved_model = $this->inv_service->saveInv($user, $inv, $body, $this->sR, $gR);
-                    /**
-                     * The InvAmount entity is created automatically during the above saveInv
-                     * @see src\Invoice\Entity\Inv ... New InvAmount();
-                     */
-                    $model_id = $saved_model->getId();
-                    if (null !== $model_id) {
-                        $this->default_taxes($inv, $trR, $formHydrator);
-                        // if Settings...Views...Invoices...Sumex...Yes => Generate sumex patient details extension table
-                        // This table can be filled in via Invoice...View...Options...Edit...Sumex
-                        $this->sumex_add_record($sumexR, (int) $model_id);
-                        // Inform the user of generated invoice number for draft setting
-                        $this->flash_message('info', $this->sR->getSetting('generate_invoice_number_for_draft') === '1'
-                        ? $this->translator->translate('i.generate_invoice_number_for_draft') . '=>' . $this->translator->translate('i.yes')
-                        : $this->translator->translate('i.generate_invoice_number_for_draft') . '=>' . $this->translator->translate('i.no'));
-                        $this->sR->getSetting('mark_invoices_sent_copy') === '1'
-                        ? $this->flash_message('danger', $this->translator->translate('invoice.mark.sent.copy.on'))
-                        : '';
-                    } //$model_id
-                    $this->flash_message('success', $this->translator->translate('i.record_successfully_created'));
-                    if (($origin == 'main') || ($origin == 'inv')) {
-                        return $this->web_service->getRedirectResponse('inv/index');
+                    $client_id = $body['client_id'];
+                    $user_client = $ucR->repoUserquery($client_id);
+                    if (null !== $user_client && null !== $user_client->getClient()) {
+                        $client_first_name = $user_client->getClient()?->getClient_name();
+                        $client_surname = $user_client->getClient()?->getClient_surname();
+                        $client_fullname = (null !== ($client_first_name)
+                                         ? $client_first_name
+                                         : '').
+                                         ' '.
+                                         (null !== ($client_surname) ? $client_surname : '');
+                    } else {
+                        $this->flash_message('danger', ($clientRepository->repoClientquery($client_id))->getClient_full_name(). ': '. $this->translator->translate('invoice.invoice.user.client.no.account'));
                     }
-                    if ($origin == 'dashboard') {
-                        return $this->web_service->getRedirectResponse('invoice/dashboard');
+                    // Ensure that the client has only one (paying) user account otherwise reject this invoice
+                    // @see UserClientRepository function get_not_assigned_to_user which ensures that only
+                    // clients that have   NOT   been assigned to a user account are presented in the dropdown box for available clients
+                    // So this line is an extra measure to ensure that the invoice is being made out to the correct payer
+                    // ie. not more than one user is associated with the client.
+                    $user = $this->active_user($client_id, $uR, $ucR, $uiR);
+                    if (null !== $user) {
+                        $saved_model = $this->inv_service->saveInv($user, $inv, $body, $this->sR, $gR);
+                        /**
+                         * The InvAmount entity is created automatically during the above saveInv
+                         * @see src\Invoice\Entity\Inv ... New InvAmount();
+                         */
+                        $model_id = $saved_model->getId();
+                        if (null !== $model_id) {
+                            $this->default_taxes($inv, $trR, $formHydrator);
+                            // if Settings...Views...Invoices...Sumex...Yes => Generate sumex patient details extension table
+                            // This table can be filled in via Invoice...View...Options...Edit...Sumex
+                            $this->sumex_add_record($sumexR, (int) $model_id);
+                            // Inform the user of generated invoice number for draft setting
+                            $this->flash_message('info', $this->sR->getSetting('generate_invoice_number_for_draft') === '1'
+                            ? $this->translator->translate('i.generate_invoice_number_for_draft') . '=>' . $this->translator->translate('i.yes')
+                            : $this->translator->translate('i.generate_invoice_number_for_draft') . '=>' . $this->translator->translate('i.no'));
+                            $this->sR->getSetting('mark_invoices_sent_copy') === '1'
+                            ? $this->flash_message('danger', $this->translator->translate('invoice.mark.sent.copy.on'))
+                            : '';
+                        } //$model_id
+                        $this->flash_message('success', $this->translator->translate('i.record_successfully_created'));
+                        if (($origin == 'main') || ($origin == 'inv')) {
+                            return $this->web_service->getRedirectResponse('inv/index');
+                        }
+                        if ($origin == 'dashboard') {
+                            return $this->web_service->getRedirectResponse('invoice/dashboard');
+                        }
+                        // otherwise return to client
+                        return $this->web_service->getRedirectResponse('client/view', ['id' => $origin]);
                     }
-                    // otherwise return to client
-                    return $this->web_service->getRedirectResponse('client/view', ['id' => $origin]);
+                    $this->flash_message('warning', $this->translator->translate('invoice.user.client.active.no'));
                 }
-                $this->flash_message('warning', $this->translator->translate('invoice.user.client.active.no'));
-            }
+            }    
             $this->flash_message('warning', $this->translator->translate('invoice.invoice.creation.unsuccessful'));
             $errors = $form->getValidationResult()->getErrorMessagesIndexedByProperty();
         } // POST
@@ -729,62 +725,58 @@ final class InvController
         ];
 
         if ($request->getMethod() === Method::POST) {
-            $body = $request->getParsedBody();
-            /**
-             * @psalm-suppress PossiblyInvalidArgument $body
-             */
-            if ($formHydrator->populateFromPostAndValidate($form, $request)) {
-                // Only clients that were assigned to user accounts were made available in dropdown
-                // therefore use the 'user client' user id
-                /**
-                 * @var string $body['client_id']
-                 */
-                $client_id = $body['client_id'];
-                $user_client = $ucR->repoUserquery($client_id);
-                if (null !== $user_client && null !== $user_client->getClient()) {
-                    $client_first_name = $user_client->getClient()?->getClient_name();
-                    $client_surname = $user_client->getClient()?->getClient_surname();
-                    $client_fullname = (null !== ($client_first_name)
-                                     ? $client_first_name
-                                     : '').
-                                     ' '.
-                                     (null !== ($client_surname) ? $client_surname : '');
-                } else {
-                    $this->flash_message('warning', $this->translator->translate('invoice.invoice.user.client.no.account'));
-                }
-                // Ensure that the client has only one (paying) user account otherwise reject this invoice
-                // @see UserClientRepository function get_not_assigned_to_user which ensures that only
-                // clients that have   NOT   been assigned to a user account are presented in the dropdown box for available clients
-                // So this line is an extra measure to ensure that the invoice is being made out to the correct payer
-                // ie. not more than one user is associated with the client.
-                $user = $this->active_user($client_id, $uR, $ucR, $uiR);
-                if (null !== $user) {
+            $body = $request->getParsedBody() ?? [];
+            if (is_array($body)) {
+                if ($formHydrator->populateFromPostAndValidate($form, $request)) {
+                    // Only clients that were assigned to user accounts were made available in dropdown
+                    // therefore use the 'user client' user id
                     /**
-                     * @psalm-suppress PossiblyInvalidArgument $body
+                     * @var string $body['client_id']
                      */
-                    $saved_model = $this->inv_service->saveInv($user, $inv, $body, $this->sR, $gR);
-                    $model_id = $saved_model->getId();
-                    if (null !== $model_id) {
-                        $this->inv_amount_service->initializeInvAmount($invAmount, $model_id);
-                        $this->default_taxes($inv, $trR, $formHydrator);
-                        // if Settings...Views...Invoices...Sumex...Yes => Generate sumex patient details extension table
-                        // This table can be filled in via Invoice...View...Options...Edit...Sumex
-                        $this->sumex_add_record($sumexR, (int) $model_id);
-                        // Inform the user of generated invoice number for draft setting
-                        $this->flash_message('info', $this->sR->getSetting('generate_invoice_number_for_draft') === '1'
-                        ? $this->translator->translate('i.generate_invoice_number_for_draft') . '=>' . $this->translator->translate('i.yes')
-                        : $this->translator->translate('i.generate_invoice_number_for_draft') . '=>' . $this->translator->translate('i.no'));
-                    } //$model_id
+                    $client_id = $body['client_id'];
+                    $user_client = $ucR->repoUserquery($client_id);
+                    if (null !== $user_client && null !== $user_client->getClient()) {
+                        $client_first_name = $user_client->getClient()?->getClient_name();
+                        $client_surname = $user_client->getClient()?->getClient_surname();
+                        $client_fullname = (null !== ($client_first_name)
+                                         ? $client_first_name
+                                         : '').
+                                         ' '.
+                                         (null !== ($client_surname) ? $client_surname : '');
+                    } else {
+                        $this->flash_message('warning', $this->translator->translate('invoice.invoice.user.client.no.account'));
+                    }
+                    // Ensure that the client has only one (paying) user account otherwise reject this invoice
+                    // @see UserClientRepository function get_not_assigned_to_user which ensures that only
+                    // clients that have   NOT   been assigned to a user account are presented in the dropdown box for available clients
+                    // So this line is an extra measure to ensure that the invoice is being made out to the correct payer
+                    // ie. not more than one user is associated with the client.
+                    $user = $this->active_user($client_id, $uR, $ucR, $uiR);
+                    if (null !== $user) {
+                        $saved_model = $this->inv_service->saveInv($user, $inv, $body, $this->sR, $gR);
+                        $model_id = $saved_model->getId();
+                        if (null !== $model_id) {
+                            $this->inv_amount_service->initializeInvAmount($invAmount, $model_id);
+                            $this->default_taxes($inv, $trR, $formHydrator);
+                            // if Settings...Views...Invoices...Sumex...Yes => Generate sumex patient details extension table
+                            // This table can be filled in via Invoice...View...Options...Edit...Sumex
+                            $this->sumex_add_record($sumexR, (int) $model_id);
+                            // Inform the user of generated invoice number for draft setting
+                            $this->flash_message('info', $this->sR->getSetting('generate_invoice_number_for_draft') === '1'
+                            ? $this->translator->translate('i.generate_invoice_number_for_draft') . '=>' . $this->translator->translate('i.yes')
+                            : $this->translator->translate('i.generate_invoice_number_for_draft') . '=>' . $this->translator->translate('i.no'));
+                        } //$model_id
+                        return $this->web_service->getRedirectResponse('inv/index');
+                    } //null!==$user
+                    // In the event of the database being manually edited (highly unlikely) present this warning anyway
+                    $message = '';
+                    if (!empty($client_fullname)) {
+                        $message = $this->translator->translate('invoice.user.inv.more.than.one.assigned').' '.(string)$client_fullname;
+                        $this->flash_message('warning', $message);
+                    }
                     return $this->web_service->getRedirectResponse('inv/index');
-                } //null!==$user
-                // In the event of the database being manually edited (highly unlikely) present this warning anyway
-                $message = '';
-                if (!empty($client_fullname)) {
-                    $message = $this->translator->translate('invoice.user.inv.more.than.one.assigned').' '.(string)$client_fullname;
-                    $this->flash_message('warning', $message);
                 }
-                return $this->web_service->getRedirectResponse('inv/index');
-            }
+            }    
             $parameters['errors'] = $form->getValidationResult()->getErrorMessagesIndexedByProperty();
             $parameters['form'] = $form;
         }
@@ -1880,7 +1872,7 @@ final class InvController
                         $invoice->setStatus_id(2);
                         // Make read_only if status is sent i.e. 2 and read-only ability exists
                         if (($this->sR->getSetting('read_only_toggle') == '2')  &&  ($this->sR->getSetting('disable_read_only') == '0')) {
-                            $inv->setIs_read_only(true);
+                            $invoice->setIs_read_only(true);
                         }    
                         //keep a record of all the times this invoice is sent
                         $this->emailedThereforeAddLog($invoice, $islR);

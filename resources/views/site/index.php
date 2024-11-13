@@ -3,6 +3,7 @@
 declare(strict_types=1);
 
 use Yiisoft\Html\Html;
+use Yiisoft\Html\Tag\Img;
 use Yiisoft\Html\Tag\Label;
 use Yiisoft\Yii\Bootstrap5\Carousel;
 
@@ -31,62 +32,37 @@ $tooltipTitle = $translator->translate('home.caption.slides.location.debug.mode'
 <?= Carousel::widget()
     ->items([
         [
-            'content' => '<div class="d-block w-100 bg-info" style="height: 200px"></div>',
+            'content' => '<div class="bg-dark" style="height: 200px; text-align: center"><br>'.
+                            Img::tag()
+                            ->src('/img/step1.jpg')
+                            ->size(150,50)
+                            ->render().
+                         '</div>',
             'caption' => $translator->translate('home.caption.slide1'),
-            'captionOptions' => ['class' => ['d-none', 'd-md-block']],
+            'captionOptions' => ['class' => ['d-none', 'd-md-block', 'img-fluid']],
         ],
         [
-            'content' => '<div class="d-block w-100 bg-secondary" style="height: 200px"></div>',
+            'content' => '<div class="bg-dark" style="height: 200px; text-align: center"><br>'.
+                            Img::tag()
+                            ->src('/img/step2.jpg')
+                            ->size(150,50)
+                            ->render().
+                         '</div>',
             'caption' => $translator->translate('home.caption.slide2'),
             'captionOptions' => ['class' => ['d-none', 'd-md-block']],
         ],
         [
-            'content' => '<div class="d-block w-100 bg-dark" style="height: 200px"></div>',
+            'content' => '<div class="bg-dark" style="height: 200px; text-align: center"><br>'.
+                            Img::tag()
+                            ->src('/img/step3.jpg')
+                            ->size(150,50)
+                            ->render().
+                         '</div>',
             'caption' => $translator->translate('home.caption.slide3'),
             'captionOptions' => ['class' => ['d-none', 'd-md-block']],
         ],
-        [
-            'content' => '<div class="d-block w-100 bg-dark" style="height: 200px"></div>',
-            'caption' => $translator->translate('home.caption.slide4'),
-            'captionOptions' => ['class' => ['d-none', 'd-md-block']],
-        ],
-        [
-            'content' => '<div class="d-block w-100 bg-dark" style="height: 200px"></div>',
-            'caption' => $translator->translate('home.caption.slide5'),
-            'captionOptions' => ['class' => ['d-none', 'd-md-block']],
-        ],
-        [
-            'content' => '<div class="d-block w-100 bg-dark" style="height: 200px"></div>',
-            'caption' => $translator->translate('home.caption.slide6'),
-            'captionOptions' => ['class' => ['d-none', 'd-md-block']],
-        ],
     ]);        
-?>  
-        
-<?= Carousel::widget()
-    ->items([
-        [
-            'content' => '<div class="d-block w-100 bg-info" style="height: 200px"></div>',
-            'caption' => Html::tag('img', '', ['src' => '/img/overdue.png']). Label::tag()->content($translator->translate('invoice.image.overdue')),
-            'captionOptions' => ['class' => ['d-none', 'd-md-block']],
-        ],
-        [
-            'content' => '<div class="d-block w-100 bg-info" style="height: 200px"></div>',
-            'caption' => Html::tag('img', '', ['src' => '/img/paid.png']). Label::tag()->content($translator->translate('invoice.image.paid')),
-            'captionOptions' => ['class' => ['d-none', 'd-md-block']],
-        ],
-        [
-            'content' => '<div class="d-block w-100 bg-info" style="height: 200px"></div>',
-            'caption' => "Html::tag('img', '', ['src' => '/img/overdue.png']). Label::tag()->content(".'$translator->translate('."'invoice.image.overdue'))",
-            'captionOptions' => ['class' => ['d-none', 'd-md-block']],
-        ],
-        [
-            'content' => '<div class="d-block w-100 bg-info" style="height: 200px"></div>',
-            'caption' => "Html::tag('img', '', ['src' => '/img/paid.png']). Label::tag()->content(".'$translator->translate('."'invoice.image.paid'))",
-            'captionOptions' => ['class' => ['d-none', 'd-md-block']],
-        ],
-    ]);        
-?>              
+?>           
         
 <?= Html::openTag('div', ['class' => 'container mt-5']); ?>
     <?= Html::openTag('div', ['class' => 'row']); ?>

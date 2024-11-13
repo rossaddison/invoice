@@ -86,13 +86,12 @@ final class UserClientController
         ];
         if ($request->getMethod() === Method::POST) {
             if ($formHydrator->populateFromPostAndValidate($form, $request)) {
-                $body = $request->getParsedBody();
-                /**
-                 * @psalm-suppress PossiblyInvalidArgument $body
-                 */
-                $this->userclientService->saveUserClient($user_client, $body);
-                return $this->webService->getRedirectResponse('userclient/index');
-            }
+                $body = $request->getParsedBody() ?? [];
+                if (is_array($body)) {
+                    $this->userclientService->saveUserClient($user_client, $body);
+                    return $this->webService->getRedirectResponse('userclient/index');
+                }
+            }    
             $parameters['form'] = $form;
             $parameters['errors'] = $form->getValidationResult()->getErrorMessagesIndexedByProperty();
         }
@@ -158,12 +157,11 @@ final class UserClientController
             if ($request->getMethod() === Method::POST) {
                 if ($formHydrator->populateFromPostAndValidate($form, $request)) {
                     $body = $request->getParsedBody();
-                    /**
-                     * @psalm-suppress PossiblyInvalidArgument $body
-                     */
-                    $this->userclientService->saveUserClient($user_client, $body);
-                    return $this->webService->getRedirectResponse('userclient/index');
-                }
+                    if (is_array($body)) {
+                        $this->userclientService->saveUserClient($user_client, $body);
+                        return $this->webService->getRedirectResponse('userclient/index');
+                    }
+                }    
                 $parameters['form'] = $form;
                 $parameters['errors'] = $form->getValidationResult()->getErrorMessagesIndexedByProperty();
             }

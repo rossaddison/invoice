@@ -84,7 +84,7 @@ final class UnitPeppolController
         ];
 
         if ($request->getMethod() === Method::POST) {
-            $body = $request->getParsedBody();
+            $body = $request->getParsedBody() ?? [];
             /**
              * @var string $body['code']
              */
@@ -105,12 +105,11 @@ final class UnitPeppolController
                 $body['description'] = $enece_array[$key]['Description'];
             }
             if ($formHydrator->populateFromPostAndValidate($form, $request)) {
-                /**
-                 * @psalm-suppress PossiblyInvalidArgument $body
-                 */
-                $this->unitpeppolService->saveUnitPeppol($unitPeppol, $body);
-                return $this->webService->getRedirectResponse('unitpeppol/index');
-            }
+                if (is_array($body)) {
+                    $this->unitpeppolService->saveUnitPeppol($unitPeppol, $body);
+                    return $this->webService->getRedirectResponse('unitpeppol/index');
+                }
+            }    
             $parameters['errors'] = $form->getValidationResult()->getErrorMessagesIndexedByProperty();
             $parameters['form'] = $form;
         }
@@ -218,13 +217,12 @@ final class UnitPeppolController
             ];
             if ($request->getMethod() === Method::POST) {
                 if ($formHydrator->populateFromPostAndValidate($form, $request)) {
-                    $body = $request->getParsedBody();
-                    /**
-                     * @psalm-suppress PossiblyInvalidArgument $body
-                     */
-                    $this->unitpeppolService->saveUnitPeppol($unitPeppol, $body);
-                    return $this->webService->getRedirectResponse('unitpeppol/index');
-                }
+                    $body = $request->getParsedBody() ?? [];
+                    if (is_array($body)) {
+                        $this->unitpeppolService->saveUnitPeppol($unitPeppol, $body);
+                        return $this->webService->getRedirectResponse('unitpeppol/index');
+                    }
+                }    
                 $parameters['errors'] = $form->getValidationResult()->getErrorMessagesIndexedByProperty();
                 $parameters['form'] = $form;
             }

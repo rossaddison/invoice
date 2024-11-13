@@ -456,14 +456,13 @@ final class SalesOrderController
             ];
             if ($request->getMethod() === Method::POST) {
                 if ($formHydrator->populateFromPostAndValidate($form, $request)) {
-                    $body = $request->getParsedBody();
-                    /**
-                     * @psalm-suppress PossiblyInvalidArgument $body
-                     */
-                    $this->salesorderService->saveSo($so, $body);
-                    $this->flash_message('success', $this->translator->translate('i.record_successfully_updated'));
-                    return $this->webService->getRedirectResponse('salesorder/index');
-                }
+                    $body = $request->getParsedBody() ?? [];
+                    if (is_array($body)) {
+                        $this->salesorderService->saveSo($so, $body);
+                        $this->flash_message('success', $this->translator->translate('i.record_successfully_updated'));
+                        return $this->webService->getRedirectResponse('salesorder/index');
+                    }
+                }    
                 $parameters['errors'] = $form->getValidationResult()->getErrorMessagesIndexedByProperty();
                 $parameters['form'] = $form;
             }
