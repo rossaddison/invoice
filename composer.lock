@@ -9689,16 +9689,16 @@
         },
         {
             "name": "symfony/http-client",
-            "version": "v7.1.7",
+            "version": "v7.1.8",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/http-client.git",
-                "reference": "90ab2a4992dcf5d1f19a9b8737eba36a7c305fd0"
+                "reference": "c30d91a1deac0dc3ed5e604683cf2e1dfc635b8a"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/http-client/zipball/90ab2a4992dcf5d1f19a9b8737eba36a7c305fd0",
-                "reference": "90ab2a4992dcf5d1f19a9b8737eba36a7c305fd0",
+                "url": "https://api.github.com/repos/symfony/http-client/zipball/c30d91a1deac0dc3ed5e604683cf2e1dfc635b8a",
+                "reference": "c30d91a1deac0dc3ed5e604683cf2e1dfc635b8a",
                 "shasum": ""
             },
             "require": {
@@ -9763,7 +9763,7 @@
                 "http"
             ],
             "support": {
-                "source": "https://github.com/symfony/http-client/tree/v7.1.7"
+                "source": "https://github.com/symfony/http-client/tree/v7.1.8"
             },
             "funding": [
                 {
@@ -9779,7 +9779,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2024-11-05T16:45:54+00:00"
+            "time": "2024-11-13T13:40:27+00:00"
         },
         {
             "name": "symfony/http-client-contracts",
@@ -24149,17 +24149,17 @@
     "minimum-stability": "dev",
     "stability-flags": {
         "cebe/markdown": 20,
-        "roave/security-advisories": 20,
-        "rossaddison/requirements": 20,
         "yiisoft/data": 20,
         "yiisoft/data-cycle": 20,
         "yiisoft/db": 20,
         "yiisoft/db-mysql": 20,
         "yiisoft/form-model": 20,
         "yiisoft/rate-limiter": 20,
+        "rossaddison/requirements": 20,
         "yiisoft/yii-bootstrap5": 20,
         "yiisoft/yii-dataview": 20,
         "yiisoft/yii-debug-api": 20,
+        "roave/security-advisories": 20,
         "yiisoft/yii-gii": 20,
         "yiisoft/yii-testing": 20
     },
@@ -24177,6 +24177,6 @@
         "ext-openssl": "*",
         "ext-pdo_sqlite": "*"
     },
-    "platform-dev": {},
+    "platform-dev": [],
     "plugin-api-version": "2.6.0"
 }
