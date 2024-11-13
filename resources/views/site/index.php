@@ -12,6 +12,9 @@ use Yiisoft\Yii\Bootstrap5\Carousel;
  * @var Yiisoft\Translator\TranslatorInterface $translator
  */
 $tooltipTitle = $translator->translate('home.caption.slides.location.debug.mode');
+$w = 649;
+$h = 383;
+$divHeight = 500;
 ?>
 
 <?= Html::openTag('header'); ?>
@@ -32,30 +35,30 @@ $tooltipTitle = $translator->translate('home.caption.slides.location.debug.mode'
 <?= Carousel::widget()
     ->items([
         [
-            'content' => '<div class="bg-dark" style="height: 200px; text-align: center"><br>'.
+            'content' => '<div class="bg-dark" style="height: '.$divHeight.'px; text-align: center"><br>'.
                             Img::tag()
                             ->src('/img/step1.jpg')
-                            ->size(150,50)
+                            ->size($w, $h)
                             ->render().
                          '</div>',
             'caption' => $translator->translate('home.caption.slide1'),
-            'captionOptions' => ['class' => ['d-none', 'd-md-block', 'img-fluid']],
+            'captionOptions' => ['class' => ['d-none', 'd-md-block']],
         ],
         [
-            'content' => '<div class="bg-dark" style="height: 200px; text-align: center"><br>'.
+            'content' => '<div class="bg-dark" style="height: '.$divHeight.'px; text-align: center"><br>'.
                             Img::tag()
                             ->src('/img/step2.jpg')
-                            ->size(150,50)
+                            ->size($w, $h)
                             ->render().
                          '</div>',
             'caption' => $translator->translate('home.caption.slide2'),
             'captionOptions' => ['class' => ['d-none', 'd-md-block']],
         ],
         [
-            'content' => '<div class="bg-dark" style="height: 200px; text-align: center"><br>'.
+            'content' => '<div class="bg-dark" style="height: '.$divHeight.'px; text-align: center"><br>'.
                             Img::tag()
                             ->src('/img/step3.jpg')
-                            ->size(150,50)
+                            ->size($w, $h)
                             ->render().
                          '</div>',
             'caption' => $translator->translate('home.caption.slide3'),
