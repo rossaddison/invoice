@@ -342,11 +342,11 @@ $toolbar = Div::tag();
             header: $translator->translate('i.status'),
             content: static function (Inv $model) use ($s, $iR, $irR, $translator): Yiisoft\Html\Tag\CustomTag {
                 $label = $iR->getSpecificStatusArrayLabel((string)$model->getStatus_id());
-                if (($model->getIs_read_only()) && $s->getSetting('disable_read_only') === (string) 0) {
-                    $label =  $translator->translate('i.paid'). ' 🚫';
+                if (($model->getIs_read_only()) && $s->getSetting('disable_read_only') == '0') {
+                    $label .=  ' 🚫';
                 }
                 if ($irR->repoCount((string) $model->getId()) > 0) {
-                    $label = $translator->translate('i.recurring'). ' 🔄';
+                    $label .= $translator->translate('i.recurring'). ' 🔄';
                 }
                 return Html::tag('span', $iR->getSpecificStatusArrayEmoji((int)$model->getStatus_id()). $label, ['class' => 'label label-' . $iR->getSpecificStatusArrayClass((int)$model->getStatus_id())]);
             },

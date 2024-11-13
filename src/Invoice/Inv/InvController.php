@@ -278,10 +278,10 @@ final class InvController
     {
         return $this->view_renderer->renderPartialAsString(
             '//invoice/layout/alert',
-            [
-        'flash' => $this->flash,
-      ]
-        );
+                [
+                    'flash' => $this->flash,
+                ]
+            );
     }
 
     /**
@@ -1878,6 +1878,10 @@ final class InvController
                         //draft->sent->view->paid
                         //set the invoice to sent ie. 2
                         $invoice->setStatus_id(2);
+                        // Make read_only if status is sent i.e. 2 and read-only ability exists
+                        if (($this->sR->getSetting('read_only_toggle') == '2')  &&  ($this->sR->getSetting('disable_read_only') == '0')) {
+                            $inv->setIs_read_only(true);
+                        }    
                         //keep a record of all the times this invoice is sent
                         $this->emailedThereforeAddLog($invoice, $islR);
                         $iR->save($invoice);
@@ -3111,6 +3115,17 @@ final class InvController
                 $inv = $iR->repoInvUnLoadedquery($value);
                 if (null !== $inv->getInvAmount()->getTotal() && $inv->getInvAmount()->getTotal() > 0) {
                     $inv->setStatus_id(2);
+                    /**
+                     * If the invoice has been sent either by 1. checkbox and the 'sent' button in the index or by 2. 'email' then
+                     * it must be made readonly so that it cannot be edited depending on what the 'read_only_toggle' status is
+                     * and whether read only effects i.e. disable_read_only, are being used. 
+                     * 'disable_read_only' is false by default in InvoiceController on setting up.
+                     * 
+                     * @see 'read_only_toggle' Settings .... Invoices ... Other Settings ... Disable the read only button on ... {status}
+                     */
+                    if (($this->sR->getSetting('read_only_toggle') == '2')  &&  ($this->sR->getSetting('disable_read_only') == '0')) {
+                        $inv->setIs_read_only(true);
+                    }    
                     $iR->save($inv);
                     $parameters['success'] = 1;
                 } else {

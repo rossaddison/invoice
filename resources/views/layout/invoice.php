@@ -521,9 +521,10 @@ $this->beginPage();
                     'url' => $urlGenerator->generate('setting/clear'), 'options' => ['class' => 'nav fs-4', 'data-bs-toggle' => 'tooltip',
                       'title' => 'Clear the assets cache which resides in /public/assets.', 'style' => 'background-color: #ffcccb'],
                     'visible' => $debugMode],
+    // Debug Mode                  
                   ['label' => $translator->translate('invoice.debug'),
                     'url' => '',
-                    'options' => ['class' => 'nav fs-4', 'data-bs-toggle' => 'tooltip', 'title' => 'Disable in invoice\src\ViewInjection\LayoutViewInjection.php. Red background links and menus will disappear.', 'style' => 'background-color: '. ($debugMode ? '#90EE90' : '#ffcccb')],
+                    'options' => ['class' => 'nav fs-4', 'data-bs-toggle' => 'tooltip', 'title' => 'Set YII_DEBUG=false in .env file in root folder. Red background links and menus will disappear.', 'style' => 'background-color: '. ($debugMode ? '#90EE90' : '#ffcccb')],
                     'visible' => $debugMode],
                   ['label' => 'Locale => ' . $locale,
                     'url' => '',

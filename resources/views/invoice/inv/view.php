@@ -63,10 +63,6 @@ use Yiisoft\Html\Tag\A;
 $vat = $s->getSetting('enable_vat_registration');
 
 ?>
-<div class="panel panel-default">
-    <div class="panel-heading">
-        <i tooltip="data-bs-toggle" title="<?= $s->isDebugMode(1); ?>"><?= $translator->translate('i.invoice'); ?></i>
-    </div>
     <?php        
         echo $alert;
         echo $modal_delete_inv;
@@ -84,8 +80,7 @@ $vat = $s->getSetting('enable_vat_registration');
         echo $modal_delete_items;
         echo $modal_create_credit;
         echo $modal_message_no_payment_method;
-    ?>
-</div>    
+    ?>   
 
    
 <?php if (!empty($payments)) { ?>
@@ -201,7 +196,7 @@ $vat = $s->getSetting('enable_vat_registration');
         <h1 class="headerbar-title">
 <?php
 echo Html::encode($translator->translate('i.invoice')) . ' ';
-echo(Html::encode(strlen($inv->getNumber()?? '') == 0 ? '#' . ($inv->getNumber() ?? '#'): $inv->getId()));
+echo(Html::encode(strlen($inv->getNumber() ?? '') > 0 ? ' #' . ($inv->getNumber() ?? ' #'): $inv->getId()));
 ?>
         </h1>        
         <div class="headerbar-item pull-right <?php if ($inv->getIs_read_only() === false || $inv->getStatus_id() !== 4) { ?>btn-group<?php } ?>">
@@ -474,7 +469,7 @@ if (($inv->getStatus_id() === 1 || ($s->getSetting('enable_invoice_deletion') ==
                         <?= Html::encode($translator->translate('i.delete') . " " . $translator->translate('i.item')); ?>
                             </a>
                         </li>
-                <?php } ?>
+<?php } ?>
                 </ul>
             </div>
             <div class="headerbar-item invoice-labels pull-right">
@@ -488,7 +483,7 @@ if (($inv->getStatus_id() === 1 || ($s->getSetting('enable_invoice_deletion') ==
                     <span class="label label-danger">
                         <i class="fa fa-read-only"></i><?= Html::encode($translator->translate('i.read_only')); ?>
                     </span>
-<?php } ?>
+        <?php } ?>
             </div>
         </div>
     </div>

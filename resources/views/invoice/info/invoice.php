@@ -47,6 +47,13 @@
 <p>Introducing India's PayTm payment gateway's QR code method of payment and comparing this with Stripe's method.</p>
 <p>A General Sales Tax (GST) Tax System will have to be implemented first for this purpose.</p>
 <p>Testing Credit Notes against Invoices with refunds (if payment made) linked to each of the payment gateways.</p>
+<p><b>11th November 2024</b></p>
+<p>The read only toggle gets set to a status e.g. draft, sent, viewed, paid which serves as a comparison when to set the invoice to read-only. Included a few more checks.</p>
+<p><b>11th November 2024</b></p>
+<p>1. Email with pdf attachment testing</p>
+<p>2. Conflict section in composer.json removed because symfony 7.1.6 could not be installed containing symfony/mime/file 
+    which yiisoft/mailer-symfony was dependent upon and could not be found in symfony/mime 5.45</p>
+<p>3. General testing of invoices. Few changes made regarding read_only status. </p>
 <p><b>9th November 2024</b></p>
 <p>1. Retest the .env and autoload files with Psalm Level 1 and filter_var function. Changes made.<p>
 <p>2. public/index.php and yii console file at the root tested. Changes made.<p>
