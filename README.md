@@ -122,3 +122,4 @@ outputting it to ````resources/views/generator/output_overwrite.````
 [![Code Coverage](https://scrutinizer-ci.com/g/rossaddison/invoice/badges/coverage.png?b=main)](https://scrutinizer-ci.com/g/rossaddison/invoice/?branch=main)
 [![Build](https://scrutinizer-ci.com/g/rossaddison/invoice/badges/build.png?b=main)](https://scrutinizer-ci.com/g/rossaddison/invoice/?branch=main)
 [![type-coverage](https://shepherd.dev/github/rossaddison/invoice/coverage.svg)](https://shepherd.dev/github/rossaddison/invoice)
+[![Github Stats](https://github-readme-stats.vercel.app/aps?username=rossaddison&show_icons=true&theme=transparent)]

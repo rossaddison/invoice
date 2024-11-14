@@ -62,6 +62,8 @@ final class GridComponents
         ->disabledItemClass('disabled')
         ->disabledLinkClass('disabled')
         ->defaultPageSize($pageSize)
+        ->urlConfig(new UrlConfig()) 
+        ->urlCreator(new UrlCreator($this->generator))             
         ->paginator($sortedAndPagedPaginator)
         ->render();
     }

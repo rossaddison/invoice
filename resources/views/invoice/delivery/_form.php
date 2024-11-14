@@ -13,6 +13,7 @@ use Yiisoft\Html\Tag\Form;
  * @var App\Invoice\Setting\SettingRepository $s
  * @var App\Widget\Button $button
  * @var Yiisoft\Translator\TranslatorInterface $translator
+ * @var Yiisoft\Router\CurrentRoute $currentRoute
  * @var Yiisoft\Router\UrlGeneratorInterface $urlGenerator
  * @var array $dels
  * @var int $del_count
@@ -146,7 +147,12 @@ use Yiisoft\Html\Tag\Form;
                         ->optionsData($optionsDataDel)
                         ->value(Html::encode($form->getDelivery_location_id()));
                     } else {
-                        echo Html::a($translator->translate('invoice.invoice.delivery.location.add'), $urlGenerator->generate('del/add',['client_id'=>$inv->getClient_id()]),['class'=>'btn btn-danger btn-lg mt-3']);
+                        echo Html::a($translator->translate('invoice.invoice.delivery.location.add'), 
+                                $urlGenerator->generate('del/add',
+                                        ['client_id'=>$inv->getClient_id()],
+                                        ['origin' => 'delivery',
+                                         'origin_id' => $currentRoute->getArgument('inv_id'),   
+                                         'action' => 'add']),['class'=>'btn btn-danger btn-lg mt-3']);
                     }    
                 ?>
             <?= Html::closeTag('div'); ?>

@@ -3,7 +3,7 @@
 declare(strict_types=1);
 
 use Yiisoft\Config\Config;
-use Yiisoft\Csrf\CsrfMiddleware;
+use Yiisoft\Csrf\CsrfTokenMiddleware;
 use Yiisoft\DataResponse\Middleware\FormatDataResponse;
 use Yiisoft\Router\FastRoute\UrlGenerator;
 use Yiisoft\Router\Group;
@@ -34,7 +34,7 @@ return [
     RouteCollectionInterface::class => static function (RouteCollectorInterface $collector) use ($config) {
         $routes = $config->get('routes');
         $collector
-            ->middleware(CsrfMiddleware::class)
+            ->middleware(CsrfTokenMiddleware::class)
             ->middleware(FormatDataResponse::class)
             ->addGroup(                
                 Group::create('/{_language}')

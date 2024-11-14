@@ -16,12 +16,10 @@ use Yiisoft\Html\Tag\Input;
 use Yiisoft\Html\Tag\Input\Checkbox;
 use Yiisoft\Html\Tag\Label;
 use Yiisoft\Yii\DataView\Column\Base\DataContext;
-use Yiisoft\Yii\DataView\Column\ActionColumn;
 use Yiisoft\Yii\DataView\Column\CheckboxColumn;
 use Yiisoft\Yii\DataView\Column\ColumnInterface;
 use Yiisoft\Yii\DataView\Column\DataColumn;
 use Yiisoft\Yii\DataView\GridView;
-use Yiisoft\Yii\DataView\YiiRouter\UrlCreator;
 
 /**
  * @see config/common/params.php 'yiisoft/view => ['gridComponents' => Reference::to(GridComponents::class)]',
@@ -47,6 +45,7 @@ use Yiisoft\Yii\DataView\YiiRouter\UrlCreator;
  * @var Yiisoft\Router\FastRoute\UrlGenerator $urlGenerator
  * @var Yiisoft\Yii\DataView\YiiRouter\UrlCreator $urlCreator
  * @var Yiisoft\Data\Cycle\Reader\EntityReader $invs
+ * @var array $order
  * @var bool $visible
  * @var bool $visibleToggleInvSentLogColumn
  * @var int $clientCount
@@ -561,7 +560,7 @@ $toolbar = Div::tag();
         Div::tag()->addClass('float-end m-3')->content($markAsSent)->encode(false)->render() .  
         // use the checkboxcolumn to mark invoices as recurring
         Div::tag()->addClass('float-end m-3')->content($markAsRecurringMultiple)->encode(false)->render() .     
-        Form::tag()->close();
+        Form::tag()->close();    
     
     $sort = Sort::only(['id', 'status_id', 'number', 'date_created', 'date_due', 'client_id'])
                     // (@see vendor\yiisoft\data\src\Reader\Sort
@@ -582,8 +581,6 @@ $toolbar = Div::tag();
         $label
     );
     
-    $urlCreator = new UrlCreator($urlGenerator);  
-    $urlCreator->__invoke([], ['default' => 'desc']);
     echo GridView::widget()
     // unpack the contents within the array using the three dot splat operator
     ->rowAttributes(['class' => 'align-left'])

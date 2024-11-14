@@ -117,7 +117,6 @@ use App\Widget\Bootstrap5ModalTranslatorMessageWithoutAction;
 use App\Invoice\Libraries\Crypt;
 // Yii
 use Yiisoft\Data\Paginator\OffsetPaginator;
-use Yiisoft\Data\Paginator\PageToken;
 use Yiisoft\Data\Reader\Sort;
 use Yiisoft\Data\Reader\OrderHelper;
 use Yiisoft\DataResponse\DataResponseFactoryInterface;
@@ -135,7 +134,6 @@ use Yiisoft\Session\Flash\Flash;
 use Yiisoft\Translator\TranslatorInterface;
 use Yiisoft\User\CurrentUser;
 use Yiisoft\Yii\DataView\YiiRouter\UrlCreator;
-use Yiisoft\Yii\DataView\UrlConfig;
 use Yiisoft\Yii\View\Renderer\ViewRenderer;
 // Psr\Http
 use Psr\Log\LoggerInterface;
@@ -2157,9 +2155,11 @@ final class InvController
             // All, Draft, Sent ... filter governed by routes eg. invoice.myhost/invoice/inv/page/1/status/1 => #[RouteArgument('page')] string $page etc
             $page = $queryPage ?? $page;
             //status 0 => 'all';
-            $status = (int) $status;
+            $status = (int) $status;            
+            $sortString = $querySort ?? '-id';            
             $urlCreator = new UrlCreator($this->url_generator);
-            $urlCreator->__invoke([], ['default' => 'desc']);
+            $order =  OrderHelper::stringToArray($sortString);
+            $urlCreator->__invoke([], $order);
             $invs = $this->invs_status($invRepo, $status);
             if (isset($queryFilterInvNumber) && !empty($queryFilterInvNumber)) {
                 $invs = $invRepo->filterInvNumber($queryFilterInvNumber);
@@ -2193,7 +2193,6 @@ final class InvController
                                                     ? (int)$this->sR->getSetting('default_list_limit') : 1,
                 // numbered tiles between the arrrows
                 'maxNavLinkCount' => 10,
-                //'sortedAndPagedPaginator' => $paginator,
                 'invs' => $invs,
                 'inv_statuses' => $inv_statuses,
                 'max' => (int) $this->sR->getSetting('default_list_limit'),

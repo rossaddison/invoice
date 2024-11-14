@@ -776,11 +776,11 @@ if (($inv->getStatus_id() === 1 || ($s->getSetting('enable_invoice_deletion') ==
             <div id="view_custom_fields" class="col-xs-12 col-md-6">
 <?= $view_custom_fields; ?>
             </div>
-            <div id="view_partial_inv_attachments" class="col-xs-12 col-md-6">
-<?= $partial_inv_attachments; ?>
-            </div>
             <div id="view_partial_inv_delivery_location" class="col-xs-12 col-md-6">
 <?= $partial_inv_delivery_location; ?>
-            </div>           
+            </div>     
+            <div id="view_partial_inv_attachments">
+<?= $partial_inv_attachments; ?>
+            </div>
 <?php  echo $modal_add_allowance_charge; ?>
         <?= Html::closeTag('div'); ?>
