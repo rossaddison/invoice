@@ -12396,16 +12396,16 @@
         },
         {
             "name": "yiisoft/csrf",
-            "version": "2.1.1",
+            "version": "2.2.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/yiisoft/csrf.git",
-                "reference": "2168b5f83ec9ce65e9d0ca08fa88613e6778d377"
+                "reference": "0f36e8056073ae39aa7d071df1ca2698a7b181ff"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/yiisoft/csrf/zipball/2168b5f83ec9ce65e9d0ca08fa88613e6778d377",
-                "reference": "2168b5f83ec9ce65e9d0ca08fa88613e6778d377",
+                "url": "https://api.github.com/repos/yiisoft/csrf/zipball/0f36e8056073ae39aa7d071df1ca2698a7b181ff",
+                "reference": "0f36e8056073ae39aa7d071df1ca2698a7b181ff",
                 "shasum": ""
             },
             "require": {
@@ -12426,7 +12426,7 @@
                 "maglnet/composer-require-checker": "^3.8|^4.2",
                 "nyholm/psr7": "^1.3",
                 "phpunit/phpunit": "^9.5",
-                "rector/rector": "^1.0.0",
+                "rector/rector": "^1.2",
                 "roave/infection-static-analysis-plugin": "^1.16",
                 "spatie/phpunit-watcher": "^1.23",
                 "vimeo/psalm": "^4.30|^5.24",
@@ -12472,15 +12472,15 @@
             },
             "funding": [
                 {
-                    "url": "https://github.com/yiisoft",
+                    "url": "https://github.com/sponsors/yiisoft",
                     "type": "github"
                 },
                 {
                     "url": "https://opencollective.com/yiisoft",
-                    "type": "open_collective"
+                    "type": "opencollective"
                 }
             ],
-            "time": "2024-05-08T09:48:50+00:00"
+            "time": "2024-11-14T17:54:45+00:00"
         },
         {
             "name": "yiisoft/data",
@@ -24151,7 +24151,6 @@
     "minimum-stability": "dev",
     "stability-flags": {
         "cebe/markdown": 20,
-        "roave/security-advisories": 20,
         "yiisoft/data": 20,
         "yiisoft/data-cycle": 20,
         "yiisoft/db": 20,
@@ -24162,6 +24161,7 @@
         "yiisoft/yii-bootstrap5": 20,
         "yiisoft/yii-dataview": 20,
         "yiisoft/yii-debug-api": 20,
+        "roave/security-advisories": 20,
         "yiisoft/yii-gii": 20,
         "yiisoft/yii-testing": 20
     },
@@ -24179,6 +24179,6 @@
         "ext-openssl": "*",
         "ext-pdo_sqlite": "*"
     },
-    "platform-dev": {},
+    "platform-dev": [],
     "plugin-api-version": "2.6.0"
 }
