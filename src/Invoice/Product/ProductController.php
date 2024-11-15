@@ -60,11 +60,8 @@ use App\User\UserService;
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
 // Yiisoft
-use Yiisoft\Data\Reader\Sort;
-use Yiisoft\Data\Reader\OrderHelper;
 use Yiisoft\DataResponse\DataResponseFactoryInterface;
-use Yiisoft\Data\Paginator\OffsetPaginator as DataOffsetPaginator;
-use Yiisoft\Data\Paginator\PageToken;
+use Yiisoft\Data\Paginator\OffsetPaginator;
 use Yiisoft\FormModel\FormHydrator;
 use Yiisoft\Http\Method;
 use Yiisoft\Json\Json;
@@ -74,7 +71,6 @@ use Yiisoft\Session\SessionInterface;
 use Yiisoft\Session\Flash\Flash;
 use Yiisoft\Translator\TranslatorInterface;
 use Yiisoft\Data\Cycle\Reader\EntityReader;
-use Yiisoft\Yii\DataView\YiiRouter\UrlCreator;
 use Yiisoft\Yii\View\Renderer\ViewRenderer;
 
 class ProductController
@@ -479,20 +475,7 @@ class ProductController
         $currentPage = $query_params['page'] ?? $page;
         /** @psalm-var positive-int $currentPageNeverZero */
         $currentPageNeverZero = (int)$currentPage > 0 ? (int)$currentPage : 1;
-
-        /** @var string $query_params['sort'] */
-        $sortString = $query_params['sort'] ?? '-id';
-        $urlCreator = new UrlCreator($urlFastRouteGenerator);
-        $order =  OrderHelper::stringToArray($sortString);
-        $urlCreator->__invoke([], $order);
-        $sort = Sort::only(['id', 'family_id', 'unit_id', 'tax_rate_id',
-                            'product_name', 'product_sku', 'product_price', 'product_description', 'product_price_base_quantity'
-                           ])
-                    // (@see vendor\yiisoft\data\src\Reader\Sort
-                    // - => 'desc'  so -id => default descending on id
-                    // Show the latest products first => -id
-                    ->withOrder($order);
-        $products = $this->products_with_sort($pR, $sort);
+        $products = $pR->findAllPreloaded();
         if (isset($query_params['filter_product_sku']) && !empty($query_params['filter_product_sku'])) {
             $products = $pR->filter_product_sku((string)$query_params['filter_product_sku']);
         }
@@ -503,17 +486,16 @@ class ProductController
            (isset($query_params['filter_product_price']) && !empty($query_params['filter_product_price']))) {
             $products = $pR->filter_product_sku_price((string)$query_params['filter_product_price'], (string)$query_params['filter_product_sku']);
         }
-        $paginator = (new DataOffsetPaginator($products))
-        ->withPageSize((int)$sR->getSetting('default_list_limit'))
-        ->withCurrentPage($currentPageNeverZero)
-        ->withToken(PageToken::next($currentPage));
+        
         $parameters = [
             'alert' => $this->alert(),
-            'paginator' => $paginator,
+            'page' => $currentPageNeverZero,
             'defaultPageSizeOffsetPaginator' => (int)$sR->getSetting('default_list_limit'),
             'optionsDataProductsDropdownFilter' => $this->optionsDataProducts($pR),
-            'urlFastRouteGenerator' => $urlFastRouteGenerator,
-            'urlCreator' => $urlCreator
+            'products' => $products,
+            /** @var string $query_params['sort'] */
+            'sortString' => $query_params['sort'] ?? '-id',
+            'urlFastRouteGenerator' => $urlFastRouteGenerator
         ];
         return $this->viewRenderer->render('index', $parameters);
     }
@@ -575,21 +557,6 @@ class ProductController
             'default_item_tax_rate' => $sR->getSetting('default_item_tax_rate') !== '' ?: 0,
         ];
         return $this->viewRenderer->renderPartial('_partial_product_table_modal', $parameters);
-    }
-
-    /**
-     * @param ProductRepository $pR
-     * @param Sort $sort
-     *
-     * @return \Yiisoft\Data\Reader\SortableDataInterface&\Yiisoft\Data\Reader\DataReaderInterface
-     *
-     * @psalm-return \Yiisoft\Data\Reader\SortableDataInterface&\Yiisoft\Data\Reader\DataReaderInterface<int, Product>
-     */
-    private function products_with_sort(ProductRepository $pR, Sort $sort): \Yiisoft\Data\Reader\SortableDataInterface
-    {
-        $products = $pR->findAllPreloaded()
-                       ->withSort($sort);
-        return $products;
     }
 
     /**
@@ -1004,7 +971,7 @@ class ProductController
     private function view_partial_product_image(string $_language, int $product_id, piR $piR, sR $sR): string
     {
         $productimages = $piR->repoProductImageProductquery($product_id);
-        $paginator = new DataOffsetPaginator($productimages);
+        $paginator = new OffsetPaginator($productimages);
         $invEdit = $this->userService->hasPermission('editInv');
         $invView = $this->userService->hasPermission('viewInv');
         return $this->viewRenderer->renderPartialAsString('//invoice/product/views/partial_product_image', [

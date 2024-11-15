@@ -3,6 +3,11 @@
 declare(strict_types=1);
 
 use App\Invoice\Entity\DeliveryLocation;
+use Yiisoft\Data\Paginator\OffsetPaginator;
+use Yiisoft\Data\Paginator\PageToken;
+use Yiisoft\Data\Reader\Sort;
+use Yiisoft\Data\Reader\OrderHelper;
+use Yiisoft\Yii\DataView\YiiRouter\UrlCreator;
 use Yiisoft\Html\Html;
 use Yiisoft\Html\Tag\A;
 use Yiisoft\Html\Tag\Div;
@@ -20,13 +25,18 @@ use Yiisoft\Yii\DataView\OffsetPagination;
  * @var App\Invoice\Inv\InvRepository $iR
  * @var App\Invoice\Quote\QuoteRepository $qR
  * @var App\Invoice\Setting\SettingRepository $s
+ * @var App\Widget\GridComponents $gridComponents
+ * @var App\Widget\PageSizeLimiter $pageSizeLimiter
+ * @var Yiisoft\Data\Cycle\Reader\EntityReader $dels
  * @var Yiisoft\Data\Paginator\OffsetPaginator $paginator
  * @var Yiisoft\Translator\TranslatorInterface $translator
  * @var Yiisoft\Router\CurrentRoute $currentRoute
- * @var Yiisoft\Router\UrlGeneratorInterface $urlGenerator
+ * @var Yiisoft\Router\FastRoute\UrlGenerator $urlGenerator
  * @var string $alert
  * @var string $csrf
+ * @var string $sortString 
  * @var string $title
+ * @psalm-var positive-int $page
  */
 
 echo $alert;
@@ -60,8 +70,9 @@ $toolbar = Div::tag();
     $columns = [
         new DataColumn(
             'id',
-            header:  $translator->translate('i.id'),
-            content: static fn(DeliveryLocation $model) => $model->getId()
+            header:  'id',
+            content: static fn(DeliveryLocation $model) => $model->getId(),
+            withSorting: true    
         ),
         new DataColumn(
             'client_id',              
@@ -102,7 +113,8 @@ $toolbar = Div::tag();
                     return $buttons;
                 }
                 return '';
-            }    
+            },
+            withSorting: true        
         ),          
         new DataColumn(
             'id',
@@ -136,7 +148,8 @@ $toolbar = Div::tag();
                     return $buttons;
                 }
                 return '';
-            }
+            },
+            withSorting: true        
         ),  
         new DataColumn(
             'global_location_number',    
@@ -193,9 +206,24 @@ $toolbar = Div::tag();
         )        
     ];        
 ?>
-<?php 
+<?php     
+    $urlCreator = new UrlCreator($urlGenerator);
+    $urlCreator->__invoke([], OrderHelper::stringToArray($sortString));
+    $defaultPageSizeOffsetPaginator = (int)$s->getSetting('default_list_limit');
+    
+    $sort = Sort::only(['id'])
+        // (@see vendor\yiisoft\data\src\Reader\Sort
+        // - => 'desc'  so -id => default descending on id
+        ->withOrderString($sortString);
+    
+    $sortedAndPagedPaginator = (new OffsetPaginator($dels))
+        ->withPageSize($defaultPageSizeOffsetPaginator)
+        ->withCurrentPage($page)
+        ->withSort($sort)  
+        ->withToken(PageToken::next((string)$page));
+    
     $grid_summary = $s->grid_summary(
-        $paginator, 
+        $sortedAndPagedPaginator, 
         $translator, 
         (int) $s->getSetting('default_list_limit'), 
         $translator->translate('invoice.delivery.location.plural'),
@@ -205,21 +233,28 @@ $toolbar = Div::tag();
         Form::tag()->post($urlGenerator->generate('del/index'))->csrf($csrf)->open() .
         Div::tag()->addClass('float-end m-3')->content($toolbarReset)->encode(false)->render() .
         Form::tag()->close();
+    
     echo GridView::widget()
     ->rowAttributes(['class' => 'align-middle'])
     ->tableAttributes(['class' => 'table table-striped text-center h-191', 'id' => 'table-delivery'])
-    ->columns(...$columns)
-    ->dataReader($paginator)          
+    ->columns(...$columns) 
+    ->dataReader($sortedAndPagedPaginator)
+    ->urlCreator($urlCreator)
+    // the up and down symbol will appear at first indicating that the column can be sorted 
+    // Ir also appears in this state if another column has been sorted        
+    ->sortableHeaderPrepend('<div class="float-end text-secondary text-opacity-50">⭥</div>')
+    // the up arrow will appear if column values are ascending          
+    ->sortableHeaderAscPrepend('<div class="float-end fw-bold">⭡</div>')
+    // the down arrow will appear if column values are descending        
+    ->sortableHeaderDescPrepend('<div class="float-end fw-bold">⭣</div>')        
+    ->headerTableEnabled(true)        
     ->headerRowAttributes(['class' => 'card-header bg-info text-black'])
     ->header($header)
     ->id('w341-grid')
     ->pagination(
-      OffsetPagination::widget()
-      ->paginator($paginator)
-      ->render(),
+        $gridComponents->offsetPaginationWidget($defaultPageSizeOffsetPaginator, $sortedAndPagedPaginator)
     )
-    ->summaryAttributes(['class' => 'mt-3 me-3 summary text-end'])
-    ->summaryTemplate($grid_summary)
+    ->summaryTemplate($pageSizeLimiter::buttons($currentRoute, $s, $urlGenerator, 'del').' '.$grid_summary)        
     ->emptyTextAttributes(['class' => 'card-header bg-warning text-black'])
     ->emptyText($translator->translate('invoice.invoice.no.records'))
     ->toolbar($toolbarString);

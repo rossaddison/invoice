@@ -9,17 +9,21 @@ use Yiisoft\Html\Tag\Div;
 use Yiisoft\Html\Tag\Form;
 use Yiisoft\Html\Tag\H5;
 use Yiisoft\Html\Tag\I;
+use Yiisoft\Data\Paginator\OffsetPaginator;
+use Yiisoft\Data\Paginator\PageToken;
+use Yiisoft\Data\Reader\OrderHelper;
+use Yiisoft\Data\Reader\Sort;
 use Yiisoft\Yii\DataView\Column\DataColumn;
 use Yiisoft\Yii\DataView\Column\ActionColumn;
 use Yiisoft\Yii\DataView\GridView;
-use Yiisoft\Yii\DataView\OffsetPagination;
-use Yiisoft\Yii\DataView\UrlConfig;
 use Yiisoft\Yii\DataView\YiiRouter\UrlCreator;
 
 /**
  * @var App\Invoice\Setting\SettingRepository $s
+ * @var App\Widget\GridComponents $gridComponents
  * @var App\Widget\PageSizeLimiter $pageSizeLimiter
- * @var Yiisoft\Router\CurrentRoute $currentRoute 
+ * @var Yiisoft\Router\CurrentRoute $currentRoute
+ * @var Yiisoft\Data\Cycle\Reader\EntityReader $products 
  * @var Yiisoft\Data\Paginator\OffsetPaginator $paginator
  * @var Yiisoft\Translator\TranslatorInterface $translator 
  * @var Yiisoft\Router\UrlGeneratorInterface $urlGenerator
@@ -27,8 +31,10 @@ use Yiisoft\Yii\DataView\YiiRouter\UrlCreator;
  * @var Yiisoft\Yii\DataView\YiiRouter\UrlCreator $urlCreator
  * @var int $defaultPageSizeOffsetPaginator
  * @var string $alert
- * @var string $csrf 
- * @psalm-var array<array-key, array<array-key, string>|string>  $optionsDataProductsDropdownFilter
+ * @var string $csrf
+ * @var string $sortString 
+ * @psalm-var array<array-key, array<array-key, string>|string> $optionsDataProductsDropdownFilter
+ * @psalm-var positive-int $page
  */ 
  
  echo $alert;
@@ -195,22 +201,37 @@ use Yiisoft\Yii\DataView\YiiRouter\UrlCreator;
     ];       
 ?>
 <?php
+    $urlCreator = new UrlCreator($urlGenerator);
+    $urlCreator->__invoke([], OrderHelper::stringToArray($sortString));
+    $sort = Sort::only(['id', 'family_id', 'unit_id', 'tax_rate_id',
+                        'product_name', 'product_sku', 'product_price', 'product_description', 'product_price_base_quantity'
+                       ])
+            ->withOrderString($sortString); 
+    
+    $sortedAndPagedPaginator = (new OffsetPaginator($products))
+        ->withPageSize((int)$s->getSetting('default_list_limit'))
+        ->withCurrentPage($page)
+        ->withSort($sort)    
+        ->withToken(PageToken::next((string)$page));
+
     $grid_summary = $s->grid_summary(
-        $paginator, 
+        $sortedAndPagedPaginator, 
         $translator, 
         (int)$s->getSetting('default_list_limit'), 
         $translator->translate('invoice.products'),
         ''
     );
+    
     $toolbarString = Form::tag()->post($urlGenerator->generate('product/index'))->csrf($csrf)->open() .
         Div::tag()->addClass('float-end m-3')->content($toolbarFilter)->encode(false)->render() .    
         Div::tag()->addClass('float-end m-3')->content($toolbarReset)->encode(false)->render() .
         Form::tag()->close();
+    
     echo GridView::widget()
     ->rowAttributes(['class' => 'align-middle'])
     ->tableAttributes(['class' => 'table table-striped text-center h-75','id'=>'table-product'])
     ->columns(...$columns)
-    ->dataReader($paginator)    
+    ->dataReader($sortedAndPagedPaginator)    
     ->urlCreator($urlCreator)
     // the up and down symbol will appear at first indicating that the column can be sorted 
     // Ir also appears in this state if another column has been sorted        
@@ -226,25 +247,8 @@ use Yiisoft\Yii\DataView\YiiRouter\UrlCreator;
     ->header($header)
     ->id('w4-grid')
     ->pagination(
-    OffsetPagination::widget()
-        /**
-         * @link https://getbootstrap.com/docs/5.0/components/pagination/
-         */    
-        ->listTag('ul')    
-        ->listAttributes(['class' => 'pagination'])
-        ->itemTag('li')
-        ->itemAttributes(['class' => 'page-item'])
-        ->linkAttributes(['class' => 'page-link'])
-        ->currentItemClass('active')
-        ->currentLinkClass('page-link')
-        ->disabledItemClass('disabled')
-        ->disabledLinkClass('disabled')
-        ->defaultPageSize($defaultPageSizeOffsetPaginator)
-        ->urlConfig(new UrlConfig()) 
-        ->urlCreator(new UrlCreator($urlGenerator))        
-        ->paginator($paginator)
-        ->render()
-    )
+        $gridComponents->offsetPaginationWidget($defaultPageSizeOffsetPaginator, $sortedAndPagedPaginator)
+    )       
     ->summaryAttributes(['class' => 'mt-3 me-3 summary text-end'])
     ->summaryTemplate($pageSizeLimiter::buttons($currentRoute, $s, $urlFastRouteGenerator, 'product').' '.$grid_summary)
     ->emptyTextAttributes(['class' => 'card-header bg-warning text-black'])

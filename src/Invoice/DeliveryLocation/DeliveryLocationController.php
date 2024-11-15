@@ -17,10 +17,9 @@ use App\User\UserService;
 use App\Service\WebControllerService;
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
-use Yiisoft\Data\Paginator\OffsetPaginator;
-use Yiisoft\Data\Paginator\PageToken;
 use Yiisoft\DataResponse\DataResponseFactoryInterface;
 use Yiisoft\Http\Method;
+use Yiisoft\Input\Http\Attribute\Parameter\Query;
 use Yiisoft\Router\CurrentRoute;
 use Yiisoft\Session\SessionInterface;
 use Yiisoft\Session\Flash\Flash;
@@ -71,37 +70,36 @@ final class DeliveryLocationController
     }
 
     /**
-     * @see config/common/routes/routes.php 'del/index'
-     * @see Currently the accesschecker only allows an administrator for delivery locations i.e. no viewInv permissions granted
-     * @param CurrentRoute $currentRoute
+     * @see ../resources/views/invoice/del/index.php
      * @param DeliveryLocationRepository $delRepository
      * @param SettingRepository $sR
      * @param CR $cR
      * @param IR $iR
      * @param QR $qR
+     * @param string $queryPage
+     * @param string $querySort
      * @return Response
      */
-    public function index(CurrentRoute $currentRoute, DeliveryLocationRepository $delRepository, SettingRepository $sR, CR $cR, IR $iR, QR $qR): Response
+    public function index(DeliveryLocationRepository $delRepository, 
+                          SettingRepository $sR, 
+                          CR $cR, 
+                          IR $iR, 
+                          QR $qR,
+                          #[Query('page')] string $queryPage = null,
+                          #[Query('sort')] string $querySort = null,): Response
     {
-        $page = (int)$currentRoute->getArgument('page', '1');
         /** @psalm-var positive-int $currentPageNeverZero */
-        $currentPageNeverZero = $page > 0 ? $page : 1;
-        $dels = $delRepository->findAllPreloaded();
-        $paginator = (new OffsetPaginator($dels))
-          ->withPageSize((int) $sR->getSetting('default_list_limit'))
-          ->withCurrentPage($currentPageNeverZero)
-          ->withToken(PageToken::next((string)$page));
+        $currentPageNeverZero = (int)$queryPage > 0 ? (int)$queryPage : 1;
         $this->add_in_invoice_flash();
         $parameters = [
-          'dels' => $this->dels($delRepository),
-          'alert' => $this->alert(),
-          'paginator' => $paginator,
-          'cR' => $cR,
-          // Use the invoice Repository to locate all the invoices relevant to this location
-          'iR' => $iR,
-          'qR' => $qR,
-          'alerts' => $this->alert(),
-          'max' => (int) $sR->getSetting('default_list_limit'),
+            'alert' => $this->alert(),
+            'cR' => $cR,
+            'dels' => $this->dels($delRepository),
+            'iR' => $iR,
+            'page' => $currentPageNeverZero,
+            // Use the invoice Repository to locate all the invoices relevant to this location
+            'qR' => $qR,
+            'sortString' => $querySort ?? '-id'
         ];
         return $this->viewRenderer->render('del/index', $parameters);
     }

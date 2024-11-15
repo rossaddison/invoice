@@ -118,7 +118,6 @@ use App\Invoice\Libraries\Crypt;
 // Yii
 use Yiisoft\Data\Paginator\OffsetPaginator;
 use Yiisoft\Data\Reader\Sort;
-use Yiisoft\Data\Reader\OrderHelper;
 use Yiisoft\DataResponse\DataResponseFactoryInterface;
 use Yiisoft\FormModel\FormHydrator;
 use Yiisoft\Http\Method;
@@ -133,7 +132,6 @@ use Yiisoft\Session\SessionInterface;
 use Yiisoft\Session\Flash\Flash;
 use Yiisoft\Translator\TranslatorInterface;
 use Yiisoft\User\CurrentUser;
-use Yiisoft\Yii\DataView\YiiRouter\UrlCreator;
 use Yiisoft\Yii\View\Renderer\ViewRenderer;
 // Psr\Http
 use Psr\Log\LoggerInterface;
@@ -2155,11 +2153,7 @@ final class InvController
             // All, Draft, Sent ... filter governed by routes eg. invoice.myhost/invoice/inv/page/1/status/1 => #[RouteArgument('page')] string $page etc
             $page = $queryPage ?? $page;
             //status 0 => 'all';
-            $status = (int) $status;            
-            $sortString = $querySort ?? '-id';            
-            $urlCreator = new UrlCreator($this->url_generator);
-            $order =  OrderHelper::stringToArray($sortString);
-            $urlCreator->__invoke([], $order);
+            $status = (int) $status;
             $invs = $this->invs_status($invRepo, $status);
             if (isset($queryFilterInvNumber) && !empty($queryFilterInvNumber)) {
                 $invs = $invRepo->filterInvNumber($queryFilterInvNumber);
@@ -2215,7 +2209,6 @@ final class InvController
                 'modal_create_recurring_multiple' =>  $this->index_modal_create_recurring_multiple($irR),
                 'modal_copy_inv_multiple' => $this->index_modal_copy_inv_multiple(),
                 'sortString' => $querySort ?? '-id',
-                'urlCreator' => $urlCreator,
                 'visible' => $visible == '0' ? false : true,
                 'visibleToggleInvSentLogColumn' => $visibleToggleInvSentLogColumn == '0' ? false : true
             ];
