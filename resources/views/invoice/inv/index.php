@@ -16,6 +16,8 @@ use Yiisoft\Html\Tag\I;
 use Yiisoft\Html\Tag\Input;
 use Yiisoft\Html\Tag\Input\Checkbox;
 use Yiisoft\Html\Tag\Label;
+use Yiisoft\Yii\DataView\Column\ActionButton;
+use Yiisoft\Yii\DataView\Column\ActionColumn;
 use Yiisoft\Yii\DataView\Column\Base\DataContext;
 use Yiisoft\Yii\DataView\Column\CheckboxColumn;
 use Yiisoft\Yii\DataView\Column\ColumnInterface;
@@ -245,7 +247,54 @@ $toolbar = Div::tag();
                 return '';
             },
             multiple: true           
-        ),         
+        ),
+        new ActionColumn(buttons: [
+                new ActionButton(
+                   content: '✎',
+                   url: static function(Inv $inv) use ($urlGenerator) : string {
+                       return $urlGenerator->generate('inv/edit', ['id' => $inv->getId()]);     
+                   },
+                   attributes: [
+                       'style' => 'text-decoration:none',
+                       'data-bs-toggle' => 'tooltip',
+                       'title' => $translator->translate('i.edit'),
+                   ]      
+                ), 
+                new ActionButton(
+                   url: static function(Inv $inv) use ($translator, $urlGenerator) : string {
+                       return $urlGenerator->generate('inv/pdf', ['include' => 0]);     
+                   },
+                   attributes: [
+                       'style' => 'text-decoration:none',
+                       'data-bs-toggle' => 'tooltip',
+                       'title' => $translator->translate('i.download_pdf'),
+                       'class' => 'bi bi-file-pdf'
+                   ]        
+                ),
+                new ActionButton(
+                   url: static function(Inv $inv) use ($translator, $urlGenerator) : string {
+                       return $urlGenerator->generate('inv/pdf', ['include' => 1]);     
+                   },
+                   attributes: [
+                       'style' => 'text-decoration:none',
+                       'data-bs-toggle' => 'tooltip',
+                       'title' => $translator->translate('i.download_pdf').'➡️'.$translator->translate('invoice.custom.field'),
+                       'class' => 'bi bi-file-pdf-fill'    
+                   ],        
+                ),
+                new ActionButton(
+                   content: '📨',
+                   url: static function(Inv $inv) use ($urlGenerator) : string {
+                       return $urlGenerator->generate('inv/email_stage_0', ['id' => $inv->getId()]);     
+                   },
+                   attributes: [
+                       'style' => 'text-decoration:none',
+                       'data-bs-toggle' => 'tooltip',
+                       'title' => $translator->translate('i.email')
+                   ],       
+                ),                      
+            ]
+        ),          
         new DataColumn(
             'id',    
             header: 'id',

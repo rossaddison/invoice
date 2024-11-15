@@ -2209,6 +2209,7 @@ final class InvController
                 'modal_create_recurring_multiple' =>  $this->index_modal_create_recurring_multiple($irR),
                 'modal_copy_inv_multiple' => $this->index_modal_copy_inv_multiple(),
                 'sortString' => $querySort ?? '-id',
+                'viewRenderer' => $this->view_renderer,
                 'visible' => $visible == '0' ? false : true,
                 'visibleToggleInvSentLogColumn' => $visibleToggleInvSentLogColumn == '0' ? false : true
             ];
