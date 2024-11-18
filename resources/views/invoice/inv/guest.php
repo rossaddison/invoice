@@ -15,6 +15,8 @@ use Yiisoft\Data\Paginator\PageToken;
 use Yiisoft\Data\Reader\Sort;
 use Yiisoft\Data\Reader\OrderHelper;
 use Yiisoft\Yii\DataView\GridView;
+use Yiisoft\Yii\DataView\Column\ActionButton;
+use Yiisoft\Yii\DataView\Column\ActionColumn;
 use Yiisoft\Yii\DataView\Column\DataColumn;
 use Yiisoft\Yii\DataView\Column\ColumnInterface;
 use Yiisoft\Yii\DataView\YiiRouter\UrlCreator;
@@ -139,6 +141,31 @@ echo $alert;
             content: static fn (Inv $model) => $model->getId(),
             withSorting: true
         ),
+        new ActionColumn(buttons: [
+                new ActionButton(
+                   url: static function(Inv $model) use ($translator, $urlGenerator) : string {
+                       return $urlGenerator->generate('inv/pdf', ['include' => 0]);     
+                   },
+                   attributes: [
+                       'style' => 'text-decoration:none',
+                       'data-bs-toggle' => 'tooltip',
+                       'title' => $translator->translate('i.download_pdf'),
+                       'class' => 'bi bi-file-pdf'
+                   ]        
+                ),
+                new ActionButton(
+                   url: static function(Inv $model) use ($translator, $urlGenerator) : string {
+                       return $urlGenerator->generate('inv/pdf', ['include' => 1]);     
+                   },
+                   attributes: [
+                       'style' => 'text-decoration:none',
+                       'data-bs-toggle' => 'tooltip',
+                       'title' => $translator->translate('i.download_pdf').'➡️'.$translator->translate('invoice.custom.field'),
+                       'class' => 'bi bi-file-pdf-fill'    
+                   ],        
+                ),                    
+            ]
+        ),  
         new DataColumn(
             'status_id',
             header: $translator->translate('i.status'),

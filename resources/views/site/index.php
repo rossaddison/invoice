@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 use Yiisoft\Html\Html;
 use Yiisoft\Html\Tag\Img;
-use Yiisoft\Html\Tag\Label;
 use Yiisoft\Yii\Bootstrap5\Carousel;
+use Yiisoft\Yii\Bootstrap5\CarouselItem;
 
 /**
  * @var App\Invoice\Setting\SettingRepository $s
@@ -33,38 +33,43 @@ use Yiisoft\Yii\Bootstrap5\Carousel;
 <?= Html::closeTag('div'); ?>
 
 <?= Carousel::widget()
-    ->items([
-        [
-            'content' => '<div class="bg-dark" style="height: '.$divHeight.'px; text-align: center"><br>'.
-                            Img::tag()
-                            ->src('/img/step1.jpg')
-                            ->size($w, $h)
-                            ->render().
-                         '</div>',
-            'caption' => $translator->translate('home.caption.slide1'),
-            'captionOptions' => ['class' => ['d-none', 'd-md-block']],
-        ],
-        [
-            'content' => '<div class="bg-dark" style="height: '.$divHeight.'px; text-align: center"><br>'.
-                            Img::tag()
-                            ->src('/img/step2.jpg')
-                            ->size($w, $h)
-                            ->render().
-                         '</div>',
-            'caption' => $translator->translate('home.caption.slide2'),
-            'captionOptions' => ['class' => ['d-none', 'd-md-block']],
-        ],
-        [
-            'content' => '<div class="bg-dark" style="height: '.$divHeight.'px; text-align: center"><br>'.
-                            Img::tag()
-                            ->src('/img/step3.jpg')
-                            ->size($w, $h)
-                            ->render().
-                         '</div>',
-            'caption' => $translator->translate('home.caption.slide3'),
-            'captionOptions' => ['class' => ['d-none', 'd-md-block']],
-        ],
-    ]);        
+    ->items(
+        new CarouselItem(
+            content:'<div class="bg-dark" style="height: '.$divHeight.'px; text-align: center"><br>'.
+                        Img::tag()
+                        ->src('/img/step1.jpg')
+                        ->size($w, $h)
+                        ->render().
+                    '</div>',
+            active: true,
+            caption: $translator->translate('home.caption.slide1'),
+            encodeCaption: false,
+            captionAttributes: ['class' => ['d-none', 'd-md-block']]    
+        ),
+        new CarouselItem(
+            content:'<div class="bg-dark" style="height: '.$divHeight.'px; text-align: center"><br>'.
+                        Img::tag()
+                        ->src('/img/step2.jpg')
+                        ->size($w, $h)
+                        ->render().
+                    '</div>',
+            caption: $translator->translate('home.caption.slide2'),
+            encodeCaption: true,
+            captionAttributes: ['class' => ['d-none', 'd-md-block']]    
+        ),
+        new CarouselItem(
+            content:'<div class="bg-dark" style="height: '.$divHeight.'px; text-align: center"><br>'.
+                        Img::tag()
+                        ->src('/img/step3.jpg')
+                        ->size($w, $h)
+                        ->render().
+                    '</div>',
+            caption: $translator->translate('home.caption.slide3'),
+            encodeCaption: true,
+            captionAttributes: ['class' => ['d-none', 'd-md-block']]    
+        )
+    )
+    ->render();        
 ?>           
         
 <?= Html::openTag('div', ['class' => 'container mt-5']); ?>

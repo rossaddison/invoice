@@ -163,11 +163,8 @@ return [
   'yiisoft/translator' => [
     'locale' => 'en',
     'fallbackLocale' => 'en',
-    'defaultCategory' => 'app',
-    'categorySources' => [
-      Reference::to('translation.app'),
-    ],
-  ],
+    'defaultCategory' => 'app'
+  ],  
   'yiisoft/view' => [
     'basePath' => '@views',
     'parameters' => [

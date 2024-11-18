@@ -116,6 +116,7 @@ use App\Widget\Bootstrap5ModalTranslatorMessageWithoutAction;
 // Libraries
 use App\Invoice\Libraries\Crypt;
 // Yii
+use Yiisoft\Aliases\Aliases;
 use Yiisoft\Data\Paginator\OffsetPaginator;
 use Yiisoft\Data\Reader\Sort;
 use Yiisoft\DataResponse\DataResponseFactoryInterface;
@@ -2109,7 +2110,7 @@ final class InvController
      * @param string $queryFilterDateCreatedYearMonth
      * @return \Yiisoft\DataResponse\DataResponse|Response
      */
-    public function index(
+    public function index(  
         IR $invRepo,
         IRR $irR,
         ISLR $islR,

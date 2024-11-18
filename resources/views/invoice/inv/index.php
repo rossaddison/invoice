@@ -285,7 +285,11 @@ $toolbar = Div::tag();
                 new ActionButton(
                    content: '📨',
                    url: static function(Inv $inv) use ($urlGenerator) : string {
-                       return $urlGenerator->generate('inv/email_stage_0', ['id' => $inv->getId()]);     
+                        // draft invoices cannot be emailed
+                        if ($inv->getStatus_id() !== 1) {
+                            return $urlGenerator->generate('inv/email_stage_0', ['id' => $inv->getId()]);
+                        }
+                        return '';
                    },
                    attributes: [
                        'style' => 'text-decoration:none',
