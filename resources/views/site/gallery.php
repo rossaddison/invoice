@@ -37,7 +37,6 @@ use Yiisoft\Yii\Bootstrap5\CarouselItem;
                         ->size($w, $h)
                         ->render().
                     '</div>',
-            active: true,
             caption: $translator->translate('gallery.caption.slide2'),
             encodeCaption: false,
             captionAttributes: ['class' => ['d-none', 'd-md-block']]    
@@ -49,7 +48,6 @@ use Yiisoft\Yii\Bootstrap5\CarouselItem;
                         ->size($w, $h)
                         ->render().
                     '</div>',
-            active: true,
             caption: $translator->translate('gallery.caption.slide3'),
             encodeCaption: false,
             captionAttributes: ['class' => ['d-none', 'd-md-block']]    
@@ -61,7 +59,6 @@ use Yiisoft\Yii\Bootstrap5\CarouselItem;
                         ->size($w, $h)
                         ->render().
                     '</div>',
-            active: true,
             caption: $translator->translate('gallery.caption.slide4'),
             encodeCaption: false,
             captionAttributes: ['class' => ['d-none', 'd-md-block']]    
@@ -73,7 +70,6 @@ use Yiisoft\Yii\Bootstrap5\CarouselItem;
                         ->size($w, $h)
                         ->render().
                     '</div>',
-            active: true,
             caption: $translator->translate('gallery.caption.slide5'),
             encodeCaption: false,
             captionAttributes: ['class' => ['d-none', 'd-md-block']]    
@@ -85,7 +81,6 @@ use Yiisoft\Yii\Bootstrap5\CarouselItem;
                         ->size($w, $h)
                         ->render().
                     '</div>',
-            active: true,
             caption: $translator->translate('gallery.caption.slide6'),
             encodeCaption: false,
             captionAttributes: ['class' => ['d-none', 'd-md-block']]    
@@ -97,7 +92,6 @@ use Yiisoft\Yii\Bootstrap5\CarouselItem;
                         ->size($w, $h)
                         ->render().
                     '</div>',
-            active: true,
             caption: $translator->translate('gallery.caption.slide7'),
             encodeCaption: false,
             captionAttributes: ['class' => ['d-none', 'd-md-block']]    
@@ -109,7 +103,6 @@ use Yiisoft\Yii\Bootstrap5\CarouselItem;
                         ->size($w, $h)
                         ->render().
                     '</div>',
-            active: true,
             caption: $translator->translate('gallery.caption.slide8'),
             encodeCaption: false,
             captionAttributes: ['class' => ['d-none', 'd-md-block']]    
@@ -121,7 +114,6 @@ use Yiisoft\Yii\Bootstrap5\CarouselItem;
                         ->size($w, $h)
                         ->render().
                     '</div>',
-            active: true,
             caption: $translator->translate('gallery.caption.slide9'),
             encodeCaption: false,
             captionAttributes: ['class' => ['d-none', 'd-md-block']]    
@@ -133,7 +125,6 @@ use Yiisoft\Yii\Bootstrap5\CarouselItem;
                         ->size($w, $h)
                         ->render().
                     '</div>',
-            active: true,
             caption: $translator->translate('gallery.caption.slide10'),
             encodeCaption: false,
             captionAttributes: ['class' => ['d-none', 'd-md-block']]    
@@ -145,7 +136,6 @@ use Yiisoft\Yii\Bootstrap5\CarouselItem;
                         ->size($w, $h)
                         ->render().
                     '</div>',
-            active: true,
             caption: $translator->translate('gallery.caption.slide11'),
             encodeCaption: false,
             captionAttributes: ['class' => ['d-none', 'd-md-block']]    
@@ -157,7 +147,6 @@ use Yiisoft\Yii\Bootstrap5\CarouselItem;
                         ->size($w, $h)
                         ->render().
                     '</div>',
-            active: true,
             caption: $translator->translate('gallery.caption.slide12'),
             encodeCaption: false,
             captionAttributes: ['class' => ['d-none', 'd-md-block']]    
@@ -169,7 +158,6 @@ use Yiisoft\Yii\Bootstrap5\CarouselItem;
                         ->size($w, $h)
                         ->render().
                     '</div>',
-            active: true,
             caption: $translator->translate('gallery.caption.slide13'),
             encodeCaption: false,
             captionAttributes: ['class' => ['d-none', 'd-md-block']]    
@@ -181,7 +169,6 @@ use Yiisoft\Yii\Bootstrap5\CarouselItem;
                         ->size($w, $h)
                         ->render().
                     '</div>',
-            active: true,
             caption: $translator->translate('gallery.caption.slide14'),
             encodeCaption: false,
             captionAttributes: ['class' => ['d-none', 'd-md-block']]    
@@ -193,7 +180,6 @@ use Yiisoft\Yii\Bootstrap5\CarouselItem;
                         ->size($w, $h)
                         ->render().
                     '</div>',
-            active: true,
             caption: $translator->translate('gallery.caption.slide15'),
             encodeCaption: false,
             captionAttributes: ['class' => ['d-none', 'd-md-block']]    
