@@ -110,6 +110,12 @@ $this->setTitle($title);
                         ]
                     ],
                     [
+                        'label' => str_repeat(' ', 1).$translator->translate('menu.accreditations'),
+                        'url' => $urlGenerator->generate('site/accreditations'),
+                        'visible' => $isGuest,
+                        'linkOptions' => ['class' => 'bi bi-patch-check']
+                    ],
+                    [
                         'label' => str_repeat(' ', 1).$translator->translate('menu.gallery'),
                         'url' => $urlGenerator->generate('site/gallery'),
                         'visible' => $isGuest,

@@ -36,6 +36,7 @@ use Yiisoft\Db\Mysql\Dsn;
 use Yiisoft\Files\FileHelper;
 use Yiisoft\FormModel\FormHydrator;
 use Yiisoft\Http\Method;
+use Yiisoft\Input\Http\Attribute\Parameter\Query;
 use Yiisoft\Json\Json;
 use Yiisoft\Router\CurrentRoute;
 use Yiisoft\Security\Random;
@@ -139,7 +140,8 @@ final class SettingController
         GR $gR,
         PM $pm,
         SettingRepository $sR,
-        TR $tR
+        TR $tR,
+        #[Query('active')] string $active = null,
     ): Response {
 
         $aliases = new Aliases(['@invoice' => dirname(__DIR__),
@@ -160,6 +162,12 @@ final class SettingController
             'defat' => $sR->withKey('default_language'),
             'actionName' => 'setting/tab_index',
             'actionArguments' => [],
+            /**
+             * Make the 'general' tab active by default unless through an outside urlGenerator query Parameter e.g.
+             * http://invoice.myhost/invoice/setting/tab_index?active=mpdf
+             * @see config/common/routes/routes.php Route::methods([Method::GET, Method::POST], '/setting/tab_index[/{active:\d+}]') 
+             */
+            'active' => $active ?? 'general',
             'alert' => $this->alert(),
             'head' => $head,
             'body' => $body,

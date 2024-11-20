@@ -91,6 +91,9 @@ return [
     Route::methods([Method::GET, Method::POST], '/about')
     ->action([SiteController::class, 'about'])
     ->name('site/about'),
+    Route::methods([Method::GET, Method::POST], '/accreditations')
+    ->action([SiteController::class, 'accreditations'])
+    ->name('site/accreditations'),
     Route::methods([Method::GET, Method::POST], '/adminmustmakeactive')
     ->action([SiteController::class, 'adminmustmakeactive'])
     ->name('site/adminmustmakeactive'),
@@ -1909,7 +1912,7 @@ return [
       ->middleware(Authentication::class)
       ->action([SettingController::class, 'save'])
       ->name('setting/save'),
-      Route::methods([Method::GET, Method::POST], '/setting/tab_index')
+      Route::methods([Method::GET, Method::POST], '/setting/tab_index[/{active:\d+}]')
       ->middleware(fn(AccessChecker $checker) => $checker->withPermission('editInv'))
       ->middleware(Authentication::class)
       ->action([SettingController::class, 'tab_index'])

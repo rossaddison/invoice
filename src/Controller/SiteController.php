@@ -23,6 +23,11 @@ final class SiteController
         return $this->viewRenderer->render('about');
     }
     
+    public function accreditations(): \Yiisoft\DataResponse\DataResponse
+    {
+        return $this->viewRenderer->render('accreditations');
+    }
+    
     public function gallery(): \Yiisoft\DataResponse\DataResponse
     {
         return $this->viewRenderer->render('gallery');

@@ -1759,6 +1759,7 @@ return [
     'layout.title' => 'Title',
     'layout.total.posts' => 'Total {count} posts',
     'menu.about' => 'About',
+    'menu.accreditations' => 'Accreditations',
     'menu.blog' => 'Blog',
     'menu.comments-feed' => 'Comments Feed',
     'menu.contact.details' => 'Contact Details',

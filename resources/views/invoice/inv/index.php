@@ -673,3 +673,4 @@ $toolbar = Div::tag();
 <?php echo $modal_add_inv; ?>
 <?php echo $modal_create_recurring_multiple; ?>
 <?php echo $modal_copy_inv_multiple; ?>
+<?php echo Html::a('test', $urlGenerator->generate('setting/tab_index', [], ['active' => 'invoices']).'#settings[email_invoice_template]')->render(); ?>

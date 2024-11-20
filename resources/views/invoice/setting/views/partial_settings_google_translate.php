@@ -10,9 +10,8 @@
      * @var array $locales
      */
 ?>
-<?= Html::openTag('div', ['class' => 'row']); ?>
+<div class="row">
     <div class="col-xs-12 col-md-8 col-md-offset-2">
-
         <div class="panel panel-default">
             <div class="panel-heading">
                 <?= 'Google Translate'; ?>
