@@ -3941,16 +3941,16 @@
         },
         {
             "name": "mollie/mollie-api-php",
-            "version": "v2.74.1",
+            "version": "v2.75.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/mollie/mollie-api-php.git",
-                "reference": "6401783472a2a423386e66bd4d6ab3b3173b1b73"
+                "reference": "ac2052855c631b90092768cf6657f6d5b2f5dd9f"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/mollie/mollie-api-php/zipball/6401783472a2a423386e66bd4d6ab3b3173b1b73",
-                "reference": "6401783472a2a423386e66bd4d6ab3b3173b1b73",
+                "url": "https://api.github.com/repos/mollie/mollie-api-php/zipball/ac2052855c631b90092768cf6657f6d5b2f5dd9f",
+                "reference": "ac2052855c631b90092768cf6657f6d5b2f5dd9f",
                 "shasum": ""
             },
             "require": {
@@ -4027,9 +4027,9 @@
             ],
             "support": {
                 "issues": "https://github.com/mollie/mollie-api-php/issues",
-                "source": "https://github.com/mollie/mollie-api-php/tree/v2.74.1"
+                "source": "https://github.com/mollie/mollie-api-php/tree/v2.75.0"
             },
-            "time": "2024-10-30T10:30:13+00:00"
+            "time": "2024-11-21T10:33:16+00:00"
         },
         {
             "name": "moneyphp/money",
@@ -8511,16 +8511,16 @@
         },
         {
             "name": "stripe/stripe-php",
-            "version": "v16.2.0",
+            "version": "v16.3.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/stripe/stripe-php.git",
-                "reference": "813ae4961755af28a13bda451689f7a6ed6498cb"
+                "reference": "48af6bc64ca8157b3fdce100e856069963bac466"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/stripe/stripe-php/zipball/813ae4961755af28a13bda451689f7a6ed6498cb",
-                "reference": "813ae4961755af28a13bda451689f7a6ed6498cb",
+                "url": "https://api.github.com/repos/stripe/stripe-php/zipball/48af6bc64ca8157b3fdce100e856069963bac466",
+                "reference": "48af6bc64ca8157b3fdce100e856069963bac466",
                 "shasum": ""
             },
             "require": {
@@ -8564,9 +8564,9 @@
             ],
             "support": {
                 "issues": "https://github.com/stripe/stripe-php/issues",
-                "source": "https://github.com/stripe/stripe-php/tree/v16.2.0"
+                "source": "https://github.com/stripe/stripe-php/tree/v16.3.0"
             },
-            "time": "2024-10-29T21:15:53+00:00"
+            "time": "2024-11-20T23:30:16+00:00"
         },
         {
             "name": "swagger-api/swagger-ui",

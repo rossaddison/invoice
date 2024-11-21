@@ -16,6 +16,8 @@ use Yiisoft\Html\Tag\I;
 use Yiisoft\Html\Tag\Input;
 use Yiisoft\Html\Tag\Input\Checkbox;
 use Yiisoft\Html\Tag\Label;
+use Yiisoft\Yii\Bootstrap5\Breadcrumbs;
+use Yiisoft\Yii\Bootstrap5\Link;
 use Yiisoft\Yii\DataView\Column\ActionButton;
 use Yiisoft\Yii\DataView\Column\ActionColumn;
 use Yiisoft\Yii\DataView\Column\Base\DataContext;
@@ -140,21 +142,84 @@ $toggleColumnInvSentLog = A::tag()
         ->id('btn-all-visible')
         ->render();
 
+$enabledAddInvoiceButton = A::tag()
+        ->addAttributes([
+            'class' => 'btn btn-info', 
+            'data-bs-toggle' => 'modal', 
+            'style' => 'text-decoration:none'
+        ])
+        ->content('➕')
+        ->href('#modal-add-inv')
+        ->id('btn-enabled-invoice-add-button')
+        ->render();
+
+$disabledAddInvoiceButton = A::tag()
+        ->addAttributes([
+            'class' => 'btn btn-info', 
+            'data-bs-toggle' => 'tooltip', 
+            'title' => $translator->translate('i.add_client'),
+            'disabled' => 'disabled', 
+            'style' => 'text-decoration:none',
+        ])
+        ->content('➕')
+        ->href('#modal-add-inv')
+        ->id('btn-disabled-invoice-add-button')
+        ->render();
+
 $toolbar = Div::tag();
+
+ echo Breadcrumbs::widget()
+     ->links(
+         new Link($translator->translate('i.default_invoice_group'), 
+                  $urlGenerator->generate('setting/tab_index', 
+                  [], ['active' => 'invoices']).'#settings[default_invoice_group]',
+                attributes: [
+                    'data-bs-toggle' => 'tooltip',
+                    'title' => $defaultInvoiceGroup ?? $s->getSetting('i.not_set')
+                ]
+         ),    
+         new Link($translator->translate('i.default_terms'), 
+                  $urlGenerator->generate('setting/tab_index', 
+                  [], ['active' => 'invoices']).'#settings[default_invoice_terms]',
+                attributes: [
+                    'data-bs-toggle' => 'tooltip', 
+                    'title' => $s->getSetting('default_invoice_terms')  ?: $s->getSetting('i.not_set')
+                ]
+         ), 
+         new Link($translator->translate('i.default_payment_method'), 
+                  $urlGenerator->generate('setting/tab_index', 
+                  [], ['active' => 'invoices']).'#settings[default_invoice_payment_method]',
+                attributes: [
+                    'data-bs-toggle' => 'tooltip',
+                    'title' => $defaultInvoicePaymentMethod ?? $s->getSetting('i.not_set')
+                ]
+         ), 
+         new Link($translator->translate('i.invoices_due_after'), 
+                  $urlGenerator->generate('setting/tab_index', 
+                  [], ['active' => 'invoices']).'#settings[invoices_due_after]',
+                attributes: [
+                    'data-bs-toggle' => 'tooltip',
+                    'title' => $s->getSetting('invoices_due_after') ?: $s->getSetting('i.not_set')
+                ]
+         ), 
+         new Link($translator->translate('i.generate_invoice_number_for_draft'), 
+                  $urlGenerator->generate('setting/tab_index', 
+                  [], ['active' => 'invoices']).'#settings[generate_invoice_number_for_draft]',
+                attributes: [
+                    'data-bs-toggle' => 'tooltip',
+                    'title' => $s->getSetting('generate_invoice_number_for_draft') == '1' ? '✅' : '❌'
+                ] 
+         ), 
+         new Link($translator->translate('i.recurring'), 
+                  $urlGenerator->generate('invrecurring/index')),
+         new Link($translator->translate('i.set_to_read_only').' '. $iR->getSpecificStatusArrayEmoji((int)$s->getSetting('read_only_toggle')) ,
+                  $urlGenerator->generate('setting/tab_index', 
+                  [], ['active' => 'invoices']).'#settings[read_only_toggle]'),        
+     )
+     ->listId(false)
+     ->render();
 ?>
 <div>
-    <h5><?= $translator->translate('i.invoice'); ?></h5>
-    <div class="btn-group">
-        <?php if ($clientCount === 0) { ?>
-            <a href="#modal-add-inv" class="btn btn-success" data-bs-toggle="modal" disabled data-bs-toggle = "tooltip" title="<?= $translator->translate('i.add_client'); ?>">
-                <i class="fa fa-plus"></i><?= $translator->translate('i.new'); ?>
-            </a>
-        <?php } else { ?>
-            <a href="#modal-add-inv" class="btn btn-success" data-bs-toggle="modal">
-                <i class="fa fa-plus"></i><?= $translator->translate('i.new'); ?>
-            </a>
-        <?php } ?>
-    </div>
     <br>
     <div class="submenu-row">
         <!--  Route::get('/inv[/page/{page:\d+}[/status/{status:\d+}]]') -->
@@ -471,7 +536,7 @@ $toolbar = Div::tag();
         new DataColumn(
             property: 'filterInvAmountTotal',    
             field: 'id',
-            header: $translator->translate('i.total') . ' ( '. $s->getSetting('currency_symbol'). ' ) ',
+            header: $translator->translate('i.total') . '➡️'. $s->getSetting('currency_symbol'),
             content: static function (Inv $model) use ($decimalPlaces) : string {
                 $invAmountTotal = $model->getInvAmount()->getTotal();
                 return
@@ -487,7 +552,7 @@ $toolbar = Div::tag();
         ),       
         new DataColumn(
             'id',
-            header: $translator->translate('i.paid') . ' ( '. $s->getSetting('currency_symbol'). ' ) ',
+            header: $translator->translate('i.paid') . '➡️'. $s->getSetting('currency_symbol'),
             content: static function (Inv $model) use ($decimalPlaces) : string {
                 $invAmountPaid = $model->getInvAmount()->getPaid();
                 return Label::tag()
@@ -501,7 +566,7 @@ $toolbar = Div::tag();
         ),         
          new DataColumn(
             'id',
-            header: $translator->translate('i.balance')  . ' ( '. $s->getSetting('currency_symbol'). ' ) ',
+            header: $translator->translate('i.balance')  . '➡️'. $s->getSetting('currency_symbol'),
             content: static function (Inv $model) use ($decimalPlaces) : string {
                 $invAmountBalance = $model->getInvAmount()->getBalance(); 
                 return  Label::tag()
@@ -615,6 +680,10 @@ $toolbar = Div::tag();
         Div::tag()->addClass('float-end m-3')->content($markAsSent)->encode(false)->render() .  
         // use the checkboxcolumn to mark invoices as recurring
         Div::tag()->addClass('float-end m-3')->content($markAsRecurringMultiple)->encode(false)->render() .     
+        ($clientCount == 0 
+            ? Div::tag()->addClass('float-end m-3')->content($disabledAddInvoiceButton)->encode(false)->render()
+            : Div::tag()->addClass('float-end m-3')->content($enabledAddInvoiceButton)->encode(false)->render()   
+        ).
         Form::tag()->close(); 
     
     $urlCreator = new UrlCreator($urlGenerator);
@@ -652,13 +721,14 @@ $toolbar = Div::tag();
     // the up arrow will appear if column values are ascending          
     ->sortableHeaderAscPrepend('<div class="float-end fw-bold">⭡</div>')
     // the down arrow will appear if column values are descending        
-    ->sortableHeaderDescPrepend('<div class="float-end fw-bold">⭣</div>')        
+    ->sortableHeaderDescPrepend('<div class="float-end fw-bold">⭣</div>') 
+    ->filterCellAttributes(['style' => 'max-width: 100px;'])        
     ->headerTableEnabled(true)        
     ->headerRowAttributes(['class' => 'card-header bg-info text-black'])
     ->footerEnabled(true) 
     ->emptyCell($translator->translate('i.not_set'))
     ->emptyCellAttributes(['style' => 'color:red'])  
-    ->header($gridComponents->header(' ' . $translator->translate('i.invoice')))
+    //->header($gridComponents->header(' ' . $translator->translate('i.invoice')))
     ->id('w3-grid')     
     ->pagination(
         $gridComponents->offsetPaginationWidget($defaultPageSizeOffsetPaginator, $sortedAndPagedPaginator)
@@ -673,4 +743,3 @@ $toolbar = Div::tag();
 <?php echo $modal_add_inv; ?>
 <?php echo $modal_create_recurring_multiple; ?>
 <?php echo $modal_copy_inv_multiple; ?>
-<?php echo Html::a('test', $urlGenerator->generate('setting/tab_index', [], ['active' => 'invoices']).'#settings[email_invoice_template]')->render(); ?>

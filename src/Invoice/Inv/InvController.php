@@ -2095,6 +2095,7 @@ final class InvController
      * @param CR $clientRepo
      * @param GR $groupRepo
      * @param QR $qR
+     * @param PMR $pmR
      * @param SOR $soR
      * @param DLR $dlR
      * @param UCR $ucR
@@ -2117,6 +2118,7 @@ final class InvController
         CR $clientRepo,
         GR $groupRepo,
         QR $qR,
+        PMR $pmR,        
         SOR $soR,
         DLR $dlR,
         UCR $ucR,
@@ -2186,6 +2188,14 @@ final class InvController
                 'decimalPlaces' => (int)$this->sR->getSetting('tax_rate_decimal_places'),
                 'defaultPageSizeOffsetPaginator' => $this->sR->getSetting('default_list_limit')
                                                     ? (int)$this->sR->getSetting('default_list_limit') : 1,
+                'defaultInvoiceGroup' => null!==($gR = ($groupRepo->repoGroupquery($this->sR->getSetting('default_invoice_group')))) 
+                                            ? (strlen($groupName = $gR->getName() ?? '') > 0 ? $groupName 
+                                                                                               : $this->sR->getSetting('i.not_set'))  
+                                            : $this->sR->getSetting('i.not_set'),
+                'defaultInvoicePaymentMethod' =>  null!==($pmR = ($pmR->repoPaymentMethodquery($this->sR->getSetting('invoice_default_payment_method')))) 
+                                            ? (strlen($paymentMethodName = $pmR->getName() ?? '') > 0 ? $paymentMethodName 
+                                                                                                : $this->sR->getSetting('i.not_set'))  
+                                            : $this->sR->getSetting('i.not_set'),
                 // numbered tiles between the arrrows
                 'maxNavLinkCount' => 10,
                 'invs' => $invs,

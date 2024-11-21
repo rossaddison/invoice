@@ -363,7 +363,20 @@ $this->beginPage();
                       ['options' => ['class' => 'nav fs-4', 'style' => 'background-color: #ffcccb'], 'label' => '8.3', 'url' => 'https://php.watch/versions/8.3'],
                       ['options' => ['class' => 'nav fs-4', 'style' => 'background-color: #ffcccb'], 'label' => '8.4', 'url' => 'https://php.watch/versions/8.4'],  
                     ],  
-                   ], 
+                   ],
+    // Emojipedia.org
+                  ['label' => '😀', 'options' => ['style' => 'background-color: #ffcccb'], 'visible' => $debugMode,
+                    'linkOptions' => [
+                        'style' => 'font-size: 2rem; color: cornflowerblue;',
+                        'data-bs-toggle' => 'dropdown',
+                    ],
+                    'items' => [
+                      ['options' => ['class' => 'nav fs-4', 'style' => 'background-color: #ffcccb'], 'label' => '✅', 'url' => 'https://emojipedia.org/check-mark-button'],
+                      ['options' => ['class' => 'nav fs-4', 'style' => 'background-color: #ffcccb'], 'label' => '❌', 'url' => 'https://emojipedia.org/cross-mark'],
+                      ['options' => ['class' => 'nav fs-4', 'style' => 'background-color: #ffcccb'], 'label' => '⬅️', 'url' => 'https://emojipedia.org/left-arrow'],
+                      ['options' => ['class' => 'nav fs-4', 'style' => 'background-color: #ffcccb'], 'label' => '➡️', 'url' => 'https://emojipedia.org/right-arrow'],  
+                    ],  
+                   ],    
     // Platform                  
                   ['label' => $translator->translate('invoice.platform'), 'options' => ['style' => 'background-color: #ffcccb'], 'visible' => $debugMode,
                     'items' => [

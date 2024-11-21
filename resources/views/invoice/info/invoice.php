@@ -47,7 +47,12 @@
 <p>Introducing India's PayTm payment gateway's QR code method of payment and comparing this with Stripe's method.</p>
 <p>A General Sales Tax (GST) Tax System will have to be implemented first for this purpose.</p>
 <p>Testing Credit Notes against Invoices with refunds (if payment made) linked to each of the payment gateways.</p>
-<p><b>11th November 2024</b></p>
+<p><b>21st November 2024</b></p>
+<p>Created redirect links from the inv/index breadcrumbs to specific settings in settings views e.g. invoice</p>
+<p>Each link shows the current setting with a tooltip</p>
+<p><b>16th November 2024</b></p>
+<p>Include 4 action buttons in the action column of the inv/index</p>
+<p><b>13th November 2024</b></p>
 <p>The read only toggle gets set to a status e.g. draft, sent, viewed, paid which serves as a comparison when to set the invoice to read-only. Included a few more checks.</p>
 <p><b>11th November 2024</b></p>
 <p>1. Email with pdf attachment testing</p>
