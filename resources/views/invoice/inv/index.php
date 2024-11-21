@@ -547,7 +547,8 @@ $toolbar = Div::tag();
                                 : number_format(0, $decimalPlaces)))
                         ->render();
             },
-            filter: true,
+            filter: \Yiisoft\Yii\DataView\Filter\Widget\TextInputFilter::widget()
+                    ->addAttributes(['style' =>'max-width: 50px']),
             withSorting: false        
         ),       
         new DataColumn(
@@ -722,7 +723,6 @@ $toolbar = Div::tag();
     ->sortableHeaderAscPrepend('<div class="float-end fw-bold">⭡</div>')
     // the down arrow will appear if column values are descending        
     ->sortableHeaderDescPrepend('<div class="float-end fw-bold">⭣</div>') 
-    ->filterCellAttributes(['style' => 'max-width: 100px;'])        
     ->headerTableEnabled(true)        
     ->headerRowAttributes(['class' => 'card-header bg-info text-black'])
     ->footerEnabled(true) 
