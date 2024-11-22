@@ -327,22 +327,24 @@ $toolbar = Div::tag();
                 ), 
                 new ActionButton(
                    url: static function(Inv $inv) use ($translator, $urlGenerator) : string {
-                       return $urlGenerator->generate('inv/pdf', ['include' => 0]);     
+                       return $urlGenerator->generate('inv/pdf_dashboard_exclude_cf', ['id' => $inv->getId()]);     
                    },
                    attributes: [
                        'style' => 'text-decoration:none',
                        'data-bs-toggle' => 'tooltip',
+                       'target' => '_blank',
                        'title' => $translator->translate('i.download_pdf'),
                        'class' => 'bi bi-file-pdf'
                    ]        
                 ),
                 new ActionButton(
                    url: static function(Inv $inv) use ($translator, $urlGenerator) : string {
-                       return $urlGenerator->generate('inv/pdf', ['include' => 1]);     
+                       return $urlGenerator->generate('inv/pdf_dashboard_include_cf', ['id' => $inv->getId()]);     
                    },
                    attributes: [
                        'style' => 'text-decoration:none',
                        'data-bs-toggle' => 'tooltip',
+                       'target' => '_blank',
                        'title' => $translator->translate('i.download_pdf').'➡️'.$translator->translate('invoice.custom.field'),
                        'class' => 'bi bi-file-pdf-fill'    
                    ],        
@@ -734,7 +736,7 @@ $toolbar = Div::tag();
         $gridComponents->offsetPaginationWidget($defaultPageSizeOffsetPaginator, $sortedAndPagedPaginator)
     )
     ->summaryAttributes(['class' => 'mt-3 me-3 summary text-end'])    
-    ->summaryTemplate($pageSizeLimiter::buttons($currentRoute, $s, $urlGenerator, 'inv').' '.$grid_summary)
+    ->summaryTemplate($pageSizeLimiter::buttons($currentRoute, $s, $translator, $urlGenerator, 'inv').' '.$grid_summary)
     ->emptyTextAttributes(['class' => 'card-header bg-warning text-black'])
     ->emptyText($translator->translate('invoice.invoice.no.records'))
     ->toolbar($toolbarString);     

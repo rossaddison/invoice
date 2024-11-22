@@ -148,6 +148,6 @@ $toolbar = Div::tag();
          ->paginator($paginator)
          ->render(),
     )
-    ->summaryTemplate($pageSizeLimiter::buttons($routeCurrent, $s, $urlFastRouteGenerator, 'postaladdress').' '.$grid_summary)
+    ->summaryTemplate($pageSizeLimiter::buttons($routeCurrent, $s, $translator, $urlFastRouteGenerator, 'postaladdress').' '.$grid_summary)
     ->summaryAttributes(['class' => 'mt-3 me-3 summary text-end'])
     ->toolbar($toolbarString);

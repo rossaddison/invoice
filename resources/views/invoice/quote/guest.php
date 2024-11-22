@@ -191,7 +191,7 @@ $toolbar = Div::tag();
        $gridComponents->offsetPaginationWidget($defaultPageSizeOffsetPaginator, $paginator)
     )
     ->summaryAttributes(['class' => 'mt-3 me-3 summary text-end'])
-    ->summaryTemplate(($editInv ? $pageSizeLimiter::buttons($currentRoute, $s, $urlGenerator, 'quote') : '').' '.$grid_summary)
+    ->summaryTemplate(($editInv ? $pageSizeLimiter::buttons($currentRoute, $s, $translator, $urlGenerator, 'quote') : '').' '.$grid_summary)
     ->emptyTextAttributes(['class' => 'card-header bg-warning text-black'])
     ->emptyText($translator->translate('invoice.invoice.no.records'))
     ->toolbar($toolbarString);          

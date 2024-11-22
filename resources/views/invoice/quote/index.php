@@ -359,7 +359,7 @@ echo Breadcrumbs::widget()
     /**
      * @see config/common/params.php `yiisoft/view` => ['parameters' => ['pageSizeLimiter' ... No need to be in inv/index
      */        
-    ->summaryTemplate($pageSizeLimiter::buttons($currentRoute, $s, $urlGenerator, 'quote').' '.$grid_summary)
+    ->summaryTemplate($pageSizeLimiter::buttons($currentRoute, $s, $translator, $urlGenerator, 'quote').' '.$grid_summary)
     ->emptyTextAttributes(['class' => 'card-header bg-warning text-black'])
     ->emptyText($translator->translate('invoice.invoice.no.records'))
     ->toolbar($toolbarString);

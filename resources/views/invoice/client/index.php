@@ -316,7 +316,7 @@ echo $alert;
         $gridComponents->offsetPaginationWidget($defaultPageSizeOffsetPaginator, $paginator) 
     )
     ->summaryAttributes(['class' => 'mt-3 me-3 summary text-end'])
-    ->summaryTemplate($pageSizeLimiter::buttons($currentRoute, $s, $urlGenerator, 'client').' '.$grid_summary)
+    ->summaryTemplate($pageSizeLimiter::buttons($currentRoute, $s, $translator, $urlGenerator, 'client').' '.$grid_summary)
     ->emptyTextAttributes(['class' => 'card-header bg-warning text-black'])
     ->emptyText($translator->translate('invoice.invoice.no.records'))
     ->toolbar($toolbarString);

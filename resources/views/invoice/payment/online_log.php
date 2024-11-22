@@ -118,5 +118,5 @@ $columns = [
     /**
      * @see config/common/params.php `yiisoft/view` => ['parameters' => ['pageSizeLimiter' ... No need to be in payment/index
      */    
-    ->summaryTemplate($pageSizeLimiter::buttons($currentRoute, $s, $urlGenerator, 'payment').' '.$grid_summary)
+    ->summaryTemplate($pageSizeLimiter::buttons($currentRoute, $s, $translator, $urlGenerator, 'payment').' '.$grid_summary)
     ->toolbar($toolbarString);

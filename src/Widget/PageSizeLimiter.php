@@ -13,19 +13,33 @@ use Yiisoft\Translator\TranslatorInterface as Translator;
 
 final class PageSizeLimiter
 {
-    public static function Buttons(CurrentRoute $currentRoute, sR $sR, UrlGenerator $urlGenerator, string $origin): string
+    public static function buttons(CurrentRoute $currentRoute, sR $sR, Translator $translator, UrlGenerator $urlGenerator, string $origin): string
     {
         $defaultListLimit = $sR->getSetting('default_list_limit');
         $setting = $sR->withKey('default_list_limit');
         $setting_id = '';
         $buttons = '';
+        // The user can click on the first button showing list limit and it will redirect to the actual setting for the list limit 
+        // under the general tab
+        $adjustListLimitButton = A::tag()
+        ->addAttributes([
+            'data-bs-toggle' => 'tooltip',
+            'title' => $translator->translate('i.default_list_limit')
+        ])
+        ->addClass('btn btn-success me-1')        
+        ->content($defaultListLimit)
+        ->href(
+            $urlGenerator->generate('setting/tab_index', [], ['active' => 'general']).'#settings[default_list_limit]',
+        )
+        ->id('btn-submit-'.$defaultListLimit)
+        ->render();        
         if (null !== $setting) {
             $setting_id = $setting->getSetting_id();
-            $limits_array = [(int)$defaultListLimit, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 15, 20, 25, 50, 75, 100, 150, 200, 250, 300];
+            $limits_array = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 15, 20, 25, 50, 75, 100, 150, 200, 250, 300];
             foreach ($limits_array as $value) {
                 $buttons .= A::tag()
                 ->addAttributes(['type' => 'submit'])
-                ->addClass($value == $defaultListLimit ? 'btn btn-success me-1' : 'btn btn-danger me-1')
+                ->addClass('btn btn-danger me-1')
                 ->content((string)$value)
                 ->href(
                     $urlGenerator->generate(
@@ -40,7 +54,7 @@ final class PageSizeLimiter
                 ->render();
             }
         }
-        return $buttons;
+        return $adjustListLimitButton.$buttons;
     }
 
     /**
