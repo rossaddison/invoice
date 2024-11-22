@@ -1668,6 +1668,10 @@ final class QuoteController
                 ),
                 'defaultPageSizeOffsetPaginator' => $this->sR->getSetting('default_list_limit')
                                                         ? (int)$this->sR->getSetting('default_list_limit') : 1,
+                'defaultQuoteGroup' => null!==($gR = ($groupRepo->repoGroupquery($this->sR->getSetting('default_quote_group')))) 
+                                            ? (strlen($groupName = $gR->getName() ?? '') > 0 ? $groupName 
+                                                                                             : $this->sR->getSetting('i.not_set'))  
+                                            : $this->sR->getSetting('i.not_set'),
                 'quoteStatuses' => $quote_statuses,
                 'max' => (int)$sR->getSetting('default_list_limit'),
                 'qR' => $quoteRepo,

@@ -175,7 +175,7 @@ $toolbar = Div::tag();
                   [], ['active' => 'invoices']).'#settings[default_invoice_group]',
                 attributes: [
                     'data-bs-toggle' => 'tooltip',
-                    'title' => $defaultInvoiceGroup ?? $s->getSetting('i.not_set')
+                    'title' => $defaultInvoiceGroup ?? $translator->translate('i.not_set')
                 ]
          ),    
          new Link($translator->translate('i.default_terms'), 
@@ -183,7 +183,7 @@ $toolbar = Div::tag();
                   [], ['active' => 'invoices']).'#settings[default_invoice_terms]',
                 attributes: [
                     'data-bs-toggle' => 'tooltip', 
-                    'title' => $s->getSetting('default_invoice_terms')  ?: $s->getSetting('i.not_set')
+                    'title' => $s->getSetting('default_invoice_terms')  ?: $translator->translate('i.not_set')
                 ]
          ), 
          new Link($translator->translate('i.default_payment_method'), 
@@ -191,7 +191,7 @@ $toolbar = Div::tag();
                   [], ['active' => 'invoices']).'#settings[default_invoice_payment_method]',
                 attributes: [
                     'data-bs-toggle' => 'tooltip',
-                    'title' => $defaultInvoicePaymentMethod ?? $s->getSetting('i.not_set')
+                    'title' => $defaultInvoicePaymentMethod ?? $translator->translate('i.not_set')
                 ]
          ), 
          new Link($translator->translate('i.invoices_due_after'), 
@@ -199,7 +199,7 @@ $toolbar = Div::tag();
                   [], ['active' => 'invoices']).'#settings[invoices_due_after]',
                 attributes: [
                     'data-bs-toggle' => 'tooltip',
-                    'title' => $s->getSetting('invoices_due_after') ?: $s->getSetting('i.not_set')
+                    'title' => $s->getSetting('invoices_due_after') ?: $translator->translate('i.not_set')
                 ]
          ), 
          new Link($translator->translate('i.generate_invoice_number_for_draft'), 

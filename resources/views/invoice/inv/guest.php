@@ -247,7 +247,8 @@ echo $alert;
                                 : number_format(0, $decimalPlaces)))
                         ->render();
             },
-            filter: true,
+            filter: \Yiisoft\Yii\DataView\Filter\Widget\TextInputFilter::widget()
+                    ->addAttributes(['style' =>'max-width: 50px']),
             withSorting: false        
         ),        
         new DataColumn(

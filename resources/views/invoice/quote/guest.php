@@ -114,12 +114,14 @@ $toolbar = Div::tag();
             withSorting: true           
         ),
         new DataColumn(
-            'number',
-            header: '#',
+            field: 'number',
+            property: 'filterQuoteNumber',
+            header: $translator->translate('invoice.quote.number'),        
             content: static function (Quote $model) use ($urlGenerator): string {
                return Html::a($model->getNumber() ?? '#', $urlGenerator->generate('quote/view',['id'=>$model->getId()]),['style'=>'text-decoration:none'])->render();
-            },
-            withSorting: true        
+            }, 
+            filter:\Yiisoft\Yii\DataView\Filter\Widget\TextInputFilter::widget()
+                    ->addAttributes(['style' =>'max-width: 80px']),
         ),
         new DataColumn(
             'client_id',

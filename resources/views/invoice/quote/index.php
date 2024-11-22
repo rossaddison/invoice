@@ -10,6 +10,8 @@ use Yiisoft\Html\Tag\Form;
 use Yiisoft\Html\Tag\H5;
 use Yiisoft\Html\Tag\I;
 use Yiisoft\Html\Tag\Label;
+use Yiisoft\Yii\Bootstrap5\Breadcrumbs;
+use Yiisoft\Yii\Bootstrap5\Link;
 use Yiisoft\Yii\DataView\Column\DataColumn;
 use Yiisoft\Yii\DataView\GridView;
 
@@ -63,23 +65,89 @@ $toolbarReset = A::tag()
     ->id('btn-reset')
     ->render();
 
+$enabledAddQuoteButton = A::tag()
+    ->addAttributes([
+        'class' => 'btn btn-info', 
+        'data-bs-toggle' => 'modal', 
+        'style' => 'text-decoration:none'
+    ])
+    ->content('➕')
+    ->href('#modal-add-quote')
+    ->id('btn-enabled-quote-add-button')
+    ->render();
+
+$disabledAddQuoteButton = A::tag()
+    ->addAttributes([
+        'class' => 'btn btn-info', 
+        'data-bs-toggle' => 'tooltip', 
+        'title' => $translator->translate('i.add_client'),
+        'disabled' => 'disabled', 
+        'style' => 'text-decoration:none',
+    ])
+    ->content('➕')
+    ->href('#modal-add-quote')
+    ->id('btn-disabled-quote-add-button')
+    ->render();
+
 $toolbar = Div::tag();
+
+echo Breadcrumbs::widget()
+     ->links(
+         new Link($translator->translate('i.default_quote_group'), 
+                  $urlGenerator->generate('setting/tab_index', 
+                  [], ['active' => 'quotes']).'#settings[default_quote_group]',
+                attributes: [
+                    'data-bs-toggle' => 'tooltip',
+                    'title' => $defaultQuoteGroup ?? $translator->translate('i.not_set')
+                ]
+         ),    
+         new Link($translator->translate('i.default_notes'), 
+                  $urlGenerator->generate('setting/tab_index', 
+                  [], ['active' => 'quotes']).'#settings[default_quote_notes]',
+                attributes: [
+                    'data-bs-toggle' => 'tooltip', 
+                    'title' => $s->getSetting('default_quote_notes')  ?: $translator->translate('i.not_set')
+                ]
+         ), 
+         new Link($translator->translate('i.quotes_expire_after'), 
+                  $urlGenerator->generate('setting/tab_index', 
+                  [], ['active' => 'quotes']).'#settings[quotes_expire_after]',
+                attributes: [
+                    'data-bs-toggle' => 'tooltip',
+                    'title' => $s->getSetting('quotes_expire_after') ?: $translator->translate('i.not_set')
+                ]
+         ), 
+         new Link($translator->translate('i.generate_quote_number_for_draft'), 
+                  $urlGenerator->generate('setting/tab_index', 
+                  [], ['active' => 'quotes']).'#settings[generate_quote_number_for_draft]',
+                attributes: [
+                    'data-bs-toggle' => 'tooltip',
+                    'title' => $s->getSetting('generate_quote_number_for_draft') == '1' ? '✅' : '❌'
+                ] 
+         ),
+         new Link($translator->translate('i.default_email_template'), 
+                  $urlGenerator->generate('setting/tab_index', 
+                  [], ['active' => 'quotes']).'#settings[email_quote_template]',
+                attributes: [
+                    'data-bs-toggle' => 'tooltip', 
+                    'title' => strlen($s->getSetting('email_quote_template')) > 0  ? $s->getSetting('email_quote_template') : $translator->translate('i.not_set')
+                ]
+         ),       
+         new Link($translator->translate('i.pdf_quote_footer'), 
+                  $urlGenerator->generate('setting/tab_index', 
+                  [], ['active' => 'quotes']).'#settings[pdf_quote_footer]',
+                attributes: [
+                    'data-bs-toggle' => 'tooltip', 
+                    'title' => $s->getSetting('pdf_quote_footer')  ?: $translator->translate('i.not_set')
+                ]
+         ),     
+     )
+     ->listId(false)
+     ->render();
+
 ?>
 
 <div>
-    <h5><?= $translator->translate('i.quote'); ?></h5>
-    <div class="btn-group">
-        <?php if ($clientCount === 0) { ?>
-        <a href="#modal-add-quote" class="btn btn-success" data-bs-toggle="modal" disabled data-bs-toggle = "tooltip" title="<?= $translator->translate('i.add_client'); ?>">
-            <i class="fa fa-plus"></i><?= $translator->translate('i.new'); ?>
-        </a>
-        <?php } else { ?>
-        <a href="#modal-add-quote" class="btn btn-success" data-bs-toggle="modal">
-            <i class="fa fa-plus"></i><?= $translator->translate('i.new'); ?>
-        </a>
-        <?php } ?>
-    </div>
-    <br>
     <br>
     <div class="submenu-row">
             <div class="btn-group index-options">
@@ -199,7 +267,8 @@ $toolbar = Div::tag();
             content: static function (Quote $model) use ($urlGenerator): string {
                return Html::a($model->getNumber() ?? '#', $urlGenerator->generate('quote/view',['id'=>$model->getId()]),['style'=>'text-decoration:none'])->render();
             }, 
-            filter: true
+            filter:\Yiisoft\Yii\DataView\Filter\Widget\TextInputFilter::widget()
+                    ->addAttributes(['style' =>'max-width: 80px']),
         ),
         new DataColumn(
             'date_created',    
@@ -243,7 +312,8 @@ $toolbar = Div::tag();
                         ->content(Html::encode(null!==$quoteTotal ? number_format($quoteTotal, $decimalPlaces) : number_format(0, $decimalPlaces)))
                         ->render();
             },
-            filter: true,
+            filter: \Yiisoft\Yii\DataView\Filter\Widget\TextInputFilter::widget()
+                    ->addAttributes(['style' =>'max-width: 50px']),
             withSorting: false
         ),      
     ];
@@ -259,6 +329,10 @@ $toolbar = Div::tag();
     $toolbarString = 
         Form::tag()->post($urlGenerator->generate('quote/guest'))->csrf($csrf)->open() .
         Div::tag()->addClass('float-end m-3')->content($toolbarReset)->encode(false)->render() .
+        ($clientCount == 0 
+            ? Div::tag()->addClass('float-end m-3')->content($disabledAddQuoteButton)->encode(false)->render()
+            : Div::tag()->addClass('float-end m-3')->content($enabledAddQuoteButton)->encode(false)->render()   
+        ).    
         Form::tag()->close();
     echo GridView::widget()
     ->rowAttributes(['class' => 'align-middle'])
@@ -276,7 +350,7 @@ $toolbar = Div::tag();
     ->headerRowAttributes(['class'=>'card-header bg-info text-black'])
     ->emptyCell($translator->translate('i.not_set'))
     ->emptyCellAttributes(['style' => 'color:red'])         
-    ->header($header)
+    //->header($header)
     ->id('w2-grid')
     ->pagination(
         $gridComponents->offsetPaginationWidget($defaultPageSizeOffsetPaginator, $paginator)
