@@ -20,7 +20,7 @@ use Yiisoft\Yii\Cycle\Schema\Conveyor\MetadataSchemaConveyor;
 use Yiisoft\Yii\Cycle\Schema\Provider\FromConveyorSchemaProvider;
 use Cycle\Schema\Provider\PhpFileSchemaProvider;
 use Yiisoft\Yii\DataView\Column\DataColumn;
-use Yiisoft\Yii\DataView\OffsetPagination;
+use Yiisoft\Yii\DataView\Pagination\OffsetPagination;
 use Yiisoft\Yii\View\Renderer\CsrfViewInjection;
 // yii3-i
 use App\Invoice\Helpers\ClientHelper;

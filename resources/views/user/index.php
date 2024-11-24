@@ -13,7 +13,7 @@ use Yiisoft\Html\Tag\I;
 use Yiisoft\Html\Tag\Select;
 use Yiisoft\Yii\DataView\Column\DataColumn;
 use Yiisoft\Yii\DataView\GridView;
-use Yiisoft\Yii\DataView\OffsetPagination;
+use Yiisoft\Yii\DataView\Pagination\OffsetPagination;
 
 /** 
  * @var Yiisoft\Data\Paginator\OffsetPaginator $paginator

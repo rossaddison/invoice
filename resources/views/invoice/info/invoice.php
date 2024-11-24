@@ -47,6 +47,11 @@
 <p>Introducing India's PayTm payment gateway's QR code method of payment and comparing this with Stripe's method.</p>
 <p>A General Sales Tax (GST) Tax System will have to be implemented first for this purpose.</p>
 <p>Testing Credit Notes against Invoices with refunds (if payment made) linked to each of the payment gateways.</p>
+<p><b>24th November 2024</b></p>
+<p>Apply https://github.com/yiisoft/yii-dataview/pull/225</p>
+<p><b>22nd November 2024</b></p>
+<p>Bugfix pdf in inv/index</p>
+<p>Clicking on template summary's default list limit button (first button) will redirect to the actual setting in general settings.</p>
 <p><b>21st November 2024</b></p>
 <p>Created redirect links from the inv/index breadcrumbs to specific settings in settings views e.g. invoice</p>
 <p>Each link shows the current setting with a tooltip</p>

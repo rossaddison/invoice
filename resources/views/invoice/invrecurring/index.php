@@ -3,18 +3,13 @@
 declare(strict_types=1);
 
 use App\Invoice\Entity\InvRecurring;
-use App\Widget\Button;
 use Yiisoft\Html\Html;
 use Yiisoft\Html\Tag\A;
 use Yiisoft\Html\Tag\Div;
 use Yiisoft\Html\Tag\Form;
 use Yiisoft\Html\Tag\I;
-use Yiisoft\Html\Tag\Input\Checkbox;
-use Yiisoft\Html\Tag\Label;
 use Yiisoft\Html\Tag\Span;
-use Yiisoft\Yii\DataView\Column\Base\DataContext;
 use Yiisoft\Yii\DataView\Column\ActionColumn;
-use Yiisoft\Yii\DataView\Column\CheckboxColumn;
 use Yiisoft\Yii\DataView\Column\ColumnInterface;
 use Yiisoft\Yii\DataView\Column\DataColumn;
 use Yiisoft\Yii\DataView\GridView;

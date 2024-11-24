@@ -14,7 +14,7 @@ use Yiisoft\Html\Tag\Td;
 use Yiisoft\Html\Tag\Th;
 use Yiisoft\Yii\DataView\Column\DataColumn;
 use Yiisoft\Yii\DataView\GridView;
-use Yiisoft\Yii\DataView\OffsetPagination;
+use Yiisoft\Yii\DataView\Pagination\OffsetPagination;
 use Yiisoft\Yii\DataView\UrlConfig;
 use Yiisoft\Yii\DataView\YiiRouter\UrlCreator;
 

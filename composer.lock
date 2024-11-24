@@ -2396,16 +2396,16 @@
         },
         {
             "name": "firebase/php-jwt",
-            "version": "v6.10.1",
+            "version": "v6.10.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/firebase/php-jwt.git",
-                "reference": "500501c2ce893c824c801da135d02661199f60c5"
+                "reference": "30c19ed0f3264cb660ea496895cfb6ef7ee3653b"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/firebase/php-jwt/zipball/500501c2ce893c824c801da135d02661199f60c5",
-                "reference": "500501c2ce893c824c801da135d02661199f60c5",
+                "url": "https://api.github.com/repos/firebase/php-jwt/zipball/30c19ed0f3264cb660ea496895cfb6ef7ee3653b",
+                "reference": "30c19ed0f3264cb660ea496895cfb6ef7ee3653b",
                 "shasum": ""
             },
             "require": {
@@ -2453,9 +2453,9 @@
             ],
             "support": {
                 "issues": "https://github.com/firebase/php-jwt/issues",
-                "source": "https://github.com/firebase/php-jwt/tree/v6.10.1"
+                "source": "https://github.com/firebase/php-jwt/tree/v6.10.2"
             },
-            "time": "2024-05-18T18:05:11+00:00"
+            "time": "2024-11-24T11:22:49+00:00"
         },
         {
             "name": "gitonomy/gitlib",
@@ -12706,12 +12706,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/yiisoft/db.git",
-                "reference": "ba043b6bb273d7b1c498dea76f7fa4497b0b8ea0"
+                "reference": "6b4bbd47eb9bae16acace57840116aee4de73e64"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/yiisoft/db/zipball/ba043b6bb273d7b1c498dea76f7fa4497b0b8ea0",
-                "reference": "ba043b6bb273d7b1c498dea76f7fa4497b0b8ea0",
+                "url": "https://api.github.com/repos/yiisoft/db/zipball/6b4bbd47eb9bae16acace57840116aee4de73e64",
+                "reference": "6b4bbd47eb9bae16acace57840116aee4de73e64",
                 "shasum": ""
             },
             "require": {
@@ -12785,7 +12785,7 @@
                     "type": "opencollective"
                 }
             ],
-            "time": "2024-11-17T13:50:39+00:00"
+            "time": "2024-11-23T01:35:33+00:00"
         },
         {
             "name": "yiisoft/db-mysql",
@@ -12793,12 +12793,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/yiisoft/db-mysql.git",
-                "reference": "e3fad7bf71314393f942f9fb09d7b55e4013af3a"
+                "reference": "47ded78b7308d932cc0234fcef3af11d48ec124d"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/yiisoft/db-mysql/zipball/e3fad7bf71314393f942f9fb09d7b55e4013af3a",
-                "reference": "e3fad7bf71314393f942f9fb09d7b55e4013af3a",
+                "url": "https://api.github.com/repos/yiisoft/db-mysql/zipball/47ded78b7308d932cc0234fcef3af11d48ec124d",
+                "reference": "47ded78b7308d932cc0234fcef3af11d48ec124d",
                 "shasum": ""
             },
             "require": {
@@ -12861,7 +12861,7 @@
                     "type": "opencollective"
                 }
             ],
-            "time": "2024-11-17T13:16:57+00:00"
+            "time": "2024-11-23T01:35:40+00:00"
         },
         {
             "name": "yiisoft/definitions",
@@ -16277,12 +16277,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/yiisoft/yii-dataview.git",
-                "reference": "3394978b539e97333015664bb77f78f86cd8f276"
+                "reference": "b49c129151f18b99e6543c3869ec60ac13610527"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/yiisoft/yii-dataview/zipball/3394978b539e97333015664bb77f78f86cd8f276",
-                "reference": "3394978b539e97333015664bb77f78f86cd8f276",
+                "url": "https://api.github.com/repos/yiisoft/yii-dataview/zipball/b49c129151f18b99e6543c3869ec60ac13610527",
+                "reference": "b49c129151f18b99e6543c3869ec60ac13610527",
                 "shasum": ""
             },
             "require": {
@@ -16371,7 +16371,7 @@
                     "type": "opencollective"
                 }
             ],
-            "time": "2024-11-16T09:05:43+00:00"
+            "time": "2024-11-24T11:52:49+00:00"
         },
         {
             "name": "yiisoft/yii-debug",
@@ -16379,12 +16379,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/yiisoft/yii-debug.git",
-                "reference": "d46d4a892fb57e6a439a686197ce188659e9b69f"
+                "reference": "b532c445ba09d52dfbe878303b00b9cfc8b7acc1"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/yiisoft/yii-debug/zipball/d46d4a892fb57e6a439a686197ce188659e9b69f",
-                "reference": "d46d4a892fb57e6a439a686197ce188659e9b69f",
+                "url": "https://api.github.com/repos/yiisoft/yii-debug/zipball/b532c445ba09d52dfbe878303b00b9cfc8b7acc1",
+                "reference": "b532c445ba09d52dfbe878303b00b9cfc8b7acc1",
                 "shasum": ""
             },
             "require": {
@@ -16477,7 +16477,7 @@
                     "type": "opencollective"
                 }
             ],
-            "time": "2024-11-11T19:46:02+00:00"
+            "time": "2024-11-23T17:55:10+00:00"
         },
         {
             "name": "yiisoft/yii-debug-api",

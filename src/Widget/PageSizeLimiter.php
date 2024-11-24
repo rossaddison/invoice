@@ -29,7 +29,7 @@ final class PageSizeLimiter
         ->addClass('btn btn-success me-1')        
         ->content($defaultListLimit)
         ->href(
-            $urlGenerator->generate('setting/tab_index', [], ['active' => 'general']).'#settings[default_list_limit]',
+            $urlGenerator->generate('setting/tab_index', ['_language' => 'en'], ['active' => 'general']).'#settings[default_list_limit]',
         )
         ->id('btn-submit-'.$defaultListLimit)
         ->render();        
