@@ -25,7 +25,6 @@ use Yiisoft\Yii\DataView\Column\CheckboxColumn;
 use Yiisoft\Yii\DataView\Column\ColumnInterface;
 use Yiisoft\Yii\DataView\Column\DataColumn;
 use Yiisoft\Yii\DataView\GridView;
-use Yiisoft\Yii\DataView\Pagination\OffsetPagination;
 use Yiisoft\Yii\DataView\YiiRouter\UrlCreator;
 
 /**
@@ -317,8 +316,9 @@ $toolbar = Div::tag();
         new ActionColumn(buttons: [
                 new ActionButton(
                    content: '✎',
-                   url: static function(Inv $inv) use ($urlGenerator) : string {
-                       return $urlGenerator->generate('inv/edit', ['id' => $inv->getId()]);     
+                   url: static function(Inv $inv) use ($s, $urlGenerator) : string {
+                        return $inv->getIs_read_only() === false && $s->getSetting('disable_read_only') === (string) 0 ? 
+                            $urlGenerator->generate('inv/edit', ['id' => $inv->getId()]) : '';     
                    },
                    attributes: [
                        'style' => 'text-decoration:none',
@@ -400,15 +400,7 @@ $toolbar = Div::tag();
             },
             filter: $optionsDataInvNumberDropDownFilter,
             withSorting: false        
-        ),           
-        new DataColumn(
-            content: static function (Inv $model) use ($s, $urlGenerator): string {
-                return $model->getIs_read_only() === false && $s->getSetting('disable_read_only') === (string) 0 
-                       ? Html::a('🖉', $urlGenerator->generate('inv/edit', 
-                               ['id' => $model->getId()]), ['style' => 'text-decoration:none'])->render() 
-                       : '';
-            }     
-        ),
+        ), 
         new DataColumn(
             'invsentlogs',
             header: $translator->translate('invoice.email.logs.with.filter'),    
@@ -746,14 +738,4 @@ $toolbar = Div::tag();
 <?php echo $modal_add_inv; ?>
 <?php echo $modal_create_recurring_multiple; ?>
 <?php echo $modal_copy_inv_multiple; ?>
-<?php $array = [0=> [1,2,3],1=> 'one', 'two', 3=> [1,2,3] ];
-      while ($key = array_shift($array)) {
-          echo print_r($key);
-          echo '-----------'.gettype($key).'-------------';
-      }
-      
-echo implode(',', ['name', 'email'])      
-      
-      
-?>
       
