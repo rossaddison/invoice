@@ -142,7 +142,7 @@ $toolbar = Div::tag();
     echo GridView::widget()
         ->columns(...$columns)
         ->dataReader($paginator)        
-        ->rowAttributes(['class' => 'align-middle'])
+        ->bodyRowAttributes(['class' => 'align-middle'])
         ->tableAttributes(['class' => 'table table-striped text-center h-75','id'=>'table-allowancecharge'])
         ->headerRowAttributes(['class'=>'card-header bg-info text-black'])
         ->header($header)

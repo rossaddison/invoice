@@ -104,7 +104,7 @@ echo $alert;
             Div::tag()->addClass('float-end m-3')->content($toolbarReset)->encode(false)->render() .
             Form::tag()->close();
     echo GridView::widget()
-      ->rowAttributes(['class' => 'align-middle'])
+      ->bodyRowAttributes(['class' => 'align-middle'])
       ->tableAttributes(['class' => 'table table-striped text-center h-99999999999999999', 'id' => 'table-productproperty'])
       ->columns(...$columns)
       ->dataReader($paginator)      

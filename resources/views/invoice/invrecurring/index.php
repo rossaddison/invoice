@@ -149,7 +149,7 @@ $toolbar = Div::tag();
         ''
     );
     echo GridView::widget()
-    ->rowAttributes(['class' => 'align-left'])
+    ->bodyRowAttributes(['class' => 'align-left'])
     ->tableAttributes(['class' => 'table table-striped table-responsive h-75', 'id' => 'table-invoice'])
     ->columns(...$columns)
     ->dataReader($paginator)

@@ -228,7 +228,7 @@ use Yiisoft\Yii\DataView\YiiRouter\UrlCreator;
         Form::tag()->close();
     
     echo GridView::widget()
-    ->rowAttributes(['class' => 'align-middle'])
+    ->bodyRowAttributes(['class' => 'align-middle'])
     ->tableAttributes(['class' => 'table table-striped text-center h-75','id'=>'table-product'])
     ->columns(...$columns)
     ->dataReader($sortedAndPagedPaginator)    

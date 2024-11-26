@@ -100,7 +100,7 @@ $toolbar = Div::tag();
         Div::tag()->addClass('float-end m-3')->content($toolbarReset)->encode(false)->render() .
         Form::tag()->close();
     echo GridView::widget()
-    ->rowAttributes(['class' => 'align-middle'])
+    ->bodyRowAttributes(['class' => 'align-middle'])
     ->tableAttributes(['class' => 'table table-striped text-center h-191', 'id' => 'table-delivery'])
     ->columns(...$columns)
     ->dataReader($paginator)

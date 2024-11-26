@@ -93,7 +93,7 @@ echo $alert;
         ''
     );
     echo GridView::widget()
-      ->rowAttributes(['class' => 'align-middle'])
+      ->bodyRowAttributes(['class' => 'align-middle'])
       ->tableAttributes(['class' => 'table table-striped text-center h-99999999999999999', 'id' => 'table-delivery'])
       ->columns(...$columns)
       ->dataReader($paginator)      

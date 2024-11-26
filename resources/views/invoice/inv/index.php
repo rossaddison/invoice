@@ -706,7 +706,7 @@ $toolbar = Div::tag();
     
     echo GridView::widget()
     // unpack the contents within the array using the three dot splat operator
-    ->rowAttributes(['class' => 'align-left'])
+    ->bodyRowAttributes(['class' => 'align-left'])
     ->tableAttributes(['class' => 'table table-striped h-75', 'id' => 'table-invoice'])
     ->columns(...$columns)
     ->dataReader($sortedAndPagedPaginator)
@@ -738,4 +738,5 @@ $toolbar = Div::tag();
 <?php echo $modal_add_inv; ?>
 <?php echo $modal_create_recurring_multiple; ?>
 <?php echo $modal_copy_inv_multiple; ?>
+
       

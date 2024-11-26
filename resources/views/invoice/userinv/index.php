@@ -318,7 +318,7 @@ echo $alert
      * @see vendor\yiisoft\yii-dataview\src\GridView.php for the sequence of functions which can effect rendering
      */
     echo GridView::widget()    
-    ->rowAttributes(['class' => 'align-middle'])        
+    ->bodyRowAttributes(['class' => 'align-middle'])        
     ->tableAttributes(['class' => 'table table-striped text-center h-75','id'=>'table-user-inv'])  
     ->columns(...$columns) 
     ->dataReader($paginator)

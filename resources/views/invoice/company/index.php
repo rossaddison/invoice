@@ -139,7 +139,7 @@ use Yiisoft\Yii\DataView\Pagination\OffsetPagination;
             (int)$s->getSetting('default_list_limit'), 
             $translator->translate('invoice.company.public'), '');  
         echo GridView::widget()
-        ->rowAttributes(['class' => 'align-middle'])
+        ->bodyRowAttributes(['class' => 'align-middle'])
         ->tableAttributes(['class' => 'table table-striped text-center h-75','id'=>'table-contract'])
         ->columns(...$columns)
         ->dataReader($paginator)    

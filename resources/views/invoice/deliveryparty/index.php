@@ -121,7 +121,7 @@ $toolbar = Div::tag();
     $grid_summary = $s->grid_summary($paginator, $translator, (int)$s->getSetting('default_list_limit'),
                   $translator->translate('invoice.invoice.delivery.party'), '');
     echo GridView::widget()
-        ->rowAttributes(['class' => 'align-middle'])
+        ->bodyRowAttributes(['class' => 'align-middle'])
         ->tableAttributes(['class' => 'table table-striped text-center h-75','id'=>'table-deliveryparty'])
         ->columns(...$columns)
         ->dataReader($paginator)        

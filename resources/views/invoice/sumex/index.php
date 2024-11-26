@@ -124,7 +124,7 @@ use Yiisoft\Router\CurrentRoute;
      * @see vendor\yiisoft\yii-dataview\src\GridView.php for the sequence of functions which can effect rendering
      */
     echo GridView::widget()
-    ->rowAttributes(['class' => 'align-middle'])
+    ->bodyRowAttributes(['class' => 'align-middle'])
     ->columns(...$columns)
     ->dataReader($paginator)
     ->headerRowAttributes(['class'=>'card-header bg-info text-black'])

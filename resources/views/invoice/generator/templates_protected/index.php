@@ -113,7 +113,7 @@ use Yiisoft\Yii\DataView\Pagination\OffsetPagination;
         Form::tag()->close();
     $grid_summary = $s->grid_summary($paginator, $translator, (int) $s->getSetting('default_list_limit'), $translator->translate('plural'), '');    
     echo GridView::widget()
-      ->rowAttributes(['class' => 'align-middle'])
+      ->bodyRowAttributes(['class' => 'align-middle'])
       ->tableAttributes(['class' => 'table table-striped text-center h-<?= $random; ?>', 'id' => 'table-<?= $generator->getSmall_singular_name(); ?>'])
       ->columns(...$columns)
       ->dataReader($paginator)

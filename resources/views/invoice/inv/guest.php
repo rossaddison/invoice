@@ -310,7 +310,7 @@ echo $alert;
     $urlCreator->__invoke([], $order); 
     
     echo GridView::widget()
-        ->rowAttributes(['class' => 'align-middle'])
+        ->bodyRowAttributes(['class' => 'align-middle'])
         ->tableAttributes(['class' => 'table table-striped text-center h-75','id'=>'table-invoice-guest'])
         ->columns(...$columns)        
         ->dataReader($sortedAndPagedPaginator)

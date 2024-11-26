@@ -131,7 +131,7 @@ $toolbar = Div::tag();
         Div::tag()->addClass('float-end m-3')->content($toolbarApplyChange . $toolbarReset)->encode(false)->render() .
         Form::tag()->close();
     echo GridView::widget()
-    ->rowAttributes(['class' => 'align-middle'])
+    ->bodyRowAttributes(['class' => 'align-middle'])
     ->tableAttributes(['class' => 'table table-hover'])
     ->dataReader($paginator)    
     ->columns(...$columns)

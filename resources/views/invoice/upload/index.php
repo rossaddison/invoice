@@ -125,7 +125,7 @@ echo $alert;
             Div::tag()->addClass('float-end m-3')->content($toolbarReset)->encode(false)->render() .
             Form::tag()->close();
     echo GridView::widget()
-    ->rowAttributes(['class' => 'align-middle'])
+    ->bodyRowAttributes(['class' => 'align-middle'])
     ->columns(...$columns)    
     ->dataReader($paginator)            
     ->headerRowAttributes(['class'=>'card-header bg-info text-black'])
