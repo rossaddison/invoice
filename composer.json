@@ -52,7 +52,7 @@
         "omnipay/common": "^3.3",
         "omnipay/stripe": "^3.2",
         "php-http/curl-client": "^2.3",
-        "php-http/guzzle7-adapter": "^1.0",
+        "php-http/guzzle7-adapter": "^1.1",
         "phpbench/phpbench": "^1.2",
         "psalm/plugin-symfony": "^5.2",
         "psr/container": "^2.0",
