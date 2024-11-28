@@ -6,6 +6,7 @@ namespace App\User\Console;
 
 use App\User\User;
 use InvalidArgumentException;
+use Stringable;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
@@ -91,7 +92,7 @@ final class AssignRoleCommand extends Command
             }
 
             /**
-             * @var int|object|string $userId
+             * @var Stringable|int|string $userId
              */
             $this->manager->assign($roleName, $userId);
 
