@@ -13499,16 +13499,16 @@
         },
         {
             "name": "yiisoft/html",
-            "version": "3.8.0",
+            "version": "3.9.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/yiisoft/html.git",
-                "reference": "e550e789243c7f8152c42cb69068a01ab1bd9db2"
+                "reference": "037b1251e6344d98211220fb97076ebe65c13e70"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/yiisoft/html/zipball/e550e789243c7f8152c42cb69068a01ab1bd9db2",
-                "reference": "e550e789243c7f8152c42cb69068a01ab1bd9db2",
+                "url": "https://api.github.com/repos/yiisoft/html/zipball/037b1251e6344d98211220fb97076ebe65c13e70",
+                "reference": "037b1251e6344d98211220fb97076ebe65c13e70",
                 "shasum": ""
             },
             "require": {
@@ -13557,7 +13557,7 @@
                     "type": "opencollective"
                 }
             ],
-            "time": "2024-10-29T08:10:04+00:00"
+            "time": "2024-11-29T08:46:06+00:00"
         },
         {
             "name": "yiisoft/http",
@@ -24172,7 +24172,6 @@
     "minimum-stability": "dev",
     "stability-flags": {
         "cebe/markdown": 20,
-        "roave/security-advisories": 20,
         "yiisoft/data": 20,
         "yiisoft/data-cycle": 20,
         "yiisoft/db": 20,
@@ -24183,6 +24182,7 @@
         "yiisoft/yii-bootstrap5": 20,
         "yiisoft/yii-dataview": 20,
         "yiisoft/yii-debug-api": 20,
+        "roave/security-advisories": 20,
         "yiisoft/yii-gii": 20,
         "yiisoft/yii-testing": 20
     },
@@ -24200,6 +24200,6 @@
         "ext-openssl": "*",
         "ext-pdo_sqlite": "*"
     },
-    "platform-dev": {},
+    "platform-dev": [],
     "plugin-api-version": "2.6.0"
 }
