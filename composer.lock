@@ -12044,11 +12044,11 @@
             },
             "type": "library",
             "extra": {
-                "config-plugin-options": {
-                    "source-directory": "config"
-                },
                 "config-plugin": {
                     "params": "params.php"
+                },
+                "config-plugin-options": {
+                    "source-directory": "config"
                 }
             },
             "autoload": {
@@ -14163,12 +14163,12 @@
             },
             "type": "library",
             "extra": {
-                "config-plugin-options": {
-                    "source-directory": "config"
-                },
                 "config-plugin": {
                     "di": "di.php",
                     "params": "params.php"
+                },
+                "config-plugin-options": {
+                    "source-directory": "config"
                 }
             },
             "autoload": {
@@ -15754,12 +15754,12 @@
                 "branch-alias": {
                     "dev-master": "3.0.x-dev"
                 },
-                "config-plugin-options": {
-                    "source-directory": "config"
-                },
                 "config-plugin": {
                     "di": "di.php",
                     "params": "params.php"
+                },
+                "config-plugin-options": {
+                    "source-directory": "config"
                 }
             },
             "autoload": {
@@ -15985,14 +15985,14 @@
             },
             "type": "library",
             "extra": {
-                "config-plugin-options": {
-                    "source-directory": "config"
-                },
                 "config-plugin": {
                     "params": "params.php",
-                    "bootstrap": "bootstrap.php",
                     "widgets": [],
+                    "bootstrap": "bootstrap.php",
                     "widgets-themes": []
+                },
+                "config-plugin-options": {
+                    "source-directory": "config"
                 }
             },
             "autoload": {
@@ -17313,13 +17313,13 @@
             },
             "type": "library",
             "extra": {
+                "config-plugin": {
+                    "di-web": "di-web.php",
+                    "params": "params.php",
+                    "events-web": "events-web.php"
+                },
                 "config-plugin-options": {
                     "source-directory": "config"
-                },
-                "config-plugin": {
-                    "params": "params.php",
-                    "di-web": "di-web.php",
-                    "events-web": "events-web.php"
                 }
             },
             "autoload": {

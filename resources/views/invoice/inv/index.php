@@ -738,5 +738,4 @@ $toolbar = Div::tag();
 <?php echo $modal_add_inv; ?>
 <?php echo $modal_create_recurring_multiple; ?>
 <?php echo $modal_copy_inv_multiple; ?>
-
       

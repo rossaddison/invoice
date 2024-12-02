@@ -1,3 +1,17 @@
+[![Yii2](https://img.shields.io/badge/Powered_by-Yii_Framework-green.svg?style=flat)](https://www.yiiframework.com/) 
+[![License](https://img.shields.io/badge/License-MIT-blue.svg)](https://opensource.org/licenses/MIT) 
+![stable](https://img.shields.io/static/v1?label=No%20Release&message=0.0.0&color=9cf)  
+![Downloads](https://img.shields.io/static/v1?label=Downloads/week&message=185&color=9cf)  
+![Build](https://img.shields.io/static/v1?label=Build&message=Passing&color=66ff00)
+![Dependency Checker](https://img.shields.io/static/v1?label=Dependency%20Checker&message=Passing&color=66ff00) 
+![Static Analysis](https://img.shields.io/static/v1?label=Static%20Analysis&message=Passing&color=66ff00)
+![Psalm Level](https://img.shields.io/static/v1?label=Psalm%20Level&message=1&color=66ff00)
+[![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/rossaddison/invoice/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/rossaddison/invoice/?branch=main)
+[![Code Coverage](https://scrutinizer-ci.com/g/rossaddison/invoice/badges/coverage.png?b=main)](https://scrutinizer-ci.com/g/rossaddison/invoice/?branch=main)
+[![Build](https://scrutinizer-ci.com/g/rossaddison/invoice/badges/build.png?b=main)](https://scrutinizer-ci.com/g/rossaddison/invoice/?branch=main)
+[![type-coverage](https://shepherd.dev/github/rossaddison/invoice/coverage.svg)](https://shepherd.dev/github/rossaddison/invoice)
+[![Github Stats](https://github-readme-stats.vercel.app/aps?username=rossaddison&show_icons=true&theme=transparent)]
+
 (place the contents of this download into yii3-i's invoice folder or run as a separate repository)
 
 # yii3-i's invoice folder 
@@ -110,16 +124,3 @@ outputting it to ````resources/views/generator/output_overwrite.````
 
 * j: Peppol exceptions will be raised.
 
-[![Yii2](https://img.shields.io/badge/Powered_by-Yii_Framework-green.svg?style=flat)](https://www.yiiframework.com/) 
-[![License](https://img.shields.io/badge/License-MIT-blue.svg)](https://opensource.org/licenses/MIT) 
-![stable](https://img.shields.io/static/v1?label=No%20Release&message=0.0.0&color=9cf)  
-![Downloads](https://img.shields.io/static/v1?label=Downloads/week&message=185&color=9cf)  
-![Build](https://img.shields.io/static/v1?label=Build&message=Passing&color=66ff00)
-![Dependency Checker](https://img.shields.io/static/v1?label=Dependency%20Checker&message=Passing&color=66ff00) 
-![Static Analysis](https://img.shields.io/static/v1?label=Static%20Analysis&message=Passing&color=66ff00)
-![Psalm Level](https://img.shields.io/static/v1?label=Psalm%20Level&message=1&color=66ff00)
-[![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/rossaddison/invoice/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/rossaddison/invoice/?branch=main)
-[![Code Coverage](https://scrutinizer-ci.com/g/rossaddison/invoice/badges/coverage.png?b=main)](https://scrutinizer-ci.com/g/rossaddison/invoice/?branch=main)
-[![Build](https://scrutinizer-ci.com/g/rossaddison/invoice/badges/build.png?b=main)](https://scrutinizer-ci.com/g/rossaddison/invoice/?branch=main)
-[![type-coverage](https://shepherd.dev/github/rossaddison/invoice/coverage.svg)](https://shepherd.dev/github/rossaddison/invoice)
-[![Github Stats](https://github-readme-stats.vercel.app/aps?username=rossaddison&show_icons=true&theme=transparent)]
