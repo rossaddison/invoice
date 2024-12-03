@@ -47,6 +47,8 @@
 <p>Introducing India's PayTm payment gateway's QR code method of payment and comparing this with Stripe's method.</p>
 <p>A General Sales Tax (GST) Tax System will have to be implemented first for this purpose.</p>
 <p>Testing Credit Notes against Invoices with refunds (if payment made) linked to each of the payment gateways.</p>
+<p><b>3rd December 2024</b></p>
+<p>Include a 'Front Page' tab under settings giving checkboxes for each of the main pages for inclusion/exlusion into/from the site.</p>
 <p><b>24th November 2024</b></p>
 <p>Apply https://github.com/yiisoft/yii-dataview/pull/225</p>
 <p><b>22nd November 2024</b></p>

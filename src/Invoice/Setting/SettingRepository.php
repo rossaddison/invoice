@@ -1604,6 +1604,10 @@ final class SettingRepository extends Select\Repository
                      'A new nullable field ... belongs_to_vat_invoice...has been introduced in the InvItem entity to allow for companies making this transition. '  ,
             'where' => 'This setting is used in resources/views/invoice/inv/view.php',
         ],
+        'front_page_file_locations_tooltip' => [
+            'why' => 'Check to remove page from menu. These checkbox\'s affect the src\ViewInjection\LayoutViewInjection.php file,',
+            'where' => 'resources\views\invoice\setting\views\partial_settings_front_page.php and src\Invoice\InvoiceController.php function install_default_settings_on_first_run'
+        ],    
         'first_day_of_week' => [
           'why' => 'This is used in the javascript function on views/layout/invoice.php along with the datehelper datepicker function.',
           'where' => 'views/layout/invoice.php'

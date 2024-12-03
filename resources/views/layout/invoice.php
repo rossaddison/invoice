@@ -358,8 +358,6 @@ $this->beginPage();
                         'data-bs-toggle' => 'dropdown',
                     ],
                     'items' => [
-                      ['options' => ['class' => 'nav fs-4', 'style' => 'background-color: #ffcccb'], 'label' => '8.1', 'url' => 'https://php.watch/versions/8.1'],
-                      ['options' => ['class' => 'nav fs-4', 'style' => 'background-color: #ffcccb'], 'label' => '8.2', 'url' => 'https://php.watch/versions/8.2'],
                       ['options' => ['class' => 'nav fs-4', 'style' => 'background-color: #ffcccb'], 'label' => '8.3', 'url' => 'https://php.watch/versions/8.3'],
                       ['options' => ['class' => 'nav fs-4', 'style' => 'background-color: #ffcccb'], 'label' => '8.4', 'url' => 'https://php.watch/versions/8.4'],  
                     ],  
@@ -375,6 +373,8 @@ $this->beginPage();
                       ['options' => ['class' => 'nav fs-4', 'style' => 'background-color: #ffcccb'], 'label' => '❌', 'url' => 'https://emojipedia.org/cross-mark'],
                       ['options' => ['class' => 'nav fs-4', 'style' => 'background-color: #ffcccb'], 'label' => '⬅️', 'url' => 'https://emojipedia.org/left-arrow'],
                       ['options' => ['class' => 'nav fs-4', 'style' => 'background-color: #ffcccb'], 'label' => '➡️', 'url' => 'https://emojipedia.org/right-arrow'],  
+                      ['options' => ['class' => 'nav fs-4', 'style' => 'background-color: #ffcccb'], 'label' => '🖉️', 'url' => 'https://emojipedia.org/lower-left-pencil'],  
+                      ['options' => ['class' => 'nav fs-4', 'style' => 'background-color: #ffcccb'], 'label' => '🐘️', 'url' => 'https://emojipedia.org/elephant'],
                     ],  
                    ],    
     // Platform                  

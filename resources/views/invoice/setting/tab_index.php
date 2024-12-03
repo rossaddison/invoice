@@ -8,6 +8,7 @@ declare(strict_types=1);
  * @var string $alert
  * @var string $actionName
  * @var string $csrf
+ * @var string $frontPage
  * @var string $general
  * @var string $invoices
  * @var string $quotes
@@ -41,6 +42,9 @@ echo $alert;
 
 <ul id="settings-tabs" class="nav nav-tabs nav-tabs-noborder">
     <!-- https://getbootstrap.com/docs/5.0/components/navs-tabs/#using-data-attributes -->
+    <li class="<?= 'nav-item'. ($active == 'front-page' ? ' active' : ''); ?>" role="presentation">
+        <button class="<?= 'nav-link'. ($active == 'front-page' ? ' active' : ''); ?>" data-bs-toggle="tab" data-bs-target="#settings-front-page" style="text-decoration: none"><?= $translator->translate('invoice.invoice.front.page'); ?> </button>
+    </li>
     <li class="<?= 'nav-item'. ($active == 'general' ? ' active' : ''); ?>" role="presentation">
         <button class="<?= 'nav-link'. ($active == 'general' ? ' active' : ''); ?>" data-bs-toggle="tab" data-bs-target="#settings-general" style="text-decoration: none"><?= $translator->translate('i.general'); ?> </button>
     </li>
@@ -98,6 +102,10 @@ echo $alert;
     <div class="tabbable tabs-below">
 
         <div class="tab-content">
+            <div id="settings-front-page" class="<?= 'tab-pane'. ($active == 'front-page' ? ' active' : ''); ?>" role="tabpanel" aria-labelledby="front-page" >
+                <?= $frontPage; ?>
+            </div>
+            
             <div id="settings-general" class="<?= 'tab-pane'. ($active == 'general' ? ' active' : ''); ?>" >
                 <?= $general; ?>
             </div>
@@ -161,7 +169,7 @@ echo $alert;
             <div id="settings-telegram" class="<?= 'tab-pane'. ($active == 'telegram' ? ' active' : ''); ?>" role="tabpanel" aria-labelledby="settings-telegram">
                 <?= $telegram; ?>
             </div>
-
+            
         </div>
 
     </div>

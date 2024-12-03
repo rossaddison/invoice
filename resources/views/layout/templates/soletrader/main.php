@@ -26,6 +26,15 @@ use Yiisoft\Yii\Bootstrap5\NavBar;
  *          ],
  * @var App\User\User|null $user
  * @var bool $debugMode
+ * @var bool $noFrontPageAbout
+ * @var bool $noFrontPageAccreditations
+ * @var bool $noFrontPageContactDetails
+ * @var bool $noFrontPageContactUs
+ * @var bool $noFrontPageGallery
+ * @var bool $noFrontPagePricing
+ * @var bool $noFrontPageTeam
+ * @var bool $noFrontPageTestimonial
+ * @var bool $noFrontPage
  * @var bool $stopLoggingIn
  * @var bool $stopSigningUp
  * @var string $content
@@ -103,7 +112,10 @@ $this->setTitle($title);
                     [
                         'label' => str_repeat(' ', 1).$translator->translate('menu.about'),
                         'url' => $urlGenerator->generate('site/about'),
-                        'visible' => $isGuest,
+                        /**
+                         * @see src/ViewInjection/LayoutViewInjection $noFrontPageAbout
+                         */
+                        'visible' => $isGuest && !$noFrontPageAbout,
                         'linkOptions' => [
                             'class' => 'bi bi-info-circle-fill text-info',
                             'style' => 'font-size: 1rem; color: cornflowerblue;'
@@ -112,42 +124,42 @@ $this->setTitle($title);
                     [
                         'label' => str_repeat(' ', 1).$translator->translate('menu.accreditations'),
                         'url' => $urlGenerator->generate('site/accreditations'),
-                        'visible' => $isGuest,
+                        'visible' => $isGuest && !$noFrontPageAccreditations,
                         'linkOptions' => ['class' => 'bi bi-patch-check']
                     ],
                     [
                         'label' => str_repeat(' ', 1).$translator->translate('menu.gallery'),
                         'url' => $urlGenerator->generate('site/gallery'),
-                        'visible' => $isGuest,
+                        'visible' => $isGuest && !$noFrontPageGallery,
                         'linkOptions' => ['class' => 'bi bi-images']
                     ],
                     [
                         'label' => str_repeat(' ', 1).$translator->translate('menu.team'),
                         'url' => $urlGenerator->generate('site/team'),
-                        'visible' => $isGuest,
+                        'visible' => $isGuest && !$noFrontPageTeam,
                         'linkOptions' => ['class' => 'bi bi-people-fill']
                     ],
                     [
                         'label' => str_repeat(' ',1).$translator->translate('menu.pricing'),
                         'url' => $urlGenerator->generate('site/pricing'),
-                        'visible' => $isGuest,
+                        'visible' => $isGuest && !$noFrontPagePricing,
                         'linkOptions' => ['class' => 'bi bi-tags-fill text-danger']
                     ],
                     [
                         'label' => str_repeat(' ',1).$translator->translate('menu.testimonial'),
                         'url' => $urlGenerator->generate('site/testimonial'),
-                        'visible' => $isGuest,
+                        'visible' => $isGuest && !$noFrontPageTestimonial,
                     ],
                     [
                         'label' => str_repeat(' ',1).$translator->translate('menu.contact.details'),
                         'url' => $urlGenerator->generate('site/contact'),
-                        'visible' => $isGuest,
+                        'visible' => $isGuest && !$noFrontPageContactDetails,
                         'linkOptions' => ['class' => 'bi bi-person-lines-fill text-primary']
                     ],
                     [
                         'label' => str_repeat(' ',1).$translator->translate('menu.contact.us'),
                         'url' => $urlGenerator->generate('contact/interest'),
-                        'visible' => $isGuest,
+                        'visible' => $isGuest && !$noFrontPageContactUs,
                         'linkOptions' => ['class' => 'bi bi-person-fill-add text-primary']
                     ],
                     [

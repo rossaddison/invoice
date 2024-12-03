@@ -103,6 +103,14 @@ final class LayoutViewInjection implements LayoutParametersInjectionInterface
         }
         $stopSigningUp = $this->settingRepository->getSetting('stop_signing_up') == '1' ? true : false;
         $stopLoggingIn = $this->settingRepository->getSetting('stop_logging_in') == '1' ? true : false;
+        $noFrontPageAbout = $this->settingRepository->getSetting('no_front_about_page') == '1' ? true : false;
+        $noFrontPageGallery = $this->settingRepository->getSetting('no_front_gallery_page') == '1' ? true : false;
+        $noFrontPageAccreditations = $this->settingRepository->getSetting('no_front_accreditations_page') == '1' ? true : false;
+        $noFrontPageTeam = $this->settingRepository->getSetting('no_front_team_page') == '1' ? true : false;
+        $noFrontPagePricing = $this->settingRepository->getSetting('no_front_pricing_page') == '1' ? true : false;
+        $noFrontPageTestimonial = $this->settingRepository->getSetting('no_front_testimonial_page') == '1' ? true : false;
+        $noFrontPageContactDetails = $this->settingRepository->getSetting('no_front_contact_details_page') == '1' ? true : false;
+        $noFrontPageContactUs = $this->settingRepository->getSetting('no_front_contact_us_page') == '1' ? true : false;
         /**
          * @see .env.php $_ENV['YII_DEBUG'] and $_ENV['BUILD_DATABASE'] located in the root (first) folder
          * @see {root} autoload.php
@@ -136,6 +144,14 @@ final class LayoutViewInjection implements LayoutParametersInjectionInterface
             'debugMode' => $debugMode,
             'stopSigningUp' => $stopSigningUp,
             'stopLoggingIn' => $stopLoggingIn,
+            'noFrontPageAbout' => $noFrontPageAbout,
+            'noFrontPageAccreditations' => $noFrontPageAccreditations,
+            'noFrontPageGallery' => $noFrontPageGallery,
+            'noFrontPagePricing' => $noFrontPagePricing,
+            'noFrontPageTeam' => $noFrontPageTeam,
+            'noFrontPageTestimonial' => $noFrontPageTestimonial,
+            'noFrontPageContactDetails' => $noFrontPageContactDetails,
+            'noFrontPageContactUs' => $noFrontPageContactUs,
             'isGuest' => $isGuest,
             'user' => $user,
             'userLogin' => $userLogin,

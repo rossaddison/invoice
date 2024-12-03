@@ -167,10 +167,11 @@ final class SettingController
              * http://invoice.myhost/invoice/setting/tab_index?active=mpdf
              * @see config/common/routes/routes.php Route::methods([Method::GET, Method::POST], '/setting/tab_index[/{active:\d+}]') 
              */
-            'active' => $active ?? 'general',
+            'active' => $active ?? 'front-page',
             'alert' => $this->alert(),
             'head' => $head,
             'body' => $body,
+            'frontPage' => $this->viewRenderer->renderPartialAsString('//invoice/setting/views/partial_settings_front_page', []),
             'general' => $this->viewRenderer->renderPartialAsString('//invoice/setting/views/partial_settings_general', [
                 /**
                  * @psalm-suppress PossiblyInvalidArgument
