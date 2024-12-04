@@ -11483,16 +11483,16 @@
         },
         {
             "name": "vjik/telegram-bot-api",
-            "version": "0.4.6",
+            "version": "0.4.7",
             "source": {
                 "type": "git",
                 "url": "https://github.com/vjik/telegram-bot-api.git",
-                "reference": "5fc13db1f4a463789d475b5901c89ff271fc623e"
+                "reference": "4face0336a1be66ffd5ea1751b26daa01348e349"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/vjik/telegram-bot-api/zipball/5fc13db1f4a463789d475b5901c89ff271fc623e",
-                "reference": "5fc13db1f4a463789d475b5901c89ff271fc623e",
+                "url": "https://api.github.com/repos/vjik/telegram-bot-api/zipball/4face0336a1be66ffd5ea1751b26daa01348e349",
+                "reference": "4face0336a1be66ffd5ea1751b26daa01348e349",
                 "shasum": ""
             },
             "require": {
@@ -11543,7 +11543,7 @@
                 "issues": "https://github.com/vjik/telegram-bot-api/issues?state=open",
                 "source": "https://github.com/vjik/telegram-bot-api"
             },
-            "time": "2024-11-18T11:36:49+00:00"
+            "time": "2024-12-04T11:56:55+00:00"
         },
         {
             "name": "vlucas/phpdotenv",
@@ -24175,7 +24175,6 @@
     "minimum-stability": "dev",
     "stability-flags": {
         "cebe/markdown": 20,
-        "roave/security-advisories": 20,
         "yiisoft/data": 20,
         "yiisoft/data-cycle": 20,
         "yiisoft/db": 20,
@@ -24186,6 +24185,7 @@
         "yiisoft/yii-bootstrap5": 20,
         "yiisoft/yii-dataview": 20,
         "yiisoft/yii-debug-api": 20,
+        "roave/security-advisories": 20,
         "yiisoft/yii-gii": 20,
         "yiisoft/yii-testing": 20
     },
@@ -24203,6 +24203,6 @@
         "ext-openssl": "*",
         "ext-pdo_sqlite": "*"
     },
-    "platform-dev": {},
+    "platform-dev": [],
     "plugin-api-version": "2.6.0"
 }
