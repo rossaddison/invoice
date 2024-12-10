@@ -1076,16 +1076,16 @@
         },
         {
             "name": "cycle/database",
-            "version": "2.11.2",
+            "version": "2.11.3",
             "source": {
                 "type": "git",
                 "url": "https://github.com/cycle/database.git",
-                "reference": "568801bba101d295e5e6a28aab2197ad41824d2b"
+                "reference": "713122e3495dbced950c795d4835e8e16da4d983"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/cycle/database/zipball/568801bba101d295e5e6a28aab2197ad41824d2b",
-                "reference": "568801bba101d295e5e6a28aab2197ad41824d2b",
+                "url": "https://api.github.com/repos/cycle/database/zipball/713122e3495dbced950c795d4835e8e16da4d983",
+                "reference": "713122e3495dbced950c795d4835e8e16da4d983",
                 "shasum": ""
             },
             "require": {
@@ -1165,7 +1165,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2024-10-23T15:28:24+00:00"
+            "time": "2024-12-10T14:03:34+00:00"
         },
         {
             "name": "cycle/entity-behavior",
@@ -10644,8 +10644,8 @@
             "type": "library",
             "extra": {
                 "thanks": {
-                    "name": "symfony/polyfill",
-                    "url": "https://github.com/symfony/polyfill"
+                    "url": "https://github.com/symfony/polyfill",
+                    "name": "symfony/polyfill"
                 }
             },
             "autoload": {
@@ -10724,8 +10724,8 @@
             "type": "library",
             "extra": {
                 "thanks": {
-                    "name": "symfony/polyfill",
-                    "url": "https://github.com/symfony/polyfill"
+                    "url": "https://github.com/symfony/polyfill",
+                    "name": "symfony/polyfill"
                 }
             },
             "autoload": {
