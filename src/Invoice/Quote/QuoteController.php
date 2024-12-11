@@ -1510,6 +1510,9 @@ final class QuoteController
                 // they can view their quotes when they log in
                 $user_clients = $ucR->get_assigned_to_user((string)$user->getId());
                 if (!empty($user_clients)) {
+                   /**
+                    * @psalm-var \Yiisoft\Data\Reader\ReadableDataInterface<array-key, array<array-key, mixed>|object>&\Yiisoft\Data\Reader\LimitableDataInterface&\Yiisoft\Data\Reader\OffsetableDataInterface&\Yiisoft\Data\Reader\CountableDataInterface $quotes 
+                    */
                     $quotes = $this->quotes_status_with_sort_guest($qR, $status, $user_clients, $sort);
                     if (isset($query_params['filterQuoteNumber']) && !empty($query_params['filterQuoteNumber'])) {
                         $quotes = $qR->filterQuoteNumber((string)$query_params['filterQuoteNumber']);
@@ -1634,6 +1637,9 @@ final class QuoteController
                         // - => 'desc'  so -id => default descending on id
                         // Show the latest quotes first => -id
                         ->withOrder($order);
+           /**
+            * @psalm-var \Yiisoft\Data\Reader\ReadableDataInterface<array-key, array<array-key, mixed>|object>&\Yiisoft\Data\Reader\LimitableDataInterface&\Yiisoft\Data\Reader\OffsetableDataInterface&\Yiisoft\Data\Reader\CountableDataInterface $quotes 
+            */
             $quotes = $this->quotes_status_with_sort($quoteRepo, $status, $sort);
             if (isset($query_params['filterQuoteNumber']) && !empty($query_params['filterQuoteNumber'])) {
                 $quotes = $quoteRepo->filterQuoteNumber((string)$query_params['filterQuoteNumber']);
@@ -1950,13 +1956,11 @@ final class QuoteController
     }
 
     /**
+     * 
      * @param QuoteRepository $quoteRepo
      * @param int $status
      * @param Sort $sort
-     *
-     * @return \Yiisoft\Data\Reader\SortableDataInterface&\Yiisoft\Data\Reader\DataReaderInterface
-     *
-     * @psalm-return \Yiisoft\Data\Reader\SortableDataInterface&\Yiisoft\Data\Reader\DataReaderInterface<int, Quote>
+     * @return \Yiisoft\Data\Reader\SortableDataInterface
      */
     private function quotes_status_with_sort(QuoteRepository $quoteRepo, int $status, Sort $sort): \Yiisoft\Data\Reader\SortableDataInterface
     {
@@ -1966,14 +1970,12 @@ final class QuoteController
     }
 
     /**
+     * 
      * @param QR $qR
      * @param int $status
      * @param array $user_clients
      * @param Sort $sort
-     *
-     * @return \Yiisoft\Data\Reader\SortableDataInterface&\Yiisoft\Data\Reader\DataReaderInterface
-     *
-     * @psalm-return \Yiisoft\Data\Reader\SortableDataInterface&\Yiisoft\Data\Reader\DataReaderInterface<int, Quote>
+     * @return \Yiisoft\Data\Reader\SortableDataInterface
      */
     private function quotes_status_with_sort_guest(QR $qR, int $status, array $user_clients, Sort $sort): \Yiisoft\Data\Reader\SortableDataInterface
     {

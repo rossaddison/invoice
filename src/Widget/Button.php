@@ -192,5 +192,30 @@ final class Button
         ->render();
     }
     
+    public function facebook(string $facebookAuthUrl) : string {        
+            return A::tag()
+            ->addClass('btn btn-primary bi bi-facebook')
+            ->content(' '.$this->translator->translate('invoice.invoice.continue.with.facebook'))
+            ->href($facebookAuthUrl) 
+            ->id('btn-facebook')
+            ->render();
+    }
     
+    public function github(string $githubAuthUrl) : string {        
+            return A::tag()
+            ->addClass('btn btn-secondary bi bi-github')
+            ->content(' '.$this->translator->translate('invoice.invoice.continue.with.github'))
+            ->href($githubAuthUrl)   
+            ->id('btn-github')
+            ->render();          
+    }
+    
+    public function google(string $googleAuthUrl) : string {       
+            return A::tag()
+            ->addClass('btn btn-success bi bi-google')
+            ->content(' '.$this->translator->translate('invoice.invoice.continue.with.google'))
+            ->href($googleAuthUrl)
+            ->id('btn-google')
+            ->render();
+    }
 }

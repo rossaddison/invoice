@@ -2,16 +2,22 @@
 
 declare(strict_types=1);
 
+use App\Widget\Button;
 use Yiisoft\FormModel\Field;
 use Yiisoft\Html\Html;
 use Yiisoft\Html\Tag\A;
 use Yiisoft\Html\Tag\Form;
 
 /**
- * @var App\Auth\Form\LoginForm $formModel 
+ * @var App\Auth\Form\LoginForm $formModel
+ * @var App\Invoice\Setting\SettingRepository $s
+ * @var Yiisoft\Router\CurrentRoute $currentRoute 
  * @var Yiisoft\Router\UrlGeneratorInterface $urlGenerator
  * @var Yiisoft\Translator\TranslatorInterface $translator
  * @var Yiisoft\View\WebView $this
+ * @var string $facebookAuthUrl
+ * @var string $githubAuthUrl
+ * @var string $googleAuthUrl
  * @var string $csrf
  */
 
@@ -26,6 +32,21 @@ $this->setTitle($translator->translate('i.login'));
                 <div class="card-header bg-dark text-white">
                     <h1 class="fw-normal h3 text-center"><?= Html::encode($this->getTitle()); ?></h1>
                 </div>
+                    <div class="text-center">
+                        <?php $button = new Button($currentRoute, $translator, $urlGenerator); ?>
+                        <?php if (strlen($facebookAuthUrl ?: '') > 0) { ?>
+                            <br><br>
+                            <?= $button->facebook($facebookAuthUrl); ?>
+                        <?php } ?>
+                        <?php if (strlen($githubAuthUrl ?: '') > 0) { ?>
+                            <br><br>
+                            <?= $button->github($githubAuthUrl ?: ''); ?>
+                        <?php } ?>    
+                        <?php if (strlen($googleAuthUrl ?: '') > 0) { ?>
+                            <br><br>
+                            <?= $button->google($googleAuthUrl ?: ''); ?>
+                        <?php } ?>
+                    </div>
                 <div class="card-body p-5 text-center">
                     <?= Form::tag()
                         ->post($urlGenerator->generate('auth/login'))

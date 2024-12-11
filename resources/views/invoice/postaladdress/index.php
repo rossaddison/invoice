@@ -11,12 +11,12 @@ use Yiisoft\Html\Tag\H5;
 use Yiisoft\Html\Tag\I;
 use Yiisoft\Yii\DataView\Column\DataColumn;
 use Yiisoft\Yii\DataView\GridView;
-use Yiisoft\Yii\DataView\Pagination\OffsetPagination;
 
 /**
  * @var App\Invoice\Entity\PostalAddress $postaladdress
  * @var App\Invoice\Client\ClientRepository $cR
- * @var App\Invoice\Setting\SettingRepository $s 
+ * @var App\Invoice\Setting\SettingRepository $s
+ * @var App\Widget\GridComponents $gridComponents 
  * @var App\Widget\PageSizeLimiter $pageSizeLimiter
  * @var Yiisoft\Data\Paginator\OffsetPaginator $paginator
  * @var Yiisoft\Translator\TranslatorInterface $translator
@@ -143,11 +143,7 @@ $toolbar = Div::tag();
     ->headerRowAttributes(['class'=>'card-header bg-info text-black'])
     ->header($header)
     ->id('w3-grid')
-    ->pagination(
-    OffsetPagination::widget()
-         ->paginator($paginator)
-         ->render(),
-    )
+    ->paginationWidget($gridComponents->offsetPaginationWidget($paginator))
     ->summaryTemplate($pageSizeLimiter::buttons($routeCurrent, $s, $translator, $urlFastRouteGenerator, 'postaladdress').' '.$grid_summary)
     ->summaryAttributes(['class' => 'mt-3 me-3 summary text-end'])
     ->toolbar($toolbarString);

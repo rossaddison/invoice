@@ -591,6 +591,9 @@ final class PaymentController
                 $client_id_array = [];
             }
             if (!empty($client_id_array)) {
+               /**
+                * @psalm-var \Yiisoft\Data\Reader\ReadableDataInterface<array-key, array<array-key, mixed>|object>&\Yiisoft\Data\Reader\LimitableDataInterface&\Yiisoft\Data\Reader\OffsetableDataInterface&\Yiisoft\Data\Reader\CountableDataInterface $payments 
+                */
                 $payments = $this->payments_with_sort_guest($paymentRepository, $client_id_array, $sort_by);
                 $paginator = (new OffsetPaginator($payments))
                  ->withPageSize($userInvListLimit ?? 10)
@@ -651,6 +654,9 @@ final class PaymentController
                      ? $uiR->repoUserInvUserIdquery($user_id)
                      : null);
             $client_id_array = (null !== $userinv ? $ucR->get_assigned_to_user($user_id) : []);
+            /**
+             * @psalm-var \Yiisoft\Data\Reader\ReadableDataInterface<array-key, array<array-key, mixed>|object>&\Yiisoft\Data\Reader\LimitableDataInterface&\Yiisoft\Data\Reader\OffsetableDataInterface&\Yiisoft\Data\Reader\CountableDataInterface $merchants 
+             */
             $merchants = $this->merchant_with_sort_guest($merchantRepository, $client_id_array, $sort_by);
             $paginator = (new OffsetPaginator($merchants))
              ->withPageSize(10)
@@ -700,6 +706,9 @@ final class PaymentController
         $sort = Sort::only(['id','inv_id','payment_date', 'payment_date'])
                 // Sort the merchant responses in descending order
                 ->withOrder($order);
+        /**
+         * @psalm-var \Yiisoft\Data\Reader\ReadableDataInterface<array-key, array<array-key, mixed>|object>&\Yiisoft\Data\Reader\LimitableDataInterface&\Yiisoft\Data\Reader\OffsetableDataInterface&\Yiisoft\Data\Reader\CountableDataInterface $payments 
+         */
         $payments = $this->payments_with_sort($paymentRepository, $sort);
         if (isset($query_params['paymentAmountFilter']) && !empty($query_params['paymentAmountFilter'])) {
             $payments = $paymentRepository->repoPaymentAmountFilter((string)$query_params['paymentAmountFilter']);
@@ -751,12 +760,10 @@ final class PaymentController
     }
 
     /**
+     * 
      * @param MerchantRepository $merchantRepository
      * @param Sort $sort
-     *
-     * @return \Yiisoft\Data\Reader\SortableDataInterface&\Yiisoft\Data\Reader\DataReaderInterface
-     *
-     * @psalm-return \Yiisoft\Data\Reader\SortableDataInterface&\Yiisoft\Data\Reader\DataReaderInterface<int, \App\Invoice\Entity\Merchant>
+     * @return \Yiisoft\Data\Reader\SortableDataInterface
      */
     private function merchant_with_sort(MerchantRepository $merchantRepository, Sort $sort): \Yiisoft\Data\Reader\SortableDataInterface
     {
@@ -766,13 +773,11 @@ final class PaymentController
     }
 
     /**
+     * 
      * @param MerchantRepository $merchantRepository
      * @param array $client_id_array
      * @param Sort $sort
-     *
-     * @return \Yiisoft\Data\Reader\SortableDataInterface&\Yiisoft\Data\Reader\DataReaderInterface
-     *
-     * @psalm-return \Yiisoft\Data\Reader\SortableDataInterface&\Yiisoft\Data\Reader\DataReaderInterface<int, \App\Invoice\Entity\Merchant>
+     * @return \Yiisoft\Data\Reader\SortableDataInterface
      */
     private function merchant_with_sort_guest(MerchantRepository $merchantRepository, array $client_id_array, Sort $sort): \Yiisoft\Data\Reader\SortableDataInterface
     {
@@ -805,6 +810,9 @@ final class PaymentController
         $sort = Sort::only(['inv_id','date', 'successful', 'driver'])
                 // Sort the merchant responses in descending order
                 ->withOrder($order);
+        /**
+         * @psalm-var \Yiisoft\Data\Reader\ReadableDataInterface<array-key, array<array-key, mixed>|object>&\Yiisoft\Data\Reader\LimitableDataInterface&\Yiisoft\Data\Reader\OffsetableDataInterface&\Yiisoft\Data\Reader\CountableDataInterface $merchants 
+         */
         $merchants = $this->merchant_with_sort($merchantRepository, $sort);
         if (isset($query_params['filterInvNumber']) && !empty($query_params['filterInvNumber'])) {
             $merchants = $merchantRepository->repoMerchantInvNumberquery((string)$query_params['filterInvNumber']);
@@ -834,12 +842,10 @@ final class PaymentController
     }
 
     /**
+     * 
      * @param PaymentRepository $paymentRepository
      * @param Sort $sort
-     *
-     * @return \Yiisoft\Data\Reader\SortableDataInterface&\Yiisoft\Data\Reader\DataReaderInterface
-     *
-     * @psalm-return \Yiisoft\Data\Reader\SortableDataInterface&\Yiisoft\Data\Reader\DataReaderInterface<int, Payment>
+     * @return \Yiisoft\Data\Reader\SortableDataInterface
      */
     private function payments_with_sort(PaymentRepository $paymentRepository, Sort $sort): \Yiisoft\Data\Reader\SortableDataInterface
     {
@@ -849,13 +855,11 @@ final class PaymentController
     }
 
     /**
+     * 
      * @param PaymentRepository $paymentRepository
      * @param array $client_id_array
      * @param Sort $sort
-     *
-     * @return \Yiisoft\Data\Reader\SortableDataInterface&\Yiisoft\Data\Reader\DataReaderInterface
-     *
-     * @psalm-return \Yiisoft\Data\Reader\SortableDataInterface&\Yiisoft\Data\Reader\DataReaderInterface<int, Payment>
+     * @return \Yiisoft\Data\Reader\SortableDataInterface
      */
     private function payments_with_sort_guest(PaymentRepository $paymentRepository, array $client_id_array, Sort $sort): \Yiisoft\Data\Reader\SortableDataInterface
     {

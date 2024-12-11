@@ -352,9 +352,7 @@ echo Breadcrumbs::widget()
     ->emptyCellAttributes(['style' => 'color:red'])         
     //->header($header)
     ->id('w2-grid')
-    ->pagination(
-        $gridComponents->offsetPaginationWidget($defaultPageSizeOffsetPaginator, $paginator)
-    )
+    ->paginationWidget($gridComponents->offsetPaginationWidget($paginator))
     ->summaryAttributes(['class' => 'mt-3 me-3 summary text-end'])
     /**
      * @see config/common/params.php `yiisoft/view` => ['parameters' => ['pageSizeLimiter' ... No need to be in inv/index

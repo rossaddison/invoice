@@ -246,9 +246,7 @@ use Yiisoft\Yii\DataView\YiiRouter\UrlCreator;
     ->emptyCellAttributes(['style' => 'color:red'])         
     ->header($header)
     ->id('w4-grid')
-    ->pagination(
-        $gridComponents->offsetPaginationWidget($defaultPageSizeOffsetPaginator, $sortedAndPagedPaginator)
-    )       
+    ->paginationWidget($gridComponents->offsetPaginationWidget($sortedAndPagedPaginator))       
     ->summaryAttributes(['class' => 'mt-3 me-3 summary text-end'])
     ->summaryTemplate($pageSizeLimiter::buttons($currentRoute, $s, $translator, $urlFastRouteGenerator, 'product').' '.$grid_summary)
     ->emptyTextAttributes(['class' => 'card-header bg-warning text-black'])

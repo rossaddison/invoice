@@ -18,7 +18,6 @@ use Vjik\TelegramBot\Api\LogType;
 use Vjik\TelegramBot\Api\TelegramBotApi;
 use Vjik\TelegramBot\Api\Type\Update\Update;
 use Vjik\TelegramBot\Api\Type\Update\WebhookInfo;
-use Yiisoft\Html\Json;
 use Yiisoft\Router\FastRoute\UrlGenerator;
 
 /**

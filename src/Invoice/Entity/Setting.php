@@ -47,8 +47,8 @@ class Setting
         return $this->setting_value;
     }
 
-    public function setSetting_value(mixed $setting_value): void
+    public function setSetting_value(string $setting_value): void
     {
-        $this->setting_value = (string)$setting_value;
+        $this->setting_value = $setting_value;
     }
 }

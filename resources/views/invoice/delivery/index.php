@@ -107,11 +107,7 @@ $toolbar = Div::tag();
     ->headerRowAttributes(['class' => 'card-header bg-info text-black'])
     ->header($header)
     ->id('w14-grid')
-    ->pagination(
-      OffsetPagination::widget()
-      ->paginator($paginator)
-      ->render(),
-    )
+    ->paginationWidget($gridComponents->offsetPaginationWidget($paginator))
     ->summaryAttributes(['class' => 'mt-3 me-3 summary text-end'])
     ->summaryTemplate($grid_summary)
     ->emptyTextAttributes(['class' => 'card-header bg-warning text-black'])

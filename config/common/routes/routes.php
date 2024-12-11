@@ -133,7 +133,7 @@ return [
     Route::methods([Method::GET, Method::POST], '/signupsuccess')
     ->action([SiteController::class, 'signupsuccess'])
     ->name('site/signupsuccess')    ,
-    // Auth
+    // Auth     
     Route::methods([Method::GET, Method::POST], '/login')
     ->middleware(LimitRequestsMiddleware::class)
     ->action([AuthController::class, 'login'])

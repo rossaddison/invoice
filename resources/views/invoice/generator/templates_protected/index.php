@@ -120,9 +120,7 @@ use Yiisoft\Yii\DataView\Pagination\OffsetPagination;
       ->headerRowAttributes(['class' => 'card-header bg-info text-black'])      
       ->header($header)
       ->id('w<?= $random; ?>-grid')
-      ->pagination(
-        $gridComponents->offsetPaginationWidget($defaultPageSizeOffsetPaginator, $paginator)
-      )
+      ->paginationWidget($gridComponents->offsetPaginationWidget($paginator))
       ->summaryAttributes(['class' => 'mt-3 me-3 summary text-end'])
       ->summaryTemplate($grid_summary)
       ->emptyTextAttributes(['class' => 'card-header bg-warning text-black'])

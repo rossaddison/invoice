@@ -7,7 +7,6 @@ namespace App\Widget;
 use App\Invoice\Entity\Client;
 use App\Invoice\Entity\Inv;
 use Yiisoft\Data\Paginator\OffsetPaginator;
-use Yiisoft\Data\Reader\Sort;
 use Yiisoft\Html\Html;
 use Yiisoft\Html\Tag\A;
 use Yiisoft\Html\Tag\Div;
@@ -17,8 +16,7 @@ use Yiisoft\Router\UrlGeneratorInterface as UrlGenerator;
 use Yiisoft\Router\CurrentRoute;
 use Yiisoft\Translator\TranslatorInterface as Translator;
 use Yiisoft\Yii\DataView\Pagination\OffsetPagination;
-use Yiisoft\Yii\DataView\UrlConfig;
-use Yiisoft\Yii\DataView\YiiRouter\UrlCreator;
+use Yiisoft\Yii\DataView\Pagination\PaginationContext;
 
 final class GridComponents
 {
@@ -48,24 +46,18 @@ final class GridComponents
                 )
                 ->render();
     }
-
-    public function offsetPaginationWidget(int $pageSize, OffsetPaginator $sortedAndPagedPaginator): string
+    
+    public function offsetPaginationWidget(OffsetPaginator $sortedAndPagedPaginator): \Yiisoft\Yii\DataView\Pagination\PaginationWidgetInterface
     {
         return OffsetPagination::widget()
+        ->withPaginator($sortedAndPagedPaginator)
         ->listTag('ul')
         ->listAttributes(['class' => 'pagination'])
         ->itemTag('li')
         ->itemAttributes(['class' => 'page-item'])
         ->linkAttributes(['class' => 'page-link'])
         ->currentItemClass('active')
-        ->currentLinkClass('page-link')
-        ->disabledItemClass('disabled')
-        ->disabledLinkClass('disabled')
-        ->defaultPageSize($pageSize)
-        ->urlConfig(new UrlConfig()) 
-        ->urlCreator(new UrlCreator($this->generator))             
-        ->paginator($sortedAndPagedPaginator)
-        ->render();
+        ->disabledItemClass('disabled');
     }
 
     public function toolbarReset(UrlGenerator $generator): string

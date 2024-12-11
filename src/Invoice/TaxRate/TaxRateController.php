@@ -13,8 +13,8 @@ use App\Service\WebControllerService;
 use App\User\UserService;
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
-use Yiisoft\Data\Paginator\OffsetPaginator;
 use Yiisoft\Http\Method;
+use Yiisoft\Input\Http\Attribute\Parameter\Query;
 use Yiisoft\Router\CurrentRoute;
 use Yiisoft\Session\Flash\Flash;
 use Yiisoft\Session\SessionInterface as Session;
@@ -51,22 +51,16 @@ final class TaxRateController
     }
 
     /**
+     * @param int $page
      * @param TaxRateRepository $taxRateRepository
      * @param SettingRepository $settingRepository
-     * @param Request $request
      */
-    public function index(TaxRateRepository $taxRateRepository, SettingRepository $settingRepository, Request $request): \Yiisoft\DataResponse\DataResponse
+    public function index(#[Query('page')] int $page = null, TaxRateRepository $taxRateRepository, SettingRepository $settingRepository): \Yiisoft\DataResponse\DataResponse
     {
-        $pageNum = (int)$request->getAttribute('page', '1');
-        /** @psalm-var positive-int $currentPageNeverZero */
-        $currentPageNeverZero = $pageNum > 0 ? $pageNum : 1;
-        $paginator = (new OffsetPaginator($this->taxrates($taxRateRepository)))
-        ->withPageSize((int)$settingRepository->getSetting('default_list_limit'))
-        ->withCurrentPage($currentPageNeverZero);
-
         $canEdit = $this->rbac();
         $parameters = [
-              'paginator' => $paginator,
+              'taxrates' => $this->taxRates($taxRateRepository),
+              'page' => $page > 0 ? $page : 1,
               'canEdit' => $canEdit,
               'alert' => $this->alert()
         ];

@@ -12,10 +12,10 @@ use Yiisoft\Html\Tag\I;
 use Yiisoft\Yii\DataView\Column\ActionColumn;
 use Yiisoft\Yii\DataView\Column\DataColumn;
 use Yiisoft\Yii\DataView\GridView;
-use Yiisoft\Yii\DataView\Pagination\OffsetPagination;
 
 /**
  * @var App\Invoice\Setting\SettingRepository $s
+ * @var App\Widget\GridComponents $gridComponents 
  * @var Yiisoft\Data\Paginator\OffsetPaginator $paginator
  * @var Yiisoft\Router\CurrentRoute $currentRoute
  * @var Yiisoft\Router\UrlGeneratorInterface $urlGenerator
@@ -126,11 +126,7 @@ echo $alert;
     ->headerRowAttributes(['class'=>'card-header bg-info text-black'])
     ->header($header)
     ->id('w53-grid')
-    ->pagination(
-    OffsetPagination::widget()
-        ->paginator($paginator)
-        ->render(),
-    )
+    ->paginationWidget($gridComponents->offsetPaginationWidget($paginator))
     ->summaryAttributes(['class' => 'mt-3 me-3 summary text-end'])
     ->summaryTemplate($grid_summary)
     ->emptyTextAttributes(['class' => 'card-header bg-warning text-black'])

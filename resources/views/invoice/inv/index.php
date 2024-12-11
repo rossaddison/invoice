@@ -691,15 +691,15 @@ $toolbar = Div::tag();
                     ->withOrderString($sortString); 
     
     $sortedAndPagedPaginator = (new OffsetPaginator($invs))
-                ->withPageSize((int) $s->getSetting('default_list_limit'))
-                ->withCurrentPage($page)
-                ->withSort($sort)    
-                ->withToken(PageToken::next((string)$page));
+            ->withPageSize($defaultPageSizeOffsetPaginator)
+            ->withCurrentPage($page)
+            ->withSort($sort)    
+            ->withToken(PageToken::next((string)$page));
     
     $grid_summary = $s->grid_summary(
         $sortedAndPagedPaginator,
         $translator,
-        (int) $s->getSetting('default_list_limit'),
+        $defaultPageSizeOffsetPaginator,
         $translator->translate('invoice.invoice.invoices'),
         $label
     );
@@ -725,9 +725,7 @@ $toolbar = Div::tag();
     ->emptyCellAttributes(['style' => 'color:red'])  
     //->header($gridComponents->header(' ' . $translator->translate('i.invoice')))
     ->id('w3-grid')     
-    ->pagination(
-        $gridComponents->offsetPaginationWidget($defaultPageSizeOffsetPaginator, $sortedAndPagedPaginator)
-    )
+    ->paginationWidget($gridComponents->offsetPaginationWidget($sortedAndPagedPaginator))
     ->summaryAttributes(['class' => 'mt-3 me-3 summary text-end'])    
     ->summaryTemplate($pageSizeLimiter::buttons($currentRoute, $s, $translator, $urlGenerator, 'inv').' '.$grid_summary)
     ->emptyTextAttributes(['class' => 'card-header bg-warning text-black'])

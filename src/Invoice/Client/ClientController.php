@@ -44,7 +44,6 @@ use App\Invoice\UserClient\UserClientRepository as ucR;
 use App\Invoice\UserInv\UserInvRepository as uiR;
 // Helpers
 use App\Invoice\Helpers\CountryHelper;
-use App\Invoice\Helpers\CustomValuesHelper as CVH;
 use App\Invoice\Helpers\DateHelper;
 use App\Invoice\Helpers\GenerateCodeFileHelper;
 // Psr\\Http
@@ -573,6 +572,9 @@ final class ClientController
                     // - => 'desc'  so -id => default descending on id
                     // Show the latest products first => -id
                     ->withOrder($order);
+        /**
+         * @psalm-var \Yiisoft\Data\Reader\ReadableDataInterface<array-key, array<array-key, mixed>|object>&\Yiisoft\Data\Reader\LimitableDataInterface&\Yiisoft\Data\Reader\OffsetableDataInterface&\Yiisoft\Data\Reader\CountableDataInterface $clients 
+         */
         $clients = $this->clients_with_sort($cR, $sort, $active);
         if (isset($query_params['filter_client_name']) && !empty($query_params['filter_client_name'])) {
             $clients = $cR->filter_client_name((string)$query_params['filter_client_name']);
@@ -613,8 +615,8 @@ final class ClientController
      * @param int $active
      *
      * @return \Yiisoft\Data\Reader\SortableDataInterface&\Yiisoft\Data\Reader\DataReaderInterface
-     *
-     * @psalm-return \Yiisoft\Data\Reader\SortableDataInterface&\Yiisoft\Data\Reader\DataReaderInterface<int, Client>
+     * 
+     * @psalm-return \Yiisoft\Data\Reader\SortableDataInterface
      */
     private function clients_with_sort(cR $cR, Sort $sort, int $active): \Yiisoft\Data\Reader\SortableDataInterface
     {

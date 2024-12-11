@@ -3,6 +3,8 @@
 declare(strict_types=1);
 
 use App\Invoice\Entity\TaxRate;
+use Yiisoft\Data\Paginator\OffsetPaginator;
+use Yiisoft\Data\Paginator\PageToken;
 use Yiisoft\Html\Html;
 use Yiisoft\View\WebView;
 use Yiisoft\Html\Tag\A;
@@ -14,18 +16,21 @@ use Yiisoft\Router\CurrentRoute;
 use Yiisoft\Yii\DataView\Column\ActionColumn;
 use Yiisoft\Yii\DataView\Column\DataColumn;
 use Yiisoft\Yii\DataView\GridView;
-use Yiisoft\Yii\DataView\Pagination\OffsetPagination;
+use Yiisoft\Yii\DataView\YiiRouter\UrlCreator;
 
 /**
  * @var App\Invoice\Entity\TaxRate $taxRate
  * @var App\Invoice\Setting\SettingRepository $s
+ * @var App\Widget\GridComponents $gridComponents
  * @var string $alert
  * @var string $csrf
- * @var CurrentRoute $currentRoute 
- * @var \Yiisoft\Data\Paginator\OffsetPaginator $paginator
- * @var \Yiisoft\Router\UrlGeneratorInterface $urlGenerator 
- * @var \Yiisoft\Translator\TranslatorInterface $translator
+ * @var CurrentRoute $currentRoute
+ * @var Yiisoft\Data\Cycle\Reader\EntityReader $taxrates 
+ * @var Yiisoft\Data\Paginator\OffsetPaginator $paginator
+ * @var Yiisoft\Router\UrlGeneratorInterface $urlGenerator 
+ * @var Yiisoft\Translator\TranslatorInterface $translator
  * @var WebView $this
+ * @psalm-var positive-int $page
  */ 
 
  echo $alert;
@@ -145,6 +150,12 @@ use Yiisoft\Yii\DataView\Pagination\OffsetPagination;
         ];
     ?>
     <?php 
+    
+    $paginator = (new OffsetPaginator($taxrates))
+        ->withPageSize((int)$s->getSetting('default_list_limit'))
+        ->withCurrentPage($page)
+        ->withToken(PageToken::next((string)$page)); 
+    
     $grid_summary = $s->grid_summary(
         $paginator, 
         $translator, 
@@ -159,15 +170,12 @@ use Yiisoft\Yii\DataView\Pagination\OffsetPagination;
         ->bodyRowAttributes(['class' => 'align-middle'])
         ->tableAttributes(['class' => 'table table-striped text-center h-75','id'=>'table-taxrate'])
         ->columns(...$columns)
-        ->dataReader($paginator)    
+        ->dataReader($paginator)
+        ->urlCreator(new UrlCreator($urlGenerator))    
         ->headerRowAttributes(['class'=>'card-header bg-info text-black'])
         ->header($header)
         ->id('w101-grid')
-        ->pagination(
-        OffsetPagination::widget()
-             ->paginator($paginator)
-             ->render(),
-        )
+        ->paginationWidget($gridComponents->offsetPaginationWidget($paginator))
         ->summaryAttributes(['class' => 'mt-3 me-3 summary text-end'])
         ->summaryTemplate($grid_summary)
         ->emptyTextAttributes(['class' => 'card-header bg-warning text-black'])

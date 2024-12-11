@@ -28,7 +28,7 @@ return [
         return $container
             ->get(ORMInterface::class)
             ->getRepository(Identity::class);
-    },
+    },         
     CookieMiddleware::class => static fn (CookieLogin $cookieLogin, LoggerInterface $logger) => new CookieMiddleware(
         $logger,
         new CookieEncryptor($secretKey),
@@ -41,5 +41,5 @@ return [
         'reset' => function (CurrentUser $currentUser) {
             $currentUser->clear();
         },
-    ],
+    ],           
 ];

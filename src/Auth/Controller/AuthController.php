@@ -6,9 +6,10 @@ namespace App\Auth\Controller;
 
 use App\Auth\AuthService;
 use App\Auth\Form\LoginForm;
-use App\Service\WebControllerService;
 use App\Auth\TokenRepository;
+use App\Invoice\Setting\SettingRepository;
 use App\Invoice\UserInv\UserInvRepository;
+use App\Service\WebControllerService;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Yiisoft\FormModel\FormHydrator;
@@ -16,6 +17,9 @@ use Yiisoft\Translator\TranslatorInterface;
 use Yiisoft\User\Login\Cookie\CookieLogin;
 use Yiisoft\User\Login\Cookie\CookieLoginIdentityInterface;
 use Yiisoft\Yii\View\Renderer\ViewRenderer;
+use Yiisoft\Yii\AuthClient\Client\Facebook;
+use Yiisoft\Yii\AuthClient\Client\GitHub;
+use Yiisoft\Yii\AuthClient\Client\Google;
 
 final class AuthController
 {
@@ -25,18 +29,24 @@ final class AuthController
         private readonly AuthService          $authService,
         private readonly WebControllerService $webService,
         private ViewRenderer                  $viewRenderer,
+        private SettingRepository             $sR,
     ) {
         $this->viewRenderer = $viewRenderer->withControllerName('auth');
+        $this->sR = $sR;
     }
 
     public function login(
         ServerRequestInterface $request,
         TranslatorInterface $translator,
+        Facebook $facebook,
+        GitHub $github,
+        Google $google,    
         FormHydrator $formHydrator,
         CookieLogin $cookieLogin,
         // use the 'active' field of the extension table userinv to verify that the user has been made active through e.g. email verificaiton    
         UserInvRepository $uiR,
-        TokenRepository $tR
+        TokenRepository $tR,
+            
     ): ResponseInterface {
         if (!$this->authService->isGuest()) {
             return $this->redirectToMain();
@@ -84,11 +94,26 @@ final class AuthController
             }
             $this->authService->logout();
             return $this->redirectToMain();
-        }
-
-        return $this->viewRenderer->render('login', ['formModel' => $loginForm]);
+        };
+        $this->initializeOauth2IdentityProvidersClientIdAndClientSecret($facebook, $github, $google);
+        return $this->viewRenderer->render('login', 
+            [
+                'formModel' => $loginForm,
+                'facebookAuthUrl' => strlen($facebook->getClientId()) > 0 ? $facebook->buildAuthUrl($request, $params = []) : '',
+                'githubAuthUrl' => strlen($github->getClientId()) > 0 ? $github->buildAuthUrl($request, $params = []) : '',   
+                'googleAuthUrl' => strlen($google->getClientId()) > 0 ? $google->buildAuthUrl($request, $params = []) : ''
+            ]);
     }
     
+    public function initializeOauth2IdentityProvidersClientIdAndClientSecret(Facebook $facebook, Github $github, Google $google) : void {
+        $facebook->setClientId($this->sR->getOauth2IdentityProviderClientId('facebook'));
+        $github->setClientId($this->sR->getOauth2IdentityProviderClientId('github'));
+        $google->setClientId($this->sR->getOauth2IdentityProviderClientId('google'));
+        $facebook->setClientSecret($this->sR->getOauth2IdentityProviderClientSecret('facebook'));
+        $github->setClientSecret($this->sR->getOauth2IdentityProviderClientSecret('github'));
+        $google->setClientSecret($this->sR->getOauth2IdentityProviderClientSecret('google'));
+    }
+        
     public function disableEmailVerificationToken(
         TokenRepository $tR,    
         ?string $userId = null

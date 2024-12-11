@@ -15,6 +15,7 @@ use Yiisoft\Yii\DataView\GridView;
  * @var App\Invoice\Helpers\DateHelper $dateHelper
  * @var App\Invoice\InvAmount\InvAmountRepository $iaR
  * @var App\Invoice\Setting\SettingRepository $s
+ * @var App\Widget\GridComponents $gridComponents
  * @var App\Widget\Button $button
  * @var App\Widget\GridComponents $gridComponents
  * @var App\Widget\PageSizeLimiter $pageSizeLimiter 
@@ -178,9 +179,7 @@ $toolbar = Div::tag();
         ->headerRowAttributes(['class'=>'card-header bg-info text-black'])
         ->header($gridComponents->header(' ' . $translator->translate('i.payment')))
         ->id('w147-grid')
-        ->pagination(
-            $gridComponents->offsetPaginationWidget($defaultPageSizeOffsetPaginator, $paginator)
-        )
+        ->paginationWidget($gridComponents->offsetPaginationWidget($paginator))
         ->summaryAttributes(['class' => 'mt-3 me-3 summary text-end'])
         ->summaryTemplate($pageSizeLimiter::buttons($currentRoute, $s, $translator, $urlGenerator, 'payment') .' '.$grid_summary)
         ->emptyTextAttributes(['class' => 'card-header bg-warning text-black'])

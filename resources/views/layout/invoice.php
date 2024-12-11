@@ -465,6 +465,10 @@ $this->beginPage();
                          'url' => 'https://ngrok.com/use-cases/webhook-testing'],
                       ['label' => 'Php Conference - Berlin and Munich', 
                          'url' => 'https://https://phpconference.com/'],
+                      ['label' => 'Google APIs Client Library for PHP (Not being used)',
+                          'url' => 'https://github.com/googleapis/google-api-php-client'],
+                      ['label' => 'Google API Explorer',
+                          'url' => 'https://developers.google.com/apis-explorer'],  
                     ],
                   ],
     // FAQ                  
