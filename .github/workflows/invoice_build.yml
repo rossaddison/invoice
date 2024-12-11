@@ -32,7 +32,7 @@ jobs:
     name: PHP ${{ matrix.php }}-${{ matrix.os }}
 
     env:
-      extensions: fileinfo, pdo, pdo_sqlite, intl, gd, openssl, dom, json, mbstring, curl
+      extensions: fileinfo, pdo, pdo_sqlite, intl, gd, openssl, dom, json, mbstring, curl, uopz
       key: cache-v1
       YII_C3: true
 
