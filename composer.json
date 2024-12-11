@@ -27,6 +27,7 @@
         "ext-mbstring": "*",
         "ext-openssl": "*",
         "ext-pdo_sqlite": "*",
+        "ext-uopz": "*",
         "amzn/amazon-pay-api-sdk-php": "^2.6",
         "braintree/braintree_php": "^6.20",
         "brick/math": "^0.12",
