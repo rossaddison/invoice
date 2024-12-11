@@ -138,7 +138,7 @@ Form::tag()
                 $translator->translate('invoice.clients'), 
             '');
             echo $pageSizeLimiter::buttonsGuest($userInv, $urlGenerator, $translator, 'client', $defaultPageSizeOffsetPaginator).' '.$grid_summary;
-            echo $gridComponents->offsetPaginationWidget($defaultPageSizeOffsetPaginator, $paginator);        
+            echo $gridComponents->offsetPaginationWidget($paginator);        
         ?>        
     </div>    
 </div>

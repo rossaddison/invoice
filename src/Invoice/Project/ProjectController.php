@@ -14,8 +14,8 @@ use App\Service\WebControllerService;
 use App\User\UserService;
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
-use Yiisoft\Data\Paginator\OffsetPaginator;
 use Yiisoft\Http\Method;
+use Yiisoft\Input\Http\Attribute\Parameter\Query;
 use Yiisoft\Router\CurrentRoute;
 use Yiisoft\Session\SessionInterface as Session;
 use Yiisoft\Session\Flash\Flash;
@@ -52,25 +52,20 @@ final class ProjectController
     }
 
     /**
+     * @param int $page
      * @param ProjectRepository $projectRepository
      * @param SettingRepository $sR
      * @param Request $request
      * @param ProjectService $service
      */
-    public function index(ProjectRepository $projectRepository, SettingRepository $sR, Request $request, ProjectService $service): \Yiisoft\DataResponse\DataResponse
+    public function index(#[Query('page')] int $page = null, ProjectRepository $projectRepository, SettingRepository $sR, Request $request, ProjectService $service): \Yiisoft\DataResponse\DataResponse
     {
-        $pageNum = (int)$request->getAttribute('page', '1');
-        /** @psalm-var positive-int $currentPageNeverZero */
-        $currentPageNeverZero = $pageNum > 0 ? $pageNum : 1;
-        $paginator = (new OffsetPaginator($this->projects($projectRepository)))
-        ->withPageSize((int)$sR->getSetting('default_list_limit'))
-        ->withCurrentPage($currentPageNeverZero);
         $canEdit = $this->rbac();
         $parameters = [
-              'paginator' => $paginator,
-              'canEdit' => $canEdit,
-              'projects' => $this->projects($projectRepository),
-              'alert' => $this->alert()
+            'page' => $page > 0 ? $page : 1,
+            'canEdit' => $canEdit,
+            'projects' => $this->projects($projectRepository),
+            'alert' => $this->alert()
         ];
         return $this->viewRenderer->render('index', $parameters);
     }

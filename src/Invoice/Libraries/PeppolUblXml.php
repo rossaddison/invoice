@@ -99,7 +99,7 @@ class PeppolUblXml
         ?PartyTaxScheme $supplier_partyTaxScheme,
         ?PartyLegalEntity $supplier_partyLegalEntity,
         ?string $supplier_endpointID,
-        mixed $supplier_endpointID_schemeID,
+        string $supplier_endpointID_schemeID,
 
         // cSP
         ?string $customer_name,
@@ -110,7 +110,7 @@ class PeppolUblXml
         ?PartyTaxScheme $customer_partyTaxScheme,
         ?PartyLegalEntity $customer_partyLegalEntity,
         ?string $customer_endpointID,
-        mixed $customer_endpointID_schemeID,
+        string $customer_endpointID_schemeID,
 
         // D
         ?DateTime $actualDeliveryDate,

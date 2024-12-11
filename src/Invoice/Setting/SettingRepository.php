@@ -508,6 +508,49 @@ final class SettingRepository extends Select\Repository
          */
         return $mailer_emails['adminEmail'];
     }
+    
+    public function getOauth2IdentityProviderClientId(string $identityProvider) : string
+    {
+        $config = $this->get_config_params();
+        $params = $config->get('params');
+        $identityProviders = $this->getOauth2IdentityProviderConfigParamsClientsArray();
+        /**
+         * @var array $identityProviders[$identityProvider]
+         */
+        $specificProvider = $identityProviders[$identityProvider];
+        /**
+         * @var string $specificProvider['clientId']
+         */
+        return $specificProvider['clientId'];
+    }
+
+    public function getOauth2IdentityProviderClientSecret(string $identityProvider) : string
+    {
+        $identityProviders = $this->getOauth2IdentityProviderConfigParamsClientsArray();        
+        /**
+         * @var array $identityProviders[$identityProvider]
+         */
+        $specificProvider = $identityProviders[$identityProvider];
+        /**
+         * @var string $specificProvider['clientSecret']
+         */
+        return $specificProvider['clientSecret'];
+    }
+    
+    public function getOauth2IdentityProviderConfigParamsClientsArray() : array
+    {
+        $config = $this->get_config_params();
+        $params = $config->get('params');
+        /**
+         * @var array $params['yiisoft/yii-auth-client']
+         */
+        $yii_oauth2_array = $params['yiisoft/yii-auth-client'];
+        /**
+         * @var array $yii_oauth2_array['clients']
+         */
+        $identityProviders = $yii_oauth2_array['clients'];
+        return $identityProviders;
+    }    
 
     /**
      * @see config/params.php

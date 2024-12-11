@@ -312,9 +312,7 @@ echo $alert;
     ->emptyCell($translator->translate('i.not_set'))
     ->emptyCellAttributes(['style' => 'color:red']) 
     ->id('w34-grid')
-    ->pagination(
-        $gridComponents->offsetPaginationWidget($defaultPageSizeOffsetPaginator, $paginator) 
-    )
+    ->paginationWidget($gridComponents->offsetPaginationWidget($paginator))
     ->summaryAttributes(['class' => 'mt-3 me-3 summary text-end'])
     ->summaryTemplate($pageSizeLimiter::buttons($currentRoute, $s, $translator, $urlGenerator, 'client').' '.$grid_summary)
     ->emptyTextAttributes(['class' => 'card-header bg-warning text-black'])

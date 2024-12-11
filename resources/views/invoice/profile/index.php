@@ -13,13 +13,13 @@ use Yiisoft\Html\Tag\I;
 use Yiisoft\Yii\DataView\Column\DataColumn;
 use Yiisoft\Yii\DataView\Column\ActionColumn;
 use Yiisoft\Yii\DataView\GridView;
-use Yiisoft\Yii\DataView\Pagination\OffsetPagination;
 use Yiisoft\Router\CurrentRoute;
 
 /**
  * @var App\Invoice\Entity\Profile $profile
  * @var App\Invoice\Setting\SettingRepository $s
  * @var App\Widget\Button $button
+ * @var App\Widget\GridComponents $gridComponents
  * @var string $alert
  * @var string $csrf
  * @var CurrentRoute $currentRoute 
@@ -142,11 +142,7 @@ use Yiisoft\Router\CurrentRoute;
     ->headerRowAttributes(['class'=>'card-header bg-info text-black'])
     ->header($header)
     ->id('w122-grid')
-    ->pagination(
-    OffsetPagination::widget()
-        ->paginator($paginator)
-         ->render(),
-    )
+    ->paginationWidget($gridComponents->offsetPaginationWidget($paginator))
     ->summaryAttributes(['class' => 'mt-3 me-3 summary text-end'])
     ->summaryTemplate($grid_summary)
     ->emptyTextAttributes(['class' => 'card-header bg-warning text-black'])

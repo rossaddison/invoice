@@ -187,9 +187,7 @@ $toolbar = Div::tag();
     ->emptyCellAttributes(['style' => 'color:red'])         
     ->header($header)        
     ->id('w7-grid')
-    ->pagination(
-       $gridComponents->offsetPaginationWidget($defaultPageSizeOffsetPaginator, $paginator)
-    )
+    ->paginationWidget($gridComponents->offsetPaginationWidget($paginator))
     ->summaryAttributes(['class' => 'mt-3 me-3 summary text-end'])
     ->summaryTemplate(($editInv ? $pageSizeLimiter::buttons($currentRoute, $s, $translator, $urlGenerator, 'quote') : '').' '.$grid_summary)
     ->emptyTextAttributes(['class' => 'card-header bg-warning text-black'])

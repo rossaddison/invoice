@@ -122,9 +122,7 @@ $toolbar = Div::tag();
         ->headerRowAttributes(['class'=>'card-header bg-info text-black'])
         ->header($gridComponents->header(' ' . $translator->translate('i.payment')))
         ->id('w148-grid')
-        ->pagination(
-            $gridComponents->offsetPaginationWidget(10, $paginator)
-        )
+        ->paginationWidget($gridComponents->offsetPaginationWidget($paginator))
         ->summaryAttributes(['class' => 'mt-3 me-3 summary text-end'])
         ->emptyTextAttributes(['class' => 'card-header bg-warning text-black'])
         ->emptyText($translator->translate('invoice.invoice.no.records'))                         

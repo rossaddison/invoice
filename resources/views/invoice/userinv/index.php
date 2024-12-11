@@ -3,6 +3,8 @@
 declare(strict_types=1); 
 
 use App\Invoice\Entity\UserInv;
+use Yiisoft\Data\Paginator\OffsetPaginator;
+use Yiisoft\Data\Paginator\PageToken;
 use Yiisoft\Html\Html;
 use Yiisoft\Html\Tag\A;
 use Yiisoft\Html\Tag\Div;
@@ -11,22 +13,22 @@ use Yiisoft\Html\Tag\H4;
 use Yiisoft\Html\Tag\H5;
 use Yiisoft\Html\Tag\I;
 use Yiisoft\Html\Tag\Td;
-use Yiisoft\Html\Tag\Th;
 use Yiisoft\Yii\DataView\Column\DataColumn;
 use Yiisoft\Yii\DataView\GridView;
-use Yiisoft\Yii\DataView\Pagination\OffsetPagination;
-use Yiisoft\Yii\DataView\UrlConfig;
 use Yiisoft\Yii\DataView\YiiRouter\UrlCreator;
 
 /**
  * @var App\Invoice\Client\ClientRepository $cR
  * @var App\Invoice\Setting\SettingRepository $s
  * @var App\Invoice\UserClient\UserClientRepository $ucR
+ * @var App\Widget\GridComponents $gridComponents
  * @var App\Widget\PageSizeLimiter $pageSizeLimiter
  * @var string $active
  * @var string $alert
  * @var string $csrf
- * @var bool $canEdit  
+ * @var bool $canEdit
+ * @psalm-var positive-int $page 
+ * @var Yiisoft\Data\Cycle\Reader\EntityReader $userinvs 
  * @var Yiisoft\Data\Paginator\OffsetPaginator $paginator
  * @var Yiisoft\Rbac\Manager $manager
  * @var Yiisoft\Router\CurrentRoute $currentRoute
@@ -303,7 +305,13 @@ echo $alert
         }),
     ];
     ?>
-    <?php 
+    <?php
+    
+    $paginator = (new OffsetPaginator($userinvs))
+        ->withPageSize((int)$s->getSetting('default_list_limit'))
+        ->withCurrentPage($page)
+        ->withToken(PageToken::next((string)$page));    
+    
     $grid_summary = $s->grid_summary(
         $paginator, 
         $translator, 
@@ -322,30 +330,12 @@ echo $alert
     ->tableAttributes(['class' => 'table table-striped text-center h-75','id'=>'table-user-inv'])  
     ->columns(...$columns) 
     ->dataReader($paginator)
+    ->urlCreator(new UrlCreator($urlGenerator))        
     ->headerRowAttributes(['class'=>'card-header bg-info text-black'])
     ->enableMultisort(true)                
     ->header($header)
     ->id('w5-grid')
-    ->pagination(
-        OffsetPagination::widget()
-            /**
-             * @link https://getbootstrap.com/docs/5.0/components/pagination/
-             */    
-            ->listTag('ul')    
-            ->listAttributes(['class' => 'pagination'])
-            ->itemTag('li')
-            ->itemAttributes(['class' => 'page-item'])
-            ->linkAttributes(['class' => 'page-link'])
-            ->currentItemClass('active')
-            ->currentLinkClass('page-link')
-            ->disabledItemClass('disabled')
-            ->disabledLinkClass('disabled')
-            ->defaultPageSize((int)$s->getSetting('default_list_limit'),  )
-            ->urlConfig(new UrlConfig()) 
-            ->urlCreator(new UrlCreator($urlGenerator))        
-            ->paginator($paginator)
-            ->render()
-    )
+    ->paginationWidget($gridComponents->offsetPaginationWidget($paginator))
     ->summaryAttributes(['class' => 'mt-3 me-3 summary text-end'])
     ->summaryTemplate($pageSizeLimiter::buttons($currentRoute, $s, $translator, $urlGenerator, 'userinv').' '.$grid_summary)
     ->emptyTextAttributes(['class' => 'card-header bg-warning text-black'])

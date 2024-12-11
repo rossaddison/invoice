@@ -112,9 +112,7 @@ use Yiisoft\Yii\DataView\GridView;
       ->headerRowAttributes(['class' => 'card-header bg-info text-black'])
       ->header($header)
       ->id('w10463-grid')
-      ->pagination(
-        $gridComponents->offsetPaginationWidget($defaultPageSizeOffsetPaginator, $paginator)
-      )
+      ->paginationWidget($gridComponents->offsetPaginationWidget($paginator))
       ->summaryAttributes(['class' => 'mt-3 me-3 summary text-end'])
       ->summaryTemplate(($viewInv ? 
                            $pageSizeLimiter::buttonsGuest($userInv, $urlGenerator, $translator, 'invsentlog', $defaultPageSizeOffsetPaginator) : '').' '.

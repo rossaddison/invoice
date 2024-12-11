@@ -11,11 +11,11 @@ use Yiisoft\Html\Tag\I;
 use Yiisoft\Yii\DataView\Column\DataColumn;
 use Yiisoft\Yii\DataView\Column\ActionColumn;
 use Yiisoft\Yii\DataView\GridView;
-use Yiisoft\Yii\DataView\Pagination\OffsetPagination;
 use Yiisoft\Router\CurrentRoute;
 
 /**
  * @var App\Invoice\Setting\SettingRepository $s
+ * @var App\Widget\GridComponents $gridComponents
  * @var CurrentRoute $currentRoute 
  * @var Yiisoft\Data\Paginator\OffsetPaginator $paginator
  * @var Yiisoft\Translator\TranslatorInterface $translator 
@@ -140,11 +140,7 @@ $toolbar = Div::tag();
     ->header($header)
     ->id('w3-grid')
     ->dataReader($paginator)
-    ->pagination(
-    OffsetPagination::widget()
-         ->paginator($paginator) 
-         ->render(),
-    )
+    ->paginationWidget($gridComponents->offsetPaginationWidget($paginator))
     ->summaryAttributes(['class' => 'mt-3 me-3 summary text-end'])
     ->summaryTemplate($grid_summary)
     ->emptyTextAttributes(['class' => 'card-header bg-warning text-black'])

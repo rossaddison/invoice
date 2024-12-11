@@ -230,9 +230,7 @@ final class UserInvController
         #[Query('filterUser')] string $queryFilterUser = null,
     ): \Yiisoft\DataResponse\DataResponse {
         $canEdit = $this->rbac();
-        $pageString = $queryPage ?? $page;
-        /** @psalm-var positive-int $currentPageNeverZero */
-        $currentPageNeverZero = (int)$pageString > 0 ? (int)$pageString : 1;
+        $page = $queryPage ?? $page;
         $activeInt = (int)$active;
         $sortString = $querySort ?? '-user_id';
         $sort = Sort::only(['user_id', 'name'])
@@ -241,26 +239,18 @@ final class UserInvController
         if (isset($queryFilterUser) && !empty($queryFilterUser)) {
             $userinvs = $uiR->filterUserInvs($queryFilterUser);
         }
-        /**
-         * @psalm-suppress PossiblyInvalidArgument
-         */
-        $paginator = (new OffsetPaginator($userinvs))
-        ->withPageSize((int)$sR->getSetting('default_list_limit'))
-        ->withCurrentPage($currentPageNeverZero)
-        ->withToken(PageToken::next($pageString));
         $parameters = [
             'cR' => $cR,
             'uiR' => $uiR,
             // get a count of clients allocated to the user
             'ucR' => $ucR,
             'active' => $activeInt,
-            'paginator' => $paginator,
             'canEdit' => $canEdit,
             'userinvs' => $userinvs,
             'locale' => $_language,
             'alert' => $this->alert(),
             // Parameters for GridView->requestArguments
-            'page' => $pageString,
+            'page' => (int)$page > 0 ? (int)$page : 1,
             'sortOrder' => $querySort ?? '',
             'manager' => $this->manager,
             'optionsDataFilterUserInvLoginDropDown' => $this->optionsDataFilterUserInvLogin($uiR)

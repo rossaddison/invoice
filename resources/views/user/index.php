@@ -13,9 +13,9 @@ use Yiisoft\Html\Tag\I;
 use Yiisoft\Html\Tag\Select;
 use Yiisoft\Yii\DataView\Column\DataColumn;
 use Yiisoft\Yii\DataView\GridView;
-use Yiisoft\Yii\DataView\Pagination\OffsetPagination;
 
-/** 
+/**
+ * @var App\Widget\GridComponents $gridComponents
  * @var Yiisoft\Data\Paginator\OffsetPaginator $paginator
  * @var Yiisoft\Router\CurrentRoute $currentRoute  
  * @var Yiisoft\Router\UrlGeneratorInterface $urlGenerator 
@@ -137,11 +137,7 @@ $toolbar = Div::tag();
     ->columns(...$columns)
     ->header($header)
     ->id('w1-grid')
-    ->pagination(
-        OffsetPagination::widget()
-            ->paginator($paginator)
-            ->render(),
-    )
+    ->paginationWidget($gridComponents->offsetPaginationWidget($paginator))
     ->summaryAttributes(['class' => 'summary text-end mb-5'])
     ->toolbar($toolbarString);
 ?>

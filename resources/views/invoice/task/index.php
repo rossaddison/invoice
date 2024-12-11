@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 use App\Invoice\Entity\Task;
 use Yiisoft\Data\Paginator\OffsetPaginator;
+use Yiisoft\Data\Paginator\PageToken;
 use Yiisoft\Html\Html;
 use Yiisoft\View\WebView;
 use Yiisoft\Html\Tag\A;
@@ -11,11 +12,11 @@ use Yiisoft\Html\Tag\Div;
 use Yiisoft\Html\Tag\Form;
 use Yiisoft\Html\Tag\H5;
 use Yiisoft\Html\Tag\I;
+use Yiisoft\Router\CurrentRoute;
 use Yiisoft\Yii\DataView\Column\DataColumn;
 use Yiisoft\Yii\DataView\Column\ActionColumn;
 use Yiisoft\Yii\DataView\GridView;
-use Yiisoft\Yii\DataView\Pagination\OffsetPagination;
-use Yiisoft\Router\CurrentRoute;
+use Yiisoft\Yii\DataView\YiiRouter\UrlCreator;
 
 /**
  * @var App\Invoice\Entity\Task $task
@@ -24,14 +25,17 @@ use Yiisoft\Router\CurrentRoute;
  * @var App\Invoice\Setting\SettingRepository $s
  * @var App\Invoice\Project\ProjectRepository $prjctR
  * @var App\Widget\Button $button
+ * @var App\Widget\GridComponents $gridComponents
  * @var string $alert
  * @var string $csrf
  * @var array $statuses
  * @var CurrentRoute $currentRoute 
  * @var OffsetPaginator $paginator
+ * @var Yiisoft\Data\Cycle\Reader\EntityReader $tasks 
  * @var Yiisoft\Translator\TranslatorInterface $translator
  * @var Yiisoft\Router\UrlGeneratorInterface $urlGenerator
- * @var WebView $this
+ * @var WebView $this 
+ * @psalm-var positive-int $page
  */ 
  
  echo $alert;
@@ -191,7 +195,12 @@ use Yiisoft\Router\CurrentRoute;
     ];       
 ?>
 
-<?php 
+<?php
+    $paginator = (new OffsetPaginator($tasks))
+        ->withPageSize((int)$s->getSetting('default_list_limit'))
+        ->withCurrentPage($page)
+        ->withToken(PageToken::next((string)$page));    
+
     $grid_summary = $s->grid_summary(
         $paginator, 
         $translator, 
@@ -209,15 +218,12 @@ use Yiisoft\Router\CurrentRoute;
     ->bodyRowAttributes(['class' => 'align-middle'])
     ->columns(...$columns)
     ->dataReader($paginator)
+    ->urlCreator(new UrlCreator($urlGenerator))        
     ->headerRowAttributes(['class'=>'card-header bg-info text-black'])
     ->tableAttributes(['class' => 'table table-striped text-center h-75','id'=>'table-task'])        
     ->header($header)
     ->id('w64-grid')
-    ->pagination(
-    OffsetPagination::widget()
-        ->paginator($paginator)
-         ->render(),
-    )
+    ->paginationWidget($gridComponents->offsetPaginationWidget($paginator))
     ->summaryAttributes(['class' => 'mt-3 me-3 summary text-end'])
     ->summaryTemplate($grid_summary)
     ->emptyTextAttributes(['class' => 'card-header bg-warning text-black'])

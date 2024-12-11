@@ -329,9 +329,7 @@ echo $alert;
         ->emptyCellAttributes(['style' => 'color:red'])  
         ->header($gridComponents->header(' ' . $translator->translate('i.invoice')))
         ->id('w9-grid')
-        ->pagination(
-           $gridComponents->offsetPaginationWidget($defaultPageSizeOffsetPaginator, $sortedAndPagedPaginator)
-        )
+        ->paginationWidget($gridComponents->offsetPaginationWidget($sortedAndPagedPaginator))
         ->summaryAttributes(['class' => 'mt-3 me-3 summary text-end'])
         ->summaryTemplate(($viewInv ? 
                            $pageSizeLimiter::buttonsGuest($userInv, $urlGenerator, $translator, 'inv', $defaultPageSizeOffsetPaginator) : '').' '.

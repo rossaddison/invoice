@@ -16,6 +16,9 @@ use Yiisoft\Router\CurrentRoute;
 use Yiisoft\Router\UrlGeneratorInterface;
 use Yiisoft\Session\SessionInterface;
 use Yiisoft\Translator\TranslatorInterface;
+use Yiisoft\Yii\AuthClient\Client\Facebook;
+use Yiisoft\Yii\AuthClient\Client\GitHub;
+use Yiisoft\Yii\AuthClient\Client\Google;
 use Yiisoft\Yii\Cycle\Schema\Conveyor\MetadataSchemaConveyor;
 use Yiisoft\Yii\Cycle\Schema\Provider\FromConveyorSchemaProvider;
 use Cycle\Schema\Provider\PhpFileSchemaProvider;
@@ -50,6 +53,33 @@ return [
      */  
     'senderEmail' => 'sender@your.web.site.domain.com',
   ],
+    
+  /**
+   * @see src/Invoice/Setting/SettingRepository function getOauth2IdentityProviderConfigParamsClientsArray()
+   * @see App\Widgets\Button function facebook, github, google
+   * @see App\Auth\Controller\AuthController function login
+   * @see resources\views\auth\login.php
+   */  
+  'yiisoft/yii-auth-client' => [
+      'enabled' => true,
+      'clients' => [          
+          'facebook' => [
+              'class' => 'Yiisoft\Yii\AuthClient\Client\Facebook::class',
+              'clientId' => $_ENV['FACEBOOK_API_CLIENT_ID'] ?? '', 
+              'clientSecret' => $_ENV['FACEBOOK_API_CLIENT_SECRET'] ?? '',              
+          ],
+          'github' => [
+              'class' => 'Yiisoft\Yii\AuthClient\Client\Github::class',
+              'clientId' => $_ENV['GITHUB_API_CLIENT_ID'] ?? '',
+              'clientSecret' => $_ENV['GITHUB_API_CLIENT_SECRET'] ?? '',
+           ],
+          'google' => [
+              'class' => 'Yiisoft\Yii\AuthClient\Client\Google::class',
+              'clientId' => $_ENV['GOOGLE_PEOPLE_API_V1_CLIENT_ID'] ?? '',
+              'clientSecret' => $_ENV['GOOGLE_PEOPLE_API_V1_CLIENT_SECRET'] ?? '',
+          ],
+     ],   
+  ],  
   'yiisoft/aliases' => [
     'aliases' => [
       '@root' => dirname(__DIR__, 2),

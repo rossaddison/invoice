@@ -28,9 +28,9 @@ use App\Invoice\Task\TaskForm;
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
 use Yiisoft\DataResponse\DataResponseFactoryInterface;
-use Yiisoft\Data\Paginator\OffsetPaginator;
 use Yiisoft\Json\Json;
 use Yiisoft\Http\Method;
+use Yiisoft\Input\Http\Attribute\Parameter\Query;
 use Yiisoft\Router\CurrentRoute;
 use Yiisoft\Session\SessionInterface as Session;
 use Yiisoft\Session\Flash\Flash;
@@ -73,23 +73,17 @@ final class TaskController
     }
 
     /**
-     * @param Request $request
+     * @param int $page
      * @param tR $tR
      * @param prjctR $prjctR
      */
-    public function index(Request $request, tR $tR, prjctR $prjctR, sR $sR): \Yiisoft\DataResponse\DataResponse
+    public function index(#[Query('page')] int $page = null, tR $tR, prjctR $prjctR): \Yiisoft\DataResponse\DataResponse
     {
-        $pageNum = (int)$request->getAttribute('page', '1');
-        /** @psalm-var positive-int $currentPageNeverZero */
-        $currentPageNeverZero = $pageNum > 0 ? $pageNum : 1;
-        $paginator = (new OffsetPaginator($this->tasks($tR)))
-        ->withPageSize((int)$sR->getSetting('default_list_limit'))
-        ->withCurrentPage($currentPageNeverZero);
         $canEdit = $this->rbac();
         $parameters = [
-            'paginator' => $paginator,
             'canEdit' => $canEdit,
             'alert' => $this->alert(),
+            'page' => $page > 0 ? $page : 1,
             'prjctR' => $prjctR,
             'tasks' => $this->tasks($tR),
         ];
