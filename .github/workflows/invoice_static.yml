@@ -48,7 +48,9 @@ jobs:
         uses: shivammathur/setup-php@v2
         with:
           php-version: ${{ matrix.php }}
-          tools: composer:v2, cs2pr
+          tools: composer:v2, cs2pr, 
+          extension-csv: uopz, # uopz works with PHP>=8.3
+          pecl: true
           coverage: none
 
       - name: Determine composer cache directory
