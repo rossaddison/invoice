@@ -1288,16 +1288,16 @@
         },
         {
             "name": "cycle/orm",
-            "version": "v2.9.0",
+            "version": "v2.9.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/cycle/orm.git",
-                "reference": "23023be5e8452c1e5b05417f9c4539db71d60927"
+                "reference": "d790848a457d54cce1846ee3d2758fe0ae83537b"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/cycle/orm/zipball/23023be5e8452c1e5b05417f9c4539db71d60927",
-                "reference": "23023be5e8452c1e5b05417f9c4539db71d60927",
+                "url": "https://api.github.com/repos/cycle/orm/zipball/d790848a457d54cce1846ee3d2758fe0ae83537b",
+                "reference": "d790848a457d54cce1846ee3d2758fe0ae83537b",
                 "shasum": ""
             },
             "require": {
@@ -1309,11 +1309,12 @@
             },
             "require-dev": {
                 "doctrine/collections": "^1.6 || ^2.0",
-                "illuminate/collections": "^8.0",
+                "illuminate/collections": "9 - 11",
                 "loophp/collection": "^6.0 || ^7.0",
                 "mockery/mockery": "^1.1",
                 "phpunit/phpunit": "^9.5",
                 "ramsey/uuid": "^4.0",
+                "spiral/code-style": "~2.2.0",
                 "spiral/tokenizer": "^2.8 || ^3.0",
                 "symfony/var-dumper": "^5.2 || ^6.0 || ^7.0",
                 "vimeo/psalm": "5.21"
@@ -1348,6 +1349,16 @@
             ],
             "description": "PHP DataMapper ORM and Data Modelling Engine",
             "homepage": "https://cycle-orm.dev",
+            "keywords": [
+                "data-mapper",
+                "mssql",
+                "mysql",
+                "orm",
+                "postgresql",
+                "query-builder",
+                "sql",
+                "sqlite"
+            ],
             "support": {
                 "chat": "https://discord.gg/spiralphp",
                 "docs": "https://cycle-orm.dev/docs",
@@ -1360,7 +1371,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2024-06-05T13:14:36+00:00"
+            "time": "2024-12-12T10:30:38+00:00"
         },
         {
             "name": "cycle/schema-builder",
@@ -7830,22 +7841,22 @@
         },
         {
             "name": "spiral/core",
-            "version": "3.14.7",
+            "version": "3.14.8",
             "source": {
                 "type": "git",
                 "url": "https://github.com/spiral/core.git",
-                "reference": "4b3581a8878feb75489de7d1bb262d11c53f1d1b"
+                "reference": "e83d25752104f376f5b46e52fdcfdfa7f353ec72"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/spiral/core/zipball/4b3581a8878feb75489de7d1bb262d11c53f1d1b",
-                "reference": "4b3581a8878feb75489de7d1bb262d11c53f1d1b",
+                "url": "https://api.github.com/repos/spiral/core/zipball/e83d25752104f376f5b46e52fdcfdfa7f353ec72",
+                "reference": "e83d25752104f376f5b46e52fdcfdfa7f353ec72",
                 "shasum": ""
             },
             "require": {
                 "php": ">=8.1",
                 "psr/container": "^1.1|^2.0",
-                "spiral/security": "^3.14.7"
+                "spiral/security": "^3.14.8"
             },
             "provide": {
                 "psr/container-implementation": "^1.1|^2.0"
@@ -7900,7 +7911,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2024-11-25T20:19:44+00:00"
+            "time": "2024-12-11T19:42:35+00:00"
         },
         {
             "name": "spiral/files",
@@ -7973,23 +7984,23 @@
         },
         {
             "name": "spiral/hmvc",
-            "version": "3.14.7",
+            "version": "3.14.8",
             "source": {
                 "type": "git",
                 "url": "https://github.com/spiral/hmvc.git",
-                "reference": "6979712ee2dfd1493e16f23b6c3b3c92a78bcf9b"
+                "reference": "63de94a5bcb30a748f9338b5c3a480ea1daffcf1"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/spiral/hmvc/zipball/6979712ee2dfd1493e16f23b6c3b3c92a78bcf9b",
-                "reference": "6979712ee2dfd1493e16f23b6c3b3c92a78bcf9b",
+                "url": "https://api.github.com/repos/spiral/hmvc/zipball/63de94a5bcb30a748f9338b5c3a480ea1daffcf1",
+                "reference": "63de94a5bcb30a748f9338b5c3a480ea1daffcf1",
                 "shasum": ""
             },
             "require": {
                 "php": ">=8.1",
                 "psr/event-dispatcher": "^1.0",
-                "spiral/core": "^3.14.7",
-                "spiral/interceptors": "^3.14.7"
+                "spiral/core": "^3.14.8",
+                "spiral/interceptors": "^3.14.8"
             },
             "require-dev": {
                 "phpunit/phpunit": "^10.1",
@@ -8043,26 +8054,26 @@
                     "type": "github"
                 }
             ],
-            "time": "2024-11-25T20:19:45+00:00"
+            "time": "2024-12-11T19:42:49+00:00"
         },
         {
             "name": "spiral/interceptors",
-            "version": "3.14.7",
+            "version": "3.14.8",
             "source": {
                 "type": "git",
                 "url": "https://github.com/spiral/interceptors.git",
-                "reference": "3e65a56f0e0a3ab142da1ce0ac12a0bdfbd21611"
+                "reference": "6a749e69bf7b9fd8cd0e856a52a59ed6a775c753"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/spiral/interceptors/zipball/3e65a56f0e0a3ab142da1ce0ac12a0bdfbd21611",
-                "reference": "3e65a56f0e0a3ab142da1ce0ac12a0bdfbd21611",
+                "url": "https://api.github.com/repos/spiral/interceptors/zipball/6a749e69bf7b9fd8cd0e856a52a59ed6a775c753",
+                "reference": "6a749e69bf7b9fd8cd0e856a52a59ed6a775c753",
                 "shasum": ""
             },
             "require": {
                 "php": ">=8.1",
                 "psr/event-dispatcher": "^1.0",
-                "spiral/core": "^3.14.7"
+                "spiral/core": "^3.14.8"
             },
             "require-dev": {
                 "phpunit/phpunit": "^10.1",
@@ -8121,7 +8132,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2024-11-25T20:19:45+00:00"
+            "time": "2024-12-11T19:42:51+00:00"
         },
         {
             "name": "spiral/logger",
@@ -8196,7 +8207,7 @@
         },
         {
             "name": "spiral/pagination",
-            "version": "3.14.7",
+            "version": "3.14.8",
             "source": {
                 "type": "git",
                 "url": "https://github.com/spiral/pagination.git",
@@ -8338,27 +8349,27 @@
         },
         {
             "name": "spiral/security",
-            "version": "3.14.7",
+            "version": "3.14.8",
             "source": {
                 "type": "git",
                 "url": "https://github.com/spiral/security.git",
-                "reference": "7e663f8a0392f3a205a5ed052f7b611f3061fb22"
+                "reference": "de9dfa79a2d3e243f43777bf39310d7c164f7a6b"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/spiral/security/zipball/7e663f8a0392f3a205a5ed052f7b611f3061fb22",
-                "reference": "7e663f8a0392f3a205a5ed052f7b611f3061fb22",
+                "url": "https://api.github.com/repos/spiral/security/zipball/de9dfa79a2d3e243f43777bf39310d7c164f7a6b",
+                "reference": "de9dfa79a2d3e243f43777bf39310d7c164f7a6b",
                 "shasum": ""
             },
             "require": {
                 "php": ">=8.1",
-                "spiral/core": "^3.14.7",
-                "spiral/hmvc": "^3.14.7"
+                "spiral/core": "^3.14.8",
+                "spiral/hmvc": "^3.14.8"
             },
             "require-dev": {
                 "mockery/mockery": "^1.5",
                 "phpunit/phpunit": "^10.1",
-                "spiral/console": "^3.14.7",
+                "spiral/console": "^3.14.8",
                 "vimeo/psalm": "^5.9"
             },
             "type": "library",
@@ -8406,7 +8417,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2024-11-25T20:20:17+00:00"
+            "time": "2024-12-11T19:43:15+00:00"
         },
         {
             "name": "spiral/tokenizer",
@@ -24160,7 +24171,6 @@
     "minimum-stability": "dev",
     "stability-flags": {
         "cebe/markdown": 20,
-        "roave/security-advisories": 20,
         "rossaddison/yii-auth-client": 20,
         "yiisoft/data": 20,
         "yiisoft/data-cycle": 20,
@@ -24172,6 +24182,7 @@
         "yiisoft/yii-bootstrap5": 20,
         "yiisoft/yii-dataview": 20,
         "yiisoft/yii-debug-api": 20,
+        "roave/security-advisories": 20,
         "yiisoft/yii-gii": 20,
         "yiisoft/yii-testing": 20
     },
@@ -24190,6 +24201,6 @@
         "ext-pdo_sqlite": "*",
         "ext-uopz": "*"
     },
-    "platform-dev": {},
+    "platform-dev": [],
     "plugin-api-version": "2.6.0"
 }
