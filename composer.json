@@ -149,7 +149,6 @@
         "styleci/cli": "1.5.1",
         "vimeo/psalm": "^5.26",
         "yiisoft/translator-extractor": "^2.0",
-        "yiisoft/yii-debug-viewer": "*",
         "yiisoft/yii-gii": "dev-master",
         "yiisoft/yii-testing": "dev-master"
     },      
