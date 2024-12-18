@@ -48,6 +48,20 @@
 <p>A General Sales Tax (GST) Tax System will have to be implemented first for this purpose.</p>
 <p>Testing Credit Notes against Invoices with refunds (if payment made) linked to each of the payment gateways.</p>
 <p>18th December 2024</p>
+<p>Creating an Oauth Application with Github to get a Github Client Id and Client Secret so that users can login to your site with their Github login. </p>
+<p>Step 1. <a href="https://docs.github.com/v3/oauth">Read the docs</a>
+<p>Step 2. <a href="https://datatracker.ietf.org/doc/html/rfc6749#section-4.1">GitHub's OAuth implementation supports the standard authorization code grant type</a>    
+<p>Step 3. <a href="https://docs.github.com/en/apps/oauth-apps/building-oauth-apps/authorizing-oauth-apps#web-application-flow">We are using the web application flow.</a>
+<p>Step 4. <a href="https://github.com/settings/applications/new">Register your application</a></p>
+<p>Step 5a. Request a User's Web Identity with <pre>GET https://github.com/login/oauth/authorize</pre> and <pre>query parameters client_id, redirect_url, state, login</pre></p>
+<p>Step 5b. Users are redirected back to your site with a temporary code. Exchange this code for an access token using endpoint <pre>POST https://github.com/login/oauth/access_token</pre> with parameters client_id, client_secret, code, redirect_url
+e.g. of an access token <pre>access_token=gho_16C7e42F292c6912E7710c838347Ae178B4a&scope=repo%2Cgist&token_type=bearer</pre> and if accept headers used ..in either json or xml format.</p>
+<p>Step 5c. The src/Auth/Controller/AuthController.php function callbackGithub, with Middleware Authentication, class receives the query parameters code and state from Github.</p>
+<p>Step 5d. If the code is not an unauthorised 401 and the state param is not empty, fetch the token <pre>function OAuth2->fetchAccessToken</pre>.
+<p>Step 5e. If an official token is received, then use the Access token to access the Api on behalf of a user using <pre>Authorization: Bearer OAUTH-TOKEN<br>
+GET https://api.github.com/user</pre><p>
+<p>Step 3f. Use the function vendor/rossaddison/yii-auth-client/src/Client/Github.php getCurrentUserJsonArray(OAuthToken $token) to use the built OauthToken Type with param 'access-token' specific to Github to access the user details e.g login i.e repository base, and id. </p>    
+<p>18th December 2024</p>
 <p>Bootstrap 5 - Apply refactor dropdown widget</p>
 <p><b>11th December 2024</b></p>
 <p>Prepare to test Google with returnUrls which have not as yet been setup.</p>

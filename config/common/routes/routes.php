@@ -138,6 +138,11 @@ return [
     ->middleware(LimitRequestsMiddleware::class)
     ->action([AuthController::class, 'login'])
     ->name('auth/login'),
+    Route::methods([Method::GET, Method::POST], '/auth/callbackGithub')
+      ->middleware(fn(AccessChecker $checker) => $checker->withPermission('editInv'))      
+      ->middleware(Authentication::class)
+      ->action([AuthController::class, 'callbackGithub'])
+      ->name('auth/callbackGithub'),      
     Route::post('/logout')
     ->action([AuthController::class, 'logout'])
     ->name('auth/logout'),
