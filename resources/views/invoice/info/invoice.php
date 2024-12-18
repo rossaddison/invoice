@@ -47,6 +47,8 @@
 <p>Introducing India's PayTm payment gateway's QR code method of payment and comparing this with Stripe's method.</p>
 <p>A General Sales Tax (GST) Tax System will have to be implemented first for this purpose.</p>
 <p>Testing Credit Notes against Invoices with refunds (if payment made) linked to each of the payment gateways.</p>
+<p>18th December 2024</p>
+<p>Bootstrap 5 - Apply refactor dropdown widget</p>
 <p><b>11th December 2024</b></p>
 <p>Prepare to test Google with returnUrls which have not as yet been setup.</p>
 <p>Apply yiisoft/yii-dataview/pull/228 Refactoring of pagination to most indexes.</p>

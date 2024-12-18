@@ -625,12 +625,31 @@ final class ClientController
         return $clients;
     }
 
-    public function guest(CurrentRoute $currentRoute, cR $cR, iaR $iaR, iR $iR, sR $sR, cpR $cpR, ucR $ucR, uiR $uiR): Response
+    public function guest(
+            CurrentRoute $currentRoute,
+            Request $request,
+            UrlGenerator $urlGenerator,
+            cR $cR, 
+            iaR $iaR, 
+            iR $iR, 
+            sR $sR, 
+            cpR $cpR, 
+            ucR $ucR, 
+            uiR $uiR): Response
     {
-        $pageNum = (int)$currentRoute->getArgument('page', '1');
+        $query_params = $request->getQueryParams();
+        /**
+         * @var string $query_params['page']
+         */
+        $page = $query_params['page'] ?? $currentRoute->getArgument('page', '1');
         /** @psalm-var positive-int $currentPageNeverZero */
-        $currentPageNeverZero = $pageNum > 0 ? $pageNum : 1;
+        $currentPageNeverZero = (int)$page > 0 ? (int)$page : 1;       
         $active = (int)$currentRoute->getArgument('active', '2');
+        /** @var string $query_params['sort'] */
+        $sortString = $query_params['sort'] ?? '-id';
+        $urlCreator = new UrlCreator($urlGenerator);
+        $order =  OrderHelper::stringToArray($sortString);
+        $urlCreator->__invoke([], $order);
         $user = $this->userService->getUser();
         if (null !== $user) {
             $user_id = $user->getId();
@@ -643,8 +662,9 @@ final class ClientController
                     if (!empty($client_array)) {
                         $clients = $cR->repoUserClient($client_array);
                         $paginator = (new DataOffsetPaginator($clients))
-                            ->withPageSize((int)$sR->getSetting('default_list_limit'))
-                            ->withCurrentPage($currentPageNeverZero);
+                            ->withPageSize((int)$userInv->getListLimit() ?: 10)
+                            ->withCurrentPage($currentPageNeverZero)
+                            ->withToken(PageToken::next((string)$page));    
                         $parameters = [
                             'paginator' => $paginator,
                             'alert' => $this->alert(),
@@ -652,12 +672,12 @@ final class ClientController
                             'iaR' => $iaR,
                             'editInv' => $this->userService->hasPermission('editInv'),
                             'active' => $active,
-                            'pageNum' => $pageNum,
                             'cpR' => $cpR,
                             'defaultPageSizeOffsetPaginator' => $sR->getSetting('default_list_limit')
                                                                 ? (int)$sR->getSetting('default_list_limit') : 1,
                             'modal_create_client' => $this->viewRenderer->renderPartialAsString('//invoice/client/modal_create_client'),
-                            'userInv' => $userInv
+                            'userInv' => $userInv,
+                            'urlCreator' => $urlCreator
                         ];
                         return $this->viewRenderer->render('guest', $parameters);
                     } //

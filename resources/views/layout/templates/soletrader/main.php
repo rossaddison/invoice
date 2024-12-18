@@ -7,6 +7,9 @@ use App\Widget\PerformanceMetrics;
 use Yiisoft\Html\Html;
 use Yiisoft\Html\Tag\Button;
 use Yiisoft\Html\Tag\Form;
+use Yiisoft\Yii\Bootstrap5\Dropdown;
+use Yiisoft\Yii\Bootstrap5\DropdownItem;
+use Yiisoft\Yii\Bootstrap5\DropdownToggleVariant;
 use Yiisoft\Yii\Bootstrap5\Nav;
 use Yiisoft\Yii\Bootstrap5\NavBar;
 
@@ -81,7 +84,7 @@ $this->setTitle($title);
     </head>
     <body class="cover-container-fluid d-flex w-100 h-100 mx-auto flex-column">
     <header class="mb-auto">
-        <?php $this->beginBody(); ?>
+        <?php $this->beginBody(); ?>        
         <?= NavBar::widget()
             ->brandImage($logoPath)
             ->brandImageAttributes(['margin' => $companyLogoMargin, 
@@ -90,7 +93,7 @@ $this->setTitle($title);
             ->brandText(str_repeat('&nbsp;', 7).$brandLabel)
             ->brandUrl($urlGenerator->generate('site/index'))
             ->options(['class' => 'navbar navbar-light bg-light navbar-expand-sm text-white'])
-            ->begin() ?>
+            ->begin() ?>        
         <?php 
             $currentPath = $currentRoute->getUri()?->getPath();
         ?> 
@@ -178,106 +181,6 @@ $this->setTitle($title);
                             'title' => str_repeat(' ',1).$translator->translate('i.setup_create_user')
                         ]
                     ],
-                    [
-                        'label' => '',
-                        'url' => '#',
-                        'linkOptions' => [
-                            'class' => 'bi bi-translate',
-                            'style' => 'font-size: 1rem; color: cornflowerblue;',
-                            'data-bs-toggle' => 'dropdown',
-                            'title' => $translator->translate('i.language')
-                        ],    
-                        'items' => [
-                            [
-                        'label' => 'Afrikaans South African',                                
-                        'url' => $urlGenerator->generateFromCurrent(['_language' => 'af-ZA'], fallbackRouteName: 'site/index'),
-                    ],
-                    [
-                        'label' => 'Arabic Bahrainian/ عربي',
-                        'url' => $urlGenerator->generateFromCurrent(['_language' => 'ar-BH'], fallbackRouteName: 'site/index'),
-                    ],
-                    [
-                        'label' => 'Azerbaijani / Azərbaycan',
-                        'url' => $urlGenerator->generateFromCurrent(['_language' => 'az'], fallbackRouteName: 'site/index'),
-                    ], 
-                    [
-                        'label' => 'Chinese Simplified / 简体中文',
-                        'url' => $urlGenerator->generateFromCurrent(['_language' => 'zh-CN'], fallbackRouteName: 'site/index'),
-                    ],
-                    [
-                        'label' => 'Tiawanese Mandarin / 简体中文',
-                        'url' => $urlGenerator->generateFromCurrent(['_language' => 'zh-TW'], fallbackRouteName: 'site/index'),
-                    ],           
-                    [
-                        'label' => 'English',
-                        'url' => $urlGenerator->generateFromCurrent(['_language' => 'en'], fallbackRouteName: 'site/index'),
-                    ],
-                    [
-                        'label' => 'Filipino / Filipino',
-                        'url' => $urlGenerator->generateFromCurrent(['_language' => 'fil'], fallbackRouteName: 'site/index'),
-                    ],         
-                    [
-                        'label' => 'French / Français',
-                        'url' => $urlGenerator->generateFromCurrent(['_language' => 'fr'], fallbackRouteName: 'site/index'),
-                    ],        
-                    [
-                        'label' => 'Dutch / Nederlands',
-                        'url' => $urlGenerator->generateFromCurrent(['_language' => 'nl'], fallbackRouteName: 'site/index'),
-                    ],
-                    [
-                        'label' => 'German / Deutsch',
-                        'url' => $urlGenerator->generateFromCurrent(['_language' => 'de'], fallbackRouteName: 'site/index'),
-                    ],
-                    [
-                        'label' => 'Indonesian / bahasa Indonesia',
-                        'url' => $urlGenerator->generateFromCurrent(['_language' => 'id'], fallbackRouteName: 'site/index'),
-                    ],
-                    [
-                        'label' => 'Italian / Italiano',
-                        'url' => $urlGenerator->generateFromCurrent(['_language' => 'it'], fallbackRouteName: 'site/index'),
-                    ],        
-                    [
-                        'label' => 'Japanese / 日本',
-                        'url' => $urlGenerator->generateFromCurrent(['_language' => 'ja'], fallbackRouteName: 'site/index'),
-                    ],       
-                    [
-                        'label' => 'Polish / Polski',
-                        'url' => $urlGenerator->generateFromCurrent(['_language' => 'pl'], fallbackRouteName: 'site/index'),
-                    ],        
-                    [
-                        'label' => 'Portugese Brazilian / Português Brasileiro',
-                        'url' => $urlGenerator->generateFromCurrent(['_language' => 'pt-BR'], fallbackRouteName: 'site/index'),
-                    ],      
-                    [
-                        'label' => 'Russian / Русский',
-                        'url' => $urlGenerator->generateFromCurrent(['_language' => 'ru'], fallbackRouteName: 'site/index'),
-                    ],
-                    [
-                        'label' => 'Slovakian / Slovenský',
-                        'url' => $urlGenerator->generateFromCurrent(['_language' => 'sk'], fallbackRouteName: 'site/index'),
-                    ],
-                    [
-                        'label' => 'Spanish / Española x',
-                        'url' => $urlGenerator->generateFromCurrent(['_language' => 'es'], fallbackRouteName: 'site/index'),
-                    ],
-                    [
-                        'label' => 'Ukrainian / українська',
-                        'url' => $urlGenerator->generateFromCurrent(['_language' => 'uk'], fallbackRouteName: 'site/index'),
-                    ],
-                    [
-                        'label' => 'Uzbek / o'."'".'zbek',
-                        'url' => $urlGenerator->generateFromCurrent(['_language' => 'uz'], fallbackRouteName: 'site/index'),
-                    ],        
-                    [
-                        'label' => 'Vietnamese / Tiếng Việt',
-                        'url' => $urlGenerator->generateFromCurrent(['_language' => 'vi'], fallbackRouteName: 'site/index'),
-                    ],
-                    [
-                        'label' => 'Zulu South African/ Zulu South African',
-                        'url' => $urlGenerator->generateFromCurrent(['_language' => 'zu-ZA'], fallbackRouteName: 'site/index'),
-                    ],           
-                        ],
-                    ],
                     $isGuest ? '' : Form::tag()
                             ->post($urlGenerator->generate('auth/logout'))
                             ->csrf($csrf)
@@ -291,6 +194,41 @@ $this->setTitle($title);
                         . Form::tag()->close(),
                 ],
             ) : ''; ?>
+        <?= Dropdown::widget()
+            ->addClass('bi bi-translate')  
+            ->addAttributes([
+                'style' => 'font-size: 1rem; color: cornflowerblue;',
+                'title' => $translator->translate('i.language'),
+                'url' => '#'
+            ])
+            ->toggleVariant(DropdownToggleVariant::INFO)
+            ->toggleContent('')        
+            ->toggleSizeSmall(true)        
+            ->items(
+                DropdownItem::link('Afrikaans South African', $urlGenerator->generateFromCurrent(['_language' => 'af-ZA'], fallbackRouteName: 'site/index')),
+                DropdownItem::link('Arabic Bahrainian/ عربي', $urlGenerator->generateFromCurrent(['_language' => 'ar-BH'], fallbackRouteName: 'site/index')),
+                DropdownItem::link('Azerbaijani / Azərbaycan', $urlGenerator->generateFromCurrent(['_language' => 'az'], fallbackRouteName: 'site/index')),
+                DropdownItem::link('Chinese Simplified / 简体中文', $urlGenerator->generateFromCurrent(['_language' => 'zh-CN'], fallbackRouteName: 'site/index')),
+                DropdownItem::link('Tiawanese Mandarin / 简体中文', $urlGenerator->generateFromCurrent(['_language' => 'zh-TW'], fallbackRouteName: 'site/index')),
+                DropdownItem::link('English', $urlGenerator->generateFromCurrent(['_language' => 'en'], fallbackRouteName: 'site/index')),
+                DropdownItem::link('Filipino / Filipino', $urlGenerator->generateFromCurrent(['_language' => 'fil'], fallbackRouteName: 'site/index')),
+                DropdownItem::link('French / Français', $urlGenerator->generateFromCurrent(['_language' => 'fr'], fallbackRouteName: 'site/index')),
+                DropdownItem::link('Dutch / Nederlands', $urlGenerator->generateFromCurrent(['_language' => 'nl'], fallbackRouteName: 'site/index')),
+                DropdownItem::link('German / Deutsch', $urlGenerator->generateFromCurrent(['_language' => 'de'], fallbackRouteName: 'site/index')),
+                DropdownItem::link('Indonesian / bahasa Indonesia', $urlGenerator->generateFromCurrent(['_language' => 'id'], fallbackRouteName: 'site/index')),
+                DropdownItem::link('Italian / Italiano', $urlGenerator->generateFromCurrent(['_language' => 'it'], fallbackRouteName: 'site/index')),
+                DropdownItem::link('Japanese / 日本', $urlGenerator->generateFromCurrent(['_language' => 'ja'], fallbackRouteName: 'site/index')),
+                DropdownItem::link('Polish / Polski', $urlGenerator->generateFromCurrent(['_language' => 'pl'], fallbackRouteName: 'site/index')),
+                DropdownItem::link('Portugese Brazilian / Português Brasileiro', $urlGenerator->generateFromCurrent(['_language' => 'pt-BR'], fallbackRouteName: 'site/index')),
+                DropdownItem::link('Russian / Русский', $urlGenerator->generateFromCurrent(['_language' => 'ru'], fallbackRouteName: 'site/index')),
+                DropdownItem::link('Slovakian / Slovenský', $urlGenerator->generateFromCurrent(['_language' => 'sk'], fallbackRouteName: 'site/index')),
+                DropdownItem::link('Spanish /  Española x', $urlGenerator->generateFromCurrent(['_language' => 'es'], fallbackRouteName: 'site/index')),
+                DropdownItem::link('Ukrainian / українська', $urlGenerator->generateFromCurrent(['_language' => 'uk'], fallbackRouteName: 'site/index')),
+                DropdownItem::link('Uzbek / o'."'".'zbek', $urlGenerator->generateFromCurrent(['_language' => 'uz'], fallbackRouteName: 'site/index')),
+                DropdownItem::link('Vietnamese / Tiếng Việt', $urlGenerator->generateFromCurrent(['_language' => 'vi'], fallbackRouteName: 'site/index')),
+                DropdownItem::link('Zulu South African/ Zulu South African', $urlGenerator->generateFromCurrent(['_language' => 'zu-ZA'], fallbackRouteName: 'site/index')),
+            )->render();
+        ?>
         <?= NavBar::end() ?>
     </header>
 
@@ -343,3 +281,5 @@ $this->setTitle($title);
     </html>
 <?php
 $this->endPage(true);
+
+
