@@ -66,17 +66,20 @@ return [
           'facebook' => [
               'class' => 'Yiisoft\Yii\AuthClient\Client\Facebook::class',
               'clientId' => $_ENV['FACEBOOK_API_CLIENT_ID'] ?? '', 
-              'clientSecret' => $_ENV['FACEBOOK_API_CLIENT_SECRET'] ?? '',              
+              'clientSecret' => $_ENV['FACEBOOK_API_CLIENT_SECRET'] ?? '',
+              'returnUrl' => $_ENV['FACEBOOK_API_CLIENT_RETURN_URL'] ?? ''
           ],
           'github' => [
               'class' => 'Yiisoft\Yii\AuthClient\Client\Github::class',
               'clientId' => $_ENV['GITHUB_API_CLIENT_ID'] ?? '',
               'clientSecret' => $_ENV['GITHUB_API_CLIENT_SECRET'] ?? '',
+              'returnUrl' => $_ENV['GITHUB_API_CLIENT_RETURN_URL'] ?? ''
            ],
           'google' => [
               'class' => 'Yiisoft\Yii\AuthClient\Client\Google::class',
               'clientId' => $_ENV['GOOGLE_PEOPLE_API_V1_CLIENT_ID'] ?? '',
               'clientSecret' => $_ENV['GOOGLE_PEOPLE_API_V1_CLIENT_SECRET'] ?? '',
+              'returnUrl' => $_ENV['GOOGLE_PEOPLE_API_VI_CLIENT_RETURN_URL'] ?? ''  
           ],
      ],   
   ],  

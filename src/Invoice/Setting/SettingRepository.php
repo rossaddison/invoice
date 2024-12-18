@@ -537,6 +537,21 @@ final class SettingRepository extends Select\Repository
         return $specificProvider['clientSecret'];
     }
     
+    public function getOauth2IdentityProviderReturnUrl(string $identityProvider) : string
+    {
+        $config = $this->get_config_params();
+        $params = $config->get('params');
+        $identityProviders = $this->getOauth2IdentityProviderConfigParamsClientsArray();
+        /**
+         * @var array $identityProviders[$identityProvider]
+         */
+        $specificProvider = $identityProviders[$identityProvider];
+        /**
+         * @var string $specificProvider['returnUrl']
+         */
+        return $specificProvider['returnUrl'];
+    }
+    
     public function getOauth2IdentityProviderConfigParamsClientsArray() : array
     {
         $config = $this->get_config_params();

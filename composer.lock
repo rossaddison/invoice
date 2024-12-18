@@ -4,29 +4,30 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "477a87edf03bd0a4fdd1cef3dacc229c",
+    "content-hash": "5e8e554401ec1b95a482f0ebef435805",
     "packages": [
         {
             "name": "alexkart/curl-builder",
-            "version": "1.0.8",
+            "version": "1.0.9",
             "source": {
                 "type": "git",
                 "url": "https://github.com/alexkart/curl-builder.git",
-                "reference": "626cf95a84a37b6e1643675f7fc4acfc2f90dbfb"
+                "reference": "6d2ffa146c59afd43d144d02f95ca4cba8a1a720"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/alexkart/curl-builder/zipball/626cf95a84a37b6e1643675f7fc4acfc2f90dbfb",
-                "reference": "626cf95a84a37b6e1643675f7fc4acfc2f90dbfb",
+                "url": "https://api.github.com/repos/alexkart/curl-builder/zipball/6d2ffa146c59afd43d144d02f95ca4cba8a1a720",
+                "reference": "6d2ffa146c59afd43d144d02f95ca4cba8a1a720",
                 "shasum": ""
             },
             "require": {
                 "php": ">=7.3",
-                "psr/http-message": "^1.0"
+                "psr/http-message": "^2.0"
             },
             "require-dev": {
                 "nyholm/psr7": "^1.3",
                 "phan/phan": "^5.4",
+                "phpstan/phpstan": "^1.10",
                 "phpunit/phpunit": "^9.5"
             },
             "type": "library",
@@ -48,9 +49,9 @@
             "description": "PSR-7 compatible curl builder.",
             "support": {
                 "issues": "https://github.com/alexkart/curl-builder/issues",
-                "source": "https://github.com/alexkart/curl-builder/tree/1.0.8"
+                "source": "https://github.com/alexkart/curl-builder/tree/1.0.9"
             },
-            "time": "2023-05-29T13:44:51+00:00"
+            "time": "2024-02-22T11:37:59+00:00"
         },
         {
             "name": "amphp/amp",
@@ -2947,16 +2948,16 @@
         },
         {
             "name": "google/protobuf",
-            "version": "v4.29.1",
+            "version": "v4.29.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/protocolbuffers/protobuf-php.git",
-                "reference": "6042b5483f8029e42473faeb8ef75ba266278381"
+                "reference": "79aa5014efeeec3d137df5cdb0ae2fc163953945"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/protocolbuffers/protobuf-php/zipball/6042b5483f8029e42473faeb8ef75ba266278381",
-                "reference": "6042b5483f8029e42473faeb8ef75ba266278381",
+                "url": "https://api.github.com/repos/protocolbuffers/protobuf-php/zipball/79aa5014efeeec3d137df5cdb0ae2fc163953945",
+                "reference": "79aa5014efeeec3d137df5cdb0ae2fc163953945",
                 "shasum": ""
             },
             "require": {
@@ -2985,9 +2986,9 @@
                 "proto"
             ],
             "support": {
-                "source": "https://github.com/protocolbuffers/protobuf-php/tree/v4.29.1"
+                "source": "https://github.com/protocolbuffers/protobuf-php/tree/v4.29.2"
             },
-            "time": "2024-12-03T22:07:45+00:00"
+            "time": "2024-12-18T14:11:12+00:00"
         },
         {
             "name": "graham-campbell/result-type",
@@ -3855,16 +3856,16 @@
         },
         {
             "name": "mollie/mollie-api-php",
-            "version": "v2.75.0",
+            "version": "v2.76.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/mollie/mollie-api-php.git",
-                "reference": "ac2052855c631b90092768cf6657f6d5b2f5dd9f"
+                "reference": "b6e9848e4893d1d306fba54da3ac6f4a31a40368"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/mollie/mollie-api-php/zipball/ac2052855c631b90092768cf6657f6d5b2f5dd9f",
-                "reference": "ac2052855c631b90092768cf6657f6d5b2f5dd9f",
+                "url": "https://api.github.com/repos/mollie/mollie-api-php/zipball/b6e9848e4893d1d306fba54da3ac6f4a31a40368",
+                "reference": "b6e9848e4893d1d306fba54da3ac6f4a31a40368",
                 "shasum": ""
             },
             "require": {
@@ -3941,9 +3942,9 @@
             ],
             "support": {
                 "issues": "https://github.com/mollie/mollie-api-php/issues",
-                "source": "https://github.com/mollie/mollie-api-php/tree/v2.75.0"
+                "source": "https://github.com/mollie/mollie-api-php/tree/v2.76.0"
             },
-            "time": "2024-11-21T10:33:16+00:00"
+            "time": "2024-12-18T12:26:03+00:00"
         },
         {
             "name": "moneyphp/money",
@@ -4219,20 +4220,20 @@
         },
         {
             "name": "mpdf/psr-http-message-shim",
-            "version": "1.0.0",
+            "version": "v2.0.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/mpdf/psr-http-message-shim.git",
-                "reference": "3206e6b80b6d2479e148ee497e9f2bebadc919db"
+                "reference": "f25a0153d645e234f9db42e5433b16d9b113920f"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/mpdf/psr-http-message-shim/zipball/3206e6b80b6d2479e148ee497e9f2bebadc919db",
-                "reference": "3206e6b80b6d2479e148ee497e9f2bebadc919db",
+                "url": "https://api.github.com/repos/mpdf/psr-http-message-shim/zipball/f25a0153d645e234f9db42e5433b16d9b113920f",
+                "reference": "f25a0153d645e234f9db42e5433b16d9b113920f",
                 "shasum": ""
             },
             "require": {
-                "psr/http-message": "^1.0"
+                "psr/http-message": "^2.0"
             },
             "type": "library",
             "autoload": {
@@ -4261,9 +4262,9 @@
             "description": "Shim to allow support of different psr/message versions.",
             "support": {
                 "issues": "https://github.com/mpdf/psr-http-message-shim/issues",
-                "source": "https://github.com/mpdf/psr-http-message-shim/tree/1.0.0"
+                "source": "https://github.com/mpdf/psr-http-message-shim/tree/v2.0.1"
             },
-            "time": "2023-09-01T05:59:47+00:00"
+            "time": "2023-10-02T14:34:03+00:00"
         },
         {
             "name": "mpdf/psr-log-aware-trait",
@@ -6528,16 +6529,16 @@
         },
         {
             "name": "psr/http-message",
-            "version": "1.1",
+            "version": "2.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/php-fig/http-message.git",
-                "reference": "cb6ce4845ce34a8ad9e68117c10ee90a29919eba"
+                "reference": "402d35bcb92c70c026d1a6a9883f06b2ead23d71"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/php-fig/http-message/zipball/cb6ce4845ce34a8ad9e68117c10ee90a29919eba",
-                "reference": "cb6ce4845ce34a8ad9e68117c10ee90a29919eba",
+                "url": "https://api.github.com/repos/php-fig/http-message/zipball/402d35bcb92c70c026d1a6a9883f06b2ead23d71",
+                "reference": "402d35bcb92c70c026d1a6a9883f06b2ead23d71",
                 "shasum": ""
             },
             "require": {
@@ -6546,7 +6547,7 @@
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-master": "1.1.x-dev"
+                    "dev-master": "2.0.x-dev"
                 }
             },
             "autoload": {
@@ -6561,7 +6562,7 @@
             "authors": [
                 {
                     "name": "PHP-FIG",
-                    "homepage": "http://www.php-fig.org/"
+                    "homepage": "https://www.php-fig.org/"
                 }
             ],
             "description": "Common interface for HTTP messages",
@@ -6575,9 +6576,9 @@
                 "response"
             ],
             "support": {
-                "source": "https://github.com/php-fig/http-message/tree/1.1"
+                "source": "https://github.com/php-fig/http-message/tree/2.0"
             },
-            "time": "2023-04-04T09:50:52+00:00"
+            "time": "2023-04-04T09:54:51+00:00"
         },
         {
             "name": "psr/http-server-handler",
@@ -7088,12 +7089,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/rossaddison/yii-auth-client.git",
-                "reference": "51d2fad06c667004017ee4ce4e0c0e66df433101"
+                "reference": "9acaa1828d49e9e0f7edeb8a1ad338bf5a048de7"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/rossaddison/yii-auth-client/zipball/51d2fad06c667004017ee4ce4e0c0e66df433101",
-                "reference": "51d2fad06c667004017ee4ce4e0c0e66df433101",
+                "url": "https://api.github.com/repos/rossaddison/yii-auth-client/zipball/9acaa1828d49e9e0f7edeb8a1ad338bf5a048de7",
+                "reference": "9acaa1828d49e9e0f7edeb8a1ad338bf5a048de7",
                 "shasum": ""
             },
             "require": {
@@ -7106,7 +7107,7 @@
                 "psr/http-message-implementation": "1.0",
                 "psr/log-implementation": "^2.0",
                 "psr/simple-cache-implementation": "^1.0",
-                "yiisoft/assets": "^4.0",
+                "yiisoft/assets": "^4.0|^5.0",
                 "yiisoft/json": "^1.0",
                 "yiisoft/session": "^2.0",
                 "yiisoft/view": "^10.0",
@@ -7173,7 +7174,83 @@
                     "type": "opencollective"
                 }
             ],
-            "time": "2024-12-11T00:12:51+00:00"
+            "time": "2024-12-18T14:20:45+00:00"
+        },
+        {
+            "name": "rossaddison/yii-bootstrap5",
+            "version": "dev-refactor-dropdown-widget",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/rossaddison/yii-bootstrap5.git",
+                "reference": "58645f786213711c14bbb956f627a3ab0c6dc9c7"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/rossaddison/yii-bootstrap5/zipball/58645f786213711c14bbb956f627a3ab0c6dc9c7",
+                "reference": "58645f786213711c14bbb956f627a3ab0c6dc9c7",
+                "shasum": ""
+            },
+            "require": {
+                "php": "^8.1",
+                "yiisoft/arrays": "^1.0|^2.0|^3.0",
+                "yiisoft/assets": "^4.0",
+                "yiisoft/files": "^2.0",
+                "yiisoft/html": "^3.0",
+                "yiisoft/json": "^1.0",
+                "yiisoft/widget": "^2.0"
+            },
+            "provide": {
+                "yiisoft/yii-bootstrap": "1.0"
+            },
+            "require-dev": {
+                "maglnet/composer-require-checker": "^4.3",
+                "phpunit/phpunit": "^9.6",
+                "rector/rector": "^1.0",
+                "roave/infection-static-analysis-plugin": "^1.16",
+                "spatie/phpunit-watcher": "^1.23",
+                "vimeo/psalm": "^5.25",
+                "yiisoft/aliases": "^3.0",
+                "yiisoft/di": "^1.0"
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "3.0.x-dev"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Yiisoft\\Yii\\Bootstrap5\\": "src"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "BSD-3-Clause"
+            ],
+            "description": "Yii Framework Twitter Bootstrap 5 Extension",
+            "keywords": [
+                "bootstrap5",
+                "yii"
+            ],
+            "support": {
+                "chat": "https://t.me/yii3en",
+                "forum": "https://www.yiiframework.com/forum/",
+                "irc": "ircs://irc.libera.chat:6697/yii",
+                "issues": "https://github.com/yiisoft/yii-bootstrap5/issues?state=open",
+                "source": "https://github.com/yiisoft/yii-bootstrap5",
+                "wiki": "https://www.yiiframework.com/wiki/"
+            },
+            "funding": [
+                {
+                    "url": "https://github.com/yiisoft",
+                    "type": "github"
+                },
+                {
+                    "url": "https://opencollective.com/yiisoft",
+                    "type": "open_collective"
+                }
+            ],
+            "time": "2024-12-08T18:34:47+00:00"
         },
         {
             "name": "sabre/uri",
@@ -11491,16 +11568,16 @@
         },
         {
             "name": "vjik/telegram-bot-api",
-            "version": "0.4.7",
+            "version": "0.4.7.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/vjik/telegram-bot-api.git",
-                "reference": "4face0336a1be66ffd5ea1751b26daa01348e349"
+                "reference": "d9982072e3320c525d71c7f17d8f01de71e06cbf"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/vjik/telegram-bot-api/zipball/4face0336a1be66ffd5ea1751b26daa01348e349",
-                "reference": "4face0336a1be66ffd5ea1751b26daa01348e349",
+                "url": "https://api.github.com/repos/vjik/telegram-bot-api/zipball/d9982072e3320c525d71c7f17d8f01de71e06cbf",
+                "reference": "d9982072e3320c525d71c7f17d8f01de71e06cbf",
                 "shasum": ""
             },
             "require": {
@@ -11511,15 +11588,15 @@
                 "psr/http-message": "^1.1|^2.0"
             },
             "require-dev": {
-                "friendsofphp/php-cs-fixer": "^3.59",
-                "httpsoft/http-message": "^1.1",
-                "maglnet/composer-require-checker": "^4.11",
-                "php-http/curl-client": "^2.3",
-                "phpunit/phpunit": "^10.5",
-                "psr/log": "^3.0",
+                "friendsofphp/php-cs-fixer": "^3.65",
+                "httpsoft/http-message": "^1.1.6",
+                "maglnet/composer-require-checker": "^4.14",
+                "php-http/curl-client": "^2.3.3",
+                "phpunit/phpunit": "^10.5.38",
+                "psr/log": "^3.0.2",
                 "roave/infection-static-analysis-plugin": "^1.35",
-                "vimeo/psalm": "^5.26",
-                "yiisoft/test-support": "^3.0"
+                "vimeo/psalm": "^5.26.1",
+                "yiisoft/test-support": "^3.0.1"
             },
             "suggest": {
                 "psr/log": "To log requests to Telegram Bot API and response handling errors."
@@ -11551,7 +11628,7 @@
                 "issues": "https://github.com/vjik/telegram-bot-api/issues?state=open",
                 "source": "https://github.com/vjik/telegram-bot-api"
             },
-            "time": "2024-12-04T11:56:55+00:00"
+            "time": "2024-12-18T11:29:17+00:00"
         },
         {
             "name": "vlucas/phpdotenv",
@@ -16037,82 +16114,6 @@
                 }
             ],
             "time": "2023-12-25T18:47:09+00:00"
-        },
-        {
-            "name": "yiisoft/yii-bootstrap5",
-            "version": "dev-refactor-dropdown-widget",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/yiisoft/yii-bootstrap5.git",
-                "reference": "58645f786213711c14bbb956f627a3ab0c6dc9c7"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/yiisoft/yii-bootstrap5/zipball/58645f786213711c14bbb956f627a3ab0c6dc9c7",
-                "reference": "58645f786213711c14bbb956f627a3ab0c6dc9c7",
-                "shasum": ""
-            },
-            "require": {
-                "php": "^8.1",
-                "yiisoft/arrays": "^1.0|^2.0|^3.0",
-                "yiisoft/assets": "^4.0",
-                "yiisoft/files": "^2.0",
-                "yiisoft/html": "^3.0",
-                "yiisoft/json": "^1.0",
-                "yiisoft/widget": "^2.0"
-            },
-            "provide": {
-                "yiisoft/yii-bootstrap": "1.0"
-            },
-            "require-dev": {
-                "maglnet/composer-require-checker": "^4.3",
-                "phpunit/phpunit": "^9.6",
-                "rector/rector": "^1.0",
-                "roave/infection-static-analysis-plugin": "^1.16",
-                "spatie/phpunit-watcher": "^1.23",
-                "vimeo/psalm": "^5.25",
-                "yiisoft/aliases": "^3.0",
-                "yiisoft/di": "^1.0"
-            },
-            "type": "library",
-            "extra": {
-                "branch-alias": {
-                    "dev-master": "3.0.x-dev"
-                }
-            },
-            "autoload": {
-                "psr-4": {
-                    "Yiisoft\\Yii\\Bootstrap5\\": "src"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "BSD-3-Clause"
-            ],
-            "description": "Yii Framework Twitter Bootstrap 5 Extension",
-            "keywords": [
-                "bootstrap5",
-                "yii"
-            ],
-            "support": {
-                "chat": "https://t.me/yii3en",
-                "forum": "https://www.yiiframework.com/forum/",
-                "irc": "ircs://irc.libera.chat:6697/yii",
-                "issues": "https://github.com/yiisoft/yii-bootstrap5/issues?state=open",
-                "source": "https://github.com/yiisoft/yii-bootstrap5",
-                "wiki": "https://www.yiiframework.com/wiki/"
-            },
-            "funding": [
-                {
-                    "url": "https://github.com/yiisoft",
-                    "type": "github"
-                },
-                {
-                    "url": "https://opencollective.com/yiisoft",
-                    "type": "open_collective"
-                }
-            ],
-            "time": "2024-12-08T18:34:47+00:00"
         },
         {
             "name": "yiisoft/yii-console",
@@ -21104,12 +21105,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/Roave/SecurityAdvisories.git",
-                "reference": "3076981ea708db9685cd16fa83f919cc0bd2cd65"
+                "reference": "82bcaf352d07debf5a23af1002051849ab01d603"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/Roave/SecurityAdvisories/zipball/3076981ea708db9685cd16fa83f919cc0bd2cd65",
-                "reference": "3076981ea708db9685cd16fa83f919cc0bd2cd65",
+                "url": "https://api.github.com/repos/Roave/SecurityAdvisories/zipball/82bcaf352d07debf5a23af1002051849ab01d603",
+                "reference": "82bcaf352d07debf5a23af1002051849ab01d603",
                 "shasum": ""
             },
             "conflict": {
@@ -21696,7 +21697,7 @@
                 "snipe/snipe-it": "<=7.0.13",
                 "socalnick/scn-social-auth": "<1.15.2",
                 "socialiteproviders/steam": "<1.1",
-                "spatie/browsershot": "<5.0.1",
+                "spatie/browsershot": "<5.0.2",
                 "spatie/image-optimizer": "<1.7.3",
                 "spencer14420/sp-php-email-handler": "<1",
                 "spipu/html2pdf": "<5.2.8",
@@ -21809,7 +21810,7 @@
                 "typo3fluid/fluid": ">=2,<2.0.8|>=2.1,<2.1.7|>=2.2,<2.2.4|>=2.3,<2.3.7|>=2.4,<2.4.4|>=2.5,<2.5.11|>=2.6,<2.6.10",
                 "ua-parser/uap-php": "<3.8",
                 "uasoft-indonesia/badaso": "<=2.9.7",
-                "unisharp/laravel-filemanager": "<2.6.4",
+                "unisharp/laravel-filemanager": "<2.9.1",
                 "unopim/unopim": "<0.1.5",
                 "userfrosting/userfrosting": ">=0.3.1,<4.6.3",
                 "usmanhalalit/pixie": "<1.0.3|>=2,<2.0.2",
@@ -21948,7 +21949,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2024-12-17T12:08:23+00:00"
+            "time": "2024-12-18T16:05:52+00:00"
         },
         {
             "name": "roave/signature",
@@ -23817,135 +23818,6 @@
             "time": "2024-02-13T13:39:33+00:00"
         },
         {
-            "name": "yiisoft/yii-debug-viewer",
-            "version": "dev-master",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/yiisoft/yii-debug-viewer.git",
-                "reference": "89f2704b5ae8aa8e188732c3dd4a8947a2cad774"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/yiisoft/yii-debug-viewer/zipball/89f2704b5ae8aa8e188732c3dd4a8947a2cad774",
-                "reference": "89f2704b5ae8aa8e188732c3dd4a8947a2cad774",
-                "shasum": ""
-            },
-            "require": {
-                "nyholm/psr7": "^1.3",
-                "php": "^8.0",
-                "psr/http-message": "^1.1",
-                "psr/http-server-handler": "^1.0",
-                "psr/http-server-middleware": "^1.0",
-                "yiisoft/assets": "^4.0",
-                "yiisoft/data-response": "^2.0",
-                "yiisoft/http": "^1.1",
-                "yiisoft/router": "^3.1",
-                "yiisoft/view": "^10.0",
-                "yiisoft/yii-view-renderer": "^7.1"
-            },
-            "require-dev": {
-                "httpsoft/http-message": "^1.0.5",
-                "jetbrains/phpstorm-attributes": "^1.0",
-                "maglnet/composer-require-checker": "^4.2",
-                "phpunit/phpunit": "^9.5",
-                "psr/container": "^2.0",
-                "psr/http-factory": "^1.0",
-                "psr/log": "^2.0|^3.0",
-                "rector/rector": "^0.15.1",
-                "roave/infection-static-analysis-plugin": "^1.21",
-                "spatie/phpunit-watcher": "^1.23",
-                "vimeo/psalm": "^4.18",
-                "yiisoft/aliases": "^3.0",
-                "yiisoft/config": "^1.0",
-                "yiisoft/di": "^1.1",
-                "yiisoft/error-handler": "^3.0",
-                "yiisoft/factory": "^1.0",
-                "yiisoft/files": "^2.0",
-                "yiisoft/injector": "^1.0",
-                "yiisoft/log": "^2.0",
-                "yiisoft/log-target-file": "^3.0",
-                "yiisoft/router-fastroute": "^3.0",
-                "yiisoft/yii-console": "^2.0",
-                "yiisoft/yii-event": "^2.0",
-                "yiisoft/yii-http": "^1.0",
-                "yiisoft/yii-runner-console": "^2.0",
-                "yiisoft/yii-runner-http": "^2.0"
-            },
-            "default-branch": true,
-            "type": "library",
-            "extra": {
-                "branch-alias": {
-                    "dev-master": "3.0.x-dev"
-                },
-                "config-plugin": {
-                    "di-web": "di-web.php",
-                    "params": "params.php",
-                    "routes": "routes.php"
-                },
-                "config-plugin-options": {
-                    "source-directory": "config"
-                },
-                "config-plugin-environments": {
-                    "yii-debug-viewer-app": {
-                        "di": "app/di.php",
-                        "di-web": [
-                            "$di",
-                            "app/web.php"
-                        ],
-                        "events": [],
-                        "params": [
-                            "app/params.php"
-                        ],
-                        "routes": [],
-                        "bootstrap": [],
-                        "di-console": "$di",
-                        "events-web": "$events",
-                        "di-providers": [],
-                        "bootstrap-web": "$bootstrap",
-                        "events-console": "$events",
-                        "di-providers-web": "$di-providers",
-                        "bootstrap-console": "$bootstrap",
-                        "di-providers-console": "$di-providers"
-                    }
-                }
-            },
-            "autoload": {
-                "psr-4": {
-                    "Yiisoft\\Yii\\Debug\\Viewer\\": "src"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "BSD-3-Clause"
-            ],
-            "description": "Yii Debug Viewer",
-            "homepage": "https://www.yiiframework.com/",
-            "keywords": [
-                "debug",
-                "dev",
-                "yii"
-            ],
-            "support": {
-                "chat": "https://t.me/yii3en",
-                "forum": "https://www.yiiframework.com/forum/",
-                "irc": "ircs://irc.libera.chat:6697/yii",
-                "issues": "https://github.com/yiisoft/yii-debug-viewer/issues?state=open",
-                "source": "https://github.com/yiisoft/yii-debug-viewer",
-                "wiki": "https://www.yiiframework.com/wiki/"
-            },
-            "funding": [
-                {
-                    "url": "https://github.com/sponsors/yiisoft",
-                    "type": "github"
-                },
-                {
-                    "url": "https://opencollective.com/yiisoft",
-                    "type": "opencollective"
-                }
-            ],
-            "time": "2024-09-06T13:05:25+00:00"
-        },
-        {
             "name": "yiisoft/yii-gii",
             "version": "dev-master",
             "source": {
@@ -24193,6 +24065,7 @@
         "cebe/markdown": 20,
         "roave/security-advisories": 20,
         "rossaddison/yii-auth-client": 20,
+        "rossaddison/yii-bootstrap5": 20,
         "yiisoft/data": 20,
         "yiisoft/data-cycle": 20,
         "yiisoft/db": 20,

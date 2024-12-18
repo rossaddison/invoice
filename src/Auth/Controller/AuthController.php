@@ -13,6 +13,8 @@ use App\Service\WebControllerService;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Yiisoft\FormModel\FormHydrator;
+use Yiisoft\Input\Http\Attribute\Parameter\Query;
+use Yiisoft\Router\FastRoute\UrlGenerator;
 use Yiisoft\Translator\TranslatorInterface;
 use Yiisoft\User\Login\Cookie\CookieLogin;
 use Yiisoft\User\Login\Cookie\CookieLoginIdentityInterface;
@@ -30,17 +32,23 @@ final class AuthController
         private readonly WebControllerService $webService,
         private ViewRenderer                  $viewRenderer,
         private SettingRepository             $sR,
+        private Facebook $facebook,
+        private GitHub $github,
+        private Google $google,  
+        private UrlGenerator $urlGenerator,    
     ) {
         $this->viewRenderer = $viewRenderer->withControllerName('auth');
         $this->sR = $sR;
+        $this->facebook = $facebook;
+        $this->github = $github;
+        $this->google = $google;        
+        $this->initializeOauth2IdentityProviderCredentials($facebook, $github, $google);
+        $this->urlGenerator = $urlGenerator;
     }
 
     public function login(
         ServerRequestInterface $request,
         TranslatorInterface $translator,
-        Facebook $facebook,
-        GitHub $github,
-        Google $google,    
         FormHydrator $formHydrator,
         CookieLogin $cookieLogin,
         // use the 'active' field of the extension table userinv to verify that the user has been made active through e.g. email verificaiton    
@@ -95,20 +103,24 @@ final class AuthController
             $this->authService->logout();
             return $this->redirectToMain();
         };
-        $this->initializeOauth2IdentityProvidersClientIdAndClientSecret($facebook, $github, $google);
         return $this->viewRenderer->render('login', 
             [
                 'formModel' => $loginForm,
-                'facebookAuthUrl' => strlen($facebook->getClientId()) > 0 ? $facebook->buildAuthUrl($request, $params = []) : '',
-                'githubAuthUrl' => strlen($github->getClientId()) > 0 ? $github->buildAuthUrl($request, $params = []) : '',   
-                'googleAuthUrl' => strlen($google->getClientId()) > 0 ? $google->buildAuthUrl($request, $params = []) : ''
+                'facebookAuthUrl' => strlen($this->facebook->getClientId()) > 0 ? $this->facebook->buildAuthUrl($request, $params = []) : '',
+                'githubAuthUrl' => strlen($this->github->getClientId()) > 0 ? $this->github->buildAuthUrl($request, $params = []) : '',   
+                'googleAuthUrl' => strlen($this->google->getClientId()) > 0 ? $this->google->buildAuthUrl($request, $params = []) : ''
             ]);
     }
     
-    public function initializeOauth2IdentityProvidersClientIdAndClientSecret(Facebook $facebook, Github $github, Google $google) : void {
+    private function initializeOauth2IdentityProviderCredentials(Facebook $facebook, Github $github, Google $google) : void {
+        $facebook->setOauth2ReturnUrl($this->sR->getOauth2IdentityProviderReturnUrl('facebook'));
+        $github->setOauth2ReturnUrl($this->sR->getOauth2IdentityProviderReturnUrl('github'));
+        $google->setOauth2ReturnUrl($this->sR->getOauth2IdentityProviderReturnUrl('google'));
+        
         $facebook->setClientId($this->sR->getOauth2IdentityProviderClientId('facebook'));
         $github->setClientId($this->sR->getOauth2IdentityProviderClientId('github'));
         $google->setClientId($this->sR->getOauth2IdentityProviderClientId('google'));
+        
         $facebook->setClientSecret($this->sR->getOauth2IdentityProviderClientSecret('facebook'));
         $github->setClientSecret($this->sR->getOauth2IdentityProviderClientSecret('github'));
         $google->setClientSecret($this->sR->getOauth2IdentityProviderClientSecret('google'));
@@ -130,13 +142,68 @@ final class AuthController
             }
         }    
     }
-
+    
+    /**
+     * https://yii3i.co.uk/callbackGithub?code=b9f7562bc6b1d214f3c4&state=a15ed92d3f9fc43f7f3bbe46126607ad0a0aba8e1b1a71f56af0695891adafa2
+     * @see https://docs.github.com/en/apps/oauth-apps/building-oauth-apps/authorizing-oauth-apps
+     * @param string $code
+     * @param string $state
+     * @param ServerRequestInterface $request
+     * @return ResponseInterface
+     */
+    public function callbackGithub(
+            #[Query('code')] string $code, 
+            #[Query('state')] string $state,
+            ServerRequestInterface $request
+        ) : ResponseInterface {
+        if (strlen($code) == 0) {
+            // If we don't have an authorization code then get one 
+            // and use the protected function oauth2->generateAuthState to generate state param
+            // which has a session id built into it
+            $authorizationUrl = $this->github->buildAuthUrl($request, []);
+            header('Location: ' . $authorizationUrl);
+            exit;
+        } elseif ($code == 401){
+            return $this->redirectToGithubCallbackResultUnAuthorised();
+        } elseif (empty($state)) {
+            /**
+             * State is invalid, possible cross-site request forgery. Exit with an error code.
+             */
+            exit(1);        
+        // code and state are both present    
+        } else {
+            // Try to get an access token (using the 'authorization code' grant)
+            // The 'request_uri' is included by default in $defaultParams[] and therefore not needed in $params
+            // The $response->getBody()->getContents() for each Client e.g. Github will be parsed and loaded into an OAuthToken Type
+            // For Github we know that the parameter key for the token is 'access_token' and not the default 'oauth_token'
+            $oAuthTokenType = $this->github->fetchAccessToken($request, $code, $params = []);
+            /**
+             * Every time you receive an access token, you should use the token to revalidate the user's identity. 
+             * A user can change which account they are signed into when you send them to authorize your app, 
+             * and you risk mixing user data if you do not validate the user's identity after every sign in.
+             * @see https://docs.github.com/en/apps/oauth-apps/building-oauth-apps/authorizing-oauth-apps#3-use-the-access-token-to-access-the-api
+             */
+            $userArray = $this->github->getCurrentUserJsonArray($oAuthTokenType);
+            return $this->redirectToGithubCallbackResult();
+        }
+    }
+    
+    private function redirectToGithubCallbackResultUnAuthorised() : ResponseInterface
+    {
+        return $this->webService->getRedirectResponse('site/githubcallbackresultunauthorised', ['_language' => 'en']);
+    }
+    
+    private function redirectToGithubCallbackResult() : ResponseInterface 
+    {
+        return $this->webService->getRedirectResponse('site/githubcallbackresult', ['_language' => 'en']);
+    }
+    
     public function logout(): ResponseInterface
     {
         $this->authService->logout();
         return $this->redirectToMain();
     }
-
+    
     private function redirectToMain(): ResponseInterface
     {
         return $this->webService->getRedirectResponse('site/index', ['_language' => 'en']);
