@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "d400f28e43f28c71ca53671a98ddac8a",
+    "content-hash": "9b837aef5912f2166c38892bbe5e57a7",
     "packages": [
         {
             "name": "alexkart/curl-builder",
@@ -7089,12 +7089,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/rossaddison/yii-auth-client.git",
-                "reference": "9acaa1828d49e9e0f7edeb8a1ad338bf5a048de7"
+                "reference": "51dfe0f292a456cad7b1d1f1d8816ec32ce8cc9e"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/rossaddison/yii-auth-client/zipball/9acaa1828d49e9e0f7edeb8a1ad338bf5a048de7",
-                "reference": "9acaa1828d49e9e0f7edeb8a1ad338bf5a048de7",
+                "url": "https://api.github.com/repos/rossaddison/yii-auth-client/zipball/51dfe0f292a456cad7b1d1f1d8816ec32ce8cc9e",
+                "reference": "51dfe0f292a456cad7b1d1f1d8816ec32ce8cc9e",
                 "shasum": ""
             },
             "require": {
@@ -7107,10 +7107,10 @@
                 "psr/http-message-implementation": "1.0",
                 "psr/log-implementation": "^2.0",
                 "psr/simple-cache-implementation": "^1.0",
-                "yiisoft/assets": "^4.0|^5.0",
+                "yiisoft/assets": "^5.0",
                 "yiisoft/json": "^1.0",
                 "yiisoft/session": "^2.0",
-                "yiisoft/view": "^10.0",
+                "yiisoft/view": "^11.0",
                 "yiisoft/widget": "^2.1"
             },
             "require-dev": {
@@ -7174,7 +7174,7 @@
                     "type": "opencollective"
                 }
             ],
-            "time": "2024-12-18T14:20:45+00:00"
+            "time": "2024-12-19T19:52:23+00:00"
         },
         {
             "name": "sabre/uri",
@@ -15821,22 +15821,20 @@
         },
         {
             "name": "yiisoft/view",
-            "version": "10.0.0",
+            "version": "11.0.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/yiisoft/view.git",
-                "reference": "4416d30e4e286e23887d9f525701f37e3a15f9ca"
+                "reference": "dfdae3f298d04a0e7f914ac28a4f87a7b98c5100"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/yiisoft/view/zipball/4416d30e4e286e23887d9f525701f37e3a15f9ca",
-                "reference": "4416d30e4e286e23887d9f525701f37e3a15f9ca",
+                "url": "https://api.github.com/repos/yiisoft/view/zipball/dfdae3f298d04a0e7f914ac28a4f87a7b98c5100",
+                "reference": "dfdae3f298d04a0e7f914ac28a4f87a7b98c5100",
                 "shasum": ""
             },
             "require": {
-                "php": "^8.0",
-                "psr/event-dispatcher": "1.0.0",
-                "psr/event-dispatcher-implementation": "1.0.0",
+                "php": "^8.1",
                 "yiisoft/arrays": "^2.0|^3.0",
                 "yiisoft/cache": "^1.0|^2.0|^3.0",
                 "yiisoft/files": "^1.0|^2.0",
@@ -15845,15 +15843,15 @@
             },
             "require-dev": {
                 "maglnet/composer-require-checker": "^4.2",
-                "phpunit/phpunit": "^9.5",
-                "rector/rector": "1.0.*",
+                "phpunit/phpunit": "^10.5",
+                "rector/rector": "^1.2",
                 "roave/infection-static-analysis-plugin": "^1.25",
                 "spatie/phpunit-watcher": "^1.23",
-                "vimeo/psalm": "^4.30|^5.20",
+                "vimeo/psalm": "^5.26",
                 "yiisoft/aliases": "^3.0",
                 "yiisoft/di": "^1.2",
                 "yiisoft/psr-dummy-provider": "^1.0",
-                "yiisoft/test-support": "^1.4|^3.0"
+                "yiisoft/test-support": "^3.0"
             },
             "type": "library",
             "extra": {
@@ -15899,7 +15897,7 @@
                     "type": "opencollective"
                 }
             ],
-            "time": "2024-06-28T10:02:35+00:00"
+            "time": "2024-10-08T07:48:10+00:00"
         },
         {
             "name": "yiisoft/widget",
