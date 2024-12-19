@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "5e8e554401ec1b95a482f0ebef435805",
+    "content-hash": "d400f28e43f28c71ca53671a98ddac8a",
     "packages": [
         {
             "name": "alexkart/curl-builder",
@@ -7177,82 +7177,6 @@
             "time": "2024-12-18T14:20:45+00:00"
         },
         {
-            "name": "rossaddison/yii-bootstrap5",
-            "version": "dev-refactor-dropdown-widget",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/rossaddison/yii-bootstrap5.git",
-                "reference": "58645f786213711c14bbb956f627a3ab0c6dc9c7"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/rossaddison/yii-bootstrap5/zipball/58645f786213711c14bbb956f627a3ab0c6dc9c7",
-                "reference": "58645f786213711c14bbb956f627a3ab0c6dc9c7",
-                "shasum": ""
-            },
-            "require": {
-                "php": "^8.1",
-                "yiisoft/arrays": "^1.0|^2.0|^3.0",
-                "yiisoft/assets": "^4.0",
-                "yiisoft/files": "^2.0",
-                "yiisoft/html": "^3.0",
-                "yiisoft/json": "^1.0",
-                "yiisoft/widget": "^2.0"
-            },
-            "provide": {
-                "yiisoft/yii-bootstrap": "1.0"
-            },
-            "require-dev": {
-                "maglnet/composer-require-checker": "^4.3",
-                "phpunit/phpunit": "^9.6",
-                "rector/rector": "^1.0",
-                "roave/infection-static-analysis-plugin": "^1.16",
-                "spatie/phpunit-watcher": "^1.23",
-                "vimeo/psalm": "^5.25",
-                "yiisoft/aliases": "^3.0",
-                "yiisoft/di": "^1.0"
-            },
-            "type": "library",
-            "extra": {
-                "branch-alias": {
-                    "dev-master": "3.0.x-dev"
-                }
-            },
-            "autoload": {
-                "psr-4": {
-                    "Yiisoft\\Yii\\Bootstrap5\\": "src"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "BSD-3-Clause"
-            ],
-            "description": "Yii Framework Twitter Bootstrap 5 Extension",
-            "keywords": [
-                "bootstrap5",
-                "yii"
-            ],
-            "support": {
-                "chat": "https://t.me/yii3en",
-                "forum": "https://www.yiiframework.com/forum/",
-                "irc": "ircs://irc.libera.chat:6697/yii",
-                "issues": "https://github.com/yiisoft/yii-bootstrap5/issues?state=open",
-                "source": "https://github.com/yiisoft/yii-bootstrap5",
-                "wiki": "https://www.yiiframework.com/wiki/"
-            },
-            "funding": [
-                {
-                    "url": "https://github.com/yiisoft",
-                    "type": "github"
-                },
-                {
-                    "url": "https://opencollective.com/yiisoft",
-                    "type": "open_collective"
-                }
-            ],
-            "time": "2024-12-08T18:34:47+00:00"
-        },
-        {
             "name": "sabre/uri",
             "version": "3.0.2",
             "source": {
@@ -8594,16 +8518,16 @@
         },
         {
             "name": "stripe/stripe-php",
-            "version": "v16.3.0",
+            "version": "v16.4.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/stripe/stripe-php.git",
-                "reference": "48af6bc64ca8157b3fdce100e856069963bac466"
+                "reference": "4aa86099f888db9368f5f778f29feb14e6294dfb"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/stripe/stripe-php/zipball/48af6bc64ca8157b3fdce100e856069963bac466",
-                "reference": "48af6bc64ca8157b3fdce100e856069963bac466",
+                "url": "https://api.github.com/repos/stripe/stripe-php/zipball/4aa86099f888db9368f5f778f29feb14e6294dfb",
+                "reference": "4aa86099f888db9368f5f778f29feb14e6294dfb",
                 "shasum": ""
             },
             "require": {
@@ -8647,70 +8571,9 @@
             ],
             "support": {
                 "issues": "https://github.com/stripe/stripe-php/issues",
-                "source": "https://github.com/stripe/stripe-php/tree/v16.3.0"
+                "source": "https://github.com/stripe/stripe-php/tree/v16.4.0"
             },
-            "time": "2024-11-20T23:30:16+00:00"
-        },
-        {
-            "name": "swagger-api/swagger-ui",
-            "version": "v5.18.2",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/swagger-api/swagger-ui.git",
-                "reference": "3c7e281d97fd3e70b25f7ff4a001eabd56e375d7"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/swagger-api/swagger-ui/zipball/3c7e281d97fd3e70b25f7ff4a001eabd56e375d7",
-                "reference": "3c7e281d97fd3e70b25f7ff4a001eabd56e375d7",
-                "shasum": ""
-            },
-            "type": "library",
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "Apache-2.0"
-            ],
-            "authors": [
-                {
-                    "name": "Anna Bodnia",
-                    "email": "anna.bodnia@gmail.com"
-                },
-                {
-                    "name": "Buu Nguyen",
-                    "email": "buunguyen@gmail.com"
-                },
-                {
-                    "name": "Josh Ponelat",
-                    "email": "jponelat@gmail.com"
-                },
-                {
-                    "name": "Kyle Shockey",
-                    "email": "kyleshockey1@gmail.com"
-                },
-                {
-                    "name": "Robert Barnwell",
-                    "email": "robert@robertismy.name"
-                },
-                {
-                    "name": "Sahar Jafari",
-                    "email": "shr.jafari@gmail.com"
-                }
-            ],
-            "description": " Swagger UI is a collection of HTML, Javascript, and CSS assets that dynamically generate beautiful documentation from a Swagger-compliant API.",
-            "homepage": "http://swagger.io",
-            "keywords": [
-                "api",
-                "documentation",
-                "openapi",
-                "specification",
-                "swagger",
-                "ui"
-            ],
-            "support": {
-                "issues": "https://github.com/swagger-api/swagger-ui/issues",
-                "source": "https://github.com/swagger-api/swagger-ui/tree/v5.18.2"
-            },
-            "time": "2024-11-07T14:02:16+00:00"
+            "time": "2024-12-18T23:42:15+00:00"
         },
         {
             "name": "symfony/cache",
@@ -12017,40 +11880,41 @@
         },
         {
             "name": "yiisoft/assets",
-            "version": "4.0.0",
+            "version": "5.0.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/yiisoft/assets.git",
-                "reference": "14984b2c8a87236da8c8ef5a4f1273d4ff8a36bc"
+                "reference": "ca5514edfb334c60e37430d3ec08a4a828f6f591"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/yiisoft/assets/zipball/14984b2c8a87236da8c8ef5a4f1273d4ff8a36bc",
-                "reference": "14984b2c8a87236da8c8ef5a4f1273d4ff8a36bc",
+                "url": "https://api.github.com/repos/yiisoft/assets/zipball/ca5514edfb334c60e37430d3ec08a4a828f6f591",
+                "reference": "ca5514edfb334c60e37430d3ec08a4a828f6f591",
                 "shasum": ""
             },
             "require": {
                 "ext-mbstring": "*",
-                "php": "^8.0",
+                "php": "^8.1",
                 "psr/log": "^1.1|^2.0|^3.0",
                 "yiisoft/aliases": "^1.1|^2.0|^3.0",
                 "yiisoft/files": "^2.0",
                 "yiisoft/json": "^1.0"
             },
             "require-dev": {
-                "maglnet/composer-require-checker": "^4.2",
-                "phpunit/phpunit": "^9.5",
-                "rector/rector": "^0.15.3",
-                "roave/infection-static-analysis-plugin": "^1.16",
-                "spatie/phpunit-watcher": "^1.23",
-                "vimeo/psalm": "^4.30|^5.6",
-                "yiisoft/di": "^1.2",
-                "yiisoft/test-support": "^3.0"
+                "maglnet/composer-require-checker": "^4.7",
+                "phpunit/phpunit": "^10.5",
+                "rector/rector": "^1.2",
+                "roave/infection-static-analysis-plugin": "^1.35",
+                "spatie/phpunit-watcher": "^1.24",
+                "vimeo/psalm": "^5.26",
+                "yiisoft/di": "^1.3",
+                "yiisoft/test-support": "^3.0",
+                "yiisoft/yii-debug": "dev-master"
             },
             "type": "library",
             "extra": {
                 "config-plugin": {
-                    "di-web": "di-web.php",
+                    "di": "di.php",
                     "params": "params.php"
                 },
                 "config-plugin-options": {
@@ -12076,22 +11940,22 @@
             "support": {
                 "chat": "https://t.me/yii3en",
                 "forum": "https://www.yiiframework.com/forum/",
-                "irc": "irc://irc.freenode.net/yii",
+                "irc": "ircs://irc.libera.chat:6697/yii",
                 "issues": "https://github.com/yiisoft/assets/issues?state=open",
                 "source": "https://github.com/yiisoft/assets",
                 "wiki": "https://www.yiiframework.com/wiki/"
             },
             "funding": [
                 {
-                    "url": "https://github.com/yiisoft",
+                    "url": "https://github.com/sponsors/yiisoft",
                     "type": "github"
                 },
                 {
                     "url": "https://opencollective.com/yiisoft",
-                    "type": "open_collective"
+                    "type": "opencollective"
                 }
             ],
-            "time": "2023-02-13T11:15:18+00:00"
+            "time": "2024-12-11T11:34:32+00:00"
         },
         {
             "name": "yiisoft/auth",
@@ -16116,6 +15980,83 @@
             "time": "2023-12-25T18:47:09+00:00"
         },
         {
+            "name": "yiisoft/yii-bootstrap5",
+            "version": "dev-master",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/yiisoft/yii-bootstrap5.git",
+                "reference": "d8e3ecb71bf0d1171a1c12e6bc03865ae413294d"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/yiisoft/yii-bootstrap5/zipball/d8e3ecb71bf0d1171a1c12e6bc03865ae413294d",
+                "reference": "d8e3ecb71bf0d1171a1c12e6bc03865ae413294d",
+                "shasum": ""
+            },
+            "require": {
+                "php": "^8.1",
+                "yiisoft/arrays": "^1.0|^2.0|^3.0",
+                "yiisoft/assets": "^5.0",
+                "yiisoft/files": "^2.0",
+                "yiisoft/html": "^3.0",
+                "yiisoft/json": "^1.0",
+                "yiisoft/widget": "^2.0"
+            },
+            "provide": {
+                "yiisoft/yii-bootstrap": "1.0"
+            },
+            "require-dev": {
+                "maglnet/composer-require-checker": "^4.3",
+                "phpunit/phpunit": "^9.6",
+                "rector/rector": "^1.0",
+                "roave/infection-static-analysis-plugin": "^1.16",
+                "spatie/phpunit-watcher": "^1.23",
+                "vimeo/psalm": "^5.25",
+                "yiisoft/aliases": "^3.0",
+                "yiisoft/di": "^1.0"
+            },
+            "default-branch": true,
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "3.0.x-dev"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Yiisoft\\Yii\\Bootstrap5\\": "src"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "BSD-3-Clause"
+            ],
+            "description": "Yii Framework Twitter Bootstrap 5 Extension",
+            "keywords": [
+                "bootstrap5",
+                "yii"
+            ],
+            "support": {
+                "chat": "https://t.me/yii3en",
+                "forum": "https://www.yiiframework.com/forum/",
+                "irc": "ircs://irc.libera.chat:6697/yii",
+                "issues": "https://github.com/yiisoft/yii-bootstrap5/issues?state=open",
+                "source": "https://github.com/yiisoft/yii-bootstrap5",
+                "wiki": "https://www.yiiframework.com/wiki/"
+            },
+            "funding": [
+                {
+                    "url": "https://github.com/yiisoft",
+                    "type": "github"
+                },
+                {
+                    "url": "https://opencollective.com/yiisoft",
+                    "type": "open_collective"
+                }
+            ],
+            "time": "2024-12-18T13:43:05+00:00"
+        },
+        {
             "name": "yiisoft/yii-console",
             "version": "2.2.0",
             "source": {
@@ -16460,18 +16401,18 @@
             "default-branch": true,
             "type": "library",
             "extra": {
-                "config-plugin-options": {
-                    "source-directory": "config"
-                },
                 "config-plugin": {
+                    "di": "di.php",
+                    "di-web": "di-web.php",
                     "params": "params.php",
                     "bootstrap": "bootstrap.php",
-                    "di": "di.php",
                     "di-console": "di-console.php",
-                    "di-web": "di-web.php",
-                    "di-providers": "di-providers.php",
                     "events-web": "events-web.php",
+                    "di-providers": "di-providers.php",
                     "events-console": "events-console.php"
+                },
+                "config-plugin-options": {
+                    "source-directory": "config"
                 }
             },
             "autoload": {
@@ -17190,95 +17131,6 @@
                 }
             ],
             "time": "2024-07-15T17:44:28+00:00"
-        },
-        {
-            "name": "yiisoft/yii-swagger",
-            "version": "2.1.1",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/yiisoft/yii-swagger.git",
-                "reference": "c0fe0483b04719a6724fb13650f679614e1b0cef"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/yiisoft/yii-swagger/zipball/c0fe0483b04719a6724fb13650f679614e1b0cef",
-                "reference": "c0fe0483b04719a6724fb13650f679614e1b0cef",
-                "shasum": ""
-            },
-            "require": {
-                "php": "^8.0",
-                "psr/http-message": "^1.0|^2.0",
-                "psr/http-server-handler": "^1.0",
-                "psr/http-server-middleware": "^1.0",
-                "swagger-api/swagger-ui": "^4.1|^5.0",
-                "yiisoft/aliases": "^1.1|^2.0|^3.0",
-                "yiisoft/arrays": "^3.0",
-                "yiisoft/assets": "^2.0|^3.0|^4.0",
-                "yiisoft/cache": "^1.0|^2.0|^3.0",
-                "yiisoft/data-response": "^1.0|^2.0",
-                "yiisoft/html": "^3.0",
-                "yiisoft/yii-view-renderer": "^7.1.0",
-                "zircote/swagger-php": "^4.0"
-            },
-            "require-dev": {
-                "doctrine/annotations": "^2.0",
-                "httpsoft/http-message": "^1.0",
-                "maglnet/composer-require-checker": "^4.4",
-                "phpunit/phpunit": "^9.5",
-                "rector/rector": "^1.0",
-                "roave/infection-static-analysis-plugin": "^1.16",
-                "spatie/phpunit-watcher": "^1.23",
-                "vimeo/psalm": "^4.30|^5.6",
-                "yiisoft/csrf": "^2.0",
-                "yiisoft/di": "^1.2",
-                "yiisoft/psr-dummy-provider": "^1.0",
-                "yiisoft/test-support": "^3.0"
-            },
-            "type": "library",
-            "extra": {
-                "config-plugin": {
-                    "di-web": "di-web.php",
-                    "params": "params.php"
-                },
-                "config-plugin-options": {
-                    "source-directory": "config"
-                }
-            },
-            "autoload": {
-                "psr-4": {
-                    "Yiisoft\\Swagger\\": "src"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "BSD-3-Clause"
-            ],
-            "description": "OpenAPI Swagger for Yii Framework",
-            "homepage": "https://www.yiiframework.com/",
-            "keywords": [
-                "api",
-                "swagger",
-                "yii"
-            ],
-            "support": {
-                "chat": "https://t.me/yii3en",
-                "forum": "https://www.yiiframework.com/forum/",
-                "irc": "ircs://irc.libera.chat:6697/yii",
-                "issues": "https://github.com/yiisoft/yii-swagger/issues?state=open",
-                "source": "https://github.com/yiisoft/yii-swagger",
-                "wiki": "https://www.yiiframework.com/wiki/"
-            },
-            "funding": [
-                {
-                    "url": "https://github.com/sponsors/yiisoft",
-                    "type": "github"
-                },
-                {
-                    "url": "https://opencollective.com/yiisoft",
-                    "type": "opencollective"
-                }
-            ],
-            "time": "2024-09-04T21:55:48+00:00"
         },
         {
             "name": "yiisoft/yii-view-renderer",
@@ -21105,12 +20957,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/Roave/SecurityAdvisories.git",
-                "reference": "82bcaf352d07debf5a23af1002051849ab01d603"
+                "reference": "4aa68d3ea343b9576b5fdebef1332f701a7bc994"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/Roave/SecurityAdvisories/zipball/82bcaf352d07debf5a23af1002051849ab01d603",
-                "reference": "82bcaf352d07debf5a23af1002051849ab01d603",
+                "url": "https://api.github.com/repos/Roave/SecurityAdvisories/zipball/4aa68d3ea343b9576b5fdebef1332f701a7bc994",
+                "reference": "4aa68d3ea343b9576b5fdebef1332f701a7bc994",
                 "shasum": ""
             },
             "conflict": {
@@ -21220,7 +21072,7 @@
                 "contao/managed-edition": "<=1.5",
                 "corveda/phpsandbox": "<1.3.5",
                 "cosenary/instagram": "<=2.3",
-                "craftcms/cms": "<=4.12.6.1|>=5,<=5.4.7.1",
+                "craftcms/cms": "<4.13.2|>=5,<5.5.2",
                 "croogo/croogo": "<4",
                 "cuyz/valinor": "<0.12",
                 "czim/file-handling": "<1.5|>=2,<2.3",
@@ -21949,7 +21801,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2024-12-18T16:05:52+00:00"
+            "time": "2024-12-18T20:05:40+00:00"
         },
         {
             "name": "roave/signature",
@@ -24065,7 +23917,6 @@
         "cebe/markdown": 20,
         "roave/security-advisories": 20,
         "rossaddison/yii-auth-client": 20,
-        "rossaddison/yii-bootstrap5": 20,
         "yiisoft/data": 20,
         "yiisoft/data-cycle": 20,
         "yiisoft/db": 20,
@@ -24073,6 +23924,7 @@
         "yiisoft/form-model": 20,
         "yiisoft/rate-limiter": 20,
         "yiisoft/requirements": 20,
+        "yiisoft/yii-bootstrap5": 20,
         "yiisoft/yii-dataview": 20,
         "yiisoft/yii-debug-api": 20,
         "yiisoft/yii-gii": 20,

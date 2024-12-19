@@ -287,7 +287,7 @@ $this->beginPage();
                     'title' => $s->debug_mode_file_location(0), 
                     'style' => 'background-color: #ffcccb',
                     'hidden' => !$debugMode,               
-                ])    
+                ]),    
             )        
             ->render();
             

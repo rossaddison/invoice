@@ -18,5 +18,8 @@
         <ignoreFiles>
             <directory name="vendor/yiisoft/requirements/src" />
         </ignoreFiles>        
-    </projectFiles>    
+    </projectFiles>
+    <issueHandlers>
+        <NonInvariantDocblockPropertyType errorLevel="suppress" />
+    </issueHandlers>    
 </psalm>
