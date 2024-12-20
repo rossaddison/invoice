@@ -4,13 +4,14 @@ declare(strict_types=1);
 
 namespace App\Invoice\Upload;
 
+use App\Invoice\Client\ClientRepository;
 use App\Invoice\Entity\Client;
 use App\Invoice\Entity\Upload;
 use App\Invoice\Upload\UploadForm;
 use App\Invoice\Upload\UploadService;
 use App\Invoice\Upload\UploadRepository;
 use App\Invoice\Setting\SettingRepository;
-use App\Invoice\Client\ClientRepository;
+use App\Invoice\Traits\FlashMessage;
 use App\User\UserService;
 use App\Service\WebControllerService;
 use Psr\Http\Message\ResponseInterface as Response;
@@ -31,6 +32,8 @@ use Exception;
 
 final class UploadController
 {
+    use FlashMessage;
+    
     private Flash $flash;
     private SessionInterface $session;
     private SettingRepository $s;
@@ -160,20 +163,6 @@ final class UploadController
     }
 
     /**
-     * @param string $level
-     * @param string $message
-     * @return Flash|null
-     */
-    private function flash_message(string $level, string $message): Flash|null
-    {
-        if (strlen($message) > 0) {
-            $this->flash->add($level, $message, true);
-            return $this->flash;
-        }
-        return null;
-    }
-
-    /**
      * @param CurrentRoute $currentRoute
      * @param UploadRepository $uploadRepository
      * @param SettingRepository $settingRepository
@@ -189,7 +178,7 @@ final class UploadController
             if ($upload) {
                 $this->uploadService->deleteUpload($upload, $settingRepository);
                 $inv_id = (string) $this->session->get('inv_id');
-                $this->flash_message('info', $this->translator->translate('i.record_successfully_deleted'));
+                $this->flashMessage('info', $this->translator->translate('i.record_successfully_deleted'));
                 return $this->factory->createResponse($this->viewRenderer->renderPartialAsString(
                     '//invoice/setting/inv_message',
                     ['heading' => '', 'message' => $this->translator->translate('i.record_successfully_deleted'), 'url' => 'inv/view', 'id' => $inv_id]
@@ -197,7 +186,7 @@ final class UploadController
             }
             return $this->webService->getRedirectResponse('upload/index');
         } catch (Exception $e) {
-            $this->flash_message('danger', $e->getMessage());
+            $this->flashMessage('danger', $e->getMessage());
             return $this->webService->getRedirectResponse('upload/index');
         }
     }

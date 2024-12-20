@@ -10,6 +10,7 @@ use App\Invoice\ClientNote\ClientNoteRepository;
 use App\Invoice\Setting\SettingRepository;
 use App\Invoice\Client\ClientRepository;
 use App\Invoice\Helpers\DateHelper;
+use App\Invoice\Traits\FlashMessage;
 use App\User\UserService;
 use App\Service\WebControllerService;
 use Psr\Http\Message\ResponseInterface as Response;
@@ -25,6 +26,8 @@ use Yiisoft\Yii\View\Renderer\ViewRenderer;
 
 final class ClientNoteController
 {
+    use FlashMessage;
+    
     private ViewRenderer $viewRenderer;
     private WebControllerService $webService;
     private UserService $userService;
@@ -200,7 +203,7 @@ final class ClientNoteController
     {
         $canEdit = $this->userService->hasPermission('editInv');
         if (!$canEdit) {
-            $this->flash_message('warning', $this->translator->translate('invoice.permission'));
+            $this->flashMessage('warning', $this->translator->translate('invoice.permission'));
             return $this->webService->getRedirectResponse('clientnote/index');
         }
         return $canEdit;
@@ -223,17 +226,6 @@ final class ClientNoteController
     }
 
     /**
-     * @return \Yiisoft\Data\Cycle\Reader\EntityReader
-     *
-     * @psalm-return \Yiisoft\Data\Cycle\Reader\EntityReader
-     */
-    private function clientnotes(ClientNoteRepository $clientnoteRepository): \Yiisoft\Data\Cycle\Reader\EntityReader
-    {
-        $clientnotes = $clientnoteRepository->findAllPreloaded();
-        return $clientnotes;
-    }
-
-    /**
       * @return string
       */
     private function alert(): string
@@ -244,19 +236,5 @@ final class ClientNoteController
         'flash' => $this->flash
       ]
         );
-    }
-
-    /**
-     * @param string $level
-     * @param string $message
-     * @return Flash|null
-     */
-    private function flash_message(string $level, string $message): Flash|null
-    {
-        if (strlen($message) > 0) {
-            $this->flash->add($level, $message, true);
-            return $this->flash;
-        }
-        return null;
     }
 }

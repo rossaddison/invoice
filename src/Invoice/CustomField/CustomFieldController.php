@@ -9,6 +9,7 @@ use App\Invoice\CustomField\CustomFieldService;
 use App\Invoice\CustomField\CustomFieldRepository;
 use App\Invoice\CustomValue\CustomValueRepository;
 use App\Invoice\Setting\SettingRepository;
+use App\Invoice\Traits\FlashMessage;
 use App\User\UserService;
 use App\Service\WebControllerService;
 // Psr
@@ -29,6 +30,8 @@ use Yiisoft\Yii\View\Renderer\ViewRenderer;
 
 final class CustomFieldController
 {
+    use FlashMessage;
+    
     private ViewRenderer $viewRenderer;
     private WebControllerService $webService;
     private UserService $userService;
@@ -78,7 +81,7 @@ final class CustomFieldController
         ->withCurrentPage($currentPageNeverZero)
         ->withToken(PageToken::next((string)$page));
         $this->rbac();
-        $this->flash_message('info', $this->viewRenderer->renderPartialAsString('//invoice/info/custom_field'));
+        $this->flashMessage('info', $this->viewRenderer->renderPartialAsString('//invoice/info/custom_field'));
         $parameters = [
             'page' => $page,
             'paginator' => $paginator,
@@ -209,7 +212,7 @@ final class CustomFieldController
             }
         }
         // Return to the index and warn of existing custom values associated with the custom field
-        $this->flash_message('warning', $this->translator->translate('invoice.custom.value.delete'));
+        $this->flashMessage('warning', $this->translator->translate('invoice.custom.value.delete'));
         return $this->webService->getRedirectResponse('customfield/index');
     }
 
@@ -244,7 +247,7 @@ final class CustomFieldController
     {
         $canEdit = $this->userService->hasPermission('editInv');
         if (!$canEdit) {
-            $this->flash_message('warning', $this->translator->translate('invoice.permission'));
+            $this->flashMessage('warning', $this->translator->translate('invoice.permission'));
             return $this->webService->getRedirectResponse('customfield/index');
         }
         return $canEdit;
@@ -288,20 +291,6 @@ final class CustomFieldController
        'errors' => [],
      ]
         );
-    }
-
-    /**
-     * @param string $level
-     * @param string $message
-     * @return Flash|null
-     */
-    private function flash_message(string $level, string $message): Flash|null
-    {
-        if (strlen($message) > 0) {
-            $this->flash->add($level, $message, true);
-            return $this->flash;
-        }
-        return null;
     }
 
     /**

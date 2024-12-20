@@ -10,6 +10,7 @@ use App\Invoice\PostalAddress\PostalAddressForm;
 use App\Invoice\PostalAddress\PostalAddressService;
 use App\Invoice\PostalAddress\PostalAddressRepository;
 use App\Invoice\Setting\SettingRepository;
+use App\Invoice\Traits\FlashMessage;
 use App\User\UserService;
 use App\Service\WebControllerService;
 use Psr\Http\Message\ResponseInterface as Response;
@@ -29,6 +30,8 @@ use Exception;
 
 final class PostalAddressController
 {
+    use FlashMessage;
+    
     private Flash $flash;
     private SessionInterface $session;
     private ViewRenderer $viewRenderer;
@@ -105,7 +108,7 @@ final class PostalAddressController
                 $body = $request->getParsedBody() ?? [];
                 if (is_array($body)) {
                     $this->postaladdressService->savePostalAddress($postalAddress, $body);
-                    $this->flash_message('success', $this->translator->translate('i.record_successfully_created'));
+                    $this->flashMessage('success', $this->translator->translate('i.record_successfully_created'));
                     $url = $origin.'/'.$action;
                     if ($origin_id) {
                         /**
@@ -136,20 +139,6 @@ final class PostalAddressController
           'flash' => $this->flash
         ]
         );
-    }
-
-    /**
-     * @param string $level
-     * @param string $message
-     * @return Flash|null
-     */
-    private function flash_message(string $level, string $message): Flash|null
-    {
-        if (strlen($message) > 0) {
-            $this->flash->add($level, $message, true);
-            return $this->flash;
-        }
-        return null;
     }
 
     /**
@@ -200,12 +189,12 @@ final class PostalAddressController
             $postaladdress = $this->postaladdress($currentRoute, $postaladdressRepository);
             if ($postaladdress) {
                 $this->postaladdressService->deletePostalAddress($postaladdress);
-                $this->flash_message('info', $this->translator->translate('i.record_successfully_deleted'));
+                $this->flashMessage('info', $this->translator->translate('i.record_successfully_deleted'));
                 return $this->webService->getRedirectResponse('postaladdress/index');
             }
             return $this->webService->getRedirectResponse('postaladdress/index');
         } catch (Exception $e) {
-            $this->flash_message('danger', $e->getMessage());
+            $this->flashMessage('danger', $e->getMessage());
             return $this->webService->getRedirectResponse('postaladdress/index');
         }
     }
@@ -251,7 +240,7 @@ final class PostalAddressController
                     $body = $request->getParsedBody() ?? [];
                     if (is_array($body)) {
                         $this->postaladdressService->savePostalAddress($postalAddress, $body);
-                        $this->flash_message('success', $this->translator->translate('i.record_successfully_created'));
+                        $this->flashMessage('success', $this->translator->translate('i.record_successfully_created'));
                         $url = $origin.'/'.$action;
                         // Route::methods([Method::GET, Method::POST], '/postaladdress/edit/{client_id}[/{origin}/{origin_id}/{action}]')
                         if ($origin_id) {

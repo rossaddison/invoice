@@ -22,6 +22,7 @@ use App\Invoice\Helpers\ClientHelper;
 use App\Invoice\Helpers\DateHelper;
 use App\Invoice\Helpers\MpdfHelper;
 use App\Invoice\Helpers\NumberHelper;
+use App\Invoice\Traits\FlashMessage;
 // Services and forms
 use App\Service\WebControllerService;
 use App\User\UserService;
@@ -37,6 +38,8 @@ use Yiisoft\Yii\View\Renderer\ViewRenderer;
 
 class ReportController
 {
+    use FlashMessage;
+    
     private Session $session;
     private Flash $flash;
     private ViewRenderer $viewRenderer;
@@ -71,35 +74,6 @@ class ReportController
         'flash' => $this->flash
       ]
         );
-    }
-
-    /**
-     * @param string $level
-     * @param string $message
-     * @return Flash|null
-     */
-    private function flash_message(string $level, string $message): Flash|null
-    {
-        if (strlen($message) > 0) {
-            $this->flash->add($level, $message, true);
-            return $this->flash;
-        }
-        return null;
-    }
-
-    /**
-     *
-     * @param string $drop_down_locale
-     * @param SettingRepository $sR
-     * @return void
-     */
-    private function cldr(string $drop_down_locale, SettingRepository $sR): void
-    {
-        $cldr = $sR->withKey('cldr');
-        if ($cldr) {
-            $cldr->setSetting_value($drop_down_locale);
-            $sR->save($cldr);
-        }
     }
 
     /**
@@ -535,7 +509,7 @@ class ReportController
         InvItemAmountRepository $iiaR,
         SettingRepository $sR
     ): Response|\Mpdf\Mpdf|array|string {
-        $this->flash_message('info', $this->translator->translate('invoice.report.sales.by.product.info'));
+        $this->flashMessage('info', $this->translator->translate('invoice.report.sales.by.product.info'));
         $dateHelper = new DateHelper($sR);
         $parameters = [
           'head' => $head,
@@ -648,7 +622,7 @@ class ReportController
         InvItemAmountRepository $iiaR,
         SettingRepository $sR
     ): Response|\Mpdf\Mpdf|array|string {
-        $this->flash_message('info', $this->translator->translate('invoice.report.sales.by.task.info'));
+        $this->flashMessage('info', $this->translator->translate('invoice.report.sales.by.task.info'));
         $dateHelper = new DateHelper($sR);
         $body = $request->getParsedBody();
         $parameters = [

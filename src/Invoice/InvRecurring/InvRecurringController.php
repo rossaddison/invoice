@@ -20,6 +20,7 @@ use App\Invoice\InvItem\InvItemService;
 use App\Invoice\InvAmount\InvAmountService;
 use App\Invoice\InvTaxRate\InvTaxRateService;
 use App\Invoice\InvCustom\InvCustomService;
+use App\Invoice\Traits\FlashMessage;
 use App\Service\WebControllerService;
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
@@ -38,6 +39,8 @@ use Yiisoft\Yii\View\Renderer\ViewRenderer;
 
 final class InvRecurringController
 {
+    use FlashMessage;
+    
     private Flash $flash;
     private DataResponseFactoryInterface $factory;
     private ViewRenderer $viewRenderer;
@@ -101,20 +104,6 @@ final class InvRecurringController
         'flash' => $this->flash
       ]
         );
-    }
-
-    /**
-     * @param string $level
-     * @param string $message
-     * @return Flash|null
-     */
-    private function flash_message(string $level, string $message): Flash|null
-    {
-        if (strlen($message) > 0) {
-            $this->flash->add($level, $message, true);
-            return $this->flash;
-        }
-        return null;
     }
 
     /**
@@ -186,7 +175,7 @@ final class InvRecurringController
                     }
                     return $this->viewRenderer->render('_form', $parameters);
                 }
-                $this->flash_message('danger', $this->translator->translate('invoice.recurring.sent.only').'❗');
+                $this->flashMessage('danger', $this->translator->translate('invoice.recurring.sent.only').'❗');
             }
         }
         return $this->webService->getNotFoundResponse();
@@ -321,12 +310,12 @@ final class InvRecurringController
             $inv_recurring = $this->invrecurring($currentRoute, $invrecurringRepository);
             if ($inv_recurring) {
                 $this->invrecurringService->deleteInvRecurring($inv_recurring);
-                $this->flash_message('info', $this->translator->translate('invoice.invoice.recurring.deleted'));
+                $this->flashMessage('info', $this->translator->translate('invoice.invoice.recurring.deleted'));
                 return $this->webService->getRedirectResponse('invrecurring/index');
             }
             return $this->webService->getNotFoundResponse();
         } catch (\Exception $e) {
-            $this->flash_message('danger', $e->getMessage());
+            $this->flashMessage('danger', $e->getMessage());
             unset($e);
             return $this->webService->getRedirectResponse('invrecurring/index');
         }
@@ -366,7 +355,7 @@ final class InvRecurringController
     {
         $canEdit = $this->userService->hasPermission('editInv');
         if (!$canEdit) {
-            $this->flash_message('warning', $this->translator->translate('invoice.permission'));
+            $this->flashMessage('warning', $this->translator->translate('invoice.permission'));
             return $this->webService->getRedirectResponse('invrecurring/index');
         }
         return $canEdit;

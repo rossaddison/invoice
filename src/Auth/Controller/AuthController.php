@@ -7,6 +7,7 @@ namespace App\Auth\Controller;
 use App\Auth\AuthService;
 use App\Auth\Form\LoginForm;
 use App\Auth\TokenRepository;
+use App\Auth\Trait\Oauth2;
 use App\Invoice\Setting\SettingRepository;
 use App\Invoice\UserInv\UserInvRepository;
 use App\Service\WebControllerService;
@@ -25,6 +26,8 @@ use Yiisoft\Yii\AuthClient\Client\Google;
 
 final class AuthController
 {
+    use Oauth2;
+    
     public const string EMAIL_VERIFICATION_TOKEN = 'email-verification';
     
     public function __construct(
@@ -103,29 +106,21 @@ final class AuthController
             $this->authService->logout();
             return $this->redirectToMain();
         };
+        $noGithubContinueButton = $this->sR->getSetting('no_github_continue_button') == '1' ? true : false;
+        $noGoogleContinueButton = $this->sR->getSetting('no_google_continue_button') == '1' ? true : false;
+        $noFacebookContinueButton = $this->sR->getSetting('no_facebook_continue_button') == '1' ? true : false;
         return $this->viewRenderer->render('login', 
             [
                 'formModel' => $loginForm,
                 'facebookAuthUrl' => strlen($this->facebook->getClientId()) > 0 ? $this->facebook->buildAuthUrl($request, $params = []) : '',
                 'githubAuthUrl' => strlen($this->github->getClientId()) > 0 ? $this->github->buildAuthUrl($request, $params = []) : '',   
-                'googleAuthUrl' => strlen($this->google->getClientId()) > 0 ? $this->google->buildAuthUrl($request, $params = []) : ''
+                'googleAuthUrl' => strlen($this->google->getClientId()) > 0 ? $this->google->buildAuthUrl($request, $params = []) : '',
+                'noGithubContinueButton' => $noGithubContinueButton,
+                'noGoogleContinueButton' => $noGoogleContinueButton,
+                'noFacebookContinueButton' => $noFacebookContinueButton,
             ]);
     }
     
-    private function initializeOauth2IdentityProviderCredentials(Facebook $facebook, Github $github, Google $google) : void {
-        $facebook->setOauth2ReturnUrl($this->sR->getOauth2IdentityProviderReturnUrl('facebook'));
-        $github->setOauth2ReturnUrl($this->sR->getOauth2IdentityProviderReturnUrl('github'));
-        $google->setOauth2ReturnUrl($this->sR->getOauth2IdentityProviderReturnUrl('google'));
-        
-        $facebook->setClientId($this->sR->getOauth2IdentityProviderClientId('facebook'));
-        $github->setClientId($this->sR->getOauth2IdentityProviderClientId('github'));
-        $google->setClientId($this->sR->getOauth2IdentityProviderClientId('google'));
-        
-        $facebook->setClientSecret($this->sR->getOauth2IdentityProviderClientSecret('facebook'));
-        $github->setClientSecret($this->sR->getOauth2IdentityProviderClientSecret('github'));
-        $google->setClientSecret($this->sR->getOauth2IdentityProviderClientSecret('google'));
-    }
-        
     public function disableEmailVerificationToken(
         TokenRepository $tR,    
         ?string $userId = null
@@ -144,7 +139,6 @@ final class AuthController
     }
     
     /**
-     * https://yii3i.co.uk/callbackGithub?code=b9f7562bc6b1d214f3c4&state=a15ed92d3f9fc43f7f3bbe46126607ad0a0aba8e1b1a71f56af0695891adafa2
      * @see https://docs.github.com/en/apps/oauth-apps/building-oauth-apps/authorizing-oauth-apps
      * @param string $code
      * @param string $state

@@ -8,6 +8,7 @@ use App\Invoice\Entity\Family;
 use App\Invoice\Family\FamilyForm;
 use App\Invoice\Family\FamilyRepository;
 use App\Invoice\Setting\SettingRepository;
+use App\Invoice\Traits\FlashMessage;
 use App\Service\WebControllerService;
 use App\User\UserService;
 use Psr\Http\Message\ResponseInterface as Response;
@@ -23,6 +24,8 @@ use Yiisoft\Yii\View\Renderer\ViewRenderer;
 
 final class FamilyController
 {
+    use FlashMessage;
+    
     private ViewRenderer $viewRenderer;
     private WebControllerService $webService;
     private FamilyService $familyService;
@@ -157,7 +160,7 @@ final class FamilyController
             return $this->webService->getRedirectResponse('family/index');
         } catch (\Exception $e) {
             unset($e);
-            $this->flash_message('danger', $this->translator->translate('invoice.family.history'));
+            $this->flashMessage('danger', $this->translator->translate('invoice.family.history'));
             return $this->webService->getRedirectResponse('family/index');
         }
     }
@@ -218,22 +221,8 @@ final class FamilyController
         return $this->viewRenderer->renderPartialAsString(
             '//invoice/layout/alert',
             [
-       'flash' => $this->flash
-     ]
+                'flash' => $this->flash
+            ]
         );
-    }
-
-    /**
-     * @param string $level
-     * @param string $message
-     * @return Flash|null
-     */
-    private function flash_message(string $level, string $message): Flash|null
-    {
-        if (strlen($message) > 0) {
-            $this->flash->add($level, $message, true);
-            return $this->flash;
-        }
-        return null;
     }
 }

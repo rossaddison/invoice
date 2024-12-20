@@ -27,6 +27,7 @@ use App\Invoice\PaymentCustom\PaymentCustomRepository;
 use App\Invoice\PaymentCustom\PaymentCustomForm;
 use App\Invoice\PaymentCustom\PaymentCustomService;
 use App\Invoice\Setting\SettingRepository;
+use App\Invoice\Traits\FlashMessage;
 use App\Invoice\UserClient\UserClientRepository;
 use App\Invoice\UserClient\Exception\NoClientsAssignedToUserException;
 use App\Invoice\UserInv\UserInvRepository;
@@ -51,6 +52,8 @@ use Yiisoft\Yii\View\Renderer\ViewRenderer;
 
 final class PaymentController
 {
+    use FlashMessage;
+    
     private Session $session;
     private Flash $flash;
     private ViewRenderer $viewRenderer;
@@ -128,7 +131,7 @@ final class PaymentController
         ITRR $itrR,
     ): Response {
         $open = $invRepository->open();
-        $invRepository->open_count() == 0 ? $this->flash_message('danger', $this->translator->translate('invoice.payment.no.invoice.sent')) : '';
+        $invRepository->open_count() == 0 ? $this->flashMessage('danger', $this->translator->translate('invoice.payment.no.invoice.sent')) : '';
         $amounts = [];
         $invoice_payment_methods = [];
         /** @var Inv $open_invoice */
@@ -183,7 +186,7 @@ final class PaymentController
                     $inv_id = $payment->getInv_id();
                     // Recalculate the invoice
                     $numberHelper->calculate_inv($inv_id, $aciR, $iiR, $iiaR, $itrR, $iaR, $invRepository, $pmtR);
-                    $this->flash_message('info', $this->translator->translate('i.record_successfully_created'));
+                    $this->flashMessage('info', $this->translator->translate('i.record_successfully_created'));
                     if (isset($body['custom'])) {
                         // Retrieve the custom array
                         /** @var array $custom */
@@ -247,21 +250,7 @@ final class PaymentController
       ]
         );
     }
-
-    /**
-     * @param string $level
-     * @param string $message
-     * @return Flash|null
-     */
-    private function flash_message(string $level, string $message): Flash|null
-    {
-        if (strlen($message) > 0) {
-            $this->flash->add($level, $message, true);
-            return $this->flash;
-        }
-        return null;
-    }
-
+    
     /**
      * @param FormHydrator $formHydrator
      * @param (mixed|string)[] $array
@@ -356,13 +345,13 @@ final class PaymentController
                 $inv_id = $payment->getInv()?->getId();
                 $this->paymentService->deletePayment($payment);
                 $number_helper->calculate_inv((string)$inv_id, $aciR, $iiR, $iiaR, $itrR, $iaR, $invRepository, $pmtR);
-                $this->flash_message('success', $this->translator->translate('invoice.payment.deleted'));
+                $this->flashMessage('success', $this->translator->translate('invoice.payment.deleted'));
                 return $this->webService->getRedirectResponse('payment/index');
             }
             return $this->webService->getRedirectResponse('payment/index');
         } catch (\Exception $e) {
             unset($e);
-            $this->flash_message('danger', $this->translator->translate('invoice.payment.cannot.delete'));
+            $this->flashMessage('danger', $this->translator->translate('invoice.payment.cannot.delete'));
             return $this->webService->getRedirectResponse('payment/index');
         }
     }
@@ -458,7 +447,7 @@ final class PaymentController
                             }
                         }
                         $number_helper->calculate_inv($inv_id, $aciR, $iiR, $iiaR, $itrR, $iaR, $invRepository, $pmtR);
-                        $this->flash_message('info', $this->translator->translate('i.record_successfully_updated'));
+                        $this->flashMessage('info', $this->translator->translate('i.record_successfully_updated'));
                         return $this->webService->getRedirectResponse('payment/index');
                     }
                     if (null !== $form) {
@@ -915,19 +904,6 @@ final class PaymentController
             }
         }
         return $custom_field_form_values;
-    }
-
-    /**
-     * @return Response|true
-     */
-    private function rbac(): bool|Response
-    {
-        $viewPayment = $this->userService->hasPermission('viewPayment');
-        if (!$viewPayment) {
-            $this->flash_message('warning', $this->translator->translate('invoice.permission'));
-            return $this->webService->getRedirectResponse('payment/index');
-        }
-        return $viewPayment;
     }
 
     // payment/view => '#btn_save_payment_custom_fields' => payment_custom_field.js => /invoice/payment/save_custom";

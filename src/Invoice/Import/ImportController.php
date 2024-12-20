@@ -17,6 +17,7 @@ use App\Invoice\Product\ProductRepository;
 use App\Invoice\Setting\SettingRepository;
 use App\Invoice\TaxRate\TaxRateRepository;
 use App\Invoice\Unit\UnitRepository;
+use App\Invoice\Traits\FlashMessage;
 // Psr
 use Psr\Http\Message\ResponseInterface as Response;
 /**
@@ -35,6 +36,8 @@ use Yiisoft\Yii\View\Renderer\ViewRenderer;
 
 final class ImportController
 {
+    use FlashMessage;
+    
     private ViewRenderer $viewRenderer;
     private WebControllerService $webService;
     private UserService $userService;
@@ -98,7 +101,7 @@ final class ImportController
             $db = new Connection($pdoDriver, $schemaCache);
             return $db;
         } else {
-            $this->flash_message('warning', $this->translator->translate('invoice.invoice.invoiceplane.no.username.or.password'));
+            $this->flashMessage('warning', $this->translator->translate('invoice.invoice.invoiceplane.no.username.or.password'));
         }
         return null;
     }
@@ -134,18 +137,18 @@ final class ImportController
                     $clients = $this->inputClient($db);
                     $this->InsertClients($clients);
                     $db->close();
-                    $this->flash_message(
+                    $this->flashMessage(
                         'success',
                         $this->translator->translate('invoice.invoice.invoiceplane.import.complete.connection.closed')
                     );
                 } else {
-                    $this->flash_message('info', $this->translator->translate('invoice.invoice.invoiceplane.no.connection'));
+                    $this->flashMessage('info', $this->translator->translate('invoice.invoice.invoiceplane.no.connection'));
                 }
             } else {
-                $this->flash_message('warning', $this->translator->translate('invoice.invoice.invoiceplane.tables.not.empty'));
+                $this->flashMessage('warning', $this->translator->translate('invoice.invoice.invoiceplane.tables.not.empty'));
             }
         } else {
-            $this->flash_message('warning', $this->translator->translate('invoice.invoice.invoiceplane.no.username.or.password'));
+            $this->flashMessage('warning', $this->translator->translate('invoice.invoice.invoiceplane.no.username.or.password'));
         }
         return $this->webService->getRedirectResponse('import/index');
     }
@@ -156,9 +159,9 @@ final class ImportController
         if (null !== $db) {
             // Test to the Query Level on any Table to ensure a username and password validated connection
             $this->inputProduct($db);
-            $this->flash_message('info', $this->translator->translate('invoice.invoice.invoiceplane.yes.connection'));
+            $this->flashMessage('info', $this->translator->translate('invoice.invoice.invoiceplane.yes.connection'));
         } else {
-            $this->flash_message('info', $this->translator->translate('invoice.invoice.invoiceplane.no.connection'));
+            $this->flashMessage('info', $this->translator->translate('invoice.invoice.invoiceplane.no.connection'));
         }
         return $this->webService->getRedirectResponse('setting/tab_index');
     }
@@ -295,7 +298,7 @@ final class ImportController
             $newUnit->setUnit_name_plrl((string)$unit['unit_name_plrl']);
             $this->uR->save($newUnit);
         }
-        $this->flash_message('info', $this->translator->translate('invoice.invoice.invoiceplane.units'));
+        $this->flashMessage('info', $this->translator->translate('invoice.invoice.invoiceplane.units'));
     }
 
     private function InsertFamilies(array $families): void
@@ -308,7 +311,7 @@ final class ImportController
             $newFamily->setFamily_name((string)$family['family_name']);
             $this->fR->save($newFamily);
         }
-        $this->flash_message('info', $this->translator->translate('invoice.invoice.invoiceplane.families'));
+        $this->flashMessage('info', $this->translator->translate('invoice.invoice.invoiceplane.families'));
     }
 
     private function InsertTaxRates(array $taxRates): void
@@ -322,7 +325,7 @@ final class ImportController
             $newTaxRate->setTaxRateDefault(false);
             $this->trR->save($newTaxRate);
         }
-        $this->flash_message('info', $this->translator->translate('invoice.invoice.invoiceplane.taxrates'));
+        $this->flashMessage('info', $this->translator->translate('invoice.invoice.invoiceplane.taxrates'));
     }
 
     private function InsertClients(array $clients): void
@@ -358,7 +361,7 @@ final class ImportController
             $newClient->setClient_gender((int)$client['client_gender']);
             $this->cR->save($newClient);
         }
-        $this->flash_message('info', $this->translator->translate('invoice.invoice.invoiceplane.clients'));
+        $this->flashMessage('info', $this->translator->translate('invoice.invoice.invoiceplane.clients'));
     }
 
     private function InsertProducts(array $products): void
@@ -380,7 +383,7 @@ final class ImportController
             $newProduct->setProduct_tariff((float)$product['product_tariff']);
             $this->pR->save($newProduct);
         }
-        $this->flash_message('info', $this->translator->translate('invoice.invoice.invoiceplane.products'));
+        $this->flashMessage('info', $this->translator->translate('invoice.invoice.invoiceplane.products'));
     }
 
     /**
@@ -394,19 +397,5 @@ final class ImportController
        'flash' => $this->flash
      ]
         );
-    }
-
-    /**
-     * @param string $level
-     * @param string $message
-     * @return Flash|null
-     */
-    private function flash_message(string $level, string $message): Flash|null
-    {
-        if (strlen($message) > 0) {
-            $this->flash->add($level, $message, true);
-            return $this->flash;
-        }
-        return null;
     }
 }

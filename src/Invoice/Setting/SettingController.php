@@ -20,6 +20,7 @@ use App\Invoice\Helpers\Peppol\PeppolArrays;
 use App\Invoice\Helpers\StoreCove\StoreCoveArrays;
 use App\Invoice\Libraries\Sumex;
 use App\Invoice\TaxRate\TaxRateRepository as TR;
+use App\Invoice\Traits\FlashMessage;
 //use App\Invoice\Libraries\Sumex;
 use App\Service\WebControllerService;
 use App\User\UserService;
@@ -52,6 +53,8 @@ use DateTimeZone;
 
 final class SettingController
 {
+    use FlashMessage;
+    
     private ViewRenderer $viewRenderer;
     private WebControllerService $webService;
     private SettingService $settingService;
@@ -171,7 +174,7 @@ final class SettingController
             'alert' => $this->alert(),
             'head' => $head,
             'body' => $body,
-            'frontPage' => $this->viewRenderer->renderPartialAsString('//invoice/setting/views/partial_settings_front_page', []),
+            'frontPage' => $this->viewRenderer->renderPartialAsString('//invoice/setting/views/partial_settings_front_page'),
             'general' => $this->viewRenderer->renderPartialAsString('//invoice/setting/views/partial_settings_general', [
                 /**
                  * @psalm-suppress PossiblyInvalidArgument
@@ -206,6 +209,7 @@ final class SettingController
             'salesorders' => $this->viewRenderer->renderPartialAsString('//invoice/setting/views/partial_settings_client_purchase_orders', [
                 'gR' => $gR,
             ]),
+            'oauth2' => $this->viewRenderer->renderPartialAsString('//invoice/setting/views/partial_settings_oauth2'),
             'taxes' => $this->viewRenderer->renderPartialAsString('//invoice/setting/views/partial_settings_taxes', [
                 'tax_rates' => $tR->findAllPreloaded(),
             ]),
@@ -295,7 +299,7 @@ final class SettingController
                         $this->tab_index_debug_mode_ensure_all_settings_included(true, $key, $value);
                     }
                 }
-                $this->flash_message('info', $this->translator->translate('i.settings_successfully_saved'));
+                $this->flashMessage('info', $this->translator->translate('i.settings_successfully_saved'));
                 return $this->webService->getRedirectResponse('setting/tab_index');
             }
         }
@@ -399,7 +403,7 @@ final class SettingController
              */
             if ($formHydrator->populateAndValidate($form, $request->getParsedBody())) {
                 $this->settingService->saveSetting($setting, $request->getParsedBody());
-                $this->flash_message('info', $this->translator->translate('i.record_successfully_updated'));
+                $this->flashMessage('info', $this->translator->translate('i.record_successfully_updated'));
                 return $this->webService->getRedirectResponse('setting/debug_index');
             }
             $parameters['form'] = $form;
@@ -583,7 +587,7 @@ final class SettingController
                      * @psalm-suppress PossiblyInvalidArgument
                      */
                     $this->settingService->saveSetting($setting, $body);
-                    $this->flash_message('info', $this->translator->translate('i.record_successfully_updated'));
+                    $this->flashMessage('info', $this->translator->translate('i.record_successfully_updated'));
                     return $this->webService->getRedirectResponse('setting/debug_index');
                 }
                 $parameters['form'] = $form;
@@ -619,24 +623,10 @@ final class SettingController
     {
         $setting = $this->setting($currentRoute, $this->s);
         if ($setting) {
-            $this->flash_message('info', $this->translator->translate('i.record_successfully_deleted'));
+            $this->flashMessage('info', $this->translator->translate('i.record_successfully_deleted'));
             $this->settingService->deleteSetting($setting);
         }
         return $this->webService->getRedirectResponse('setting/debug_index');
-    }
-
-    /**
-     * @param string $level
-     * @param string $message
-     * @return Flash|null
-     */
-    private function flash_message(string $level, string $message): Flash|null
-    {
-        if (strlen($message) > 0) {
-            $this->flash->add($level, $message, true);
-            return $this->flash;
-        }
-        return null;
     }
 
     /**
@@ -666,7 +656,7 @@ final class SettingController
     {
         $canEdit = $this->userService->hasPermission('editInv');
         if (!$canEdit) {
-            $this->flash_message('warning', $this->translator->translate('invoice.permission'));
+            $this->flashMessage('warning', $this->translator->translate('invoice.permission'));
             return $this->webService->getRedirectResponse('setting/index');
         }
         return $canEdit;
@@ -711,13 +701,13 @@ final class SettingController
         try {
             $filehelper = new FileHelper();
             $filehelper->clearDirectory($directory);
-            $this->flash_message('info', $this->translator->translate('invoice.setting.assets.cleared.at').$directory);
+            $this->flashMessage('info', $this->translator->translate('invoice.setting.assets.cleared.at').$directory);
             return $this->factory->createResponse($this->viewRenderer->renderPartialAsString(
                 '//invoice/setting/successful',
                 ['heading' => $this->translator->translate('invoice.successful'),'message' => $this->translator->translate('invoice.setting.you.have.cleared.the.cache')]
             ));
         } catch (\Exception $e) {
-            $this->flash_message('warning', $this->translator->translate('invoice.setting.assets.were.not.cleared.at') .$directory. $this->translator->translate('invoice.setting.as.a.result.of').$e->getMessage());
+            $this->flashMessage('warning', $this->translator->translate('invoice.setting.assets.were.not.cleared.at') .$directory. $this->translator->translate('invoice.setting.as.a.result.of').$e->getMessage());
             return $this->factory->createResponse($this->viewRenderer->renderPartialAsString(
                 '//invoice/setting/unsuccessful',
                 ['heading' => $this->translator->translate('invoice.unsuccessful'),'message' => $this->translator->translate('invoice.setting.you.have.not.cleared.the.cache.due.to.a') . $e->getMessage(). $this->translator->translate('invoice.setting.error.on.the.public.assets.folder')]

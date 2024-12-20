@@ -20,6 +20,7 @@ use App\Invoice\Setting\SettingRepository as sR;
 use App\Invoice\Task\TaskRepository as tR;
 use App\Invoice\TaxRate\TaxRateRepository as trR;
 use App\Invoice\Task\TaskService;
+use App\Invoice\Traits\FlashMessage;
 use App\Service\WebControllerService;
 use App\User\UserService;
 use App\Invoice\InvItem\InvItemService;
@@ -40,6 +41,8 @@ use Yiisoft\FormModel\FormHydrator;
 
 final class TaskController
 {
+    use FlashMessage;
+    
     private Flash $flash;
     private Session $session;
     private ViewRenderer $viewRenderer;
@@ -123,7 +126,7 @@ final class TaskController
                 $body = $request->getParsedBody() ?? [];
                 if (is_array($body)) {
                     $this->taskService->saveTask($task, $body);
-                    $this->flash_message('info', $this->translator->translate('i.record_successfully_created'));
+                    $this->flashMessage('info', $this->translator->translate('i.record_successfully_created'));
                     return $this->webService->getRedirectResponse('task/index');
                 }
             }    
@@ -170,7 +173,7 @@ final class TaskController
                     $body = $request->getParsedBody() ?? [];
                     if (is_array($body)) {
                         $this->taskService->saveTask($task, $body);
-                        $this->flash_message('info', $this->translator->translate('i.record_successfully_updated'));
+                        $this->flashMessage('info', $this->translator->translate('i.record_successfully_updated'));
                         return $this->webService->getRedirectResponse('task/index');
                     }
                 }    
@@ -194,7 +197,7 @@ final class TaskController
         $task = $this->task($currentRoute, $tR);
         /** @var Task $task */
         $this->taskService->deleteTask($task);
-        $this->flash_message('info', $this->translator->translate('i.record_successfully_deleted'));
+        $this->flashMessage('info', $this->translator->translate('i.record_successfully_deleted'));
         return $this->webService->getRedirectResponse('task/index');
     }
 
@@ -348,7 +351,7 @@ final class TaskController
     {
         $canEdit = $this->userService->hasPermission('editInv');
         if (!$canEdit) {
-            $this->flash_message('warning', $this->translator->translate('invoice.permission'));
+            $this->flashMessage('warning', $this->translator->translate('invoice.permission'));
             return $this->webService->getRedirectResponse('task/index');
         }
         return $canEdit;
@@ -391,19 +394,5 @@ final class TaskController
             'flash' => $this->flash
         ]
         );
-    }
-
-    /**
-     * @param string $level
-     * @param string $message
-     * @return Flash|null
-     */
-    private function flash_message(string $level, string $message): Flash|null
-    {
-        if (strlen($message) > 0) {
-            $this->flash->add($level, $message, true);
-            return $this->flash;
-        }
-        return null;
     }
 }

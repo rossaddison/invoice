@@ -6,6 +6,7 @@ namespace App\Invoice\Unit;
 
 use App\Invoice\Entity\Unit;
 use App\Invoice\Setting\SettingRepository;
+use App\Invoice\Traits\FlashMessage;
 use App\Invoice\Unit\UnitRepository;
 use App\Invoice\UnitPeppol\UnitPeppolRepository;
 use App\Service\WebControllerService;
@@ -24,6 +25,8 @@ use Yiisoft\Yii\View\Renderer\ViewRenderer;
 
 final class UnitController
 {
+    use FlashMessage;
+    
     private Flash $flash;
     private Session $session;
     private ViewRenderer $viewRenderer;
@@ -95,7 +98,7 @@ final class UnitController
                 $body = $request->getParsedBody() ?? [];
                 if (is_array($body)) {
                     $this->unitService->saveUnit($unit, $body);
-                    $this->flash_message('info', $this->translator->translate('i.record_successfully_created'));
+                    $this->flashMessage('info', $this->translator->translate('i.record_successfully_created'));
                     return $this->webService->getRedirectResponse('unit/index');
                 }
             }    
@@ -133,7 +136,7 @@ final class UnitController
                     $body = $request->getParsedBody() ?? [];
                     if (is_array($body)) {
                         $this->unitService->saveUnit($unit, $body);
-                        $this->flash_message('info', $this->translator->translate('i.record_successfully_updated'));
+                        $this->flashMessage('info', $this->translator->translate('i.record_successfully_updated'));
                         return $this->webService->getRedirectResponse('unit/index');
                     }
                 }    
@@ -156,11 +159,11 @@ final class UnitController
             /** @var Unit $unit */
             $unit = $this->unit($unit_id, $unitRepository);
             $this->unitService->deleteUnit($unit);
-            $this->flash_message('success', $this->translator->translate('i.record_successfully_deleted'));
+            $this->flashMessage('success', $this->translator->translate('i.record_successfully_deleted'));
             return $this->webService->getRedirectResponse('unit/index');
         } catch (\Exception $e) {
             unset($e);
-            $this->flash_message('danger', $this->translator->translate('invoice.unit.history'));
+            $this->flashMessage('danger', $this->translator->translate('invoice.unit.history'));
             return $this->webService->getRedirectResponse('unit/index');
         }
     }
@@ -222,19 +225,5 @@ final class UnitController
         'flash' => $this->flash
       ]
         );
-    }
-
-    /**
-     * @param string $level
-     * @param string $message
-     * @return Flash|null
-     */
-    private function flash_message(string $level, string $message): Flash|null
-    {
-        if (strlen($message) > 0) {
-            $this->flash->add($level, $message, true);
-            return $this->flash;
-        }
-        return null;
     }
 }

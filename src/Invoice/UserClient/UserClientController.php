@@ -7,6 +7,7 @@ namespace App\Invoice\UserClient;
 use App\Invoice\Entity\UserClient;
 use App\Invoice\Entity\UserInv;
 use App\Invoice\Client\ClientRepository;
+use App\Invoice\Traits\FlashMessage;
 use App\Invoice\UserClient\UserClientService;
 use App\Invoice\UserClient\UserClientRepository;
 use App\Invoice\UserClient\UserClientForm;
@@ -26,6 +27,8 @@ use Yiisoft\Yii\View\Renderer\ViewRenderer;
 
 final class UserClientController
 {
+    use FlashMessage;
+    
     private Session $session;
     private Flash $flash;
     private ViewRenderer $viewRenderer;
@@ -115,7 +118,7 @@ final class UserClientController
             $this->userclientService->deleteUserClient($user_client);
             $user_inv = $uiR->repoUserInvUserIdquery($user_id);
             if (null !== $user_inv) {
-                $this->flash_message('info', $this->translator->translate('i.record_successfully_deleted'));
+                $this->flashMessage('info', $this->translator->translate('i.record_successfully_deleted'));
                 return $this->factory->createResponse(
                     $this->viewRenderer->renderPartialAsString(
                         '//invoice/setting/userclient_successful',
@@ -232,12 +235,12 @@ final class UserClientController
                                 // Check that the user client does not exist
                                                          && !$ucR->repoUserClientqueryCount($user_id, $value) > 0) {
                                 $this->userclientService->saveUserClient($user_client, $form_array);
-                                $this->flash_message('info', $this->translator->translate('i.record_successfully_updated'));
+                                $this->flashMessage('info', $this->translator->translate('i.record_successfully_updated'));
                                 return $this->webService->getRedirectResponse('userinv/index');
                             }
 
                             if ($ucR->repoUserClientqueryCount($user_id, $value) > 0) {
-                                $this->flash_message('info', $this->translator->translate('i.client_already_exists'));
+                                $this->flashMessage('info', $this->translator->translate('i.client_already_exists'));
                                 return $this->webService->getRedirectResponse('userinv/index');
                             }
                             $parameters['errors'] = $form->getValidationResult()->getErrorMessagesIndexedByProperty();
@@ -279,7 +282,7 @@ final class UserClientController
     {
         $canEdit = $this->userService->hasPermission('editInv');
         if (!$canEdit) {
-            $this->flash_message('warning', $this->translator->translate('invoice.permission'));
+            $this->flashMessage('warning', $this->translator->translate('invoice.permission'));
             return $this->webService->getRedirectResponse('userclient/index');
         }
         return $canEdit;
@@ -338,19 +341,5 @@ final class UserClientController
         'flash' => $this->flash
       ]
         );
-    }
-
-    /**
-     * @param string $level
-     * @param string $message
-     * @return Flash|null
-     */
-    private function flash_message(string $level, string $message): Flash|null
-    {
-        if (strlen($message) > 0) {
-            $this->flash->add($level, $message, true);
-            return $this->flash;
-        }
-        return null;
     }
 }

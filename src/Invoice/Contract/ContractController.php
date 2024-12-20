@@ -10,6 +10,7 @@ use App\Invoice\Contract\ContractRepository as contractR;
 use App\Invoice\Client\ClientRepository as cR;
 use App\Invoice\Inv\InvRepository as iR;
 use App\Invoice\Setting\SettingRepository as sR;
+use App\Invoice\Traits\FlashMessage;
 use App\User\UserService;
 use App\Service\WebControllerService;
 use Psr\Http\Message\ResponseInterface as Response;
@@ -29,6 +30,8 @@ use Exception;
 
 final class ContractController
 {
+    use FlashMessage;
+    
     private SessionInterface $session;
     private Flash $flash;
     private ViewRenderer $viewRenderer;
@@ -84,7 +87,7 @@ final class ContractController
             // Show the latest quotes first => -id
             ->withOrderString($query_params['sort'] ?? '-id');
         $contracts = $this->contracts_with_sort($contractR, $sort);
-        $this->flash_message('info', $this->translator->translate('invoice.invoice.contract.create'));
+        $this->flashMessage('info', $this->translator->translate('invoice.invoice.contract.create'));
         $paginator = (new OffsetPaginator($contracts))
         ->withPageSize((int)$sR->getSetting('default_list_limit'))
         ->withCurrentPage($currentPageNeverZero)
@@ -193,7 +196,7 @@ final class ContractController
     {
         $canEdit = $this->userService->hasPermission('editInv');
         if (!$canEdit) {
-            $this->flash_message('warning', $this->translator->translate('invoice.permission'));
+            $this->flashMessage('warning', $this->translator->translate('invoice.permission'));
             return $this->webService->getRedirectResponse('contract/index');
         }
         return $canEdit;
@@ -210,12 +213,12 @@ final class ContractController
             $contract = $this->contract($currentRoute, $contractRepository);
             if ($contract) {
                 $this->contractService->deleteContract($contract);
-                $this->flash_message('success', $this->translator->translate('i.record_successfully_deleted'));
+                $this->flashMessage('success', $this->translator->translate('i.record_successfully_deleted'));
                 return $this->webService->getRedirectResponse('contract/index');
             }
             return $this->webService->getRedirectResponse('contract/index');
         } catch (Exception $e) {
-            $this->flash_message('danger', $e->getMessage());
+            $this->flashMessage('danger', $e->getMessage());
             return $this->webService->getRedirectResponse('contract/index');
         }
     }
@@ -297,19 +300,5 @@ final class ContractController
        'errors' => [],
      ]
         );
-    }
-
-    /**
-    * @param string $level
-    * @param string $message
-    * @return Flash|null
-    */
-    private function flash_message(string $level, string $message): Flash|null
-    {
-        if (strlen($message) > 0) {
-            $this->flash->add($level, $message, true);
-            return $this->flash;
-        }
-        return null;
     }
 }

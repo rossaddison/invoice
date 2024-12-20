@@ -8,6 +8,7 @@ use App\Invoice\Entity\ItemLookup;
 use App\Invoice\ItemLookup\ItemLookupService;
 use App\Invoice\ItemLookup\ItemLookupRepository;
 use App\Invoice\Setting\SettingRepository;
+use App\Invoice\Traits\FlashMessage;
 use App\User\UserService;
 use App\Service\WebControllerService;
 use Psr\Http\Message\ResponseInterface as Response;
@@ -23,6 +24,8 @@ use Yiisoft\Yii\View\Renderer\ViewRenderer;
 
 final class ItemLookupController
 {
+    use FlashMessage;
+    
     private Session $session;
     private Flash $flash;
     private ViewRenderer $viewRenderer;
@@ -184,7 +187,7 @@ final class ItemLookupController
     {
         $canEdit = $this->userService->hasPermission('editInv');
         if (!$canEdit) {
-            $this->flash_message('warning', $this->translator->translate('invoice.permission'));
+            $this->flashMessage('warning', $this->translator->translate('invoice.permission'));
             return $this->webService->getRedirectResponse('itemlookup/index');
         }
         return $canEdit;
@@ -228,19 +231,5 @@ final class ItemLookupController
          'flash' => $this->flash
        ]
         );
-    }
-
-    /**
-     * @param string $level
-     * @param string $message
-     * @return Flash|null
-     */
-    private function flash_message(string $level, string $message): Flash|null
-    {
-        if (strlen($message) > 0) {
-            $this->flash->add($level, $message, true);
-            return $this->flash;
-        }
-        return null;
     }
 }

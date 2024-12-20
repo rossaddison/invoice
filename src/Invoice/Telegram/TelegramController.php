@@ -6,6 +6,7 @@ namespace App\Invoice\Telegram;
 
 use App\Invoice\Helpers\Telegram\TelegramHelper;
 use App\Invoice\Setting\SettingRepository as sR;
+use App\Invoice\Traits\FlashMessage;
 use App\Service\WebControllerService;
 use App\User\UserService;
 use App\Widget\Button;
@@ -27,6 +28,8 @@ use Yiisoft\Yii\View\Renderer\ViewRenderer;
 
 final class TelegramController
 {
+    use FlashMessage;
+    
     /**
      * Note: Yiisoft\Di\NotFoundException can occur if $factory is placed after $telegramBotApi i.e. in the wrong order
      * @see https://github.com/rossaddison/invoice/issues/41
@@ -425,19 +428,5 @@ final class TelegramController
         'flash' => $this->flash,
       ]
         );
-    }
-
-    /**
-     * @param string $level
-     * @param string $message
-     * @return Flash|null
-     */
-    private function flashMessage(string $level, string $message): Flash|null
-    {
-        if (strlen($message) > 0) {
-            $this->flash->add($level, $message, true);
-            return $this->flash;
-        }
-        return null;
     }
 }

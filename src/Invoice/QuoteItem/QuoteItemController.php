@@ -15,6 +15,7 @@ use App\Invoice\QuoteItemAmount\QuoteItemAmountRepository as QIAR;
 use App\Invoice\QuoteItemAmount\QuoteItemAmountService as QIAS;
 use App\Invoice\Setting\SettingRepository as SR;
 use App\Invoice\TaxRate\TaxRateRepository as TRR;
+use App\Invoice\Traits\FlashMessage;
 use App\Invoice\Unit\UnitRepository as UR;
 use App\Service\WebControllerService;
 use App\User\UserService;
@@ -37,6 +38,8 @@ use Yiisoft\Yii\View\Renderer\ViewRenderer;
 
 final class QuoteItemController
 {
+    use FlashMessage;
+    
     private Flash $flash;
     private Session $session;
     private ViewRenderer $viewRenderer;
@@ -110,7 +113,7 @@ final class QuoteItemController
                 $body = $request->getParsedBody() ?? '';
                 if (is_array($body)) {
                     $this->quoteitemService->addQuoteItem($quoteItem, $body, $quote_id, $pR, $qiar, new QIAS($qiar), $uR, $trR, $this->translator);
-                    $this->flash_message('success', $this->translator->translate('i.record_successfully_created'));
+                    $this->flashMessage('success', $this->translator->translate('i.record_successfully_created'));
                     return $this->webService->getRedirectResponse('quote/view', ['id' => $quote_id]);
                 }
             }    
@@ -119,34 +122,7 @@ final class QuoteItemController
         }
         return $this->viewRenderer->render('_item_form', $parameters);
     }
-
-    /**
-     * @return string
-     */
-    private function alert(): string
-    {
-        return $this->viewRenderer->renderPartialAsString(
-            '//invoice/layout/alert',
-            [
-       'flash' => $this->flash,
-     ]
-        );
-    }
-
-    /**
-     * @param string $level
-     * @param string $message
-     * @return Flash|null
-     */
-    private function flash_message(string $level, string $message): Flash|null
-    {
-        if (strlen($message) > 0) {
-            $this->flash->add($level, $message, true);
-            return $this->flash;
-        }
-        return null;
-    }
-
+    
     /**
      * @param CurrentRoute $currentRoute
      * @param Request $request
@@ -214,7 +190,7 @@ final class QuoteItemController
                                 $qiar,
                                 $sR
                             );
-                            $this->flash_message('success', $this->translator->translate('i.record_successfully_updated'));
+                            $this->flashMessage('success', $this->translator->translate('i.record_successfully_updated'));
                             return $this->webService->getRedirectResponse('quote/view', ['id' => $quote_id]);
                         }
                     } // is_array    
@@ -360,7 +336,7 @@ final class QuoteItemController
     {
         $canEdit = $this->userService->hasPermission('editInv');
         if (!$canEdit) {
-            $this->flash_message('warning', $this->translator->translate('invoice.permission'));
+            $this->flashMessage('warning', $this->translator->translate('invoice.permission'));
             return $this->webService->getRedirectResponse('quote/index');
         }
         return $canEdit;

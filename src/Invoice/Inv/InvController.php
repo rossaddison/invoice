@@ -92,6 +92,7 @@ use App\Invoice\Setting\SettingRepository as SR;
 use App\Invoice\Sumex\SumexRepository as SumexR;
 use App\Invoice\Task\TaskRepository as TASKR;
 use App\Invoice\TaxRate\TaxRateRepository as TRR;
+use App\Invoice\Traits\FlashMessage;
 use App\Invoice\Unit\UnitRepository as UNR;
 use App\Invoice\UnitPeppol\UnitPeppolRepository as unpR;
 use App\Invoice\Upload\UploadRepository as UPR;
@@ -116,7 +117,6 @@ use App\Widget\Bootstrap5ModalTranslatorMessageWithoutAction;
 // Libraries
 use App\Invoice\Libraries\Crypt;
 // Yii
-use Yiisoft\Aliases\Aliases;
 use Yiisoft\Data\Paginator\OffsetPaginator;
 use Yiisoft\Data\Reader\Sort;
 use Yiisoft\DataResponse\DataResponseFactoryInterface;
@@ -141,6 +141,8 @@ use Psr\Http\Message\ServerRequestInterface as Request;
 
 final class InvController
 {
+    use FlashMessage;
+    
     private Crypt $crypt;
     private DateHelper $date_helper;
     private DataResponseFactoryInterface $factory;
@@ -360,11 +362,11 @@ final class InvController
                 $uPR->save($track_file);
                 return true;
             } else {
-                $this->flash_message('warning', $this->translator->translate('invoice.invoice.possible.file.upload.attack') . $tmp);
+                $this->flashMessage('warning', $this->translator->translate('invoice.invoice.possible.file.upload.attack') . $tmp);
                 return false;
             }
         } else {
-            $this->flash_message('warning', $this->translator->translate('i.error_duplicate_file'));
+            $this->flashMessage('warning', $this->translator->translate('i.error_duplicate_file'));
             return false;
         }
     }
@@ -597,7 +599,7 @@ final class InvController
                                          ' '.
                                          (null !== ($client_surname) ? $client_surname : '');
                     } else {
-                        $this->flash_message('danger', ($clientRepository->repoClientquery($client_id))->getClient_full_name(). ': '. $this->translator->translate('invoice.invoice.user.client.no.account'));
+                        $this->flashMessage('danger', ($clientRepository->repoClientquery($client_id))->getClient_full_name(). ': '. $this->translator->translate('invoice.invoice.user.client.no.account'));
                     }
                     // Ensure that the client has only one (paying) user account otherwise reject this invoice
                     // @see UserClientRepository function get_not_assigned_to_user which ensures that only
@@ -618,14 +620,14 @@ final class InvController
                             // This table can be filled in via Invoice...View...Options...Edit...Sumex
                             $this->sumex_add_record($sumexR, (int) $model_id);
                             // Inform the user of generated invoice number for draft setting
-                            $this->flash_message('info', $this->sR->getSetting('generate_invoice_number_for_draft') === '1'
+                            $this->flashMessage('info', $this->sR->getSetting('generate_invoice_number_for_draft') === '1'
                             ? $this->translator->translate('i.generate_invoice_number_for_draft') . '=>' . $this->translator->translate('i.yes')
                             : $this->translator->translate('i.generate_invoice_number_for_draft') . '=>' . $this->translator->translate('i.no'));
                             $this->sR->getSetting('mark_invoices_sent_copy') === '1'
-                            ? $this->flash_message('danger', $this->translator->translate('invoice.mark.sent.copy.on'))
+                            ? $this->flashMessage('danger', $this->translator->translate('invoice.mark.sent.copy.on'))
                             : '';
                         } //$model_id
-                        $this->flash_message('success', $this->translator->translate('i.record_successfully_created'));
+                        $this->flashMessage('success', $this->translator->translate('i.record_successfully_created'));
                         if (($origin == 'main') || ($origin == 'inv')) {
                             return $this->web_service->getRedirectResponse('inv/index');
                         }
@@ -635,10 +637,10 @@ final class InvController
                         // otherwise return to client
                         return $this->web_service->getRedirectResponse('client/view', ['id' => $origin]);
                     }
-                    $this->flash_message('warning', $this->translator->translate('invoice.user.client.active.no'));
+                    $this->flashMessage('warning', $this->translator->translate('invoice.user.client.active.no'));
                 }
             }    
-            $this->flash_message('warning', $this->translator->translate('invoice.invoice.creation.unsuccessful'));
+            $this->flashMessage('warning', $this->translator->translate('invoice.invoice.creation.unsuccessful'));
             $errors = $form->getValidationResult()->getErrorMessagesIndexedByProperty();
         } // POST
         // show the form without a modal when using the main menu
@@ -741,7 +743,7 @@ final class InvController
                                          ' '.
                                          (null !== ($client_surname) ? $client_surname : '');
                     } else {
-                        $this->flash_message('warning', $this->translator->translate('invoice.invoice.user.client.no.account'));
+                        $this->flashMessage('warning', $this->translator->translate('invoice.invoice.user.client.no.account'));
                     }
                     // Ensure that the client has only one (paying) user account otherwise reject this invoice
                     // @see UserClientRepository function get_not_assigned_to_user which ensures that only
@@ -759,7 +761,7 @@ final class InvController
                             // This table can be filled in via Invoice...View...Options...Edit...Sumex
                             $this->sumex_add_record($sumexR, (int) $model_id);
                             // Inform the user of generated invoice number for draft setting
-                            $this->flash_message('info', $this->sR->getSetting('generate_invoice_number_for_draft') === '1'
+                            $this->flashMessage('info', $this->sR->getSetting('generate_invoice_number_for_draft') === '1'
                             ? $this->translator->translate('i.generate_invoice_number_for_draft') . '=>' . $this->translator->translate('i.yes')
                             : $this->translator->translate('i.generate_invoice_number_for_draft') . '=>' . $this->translator->translate('i.no'));
                         } //$model_id
@@ -769,7 +771,7 @@ final class InvController
                     $message = '';
                     if (!empty($client_fullname)) {
                         $message = $this->translator->translate('invoice.user.inv.more.than.one.assigned').' '.(string)$client_fullname;
-                        $this->flash_message('warning', $message);
+                        $this->flashMessage('warning', $message);
                     }
                     return $this->web_service->getRedirectResponse('inv/index');
                 }
@@ -933,12 +935,12 @@ final class InvController
             $inv = $this->inv($id, $invRepo);
             if ($inv) {
                 $this->inv_service->deleteInv($inv, $aciR, $aciiR, $iiaR, $icR, $icS, $iiR, $iiS, $itrR, $itrS, $iaR, $iaS);
-                $this->flash_message('info', $this->translator->translate('i.record_successfully_deleted'));
+                $this->flashMessage('info', $this->translator->translate('i.record_successfully_deleted'));
                 return $this->web_service->getRedirectResponse('inv/index');
             }
             return $this->web_service->getRedirectResponse('inv/index');
         } catch (\Exception $e) {
-            $this->flash_message('danger', $e->getMessage());
+            $this->flashMessage('danger', $e->getMessage());
             unset($e);
             return $this->web_service->getRedirectResponse('inv/index');
         }
@@ -969,15 +971,15 @@ final class InvController
                         $this->aciis->deleteInvItemAllowanceCharge($acii, $iaR, $iiaR, $itrR, $aciiR, $sR);
                     }
                     $this->inv_item_service->deleteInvItem($invItem);
-                    $this->flash_message('info', $this->translator->translate('i.record_successfully_deleted'));
+                    $this->flashMessage('info', $this->translator->translate('i.record_successfully_deleted'));
                     return $this->web_service->getRedirectResponse('inv/view', ['id' => $invItem->getInv_id()]);
                 } else {
-                    $this->flash_message('warning', $this->translator->translate('invoice.invoice.delete.sent'));
+                    $this->flashMessage('warning', $this->translator->translate('invoice.invoice.delete.sent'));
                     return $this->web_service->getRedirectResponse('inv/view', ['id' => $invItem->getInv_id()]);
                 }
             }
         } catch (\Exception $e) {
-            $this->flash_message('danger', $e->getMessage());
+            $this->flashMessage('danger', $e->getMessage());
             unset($e);
         }
         $inv_id = (string) $this->session->get('inv_id');
@@ -997,7 +999,7 @@ final class InvController
             $inv_tax_rate = $this->invtaxrate($id, $invtaxrateRepository);
             $this->inv_tax_rate_service->deleteInvTaxRate($inv_tax_rate);
         } catch (\Exception $e) {
-            $this->flash_message('danger', $e->getMessage());
+            $this->flashMessage('danger', $e->getMessage());
             unset($e);
         }
         $inv_id = (string) $this->session->get('inv_id');
@@ -1010,10 +1012,10 @@ final class InvController
     private function disable_read_only_status_message(): void
     {
         if ($this->sR->getSetting('disable_read_only') == '') {
-            $this->flash_message('warning', $this->translator->translate('invoice.security.disable.read.only.empty'));
+            $this->flashMessage('warning', $this->translator->translate('invoice.security.disable.read.only.empty'));
         }
         if ($this->sR->getSetting('disable_read_only') == '1') {
-            $this->flash_message('warning', $this->translator->translate('invoice.security.disable.read.only.warning'));
+            $this->flashMessage('warning', $this->translator->translate('invoice.security.disable.read.only.warning'));
         }
     }
 
@@ -1358,7 +1360,7 @@ final class InvController
                             return $this->view_renderer->render('inv/_form_edit', $parameters);
                         }
                         $this->edit_save_custom_fields($body, $formHydrator, $icR, $inv_id);
-                        $this->flash_message('success', $this->translator->translate('i.record_successfully_updated'));
+                        $this->flashMessage('success', $this->translator->translate('i.record_successfully_updated'));
                         return $this->web_service->getRedirectResponse('inv/view', ['id' => $inv_id]);
                     }
                 } //$body
@@ -1504,7 +1506,7 @@ final class InvController
         $mailer_helper = new MailerHelper($this->sR, $this->session, $this->translator, $this->logger, $this->mailer, $ccR, $qcR, $icR, $pcR, $socR, $cfR, $cvR);
         $template_helper = new TemplateHelper($this->sR, $ccR, $qcR, $icR, $pcR, $socR, $cfR, $cvR);
         if (!$mailer_helper->mailer_configured()) {
-            $this->flash_message('warning', $this->translator->translate('i.email_not_configured'));
+            $this->flashMessage('warning', $this->translator->translate('i.email_not_configured'));
             return $this->web_service->getRedirectResponse('inv/index');
         }
         $inv = $this->inv($id, $iR, true);
@@ -1525,16 +1527,16 @@ final class InvController
                     $custom_fields[$table] = $cfR->repoTablequery($table);
                 }
                 if ($template_helper->select_email_invoice_template($invoice) == '') {
-                    $this->flash_message('warning', $this->translator->translate('invoice.email.template.not.configured'));
+                    $this->flashMessage('warning', $this->translator->translate('invoice.email.template.not.configured'));
                     return $this->web_service->getRedirectResponse('setting/tab_index');
                 }
                 $setting_status_email_template = $etR->repoEmailTemplatequery($template_helper->select_email_invoice_template($invoice)) ?: null;
-                null === $setting_status_email_template ? $this->flash_message(
+                null === $setting_status_email_template ? $this->flashMessage(
                     'info',
                     $this->translator->translate('i.default_email_template') . '=>' .
                                         $this->translator->translate('i.not_set')
                 ) : '';
-                empty($template_helper->select_pdf_invoice_template($invoice)) ? $this->flash_message(
+                empty($template_helper->select_pdf_invoice_template($invoice)) ? $this->flashMessage(
                     'info',
                     $this->translator->translate('i.default_pdf_template') . '=>' .
                                         $this->translator->translate('i.not_set')
@@ -1791,7 +1793,7 @@ final class InvController
             if (is_array($body)) {
                 $body['btn_cancel'] = 0;
                 if (!$mailer_helper->mailer_configured()) {
-                    $this->flash_message('warning', $this->translator->translate('i.email_not_configured'));
+                    $this->flashMessage('warning', $this->translator->translate('i.email_not_configured'));
                     return $this->web_service->getRedirectResponse('inv/index');
                 }
                 /**
@@ -1919,22 +1921,6 @@ final class InvController
         $invSentLog->setInv_id((int)$invoice->getId());
         $invSentLog->setDate_sent(new \DateTimeImmutable('now'));
         $islR->save($invSentLog);
-    }
-
-    // email_stage_2
-
-    /**
-     * @param string $level
-     * @param string $message
-     * @return Flash|null
-     */
-    private function flash_message(string $level, string $message): Flash|null
-    {
-        if (strlen($message) > 0 && $this->sR->getSetting('disable_flash_messages_inv') == '0') {
-            $this->flash->add($level, $message, true);
-            return $this->flash;
-        }
-        return null;
     }
 
     /**
@@ -2226,7 +2212,7 @@ final class InvController
             ];
             return $this->view_renderer->render('inv/index', $parameters);
         } else {
-            $this->flash_message('info', $this->translator->translate('invoice.user.client.active.no'));
+            $this->flashMessage('info', $this->translator->translate('invoice.user.client.active.no'));
             return $this->web_service->getRedirectResponse('client/index');
         }
     }
@@ -2638,7 +2624,7 @@ final class InvController
         /** @var Inv $i */ foreach ($iR->findAllPreloaded() as $i) {
             $iR->delete($i);
         }
-        $this->flash_message('danger', $this->translator->translate('invoice.invoice.caution.deleted.invoices'));
+        $this->flashMessage('danger', $this->translator->translate('invoice.invoice.caution.deleted.invoices'));
         return $this->web_service->getRedirectResponse('inv/index');
     }
 
@@ -2879,7 +2865,7 @@ final class InvController
                         $iR->save($copy);
                         $parameters = ['success' => 1];
                         //return response to inv.js to reload page at location
-                        $this->flash_message('info', $this->translator->translate('invoice.draft.guest'));
+                        $this->flashMessage('info', $this->translator->translate('invoice.draft.guest'));
                         return $this->factory->createResponse(Json::encode($parameters));
                     }
                 }
@@ -3037,7 +3023,7 @@ final class InvController
                     }
                 } else {
                     if (!empty($errors = $form->getValidationResult()->getErrorMessagesIndexedByProperty())) {
-                        $this->flash_message('danger', 'You have validation errors on '. ($inv_item->getId() ?? ''));
+                        $this->flashMessage('danger', 'You have validation errors on '. ($inv_item->getId() ?? ''));
                     }
                 }
             } // null!==originalItemId
@@ -3128,7 +3114,7 @@ final class InvController
                     $parameters['success'] = 0;
                 }
             }
-            $this->flash_message('info', $this->translator->translate('i.record_successfully_updated'));
+            $this->flashMessage('info', $this->translator->translate('i.record_successfully_updated'));
 
         }
         return $this->factory->createResponse(Json::encode($parameters));
@@ -3493,15 +3479,15 @@ final class InvController
                             ];
                             return $this->view_renderer->render('inv/url_key', $parameters);
                         } // if inv_amount
-                        $this->flash_message('warning', $this->translator->translate('invoice.invoice.amount.no'));
+                        $this->flashMessage('warning', $this->translator->translate('invoice.invoice.amount.no'));
                         return $this->web_service->getNotFoundResponse();
                     } // null!== $user_inv
                 } // null!== $user_id
             } // if user_inv
-            $this->flash_message('danger', $this->translator->translate('invoice.invoice.client.not.allocated.to.user'));
+            $this->flashMessage('danger', $this->translator->translate('invoice.invoice.client.not.allocated.to.user'));
             return $this->web_service->getNotFoundResponse();
         } // if inv
-        $this->flash_message('danger', $this->translator->translate('invoice.invoice.not.found'));
+        $this->flashMessage('danger', $this->translator->translate('invoice.invoice.not.found'));
         return $this->web_service->getNotFoundResponse();
     }
 
@@ -3528,7 +3514,7 @@ final class InvController
     private function flash_no_enabled_gateways(array $enabled_gateways, string $message): void
     {
         if (empty(array_filter($enabled_gateways))) {
-            $this->flash_message('warning', $message);
+            $this->flashMessage('warning', $message);
         }
     }
 
@@ -3545,41 +3531,41 @@ final class InvController
             // check that each individual field has been completed otherwise raise a flash message
             if (null !== $cp) {
                 if (empty($cp->getEndpointid())) {
-                    $this->flash_message('warning', '$cp->getEndpointid() '.$cp->getEndpointid());
+                    $this->flashMessage('warning', '$cp->getEndpointid() '.$cp->getEndpointid());
                 }
                 if (empty($cp->getEndpointid_schemeid())) {
-                    $this->flash_message('warning', '$cp->getEndpointid_schemeid() '.$cp->getEndpointid_schemeid());
+                    $this->flashMessage('warning', '$cp->getEndpointid_schemeid() '.$cp->getEndpointid_schemeid());
                 }
                 if (empty($cp->getIdentificationid())) {
-                    $this->flash_message('warning', '$cp->getIdentificationid() '.$cp->getIdentificationid());
+                    $this->flashMessage('warning', '$cp->getIdentificationid() '.$cp->getIdentificationid());
                 }
                 if (empty($cp->getTaxschemecompanyid())) {
-                    $this->flash_message('warning', '$cp->getTaxschemecompanyid() '.$cp->getTaxschemecompanyid());
+                    $this->flashMessage('warning', '$cp->getTaxschemecompanyid() '.$cp->getTaxschemecompanyid());
                 }
                 if (empty($cp->getTaxschemeid())) {
-                    $this->flash_message('warning', '$cp->getTaxschemeid() '.$cp->getTaxschemeid());
+                    $this->flashMessage('warning', '$cp->getTaxschemeid() '.$cp->getTaxschemeid());
                 }
                 if (empty($cp->getLegal_entity_registration_name())) {
-                    $this->flash_message('warning', '$cp->getLegal_entity_registration_name() '.$cp->getLegal_entity_registration_name());
+                    $this->flashMessage('warning', '$cp->getLegal_entity_registration_name() '.$cp->getLegal_entity_registration_name());
                 }
                 if (empty($cp->getLegal_entity_companyid())) {
-                    $this->flash_message('warning', '$cp->getLegal_entity_companyid() '.$cp->getLegal_entity_companyid());
+                    $this->flashMessage('warning', '$cp->getLegal_entity_companyid() '.$cp->getLegal_entity_companyid());
                 }
                 if (empty($cp->getLegal_entity_companyid_schemeid())) {
-                    $this->flash_message('warning', '$cp->getLegal_entity_companyid_schemeid() '.$cp->getLegal_entity_companyid_schemeid());
+                    $this->flashMessage('warning', '$cp->getLegal_entity_companyid_schemeid() '.$cp->getLegal_entity_companyid_schemeid());
                 }
                 if (empty($cp->getLegal_entity_company_legal_form())) {
-                    $this->flash_message('warning', '$cp->getLegal_entity_company_legal_form() '.$cp->getLegal_entity_company_legal_form());
+                    $this->flashMessage('warning', '$cp->getLegal_entity_company_legal_form() '.$cp->getLegal_entity_company_legal_form());
                 }
                 if (empty($cp->getFinancial_institution_branchid())) {
-                    $this->flash_message('warning', '$cp->getFinancial_institution_branchid() '.$cp->getFinancial_institution_branchid());
+                    $this->flashMessage('warning', '$cp->getFinancial_institution_branchid() '.$cp->getFinancial_institution_branchid());
                 }
                 if (empty($cp->getAccountingCost())) {
-                    $this->flash_message('warning', '$cp->getAccountingCost() '.$cp->getAccountingCost());
+                    $this->flashMessage('warning', '$cp->getAccountingCost() '.$cp->getAccountingCost());
                 }
 
                 if (empty($cp->getSupplierAssignedAccountId())) {
-                    $this->flash_message('warning', '$cp->getSupplierAssignedAccountId() '.$cp->getSupplierAssignedAccountId());
+                    $this->flashMessage('warning', '$cp->getSupplierAssignedAccountId() '.$cp->getSupplierAssignedAccountId());
                 }
 
                 if ($cp->getEndpointid()
@@ -3597,7 +3583,7 @@ final class InvController
                   && $cp->getSupplierAssignedAccountId()) {
                     $passed = true;
                 } else {
-                    $this->flash_message('warning', $this->translator->translate('invoice.peppol.client.check'));
+                    $this->flashMessage('warning', $this->translator->translate('invoice.peppol.client.check'));
                     $passed = false;
                 }
             } // null!==$cp
@@ -3710,7 +3696,7 @@ final class InvController
                                 exit;
                             }
                         } // null!== $delivery_location
-                        $this->flash_message('warning', $this->translator->translate('invoice.delivery.location.peppol.output'));
+                        $this->flashMessage('warning', $this->translator->translate('invoice.delivery.location.peppol.output'));
                     } // client_peppol fully setup
                 } // null!== $client_id
             } // invoice
@@ -3748,7 +3734,7 @@ final class InvController
                 }
             } // else
         } // $this->sR->repoCount
-        $this->flash_message('info', $this->translator->translate('invoice.peppol.stream.toggle'));
+        $this->flashMessage('info', $this->translator->translate('invoice.peppol.stream.toggle'));
         return $this->web_service->getRedirectResponse('inv/view', ['id' => $id]);
     } // peppol stream toggle
 
@@ -4388,7 +4374,7 @@ final class InvController
           .$on_off)) . str_repeat("&nbsp;", 2)
           .(!empty($setting_url) ? (string)Html::a(Html::tag('i', '', ['class' => 'fa fa-pencil']), $setting_url, ['class' => 'btn btn-primary'])
           : '');
-        $this->flash_message($level, $message);
+        $this->flashMessage($level, $message);
     }
 
     /**
@@ -4427,7 +4413,7 @@ final class InvController
               ['class' => $mark_sent == '0' ? 'btn btn-success' : 'btn btn-danger']
           )
           : '');
-        $this->flash_message($level, $message);
+        $this->flashMessage($level, $message);
     }
 
     /**

@@ -25,6 +25,7 @@ use App\Invoice\Setting\SettingRepository as SR;
 use App\Invoice\Task\TaskRepository as TaskR;
 use App\Invoice\TaxRate\TaxRateRepository as TRR;
 use App\Invoice\Unit\UnitRepository as UR;
+use App\Invoice\Traits\FlashMessage;
 use App\Service\WebControllerService;
 use App\User\UserService;
 // Psr
@@ -45,6 +46,8 @@ use Yiisoft\Yii\View\Renderer\ViewRenderer;
 
 final class InvItemController
 {
+    use FlashMessage;
+    
     private Flash $flash;
     private Session $session;
     private ViewRenderer $viewRenderer;
@@ -118,7 +121,7 @@ final class InvItemController
             if ($formHydrator->populateFromPostAndValidate($form, $request)) {
                 if (is_array($body)) {
                     $this->invitemService->addInvItem_product($invitem, $body, $inv_id, $pR, $trR, new IIAS($iiar), $iiar, $sR, $uR);
-                    $this->flash_message('info', $this->translator->translate('i.record_successfully_created'));
+                    $this->flashMessage('info', $this->translator->translate('i.record_successfully_created'));
                     return $this->webService->getRedirectResponse('inv/view', ['id' => $inv_id]);
                 }
             }    
@@ -170,7 +173,7 @@ final class InvItemController
             if ($formHydrator->populateFromPostAndValidate($form, $request)) {
                 if (is_array($body)) {
                     $this->invitemService->addInvItem_task($invitem, $body, $inv_id, $taskR, $trR, new IIAS($iiar), $iiar, $sR);
-                    $this->flash_message('info', $this->translator->translate('i.record_successfully_created'));
+                    $this->flashMessage('info', $this->translator->translate('i.record_successfully_created'));
                     return $this->webService->getRedirectResponse('inv/view', ['id' => $inv_id]);
                 }
             }    
@@ -325,7 +328,7 @@ final class InvItemController
                             );
                             $numberHelper = new NumberHelper($sR);
                             $numberHelper->calculate_inv($inv_id, $aciR, $iiR, $iiaR, $itrR, $iaR, $iR, $pymR);
-                            $this->flash_message('info', $this->translator->translate('i.record_successfully_updated'));
+                            $this->flashMessage('info', $this->translator->translate('i.record_successfully_updated'));
                             return $this->webService->getRedirectResponse('inv/view', ['id' => $inv_id]);
                         }
                     }    
@@ -490,7 +493,7 @@ final class InvItemController
                             $this->saveInvItemAmount($request_inv_item, $quantity, $price, $discount, $charge, $allowance, $tax_rate_percentage, $iias, $iiaR, $sR);
                             $numberHelper = new NumberHelper($sR);
                             $numberHelper->calculate_inv($inv_id, $aciR, $iiR, $iiaR, $itrR, $iaR, $iR, $pymR);
-                            $this->flash_message('info', $this->translator->translate('i.record_successfully_updated'));
+                            $this->flashMessage('info', $this->translator->translate('i.record_successfully_updated'));
                             return $this->webService->getRedirectResponse('inv/view', ['id' => $inv_id]);
                         }    
                     }    
@@ -501,33 +504,6 @@ final class InvItemController
             return $this->viewRenderer->render('_item_form_task', $parameters);
         } // $inv_item
         return $this->webService->getNotFoundResponse();
-    }
-
-    /**
-     * @return string
-     */
-    private function alert(): string
-    {
-        return $this->viewRenderer->renderPartialAsString(
-            '//invoice/layout/alert',
-            [
-       'flash' => $this->flash
-     ]
-        );
-    }
-
-    /**
-     * @param string $level
-     * @param string $message
-     * @return Flash|null
-     */
-    private function flash_message(string $level, string $message): Flash|null
-    {
-        if (strlen($message) > 0) {
-            $this->flash->add($level, $message, true);
-            return $this->flash;
-        }
-        return null;
     }
 
     /**
@@ -545,16 +521,6 @@ final class InvItemController
             }
         }
         return null;
-    }
-
-    /**
-     * @param IIR $iiR
-     * @return \Yiisoft\Data\Cycle\Reader\EntityReader
-     */
-    private function invitems(IIR $iiR): \Yiisoft\Data\Cycle\Reader\EntityReader
-    {
-        $invitems = $iiR->findAllPreloaded();
-        return $invitems;
     }
 
     /**

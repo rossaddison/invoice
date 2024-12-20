@@ -9,6 +9,7 @@ use App\Invoice\Sumex\SumexService;
 use App\Invoice\Sumex\SumexForm;
 use App\Invoice\Sumex\SumexRepository;
 use App\Invoice\Setting\SettingRepository;
+use App\Invoice\Traits\FlashMessage;
 use App\User\UserService;
 use App\Service\WebControllerService;
 use Psr\Http\Message\ResponseInterface as Response;
@@ -25,6 +26,8 @@ use Yiisoft\FormModel\FormHydrator;
 
 final class SumexController
 {
+    use FlashMessage;
+    
     private Flash $flash;
     private Session $session;
     private ViewRenderer $viewRenderer;
@@ -90,20 +93,6 @@ final class SumexController
        'flash' => $this->flash
      ]
         );
-    }
-
-    /**
-     * @param string $level
-     * @param string $message
-     * @return Flash|null
-     */
-    private function flash_message(string $level, string $message): Flash|null
-    {
-        if (strlen($message) > 0) {
-            $this->flash->add($level, $message, true);
-            return $this->flash;
-        }
-        return null;
     }
 
     /**
@@ -173,7 +162,7 @@ final class SumexController
                     $body = $request->getParsedBody() ?? [];
                     if (is_array($body) && isset($body['invoice'])) {
                         $this->sumexService->saveSumex($sumex, $body);
-                        $this->flash_message('success', $this->translator->translate('i.record_successfully_updated'));
+                        $this->flashMessage('success', $this->translator->translate('i.record_successfully_updated'));
                         $id = (string)$body['invoice'];
                         return $this->webService->getRedirectResponse('inv/view', ['id' => $id]);
                     }
@@ -198,7 +187,7 @@ final class SumexController
         $sumex = $this->sumex($currentRoute, $sumexRepository);
         if ($sumex) {
             $this->sumexService->deleteSumex($sumex);
-            $this->flash_message('success', $this->translator->translate('i.record_successfully_deleted'));
+            $this->flashMessage('success', $this->translator->translate('i.record_successfully_deleted'));
         }
         return $this->webService->getRedirectResponse('sumex/index');
     }
@@ -234,7 +223,7 @@ final class SumexController
     {
         $canEdit = $this->userService->hasPermission('editInv');
         if (!$canEdit) {
-            $this->flash_message('warning', $this->translator->translate('invoice.permission'));
+            $this->flashMessage('warning', $this->translator->translate('invoice.permission'));
             return $this->webService->getRedirectResponse('sumex/index');
         }
         return $canEdit;

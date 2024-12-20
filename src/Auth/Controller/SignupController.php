@@ -10,6 +10,7 @@ use App\User\User;
 use App\User\UserRepository as uR;
 use App\Auth\AuthService;
 use App\Auth\Form\SignupForm;
+use App\Auth\Trait\Oauth2;
 use App\Invoice\Entity\UserInv;
 use App\Invoice\Setting\SettingRepository as sR;
 use App\Invoice\UserInv\UserInvRepository as uiR;
@@ -29,10 +30,15 @@ use Yiisoft\Router\CurrentRoute;
 use Yiisoft\Router\FastRoute\UrlGenerator;
 use Yiisoft\Security\TokenMask;
 use Yiisoft\Translator\TranslatorInterface as Translator;
+use Yiisoft\Yii\AuthClient\Client\Facebook;
+use Yiisoft\Yii\AuthClient\Client\GitHub;
+use Yiisoft\Yii\AuthClient\Client\Google;
 use Yiisoft\Yii\View\Renderer\ViewRenderer;
 
 final class SignupController
 {
+    use Oauth2;
+    
     public const string EMAIL_VERIFICATION_TOKEN = 'email-verification';
     private Assignment $assignment;
     private ItemStorage $itemstorage;
@@ -49,11 +55,14 @@ final class SignupController
         private WebControllerService $webService,
         private ViewRenderer $viewRenderer,
         private MailerInterface $mailer,
-        private sR $sR,
+        private sR $sR, 
+        private Facebook $facebook,
+        private GitHub $github,
+        private Google $google, 
         private Translator $translator,
         private UrlGenerator $urlGenerator,
         private CurrentRoute $currentRoute,
-        private LoggerInterface $logger
+        private LoggerInterface $logger       
     ) {
         $this->assignment = $assignment;
         $this->itemstorage = $itemstorage;
@@ -64,6 +73,10 @@ final class SignupController
         $this->viewRenderer = $viewRenderer->withControllerName('signup');
         $this->mailer = $mailer;
         $this->sR = $sR;
+        $this->facebook = $facebook;
+        $this->github = $github;
+        $this->google = $google;               
+        $this->initializeOauth2IdentityProviderCredentials($facebook, $github, $google);
         $this->translator = $translator;
         $this->urlGenerator = $urlGenerator;
         $this->currentRoute = $currentRoute;
@@ -155,7 +168,18 @@ final class SignupController
             }
             return $this->webService->getRedirectResponse('site/signupsuccess');
         }
-        return $this->viewRenderer->render('signup', ['formModel' => $signupForm]);
+        $noGithubContinueButton = $this->sR->getSetting('no_github_continue_button') == '1' ? true : false;
+        $noGoogleContinueButton = $this->sR->getSetting('no_google_continue_button') == '1' ? true : false;
+        $noFacebookContinueButton = $this->sR->getSetting('no_facebook_continue_button') == '1' ? true : false;
+        return $this->viewRenderer->render('signup', [
+            'formModel' => $signupForm,
+            'facebookAuthUrl' => strlen($this->facebook->getClientId()) > 0 ? $this->facebook->buildAuthUrl($request, $params = []) : '',
+            'githubAuthUrl' => strlen($this->github->getClientId()) > 0 ? $this->github->buildAuthUrl($request, $params = []) : '',   
+            'googleAuthUrl' => strlen($this->google->getClientId()) > 0 ? $this->google->buildAuthUrl($request, $params = []) : '',
+            'noGithubContinueButton' => $noGithubContinueButton,
+            'noGoogleContinueButton' => $noGoogleContinueButton,
+            'noFacebookContinueButton' => $noFacebookContinueButton,
+        ]);
     }
 
     /**
@@ -193,7 +217,7 @@ final class SignupController
             return $htmlBody;
         }
         return '';
-    }
+    }    
 
     /**
      * @param User $user

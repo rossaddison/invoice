@@ -54,6 +54,7 @@ use App\Invoice\Quote\QuoteRepository as qR;
 use App\Invoice\Inv\InvRepository as iR;
 use App\Invoice\InvItemAmount\InvItemAmountRepository as iiaR;
 use App\Invoice\Payment\PaymentRepository as pymR;
+use App\Invoice\Traits\FlashMessage;
 use App\Service\WebControllerService;
 use App\User\UserService;
 //  Psr
@@ -75,6 +76,8 @@ use Yiisoft\Yii\View\Renderer\ViewRenderer;
 
 class ProductController
 {
+    use FlashMessage;
+    
     private const string FILTER_FAMILY = 'ff';
     private const string FILTER_PRODUCT = 'fp';
     private const string RESET_TRUE = 'rt';

@@ -9,6 +9,7 @@ use App\Invoice\Enum\StoreCoveTaxType;
 use App\Invoice\Helpers\Peppol\PeppolArrays;
 use App\Invoice\TaxRate\TaxRateRepository;
 use App\Invoice\Setting\SettingRepository;
+use App\Invoice\Traits\FlashMessage;
 use App\Service\WebControllerService;
 use App\User\UserService;
 use Psr\Http\Message\ResponseInterface as Response;
@@ -24,6 +25,8 @@ use Yiisoft\Yii\View\Renderer\ViewRenderer;
 
 final class TaxRateController
 {
+    use FlashMessage;
+    
     private Flash $flash;
     private Session $session;
     private ViewRenderer $viewRenderer;
@@ -240,20 +243,6 @@ final class TaxRateController
         'flash' => $this->flash
       ]
         );
-    }
-
-    /**
-     * @param string $level
-     * @param string $message
-     * @return Flash|null
-     */
-    private function flashMessage(string $level, string $message): Flash|null
-    {
-        if (strlen($message) > 0) {
-            $this->flash->add($level, $message, true);
-            return $this->flash;
-        }
-        return null;
     }
 
     /**

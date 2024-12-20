@@ -11,6 +11,7 @@ use App\Invoice\Delivery\DeliveryService;
 use App\Invoice\Delivery\DeliveryRepository;
 use App\Invoice\DeliveryLocation\DeliveryLocationRepository as DLR;
 use App\Invoice\Setting\SettingRepository;
+use App\Invoice\Traits\FlashMessage;
 use App\User\UserService;
 use App\Service\WebControllerService;
 use Psr\Http\Message\ResponseInterface as Response;
@@ -31,6 +32,8 @@ use Exception;
 
 final class DeliveryController
 {
+    use FlashMessage;
+    
     private SessionInterface $session;
     private Flash $flash;
     private ViewRenderer $viewRenderer;
@@ -130,20 +133,6 @@ final class DeliveryController
     }
 
     /**
-     * @param string $level
-     * @param string $message
-     * @return Flash|null
-     */
-    private function flash_message(string $level, string $message): Flash|null
-    {
-        if (strlen($message) > 0) {
-            $this->flash->add($level, $message, true);
-            return $this->flash;
-        }
-        return null;
-    }
-
-    /**
      * @param CurrentRoute $currentRoute
      * @param DeliveryRepository $dR
      * @param SettingRepository $sR
@@ -207,12 +196,12 @@ final class DeliveryController
             $delivery = $this->delivery($currentRoute, $deliveryRepository);
             if ($delivery) {
                 $this->deliveryService->deleteDelivery($delivery);
-                $this->flash_message('info', $this->translator->translate('i.record_successfully_deleted'));
+                $this->flashMessage('info', $this->translator->translate('i.record_successfully_deleted'));
                 return $this->webService->getRedirectResponse('delivery/index');
             }
             return $this->webService->getRedirectResponse('delivery/index');
         } catch (Exception $e) {
-            $this->flash_message('danger', $e->getMessage());
+            $this->flashMessage('danger', $e->getMessage());
             return $this->webService->getRedirectResponse('delivery/index');
         }
     }

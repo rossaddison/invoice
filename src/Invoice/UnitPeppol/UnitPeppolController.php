@@ -10,6 +10,7 @@ use App\Invoice\Helpers\Peppol\Peppol_UNECERec20_11e;
 use App\Invoice\UnitPeppol\UnitPeppolService;
 use App\Invoice\UnitPeppol\UnitPeppolRepository;
 use App\Invoice\Setting\SettingRepository;
+use App\Invoice\Traits\FlashMessage;
 use App\Invoice\Unit\UnitRepository;
 use App\User\UserService;
 use App\Service\WebControllerService;
@@ -28,6 +29,8 @@ use Exception;
 
 final class UnitPeppolController
 {
+    use FlashMessage;
+    
     private Flash $flash;
     private Session $session;
     private ViewRenderer $viewRenderer;
@@ -130,20 +133,6 @@ final class UnitPeppolController
     }
 
     /**
-     * @param string $level
-     * @param string $message
-     * @return Flash|null
-     */
-    private function flash_message(string $level, string $message): Flash|null
-    {
-        if (strlen($message) > 0) {
-            $this->flash->add($level, $message, true);
-            return $this->flash;
-        }
-        return null;
-    }
-
-    /**
      * @param UnitPeppolRepository $unitpeppolRepository
      * @param SettingRepository $settingRepository
      * @return Response
@@ -173,12 +162,12 @@ final class UnitPeppolController
             $unitpeppol = $this->unitpeppol($currentRoute, $unitpeppolRepository);
             if ($unitpeppol) {
                 $this->unitpeppolService->deleteUnitPeppol($unitpeppol);
-                $this->flash_message('info', $this->translator->translate('i.record_successfully_deleted'));
+                $this->flashMessage('info', $this->translator->translate('i.record_successfully_deleted'));
                 return $this->webService->getRedirectResponse('unitpeppol/index');
             }
             return $this->webService->getRedirectResponse('unitpeppol/index');
         } catch (Exception $e) {
-            $this->flash_message('danger', $e->getMessage());
+            $this->flashMessage('danger', $e->getMessage());
             return $this->webService->getRedirectResponse('unitpeppol/index');
         }
     }

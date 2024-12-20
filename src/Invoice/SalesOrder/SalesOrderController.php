@@ -46,6 +46,7 @@ use App\Invoice\SalesOrderTaxRate\SalesOrderTaxRateRepository as SoTRR;
 use App\Invoice\SalesOrderTaxRate\SalesOrderTaxRateService as SoTRS;
 use App\Invoice\Setting\SettingRepository;
 use App\Invoice\TaxRate\TaxRateRepository as TRR;
+use App\Invoice\Traits\FlashMessage;
 use App\Invoice\UserClient\UserClientRepository as UCR;
 use App\Invoice\UserClient\Exception\NoClientsAssignedToUserException;
 use App\Invoice\UserInv\UserInvRepository as UIR;
@@ -59,8 +60,6 @@ use App\User\UserService;
 use App\Service\WebControllerService;
 // Helpers
 use App\Invoice\Helpers\CustomValuesHelper as CVH;
-use App\Invoice\Helpers\ClientHelper;
-use App\Invoice\Helpers\DateHelper;
 use App\Invoice\Helpers\NumberHelper;
 use App\Invoice\Helpers\PdfHelper;
 // Psr
@@ -83,6 +82,8 @@ use Exception;
 
 final class SalesOrderController
 {
+    use FlashMessage;
+    
     private DataResponseFactoryInterface $factory;
     private Flash $flash;
     private InvService $invService;
@@ -446,7 +447,7 @@ final class SalesOrderController
                 'terms_and_conditions_file' => $this->viewRenderer->renderPartialAsString('//invoice/salesorder/terms_and_conditions_file'),
                 'terms_and_conditions' => $settingRepository->getTermsAndConditions(),
                 // if there are no delivery locations add a flash message
-                'no_delivery_locations' => $delRepo->repoClientCount($so->getClient_id()) > 0 ? '' : $this->flash_message('warning', $this->translator->translate('invoice.quote.delivery.location.none')),
+                'no_delivery_locations' => $delRepo->repoClientCount($so->getClient_id()) > 0 ? '' : $this->flashMessage('warning', $this->translator->translate('invoice.quote.delivery.location.none')),
                 'alert' => $this->alert(),
                 'so' => $so,
                 'cfR' => $cfR,
@@ -459,7 +460,7 @@ final class SalesOrderController
                     $body = $request->getParsedBody() ?? [];
                     if (is_array($body)) {
                         $this->salesorderService->saveSo($so, $body);
-                        $this->flash_message('success', $this->translator->translate('i.record_successfully_updated'));
+                        $this->flashMessage('success', $this->translator->translate('i.record_successfully_updated'));
                         return $this->webService->getRedirectResponse('salesorder/index');
                     }
                 }    
@@ -500,12 +501,12 @@ final class SalesOrderController
             $so = $this->salesorder($currentRoute, $salesorderRepository);
             if ($so) {
                 $this->salesorderService->deleteSo($so, $socR, $socS, $soiR, $soiS, $sotrR, $sotrS, $soaR, $soaS);
-                $this->flash_message('info', $this->translator->translate('i.record_successfully_deleted'));
+                $this->flashMessage('info', $this->translator->translate('i.record_successfully_deleted'));
                 return $this->webService->getRedirectResponse('salesorder/index');
             }
             return $this->webService->getRedirectResponse('salesorder/index');
         } catch (Exception $e) {
-            $this->flash_message('danger', $e->getMessage());
+            $this->flashMessage('danger', $e->getMessage());
             return $this->webService->getRedirectResponse('salesorder/index');
         }
     }
@@ -792,7 +793,7 @@ final class SalesOrderController
                                 $so->setInv_id($inv_id);
                                 // Set salesorder's status to invoice generated
                                 $so->setStatus_id(8);
-                                $this->flash_message('info', $this->translator->translate('invoice.salesorder.invoice.generated'));
+                                $this->flashMessage('info', $this->translator->translate('invoice.salesorder.invoice.generated'));
                                 $soR->save($so);
                                 $parameters = [
                                     'success' => 1,
@@ -1070,21 +1071,6 @@ final class SalesOrderController
      ]
         );
     }
-
-    /**
-     * @param string $level
-     * @param string $message
-     * @return Flash|null
-     */
-    private function flash_message(string $level, string $message): Flash|null
-    {
-        if (strlen($message) > 0) {
-            $this->flash->add($level, $message, true);
-            return $this->flash;
-        }
-        return null;
-    }
-
 
     private function OptionsData(
         int $client_id,

@@ -10,6 +10,7 @@ use App\Invoice\FromDropDown\FromDropDownRepository;
 use App\Invoice\CustomField\CustomFieldRepository;
 use App\Invoice\EmailTemplate\EmailTemplateForm;
 use App\Invoice\Setting\SettingRepository;
+use App\Invoice\Traits\FlashMessage;
 use App\Service\WebControllerService;
 use App\User\UserService;
 use Psr\Http\Message\ResponseInterface as Response;
@@ -28,6 +29,8 @@ use Yiisoft\Yii\View\Renderer\ViewRenderer;
 
 final class EmailTemplateController
 {
+    use FlashMessage;
+    
     private SessionInterface $session;
     private Flash $flash;
     private ViewRenderer $viewRenderer;
@@ -121,7 +124,7 @@ final class EmailTemplateController
             if (null !== $this->userService->getUser() && $formHydrator->populateAndValidate($form, $body)) {
                 if (is_array($body)) {
                     $this->emailtemplateService->saveEmailTemplate(new EmailTemplate(), $body);
-                    $this->flash_message('info', $this->translator->translate('invoice.email.template.successfully.added'));
+                    $this->flashMessage('info', $this->translator->translate('invoice.email.template.successfully.added'));
                     return $this->webService->getRedirectResponse('emailtemplate/index');
                 }
             }    
@@ -173,7 +176,7 @@ final class EmailTemplateController
             if (null !== $this->userService->getUser() && $formHydrator->populateAndValidate($form, $body)) {
                 if (is_array($body)) {
                     $this->emailtemplateService->saveEmailTemplate(new EmailTemplate(), $body);
-                    $this->flash_message('info', $this->translator->translate('invoice.email.template.successfully.added'));
+                    $this->flashMessage('info', $this->translator->translate('invoice.email.template.successfully.added'));
                     return $this->webService->getRedirectResponse('emailtemplate/index');
                 }
             }    
@@ -194,20 +197,6 @@ final class EmailTemplateController
        'flash' => $this->flash
      ]
         );
-    }
-
-    /**
-     * @param string $level
-     * @param string $message
-     * @return Flash|null
-     */
-    private function flash_message(string $level, string $message): Flash|null
-    {
-        if (strlen($message) > 0) {
-            $this->flash->add($level, $message, true);
-            return $this->flash;
-        }
-        return null;
     }
 
     /**
@@ -262,7 +251,7 @@ final class EmailTemplateController
                 if ($formHydrator->populateFromPostAndValidate($form, $request)) {
                     if (is_array($body)) {
                         $this->emailtemplateService->saveEmailTemplate($email_template, $body);
-                        $this->flash_message('info', $this->translator->translate('invoice.email.template.successfully.edited'));
+                        $this->flashMessage('info', $this->translator->translate('invoice.email.template.successfully.edited'));
                         return $this->webService->getRedirectResponse('emailtemplate/index');
                     }
                 }    
@@ -326,7 +315,7 @@ final class EmailTemplateController
                 if ($formHydrator->populateFromPostAndValidate($form, $request)) {
                     if (is_array($body)) {
                         $this->emailtemplateService->saveEmailTemplate($email_template, $body);
-                        $this->flash_message('info', $this->translator->translate('invoice.email.template.successfully.edited'));
+                        $this->flashMessage('info', $this->translator->translate('invoice.email.template.successfully.edited'));
                         return $this->webService->getRedirectResponse('emailtemplate/index');
                     }
                 }    
@@ -350,7 +339,7 @@ final class EmailTemplateController
         $email_template = $this->emailtemplate($currentRoute, $emailtemplateRepository);
         if ($email_template) {
             $this->emailtemplateService->deleteEmailTemplate($email_template);
-            $this->flash_message('info', $this->translator->translate('invoice.email.template.successfully.deleted'));
+            $this->flashMessage('info', $this->translator->translate('invoice.email.template.successfully.deleted'));
             return $this->webService->getRedirectResponse('emailtemplate/index');
         }
         return $this->webService->getRedirectResponse('emailtemplate/index');
@@ -433,7 +422,7 @@ final class EmailTemplateController
     {
         $canEdit = $this->userService->hasPermission('editInv');
         if (!$canEdit) {
-            $this->flash_message('warning', $this->translator->translate('invoice.permission'));
+            $this->flashMessage('warning', $this->translator->translate('invoice.permission'));
             return $this->webService->getRedirectResponse('emailtemplate/index');
         }
         return $canEdit;

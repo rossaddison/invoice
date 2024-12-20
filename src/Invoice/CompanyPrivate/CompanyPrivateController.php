@@ -9,6 +9,7 @@ use App\Invoice\CompanyPrivate\CompanyPrivateService;
 use App\Invoice\CompanyPrivate\CompanyPrivateRepository;
 use App\Invoice\Entity\CompanyPrivate;
 use App\Invoice\Setting\SettingRepository;
+use App\Invoice\Traits\FlashMessage;
 use App\Service\WebControllerService;
 use App\User\UserService;
 use Psr\Http\Message\ResponseInterface as Response;
@@ -25,6 +26,8 @@ use Yiisoft\Yii\View\Renderer\ViewRenderer;
 
 final class CompanyPrivateController
 {
+    use FlashMessage;
+    
     private SessionInterface $session;
     private Flash $flash;
     private ViewRenderer $viewRenderer;
@@ -97,7 +100,7 @@ final class CompanyPrivateController
         $targetPath = $aliases->get('@company_private_logos');
         $targetPublicPath = $aliases->get('@public_logo');
         if (!is_writable($targetPath)) {
-            $this->flash_message('warning', $this->translator->translate('i.is_not_writable'));
+            $this->flashMessage('warning', $this->translator->translate('i.is_not_writable'));
             return $this->webService->getRedirectResponse('companyprivate/index');
         }
         if ($request->getMethod() === Method::POST) {
@@ -116,7 +119,7 @@ final class CompanyPrivateController
                 if (!$this->file_uploading_errors($tmp, $target_file_name, $target_public_logo)) {
                     if ($formHydrator->populateAndValidate($form, $body)) {
                         $this->companyprivateService->saveCompanyPrivate($company_private, $body, $settingRepository);
-                        $this->flash_message('info', $this->translator->translate('i.record_successfully_created'));
+                        $this->flashMessage('info', $this->translator->translate('i.record_successfully_created'));
                         return $this->webService->getRedirectResponse('companyprivate/index');
                     }                   
                 }
@@ -182,20 +185,6 @@ final class CompanyPrivateController
     }
 
     /**
-    * @param string $level
-    * @param string $message
-    * @return Flash|null
-    */
-    private function flash_message(string $level, string $message): Flash|null
-    {
-        if (strlen($message) > 0) {
-            $this->flash->add($level, $message, true);
-            return $this->flash;
-        }
-        return null;
-    }
-
-    /**
      * @param Request $request
      * @param CurrentRoute $currentRoute
      * @param FormHydrator $formHydrator
@@ -228,7 +217,7 @@ final class CompanyPrivateController
             $targetPath = $aliases->get('@company_private_logos');
             $targetPublicPath = $aliases->get('@public_logo');
             if (!is_writable($targetPath)) {
-                $this->flash_message('warning', $this->translator->translate('i.is_not_writable'));
+                $this->flashMessage('warning', $this->translator->translate('i.is_not_writable'));
                 return $this->webService->getRedirectResponse('companyprivate/index');
             }
             if ($request->getMethod() === Method::POST) {
@@ -275,7 +264,7 @@ final class CompanyPrivateController
                         );
                         $companyprivateRepository->save($after_save);
 
-                        $this->flash_message('info', $this->translator->translate('i.record_successfully_updated'));
+                        $this->flashMessage('info', $this->translator->translate('i.record_successfully_updated'));
                         return $this->webService->getRedirectResponse('companyprivate/index');
                     } // after  save
                 }
@@ -312,7 +301,7 @@ final class CompanyPrivateController
                 $target_public_logo = $targetPublicPath .DIRECTORY_SEPARATOR. $logo;
                 unlink($target_public_logo);
                 $this->companyprivateService->deleteCompanyPrivate($company_private);
-                $this->flash_message('info', $this->translator->translate('i.record_successfully_deleted'));
+                $this->flashMessage('info', $this->translator->translate('i.record_successfully_deleted'));
                 return $this->webService->getRedirectResponse('companyprivate/index');
             }
         }
@@ -354,7 +343,7 @@ final class CompanyPrivateController
     {
         $canEdit = $this->userService->hasPermission('editInv');
         if (!$canEdit) {
-            $this->flash_message('warning', $this->translator->translate('invoice.permission'));
+            $this->flashMessage('warning', $this->translator->translate('invoice.permission'));
             return $this->webService->getRedirectResponse('companyprivate/index');
         }
         return $canEdit;

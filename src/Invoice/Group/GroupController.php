@@ -8,6 +8,7 @@ use App\Invoice\Entity\Group;
 use App\Invoice\Group\GroupService;
 use App\Invoice\Group\GroupRepository;
 use App\Invoice\Setting\SettingRepository;
+use App\Invoice\Traits\FlashMessage;
 use App\Service\WebControllerService;
 use App\User\UserService;
 use Psr\Http\Message\ResponseInterface as Response;
@@ -24,6 +25,8 @@ use Yiisoft\Yii\View\Renderer\ViewRenderer;
 
 final class GroupController
 {
+    use FlashMessage; 
+    
     private Flash $flash;
     private Session $session;
     private ViewRenderer $viewRenderer;
@@ -174,7 +177,7 @@ final class GroupController
             return $this->webService->getRedirectResponse('group/index');
         } catch (\Exception $e) {
             unset($e);
-            $this->flash_message('danger', $this->translator->translate('invoice.group.history'));
+            $this->flashMessage('danger', $this->translator->translate('invoice.group.history'));
             return $this->webService->getRedirectResponse('group/index');
         }
     }
@@ -211,7 +214,7 @@ final class GroupController
     {
         $canEdit = $this->userService->hasPermission('editInv');
         if (!$canEdit) {
-            $this->flash_message('warning', $this->translator->translate('invoice.permission'));
+            $this->flashMessage('warning', $this->translator->translate('invoice.permission'));
             return $this->webService->getRedirectResponse('group/index');
         }
         return $canEdit;
@@ -254,16 +257,5 @@ final class GroupController
          'flash' => $this->flash
        ]
         );
-    }
-
-    /**
-     * @param string $level
-     * @param string $message
-     * @return Flash
-     */
-    private function flash_message(string $level, string $message): Flash
-    {
-        $this->flash->add($level, $message, true);
-        return $this->flash;
     }
 }

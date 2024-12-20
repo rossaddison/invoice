@@ -10,6 +10,7 @@ use App\Invoice\Project\ProjectService;
 use App\Invoice\Project\ProjectForm;
 use App\Invoice\Project\ProjectRepository;
 use App\Invoice\Setting\SettingRepository;
+use App\Invoice\Traits\FlashMessage;
 use App\Service\WebControllerService;
 use App\User\UserService;
 use Psr\Http\Message\ResponseInterface as Response;
@@ -25,6 +26,8 @@ use Yiisoft\Yii\View\Renderer\ViewRenderer;
 
 final class ProjectController
 {
+    use FlashMessage;
+    
     private Session $session;
     private Flash $flash;
     private ViewRenderer $viewRenderer;
@@ -118,21 +121,7 @@ final class ProjectController
      ]
         );
     }
-
-    /**
-     * @param string $level
-     * @param string $message
-     * @return Flash|null
-     */
-    private function flash_message(string $level, string $message): Flash|null
-    {
-        if (strlen($message) > 0) {
-            $this->flash->add($level, $message, true);
-            return $this->flash;
-        }
-        return null;
-    }
-
+    
     /**
      * @param Request $request
      * @param CurrentRoute $currentRoute
@@ -187,7 +176,7 @@ final class ProjectController
         $project = $this->project($currentRoute, $projectRepository);
         if ($project) {
             $this->projectService->deleteProject($project);
-            $this->flash_message('success', $this->translator->translate('i.record_successfully_deleted'));
+            $this->flashMessage('success', $this->translator->translate('i.record_successfully_deleted'));
         }
         return $this->webService->getRedirectResponse('project/index');
     }
@@ -221,7 +210,7 @@ final class ProjectController
     {
         $canEdit = $this->userService->hasPermission('editInv');
         if (!$canEdit) {
-            $this->flash_message('warning', $this->translator->translate('invoice.permission'));
+            $this->flashMessage('warning', $this->translator->translate('invoice.permission'));
             return $this->webService->getRedirectResponse('project/index');
         }
         return $canEdit;

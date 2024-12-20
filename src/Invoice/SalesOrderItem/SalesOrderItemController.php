@@ -71,19 +71,6 @@ final class SalesOrderItemController
         $this->translator = $translator;
     }
 
-    /**
-     * @return string
-     */
-    private function alert(): string
-    {
-        return $this->viewRenderer->renderPartialAsString(
-            '//invoice/layout/alert',
-            [
-            'flash' => $this->flash
-        ]
-        );
-    }
-
     public function edit(
         CurrentRoute $currentRoute,
         Request $request,
@@ -137,18 +124,6 @@ final class SalesOrderItemController
         return $this->webService->getNotFoundResponse();
     }
 
-    /**
-     * @param string $level
-     * @param string $message
-     * @return Flash
-     */
-    private function flash(string $level, string $message): Flash
-    {
-        $flash = new Flash($this->session);
-        $flash->set($level, $message);
-        return $flash;
-    }
-
     //For rbac refer to AccessChecker
 
     /**
@@ -164,17 +139,6 @@ final class SalesOrderItemController
             return $salesorderitem;
         }
         return null;
-    }
-
-    /**
-     * @return \Yiisoft\Data\Cycle\Reader\EntityReader
-     *
-     * @psalm-return \Yiisoft\Data\Cycle\Reader\EntityReader
-     */
-    private function salesorderitems(SalesOrderItemRepository $salesorderitemRepository): \Yiisoft\Data\Cycle\Reader\EntityReader
-    {
-        $salesorderitems = $salesorderitemRepository->findAllPreloaded();
-        return $salesorderitems;
     }
 
     public function taxrate_percentage(int $id, TRR $trr): float|null

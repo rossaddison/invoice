@@ -36,6 +36,7 @@ use App\Invoice\Setting\SettingRepository as sR;
 // Services
 use App\Invoice\Merchant\MerchantService;
 use App\Invoice\Payment\PaymentService;
+use App\Invoice\Traits\FlashMessage;
 use App\Service\WebControllerService;
 use Vjik\TelegramBot\Api\FailResult;
 use Vjik\TelegramBot\Api\TelegramBotApi;
@@ -55,6 +56,8 @@ use Mollie\Api\Exceptions\ApiException as MollieException;
 
 final class PaymentInformationController
 {
+    use FlashMessage;
+    
     private Crypt $crypt;
 
     public function __construct(
@@ -124,19 +127,6 @@ final class PaymentInformationController
         );
     }
 
-    /**
-     * @param string $level
-     * @param string $message
-     * @return Flash|null
-     */
-    private function flash_message(string $level, string $message): Flash|null
-    {
-        if (strlen($message) > 0) {
-            $this->flash->add($level, $message, true);
-            return $this->flash;
-        }
-        return null;
-    }
     // https://developer.amazon.com/docs/amazon-pay-api-v2/checkout-session.html#create-checkout-session
 
     /**
@@ -377,7 +367,7 @@ final class PaymentInformationController
                         ];
                         // Check if the invoice is payable
                         if ($balance == 0.00) {
-                            $this->flash_message('warning', $this->translator->translate('i.invoice_already_paid'));
+                            $this->flashMessage('warning', $this->translator->translate('i.invoice_already_paid'));
                             $disable_form = true;
                         }
                         // Get additional invoice information
@@ -388,19 +378,19 @@ final class PaymentInformationController
                             if ($this->sR->getSetting('gateway_'.$d.'_version') === '1') {
                                 // Setup Stripe omnipay if enabled
                                 if ($this->sR->getSetting('gateway_stripe_enabled') === '1' && ($this->stripe_setApiKey() == false) && ($d == 'stripe')) {
-                                    $this->flash_message(
+                                    $this->flashMessage(
                                         'warning',
                                         $this->translator->translate('invoice.payment.information.stripe.api.key')
                                     );
                                 }
                                 if ($this->sR->getSetting('gateway_amazon_pay_enabled') === '1' && ($d == 'amazon_pay')) {
-                                    $this->flash_message(
+                                    $this->flashMessage(
                                         'warning',
                                         $this->translator->translate('invoice.payment.information.amazon.no.omnipay.version')
                                     );
                                 }
                                 if ($this->sR->getSetting('gateway_braintree_enabled') === '1' && ($d == 'braintree')) {
-                                    $this->flash_message(
+                                    $this->flashMessage(
                                         'warning',
                                         $this->translator->translate('invoice.payment.information.braintree.no.omnipay.version')
                                     );
@@ -552,7 +542,7 @@ final class PaymentInformationController
                 }
             }
         } else {
-            $this->flash_message('danger', $this->translator->translate('invoice.invoice.number.no'));
+            $this->flashMessage('danger', $this->translator->translate('invoice.invoice.number.no'));
         }
         return $this->webService->getNotFoundResponse();
     }
@@ -573,7 +563,7 @@ final class PaymentInformationController
         // Return the view
         $aliases = $this->sR->get_amazon_pem_file_folder_aliases();
         if (!file_exists($aliases->get('@pem_file_unique_folder').'/private.pem')) {
-            $this->flash_message('warning', 'Amazon_Pay private.pem File Not Downloaded from Amazon and saved in Pem_unique_folder as private.pem');
+            $this->flashMessage('warning', 'Amazon_Pay private.pem File Not Downloaded from Amazon and saved in Pem_unique_folder as private.pem');
             return $this->viewRenderer->render(
                 'setting/payment_message',
                 [
@@ -773,11 +763,11 @@ final class PaymentInformationController
         $mollieClient = new MollieClient();
         // Return the view
         if ($this->sR->getSetting('gateway_mollie_enabled') === '1' && ($this->mollieSetTestOrLiveApiKey($mollieClient) == false)) {
-            $this->flash_message('warning', $this->translator->translate('invoice.payment.gateway.mollie.api.key.needs.to.be.setup'));
+            $this->flashMessage('warning', $this->translator->translate('invoice.payment.gateway.mollie.api.key.needs.to.be.setup'));
             return $this->webService->getNotFoundResponse();
         }
         if ($this->sR->getSetting('gateway_mollie_enabled') === '1' && ($this->mollieSetTestOrLiveApiKey($mollieClient) == true)) {
-            $this->flash_message('success', $this->translator->translate('invoice.payment.gateway.mollie.api.key.has.been.setup'));
+            $this->flashMessage('success', $this->translator->translate('invoice.payment.gateway.mollie.api.key.has.been.setup'));
         }
         $payment = $this->mollieApiClientCreatePayment(
             $mollieClient,
@@ -1067,7 +1057,7 @@ final class PaymentInformationController
     ): Response {
         // Return the view
         if ($this->sR->getSetting('gateway_stripe_enabled') === '1' && ($this->stripe_setApiKey() == false)) {
-            $this->flash_message('warning', 'Stripe Payment Gateway Secret Key/Api Key needs to be setup.');
+            $this->flashMessage('warning', 'Stripe Payment Gateway Secret Key/Api Key needs to be setup.');
             return $this->webService->getNotFoundResponse();
         }
         $stripe_pci_view_data = [
@@ -1370,7 +1360,7 @@ final class PaymentInformationController
                 $credit_card->validate();
             } catch (\Exception $e) {
                 // Redirect the user and display failure message
-                $this->flash_message(
+                $this->flashMessage(
                     'error',
                     $this->translator->translate('g.online_payment_card_invalid') . '<br/>' . $e->getMessage()
                 );
@@ -1487,12 +1477,12 @@ final class PaymentInformationController
                         if ((strlen($chatId) > 0) && strlen($telegramToken) > 0) {
                             $failResultSendMessage = $telegramBotApi->sendMessage($chatId, $clientFullName.': '.$balance. ' : '.$payment_note);
                             if (!$failResultSendMessage instanceof FailResult) {
-                                $this->flash_message('success', $this->translator->translate('invoice.invoice.telegram.bot.api.payment.notification.success'));
+                                $this->flashMessage('success', $this->translator->translate('invoice.invoice.telegram.bot.api.payment.notification.success'));
                             }
                         }
                     } else {
                         if ($this->sR->getSetting('enable_telegram') == '1') {
-                            $this->flash_message('danger', $this->translator->translate('invoice.invoice.telegram.bot.api.token.not.set'));
+                            $this->flashMessage('danger', $this->translator->translate('invoice.invoice.telegram.bot.api.token.not.set'));
                         }
                     }
                 }
@@ -1517,7 +1507,7 @@ final class PaymentInformationController
                  );
 
             // Redirect user and display the success message
-            $this->flash_message('success', $payment_success_msg);
+            $this->flashMessage('success', $payment_success_msg);
             return $this->factory->createResponse(
                 $this->viewRenderer->renderPartialAsString(
                     'setting/payment_message',
@@ -1557,7 +1547,7 @@ final class PaymentInformationController
                  );
 
             // Redirect user and display the success message
-            $this->flash_message('warning', $payment_failure_msg);
+            $this->flashMessage('warning', $payment_failure_msg);
             return $this->factory->createResponse(
                 $this->viewRenderer->renderPartialAsString(
                     'setting/payment_message',
@@ -1634,7 +1624,7 @@ final class PaymentInformationController
                  ->saveMerchant_via_payment_handler($merchant_response, $successful_merchant_response_array);
 
             // Redirect user and display the success message
-            $this->flash_message('success', $payment_success_msg);
+            $this->flashMessage('success', $payment_success_msg);
             return $this->factory->createResponse(
                 $this->viewRenderer->renderPartialAsString(
                     'setting/payment_message',
@@ -1669,7 +1659,7 @@ final class PaymentInformationController
                  );
 
             // Redirect user and display the success message
-            $this->flash_message('warning', $payment_failure_msg);
+            $this->flashMessage('warning', $payment_failure_msg);
             return $this->factory->createResponse(
                 $this->viewRenderer->renderPartialAsString(
                     'setting/payment_message',
@@ -1783,12 +1773,12 @@ final class PaymentInformationController
                     $payment_msg = sprintf($this->translator->translate('g.online_payment_payment_successful'), $invoiceNumber);
 
                     // Set the success flash message
-                    $this->flash_message('success', $payment_msg);
+                    $this->flashMessage('success', $payment_msg);
                 } // invoice_amount_record
             } else {
                 $payment_msg = sprintf($this->translator->translate('g.online_payment_payment_failed'), $invoiceNumber);
                 // Set the failure flash message
-                $this->flash_message('error', $this->translator->translate('g.online_payment_payment_failed'));
+                $this->flashMessage('error', $this->translator->translate('g.online_payment_payment_failed'));
             }
             // Redirect to guest invoice view with flash message
             return $this->factory->createResponse(
@@ -1880,7 +1870,7 @@ final class PaymentInformationController
         $this->omnipay_payment_validate($invoice_url_key, $driver, true);
 
         // Set the cancel flash message
-        $this->flash_message('info', $this->translator->translate('g.online_payment_payment_cancelled'));
+        $this->flashMessage('info', $this->translator->translate('g.online_payment_payment_cancelled'));
 
         $d = strtolower($driver);
         $sandbox_url_array = $this->sR->sandbox_url_array();

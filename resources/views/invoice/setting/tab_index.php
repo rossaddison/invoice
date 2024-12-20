@@ -21,6 +21,7 @@ declare(strict_types=1);
  * @var string $google_translate
  * @var string $vat_registered
  * @var string $mpdf
+ * @var string $oauth2
  * @var string $peppol_electronic_invoicing
  * @var string $storecove
  * @var string $invoiceplane
@@ -45,6 +46,9 @@ echo $alert;
     <!-- https://getbootstrap.com/docs/5.0/components/navs-tabs/#using-data-attributes -->
     <li class="<?= 'nav-item'. ($active == 'front-page' ? ' active' : ''); ?>" role="presentation">
         <button class="<?= 'nav-link'. ($active == 'front-page' ? ' active' : ''); ?>" data-bs-toggle="tab" data-bs-target="#settings-front-page" style="text-decoration: none"><?= $translator->translate('invoice.invoice.front.page'); ?> </button>
+    </li>
+    <li class="<?= 'nav-item'. ($active == 'oauth2' ? ' active' : ''); ?>" role="presentation">
+        <button class="<?= 'nav-link'. ($active == 'oauth2' ? ' active' : ''); ?>" data-bs-toggle="tab" data-bs-target="#settings-oauth2" style="text-decoration: none"><?= 'OAuth2'; ?> </button>
     </li>
     <li class="<?= 'nav-item'. ($active == 'general' ? ' active' : ''); ?>" role="presentation">
         <button class="<?= 'nav-link'. ($active == 'general' ? ' active' : ''); ?>" data-bs-toggle="tab" data-bs-target="#settings-general" style="text-decoration: none"><?= $translator->translate('i.general'); ?> </button>
@@ -105,6 +109,10 @@ echo $alert;
         <div class="tab-content">
             <div id="settings-front-page" class="<?= 'tab-pane'. ($active == 'front-page' ? ' active' : ''); ?>" role="tabpanel" aria-labelledby="front-page" >
                 <?= $frontPage; ?>
+            </div>
+            
+            <div id="settings-oauth2" class="<?= 'tab-pane'. ($active == 'oauth2' ? ' active' : ''); ?>" role="tabpanel" aria-labelledby="oauth2" >
+                <?= $oauth2; ?>
             </div>
             
             <div id="settings-general" class="<?= 'tab-pane'. ($active == 'general' ? ' active' : ''); ?>" >

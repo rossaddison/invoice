@@ -1771,6 +1771,10 @@ final class SettingRepository extends Select\Repository
                  'between the numbers for display.',
           'where' => 'SettingController/tab_index_number_format'
         ],
+        'oauth2' => [
+            'why' => 'Check to remove continue button from both login and signup forms. These checkbox\'s affect the src\Auth\Controller\AuthController.php, and ..resources\views\invoice\setting\tab_index.php file,',
+            'where' => 'resources\views\invoice\setting\views\partial_settings_oauth2.php and src\Invoice\InvoiceController.php function install_default_settings_on_first_run'
+        ],    
         'open_reports_in_new_tab' => [
           'why' => 'Open reports up in a new tab. Featured in eg. Reports...invoice_aging_index.php',
           'where' => ' eg. views/invoice/invoice_aging_index.php'

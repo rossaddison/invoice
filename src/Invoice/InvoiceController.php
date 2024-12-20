@@ -27,6 +27,7 @@ use App\Invoice\QuoteAmount\QuoteAmountRepository;
 use App\Invoice\Setting\SettingRepository;
 use App\Invoice\Task\TaskRepository;
 use App\Invoice\TaxRate\TaxRateRepository;
+use App\Invoice\Traits\FlashMessage;
 use App\Invoice\Unit\UnitRepository;
 // Services and forms
 use App\Invoice\Setting\SettingService;
@@ -46,6 +47,8 @@ use App\Invoice\Libraries\Crypt;
 
 final class InvoiceController
 {
+    use FlashMessage;
+    
     private Flash $flash;
     private ViewRenderer $viewRenderer;
     private WebControllerService $webService;
@@ -83,21 +86,21 @@ final class InvoiceController
         if (!$this->userService->hasPermission('viewInv') && !$this->userService->hasPermission('editInv')) {
             $this->viewRenderer = $viewRenderer->withControllerName('invoice')
                                                ->withLayout('@views/layout/guest.php');
-            $this->flash_message('info', $this->translator->translate('invoice.permission.unauthorised'));
+            $this->flashMessage('info', $this->translator->translate('invoice.permission.unauthorised'));
         }
 
         // Client: Authenticated and Authorised (Permission: viewInv)
         if ($this->userService->hasPermission('viewInv') && !$this->userService->hasPermission('editInv')) {
             $this->viewRenderer = $viewRenderer->withControllerName('invoice')
                                                ->withLayout('@views/layout/guest.php');
-            $this->flash_message('info', $this->translator->translate('invoice.permission.authorised.view'));
+            $this->flashMessage('info', $this->translator->translate('invoice.permission.authorised.view'));
         }
 
         // Administrator: Authenticated and Authorised (Permission: editInv)
         if ($this->userService->hasPermission('editInv')) {
             $this->viewRenderer = $viewRenderer->withControllerName('invoice')
                                                  ->withLayout('@views/layout/invoice.php');
-            $this->flash_message('info', $this->translator->translate('invoice.permission.authorised.edit'));
+            $this->flashMessage('info', $this->translator->translate('invoice.permission.authorised.edit'));
         }
     }
 
@@ -734,35 +737,6 @@ final class InvoiceController
     }
 
     /**
-     *
-     * @param string $drop_down_locale
-     * @param SettingRepository $sR
-     * @return void
-     */
-    private function cldr(string $drop_down_locale, SettingRepository $sR): void
-    {
-        $cldr = $sR->withKey('cldr');
-        if ($cldr) {
-            $cldr->setSetting_value($drop_down_locale);
-            $sR->save($cldr);
-        }
-    }
-
-    /**
-     * @param string $level
-     * @param string $message
-     * @return Flash|null
-     */
-    private function flash_message(string $level, string $message): Flash|null
-    {
-        if (strlen($message) > 0) {
-            $this->flash->add($level, $message, true);
-            return $this->flash;
-        }
-        return null;
-    }
-
-    /**
      * @param SessionInterface $session
      * @param SettingRepository $sR
      * @param TaxRateRepository $trR
@@ -786,7 +760,7 @@ final class InvoiceController
         GroupRepository $gR
     ): \Yiisoft\DataResponse\DataResponse {
         if (($sR->getSetting('debug_mode') == '1') && ($this->userService->hasPermission('editInv'))) {
-            $this->flash_message('info', $this->viewRenderer->renderPartialAsString('//invoice/info/invoice'));
+            $this->flashMessage('info', $this->viewRenderer->renderPartialAsString('//invoice/info/invoice'));
         }
         $gR->repoCountAll() === 0 ? $this->install_default_invoice_and_quote_group($gR) : '';
         $pmR->count() === 0 ? $this->install_default_payment_methods($pmR) : '';
@@ -827,7 +801,7 @@ final class InvoiceController
             $this->install_test_data($trR, $uR, $fR, $pR, $cR);
         } else {
             // Test Data Already exists => Settings...View install_test_data must be set back to No
-            $this->flash_message('warning', $this->translator->translate('invoice.install.test.data.exists.already'));
+            $this->flashMessage('warning', $this->translator->translate('invoice.install.test.data.exists.already'));
             $setting = $sR->withKey('install_test_data');
             if ($setting) {
                 $setting->setSetting_value('0');
@@ -915,7 +889,10 @@ final class InvoiceController
             'no_front_pricing_page' => 0,
             'no_front_site_slider_page' => 0,
             'no_front_team_page' => 0, 
-            'no_front_testimonial_page' => 0, 
+            'no_front_testimonial_page' => 0,
+            'no_facebook_continue_button' => 1,
+            'no_github_continue_button' => 1,
+            'no_google_continue_button' => 1,
             // Number format Default located in SettingsRepository
             'number_format' => 'number_format_us_uk',
             'payment_list_limit' => 20,
@@ -1262,7 +1239,7 @@ final class InvoiceController
     {
         $canEdit = $this->userService->hasPermission('viewInv');
         if (!$canEdit) {
-            $this->flash_message('warning', $this->translator->translate('invoice.permission'));
+            $this->flashMessage('warning', $this->translator->translate('invoice.permission'));
             return $this->webService->getRedirectResponse('invoice/index');
         }
         return $canEdit;
@@ -1369,7 +1346,7 @@ final class InvoiceController
         } else {
             $flash = $this->translator->translate('invoice.install.test.data');
         }
-        $this->flash_message('info', $flash);
+        $this->flashMessage('info', $flash);
         $data = [
             'alerts' => $this->alert(),
         ];

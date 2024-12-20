@@ -13,6 +13,7 @@ use App\Invoice\Inv\InvRepository as IR;
 use App\Invoice\Quote\QuoteRepository as QR;
 use App\Invoice\Setting\SettingRepository;
 use App\Invoice\Helpers\Peppol\PeppolArrays;
+use App\Invoice\Traits\FlashMessage;
 use App\User\UserService;
 use App\Service\WebControllerService;
 use Psr\Http\Message\ResponseInterface as Response;
@@ -30,6 +31,8 @@ use Exception;
 
 final class DeliveryLocationController
 {
+    use FlashMessage;
+    
     private SessionInterface $session;
     private Flash $flash;
     private ViewRenderer $viewRenderer;
@@ -106,7 +109,7 @@ final class DeliveryLocationController
 
     public function add_in_invoice_flash(): void
     {
-        $this->flash_message('info', $this->translator->translate('invoice.invoice.delivery.location.add.in.invoice'));
+        $this->flashMessage('info', $this->translator->translate('invoice.invoice.delivery.location.add.in.invoice'));
     }
 
     /**
@@ -163,7 +166,7 @@ final class DeliveryLocationController
             if ($formHydrator->populateFromPostAndValidate($form, $request)) {
                 if (is_array($body)) {
                     $this->delService->saveDeliveryLocation($delivery_location, $body);
-                    $this->flash_message('success', $this->translator->translate('i.record_successfully_created'));
+                    $this->flashMessage('success', $this->translator->translate('i.record_successfully_created'));
                     $url = $origin.'/'.$action;
                     // Route::methods([Method::GET, Method::POST], '/del/add/{client_id}[/{origin}/{origin_id}/{action}]')
                     if ($origin_id) {
@@ -226,7 +229,7 @@ final class DeliveryLocationController
                 if (is_array($body)) {
                     if ($formHydrator->populateFromPostAndValidate($form, $request)) {
                         $this->delService->saveDeliveryLocation($del, $body);
-                        $this->flash_message('success', $this->translator->translate('i.record_successfully_created'));
+                        $this->flashMessage('success', $this->translator->translate('i.record_successfully_created'));
                         $url = $origin.'/'.$action;
                         // Route::methods([Method::GET, Method::POST], '/del/edit/{client_id}[/{origin}/{origin_id}/{action}]')
                         if ($origin_id) {
@@ -264,12 +267,12 @@ final class DeliveryLocationController
             $del = $this->del($currentRoute, $delRepository);
             if ($del) {
                 $this->delService->deleteDeliveryLocation($del);
-                $this->flash_message('info', $this->translator->translate('i.record_successfully_deleted'));
+                $this->flashMessage('info', $this->translator->translate('i.record_successfully_deleted'));
                 return $this->webService->getRedirectResponse('del/index');
             }
             return $this->webService->getRedirectResponse('del/index');
         } catch (Exception $e) {
-            $this->flash_message('danger', $e->getMessage());
+            $this->flashMessage('danger', $e->getMessage());
             return $this->webService->getRedirectResponse('del/index');
         }
     }
@@ -336,19 +339,5 @@ final class DeliveryLocationController
        'flash' => $this->flash
      ]
         );
-    }
-
-    /**
-     * @param string $level
-     * @param string $message
-     * @return Flash|null
-     */
-    private function flash_message(string $level, string $message): Flash|null
-    {
-        if (strlen($message) > 0) {
-            $this->flash->add($level, $message, true);
-            return $this->flash;
-        }
-        return null;
     }
 }

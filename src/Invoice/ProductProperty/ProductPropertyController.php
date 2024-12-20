@@ -7,8 +7,9 @@ namespace App\Invoice\ProductProperty;
 use App\Invoice\Entity\ProductProperty;
 use App\Invoice\ProductProperty\ProductPropertyService;
 use App\Invoice\ProductProperty\ProductPropertyRepository;
-use App\Invoice\Setting\SettingRepository;
 use App\Invoice\Product\ProductRepository;
+use App\Invoice\Setting\SettingRepository;
+use App\Invoice\Traits\FlashMessage;
 use App\User\UserService;
 use App\Service\WebControllerService;
 use Psr\Http\Message\ResponseInterface as Response;
@@ -26,6 +27,8 @@ use Exception;
 
 final class ProductPropertyController
 {
+    use FlashMessage;
+    
     private Flash $flash;
     private SessionInterface $session;
     private ViewRenderer $viewRenderer;
@@ -144,12 +147,12 @@ final class ProductPropertyController
             $productproperty = $this->productproperty($currentRoute, $productpropertyRepository);
             if ($productproperty) {
                 $this->productpropertyService->deleteProductProperty($productproperty);
-                $this->flash_message('info', $this->translator->translate('i.record_successfully_deleted'));
+                $this->flashMessage('info', $this->translator->translate('i.record_successfully_deleted'));
                 return $this->webService->getRedirectResponse('productproperty/index');
             }
             return $this->webService->getRedirectResponse('productproperty/index');
         } catch (Exception $e) {
-            $this->flash_message('danger', $e->getMessage());
+            $this->flashMessage('danger', $e->getMessage());
             return $this->webService->getRedirectResponse('productproperty/index');
         }
     }
@@ -194,20 +197,6 @@ final class ProductPropertyController
             return $this->viewRenderer->render('_form', $parameters);
         }
         return $this->webService->getRedirectResponse('productproperty/index');
-    }
-
-    /**
-     * @param string $level
-     * @param string $message
-     * @return Flash|null
-     */
-    private function flash_message(string $level, string $message): Flash|null
-    {
-        if (strlen($message) > 0) {
-            $this->flash->add($level, $message, true);
-            return $this->flash;
-        }
-        return null;
     }
 
     //For rbac refer to AccessChecker

@@ -7,6 +7,7 @@ namespace App\Invoice\GeneratorRelation;
 use App\Invoice\Entity\GentorRelation;
 use App\Invoice\GeneratorRelation\GeneratorRelationForm;
 use App\Invoice\Generator\GeneratorRepository;
+use App\Invoice\Traits\FlashMessage;
 use App\Service\WebControllerService;
 use App\User\UserService;
 use Yiisoft\Data\Paginator\OffsetPaginator;
@@ -22,6 +23,8 @@ use Psr\Http\Message\ServerRequestInterface as Request;
 
 final class GeneratorRelationController
 {
+    use FlashMessage;
+    
     private Session $session;
     private Flash $flash;
     private ViewRenderer $viewRenderer;
@@ -194,7 +197,7 @@ final class GeneratorRelationController
     {
         $canEdit = $this->userService->hasPermission('editInv');
         if (!$canEdit) {
-            $this->flash_message('warning', $this->translator->translate('invoice.permission'));
+            $this->flashMessage('warning', $this->translator->translate('invoice.permission'));
             return $this->webService->getRedirectResponse('generatorrelation/index');
         }
         return $canEdit;
@@ -239,19 +242,5 @@ final class GeneratorRelationController
         'flash' => $this->flash
       ]
         );
-    }
-
-    /**
-    * @param string $level
-    * @param string $message
-    * @return Flash|null
-    */
-    private function flash_message(string $level, string $message): Flash|null
-    {
-        if (strlen($message) > 0) {
-            $this->flash->add($level, $message, true);
-            return $this->flash;
-        }
-        return null;
     }
 }

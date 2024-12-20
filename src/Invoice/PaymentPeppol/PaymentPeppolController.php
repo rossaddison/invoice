@@ -8,6 +8,7 @@ use App\Invoice\Entity\PaymentPeppol;
 use App\Invoice\PaymentPeppol\PaymentPeppolService;
 use App\Invoice\PaymentPeppol\PaymentPeppolRepository;
 use App\Invoice\Setting\SettingRepository;
+use App\Invoice\Traits\FlashMessage;
 use App\User\UserService;
 use App\Service\WebControllerService;
 use Psr\Http\Message\ResponseInterface as Response;
@@ -25,6 +26,8 @@ use Exception;
 
 final class PaymentPeppolController
 {
+    use FlashMessage;
+    
     private Flash $flash;
     private SessionInterface $session;
     private ViewRenderer $viewRenderer;
@@ -105,20 +108,6 @@ final class PaymentPeppolController
     }
 
     /**
-     * @param string $level
-     * @param string $message
-     * @return Flash|null
-     */
-    private function flash_message(string $level, string $message): Flash|null
-    {
-        if (strlen($message) > 0) {
-            $this->flash->add($level, $message, true);
-            return $this->flash;
-        }
-        return null;
-    }
-
-    /**
      * @param CurrentRoute $routeCurrent
      * @param PaymentPeppolRepository $paymentpeppolRepository
      * @param SettingRepository $settingRepository
@@ -154,12 +143,12 @@ final class PaymentPeppolController
             $paymentpeppol = $this->paymentpeppol($currentRoute, $paymentpeppolRepository);
             if (null !== $paymentpeppol) {
                 $this->paymentpeppolService->deletePaymentPeppol($paymentpeppol);
-                $this->flash_message('info', $this->translator->translate('i.record_successfully_deleted'));
+                $this->flashMessage('info', $this->translator->translate('i.record_successfully_deleted'));
                 return $this->webService->getRedirectResponse('paymentpeppol/index');
             }
             return $this->webService->getRedirectResponse('paymentpeppol/index');
         } catch (Exception $e) {
-            $this->flash_message('danger', $e->getMessage());
+            $this->flashMessage('danger', $e->getMessage());
             return $this->webService->getRedirectResponse('paymentpeppol/index');
         }
     }

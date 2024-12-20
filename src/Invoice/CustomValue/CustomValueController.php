@@ -10,6 +10,7 @@ use App\Invoice\CustomValue\CustomValueRepository;
 use App\Invoice\Setting\SettingRepository;
 use App\Invoice\CustomField\CustomFieldForm;
 use App\Invoice\CustomField\CustomFieldRepository;
+use App\Invoice\Traits\FlashMessage;
 use App\Service\WebControllerService;
 use App\User\UserService;
 use Psr\Http\Message\ResponseInterface as Response;
@@ -24,11 +25,15 @@ use Yiisoft\Yii\View\Renderer\ViewRenderer;
 
 final class CustomValueController
 {
+    use FlashMessage;
+    
+    private Flash $flash;
     private ViewRenderer $viewRenderer;
     private WebControllerService $webService;
     private UserService $userService;
     private CustomValueService $customvalueService;
     private TranslatorInterface $translator;
+    private SessionInterface $session;
 
     public function __construct(
         ViewRenderer $viewRenderer,
@@ -36,6 +41,8 @@ final class CustomValueController
         UserService $userService,
         CustomValueService $customvalueService,
         TranslatorInterface $translator,
+        SessionInterface $session
+            
     ) {
         $this->viewRenderer = $viewRenderer->withControllerName('invoice/customvalue')
                                            ->withLayout('@views/layout/invoice.php');
@@ -43,20 +50,20 @@ final class CustomValueController
         $this->userService = $userService;
         $this->customvalueService = $customvalueService;
         $this->translator = $translator;
+         $this->session = $session;
+        $this->flash = new Flash($session);
     }
 
     /**
-     *
-     * @param SessionInterface $session
      * @param CustomValueRepository $customvalueRepository
      * @param CustomFieldRepository $customfieldRepository
      * @param SettingRepository $settingRepository
      * @return Response
      */
-    public function index(SessionInterface $session, CustomValueRepository $customvalueRepository, CustomFieldRepository $customfieldRepository, SettingRepository $settingRepository): Response
+    public function index(CustomValueRepository $customvalueRepository, CustomFieldRepository $customfieldRepository, SettingRepository $settingRepository): Response
     {
-        $this->rbac($session);
-        $custom_field_id = (string)$session->get('custom_field_id');
+        $this->rbac();
+        $custom_field_id = (string)$this->session->get('custom_field_id');
         $custom_values = $customvalueRepository->repoCustomFieldquery((int)$custom_field_id);
         $parameters = [
          'custom_field' => $customfieldRepository->repoCustomFieldquery($custom_field_id),
@@ -68,7 +75,6 @@ final class CustomValueController
     }
 
     /**
-     * @param SessionInterface $session
      * @param CustomFieldRepository $customfieldRepository
      * @param CustomValueRepository $customvalueRepository
      * @param SettingRepository $settingRepository
@@ -76,12 +82,12 @@ final class CustomValueController
      * @param CustomValueService $service
      * @return Response
      */
-    public function field(SessionInterface $session, CustomFieldRepository $customfieldRepository, CustomValueRepository $customvalueRepository, SettingRepository $settingRepository, CurrentRoute $currentRoute, CustomValueService $service): Response
+    public function field(CustomFieldRepository $customfieldRepository, CustomValueRepository $customvalueRepository, SettingRepository $settingRepository, CurrentRoute $currentRoute, CustomValueService $service): Response
     {
-        $this->rbac($session);
+        $this->rbac();
         $id = $currentRoute->getArgument('id');
         if (null !== $id) {
-            null !== ($session->get('custom_field_id')) ?: $session->set('custom_field_id', $id);
+            null !== ($this->session->get('custom_field_id')) ?: $this->session->set('custom_field_id', $id);
             $custom_field = $customfieldRepository->repoCustomFieldquery($id);
             $customvalues = $customvalueRepository->repoCustomFieldquery((int)$id);
             if ($custom_field) {
@@ -100,7 +106,6 @@ final class CustomValueController
 
     /**
      * @param Request $request
-     * @param SessionInterface $session
      * @param CurrentRoute $currentRoute
      * @param FormHydrator $formHydrator
      * @param CustomFieldRepository $custom_fieldRepository
@@ -108,14 +113,13 @@ final class CustomValueController
      */
     public function new(
         Request $request,
-        SessionInterface $session,
         CurrentRoute $currentRoute,
         FormHydrator $formHydrator,
         CustomFieldRepository $custom_fieldRepository
     ): Response {
         $field_id = $currentRoute->getArgument('id');
         if (null !== $field_id) {
-            $session->set('custom_field_id', $field_id);
+            $this->session->set('custom_field_id', $field_id);
             $custom_field = $custom_fieldRepository->repoCustomFieldquery($field_id);
             $custom_value = new CustomValue();
             if ($custom_field) {
@@ -147,7 +151,6 @@ final class CustomValueController
     }
 
     /**
-     * @param SessionInterface $session
      * @param Request $request
      * @param CurrentRoute $currentRoute
      * @param FormHydrator $formHydrator
@@ -156,14 +159,13 @@ final class CustomValueController
      * @return Response
      */
     public function edit(
-        SessionInterface $session,
         Request $request,
         CurrentRoute $currentRoute,
         FormHydrator $formHydrator,
         CustomValueRepository $customvalueRepository,
         CustomFieldRepository $custom_fieldRepository
     ): Response {
-        $custom_field_id = (string)$session->get('custom_field_id');
+        $custom_field_id = (string)$this->session->get('custom_field_id');
         $custom_field = $custom_fieldRepository->repoCustomFieldquery($custom_field_id);
         $custom_value = $this->customvalue($currentRoute, $customvalueRepository);
         if ($custom_field && $custom_value) {
@@ -193,22 +195,19 @@ final class CustomValueController
     }
 
     /**
-     *
-     * @param SessionInterface $session
      * @param CurrentRoute $currentRoute
      * @param CustomValueRepository $customvalueRepository
      * @return Response
      */
     public function delete(
-        SessionInterface $session,
         CurrentRoute $currentRoute,
         CustomValueRepository $customvalueRepository
     ): Response {
-        $custom_field_id = (string)$session->get('custom_field_id');
+        $custom_field_id = (string)$this->session->get('custom_field_id');
         $custom_value = $this->customvalue($currentRoute, $customvalueRepository);
         if ($custom_value) {
             $this->customvalueService->deleteCustomValue($custom_value);
-            $this->flash($session, 'info', $this->translator->translate('i.record_successfully_deleted'));
+            $this->flashMessage('info', $this->translator->translate('i.record_successfully_deleted'));
             return $this->webService->getRedirectResponse('customvalue/field', ['id' => $custom_field_id]);
         }
         return $this->webService->getRedirectResponse('customvalue/field', ['id' => $custom_field_id]);
@@ -237,11 +236,11 @@ final class CustomValueController
     /**
      * @return Response|true
      */
-    private function rbac(SessionInterface $session): bool|Response
+    private function rbac(): bool|Response
     {
         $canEdit = $this->userService->hasPermission('editInv');
         if (!$canEdit) {
-            $this->flash($session, 'warning', $this->translator->translate('invoice.permission'));
+            $this->flashMessage('warning', $this->translator->translate('invoice.permission'));
             return $this->webService->getRedirectResponse('customvalue/index');
         }
         return $canEdit;
@@ -260,24 +259,6 @@ final class CustomValueController
             return $customvalue;
         }
         return null;
-    }
-
-    /**
-     * @return \Yiisoft\Data\Cycle\Reader\EntityReader
-     *
-     * @psalm-return \Yiisoft\Data\Cycle\Reader\EntityReader
-     */
-    private function customvalues(CustomValueRepository $customvalueRepository): \Yiisoft\Data\Cycle\Reader\EntityReader
-    {
-        $customvalues = $customvalueRepository->findAllPreloaded();
-        return $customvalues;
-    }
-
-    private function flash(SessionInterface $session, string $level, string $message): Flash
-    {
-        $flash = new Flash($session);
-        $flash->set($level, $message);
-        return $flash;
     }
 
     /**

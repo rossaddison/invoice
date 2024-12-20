@@ -501,6 +501,7 @@ $this->beginPage();
                 DropdownItem::link('Writing XML using Sabre', 'https://sabre.io/xml/writing/'),
                 DropdownItem::link('Understanding Same Site Cookies', 'https://andrewlock.net/understanding-samesite-cookies/#:~:text=SameSite%3DLax%20cookies%20are%20not,Lax%20(or%20Strict%20)%20cookies'),
                 DropdownItem::link('Scotland - e-invoice Template - Lessons Learned', 'https://www.gov.scot/publications/einvoicing-guide/documents/'),
+                DropdownItem::link('German, and Swiss Law Amendments now prioritize Opensource in Public Sector', 'https://interoperable-europe.ec.europa.eu/collection/open-source-observatory-osor/news/germanys-ozg-20-favors-open-source-solutions'),
                 DropdownItem::link('Jsonld  Playground for flattening Jsonld files', 'https://json-ld.org/playground/'),
                 DropdownItem::link('Converting flattened file to php array', 'https://wtools.io/convert-json-to-php-array'),    
                 DropdownItem::link('Jsonld  Playground for flattening Jsonld files', 'https://json-ld.org/playground/'),   

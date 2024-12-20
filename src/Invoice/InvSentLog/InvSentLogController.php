@@ -10,6 +10,7 @@ use App\Invoice\InvSentLog\InvSentLogService;
 use App\Invoice\InvSentLog\InvSentLogRepository as ISLR;
 use App\Invoice\Setting\SettingRepository;
 use App\Invoice\UserInv\UserInvRepository as UIR;
+use App\Invoice\Traits\FlashMessage;
 use App\User\UserService;
 use App\User\User;
 use App\Service\WebControllerService;
@@ -25,6 +26,8 @@ use Yiisoft\Yii\View\Renderer\ViewRenderer;
 
 final class InvSentLogController
 {
+    use FlashMessage;
+    
     private Flash $flash;
     private Session $session;
     private ViewRenderer $viewRenderer;
@@ -180,20 +183,6 @@ final class InvSentLogController
         return $this->viewRenderer->render('index', $parameters);
     }
 
-    /**
-     * @param string $level
-     * @param string $message
-     * @return Flash|null
-     */
-    private function flash_message(string $level, string $message): Flash|null
-    {
-        if (strlen($message) > 0) {
-            $this->flash->add($level, $message, true);
-            return $this->flash;
-        }
-        return null;
-    }
-
     //For rbac refer to AccessChecker
 
     /**
@@ -211,17 +200,6 @@ final class InvSentLogController
             return $invsentlog;
         }
         return null;
-    }
-
-    /**
-     * @return \Yiisoft\Data\Cycle\Reader\EntityReader
-     *
-     * @psalm-return \Yiisoft\Data\Cycle\Reader\EntityReader
-     */
-    private function invsentlogs(ISLR $islR): \Yiisoft\Data\Cycle\Reader\EntityReader
-    {
-        $invsentlogs = $islR->findAllPreloaded();
-        return $invsentlogs;
     }
 
     /**

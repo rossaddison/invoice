@@ -9,6 +9,7 @@ use App\Invoice\Company\CompanyRepository;
 use App\Invoice\Company\CompanyForm;
 use App\Invoice\Entity\Company;
 use App\Invoice\Setting\SettingRepository;
+use App\Invoice\Traits\FlashMessage;
 use App\Service\WebControllerService;
 use App\User\UserService;
 use Psr\Http\Message\ResponseInterface as Response;
@@ -24,6 +25,8 @@ use Yiisoft\Yii\View\Renderer\ViewRenderer;
 
 final class CompanyController
 {
+    use FlashMessage;
+    
     private SessionInterface $session;
     private Flash $flash;
     private ViewRenderer $viewRenderer;
@@ -154,7 +157,7 @@ final class CompanyController
         $company = $this->company($currentRoute, $companyRepository);
         if ($company) {
             if ($this->companyService->deleteCompany($company)) {
-                $this->flash_message('info', $this->translator->translate('invoice.company.deleted'));
+                $this->flashMessage('info', $this->translator->translate('invoice.company.deleted'));
             }
         }
         return $this->webService->getRedirectResponse('company/index');
@@ -192,7 +195,7 @@ final class CompanyController
     {
         $canEdit = $this->userService->hasPermission('editInv');
         if (!$canEdit) {
-            $this->flash_message('warning', $this->translator->translate('invoice.permission'));
+            $this->flashMessage('warning', $this->translator->translate('invoice.permission'));
             return $this->webService->getRedirectResponse('company/index');
         }
         return $canEdit;
@@ -237,19 +240,5 @@ final class CompanyController
        'errors' => [],
      ]
         );
-    }
-
-    /**
-    * @param string $level
-    * @param string $message
-    * @return Flash|null
-    */
-    private function flash_message(string $level, string $message): Flash|null
-    {
-        if (strlen($message) > 0) {
-            $this->flash->add($level, $message, true);
-            return $this->flash;
-        }
-        return null;
     }
 }

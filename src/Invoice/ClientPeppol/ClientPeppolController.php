@@ -11,6 +11,7 @@ use App\Invoice\ClientPeppol\ClientPeppolRepository;
 use App\Invoice\Setting\SettingRepository;
 use App\Invoice\Helpers\Peppol\PeppolArrays;
 use App\Invoice\Helpers\StoreCove\StoreCoveArrays;
+use App\Invoice\Traits\FlashMessage;
 use App\User\UserService;
 use App\Service\WebControllerService;
 // Psr
@@ -29,6 +30,8 @@ use Exception;
 
 final class ClientPeppolController
 {
+    use FlashMessage;
+    
     private Flash $flash;
     private SessionInterface $session;
     private ViewRenderer $viewRenderer;
@@ -224,12 +227,12 @@ final class ClientPeppolController
             $clientpeppol = $this->clientpeppol($currentRoute, $clientpeppolRepository);
             if ($clientpeppol) {
                 $this->clientpeppolService->deleteClientPeppol($clientpeppol);
-                $this->flash_message('info', $this->translator->translate('i.record_successfully_deleted'));
+                $this->flashMessage('info', $this->translator->translate('i.record_successfully_deleted'));
                 return $this->webService->getRedirectResponse('clientpeppol/index');
             }
             return $this->webService->getRedirectResponse('clientpeppol/index');
         } catch (Exception $e) {
-            $this->flash_message('danger', $e->getMessage());
+            $this->flashMessage('danger', $e->getMessage());
             return $this->webService->getRedirectResponse('clientpeppol/index');
         }
     }
@@ -309,17 +312,6 @@ final class ClientPeppolController
        'errors' => [],
      ]
         );
-    }
-
-    /**
-     * @param string $level
-     * @param string $message
-     * @return Flash
-     */
-    private function flash_message(string $level, string $message): Flash
-    {
-        $this->flash->add($level, $message, true);
-        return $this->flash;
     }
 
     //For rbac refer to AccessChecker

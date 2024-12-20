@@ -3,6 +3,7 @@
 declare(strict_types=1);
 
 /**
+ * @see resources\views\invoice\setting\tab_index 
  * @var App\Invoice\Setting\SettingRepository $s 
  * @var Yiisoft\Translator\TranslatorInterface $translator
  * @var \Yiisoft\Router\UrlGeneratorInterface $urlGenerator 

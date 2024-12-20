@@ -18,6 +18,7 @@ use App\Invoice\InvItemAmount\InvItemAmountRepository;
 use App\Invoice\InvTaxRate\InvTaxRateRepository;
 use App\Invoice\Payment\PaymentRepository;
 use App\Invoice\Setting\SettingRepository;
+use App\Invoice\Traits\FlashMessage;
 use App\User\UserService;
 use App\Service\WebControllerService;
 use Psr\Http\Message\ResponseInterface as Response;
@@ -33,6 +34,8 @@ use Yiisoft\Yii\View\Renderer\ViewRenderer;
 
 final class InvItemAllowanceChargeController
 {
+    use FlashMessage;
+    
     private SessionInterface $session;
     private Flash $flash;
     private ViewRenderer $viewRenderer;
@@ -196,20 +199,6 @@ final class InvItemAllowanceChargeController
     }
 
     /**
-     * @param string $level
-     * @param string $message
-     * @return Flash|null
-     */
-    private function flash_message(string $level, string $message): Flash|null
-    {
-        if (strlen($message) > 0) {
-            $this->flash->add($level, $message, true);
-            return $this->flash;
-        }
-        return null;
-    }
-
-    /**
      * @param Request $request
      * @param InvItemAllowanceChargeRepository $iiacR
      * @param SettingRepository $settingRepository
@@ -223,7 +212,7 @@ final class InvItemAllowanceChargeController
         $params = $request->getQueryParams();
         /** @var string $params['inv_item_id'] */
         $inv_item_id = $params['inv_item_id'] ?? '';
-        $this->flash_message('info', $this->translator->translate('invoice.peppol.allowance.or.charge.inherit'));
+        $this->flashMessage('info', $this->translator->translate('invoice.peppol.allowance.or.charge.inherit'));
         // retrieve all the allowances or charges associated with the inv_item_id
         $invoice_item_allowances_or_charges = $iiacR->repoInvItemquery($inv_item_id);
         $paginator = (new OffsetPaginator($invoice_item_allowances_or_charges));
@@ -266,7 +255,7 @@ final class InvItemAllowanceChargeController
             $this->aciiService->deleteInvItemAllowanceCharge($acii, $iaR, $iiaR, $itrR, $aciiR, $sR);
             // update the inv amount record
             $this->numberHelper->calculate_inv($inv_id, $aciR, $iiR, $iiaR, $itrR, $iaR, $iR, $pymR);
-            $this->flash_message('info', $this->translator->translate('i.record_successfully_deleted'));
+            $this->flashMessage('info', $this->translator->translate('i.record_successfully_deleted'));
             return $this->webService->getRedirectResponse('inv/view', ['id' => $inv_id]);
         }
         return $this->webService->getNotFoundResponse();

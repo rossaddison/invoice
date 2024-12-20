@@ -10,6 +10,7 @@ use App\Invoice\AllowanceCharge\AllowanceChargeRepository;
 use App\Invoice\Helpers\Peppol\PeppolArrays;
 use App\Invoice\Setting\SettingRepository;
 use App\Invoice\TaxRate\TaxRateRepository;
+use App\Invoice\Traits\FlashMessage;
 use App\User\UserService;
 use App\Service\WebControllerService;
 use Psr\Http\Message\ResponseInterface as Response;
@@ -26,6 +27,8 @@ use Exception;
 
 final class AllowanceChargeController
 {
+    use FlashMessage;
+    
     private SessionInterface $session;
     private Flash $flash;
     private ViewRenderer $viewRenderer;
@@ -329,20 +332,6 @@ final class AllowanceChargeController
             return $this->viewRenderer->render('_form_charge', $parameters);
         }
         return $this->webService->getRedirectResponse('allowancecharge/index');
-    }
-
-    /**
-    * @param string $level
-    * @param string $message
-    * @return Flash|null
-    */
-    private function flashMessage(string $level, string $message): Flash|null
-    {
-        if (strlen($message) > 0) {
-            $this->flash->add($level, $message, true);
-            return $this->flash;
-        }
-        return null;
     }
 
     //For rbac refer to AccessChecker

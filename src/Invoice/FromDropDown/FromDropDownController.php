@@ -8,6 +8,7 @@ use App\Invoice\Entity\FromDropDown;
 use App\Invoice\FromDropDown\FromDropDownService;
 use App\Invoice\FromDropDown\FromDropDownRepository;
 use App\Invoice\Setting\SettingRepository;
+use App\Invoice\Traits\FlashMessage;
 use App\User\UserService;
 use App\Service\WebControllerService;
 use Psr\Http\Message\ResponseInterface as Response;
@@ -25,6 +26,8 @@ use Exception;
 
 final class FromDropDownController
 {
+    use FlashMessage;
+    
     private Flash $flash;
     private Session $session;
     private ViewRenderer $viewRenderer;
@@ -127,12 +130,12 @@ final class FromDropDownController
             $from = $this->from($currentRoute, $fromRepository);
             if ($from) {
                 $this->fromService->deleteFromDropDown($from);
-                $this->flash_message('info', $this->translator->translate('i.record_successfully_deleted'));
+                $this->flashMessage('info', $this->translator->translate('i.record_successfully_deleted'));
                 return $this->webService->getRedirectResponse('from/index');
             }
             return $this->webService->getRedirectResponse('from/index');
         } catch (Exception $e) {
-            $this->flash_message('danger', $e->getMessage());
+            $this->flashMessage('danger', $e->getMessage());
             return $this->webService->getRedirectResponse('from/index');
         }
     }
@@ -174,20 +177,6 @@ final class FromDropDownController
             return $this->viewRenderer->render('_form', $parameters);
         }
         return $this->webService->getRedirectResponse('from/index');
-    }
-
-    /**
-     * @param string $level
-     * @param string $message
-     * @return Flash|null
-     */
-    private function flash_message(string $level, string $message): Flash|null
-    {
-        if (strlen($message) > 0) {
-            $this->flash->add($level, $message, true);
-            return $this->flash;
-        }
-        return null;
     }
 
     //For rbac refer to AccessChecker

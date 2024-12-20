@@ -21,6 +21,7 @@ use App\Invoice\ClientCustom\ClientCustomForm;
 use App\Invoice\ClientNote\ClientNoteService as cnS;
 use App\Invoice\ClientNote\ClientNoteForm;
 use App\Invoice\Quote\QuoteForm;
+use App\Invoice\Traits\FlashMessage;
 use App\Invoice\UserClient\UserClientService;
 use App\Invoice\UserClient\Exception\NoClientsAssignedToUserException;
 use App\User\UserService;
@@ -76,6 +77,8 @@ use Yiisoft\Yii\View\Renderer\ViewRenderer;
 
 final class ClientController
 {
+    use FlashMessage;
+    
     private ViewRenderer $viewRenderer;
     private WebControllerService $webService;
     private ClientService $clientService;
@@ -283,7 +286,7 @@ final class ClientController
                                 $parameters['errorsCustom'] = $clientCustomForm->getValidationResult()->getErrorMessagesIndexedByProperty();
                             }
                         }
-                        $this->flash_message('info', $this->translator->translate('i.record_successfully_created'));
+                        $this->flashMessage('info', $this->translator->translate('i.record_successfully_created'));
                         if ($origin == 'main' || $origin == 'add') {
                             return $this->webService->getRedirectResponse('client/index');
                         }
@@ -392,7 +395,7 @@ final class ClientController
                             } //isset
                         } // cfR
                     } // is_array
-                    $this->flash_message('info', $this->translator->translate('i.record_successfully_updated'));
+                    $this->flashMessage('info', $this->translator->translate('i.record_successfully_updated'));
                     if ($origin  == 'edit') {
                         return $this->webService->getRedirectResponse('client/index');
                     }
@@ -474,12 +477,12 @@ final class ClientController
     {
         try {
             $this->clientService->deleteClient($this->client($currentRoute, $cR));
-            $this->flash_message('info', $this->translator->translate('i.record_successfully_deleted'));
+            $this->flashMessage('info', $this->translator->translate('i.record_successfully_deleted'));
             //UserClient Entity automatically deletes the UserClient record relevant to this client
             return $this->webService->getRedirectResponse('client/index');
         } catch (\Exception $e) {
             unset($e);
-            $this->flash_message('danger', $this->translator->translate('invoice.client.delete.history.exits.no'));
+            $this->flashMessage('danger', $this->translator->translate('invoice.client.delete.history.exits.no'));
             return $this->webService->getRedirectResponse('client/index');
         }
     }
@@ -509,20 +512,6 @@ final class ClientController
     public function add_custom_field(string $client_id, int $custom_field_id, ccR $ccR): bool
     {
         return ($ccR->repoClientCustomCount($client_id, (string)$custom_field_id) > 0 ? false : true);
-    }
-
-    /**
-    * @param string $level
-    * @param string $message
-    * @return Flash|null
-    */
-    private function flash_message(string $level, string $message): Flash|null
-    {
-        if (strlen($message) > 0) {
-            $this->flash->add($level, $message, true);
-            return $this->flash;
-        }
-        return null;
     }
 
     /**
@@ -681,7 +670,7 @@ final class ClientController
                         ];
                         return $this->viewRenderer->render('guest', $parameters);
                     } //
-                    $this->flash_message('warning', $this->translator->translate('invoice.user.clients.assigned.not'));
+                    $this->flashMessage('warning', $this->translator->translate('invoice.user.clients.assigned.not'));
                     throw new NoClientsAssignedToUserException($this->translator);
                 } // null!==$userInv
             } // null!== $user_id
@@ -709,7 +698,7 @@ final class ClientController
     {
         $canEdit = $this->userService->hasPermission('editInv');
         if (!$canEdit) {
-            $this->flash_message('warning', $this->translator->translate('invoice.permission'));
+            $this->flashMessage('warning', $this->translator->translate('invoice.permission'));
             return $this->webService->getRedirectResponse('client/index');
         }
         return $canEdit;
