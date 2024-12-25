@@ -161,6 +161,9 @@ final class CommonViewInjection implements CommonParametersInjectionInterface
             'forgotusernotfound' => [
                 'loginAlertUserNotFound' => $this->translator->translate('i.loginalert_user_not_found'),
             ],
+            'githubcallbackresultunauthorised' => [
+                'githubcallbackresultunauthorised' =>  $this->translator->translate('layout.page.not-authorised')
+            ],
             'resetpasswordfailed' => [
                 'resetPasswordFailed' => $this->translator->translate('i.password_reset_failed')
             ],

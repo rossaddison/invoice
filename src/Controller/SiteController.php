@@ -48,6 +48,11 @@ final class SiteController
         return $this->viewRenderer->render('testimonial');
     }
     
+    public function githubcallbackresultunauthorised(): \Yiisoft\DataResponse\DataResponse
+    {
+        return $this->viewRenderer->render('githubcallbackresultunauthorised');
+    }
+    
     public function adminmustmakeactive(): \Yiisoft\DataResponse\DataResponse
     {
         return $this->viewRenderer->render('adminmustmakeactive');

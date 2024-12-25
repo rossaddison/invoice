@@ -1184,6 +1184,9 @@ return [
     'invoice.invoice.email.not.sent.successfully' => 'The email was NOT sent successfully',
     'invoice.invoice.html.sumex.yes' => 'Html with Sumex',
     'invoice.invoice.html.sumex.no' => 'Html without Sumex',
+    'invoice.invoice.identity.provider.authentication.successful' => 'You have been successfully authenticated through '.
+        'your chosen Identity Provider, signed up, and allocated a client account. Click here within the next hour to make your account active. '.
+        'You have an hour to first-time login.',
     'invoice.invoice.item' => 'Invoice Item',
     'invoice.invoice.item.charge' => 'Item Charge',
     'invoice.invoice.item.allowance' => 'Item Allowance',
@@ -1753,6 +1756,7 @@ return [
     'layout.no-records' => 'No records',
     'layout.not-found' => 'Not found',
     'layout.page.not-found' => 'The page {url} could not be found.',
+    'layout.page.not-authorised' => 'Not Authorised: Authentication credentials are incorrect.',
     'layout.pagination-summary' => 'Showing {pageSize} out of {total} posts',
     'layout.password-verify' => 'Confirm your password',
     'layout.password' => 'Password',

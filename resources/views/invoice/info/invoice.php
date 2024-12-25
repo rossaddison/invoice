@@ -47,6 +47,35 @@
 <p>Introducing India's PayTm payment gateway's QR code method of payment and comparing this with Stripe's method.</p>
 <p>A General Sales Tax (GST) Tax System will have to be implemented first for this purpose.</p>
 <p>Testing Credit Notes against Invoices with refunds (if payment made) linked to each of the payment gateways.</p>
+<p><b>25th December 2024</b></p>
+<p>Github Oauth2 functional. A Github user is authenticated, signed up, and assigned a client automatically without disclosing passwords.</p>
+<p>A new oAuthService function oauthLogin has been created which does not require a password since authentication is already provided by Github.</p>
+<p>In summary, the user is found by means of their login i.e. username with code<pre>
+    Auth\AuthService
+    
+    public function oauthLogin(string $login): bool
+    {
+        $user = $this->userRepository->findByLoginWithAuthIdentity($login);
+        
+        if ($user === null) {
+            return false;
+        }
+
+        return $this->currentUser->login($user->getIdentity());
+    }
+</pre> and using the user identity, the current user is logged in.</p>
+<p><b>Step 1.</b> When the user chooses to 'Continue to Github', Github returns an access token using <pre>$oAuthTokenType = $this->github->fetchAccessToken($request, $code, $params = [])</pre>, 
+   and we use this token in a header request, to get information from the user by means of the Github Client in fork rossaddison/yii-auth-client
+   <pre>$this->github->getCurrentUserJsonArray($oAuthTokenType);</pre>
+   The auth/callbackGithub function concatenates a user using:</p>
+<pre> $login = 'github'.(string)$githubId.$githubLogin;</pre>
+<p>a. 'github' ... to distinguish it from other Identity Providers.</p>
+<p>b. The Github Id which is an integer and naturally unique. </p>
+<p>c. and the Github 'login' or username which is perhaps not that unique and may have been used more than once by the user when registering with other Identity Providers e.g LinkedIn</p>
+<p><b>Step 2.</b> A random string password is built but will never be used and is hashed.</p>
+<p><b>Step 3.</b> The authService attempts to 'first time login' with this 'login' and deactivate the hour token ...otherwise a new user, and userinv is created, directing the user to login with their Identity Provider. </p>
+<p><b>Step 4.</b> The user must click on the 'please click here within the next hour to make active' button, to avoid our 'Github Access Token' from expiring.  
+<p>Like the email verification token, our Github Access Token is set at an hour or 3600 seconds, allowing the user to activate and login within the hour and is unrelated to the Application's Github Access Token received from Github in step 1.</p>
 <p><b>20th December 2024</b></p>
 <p>Introduce Oauth2 and FlashMessage Trait</p>
 <p>Oauth2 Settings Tab to include/exclude Github, Facebook, and Google continue buttons on both the login, and signup forms.</p>
@@ -59,7 +88,7 @@
 <p><b>Step 5a. </b>Request a User's Web Identity with <pre>GET https://github.com/login/oauth/authorize</pre> and <pre>query parameters client_id, redirect_url, state, login</pre></p>
 <p><b>Step 5b. </b>Users are redirected back to your site with a temporary code. Exchange this code for an access token using endpoint <pre>POST https://github.com/login/oauth/access_token</pre> with parameters client_id, client_secret, code, redirect_url
 e.g. of an access token <pre>access_token=gho_16C7e42F292c6912E7710c838347Ae178B4a&scope=repo%2Cgist&token_type=bearer</pre> and if accept headers used ..in either json or xml format.</p>
-<p><b>Step 5c. </b> The src/Auth/Controller/AuthController.php function callbackGithub, with Middleware Authentication, class receives the query parameters code and state from Github.</p>
+<p><b>Step 5c. </b> The src/Auth/Controller/AuthController.php function callbackGithub, <s>with Middleware Authentication class</s> receives the query parameters code and state from Github.</p>
 <p><b>Step 5d. </b>If the code is not an unauthorised 401 and the state param is not empty, fetch the token <pre>function OAuth2->fetchAccessToken</pre>.
 <p><b>Step 5e. </b>If an official token is received, then use the Access token to access the Api on behalf of a user using <pre>Authorization: Bearer OAUTH-TOKEN<br>
 GET https://api.github.com/user</pre><p>

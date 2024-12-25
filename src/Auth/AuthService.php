@@ -30,6 +30,17 @@ final class AuthService
 
         return $this->currentUser->login($user->getIdentity());
     }
+    
+    public function oauthLogin(string $login): bool
+    {
+        $user = $this->userRepository->findByLoginWithAuthIdentity($login);
+        
+        if ($user === null) {
+            return false;
+        }
+
+        return $this->currentUser->login($user->getIdentity());
+    }
 
     /**
      * @throws Throwable

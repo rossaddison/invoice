@@ -192,6 +192,10 @@ final class Button
         ->render();
     }
     
+    public static function identityProviderAuthenticationSuccessful(string $buttonHtml) : string {
+        return $buttonHtml;
+    }
+    
     public function facebook(string $facebookAuthUrl) : string {        
             return A::tag()
             ->addClass('btn btn-primary bi bi-facebook')

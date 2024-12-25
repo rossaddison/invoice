@@ -138,9 +138,8 @@ return [
     ->middleware(LimitRequestsMiddleware::class)
     ->action([AuthController::class, 'login'])
     ->name('auth/login'),
-    Route::methods([Method::GET, Method::POST], '/auth/callbackGithub')
-      ->middleware(fn(AccessChecker $checker) => $checker->withPermission('editInv'))      
-      ->middleware(Authentication::class)
+    Route::methods([Method::GET, Method::POST], '/callbackGithub')
+      ->middleware(LimitRequestsMiddleware::class)
       ->action([AuthController::class, 'callbackGithub'])
       ->name('auth/callbackGithub'),      
     Route::post('/logout')
@@ -2249,6 +2248,9 @@ return [
       // email-verification-token has to be unmasked      
       Route::methods([Method::GET, Method::POST], '/userinv/signup/{language}/{token}')
       ->name('userinv/signup')
-      ->action([UserInvController::class, 'signup']),      
+      ->action([UserInvController::class, 'signup']),  
+      Route::methods([Method::GET, Method::POST], '/userinv/github/{language}/{token}')
+      ->name('userinv/github')
+      ->action([UserInvController::class, 'github']),  
     ), //invoice
 ];

@@ -180,8 +180,8 @@ final class SignupController
             'noGoogleContinueButton' => $noGoogleContinueButton,
             'noFacebookContinueButton' => $noFacebookContinueButton,
         ]);
-    }
-
+    }  
+    
     /**
      * @param User $user
      * @param uiR $uiR
@@ -218,7 +218,7 @@ final class SignupController
         }
         return '';
     }    
-
+    
     /**
      * @param User $user
      * @param tR $tR
@@ -235,5 +235,5 @@ final class SignupController
         $timeString = (string)($token->getCreated_at())->getTimestamp();
         // build the token
         return $emailVerificationToken = null !== $tokenString ? ($tokenString. '_' . $timeString) : '';
-    }
+    }    
 }
