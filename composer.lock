@@ -15432,16 +15432,16 @@
         },
         {
             "name": "yiisoft/translator",
-            "version": "3.0.0",
+            "version": "3.1.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/yiisoft/translator.git",
-                "reference": "869a224bf59dda36a8725985f5dd2e31cb357e21"
+                "reference": "94a0f11b307043917c21ba45d71e8087db8aeaf1"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/yiisoft/translator/zipball/869a224bf59dda36a8725985f5dd2e31cb357e21",
-                "reference": "869a224bf59dda36a8725985f5dd2e31cb357e21",
+                "url": "https://api.github.com/repos/yiisoft/translator/zipball/94a0f11b307043917c21ba45d71e8087db8aeaf1",
+                "reference": "94a0f11b307043917c21ba45d71e8087db8aeaf1",
                 "shasum": ""
             },
             "require": {
@@ -15452,11 +15452,11 @@
             },
             "require-dev": {
                 "maglnet/composer-require-checker": "^4.2",
-                "phpunit/phpunit": "^9.5",
-                "rector/rector": "^0.15.2",
+                "phpunit/phpunit": "^9.6",
+                "rector/rector": "^2.0.3",
                 "roave/infection-static-analysis-plugin": "^1.25",
                 "spatie/phpunit-watcher": "^1.23",
-                "vimeo/psalm": "^4.30|^5.4",
+                "vimeo/psalm": "^4.30|^5.21",
                 "yiisoft/di": "^1.2"
             },
             "suggest": {
@@ -15493,22 +15493,22 @@
             "support": {
                 "chat": "https://t.me/yii3en",
                 "forum": "https://www.yiiframework.com/forum/",
-                "irc": "irc://irc.freenode.net/yii",
+                "irc": "ircs://irc.libera.chat:6697/yii",
                 "issues": "https://github.com/yiisoft/translator/issues?state=open",
                 "source": "https://github.com/yiisoft/translator",
                 "wiki": "https://www.yiiframework.com/wiki/"
             },
             "funding": [
                 {
-                    "url": "https://github.com/yiisoft",
+                    "url": "https://github.com/sponsors/yiisoft",
                     "type": "github"
                 },
                 {
                     "url": "https://opencollective.com/yiisoft",
-                    "type": "open_collective"
+                    "type": "opencollective"
                 }
             ],
-            "time": "2023-02-17T13:16:40+00:00"
+            "time": "2024-12-26T07:49:19+00:00"
         },
         {
             "name": "yiisoft/translator-message-php",
@@ -23924,7 +23924,6 @@
     "minimum-stability": "dev",
     "stability-flags": {
         "cebe/markdown": 20,
-        "roave/security-advisories": 20,
         "rossaddison/yii-auth-client": 20,
         "yiisoft/data": 20,
         "yiisoft/data-cycle": 20,
@@ -23937,6 +23936,7 @@
         "yiisoft/yii-dataview": 20,
         "yiisoft/yii-debug": 20,
         "yiisoft/yii-debug-api": 20,
+        "roave/security-advisories": 20,
         "yiisoft/yii-gii": 20,
         "yiisoft/yii-testing": 20
     },
@@ -23955,6 +23955,6 @@
         "ext-pdo_sqlite": "*",
         "ext-uopz": "*"
     },
-    "platform-dev": {},
+    "platform-dev": [],
     "plugin-api-version": "2.6.0"
 }
