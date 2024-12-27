@@ -486,9 +486,9 @@ final class AuthController
     private function getTokenType(string $provider) : string 
     {
         return $tokenType = match ($provider) {
-            'email' => SELF::EMAIL_VERIFICATION_TOKEN,
-            'facebook' => SELF::FACEBOOK_ACCESS_TOKEN,
-            'github' => SELF::GITHUB_ACCESS_TOKEN,
+            'email' => self::EMAIL_VERIFICATION_TOKEN,
+            'facebook' => self::FACEBOOK_ACCESS_TOKEN,
+            'github' => self::GITHUB_ACCESS_TOKEN,
         };
     }
     
