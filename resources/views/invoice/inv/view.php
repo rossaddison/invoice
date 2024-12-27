@@ -2,6 +2,7 @@
 
 declare(strict_types=1);
 
+use App\Widget\Button;
 use Yiisoft\Html\Html;
 use Yiisoft\Html\Tag\I;
 use Yiisoft\Html\Tag\A;
@@ -144,6 +145,19 @@ $vat = $s->getSetting('enable_vat_registration');
             ->id('btn-reset')
             ->render(); 
         ?>
+    <?= Html::closeTag('li'); ?> 
+    <?= Html::openTag('li', ['id' => 'back', 'class' => 'tab-pane']); ?>
+        <?= A::tag()
+            ->addAttributes([
+                'type' => 'reset',
+                'onclick' => 'window.history.back()',
+                'value' => '1',
+                'data-bs-toggle' => 'tab',
+                'style' => 'text-decoration:none'
+            ])
+            ->addClass('btn btn-danger bi bi-arrow-left')
+            ->id('back')
+            ->render(); ?>
     <?= Html::closeTag('li'); ?>    
 <?= Html::closeTag('ul'); ?>
     

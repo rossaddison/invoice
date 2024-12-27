@@ -44,8 +44,6 @@ final class UserInvController
 {
     use FlashMessage;
     
-    public const string GITHUB_ACCESS_TOKEN = 'github-access';
-    public const string EMAIL_VERIFICATION_TOKEN = 'email-verification';
     private Assignment $assignment;
     private ItemStorage $itemstorage;
     private Manager $manager;
@@ -536,7 +534,8 @@ final class UserInvController
         #[RouteArgument('_language')] string $_language,
         // language e.g. 'English'
         #[RouteArgument('language')] string $language,
-        #[RouteArgument('token')] string $token,
+        #[RouteArgument('token')] string $tokenMasked,
+        #[RouteArgument('tokenType')] string $tokenType,
         cR $cR,
         uiR $uiR,
         ucR $ucR,
@@ -544,14 +543,14 @@ final class UserInvController
         tR $tR
     ): Response {
         // A token consists of a random 32 length string concatenated with a timestamp and then Masked.
-        $unMaskedToken = TokenMask::remove($token);
+        $unMaskedToken = TokenMask::remove($tokenMasked);
         $positionFromUnderscore = strrpos($unMaskedToken, '_');
         if ($positionFromUnderscore > -1) {
             $timestamp = substr($unMaskedToken, $positionFromUnderscore + 1);
             $lengthTimeStamp = strlen($timestamp);
-            $token = substr($unMaskedToken, 0, -($lengthTimeStamp + 1));
+            $tokenWithoutTimestamp = substr($unMaskedToken, 0, -($lengthTimeStamp + 1));
             if ((int)$timestamp + 3600 >= time()) {
-                $identity = $tR->findIdentityByToken($token, self::EMAIL_VERIFICATION_TOKEN);
+                $identity = $tR->findIdentityByToken($tokenWithoutTimestamp, $tokenType);
                 if (null !== $identity) {
                     $userId = $identity->getUser()?->getId();
                     if (null !== $userId) {
@@ -561,13 +560,13 @@ final class UserInvController
                             $uiR->save($userInv);
                             $userId = $userInv->getUser_id();
                             // the status is now active i.e. 1, now make sure the token cannot be used again
-                            $token = $tR->findTokenByTokenAndType($token, self::EMAIL_VERIFICATION_TOKEN);
-                            if (null !== $token) {
+                            $tokenEntity = $tR->findTokenByTokenAndType($tokenWithoutTimestamp, $tokenType);
+                            if (null !== $tokenEntity) {
                                 /**
                                  * @see https://github.com/search?q=repo%3Ayiisoft%2Fyii2-app-advanced%20already_&type=code
                                  */
-                                $token->setToken('already_used_token_'.time());
-                                $tR->save($token);
+                                $tokenEntity->setToken('already_used_token_'.time());
+                                $tR->save($tokenEntity);
                                 // $email address field in signup form and a field in the user table
                                 $email = $identity->getUser()?->getEmail();
                                 if (null !== $email) {
@@ -622,106 +621,6 @@ final class UserInvController
         return $this->webService->getRedirectResponse('site/index');
     }
     
-    /**
-     * After the user has clicked on their received email link in their email account, their hyperlink takes them to this function
-     * 
-     * @param string $_language
-     * @param string $language
-     * @param string $token
-     * @param cR $cR
-     * @param uiR $uiR
-     * @param ucR $ucR
-     * @param sR $sR
-     * @param tR $tR
-     * @return Response
-     */
-    public function github(
-        // cldr e.g. 'en'
-        #[RouteArgument('_language')] string $_language,
-        // language e.g. 'English'
-        #[RouteArgument('language')] string $language,
-        #[RouteArgument('token')] string $token,
-        cR $cR,
-        uiR $uiR,
-        ucR $ucR,
-        sR $sR,
-        tR $tR
-    ): Response {
-        // A token consists of a random 32 length string concatenated with a timestamp and then Masked.
-        $unMaskedToken = TokenMask::remove($token);
-        $positionFromUnderscore = strrpos($unMaskedToken, '_');
-        if ($positionFromUnderscore > -1) {
-            $timestamp = substr($unMaskedToken, $positionFromUnderscore + 1);
-            $lengthTimeStamp = strlen($timestamp);
-            $token = substr($unMaskedToken, 0, -($lengthTimeStamp + 1));
-            if ((int)$timestamp + 3600 >= time()) {
-                $identity = $tR->findIdentityByToken($token, self::GITHUB_ACCESS_TOKEN);
-                if (null !== $identity) {
-                    $userId = $identity->getUser()?->getId();
-                    if (null !== $userId) {
-                        $userInv = $uiR->repoUserInvUserIdquery($userId);
-                        if (null !== ($userInv)) {
-                            $userInv->setActive(true);
-                            $uiR->save($userInv);
-                            $userId = $userInv->getUser_id();
-                            // the status is now active i.e. 1, now make sure the token cannot be used again
-                            $token = $tR->findTokenByTokenAndType($token, self::GITHUB_ACCESS_TOKEN);
-                            if (null !== $token) {
-                                $token->setToken('already_used_token_'.time());
-                                $tR->save($token);
-                                $email = $identity->getUser()?->getEmail();
-                                if (null !== $email) {
-                                    /**
-                                     * The client will have to be assigned to the user by the admin manually if this is not set
-                                     * @see InvoiceController 'signup_automatically_assign_client' => 0
-                                     */
-                                    if ($sR->getSetting('signup_automatically_assign_client') == '1') {
-                                        $client = new Client();
-                                        // set the client as active so that invoices can be created for the client
-                                        $client->setClient_active(true);
-                                        $client->setClient_email($email);
-                                        $client->setClient_language($language);
-                                        $client->setClient_age($sR->getSetting('signup_default_age_minimum_eighteen') == '1' ? 18 : 0);
-                                        $cR->save($client);
-                                        $this->flashMessage('info', $this->translator->translate('invoice.invoice.assign.client.on.signup.done'));
-                                        if (null !== ($clientId = $client->getClient_id())) {
-                                            $userClient = new UserClient();
-                                            $userClient->setUser_id((int)$userInv->getUser_id());
-                                            $userClient->setClient_id($clientId);
-                                            $ucR->save($userClient);
-                                        }
-                                        if (strlen($userId) > 0 && $userId > 1) {
-                                            $this->manager->revokeAll($userId);
-                                            $this->manager->assign('observer', $userId);
-                                            $this->flashMessage('info', $this->translator->translate('invoice.user.inv.role.observer.assigned'));
-                                        }
-                                        if (strlen($userId) > 0 && $userId == 1) {
-                                            $this->manager->revokeAll($userId);
-                                            $this->manager->assign('admin', $userId);
-                                            $this->flashMessage('info', $this->translator->translate('invoice.user.inv.role.admin.assigned'));
-                                        }
-                                    } else {
-                                        $this->flashMessage('warning', 'Client not signed up automatically because setting not on. As Admin you should click on this button to enable clients to be assigned to users automatically.' .' '.
-                                            Button::setOrUnsetAssignClientToUserAutomatically($this->urlGenerator, $_language));
-                                    }
-                                }
-                            }    
-                        } else {
-                            $this->flashMessage('warning', 'No User Inv');
-                        }
-                    } else {
-                        $this->flashMessage('warning', 'No User');
-                    }
-                } else {
-                    $this->flashMessage('warning', 'No token');
-                }
-            }
-        } else {
-            $this->flashMessage('warning', 'No separating underscore in token');
-        }
-        return $this->webService->getRedirectResponse('site/index');
-    }
-
     /**
      * @param int $id
      * @param UserInvRepository $userinvRepository

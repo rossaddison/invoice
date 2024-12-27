@@ -293,7 +293,7 @@ if (null!==$currentPath) {
                     ->open()
                 . '<div class="mb-1">'
                 . Button::submit(
-                    $translator->translate('menu.logout', ['login' => Html::encode(null!==$user ? $user->getLogin() : '')])
+                    $translator->translate('menu.logout', ['login' => Html::encode(null!==$user ? preg_replace('/\d+/', '', $user->getLogin()) : '')])
                 )
                     ->class('btn btn-primary')
                 . '</div>'

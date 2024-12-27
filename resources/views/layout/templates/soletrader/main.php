@@ -187,7 +187,7 @@ $this->setTitle($title);
                             ->open()
                         . '<div class="mb-1">'
                         . Button::submit(
-                            $translator->translate('i.logout', ['login' => Html::encode(null!==$user ? $user->getLogin() : '')])
+                            $translator->translate('i.logout', ['login' => Html::encode(null!==$user ? preg_replace('/\d+/', '', $user->getLogin()) : '')])
                         )
                             ->class('btn btn-primary')
                         . '</div>'

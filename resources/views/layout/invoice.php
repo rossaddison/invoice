@@ -748,7 +748,7 @@ $this->beginPage();
                     ->csrf($csrf)
                     ->open()
                     . Button::submit(
-                      $translator->translate('menu.logout', ['login' => Html::encode($userLogin)])
+                      $translator->translate('menu.logout', ['login' => Html::encode(preg_replace('/\d+/', '', $userLogin))])
                     )
                     ->class('btn btn-primary')
                     . Form::tag()->close(),

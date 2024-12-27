@@ -15,6 +15,8 @@ trait Oauth2
 {
     public const string GITHUB_ACCESS_TOKEN = 'github-access';
     
+    public const string FACEBOOK_ACCESS_TOKEN = 'facebook-access';
+    
     private function initializeOauth2IdentityProviderCredentials(Facebook $facebook, GitHub $github, Google $google) : void {
         $facebook->setOauth2ReturnUrl($this->sR->getOauth2IdentityProviderReturnUrl('facebook'));
         $github->setOauth2ReturnUrl($this->sR->getOauth2IdentityProviderReturnUrl('github'));
@@ -34,6 +36,25 @@ trait Oauth2
      * @param TokenRepository $tR
      * @return string
      */
+    private function getFacebookAccessToken(User $user, TokenRepository $tR): string
+    {
+        $identity = $user->getIdentity();
+        $identityId = (int)$identity->getId();
+        // This records the fact that the user has signed up with a Facebook 'access-token'
+        $token = new Token($identityId, self::FACEBOOK_ACCESS_TOKEN);
+        // store the token amongst all the other types of tokens e.g. password-rest, email-verification, github-access
+        $tR->save($token);
+        $tokenString = $token->getToken();
+        $timeString = (string)($token->getCreated_at())->getTimestamp();
+        // build the token with a timestamp built into it for comparison later
+        return $facebookAccessToken = null !== $tokenString ? ($tokenString. '_' . $timeString) : '';
+    }
+    
+    /**
+     * @param User $user
+     * @param TokenRepository $tR
+     * @return string
+     */
     private function getGithubAccessToken(User $user, TokenRepository $tR): string
     {
         $identity = $user->getIdentity();
@@ -45,6 +66,6 @@ trait Oauth2
         $tokenString = $token->getToken();
         $timeString = (string)($token->getCreated_at())->getTimestamp();
         // build the token with a timestamp built into it for comparison later
-        return $githubVerificationToken = null !== $tokenString ? ($tokenString. '_' . $timeString) : '';
+        return $githubAccessToken = null !== $tokenString ? ($tokenString. '_' . $timeString) : '';
     }
 }

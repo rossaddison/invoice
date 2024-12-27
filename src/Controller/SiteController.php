@@ -42,15 +42,20 @@ final class SiteController
     {
         return $this->viewRenderer->render('pricing');
     }
+    
+    public function privacypolicy(): \Yiisoft\DataResponse\DataResponse
+    {
+        return $this->viewRenderer->render('privacypolicy');
+    }
 
     public function testimonial(): \Yiisoft\DataResponse\DataResponse
     {
         return $this->viewRenderer->render('testimonial');
     }
     
-    public function githubcallbackresultunauthorised(): \Yiisoft\DataResponse\DataResponse
+    public function oauth2callbackresultunauthorised(): \Yiisoft\DataResponse\DataResponse
     {
-        return $this->viewRenderer->render('githubcallbackresultunauthorised');
+        return $this->viewRenderer->render('oauth2callbackresultunauthorised');
     }
     
     public function adminmustmakeactive(): \Yiisoft\DataResponse\DataResponse

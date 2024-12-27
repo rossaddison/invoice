@@ -111,7 +111,10 @@ return [
     ->name('site/contact'),
     Route::methods([Method::GET, Method::POST], '/gallery')
     ->action([SiteController::class, 'gallery'])
-    ->name('site/gallery'),
+    ->name('site/gallery'),    
+    Route::methods([Method::GET, Method::POST], '/oauth2callbackresultunauthorised')
+    ->action([SiteController::class, 'oauth2callbackresultunauthorised'])
+    ->name('site/oauth2callbackresultunauthorised'),
     Route::methods([Method::GET, Method::POST], '/forgotalert')
     ->action([SiteController::class, 'forgotalert'])
     ->name('site/forgotalert'),
@@ -120,7 +123,10 @@ return [
     ->name('site/forgotemailfailed'),
     Route::methods([Method::GET, Method::POST], '/forgotusernotfound')
     ->action([SiteController::class, 'forgotusernotfound'])
-    ->name('site/forgotusernotfound'),
+    ->name('site/forgotusernotfound'),    
+    Route::methods([Method::GET, Method::POST], '/privacypolicy')
+    ->action([SiteController::class, 'privacypolicy'])
+    ->name('site/privacypolicy'),
     Route::methods([Method::GET, Method::POST], '/resetpasswordfailed')
     ->action([SiteController::class, 'resetpasswordfailed'])
     ->name('site/resetpasswordfailed'),
@@ -138,6 +144,10 @@ return [
     ->middleware(LimitRequestsMiddleware::class)
     ->action([AuthController::class, 'login'])
     ->name('auth/login'),
+    Route::methods([Method::GET, Method::POST], '/callbackFacebook')
+      ->middleware(LimitRequestsMiddleware::class)
+      ->action([AuthController::class, 'callbackFacebook'])
+      ->name('auth/callbackFacebook'),      
     Route::methods([Method::GET, Method::POST], '/callbackGithub')
       ->middleware(LimitRequestsMiddleware::class)
       ->action([AuthController::class, 'callbackGithub'])
@@ -2245,12 +2255,12 @@ return [
       ->middleware(fn(AccessChecker $checker) => $checker->withPermission('editInv'))
       ->middleware(Authentication::class)
       ->action([UserInvController::class, 'assignAdminRole']),
-      // email-verification-token has to be unmasked      
-      Route::methods([Method::GET, Method::POST], '/userinv/signup/{language}/{token}')
+      /**
+       * token e.g. maskedToken, tokenType e.g. email-verification, facebook-access, github-access
+       * @see AuthController function getTokenType($provider)
+       */     
+      Route::methods([Method::GET, Method::POST], '/userinv/signup/{language}/{token}/{tokenType}')
       ->name('userinv/signup')
       ->action([UserInvController::class, 'signup']),  
-      Route::methods([Method::GET, Method::POST], '/userinv/github/{language}/{token}')
-      ->name('userinv/github')
-      ->action([UserInvController::class, 'github']),  
     ), //invoice
 ];

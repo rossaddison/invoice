@@ -208,7 +208,7 @@ final class SignupController
                        // edit their userinv details on the client side as well as the client record.
                        ->href($this->urlGenerator->generateAbsolute(
                            'userinv/signup',
-                           ['_language' => $_language, 'language' => $language, 'token' => $tokenWithMask]
+                           ['_language' => $_language, 'language' => $language, 'token' => $tokenWithMask, 'tokenType' => 'email']
                        ))
                        ->content($this->translator->translate('invoice.invoice.email.link.click.confirm'));
             $htmlBody = Body::tag()

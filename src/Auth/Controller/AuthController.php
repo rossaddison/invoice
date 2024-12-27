@@ -6,8 +6,6 @@ namespace App\Auth\Controller;
 
 use App\Auth\AuthService;
 use App\Auth\Form\LoginForm;
-use App\Auth\Form\SignupForm;
-use App\Auth\IdentityRepository;
 use App\Auth\TokenRepository;
 use App\Auth\Trait\Oauth2;
 use App\Invoice\Entity\UserInv;
@@ -38,6 +36,8 @@ final class AuthController
 { 
     use Oauth2;
     
+    public const string FACEBOOK_ACCESS_TOKEN = 'facebook-access';
+    public const string GITHUB_ACCESS_TOKEN = 'github-access';
     public const string EMAIL_VERIFICATION_TOKEN = 'email-verification';
     
     public function __construct(
@@ -164,14 +164,30 @@ final class AuthController
         }    
     }
     
+    public function disableFacebookAccessToken(
+        TokenRepository $tR,    
+        ?string $userId = null
+    ) : void 
+    {
+        if (null !== $userId) {    
+            $token = $tR->findTokenByIdentityIdAndType($userId, self::FACEBOOK_ACCESS_TOKEN);
+            if (null !== $token) {
+                $token->setToken('already_used_token_'.time());
+                $tR->save($token);
+            }
+        }    
+    }
+    
     /**
+     * Purpose: Once Github redirects to this callback, in this callback function:
+     * 1. the user is logged in, or a new user is created, and the proceedToMenuButton is created
+     * 2. clicking on the proceedToMenuButton will further create a userinv extension of the user table
+     * @see src/Invoice/UserInv/UserInvController function github
      * @see https://docs.github.com/en/apps/oauth-apps/building-oauth-apps/authorizing-oauth-apps
      * @param CurrentRoute $currentRoute
-     * @param FormHydrator $formHydrator
      * @param string $code
      * @param string $state
      * @param ServerRequestInterface $request
-     * @param SignupForm $signupForm,    
      * @param TranslatorInterface $translator
      * @param TokenRepository $tR
      * @param UserInvRepository $uiR
@@ -180,10 +196,8 @@ final class AuthController
      */
     public function callbackGithub(
         CurrentRoute $currentRoute,
-        FormHydrator $formHydrator,
         #[Query('code')] string $code, 
         #[Query('state')] string $state,
-        IdentityRepository $identityRepository,
         ServerRequestInterface $request,
         TranslatorInterface $translator,    
         TokenRepository $tR,
@@ -199,7 +213,7 @@ final class AuthController
             header('Location: ' . $authorizationUrl);
             exit;
         } elseif ($code == 401){
-            return $this->redirectToGithubCallbackResultUnAuthorised();
+            return $this->redirectToOauth2CallbackResultUnAuthorised();
         } elseif (empty($state)) {
             /**
              * State is invalid, possible cross-site request forgery. Exit with an error code.
@@ -276,6 +290,7 @@ final class AuthController
                             $languageArray = $this->sR->locale_language_array();
                             $_language = $currentRoute->getArgument('_language');
                             /**
+                             * @see Trait\Oauth2 function getGithubAccessToken
                              * @var string $_language
                              * @var array $languageArray
                              * @var string $language
@@ -285,7 +300,133 @@ final class AuthController
                             /**
                              * @see A new UserInv (extension table of user) for the user is created.
                              */
-                            $proceedToMenuButton = $this->proceedToMenuButtonWithMaskedRandomAndTimeTokenLink($translator, $user, $uiR, $language, $_language, $randomAndTimeToken);
+                            $proceedToMenuButton = $this->proceedToMenuButtonWithMaskedRandomAndTimeTokenLink($translator, $user, $uiR, $language, $_language, $randomAndTimeToken, 'github');
+                            return $this->viewRenderer->render('proceed', [
+                                'proceedToMenuButton' => $proceedToMenuButton
+                            ]);
+                        }     
+                    }
+                }    
+            }    
+        }
+        $this->authService->logout();
+        return $this->redirectToMain();
+    }
+    
+    /**
+     * Purpose: Once Facebook redirects to this callback, in this callback function:
+     * 1. the user is logged in, or a new user is created, and the proceedToMenuButton is created
+     * 2. clicking on the proceedToMenuButton will further create a userinv extension of the user table
+     * @see src/Invoice/UserInv/UserInvController function facebook
+     * @param CurrentRoute $currentRoute
+     * @param string $code
+     * @param string $state
+     * @param ServerRequestInterface $request
+     * @param TranslatorInterface $translator
+     * @param TokenRepository $tR
+     * @param UserInvRepository $uiR
+     * @param UserRepository $uR
+     * @return ResponseInterface
+     */
+    public function callbackFacebook(
+        CurrentRoute $currentRoute,
+        #[Query('code')] string $code, 
+        #[Query('state')] string $state,
+        ServerRequestInterface $request,
+        TranslatorInterface $translator,    
+        TokenRepository $tR,
+        UserInvRepository $uiR,
+        UserRepository $uR
+    ) : ResponseInterface 
+    {
+        if (strlen($code) == 0) {
+            // If we don't have an authorization code then get one 
+            // and use the protected function oauth2->generateAuthState to generate state param
+            // which has a session id built into it
+            $authorizationUrl = $this->facebook->buildAuthUrl($request, []);
+            header('Location: ' . $authorizationUrl);
+            exit;
+        } elseif ($code == 401){
+            return $this->redirectToOauth2CallbackResultUnAuthorised();
+        } elseif (empty($state)) {
+            /**
+             * State is invalid, possible cross-site request forgery. Exit with an error code.
+             */
+            exit(1);        
+        // code and state are both present    
+        } else {
+            $oAuthTokenType = $this->facebook->fetchAccessToken($request, $code, $params = []);
+            
+            /**
+             * @var array $userArray
+             */
+            $userArray = $this->facebook->getCurrentUserJsonArray($oAuthTokenType);
+            /**
+             * @var int $userArray['id']
+             */
+            $facebookId = $userArray['id'] ?? 0;
+            if ($facebookId > 0) { 
+                /**
+                 * @var string $userArray['name']
+                 */
+                $facebookLogin = strtolower($userArray['name'] ?? '');
+                if (strlen($facebookLogin) > 0) {
+                    $login = 'facebook'.(string)$facebookId.$facebookLogin;
+                    /**
+                     * @var string $userArray['email']
+                     */
+                    $email = $userArray['email'] ?? 'noemail'.$login.'@facebook.com';
+                    $password = Random::string(32);
+                    // The password does not need to be validated here so use authService->oauthLogin($login) instead of authService->login($login, $password)
+                    // but it will be used later to build a passwordHash
+                    if ($this->authService->oauthLogin($login)) {
+                        $identity = $this->authService->getIdentity();
+                        $userId = $identity->getId();
+                        if (null!==$userId) {
+                            $userInv = $uiR->repoUserInvUserIdquery($userId);
+                            if (null!==$userInv) {
+                                // disable our facebook access token as soon as the user logs in for the first time
+                                $status = $userInv->getActive();
+                                if ($status || $userId == 1) {
+                                    $userId == 1 ? $this->disableFacebookAccessToken($tR, '1') : '';
+                                    return $this->redirectToInvoiceIndex();
+                                } else {
+                                    $this->disableFacebookAccessToken($tR, $userId);
+                                    return $this->redirectToAdminMustMakeActive();
+                                }
+                            }
+                        }
+                        return $this->redirectToMain();
+                    } else {
+                        $user = new User($login, $email, $password);
+                        $uR->save($user);
+                        $userId = $user->getId();
+                        if ($userId > 0) {
+                            if ($uR->repoCount() == 1) {
+                                $this->manager->revokeAll($userId);
+                                $this->manager->assign('admin', $userId);
+                            } else {
+                                $this->manager->revokeAll($userId);
+                                $this->manager->assign('observer', $userId);
+                            }
+                            $login = $user->getLogin();
+                            /**
+                             * @var array $this->sR->locale_language_array()
+                             */
+                            $languageArray = $this->sR->locale_language_array();
+                            $_language = $currentRoute->getArgument('_language');
+                            /**
+                             * @see Trait\Oauth2 function getFacebookAccessToken
+                             * @var string $_language
+                             * @var array $languageArray
+                             * @var string $language
+                             */
+                            $language = $languageArray[$_language];
+                            $randomAndTimeToken = $this->getFacebookAccessToken($user, $tR);
+                            /**
+                             * @see A new UserInv (extension table of user) for the user is created.
+                             */
+                            $proceedToMenuButton = $this->proceedToMenuButtonWithMaskedRandomAndTimeTokenLink($translator, $user, $uiR, $language, $_language, $randomAndTimeToken, 'facebook');
                             return $this->viewRenderer->render('proceed', [
                                 'proceedToMenuButton' => $proceedToMenuButton
                             ]);
@@ -305,10 +446,12 @@ final class AuthController
      * @param string $language
      * @param string $_language
      * @param string $randomAndTimeToken
+     * @param string $provider e.g. github
      * @return string
      */
-    private function proceedToMenuButtonWithMaskedRandomAndTimeTokenLink(TranslatorInterface $translator, User $user, UserInvRepository $uiR, string $language, string $_language, string $randomAndTimeToken): string
+    private function proceedToMenuButtonWithMaskedRandomAndTimeTokenLink(TranslatorInterface $translator, User $user, UserInvRepository $uiR, string $language, string $_language, string $randomAndTimeToken, string $provider): string
     {
+        $tokenType = $this->getTokenType($provider);
         $tokenWithMask = TokenMask::apply($randomAndTimeToken);
         $userInv = new UserInv();
         if (null !== ($userId = $user->getId())) {
@@ -320,26 +463,40 @@ final class AuthController
             $userInv->setLanguage($language);
             $uiR->save($userInv);
             $proceedToMenuButton = A::tag()
-                // When the url is clicked by the user, return to userinv/signup to activate the user and assign a client to the user
+                // When the url is clicked by the user, return to userinv/$provider to activate the user and assign a client to the user
                 // depending on whether 'Assign a client to user on signup' has been chosen under View ... Settings...General. The user will be able to
                 // edit their userinv details on the client side as well as the client record.
                 ->href($this->urlGenerator->generateAbsolute(
-                    'userinv/github',
-                    ['_language' => $_language, 'language' => $language, 'token' => $tokenWithMask]
+                    'userinv/signup',
+                    [
+                        '_language' => $_language, 
+                        'language' => $language, 
+                        'token' => $tokenWithMask, 
+                        'tokenType' => $tokenType
+                    ]
                 ))
+                ->addClass('btn btn-success')    
                 ->content($translator->translate('invoice.invoice.identity.provider.authentication.successful'))
                 ->render();
             return $proceedToMenuButton;
         }
         return '';
-    }    
-
-    
-    private function redirectToGithubCallbackResultUnAuthorised() : ResponseInterface
-    {
-        return $this->webService->getRedirectResponse('site/githubcallbackresultunauthorised', ['_language' => 'en']);
     }
-        
+    
+    private function getTokenType(string $provider) : string 
+    {
+        return $tokenType = match ($provider) {
+            'email' => SELF::EMAIL_VERIFICATION_TOKEN,
+            'facebook' => SELF::FACEBOOK_ACCESS_TOKEN,
+            'github' => SELF::GITHUB_ACCESS_TOKEN,
+        };
+    }
+    
+    private function redirectToOauth2CallbackResultUnAuthorised() : ResponseInterface
+    {
+        return $this->webService->getRedirectResponse('site/oauth2callbackresultunauthorised', ['_language' => 'en']);
+    }
+    
     public function logout(): ResponseInterface
     {
         $this->authService->logout();
