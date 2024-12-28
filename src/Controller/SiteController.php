@@ -58,6 +58,11 @@ final class SiteController
         return $this->viewRenderer->render('oauth2callbackresultunauthorised');
     }
     
+    public function usercancelledoauth2(): \Yiisoft\DataResponse\DataResponse
+    {
+        return $this->viewRenderer->render('usercancelledoauth2');
+    }
+    
     public function adminmustmakeactive(): \Yiisoft\DataResponse\DataResponse
     {
         return $this->viewRenderer->render('adminmustmakeactive');

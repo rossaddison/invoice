@@ -196,8 +196,8 @@ final class AuthController
      */
     public function callbackGithub(
         CurrentRoute $currentRoute,
-        #[Query('code')] string $code, 
-        #[Query('state')] string $state,
+        #[Query('code')] string $code = null, 
+        #[Query('state')] string $state = null,
         ServerRequestInterface $request,
         TranslatorInterface $translator,    
         TokenRepository $tR,
@@ -205,6 +205,12 @@ final class AuthController
         UserRepository $uR
     ) : ResponseInterface 
     {
+        if ($code == null || $state == null) {
+            return $this->redirectToMain();
+        }
+        /**
+         * @psalm-suppress DocblockTypeContradiction $code
+         */
         if (strlen($code) == 0) {
             // If we don't have an authorization code then get one 
             // and use the protected function oauth2->generateAuthState to generate state param
@@ -214,7 +220,7 @@ final class AuthController
             exit;
         } elseif ($code == 401){
             return $this->redirectToOauth2CallbackResultUnAuthorised();
-        } elseif (empty($state)) {
+        } elseif (strlen($state) == 0) {
             /**
              * State is invalid, possible cross-site request forgery. Exit with an error code.
              */
@@ -321,6 +327,9 @@ final class AuthController
      * @param CurrentRoute $currentRoute
      * @param string $code
      * @param string $state
+     * @param string $error
+     * @param string $errorCode
+     * @param string $errorReason
      * @param ServerRequestInterface $request
      * @param TranslatorInterface $translator
      * @param TokenRepository $tR
@@ -330,8 +339,11 @@ final class AuthController
      */
     public function callbackFacebook(
         CurrentRoute $currentRoute,
-        #[Query('code')] string $code, 
-        #[Query('state')] string $state,
+        #[Query('code')] string $code = null, 
+        #[Query('state')] string $state = null,
+        #[Query('error')] string $error = null,
+        #[Query('error_code')] string $errorCode = null,
+        #[Query('error_reason')] string $errorReason = null,
         ServerRequestInterface $request,
         TranslatorInterface $translator,    
         TokenRepository $tR,
@@ -339,6 +351,18 @@ final class AuthController
         UserRepository $uR
     ) : ResponseInterface 
     {
+        // Avoid MissingRequiredArgumentException
+        if ($code == null || $state == null) {
+            // e.g. User presses cancel button: callbackFacebook?error=access_denied&error_code=200&error_description=Permissions+error&error_reason=user_denied&state=
+            if (($errorCode == 200) && ($error == 'access_denied') && ($errorReason == 'user_denied')) {
+                return $this->redirectToUserCancelledOauth2();
+            } else {
+                return $this->redirectToMain();
+            }
+        }
+        /**
+         * @psalm-suppress DocblockTypeContradiction $code
+         */
         if (strlen($code) == 0) {
             // If we don't have an authorization code then get one 
             // and use the protected function oauth2->generateAuthState to generate state param
@@ -348,7 +372,7 @@ final class AuthController
             exit;
         } elseif ($code == 401){
             return $this->redirectToOauth2CallbackResultUnAuthorised();
-        } elseif (empty($state)) {
+        } elseif (strlen($state) == 0) {
             /**
              * State is invalid, possible cross-site request forgery. Exit with an error code.
              */
@@ -356,7 +380,6 @@ final class AuthController
         // code and state are both present    
         } else {
             $oAuthTokenType = $this->facebook->fetchAccessToken($request, $code, $params = []);
-            
             /**
              * @var array $userArray
              */
@@ -475,7 +498,7 @@ final class AuthController
                         'tokenType' => $tokenType
                     ]
                 ))
-                ->addClass('btn btn-success')    
+                ->addClass('btn btn-success')
                 ->content($translator->translate('invoice.invoice.identity.provider.authentication.successful'))
                 ->render();
             return $proceedToMenuButton;
@@ -490,6 +513,11 @@ final class AuthController
             'facebook' => self::FACEBOOK_ACCESS_TOKEN,
             'github' => self::GITHUB_ACCESS_TOKEN,
         };
+    }
+    
+    private function redirectToUserCancelledOauth2() : ResponseInterface
+    {
+        return $this->webService->getRedirectResponse('site/usercancelledoauth2', ['_language' => 'en']);
     }
     
     private function redirectToOauth2CallbackResultUnAuthorised() : ResponseInterface

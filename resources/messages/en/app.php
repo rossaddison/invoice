@@ -1757,6 +1757,7 @@ return [
     'layout.not-found' => 'Not found',
     'layout.page.not-found' => 'The page {url} could not be found.',
     'layout.page.not-authorised' => 'Not Authorised: Authentication credentials are incorrect.',
+    'layout.page.user-cancelled-oauth2' => 'User Cancelled Logging in / Registering via Identity Provider e.g Facebook',
     'layout.pagination-summary' => 'Showing {pageSize} out of {total} posts',
     'layout.password-verify' => 'Confirm your password',
     'layout.password' => 'Password',
