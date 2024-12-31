@@ -12,9 +12,8 @@
 <p><s>6. Filters to be introduced on grids</s></p>
 <p><s>7. Improve Generator index template using Yiisoft functions.</s></p>
 <p><s>8. Include Product images</s></p>
-<p>9. Integrate <code>https://github.com/php-finance/double-entry</code></p>
-<p>10. Remove all $s variables passed to views since the variable is defined under config/params.php</p>
-<p>11. Upskilling on Docker. </p>
+<p><s>9. Remove all $s variables passed to views since the variable is defined under config/params.php</s></p>
+<p>10. Upskilling on Docker. </p>
 <br>
 <code>
 'yiisoft/view' => [
@@ -47,6 +46,22 @@
 <p>Introducing India's PayTm payment gateway's QR code method of payment and comparing this with Stripe's method.</p>
 <p>A General Sales Tax (GST) Tax System will have to be implemented first for this purpose.</p>
 <p>Testing Credit Notes against Invoices with refunds (if payment made) linked to each of the payment gateways.</p>
+<p><b>31st December 2024</b></p>
+<p>Google Oauth2 functional.</p>
+<p>Improve the ordering of the parameters in the AuthController functions and include callbackGoogle in the controller.</p>
+<pre>..resources/rbac/assignments.php has been reduced to an empty array to allow for signing up. If you encounter any difficulties this is the format:
+    return [
+        1 => [
+            'user_id' => '1',
+            'item_name' => 'admin',
+        ],
+        2 => [
+            'user_id' => '2',
+            'item_name' => 'observer',
+        ],
+    ]; 
+</pre>
+<p>Next LinkedIn Oauth2</p>
 <p><b>27th December 2024</b></p>
 <p>Facebook Oauth2 functional.</p>
 <p>src\Auth\Controller\AuthController <pre>function getAuthTokenType($identityProvider)</pre> shows the token-type for each identityProvider e.g. 'facebook' => 'access-token', 'email' => 'email-verification</p>

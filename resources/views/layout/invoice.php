@@ -509,7 +509,9 @@ $this->beginPage();
                 DropdownItem::link($translator->translate('invoice.platform.scrutinizer.config.checks.php'), 'https://scrutinizer-ci.com/g/'. $scrutinizerRepository. '/settings/build-config/editor?language=php'),    
                 DropdownItem::link($translator->translate('invoice.platform.scrutinizer.config.checks.javascript'), 'https://scrutinizer-ci.com/g/'. $scrutinizerRepository. '/settings/build-config'),    
                 DropdownItem::link('Using ngrok and Wampserver VirtualHosts', 'https://ngrok.com/docs/using-ngrok-with/virtualHosts/'),    
-                DropdownItem::link('Using ngrok and webhook testing', 'https://ngrok.com/use-cases/webhook-testing')
+                DropdownItem::link('Using ngrok and webhook testing', 'https://ngrok.com/use-cases/webhook-testing'),
+                DropdownItem::link('Google Oauth2 Playground', 'https://developers.google.com/oauthplayground'),
+                DropdownItem::link('Google Oauth2 Web Application', 'https://console.cloud.google.com/apis/credentials/oauthclient')
             )
             ->render();
             

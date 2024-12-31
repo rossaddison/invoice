@@ -3612,48 +3612,6 @@
             "time": "2024-11-18T16:19:46+00:00"
         },
         {
-            "name": "jetbrains/phpstorm-attributes",
-            "version": "1.2",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/JetBrains/phpstorm-attributes.git",
-                "reference": "64de815a4509c29e00d5e3474087fd24c171afc2"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/JetBrains/phpstorm-attributes/zipball/64de815a4509c29e00d5e3474087fd24c171afc2",
-                "reference": "64de815a4509c29e00d5e3474087fd24c171afc2",
-                "shasum": ""
-            },
-            "type": "library",
-            "autoload": {
-                "psr-4": {
-                    "JetBrains\\PhpStorm\\": "src/"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "Apache-2.0"
-            ],
-            "authors": [
-                {
-                    "name": "JetBrains",
-                    "homepage": "https://www.jetbrains.com"
-                }
-            ],
-            "description": "PhpStorm specific attributes",
-            "keywords": [
-                "attributes",
-                "jetbrains",
-                "phpstorm"
-            ],
-            "support": {
-                "issues": "https://youtrack.jetbrains.com/newIssue?project=WI",
-                "source": "https://github.com/JetBrains/phpstorm-attributes/tree/1.2"
-            },
-            "time": "2024-10-11T10:46:19+00:00"
-        },
-        {
             "name": "league/iso3166",
             "version": "4.3.2",
             "source": {
@@ -7099,12 +7057,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/rossaddison/yii-auth-client.git",
-                "reference": "c53677d9cbe8c8ee5bac002de54f76ef3a9b1cdb"
+                "reference": "d7bb00d80e6d48bfce56b1ab7370e011164c2b09"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/rossaddison/yii-auth-client/zipball/c53677d9cbe8c8ee5bac002de54f76ef3a9b1cdb",
-                "reference": "c53677d9cbe8c8ee5bac002de54f76ef3a9b1cdb",
+                "url": "https://api.github.com/repos/rossaddison/yii-auth-client/zipball/d7bb00d80e6d48bfce56b1ab7370e011164c2b09",
+                "reference": "d7bb00d80e6d48bfce56b1ab7370e011164c2b09",
                 "shasum": ""
             },
             "require": {
@@ -7184,7 +7142,7 @@
                     "type": "opencollective"
                 }
             ],
-            "time": "2024-12-27T15:15:43+00:00"
+            "time": "2024-12-31T13:33:28+00:00"
         },
         {
             "name": "sabre/uri",
@@ -11052,34 +11010,32 @@
         },
         {
             "name": "symfony/var-dumper",
-            "version": "v6.4.15",
+            "version": "v7.2.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/var-dumper.git",
-                "reference": "38254d5a5ac2e61f2b52f9caf54e7aa3c9d36b80"
+                "reference": "c6a22929407dec8765d6e2b6ff85b800b245879c"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/var-dumper/zipball/38254d5a5ac2e61f2b52f9caf54e7aa3c9d36b80",
-                "reference": "38254d5a5ac2e61f2b52f9caf54e7aa3c9d36b80",
+                "url": "https://api.github.com/repos/symfony/var-dumper/zipball/c6a22929407dec8765d6e2b6ff85b800b245879c",
+                "reference": "c6a22929407dec8765d6e2b6ff85b800b245879c",
                 "shasum": ""
             },
             "require": {
-                "php": ">=8.1",
-                "symfony/deprecation-contracts": "^2.5|^3",
+                "php": ">=8.2",
                 "symfony/polyfill-mbstring": "~1.0"
             },
             "conflict": {
-                "symfony/console": "<5.4"
+                "symfony/console": "<6.4"
             },
             "require-dev": {
                 "ext-iconv": "*",
-                "symfony/console": "^5.4|^6.0|^7.0",
-                "symfony/error-handler": "^6.3|^7.0",
-                "symfony/http-kernel": "^5.4|^6.0|^7.0",
-                "symfony/process": "^5.4|^6.0|^7.0",
-                "symfony/uid": "^5.4|^6.0|^7.0",
-                "twig/twig": "^2.13|^3.0.4"
+                "symfony/console": "^6.4|^7.0",
+                "symfony/http-kernel": "^6.4|^7.0",
+                "symfony/process": "^6.4|^7.0",
+                "symfony/uid": "^6.4|^7.0",
+                "twig/twig": "^3.12"
             },
             "bin": [
                 "Resources/bin/var-dump-server"
@@ -11117,7 +11073,7 @@
                 "dump"
             ],
             "support": {
-                "source": "https://github.com/symfony/var-dumper/tree/v6.4.15"
+                "source": "https://github.com/symfony/var-dumper/tree/v7.2.0"
             },
             "funding": [
                 {
@@ -11133,7 +11089,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2024-11-08T15:28:48+00:00"
+            "time": "2024-11-08T15:48:14+00:00"
         },
         {
             "name": "symfony/var-exporter",
@@ -16359,18 +16315,17 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/yiisoft/yii-debug.git",
-                "reference": "911877ccf7d9059d4d29a3ce94d6119ea13e1ad2"
+                "reference": "7002fea105d84ad05b5633b5b646bd39a7943433"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/yiisoft/yii-debug/zipball/911877ccf7d9059d4d29a3ce94d6119ea13e1ad2",
-                "reference": "911877ccf7d9059d4d29a3ce94d6119ea13e1ad2",
+                "url": "https://api.github.com/repos/yiisoft/yii-debug/zipball/7002fea105d84ad05b5633b5b646bd39a7943433",
+                "reference": "7002fea105d84ad05b5633b5b646bd39a7943433",
                 "shasum": ""
             },
             "require": {
                 "ext-mbstring": "*",
                 "guzzlehttp/psr7": "^2.4",
-                "jetbrains/phpstorm-attributes": "^1.0",
                 "php": "^8.1",
                 "psr/container": "^2.0",
                 "psr/event-dispatcher": "^1.0",
@@ -16378,9 +16333,6 @@
                 "psr/http-message": "^1.0|^2.0",
                 "psr/log": "^1.0|^2.0|^3.0",
                 "symfony/console": "^5.4|^6.0",
-                "symfony/var-dumper": "^5.4|^6.4",
-                "yiisoft/arrays": "^2.0|^3.0",
-                "yiisoft/config": "^1.3",
                 "yiisoft/di": "^1.0",
                 "yiisoft/files": "^2.0",
                 "yiisoft/profiler": "^3.0",
@@ -16391,6 +16343,7 @@
             "require-dev": {
                 "ext-curl": "*",
                 "ext-sockets": "*",
+                "jetbrains/phpstorm-attributes": "^1.2",
                 "maglnet/composer-require-checker": "^4.2",
                 "nyholm/psr7": "^1.3",
                 "phpunit/phpunit": "^10.5",
@@ -16455,7 +16408,7 @@
                     "type": "opencollective"
                 }
             ],
-            "time": "2024-12-28T14:42:56+00:00"
+            "time": "2024-12-29T15:50:07+00:00"
         },
         {
             "name": "yiisoft/yii-debug-api",
@@ -18336,16 +18289,16 @@
         },
         {
             "name": "friendsofphp/php-cs-fixer",
-            "version": "v3.65.0",
+            "version": "v3.66.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/PHP-CS-Fixer/PHP-CS-Fixer.git",
-                "reference": "79d4f3e77b250a7d8043d76c6af8f0695e8a469f"
+                "reference": "5f5f2a142ff36b93c41885bca29cc5f861c013e6"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/PHP-CS-Fixer/PHP-CS-Fixer/zipball/79d4f3e77b250a7d8043d76c6af8f0695e8a469f",
-                "reference": "79d4f3e77b250a7d8043d76c6af8f0695e8a469f",
+                "url": "https://api.github.com/repos/PHP-CS-Fixer/PHP-CS-Fixer/zipball/5f5f2a142ff36b93c41885bca29cc5f861c013e6",
+                "reference": "5f5f2a142ff36b93c41885bca29cc5f861c013e6",
                 "shasum": ""
             },
             "require": {
@@ -18371,7 +18324,7 @@
                 "symfony/polyfill-mbstring": "^1.28",
                 "symfony/polyfill-php80": "^1.28",
                 "symfony/polyfill-php81": "^1.28",
-                "symfony/process": "^5.4 || ^6.0 || ^7.0",
+                "symfony/process": "^5.4 || ^6.0 || ^7.0 <7.2",
                 "symfony/stopwatch": "^5.4 || ^6.0 || ^7.0"
             },
             "require-dev": {
@@ -18427,7 +18380,7 @@
             ],
             "support": {
                 "issues": "https://github.com/PHP-CS-Fixer/PHP-CS-Fixer/issues",
-                "source": "https://github.com/PHP-CS-Fixer/PHP-CS-Fixer/tree/v3.65.0"
+                "source": "https://github.com/PHP-CS-Fixer/PHP-CS-Fixer/tree/v3.66.0"
             },
             "funding": [
                 {
@@ -18435,20 +18388,20 @@
                     "type": "github"
                 }
             ],
-            "time": "2024-11-25T00:39:24+00:00"
+            "time": "2024-12-29T13:46:23+00:00"
         },
         {
             "name": "httpsoft/http-basis",
-            "version": "1.1.0",
+            "version": "1.1.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/httpsoft/http-basis.git",
-                "reference": "63c4306c516375e3fa08358a58194e159bfbb984"
+                "reference": "373bd3b4fbd81289ca0e0a7b46134c5db75381d8"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/httpsoft/http-basis/zipball/63c4306c516375e3fa08358a58194e159bfbb984",
-                "reference": "63c4306c516375e3fa08358a58194e159bfbb984",
+                "url": "https://api.github.com/repos/httpsoft/http-basis/zipball/373bd3b4fbd81289ca0e0a7b46134c5db75381d8",
+                "reference": "373bd3b4fbd81289ca0e0a7b46134c5db75381d8",
                 "shasum": ""
             },
             "require": {
@@ -18515,7 +18468,7 @@
                 "issues": "https://github.com/httpsoft/http-basis/issues",
                 "source": "https://github.com/httpsoft/http-basis"
             },
-            "time": "2023-05-05T22:15:06+00:00"
+            "time": "2024-12-29T23:48:58+00:00"
         },
         {
             "name": "httpsoft/http-cookie",
@@ -18585,16 +18538,16 @@
         },
         {
             "name": "httpsoft/http-emitter",
-            "version": "1.1.0",
+            "version": "1.1.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/httpsoft/http-emitter.git",
-                "reference": "b09e2834b6d40e022f0c0eb7417f97f496e376b6"
+                "reference": "f63429d3c6f7f42611ed0cfaa0c40e8ef6ea041a"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/httpsoft/http-emitter/zipball/b09e2834b6d40e022f0c0eb7417f97f496e376b6",
-                "reference": "b09e2834b6d40e022f0c0eb7417f97f496e376b6",
+                "url": "https://api.github.com/repos/httpsoft/http-emitter/zipball/f63429d3c6f7f42611ed0cfaa0c40e8ef6ea041a",
+                "reference": "f63429d3c6f7f42611ed0cfaa0c40e8ef6ea041a",
                 "shasum": ""
             },
             "require": {
@@ -18643,20 +18596,20 @@
                 "issues": "https://github.com/httpsoft/http-emitter/issues",
                 "source": "https://github.com/httpsoft/http-emitter"
             },
-            "time": "2023-05-05T20:18:44+00:00"
+            "time": "2024-12-29T22:09:06+00:00"
         },
         {
             "name": "httpsoft/http-error-handler",
-            "version": "1.1.0",
+            "version": "1.1.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/httpsoft/http-error-handler.git",
-                "reference": "f5bfb10cdf6de7420e59d8342ba12f19749e7bc1"
+                "reference": "402f7559120422c267e5ff3a705b3e10dfcfb6e4"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/httpsoft/http-error-handler/zipball/f5bfb10cdf6de7420e59d8342ba12f19749e7bc1",
-                "reference": "f5bfb10cdf6de7420e59d8342ba12f19749e7bc1",
+                "url": "https://api.github.com/repos/httpsoft/http-error-handler/zipball/402f7559120422c267e5ff3a705b3e10dfcfb6e4",
+                "reference": "402f7559120422c267e5ff3a705b3e10dfcfb6e4",
                 "shasum": ""
             },
             "require": {
@@ -18710,7 +18663,7 @@
                 "issues": "https://github.com/httpsoft/http-error-handler/issues",
                 "source": "https://github.com/httpsoft/http-error-handler"
             },
-            "time": "2023-05-05T21:14:04+00:00"
+            "time": "2024-12-29T22:23:56+00:00"
         },
         {
             "name": "httpsoft/http-response",
@@ -18775,16 +18728,16 @@
         },
         {
             "name": "httpsoft/http-router",
-            "version": "1.1.0",
+            "version": "1.1.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/httpsoft/http-router.git",
-                "reference": "460ee40b15ceb61d86a7c511d321c4580960601e"
+                "reference": "2fd23a8209c39b501f16989303c10e978599ee8f"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/httpsoft/http-router/zipball/460ee40b15ceb61d86a7c511d321c4580960601e",
-                "reference": "460ee40b15ceb61d86a7c511d321c4580960601e",
+                "url": "https://api.github.com/repos/httpsoft/http-router/zipball/2fd23a8209c39b501f16989303c10e978599ee8f",
+                "reference": "2fd23a8209c39b501f16989303c10e978599ee8f",
                 "shasum": ""
             },
             "require": {
@@ -18835,20 +18788,20 @@
                 "issues": "https://github.com/httpsoft/http-router/issues",
                 "source": "https://github.com/httpsoft/http-router"
             },
-            "time": "2023-05-05T22:02:47+00:00"
+            "time": "2024-12-29T22:49:27+00:00"
         },
         {
             "name": "httpsoft/http-runner",
-            "version": "1.1.0",
+            "version": "1.1.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/httpsoft/http-runner.git",
-                "reference": "00ddc625dbf8f0acb786e899575537c7e8327847"
+                "reference": "4846365dafff0c5a46d8b5510253959a1daae0ed"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/httpsoft/http-runner/zipball/00ddc625dbf8f0acb786e899575537c7e8327847",
-                "reference": "00ddc625dbf8f0acb786e899575537c7e8327847",
+                "url": "https://api.github.com/repos/httpsoft/http-runner/zipball/4846365dafff0c5a46d8b5510253959a1daae0ed",
+                "reference": "4846365dafff0c5a46d8b5510253959a1daae0ed",
                 "shasum": ""
             },
             "require": {
@@ -18904,7 +18857,7 @@
                 "issues": "https://github.com/httpsoft/http-runner/issues",
                 "source": "https://github.com/httpsoft/http-runner"
             },
-            "time": "2023-05-05T21:47:55+00:00"
+            "time": "2024-12-29T23:17:20+00:00"
         },
         {
             "name": "httpsoft/http-server-request",
@@ -20963,12 +20916,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/Roave/SecurityAdvisories.git",
-                "reference": "9dd07280fc4c5f6c3d2a3da5e4058fc7288c2a1d"
+                "reference": "1b5fbfd0ff8484f7cc650978bfce4b8273633341"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/Roave/SecurityAdvisories/zipball/9dd07280fc4c5f6c3d2a3da5e4058fc7288c2a1d",
-                "reference": "9dd07280fc4c5f6c3d2a3da5e4058fc7288c2a1d",
+                "url": "https://api.github.com/repos/Roave/SecurityAdvisories/zipball/1b5fbfd0ff8484f7cc650978bfce4b8273633341",
+                "reference": "1b5fbfd0ff8484f7cc650978bfce4b8273633341",
                 "shasum": ""
             },
             "conflict": {
@@ -21090,7 +21043,7 @@
                 "datatables/datatables": "<1.10.10",
                 "david-garcia/phpwhois": "<=4.3.1",
                 "dbrisinajumi/d2files": "<1",
-                "dcat/laravel-admin": "<=2.1.3",
+                "dcat/laravel-admin": "<=2.1.3|==2.2.0.0-beta|==2.2.2.0-beta",
                 "derhansen/fe_change_pwd": "<2.0.5|>=3,<3.0.3",
                 "derhansen/sf_event_mgt": "<4.3.1|>=5,<5.1.1|>=7,<7.4",
                 "desperado/xml-bundle": "<=0.1.7",
@@ -21375,7 +21328,7 @@
                 "netgen/tagsbundle": ">=3.4,<3.4.11|>=4,<4.0.15",
                 "nette/application": ">=2,<2.0.19|>=2.1,<2.1.13|>=2.2,<2.2.10|>=2.3,<2.3.14|>=2.4,<2.4.16|>=3,<3.0.6",
                 "nette/nette": ">=2,<2.0.19|>=2.1,<2.1.13",
-                "nilsteampassnet/teampass": "<3.0.10",
+                "nilsteampassnet/teampass": "<3.1.3.1-dev",
                 "nonfiction/nterchange": "<4.1.1",
                 "notrinos/notrinos-erp": "<=0.7",
                 "noumo/easyii": "<=0.9",
@@ -21810,7 +21763,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2024-12-27T20:05:23+00:00"
+            "time": "2024-12-30T19:04:40+00:00"
         },
         {
             "name": "roave/signature",

@@ -38,6 +38,7 @@ final class AuthController
     
     public const string FACEBOOK_ACCESS_TOKEN = 'facebook-access';
     public const string GITHUB_ACCESS_TOKEN = 'github-access';
+    public const string GOOGLE_ACCESS_TOKEN = 'google-access';
     public const string EMAIL_VERIFICATION_TOKEN = 'email-verification';
     
     public function __construct(
@@ -99,7 +100,7 @@ final class AuthController
                      *      and the userinv account's status field is made active i.e. 1
                      */
                     if ($status || $userId == 1) {
-                        $userId == 1 ? $this->disableEmailVerificationToken($tR, '1') : '';
+                        $userId == 1 ? $this->disableToken($tR, '1', 'email') : '';
                         if ($identity instanceof CookieLoginIdentityInterface && $loginForm->getPropertyValue('rememberMe')) {
                             return $cookieLogin->addCookie($identity, $this->redirectToInvoiceIndex());
                         }
@@ -110,7 +111,7 @@ final class AuthController
                          * the admin will have to make the user active via Settings Invoice User Account AND assign the user an added client
                          * Also the token that was originally assigned on signup, must now be 'disabled' because the admin is responsible for making the user active
                          */
-                        $this->disableEmailVerificationToken($tR, $userId);
+                        $this->disableToken($tR, $userId, $this->getTokenType('email'));
                         return $this->redirectToAdminMustMakeActive();
                     }
                 }
@@ -133,44 +134,14 @@ final class AuthController
             ]);
     }
     
-    public function disableEmailVerificationToken(
+    public function disableToken(
         TokenRepository $tR,    
-        ?string $userId = null
+        ?string $userId = null,
+        string $identityProvider = ''
     ) : void 
     {
         if (null !== $userId) {    
-            $token = $tR->findTokenByIdentityIdAndType($userId, self::EMAIL_VERIFICATION_TOKEN);
-            if (null !== $token) {
-                /**
-                 * @see https://github.com/search?q=repo%3Ayiisoft%2Fyii2-app-advanced%20already_&type=code
-                 */
-                $token->setToken('already_used_token_'.time());
-                $tR->save($token);
-            }
-        }    
-    }
-    
-    public function disableGithubAccessToken(
-        TokenRepository $tR,    
-        ?string $userId = null
-    ) : void 
-    {
-        if (null !== $userId) {    
-            $token = $tR->findTokenByIdentityIdAndType($userId, self::GITHUB_ACCESS_TOKEN);
-            if (null !== $token) {
-                $token->setToken('already_used_token_'.time());
-                $tR->save($token);
-            }
-        }    
-    }
-    
-    public function disableFacebookAccessToken(
-        TokenRepository $tR,    
-        ?string $userId = null
-    ) : void 
-    {
-        if (null !== $userId) {    
-            $token = $tR->findTokenByIdentityIdAndType($userId, self::FACEBOOK_ACCESS_TOKEN);
+            $token = $tR->findTokenByIdentityIdAndType($userId, $this->getTokenType($identityProvider));
             if (null !== $token) {
                 $token->setToken('already_used_token_'.time());
                 $tR->save($token);
@@ -185,24 +156,24 @@ final class AuthController
      * @see src/Invoice/UserInv/UserInvController function github
      * @see https://docs.github.com/en/apps/oauth-apps/building-oauth-apps/authorizing-oauth-apps
      * @param CurrentRoute $currentRoute
-     * @param string $code
-     * @param string $state
      * @param ServerRequestInterface $request
      * @param TranslatorInterface $translator
      * @param TokenRepository $tR
      * @param UserInvRepository $uiR
      * @param UserRepository $uR
+     * @param string $code
+     * @param string $state     
      * @return ResponseInterface
      */
     public function callbackGithub(
         CurrentRoute $currentRoute,
-        #[Query('code')] string $code = null, 
-        #[Query('state')] string $state = null,
         ServerRequestInterface $request,
         TranslatorInterface $translator,    
         TokenRepository $tR,
         UserInvRepository $uiR,
-        UserRepository $uR
+        UserRepository $uR,
+        #[Query('code')] string $code = null, 
+        #[Query('state')] string $state = null,        
     ) : ResponseInterface 
     {
         if ($code == null || $state == null) {
@@ -244,10 +215,7 @@ final class AuthController
              */
             $githubId = $userArray['id'] ?? 0;
             if ($githubId > 0) { 
-                /**
-                 * @var string $userArray['login']
-                 */
-                $githubLogin = $userArray['login'] ?? '';
+                $githubLogin = 'g';
                 if (strlen($githubLogin) > 0) {
                     // Append github in case user has used same login for other identity providers
                     $login = 'github'.(string)$githubId.$githubLogin;
@@ -267,10 +235,10 @@ final class AuthController
                                 // disable the github verification token as soon as the user logs in for the first time
                                 $status = $userInv->getActive();
                                 if ($status || $userId == 1) {
-                                    $userId == 1 ? $this->disableGithubAccessToken($tR, '1') : '';
+                                    $userId == 1 ? $this->disableToken($tR, '1', $this->getTokenType('github')) : '';
                                     return $this->redirectToInvoiceIndex();
                                 } else {
-                                    $this->disableGithubAccessToken($tR, $userId);
+                                    $this->disableToken($tR, $userId, $this->getTokenType('github'));
                                     return $this->redirectToAdminMustMakeActive();
                                 }
                             }
@@ -325,30 +293,30 @@ final class AuthController
      * 2. clicking on the proceedToMenuButton will further create a userinv extension of the user table
      * @see src/Invoice/UserInv/UserInvController function facebook
      * @param CurrentRoute $currentRoute
-     * @param string $code
-     * @param string $state
-     * @param string $error
-     * @param string $errorCode
-     * @param string $errorReason
      * @param ServerRequestInterface $request
      * @param TranslatorInterface $translator
      * @param TokenRepository $tR
      * @param UserInvRepository $uiR
      * @param UserRepository $uR
+     * @param string $code
+     * @param string $state
+     * @param string $error
+     * @param string $errorCode
+     * @param string $errorReason     
      * @return ResponseInterface
      */
     public function callbackFacebook(
         CurrentRoute $currentRoute,
-        #[Query('code')] string $code = null, 
-        #[Query('state')] string $state = null,
-        #[Query('error')] string $error = null,
-        #[Query('error_code')] string $errorCode = null,
-        #[Query('error_reason')] string $errorReason = null,
         ServerRequestInterface $request,
         TranslatorInterface $translator,    
         TokenRepository $tR,
         UserInvRepository $uiR,
-        UserRepository $uR
+        UserRepository $uR,    
+        #[Query('code')] string $code = null, 
+        #[Query('state')] string $state = null,
+        #[Query('error')] string $error = null,
+        #[Query('error_code')] string $errorCode = null,
+        #[Query('error_reason')] string $errorReason = null        
     ) : ResponseInterface 
     {
         // Avoid MissingRequiredArgumentException
@@ -411,10 +379,10 @@ final class AuthController
                                 // disable our facebook access token as soon as the user logs in for the first time
                                 $status = $userInv->getActive();
                                 if ($status || $userId == 1) {
-                                    $userId == 1 ? $this->disableFacebookAccessToken($tR, '1') : '';
+                                    $userId == 1 ? $this->disableToken($tR, '1', $this->getTokenType('facebook')) : '';
                                     return $this->redirectToInvoiceIndex();
                                 } else {
-                                    $this->disableFacebookAccessToken($tR, $userId);
+                                    $this->disableToken($tR, $userId, $this->getTokenType('facebook'));
                                     return $this->redirectToAdminMustMakeActive();
                                 }
                             }
@@ -456,6 +424,114 @@ final class AuthController
                         }     
                     }
                 }    
+            }    
+        }
+        $this->authService->logout();
+        return $this->redirectToMain();
+    }
+    
+    /**
+     * @see https://console.cloud.google.com/apis/credentials?project=YOUR_PROJECT
+     */
+    public function callbackGoogle(
+        CurrentRoute $currentRoute,
+        ServerRequestInterface $request,
+        TranslatorInterface $translator,    
+        TokenRepository $tR,
+        UserInvRepository $uiR,
+        UserRepository $uR,
+        #[Query('code')] string $code = null, 
+        #[Query('state')] string $state = null,        
+    ) : ResponseInterface 
+    {
+        if ($code == null || $state == null) {
+            return $this->redirectToMain();
+        }
+        /**
+         * @psalm-suppress DocblockTypeContradiction $code
+         */
+        if (strlen($code) == 0) {
+            $authorizationUrl = $this->google->buildAuthUrl($request, []);
+            header('Location: ' . $authorizationUrl);
+            exit;
+        } elseif ($code == 401){
+            return $this->redirectToOauth2CallbackResultUnAuthorised();
+        } elseif (strlen($state) == 0) {
+            /**
+             * State is invalid, possible cross-site request forgery. Exit with an error code.
+             */
+            exit(1);        
+        // code and state are both present    
+        } else {
+            $oAuthTokenType = $this->google->fetchAccessToken($request, $code, $params = []);
+            /**
+             * @var array $userArray
+             */
+            $userArray = $this->google->getCurrentUserJsonArray($oAuthTokenType);
+            /**
+             * @var int $userArray['id']
+             */
+            $googleId = $userArray['id'] ?? 0;
+            if ($googleId > 0) { 
+                $login = 'google'.(string)$googleId;
+                /**
+                 * @var string $userArray['email']
+                 */
+                $email = $userArray['email'] ?? 'noemail'.$login.'@google.com';
+                $password = Random::string(32);
+                if ($this->authService->oauthLogin($login)) {
+                    $identity = $this->authService->getIdentity();
+                    $userId = $identity->getId();
+                    if (null!==$userId) {
+                        $userInv = $uiR->repoUserInvUserIdquery($userId);
+                        if (null!==$userInv) {
+                            $status = $userInv->getActive();
+                            if ($status || $userId == 1) {
+                                $userId == 1 ? $this->disableToken($tR, '1', $this->getTokenType('google')) : '';
+                                return $this->redirectToInvoiceIndex();
+                            } else {
+                                $this->disableToken($tR, $userId, $this->getTokenType('google'));
+                                return $this->redirectToAdminMustMakeActive();
+                            }
+                        }
+                    }
+                    return $this->redirectToMain();
+                } else {
+                    $user = new User($login, $email, $password);
+                    $uR->save($user);
+                    $userId = $user->getId();
+                    if ($userId > 0) {
+                        // avoid autoincrement issues and using predefined user id of 1 ... and assign the first signed-up user ... admin rights
+                        if ($uR->repoCount() == 1) {
+                            $this->manager->revokeAll($userId);
+                            $this->manager->assign('admin', $userId);
+                        } else {
+                            $this->manager->revokeAll($userId);
+                            $this->manager->assign('observer', $userId);
+                        }
+                        $login = $user->getLogin();
+                        /**
+                         * @var array $this->sR->locale_language_array()
+                         */
+                        $languageArray = $this->sR->locale_language_array();
+                        $_language = $currentRoute->getArgument('_language');
+                        /**
+                         * @see Trait\Oauth2 function getGoogleAccessToken
+                         * @var string $_language
+                         * @var array $languageArray
+                         * @var string $language
+                         */
+                        $language = $languageArray[$_language];
+                        $randomAndTimeToken = $this->getGoogleAccessToken($user, $tR);
+                        /**
+                         * @see A new UserInv (extension table of user) for the user is created.
+                         */
+                        $proceedToMenuButton = $this->proceedToMenuButtonWithMaskedRandomAndTimeTokenLink($translator, $user, $uiR, $language, $_language, $randomAndTimeToken, 'google');
+                        return $this->viewRenderer->render('proceed', [
+                            'proceedToMenuButton' => $proceedToMenuButton
+                        ]);
+                    }     
+                }   
             }    
         }
         $this->authService->logout();
@@ -512,6 +588,7 @@ final class AuthController
             'email' => self::EMAIL_VERIFICATION_TOKEN,
             'facebook' => self::FACEBOOK_ACCESS_TOKEN,
             'github' => self::GITHUB_ACCESS_TOKEN,
+            'google' => self::GOOGLE_ACCESS_TOKEN
         };
     }
     

@@ -17,6 +17,8 @@ trait Oauth2
     
     public const string FACEBOOK_ACCESS_TOKEN = 'facebook-access';
     
+    public const string GOOGLE_ACCESS_TOKEN = 'google-access';
+    
     private function initializeOauth2IdentityProviderCredentials(Facebook $facebook, GitHub $github, Google $google) : void {
         $facebook->setOauth2ReturnUrl($this->sR->getOauth2IdentityProviderReturnUrl('facebook'));
         $github->setOauth2ReturnUrl($this->sR->getOauth2IdentityProviderReturnUrl('github'));
@@ -68,4 +70,24 @@ trait Oauth2
         // build the token with a timestamp built into it for comparison later
         return $githubAccessToken = null !== $tokenString ? ($tokenString. '_' . $timeString) : '';
     }
+    
+    /**
+     * @param User $user
+     * @param TokenRepository $tR
+     * @return string
+     */
+    private function getGoogleAccessToken(User $user, TokenRepository $tR): string
+    {
+        $identity = $user->getIdentity();
+        $identityId = (int)$identity->getId();
+        // This records the fact that the user has signed up with a Github 'access-token'
+        $token = new Token($identityId, self::GOOGLE_ACCESS_TOKEN);
+        // store the token amongst all the other types of tokens e.g. password-rest, email-verification, github-access
+        $tR->save($token);
+        $tokenString = $token->getToken();
+        $timeString = (string)($token->getCreated_at())->getTimestamp();
+        // build the token with a timestamp built into it for comparison later
+        return $googleAccessToken = null !== $tokenString ? ($tokenString. '_' . $timeString) : '';
+    }
 }
+
