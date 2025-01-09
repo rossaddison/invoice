@@ -306,6 +306,7 @@ $this->beginPage();
                 DropdownItem::link($translator->translate('invoice.faq.taxpoint'), $urlGenerator->generate('invoice/faq', ['topic' => 'tp', 'selection' => ''])), 
                 DropdownItem::link($translator->translate('invoice.faq.shared.hosting'), $urlGenerator->generate('invoice/faq', ['topic' => 'shared', 'selection' => ''])), 
                 DropdownItem::link($translator->translate('invoice.faq.payment.provider'), $urlGenerator->generate('invoice/faq', ['topic' => 'paymentprovider', 'selection' => ''])), 
+                DropdownItem::link($translator->translate('invoice.faq.oauth2'), $urlGenerator->generate('invoice/faq', ['topic' => 'oauth2', 'selection' => ''])), 
                 DropdownItem::link($translator->translate('invoice.faq.php.info.all'), $urlGenerator->generate('invoice/phpinfo', ['selection' => '-1'])), 
                 DropdownItem::link($translator->translate('invoice.faq.php.info.general'), $urlGenerator->generate('invoice/phpinfo', ['selection' => '1'])), 
                 DropdownItem::link($translator->translate('invoice.faq.php.info.credits'), $urlGenerator->generate('invoice/phpinfo', ['selection' => '2'])), 

@@ -1514,7 +1514,7 @@ final class QuoteController
                         $quotes = $qR->filterQuoteNumberAndQuoteAmountTotal((string)$query_params['filterQuoteNumber'], (float)$query_params['filterQuoteAmountTotal']);
                     }
                     $paginator = (new DataOffsetPaginator($quotes))
-                    ->withPageSize((int)$this->sR->getSetting('default_list_limit'))
+                    ->withPageSize($this->sR->positiveListLimit())
                     ->withCurrentPage($currentPageNeverZero)
                     ->withSort($sort)
                     ->withToken(PageToken::next((string)$pageMixed));
@@ -1641,7 +1641,7 @@ final class QuoteController
                 $quotes = $quoteRepo->filterQuoteNumberAndQuoteAmountTotal((string)$query_params['filterQuoteNumber'], (float)$query_params['filterQuoteAmountTotal']);
             }
             $paginator = (new DataOffsetPaginator($quotes))
-            ->withPageSize((int)$this->sR->getSetting('default_list_limit'))
+            ->withPageSize($this->sR->positiveListLimit())
             ->withCurrentPage($currentPageNeverZero)
             ->withSort($sort)
             ->withToken(PageToken::next($page));

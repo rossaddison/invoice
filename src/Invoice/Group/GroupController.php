@@ -72,7 +72,7 @@ final class GroupController
         /** @psalm-var positive-int $currentPageNeverZero */
         $currentPageNeverZero = $page > 0 ? $page : 1;
         $paginator = (new DataOffsetPaginator($this->groups($groupRepository)))
-        ->withPageSize((int)$settingRepository->getSetting('default_list_limit'))
+        ->withPageSize($settingRepository->positiveListLimit())
         ->withCurrentPage($currentPageNeverZero)
         ->withToken(PageToken::next((string)$page));
         // Generate a flash message in the index if the user does not have permission

@@ -156,7 +156,7 @@ final class DeliveryController
                 ->withOrderString($query_params['sort'] ?? '-id');
         $deliveries = $this->deliveries_with_sort($dR, $sort);
         $paginator = (new OffsetPaginator($deliveries))
-                ->withPageSize((int) $sR->getSetting('default_list_limit'))
+                ->withPageSize($sR->positiveListLimit())
                 ->withCurrentPage($currentPageNeverZero)
                 ->withToken(PageToken::next((string)$page));
         $parameters = [

@@ -63,7 +63,7 @@ final class CompanyController
         $this->rbac();
         $companies = $this->companies($companyRepository);
         $paginator = (new OffsetPaginator($companies))
-                         ->withPageSize((int)$sR->getSetting('default_list_limit'));
+                         ->withPageSize($sR->positiveListLimit());
         $parameters = [
             'paginator' => $paginator,
             'company_public' => $this->translator->translate('invoice.company.public'),

@@ -18,9 +18,13 @@ use Yiisoft\Html\Tag\Form;
  * @var string                                  $facebookAuthUrl
  * @var string                                  $githubAuthUrl
  * @var string                                  $googleAuthUrl
+ * @var string                                  $linkedInAuthUrl 
+ * @var string                                  $microsoftOnlineAuthUrl
  * @var bool                                    $noFacebookContinueButton
  * @var bool                                    $noGithubContinueButton
  * @var bool                                    $noGoogleContinueButton
+ * @var bool                                    $noLinkedInContinueButton
+ * @var bool                                    $noMicrosoftOnlineContinueButton
  * @var string                                  $csrf
  */
 
@@ -49,6 +53,14 @@ $this->setTitle($translator->translate('i.login'));
                         <br><br>
                         <?= $button->google($googleAuthUrl ?: ''); ?>
                     <?php } ?>
+                    <?php if ((strlen($linkedInAuthUrl ?: '') > 0) && !$noLinkedInContinueButton) { ?>
+                        <br><br>
+                        <?= $button->linkedin($linkedInAuthUrl ?: ''); ?>
+                    <?php } ?>
+                    <?php if ((strlen($microsoftOnlineAuthUrl ?: '') > 0) && !$noMicrosoftOnlineContinueButton) { ?>
+                        <br><br>
+                        <?= $button->microsoftonline($microsoftOnlineAuthUrl ?: ''); ?>
+                    <?php } ?>    
                 </div>
                 <div class="card-body p-5 text-center">
                     <?= Form::tag()

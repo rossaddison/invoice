@@ -103,6 +103,138 @@ final class InvoiceController
             $this->flashMessage('info', $this->translator->translate('invoice.permission.authorised.edit'));
         }
     }
+    
+    /**
+     *
+     * @param SessionInterface $session
+     * @param SettingRepository $sR
+     * @return void
+     */
+    private function install_default_settings_on_first_run(SessionInterface $session, SettingRepository $sR): void
+    {
+        $default_settings = [
+            //*************************************************************************************//
+            // Remove the 'default_settings_exist' setting from the settings table by manually     //
+            // going into the mysql database table 'settings' and deleting it. This will remove &  //
+            // reinstall the default settings listed below. The above index function will check    //
+            // whether this setting exists. If not THIS function will be run.                      //
+            // CAUTION: THIS WILL ALSO REMOVE ALL THE SETTINGS INCLUDING SECRET KEYS
+            //*************************************************************************************//
+            'default_settings_exist' => '1',
+            'cron_key' => Random::string(32),
+            'currency_symbol' => '£',
+            'currency_symbol_placement' => 'before',
+            // default payment gateway currency code
+            'currency_code' => 'GBP',
+            'currency_code_from' => 'GBP',
+            'currency_code_to' => 'GBP',
+            'custom_title' => 'Yii-invoice',
+            // Use the mySql Y-m-d date format as  default
+            'date_format' => 'Y-m-d',
+            'decimal_point' => '.',
+            'default_invoice_group' => 1,
+            'default_quote_group' => 2,
+            'default_invoice_terms' => '',
+            'default_sales_order_group' => 3,
+            'default_language' => $sR->get_folder_language() ?: 'English',
+            //paginator list limit
+            'default_list_limit' => 120,
+            'disable_flash_messages_inv' => 0,
+            'disable_flash_messages_quote' => 0,
+            // Prevent documents from being made non-editable. By default documents are made non-editable
+            // according to the read_only_toggle (listed below) which is set at sent ie 2. So when a document is sent it becomes non-editable i.e. read_only
+            // By default this setting is on 0 ie. Invoices can be made read-only (through the
+            // read_only_toggle)
+            'disable_read_only' => 0,
+            'disable_sidebar' => 1,
+            'email_send_method' => 'symfony',
+            // Invoice deletion by Law is not allowed. Invoices have to be cancelled with a credit invoice/note.
+            'enable_invoice_deletion' => true,
+            'enable_peppol_client_defaults' => 1,
+            'enable_telegram' => 0,
+            'enable_vat_registration' => 0,
+            // Archived pdfs are automatically sent to customers from view/invoice...Options...Send
+            // The pdf is sent along with the attachment to the invoice on the view/invoice.
+            'email_pdf_attachment' => 1,
+            'generate_invoice_number_for_draft' => 1,
+            'generate_quote_number_for_draft' => 1,
+            'generate_so_number_for_draft' => 1,
+            'install_test_data' => 0,
+            //1 => None, 2 => Cash, 3 => Cheque, 4 => Card/Direct Debit - Succeeded
+            //5 => Card/Direct Debit - Processing 6 => Card/Direct Debit - Customer Ready
+            'invoice_default_payment_method' => 1,
+            'invoices_due_after' => 30,
+            'invoice_logo' => 'favicon.ico',
+            //This setting should be zero during Production. See inv/mark_sent warning
+            'mark_invoices_sent_copy' => 0,
+            'mpdf_ltr' => 1,
+            'mpdf_cjk' => 1,
+            'mpdf_auto_script_to_lang' => 1,
+            'mpdf_auto_vietnamese' => 1,
+            'mpdf_auto_arabic' => 1,
+            'mpdf_allow_charset_conversion' => 1,
+            'mpdf_auto_language_to_font' => 1,
+            'mpdf_show_image_errors' => 1,
+            'no_front_about_page' => 0,
+            'no_front_accreditations_page' => 0,
+            'no_front_contact_details_page' => 0,
+            'no_front_contact_interest_page' => 0,
+            'no_front_gallery_page' => 0,
+            'no_front_pricing_page' => 0,
+            'no_front_site_slider_page' => 0,
+            'no_front_team_page' => 0, 
+            'no_front_testimonial_page' => 0,
+            'no_facebook_continue_button' => 1,
+            'no_github_continue_button' => 1,
+            'no_google_continue_button' => 1,
+            'no_linkedin_continue_button' => 1,
+            'no_microsoftonline_continue_button' => 1,
+            // Number format Default located in SettingsRepository
+            'number_format' => 'number_format_us_uk',
+            'payment_list_limit' => 20,
+            // Show the pdf in the Browser ie. stream ...Settings...View...Invoices...Pdf Settings...G
+            'pdf_stream_inv' => 1,
+            // Accumulate pdf's in archive folder /src/Invoice/Uploads/Archive/Invoice
+            // Settings...View...Invoices...Pdf Settings...Folder
+            'pdf_archive_inv' => 1,
+            // Preview in webpage as html instead of tabbed pdf with
+            // Settings...View...Invoices...Pdf Settings...</>
+            'pdf_html_inv' => 0,
+            // Setting => filename ... under views/invoice/template/invoice/pdf
+            'pdf_stream_quote' => 1,
+            'pdf_archive_quote' => 1,
+            'pdf_html_quote' => 0,
+            'pdf_invoice_template' => 'invoice',
+            'pdf_invoice_template_paid' => 'paid',
+            'pdf_invoice_template_overdue' => 'overdue',
+            // Setting => filename ... under views/invoice/template/quote/pdf
+            'pdf_quote_template' => 'quote',
+            // Templates used for processing online payments via customers/clients login portal
+            'peppol_xml_stream' => 1,
+            'public_invoice_template' => 'Invoice_Web',
+            'public_quote_template' => 'Quote_Web',
+            'quotes_expire_after' => 15,
+            // Set the invoice to read-only on sent by default;
+            'read_only_toggle' => 2,
+            'reports_in_new_tab' => true,
+            'signup_automatically_assign_client' => 0,
+            'signup_default_age_minimum_eighteen' => 1,
+            'stop_logging_in' => false,
+            'stop_signing_up' => false,
+            'sumex_canton' => 1,
+            'sumex_role' => 1,
+            'sumex_place' => 1,
+            'tax_rate_decimal_places' => 2,
+            'telegram_chat_id' => '',
+            'telegram_payment_notifications' => 0,
+            'telegram_token' => '',
+            'telegram_webhook_secret_token' => '',
+            'telegram_test_message_use' => 1,
+            'thousands_separator' => ',',
+            'time_zone' => 'Europe/London'
+        ];
+        $this->install_default_settings($default_settings, $sR);
+    }
 
     /**
      * @return string
@@ -126,6 +258,9 @@ final class InvoiceController
                 break;
             case 'shared':
                 $view = $this->viewRenderer->renderPartialAsString('//invoice/info/shared_hosting');
+                break;
+            case 'oauth2':
+                $view = $this->viewRenderer->renderPartialAsString('//invoice/info/oauth2');
                 break;
             case 'paymentprovider':
                 $view = $this->viewRenderer->renderPartialAsString('//invoice/info/payment_provider');
@@ -810,135 +945,7 @@ final class InvoiceController
         }
     }
 
-    /**
-     *
-     * @param SessionInterface $session
-     * @param SettingRepository $sR
-     * @return void
-     */
-    private function install_default_settings_on_first_run(SessionInterface $session, SettingRepository $sR): void
-    {
-        $default_settings = [
-            //*************************************************************************************//
-            // Remove the 'default_settings_exist' setting from the settings table by manually     //
-            // going into the mysql database table 'settings' and deleting it. This will remove &  //
-            // reinstall the default settings listed below. The above index function will check    //
-            // whether this setting exists. If not THIS function will be run.                      //
-            // CAUTION: THIS WILL ALSO REMOVE ALL THE SETTINGS INCLUDING SECRET KEYS
-            //*************************************************************************************//
-            'default_settings_exist' => '1',
-            'cron_key' => Random::string(32),
-            'currency_symbol' => '£',
-            'currency_symbol_placement' => 'before',
-            // default payment gateway currency code
-            'currency_code' => 'GBP',
-            'currency_code_from' => 'GBP',
-            'currency_code_to' => 'GBP',
-            'custom_title' => 'Yii-invoice',
-            // Use the mySql Y-m-d date format as  default
-            'date_format' => 'Y-m-d',
-            'decimal_point' => '.',
-            'default_invoice_group' => 1,
-            'default_quote_group' => 2,
-            'default_invoice_terms' => '',
-            'default_sales_order_group' => 3,
-            'default_language' => $sR->get_folder_language() ?: 'English',
-            //paginator list limit
-            'default_list_limit' => 120,
-            'disable_flash_messages_inv' => 0,
-            'disable_flash_messages_quote' => 0,
-            // Prevent documents from being made non-editable. By default documents are made non-editable
-            // according to the read_only_toggle (listed below) which is set at sent ie 2. So when a document is sent it becomes non-editable i.e. read_only
-            // By default this setting is on 0 ie. Invoices can be made read-only (through the
-            // read_only_toggle)
-            'disable_read_only' => 0,
-            'disable_sidebar' => 1,
-            'email_send_method' => 'symfony',
-            // Invoice deletion by Law is not allowed. Invoices have to be cancelled with a credit invoice/note.
-            'enable_invoice_deletion' => true,
-            'enable_peppol_client_defaults' => 1,
-            'enable_telegram' => 0,
-            'enable_vat_registration' => 0,
-            // Archived pdfs are automatically sent to customers from view/invoice...Options...Send
-            // The pdf is sent along with the attachment to the invoice on the view/invoice.
-            'email_pdf_attachment' => 1,
-            'generate_invoice_number_for_draft' => 1,
-            'generate_quote_number_for_draft' => 1,
-            'generate_so_number_for_draft' => 1,
-            'install_test_data' => 0,
-            //1 => None, 2 => Cash, 3 => Cheque, 4 => Card/Direct Debit - Succeeded
-            //5 => Card/Direct Debit - Processing 6 => Card/Direct Debit - Customer Ready
-            'invoice_default_payment_method' => 1,
-            'invoices_due_after' => 30,
-            'invoice_logo' => 'favicon.ico',
-            //This setting should be zero during Production. See inv/mark_sent warning
-            'mark_invoices_sent_copy' => 0,
-            'mpdf_ltr' => 1,
-            'mpdf_cjk' => 1,
-            'mpdf_auto_script_to_lang' => 1,
-            'mpdf_auto_vietnamese' => 1,
-            'mpdf_auto_arabic' => 1,
-            'mpdf_allow_charset_conversion' => 1,
-            'mpdf_auto_language_to_font' => 1,
-            'mpdf_show_image_errors' => 1,
-            'no_front_about_page' => 0,
-            'no_front_accreditations_page' => 0,
-            'no_front_contact_details_page' => 0,
-            'no_front_contact_interest_page' => 0,
-            'no_front_gallery_page' => 0,
-            'no_front_pricing_page' => 0,
-            'no_front_site_slider_page' => 0,
-            'no_front_team_page' => 0, 
-            'no_front_testimonial_page' => 0,
-            'no_facebook_continue_button' => 1,
-            'no_github_continue_button' => 1,
-            'no_google_continue_button' => 1,
-            // Number format Default located in SettingsRepository
-            'number_format' => 'number_format_us_uk',
-            'payment_list_limit' => 20,
-            // Show the pdf in the Browser ie. stream ...Settings...View...Invoices...Pdf Settings...G
-            'pdf_stream_inv' => 1,
-            // Accumulate pdf's in archive folder /src/Invoice/Uploads/Archive/Invoice
-            // Settings...View...Invoices...Pdf Settings...Folder
-            'pdf_archive_inv' => 1,
-            // Preview in webpage as html instead of tabbed pdf with
-            // Settings...View...Invoices...Pdf Settings...</>
-            'pdf_html_inv' => 0,
-            // Setting => filename ... under views/invoice/template/invoice/pdf
-            'pdf_stream_quote' => 1,
-            'pdf_archive_quote' => 1,
-            'pdf_html_quote' => 0,
-            'pdf_invoice_template' => 'invoice',
-            'pdf_invoice_template_paid' => 'paid',
-            'pdf_invoice_template_overdue' => 'overdue',
-            // Setting => filename ... under views/invoice/template/quote/pdf
-            'pdf_quote_template' => 'quote',
-            // Templates used for processing online payments via customers/clients login portal
-            'peppol_xml_stream' => 1,
-            'public_invoice_template' => 'Invoice_Web',
-            'public_quote_template' => 'Quote_Web',
-            'quotes_expire_after' => 15,
-            // Set the invoice to read-only on sent by default;
-            'read_only_toggle' => 2,
-            'reports_in_new_tab' => true,
-            'signup_automatically_assign_client' => 0,
-            'signup_default_age_minimum_eighteen' => 1,
-            'stop_logging_in' => false,
-            'stop_signing_up' => false,
-            'sumex_canton' => 1,
-            'sumex_role' => 1,
-            'sumex_place' => 1,
-            'tax_rate_decimal_places' => 2,
-            'telegram_chat_id' => '',
-            'telegram_payment_notifications' => 0,
-            'telegram_token' => '',
-            'telegram_webhook_secret_token' => '',
-            'telegram_test_message_use' => 1,
-            'thousands_separator' => ',',
-            'time_zone' => 'Europe/London'
-        ];
-        $this->install_default_settings($default_settings, $sR);
-    }
+    
 
     /**
      *

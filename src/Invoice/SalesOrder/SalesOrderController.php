@@ -192,7 +192,7 @@ final class SalesOrderController
                 if (!empty($user_clients)) {
                     $salesOrders = $this->salesorders_status_with_sort_guest($soR, $status, $user_clients, $sort);
                     $paginator = (new OffsetPaginator($salesOrders))
-                    ->withPageSize((int)$this->sR->getSetting('default_list_limit'))
+                    ->withPageSize($this->sR->positiveListLimit())
                     ->withCurrentPage($currentPageNeverZero);
                     /**
                      * @var array $so_statuses
@@ -246,7 +246,7 @@ final class SalesOrderController
                     ->withOrderString((string)$sort_string);
         $salesorders = $this->salesorders_status_with_sort($soR, $status, $sort);
         $paginator = (new OffsetPaginator($salesorders))
-        ->withPageSize((int)$sR->getSetting('default_list_limit'))
+        ->withPageSize($sR->positiveListLimit())
         ->withCurrentPage($currentPageNeverZero)
         ->withToken(PageToken::next((string)$page));
         $so_statuses = $soR->getStatuses($this->translator);

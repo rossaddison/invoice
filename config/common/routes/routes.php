@@ -151,7 +151,19 @@ return [
     Route::methods([Method::GET, Method::POST], '/callbackGithub')
       ->middleware(LimitRequestsMiddleware::class)
       ->action([AuthController::class, 'callbackGithub'])
-      ->name('auth/callbackGithub'),      
+      ->name('auth/callbackGithub'),
+    Route::methods([Method::GET, Method::POST], '/callbackGoogle')
+      ->middleware(LimitRequestsMiddleware::class)
+      ->action([AuthController::class, 'callbackGoogle'])
+      ->name('auth/callbackGoogle'),
+    Route::methods([Method::GET, Method::POST], '/callbackLinkedIn')
+      ->middleware(LimitRequestsMiddleware::class)
+      ->action([AuthController::class, 'callbackLinkedIn'])
+      ->name('auth/callbackLinkedIn'),
+    Route::methods([Method::GET, Method::POST], '/callbackMicrosoftOnline')
+      ->middleware(LimitRequestsMiddleware::class)
+      ->action([AuthController::class, 'callbackMicrosoftOnline'])
+      ->name('auth/callbackMicrosoftOnline'),  
     Route::post('/logout')
     ->action([AuthController::class, 'logout'])
     ->name('auth/logout'),

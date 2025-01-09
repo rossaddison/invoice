@@ -31,6 +31,11 @@ use Yiisoft\Yii\View\Renderer\ViewRenderer;
 use Yiisoft\Yii\AuthClient\Client\Facebook;
 use Yiisoft\Yii\AuthClient\Client\GitHub;
 use Yiisoft\Yii\AuthClient\Client\Google;
+use Yiisoft\Yii\AuthClient\Client\LinkedIn;
+use Yiisoft\Yii\AuthClient\Client\MicrosoftOnline;
+//use Yiisoft\Yii\AuthClient\Client\TwitterOAuth2;
+//use Yiisoft\Yii\AuthClient\Client\VKontakte;
+//use Yiisoft\Yii\AuthClient\Client\Yandex;
 
 final class AuthController
 { 
@@ -39,17 +44,24 @@ final class AuthController
     public const string FACEBOOK_ACCESS_TOKEN = 'facebook-access';
     public const string GITHUB_ACCESS_TOKEN = 'github-access';
     public const string GOOGLE_ACCESS_TOKEN = 'google-access';
+    public const string LINKEDIN_ACCESS_TOKEN = 'linkedin-access';    
+    public const string MICROSOFTONLINE_ACCESS_TOKEN = 'microsoftonline-access';    
+    public const string TWITTEROAUTH2_ACCESS_TOKEN = 'twitteroauth2-access';    
+    public const string VKONTAKTE_ACCESS_TOKEN = 'vkontakte-access';    
+    public const string YANDEX_ACCESS_TOKEN = 'yandex-access';
     public const string EMAIL_VERIFICATION_TOKEN = 'email-verification';
-    
+   
     public function __construct(
         private readonly AuthService            $authService,
         private readonly WebControllerService   $webService,
         private ViewRenderer                    $viewRenderer,
         private Manager                         $manager,    
-        private SettingRepository               $sR,
+        private SettingRepository               $sR,  
         private Facebook                        $facebook,
         private GitHub                          $github,
-        private Google                          $google,  
+        private Google                          $google,
+        private LinkedIn                        $linkedIn,
+        private MicrosoftOnline                 $microsoftOnline,
         private UrlGenerator                    $urlGenerator,    
     ) {
         $this->viewRenderer = $viewRenderer->withControllerName('auth');
@@ -57,8 +69,11 @@ final class AuthController
         $this->sR = $sR;
         $this->facebook = $facebook;
         $this->github = $github;
-        $this->google = $google;        
-        $this->initializeOauth2IdentityProviderCredentials($facebook, $github, $google);
+        $this->google = $google;
+        $this->linkedIn = $linkedIn;
+        $this->microsoftOnline = $microsoftOnline;
+        // use the Oauth2 trait function
+        $this->initializeOauth2IdentityProviderCredentials($facebook, $github, $google, $linkedIn, $microsoftOnline);
         $this->urlGenerator = $urlGenerator;
     }
 
@@ -122,15 +137,21 @@ final class AuthController
         $noGithubContinueButton = $this->sR->getSetting('no_github_continue_button') == '1' ? true : false;
         $noGoogleContinueButton = $this->sR->getSetting('no_google_continue_button') == '1' ? true : false;
         $noFacebookContinueButton = $this->sR->getSetting('no_facebook_continue_button') == '1' ? true : false;
+        $noLinkedInContinueButton = $this->sR->getSetting('no_linkedin_continue_button') == '1' ? true : false;
+        $noMicrosoftOnlineContinueButton = $this->sR->getSetting('no_microsoftonline_continue_button') == '1' ? true : false;
         return $this->viewRenderer->render('login', 
             [
                 'formModel' => $loginForm,
                 'facebookAuthUrl' => strlen($this->facebook->getClientId()) > 0 ? $this->facebook->buildAuthUrl($request, $params = []) : '',
                 'githubAuthUrl' => strlen($this->github->getClientId()) > 0 ? $this->github->buildAuthUrl($request, $params = []) : '',   
                 'googleAuthUrl' => strlen($this->google->getClientId()) > 0 ? $this->google->buildAuthUrl($request, $params = []) : '',
+                'linkedInAuthUrl' => strlen($this->linkedIn->getClientId()) > 0 ? $this->linkedIn->buildAuthUrl($request, $params = []) : '',
+                'microsoftOnlineAuthUrl' => strlen($this->microsoftOnline->getClientId()) > 0 ? $this->microsoftOnline->buildAuthUrl($request, $params = []) : '',
                 'noGithubContinueButton' => $noGithubContinueButton,
                 'noGoogleContinueButton' => $noGoogleContinueButton,
                 'noFacebookContinueButton' => $noFacebookContinueButton,
+                'noLinkedInContinueButton' => $noLinkedInContinueButton,
+                'noMicrosoftOnlineContinueButton' => $noMicrosoftOnlineContinueButton
             ]);
     }
     
@@ -218,6 +239,7 @@ final class AuthController
                 $githubLogin = 'g';
                 if (strlen($githubLogin) > 0) {
                     // Append github in case user has used same login for other identity providers
+                    // the id will be removed in the logout button
                     $login = 'github'.(string)$githubId.$githubLogin;
                     /**
                      * @var string $userArray['email']
@@ -362,6 +384,7 @@ final class AuthController
                  */
                 $facebookLogin = strtolower($userArray['name'] ?? '');
                 if (strlen($facebookLogin) > 0) {
+                    // the id will be removed in the logout button
                     $login = 'facebook'.(string)$facebookId.$facebookLogin;
                     /**
                      * @var string $userArray['email']
@@ -472,7 +495,8 @@ final class AuthController
              * @var int $userArray['id']
              */
             $googleId = $userArray['id'] ?? 0;
-            if ($googleId > 0) { 
+            if ($googleId > 0) {
+                // the id will be removed in the logout button
                 $login = 'google'.(string)$googleId;
                 /**
                  * @var string $userArray['email']
@@ -538,6 +562,219 @@ final class AuthController
         return $this->redirectToMain();
     }
     
+    // This funtion has not been tested yet
+    public function callbackLinkedIn(
+        CurrentRoute $currentRoute,
+        ServerRequestInterface $request,
+        TranslatorInterface $translator,    
+        TokenRepository $tR,
+        UserInvRepository $uiR,
+        UserRepository $uR,
+        #[Query('code')] string $code = null, 
+        #[Query('state')] string $state = null,        
+    ) : ResponseInterface 
+    {
+        if ($code == null || $state == null) {
+            return $this->redirectToMain();
+        }
+        /**
+         * @psalm-suppress DocblockTypeContradiction $code
+         */
+        if (strlen($code) == 0) {
+            $authorizationUrl = $this->linkedIn->buildAuthUrl($request, []);
+            header('Location: ' . $authorizationUrl);
+            exit;
+        } elseif ($code == 401){
+            return $this->redirectToOauth2CallbackResultUnAuthorised();
+        } elseif (strlen($state) == 0) {
+            /**
+             * State is invalid, possible cross-site request forgery. Exit with an error code.
+             */
+            exit(1);        
+        // code and state are both present    
+        } else {
+            $oAuthTokenType = $this->linkedIn->fetchAccessToken($request, $code, $params = []);
+            /**
+             * @var array $userArray
+             */
+            $userArray = $this->linkedIn->getCurrentUserJsonArray($oAuthTokenType);
+            /**
+             * @var int $userArray['id']
+             */
+            $linkedInId = $userArray['id'] ?? 0;
+            if ($linkedInId > 0) { 
+                $login = 'linkedIn'.(string)$linkedInId;
+                /**
+                 * @var string $userArray['email']
+                 */
+                $email = $userArray['email'] ?? 'noemail'.$login.'@linkedin.com';
+                $password = Random::string(32);
+                if ($this->authService->oauthLogin($login)) {
+                    $identity = $this->authService->getIdentity();
+                    $userId = $identity->getId();
+                    if (null!==$userId) {
+                        $userInv = $uiR->repoUserInvUserIdquery($userId);
+                        if (null!==$userInv) {
+                            $status = $userInv->getActive();
+                            if ($status || $userId == 1) {
+                                $userId == 1 ? $this->disableToken($tR, '1', $this->getTokenType('linkedin')) : '';
+                                return $this->redirectToInvoiceIndex();
+                            } else {
+                                $this->disableToken($tR, $userId, $this->getTokenType('linkedin'));
+                                return $this->redirectToAdminMustMakeActive();
+                            }
+                        }
+                    }
+                    return $this->redirectToMain();
+                } else {
+                    $user = new User($login, $email, $password);
+                    $uR->save($user);
+                    $userId = $user->getId();
+                    if ($userId > 0) {
+                        // avoid autoincrement issues and using predefined user id of 1 ... and assign the first signed-up user ... admin rights
+                        if ($uR->repoCount() == 1) {
+                            $this->manager->revokeAll($userId);
+                            $this->manager->assign('admin', $userId);
+                        } else {
+                            $this->manager->revokeAll($userId);
+                            $this->manager->assign('observer', $userId);
+                        }
+                        $login = $user->getLogin();
+                        /**
+                         * @var array $this->sR->locale_language_array()
+                         */
+                        $languageArray = $this->sR->locale_language_array();
+                        $_language = $currentRoute->getArgument('_language');
+                        /**
+                         * @see Trait\Oauth2 function getLinkedInAccessToken
+                         * @var string $_language
+                         * @var array $languageArray
+                         * @var string $language
+                         */
+                        $language = $languageArray[$_language];
+                        $randomAndTimeToken = $this->getLinkedInAccessToken($user, $tR);
+                        /**
+                         * @see A new UserInv (extension table of user) for the user is created.
+                         */
+                        $proceedToMenuButton = $this->proceedToMenuButtonWithMaskedRandomAndTimeTokenLink($translator, $user, $uiR, $language, $_language, $randomAndTimeToken, 'google');
+                        return $this->viewRenderer->render('proceed', [
+                            'proceedToMenuButton' => $proceedToMenuButton
+                        ]);
+                    }     
+                }   
+            }    
+        }
+        $this->authService->logout();
+        return $this->redirectToMain();
+    }
+    
+    public function callbackMicrosoftOnline(
+        CurrentRoute $currentRoute,
+        ServerRequestInterface $request,
+        TranslatorInterface $translator,    
+        TokenRepository $tR,
+        UserInvRepository $uiR,
+        UserRepository $uR,
+        #[Query('code')] string $code = null, 
+        #[Query('state')] string $state = null, 
+        #[Query('session_state')] string $sessionState = null,
+    ) : ResponseInterface 
+    {
+        if ($code == null || $state == null || $sessionState == null) {
+            return $this->redirectToMain();
+        }
+        /**
+         * @psalm-suppress DocblockTypeContradiction $code
+         */
+        if (strlen($code) == 0) {
+            $authorizationUrl = $this->microsoftOnline->buildAuthUrl($request, $params = ['redirect_uri' => 'https://yii3i.co.uk/callbackMicrosoftOnline']);
+            header('Location: ' . $authorizationUrl);
+            exit;
+        } elseif ($code == 401){
+            return $this->redirectToOauth2CallbackResultUnAuthorised();
+        } elseif (strlen($state) == 0 || strlen($sessionState) == 0) {
+            /**
+             * State is invalid, possible cross-site request forgery. Exit with an error code.
+             */
+            exit(1);        
+        // code and state and stateSession are both present    
+        } else {
+            $oAuthTokenType = $this->microsoftOnline->fetchAccessTokenWithCurl($request, $code, $params = ['redirect_uri' => 'https://yii3i.co.uk/callbackMicrosoftOnline']);
+            /**
+             * @var array $userArray
+             */
+            $userArray = $this->microsoftOnline->getCurrentUserJsonArrayUsingCurl($oAuthTokenType);
+            /**
+             * @var int $userArray['id']
+             */
+            $microsoftOnlineId = $userArray['id'] ?? 0;
+            if ($microsoftOnlineId > 0) { 
+                // Append the last four digits of the Id
+                $login = 'ms'. substr((string)$microsoftOnlineId, strlen((string)$microsoftOnlineId) - 4, strlen((string)$microsoftOnlineId));
+                /**
+                 * @var string $userArray['email']
+                 */
+                $email = $userArray['email'] ?? 'noemail'.$login.'@microsoftonline.com';
+                $password = Random::string(32);
+                if ($this->authService->oauthLogin($login)) {
+                    $identity = $this->authService->getIdentity();
+                    $userId = $identity->getId();
+                    if (null!==$userId) {
+                        $userInv = $uiR->repoUserInvUserIdquery($userId);
+                        if (null!==$userInv) {
+                            $status = $userInv->getActive();
+                            if ($status || $userId == 1) {
+                                $userId == 1 ? $this->disableToken($tR, '1', $this->getTokenType('microsoftonline')) : '';
+                                return $this->redirectToInvoiceIndex();
+                            } else {
+                                $this->disableToken($tR, $userId, $this->getTokenType('microsoftonline'));
+                                return $this->redirectToAdminMustMakeActive();
+                            }
+                        }
+                    }
+                    return $this->redirectToMain();
+                } else {
+                    $user = new User($login, $email, $password);
+                    $uR->save($user);
+                    $userId = $user->getId();
+                    if ($userId > 0) {
+                        // avoid autoincrement issues and using predefined user id of 1 ... and assign the first signed-up user ... admin rights
+                        if ($uR->repoCount() == 1) {
+                            $this->manager->revokeAll($userId);
+                            $this->manager->assign('admin', $userId);
+                        } else {
+                            $this->manager->revokeAll($userId);
+                            $this->manager->assign('observer', $userId);
+                        }
+                        $login = $user->getLogin();
+                        /**
+                         * @var array $this->sR->locale_language_array()
+                         */
+                        $languageArray = $this->sR->locale_language_array();
+                        $_language = $currentRoute->getArgument('_language');
+                        /**
+                         * @see Trait\Oauth2 function getMicrosoftOnlineAccessToken
+                         * @var string $_language
+                         * @var array $languageArray
+                         * @var string $language
+                         */
+                        $language = $languageArray[$_language];
+                        $randomAndTimeToken = $this->getMicrosoftOnlineAccessToken($user, $tR);
+                        /**
+                         * @see A new UserInv (extension table of user) for the user is created.
+                         */
+                        $proceedToMenuButton = $this->proceedToMenuButtonWithMaskedRandomAndTimeTokenLink($translator, $user, $uiR, $language, $_language, $randomAndTimeToken, 'microsoftonline');
+                        return $this->viewRenderer->render('proceed', [
+                            'proceedToMenuButton' => $proceedToMenuButton
+                        ]);
+                    }     
+                }   
+            }    
+        }
+        $this->authService->logout();
+        return $this->redirectToMain();
+    }
+    
     /**
      * @param TranslatorInterface $translator
      * @param User $user
@@ -588,7 +825,9 @@ final class AuthController
             'email' => self::EMAIL_VERIFICATION_TOKEN,
             'facebook' => self::FACEBOOK_ACCESS_TOKEN,
             'github' => self::GITHUB_ACCESS_TOKEN,
-            'google' => self::GOOGLE_ACCESS_TOKEN
+            'google' => self::GOOGLE_ACCESS_TOKEN,
+            'linkedin' => self::LINKEDIN_ACCESS_TOKEN,
+            'microsoftonline' => self::MICROSOFTONLINE_ACCESS_TOKEN
         };
     }
     

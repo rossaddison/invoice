@@ -162,7 +162,7 @@ final class PostalAddressController
         $currentPageNeverZero = $page > 0 ? $page : 1;
         $postaladdresses = $this->postaladdresses($postaladdressRepository);
         $paginator = (new OffsetPaginator($postaladdresses))
-        ->withPageSize((int)$settingRepository->getSetting('default_list_limit'))
+        ->withPageSize($settingRepository->positiveListLimit())
         ->withCurrentPage($currentPageNeverZero)
         ->withToken(PageToken::next($page));
         $parameters = [

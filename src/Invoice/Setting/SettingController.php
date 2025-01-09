@@ -111,7 +111,7 @@ final class SettingController
         /** @psalm-var positive-int $currentPageNeverZero */
         $currentPageNeverZero = $pageNum > 0 ? $pageNum : 1;
         $paginator = (new OffsetPaginator($this->settings($this->s)))
-        ->withPageSize((int)$this->s->getSetting('default_list_limit'))
+        ->withPageSize($this->s->positiveListLimit())
         ->withCurrentPage($currentPageNeverZero);
         $canEdit = $this->rbac();
         $parameters = [
