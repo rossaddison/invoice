@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "14162788519680ef3f6f362efb390e26",
+    "content-hash": "f0a067a4eca88e17f4d32e0820be88f6",
     "packages": [
         {
             "name": "alexkart/curl-builder",
@@ -11397,16 +11397,16 @@
         },
         {
             "name": "vjik/telegram-bot-api",
-            "version": "0.4.7.1",
+            "version": "0.5",
             "source": {
                 "type": "git",
                 "url": "https://github.com/vjik/telegram-bot-api.git",
-                "reference": "d9982072e3320c525d71c7f17d8f01de71e06cbf"
+                "reference": "67527f8a213578f95fc38858b54d15d818702c70"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/vjik/telegram-bot-api/zipball/d9982072e3320c525d71c7f17d8f01de71e06cbf",
-                "reference": "d9982072e3320c525d71c7f17d8f01de71e06cbf",
+                "url": "https://api.github.com/repos/vjik/telegram-bot-api/zipball/67527f8a213578f95fc38858b54d15d818702c70",
+                "reference": "67527f8a213578f95fc38858b54d15d818702c70",
                 "shasum": ""
             },
             "require": {
@@ -11457,7 +11457,7 @@
                 "issues": "https://github.com/vjik/telegram-bot-api/issues?state=open",
                 "source": "https://github.com/vjik/telegram-bot-api"
             },
-            "time": "2024-12-18T11:29:17+00:00"
+            "time": "2025-01-02T17:40:24+00:00"
         },
         {
             "name": "vlucas/phpdotenv",
