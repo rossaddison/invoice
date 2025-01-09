@@ -23877,7 +23877,6 @@
     "minimum-stability": "dev",
     "stability-flags": {
         "cebe/markdown": 20,
-        "roave/security-advisories": 20,
         "rossaddison/yii-auth-client": 20,
         "yiisoft/data": 20,
         "yiisoft/data-cycle": 20,
@@ -23890,6 +23889,7 @@
         "yiisoft/yii-dataview": 20,
         "yiisoft/yii-debug": 20,
         "yiisoft/yii-debug-api": 20,
+        "roave/security-advisories": 20,
         "yiisoft/yii-gii": 20,
         "yiisoft/yii-testing": 20
     },
@@ -23908,6 +23908,6 @@
         "ext-pdo_sqlite": "*",
         "ext-uopz": "*"
     },
-    "platform-dev": {},
+    "platform-dev": [],
     "plugin-api-version": "2.6.0"
 }
