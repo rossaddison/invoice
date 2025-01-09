@@ -66,7 +66,7 @@ final class UnitController
         /** @psalm-var positive-int $currentPageNeverZero */
         $currentPageNeverZero = $pageNum > 0 ? $pageNum : 1;
         $paginator = (new OffsetPaginator($units))
-            ->withPageSize((int)$settingRepository->getSetting('default_list_limit'))
+            ->withPageSize($settingRepository->positiveListLimit())
             ->withCurrentPage($currentPageNeverZero);
         $parameters = [
             'alert' => $this->alert(),

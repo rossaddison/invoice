@@ -77,7 +77,7 @@ final class CustomFieldController
                 ->withOrderString($query_params['sort'] ?? '-id');
         $customFields = $this->customFieldsWithSort($customfieldRepository, $sort);
         $paginator = (new DataOffsetPaginator($customFields))
-        ->withPageSize((int)$settingRepository->getSetting('default_list_limit'))
+        ->withPageSize($settingRepository->positiveListLimit())
         ->withCurrentPage($currentPageNeverZero)
         ->withToken(PageToken::next((string)$page));
         $this->rbac();

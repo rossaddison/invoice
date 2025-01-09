@@ -197,29 +197,47 @@ final class Button
     }
     
     public function facebook(string $facebookAuthUrl) : string {        
-            return A::tag()
-            ->addClass('btn btn-primary bi bi-facebook')
-            ->content(' '.$this->translator->translate('invoice.invoice.continue.with.facebook'))
-            ->href($facebookAuthUrl) 
-            ->id('btn-facebook')
-            ->render();
+        return A::tag()
+        ->addClass('btn btn-primary bi bi-facebook')
+        ->content(' '.$this->translator->translate('invoice.invoice.continue.with.facebook'))
+        ->href($facebookAuthUrl) 
+        ->id('btn-facebook')
+        ->render();
     }
     
     public function github(string $githubAuthUrl) : string {        
-            return A::tag()
-            ->addClass('btn btn-secondary bi bi-github')
-            ->content(' '.$this->translator->translate('invoice.invoice.continue.with.github'))
-            ->href($githubAuthUrl)   
-            ->id('btn-github')
-            ->render();          
+        return A::tag()
+        ->addClass('btn btn-dark bi bi-github')
+        ->content(' '.$this->translator->translate('invoice.invoice.continue.with.github'))
+        ->href($githubAuthUrl)   
+        ->id('btn-github')
+        ->render();          
     }
     
     public function google(string $googleAuthUrl) : string {       
-            return A::tag()
-            ->addClass('btn btn-success bi bi-google')
-            ->content(' '.$this->translator->translate('invoice.invoice.continue.with.google'))
-            ->href($googleAuthUrl)
-            ->id('btn-google')
-            ->render();
+        return A::tag()
+        ->addClass('btn btn-success bi bi-google')
+        ->content(' '.$this->translator->translate('invoice.invoice.continue.with.google'))
+        ->href($googleAuthUrl)
+        ->id('btn-google')
+        ->render();
+    }
+    
+    public function linkedin(string $linkedInAuthUrl) : string {       
+        return A::tag()
+        ->addClass('btn btn-info bi bi-linkedin')
+        ->content(' '.$this->translator->translate('invoice.invoice.continue.with.linkedin'))
+        ->href($linkedInAuthUrl)
+        ->id('btn-linkedin')
+        ->render();
+    }
+    
+    public function microsoftonline(string $microsoftOnlineAuthUrl) : string {       
+        return A::tag()
+        ->addClass('btn btn-warning bi bi-microsoft')
+        ->content(' '.$this->translator->translate('invoice.invoice.continue.with.microsoftonline'))
+        ->href($microsoftOnlineAuthUrl)
+        ->id('btn-microsoftonline')
+        ->render();
     }
 }

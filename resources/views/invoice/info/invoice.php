@@ -46,6 +46,8 @@
 <p>Introducing India's PayTm payment gateway's QR code method of payment and comparing this with Stripe's method.</p>
 <p>A General Sales Tax (GST) Tax System will have to be implemented first for this purpose.</p>
 <p>Testing Credit Notes against Invoices with refunds (if payment made) linked to each of the payment gateways.</p>
+<p><b>9th January 2025</b></p>
+<p>MicrosoftOnline Oauth2 functional</p>
 <p><b>31st December 2024</b></p>
 <p>Google Oauth2 functional.</p>
 <p>Improve the ordering of the parameters in the AuthController functions and include callbackGoogle in the controller.</p>

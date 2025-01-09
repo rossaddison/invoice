@@ -90,7 +90,7 @@ final class ProductImageController
                 ->withOrderString($query_params['sort'] ?? '-id');
         $productimages = $this->productimages_with_sort($productimageRepository, $sort);
         $paginator = (new OffsetPaginator($productimages))
-                ->withPageSize((int) $this->s->getSetting('default_list_limit'));
+                ->withPageSize($this->s->positiveListLimit());
 
         $parameters = [
             'paginator' => $paginator,

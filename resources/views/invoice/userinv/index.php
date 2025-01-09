@@ -308,7 +308,7 @@ echo $alert
     <?php
     
     $paginator = (new OffsetPaginator($userinvs))
-        ->withPageSize((int)$s->getSetting('default_list_limit'))
+        ->withPageSize($s->positiveListLimit())
         ->withCurrentPage($page)
         ->withToken(PageToken::next((string)$page));    
     

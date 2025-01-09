@@ -585,7 +585,7 @@ final class PaymentController
                 */
                 $payments = $this->payments_with_sort_guest($paymentRepository, $client_id_array, $sort_by);
                 $paginator = (new OffsetPaginator($payments))
-                 ->withPageSize($userInvListLimit ?? 10)
+                 ->withPageSize($userInvListLimit > 0 ? $userInvListLimit : 10)
                  ->withCurrentPage($currentPageNeverZero)
                  ->withToken(PageToken::next((string)$page));
                 $canEdit = $this->userService->hasPermission('editPayment');
@@ -713,7 +713,7 @@ final class PaymentController
             );
         }
         $paginator = (new OffsetPaginator($payments))
-         ->withPageSize((int)$settingRepository->getSetting('default_list_limit'))
+         ->withPageSize($settingRepository->positiveListLimit())
          ->withCurrentPage($currentPageNeverZero)
          ->withSort($sort)
          ->withToken(PageToken::next((string)$page));
@@ -814,7 +814,7 @@ final class PaymentController
             $merchants = $merchantRepository->repoMerchantInvNumberWithPaymentProvider((string)$query_params['filterInvNumber'], (string)$query_params['filterPaymentProvider']);
         }
         $paginator = (new OffsetPaginator($merchants))
-         ->withPageSize((int)$settingRepository->getSetting('default_list_limit'))
+         ->withPageSize($settingRepository->positiveListLimit())
          ->withCurrentPage($currentPageNeverZero)
          ->withToken(PageToken::next((string) $page));
         // No need for rbac here since the route accessChecker for payment/online_log

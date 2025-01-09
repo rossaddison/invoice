@@ -44,7 +44,7 @@ final class UserController
 
         $offsetPaginator = (new OffsetPaginator($dataReader));
         $paginator = $offsetPaginator
-                      ->withPageSize($pageSize)
+                      ->withPageSize($pageSize > 0 ? $pageSize : 1)
                       ->withSort($sort)
                       ->withToken(PageToken::next((string) $page));
 

@@ -209,7 +209,7 @@ use Yiisoft\Yii\DataView\YiiRouter\UrlCreator;
             ->withOrderString($sortString); 
     
     $sortedAndPagedPaginator = (new OffsetPaginator($products))
-        ->withPageSize((int)$s->getSetting('default_list_limit'))
+        ->withPageSize($s->positiveListLimit())
         ->withCurrentPage($page)
         ->withSort($sort)    
         ->withToken(PageToken::next((string)$page));

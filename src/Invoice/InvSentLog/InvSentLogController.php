@@ -117,7 +117,7 @@ final class InvSentLogController
                     $invsentlogs = $islR->filterInvNumberWithClient($queryFilterInvNumber, $queryFilterClient);
                 }
                 $paginator = (new OffsetPaginator($invsentlogs))
-                ->withPageSize(null !== $userInvListLimit ? $userInvListLimit : 10)
+                ->withPageSize($userInvListLimit > 0 ? $userInvListLimit : 10)
                 ->withCurrentPage($currentPageNeverZero)
                 ->withToken(PageToken::next($finalPage));
                 $parameters = [
@@ -169,7 +169,7 @@ final class InvSentLogController
             $invsentlogs = $islR->filterInvNumberWithClient($queryFilterInvNumber, $queryFilterClientId);
         }
         $paginator = (new OffsetPaginator($invsentlogs))
-        ->withPageSize((int)$settingRepository->getSetting('default_list_limit'))
+        ->withPageSize($settingRepository->positiveListLimit())
         ->withCurrentPage($currentPageNeverZero)
         ->withToken(PageToken::next($finalPage));
         $parameters = [
