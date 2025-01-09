@@ -21,9 +21,13 @@ use Yiisoft\View\WebView;
  * @var bool                                    $noFacebookContinueButton
  * @var bool                                    $noGithubContinueButton
  * @var bool                                    $noGoogleContinueButton
+ * @var bool                                    $noLinkedInContinueButton
+ * @var bool                                    $noMicrosoftOnlineContinueButton
  * @var string                                  $facebookAuthUrl
  * @var string                                  $githubAuthUrl
  * @var string                                  $googleAuthUrl
+ * @var string                                  $linkedInAuthUrl
+ * @var string                                  $microsoftOnlineAuthUrl
  */
 $this->setTitle($translator->translate('menu.signup'));
 ?>
@@ -49,14 +53,22 @@ $this->setTitle($translator->translate('menu.signup'));
                         <br><br>
                         <?= $button->google($googleAuthUrl ?: ''); ?>
                     <?php } ?>
+                    <?php if ((strlen($linkedInAuthUrl ?: '') > 0) && !$noLinkedInContinueButton) { ?>
+                        <br><br>
+                        <?= $button->linkedin($linkedInAuthUrl ?: ''); ?>
+                    <?php } ?>
+                    <?php if ((strlen($microsoftOnlineAuthUrl ?: '') > 0) && !$noMicrosoftOnlineContinueButton) { ?>
+                        <br><br>
+                        <?= $button->microsoftonline($microsoftOnlineAuthUrl ?: ''); ?>
+                    <?php } ?>      
                 </div>
                 <div class="card-body p-5 text-center">
                     <?= Form::tag()
                         ->post($urlGenerator->generate('auth/signup'))
                         ->csrf($csrf)
                         ->id('signupForm')
-                        ->open() ?>
-
+                        ->open();
+                    ?>
                     <?= Field::text($formModel, 'login')
                         ->label($translator->translate('layout.login'))
                         ->autofocus()
@@ -76,7 +88,6 @@ $this->setTitle($translator->translate('menu.signup'));
                         ->name('register-button')
                         ->content($translator->translate('layout.submit'))
                     ?>
-
                     <?= Form::tag()->close() ?>
                 </div>
             </div>

@@ -286,7 +286,7 @@ echo $alert;
             ->withOrderString($sortString);
     
     $sortedAndPagedPaginator = (new OffsetPaginator($invs))
-                        ->withPageSize($userInvListLimit ?: 10)
+                        ->withPageSize($userInvListLimit > 0 ? $userInvListLimit : 10)
                         ->withCurrentPage($page)
                         ->withSort($sort)  
                         ->withToken(PageToken::next((string)$page));   

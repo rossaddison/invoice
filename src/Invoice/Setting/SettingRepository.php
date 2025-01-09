@@ -204,7 +204,22 @@ final class SettingRepository extends Select\Repository
         }
         return $setting;
     }
-
+    
+    /**
+     * @psalm-return positive-int
+     */
+    public function positiveListLimit() : int {
+        $defaultListLimit = (int)$this->getSetting('default_list_limit');
+        if ($defaultListLimit > 0) {
+            /**
+             * @psalm-var positive-int $positiveInt
+             */
+            return $positiveInt = $defaultListLimit;
+        } else {
+            return  1;
+        }
+    }
+    
     /**
      * Save the new setting key and make it available
      *
@@ -535,6 +550,19 @@ final class SettingRepository extends Select\Repository
          * @var string $specificProvider['clientSecret']
          */
         return $specificProvider['clientSecret'];
+    }
+    
+    public function getOauth2MicrosoftEntraIdentityOverviewTenant(string $identityProvider) : string
+    {
+        $identityProviders = $this->getOauth2IdentityProviderConfigParamsClientsArray();        
+        /**
+         * @var array $identityProviders[$identityProvider]
+         */
+        $specificProvider = $identityProviders[$identityProvider];
+        /**
+         * @var string $specificProvider['tenant']
+         */
+        return $specificProvider['tenant'];
     }
     
     public function getOauth2IdentityProviderReturnUrl(string $identityProvider) : string

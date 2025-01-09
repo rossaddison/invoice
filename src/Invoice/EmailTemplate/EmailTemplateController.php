@@ -73,7 +73,7 @@ final class EmailTemplateController
         $this->rbac();
         $parameters = [
             'paginator' => (new OffsetPaginator($this->emailtemplates($emailtemplateRepository)))
-                            ->withPageSize((int)$settingRepository->getSetting('default_list_limit'))
+                            ->withPageSize($settingRepository->positiveListLimit())
                             ->withCurrentPage($currentPageNeverZero),
             'alert' => $this->alert(),
             'email_templates' => $this->emailtemplates($emailtemplateRepository),

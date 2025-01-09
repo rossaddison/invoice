@@ -48,6 +48,24 @@ use  Yiisoft\Html\Tag\I;
                             <?= I::tag()->addClass('bi bi-facebook')->render() . ' Facebook'; ?>
                         </label>
                     </div>
+                    <div class="checkbox">
+                        <?php $body['settings[no_linkedin_continue_button]'] = $s->getSetting('no_linkedin_continue_button');?>
+                        <label>
+                            <input type="hidden" name="settings[no_linkedin_continue_button]" value="0">
+                            <input type="checkbox" name="settings[no_linkedin_continue_button]" value="1"
+                                <?php $s->check_select($body['settings[no_linkedin_continue_button]'], 1, '==', true) ?>>
+                            <?= I::tag()->addClass('bi bi-linkedin')->render() . ' LinkedIn'; ?>
+                        </label>
+                    </div>
+                    <div class="checkbox">
+                        <?php $body['settings[no_microsoftonline_continue_button]'] = $s->getSetting('no_microsoftonline_continue_button');?>
+                        <label>
+                            <input type="hidden" name="settings[no_microsoftonline_continue_button]" value="0">
+                            <input type="checkbox" name="settings[no_microsoftonline_continue_button]" value="1"
+                                <?php $s->check_select($body['settings[no_microsoftonline_continue_button]'], 1, '==', true) ?>>
+                            <?= I::tag()->addClass('bi bi-microsoft')->render() . ' Microsoft Online'; ?>
+                        </label>
+                    </div>
                 </div>
             </div>    
         </div>

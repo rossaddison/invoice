@@ -105,7 +105,7 @@ final class FromDropDownController
         $currentPageNeverZero = $page > 0 ? $page : 1;
         $from = $fromRepository->findAllPreloaded();
         $paginator = (new OffsetPaginator($from))
-        ->withPageSize((int) $settingRepository->getSetting('default_list_limit'))
+        ->withPageSize($settingRepository->positiveListLimit())
         ->withCurrentPage($currentPageNeverZero)
         ->withToken(PageToken::next((string)$page));
         $parameters = [

@@ -691,7 +691,7 @@ $toolbar = Div::tag();
                     ->withOrderString($sortString); 
     
     $sortedAndPagedPaginator = (new OffsetPaginator($invs))
-            ->withPageSize($defaultPageSizeOffsetPaginator)
+            ->withPageSize($defaultPageSizeOffsetPaginator > 0 ? $defaultPageSizeOffsetPaginator : 1)
             ->withCurrentPage($page)
             ->withSort($sort)    
             ->withToken(PageToken::next((string)$page));

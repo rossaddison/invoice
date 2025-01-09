@@ -16,9 +16,6 @@ use Yiisoft\Router\CurrentRoute;
 use Yiisoft\Router\UrlGeneratorInterface;
 use Yiisoft\Session\SessionInterface;
 use Yiisoft\Translator\TranslatorInterface;
-use Yiisoft\Yii\AuthClient\Client\Facebook;
-use Yiisoft\Yii\AuthClient\Client\GitHub;
-use Yiisoft\Yii\AuthClient\Client\Google;
 use Yiisoft\Yii\Cycle\Schema\Conveyor\MetadataSchemaConveyor;
 use Yiisoft\Yii\Cycle\Schema\Provider\FromConveyorSchemaProvider;
 use Cycle\Schema\Provider\PhpFileSchemaProvider;
@@ -77,9 +74,26 @@ return [
            ],
           'google' => [
               'class' => 'Yiisoft\Yii\AuthClient\Client\Google::class',
-              'clientId' => $_ENV['GOOGLE_PEOPLE_API_V1_CLIENT_ID'] ?? '',
-              'clientSecret' => $_ENV['GOOGLE_PEOPLE_API_V1_CLIENT_SECRET'] ?? '',
-              'returnUrl' => $_ENV['GOOGLE_PEOPLE_API_VI_CLIENT_RETURN_URL'] ?? ''  
+              'clientId' => $_ENV['GOOGLE_API_CLIENT_ID'] ?? '',
+              'clientSecret' => $_ENV['GOOGLE_API_CLIENT_SECRET'] ?? '',
+              'returnUrl' => $_ENV['GOOGLE_API_CLIENT_RETURN_URL'] ?? ''  
+          ],
+          'linkedin' => [
+              'class' => 'Yiisoft\Yii\AuthClient\Client\LinkedIn::class',
+              'clientId' => $_ENV['LINKEDIN_API_CLIENT_ID'] ?? '',
+              'clientSecret' => $_ENV['LINKEDIN_API_CLIENT_SECRET'] ?? '',
+              'returnUrl' => $_ENV['LINKEDIN_API_CLIENT_RETURN_URL'] ?? ''  
+          ],
+          'microsoftonline' => [
+              'class' => 'Yiisoft\Yii\AuthClient\Client\MicrosoftOnline::class',
+              'clientId' => $_ENV['MICROSOFTONLINE_API_CLIENT_ID'] ?? '',
+              'clientSecret' => $_ENV['MICROSOFTONLINE_API_CLIENT_SECRET'] ?? '',
+              'returnUrl' => $_ENV['MICROSOFTONLINE_API_CLIENT_RETURN_URL'] ?? '',
+              /**
+               * tenant can be one of 'common', 'organisations', 'consumers', or a tenant ID 
+               * @see https://learn.microsoft.com/en-us/entra/identity-platform/v2-oauth2-auth-code-flow#request-an-authorization-code
+               */
+              'tenant' => $_ENV['MICROSOFTONLINE_API_CLIENT_TENANT'] ?? 'common'
           ],
      ],   
   ],  

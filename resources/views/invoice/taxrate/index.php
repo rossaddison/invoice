@@ -152,7 +152,7 @@ use Yiisoft\Yii\DataView\YiiRouter\UrlCreator;
     <?php 
     
     $paginator = (new OffsetPaginator($taxrates))
-        ->withPageSize((int)$s->getSetting('default_list_limit'))
+        ->withPageSize($s->positiveListLimit())
         ->withCurrentPage($page)
         ->withToken(PageToken::next((string)$page)); 
     

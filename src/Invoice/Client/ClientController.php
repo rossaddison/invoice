@@ -576,7 +576,7 @@ final class ClientController
             $clients = $cR->filter_client_name_surname((string)$query_params['filter_client_name'], (string)$query_params['filter_client_surname']);
         }
         $paginator = (new DataOffsetPaginator($clients))
-            ->withPageSize((int)$sR->getSetting('default_list_limit'))
+            ->withPageSize($sR->positiveListLimit())
             ->withCurrentPage($currentPageNeverZero)
             ->withToken(PageToken::next((string)$page));
         $parameters = [
@@ -650,8 +650,12 @@ final class ClientController
                     $client_array = $ucR->get_assigned_to_user($user_id);
                     if (!empty($client_array)) {
                         $clients = $cR->repoUserClient($client_array);
+                        /**
+                         * @psalm-var positive-int $listLimit
+                         */
+                        $listLimit = $userInv->getListLimit() > 0 ? ($userInv->getListLimit() ?? 1) : 1;
                         $paginator = (new DataOffsetPaginator($clients))
-                            ->withPageSize((int)$userInv->getListLimit() ?: 10)
+                            ->withPageSize($listLimit)
                             ->withCurrentPage($currentPageNeverZero)
                             ->withToken(PageToken::next((string)$page));    
                         $parameters = [
