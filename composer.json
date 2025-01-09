@@ -140,7 +140,7 @@
         "codeception/module-asserts": "^3.0",
         "codeception/module-cli": "^2.0",
         "codeception/module-phpbrowser": "^3.0",
-        "friendsofphp/php-cs-fixer": "^3.66",
+        "friendsofphp/php-cs-fixer": "^3.66.2",
         "phpunit/phpunit": "^9.6",
         "roave/better-reflection": "^6.26",
         "roave/infection-static-analysis-plugin": "^1.25",
