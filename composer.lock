@@ -7057,12 +7057,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/rossaddison/yii-auth-client.git",
-                "reference": "3ff518918e0dab1394d69fcec7300b29e23bd273"
+                "reference": "17b78b8336ab10ab8bb68c174f635acdcf847951"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/rossaddison/yii-auth-client/zipball/3ff518918e0dab1394d69fcec7300b29e23bd273",
-                "reference": "3ff518918e0dab1394d69fcec7300b29e23bd273",
+                "url": "https://api.github.com/repos/rossaddison/yii-auth-client/zipball/17b78b8336ab10ab8bb68c174f635acdcf847951",
+                "reference": "17b78b8336ab10ab8bb68c174f635acdcf847951",
                 "shasum": ""
             },
             "require": {
@@ -7142,7 +7142,7 @@
                     "type": "opencollective"
                 }
             ],
-            "time": "2025-01-09T00:48:55+00:00"
+            "time": "2025-01-11T19:49:41+00:00"
         },
         {
             "name": "sabre/uri",
@@ -16315,12 +16315,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/yiisoft/yii-debug.git",
-                "reference": "8ed4683d7f5830ec621f6f65d109a114d7210f96"
+                "reference": "63082164a61ea7b932034cd1a7321675c23ce252"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/yiisoft/yii-debug/zipball/8ed4683d7f5830ec621f6f65d109a114d7210f96",
-                "reference": "8ed4683d7f5830ec621f6f65d109a114d7210f96",
+                "url": "https://api.github.com/repos/yiisoft/yii-debug/zipball/63082164a61ea7b932034cd1a7321675c23ce252",
+                "reference": "63082164a61ea7b932034cd1a7321675c23ce252",
                 "shasum": ""
             },
             "require": {
@@ -16408,7 +16408,7 @@
                     "type": "opencollective"
                 }
             ],
-            "time": "2025-01-11T06:41:46+00:00"
+            "time": "2025-01-11T18:26:17+00:00"
         },
         {
             "name": "yiisoft/yii-debug-api",
