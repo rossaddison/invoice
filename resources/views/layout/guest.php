@@ -45,6 +45,7 @@ use Yiisoft\Yii\Bootstrap5\DropdownItem;
 use Yiisoft\Yii\Bootstrap5\DropdownToggleVariant;
 use Yiisoft\Yii\Bootstrap5\Nav;
 use Yiisoft\Yii\Bootstrap5\NavBar;
+use Yiisoft\Yii\Bootstrap5\NavLink;
 
 /**
  * @var App\Invoice\Helpers\DateHelper $dateHelper
@@ -130,180 +131,185 @@ $this->beginPage();
 <?php
     Html::tag('Noscript',Html::tag('Div',$translator->translate('i.please_enable_js'),['class'=>'alert alert-danger no-margin']));
 ?>
+<header>
 <?php
 $this->beginBody();
 
 echo NavBar::widget()
-->brandImage($logoPath)
-->brandImageAttributes(['margin' => $companyLogoMargin, 
-                        'width' => $companyLogoWidth, 
-                        'height' => $companyLogoHeight])    
-//->brandText(str_repeat('&nbsp;', 7).$brandLabel)
-->brandUrl($urlGenerator->generate('site/index'))
-->begin();
+    ->brandImage($logoPath)
+    ->brandImageAttributes(['margin' => $companyLogoMargin, 
+                            'width' => $companyLogoWidth, 
+                            'height' => $companyLogoHeight])    
+    //->brandText(str_repeat('&nbsp;', 7).$brandLabel)
+    ->brandUrl($urlGenerator->generate('site/index'))
+    ->begin();
 
-$currentPath = $currentRoute->getUri()?->getPath();
-if ((null!== $currentPath) && !$isGuest) {
-    // Client
-    echo Dropdown::widget()
-    ->addClass('navbar fs-4')  
-    ->addAttributes([
-        'style' => 'font-size: 1rem; color: cornflowerblue;',
-    ])
-    ->toggleVariant(DropdownToggleVariant::INFO)
-    ->toggleContent($translator->translate('invoice.client'))        
-    ->toggleSizeLarge(true)        
-    ->items(
-        DropdownItem::link($translator->translate('invoice.view'), $urlGenerator->generate('client/guest'))    
-    )
-    ->render();
-    
-    // Quote
-    echo Dropdown::widget()
-    ->addClass('navbar fs-4')  
-    ->addAttributes([
-        'style' => 'font-size: 1rem; color: cornflowerblue;',
-    ])
-    ->toggleVariant(DropdownToggleVariant::INFO)
-    ->toggleContent($translator->translate('invoice.quote'))        
-    ->toggleSizeLarge(true)        
-    ->items(
-        DropdownItem::link($translator->translate('invoice.view'), $urlGenerator->generate('quote/guest'))    
-    )
-    ->render();
-    
-    // SalesOrder
-    echo Dropdown::widget()
-    ->addClass('navbar fs-4')  
-    ->addAttributes([
-        'style' => 'font-size: 1rem; color: cornflowerblue;',
-    ])
-    ->toggleVariant(DropdownToggleVariant::INFO)
-    ->toggleContent($translator->translate('invoice.salesorder'))        
-    ->toggleSizeLarge(true)        
-    ->items(
-        DropdownItem::link($translator->translate('invoice.view'), $urlGenerator->generate('salesorder/guest'))    
-    )
-    ->render();
-    
-    // Invoice
-    echo Dropdown::widget()
-    ->addClass('navbar fs-4')  
-    ->addAttributes([
-        'style' => 'font-size: 1rem; color: cornflowerblue;',
-    ])
-    ->toggleVariant(DropdownToggleVariant::INFO)
-    ->toggleContent($translator->translate('i.invoice'))        
-    ->toggleSizeLarge(true)        
-    ->items(
-        DropdownItem::link($translator->translate('i.view'), $urlGenerator->generate('inv/guest'))    
-    )
-    ->render();
-    
-    // Payment
-    echo Dropdown::widget()
-    ->addClass('navbar fs-4')  
-    ->addAttributes([
-        'style' => 'font-size: 1rem; color: cornflowerblue;',
-    ])
-    ->toggleVariant(DropdownToggleVariant::INFO)
-    ->toggleContent(I::tag()->addClass('bi bi-coin').' '.$translator->translate('i.payment'))        
-    ->toggleSizeLarge(true)        
-    ->items(
-        DropdownItem::link($translator->translate('invoice.view'), $urlGenerator->generate('payment/guest')),
-        DropdownItem::link($translator->translate('invoice.online.log'), $urlGenerator->generate('payment/guest_online_log'))    
-    )
-    ->render();
-    
-    // Settings
-    echo Dropdown::widget()
-    ->addClass('navbar fs-4')  
-    ->addAttributes([
-        'style' => 'font-size: 1rem;',
-    ])
-    ->toggleVariant(DropdownToggleVariant::INFO)
-    ->toggleContent(I::tag()->addClass('fa fa-cogs'). ' '. $translator->translate('i.settings'))        
-    ->toggleSizeLarge(true)        
-    ->items(
-        DropdownItem::link($translator->translate('invoice.view'), $urlGenerator->generate('userinv/guest')),
-        DropdownItem::link($translator->translate('password.change'), $urlGenerator->generate('auth/change')),
-        DropdownItem::link($translator->translate('invoice.email.log'), $urlGenerator->generate('invsentlog/guest')),    
-            
-    )
-    ->render();
+    $currentPath = $currentRoute->getUri()?->getPath();
+    if ((null!== $currentPath) && !$isGuest) {
+        // Client
+        echo Dropdown::widget()
+        ->addClass('navbar fs-4')  
+        ->addAttributes([
+            'style' => 'font-size: 1rem; color: cornflowerblue;',
+        ])
+        ->toggleVariant(DropdownToggleVariant::INFO)
+        ->toggleContent($translator->translate('invoice.client'))        
+        ->toggleSizeLarge(true)        
+        ->items(
+            DropdownItem::link($translator->translate('invoice.view'), $urlGenerator->generate('client/guest'))    
+        )
+        ->render();
 
-// Translate
-echo Dropdown::widget()
-->addClass('navbar fs4')        
-->addAttributes([
-    'style' => 'font-size: 1rem; color: cornflowerblue;',
-    'data-bs-toggle' => 'tooltip',
-    'title' => $translator->translate('i.language'),
-    'url' => '#'
-])
-->toggleVariant(DropdownToggleVariant::INFO)
-->toggleContent(I::tag()->addClass('bi bi-translate'))        
-->toggleSizeLarge(true)        
-->items(
-    DropdownItem::link('Afrikaans South African', $urlGenerator->generateFromCurrent(['_language' => 'af-ZA'], fallbackRouteName: 'site/index')),
-    DropdownItem::link('Arabic Bahrainian/ عربي', $urlGenerator->generateFromCurrent(['_language' => 'ar-BH'], fallbackRouteName: 'site/index')),
-    DropdownItem::link('Azerbaijani / Azərbaycan', $urlGenerator->generateFromCurrent(['_language' => 'az'], fallbackRouteName: 'site/index')),
-    DropdownItem::link('Chinese Simplified / 简体中文', $urlGenerator->generateFromCurrent(['_language' => 'zh-CN'], fallbackRouteName: 'site/index')),
-    DropdownItem::link('Tiawanese Mandarin / 简体中文', $urlGenerator->generateFromCurrent(['_language' => 'zh-TW'], fallbackRouteName: 'site/index')),
-    DropdownItem::link('English', $urlGenerator->generateFromCurrent(['_language' => 'en'], fallbackRouteName: 'site/index')),
-    DropdownItem::link('Filipino / Filipino', $urlGenerator->generateFromCurrent(['_language' => 'fil'], fallbackRouteName: 'site/index')),
-    DropdownItem::link('French / Français', $urlGenerator->generateFromCurrent(['_language' => 'fr'], fallbackRouteName: 'site/index')),
-    DropdownItem::link('Dutch / Nederlands', $urlGenerator->generateFromCurrent(['_language' => 'nl'], fallbackRouteName: 'site/index')),
-    DropdownItem::link('German / Deutsch', $urlGenerator->generateFromCurrent(['_language' => 'de'], fallbackRouteName: 'site/index')),
-    DropdownItem::link('Indonesian / bahasa Indonesia', $urlGenerator->generateFromCurrent(['_language' => 'id'], fallbackRouteName: 'site/index')),
-    DropdownItem::link('Italian / Italiano', $urlGenerator->generateFromCurrent(['_language' => 'it'], fallbackRouteName: 'site/index')),
-    DropdownItem::link('Japanese / 日本', $urlGenerator->generateFromCurrent(['_language' => 'ja'], fallbackRouteName: 'site/index')),
-    DropdownItem::link('Polish / Polski', $urlGenerator->generateFromCurrent(['_language' => 'pl'], fallbackRouteName: 'site/index')),
-    DropdownItem::link('Portugese Brazilian / Português Brasileiro', $urlGenerator->generateFromCurrent(['_language' => 'pt-BR'], fallbackRouteName: 'site/index')),
-    DropdownItem::link('Russian / Русский', $urlGenerator->generateFromCurrent(['_language' => 'ru'], fallbackRouteName: 'site/index')),
-    DropdownItem::link('Slovakian / Slovenský', $urlGenerator->generateFromCurrent(['_language' => 'sk'], fallbackRouteName: 'site/index')),
-    DropdownItem::link('Spanish /  Española x', $urlGenerator->generateFromCurrent(['_language' => 'es'], fallbackRouteName: 'site/index')),
-    DropdownItem::link('Ukrainian / українська', $urlGenerator->generateFromCurrent(['_language' => 'uk'], fallbackRouteName: 'site/index')),
-    DropdownItem::link('Uzbek / o'."'".'zbek', $urlGenerator->generateFromCurrent(['_language' => 'uz'], fallbackRouteName: 'site/index')),
-    DropdownItem::link('Vietnamese / Tiếng Việt', $urlGenerator->generateFromCurrent(['_language' => 'vi'], fallbackRouteName: 'site/index')),
-    DropdownItem::link('Zulu South African/ Zulu South African', $urlGenerator->generateFromCurrent(['_language' => 'zu-ZA'], fallbackRouteName: 'site/index')),
-)->render();  
+        // Quote
+        echo Dropdown::widget()
+        ->addClass('navbar fs-4')  
+        ->addAttributes([
+            'style' => 'font-size: 1rem; color: cornflowerblue;',
+        ])
+        ->toggleVariant(DropdownToggleVariant::INFO)
+        ->toggleContent($translator->translate('invoice.quote'))        
+        ->toggleSizeLarge(true)        
+        ->items(
+            DropdownItem::link($translator->translate('invoice.view'), $urlGenerator->generate('quote/guest'))    
+        )
+        ->render();
 
-}
+        // SalesOrder
+        echo Dropdown::widget()
+        ->addClass('navbar fs-4')  
+        ->addAttributes([
+            'style' => 'font-size: 1rem; color: cornflowerblue;',
+        ])
+        ->toggleVariant(DropdownToggleVariant::INFO)
+        ->toggleContent($translator->translate('invoice.salesorder'))        
+        ->toggleSizeLarge(true)        
+        ->items(
+            DropdownItem::link($translator->translate('invoice.view'), $urlGenerator->generate('salesorder/guest'))    
+        )
+        ->render();
 
-if (null!==$currentPath) {
-    echo Nav::widget()
-    ->currentPath($currentPath)
-    ->options(['class' => 'navbar-nav'])
-    ->items(
-        [
-            [
-                'label' => $translator->translate('menu.login'),
-                'url' => $urlGenerator->generate('auth/login'),
-                'visible' => $isGuest,
-            ],
-            [
-                'label' => $translator->translate('menu.signup'),
-                'url' => $urlGenerator->generate('auth/signup'),
-                'visible' => $isGuest,
-            ],
-            $isGuest ? '' : Form::tag()
-                    ->post($urlGenerator->generate('auth/logout'))
-                    ->csrf($csrf)
-                    ->open()
-                . '<div class="mb-1">'
-                . Button::submit(
-                    $translator->translate('menu.logout', ['login' => Html::encode(null!==$user ? preg_replace('/\d+/', '', $user->getLogin()) : '')])
-                )
-                    ->class('btn btn-primary')
-                . '</div>'
-                . Form::tag()->close()
-        ],
-    );
-}
-echo NavBar::end();
-?>
+        // Invoice
+        echo Dropdown::widget()
+        ->addClass('navbar fs-4')  
+        ->addAttributes([
+            'style' => 'font-size: 1rem; color: cornflowerblue;',
+        ])
+        ->toggleVariant(DropdownToggleVariant::INFO)
+        ->toggleContent($translator->translate('i.invoice'))        
+        ->toggleSizeLarge(true)        
+        ->items(
+            DropdownItem::link($translator->translate('i.view'), $urlGenerator->generate('inv/guest'))    
+        )
+        ->render();
 
+        // Payment
+        echo Dropdown::widget()
+        ->addClass('navbar fs-4')  
+        ->addAttributes([
+            'style' => 'font-size: 1rem; color: cornflowerblue;',
+        ])
+        ->toggleVariant(DropdownToggleVariant::INFO)
+        ->toggleContent(I::tag()->addClass('bi bi-coin').' '.$translator->translate('i.payment'))        
+        ->toggleSizeLarge(true)        
+        ->items(
+            DropdownItem::link($translator->translate('invoice.view'), $urlGenerator->generate('payment/guest')),
+            DropdownItem::link($translator->translate('invoice.online.log'), $urlGenerator->generate('payment/guest_online_log'))    
+        )
+        ->render();
+
+        // Settings
+        echo Dropdown::widget()
+        ->addClass('navbar fs-4')  
+        ->addAttributes([
+            'style' => 'font-size: 1rem;',
+        ])
+        ->toggleVariant(DropdownToggleVariant::INFO)
+        ->toggleContent(I::tag()->addClass('fa fa-cogs'). ' '. $translator->translate('i.settings'))        
+        ->toggleSizeLarge(true)        
+        ->items(
+            DropdownItem::link($translator->translate('invoice.view'), $urlGenerator->generate('userinv/guest')),
+            DropdownItem::link($translator->translate('password.change'), $urlGenerator->generate('auth/change')),
+            DropdownItem::link($translator->translate('invoice.email.log'), $urlGenerator->generate('invsentlog/guest')),    
+        )
+        ->render();
+        // Translate
+        echo Dropdown::widget()
+        ->addClass('navbar fs4')        
+        ->addAttributes([
+            'style' => 'font-size: 1rem; color: cornflowerblue;',
+            'data-bs-toggle' => 'tooltip',
+            'title' => $translator->translate('i.language'),
+            'url' => '#'
+        ])
+        ->toggleVariant(DropdownToggleVariant::INFO)
+        ->toggleContent(I::tag()->addClass('bi bi-translate'))        
+        ->toggleSizeLarge(true)        
+        ->items(
+            DropdownItem::link('Afrikaans South African', $urlGenerator->generateFromCurrent(['_language' => 'af-ZA'], fallbackRouteName: 'site/index')),
+            DropdownItem::link('Arabic Bahrainian/ عربي', $urlGenerator->generateFromCurrent(['_language' => 'ar-BH'], fallbackRouteName: 'site/index')),
+            DropdownItem::link('Azerbaijani / Azərbaycan', $urlGenerator->generateFromCurrent(['_language' => 'az'], fallbackRouteName: 'site/index')),
+            DropdownItem::link('Chinese Simplified / 简体中文', $urlGenerator->generateFromCurrent(['_language' => 'zh-CN'], fallbackRouteName: 'site/index')),
+            DropdownItem::link('Tiawanese Mandarin / 简体中文', $urlGenerator->generateFromCurrent(['_language' => 'zh-TW'], fallbackRouteName: 'site/index')),
+            DropdownItem::link('English', $urlGenerator->generateFromCurrent(['_language' => 'en'], fallbackRouteName: 'site/index')),
+            DropdownItem::link('Filipino / Filipino', $urlGenerator->generateFromCurrent(['_language' => 'fil'], fallbackRouteName: 'site/index')),
+            DropdownItem::link('French / Français', $urlGenerator->generateFromCurrent(['_language' => 'fr'], fallbackRouteName: 'site/index')),
+            DropdownItem::link('Dutch / Nederlands', $urlGenerator->generateFromCurrent(['_language' => 'nl'], fallbackRouteName: 'site/index')),
+            DropdownItem::link('German / Deutsch', $urlGenerator->generateFromCurrent(['_language' => 'de'], fallbackRouteName: 'site/index')),
+            DropdownItem::link('Indonesian / bahasa Indonesia', $urlGenerator->generateFromCurrent(['_language' => 'id'], fallbackRouteName: 'site/index')),
+            DropdownItem::link('Italian / Italiano', $urlGenerator->generateFromCurrent(['_language' => 'it'], fallbackRouteName: 'site/index')),
+            DropdownItem::link('Japanese / 日本', $urlGenerator->generateFromCurrent(['_language' => 'ja'], fallbackRouteName: 'site/index')),
+            DropdownItem::link('Polish / Polski', $urlGenerator->generateFromCurrent(['_language' => 'pl'], fallbackRouteName: 'site/index')),
+            DropdownItem::link('Portugese Brazilian / Português Brasileiro', $urlGenerator->generateFromCurrent(['_language' => 'pt-BR'], fallbackRouteName: 'site/index')),
+            DropdownItem::link('Russian / Русский', $urlGenerator->generateFromCurrent(['_language' => 'ru'], fallbackRouteName: 'site/index')),
+            DropdownItem::link('Slovakian / Slovenský', $urlGenerator->generateFromCurrent(['_language' => 'sk'], fallbackRouteName: 'site/index')),
+            DropdownItem::link('Spanish /  Española x', $urlGenerator->generateFromCurrent(['_language' => 'es'], fallbackRouteName: 'site/index')),
+            DropdownItem::link('Ukrainian / українська', $urlGenerator->generateFromCurrent(['_language' => 'uk'], fallbackRouteName: 'site/index')),
+            DropdownItem::link('Uzbek / o'."'".'zbek', $urlGenerator->generateFromCurrent(['_language' => 'uz'], fallbackRouteName: 'site/index')),
+            DropdownItem::link('Vietnamese / Tiếng Việt', $urlGenerator->generateFromCurrent(['_language' => 'vi'], fallbackRouteName: 'site/index')),
+            DropdownItem::link('Zulu South African/ Zulu South African', $urlGenerator->generateFromCurrent(['_language' => 'zu-ZA'], fallbackRouteName: 'site/index')),
+        )->render();  
+    }
+
+    if (null!==$currentPath && $isGuest) {
+        echo Nav::widget()
+        ->items(
+            NavLink::item(
+                '',    
+                $urlGenerator->generate('auth/login'), 
+                true, 
+                false, [],
+                [
+                    'class' => 'bi bi-door-open-fill text-success'
+                ]
+            ),
+            NavLink::item(
+                '', 
+                $urlGenerator->generate('auth/signup'), 
+                true, 
+                false, [],
+                [
+                    'class' => 'bi bi-person-plus-fill',
+                    'data-bs-toggle' => 'tooltip',
+                    'title' => str_repeat(' ',1).$translator->translate('i.setup_create_user')
+                ]
+            )
+        );
+    }
+
+    if (!$isGuest) { 
+        echo Form::tag()
+        ->post($urlGenerator->generate('auth/logout'))
+        ->csrf($csrf)
+        ->open()
+        . '<div class="mb-1">'
+        . Button::submit(null!==$user ? preg_replace('/\d+/', '', $user->getLogin().' '.$translator->translate('i.logout')) : ''. ' '.
+            $translator->translate('i.logout'))->class('btn btn-primary')
+        . '</div>'
+        . Form::tag()->close();
+    }    
+    echo NavBar::end();
+?>    
+</header>
 <div id="main-area">
     <main class="container py-4">        
         <?php echo $content; ?>

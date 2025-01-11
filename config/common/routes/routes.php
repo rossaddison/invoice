@@ -163,7 +163,15 @@ return [
     Route::methods([Method::GET, Method::POST], '/callbackMicrosoftOnline')
       ->middleware(LimitRequestsMiddleware::class)
       ->action([AuthController::class, 'callbackMicrosoftOnline'])
-      ->name('auth/callbackMicrosoftOnline'),  
+      ->name('auth/callbackMicrosoftOnline'),
+    Route::methods([Method::GET, Method::POST], '/callbackX')
+      ->middleware(LimitRequestsMiddleware::class)
+      ->action([AuthController::class, 'callbackX'])
+      ->name('auth/callbackX'),
+    Route::methods([Method::GET, Method::POST], '/callbackYandex')
+      ->middleware(LimitRequestsMiddleware::class)
+      ->action([AuthController::class, 'callbackYandex'])
+      ->name('auth/callbackYandex'),  
     Route::post('/logout')
     ->action([AuthController::class, 'logout'])
     ->name('auth/logout'),

@@ -35,6 +35,8 @@ use Yiisoft\Yii\AuthClient\Client\GitHub;
 use Yiisoft\Yii\AuthClient\Client\Google;
 use Yiisoft\Yii\AuthClient\Client\LinkedIn;
 use Yiisoft\Yii\AuthClient\Client\MicrosoftOnline;
+use Yiisoft\Yii\AuthClient\Client\X;
+use Yiisoft\Yii\AuthClient\Client\Yandex;
 use Yiisoft\Yii\View\Renderer\ViewRenderer;
 
 final class SignupController
@@ -63,6 +65,8 @@ final class SignupController
         private Google $google, 
         private LinkedIn $linkedIn,
         private MicrosoftOnline $microsoftOnline,
+        private X $x,
+        private Yandex $yandex,    
         private Translator $translator,
         private UrlGenerator $urlGenerator,
         private CurrentRoute $currentRoute,
@@ -82,7 +86,17 @@ final class SignupController
         $this->google = $google;
         $this->linkedIn = $linkedIn;
         $this->microsoftOnline = $microsoftOnline;
-        $this->initializeOauth2IdentityProviderCredentials($facebook, $github, $google, $linkedIn, $microsoftOnline);
+        $this->x = $x;
+        $this->yandex = $yandex;
+        $this->initializeOauth2IdentityProviderCredentials(
+            $facebook, 
+            $github, 
+            $google, 
+            $linkedIn, 
+            $microsoftOnline, 
+            $x,
+            $yandex    
+        );
         $this->translator = $translator;
         $this->urlGenerator = $urlGenerator;
         $this->currentRoute = $currentRoute;
@@ -179,18 +193,24 @@ final class SignupController
         $noFacebookContinueButton = $this->sR->getSetting('no_facebook_continue_button') == '1' ? true : false;
         $noLinkedInContinueButton = $this->sR->getSetting('no_linkedin_continue_button') == '1' ? true : false;
         $noMicrosoftOnlineContinueButton = $this->sR->getSetting('no_microsoftonline_continue_button') == '1' ? true : false;
+        $noXContinueButton = $this->sR->getSetting('no_x_continue_button') == '1' ? true : false;
+        $noYandexContinueButton = $this->sR->getSetting('no_yandex_continue_button') == '1' ? true : false;
         return $this->viewRenderer->render('signup', [
             'formModel' => $signupForm,
             'facebookAuthUrl' => strlen($this->facebook->getClientId()) > 0 ? $this->facebook->buildAuthUrl($request, $params = []) : '',
             'githubAuthUrl' => strlen($this->github->getClientId()) > 0 ? $this->github->buildAuthUrl($request, $params = []) : '',   
             'googleAuthUrl' => strlen($this->google->getClientId()) > 0 ? $this->google->buildAuthUrl($request, $params = []) : '',
             'linkedInAuthUrl' => strlen($this->linkedIn->getClientId()) > 0 ? $this->linkedIn->buildAuthUrl($request, $params = []) : '',
-            'noLiveAuthUrl' => strlen($this->microsoftOnline->getClientId()) > 0 ? $this->microsoftOnline->buildAuthUrl($request, $params = []) : '',
+            'microsoftOnlineAuthUrl' => strlen($this->microsoftOnline->getClientId()) > 0 ? $this->microsoftOnline->buildAuthUrl($request, $params = []) : '',
+            'xAuthUrl' => strlen($this->x->getClientId()) > 0 ? $this->x->buildAuthUrl($request, $params = []) : '',
+            'yandexAuthUrl' => strlen($this->yandex->getClientId()) > 0 ? $this->yandex->buildAuthUrl($request, $params = []) : '',
+            'noFacebookContinueButton' => $noFacebookContinueButton,            
             'noGithubContinueButton' => $noGithubContinueButton,
             'noGoogleContinueButton' => $noGoogleContinueButton,
-            'noFacebookContinueButton' => $noFacebookContinueButton,            
             'noLinkedInContinueButton' => $noLinkedInContinueButton,
-            'noMicrosoftOnlineContinueButton' => $noMicrosoftOnlineContinueButton
+            'noMicrosoftOnlineContinueButton' => $noMicrosoftOnlineContinueButton,
+            'noXContinueButton' => $noXContinueButton,
+            'noYandexContinueButton' => $noYandexContinueButton
         ]);
     }  
     

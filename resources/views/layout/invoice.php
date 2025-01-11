@@ -714,7 +714,6 @@ $this->beginPage();
                 DropdownItem::link('➡', 'https://emojipedia.org/right-arrow', $debugMode, false, ['style' => 'background-color: #ffcccb']), 
                 DropdownItem::link('🖉', 'https://emojipedia.org/lower-left-pencil', $debugMode, false, ['style' => 'background-color: #ffcccb']), 
                 DropdownItem::link('🐘', 'https://emojipedia.org/elephant', $debugMode, false, ['style' => 'background-color: #ffcccb']), 
-                
             )
             ->render(); 
             
@@ -736,29 +735,21 @@ $this->beginPage();
             ->toggleSizeLarge(true)        
             ->items(
                 DropdownItem::link(str_repeat(' ',1).$translator->translate('i.setup_create_user'), $urlGenerator->generate('auth/signup'))
-            )->render();            
+            )->render();  
+            
+            // Logout
+            echo Form::tag()
+            ->post($urlGenerator->generate('auth/logout'))
+            ->csrf($csrf)
+            ->open()
+            . Button::submit(
+              $translator->translate('menu.logout', ['login' => Html::encode(preg_replace('/\d+/', '', $userLogin))])
+            )
+            ->class('btn btn-xs btn-info')
+            . Form::tag()->close();
             
         } //null!== currentPath && !isGuest  
-        
-        if (null!==$currentPath) {
-            echo Nav::widget()
-              ->currentPath($currentPath)
-              ->options(['class' => 'navbar fs4'])
-              ->items(
-                [
-                  $isGuest ? '' : Form::tag()
-                    ->post($urlGenerator->generate('auth/logout'))
-                    ->csrf($csrf)
-                    ->open()
-                    . Button::submit(
-                      $translator->translate('menu.logout', ['login' => Html::encode(preg_replace('/\d+/', '', $userLogin))])
-                    )
-                    ->class('btn btn-primary')
-                    . Form::tag()->close(),
-                ],
-            );
-        }
-        
+                
         echo NavBar::end();
         ?>
 

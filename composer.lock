@@ -2631,16 +2631,16 @@
         },
         {
             "name": "google/cloud-core",
-            "version": "v1.60.1",
+            "version": "v1.61.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/googleapis/google-cloud-php-core.git",
-                "reference": "c149dd075a77bc8555a0eff46267522f1c4e0bfd"
+                "reference": "c2cd6aff17704dd5a59e2c1c802509f9e82d36fd"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/googleapis/google-cloud-php-core/zipball/c149dd075a77bc8555a0eff46267522f1c4e0bfd",
-                "reference": "c149dd075a77bc8555a0eff46267522f1c4e0bfd",
+                "url": "https://api.github.com/repos/googleapis/google-cloud-php-core/zipball/c2cd6aff17704dd5a59e2c1c802509f9e82d36fd",
+                "reference": "c2cd6aff17704dd5a59e2c1c802509f9e82d36fd",
                 "shasum": ""
             },
             "require": {
@@ -2691,9 +2691,9 @@
             ],
             "description": "Google Cloud PHP shared dependency, providing functionality useful to all components.",
             "support": {
-                "source": "https://github.com/googleapis/google-cloud-php-core/tree/v1.60.1"
+                "source": "https://github.com/googleapis/google-cloud-php-core/tree/v1.61.0"
             },
-            "time": "2024-12-12T21:15:35+00:00"
+            "time": "2025-01-11T02:14:50+00:00"
         },
         {
             "name": "google/cloud-translate",
@@ -2753,16 +2753,16 @@
         },
         {
             "name": "google/common-protos",
-            "version": "4.8.3",
+            "version": "4.9.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/googleapis/common-protos-php.git",
-                "reference": "38a9a8bb459fa618da797d25d7bf36bb21d1103d"
+                "reference": "a2d1a583819286db5ef9403c6a2bfa29c9636c46"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/googleapis/common-protos-php/zipball/38a9a8bb459fa618da797d25d7bf36bb21d1103d",
-                "reference": "38a9a8bb459fa618da797d25d7bf36bb21d1103d",
+                "url": "https://api.github.com/repos/googleapis/common-protos-php/zipball/a2d1a583819286db5ef9403c6a2bfa29c9636c46",
+                "reference": "a2d1a583819286db5ef9403c6a2bfa29c9636c46",
                 "shasum": ""
             },
             "require": {
@@ -2806,9 +2806,9 @@
                 "google"
             ],
             "support": {
-                "source": "https://github.com/googleapis/common-protos-php/tree/v4.8.3"
+                "source": "https://github.com/googleapis/common-protos-php/tree/v4.9.0"
             },
-            "time": "2024-09-07T01:37:15+00:00"
+            "time": "2025-01-11T02:14:50+00:00"
         },
         {
             "name": "google/gax",
@@ -15949,12 +15949,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/yiisoft/yii-bootstrap5.git",
-                "reference": "52518fc53daf933b51c015ab204f4e3cae2b4acd"
+                "reference": "c62e942ef354dc9942cdba53915342396454662d"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/yiisoft/yii-bootstrap5/zipball/52518fc53daf933b51c015ab204f4e3cae2b4acd",
-                "reference": "52518fc53daf933b51c015ab204f4e3cae2b4acd",
+                "url": "https://api.github.com/repos/yiisoft/yii-bootstrap5/zipball/c62e942ef354dc9942cdba53915342396454662d",
+                "reference": "c62e942ef354dc9942cdba53915342396454662d",
                 "shasum": ""
             },
             "require": {
@@ -16018,7 +16018,7 @@
                     "type": "open_collective"
                 }
             ],
-            "time": "2025-01-09T09:25:24+00:00"
+            "time": "2025-01-10T11:28:12+00:00"
         },
         {
             "name": "yiisoft/yii-console",
@@ -16315,12 +16315,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/yiisoft/yii-debug.git",
-                "reference": "012cb758de8eed7b2547404707e1465f67390367"
+                "reference": "8ed4683d7f5830ec621f6f65d109a114d7210f96"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/yiisoft/yii-debug/zipball/012cb758de8eed7b2547404707e1465f67390367",
-                "reference": "012cb758de8eed7b2547404707e1465f67390367",
+                "url": "https://api.github.com/repos/yiisoft/yii-debug/zipball/8ed4683d7f5830ec621f6f65d109a114d7210f96",
+                "reference": "8ed4683d7f5830ec621f6f65d109a114d7210f96",
                 "shasum": ""
             },
             "require": {
@@ -16408,7 +16408,7 @@
                     "type": "opencollective"
                 }
             ],
-            "time": "2025-01-06T08:54:40+00:00"
+            "time": "2025-01-11T06:41:46+00:00"
         },
         {
             "name": "yiisoft/yii-debug-api",
@@ -23877,6 +23877,7 @@
     "minimum-stability": "dev",
     "stability-flags": {
         "cebe/markdown": 20,
+        "roave/security-advisories": 20,
         "rossaddison/yii-auth-client": 20,
         "yiisoft/data": 20,
         "yiisoft/data-cycle": 20,
@@ -23889,7 +23890,6 @@
         "yiisoft/yii-dataview": 20,
         "yiisoft/yii-debug": 20,
         "yiisoft/yii-debug-api": 20,
-        "roave/security-advisories": 20,
         "yiisoft/yii-gii": 20,
         "yiisoft/yii-testing": 20
     },
@@ -23908,6 +23908,6 @@
         "ext-pdo_sqlite": "*",
         "ext-uopz": "*"
     },
-    "platform-dev": [],
+    "platform-dev": {},
     "plugin-api-version": "2.6.0"
 }

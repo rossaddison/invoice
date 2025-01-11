@@ -52,7 +52,7 @@ use  Yiisoft\Html\Tag\I;
                         <?php $body['settings[no_linkedin_continue_button]'] = $s->getSetting('no_linkedin_continue_button');?>
                         <label>
                             <input type="hidden" name="settings[no_linkedin_continue_button]" value="0">
-                            <input type="checkbox" name="settings[no_linkedin_continue_button]" value="1"
+                            <input type="checkbox" name="settings[no_linkedin_continue_button]" value="1" disabled="true"
                                 <?php $s->check_select($body['settings[no_linkedin_continue_button]'], 1, '==', true) ?>>
                             <?= I::tag()->addClass('bi bi-linkedin')->render() . ' LinkedIn'; ?>
                         </label>
@@ -64,6 +64,24 @@ use  Yiisoft\Html\Tag\I;
                             <input type="checkbox" name="settings[no_microsoftonline_continue_button]" value="1"
                                 <?php $s->check_select($body['settings[no_microsoftonline_continue_button]'], 1, '==', true) ?>>
                             <?= I::tag()->addClass('bi bi-microsoft')->render() . ' Microsoft Online'; ?>
+                        </label>
+                    </div>
+                    <div class="checkbox">
+                        <?php $body['settings[no_x_continue_button]'] = $s->getSetting('no_x_continue_button');?>
+                        <label>
+                            <input type="hidden" name="settings[no_x_continue_button]" value="0">
+                            <input type="checkbox" name="settings[no_x_continue_button]" value="1"
+                                <?php $s->check_select($body['settings[no_x_continue_button]'], 1, '==', true) ?>>
+                            <?= I::tag()->addClass('bi bi-twitter')->render() . ' X i.e Twitter'; ?>
+                        </label>
+                    </div>
+                    <div class="checkbox">
+                        <?php $body['settings[no_yandex_continue_button]'] = $s->getSetting('no_yandex_continue_button');?>
+                        <label>
+                            <input type="hidden" name="settings[no_yandex_continue_button]" value="0">
+                            <input type="checkbox" name="settings[no_yandex_continue_button]" value="1"
+                                <?php $s->check_select($body['settings[no_yandex_continue_button]'], 1, '==', true) ?>>
+                            <img src="/img/yandex.jpg" width="12" height="12"><?= ' Yandex'; ?>
                         </label>
                     </div>
                 </div>

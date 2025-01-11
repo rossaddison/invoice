@@ -189,6 +189,8 @@ final class InvoiceController
             'no_google_continue_button' => 1,
             'no_linkedin_continue_button' => 1,
             'no_microsoftonline_continue_button' => 1,
+            'no_x_continue_button' => 1,
+            'no_yandex_continue_button' => 1,
             // Number format Default located in SettingsRepository
             'number_format' => 'number_format_us_uk',
             'payment_list_limit' => 20,

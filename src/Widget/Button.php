@@ -9,6 +9,7 @@ use Yiisoft\Router\UrlGeneratorInterface as UrlGenerator;
 use Yiisoft\FormModel\Field;
 use Yiisoft\Html\Html;
 use Yiisoft\Html\Tag\A;
+use Yiisoft\Html\Tag\Img;
 use Yiisoft\Html\Tag\Span;
 use Yiisoft\Router\CurrentRoute;
 use Yiisoft\Translator\TranslatorInterface as Translator;
@@ -238,6 +239,24 @@ final class Button
         ->content(' '.$this->translator->translate('invoice.invoice.continue.with.microsoftonline'))
         ->href($microsoftOnlineAuthUrl)
         ->id('btn-microsoftonline')
+        ->render();
+    }
+    
+    public function x(string $xAuthUrl) : string {       
+        return A::tag()
+        ->addClass('btn btn-dark bi bi-twitter')
+        ->content(' '.$this->translator->translate('invoice.invoice.continue.with.x'))
+        ->href($xAuthUrl)
+        ->id('btn-x')
+        ->render();
+    }
+    
+    public function yandex(string $yandexAuthUrl) : string {       
+        return A::tag()
+        ->addClass('btn btn-dark bi bi-globe')
+        ->content(' '.$this->translator->translate('invoice.invoice.continue.with.yandex'))
+        ->href($yandexAuthUrl)
+        ->id('btn-yandex')
         ->render();
     }
 }

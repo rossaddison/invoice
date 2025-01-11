@@ -20,11 +20,15 @@ use Yiisoft\Html\Tag\Form;
  * @var string                                  $googleAuthUrl
  * @var string                                  $linkedInAuthUrl 
  * @var string                                  $microsoftOnlineAuthUrl
+ * @var string                                  $xAuthUrl
+ * @var string                                  $yandexAuthUrl
  * @var bool                                    $noFacebookContinueButton
  * @var bool                                    $noGithubContinueButton
  * @var bool                                    $noGoogleContinueButton
  * @var bool                                    $noLinkedInContinueButton
  * @var bool                                    $noMicrosoftOnlineContinueButton
+ * @var bool                                    $noXContinueButton
+ * @var bool                                    $noYandexContinueButton
  * @var string                                  $csrf
  */
 
@@ -60,7 +64,15 @@ $this->setTitle($translator->translate('i.login'));
                     <?php if ((strlen($microsoftOnlineAuthUrl ?: '') > 0) && !$noMicrosoftOnlineContinueButton) { ?>
                         <br><br>
                         <?= $button->microsoftonline($microsoftOnlineAuthUrl ?: ''); ?>
-                    <?php } ?>    
+                    <?php } ?>
+                    <?php if ((strlen($xAuthUrl ?: '') > 0) && !$noXContinueButton) { ?>
+                        <br><br>
+                        <?= $button->x($xAuthUrl ?: ''); ?>
+                    <?php } ?>
+                    <?php if ((strlen($yandexAuthUrl ?: '') > 0) && !$noYandexContinueButton) { ?>
+                        <br><br>
+                        <?= $button->yandex($yandexAuthUrl ?: ''); ?>
+                    <?php } ?>       
                 </div>
                 <div class="card-body p-5 text-center">
                     <?= Form::tag()

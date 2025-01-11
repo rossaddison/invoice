@@ -23,11 +23,15 @@ use Yiisoft\View\WebView;
  * @var bool                                    $noGoogleContinueButton
  * @var bool                                    $noLinkedInContinueButton
  * @var bool                                    $noMicrosoftOnlineContinueButton
+ * @var bool                                    $noXContinueButton
+ * @var bool                                    $noYandexContinueButton
  * @var string                                  $facebookAuthUrl
  * @var string                                  $githubAuthUrl
  * @var string                                  $googleAuthUrl
  * @var string                                  $linkedInAuthUrl
  * @var string                                  $microsoftOnlineAuthUrl
+ * @var string                                  $xAuthUrl
+ * @var string                                  $yandexAuthUrl
  */
 $this->setTitle($translator->translate('menu.signup'));
 ?>
@@ -60,7 +64,15 @@ $this->setTitle($translator->translate('menu.signup'));
                     <?php if ((strlen($microsoftOnlineAuthUrl ?: '') > 0) && !$noMicrosoftOnlineContinueButton) { ?>
                         <br><br>
                         <?= $button->microsoftonline($microsoftOnlineAuthUrl ?: ''); ?>
-                    <?php } ?>      
+                    <?php } ?>
+                    <?php if ((strlen($xAuthUrl ?: '') > 0) && !$noXContinueButton) { ?>
+                        <br><br>
+                        <?= $button->x($xAuthUrl ?: ''); ?>
+                    <?php } ?>
+                    <?php if ((strlen($yandexAuthUrl ?: '') > 0) && !$noYandexContinueButton) { ?>
+                        <br><br>
+                        <?= $button->yandex($yandexAuthUrl ?: ''); ?>
+                    <?php } ?>       
                 </div>
                 <div class="card-body p-5 text-center">
                     <?= Form::tag()

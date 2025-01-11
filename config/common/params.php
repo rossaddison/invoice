@@ -95,6 +95,18 @@ return [
                */
               'tenant' => $_ENV['MICROSOFTONLINE_API_CLIENT_TENANT'] ?? 'common'
           ],
+          'x' => [
+              'class' => 'Yiisoft\Yii\AuthClient\Client\X::class',
+              'clientId' => $_ENV['X_API_CLIENT_ID'] ?? '',
+              'clientSecret' => $_ENV['X_API_CLIENT_SECRET'] ?? '',
+              'returnUrl' => $_ENV['X_API_CLIENT_RETURN_URL'] ?? '' 
+          ],
+          'yandex' => [
+              'class' => 'Yiisoft\Yii\AuthClient\Client\YANDEX::class',
+              'clientId' => $_ENV['YANDEX_API_CLIENT_ID'] ?? '',
+              'clientSecret' => $_ENV['YANDEX_API_CLIENT_SECRET'] ?? '',
+              'returnUrl' => $_ENV['YANDEX_API_CLIENT_RETURN_URL'] ?? '' 
+          ] 
      ],   
   ],  
   'yiisoft/aliases' => [

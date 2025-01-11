@@ -12,6 +12,8 @@ use Yiisoft\Yii\AuthClient\Client\GitHub;
 use Yiisoft\Yii\AuthClient\Client\Google;
 use Yiisoft\Yii\AuthClient\Client\LinkedIn;
 use Yiisoft\Yii\AuthClient\Client\MicrosoftOnline;
+use Yiisoft\Yii\AuthClient\Client\X;
+use Yiisoft\Yii\AuthClient\Client\Yandex;
 
 trait Oauth2
 {
@@ -25,12 +27,18 @@ trait Oauth2
     
     public const string MICROSOFTONLINE_ACCESS_TOKEN = 'microsoftonline-access';
     
+    public const string X_ACCESS_TOKEN = 'x-access';
+    
+    public const string YANDEX_ACCESS_TOKEN = 'yandex-access';
+    
     private function initializeOauth2IdentityProviderCredentials(
         Facebook $facebook, 
         GitHub $github, 
         Google $google,
         LinkedIn $linkedIn,
-        MicrosoftOnline $microsoftOnline
+        MicrosoftOnline $microsoftOnline,
+        X $x,
+        Yandex $yandex
     ) : void {
         /**
          * @see config/common/params.php
@@ -40,18 +48,24 @@ trait Oauth2
         $google->setOauth2ReturnUrl($this->sR->getOauth2IdentityProviderReturnUrl('google'));
         $linkedIn->setOauth2ReturnUrl($this->sR->getOauth2IdentityProviderReturnUrl('linkedin'));
         $microsoftOnline->setOauth2ReturnUrl($this->sR->getOauth2IdentityProviderReturnUrl('microsoftonline'));
+        $x->setOauth2ReturnUrl($this->sR->getOauth2IdentityProviderReturnUrl('x'));
+        $yandex->setOauth2ReturnUrl($this->sR->getOauth2IdentityProviderReturnUrl('yandex'));
         
         $facebook->setClientId($this->sR->getOauth2IdentityProviderClientId('facebook'));
         $github->setClientId($this->sR->getOauth2IdentityProviderClientId('github'));
         $google->setClientId($this->sR->getOauth2IdentityProviderClientId('google'));
         $linkedIn->setClientId($this->sR->getOauth2IdentityProviderClientId('linkedin'));
         $microsoftOnline->setClientId($this->sR->getOauth2IdentityProviderClientId('microsoftonline'));
+        $x->setClientId($this->sR->getOauth2IdentityProviderClientId('x'));
+        $yandex->setClientId($this->sR->getOauth2IdentityProviderClientId('yandex'));
         
         $facebook->setClientSecret($this->sR->getOauth2IdentityProviderClientSecret('facebook'));
         $github->setClientSecret($this->sR->getOauth2IdentityProviderClientSecret('github'));
         $google->setClientSecret($this->sR->getOauth2IdentityProviderClientSecret('google'));
         $linkedIn->setClientSecret($this->sR->getOauth2IdentityProviderClientSecret('linkedin'));
         $microsoftOnline->setClientSecret($this->sR->getOauth2IdentityProviderClientSecret('microsoftonline'));
+        $x->setClientSecret($this->sR->getOauth2IdentityProviderClientSecret('x'));
+        $yandex->setClientSecret($this->sR->getOauth2IdentityProviderClientSecret('yandex'));
         
         /**
          * @see https://entra.microsoft.com/#view/Microsoft_AAD_IAM/TenantOverview.ReactView
@@ -80,14 +94,14 @@ trait Oauth2
     {
         $identity = $user->getIdentity();
         $identityId = (int)$identity->getId();
-        // This records the fact that the user has signed up with a Github 'access-token'
+        // This records the fact that the user has signed up with e.g. a Github 'access-token'
         $token = new Token($identityId, $self);
         // store the token amongst all the other types of tokens e.g. password-rest, email-verification, github-access
         $tR->save($token);
         $tokenString = $token->getToken();
         $timeString = (string)($token->getCreated_at())->getTimestamp();
         // build the token with a timestamp built into it for comparison later
-        return $githubAccessToken = null !== $tokenString ? ($tokenString. '_' . $timeString) : '';
+        return null !== $tokenString ? ($tokenString. '_' . $timeString) : '';
     }
     
     private function getGithubAccessToken(User $user, TokenRepository $tR): string
@@ -113,6 +127,16 @@ trait Oauth2
     private function getMicrosoftOnlineAccessToken(User $user, TokenRepository $tR): string
     {
         return $this->getAccessToken($user, $tR, self::MICROSOFTONLINE_ACCESS_TOKEN);
+    }
+    
+    private function getXAccessToken(User $user, TokenRepository $tR): string
+    {
+        return $this->getAccessToken($user, $tR, self::X_ACCESS_TOKEN);
+    }
+    
+    private function getYandexAccessToken(User $user, TokenRepository $tR): string
+    {
+        return $this->getAccessToken($user, $tR, self::YANDEX_ACCESS_TOKEN);
     }
 }
 
