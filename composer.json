@@ -145,7 +145,7 @@
         "roave/better-reflection": "^6.26",
         "roave/infection-static-analysis-plugin": "^1.25",
         "roave/security-advisories": "dev-latest",
-        "spatie/phpunit-watcher": "^1.24",
+        "spatie/phpunit-watcher": "^1.23",
         "styleci/cli": "1.5.1",
         "vimeo/psalm": "^5.26",
         "yiisoft/translator-extractor": "^2.0",
