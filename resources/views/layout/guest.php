@@ -46,6 +46,7 @@ use Yiisoft\Yii\Bootstrap5\DropdownToggleVariant;
 use Yiisoft\Yii\Bootstrap5\Nav;
 use Yiisoft\Yii\Bootstrap5\NavBar;
 use Yiisoft\Yii\Bootstrap5\NavLink;
+use Yiisoft\Yii\Bootstrap5\NavStyle;
 
 /**
  * @var App\Invoice\Helpers\DateHelper $dateHelper
@@ -273,27 +274,30 @@ echo NavBar::widget()
     if (null!==$currentPath && $isGuest) {
         echo Nav::widget()
         ->items(
-            NavLink::item(
-                '',    
+            NavLink::to(
+                Label::tag()
+                ->attributes([
+                    'class' => 'bi bi-door-open-fill text-success'
+                ])
+                ->content(),    
                 $urlGenerator->generate('auth/login'), 
                 true, 
-                false, [],
-                [
-                    'class' => 'bi bi-door-open-fill text-success'
-                ]
+                false, []
             ),
-            NavLink::item(
-                '', 
-                $urlGenerator->generate('auth/signup'), 
-                true, 
-                false, [],
+            NavLink::to(
+                Label::tag()
+                ->attributes(
                 [
                     'class' => 'bi bi-person-plus-fill',
                     'data-bs-toggle' => 'tooltip',
                     'title' => str_repeat(' ',1).$translator->translate('i.setup_create_user')
-                ]
+                ]), 
+                $urlGenerator->generate('auth/signup'), 
+                true, 
+                false, []
             )
-        );
+        )
+        ->styles(NavStyle::NAVBAR);
     }
 
     if (!$isGuest) { 

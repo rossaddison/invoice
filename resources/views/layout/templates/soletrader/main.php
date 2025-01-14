@@ -7,6 +7,7 @@ use App\Widget\PerformanceMetrics;
 use Yiisoft\Html\Html;
 use Yiisoft\Html\Tag\Button;
 use Yiisoft\Html\Tag\Form;
+use Yiisoft\Html\Tag\Label;
 use Yiisoft\Yii\Bootstrap5\Dropdown;
 use Yiisoft\Yii\Bootstrap5\DropdownItem;
 use Yiisoft\Yii\Bootstrap5\DropdownToggleVariant;
@@ -87,117 +88,115 @@ $this->setTitle($title);
     <header class="mb-auto">
         <?php $this->beginBody(); ?>        
         <?= NavBar::widget()
+            ->addClass('navbar navbar-light bg-light navbar-expand-sm text-white')    
             ->brandImage($logoPath)
             ->brandImageAttributes(['margin' => $companyLogoMargin, 
                                     'width' => $companyLogoWidth, 
                                     'height' => $companyLogoHeight])    
             ->brandText(str_repeat('&nbsp;', 7).$brandLabel)
             ->brandUrl($urlGenerator->generate('site/index'))
-            ->options(['class' => 'navbar navbar-light bg-light navbar-expand-sm text-white'])
             ->begin() ?>        
         <?php 
             $currentPath = $currentRoute->getUri()?->getPath();
         ?> 
         <?= null!==$currentPath ? Nav::widget()
             ->items(
-                NavLink::item(
-                    '',
-                    '',
-                    //active    
-                    $debugMode,
-                    //disabled    
-                    !$debugMode, [],
-                    [
+                NavLink::to(
+                    Label::tag()
+                    ->attributes([
                         'class' => 'bi bi-info-circle',
                         'style' => 'font-size: 1rem; color: cornflowerblue;',
                         'data-bs-toggle' => 'tooltip',
                         'title' => '..\invoice\resources\views\layout\templates\soletrader\main.php && config/common/params.php yiisoft/yii-view layouts'
-                    ]
+                    ]),
+                    '',
+                    //active    
+                    $debugMode,
+                    //disabled    
+                    !$debugMode, []
                 ),
-                NavLink::item(
-                    str_repeat(' ', 1).$translator->translate('menu.about'), 
-                    $urlGenerator->generate('site/about'), 
-                    $isGuest && !$noFrontPageAbout, 
-                    !$isGuest && $noFrontPageAbout, [],
-                    [
+                NavLink::to(
+                    Label::tag()
+                    ->attributes([
                         'class' => 'bi bi-info-circle-fill text-info',
                         'style' => 'font-size: 1rem; color: cornflowerblue;'
-                    ]
+                    ])
+                    ->content(str_repeat(' ', 1).$translator->translate('menu.about')), 
+                    $urlGenerator->generate('site/about'), 
+                    $isGuest && !$noFrontPageAbout, 
+                    !$isGuest && $noFrontPageAbout, []
                 ),
-                NavLink::item(
-                    str_repeat(' ', 1).$translator->translate('menu.accreditations'), 
+                NavLink::to(
+                    Label::tag()
+                    ->attributes([
+                        'class' => 'bi bi-patch-check'
+                    ])
+                    ->content(str_repeat(' ', 1).$translator->translate('menu.accreditations')),  
                     $urlGenerator->generate('site/accreditations'), 
                     $isGuest && !$noFrontPageAccreditations, 
-                    !$isGuest && $noFrontPageAccreditations, [],
-                    [
-                        'class' => 'bi bi-patch-check'
-                    ]
+                    !$isGuest && $noFrontPageAccreditations, []
                 ),
-                NavLink::item(
-                    str_repeat(' ', 1).$translator->translate('menu.gallery'), 
+                NavLink::to(
+                    Label::tag()
+                    ->attributes(['class' => 'bi bi-images'])
+                    ->content(str_repeat(' ', 1).$translator->translate('menu.gallery')),
                     $urlGenerator->generate('site/gallery'), 
                     $isGuest && !$noFrontPageGallery, 
-                    !$isGuest && $noFrontPageGallery, [],
-                    [
-                        'class' => 'bi bi-images'
-                    ]
+                    !$isGuest && $noFrontPageGallery, []
                 ),     
-                NavLink::item(
-                    str_repeat(' ', 1).$translator->translate('menu.team'), 
+                NavLink::to(
+                    Label::tag()
+                    ->attributes(['class' => 'bi bi-people-fill'])
+                    ->content(str_repeat(' ', 1).$translator->translate('menu.team')), 
                     $urlGenerator->generate('site/team'), 
                     $isGuest && !$noFrontPageTeam, 
-                    !$isGuest && $noFrontPageTeam, [],
-                    [
-                        'class' => 'bi bi-people-fill'
-                    ]
+                    !$isGuest && $noFrontPageTeam, []
                 ),
-                NavLink::item(
-                    str_repeat(' ', 1).$translator->translate('menu.pricing'), 
+                NavLink::to(
+                    Label::tag()
+                    ->attributes(['class' => 'bi bi-tags-fill text-danger'])
+                    ->content(str_repeat(' ', 1).$translator->translate('menu.pricing')), 
                     $urlGenerator->generate('site/pricing'), 
                     $isGuest && !$noFrontPagePricing, 
-                    !$isGuest && $noFrontPagePricing, [],
-                    [
-                        'class' => 'bi bi-tags-fill text-danger'
-                    ]
+                    !$isGuest && $noFrontPagePricing, []
                 ),
-                NavLink::item(
-                    str_repeat(' ', 1).$translator->translate('menu.testimonial'), 
+                NavLink::to(
+                    Label::tag()
+                    ->content(str_repeat(' ', 1).$translator->translate('menu.testimonial')), 
                     $urlGenerator->generate('site/testimonial'), 
                     $isGuest && !$noFrontPageTestimonial, 
-                    !$isGuest && $noFrontPageTestimonial, [],
-                    []
+                    !$isGuest && $noFrontPageTestimonial, []
                 ),
-                NavLink::item(
-                    '',
+                NavLink::to(
+                    Label::tag()
+                    ->attributes(['class' => 'bi bi-person-lines-fill text-primary'])
+                    ->content(),
                     $urlGenerator->generate('site/contact'), 
                     $isGuest && !$noFrontPageContactDetails, 
-                    !$isGuest && $noFrontPageContactDetails, [],
-                    [
-                        'class' => 'bi bi-person-lines-fill text-primary'
-                    ]
+                    !$isGuest && $noFrontPageContactDetails, []
                 ),
-                NavLink::item(
-                    '',    
+                NavLink::to(
+                    Label::tag()
+                    ->attributes(['class' => 'bi bi-door-open-fill text-success'])
+                    ->content(),    
                     $urlGenerator->generate('auth/login'), 
                     $isGuest && !$stopLoggingIn, 
-                    !$isGuest && $stopLoggingIn, [],
-                    [
-                        'class' => 'bi bi-door-open-fill text-success'
-                    ]
+                    !$isGuest && $stopLoggingIn, []
                 ),
-                NavLink::item(
-                    '', 
-                    $urlGenerator->generate('auth/signup'), 
-                    $isGuest && !$stopSigningUp, 
-                    !$isGuest && $stopSigningUp, [],
-                    [
+                NavLink::to(
+                    Label::tag()
+                    ->attributes([
                         'class' => 'bi bi-person-plus-fill',
                         'data-bs-toggle' => 'tooltip',
                         'title' => str_repeat(' ',1).$translator->translate('i.setup_create_user')
-                    ]
-
+                    ])
+                    ->content(), 
+                    $urlGenerator->generate('auth/signup'), 
+                    $isGuest && !$stopSigningUp, 
+                    !$isGuest && $stopSigningUp, []
                 )                 
-            ) : ''; 
+            )
+            ->styles(NavStyle::NAVBAR) : ''; 
         ?>
         
         <?= Dropdown::widget()

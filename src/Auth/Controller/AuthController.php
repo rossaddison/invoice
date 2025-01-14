@@ -669,7 +669,7 @@ final class AuthController
                         /**
                          * @see A new UserInv (extension table of user) for the user is created.
                          */
-                        $proceedToMenuButton = $this->proceedToMenuButtonWithMaskedRandomAndTimeTokenLink($translator, $user, $uiR, $language, $_language, $randomAndTimeToken, 'google');
+                        $proceedToMenuButton = $this->proceedToMenuButtonWithMaskedRandomAndTimeTokenLink($translator, $user, $uiR, $language, $_language, $randomAndTimeToken, 'linkedin');
                         return $this->viewRenderer->render('proceed', [
                             'proceedToMenuButton' => $proceedToMenuButton
                         ]);

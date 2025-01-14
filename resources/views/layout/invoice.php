@@ -38,12 +38,13 @@ use Yiisoft\Html\Tag\Form;
 use Yiisoft\Html\Tag\I;
 use Yiisoft\Html\Html;
 use Yiisoft\Html\Tag\Meta;
+use Yiisoft\Html\Tag\Img;
 use Yiisoft\Yii\Bootstrap5\Dropdown;
 use Yiisoft\Yii\Bootstrap5\DropdownItem;
 use Yiisoft\Yii\Bootstrap5\DropdownToggleVariant;
-use Yiisoft\Yii\Bootstrap5\Nav;
 use Yiisoft\Yii\Bootstrap5\NavBar;
-use Yiisoft\Yii\Bootstrap5\Offcanvas;
+use Yiisoft\Yii\Bootstrap5\NavBarExpand;
+use Yiisoft\Yii\Bootstrap5\NavBarPlacement;
 
 /**
  * @see ...src\ViewInjection\LayoutViewInjection
@@ -191,26 +192,37 @@ $this->beginPage();
         ?>
         
         <?php
-        $this->beginBody();        
-        $offcanvas = new Offcanvas();
-        $offcanvas->title($s->getSetting('custom_title') ?: 'Yii-Invoice');
-        
+        $this->beginBody();
         echo NavBar::widget()
           // public folder represented by first forward slash ie. root
+          ->addAttributes([])
+          ->addClass('') 
+          ->addCssStyle(['color' => 'red', 'font-weight' => 'bold']) 
+          ->attributes([])      
           ->brandImage($logoPath)              
-          ->brandImageAttributes(['margin' => $companyLogoMargin, 'width' => $companyLogoWidth, 'height' => $companyLogoHeight])
-          //->brandText(str_repeat('&nbsp;', 7).$brandLabel)      
-          ->brandUrl($urlGenerator->generate('invoice/index'))
-          ->withWidget(
-            // If not full screen => 'burger icon ie. 3 horizontal lines' represents menu and
-            // navbar moves in from left
-            $offcanvas
+          ->brandImageAttributes(
+                //Img::tag()
+                //->alt('bootstrap')
+                //->margin($companyLogoMargin)
+                //->width($companyLogoWidth)
+                //->height($companyLogoHeight)
+                ['margin' => $companyLogoMargin, 'width' => $companyLogoWidth, 'height' => $companyLogoHeight]  
           )
+          ->brandText(str_repeat('&nbsp;', 7).$brandLabel)      
+          ->brandUrl($urlGenerator->generate('invoice/index'))
+          ->class()
+          ->container(false) 
+          ->containerAttributes([])      
+          ->expand(NavBarExpand::LG)
+          ->id('navbar')      
+          //->innerContainerAttributes(['class' => 'container-md'])      
+          ->placement(NavBarPlacement::STICKY_TOP) 
+          //->tag('')
+          //->theme('dark')      
           ->begin();
         
         $currentPath = $currentRoute->getUri()?->getPath();
         if ((null!== $currentPath) && !$isGuest) {
-            
             // Dashboard
             echo Dropdown::widget()
             ->addClass('navbar fs-4')  

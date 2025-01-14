@@ -14,6 +14,7 @@ use Yiisoft\Yii\Bootstrap5\DropdownToggleVariant;
 use Yiisoft\Yii\Bootstrap5\Nav;
 use Yiisoft\Yii\Bootstrap5\NavBar;
 use Yiisoft\Yii\Bootstrap5\NavLink;
+use Yiisoft\Yii\Bootstrap5\NavStyle;
 
 /**
  * @var Yiisoft\Assets\AssetManager $assetManager
@@ -78,28 +79,28 @@ $this->beginPage();
         
         <?= null!==$currentPath ? Nav::widget()
             ->items(
-                NavLink::item(
-                    '',    
+                NavLink::to(
+                    Label::tag()
+                    ->attributes(['class' => 'bi bi-door-open-fill text-success'])
+                    ->content(),    
                     $urlGenerator->generate('auth/login'), 
                     $isGuest && !$stopLoggingIn, 
-                    !$isGuest && $stopLoggingIn, [],
-                    [
-                        'class' => 'bi bi-door-open-fill text-success'
-                    ]
+                    !$isGuest && $stopLoggingIn, []
                 ),
-                NavLink::item(
-                    '', 
-                    $urlGenerator->generate('auth/signup'), 
-                    $isGuest && !$stopSigningUp, 
-                    !$isGuest && $stopSigningUp, [],
-                    [
+                NavLink::to(
+                    Label::tag()
+                    ->attributes([
                         'class' => 'bi bi-person-plus-fill',
                         'data-bs-toggle' => 'tooltip',
                         'title' => str_repeat(' ',1).$translator->translate('i.setup_create_user')
-                    ]
-
-                )                 
-            ) : ''; 
+                    ])
+                    ->content(), 
+                    $urlGenerator->generate('auth/signup'), 
+                    $isGuest && !$stopSigningUp, 
+                    !$isGuest && $stopSigningUp, []
+                )                   
+            )
+            ->styles(NavStyle::NAVBAR) : ''; 
         ?>
         <?= Dropdown::widget()
             ->addClass('bi bi-translate')  

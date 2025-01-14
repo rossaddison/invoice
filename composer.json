@@ -37,7 +37,7 @@
         "cycle/annotated": "^3.5",
         "cycle/database": "^2.0",
         "cycle/entity-behavior": "^1.0",
-        "cycle/orm": "^2.0",
+        "cycle/orm": "^2.9.3",
         "digitalbazaar/json-ld": "^0.4",
         "doctrine/collections": "^2.2",
         "fakerphp/faker": "^1.24",
