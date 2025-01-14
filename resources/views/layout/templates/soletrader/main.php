@@ -12,8 +12,11 @@ use Yiisoft\Yii\Bootstrap5\Dropdown;
 use Yiisoft\Yii\Bootstrap5\DropdownItem;
 use Yiisoft\Yii\Bootstrap5\DropdownToggleVariant;
 use Yiisoft\Yii\Bootstrap5\Nav;
+use Yiisoft\Yii\Bootstrap5\NavBarExpand;
+use Yiisoft\Yii\Bootstrap5\NavBarPlacement;
 use Yiisoft\Yii\Bootstrap5\NavLink;
 use Yiisoft\Yii\Bootstrap5\NavBar;
+use Yiisoft\Yii\Bootstrap5\NavStyle;
 
 /**
  * @var Yiisoft\Assets\AssetManager $assetManager
@@ -89,12 +92,21 @@ $this->setTitle($title);
         <?php $this->beginBody(); ?>        
         <?= NavBar::widget()
             ->addClass('navbar navbar-light bg-light navbar-expand-sm text-white')    
+            ->addAttributes([])
+            ->addClass('') 
+            ->addCssStyle(['color' => 'red', 'font-weight' => 'bold'])
             ->brandImage($logoPath)
             ->brandImageAttributes(['margin' => $companyLogoMargin, 
                                     'width' => $companyLogoWidth, 
                                     'height' => $companyLogoHeight])    
             ->brandText(str_repeat('&nbsp;', 7).$brandLabel)
             ->brandUrl($urlGenerator->generate('site/index'))
+            ->container(false) 
+            ->containerAttributes([])      
+            ->expand(NavBarExpand::LG)
+            ->id('navbar')      
+            ->innerContainerAttributes(['class' => 'container-md'])      
+            ->placement(NavBarPlacement::STICKY_TOP)
             ->begin() ?>        
         <?php 
             $currentPath = $currentRoute->getUri()?->getPath();
@@ -113,7 +125,7 @@ $this->setTitle($title);
                     //active    
                     $debugMode,
                     //disabled    
-                    !$debugMode, []
+                    !$debugMode
                 ),
                 NavLink::to(
                     Label::tag()
@@ -124,7 +136,7 @@ $this->setTitle($title);
                     ->content(str_repeat(' ', 1).$translator->translate('menu.about')), 
                     $urlGenerator->generate('site/about'), 
                     $isGuest && !$noFrontPageAbout, 
-                    !$isGuest && $noFrontPageAbout, []
+                    !$isGuest && $noFrontPageAbout
                 ),
                 NavLink::to(
                     Label::tag()
@@ -134,7 +146,7 @@ $this->setTitle($title);
                     ->content(str_repeat(' ', 1).$translator->translate('menu.accreditations')),  
                     $urlGenerator->generate('site/accreditations'), 
                     $isGuest && !$noFrontPageAccreditations, 
-                    !$isGuest && $noFrontPageAccreditations, []
+                    !$isGuest && $noFrontPageAccreditations
                 ),
                 NavLink::to(
                     Label::tag()
@@ -142,7 +154,7 @@ $this->setTitle($title);
                     ->content(str_repeat(' ', 1).$translator->translate('menu.gallery')),
                     $urlGenerator->generate('site/gallery'), 
                     $isGuest && !$noFrontPageGallery, 
-                    !$isGuest && $noFrontPageGallery, []
+                    !$isGuest && $noFrontPageGallery
                 ),     
                 NavLink::to(
                     Label::tag()
@@ -150,7 +162,7 @@ $this->setTitle($title);
                     ->content(str_repeat(' ', 1).$translator->translate('menu.team')), 
                     $urlGenerator->generate('site/team'), 
                     $isGuest && !$noFrontPageTeam, 
-                    !$isGuest && $noFrontPageTeam, []
+                    !$isGuest && $noFrontPageTeam
                 ),
                 NavLink::to(
                     Label::tag()
@@ -158,14 +170,14 @@ $this->setTitle($title);
                     ->content(str_repeat(' ', 1).$translator->translate('menu.pricing')), 
                     $urlGenerator->generate('site/pricing'), 
                     $isGuest && !$noFrontPagePricing, 
-                    !$isGuest && $noFrontPagePricing, []
+                    !$isGuest && $noFrontPagePricing
                 ),
                 NavLink::to(
                     Label::tag()
                     ->content(str_repeat(' ', 1).$translator->translate('menu.testimonial')), 
                     $urlGenerator->generate('site/testimonial'), 
                     $isGuest && !$noFrontPageTestimonial, 
-                    !$isGuest && $noFrontPageTestimonial, []
+                    !$isGuest && $noFrontPageTestimonial
                 ),
                 NavLink::to(
                     Label::tag()
@@ -173,7 +185,7 @@ $this->setTitle($title);
                     ->content(),
                     $urlGenerator->generate('site/contact'), 
                     $isGuest && !$noFrontPageContactDetails, 
-                    !$isGuest && $noFrontPageContactDetails, []
+                    !$isGuest && $noFrontPageContactDetails
                 ),
                 NavLink::to(
                     Label::tag()
@@ -181,7 +193,7 @@ $this->setTitle($title);
                     ->content(),    
                     $urlGenerator->generate('auth/login'), 
                     $isGuest && !$stopLoggingIn, 
-                    !$isGuest && $stopLoggingIn, []
+                    !$isGuest && $stopLoggingIn
                 ),
                 NavLink::to(
                     Label::tag()
@@ -193,7 +205,7 @@ $this->setTitle($title);
                     ->content(), 
                     $urlGenerator->generate('auth/signup'), 
                     $isGuest && !$stopSigningUp, 
-                    !$isGuest && $stopSigningUp, []
+                    !$isGuest && $stopSigningUp
                 )                 
             )
             ->styles(NavStyle::NAVBAR) : ''; 

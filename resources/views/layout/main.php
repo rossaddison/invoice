@@ -8,11 +8,14 @@ use App\Widget\PerformanceMetrics;
 use Yiisoft\Html\Html;
 use Yiisoft\Html\Tag\Button;
 use Yiisoft\Html\Tag\Form;
+use Yiisoft\Html\Tag\Label;
 use Yiisoft\Yii\Bootstrap5\Dropdown;
 use Yiisoft\Yii\Bootstrap5\DropdownItem;
 use Yiisoft\Yii\Bootstrap5\DropdownToggleVariant;
 use Yiisoft\Yii\Bootstrap5\Nav;
 use Yiisoft\Yii\Bootstrap5\NavBar;
+use Yiisoft\Yii\Bootstrap5\NavBarExpand;
+use Yiisoft\Yii\Bootstrap5\NavBarPlacement;
 use Yiisoft\Yii\Bootstrap5\NavLink;
 use Yiisoft\Yii\Bootstrap5\NavStyle;
 
@@ -63,16 +66,24 @@ $this->beginPage();
     <body class="cover-container-fluid d-flex w-100 h-100 mx-auto flex-column">
     <header class="mb-auto">
         <?php $this->beginBody(); ?>
-        <?= NavBar::widget()
+        <?php echo NavBar::widget()
+            ->addAttributes([])    
+            ->addClass('navbar navbar-light bg-light navbar-expand-sm text-white')    
             ->brandImage($logoPath)
             ->brandImageAttributes(['margin' => $companyLogoMargin, 
                                     'width' => $companyLogoWidth, 
                                     'height' => $companyLogoHeight])    
             ->brandText(str_repeat('&nbsp;', 7).$brandLabel)
             ->brandUrl($urlGenerator->generate('site/index'))
-            ->options(['class' => 'navbar navbar-light bg-light navbar-expand-sm text-white'])
-            ->begin() ?>
-
+            ->class()
+            ->container(false) 
+            ->containerAttributes([])      
+            ->expand(NavBarExpand::LG)
+            ->id('navbar')      
+            //->innerContainerAttributes(['class' => 'container-md'])      
+            ->placement(NavBarPlacement::STICKY_TOP)     
+            ->begin();
+        ?>
         <?php 
             $currentPath = $currentRoute->getUri()?->getPath();
         ?> 
@@ -85,7 +96,7 @@ $this->beginPage();
                     ->content(),    
                     $urlGenerator->generate('auth/login'), 
                     $isGuest && !$stopLoggingIn, 
-                    !$isGuest && $stopLoggingIn, []
+                    !$isGuest && $stopLoggingIn
                 ),
                 NavLink::to(
                     Label::tag()
@@ -97,7 +108,7 @@ $this->beginPage();
                     ->content(), 
                     $urlGenerator->generate('auth/signup'), 
                     $isGuest && !$stopSigningUp, 
-                    !$isGuest && $stopSigningUp, []
+                    !$isGuest && $stopSigningUp
                 )                   
             )
             ->styles(NavStyle::NAVBAR) : ''; 

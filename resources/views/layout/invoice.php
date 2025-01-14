@@ -60,6 +60,7 @@ use Yiisoft\Yii\Bootstrap5\NavBarPlacement;
  * @var bool $isGuest
  * @var bool $buildDatabase
  * @var bool $debugMode
+ * @var string $brandLabel
  * @var string $csrf
  * @var string $companyLogoHeight 
  * @var string $companyLogoMargin
@@ -196,29 +197,21 @@ $this->beginPage();
         echo NavBar::widget()
           // public folder represented by first forward slash ie. root
           ->addAttributes([])
-          ->addClass('') 
+          ->addClass('navbar navbar-light bg-light navbar-expand-sm text-white') 
           ->addCssStyle(['color' => 'red', 'font-weight' => 'bold']) 
           ->attributes([])      
           ->brandImage($logoPath)              
           ->brandImageAttributes(
-                //Img::tag()
-                //->alt('bootstrap')
-                //->margin($companyLogoMargin)
-                //->width($companyLogoWidth)
-                //->height($companyLogoHeight)
                 ['margin' => $companyLogoMargin, 'width' => $companyLogoWidth, 'height' => $companyLogoHeight]  
           )
           ->brandText(str_repeat('&nbsp;', 7).$brandLabel)      
           ->brandUrl($urlGenerator->generate('invoice/index'))
-          ->class()
           ->container(false) 
           ->containerAttributes([])      
           ->expand(NavBarExpand::LG)
           ->id('navbar')      
           //->innerContainerAttributes(['class' => 'container-md'])      
-          ->placement(NavBarPlacement::STICKY_TOP) 
-          //->tag('')
-          //->theme('dark')      
+          ->placement(NavBarPlacement::STICKY_TOP)
           ->begin();
         
         $currentPath = $currentRoute->getUri()?->getPath();

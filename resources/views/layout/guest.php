@@ -39,12 +39,15 @@ use Yiisoft\Html\Html;
 use Yiisoft\Html\Tag\Button;
 use Yiisoft\Html\Tag\Form;
 use Yiisoft\Html\Tag\I;
+use Yiisoft\Html\Tag\Label;
 use Yiisoft\Html\Tag\Meta;
 use Yiisoft\Yii\Bootstrap5\Dropdown;
 use Yiisoft\Yii\Bootstrap5\DropdownItem;
 use Yiisoft\Yii\Bootstrap5\DropdownToggleVariant;
 use Yiisoft\Yii\Bootstrap5\Nav;
 use Yiisoft\Yii\Bootstrap5\NavBar;
+use Yiisoft\Yii\Bootstrap5\NavBarExpand;
+use Yiisoft\Yii\Bootstrap5\NavBarPlacement;
 use Yiisoft\Yii\Bootstrap5\NavLink;
 use Yiisoft\Yii\Bootstrap5\NavStyle;
 
@@ -137,12 +140,21 @@ $this->beginPage();
 $this->beginBody();
 
 echo NavBar::widget()
+    ->addAttributes([])    
+    ->addClass('navbar navbar-light bg-light navbar-expand-sm text-white')    
     ->brandImage($logoPath)
     ->brandImageAttributes(['margin' => $companyLogoMargin, 
                             'width' => $companyLogoWidth, 
                             'height' => $companyLogoHeight])    
     //->brandText(str_repeat('&nbsp;', 7).$brandLabel)
     ->brandUrl($urlGenerator->generate('site/index'))
+    ->class()
+    ->container(false) 
+    ->containerAttributes([])      
+    ->expand(NavBarExpand::LG)
+    ->id('navbar')      
+    ->innerContainerAttributes(['class' => 'container-md'])      
+    ->placement(NavBarPlacement::STICKY_TOP)     
     ->begin();
 
     $currentPath = $currentRoute->getUri()?->getPath();
@@ -282,7 +294,7 @@ echo NavBar::widget()
                 ->content(),    
                 $urlGenerator->generate('auth/login'), 
                 true, 
-                false, []
+                false
             ),
             NavLink::to(
                 Label::tag()
@@ -294,7 +306,7 @@ echo NavBar::widget()
                 ]), 
                 $urlGenerator->generate('auth/signup'), 
                 true, 
-                false, []
+                false
             )
         )
         ->styles(NavStyle::NAVBAR);
