@@ -46,6 +46,8 @@
 <p>Introducing India's PayTm payment gateway's QR code method of payment and comparing this with Stripe's method.</p>
 <p>A General Sales Tax (GST) Tax System will have to be implemented first for this purpose.</p>
 <p>Testing Credit Notes against Invoices with refunds (if payment made) linked to each of the payment gateways.</p>
+<p><b>15th January 2025</b></p>
+<p>X i.e. Twitter Oauth2.0 Authorization Code with PKCE Public Client (Not Confidential Client) functional. Confidential client will be introduced later.</p>
 <p><b>9th January 2025</b></p>
 <p>MicrosoftOnline Oauth2 functional</p>
 <p><b>31st December 2024</b></p>

@@ -260,6 +260,9 @@ return [
   // @see blog/common/config/di/router.php  which relies on Yiisoft\Yii\Debug\Viewer\Middleware\ToolbarMiddleware
   'yiisoft/yii-debug' => [
     'enabled' => false,  
+  ], 
+  'yiisoft/yii-debug-api' => [
+    'enabled' => false  
   ],  
   'yiisoft/yii-view-renderer' => [
     'viewPath' => '@views',
