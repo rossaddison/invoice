@@ -96,7 +96,8 @@ $this->beginPage();
                     ->content(),    
                     $urlGenerator->generate('auth/login'), 
                     $isGuest && !$stopLoggingIn, 
-                    !$isGuest && $stopLoggingIn
+                    !$isGuest && $stopLoggingIn,                        
+                    false
                 ),
                 NavLink::to(
                     Label::tag()
@@ -108,7 +109,8 @@ $this->beginPage();
                     ->content(), 
                     $urlGenerator->generate('auth/signup'), 
                     $isGuest && !$stopSigningUp, 
-                    !$isGuest && $stopSigningUp
+                    !$isGuest && $stopSigningUp,                        
+                    false
                 )                   
             )
             ->styles(NavStyle::NAVBAR) : ''; 

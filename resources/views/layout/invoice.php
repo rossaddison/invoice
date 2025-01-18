@@ -38,7 +38,6 @@ use Yiisoft\Html\Tag\Form;
 use Yiisoft\Html\Tag\I;
 use Yiisoft\Html\Html;
 use Yiisoft\Html\Tag\Meta;
-use Yiisoft\Html\Tag\Img;
 use Yiisoft\Yii\Bootstrap5\Dropdown;
 use Yiisoft\Yii\Bootstrap5\DropdownItem;
 use Yiisoft\Yii\Bootstrap5\DropdownToggleVariant;
@@ -216,6 +215,17 @@ $this->beginPage();
         
         $currentPath = $currentRoute->getUri()?->getPath();
         if ((null!== $currentPath) && !$isGuest) {
+             // Logout
+            echo Form::tag()
+            ->post($urlGenerator->generate('auth/logout'))
+            ->csrf($csrf)
+            ->open()
+            . Button::submit(
+              $translator->translate('menu.logout', ['login' => Html::encode(preg_replace('/\d+/', '', $userLogin))])
+            )
+            ->class('btn btn-xs btn-warning')
+            . Form::tag()->close();
+            
             // Dashboard
             echo Dropdown::widget()
             ->addClass('navbar fs-4')  
@@ -740,19 +750,7 @@ $this->beginPage();
             ->toggleSizeLarge(true)        
             ->items(
                 DropdownItem::link(str_repeat(' ',1).$translator->translate('i.setup_create_user'), $urlGenerator->generate('auth/signup'))
-            )->render();  
-            
-            // Logout
-            echo Form::tag()
-            ->post($urlGenerator->generate('auth/logout'))
-            ->csrf($csrf)
-            ->open()
-            . Button::submit(
-              $translator->translate('menu.logout', ['login' => Html::encode(preg_replace('/\d+/', '', $userLogin))])
-            )
-            ->class('btn btn-xs btn-info')
-            . Form::tag()->close();
-            
+            )->render();             
         } //null!== currentPath && !isGuest  
                 
         echo NavBar::end();

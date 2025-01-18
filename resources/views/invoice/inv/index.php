@@ -17,7 +17,7 @@ use Yiisoft\Html\Tag\Input;
 use Yiisoft\Html\Tag\Input\Checkbox;
 use Yiisoft\Html\Tag\Label;
 use Yiisoft\Yii\Bootstrap5\Breadcrumbs;
-use Yiisoft\Yii\Bootstrap5\Link;
+use Yiisoft\Yii\Bootstrap5\BreadcrumbLink;
 use Yiisoft\Yii\DataView\Column\ActionButton;
 use Yiisoft\Yii\DataView\Column\ActionColumn;
 use Yiisoft\Yii\DataView\Column\Base\DataContext;
@@ -170,50 +170,67 @@ $toolbar = Div::tag();
 
  echo Breadcrumbs::widget()
      ->links(
-         new Link($translator->translate('i.default_invoice_group'), 
-                  $urlGenerator->generate('setting/tab_index', 
+         BreadcrumbLink::to(
+                label: $translator->translate('i.default_invoice_group'), 
+                url: $urlGenerator->generate('setting/tab_index', 
                   [], ['active' => 'invoices']).'#settings[default_invoice_group]',
+                active: true, 
                 attributes: [
                     'data-bs-toggle' => 'tooltip',
                     'title' => $defaultInvoiceGroup ?? $translator->translate('i.not_set')
-                ]
+                ],
+                encodeLabel: false
          ),    
-         new Link($translator->translate('i.default_terms'), 
-                  $urlGenerator->generate('setting/tab_index', 
+         BreadcrumbLink::to(
+                label: $translator->translate('i.default_terms'), 
+                url: $urlGenerator->generate('setting/tab_index', 
                   [], ['active' => 'invoices']).'#settings[default_invoice_terms]',
+                active: false,
                 attributes: [
                     'data-bs-toggle' => 'tooltip', 
                     'title' => $s->getSetting('default_invoice_terms')  ?: $translator->translate('i.not_set')
-                ]
+                ],
+                encodeLabel: false 
          ), 
-         new Link($translator->translate('i.default_payment_method'), 
-                  $urlGenerator->generate('setting/tab_index', 
+         BreadcrumbLink::to(
+                label:  $translator->translate('i.default_payment_method'), 
+                url: $urlGenerator->generate('setting/tab_index', 
                   [], ['active' => 'invoices']).'#settings[default_invoice_payment_method]',
+                active: false,
                 attributes: [
                     'data-bs-toggle' => 'tooltip',
                     'title' => $defaultInvoicePaymentMethod ?? $translator->translate('i.not_set')
-                ]
+                ],
+                encodeLabel: false
          ), 
-         new Link($translator->translate('i.invoices_due_after'), 
-                  $urlGenerator->generate('setting/tab_index', 
+         BreadcrumbLink::to(
+                label: $translator->translate('i.invoices_due_after'), 
+                url: $urlGenerator->generate('setting/tab_index', 
                   [], ['active' => 'invoices']).'#settings[invoices_due_after]',
+                active: false,
                 attributes: [
                     'data-bs-toggle' => 'tooltip',
                     'title' => $s->getSetting('invoices_due_after') ?: $translator->translate('i.not_set')
-                ]
+                ],
+                encodeLabel: false 
          ), 
-         new Link($translator->translate('i.generate_invoice_number_for_draft'), 
-                  $urlGenerator->generate('setting/tab_index', 
+         BreadcrumbLink::to(
+                label: $translator->translate('i.generate_invoice_number_for_draft'), 
+                url: $urlGenerator->generate('setting/tab_index', 
                   [], ['active' => 'invoices']).'#settings[generate_invoice_number_for_draft]',
+                active: false,
                 attributes: [
                     'data-bs-toggle' => 'tooltip',
                     'title' => $s->getSetting('generate_invoice_number_for_draft') == '1' ? '✅' : '❌'
-                ] 
+                ],
+                encodeLabel: false 
          ), 
-         new Link($translator->translate('i.recurring'), 
-                  $urlGenerator->generate('invrecurring/index')),
-         new Link($translator->translate('i.set_to_read_only').' '. $iR->getSpecificStatusArrayEmoji((int)$s->getSetting('read_only_toggle')) ,
-                  $urlGenerator->generate('setting/tab_index', 
+         BreadcrumbLink::to(
+                label: $translator->translate('i.recurring'), 
+                url: $urlGenerator->generate('invrecurring/index')),
+         BreadcrumbLink::to(
+                label: $translator->translate('i.set_to_read_only').' '. $iR->getSpecificStatusArrayEmoji((int)$s->getSetting('read_only_toggle')) ,
+                url:  $urlGenerator->generate('setting/tab_index', 
                   [], ['active' => 'invoices']).'#settings[read_only_toggle]'),        
      )
      ->listId(false)

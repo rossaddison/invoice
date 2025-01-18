@@ -7057,12 +7057,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/rossaddison/yii-auth-client.git",
-                "reference": "3eaae88a4114a9098e0fc4b3824d7057db04e515"
+                "reference": "90401769933aefd86b994d62343fc2f84a125d03"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/rossaddison/yii-auth-client/zipball/3eaae88a4114a9098e0fc4b3824d7057db04e515",
-                "reference": "3eaae88a4114a9098e0fc4b3824d7057db04e515",
+                "url": "https://api.github.com/repos/rossaddison/yii-auth-client/zipball/90401769933aefd86b994d62343fc2f84a125d03",
+                "reference": "90401769933aefd86b994d62343fc2f84a125d03",
                 "shasum": ""
             },
             "require": {
@@ -7142,7 +7142,7 @@
                     "type": "opencollective"
                 }
             ],
-            "time": "2025-01-15T16:22:45+00:00"
+            "time": "2025-01-18T14:28:29+00:00"
         },
         {
             "name": "sabre/uri",
@@ -15949,12 +15949,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/yiisoft/yii-bootstrap5.git",
-                "reference": "7a9e6288d348cf8a590d8f8b61811fdede5670ba"
+                "reference": "ed3598a33c23a61b344e0f79e85ca9208be8ddf8"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/yiisoft/yii-bootstrap5/zipball/7a9e6288d348cf8a590d8f8b61811fdede5670ba",
-                "reference": "7a9e6288d348cf8a590d8f8b61811fdede5670ba",
+                "url": "https://api.github.com/repos/yiisoft/yii-bootstrap5/zipball/ed3598a33c23a61b344e0f79e85ca9208be8ddf8",
+                "reference": "ed3598a33c23a61b344e0f79e85ca9208be8ddf8",
                 "shasum": ""
             },
             "require": {
@@ -16018,7 +16018,7 @@
                     "type": "open_collective"
                 }
             ],
-            "time": "2025-01-14T08:16:38+00:00"
+            "time": "2025-01-16T14:42:28+00:00"
         },
         {
             "name": "yiisoft/yii-console",
@@ -16315,12 +16315,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/yiisoft/yii-debug.git",
-                "reference": "ace7cea52b6f9d33307e6d3ac9df5f5a02eee4d8"
+                "reference": "b326385d207b72bd707d985a03ab87c10c18e1d5"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/yiisoft/yii-debug/zipball/ace7cea52b6f9d33307e6d3ac9df5f5a02eee4d8",
-                "reference": "ace7cea52b6f9d33307e6d3ac9df5f5a02eee4d8",
+                "url": "https://api.github.com/repos/yiisoft/yii-debug/zipball/b326385d207b72bd707d985a03ab87c10c18e1d5",
+                "reference": "b326385d207b72bd707d985a03ab87c10c18e1d5",
                 "shasum": ""
             },
             "require": {
@@ -16408,7 +16408,7 @@
                     "type": "opencollective"
                 }
             ],
-            "time": "2025-01-15T14:17:54+00:00"
+            "time": "2025-01-18T06:09:32+00:00"
         },
         {
             "name": "yiisoft/yii-debug-api",
@@ -18290,16 +18290,16 @@
         },
         {
             "name": "friendsofphp/php-cs-fixer",
-            "version": "v3.68.0",
+            "version": "v3.68.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/PHP-CS-Fixer/PHP-CS-Fixer.git",
-                "reference": "73f78d8b2b34a0dd65fedb434a602ee4c2c8ad4c"
+                "reference": "b9db2b2ea3cdba7201067acee46f984ef2397cff"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/PHP-CS-Fixer/PHP-CS-Fixer/zipball/73f78d8b2b34a0dd65fedb434a602ee4c2c8ad4c",
-                "reference": "73f78d8b2b34a0dd65fedb434a602ee4c2c8ad4c",
+                "url": "https://api.github.com/repos/PHP-CS-Fixer/PHP-CS-Fixer/zipball/b9db2b2ea3cdba7201067acee46f984ef2397cff",
+                "reference": "b9db2b2ea3cdba7201067acee46f984ef2397cff",
                 "shasum": ""
             },
             "require": {
@@ -18381,7 +18381,7 @@
             ],
             "support": {
                 "issues": "https://github.com/PHP-CS-Fixer/PHP-CS-Fixer/issues",
-                "source": "https://github.com/PHP-CS-Fixer/PHP-CS-Fixer/tree/v3.68.0"
+                "source": "https://github.com/PHP-CS-Fixer/PHP-CS-Fixer/tree/v3.68.1"
             },
             "funding": [
                 {
@@ -18389,7 +18389,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2025-01-13T17:01:01+00:00"
+            "time": "2025-01-17T09:20:36+00:00"
         },
         {
             "name": "httpsoft/http-basis",
@@ -20913,12 +20913,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/Roave/SecurityAdvisories.git",
-                "reference": "b3b47da8ab8f3fd7ab2881a1add662280d6257e2"
+                "reference": "e7a38fcc13e4ddfe9a28d5c7bf50aa9a9da758ec"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/Roave/SecurityAdvisories/zipball/b3b47da8ab8f3fd7ab2881a1add662280d6257e2",
-                "reference": "b3b47da8ab8f3fd7ab2881a1add662280d6257e2",
+                "url": "https://api.github.com/repos/Roave/SecurityAdvisories/zipball/e7a38fcc13e4ddfe9a28d5c7bf50aa9a9da758ec",
+                "reference": "e7a38fcc13e4ddfe9a28d5c7bf50aa9a9da758ec",
                 "shasum": ""
             },
             "conflict": {
@@ -21202,6 +21202,7 @@
                 "intelliants/subrion": "<4.2.2",
                 "inter-mediator/inter-mediator": "==5.5",
                 "ipl/web": "<0.10.1",
+                "islandora/crayfish": "<4.1",
                 "islandora/islandora": ">=2,<2.4.1",
                 "ivankristianto/phpwhois": "<=4.3",
                 "jackalope/jackalope-doctrine-dbal": "<1.7.4",
@@ -21773,7 +21774,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2025-01-14T23:04:29+00:00"
+            "time": "2025-01-15T23:05:13+00:00"
         },
         {
             "name": "roave/signature",

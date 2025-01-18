@@ -294,7 +294,8 @@ echo NavBar::widget()
                 ->content(),    
                 $urlGenerator->generate('auth/login'), 
                 true, 
-                false
+                false,                        
+                false        
             ),
             NavLink::to(
                 Label::tag()
@@ -306,6 +307,7 @@ echo NavBar::widget()
                 ]), 
                 $urlGenerator->generate('auth/signup'), 
                 true, 
+                false,                        
                 false
             )
         )

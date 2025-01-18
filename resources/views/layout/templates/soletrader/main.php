@@ -125,7 +125,9 @@ $this->setTitle($title);
                     //active    
                     $debugMode,
                     //disabled    
-                    !$debugMode
+                    !$debugMode,
+                    //encode label    
+                    false    
                 ),
                 NavLink::to(
                     Label::tag()
@@ -136,7 +138,8 @@ $this->setTitle($title);
                     ->content(str_repeat(' ', 1).$translator->translate('menu.about')), 
                     $urlGenerator->generate('site/about'), 
                     $isGuest && !$noFrontPageAbout, 
-                    !$isGuest && $noFrontPageAbout
+                    !$isGuest && $noFrontPageAbout,
+                    false        
                 ),
                 NavLink::to(
                     Label::tag()
@@ -146,7 +149,8 @@ $this->setTitle($title);
                     ->content(str_repeat(' ', 1).$translator->translate('menu.accreditations')),  
                     $urlGenerator->generate('site/accreditations'), 
                     $isGuest && !$noFrontPageAccreditations, 
-                    !$isGuest && $noFrontPageAccreditations
+                    !$isGuest && $noFrontPageAccreditations,                        
+                    false        
                 ),
                 NavLink::to(
                     Label::tag()
@@ -154,7 +158,8 @@ $this->setTitle($title);
                     ->content(str_repeat(' ', 1).$translator->translate('menu.gallery')),
                     $urlGenerator->generate('site/gallery'), 
                     $isGuest && !$noFrontPageGallery, 
-                    !$isGuest && $noFrontPageGallery
+                    !$isGuest && $noFrontPageGallery,                        
+                    false        
                 ),     
                 NavLink::to(
                     Label::tag()
@@ -162,7 +167,8 @@ $this->setTitle($title);
                     ->content(str_repeat(' ', 1).$translator->translate('menu.team')), 
                     $urlGenerator->generate('site/team'), 
                     $isGuest && !$noFrontPageTeam, 
-                    !$isGuest && $noFrontPageTeam
+                    !$isGuest && $noFrontPageTeam,                        
+                    false        
                 ),
                 NavLink::to(
                     Label::tag()
@@ -170,14 +176,16 @@ $this->setTitle($title);
                     ->content(str_repeat(' ', 1).$translator->translate('menu.pricing')), 
                     $urlGenerator->generate('site/pricing'), 
                     $isGuest && !$noFrontPagePricing, 
-                    !$isGuest && $noFrontPagePricing
+                    !$isGuest && $noFrontPagePricing,                        
+                    false        
                 ),
                 NavLink::to(
                     Label::tag()
                     ->content(str_repeat(' ', 1).$translator->translate('menu.testimonial')), 
                     $urlGenerator->generate('site/testimonial'), 
                     $isGuest && !$noFrontPageTestimonial, 
-                    !$isGuest && $noFrontPageTestimonial
+                    !$isGuest && $noFrontPageTestimonial,                        
+                    false        
                 ),
                 NavLink::to(
                     Label::tag()
@@ -185,7 +193,8 @@ $this->setTitle($title);
                     ->content(),
                     $urlGenerator->generate('site/contact'), 
                     $isGuest && !$noFrontPageContactDetails, 
-                    !$isGuest && $noFrontPageContactDetails
+                    !$isGuest && $noFrontPageContactDetails,                        
+                    false        
                 ),
                 NavLink::to(
                     Label::tag()
@@ -193,7 +202,8 @@ $this->setTitle($title);
                     ->content(),    
                     $urlGenerator->generate('auth/login'), 
                     $isGuest && !$stopLoggingIn, 
-                    !$isGuest && $stopLoggingIn
+                    !$isGuest && $stopLoggingIn,                        
+                    false        
                 ),
                 NavLink::to(
                     Label::tag()
@@ -205,7 +215,8 @@ $this->setTitle($title);
                     ->content(), 
                     $urlGenerator->generate('auth/signup'), 
                     $isGuest && !$stopSigningUp, 
-                    !$isGuest && $stopSigningUp
+                    !$isGuest && $stopSigningUp,                        
+                    false        
                 )                 
             )
             ->styles(NavStyle::NAVBAR) : ''; 

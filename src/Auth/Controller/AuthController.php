@@ -24,6 +24,7 @@ use Yiisoft\Router\CurrentRoute;
 use Yiisoft\Router\FastRoute\UrlGenerator;
 use Yiisoft\Security\Random;
 use Yiisoft\Security\TokenMask;
+use Yiisoft\Session\SessionInterface;
 use Yiisoft\Translator\TranslatorInterface;
 use Yiisoft\User\Login\Cookie\CookieLogin;
 use Yiisoft\User\Login\Cookie\CookieLoginIdentityInterface;
@@ -55,7 +56,8 @@ final class AuthController
         private readonly AuthService            $authService,
         private readonly WebControllerService   $webService,
         private ViewRenderer                    $viewRenderer,
-        private Manager                         $manager,    
+        private Manager                         $manager,
+        private SessionInterface                $session,    
         private SettingRepository               $sR,  
         private Facebook                        $facebook,
         private GitHub                          $github,
@@ -68,6 +70,7 @@ final class AuthController
     ) {
         $this->viewRenderer = $viewRenderer->withControllerName('auth');
         $this->manager = $manager;
+        $this->session = $session;
         $this->sR = $sR;
         $this->facebook = $facebook;
         $this->github = $github;
@@ -148,6 +151,9 @@ final class AuthController
         $noMicrosoftOnlineContinueButton = $this->sR->getSetting('no_microsoftonline_continue_button') == '1' ? true : false;
         $noXContinueButton = $this->sR->getSetting('no_x_continue_button') == '1' ? true : false;
         $noYandexContinueButton = $this->sR->getSetting('no_yandex_continue_button') == '1' ? true : false;
+        $codeVerifier = Random::string(128);
+        $codeChallenge = strtr(rtrim(base64_encode(hash('sha256', $codeVerifier, true)), '='), '+/', '-_');
+        $this->session->set('code_verifier', $codeVerifier); 
         return $this->viewRenderer->render('login', 
             [
                 'formModel' => $loginForm,
@@ -162,8 +168,16 @@ final class AuthController
                  * code_challenge_method. 
                  * @link https://developer.x.com/en/docs/authentication/oauth-2-0/user-access-token
                  */
-                'xAuthUrl' => strlen($this->x->getClientId()) > 0 ? $this->x->buildAuthUrl($request, $params = ['code_challenge' => 'challenge', 'code_challenge_method' => 'plain']) : '',
-                'yandexAuthUrl' => strlen($this->yandex->getClientId()) > 0 ? $this->yandex->buildAuthUrl($request, $params = []) : '',
+                'xAuthUrl' => strlen($this->x->getClientId()) > 0 ? $this->x->buildAuthUrl($request, 
+                $params = [
+                    'code_challenge' => $codeChallenge, 
+                    'code_challenge_method' => 'S256'
+                ]) : '',
+                'yandexAuthUrl' => strlen($this->yandex->getClientId()) > 0 ? $this->yandex->buildAuthUrl($request, 
+                $params = [
+                    'code_challenge' => $codeChallenge, 
+                    'code_challenge_method' => 'S256'
+                ]) : '',
                 'noGithubContinueButton' => $noGithubContinueButton,
                 'noGoogleContinueButton' => $noGoogleContinueButton,
                 'noFacebookContinueButton' => $noFacebookContinueButton,
@@ -207,45 +221,41 @@ final class AuthController
          * @psalm-suppress DocblockTypeContradiction $code
          */
         if (strlen($code) == 0) {
-            // If we don't have an authorization code then get one 
-            // and use the protected function oauth2->generateAuthState to generate state param
-            // which has a session id built into it
-            $authorizationUrl = $this->x->buildAuthUrl($request, ['code_challenge' => 'challenge', 'code_challenge_method' => 'plain']);
+            $codeVerifier = Random::string(128);
+            $codeChallenge = strtr(rtrim(base64_encode(hash('sha256', $codeVerifier, true)), '='), '+/', '-_');
+            
+            // Store code_verifier in session or other storage
+            $this->session->set('code_verifier', $codeVerifier); 
+            
+            $authorizationUrl = $this->x->buildAuthUrl($request, 
+                [
+                    'code_challenge' => $codeChallenge, 
+                    'code_challenge_method' => 'S256'
+                ]
+            );
             header('Location: ' . $authorizationUrl);
             exit;
         } elseif ($code == 401){
             return $this->redirectToOauth2CallbackResultUnAuthorised();
         } elseif (strlen($state) == 0) {
-            /**
-             * State is invalid, possible cross-site request forgery. Exit with an error code.
-             */
             exit(1);        
-        // code and state are both present    
         } else {
-            /**
-             * @see https://docs.x.com/resources/fundamentals/authentication/oauth-2-0/user-access-token#steps-to-connect-using-oauth-2-0
-             */
+            $codeVerifier = (string)$this->session->get('code_verifier');
             $params = [
                 'grant_type' => 'authorization_code', 
                 'redirect_uri' => $this->x->getOauth2ReturnUrl(),
-                'code_verifier' => 'challenge'
+                'code_verifier' => $codeVerifier
             ];
-            /**
-             * Developer Portal: User Authentication Settings: Type of App: Native App: Public Client (NOT Web app)
-             * @see https://developer.twitter.com/en/portal/projects/{}/apps/{}/auth-settings
-             * @see https://developer.x.com/en/docs/authentication/oauth-2-0/user-access-token
-             */
             $oAuthTokenType = $this->x->fetchAccessTokenWithCurlAndCodeVerifier($request, $code, $params);
-            
             $userArray = $this->x->getCurrentUserJsonArrayUsingCurl($oAuthTokenType);
             /**
              * @var array $userArray['data']
              */
-            $data = $userArray['data'];
+            $data = $userArray['data'] ?? [];
             /**
              * @var int $data['id']
              */
-            $xId = $data['id'] ?: 0;
+            $xId = $data['id'] ?? 0;
             if ($xId > 0) { 
                 /**
                  * @var string $data['username']
@@ -258,15 +268,12 @@ final class AuthController
                      */
                     $email = $userArray['email'] ?? 'noemail'.$login.'@x.com';
                     $password = Random::string(32);
-                    // The password does not need to be validated here so use authService->oauthLogin($login) instead of authService->login($login, $password)
-                    // but it will be used later to build a passwordHash
                     if ($this->authService->oauthLogin($login)) {
                         $identity = $this->authService->getIdentity();
                         $userId = $identity->getId();
                         if (null!==$userId) {
                             $userInv = $uiR->repoUserInvUserIdquery($userId);
                             if (null!==$userInv) {
-                                // disable the x verification token as soon as the user logs in for the first time
                                 $status = $userInv->getActive();
                                 if ($status || $userId == 1) {
                                     $userId == 1 ? $this->disableToken($tR, '1', $this->getTokenType('x')) : '';
@@ -283,7 +290,6 @@ final class AuthController
                         $uR->save($user);
                         $userId = $user->getId();
                         if ($userId > 0) {
-                            // avoid autoincrement issues and using predefined user id of 1 ... and assign the first signed-up user ... admin rights
                             if ($uR->repoCount() == 1) {
                                 $this->manager->revokeAll($userId);
                                 $this->manager->assign('admin', $userId);
@@ -309,10 +315,11 @@ final class AuthController
                              * @see A new UserInv (extension table of user) for the user is created.
                              */
                             $proceedToMenuButton = $this->proceedToMenuButtonWithMaskedRandomAndTimeTokenLink(
-                                    $translator, 
-                                    $user, 
-                                    $uiR, 
-                                    $language, $_language, $randomAndTimeToken, 'x');
+                                $translator, 
+                                $user, 
+                                $uiR, 
+                                $language, $_language, $randomAndTimeToken, 'x'
+                            );
                             return $this->viewRenderer->render('proceed', [
                                 'proceedToMenuButton' => $proceedToMenuButton
                             ]);
@@ -948,7 +955,18 @@ final class AuthController
          * @psalm-suppress DocblockTypeContradiction $code
          */
         if (strlen($code) == 0) {
-            $authorizationUrl = $this->yandex->buildAuthUrl($request, []);
+            $codeVerifier = Random::string(128);
+            $codeChallenge = strtr(rtrim(base64_encode(hash('sha256', $codeVerifier, true)), '='), '+/', '-_');
+            
+            // Store code_verifier in session or other storage
+            $this->session->set('code_verifier', $codeVerifier); 
+            
+            $authorizationUrl = $this->yandex->buildAuthUrl($request, 
+                [
+                    'code_challenge' => $codeChallenge, 
+                    'code_challenge_method' => 'S256'
+                ]
+            );
             header('Location: ' . $authorizationUrl);
             exit;
         } elseif ($code == 401){
@@ -956,86 +974,94 @@ final class AuthController
         } elseif (strlen($state) == 0) {
             exit(1);
         } else {
-            $oAuthTokenType = $this->yandex->fetchAccessToken($request, $code, $params = []);
-            $userArray = $this->yandex->applyAccessTokenToRequest($request, $oAuthTokenType);
+            $codeVerifier = (string)$this->session->get('code_verifier');
+            $params = [
+                'grant_type' => 'authorization_code', 
+                'redirect_uri' => $this->yandex->getOauth2ReturnUrl(),
+                'code_verifier' => $codeVerifier
+            ];
+            $oAuthTokenType = $this->yandex->fetchAccessTokenWithCurlAndCodeVerifier($request, $code, $params);
+            /**
+             * @var array $userArray
+             */
+            $userArray = $this->yandex->getCurrentUserJsonArrayUsingCurl($oAuthTokenType);
             /**
              * @var int $userArray['id']
              */
-            $xId = $userArray['id'] ?? 0;
-            if ($xId > 0) { 
-                $xLogin = 'yandex';
-                if (strlen($xLogin) > 0) {
-                    $login = 'yandex'.(string)$xId.$xLogin;
-                    /**
-                     * @var string $userArray['email']
-                     */
-                    $email = $userArray['email'] ?? 'noemail'.$login.'@yandex.com';
-                    $password = Random::string(32);
-                    // The password does not need to be validated here so use authService->oauthLogin($login) instead of authService->login($login, $password)
-                    // but it will be used later to build a passwordHash
-                    if ($this->authService->oauthLogin($login)) {
-                        $identity = $this->authService->getIdentity();
-                        $userId = $identity->getId();
-                        if (null!==$userId) {
-                            $userInv = $uiR->repoUserInvUserIdquery($userId);
-                            if (null!==$userInv) {
-                                // disable the yandex verification token as soon as the user logs in for the first time
-                                $status = $userInv->getActive();
-                                if ($status || $userId == 1) {
-                                    $userId == 1 ? $this->disableToken($tR, '1', $this->getTokenType('yandex')) : '';
-                                    return $this->redirectToInvoiceIndex();
-                                } else {
-                                    $this->disableToken($tR, $userId, $this->getTokenType('yandex'));
-                                    return $this->redirectToAdminMustMakeActive();
-                                }
+            $id = $userArray['id'] ?? 0;
+            if ($id > 0) {
+                /**
+                 * @var string $userArray['login'] e.g john.doe.com
+                 */
+                $userName = $userArray['login']; 
+                // Append the last four digits of the Id
+                $login = 'yx'.$userName. substr((string)$id, strlen((string)$id) - 4, strlen((string)$id));
+                $email = 'noemail'.$login.'@yandex.com';
+                $password = Random::string(32);
+                // The password does not need to be validated here so use authService->oauthLogin($login) instead of authService->login($login, $password)
+                // but it will be used later to build a passwordHash
+                if ($this->authService->oauthLogin($login)) {
+                    $identity = $this->authService->getIdentity();
+                    $userId = $identity->getId();
+                    if (null!==$userId) {
+                        $userInv = $uiR->repoUserInvUserIdquery($userId);
+                        if (null!==$userInv) {
+                            // disable the yandex verification token as soon as the user logs in for the first time
+                            $status = $userInv->getActive();
+                            if ($status || $userId == 1) {
+                                $userId == 1 ? $this->disableToken($tR, '1', $this->getTokenType('yandex')) : '';
+                                return $this->redirectToInvoiceIndex();
+                            } else {
+                                $this->disableToken($tR, $userId, $this->getTokenType('yandex'));
+                                return $this->redirectToAdminMustMakeActive();
                             }
                         }
-                        return $this->redirectToMain();
-                    } else {
-                        $user = new User($login, $email, $password);
-                        $uR->save($user);
-                        $userId = $user->getId();
-                        if ($userId > 0) {
-                            // avoid autoincrement issues and using predefined user id of 1 ... and assign the first signed-up user ... admin rights
-                            if ($uR->repoCount() == 1) {
-                                $this->manager->revokeAll($userId);
-                                $this->manager->assign('admin', $userId);
-                            } else {
-                                $this->manager->revokeAll($userId);
-                                $this->manager->assign('observer', $userId);
-                            }
-                            $login = $user->getLogin();
-                            /**
-                             * @var array $this->sR->locale_language_array()
-                             */
-                            $languageArray = $this->sR->locale_language_array();
-                            $_language = $currentRoute->getArgument('_language');
-                            /**
-                             * @see Trait\Oauth2 function getXAccessToken
-                             * @var string $_language
-                             * @var array $languageArray
-                             * @var string $language
-                             */
-                            $language = $languageArray[$_language];
-                            $randomAndTimeToken = $this->getYandexAccessToken($user, $tR);
-                            /**
-                             * @see A new UserInv (extension table of user) for the user is created.
-                             */
-                            $proceedToMenuButton = $this->proceedToMenuButtonWithMaskedRandomAndTimeTokenLink(
-                                    $translator, 
-                                    $user, 
-                                    $uiR, 
-                                    $language, 
-                                    $_language, 
-                                    $randomAndTimeToken, 
-                                    'yandex'
-                            );
-                            return $this->viewRenderer->render('proceed', [
-                                'proceedToMenuButton' => $proceedToMenuButton
-                            ]);
-                        }     
                     }
-                }    
+                    return $this->redirectToMain();
+                } else {
+                    $user = new User($login, $email, $password);
+                    $uR->save($user);
+                    $userId = $user->getId();
+                    if ($userId > 0) {
+                        // avoid autoincrement issues and using predefined user id of 1 ... and assign the first signed-up user ... admin rights
+                        if ($uR->repoCount() == 1) {
+                            $this->manager->revokeAll($userId);
+                            $this->manager->assign('admin', $userId);
+                        } else {
+                            $this->manager->revokeAll($userId);
+                            $this->manager->assign('observer', $userId);
+                        }
+                        $login = $user->getLogin();
+                        /**
+                         * @var array $this->sR->locale_language_array()
+                         */
+                        $languageArray = $this->sR->locale_language_array();
+                        $_language = $currentRoute->getArgument('_language');
+                        /**
+                         * @see Trait\Oauth2 function getYandexAccessToken
+                         * @var string $_language
+                         * @var array $languageArray
+                         * @var string $language
+                         */
+                        $language = $languageArray[$_language];
+                        $randomAndTimeToken = $this->getYandexAccessToken($user, $tR);
+                        /**
+                         * @see A new UserInv (extension table of user) for the user is created.
+                         */
+                        $proceedToMenuButton = $this->proceedToMenuButtonWithMaskedRandomAndTimeTokenLink(
+                                $translator, 
+                                $user, 
+                                $uiR, 
+                                $language, 
+                                $_language, 
+                                $randomAndTimeToken, 
+                                'yandex'
+                        );
+                        return $this->viewRenderer->render('proceed', [
+                            'proceedToMenuButton' => $proceedToMenuButton
+                        ]);
+                    }     
+                }   
             }    
         }
         $this->authService->logout();

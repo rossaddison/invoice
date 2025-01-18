@@ -11,7 +11,7 @@ use Yiisoft\Html\Tag\H5;
 use Yiisoft\Html\Tag\I;
 use Yiisoft\Html\Tag\Label;
 use Yiisoft\Yii\Bootstrap5\Breadcrumbs;
-use Yiisoft\Yii\Bootstrap5\Link;
+use Yiisoft\Yii\Bootstrap5\BreadcrumbLink;
 use Yiisoft\Yii\DataView\Column\DataColumn;
 use Yiisoft\Yii\DataView\GridView;
 
@@ -93,54 +93,72 @@ $toolbar = Div::tag();
 
 echo Breadcrumbs::widget()
      ->links(
-         new Link($translator->translate('i.default_quote_group'), 
-                  $urlGenerator->generate('setting/tab_index', 
-                  [], ['active' => 'quotes']).'#settings[default_quote_group]',
-                attributes: [
-                    'data-bs-toggle' => 'tooltip',
-                    'title' => $defaultQuoteGroup ?? $translator->translate('i.not_set')
-                ]
-         ),    
-         new Link($translator->translate('i.default_notes'), 
-                  $urlGenerator->generate('setting/tab_index', 
-                  [], ['active' => 'quotes']).'#settings[default_quote_notes]',
-                attributes: [
-                    'data-bs-toggle' => 'tooltip', 
-                    'title' => $s->getSetting('default_quote_notes')  ?: $translator->translate('i.not_set')
-                ]
-         ), 
-         new Link($translator->translate('i.quotes_expire_after'), 
-                  $urlGenerator->generate('setting/tab_index', 
-                  [], ['active' => 'quotes']).'#settings[quotes_expire_after]',
-                attributes: [
-                    'data-bs-toggle' => 'tooltip',
-                    'title' => $s->getSetting('quotes_expire_after') ?: $translator->translate('i.not_set')
-                ]
-         ), 
-         new Link($translator->translate('i.generate_quote_number_for_draft'), 
-                  $urlGenerator->generate('setting/tab_index', 
-                  [], ['active' => 'quotes']).'#settings[generate_quote_number_for_draft]',
-                attributes: [
-                    'data-bs-toggle' => 'tooltip',
-                    'title' => $s->getSetting('generate_quote_number_for_draft') == '1' ? '✅' : '❌'
-                ] 
-         ),
-         new Link($translator->translate('i.default_email_template'), 
-                  $urlGenerator->generate('setting/tab_index', 
-                  [], ['active' => 'quotes']).'#settings[email_quote_template]',
-                attributes: [
-                    'data-bs-toggle' => 'tooltip', 
-                    'title' => strlen($s->getSetting('email_quote_template')) > 0  ? $s->getSetting('email_quote_template') : $translator->translate('i.not_set')
-                ]
-         ),       
-         new Link($translator->translate('i.pdf_quote_footer'), 
-                  $urlGenerator->generate('setting/tab_index', 
-                  [], ['active' => 'quotes']).'#settings[pdf_quote_footer]',
-                attributes: [
-                    'data-bs-toggle' => 'tooltip', 
-                    'title' => $s->getSetting('pdf_quote_footer')  ?: $translator->translate('i.not_set')
-                ]
-         ),     
+        BreadcrumbLink::to(
+               label: $translator->translate('i.default_quote_group'), 
+               url: $urlGenerator->generate('setting/tab_index', 
+                 [], ['active' => 'quotes']).'#settings[default_quote_group]',
+               active: true,
+               attributes: [
+                   'data-bs-toggle' => 'tooltip',
+                   'title' => $defaultQuoteGroup ?? $translator->translate('i.not_set')
+               ],
+               encodeLabel: false
+        ),    
+        BreadcrumbLink::to(
+               label: $translator->translate('i.default_notes'), 
+               url: $urlGenerator->generate('setting/tab_index', 
+                 [], ['active' => 'quotes']).'#settings[default_quote_notes]',
+               active: false,
+               attributes: [
+                   'data-bs-toggle' => 'tooltip', 
+                   'title' => $s->getSetting('default_quote_notes')  ?: $translator->translate('i.not_set')
+               ],
+               encodeLabel: false 
+        ), 
+        BreadcrumbLink::to(
+               label: $translator->translate('i.quotes_expire_after'), 
+               url: $urlGenerator->generate('setting/tab_index', 
+                 [], ['active' => 'quotes']).'#settings[quotes_expire_after]',
+               active: false,
+               attributes: [
+                   'data-bs-toggle' => 'tooltip',
+                   'title' => $s->getSetting('quotes_expire_after') ?: $translator->translate('i.not_set')
+               ],
+               encodeLabel: false 
+        ), 
+        BreadcrumbLink::to(
+               label: $translator->translate('i.generate_quote_number_for_draft'), 
+               url:  $urlGenerator->generate('setting/tab_index', 
+                 [], ['active' => 'quotes']).'#settings[generate_quote_number_for_draft]',
+               active: false,
+               attributes: [
+                   'data-bs-toggle' => 'tooltip',
+                   'title' => $s->getSetting('generate_quote_number_for_draft') == '1' ? '✅' : '❌'
+               ],
+               encodeLabel: false 
+        ),
+        BreadcrumbLink::to(
+               label: $translator->translate('i.default_email_template'), 
+               url:  $urlGenerator->generate('setting/tab_index', 
+                 [], ['active' => 'quotes']).'#settings[email_quote_template]',
+               active: false,
+               attributes: [
+                   'data-bs-toggle' => 'tooltip', 
+                   'title' => strlen($s->getSetting('email_quote_template')) > 0  ? $s->getSetting('email_quote_template') : $translator->translate('i.not_set')
+               ],
+               encodeLabel: false 
+        ),       
+        BreadcrumbLink::to(
+               label: $translator->translate('i.pdf_quote_footer'), 
+               url: $urlGenerator->generate('setting/tab_index', 
+                 [], ['active' => 'quotes']).'#settings[pdf_quote_footer]',
+               active: false,
+               attributes: [
+                   'data-bs-toggle' => 'tooltip', 
+                   'title' => $s->getSetting('pdf_quote_footer')  ?: $translator->translate('i.not_set')
+               ],
+               encodeLabel: false
+        ),     
      )
      ->listId(false)
      ->render();
