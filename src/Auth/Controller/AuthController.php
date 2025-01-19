@@ -724,7 +724,6 @@ final class AuthController
         return $this->redirectToMain();
     }
     
-    // This funtion has not been tested yet
     public function callbackLinkedIn(
         CurrentRoute $currentRoute,
         ServerRequestInterface $request,
@@ -755,17 +754,35 @@ final class AuthController
             exit(1);        
         // code and state are both present    
         } else {
-            $oAuthTokenType = $this->linkedIn->fetchAccessToken($request, $code, $params = []);
+            $params = [
+                'grant_type' => 'authorization_code', 
+                'redirect_uri' => $this->linkedIn->getOauth2ReturnUrl()
+            ];
+            $oAuthTokenType = $this->linkedIn->fetchAccessTokenWithCurl($request, $code, $params);
             /**
              * @var array $userArray
              */
-            $userArray = $this->linkedIn->getCurrentUserJsonArray($oAuthTokenType);
+            $userArray = $this->linkedIn->getCurrentUserJsonArrayUsingCurl($oAuthTokenType);
             /**
-             * @var int $userArray['id']
+             * eg. [
+             *      'sub' => 'P1c9jkRFSy', 
+             *      'email_verified' => true, 
+             *      'name' => 'Joe Bloggs', 
+             *      'locale' => ['country' => 'UK', 'language' => 'en'], 
+             *      'given_name' => 'Joe',
+             *      'family_name' => 'Bloggs',
+             *      'email' => 'joe.bloggs@website.com'
+             *      ]
+             * 
+             * @var string $userArray['sub'] e.g. P1c9jkRFSy   ... A sub string is returned instead of an id
              */
-            $linkedInId = $userArray['id'] ?? 0;
-            if ($linkedInId > 0) { 
-                $login = 'linkedIn'.(string)$linkedInId;
+            $linkedInSub = $userArray['sub'] ?? '';
+            if (strlen($linkedInSub) > 0) { 
+                /**
+                 * @var string $userArray['name']
+                 */
+                $linkedInName = $userArray['name'] ?? 'unknown';
+                $login = 'linkedIn'.$linkedInName;
                 /**
                  * @var string $userArray['email']
                  */

@@ -46,6 +46,8 @@
 <p>Introducing India's PayTm payment gateway's QR code method of payment and comparing this with Stripe's method.</p>
 <p>A General Sales Tax (GST) Tax System will have to be implemented first for this purpose.</p>
 <p>Testing Credit Notes against Invoices with refunds (if payment made) linked to each of the payment gateways.</p>
+<p><b>19th January 2025</b></p>
+<p>LinkedIn Oauth2.0 Authorization Code introduced. </p>
 <p><b>18th January 2025</b></p>
 <p>Yandex Oauth2.0 Authorization Code with PKCE introduced. </p>
 <p>Code Challenge Method S256 used.</p>
