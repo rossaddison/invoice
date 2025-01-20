@@ -18,7 +18,7 @@ use Yiisoft\Yii\Bootstrap5\CarouselItem;
 ?>
 <?= Carousel::widget()
     ->items(
-        new CarouselItem(
+        CarouselItem::to(
             content:'<div class="bg-dark" style="height: '.$divHeight.'px; text-align: center"><br>'.
                         Img::tag()
                         ->src('/img/gallery/1.jpeg')
@@ -30,7 +30,7 @@ use Yiisoft\Yii\Bootstrap5\CarouselItem;
             encodeCaption: false,
             captionAttributes: ['class' => ['d-none', 'd-md-block']]    
         ),
-        new CarouselItem(
+        CarouselItem::to(
             content:'<div class="bg-dark" style="height: '.$divHeight.'px; text-align: center"><br>'.
                         Img::tag()
                         ->src('/img/gallery/2.jpeg')
@@ -41,7 +41,7 @@ use Yiisoft\Yii\Bootstrap5\CarouselItem;
             encodeCaption: false,
             captionAttributes: ['class' => ['d-none', 'd-md-block']]    
         ),
-        new CarouselItem(
+        CarouselItem::to(
             content:'<div class="bg-dark" style="height: '.$divHeight.'px; text-align: center"><br>'.
                         Img::tag()
                         ->src('/img/gallery/3.jpeg')
@@ -52,7 +52,7 @@ use Yiisoft\Yii\Bootstrap5\CarouselItem;
             encodeCaption: false,
             captionAttributes: ['class' => ['d-none', 'd-md-block']]    
         ),
-        new CarouselItem(
+        CarouselItem::to(
             content:'<div class="bg-dark" style="height: '.$divHeight.'px; text-align: center"><br>'.
                         Img::tag()
                         ->src('/img/gallery/4.jpeg')
@@ -63,7 +63,7 @@ use Yiisoft\Yii\Bootstrap5\CarouselItem;
             encodeCaption: false,
             captionAttributes: ['class' => ['d-none', 'd-md-block']]    
         ),    
-        new CarouselItem(
+        CarouselItem::to(
             content:'<div class="bg-dark" style="height: '.$divHeight.'px; text-align: center"><br>'.
                         Img::tag()
                         ->src('/img/gallery/5.jpeg')
@@ -74,7 +74,7 @@ use Yiisoft\Yii\Bootstrap5\CarouselItem;
             encodeCaption: false,
             captionAttributes: ['class' => ['d-none', 'd-md-block']]    
         ),    
-        new CarouselItem(
+        CarouselItem::to(
             content:'<div class="bg-dark" style="height: '.$divHeight.'px; text-align: center"><br>'.
                         Img::tag()
                         ->src('/img/gallery/6.jpeg')
@@ -85,7 +85,7 @@ use Yiisoft\Yii\Bootstrap5\CarouselItem;
             encodeCaption: false,
             captionAttributes: ['class' => ['d-none', 'd-md-block']]    
         ),
-        new CarouselItem(
+        CarouselItem::to(
             content:'<div class="bg-dark" style="height: '.$divHeight.'px; text-align: center"><br>'.
                         Img::tag()
                         ->src('/img/gallery/7.jpeg')
@@ -96,7 +96,7 @@ use Yiisoft\Yii\Bootstrap5\CarouselItem;
             encodeCaption: false,
             captionAttributes: ['class' => ['d-none', 'd-md-block']]    
         ),
-        new CarouselItem(
+        CarouselItem::to(
             content:'<div class="bg-dark" style="height: '.$divHeight.'px; text-align: center"><br>'.
                         Img::tag()
                         ->src('/img/gallery/8.jpeg')
@@ -107,7 +107,7 @@ use Yiisoft\Yii\Bootstrap5\CarouselItem;
             encodeCaption: false,
             captionAttributes: ['class' => ['d-none', 'd-md-block']]    
         ),    
-        new CarouselItem(
+        CarouselItem::to(
             content:'<div class="bg-dark" style="height: '.$divHeight.'px; text-align: center"><br>'.
                         Img::tag()
                         ->src('/img/gallery/9.jpeg')
@@ -118,7 +118,7 @@ use Yiisoft\Yii\Bootstrap5\CarouselItem;
             encodeCaption: false,
             captionAttributes: ['class' => ['d-none', 'd-md-block']]    
         ),    
-        new CarouselItem(
+        CarouselItem::to(
             content:'<div class="bg-dark" style="height: '.$divHeight.'px; text-align: center"><br>'.
                         Img::tag()
                         ->src('/img/gallery/10.jpeg')
@@ -129,7 +129,7 @@ use Yiisoft\Yii\Bootstrap5\CarouselItem;
             encodeCaption: false,
             captionAttributes: ['class' => ['d-none', 'd-md-block']]    
         ),    
-        new CarouselItem(
+        CarouselItem::to(
             content:'<div class="bg-dark" style="height: '.$divHeight.'px; text-align: center"><br>'.
                         Img::tag()
                         ->src('/img/gallery/11.jpeg')
@@ -140,7 +140,7 @@ use Yiisoft\Yii\Bootstrap5\CarouselItem;
             encodeCaption: false,
             captionAttributes: ['class' => ['d-none', 'd-md-block']]    
         ),    
-        new CarouselItem(
+        CarouselItem::to(
             content:'<div class="bg-dark" style="height: '.$divHeight.'px; text-align: center"><br>'.
                         Img::tag()
                         ->src('/img/gallery/12.jpeg')
@@ -151,7 +151,7 @@ use Yiisoft\Yii\Bootstrap5\CarouselItem;
             encodeCaption: false,
             captionAttributes: ['class' => ['d-none', 'd-md-block']]    
         ),    
-        new CarouselItem(
+        CarouselItem::to(
             content:'<div class="bg-dark" style="height: '.$divHeight.'px; text-align: center"><br>'.
                         Img::tag()
                         ->src('/img/gallery/13.jpeg')
@@ -162,7 +162,7 @@ use Yiisoft\Yii\Bootstrap5\CarouselItem;
             encodeCaption: false,
             captionAttributes: ['class' => ['d-none', 'd-md-block']]    
         ),    
-        new CarouselItem(
+        CarouselItem::to(
             content:'<div class="bg-dark" style="height: '.$divHeight.'px; text-align: center"><br>'.
                         Img::tag()
                         ->src('/img/gallery/14.jpeg')
@@ -173,7 +173,7 @@ use Yiisoft\Yii\Bootstrap5\CarouselItem;
             encodeCaption: false,
             captionAttributes: ['class' => ['d-none', 'd-md-block']]    
         ),
-        new CarouselItem(
+        CarouselItem::to(
             content:'<div class="bg-dark" style="height: '.$divHeight.'px; text-align: center"><br>'.
                         Img::tag()
                         ->src('/img/gallery/15.jpeg')

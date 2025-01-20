@@ -34,7 +34,7 @@ use Yiisoft\Yii\Bootstrap5\CarouselItem;
 
     <?= Carousel::widget()
         ->items(
-            new CarouselItem(
+            CarouselItem::to(
                 content:'<div class="bg-dark" style="height: '.$divHeight.'px; text-align: center"><br>'.
                             Img::tag()
                             ->src('/img/step1.jpg')
@@ -46,7 +46,7 @@ use Yiisoft\Yii\Bootstrap5\CarouselItem;
                 encodeCaption: false,
                 captionAttributes: ['class' => ['d-none', 'd-md-block']]    
             ),
-            new CarouselItem(
+            CarouselItem::to(
                 content:'<div class="bg-dark" style="height: '.$divHeight.'px; text-align: center"><br>'.
                             Img::tag()
                             ->src('/img/step2.jpg')
@@ -57,7 +57,7 @@ use Yiisoft\Yii\Bootstrap5\CarouselItem;
                 encodeCaption: true,
                 captionAttributes: ['class' => ['d-none', 'd-md-block']]    
             ),
-            new CarouselItem(
+            CarouselItem::to(
                 content:'<div class="bg-dark" style="height: '.$divHeight.'px; text-align: center"><br>'.
                             Img::tag()
                             ->src('/img/step3.jpg')
