@@ -12,6 +12,7 @@ use Yiisoft\Yii\AuthClient\Client\GitHub;
 use Yiisoft\Yii\AuthClient\Client\Google;
 use Yiisoft\Yii\AuthClient\Client\LinkedIn;
 use Yiisoft\Yii\AuthClient\Client\MicrosoftOnline;
+use Yiisoft\Yii\AuthClient\Client\VKontakte;
 use Yiisoft\Yii\AuthClient\Client\X;
 use Yiisoft\Yii\AuthClient\Client\Yandex;
 
@@ -27,6 +28,8 @@ trait Oauth2
     
     public const string MICROSOFTONLINE_ACCESS_TOKEN = 'microsoftonline-access';
     
+    public const string VKONTAKTE_ACCESS_TOKEN = 'vkontakte-access';
+    
     public const string X_ACCESS_TOKEN = 'x-access';
     
     public const string YANDEX_ACCESS_TOKEN = 'yandex-access';
@@ -37,6 +40,7 @@ trait Oauth2
         Google $google,
         LinkedIn $linkedIn,
         MicrosoftOnline $microsoftOnline,
+        VKontakte $vkontakte,    
         X $x,
         Yandex $yandex
     ) : void {
@@ -48,6 +52,7 @@ trait Oauth2
         $google->setOauth2ReturnUrl($this->sR->getOauth2IdentityProviderReturnUrl('google'));
         $linkedIn->setOauth2ReturnUrl($this->sR->getOauth2IdentityProviderReturnUrl('linkedin'));
         $microsoftOnline->setOauth2ReturnUrl($this->sR->getOauth2IdentityProviderReturnUrl('microsoftonline'));
+        $vkontakte->setOauth2ReturnUrl($this->sR->getOauth2IdentityProviderReturnUrl('vkontakte'));
         $x->setOauth2ReturnUrl($this->sR->getOauth2IdentityProviderReturnUrl('x'));
         $yandex->setOauth2ReturnUrl($this->sR->getOauth2IdentityProviderReturnUrl('yandex'));
         
@@ -56,6 +61,7 @@ trait Oauth2
         $google->setClientId($this->sR->getOauth2IdentityProviderClientId('google'));
         $linkedIn->setClientId($this->sR->getOauth2IdentityProviderClientId('linkedin'));
         $microsoftOnline->setClientId($this->sR->getOauth2IdentityProviderClientId('microsoftonline'));
+        $vkontakte->setClientId($this->sR->getOauth2IdentityProviderClientId('vkontakte'));
         $x->setClientId($this->sR->getOauth2IdentityProviderClientId('x'));
         $yandex->setClientId($this->sR->getOauth2IdentityProviderClientId('yandex'));
         
@@ -64,6 +70,7 @@ trait Oauth2
         $google->setClientSecret($this->sR->getOauth2IdentityProviderClientSecret('google'));
         $linkedIn->setClientSecret($this->sR->getOauth2IdentityProviderClientSecret('linkedin'));
         $microsoftOnline->setClientSecret($this->sR->getOauth2IdentityProviderClientSecret('microsoftonline'));
+        $vkontakte->setClientSecret($this->sR->getOauth2IdentityProviderClientSecret('vkontakte'));
         $x->setClientSecret($this->sR->getOauth2IdentityProviderClientSecret('x'));
         $yandex->setClientSecret($this->sR->getOauth2IdentityProviderClientSecret('yandex'));
         
@@ -127,6 +134,11 @@ trait Oauth2
     private function getMicrosoftOnlineAccessToken(User $user, TokenRepository $tR): string
     {
         return $this->getAccessToken($user, $tR, self::MICROSOFTONLINE_ACCESS_TOKEN);
+    }
+    
+    private function getVKontakteAccessToken(User $user, TokenRepository $tR): string
+    {
+        return $this->getAccessToken($user, $tR, self::VKONTAKTE_ACCESS_TOKEN);
     }
     
     private function getXAccessToken(User $user, TokenRepository $tR): string

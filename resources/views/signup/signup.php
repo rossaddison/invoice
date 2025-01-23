@@ -23,6 +23,7 @@ use Yiisoft\View\WebView;
  * @var bool                                    $noGoogleContinueButton
  * @var bool                                    $noLinkedInContinueButton
  * @var bool                                    $noMicrosoftOnlineContinueButton
+ * @var bool                                    $noVKontakteContinueButton
  * @var bool                                    $noXContinueButton
  * @var bool                                    $noYandexContinueButton
  * @var string                                  $facebookAuthUrl
@@ -30,6 +31,7 @@ use Yiisoft\View\WebView;
  * @var string                                  $googleAuthUrl
  * @var string                                  $linkedInAuthUrl
  * @var string                                  $microsoftOnlineAuthUrl
+ * @var string                                  $vkontakteAuthUrl
  * @var string                                  $xAuthUrl
  * @var string                                  $yandexAuthUrl
  */
@@ -64,6 +66,10 @@ $this->setTitle($translator->translate('menu.signup'));
                     <?php if ((strlen($microsoftOnlineAuthUrl ?: '') > 0) && !$noMicrosoftOnlineContinueButton) { ?>
                         <br><br>
                         <?= $button->microsoftonline($microsoftOnlineAuthUrl ?: ''); ?>
+                    <?php } ?>
+                    <?php if ((strlen($vkontakteAuthUrl ?: '') > 0) && !$noVKontakteContinueButton) { ?>
+                        <br><br>
+                        <?= $button->vkontakte($vkontakteAuthUrl ?: ''); ?>
                     <?php } ?>
                     <?php if ((strlen($xAuthUrl ?: '') > 0) && !$noXContinueButton) { ?>
                         <br><br>

@@ -67,6 +67,15 @@ use  Yiisoft\Html\Tag\I;
                         </label>
                     </div>
                     <div class="checkbox">
+                        <?php $body['settings[no_vkontakte_continue_button]'] = $s->getSetting('no_vkontakte_continue_button');?>
+                        <label>
+                            <input type="hidden" name="settings[no_vkontakte_continue_button]" value="0">
+                            <input type="checkbox" name="settings[no_vkontakte_continue_button]" value="1"
+                                <?php $s->check_select($body['settings[no_vkontakte_continue_button]'], 1, '==', true) ?>>
+                            <img src="/img/vkontakte.jpg" width="12" height="12"><?= ' VKontakte'; ?>
+                        </label>
+                    </div>
+                    <div class="checkbox">
                         <?php $body['settings[no_x_continue_button]'] = $s->getSetting('no_x_continue_button');?>
                         <label>
                             <input type="hidden" name="settings[no_x_continue_button]" value="0">

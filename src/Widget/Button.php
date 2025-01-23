@@ -242,6 +242,21 @@ final class Button
         ->render();
     }
     
+    public function vkontakte(string $vkontakteAuthUrl) : string {       
+        return
+        Html::openTag('div', ['class' => 'btn-group', 'role' => 'group']).
+            Img::tag()   
+            ->src('/img/vkontakte-24.jpg')
+            ->addClass('btn btn-dark disabled')        
+            ->render() . A::tag()
+            ->addClass('btn btn-dark')        
+            ->content($this->translator->translate('invoice.invoice.continue.with.vkontakte'))
+            ->href($vkontakteAuthUrl)
+            ->id('btn-vkontakte')
+            ->render().
+        Html::closeTag('div');        
+    }
+    
     public function x(string $xAuthUrl) : string {       
         return A::tag()
         ->addClass('btn btn-dark bi bi-twitter')
@@ -252,11 +267,17 @@ final class Button
     }
     
     public function yandex(string $yandexAuthUrl) : string {       
-        return A::tag()
-        ->addClass('btn btn-dark bi bi-globe')
-        ->content(' '.$this->translator->translate('invoice.invoice.continue.with.yandex'))
-        ->href($yandexAuthUrl)
-        ->id('btn-yandex')
-        ->render();
+        return
+        Html::openTag('div', ['class' => 'btn-group', 'role' => 'group']).
+            Img::tag()   
+            ->src('/img/yandex-24.jpg')
+            ->addClass('btn btn-dark disabled')        
+            ->render() . A::tag()
+            ->addClass('btn btn-dark')        
+            ->content($this->translator->translate('invoice.invoice.continue.with.yandex'))
+            ->href($yandexAuthUrl)
+            ->id('btn-vkontakte')
+            ->render().
+        Html::closeTag('div');        
     }
 }

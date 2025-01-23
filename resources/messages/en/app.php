@@ -1149,6 +1149,7 @@ return [
     'invoice.invoice.continue.with.google' => 'Continue with Google',
     'invoice.invoice.continue.with.linkedin' => 'Continue with LinkedIn',
     'invoice.invoice.continue.with.microsoftonline' => 'Continue with MicrosoftOnline',
+    'invoice.invoice.continue.with.vkontakte' => 'Continue with VKontakte',
     'invoice.invoice.continue.with.x' => 'Continue with X',
     'invoice.invoice.continue.with.yandex' => 'Continue with Yandex',
     'invoice.invoice.contract' => 'Contract',

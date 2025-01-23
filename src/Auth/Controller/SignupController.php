@@ -28,13 +28,16 @@ use Yiisoft\Rbac\Manager as Manager;
 use Yiisoft\Rbac\RuleFactoryInterface as Rule;
 use Yiisoft\Router\CurrentRoute;
 use Yiisoft\Router\FastRoute\UrlGenerator;
+use Yiisoft\Security\Random;
 use Yiisoft\Security\TokenMask;
+use Yiisoft\Session\SessionInterface;
 use Yiisoft\Translator\TranslatorInterface as Translator;
 use Yiisoft\Yii\AuthClient\Client\Facebook;
 use Yiisoft\Yii\AuthClient\Client\GitHub;
 use Yiisoft\Yii\AuthClient\Client\Google;
 use Yiisoft\Yii\AuthClient\Client\LinkedIn;
 use Yiisoft\Yii\AuthClient\Client\MicrosoftOnline;
+use Yiisoft\Yii\AuthClient\Client\VKontakte;
 use Yiisoft\Yii\AuthClient\Client\X;
 use Yiisoft\Yii\AuthClient\Client\Yandex;
 use Yiisoft\Yii\View\Renderer\ViewRenderer;
@@ -57,14 +60,17 @@ final class SignupController
         ItemStorage $itemstorage,
         Rule $rule,
         private WebControllerService $webService,
+        private SessionInterface $session,        
         private ViewRenderer $viewRenderer,
         private MailerInterface $mailer,
+            
         private sR $sR, 
         private Facebook $facebook,
         private GitHub $github,
         private Google $google, 
         private LinkedIn $linkedIn,
         private MicrosoftOnline $microsoftOnline,
+        private VKontakte $vkontakte,    
         private X $x,
         private Yandex $yandex,    
         private Translator $translator,
@@ -78,6 +84,7 @@ final class SignupController
         // @see yiisoft/rbac-php
         $this->manager = new Manager($itemstorage, $assignment, $rule);
         $this->rule = $rule;
+        $this->session = $session;
         $this->viewRenderer = $viewRenderer->withControllerName('signup');
         $this->mailer = $mailer;
         $this->sR = $sR;
@@ -86,6 +93,7 @@ final class SignupController
         $this->google = $google;
         $this->linkedIn = $linkedIn;
         $this->microsoftOnline = $microsoftOnline;
+        $this->vkontakte = $vkontakte;
         $this->x = $x;
         $this->yandex = $yandex;
         $this->initializeOauth2IdentityProviderCredentials(
@@ -93,7 +101,8 @@ final class SignupController
             $github, 
             $google, 
             $linkedIn, 
-            $microsoftOnline, 
+            $microsoftOnline,
+            $vkontakte,    
             $x,
             $yandex    
         );
@@ -193,8 +202,17 @@ final class SignupController
         $noFacebookContinueButton = $this->sR->getSetting('no_facebook_continue_button') == '1' ? true : false;
         $noLinkedInContinueButton = $this->sR->getSetting('no_linkedin_continue_button') == '1' ? true : false;
         $noMicrosoftOnlineContinueButton = $this->sR->getSetting('no_microsoftonline_continue_button') == '1' ? true : false;
+        
+        $noVKontakteContinueButton = $this->sR->getSetting('no_vkontakte_continue_button') == '1' ? true : false;
+        
+        $codeVerifier = Random::string(128);
+        
+        $codeChallenge = strtr(rtrim(base64_encode(hash('sha256', $codeVerifier, true)), '='), '+/', '-_');
+        
         $noXContinueButton = $this->sR->getSetting('no_x_continue_button') == '1' ? true : false;
         $noYandexContinueButton = $this->sR->getSetting('no_yandex_continue_button') == '1' ? true : false;
+        
+        $this->session->set('code_verifier', $codeVerifier);
         return $this->viewRenderer->render('signup', [
             'formModel' => $signupForm,
             'facebookAuthUrl' => strlen($this->facebook->getClientId()) > 0 ? $this->facebook->buildAuthUrl($request, $params = []) : '',
@@ -202,13 +220,33 @@ final class SignupController
             'googleAuthUrl' => strlen($this->google->getClientId()) > 0 ? $this->google->buildAuthUrl($request, $params = []) : '',
             'linkedInAuthUrl' => strlen($this->linkedIn->getClientId()) > 0 ? $this->linkedIn->buildAuthUrl($request, $params = []) : '',
             'microsoftOnlineAuthUrl' => strlen($this->microsoftOnline->getClientId()) > 0 ? $this->microsoftOnline->buildAuthUrl($request, $params = []) : '',
-            'xAuthUrl' => strlen($this->x->getClientId()) > 0 ? $this->x->buildAuthUrl($request, $params = []) : '',
-            'yandexAuthUrl' => strlen($this->yandex->getClientId()) > 0 ? $this->yandex->buildAuthUrl($request, $params = []) : '',
+            'vkontakteAuthUrl' => strlen($this->vkontakte->getClientId()) > 0 ? $this->vkontakte->buildAuthUrl($request, 
+                $params = [
+                    'code_challenge' => $codeChallenge, 
+                    'code_challenge_method' => 'S256'
+                ]) : '',
+            /**
+             * PKCE: An extension to the authorization code flow to prevent several attacks and to be able
+             * to perform the OAuth exchange from public clients securely using two parameters code_challenge and 
+             * code_challenge_method. 
+             * @link https://developer.x.com/en/docs/authentication/oauth-2-0/user-access-token
+             */
+            'xAuthUrl' => strlen($this->x->getClientId()) > 0 ? $this->x->buildAuthUrl($request, 
+                $params = [
+                    'code_challenge' => $codeChallenge, 
+                    'code_challenge_method' => 'S256'
+                ]) : '',
+            'yandexAuthUrl' => strlen($this->yandex->getClientId()) > 0 ? $this->yandex->buildAuthUrl($request, 
+                $params = [
+                    'code_challenge' => $codeChallenge, 
+                    'code_challenge_method' => 'S256'
+                ]) : '',
             'noFacebookContinueButton' => $noFacebookContinueButton,            
             'noGithubContinueButton' => $noGithubContinueButton,
             'noGoogleContinueButton' => $noGoogleContinueButton,
             'noLinkedInContinueButton' => $noLinkedInContinueButton,
             'noMicrosoftOnlineContinueButton' => $noMicrosoftOnlineContinueButton,
+            'noVKontakteContinueButton' => $noVKontakteContinueButton,
             'noXContinueButton' => $noXContinueButton,
             'noYandexContinueButton' => $noYandexContinueButton
         ]);

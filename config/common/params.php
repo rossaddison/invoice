@@ -95,6 +95,12 @@ return [
                */
               'tenant' => $_ENV['MICROSOFTONLINE_API_CLIENT_TENANT'] ?? 'common'
           ],
+          'vkontakte' => [
+              'class' => 'Yiisoft\Yii\AuthClient\Client\VKontakte::class',
+              'clientId' => $_ENV['VKONTAKTE_API_CLIENT_ID'] ?? '',
+              'clientSecret' => $_ENV['VKONTAKTE_API_CLIENT_SECRET'] ?? '',
+              'returnUrl' => $_ENV['VKONTAKTE_API_CLIENT_RETURN_URL'] ?? '' 
+          ],
           'x' => [
               'class' => 'Yiisoft\Yii\AuthClient\Client\X::class',
               'clientId' => $_ENV['X_API_CLIENT_ID'] ?? '',

@@ -164,6 +164,10 @@ return [
       ->middleware(LimitRequestsMiddleware::class)
       ->action([AuthController::class, 'callbackMicrosoftOnline'])
       ->name('auth/callbackMicrosoftOnline'),
+    Route::methods([Method::GET, Method::POST], '/callbackVKontakte')
+      ->middleware(LimitRequestsMiddleware::class)
+      ->action([AuthController::class, 'callbackVKontakte'])
+      ->name('auth/callbackVKontakte'),    
     Route::methods([Method::GET, Method::POST], '/callbackX')
       ->middleware(LimitRequestsMiddleware::class)
       ->action([AuthController::class, 'callbackX'])

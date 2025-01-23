@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "5afbb21d655f0f828185dbc89a030cfa",
+    "content-hash": "6a1694951bbb67935e23d12976d7a5e3",
     "packages": [
         {
             "name": "alexkart/curl-builder",
@@ -270,16 +270,16 @@
         },
         {
             "name": "braintree/braintree_php",
-            "version": "6.21.0",
+            "version": "6.22.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/braintree/braintree_php.git",
-                "reference": "d94339d1d7ee0ccd3d45727c7b5e36af4c5583a8"
+                "reference": "418ff0ae1708f4deab44de154cba20a1b2f39fcb"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/braintree/braintree_php/zipball/d94339d1d7ee0ccd3d45727c7b5e36af4c5583a8",
-                "reference": "d94339d1d7ee0ccd3d45727c7b5e36af4c5583a8",
+                "url": "https://api.github.com/repos/braintree/braintree_php/zipball/418ff0ae1708f4deab44de154cba20a1b2f39fcb",
+                "reference": "418ff0ae1708f4deab44de154cba20a1b2f39fcb",
                 "shasum": ""
             },
             "require": {
@@ -313,9 +313,9 @@
             "description": "Braintree PHP Client Library",
             "support": {
                 "issues": "https://github.com/braintree/braintree_php/issues",
-                "source": "https://github.com/braintree/braintree_php/tree/6.21.0"
+                "source": "https://github.com/braintree/braintree_php/tree/6.22.0"
             },
-            "time": "2024-10-31T16:08:55+00:00"
+            "time": "2025-01-23T16:21:38+00:00"
         },
         {
             "name": "brick/math",
@@ -2436,16 +2436,16 @@
         },
         {
             "name": "firebase/php-jwt",
-            "version": "v6.10.2",
+            "version": "v6.11.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/firebase/php-jwt.git",
-                "reference": "30c19ed0f3264cb660ea496895cfb6ef7ee3653b"
+                "reference": "8f718f4dfc9c5d5f0c994cdfd103921b43592712"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/firebase/php-jwt/zipball/30c19ed0f3264cb660ea496895cfb6ef7ee3653b",
-                "reference": "30c19ed0f3264cb660ea496895cfb6ef7ee3653b",
+                "url": "https://api.github.com/repos/firebase/php-jwt/zipball/8f718f4dfc9c5d5f0c994cdfd103921b43592712",
+                "reference": "8f718f4dfc9c5d5f0c994cdfd103921b43592712",
                 "shasum": ""
             },
             "require": {
@@ -2493,9 +2493,9 @@
             ],
             "support": {
                 "issues": "https://github.com/firebase/php-jwt/issues",
-                "source": "https://github.com/firebase/php-jwt/tree/v6.10.2"
+                "source": "https://github.com/firebase/php-jwt/tree/v6.11.0"
             },
-            "time": "2024-11-24T11:22:49+00:00"
+            "time": "2025-01-23T05:11:06+00:00"
         },
         {
             "name": "gitonomy/gitlib",
@@ -2570,16 +2570,16 @@
         },
         {
             "name": "google/auth",
-            "version": "v1.45.0",
+            "version": "v1.45.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/googleapis/google-auth-library-php.git",
-                "reference": "cfcb93162341ed5022fa976e621f0fa2b05ba6ad"
+                "reference": "86e9d937632a96b09dc40444c7cb68eb778a6ea6"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/googleapis/google-auth-library-php/zipball/cfcb93162341ed5022fa976e621f0fa2b05ba6ad",
-                "reference": "cfcb93162341ed5022fa976e621f0fa2b05ba6ad",
+                "url": "https://api.github.com/repos/googleapis/google-auth-library-php/zipball/86e9d937632a96b09dc40444c7cb68eb778a6ea6",
+                "reference": "86e9d937632a96b09dc40444c7cb68eb778a6ea6",
                 "shasum": ""
             },
             "require": {
@@ -2625,9 +2625,9 @@
             "support": {
                 "docs": "https://googleapis.github.io/google-auth-library-php/main/",
                 "issues": "https://github.com/googleapis/google-auth-library-php/issues",
-                "source": "https://github.com/googleapis/google-auth-library-php/tree/v1.45.0"
+                "source": "https://github.com/googleapis/google-auth-library-php/tree/v1.45.1"
             },
-            "time": "2024-12-11T02:10:48+00:00"
+            "time": "2025-01-22T23:27:35+00:00"
         },
         {
             "name": "google/cloud-core",
@@ -7057,12 +7057,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/rossaddison/yii-auth-client.git",
-                "reference": "f3f8ccea4a76a11cb8e399dec1e14ddfefe2808f"
+                "reference": "c01c7cbb7d9bafecf20ee8aa12385608e68f946f"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/rossaddison/yii-auth-client/zipball/f3f8ccea4a76a11cb8e399dec1e14ddfefe2808f",
-                "reference": "f3f8ccea4a76a11cb8e399dec1e14ddfefe2808f",
+                "url": "https://api.github.com/repos/rossaddison/yii-auth-client/zipball/c01c7cbb7d9bafecf20ee8aa12385608e68f946f",
+                "reference": "c01c7cbb7d9bafecf20ee8aa12385608e68f946f",
                 "shasum": ""
             },
             "require": {
@@ -7142,7 +7142,7 @@
                     "type": "opencollective"
                 }
             ],
-            "time": "2025-01-19T17:01:39+00:00"
+            "time": "2025-01-23T16:22:51+00:00"
         },
         {
             "name": "sabre/uri",
@@ -7830,22 +7830,22 @@
         },
         {
             "name": "spiral/core",
-            "version": "3.14.9",
+            "version": "3.14.10",
             "source": {
                 "type": "git",
                 "url": "https://github.com/spiral/core.git",
-                "reference": "ec592c24e40c5dd9d69d7fef5b54b37e1ce17e76"
+                "reference": "1775ce1a1ee3c95f48781c859e53dab86c0e2ffd"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/spiral/core/zipball/ec592c24e40c5dd9d69d7fef5b54b37e1ce17e76",
-                "reference": "ec592c24e40c5dd9d69d7fef5b54b37e1ce17e76",
+                "url": "https://api.github.com/repos/spiral/core/zipball/1775ce1a1ee3c95f48781c859e53dab86c0e2ffd",
+                "reference": "1775ce1a1ee3c95f48781c859e53dab86c0e2ffd",
                 "shasum": ""
             },
             "require": {
                 "php": ">=8.1",
                 "psr/container": "^1.1|^2.0",
-                "spiral/security": "^3.14.9"
+                "spiral/security": "^3.14.10"
             },
             "provide": {
                 "psr/container-implementation": "^1.1|^2.0"
@@ -7900,20 +7900,20 @@
                     "type": "github"
                 }
             ],
-            "time": "2025-01-07T13:30:52+00:00"
+            "time": "2025-01-22T15:13:32+00:00"
         },
         {
             "name": "spiral/files",
-            "version": "3.14.9",
+            "version": "3.14.10",
             "source": {
                 "type": "git",
                 "url": "https://github.com/spiral/files.git",
-                "reference": "6088d8db8ee18e38ca112237d074649fa7053ced"
+                "reference": "3a79d8484f054d60f256a7d1a577ca0678eb9662"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/spiral/files/zipball/6088d8db8ee18e38ca112237d074649fa7053ced",
-                "reference": "6088d8db8ee18e38ca112237d074649fa7053ced",
+                "url": "https://api.github.com/repos/spiral/files/zipball/3a79d8484f054d60f256a7d1a577ca0678eb9662",
+                "reference": "3a79d8484f054d60f256a7d1a577ca0678eb9662",
                 "shasum": ""
             },
             "require": {
@@ -7969,27 +7969,27 @@
                     "type": "github"
                 }
             ],
-            "time": "2025-01-07T13:32:34+00:00"
+            "time": "2025-01-22T15:13:51+00:00"
         },
         {
             "name": "spiral/hmvc",
-            "version": "3.14.9",
+            "version": "3.14.10",
             "source": {
                 "type": "git",
                 "url": "https://github.com/spiral/hmvc.git",
-                "reference": "8df0fd393209cdfa3808c12d49cb3c4578cdfbf2"
+                "reference": "e760bf064039441e876be1bec4c3831af7804294"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/spiral/hmvc/zipball/8df0fd393209cdfa3808c12d49cb3c4578cdfbf2",
-                "reference": "8df0fd393209cdfa3808c12d49cb3c4578cdfbf2",
+                "url": "https://api.github.com/repos/spiral/hmvc/zipball/e760bf064039441e876be1bec4c3831af7804294",
+                "reference": "e760bf064039441e876be1bec4c3831af7804294",
                 "shasum": ""
             },
             "require": {
                 "php": ">=8.1",
                 "psr/event-dispatcher": "^1.0",
-                "spiral/core": "^3.14.9",
-                "spiral/interceptors": "^3.14.9"
+                "spiral/core": "^3.14.10",
+                "spiral/interceptors": "^3.14.10"
             },
             "require-dev": {
                 "phpunit/phpunit": "^10.1",
@@ -8043,26 +8043,26 @@
                     "type": "github"
                 }
             ],
-            "time": "2025-01-07T13:32:31+00:00"
+            "time": "2025-01-22T15:13:55+00:00"
         },
         {
             "name": "spiral/interceptors",
-            "version": "3.14.9",
+            "version": "3.14.10",
             "source": {
                 "type": "git",
                 "url": "https://github.com/spiral/interceptors.git",
-                "reference": "b33fb84d778c4e47515e1e36607a7540441f13df"
+                "reference": "9369b728104112233e91b3b31627490034e00844"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/spiral/interceptors/zipball/b33fb84d778c4e47515e1e36607a7540441f13df",
-                "reference": "b33fb84d778c4e47515e1e36607a7540441f13df",
+                "url": "https://api.github.com/repos/spiral/interceptors/zipball/9369b728104112233e91b3b31627490034e00844",
+                "reference": "9369b728104112233e91b3b31627490034e00844",
                 "shasum": ""
             },
             "require": {
                 "php": ">=8.1",
                 "psr/event-dispatcher": "^1.0",
-                "spiral/core": "^3.14.9"
+                "spiral/core": "^3.14.10"
             },
             "require-dev": {
                 "phpunit/phpunit": "^10.1",
@@ -8121,26 +8121,26 @@
                     "type": "github"
                 }
             ],
-            "time": "2025-01-07T13:32:35+00:00"
+            "time": "2025-01-22T15:13:52+00:00"
         },
         {
             "name": "spiral/logger",
-            "version": "3.14.9",
+            "version": "3.14.10",
             "source": {
                 "type": "git",
                 "url": "https://github.com/spiral/logger.git",
-                "reference": "9e76f6468409273ba737d851d8085ba25e9280fe"
+                "reference": "f2e11973b7af05e0c3ce4478e5907a57fabfda74"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/spiral/logger/zipball/9e76f6468409273ba737d851d8085ba25e9280fe",
-                "reference": "9e76f6468409273ba737d851d8085ba25e9280fe",
+                "url": "https://api.github.com/repos/spiral/logger/zipball/f2e11973b7af05e0c3ce4478e5907a57fabfda74",
+                "reference": "f2e11973b7af05e0c3ce4478e5907a57fabfda74",
                 "shasum": ""
             },
             "require": {
                 "php": ">=8.1",
                 "psr/log": "1 - 3",
-                "spiral/core": "^3.14.9"
+                "spiral/core": "^3.14.10"
             },
             "require-dev": {
                 "mockery/mockery": "^1.5",
@@ -8192,20 +8192,20 @@
                     "type": "github"
                 }
             ],
-            "time": "2025-01-07T13:32:43+00:00"
+            "time": "2025-01-22T15:13:51+00:00"
         },
         {
             "name": "spiral/pagination",
-            "version": "3.14.9",
+            "version": "3.14.10",
             "source": {
                 "type": "git",
                 "url": "https://github.com/spiral/pagination.git",
-                "reference": "7065a16b17f7d76a776d059bcac1ce360dfb3c2c"
+                "reference": "ca8b68bd438dcbb905315bee0a51080db6751764"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/spiral/pagination/zipball/7065a16b17f7d76a776d059bcac1ce360dfb3c2c",
-                "reference": "7065a16b17f7d76a776d059bcac1ce360dfb3c2c",
+                "url": "https://api.github.com/repos/spiral/pagination/zipball/ca8b68bd438dcbb905315bee0a51080db6751764",
+                "reference": "ca8b68bd438dcbb905315bee0a51080db6751764",
                 "shasum": ""
             },
             "require": {
@@ -8261,27 +8261,27 @@
                     "type": "github"
                 }
             ],
-            "time": "2025-01-07T13:32:48+00:00"
+            "time": "2025-01-22T15:13:59+00:00"
         },
         {
             "name": "spiral/reactor",
-            "version": "3.14.9",
+            "version": "3.14.10",
             "source": {
                 "type": "git",
                 "url": "https://github.com/spiral/reactor.git",
-                "reference": "ea07d821d72d8c90192f7a71f0ce78dc9851f18a"
+                "reference": "484d55077400c8e6a43852c62aeee0d0a7865362"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/spiral/reactor/zipball/ea07d821d72d8c90192f7a71f0ce78dc9851f18a",
-                "reference": "ea07d821d72d8c90192f7a71f0ce78dc9851f18a",
+                "url": "https://api.github.com/repos/spiral/reactor/zipball/484d55077400c8e6a43852c62aeee0d0a7865362",
+                "reference": "484d55077400c8e6a43852c62aeee0d0a7865362",
                 "shasum": ""
             },
             "require": {
                 "doctrine/inflector": "^1.4|^2.0",
                 "nette/php-generator": "^4.1.2",
                 "php": ">=8.1",
-                "spiral/files": "^3.14.9"
+                "spiral/files": "^3.14.10"
             },
             "require-dev": {
                 "mockery/mockery": "^1.5",
@@ -8334,31 +8334,31 @@
                     "type": "github"
                 }
             ],
-            "time": "2025-01-07T13:33:36+00:00"
+            "time": "2025-01-22T15:14:15+00:00"
         },
         {
             "name": "spiral/security",
-            "version": "3.14.9",
+            "version": "3.14.10",
             "source": {
                 "type": "git",
                 "url": "https://github.com/spiral/security.git",
-                "reference": "0277b6a5126b21d8a93d9d44c88fcb862bea55b4"
+                "reference": "9485a3c6881f2704096430608d1da63b5e52e1f4"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/spiral/security/zipball/0277b6a5126b21d8a93d9d44c88fcb862bea55b4",
-                "reference": "0277b6a5126b21d8a93d9d44c88fcb862bea55b4",
+                "url": "https://api.github.com/repos/spiral/security/zipball/9485a3c6881f2704096430608d1da63b5e52e1f4",
+                "reference": "9485a3c6881f2704096430608d1da63b5e52e1f4",
                 "shasum": ""
             },
             "require": {
                 "php": ">=8.1",
-                "spiral/core": "^3.14.9",
-                "spiral/hmvc": "^3.14.9"
+                "spiral/core": "^3.14.10",
+                "spiral/hmvc": "^3.14.10"
             },
             "require-dev": {
                 "mockery/mockery": "^1.5",
                 "phpunit/phpunit": "^10.1",
-                "spiral/console": "^3.14.9",
+                "spiral/console": "^3.14.10",
                 "vimeo/psalm": "^5.9"
             },
             "type": "library",
@@ -8406,35 +8406,35 @@
                     "type": "github"
                 }
             ],
-            "time": "2025-01-07T13:33:39+00:00"
+            "time": "2025-01-22T15:14:18+00:00"
         },
         {
             "name": "spiral/tokenizer",
-            "version": "3.14.9",
+            "version": "3.14.10",
             "source": {
                 "type": "git",
                 "url": "https://github.com/spiral/tokenizer.git",
-                "reference": "13f2c0518e8450f29610128bcd3a686265561f9d"
+                "reference": "e6222c99f094a10848ad613f64f51a5510947105"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/spiral/tokenizer/zipball/13f2c0518e8450f29610128bcd3a686265561f9d",
-                "reference": "13f2c0518e8450f29610128bcd3a686265561f9d",
+                "url": "https://api.github.com/repos/spiral/tokenizer/zipball/e6222c99f094a10848ad613f64f51a5510947105",
+                "reference": "e6222c99f094a10848ad613f64f51a5510947105",
                 "shasum": ""
             },
             "require": {
                 "ext-tokenizer": "*",
                 "php": ">=8.1",
-                "spiral/core": "^3.14.9",
-                "spiral/logger": "^3.14.9",
+                "spiral/core": "^3.14.10",
+                "spiral/logger": "^3.14.10",
                 "symfony/finder": "^5.3.7 || ^6.0 || ^7.0"
             },
             "require-dev": {
                 "mockery/mockery": "^1.6",
                 "phpunit/phpunit": "^10.1",
                 "spiral/attributes": "^2.8|^3.0",
-                "spiral/boot": "^3.14.9",
-                "spiral/files": "^3.14.9",
+                "spiral/boot": "^3.14.10",
+                "spiral/files": "^3.14.10",
                 "vimeo/psalm": "^5.9"
             },
             "type": "library",
@@ -8482,7 +8482,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2025-01-07T13:33:59+00:00"
+            "time": "2025-01-22T15:17:04+00:00"
         },
         {
             "name": "stripe/stripe-php",
@@ -12625,12 +12625,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/yiisoft/db.git",
-                "reference": "03a0367b66f154c7dc7cdfd6e6e4af94273a72db"
+                "reference": "8c77a8492d160fcc0ce1c1275eaba0ddcffc4ca8"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/yiisoft/db/zipball/03a0367b66f154c7dc7cdfd6e6e4af94273a72db",
-                "reference": "03a0367b66f154c7dc7cdfd6e6e4af94273a72db",
+                "url": "https://api.github.com/repos/yiisoft/db/zipball/8c77a8492d160fcc0ce1c1275eaba0ddcffc4ca8",
+                "reference": "8c77a8492d160fcc0ce1c1275eaba0ddcffc4ca8",
                 "shasum": ""
             },
             "require": {
@@ -12704,7 +12704,7 @@
                     "type": "opencollective"
                 }
             ],
-            "time": "2025-01-13T07:54:49+00:00"
+            "time": "2025-01-22T05:28:36+00:00"
         },
         {
             "name": "yiisoft/db-mysql",
@@ -15949,12 +15949,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/yiisoft/yii-bootstrap5.git",
-                "reference": "4c3d46f065e5780d71bda043b20b7aae003a3824"
+                "reference": "0282f97f0f54db3cbcde2a886dabae3f1116ae1f"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/yiisoft/yii-bootstrap5/zipball/4c3d46f065e5780d71bda043b20b7aae003a3824",
-                "reference": "4c3d46f065e5780d71bda043b20b7aae003a3824",
+                "url": "https://api.github.com/repos/yiisoft/yii-bootstrap5/zipball/0282f97f0f54db3cbcde2a886dabae3f1116ae1f",
+                "reference": "0282f97f0f54db3cbcde2a886dabae3f1116ae1f",
                 "shasum": ""
             },
             "require": {
@@ -16018,20 +16018,20 @@
                     "type": "open_collective"
                 }
             ],
-            "time": "2025-01-20T15:59:56+00:00"
+            "time": "2025-01-21T19:59:57+00:00"
         },
         {
             "name": "yiisoft/yii-console",
-            "version": "2.2.0",
+            "version": "2.3.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/yiisoft/yii-console.git",
-                "reference": "7942fc70df59965bb1b33ac4671c915a145d2dcf"
+                "reference": "c2829fa6e1ac2f0f3e5d1e55b2650f9ec0e30f93"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/yiisoft/yii-console/zipball/7942fc70df59965bb1b33ac4671c915a145d2dcf",
-                "reference": "7942fc70df59965bb1b33ac4671c915a145d2dcf",
+                "url": "https://api.github.com/repos/yiisoft/yii-console/zipball/c2829fa6e1ac2f0f3e5d1e55b2650f9ec0e30f93",
+                "reference": "c2829fa6e1ac2f0f3e5d1e55b2650f9ec0e30f93",
                 "shasum": ""
             },
             "require": {
@@ -16046,7 +16046,7 @@
             "require-dev": {
                 "maglnet/composer-require-checker": "^3.8|^4.4",
                 "phpunit/phpunit": "^9.5",
-                "rector/rector": "^1.0.0",
+                "rector/rector": "^2.0.7",
                 "roave/infection-static-analysis-plugin": "^1.16",
                 "vimeo/psalm": "^4.30|^5.20",
                 "yiisoft/config": "^1.3",
@@ -16083,7 +16083,7 @@
             "support": {
                 "chat": "https://t.me/yii3en",
                 "forum": "https://www.yiiframework.com/forum/",
-                "irc": "irc://irc.freenode.net/yii",
+                "irc": "ircs://irc.libera.chat:6697/yii",
                 "issues": "https://github.com/yiisoft/yii-console/issues?state=open",
                 "source": "https://github.com/yiisoft/yii-console",
                 "wiki": "https://www.yiiframework.com/wiki/"
@@ -16098,7 +16098,7 @@
                     "type": "opencollective"
                 }
             ],
-            "time": "2024-02-17T13:10:12+00:00"
+            "time": "2025-01-23T14:38:56+00:00"
         },
         {
             "name": "yiisoft/yii-cycle",
@@ -16213,12 +16213,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/yiisoft/yii-dataview.git",
-                "reference": "b305e703111d3870dca9e892da32b50f798a0196"
+                "reference": "738e585fcf0487e242b4a2140f7cb95e55108672"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/yiisoft/yii-dataview/zipball/b305e703111d3870dca9e892da32b50f798a0196",
-                "reference": "b305e703111d3870dca9e892da32b50f798a0196",
+                "url": "https://api.github.com/repos/yiisoft/yii-dataview/zipball/738e585fcf0487e242b4a2140f7cb95e55108672",
+                "reference": "738e585fcf0487e242b4a2140f7cb95e55108672",
                 "shasum": ""
             },
             "require": {
@@ -16307,7 +16307,7 @@
                     "type": "opencollective"
                 }
             ],
-            "time": "2025-01-13T08:01:46+00:00"
+            "time": "2025-01-22T17:27:02+00:00"
         },
         {
             "name": "yiisoft/yii-debug",
@@ -16315,12 +16315,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/yiisoft/yii-debug.git",
-                "reference": "b326385d207b72bd707d985a03ab87c10c18e1d5"
+                "reference": "c57895780bba3fe5ab29824554bdaf1dc29e8f35"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/yiisoft/yii-debug/zipball/b326385d207b72bd707d985a03ab87c10c18e1d5",
-                "reference": "b326385d207b72bd707d985a03ab87c10c18e1d5",
+                "url": "https://api.github.com/repos/yiisoft/yii-debug/zipball/c57895780bba3fe5ab29824554bdaf1dc29e8f35",
+                "reference": "c57895780bba3fe5ab29824554bdaf1dc29e8f35",
                 "shasum": ""
             },
             "require": {
@@ -16337,7 +16337,7 @@
                 "yiisoft/files": "^2.0",
                 "yiisoft/profiler": "^3.0",
                 "yiisoft/proxy": "^1.0.1",
-                "yiisoft/strings": "^2.2",
+                "yiisoft/strings": "^2.5",
                 "yiisoft/var-dumper": "^1.7"
             },
             "require-dev": {
@@ -16408,7 +16408,7 @@
                     "type": "opencollective"
                 }
             ],
-            "time": "2025-01-18T06:09:32+00:00"
+            "time": "2025-01-21T16:18:45+00:00"
         },
         {
             "name": "yiisoft/yii-debug-api",
@@ -20913,12 +20913,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/Roave/SecurityAdvisories.git",
-                "reference": "e7a38fcc13e4ddfe9a28d5c7bf50aa9a9da758ec"
+                "reference": "2135caa192c134f0a421ee680fa9c0e346841dbc"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/Roave/SecurityAdvisories/zipball/e7a38fcc13e4ddfe9a28d5c7bf50aa9a9da758ec",
-                "reference": "e7a38fcc13e4ddfe9a28d5c7bf50aa9a9da758ec",
+                "url": "https://api.github.com/repos/Roave/SecurityAdvisories/zipball/2135caa192c134f0a421ee680fa9c0e346841dbc",
+                "reference": "2135caa192c134f0a421ee680fa9c0e346841dbc",
                 "shasum": ""
             },
             "conflict": {
@@ -21013,7 +21013,7 @@
                 "cockpit-hq/cockpit": "<2.7|==2.7",
                 "codeception/codeception": "<3.1.3|>=4,<4.1.22",
                 "codeigniter/framework": "<3.1.9",
-                "codeigniter4/framework": "<4.4.7",
+                "codeigniter4/framework": "<4.5.8",
                 "codeigniter4/shield": "<1.0.0.0-beta8",
                 "codiad/codiad": "<=2.8.4",
                 "composer/composer": "<1.10.27|>=2,<2.2.24|>=2.3,<2.7.7",
@@ -21028,7 +21028,7 @@
                 "contao/managed-edition": "<=1.5",
                 "corveda/phpsandbox": "<1.3.5",
                 "cosenary/instagram": "<=2.3",
-                "craftcms/cms": "<4.13.2|>=5,<5.5.2",
+                "craftcms/cms": "<4.13.8|>=5,<5.5.5",
                 "croogo/croogo": "<4",
                 "cuyz/valinor": "<0.12",
                 "czim/file-handling": "<1.5|>=2,<2.3",
@@ -21395,7 +21395,7 @@
                 "phpmyfaq/phpmyfaq": "<3.2.5|==3.2.5|>=3.2.10,<=4.0.1",
                 "phpoffice/common": "<0.2.9",
                 "phpoffice/phpexcel": "<1.8.1",
-                "phpoffice/phpspreadsheet": "<=1.29.6|>=2,<=2.1.5|>=2.2,<=2.3.4|>=3,<3.7",
+                "phpoffice/phpspreadsheet": "<1.29.8|>=2,<2.1.7|>=2.2,<2.3.6|>=3,<3.8",
                 "phpseclib/phpseclib": "<2.0.47|>=3,<3.0.36",
                 "phpservermon/phpservermon": "<3.6",
                 "phpsysinfo/phpsysinfo": "<3.4.3",
@@ -21425,6 +21425,7 @@
                 "prestashop/gamification": "<2.3.2",
                 "prestashop/prestashop": "<8.1.6",
                 "prestashop/productcomments": "<5.0.2",
+                "prestashop/ps_contactinfo": "<=3.3.2",
                 "prestashop/ps_emailsubscription": "<2.6.1",
                 "prestashop/ps_facetedsearch": "<3.4.1",
                 "prestashop/ps_linklist": "<3.1",
@@ -21683,7 +21684,7 @@
                 "xataface/xataface": "<3",
                 "xpressengine/xpressengine": "<3.0.15",
                 "yab/quarx": "<2.4.5",
-                "yeswiki/yeswiki": "<=4.4.4",
+                "yeswiki/yeswiki": "<=4.4.5",
                 "yetiforce/yetiforce-crm": "<6.5",
                 "yidashi/yii2cmf": "<=2",
                 "yii2mod/yii2-cms": "<1.9.2",
@@ -21774,7 +21775,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2025-01-15T23:05:13+00:00"
+            "time": "2025-01-22T19:04:49+00:00"
         },
         {
             "name": "roave/signature",

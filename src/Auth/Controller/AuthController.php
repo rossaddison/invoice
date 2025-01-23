@@ -20,8 +20,8 @@ use Yiisoft\FormModel\FormHydrator;
 use Yiisoft\Html\Tag\A;
 use Yiisoft\Input\Http\Attribute\Parameter\Query;
 use Yiisoft\Rbac\Manager as Manager;
-use Yiisoft\Router\CurrentRoute;
 use Yiisoft\Router\FastRoute\UrlGenerator;
+use Yiisoft\Router\HydratorAttribute\RouteArgument;
 use Yiisoft\Security\Random;
 use Yiisoft\Security\TokenMask;
 use Yiisoft\Session\SessionInterface;
@@ -35,11 +35,12 @@ use Yiisoft\Yii\AuthClient\Client\Google;
 use Yiisoft\Yii\AuthClient\Client\LinkedIn;
 use Yiisoft\Yii\AuthClient\Client\MicrosoftOnline;
 use Yiisoft\Yii\AuthClient\Client\X;
-//use Yiisoft\Yii\AuthClient\Client\VKontakte;
+use Yiisoft\Yii\AuthClient\Client\VKontakte;
 use Yiisoft\Yii\AuthClient\Client\Yandex;
 
 final class AuthController
 { 
+    //initialize .env file at root with oauth2.0 settings
     use Oauth2;
     
     public const string FACEBOOK_ACCESS_TOKEN = 'facebook-access';
@@ -64,6 +65,7 @@ final class AuthController
         private Google                          $google,
         private LinkedIn                        $linkedIn,
         private MicrosoftOnline                 $microsoftOnline,
+        private VKontakte                       $vkontakte,    
         private X                               $x,
         private Yandex                          $yandex,    
         private UrlGenerator                    $urlGenerator,    
@@ -77,6 +79,7 @@ final class AuthController
         $this->google = $google;
         $this->linkedIn = $linkedIn;
         $this->microsoftOnline = $microsoftOnline;
+        $this->vkontakte = $vkontakte;
         $this->x = $x;
         $this->yandex = $yandex;
         // use the Oauth2 trait function
@@ -86,6 +89,7 @@ final class AuthController
             $google, 
             $linkedIn, 
             $microsoftOnline, 
+            $vkontakte,    
             $x,
             $yandex
         );
@@ -149,11 +153,15 @@ final class AuthController
         $noFacebookContinueButton = $this->sR->getSetting('no_facebook_continue_button') == '1' ? true : false;
         $noLinkedInContinueButton = $this->sR->getSetting('no_linkedin_continue_button') == '1' ? true : false;
         $noMicrosoftOnlineContinueButton = $this->sR->getSetting('no_microsoftonline_continue_button') == '1' ? true : false;
+        $noVKontakteContinueButton = $this->sR->getSetting('no_vkontakte_continue_button') == '1' ? true : false;
         $noXContinueButton = $this->sR->getSetting('no_x_continue_button') == '1' ? true : false;
         $noYandexContinueButton = $this->sR->getSetting('no_yandex_continue_button') == '1' ? true : false;
+        
         $codeVerifier = Random::string(128);
+        
         $codeChallenge = strtr(rtrim(base64_encode(hash('sha256', $codeVerifier, true)), '='), '+/', '-_');
-        $this->session->set('code_verifier', $codeVerifier); 
+        
+        $this->session->set('code_verifier', $codeVerifier);
         return $this->viewRenderer->render('login', 
             [
                 'formModel' => $loginForm,
@@ -162,6 +170,11 @@ final class AuthController
                 'googleAuthUrl' => strlen($this->google->getClientId()) > 0 ? $this->google->buildAuthUrl($request, $params = []) : '',
                 'linkedInAuthUrl' => strlen($this->linkedIn->getClientId()) > 0 ? $this->linkedIn->buildAuthUrl($request, $params = []) : '',
                 'microsoftOnlineAuthUrl' => strlen($this->microsoftOnline->getClientId()) > 0 ? $this->microsoftOnline->buildAuthUrl($request, $params = []) : '',
+                'vkontakteAuthUrl' => strlen($this->vkontakte->getClientId()) > 0 ? $this->vkontakte->buildAuthUrl($request, 
+                    $params = [
+                        'code_challenge' => $codeChallenge, 
+                        'code_challenge_method' => 'S256'
+                    ]) : '',
                 /**
                  * PKCE: An extension to the authorization code flow to prevent several attacks and to be able
                  * to perform the OAuth exchange from public clients securely using two parameters code_challenge and 
@@ -169,23 +182,25 @@ final class AuthController
                  * @link https://developer.x.com/en/docs/authentication/oauth-2-0/user-access-token
                  */
                 'xAuthUrl' => strlen($this->x->getClientId()) > 0 ? $this->x->buildAuthUrl($request, 
-                $params = [
-                    'code_challenge' => $codeChallenge, 
-                    'code_challenge_method' => 'S256'
-                ]) : '',
+                    $params = [
+                        'code_challenge' => $codeChallenge, 
+                        'code_challenge_method' => 'S256'
+                    ]) : '',
                 'yandexAuthUrl' => strlen($this->yandex->getClientId()) > 0 ? $this->yandex->buildAuthUrl($request, 
-                $params = [
-                    'code_challenge' => $codeChallenge, 
-                    'code_challenge_method' => 'S256'
-                ]) : '',
+                    $params = [
+                        'code_challenge' => $codeChallenge, 
+                        'code_challenge_method' => 'S256'
+                    ]) : '',
                 'noGithubContinueButton' => $noGithubContinueButton,
                 'noGoogleContinueButton' => $noGoogleContinueButton,
                 'noFacebookContinueButton' => $noFacebookContinueButton,
                 'noLinkedInContinueButton' => $noLinkedInContinueButton,
                 'noMicrosoftOnlineContinueButton' => $noMicrosoftOnlineContinueButton,
+                'noVKontakteContinueButton' => $noVKontakteContinueButton,
                 'noXContinueButton' => $noXContinueButton,
                 'noYandexContinueButton' => $noYandexContinueButton
-            ]);
+            ]
+        );
     }
     
     public function disableToken(
@@ -202,14 +217,14 @@ final class AuthController
             }
         }    
     }
-    
+       
     public function callbackX(
-        CurrentRoute $currentRoute,
         ServerRequestInterface $request,
         TranslatorInterface $translator,    
         TokenRepository $tR,
         UserInvRepository $uiR,
         UserRepository $uR,
+        #[RouteArgument('_language')] string $_language,    
         #[Query('code')] string $code = null, 
         #[Query('state')] string $state = null
     ) : ResponseInterface 
@@ -302,10 +317,8 @@ final class AuthController
                              * @var array $this->sR->locale_language_array()
                              */
                             $languageArray = $this->sR->locale_language_array();
-                            $_language = $currentRoute->getArgument('_language');
                             /**
                              * @see Trait\Oauth2 function getXAccessToken
-                             * @var string $_language
                              * @var array $languageArray
                              * @var string $language
                              */
@@ -338,23 +351,23 @@ final class AuthController
      * 2. clicking on the proceedToMenuButton will further create a userinv extension of the user table
      * @see src/Invoice/UserInv/UserInvController function github
      * @see https://docs.github.com/en/apps/oauth-apps/building-oauth-apps/authorizing-oauth-apps
-     * @param CurrentRoute $currentRoute
      * @param ServerRequestInterface $request
      * @param TranslatorInterface $translator
      * @param TokenRepository $tR
      * @param UserInvRepository $uiR
      * @param UserRepository $uR
+     * @param string $_language
      * @param string $code
      * @param string $state     
      * @return ResponseInterface
      */
     public function callbackGithub(
-        CurrentRoute $currentRoute,
         ServerRequestInterface $request,
         TranslatorInterface $translator,    
         TokenRepository $tR,
         UserInvRepository $uiR,
         UserRepository $uR,
+        #[RouteArgument('_language')] string $_language,    
         #[Query('code')] string $code = null, 
         #[Query('state')] string $state = null,        
     ) : ResponseInterface 
@@ -446,10 +459,8 @@ final class AuthController
                              * @var array $this->sR->locale_language_array()
                              */
                             $languageArray = $this->sR->locale_language_array();
-                            $_language = $currentRoute->getArgument('_language');
                             /**
                              * @see Trait\Oauth2 function getGithubAccessToken
-                             * @var string $_language
                              * @var array $languageArray
                              * @var string $language
                              */
@@ -476,12 +487,12 @@ final class AuthController
      * 1. the user is logged in, or a new user is created, and the proceedToMenuButton is created
      * 2. clicking on the proceedToMenuButton will further create a userinv extension of the user table
      * @see src/Invoice/UserInv/UserInvController function facebook
-     * @param CurrentRoute $currentRoute
      * @param ServerRequestInterface $request
      * @param TranslatorInterface $translator
      * @param TokenRepository $tR
      * @param UserInvRepository $uiR
      * @param UserRepository $uR
+     * @param string $_language
      * @param string $code
      * @param string $state
      * @param string $error
@@ -490,12 +501,12 @@ final class AuthController
      * @return ResponseInterface
      */
     public function callbackFacebook(
-        CurrentRoute $currentRoute,
         ServerRequestInterface $request,
         TranslatorInterface $translator,    
         TokenRepository $tR,
         UserInvRepository $uiR,
-        UserRepository $uR,    
+        UserRepository $uR,
+        #[RouteArgument('_language')] string $_language,    
         #[Query('code')] string $code = null, 
         #[Query('state')] string $state = null,
         #[Query('error')] string $error = null,
@@ -590,10 +601,8 @@ final class AuthController
                              * @var array $this->sR->locale_language_array()
                              */
                             $languageArray = $this->sR->locale_language_array();
-                            $_language = $currentRoute->getArgument('_language');
                             /**
                              * @see Trait\Oauth2 function getFacebookAccessToken
-                             * @var string $_language
                              * @var array $languageArray
                              * @var string $language
                              */
@@ -619,12 +628,12 @@ final class AuthController
      * @see https://console.cloud.google.com/apis/credentials?project=YOUR_PROJECT
      */
     public function callbackGoogle(
-        CurrentRoute $currentRoute,
         ServerRequestInterface $request,
         TranslatorInterface $translator,    
         TokenRepository $tR,
         UserInvRepository $uiR,
         UserRepository $uR,
+        #[RouteArgument('_language')] string $_language,    
         #[Query('code')] string $code = null, 
         #[Query('state')] string $state = null,        
     ) : ResponseInterface 
@@ -700,10 +709,8 @@ final class AuthController
                          * @var array $this->sR->locale_language_array()
                          */
                         $languageArray = $this->sR->locale_language_array();
-                        $_language = $currentRoute->getArgument('_language');
                         /**
                          * @see Trait\Oauth2 function getGoogleAccessToken
-                         * @var string $_language
                          * @var array $languageArray
                          * @var string $language
                          */
@@ -725,12 +732,12 @@ final class AuthController
     }
     
     public function callbackLinkedIn(
-        CurrentRoute $currentRoute,
         ServerRequestInterface $request,
         TranslatorInterface $translator,    
         TokenRepository $tR,
         UserInvRepository $uiR,
         UserRepository $uR,
+        #[RouteArgument('_language')] string $_language,    
         #[Query('code')] string $code = null, 
         #[Query('state')] string $state = null,        
     ) : ResponseInterface 
@@ -823,10 +830,8 @@ final class AuthController
                          * @var array $this->sR->locale_language_array()
                          */
                         $languageArray = $this->sR->locale_language_array();
-                        $_language = $currentRoute->getArgument('_language');
                         /**
                          * @see Trait\Oauth2 function getLinkedInAccessToken
-                         * @var string $_language
                          * @var array $languageArray
                          * @var string $language
                          */
@@ -848,12 +853,12 @@ final class AuthController
     }
     
     public function callbackMicrosoftOnline(
-        CurrentRoute $currentRoute,
         ServerRequestInterface $request,
         TranslatorInterface $translator,    
         TokenRepository $tR,
         UserInvRepository $uiR,
         UserRepository $uR,
+        #[RouteArgument('_language')] string $_language,
         #[Query('code')] string $code = null, 
         #[Query('state')] string $state = null, 
         #[Query('session_state')] string $sessionState = null,
@@ -930,10 +935,8 @@ final class AuthController
                          * @var array $this->sR->locale_language_array()
                          */
                         $languageArray = $this->sR->locale_language_array();
-                        $_language = $currentRoute->getArgument('_language');
                         /**
                          * @see Trait\Oauth2 function getMicrosoftOnlineAccessToken
-                         * @var string $_language
                          * @var array $languageArray
                          * @var string $language
                          */
@@ -955,12 +958,12 @@ final class AuthController
     }
     
     public function callbackYandex(
-        CurrentRoute $currentRoute,
         ServerRequestInterface $request,
         TranslatorInterface $translator,    
         TokenRepository $tR,
         UserInvRepository $uiR,
         UserRepository $uR,
+        #[RouteArgument('_language')] string $_language,    
         #[Query('code')] string $code = null, 
         #[Query('state')] string $state = null,        
     ) : ResponseInterface 
@@ -1053,10 +1056,8 @@ final class AuthController
                          * @var array $this->sR->locale_language_array()
                          */
                         $languageArray = $this->sR->locale_language_array();
-                        $_language = $currentRoute->getArgument('_language');
                         /**
                          * @see Trait\Oauth2 function getYandexAccessToken
-                         * @var string $_language
                          * @var array $languageArray
                          * @var string $language
                          */
@@ -1073,6 +1074,178 @@ final class AuthController
                                 $_language, 
                                 $randomAndTimeToken, 
                                 'yandex'
+                        );
+                        return $this->viewRenderer->render('proceed', [
+                            'proceedToMenuButton' => $proceedToMenuButton
+                        ]);
+                    }     
+                }   
+            }    
+        }
+        $this->authService->logout();
+        return $this->redirectToMain();
+    }
+    
+     
+    public function callbackVKontakte(
+        ServerRequestInterface $request,
+        TranslatorInterface $translator,    
+        TokenRepository $tR,
+        UserInvRepository $uiR,
+        UserRepository $uR,
+        #[RouteArgument('_language')] string $_language,    
+        #[Query('code')] string $code = null, 
+        #[Query('state')] string $state = null,
+        #[Query('device_id')] string $device_id = null
+    ) : ResponseInterface 
+    {
+        if ($code == null || $state == null) {
+            return $this->redirectToMain();
+        }
+        
+        /**
+         * @psalm-suppress DocblockTypeContradiction $code
+         */
+        if (strlen($code) == 0) {
+            $codeVerifier = Random::string(128);
+            $codeChallenge = strtr(rtrim(base64_encode(hash('sha256', $codeVerifier, true)), '='), '+/', '-_');
+            
+            // Store code_verifier in session or other storage
+            $this->session->set('code_verifier', $codeVerifier);
+            
+            $authorizationUrl = $this->vkontakte->buildAuthUrl($request, 
+                [
+                    'code_challenge' => $codeChallenge, 
+                    'code_challenge_method' => 'S256',
+                    'device_id' => $device_id
+                ]
+            );
+            header('Location: ' . $authorizationUrl);
+            exit;
+        } elseif ($code == 401){
+            return $this->redirectToOauth2CallbackResultUnAuthorised();
+        } elseif (strlen($state) == 0) {
+            exit(1);
+        } else {
+            $codeVerifier = (string)$this->session->get('code_verifier');
+            $params = [
+                'device_id' => $device_id,
+                'grant_type' => 'authorization_code', 
+                'redirect_uri' => $this->vkontakte->getOauth2ReturnUrl(),
+                'code_verifier' => $codeVerifier
+            ];
+            
+            /**
+             * $oAuthTokenType = e.g.    'refresh_token' => '{string}'
+             *                           'access_token' => '{string}'
+             *                           'id_token' => '{string}'
+             *                           'token_type' => 'Bearer'
+             *                           'expires_in' => 3600
+             *                           'user_id' => 1023583333
+             *                           'state' => '{string}'
+             *                           'scope' => 'vkid.personal_info email'
+             */
+            $oAuthTokenType = $this->vkontakte->fetchAccessTokenWithCurlAndCodeVerifier($request, $code, $params);
+            
+            /**
+             * e.g.  'user' => [
+             *          'user_id' => '1023581111'
+             *          'first_name' => 'Joe'
+             *          'last_name' => 'Bloggs'
+             *          'avatar' => 'https://..' 
+             *          'email' => ''
+             *          'sex' => 2
+             *          'verified' => false
+             *          'birthday' => '09.09.1999'
+             *       ]
+             * @var array $userArray
+             */
+            $userArray = $this->vkontakte->step8ObtainingUserDataArrayUsingCurlWithClientId($oAuthTokenType, $this->vkontakte->getClientId());
+            
+            /**
+             * @var array $userArray['user']
+             */
+            $user = $userArray['user'] ?? [];
+            
+            /**
+             * @var int $user['user_id']
+             */
+            $id = $user['user_id'] ?? 0;
+            if ($id > 0) {
+                /**
+                 * @var string $user['first_name']
+                 */
+                $userFirstName = $user['first_name'] ?? 'unknown';
+                /**
+                 * @var string $user['last_name']
+                 */
+                $userLastName = $user['last_name'] ?? 'unknown';
+                if (strlen($userFirstName) > 0 && strlen($userLastName) > 0) {
+                    $userName = $userFirstName . ' '. $userLastName; 
+                } else $userName = 'fullname unknown';
+                // Append the last four digits of the Id
+                $login = ''.$userName. substr((string)$id, strlen((string)$id) - 4, strlen((string)$id));
+                /**
+                 * @var string $userArray['email']
+                 */
+                $email = $userArray['email'] ?? 'noemail'.$login.'@vk.ru';
+                $password = Random::string(32);
+                // The password does not need to be validated here so use authService->oauthLogin($login) instead of authService->login($login, $password)
+                // but it will be used later to build a passwordHash
+                if ($this->authService->oauthLogin($login)) {
+                    $identity = $this->authService->getIdentity();
+                    $userId = $identity->getId();
+                    if (null!==$userId) {
+                        $userInv = $uiR->repoUserInvUserIdquery($userId);
+                        if (null!==$userInv) {
+                            // disable the vkontakte verification token as soon as the user logs in for the first time
+                            $status = $userInv->getActive();
+                            if ($status || $userId == 1) {
+                                $userId == 1 ? $this->disableToken($tR, '1', $this->getTokenType('vkontakte')) : '';
+                                return $this->redirectToInvoiceIndex();
+                            } else {
+                                $this->disableToken($tR, $userId, $this->getTokenType('vkontakte'));
+                                return $this->redirectToAdminMustMakeActive();
+                            }
+                        }
+                    }
+                    return $this->redirectToMain();
+                } else {
+                    $user = new User($login, $email, $password);
+                    $uR->save($user);
+                    $userId = $user->getId();
+                    if ($userId > 0) {
+                        // avoid autoincrement issues and using predefined user id of 1 ... and assign the first signed-up user ... admin rights
+                        if ($uR->repoCount() == 1) {
+                            $this->manager->revokeAll($userId);
+                            $this->manager->assign('admin', $userId);
+                        } else {
+                            $this->manager->revokeAll($userId);
+                            $this->manager->assign('observer', $userId);
+                        }
+                        $login = $user->getLogin();
+                        /**
+                         * @var array $this->sR->locale_language_array()
+                         */
+                        $languageArray = $this->sR->locale_language_array();
+                        /**
+                         * @see Trait\Oauth2 function getYandexAccessToken
+                         * @var array $languageArray
+                         * @var string $language
+                         */
+                        $language = $languageArray[$_language];
+                        $randomAndTimeToken = $this->getVKontakteAccessToken($user, $tR);
+                        /**
+                         * @see A new UserInv (extension table of user) for the user is created.
+                         */
+                        $proceedToMenuButton = $this->proceedToMenuButtonWithMaskedRandomAndTimeTokenLink(
+                            $translator, 
+                            $user, 
+                            $uiR, 
+                            $language, 
+                            $_language, 
+                            $randomAndTimeToken, 
+                            'vkontakte'
                         );
                         return $this->viewRenderer->render('proceed', [
                             'proceedToMenuButton' => $proceedToMenuButton
@@ -1138,6 +1311,7 @@ final class AuthController
             'google' => self::GOOGLE_ACCESS_TOKEN,
             'linkedin' => self::LINKEDIN_ACCESS_TOKEN,
             'microsoftonline' => self::MICROSOFTONLINE_ACCESS_TOKEN,
+            'vkontakte' => self::VKONTAKTE_ACCESS_TOKEN,
             'x' => self::X_ACCESS_TOKEN,
             'yandex' => self::YANDEX_ACCESS_TOKEN
         };

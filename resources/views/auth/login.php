@@ -20,6 +20,7 @@ use Yiisoft\Html\Tag\Form;
  * @var string                                  $googleAuthUrl
  * @var string                                  $linkedInAuthUrl 
  * @var string                                  $microsoftOnlineAuthUrl
+ * @var string                                  $vkontakteAuthUrl
  * @var string                                  $xAuthUrl
  * @var string                                  $yandexAuthUrl
  * @var bool                                    $noFacebookContinueButton
@@ -27,6 +28,7 @@ use Yiisoft\Html\Tag\Form;
  * @var bool                                    $noGoogleContinueButton
  * @var bool                                    $noLinkedInContinueButton
  * @var bool                                    $noMicrosoftOnlineContinueButton
+ * @var bool                                    $noVKontakteContinueButton
  * @var bool                                    $noXContinueButton
  * @var bool                                    $noYandexContinueButton
  * @var string                                  $csrf
@@ -64,6 +66,10 @@ $this->setTitle($translator->translate('i.login'));
                     <?php if ((strlen($microsoftOnlineAuthUrl ?: '') > 0) && !$noMicrosoftOnlineContinueButton) { ?>
                         <br><br>
                         <?= $button->microsoftonline($microsoftOnlineAuthUrl ?: ''); ?>
+                    <?php } ?>
+                    <?php if ((strlen($vkontakteAuthUrl ?: '') > 0) && !$noVKontakteContinueButton) { ?>
+                        <br><br>
+                        <?= $button->vkontakte($vkontakteAuthUrl ?: ''); ?>
                     <?php } ?>
                     <?php if ((strlen($xAuthUrl ?: '') > 0) && !$noXContinueButton) { ?>
                         <br><br>
@@ -113,4 +119,3 @@ $this->setTitle($translator->translate('i.login'));
         </div>
     </div>
 </div>
-
