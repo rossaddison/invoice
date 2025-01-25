@@ -247,8 +247,8 @@ final class Button
         Html::openTag('div', ['class' => 'btn-group', 'role' => 'group']).
             Img::tag()   
             ->src('/img/vkontakte-24.jpg')
-            ->addClass('btn btn-dark disabled')        
-            ->render() . A::tag()
+            ->addClass('btn btn-dark')        
+            ->render(). A::tag()
             ->addClass('btn btn-dark')        
             ->content($this->translator->translate('invoice.invoice.continue.with.vkontakte'))
             ->href($vkontakteAuthUrl)

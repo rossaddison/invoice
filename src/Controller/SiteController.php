@@ -47,6 +47,11 @@ final class SiteController
     {
         return $this->viewRenderer->render('privacypolicy');
     }
+    
+    public function termsofservice(): \Yiisoft\DataResponse\DataResponse
+    {
+        return $this->viewRenderer->render('termsofservice');
+    }
 
     public function testimonial(): \Yiisoft\DataResponse\DataResponse
     {

@@ -138,7 +138,10 @@ return [
     ->name('site/signupfailed'),
     Route::methods([Method::GET, Method::POST], '/signupsuccess')
     ->action([SiteController::class, 'signupsuccess'])
-    ->name('site/signupsuccess')    ,
+    ->name('site/signupsuccess'),
+    Route::methods([Method::GET, Method::POST], '/termsofservice')
+    ->action([SiteController::class, 'termsofservice'])
+    ->name('site/termsofservice'),
     // Auth     
     Route::methods([Method::GET, Method::POST], '/login')
     ->middleware(LimitRequestsMiddleware::class)

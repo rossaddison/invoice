@@ -265,7 +265,7 @@ return [
   // works in association with yiisoft/yii-debug-viewer which is not installed 
   // @see blog/common/config/di/router.php  which relies on Yiisoft\Yii\Debug\Viewer\Middleware\ToolbarMiddleware
   'yiisoft/yii-debug' => [
-    'enabled' => false,  
+    'enabled' => false  
   ], 
   'yiisoft/yii-debug-api' => [
     'enabled' => false  
