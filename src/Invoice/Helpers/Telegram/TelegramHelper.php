@@ -11,9 +11,7 @@ use HttpSoft\Message\StreamFactory;
 use Psr\Http\Message\ServerRequestInterface as Request;
 use Psr\Log\LoggerInterface as Logger;
 use Vjik\TelegramBot\Api\FailResult;
-use Vjik\TelegramBot\Api\Client\PsrTelegramClient;
-use Vjik\TelegramBot\Api\Client\TelegramResponse;
-use Vjik\TelegramBot\Api\Request\TelegramRequestInterface as trI;
+use Vjik\TelegramBot\Api\Transport\PsrTransport;
 use Vjik\TelegramBot\Api\LogType;
 use Vjik\TelegramBot\Api\TelegramBotApi;
 use Vjik\TelegramBot\Api\Type\Update\Update;
@@ -45,7 +43,7 @@ final class TelegramHelper
         $requestFactory = new RequestFactory();
         $streamFactory = new StreamFactory();
         $this->botApi = new TelegramBotApi(
-            new PsrTelegramClient(
+            new PsrTransport(
                 $this->settingRepositoryTelegramToken,
                 $client = new Client($responseFactory, $streamFactory),
                 $requestFactory,
@@ -116,23 +114,23 @@ final class TelegramHelper
         return Update::fromJson($jsonString, $logger);
     }
 
-    public static function logTypeCreateSendRequestContext(trI $request): array
+    public static function logTypeCreateSendRequestContext(): int
     {
-        return LogType::createSendRequestContext($request);
+        return LogType::SEND_REQUEST;
     }
 
-    public static function logTypeCreateSuccessResultContext(trI $request, TelegramResponse $response, mixed $decodedResponse): array
+    public static function logTypeCreateSuccessResultContext(): int
     {
-        return LogType::createSuccessResultContext($request, $response, $decodedResponse);
+        return LogType::SUCCESS_RESULT;
     }
 
-    public static function logTypeCreateFailResultContext(trI $request, TelegramResponse $response, mixed $decodedResponse): array
+    public static function logTypeCreateFailResultContext(): int
     {
-        return LogType::createFailResultContext($request, $response, $decodedResponse);
+        return LogType::FAIL_RESULT; 
     }
 
-    public static function logTypeCreateParseResultErrorContext(string $raw): array
+    public static function logTypeCreateParseResultErrorContext(): int
     {
-        return LogType::createParseResultErrorContext($raw);
+        return LogType::PARSE_RESULT_ERROR;
     }
 }

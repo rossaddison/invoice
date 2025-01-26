@@ -91,6 +91,7 @@ final class TelegramController
         $messageEffectId = null;
         $replyParameters = null;
         $replyMarkup = null;
+        $allowPaidBroadcast = null;
         $secretToken = $this->sR->getSetting('telegram_webhook_secret_token') ?: null;
         try {
             $telegramEnabled = $this->sR->getSetting('enable_telegram');
@@ -129,6 +130,7 @@ final class TelegramController
                                     $messageEffectId = null,
                                     $replyParameters = null,
                                     $replyMarkup = null,
+                                    $allowPaidBroadcast = null    
                                 );
                                 if (!$sendMessageResult instanceof FailResult) {
                                     $this->flashMessage('success', $this->translator->translate('invoice.invoice.telegram.bot.api.hello.world.test.message.sent'));
