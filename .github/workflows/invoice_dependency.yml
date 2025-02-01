@@ -68,7 +68,7 @@ jobs:
         run: composer self-update
 
       - name: Install maglnet/composer-require-checker
-        run: composer require maglnet/composer-require-checker:^4.0
+        run: composer require maglnet/composer-require-checker:dev-renovate/nikic-php-parser-5.x
 
       - name: Check dependency
         run: vendor/bin/composer-require-checker
