@@ -9,16 +9,30 @@ declare(strict_types=1);
     * Existing url's for a 'terms of service' page, and a 'privacy policy' page, 
     * are necessary to develop many of the Oauth2.0 clients
     * 
-    * for the yii3i.co.uk test site
+    * @see ViewInjection\CommonViewInjection
+    * 
+    * @var string $arbitrationBody
+    * @var string $arbitrationJurisdiction 
+    * @var string $companyAddress1
+    * @var string $companyAddress2
+    * @var string $companyCity
+    * @var string $companyEmail
+    * @var string $companyName
+    * @var string $companyPhone 
+    * @var string $companyStartDate
+    * @var string $companyState
+    * @var string $companyCountry
+    * @var string $companyWeb
+    * @var string $companyZip
     */
 ?>
 <p><strong>Terms of Service</strong></p>
-<p><strong>Effective Date:</strong> [Insert Date]</p>
-<p>Welcome to [Your Company Name], a Yii3 PHP framework development company. By accessing or using our services, you agree to be bound by these Terms of Service. If you do not agree to these terms, please do not use our services.</p>
+<p><strong>Effective Date:</strong> <?= $companyStartDate; ?></p>
+<p>Welcome to <?= $companyName; ?>, a Yii3 PHP framework development company. By accessing or using our services, you agree to be bound by these Terms of Service. If you do not agree to these terms, please do not use our services.</p>
 <hr />
 <h3>1. <strong>Definitions</strong></h3>
 <ul>
-<li><strong>"Company"</strong> refers to [Your Company Name], the provider of Yii3 PHP framework development services.</li>
+<li><strong>"Company"</strong> refers to <?= $companyName ?>, the provider of Yii3 PHP framework development services.</li>
 <li><strong>"Client"</strong> refers to any individual, company, or entity that engages our services.</li>
 <li><strong>"Services"</strong> refer to Yii3 PHP framework development, support, consultation, and related services provided by the Company.</li>
 <li><strong>"Agreement"</strong> refers to these Terms of Service, as well as any contracts or agreements entered into between the Client and the Company.</li>
@@ -46,7 +60,7 @@ declare(strict_types=1);
 <h3>4. <strong>Fees and Payment</strong></h3>
 <ul>
 <li>Fees for services will be outlined in a written agreement or invoice provided to the Client.</li>
-<li>Payment terms are net [Insert Number] days from the invoice date unless otherwise agreed upon.</li>
+<li>Payment terms are net 30 days from the invoice date unless otherwise agreed upon.</li>
 <li>Late payments may incur additional charges or suspension of services.</li>
 </ul>
 <hr />
@@ -72,23 +86,24 @@ declare(strict_types=1);
 <hr />
 <h3>8. <strong>Termination</strong></h3>
 <ul>
-<li>Either party may terminate the Agreement by providing [Insert Notice Period, e.g., "30 days"] written notice.</li>
+<li>Either party may terminate the Agreement by providing "30 days" written notice.</li>
 <li>Upon termination, the Client agrees to pay for all services rendered up to the date of termination.</li>
 </ul>
 <hr />
 <h3>9. <strong>Dispute Resolution</strong></h3>
 <ul>
 <li>Any disputes arising under this Agreement shall be resolved through good-faith negotiation.</li>
-<li>If unresolved, disputes shall be submitted to binding arbitration under the rules of [Insert Arbitration Body] in [Insert Jurisdiction].</li>
+<li>If unresolved, disputes shall be submitted to binding arbitration under the rules of <?= $arbitrationBody ?> in <?= $arbitrationJurisdiction ?>.</li>
 </ul>
 <hr />
 <h3>10. <strong>Governing Law</strong></h3>
-<p>This Agreement shall be governed by and construed in accordance with the laws of [Insert Jurisdiction].</p>
+<p>This Agreement shall be governed by and construed in accordance with the laws of <?= $arbitrationJurisdiction ?>.</p>
 <hr />
 <h3>11. <strong>Amendments</strong></h3>
 <p>The Company reserves the right to modify these Terms of Service at any time. Clients will be notified of significant changes via email or a notice on our website.</p>
 <hr />
 <h3>12. <strong>Contact Information</strong></h3>
 <p>For any questions about these Terms of Service, please contact us at:</p>
-<p>[Your Company Name]<br /> [Your Address]<br /> [Your Email Address]<br /> [Your Phone Number]</p>
-<hr />
+<p><b><?= $companyName ?></b><br /><?= $companyAddress1 ?><br /><?= $companyAddress2 ?><br /><?= $companyCity ?><br /><?= $companyState ?><br /><?= $companyZip ?><br /><?= $companyCountry ?>
+<br /><?= $companyEmail ?><br /> <?= $companyPhone ?></p>
+<hr/>

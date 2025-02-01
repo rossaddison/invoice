@@ -91,21 +91,20 @@ class <?= $generator->getCamelcase_capital_name()."\n"; ?>
                     $init = 'null';
                     break;
                 case 'bool':
-                    {
-                        if ($column->hasDefaultValue()) {
-                           /**
-                            * @var mixed $init
-                            */ 
-                           $init  = $column->getDefaultValue();
-                           if ($init === 1) {$init = 'false';}
-                           if ($init === 0) {$init = 'true';}
-                           break;
-                        }
-                        else {
+                    if ($column->hasDefaultValue()) {
+                        /**
+                         * @var mixed $init
+                         */ 
+                       $init  = $column->getDefaultValue();
+                       if ($init === 1) {
                            $init = 'false';
-                           break;
-                        }
+                       } elseif ($init === 0) {
+                           $init = 'true';
+                       }
+                    } else {
+                       $init = 'false';
                     }
+                    break;
             }
             $ab = '';
             $default = '';
@@ -125,11 +124,14 @@ class <?= $generator->getCamelcase_capital_name()."\n"; ?>
                     break;
                 //Boolean type, some databases store it as an integer (1/0).
                 case 'boolean':
-                {
-                    $ab = '    #[Column(type:'."'bool'" . ',default:false'.($column->isNullable() ? ',nullable: false'  : ',nullable: false').')]'."\n";
+                    $ab = '    #[Column(type:'.
+                          "'bool'". 
+                          ',default:false'.
+                          ($column->isNullable() ? ',nullable: false'  : ',nullable: false').
+                          ')]'.
+                          "\n";
                     $ate_or_lic='private ';
                     break;
-                }
                 //Database specific integer (usually 32 bits).    
                 case 'integer':
                     $result = $column->getSize();

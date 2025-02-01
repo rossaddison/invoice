@@ -1791,6 +1791,8 @@ return [
     'menu.swagger' => 'Swagger',
     'menu.team' => 'Team',
     'menu.pricing' => 'Pricing',
+    'menu.privacy.policy' => 'Privacy Policy',
+    'menu.terms.of.service' => 'Terms of Service',
     'menu.testimonial' => 'Testimonial',
     'menu.users' => 'Users',
     'password.reset' => 'Reset Password',

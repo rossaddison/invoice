@@ -738,64 +738,66 @@ final class GeneratorController
                 throw new GoogleTranslateJsonFileNotFoundException();
             }
             $data = file_get_contents(FileHelper::normalizePath($path_and_filename));
-            /** @var array $json */
-            $json = Json::decode($data, true);
-            $projectId = (string)$json['project_id'];
-            putenv("GOOGLE_APPLICATION_CREDENTIALS=$path_and_filename");
-            $translationClient = new TranslationServiceClient();
-            // Use the ..src/Invoice/Language/English/ip_lang.php associative array as template
-            $folder_language = 'English';
-            $lang = new Lang();
-            // type eg. 'ip', 'gateway'  of ip_lang.php or gateway_lang.php or latest_lang.php i.e. invoice.invoice. lines
-            $lang->load($type, $folder_language);
-            $content = $lang->_language;
-            // Build a template array using keys from $content
-            // These keys will be filled with the associated translated text values
-            // generated below by merging the two arrays.
-            $content_keys_array = array_keys($content);
-            // Retrieve the selected new language according to locale in Settings View Google Translate
-            // eg. 'es' ie. Spanish
-            $targetLanguage = $sR->getSetting('google_translate_locale');
-            if (empty($targetLanguage)) {
-                throw new GoogleTranslateLocaleSettingNotFoundException();
-            }
-            // https://github.com/googleapis/google-cloud-php-translate
-            /** @var array<array-key, string> $content */
-            $response = $translationClient->translateText(
-                $content,
-                $targetLanguage,
-                TranslationServiceClient::locationName($projectId, 'global')
-            );
-            $result_array = [];
-            /**
-             * @var \Google\Cloud\Translate\V3\TranslateTextResponse $response_get_translations
-             */
-            $response_get_translations = $response->getTranslations();
-            /**
-             * @psalm-suppress RawObjectIteration $response_get_translations
-             * @var \Google\Cloud\Translate\V3\Translation $translation
-             * @var string $key
-             */
-            foreach ($response_get_translations as $key => $translation) {
-                $result_array[$key] = $translation->getTranslatedText().',';
-            }
-            $combined_array = array_combine($content_keys_array, $result_array);
-            $file = $this->google_translate_get_file_from_type($type);
-            $path = $this->aliases->get('@generated');
-            $content_params = [
-                'combined_array' => $combined_array
-            ];
-            $file_content = $this->viewRenderer->renderPartialAsString(
-                'generator/templates_protected/'.$file,
-                $content_params
-            );
-            $this->flashMessage('success', $file.$this->translator->translate('invoice.generator.generated'). $path .'/'.$file);
-            $this->build_and_save($path, $file_content, $file, $type);
-            $parameters = [
-               'alert' => $this->alert(),
-               'combined_array' => $combined_array
-            ];
-            return $this->viewRenderer->render('_google_translate_lang', $parameters);
+            if ($data <> false) {
+                /** @var array $json */
+                $json = Json::decode($data, true);
+                $projectId = (string)$json['project_id'];
+                putenv("GOOGLE_APPLICATION_CREDENTIALS=$path_and_filename");
+                $translationClient = new TranslationServiceClient();
+                // Use the ..src/Invoice/Language/English/ip_lang.php associative array as template
+                $folder_language = 'English';
+                $lang = new Lang();
+                // type eg. 'ip', 'gateway'  of ip_lang.php or gateway_lang.php or latest_lang.php i.e. invoice.invoice. lines
+                $lang->load($type, $folder_language);
+                $content = $lang->_language;
+                // Build a template array using keys from $content
+                // These keys will be filled with the associated translated text values
+                // generated below by merging the two arrays.
+                $content_keys_array = array_keys($content);
+                // Retrieve the selected new language according to locale in Settings View Google Translate
+                // eg. 'es' ie. Spanish
+                $targetLanguage = $sR->getSetting('google_translate_locale');
+                if (empty($targetLanguage)) {
+                    throw new GoogleTranslateLocaleSettingNotFoundException();
+                }
+                // https://github.com/googleapis/google-cloud-php-translate
+                /** @var array<array-key, string> $content */
+                $response = $translationClient->translateText(
+                    $content,
+                    $targetLanguage,
+                    TranslationServiceClient::locationName($projectId, 'global')
+                );
+                $result_array = [];
+                /**
+                 * @var \Google\Cloud\Translate\V3\TranslateTextResponse $response_get_translations
+                 */
+                $response_get_translations = $response->getTranslations();
+                /**
+                 * @psalm-suppress RawObjectIteration $response_get_translations
+                 * @var \Google\Cloud\Translate\V3\Translation $translation
+                 * @var string $key
+                 */
+                foreach ($response_get_translations as $key => $translation) {
+                    $result_array[$key] = $translation->getTranslatedText().',';
+                }
+                $combined_array = array_combine($content_keys_array, $result_array);
+                $file = $this->google_translate_get_file_from_type($type);
+                $path = $this->aliases->get('@generated');
+                $content_params = [
+                    'combined_array' => $combined_array
+                ];
+                $file_content = $this->viewRenderer->renderPartialAsString(
+                    'generator/templates_protected/'.$file,
+                    $content_params
+                );
+                $this->flashMessage('success', $file.$this->translator->translate('invoice.generator.generated'). $path .'/'.$file);
+                $this->build_and_save($path, $file_content, $file, $type);
+                $parameters = [
+                   'alert' => $this->alert(),
+                   'combined_array' => $combined_array
+                ];
+                return $this->viewRenderer->render('_google_translate_lang', $parameters);
+            }    
         }
         $this->flashMessage('info', $this->translator->translate('invoice.generator.file.type.not.found'));
         return $this->webService->getRedirectResponse('site/index');

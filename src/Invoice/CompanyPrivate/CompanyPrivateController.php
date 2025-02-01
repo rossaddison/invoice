@@ -107,24 +107,27 @@ final class CompanyPrivateController
             // echo \Yiisoft\VarDumper\VarDumper::dump($_FILES);
             // Filename of logo in PUBLIC folder
             $tmp = $_FILES['logo_filename']['tmp_name'];
-            // Replace filename's spaces with underscore
-            $modified_original_file_name = Random::string(4).'_'.preg_replace('/\s+/', '_', $_FILES['logo_filename']['name']);
-            // Build a target file name
-            $target_file_name = $targetPath . '/'.$modified_original_file_name;
-            // Make the logo available also on the public path so that it can be viewed online
-            $target_public_logo = $targetPublicPath . '/'.$modified_original_file_name;
-            if (is_array($body)) {
-                $body['logo_filename'] = $modified_original_file_name;
-                // Move the logo to the private folder for storage and the publicly viewable folder for online viewing
-                if (!$this->file_uploading_errors($tmp, $target_file_name, $target_public_logo)) {
-                    if ($formHydrator->populateAndValidate($form, $body)) {
-                        $this->companyprivateService->saveCompanyPrivate($company_private, $body, $settingRepository);
-                        $this->flashMessage('info', $this->translator->translate('i.record_successfully_created'));
-                        return $this->webService->getRedirectResponse('companyprivate/index');
-                    }                   
+            $spaceToUnderscore = preg_replace('/\s+/', '_', $tmp);
+            if (null!==$spaceToUnderscore) {
+                // Replace filename's spaces with underscore
+                $modified_original_file_name = Random::string(4).'_'.$spaceToUnderscore;
+                // Build a target file name
+                $target_file_name = $targetPath . '/'.$modified_original_file_name;
+                // Make the logo available also on the public path so that it can be viewed online
+                $target_public_logo = $targetPublicPath . '/'.$modified_original_file_name;
+                if (is_array($body)) {
+                    $body['logo_filename'] = $modified_original_file_name;
+                    // Move the logo to the private folder for storage and the publicly viewable folder for online viewing
+                    if (!$this->file_uploading_errors($tmp, $target_file_name, $target_public_logo)) {
+                        if ($formHydrator->populateAndValidate($form, $body)) {
+                            $this->companyprivateService->saveCompanyPrivate($company_private, $body, $settingRepository);
+                            $this->flashMessage('info', $this->translator->translate('i.record_successfully_created'));
+                            return $this->webService->getRedirectResponse('companyprivate/index');
+                        }                    
+                        $parameters['form'] = $form;
+                        $parameters['errors'] = $form->getValidationResult()->getErrorMessagesIndexedByProperty();
+                    }
                 }
-                $parameters['form'] = $form;
-                $parameters['errors'] = $form->getValidationResult()->getErrorMessagesIndexedByProperty();
             }    
         }
         return $this->viewRenderer->render('_form', $parameters);
@@ -234,7 +237,7 @@ final class CompanyPrivateController
                 $body['logo_filename'] = $_FILES['logo_filename']['name'];
                 if ($formHydrator->populateAndValidate($form, $body)) {
                     // Replace filename's spaces with underscore and add random string preventing overwrites
-                    $modified_original_file_name = Random::string(4).'_'.preg_replace('/\s+/', '_', $body['logo_filename']);
+                    $modified_original_file_name = Random::string(4).'_'.(string)preg_replace('/\s+/', '_', $body['logo_filename']);
                     // Build a unique target file name
                     $target_file_name = $targetPath . '/'. $modified_original_file_name;
                     $target_public_logo = $targetPublicPath . '/'.$modified_original_file_name;

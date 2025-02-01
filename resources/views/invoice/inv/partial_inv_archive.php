@@ -38,7 +38,7 @@ declare(strict_types=1);
                     </a>
                 </td>
                 <td>
-                    <?= date("F d Y H:i:s.", filemtime($invoice)); ?>
+                    <?= date("F d Y H:i:s.", ((($fileInvoice = filemtime($invoice)) <> false ? $fileInvoice : null))); ?>
                 </td>
             </tr>
         <?php } ?>

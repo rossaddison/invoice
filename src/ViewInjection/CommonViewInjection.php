@@ -41,26 +41,38 @@ final class CommonViewInjection implements CommonParametersInjectionInterface
     {
         $companies = $this->companyRepository->findAllPreloaded();
         $companyPrivates = $this->companyPrivateRepository->findAllPreloaded();
+        $companyName = '';
+        $companyWeb = '';
         $companyAddress1 = '';
         $companyAddress2 = '';
         $companyCity = '';
         $companyState = '';
         $companyZip = '';
+        $companyCountry = '';
         $companyPhone = '';
         $companyEmail = '';
         $companyLogoFileName = '';
+        $companyStartDate = '';
+        $arbitrationBody = '';
+        $arbitrationJurisdiction = '';
         /**
          * @var Company $company
          */
         foreach ($companies as $company) {
             if ($company->getCurrent() == '1') {
+                $companyName = $company->getName();
+                $companyWeb = $company->getWeb();
                 $companyAddress1 = $company->getAddress_1();
                 $companyAddress2 = $company->getAddress_2();
                 $companyCity = $company->getCity();
                 $companyState = $company->getState();
                 $companyZip = $company->getZip();
+                $companyCountry = $company->getCountry();
                 $companyPhone = $company->getPhone();
                 $companyEmail = $company->getEmail();
+                $arbitrationBody = $company->getArbitrationBody();
+                $arbitrationJurisdiction = $company->getArbitrationJurisdiction();
+                
                 /**
                  * @var CompanyPrivate $private
                  */
@@ -71,6 +83,7 @@ final class CommonViewInjection implements CommonParametersInjectionInterface
                             $companyLogoFileName = $private->getLogo_filename();
                             $companyLogoWidth = $private->getLogo_width();
                             $companyLogoHeight = $private->getLogo_height();
+                            $companyStartDate = $private->getStart_date()?->format('Y-m-d');
                             //  break;
                         }
                     }
@@ -84,19 +97,26 @@ final class CommonViewInjection implements CommonParametersInjectionInterface
         );
 
         return [
-            'translator' => $this->translator,
-            'url' => $this->url,
+            'arbitrationBody' => $arbitrationBody ?? '',
+            'arbitrationJurisdiction' => $arbitrationJurisdiction ?? '',
             'companyAddress1' => $companyAddress1 ?? '',
             'companyAddress2' => $companyAddress2 ?? '',
             'companyCity' => $companyCity ?? '',
             'companyState' => $companyState ?? '',
             'companyZip' => $companyZip ?? '',
+            'companyCountry' => $companyCountry ?? '',
             'companyPhone' => $companyPhone ?? '',
             'companyEmail' => $companyEmail ?? '',
             'companyLogoFileName' => $companyLogoFileName ?? '',
             'companyLogoWidth' => $companyLogoWidth ?? 80,
             'companyLogoHeight' => $companyLogoHeight ?? 40,
+            'companyName' => $companyName ?? '',
+            'companyStartDate' => $companyStartDate ?? date('Y-m-d'),
+            'companyWeb' => $companyWeb ?? 'mywebpage.com',
             'logoPath' => $logoPath,
+            'translator' => $this->translator,
+            'url' => $this->url,
+            
             /**
              * @see \invoice\resources\messages\en\app.php
              * @see \invoice\vendor\yiisoft\yii-view\src\ViewRenderer.php function getCommonParameters

@@ -20,10 +20,8 @@ class GoogleTranslateNetworkException extends \RuntimeException implements Frien
 
     /**
      * @return string
-     *
-     * @psalm-return '    Please try again later.'
      */
-    public function getSolution(): ?string
+    public function getSolution(): string
     {
         return <<<'SOLUTION'
                 Please try again later.

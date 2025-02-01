@@ -65,7 +65,7 @@ class Lang
         $langfile = str_replace('.php', '', $langfile);
 
         if ($add_suffix === true) {
-            $langfile = preg_replace('/_lang$/', '', $langfile).'_lang';
+            $langfile = (preg_replace('/_lang$/', '', $langfile) ?? 'unknown').'_lang';
         }
 
         $langfile .= '.php';

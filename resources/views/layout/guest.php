@@ -320,7 +320,7 @@ echo NavBar::widget()
         ->csrf($csrf)
         ->open()
         . '<div class="mb-1">'
-        . Button::submit(null!==$user ? preg_replace('/\d+/', '', $user->getLogin().' '.$translator->translate('i.logout')) : ''. ' '.
+        . Button::submit(null!==$user ? (string)preg_replace('/\d+/', '', $user->getLogin().' '.$translator->translate('i.logout')) : ''. ' '.
             $translator->translate('i.logout'))->class('btn btn-primary')
         . '</div>'
         . Form::tag()->close();

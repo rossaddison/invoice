@@ -56,7 +56,7 @@ class InvoiceHelper
                                           .DIRECTORY_SEPARATOR.
                                           'img']);
         if (!empty($this->s->getSetting('invoice_logo'))) {
-            return '<img src="file://' . getcwd() . $aliases->get('@img'). $this->s->getSetting('invoice_logo')  . '" id="invoice-logo">';
+            return '<img src="file://' . (string)getcwd() . $aliases->get('@img'). $this->s->getSetting('invoice_logo')  . '" id="invoice-logo">';
         }
         return '';
     }
@@ -97,8 +97,8 @@ class InvoiceHelper
         $subNumb_exploded = explode("-", (string)$subNumb);
         $fullSub = $subNumb_exploded[0] . sprintf("%06d", $subNumb_exploded[1]) . $subNumb_exploded[2];
         $rnumb_preg_replace = preg_replace('/\s+/', '', $rnumb);
-
-        return $slipType . $amountLine . $checkSlAmount . ">" . $rnumb_preg_replace . "+ " . $fullSub . ">";
+        
+        return $slipType . $amountLine . $checkSlAmount . ">" . (string)$rnumb_preg_replace . "+ " . $fullSub . ">";
     }
 
     /**

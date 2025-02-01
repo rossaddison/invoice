@@ -43,6 +43,8 @@ use Yiisoft\Yii\Bootstrap5\NavStyle;
  * @var bool $noFrontPageTeam
  * @var bool $noFrontPageTestimonial
  * @var bool $noFrontPage
+ * @var bool $noFrontPagePrivacyPolicy
+ * @var bool $noFrontPageTermsOfService
  * @var bool $stopLoggingIn
  * @var bool $stopSigningUp
  * @var string $content
@@ -107,7 +109,42 @@ $this->setTitle($title);
             ->id('navbar')      
             ->innerContainerAttributes(['class' => 'container-md'])      
             ->placement(NavBarPlacement::STICKY_TOP)
-            ->begin() ?>        
+            ->begin(); ?>
+        
+        <?= Dropdown::widget()
+            ->addClass('dropdown bi bi-translate')  
+            ->addAttributes([
+                'style' => 'font-size: 1rem; color: black;',
+                'url' => '#'
+            ])
+            ->toggleVariant(DropdownToggleVariant::LIGHT)
+            ->toggleContent('')        
+            ->toggleSizeSmall(true)        
+            ->items(
+                DropdownItem::link('Afrikaans South African', $urlGenerator->generateFromCurrent(['_language' => 'af-ZA'], fallbackRouteName: 'site/index')),
+                DropdownItem::link('Arabic Bahrainian/ عربي', $urlGenerator->generateFromCurrent(['_language' => 'ar-BH'], fallbackRouteName: 'site/index')),
+                DropdownItem::link('Azerbaijani / Azərbaycan', $urlGenerator->generateFromCurrent(['_language' => 'az'], fallbackRouteName: 'site/index')),
+                DropdownItem::link('Chinese Simplified / 简体中文', $urlGenerator->generateFromCurrent(['_language' => 'zh-CN'], fallbackRouteName: 'site/index')),
+                DropdownItem::link('Tiawanese Mandarin / 简体中文', $urlGenerator->generateFromCurrent(['_language' => 'zh-TW'], fallbackRouteName: 'site/index')),
+                DropdownItem::link('English', $urlGenerator->generateFromCurrent(['_language' => 'en'], fallbackRouteName: 'site/index')),
+                DropdownItem::link('Filipino / Filipino', $urlGenerator->generateFromCurrent(['_language' => 'fil'], fallbackRouteName: 'site/index')),
+                DropdownItem::link('French / Français', $urlGenerator->generateFromCurrent(['_language' => 'fr'], fallbackRouteName: 'site/index')),
+                DropdownItem::link('Dutch / Nederlands', $urlGenerator->generateFromCurrent(['_language' => 'nl'], fallbackRouteName: 'site/index')),
+                DropdownItem::link('German / Deutsch', $urlGenerator->generateFromCurrent(['_language' => 'de'], fallbackRouteName: 'site/index')),
+                DropdownItem::link('Indonesian / bahasa Indonesia', $urlGenerator->generateFromCurrent(['_language' => 'id'], fallbackRouteName: 'site/index')),
+                DropdownItem::link('Italian / Italiano', $urlGenerator->generateFromCurrent(['_language' => 'it'], fallbackRouteName: 'site/index')),
+                DropdownItem::link('Japanese / 日本', $urlGenerator->generateFromCurrent(['_language' => 'ja'], fallbackRouteName: 'site/index')),
+                DropdownItem::link('Polish / Polski', $urlGenerator->generateFromCurrent(['_language' => 'pl'], fallbackRouteName: 'site/index')),
+                DropdownItem::link('Portugese Brazilian / Português Brasileiro', $urlGenerator->generateFromCurrent(['_language' => 'pt-BR'], fallbackRouteName: 'site/index')),
+                DropdownItem::link('Russian / Русский', $urlGenerator->generateFromCurrent(['_language' => 'ru'], fallbackRouteName: 'site/index')),
+                DropdownItem::link('Slovakian / Slovenský', $urlGenerator->generateFromCurrent(['_language' => 'sk'], fallbackRouteName: 'site/index')),
+                DropdownItem::link('Spanish /  Española x', $urlGenerator->generateFromCurrent(['_language' => 'es'], fallbackRouteName: 'site/index')),
+                DropdownItem::link('Ukrainian / українська', $urlGenerator->generateFromCurrent(['_language' => 'uk'], fallbackRouteName: 'site/index')),
+                DropdownItem::link('Uzbek / o'."'".'zbek', $urlGenerator->generateFromCurrent(['_language' => 'uz'], fallbackRouteName: 'site/index')),
+                DropdownItem::link('Vietnamese / Tiếng Việt', $urlGenerator->generateFromCurrent(['_language' => 'vi'], fallbackRouteName: 'site/index')),
+                DropdownItem::link('Zulu South African/ Zulu South African', $urlGenerator->generateFromCurrent(['_language' => 'zu-ZA'], fallbackRouteName: 'site/index')),
+            )->render();
+        ?>
         <?php 
             $currentPath = $currentRoute->getUri()?->getPath();
         ?> 
@@ -116,10 +153,10 @@ $this->setTitle($title);
                 NavLink::to(
                     Label::tag()
                     ->attributes([
-                        'class' => 'bi bi-info-circle',
+                        'class' => $debugMode ? 'bi bi-info-circle' : '',
                         'style' => 'font-size: 1rem; color: cornflowerblue;',
                         'data-bs-toggle' => 'tooltip',
-                        'title' => '..\invoice\resources\views\layout\templates\soletrader\main.php && config/common/params.php yiisoft/yii-view layouts'
+                        'title' => $debugMode ? '..\invoice\resources\views\layout\templates\soletrader\main.php && config/common/params.php yiisoft/yii-view layouts' : ''
                     ]),
                     '',
                     //active    
@@ -181,12 +218,31 @@ $this->setTitle($title);
                 ),
                 NavLink::to(
                     Label::tag()
+                    ->attributes(['class' => 'bi bi-file-ruled'])    
                     ->content(str_repeat(' ', 1).$translator->translate('menu.testimonial')), 
                     $urlGenerator->generate('site/testimonial'), 
                     $isGuest && !$noFrontPageTestimonial, 
                     !$isGuest && $noFrontPageTestimonial,                        
                     false        
                 ),
+                NavLink::to(
+                    Label::tag()
+                    ->attributes(['class' => 'bi bi-file-text'])
+                    ->content(str_repeat(' ', 1).$translator->translate('menu.privacy.policy')), 
+                    $urlGenerator->generate('site/privacypolicy'), 
+                    $isGuest && !$noFrontPagePrivacyPolicy, 
+                    !$isGuest && $noFrontPagePrivacyPolicy,                        
+                    false        
+                ),
+                NavLink::to(
+                    Label::tag()
+                    ->attributes(['class' => 'bi bi-file-text-fill'])
+                    ->content(str_repeat(' ', 1).$translator->translate('menu.terms.of.service')), 
+                    $urlGenerator->generate('site/termsofservice'), 
+                    $isGuest && !$noFrontPageTermsOfService, 
+                    !$isGuest && $noFrontPageTermsOfService,                        
+                    false        
+                ),    
                 NavLink::to(
                     Label::tag()
                     ->attributes(['class' => 'bi bi-person-lines-fill text-primary'])
@@ -220,44 +276,8 @@ $this->setTitle($title);
                 )                 
             )
             ->styles(NavStyle::NAVBAR) : ''; 
-        ?>
+        ?>        
         
-        <?= Dropdown::widget()
-            ->addClass('bi bi-translate')  
-            ->addAttributes([
-                'style' => 'font-size: 1rem; color: cornflowerblue;',
-                'title' => $translator->translate('i.language'),
-                'url' => '#'
-            ])
-            ->toggleVariant(DropdownToggleVariant::INFO)
-            ->toggleContent('')        
-            ->toggleSizeSmall(true)        
-            ->items(
-                DropdownItem::link('Afrikaans South African', $urlGenerator->generateFromCurrent(['_language' => 'af-ZA'], fallbackRouteName: 'site/index')),
-                DropdownItem::link('Arabic Bahrainian/ عربي', $urlGenerator->generateFromCurrent(['_language' => 'ar-BH'], fallbackRouteName: 'site/index')),
-                DropdownItem::link('Azerbaijani / Azərbaycan', $urlGenerator->generateFromCurrent(['_language' => 'az'], fallbackRouteName: 'site/index')),
-                DropdownItem::link('Chinese Simplified / 简体中文', $urlGenerator->generateFromCurrent(['_language' => 'zh-CN'], fallbackRouteName: 'site/index')),
-                DropdownItem::link('Tiawanese Mandarin / 简体中文', $urlGenerator->generateFromCurrent(['_language' => 'zh-TW'], fallbackRouteName: 'site/index')),
-                DropdownItem::link('English', $urlGenerator->generateFromCurrent(['_language' => 'en'], fallbackRouteName: 'site/index')),
-                DropdownItem::link('Filipino / Filipino', $urlGenerator->generateFromCurrent(['_language' => 'fil'], fallbackRouteName: 'site/index')),
-                DropdownItem::link('French / Français', $urlGenerator->generateFromCurrent(['_language' => 'fr'], fallbackRouteName: 'site/index')),
-                DropdownItem::link('Dutch / Nederlands', $urlGenerator->generateFromCurrent(['_language' => 'nl'], fallbackRouteName: 'site/index')),
-                DropdownItem::link('German / Deutsch', $urlGenerator->generateFromCurrent(['_language' => 'de'], fallbackRouteName: 'site/index')),
-                DropdownItem::link('Indonesian / bahasa Indonesia', $urlGenerator->generateFromCurrent(['_language' => 'id'], fallbackRouteName: 'site/index')),
-                DropdownItem::link('Italian / Italiano', $urlGenerator->generateFromCurrent(['_language' => 'it'], fallbackRouteName: 'site/index')),
-                DropdownItem::link('Japanese / 日本', $urlGenerator->generateFromCurrent(['_language' => 'ja'], fallbackRouteName: 'site/index')),
-                DropdownItem::link('Polish / Polski', $urlGenerator->generateFromCurrent(['_language' => 'pl'], fallbackRouteName: 'site/index')),
-                DropdownItem::link('Portugese Brazilian / Português Brasileiro', $urlGenerator->generateFromCurrent(['_language' => 'pt-BR'], fallbackRouteName: 'site/index')),
-                DropdownItem::link('Russian / Русский', $urlGenerator->generateFromCurrent(['_language' => 'ru'], fallbackRouteName: 'site/index')),
-                DropdownItem::link('Slovakian / Slovenský', $urlGenerator->generateFromCurrent(['_language' => 'sk'], fallbackRouteName: 'site/index')),
-                DropdownItem::link('Spanish /  Española x', $urlGenerator->generateFromCurrent(['_language' => 'es'], fallbackRouteName: 'site/index')),
-                DropdownItem::link('Ukrainian / українська', $urlGenerator->generateFromCurrent(['_language' => 'uk'], fallbackRouteName: 'site/index')),
-                DropdownItem::link('Uzbek / o'."'".'zbek', $urlGenerator->generateFromCurrent(['_language' => 'uz'], fallbackRouteName: 'site/index')),
-                DropdownItem::link('Vietnamese / Tiếng Việt', $urlGenerator->generateFromCurrent(['_language' => 'vi'], fallbackRouteName: 'site/index')),
-                DropdownItem::link('Zulu South African/ Zulu South African', $urlGenerator->generateFromCurrent(['_language' => 'zu-ZA'], fallbackRouteName: 'site/index')),
-            )->render();
-        ?>
-        <?= NavBar::end() ?>
         <?=  
             $isGuest ? '' : Form::tag()
                             ->post($urlGenerator->generate('auth/logout'))
@@ -271,6 +291,7 @@ $this->setTitle($title);
                         . '</div>'
                         . Form::tag()->close();
         ?>
+        <?= NavBar::end() ?>
     </header>
 
     <main class="container py-3">

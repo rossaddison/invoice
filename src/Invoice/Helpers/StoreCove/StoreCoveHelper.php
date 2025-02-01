@@ -1682,14 +1682,17 @@ class StoreCoveHelper
         $api_key_here = $this->crypt->decode($this->s->getSetting('gateway_storecove_apiKey'));
         $country_code_identifier = $this->s->getSetting('storecove_country');
         $site = curl_init();
-        curl_setopt($site, CURLOPT_URL, "https://api.storecove.com/api/v2/legal_entities");
-        curl_setopt($site, CURLOPT_POST, true);
-        curl_setopt($site, CURLOPT_RETURNTRANSFER, true);
-        curl_setopt($site, CURLOPT_HTTPHEADER, ["Accept: application/json", "Authorization: Bearer $api_key_here", "Content-Type: application/json"]);
-        curl_setopt($site, CURLOPT_HEADER, true);
-        $data = '{"party_name": "Test Party", "line1": "Test Street 1", "city": "Test City", "zip": "Zippy", "country": "' . $country_code_identifier . '"}';
-        curl_setopt($site, CURLOPT_POSTFIELDS, $data);
-        curl_close($site);
-        return curl_exec($site);
+        if ($site <> false) {
+            curl_setopt($site, CURLOPT_URL, "https://api.storecove.com/api/v2/legal_entities");
+            curl_setopt($site, CURLOPT_POST, true);
+            curl_setopt($site, CURLOPT_RETURNTRANSFER, true);
+            curl_setopt($site, CURLOPT_HTTPHEADER, ["Accept: application/json", "Authorization: Bearer $api_key_here", "Content-Type: application/json"]);
+            curl_setopt($site, CURLOPT_HEADER, true);
+            $data = '{"party_name": "Test Party", "line1": "Test Street 1", "city": "Test City", "zip": "Zippy", "country": "' . $country_code_identifier . '"}';
+            curl_setopt($site, CURLOPT_POSTFIELDS, $data);
+            curl_close($site);
+            return curl_exec($site);
+        } 
+        return false;
     }
 }

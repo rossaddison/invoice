@@ -15,6 +15,7 @@ final class CompanyForm extends FormModel
 
     #[Required]
     private ?string $name = '';
+    
     private ?string $address_1 = '';
     private ?string $address_2 = '';
     private ?string $city = '';
@@ -23,10 +24,16 @@ final class CompanyForm extends FormModel
     private ?string $country = '';
     private ?string $phone = '';
     private ?string $fax = '';
+    
     #[Required]
     private ?string $email = '';
+    
     private ?string $web = '';
 
+    private ?string $arbitrationBody =  '';
+    
+    private ?string $arbitrationJurisdiction = '';
+    
     public function __construct(Company $company)
     {
         $this->id = $company->getId();
@@ -42,6 +49,8 @@ final class CompanyForm extends FormModel
         $this->fax = $company->getFax();
         $this->email = $company->getEmail();
         $this->web = $company->getWeb();
+        $this->arbitrationBody = $company->getArbitrationBody();
+        $this->arbitrationJurisdiction = $company->getArbitrationJurisdiction();
     }
 
     public function getId(): int|null
@@ -107,6 +116,16 @@ final class CompanyForm extends FormModel
     public function getWeb(): string|null
     {
         return $this->web;
+    }
+    
+    public function getArbitrationBody(): string|null
+    {
+        return $this->arbitrationBody;
+    }
+    
+    public function getArbitrationJurisdiction(): string|null
+    {
+        return $this->arbitrationJurisdiction;
     }
 
     /**

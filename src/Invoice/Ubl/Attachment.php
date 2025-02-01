@@ -101,20 +101,27 @@ class Attachment implements XmlSerializable
     public function xmlSerialize(Writer $writer): void
     {
         $this->validate();
+        
+        $filePath = $this->filePath;
+        
+        if (null !== $filePath) {
+            
+            $fileContents = file_get_contents($filePath, true);
+        
+            if ($fileContents <> false) {
+                $newFileContents = base64_encode($fileContents);
+                $mimeType = $this->getFileMimeType();
 
-        if (null !== $this->filePath) {
-            $fileContents = base64_encode(file_get_contents($this->filePath, true));
-            $mimeType = $this->getFileMimeType();
-
-            $writer->write([
-                'name' => Schema::CBC . 'EmbeddedDocumentBinaryObject',
-                'value' => $fileContents,
-                'attributes' => [
-                    'mimeCode' => $mimeType,
-                    'filename' => basename($this->filePath)
-                ]
-            ]);
-        }
+                $writer->write([
+                    'name' => Schema::CBC . 'EmbeddedDocumentBinaryObject',
+                    'value' => $newFileContents,
+                    'attributes' => [
+                        'mimeCode' => $mimeType,
+                        'filename' => basename($filePath)
+                    ]
+                ]);
+            }
+        }    
 
         if (null !== $this->externalReference) {
             $writer->writeElement(

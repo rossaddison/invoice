@@ -124,7 +124,7 @@ final class CompanyController
             $parameters = [
                 'title' => $this->translator->translate('i.edit'),
                 'actionName' => 'company/edit',
-                'actionArgumens' => ['id' => $company->getId()],
+                'actionArguments' => ['id' => $company->getId()],
                 'errors' => [],
                 'form' => $form,
                 'company_public' => $this->translator->translate('invoice.company.public'),

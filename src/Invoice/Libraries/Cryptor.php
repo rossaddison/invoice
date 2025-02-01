@@ -54,8 +54,11 @@ class Cryptor
         if (!in_array($hash_algo, openssl_get_md_methods(true))) {
             throw new \Exception("Cryptor:: - unknown hash algo {$hash_algo}");
         }
-
-        $this->iv_num_bytes = openssl_cipher_iv_length($cipher_algo);
+        
+        $openBytes = openssl_cipher_iv_length($cipher_algo);
+        if ($openBytes <> false) {
+            $this->iv_num_bytes = $openBytes;
+        }
     }
 
     /**
@@ -80,27 +83,40 @@ class Cryptor
 
         // Hash the key
         $keyhash = openssl_digest($key, $this->hash_algo, true);
+        
+        if ($keyhash === false) {
+            throw new \Exception('Keyhash is false');
+        }
 
         // and encrypt
         $opts =  OPENSSL_RAW_DATA;
         $encrypted = openssl_encrypt($in, $this->cipher_algo, $keyhash, $opts, $iv);
 
-        if ($encrypted === false) {
-            throw new \Exception('Cryptor::encryptString() - Encryption failed: ' . openssl_error_string());
+        $errorString = openssl_error_string();
+        if (($encrypted === false) && ($errorString <> false)) {
+            throw new \Exception('Cryptor::encryptString() - Encryption failed: ' . $errorString);
         }
 
         // The result comprises the IV and encrypted data
-        $res = $iv . $encrypted;
+        if ($encrypted <> false) {
+        
+            $res = $iv . $encrypted;
 
-        // and format the result if required.
-        if ($fmt == Cryptor::FORMAT_B64) {
-            $res = base64_encode($res);
-        } elseif ($fmt == Cryptor::FORMAT_HEX) {
-            /** @var array|false|string $res */
-            $res = unpack('H*', $res)[1];
+            // and format the result if required.
+            if ($fmt == Cryptor::FORMAT_B64) {
+                $res = base64_encode($res);
+            } elseif ($fmt == Cryptor::FORMAT_HEX) {
+                $unpacked = unpack('H*', $res);
+                if (is_array($unpacked)) {
+                    /** @var array $res */
+                    $res = $unpacked[1];
+                }
+            }
+
+            return $res;
         }
-
-        return $res;
+        
+        return false;
     }
 
     /**
@@ -139,12 +155,17 @@ class Cryptor
         // Hash the key
         $keyhash = openssl_digest($key, $this->hash_algo, true);
 
+        if ($keyhash === false) {
+            throw new \Exception('Keyhash is false');
+        }
+        
         // and decrypt.
         $opts = OPENSSL_RAW_DATA;
         $res = openssl_decrypt($raw, $this->cipher_algo, $keyhash, $opts, $iv);
-
-        if ($res === false) {
-            throw new \Exception('Cryptor::decryptString - decryption failed: ' . openssl_error_string());
+        
+        $errorString = openssl_error_string();
+        if (($res === false) && ($errorString <> false)) {
+            throw new \Exception('Cryptor::decryptString - decryption failed: ' . $errorString);
         }
 
         return $res;

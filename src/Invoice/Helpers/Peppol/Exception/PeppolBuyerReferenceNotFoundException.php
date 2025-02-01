@@ -20,10 +20,8 @@ class PeppolBuyerReferenceNotFoundException extends \RuntimeException implements
 
     /**
      * @return string
-     *
-     * @psalm-return '    Please try again'
      */
-    public function getSolution(): ?string
+    public function getSolution(): string
     {
         return <<<'SOLUTION'
                 Please try again

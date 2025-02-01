@@ -150,7 +150,6 @@ $this->beginPage();
                 DropdownItem::link('Zulu South African/ Zulu South African', $urlGenerator->generateFromCurrent(['_language' => 'zu-ZA'], fallbackRouteName: 'site/index')),
             )->render();
         ?>
-        <?= NavBar::end() ?>
         <?=  
             $isGuest ? '' : Form::tag()
                             ->post($urlGenerator->generate('auth/logout'))
@@ -164,6 +163,8 @@ $this->beginPage();
                         . '</div>'
                         . Form::tag()->close();
         ?>
+        
+        <?= NavBar::end() ?>
     </header>
 
     <main class="container py-3">

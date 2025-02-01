@@ -925,18 +925,19 @@ class ProductController
                 if ($product_id) {
                     if (!empty($_FILES)) {
                         // @see https://github.com/vimeo/psalm/issues/5458
-
                         /** @var array $_FILES['ImageAttachForm'] */
                         /** @var string $_FILES['ImageAttachForm']['tmp_name']['attachFile'] */
                         $temporary_file = $_FILES['ImageAttachForm']['tmp_name']['attachFile'];
                         /** @var string $_FILES['ImageAttachForm']['name']['attachFile'] */
                         $original_file_name = preg_replace('/\s+/', '_', $_FILES['ImageAttachForm']['name']['attachFile']);
-                        $target_path_with_filename = $targetPath . '/' . $original_file_name;
-                        if ($this->image_attachment_move_to($temporary_file, $target_path_with_filename, (int)$product_id, $original_file_name, $piR, $sR)) {
-                            return $this->responseFactory->createResponse($this->image_attachment_successfully_created((int) $product_id));
-                        } else {
-                            return $this->responseFactory->createResponse($this->image_attachment_no_file_uploaded((int) $product_id));
-                        }
+                        if (null!==$original_file_name) {
+                            $target_path_with_filename = $targetPath . '/' . $original_file_name;
+                            if ($this->image_attachment_move_to($temporary_file, $target_path_with_filename, (int)$product_id, $original_file_name, $piR, $sR)) {
+                                return $this->responseFactory->createResponse($this->image_attachment_successfully_created((int) $product_id));
+                            } else {
+                                return $this->responseFactory->createResponse($this->image_attachment_no_file_uploaded((int) $product_id));
+                            }
+                        }    
                     } else {
                         return $this->responseFactory->createResponse($this->image_attachment_no_file_uploaded((int) $product_id));
                     }
@@ -1044,20 +1045,22 @@ class ProductController
                 $file_ext = $path_parts['extension'] ?? '';
                 if (file_exists($target_path_with_filename)) {
                     $file_size = filesize($target_path_with_filename);
-                    $allowed_content_type_array = $piR->getContentTypes();
-                    // Check extension against allowed content file types @see ProductImageRepository getContentTypes
-                    $save_ctype = isset($allowed_content_type_array[$file_ext]);
-                    /** @var string $ctype */
-                    $ctype = $save_ctype ? $allowed_content_type_array[$file_ext] : $piR->getContentTypeDefaultOctetStream();
-                    // https://www.php.net/manual/en/function.header.php
-                    // Remember that header() must be called before any actual output is sent, either by normal HTML tags,
-                    // blank lines in a file, or from PHP.
-                    header("Expires: -1");
-                    header("Cache-Control: public, must-revalidate, post-check=0, pre-check=0");
-                    header("Content-Disposition: attachment; filename=\"$original_file_name\"");
-                    header("Content-Type: " . $ctype);
-                    header("Content-Length: " . $file_size);
-                    echo file_get_contents($target_path_with_filename, true);
+                    if ($file_size <> false) {
+                        $allowed_content_type_array = $piR->getContentTypes();
+                        // Check extension against allowed content file types @see ProductImageRepository getContentTypes
+                        $save_ctype = isset($allowed_content_type_array[$file_ext]);
+                        /** @var string $ctype */
+                        $ctype = $save_ctype ? $allowed_content_type_array[$file_ext] : $piR->getContentTypeDefaultOctetStream();
+                        // https://www.php.net/manual/en/function.header.php
+                        // Remember that header() must be called before any actual output is sent, either by normal HTML tags,
+                        // blank lines in a file, or from PHP.
+                        header("Expires: -1");
+                        header("Cache-Control: public, must-revalidate, post-check=0, pre-check=0");
+                        header("Content-Disposition: attachment; filename=\"$original_file_name\"");
+                        header("Content-Type: " . $ctype);
+                        header("Content-Length: " . $file_size);
+                        echo file_get_contents($target_path_with_filename, true);
+                    } // if file_size <> false   
                     exit;
                 } //if file_exists
                 exit;

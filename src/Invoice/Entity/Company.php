@@ -67,6 +67,12 @@ class Company
 
     #[Column(type: 'text', nullable: true)]
     private ?string $whatsapp =  '';
+    
+    #[Column(type: 'text', nullable: true)]
+    private ?string $arbitrationBody =  '';
+    
+    #[Column(type: 'text', nullable: true)]
+    private ?string $arbitrationJurisdiction =  '';
 
     #[Column(type: 'datetime')]
     private DateTimeImmutable $date_created;
@@ -93,6 +99,8 @@ class Company
         string $twitter = '',
         string $linkedin = '',
         string $whatsapp = '',
+        string $arbitrationBody = '',
+        string $arbitrationJurisdiction = ''    
     ) {
         $this->id = $id;
         $this->current = $current;
@@ -112,6 +120,8 @@ class Company
         $this->twitter = $twitter;
         $this->linkedin = $linkedin;
         $this->whatsapp = $whatsapp;
+        $this->arbitrationBody = $arbitrationBody;
+        $this->arbitrationJurisdiction = $arbitrationJurisdiction;
         $this->date_created = new \DateTimeImmutable();
         $this->date_modified = new \DateTimeImmutable();
     }
@@ -294,6 +304,26 @@ class Company
     public function setWhatsapp(string $whatsapp): void
     {
         $this->whatsapp =  $whatsapp;
+    }
+    
+    public function getArbitrationBody(): string|null
+    {
+        return $this->arbitrationBody;
+    }
+
+    public function setArbitrationBody(string $arbitrationBody): void
+    {
+        $this->arbitrationBody =  $arbitrationBody;
+    }
+    
+    public function getArbitrationJurisdiction(): string|null
+    {
+        return $this->arbitrationJurisdiction;
+    }
+
+    public function setArbitrationJurisdiction(string $arbitrationJurisdiction): void
+    {
+        $this->arbitrationJurisdiction =  $arbitrationJurisdiction;
     }
 
     public function getDate_created(): DateTimeImmutable

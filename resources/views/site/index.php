@@ -3,6 +3,8 @@
 declare(strict_types=1);
 
 use Yiisoft\Html\Html;
+use Yiisoft\Html\Tag\A;
+use Yiisoft\Html\Tag\Br;
 use Yiisoft\Html\Tag\Img;
 use Yiisoft\Yii\Bootstrap5\Carousel;
 use Yiisoft\Yii\Bootstrap5\CarouselItem;
@@ -16,6 +18,51 @@ use Yiisoft\Yii\Bootstrap5\CarouselItem;
     $h = 75;
     $divHeight = 250;
 ?>
+
+<?= Html::openTag('div', ['class' => 'container mt-5']); ?>
+    <?= Html::openTag('div', ['class' => 'row']); ?>
+        <?= Html::openTag('div', ['class' => 'col-sm-4']); ?>
+                <?= Html::openTag('h3'); ?>
+                    OAuth2.0 Client Development
+                <?= Html::closeTag('h3'); ?>
+                <?= Html::openTag('p'); ?>
+                    This is a development website using the Yii3 Framework.
+                <?= Html::closeTag('p'); ?>
+                <?= Html::openTag('p'); ?>
+                    Currently I am assisting with the development of OAuth 2.0 Clients and the repository in question is available at ➡ 
+                <?= Html::closeTag('p'); ?>
+                <?= Html::openTag('p'); ?>
+                <?= A::tag()->content('https://github.com/rossaddison/yii-auth-client')->href('https://github.com/rossaddison/yii-auth-client')->render(); ?>    
+                <?= Html::closeTag('p'); ?>
+        <?= Html::closeTag('div'); ?>
+        <?= Html::openTag('div', ['class' => 'col-sm-4']); ?>
+                <?= Html::openTag('h3'); ?>
+                    Invoicing System Development 
+                <?= Html::closeTag('h3'); ?>
+                <?= Html::openTag('p'); ?>
+                    Currently I am developing a php based invoicing system using the Yii3 Framework and the opensource code is available at ➡️ 
+                <?= Html::closeTag('p'); ?>
+                <?= Html::openTag('p'); ?>
+                <?= A::tag()->content('https://github.com/rossaddison/invoice')->href('https://github.com/rossaddison/invoice')->render(); ?>
+                <?= Html::closeTag('p'); ?>
+                <?= Html::openTag('p'); ?>
+                    This site will be used to demo quote and invoice creation at a future date.
+                <?= Html::closeTag('p'); ?>
+        <?= Html::closeTag('div'); ?> 
+        <?= Html::openTag('div', ['class' => 'col-sm-4']); ?>
+                <?= Html::openTag('h3'); ?>                    
+                    Yii3 Demo
+                <?= Html::closeTag('h3'); ?>
+                <?= Html::openTag('p'); ?>
+                    The Invoicing System uses a structure similar to the Yii3 Demo available at ➡️
+                <?= Html::closeTag('p'); ?>
+                <?= Html::openTag('p'); ?>
+                <?= A::tag()->content('https://github.com/yiisoft/demo')->href('https://github.com/yiisoft/demo')->render(); ?>
+                <?= Html::closeTag('p'); ?>
+        <?= Html::closeTag('div'); ?>
+    <?= Html::openTag('div'); ?>
+<?= Html::openTag('div'); ?>
+                        
 <?php if ($s->getSetting('no_front_site_slider_page') == '0') { ?>
     <?= Html::openTag('header'); ?>
         <?= ($s->getSetting('debug_mode') == '1') 
@@ -70,45 +117,7 @@ use Yiisoft\Yii\Bootstrap5\CarouselItem;
             )
         )
         ->render();        
-    ?>           
-
-    <?= Html::openTag('div', ['class' => 'container mt-5']); ?>
-        <?= Html::openTag('div', ['class' => 'row']); ?>
-            <?= Html::openTag('div', ['class' => 'col-sm-4']); ?>
-                    <?= Html::openTag('h3'); ?>
-                        Column 1
-                    <?= Html::closeTag('h3'); ?>
-                    <?= Html::openTag('p'); ?>
-                        Lorem ipsum dolor sit amet, consectetur adipisicing elit...
-                    <?= Html::closeTag('p'); ?>
-                    <?= Html::openTag('p'); ?>
-                        Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris...    
-                    <?= Html::closeTag('p'); ?>
-            <?= Html::closeTag('div'); ?>
-            <?= Html::openTag('div', ['class' => 'col-sm-4']); ?>
-                    <?= Html::openTag('h3'); ?>
-                        Column 1
-                    <?= Html::closeTag('h3'); ?>
-                    <?= Html::openTag('p'); ?>
-                        Lorem ipsum dolor sit amet, consectetur adipisicing elit...
-                    <?= Html::closeTag('p'); ?>
-                    <?= Html::openTag('p'); ?>
-                        Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris...    
-                    <?= Html::closeTag('p'); ?>
-            <?= Html::closeTag('div'); ?> 
-            <?= Html::openTag('div', ['class' => 'col-sm-4']); ?>
-                    <?= Html::openTag('h3'); ?>
-                        Column 1
-                    <?= Html::closeTag('h3'); ?>
-                    <?= Html::openTag('p'); ?>
-                        Lorem ipsum dolor sit amet, consectetur adipisicing elit...
-                    <?= Html::closeTag('p'); ?>
-                    <?= Html::openTag('p'); ?>
-                        Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris...    
-                    <?= Html::closeTag('p'); ?>
-            <?= Html::closeTag('div'); ?>
-        <?= Html::openTag('div'); ?>
-    <?= Html::openTag('div'); ?>
+    ?>    
 <?php } ?>
 
 

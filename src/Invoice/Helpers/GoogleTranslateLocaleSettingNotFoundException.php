@@ -20,10 +20,8 @@ class GoogleTranslateLocaleSettingNotFoundException extends \RuntimeException im
 
     /**
      * @return string
-     *
-     * @psalm-return '    Please select a locale. The translation to the eg. ip_lang can then start.'
      */
-    public function getSolution(): ?string
+    public function getSolution(): string
     {
         return <<<'SOLUTION'
                 Please select a locale. The translation to the eg. ip_lang can then start.

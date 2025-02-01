@@ -447,12 +447,14 @@ final class InvController
                         $temporary_file = $_FILES['InvAttachmentsForm']['tmp_name']['attachFile'];
                         /** @var string $_FILES['InvAttachmentsForm']['name']['attachFile'] */
                         $original_file_name = preg_replace('/\s+/', '_', $_FILES['InvAttachmentsForm']['name']['attachFile']);
-                        $target_path_with_filename = $targetPath . '/' . $url_key . '_' . $original_file_name;
-                        if ($this->attachment_move_to($temporary_file, $target_path_with_filename, $client_id, $url_key, $original_file_name, $uPR)) {
-                            return $this->factory->createResponse($this->attachment_successfully_created($inv_id));
-                        } else {
-                            return $this->factory->createResponse($this->attachment_no_file_uploaded($inv_id));
-                        }
+                        if (($original_file_name <> false) && (strlen($temporary_file) > 0)) {
+                            $target_path_with_filename = $targetPath . '/' . $url_key . '_' . $original_file_name;
+                            if ($this->attachment_move_to($temporary_file, $target_path_with_filename, $client_id, $url_key, $original_file_name, $uPR)) {
+                                return $this->factory->createResponse($this->attachment_successfully_created($inv_id));
+                            } else {
+                                return $this->factory->createResponse($this->attachment_no_file_uploaded($inv_id));
+                            }
+                        }    
                     } else {
                         return $this->factory->createResponse($this->attachment_no_file_uploaded($inv_id));
                     }
@@ -1040,20 +1042,22 @@ final class InvController
                 $file_ext = $path_parts['extension'] ?? '';
                 if (file_exists($target_path_with_filename)) {
                     $file_size = filesize($target_path_with_filename);
-                    $allowed_content_type_array = $upR->getContentTypes();
-                    // Check extension against allowed content file types @see UploadRepository getContentTypes
-                    $save_ctype = isset($allowed_content_type_array[$file_ext]);
-                    /** @var string $ctype */
-                    $ctype = $save_ctype ? $allowed_content_type_array[$file_ext] : $upR->getContentTypeDefaultOctetStream();
-                    // https://www.php.net/manual/en/function.header.php
-                    // Remember that header() must be called before any actual output is sent, either by normal HTML tags,
-                    // blank lines in a file, or from PHP.
-                    header("Expires: -1");
-                    header("Cache-Control: public, must-revalidate, post-check=0, pre-check=0");
-                    header("Content-Disposition: attachment; filename=\"$original_file_name\"");
-                    header("Content-Type: " . $ctype);
-                    header("Content-Length: " . $file_size);
-                    echo file_get_contents($target_path_with_filename, true);
+                    if ($file_size <> false) {
+                        $allowed_content_type_array = $upR->getContentTypes();
+                        // Check extension against allowed content file types @see UploadRepository getContentTypes
+                        $save_ctype = isset($allowed_content_type_array[$file_ext]);
+                        /** @var string $ctype */
+                        $ctype = $save_ctype ? $allowed_content_type_array[$file_ext] : $upR->getContentTypeDefaultOctetStream();
+                        // https://www.php.net/manual/en/function.header.php
+                        // Remember that header() must be called before any actual output is sent, either by normal HTML tags,
+                        // blank lines in a file, or from PHP.
+                        header("Expires: -1");
+                        header("Cache-Control: public, must-revalidate, post-check=0, pre-check=0");
+                        header("Content-Disposition: attachment; filename=\"$original_file_name\"");
+                        header("Content-Type: " . $ctype);
+                        header("Content-Length: " . $file_size);
+                        echo file_get_contents($target_path_with_filename, true);
+                    } // file size <> false    
                     exit;
                 } //if file_exists
                 exit;
@@ -2452,22 +2456,24 @@ final class InvController
                             $original_file_name = $path_parts['basename'];
                             if (file_exists($temp_aliase)) {
                                 $file_size = filesize($temp_aliase);
-                                $allowed_content_type_array = $upR->getContentTypes();
-                                // Check extension against allowed content file types @see UploadRepository getContentTypes
-                                $save_ctype = isset($allowed_content_type_array[$file_ext]);
-                                /**
-                                 * @var string $ctype
-                                 */
-                                $ctype = $save_ctype ? $allowed_content_type_array[$file_ext] : $upR->getContentTypeDefaultOctetStream();
-                                // https://www.php.net/manual/en/function.header.php
-                                // Remember that header() must be called before any actual output is sent, either by normal HTML tags,
-                                // blank lines in a file, or from PHP.
-                                header("Expires: -1");
-                                header("Cache-Control: public, must-revalidate, post-check=0, pre-check=0");
-                                header("Content-Disposition: attachment; filename=\"$original_file_name\"");
-                                header("Content-Type: " . $ctype);
-                                header("Content-Length: " . $file_size);
-                                echo file_get_contents($temp_aliase, true);
+                                if ($file_size <> false) {
+                                    $allowed_content_type_array = $upR->getContentTypes();
+                                    // Check extension against allowed content file types @see UploadRepository getContentTypes
+                                    $save_ctype = isset($allowed_content_type_array[$file_ext]);
+                                    /**
+                                     * @var string $ctype
+                                     */
+                                    $ctype = $save_ctype ? $allowed_content_type_array[$file_ext] : $upR->getContentTypeDefaultOctetStream();
+                                    // https://www.php.net/manual/en/function.header.php
+                                    // Remember that header() must be called before any actual output is sent, either by normal HTML tags,
+                                    // blank lines in a file, or from PHP.
+                                    header("Expires: -1");
+                                    header("Cache-Control: public, must-revalidate, post-check=0, pre-check=0");
+                                    header("Content-Disposition: attachment; filename=\"$original_file_name\"");
+                                    header("Content-Type: " . $ctype);
+                                    header("Content-Length: " . $file_size);
+                                    echo file_get_contents($temp_aliase, true);
+                                }    
                                 exit;
                             } // file_exists
                         } // is_string
@@ -2535,20 +2541,22 @@ final class InvController
                             $original_file_name = $path_parts['filename'];
                             if (file_exists($temp_aliase)) {
                                 $file_size = filesize($temp_aliase);
-                                $allowed_content_type_array = $upR->getContentTypes();
-                                // Check extension against allowed content file types @see UploadRepository getContentTypes
-                                $save_ctype = isset($allowed_content_type_array[$file_ext]);
-                                /** @var string $ctype */
-                                $ctype = $save_ctype ? $allowed_content_type_array[$file_ext] : $upR->getContentTypeDefaultOctetStream();
-                                // https://www.php.net/manual/en/function.header.php
-                                // Remember that header() must be called before any actual output is sent, either by normal HTML tags,
-                                // blank lines in a file, or from PHP.
-                                header("Expires: -1");
-                                header("Cache-Control: public, must-revalidate, post-check=0, pre-check=0");
-                                header("Content-Disposition: attachment; filename=\"$original_file_name\"");
-                                header("Content-Type: " . $ctype);
-                                header("Content-Length: " . $file_size);
-                                echo file_get_contents($temp_aliase, true);
+                                if ($file_size <> false) {
+                                    $allowed_content_type_array = $upR->getContentTypes();
+                                    // Check extension against allowed content file types @see UploadRepository getContentTypes
+                                    $save_ctype = isset($allowed_content_type_array[$file_ext]);
+                                    /** @var string $ctype */
+                                    $ctype = $save_ctype ? $allowed_content_type_array[$file_ext] : $upR->getContentTypeDefaultOctetStream();
+                                    // https://www.php.net/manual/en/function.header.php
+                                    // Remember that header() must be called before any actual output is sent, either by normal HTML tags,
+                                    // blank lines in a file, or from PHP.
+                                    header("Expires: -1");
+                                    header("Cache-Control: public, must-revalidate, post-check=0, pre-check=0");
+                                    header("Content-Disposition: attachment; filename=\"$original_file_name\"");
+                                    header("Content-Type: " . $ctype);
+                                    header("Content-Length: " . $file_size);
+                                    echo file_get_contents($temp_aliase, true);
+                                }    
                                 exit;
                             } // file_exists
                         } // $temp_aliase
@@ -3841,9 +3849,9 @@ final class InvController
     /**
      * @param upR $upR
      * @param string $uploads_temp_peppol_absolute_path_dot_xml
-     * @return string
+     * @return false|string
      */
-    private function peppol_output(upR $upR, string $uploads_temp_peppol_absolute_path_dot_xml): string
+    private function peppol_output(upR $upR, string $uploads_temp_peppol_absolute_path_dot_xml): false|string
     {
         $path_parts = pathinfo($uploads_temp_peppol_absolute_path_dot_xml);
         /**
@@ -3853,21 +3861,23 @@ final class InvController
         $original_file_name = $path_parts['filename'];
         if (file_exists($uploads_temp_peppol_absolute_path_dot_xml)) {
             $file_size = filesize($uploads_temp_peppol_absolute_path_dot_xml);
-            // xml is included in the getContentTypes allowed array
-            $allowed_content_type_array = $upR->getContentTypes();
-            // Check current extension against allowed content file types @see UploadRepository getContentTypes
-            $save_ctype = isset($allowed_content_type_array[$file_ext]);
-            /** @var string $ctype */
-            $ctype = $save_ctype ? $allowed_content_type_array[$file_ext] : $upR->getContentTypeDefaultOctetStream();
-            // https://www.php.net/manual/en/function.header.php
-            // Remember that header() must be called before any actual output is sent, either by normal HTML tags,
-            // blank lines in a file, or from PHP.
-            header("Expires: -1");
-            header("Cache-Control: public, must-revalidate, post-check=0, pre-check=0");
-            header("Content-Disposition: attachment; filename=\"$original_file_name\"");
-            header("Content-Type: " . $ctype);
-            header("Content-Length: " . $file_size);
-            return file_get_contents($uploads_temp_peppol_absolute_path_dot_xml, true);
+            if ($file_size <> false) { 
+                // xml is included in the getContentTypes allowed array
+                $allowed_content_type_array = $upR->getContentTypes();
+                // Check current extension against allowed content file types @see UploadRepository getContentTypes
+                $save_ctype = isset($allowed_content_type_array[$file_ext]);
+                /** @var string $ctype */
+                $ctype = $save_ctype ? $allowed_content_type_array[$file_ext] : $upR->getContentTypeDefaultOctetStream();
+                // https://www.php.net/manual/en/function.header.php
+                // Remember that header() must be called before any actual output is sent, either by normal HTML tags,
+                // blank lines in a file, or from PHP.
+                header("Expires: -1");
+                header("Cache-Control: public, must-revalidate, post-check=0, pre-check=0");
+                header("Content-Disposition: attachment; filename=\"$original_file_name\"");
+                header("Content-Type: " . $ctype);
+                header("Content-Length: " . $file_size);
+                return file_get_contents($uploads_temp_peppol_absolute_path_dot_xml, true);
+            }    
         }
         return '';
     }

@@ -48,10 +48,8 @@ final class <?= $generator->getCamelcase_capital_name(); ?>Service
                         //    break;
                         //Boolean type, some databases store it as an integer (1/0).
                         case 'boolean':
-                        {
                             $typecast = '(bool)';
                             break;
-                        }
                         //Database specific integer (usually 32 bits).    
                         case 'integer':
                             $typecast = '(int)';

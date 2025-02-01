@@ -46,6 +46,53 @@
 <p>Introducing India's PayTm payment gateway's QR code method of payment and comparing this with Stripe's method.</p>
 <p>A General Sales Tax (GST) Tax System will have to be implemented first for this purpose.</p>
 <p>Testing Credit Notes against Invoices with refunds (if payment made) linked to each of the payment gateways.</p>
+<p><b>1st February 2025</b></p>
+<p>Privacy policy and terms of service introduced in preparation for TikTok OAuth2.0</p>
+<p>vimeo/psalm 6.1 introduced - 186 errors fixed mainly related to PossiblyFalseArgument.</p>
+<p>layout\invoice.php i.e.Internal non-guest Menu has been split between debug and production. Adjust YII_DEBUG=true in .env file at root.</p>
+<pre>
+C:\wamp128\www\invoice>php ./vendor/bin/psalm
+
+JIT acceleration: OFF (disabled on Windows and PHP < 8.4)
+Install PHP 8.4+ to make use of JIT on Windows for a 20%+ performance boost!
+
+Target PHP version: 8.3 (inferred from composer.json) Enabled extensions: dom (unsupported extensions: fileinfo, pdo_sqlite, uopz).
+
+Scanning files...
+
+1576 / 1576...
+
+Analyzing files...
+------------------------------
+
+       No errors found!
+
+------------------------------
+<br>
+C:\wamp128\www\invoice>composer outdated
+Color legend:
+- patch or minor release available - update recommended
+- major release available - update possible
+<br>
+Direct dependencies required in composer.json:
+cycle/annotated                    3.5.0   4.2.3  Cycle ORM Annotated Entities generator
+phpbench/phpbench                  1.2.15  1.4.0  PHP Benchmarking Framework
+phpunit/phpunit                    10.5.44 11.5.6 The PHP Unit Testing framework.
+spatie/phpunit-watcher             1.23.6  1.24.0 Automatically rerun PHPUnit tests when source code changes
+symfony/console                    6.4.17  7.2.1  Eases the creation of beautiful and testable command line interfaces
+zircote/swagger-php                4.11.1  5.0.3  swagger-php - Generate interactive documentation for your RESTful...
+<br>
+C:\wamp128\www\invoice>composer why-not cycle/annotated 4.2.3
+rossaddison/invoice -         requires cycle/annotated (^3.5)
+yiisoft/yii-cycle   2.0.x-dev requires cycle/annotated (^3.5)
+Not finding what you were looking for? Try calling `composer require "cycle/annotated:4.2.3" --dry-run` to get another view on the problem.
+<br>
+C:\wamp128\www\invoice>composer why-not zircote/swagger-php 5.0.3
+rossaddison/invoice   -         requires zircote/swagger-php (^4.0)
+yiisoft/yii-debug-api 3.0.x-dev requires zircote/swagger-php (^4.0)
+Not finding what you were looking for? Try calling `composer require "zircote/swagger-php:5.0.3" --dry-run` to get another view on the problem.
+
+</pre>
 <p><b>23rd January 2025</b></p>
 <p>VKontakte Oauth2.0 Authorization Code introduced. </p>
 <p><b>19th January 2025</b></p>

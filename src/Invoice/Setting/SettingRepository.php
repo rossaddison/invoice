@@ -277,17 +277,20 @@ final class SettingRepository extends Select\Repository
     public function expandDirectoriesMatrix(string $base_dir, int $level): iterable
     {
         $directories = [];
-        foreach (scandir($base_dir) as $file) {
-            if ($file == '.' || $file == '..') {
-                continue;
-            }
-            $dir = $base_dir.DIRECTORY_SEPARATOR.$file;
-            if (is_dir($dir)) {
-                $directories[] = array(
-                        'level' => $level,
-                        'name' => $file,
-                        'path' => $dir
-                    );
+        $scanDir = scandir($base_dir);
+        if ($scanDir <> false) {
+            foreach ($scanDir as $file) {
+                if ($file == '.' || $file == '..') {
+                    continue;
+                }
+                $dir = $base_dir.DIRECTORY_SEPARATOR.$file;
+                if (is_dir($dir)) {
+                    $directories[] = array(
+                            'level' => $level,
+                            'name' => $file,
+                            'path' => $dir
+                        );
+                }
             }
         }
         return $directories;
@@ -1090,10 +1093,12 @@ final class SettingRepository extends Select\Repository
                                 '@public' => '@base/resources/views/invoice/template/invoice/public'
                                ]);
         $templates = [];
-        if ($type == 'pdf') {
-            $templates = array_diff(scandir($aliases->get('@pdf'), SCANDIR_SORT_ASCENDING), array('..', '.'));
-        } elseif ($type == 'public') {
-            $templates = array_diff(scandir($aliases->get('@public'), SCANDIR_SORT_ASCENDING), array('..', '.'));
+        $pdf = scandir($aliases->get('@pdf'), SCANDIR_SORT_ASCENDING);
+        $public = scandir($aliases->get('@public'), SCANDIR_SORT_ASCENDING);
+        if (($type == 'pdf') && ($pdf <> false)) {
+            $templates = array_diff($pdf, array('..', '.'));
+        } elseif (($type == 'public') && ($public <> false)) {
+            $templates = array_diff($public, array('..', '.'));
         }
         return $this->remove_extension($templates);
     }
@@ -1110,10 +1115,12 @@ final class SettingRepository extends Select\Repository
                                 '@public' => '@base/resources/views/invoice/template/quote/public'
                               ]);
         $templates = [];
-        if ($type == 'pdf') {
-            $templates = array_diff(scandir($aliases->get('@pdf'), SCANDIR_SORT_ASCENDING), array('..', '.'));
-        } elseif ($type == 'public') {
-            $templates = array_diff(scandir($aliases->get('@public'), SCANDIR_SORT_ASCENDING), array('..', '.'));
+        $scanPdf = scandir($aliases->get('@pdf'), SCANDIR_SORT_ASCENDING);
+        $scanPublic = scandir($aliases->get('@public'), SCANDIR_SORT_ASCENDING);
+        if (($type == 'pdf') && ($scanPdf <> false)) {
+            $templates = array_diff($scanPdf, array('..', '.'));
+        } elseif (($type == 'public') && ($scanPublic <> false)) {
+            $templates = array_diff($scanPublic, array('..', '.'));
         }
         return $this->remove_extension($templates);
     }
@@ -2014,34 +2021,42 @@ final class SettingRepository extends Select\Repository
     public function range(string $period): array
     {
         $range = [];
+        $now = new \DateTimeImmutable('now');
+        $oneMonth = \DateInterval::createFromDateString('1 month');
+        $twoMonths = \DateInterval::createFromDateString('2 months');
+        $threeMonths = \DateInterval::createFromDateString('3 months');
+        $sixMonths = \DateInterval::createFromDateString('6 months');
+        $oneYear = \DateInterval::createFromDateString('12 months');
+        $twoYears = \DateInterval::createFromDateString('24 months');
         switch ($period) {
             case 'this-month':
-                $range['upper'] = new \DateTimeImmutable('now');
-                $range['lower'] = (new \DateTimeImmutable('now'))->sub(\DateInterval::createFromDateString('1 month'));
+                $range['upper'] = $now;
+                $range['lower'] = $oneMonth ? 
+                                  $now->sub($oneMonth) : $now;
                 break;
             case 'last-month':
-                $range['upper'] = (new \DateTimeImmutable('now'))->sub(\DateInterval::createFromDateString('1 month'));
-                $range['lower'] = (new \DateTimeImmutable('now'))->sub(\DateInterval::createFromDateString('2 months'));
+                $range['upper'] = $oneMonth ? $now->sub($oneMonth) : $now;
+                $range['lower'] = $twoMonths ? $now->sub($twoMonths) : $now;
                 break;
             case 'this-quarter':
-                $range['upper'] = new \DateTimeImmutable('now');
-                $range['lower'] = (new \DateTimeImmutable('now'))->sub(\DateInterval::createFromDateString('3 months'));
+                $range['upper'] = $now;
+                $range['lower'] = $threeMonths ? $now->sub($threeMonths) : $now;
                 break;
             case 'last-quarter':
-                $range['upper'] = (new \DateTimeImmutable('now'))->sub(\DateInterval::createFromDateString('3 months'));
-                $range['lower'] = (new \DateTimeImmutable('now'))->sub(\DateInterval::createFromDateString('6 months'));
+                $range['upper'] = $threeMonths ? $now->sub($threeMonths) : $now;
+                $range['lower'] = $sixMonths ? $now->sub($sixMonths) : $now;
                 break;
             case 'this-year':
-                $range['upper'] = new \DateTimeImmutable('now');
-                $range['lower'] = (new \DateTimeImmutable('now'))->sub(\DateInterval::createFromDateString('12 months'));
+                $range['upper'] = $now;
+                $range['lower'] = $oneYear ? $now->sub($oneYear) : $now;
                 break;
             case 'last-year':
-                $range['upper'] = (new \DateTimeImmutable('now'))->sub(\DateInterval::createFromDateString('12 months'));
-                $range['lower'] = (new \DateTimeImmutable('now'))->sub(\DateInterval::createFromDateString('24 months'));
+                $range['upper'] = $oneYear ? $now->sub($oneYear) : $now;
+                $range['lower'] = $twoYears ? $now->sub($twoYears) : $now;
                 break;
             default:
-                $range['upper'] = new \DateTimeImmutable('now');
-                $range['lower'] = (new \DateTimeImmutable('now'))->sub(\DateInterval::createFromDateString('1 month'));
+                $range['upper'] = $now;
+                $range['lower'] = $oneMonth ? $now->sub($oneMonth) : $now;
                 break;
         }
         return $range;

@@ -51,21 +51,22 @@ final class <?= $generator->getCamelcase_capital_name();?>Form extends FormModel
                 $init = 'null';
                 break;
             case 'bool':
-                {
-                   if ($column->hasDefaultValue()) {
-                      /**
-                       * @var mixed $init
-                       */ 
-                      $init  = $column->getDefaultValue();
-                      if ($init === 1) {$init = 'true';}
-                      if ($init === 0) {$init = 'false';}
-                      break;
+                if ($column->hasDefaultValue()) {
+                   /**
+                    * @var mixed $init
+                    */ 
+                   $init  = $column->getDefaultValue();
+                   if ($init === 1) {
+                       $init = 'true';
                    }
-                   else {
+                   if ($init === 0) {
                        $init = 'false';
-                       break;
                    }
                 }
+                else {
+                   $init = 'false';
+                }
+                break;
         }
         // Ignore the id field
         if ($column->getAbstractType() <> 'primary') {

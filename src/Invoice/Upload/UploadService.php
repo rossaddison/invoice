@@ -49,7 +49,11 @@ final class UploadService
         $targetPath = $aliases->get('@customer_files');
         $file_path = $targetPath . '/' . $model->getFile_name_new();
         // see vendor/yiisoft/files/src/FileHelper::unlink will delete the file
-        strpos(realpath($targetPath), realpath($file_path)) == 0 ? FileHelper::unlink($file_path) : '';
-        $this->repository->delete($model);
+        $realTargetPath = realpath($targetPath);
+        $realFilePath = realpath($file_path);
+        if (($realTargetPath <> false) && ($realFilePath <> false)) {
+            strpos($realTargetPath, $realFilePath) == 0 ? FileHelper::unlink($file_path) : '';
+            $this->repository->delete($model);
+        }
     }
 }

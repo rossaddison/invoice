@@ -34,6 +34,8 @@ final class CompanyService
         isset($array['fax']) ? $model->setFax((string)$array['fax']) : '';
         isset($array['email']) ? $model->setEmail((string)$array['email']) : '';
         isset($array['web']) ? $model->setWeb((string)$array['web']) : '';
+        isset($array['arbitrationBody']) ? $model->setWeb((string)$array['arbitrationBody']) : '';
+        isset($array['arbitrationJurisdiction']) ? $model->setWeb((string)$array['arbitrationJurisdiction']) : '';
         $this->repository->save($model);
     }
 

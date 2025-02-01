@@ -23,9 +23,8 @@ class NoClientsAssignedToUserException extends \RuntimeException implements Frie
 
     /**
      * @return string
-     * @psalm-return '    Please contact your administrator'
      */
-    public function getSolution(): ?string
+    public function getSolution(): string
     {
         return <<<'SOLUTION'
                 Please contact your administrator
