@@ -10,7 +10,7 @@
 [![Code Coverage](https://scrutinizer-ci.com/g/rossaddison/invoice/badges/coverage.png?b=main)](https://scrutinizer-ci.com/g/rossaddison/invoice/?branch=main)
 [![Build](https://scrutinizer-ci.com/g/rossaddison/invoice/badges/build.png?b=main)](https://scrutinizer-ci.com/g/rossaddison/invoice/?branch=main)
 [![type-coverage](https://shepherd.dev/github/rossaddison/invoice/coverage.svg)](https://shepherd.dev/github/rossaddison/invoice)
-[![Github Stats](https://github-readme-stats.vercel.app/aps?username=rossaddison&show_icons=true&theme=transparent)]
+[![Stats](https://github-readme-stats.vercel.app/api?username=rossaddison)]
 
 (place the contents of this download into yii3-i's invoice folder or run as a separate repository)
 
