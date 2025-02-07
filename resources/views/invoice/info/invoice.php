@@ -46,6 +46,14 @@
 <p>Introducing India's PayTm payment gateway's QR code method of payment and comparing this with Stripe's method.</p>
 <p>A General Sales Tax (GST) Tax System will have to be implemented first for this purpose.</p>
 <p>Testing Credit Notes against Invoices with refunds (if payment made) linked to each of the payment gateways.</p>
+<p><b>8th February 2025</b></p>
+<p>1. Include a function blockInvalidState in all the AuthController callback clients which checks for csrf attacks </p>
+<p>and null session Auth state. Copilot was asked a question regarding this however the yii-auth-client repository </p>
+<p>already stores the state during the yii-auth-client oauth2 buildAuthUrl function as 'authState'. </p>
+<p>This value is compared with the state value returned by the IdentityProvider and if compared and </p>
+<p>they are not the same then there is likely a csrf attack. This potential has been included as well </p>
+<p>as potential for a null value since the AuthClient getState function is mixed so can return either a string value or null.</p>
+<p>2. Include an idle_timeout setting into composer.json as suggested by Scrutinizer.</p>
 <p><b>1st February 2025</b></p>
 <p>Privacy policy and terms of service introduced in preparation for TikTok OAuth2.0</p>
 <p>vimeo/psalm 6.1 introduced - 186 errors fixed mainly related to PossiblyFalseArgument.</p>
