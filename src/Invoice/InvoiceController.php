@@ -255,6 +255,9 @@ final class InvoiceController
     public function faq(#[RouteArgument('topic')] string $topic): Response
     {
         switch ($topic) {
+            case 'ai_callback_session':
+                $view = $this->viewRenderer->renderPartialAsString('//invoice/info/ai/ai_callback_session');
+                break;
             case 'tp':
                 $view = $this->viewRenderer->renderPartialAsString('//invoice/info/taxpoint');
                 break;

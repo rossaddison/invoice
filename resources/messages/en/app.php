@@ -1017,6 +1017,7 @@ return [
     'invoice.family.add' => 'Family Add',
     'invoice.family.history' => 'Family History exists. Cannot delete',
     'invoice.faq' => 'FAQ\'s',
+    'invoice.faq.ai.callback.session' => 'Copilot: How can I include https://github.com/rossaddison/yii-auth-client/blob/master/src/StateStorage/SessionStateStorage.php to improve the state management in the `callbackGithub` function?',
     'invoice.faq.taxpoint' => 'How to determine what the Tax Point is?',
     'invoice.faq.business.rules' => 'What are the Peppol Business Rules?',
     'invoice.faq.shared.hosting' => 'How do I host yii3i on shared hosting?',

@@ -16,9 +16,11 @@ use App\User\User;
 use App\User\UserRepository;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
+use Psr\Log\LogLevel;
 use Yiisoft\FormModel\FormHydrator;
 use Yiisoft\Html\Tag\A;
 use Yiisoft\Input\Http\Attribute\Parameter\Query;
+use Yiisoft\Log\Logger;
 use Yiisoft\Rbac\Manager as Manager;
 use Yiisoft\Router\FastRoute\UrlGenerator;
 use Yiisoft\Router\HydratorAttribute\RouteArgument;
@@ -58,7 +60,7 @@ final class AuthController
         private readonly WebControllerService   $webService,
         private ViewRenderer                    $viewRenderer,
         private Manager                         $manager,
-        private SessionInterface                $session,    
+        private SessionInterface                $session, 
         private SettingRepository               $sR,  
         private Facebook                        $facebook,
         private GitHub                          $github,
@@ -68,7 +70,8 @@ final class AuthController
         private VKontakte                       $vkontakte,    
         private X                               $x,
         private Yandex                          $yandex,    
-        private UrlGenerator                    $urlGenerator,    
+        private UrlGenerator                    $urlGenerator,  
+        private Logger                          $logger    
     ) {
         $this->viewRenderer = $viewRenderer->withControllerName('auth');
         $this->manager = $manager;
@@ -94,6 +97,7 @@ final class AuthController
             $yandex
         );
         $this->urlGenerator = $urlGenerator;
+        $this->logger = $logger;
     }
 
     public function login(
@@ -232,6 +236,9 @@ final class AuthController
         if ($code == null || $state == null) {
             return $this->redirectToMain();
         }
+        
+        $this->blockInvalidState('x', $state);
+        
         /**
          * @psalm-suppress DocblockTypeContradiction $code
          */
@@ -375,12 +382,15 @@ final class AuthController
         if ($code == null || $state == null) {
             return $this->redirectToMain();
         }
+        
+        $this->blockInvalidState('github', $state);
+        
         /**
          * @psalm-suppress DocblockTypeContradiction $code
          */
         if (strlen($code) == 0) {
             // If we don't have an authorization code then get one 
-            // and use the protected function oauth2->generateAuthState to generate state param
+            // and use the protected function oauth2->generateAuthState to generate state param 'authState'
             // which has a session id built into it
             $authorizationUrl = $this->github->buildAuthUrl($request, []);
             header('Location: ' . $authorizationUrl);
@@ -523,6 +533,9 @@ final class AuthController
                 return $this->redirectToMain();
             }
         }
+        
+        $this->blockInvalidState('facebook', $state);
+        
         /**
          * @psalm-suppress DocblockTypeContradiction $code
          */
@@ -641,6 +654,9 @@ final class AuthController
         if ($code == null || $state == null) {
             return $this->redirectToMain();
         }
+        
+        $this->blockInvalidState('google', $state);
+        
         /**
          * @psalm-suppress DocblockTypeContradiction $code
          */
@@ -745,6 +761,9 @@ final class AuthController
         if ($code == null || $state == null) {
             return $this->redirectToMain();
         }
+        
+        $this->blockInvalidState('linkedin', $state);
+        
         /**
          * @psalm-suppress DocblockTypeContradiction $code
          */
@@ -867,6 +886,9 @@ final class AuthController
         if ($code == null || $state == null || $sessionState == null) {
             return $this->redirectToMain();
         }
+        
+        $this->blockInvalidState('microsoftonline', $state);
+        
         /**
          * @psalm-suppress DocblockTypeContradiction $code
          */
@@ -971,6 +993,9 @@ final class AuthController
         if ($code == null || $state == null) {
             return $this->redirectToMain();
         }
+        
+        $this->blockInvalidState('yandex', $state);
+        
         /**
          * @psalm-suppress DocblockTypeContradiction $code
          */
@@ -1102,6 +1127,8 @@ final class AuthController
         if ($code == null || $state == null) {
             return $this->redirectToMain();
         }
+        
+        $this->blockInvalidState('vkontakte', $state);
         
         /**
          * @psalm-suppress DocblockTypeContradiction $code
@@ -1256,6 +1283,33 @@ final class AuthController
         }
         $this->authService->logout();
         return $this->redirectToMain();
+    }
+    
+    /**
+     * Get the 'authState' session variable created automatically (validateAuthState always true)
+     * in the callback function yii-auth-client\src\OAuth2\buildAuthUrl
+     * and compare it with the 'state' variable returned by an identity Provider e.g. Facebook 
+     * @param string $identityProvider
+     * @param string $state
+     * @psalm-return void
+     */    
+    private function blockInvalidState (string $identityProvider, string $state) : void 
+    {
+        /**
+         * @psalm-suppress MixedMethodCall, 
+         * @psalm-suppress MixedAssignment $sessionState
+         */
+        $sessionState = $this->$identityProvider->getSessionAuthState() ?? null;
+        if (null!==$sessionState) {
+            if (!$sessionState || ($state !== $sessionState)) {
+                // State is invalid, possible cross-site request forgery. Exit with an error code.
+                $this->logger->log(LogLevel::ALERT, 'Csrf attack attempt');
+                exit(1);
+            }
+        } else {     
+            $this->logger->log(LogLevel::ALERT, 'Session Auth state is null.');
+            exit(1);
+        }    
     }
     
     /**
