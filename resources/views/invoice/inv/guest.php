@@ -322,9 +322,7 @@ echo $alert;
         ->sortableHeaderAscPrepend('<div class="float-end fw-bold">⭡</div>')
         // the down arrow will appear if column values are descending        
         ->sortableHeaderDescPrepend('<div class="float-end fw-bold">⭣</div>')
-        ->headerTableEnabled(true)        
         ->headerRowAttributes(['class'=>'card-header bg-info text-black'])
-        ->footerEnabled(true) 
         ->emptyCell($translator->translate('i.not_set'))
         ->emptyCellAttributes(['style' => 'color:red'])  
         ->header($gridComponents->header(' ' . $translator->translate('i.invoice')))
