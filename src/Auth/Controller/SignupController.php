@@ -173,20 +173,20 @@ final class SignupController
                  */
                 $htmlBody = $this->htmlBodyWithMaskedRandomAndTimeTokenLink($user, $uiR, $language, $_language, $randomAndTimeToken);
                 if (($this->sR->getSetting('email_send_method') == 'symfony') || ($this->sR->mailerEnabled() == true)) {
-                    $email = (new \Yiisoft\Mailer\Message())
-                    ->withHeaders(
-                        [
+                    $email = new \Yiisoft\Mailer\Message(
+                        charset: 'utf-8',
+                        headers: [
                             'X-Origin' => ['0', '1'],
                             'X-Pass' => 'pass',
-                        ]
-                    )
-                    ->withCharSet('utf-8')
-                    ->withSubject($login. ': <'.$to.'>')
-                    ->withDate(new \DateTimeImmutable('now'))
-                    ->withFrom([$this->sR->getConfigAdminEmail() => $this->translator->translate('i.administrator')])
-                    ->withTo($to)
-                    ->withHtmlBody($htmlBody)
-                    ->withAddedHeader('Message-ID', $this->sR->getConfigAdminEmail());
+                        ],
+                        subject: $login. ': <'.$to.'>',
+                        date: new \DateTimeImmutable('now'),
+                        from: [$this->sR->getConfigAdminEmail() => $this->translator->translate('i.administrator')],
+                        to: $to,
+                        htmlBody: $htmlBody
+                    );
+                    $email->withAddedHeader('Message-ID', $this->sR->getConfigAdminEmail());
+                                        
                     try {
                         $this->mailer->send($email);
                     } catch (\Exception $e) {

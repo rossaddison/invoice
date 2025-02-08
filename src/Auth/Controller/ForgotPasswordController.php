@@ -133,21 +133,20 @@ final class ForgotPasswordController
                          */
                         $htmlBody = $this->htmlBodyWithMaskedRandomAndTimeTokenLink($user, $_language, $requestPasswordResetToken);
                         if (($this->sR->getSetting('email_send_method') == 'symfony') || ($this->sR->mailerEnabled() == true)) {
-                            $messageEntity = new \Yiisoft\Mailer\Message();
-                            $email = $messageEntity
-                                    ->withHeaders(
-                                        [
-                                            'X-Origin' => ['0', '1'],
-                                            'X-Pass' => 'pass',
-                                        ]
-                                    )
-                                    ->withCharSet('utf-8')
-                                    ->withSubject($login. ': <'.$to.'>')
-                                    ->withDate(new \DateTimeImmutable('now'))
-                                    ->withFrom([$this->sR->getConfigAdminEmail() => $this->translator->translate('i.administrator')])
-                                    ->withTo($to)
-                                    ->withHtmlBody($htmlBody)
-                                    ->withAddedHeader('Message-ID', $this->sR->getConfigAdminEmail());
+                            $email = new \Yiisoft\Mailer\Message(
+                                charset: 'utf-8',
+                                headers: [
+                                    'X-Origin' => ['0', '1'],
+                                    'X-Pass' => 'pass',
+                                ],
+                                subject: $login. ': <'.$to.'>',
+                                date: new \DateTimeImmutable('now'),
+                                from: [$this->sR->getConfigAdminEmail() => $this->translator->translate('i.administrator')],
+                                to: $to,
+                                htmlBody: $htmlBody
+                            );
+                            $email->withAddedHeader('Message-ID', $this->sR->getConfigAdminEmail());                            
+                            
                             try {
                                 $this->mailer->send($email);
                             } catch (\Exception $e) {

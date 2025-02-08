@@ -59,5 +59,8 @@ return [
         CookieLoginMiddleware::class,
         Locale::class,
         Router::class,
-    ]
+    ],
+    'yiisoft/widget' => [
+        'defaultTheme' => 'bootstrap5',
+    ],
 ];

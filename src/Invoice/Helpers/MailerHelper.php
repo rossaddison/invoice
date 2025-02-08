@@ -169,13 +169,16 @@ class MailerHelper
                 is_array($bcc) && $email !== '' ? array_unshift($bcc, $email) : '';
             }
         }
-        $email = (new \Yiisoft\Mailer\Message())
-            ->withCharSet('UTF-8')
-            ->withSubject($subject)
-            ->withDate(new \DateTimeImmutable('now'))
-            ->withFrom([$from_email => $from_name])
-            ->withTo($to)
-            ->withHtmlBody($html_body);
+        
+        $email = new \Yiisoft\Mailer\Message(
+            charset: 'utf-8',    
+            subject: $subject,
+            date: new \DateTimeImmutable('now'),
+            from: [$from_email => $from_name],
+            to: $to,
+            htmlBody: $html_body
+        );        
+        
         /** @var array<array-key, string>|string $cc */
         is_array($cc) && !empty($cc) ? $email->withCC($cc) : '';
         /** @var array<array-key, string>|string $bcc */
