@@ -193,7 +193,7 @@
             "oomphinc/composer-installers-extender": true,
             "composer/installers": true,
             "composer/package-versions-deprecated": true,
-            "infection/extension-installer": false,
+            "infection/extension-installer": true,
             "yiisoft/config": true,
             "php-http/discovery": false
         }
