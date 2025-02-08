@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "e51f46e43348b9ece1d52deb8bbbb802",
+    "content-hash": "c0c72b82fbe9b8bb46b3eeb425a46f08",
     "packages": [
         {
             "name": "alexkart/curl-builder",
@@ -17181,12 +17181,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/yiisoft/yii-dataview.git",
-                "reference": "ef6a2ed117fa1208ca4ab66a431f384f1cb43e76"
+                "reference": "58d15124d320a3d7315b33276b64002d0f70263f"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/yiisoft/yii-dataview/zipball/ef6a2ed117fa1208ca4ab66a431f384f1cb43e76",
-                "reference": "ef6a2ed117fa1208ca4ab66a431f384f1cb43e76",
+                "url": "https://api.github.com/repos/yiisoft/yii-dataview/zipball/58d15124d320a3d7315b33276b64002d0f70263f",
+                "reference": "58d15124d320a3d7315b33276b64002d0f70263f",
                 "shasum": ""
             },
             "require": {
@@ -17275,7 +17275,7 @@
                     "type": "opencollective"
                 }
             ],
-            "time": "2025-01-24T07:48:18+00:00"
+            "time": "2025-02-08T20:36:30+00:00"
         },
         {
             "name": "yiisoft/yii-debug",
