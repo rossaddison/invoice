@@ -39,7 +39,7 @@ class Invoice implements XmlSerializable
     private ?PaymentTerms $paymentTerms;
     private array $allowanceCharges;
     private array $taxAmounts;
-    private array $taxSubtotal;
+    private array $taxSubTotal;
     private ?LegalMonetaryTotal $legalMonetaryTotal;
     protected array $invoiceLines;
     private ?bool $isCopyIndicator;
@@ -66,7 +66,7 @@ class Invoice implements XmlSerializable
         PaymentTerms $paymentTerms,
         array $allowanceCharges,
         array $taxAmounts,
-        array $taxSubtotal,
+        array $taxSubTotal,
         ?LegalMonetaryTotal $legalMonetaryTotal,
         array $invoiceLines,
         ?bool $isCopyIndicator,
@@ -92,7 +92,7 @@ class Invoice implements XmlSerializable
         $this->paymentTerms = $paymentTerms;
         $this->allowanceCharges = $allowanceCharges;
         $this->taxAmounts = $taxAmounts;
-        $this->taxSubtotal = $taxSubtotal;
+        $this->taxSubTotal = $taxSubTotal;
         $this->legalMonetaryTotal = $legalMonetaryTotal;
         $this->invoiceLines = $invoiceLines;
         $this->isCopyIndicator = $isCopyIndicator;
@@ -440,10 +440,10 @@ class Invoice implements XmlSerializable
     {
         $merged_array = [];
         /**
-         * @var array $this->taxSubtotal
+         * @var array $this->taxSubTotal
          * @var array $value
          */
-        foreach ($this->taxSubtotal as $value) {
+        foreach ($this->taxSubTotal as $value) {
             $tst = new TaxSubtotal($value);
             $merged_array[] = $tst->build_pre_serialized_array();
         }

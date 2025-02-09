@@ -3297,7 +3297,7 @@ final class InvController
             'inv_id' => $body['inv_id'],
             'tax_rate_id' => $body['inv_tax_rate_id'],
             'include_item_tax' => $body['include_inv_item_tax'],
-            'inv_tax_rate_amount' => (float) 0.00,
+            'inv_tax_rate_amount' => 0.00
         ];
         $invTaxRate = new InvTaxRate();
         $form = new InvTaxRateForm($invTaxRate);
