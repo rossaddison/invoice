@@ -444,7 +444,7 @@ class Invoice implements XmlSerializable
          * @var array $value
          */
         foreach ($this->taxSubTotal as $value) {
-            $tst = new TaxSubtotal($value);
+            $tst = new TaxSubTotal($value);
             $merged_array[] = $tst->build_pre_serialized_array();
         }
         return $merged_array;

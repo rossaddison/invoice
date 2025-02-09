@@ -265,6 +265,10 @@ final class AuthController
         if ($code == 401) {
             return $this->redirectToOauth2CallbackResultUnAuthorised();
         }
+        
+        /**
+         * @psalm-suppress DocblockTypeContradiction $state
+         */
         if (strlen($state) == 0) {
             exit(1);
         }
@@ -405,6 +409,10 @@ final class AuthController
         if ($code == 401) {
             return $this->redirectToOauth2CallbackResultUnAuthorised();
         }
+        
+        /**
+         * @psalm-suppress DocblockTypeContradiction $state
+         */
         if (strlen($state) == 0) {
             /**
              * State is invalid, possible cross-site request forgery. Exit with an error code.
@@ -554,6 +562,10 @@ final class AuthController
         if ($code == 401) {
             return $this->redirectToOauth2CallbackResultUnAuthorised();
         }
+        
+        /**
+         * @psalm-suppress DocblockTypeContradiction $state
+         */
         if (strlen($state) == 0) {
             /**
              * State is invalid, possible cross-site request forgery. Exit with an error code.
@@ -671,6 +683,10 @@ final class AuthController
         if ($code == 401) {
             return $this->redirectToOauth2CallbackResultUnAuthorised();
         }
+        
+        /**
+         * @psalm-suppress DocblockTypeContradiction $state
+         */
         if (strlen($state) == 0) {
             /**
              * State is invalid, possible cross-site request forgery. Exit with an error code.
@@ -777,6 +793,10 @@ final class AuthController
         if ($code == 401) {
             return $this->redirectToOauth2CallbackResultUnAuthorised();
         }
+        
+        /**
+         * @psalm-suppress DocblockTypeContradiction $state
+         */
         if (strlen($state) == 0) {
             /**
              * State is invalid, possible cross-site request forgery. Exit with an error code.
@@ -898,9 +918,17 @@ final class AuthController
             header('Location: ' . $authorizationUrl);
             exit;
         }
+        
+        /**
+         * @psalm-suppress DocblockTypeContradiction $state
+         */
         if ($code == 401) {
             return $this->redirectToOauth2CallbackResultUnAuthorised();
         }
+        /**
+         * @psalm-suppress DocblockTypeContradiction $state
+         * @psalm-suppress DocblockTypeContradiction $sessionState
+         */
         if (strlen($state) == 0 || strlen($sessionState) == 0) {
             /**
              * State is invalid, possible cross-site request forgery. Exit with an error code.
@@ -1019,6 +1047,10 @@ final class AuthController
         if ($code == 401) {
             return $this->redirectToOauth2CallbackResultUnAuthorised();
         }
+        
+        /**
+         * @psalm-suppress DocblockTypeContradiction $state
+         */
         if (strlen($state) == 0) {
             exit(1);
         }
@@ -1153,6 +1185,10 @@ final class AuthController
         if ($code == 401) {
             return $this->redirectToOauth2CallbackResultUnAuthorised();
         }
+        
+        /**
+         * @psalm-suppress DocblockTypeContradiction $state
+         */
         if (strlen($state) == 0) {
             exit(1);
         }
