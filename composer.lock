@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "c0c72b82fbe9b8bb46b3eeb425a46f08",
+    "content-hash": "40091e9dc4b53528ca6f83976b654e24",
     "packages": [
         {
             "name": "alexkart/curl-builder",
@@ -16917,12 +16917,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/yiisoft/yii-bootstrap5.git",
-                "reference": "e164db2c619a55a02c757e49eb8106855e70b985"
+                "reference": "a27413d28341a79f179b593b7f99edb8bbec489e"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/yiisoft/yii-bootstrap5/zipball/e164db2c619a55a02c757e49eb8106855e70b985",
-                "reference": "e164db2c619a55a02c757e49eb8106855e70b985",
+                "url": "https://api.github.com/repos/yiisoft/yii-bootstrap5/zipball/a27413d28341a79f179b593b7f99edb8bbec489e",
+                "reference": "a27413d28341a79f179b593b7f99edb8bbec489e",
                 "shasum": ""
             },
             "require": {
@@ -16986,7 +16986,7 @@
                     "type": "open_collective"
                 }
             ],
-            "time": "2025-01-28T11:11:03+00:00"
+            "time": "2025-02-09T09:33:05+00:00"
         },
         {
             "name": "yiisoft/yii-console",
