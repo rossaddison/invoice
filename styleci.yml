@@ -1,16 +1,13 @@
 preset: psr12
 risky: true
 
-version: 8.1
+version: 8.3
 
 finder:
-  exclude:
-    - "*/docs"
+  exclude
     - "*/vendor"
     - "*/resources"
-    - "*/views"
     - "*/public"
-    - "*/templates"
 
 enabled:
   - alpha_ordered_traits
