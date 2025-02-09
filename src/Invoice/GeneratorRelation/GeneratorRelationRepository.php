@@ -40,7 +40,6 @@ final class GeneratorRelationRepository extends Select\Repository
         return $this->prepareDataReader($query);
     }
 
-
     public function findRelations(string $id): EntityReader
     {
         $query = $this->select()->load('gentor')->where('gentor_id', $id);
@@ -51,7 +50,6 @@ final class GeneratorRelationRepository extends Select\Repository
      * @see Reader/ReadableDataInterface|InvalidArgumentException
      * @param array|GentorRelation|null $generatorrelation
      * @throws Throwable
-     * @return void
      */
     public function save(array|GentorRelation|null $generatorrelation): void
     {
@@ -62,7 +60,6 @@ final class GeneratorRelationRepository extends Select\Repository
      * @see Reader/ReadableDataInterface|InvalidArgumentException
      * @param array|GentorRelation|null $generatorrelation
      * @throws Throwable
-     * @return void
      */
     public function delete(array|GentorRelation|null $generatorrelation): void
     {
@@ -78,7 +75,7 @@ final class GeneratorRelationRepository extends Select\Repository
     }
 
     /**
-     * @return null|GentorRelation
+     * @return GentorRelation|null
      *
      * @psalm-return TEntity|null
      */
@@ -92,7 +89,6 @@ final class GeneratorRelationRepository extends Select\Repository
     }
 
     /**
-     *
      * @param string $id
      * @return array
      */
@@ -105,7 +101,6 @@ final class GeneratorRelationRepository extends Select\Repository
     }
 
     /**
-     *
      * @param string $generatorrelation_lowercase_name
      * @return object|null
      */

@@ -7,7 +7,6 @@ namespace App\Invoice\UserClient;
 use App\Invoice\Entity\UserClient;
 use App\Invoice\Entity\Client;
 use App\Invoice\Entity\UserInv;
-use App\Invoice\UserClient\UserClientForm;
 use App\Invoice\UserClient\UserClientService as UCS;
 use App\Invoice\UserInv\UserInvRepository as UIR;
 use App\Invoice\Client\ClientRepository as CR;
@@ -25,6 +24,7 @@ use Yiisoft\Data\Cycle\Writer\EntityWriter;
 final class UserClientRepository extends Select\Repository
 {
     private EntityWriter $entityWriter;
+
     /**
      * @param Select<TEntity> $select
      * @param EntityWriter $entityWriter
@@ -64,7 +64,6 @@ final class UserClientRepository extends Select\Repository
      * @see Reader/ReadableDataInterface|InvalidArgumentException
      * @param array|UserClient|null $userclient
      * @throws Throwable
-     * @return void
      */
     public function save(array|UserClient|null $userclient): void
     {
@@ -75,7 +74,6 @@ final class UserClientRepository extends Select\Repository
      * @see Reader/ReadableDataInterface|InvalidArgumentException
      * @param UserClient $userclient
      * @throws Throwable
-     * @return void
      */
     public function delete(UserClient $userclient): void
     {
@@ -91,7 +89,7 @@ final class UserClientRepository extends Select\Repository
     }
 
     /**
-     * @return null|UserClient
+     * @return UserClient|null
      *
      * @psalm-return TEntity|null
      */
@@ -105,7 +103,6 @@ final class UserClientRepository extends Select\Repository
     }
 
     /**
-     *
      * @param string $client_id
      * @return UserClient|null
      */
@@ -163,7 +160,7 @@ final class UserClientRepository extends Select\Repository
         foreach ($this->findAllPreloaded() as $user_client) {
             $client_id = $user_client->getClient_id();
             if (!in_array($client_id, $client_ids)) {
-                array_push($client_ids, $client_id);
+                $client_ids[] = $client_id;
             }
         }
         return $client_ids;
@@ -217,9 +214,7 @@ final class UserClientRepository extends Select\Repository
         }
 
         // Create unassigned client list for dropdown
-        $possible_client_ids = array_diff($every_client_ids, $assigned_client_ids);
-
-        return $possible_client_ids;
+        return array_diff($every_client_ids, $assigned_client_ids);
     }
 
     /**
@@ -247,15 +242,11 @@ final class UserClientRepository extends Select\Repository
         return $unassigned_client_ids;
     }
 
-
-
     /**
-     *
      * @param UIR $uiR
      * @param CR $cR
      * @param UCS $ucS
      * @param FormHydrator $formHydrator
-     * @return void
      */
     public function reset_users_all_clients(UIR $uiR, CR $cR, UCS $ucS, FormHydrator $formHydrator): void
     {
@@ -272,21 +263,19 @@ final class UserClientRepository extends Select\Repository
     }
 
     /**
-     *
      * @param array $available_client_ids
      * @param string $user_id
      * @param FormHydrator $formHydrator
      * @param UCS $ucS
-     * @return void
      */
     public function assign_to_user_client(array $available_client_ids, string $user_id, FormHydrator $formHydrator, UCS $ucS): void
     {
         /** @var int $value */
         foreach ($available_client_ids as $_key => $value) {
             $user_client = [
-                 'user_id' => $user_id,
-                 'client_id' => $value,
-             ];
+                'user_id' => $user_id,
+                'client_id' => $value,
+            ];
             $model = new UserClient();
             $form = new UserClientForm($model);
             ($formHydrator->populateAndValidate($form, $user_client)) ? $ucS->saveUserClient($model, $user_client) : '';

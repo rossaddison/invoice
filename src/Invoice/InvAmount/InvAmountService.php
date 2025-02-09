@@ -22,10 +22,8 @@ final class InvAmountService
     }
 
     /**
-     *
      * @param InvAmount $model
      * @param string $inv_id
-     * @return void
      */
     public function initializeInvAmount(InvAmount $model, string $inv_id): void
     {
@@ -44,7 +42,6 @@ final class InvAmountService
      * @param InvAmount $model
      * @param int $basis_inv_id
      * @param string $new_inv_id
-     * @return void
      */
     public function initializeCreditInvAmount(InvAmount $model, int $basis_inv_id, string $new_inv_id): void
     {
@@ -61,11 +58,9 @@ final class InvAmountService
     }
 
     /**
-     *
      * @param InvAmount $model
      * @param int $basis_inv_id
      * @param string $new_inv_id
-     * @return void
      */
     public function initializeCopyInvAmount(InvAmount $model, int $basis_inv_id, string $new_inv_id): void
     {
@@ -86,7 +81,6 @@ final class InvAmountService
      * @param InvAmount $model
      * @param array $array
      * @param InvAmountForm $form
-     * @return void
      */
     public function saveInvAmount(InvAmount $model, array $array): void
     {
@@ -102,12 +96,10 @@ final class InvAmountService
     }
 
     /**
-     *
      * @param InvAmount $model
      * @param array $array
-     * @return void
      */
-    public function saveInvAmountViaCalculations(InvAmount $model, array  $array): void
+    public function saveInvAmountViaCalculations(InvAmount $model, array $array): void
     {
         $model->setInv_id((int)$array['inv_id']);
         $model->setItem_subtotal((float)$array['item_subtotal']);
@@ -119,7 +111,6 @@ final class InvAmountService
         $this->repository->save($model);
     }
 
-
     /**
      * Update the Invoice Amounts when an inv item allowance or charge is added to an invoice item.
      * Also update the Invoice totals using Numberhelper calculate inv_taxes function
@@ -129,7 +120,6 @@ final class InvAmountService
      * @param IIAR $iiaR
      * @param ITRR $itrR
      * @param NumberHelper $numberHelper
-     * @return void
      */
     public function updateInvAmount(int $inv_id, IAR $iaR, IIAR $iiaR, ITRR $itrR, NumberHelper $numberHelper): void
     {
@@ -175,9 +165,7 @@ final class InvAmountService
     }
 
     /**
-     *
      * @param InvAmount $model
-     * @return void
      */
     public function deleteInvAmount(InvAmount $model): void
     {

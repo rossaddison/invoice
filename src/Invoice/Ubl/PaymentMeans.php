@@ -11,7 +11,7 @@ class PaymentMeans implements XmlSerializable
 {
     private ?int $paymentMeansCode = 30;
     private array $paymentMeansCodeAttributes = [
-        'name' => 'Credit Transfer'
+        'name' => 'Credit Transfer',
     ];
     private ?string $paymentId;
     private ?PayeeFinancialAccount $payeeFinancialAccount;
@@ -27,25 +27,24 @@ class PaymentMeans implements XmlSerializable
     /**
      * @see https://github.com/OpenPEPPOL/peppol-bis-invoice-3/search?p=3&q=PaymentMeans
      * @param Writer $writer
-     * @return void
      */
     public function xmlSerialize(Writer $writer): void
     {
         $writer->write([
             'name' => Schema::CBC . 'PaymentMeansCode',
             'value' => $this->paymentMeansCode,
-            'attributes' => $this->paymentMeansCodeAttributes
+            'attributes' => $this->paymentMeansCodeAttributes,
         ]);
 
         if ($this->paymentId !== null) {
             $writer->write([
-                Schema::CBC . 'PaymentID' => $this->paymentId
+                Schema::CBC . 'PaymentID' => $this->paymentId,
             ]);
         }
 
         if ($this->payeeFinancialAccount !== null) {
             $writer->write([
-                Schema::CAC . 'PayeeFinancialAccount' => $this->payeeFinancialAccount
+                Schema::CAC . 'PayeeFinancialAccount' => $this->payeeFinancialAccount,
             ]);
         }
     }

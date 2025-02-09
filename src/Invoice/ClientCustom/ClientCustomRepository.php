@@ -18,6 +18,7 @@ use Yiisoft\Data\Cycle\Writer\EntityWriter;
 final class ClientCustomRepository extends Select\Repository
 {
     private EntityWriter $entityWriter;
+
     /**
      * @param Select<TEntity> $select
      * @param EntityWriter $entityWriter
@@ -59,7 +60,6 @@ final class ClientCustomRepository extends Select\Repository
      * @see Reader/ReadableDataInterface|InvalidArgumentException
      * @param array|ClientCustom|null $clientcustom
      * @throws Throwable
-     * @return void
      */
     public function save(array|ClientCustom|null $clientcustom): void
     {
@@ -70,7 +70,6 @@ final class ClientCustomRepository extends Select\Repository
      * @see Reader/ReadableDataInterface|InvalidArgumentException
      * @param array|ClientCustom|null $clientcustom
      * @throws Throwable
-     * @return void
      */
     public function delete(array|ClientCustom|null $clientcustom): void
     {
@@ -86,7 +85,6 @@ final class ClientCustomRepository extends Select\Repository
     }
 
     /**
-     *
      * @param string $id
      * @return ClientCustom|null
      */
@@ -100,7 +98,6 @@ final class ClientCustomRepository extends Select\Repository
     }
 
     /**
-     *
      * @param string $client_id
      * @return int
      */
@@ -112,7 +109,6 @@ final class ClientCustomRepository extends Select\Repository
     }
 
     /**
-     *
      * @param string $client_id
      * @param string $custom_field_id
      * @return ClientCustom|null
@@ -126,7 +122,6 @@ final class ClientCustomRepository extends Select\Repository
     }
 
     /**
-     *
      * @param string $client_id
      * @param string $custom_field_id
      * @return int

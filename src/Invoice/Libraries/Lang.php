@@ -27,8 +27,6 @@ class Lang
 
     /**
      * Class constructor
-     *
-     * @return	void
      */
     public function __construct()
     {
@@ -47,7 +45,7 @@ class Lang
      * @param bool $add_suffix	Whether to add suffix to $langfile
      * @param string $alt_path	Alternative path to look for the language file
      *
-     * @return array|null|true Array containing translations, if $return is set to true
+     * @return array|true|null Array containing translations, if $return is set to true
      *
      * @psalm-return array<empty, empty>|null|true
      */
@@ -65,20 +63,20 @@ class Lang
         $langfile = str_replace('.php', '', $langfile);
 
         if ($add_suffix === true) {
-            $langfile = (preg_replace('/_lang$/', '', $langfile) ?? 'unknown').'_lang';
+            $langfile = (preg_replace('/_lang$/', '', $langfile) ?? 'unknown') . '_lang';
         }
 
         $langfile .= '.php';
 
-        if (empty($idiom) or ! preg_match('/^[a-z_-]+$/i', $idiom)) {
+        if (empty($idiom) || !preg_match('/^[a-z_-]+$/i', $idiom)) {
             $idiom = 'English';
         }
 
         // Load the base file, so any others found can override it
         $aliases = new Aliases(['@invoice' => dirname(__DIR__),
-                                '@language' => dirname(__DIR__).DIRECTORY_SEPARATOR.'Language']);
+            '@language' => dirname(__DIR__) . DIRECTORY_SEPARATOR . 'Language']);
         $path = $aliases->get('@language');
-        $basepath = $path.'/'.$idiom.'/'.$langfile;
+        $basepath = $path . '/' . $idiom . '/' . $langfile;
         $lang = [];
         if (($found = file_exists($basepath)) === true) {
             // $lang is a full array in $basepath
@@ -86,14 +84,14 @@ class Lang
         }
 
         if ($found !== true) {
-            $this->_logger->info('Unable to load the requested language file: language/'.$idiom.'/'.$langfile);
+            $this->_logger->info('Unable to load the requested language file: language/' . $idiom . '/' . $langfile);
             $lang = '';
         }
 
         // $lang is declared in basepath
         if (!is_array($lang)) {
             if ($return === true) {
-                return array();
+                return [];
             }
             return;
         }
@@ -101,7 +99,7 @@ class Lang
         $this->_is_loaded[$langfile] = $idiom;
         $this->_language = array_merge($this->_language, $lang);
 
-        $this->_logger->info('Language file loaded: language/'.$idiom.'/'.$langfile);
+        $this->_logger->info('Language file loaded: language/' . $idiom . '/' . $langfile);
         return true;
     }
 
@@ -114,19 +112,18 @@ class Lang
      *
      * @param	string	$line		Language line key
      * @param	bool	$log_errors	Whether to log an error message if the line is not found
-     * @return	string|false|mixed	Translation
+     * @return	false|mixed|string	Translation
      */
     public function line($line, $log_errors = true)
     {
-        /** @var string|false|mixed $value */
-        $value = isset($this->_language[$line]) ? $this->_language[$line] : false;
+        /** @var false|mixed|string $value */
+        $value = $this->_language[$line] ?? false;
 
         // Because killer robots like unicorns!
         if ($value === false && $log_errors === true) {
-            $this->_logger->info('Could not find the language line "'.$line.'"');
+            $this->_logger->info('Could not find the language line "' . $line . '"');
         }
 
         return $value;
     }
-
 }

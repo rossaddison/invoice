@@ -92,7 +92,7 @@ final class AssignRoleCommand extends Command
             }
 
             /**
-             * @var Stringable|int|string $userId
+             * @var int|string|Stringable $userId
              */
             $this->manager->assign($roleName, $userId);
 

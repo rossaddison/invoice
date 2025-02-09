@@ -138,7 +138,7 @@ class PeppolUblXml
         ?bool $isCopyIndicator,
         ?string $supplierAssignedAccountID,
     ): Invoice {
-        $ubl_invoice = new Invoice(
+        return new Invoice(
             $this->sR,
             $profileID,
             $id,
@@ -236,11 +236,9 @@ class PeppolUblXml
             $isCopyIndicator,
             $supplierAssignedAccountID,
         );
-        return $ubl_invoice;
     }
 
     /**
-     *
      * @param Invoice $ubl_invoice
      * @return string
      */
@@ -254,5 +252,4 @@ class PeppolUblXml
         $writer->endDocument();
         return $writer->outputMemory();
     }
-
 }

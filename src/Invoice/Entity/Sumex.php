@@ -13,31 +13,31 @@ use DateTimeImmutable;
 class Sumex
 {
     #[Column(type: 'primary')]
-    private ?int $id =  null;
+    private ?int $id = null;
 
     #[Column(type: 'integer(11)', nullable: true)]
-    private ?int $invoice =  null;
+    private ?int $invoice = null;
 
     #[Column(type: 'integer(11)', nullable: false, default: 0)]
-    private ?int $reason =  null;
+    private ?int $reason = null;
 
     #[Column(type: 'string(500)', nullable: false)]
-    private string $diagnosis =  '';
+    private string $diagnosis = '';
 
     #[Column(type: 'string(500)', nullable: false)]
-    private string $observations =  '';
+    private string $observations = '';
 
     #[Column(type: 'date', nullable: true)]
-    private mixed $treatmentstart =  '';
+    private mixed $treatmentstart = '';
 
     #[Column(type: 'date', nullable: true)]
-    private mixed $treatmentend =  '';
+    private mixed $treatmentend = '';
 
     #[Column(type: 'date', nullable: true)]
-    private mixed $casedate =  '';
+    private mixed $casedate = '';
 
     #[Column(type: 'string(35)', nullable: true)]
-    private ?string $casenumber =  '';
+    private ?string $casenumber = '';
 
     public function __construct(
         int $invoice = null,
@@ -66,7 +66,7 @@ class Sumex
 
     public function setId(int $id): void
     {
-        $this->id =  $id;
+        $this->id = $id;
     }
 
     public function getInvoice(): int|null
@@ -76,7 +76,7 @@ class Sumex
 
     public function setInvoice(int $invoice): void
     {
-        $this->invoice =  $invoice;
+        $this->invoice = $invoice;
     }
 
     public function getReason(): int|null
@@ -86,7 +86,7 @@ class Sumex
 
     public function setReason(int $reason): void
     {
-        $this->reason =  $reason;
+        $this->reason = $reason;
     }
 
     public function getDiagnosis(): string
@@ -96,7 +96,7 @@ class Sumex
 
     public function setDiagnosis(string $diagnosis): void
     {
-        $this->diagnosis =  $diagnosis;
+        $this->diagnosis = $diagnosis;
     }
 
     public function getObservations(): string
@@ -106,7 +106,7 @@ class Sumex
 
     public function setObservations(string $observations): void
     {
-        $this->observations =  $observations;
+        $this->observations = $observations;
     }
 
     public function getTreatmentstart(): DateTimeImmutable|string|null
@@ -117,7 +117,7 @@ class Sumex
 
     public function setTreatmentstart(DateTime $treatmentstart): void
     {
-        $this->treatmentstart =  $treatmentstart;
+        $this->treatmentstart = $treatmentstart;
     }
 
     public function getTreatmentend(): DateTimeImmutable|string|null
@@ -128,7 +128,7 @@ class Sumex
 
     public function setTreatmentend(DateTime $treatmentend): void
     {
-        $this->treatmentend =  $treatmentend;
+        $this->treatmentend = $treatmentend;
     }
 
     public function getCasedate(): DateTimeImmutable|string|null
@@ -139,7 +139,7 @@ class Sumex
 
     public function setCasedate(DateTime $casedate): void
     {
-        $this->casedate =  $casedate;
+        $this->casedate = $casedate;
     }
 
     public function getCasenumber(): ?string
@@ -149,6 +149,6 @@ class Sumex
 
     public function setCasenumber(string $casenumber): void
     {
-        $this->casenumber =  $casenumber;
+        $this->casenumber = $casenumber;
     }
 }

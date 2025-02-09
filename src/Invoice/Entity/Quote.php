@@ -11,9 +11,6 @@ use Cycle\Annotated\Annotation\Relation\HasMany;
 use Cycle\Annotated\Annotation\Relation\HasOne;
 use Cycle\ORM\Entity\Behavior;
 use Doctrine\Common\Collections\ArrayCollection;
-use App\Invoice\Entity\Client;
-use App\Invoice\Entity\QuoteAmount;
-use App\Invoice\Entity\Group;
 use App\User\User;
 use App\Invoice\Setting\SettingRepository as sR;
 use DateTimeImmutable;
@@ -28,21 +25,21 @@ class Quote
     private ?Client $client = null;
 
     #[Column(type: 'integer(11)', nullable:false)]
-    private ?int $client_id =  null;
+    private ?int $client_id = null;
 
     // Group
     #[BelongsTo(target:Group::class, nullable: false, fkAction:'NO ACTION')]
     private ?Group $group = null;
 
     #[Column(type: 'integer(11)', nullable:false)]
-    private ?int $group_id =  null;
+    private ?int $group_id = null;
 
     // User
     #[BelongsTo(target:User::class, nullable: false)]
     private ?User $user = null;
 
     #[Column(type: 'integer(11)', nullable:false)]
-    private ?int $user_id =  null;
+    private ?int $user_id = null;
 
     // QuoteAmount
     #[HasOne(target: QuoteAmount::class)]
@@ -56,16 +53,16 @@ class Quote
     private ArrayCollection $items;
 
     #[Column(type: 'primary')]
-    private ?int $id =  null;
+    private ?int $id = null;
 
     #[Column(type: 'integer(11)', nullable:true, default:0)]
-    private ?int $so_id =  null;
+    private ?int $so_id = null;
 
     #[Column(type: 'integer(11)', nullable:true, default:0)]
-    private ?int $inv_id =  null;
+    private ?int $inv_id = null;
 
     #[Column(type: 'tinyInteger(2)', nullable:false, default:1)]
-    private ?int $status_id =  null;
+    private ?int $status_id = null;
 
     #[Column(type: 'integer(11)', nullable: true)]
     private ?int $delivery_location_id = null;
@@ -86,22 +83,22 @@ class Quote
     private DateTimeImmutable $date_required;
 
     #[Column(type: 'string(100)', nullable:true)]
-    private ?string $number =  '';
+    private ?string $number = '';
 
     #[Column(type: 'decimal(20,2)', nullable: false, default: 0.00)]
-    private ?float $discount_amount =  0.00;
+    private ?float $discount_amount = 0.00;
 
     #[Column(type: 'decimal(20,2)', nullable: false, default: 0.00)]
-    private ?float $discount_percent =  0.00;
+    private ?float $discount_percent = 0.00;
 
     #[Column(type: 'string(32)', nullable:true)]
-    private string $url_key =  '';
+    private string $url_key = '';
 
     #[Column(type: 'string(90)', nullable:true)]
-    private ?string $password =  '';
+    private ?string $password = '';
 
     #[Column(type: 'longText', nullable:true)]
-    private ?string $notes =  '';
+    private ?string $notes = '';
 
     public function __construct(
         int $so_id = null,
@@ -177,7 +174,7 @@ class Quote
     }
 
     /**
-     * @return null|numeric-string
+     * @return numeric-string|null
      */
     public function getId(): string|null
     {
@@ -186,7 +183,7 @@ class Quote
 
     public function setId(int $id): void
     {
-        $this->id =  $id;
+        $this->id = $id;
     }
 
     public function getUser_id(): string
@@ -196,7 +193,7 @@ class Quote
 
     public function setUser_id(int $user_id): void
     {
-        $this->user_id =  $user_id;
+        $this->user_id = $user_id;
     }
 
     public function getSo_id(): string
@@ -205,7 +202,7 @@ class Quote
     }
 
     /**
-     * @param int|null|string $so_id
+     * @param int|string|null $so_id
      */
     public function setSo_id(string|int|null $so_id): void
     {
@@ -218,7 +215,7 @@ class Quote
     }
 
     /**
-     * @param int|null|string $inv_id
+     * @param int|string|null $inv_id
      */
     public function setInv_id(string|int|null $inv_id): void
     {
@@ -232,7 +229,7 @@ class Quote
 
     public function setClient_id(int $client_id): void
     {
-        $this->client_id =  $client_id;
+        $this->client_id = $client_id;
     }
 
     public function getGroup_id(): string
@@ -242,7 +239,7 @@ class Quote
 
     public function setGroup_id(int $group_id): void
     {
-        $this->group_id =  $group_id;
+        $this->group_id = $group_id;
     }
 
     public function getDelivery_location_id(): string
@@ -252,7 +249,7 @@ class Quote
 
     public function setDelivery_location_id(int $delivery_location_id): void
     {
-        $this->delivery_location_id =  $delivery_location_id;
+        $this->delivery_location_id = $delivery_location_id;
     }
 
     public function getContract_id(): string
@@ -262,7 +259,7 @@ class Quote
 
     public function setContract_id(int $contract_id): void
     {
-        $this->contract_id =  $contract_id;
+        $this->contract_id = $contract_id;
     }
 
     public function getStatus_id(): int|null
@@ -275,22 +272,22 @@ class Quote
         $status = '';
         switch ($status_id) {
             case 1:
-                $status =  'draft';
+                $status = 'draft';
                 break;
             case 2:
-                $status =  'sent';
+                $status = 'sent';
                 break;
             case 3:
-                $status =  'viewed';
+                $status = 'viewed';
                 break;
             case 4:
-                $status =  'approved';
+                $status = 'approved';
                 break;
             case 5:
-                $status =  'rejected';
+                $status = 'rejected';
                 break;
             case 6:
-                $status =  'cancelled';
+                $status = 'cancelled';
                 break;
         }
         return $status;
@@ -319,7 +316,7 @@ class Quote
     public function setDate_expires(sR $sR): void
     {
         $days = 30;
-        if (($sR->repoCount('quotes_expire_after')) == 0) {
+        if ($sR->repoCount('quotes_expire_after') == 0) {
             $days = 30;
         } else {
             $setting = $sR->withKey('quotes_expire_after');
@@ -327,7 +324,7 @@ class Quote
                 $days = $setting->getSetting_value() ?: 30;
             }
         }
-        $this->date_expires = (new \DateTimeImmutable('now'))->add(new \DateInterval('P'.$days.'D'));
+        $this->date_expires = (new \DateTimeImmutable('now'))->add(new \DateInterval('P' . $days . 'D'));
     }
 
     public function getDate_expires(): DateTimeImmutable
@@ -352,7 +349,7 @@ class Quote
 
     public function setNumber(string $number): void
     {
-        $this->number =  $number;
+        $this->number = $number;
     }
 
     public function getDiscount_amount(): ?float
@@ -372,7 +369,7 @@ class Quote
 
     public function setDiscount_percent(float $discount_percent): void
     {
-        $this->discount_percent =  $discount_percent;
+        $this->discount_percent = $discount_percent;
     }
 
     public function getUrl_key(): string
@@ -382,7 +379,7 @@ class Quote
 
     public function setUrl_key(string $url_key): void
     {
-        $this->url_key =  $url_key;
+        $this->url_key = $url_key;
     }
 
     public function getPassword(): ?string
@@ -392,7 +389,7 @@ class Quote
 
     public function setPassword(string $password): void
     {
-        $this->password =  $password;
+        $this->password = $password;
     }
 
     public function getNotes(): ?string
@@ -402,7 +399,7 @@ class Quote
 
     public function setNotes(string $notes): void
     {
-        $this->notes =  $notes;
+        $this->notes = $notes;
     }
 
     public function getItems(): ArrayCollection
@@ -411,17 +408,15 @@ class Quote
     }
 
     /**
-     *
      * @param int $group_id
      * @param int $client_id
-     * @return void
      */
     public function nullifyRelationOnChange(int $group_id, int $client_id): void
     {
-        if ($this->group_id <> $group_id) {
+        if ($this->group_id != $group_id) {
             $this->group = null;
         }
-        if ($this->client_id <> $client_id) {
+        if ($this->client_id != $client_id) {
             $this->client = null;
         }
         // the user_id will always be attached to the client therefore will not change

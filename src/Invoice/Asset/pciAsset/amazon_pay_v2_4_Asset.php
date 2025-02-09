@@ -4,8 +4,6 @@ declare(strict_types=1);
 
 namespace App\Invoice\Asset\pciAsset;
 
-use App\Invoice\Asset\pciAsset\__Asset;
-
 class amazon_pay_v2_4_Asset extends __Asset
 {
     public array $js = [

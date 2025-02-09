@@ -59,9 +59,10 @@ class CustomValuesHelper
      */
     public function format_boolean(Translator $translator, string $txt): string
     {
-        if ($txt === "1") {
+        if ($txt === '1') {
             return $translator->translate('i.true');
-        } elseif ($txt === "0") {
+        }
+        if ($txt === '0') {
             return $translator->translate('i.false');
         }
         return $translator->translate('i.false');
@@ -77,7 +78,7 @@ class CustomValuesHelper
         if (!preg_match('/(\d{3})(\d{4})(\d{4})(\d{2})/', $txt, $matches)) {
             return $txt;
         }
-        return $matches[1] . "." . $matches[2] . "." . $matches[3] . "." . $matches[4];
+        return $matches[1] . '.' . $matches[2] . '.' . $matches[3] . '.' . $matches[4];
     }
 
     /**
@@ -96,21 +97,21 @@ class CustomValuesHelper
         FormModel $formModel,
         Translator $translator,
         array $entity_custom_values,
-        array  $custom_value
+        array $custom_value
     ): void {
-        $fieldValue =   null !== $this->form_value($entity_custom_values, $custom_field->getId())
+        $fieldValue = null !== $this->form_value($entity_custom_values, $custom_field->getId())
                         ? $this->form_value($entity_custom_values, $custom_field->getId())
                         : gettype($this->form_value($entity_custom_values, $custom_field->getId()));
 
         switch ($custom_field->getType()) {
             case 'DATE':
-                $dateValue = $fieldValue == "" ? "" : $fieldValue;
+                $dateValue = $fieldValue == '' ? '' : $fieldValue;
 
                 echo Field::date($formModel, 'custom_field_id')
                 ->label($custom_field->getLabel())
                 ->addInputAttributes([
-                    'name' => 'custom['. $custom_field->getId().']',
-                    'id' => $custom_field->getId()
+                    'name' => 'custom[' . $custom_field->getId() . ']',
+                    'id' => $custom_field->getId(),
                 ])
                 ->required($custom_field->getRequired() == 1 ? true : false)
                 ->hint($custom_field->getRequired() == 1
@@ -132,15 +133,15 @@ class CustomValuesHelper
                 }
 
                 echo Label::tag()
-                ->forId('custom['.$custom_field->getId().']')
+                ->forId('custom[' . $custom_field->getId() . ']')
                 ->content(Html::encode($custom_field->getLabel()));
 
                 echo Select::tag()
                 ->addAttributes(
                     [
                         'id' => $custom_field->getId(),
-                        'name' => 'custom['.$custom_field->getId().']',
-                        'class' => 'form-control'
+                        'name' => 'custom[' . $custom_field->getId() . ']',
+                        'class' => 'form-control',
                     ]
                 )
                 ->disabled(false)
@@ -167,7 +168,7 @@ class CustomValuesHelper
                 }
 
                 echo Label::tag()
-                ->forId('custom['.$custom_field->getId().']')
+                ->forId('custom[' . $custom_field->getId() . ']')
                 ->content(Html::encode($custom_field->getLabel()));
 
                 /**
@@ -177,7 +178,7 @@ class CustomValuesHelper
                 ->addAttributes([
                     'class' => 'form-control',
                     'id' => $custom_field->getId(),
-                    'name' => 'custom['.$custom_field->getId().']'
+                    'name' => 'custom[' . $custom_field->getId() . ']',
                 ])
                 ->disabled(false)
                 ->multiple(true)
@@ -189,8 +190,8 @@ class CustomValuesHelper
             case 'BOOLEAN':
                 echo Field::checkbox($formModel, 'custom_field_id')
                 ->addInputAttributes([
-                    'name' => 'custom['. $custom_field->getId().']',
-                    'id' => $custom_field->getId()
+                    'name' => 'custom[' . $custom_field->getId() . ']',
+                    'id' => $custom_field->getId(),
                 ])
                 ->disabled(false)
                 ->inputClass('form-check-input')
@@ -209,8 +210,8 @@ class CustomValuesHelper
                 )
                 ->label($custom_field->getLabel())
                 ->addInputAttributes([
-                    'name' => 'custom['. $custom_field->getId().']',
-                    'id' => $custom_field->getId()
+                    'name' => 'custom[' . $custom_field->getId() . ']',
+                    'id' => $custom_field->getId(),
                 ])
                 ->value((int)$fieldValue ?: 0)
                 ->required($custom_field->getRequired() == 1 ? true : false)
@@ -224,8 +225,8 @@ class CustomValuesHelper
                 ->label($custom_field->getLabel())
                 ->required(true)
                 ->addInputAttributes([
-                    'name' => 'custom['. $custom_field->getId().']',
-                    'id' => $custom_field->getId()
+                    'name' => 'custom[' . $custom_field->getId() . ']',
+                    'id' => $custom_field->getId(),
                 ])
                 ->required($custom_field->getRequired() == 1 ? true : false)
                 ->hint($custom_field->getRequired() == 1
@@ -240,7 +241,6 @@ class CustomValuesHelper
      * @param FormModel $formModel
      * @param array $entity_custom_values
      * @param array $custom_value
-     * @return void
      */
     public function print_field_for_view(CustomField $custom_field, FormModel $formModel, array $entity_custom_values, array $custom_value): void
     {
@@ -249,12 +249,12 @@ class CustomValuesHelper
                       : '';
         switch ($custom_field->getType()) {
             case 'DATE':
-                $dateValue = $fieldValue == "" ? "" : $fieldValue;
+                $dateValue = $fieldValue == '' ? '' : $fieldValue;
 
                 echo Field::date($formModel, 'custom_field_id')
                 ->label($custom_field->getLabel())
                 ->addInputAttributes([
-                    'name' => 'custom['. $custom_field->getId().']',
+                    'name' => 'custom[' . $custom_field->getId() . ']',
                     'id' => $custom_field->getId(),
                 ])
                 ->disabled(true)
@@ -271,15 +271,15 @@ class CustomValuesHelper
                 }
 
                 echo Label::tag()
-                ->forId('custom['.$custom_field->getId().']')
+                ->forId('custom[' . $custom_field->getId() . ']')
                 ->content(Html::encode($custom_field->getLabel()));
                 if (null !== $fieldValue) {
                     echo Select::tag()
                     ->addAttributes(
                         [
                             'id' => $custom_field->getId(),
-                            'name' => 'custom['.$custom_field->getId().']',
-                            'class' => 'form-control'
+                            'name' => 'custom[' . $custom_field->getId() . ']',
+                            'class' => 'form-control',
                         ]
                     )
                     ->disabled(true)
@@ -305,7 +305,7 @@ class CustomValuesHelper
                 }
 
                 echo Label::tag()
-                ->forId('custom['.$custom_field->getId().']')
+                ->forId('custom[' . $custom_field->getId() . ']')
                 ->content(Html::encode($custom_field->getLabel()));
 
                 /**
@@ -313,10 +313,10 @@ class CustomValuesHelper
                  */
                 echo Select::tag()
                     ->addAttributes([
-                    'class' => 'form-control',
-                    'id' => $custom_field->getId(),
-                    'name' => 'custom['.$custom_field->getId().']'
-                ])
+                        'class' => 'form-control',
+                        'id' => $custom_field->getId(),
+                        'name' => 'custom[' . $custom_field->getId() . ']',
+                    ])
                 ->disabled(true)
                 ->multiple(true)
                 ->optionsData($optionsData)
@@ -326,7 +326,7 @@ class CustomValuesHelper
             case 'BOOLEAN':
                 echo Field::checkbox($formModel, 'custom_field_id')
                 ->addInputAttributes([
-                    'name' => 'custom['. $custom_field->getId().']',
+                    'name' => 'custom[' . $custom_field->getId() . ']',
                     'id' => $custom_field->getId(),
                 ])
                 ->disabled(true)
@@ -354,7 +354,6 @@ class CustomValuesHelper
      * @param array $entity_custom_values
      * @param CustomField $custom_field
      * @param cvR $cvR
-     * @return void
      */
     public function print_field_for_pdf(Translator $translator, array $entity_custom_values, CustomField $custom_field, cvR $cvR): void
     {
@@ -371,7 +370,7 @@ class CustomValuesHelper
         echo Html::openTag('div');
         switch ($custom_field->getType()) {
             case 'DATE':
-                $dateValue = $fieldValue == "" ? "" : $fieldValue;
+                $dateValue = $fieldValue == '' ? '' : $fieldValue;
                 echo Label::tag()
                 ->content((string)$dateValue);
                 echo Br::tag();
@@ -402,9 +401,9 @@ class CustomValuesHelper
                 break;
             case 'BOOLEAN':
                 echo Label::tag()
-                ->content((null !== $this->form_value($entity_custom_values, $custom_field->getId())
+                ->content(null !== $this->form_value($entity_custom_values, $custom_field->getId())
                                   ? $translator->translate('i.true')
-                                  : $translator->translate('i.false')));
+                                  : $translator->translate('i.false'));
                 echo Br::tag();
                 break;
             case 'NUMBER':
@@ -429,7 +428,7 @@ class CustomValuesHelper
     public function is_serialized(mixed $entry_data, $strict = true): bool
     {
         // If it isn't a string, it isn't serialized.
-        if (! is_string($entry_data)) {
+        if (!is_string($entry_data)) {
             return false;
         }
         $data = trim($entry_data);
@@ -449,7 +448,7 @@ class CustomValuesHelper
             }
         } else {
             $semicolon = strpos($data, ';');
-            $brace     = strpos($data, '}');
+            $brace = strpos($data, '}');
             // Either ; or } must exist.
             if (false === $semicolon && false === $brace) {
                 return false;
@@ -469,7 +468,7 @@ class CustomValuesHelper
                     if ('"' !== substr($data, -2, 1)) {
                         return false;
                     }
-                } elseif (! str_contains($data, '"')) {
+                } elseif (!str_contains($data, '"')) {
                     return false;
                 }
                 // Or else fall through.
@@ -493,7 +492,7 @@ class CustomValuesHelper
      * values of a Multiple Choice Dropdown
      * @param array $entity_custom_values
      * @param string $custom_field_id
-     * @return string|int|null
+     * @return int|string|null
      */
     public function form_value(array $entity_custom_values, string $custom_field_id): string|int|null
     {
@@ -510,7 +509,7 @@ class CustomValuesHelper
      * @param array $entity_custom_values
      * @param string $custom_field_id
      * @param cvR $cvR
-     * @return string|int|null
+     * @return int|string|null
      */
     public function selected_value(array $entity_custom_values, string $custom_field_id, cvR $cvR): string|int|null
     {

@@ -18,8 +18,8 @@ use Yiisoft\Data\Cycle\Writer\EntityWriter;
 final class QuoteItemAmountRepository extends Select\Repository
 {
     private EntityWriter $entityWriter;
+
     /**
-     *
      * @param Select<TEntity> $select
      * @param EntityWriter $entityWriter
      */
@@ -58,7 +58,6 @@ final class QuoteItemAmountRepository extends Select\Repository
      * @see Reader/ReadableDataInterface|InvalidArgumentException
      * @param array|QuoteItemAmount|null $quoteitemamount
      * @throws Throwable
-     * @return void
      */
     public function save(array|QuoteItemAmount|null $quoteitemamount): void
     {
@@ -69,7 +68,6 @@ final class QuoteItemAmountRepository extends Select\Repository
      * @see Reader/ReadableDataInterface|InvalidArgumentException
      * @param array|QuoteItemAmount|null $quoteitemamount
      * @throws Throwable
-     * @return void
      */
     public function delete(array|QuoteItemAmount|null $quoteitemamount): void
     {
@@ -85,7 +83,7 @@ final class QuoteItemAmountRepository extends Select\Repository
     }
 
     /**
-     * @return null|QuoteItemAmount
+     * @return QuoteItemAmount|null
      *
      * @psalm-return TEntity|null
      */
@@ -98,7 +96,6 @@ final class QuoteItemAmountRepository extends Select\Repository
     }
 
     /**
-     *
      * @param string $quote_item_id
      * @return int
      */

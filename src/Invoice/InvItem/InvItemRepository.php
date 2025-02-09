@@ -18,6 +18,7 @@ use Yiisoft\Data\Cycle\Writer\EntityWriter;
 final class InvItemRepository extends Select\Repository
 {
     private EntityWriter $entityWriter;
+
     /**
      * @param Select<TEntity> $select
      * @param EntityWriter $entityWriter
@@ -48,7 +49,6 @@ final class InvItemRepository extends Select\Repository
     }
 
     /**
-     *
      * @return Sort
      */
     private function getSort(): Sort
@@ -57,9 +57,7 @@ final class InvItemRepository extends Select\Repository
     }
 
     /**
-     *
      * @param array|InvItem|null $invitem
-     * @return void
      */
     public function save(array|InvItem|null $invitem): void
     {
@@ -67,9 +65,7 @@ final class InvItemRepository extends Select\Repository
     }
 
     /**
-     *
      * @param array|InvItem|null $invitem
-     * @return void
      */
     public function delete(array|InvItem|null $invitem): void
     {
@@ -77,7 +73,6 @@ final class InvItemRepository extends Select\Repository
     }
 
     /**
-     *
      * @param Select $query
      * @return EntityReader
      */
@@ -90,7 +85,6 @@ final class InvItemRepository extends Select\Repository
     }
 
     /**
-     *
      * @param string $id
      * @return InvItem|null
      * @psalm-return TEntity|null
@@ -116,7 +110,6 @@ final class InvItemRepository extends Select\Repository
     }
 
     /**
-     *
      * @param string $inv_id
      * @return EntityReader
      */
@@ -129,33 +122,28 @@ final class InvItemRepository extends Select\Repository
     }
 
     /**
-     *
      * @param string $inv_id
      * @return int
      */
     public function repoCount(string $inv_id): int
     {
-        $count = $this->select()
+        return $this->select()
                       ->where(['inv_id' => $inv_id])
                       ->count();
-        return $count;
     }
 
     /**
-     *
      * @param string $id
      * @return int
      */
     public function repoInvItemCount(string $id): int
     {
-        $count = $this->select()
+        return $this->select()
                       ->where(['id' => $id])
                       ->count();
-        return $count;
     }
 
     /**
-     *
      * @param array $item_ids
      * @return EntityReader
      */

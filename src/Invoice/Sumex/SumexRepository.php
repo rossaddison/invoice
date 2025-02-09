@@ -58,7 +58,6 @@ final class SumexRepository extends Select\Repository
      * @see Reader/ReadableDataInterface|InvalidArgumentException
      * @param array|Sumex|null $sumex
      * @throws Throwable
-     * @return void
      */
     public function save(array|Sumex|null $sumex): void
     {
@@ -69,7 +68,6 @@ final class SumexRepository extends Select\Repository
      * @see Reader/ReadableDataInterface|InvalidArgumentException
      * @param array|Sumex|null $sumex
      * @throws Throwable
-     * @return void
      */
     public function delete(array|Sumex|null $sumex): void
     {
@@ -85,7 +83,7 @@ final class SumexRepository extends Select\Repository
     }
 
     /**
-     * @return null|Sumex
+     * @return Sumex|null
      *
      * @psalm-return TEntity|null
      */
@@ -96,7 +94,7 @@ final class SumexRepository extends Select\Repository
     }
 
     /**
-     * @return null|Sumex
+     * @return Sumex|null
      *
      * @psalm-return TEntity|null
      */

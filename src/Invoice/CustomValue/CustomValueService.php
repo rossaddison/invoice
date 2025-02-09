@@ -18,7 +18,6 @@ final class CustomValueService
     /**
      * @param CustomValue $model
      * @param array $array
-     * @return void
      */
     public function saveCustomValue(CustomValue $model, array $array): void
     {
@@ -29,7 +28,6 @@ final class CustomValueService
 
     /**
      * @param array|CustomValue|null $model
-     * @return void
      */
     public function deleteCustomValue(array|CustomValue|null $model): void
     {

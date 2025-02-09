@@ -19,19 +19,18 @@ class CountryHelper
     public function get_country_list(string $cldr): mixed
     {
         $new_aliases = new Aliases(['@helpers' => __DIR__, '@country_list' => '@helpers/Country-list']);
-        $file = $new_aliases->get('@country_list') .DIRECTORY_SEPARATOR. $cldr .DIRECTORY_SEPARATOR.'country.php';
-        $default_english = $new_aliases->get('@country_list') .DIRECTORY_SEPARATOR.'en'.DIRECTORY_SEPARATOR.'country.php';
+        $file = $new_aliases->get('@country_list') . DIRECTORY_SEPARATOR . $cldr . DIRECTORY_SEPARATOR . 'country.php';
+        $default_english = $new_aliases->get('@country_list') . DIRECTORY_SEPARATOR . 'en' . DIRECTORY_SEPARATOR . 'country.php';
         if (file_exists($file)) {
             /**
              * @psalm-suppress UnresolvableInclude
              */
-            return (include $file);
-        } else {
-            /**
-             * @psalm-suppress UnresolvableInclude
-             */
-            return (include $default_english);
+            return include $file;
         }
+        /**
+         * @psalm-suppress UnresolvableInclude
+         */
+        return include $default_english;
     }
 
     /**
@@ -46,7 +45,7 @@ class CountryHelper
         /** @var array $countries */
         $countries = $this->get_country_list($cldr);
         /** @var string $countries[$countrycode] */
-        return (isset($countries[$countrycode]) ? $countries[$countrycode] : $countrycode);
+        return $countries[$countrycode] ?? $countrycode;
     }
 
     /**
@@ -81,7 +80,6 @@ class CountryHelper
         $data = (new ISO3166())->name($name);
         // return the 2-letter country code
         /** @var string $data['alpha2'] */
-        return (!empty($data['alpha2']) ? $data['alpha2'] : '');
+        return !empty($data['alpha2']) ? $data['alpha2'] : '';
     }
-
 }

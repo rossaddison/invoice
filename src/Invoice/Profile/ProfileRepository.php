@@ -18,6 +18,7 @@ use Yiisoft\Data\Cycle\Writer\EntityWriter;
 final class ProfileRepository extends Select\Repository
 {
     private EntityWriter $entityWriter;
+
     /**
     * @param Select<TEntity> $select
     * @param EntityWriter $entityWriter
@@ -57,7 +58,6 @@ final class ProfileRepository extends Select\Repository
      * @see Reader/ReadableDataInterface|InvalidArgumentException
      * @param array|Profile|null $profile
      * @throws Throwable
-     * @return void
      */
     public function save(array|Profile|null $profile): void
     {
@@ -68,7 +68,6 @@ final class ProfileRepository extends Select\Repository
      * @see Reader/ReadableDataInterface|InvalidArgumentException
      * @param array|Profile|null $profile
      * @throws Throwable
-     * @return void
      */
     public function delete(array|Profile|null $profile): void
     {
@@ -84,7 +83,7 @@ final class ProfileRepository extends Select\Repository
     }
 
     /**
-     * @return null|Profile
+     * @return Profile|null
      *
      * @psalm-return TEntity|null
      */

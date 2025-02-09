@@ -30,5 +30,4 @@ class PeppolNoLinkedInvoiceFoundException extends \RuntimeException implements F
                 Please try again
             SOLUTION;
     }
-
 }

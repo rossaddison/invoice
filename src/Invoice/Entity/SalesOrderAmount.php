@@ -7,7 +7,6 @@ namespace App\Invoice\Entity;
 use Cycle\Annotated\Annotation\Column;
 use Cycle\Annotated\Annotation\Entity;
 use Cycle\Annotated\Annotation\Relation\BelongsTo;
-use App\Invoice\Entity\SalesOrder;
 
 #[Entity(repository: \App\Invoice\SalesOrderAmount\SalesOrderAmountRepository::class)]
 class SalesOrderAmount
@@ -16,22 +15,22 @@ class SalesOrderAmount
     private ?SalesOrder $so = null;
 
     #[Column(type: 'primary')]
-    private ?int $id =  null;
+    private ?int $id = null;
 
     #[Column(type: 'integer(11)', nullable:false)]
-    private ?int $so_id =  null;
+    private ?int $so_id = null;
 
     #[Column(type: 'decimal(20,2)', nullable:false, default: 0.00)]
-    private ?float $item_subtotal =  0.00;
+    private ?float $item_subtotal = 0.00;
 
     #[Column(type: 'decimal(20,2)', nullable:false, default: 0.00)]
-    private ?float $item_tax_total =  0.00;
+    private ?float $item_tax_total = 0.00;
 
     #[Column(type: 'decimal(20,2)', nullable:false, default: 0.00)]
-    private ?float $tax_total =  0.00;
+    private ?float $tax_total = 0.00;
 
     #[Column(type: 'decimal(20,2)', nullable:false, default: 0.00)]
-    private ?float $total =  0.00;
+    private ?float $total = 0.00;
 
     public function __construct(
         int $id = null,
@@ -61,7 +60,7 @@ class SalesOrderAmount
 
     public function setId(int $id): void
     {
-        $this->id =  $id;
+        $this->id = $id;
     }
 
     public function getSo_id(): string
@@ -71,7 +70,7 @@ class SalesOrderAmount
 
     public function setSo_id(int $so_id): void
     {
-        $this->so_id =  $so_id;
+        $this->so_id = $so_id;
     }
 
     public function getItem_subtotal(): ?float
@@ -81,7 +80,7 @@ class SalesOrderAmount
 
     public function setItem_subtotal(float $item_subtotal): void
     {
-        $this->item_subtotal =  $item_subtotal;
+        $this->item_subtotal = $item_subtotal;
     }
 
     public function getItem_tax_total(): ?float
@@ -91,7 +90,7 @@ class SalesOrderAmount
 
     public function setItem_tax_total(float $item_tax_total): void
     {
-        $this->item_tax_total =  $item_tax_total;
+        $this->item_tax_total = $item_tax_total;
     }
 
     public function getTax_total(): ?float
@@ -101,7 +100,7 @@ class SalesOrderAmount
 
     public function setTax_total(float $tax_total): void
     {
-        $this->tax_total =  $tax_total;
+        $this->tax_total = $tax_total;
     }
 
     public function getTotal(): ?float
@@ -111,6 +110,6 @@ class SalesOrderAmount
 
     public function setTotal(float $total): void
     {
-        $this->total =  $total;
+        $this->total = $total;
     }
 }

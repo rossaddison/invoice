@@ -21,7 +21,6 @@ final class Bootstrap5ModalTranslatorMessageWithoutAction
     }
 
     /**
-     *
      * @param string $translatedHeading
      * @param string $translatedMessage
      * @param string $origin
@@ -38,7 +37,7 @@ final class Bootstrap5ModalTranslatorMessageWithoutAction
                 '//invoice/inv/modal_message',
                 [
                     'translatedHeading' => $translatedHeading,
-                    'translatedMessage' => $translatedMessage
+                    'translatedMessage' => $translatedMessage,
                 ]
             ),
         ];

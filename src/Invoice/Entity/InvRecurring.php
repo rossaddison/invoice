@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace App\Invoice\Entity;
 
-use App\Invoice\Entity\Inv;
 use Cycle\Annotated\Annotation\Column;
 use Cycle\Annotated\Annotation\Entity;
 use Cycle\Annotated\Annotation\Relation\BelongsTo;
@@ -16,17 +15,17 @@ use DateTimeImmutable;
 class InvRecurring
 {
     #[Column(type:'primary')]
-    private ?int $id =  null;
+    private ?int $id = null;
 
     /**
      * Every Recurring Invoice record belongs to one related Invoice
      * @var Inv $inv
      */
-    #[BelongsTo(target:Inv::class, nullable: false, fkAction: "NO ACTION")]
+    #[BelongsTo(target:Inv::class, nullable: false, fkAction: 'NO ACTION')]
     private ?Inv $inv = null;
 
     #[Column(type:'integer(11)', nullable: false)]
-    private ?int $inv_id =  null;
+    private ?int $inv_id = null;
 
     #[Column(type:'date', nullable: false)]
     private mixed $start;
@@ -35,7 +34,7 @@ class InvRecurring
     private mixed $end;
 
     #[Column(type:'string(191)', nullable: false)]
-    private string $frequency =  '';
+    private string $frequency = '';
 
     #[Column(type:'date', nullable: true)]
     private mixed $next;
@@ -63,7 +62,7 @@ class InvRecurring
 
     public function setId(int $id): void
     {
-        $this->id =  $id;
+        $this->id = $id;
     }
 
     public function getInv(): ?Inv
@@ -78,12 +77,12 @@ class InvRecurring
 
     public function setInv_id(int $inv_id): void
     {
-        $this->inv_id =  $inv_id;
+        $this->inv_id = $inv_id;
     }
 
     public function getStart(): string|DateTimeImmutable
     {
-        /** @var string|DateTimeImmutable $this->start */
+        /** @var DateTimeImmutable|string $this->start */
         return $this->start;
     }
 
@@ -94,7 +93,7 @@ class InvRecurring
 
     public function getEnd(): string|null|DateTimeImmutable
     {
-        /** @var string|null|DateTimeImmutable $this->end */
+        /** @var DateTimeImmutable|string|null $this->end */
         return $this->end;
     }
 
@@ -105,7 +104,7 @@ class InvRecurring
 
     public function getNext(): string|null|DateTimeImmutable
     {
-        /** @var string|null|DateTimeImmutable $this->next */
+        /** @var DateTimeImmutable|string|null $this->next */
         return $this->next;
     }
 
@@ -121,6 +120,6 @@ class InvRecurring
 
     public function setFrequency(string $frequency): void
     {
-        $this->frequency =  $frequency;
+        $this->frequency = $frequency;
     }
 }

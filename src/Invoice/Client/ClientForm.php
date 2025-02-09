@@ -217,7 +217,7 @@ final class ClientForm extends FormModel
     public function getClient_birthdate(): string|null|DateTimeImmutable
     {
         /**
-         * @var string|null|DateTimeImmutable $this->client_birthdate
+         * @var DateTimeImmutable|string|null $this->client_birthdate
          */
         return $this->client_birthdate;
     }

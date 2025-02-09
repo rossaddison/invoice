@@ -1,7 +1,7 @@
 <?php
 
 declare(strict_types=1);
-return array(
+return [
     'JM' => 'Јамајка',
     'JP' => 'Јапан',
     'YE' => 'Јемен',
@@ -250,4 +250,4 @@ return array(
     'SE' => 'Шведска',
     'ES' => 'Шпанија',
     'LK' => 'Шри Ланка',
-);
+];

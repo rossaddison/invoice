@@ -7,9 +7,6 @@ namespace App\Invoice\Upload;
 use App\Invoice\Client\ClientRepository;
 use App\Invoice\Entity\Client;
 use App\Invoice\Entity\Upload;
-use App\Invoice\Upload\UploadForm;
-use App\Invoice\Upload\UploadService;
-use App\Invoice\Upload\UploadRepository;
 use App\Invoice\Setting\SettingRepository;
 use App\Invoice\Traits\FlashMessage;
 use App\User\UserService;
@@ -33,7 +30,7 @@ use Exception;
 final class UploadController
 {
     use FlashMessage;
-    
+
     private Flash $flash;
     private SessionInterface $session;
     private SettingRepository $s;
@@ -78,7 +75,6 @@ final class UploadController
      */
 
     /**
-     *
      * @param Request $request
      * @param CurrentRoute $currentRoute
      * @param UploadRepository $uploadRepository
@@ -108,7 +104,7 @@ final class UploadController
         $parameters = [
             'paginator' => $paginator,
             'uploads' => $this->uploads($uploadRepository),
-            'alert' => $this->alert()
+            'alert' => $this->alert(),
         ];
         return $this->viewRenderer->render('index', $parameters);
     }
@@ -142,7 +138,7 @@ final class UploadController
                     $this->uploadService->saveUpload($upload, $body);
                     return $this->webService->getRedirectResponse('upload/index');
                 }
-            }    
+            }
             $parameters['errors'] = $form->getValidationResult()->getErrorMessagesIndexedByProperty();
             $parameters['form'] = $form;
         }
@@ -157,8 +153,8 @@ final class UploadController
         return $this->viewRenderer->renderPartialAsString(
             '//invoice/layout/alert',
             [
-        'flash' => $this->flash
-      ]
+                'flash' => $this->flash,
+            ]
         );
     }
 
@@ -225,7 +221,7 @@ final class UploadController
                         $this->uploadService->saveUpload($upload, $body);
                         return $this->webService->getRedirectResponse('upload/index');
                     }
-                }    
+                }
                 $parameters['errors'] = $form->getValidationResult()->getErrorMessagesIndexedByProperty();
                 $parameters['form'] = $form;
             }
@@ -266,8 +262,7 @@ final class UploadController
     {
         $id = $currentRoute->getArgument('id');
         if (null !== $id) {
-            $upload = $uploadRepository->repoUploadquery($id);
-            return $upload;
+            return $uploadRepository->repoUploadquery($id);
         }
         return null;
     }
@@ -279,25 +274,23 @@ final class UploadController
      *
      * @psalm-return \Yiisoft\Data\Cycle\Reader\EntityReader
      */
-    private function uploads(UploadRepository $uploadRepository): \Yiisoft\Data\Cycle\Reader\EntityReader
+    private function uploads(UploadRepository $uploadRepository): EntityReader
     {
-        $uploads = $uploadRepository->findAllPreloaded();
-        return $uploads;
+        return $uploadRepository->findAllPreloaded();
     }
 
     /**
      * @param UploadRepository $uploadRepository
      * @param Sort $sort
      *
-     * @return \Yiisoft\Data\Reader\SortableDataInterface&\Yiisoft\Data\Reader\DataReaderInterface
+     * @return \Yiisoft\Data\Reader\DataReaderInterface&\Yiisoft\Data\Reader\SortableDataInterface
      *
      * @psalm-return \Yiisoft\Data\Reader\SortableDataInterface&\Yiisoft\Data\Reader\DataReaderInterface<int, Upload>
      */
     private function uploads_with_sort(UploadRepository $uploadRepository, Sort $sort): \Yiisoft\Data\Reader\SortableDataInterface
     {
-        $uploads = $uploadRepository->findAllPreloaded()
+        return $uploadRepository->findAllPreloaded()
                 ->withSort($sort);
-        return $uploads;
     }
 
     /**
@@ -316,5 +309,4 @@ final class UploadController
         }
         return $optionsDataClients;
     }
-
 }

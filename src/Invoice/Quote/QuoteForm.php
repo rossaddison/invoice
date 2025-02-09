@@ -50,7 +50,7 @@ final class QuoteForm extends FormModel
     public function getDate_created(): string|null|DateTimeImmutable
     {
         /**
-         * @var string|null|DateTimeImmutable $this->date_created
+         * @var DateTimeImmutable|string|null $this->date_created
          */
         return $this->date_created;
     }

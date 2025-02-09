@@ -15,6 +15,6 @@ class ReportAsset extends AssetBundle
     public ?string $sourcePath = '@src/Invoice/Asset';
 
     public array $css = [
-        'invoice/css/reports.css'
+        'invoice/css/reports.css',
     ];
 }

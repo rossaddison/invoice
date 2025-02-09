@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace App\Invoice\Entity;
 
-use App\Invoice\Entity\Client;
 use Cycle\Annotated\Annotation\Column;
 use Cycle\Annotated\Annotation\Entity;
 use Cycle\Annotated\Annotation\Relation\BelongsTo;
@@ -55,7 +54,7 @@ class DeliveryLocation
     #[Column(type: 'datetime')]
     private DateTimeImmutable $date_modified;
 
-    #[BelongsTo(target: \App\Invoice\Entity\Client::class, nullable: false, fkAction: 'NO ACTION')]
+    #[BelongsTo(target: Client::class, nullable: false, fkAction: 'NO ACTION')]
     private ?Client $client = null;
 
     #[Column(type: 'integer(11)', nullable: false)]
@@ -240,5 +239,4 @@ class DeliveryLocation
     {
         return $this->getId() === null;
     }
-
 }

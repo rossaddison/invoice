@@ -43,7 +43,7 @@ final class PaymentForm extends FormModel
     public function getPayment_date(): null|string|DateTimeImmutable
     {
         /**
-         * @var null|string|DateTimeImmutable $this->payment_date
+         * @var DateTimeImmutable|string|null $this->payment_date
          */
         return $this->payment_date;
     }

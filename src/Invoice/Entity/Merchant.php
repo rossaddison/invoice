@@ -7,7 +7,6 @@ namespace App\Invoice\Entity;
 use Cycle\Annotated\Annotation\Column;
 use Cycle\Annotated\Annotation\Entity;
 use Cycle\Annotated\Annotation\Relation\BelongsTo;
-use App\Invoice\Entity\Inv;
 use DateTime;
 use DateTimeImmutable;
 
@@ -18,25 +17,25 @@ class Merchant
     private ?Inv $inv = null;
 
     #[Column(type: 'primary')]
-    private ?int $id =  null;
+    private ?int $id = null;
 
     #[Column(type: 'integer(11)', nullable: false)]
-    private ?int $inv_id =  null;
+    private ?int $inv_id = null;
 
     #[Column(type: 'boolean', nullable: true, default:1)]
     private ?bool $successful = true;
 
     #[Column(type: 'date', nullable: false)]
-    private mixed $date =  '';
+    private mixed $date = '';
 
     #[Column(type: 'string(35)', nullable: false)]
-    private string $driver =  '';
+    private string $driver = '';
 
     #[Column(type: 'string(151)', nullable: false)]
-    private string $response =  '';
+    private string $response = '';
 
     #[Column(type: 'string(151)', nullable: false)]
-    private string $reference =  '';
+    private string $reference = '';
 
     public function __construct(
         int $id = null,
@@ -66,7 +65,7 @@ class Merchant
 
     public function setId(int $id): void
     {
-        $this->id =  $id;
+        $this->id = $id;
     }
 
     public function getInv_id(): string
@@ -76,7 +75,7 @@ class Merchant
 
     public function setInv_id(int $inv_id): void
     {
-        $this->inv_id =  $inv_id;
+        $this->inv_id = $inv_id;
     }
 
     public function getSuccessful(): bool|null
@@ -91,13 +90,13 @@ class Merchant
 
     public function getDate(): string|DateTimeImmutable
     {
-        /** @var string|DateTimeImmutable $this->date */
+        /** @var DateTimeImmutable|string $this->date */
         return $this->date;
     }
 
     public function setDate(DateTime $date): void
     {
-        $this->date =  $date;
+        $this->date = $date;
     }
 
     public function getDriver(): string
@@ -107,7 +106,7 @@ class Merchant
 
     public function setDriver(string $driver): void
     {
-        $this->driver =  $driver;
+        $this->driver = $driver;
     }
 
     public function getResponse(): string
@@ -117,7 +116,7 @@ class Merchant
 
     public function setResponse(string $response): void
     {
-        $this->response =  $response;
+        $this->response = $response;
     }
 
     public function getReference(): string
@@ -127,6 +126,6 @@ class Merchant
 
     public function setReference(string $reference): void
     {
-        $this->reference =  $reference;
+        $this->reference = $reference;
     }
 }

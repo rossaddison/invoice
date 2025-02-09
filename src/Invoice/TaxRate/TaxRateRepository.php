@@ -44,7 +44,6 @@ final class TaxRateRepository extends Select\Repository
      * @see Reader/ReadableDataInterface|InvalidArgumentException
      * @param array|TaxRate|null $taxRate
      * @throws Throwable
-     * @return void
      */
     public function save(array|TaxRate|null $taxRate): void
     {
@@ -55,7 +54,6 @@ final class TaxRateRepository extends Select\Repository
      * @see Reader/ReadableDataInterface|InvalidArgumentException
      * @param array|TaxRate|null $taxRate
      * @throws Throwable
-     * @return void
      */
     public function delete(array|TaxRate|null $taxRate): void
     {
@@ -63,7 +61,6 @@ final class TaxRateRepository extends Select\Repository
     }
 
     /**
-     *
      * @param Select $query
      * @return EntityReader
      */
@@ -76,9 +73,8 @@ final class TaxRateRepository extends Select\Repository
     }
 
     /**
-     *
      * @param string $tax_rate_id
-     * @return null|TaxRate
+     * @return TaxRate|null
      */
     public function repoTaxRatequery(string $tax_rate_id): null|TaxRate
     {
@@ -89,7 +85,6 @@ final class TaxRateRepository extends Select\Repository
     }
 
     /**
-     *
      * @param string $tax_rate_name
      * @return TaxRate|null
      */
@@ -102,27 +97,23 @@ final class TaxRateRepository extends Select\Repository
     }
 
     /**
-     *
      * @param string $tax_rate_id
      * @return int
      */
     public function repoCount(string $tax_rate_id): int
     {
-        $count = $this->select()
+        return $this->select()
                       ->where(['id' => $tax_rate_id])
                       ->count();
-        return $count;
     }
 
     /**
-     *
      * @return int
      */
     public function repoCountAll(): int
     {
-        $countall = $this->select()
+        return $this->select()
                          ->count();
-        return $countall;
     }
 
     /**

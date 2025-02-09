@@ -11,22 +11,22 @@ use Cycle\Annotated\Annotation\Entity;
 class CustomField
 {
     #[Column(type: 'primary')]
-    private ?int $id =  null;
+    private ?int $id = null;
 
     #[Column(type: 'string(50)', nullable:true)]
-    private ?string $table =  '';
+    private ?string $table = '';
 
     #[Column(type: 'string(50)', nullable:true)]
-    private ?string $label =  '';
+    private ?string $label = '';
 
     #[Column(type: 'string(151)', nullable:false, default: 'TEXT')]
-    private string $type =  '';
+    private string $type = '';
 
     #[Column(type: 'integer(11)', nullable:true, default:0)]
-    private ?int $location =  null;
+    private ?int $location = null;
 
     #[Column(type: 'integer(11)', nullable:true, default:999)]
-    private ?int $order =  null;
+    private ?int $order = null;
 
     #[Column(type: 'bool', default: true)]
     private bool $required = true;
@@ -56,7 +56,7 @@ class CustomField
 
     public function setId(int $id): void
     {
-        $this->id =  $id;
+        $this->id = $id;
     }
 
     public function getTable(): ?string
@@ -66,7 +66,7 @@ class CustomField
 
     public function setTable(string $table): void
     {
-        $this->table =  $table;
+        $this->table = $table;
     }
 
     public function getLabel(): ?string
@@ -76,7 +76,7 @@ class CustomField
 
     public function setLabel(string $label): void
     {
-        $this->label =  $label;
+        $this->label = $label;
     }
 
     public function getType(): string
@@ -86,7 +86,7 @@ class CustomField
 
     public function setType(string $type): void
     {
-        $this->type =  $type;
+        $this->type = $type;
     }
 
     public function getLocation(): ?int
@@ -96,7 +96,7 @@ class CustomField
 
     public function setLocation(int $location): void
     {
-        $this->location =  $location;
+        $this->location = $location;
     }
 
     public function getOrder(): ?int
@@ -106,7 +106,7 @@ class CustomField
 
     public function setOrder(int $order): void
     {
-        $this->order =  $order;
+        $this->order = $order;
     }
 
     public function getRequired(): bool
@@ -116,6 +116,6 @@ class CustomField
 
     public function setRequired(bool $required): void
     {
-        $this->required =  $required;
+        $this->required = $required;
     }
 }

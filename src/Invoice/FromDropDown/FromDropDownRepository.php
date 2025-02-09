@@ -18,6 +18,7 @@ use Yiisoft\Data\Cycle\Writer\EntityWriter;
 final class FromDropDownRepository extends Select\Repository
 {
     private EntityWriter $entityWriter;
+
     /**
      * @param Select<TEntity> $select
      * @param EntityWriter $entityWriter
@@ -61,7 +62,6 @@ final class FromDropDownRepository extends Select\Repository
      * @param array|FromDropDown|null $from
      * @psalm-param TEntity $from
      * @throws Throwable
-     * @return void
      */
     public function save(array|FromDropDown|null $from): void
     {
@@ -73,7 +73,6 @@ final class FromDropDownRepository extends Select\Repository
      * @param array|FromDropDown|null $from
 
      * @throws Throwable
-     * @return void
      */
     public function delete(array|FromDropDown|null $from): void
     {

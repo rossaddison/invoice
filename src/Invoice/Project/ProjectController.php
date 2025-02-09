@@ -6,9 +6,6 @@ namespace App\Invoice\Project;
 
 use App\Invoice\Client\ClientRepository;
 use App\Invoice\Entity\Project;
-use App\Invoice\Project\ProjectService;
-use App\Invoice\Project\ProjectForm;
-use App\Invoice\Project\ProjectRepository;
 use App\Invoice\Setting\SettingRepository;
 use App\Invoice\Traits\FlashMessage;
 use App\Service\WebControllerService;
@@ -27,7 +24,7 @@ use Yiisoft\Yii\View\Renderer\ViewRenderer;
 final class ProjectController
 {
     use FlashMessage;
-    
+
     private Session $session;
     private Flash $flash;
     private ViewRenderer $viewRenderer;
@@ -68,7 +65,7 @@ final class ProjectController
             'page' => $page > 0 ? $page : 1,
             'canEdit' => $canEdit,
             'projects' => $this->projects($projectRepository),
-            'alert' => $this->alert()
+            'alert' => $this->alert(),
         ];
         return $this->viewRenderer->render('index', $parameters);
     }
@@ -102,7 +99,7 @@ final class ProjectController
                     $this->projectService->saveProject($project, $body);
                     return $this->webService->getRedirectResponse('project/index');
                 }
-            }    
+            }
             $parameters['errors'] = $form->getValidationResult()->getErrorMessagesIndexedByProperty();
             $parameters['form'] = $form;
         }
@@ -117,11 +114,11 @@ final class ProjectController
         return $this->viewRenderer->renderPartialAsString(
             '//invoice/layout/alert',
             [
-       'flash' => $this->flash
-     ]
+                'flash' => $this->flash,
+            ]
         );
     }
-    
+
     /**
      * @param Request $request
      * @param CurrentRoute $currentRoute
@@ -146,7 +143,7 @@ final class ProjectController
                 'actionArguments' => ['id' => $project->getId()],
                 'errors' => [],
                 'form' => $form,
-                'clients' => $clientRepository->findAllPreloaded()
+                'clients' => $clientRepository->findAllPreloaded(),
             ];
             if ($request->getMethod() === Method::POST) {
                 if ($formHydrator->populateFromPostAndValidate($form, $request)) {
@@ -155,7 +152,7 @@ final class ProjectController
                         $this->projectService->saveProject($project, $body);
                         return $this->webService->getRedirectResponse('project/index');
                     }
-                }    
+                }
                 $parameters['errors'] = $form->getValidationResult()->getErrorMessagesIndexedByProperty();
                 $parameters['form'] = $form;
             }
@@ -196,7 +193,7 @@ final class ProjectController
                 'actionName' => 'project/view',
                 'actionArguments' => ['id' => $project->getId()],
                 'form' => $form,
-                'clients' => $clientRepository->findAllPreloaded()
+                'clients' => $clientRepository->findAllPreloaded(),
             ];
             return $this->viewRenderer->render('_view', $parameters);
         }
@@ -225,8 +222,7 @@ final class ProjectController
     {
         $id = $currentRoute->getArgument('id');
         if (null !== $id) {
-            $project = $projectRepository->repoProjectquery($id);
-            return $project;
+            return $projectRepository->repoProjectquery($id);
         }
         return null;
     }
@@ -238,7 +234,6 @@ final class ProjectController
      */
     private function projects(ProjectRepository $projectRepository): \Yiisoft\Data\Cycle\Reader\EntityReader
     {
-        $projects = $projectRepository->findAllPreloaded();
-        return $projects;
+        return $projectRepository->findAllPreloaded();
     }
 }

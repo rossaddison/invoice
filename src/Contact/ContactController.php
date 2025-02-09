@@ -27,7 +27,6 @@ final class ContactController
     }
 
     /**
-     *
      * @param FormHydrator $formHydrator
      * @param ServerRequestInterface $request
      * @return ResponseInterface

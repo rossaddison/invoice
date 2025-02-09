@@ -16,7 +16,6 @@ use Yiisoft\Router\UrlGeneratorInterface as UrlGenerator;
 use Yiisoft\Router\CurrentRoute;
 use Yiisoft\Translator\TranslatorInterface as Translator;
 use Yiisoft\Yii\DataView\Pagination\OffsetPagination;
-use Yiisoft\Yii\DataView\Pagination\PaginationContext;
 
 final class GridComponents
 {
@@ -46,7 +45,7 @@ final class GridComponents
                 )
                 ->render();
     }
-    
+
     public function offsetPaginationWidget(OffsetPaginator $sortedAndPagedPaginator): \Yiisoft\Yii\DataView\Pagination\PaginationWidgetInterface
     {
         return OffsetPagination::widget()
@@ -83,7 +82,7 @@ final class GridComponents
         $item_count = 0;
         $string = Html::openTag('table');
         $string .= Html::openTag('tr', [
-            'class' => 'card-header bg-info text-black'
+            'class' => 'card-header bg-info text-black',
         ]);
         $invoices = $model->getInvs()->toArray();
         // Work with the Array Collection to build an output string
@@ -99,7 +98,7 @@ final class GridComponents
             $invNumber = $invoice->getNumber();
             $invId = $invoice->getId();
             $invBalance = $invoice->getInvAmount()->getBalance();
-            $string .= Html::openTag('td').
+            $string .= Html::openTag('td') .
                 A::tag()
                     ->addAttributes([
                         'style' => 'text-decoration:none',
@@ -110,14 +109,14 @@ final class GridComponents
                         ((null !== $invNumber && null !== $invId)
                               ? $invNumber
                               : $this->translator
-                                     ->translate('invoice.invoice.number.missing.therefore.use.invoice.id').
-                                       ($invId ?? '')).
+                                     ->translate('invoice.invoice.number.missing.therefore.use.invoice.id') .
+                                       ($invId ?? '')) .
                                        ' ' .
                                        (null !== $invBalance
                                              ? $invBalance
                                              : '')
                     )
-                    ->render().
+                    ->render() .
                 Html::closeTag('td');
             $item_count++;
         }
@@ -137,7 +136,7 @@ final class GridComponents
         $item_count = 0;
         $string = Html::openTag('table');
         $string .= Html::openTag('tr', [
-            'class' => 'card-header bg-info text-black'
+            'class' => 'card-header bg-info text-black',
         ]);
         $invSentLogs = $model->getInvSentLogs()->toArray();
         // Work with the Array Collection to build an output string
@@ -151,7 +150,7 @@ final class GridComponents
                 $item_count = 0;
             }
             $invSentLogId = $invSentLog->getId();
-            $string .= Html::openTag('td').
+            $string .= Html::openTag('td') .
                 A::tag()
                     ->addAttributes([
                         'style' => 'text-decoration:none',
@@ -159,7 +158,7 @@ final class GridComponents
                         'title' => $invSentLog->getDate_sent()->format('m-d')])
                     ->href($urlGenerator->generate('invsentlog/view', ['id' => $invSentLogId]))
                     ->content((string)$invSentLogId)
-                    ->render().
+                    ->render() .
                 Html::closeTag('td');
             $item_count++;
         }

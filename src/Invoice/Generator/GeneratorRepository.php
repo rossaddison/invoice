@@ -44,7 +44,6 @@ final class GeneratorRepository extends Select\Repository
      * @see Reader/ReadableDataInterface|InvalidArgumentException
      * @param array|Gentor|null $generator
      * @throws Throwable
-     * @return void
      */
     public function save(array|Gentor|null $generator): void
     {
@@ -55,7 +54,6 @@ final class GeneratorRepository extends Select\Repository
      * @see Reader/ReadableDataInterface|InvalidArgumentException
      * @param array|Gentor|null $generator
      * @throws Throwable
-     * @return void
      */
     public function delete(array|Gentor|null $generator): void
     {
@@ -71,7 +69,7 @@ final class GeneratorRepository extends Select\Repository
     }
 
     /**
-     * @return null|Gentor
+     * @return Gentor|null
      *
      * @psalm-return TEntity|null
      */

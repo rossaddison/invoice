@@ -20,7 +20,6 @@ final class QuoteTaxRateRepository extends Select\Repository
     private EntityWriter $entityWriter;
 
     /**
-     *
      * @param Select<TEntity> $select
      * @param EntityWriter $entityWriter
      */
@@ -61,7 +60,6 @@ final class QuoteTaxRateRepository extends Select\Repository
      * @see Reader/ReadableDataInterface|InvalidArgumentException
      * @param array|QuoteTaxRate|null $quotetaxrate
      * @throws Throwable
-     * @return void
      */
     public function save(array|QuoteTaxRate|null $quotetaxrate): void
     {
@@ -72,7 +70,6 @@ final class QuoteTaxRateRepository extends Select\Repository
      * @see Reader/ReadableDataInterface|InvalidArgumentException
      * @param array|QuoteTaxRate|null $quotetaxrate
      * @throws Throwable
-     * @return void
      */
     public function delete(array|QuoteTaxRate|null $quotetaxrate): void
     {
@@ -91,19 +88,18 @@ final class QuoteTaxRateRepository extends Select\Repository
     //used in quote/view to determine if a 'one-off'  quote tax rate acquired from tax rates is to be applied to the quote
     //quote tax rates are children of their parent tax rate and are normally used when all products use the same tax rate ie. no item tax
     /**
-     * @param null|string $quote_id
+     * @param string|null $quote_id
      */
     public function repoCount(string|null $quote_id): int
     {
-        $count = $this->select()
+        return $this->select()
                       ->where(['quote_id' => $quote_id])
                       ->count();
-        return $count;
     }
 
     //find a specific quotes tax rate, normally to delete
     /**
-     * @return null|QuoteTaxRate
+     * @return QuoteTaxRate|null
      *
      * @psalm-return TEntity|null
      */
@@ -123,7 +119,6 @@ final class QuoteTaxRateRepository extends Select\Repository
     // which we will use in quote/view
 
     /**
-     *
      * @param string $quote_id
      * @return EntityReader
      */
@@ -136,7 +131,7 @@ final class QuoteTaxRateRepository extends Select\Repository
     }
 
     /**
-     * @return null|QuoteTaxRate
+     * @return QuoteTaxRate|null
      *
      * @psalm-return TEntity|null
      */

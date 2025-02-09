@@ -10,37 +10,36 @@ use Cycle\ORM\Entity\Behavior;
 use Cycle\Annotated\Annotation\Relation\BelongsTo;
 use DateTime;
 use DateTimeImmutable;
-use App\Invoice\Entity\Company;
 
 #[Entity(repository: \App\Invoice\CompanyPrivate\CompanyPrivateRepository::class)]
 #[Behavior\UpdatedAt(field: 'date_modified', column: 'date_modified')]
 class CompanyPrivate
 {
-    #[BelongsTo(target:Company::class, nullable: false, fkAction: "NO ACTION")]
+    #[BelongsTo(target:Company::class, nullable: false, fkAction: 'NO ACTION')]
     private ?Company $company = null;
     #[Column(type: 'integer(11)', nullable: false)]
-    private ?int $company_id =  null;
+    private ?int $company_id = null;
 
     #[Column(type: 'primary')]
-    private ?int $id =  null;
+    private ?int $id = null;
 
     #[Column(type: 'text', nullable: true)]
-    private ?string $vat_id =  '';
+    private ?string $vat_id = '';
 
     #[Column(type: 'text', nullable: true)]
-    private ?string $tax_code =  '';
+    private ?string $tax_code = '';
 
     #[Column(type: 'string(34)', nullable: true)]
-    private ?string $iban =  '';
+    private ?string $iban = '';
 
     #[Column(type: 'string(14)', nullable: true)]
-    private ?string $gln =  null;
+    private ?string $gln = null;
 
     #[Column(type: 'string(7)', nullable: true)]
-    private ?string $rcc =  '';
+    private ?string $rcc = '';
 
     #[Column(type: 'string(150)', nullable: true)]
-    private ?string $logo_filename =  '';
+    private ?string $logo_filename = '';
 
     #[Column(type: 'int', nullable: false, default: 80)]
     private ?int $logo_width = null;
@@ -114,7 +113,7 @@ class CompanyPrivate
 
     public function setId(int $id): void
     {
-        $this->id =  $id;
+        $this->id = $id;
     }
 
     public function getCompany_id(): string
@@ -124,7 +123,7 @@ class CompanyPrivate
 
     public function setCompany_id(int $company_id): void
     {
-        $this->company_id =  $company_id;
+        $this->company_id = $company_id;
     }
 
     public function getVat_id(): string
@@ -134,7 +133,7 @@ class CompanyPrivate
 
     public function setVat_id(string $vat_id): void
     {
-        $this->vat_id =  $vat_id;
+        $this->vat_id = $vat_id;
     }
 
     public function getTax_code(): string|null
@@ -144,7 +143,7 @@ class CompanyPrivate
 
     public function setTax_code(string $tax_code): void
     {
-        $this->tax_code =  $tax_code;
+        $this->tax_code = $tax_code;
     }
 
     public function getIban(): string|null
@@ -154,7 +153,7 @@ class CompanyPrivate
 
     public function setIban(string $iban): void
     {
-        $this->iban =  $iban;
+        $this->iban = $iban;
     }
 
     public function getGln(): string|null
@@ -164,7 +163,7 @@ class CompanyPrivate
 
     public function setGln(string $gln): void
     {
-        $this->gln =  $gln;
+        $this->gln = $gln;
     }
 
     public function getRcc(): string|null
@@ -174,7 +173,7 @@ class CompanyPrivate
 
     public function setRcc(string $rcc): void
     {
-        $this->rcc =  $rcc;
+        $this->rcc = $rcc;
     }
 
     public function getLogo_filename(): string|null
@@ -253,7 +252,7 @@ class CompanyPrivate
 
     public function nullifyRelationOnChange(int $company_id): void
     {
-        if ($this->company_id <> $company_id) {
+        if ($this->company_id != $company_id) {
             $this->company = null;
         }
     }

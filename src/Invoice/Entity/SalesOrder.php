@@ -9,8 +9,6 @@ use Cycle\Annotated\Annotation\Entity;
 use Cycle\Annotated\Annotation\Relation\BelongsTo;
 use Cycle\ORM\Entity\Behavior;
 use DateTimeImmutable;
-use App\Invoice\Entity\Client;
-use App\Invoice\Entity\Group;
 use App\User\User;
 
 #[Entity(repository: \App\Invoice\SalesOrder\SalesOrderRepository::class)]
@@ -29,25 +27,25 @@ class SalesOrder
     private ?User $user = null;
 
     #[Column(type: 'primary')]
-    private ?int $id =  null;
+    private ?int $id = null;
 
     #[Column(type: 'integer(11)', nullable:false, default:0)]
-    private ?int $quote_id =  null;
+    private ?int $quote_id = null;
 
     #[Column(type: 'integer(11)', nullable:false, default:0)]
-    private ?int $inv_id =  null;
+    private ?int $inv_id = null;
 
     #[Column(type: 'integer(11)', nullable:false)]
-    private ?int $user_id =  null;
+    private ?int $user_id = null;
 
     #[Column(type: 'integer(11)', nullable:false)]
-    private ?int $client_id =  null;
+    private ?int $client_id = null;
 
     #[Column(type: 'integer(11)', nullable:false)]
-    private ?int $group_id =  null;
+    private ?int $group_id = null;
 
     #[Column(type: 'tinyInteger(2)', nullable:false, default:1)]
-    private ?int $status_id =  null;
+    private ?int $status_id = null;
 
     #[Column(type: 'datetime', nullable:false)]
     private DateTimeImmutable $date_created;
@@ -59,34 +57,34 @@ class SalesOrder
     private DateTimeImmutable $date_expires;
 
     #[Column(type: 'string(100)', nullable:true)]
-    private ?string $number =  '';
+    private ?string $number = '';
 
     #[Column(type: 'string(100)', nullable:true)]
-    private ?string $client_po_number =  '';
+    private ?string $client_po_number = '';
 
     #[Column(type: 'string(100)', nullable:true)]
-    private ?string $client_po_line_number =  '';
+    private ?string $client_po_line_number = '';
 
     #[Column(type: 'string(100)', nullable:true)]
-    private ?string $client_po_person =  '';
+    private ?string $client_po_person = '';
 
     #[Column(type: 'decimal(20,2)', nullable: false, default: 0.00)]
-    private ?float $discount_amount =  0.00;
+    private ?float $discount_amount = 0.00;
 
     #[Column(type: 'decimal(20,2)', nullable: false, default: 0.00)]
-    private ?float $discount_percent =  0.00;
+    private ?float $discount_percent = 0.00;
 
     #[Column(type: 'string(32)', nullable:true)]
-    private string $url_key =  '';
+    private string $url_key = '';
 
     #[Column(type: 'string(90)', nullable:true)]
-    private ?string $password =  '';
+    private ?string $password = '';
 
     #[Column(type: 'longText', nullable:true)]
-    private ?string $payment_term =  '';
+    private ?string $payment_term = '';
 
     #[Column(type: 'longText', nullable:true)]
-    private ?string $notes =  '';
+    private ?string $notes = '';
 
     public function __construct(
         // The purchase order is derived from the quote =>quote_id
@@ -170,7 +168,7 @@ class SalesOrder
     }
 
     /**
-     * @return null|numeric-string
+     * @return numeric-string|null
      */
     public function getId(): string|null
     {
@@ -179,7 +177,7 @@ class SalesOrder
 
     public function setId(int $id): void
     {
-        $this->id =  $id;
+        $this->id = $id;
     }
 
     public function getUser_id(): string
@@ -189,11 +187,11 @@ class SalesOrder
 
     public function setUser_id(int $user_id): void
     {
-        $this->user_id =  $user_id;
+        $this->user_id = $user_id;
     }
 
     /**
-     * @param int|null|string $quote_id
+     * @param int|string|null $quote_id
      */
     public function setQuote_id(string|int|null $quote_id): void
     {
@@ -211,7 +209,7 @@ class SalesOrder
     }
 
     /**
-     * @param int|null|string $inv_id
+     * @param int|string|null $inv_id
      */
     public function setInv_id(string|int|null $inv_id): void
     {
@@ -225,7 +223,7 @@ class SalesOrder
 
     public function setClient_id(int $client_id): void
     {
-        $this->client_id =  $client_id;
+        $this->client_id = $client_id;
     }
 
     public function getGroup_id(): string
@@ -235,7 +233,7 @@ class SalesOrder
 
     public function setGroup_id(int $group_id): void
     {
-        $this->group_id =  $group_id;
+        $this->group_id = $group_id;
     }
 
     public function getStatus_id(): int|null
@@ -248,22 +246,22 @@ class SalesOrder
         $status = '';
         switch ($status_id) {
             case 1:
-                $status =  'draft';
+                $status = 'draft';
                 break;
             case 2:
-                $status =  'sent';
+                $status = 'sent';
                 break;
             case 3:
-                $status =  'viewed';
+                $status = 'viewed';
                 break;
             case 4:
-                $status =  'approved';
+                $status = 'approved';
                 break;
             case 5:
-                $status =  'rejected';
+                $status = 'rejected';
                 break;
             case 6:
-                $status =  'cancelled';
+                $status = 'cancelled';
                 break;
         }
         return $status;
@@ -292,7 +290,7 @@ class SalesOrder
     public function setDate_expires(): void
     {
         $days = 1;
-        $this->date_expires = (new \DateTimeImmutable('now'))->add(new \DateInterval('P'.$days.'D'));
+        $this->date_expires = (new \DateTimeImmutable('now'))->add(new \DateInterval('P' . $days . 'D'));
     }
 
     public function getDate_expires(): DateTimeImmutable
@@ -307,7 +305,7 @@ class SalesOrder
 
     public function setNumber(string $number): void
     {
-        $this->number =  $number;
+        $this->number = $number;
     }
 
     public function getClient_po_number(): ?string
@@ -317,7 +315,7 @@ class SalesOrder
 
     public function setClient_po_number(string $client_po_number): void
     {
-        $this->client_po_number =  $client_po_number;
+        $this->client_po_number = $client_po_number;
     }
 
     public function getClient_po_line_number(): ?string
@@ -327,7 +325,7 @@ class SalesOrder
 
     public function setClient_po_line_number(string $client_po_line_number): void
     {
-        $this->client_po_line_number =  $client_po_line_number;
+        $this->client_po_line_number = $client_po_line_number;
     }
 
     public function getClient_po_person(): ?string
@@ -337,7 +335,7 @@ class SalesOrder
 
     public function setClient_po_person(string $client_po_person): void
     {
-        $this->client_po_person =  $client_po_person;
+        $this->client_po_person = $client_po_person;
     }
 
     public function getDiscount_amount(): ?float
@@ -357,7 +355,7 @@ class SalesOrder
 
     public function setDiscount_percent(float $discount_percent): void
     {
-        $this->discount_percent =  $discount_percent;
+        $this->discount_percent = $discount_percent;
     }
 
     public function getUrl_key(): string
@@ -367,7 +365,7 @@ class SalesOrder
 
     public function setUrl_key(string $url_key): void
     {
-        $this->url_key =  $url_key;
+        $this->url_key = $url_key;
     }
 
     public function getPassword(): ?string
@@ -377,7 +375,7 @@ class SalesOrder
 
     public function setPassword(string $password): void
     {
-        $this->password =  $password;
+        $this->password = $password;
     }
 
     public function getNotes(): ?string
@@ -387,7 +385,7 @@ class SalesOrder
 
     public function setNotes(string $notes): void
     {
-        $this->notes =  $notes;
+        $this->notes = $notes;
     }
 
     public function isNewRecord(): bool

@@ -18,6 +18,7 @@ use Yiisoft\Data\Cycle\Writer\EntityWriter;
 final class DeliveryRepository extends Select\Repository
 {
     private EntityWriter $entityWriter;
+
     /**
      * @param Select<TEntity> $select
      * @param EntityWriter $entityWriter
@@ -61,7 +62,6 @@ final class DeliveryRepository extends Select\Repository
      * @param array|Delivery|null $delivery
      * @psalm-param TEntity $delivery
      * @throws Throwable
-     * @return void
      */
     public function save(array|Delivery|null $delivery): void
     {
@@ -73,7 +73,6 @@ final class DeliveryRepository extends Select\Repository
      * @param array|Delivery|null $delivery
 
      * @throws Throwable
-     * @return void
      */
     public function delete(array|Delivery|null $delivery): void
     {
@@ -127,7 +126,6 @@ final class DeliveryRepository extends Select\Repository
     }
 
     /**
-     *
      * @param string $inv_id
      * @return int
      */

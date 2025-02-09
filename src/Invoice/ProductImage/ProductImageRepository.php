@@ -18,6 +18,7 @@ use Yiisoft\Data\Cycle\Writer\EntityWriter;
 final class ProductImageRepository extends Select\Repository
 {
     private EntityWriter $entityWriter;
+
     /**
      * @param Select<TEntity> $select
      * @param EntityWriter $entityWriter
@@ -28,7 +29,7 @@ final class ProductImageRepository extends Select\Repository
         parent::__construct($select);
     }
 
-    public string $ctype_default = "application/octet-stream";
+    public string $ctype_default = 'application/octet-stream';
 
     public array $content_types = [
         'gif' => 'image/gif',
@@ -36,7 +37,7 @@ final class ProductImageRepository extends Select\Repository
         'jpeg' => 'image/jpeg',
         'png' => 'image/png',
         'bmp' => 'image/bmp',
-        'tiff' => 'image/tiff'
+        'tiff' => 'image/tiff',
     ];
 
     /**
@@ -88,7 +89,6 @@ final class ProductImageRepository extends Select\Repository
      * @see Reader/ReadableDataInterface|InvalidArgumentException
      * @param array|ProductImage|null $productimage
      * @throws Throwable
-     * @return void
      */
     public function save(array|ProductImage|null $productimage): void
     {
@@ -99,7 +99,6 @@ final class ProductImageRepository extends Select\Repository
      * @see Reader/ReadableDataInterface|InvalidArgumentException
      * @param array|ProductImage|null $productimage
      * @throws Throwable
-     * @return void
      */
     public function delete(array|ProductImage|null $productimage): void
     {
@@ -115,7 +114,6 @@ final class ProductImageRepository extends Select\Repository
     }
 
     /**
-     *
      * @param string $id
      * @return ProductImage|null
      */
@@ -139,7 +137,6 @@ final class ProductImageRepository extends Select\Repository
     }
 
     /**
-     *
      * @param int $product_id
      * @return int
      */

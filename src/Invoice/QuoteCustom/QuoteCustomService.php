@@ -18,7 +18,6 @@ final class QuoteCustomService
     /**
      * @param QuoteCustom $model
      * @param array $array
-     * @return void
      */
     public function saveQuoteCustom(QuoteCustom $model, array $array): void
     {
@@ -29,9 +28,7 @@ final class QuoteCustomService
     }
 
     /**
-     *
      * @param array|QuoteCustom|null $model
-     * @return void
      */
     public function deleteQuoteCustom(array|QuoteCustom|null $model): void
     {

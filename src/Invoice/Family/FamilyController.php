@@ -5,8 +5,6 @@ declare(strict_types=1);
 namespace App\Invoice\Family;
 
 use App\Invoice\Entity\Family;
-use App\Invoice\Family\FamilyForm;
-use App\Invoice\Family\FamilyRepository;
 use App\Invoice\Setting\SettingRepository;
 use App\Invoice\Traits\FlashMessage;
 use App\Service\WebControllerService;
@@ -25,7 +23,7 @@ use Yiisoft\Yii\View\Renderer\ViewRenderer;
 final class FamilyController
 {
     use FlashMessage;
-    
+
     private ViewRenderer $viewRenderer;
     private WebControllerService $webService;
     private FamilyService $familyService;
@@ -92,7 +90,7 @@ final class FamilyController
             'actionName' => 'family/add',
             'actionArguments' => [],
             'errors' => [],
-            'form' => $form
+            'form' => $form,
         ];
         if ($request->getMethod() === Method::POST) {
             $body = $request->getParsedBody() ?? [];
@@ -101,7 +99,7 @@ final class FamilyController
                     $this->familyService->saveFamily($family, $body);
                     return $this->webService->getRedirectResponse('family/index');
                 }
-            }    
+            }
             $parameters['errors'] = $form->getValidationResult()->getErrorMessagesIndexedByProperty();
             $parameters['form'] = $form;
         }
@@ -125,7 +123,7 @@ final class FamilyController
                 'actionName' => 'family/edit',
                 'actionArguments' => ['id' => $family->getFamily_id()],
                 'errors' => [],
-                'form' => $form
+                'form' => $form,
             ];
             if ($request->getMethod() === Method::POST) {
                 $body = $request->getParsedBody() ?? [];
@@ -134,14 +132,13 @@ final class FamilyController
                         $this->familyService->saveFamily($family, $body);
                         return $this->webService->getRedirectResponse('family/index');
                     }
-                }    
+                }
                 $parameters['errors'] = $form->getValidationResult()->getErrorMessagesIndexedByProperty();
                 $parameters['form'] = $form;
             }
             return $this->viewRenderer->render('_form', $parameters);
-        } else {
-            return $this->webService->getRedirectResponse('family/index');
         }
+        return $this->webService->getRedirectResponse('family/index');
     }
 
     /**
@@ -196,8 +193,7 @@ final class FamilyController
     {
         $family_id = $currentRoute->getArgument('id');
         if (null !== $family_id) {
-            $family = $familyRepository->repoFamilyquery($family_id);
-            return $family;
+            return $familyRepository->repoFamilyquery($family_id);
         }
         return null;
     }
@@ -209,8 +205,7 @@ final class FamilyController
      */
     private function familys(FamilyRepository $familyRepository): \Yiisoft\Data\Cycle\Reader\EntityReader
     {
-        $familys = $familyRepository->findAllPreloaded();
-        return $familys;
+        return $familyRepository->findAllPreloaded();
     }
 
     /**
@@ -221,7 +216,7 @@ final class FamilyController
         return $this->viewRenderer->renderPartialAsString(
             '//invoice/layout/alert',
             [
-                'flash' => $this->flash
+                'flash' => $this->flash,
             ]
         );
     }

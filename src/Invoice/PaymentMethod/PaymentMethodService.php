@@ -18,7 +18,6 @@ final class PaymentMethodService
     /**
      * @param PaymentMethod $model
      * @param array $array
-     * @return void
      */
     public function savePaymentMethod(PaymentMethod $model, array $array): void
     {
@@ -28,7 +27,6 @@ final class PaymentMethodService
 
     /**
      * @param PaymentMethod $model
-     * @return void
      */
     public function deletePaymentMethod(PaymentMethod $model): void
     {

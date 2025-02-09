@@ -18,7 +18,6 @@ final class PostalAddressService
     /**
      * @param PostalAddress $model
      * @param array $array
-     * @return void
      */
     public function savePostalAddress(PostalAddress $model, array $array): void
     {

@@ -11,10 +11,10 @@ use Cycle\Annotated\Annotation\Entity;
 class PaymentMethod
 {
     #[Column(type: 'primary')]
-    private ?int $id =  null;
+    private ?int $id = null;
 
     #[Column(type: 'text', nullable: true)]
-    private ?string $name =  '';
+    private ?string $name = '';
 
     public function __construct(
         int $id = null,
@@ -31,7 +31,7 @@ class PaymentMethod
 
     public function setId(int $id): void
     {
-        $this->id =  $id;
+        $this->id = $id;
     }
 
     public function getName(): ?string
@@ -41,6 +41,6 @@ class PaymentMethod
 
     public function setName(string $name): void
     {
-        $this->name =  $name;
+        $this->name = $name;
     }
 }

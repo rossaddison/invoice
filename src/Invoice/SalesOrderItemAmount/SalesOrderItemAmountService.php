@@ -19,7 +19,6 @@ final class SalesOrderItemAmountService
      * Used in salesorderitemservice/saveSalesOrderItemAmount
      * @param SalesOrderItemAmount $model
      * @param array $soitem
-     * @return void
      */
     public function saveSalesOrderItemAmountNoForm(SalesOrderItemAmount $model, array $soitem): void
     {
@@ -38,9 +37,7 @@ final class SalesOrderItemAmountService
     }
 
     /**
-     *
      * @param SalesOrderItemAmount $model
-     * @return void
      */
     public function deleteSalesOrderItemAmount(SalesOrderItemAmount $model): void
     {

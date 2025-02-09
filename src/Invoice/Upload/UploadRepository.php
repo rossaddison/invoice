@@ -18,6 +18,7 @@ use Yiisoft\Data\Cycle\Writer\EntityWriter;
 final class UploadRepository extends Select\Repository
 {
     private EntityWriter $entityWriter;
+
     /**
      * @param Select<TEntity> $select
      * @param EntityWriter $entityWriter
@@ -28,7 +29,7 @@ final class UploadRepository extends Select\Repository
         parent::__construct($select);
     }
 
-    public string $ctype_default = "application/octet-stream";
+    public string $ctype_default = 'application/octet-stream';
 
     public array $content_types = [
         'gif' => 'image/gif',
@@ -89,7 +90,6 @@ final class UploadRepository extends Select\Repository
      * @see Reader/ReadableDataInterface|InvalidArgumentException
      * @param array|Upload|null $upload
      * @throws Throwable
-     * @return void
      */
     public function save(array|Upload|null $upload): void
     {
@@ -100,7 +100,6 @@ final class UploadRepository extends Select\Repository
      * @see Reader/ReadableDataInterface|InvalidArgumentException
      * @param array|Upload|null $upload
      * @throws Throwable
-     * @return void
      */
     public function delete(array|Upload|null $upload): void
     {
@@ -116,7 +115,6 @@ final class UploadRepository extends Select\Repository
     }
 
     /**
-     *
      * @param string $id
      * @return Upload|null
      */
@@ -141,7 +139,6 @@ final class UploadRepository extends Select\Repository
     }
 
     /**
-     *
      * @param string $url_key
      * @param int $client_id
      * @return int

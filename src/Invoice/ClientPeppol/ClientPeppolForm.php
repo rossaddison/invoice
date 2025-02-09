@@ -96,7 +96,6 @@ final class ClientPeppolForm extends FormModel
         return $this->financial_institution_branchid;
     }
 
-
     public function getIdentificationid(): string|null
     {
         return $this->identificationid;
@@ -150,5 +149,4 @@ final class ClientPeppolForm extends FormModel
     {
         return '';
     }
-
 }

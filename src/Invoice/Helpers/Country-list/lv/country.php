@@ -1,7 +1,7 @@
 <?php
 
 declare(strict_types=1);
-return array(
+return [
     'UM' => 'ASV mazās aizjūras teritorijas',
     'AF' => 'Afganistāna',
     'AL' => 'Albānija',
@@ -250,4 +250,4 @@ return array(
     'MO' => 'Ķīnas īpašās pārvaldes apgabals Makao',
     'LK' => 'Šrilanka',
     'CH' => 'Šveice',
-);
+];

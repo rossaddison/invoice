@@ -26,7 +26,7 @@ final class UnitPeppolForm extends FormModel
         $this->unit_id = $unitPeppol->getUnit_id();
         $this->code = $unitPeppol->getCode();
         $this->name = $unitPeppol->getName();
-        $this->description =  $unitPeppol->getDescription();
+        $this->description = $unitPeppol->getDescription();
     }
 
     public function getId(): string|null

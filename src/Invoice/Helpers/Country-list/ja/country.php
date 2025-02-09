@@ -1,7 +1,7 @@
 <?php
 
 declare(strict_types=1);
-return array(
+return [
     'IS' => 'アイスランド',
     'IE' => 'アイルランド',
     'AZ' => 'アゼルバイジャン',
@@ -250,4 +250,4 @@ return array(
     'IO' => '英領インド洋植民地',
     'EH' => '西サハラ',
     'GQ' => '赤道ギニア',
-);
+];

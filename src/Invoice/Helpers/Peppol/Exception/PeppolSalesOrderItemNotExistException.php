@@ -30,5 +30,4 @@ class PeppolSalesOrderItemNotExistException extends \RuntimeException implements
                 Please try again
             SOLUTION;
     }
-
 }

@@ -5,8 +5,6 @@ declare(strict_types=1);
 namespace App\Invoice\CompanyPrivate;
 
 use App\Invoice\Company\CompanyRepository;
-use App\Invoice\CompanyPrivate\CompanyPrivateService;
-use App\Invoice\CompanyPrivate\CompanyPrivateRepository;
 use App\Invoice\Entity\CompanyPrivate;
 use App\Invoice\Setting\SettingRepository;
 use App\Invoice\Traits\FlashMessage;
@@ -27,7 +25,7 @@ use Yiisoft\Yii\View\Renderer\ViewRenderer;
 final class CompanyPrivateController
 {
     use FlashMessage;
-    
+
     private SessionInterface $session;
     private Flash $flash;
     private ViewRenderer $viewRenderer;
@@ -62,11 +60,11 @@ final class CompanyPrivateController
         $canEdit = $this->rbac();
         $paginator = new OffsetPaginator($this->companyprivates($companyprivateRepository));
         $parameters = [
-          'canEdit' => $canEdit,
-          'company_private' => $this->translator->translate('invoice.setting.company.private'),
-          'paginator' => $paginator,
-          'alert' => $this->alert()
-         ];
+            'canEdit' => $canEdit,
+            'company_private' => $this->translator->translate('invoice.setting.company.private'),
+            'paginator' => $paginator,
+            'alert' => $this->alert(),
+        ];
 
         return $this->viewRenderer->render('index', $parameters);
     }
@@ -108,13 +106,13 @@ final class CompanyPrivateController
             // Filename of logo in PUBLIC folder
             $tmp = $_FILES['logo_filename']['tmp_name'];
             $spaceToUnderscore = preg_replace('/\s+/', '_', $tmp);
-            if (null!==$spaceToUnderscore) {
+            if (null !== $spaceToUnderscore) {
                 // Replace filename's spaces with underscore
-                $modified_original_file_name = Random::string(4).'_'.$spaceToUnderscore;
+                $modified_original_file_name = Random::string(4) . '_' . $spaceToUnderscore;
                 // Build a target file name
-                $target_file_name = $targetPath . '/'.$modified_original_file_name;
+                $target_file_name = $targetPath . '/' . $modified_original_file_name;
                 // Make the logo available also on the public path so that it can be viewed online
-                $target_public_logo = $targetPublicPath . '/'.$modified_original_file_name;
+                $target_public_logo = $targetPublicPath . '/' . $modified_original_file_name;
                 if (is_array($body)) {
                     $body['logo_filename'] = $modified_original_file_name;
                     // Move the logo to the private folder for storage and the publicly viewable folder for online viewing
@@ -123,18 +121,17 @@ final class CompanyPrivateController
                             $this->companyprivateService->saveCompanyPrivate($company_private, $body, $settingRepository);
                             $this->flashMessage('info', $this->translator->translate('i.record_successfully_created'));
                             return $this->webService->getRedirectResponse('companyprivate/index');
-                        }                    
+                        }
                         $parameters['form'] = $form;
                         $parameters['errors'] = $form->getValidationResult()->getErrorMessagesIndexedByProperty();
                     }
                 }
-            }    
+            }
         }
         return $this->viewRenderer->render('_form', $parameters);
     }
 
     /**
-     *
      * @param string $tmp
      * @param string $target_file_name
      * @param string $target_public_logo
@@ -182,8 +179,8 @@ final class CompanyPrivateController
         return $this->viewRenderer->renderPartialAsString(
             '//invoice/layout/alert',
             [
-        'flash' => $this->flash
-      ]
+                'flash' => $this->flash,
+            ]
         );
     }
 
@@ -237,10 +234,10 @@ final class CompanyPrivateController
                 $body['logo_filename'] = $_FILES['logo_filename']['name'];
                 if ($formHydrator->populateAndValidate($form, $body)) {
                     // Replace filename's spaces with underscore and add random string preventing overwrites
-                    $modified_original_file_name = Random::string(4).'_'.(string)preg_replace('/\s+/', '_', $body['logo_filename']);
+                    $modified_original_file_name = Random::string(4) . '_' . (string)preg_replace('/\s+/', '_', $body['logo_filename']);
                     // Build a unique target file name
-                    $target_file_name = $targetPath . '/'. $modified_original_file_name;
-                    $target_public_logo = $targetPublicPath . '/'.$modified_original_file_name;
+                    $target_file_name = $targetPath . '/' . $modified_original_file_name;
+                    $target_public_logo = $targetPublicPath . '/' . $modified_original_file_name;
                     // Save the body including the logo_filename field
                     $this->companyprivateService->saveCompanyPrivate($company_private, $body, $settingRepository);
 
@@ -273,7 +270,6 @@ final class CompanyPrivateController
                 }
                 $parameters['form'] = $form;
                 $parameters['errors'] = $form->getValidationResult()->getErrorMessagesIndexedByProperty();
-
             }
             return $this->viewRenderer->render('_form', $parameters);
         }
@@ -299,9 +295,9 @@ final class CompanyPrivateController
                 $aliases = $sR->get_company_private_logos_folder_aliases();
                 $targetPath = $aliases->get('@company_private_logos');
                 $targetPublicPath = $aliases->get('@public_logo');
-                $target_file_name = $targetPath .DIRECTORY_SEPARATOR.$logo;
+                $target_file_name = $targetPath . DIRECTORY_SEPARATOR . $logo;
                 unlink($target_file_name);
-                $target_public_logo = $targetPublicPath .DIRECTORY_SEPARATOR. $logo;
+                $target_public_logo = $targetPublicPath . DIRECTORY_SEPARATOR . $logo;
                 unlink($target_public_logo);
                 $this->companyprivateService->deleteCompanyPrivate($company_private);
                 $this->flashMessage('info', $this->translator->translate('i.record_successfully_deleted'));
@@ -334,9 +330,8 @@ final class CompanyPrivateController
                 'company_public' => $this->translator->translate('invoice.company.public'),
             ];
             return $this->viewRenderer->render('_view', $parameters);
-        } else {
-            return $this->webService->getRedirectResponse('companyprivate/index');
         }
+        return $this->webService->getRedirectResponse('companyprivate/index');
     }
 
     /**
@@ -361,8 +356,7 @@ final class CompanyPrivateController
     {
         $id = $currentRoute->getArgument('id');
         if (null !== $id) {
-            $companyprivate = $companyprivateRepository->repoCompanyPrivatequery($id);
-            return $companyprivate;
+            return $companyprivateRepository->repoCompanyPrivatequery($id);
         }
         return null;
     }
@@ -374,7 +368,6 @@ final class CompanyPrivateController
      */
     private function companyprivates(CompanyPrivateRepository $companyprivateRepository): \Yiisoft\Data\Cycle\Reader\EntityReader
     {
-        $companyprivates = $companyprivateRepository->findAllPreloaded();
-        return $companyprivates;
+        return $companyprivateRepository->findAllPreloaded();
     }
 }

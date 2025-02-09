@@ -30,5 +30,4 @@ class PeppolTaxCategoryPercentNotFoundException extends \RuntimeException implem
                 Please try again
             SOLUTION;
     }
-
 }

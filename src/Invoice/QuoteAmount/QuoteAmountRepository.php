@@ -62,7 +62,6 @@ final class QuoteAmountRepository extends Select\Repository
      * @see Reader/ReadableDataInterface|InvalidArgumentException
      * @param array|QuoteAmount|null $quoteamount
      * @throws Throwable
-     * @return void
      */
     public function save(array|QuoteAmount|null $quoteamount): void
     {
@@ -73,7 +72,6 @@ final class QuoteAmountRepository extends Select\Repository
      * @see Reader/ReadableDataInterface|InvalidArgumentException
      * @param array|QuoteAmount|null $quoteamount
      * @throws Throwable
-     * @return void
      */
     public function delete(array|QuoteAmount|null $quoteamount): void
     {
@@ -93,14 +91,13 @@ final class QuoteAmountRepository extends Select\Repository
      */
     public function repoQuoteAmountCount(string $quote_id): int
     {
-        $count = $this->select()
+        return $this->select()
                       ->where(['quote_id' => $quote_id])
                       ->count();
-        return $count;
     }
 
     /**
-     * @return null|QuoteAmount
+     * @return QuoteAmount|null
      *
      * @psalm-return TEntity|null
      */
@@ -115,7 +112,7 @@ final class QuoteAmountRepository extends Select\Repository
     /**
      * @param string $quote_id
      *
-     * @return null|QuoteAmount
+     * @return QuoteAmount|null
      *
      * @psalm-return TEntity|null
      */
@@ -130,7 +127,7 @@ final class QuoteAmountRepository extends Select\Repository
     /**
      * @param string $quote_id
      *
-     * @return null|QuoteAmount
+     * @return QuoteAmount|null
      *
      * @psalm-return TEntity|null
      */
@@ -143,7 +140,6 @@ final class QuoteAmountRepository extends Select\Repository
     }
 
     /**
-     *
      * @param int $key
      * @param array $range
      * @param SR $sR
@@ -165,7 +161,6 @@ final class QuoteAmountRepository extends Select\Repository
     }
 
     /**
-     *
      * @param int $key
      * @param array $range
      * @param SR $sR
@@ -178,17 +173,15 @@ final class QuoteAmountRepository extends Select\Repository
          * @var \DateTimeImmutable $range['lower']
          * @var \DateTimeImmutable $range['upper']
          */
-        $query = $this->select()
+        return $this->select()
                       ->load('quote')
                       ->where(['quote.status_id' => $key])
                       ->andWhere('quote.date_created', '>=', $datehelper->date_from_mysql_without_style($range['lower']))
                       ->andWhere('quote.date_created', '<=', $datehelper->date_from_mysql_without_style($range['upper']))
                       ->count();
-        return $query;
     }
 
     /**
-     *
      * @param QR $qR
      * @param SR $sR
      * @param Translator $translator
@@ -218,7 +211,7 @@ final class QuoteAmountRepository extends Select\Repository
                 'label' => $status['label'],
                 'href' => (string) $status['href'],
                 'sum_total' => $total,
-                'num_total' => $this->repoStatusTotals_Num_Total($key, $range, $sR) ?: 0
+                'num_total' => $this->repoStatusTotals_Num_Total($key, $range, $sR) ?: 0,
             ];
         }
         return $return;

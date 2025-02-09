@@ -30,5 +30,4 @@ class PeppolInvoiceNoteNotFoundException extends \RuntimeException implements Fr
                 Please try again
             SOLUTION;
     }
-
 }

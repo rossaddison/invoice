@@ -18,7 +18,6 @@ final class DeliveryLocationService
     /**
      * @param DeliveryLocation $model
      * @param array $array
-     * @return void
      */
     public function saveDeliveryLocation(DeliveryLocation $model, array $array): void
     {
@@ -40,5 +39,4 @@ final class DeliveryLocationService
     {
         $this->repository->delete($model);
     }
-
 }

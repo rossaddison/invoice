@@ -7,8 +7,6 @@ namespace App\Invoice\UnitPeppol;
 use App\Invoice\Entity\Unit;
 use App\Invoice\Entity\UnitPeppol;
 use App\Invoice\Helpers\Peppol\Peppol_UNECERec20_11e;
-use App\Invoice\UnitPeppol\UnitPeppolService;
-use App\Invoice\UnitPeppol\UnitPeppolRepository;
 use App\Invoice\Setting\SettingRepository;
 use App\Invoice\Traits\FlashMessage;
 use App\Invoice\Unit\UnitRepository;
@@ -30,7 +28,7 @@ use Exception;
 final class UnitPeppolController
 {
     use FlashMessage;
-    
+
     private Flash $flash;
     private Session $session;
     private ViewRenderer $viewRenderer;
@@ -83,7 +81,7 @@ final class UnitPeppolController
             'errors' => [],
             'eneces' => $enece_array,
             'optionsDataEneces' => $this->optionsDataEneces($enece_array),
-            'optionsDataUnits' => $this->optionsDataUnits($units)
+            'optionsDataUnits' => $this->optionsDataUnits($units),
         ];
 
         if ($request->getMethod() === Method::POST) {
@@ -112,7 +110,7 @@ final class UnitPeppolController
                     $this->unitpeppolService->saveUnitPeppol($unitPeppol, $body);
                     return $this->webService->getRedirectResponse('unitpeppol/index');
                 }
-            }    
+            }
             $parameters['errors'] = $form->getValidationResult()->getErrorMessagesIndexedByProperty();
             $parameters['form'] = $form;
         }
@@ -127,8 +125,8 @@ final class UnitPeppolController
         return $this->viewRenderer->renderPartialAsString(
             '//invoice/layout/alert',
             [
-        'flash' => $this->flash
-      ]
+                'flash' => $this->flash,
+            ]
         );
     }
 
@@ -144,7 +142,7 @@ final class UnitPeppolController
             'alert' => $this->alert(),
             'unitpeppols' => $this->unitpeppols($unitpeppolRepository),
             'grid_summary' => $settingRepository->grid_summary($paginator, $this->translator, (int)$settingRepository->getSetting('default_list_limit'), $this->translator->translate('invoice.unit.peppol'), ''),
-            'paginator' => $paginator
+            'paginator' => $paginator,
         ];
         return $this->viewRenderer->render('index', $parameters);
     }
@@ -202,7 +200,7 @@ final class UnitPeppolController
                 'errors' => [],
                 'form' => $form,
                 'optionsDataEneces' => $this->optionsDataEneces($enece_array),
-                'optionsDataUnits' => $this->optionsDataUnits($units)
+                'optionsDataUnits' => $this->optionsDataUnits($units),
             ];
             if ($request->getMethod() === Method::POST) {
                 if ($formHydrator->populateFromPostAndValidate($form, $request)) {
@@ -211,7 +209,7 @@ final class UnitPeppolController
                         $this->unitpeppolService->saveUnitPeppol($unitPeppol, $body);
                         return $this->webService->getRedirectResponse('unitpeppol/index');
                     }
-                }    
+                }
                 $parameters['errors'] = $form->getValidationResult()->getErrorMessagesIndexedByProperty();
                 $parameters['form'] = $form;
             }
@@ -231,8 +229,7 @@ final class UnitPeppolController
     {
         $id = $currentRoute->getArgument('id');
         if (null !== $id) {
-            $unitpeppol = $unitpeppolRepository->repoUnitPeppolLoadedquery($id);
-            return $unitpeppol;
+            return $unitpeppolRepository->repoUnitPeppolLoadedquery($id);
         }
         return null;
     }
@@ -242,17 +239,16 @@ final class UnitPeppolController
      *
      * @psalm-return \Yiisoft\Data\Cycle\Reader\EntityReader
      */
-    private function unitpeppols(UnitPeppolRepository $unitpeppolRepository): \Yiisoft\Data\Cycle\Reader\EntityReader
+    private function unitpeppols(UnitPeppolRepository $unitpeppolRepository): EntityReader
     {
-        $unitpeppols = $unitpeppolRepository->findAllPreloaded();
-        return $unitpeppols;
+        return $unitpeppolRepository->findAllPreloaded();
     }
 
     /**
      * @param CurrentRoute $currentRoute
      * @param UnitRepository $unitRepository
      * @param UnitPeppolRepository $unitpeppolRepository
-     * @return \Yiisoft\DataResponse\DataResponse|Response
+     * @return Response|\Yiisoft\DataResponse\DataResponse
      */
     public function view(
         CurrentRoute $currentRoute,
@@ -272,7 +268,7 @@ final class UnitPeppolController
                 'form' => $form,
                 'eneces' => $eneceArray,
                 'optionsDataEneces' => $this->optionsDataEneces($eneceArray),
-                'optionsDataUnits' => $this->optionsDataUnits($units)
+                'optionsDataUnits' => $this->optionsDataUnits($units),
             ];
             return $this->viewRenderer->render('_view', $parameters);
         }
@@ -299,7 +295,7 @@ final class UnitPeppolController
              * @var
              */
             $description = (array_key_exists('Description', $eneces[$key]) ? $eneces[$key]['Description'] : '');
-            $cell = ' '.$eneces[$key]['Id'].' -------- '.$eneces[$key]['Name'] .' ------ '. $description;
+            $cell = ' ' . $eneces[$key]['Id'] . ' -------- ' . $eneces[$key]['Name'] . ' ------ ' . $description;
             /**
              * @var int $value['Id']
              */
@@ -320,7 +316,7 @@ final class UnitPeppolController
          */
         foreach ($units as $unit) {
             $key = $unit->getUnit_id();
-            null !== $key ? $optionsDataUnits[$key] = $unit->getUnit_name().' '. $unit->getUnit_name_plrl() : '';
+            null !== $key ? $optionsDataUnits[$key] = $unit->getUnit_name() . ' ' . $unit->getUnit_name_plrl() : '';
         }
         return $optionsDataUnits;
     }

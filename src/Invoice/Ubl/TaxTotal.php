@@ -18,8 +18,6 @@ class TaxTotal implements XmlSerializable
     }
 
     /**
-     *
-     * @return void
      * @throws InvalidArgumentException
      */
     public function validate(): void
@@ -33,7 +31,6 @@ class TaxTotal implements XmlSerializable
      * @see PeppolHelper/TaxAmounts function
      *
      * @param Writer $writer
-     * @return void
      */
     public function xmlSerialize(Writer $writer): void
     {
@@ -61,34 +58,34 @@ class TaxTotal implements XmlSerializable
         if ($doc_cc === $supp_cc) {
             $writer->write(
                 [
-                'name' => Schema::CBC . 'TaxAmount',
-                'value' => number_format($supp_tax_cc_tax_amount ?: 0.00, 2, '.', ''),
-                'attributes' => [
-                    'currencyID' => $supp_cc,
-                ]
-          ],
+                    'name' => Schema::CBC . 'TaxAmount',
+                    'value' => number_format($supp_tax_cc_tax_amount ?: 0.00, 2, '.', ''),
+                    'attributes' => [
+                        'currencyID' => $supp_cc,
+                    ],
+                ],
             );
 
-            // The suppliers currency is different to the document's currency
+        // The suppliers currency is different to the document's currency
         } else {
             // https://docs.peppol.eu/poacc/billing/3.0/syntax/ubl-invoice/cac-TaxTotal/
             // Suppliers Tax Amount in Suppliers Currency without subtotal breakdown
             $writer->write([
-              'name' => Schema::CBC . 'TaxAmount',
-              'value' => number_format((float)(string)$supp_tax_cc_tax_amount ?: 0.00, 2, '.', ''),
-              'attributes' => [
-                  'currencyID' => $supp_cc
-              ],
+                'name' => Schema::CBC . 'TaxAmount',
+                'value' => number_format((float)(string)$supp_tax_cc_tax_amount ?: 0.00, 2, '.', ''),
+                'attributes' => [
+                    'currencyID' => $supp_cc,
+                ],
             ]);
             // Document Recipients TaxAmount in Document Recipient's Currency
             $writer->write([
-              [
-                'name' => Schema::CBC . 'TaxAmount',
-                'value' => number_format((float)(string)$doc_cc_tax_amount ?: 0.00, 2, '.', ''),
-                'attributes' => [
-                    'currencyID' => $doc_cc
-                ]
-              ],
+                [
+                    'name' => Schema::CBC . 'TaxAmount',
+                    'value' => number_format((float)(string)$doc_cc_tax_amount ?: 0.00, 2, '.', ''),
+                    'attributes' => [
+                        'currencyID' => $doc_cc,
+                    ],
+                ],
             ]);
         } // elseif
     } //xmlserialize

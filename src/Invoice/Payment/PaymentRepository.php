@@ -21,6 +21,7 @@ use Throwable;
 final class PaymentRepository extends Select\Repository
 {
     private EntityWriter $entityWriter;
+
     /**
     * @param Select<TEntity> $select
     * @param EntityWriter $entityWriter
@@ -78,7 +79,6 @@ final class PaymentRepository extends Select\Repository
      * @see Reader/ReadableDataInterface|InvalidArgumentException
      * @param array|Payment|null $payment
      * @throws Throwable
-     * @return void
      */
     public function save(array|Payment|null $payment): void
     {
@@ -89,7 +89,6 @@ final class PaymentRepository extends Select\Repository
      * @see Reader/ReadableDataInterface|InvalidArgumentException
      * @param array|Payment|null $payment
      * @throws Throwable
-     * @return void
      */
     public function delete(array|Payment|null $payment): void
     {
@@ -147,7 +146,7 @@ final class PaymentRepository extends Select\Repository
     }
 
     /**
-     * @return null|Payment
+     * @return Payment|null
      *
      * @psalm-return TEntity|null
      */
@@ -162,13 +161,12 @@ final class PaymentRepository extends Select\Repository
 
     public function repoPaymentLoaded_from_to_count(string $from, string $to): int
     {
-        $count = $this->select()
+        return $this->select()
                       ->load('inv')
                       ->load('payment_method')
                       ->where('payment_date', '>=', $from)
                       ->andWhere('payment_date', '<=', $to)
                       ->count();
-        return $count;
     }
 
     public function repoPaymentLoaded_from_to(string $from, string $to): EntityReader
@@ -194,16 +192,13 @@ final class PaymentRepository extends Select\Repository
     }
 
     /**
-     *
      * @param string $inv_id
      * @return int
      */
     public function repoCount(string $inv_id): int
     {
-        $count = $this->select()
+        return $this->select()
                       ->where(['inv_id' => $inv_id])
                       ->count();
-        return $count;
     }
-
 }

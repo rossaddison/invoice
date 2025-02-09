@@ -16,10 +16,8 @@ final class SalesOrderTaxRateService
     }
 
     /**
-     *
      * @param SalesOrderTaxRate $model
      * @param array $array
-     * @return void
      */
     public function saveSoTaxRate(SalesOrderTaxRate $model, array $array): void
     {
@@ -32,9 +30,7 @@ final class SalesOrderTaxRateService
     }
 
     /**
-     *
      * @param array|SalesOrderTaxRate|null $model
-     * @return void
      */
     public function deleteSalesOrderTaxRate(array|SalesOrderTaxRate|null $model): void
     {

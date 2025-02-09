@@ -54,8 +54,8 @@ final class ClientCustomForm extends FormModel
     public function getRules(): array
     {
         return [
-          'client_id' => [new Required()],
-          'custom_field_id' => [new Required()],
-    ];
+            'client_id' => [new Required()],
+            'custom_field_id' => [new Required()],
+        ];
     }
 }
