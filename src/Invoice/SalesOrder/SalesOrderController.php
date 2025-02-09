@@ -960,7 +960,7 @@ final class SalesOrderController
                 'item_tax_total' => $so_amount->getItem_tax_total(),
                 'tax_total' => $so_amount->getTax_total(),
                 'total' => $so_amount->getTotal(),
-                'paid' => floatval(0.00),
+                'paid' => 0.00,
                 'balance' => $so_amount->getTotal(),
             ];
         }

@@ -2452,7 +2452,7 @@ final class QuoteController
                 'item_tax_total' => $quote_amount->getItem_tax_total(),
                 'tax_total' => $quote_amount->getTax_total(),
                 'total' => $quote_amount->getTotal(),
-                'paid' => floatval(0.00),
+                'paid' => 0.00,
                 'balance' => $quote_amount->getTotal(),
             ];
         }
@@ -2789,7 +2789,7 @@ final class QuoteController
             'quote_id' => $body['quote_id'],
             'tax_rate_id' => $body['tax_rate_id'],
             'include_item_tax' => $body['include_item_tax'],
-            'quote_tax_rate_amount' => floatval(0.00),
+            'quote_tax_rate_amount' => 0.00
         ];
         $quoteTaxRate = new QuoteTaxRate();
         $ajax_content = new QuoteTaxRateForm($quoteTaxRate);
