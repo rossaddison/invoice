@@ -1,7 +1,7 @@
 <?php
 
 declare(strict_types=1);
-return array(
+return [
     'AF' => 'Afghanistan',
     'ZA' => 'Afrique du Sud',
     'AL' => 'Albanie',
@@ -250,4 +250,4 @@ return array(
     'VG' => 'Îles Vierges britanniques',
     'VI' => 'Îles Vierges des États-Unis',
     'AX' => 'Îles Åland',
-);
+];

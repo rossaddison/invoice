@@ -7,7 +7,6 @@ namespace App\Invoice\Entity;
 use Cycle\Annotated\Annotation\Column;
 use Cycle\Annotated\Annotation\Entity;
 use Cycle\Annotated\Annotation\Relation\BelongsTo;
-use App\Invoice\Entity\Client;
 use DateTime;
 use DateTimeImmutable;
 
@@ -18,16 +17,16 @@ class ClientNote
     private ?Client $client = null;
 
     #[Column(type:'primary')]
-    private ?int $id =  null;
+    private ?int $id = null;
 
     #[Column(type:'integer(11)', nullable: false)]
-    private ?int $client_id =  null;
+    private ?int $client_id = null;
 
     #[Column(type: 'date', nullable: false)]
     private mixed $date_note;
 
     #[Column(type: 'longText', nullable:false)]
-    private string $note =  '';
+    private string $note = '';
 
     public function __construct(
         int $client_id = null,
@@ -46,11 +45,11 @@ class ClientNote
 
     public function setClient(?Client $client): void
     {
-        $this->client =  $client;
+        $this->client = $client;
     }
 
     /**
-     * @return null|numeric-string
+     * @return numeric-string|null
      */
     public function getId(): string|null
     {
@@ -59,7 +58,7 @@ class ClientNote
 
     public function setId(int $id): void
     {
-        $this->id =  $id;
+        $this->id = $id;
     }
 
     public function getClient_id(): string
@@ -69,20 +68,20 @@ class ClientNote
 
     public function setClient_id(int $client_id): void
     {
-        $this->client_id =  $client_id;
+        $this->client_id = $client_id;
     }
 
     public function getDate_note(): string|DateTimeImmutable
     {
         /**
-         * @var string|DateTimeImmutable $this->date_note
+         * @var DateTimeImmutable|string $this->date_note
          */
         return $this->date_note;
     }
 
     public function setDate_note(DateTime $date_note): void
     {
-        $this->date_note =  $date_note;
+        $this->date_note = $date_note;
     }
 
     public function getNote(): string
@@ -92,7 +91,7 @@ class ClientNote
 
     public function setNote(string $note): void
     {
-        $this->note =  $note;
+        $this->note = $note;
     }
 
     public function isNewRecord(): bool

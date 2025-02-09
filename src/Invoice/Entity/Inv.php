@@ -12,12 +12,6 @@ use Cycle\Annotated\Annotation\Relation\HasOne;
 use Cycle\ORM\Entity\Behavior;
 use Doctrine\Common\Collections\ArrayCollection;
 use App\User\User;
-use App\Invoice\Entity\Client;
-use App\Invoice\Entity\Group;
-use App\Invoice\Entity\InvAmount;
-use App\Invoice\Entity\InvItem;
-use App\Invoice\Entity\InvRecurring;
-use App\Invoice\Entity\InvSentLog;
 use DateTimeImmutable;
 
 #[Entity(repository: \App\Invoice\Inv\InvRepository::class)]
@@ -283,7 +277,7 @@ class Inv
     }
 
     /**
-     * @return null|numeric-string
+     * @return numeric-string|null
      */
     public function getId(): string|null
     {
@@ -444,7 +438,7 @@ class Inv
             $days = $sR->getSetting('invoices_due_after');
         }
 
-        $this->date_due = ($this->date_created)->add(new \DateInterval('P' . $days . 'D'));
+        $this->date_due = $this->date_created->add(new \DateInterval('P' . $days . 'D'));
     }
 
     public function getDate_due(): DateTimeImmutable
@@ -609,14 +603,13 @@ class Inv
      * @see https://github.com/yiisoft/demo/issues/462
      * @param int $group_id
      * @param int $client_id
-     * @return void
      */
     public function nullifyRelationOnChange(int $group_id, int $client_id): void
     {
-        if ($this->group_id <> $group_id) {
+        if ($this->group_id != $group_id) {
             $this->group = null;
         }
-        if ($this->client_id <> $client_id) {
+        if ($this->client_id != $client_id) {
             $this->client = null;
         }
         // the user_id will always be attached to the client therefore will not change
@@ -626,5 +619,4 @@ class Inv
     {
         return null === $this->getId() ? true : false;
     }
-
 }

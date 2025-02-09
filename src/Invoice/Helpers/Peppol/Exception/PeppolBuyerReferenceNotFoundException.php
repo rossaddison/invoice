@@ -27,5 +27,4 @@ class PeppolBuyerReferenceNotFoundException extends \RuntimeException implements
                 Please try again
             SOLUTION;
     }
-
 }

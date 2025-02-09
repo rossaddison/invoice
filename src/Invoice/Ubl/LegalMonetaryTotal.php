@@ -39,13 +39,10 @@ class LegalMonetaryTotal implements XmlSerializable
     }
 
     /**
-     *
      * @param Writer $writer
-     * @return void
      */
     public function xmlSerialize(Writer $writer): void
     {
-
         $writer->write([
             /**
              * @see https://docs.peppol.eu/poacc/billing/3.0/syntax/ubl-invoice/cac-InvoiceLine/cbc-LineExtensionAmount/
@@ -54,40 +51,36 @@ class LegalMonetaryTotal implements XmlSerializable
                 'name' => Schema::CBC . 'LineExtensionAmount',
                 'value' => number_format($this->lineExtensionAmount, 2, '.', ''),
                 'attributes' => [
-                    'currencyID' => $this->document_currency
-                ]
-
+                    'currencyID' => $this->document_currency,
+                ],
             ],
             [
                 'name' => Schema::CBC . 'TaxExclusiveAmount',
                 'value' => number_format($this->taxExclusiveAmount, 2, '.', ''),
                 'attributes' => [
-                    'currencyID' => $this->document_currency
-                ]
-
+                    'currencyID' => $this->document_currency,
+                ],
             ],
             [
                 'name' => Schema::CBC . 'TaxInclusiveAmount',
                 'value' => number_format($this->taxInclusiveAmount, 2, '.', ''),
                 'attributes' => [
-                    'currencyID' => $this->document_currency
-                ]
-
+                    'currencyID' => $this->document_currency,
+                ],
             ],
             [
                 'name' => Schema::CBC . 'AllowanceTotalAmount',
                 'value' => number_format($this->allowanceTotalAmount, 2, '.', ''),
                 'attributes' => [
-                    'currencyID' => $this->document_currency
-                ]
-
+                    'currencyID' => $this->document_currency,
+                ],
             ],
             [
                 'name' => Schema::CBC . 'PayableAmount',
                 'value' => number_format($this->payableAmount, 2, '.', ''),
                 'attributes' => [
-                    'currencyID' => $this->document_currency
-                ]
+                    'currencyID' => $this->document_currency,
+                ],
             ],
         ]);
     }

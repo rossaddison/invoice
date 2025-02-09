@@ -15,64 +15,64 @@ use DateTimeImmutable;
 class Company
 {
     #[Column(type: 'primary')]
-    private ?int $id =  null;
+    private ?int $id = null;
 
     #[Column(type: 'tinyInteger(1)', nullable: false, default:0)]
-    private ?int $current =  null;
+    private ?int $current = null;
 
     #[Column(type: 'text', nullable: true)]
-    private ?string $name =  '';
+    private ?string $name = '';
 
     #[Column(type: 'text', nullable: true)]
-    private ?string $address_1 =  '';
+    private ?string $address_1 = '';
 
     #[Column(type: 'text', nullable: true)]
-    private ?string $address_2 =  '';
+    private ?string $address_2 = '';
 
     #[Column(type: 'text', nullable: true)]
-    private ?string $city =  '';
+    private ?string $city = '';
 
     #[Column(type: 'text', nullable: true)]
-    private ?string $state =  '';
+    private ?string $state = '';
 
     #[Column(type: 'text', nullable: true)]
-    private ?string $zip =  '';
+    private ?string $zip = '';
 
     #[Column(type: 'text', nullable: true)]
-    private ?string $country =  '';
+    private ?string $country = '';
 
     #[Column(type: 'text', nullable: true)]
-    private ?string $phone =  '';
+    private ?string $phone = '';
 
     #[Column(type: 'text', nullable: true)]
-    private ?string $fax =  '';
+    private ?string $fax = '';
 
     #[Column(type: 'text', nullable: true)]
-    private ?string $email =  '';
+    private ?string $email = '';
 
     #[Column(type: 'text', nullable: true)]
-    private ?string $web =  '';
+    private ?string $web = '';
 
     #[Column(type: 'text', nullable: true)]
-    private ?string $slack =  '';
+    private ?string $slack = '';
 
     #[Column(type: 'text', nullable: true)]
-    private ?string $facebook =  '';
+    private ?string $facebook = '';
 
     #[Column(type: 'text', nullable: true)]
-    private ?string $twitter =  '';
+    private ?string $twitter = '';
 
     #[Column(type: 'text', nullable: true)]
-    private ?string $linkedin =  '';
+    private ?string $linkedin = '';
 
     #[Column(type: 'text', nullable: true)]
-    private ?string $whatsapp =  '';
-    
+    private ?string $whatsapp = '';
+
     #[Column(type: 'text', nullable: true)]
-    private ?string $arbitrationBody =  '';
-    
+    private ?string $arbitrationBody = '';
+
     #[Column(type: 'text', nullable: true)]
-    private ?string $arbitrationJurisdiction =  '';
+    private ?string $arbitrationJurisdiction = '';
 
     #[Column(type: 'datetime')]
     private DateTimeImmutable $date_created;
@@ -100,7 +100,7 @@ class Company
         string $linkedin = '',
         string $whatsapp = '',
         string $arbitrationBody = '',
-        string $arbitrationJurisdiction = ''    
+        string $arbitrationJurisdiction = ''
     ) {
         $this->id = $id;
         $this->current = $current;
@@ -133,7 +133,7 @@ class Company
 
     public function setId(int $id): void
     {
-        $this->id =  $id;
+        $this->id = $id;
     }
 
     public function getCurrent(): int|null
@@ -143,7 +143,7 @@ class Company
 
     public function setCurrent(int $current): void
     {
-        $this->current =  $current;
+        $this->current = $current;
     }
 
     public function getName(): string|null
@@ -153,7 +153,7 @@ class Company
 
     public function setName(string $name): void
     {
-        $this->name =  $name;
+        $this->name = $name;
     }
 
     public function getAddress_1(): string|null
@@ -163,7 +163,7 @@ class Company
 
     public function setAddress_1(string $address_1): void
     {
-        $this->address_1 =  $address_1;
+        $this->address_1 = $address_1;
     }
 
     public function getAddress_2(): string|null
@@ -173,7 +173,7 @@ class Company
 
     public function setAddress_2(string $address_2): void
     {
-        $this->address_2 =  $address_2;
+        $this->address_2 = $address_2;
     }
 
     public function getCity(): string|null
@@ -183,7 +183,7 @@ class Company
 
     public function setCity(string $city): void
     {
-        $this->city =  $city;
+        $this->city = $city;
     }
 
     public function getState(): string|null
@@ -193,7 +193,7 @@ class Company
 
     public function setState(string $state): void
     {
-        $this->state =  $state;
+        $this->state = $state;
     }
 
     public function getZip(): string|null
@@ -203,7 +203,7 @@ class Company
 
     public function setZip(string $zip): void
     {
-        $this->zip =  $zip;
+        $this->zip = $zip;
     }
 
     public function getCountry(): string|null
@@ -213,7 +213,7 @@ class Company
 
     public function setCountry(string $country): void
     {
-        $this->country =  $country;
+        $this->country = $country;
     }
 
     public function getPhone(): string|null
@@ -223,7 +223,7 @@ class Company
 
     public function setPhone(string $phone): void
     {
-        $this->phone =  $phone;
+        $this->phone = $phone;
     }
 
     public function getFax(): string|null
@@ -233,7 +233,7 @@ class Company
 
     public function setFax(string $fax): void
     {
-        $this->fax =  $fax;
+        $this->fax = $fax;
     }
 
     public function getEmail(): string|null
@@ -243,7 +243,7 @@ class Company
 
     public function setEmail(string $email): void
     {
-        $this->email =  $email;
+        $this->email = $email;
     }
 
     public function getWeb(): string|null
@@ -253,7 +253,7 @@ class Company
 
     public function setWeb(string $web): void
     {
-        $this->web =  $web;
+        $this->web = $web;
     }
 
     public function getSlack(): string|null
@@ -263,7 +263,7 @@ class Company
 
     public function setSlack(string $slack): void
     {
-        $this->slack =  $slack;
+        $this->slack = $slack;
     }
 
     public function getTwitter(): string|null
@@ -273,7 +273,7 @@ class Company
 
     public function setTwitter(string $twitter): void
     {
-        $this->twitter =  $twitter;
+        $this->twitter = $twitter;
     }
 
     public function getFacebook(): string|null
@@ -283,7 +283,7 @@ class Company
 
     public function setFacebook(string $facebook): void
     {
-        $this->facebook =  $facebook;
+        $this->facebook = $facebook;
     }
 
     public function getLinkedIn(): string|null
@@ -293,7 +293,7 @@ class Company
 
     public function setLinkedIn(string $linkedin): void
     {
-        $this->linkedin =  $linkedin;
+        $this->linkedin = $linkedin;
     }
 
     public function getWhatsapp(): string|null
@@ -303,9 +303,9 @@ class Company
 
     public function setWhatsapp(string $whatsapp): void
     {
-        $this->whatsapp =  $whatsapp;
+        $this->whatsapp = $whatsapp;
     }
-    
+
     public function getArbitrationBody(): string|null
     {
         return $this->arbitrationBody;
@@ -313,9 +313,9 @@ class Company
 
     public function setArbitrationBody(string $arbitrationBody): void
     {
-        $this->arbitrationBody =  $arbitrationBody;
+        $this->arbitrationBody = $arbitrationBody;
     }
-    
+
     public function getArbitrationJurisdiction(): string|null
     {
         return $this->arbitrationJurisdiction;
@@ -323,7 +323,7 @@ class Company
 
     public function setArbitrationJurisdiction(string $arbitrationJurisdiction): void
     {
-        $this->arbitrationJurisdiction =  $arbitrationJurisdiction;
+        $this->arbitrationJurisdiction = $arbitrationJurisdiction;
     }
 
     public function getDate_created(): DateTimeImmutable

@@ -58,10 +58,10 @@ final class QuoteItemAmountForm extends FormModel
     public function getRules(): array
     {
         return [
-          'subtotal' => [new Required()],
-          'tax_total' => [new Required()],
-          'discount' => [new Required()],
-          'total' => [new Required()],
-    ];
+            'subtotal' => [new Required()],
+            'tax_total' => [new Required()],
+            'discount' => [new Required()],
+            'total' => [new Required()],
+        ];
     }
 }

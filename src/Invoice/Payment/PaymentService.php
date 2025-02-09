@@ -18,7 +18,6 @@ final class PaymentService
     /**
      * @param Payment $model
      * @param array $array
-     * @return void
      */
     public function savePayment(Payment $model, array $array): void
     {
@@ -40,7 +39,6 @@ final class PaymentService
     /**
      * @param Payment $model
      * @param array $array
-     * @return void
      */
     public function addPayment_via_payment_handler(Payment $model, array $array): void
     {
@@ -56,9 +54,7 @@ final class PaymentService
     }
 
     /**
-     *
      * @param Payment $model
-     * @return void
      */
     public function deletePayment(Payment $model): void
     {

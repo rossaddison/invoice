@@ -20,7 +20,6 @@ final class WebControllerService
     }
 
     /**
-     *
      * @param string $url
      * @param array<string,scalar|Stringable|null> $arguments Argument-value set
      * @return ResponseInterface

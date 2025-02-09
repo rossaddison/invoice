@@ -23,7 +23,6 @@ final class TaskRepository extends Select\Repository
     private Translator $translator;
 
     /**
-    *
     * @param Select<TEntity> $select
     * @param EntityWriter $entityWriter
     */
@@ -63,7 +62,6 @@ final class TaskRepository extends Select\Repository
      * @see Reader/ReadableDataInterface|InvalidArgumentException
      * @param array|Task|null $task
      * @throws Throwable
-     * @return void
      */
     public function save(array|Task|null $task): void
     {
@@ -74,7 +72,6 @@ final class TaskRepository extends Select\Repository
      * @see Reader/ReadableDataInterface|InvalidArgumentException
      * @param array|Task|null $task
      * @throws Throwable
-     * @return void
      */
     public function delete(array|Task|null $task): void
     {
@@ -94,7 +91,7 @@ final class TaskRepository extends Select\Repository
     }
 
     /**
-     * @return null|Task
+     * @return Task|null
      *
      * @psalm-return TEntity|null
      */
@@ -104,7 +101,6 @@ final class TaskRepository extends Select\Repository
                                 ->where(['id' => $id]);
         return  $query->fetchOne() ?: null;
     }
-
 
     /**
      * Get tasks  with filter
@@ -119,7 +115,6 @@ final class TaskRepository extends Select\Repository
     }
 
     /**
-     *
      * @param array $task_ids
      * @return EntityReader
      */
@@ -131,16 +126,14 @@ final class TaskRepository extends Select\Repository
     }
 
     /**
-     *
      * @param string $task_id
      * @return int
      */
     public function repoCount(string $task_id): int
     {
-        $count = $this->select()
+        return $this->select()
                       ->where(['id' => $task_id])
                       ->count();
-        return $count;
     }
 
     /**
@@ -152,25 +145,24 @@ final class TaskRepository extends Select\Repository
         return [
             '1' => [
                 'label' => $translator->translate('i.not_started'),
-                'class' => 'draft'
+                'class' => 'draft',
             ],
             '2' => [
                 'label' => $translator->translate('i.in_progress'),
-                'class' => 'viewed'
+                'class' => 'viewed',
             ],
             '3' => [
                 'label' => $translator->translate('i.complete'),
-                'class' => 'sent'
+                'class' => 'sent',
             ],
             '4' => [
                 'label' => $translator->translate('i.invoiced'),
-                'class' => 'paid'
-            ]
+                'class' => 'paid',
+            ],
         ];
     }
 
     /**
-     *
      * @param string $key
      * @return string
      */
@@ -185,7 +177,6 @@ final class TaskRepository extends Select\Repository
     }
 
     /**
-     *
      * @param int $status
      * @return string
      */

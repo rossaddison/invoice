@@ -18,7 +18,6 @@ final class TaxRateService
     /**
      * @param TaxRate $model
      * @param array $array
-     * @return void
      */
     public function saveTaxRate(TaxRate $model, array $array): void
     {
@@ -36,7 +35,6 @@ final class TaxRateService
 
     /**
      * @param TaxRate $model
-     * @return void
      */
     public function deleteTaxRate(TaxRate $model): void
     {

@@ -66,7 +66,7 @@ final class SumexForm extends FormModel
     public function getTreatmentstart(): string|null|DateTimeImmutable
     {
         /**
-         * @var string|null|DateTimeImmutable $this->treatmentstart
+         * @var DateTimeImmutable|string|null $this->treatmentstart
          */
         return $this->treatmentstart;
     }
@@ -74,7 +74,7 @@ final class SumexForm extends FormModel
     public function getTreatmentend(): string|null|DateTimeImmutable
     {
         /**
-         * @var string|null|DateTimeImmutable $this->treatmentend
+         * @var DateTimeImmutable|string|null $this->treatmentend
          */
         return $this->treatmentend;
     }
@@ -82,7 +82,7 @@ final class SumexForm extends FormModel
     public function getCasedate(): string|null|DateTimeImmutable
     {
         /**
-         * @var string|null|DateTimeImmutable $this->casedate
+         * @var DateTimeImmutable|string|null $this->casedate
          */
         return $this->casedate;
     }

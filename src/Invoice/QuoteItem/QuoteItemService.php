@@ -32,14 +32,13 @@ final class QuoteItemService
      * @param UR $uR
      * @param TRR $trr
      * @param Translator $translator
-     * @return void
      */
     public function addQuoteItem(QuoteItem $model, array $array, string $quote_id, PR $pr, QIAR $qiar, QIAS $qias, UR $uR, TRR $trr, Translator $translator): void
     {
         // This function is used in product/save_product_lookup_item_quote when adding a quote using the modal
         $tax_rate_id = ((isset($array['tax_rate_id'])) ? (int)$array['tax_rate_id'] : '');
         $model->setTax_rate_id((int)$tax_rate_id);
-        $product_id = (int)(isset($array['product_id']) ? $array['product_id'] : '');
+        $product_id = (int)($array['product_id'] ?? '');
         $model->setProduct_id($product_id);
         $model->setQuote_id((int)$quote_id);
         $product = $pr->repoProductquery((string)$array['product_id']);
@@ -70,7 +69,7 @@ final class QuoteItemService
         $tax_rate_percentage = $this->taxrate_percentage((int)$tax_rate_id, $trr);
         if ($product_id) {
             $this->repository->save($model);
-            if (isset($array['quantity']) && isset($array['price']) && isset($array['discount_amount']) && null !== $tax_rate_percentage) {
+            if (isset($array['quantity'], $array['price'], $array['discount_amount'])     && null !== $tax_rate_percentage) {
                 $this->saveQuoteItemAmount((int)$model->getId(), (float)$array['quantity'], (float)$array['price'], (float)$array['discount_amount'], $tax_rate_percentage, $qiar, $qias);
             }
         }
@@ -127,7 +126,6 @@ final class QuoteItemService
     }
 
     /**
-     *
      * @param int $id
      * @param TRR $trr
      * @return float|null
@@ -136,14 +134,12 @@ final class QuoteItemService
     {
         $taxrate = $trr->repoTaxRatequery((string)$id);
         if ($taxrate) {
-            $percentage = $taxrate->getTaxRatePercent();
-            return $percentage;
+            return $taxrate->getTaxRatePercent();
         }
         return null;
     }
 
     /**
-     *
      * @param int $quote_item_id
      * @param float $quantity
      * @param float $price
@@ -151,7 +147,6 @@ final class QuoteItemService
      * @param float|null $tax_rate_percentage
      * @param QIAR $qiar
      * @param QIAS $qias
-     * @return void
      */
     public function saveQuoteItemAmount(int $quote_item_id, float $quantity, float $price, float $discount, float|null $tax_rate_percentage, QIAR $qiar, QIAS $qias): void
     {
@@ -179,9 +174,7 @@ final class QuoteItemService
     }
 
     /**
-     *
      * @param array|QuoteItem|null $model
-     * @return void
      */
     public function deleteQuoteItem(array|QuoteItem|null $model): void
     {

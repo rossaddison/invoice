@@ -33,7 +33,6 @@ final class FamilyRepository extends Select\Repository
      * Get families without filter
      *
      * @psalm-return EntityReader
-     *
      */
     public function findAllPreloaded(): EntityReader
     {
@@ -45,7 +44,6 @@ final class FamilyRepository extends Select\Repository
      * @see Reader/ReadableDataInterface|InvalidArgumentException
      * @param array|Family|null $family
      * @throws Throwable
-     * @return void
      */
     public function save(array|Family|null $family): void
     {
@@ -56,7 +54,6 @@ final class FamilyRepository extends Select\Repository
      * @see Reader/ReadableDataInterface|InvalidArgumentException
      * @param array|Family|null $family
      * @throws Throwable
-     * @return void
      */
     public function delete(array|Family|null $family): void
     {
@@ -64,7 +61,6 @@ final class FamilyRepository extends Select\Repository
     }
 
     /**
-     *
      * @param Select $query
      * @return EntityReader
      */
@@ -77,7 +73,7 @@ final class FamilyRepository extends Select\Repository
     }
 
     /**
-     * @return null|Family
+     * @return Family|null
      *
      * @psalm-return TEntity|null
      */
@@ -90,7 +86,7 @@ final class FamilyRepository extends Select\Repository
     }
 
     /**
-     * @return null|Family
+     * @return Family|null
      *
      * @psalm-return TEntity|null
      */
@@ -107,8 +103,7 @@ final class FamilyRepository extends Select\Repository
      */
     public function repoTestDataCount(): int
     {
-        $count = $this->select()
+        return $this->select()
                       ->count();
-        return $count;
     }
 }

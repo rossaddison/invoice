@@ -6,7 +6,6 @@ namespace App\Auth;
 
 use Cycle\ORM\Select;
 use Throwable;
-use App\Auth\Identity;
 use Yiisoft\Auth\IdentityRepositoryInterface;
 use Yiisoft\Data\Cycle\Writer\EntityWriter;
 
@@ -17,7 +16,6 @@ use Yiisoft\Data\Cycle\Writer\EntityWriter;
 final class IdentityRepository extends Select\Repository implements IdentityRepositoryInterface
 {
     /**
-     *
      * @param EntityWriter $entityWriter
      * @param Select<TEntity> $select
      */
@@ -27,7 +25,6 @@ final class IdentityRepository extends Select\Repository implements IdentityRepo
     }
 
     /**
-     *
      * @param string $id
      * @return Identity|null
      */

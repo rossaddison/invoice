@@ -53,12 +53,10 @@ final class ContractForm extends FormModel
         return $this->name;
     }
 
-
     public function getPeriod_start(): DateTimeImmutable
     {
         return $this->period_start;
     }
-
 
     public function getPeriod_end(): DateTimeImmutable
     {

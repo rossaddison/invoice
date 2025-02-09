@@ -18,6 +18,7 @@ use Yiisoft\Data\Cycle\Writer\EntityWriter;
 final class ClientNoteRepository extends Select\Repository
 {
     private EntityWriter $entityWriter;
+
     /**
      * @param Select<TEntity> $select
      * @param EntityWriter $entityWriter
@@ -57,7 +58,6 @@ final class ClientNoteRepository extends Select\Repository
      * @see Reader/ReadableDataInterface|InvalidArgumentException
      * @param array|ClientNote|null $clientnote
      * @throws Throwable
-     * @return void
      */
     public function save(array|ClientNote|null $clientnote): void
     {
@@ -68,7 +68,6 @@ final class ClientNoteRepository extends Select\Repository
      * @see Reader/ReadableDataInterface|InvalidArgumentException
      * @param array|ClientNote|null $clientnote
      * @throws Throwable
-     * @return void
      */
     public function delete(array|ClientNote|null $clientnote): void
     {
@@ -84,7 +83,7 @@ final class ClientNoteRepository extends Select\Repository
     }
 
     /**
-     * @return null|ClientNote
+     * @return ClientNote|null
      *
      * @psalm-return TEntity|null
      */
@@ -105,9 +104,8 @@ final class ClientNoteRepository extends Select\Repository
 
     public function repoClientNoteCount(int $client_id): int
     {
-        $count = $this->select()
+        return $this->select()
                       ->where(['client_id' => $client_id])
                       ->count();
-        return $count;
     }
 }

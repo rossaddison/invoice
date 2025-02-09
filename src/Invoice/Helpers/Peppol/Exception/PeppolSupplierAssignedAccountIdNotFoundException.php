@@ -30,5 +30,4 @@ class PeppolSupplierAssignedAccountIdNotFoundException extends \RuntimeException
                 Please try again
             SOLUTION;
     }
-
 }

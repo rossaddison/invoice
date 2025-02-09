@@ -4,9 +4,6 @@ declare(strict_types=1);
 
 namespace App\Invoice\Company;
 
-use App\Invoice\Company\CompanyService;
-use App\Invoice\Company\CompanyRepository;
-use App\Invoice\Company\CompanyForm;
 use App\Invoice\Entity\Company;
 use App\Invoice\Setting\SettingRepository;
 use App\Invoice\Traits\FlashMessage;
@@ -26,7 +23,7 @@ use Yiisoft\Yii\View\Renderer\ViewRenderer;
 final class CompanyController
 {
     use FlashMessage;
-    
+
     private SessionInterface $session;
     private Flash $flash;
     private ViewRenderer $viewRenderer;
@@ -97,7 +94,7 @@ final class CompanyController
                 if (is_array($body)) {
                     $this->companyService->saveCompany(new Company(), $body);
                     return $this->webService->getRedirectResponse('company/index');
-                }    
+                }
             }
             $parameters['form'] = $form;
             $parameters['errors'] = $form->getValidationResult()->getErrorMessagesIndexedByProperty();
@@ -135,7 +132,7 @@ final class CompanyController
                     if (is_array($body)) {
                         $this->companyService->saveCompany($company, $body);
                         return $this->webService->getRedirectResponse('company/index');
-                    }    
+                    }
                 }
                 $parameters['errors'] = $form->getValidationResult()->getErrorMessagesIndexedByProperty();
                 $parameters['form'] = $form;
@@ -164,7 +161,6 @@ final class CompanyController
     }
 
     /**
-     *
      * @param CurrentRoute $currentRoute
      * @param CompanyRepository $companyRepository
      * @return Response
@@ -180,12 +176,11 @@ final class CompanyController
                 'title' => $this->translator->translate('i.view'),
                 'actionName' => 'company/view',
                 'actionArgumens' => ['id' => $company->getId()],
-                'form' => $form
+                'form' => $form,
             ];
             return $this->viewRenderer->render('_view', $parameters);
-        } else {
-            return $this->webService->getRedirectResponse('company/index');
         }
+        return $this->webService->getRedirectResponse('company/index');
     }
 
     /**
@@ -202,7 +197,6 @@ final class CompanyController
     }
 
     /**
-     *
      * @param CurrentRoute $currentRoute
      * @param CompanyRepository $companyRepository
      * @return Company|null
@@ -211,8 +205,7 @@ final class CompanyController
     {
         $id = $currentRoute->getArgument('id');
         if (null !== $id) {
-            $company = $companyRepository->repoCompanyquery($id);
-            return $company;
+            return $companyRepository->repoCompanyquery($id);
         }
         return null;
     }
@@ -224,8 +217,7 @@ final class CompanyController
      */
     private function companies(CompanyRepository $companyRepository): \Yiisoft\Data\Cycle\Reader\EntityReader
     {
-        $companies = $companyRepository->findAllPreloaded();
-        return $companies;
+        return $companyRepository->findAllPreloaded();
     }
 
     /**
@@ -236,9 +228,9 @@ final class CompanyController
         return $this->viewRenderer->renderPartialAsString(
             '//invoice/layout/alert',
             [
-       'flash' => $this->flash,
-       'errors' => [],
-     ]
+                'flash' => $this->flash,
+                'errors' => [],
+            ]
         );
     }
 }

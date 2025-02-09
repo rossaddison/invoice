@@ -5,9 +5,6 @@ declare(strict_types=1);
 namespace App\Invoice\ClientPeppol;
 
 use App\Invoice\Entity\ClientPeppol;
-use App\Invoice\ClientPeppol\ClientPeppolForm;
-use App\Invoice\ClientPeppol\ClientPeppolService;
-use App\Invoice\ClientPeppol\ClientPeppolRepository;
 use App\Invoice\Setting\SettingRepository;
 use App\Invoice\Helpers\Peppol\PeppolArrays;
 use App\Invoice\Helpers\StoreCove\StoreCoveArrays;
@@ -31,7 +28,7 @@ use Exception;
 final class ClientPeppolController
 {
     use FlashMessage;
-    
+
     private Flash $flash;
     private SessionInterface $session;
     private ViewRenderer $viewRenderer;
@@ -69,7 +66,6 @@ final class ClientPeppolController
     }
 
     /**
-     *
      * @param CurrentRoute $currentRoute
      * @param Request $request
      * @param FormHydrator $formHydrator
@@ -89,18 +85,18 @@ final class ClientPeppolController
         $peppolarrays = new PeppolArrays();
         if (null !== $client_id) {
             $parameters = [
-              'title' => $this->translator->translate('invoice.add'),
-              'actionName' => 'clientpeppol/add',
-              'actionArguments' =>  ['client_id' => $client_id],
-              'errors' => [],
-              'form' => $form,
-              'pep' => $this->pep(),
-              'setting' => $settingRepository->getSetting('enable_client_peppol_defaults'),
-              'defaults' => $settingRepository->getSetting('enable_client_peppol_defaults') == '1' ? true : false,
-              'client_id' => $client_id,
-              'receiver_identifier_array' => StoreCoveArrays::store_cove_receiver_identifier_array(),
-              'electronic_address_scheme' => $electronic_address_scheme,
-              'iso_6523_array' => $peppolarrays->getIso_6523_icd()
+                'title' => $this->translator->translate('invoice.add'),
+                'actionName' => 'clientpeppol/add',
+                'actionArguments' => ['client_id' => $client_id],
+                'errors' => [],
+                'form' => $form,
+                'pep' => $this->pep(),
+                'setting' => $settingRepository->getSetting('enable_client_peppol_defaults'),
+                'defaults' => $settingRepository->getSetting('enable_client_peppol_defaults') == '1' ? true : false,
+                'client_id' => $client_id,
+                'receiver_identifier_array' => StoreCoveArrays::store_cove_receiver_identifier_array(),
+                'electronic_address_scheme' => $electronic_address_scheme,
+                'iso_6523_array' => $peppolarrays->getIso_6523_icd(),
             ];
             if ($request->getMethod() === Method::POST) {
                 $body = $request->getParsedBody() ?? [];
@@ -117,11 +113,11 @@ final class ClientPeppolController
                                              ? 'client/guest'
                                              : 'client/index',
                                     'heading' => $this->translator->translate('invoice.client.peppol'),
-                                    'message' => $this->translator->translate('i.record_successfully_updated')
+                                    'message' => $this->translator->translate('i.record_successfully_updated'),
                                 ]
                             )
                         );
-                    }    
+                    }
                 }
                 $parameters['errors'] = $form->getValidationResult()->getErrorMessagesIndexedByProperty();
                 $parameters['form'] = $form;
@@ -132,74 +128,71 @@ final class ClientPeppolController
     }
 
     /**
-     *
      * @return array
      */
     private function pep(): array
     {
-        $pep = [
-          'endpointid' => [
-            'eg' => 'joe.bloggs@web.com',
-            'url' => 'cac-AccountingSupplierParty/cac-Party/cbc-EndpointID/'
-          ],
-          'endpointid_schemeid' => [
-            'eg' => '0192',
-            'url' => 'cac-AccountingSupplierParty/cac-Party/cbc-EndpointID/schemeID/'
-          ],
-          'identificationid' => [
-            'eg' => 'SE8765456787',
-            'url' => 'cac-AccountingCustomerParty/cac-Party/cac-PartyIdentification/cbc-ID/'
-          ],
-          'identificationid_schemeid' => [
-            'eg' => '0088',
-            'url' => 'cac-AccountingCustomerParty/cac-Party/cac-PartyIdentification/cbc-ID/schemeID/'
-          ],
-          'taxschemecompanyid' => [
-            'eg' => 'SE8765456787',
-            'url' => 'cac-AccountingCustomerParty/cac-Party/cac-PartyTaxScheme/cbc-CompanyID/'
-          ],
-          'taxschemeid' => [
-            'eg' => 'VAT',
-            'url' => 'cac-AccountingCustomerParty/cac-Party/cac-PartyTaxScheme/cac-TaxScheme/cbc-ID/'
-          ],
-          'legal_entity_registration_name' => [
-            'eg' => 'Buyer Full Name AS',
-            'url' => 'cac-AccountingCustomerParty/cac-Party/cac-PartyLegalEntity/cbc-RegistrationName/'
-          ],
-          'legal_entity_companyid' => [
-            'eg' => '5560104525',
-            'url' => 'cac-AccountingCustomerParty/cac-Party/cac-PartyLegalEntity/cbc-CompanyID/'
-          ],
-          'legal_entity_companyid_schemeid' => [
-            'eg' => '0007',
-            'url' => 'cac-AccountingCustomerParty/cac-Party/cac-PartyLegalEntity/cbc-CompanyID/schemeID/'
-          ],
-          'legal_entity_company_legal_form' => [
-            'eg' => 'Share Capital',
-            'url' => 'cac-AccountingSupplierParty/cac-Party/cac-PartyLegalEntity/cbc-CompanyLegalForm/'
-          ],
-          'financial_institution_branchid' => [
-            'eg' => '9999',
-            'url' => 'cac-PaymentMeans/cac-PayeeFinancialAccount/cac-FinancialInstitutionBranch/'
-          ],
-          'accounting_cost' => [
-            'eg' => '4217:2323:2323',
-            'url' => 'cbc-AccountingCost/'
-          ],
-          'buyer_reference' => [
-            'eg' => 'abs1234',
-            'url' => 'cbc-BuyerReference/'
-          ],
-          'supplier_assigned_accountid' => [
-            'eg' => '',
-            'url' => ''
-          ],
+        return [
+            'endpointid' => [
+                'eg' => 'joe.bloggs@web.com',
+                'url' => 'cac-AccountingSupplierParty/cac-Party/cbc-EndpointID/',
+            ],
+            'endpointid_schemeid' => [
+                'eg' => '0192',
+                'url' => 'cac-AccountingSupplierParty/cac-Party/cbc-EndpointID/schemeID/',
+            ],
+            'identificationid' => [
+                'eg' => 'SE8765456787',
+                'url' => 'cac-AccountingCustomerParty/cac-Party/cac-PartyIdentification/cbc-ID/',
+            ],
+            'identificationid_schemeid' => [
+                'eg' => '0088',
+                'url' => 'cac-AccountingCustomerParty/cac-Party/cac-PartyIdentification/cbc-ID/schemeID/',
+            ],
+            'taxschemecompanyid' => [
+                'eg' => 'SE8765456787',
+                'url' => 'cac-AccountingCustomerParty/cac-Party/cac-PartyTaxScheme/cbc-CompanyID/',
+            ],
+            'taxschemeid' => [
+                'eg' => 'VAT',
+                'url' => 'cac-AccountingCustomerParty/cac-Party/cac-PartyTaxScheme/cac-TaxScheme/cbc-ID/',
+            ],
+            'legal_entity_registration_name' => [
+                'eg' => 'Buyer Full Name AS',
+                'url' => 'cac-AccountingCustomerParty/cac-Party/cac-PartyLegalEntity/cbc-RegistrationName/',
+            ],
+            'legal_entity_companyid' => [
+                'eg' => '5560104525',
+                'url' => 'cac-AccountingCustomerParty/cac-Party/cac-PartyLegalEntity/cbc-CompanyID/',
+            ],
+            'legal_entity_companyid_schemeid' => [
+                'eg' => '0007',
+                'url' => 'cac-AccountingCustomerParty/cac-Party/cac-PartyLegalEntity/cbc-CompanyID/schemeID/',
+            ],
+            'legal_entity_company_legal_form' => [
+                'eg' => 'Share Capital',
+                'url' => 'cac-AccountingSupplierParty/cac-Party/cac-PartyLegalEntity/cbc-CompanyLegalForm/',
+            ],
+            'financial_institution_branchid' => [
+                'eg' => '9999',
+                'url' => 'cac-PaymentMeans/cac-PayeeFinancialAccount/cac-FinancialInstitutionBranch/',
+            ],
+            'accounting_cost' => [
+                'eg' => '4217:2323:2323',
+                'url' => 'cbc-AccountingCost/',
+            ],
+            'buyer_reference' => [
+                'eg' => 'abs1234',
+                'url' => 'cbc-BuyerReference/',
+            ],
+            'supplier_assigned_accountid' => [
+                'eg' => '',
+                'url' => '',
+            ],
         ];
-        return $pep;
     }
 
     /**
-     *
      * @param ClientPeppolRepository $clientpeppolRepository
      * @param Request $request
      * @param ClientPeppolService $service
@@ -208,8 +201,8 @@ final class ClientPeppolController
     public function index(ClientPeppolRepository $clientpeppolRepository, Request $request, ClientPeppolService $service): Response
     {
         $parameters = [
-          'clientpeppols' => $this->clientpeppols($clientpeppolRepository),
-          'alert' => $this->alert()
+            'clientpeppols' => $this->clientpeppols($clientpeppolRepository),
+            'alert' => $this->alert(),
         ];
         return $this->viewRenderer->render('index', $parameters);
     }
@@ -258,22 +251,22 @@ final class ClientPeppolController
             $peppolarrays = new PeppolArrays();
             $form = new ClientPeppolForm($clientpeppol);
             $parameters = [
-              'title' => $this->translator->translate('i.edit'),
-              'actionName' => 'clientpeppol/edit',
-              'actionArguments' => ['client_id' => $clientpeppol->getClient_id()],
-              'buttons' => $this->viewRenderer->renderPartialAsString(
-                  '//invoice/layout/header_buttons',
-                  ['hide_submit_button' => false, 'hide_cancel_button' => false]
-              ),
-              'errors' => [],
-              'form' => $form,
-              'pep' => $this->pep(),
-              'setting' => $settingRepository->getSetting('enable_client_peppol_defaults'),
-              'defaults' => $settingRepository->getSetting('enable_client_peppol_defaults') == '1' ? true : false,
-              'client_id' => $clientpeppol->getClient_id(),
-              'receiver_identifier_array' => StoreCoveArrays::store_cove_receiver_identifier_array(),
-              'electronic_address_scheme' => PeppolArrays::electronic_address_scheme(),
-              'iso_6523_array' => $peppolarrays->getIso_6523_icd()
+                'title' => $this->translator->translate('i.edit'),
+                'actionName' => 'clientpeppol/edit',
+                'actionArguments' => ['client_id' => $clientpeppol->getClient_id()],
+                'buttons' => $this->viewRenderer->renderPartialAsString(
+                    '//invoice/layout/header_buttons',
+                    ['hide_submit_button' => false, 'hide_cancel_button' => false]
+                ),
+                'errors' => [],
+                'form' => $form,
+                'pep' => $this->pep(),
+                'setting' => $settingRepository->getSetting('enable_client_peppol_defaults'),
+                'defaults' => $settingRepository->getSetting('enable_client_peppol_defaults') == '1' ? true : false,
+                'client_id' => $clientpeppol->getClient_id(),
+                'receiver_identifier_array' => StoreCoveArrays::store_cove_receiver_identifier_array(),
+                'electronic_address_scheme' => PeppolArrays::electronic_address_scheme(),
+                'iso_6523_array' => $peppolarrays->getIso_6523_icd(),
             ];
             if ($request->getMethod() === Method::POST) {
                 if (is_array($body)) {
@@ -289,11 +282,11 @@ final class ClientPeppolController
                         // Administrator's return url to see all clients
                         if ($this->userService->hasPermission('editClientPeppol') && $this->userService->hasPermission('viewInv') && $this->userService->hasPermission('editInv')) {
                             return $this->webService->getRedirectResponse('client/index');
-                        }   
+                        }
                     }
                     $parameters['errors'] = $form->getValidationResult()->getErrorMessagesIndexedByProperty();
                     $parameters['form'] = $form;
-                }    
+                }
             }
             return $this->viewRenderer->render('_form', $parameters);
         }
@@ -308,9 +301,9 @@ final class ClientPeppolController
         return $this->viewRenderer->renderPartialAsString(
             '//invoice/layout/alert',
             [
-       'flash' => $this->flash,
-       'errors' => [],
-     ]
+                'flash' => $this->flash,
+                'errors' => [],
+            ]
         );
     }
 
@@ -325,8 +318,7 @@ final class ClientPeppolController
     {
         $client_id = $currentRoute->getArgument('client_id');
         if (null !== $client_id) {
-            $clientpeppol = $clientpeppolRepository->repoClientPeppolLoadedquery($client_id);
-            return $clientpeppol;
+            return $clientpeppolRepository->repoClientPeppolLoadedquery($client_id);
         }
         return null;
     }
@@ -338,7 +330,6 @@ final class ClientPeppolController
      */
     private function clientpeppols(ClientPeppolRepository $clientpeppolRepository): \Yiisoft\Data\Cycle\Reader\EntityReader
     {
-        $clientpeppols = $clientpeppolRepository->findAllPreloaded();
-        return $clientpeppols;
+        return $clientpeppolRepository->findAllPreloaded();
     }
 }

@@ -59,7 +59,6 @@ final class PaymentMethodRepository extends Select\Repository
      * @see Reader/ReadableDataInterface|InvalidArgumentException
      * @param array|PaymentMethod|null $paymentmethod
      * @throws Throwable
-     * @return void
      */
     public function save(array|PaymentMethod|null $paymentmethod): void
     {
@@ -70,7 +69,6 @@ final class PaymentMethodRepository extends Select\Repository
      * @see Reader/ReadableDataInterface|InvalidArgumentException
      * @param array|PaymentMethod|null $paymentmethod
      * @throws Throwable
-     * @return void
      */
     public function delete(array|PaymentMethod|null $paymentmethod): void
     {
@@ -78,7 +76,6 @@ final class PaymentMethodRepository extends Select\Repository
     }
 
     /**
-     *
      * @param Select $query
      * @return EntityReader
      */
@@ -91,10 +88,9 @@ final class PaymentMethodRepository extends Select\Repository
     }
 
     /**
-     *
      * @param string $id
      *
-     * @return null|PaymentMethod
+     * @return PaymentMethod|null
      *
      * @psalm-return TEntity|null
      */
@@ -106,26 +102,22 @@ final class PaymentMethodRepository extends Select\Repository
     }
 
     /**
-     *
      * @param string $id
      * @return int
      */
     public function repoPaymentMethodqueryCount(string $id): int
     {
-        $count = $this->select()
+        return $this->select()
                       ->where(['id' => $id])
                       ->count();
-        return  $count;
     }
 
     /**
-     *
      * @return int
      */
     public function count(): int
     {
-        $count = $this->select()
+        return $this->select()
                       ->count();
-        return $count;
     }
 }

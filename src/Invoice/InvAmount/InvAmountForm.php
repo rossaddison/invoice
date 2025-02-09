@@ -102,11 +102,11 @@ final class InvAmountForm extends FormModel
     public function getRules(): array
     {
         return [
-          'item_subtotal' => [new Required()],
-          'item_tax_total' => [new Required()],
-          'tax_total' => [new Required()],
-          'total' => [new Required()],
-          'inv_id' => [new Required()],
-    ];
+            'item_subtotal' => [new Required()],
+            'item_tax_total' => [new Required()],
+            'tax_total' => [new Required()],
+            'total' => [new Required()],
+            'inv_id' => [new Required()],
+        ];
     }
 }

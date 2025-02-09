@@ -22,7 +22,7 @@ class Party implements XmlSerializable
     private ?string $endpointID;
     private Translator $translator;
 
-    /** @var null|string|int $endpointId_schemeID */
+    /** @var int|string|null $endpointId_schemeID */
     private mixed $endpointID_schemeID;
 
     public function __construct(Translator $translator, ?string $name, ?string $partyIdentificationId, ?string $partyIdentificationSchemeId, ?Address $postalAddress, ?Address $physicalLocation, ?Contact $contact, ?PartyTaxScheme $partyTaxScheme, ?PartyLegalEntity $partyLegalEntity, ?string $endpointID, mixed $endpointID_schemeID)
@@ -47,8 +47,6 @@ class Party implements XmlSerializable
     }
 
     /**
-     *
-     * @return void
      * @throws InvalidArgumentException
      */
     private function validate(): void
@@ -67,20 +65,19 @@ class Party implements XmlSerializable
 
     /**
      * @param Writer $writer
-     * @return void
      */
     public function xmlSerialize(Writer $writer): void
     {
         $this->validate();
-        if (null !== ($this->endpointID) && null !== ($this->endpointID_schemeID)) {
+        if (null !== $this->endpointID && null !== $this->endpointID_schemeID) {
             $writer->write([
                 [
                     'name' => Schema::CBC . 'EndpointID',
                     'value' => $this->endpointID,
                     'attributes' => [
-                        'schemeID' => is_numeric($this->endpointID_schemeID) ? sprintf('%04d', +$this->endpointID_schemeID) : $this->endpointID_schemeID
-                    ]
-                ]
+                        'schemeID' => is_numeric($this->endpointID_schemeID) ? sprintf('%04d', +$this->endpointID_schemeID) : $this->endpointID_schemeID,
+                    ],
+                ],
             ]);
         }
 
@@ -100,8 +97,8 @@ class Party implements XmlSerializable
                     [
                         'name' => Schema::CBC . 'ID',
                         'value' => $this->partyIdentificationId,
-                        'attributes' => $partyIdentificationAttributes
-                    ]
+                        'attributes' => $partyIdentificationAttributes,
+                    ],
                 ],
             ]);
         }
@@ -109,36 +106,36 @@ class Party implements XmlSerializable
         if ($this->name !== null) {
             $writer->write([
                 Schema::CAC . 'PartyName' => [
-                    Schema::CBC . 'Name' => $this->name
-                ]
+                    Schema::CBC . 'Name' => $this->name,
+                ],
             ]);
         }
 
         $writer->write([
-            Schema::CAC . 'PostalAddress' => $this->postalAddress
+            Schema::CAC . 'PostalAddress' => $this->postalAddress,
         ]);
 
         if ($this->physicalLocation !== null) {
             $writer->write([
-                Schema::CAC . 'PhysicalLocation' => [Schema::CAC . 'Address' => $this->physicalLocation]
+                Schema::CAC . 'PhysicalLocation' => [Schema::CAC . 'Address' => $this->physicalLocation],
             ]);
         }
 
         if ($this->partyTaxScheme !== null) {
             $writer->write([
-                Schema::CAC . 'PartyTaxScheme' => $this->partyTaxScheme
+                Schema::CAC . 'PartyTaxScheme' => $this->partyTaxScheme,
             ]);
         }
 
         if ($this->partyLegalEntity !== null) {
             $writer->write([
-                Schema::CAC . 'PartyLegalEntity' => $this->partyLegalEntity
+                Schema::CAC . 'PartyLegalEntity' => $this->partyLegalEntity,
             ]);
         }
 
         if ($this->contact !== null) {
             $writer->write([
-                Schema::CAC . 'Contact' => $this->contact
+                Schema::CAC . 'Contact' => $this->contact,
             ]);
         }
     }

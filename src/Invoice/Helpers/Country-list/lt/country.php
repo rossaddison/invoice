@@ -1,7 +1,7 @@
 <?php
 
 declare(strict_types=1);
-return array(
+return [
     'AF' => 'Afganistanas',
     'IE' => 'Airija',
     'AX' => 'Alandų salos',
@@ -250,4 +250,4 @@ return array(
     'SH' => 'Šventoji Elena',
     'LC' => 'Šventoji Liucija',
     'CV' => 'Žaliasis Kyšulys',
-);
+];

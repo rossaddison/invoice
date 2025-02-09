@@ -18,8 +18,8 @@ use Yiisoft\Data\Cycle\Writer\EntityWriter;
 final class SalesOrderItemAmountRepository extends Select\Repository
 {
     private EntityWriter $entityWriter;
+
     /**
-     *
      * @param Select<TEntity> $select
      * @param EntityWriter $entityWriter
      */
@@ -59,7 +59,6 @@ final class SalesOrderItemAmountRepository extends Select\Repository
      * @see Reader/ReadableDataInterface|InvalidArgumentException
      * @param array|SalesOrderItemAmount|null $salesorderitemamount
      * @throws Throwable
-     * @return void
      */
     public function save(array|SalesOrderItemAmount|null $salesorderitemamount): void
     {
@@ -70,7 +69,6 @@ final class SalesOrderItemAmountRepository extends Select\Repository
      * @see Reader/ReadableDataInterface|InvalidArgumentException
      * @param array|SalesOrderItemAmount|null $salesorderitemamount
      * @throws Throwable
-     * @return void
      */
     public function delete(array|SalesOrderItemAmount|null $salesorderitemamount): void
     {
@@ -86,7 +84,7 @@ final class SalesOrderItemAmountRepository extends Select\Repository
     }
 
     /**
-     * @return null|SalesOrderItemAmount
+     * @return SalesOrderItemAmount|null
      *
      * @psalm-return TEntity|null
      */
@@ -99,7 +97,6 @@ final class SalesOrderItemAmountRepository extends Select\Repository
     }
 
     /**
-     *
      * @param string $so_item_id
      * @return int
      */

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 require_once('vendor/yiisoft/requirements/src/RequirementsChecker.php');
 
 use Yiisoft\Requirements\RequirementsChecker;
@@ -41,7 +43,7 @@ $config = [
         'mandatory' => false,
         'condition' => $requirementsChecker->checkPhpExtensionVersion('intl', '1.0.2', '>='),
         'by' => '<a href="https://secure.php.net/manual/en/book.intl.php">Internationalization</a> support',
-        'memo' => 'PHP Intl extension 1.0.2 or higher is required.'
+        'memo' => 'PHP Intl extension 1.0.2 or higher is required.',
     ],
 ];
 

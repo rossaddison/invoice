@@ -52,7 +52,6 @@ final class CustomValueForm extends FormModel
         return $this->customfield;
     }
 
-
     public function getValue(): string|null
     {
         return $this->value;

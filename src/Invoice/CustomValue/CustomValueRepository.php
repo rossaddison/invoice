@@ -19,6 +19,7 @@ use Yiisoft\Data\Cycle\Writer\EntityWriter;
 final class CustomValueRepository extends Select\Repository
 {
     private EntityWriter $entityWriter;
+
     /**
      * @param Select<TEntity> $select
      * @param EntityWriter $entityWriter
@@ -55,9 +56,7 @@ final class CustomValueRepository extends Select\Repository
     }
 
     /**
-     *
      * @param array|CustomValue|null $customvalue
-     * @return void
      */
     public function save(array|CustomValue|null $customvalue): void
     {
@@ -68,7 +67,6 @@ final class CustomValueRepository extends Select\Repository
      * @see Reader/ReadableDataInterface|InvalidArgumentException
      * @param array|CustomValue|null $customvalue
      * @throws Throwable
-     * @return void
      */
     public function delete(array|CustomValue|null $customvalue): void
     {
@@ -84,7 +82,6 @@ final class CustomValueRepository extends Select\Repository
     }
 
     /**
-     *
      * @param string $id
      * @return CustomValue|null
      */
@@ -95,16 +92,14 @@ final class CustomValueRepository extends Select\Repository
     }
 
     /**
-     *
      * @param string $id
      * @return int
      */
     public function repoCount(string $id): int
     {
-        $count = $this->select()
+        return $this->select()
                       ->where(['id' => $id])
                       ->count();
-        return $count;
     }
 
     /**
@@ -119,26 +114,23 @@ final class CustomValueRepository extends Select\Repository
     }
 
     /**
-     *
      * @param int $custom_field_id
      * @return int
      */
     public function repoCustomFieldquery_count(int $custom_field_id): int
     {
-        $count = $this->select()
+        return $this->select()
                       ->where(['custom_field_id' => $custom_field_id])
                       ->count();
-        return $count;
     }
 
     /**
-     *
      * @param EntityReader $custom_fields
      * @return array
      */
     public function attach_hard_coded_custom_field_values_to_custom_field(EntityReader $custom_fields): array
     {
-        $custom_values  = [];
+        $custom_values = [];
         /** @var CustomField $custom_field */
         foreach ($custom_fields as $custom_field) {
             if (in_array($custom_field->getType(), ['SINGLE-CHOICE','MULTIPLE-CHOICE'])) {
@@ -148,5 +140,4 @@ final class CustomValueRepository extends Select\Repository
         }
         return $custom_values;
     }
-
 }

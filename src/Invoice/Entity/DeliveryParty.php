@@ -12,10 +12,10 @@ use Cycle\Annotated\Annotation\Entity;
 class DeliveryParty
 {
     #[Column(type: 'primary')]
-    private ?int $id =  null;
+    private ?int $id = null;
 
     #[Column(type: 'text', nullable: true)]
-    private ?string $party_name =  '';
+    private ?string $party_name = '';
 
     public function __construct(
         int $id = null,
@@ -32,7 +32,7 @@ class DeliveryParty
 
     public function setId(int $id): void
     {
-        $this->id =  $id;
+        $this->id = $id;
     }
 
     public function getPartyName(): string|null
@@ -42,7 +42,7 @@ class DeliveryParty
 
     public function setPartyName(string $party_name): void
     {
-        $this->party_name =  $party_name;
+        $this->party_name = $party_name;
     }
 
     public function isNewRecord(): bool

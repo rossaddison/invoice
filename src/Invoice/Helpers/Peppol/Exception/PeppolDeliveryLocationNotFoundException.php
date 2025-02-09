@@ -27,5 +27,4 @@ class PeppolDeliveryLocationNotFoundException extends \RuntimeException implemen
                 Please try again
             SOLUTION;
     }
-
 }

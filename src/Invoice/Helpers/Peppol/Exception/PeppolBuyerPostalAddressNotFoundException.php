@@ -27,5 +27,4 @@ class PeppolBuyerPostalAddressNotFoundException extends \RuntimeException implem
                 Please try again
             SOLUTION;
     }
-
 }

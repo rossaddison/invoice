@@ -30,5 +30,4 @@ class PeppolClientNotFoundException extends \RuntimeException implements Friendl
                 Please try again
             SOLUTION;
     }
-
 }

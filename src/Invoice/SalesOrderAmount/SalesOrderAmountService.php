@@ -12,7 +12,6 @@ final class SalesOrderAmountService
 {
     private SalesOrderAmountRepository $repository;
 
-
     public function __construct(SalesOrderAmountRepository $repository)
     {
         $this->repository = $repository;
@@ -21,7 +20,6 @@ final class SalesOrderAmountService
     /**
      * @param SoAmount $model
      * @param int $so_id
-     * @return void
      */
     public function initializeSalesOrderAmount(SoAmount $model, int $so_id): void
     {
@@ -40,7 +38,6 @@ final class SalesOrderAmountService
      * @param SOAR $soaR
      * @param string $basis_quote_id
      * @param string|null $new_so_id
-     * @return void
      */
     public function initializeCopyQuoteAmount(SoAmount $model, QAR $qaR, SOAR $soaR, string $basis_quote_id, string|null $new_so_id): void
     {
@@ -56,10 +53,8 @@ final class SalesOrderAmountService
     }
 
     /**
-     *
      * @param SoAmount $model
      * @param array $array
-     * @return void
      */
     public function saveSalesOrderAmountViaCalculations(SoAmount $model, array $array): void
     {
@@ -79,9 +74,7 @@ final class SalesOrderAmountService
     }
 
     /**
-     *
      * @param SoAmount|null $model
-     * @return void
      */
     public function deleteSalesOrderAmount(SoAmount|null $model): void
     {

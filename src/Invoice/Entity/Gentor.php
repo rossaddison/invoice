@@ -86,6 +86,7 @@ class Gentor
         $this->deleted_include = $deleted_include;
         $this->flash_include = $flash_include;
     }
+
     public function getGentor_id(): string
     {
         return (string)$this->id;

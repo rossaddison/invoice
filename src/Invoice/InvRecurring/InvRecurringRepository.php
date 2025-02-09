@@ -75,7 +75,6 @@ final class InvRecurringRepository extends Select\Repository
 
     // cycle/ORM/src/Select fetchOne
     /**
-     *
      * @param string $id
      * @return TEntity|null
      */
@@ -96,7 +95,7 @@ final class InvRecurringRepository extends Select\Repository
 
     public function recur_frequencies(): array
     {
-        $recur_frequencies = [
+        return [
             '1D' => 'i.calendar_day_1',
             '2D' => 'i.calendar_day_2',
             '3D' => 'i.calendar_day_3',
@@ -126,7 +125,6 @@ final class InvRecurringRepository extends Select\Repository
             '4Y' => 'i.calendar_year_4',
             '5Y' => 'i.calendar_year_5',
         ];
-        return $recur_frequencies;
     }
 
     // Recur invoices become active when the current date passes the recur_next_date ie. recur_next_date is less than current date
@@ -152,11 +150,10 @@ final class InvRecurringRepository extends Select\Repository
     public function CountActive(SettingRepository $s): int
     {
         $datehelper = new DateHelper($s);
-        $count_active = $this->select()
+        return $this->select()
                       ->where('next_date', '<', date($datehelper->style()))
                       ->orWhere('end_date', '>', date($datehelper->style()))
                       ->orWhere('end_date', '=', '0000-00-00')
                       ->count();
-        return $count_active;
     }
 }

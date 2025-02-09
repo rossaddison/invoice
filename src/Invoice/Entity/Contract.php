@@ -15,10 +15,10 @@ class Contract
     #[Column(type: 'primary')]
     public ?int $id = null;
 
-    #[BelongsTo(target: \App\Invoice\Entity\Client::class, nullable: false, fkAction: 'NO ACTION')]
+    #[BelongsTo(target: Client::class, nullable: false, fkAction: 'NO ACTION')]
     private ?Client $client = null;
     #[Column(type: 'integer(11)', nullable: false)]
-    private ?int $client_id =  null;
+    private ?int $client_id = null;
 
     #[Column(type: 'text', nullable: true)]
     public ?string $reference = null;
@@ -56,7 +56,7 @@ class Contract
 
     public function setClient_id(int $client_id): void
     {
-        $this->client_id =  $client_id;
+        $this->client_id = $client_id;
     }
 
     public function getClient(): Client|null
@@ -96,7 +96,7 @@ class Contract
 
     public function setPeriod_start(DateTimeImmutable $period_start): void
     {
-        $this->period_start  = $period_start;
+        $this->period_start = $period_start;
     }
 
     public function getPeriod_end(): DateTimeImmutable
@@ -111,7 +111,7 @@ class Contract
 
     public function nullifyRelationOnChange(int $client_id): void
     {
-        if ($this->client_id <> $client_id) {
+        if ($this->client_id != $client_id) {
             $this->client = null;
         }
     }

@@ -21,7 +21,6 @@ final class SalesOrderItemRepository extends Select\Repository
     private EntityWriter $entityWriter;
 
     /**
-     *
      * @param Select<TEntity> $select
      * @param EntityWriter $entityWriter
      */
@@ -61,7 +60,6 @@ final class SalesOrderItemRepository extends Select\Repository
      * @see Reader/ReadableDataInterface|InvalidArgumentException
      * @param array|SalesOrderItem|null $salesorderitem
      * @throws Throwable
-     * @return void
      */
     public function save(array|SalesOrderItem|null $salesorderitem): void
     {
@@ -72,7 +70,6 @@ final class SalesOrderItemRepository extends Select\Repository
      * @see Reader/ReadableDataInterface|InvalidArgumentException
      * @param array|SalesOrderItem|null $salesorderitem
      * @throws Throwable
-     * @return void
      */
     public function delete(array|SalesOrderItem|null $salesorderitem): void
     {
@@ -88,7 +85,7 @@ final class SalesOrderItemRepository extends Select\Repository
     }
 
     /**
-     * @return null|SalesOrderItem
+     * @return SalesOrderItem|null
      *
      * @psalm-return TEntity|null
      */
@@ -127,18 +124,16 @@ final class SalesOrderItemRepository extends Select\Repository
 
     public function repoCount(string $salesorder_id): int
     {
-        $count = $this->select()
+        return $this->select()
                       ->where(['sales_order_id' => $salesorder_id])
                       ->count();
-        return $count;
     }
 
     public function repoSalesOrderItemCount(string $id): int
     {
-        $count = $this->select()
+        return $this->select()
                       ->where(['id' => $id])
                       ->count();
-        return $count;
     }
 
     /**
@@ -147,7 +142,6 @@ final class SalesOrderItemRepository extends Select\Repository
      * @param array $item_ids
      * @return EntityReader
      */
-
     public function findinSalesOrderItems(array $item_ids): EntityReader
     {
         $query = $this->select()->where(['id' => ['in' => new Parameter($item_ids)]]);

@@ -20,9 +20,7 @@ class SettlementPeriod implements XmlSerializable
     }
 
     /**
-     *
      * @param Writer $writer
-     * @return void
      */
     public function xmlSerialize(Writer $writer): void
     {
@@ -36,9 +34,9 @@ class SettlementPeriod implements XmlSerializable
                 'name' => Schema::CBC . 'DurationMeasure',
                 'value' => $this->endDate->diff($this->startDate)->format('%d'),
                 'attributes' => [
-                    'unitCode' => 'DAY'
-                ]
-            ]
+                    'unitCode' => 'DAY',
+                ],
+            ],
         ]);
     }
 }

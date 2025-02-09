@@ -8,9 +8,6 @@ use App\Invoice\Entity\UserClient;
 use App\Invoice\Entity\UserInv;
 use App\Invoice\Client\ClientRepository;
 use App\Invoice\Traits\FlashMessage;
-use App\Invoice\UserClient\UserClientService;
-use App\Invoice\UserClient\UserClientRepository;
-use App\Invoice\UserClient\UserClientForm;
 use App\Invoice\UserInv\UserInvRepository as UIR;
 use App\User\UserService;
 use App\Service\WebControllerService;
@@ -28,7 +25,7 @@ use Yiisoft\Yii\View\Renderer\ViewRenderer;
 final class UserClientController
 {
     use FlashMessage;
-    
+
     private Session $session;
     private Flash $flash;
     private ViewRenderer $viewRenderer;
@@ -65,9 +62,9 @@ final class UserClientController
     {
         $canEdit = $this->rbac();
         $parameters = [
-          'canEdit' => $canEdit,
-          'userclients' => $this->userclients($userclientRepository),
-          'alert' => $this->alert(),
+            'canEdit' => $canEdit,
+            'userclients' => $this->userclients($userclientRepository),
+            'alert' => $this->alert(),
         ];
         return $this->viewRenderer->render('index', $parameters);
     }
@@ -85,7 +82,7 @@ final class UserClientController
             'title' => $this->translator->translate('i.add'),
             'action' => ['userclient/add'],
             'errors' => [],
-            'form' => $form
+            'form' => $form,
         ];
         if ($request->getMethod() === Method::POST) {
             if ($formHydrator->populateFromPostAndValidate($form, $request)) {
@@ -94,7 +91,7 @@ final class UserClientController
                     $this->userclientService->saveUserClient($user_client, $body);
                     return $this->webService->getRedirectResponse('userclient/index');
                 }
-            }    
+            }
             $parameters['form'] = $form;
             $parameters['errors'] = $form->getValidationResult()->getErrorMessagesIndexedByProperty();
         }
@@ -105,7 +102,7 @@ final class UserClientController
      * @param CurrentRoute $currentRoute
      * @param UserClientRepository $userclientRepository
      * @param UIR $uiR
-     * @return \Yiisoft\DataResponse\DataResponse|Response
+     * @return Response|\Yiisoft\DataResponse\DataResponse
      */
     public function delete(
         CurrentRoute $currentRoute,
@@ -123,9 +120,9 @@ final class UserClientController
                     $this->viewRenderer->renderPartialAsString(
                         '//invoice/setting/userclient_successful',
                         [
-                        'heading' => $this->translator->translate('i.client'),
-                        'message' => $this->translator->translate('i.record_successfully_deleted'),
-                        'url' => 'userinv/client','id' => $user_inv->getId()
+                            'heading' => $this->translator->translate('i.client'),
+                            'message' => $this->translator->translate('i.record_successfully_deleted'),
+                            'url' => 'userinv/client','id' => $user_inv->getId(),
                         ]
                     )
                 );
@@ -164,7 +161,7 @@ final class UserClientController
                         $this->userclientService->saveUserClient($user_client, $body);
                         return $this->webService->getRedirectResponse('userclient/index');
                     }
-                }    
+                }
                 $parameters['form'] = $form;
                 $parameters['errors'] = $form->getValidationResult()->getErrorMessagesIndexedByProperty();
             }
@@ -196,7 +193,6 @@ final class UserClientController
         UserClientService $ucS,
         UIR $uiR
     ): Response {
-
         $user_id = $currentRoute->getArgument('user_id');
         if (null !== $user_id) {
             // Get possible client ids as an array that can be presented to this user
@@ -210,7 +206,7 @@ final class UserClientController
                 'availableClientIdList' => $availableClientIdList,
                 'cR' => $cR,
                 // Initialize the checkbox to zero so that both 'all_clients' and dropdownbox is presented on userclient/new.php
-                'form' => $form
+                'form' => $form,
             ];
 
             if ($request->getMethod() === Method::POST) {
@@ -226,10 +222,10 @@ final class UserClientController
                             $ucR->reset_users_all_clients($uiR, $cR, $ucS, $formHydrator);
                             return $this->webService->getRedirectResponse('userinv/index');
                         }
-                        if ((((string)$key === 'client_id'))) {
+                        if ((string)$key === 'client_id') {
                             $form_array = [
                                 'user_id' => $user_id,
-                                'client_id' => $value
+                                'client_id' => $value,
                             ];
                             if ($formHydrator->populateAndValidate($form, $form_array)
                                 // Check that the user client does not exist
@@ -289,7 +285,6 @@ final class UserClientController
     }
 
     /**
-     *
      * @param CurrentRoute $currentRoute
      * @param UIR $uiR
      * @return UserInv|null
@@ -298,8 +293,7 @@ final class UserClientController
     {
         $user_id = $currentRoute->getArgument('user_id');
         if (null !== $user_id) {
-            $user = $uiR->repoUserInvUserIdquery($user_id);
-            return $user;
+            return $uiR->repoUserInvUserIdquery($user_id);
         }
         return null;
     }
@@ -313,8 +307,7 @@ final class UserClientController
     {
         $id = $currentRoute->getArgument('id');
         if (null !== $id) {
-            $userclient = $userclientRepository->repoUserClientquery($id);
-            return $userclient;
+            return $userclientRepository->repoUserClientquery($id);
         }
         return null;
     }
@@ -326,8 +319,7 @@ final class UserClientController
      */
     private function userclients(UserClientRepository $userclientRepository): \Yiisoft\Data\Cycle\Reader\EntityReader
     {
-        $userclients = $userclientRepository->findAllPreloaded();
-        return $userclients;
+        return $userclientRepository->findAllPreloaded();
     }
 
     /**
@@ -338,8 +330,8 @@ final class UserClientController
         return $this->viewRenderer->renderPartialAsString(
             '//invoice/layout/alert',
             [
-        'flash' => $this->flash
-      ]
+                'flash' => $this->flash,
+            ]
         );
     }
 }

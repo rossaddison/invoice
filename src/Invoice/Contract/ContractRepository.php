@@ -18,6 +18,7 @@ use Yiisoft\Data\Cycle\Writer\EntityWriter;
 final class ContractRepository extends Select\Repository
 {
     private EntityWriter $entityWriter;
+
     /**
      * @param Select<TEntity> $select
      * @param EntityWriter $entityWriter
@@ -61,7 +62,6 @@ final class ContractRepository extends Select\Repository
      * @param array|Contract|null $contract
      * @psalm-param TEntity $contract
      * @throws Throwable
-     * @return void
      */
     public function save(array|Contract|null $contract): void
     {
@@ -72,7 +72,6 @@ final class ContractRepository extends Select\Repository
      * @see Reader/ReadableDataInterface|InvalidArgumentException
      * @param array|Contract|null $contract
      * @throws Throwable
-     * @return void
      */
     public function delete(array|Contract|null $contract): void
     {

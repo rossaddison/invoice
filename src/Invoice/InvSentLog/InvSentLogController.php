@@ -5,8 +5,6 @@ declare(strict_types=1);
 namespace App\Invoice\InvSentLog;
 
 use App\Invoice\Entity\InvSentLog;
-use App\Invoice\InvSentLog\InvSentLogForm;
-use App\Invoice\InvSentLog\InvSentLogService;
 use App\Invoice\InvSentLog\InvSentLogRepository as ISLR;
 use App\Invoice\Setting\SettingRepository;
 use App\Invoice\UserInv\UserInvRepository as UIR;
@@ -27,7 +25,7 @@ use Yiisoft\Yii\View\Renderer\ViewRenderer;
 final class InvSentLogController
 {
     use FlashMessage;
-    
+
     private Flash $flash;
     private Session $session;
     private ViewRenderer $viewRenderer;
@@ -61,7 +59,6 @@ final class InvSentLogController
         $this->translator = $translator;
     }
 
-
     /**
      * @return string
      */
@@ -70,9 +67,9 @@ final class InvSentLogController
         return $this->viewRenderer->renderPartialAsString(
             '//invoice/layout/alert',
             [
-            'flash' => $this->flash,
-            'errors' => [],
-        ]
+                'flash' => $this->flash,
+                'errors' => [],
+            ]
         );
     }
 
@@ -113,7 +110,7 @@ final class InvSentLogController
                     $invsentlogs = $islR->filterClient($queryFilterClient);
                 }
                 if ((isset($queryFilterInvNumber) && !empty($queryFilterInvNumber))
-                && ((isset($queryFilterClient) && !empty($queryFilterClient)))) {
+                && (isset($queryFilterClient) && !empty($queryFilterClient))) {
                     $invsentlogs = $islR->filterInvNumberWithClient($queryFilterInvNumber, $queryFilterClient);
                 }
                 $paginator = (new OffsetPaginator($invsentlogs))
@@ -137,7 +134,6 @@ final class InvSentLogController
     }
 
     /**
-     *
      * @param ISLR $islR
      * @param SettingRepository $settingRepository
      * @param string $page
@@ -165,7 +161,7 @@ final class InvSentLogController
             $invsentlogs = $islR->filterClient($queryFilterClientId);
         }
         if ((isset($queryFilterInvNumber) && !empty($queryFilterInvNumber))
-        && ((isset($queryFilterClientId) && !empty($queryFilterClientId)))) {
+        && (isset($queryFilterClientId) && !empty($queryFilterClientId))) {
             $invsentlogs = $islR->filterInvNumberWithClient($queryFilterInvNumber, $queryFilterClientId);
         }
         $paginator = (new OffsetPaginator($invsentlogs))
@@ -196,8 +192,7 @@ final class InvSentLogController
             /**
              * @var InvSentLog $invsentlog
              */
-            $invsentlog = $islR->repoInvSentLogLoadedquery((string)$id);
-            return $invsentlog;
+            return $islR->repoInvSentLogLoadedquery((string)$id);
         }
         return null;
     }
@@ -206,7 +201,7 @@ final class InvSentLogController
      * @param ISLR $islR
      * @param SettingRepository $settingRepository
      * @param int id
-     * @return \Yiisoft\DataResponse\DataResponse|Response
+     * @return Response|\Yiisoft\DataResponse\DataResponse
      */
     public function view(ISLR $islR, #[RouteArgument('id')] int $id): \Yiisoft\DataResponse\DataResponse|Response
     {
@@ -217,7 +212,7 @@ final class InvSentLogController
                 'title' => $this->translator->translate('i.view'),
                 'actionName' => 'invsentlog/view',
                 'actionArguments' => ['id' => $id],
-                'form' => $form
+                'form' => $form,
             ];
             return $this->viewRenderer->render('view', $parameters);
         }
@@ -302,7 +297,6 @@ final class InvSentLogController
     }
 
     /**
-     *
      * @param ISLR $islR
      * @param string $userId
      * @return array

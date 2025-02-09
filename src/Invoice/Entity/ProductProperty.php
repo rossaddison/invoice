@@ -6,7 +6,6 @@ namespace App\Invoice\Entity;
 
 use Cycle\Annotated\Annotation\Column;
 use Cycle\Annotated\Annotation\Entity;
-use App\Invoice\Entity\Product;
 use Cycle\Annotated\Annotation\Relation\BelongsTo;
 
 #[Entity(repository: \App\Invoice\ProductProperty\ProductPropertyRepository::class)]
@@ -15,7 +14,7 @@ class ProductProperty
     #[Column(type: 'primary')]
     public ?int $id = null;
 
-    #[BelongsTo(target:Product::class, nullable: false, fkAction: "NO ACTION")]
+    #[BelongsTo(target:Product::class, nullable: false, fkAction: 'NO ACTION')]
     private ?Product $product = null;
     #[Column(type: 'integer(11)', nullable: true)]
     private ?int $product_id = null;
@@ -78,7 +77,7 @@ class ProductProperty
 
     public function nullifyRelationOnChange(int $product_id): void
     {
-        if ($this->product_id <> $product_id) {
+        if ($this->product_id != $product_id) {
             $this->product = null;
         }
     }

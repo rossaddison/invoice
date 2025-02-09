@@ -18,7 +18,6 @@ final class UserClientService
     /**
      * @param UserClient $model
      * @param array $array
-     * @return void
      */
     public function saveUserClient(UserClient $model, array $array): void
     {
@@ -29,7 +28,6 @@ final class UserClientService
 
     /**
      * @param UserClient $model
-     * @return void
      */
     public function deleteUserClient(UserClient $model): void
     {

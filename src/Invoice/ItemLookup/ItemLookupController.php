@@ -5,8 +5,6 @@ declare(strict_types=1);
 namespace App\Invoice\ItemLookup;
 
 use App\Invoice\Entity\ItemLookup;
-use App\Invoice\ItemLookup\ItemLookupService;
-use App\Invoice\ItemLookup\ItemLookupRepository;
 use App\Invoice\Setting\SettingRepository;
 use App\Invoice\Traits\FlashMessage;
 use App\User\UserService;
@@ -25,7 +23,7 @@ use Yiisoft\Yii\View\Renderer\ViewRenderer;
 final class ItemLookupController
 {
     use FlashMessage;
-    
+
     private Session $session;
     private Flash $flash;
     private ViewRenderer $viewRenderer;
@@ -61,9 +59,9 @@ final class ItemLookupController
         $itemLookups = $this->itemlookups($itemlookupRepository);
         $paginator = (new OffsetPaginator($itemLookups));
         $parameters = [
-         'paginator' => $paginator,
-         'canEdit' => $canEdit,
-         'alert' => $this->alert()
+            'paginator' => $paginator,
+            'canEdit' => $canEdit,
+            'alert' => $this->alert(),
         ];
         return $this->viewRenderer->render('index', $parameters);
     }
@@ -80,11 +78,11 @@ final class ItemLookupController
         $itemLookup = new ItemLookup();
         $form = new ItemLookupForm($itemLookup);
         $parameters = [
-          'title' => $this->translator->translate('invoice.add'),
-          'actionName' => 'itemlookup/add',
-          'actionArguments' => [],
-          'errors' => [],
-          'form' => $form
+            'title' => $this->translator->translate('invoice.add'),
+            'actionName' => 'itemlookup/add',
+            'actionArguments' => [],
+            'errors' => [],
+            'form' => $form,
         ];
         if ($request->getMethod() === Method::POST) {
             $body = $request->getParsedBody() ?? [];
@@ -93,7 +91,7 @@ final class ItemLookupController
                     $this->itemlookupService->saveItemLookup($itemLookup, $body);
                     return $this->webService->getRedirectResponse('itemlookup/index');
                 }
-            }    
+            }
             $parameters['errors'] = $form->getValidationResult()->getErrorMessagesIndexedByProperty();
             $parameters['form'] = $form;
         }
@@ -117,11 +115,11 @@ final class ItemLookupController
         if (null !== $lookup) {
             $form = new ItemLookupForm($lookup);
             $parameters = [
-              'title' => $this->translator->translate('i.edit'),
-              'actionName' => 'itemlookup/edit',
-              'actionArguments' => ['id' => $lookup->getId()],
-              'errors' => [],
-              'form' => $form
+                'title' => $this->translator->translate('i.edit'),
+                'actionName' => 'itemlookup/edit',
+                'actionArguments' => ['id' => $lookup->getId()],
+                'errors' => [],
+                'form' => $form,
             ];
             if ($request->getMethod() === Method::POST) {
                 $body = $request->getParsedBody() ?? [];
@@ -130,7 +128,7 @@ final class ItemLookupController
                         $this->itemlookupService->saveItemLookup($lookup, $body);
                         return $this->webService->getRedirectResponse('itemlookup/index');
                     }
-                }    
+                }
                 $parameters['errors'] = $form->getValidationResult()->getErrorMessagesIndexedByProperty();
                 $parameters['form'] = $form;
             }
@@ -140,7 +138,6 @@ final class ItemLookupController
     }
 
     /**
-     *
      * @param CurrentRoute $currentRoute
      * @param ItemLookupRepository $itemlookupRepository
      * @return Response
@@ -160,7 +157,7 @@ final class ItemLookupController
     /**
      * @param CurrentRoute $currentRoute
      * @param ItemLookupRepository $itemlookupRepository
-     * @return \Yiisoft\DataResponse\DataResponse|Response
+     * @return Response|\Yiisoft\DataResponse\DataResponse
      */
     public function view(
         CurrentRoute $currentRoute,
@@ -170,10 +167,10 @@ final class ItemLookupController
         if (null !== $itemLookup) {
             $form = new ItemLookupForm($itemLookup);
             $parameters = [
-              'title' => $this->translator->translate('i.view'),
-              'actionName' => 'itemlookup/view',
-              'actionArguments' => ['id' => $itemLookup->getId()],
-              'form' => $form,
+                'title' => $this->translator->translate('i.view'),
+                'actionName' => 'itemlookup/view',
+                'actionArguments' => ['id' => $itemLookup->getId()],
+                'form' => $form,
             ];
             return $this->viewRenderer->render('_view', $parameters);
         }
@@ -203,8 +200,7 @@ final class ItemLookupController
         $itemlookup = new ItemLookup();
         $id = $currentRoute->getArgument('id');
         if (null !== $id) {
-            $itemlookup = $itemlookupRepository->repoItemLookupquery($id);
-            return $itemlookup;
+            return $itemlookupRepository->repoItemLookupquery($id);
         }
         return $itemlookup;
     }
@@ -216,8 +212,7 @@ final class ItemLookupController
      */
     private function itemlookups(ItemLookupRepository $itemlookupRepository): \Yiisoft\Data\Cycle\Reader\EntityReader
     {
-        $itemlookups = $itemlookupRepository->findAllPreloaded();
-        return $itemlookups;
+        return $itemlookupRepository->findAllPreloaded();
     }
 
     /**
@@ -228,8 +223,8 @@ final class ItemLookupController
         return $this->viewRenderer->renderPartialAsString(
             '//invoice/layout/alert',
             [
-         'flash' => $this->flash
-       ]
+                'flash' => $this->flash,
+            ]
         );
     }
 }

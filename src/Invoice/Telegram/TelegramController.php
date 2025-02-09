@@ -29,11 +29,11 @@ use Yiisoft\Yii\View\Renderer\ViewRenderer;
 final class TelegramController
 {
     use FlashMessage;
-    
+
     /**
      * Note: Yiisoft\Di\NotFoundException can occur if $factory is placed after $telegramBotApi i.e. in the wrong order
      * @see https://github.com/rossaddison/invoice/issues/41
-     * 
+     *
      * @param DataResponseFactoryInterface $factory
      * @param ViewRenderer $viewRenderer
      * @param WebControllerService $webService
@@ -46,12 +46,11 @@ final class TelegramController
      * @param Update|null $update
      * @param TelegramBotApi|null $telegramBotApi
      */
-    
     public function __construct(
         private DataResponseFactoryInterface $factory,
         private ViewRenderer $viewRenderer,
         private WebControllerService $webService,
-        private UserService $userService,        
+        private UserService $userService,
         private Session $session,
         private Flash $flash,
         private TranslatorInterface $translator,
@@ -130,7 +129,7 @@ final class TelegramController
                                     $messageEffectId = null,
                                     $replyParameters = null,
                                     $replyMarkup = null,
-                                    $allowPaidBroadcast = null    
+                                    $allowPaidBroadcast = null
                                 );
                                 if (!$sendMessageResult instanceof FailResult) {
                                     $this->flashMessage('success', $this->translator->translate('invoice.invoice.telegram.bot.api.hello.world.test.message.sent'));
@@ -142,12 +141,12 @@ final class TelegramController
                                     if (null !== $sendMessageResult->errorCode) {
                                         $match = match ($sendMessageResult->errorCode) {
                                             403 => 'Solution: 1. Send a Message to Your Bot: Open Telegram and search for your bot by its username.' .
-                                                   'Start a chat with your bot and send any message to it. 2. Open your browser and enter the following URL,'.
-                                                   ' replacing YOUR_BOT_TOKEN with your bot token: https://api.telegram.org/botYOUR_BOT_TOKEN/getUpdates'. Button::deleteWebhook($urlGenerator, $this->translator),
+                                                   'Start a chat with your bot and send any message to it. 2. Open your browser and enter the following URL,' .
+                                                   ' replacing YOUR_BOT_TOKEN with your bot token: https://api.telegram.org/botYOUR_BOT_TOKEN/getUpdates' . Button::deleteWebhook($urlGenerator, $this->translator),
                                             409 => Button::deleteWebhook($urlGenerator, $this->translator),
                                             default => null !== $sendMessageResult->description ? $sendMessageResult->description : '',
                                         };
-                                        $this->flashMessage('primary', 'Fail Result: ' . (string)$sendMessageResult->errorCode.' '.$match);
+                                        $this->flashMessage('primary', 'Fail Result: ' . (string)$sendMessageResult->errorCode . ' ' . $match);
                                     }
                                     $this->webService->getRedirectResponse('setting/tab_index');
                                 }
@@ -176,20 +175,22 @@ final class TelegramController
             $this->flashMessage('secondary', $e->getMessage());
         }
         return $this->viewRenderer->render('index', $parameters = [
-            'alert' => $this->alert()
+            'alert' => $this->alert(),
         ]);
     }
-    
+
     /**
      * Note: This function has not been tested and is still under development
      * @param Request $request
      * @param string $secret_token
      * @param string $jsonString
      * @return \Yiisoft\DataResponse\DataResponse
-     */    
-    public function webhook(Request $request, 
-            #[RouteArgument('secret_token')] string $secret_token, 
-            #[RouteArgument('jsonString')] string $jsonString) : \Yiisoft\DataResponse\DataResponse
+     */
+    public function webhook(
+        Request $request,
+        #[RouteArgument('secret_token')] string $secret_token,
+        #[RouteArgument('jsonString')] string $jsonString
+    ): \Yiisoft\DataResponse\DataResponse
     {
         $settingRepositoryTelegramToken = $this->sR->getSetting('telegram_token');
         $settingRepositoryTelegramSecretToken = $this->sR->getSetting('telegram_secret_token');
@@ -203,7 +204,7 @@ final class TelegramController
                     /** @throws TelegramParseResultException */
                     $update = $telegramHelper::decodeJsonEncodedUpdatePushedToWebhookFromTelegramApi($jsonString, $this->logger);
                     return $this->factory->createResponse(Json::encode($update));
-                }    
+                }
             } else {
                 $this->logger->warning($this->translator->translate('invoice.invoice.telegram.bot.api.token.not.set'));
                 return $this->factory->createResponse(Json::encode(['fail' => $this->translator->translate('invoice.invoice.telegram.bot.api.token.not.set')]));
@@ -218,7 +219,7 @@ final class TelegramController
      * Note: Tested and functional
      * @param Request $request
      * @param UrlGenerator $urlGenerator
-     * @return \Yiisoft\DataResponse\DataResponse|Response
+     * @return Response|\Yiisoft\DataResponse\DataResponse
      */
     public function get_webhookinfo(Request $request, UrlGenerator $urlGenerator): \Yiisoft\DataResponse\DataResponse|Response
     {
@@ -247,15 +248,15 @@ final class TelegramController
         }
         return $this->viewRenderer->render('getwebhookinfo', $parameters = [
             'alert' => $this->alert(),
-            'webhookinfo' => $failResultWebhookInfo
+            'webhookinfo' => $failResultWebhookInfo,
         ]);
     }
-    
+
     /**
      * Note: Tested and functional
      * @param Request $request
      * @param UrlGenerator $urlGenerator
-     * @return \Yiisoft\DataResponse\DataResponse|Response
+     * @return Response|\Yiisoft\DataResponse\DataResponse
      */
     public function set_webhook(Request $request, UrlGenerator $urlGenerator): \Yiisoft\DataResponse\DataResponse|Response
     {
@@ -303,7 +304,7 @@ final class TelegramController
         }
         return $this->viewRenderer->render('setwebhook', $parameters = [
             'alert' => $this->alert(),
-            'webhookinfo' => $failResultWebhookInfo
+            'webhookinfo' => $failResultWebhookInfo,
         ]);
     }
 
@@ -311,7 +312,7 @@ final class TelegramController
      * Note: Tested and functional
      * @param Request $request
      * @param UrlGenerator $urlGenerator
-     * @return \Yiisoft\DataResponse\DataResponse|Response
+     * @return Response|\Yiisoft\DataResponse\DataResponse
      */
     public function delete_webhook(Request $request, UrlGenerator $urlGenerator): \Yiisoft\DataResponse\DataResponse|Response
     {
@@ -351,7 +352,7 @@ final class TelegramController
             $this->flashMessage('secondary', $e->getMessage());
         }
         return $this->viewRenderer->render('index', $parameters = [
-            'alert' => $this->alert()
+            'alert' => $this->alert(),
         ]);
     }
 
@@ -359,7 +360,7 @@ final class TelegramController
      * Note: Tested and functional
      * @param Request $request
      * @param UrlGenerator $urlGenerator
-     * @return \Yiisoft\DataResponse\DataResponse|Response
+     * @return Response|\Yiisoft\DataResponse\DataResponse
      */
     public function get_updates(Request $request, UrlGenerator $urlGenerator): \Yiisoft\DataResponse\DataResponse|Response
     {
@@ -415,7 +416,7 @@ final class TelegramController
         }
         return $this->viewRenderer->render('updates', $parameters = [
             'alert' => $this->alert(),
-            'updates' => $failResultUpdates
+            'updates' => $failResultUpdates,
         ]);
     }
 
@@ -427,8 +428,8 @@ final class TelegramController
         return $this->viewRenderer->renderPartialAsString(
             '//invoice/layout/alert',
             [
-        'flash' => $this->flash,
-      ]
+                'flash' => $this->flash,
+            ]
         );
     }
 }

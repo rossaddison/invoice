@@ -5,8 +5,6 @@ declare(strict_types=1);
 namespace App\Auth;
 
 use Cycle\ORM\Select;
-use Throwable;
-use App\Auth\Token;
 use Yiisoft\Auth\IdentityWithTokenRepositoryInterface;
 use Yiisoft\Data\Cycle\Writer\EntityWriter;
 
@@ -31,10 +29,10 @@ final class TokenRepository extends Select\Repository implements IdentityWithTok
      */
     public function findIdentityByToken(string $token, string $type = null): ?Identity
     {
-        $tokenRecord =  $this->findOne(['token' => $token, 'type' => $type]);
+        $tokenRecord = $this->findOne(['token' => $token, 'type' => $type]);
         return null !== $tokenRecord ? $tokenRecord->getIdentity() : null;
     }
-    
+
     /**
      * @param string $token
      * @param string $type
@@ -42,9 +40,9 @@ final class TokenRepository extends Select\Repository implements IdentityWithTok
      */
     public function findTokenByTokenAndType(string $token, string $type = null): ?Token
     {
-        $tokenRecord =  $this->findOne(['token' => $token, 'type' => $type]);
+        $tokenRecord = $this->findOne(['token' => $token, 'type' => $type]);
         return null !== $tokenRecord ? $tokenRecord : null;
-    }    
+    }
 
     /**
      * @param string $identityId
@@ -58,9 +56,7 @@ final class TokenRepository extends Select\Repository implements IdentityWithTok
     }
 
     /**
-     *
      * @param Token $token
-     * @return void
      */
     public function save(Token $token): void
     {

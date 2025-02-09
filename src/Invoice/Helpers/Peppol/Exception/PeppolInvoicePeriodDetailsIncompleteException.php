@@ -9,7 +9,6 @@ use Yiisoft\FriendlyException\FriendlyExceptionInterface;
 class PeppolInvoicePeriodDetailsIncompleteException extends \RuntimeException implements FriendlyExceptionInterface
 {
     /**
-     *
      * @return string
      *
      * @psalm-return 'Invoice Period Details Incomplete or Non-existant. See delivery/edit/{inv_id}'
@@ -28,5 +27,4 @@ class PeppolInvoicePeriodDetailsIncompleteException extends \RuntimeException im
                 Please try again
             SOLUTION;
     }
-
 }

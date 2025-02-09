@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace App\Contact;
 
 use Exception;
-use App\Contact\ContactForm;
 use Psr\Log\LoggerInterface;
 use Yiisoft\Mailer\File;
 use Yiisoft\Mailer\MailerInterface;
@@ -36,7 +35,7 @@ final class ContactMailer
     public function send(ContactForm $form): void
     {
         $message = new \Yiisoft\Mailer\Message(
-            charset: 'utf-8',    
+            charset: 'utf-8',
             subject: (string)$form->getPropertyValue('subject'),
             date: new \DateTimeImmutable('now'),
             from: [(string)$form->getPropertyValue('email') => (string)$form->getPropertyValue('name')],

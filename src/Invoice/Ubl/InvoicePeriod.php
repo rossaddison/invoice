@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Invoice\Ubl;
 
 use Sabre\Xml\Writer;
@@ -40,7 +42,6 @@ class InvoicePeriod implements XmlSerializable
      * The xmlSerialize method is called during xml writing.
      *
      * @param Writer $writer
-     * @return void
      */
     public function xmlSerialize(Writer $writer): void
     {

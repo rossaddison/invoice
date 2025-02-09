@@ -30,18 +30,18 @@ class PayeeFinancialAccount implements XmlSerializable
             'value' => $this->id,
             'attributes' => [
                 //'schemeID' => 'IBAN'
-            ]
+            ],
         ]);
 
         if ($this->name !== null) {
             $writer->write([
-                Schema::CBC . 'Name' => $this->name
+                Schema::CBC . 'Name' => $this->name,
             ]);
         }
 
         if ($this->financialInstitutionBranch !== null) {
             $writer->write([
-                Schema::CAC . 'FinancialInstitutionBranch' => $this->financialInstitutionBranch
+                Schema::CAC . 'FinancialInstitutionBranch' => $this->financialInstitutionBranch,
             ]);
         }
     }

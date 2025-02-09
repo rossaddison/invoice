@@ -18,6 +18,7 @@ use Yiisoft\Data\Cycle\Writer\EntityWriter;
 final class InvItemAllowanceChargeRepository extends Select\Repository
 {
     private EntityWriter $entityWriter;
+
     /**
      * @param Select<TEntity> $select
      * @param EntityWriter $entityWriter
@@ -61,7 +62,6 @@ final class InvItemAllowanceChargeRepository extends Select\Repository
      * @param array|InvItemAllowanceCharge|null $acii
      * @psalm-param TEntity $acii
      * @throws Throwable
-     * @return void
      */
     public function save(array|InvItemAllowanceCharge|null $acii): void
     {
@@ -73,7 +73,6 @@ final class InvItemAllowanceChargeRepository extends Select\Repository
      * @param array|InvItemAllowanceCharge|null $acii
 
      * @throws Throwable
-     * @return void
      */
     public function delete(array|InvItemAllowanceCharge|null $acii): void
     {

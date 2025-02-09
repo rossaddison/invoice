@@ -4,8 +4,6 @@ declare(strict_types=1);
 
 namespace App\Invoice\Entity;
 
-use App\Invoice\Entity\DeliveryLocation;
-use App\Invoice\Entity\Inv;
 use Cycle\Annotated\Annotation\Column;
 use Cycle\Annotated\Annotation\Entity;
 use Cycle\Annotated\Annotation\Relation\HasMany;
@@ -23,13 +21,13 @@ class Client
     public ?int $id = null;
 
     #[Column(type: 'string(254)', nullable: true)]
-    private string $client_email =  '';
+    private string $client_email = '';
 
     #[Column(type: 'string(20)', nullable: true)]
-    private ?string $client_mobile =  '';
+    private ?string $client_mobile = '';
 
     #[Column(type: 'integer(11)', nullable:true)]
-    private ?int $postaladdress_id =  null;
+    private ?int $postaladdress_id = null;
 
     #[Column(type: 'datetime')]
     private DateTimeImmutable $client_date_created;
@@ -58,58 +56,58 @@ class Client
     private ?string $client_frequency = '';
 
     #[Column(type: 'string(100)', nullable: true)]
-    private ?string $client_address_1 =  '';
+    private ?string $client_address_1 = '';
 
     #[Column(type: 'string(100)', nullable: true)]
-    private ?string $client_address_2 =  '';
+    private ?string $client_address_2 = '';
 
     #[Column(type: 'string(10)', nullable: true)]
     private ?string $client_building_number = '';
 
     #[Column(type: 'string(100)', nullable: true)]
-    private ?string $client_city =  '';
+    private ?string $client_city = '';
 
     #[Column(type: 'string(30)', nullable: true)]
-    private ?string $client_state =  '';
+    private ?string $client_state = '';
 
     #[Column(type: 'string(10)', nullable: true)]
-    private ?string $client_zip =  '';
+    private ?string $client_zip = '';
 
     #[Column(type: 'string(30)', nullable: true)]
-    private ?string $client_country =  '';
+    private ?string $client_country = '';
 
     #[Column(type: 'string(30)', nullable: true)]
-    private ?string $client_phone =  '';
+    private ?string $client_phone = '';
 
     #[Column(type: 'string(20)', nullable: true)]
-    private ?string $client_fax =  '';
+    private ?string $client_fax = '';
 
     #[Column(type: 'string(50)', nullable: true)]
-    private ?string $client_web =  '';
+    private ?string $client_web = '';
 
     #[Column(type: 'string(30)', nullable: true)]
-    private ?string $client_vat_id =  '';
+    private ?string $client_vat_id = '';
 
     #[Column(type: 'string(20)', nullable: true)]
-    private ?string $client_tax_code =  '';
+    private ?string $client_tax_code = '';
 
     #[Column(type: 'string(151)', nullable: true)]
-    private ?string $client_language =  '';
+    private ?string $client_language = '';
 
     #[Column(type: 'bool', default: false)]
     private bool $client_active = false;
 
     #[Column(type: 'string(12)', nullable: true)]
-    private ?string $client_number =  '';
+    private ?string $client_number = '';
 
     #[Column(type: 'string(16)', nullable: true)]
-    private ?string $client_avs =  '';
+    private ?string $client_avs = '';
 
     #[Column(type: 'string(151)', nullable: true)]
-    private ?string $client_insurednumber =  '';
+    private ?string $client_insurednumber = '';
 
     #[Column(type: 'string(30)', nullable: true)]
-    private ?string $client_veka =  '';
+    private ?string $client_veka = '';
 
     #[Column(type:'date', nullable: true)]
     private mixed $client_birthdate;
@@ -212,9 +210,8 @@ class Client
 
     public function setClient_email(string $client_email): void
     {
-        $this->client_email =  $client_email;
+        $this->client_email = $client_email;
     }
-
 
     public function getClient_mobile(): ?string
     {
@@ -223,7 +220,7 @@ class Client
 
     public function setClient_mobile(string $client_mobile): void
     {
-        $this->client_mobile =  $client_mobile;
+        $this->client_mobile = $client_mobile;
     }
 
     public function setClient_date_created(string $client_date_created): void
@@ -231,7 +228,7 @@ class Client
         /**
          * @see ImportController insertClients function
          */
-        $this->client_date_created =  (new \DateTimeImmutable())->createFromFormat('Y-m-d h:i:s', $client_date_created) ?: new \DateTimeImmutable('now');
+        $this->client_date_created = (new \DateTimeImmutable())->createFromFormat('Y-m-d h:i:s', $client_date_created) ?: new \DateTimeImmutable('now');
     }
 
     public function getClient_date_created(): DateTimeImmutable
@@ -249,7 +246,7 @@ class Client
     // Used in ImportController to import Invoiceplane $client_date_modified
     public function setClient_date_modified(string $client_date_modified): void
     {
-        $this->client_date_modified =  (new \DateTimeImmutable())->createFromFormat('Y-m-d h:i:s', $client_date_modified) ?: new \DateTimeImmutable('now');
+        $this->client_date_modified = (new \DateTimeImmutable())->createFromFormat('Y-m-d h:i:s', $client_date_modified) ?: new \DateTimeImmutable('now');
     }
 
     public function getClient_title(): ?string
@@ -259,25 +256,23 @@ class Client
 
     public function setClient_title(?string $client_title): void
     {
-        $this->client_title =  $client_title;
+        $this->client_title = $client_title;
     }
 
     public function setClient_full_name(string $client_full_name): void
     {
-        $this->client_full_name =  $client_full_name;
+        $this->client_full_name = $client_full_name;
     }
 
     public function getClient_full_name(): string
     {
         if (null == $this->client_full_name) {
             if (null !== $this->client_surname) {
-                return ltrim(rtrim($this->client_name. ' ' . $this->client_surname));
-            } else {
-                return ltrim(rtrim($this->client_name));
+                return ltrim(rtrim($this->client_name . ' ' . $this->client_surname));
             }
-        } else {
-            return $this->client_full_name;
+            return ltrim(rtrim($this->client_name));
         }
+        return $this->client_full_name;
     }
 
     public function getClient_name(): string
@@ -287,7 +282,7 @@ class Client
 
     public function setClient_name(string $client_name): void
     {
-        $this->client_name =  $client_name;
+        $this->client_name = $client_name;
     }
 
     public function getClient_surname(): ?string
@@ -297,7 +292,7 @@ class Client
 
     public function setClient_surname(string $client_surname): void
     {
-        $this->client_surname =  $client_surname;
+        $this->client_surname = $client_surname;
     }
 
     public function getClient_frequency(): ?string
@@ -307,7 +302,7 @@ class Client
 
     public function setClient_frequency(string $client_frequency): void
     {
-        $this->client_frequency =  $client_frequency;
+        $this->client_frequency = $client_frequency;
     }
 
     public function getClient_group(): ?string
@@ -317,7 +312,7 @@ class Client
 
     public function setClient_group(string $client_group): void
     {
-        $this->client_group =  $client_group;
+        $this->client_group = $client_group;
     }
 
     public function getClient_address_1(): ?string
@@ -327,7 +322,7 @@ class Client
 
     public function setClient_address_1(string $client_address_1): void
     {
-        $this->client_address_1 =  $client_address_1;
+        $this->client_address_1 = $client_address_1;
     }
 
     public function getClient_address_2(): ?string
@@ -337,7 +332,7 @@ class Client
 
     public function setClient_address_2(string $client_address_2): void
     {
-        $this->client_address_2 =  $client_address_2;
+        $this->client_address_2 = $client_address_2;
     }
 
     public function getClient_building_number(): ?string
@@ -347,7 +342,7 @@ class Client
 
     public function setClient_building_number(string $client_building_number): void
     {
-        $this->client_building_number =  $client_building_number;
+        $this->client_building_number = $client_building_number;
     }
 
     public function getClient_city(): ?string
@@ -357,7 +352,7 @@ class Client
 
     public function setClient_city(string $client_city): void
     {
-        $this->client_city =  $client_city;
+        $this->client_city = $client_city;
     }
 
     public function getClient_state(): ?string
@@ -367,7 +362,7 @@ class Client
 
     public function setClient_state(string $client_state): void
     {
-        $this->client_state =  $client_state;
+        $this->client_state = $client_state;
     }
 
     public function getClient_zip(): ?string
@@ -377,7 +372,7 @@ class Client
 
     public function setClient_zip(string $client_zip): void
     {
-        $this->client_zip =  $client_zip;
+        $this->client_zip = $client_zip;
     }
 
     public function getClient_country(): ?string
@@ -387,7 +382,7 @@ class Client
 
     public function setClient_country(string $client_country): void
     {
-        $this->client_country =  $client_country;
+        $this->client_country = $client_country;
     }
 
     public function getClient_phone(): ?string
@@ -397,7 +392,7 @@ class Client
 
     public function setClient_phone(string $client_phone): void
     {
-        $this->client_phone =  $client_phone;
+        $this->client_phone = $client_phone;
     }
 
     public function getClient_fax(): ?string
@@ -407,7 +402,7 @@ class Client
 
     public function setClient_fax(string $client_fax): void
     {
-        $this->client_fax =  $client_fax;
+        $this->client_fax = $client_fax;
     }
 
     public function getClient_web(): ?string
@@ -417,7 +412,7 @@ class Client
 
     public function setClient_web(string $client_web): void
     {
-        $this->client_web =  $client_web;
+        $this->client_web = $client_web;
     }
 
     public function getClient_vat_id(): string
@@ -427,7 +422,7 @@ class Client
 
     public function setClient_vat_id(string $client_vat_id): void
     {
-        $this->client_vat_id =  $client_vat_id;
+        $this->client_vat_id = $client_vat_id;
     }
 
     public function getClient_tax_code(): ?string
@@ -437,7 +432,7 @@ class Client
 
     public function setClient_tax_code(string $client_tax_code): void
     {
-        $this->client_tax_code =  $client_tax_code;
+        $this->client_tax_code = $client_tax_code;
     }
 
     public function getClient_language(): ?string
@@ -447,7 +442,7 @@ class Client
 
     public function setClient_language(string $client_language): void
     {
-        $this->client_language =  $client_language;
+        $this->client_language = $client_language;
     }
 
     public function getClient_active(): bool
@@ -457,7 +452,7 @@ class Client
 
     public function setClient_active(bool $client_active): void
     {
-        $this->client_active =  $client_active;
+        $this->client_active = $client_active;
     }
 
     public function getClient_avs(): ?string
@@ -467,7 +462,7 @@ class Client
 
     public function setClient_avs(string $client_avs): void
     {
-        $this->client_avs =  $client_avs;
+        $this->client_avs = $client_avs;
     }
 
     public function getClient_insurednumber(): ?string
@@ -477,7 +472,7 @@ class Client
 
     public function setClient_insurednumber(string $client_insurednumber): void
     {
-        $this->client_insurednumber =  $client_insurednumber;
+        $this->client_insurednumber = $client_insurednumber;
     }
 
     public function getClient_veka(): ?string
@@ -487,7 +482,7 @@ class Client
 
     public function setClient_veka(string $client_veka): void
     {
-        $this->client_veka =  $client_veka;
+        $this->client_veka = $client_veka;
     }
 
     //cycle
@@ -529,7 +524,7 @@ class Client
 
     public function setClient_gender(int $client_gender): void
     {
-        $this->client_gender =  $client_gender;
+        $this->client_gender = $client_gender;
     }
 
     public function setPostaladdress_id(int $postaladdress_id): void

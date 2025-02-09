@@ -1,7 +1,7 @@
 <?php
 
 declare(strict_types=1);
-return array(
+return [
     'AU' => 'Австралия',
     'AT' => 'Австрия',
     'AZ' => 'Азербайджан',
@@ -250,4 +250,4 @@ return array(
     'JP' => 'Япония',
     'GG' => 'о. Гърнзи',
     'JE' => 'о. Джързи',
-);
+];

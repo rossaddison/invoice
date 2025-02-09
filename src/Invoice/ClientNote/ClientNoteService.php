@@ -39,7 +39,6 @@ final class ClientNoteService
     /**
      * @param ClientNote $model
      * @param array $array
-     * @return void
      */
     public function saveClientNote(ClientNote $model, array $array): void
     {
@@ -67,7 +66,6 @@ final class ClientNoteService
 
     /**
      * @param array|ClientNote|null $model
-     * @return void
      */
     public function deleteClientNote(array|ClientNote|null $model): void
     {

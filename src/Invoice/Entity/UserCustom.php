@@ -12,20 +12,20 @@ use Cycle\Annotated\Annotation\Relation\BelongsTo;
 #[Entity(repository: \App\Invoice\UserCustom\UserCustomRepository::class)]
 class UserCustom
 {
-    #[BelongsTo(target: \App\User\User::class, nullable: false)]
+    #[BelongsTo(target: User::class, nullable: false)]
     private ?User $user = null;
 
     #[Column(type: 'primary')]
-    private ?int $id =  null;
+    private ?int $id = null;
 
     #[Column(type: 'integer(11)', nullable: false)]
-    private ?int $user_id =  null;
+    private ?int $user_id = null;
 
     #[Column(type: 'integer(11)', nullable: false)]
-    private ?int $fieldid =  null;
+    private ?int $fieldid = null;
 
     #[Column(type: 'text', nullable: true)]
-    private ?string $fieldvalue =  '';
+    private ?string $fieldvalue = '';
 
     public function __construct(
         int $id = null,
@@ -39,7 +39,7 @@ class UserCustom
         $this->fieldvalue = $fieldvalue;
     }
 
-    public function getUser(): ?\App\User\User
+    public function getUser(): ?User
     {
         return $this->user;
     }
@@ -51,7 +51,7 @@ class UserCustom
 
     public function setId(int $id): void
     {
-        $this->id =  $id;
+        $this->id = $id;
     }
 
     public function getUser_id(): string
@@ -61,7 +61,7 @@ class UserCustom
 
     public function setUser_id(int $user_id): void
     {
-        $this->user_id =  $user_id;
+        $this->user_id = $user_id;
     }
 
     public function getFieldid(): string
@@ -71,7 +71,7 @@ class UserCustom
 
     public function setFieldid(int $fieldid): void
     {
-        $this->fieldid =  $fieldid;
+        $this->fieldid = $fieldid;
     }
 
     public function getFieldvalue(): ?string
@@ -81,6 +81,6 @@ class UserCustom
 
     public function setFieldvalue(string $fieldvalue): void
     {
-        $this->fieldvalue =  $fieldvalue;
+        $this->fieldvalue = $fieldvalue;
     }
 }

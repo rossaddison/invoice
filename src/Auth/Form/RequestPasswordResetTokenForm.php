@@ -48,7 +48,6 @@ final class RequestPasswordResetTokenForm extends FormModel implements RulesProv
     }
 
     /**
-     *
      * @return PropertyTranslatorInterface|null
      */
     public function getPropertyTranslator(): ?PropertyTranslatorInterface
@@ -62,7 +61,7 @@ final class RequestPasswordResetTokenForm extends FormModel implements RulesProv
     }
 
     /**
-     * @return (Required|Email|\Closure)[][]
+     * @return (\Closure|Email|Required)[][]
      *
      * @psalm-return array{email: list{Required, Email, \Closure(mixed):Result}}
      */
@@ -79,7 +78,7 @@ final class RequestPasswordResetTokenForm extends FormModel implements RulesProv
                     }
                     return $result;
                 },
-            ]
+            ],
         ];
     }
 }

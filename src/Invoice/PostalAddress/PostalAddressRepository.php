@@ -19,7 +19,6 @@ final class PostalAddressRepository extends Select\Repository
 {
     private EntityWriter $entityWriter;
 
-
     /**
      * @param Select<TEntity> $select
      * @param EntityWriter $entityWriter
@@ -63,7 +62,6 @@ final class PostalAddressRepository extends Select\Repository
      * @param array|PostalAddress|null $postaladdress
      * @psalm-param TEntity $postaladdress
      * @throws Throwable
-     * @return void
      */
     public function save(array|PostalAddress|null $postaladdress): void
     {
@@ -75,7 +73,6 @@ final class PostalAddressRepository extends Select\Repository
      * @param array|PostalAddress|null $postaladdress
 
      * @throws Throwable
-     * @return void
      */
     public function delete(array|PostalAddress|null $postaladdress): void
     {
@@ -130,7 +127,6 @@ final class PostalAddressRepository extends Select\Repository
     }
 
     /**
-     *
      * @param string $client_id
      * @return EntityReader
      */

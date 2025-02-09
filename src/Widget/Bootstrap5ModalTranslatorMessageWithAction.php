@@ -35,7 +35,7 @@ final class Bootstrap5ModalTranslatorMessageWithAction
                     'translatedHeading' => $translatedHeading,
                     'translatedMessage' => $translatedMessage,
                     'urlString' => $urlString,
-                    'id' => $id
+                    'id' => $id,
                 ]
             ),
         ];

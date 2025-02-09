@@ -99,9 +99,7 @@ final class QuoteService
      * @param QTRS $qtrS
      * @param QAR $qaR
      * @param QAS $qaS
-     * @return void
      */
-
     public function deleteQuote(Quote $model, QCR $qcR, QCS $qcS, QIR $qiR, QIS $qiS, QTRR $qtrR, QTRS $qtrS, QAR $qaR, QAS $qaS): void
     {
         $quote_id = $model->getId();

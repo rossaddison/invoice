@@ -55,7 +55,6 @@ class TemplateHelper
     }
 
     /**
-     *
      * @param string $pk
      * @param bool $isInvoice
      * @param string $body
@@ -69,7 +68,6 @@ class TemplateHelper
      * @param uiR $uiR
      * @return string
      */
-
     public function parse_template(string $pk, bool $isInvoice, string $body, CR $cR, CVR $cvR, IR $iR, IAR $iaR, QR $qR, QAR $qaR, SOR $soR, uiR $uiR)
     {
         $template_vars = [];
@@ -382,7 +380,7 @@ class TemplateHelper
                     case 'quote_guest_url':
                         $quote = $qR->repoCount($pk) > 0 ? $qR->repoQuoteUnloadedquery($pk) : null;
                         if ($quote) {
-                            $replace = 'quote/url_key/'. $quote->getUrl_key();
+                            $replace = 'quote/url_key/' . $quote->getUrl_key();
                         }
                         break;
                     case 'quote_number':
@@ -403,7 +401,7 @@ class TemplateHelper
                     case 'invoice_guest_url':
                         $invoice = $iR->repoCount($pk) > 0 ? $iR->repoInvUnloadedquery($pk) : null;
                         if ($invoice) {
-                            $replace = 'inv/url_key/'. $invoice->getUrl_key();
+                            $replace = 'inv/url_key/' . $invoice->getUrl_key();
                         }
                         break;
                     case 'invoice_date_due':
@@ -464,7 +462,7 @@ class TemplateHelper
                             /** @var CustomField $cf */
                             $cf = $this->cfR->repoCustomFieldquery($cf_id[1]);
                             // Get the table from the custom field table
-                            $table =  $cf->getTable();
+                            $table = $cf->getTable();
                             //$custom_fields = $this->cfR->repoTablequery($table) ?: null;
 
                             // If the table is eg. 'quote_custom' search the table with the custom_field_id
@@ -525,7 +523,6 @@ class TemplateHelper
     }
 
     /**
-     *
      * @param Inv $invoice
      * @return string
      */
@@ -534,13 +531,13 @@ class TemplateHelper
         if ($invoice->isOverdue()) {
             // Use the overdue template
             return $this->s->getSetting('pdf_invoice_template_overdue');
-        } elseif ($invoice->getStatus_id() === 4) {
+        }
+        if ($invoice->getStatus_id() === 4) {
             // Use the paid template
             return $this->s->getSetting('pdf_invoice_template_paid');
-        } else {
-            // Use the default template
-            return $this->s->getSetting('pdf_invoice_template');
         }
+        // Use the default template
+        return $this->s->getSetting('pdf_invoice_template');
     }
 
     /**
@@ -558,13 +555,13 @@ class TemplateHelper
         if ($invoice->isOverdue()) {
             // Use the overdue template
             return $this->s->getSetting('email_invoice_template_overdue');
-        } elseif ($invoice->getStatus_id() === 4) {
+        }
+        if ($invoice->getStatus_id() === 4) {
             // Use the paid template
             return $this->s->getSetting('email_invoice_template_paid');
-        } else {
-            // Use the default template
-            return $this->s->getSetting('email_invoice_template');
         }
+        // Use the default template
+        return $this->s->getSetting('email_invoice_template');
     }
 
     /**
@@ -577,7 +574,6 @@ class TemplateHelper
     }
 
     /**
-     *
      * @return string
      */
     public function select_email_quote_template(): string

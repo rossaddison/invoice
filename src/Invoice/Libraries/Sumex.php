@@ -48,52 +48,52 @@ class Sumex
         'hospital',
         'lab',
         'association',
-        'company'
+        'company',
     ];
     public const array CANTONS = [
-        "AG",
-        "AI",
-        "AR",
-        "BE",
-        "BL",
-        "BS",
-        "FR",
-        "GE",
-        "GL",
-        "GR",
-        "JU",
-        "LU",
-        "NE",
-        "NW",
-        "OW",
-        "SG",
-        "SH",
-        "SO",
-        "SZ",
-        "TI",
-        "TG",
-        "UR",
-        "VD",
-        "VS",
-        "ZG",
-        "ZH",
-        "LI",
-        "A",
-        "D",
-        "F",
-        "I"
+        'AG',
+        'AI',
+        'AR',
+        'BE',
+        'BL',
+        'BS',
+        'FR',
+        'GE',
+        'GL',
+        'GR',
+        'JU',
+        'LU',
+        'NE',
+        'NW',
+        'OW',
+        'SG',
+        'SH',
+        'SO',
+        'SZ',
+        'TI',
+        'TG',
+        'UR',
+        'VD',
+        'VS',
+        'ZG',
+        'ZH',
+        'LI',
+        'A',
+        'D',
+        'F',
+        'I',
     ];
     public Inv $invoice;
-    public string $_lang = "it";
-    public string $_mode = "production";
-    public string $_copy = "0";
-    public string $_storno = "0";
-    public string $_role = "physiotherapist";
-    public string $_place = "practice";
-    public string $_currency = "CHF";
-    public string $_paymentperiod = "P30D";
-    public string $_canton = "TI";
-    public string $_esrType = "9";
+    public string $_lang = 'it';
+    public string $_mode = 'production';
+    public string $_copy = '0';
+    public string $_storno = '0';
+    public string $_role = 'physiotherapist';
+    public string $_place = 'practice';
+    public string $_currency = 'CHF';
+    public string $_paymentperiod = 'P30D';
+    public string $_canton = 'TI';
+    public string $_esrType = '9';
 
     public array $_patient = [
         'gender' => 'male',
@@ -104,18 +104,18 @@ class Sumex
         'zip' => '0000',
         'city' => 'ClientCity',
         'phone' => '000 000 00 00',
-        'avs' => '7000000000000'
+        'avs' => '7000000000000',
     ];
 
-    public string $_casedate = "1970-01-01";
-    public string $_casenumber = "0";
+    public string $_casedate = '1970-01-01';
+    public string $_casenumber = '0';
     public string $_insuredid = '1234567';
 
     public array $_treatment = [
         'start' => '',
         'end' => '',
         'reason' => 'disease',
-        'diagnosis' => '.'
+        'diagnosis' => '.',
     ];
 
     public array $_company = [
@@ -125,7 +125,7 @@ class Sumex
         'city' => 'Lugano',
         'phone' => '091 902 11 00',
         'gln' => '123456789123', // EAN 13
-        'rcc' => 'C000002'
+        'rcc' => 'C000002',
     ];
 
     public array $_insurance = [
@@ -133,12 +133,12 @@ class Sumex
         'name' => 'SUVA',
         'street' => 'ChangeMe 12',
         'zip' => '6900',
-        'city' => 'Lugano'
+        'city' => 'Lugano',
     ];
 
     public array $_options = [
-        'copy' => "0",
-        'storno' => "0"
+        'copy' => '0',
+        'storno' => '0',
     ];
 
     public sR $s;
@@ -174,11 +174,11 @@ class Sumex
         $this->_patient['givenName'] = $this->invoice->getClient()?->getClient_name();
         $this->_patient['familyName'] = $this->invoice->getClient()?->getClient_surname();
         $this->_patient['birthdate'] = $this->invoice->getClient()?->getClient_birthdate();
-        $this->_patient['gender'] = ($this->invoice->getClient()?->getClient_gender() == "0" ? "male" : "female");
+        $this->_patient['gender'] = ($this->invoice->getClient()?->getClient_gender() == '0' ? 'male' : 'female');
         $this->_patient['street'] = $this->invoice->getClient()?->getClient_address_1();
         $this->_patient['zip'] = $this->invoice->getClient()?->getClient_zip();
         $this->_patient['city'] = $this->invoice->getClient()?->getClient_city();
-        $this->_patient['phone'] = ($this->invoice->getClient()?->getClient_phone() == "" ? null : $this->invoice->getClient()?->getClient_phone());
+        $this->_patient['phone'] = ($this->invoice->getClient()?->getClient_phone() == '' ? null : $this->invoice->getClient()?->getClient_phone());
         $this->_patient['avs'] = $this->invoice->getClient()?->getClient_avs();
 
         $this->_company['name'] = $this->user_details->getName();
@@ -215,7 +215,7 @@ class Sumex
             'maternity',
             'prevention',
             'birthdefect',
-            'unknown'
+            'unknown',
         ];
 
         $this->_treatment = [
@@ -231,7 +231,7 @@ class Sumex
             'observations' => $this->sumex_treatment->getObservations(),
         ];
 
-        $esrTypes = ["9", "red"];
+        $esrTypes = ['9', 'red'];
         $this->_esrType = $esrTypes[(int)$this->s->getSetting('sumex_sliptype')];
         $this->_currency = $this->s->getSetting('currency_code');
         $this->_role = self::ROLES[(int)$this->s->getSetting('sumex_role')];
@@ -248,12 +248,12 @@ class Sumex
      *
      * @param int $inv_id
      *
-     * @return string|bool
+     * @return bool|string
      */
     public function pdf(int $inv_id): string|bool
     {
         // TODO
-        return ($inv_id ? true : false);
+        return $inv_id ? true : false;
     }
 
     /**
@@ -274,7 +274,6 @@ class Sumex
     }
 
     /**
-     *
      * @param DOMDocument $doc
      * @return DOMElement
      */
@@ -304,10 +303,10 @@ class Sumex
 
         $transport = $doc->createElement('invoice:transport');
         $transport->setAttribute('from', (string)$this->_company['gln']);
-        $transport->setAttribute('to', '7601003000078'); # Example: SUVA
+        $transport->setAttribute('to', '7601003000078'); // Example: SUVA
 
         $via = $doc->createElement('invoice:via');
-        $via->setAttribute('via', '7601003000078'); # Example: SUVA
+        $via->setAttribute('via', '7601003000078'); // Example: SUVA
         $via->setAttribute('sequence_id', '1');
 
         $transport->appendChild($via);
@@ -332,10 +331,10 @@ class Sumex
         $invoiceInvoice = $doc->createElement('invoice:invoice');
         $invoiceInvoice->setAttribute('request_timestamp', (string)time());
         $invoiceInvoice->setAttribute('request_id', (string)$this->invoice->getNumber());
-        $strToTime = strtotime(($this->invoice->getDate_modified())->format($date_helper->style()));
-        if ($strToTime <> false) {
+        $strToTime = strtotime($this->invoice->getDate_modified()->format($date_helper->style()));
+        if ($strToTime != false) {
             $invoiceInvoice->setAttribute('request_date', date("Y-m-d\TH:i:s", $strToTime));
-        }    
+        }
         $invoiceBody = $this->xmlInvoiceBody($doc);
 
         $node->appendChild($invoiceInvoice);
@@ -345,7 +344,6 @@ class Sumex
     }
 
     /**
-     *
      * @param DOMDocument $doc
      * @return DOMElement
      */
@@ -355,7 +353,7 @@ class Sumex
         $node->setAttribute('role', $this->_role);
         $node->setAttribute('place', $this->_place);
 
-        if ($this->_esrType == "9") {
+        if ($this->_esrType == '9') {
             $esr = $this->xmlInvoiceEsr9($doc);
         } else {
             // Red
@@ -374,7 +372,7 @@ class Sumex
 
         $node->appendChild($prolog);
         /** @var string $this->_treatment['observations'] */
-        if ($this->_treatment['observations'] != "") {
+        if ($this->_treatment['observations'] != '') {
             $node->appendChild($remark);
         }
         $node->appendChild($balance);
@@ -390,8 +388,8 @@ class Sumex
 
     /**
      * @param DOMDocument $doc
-     * @return DOMElement
      * @throws Error
+     * @return DOMElement
      */
     protected function xmlInvoiceEsr9(DOMDocument $doc): DOMElement
     {
@@ -404,46 +402,46 @@ class Sumex
         $node->setAttribute('type', '16or27'); // 16or27 = 01, 16or27plus = 04
 
         // 26numbers + 1 chek
-        $referenceNumber = "";
+        $referenceNumber = '';
 
         // Custom style, we create the reference number as following:
         // 5 digits for client id, 10 digits for invoice ID, 9 digits for Invoice Date, 1 for checksum
 
-        $referenceNumber .= "06"; // Dog Fooding
-        $referenceNumber .= sprintf("%05d", ($this->invoice->getClient()?->getClient_id() ?? 'No Client Id'));
-        $referenceNumber .= sprintf("%010d", $this->invoice->getId() ?? 'No Invoice Id provided');
-        $strToTime = strtotime(($this->invoice->getDate_modified())->format($date_helper->style()));
-        if ($strToTime <> false) {
-            $referenceNumber .= sprintf("%09d", date("Ymd", $strToTime));
+        $referenceNumber .= '06'; // Dog Fooding
+        $referenceNumber .= sprintf('%05d', $this->invoice->getClient()?->getClient_id() ?? 'No Client Id');
+        $referenceNumber .= sprintf('%010d', $this->invoice->getId() ?? 'No Invoice Id provided');
+        $strToTime = strtotime($this->invoice->getDate_modified()->format($date_helper->style()));
+        if ($strToTime != false) {
+            $referenceNumber .= sprintf('%09d', date('Ymd', $strToTime));
             $refCsum = $this->invoice_helper->invoice_recMod10($referenceNumber);
             $referenceNumber = $referenceNumber . $refCsum;
 
             if (!preg_match("/\d{27}/", $referenceNumber)) {
-                throw new Error("Invalid reference number!");
+                throw new Error('Invalid reference number!');
             }
 
-            $slipType = "01"; // ISR in CHF
+            $slipType = '01'; // ISR in CHF
 
             $amount = $this->invoice_amount->getTotal();
 
-            $formattedRN = "";
+            $formattedRN = '';
             $formattedRN .= substr($referenceNumber, 0, 2);
-            $formattedRN .= " ";
+            $formattedRN .= ' ';
             $formattedRN .= substr($referenceNumber, 2, 5);
-            $formattedRN .= " ";
+            $formattedRN .= ' ';
             $formattedRN .= substr($referenceNumber, 7, 5);
-            $formattedRN .= " ";
+            $formattedRN .= ' ';
             $formattedRN .= substr($referenceNumber, 12, 5);
-            $formattedRN .= " ";
+            $formattedRN .= ' ';
             $formattedRN .= substr($referenceNumber, 17, 5);
-            $formattedRN .= " ";
+            $formattedRN .= ' ';
             $formattedRN .= substr($referenceNumber, 22, 5);
 
-            $codingLine =  $this->invoice_helper->invoice_genCodeline($slipType, $amount, $formattedRN, $subNumb);
+            $codingLine = $this->invoice_helper->invoice_genCodeline($slipType, $amount, $formattedRN, $subNumb);
 
             $node->setAttribute('reference_number', $formattedRN);
             $node->setAttribute('coding_line', $codingLine);
-        }    
+        }
         return $node;
     }
 
@@ -500,7 +498,6 @@ class Sumex
     }
 
     /**
-     *
      * @param DOMDocument $doc
      * @return DOMElement
      */
@@ -582,7 +579,7 @@ class Sumex
         // <invoice:patient>
         $patient->setAttribute('gender', (string)$this->_patient['gender']);
         $strToTimePatientBirthDate = strtotime((string)$this->_patient['birthdate']);
-        if ($strToTimePatientBirthDate <> false) {
+        if ($strToTimePatientBirthDate != false) {
             $patient->setAttribute('birthdate', date("Y-m-d\TH:i:s", $strToTimePatientBirthDate));
         }
         $person_is_patient = $this->generatePerson($doc, (string)$this->_patient['street'], (string)$this->_patient['zip'], (string)$this->_patient['city'], (string)$this->_patient['phone']);
@@ -603,7 +600,6 @@ class Sumex
     }
 
     /**
-     *
      * @param DOMDocument $doc
      * @return DOMElement
      */
@@ -631,7 +627,6 @@ class Sumex
     }
 
     /**
-     *
      * @param DOMDocument $doc
      * @param string $street
      * @param string $zip
@@ -659,7 +654,6 @@ class Sumex
     }
 
     /**
-     *
      * @param DOMDocument $doc
      * @param string $street
      * @param string $zip
@@ -719,15 +713,15 @@ class Sumex
     {
         $node = $doc->createElement('invoice:org');
         $strToTime = strtotime($this->_casedate);
-        if ($strToTime <> false) {
+        if ($strToTime != false) {
             $node->setAttribute('case_date', date("Y-m-d\TH:i:s", $strToTime));
         }
-        
-        if ($this->_casenumber != "") {
+
+        if ($this->_casenumber != '') {
             $node->setAttribute('case_id', $this->_casenumber);
         }
 
-        if ($this->_insuredid != "") {
+        if ($this->_insuredid != '') {
             $node->setAttribute('insured_id', $this->_insuredid);
         }
 
@@ -735,28 +729,27 @@ class Sumex
     }
 
     /**
-     *
      * @param DOMDocument $doc
      * @return DOMElement
      */
     protected function xmlInvoiceTreatment(DOMDocument $doc): DOMElement
     {
         $node = $doc->createElement('invoice:treatment');
-        
+
         $start = strtotime((string)$this->_treatment['start']);
-        if ($start <> false) {
+        if ($start != false) {
             $node->setAttribute('date_begin', date("Y-m-d\TH:i:s", $start));
         }
-        
+
         $end = strtotime((string)$this->_treatment['end']);
-        if ($end <> false) {
+        if ($end != false) {
             $node->setAttribute('date_end', date("Y-m-d\TH:i:s", $end));
         }
-        
+
         $node->setAttribute('canton', $this->_canton);
         $node->setAttribute('reason', (string)$this->_treatment['reason']);
 
-        if ($this->_treatment['diagnosis'] != "") {
+        if ($this->_treatment['diagnosis'] != '') {
             $diag = $doc->createElement('invoice:diagnosis');
             $diag->setAttribute('type', 'freetext');
             //$diag->setAttribute('code', );
@@ -768,7 +761,6 @@ class Sumex
     }
 
     /**
-     *
      * @param DOMDocument $doc
      * @return DOMElement
      */
@@ -787,7 +779,6 @@ class Sumex
     }
 
     /**
-     *
      * @param DOMDocument $doc
      * @param int $recordId
      * @param InvItem $item
@@ -799,26 +790,26 @@ class Sumex
         $node = $doc->createElement('invoice:record_other');
         $node->setAttribute('record_id', (string)$recordId);
         $node->setAttribute('tariff_type', (string)590);
-        $node->setAttribute('code', ($item->getProduct()?->getProduct_sku() ?? 'Not available'));
+        $node->setAttribute('code', $item->getProduct()?->getProduct_sku() ?? 'Not available');
         $node->setAttribute('session', (string)1);
         $node->setAttribute('quantity', (string)($item->getQuantity() ?? 0.00));
-        $strToTime = strtotime(($item->getDate())->format($date_helper->style()));
-        if ($strToTime <> false ) {
+        $strToTime = strtotime($item->getDate()->format($date_helper->style()));
+        if ($strToTime != false) {
             $node->setAttribute('date_begin', date("Y-m-d\TH:i:s", $strToTime));
         }
         $node->setAttribute('provider_id', (string)$this->_company['gln']);
         $node->setAttribute('responsible_id', (string)$this->_company['gln']);
         $node->setAttribute('unit', (string)$item->getPrice());
-        #$node->setAttribute('unit_factor', 1);
+        //$node->setAttribute('unit_factor', 1);
         if (is_numeric($item->getPrice()) && is_numeric($item->getQuantity())) {
-            $amount = (string)((($item->getPrice() ?? 0.00) * ($item->getQuantity() ?? 0.00)));
+            $amount = (string)(($item->getPrice() ?? 0.00) * ($item->getQuantity() ?? 0.00));
         } else {
-            $amount  = '0';
+            $amount = '0';
         }
         $node->setAttribute('amount', $amount);
-        #$node->setAttribute('validate', 0);
-        #$node->setAttribute('service_attributes', 0);
-        #$node->setAttribute('obligation', 0);
+        //$node->setAttribute('validate', 0);
+        //$node->setAttribute('service_attributes', 0);
+        //$node->setAttribute('obligation', 0);
         $node->setAttribute('name', (string)(null !== $item->getName() ?: 'Not Available'));
         return $node;
     }
@@ -868,9 +859,9 @@ class Sumex
 
         // <invoice:patient>
         $patient->setAttribute('gender', (string)$this->_patient['gender']);
-        
+
         $strToTimeBirthDate = strtotime((string)$this->_patient['birthdate']);
-        if ($strToTimeBirthDate <> false) {
+        if ($strToTimeBirthDate != false) {
             $patient->setAttribute('birthdate', date("Y-m-d\TH:i:s", $strToTimeBirthDate));
         }
         $person_is_patient = $this->generatePerson($doc, (string)$this->_patient['street'], (string)$this->_patient['zip'], (string)$this->_patient['city'], (string)$this->_patient['phone']);
@@ -880,7 +871,7 @@ class Sumex
         // <invoice:insured>
         $insured->setAttribute('gender', (string)$this->_patient['gender']);
         $strToTimeInsuredBirthDate = strtotime((string)$this->_patient['birthdate']);
-        if ($strToTimeInsuredBirthDate <> false) {
+        if ($strToTimeInsuredBirthDate != false) {
             $insured->setAttribute('birthdate', date("Y-m-d\TH:i:s", $strToTimeInsuredBirthDate));
         }
         $person_is_insured = $this->generatePerson($doc, (string)$this->_patient['street'], (string)$this->_patient['zip'], (string)$this->_patient['city'], (string)$this->_patient['phone']);
@@ -889,7 +880,7 @@ class Sumex
 
         // <invoice:guarantor>
         $guarantor->setAttribute('xmlns', 'http://www.forum-datenaustausch.ch/invoice');
-        
+
         $person_is_guarantor = $this->generatePerson($doc, (string)$this->_patient['street'], (string)$this->_patient['zip'], (string)$this->_patient['city'], (string)$this->_patient['phone']);
         $guarantor->appendChild($person_is_guarantor);
         // </invoice:guarantor>
@@ -944,9 +935,9 @@ class Sumex
     {
         $node = $doc->createElement('invoice:mvg');
         $node->setAttribute('ssn', (string)$this->_patient['avs']);
-        #$node->setAttribute('insured_id', '1234');
+        //$node->setAttribute('insured_id', '1234');
         $strToTime = strtotime($this->_casedate);
-        if ($strToTime <> false) {
+        if ($strToTime != false) {
             $node->setAttribute('case_date', date("Y-m-d\TH:i:s", $strToTime));
         }
         return $node;

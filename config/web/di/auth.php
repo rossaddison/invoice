@@ -17,7 +17,7 @@ use Yiisoft\Session\SessionInterface;
 use Yiisoft\User\CurrentUser;
 use Yiisoft\User\Login\Cookie\CookieLogin;
 
-/** 
+/**
  * @var array $params
  * @var array $params['yiisoft/cookies']
  * @var string $params['yiisoft/cookies']['secretKey']
@@ -28,7 +28,7 @@ return [
         return $container
             ->get(ORMInterface::class)
             ->getRepository(Identity::class);
-    },         
+    },
     CookieMiddleware::class => static fn (CookieLogin $cookieLogin, LoggerInterface $logger) => new CookieMiddleware(
         $logger,
         new CookieEncryptor($secretKey),
@@ -41,5 +41,5 @@ return [
         'reset' => function (CurrentUser $currentUser) {
             $currentUser->clear();
         },
-    ],           
+    ],
 ];

@@ -69,7 +69,6 @@ final class InvSentLogRepository extends Select\Repository
     }
 
     /**
-     *
      * @param string $inv_id
      * @return EntityReader
      */
@@ -153,7 +152,6 @@ final class InvSentLogRepository extends Select\Repository
      * @param array|InvSentLog|null $invsentlog
      * @psalm-param TEntity $invsentlog
      * @throws Throwable
-     * @return void
      */
     public function save(array|InvSentLog|null $invsentlog): void
     {
@@ -162,7 +160,6 @@ final class InvSentLogRepository extends Select\Repository
 
     /**
      * @param array|InvSentLog|null $invsentlog
-     * @return void
      */
     public function delete(array|InvSentLog|null $invsentlog): void
     {

@@ -5,8 +5,6 @@ declare(strict_types=1);
 namespace App\Invoice\Inv;
 
 use Yiisoft\FormModel\FormModel;
-use Yiisoft\Validator\Rule\Email;
-use Yiisoft\Validator\Rule\Required;
 
 final class MailerInvForm extends FormModel
 {
@@ -31,5 +29,4 @@ final class MailerInvForm extends FormModel
     {
         return 'MailerInvForm';
     }
-
 }

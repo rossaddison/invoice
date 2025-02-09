@@ -30,7 +30,6 @@ final class CompanyPrivateRepository extends Select\Repository
     }
 
     /**
-     *
      * @psalm-return EntityReader
      */
     public function findAllPreloaded(): EntityReader
@@ -57,7 +56,6 @@ final class CompanyPrivateRepository extends Select\Repository
     * @see Reader/ReadableDataInterface|InvalidArgumentException
     * @param array|CompanyPrivate|null $companyprivate
     * @throws Throwable
-    * @return void
     */
     public function save(array|CompanyPrivate|null $companyprivate): void
     {
@@ -68,7 +66,6 @@ final class CompanyPrivateRepository extends Select\Repository
     * @see Reader/ReadableDataInterface|InvalidArgumentException
     * @param array|CompanyPrivate|null $companyprivate
     * @throws Throwable
-    * @return void
     */
     public function delete(array|CompanyPrivate|null $companyprivate): void
     {

@@ -49,7 +49,6 @@ final class LayoutViewInjection implements LayoutParametersInjectionInterface
      *
      * @psalm-return array<string, mixed>
      */
-
     public function getLayoutParameters(): array
     {
         $brandLabel = '';
@@ -114,10 +113,9 @@ final class LayoutViewInjection implements LayoutParametersInjectionInterface
         $noFrontPageContactDetails = $this->settingRepository->getSetting('no_front_contact_details_page') == '1' ? true : false;
         $noFrontPageContactUs = $this->settingRepository->getSetting('no_front_contact_us_page') == '1' ? true : false;
         /**
-         * @see .env.php $_ENV['YII_DEBUG'] and $_ENV['BUILD_DATABASE'] located in the root (first) folder 
+         * @see .env.php $_ENV['YII_DEBUG'] and $_ENV['BUILD_DATABASE'] located in the root (first) folder
          *      e.g YII_DEBUG=true
          * @see {root} autoload.php
-         * 
          */
         $debugMode = $_ENV['YII_DEBUG'] == 'true' ? true : false;
         $buildDatabase = $_ENV['BUILD_DATABASE'] == 'true' ? true : false;
@@ -127,10 +125,10 @@ final class LayoutViewInjection implements LayoutParametersInjectionInterface
         $isGuest = ($user === null || $user->getId() === null);
         $userLogin = (null !== $user ? $user->getLogin() : null);
         // Show the default logo if the logo applicable dates have expired under CompanyPrivate
-        $logoPath = ((isset($companyLogoFileName) && !empty($companyLogoFileName)) ? '/logo/'. $companyLogoFileName : '/site/logo.png');
+        $logoPath = ((isset($companyLogoFileName) && !empty($companyLogoFileName)) ? '/logo/' . $companyLogoFileName : '/site/logo.png');
         // https://api.jqueryui.com/datepicker
         $dateHelper = new DateHelper($this->settingRepository);
-        $javascriptJqueryDateHelper = "$(function () {" .
+        $javascriptJqueryDateHelper = '$(function () {' .
           '$(".form-control.input-sm.datepicker").datepicker({dateFormat:"' . $dateHelper->datepicker_dateFormat()
           . '", firstDay:' . $dateHelper->datepicker_firstDay()
           . ', changeMonth: true'

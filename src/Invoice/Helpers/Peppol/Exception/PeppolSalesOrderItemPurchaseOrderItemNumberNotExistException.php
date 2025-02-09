@@ -30,5 +30,4 @@ class PeppolSalesOrderItemPurchaseOrderItemNumberNotExistException extends \Runt
                 Please try again
             SOLUTION;
     }
-
 }

@@ -53,7 +53,6 @@ final class ProductService
 
     /**
      * @param Product $model
-     * @return void
      */
     public function deleteProduct(Product $model): void
     {

@@ -20,7 +20,6 @@ final class SalesOrderCustomRepository extends Select\Repository
     private EntityWriter $entityWriter;
 
     /**
-     *
      * @param Select<TEntity> $select
      * @param EntityWriter $entityWriter
      */
@@ -61,7 +60,6 @@ final class SalesOrderCustomRepository extends Select\Repository
      * @see Reader/ReadableDataInterface|InvalidArgumentException
      * @param array|SalesOrderCustom|null $quotecustom
      * @throws Throwable
-     * @return void
      */
     public function save(array|SalesOrderCustom|null $quotecustom): void
     {
@@ -72,7 +70,6 @@ final class SalesOrderCustomRepository extends Select\Repository
      * @see Reader/ReadableDataInterface|InvalidArgumentException
      * @param array|SalesOrderCustom|null $so_custom
      * @throws Throwable
-     * @return void
      */
     public function delete(array|SalesOrderCustom|null $so_custom): void
     {
@@ -95,7 +92,6 @@ final class SalesOrderCustomRepository extends Select\Repository
                       ->where(['id' => $id]);
         return  $query->fetchOne() ?: null;
     }
-
 
     public function repoFormValuequery(string $so_id, string $custom_field_id): SalesOrderCustom|null
     {

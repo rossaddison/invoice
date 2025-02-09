@@ -9,7 +9,6 @@ use App\Invoice\InvItemAmount\InvItemAmountRepository as iiaR;
 use App\Invoice\Entity\Inv;
 use App\Invoice\Entity\InvAmount;
 use App\Invoice\Entity\Quote;
-use App\Invoice\Helpers\ZugFerdHelper;
 use Yiisoft\Aliases\Aliases;
 use Yiisoft\Files\FileHelper;
 
@@ -106,12 +105,11 @@ class MpdfHelper
     public string $mode = self::MODE_BLANK;
 
     /**
-     *
      * @var string
      */
     public string $format = self::FORMAT_A4;
     /**
-     * @var integer
+     * @var int
      */
     public int $defaultFontSize = 0;
     /**
@@ -160,13 +158,13 @@ class MpdfHelper
      * @param string $html
      * @param string $filename
      * @param bool $stream
-     * @param null|string $password
+     * @param string|null $password
      * @param sR $sR
-     * @param null|iiaR $iiaR
+     * @param iiaR|null $iiaR
      * @param bool $isInvoice
      * @param bool $zugferd_invoice
      * @param array $associated_files
-     * @param null|object $quote_or_invoice
+     * @param object|null $quote_or_invoice
      * @return string
      */
     public function pdf_create(
@@ -187,7 +185,7 @@ class MpdfHelper
     ): string {
         $sR->load_settings();
         $aliases = $this->ensure_uploads_folder_exists($sR);
-        $archived_file = $aliases->get('@uploads').$sR::getUploadsArchiveholderRelativeUrl() .''. date('Y-m-d') . '_' . $filename . '.pdf';
+        $archived_file = $aliases->get('@uploads') . $sR::getUploadsArchiveholderRelativeUrl() . '' . date('Y-m-d') . '_' . $filename . '.pdf';
         $title = $sR->getSetting('pdf_archive_inv') == '1' ? $archived_file : $filename . '.pdf';
         $start_mpdf = $this->initialize_pdf($password, $sR, $title, $quote_or_invoice, $iiaR, $inv_amount, $aliases, $zugferd_invoice, $associated_files);
         $css = $this->get_css_file($aliases);
@@ -199,22 +197,20 @@ class MpdfHelper
             // send the file inline to the browser. The plug-in is used if available.
             $mpdf->Output($filename . '.pdf', self::DEST_BROWSER);
             if ($sR->getSetting('pdf_archive_inv') === '1') {
-                $mpdf->Output($aliases->get('@uploads').$sR::getUploadsArchiveholderRelativeUrl() .''. date('Y-m-d') . '_' . $filename . '.pdf', self::DEST_FILE);
-                return $aliases->get('@uploads').$sR::getUploadsArchiveholderRelativeUrl() .''. date('Y-m-d') . '_' . $filename . '.pdf';
-            } else {
-                return 'streamed_not_saved';
+                $mpdf->Output($aliases->get('@uploads') . $sR::getUploadsArchiveholderRelativeUrl() . '' . date('Y-m-d') . '_' . $filename . '.pdf', self::DEST_FILE);
+                return $aliases->get('@uploads') . $sR::getUploadsArchiveholderRelativeUrl() . '' . date('Y-m-d') . '_' . $filename . '.pdf';
             }
-        } else {    // save to a local file with the name given by $filename (may include a path).
-            if ($sR->getSetting('pdf_archive_inv') === '1') {
-                $mpdf->Output($aliases->get('@uploads').$sR::getUploadsArchiveholderRelativeUrl() .''. date('Y-m-d') . '_' . $filename . '.pdf', self::DEST_FILE);
-                return $aliases->get('@uploads').$sR::getUploadsArchiveholderRelativeUrl() .''. date('Y-m-d') . '_' . $filename . '.pdf';
-            }
+            return 'streamed_not_saved';
+        }      // save to a local file with the name given by $filename (may include a path).
+        if ($sR->getSetting('pdf_archive_inv') === '1') {
+            $mpdf->Output($aliases->get('@uploads') . $sR::getUploadsArchiveholderRelativeUrl() . '' . date('Y-m-d') . '_' . $filename . '.pdf', self::DEST_FILE);
+            return $aliases->get('@uploads') . $sR::getUploadsArchiveholderRelativeUrl() . '' . date('Y-m-d') . '_' . $filename . '.pdf';
         }
+
         return '';
     }
 
     /**
-     *
      * @param string $filename
      * @param \Mpdf\Mpdf $mpdf
      * @param Aliases $aliases
@@ -225,8 +221,8 @@ class MpdfHelper
     {
         // Archive the file if it is an invoice
         if ($sR->getSetting('pdf_archive_inv') === '1') {
-            $archive_folder = $aliases->get('@uploads').$sR::getUploadsArchiveholderRelativeUrl() .'/Invoice';
-            $archived_file = $aliases->get('@uploads').$sR::getUploadsArchiveholderRelativeUrl() .''. date('Y-m-d') . '_' . $filename . '.pdf';
+            $archive_folder = $aliases->get('@uploads') . $sR::getUploadsArchiveholderRelativeUrl() . '/Invoice';
+            $archived_file = $aliases->get('@uploads') . $sR::getUploadsArchiveholderRelativeUrl() . '' . date('Y-m-d') . '_' . $filename . '.pdf';
             if (!is_dir($archive_folder)) {
                 FileHelper::ensureDirectory($archive_folder, 0775);
             }
@@ -239,10 +235,10 @@ class MpdfHelper
     private function ensure_uploads_folder_exists(SR $sR): Aliases
     {
         $aliases = new Aliases(['@invoice' => dirname(__DIR__),
-                                '@uploads' => dirname(__DIR__).DIRECTORY_SEPARATOR.'Uploads'.DIRECTORY_SEPARATOR]);
+            '@uploads' => dirname(__DIR__) . DIRECTORY_SEPARATOR . 'Uploads' . DIRECTORY_SEPARATOR]);
 
         // Invoice/Uploads/Archive
-        $folder = $aliases->get('@uploads').$sR::getUploadsArchiveholderRelativeUrl();
+        $folder = $aliases->get('@uploads') . $sR::getUploadsArchiveholderRelativeUrl();
         // Check if the archive folder is available
         if (!(is_dir($folder) || is_link($folder))) {
             FileHelper::ensureDirectory($folder, 0775);
@@ -262,7 +258,6 @@ class MpdfHelper
      * @param array $associated_files
      * @return \Mpdf\Mpdf
      */
-
     private function initialize_pdf(string|null $password, SR $sR, string $title, object|null $quote_or_invoice, IIAR|null $iiaR, InvAmount|null $inv_amount, Aliases $aliases, bool $zugferd_invoice, array $associated_files = []): \Mpdf\Mpdf
     {
         $mpdf = new \Mpdf\Mpdf($this->options);
@@ -294,8 +289,8 @@ class MpdfHelper
             $mpdf->SetAssociatedFiles($associated_files);
         }
 
-        $content = $title. ': '. date($sR->trans('date_format'));
-        $mpdf->SetHTMLHeader('<div style="text-align: right; font-size: 8px; font-weight: lighter;">'.$content.'</div>');
+        $content = $title . ': ' . date($sR->trans('date_format'));
+        $mpdf->SetHTMLHeader('<div style="text-align: right; font-size: 8px; font-weight: lighter;">' . $content . '</div>');
 
         // Set the footer if is invoice and if set in settings
         if (!empty($sR->getSetting('pdf_invoice_footer'))) {
@@ -310,14 +305,14 @@ class MpdfHelper
         }
 
         if (($quote_or_invoice instanceof Quote) || ($quote_or_invoice instanceof Inv)) {
-            if ((null !== $quote_or_invoice->getClient()?->getClient_language())) {
-                if (($sR->get_folder_language() === "Arabic") || $quote_or_invoice->getClient()?->getClient_language() === "Arabic") {
+            if (null !== $quote_or_invoice->getClient()?->getClient_language()) {
+                if (($sR->get_folder_language() === 'Arabic') || $quote_or_invoice->getClient()?->getClient_language() === 'Arabic') {
                     $mpdf->SetDirectionality('rtl');
                 }
             }
         }
         // Set a password if set for the voucher
-        if (null !== ($password)) {
+        if (null !== $password) {
             $mpdf->SetProtection(['copy', 'print'], $password, $password);
         }
         return $mpdf;
@@ -333,8 +328,7 @@ class MpdfHelper
     }
 
     /**
-     *
-     * @param string|false $css
+     * @param false|string $css
      * @param string $html
      * @param \Mpdf\Mpdf $mpdf
      * @return \Mpdf\Mpdf

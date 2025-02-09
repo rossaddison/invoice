@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace App\Invoice\Contract;
 
 use App\Invoice\Entity\Contract;
-use App\Invoice\Contract\ContractService;
 use App\Invoice\Contract\ContractRepository as contractR;
 use App\Invoice\Client\ClientRepository as cR;
 use App\Invoice\Inv\InvRepository as iR;
@@ -31,7 +30,7 @@ use Exception;
 final class ContractController
 {
     use FlashMessage;
-    
+
     private SessionInterface $session;
     private Flash $flash;
     private ViewRenderer $viewRenderer;
@@ -61,7 +60,6 @@ final class ContractController
     }
 
     /**
-     *
      * @param CurrentRoute $currentRoute
      * @param contractR $contractR
      * @param Request $request
@@ -97,7 +95,7 @@ final class ContractController
             'paginator' => $paginator,
             'cR' => $cR,
             // Use the invoice Repository to retrieve all invoices associated with this contract
-            'iR' => $iR
+            'iR' => $iR,
         ];
         return $this->viewRenderer->render('index', $parameters);
     }
@@ -108,7 +106,7 @@ final class ContractController
      * @param FormHydrator $formHydrator
      * @param cR $cR
      * @param sR $sR
-     * @return \Yiisoft\DataResponse\DataResponse|Response
+     * @return Response|\Yiisoft\DataResponse\DataResponse
      */
     public function add(CurrentRoute $currentRoute, Request $request, FormHydrator $formHydrator, cR $cR, sR $sR): \Yiisoft\DataResponse\DataResponse|Response
     {
@@ -119,19 +117,19 @@ final class ContractController
         $title = '';
         $form = new ContractForm($contract);
         if (null !== $client_id) {
-            $title = ($cR->repoClientquery($client_id))->getClient_name();
+            $title = $cR->repoClientquery($client_id)->getClient_name();
         } else {
             $title = $this->translator->translate('invoice.not.available');
         }
         $parameters = [
             'title' => $this->translator->translate('invoice.invoice.contract.add')
-                       .': '
+                       . ': '
                        . $title,
             'actionName' => 'contract/add',
             'actionArguments' => ['client_id' => $client_id],
             'errors' => [],
             'form' => $form,
-            'client_id' => $client_id
+            'client_id' => $client_id,
         ];
 
         if ($request->getMethod() === Method::POST) {
@@ -140,7 +138,7 @@ final class ContractController
                 if (is_array($body)) {
                     $this->contractService->saveContract($contract, $body, $sR);
                     return $this->webService->getRedirectResponse('contract/index');
-                }    
+                }
             }
             $parameters['form'] = $form;
             $parameters['errors'] = $form->getValidationResult()->getErrorMessagesIndexedByProperty();
@@ -171,7 +169,7 @@ final class ContractController
                 'actionName' => 'contract/edit',
                 'actionArguments' => ['id' => $contract->getId()],
                 'errors' => [],
-                'form' => $form
+                'form' => $form,
             ];
             if ($request->getMethod() === Method::POST) {
                 if ($formHydrator->populateFromPostAndValidate($form, $request)) {
@@ -179,7 +177,7 @@ final class ContractController
                     if (is_array($body)) {
                         $this->contractService->saveContract($contract, $body, $sR);
                         return $this->webService->getRedirectResponse('contract/index');
-                    }    
+                    }
                 }
                 $parameters['form'] = $form;
                 $parameters['errors'] = $form->getValidationResult()->getErrorMessagesIndexedByProperty();
@@ -226,7 +224,7 @@ final class ContractController
     /**
      * @param CurrentRoute $currentRoute
      * @param contractR $contractRepository
-     * @return \Yiisoft\DataResponse\DataResponse|Response
+     * @return Response|\Yiisoft\DataResponse\DataResponse
      */
     public function view(CurrentRoute $currentRoute, contractR $contractRepository): \Yiisoft\DataResponse\DataResponse|Response
     {
@@ -238,7 +236,7 @@ final class ContractController
                 'actionName' => 'contract/view',
                 'actionArguments' => ['id' => $contract->getId()],
                 'errors' => [],
-                'form' => $form
+                'form' => $form,
             ];
             return $this->viewRenderer->render('_view', $parameters);
         }
@@ -256,36 +254,32 @@ final class ContractController
     {
         $id = $currentRoute->getArgument('id');
         if (null !== $id) {
-            $contract = $contractRepository->repoContractquery($id);
-            return $contract;
+            return $contractRepository->repoContractquery($id);
         }
         return null;
     }
 
     /**
-     *
      * @param contractR $contractRepository
      * @return \Yiisoft\Data\Cycle\Reader\EntityReader
      */
     private function contracts(contractR $contractRepository): \Yiisoft\Data\Cycle\Reader\EntityReader
     {
-        $contracts = $contractRepository->findAllPreloaded();
-        return $contracts;
+        return $contractRepository->findAllPreloaded();
     }
 
     /**
      * @param contractR $cR
      * @param Sort $sort
      *
-     * @return \Yiisoft\Data\Reader\SortableDataInterface&\Yiisoft\Data\Reader\DataReaderInterface
+     * @return \Yiisoft\Data\Reader\DataReaderInterface&\Yiisoft\Data\Reader\SortableDataInterface
      *
      * @psalm-return \Yiisoft\Data\Reader\SortableDataInterface&\Yiisoft\Data\Reader\DataReaderInterface<int, Contract>
      */
     private function contracts_with_sort(contractR $cR, Sort $sort): \Yiisoft\Data\Reader\SortableDataInterface
     {
-        $contracts = $cR->findAllPreloaded()
+        return $cR->findAllPreloaded()
                        ->withSort($sort);
-        return $contracts;
     }
 
     /**
@@ -296,9 +290,9 @@ final class ContractController
         return $this->viewRenderer->renderPartialAsString(
             '//invoice/layout/alert',
             [
-       'flash' => $this->flash,
-       'errors' => [],
-     ]
+                'flash' => $this->flash,
+                'errors' => [],
+            ]
         );
     }
 }

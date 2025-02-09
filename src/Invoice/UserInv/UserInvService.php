@@ -16,10 +16,8 @@ final class UserInvService
     }
 
     /**
-     *
      * @param UserInv $model
      * @param array $array
-     * @return void
      */
     public function saveUserInv(UserInv $model, array $array): void
     {
@@ -51,9 +49,7 @@ final class UserInvService
     }
 
     /**
-     *
      * @param UserInv $model
-     * @return void
      */
     public function deleteUserInv(UserInv $model): void
     {

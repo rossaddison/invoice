@@ -52,12 +52,12 @@ final class DeliveryLocationForm extends FormModel
         $this->electronic_address_scheme = $del->getElectronic_address_scheme();
     }
 
-    public function getDate_created(): \DateTimeImmutable
+    public function getDate_created(): DateTimeImmutable
     {
         return $this->date_created;
     }
 
-    public function getDate_modified(): \DateTimeImmutable
+    public function getDate_modified(): DateTimeImmutable
     {
         return $this->date_modified;
     }

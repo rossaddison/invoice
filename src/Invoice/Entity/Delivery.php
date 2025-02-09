@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace App\Invoice\Entity;
 
-use App\Invoice\Entity\DeliveryLocation;
 use Cycle\Annotated\Annotation\Column;
 use Cycle\Annotated\Annotation\Entity;
 use Cycle\Annotated\Annotation\Relation\BelongsTo;
@@ -34,7 +33,7 @@ class Delivery
     #[Column(type: 'datetime', nullable: false)]
     private DateTimeImmutable $end_date;
 
-    #[BelongsTo(target: DeliveryLocation::class, nullable: true, fkAction: "NO ACTION")]
+    #[BelongsTo(target: DeliveryLocation::class, nullable: true, fkAction: 'NO ACTION')]
     private ?DeliveryLocation $delivery_location = null;
 
     #[Column(type: 'integer(11)', nullable: true)]

@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace App\Invoice\Entity;
 
-use App\Invoice\Entity\Inv;
 use Cycle\Annotated\Annotation\Column;
 use Cycle\Annotated\Annotation\Entity;
 use Cycle\Annotated\Annotation\Relation\BelongsTo;
@@ -25,7 +24,7 @@ class PaymentPeppol
     private int $auto_reference;
 
     #[Column(type: 'string(20)', nullable:false)]
-    private string $provider =  '';
+    private string $provider = '';
 
     public function __construct(
         int $inv_id = null,
@@ -54,7 +53,7 @@ class PaymentPeppol
 
     public function setId(int $id): void
     {
-        $this->id =  $id;
+        $this->id = $id;
     }
 
     public function getAuto_reference(): int
@@ -74,7 +73,7 @@ class PaymentPeppol
 
     public function setInv_id(int $inv_id): void
     {
-        $this->inv_id =  $inv_id;
+        $this->inv_id = $inv_id;
     }
 
     public function getProvider(): string

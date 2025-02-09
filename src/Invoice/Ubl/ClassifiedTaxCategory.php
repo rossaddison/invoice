@@ -34,29 +34,27 @@ class ClassifiedTaxCategory implements XmlSerializable
     public const string UNCL5305 = 'UNCL5305';
 
     /**
-     *
      * @return string|null
      */
     public function getId(): ?string
     {
-        if (null !== ($this->id)) {
+        if (null !== $this->id) {
             return $this->id;
         }
 
         if ($this->percent !== null) {
             if ($this->percent >= 21) {
                 return 'S';
-            } elseif ($this->percent <= 21 && $this->percent >= 6) {
-                return 'AA';
-            } else {
-                return 'Z';
             }
+            if ($this->percent <= 21 && $this->percent >= 6) {
+                return 'AA';
+            }
+            return 'Z';
         }
         return null;
     }
 
     /**
-     *
      * @throws InvalidArgumentException
      */
     public function validate(): void
@@ -71,9 +69,7 @@ class ClassifiedTaxCategory implements XmlSerializable
     }
 
     /**
-     *
      * @param Writer $writer
-     * @return void
      */
     public function xmlSerialize(Writer $writer): void
     {
@@ -90,7 +86,7 @@ class ClassifiedTaxCategory implements XmlSerializable
         $writer->write([
             'name' => Schema::CBC . 'ID',
             'value' => $this->id,
-            'attributes' => $schemeAttributes
+            'attributes' => $schemeAttributes,
         ]);
 
         if ($this->name !== null) {

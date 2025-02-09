@@ -33,10 +33,10 @@ class InvoiceHelper
     public function invoice_logo(): string
     {
         $aliases = new Aliases(['@invoice' => dirname(__DIR__),
-                                '@img' => dirname(__DIR__). DIRECTORY_SEPARATOR
-                                          .'Asset/core/img']);
+            '@img' => dirname(__DIR__) . DIRECTORY_SEPARATOR
+                      . 'Asset/core/img']);
         if (!empty($this->s->getSetting('invoice_logo'))) {
-            return '<img src="'. $aliases->get('@img') . $this->s->getSetting('invoice_logo') . '">';
+            return '<img src="' . $aliases->get('@img') . $this->s->getSetting('invoice_logo') . '">';
         }
         return '';
     }
@@ -49,14 +49,14 @@ class InvoiceHelper
     public function invoice_logo_pdf()
     {
         $aliases = new Aliases(['@invoice' => dirname(__DIR__),
-                                '@img' => dirname(__DIR__). DIRECTORY_SEPARATOR
-                                          .'Asset'
-                                          .DIRECTORY_SEPARATOR.
-                                          'core'
-                                          .DIRECTORY_SEPARATOR.
-                                          'img']);
+            '@img' => dirname(__DIR__) . DIRECTORY_SEPARATOR
+                      . 'Asset'
+                      . DIRECTORY_SEPARATOR .
+                      'core'
+                      . DIRECTORY_SEPARATOR .
+                      'img']);
         if (!empty($this->s->getSetting('invoice_logo'))) {
-            return '<img src="file://' . (string)getcwd() . $aliases->get('@img'). $this->s->getSetting('invoice_logo')  . '" id="invoice-logo">';
+            return '<img src="file://' . (string)getcwd() . $aliases->get('@img') . $this->s->getSetting('invoice_logo') . '" id="invoice-logo">';
         }
         return '';
     }
@@ -87,18 +87,18 @@ class InvoiceHelper
             $this->flash('danger', $this->s->trans('invalid_amount'));
         }
 
-        $amountLine = sprintf("%010d", (float)$amount * 100);
+        $amountLine = sprintf('%010d', (float)$amount * 100);
         $checkSlAmount = $this->invoice_recMod10($slipType . $amountLine);
 
         if (!preg_match("/\d{2}-\d{1,6}-\d{1}/", (string)$subNumb)) {
             $this->flash('danger', $this->s->trans('Invalid subscriber number'));
         }
 
-        $subNumb_exploded = explode("-", (string)$subNumb);
-        $fullSub = $subNumb_exploded[0] . sprintf("%06d", $subNumb_exploded[1]) . $subNumb_exploded[2];
+        $subNumb_exploded = explode('-', (string)$subNumb);
+        $fullSub = $subNumb_exploded[0] . sprintf('%06d', $subNumb_exploded[1]) . $subNumb_exploded[2];
         $rnumb_preg_replace = preg_replace('/\s+/', '', $rnumb);
-        
-        return $slipType . $amountLine . $checkSlAmount . ">" . (string)$rnumb_preg_replace . "+ " . $fullSub . ">";
+
+        return $slipType . $amountLine . $checkSlAmount . '>' . (string)$rnumb_preg_replace . '+ ' . $fullSub . '>';
     }
 
     /**
@@ -119,7 +119,7 @@ class InvoiceHelper
              * @var int $carry
              * @psalm-suppress InvalidArrayOffset
              */
-            $carry = $line[($carry + intval($char)) % 10];
+            $carry = $line[($carry + (int) $char) % 10];
         }
 
         return (10 - $carry) % 10;

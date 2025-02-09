@@ -18,6 +18,7 @@ use Yiisoft\Data\Cycle\Writer\EntityWriter;
 final class UserCustomRepository extends Select\Repository
 {
     private EntityWriter $entityWriter;
+
     /**
      * @param Select<TEntity> $select
      * @param EntityWriter $entityWriter
@@ -57,7 +58,6 @@ final class UserCustomRepository extends Select\Repository
      * @see Reader/ReadableDataInterface|InvalidArgumentException
      * @param array|UserCustom|null $usercustom
      * @throws Throwable
-     * @return void
      */
     public function save(array|UserCustom|null $usercustom): void
     {
@@ -68,7 +68,6 @@ final class UserCustomRepository extends Select\Repository
      * @see Reader/ReadableDataInterface|InvalidArgumentException
      * @param array|UserCustom|null $usercustom
      * @throws Throwable
-     * @return void
      */
     public function delete(array|UserCustom|null $usercustom): void
     {
@@ -84,7 +83,7 @@ final class UserCustomRepository extends Select\Repository
     }
 
     /**
-     * @return null|UserCustom
+     * @return UserCustom|null
      *
      * @psalm-return TEntity|null
      */

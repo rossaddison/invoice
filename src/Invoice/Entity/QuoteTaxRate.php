@@ -7,8 +7,6 @@ namespace App\Invoice\Entity;
 use Cycle\Annotated\Annotation\Column;
 use Cycle\Annotated\Annotation\Entity;
 use Cycle\Annotated\Annotation\Relation\BelongsTo;
-use App\Invoice\Entity\Quote;
-use App\Invoice\Entity\TaxRate;
 
 #[Entity(repository: \App\Invoice\QuoteTaxRate\QuoteTaxRateRepository::class)]
 
@@ -21,19 +19,19 @@ class QuoteTaxRate
     private ?TaxRate $tax_rate = null;
 
     #[Column(type: 'primary')]
-    private ?int $id =  null;
+    private ?int $id = null;
 
     #[Column(type: 'integer(11)', nullable: false)]
-    private ?int $quote_id =  null;
+    private ?int $quote_id = null;
 
     #[Column(type: 'integer(11)', nullable: false)]
-    private ?int $tax_rate_id =  null;
+    private ?int $tax_rate_id = null;
 
     #[Column(type: 'integer(1)', nullable: false, default:0)]
-    private ?int $include_item_tax =  null;
+    private ?int $include_item_tax = null;
 
     #[Column(type: 'decimal(20,2)', nullable: false, default: 0.00)]
-    private ?float $quote_tax_rate_amount =  0.00;
+    private ?float $quote_tax_rate_amount = 0.00;
 
     public function __construct(
         int $id = null,
@@ -66,7 +64,7 @@ class QuoteTaxRate
 
     public function setId(int $id): void
     {
-        $this->id =  $id;
+        $this->id = $id;
     }
 
     public function getQuote_id(): string
@@ -76,7 +74,7 @@ class QuoteTaxRate
 
     public function setQuote_id(int $quote_id): void
     {
-        $this->quote_id =  $quote_id;
+        $this->quote_id = $quote_id;
     }
 
     public function getTax_rate_id(): string
@@ -86,7 +84,7 @@ class QuoteTaxRate
 
     public function setTax_rate_id(int $tax_rate_id): void
     {
-        $this->tax_rate_id =  $tax_rate_id;
+        $this->tax_rate_id = $tax_rate_id;
     }
 
     public function getInclude_item_tax(): int|null
@@ -96,7 +94,7 @@ class QuoteTaxRate
 
     public function setInclude_item_tax(int $include_item_tax): void
     {
-        $this->include_item_tax =  $include_item_tax;
+        $this->include_item_tax = $include_item_tax;
     }
 
     public function getQuote_tax_rate_amount(): ?float
@@ -106,6 +104,6 @@ class QuoteTaxRate
 
     public function setQuote_tax_rate_amount(float $quote_tax_rate_amount): void
     {
-        $this->quote_tax_rate_amount =  $quote_tax_rate_amount;
+        $this->quote_tax_rate_amount = $quote_tax_rate_amount;
     }
 }

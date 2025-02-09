@@ -5,9 +5,6 @@ declare(strict_types=1);
 namespace App\Invoice\ProductImage;
 
 use App\Invoice\Entity\ProductImage;
-use App\Invoice\ProductImage\ProductImageForm;
-use App\Invoice\ProductImage\ProductImageService;
-use App\Invoice\ProductImage\ProductImageRepository;
 use App\Invoice\Setting\SettingRepository;
 use App\Invoice\Product\ProductRepository;
 use App\Invoice\Traits\FlashMessage;
@@ -30,7 +27,7 @@ use Exception;
 final class ProductImageController
 {
     use FlashMessage;
-    
+
     private Flash $flash;
     private SessionInterface $session;
     private SettingRepository $s;
@@ -95,7 +92,7 @@ final class ProductImageController
         $parameters = [
             'paginator' => $paginator,
             'productimages' => $this->productimages($productimageRepository),
-            'alert' => $this->alert()
+            'alert' => $this->alert(),
         ];
         return $this->viewRenderer->render('index', $parameters);
     }
@@ -150,8 +147,8 @@ final class ProductImageController
         return $this->viewRenderer->renderPartialAsString(
             '//invoice/layout/alert',
             [
-        'flash' => $this->flash
-      ]
+                'flash' => $this->flash,
+            ]
         );
     }
 
@@ -175,11 +172,11 @@ final class ProductImageController
                 return $this->factory->createResponse($this->viewRenderer->renderPartialAsString(
                     '//invoice/setting/inv_message',
                     [
-                    'heading' => '',
-                    'message' => $this->translator->translate('i.record_successfully_deleted'),
-                    'url' => 'product/view',
-                    'id' => $product_id
-                ]
+                        'heading' => '',
+                        'message' => $this->translator->translate('i.record_successfully_deleted'),
+                        'url' => 'product/view',
+                        'id' => $product_id,
+                    ]
                 ));
             }
             return $this->webService->getRedirectResponse('productimage/index');
@@ -214,7 +211,7 @@ final class ProductImageController
                 'actionArguments' => ['id' => $productImage->getId()],
                 'errors' => [],
                 'form' => $form,
-                'products' => $productRepository->findAllPreloaded()
+                'products' => $productRepository->findAllPreloaded(),
             ];
             if ($request->getMethod() === Method::POST) {
                 if ($formHydrator->populateFromPostAndValidate($form, $request)) {
@@ -223,7 +220,7 @@ final class ProductImageController
                         $this->productimageService->saveProductImage($productImage, $body);
                         return $this->webService->getRedirectResponse('productimage/index');
                     }
-                }    
+                }
                 $parameters['errors'] = $form->getValidationResult()->getErrorMessagesIndexedByProperty();
                 $parameters['form'] = $form;
             }
@@ -235,7 +232,7 @@ final class ProductImageController
     /**
      * @param CurrentRoute $currentRoute
      * @param ProductImageRepository $productimageRepository
-     * @return \Yiisoft\DataResponse\DataResponse|Response
+     * @return Response|\Yiisoft\DataResponse\DataResponse
      */
     public function view(CurrentRoute $currentRoute, ProductImageRepository $productimageRepository): \Yiisoft\DataResponse\DataResponse|Response
     {
@@ -262,8 +259,7 @@ final class ProductImageController
     {
         $id = $currentRoute->getArgument('id');
         if (null !== $id) {
-            $productimage = $productimageRepository->repoProductImagequery($id);
-            return $productimage;
+            return $productimageRepository->repoProductImagequery($id);
         }
         return null;
     }
@@ -277,22 +273,20 @@ final class ProductImageController
      */
     private function productimages(ProductImageRepository $productimageRepository): \Yiisoft\Data\Cycle\Reader\EntityReader
     {
-        $productimages = $productimageRepository->findAllPreloaded();
-        return $productimages;
+        return $productimageRepository->findAllPreloaded();
     }
 
     /**
      * @param ProductImageRepository $productimageRepository
      * @param Sort $sort
      *
-     * @return \Yiisoft\Data\Reader\SortableDataInterface&\Yiisoft\Data\Reader\DataReaderInterface
+     * @return \Yiisoft\Data\Reader\DataReaderInterface&\Yiisoft\Data\Reader\SortableDataInterface
      *
      * @psalm-return \Yiisoft\Data\Reader\SortableDataInterface&\Yiisoft\Data\Reader\DataReaderInterface<int, ProductImage>
      */
     private function productimages_with_sort(ProductImageRepository $productimageRepository, Sort $sort): \Yiisoft\Data\Reader\SortableDataInterface
     {
-        $productimages = $productimageRepository->findAllPreloaded()
+        return $productimageRepository->findAllPreloaded()
                 ->withSort($sort);
-        return $productimages;
     }
 }

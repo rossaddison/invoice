@@ -18,7 +18,6 @@ final class CompanyService
     /**
      * @param Company $model
      * @param array $array
-     * @return void
      */
     public function saveCompany(Company $model, array $array): void
     {
@@ -40,9 +39,7 @@ final class CompanyService
     }
 
     /**
-     *
      * @param array|Company|null $model
-     * @return void
      */
     public function deleteCompany(array|Company|null $model): void
     {

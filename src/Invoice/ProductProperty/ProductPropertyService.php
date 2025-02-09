@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace App\Invoice\ProductProperty;
 
 use App\Invoice\Entity\ProductProperty;
-use App\Invoice\ProductProperty\ProductPropertyRepository;
 
 final class ProductPropertyService
 {
@@ -19,7 +18,6 @@ final class ProductPropertyService
     /**
      * @param ProductProperty $model
      * @param array $array
-     * @return void
      */
     public function saveProductProperty(ProductProperty $model, array $array): void
     {
@@ -32,7 +30,6 @@ final class ProductPropertyService
 
     /**
      * @param ProductProperty $model
-     * @return void
      */
     public function deleteProductProperty(ProductProperty $model): void
     {

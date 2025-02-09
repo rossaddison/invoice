@@ -7,7 +7,6 @@ namespace App\Invoice\Entity;
 use Cycle\Annotated\Annotation\Column;
 use Cycle\Annotated\Annotation\Entity;
 use Cycle\Annotated\Annotation\Relation\BelongsTo;
-use App\Invoice\Entity\Inv;
 
 #[Entity(repository: \App\Invoice\InvAmount\InvAmountRepository::class)]
 class InvAmount
@@ -79,7 +78,7 @@ class InvAmount
 
     public function setId(int $id): void
     {
-        $this->id =  $id;
+        $this->id = $id;
     }
 
     public function getInv_id(): string
@@ -89,7 +88,7 @@ class InvAmount
 
     public function setInv_id(int $inv_id): void
     {
-        $this->inv_id =  $inv_id;
+        $this->inv_id = $inv_id;
     }
 
     public function getSign(): int
@@ -99,7 +98,7 @@ class InvAmount
 
     public function setSign(int $sign): void
     {
-        $this->sign =  $sign;
+        $this->sign = $sign;
     }
 
     public function getItem_subtotal(): float
@@ -109,7 +108,7 @@ class InvAmount
 
     public function setItem_subtotal(float $item_subtotal): void
     {
-        $this->item_subtotal =  $item_subtotal;
+        $this->item_subtotal = $item_subtotal;
     }
 
     public function getItem_tax_total(): float
@@ -119,7 +118,7 @@ class InvAmount
 
     public function setItem_tax_total(float $item_tax_total): void
     {
-        $this->item_tax_total =  $item_tax_total;
+        $this->item_tax_total = $item_tax_total;
     }
 
     public function getTax_total(): float|null
@@ -129,7 +128,7 @@ class InvAmount
 
     public function setTax_total(float $tax_total): void
     {
-        $this->tax_total =  $tax_total;
+        $this->tax_total = $tax_total;
     }
 
     public function getTotal(): float|null
@@ -139,7 +138,7 @@ class InvAmount
 
     public function setTotal(float $total): void
     {
-        $this->total =  $total;
+        $this->total = $total;
     }
 
     public function getPaid(): float|null
@@ -149,7 +148,7 @@ class InvAmount
 
     public function setPaid(float $paid): void
     {
-        $this->paid =  $paid;
+        $this->paid = $paid;
     }
 
     public function getBalance(): float|null
@@ -159,6 +158,6 @@ class InvAmount
 
     public function setBalance(float $balance): void
     {
-        $this->balance =  $balance;
+        $this->balance = $balance;
     }
 }

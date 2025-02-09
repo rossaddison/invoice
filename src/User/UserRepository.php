@@ -17,7 +17,6 @@ use Yiisoft\Data\Cycle\Writer\EntityWriter;
 final class UserRepository extends Select\Repository
 {
     /**
-     *
      * @param EntityWriter $entityWriter
      * @param Select<TEntity> $select
      */
@@ -45,8 +44,8 @@ final class UserRepository extends Select\Repository
         return (new EntityReader($query))->withSort(
             Sort::only(['id', 'login'])
                 ->withOrder([
-                             'id' => 'desc',
-                             'login' => 'desc'
+                    'id' => 'desc',
+                    'login' => 'desc',
                 ])
         );
     }
@@ -61,7 +60,6 @@ final class UserRepository extends Select\Repository
     }
 
     /**
-     *
      * @param array $scope
      * @param array $orderBy
      * @return EntityReader
@@ -145,8 +143,7 @@ final class UserRepository extends Select\Repository
     */
     public function repoCount(): int
     {
-        $count = $this->select()
+        return $this->select()
                       ->count();
-        return $count;
     }
 }

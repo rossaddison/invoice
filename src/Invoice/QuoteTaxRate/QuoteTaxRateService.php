@@ -16,10 +16,8 @@ final class QuoteTaxRateService
     }
 
     /**
-     *
      * @param QuoteTaxRate $model
      * @param array $array
-     * @return void
      */
     public function saveQuoteTaxRate(QuoteTaxRate $model, array $array): void
     {
@@ -32,9 +30,7 @@ final class QuoteTaxRateService
     }
 
     /**
-     *
      * @param array|QuoteTaxRate|null $model
-     * @return void
      */
     public function deleteQuoteTaxRate(array|QuoteTaxRate|null $model): void
     {

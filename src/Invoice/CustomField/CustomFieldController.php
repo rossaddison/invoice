@@ -5,8 +5,6 @@ declare(strict_types=1);
 namespace App\Invoice\CustomField;
 
 use App\Invoice\Entity\CustomField;
-use App\Invoice\CustomField\CustomFieldService;
-use App\Invoice\CustomField\CustomFieldRepository;
 use App\Invoice\CustomValue\CustomValueRepository;
 use App\Invoice\Setting\SettingRepository;
 use App\Invoice\Traits\FlashMessage;
@@ -31,7 +29,7 @@ use Yiisoft\Yii\View\Renderer\ViewRenderer;
 final class CustomFieldController
 {
     use FlashMessage;
-    
+
     private ViewRenderer $viewRenderer;
     private WebControllerService $webService;
     private UserService $userService;
@@ -90,7 +88,7 @@ final class CustomFieldController
             'custom_tables' => $this->custom_tables(),
             'custom_value_fields' => $this->custom_value_fields(),
             'alert' => $this->alert(),
-       ];
+        ];
         return $this->viewRenderer->render('index', $parameters);
     }
 
@@ -98,15 +96,14 @@ final class CustomFieldController
      * @param CustomFieldRepository $cfR
      * @param Sort $sort
      *
-     * @return \Yiisoft\Data\Reader\SortableDataInterface&\Yiisoft\Data\Reader\DataReaderInterface
+     * @return \Yiisoft\Data\Reader\DataReaderInterface&\Yiisoft\Data\Reader\SortableDataInterface
      *
      * @psalm-return \Yiisoft\Data\Reader\SortableDataInterface&\Yiisoft\Data\Reader\DataReaderInterface<int, CustomField>
      */
     private function customFieldsWithSort(CustomFieldRepository $cfR, Sort $sort): \Yiisoft\Data\Reader\SortableDataInterface
     {
         $query = $this->customFields($cfR);
-        $customFields = $query->withSort($sort);
-        return $customFields;
+        return $query->withSort($sort);
     }
 
     /**
@@ -134,7 +131,7 @@ final class CustomFieldController
             'custom_value_fields' => ['SINGLE-CHOICE','MULTIPLE-CHOICE'],
             // Create an array for "moduled" ES6 jquery script. The script is "moduled" and therefore deferred by default to avoid
             // the $ undefined reference error in the DOM.
-            'positions' => $this->positions($settingRepository)
+            'positions' => $this->positions($settingRepository),
         ];
 
         if ($request->getMethod() === Method::POST) {
@@ -142,7 +139,7 @@ final class CustomFieldController
                 if (is_array($body)) {
                     $this->customfieldService->saveCustomField($custom_field, $body);
                     return $this->webService->getRedirectResponse('customfield/index');
-                }    
+                }
             }
             $parameters['form'] = $form;
             $parameters['errors'] = $form->getValidationResult()->getErrorMessagesIndexedByProperty();
@@ -177,7 +174,7 @@ final class CustomFieldController
                 'tables' => $this->custom_tables(),
                 'user_input_types' => ['NUMBER','TEXT','DATE','BOOLEAN'],
                 'custom_value_fields' => ['SINGLE-CHOICE','MULTIPLE-CHOICE'],
-                'positions' => $this->positions($settingRepository)
+                'positions' => $this->positions($settingRepository),
             ];
             if ($request->getMethod() === Method::POST) {
                 $body = $request->getParsedBody() ?? [];
@@ -185,7 +182,7 @@ final class CustomFieldController
                     if (is_array($body)) {
                         $this->customfieldService->saveCustomField($custom_field, $body);
                         return $this->webService->getRedirectResponse('customfield/index');
-                    }    
+                    }
                 }
                 $parameters['form'] = $form;
                 $parameters['errors'] = $form->getValidationResult()->getErrorMessagesIndexedByProperty();
@@ -232,12 +229,11 @@ final class CustomFieldController
                 'actionArguments' => ['id' => $custom_field->getId()],
                 'errors' => [],
                 'form' => $form,
-                'custom_tables' => $this->custom_tables()
+                'custom_tables' => $this->custom_tables(),
             ];
             return $this->viewRenderer->render('_view', $parameters);
-        } else {
-            return $this->webService->getRedirectResponse('customfield/index');
         }
+        return $this->webService->getRedirectResponse('customfield/index');
     }
 
     /**
@@ -262,8 +258,7 @@ final class CustomFieldController
     {
         $id = $currentRoute->getArgument('id');
         if (null !== $id) {
-            $customfield = $customfieldRepository->repoCustomFieldquery($id);
-            return $customfield;
+            return $customfieldRepository->repoCustomFieldquery($id);
         }
         return null;
     }
@@ -275,8 +270,7 @@ final class CustomFieldController
      */
     private function customfields(CustomFieldRepository $customfieldRepository): \Yiisoft\Data\Cycle\Reader\EntityReader
     {
-        $customfields = $customfieldRepository->findAllPreloaded();
-        return $customfields;
+        return $customfieldRepository->findAllPreloaded();
     }
 
     /**
@@ -287,9 +281,9 @@ final class CustomFieldController
         return $this->viewRenderer->renderPartialAsString(
             '//invoice/layout/alert',
             [
-       'flash' => $this->flash,
-       'errors' => [],
-     ]
+                'flash' => $this->flash,
+                'errors' => [],
+            ]
         );
     }
 
@@ -302,14 +296,14 @@ final class CustomFieldController
         // The default position on the form is custom fields so if none of the other options are chosen then the new field
         // will appear under the default custom field section. The client form has five areas where the new field can appear.
         $positions = [
-                    'client' =>  ['i.custom_fields', 'i.address', 'i.contact_information', 'i.personal_information', 'i.tax_information'],
-                    'product' =>  ['i.custom_fields'],
-                    // A custom field created with "properties" will appear in the address section
-                    'invoice' => ['i.custom_fields','i.properties'],
-                    'payment' => ['i.custom_fields'],
-                    'quote' =>   ['i.custom_fields','i.properties'],
-                    'user' =>    ['i.custom_fields', 'i.account_information', 'i.address', 'i.tax_information', 'i.contact_information'],
-                ];
+            'client' => ['i.custom_fields', 'i.address', 'i.contact_information', 'i.personal_information', 'i.tax_information'],
+            'product' => ['i.custom_fields'],
+            // A custom field created with "properties" will appear in the address section
+            'invoice' => ['i.custom_fields','i.properties'],
+            'payment' => ['i.custom_fields'],
+            'quote' => ['i.custom_fields','i.properties'],
+            'user' => ['i.custom_fields', 'i.account_information', 'i.address', 'i.tax_information', 'i.contact_information'],
+        ];
         foreach ($positions as $key => $val) {
             foreach ($val as $key2 => $val2) {
                 $val[$key2] = $this->translator->translate($val2);
@@ -342,9 +336,9 @@ final class CustomFieldController
      */
     public static function custom_value_fields(): array
     {
-        return array(
+        return [
             'SINGLE-CHOICE',
-            'MULTIPLE-CHOICE'
-        );
+            'MULTIPLE-CHOICE',
+        ];
     }
 }
