@@ -1368,10 +1368,7 @@ final class InvController
         $invoice_amount = $iaR->repoInvquery($inv_id);
         if (null !== $invoice_amount) {
             // If the invoice is fully paid up allow the status to change to 'paid'
-            return (bool) ($invoice_amount->getBalance() == 0.00)
-
-
-             ;
+            return ($invoice_amount->getBalance() == 0.00);
         }
         return false;
     }
@@ -3466,10 +3463,7 @@ final class InvController
             return true;
         }
         // Override the invoice's readonly
-        return (bool) ($this->sR->getSetting('disable_read_only') === (string) 1)
-
-
-         ;
+        return ($this->sR->getSetting('disable_read_only') === (string) 1);
     }
 
     /**

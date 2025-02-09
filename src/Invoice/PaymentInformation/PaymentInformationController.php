@@ -280,7 +280,10 @@ final class PaymentInformationController
         // $signature = $client->testPrivateKeyIntegrity()
         //           ? $client->generateButtonSignature($this->amazon_payload_json($url_key))
         //           : '';
-        /** @var string $signature */
+        
+        /**
+         * @psalm-suppress MixedReturnStatement
+         */
         return $client->generateButtonSignature($this->amazon_payload_json($url_key));
     }
 
