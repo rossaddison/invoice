@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "804af1b56619ead1f827f56bce5e58d7",
+    "content-hash": "bf51e896ce2ca1c94067ad633a428589",
     "packages": [
         {
             "name": "alexkart/curl-builder",
@@ -3389,16 +3389,16 @@
         },
         {
             "name": "google/cloud-translate",
-            "version": "v2.0.0",
+            "version": "v1.21.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/googleapis/google-cloud-php-translate.git",
-                "reference": "13aa117f643cf837e9df42d59ff0dc65ddc7a05c"
+                "reference": "5ef17ec64c86bc96b2258ddae779de8a38942ee4"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/googleapis/google-cloud-php-translate/zipball/13aa117f643cf837e9df42d59ff0dc65ddc7a05c",
-                "reference": "13aa117f643cf837e9df42d59ff0dc65ddc7a05c",
+                "url": "https://api.github.com/repos/googleapis/google-cloud-php-translate/zipball/5ef17ec64c86bc96b2258ddae779de8a38942ee4",
+                "reference": "5ef17ec64c86bc96b2258ddae779de8a38942ee4",
                 "shasum": ""
             },
             "require": {
@@ -3439,9 +3439,9 @@
             ],
             "description": "Cloud Translation Client for PHP",
             "support": {
-                "source": "https://github.com/googleapis/google-cloud-php-translate/tree/v2.0.0"
+                "source": "https://github.com/googleapis/google-cloud-php-translate/tree/v1.21.0"
             },
-            "time": "2025-02-08T00:05:17+00:00"
+            "time": "2025-02-03T23:47:57+00:00"
         },
         {
             "name": "google/common-protos",
@@ -16917,16 +16917,16 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/yiisoft/yii-bootstrap5.git",
-                "reference": "a27413d28341a79f179b593b7f99edb8bbec489e"
+                "reference": "c0bea8683e0a814ccc9590fb8c34a78e750bbd7b"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/yiisoft/yii-bootstrap5/zipball/a27413d28341a79f179b593b7f99edb8bbec489e",
-                "reference": "a27413d28341a79f179b593b7f99edb8bbec489e",
+                "url": "https://api.github.com/repos/yiisoft/yii-bootstrap5/zipball/c0bea8683e0a814ccc9590fb8c34a78e750bbd7b",
+                "reference": "c0bea8683e0a814ccc9590fb8c34a78e750bbd7b",
                 "shasum": ""
             },
             "require": {
-                "php": "^8.1",
+                "php": "~8.1.0 || ~8.2.0 || ~8.3.0 || ~8.4.0",
                 "yiisoft/arrays": "^1.0|^2.0|^3.0",
                 "yiisoft/assets": "^5.0",
                 "yiisoft/files": "^2.0",
@@ -16938,12 +16938,12 @@
                 "yiisoft/yii-bootstrap": "1.0"
             },
             "require-dev": {
-                "maglnet/composer-require-checker": "^4.3",
-                "phpunit/phpunit": "^9.6",
+                "maglnet/composer-require-checker": "^4.1",
+                "phpunit/phpunit": "^10.5",
                 "rector/rector": "^2.0",
-                "roave/infection-static-analysis-plugin": "^1.16",
+                "roave/infection-static-analysis-plugin": "^1.35",
                 "spatie/phpunit-watcher": "^1.23",
-                "vimeo/psalm": "^5.25",
+                "vimeo/psalm": "^5.26.1|^6.4.1",
                 "yiisoft/aliases": "^3.0",
                 "yiisoft/di": "^1.0"
             },
@@ -16986,7 +16986,7 @@
                     "type": "open_collective"
                 }
             ],
-            "time": "2025-02-09T09:33:05+00:00"
+            "time": "2025-02-09T11:15:20+00:00"
         },
         {
             "name": "yiisoft/yii-console",
