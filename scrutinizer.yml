@@ -60,6 +60,12 @@ checks:
     avoid_closing_tag: false
     assignment_of_null_return: false
     argument_type_checks: true
+    
+tools:
+    php_code_coverage:
+        enabled: true
+    external_code_coverage:
+        timeout: 600    
 
 filter:
   paths:
