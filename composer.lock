@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "40091e9dc4b53528ca6f83976b654e24",
+    "content-hash": "804af1b56619ead1f827f56bce5e58d7",
     "packages": [
         {
             "name": "alexkart/curl-builder",
@@ -3389,16 +3389,16 @@
         },
         {
             "name": "google/cloud-translate",
-            "version": "v1.21.0",
+            "version": "v2.0.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/googleapis/google-cloud-php-translate.git",
-                "reference": "5ef17ec64c86bc96b2258ddae779de8a38942ee4"
+                "reference": "13aa117f643cf837e9df42d59ff0dc65ddc7a05c"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/googleapis/google-cloud-php-translate/zipball/5ef17ec64c86bc96b2258ddae779de8a38942ee4",
-                "reference": "5ef17ec64c86bc96b2258ddae779de8a38942ee4",
+                "url": "https://api.github.com/repos/googleapis/google-cloud-php-translate/zipball/13aa117f643cf837e9df42d59ff0dc65ddc7a05c",
+                "reference": "13aa117f643cf837e9df42d59ff0dc65ddc7a05c",
                 "shasum": ""
             },
             "require": {
@@ -3439,9 +3439,9 @@
             ],
             "description": "Cloud Translation Client for PHP",
             "support": {
-                "source": "https://github.com/googleapis/google-cloud-php-translate/tree/v1.21.0"
+                "source": "https://github.com/googleapis/google-cloud-php-translate/tree/v2.0.0"
             },
-            "time": "2025-02-03T23:47:57+00:00"
+            "time": "2025-02-08T00:05:17+00:00"
         },
         {
             "name": "google/common-protos",
@@ -17181,12 +17181,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/yiisoft/yii-dataview.git",
-                "reference": "58d15124d320a3d7315b33276b64002d0f70263f"
+                "reference": "e7c3b93a62815deb92a4b097c5d2fcf59c50f40c"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/yiisoft/yii-dataview/zipball/58d15124d320a3d7315b33276b64002d0f70263f",
-                "reference": "58d15124d320a3d7315b33276b64002d0f70263f",
+                "url": "https://api.github.com/repos/yiisoft/yii-dataview/zipball/e7c3b93a62815deb92a4b097c5d2fcf59c50f40c",
+                "reference": "e7c3b93a62815deb92a4b097c5d2fcf59c50f40c",
                 "shasum": ""
             },
             "require": {
@@ -17275,7 +17275,7 @@
                     "type": "opencollective"
                 }
             ],
-            "time": "2025-02-08T20:36:30+00:00"
+            "time": "2025-02-09T11:07:31+00:00"
         },
         {
             "name": "yiisoft/yii-debug",
@@ -21807,16 +21807,16 @@
         },
         {
             "name": "roave/better-reflection",
-            "version": "6.55.0",
+            "version": "6.56.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/Roave/BetterReflection.git",
-                "reference": "42e750c4e806ca1ff74959da2e221952f8bebee0"
+                "reference": "87fc50186197726e2e5aa24acf910743134951fe"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/Roave/BetterReflection/zipball/42e750c4e806ca1ff74959da2e221952f8bebee0",
-                "reference": "42e750c4e806ca1ff74959da2e221952f8bebee0",
+                "url": "https://api.github.com/repos/Roave/BetterReflection/zipball/87fc50186197726e2e5aa24acf910743134951fe",
+                "reference": "87fc50186197726e2e5aa24acf910743134951fe",
                 "shasum": ""
             },
             "require": {
@@ -21830,7 +21830,7 @@
             },
             "require-dev": {
                 "phpbench/phpbench": "^1.4.0",
-                "phpunit/phpunit": "^11.5.6"
+                "phpunit/phpunit": "^11.5.7"
             },
             "suggest": {
                 "composer/composer": "Required to use the ComposerSourceLocator"
@@ -21870,9 +21870,9 @@
             "description": "Better Reflection - an improved code reflection API",
             "support": {
                 "issues": "https://github.com/Roave/BetterReflection/issues",
-                "source": "https://github.com/Roave/BetterReflection/tree/6.55.0"
+                "source": "https://github.com/Roave/BetterReflection/tree/6.56.0"
             },
-            "time": "2025-02-06T12:13:01+00:00"
+            "time": "2025-02-09T11:05:37+00:00"
         },
         {
             "name": "roave/infection-static-analysis-plugin",
