@@ -3,6 +3,63 @@ checks:
     duplication: true
     unused_parameters: true
     properties_in_camelcaps: true
+    verify_property_names: false
+    verify_argument_usable_as_reference: false
+    verify_access_scope_valid: false
+    variable_existence: false
+    useless_calls: false
+    use_statement_alias_conflict: false
+    unused_variables: false
+    unused_properties: false
+    unused_methods: false
+    unreachable_code: false
+    too_many_arguments: true
+    symfony_request_injection: false
+    switch_fallthrough_commented: false
+    sql_injection_vulnerabilities: false
+    security_vulnerabilities: true
+    return_in_constructor: false
+    require_scope_for_methods: false
+    require_php_tag_first: false
+    property_assignments: false
+    precedence_mistakes: false
+    precedence_in_conditions: false
+    parse_doc_comments: false
+    parameter_non_unique: false
+    overriding_private_members: false
+    overriding_parameter: false
+    non_commented_empty_catch_block: false
+    no_trait_type_hints: false
+    no_trailing_whitespace: false
+    no_short_open_tag: false
+    no_property_on_interface: false
+    no_non_implemented_abstract_methods: false
+    no_exit: false
+    no_eval: false
+    no_error_suppression: false
+    no_debug_code: false
+    missing_arguments: true
+    method_calls_on_non_object: false
+    instanceof_class_exists: false
+    foreach_usable_as_reference: false
+    foreach_traversable: false
+    fix_doc_comments: false
+    encourage_shallow_comparison: false
+    deprecated_code_usage: false
+    deadlock_detection_in_loops: false
+    comparison_always_same_result: false
+    code_rating: true
+    closure_use_not_conflicting: false
+    closure_use_modifiable: false
+    catch_class_exists: true
+    call_to_parent_method: false
+    avoid_superglobals: false
+    avoid_length_functions_in_loops: false
+    avoid_entity_manager_injection: false
+    avoid_duplicate_types: true
+    avoid_closing_tag: false
+    assignment_of_null_return: false
+    argument_type_checks: true
 
 filter:
   paths:
