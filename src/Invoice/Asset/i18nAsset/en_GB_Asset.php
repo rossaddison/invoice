@@ -4,8 +4,6 @@ declare(strict_types=1);
 
 namespace App\Invoice\Asset\i18nAsset;
 
-use App\Invoice\Asset\i18nAsset\__Asset;
-
 class en_GB_Asset extends __Asset
 {
     public array $js = [

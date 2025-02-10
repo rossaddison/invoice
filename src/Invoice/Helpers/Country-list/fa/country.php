@@ -1,6 +1,8 @@
 <?php
 
-return array(
+declare(strict_types=1);
+
+return [
     'AW' => 'آروبا',
     'AR' => 'آرژانتین',
     'AL' => 'آلبانی',
@@ -249,4 +251,4 @@ return array(
     'GW' => 'گینهٔ بیسائو',
     'YE' => 'یمن',
     'GR' => 'یونان',
-);
+];

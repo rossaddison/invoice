@@ -4,15 +4,12 @@ declare(strict_types=1);
 
 namespace App\Auth\Form;
 
-use App\User\UserRepository;
-use App\Auth\AuthService;
 use Yiisoft\FormModel\FormModel;
 use Yiisoft\Translator\TranslatorInterface;
 use Yiisoft\Validator\Result;
 use Yiisoft\Validator\Rule\Callback;
 use Yiisoft\Validator\Rule\Length;
 use Yiisoft\Validator\Rule\Required;
-use Yiisoft\Validator\ValidatorInterface;
 use Yiisoft\Validator\RulesProviderInterface;
 
 final class ResetPasswordForm extends FormModel implements RulesProviderInterface
@@ -68,7 +65,7 @@ final class ResetPasswordForm extends FormModel implements RulesProviderInterfac
                  * @see https://github.com/yiisoft/demo/pull/602  Password length should not be limited
                  */
             ],
-            'newPasswordVerify' => $this->NewPasswordVerifyRules()
+            'newPasswordVerify' => $this->NewPasswordVerifyRules(),
         ];
     }
 

@@ -6,7 +6,6 @@ namespace App\Invoice\Sumex;
 
 use App\Invoice\Entity\Sumex;
 use App\Invoice\Setting\SettingRepository;
-use App\Invoice\Sumex\SumexRepository;
 
 final class SumexService
 {
@@ -21,7 +20,6 @@ final class SumexService
      * @param Sumex $model
      * @param array $array
      * @param SettingRepository $s
-     * @return void
      */
     public function saveSumex(Sumex $model, array $array): void
     {
@@ -53,7 +51,6 @@ final class SumexService
 
     /**
      * @param Sumex $model
-     * @return void
      */
     public function deleteSumex(Sumex $model): void
     {

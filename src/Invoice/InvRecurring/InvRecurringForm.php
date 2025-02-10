@@ -6,7 +6,6 @@ namespace App\Invoice\InvRecurring;
 
 use App\Invoice\Entity\InvRecurring;
 use Yiisoft\FormModel\FormModel;
-use Yiisoft\Validator\EmptyCondition\WhenNull;
 use Yiisoft\Validator\Rule\Required;
 use DateTimeImmutable;
 
@@ -40,7 +39,7 @@ final class InvRecurringForm extends FormModel
     public function getStart(): null|string|DateTimeImmutable
     {
         /**
-         * @var null|string|DateTimeImmutable $this->start
+         * @var DateTimeImmutable|string|null $this->start
          */
         return $this->start;
     }
@@ -48,7 +47,7 @@ final class InvRecurringForm extends FormModel
     public function getEnd(): null|string|DateTimeImmutable
     {
         /**
-         * @var null|string|DateTimeImmutable $this->end
+         * @var DateTimeImmutable|string|null $this->end
          */
         return $this->end;
     }
@@ -61,7 +60,7 @@ final class InvRecurringForm extends FormModel
     public function getNext(): null|string|DateTimeImmutable
     {
         /**
-         * @var null|string|DateTimeImmutable $this->next
+         * @var DateTimeImmutable|string|null $this->next
          */
         return $this->next;
     }

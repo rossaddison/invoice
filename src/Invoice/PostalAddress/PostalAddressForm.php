@@ -58,7 +58,7 @@ final class PostalAddressForm extends FormModel
             'city_name' => $this->translator->translate('invoice.client.postaladdress.city.name'),
             'postalzone' => $this->translator->translate('invoice.client.postaladdress.postalzone'),
             'countrysubentity' => $this->translator->translate('invoice.client.postaladdress.countrysubentity'),
-            'country' => $this->translator->translate('invoice.client.postaladdress.country')
+            'country' => $this->translator->translate('invoice.client.postaladdress.country'),
         ];
     }
 
@@ -73,7 +73,7 @@ final class PostalAddressForm extends FormModel
             'city_name' => $this->translator->translate($required),
             'postalzone' => $this->translator->translate($required),
             'countrysubentity' => $this->translator->translate($required),
-            'country' => $this->translator->translate($required)
+            'country' => $this->translator->translate($required),
         ];
     }
 

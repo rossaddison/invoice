@@ -16,10 +16,8 @@ final class ItemLookupService
     }
 
     /**
-     *
      * @param ItemLookup $model
      * @param array $array
-     * @return void
      */
     public function saveItemLookup(ItemLookup $model, array $array): void
     {
@@ -31,7 +29,6 @@ final class ItemLookupService
 
     /**
      * @param ItemLookup $model
-     * @return void
      */
     public function deleteItemLookup(ItemLookup $model): void
     {

@@ -33,5 +33,4 @@ class PeppolClientsAccountingCostNotFoundException extends \RuntimeException imp
                 Please try again
             SOLUTION;
     }
-
 }

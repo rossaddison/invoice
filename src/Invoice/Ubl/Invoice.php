@@ -7,7 +7,6 @@ namespace App\Invoice\Ubl;
 // Sabre
 use Sabre\Xml\Writer;
 use Sabre\Xml\XmlSerializable;
-use App\Invoice\Ubl\Schema;
 use App\Invoice\Setting\SettingRepository;
 use DateTime;
 use InvalidArgumentException;
@@ -40,7 +39,7 @@ class Invoice implements XmlSerializable
     private ?PaymentTerms $paymentTerms;
     private array $allowanceCharges;
     private array $taxAmounts;
-    private array $taxSubtotal;
+    private array $taxSubTotal;
     private ?LegalMonetaryTotal $legalMonetaryTotal;
     protected array $invoiceLines;
     private ?bool $isCopyIndicator;
@@ -67,7 +66,7 @@ class Invoice implements XmlSerializable
         PaymentTerms $paymentTerms,
         array $allowanceCharges,
         array $taxAmounts,
-        array $taxSubtotal,
+        array $taxSubTotal,
         ?LegalMonetaryTotal $legalMonetaryTotal,
         array $invoiceLines,
         ?bool $isCopyIndicator,
@@ -93,7 +92,7 @@ class Invoice implements XmlSerializable
         $this->paymentTerms = $paymentTerms;
         $this->allowanceCharges = $allowanceCharges;
         $this->taxAmounts = $taxAmounts;
-        $this->taxSubtotal = $taxSubtotal;
+        $this->taxSubTotal = $taxSubTotal;
         $this->legalMonetaryTotal = $legalMonetaryTotal;
         $this->invoiceLines = $invoiceLines;
         $this->isCopyIndicator = $isCopyIndicator;
@@ -101,7 +100,7 @@ class Invoice implements XmlSerializable
     }
 
     /**
-     * @return null|string
+     * @return string|null
      */
     public function getUBLVersionID(): ?string
     {
@@ -110,11 +109,11 @@ class Invoice implements XmlSerializable
 
     /**
      * @see http://www.schemacentral.com Business Document Standards
-     * @param null|string $UBLVersionID
+     * @param string|null $UBLVersionID
      * eg. '2.0', '2.1', '2.2', '2.3'
      * @return Invoice
      */
-    public function setUBLVersionID(?string $UBLVersionID): Invoice
+    public function setUBLVersionID(?string $UBLVersionID): self
     {
         $this->UBLVersionID = $UBLVersionID;
         return $this;
@@ -123,7 +122,7 @@ class Invoice implements XmlSerializable
     /**
      * @return Invoice
      */
-    public function setDocumentCurrencyCode(): Invoice
+    public function setDocumentCurrencyCode(): self
     {
         $this->documentCurrencyCode = $this->settingRepository->getSetting('currency_code_to');
         return $this;
@@ -137,7 +136,6 @@ class Invoice implements XmlSerializable
     /**
      * The validate function that is called during xml writing to validate the data of the object.
      *
-     * @return void
      * @throws InvalidArgumentException An error with information about required data that is missing to write the XML
      */
     public function validate(): void
@@ -176,27 +174,25 @@ class Invoice implements XmlSerializable
     }
 
     /**
-     *
      * @param Writer $writer
-     * @return void
      */
     public function xmlSerialize(Writer $writer): void
     {
         $this->validate();
 
         $writer->write([
-          Schema::CBC . 'UBLVersionID' => $this->UBLVersionID,
-          Schema::CBC . 'CustomizationID' => $this->customizationID,
+            Schema::CBC . 'UBLVersionID' => $this->UBLVersionID,
+            Schema::CBC . 'CustomizationID' => $this->customizationID,
         ]);
 
         if ($this->profileID !== null) {
             $writer->write([
-              Schema::CBC . 'ProfileID' => $this->profileID
+                Schema::CBC . 'ProfileID' => $this->profileID,
             ]);
         }
 
         $writer->write([
-          Schema::CBC . 'ID' => $this->id
+            Schema::CBC . 'ID' => $this->id,
         ]);
 
         /**
@@ -218,33 +214,33 @@ class Invoice implements XmlSerializable
         //}
 
         $writer->write([
-          Schema::CBC . 'IssueDate' => $this->issueDate->format('Y-m-d'),
+            Schema::CBC . 'IssueDate' => $this->issueDate->format('Y-m-d'),
         ]);
 
         if ($this->dueDate !== null) {
             $writer->write([
-              Schema::CBC . 'DueDate' => $this->dueDate->format('Y-m-d')
+                Schema::CBC . 'DueDate' => $this->dueDate->format('Y-m-d'),
             ]);
         }
 
         $writer->write([
-          Schema::CBC . 'InvoiceTypeCode' => $this->invoiceTypeCode
+            Schema::CBC . 'InvoiceTypeCode' => $this->invoiceTypeCode,
         ]);
 
         if ($this->note !== null) {
             $writer->write([
-              Schema::CBC . 'Note' => $this->note
+                Schema::CBC . 'Note' => $this->note,
             ]);
         }
 
         if ($this->taxPointDate !== null) {
             $writer->write([
-              Schema::CBC . 'TaxPointDate' => $this->taxPointDate->format('Y-m-d')
+                Schema::CBC . 'TaxPointDate' => $this->taxPointDate->format('Y-m-d'),
             ]);
         }
 
         $writer->write([
-          Schema::CBC . 'DocumentCurrencyCode' => $this->getDocumentCurrencyCode(),
+            Schema::CBC . 'DocumentCurrencyCode' => $this->getDocumentCurrencyCode(),
         ]);
 
         /*
@@ -263,25 +259,25 @@ class Invoice implements XmlSerializable
 
         if ($this->buyerReference !== null) {
             $writer->write([
-              Schema::CBC . 'BuyerReference' => $this->buyerReference
+                Schema::CBC . 'BuyerReference' => $this->buyerReference,
             ]);
         }
 
         if ($this->invoicePeriod !== null) {
             $writer->write([
-              Schema::CAC . 'InvoicePeriod' => $this->invoicePeriod
+                Schema::CAC . 'InvoicePeriod' => $this->invoicePeriod,
             ]);
         }
 
         if ($this->orderReference !== null) {
             $writer->write([
-              Schema::CAC . 'OrderReference' => $this->orderReference
+                Schema::CAC . 'OrderReference' => $this->orderReference,
             ]);
         }
 
         if ($this->contractDocumentReference !== null) {
             $writer->write([
-              Schema::CAC . 'ContractDocumentReference' => $this->contractDocumentReference,
+                Schema::CAC . 'ContractDocumentReference' => $this->contractDocumentReference,
             ]);
         }
 
@@ -296,7 +292,7 @@ class Invoice implements XmlSerializable
 
         if ($this->additionalDocumentReference !== null) {
             $writer->write([
-              Schema::CAC . 'AdditionalDocumentReference' => $this->additionalDocumentReference
+                Schema::CAC . 'AdditionalDocumentReference' => $this->additionalDocumentReference,
             ]);
         }
 
@@ -315,30 +311,30 @@ class Invoice implements XmlSerializable
         //  ];
         //} else {
         $customerParty = [
-          Schema::CAC . "Party" => $this->accountingCustomerParty
+            Schema::CAC . 'Party' => $this->accountingCustomerParty,
         ];
         //}
 
         $writer->write([
-          Schema::CAC . 'AccountingSupplierParty' => [Schema::CAC . "Party" => $this->accountingSupplierParty],
-          Schema::CAC . 'AccountingCustomerParty' => $customerParty,
+            Schema::CAC . 'AccountingSupplierParty' => [Schema::CAC . 'Party' => $this->accountingSupplierParty],
+            Schema::CAC . 'AccountingCustomerParty' => $customerParty,
         ]);
 
         if ($this->delivery !== null) {
             $writer->write([
-              Schema::CAC . 'Delivery' => $this->delivery
+                Schema::CAC . 'Delivery' => $this->delivery,
             ]);
         }
 
         if ($this->paymentMeans !== null) {
             $writer->write([
-              Schema::CAC . 'PaymentMeans' => $this->paymentMeans
+                Schema::CAC . 'PaymentMeans' => $this->paymentMeans,
             ]);
         }
 
         if ($this->paymentTerms !== null) {
             $writer->write([
-              Schema::CAC . 'PaymentTerms' => $this->paymentTerms
+                Schema::CAC . 'PaymentTerms' => $this->paymentTerms,
             ]);
         }
 
@@ -346,7 +342,7 @@ class Invoice implements XmlSerializable
             /** @var AllowanceCharge $allowanceCharge */
             foreach ($this->allowanceCharges as $allowanceCharge) {
                 $writer->write([
-                  Schema::CAC . 'AllowanceCharge' => $allowanceCharge
+                    Schema::CAC . 'AllowanceCharge' => $allowanceCharge,
                 ]);
             }
         }
@@ -373,41 +369,41 @@ class Invoice implements XmlSerializable
         // if the document's currency code is the same as us (Supplier) ie. sending locally
         if ($doc_cc === $supp_cc) {
             $writer->write([
-              [
-                'name' => Schema::CAC . 'TaxTotal',
-                'value' => [
-                   [
-                      'name' => Schema::CBC . 'TaxAmount',
-                      'value' => number_format($supp_tax_cc_tax_amount ?: 0.00, 2, '.', ''),
-                        'attributes' => [
-                            'currencyID' => $supp_cc,
-                      ]
-                   ],
-                   [
-                      $this->build_tax_sub_totals_array()
-                   ],
+                [
+                    'name' => Schema::CAC . 'TaxTotal',
+                    'value' => [
+                        [
+                            'name' => Schema::CBC . 'TaxAmount',
+                            'value' => number_format($supp_tax_cc_tax_amount ?: 0.00, 2, '.', ''),
+                            'attributes' => [
+                                'currencyID' => $supp_cc,
+                            ],
+                        ],
+                        [
+                            $this->build_tax_sub_totals_array(),
+                        ],
+                    ],
                 ],
-              ],
             ]);
         } else {
             // https://docs.peppol.eu/poacc/billing/3.0/syntax/ubl-invoice/cac-TaxTotal/
             // Suppliers Tax Amount in Suppliers Currency without subtotal breakdown
             $writer->write([
-              [
-                'name' => Schema::CAC . 'TaxTotal',
-                'value' => [
-                   [
-                      'name' => Schema::CBC . 'TaxAmount',
-                      'value' => number_format($supp_tax_cc_tax_amount ?: 0.00, 2, '.', ''),
-                        'attributes' => [
-                            'currencyID' => $supp_cc,
-                      ]
-                   ],
-                   [
-                      $this->build_tax_sub_totals_array()
-                   ],
+                [
+                    'name' => Schema::CAC . 'TaxTotal',
+                    'value' => [
+                        [
+                            'name' => Schema::CBC . 'TaxAmount',
+                            'value' => number_format($supp_tax_cc_tax_amount ?: 0.00, 2, '.', ''),
+                            'attributes' => [
+                                'currencyID' => $supp_cc,
+                            ],
+                        ],
+                        [
+                            $this->build_tax_sub_totals_array(),
+                        ],
+                    ],
                 ],
-              ],
             ]);
             // Document Recipients TaxAmount in Document Recipient's Currency
             $writer->write([
@@ -415,15 +411,14 @@ class Invoice implements XmlSerializable
                     'name' => Schema::CBC . 'TaxAmount',
                     'value' => number_format((float)(string)$doc_cc_tax_amount ?: 0.00, 2, '.', ''),
                     'attributes' => [
-                        'currencyID' => $doc_cc
-                    ]
+                        'currencyID' => $doc_cc,
+                    ],
                 ],
             ]);
-
         } // elseif
 
         $writer->write([
-          Schema::CAC . 'LegalMonetaryTotal' => $this->legalMonetaryTotal
+            Schema::CAC . 'LegalMonetaryTotal' => $this->legalMonetaryTotal,
         ]);
 
         /**
@@ -445,12 +440,12 @@ class Invoice implements XmlSerializable
     {
         $merged_array = [];
         /**
-         * @var array $this->taxSubtotal
+         * @var array $this->taxSubTotal
          * @var array $value
          */
-        foreach ($this->taxSubtotal as $value) {
-            $tst = new TaxSubtotal($value);
-            array_push($merged_array, $tst->build_pre_serialized_array());
+        foreach ($this->taxSubTotal as $value) {
+            $tst = new TaxSubTotal($value);
+            $merged_array[] = $tst->build_pre_serialized_array();
         }
         return $merged_array;
     }

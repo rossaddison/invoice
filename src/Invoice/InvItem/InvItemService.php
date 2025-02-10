@@ -84,7 +84,7 @@ final class InvItemService
         if ($product_id > 0) {
             $this->repository->save($model);
             // Peppol Allowances / charges can only be added on an existing product => zero for allowances or charges
-            if (isset($array['quantity']) && isset($array['price']) && isset($array['discount_amount']) && null !== $tax_rate_percentage) {
+            if (isset($array['quantity'], $array['price'], $array['discount_amount'])     && null !== $tax_rate_percentage) {
                 $this->saveInvItemAmount((int)$model->getId(), (float)$array['quantity'], (float)$array['price'], (float)$array['discount_amount'], 0.00, 0.00, $tax_rate_percentage, $iias, $iiar, $s);
             }
         }
@@ -131,7 +131,6 @@ final class InvItemService
      * @param int $originalId
      * @param int $newId
      * @param ACIIR $aciiR
-     * @return void
      */
     public function addInvItem_allowance_charges(string $copyInvId, int $originalId, int $newId, ACIIR $aciiR): void
     {
@@ -151,7 +150,6 @@ final class InvItemService
     }
 
     /**
-     *
      * @param InvItem $model
      * @param array $array
      * @param string $inv_id
@@ -200,7 +198,6 @@ final class InvItemService
         $model->setProduct_unit_id((int)$array['product_unit_id']);
         $product_id > 0 ? $this->repository->save($model) : '';
         return (int)$tax_rate_id;
-
     }
 
     /**
@@ -253,7 +250,7 @@ final class InvItemService
         $tax_rate_percentage = $this->taxrate_percentage((int)$tax_rate_id, $trr);
         if ($task_id > 0) {
             $this->repository->save($model);
-            if (isset($array['quantity']) && isset($array['price']) && isset($array['discount_amount']) && null !== $tax_rate_percentage) {
+            if (isset($array['quantity'], $array['price'], $array['discount_amount'])     && null !== $tax_rate_percentage) {
                 $this->saveInvItemAmount((int)$model->getId(), (float)$array['quantity'], (float)$array['price'], (float)$array['discount_amount'], 0.00, 0.00, $tax_rate_percentage, $iias, $iiar, $s);
             }
         }
@@ -333,7 +330,6 @@ final class InvItemService
      * @param IIAS $iias
      * @param IIAR $iiar
      * @param SR $s
-     * @return void
      */
     public function saveInvItemAmount(
         int $inv_item_id,
@@ -360,7 +356,7 @@ final class InvItemService
         if ($s->getSetting('enable_vat_registration') === '1') {
             // EARLY SETTLEMENT CASH DISCOUNTS MUST BE REMOVED BEFORE VAT IS DETERMINED
             // @see https://informi.co.uk/finance/how-vat-affected-discounts
-            $tax_total = ((($sub_total - $discount_total + $charge_total) * ($tax_rate_percentage / 100)));
+            $tax_total = (($sub_total - $discount_total + $charge_total) * ($tax_rate_percentage / 100));
         }
         $iias_array['discount'] = $discount_total;
         $iias_array['charge'] = $charge_total;
@@ -381,9 +377,7 @@ final class InvItemService
     }
 
     /**
-     *
      * @param InvItem $model
-     * @return void
      */
     public function deleteInvItem(InvItem $model): void
     {
@@ -391,7 +385,6 @@ final class InvItemService
     }
 
     /**
-     *
      * @param int $id
      * @param TRR $trr
      * @return float|null
@@ -400,20 +393,17 @@ final class InvItemService
     {
         $taxrate = $trr->repoTaxRatequery((string)$id);
         if ($taxrate) {
-            $percentage = $taxrate->getTaxRatePercent();
-            return $percentage;
+            return $taxrate->getTaxRatePercent();
         }
         return null;
     }
 
     /**
-     *
      * @param int $basis_inv_id
      * @param string $new_inv_id
      * @param InvItemRepository $iiR
      * @param IIAR $iiaR
      * @param SR $sR
-     * @return void
      */
     public function initializeCreditInvItems(int $basis_inv_id, string $new_inv_id, InvItemRepository $iiR, IIAR $iiaR, SR $sR): void
     {

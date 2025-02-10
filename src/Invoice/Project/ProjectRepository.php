@@ -58,7 +58,6 @@ final class ProjectRepository extends Select\Repository
      * @see Reader/ReadableDataInterface|InvalidArgumentException
      * @param array|Project|null $project
      * @throws Throwable
-     * @return void
      */
     public function save(array|Project|null $project): void
     {
@@ -69,7 +68,6 @@ final class ProjectRepository extends Select\Repository
      * @see Reader/ReadableDataInterface|InvalidArgumentException
      * @param array|Project|null $project
      * @throws Throwable
-     * @return void
      */
     public function delete(array|Project|null $project): void
     {
@@ -85,7 +83,7 @@ final class ProjectRepository extends Select\Repository
     }
 
     /**
-     * @return null|Project
+     * @return Project|null
      *
      * @psalm-return TEntity|null
      */
@@ -96,16 +94,14 @@ final class ProjectRepository extends Select\Repository
     }
 
     /**
-     *
      * @param string $project_id
      * @return int
      */
     public function count(string $project_id): int
     {
-        $count = $this->select()
+        return $this->select()
                       ->where(['id' => $project_id])
                       ->count();
-        return $count;
     }
 
     /**

@@ -61,7 +61,6 @@ final class MerchantRepository extends Select\Repository
      * @see Reader/ReadableDataInterface|InvalidArgumentException
      * @param array|Merchant|null $merchant
      * @throws Throwable
-     * @return void
      */
     public function save(array|Merchant|null $merchant): void
     {
@@ -72,7 +71,6 @@ final class MerchantRepository extends Select\Repository
      * @see Reader/ReadableDataInterface|InvalidArgumentException
      * @param array|Merchant|null $merchant
      * @throws Throwable
-     * @return void
      */
     public function delete(array|Merchant|null $merchant): void
     {
@@ -88,7 +86,7 @@ final class MerchantRepository extends Select\Repository
     }
 
     /**
-     * @return null|Merchant
+     * @return Merchant|null
      *
      * @psalm-return TEntity|null
      */

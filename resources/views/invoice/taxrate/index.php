@@ -13,6 +13,7 @@ use Yiisoft\Html\Tag\Form;
 use Yiisoft\Html\Tag\H5;
 use Yiisoft\Html\Tag\I;
 use Yiisoft\Router\CurrentRoute;
+use Yiisoft\Yii\DataView\Column\ActionButton;
 use Yiisoft\Yii\DataView\Column\ActionColumn;
 use Yiisoft\Yii\DataView\Column\DataColumn;
 use Yiisoft\Yii\DataView\GridView;
@@ -109,44 +110,38 @@ use Yiisoft\Yii\DataView\YiiRouter\UrlCreator;
                                                                   ($translator->translate('i.active').' '.'✔️' ) : 
                                                                    $translator->translate('i.inactive').' '.'❌')
             ),
-            new ActionColumn(
-                content: static function(TaxRate $model) use ($translator) : string { 
-                $taxRateId = $model->getTaxRateId();
-                if (null!==$taxRateId) {
-                    return Html::openTag('div', ['class' => 'btn-group']) .
-                        Html::a()
-                        ->addAttributes([
-                            'class' => 'dropdown-button text-decoration-none', 
-                            'title' => $translator->translate('i.view')
-                        ])
-                        ->content('🔎')
-                        ->encode(false)
-                        ->href('taxrate/view/'. $taxRateId)
-                        ->render() .
-                        Html::a()
-                        ->addAttributes([
-                            'class' => 'dropdown-button text-decoration-none', 
-                            'title' => $translator->translate('i.edit')
-                        ])
-                        ->content('✎')
-                        ->encode(false)
-                        ->href('taxrate/edit/'. $taxRateId)
-                        ->render() .
-                        Html::a()
-                        ->addAttributes([
-                            'class'=>'dropdown-button text-decoration-none', 
-                            'title' => $translator->translate('i.delete'),
-                            'type'=>'submit', 
-                            'onclick'=>"return confirm("."'".$translator->translate('i.delete_record_warning')."');"
-                        ])
-                        ->content('❌')
-                        ->encode(false)
-                        ->href('taxrate/delete/'. $taxRateId)
-                        ->render() . Html::closeTag('div');
-                } else {
-                    return '';
-                }
-            }),
+            new ActionColumn(buttons: [
+                new ActionButton(
+                    content: '🔎',
+                    url: static function(TaxRate $model) use ($urlGenerator) : string {
+                         return $urlGenerator->generate('taxrate/view', ['id' => $model->getTaxRateId()]);     
+                    },
+                    attributes: [
+                        'data-bs-toggle' => 'tooltip',
+                        'title' => $translator->translate('i.view'),
+                    ]      
+                ),
+                new ActionButton(
+                    content: '✎',
+                    url: static function(TaxRate $model) use ($urlGenerator) : string {
+                         return $urlGenerator->generate('taxrate/edit', ['id' => $model->getTaxRateId()]);     
+                    },
+                    attributes: [
+                        'data-bs-toggle' => 'tooltip',
+                        'title' => $translator->translate('i.edit'),
+                    ]      
+                ),
+                new ActionButton(
+                    content: '❌',
+                    url: static function(TaxRate $model) use ($urlGenerator) : string {
+                         return $urlGenerator->generate('taxrate/delete', ['id' => $model->getTaxRateId()]);     
+                    },
+                    attributes: [
+                        'title' => $translator->translate('i.delete'),
+                        'onclick'=>"return confirm("."'".$translator->translate('i.delete_record_warning')."');"
+                    ]      
+                ),          
+            ]),
         ];
     ?>
     <?php 

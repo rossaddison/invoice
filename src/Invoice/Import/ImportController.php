@@ -37,7 +37,7 @@ use Yiisoft\Yii\View\Renderer\ViewRenderer;
 final class ImportController
 {
     use FlashMessage;
-    
+
     private ViewRenderer $viewRenderer;
     private WebControllerService $webService;
     private UserService $userService;
@@ -91,18 +91,17 @@ final class ImportController
                 $settingInvoiceplaneName,
                 '3306',
                 [
-                    'charset' => 'utf8mb4'
+                    'charset' => 'utf8mb4',
                 ]
             )
             )->asString();
             $arrayCache = new ArrayCache();
             $schemaCache = new SchemaCache($arrayCache);
             $pdoDriver = new Driver($dsn, $settingInvoiceplaneUsername, $settingInvoiceplanePassword);
-            $db = new Connection($pdoDriver, $schemaCache);
-            return $db;
-        } else {
-            $this->flashMessage('warning', $this->translator->translate('invoice.invoice.invoiceplane.no.username.or.password'));
+            return new Connection($pdoDriver, $schemaCache);
         }
+        $this->flashMessage('warning', $this->translator->translate('invoice.invoice.invoiceplane.no.username.or.password'));
+
         return null;
     }
 
@@ -169,11 +168,10 @@ final class ImportController
     private function inputUnit(Connection $db): array
     {
         try {
-            $units = (new Query($db))
+            return (new Query($db))
             ->select(['unit_name', 'unit_name_plrl'])
             ->from('{{%ip_units}}')
             ->all();
-            return $units;
         } catch (\Yiisoft\Db\Exception\Exception $e) {
             throw new NoConnectionException($this->translator, $e);
         }
@@ -182,11 +180,10 @@ final class ImportController
     private function inputFamily(Connection $db): array
     {
         try {
-            $families = (new Query($db))
+            return (new Query($db))
             ->select(['family_name'])
             ->from('{{%ip_families}}')
             ->all();
-            return $families;
         } catch (\Yiisoft\Db\Exception\Exception $e) {
             throw new NoConnectionException($this->translator, $e);
         }
@@ -216,11 +213,10 @@ final class ImportController
     {
         $this->ensureMandatoryTaxRatesInstalled();
         try {
-            $taxRates = (new Query($db))
+            return (new Query($db))
             ->select(['tax_rate_name', 'tax_rate_percent'])
             ->from('{{%ip_tax_rates}}')
             ->all();
-            return $taxRates;
         } catch (\Yiisoft\Db\Exception\Exception $e) {
             throw new NoConnectionException($this->translator, $e);
         }
@@ -229,7 +225,7 @@ final class ImportController
     private function inputClient(Connection $db): array
     {
         try {
-            $clients = (new Query($db))
+            return (new Query($db))
             ->select([
                 'client_date_created',
                 'client_date_modified',
@@ -254,11 +250,10 @@ final class ImportController
                 'client_insurednumber',
                 'client_veka',
                 'client_birthdate',
-                'client_gender'
+                'client_gender',
             ])
             ->from('{{%ip_clients}}')
             ->all();
-            return $clients;
         } catch (\Yiisoft\Db\Exception\Exception $e) {
             throw new NoConnectionException($this->translator, $e);
         }
@@ -267,7 +262,7 @@ final class ImportController
     private function inputProduct(Connection $db): array
     {
         try {
-            $products = (new Query($db))
+            return (new Query($db))
             ->select([
                 'family_id',
                 'product_sku',
@@ -281,7 +276,6 @@ final class ImportController
                 'product_tariff'])
             ->from('{{%ip_products}}')
             ->all();
-            return $products;
         } catch (\Yiisoft\Db\Exception\Exception $e) {
             throw new NoConnectionException($this->translator, $e);
         }
@@ -394,8 +388,8 @@ final class ImportController
         return $this->viewRenderer->renderPartialAsString(
             '//invoice/layout/alert',
             [
-       'flash' => $this->flash
-     ]
+                'flash' => $this->flash,
+            ]
         );
     }
 }

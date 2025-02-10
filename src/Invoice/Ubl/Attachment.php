@@ -7,7 +7,6 @@ namespace App\Invoice\Ubl;
 use Exception;
 use Sabre\Xml\Writer;
 use Sabre\Xml\XmlSerializable;
-use App\Invoice\Ubl\Schema;
 use InvalidArgumentException;
 
 class Attachment implements XmlSerializable
@@ -22,9 +21,8 @@ class Attachment implements XmlSerializable
     }
 
     /**
-     *
-     * @return string
      * @throws Exception
+     * @return string
      */
     public function getFileMimeType(): string
     {
@@ -38,7 +36,6 @@ class Attachment implements XmlSerializable
     }
 
     /**
-     *
      * @return string|null
      */
     public function getFilePath(): ?string
@@ -47,18 +44,16 @@ class Attachment implements XmlSerializable
     }
 
     /**
-     *
      * @param string|null $filePath
      * @return Attachment
      */
-    public function setFilePath(?string $filePath): Attachment
+    public function setFilePath(?string $filePath): self
     {
         $this->filePath = $filePath;
         return $this;
     }
 
     /**
-     *
      * @return string|null
      */
     public function getExternalReference(): ?string
@@ -67,19 +62,16 @@ class Attachment implements XmlSerializable
     }
 
     /**
-     *
      * @param string|null $externalReference
      * @return Attachment
      */
-    public function setExternalReference(?string $externalReference): Attachment
+    public function setExternalReference(?string $externalReference): self
     {
         $this->externalReference = $externalReference;
         return $this;
     }
 
     /**
-     *
-     * @return void
      * @throws InvalidArgumentException
      */
     public function validate(): void
@@ -94,21 +86,18 @@ class Attachment implements XmlSerializable
     }
 
     /**
-     *
      * @param Writer $writer
-     * @return void
      */
     public function xmlSerialize(Writer $writer): void
     {
         $this->validate();
-        
+
         $filePath = $this->filePath;
-        
+
         if (null !== $filePath) {
-            
             $fileContents = file_get_contents($filePath, true);
-        
-            if ($fileContents <> false) {
+
+            if ($fileContents != false) {
                 $newFileContents = base64_encode($fileContents);
                 $mimeType = $this->getFileMimeType();
 
@@ -117,11 +106,11 @@ class Attachment implements XmlSerializable
                     'value' => $newFileContents,
                     'attributes' => [
                         'mimeCode' => $mimeType,
-                        'filename' => basename($filePath)
-                    ]
+                        'filename' => basename($filePath),
+                    ],
                 ]);
             }
-        }    
+        }
 
         if (null !== $this->externalReference) {
             $writer->writeElement(
@@ -130,5 +119,4 @@ class Attachment implements XmlSerializable
             );
         }
     }
-
 }

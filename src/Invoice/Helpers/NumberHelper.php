@@ -38,7 +38,7 @@ final class NumberHelper
     }
 
     /**
-     * @param null|mixed $amount
+     * @param mixed|null $amount
      */
     public function format_currency(mixed $amount = null): string
     {
@@ -48,21 +48,20 @@ final class NumberHelper
         $thousands_separator = $this->s->getSetting('thousands_separator');
         $decimal_point = $this->s->getSetting('decimal_point');
         if ($currency_symbol_placement == 'before') {
-            return $currency_symbol. number_format((float)$amount, ($decimal_point) ? 2 : 0, $decimal_point, $thousands_separator);
-        } elseif ($currency_symbol_placement == 'afterspace') {
-            return number_format((float)$amount, ($decimal_point) ? 2 : 0, $decimal_point, $thousands_separator) . '&nbsp;' . $currency_symbol;
-        } else {
-            return number_format((float)$amount, ($decimal_point) ? 2 : 0, $decimal_point, $thousands_separator) . $currency_symbol;
+            return $currency_symbol . number_format((float)$amount, ($decimal_point) ? 2 : 0, $decimal_point, $thousands_separator);
         }
+        if ($currency_symbol_placement == 'afterspace') {
+            return number_format((float)$amount, ($decimal_point) ? 2 : 0, $decimal_point, $thousands_separator) . '&nbsp;' . $currency_symbol;
+        }
+        return number_format((float)$amount, ($decimal_point) ? 2 : 0, $decimal_point, $thousands_separator) . $currency_symbol;
     }
 
     /**
      * Output the amount as a currency amount, e.g. 1.234,56
      *
-     * @param null|mixed $amount
-     * @return null|string
+     * @param mixed|null $amount
+     * @return string|null
      */
-
     public function format_amount(mixed $amount = null): null|string
     {
         $this->s->load_settings();
@@ -87,9 +86,7 @@ final class NumberHelper
         $decimal_point = $this->s->getSetting('decimal_point');
         /** @var array<array-key, float|int|string>|string $amount */
         $amt = str_replace($thousands_separator, '', $amount);
-        $final_amount = str_replace($decimal_point, '.', $amt);
-
-        return $final_amount;
+        return str_replace($decimal_point, '.', $amt);
     }
 
     /**
@@ -189,7 +186,6 @@ final class NumberHelper
         if ($this->s->getSetting('enable_vat_registration') === '0') {
             $inv_tax_rate_total = $this->calculate_inv_taxes($inv_id, $itrR, $iaR);
         } else {
-
             $inv_allowance_charges = $aciR->repoACIquery($inv_id);
             /** @var InvAllowanceCharge $inv_allowance_charge */
             foreach ($inv_allowance_charges as $inv_allowance_charge) {
@@ -287,10 +283,10 @@ final class NumberHelper
         $grand_discount = 0.00;
         $grand_total = 0.00;
         $totals = [
-                'subtotal' => $grand_sub_total,
-                'tax_total' => $grand_taxtotal,
-                'discount' => $grand_discount,
-                'total' => $grand_total,
+            'subtotal' => $grand_sub_total,
+            'tax_total' => $grand_taxtotal,
+            'discount' => $grand_discount,
+            'total' => $grand_total,
         ];
 
         /** @var QuoteItem $item */
@@ -356,12 +352,12 @@ final class NumberHelper
         $grand_allowance = 0.00;
         $grand_total = 0.00;
         $totals = [
-                'subtotal' => $grand_sub_total,
-                'tax_total' => $grand_taxtotal,
-                'discount' => $grand_discount,
-                'charge' => $grand_charge,
-                'allowance' => $grand_allowance,
-                'total' => $grand_total,
+            'subtotal' => $grand_sub_total,
+            'tax_total' => $grand_taxtotal,
+            'discount' => $grand_discount,
+            'charge' => $grand_charge,
+            'allowance' => $grand_allowance,
+            'total' => $grand_total,
         ];
         /** @var InvItem $item */
         foreach ($get_all_items_in_inv as $item) {
@@ -387,7 +383,6 @@ final class NumberHelper
     }
 
     /**
-     *
      * @param string $quote_id
      * @param float $quote_total
      * @param QR $qR
@@ -408,8 +403,7 @@ final class NumberHelper
         // Discount amount is the user inputed amount on the quote representing a cash discount
         // Discount percent is the user inputed percentage on the quote representing a cash percentage
         $trimmed_total = $total - $discount_amount;
-        $final_total = $trimmed_total - round(($trimmed_total / 100 * $discount_percent), 2);
-        return $final_total;
+        return $trimmed_total - round($trimmed_total / 100 * $discount_percent, 2);
     }
 
     /**
@@ -433,8 +427,7 @@ final class NumberHelper
         // Discount amount is the user inputed amount on the invoice representing a cash discount
         // Discount percent is the user inputed percentage on the invoice representing a cash percentage
         $trimmed_total = $total - $discount_amount;
-        $final_total = $trimmed_total - round(($trimmed_total / 100 * $discount_percent), 2);
-        return $final_total;
+        return $trimmed_total - round($trimmed_total / 100 * $discount_percent, 2);
     }
 
     /**
@@ -507,7 +500,7 @@ final class NumberHelper
                 foreach ($inv_tax_rates as $inv_tax_rate) {
                     // If the include item tax has been checked ie. value is 1
                     $inv_tax_rate_amount = (
-                        (null !== ($inv_tax_rate->getInclude_item_tax()) && $inv_tax_rate->getInclude_item_tax() === 1)
+                        (null !== $inv_tax_rate->getInclude_item_tax() && $inv_tax_rate->getInclude_item_tax() === 1)
                         ?
                             // 'Apply after item tax' => The inv tax rate should include the applied item tax
                             ((($inv_amount->getItem_subtotal() ?: 0.00) + ($inv_amount->getItem_tax_total() ?: 0.00)) * ($inv_tax_rate->getTaxRate()?->getTaxRatePercent() ?? 0.00) / 100)
@@ -530,7 +523,7 @@ final class NumberHelper
      */
     public function recur_frequencies(): array
     {
-        $recur_frequencies = [
+        return [
             '1D' => 'i.calendar_day_1',
             '2D' => 'i.calendar_day_2',
             '3D' => 'i.calendar_day_3',
@@ -560,7 +553,5 @@ final class NumberHelper
             '4Y' => 'i.calendar_year_4',
             '5Y' => 'i.calendar_year_5',
         ];
-        return $recur_frequencies;
     }
-
 }

@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace App\Invoice\Profile;
 
 use App\Invoice\Entity\Profile;
-use App\Invoice\Profile\ProfileRepository;
 
 final class ProfileService
 {
@@ -19,7 +18,6 @@ final class ProfileService
     /**
      * @param Profile $model
      * @param array $array
-     * @return void
      */
     public function saveProfile(Profile $model, array $array): void
     {
@@ -34,7 +32,6 @@ final class ProfileService
 
     /**
      * @param Profile $model
-     * @return void
      */
     public function deleteProfile(Profile $model): void
     {

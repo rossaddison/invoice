@@ -64,7 +64,7 @@ final class UploadForm extends FormModel
     public function getUploaded_date(): string|DateTimeImmutable
     {
         /**
-         * @var string|DateTimeImmutable $this->uploaded_date
+         * @var DateTimeImmutable|string $this->uploaded_date
          */
         return $this->uploaded_date;
     }

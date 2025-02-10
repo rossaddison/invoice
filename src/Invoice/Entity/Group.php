@@ -14,16 +14,16 @@ class Group
     private ?int $id = null;
 
     #[Column(type: 'text', nullable: true)]
-    private ?string $name =  '';
+    private ?string $name = '';
 
     #[Column(type: 'string(191)', nullable: true)]
-    private ?string $identifier_format =  '';
+    private ?string $identifier_format = '';
 
     #[Column(type: 'integer', nullable: true)]
-    private ?int $next_id =  null;
+    private ?int $next_id = null;
 
     #[Column(type: 'integer', nullable: true, default: 0)]
-    private ?int $left_pad =  null;
+    private ?int $left_pad = null;
 
     public function __construct(
         string $name = '',
@@ -44,7 +44,7 @@ class Group
 
     public function setId(int $id): void
     {
-        $this->id =  $id;
+        $this->id = $id;
     }
 
     public function getName(): string|null
@@ -54,7 +54,7 @@ class Group
 
     public function setName(string $name): void
     {
-        $this->name =  $name;
+        $this->name = $name;
     }
 
     public function getIdentifier_format(): ?string
@@ -64,7 +64,7 @@ class Group
 
     public function setIdentifier_format(string $identifier_format): void
     {
-        $this->identifier_format =  $identifier_format;
+        $this->identifier_format = $identifier_format;
     }
 
     public function getNext_id(): string
@@ -74,7 +74,7 @@ class Group
 
     public function setNext_id(int $next_id): void
     {
-        $this->next_id =  $next_id;
+        $this->next_id = $next_id;
     }
 
     public function getLeft_pad(): ?int
@@ -84,6 +84,6 @@ class Group
 
     public function setLeft_pad(int $left_pad): void
     {
-        $this->left_pad =  $left_pad;
+        $this->left_pad = $left_pad;
     }
 }

@@ -18,6 +18,7 @@ use Yiisoft\Data\Cycle\Writer\EntityWriter;
 final class UnitPeppolRepository extends Select\Repository
 {
     private EntityWriter $entityWriter;
+
     /**
      * @param Select<TEntity> $select
      * @param EntityWriter $entityWriter
@@ -61,7 +62,6 @@ final class UnitPeppolRepository extends Select\Repository
      * @param array|UnitPeppol|null $unitpeppol
      * @psalm-param TEntity $unitpeppol
      * @throws Throwable
-     * @return void
      */
     public function save(array|UnitPeppol|null $unitpeppol): void
     {
@@ -73,7 +73,6 @@ final class UnitPeppolRepository extends Select\Repository
      * @param array|UnitPeppol|null $unitpeppol
 
      * @throws Throwable
-     * @return void
      */
     public function delete(array|UnitPeppol|null $unitpeppol): void
     {

@@ -6,8 +6,6 @@ namespace App\Invoice\Setting;
 
 // App
 use App\Invoice\Entity\Setting;
-use App\Invoice\Setting\SettingRepository;
-use App\Invoice\Setting\SettingForm;
 use App\Invoice\EmailTemplate\EmailTemplateRepository as ER;
 use App\Invoice\Group\GroupRepository as GR;
 use App\Invoice\Libraries\Crypt;
@@ -54,7 +52,7 @@ use DateTimeZone;
 final class SettingController
 {
     use FlashMessage;
-    
+
     private ViewRenderer $viewRenderer;
     private WebControllerService $webService;
     private SettingService $settingService;
@@ -95,8 +93,8 @@ final class SettingController
         return $this->viewRenderer->renderPartialAsString(
             '//invoice/layout/alert',
             [
-        'flash' => $this->flash
-      ]
+                'flash' => $this->flash,
+            ]
         );
     }
 
@@ -115,11 +113,11 @@ final class SettingController
         ->withCurrentPage($currentPageNeverZero);
         $canEdit = $this->rbac();
         $parameters = [
-          'paginator' => $paginator,
-          'alert' => $this->alert(),
-          'canEdit' => $canEdit,
-          'settings' => $this->settings($this->s),
-          'session' => $this->session
+            'paginator' => $paginator,
+            'alert' => $this->alert(),
+            'canEdit' => $canEdit,
+            'settings' => $this->settings($this->s),
+            'session' => $this->session,
         ];
         return $this->viewRenderer->render('debug_index', $parameters);
     }
@@ -146,10 +144,9 @@ final class SettingController
         TR $tR,
         #[Query('active')] string $active = null,
     ): Response {
-
         $aliases = new Aliases(['@invoice' => dirname(__DIR__),
-                                '@language' => '@invoice/Language',
-                                '@icon' => '@invoice/Uploads/Temp']);
+            '@language' => '@invoice/Language',
+            '@icon' => '@invoice/Uploads/Temp']);
         $datehelper = new DateHelper($this->s);
         $numberhelper = new NumberHelper($this->s);
         $countries = new CountryHelper();
@@ -168,7 +165,7 @@ final class SettingController
             /**
              * Make the 'general' tab active by default unless through an outside urlGenerator query Parameter e.g.
              * http://invoice.myhost/invoice/setting/tab_index?active=mpdf
-             * @see config/common/routes/routes.php Route::methods([Method::GET, Method::POST], '/setting/tab_index[/{active:\d+}]') 
+             * @see config/common/routes/routes.php Route::methods([Method::GET, Method::POST], '/setting/tab_index[/{active:\d+}]')
              */
             'active' => $active ?? 'front-page',
             'alert' => $this->alert(),
@@ -188,7 +185,7 @@ final class SettingController
                 'gateway_currency_codes' => CurrencyHelper::all(),
                 'number_formats' => $this->s->number_formats(),
                 'current_date' => new \DateTime(),
-                'icon' => $aliases->get('@icon')
+                'icon' => $aliases->get('@icon'),
             ]),
             'invoices' => $this->viewRenderer->renderPartialAsString('//invoice/setting/views/partial_settings_invoices', [
                 'invoice_groups' => $gR->findAllPreloaded(),
@@ -221,8 +218,8 @@ final class SettingController
                 'gateway_drivers' => $this->s->active_payment_gateways(),
                 'gateway_currency_codes' => CurrencyHelper::all(),
                 'gateway_regions' => $this->s->amazon_regions(),
-                'payment_methods' =>  $pm->findAllPreloaded(),
-                'crypt' => $crypt
+                'payment_methods' => $pm->findAllPreloaded(),
+                'crypt' => $crypt,
             ]),
             'mpdf' => $this->viewRenderer->renderPartialAsString('//invoice/setting/views/partial_settings_mpdf'),
             'projects_tasks' => $this->viewRenderer->renderPartialAsString('//invoice/setting/views/partial_settings_projects_tasks'),
@@ -238,7 +235,7 @@ final class SettingController
                 // They cannot both exist at the same time.
                 'stand_in_codes' => $peppol_arrays->getUncl2005subset(),
                 // use crypt to decode the store cove api key
-                'crypt' => $crypt
+                'crypt' => $crypt,
             ]),
             'storecove' => $this->viewRenderer->renderPartialAsString('//invoice/setting/views/partial_settings_storecove', [
                 'countries' => $countries->get_country_list((string)$this->session->get('_language')),
@@ -253,7 +250,7 @@ final class SettingController
             'qrcode' => $this->viewRenderer->renderPartialAsString('//invoice/setting/views/partial_settings_qr_code', [
             ]),
             'telegram' => $this->viewRenderer->renderPartialAsString('//invoice/setting/views/partial_settings_telegram', [
-            ])
+            ]),
         ];
         if ($request->getMethod() === Method::POST) {
             $body = $request->getParsedBody();
@@ -307,11 +304,9 @@ final class SettingController
     }
 
     /**
-     *
      * @param string $key
      * @param string $value
      * @param SettingRepository $sR
-     * @return void
      */
     public function tab_index_settings_save(string $key, string $value, SettingRepository $sR): void
     {
@@ -323,9 +318,7 @@ final class SettingController
     }
 
     /**
-     *
      * @param int $value
-     * @return void
      */
     public function tab_index_change_decimal_column(int $value): void
     {
@@ -334,10 +327,8 @@ final class SettingController
     }
 
     /**
-     *
      * @param string $value
      * @param SettingRepository $sR
-     * @return void
      */
     public function tab_index_number_format(string $value, SettingRepository $sR): void
     {
@@ -361,11 +352,9 @@ final class SettingController
 
     // This procedure is used in the above procedure to ensure that all settings are being captured.
     /**
-     *
      * @param bool $bool
      * @param string $key
      * @param string $value
-     * @return void
      */
     public function tab_index_debug_mode_ensure_all_settings_included(bool $bool, string $key, string $value): void
     {
@@ -380,7 +369,6 @@ final class SettingController
     }
 
     /**
-     *
      * @param Request $request
      * @param FormHydrator $formHydrator
      * @return Response
@@ -505,11 +493,11 @@ final class SettingController
             $setting->setSetting_value('0');
             $this->s->save($setting);
             return $this->webService->getRedirectResponse('inv/index');
-        } else {
-            $new_setting = new Setting();
-            $new_setting->setSetting_key('columns_all_visible');
-            $this->s->save($new_setting);
         }
+        $new_setting = new Setting();
+        $new_setting->setSetting_key('columns_all_visible');
+        $this->s->save($new_setting);
+
         return $this->webService->getRedirectResponse('inv/index');
     }
 
@@ -534,11 +522,11 @@ final class SettingController
             $setting->setSetting_value('0');
             $this->s->save($setting);
             return $this->webService->getRedirectResponse('inv/index');
-        } else {
-            $new_setting = new Setting();
-            $new_setting->setSetting_key('column_inv_sent_log_visible');
-            $this->s->save($new_setting);
         }
+        $new_setting = new Setting();
+        $new_setting->setSetting_key('column_inv_sent_log_visible');
+        $this->s->save($new_setting);
+
         return $this->webService->getRedirectResponse('inv/index');
     }
 
@@ -551,11 +539,10 @@ final class SettingController
             $setting->setSetting_value((string)$limit);
             $this->s->save($setting);
         }
-        return $this->webService->getRedirectResponse($origin.'/index');
+        return $this->webService->getRedirectResponse($origin . '/index');
     }
 
     /**
-     *
      * @param Request $request
      * @param CurrentRoute $currentRoute
      * @param FormHydrator $formHydrator
@@ -575,7 +562,7 @@ final class SettingController
                 'actionArguments' => ['setting_id' => $setting->getSetting_id()],
                 'alert' => $this->alert(),
                 'form' => $form,
-                'errors' => []
+                'errors' => [],
             ];
             if ($request->getMethod() === Method::POST) {
                 /**
@@ -615,7 +602,6 @@ final class SettingController
     }
 
     /**
-     *
      * @param CurrentRoute $currentRoute
      * @return Response
      */
@@ -642,7 +628,7 @@ final class SettingController
                 'actionName' => 'setting/view',
                 'actionArguments' => ['setting_id' => $setting->getSetting_id()],
                 'setting' => $setting,
-                'form' => $form
+                'form' => $form,
             ];
             return $this->viewRenderer->render('__view', $parameters);
         }
@@ -673,8 +659,7 @@ final class SettingController
     ): Setting|null {
         $setting_id = $currentRoute->getArgument('setting_id');
         if (null !== $setting_id) {
-            $setting = $settingRepository->repoSettingquery($setting_id);
-            return $setting;
+            return $settingRepository->repoSettingquery($setting_id);
         }
         return null;
     }
@@ -688,8 +673,7 @@ final class SettingController
      */
     private function settings(SettingRepository $settingRepository): \Yiisoft\Data\Cycle\Reader\EntityReader
     {
-        $settings = $settingRepository->findAllPreloaded();
-        return $settings;
+        return $settingRepository->findAllPreloaded();
     }
 
     /**
@@ -697,20 +681,20 @@ final class SettingController
      */
     public function clear(): \Yiisoft\DataResponse\DataResponse
     {
-        $directory = dirname(dirname(dirname(__DIR__))).DIRECTORY_SEPARATOR.'public'.DIRECTORY_SEPARATOR. 'assets';
+        $directory = dirname(__DIR__, 3) . DIRECTORY_SEPARATOR . 'public' . DIRECTORY_SEPARATOR . 'assets';
         try {
             $filehelper = new FileHelper();
             $filehelper->clearDirectory($directory);
-            $this->flashMessage('info', $this->translator->translate('invoice.setting.assets.cleared.at').$directory);
+            $this->flashMessage('info', $this->translator->translate('invoice.setting.assets.cleared.at') . $directory);
             return $this->factory->createResponse($this->viewRenderer->renderPartialAsString(
                 '//invoice/setting/successful',
                 ['heading' => $this->translator->translate('invoice.successful'),'message' => $this->translator->translate('invoice.setting.you.have.cleared.the.cache')]
             ));
         } catch (\Exception $e) {
-            $this->flashMessage('warning', $this->translator->translate('invoice.setting.assets.were.not.cleared.at') .$directory. $this->translator->translate('invoice.setting.as.a.result.of').$e->getMessage());
+            $this->flashMessage('warning', $this->translator->translate('invoice.setting.assets.were.not.cleared.at') . $directory . $this->translator->translate('invoice.setting.as.a.result.of') . $e->getMessage());
             return $this->factory->createResponse($this->viewRenderer->renderPartialAsString(
                 '//invoice/setting/unsuccessful',
-                ['heading' => $this->translator->translate('invoice.unsuccessful'),'message' => $this->translator->translate('invoice.setting.you.have.not.cleared.the.cache.due.to.a') . $e->getMessage(). $this->translator->translate('invoice.setting.error.on.the.public.assets.folder')]
+                ['heading' => $this->translator->translate('invoice.unsuccessful'),'message' => $this->translator->translate('invoice.setting.you.have.not.cleared.the.cache.due.to.a') . $e->getMessage() . $this->translator->translate('invoice.setting.error.on.the.public.assets.folder')]
             ));
         }
     }
@@ -721,8 +705,8 @@ final class SettingController
     public function get_cron_key(): \Yiisoft\DataResponse\DataResponse
     {
         $parameters = [
-               'success' => 1,
-               'cronkey' => Random::string(32)
+            'success' => 1,
+            'cronkey' => Random::string(32),
         ];
         return $this->factory->createResponse(Json::encode($parameters));
     }
@@ -739,7 +723,7 @@ final class SettingController
                 $settingInvoiceplaneName,
                 '3306',
                 [
-                    'charset' => 'utf8mb4'
+                    'charset' => 'utf8mb4',
                 ]
             )
             )->asString();

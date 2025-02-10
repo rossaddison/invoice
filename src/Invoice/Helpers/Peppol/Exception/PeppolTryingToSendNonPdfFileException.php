@@ -30,5 +30,4 @@ class PeppolTryingToSendNonPdfFileException extends \RuntimeException implements
                 Please try again
             SOLUTION;
     }
-
 }

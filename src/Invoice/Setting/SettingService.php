@@ -18,7 +18,6 @@ final class SettingService
     /**
      * @param Setting $setting
      * @param array $body
-     * @return void
      */
     public function saveSetting(Setting $setting, array $body): void
     {
@@ -28,9 +27,7 @@ final class SettingService
     }
 
     /**
-     *
      * @param Setting $setting
-     * @return void
      */
     public function deleteSetting(Setting $setting): void
     {

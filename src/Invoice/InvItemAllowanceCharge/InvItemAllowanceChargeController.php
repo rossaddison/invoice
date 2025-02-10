@@ -9,8 +9,6 @@ use App\Invoice\Helpers\NumberHelper;
 use App\Invoice\Inv\InvRepository;
 use App\Invoice\InvAmount\InvAmountService;
 use App\Invoice\InvAmount\InvAmountRepository;
-use App\Invoice\InvItemAllowanceCharge\InvItemAllowanceChargeService;
-use App\Invoice\InvItemAllowanceCharge\InvItemAllowanceChargeRepository;
 use App\Invoice\AllowanceCharge\AllowanceChargeRepository;
 use App\Invoice\InvAllowanceCharge\InvAllowanceChargeRepository;
 use App\Invoice\InvItem\InvItemRepository;
@@ -35,7 +33,7 @@ use Yiisoft\Yii\View\Renderer\ViewRenderer;
 final class InvItemAllowanceChargeController
 {
     use FlashMessage;
-    
+
     private SessionInterface $session;
     private Flash $flash;
     private ViewRenderer $viewRenderer;
@@ -78,7 +76,6 @@ final class InvItemAllowanceChargeController
     }
 
     /**
-     *
      * @param CurrentRoute $currentRoute
      * @param Request $request
      * @param FormHydrator $formHydrator
@@ -193,8 +190,8 @@ final class InvItemAllowanceChargeController
         return $this->viewRenderer->renderPartialAsString(
             '//invoice/layout/alert',
             [
-       'flash' => $this->flash
-     ]
+                'flash' => $this->flash,
+            ]
         );
     }
 
@@ -262,7 +259,6 @@ final class InvItemAllowanceChargeController
     }
 
     /**
-     *
      * @param CurrentRoute $currentRoute
      * @param Request $request
      * @param FormHydrator $formHydrator
@@ -367,7 +363,7 @@ final class InvItemAllowanceChargeController
                     $parameters['form'] = $form;
                 } // request
                 return $this->viewRenderer->render('_form', $parameters);
-            } // is_array    
+            } // is_array
         } // if acii
         return $this->webService->getRedirectResponse('index');
     }
@@ -383,8 +379,7 @@ final class InvItemAllowanceChargeController
     {
         $id = $currentRoute->getArgument('id');
         if (null !== $id) {
-            $acii = $aciiRepository->repoInvItemAllowanceChargequery($id);
-            return $acii;
+            return $aciiRepository->repoInvItemAllowanceChargequery($id);
         }
         return null;
     }
@@ -396,15 +391,14 @@ final class InvItemAllowanceChargeController
      */
     private function aciis(InvItemAllowanceChargeRepository $aciiRepository): \Yiisoft\Data\Cycle\Reader\EntityReader
     {
-        $aciis = $aciiRepository->findAllPreloaded();
-        return $aciis;
+        return $aciiRepository->findAllPreloaded();
     }
 
     /**
      * @param CurrentRoute $currentRoute
      * @param InvItemAllowanceChargeRepository $aciiRepository
      * @param AllowanceChargeRepository $acR
-     * @return \Yiisoft\DataResponse\DataResponse|Response
+     * @return Response|\Yiisoft\DataResponse\DataResponse
      */
     public function view(
         CurrentRoute $currentRoute,

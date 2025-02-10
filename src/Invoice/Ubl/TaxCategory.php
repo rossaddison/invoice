@@ -6,15 +6,14 @@ namespace App\Invoice\Ubl;
 
 use Sabre\Xml\Writer;
 use Sabre\Xml\XmlSerializable;
-use App\Invoice\Ubl\TaxScheme;
 use InvalidArgumentException;
 
 class TaxCategory implements XmlSerializable
 {
     private null|string $id = '';
     private array $idAttributes = [
-        'schemeID' => TaxCategory::UNCL5305,
-        'schemeName' => 'Duty or tax or fee category'
+        'schemeID' => self::UNCL5305,
+        'schemeName' => 'Duty or tax or fee category',
     ];
     private string $name = '';
     private float $percent = 0.00;
@@ -41,22 +40,21 @@ class TaxCategory implements XmlSerializable
      */
     public function getId(): null|string
     {
-        if (null !== ($this->id)) {
+        if (null !== $this->id) {
             return $this->id;
         }
         if ($this->percent >= 21) {
             return 'S';
-        } elseif ($this->percent <= 21 && $this->percent >= 6) {
-            return 'AA';
-        } else {
-            return 'Z';
         }
+        if ($this->percent <= 21 && $this->percent >= 6) {
+            return 'AA';
+        }
+        return 'Z';
+
         return null;
     }
 
     /**
-     *
-     * @return void
      * @throws InvalidArgumentException
      */
     public function validate(): void
@@ -71,9 +69,7 @@ class TaxCategory implements XmlSerializable
     }
 
     /**
-     *
      * @param Writer $writer
-     * @return void
      */
     public function xmlSerialize(Writer $writer): void
     {

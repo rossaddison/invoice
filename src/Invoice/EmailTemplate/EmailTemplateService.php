@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace App\Invoice\EmailTemplate;
 
 use App\Invoice\Entity\EmailTemplate;
-use App\Invoice\EmailTemplate\EmailTemplateRepository;
 
 final class EmailTemplateService
 {
@@ -19,7 +18,6 @@ final class EmailTemplateService
     /**
      * @param EmailTemplate $model
      * @param array $array
-     * @return void
      */
     public function saveEmailTemplate(EmailTemplate $model, array $array): void
     {
@@ -37,7 +35,6 @@ final class EmailTemplateService
 
     /**
      * @param EmailTemplate $model
-     * @return void
      */
     public function deleteEmailTemplate(EmailTemplate $model): void
     {

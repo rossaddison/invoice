@@ -59,7 +59,6 @@ final class PaymentCustomRepository extends Select\Repository
      * @see Reader/ReadableDataInterface|InvalidArgumentException
      * @param array|PaymentCustom|null $paymentcustom
      * @throws Throwable
-     * @return void
      */
     public function save(array|PaymentCustom|null $paymentcustom): void
     {
@@ -70,7 +69,6 @@ final class PaymentCustomRepository extends Select\Repository
      * @see Reader/ReadableDataInterface|InvalidArgumentException
      * @param array|PaymentCustom|null $paymentcustom
      * @throws Throwable
-     * @return void
      */
     public function delete(array|PaymentCustom|null $paymentcustom): void
     {
@@ -86,7 +84,7 @@ final class PaymentCustomRepository extends Select\Repository
     }
 
     /**
-     * @return null|PaymentCustom
+     * @return PaymentCustom|null
      *
      * @psalm-return TEntity|null
      */
@@ -99,7 +97,7 @@ final class PaymentCustomRepository extends Select\Repository
     }
 
     /**
-     * @return null|PaymentCustom
+     * @return PaymentCustom|null
      *
      * @psalm-return TEntity|null
      */

@@ -20,7 +20,6 @@ use Yiisoft\Html\Tag\A;
 use Yiisoft\Html\Tag\Body;
 use Yiisoft\FormModel\FormHydrator;
 use Yiisoft\Mailer\MailerInterface;
-use Yiisoft\Mailer\MessageBodyTemplate;
 use Yiisoft\Router\CurrentRoute;
 use Yiisoft\Router\FastRoute\UrlGenerator;
 use Yiisoft\Security\TokenMask;
@@ -98,10 +97,10 @@ final class ForgotPasswordController
                     } else {
                         $tokenString = $tokenRecord->getToken();
                         if (null !== $tokenString) {
-                            $timeStamp = (string)($tokenRecord->getCreated_at())->getTimestamp();
+                            $timeStamp = (string)$tokenRecord->getCreated_at()->getTimestamp();
                             // check if token Random string is still valid by checking the timestamp
                             if ($timeStamp + 3600 >= time()) {
-                                $requestPasswordResetToken = $tokenString. '_' . $timeStamp;
+                                $requestPasswordResetToken = $tokenString . '_' . $timeStamp;
                             } else {
                                 /**
                                  * This new Token will be nullified when the password is actually reset in the Token extension table i.e.
@@ -121,9 +120,7 @@ final class ForgotPasswordController
                          */
                         $languageArray = $this->sR->locale_language_array();
                         $_language = $currentRoute->getArgument('_language');
-                        /**
 
-                         */
                         /**
                          * @see A new UserInv (extension table of user) for the user is created.
                          * For additional headers to strengthen security refer to:
@@ -139,14 +136,14 @@ final class ForgotPasswordController
                                     'X-Origin' => ['0', '1'],
                                     'X-Pass' => 'pass',
                                 ],
-                                subject: $login. ': <'.$to.'>',
+                                subject: $login . ': <' . $to . '>',
                                 date: new \DateTimeImmutable('now'),
                                 from: [$this->sR->getConfigAdminEmail() => $this->translator->translate('i.administrator')],
                                 to: $to,
                                 htmlBody: $htmlBody
                             );
-                            $email->withAddedHeader('Message-ID', $this->sR->getConfigAdminEmail());                            
-                            
+                            $email->withAddedHeader('Message-ID', $this->sR->getConfigAdminEmail());
+
                             try {
                                 $this->mailer->send($email);
                             } catch (\Exception $e) {
@@ -184,8 +181,8 @@ final class ForgotPasswordController
         $tR->save($newTokenRecord);
         $tokenString = $newTokenRecord->getToken();
         if (null !== $tokenString) {
-            $timeStamp = (string)($newTokenRecord->getCreated_at())->getTimestamp();
-            $requestPasswordResetToken = $tokenString. '_' . $timeStamp;
+            $timeStamp = (string)$newTokenRecord->getCreated_at()->getTimestamp();
+            $requestPasswordResetToken = $tokenString . '_' . $timeStamp;
         }
         return $requestPasswordResetToken;
     }
@@ -206,10 +203,9 @@ final class ForgotPasswordController
                            ['_language' => $_language, 'token' => $tokenWithMask]
                        ))
                        ->content($this->translator->translate('i.password_reset_email'));
-            $htmlBody = Body::tag()
+            return Body::tag()
                        ->content($content)
                        ->render();
-            return $htmlBody;
         }
         return '';
     }

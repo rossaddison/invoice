@@ -64,7 +64,7 @@ final class ProfileForm extends FormModel
     public function getDate_created(): string|null|DateTimeImmutable
     {
         /**
-         * @var string|null|DateTimeImmutable $this->date_created
+         * @var DateTimeImmutable|string|null $this->date_created
          */
         return $this->date_created;
     }
@@ -72,7 +72,7 @@ final class ProfileForm extends FormModel
     public function getDate_modified(): string|null|DateTimeImmutable
     {
         /**
-         * @var string|null|DateTimeImmutable $this->date_modified
+         * @var DateTimeImmutable|string|null $this->date_modified
          */
         return $this->date_modified;
     }

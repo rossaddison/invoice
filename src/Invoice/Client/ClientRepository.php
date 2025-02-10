@@ -32,14 +32,12 @@ final class ClientRepository extends Select\Repository
     }
 
     /**
-     *
      * @return int
      */
     public function count(): int
     {
-        $count = $this->select()
+        return $this->select()
                       ->count();
-        return $count;
     }
 
     /**
@@ -49,13 +47,12 @@ final class ClientRepository extends Select\Repository
      */
     public function findAllWithActive(int $active): EntityReader
     {
-        if (($active) < 2) {
+        if ($active < 2) {
             $query = $this->select()
                    ->where(['client_active' => $active]);
             return $this->prepareDataReader($query);
-        } else {
-            return $this->findAllPreloaded();
         }
+        return $this->findAllPreloaded();
     }
 
     /**
@@ -88,7 +85,6 @@ final class ClientRepository extends Select\Repository
      * @param array|Client|null $client
      * @psalm-param TEntity $client
      * @throws Throwable
-     * @return void
      */
     public function save(array|Client|null $client): void
     {
@@ -99,7 +95,6 @@ final class ClientRepository extends Select\Repository
      * @see Reader/ReadableDataInterface|InvalidArgumentException
      * @param array|Client|null $client
      * @throws Throwable
-     * @return void
      */
     public function delete(array|Client|null $client): void
     {
@@ -107,7 +102,6 @@ final class ClientRepository extends Select\Repository
     }
 
     /**
-     *
      * @param Select $query
      * @return EntityReader
      */
@@ -120,16 +114,14 @@ final class ClientRepository extends Select\Repository
     }
 
     /**
-     *
      * @param string $id
      * @return int
      */
     public function repoClientCount(string $id): int
     {
-        $count = $this->select()
+        return $this->select()
                       ->where(['id' => $id])
                       ->count();
-        return $count;
     }
 
     /**
@@ -157,7 +149,6 @@ final class ClientRepository extends Select\Repository
     }
 
     /**
-     *
      * @psalm-return EntityReader
      */
     public function repoUserClient(array $available_client_id_list): EntityReader
@@ -169,7 +160,6 @@ final class ClientRepository extends Select\Repository
     }
 
     /**
-     *
      * @psalm-return EntityReader
      */
     public function repoActivequery(bool $client_active): EntityReader
@@ -199,8 +189,7 @@ final class ClientRepository extends Select\Repository
              * @var Client $client
              */
             foreach ($this->repoUserClient($ucR->getClients_with_user_accounts()) as $client) {
-
-                $optionsData[(int)$client->getClient_id()] = ($client->getClient_name() ?: '??') . str_repeat(' ', 3). ($client->getClient_surname() ?? '??');
+                $optionsData[(int)$client->getClient_id()] = ($client->getClient_name() ?: '??') . str_repeat(' ', 3) . ($client->getClient_surname() ?? '??');
             }
         }
         return $optionsData;

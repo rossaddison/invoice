@@ -26,7 +26,6 @@ final class QuoteRepository extends Select\Repository
     /**
      * @param Select<TEntity> $select
      * @param EntityWriter $entityWriter
-     *
      */
     public function __construct(Select $select, EntityWriter $entityWriter, Translator $translator)
     {
@@ -68,14 +67,13 @@ final class QuoteRepository extends Select\Repository
      */
     public function findAllWithStatus(int $status_id): EntityReader
     {
-        if (($status_id) > 0) {
+        if ($status_id > 0) {
             $query = $this->select()
                     ->load(['client','group','user'])
                     ->where(['status_id' => $status_id]);
             return $this->prepareDataReader($query);
-        } else {
-            return $this->findAllPreloaded();
         }
+        return $this->findAllPreloaded();
     }
 
     /**
@@ -120,7 +118,6 @@ final class QuoteRepository extends Select\Repository
      * @see Reader/ReadableDataInterface|InvalidArgumentException
      * @param array|Quote|null $quote
      * @throws Throwable
-     * @return void
      */
     public function save(array|Quote|null $quote): void
     {
@@ -131,7 +128,6 @@ final class QuoteRepository extends Select\Repository
      * @see Reader/ReadableDataInterface|InvalidArgumentException
      * @param array|Quote|null $quote
      * @throws Throwable
-     * @return void
      */
     public function delete(array|Quote|null $quote): void
     {
@@ -139,7 +135,6 @@ final class QuoteRepository extends Select\Repository
     }
 
     /**
-     *
      * @param Select $query
      * @return EntityReader
      */
@@ -152,7 +147,7 @@ final class QuoteRepository extends Select\Repository
     }
 
     /**
-     * @return null|Quote
+     * @return Quote|null
      *
      * @psalm-return TEntity|null
      */
@@ -164,7 +159,7 @@ final class QuoteRepository extends Select\Repository
     }
 
     /**
-     * @return null|Quote
+     * @return Quote|null
      *
      * @psalm-return TEntity|null
      */
@@ -177,7 +172,6 @@ final class QuoteRepository extends Select\Repository
     }
 
     /**
-     *
      * @param string|null $quote_id
      * @param int $status_id
      * @return Quote|null
@@ -192,18 +186,16 @@ final class QuoteRepository extends Select\Repository
     /**
      * @psalm-param 1 $status_id
      *
-     * @param null|string $quote_id
+     * @param string|null $quote_id
      */
     public function repoQuoteStatuscount(string|null $quote_id, int $status_id): int
     {
-        $count = $this->select()->where(['id' => $quote_id])
+        return $this->select()->where(['id' => $quote_id])
                                 ->where(['status_id' => $status_id])
                                 ->count();
-        return  $count;
     }
 
     /**
-     *
      * @param string $url_key
      * @return Quote|null
      */
@@ -216,35 +208,30 @@ final class QuoteRepository extends Select\Repository
     }
 
     /**
-     *
      * @param string $url_key
      * @return int
      */
     public function repoUrl_key_guest_count(string $url_key): int
     {
-        $count = $this->select()
+        return $this->select()
                       ->where(['url_key' => $url_key])
                       ->count();
-        return  $count;
     }
 
     /**
-     *
      * @param string $quote_id
      * @param array $user_client
      * @return int
      */
     public function repoClient_guest_count(string $quote_id, array $user_client = []): int
     {
-        $count = $this->select()
+        return $this->select()
                       ->where(['id' => $quote_id])
                       ->andWhere(['client_id' => ['in' => new Parameter($user_client)]])
                       ->count();
-        return  $count;
     }
 
     /**
-     *
      * @param int $status_id
      * @param array $user_client
      * @return EntityReader
@@ -257,59 +244,56 @@ final class QuoteRepository extends Select\Repository
                     ->where(['status_id' => $status_id])
                     ->andWhere(['client_id' => ['in' => new Parameter($user_client)]]);
             return $this->prepareDataReader($query);
-        } else { // Get all the quotes that are either sent, viewed, approved, or rejected, or cancelled
-            $query = $this->select()
-                         // sent = 2, viewed = 3, approved = 4, rejected = 5, cancelled = 6
-                         ->where(['client_id' => ['in' => new Parameter($user_client)]])
-                         ->andWhere(['status_id' => ['in' => new Parameter([2,3,4,5,6])]]);
-            return $this->prepareDataReader($query);
-        }
+        }   // Get all the quotes that are either sent, viewed, approved, or rejected, or cancelled
+        $query = $this->select()
+                     // sent = 2, viewed = 3, approved = 4, rejected = 5, cancelled = 6
+                     ->where(['client_id' => ['in' => new Parameter($user_client)]])
+                     ->andWhere(['status_id' => ['in' => new Parameter([2,3,4,5,6])]]);
+        return $this->prepareDataReader($query);
     }
 
     /**
-     *
-     *
      * @return array
      */
     public function getStatuses(Translator $translator): array
     {
-        return array(
-            '0' => array(
+        return [
+            '0' => [
                 'label' => $translator->translate('i.all'),
                 'class' => 'all',
-                'href' => 0
-            ),
-            '1' => array(
+                'href' => 0,
+            ],
+            '1' => [
                 'label' => $translator->translate('i.draft'),
                 'class' => 'draft',
-                'href' => 1
-            ),
-            '2' => array(
+                'href' => 1,
+            ],
+            '2' => [
                 'label' => $translator->translate('i.sent'),
                 'class' => 'sent',
-                'href' => 2
-            ),
-            '3' => array(
+                'href' => 2,
+            ],
+            '3' => [
                 'label' => $translator->translate('i.viewed'),
                 'class' => 'viewed',
-                'href' => 3
-            ),
-            '4' => array(
+                'href' => 3,
+            ],
+            '4' => [
                 'label' => $translator->translate('i.approved'),
                 'class' => 'approved',
-                'href' => 4
-            ),
-            '5' => array(
+                'href' => 4,
+            ],
+            '5' => [
                 'label' => $translator->translate('i.rejected'),
                 'class' => 'rejected',
-                'href' => 5
-            ),
-            '6' => array(
+                'href' => 5,
+            ],
+            '6' => [
                 'label' => $translator->translate('i.canceled'),
                 'class' => 'canceled',
-                'href' => 6
-            )
-        );
+                'href' => 6,
+            ],
+        ];
     }
 
     public function getSpecificStatusArrayLabel(string $key): string
@@ -346,8 +330,7 @@ final class QuoteRepository extends Select\Repository
      */
     public function is_draft(): Select
     {
-        $query = $this->select()->where(['status_id' => 1]);
-        return $query;
+        return $this->select()->where(['status_id' => 1]);
     }
 
     /**
@@ -355,8 +338,7 @@ final class QuoteRepository extends Select\Repository
      */
     public function is_sent(): Select
     {
-        $query = $this->select()->where(['status_id' => 2]);
-        return $query;
+        return $this->select()->where(['status_id' => 2]);
     }
 
     /**
@@ -364,8 +346,7 @@ final class QuoteRepository extends Select\Repository
      */
     public function is_viewed(): Select
     {
-        $query = $this->select()->where(['status_id' => 3]);
-        return $query;
+        return $this->select()->where(['status_id' => 3]);
     }
 
     /**
@@ -373,8 +354,7 @@ final class QuoteRepository extends Select\Repository
      */
     public function is_approved(): Select
     {
-        $query = $this->select()->where(['status_id' => 4]);
-        return $query;
+        return $this->select()->where(['status_id' => 4]);
     }
 
     /**
@@ -382,8 +362,7 @@ final class QuoteRepository extends Select\Repository
      */
     public function is_rejected(): Select
     {
-        $query = $this->select()->where(['status_id' => 5]);
-        return $query;
+        return $this->select()->where(['status_id' => 5]);
     }
 
     /**
@@ -391,8 +370,7 @@ final class QuoteRepository extends Select\Repository
      */
     public function is_canceled(): Select
     {
-        $query = $this->select()->where(['status_id' => 6]);
-        return $query;
+        return $this->select()->where(['status_id' => 6]);
     }
 
     /**
@@ -402,8 +380,7 @@ final class QuoteRepository extends Select\Repository
      */
     public function is_open(): Select
     {
-        $query = $this->select()->where(['status_id' => ['in' => new Parameter([2,3])]]);
-        return $query;
+        return $this->select()->where(['status_id' => ['in' => new Parameter([2,3])]]);
     }
 
     /**
@@ -411,8 +388,7 @@ final class QuoteRepository extends Select\Repository
      */
     public function guest_visible(): Select
     {
-        $query = $this->select()->where(['status_id' => ['in' => new Parameter([2,3,4,5])]]);
-        return $query ;
+        return $this->select()->where(['status_id' => ['in' => new Parameter([2,3,4,5])]]);
     }
 
     /**
@@ -422,9 +398,8 @@ final class QuoteRepository extends Select\Repository
      */
     public function by_client(int $client_id): Select
     {
-        $query = $this->select()
+        return $this->select()
                       ->where(['client_id' => $client_id]);
-        return $query;
     }
 
     /**
@@ -442,18 +417,16 @@ final class QuoteRepository extends Select\Repository
     }
 
     /**
-     *
      * @param int $client_id
      * @param int $status_id
      * @return int
      */
     public function by_client_quote_status_count(int $client_id, int $status_id): int
     {
-        $count = $this->select()
+        return $this->select()
                       ->where(['client_id' => $client_id])
                       ->andWhere(['status_id' => $status_id])
                       ->count();
-        return $count;
     }
 
     /**
@@ -463,62 +436,53 @@ final class QuoteRepository extends Select\Repository
      */
     public function approve_or_reject_quote_by_key(string $url_key): Select
     {
-        $query = $this->select()
+        return $this->select()
                       ->where(['status_id' => ['in' => new Parameter([2,3,4,5])]])
                       ->where(['url_key' => $url_key]);
-        return $query;
     }
 
     /**
-     *
      * @param string $id
      * @return Select
      */
     public function approve_or_reject_quote_by_id(string $id): Select
     {
-        $query = $this->select()
+        return $this->select()
                       ->where(['status_id' => ['in' => new Parameter([2,3,4,5])]])
                       ->where(['id' => $id]);
-        return $query;
     }
 
     /**
-     * @param null|string $quote_id
+     * @param string|null $quote_id
      */
     public function repoCount(string|null $quote_id): int
     {
-        $count = $this->select()
+        return $this->select()
                       ->where(['id' => $quote_id])
                       ->count();
-        return $count;
     }
 
     /**
-     *
      * @return int
      */
     public function repoCountAll(): int
     {
-        $count = $this->select()
+        return $this->select()
                       ->count();
-        return $count;
     }
 
     /**
-     *
      * @param int $client_id
      * @return int
      */
     public function repoCountByClient(int $client_id): int
     {
-        $count = $this->select()
+        return $this->select()
                       ->where(['client_id' => $client_id])
                       ->count();
-        return $count;
     }
 
     /**
-     *
      * @param int $client_id
      * @return EntityReader
      */

@@ -18,25 +18,25 @@ class PostalAddress
     private ?int $client_id = null;
 
     #[Column(type:'string(50)', nullable: false)]
-    private string $street_name =  '';
+    private string $street_name = '';
 
     #[Column(type:'string(50)', nullable: false)]
-    private string $additional_street_name =  '';
+    private string $additional_street_name = '';
 
     #[Column(type:'string(4)', nullable: false)]
-    private string $building_number =  '';
+    private string $building_number = '';
 
     #[Column(type:'string(50)', nullable: false)]
-    private string $city_name =  '';
+    private string $city_name = '';
 
     #[Column(type:'string(7)', nullable: false)]
-    private string $postalzone =  '';
+    private string $postalzone = '';
 
     #[Column(type:'string(50)', nullable: false)]
-    private string $countrysubentity =  '';
+    private string $countrysubentity = '';
 
     #[Column(type:'string(50)', nullable: false)]
-    private string $country =  '';
+    private string $country = '';
 
     public function __construct(
         int $id = null,
@@ -67,7 +67,7 @@ class PostalAddress
 
     public function setId(int $id): void
     {
-        $this->id =  $id;
+        $this->id = $id;
     }
 
     public function getClient_id(): string
@@ -77,7 +77,7 @@ class PostalAddress
 
     public function setClient_id(int $client_id): void
     {
-        $this->client_id =  $client_id;
+        $this->client_id = $client_id;
     }
 
     public function getStreet_name(): string
@@ -87,7 +87,7 @@ class PostalAddress
 
     public function setStreet_name(string $street_name): void
     {
-        $this->street_name =  $street_name;
+        $this->street_name = $street_name;
     }
 
     public function getAdditional_street_name(): string
@@ -97,7 +97,7 @@ class PostalAddress
 
     public function setAdditional_street_name(string $additional_street_name): void
     {
-        $this->additional_street_name =  $additional_street_name;
+        $this->additional_street_name = $additional_street_name;
     }
 
     public function getBuilding_number(): string
@@ -107,7 +107,7 @@ class PostalAddress
 
     public function setBuilding_number(string $building_number): void
     {
-        $this->building_number =  $building_number;
+        $this->building_number = $building_number;
     }
 
     public function getCity_name(): string
@@ -117,7 +117,7 @@ class PostalAddress
 
     public function setCity_name(string $city_name): void
     {
-        $this->city_name =  $city_name;
+        $this->city_name = $city_name;
     }
 
     public function getPostalzone(): string
@@ -127,7 +127,7 @@ class PostalAddress
 
     public function setPostalzone(string $postalzone): void
     {
-        $this->postalzone =  $postalzone;
+        $this->postalzone = $postalzone;
     }
 
     public function getCountrysubentity(): string
@@ -137,7 +137,7 @@ class PostalAddress
 
     public function setCountrysubentity(string $countrysubentity): void
     {
-        $this->countrysubentity =  $countrysubentity;
+        $this->countrysubentity = $countrysubentity;
     }
 
     public function getCountry(): string
@@ -147,11 +147,11 @@ class PostalAddress
 
     public function setCountry(string $country): void
     {
-        $this->country =  $country;
+        $this->country = $country;
     }
 
     public function getFullAddress(): string
     {
-        return $this->street_name.' '. $this->building_number. ', '.$this->additional_street_name.', '.$this->postalzone;
+        return $this->street_name . ' ' . $this->building_number . ', ' . $this->additional_street_name . ', ' . $this->postalzone;
     }
 }

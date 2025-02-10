@@ -101,7 +101,7 @@ final class InvForm extends FormModel
     public function getDate_created(): string|null|DateTimeImmutable
     {
         /**
-         * @var string|null|DateTimeImmutable $this->date_created
+         * @var DateTimeImmutable|string|null $this->date_created
          */
         return $this->date_created;
     }
@@ -109,7 +109,7 @@ final class InvForm extends FormModel
     public function getDate_modified(): string|null|DateTimeImmutable
     {
         /**
-         * @var string|DateTimeImmutable $this->date_modified
+         * @var DateTimeImmutable|string $this->date_modified
          */
         return $this->date_modified;
     }
@@ -117,7 +117,7 @@ final class InvForm extends FormModel
     public function getDate_supplied(): string|null|DateTimeImmutable
     {
         /**
-         * @var string|DateTimeImmutable $this->date_supplied
+         * @var DateTimeImmutable|string $this->date_supplied
          */
         return $this->date_supplied;
     }
@@ -125,7 +125,7 @@ final class InvForm extends FormModel
     public function getDate_paid_off(): string|null|DateTimeImmutable
     {
         /**
-         * @var string|DateTimeImmutable $this->date_paid_off
+         * @var DateTimeImmutable|string $this->date_paid_off
          */
         return $this->date_paid_off;
     }
@@ -133,7 +133,7 @@ final class InvForm extends FormModel
     public function getDate_tax_point(): string|null|DateTimeImmutable
     {
         /**
-         * @var string|DateTimeImmutable $this->date_tax_point
+         * @var DateTimeImmutable|string $this->date_tax_point
          */
         return $this->date_tax_point;
     }
@@ -141,7 +141,7 @@ final class InvForm extends FormModel
     public function getDate_due(): string|null|DateTimeImmutable
     {
         /**
-         * @var string|DateTimeImmutable $this->date_due
+         * @var DateTimeImmutable|string $this->date_due
          */
         return $this->date_due;
     }
@@ -149,7 +149,7 @@ final class InvForm extends FormModel
     public function getTime_created(): string|null|DateTimeImmutable
     {
         /**
-         * @var string|DateTimeImmutable $this->time_created
+         * @var DateTimeImmutable|string $this->time_created
          */
         return $this->time_created;
     }

@@ -12,16 +12,16 @@ use Cycle\Annotated\Annotation\Entity;
 class FromDropDown
 {
     #[Column(type: 'primary')]
-    private ?int $id =  null;
+    private ?int $id = null;
 
     #[Column(type:'text)', nullable: false)]
-    private string $email =  '';
+    private string $email = '';
 
     #[Column(type:'bool', default:false, nullable: false)]
-    private bool $include =  false;
+    private bool $include = false;
 
     #[Column(type:'bool', default:false, nullable: false)]
-    private bool $default_email =  false;
+    private bool $default_email = false;
 
     public function __construct(
         int $id = null,
@@ -42,7 +42,7 @@ class FromDropDown
 
     public function setId(int $id): void
     {
-        $this->id =  $id;
+        $this->id = $id;
     }
 
     public function getEmail(): string
@@ -52,7 +52,7 @@ class FromDropDown
 
     public function setEmail(string $email): void
     {
-        $this->email =  $email;
+        $this->email = $email;
     }
 
     public function getInclude(): bool
@@ -62,7 +62,7 @@ class FromDropDown
 
     public function setInclude(bool $include): void
     {
-        $this->include =  $include;
+        $this->include = $include;
     }
 
     public function getDefault_email(): bool
@@ -72,6 +72,6 @@ class FromDropDown
 
     public function setDefault_email(bool $default_email): void
     {
-        $this->default_email =  $default_email;
+        $this->default_email = $default_email;
     }
 }

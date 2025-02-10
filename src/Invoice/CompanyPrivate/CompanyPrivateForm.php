@@ -113,7 +113,7 @@ final class CompanyPrivateForm extends FormModel
     public function getStart_date(): string|null|DateTimeImmutable
     {
         /**
-         * @var string|null|DateTimeImmutable $this->start_date
+         * @var DateTimeImmutable|string|null $this->start_date
          */
         return $this->start_date;
     }
@@ -121,7 +121,7 @@ final class CompanyPrivateForm extends FormModel
     public function getEnd_date(): string|null|DateTimeImmutable
     {
         /**
-         * @var string|null|DateTimeImmutable $this->end_date
+         * @var DateTimeImmutable|string|null $this->end_date
          */
         return $this->end_date;
     }

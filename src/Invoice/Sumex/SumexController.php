@@ -5,9 +5,6 @@ declare(strict_types=1);
 namespace App\Invoice\Sumex;
 
 use App\Invoice\Entity\Sumex;
-use App\Invoice\Sumex\SumexService;
-use App\Invoice\Sumex\SumexForm;
-use App\Invoice\Sumex\SumexRepository;
 use App\Invoice\Setting\SettingRepository;
 use App\Invoice\Traits\FlashMessage;
 use App\User\UserService;
@@ -27,7 +24,7 @@ use Yiisoft\FormModel\FormHydrator;
 final class SumexController
 {
     use FlashMessage;
-    
+
     private Flash $flash;
     private Session $session;
     private ViewRenderer $viewRenderer;
@@ -77,7 +74,7 @@ final class SumexController
             'canEdit' => $canEdit,
             'sumexs' => $sumexs,
             'paginator' => $paginator,
-            'alert' => $this->alert()
+            'alert' => $this->alert(),
         ];
         return $this->viewRenderer->render('index', $parameters);
     }
@@ -90,8 +87,8 @@ final class SumexController
         return $this->viewRenderer->renderPartialAsString(
             '//invoice/layout/alert',
             [
-       'flash' => $this->flash
-     ]
+                'flash' => $this->flash,
+            ]
         );
     }
 
@@ -126,7 +123,7 @@ final class SumexController
                     $this->sumexService->saveSumex($model, $body);
                     return $this->webService->getRedirectResponse('sumex/index');
                 }
-            }    
+            }
             $parameters['errors'] = $form->getValidationResult()->getErrorMessagesIndexedByProperty();
             $parameters['form'] = $form;
         }
@@ -193,10 +190,9 @@ final class SumexController
     }
 
     /**
-     *
      * @param CurrentRoute $currentRoute
      * @param SumexRepository $sumexRepository
-     * @return \Yiisoft\DataResponse\DataResponse|Response
+     * @return Response|\Yiisoft\DataResponse\DataResponse
      */
     public function view(CurrentRoute $currentRoute, SumexRepository $sumexRepository): \Yiisoft\DataResponse\DataResponse|Response
     {
@@ -209,7 +205,7 @@ final class SumexController
                 'actionArguments' => ['id' => $sumex->getId()],
                 'optionsDataReasons' => $this->optionsDataReasons(),
                 'errors' => [],
-                'form' => $form
+                'form' => $form,
             ];
             return $this->viewRenderer->render('_view', $parameters);
         }
@@ -238,8 +234,7 @@ final class SumexController
     {
         $id = $currentRoute->getArgument('id');
         if (null !== $id) {
-            $sumex = $sumexRepository->repoSumexquery($id);
-            return $sumex;
+            return $sumexRepository->repoSumexquery($id);
         }
         return null;
     }
@@ -251,8 +246,7 @@ final class SumexController
      */
     private function sumexs(SumexRepository $sumexRepository): \Yiisoft\Data\Cycle\Reader\EntityReader
     {
-        $sumexs = $sumexRepository->findAllPreloaded();
-        return $sumexs;
+        return $sumexRepository->findAllPreloaded();
     }
 
     private function optionsDataReasons(): array
@@ -263,7 +257,7 @@ final class SumexController
             'maternity',
             'prevention',
             'birthdefect',
-            'unknown'
+            'unknown',
         ];
         $optionsDataReasons = [];
         foreach ($reasons as $key => $value) {

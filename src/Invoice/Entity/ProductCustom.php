@@ -7,8 +7,6 @@ namespace App\Invoice\Entity;
 use Cycle\Annotated\Annotation\Column;
 use Cycle\Annotated\Annotation\Entity;
 use Cycle\Annotated\Annotation\Relation\BelongsTo;
-use App\Invoice\Entity\Product;
-use App\Invoice\Entity\CustomField;
 
 #[Entity(repository: \App\Invoice\ProductCustom\ProductCustomRepository::class)]
 class ProductCustom
@@ -20,16 +18,16 @@ class ProductCustom
     private ?CustomField $custom_field = null;
 
     #[Column(type: 'primary')]
-    private ?int $id =  null;
+    private ?int $id = null;
 
     #[Column(type: 'integer(11)', nullable: false)]
-    private ?int $product_id =  null;
+    private ?int $product_id = null;
 
     #[Column(type: 'integer(11)', nullable: false)]
-    private ?int $custom_field_id =  null;
+    private ?int $custom_field_id = null;
 
     #[Column(type: 'text', nullable: true)]
-    private ?string $value =  '';
+    private ?string $value = '';
 
     public function __construct(
         int $id = null,
@@ -60,7 +58,7 @@ class ProductCustom
 
     public function setId(int $id): void
     {
-        $this->id =  $id;
+        $this->id = $id;
     }
 
     public function getProduct_id(): string
@@ -70,7 +68,7 @@ class ProductCustom
 
     public function setProduct_id(int $product_id): void
     {
-        $this->product_id =  $product_id;
+        $this->product_id = $product_id;
     }
 
     public function getCustom_field_id(): string
@@ -80,7 +78,7 @@ class ProductCustom
 
     public function setCustom_field_id(int $custom_field_id): void
     {
-        $this->custom_field_id =  $custom_field_id;
+        $this->custom_field_id = $custom_field_id;
     }
 
     public function getValue(): ?string
@@ -90,6 +88,6 @@ class ProductCustom
 
     public function setValue(string $value): void
     {
-        $this->value =  $value;
+        $this->value = $value;
     }
 }

@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace App\Invoice\QuoteItemAmount;
 
 use App\Invoice\Entity\QuoteItemAmount;
-use App\Invoice\QuoteItemAmount\QuoteItemAmountForm;
 
 final class QuoteItemAmountService
 {
@@ -17,10 +16,8 @@ final class QuoteItemAmountService
     }
 
     /**
-     *
      * @param QuoteItemAmount $model
      * @param array $quoteitem
-     * @return void
      */
     public function saveQuoteItemAmountNoForm(QuoteItemAmount $model, array $quoteitem): void
     {
@@ -39,9 +36,7 @@ final class QuoteItemAmountService
     }
 
     /**
-     *
      * @param QuoteItemAmount $model
-     * @return void
      */
     public function deleteQuoteItemAmount(QuoteItemAmount $model): void
     {

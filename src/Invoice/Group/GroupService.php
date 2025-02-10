@@ -11,7 +11,6 @@ final class GroupService
     private GroupRepository $repository;
 
     /**
-     *
      * @param GroupRepository $repository
      */
     public function __construct(GroupRepository $repository)
@@ -22,7 +21,6 @@ final class GroupService
     /**
      * @param Group $model
      * @param array $array
-     * @return void
      */
     public function saveGroup(Group $model, array $array): void
     {
@@ -34,16 +32,14 @@ final class GroupService
     }
 
     /**
-     *
      * @param Group $model
-     * @return void
      */
     public function deleteGroup(Group $model): void
     {
         // The first three default groups i.e. quote, salesorder, and invoice cannot be deleted
-        if (($model->getName() <> 'Quote Group')
-                && ($model->getName() <> 'Invoice Group')
-                    && ($model->getName() <> 'Sales Order Group')) {
+        if (($model->getName() != 'Quote Group')
+                && ($model->getName() != 'Invoice Group')
+                    && ($model->getName() != 'Sales Order Group')) {
             $this->repository->delete($model);
         }
     }

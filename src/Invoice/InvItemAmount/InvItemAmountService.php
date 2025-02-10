@@ -16,10 +16,8 @@ final class InvItemAmountService
     }
 
     /**
-     *
      * @param InvItemAmount $model
      * @param array $invitem
-     * @return void
      */
     public function saveInvItemAmountNoForm(InvItemAmount $model, array $invitem): void
     {
@@ -34,9 +32,7 @@ final class InvItemAmountService
     }
 
     /**
-     *
      * @param InvItemAmount $model
-     * @return void
      */
     public function deleteInvItemAmount(InvItemAmount $model): void
     {

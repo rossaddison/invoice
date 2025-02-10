@@ -5,8 +5,6 @@ declare(strict_types=1);
 namespace App\Invoice\PaymentPeppol;
 
 use App\Invoice\Entity\PaymentPeppol;
-use App\Invoice\PaymentPeppol\PaymentPeppolService;
-use App\Invoice\PaymentPeppol\PaymentPeppolRepository;
 use App\Invoice\Setting\SettingRepository;
 use App\Invoice\Traits\FlashMessage;
 use App\User\UserService;
@@ -27,7 +25,7 @@ use Exception;
 final class PaymentPeppolController
 {
     use FlashMessage;
-    
+
     private Flash $flash;
     private SessionInterface $session;
     private ViewRenderer $viewRenderer;
@@ -74,10 +72,10 @@ final class PaymentPeppolController
             'response' => $this->viewRenderer->renderPartial(
                 '//invoice/layout/header_buttons',
                 [
-                'hide_submit_button' => false ,
-                'hide_cancel_button' => false
-            ]
-            )
+                    'hide_submit_button' => false ,
+                    'hide_cancel_button' => false,
+                ]
+            ),
         ];
 
         if ($request->getMethod() === Method::POST) {
@@ -87,7 +85,7 @@ final class PaymentPeppolController
                     $this->paymentpeppolService->savePaymentPeppol($paymentPeppol, $body);
                     return $this->webService->getRedirectResponse('paymentpeppol/index');
                 }
-            }    
+            }
             $parameters['errors'] = $form->getValidationResult()->getErrorMessagesIndexedByProperty();
             $parameters['form'] = $form;
         }
@@ -102,8 +100,8 @@ final class PaymentPeppolController
         return $this->viewRenderer->renderPartialAsString(
             '//invoice/layout/alert',
             [
-       'flash' => $this->flash
-     ]
+                'flash' => $this->flash,
+            ]
         );
     }
 
@@ -124,11 +122,11 @@ final class PaymentPeppolController
         ->withCurrentPage($currentPageNeverZero)
         ->withToken(PageToken::next((string)$page));
         $parameters = [
-        'paymentpeppols' => $this->paymentpeppols($paymentpeppolRepository),
-        'paginator' => $paginator,
-        'alert' => $this->alert(),
-        'routeCurrent' => $routeCurrent
-    ];
+            'paymentpeppols' => $this->paymentpeppols($paymentpeppolRepository),
+            'paginator' => $paginator,
+            'alert' => $this->alert(),
+            'routeCurrent' => $routeCurrent,
+        ];
         return $this->viewRenderer->render('paymentpeppol/index', $parameters);
     }
 
@@ -178,10 +176,10 @@ final class PaymentPeppolController
                 'response' => $this->viewRenderer->renderPartial(
                     '//invoice/layout/header_buttons',
                     [
-                    'hide_submit_button' => false ,
-                    'hide_cancel_button' => false
-                ]
-                )
+                        'hide_submit_button' => false ,
+                        'hide_cancel_button' => false,
+                    ]
+                ),
             ];
             if ($request->getMethod() === Method::POST) {
                 $body = $request->getParsedBody() ?? [];
@@ -190,7 +188,7 @@ final class PaymentPeppolController
                         $this->paymentpeppolService->savePaymentPeppol($paymentPeppol, $body);
                         return $this->webService->getRedirectResponse('paymentpeppol/index');
                     }
-                }    
+                }
                 $parameters['errors'] = $form->getValidationResult()->getErrorMessagesIndexedByProperty();
                 $parameters['form'] = $form;
             }
@@ -210,8 +208,7 @@ final class PaymentPeppolController
     {
         $id = $currentRoute->getArgument('id');
         if (null !== $id) {
-            $paymentpeppol = $paymentpeppolRepository->repoPaymentPeppolLoadedquery($id);
-            return $paymentpeppol;
+            return $paymentpeppolRepository->repoPaymentPeppolLoadedquery($id);
         }
         return null;
     }
@@ -223,14 +220,13 @@ final class PaymentPeppolController
      */
     private function paymentpeppols(PaymentPeppolRepository $paymentpeppolRepository): \Yiisoft\Data\Cycle\Reader\EntityReader
     {
-        $paymentpeppols = $paymentpeppolRepository->findAllPreloaded();
-        return $paymentpeppols;
+        return $paymentpeppolRepository->findAllPreloaded();
     }
 
     /**
      * @param CurrentRoute $currentRoute
      * @param PaymentPeppolRepository $paymentpeppolRepository
-     * @return \Yiisoft\DataResponse\DataResponse|Response
+     * @return Response|\Yiisoft\DataResponse\DataResponse
      */
     public function view(CurrentRoute $currentRoute, PaymentPeppolRepository $paymentpeppolRepository): \Yiisoft\DataResponse\DataResponse|Response
     {
@@ -246,10 +242,10 @@ final class PaymentPeppolController
                 'response' => $this->viewRenderer->renderPartial(
                     '//invoice/layout/header_buttons',
                     [
-                    'hide_submit_button' => false ,
-                    'hide_cancel_button' => false
-                ]
-                )
+                        'hide_submit_button' => false ,
+                        'hide_cancel_button' => false,
+                    ]
+                ),
             ];
             return $this->viewRenderer->render('_view', $parameters);
         }

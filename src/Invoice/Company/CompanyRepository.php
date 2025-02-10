@@ -58,7 +58,6 @@ final class CompanyRepository extends Select\Repository
      * @see Reader/ReadableDataInterface|InvalidArgumentException
      * @param array|Company|null $company
      * @throws Throwable
-     * @return void
      */
     public function save(array|Company|null $company): void
     {
@@ -69,7 +68,6 @@ final class CompanyRepository extends Select\Repository
      * @see Reader/ReadableDataInterface|InvalidArgumentException
      * @param array|Company|null $company
      * @throws Throwable
-     * @return void
      */
     public function delete(array|Company|null $company): void
     {
@@ -85,7 +83,7 @@ final class CompanyRepository extends Select\Repository
     }
 
     /**
-     * @return null|Company
+     * @return Company|null
      *
      * @psalm-return TEntity|null
      */
@@ -96,7 +94,7 @@ final class CompanyRepository extends Select\Repository
     }
 
     /**
-     * @return null|Company
+     * @return Company|null
      *
      * @psalm-return TEntity|null
      */
@@ -105,5 +103,4 @@ final class CompanyRepository extends Select\Repository
         $query = $this->select()->where(['current' => '1']);
         return  $query->fetchOne() ?: null;
     }
-
 }

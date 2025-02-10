@@ -18,7 +18,6 @@ final class CustomFieldService
     /**
      * @param CustomField $model
      * @param array $array
-     * @return void
      */
     public function saveCustomField(CustomField $model, array $array): void
     {
@@ -32,9 +31,7 @@ final class CustomFieldService
     }
 
     /**
-     *
      * @param CustomField $model
-     * @return void
      */
     public function deleteCustomField(CustomField $model): void
     {

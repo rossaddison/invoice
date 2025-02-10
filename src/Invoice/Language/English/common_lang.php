@@ -3,7 +3,7 @@
 declare(strict_types=1);
 // as at 4th May 2024. Note this file has been built using copy paste from resources/messages/en/app.php
 // Remember to adjust the app.php file with '$lang =' as seen below
-$lang =  [
+$lang = [
     'site.soletrader.about.we' => 'We diligently apply our skills to the best of our ability.',
     'site.soletrader.about.choose' => 'Here are some appealing reasons to choose us:',
     'site.soletrader.about.competitive.rates' => 'Competitive Rates',

@@ -6,7 +6,6 @@ namespace App\Invoice\Entity;
 
 use Cycle\Annotated\Annotation\Column;
 use Cycle\Annotated\Annotation\Entity;
-use App\Invoice\Entity\Gentor;
 use Cycle\Annotated\Annotation\Relation\BelongsTo;
 
 #[Entity(repository: \App\Invoice\GeneratorRelation\GeneratorRelationRepository::class)]

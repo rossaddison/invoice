@@ -13,10 +13,10 @@ use Yiisoft\Translator\TranslatorInterface;
 use Yiisoft\Definitions\DynamicReference;
 
 /**
- * @see https://github.com/yiisoft/translator/blob/master/config/di.php 
+ * @see https://github.com/yiisoft/translator/blob/master/config/di.php
  * @var array $params
  * @var array $params['yiisoft/translator']
- * @var string $params['yiisoft/translator']['defaultCategory'] 
+ * @var string $params['yiisoft/translator']['defaultCategory']
  */
 
 return [
@@ -30,17 +30,17 @@ return [
         ],
         'addCategorySources()' => ['categories' => [
             DynamicReference::to(static function (Aliases $aliases) use ($params) {
-            return new CategorySource(  
+                return new CategorySource(
                     $params['yiisoft/translator']['defaultCategory'],
                     new MessageSource($aliases->get('@messages')),
                     new IntlMessageFormatter(),
                 );
-            })
+            }),
         ]],
         'reset' => function () use ($params) {
-            /** 
+            /**
              * @var string $params['yiisoft/translator']['locale']
-             * @var Translator $this 
+             * @var Translator $this
              */
             $this->setLocale($params['yiisoft/translator']['locale']);
         },

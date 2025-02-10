@@ -3,7 +3,7 @@
 declare(strict_types=1);
 // as at 5th May 2024. Note this file has been built using copy paste from resources/messages/en/app.php
 // Remember to adjust the app.php file with '$lang =' as seen below
-$lang =  [
+$lang = [
     'invoice.add' => 'Add',
     'invoice.archive' => 'Invoice Archive',
     'invoice.back' => 'Back',
@@ -31,11 +31,11 @@ $lang =  [
     'invoice.client.group' => 'Client Group',
     'invoice.client.import.list.blank' => 'Client Import List Blank',
     'invoice.client.has.user.account' => 'User Account',
-    'invoice.client.has.not.user.account' => 'This client does not have a user account. '."\r\n"
-      .' 1. Ensure Client is Signed up. '."\r\n"
-      .' 2. Settings ... User Account ... Add a User Account'."\r\n"
-      .' 3. Assign this client to the user account' ."\r\n"
-      .' 4. Invoices and Quotes will not be able to be created for this Client',
+    'invoice.client.has.not.user.account' => 'This client does not have a user account. ' . "\r\n"
+      . ' 1. Ensure Client is Signed up. ' . "\r\n"
+      . ' 2. Settings ... User Account ... Add a User Account' . "\r\n"
+      . ' 3. Assign this client to the user account' . "\r\n"
+      . ' 4. Invoices and Quotes will not be able to be created for this Client',
     'invoice.client.note' => 'Client Note',
     'invoice.client.notes' => 'Client Notes',
     'invoice.client.note.date' => 'Client Date',
@@ -151,11 +151,11 @@ $lang =  [
     'invoice.email.template.successfully.added' => 'Email Template Successfully Added',
     'invoice.email.template.successfully.deleted' => 'Email Template Successfully Deleted',
     'invoice.email.template.successfully.edited' => 'Email Template Successfully Edited',
-    'invoice.email.template.from.email.leave.blank' => ': If you leave this field blank, the User\'s account email address will be'.
-                                                       ' inserted as an editable value on the mailer form. '.
+    'invoice.email.template.from.email.leave.blank' => ': If you leave this field blank, the User\'s account email address will be' .
+                                                       ' inserted as an editable value on the mailer form. ' .
                                                        ' eg. An accountant\'s server email address.' .
                                                        ' Preferably use a server related email address here.',
-    'invoice.email.template.user.account.leave.blank' => ': If you leave this field blank, the Email Template\'s From email address will be'.
+    'invoice.email.template.user.account.leave.blank' => ': If you leave this field blank, the Email Template\'s From email address will be' .
                                                        ' inserted as an editable value on the mailer form. ',
     'invoice.enter' => 'Enter',
     'invoice.errors' => 'Errors',
@@ -196,7 +196,7 @@ $lang =  [
     'invoice.generator.controller.layout.directory.placeholder' => 'Controller Layout Directory eg. dirname(dirname(__DIR__))',
     'invoice.generator.controller.layout.directory.dot.path' => 'Controller Layout Directory Dot Path eg. \'/views/layout/invoice.php\' that appears just after controller construct (exclude the apostrophe\'s) and is appended to the above src directory location.',
     'invoice.generator.controller.layout.directory.dot.path.placeholder' => 'Controller Layout Directory Dot Path',
-    'invoice.generator.file.type.not.found' =>  'File type not found.',
+    'invoice.generator.file.type.not.found' => 'File type not found.',
     'invoice.generator.flash.include' => 'Include Flash Message in Add/Edit/View/Delete function in Controller',
     'invoice.generator.created.at.include' => 'Include created_at field in Entity',
     'invoice.generator.modified.at.include' => 'Include modified_at field in Entity',
@@ -327,7 +327,7 @@ $lang =  [
     'invoice.invoice.item.lookup' => 'Item Lookup',
     'invoice.invoice.item.add' => 'Invoice Item Add',
     'invoice.invoice.invoiceplane' => 'InvoicePlane',
-    'invoice.invoice.invoiceplane.tables' => 'Import InvoicePlane Tables Client, Product, Unit, Family, TaxRate into blank tables.' ."\n".
+    'invoice.invoice.invoiceplane.tables' => 'Import InvoicePlane Tables Client, Product, Unit, Family, TaxRate into blank tables.' . "\n" .
                                              'There should be no existing data in these tables prior to importing and no existing documents e.g. Invoices.',
     'invoice.invoice.invoiceplane.database.name' => 'Database Name',
     'invoice.invoice.invoiceplane.import' => 'Test Connection',
@@ -561,7 +561,7 @@ $lang =  [
     'invoice.product.form.tab.required' => 'Required Fields',
     'invoice.product.form.tab.not.required' => 'Not Required Fields',
     'invoice.product.found' => 'Product found',
-    'invoice.product.history' =>  'Cannot delete. This product is on an invoice or quote.',
+    'invoice.product.history' => 'Cannot delete. This product is on an invoice or quote.',
     'invoice.product.id' => 'Product Id',
     'invoice.product.image' => 'Image',
     'invoice.product.item.classification.code.scheme.id.not.found' => 'Product Item Classification Code Scheme Id not found',
@@ -598,7 +598,7 @@ $lang =  [
     'invoice.productimage.uploaded.to' => 'The image has been uploaded to the following directory: ',
     'invoice.productimage.deleted.from' => 'The image has been successfully deleted from the following directory: ',
     'invoice.productimage.view' => 'Multiple images relating to the product can be added under Product View',
-    'invoice.profile.new' => 'Create a profile with a new email address, or mobile number, make it active, '.
+    'invoice.profile.new' => 'Create a profile with a new email address, or mobile number, make it active, ' .
                              'and select the company details you wish to link it to. This information will automatically appear on the documentation eg. quotes and invoices.',
     'invoice.profile.deleted' => 'Profile has been deleted',
     'invoice.profile.not.deleted' => 'Profile has not been deleted',
@@ -718,7 +718,7 @@ $lang =  [
     'invoice.storecove.not.available' => 'Not Available',
     'invoice.storecove.purchase.order.item.id.null' => 'po-item-id-null',
     'invoice.storecove.receiver.identifier' => 'Receiver Identifier - see StoreCove 6.3',
-    'invoice.storecove.region.country.legal.tax' => "Region ---------- Country --------- Legal --------- Tax",
+    'invoice.storecove.region.country.legal.tax' => 'Region ---------- Country --------- Legal --------- Tax',
     'invoice.storecove.salesorder.number.not.exist' => 'Sales Order Number does not exist',
     'invoice.storecove.sender.identifier' => '6.2 Sender Identifier',
     'invoice.storecove.sender.identifier.basis' => '6.2 Sender Identifier Basis - Legal or Tax',

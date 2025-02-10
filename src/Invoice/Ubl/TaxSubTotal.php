@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Invoice\Ubl;
 
-class TaxSubtotal
+class TaxSubTotal
 {
     private float $taxableAmounts = 0.00;
     private float $taxAmount = 0.00;
@@ -49,78 +49,75 @@ class TaxSubtotal
     public function build_pre_serialized_array(): array
     {
         $this->load_values_from_array();
-        $return_array = [
-          'name' => Schema::CAC . 'TaxSubtotal',
-          'value' => [
+        return [
+            'name' => Schema::CAC . 'TaxSubtotal',
+            'value' => [
                 [
-                  'name' => Schema::CBC . 'TaxableAmount',
-                  'value' => number_format($this->taxableAmounts ?: 0.00, 2, '.', ''),
-                  'attributes' => [
-                      'currencyID' => $this->documentCurrency
-                  ]
-                 ],
-                 [
-                   'name' => Schema::CBC . 'TaxAmount',
-                   'value' => number_format($this->taxAmount ?: 0.00, 2, '.', ''),
-                   'attributes' => [
-                        'currencyID' => $this->documentCurrency
-                   ]
-                  ],
-                  [
+                    'name' => Schema::CBC . 'TaxableAmount',
+                    'value' => number_format($this->taxableAmounts ?: 0.00, 2, '.', ''),
+                    'attributes' => [
+                        'currencyID' => $this->documentCurrency,
+                    ],
+                ],
+                [
+                    'name' => Schema::CBC . 'TaxAmount',
+                    'value' => number_format($this->taxAmount ?: 0.00, 2, '.', ''),
+                    'attributes' => [
+                        'currencyID' => $this->documentCurrency,
+                    ],
+                ],
+                [
                     'name' => Schema::CAC . 'TaxCategory',
                     'value' => [
-                      [
-                         'name' => Schema::CBC . 'ID',
-                         'value' => $this->taxCategory
-                      ],
-                      [
-                         'name' => Schema::CBC . 'Percent',
-                         'value' => $this->taxCategoryPercent
-                      ],
-                      // https://docs.peppol.eu/poacc/billing/3.0/syntax/ubl-invoice/cac-TaxTotal/cac-TaxSubtotal/cac-TaxCategory/cbc-TaxExemptionReasonCode/
-                      $this->cbcTaxExemptionReasonCode($this->taxCategory),
-                      $this->cbcTaxExemptionReason($this->taxCategory),
-                      [
-                         'name' => Schema::CAC .  'TaxScheme',
-                         'value' => [
-                            [
-                              'name' => Schema::CBC . 'ID',
-                              'value' => 'VAT'
-                            ]
-                         ]
-                      ]
-                    ]
-                  ],
-                ]
-              ];
-        return $return_array;
+                        [
+                            'name' => Schema::CBC . 'ID',
+                            'value' => $this->taxCategory,
+                        ],
+                        [
+                            'name' => Schema::CBC . 'Percent',
+                            'value' => $this->taxCategoryPercent,
+                        ],
+                        // https://docs.peppol.eu/poacc/billing/3.0/syntax/ubl-invoice/cac-TaxTotal/cac-TaxSubtotal/cac-TaxCategory/cbc-TaxExemptionReasonCode/
+                        $this->cbcTaxExemptionReasonCode($this->taxCategory),
+                        $this->cbcTaxExemptionReason($this->taxCategory),
+                        [
+                            'name' => Schema::CAC . 'TaxScheme',
+                            'value' => [
+                                [
+                                    'name' => Schema::CBC . 'ID',
+                                    'value' => 'VAT',
+                                ],
+                            ],
+                        ],
+                    ],
+                ],
+            ],
+        ];
     }
 
     private function cbcTaxExemptionReasonCode(string $status_code): array
     {
-        $array = match($status_code) {
+        return match ($status_code) {
             // Exempt from tax
             'E' => [
-               'name' => Schema::CBC . 'TaxExemptionReasonCode',
-               'value' => 'E',
-               'attributes' => []
+                'name' => Schema::CBC . 'TaxExemptionReasonCode',
+                'value' => 'E',
+                'attributes' => [],
             ],
             default => [],
         };
-        return $array;
     }
 
     private function cbcTaxExemptionReason(string $status_code): array
     {
-        $array = match($status_code) {
+        return match ($status_code) {
             // Exempt from tax
             'E' => [
-               'name' => Schema::CBC . 'TaxExemptionReason',
-               'value' => 'Exempt',
-               'attributes' => []
+                'name' => Schema::CBC . 'TaxExemptionReason',
+                'value' => 'Exempt',
+                'attributes' => [],
             ],
             default => [],
         };
-        return $array;
     }
 }

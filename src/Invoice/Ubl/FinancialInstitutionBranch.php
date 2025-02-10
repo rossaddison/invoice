@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Invoice\Ubl;
 
 use Sabre\Xml\Writer;
@@ -17,7 +19,7 @@ class FinancialInstitutionBranch implements XmlSerializable
     public function xmlSerialize(Writer $writer): void
     {
         $writer->write([
-            Schema::CBC . 'ID' => $this->id
+            Schema::CBC . 'ID' => $this->id,
         ]);
     }
 }

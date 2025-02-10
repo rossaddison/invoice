@@ -17,7 +17,7 @@ use Yiisoft\Router\UrlGeneratorInterface;
  * @var array $params
  * @var array $params['yiisoft/router-fastroute']
  * @var bool $params['yiisoft/router-fastroute']['encodeRaw']
- * @var array $defaultArguments 
+ * @var array $defaultArguments
  * @psalm-suppress MixedArgument $routes
  */
 
@@ -30,13 +30,13 @@ return [
             $defaultArguments = ['_language', 'en'];
         },
     ],
-    
+
     RouteCollectionInterface::class => static function (RouteCollectorInterface $collector) use ($config) {
         $routes = $config->get('routes');
         $collector
             ->middleware(CsrfTokenMiddleware::class)
             ->middleware(FormatDataResponse::class)
-            ->addGroup(                
+            ->addGroup(
                 Group::create('/{_language}')
                     ->routes(...$routes)
             );

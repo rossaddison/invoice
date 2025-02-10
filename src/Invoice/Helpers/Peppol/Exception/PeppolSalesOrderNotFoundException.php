@@ -30,5 +30,4 @@ class PeppolSalesOrderNotFoundException extends \RuntimeException implements Fri
                 Please try again
             SOLUTION;
     }
-
 }

@@ -25,9 +25,7 @@ class Country implements XmlSerializable
     }
 
     /**
-     *
      * @param Writer $writer
-     * @return void
      */
     public function xmlSerialize(Writer $writer): void
     {
@@ -51,5 +49,4 @@ class Country implements XmlSerializable
             //'attributes' => $attributes
         ]);
     }
-
 }

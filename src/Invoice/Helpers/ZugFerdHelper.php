@@ -18,6 +18,7 @@ class ZugFerdHelper
     private SRepo $s;
     private IIAR $iiaR;
     private InvAmount $inv_amount;
+
     /**
      * @param SRepo $s
      * @param IIAR $iiaR
@@ -26,11 +27,11 @@ class ZugFerdHelper
     public function __construct(SRepo $s, IIAR $iiaR, InvAmount $inv_amount)
     {
         $this->s = $s;
-        $this->iiaR =  $iiaR;
+        $this->iiaR = $iiaR;
         $this->inv_amount = $inv_amount;
     }
+
     /**
-     *
      * @param SRepo $sR
      * @return Aliases
      */
@@ -44,7 +45,7 @@ class ZugFerdHelper
             FileHelper::ensureDirectory($folder, 0775);
         }
         // Invoice/Uploads/Temp/Zugferd
-        $temp_zugferd_folder = $aliases->get('@Uploads').$this->s::getTempZugferdfolderRelativeUrl();
+        $temp_zugferd_folder = $aliases->get('@Uploads') . $this->s::getTempZugferdfolderRelativeUrl();
         if (!is_dir($temp_zugferd_folder)) {
             FileHelper::ensureDirectory($temp_zugferd_folder, 0775);
         }
@@ -60,11 +61,11 @@ class ZugFerdHelper
     public function generate_invoice_zugferd_xml_temp_file(Inv $invoice, IIAR $iiaR, InvAmount $inv_amount): string
     {
         $this->ensure_temp_zugferd_folder_and_uploads_folder_exist();
-        $path = dirname(__DIR__).DIRECTORY_SEPARATOR.'Uploads'
-                                .DIRECTORY_SEPARATOR.'Temp'
-                                .DIRECTORY_SEPARATOR.'Zugferd'
-                                .DIRECTORY_SEPARATOR. 'invoice_' .  Random::string(8)
-                                . ($invoice->getNumber() ?? '_search_null_invoice_id_'). '_zugferd.xml';
+        $path = dirname(__DIR__) . DIRECTORY_SEPARATOR . 'Uploads'
+                                . DIRECTORY_SEPARATOR . 'Temp'
+                                . DIRECTORY_SEPARATOR . 'Zugferd'
+                                . DIRECTORY_SEPARATOR . 'invoice_' . Random::string(8)
+                                . ($invoice->getNumber() ?? '_search_null_invoice_id_') . '_zugferd.xml';
         // Generate inv items from Entity Inv->getItems() HasMany function
         // Generate inv item amounts from $iiaR
         $z = new ZugferdXml($this->s, $invoice, $iiaR, $inv_amount);

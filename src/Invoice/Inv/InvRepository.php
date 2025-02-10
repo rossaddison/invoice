@@ -51,7 +51,7 @@ final class InvRepository extends Select\Repository
         $select = $this->select();
         $query = $select
                  ->load('invAmount')
-                 ->where('invAmount.total', 'like', $invAmountTotal.'%');
+                 ->where('invAmount.total', 'like', $invAmountTotal . '%');
         return $this->prepareDataReader($query);
     }
 
@@ -66,20 +66,18 @@ final class InvRepository extends Select\Repository
     }
 
     /**
-     *
      * @param int $status_id
      * @return EntityReader
      */
     public function findAllWithStatus(int $status_id): EntityReader
     {
-        if (($status_id) > 0) {
+        if ($status_id > 0) {
             $query = $this->select()
                     ->load(['client','group','user'])
                     ->where(['status_id' => $status_id]);
             return $this->prepareDataReader($query);
-        } else {
-            return $this->findAllPreloaded();
         }
+        return $this->findAllPreloaded();
     }
 
     public function filterClient(string $client_full_name): EntityReader
@@ -105,14 +103,13 @@ final class InvRepository extends Select\Repository
         $query = $select->where(
             'date_created',
             'like',
-            ($dateTimeImmutable instanceof \DateTimeImmutable ?
-                                $dateTimeImmutable->format('Y-m').'%' : '')
+            $dateTimeImmutable instanceof \DateTimeImmutable ?
+                                $dateTimeImmutable->format('Y-m') . '%' : ''
         );
         return $this->prepareDataReader($query);
     }
 
     /**
-     *
      * @param int $client_id
      * @return EntityReader
      */
@@ -186,7 +183,6 @@ final class InvRepository extends Select\Repository
     }
 
     /**
-     *
      * @param Select $query
      * @return EntityReader
      */
@@ -199,31 +195,26 @@ final class InvRepository extends Select\Repository
     }
 
     /**
-     *
      * @param string $id
      * @return int
      */
     public function repoCount(string $id): int
     {
-        $count = $this->select()
+        return $this->select()
                 ->where(['id' => $id])
                 ->count();
-        return $count;
     }
 
     /**
-     *
      * @return int
      */
     public function repoCountAll(): int
     {
-        $count = $this->select()
+        return $this->select()
                       ->count();
-        return $count;
     }
 
     /**
-     *
      * @param int $invoice_id
      * @param int $status_id
      * @return Inv|null
@@ -237,7 +228,6 @@ final class InvRepository extends Select\Repository
     }
 
     /**
-     *
      * @param string $id
      * @return Inv|null
      */
@@ -257,7 +247,6 @@ final class InvRepository extends Select\Repository
     }
 
     /**
-     *
      * @param string $id
      * @return Inv|null
      */
@@ -284,17 +273,15 @@ final class InvRepository extends Select\Repository
     }
 
     /**
-     *
      * @param string $url_key
      * @return int
      */
     public function repoUrl_key_guest_count(string $url_key): int
     {
-        $count = $this->select()
+        return $this->select()
                       ->where(['url_key' => $url_key])
                       ->andWhere(['status_id' => ['in' => new Parameter([2,3,4,5,6,7,8,9,10,11,12,13])]])
                       ->count();
-        return  $count;
     }
 
     /**
@@ -302,12 +289,11 @@ final class InvRepository extends Select\Repository
      */
     public function repoClient_guest_count(int $inv_id, array $user_client = []): Select
     {
-        $count = $this->select()
+        return $this->select()
                       ->where(['id' => $inv_id])
                       // sent = 2, viewed = 3, paid = 4
                       ->andWhere(['status_id' => ['in' => new Parameter([2,3,4,5,6,7,8,9,10,11,12,13])]])
                       ->andWhere(['client_id' => ['in' => new Parameter($user_client)]]);
-        return  $count;
     }
 
     /**
@@ -326,12 +312,11 @@ final class InvRepository extends Select\Repository
                     ->where(['client_id' => ['in' => new Parameter($user_client)]])
                     ->andWhere(['status_id' => ['in' => new Parameter([2,3,4,5,6,7,8,9,10,11,12,13])]]);
             return $this->prepareDataReader($query);
-        } else { // Get all the invoices
-            $query = $this->select()
-                         ->where(['client_id' => ['in' => new Parameter($user_client)]])
-                         ->andWhere(['status_id' => ['in' => new Parameter([2,3,4,5,6,7,8,9,10,11,12,13])]]);
-            return $this->prepareDataReader($query);
-        }
+        }   // Get all the invoices
+        $query = $this->select()
+                     ->where(['client_id' => ['in' => new Parameter($user_client)]])
+                     ->andWhere(['status_id' => ['in' => new Parameter([2,3,4,5,6,7,8,9,10,11,12,13])]]);
+        return $this->prepareDataReader($query);
     }
 
     /**
@@ -349,10 +334,9 @@ final class InvRepository extends Select\Repository
     {
         // 1 draft, 2 sent, 3 viewed, 4 paid
         // 2,3 => There is still a balance available => Not paid
-        $count = $this->select()
+        return $this->select()
                       ->where(['status_id' => ['in' => new Parameter([2,3])]])
                       ->count();
-        return $count;
     }
 
     /**
@@ -422,7 +406,6 @@ final class InvRepository extends Select\Repository
     }
 
     /**
-     *
      * @param int $client_id
      * @return EntityReader
      */
@@ -448,18 +431,16 @@ final class InvRepository extends Select\Repository
     }
 
     /**
-     *
      * @param int $client_id
      * @param int $status_id
      * @return int
      */
     public function by_client_inv_status_count(int $client_id, int $status_id): int
     {
-        $count = $this->select()
+        return $this->select()
                       ->where(['client_id' => $client_id])
                       ->andWhere(['status_id' => $status_id])
                       ->count();
-        return $count;
     }
 
     /**
@@ -468,96 +449,95 @@ final class InvRepository extends Select\Repository
      */
     public function getStatuses(Translator $translator): array
     {
-        return array(
-            '0' => array(
+        return [
+            '0' => [
                 'label' => $translator->translate('i.all'),
                 'class' => 'default',
                 'href' => 0,
-                'emoji' => '🌎 '
-            ),
-            '1' => array(
+                'emoji' => '🌎 ',
+            ],
+            '1' => [
                 'label' => $translator->translate('i.draft'),
                 'class' => 'default',
                 'href' => 1,
-                'emoji' => '🗋 '
-            ),
-            '2' => array(
+                'emoji' => '🗋 ',
+            ],
+            '2' => [
                 'label' => $translator->translate('i.sent'),
                 'class' => 'info',
                 'href' => 2,
-                'emoji' => '📨 '
-            ),
-            '3' => array(
+                'emoji' => '📨 ',
+            ],
+            '3' => [
                 'label' => $translator->translate('i.viewed'),
                 'class' => 'info',
                 'href' => 3,
-                'emoji' => '👀 '
-            ),
-            '4' => array(
+                'emoji' => '👀 ',
+            ],
+            '4' => [
                 'label' => $translator->translate('i.paid'),
                 'class' => 'success',
                 'href' => 4,
-                'emoji' => '😀 '
-            ),
-            '5' => array(
+                'emoji' => '😀 ',
+            ],
+            '5' => [
                 'label' => $translator->translate('i.overdue'),
                 'class' => 'warning',
                 'href' => 5,
-                'emoji' => '🏦 '
-            ),
-            '6' => array(
+                'emoji' => '🏦 ',
+            ],
+            '6' => [
                 'label' => $translator->translate('i.unpaid'),
                 'class' => 'danger',
                 'href' => 6,
-                'emoji' => '💸 '
-            ),
-            '7' => array(
+                'emoji' => '💸 ',
+            ],
+            '7' => [
                 'label' => $translator->translate('i.reminder'),
                 'class' => 'info',
                 'href' => 7,
-                'emoji' => '🔔 '
-            ),
-            '8' => array(
+                'emoji' => '🔔 ',
+            ],
+            '8' => [
                 'label' => $translator->translate('i.letter'),
                 'class' => 'danger',
                 'href' => 8,
-                'emoji' => '🗎 '
-            ),
-            '9' => array(
+                'emoji' => '🗎 ',
+            ],
+            '9' => [
                 'label' => $translator->translate('i.claim'),
                 'class' => 'info',
                 'href' => 9,
-                'emoji' => '🛄 '
-            ),
-            '10' => array(
+                'emoji' => '🛄 ',
+            ],
+            '10' => [
                 'label' => $translator->translate('i.judgement'),
                 'class' => 'success',
                 'href' => 10,
-                'emoji' => '🙌 '
-            ),
-            '11' => array(
+                'emoji' => '🙌 ',
+            ],
+            '11' => [
                 'label' => $translator->translate('i.enforcement'),
                 'class' => 'primary',
                 'href' => 11,
-                'emoji' => '👮 '
-            ),
-            '12' => array(
+                'emoji' => '👮 ',
+            ],
+            '12' => [
                 'label' => $translator->translate('i.credit_invoice_for_invoice'),
                 'class' => 'default',
                 'href' => 12,
-                'emoji' => '🛑️ '
-            ),
-            '13' => array(
+                'emoji' => '🛑️ ',
+            ],
+            '13' => [
                 'label' => $translator->translate('i.loss'),
                 'class' => 'danger',
                 'href' => 13,
-                'emoji' => '❎ '
-            ),
-        );
+                'emoji' => '❎ ',
+            ],
+        ];
     }
 
     /**
-     *
      * @param string $key
      * @return string
      */
@@ -572,7 +552,6 @@ final class InvRepository extends Select\Repository
     }
 
     /**
-     *
      * @param int $status
      * @return string
      */
@@ -633,7 +612,6 @@ final class InvRepository extends Select\Repository
     // total = item_subtotal + item_tax_total + tax_total
     // total => sales including item tax and tax
     /**
-     *
      * @param int $client_id
      * @param IAR $iaR
      * @return float
@@ -654,7 +632,6 @@ final class InvRepository extends Select\Repository
 
     // sales without item tax and tax => item_subtotal
     /**
-     *
      * @param int $client_id
      * @param IAR $iaR
      * @return float
@@ -678,7 +655,6 @@ final class InvRepository extends Select\Repository
     // total = item_subtotal + item_tax_total + tax_total
     // total => sales including item tax and tax
     /**
-     *
      * @param int $client_id
      * @param string $from
      * @param string $to
@@ -703,7 +679,6 @@ final class InvRepository extends Select\Repository
 
     // sales without item tax and tax => item_subtotal
     /**
-     *
      * @param int $client_id
      * @param string $from
      * @param string $to
@@ -728,7 +703,6 @@ final class InvRepository extends Select\Repository
 
     // First tax: Item tax total
     /**
-     *
      * @param int $client_id
      * @param string $from
      * @param string $to
@@ -767,7 +741,6 @@ final class InvRepository extends Select\Repository
     }
 
     /**
-     *
      * @param int $client_id
      * @param string $from
      * @param string $to
@@ -789,7 +762,6 @@ final class InvRepository extends Select\Repository
     }
 
     /**
-     *
      * @param int $client_id
      * @param IAR $iaR
      * @return float
@@ -828,7 +800,6 @@ final class InvRepository extends Select\Repository
     }
 
     /**
-     *
      * @param int $client_id
      * @param IAR $iaR
      * @return float
@@ -848,20 +819,17 @@ final class InvRepository extends Select\Repository
     }
 
     /**
-     *
      * @param int|null $client_id
      * @return int
      */
     public function repoCountByClient(int|null $client_id): int
     {
-        $count = $this->select()
+        return $this->select()
                       ->where(['client_id' => $client_id])
                       ->count();
-        return $count;
     }
 
     /**
-     *
      * @param int $client_id
      * @param string $from_date
      * @param string $to_date
@@ -869,17 +837,15 @@ final class InvRepository extends Select\Repository
      */
     public function repoCountClientLoadedFromToDate(int $client_id, string $from_date, string $to_date): int
     {
-        $count = $this->select()
+        return $this->select()
                       ->load('client')
                       ->where(['client_id' => $client_id])
                       ->andWhere('date_created', '>=', $from_date)
                       ->andWhere('date_created', '<=', $to_date)
                       ->count();
-        return $count;
     }
 
     /**
-     *
      * @param int $client_id
      * @param string $from_date
      * @param string $to_date
@@ -896,7 +862,6 @@ final class InvRepository extends Select\Repository
     }
 
     /**
-     *
      * @param int|null $client_id
      * @return EntityReader
      */
@@ -913,14 +878,12 @@ final class InvRepository extends Select\Repository
      */
     public function repoCountByProduct(int|null $product_id): int
     {
-        $count = $this->select()
+        return $this->select()
                       ->distinct()
                       ->with('items')
                       ->where('items.product_id', $product_id)
                       ->count();
-        return $count;
     }
-
 
     /**
      * @param int $product_id
@@ -1042,14 +1005,12 @@ final class InvRepository extends Select\Repository
      */
     public function repoCountByTask(int|null $task_id): int
     {
-        $count = $this->select()
+        return $this->select()
                       ->distinct()
                       ->with('items')
                       ->where('items.task_id', $task_id)
                       ->count();
-        return $count;
     }
-
 
     /**
      * @param int $task_id

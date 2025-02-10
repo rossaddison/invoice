@@ -22,7 +22,6 @@ final class ProductImageService
     /**
      * @param ProductImage $model
      * @param array $array
-     * @return void
      */
     public function saveProductImage(ProductImage $model, array $array): void
     {
@@ -45,7 +44,6 @@ final class ProductImageService
     /**
      * @param ProductImage $model
      * @param SettingRepository $sR
-     * @return void
      */
     public function deleteProductImage(ProductImage $model, SettingRepository $sR): void
     {
@@ -55,9 +53,9 @@ final class ProductImageService
         // see vendor/yiisoft/files/src/FileHelper::unlink will delete the file
         $realTargetPath = realpath($targetPath);
         $realFilePath = realpath($file_path);
-        if (($realTargetPath <> false) && ($realFilePath <> false)) {
+        if (($realTargetPath != false) && ($realFilePath != false)) {
             strpos($realTargetPath, $realFilePath) == 0 ? FileHelper::unlink($file_path) : '';
             $this->repository->delete($model);
-        }    
+        }
     }
 }

@@ -29,7 +29,6 @@ class AdditionalDocumentReference implements XmlSerializable
     }
 
     /**
-     * @return void
      * @throws InvalidArgumentException
      */
     public function validate(): void
@@ -40,9 +39,7 @@ class AdditionalDocumentReference implements XmlSerializable
     }
 
     /**
-     *
      * @param Writer $writer
-     * @return void
      */
     public function xmlSerialize(Writer $writer): void
     {
@@ -50,12 +47,12 @@ class AdditionalDocumentReference implements XmlSerializable
         $writer->write([Schema::CBC . 'ID' => $this->id]);
         if ($this->documentType !== null && $this->ubl_cr_114 === false) {
             $writer->write([
-              Schema::CBC . 'DocumentType' => $this->documentType
+                Schema::CBC . 'DocumentType' => $this->documentType,
             ]);
         }
         if ($this->documentDescription !== null) {
             $writer->write([
-              Schema::CBC . 'DocumentDescription' => $this->documentDescription
+                Schema::CBC . 'DocumentDescription' => $this->documentDescription,
             ]);
         }
         /**

@@ -45,7 +45,7 @@ use Yiisoft\Yii\View\Renderer\ViewRenderer;
 final class SignupController
 {
     use Oauth2;
-    
+
     public const string EMAIL_VERIFICATION_TOKEN = 'email-verification';
     private Assignment $assignment;
     private ItemStorage $itemstorage;
@@ -60,23 +60,22 @@ final class SignupController
         ItemStorage $itemstorage,
         Rule $rule,
         private WebControllerService $webService,
-        private SessionInterface $session,        
+        private SessionInterface $session,
         private ViewRenderer $viewRenderer,
         private MailerInterface $mailer,
-            
-        private sR $sR, 
+        private sR $sR,
         private Facebook $facebook,
         private GitHub $github,
-        private Google $google, 
+        private Google $google,
         private LinkedIn $linkedIn,
         private MicrosoftOnline $microsoftOnline,
-        private VKontakte $vkontakte,    
+        private VKontakte $vkontakte,
         private X $x,
-        private Yandex $yandex,    
+        private Yandex $yandex,
         private Translator $translator,
         private UrlGenerator $urlGenerator,
         private CurrentRoute $currentRoute,
-        private LoggerInterface $logger       
+        private LoggerInterface $logger
     ) {
         $this->assignment = $assignment;
         $this->itemstorage = $itemstorage;
@@ -97,14 +96,14 @@ final class SignupController
         $this->x = $x;
         $this->yandex = $yandex;
         $this->initializeOauth2IdentityProviderCredentials(
-            $facebook, 
-            $github, 
-            $google, 
-            $linkedIn, 
+            $facebook,
+            $github,
+            $google,
+            $linkedIn,
             $microsoftOnline,
-            $vkontakte,    
+            $vkontakte,
             $x,
-            $yandex    
+            $yandex
         );
         $this->translator = $translator;
         $this->urlGenerator = $urlGenerator;
@@ -179,14 +178,14 @@ final class SignupController
                             'X-Origin' => ['0', '1'],
                             'X-Pass' => 'pass',
                         ],
-                        subject: $login. ': <'.$to.'>',
+                        subject: $login . ': <' . $to . '>',
                         date: new \DateTimeImmutable('now'),
                         from: [$this->sR->getConfigAdminEmail() => $this->translator->translate('i.administrator')],
                         to: $to,
                         htmlBody: $htmlBody
                     );
                     $email->withAddedHeader('Message-ID', $this->sR->getConfigAdminEmail());
-                                        
+
                     try {
                         $this->mailer->send($email);
                     } catch (\Exception $e) {
@@ -202,56 +201,62 @@ final class SignupController
         $noFacebookContinueButton = $this->sR->getSetting('no_facebook_continue_button') == '1' ? true : false;
         $noLinkedInContinueButton = $this->sR->getSetting('no_linkedin_continue_button') == '1' ? true : false;
         $noMicrosoftOnlineContinueButton = $this->sR->getSetting('no_microsoftonline_continue_button') == '1' ? true : false;
-        
+
         $noVKontakteContinueButton = $this->sR->getSetting('no_vkontakte_continue_button') == '1' ? true : false;
-        
+
         $codeVerifier = Random::string(128);
-        
+
         $codeChallenge = strtr(rtrim(base64_encode(hash('sha256', $codeVerifier, true)), '='), '+/', '-_');
-        
+
         $noXContinueButton = $this->sR->getSetting('no_x_continue_button') == '1' ? true : false;
         $noYandexContinueButton = $this->sR->getSetting('no_yandex_continue_button') == '1' ? true : false;
-        
+
         $this->session->set('code_verifier', $codeVerifier);
         return $this->viewRenderer->render('signup', [
             'formModel' => $signupForm,
             'facebookAuthUrl' => strlen($this->facebook->getClientId()) > 0 ? $this->facebook->buildAuthUrl($request, $params = []) : '',
-            'githubAuthUrl' => strlen($this->github->getClientId()) > 0 ? $this->github->buildAuthUrl($request, $params = []) : '',   
+            'githubAuthUrl' => strlen($this->github->getClientId()) > 0 ? $this->github->buildAuthUrl($request, $params = []) : '',
             'googleAuthUrl' => strlen($this->google->getClientId()) > 0 ? $this->google->buildAuthUrl($request, $params = []) : '',
             'linkedInAuthUrl' => strlen($this->linkedIn->getClientId()) > 0 ? $this->linkedIn->buildAuthUrl($request, $params = []) : '',
             'microsoftOnlineAuthUrl' => strlen($this->microsoftOnline->getClientId()) > 0 ? $this->microsoftOnline->buildAuthUrl($request, $params = []) : '',
-            'vkontakteAuthUrl' => strlen($this->vkontakte->getClientId()) > 0 ? $this->vkontakte->buildAuthUrl($request, 
+            'vkontakteAuthUrl' => strlen($this->vkontakte->getClientId()) > 0 ? $this->vkontakte->buildAuthUrl(
+                $request,
                 $params = [
-                    'code_challenge' => $codeChallenge, 
-                    'code_challenge_method' => 'S256'
-                ]) : '',
+                    'code_challenge' => $codeChallenge,
+                    'code_challenge_method' => 'S256',
+                ]
+            ) : '',
             /**
              * PKCE: An extension to the authorization code flow to prevent several attacks and to be able
-             * to perform the OAuth exchange from public clients securely using two parameters code_challenge and 
-             * code_challenge_method. 
+             * to perform the OAuth exchange from public clients securely using two parameters code_challenge and
+             * code_challenge_method.
              * @link https://developer.x.com/en/docs/authentication/oauth-2-0/user-access-token
              */
-            'xAuthUrl' => strlen($this->x->getClientId()) > 0 ? $this->x->buildAuthUrl($request, 
+            'xAuthUrl' => strlen($this->x->getClientId()) > 0 ? $this->x->buildAuthUrl(
+                $request,
                 $params = [
-                    'code_challenge' => $codeChallenge, 
-                    'code_challenge_method' => 'S256'
-                ]) : '',
-            'yandexAuthUrl' => strlen($this->yandex->getClientId()) > 0 ? $this->yandex->buildAuthUrl($request, 
+                    'code_challenge' => $codeChallenge,
+                    'code_challenge_method' => 'S256',
+                ]
+            ) : '',
+            'yandexAuthUrl' => strlen($this->yandex->getClientId()) > 0 ? $this->yandex->buildAuthUrl(
+                $request,
                 $params = [
-                    'code_challenge' => $codeChallenge, 
-                    'code_challenge_method' => 'S256'
-                ]) : '',
-            'noFacebookContinueButton' => $noFacebookContinueButton,            
+                    'code_challenge' => $codeChallenge,
+                    'code_challenge_method' => 'S256',
+                ]
+            ) : '',
+            'noFacebookContinueButton' => $noFacebookContinueButton,
             'noGithubContinueButton' => $noGithubContinueButton,
             'noGoogleContinueButton' => $noGoogleContinueButton,
             'noLinkedInContinueButton' => $noLinkedInContinueButton,
             'noMicrosoftOnlineContinueButton' => $noMicrosoftOnlineContinueButton,
             'noVKontakteContinueButton' => $noVKontakteContinueButton,
             'noXContinueButton' => $noXContinueButton,
-            'noYandexContinueButton' => $noYandexContinueButton
+            'noYandexContinueButton' => $noYandexContinueButton,
         ]);
-    }  
-    
+    }
+
     /**
      * @param User $user
      * @param uiR $uiR
@@ -281,14 +286,13 @@ final class SignupController
                            ['_language' => $_language, 'language' => $language, 'token' => $tokenWithMask, 'tokenType' => 'email']
                        ))
                        ->content($this->translator->translate('invoice.invoice.email.link.click.confirm'));
-            $htmlBody = Body::tag()
+            return Body::tag()
                        ->content($content)
                        ->render();
-            return $htmlBody;
         }
         return '';
-    }    
-    
+    }
+
     /**
      * @param User $user
      * @param tR $tR
@@ -302,8 +306,8 @@ final class SignupController
         // store the token amongst all the other types of tokens e.g. password_reset_token, email_verification_token etc
         $tR->save($token);
         $tokenString = $token->getToken();
-        $timeString = (string)($token->getCreated_at())->getTimestamp();
+        $timeString = (string)$token->getCreated_at()->getTimestamp();
         // build the token
-        return $emailVerificationToken = null !== $tokenString ? ($tokenString. '_' . $timeString) : '';
-    }    
+        return $emailVerificationToken = null !== $tokenString ? ($tokenString . '_' . $timeString) : '';
+    }
 }

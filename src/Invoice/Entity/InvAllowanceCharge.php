@@ -7,8 +7,6 @@ namespace App\Invoice\Entity;
 use Cycle\Annotated\Annotation\Column;
 use Cycle\Annotated\Annotation\Entity;
 use Cycle\Annotated\Annotation\Relation\BelongsTo;
-use App\Invoice\Entity\AllowanceCharge;
-use App\Invoice\Entity\Inv;
 
 #[Entity(repository: \App\Invoice\InvAllowanceCharge\InvAllowanceChargeRepository::class)]
 
@@ -18,19 +16,19 @@ class InvAllowanceCharge
     private ?AllowanceCharge $allowance_charge = null;
 
     #[Column(type:'primary')]
-    private ?int $id =  null;
+    private ?int $id = null;
 
     #[BelongsTo(target:Inv::class, nullable: false, fkAction:'NO ACTION')]
     private ?Inv $inv = null;
 
     #[Column(type:'integer(11)', nullable: false)]
-    private ?int $inv_id =  null;
+    private ?int $inv_id = null;
 
     #[Column(type:'integer(11)', nullable: false)]
-    private ?int $allowance_charge_id =  null;
+    private ?int $allowance_charge_id = null;
 
     #[Column(type:'decimal(20,2)', nullable: false, default: 0.00)]
-    private ?float $amount =  null;
+    private ?float $amount = null;
 
     #[Column(type: 'decimal(20,2)', nullable: false, default: 0.00)]
     private ?float $vat = 0.00;
@@ -71,7 +69,7 @@ class InvAllowanceCharge
 
     public function setId(int $id): void
     {
-        $this->id =  $id;
+        $this->id = $id;
     }
 
     public function getInv_id(): string
@@ -81,7 +79,7 @@ class InvAllowanceCharge
 
     public function setInv_id(int $inv_id): void
     {
-        $this->inv_id =  $inv_id;
+        $this->inv_id = $inv_id;
     }
 
     public function getAllowance_charge_id(): string
@@ -91,7 +89,7 @@ class InvAllowanceCharge
 
     public function setAllowance_charge_id(int $allowance_charge_id): void
     {
-        $this->allowance_charge_id =  $allowance_charge_id;
+        $this->allowance_charge_id = $allowance_charge_id;
     }
 
     public function getAmount(): string
@@ -116,7 +114,7 @@ class InvAllowanceCharge
 
     public function nullifyRelationOnChange(int $allowance_charge_id): void
     {
-        if ($this->allowance_charge_id <> $allowance_charge_id) {
+        if ($this->allowance_charge_id != $allowance_charge_id) {
             $this->allowance_charge = null;
         }
     }

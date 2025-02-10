@@ -5,8 +5,6 @@ declare(strict_types=1);
 namespace App\Invoice\ClientNote;
 
 use App\Invoice\Entity\ClientNote;
-use App\Invoice\ClientNote\ClientNoteService;
-use App\Invoice\ClientNote\ClientNoteRepository;
 use App\Invoice\Setting\SettingRepository;
 use App\Invoice\Client\ClientRepository;
 use App\Invoice\Helpers\DateHelper;
@@ -27,7 +25,7 @@ use Yiisoft\Yii\View\Renderer\ViewRenderer;
 final class ClientNoteController
 {
     use FlashMessage;
-    
+
     private ViewRenderer $viewRenderer;
     private WebControllerService $webService;
     private UserService $userService;
@@ -100,7 +98,7 @@ final class ClientNoteController
                 if (is_array($body)) {
                     $this->clientnoteService->addClientNote($clientnote, $body);
                     return $this->webService->getRedirectResponse('clientnote/index');
-                }    
+                }
             }
             $parameters['errors'] = $form->getValidationResult()->getErrorMessagesIndexedByProperty();
             $parameters['form'] = $form;
@@ -133,7 +131,7 @@ final class ClientNoteController
                 'actionArguments' => ['id' => $client_note->getId()],
                 'errors' => [],
                 'form' => $form,
-                'clients' => $clientRepository->findAllPreloaded()
+                'clients' => $clientRepository->findAllPreloaded(),
             ];
             if ($request->getMethod() === Method::POST) {
                 $body = $request->getParsedBody() ?? [];
@@ -144,15 +142,14 @@ final class ClientNoteController
                     }
                     $parameters['form'] = $form;
                     $parameters['error'] = $form->getValidationResult()->getErrorMessagesIndexedByProperty();
-                } 
-            }    
+                }
+            }
             return $this->viewRenderer->render('_form', $parameters);
         } //client note
         return $this->webService->getRedirectResponse('clientnote/index');
     }
 
     /**
-     *
      * @param ClientNoteRepository $clientnoteRepository
      * @param CurrentRoute $currentRoute
      * @return Response
@@ -191,9 +188,8 @@ final class ClientNoteController
                 'clients' => $clientRepository->findAllPreloaded(),
             ];
             return $this->viewRenderer->render('_view', $parameters);
-        } else {
-            return $this->webService->getRedirectResponse('clientnote/index');
         }
+        return $this->webService->getRedirectResponse('clientnote/index');
     }
 
     /**
@@ -210,7 +206,6 @@ final class ClientNoteController
     }
 
     /**
-     *
      * @param CurrentRoute $currentRoute
      * @param ClientNoteRepository $clientnoteRepository
      * @return ClientNote|null
@@ -219,8 +214,7 @@ final class ClientNoteController
     {
         $id = $currentRoute->getArgument('id');
         if (null !== $id) {
-            $clientnote = $clientnoteRepository->repoClientNotequery($id);
-            return $clientnote;
+            return $clientnoteRepository->repoClientNotequery($id);
         }
         return null;
     }
@@ -233,8 +227,8 @@ final class ClientNoteController
         return $this->viewRenderer->renderPartialAsString(
             '//invoice/layout/alert',
             [
-        'flash' => $this->flash
-      ]
+                'flash' => $this->flash,
+            ]
         );
     }
 }

@@ -56,9 +56,7 @@ final class InvAmountRepository extends Select\Repository
     }
 
     /**
-     *
      * @param array|InvAmount|null $invamount
-     * @return void
      */
     public function save(array|InvAmount|null $invamount): void
     {
@@ -66,9 +64,7 @@ final class InvAmountRepository extends Select\Repository
     }
 
     /**
-     *
      * @param array|InvAmount|null $invamount
-     * @return void
      */
     public function delete(array|Invamount|null $invamount): void
     {
@@ -76,7 +72,6 @@ final class InvAmountRepository extends Select\Repository
     }
 
     /**
-     *
      * @param Select $query
      * @return EntityReader
      */
@@ -89,22 +84,19 @@ final class InvAmountRepository extends Select\Repository
     }
 
     /**
-     *
      * @param int $inv_id
      * @return int
      */
     public function repoInvAmountCount(int $inv_id): int
     {
-        $count = $this->select()
+        return $this->select()
                       ->where(['inv_id' => $inv_id])
                       ->count();
-        return $count;
     }
 
     /**
-     *
      * @param string $inv_id
-     * @return null|InvAmount
+     * @return InvAmount|null
      */
     public function repoCreditInvoicequery(string $inv_id): null|InvAmount
     {
@@ -116,9 +108,8 @@ final class InvAmountRepository extends Select\Repository
     }
 
     /**
-     *
      * @param int $id
-     * @return null|InvAmount
+     * @return InvAmount|null
      */
     public function repoInvAmountquery(int $id): null|InvAmount
     {
@@ -134,31 +125,29 @@ final class InvAmountRepository extends Select\Repository
      */
     public function AgingCount(int $interval_end, int $interval_start): int
     {
-        $end = (new \DateTimeImmutable('now'))->sub(new \DateInterval('P'.$interval_end.'D'))
+        $end = (new \DateTimeImmutable('now'))->sub(new \DateInterval('P' . $interval_end . 'D'))
                                               ->format('Y-m-d');
-        $start = (new \DateTimeImmutable('now'))->sub(new \DateInterval('P'.$interval_start. 'D'))
+        $start = (new \DateTimeImmutable('now'))->sub(new \DateInterval('P' . $interval_start . 'D'))
                                                 ->format('Y-m-d');
-        $count = $this->select()
+        return $this->select()
                       ->load('inv')
                       ->where('inv.date_due', '<=', $end)
                       ->andWhere('inv.date_due', '>=', $start)
                       ->andWhere('balance', '>', 0)
                       ->count();
-        return $count;
     }
 
     /**
-     *
      * @param int $interval_end
      * @param int $interval_start
      * @return EntityReader
      */
     public function Aging(int $interval_end, int $interval_start): EntityReader
     {
-        $end = (new \DateTimeImmutable('now'))->sub(new \DateInterval('P'.$interval_end.'D'))
+        $end = (new \DateTimeImmutable('now'))->sub(new \DateInterval('P' . $interval_end . 'D'))
                                               ->format('Y-m-d');
 
-        $start = (new \DateTimeImmutable('now'))->sub(new \DateInterval('P'.$interval_start. 'D'))
+        $start = (new \DateTimeImmutable('now'))->sub(new \DateInterval('P' . $interval_start . 'D'))
                                                 ->format('Y-m-d');
         $query = $this->select()
                       ->load('inv')
@@ -169,7 +158,6 @@ final class InvAmountRepository extends Select\Repository
     }
 
     /**
-     *
      * @param int $inv_id
      * @return InvAmount|null
      */
@@ -181,7 +169,6 @@ final class InvAmountRepository extends Select\Repository
     }
 
     /**
-     *
      * @param int $key
      * @param array $range
      * @param SR $sR
@@ -203,7 +190,6 @@ final class InvAmountRepository extends Select\Repository
     }
 
     /**
-     *
      * @param int $key
      * @param array $range
      * @param SR $sR
@@ -216,17 +202,15 @@ final class InvAmountRepository extends Select\Repository
          * @var \DateTimeImmutable $range['lower']
          * @var \DateTimeImmutable $range['upper']
          */
-        $query = $this->select()
+        return $this->select()
                       ->load('inv')
                       ->where(['inv.status_id' => $key])
                       ->andWhere('inv.date_created', '>=', $datehelper->date_from_mysql_without_style($range['lower']))
                       ->andWhere('inv.date_created', '<=', $datehelper->date_from_mysql_without_style($range['upper']))
                       ->count();
-        return $query;
     }
 
     /**
-     *
      * @param IR $iR
      * @param SR $sR
      * @param Translator $translator
@@ -256,7 +240,7 @@ final class InvAmountRepository extends Select\Repository
                 'label' => $status['label'],
                 'href' => (string) $status['href'],
                 'sum_total' => $total,
-                'num_total' => $this->repoStatusTotals_Num_Total((int)$key, $range, $sR)
+                'num_total' => $this->repoStatusTotals_Num_Total((int)$key, $range, $sR),
             ];
         }
         return $return;

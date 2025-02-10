@@ -6,9 +6,6 @@ namespace App\Invoice\PostalAddress;
 
 use App\Invoice\Entity\PostalAddress;
 use App\Invoice\Client\ClientRepository;
-use App\Invoice\PostalAddress\PostalAddressForm;
-use App\Invoice\PostalAddress\PostalAddressService;
-use App\Invoice\PostalAddress\PostalAddressRepository;
 use App\Invoice\Setting\SettingRepository;
 use App\Invoice\Traits\FlashMessage;
 use App\User\UserService;
@@ -31,7 +28,7 @@ use Exception;
 final class PostalAddressController
 {
     use FlashMessage;
-    
+
     private Flash $flash;
     private SessionInterface $session;
     private ViewRenderer $viewRenderer;
@@ -97,10 +94,10 @@ final class PostalAddressController
                 'origin' => $origin,
                 'origin_id' => $origin_id,
                 // origin form action e.g. normally 'add', or 'edit
-                'action' => $action
+                'action' => $action,
             ],
             'errors' => [],
-            'form' => $form
+            'form' => $form,
         ];
 
         if ($request->getMethod() === Method::POST) {
@@ -109,18 +106,17 @@ final class PostalAddressController
                 if (is_array($body)) {
                     $this->postaladdressService->savePostalAddress($postalAddress, $body);
                     $this->flashMessage('success', $this->translator->translate('i.record_successfully_created'));
-                    $url = $origin.'/'.$action;
+                    $url = $origin . '/' . $action;
                     if ($origin_id) {
                         /**
                          * @psalm-suppress MixedArgumentTypeCoercion
                          */
                         return $this->webService->getRedirectResponse($url, [
-                            'id' => $origin_id
+                            'id' => $origin_id,
                         ]);
-                    } else {
-                        return $this->webService->getRedirectResponse($url);
                     }
-                }    
+                    return $this->webService->getRedirectResponse($url);
+                }
             }
             $parameters['errors'] = $form->getValidationResult()->getErrorMessagesIndexedByProperty();
             $parameters['form'] = $form;
@@ -136,8 +132,8 @@ final class PostalAddressController
         return $this->viewRenderer->renderPartialAsString(
             '//invoice/layout/alert',
             [
-          'flash' => $this->flash
-        ]
+                'flash' => $this->flash,
+            ]
         );
     }
 
@@ -166,14 +162,14 @@ final class PostalAddressController
         ->withCurrentPage($currentPageNeverZero)
         ->withToken(PageToken::next($page));
         $parameters = [
-          'canEdit' => ($this->userService->hasPermission('viewInv') && $this->userService->hasPermission('editInv')) ? true : false,
-          'postaladdresses' => $postaladdresses,
-          'alert' => $this->alert(),
-          'paginator' => $paginator,
-          'max' => (int)$settingRepository->getSetting('default_list_limit'),
-          'cR' => $cR,
-          'routeCurrent' => $routeCurrent,
-          'urlFastRouteGenerator' => $urlFastRouteGenerator
+            'canEdit' => ($this->userService->hasPermission('viewInv') && $this->userService->hasPermission('editInv')) ? true : false,
+            'postaladdresses' => $postaladdresses,
+            'alert' => $this->alert(),
+            'paginator' => $paginator,
+            'max' => (int)$settingRepository->getSetting('default_list_limit'),
+            'cR' => $cR,
+            'routeCurrent' => $routeCurrent,
+            'urlFastRouteGenerator' => $urlFastRouteGenerator,
         ];
         return $this->viewRenderer->render('index', $parameters);
     }
@@ -230,10 +226,10 @@ final class PostalAddressController
                 'actionQueryParameters' => [
                     'origin' => $origin,
                     'origin_id' => $origin_id,
-                    'action' => $action
+                    'action' => $action,
                 ],
                 'errors' => [],
-                'form' => $form
+                'form' => $form,
             ];
             if ($request->getMethod() === Method::POST) {
                 if ($formHydrator->populateFromPostAndValidate($form, $request)) {
@@ -241,7 +237,7 @@ final class PostalAddressController
                     if (is_array($body)) {
                         $this->postaladdressService->savePostalAddress($postalAddress, $body);
                         $this->flashMessage('success', $this->translator->translate('i.record_successfully_created'));
-                        $url = $origin.'/'.$action;
+                        $url = $origin . '/' . $action;
                         // Route::methods([Method::GET, Method::POST], '/postaladdress/edit/{client_id}[/{origin}/{origin_id}/{action}]')
                         if ($origin_id) {
                             /**
@@ -249,13 +245,12 @@ final class PostalAddressController
                              * @psalm-suppress MixedArgumentTypeCoercion
                              */
                             return $this->webService->getRedirectResponse($url, [
-                                'id' => $origin_id
+                                'id' => $origin_id,
                             ]);
-                        } else {
-                            // Redirect to inv/index
-                            return $this->webService->getRedirectResponse($url);
                         }
-                    }    
+                        // Redirect to inv/index
+                        return $this->webService->getRedirectResponse($url);
+                    }
                 }
                 $parameters['errors'] = $form->getValidationResult()->getErrorMessagesIndexedByProperty();
                 $parameters['form'] = $form;
@@ -277,8 +272,7 @@ final class PostalAddressController
         $id = $currentRoute->getArgument('id');
         if (null !== $id) {
             /* @var PostalAddress $postaladdress */
-            $postaladdress = $postaladdressRepository->repoPostalAddressLoadedquery($id);
-            return $postaladdress;
+            return $postaladdressRepository->repoPostalAddressLoadedquery($id);
         }
         return null;
     }
@@ -290,14 +284,13 @@ final class PostalAddressController
      */
     private function postaladdresses(PostalAddressRepository $postaladdressRepository): \Yiisoft\Data\Cycle\Reader\EntityReader
     {
-        $postaladdresses = $postaladdressRepository->findAllPreloaded();
-        return $postaladdresses;
+        return $postaladdressRepository->findAllPreloaded();
     }
 
     /**
      * @param CurrentRoute $currentRoute
      * @param PostalAddressRepository $postalAddressRepository
-     * @return \Yiisoft\DataResponse\DataResponse|Response
+     * @return Response|\Yiisoft\DataResponse\DataResponse
      */
     public function view(
         CurrentRoute $currentRoute,

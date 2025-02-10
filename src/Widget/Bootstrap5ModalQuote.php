@@ -66,7 +66,7 @@ final class Bootstrap5ModalQuote
             'clients' => $this->cR->optionsData($this->ucR),
             'groups' => $optionsGroupData,
             'defaultGroupId' => $defaultGroupId,
-            'urlKey' => Random::string(32)
+            'urlKey' => Random::string(32),
         ];
         $this->layoutParameters = [
             'type' => 'quote',

@@ -16,10 +16,8 @@ final class FamilyService
     }
 
     /**
-     *
      * @param Family $model
      * @param array $array
-     * @return void
      */
     public function saveFamily(Family $model, array $array): void
     {
@@ -28,9 +26,7 @@ final class FamilyService
     }
 
     /**
-     *
      * @param Family $model
-     * @return void
      */
     public function deleteFamily(Family $model): void
     {

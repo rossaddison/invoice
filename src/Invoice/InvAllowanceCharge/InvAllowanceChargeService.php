@@ -21,7 +21,6 @@ final class InvAllowanceChargeService
     /**
      * @param InvAllowanceCharge $model
      * @param array $array
-     * @return void
      */
     public function saveInvAllowanceCharge(InvAllowanceCharge $model, array $array): void
     {
@@ -48,7 +47,6 @@ final class InvAllowanceChargeService
 
     /**
      * @param InvAllowanceCharge $model
-     * @return void
      */
     public function deleteInvAllowanceCharge(InvAllowanceCharge $model): void
     {

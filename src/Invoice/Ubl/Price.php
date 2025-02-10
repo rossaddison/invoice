@@ -26,7 +26,6 @@ class Price implements XmlSerializable
     /**
      * @see https://github.com/OpenPEPPOL/peppol-bis-invoice-3/search?p=3&q=Price
      * @param Writer $writer
-     * @return void
      */
     public function xmlSerialize(Writer $writer): void
     {
@@ -43,14 +42,14 @@ class Price implements XmlSerializable
                 'name' => Schema::CBC . 'PriceAmount',
                 'value' => number_format((float)$this->priceAmount ?: 0.00, 2, '.', ''),
                 'attributes' => [
-                    'currencyID' => Generator::$currencyID
-                ]
+                    'currencyID' => Generator::$currencyID,
+                ],
             ],
             [
                 'name' => Schema::CBC . 'BaseQuantity',
                 'value' => number_format((float)$this->baseQuantity ?: 0, 2, '.', ''),
-                'attributes' => $baseQuantityAttributes
-            ]
+                'attributes' => $baseQuantityAttributes,
+            ],
         ]);
 
         if ($this->allowanceCharge !== null) {

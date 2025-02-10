@@ -5,8 +5,6 @@ declare(strict_types=1);
 namespace App\Invoice\InvAllowanceCharge;
 
 use App\Invoice\Entity\InvAllowanceCharge;
-use App\Invoice\InvAllowanceCharge\InvAllowanceChargeService;
-use App\Invoice\InvAllowanceCharge\InvAllowanceChargeRepository;
 use App\Invoice\AllowanceCharge\AllowanceChargeRepository;
 use App\Invoice\Traits\FlashMessage;
 use App\User\UserService;
@@ -26,7 +24,7 @@ use Exception;
 final class InvAllowanceChargeController
 {
     use FlashMessage;
-    
+
     private Flash $flash;
     private Session $session;
     private ViewRenderer $viewRenderer;
@@ -108,8 +106,8 @@ final class InvAllowanceChargeController
         return $this->viewRenderer->renderPartialAsString(
             '//invoice/layout/alert',
             [
-       'flash' => $this->flash
-     ]
+                'flash' => $this->flash,
+            ]
         );
     }
 
@@ -122,9 +120,9 @@ final class InvAllowanceChargeController
         $invallowancecharges = $this->invallowancecharges($invallowancechargeRepository);
         $paginator = (new OffsetPaginator($invallowancecharges));
         $parameters = [
-          'paginator' => $paginator,
-          'alert' => $this->alert()
-         ];
+            'paginator' => $paginator,
+            'alert' => $this->alert(),
+        ];
         return $this->viewRenderer->render('index', $parameters);
     }
 
@@ -184,7 +182,7 @@ final class InvAllowanceChargeController
                         $this->invallowancechargeService->saveInvAllowanceCharge($invAllowanceCharge, $body);
                         return $this->webService->getRedirectResponse('invallowancecharge/index');
                     }
-                }    
+                }
                 $parameters['errors'] = $form->getValidationResult()->getErrorMessagesIndexedByProperty();
                 $parameters['form'] = $form;
             }
@@ -204,8 +202,7 @@ final class InvAllowanceChargeController
     {
         $id = $currentRoute->getArgument('id');
         if (null !== $id) {
-            $invallowancecharge = $invallowancechargeRepository->repoInvAllowanceChargeLoadedquery($id);
-            return $invallowancecharge;
+            return $invallowancechargeRepository->repoInvAllowanceChargeLoadedquery($id);
         }
         return null;
     }
@@ -217,14 +214,13 @@ final class InvAllowanceChargeController
      */
     private function invallowancecharges(InvAllowanceChargeRepository $invallowancechargeRepository): \Yiisoft\Data\Cycle\Reader\EntityReader
     {
-        $invallowancecharges = $invallowancechargeRepository->findAllPreloaded();
-        return $invallowancecharges;
+        return $invallowancechargeRepository->findAllPreloaded();
     }
 
     /**
      * @param CurrentRoute $currentRoute
      * @param InvAllowanceChargeRepository $invallowancechargeRepository
-     * @return \Yiisoft\DataResponse\DataResponse|Response
+     * @return Response|\Yiisoft\DataResponse\DataResponse
      */
     public function view(
         CurrentRoute $currentRoute,

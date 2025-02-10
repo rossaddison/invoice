@@ -17,6 +17,7 @@ use Yiisoft\Data\Cycle\Writer\EntityWriter;
 final class InvTaxRateRepository extends Select\Repository
 {
     private EntityWriter $entityWriter;
+
     /**
      * @param Select<TEntity> $select
      * @param EntityWriter $entityWriter
@@ -50,7 +51,6 @@ final class InvTaxRateRepository extends Select\Repository
     }
 
     /**
-     *
      * @return Sort
      */
     private function getSort(): Sort
@@ -62,7 +62,6 @@ final class InvTaxRateRepository extends Select\Repository
      * @see Reader/ReadableDataInterface|InvalidArgumentException
      * @param array|InvTaxRate|null $invtaxrate
      * @throwable
-     * @return void
      */
     public function save(array|InvTaxRate|null $invtaxrate): void
     {
@@ -73,7 +72,6 @@ final class InvTaxRateRepository extends Select\Repository
      * @see Reader/ReadableDataInterface|InvalidArgumentException
      * @param array|InvTaxRate|null $invtaxrate
      * @throwable
-     * @return void
      */
     public function delete(array|InvTaxRate|null $invtaxrate): void
     {
@@ -81,7 +79,6 @@ final class InvTaxRateRepository extends Select\Repository
     }
 
     /**
-     *
      * @param Select $query
      * @return EntityReader
      */
@@ -98,18 +95,16 @@ final class InvTaxRateRepository extends Select\Repository
     //inv tax rates are children of their parent tax rate and are normally used when all products use the same tax rate ie. no item tax
 
     /**
-     * @param null|string $inv_id
+     * @param string|null $inv_id
      */
     public function repoCount(string|null $inv_id): int
     {
-        $count = $this->select()
+        return $this->select()
                       ->where(['inv_id' => $inv_id])
                       ->count();
-        return $count;
     }
 
     /**
-     *
      * @param string $id
      * @return TEntity|null
      */
@@ -134,7 +129,6 @@ final class InvTaxRateRepository extends Select\Repository
     }
 
     /**
-     *
      * @param string $tax_rate_id
      * @return TEntity|null
      */
@@ -145,7 +139,6 @@ final class InvTaxRateRepository extends Select\Repository
     }
 
     /**
-     *
      * @param string $inv_id
      * @return EntityReader
      */
@@ -157,7 +150,6 @@ final class InvTaxRateRepository extends Select\Repository
     }
 
     /**
-     *
      * @param string $inv_id
      * @return float
      */

@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace App\Invoice\Generator;
 
 use App\Invoice\Entity\Gentor;
-use App\Invoice\Generator\GeneratorRepository;
 
 final class GeneratorService
 {
@@ -19,7 +18,6 @@ final class GeneratorService
     /**
      * @param Gentor $model
      * @param array $array
-     * @return void
      */
     public function saveGenerator(Gentor $model, array $array): void
     {
@@ -41,9 +39,7 @@ final class GeneratorService
     }
 
     /**
-     *
      * @param array|Gentor|null $model
-     * @return void
      */
     public function deleteGenerator(array|Gentor|null $model): void
     {

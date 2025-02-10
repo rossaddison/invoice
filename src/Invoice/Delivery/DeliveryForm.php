@@ -43,7 +43,7 @@ final class DeliveryForm extends FormModel
     public function getDate_created(): string|DateTimeImmutable
     {
         /**
-         * @var string|DateTimeImmutable $this->date_created
+         * @var DateTimeImmutable|string $this->date_created
          */
         return $this->date_created;
     }
@@ -51,7 +51,7 @@ final class DeliveryForm extends FormModel
     public function getDate_modified(): string|DateTimeImmutable
     {
         /**
-         * @var string|DateTimeImmutable $this->date_modified
+         * @var DateTimeImmutable|string $this->date_modified
          */
         return $this->date_modified;
     }
@@ -59,7 +59,7 @@ final class DeliveryForm extends FormModel
     public function getStart_date(): string|DateTimeImmutable
     {
         /**
-         * @var string|DateTimeImmutable $this->start_date
+         * @var DateTimeImmutable|string $this->start_date
          */
         return $this->start_date;
     }
@@ -67,7 +67,7 @@ final class DeliveryForm extends FormModel
     public function getActual_delivery_date(): string|DateTimeImmutable
     {
         /**
-         * @var string|DateTimeImmutable $this->actual_delivery_date
+         * @var DateTimeImmutable|string $this->actual_delivery_date
          */
         return $this->actual_delivery_date;
     }
@@ -75,7 +75,7 @@ final class DeliveryForm extends FormModel
     public function getEnd_date(): string|DateTimeImmutable
     {
         /**
-         * @var string|DateTimeImmutable $this->end_date
+         * @var DateTimeImmutable|string $this->end_date
          */
         return $this->end_date;
     }
@@ -108,5 +108,4 @@ final class DeliveryForm extends FormModel
     {
         return '';
     }
-
 }

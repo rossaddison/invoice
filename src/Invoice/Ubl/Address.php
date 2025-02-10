@@ -20,6 +20,7 @@ class Address implements XmlSerializable
     private bool $ubl_cr_155;
     private bool $ubl_cr_218;
     private bool $ubl_cr_367;
+
     public function __construct(?string $streetName, ?string $additionalStreetName, ?string $buildingNumber, ?string $cityName, ?string $postalZone, ?string $countrySubEntity, ?Country $country, bool $ubl_cr_155 = false, bool $ubl_cr_218 = false, bool $ubl_cr_367 = false)
     {
         $this->streetName = $streetName;
@@ -80,20 +81,18 @@ class Address implements XmlSerializable
     }
 
     /**
-     *
      * @param Writer $writer
-     * @return void
      */
     public function xmlSerialize(Writer $writer): void
     {
         if ($this->streetName !== null) {
             $writer->write([
-                Schema::CBC . 'StreetName' => $this->streetName
+                Schema::CBC . 'StreetName' => $this->streetName,
             ]);
         }
         if ($this->additionalStreetName !== null) {
             $writer->write([
-                Schema::CBC . 'AdditionalStreetName' => $this->additionalStreetName
+                Schema::CBC . 'AdditionalStreetName' => $this->additionalStreetName,
             ]);
         }
         if ($this->buildingNumber !== null
@@ -101,7 +100,7 @@ class Address implements XmlSerializable
             && $this->ubl_cr_155 === false
             && $this->ubl_cr_367 === false) {
             $writer->write([
-                Schema::CBC . 'BuildingNumber' => $this->buildingNumber
+                Schema::CBC . 'BuildingNumber' => $this->buildingNumber,
             ]);
         }
         if ($this->cityName !== null) {
@@ -125,5 +124,4 @@ class Address implements XmlSerializable
             ]);
         }
     }
-
 }

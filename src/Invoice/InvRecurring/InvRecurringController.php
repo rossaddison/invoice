@@ -9,8 +9,6 @@ use App\Invoice\Entity\InvRecurring;
 // Forms
 use App\Invoice\Inv\InvService as IS;
 use App\Invoice\Inv\InvRepository as IR;
-use App\Invoice\InvRecurring\InvRecurringService;
-use App\Invoice\InvRecurring\InvRecurringForm;
 use App\Invoice\InvRecurring\InvRecurringRepository as IRR;
 use App\Invoice\Setting\SettingRepository as SR;
 use App\Invoice\Helpers\DateHelper;
@@ -40,7 +38,7 @@ use Yiisoft\Yii\View\Renderer\ViewRenderer;
 final class InvRecurringController
 {
     use FlashMessage;
-    
+
     private Flash $flash;
     private DataResponseFactoryInterface $factory;
     private ViewRenderer $viewRenderer;
@@ -101,8 +99,8 @@ final class InvRecurringController
         return $this->viewRenderer->renderPartialAsString(
             '//invoice/layout/alert',
             [
-        'flash' => $this->flash
-      ]
+                'flash' => $this->flash,
+            ]
         );
     }
 
@@ -121,13 +119,13 @@ final class InvRecurringController
         $numberhelper = new NumberHelper($this->s);
         $canEdit = $this->rbac();
         $parameters = [
-          'paginator' => $paginator,
-          'canEdit' => $canEdit,
-          'defaultPageSizeOffsetPaginator' => $this->s->getSetting('default_list_limit')
-                                                    ? (int)$this->s->getSetting('default_list_limit') : 1,
-          'recur_frequencies' => $numberhelper->recur_frequencies(),
-          'invrecurrings' => $this->invrecurrings($irR),
-          'alert' => $this->alert()
+            'paginator' => $paginator,
+            'canEdit' => $canEdit,
+            'defaultPageSizeOffsetPaginator' => $this->s->getSetting('default_list_limit')
+                                                      ? (int)$this->s->getSetting('default_list_limit') : 1,
+            'recur_frequencies' => $numberhelper->recur_frequencies(),
+            'invrecurrings' => $this->invrecurrings($irR),
+            'alert' => $this->alert(),
         ];
         return $this->viewRenderer->render('index', $parameters);
     }
@@ -160,7 +158,7 @@ final class InvRecurringController
                         'actionArguments' => ['inv_id' => $inv_id],
                         'errors' => [],
                         'invDateCreated' => $invDateCreated,
-                        'form' => $form
+                        'form' => $form,
                     ];
                     if ($request->getMethod() === Method::POST) {
                         $body = $request->getParsedBody() ?? [];
@@ -169,13 +167,13 @@ final class InvRecurringController
                                 $this->invrecurringService->saveInvRecurring($invRecurring, $body);
                                 return $this->webService->getRedirectResponse('invrecurring/index');
                             }
-                        }    
+                        }
                         $parameters['errors'] = $form->getValidationResult()->getErrorMessagesIndexedByProperty();
                         $parameters['form'] = $form;
                     }
                     return $this->viewRenderer->render('_form', $parameters);
                 }
-                $this->flashMessage('danger', $this->translator->translate('invoice.recurring.sent.only').'❗');
+                $this->flashMessage('danger', $this->translator->translate('invoice.recurring.sent.only') . '❗');
             }
         }
         return $this->webService->getNotFoundResponse();
@@ -212,14 +210,14 @@ final class InvRecurringController
                             'start' => $data['recur_start_date'] ?? null,
                             'end' => $data['recur_end_date'] ?? null,
                             'frequency' => $data['recur_frequency'],
-                            'next' => $data['recur_start_date'] ?? null
+                            'next' => $data['recur_start_date'] ?? null,
                         ];
                         if ($formHydrator->populateAndValidate($form, $body_array)) {
                             $this->invrecurringService->saveInvRecurring($invRecurring, $body_array);
                         }
                     } else {
                         return $this->factory->createResponse(Json::encode(['success' => 0,
-                        'message' => $this->translator->translate('invoice.recurring.status.sent.only')]));
+                            'message' => $this->translator->translate('invoice.recurring.status.sent.only')]));
                     }
                 } else {
                     return $this->factory->createResponse(Json::encode(['success' => 0, 'message' => '']));
@@ -287,7 +285,7 @@ final class InvRecurringController
                             $this->invrecurringService->saveInvRecurring($inv_recurring, $body);
                             return $this->webService->getRedirectResponse('invrecurring/index');
                         }
-                    }    
+                    }
                     $parameters['errors'] = $form->getValidationResult()->getErrorMessagesIndexedByProperty();
                     $parameters['form'] = $form;
                 }
@@ -331,9 +329,8 @@ final class InvRecurringController
         $invrecurring = new InvRecurring();
         $id = $currentRoute->getArgument('id');
         if (null !== $id) {
-            $invrecurring = $invrecurringRepository->repoInvRecurringquery($id);
+            return $invrecurringRepository->repoInvRecurringquery($id);
             // InvRecurring/null can be returned here
-            return $invrecurring;
         }
         return $invrecurring;
     }
@@ -344,8 +341,7 @@ final class InvRecurringController
      */
     private function invrecurrings(IRR $invrecurringRepository): \Yiisoft\Data\Cycle\Reader\EntityReader
     {
-        $invrecurrings = $invrecurringRepository->findAllPreloaded();
-        return $invrecurrings;
+        return $invrecurringRepository->findAllPreloaded();
     }
 
     /**
@@ -382,22 +378,21 @@ final class InvRecurringController
             $parameters = [
                 'success' => 1,
                 // Show the recur_start_date in Y-m-d format
-                'start_date' => $dateHelper->add_to_immutable($immutable_invoice_date, $recur_frequency)
+                'start_date' => $dateHelper->add_to_immutable($immutable_invoice_date, $recur_frequency),
             ];
             return $this->factory->createResponse(Json::encode($parameters));
         }
         return $this->factory->createResponse(Json::encode(
             [
-            'success' => 0]
+                'success' => 0]
         ));
     }
 
     /**
-     *
      * @param CurrentRoute $currentRoute
      * @param IRR $invrecurringRepository
      * @param IR $iR
-     * @return \Yiisoft\DataResponse\DataResponse|Response
+     * @return Response|\Yiisoft\DataResponse\DataResponse
      */
     public function view(CurrentRoute $currentRoute, IRR $invrecurringRepository, IR $iR): \Yiisoft\DataResponse\DataResponse|Response
     {

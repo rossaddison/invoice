@@ -21,7 +21,6 @@ final class CompanyPrivateService
      * @param CompanyPrivate $model
      * @param array $array
      * @param SettingRepository $s
-     * @return void
      */
     public function saveCompanyPrivate(CompanyPrivate $model, array $array, SettingRepository $s): void
     {
@@ -50,9 +49,7 @@ final class CompanyPrivateService
     }
 
     /**
-     *
      * @param array|CompanyPrivate|null $model
-     * @return void
      */
     public function deleteCompanyPrivate(array|CompanyPrivate|null $model): void
     {

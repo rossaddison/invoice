@@ -8,7 +8,6 @@ use Cycle\Annotated\Annotation\Column;
 use Cycle\Annotated\Annotation\Entity;
 use Cycle\Annotated\Annotation\Relation\BelongsTo;
 use DateTimeImmutable;
-use App\Invoice\Entity\Product;
 
 #[Entity(repository: \App\Invoice\ProductImage\ProductImageRepository::class)]
 
@@ -17,7 +16,7 @@ class ProductImage
     #[Column(type: 'primary')]
     private ?int $id = null;
 
-    #[BelongsTo(target: Product::class, nullable: false, fkAction: "NO ACTION")]
+    #[BelongsTo(target: Product::class, nullable: false, fkAction: 'NO ACTION')]
     private ?Product $product = null;
 
     #[Column(type: 'integer(11)', nullable: false)]
@@ -125,9 +124,8 @@ class ProductImage
 
     public function nullifyRelationOnChange(int $product_id): void
     {
-        if ($this->product_id <> $product_id) {
+        if ($this->product_id != $product_id) {
             $this->product = null;
         }
     }
-
 }

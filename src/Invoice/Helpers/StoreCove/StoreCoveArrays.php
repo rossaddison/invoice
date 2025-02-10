@@ -13,7 +13,7 @@ class StoreCoveArrays
      */
     public static function store_cove_sender_identifier_array(): array
     {
-        $array = [
+        return [
             -1 => [
                 'Region' => 'Region',
                 'Country' => 'Country',
@@ -363,23 +363,21 @@ class StoreCoveArrays
                 'Tax' => '',
             ],
         ];
-        return $array;
     }
 
     /**
-     *
      * @return array
      */
     public static function store_cove_receiver_identifier_array(): array
     {
-        $array = [
+        return [
             -1 => [
                 'region' => 'Region',
                 'country' => 'Country',
                 'b2x' => 'B2X',
                 'legal' => 'Legal',
                 'tax' => 'Tax',
-                'routing' => 'Routing'
+                'routing' => 'Routing',
             ],
             0 => [
                 'region' => 'Americas',
@@ -862,7 +860,5 @@ class StoreCoveArrays
                 'routing' => ' LEI',
             ],
         ];
-
-        return $array;
     }
 }

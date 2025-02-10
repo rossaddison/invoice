@@ -18,7 +18,6 @@ final class InvCustomService
     /**
      * @param InvCustom $model
      * @param array $array
-     * @return void
      */
     public function saveInvCustom(InvCustom $model, array $array): void
     {
@@ -29,9 +28,7 @@ final class InvCustomService
     }
 
     /**
-     *
      * @param InvCustom $model
-     * @return void
      */
     public function deleteInvCustom(InvCustom $model): void
     {

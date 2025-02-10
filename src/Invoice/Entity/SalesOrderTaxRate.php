@@ -7,8 +7,6 @@ namespace App\Invoice\Entity;
 use Cycle\Annotated\Annotation\Column;
 use Cycle\Annotated\Annotation\Entity;
 use Cycle\Annotated\Annotation\Relation\BelongsTo;
-use App\Invoice\Entity\SalesOrder;
-use App\Invoice\Entity\TaxRate;
 
 #[Entity(repository: \App\Invoice\SalesOrderTaxRate\SalesOrderTaxRateRepository::class)]
 
@@ -21,19 +19,19 @@ class SalesOrderTaxRate
     private ?TaxRate $tax_rate = null;
 
     #[Column(type: 'primary')]
-    private ?int $id =  null;
+    private ?int $id = null;
 
     #[Column(type: 'integer(11)', nullable: false)]
-    private ?int $so_id =  null;
+    private ?int $so_id = null;
 
     #[Column(type: 'integer(11)', nullable: false)]
-    private ?int $tax_rate_id =  null;
+    private ?int $tax_rate_id = null;
 
     #[Column(type: 'integer(1)', nullable: false, default:0)]
-    private ?int $include_item_tax =  null;
+    private ?int $include_item_tax = null;
 
     #[Column(type: 'decimal(20,2)', nullable: false, default: 0.00)]
-    private ?float $so_tax_rate_amount =  0.00;
+    private ?float $so_tax_rate_amount = 0.00;
 
     public function __construct(
         int $id = null,
@@ -66,7 +64,7 @@ class SalesOrderTaxRate
 
     public function setId(int $id): void
     {
-        $this->id =  $id;
+        $this->id = $id;
     }
 
     public function getSo_id(): string
@@ -76,7 +74,7 @@ class SalesOrderTaxRate
 
     public function setSo_id(int $so_id): void
     {
-        $this->so_id =  $so_id;
+        $this->so_id = $so_id;
     }
 
     public function getTax_rate_id(): string
@@ -86,7 +84,7 @@ class SalesOrderTaxRate
 
     public function setTax_rate_id(int $tax_rate_id): void
     {
-        $this->tax_rate_id =  $tax_rate_id;
+        $this->tax_rate_id = $tax_rate_id;
     }
 
     public function getInclude_item_tax(): int|null
@@ -96,7 +94,7 @@ class SalesOrderTaxRate
 
     public function setInclude_item_tax(int $include_item_tax): void
     {
-        $this->include_item_tax =  $include_item_tax;
+        $this->include_item_tax = $include_item_tax;
     }
 
     public function getSo_tax_rate_amount(): ?float
@@ -106,6 +104,6 @@ class SalesOrderTaxRate
 
     public function setSo_tax_rate_amount(float $so_tax_rate_amount): void
     {
-        $this->so_tax_rate_amount =  $so_tax_rate_amount;
+        $this->so_tax_rate_amount = $so_tax_rate_amount;
     }
 }

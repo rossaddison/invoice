@@ -7,10 +7,6 @@ namespace App\Invoice\Entity;
 use Cycle\Annotated\Annotation\Column;
 use Cycle\Annotated\Annotation\Entity;
 use Cycle\Annotated\Annotation\Relation\HasMany;
-use App\Invoice\Entity\Inv;
-use App\Invoice\Entity\TaxRate;
-use App\Invoice\Entity\Product;
-use App\Invoice\Entity\Task;
 use Cycle\Annotated\Annotation\Relation\BelongsTo;
 use Doctrine\Common\Collections\ArrayCollection;
 use DateTime;
@@ -20,63 +16,63 @@ use DateTimeImmutable;
 class InvItem
 {
     #[Column(type: 'primary')]
-    public ?int $id =  null;
+    public ?int $id = null;
 
     #[Column(type: 'integer(11)', nullable: false)]
-    private ?int $inv_id =  null;
+    private ?int $inv_id = null;
 
     #[Column(type: 'integer(11)', nullable: true)]
-    private ?int $so_item_id =  null;
+    private ?int $so_item_id = null;
 
     #[Column(type: 'date', nullable: false)]
     private mixed $date_added;
 
     #[Column(type: 'text', nullable: true)]
-    private ?string $name =  '';
+    private ?string $name = '';
 
     #[Column(type: 'longText', nullable: true)]
-    private ?string $description =  '';
+    private ?string $description = '';
 
     #[Column(type: 'decimal(10,2)', nullable: false, default: 1)]
-    private ?float $quantity =  null;
+    private ?float $quantity = null;
 
     #[Column(type: 'decimal(20,2)', nullable: false, default: 0.00)]
-    private ?float $price =  0.00;
+    private ?float $price = 0.00;
 
     #[Column(type: 'decimal(20,2)', nullable: false, default: 0.00)]
-    private ?float $discount_amount =  0.00;
+    private ?float $discount_amount = 0.00;
 
     #[Column(type: 'integer(2)', nullable: true, default:0)]
-    private ?int $order =  null;
+    private ?int $order = null;
 
     #[Column(type: 'boolean', nullable: false)]
-    private ?bool $is_recurring =  false;
+    private ?bool $is_recurring = false;
 
     #[Column(type: 'string(50)', nullable: true)]
-    private ?string $product_unit =  '';
+    private ?string $product_unit = '';
 
     #[Column(type: 'integer(11)', nullable: true)]
-    private ?int $product_unit_id =  null;
+    private ?int $product_unit_id = null;
 
     #[Column(type: 'datetime', nullable: false)]
     private DateTimeImmutable $date;
 
-    #[BelongsTo(target: \App\Invoice\Entity\TaxRate::class, nullable: false, fkAction: 'NO ACTION')]
+    #[BelongsTo(target: TaxRate::class, nullable: false, fkAction: 'NO ACTION')]
     private ?TaxRate $tax_rate = null;
     #[Column(type: 'integer(11)', nullable: false, default:0)]
-    private ?int $tax_rate_id =  null;
+    private ?int $tax_rate_id = null;
 
-    #[BelongsTo(target: \App\Invoice\Entity\Product::class, nullable: true, fkAction: 'NO ACTION')]
+    #[BelongsTo(target: Product::class, nullable: true, fkAction: 'NO ACTION')]
     private ?Product $product = null;
     #[Column(type: 'integer(11)', nullable: true, default:null)]
-    private ?int $product_id =  null;
+    private ?int $product_id = null;
 
-    #[BelongsTo(target: \App\Invoice\Entity\Task::class, nullable: true, fkAction: 'NO ACTION')]
+    #[BelongsTo(target: Task::class, nullable: true, fkAction: 'NO ACTION')]
     private ?Task $task = null;
     #[Column(type: 'integer(11)', nullable: true, default:null)]
-    private ?int $task_id =  null;
+    private ?int $task_id = null;
 
-    #[BelongsTo(target: \App\Invoice\Entity\Inv::class, nullable: false, fkAction: 'NO ACTION')]
+    #[BelongsTo(target: Inv::class, nullable: false, fkAction: 'NO ACTION')]
     private ?Inv $inv = null;
 
     /**
@@ -86,13 +82,13 @@ class InvItem
     private ArrayCollection $invitemallowancecharges;
 
     #[Column(type: 'integer(2)', nullable: true, default:0)]
-    private ?int $belongs_to_vat_invoice =  null;
+    private ?int $belongs_to_vat_invoice = null;
 
     #[Column(type: 'integer(11)', nullable: true)]
-    private ?int $delivery_id =  null;
+    private ?int $delivery_id = null;
 
     #[Column(type: 'longText', nullable: true)]
-    private ?string $note =  null;
+    private ?string $note = null;
 
     public function __construct(
         int $id = null,
@@ -144,7 +140,7 @@ class InvItem
 
     public function setId(int $id): void
     {
-        $this->id =  $id;
+        $this->id = $id;
     }
 
     public function setInvItemAllowanceCharges(): void
@@ -273,7 +269,7 @@ class InvItem
 
     public function setName(string $name): void
     {
-        $this->name =  $name;
+        $this->name = $name;
     }
 
     public function getDescription(): ?string
@@ -356,7 +352,7 @@ class InvItem
 
     public function setProduct_unit(string $product_unit): void
     {
-        $this->product_unit =  $product_unit;
+        $this->product_unit = $product_unit;
     }
 
     public function getProduct_unit_id(): string
@@ -366,7 +362,7 @@ class InvItem
 
     public function setProduct_unit_id(int $product_unit_id): void
     {
-        $this->product_unit_id =  $product_unit_id;
+        $this->product_unit_id = $product_unit_id;
     }
 
     public function setBelongs_to_vat_invoice(int $belongs_to_vat_invoice): void
@@ -386,7 +382,7 @@ class InvItem
 
     public function setDelivery_id(int $delivery_id): void
     {
-        $this->delivery_id =  $delivery_id;
+        $this->delivery_id = $delivery_id;
     }
 
     public function getNote(): ?string

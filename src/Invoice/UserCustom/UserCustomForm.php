@@ -45,9 +45,9 @@ final class UserCustomForm extends FormModel
     public function getRules(): array
     {
         return [
-          'fieldvalue' => [
-               [new Required()],
-          ],
-    ];
+            'fieldvalue' => [
+                [new Required()],
+            ],
+        ];
     }
 }

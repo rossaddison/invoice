@@ -18,6 +18,7 @@ use Yiisoft\Data\Cycle\Writer\EntityWriter;
 final class ProductPropertyRepository extends Select\Repository
 {
     private EntityWriter $entityWriter;
+
     /**
      * @param Select<TEntity> $select
      * @param EntityWriter $entityWriter
@@ -73,7 +74,6 @@ final class ProductPropertyRepository extends Select\Repository
      * @param array|ProductProperty|null $productproperty
      * @psalm-param TEntity $productproperty
      * @throws Throwable
-     * @return void
      */
     public function save(array|ProductProperty|null $productproperty): void
     {
@@ -85,7 +85,6 @@ final class ProductPropertyRepository extends Select\Repository
      * @param array|ProductProperty|null $productproperty
 
      * @throws Throwable
-     * @return void
      */
     public function delete(array|ProductProperty|null $productproperty): void
     {

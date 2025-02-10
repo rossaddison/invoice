@@ -5,8 +5,6 @@ declare(strict_types=1);
 namespace App\Invoice\ProductProperty;
 
 use App\Invoice\Entity\ProductProperty;
-use App\Invoice\ProductProperty\ProductPropertyService;
-use App\Invoice\ProductProperty\ProductPropertyRepository;
 use App\Invoice\Product\ProductRepository;
 use App\Invoice\Setting\SettingRepository;
 use App\Invoice\Traits\FlashMessage;
@@ -28,7 +26,7 @@ use Exception;
 final class ProductPropertyController
 {
     use FlashMessage;
-    
+
     private Flash $flash;
     private SessionInterface $session;
     private ViewRenderer $viewRenderer;
@@ -74,12 +72,12 @@ final class ProductPropertyController
         $productProperty = new ProductProperty();
         $form = new ProductPropertyForm($productProperty, (int)$product_id);
         $parameters = [
-          'title' => $this->translator->translate('invoice.add'),
-          'actionName' => 'productproperty/add',
-          'actionArguments' => ['product_id' => $product_id],
-          'errors' => [],
-          'form' => $form,
-          'products' => $productRepository->findAllPreloaded(),
+            'title' => $this->translator->translate('invoice.add'),
+            'actionName' => 'productproperty/add',
+            'actionArguments' => ['product_id' => $product_id],
+            'errors' => [],
+            'form' => $form,
+            'products' => $productRepository->findAllPreloaded(),
         ];
 
         if ($request->getMethod() === Method::POST) {
@@ -89,7 +87,7 @@ final class ProductPropertyController
                     $this->productpropertyService->saveProductProperty($productProperty, $body);
                     return $this->webService->getRedirectResponse('productproperty/index');
                 }
-            }    
+            }
             $parameters['errors'] = $form->getValidationResult()->getErrorMessagesIndexedByProperty();
             $parameters['form'] = $form;
         }
@@ -104,8 +102,8 @@ final class ProductPropertyController
         return $this->viewRenderer->renderPartialAsString(
             '//invoice/layout/alert',
             [
-        'flash' => $this->flash
-      ]
+                'flash' => $this->flash,
+            ]
         );
     }
 
@@ -126,11 +124,11 @@ final class ProductPropertyController
         ->withCurrentPage($currentPageNeverZero)
         ->withToken(PageToken::next((string)$page));
         $parameters = [
-          'productpropertys' => $this->productpropertys($productpropertyRepository),
-          'paginator' => $paginator,
-          'alert' => $this->alert(),
-          'max' => (int) $settingRepository->getSetting('default_list_limit')
-    ];
+            'productpropertys' => $this->productpropertys($productpropertyRepository),
+            'paginator' => $paginator,
+            'alert' => $this->alert(),
+            'max' => (int) $settingRepository->getSetting('default_list_limit'),
+        ];
         return $this->viewRenderer->render('index', $parameters);
     }
 
@@ -176,12 +174,12 @@ final class ProductPropertyController
         if ($productProperty) {
             $form = new ProductPropertyForm($productProperty, (int)$productProperty->getProduct_id());
             $parameters = [
-              'title' => $this->translator->translate('i.edit'),
-              'actionName' => 'productproperty/edit',
-              'actionArguments' => ['id' => $productProperty->getProperty_id()],
-              'errors' => [],
-              'form' => $form,
-              'products' => $productRepository->findAllPreloaded()
+                'title' => $this->translator->translate('i.edit'),
+                'actionName' => 'productproperty/edit',
+                'actionArguments' => ['id' => $productProperty->getProperty_id()],
+                'errors' => [],
+                'form' => $form,
+                'products' => $productRepository->findAllPreloaded(),
             ];
             if ($request->getMethod() === Method::POST) {
                 if ($formHydrator->populateFromPostAndValidate($form, $request)) {
@@ -190,7 +188,7 @@ final class ProductPropertyController
                         $this->productpropertyService->saveProductProperty($productProperty, $body);
                         return $this->webService->getRedirectResponse('productproperty/index');
                     }
-                }    
+                }
                 $parameters['errors'] = $form->getValidationResult()->getErrorMessagesIndexedByProperty();
                 $parameters['form'] = $form;
             }
@@ -210,8 +208,7 @@ final class ProductPropertyController
     {
         $id = $currentRoute->getArgument('id');
         if (null !== $id) {
-            $productproperty = $productpropertyRepository->repoProductPropertyLoadedquery($id);
-            return $productproperty;
+            return $productpropertyRepository->repoProductPropertyLoadedquery($id);
         }
         return null;
     }
@@ -223,14 +220,13 @@ final class ProductPropertyController
      */
     private function productpropertys(ProductPropertyRepository $productpropertyRepository): \Yiisoft\Data\Cycle\Reader\EntityReader
     {
-        $productproperties = $productpropertyRepository->findAllPreloaded();
-        return $productproperties;
+        return $productpropertyRepository->findAllPreloaded();
     }
 
     /**
      * @param CurrentRoute $currentRoute
      * @param ProductPropertyRepository $productpropertyRepository
-     * @return \Yiisoft\DataResponse\DataResponse|Response
+     * @return Response|\Yiisoft\DataResponse\DataResponse
      */
     public function view(CurrentRoute $currentRoute, ProductPropertyRepository $productpropertyRepository): \Yiisoft\DataResponse\DataResponse|Response
     {

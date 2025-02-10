@@ -12,7 +12,6 @@ use Yiisoft\Html\Html;
  * @property string $relativePath The code file path relative to the application base path. This property is
  * read-only.
  * @property string $type The code file extension (e.g. php, txt). This property is read-only.
- *
  */
 class GenerateCodeFileHelper
 {
@@ -60,7 +59,7 @@ class GenerateCodeFileHelper
         $this->path = strtr($path, '/\\', DIRECTORY_SEPARATOR . DIRECTORY_SEPARATOR);
 
         // $this->basepath used in function relativepath
-        $this->basepath = dirname(dirname(dirname(__DIR__)));
+        $this->basepath = dirname(__DIR__, 3);
 
         $this->content = $content;
         /**
@@ -143,7 +142,8 @@ class GenerateCodeFileHelper
 
         if ($type === 'php') {
             return highlight_string($this->content, true);
-        } elseif (!in_array($type, ['jpg', 'gif', 'png', 'exe'])) {
+        }
+        if (!in_array($type, ['jpg', 'gif', 'png', 'exe'])) {
             return nl2br(Html::encode($this->content));
         }
 

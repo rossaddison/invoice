@@ -71,7 +71,7 @@ final class TelegramHelper
         ?bool $dropPendingUpdates = null,
         ?string $secretToken = null
     ): true|FailResult {
-        $result = $this->botApi->setWebhook(
+        return $this->botApi->setWebhook(
             $urlGenerator->generateAbsolute('telegram/webhook', ['_language' => 'en']),
             $ipAddress,
             $maxConnections,
@@ -79,7 +79,6 @@ final class TelegramHelper
             $dropPendingUpdates,
             $secretToken
         );
-        return $result;
     }
 
     public function deleteWebhook(): true|FailResult
@@ -88,7 +87,6 @@ final class TelegramHelper
     }
 
     /**
-     *
      * @param int|null $offset
      * @param int|null $limit
      * @param int|null $timeout
@@ -126,7 +124,7 @@ final class TelegramHelper
 
     public static function logTypeCreateFailResultContext(): int
     {
-        return LogType::FAIL_RESULT; 
+        return LogType::FAIL_RESULT;
     }
 
     public static function logTypeCreateParseResultErrorContext(): int

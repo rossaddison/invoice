@@ -52,7 +52,7 @@ class User
     }
 
     /**
-     * @return null|numeric-string
+     * @return numeric-string|null
      */
     public function getId(): string|null
     {
@@ -97,5 +97,5 @@ class User
     public function getIdentity(): Identity
     {
         return $this->identity;
-    }  
+    }
 }

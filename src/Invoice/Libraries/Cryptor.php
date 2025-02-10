@@ -41,7 +41,7 @@ class Cryptor
     public const int FORMAT_B64 = 1;
     public const int FORMAT_HEX = 2;
 
-    public function __construct(string $cipher_algo = 'aes-256-ctr', string $hash_algo = 'sha256', int $fmt = Cryptor::FORMAT_B64)
+    public function __construct(string $cipher_algo = 'aes-256-ctr', string $hash_algo = 'sha256', int $fmt = self::FORMAT_B64)
     {
         $this->cipher_algo = $cipher_algo;
         $this->hash_algo = $hash_algo;
@@ -54,20 +54,19 @@ class Cryptor
         if (!in_array($hash_algo, openssl_get_md_methods(true))) {
             throw new \Exception("Cryptor:: - unknown hash algo {$hash_algo}");
         }
-        
+
         $openBytes = openssl_cipher_iv_length($cipher_algo);
-        if ($openBytes <> false) {
+        if ($openBytes != false) {
             $this->iv_num_bytes = $openBytes;
         }
     }
 
     /**
-     *
      * @param string $in
      * @param string $key
      * @param int|null $fmt
-     * @return mixed
      * @throws \Exception
+     * @return mixed
      */
     public function encryptString(string $in, string $key, int|null $fmt = null): mixed
     {
@@ -78,34 +77,33 @@ class Cryptor
         // Build an initialisation vector
         $iv = openssl_random_pseudo_bytes($this->iv_num_bytes, $isStrongCrypto);
         if (!$isStrongCrypto) {
-            throw new \Exception("Cryptor::encryptString() - Not a strong key");
+            throw new \Exception('Cryptor::encryptString() - Not a strong key');
         }
 
         // Hash the key
         $keyhash = openssl_digest($key, $this->hash_algo, true);
-        
+
         if ($keyhash === false) {
             throw new \Exception('Keyhash is false');
         }
 
         // and encrypt
-        $opts =  OPENSSL_RAW_DATA;
+        $opts = OPENSSL_RAW_DATA;
         $encrypted = openssl_encrypt($in, $this->cipher_algo, $keyhash, $opts, $iv);
 
         $errorString = openssl_error_string();
-        if (($encrypted === false) && ($errorString <> false)) {
+        if (($encrypted === false) && ($errorString != false)) {
             throw new \Exception('Cryptor::encryptString() - Encryption failed: ' . $errorString);
         }
 
         // The result comprises the IV and encrypted data
-        if ($encrypted <> false) {
-        
+        if ($encrypted != false) {
             $res = $iv . $encrypted;
 
             // and format the result if required.
-            if ($fmt == Cryptor::FORMAT_B64) {
+            if ($fmt == self::FORMAT_B64) {
                 $res = base64_encode($res);
-            } elseif ($fmt == Cryptor::FORMAT_HEX) {
+            } elseif ($fmt == self::FORMAT_HEX) {
                 $unpacked = unpack('H*', $res);
                 if (is_array($unpacked)) {
                     /** @var array $res */
@@ -115,7 +113,7 @@ class Cryptor
 
             return $res;
         }
-        
+
         return false;
     }
 
@@ -136,9 +134,9 @@ class Cryptor
         $raw = $in;
 
         // Restore the encrypted data if encoded
-        if ($fmt == Cryptor::FORMAT_B64) {
+        if ($fmt == self::FORMAT_B64) {
             $raw = base64_decode($in);
-        } elseif ($fmt == Cryptor::FORMAT_HEX) {
+        } elseif ($fmt == self::FORMAT_HEX) {
             $raw = pack('H*', $in);
         }
 
@@ -158,13 +156,13 @@ class Cryptor
         if ($keyhash === false) {
             throw new \Exception('Keyhash is false');
         }
-        
+
         // and decrypt.
         $opts = OPENSSL_RAW_DATA;
         $res = openssl_decrypt($raw, $this->cipher_algo, $keyhash, $opts, $iv);
-        
+
         $errorString = openssl_error_string();
-        if (($res === false) && ($errorString <> false)) {
+        if (($res === false) && ($errorString != false)) {
             throw new \Exception('Cryptor::decryptString - decryption failed: ' . $errorString);
         }
 
@@ -180,7 +178,7 @@ class Cryptor
      */
     public static function Encrypt($in, $key, $fmt = null): mixed
     {
-        $c = new Cryptor();
+        $c = new self();
         return $c->encryptString($in, $key, $fmt);
     }
 
@@ -193,7 +191,7 @@ class Cryptor
      */
     public static function Decrypt($in, $key, $fmt = null): mixed
     {
-        $c = new Cryptor();
+        $c = new self();
         return $c->decryptString($in, $key, $fmt);
     }
 }
