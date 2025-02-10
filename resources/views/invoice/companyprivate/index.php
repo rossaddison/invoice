@@ -76,6 +76,7 @@ echo $alert;
             content: static fn (CompanyPrivate $model) => Html::encode($model->getLogo_filename())
         ),
         new ActionColumn(
+            /** @psalm-suppress InvalidArgument */    
             content: static fn(CompanyPrivate $model): string => null!==($modelId = $model->getId()) ? Html::openTag('div', ['class' => 'btn-group']) .
             Html::a()
             ->addAttributes([

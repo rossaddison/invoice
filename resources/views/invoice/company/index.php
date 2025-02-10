@@ -95,6 +95,7 @@ use Yiisoft\Yii\DataView\GridView;
                 content: static fn (Company $model) => Html::encode($model->getPhone())
             ),
             new ActionColumn(
+                /** @psalm-suppress InvalidArgument */
                 content: static fn(Company $model): string => null!==($modelId = $model->getId()) ? Html::openTag('div', ['class' => 'btn-group']) .
                 Html::a()
                 ->addAttributes([

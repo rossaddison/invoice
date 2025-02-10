@@ -123,6 +123,7 @@ use Yiisoft\Yii\DataView\GridView;
                 content: static fn (Contract $model): string => ($model->getPeriod_end())->format($dateHelper->style())                        
             ),
             new ActionColumn(
+                /** @psalm-suppress InvalidArgument */
                 content: static fn(Contract $model): string => null!==($modelId = $model->getId()) ? 
                (
                 Html::openTag('div', ['class' => 'btn-group']) .

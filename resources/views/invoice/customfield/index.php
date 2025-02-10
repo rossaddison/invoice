@@ -105,6 +105,7 @@ $translator->translate('i.custom_fields');
             }
         ),
         new ActionColumn(
+                /** @psalm-suppress InvalidArgument */
                 content: static fn(CustomField $model): string => Html::openTag('div', ['class' => 'btn-group']) .
                 Html::a()
                 ->addAttributes([

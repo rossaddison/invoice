@@ -87,6 +87,7 @@ use Yiisoft\Yii\DataView\GridView;
             content: static fn (ClientNote $model): string => Html::encode((!is_string($dateNote = $model->getDate_note()) ? $dateNote->format($dateHelper->style()) : '')) 
         ),
         new ActionColumn(
+            /** @psalm-suppress InvalidArgument */    
             content: static fn(ClientNote $model): string => null!==($modelId = $model->getId()) ? 
             Html::a()
             ->addAttributes(['class' => 'dropdown-button text-decoration-none', 'title' => $translator->translate('i.view')])
@@ -96,6 +97,7 @@ use Yiisoft\Yii\DataView\GridView;
             ->render() : '',
         ),
         new ActionColumn(
+            /** @psalm-suppress InvalidArgument */
             content: static fn(ClientNote $model): string => null!==($modelId = $model->getId()) ?
             Html::a()
             ->addAttributes(['class' => 'dropdown-button text-decoration-none', 'title' => $translator->translate('i.edit')])
@@ -105,6 +107,7 @@ use Yiisoft\Yii\DataView\GridView;
             ->render() : '',
         ),
         new ActionColumn(
+            /** @psalm-suppress InvalidArgument */    
             content: static fn(ClientNote $model): string => null!==($modelId = $model->getId()) ? 
             Html::a()
             ->addAttributes([
