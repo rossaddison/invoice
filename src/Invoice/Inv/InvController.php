@@ -1368,7 +1368,7 @@ final class InvController
         $invoice_amount = $iaR->repoInvquery($inv_id);
         if (null !== $invoice_amount) {
             // If the invoice is fully paid up allow the status to change to 'paid'
-            return ($invoice_amount->getBalance() == 0.00);
+            return $invoice_amount->getBalance() == 0.00;
         }
         return false;
     }
@@ -3297,7 +3297,7 @@ final class InvController
             'inv_id' => $body['inv_id'],
             'tax_rate_id' => $body['inv_tax_rate_id'],
             'include_item_tax' => $body['include_inv_item_tax'],
-            'inv_tax_rate_amount' => 0.00
+            'inv_tax_rate_amount' => 0.00,
         ];
         $invTaxRate = new InvTaxRate();
         $form = new InvTaxRateForm($invTaxRate);
@@ -3463,7 +3463,7 @@ final class InvController
             return true;
         }
         // Override the invoice's readonly
-        return ($this->sR->getSetting('disable_read_only') === (string) 1);
+        return $this->sR->getSetting('disable_read_only') === (string) 1;
     }
 
     /**

@@ -9,8 +9,9 @@ use Yiisoft\Html\Tag\Div;
 use Yiisoft\Html\Tag\Form;
 use Yiisoft\Html\Tag\H5;
 use Yiisoft\Html\Tag\I;
-use Yiisoft\Yii\DataView\Column\DataColumn;
+use Yiisoft\Yii\DataView\Column\ActionButton;
 use Yiisoft\Yii\DataView\Column\ActionColumn;
+use Yiisoft\Yii\DataView\Column\DataColumn;
 use Yiisoft\Yii\DataView\GridView;
 use Yiisoft\Router\CurrentRoute;
 
@@ -85,45 +86,39 @@ use Yiisoft\Router\CurrentRoute;
             'next_id',
             header: $translator->translate('i.next_id'),
             content: static fn (Group $model) => Html::encode($model->getNext_id())
-        ),        
-        new ActionColumn(
-            content: static fn(Group $model): string => 
-            Html::a()
-            ->addAttributes([
-                'class' => 'dropdown-button text-decoration-none', 
-                'title' => $translator->translate('i.view')
-            ])
-            ->content('🔎')
-            ->encode(false)
-            ->href('group/view/'. $model->getId())
-            ->render(),
-        ),
-        new ActionColumn(
-            content: static fn(Group $model): string => 
-            Html::a()
-            ->addAttributes([
-                'class' => 'dropdown-button text-decoration-none', 
-                'title' => $translator->translate('i.edit')
-            ])
-            ->content('✎')
-            ->encode(false)
-            ->href('group/edit/'. $model->getId())
-            ->render(),
-        ),
-        new ActionColumn(
-            content: static fn(Group $model): string => 
-            Html::a()
-            ->addAttributes([
-                'class'=>'dropdown-button text-decoration-none', 
-                'title' => $translator->translate('i.delete'),
-                'type'=>'submit', 
-                'onclick'=>"return confirm("."'".$translator->translate('i.delete_record_warning')."');"
-            ])
-            ->content('❌')
-            ->encode(false)
-            ->href('group/delete/'. $model->getId())
-            ->render(),
-        )
+        ), 
+        new ActionColumn(buttons: [
+            new ActionButton(
+                content: '🔎',
+                url: static function(Group $model) use ($urlGenerator) : string {
+                     return $urlGenerator->generate('group/view', ['id' => $model->getId()]);     
+                },
+                attributes: [
+                    'data-bs-toggle' => 'tooltip',
+                    'title' => $translator->translate('i.view'),
+                ]      
+            ),
+            new ActionButton(
+                content: '✎',
+                url: static function(Group $model) use ($urlGenerator) : string {
+                     return $urlGenerator->generate('group/edit', ['id' => $model->getId()]);     
+                },
+                attributes: [
+                    'data-bs-toggle' => 'tooltip',
+                    'title' => $translator->translate('i.edit'),
+                ]      
+            ),
+            new ActionButton(
+                content: '❌',
+                url: static function(Group $model) use ($urlGenerator) : string {
+                     return $urlGenerator->generate('group/delete', ['id' => $model->getId()]);     
+                },
+                attributes: [
+                    'title' => $translator->translate('i.delete'),
+                    'onclick'=>"return confirm("."'".$translator->translate('i.delete_record_warning')."');"
+                ]      
+            ),          
+        ]),
     ];       
 ?>
 <?php

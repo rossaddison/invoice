@@ -10,8 +10,9 @@ use Yiisoft\Html\Tag\Div;
 use Yiisoft\Html\Tag\Form;
 use Yiisoft\Html\Tag\H5;
 use Yiisoft\Html\Tag\I;
-use Yiisoft\Yii\DataView\Column\DataColumn;
+use Yiisoft\Yii\DataView\Column\ActionButton;
 use Yiisoft\Yii\DataView\Column\ActionColumn;
+use Yiisoft\Yii\DataView\Column\DataColumn;
 use Yiisoft\Yii\DataView\GridView;
 use Yiisoft\Router\CurrentRoute;
 
@@ -89,38 +90,38 @@ use Yiisoft\Router\CurrentRoute;
             header: $translator->translate('i.description'),                
             content: static fn (Profile $model): string => Html::encode(ucfirst($model->getDescription() ?? '')) 
         ),
-        new ActionColumn(
-            content: static fn(Profile $model): string => null!== ($id = $model->getId()) ? 
-            Html::a()
-            ->addAttributes(['class' => 'dropdown-button text-decoration-none', 'title' => $translator->translate('i.profile')])
-            ->content('🔎')
-            ->encode(false)
-            ->href('profile/view/'. $id)
-            ->render() : '',
-        ),
-        new ActionColumn(
-            content: static fn(Profile $model): string => null!== ($id = $model->getId()) ?
-            Html::a()
-            ->addAttributes(['class' => 'dropdown-button text-decoration-none', 'title' => $translator->translate('i.edit')])
-            ->content('✎')
-            ->encode(false)
-            ->href('profile/edit/'. $id)
-            ->render() : '',
-        ),
-        new ActionColumn(
-            content: static fn(Profile $model): string => null!== ($id = $model->getId()) ?
-            Html::a()
-            ->addAttributes([
-                'class'=>'dropdown-button text-decoration-none', 
-                'title' => $translator->translate('i.delete'),
-                'type'=>'submit', 
-                'onclick'=>"return confirm("."'".$translator->translate('i.delete_record_warning')."');"
-            ])
-            ->content('❌')
-            ->encode(false)
-            ->href('profile/delete/'. $id)
-            ->render() : '',
-        )
+        new ActionColumn(buttons: [
+            new ActionButton(
+                content: '🔎',
+                url: static function(Profile $model) use ($urlGenerator) : string {
+                     return $urlGenerator->generate('profile/view', ['id' => $model->getId()]);     
+                },
+                attributes: [
+                    'data-bs-toggle' => 'tooltip',
+                    'title' => $translator->translate('i.view'),
+                ]      
+            ),
+            new ActionButton(
+                content: '✎',
+                url: static function(Profile $model) use ($urlGenerator) : string {
+                     return $urlGenerator->generate('profile/edit', ['id' => $model->getId()]);     
+                },
+                attributes: [
+                    'data-bs-toggle' => 'tooltip',
+                    'title' => $translator->translate('i.edit'),
+                ]      
+            ),
+            new ActionButton(
+                content: '❌',
+                url: static function(Profile $model) use ($urlGenerator) : string {
+                     return $urlGenerator->generate('profile/delete', ['id' => $model->getId()]);     
+                },
+                attributes: [
+                    'title' => $translator->translate('i.delete'),
+                    'onclick'=>"return confirm("."'".$translator->translate('i.delete_record_warning')."');"
+                ]      
+            ),          
+        ]),
     ];       
 ?>
 <?php
