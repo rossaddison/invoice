@@ -406,6 +406,7 @@ final class AuthController
             header('Location: ' . $authorizationUrl);
             exit;
         }
+        
         if ($code == 401) {
             return $this->redirectToOauth2CallbackResultUnAuthorised();
         }
@@ -559,6 +560,7 @@ final class AuthController
             header('Location: ' . $authorizationUrl);
             exit;
         }
+        
         if ($code == 401) {
             return $this->redirectToOauth2CallbackResultUnAuthorised();
         }
@@ -680,6 +682,7 @@ final class AuthController
             header('Location: ' . $authorizationUrl);
             exit;
         }
+        
         if ($code == 401) {
             return $this->redirectToOauth2CallbackResultUnAuthorised();
         }
@@ -790,6 +793,7 @@ final class AuthController
             header('Location: ' . $authorizationUrl);
             exit;
         }
+        
         if ($code == 401) {
             return $this->redirectToOauth2CallbackResultUnAuthorised();
         }
@@ -925,6 +929,7 @@ final class AuthController
         if ($code == 401) {
             return $this->redirectToOauth2CallbackResultUnAuthorised();
         }
+        
         /**
          * @psalm-suppress DocblockTypeContradiction $state
          * @psalm-suppress DocblockTypeContradiction $sessionState
