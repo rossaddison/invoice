@@ -22,7 +22,7 @@ use Yiisoft\Html\Tag\Form;
 ?>
 
 <?= Html::openTag('h1'); ?>
-    <?= Html::encode($title.' '. $companPublic); ?>
+    <?= Html::encode($title.' '. $companyPublic); ?>
 <?= Html::closeTag('h1'); ?>
 
 <?= Form::tag()
