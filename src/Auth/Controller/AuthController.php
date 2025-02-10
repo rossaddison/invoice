@@ -265,7 +265,7 @@ final class AuthController
         if ($code == 401) {
             return $this->redirectToOauth2CallbackResultUnAuthorised();
         }
-        
+
         /**
          * @psalm-suppress DocblockTypeContradiction $state
          */
@@ -406,11 +406,11 @@ final class AuthController
             header('Location: ' . $authorizationUrl);
             exit;
         }
-        
+
         if ($code == 401) {
             return $this->redirectToOauth2CallbackResultUnAuthorised();
         }
-        
+
         /**
          * @psalm-suppress DocblockTypeContradiction $state
          */
@@ -560,11 +560,11 @@ final class AuthController
             header('Location: ' . $authorizationUrl);
             exit;
         }
-        
+
         if ($code == 401) {
             return $this->redirectToOauth2CallbackResultUnAuthorised();
         }
-        
+
         /**
          * @psalm-suppress DocblockTypeContradiction $state
          */
@@ -682,11 +682,11 @@ final class AuthController
             header('Location: ' . $authorizationUrl);
             exit;
         }
-        
+
         if ($code == 401) {
             return $this->redirectToOauth2CallbackResultUnAuthorised();
         }
-        
+
         /**
          * @psalm-suppress DocblockTypeContradiction $state
          */
@@ -793,11 +793,11 @@ final class AuthController
             header('Location: ' . $authorizationUrl);
             exit;
         }
-        
+
         if ($code == 401) {
             return $this->redirectToOauth2CallbackResultUnAuthorised();
         }
-        
+
         /**
          * @psalm-suppress DocblockTypeContradiction $state
          */
@@ -922,14 +922,14 @@ final class AuthController
             header('Location: ' . $authorizationUrl);
             exit;
         }
-        
+
         /**
          * @psalm-suppress DocblockTypeContradiction $state
          */
         if ($code == 401) {
             return $this->redirectToOauth2CallbackResultUnAuthorised();
         }
-        
+
         /**
          * @psalm-suppress DocblockTypeContradiction $state
          * @psalm-suppress DocblockTypeContradiction $sessionState
@@ -1052,7 +1052,7 @@ final class AuthController
         if ($code == 401) {
             return $this->redirectToOauth2CallbackResultUnAuthorised();
         }
-        
+
         /**
          * @psalm-suppress DocblockTypeContradiction $state
          */
@@ -1190,7 +1190,7 @@ final class AuthController
         if ($code == 401) {
             return $this->redirectToOauth2CallbackResultUnAuthorised();
         }
-        
+
         /**
          * @psalm-suppress DocblockTypeContradiction $state
          */
