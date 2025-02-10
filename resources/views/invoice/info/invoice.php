@@ -46,6 +46,62 @@
 <p>Introducing India's PayTm payment gateway's QR code method of payment and comparing this with Stripe's method.</p>
 <p>A General Sales Tax (GST) Tax System will have to be implemented first for this purpose.</p>
 <p>Testing Credit Notes against Invoices with refunds (if payment made) linked to each of the payment gateways.</p>
+<p><b>10th February 2025</b></p>
+<p>Scrutinizer removed with the possibility of reimplementation.</p>
+<p>Branches updated with commits.</p>
+<p>Google Cloud Translate version 2 branch created - work commencing.</p>
+<p>ActionButtons implemented in all ActionColumns</p>
+<p><pre>C:\wamp128\www\invoice>composer outdated
+Color legend:
+- patch or minor release available - update recommended
+- major release available - update possible
+
+Direct dependencies required in composer.json:
+cycle/annotated              3.5.0  4.2.3  Cycle ORM Annotated Entities generator
+google/cloud-translate       1.21.0 2.0.0  Cloud Translation Client for PHP
+phpbench/phpbench            1.2.15 1.4.0  PHP Benchmarking Framework
+phpunit/phpunit              11.5.7 12.0.2 The PHP Unit Testing framework.
+spatie/phpunit-watcher       1.23.6 1.24.0 Automatically rerun PHPUnit tests when source code changes
+symfony/console              6.4.17 7.2.1  Eases the creation of beautiful and testable command line interfaces
+yiisoft/error-handler        3.3.0  4.0.0  Yii Error Handling Library
+zircote/swagger-php          4.11.1 5.0.3  swagger-php - Generate interactive documentation for your RESTful API us...
+
+Transitive dependencies not required in composer.json:
+jolicode/jolinotif           2.7.3  3.0.0  Send desktop notifications on Windows, Linux, MacOS.
+jolicode/php-os-helper       0.1.0  0.2.0  Helpers to detect the OS of the machine where PHP is running.
+justinrainbow/json-schema    5.3.0  6.1.0  A library to validate a json schema.
+netresearch/jsonmapper       4.5.0  5.0.0  Map nested JSON structures onto PHP classes
+php-http/message-factory     1.1.0  1.1.0  Factory interfaces for PSR-7 HTTP Message
+Package php-http/message-factory is abandoned, you should avoid using it. Use psr/http-factory instead.
+phpbench/dom                 0.3.3  0.3.3  DOM wrapper to simplify working with the PHP DOM implementation
+Package phpbench/dom is abandoned, you should avoid using it. No replacement was suggested.
+phpunit/php-code-coverage    11.0.8 12.0.2 Library that provides collection, processing, and rendering functionalit...
+phpunit/php-file-iterator    5.1.0  6.0.0  FilterIterator implementation that filters files based on a list of suff...
+phpunit/php-invoker          5.0.1  6.0.0  Invoke callables with a timeout
+phpunit/php-text-template    4.0.1  5.0.0  Simple template engine.
+phpunit/php-timer            7.0.1  8.0.0  Utility class for timing
+sebastian/cli-parser         3.0.2  4.0.0  Library for parsing CLI options
+sebastian/comparator         6.3.0  7.0.0  Provides the functionality to compare PHP values for equality
+sebastian/complexity         4.0.1  5.0.0  Library for calculating the complexity of PHP code units
+sebastian/diff               6.0.2  7.0.0  Diff implementation
+sebastian/environment        7.2.0  8.0.0  Provides functionality to handle HHVM/PHP environments
+sebastian/exporter           6.3.0  7.0.0  Provides the functionality to export PHP variables for visualization
+sebastian/global-state       7.0.2  8.0.0  Snapshotting of global state
+sebastian/lines-of-code      3.0.1  4.0.0  Library for counting the lines of code in PHP source code
+sebastian/object-enumerator  6.0.1  7.0.0  Traverses array structures and object graphs to enumerate all referenced...
+sebastian/object-reflector   4.0.1  5.0.0  Allows reflection of object attributes, including inherited and non-publ...
+sebastian/recursion-context  6.0.2  7.0.0  Provides functionality to recursively process PHP variables
+sebastian/type               5.1.0  6.0.0  Collection of value objects that represent the types of the PHP type system
+sebastian/version            5.0.2  6.0.0  Library that helps with managing the version number of Git-hosted PHP pr...
+sentry/sdk                   3.6.0  4.0.0  This is a metapackage shipping sentry/sentry with a recommended HTTP cli...
+sentry/sentry                3.22.1 4.10.0 A PHP SDK for Sentry (http://sentry.io)
+symfony/config               6.4.14 7.2.3  Helps you find, load, combine, autofill and validate configuration value...
+symfony/dependency-injection 6.4.16 7.2.3  Allows you to standardize and centralize the way objects are constructed...
+symfony/finder               5.4.45 7.2.2  Finds files and directories via an intuitive fluent interface
+symfony/framework-bundle     6.4.18 7.2.3  Provides a tight integration between Symfony components and the Symfony ...
+symfony/http-kernel          6.4.18 7.2.3  Provides a structured process for converting a Request into a Response
+symfony/process              6.4.15 7.2.0  Executes commands in sub-processes
+symfony/yaml                 6.4.18 7.2.3  Loads and dumps YAML files</pre></p>
 <p><b>8th February 2025</b></p>
 <p>1. Include a function blockInvalidState in all the AuthController callback clients which checks for csrf attacks </p>
 <p>and null session Auth state. Copilot was asked a question regarding this however the yii-auth-client repository </p>
