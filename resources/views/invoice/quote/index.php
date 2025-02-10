@@ -12,6 +12,8 @@ use Yiisoft\Html\Tag\I;
 use Yiisoft\Html\Tag\Label;
 use Yiisoft\Yii\Bootstrap5\Breadcrumbs;
 use Yiisoft\Yii\Bootstrap5\BreadcrumbLink;
+use Yiisoft\Yii\DataView\Column\ActionButton;
+use Yiisoft\Yii\DataView\Column\ActionColumn;
 use Yiisoft\Yii\DataView\Column\DataColumn;
 use Yiisoft\Yii\DataView\GridView;
 
@@ -209,35 +211,39 @@ echo Breadcrumbs::widget()
             header: $translator->translate('i.id'),
             content: static fn (Quote $model) => $model->getId(),
             withSorting: true    
-        ), new DataColumn(
-            header: $translator->translate('i.view'),
-            content: static function (Quote $model) use ($urlGenerator): string {
-               return Html::a(Html::tag('i','',['class'=>'fa fa-eye fa-margin']), $urlGenerator->generate('quote/view',['id'=>$model->getId()]),[])->render();
-            }
         ),
-        new DataColumn(
-            header: $translator->translate('i.edit'),
-            content: static function (Quote $model) use ($urlGenerator): string {
-               return Html::a(Html::tag('i','',['class'=>'fa fa-edit fa-margin']), $urlGenerator->generate('quote/edit',['id'=>$model->getId()]),[])->render();
-            }
-        ),
-        new DataColumn(
-            header: $translator->translate('i.delete'), 
-            content: static function (Quote $model) use ($translator, $urlGenerator): string {
-                if ($model->getStatus_id() == '1') {
-                    return Html::a( Html::tag('button',
-                        Html::tag('i','',['class'=>'fa fa-trash fa-margin']),
-                        [
-                            'type'=>'submit', 
-                            'class'=>'dropdown-button',
-                            'onclick'=>"return confirm("."'".$translator->translate('i.delete_record_warning')."');"
-                        ]
-                        ),
-                        $urlGenerator->generate('quote/delete',['id'=>$model->getId()]),[]                                         
-                    )->render();
-                } else { return ''; }
-            }
-        ),        
+        new ActionColumn(buttons: [
+            new ActionButton(
+                content: '🔎',
+                url: static function(Quote $model) use ($urlGenerator) : string {
+                     return $urlGenerator->generate('quote/view', ['id' => $model->getId()]);     
+                },
+                attributes: [
+                    'data-bs-toggle' => 'tooltip',
+                    'title' => $translator->translate('i.view'),
+                ]      
+            ),
+            new ActionButton(
+                content: '✎',
+                url: static function(Quote $model) use ($urlGenerator) : string {
+                     return $urlGenerator->generate('quote/edit', ['id' => $model->getId()]);     
+                },
+                attributes: [
+                    'data-bs-toggle' => 'tooltip',
+                    'title' => $translator->translate('i.edit'),
+                ]      
+            ),
+            new ActionButton(
+                content: '❌',
+                url: static function(Quote $model) use ($urlGenerator) : string {
+                     return $urlGenerator->generate('quote/delete', ['id' => $model->getId()]);     
+                },
+                attributes: [
+                    'title' => $translator->translate('i.delete'),
+                    'onclick'=>"return confirm("."'".$translator->translate('i.delete_record_warning')."');"
+                ]      
+            ),          
+        ]),
         new DataColumn(
             'status_id',
             header: $translator->translate('i.status'),

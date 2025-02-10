@@ -86,7 +86,7 @@ final class CompanyController
             'actionArguments' => [],
             'errors' => [],
             'form' => $form,
-            'company_public' => $this->translator->translate('invoice.company.public'),
+            'companyPublic' => $this->translator->translate('invoice.company.public'),
         ];
 
         if ($request->getMethod() === Method::POST) {
@@ -124,7 +124,7 @@ final class CompanyController
                 'actionArguments' => ['id' => $company->getId()],
                 'errors' => [],
                 'form' => $form,
-                'company_public' => $this->translator->translate('invoice.company.public'),
+                'companyPublic' => $this->translator->translate('invoice.company.public'),
             ];
             if ($request->getMethod() === Method::POST) {
                 $body = $request->getParsedBody() ?? [];
@@ -175,7 +175,8 @@ final class CompanyController
             $parameters = [
                 'title' => $this->translator->translate('i.view'),
                 'actionName' => 'company/view',
-                'actionArgumens' => ['id' => $company->getId()],
+                'actionArguments' => ['id' => $company->getId()],                
+                'companyPublic' => $this->translator->translate('invoice.company.public'),
                 'form' => $form,
             ];
             return $this->viewRenderer->render('_view', $parameters);
