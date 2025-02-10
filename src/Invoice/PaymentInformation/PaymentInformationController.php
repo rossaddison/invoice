@@ -276,7 +276,11 @@ final class PaymentInformationController
             'sandbox' => $this->sR->getSetting('gateway_amazon_pay_sandbox') === '1' ? true : false,
         ];
         $client = new \Amazon\Pay\API\Client($amazonpay_config);
-
+        // For testing purposes
+        // $signature = $client->testPrivateKeyIntegrity()
+        //           ? $client->generateButtonSignature($this->amazon_payload_json($url_key))
+        //           : '';
+        //
         /**
          * @psalm-suppress MixedReturnStatement
          */
