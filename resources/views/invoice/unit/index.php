@@ -11,6 +11,7 @@ use Yiisoft\Html\Tag\Div;
 use Yiisoft\Html\Tag\Form;
 use Yiisoft\Html\Tag\H5;
 use Yiisoft\Html\Tag\I;
+use Yiisoft\Yii\DataView\Column\ActionButton;
 use Yiisoft\Yii\DataView\Column\ActionColumn;
 use Yiisoft\Yii\DataView\Column\DataColumn;
 use Yiisoft\Yii\DataView\GridView;
@@ -87,46 +88,38 @@ use Yiisoft\Yii\DataView\GridView;
                 content: static fn (Unit $model) => Html::encode($model->getUnit_name_plrl())
             ),
             
-            new ActionColumn(
-                content: static function(Unit $model) use ($translator) : string { 
-                    $unitId = $model->getUnit_id();
-                    if (null!==$unitId) {
-                        return Html::openTag('div', ['class' => 'btn-group']) .
-                        Html::a()
-                        ->addAttributes([
-                            'class' => 'dropdown-button text-decoration-none', 
-                            'title' => $translator->translate('i.view')
-                        ])
-                        ->content('🔎')
-                        ->encode(false)
-                        ->href('unit/view/'. $unitId)
-                        ->render() .
-                        Html::a()
-                        ->addAttributes([
-                            'class' => 'dropdown-button text-decoration-none', 
-                            'title' => $translator->translate('i.edit')
-                        ])
-                        ->content('✎')
-                        ->encode(false)
-                        ->href('unit/edit/'. $unitId)
-                        ->render() .
-                        Html::a()
-                        ->addAttributes([
-                            'class'=>'dropdown-button text-decoration-none', 
-                            'title' => $translator->translate('i.delete'),
-                            'type'=>'submit', 
-                            'onclick'=>"return confirm("."'".$translator->translate('i.delete_record_warning')."');"
-                        ])
-                        ->content('❌')
-                        ->encode(false)
-                        ->href('unit/delete/'. $unitId)
-                        ->render() . 
-                        Html::closeTag('div');
-                    } else {
-                        return '';
-                    }    
-                }     
-            ),           
+            new ActionColumn(buttons: [
+                new ActionButton(
+                    content: '🔎',
+                    url: static function(Unit $model) use ($urlGenerator) : string {
+                         return $urlGenerator->generate('unit/view', ['id' => $model->getUnit_id()]);     
+                    },
+                    attributes: [
+                        'data-bs-toggle' => 'tooltip',
+                        'title' => $translator->translate('i.view'),
+                    ]      
+                ),
+                new ActionButton(
+                    content: '✎',
+                    url: static function(Unit $model) use ($urlGenerator) : string {
+                         return $urlGenerator->generate('unit/edit', ['id' => $model->getUnit_id()]);     
+                    },
+                    attributes: [
+                        'data-bs-toggle' => 'tooltip',
+                        'title' => $translator->translate('i.edit'),
+                    ]      
+                ),
+                new ActionButton(
+                    content: '❌',
+                    url: static function(Unit $model) use ($urlGenerator) : string {
+                         return $urlGenerator->generate('unit/delete', ['id' => $model->getUnit_id()]);     
+                    },
+                    attributes: [
+                        'title' => $translator->translate('i.delete'),
+                        'onclick'=>"return confirm("."'".$translator->translate('i.delete_record_warning')."');"
+                    ]      
+                ),          
+            ]),           
         ];
     ?>
     <?php

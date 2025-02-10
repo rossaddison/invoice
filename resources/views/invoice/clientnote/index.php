@@ -10,6 +10,7 @@ use Yiisoft\Html\Tag\Form;
 use Yiisoft\Html\Tag\H5;
 use Yiisoft\Html\Tag\I;
 use Yiisoft\Yii\DataView\Column\DataColumn;
+use Yiisoft\Yii\DataView\Column\ActionButton;
 use Yiisoft\Yii\DataView\Column\ActionColumn;
 use Yiisoft\Yii\DataView\GridView;
 
@@ -86,41 +87,38 @@ use Yiisoft\Yii\DataView\GridView;
             header: $translator->translate('invoice.client.note.date'),                
             content: static fn (ClientNote $model): string => Html::encode((!is_string($dateNote = $model->getDate_note()) ? $dateNote->format($dateHelper->style()) : '')) 
         ),
-        new ActionColumn(
-            /** @psalm-suppress InvalidArgument */    
-            content: static fn(ClientNote $model): string => null!==($modelId = $model->getId()) ? 
-            Html::a()
-            ->addAttributes(['class' => 'dropdown-button text-decoration-none', 'title' => $translator->translate('i.view')])
-            ->content('🔎')
-            ->encode(false)
-            ->href('clientnote/view/'. $modelId)
-            ->render() : '',
-        ),
-        new ActionColumn(
-            /** @psalm-suppress InvalidArgument */
-            content: static fn(ClientNote $model): string => null!==($modelId = $model->getId()) ?
-            Html::a()
-            ->addAttributes(['class' => 'dropdown-button text-decoration-none', 'title' => $translator->translate('i.edit')])
-            ->content('✎')
-            ->encode(false)
-            ->href('clientnote/edit/'. $modelId)
-            ->render() : '',
-        ),
-        new ActionColumn(
-            /** @psalm-suppress InvalidArgument */    
-            content: static fn(ClientNote $model): string => null!==($modelId = $model->getId()) ? 
-            Html::a()
-            ->addAttributes([
-                'class'=>'dropdown-button text-decoration-none', 
-                'title' => $translator->translate('i.delete'),
-                'type'=>'submit', 
-                'onclick'=>"return confirm("."'".$translator->translate('i.delete_record_warning')."');"
-            ])
-            ->content('❌')
-            ->encode(false)
-            ->href('clientnote/delete/'. $modelId)
-            ->render() : '',
-        )
+        new ActionColumn(buttons: [
+            new ActionButton(
+                content: '🔎',
+                url: static function(ClientNote $model) use ($urlGenerator) : string {
+                     return $urlGenerator->generate('clientnote/view', ['id' => $model->getId()]);     
+                },
+                attributes: [
+                    'data-bs-toggle' => 'tooltip',
+                    'title' => $translator->translate('i.view'),
+                ]      
+            ),
+            new ActionButton(
+                content: '✎',
+                url: static function(ClientNote $model) use ($urlGenerator) : string {
+                     return $urlGenerator->generate('clientnote/edit', ['id' => $model->getId()]);     
+                },
+                attributes: [
+                    'data-bs-toggle' => 'tooltip',
+                    'title' => $translator->translate('i.edit'),
+                ]      
+            ),
+            new ActionButton(
+                content: '❌',
+                url: static function(ClientNote $model) use ($urlGenerator) : string {
+                     return $urlGenerator->generate('clientnote/delete', ['id' => $model->getId()]);     
+                },
+                attributes: [
+                    'title' => $translator->translate('i.delete'),
+                    'onclick'=>"return confirm("."'".$translator->translate('i.delete_record_warning')."');"
+                ]      
+            ),          
+        ]),     
     ];       
 ?>
 <?php

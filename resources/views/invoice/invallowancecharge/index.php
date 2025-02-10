@@ -8,8 +8,9 @@ use Yiisoft\Html\Tag\Div;
 use Yiisoft\Html\Tag\Form;
 use Yiisoft\Html\Tag\H5;
 use Yiisoft\Html\Tag\I;
-use Yiisoft\Yii\DataView\Column\DataColumn;
+use Yiisoft\Yii\DataView\Column\ActionButton;
 use Yiisoft\Yii\DataView\Column\ActionColumn;
+use Yiisoft\Yii\DataView\Column\DataColumn;
 use Yiisoft\Yii\DataView\GridView;
 use Yiisoft\Router\CurrentRoute;
 
@@ -88,38 +89,38 @@ $toolbar = Div::tag();
             header:  $translator->translate('invoice.invoice.vat'),
             content: static fn (InvAllowanceCharge $model) => $model->getVat()
         ),
-        new ActionColumn(
-            content: static fn(InvAllowanceCharge $model): string => 
-            Html::a()
-            ->addAttributes(['class' => 'dropdown-button text-decoration-none', 'title' => $translator->translate('i.view')])
-            ->content('🔎')
-            ->encode(false)
-            ->href('invallowancecharge/view/'. $model->getId())
-            ->render(),
-        ),
-        new ActionColumn(
-            content: static fn(InvAllowanceCharge $model): string => 
-            Html::a()
-            ->addAttributes(['class' => 'dropdown-button text-decoration-none', 'title' => $translator->translate('i.edit')])
-            ->content('✎')
-            ->encode(false)
-            ->href('invallowancecharge/edit/'. $model->getId())
-            ->render(),
-        ),
-        new ActionColumn(
-            content: static fn(InvAllowanceCharge $model): string => 
-            Html::a()
-            ->addAttributes([
-                'class'=>'dropdown-button text-decoration-none', 
-                'title' => $translator->translate('i.delete'),
-                'type'=>'submit', 
-                'onclick'=>"return confirm("."'".$translator->translate('i.delete_record_warning')."');"
-            ])
-            ->content('❌')
-            ->encode(false)
-            ->href('invallowancecharge/delete/'. $model->getId())
-            ->render(),
-        )        
+        new ActionColumn(buttons: [
+            new ActionButton(
+                content: '🔎',
+                url: static function(InvAllowanceCharge $model) use ($urlGenerator) : string {
+                     return $urlGenerator->generate('invallowancecharge/view', ['id' => $model->getId()]);     
+                },
+                attributes: [
+                    'data-bs-toggle' => 'tooltip',
+                    'title' => $translator->translate('i.view'),
+                ]      
+            ),
+            new ActionButton(
+                content: '✎',
+                url: static function(InvAllowanceCharge $model) use ($urlGenerator) : string {
+                     return $urlGenerator->generate('invallowancecharge/edit', ['id' => $model->getId()]);     
+                },
+                attributes: [
+                    'data-bs-toggle' => 'tooltip',
+                    'title' => $translator->translate('i.edit'),
+                ]      
+            ),
+            new ActionButton(
+                content: '❌',
+                url: static function(InvAllowanceCharge $model) use ($urlGenerator) : string {
+                     return $urlGenerator->generate('invallowancecharage/delete', ['id' => $model->getId()]);     
+                },
+                attributes: [
+                    'title' => $translator->translate('i.delete'),
+                    'onclick'=>"return confirm("."'".$translator->translate('i.delete_record_warning')."');"
+                ]      
+            ),          
+        ]),        
     ];            
 ?>
 <?php

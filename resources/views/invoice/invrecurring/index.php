@@ -9,6 +9,7 @@ use Yiisoft\Html\Tag\Div;
 use Yiisoft\Html\Tag\Form;
 use Yiisoft\Html\Tag\I;
 use Yiisoft\Html\Tag\Span;
+use Yiisoft\Yii\DataView\Column\ActionButton;
 use Yiisoft\Yii\DataView\Column\ActionColumn;
 use Yiisoft\Yii\DataView\Column\ColumnInterface;
 use Yiisoft\Yii\DataView\Column\DataColumn;
@@ -100,41 +101,42 @@ $toolbar = Div::tag();
             content: static fn(InvRecurring $model) => 
             Html::encode(null!==$model->getNext() ? ((!is_string($recurringNext = $model->getNext()) && null!==$recurringNext) ? $recurringNext->format($dateHelper->style()) : '') : '')
         ),
-        new ActionColumn(
-            header: '', 
-            content: static fn(InvRecurring $model): string =>  
-            Html::a()
-            ->addAttributes(['class' => 'btn btn-default text-decoration-none', 'title' => null!==$model->getNext() ? $translator->translate('i.stop') : $translator->translate('i.start') ])
-            ->content(null!==$model->getNext() ? '🛑' : '🏃')
-            ->encode(false)
-            ->href(null!==$model->getNext() ? 'invrecurring/stop/'. $model->getId() : 'invrecurring/start/'. $model->getId())
-            ->render(),
-        ),    
-        new ActionColumn(
-            header: '',
-            content: static fn(InvRecurring $model): string => !empty($id = $model->getId()) ? 
-            Html::a()
-            ->addAttributes(['class' => 'btn btn-default text-decoration-none', 'title' => $translator->translate('i.view')])
-            ->content('🔎')
-            ->encode(false)
-            ->href('invrecurring/view/'. $id)
-            ->render() : '',
-        ),
-        new ActionColumn(
-            header: '',
-            content: static fn(InvRecurring $model): string => !empty($id = $model->getId()) ?
-            Html::a()
-            ->addAttributes([
-                'class'=>'btn btn-default text-decoration-none', 
-                'title' => $translator->translate('i.delete'),
-                'type'=>'submit', 
-                'onclick'=>"return confirm("."'".$translator->translate('i.delete_record_warning')."');"
-            ])
-            ->content('❌')
-            ->encode(false)
-            ->href('invrecurring/delete/'. $id)
-            ->render() : '',
-        ),
+        new ActionColumn(buttons: [
+            new ActionButton(
+                content: static function(InvRecurring $model) : string { 
+                    return null!==$model->getNext() ? '🛑' : '🏃';
+                },            
+                url: static function(InvRecurring $model) use ($urlGenerator) : string {
+                     return null!==$model->getNext() ? $urlGenerator->generate('invrecurring/stop', ['id' => $model->getId()]) : $urlGenerator->generate('invrecurring/start', ['id' => $model->getId()]);     
+                },
+                attributes: function(InvRecurring $model) use ($translator) : array  { 
+                    return [
+                        'data-bs-toggle' => 'tooltip',
+                        'title' => null!==$model->getNext() ? $translator->translate('i.stop') : $translator->translate('i.start'),
+                    ];
+                }            
+            ),
+            new ActionButton(
+                content: '🔎',
+                url: static function(InvRecurring $model) use ($urlGenerator) : string {
+                     return $urlGenerator->generate('invrecurring/view', ['id' => $model->getId()]);     
+                },
+                attributes: [
+                    'data-bs-toggle' => 'tooltip',
+                    'title' => $translator->translate('i.view'),
+                ]      
+            ),
+            new ActionButton(
+                content: '❌',
+                url: static function(InvRecurring $model) use ($urlGenerator) : string {
+                     return $urlGenerator->generate('invrecurring/delete', ['id' => $model->getId()]);     
+                },
+                attributes: [
+                    'title' => $translator->translate('i.delete'),
+                    'onclick'=>"return confirm("."'".$translator->translate('i.delete_record_warning')."');"
+                ]      
+            ),          
+        ]), 
     ];
 ?>
 <?php

@@ -11,7 +11,7 @@ use Yiisoft\Html\Tag\Form;
  * @var App\Widget\Button $button
  * @var Yiisoft\Router\UrlGeneratorInterface $urlGenerator
  * @var Yiisoft\Translator\TranslatorInterface $translator
- * @var string $company_public
+ * @var string $companyPublic
  * @var string $csrf
  * @var string $actionName
  * @var string $title
@@ -22,7 +22,7 @@ use Yiisoft\Html\Tag\Form;
 ?>
 
 <?= Html::openTag('h1'); ?>
-    <?= Html::encode($title.' '. $company_public); ?>
+    <?= Html::encode($title.' '. $companyPublic); ?>
 <?= Html::closeTag('h1'); ?>
 
 <?= Form::tag()
