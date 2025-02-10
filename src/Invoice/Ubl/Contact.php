@@ -61,39 +61,37 @@ class Contact implements XmlSerializable
     }
 
     /**
-     *
      * @param Writer $writer
-     * @return void
      */
     public function xmlSerialize(Writer $writer): void
     {
         if ($this->name !== null) {
             $writer->write([
-                Schema::CBC . 'Name' => $this->name
+                Schema::CBC . 'Name' => $this->name,
             ]);
         }
 
         if ($this->name == null && ($this->firstname !== null || $this->lastname !== null)) {
             $writer->write([
-                Schema::CBC . 'Name' => ($this->firstname ?? '').' '. ($this->lastname ?? '')
+                Schema::CBC . 'Name' => ($this->firstname ?? '') . ' ' . ($this->lastname ?? ''),
             ]);
         }
 
         if ($this->telephone !== null) {
             $writer->write([
-                Schema::CBC . 'Telephone' => $this->telephone
+                Schema::CBC . 'Telephone' => $this->telephone,
             ]);
         }
 
         if ($this->telefax !== null) {
             $writer->write([
-                Schema::CBC . 'Telefax' => $this->telefax
+                Schema::CBC . 'Telefax' => $this->telefax,
             ]);
         }
 
         if ($this->electronicMail !== null) {
             $writer->write([
-                Schema::CBC . 'ElectronicMail' => $this->electronicMail
+                Schema::CBC . 'ElectronicMail' => $this->electronicMail,
             ]);
         }
     }

@@ -35,7 +35,7 @@ final class ClientNoteForm extends FormModel
     public function getDate_note(): string|DateTimeImmutable
     {
         /**
-         * @var string|DateTimeImmutable $this->date_note
+         * @var DateTimeImmutable|string $this->date_note
          */
         return $this->date_note;
     }

@@ -9,8 +9,6 @@ use Cycle\Annotated\Annotation\Entity;
 use Cycle\Annotated\Annotation\Relation\BelongsTo;
 use DateTime;
 use DateTimeImmutable;
-use App\Invoice\Entity\Project;
-use App\Invoice\Entity\TaxRate;
 
 #[Entity(repository: \App\Invoice\Task\TaskRepository::class)]
 class Task
@@ -22,19 +20,19 @@ class Task
     private ?Project $project = null;
 
     #[Column(type: 'primary')]
-    private ?int $id =  null;
+    private ?int $id = null;
 
     #[Column(type:'integer(11)', nullable: true, default: null)]
-    private ?int $project_id =  null;
+    private ?int $project_id = null;
 
     #[Column(type:'text', nullable: true)]
-    private ?string $name =  '';
+    private ?string $name = '';
 
     #[Column(type:'longText', nullable: false)]
-    private string $description =  '';
+    private string $description = '';
 
     #[Column(type:'decimal(20,2)', nullable: false, default: 0.00)]
-    private ?float $price =  0.00;
+    private ?float $price = 0.00;
 
     #[Column(type:'date', nullable: true)]
     private mixed $finish_date;
@@ -43,7 +41,7 @@ class Task
     private ?int $status = null;
 
     #[Column(type:'integer(11)', nullable: false)]
-    private ?int $tax_rate_id =  null;
+    private ?int $tax_rate_id = null;
 
     public function __construct(
         int $id = null,
@@ -82,7 +80,7 @@ class Task
 
     public function setId(int $id): void
     {
-        $this->id =  $id;
+        $this->id = $id;
     }
 
     public function getProject_id(): string
@@ -92,7 +90,7 @@ class Task
 
     public function setProject_id(int $project_id): void
     {
-        $this->project_id =  $project_id;
+        $this->project_id = $project_id;
     }
 
     public function getName(): ?string
@@ -102,7 +100,7 @@ class Task
 
     public function setName(string $name): void
     {
-        $this->name =  $name;
+        $this->name = $name;
     }
 
     public function getDescription(): string
@@ -112,7 +110,7 @@ class Task
 
     public function setDescription(string $description): void
     {
-        $this->description =  $description;
+        $this->description = $description;
     }
 
     public function getPrice(): ?float
@@ -122,18 +120,18 @@ class Task
 
     public function setPrice(float $price): void
     {
-        $this->price =  $price;
+        $this->price = $price;
     }
 
     public function getFinish_date(): string|DateTimeImmutable
     {
-        /** @var string|DateTimeImmutable $this->finish_date */
+        /** @var DateTimeImmutable|string $this->finish_date */
         return $this->finish_date;
     }
 
     public function setFinish_date(?DateTime $finish_date): void
     {
-        $this->finish_date =  $finish_date;
+        $this->finish_date = $finish_date;
     }
 
     public function getStatus(): ?int
@@ -143,7 +141,7 @@ class Task
 
     public function setStatus(int $status): void
     {
-        $this->status =  $status;
+        $this->status = $status;
     }
 
     public function getTax_rate_id(): string
@@ -153,7 +151,7 @@ class Task
 
     public function setTax_rate_id(int $tax_rate_id): void
     {
-        $this->tax_rate_id =  $tax_rate_id;
+        $this->tax_rate_id = $tax_rate_id;
     }
 
     public function Is_overdue(): bool

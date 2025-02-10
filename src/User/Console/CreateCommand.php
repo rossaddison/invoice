@@ -22,8 +22,8 @@ final class CreateCommand extends Command
     protected static $defaultName = 'user/create';
 
     public function __construct(
-        private readonly SignupForm   $signupForm,
-        private readonly Manager      $manager,
+        private readonly SignupForm $signupForm,
+        private readonly Manager $manager,
         private readonly FormHydrator $formHydrator
     ) {
         parent::__construct();
@@ -44,8 +44,8 @@ final class CreateCommand extends Command
      * @param OutputInterface $output
      * @param string $error
      * @param string $attribute
-     * @return int
      * @throws LogicException
+     * @return int
      */
     protected function execute(InputInterface $input, OutputInterface $output): int
     {

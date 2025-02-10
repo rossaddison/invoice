@@ -12,11 +12,7 @@ use App\Invoice\Entity\SalesOrder;
 use App\Invoice\Entity\SalesOrderItem;
 use App\Invoice\Entity\InvItem;
 //use App\Invoice\Entity\UserInv;
-use App\Invoice\Helpers\DateHelper;
-use App\Invoice\Helpers\MpdfHelper;
-use App\Invoice\Helpers\CountryHelper;
 use App\Invoice\Helpers\CustomValuesHelper as CVH;
-use App\Invoice\Helpers\ZugFerdHelper;
 //use App\Invoice\Libraries\Sumex;
 //use App\Invoice\InvAmount\InvAmountRepository;
 //use App\Invoice\Inv\InvRepository;
@@ -44,7 +40,6 @@ class PdfHelper
     }
 
     /**
-     *
      * @return string|null
      */
     private function locale_to_language(): string|null
@@ -57,7 +52,6 @@ class PdfHelper
     }
 
     /**
-     *
      * @param array|object $quote_or_inv
      * @return mixed
      */
@@ -110,7 +104,6 @@ class PdfHelper
         \Yiisoft\Yii\View\Renderer\ViewRenderer $viewrenderer
     ) {
         if (null !== $quote_id) {
-
             $quote = $qR->repoCount($quote_id) > 0 ? $qR->repoQuoteLoadedquery($quote_id) : null;
 
             if (null !== $quote) {
@@ -168,11 +161,11 @@ class PdfHelper
                     'company_logo_and_address' => $viewrenderer->renderPartialAsString(
                         '//invoice/setting/company_logo_and_address.php',
                         ['company' => $company = $this->s->get_config_company_details(),
-                         'document_number' => $quote->getNumber(),
-                         'client_number' => $client_number,
-                         'isInvoice' => false,
-                         'isQuote' => true,
-                         'isSalesOrder' => false
+                            'document_number' => $quote->getNumber(),
+                            'client_number' => $client_number,
+                            'isInvoice' => false,
+                            'isQuote' => true,
+                            'isSalesOrder' => false,
                         ]
                     ),
                     'userInv' => $userinv,
@@ -182,14 +175,14 @@ class PdfHelper
                     'cldr' => array_keys($this->s->locale_language_array(), $this->get_print_language($quote)),
                 ];
                 // Quote Template will be either 'quote' or a custom designed quote in the folder.
-                $html = $viewrenderer->renderPartialAsString('//invoice/template/quote/pdf/'.$quote_template, $data);
+                $html = $viewrenderer->renderPartialAsString('//invoice/template/quote/pdf/' . $quote_template, $data);
                 if ($this->s->getSetting('pdf_html_quote') === '1') {
                     return $html;
                 }
                 // Set the print language to null for future use
                 $this->session->set('print_language', '');
                 $mpdfhelper = new MpdfHelper();
-                $filename = $this->s->getSetting('i.quote') . '_' . str_replace(['\\', '/'], '_', ($quote->getNumber() ?? (string)rand(0, 10)));
+                $filename = $this->s->getSetting('i.quote') . '_' . str_replace(['\\', '/'], '_', $quote->getNumber() ?? (string)rand(0, 10));
                 return $mpdfhelper->pdf_create($html, $filename, $stream, $quote->getPassword(), $this->s, null, null, false, false, [], $quote);
             }
         }
@@ -197,7 +190,6 @@ class PdfHelper
     }   //generate_quote_pdf
 
     /**
-     *
      * @param string|null $so_id
      * @param string $user_id
      * @param bool $stream
@@ -235,7 +227,6 @@ class PdfHelper
         Translator $translator
     ): string {
         if (null !== $so_id) {
-
             $so = $soR->repoCount($so_id) > 0 ? $soR->repoSalesOrderLoadedquery($so_id) : null;
 
             if (null !== $so) {
@@ -278,23 +269,23 @@ class PdfHelper
                         'custom_fields' => $cfR->repoTablequery('salesorder_custom'),
                         'cvR' => $cvR,
                         'salesorder_custom_values' => $so_custom_values,
-                        'cvH' => new CVH($this->s)
+                        'cvH' => new CVH($this->s),
                     ]),
                     // Custom fields appearing at the bottom of the salesorder
                     'view_custom_fields' => $viewrenderer->renderPartialAsString('//invoice/template/salesorder/pdf/view_custom_fields', [
                         'custom_fields' => $cfR->repoTablequery('salesorder_custom'),
                         'cvR' => $cvR,
                         'salesorder_custom_values' => $so_custom_values,
-                        'cvH' => new CVH($this->s)
+                        'cvH' => new CVH($this->s),
                     ]),
                     'company_logo_and_address' => $viewrenderer->renderPartialAsString(
                         '//invoice/setting/company_logo_and_address.php',
                         ['company' => $company = $this->s->get_config_company_details(),
-                         'document_number' => $so->getNumber(),
-                         'client_number' => $client_number,
-                         'isInvoice' => false,
-                         'isQuote' => false,
-                         'isSalesOrder' => true
+                            'document_number' => $so->getNumber(),
+                            'client_number' => $client_number,
+                            'isInvoice' => false,
+                            'isQuote' => false,
+                            'isSalesOrder' => true,
                         ]
                     ),
                     'userInv' => $userinv,
@@ -304,14 +295,14 @@ class PdfHelper
                     'cldr' => array_keys($this->s->locale_language_array(), $this->get_print_language($so)),
                 ];
                 // Sales Order Template will be either 'salesorder' or a custom designed salesorder in the folder.
-                $html = $viewrenderer->renderPartialAsString('//invoice/template/salesorder/pdf/'.$salesorder_template, $data);
+                $html = $viewrenderer->renderPartialAsString('//invoice/template/salesorder/pdf/' . $salesorder_template, $data);
                 if ($this->s->getSetting('pdf_html_salesorder') === '1') {
                     return $html;
                 }
                 // Set the print language to null for future use
                 $this->session->set('print_language', '');
                 $mpdfhelper = new MpdfHelper();
-                $filename = $translator->translate('invoice.salesorder') . '_' . str_replace(['\\', '/'], '_', ($so->getNumber() ?? (string)rand(0, 10)));
+                $filename = $translator->translate('invoice.salesorder') . '_' . str_replace(['\\', '/'], '_', $so->getNumber() ?? (string)rand(0, 10));
                 return $mpdfhelper->pdf_create($html, $filename, $stream, $so->getPassword(), $this->s, null, null, false, false, [], $so);
             }
         }
@@ -319,7 +310,6 @@ class PdfHelper
     }   //generate_quote_pdf
 
     /**
-     *
      * @param string|null $inv_id
      * @param string $user_id
      * @param bool $custom
@@ -413,19 +403,19 @@ class PdfHelper
                 'company_logo_and_address' => $viewrenderer->renderPartialAsString(
                     '//invoice/setting/company_logo_and_address.php',
                     [
-                     // if there is no active company with private details, use the config params company details
-                     'company' => !$this->s->get_private_company_details() == []
-                                 ? $this->s->get_private_company_details()
-                                 : $this->s->get_config_company_details(),
-                     'document_number' => $inv->getNumber(),
-                     //'client_number'=> $client_number,
-                     'client_purchase_order_number' => $client_purchase_order_number,
-                     'date_tax_point' => $date_helper->date_from_mysql($inv->getDate_tax_point()),
-                     '_language' => $_language,
-                     'inv_id' => $inv_id,
-                     'isInvoice' => true,
-                     'isQuote' => false,
-                     'isSalesOrder' => false
+                        // if there is no active company with private details, use the config params company details
+                        'company' => !$this->s->get_private_company_details() == []
+                                    ? $this->s->get_private_company_details()
+                                    : $this->s->get_config_company_details(),
+                        'document_number' => $inv->getNumber(),
+                        //'client_number'=> $client_number,
+                        'client_purchase_order_number' => $client_purchase_order_number,
+                        'date_tax_point' => $date_helper->date_from_mysql($inv->getDate_tax_point()),
+                        '_language' => $_language,
+                        'inv_id' => $inv_id,
+                        'isInvoice' => true,
+                        'isQuote' => false,
+                        'isSalesOrder' => false,
                     ]
                 ),
                 'client' => $cR->repoClientquery((string)$inv->getClient()?->getClient_id()),
@@ -434,7 +424,7 @@ class PdfHelper
                 'cldr' => array_keys($this->s->locale_language_array(), $this->get_print_language($inv)),
             ];
             // Inv Template will be either 'inv' or a custom designed inv in the folder.
-            return $viewrenderer->renderPartialAsString('//invoice/template/invoice/pdf/'.$inv_template, $data);
+            return $viewrenderer->renderPartialAsString('//invoice/template/invoice/pdf/' . $inv_template, $data);
         }
         return '';
     }
@@ -494,13 +484,13 @@ class PdfHelper
                             'description' => 'ZUGFeRD Invoice',
                             'AFRelationship' => 'Alternative',
                             'mime' => 'text/xml',
-                            'path' => $z->generate_invoice_zugferd_xml_temp_file($inv, $iiaR, $inv_amount)
-                        ]
+                            'path' => $z->generate_invoice_zugferd_xml_temp_file($inv, $iiaR, $inv_amount),
+                        ],
                     ];
                 } else {
                     $associatedFiles = [];
                 }
-                $filename = $this->s->trans('invoice') . '_' . str_replace(['\\', '/'], '_', ($inv->getNumber() ?? (string)rand(0, 10)));
+                $filename = $this->s->trans('invoice') . '_' . str_replace(['\\', '/'], '_', $inv->getNumber() ?? (string)rand(0, 10));
                 //$isInvoice is assigned to true as it is an invoice
                 // If stream is true return the pdf as a string using mpdf otherwise save to local file and
                 // return the filename inclusive target_path to be used to attach to email attachments
@@ -518,20 +508,20 @@ class PdfHelper
     public function generate_inv_pdf_template_normal_paid_overdue_watermark(int $status_id): string
     {
         switch ($status_id) {
-            case ($status_id == 4 && !empty($this->s->getSetting('pdf_invoice_template_paid'))):
-                $return =  $this->s->getSetting('pdf_invoice_template_paid');
+            case $status_id == 4 && !empty($this->s->getSetting('pdf_invoice_template_paid')):
+                $return = $this->s->getSetting('pdf_invoice_template_paid');
                 break;
-            case ($status_id == 4 && empty($this->s->getSetting('pdf_invoice_template_paid'))):
+            case $status_id == 4 && empty($this->s->getSetting('pdf_invoice_template_paid')):
                 $return = 'paid';
                 break;
-            case ($status_id == 5 && !empty($this->s->getSetting('pdf_invoice_template_overdue'))):
-                $return =  $this->s->getSetting('pdf_invoice_template_overdue');
+            case $status_id == 5 && !empty($this->s->getSetting('pdf_invoice_template_overdue')):
+                $return = $this->s->getSetting('pdf_invoice_template_overdue');
                 break;
-            case ($status_id == 5 && empty($this->s->getSetting('pdf_invoice_template_overdue'))):
+            case $status_id == 5 && empty($this->s->getSetting('pdf_invoice_template_overdue')):
                 $return = 'overdue';
                 break;
             default:
-                $return =  strlen($this->s->getSetting('pdf_invoice_template')) > 0 ? $this->s->getSetting('pdf_invoice_template') : 'invoice';
+                $return = strlen($this->s->getSetting('pdf_invoice_template')) > 0 ? $this->s->getSetting('pdf_invoice_template') : 'invoice';
                 break;
         }
         return $return;

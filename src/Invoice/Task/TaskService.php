@@ -18,7 +18,6 @@ final class TaskService
     /**
      * @param Task $model
      * @param array $array
-     * @return void
      */
     public function saveTask(Task $model, array $array): void
     {
@@ -41,7 +40,6 @@ final class TaskService
 
     /**
      * @param Task $model
-     * @return void
      */
     public function deleteTask(Task $model): void
     {

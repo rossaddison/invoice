@@ -31,7 +31,6 @@ final class SalesOrderItemService
      * @param SoIAS $soias
      * @param UR $uR
      * @param TRR $trr
-     * @return void
      */
     public function addSoItem(SalesOrderItem $model, array $array, string $sales_order_id, PR $pr, SoIAR $soiar, SoIAS $soias, UR $uR, TRR $trr): void
     {
@@ -70,7 +69,7 @@ final class SalesOrderItemService
         $tax_rate_percentage = $this->taxrate_percentage((int)$tax_rate_id, $trr);
         if (isset($array['product_id'])) {
             $this->repository->save($model);
-            if (isset($array['quantity']) && isset($array['price']) && isset($array['discount_amount']) && null !== $tax_rate_percentage) {
+            if (isset($array['quantity'], $array['price'], $array['discount_amount'])     && null !== $tax_rate_percentage) {
                 $this->saveSalesOrderItemAmount((int)$model->getId(), (float)$array['quantity'], (float)$array['price'], (float)$array['discount_amount'], $tax_rate_percentage, $soiar, $soias);
             }
         }
@@ -153,7 +152,6 @@ final class SalesOrderItemService
     }
 
     /**
-     *
      * @param int $id
      * @param TRR $trr
      * @return float|null
@@ -162,14 +160,12 @@ final class SalesOrderItemService
     {
         $taxrate = $trr->repoTaxRatequery((string)$id);
         if ($taxrate) {
-            $percentage = $taxrate->getTaxRatePercent();
-            return $percentage;
+            return $taxrate->getTaxRatePercent();
         }
         return null;
     }
 
     /**
-     *
      * @param int $so_item_id
      * @param float $quantity
      * @param float $price
@@ -177,7 +173,6 @@ final class SalesOrderItemService
      * @param float|null $tax_rate_percentage
      * @param SoIAR $soiar
      * @param SoIAS $soias
-     * @return void
      */
     public function saveSalesOrderItemAmount(int $so_item_id, float $quantity, float $price, float $discount, float|null $tax_rate_percentage, SoIAR $soiar, SoIAS $soias): void
     {
@@ -205,9 +200,7 @@ final class SalesOrderItemService
     }
 
     /**
-     *
      * @param array|SalesOrderItem|null $model
-     * @return void
      */
     public function deleteSalesOrderItem(array|SalesOrderItem|null $model): void
     {

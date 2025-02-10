@@ -20,7 +20,6 @@ final class UnitRepository extends Select\Repository
     private EntityWriter $entityWriter;
 
     /**
-     *
      * @param Select<TEntity> $select
      * @param EntityWriter $entityWriter
      */
@@ -45,7 +44,6 @@ final class UnitRepository extends Select\Repository
      * @see Reader/ReadableDataInterface|InvalidArgumentException
      * @param array|Unit|null $unit
      * @throws Throwable
-     * @return void
      */
     public function save(array|Unit|null $unit): void
     {
@@ -56,7 +54,6 @@ final class UnitRepository extends Select\Repository
      * @see Reader/ReadableDataInterface|InvalidArgumentException
      * @param array|Unit|null $unit
      * @throws Throwable
-     * @return void
      */
     public function delete(array|Unit|null $unit): void
     {
@@ -64,7 +61,6 @@ final class UnitRepository extends Select\Repository
     }
 
     /**
-     *
      * @param Select $query
      * @return EntityReader
      */
@@ -77,20 +73,18 @@ final class UnitRepository extends Select\Repository
     }
 
     /**
-     *
      * @param string $unit_id
      * @return int
      */
     public function repoCount(string $unit_id): int
     {
-        $count = $this->select()
+        return $this->select()
                       ->where(['id' => $unit_id])
                       ->count();
-        return $count;
     }
 
     /**
-     * @return null|Unit
+     * @return Unit|null
      *
      * @psalm-return TEntity|null
      */
@@ -103,7 +97,6 @@ final class UnitRepository extends Select\Repository
     }
 
     /**
-     *
      * @param string $unit_name
      * @return Unit|null
      */
@@ -127,17 +120,15 @@ final class UnitRepository extends Select\Repository
     {
         if ((int)$unit_id === 0) {
             return '';
-        } else {
-            $unit = $this->repoUnitquery($unit_id);
-            if ($unit) {
-                if ($quantity == -1 || $quantity == 1) {
-                    return $unit->getUnit_name();
-                } else {
-                    return $unit->getUnit_name_plrl();
-                }
-            }
-            return null;
         }
+        $unit = $this->repoUnitquery($unit_id);
+        if ($unit) {
+            if ($quantity == -1 || $quantity == 1) {
+                return $unit->getUnit_name();
+            }
+            return $unit->getUnit_name_plrl();
+        }
+        return null;
     }
 
     /**
@@ -145,8 +136,7 @@ final class UnitRepository extends Select\Repository
      */
     public function repoTestDataCount(): int
     {
-        $count = $this->select()
+        return $this->select()
                       ->count();
-        return $count;
     }
 }

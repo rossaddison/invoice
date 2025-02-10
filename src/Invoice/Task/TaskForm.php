@@ -65,7 +65,7 @@ final class TaskForm extends FormModel
     public function getFinish_date(): null|string|DateTimeImmutable
     {
         /**
-         * @var null|string|DateTimeImmutable $this->finish_date
+         * @var DateTimeImmutable|string|null $this->finish_date
          */
         return $this->finish_date;
     }

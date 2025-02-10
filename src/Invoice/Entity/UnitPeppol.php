@@ -7,7 +7,6 @@ namespace App\Invoice\Entity;
 use Cycle\Annotated\Annotation\Column;
 use Cycle\Annotated\Annotation\Entity;
 use Cycle\Annotated\Annotation\Relation\BelongsTo;
-use App\Invoice\Entity\Unit;
 
 #[Entity(repository: \App\Invoice\UnitPeppol\UnitPeppolRepository::class)]
 
@@ -17,19 +16,19 @@ class UnitPeppol
     private ?Unit $unit = null;
 
     #[Column(type: 'primary')]
-    private ?int $id =  null;
+    private ?int $id = null;
 
     #[Column(type:'integer(11)', nullable: false)]
-    private ?int $unit_id =  null;
+    private ?int $unit_id = null;
 
     #[Column(type:'string(3)', nullable: false)]
-    private string $code =  '';
+    private string $code = '';
 
     #[Column(type:'string(120)', nullable: false)]
-    private string $name =  '';
+    private string $name = '';
 
     #[Column(type:'longText', nullable: false)]
-    private string $description =  '';
+    private string $description = '';
 
     public function __construct(
         int $id = null,
@@ -62,7 +61,7 @@ class UnitPeppol
 
     public function setId(int $id): void
     {
-        $this->id =  $id;
+        $this->id = $id;
     }
 
     public function getUnit_id(): string
@@ -72,7 +71,7 @@ class UnitPeppol
 
     public function setUnit_id(int $unit_id): void
     {
-        $this->unit_id =  $unit_id;
+        $this->unit_id = $unit_id;
     }
 
     public function getCode(): string
@@ -82,7 +81,7 @@ class UnitPeppol
 
     public function setCode(string $code): void
     {
-        $this->code =  $code;
+        $this->code = $code;
     }
 
     public function getDescription(): string
@@ -92,7 +91,7 @@ class UnitPeppol
 
     public function setDescription(string $description): void
     {
-        $this->description =  $description;
+        $this->description = $description;
     }
 
     public function getName(): string
@@ -102,6 +101,6 @@ class UnitPeppol
 
     public function setName(string $name): void
     {
-        $this->name =  $name;
+        $this->name = $name;
     }
 }

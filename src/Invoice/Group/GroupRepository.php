@@ -18,6 +18,7 @@ use Yiisoft\Data\Cycle\Writer\EntityWriter;
 final class GroupRepository extends Select\Repository
 {
     private EntityWriter $entityWriter;
+
     /**
      * @param Select<TEntity> $select
      * @param EntityWriter $entityWriter
@@ -57,7 +58,6 @@ final class GroupRepository extends Select\Repository
      * @see Reader/ReadableDataInterface|InvalidArgumentException
      * @param array|Group|null $group
      * @throws Throwable
-     * @return void
      */
     public function save(array|Group|null $group): void
     {
@@ -68,7 +68,6 @@ final class GroupRepository extends Select\Repository
      * @see Reader/ReadableDataInterface|InvalidArgumentException
      * @param array|Group|null $group
      * @throws Throwable
-     * @return void
      */
     public function delete(array|Group|null $group): void
     {
@@ -112,7 +111,7 @@ final class GroupRepository extends Select\Repository
       * @param int $left_pad
       * @return string
       */
-    private function parse_identifier_format(string $identifier_format = '', int $next_id = 1, int  $left_pad = 1): string
+    private function parse_identifier_format(string $identifier_format = '', int $next_id = 1, int $left_pad = 1): string
     {
         $template_vars = [];
         $var = '';
@@ -145,7 +144,7 @@ final class GroupRepository extends Select\Repository
     }
 
     /**
-     * @return null|Group
+     * @return Group|null
      *
      * @psalm-return TEntity|null
      */
@@ -158,17 +157,15 @@ final class GroupRepository extends Select\Repository
 
     public function repoGroupcount(string $id): int
     {
-        $count = $this->select()
+        return $this->select()
                       ->where(['id' => $id])
                       ->count();
-        return  $count;
     }
 
     public function repoCountAll(): int
     {
-        $count = $this->select()
+        return $this->select()
                       ->count();
-        return  $count;
     }
 
     /**
@@ -183,9 +180,8 @@ final class GroupRepository extends Select\Repository
             $result->setNext_id($incremented_next_id);
             $this->save($result);
             return (int)$current_id;
-        } else {
-            return 0;
         }
+        return 0;
     }
 
     public function optionsData(): array

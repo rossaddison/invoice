@@ -7,7 +7,6 @@ namespace App\Invoice\Unit;
 use App\Invoice\Entity\Unit;
 use App\Invoice\Setting\SettingRepository;
 use App\Invoice\Traits\FlashMessage;
-use App\Invoice\Unit\UnitRepository;
 use App\Invoice\UnitPeppol\UnitPeppolRepository;
 use App\Service\WebControllerService;
 use App\User\UserService;
@@ -26,7 +25,7 @@ use Yiisoft\Yii\View\Renderer\ViewRenderer;
 final class UnitController
 {
     use FlashMessage;
-    
+
     private Flash $flash;
     private Session $session;
     private ViewRenderer $viewRenderer;
@@ -91,7 +90,7 @@ final class UnitController
             'actionName' => 'unit/add',
             'actionArguments' => [],
             'form' => $form,
-            'errors' => []
+            'errors' => [],
         ];
         if ($request->getMethod() === Method::POST) {
             if ($formHydrator->populateFromPostAndValidate($form, $request)) {
@@ -101,7 +100,7 @@ final class UnitController
                     $this->flashMessage('info', $this->translator->translate('i.record_successfully_created'));
                     return $this->webService->getRedirectResponse('unit/index');
                 }
-            }    
+            }
             $parameters['errors'] = $form->getValidationResult()->getErrorMessagesIndexedByProperty();
             $parameters['form'] = $form;
         }
@@ -129,7 +128,7 @@ final class UnitController
                 'actionName' => 'unit/edit',
                 'actionArguments' => ['unit_id' => $unit_id],
                 'form' => $form,
-                'errors' => []
+                'errors' => [],
             ];
             if ($request->getMethod() === Method::POST) {
                 if ($formHydrator->populateFromPostAndValidate($form, $request)) {
@@ -139,7 +138,7 @@ final class UnitController
                         $this->flashMessage('info', $this->translator->translate('i.record_successfully_updated'));
                         return $this->webService->getRedirectResponse('unit/index');
                     }
-                }    
+                }
                 $parameters['errors'] = $form->getValidationResult()->getErrorMessagesIndexedByProperty();
                 $parameters['form'] = $form;
             }
@@ -181,7 +180,7 @@ final class UnitController
                 'title' => $this->translator->translate('i.view'),
                 'actionName' => 'unit/view',
                 'actionArguments' => ['unit_id' => $unit_id],
-                'form' => $form
+                'form' => $form,
             ];
             return $this->viewRenderer->render('__view', $parameters);
         }
@@ -196,12 +195,10 @@ final class UnitController
     private function unit(string $unit_id, UnitRepository $unitRepository): Unit|null
     {
         if ($unit_id) {
-            $unit = $unitRepository->repoUnitquery($unit_id);
-            return $unit;
+            return $unitRepository->repoUnitquery($unit_id);
         }
         return null;
     }
-
 
     /**
      * @return \Yiisoft\Data\Cycle\Reader\EntityReader
@@ -210,8 +207,7 @@ final class UnitController
      */
     private function units(UnitRepository $unitRepository): \Yiisoft\Data\Cycle\Reader\EntityReader
     {
-        $units = $unitRepository->findAllPreloaded();
-        return $units;
+        return $unitRepository->findAllPreloaded();
     }
 
     /**
@@ -222,8 +218,8 @@ final class UnitController
         return $this->viewRenderer->renderPartialAsString(
             '//invoice/layout/alert',
             [
-        'flash' => $this->flash
-      ]
+                'flash' => $this->flash,
+            ]
         );
     }
 }

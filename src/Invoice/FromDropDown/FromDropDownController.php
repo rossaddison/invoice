@@ -5,8 +5,6 @@ declare(strict_types=1);
 namespace App\Invoice\FromDropDown;
 
 use App\Invoice\Entity\FromDropDown;
-use App\Invoice\FromDropDown\FromDropDownService;
-use App\Invoice\FromDropDown\FromDropDownRepository;
 use App\Invoice\Setting\SettingRepository;
 use App\Invoice\Traits\FlashMessage;
 use App\User\UserService;
@@ -27,7 +25,7 @@ use Exception;
 final class FromDropDownController
 {
     use FlashMessage;
-    
+
     private Flash $flash;
     private Session $session;
     private ViewRenderer $viewRenderer;
@@ -69,16 +67,16 @@ final class FromDropDownController
             'actionName' => 'from/add',
             'actionArguments' => [],
             'errors' => [],
-            'form' => $form
+            'form' => $form,
         ];
         if ($request->getMethod() === Method::POST) {
             $body = $request->getParsedBody() ?? [];
             if ($formHydrator->populateFromPostAndValidate($form, $request)) {
                 if (is_array($body)) {
-                        $this->fromService->saveFromDropDown($entity, $body);
+                    $this->fromService->saveFromDropDown($entity, $body);
                     return $this->webService->getRedirectResponse('from/index');
                 }
-            }    
+            }
             $parameters['errors'] = $form->getValidationResult()->getErrorMessagesIndexedByProperty();
             $parameters['form'] = $form;
         }
@@ -93,8 +91,8 @@ final class FromDropDownController
         return $this->viewRenderer->renderPartialAsString(
             '//invoice/layout/alert',
             [
-            'flash' => $this->flash
-        ]
+                'flash' => $this->flash,
+            ]
         );
     }
 
@@ -109,11 +107,11 @@ final class FromDropDownController
         ->withCurrentPage($currentPageNeverZero)
         ->withToken(PageToken::next((string)$page));
         $parameters = [
-        'froms' => $this->froms($fromRepository),
-        'paginator' => $paginator,
-        'alert' => $this->alert(),
-        'max' => (int) $settingRepository->getSetting('default_list_limit')
-    ];
+            'froms' => $this->froms($fromRepository),
+            'paginator' => $paginator,
+            'alert' => $this->alert(),
+            'max' => (int) $settingRepository->getSetting('default_list_limit'),
+        ];
         return $this->viewRenderer->render('index', $parameters);
     }
 
@@ -161,7 +159,7 @@ final class FromDropDownController
                 'actionName' => 'from/edit',
                 'actionArguments' => ['id' => $from->getId()],
                 'errors' => [],
-                'form' => $form
+                'form' => $form,
             ];
             if ($request->getMethod() === Method::POST) {
                 $body = $request->getParsedBody() ?? [];
@@ -170,7 +168,7 @@ final class FromDropDownController
                         $this->fromService->saveFromDropDown($from, $body);
                         return $this->webService->getRedirectResponse('from/index');
                     }
-                }    
+                }
                 $parameters['errors'] = $form->getValidationResult()->getErrorMessagesIndexedByProperty();
                 $parameters['form'] = $form;
             }
@@ -190,8 +188,7 @@ final class FromDropDownController
     {
         $id = $currentRoute->getArgument('id');
         if (null !== $id) {
-            $from = $fromRepository->repoFromDropDownLoadedquery($id);
-            return $from;
+            return $fromRepository->repoFromDropDownLoadedquery($id);
         }
         return null;
     }
@@ -203,14 +200,13 @@ final class FromDropDownController
      */
     private function froms(FromDropDownRepository $fromRepository): \Yiisoft\Data\Cycle\Reader\EntityReader
     {
-        $froms = $fromRepository->findAllPreloaded();
-        return $froms;
+        return $fromRepository->findAllPreloaded();
     }
 
     /**
      * @param CurrentRoute $currentRoute
      * @param FromDropDownRepository $fromRepository
-     * @return \Yiisoft\DataResponse\DataResponse|Response
+     * @return Response|\Yiisoft\DataResponse\DataResponse
      */
     public function view(CurrentRoute $currentRoute, FromDropDownRepository $fromRepository): \Yiisoft\DataResponse\DataResponse|Response
     {
@@ -223,7 +219,7 @@ final class FromDropDownController
                 'actionArguments' => ['id' => $from->getId()],
                 'errors' => [],
                 'form' => $form,
-                'from' => $from
+                'from' => $from,
             ];
             return $this->viewRenderer->render('_view', $parameters);
         }

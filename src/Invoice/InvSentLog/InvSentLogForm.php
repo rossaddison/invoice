@@ -42,7 +42,7 @@ final class InvSentLogForm extends FormModel
     public function getDate_sent(): string|null|DateTimeImmutable
     {
         /**
-         * @var string|DateTimeImmutable $this->date_sent
+         * @var DateTimeImmutable|string $this->date_sent
          */
         return $this->date_sent;
     }
@@ -55,5 +55,4 @@ final class InvSentLogForm extends FormModel
     {
         return '';
     }
-
 }

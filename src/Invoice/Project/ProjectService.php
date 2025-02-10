@@ -18,7 +18,6 @@ final class ProjectService
     /**
      * @param Project $model
      * @param array $array
-     * @return void
      */
     public function saveProject(Project $model, array $array): void
     {
@@ -28,9 +27,7 @@ final class ProjectService
     }
 
     /**
-     *
      * @param Project $model
-     * @return void
      */
     public function deleteProject(Project $model): void
     {

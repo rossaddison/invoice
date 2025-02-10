@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace App\Invoice\Entity;
 
-use App\Invoice\Entity\TaxRate;
 use Cycle\Annotated\Annotation\Column;
 use Cycle\Annotated\Annotation\Entity;
 use Cycle\Annotated\Annotation\Relation\BelongsTo;
@@ -14,30 +13,30 @@ use Cycle\Annotated\Annotation\Relation\BelongsTo;
 class AllowanceCharge
 {
     #[Column(type:'primary')]
-    private ?int $id =  null;
+    private ?int $id = null;
 
     #[Column(type:'bool', typecast:'bool', default:false, nullable: false)]
-    private bool $identifier =  false;
+    private bool $identifier = false;
 
     #[Column(type:'string(3)', nullable: false)]
-    private string $reason_code =  '';
+    private string $reason_code = '';
 
     #[Column(type:'longText)', nullable: false)]
-    private string $reason =  '';
+    private string $reason = '';
 
     #[Column(type:'integer(11)', nullable: false)]
-    private int $multiplier_factor_numeric =  0;
+    private int $multiplier_factor_numeric = 0;
 
     #[Column(type:'integer(11)', nullable: false)]
-    private int $amount =  0;
+    private int $amount = 0;
 
     #[Column(type:'integer(11)', nullable: false)]
-    private int $base_amount =  0;
+    private int $base_amount = 0;
 
     #[BelongsTo(target:TaxRate::class, nullable: false, fkAction: 'NO ACTION')]
     private ?TaxRate $tax_rate = null;
     #[Column(type:'integer(11)', nullable: false)]
-    private ?int $tax_rate_id =  null;
+    private ?int $tax_rate_id = null;
 
     public function __construct(
         int $id = null,
@@ -69,7 +68,7 @@ class AllowanceCharge
 
     public function setId(int $id): void
     {
-        $this->id =  $id;
+        $this->id = $id;
     }
 
     public function getIdentifier(): bool
@@ -79,7 +78,7 @@ class AllowanceCharge
 
     public function setIdentifier(bool $identifier): void
     {
-        $this->identifier =  $identifier;
+        $this->identifier = $identifier;
     }
 
     public function getReasonCode(): string
@@ -89,7 +88,7 @@ class AllowanceCharge
 
     public function setReasonCode(string $reason_code): void
     {
-        $this->reason_code =  $reason_code;
+        $this->reason_code = $reason_code;
     }
 
     public function getReason(): string
@@ -99,7 +98,7 @@ class AllowanceCharge
 
     public function setReason(string $reason): void
     {
-        $this->reason =  $reason;
+        $this->reason = $reason;
     }
 
     public function getMultiplierFactorNumeric(): int
@@ -109,7 +108,7 @@ class AllowanceCharge
 
     public function setMultiplierFactorNumeric(int $multiplier_factor_numeric): void
     {
-        $this->multiplier_factor_numeric =  $multiplier_factor_numeric;
+        $this->multiplier_factor_numeric = $multiplier_factor_numeric;
     }
 
     public function getAmount(): int
@@ -119,7 +118,7 @@ class AllowanceCharge
 
     public function setAmount(int $amount): void
     {
-        $this->amount =  $amount;
+        $this->amount = $amount;
     }
 
     public function getBaseAmount(): int
@@ -129,7 +128,7 @@ class AllowanceCharge
 
     public function setBaseAmount(int $base_amount): void
     {
-        $this->base_amount =  $base_amount;
+        $this->base_amount = $base_amount;
     }
 
     public function getTaxRate(): ?TaxRate
@@ -149,6 +148,6 @@ class AllowanceCharge
 
     public function setTaxRateId(int $tax_rate_id): void
     {
-        $this->tax_rate_id =  $tax_rate_id;
+        $this->tax_rate_id = $tax_rate_id;
     }
 }

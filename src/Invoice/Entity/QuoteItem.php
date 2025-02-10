@@ -9,46 +9,43 @@ use Cycle\Annotated\Annotation\Entity;
 use Cycle\Annotated\Annotation\Relation\BelongsTo;
 use DateTime;
 use DateTimeImmutable;
-use App\Invoice\Entity\TaxRate;
-use App\Invoice\Entity\Product;
-use App\Invoice\Entity\Quote;
 
 #[Entity(repository: \App\Invoice\QuoteItem\QuoteItemRepository::class)]
 class QuoteItem
 {
     #[Column(type: 'primary')]
-    public ?int $id =  null;
+    public ?int $id = null;
 
     #[Column(type: 'date', nullable: false)]
     private mixed $date_added;
 
     #[Column(type: 'text', nullable: true)]
-    private ?string $name =  '';
+    private ?string $name = '';
 
     #[Column(type: 'text', nullable: true)]
-    private ?string $description =  '';
+    private ?string $description = '';
 
     #[Column(type: 'decimal(20,2)', nullable: false, default: 1.00)]
     private ?float $quantity = 1.00;
 
     #[Column(type: 'decimal(20,2)', nullable: false, default: 0.00)]
-    private ?float $price =  0.00;
+    private ?float $price = 0.00;
 
     #[Column(type: 'decimal(20,2)', nullable: false, default: 0.00)]
     private ?float $discount_amount = 0.00;
 
     #[Column(type: 'integer(2)', nullable: false, default:0)]
-    private ?int $order =  null;
+    private ?int $order = null;
 
     #[Column(type: 'string(50)', nullable: true)]
-    private ?string $product_unit =  '';
+    private ?string $product_unit = '';
 
     #[BelongsTo(target:Quote::class, nullable: false, fkAction: 'NO ACTION')]
     private ?Quote $quote = null;
     #[Column(type: 'integer(11)', nullable: false)]
-    private ?int $quote_id =  null;
+    private ?int $quote_id = null;
 
-    #[BelongsTo(target:TaxRate::class, nullable: false, fkAction: "NO ACTION")]
+    #[BelongsTo(target:TaxRate::class, nullable: false, fkAction: 'NO ACTION')]
     private ?TaxRate $tax_rate = null;
     #[Column(type: 'integer(11)', nullable: false)]
     private ?int $tax_rate_id = null;
@@ -142,7 +139,7 @@ class QuoteItem
 
     public function setQuote_id(int $quote_id): void
     {
-        $this->quote_id =  $quote_id;
+        $this->quote_id = $quote_id;
     }
 
     public function getTax_rate_id(): string
@@ -152,7 +149,7 @@ class QuoteItem
 
     public function setTax_rate_id(int $tax_rate_id): void
     {
-        $this->tax_rate_id =  $tax_rate_id;
+        $this->tax_rate_id = $tax_rate_id;
     }
 
     public function getProduct_id(): string
@@ -162,7 +159,7 @@ class QuoteItem
 
     public function setProduct_id(int $product_id): void
     {
-        $this->product_id =  $product_id;
+        $this->product_id = $product_id;
     }
 
     public function getDate_added(): DateTimeImmutable
@@ -173,7 +170,7 @@ class QuoteItem
 
     public function setDate_added(DateTime $date_added): void
     {
-        $this->date_added =  $date_added;
+        $this->date_added = $date_added;
     }
 
     public function getName(): ?string
@@ -183,7 +180,7 @@ class QuoteItem
 
     public function setName(string $name): void
     {
-        $this->name =  $name;
+        $this->name = $name;
     }
 
     public function getDescription(): ?string
@@ -193,7 +190,7 @@ class QuoteItem
 
     public function setDescription(string $description): void
     {
-        $this->description =  $description;
+        $this->description = $description;
     }
 
     public function getQuantity(): ?float
@@ -203,7 +200,7 @@ class QuoteItem
 
     public function setQuantity(float $quantity): void
     {
-        $this->quantity =  $quantity;
+        $this->quantity = $quantity;
     }
 
     public function getPrice(): ?float
@@ -213,7 +210,7 @@ class QuoteItem
 
     public function setPrice(float $price): void
     {
-        $this->price =  $price;
+        $this->price = $price;
     }
 
     public function getDiscount_amount(): ?float
@@ -223,7 +220,7 @@ class QuoteItem
 
     public function setDiscount_amount(float $discount_amount): void
     {
-        $this->discount_amount =  $discount_amount;
+        $this->discount_amount = $discount_amount;
     }
 
     public function getOrder(): int|null
@@ -233,7 +230,7 @@ class QuoteItem
 
     public function setOrder(int $order): void
     {
-        $this->order =  $order;
+        $this->order = $order;
     }
 
     public function getProduct_unit(): ?string
@@ -243,7 +240,7 @@ class QuoteItem
 
     public function setProduct_unit(string $product_unit): void
     {
-        $this->product_unit =  $product_unit;
+        $this->product_unit = $product_unit;
     }
 
     public function getProduct_unit_id(): string
@@ -253,6 +250,6 @@ class QuoteItem
 
     public function setProduct_unit_id(int $product_unit_id): void
     {
-        $this->product_unit_id =  $product_unit_id;
+        $this->product_unit_id = $product_unit_id;
     }
 }

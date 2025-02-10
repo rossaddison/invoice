@@ -6,9 +6,6 @@ namespace App\Invoice\Delivery;
 
 use App\Invoice\Entity\Delivery;
 use App\Invoice\Inv\InvRepository;
-use App\Invoice\Delivery\DeliveryForm;
-use App\Invoice\Delivery\DeliveryService;
-use App\Invoice\Delivery\DeliveryRepository;
 use App\Invoice\DeliveryLocation\DeliveryLocationRepository as DLR;
 use App\Invoice\Setting\SettingRepository;
 use App\Invoice\Traits\FlashMessage;
@@ -33,7 +30,7 @@ use Exception;
 final class DeliveryController
 {
     use FlashMessage;
-    
+
     private SessionInterface $session;
     private Flash $flash;
     private ViewRenderer $viewRenderer;
@@ -100,7 +97,7 @@ final class DeliveryController
                 'form' => $form,
                 'del_count' => $delRepo->repoClientCount($inv->getClient_id()),
                 'dels' => $dels,
-                'inv' => $inv
+                'inv' => $inv,
             ];
             if ($request->getMethod() === Method::POST) {
                 $body = $request->getParsedBody() ?? [];
@@ -109,7 +106,7 @@ final class DeliveryController
                         $this->deliveryService->saveDelivery($delivery, $body, $settingRepository);
                         return $this->webService->getRedirectResponse('inv/edit', ['id' => $inv_id]);
                     }
-                }    
+                }
                 $parameters['errors'] = $form->getValidationResult()->getErrorMessagesIndexedByProperty();
                 $parameters['form'] = $form;
             }
@@ -126,9 +123,9 @@ final class DeliveryController
         return $this->viewRenderer->renderPartialAsString(
             '//invoice/layout/alert',
             [
-       'flash' => $this->flash,
-       'errors' => [],
-     ]
+                'flash' => $this->flash,
+                'errors' => [],
+            ]
         );
     }
 
@@ -172,15 +169,14 @@ final class DeliveryController
      * @param DeliveryRepository $dR
      * @param Sort $sort
      *
-     * @return SortableDataInterface&DataReaderInterface
+     * @return DataReaderInterface&SortableDataInterface
      *
      * @psalm-return SortableDataInterface&DataReaderInterface<int, Delivery>
      */
     private function deliveries_with_sort(DeliveryRepository $dR, Sort $sort): SortableDataInterface
     {
-        $deliveries = $dR->findAllPreloaded()
+        return $dR->findAllPreloaded()
                          ->withSort($sort);
-        return $deliveries;
     }
 
     /**
@@ -240,7 +236,7 @@ final class DeliveryController
                     'form' => $form,
                     'inv' => $inv,
                     'del_count' => $delRepo->repoClientCount($inv->getClient_id()),
-                    'dels' => $dels
+                    'dels' => $dels,
                 ];
                 if ($request->getMethod() === Method::POST) {
                     $body = $request->getParsedBody() ?? [];
@@ -249,10 +245,9 @@ final class DeliveryController
                             $this->deliveryService->saveDelivery($delivery, $body, $settingRepository);
                             return $this->webService->getRedirectResponse('delivery/index');
                         }
-                    }    
+                    }
                     $parameters['errors'] = $form->getValidationResult()->getErrorMessagesIndexedByProperty();
                     $parameters['form'] = $form;
-
                 }
                 return $this->viewRenderer->render('delivery/_form', $parameters);
             } // null!==$inv
@@ -271,8 +266,7 @@ final class DeliveryController
     {
         $id = $currentRoute->getArgument('id');
         if (null !== $id) {
-            $delivery = $deliveryRepository->repoDeliveryquery($id);
-            return $delivery;
+            return $deliveryRepository->repoDeliveryquery($id);
         }
         return null;
     }
@@ -284,14 +278,13 @@ final class DeliveryController
      */
     private function deliveries(DeliveryRepository $deliveryRepository): \Yiisoft\Data\Cycle\Reader\EntityReader
     {
-        $deliveries = $deliveryRepository->findAllPreloaded();
-        return $deliveries;
+        return $deliveryRepository->findAllPreloaded();
     }
 
     /**
      * @param CurrentRoute $currentRoute
      * @param DeliveryRepository $deliveryRepository
-     * @return \Yiisoft\DataResponse\DataResponse|Response
+     * @return Response|\Yiisoft\DataResponse\DataResponse
      */
     public function view(CurrentRoute $currentRoute, DeliveryRepository $deliveryRepository): \Yiisoft\DataResponse\DataResponse|Response
     {
@@ -310,5 +303,4 @@ final class DeliveryController
         }
         return $this->webService->getRedirectResponse('delivery/index');
     }
-
 }

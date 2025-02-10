@@ -5,11 +5,9 @@ declare(strict_types=1);
 namespace App\Contact;
 
 use Exception;
-use App\Contact\ContactForm;
 use Psr\Log\LoggerInterface;
 use Yiisoft\Mailer\File;
 use Yiisoft\Mailer\MailerInterface;
-use Yiisoft\Mailer\MessageBodyTemplate;
 use Yiisoft\Session\SessionInterface as Session;
 use Yiisoft\Session\Flash\Flash;
 use Yiisoft\Translator\TranslatorInterface as Translator;
@@ -36,13 +34,15 @@ final class ContactMailer
 
     public function send(ContactForm $form): void
     {
-        $message = (new \Yiisoft\Mailer\Message())
-        ->withCharSet('UTF-8')
-        ->withSubject((string)$form->getPropertyValue('subject'))
-        ->withFrom([(string)$form->getPropertyValue('email') => (string)$form->getPropertyValue('name')])
-        ->withSender($this->sender)
-        ->withTo($this->to)
-        ->withTextBody((string)$form->getPropertyValue('body'));
+        $message = new \Yiisoft\Mailer\Message(
+            charset: 'utf-8',
+            subject: (string)$form->getPropertyValue('subject'),
+            date: new \DateTimeImmutable('now'),
+            from: [(string)$form->getPropertyValue('email') => (string)$form->getPropertyValue('name')],
+            sender: $this->sender,
+            to: $this->to,
+            textBody: (string)$form->getPropertyValue('body')
+        );
 
         /** @var array $attachFile */
         foreach ($form->getPropertyValue('attachFiles') as $attachFile) {

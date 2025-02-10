@@ -6,9 +6,6 @@ namespace App\Invoice\Entity;
 
 use Cycle\Annotated\Annotation\Column;
 use Cycle\Annotated\Annotation\Entity;
-use App\Invoice\Entity\Family;
-use App\Invoice\Entity\TaxRate;
-use App\Invoice\Entity\Unit;
 use Cycle\Annotated\Annotation\Relation\BelongsTo;
 
 #[Entity(repository: \App\Invoice\Product\ProductRepository::class)]
@@ -74,18 +71,18 @@ class Product
     #[Column(type: 'text', nullable: true)]
     private ?string $product_additional_item_property_value = '';
 
-    #[BelongsTo(target:Family::class, nullable: false, fkAction: "NO ACTION")]
+    #[BelongsTo(target:Family::class, nullable: false, fkAction: 'NO ACTION')]
     private ?Family $family = null;
     #[Column(type: 'integer(11)', nullable: true)]
     private ?int $family_id = null;
 
     // A product has to have a tax rate before it can be created even if it is a zero tax rate
-    #[BelongsTo(target:TaxRate::class, nullable: false, fkAction: "NO ACTION")]
+    #[BelongsTo(target:TaxRate::class, nullable: false, fkAction: 'NO ACTION')]
     private ?TaxRate $tax_rate = null;
     #[Column(type: 'integer(11)', nullable: false)]
     private ?int $tax_rate_id = null;
 
-    #[BelongsTo(target:Unit::class, nullable: false, fkAction: "NO ACTION")]
+    #[BelongsTo(target:Unit::class, nullable: false, fkAction: 'NO ACTION')]
     private ?Unit $unit = null;
     #[Column(type: 'integer(11)', nullable: true)]
     private ?int $unit_id = null;
@@ -218,7 +215,6 @@ class Product
      * Mandatory (M) eg. 0160 from PeppolArrays getIso6523_icd()
      * @see https://docs.peppol.eu/poacc/billing/3.0/syntax/ubl-invoice/cac-InvoiceLine/cac-Item/cac-StandardItemIdentification/cbc-ID/
      * @param string $product_sii_schemeid
-     * @return void
      */
     public function setProduct_sii_schemeid(string $product_sii_schemeid): void
     {
@@ -420,17 +416,16 @@ class Product
      * @param int $tax_rate_id
      * @param int $unit_id
      * @param int $family_id
-     * @return void
      */
     public function nullifyRelationOnChange(int $tax_rate_id, int $unit_id, int $family_id): void
     {
-        if ($this->tax_rate_id <> $tax_rate_id) {
+        if ($this->tax_rate_id != $tax_rate_id) {
             $this->tax_rate = null;
         }
-        if ($this->unit_id <> $unit_id) {
+        if ($this->unit_id != $unit_id) {
             $this->unit = null;
         }
-        if ($this->family_id <> $family_id) {
+        if ($this->family_id != $family_id) {
             $this->family = null;
         }
     }

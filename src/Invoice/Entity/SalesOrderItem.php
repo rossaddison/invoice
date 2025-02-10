@@ -9,40 +9,37 @@ use Cycle\Annotated\Annotation\Entity;
 use Cycle\Annotated\Annotation\Relation\BelongsTo;
 use DateTime;
 use DateTimeImmutable;
-use App\Invoice\Entity\TaxRate;
-use App\Invoice\Entity\Product;
-use App\Invoice\Entity\SalesOrder;
 
 #[Entity(repository: \App\Invoice\SalesOrderItem\SalesOrderItemRepository::class)]
 class SalesOrderItem
 {
     #[Column(type: 'primary')]
-    public ?int $id =  null;
+    public ?int $id = null;
 
     // The client/customer is required to match this item with their purchase order item number
     // This value will be input by the client/customer from their side
     // https://docs.peppol.eu/poacc/billing/3.0/syntax/ubl-invoice/cac-InvoiceLine/cac-Item/cac-BuyersItemIdentification/cbc-ID/
     #[Column(type: 'text', nullable: true)]
-    private ?string $peppol_po_itemid =  '';
+    private ?string $peppol_po_itemid = '';
 
     // https://docs.peppol.eu/poacc/billing/3.0/syntax/ubl-invoice/cac-InvoiceLine/cac-OrderLineReference/cbc-LineID/
     #[Column(type: 'text', nullable: true)]
-    private ?string $peppol_po_lineid =  '';
+    private ?string $peppol_po_lineid = '';
 
     #[Column(type: 'date', nullable: false)]
     private mixed $date_added;
 
     #[Column(type: 'text', nullable: true)]
-    private ?string $name =  '';
+    private ?string $name = '';
 
     #[Column(type: 'text', nullable: true)]
-    private ?string $description =  '';
+    private ?string $description = '';
 
     #[Column(type: 'decimal(20,2)', nullable: false, default: 1.00)]
     private ?float $quantity = 1.00;
 
     #[Column(type: 'decimal(20,2)', nullable: false, default: 0.00)]
-    private ?float $price =  0.00;
+    private ?float $price = 0.00;
 
     #[Column(type: 'decimal(20,2)', nullable: false, default: 0.00)]
     private ?float $discount_amount = 0.00;
@@ -51,17 +48,17 @@ class SalesOrderItem
     private ?float $charge_amount = 0.00;
 
     #[Column(type: 'integer(2)', nullable: false, default:0)]
-    private ?int $order =  null;
+    private ?int $order = null;
 
     #[Column(type: 'string(50)', nullable: true)]
-    private ?string $product_unit =  '';
+    private ?string $product_unit = '';
 
     #[BelongsTo(target:SalesOrder::class, nullable: false, fkAction: 'NO ACTION')]
     private ?SalesOrder $sales_order = null;
     #[Column(type: 'integer(11)', nullable: false)]
-    private ?int $sales_order_id =  null;
+    private ?int $sales_order_id = null;
 
-    #[BelongsTo(target:TaxRate::class, nullable: false, fkAction: "NO ACTION")]
+    #[BelongsTo(target:TaxRate::class, nullable: false, fkAction: 'NO ACTION')]
     private ?TaxRate $tax_rate = null;
     #[Column(type: 'integer(11)', nullable: false)]
     private ?int $tax_rate_id = null;
@@ -161,7 +158,7 @@ class SalesOrderItem
 
     public function setSales_order_id(int $sales_order_id): void
     {
-        $this->sales_order_id =  $sales_order_id;
+        $this->sales_order_id = $sales_order_id;
     }
 
     public function getPeppol_po_itemid(): ?string
@@ -171,7 +168,7 @@ class SalesOrderItem
 
     public function setPeppol_po_itemid(string $peppol_po_itemid): void
     {
-        $this->peppol_po_itemid =  $peppol_po_itemid;
+        $this->peppol_po_itemid = $peppol_po_itemid;
     }
 
     public function getPeppol_po_lineid(): ?string
@@ -181,7 +178,7 @@ class SalesOrderItem
 
     public function setPeppol_po_lineid(string $peppol_po_lineid): void
     {
-        $this->peppol_po_lineid =  $peppol_po_lineid;
+        $this->peppol_po_lineid = $peppol_po_lineid;
     }
 
     public function getTax_rate_id(): string
@@ -191,7 +188,7 @@ class SalesOrderItem
 
     public function setTax_rate_id(int $tax_rate_id): void
     {
-        $this->tax_rate_id =  $tax_rate_id;
+        $this->tax_rate_id = $tax_rate_id;
     }
 
     public function getProduct_id(): string
@@ -201,7 +198,7 @@ class SalesOrderItem
 
     public function setProduct_id(int $product_id): void
     {
-        $this->product_id =  $product_id;
+        $this->product_id = $product_id;
     }
 
     public function getDate_added(): DateTimeImmutable
@@ -212,7 +209,7 @@ class SalesOrderItem
 
     public function setDate_added(DateTime $date_added): void
     {
-        $this->date_added =  $date_added;
+        $this->date_added = $date_added;
     }
 
     public function getName(): ?string
@@ -222,7 +219,7 @@ class SalesOrderItem
 
     public function setName(string $name): void
     {
-        $this->name =  $name;
+        $this->name = $name;
     }
 
     public function getDescription(): ?string
@@ -232,7 +229,7 @@ class SalesOrderItem
 
     public function setDescription(string $description): void
     {
-        $this->description =  $description;
+        $this->description = $description;
     }
 
     public function getQuantity(): ?float
@@ -242,7 +239,7 @@ class SalesOrderItem
 
     public function setQuantity(float $quantity): void
     {
-        $this->quantity =  $quantity;
+        $this->quantity = $quantity;
     }
 
     public function getPrice(): ?float
@@ -252,7 +249,7 @@ class SalesOrderItem
 
     public function setPrice(float $price): void
     {
-        $this->price =  $price;
+        $this->price = $price;
     }
 
     public function getDiscount_amount(): ?float
@@ -262,7 +259,7 @@ class SalesOrderItem
 
     public function setDiscount_amount(float $discount_amount): void
     {
-        $this->discount_amount =  $discount_amount;
+        $this->discount_amount = $discount_amount;
     }
 
     public function getCharge_amount(): ?float
@@ -272,7 +269,7 @@ class SalesOrderItem
 
     public function setCharge_amount(float $charge_amount): void
     {
-        $this->charge_amount =  $charge_amount;
+        $this->charge_amount = $charge_amount;
     }
 
     public function getOrder(): int|null
@@ -282,7 +279,7 @@ class SalesOrderItem
 
     public function setOrder(int $order): void
     {
-        $this->order =  $order;
+        $this->order = $order;
     }
 
     public function getProduct_unit(): ?string
@@ -292,7 +289,7 @@ class SalesOrderItem
 
     public function setProduct_unit(string $product_unit): void
     {
-        $this->product_unit =  $product_unit;
+        $this->product_unit = $product_unit;
     }
 
     public function getProduct_unit_id(): string
@@ -302,6 +299,6 @@ class SalesOrderItem
 
     public function setProduct_unit_id(int $product_unit_id): void
     {
-        $this->product_unit_id =  $product_unit_id;
+        $this->product_unit_id = $product_unit_id;
     }
 }

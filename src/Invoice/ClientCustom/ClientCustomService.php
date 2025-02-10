@@ -16,10 +16,8 @@ final class ClientCustomService
     }
 
     /**
-     *
      * @param ClientCustom $model
      * @param array $array
-     * @return void
      */
     public function saveClientCustom(ClientCustom $model, array $array): void
     {
@@ -31,7 +29,6 @@ final class ClientCustomService
 
     /**
      * @param ClientCustom $model
-     * @return void
      */
     public function deleteClientCustom(ClientCustom $model): void
     {

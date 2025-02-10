@@ -48,7 +48,7 @@ use App\Invoice\Libraries\Crypt;
 final class InvoiceController
 {
     use FlashMessage;
-    
+
     private Flash $flash;
     private ViewRenderer $viewRenderer;
     private WebControllerService $webService;
@@ -103,12 +103,10 @@ final class InvoiceController
             $this->flashMessage('info', $this->translator->translate('invoice.permission.authorised.edit'));
         }
     }
-    
+
     /**
-     *
      * @param SessionInterface $session
      * @param SettingRepository $sR
-     * @return void
      */
     private function install_default_settings_on_first_run(SessionInterface $session, SettingRepository $sR): void
     {
@@ -182,7 +180,7 @@ final class InvoiceController
             'no_front_gallery_page' => 0,
             'no_front_pricing_page' => 0,
             'no_front_site_slider_page' => 0,
-            'no_front_team_page' => 0, 
+            'no_front_team_page' => 0,
             'no_front_testimonial_page' => 0,
             'no_facebook_continue_button' => 1,
             'no_github_continue_button' => 1,
@@ -233,7 +231,7 @@ final class InvoiceController
             'telegram_webhook_secret_token' => '',
             'telegram_test_message_use' => 1,
             'thousands_separator' => ',',
-            'time_zone' => 'Europe/London'
+            'time_zone' => 'Europe/London',
         ];
         $this->install_default_settings($default_settings, $sR);
     }
@@ -246,9 +244,9 @@ final class InvoiceController
         return $this->viewRenderer->renderPartialAsString(
             '//invoice/layout/alert',
             [
-         'flash' => $this->flash,
-         'errors' => [],
-       ]
+                'flash' => $this->flash,
+                'errors' => [],
+            ]
         );
     }
 
@@ -301,20 +299,20 @@ final class InvoiceController
         $parameters = [
             'result' => '',
             'message' => '',
-            'status' => ''
+            'status' => '',
         ];
-        $store_cove = "https://api.storecove.com/api/v2/discovery/receives";
+        $store_cove = 'https://api.storecove.com/api/v2/discovery/receives';
         // 1.1.2 : Create a new API key by clicking the "Create New API Key" button. For the Integrator package, create a "Master" key.
         /**
          * @var mixed $api_key_here
          */
         $api_key_here = $this->crypt->decode($this->s->getSetting('gateway_storecove_apiKey'));
         $site = curl_init();
-        if ($site <> false) {
+        if ($site != false) {
             curl_setopt($site, CURLOPT_URL, $store_cove);
             curl_setopt($site, CURLOPT_POST, true);
             curl_setopt($site, CURLOPT_RETURNTRANSFER, true);
-            curl_setopt($site, CURLOPT_HTTPHEADER, ["Accept: application/json","Authorization: Bearer $api_key_here","Content-Type: application/json"]);
+            curl_setopt($site, CURLOPT_HTTPHEADER, ['Accept: application/json',"Authorization: Bearer $api_key_here",'Content-Type: application/json']);
             curl_setopt($site, CURLOPT_HEADER, true);
             /**
              * @see https://www.storecove.com/docs/#_getting_started 1.1.3. Make your first API call
@@ -325,9 +323,9 @@ final class InvoiceController
             $message = curl_error($site) ? curl_error($site) :
             $this->translator->translate('invoice.curl.store.cove.api.setup.successful');
             $parameters = [
-               'result' => curl_exec($site),
-               'message' => $message,
-               'status' => curl_error($site) ? 'warning' : 'success'
+                'result' => curl_exec($site),
+                'message' => $message,
+                'status' => curl_error($site) ? 'warning' : 'success',
             ];
         }
         return $this->viewRenderer->render('curl/api_result', $parameters);
@@ -344,32 +342,32 @@ final class InvoiceController
         $parameters = [
             'result' => '',
             'message' => '',
-            'status' => ''
+            'status' => '',
         ];
-        $store_cove = "https://api.storecove.com/api/v2/legal_entities";
+        $store_cove = 'https://api.storecove.com/api/v2/legal_entities';
         /**
          * @var mixed $api_key_here
          */
         $api_key_here = $this->crypt->decode($this->s->getSetting('gateway_storecove_apiKey'));
         $site = curl_init();
-        if ($site <> false) {
+        if ($site != false) {
             curl_setopt($site, CURLOPT_URL, $store_cove);
             curl_setopt($site, CURLOPT_POST, true);
             curl_setopt($site, CURLOPT_RETURNTRANSFER, true);
-            curl_setopt($site, CURLOPT_HTTPHEADER, ["Accept: application/json","Authorization: Bearer $api_key_here","Content-Type: application/json"]);
+            curl_setopt($site, CURLOPT_HTTPHEADER, ['Accept: application/json',"Authorization: Bearer $api_key_here",'Content-Type: application/json']);
             curl_setopt($site, CURLOPT_HEADER, true);
             $country_code_identifier = 'GB';
-            $data = '{"party_name": "Test Party", "line1": "Test Street 1", "city": "Test City", "zip": "Zippy", "country": "'.$country_code_identifier.'"}';
+            $data = '{"party_name": "Test Party", "line1": "Test Street 1", "city": "Test City", "zip": "Zippy", "country": "' . $country_code_identifier . '"}';
             curl_setopt($site, CURLOPT_POSTFIELDS, $data);
             curl_close($site);
             $message = curl_error($site) ? curl_error($site) :
             $this->translator->translate('invoice.curl.store.cove.api.get.legal.entity.id.successful');
             $parameters = [
-               'result' => curl_exec($site),
-               'message' => $message,
-               'status' => curl_error($site) ? 'warning' : 'success'
+                'result' => curl_exec($site),
+                'message' => $message,
+                'status' => curl_error($site) ? 'warning' : 'success',
             ];
-        }    
+        }
         return $this->viewRenderer->render('curl/api_result', $parameters);
     }
 
@@ -390,7 +388,7 @@ final class InvoiceController
         // eg. 000217688
         $id = '000217793';
         $scheme_tax_identifier = 'GB:VAT';
-        $combo_id = $legal.$id;
+        $combo_id = $legal . $id;
         $store_cove = "https://api.storecove.com/api/v2/legal_entities/$id/peppol_identifiers";
         /**
          * @var mixed $api_key_here
@@ -399,26 +397,26 @@ final class InvoiceController
         $parameters = [
             'result' => '',
             'message' => '',
-            'status' => ''
+            'status' => '',
         ];
         $site = curl_init();
-        if ($site <> false) {
+        if ($site != false) {
             curl_setopt($site, CURLOPT_URL, $store_cove);
             curl_setopt($site, CURLOPT_POST, true);
             curl_setopt($site, CURLOPT_RETURNTRANSFER, true);
-            curl_setopt($site, CURLOPT_HTTPHEADER, ["Accept: application/json","Authorization: Bearer $api_key_here","Content-Type: application/json"]);
+            curl_setopt($site, CURLOPT_HTTPHEADER, ['Accept: application/json',"Authorization: Bearer $api_key_here",'Content-Type: application/json']);
             curl_setopt($site, CURLOPT_HEADER, true);
-            $data = '{"superscheme": "iso6523-actorid-upis", "scheme": "'.$scheme_tax_identifier.'", "identifier": "'.$combo_id.'"}';
+            $data = '{"superscheme": "iso6523-actorid-upis", "scheme": "' . $scheme_tax_identifier . '", "identifier": "' . $combo_id . '"}';
             curl_setopt($site, CURLOPT_POSTFIELDS, $data);
             curl_close($site);
             $message = curl_error($site) ? curl_error($site) :
             $this->translator->translate('invoice.curl.store.cove.api.legal.entity.identifier.successful');
             $parameters = [
-               'result' => curl_exec($site),
-               'message' => $message,
-               'status' => curl_error($site) ? 'warning' : 'success'
+                'result' => curl_exec($site),
+                'message' => $message,
+                'status' => curl_error($site) ? 'warning' : 'success',
             ];
-        }    
+        }
         return $this->viewRenderer->render('curl/api_result', $parameters);
     }
 
@@ -429,7 +427,7 @@ final class InvoiceController
      */
     public function store_cove_send_test_json_invoice(): \Yiisoft\DataResponse\DataResponse
     {
-        $store_cove = "https://api.storecove.com/api/v2/document_submissions";
+        $store_cove = 'https://api.storecove.com/api/v2/document_submissions';
         // Remove zeros from '000217668' => integer'
         $legal_entity_id_as_integer = (int)$this->s->getSetting('storecove_legal_entity_id');
         /**
@@ -439,18 +437,18 @@ final class InvoiceController
         $parameters = [
             'result' => '',
             'message' => '',
-            'status' => ''
+            'status' => '',
         ];
         $site = curl_init();
-        if ($site <> false) {
+        if ($site != false) {
             curl_setopt($site, CURLOPT_URL, $store_cove);
             curl_setopt($site, CURLOPT_POST, true);
             curl_setopt($site, CURLOPT_RETURNTRANSFER, true);
-            curl_setopt($site, CURLOPT_HTTPHEADER, ["Accept: application/json","Authorization: Bearer $api_key_here","Content-Type: application/json"]);
+            curl_setopt($site, CURLOPT_HTTPHEADER, ['Accept: application/json',"Authorization: Bearer $api_key_here",'Content-Type: application/json']);
             curl_setopt($site, CURLOPT_HEADER, true);
             // World ie. GB,  to Germany a.k.a "World to DE"
             $data = '{
-                "legalEntityId": '.$legal_entity_id_as_integer.',
+                "legalEntityId": ' . $legal_entity_id_as_integer . ',
                 "routing": {
                   "emails": [
                     "test@example.com"
@@ -522,17 +520,17 @@ final class InvoiceController
             $message = curl_error($site) ? curl_error($site) :
             $this->translator->translate('invoice.curl.store.cove.api.send.test.json.invoice.successful');
             $parameters = [
-               'result' => curl_exec($site),
-               'message' => $message,
-               'status' => curl_error($site) ? 'warning' : 'success'
+                'result' => curl_exec($site),
+                'message' => $message,
+                'status' => curl_error($site) ? 'warning' : 'success',
             ];
-        }    
+        }
         return $this->viewRenderer->render('curl/api_result', $parameters);
     }
 
     public function store_cove_send_actual_json_invoice(): \Yiisoft\DataResponse\DataResponse
     {
-        $store_cove = "https://api.storecove.com/api/v2/document_submissions";
+        $store_cove = 'https://api.storecove.com/api/v2/document_submissions';
         // Remove zeros from '000217668' => integer'
         $legal_entity_id_as_integer = (int)$this->s->getSetting('storecove_legal_entity_id');
         /**
@@ -542,18 +540,18 @@ final class InvoiceController
         $parameters = [
             'result' => '',
             'message' => '',
-            'status' => ''
+            'status' => '',
         ];
         $site = curl_init();
-        if ($site <> false) {
+        if ($site != false) {
             curl_setopt($site, CURLOPT_URL, $store_cove);
             curl_setopt($site, CURLOPT_POST, true);
             curl_setopt($site, CURLOPT_RETURNTRANSFER, true);
-            curl_setopt($site, CURLOPT_HTTPHEADER, ["Accept: application/json","Authorization: Bearer $api_key_here","Content-Type: application/json"]);
+            curl_setopt($site, CURLOPT_HTTPHEADER, ['Accept: application/json',"Authorization: Bearer $api_key_here",'Content-Type: application/json']);
             curl_setopt($site, CURLOPT_HEADER, true);
             // World ie. GB,  to Germany a.k.a "World to DE"
             $data = '{
-                "legalEntityId": '.$legal_entity_id_as_integer.',
+                "legalEntityId": ' . $legal_entity_id_as_integer . ',
                 "routing": {
                   "emails": [
                     "test@example.com"
@@ -835,11 +833,11 @@ final class InvoiceController
             $message = curl_error($site) ? curl_error($site) :
             $this->translator->translate('invoice.curl.store.cove.api.setup.legal.entity.successful');
             $parameters = [
-               'result' => curl_exec($site),
-               'message' => $message,
-               'status' => curl_error($site) ? 'warning' : 'success'
+                'result' => curl_exec($site),
+                'message' => $message,
+                'status' => curl_error($site) ? 'warning' : 'success',
             ];
-        }    
+        }
         return $this->viewRenderer->render('curl/api_result', $parameters);
     }
 
@@ -934,7 +932,7 @@ final class InvoiceController
         ClientRepository $cR,
         GroupRepository $gR
     ): \Yiisoft\DataResponse\DataResponse {
-        if (($sR->getSetting('debug_mode') == '1') && ($this->userService->hasPermission('editInv'))) {
+        if (($sR->getSetting('debug_mode') == '1') && $this->userService->hasPermission('editInv')) {
             $this->flashMessage('info', $this->viewRenderer->renderPartialAsString('//invoice/info/invoice'));
         }
         $gR->repoCountAll() === 0 ? $this->install_default_invoice_and_quote_group($gR) : '';
@@ -956,7 +954,6 @@ final class InvoiceController
      * @param ProductRepository $pR
      * @param TaxRateRepository $trR
      * @param ClientRepository $cR
-     * @return void
      */
     private function install_check_for_preexisting_test_data(
         SettingRepository $sR,
@@ -985,13 +982,9 @@ final class InvoiceController
         }
     }
 
-    
-
     /**
-     *
      * @param array $default_settings
      * @param SettingRepository $sR
-     * @return void
      */
     private function install_default_settings(array $default_settings, SettingRepository $sR): void
     {
@@ -1009,13 +1002,11 @@ final class InvoiceController
     }
 
     /**
-     *
      * @param TaxRateRepository $trR
      * @param UnitRepository $uR
      * @param FamilyRepository $fR
      * @param ProductRepository $pR
      * @param ClientRepository $cR
-     * @return void
      */
     private function install_test_data(TaxRateRepository $trR, UnitRepository $uR, FamilyRepository $fR, ProductRepository $pR, ClientRepository $cR): void
     {
@@ -1023,13 +1014,11 @@ final class InvoiceController
     }
 
     /**
-     *
      * @param TaxRateRepository $trR
      * @param UnitRepository $uR
      * @param FamilyRepository $fR
      * @param ProductRepository $pR
      * @param ClientRepository $cR
-     * @return void
      */
     private function install(TaxRateRepository $trR, UnitRepository $uR, FamilyRepository $fR, ProductRepository $pR, ClientRepository $cR): void
     {
@@ -1051,9 +1040,7 @@ final class InvoiceController
     }
 
     /**
-     *
      * @param TaxRateRepository $trR
-     * @return void
      */
     private function install_zero_rate(TaxRateRepository $trR): void
     {
@@ -1069,9 +1056,7 @@ final class InvoiceController
     }
 
     /**
-     *
      * @param TaxRateRepository $trR
-     * @return void
      */
     private function install_standard_rate(TaxRateRepository $trR): void
     {
@@ -1087,9 +1072,7 @@ final class InvoiceController
     }
 
     /**
-     *
      * @param UnitRepository $uR
-     * @return void
      */
     private function install_product_unit(UnitRepository $uR): void
     {
@@ -1100,9 +1083,7 @@ final class InvoiceController
     }
 
     /**
-     *
      * @param UnitRepository $uR
-     * @return void
      */
     private function install_service_unit(UnitRepository $uR): void
     {
@@ -1113,9 +1094,7 @@ final class InvoiceController
     }
 
     /**
-     *
      * @param FamilyRepository $fR
-     * @return void
      */
     private function install_product_family(FamilyRepository $fR): void
     {
@@ -1125,9 +1104,7 @@ final class InvoiceController
     }
 
     /**
-     *
      * @param FamilyRepository $fR
-     * @return void
      */
     private function install_service_family(FamilyRepository $fR): void
     {
@@ -1138,7 +1115,6 @@ final class InvoiceController
 
     /**
      * @param ProductRepository $pR
-     * @return void
      */
     private function install_product(ProductRepository $pR): void
     {
@@ -1158,7 +1134,6 @@ final class InvoiceController
 
     /**
      * @param ProductRepository $pR
-     * @return void
      */
     private function install_service(ProductRepository $pR): void
     {
@@ -1181,7 +1156,6 @@ final class InvoiceController
 
     /**
      * @param ClientRepository $cR
-     * @return void
      */
     private function install_foreign_client(ClientRepository $cR): void
     {
@@ -1198,7 +1172,6 @@ final class InvoiceController
 
     /**
      * @param ClientRepository $cR
-     * @return void
      */
     private function install_non_foreign_client(ClientRepository $cR): void
     {
@@ -1214,9 +1187,7 @@ final class InvoiceController
     }
 
     /**
-     *
      * @param GroupRepository $gR
-     * @return void
      */
     private function install_default_invoice_and_quote_group(GroupRepository $gR): void
     {
@@ -1243,9 +1214,7 @@ final class InvoiceController
     }
 
     /**
-     *
      * @param PaymentMethodRepository $pmR
-     * @return void
      */
     private function install_default_payment_methods(PaymentMethodRepository $pmR): void
     {
@@ -1293,9 +1262,7 @@ final class InvoiceController
     }
 
     /**
-     *
      * @param SettingRepository $sR
-     * @return void
      */
     private function remove_all_settings(SettingRepository $sR): void
     {
@@ -1308,7 +1275,6 @@ final class InvoiceController
     }
 
     /**
-     *
      * @param SettingRepository $sR
      * @return Response
      */
@@ -1339,8 +1305,8 @@ final class InvoiceController
         QuoteRepository $qR,
         InvRepository $iR,
     ): \Yiisoft\DataResponse\DataResponse {
-        $flash =  '';
-        if (($sR->repoCount('use_test_data') > 0 && $sR->getSetting('use_test_data') == '0')) {
+        $flash = '';
+        if ($sR->repoCount('use_test_data') > 0 && $sR->getSetting('use_test_data') == '0') {
             // Only remove the test data if the user's test quotes and invoices have been removed FIRST else integrity constraint violations
             if (($qR->repoCountAll() > 0) || ($iR->repoCountAll() > 0)) {
                 $flash = $this->translator->translate('invoice.first.reset');
@@ -1355,7 +1321,7 @@ final class InvoiceController
             $flash = $this->translator->translate('invoice.install.test.data');
         }
         $data = [
-                'alerts' => $this->alert(),
+            'alerts' => $this->alert(),
         ];
         return $this->viewRenderer->render('index', $data);
     }
@@ -1380,7 +1346,7 @@ final class InvoiceController
         InvRepository $iR,
         TaxRateRepository $trR
     ): \Yiisoft\DataResponse\DataResponse {
-        $flash =  '';
+        $flash = '';
         if ($sR->repoCount('install_test_data') > 0 && $sR->getSetting('install_test_data') == 1) {
             // Only remove the test data if the user's test quotes and invoices have been removed FIRST else integrity constraint violations
             if (($qR->repoCountAll() > 0) || ($iR->repoCountAll() > 0)) {
@@ -1401,12 +1367,10 @@ final class InvoiceController
     }
 
     /**
-     *
      * @param UnitRepository $uR
      * @param FamilyRepository $fR
      * @param ProductRepository $pR
      * @param ClientRepository $cR
-     * @return void
      */
     private function test_data_delete(UnitRepository $uR, FamilyRepository $fR, ProductRepository $pR, ClientRepository $cR): void
     {

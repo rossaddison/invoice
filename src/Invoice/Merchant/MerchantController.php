@@ -6,8 +6,6 @@ namespace App\Invoice\Merchant;
 
 use App\Invoice\Entity\Merchant;
 use App\Invoice\Inv\InvRepository;
-use App\Invoice\Merchant\MerchantService;
-use App\Invoice\Merchant\MerchantRepository;
 use App\Invoice\Traits\FlashMessage;
 use App\User\UserService;
 use App\Service\WebControllerService;
@@ -25,7 +23,7 @@ use Yiisoft\Yii\View\Renderer\ViewRenderer;
 final class MerchantController
 {
     use FlashMessage;
-    
+
     private Session $session;
     private Flash $flash;
     private ViewRenderer $viewRenderer;
@@ -61,10 +59,10 @@ final class MerchantController
         $merchants = $this->merchants($merchantRepository);
         $paginator = (new OffsetPaginator($merchants));
         $parameters = [
-         'canEdit' => $canEdit,
-         'paginator' => $paginator,
-         'merchants' => $this->merchants($merchantRepository),
-         'alert' => $this->alert()
+            'canEdit' => $canEdit,
+            'paginator' => $paginator,
+            'merchants' => $this->merchants($merchantRepository),
+            'alert' => $this->alert(),
         ];
         return $this->viewRenderer->render('index', $parameters);
     }
@@ -98,7 +96,7 @@ final class MerchantController
                     $this->merchantService->saveMerchant($merchant, $body);
                     return $this->webService->getRedirectResponse('merchant/index');
                 }
-            }    
+            }
             $parameters['errors'] = $form->getValidationResult()->getErrorMessagesIndexedByProperty();
             $parameters['form'] = $form;
         }
@@ -129,7 +127,7 @@ final class MerchantController
                 'actionArguments' => ['id' => $merchant->getId()],
                 'errors' => [],
                 'form' => $form,
-                'invs' => $invRepository->findAllPreloaded()
+                'invs' => $invRepository->findAllPreloaded(),
             ];
             if ($request->getMethod() === Method::POST) {
                 $body = $request->getParsedBody() ?? [];
@@ -138,7 +136,7 @@ final class MerchantController
                         $this->merchantService->saveMerchant($merchant, $body);
                         return $this->webService->getRedirectResponse('merchant/index');
                     }
-                }    
+                }
                 $parameters['errors'] = $form->getValidationResult()->getErrorMessagesIndexedByProperty();
                 $parameters['form'] = $form;
             }
@@ -222,8 +220,7 @@ final class MerchantController
     {
         $id = $currentRoute->getArgument('id');
         if (null !== $id) {
-            $merchant = $merchantRepository->repoMerchantquery($id);
-            return $merchant;
+            return $merchantRepository->repoMerchantquery($id);
         }
         return null;
     }
@@ -235,8 +232,7 @@ final class MerchantController
      */
     private function merchants(MerchantRepository $merchantRepository): \Yiisoft\Data\Cycle\Reader\EntityReader
     {
-        $merchants = $merchantRepository->findAllPreloaded();
-        return $merchants;
+        return $merchantRepository->findAllPreloaded();
     }
 
     /**
@@ -247,8 +243,8 @@ final class MerchantController
         return $this->viewRenderer->renderPartialAsString(
             '//invoice/layout/alert',
             [
-        'flash' => $this->flash
-      ]
+                'flash' => $this->flash,
+            ]
         );
     }
 }

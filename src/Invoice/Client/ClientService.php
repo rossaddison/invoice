@@ -18,7 +18,6 @@ final class ClientService
     }
 
     /**
-     *
      * @param Client $model
      * @param array $body
      * @param SettingRepository $s
@@ -30,7 +29,7 @@ final class ClientService
         isset($body['client_title']) ? $model->setClient_title((string)$body['client_title']) : '';
         isset($body['client_name']) ? $model->setClient_name((string)$body['client_name']) : '';
         isset($body['client_surname']) ? $model->setClient_surname((string)$body['client_surname']) : '';
-        $model->setClient_full_name((string)$body['client_name'].' '.(string)$body['client_surname']);
+        $model->setClient_full_name((string)$body['client_name'] . ' ' . (string)$body['client_surname']);
         isset($body['client_frequency']) ? $model->setClient_frequency((string)$body['client_frequency']) : '';
         isset($body['client_group']) ? $model->setClient_group((string)$body['client_group']) : '';
         isset($body['client_number']) ? $model->setClient_number((string)$body['client_number']) : '';
@@ -69,9 +68,7 @@ final class ClientService
     }
 
     /**
-     *
      * @param array|Client|null $model
-     * @return void
      */
     public function deleteClient(array|Client|null $model): void
     {

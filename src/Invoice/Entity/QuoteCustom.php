@@ -7,8 +7,6 @@ namespace App\Invoice\Entity;
 use Cycle\Annotated\Annotation\Column;
 use Cycle\Annotated\Annotation\Entity;
 use Cycle\Annotated\Annotation\Relation\BelongsTo;
-use App\Invoice\Entity\CustomField;
-use App\Invoice\Entity\Quote;
 
 #[Entity(repository: \App\Invoice\QuoteCustom\QuoteCustomRepository::class)]
 class QuoteCustom
@@ -20,16 +18,16 @@ class QuoteCustom
     private ?Quote $quote = null;
 
     #[Column(type: 'primary')]
-    private ?int $id =  null;
+    private ?int $id = null;
 
     #[Column(type: 'integer(11)', nullable: false)]
-    private ?int $quote_id =  null;
+    private ?int $quote_id = null;
 
     #[Column(type: 'integer(11)', nullable: false)]
-    private ?int $custom_field_id =  null;
+    private ?int $custom_field_id = null;
 
     #[Column(type: 'text', nullable: true)]
-    private string $value =  '';
+    private string $value = '';
 
     public function __construct(
         int $id = null,
@@ -60,7 +58,7 @@ class QuoteCustom
 
     public function setId(int $id): void
     {
-        $this->id =  $id;
+        $this->id = $id;
     }
 
     public function getQuote_id(): string
@@ -70,7 +68,7 @@ class QuoteCustom
 
     public function setQuote_id(int $quote_id): void
     {
-        $this->quote_id =  $quote_id;
+        $this->quote_id = $quote_id;
     }
 
     public function getCustom_field_id(): string
@@ -80,7 +78,7 @@ class QuoteCustom
 
     public function setCustom_field_id(int $custom_field_id): void
     {
-        $this->custom_field_id =  $custom_field_id;
+        $this->custom_field_id = $custom_field_id;
     }
 
     public function getValue(): string
@@ -90,6 +88,6 @@ class QuoteCustom
 
     public function setValue(string $value): void
     {
-        $this->value =  $value;
+        $this->value = $value;
     }
 }

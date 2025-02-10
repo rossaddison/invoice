@@ -59,7 +59,6 @@ final class InvItemAmountRepository extends Select\Repository
      * @see Reader/ReadableDataInterface|InvalidArgumentException
      * @param array|InvItemAmount|null $invitemamount
      * @throws Throwable
-     * @return void
      */
     public function save(array|InvItemAmount|null $invitemamount): void
     {
@@ -70,7 +69,6 @@ final class InvItemAmountRepository extends Select\Repository
      * @see Reader/ReadableDataInterface|InvalidArgumentException
      * @param array|InvItemAmount|null $invitemamount
      * @throws Throwable
-     * @return void
      */
     public function delete(array|InvItemAmount|null $invitemamount): void
     {
@@ -86,7 +84,7 @@ final class InvItemAmountRepository extends Select\Repository
     }
 
     /**
-     * @return null|InvItemAmount
+     * @return InvItemAmount|null
      *
      * @psalm-return TEntity|null
      */
@@ -99,7 +97,6 @@ final class InvItemAmountRepository extends Select\Repository
     }
 
     /**
-     *
      * @param string $inv_item_id
      * @return int
      */

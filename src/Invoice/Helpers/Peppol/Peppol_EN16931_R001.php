@@ -31,7 +31,7 @@ class Peppol_EN16931_R001 extends \RuntimeException implements FriendlyException
     {
         $string = Html::a('Please try again', $this->urlGenerator->generate('controller/function', ['client_id' => $this->client_id]));
         $open = "<<<'SOLUTION'";
-        $close = "SOLUTION;";
-        return $open.$string.$close;
+        $close = 'SOLUTION;';
+        return $open . $string . $close;
     }
 }

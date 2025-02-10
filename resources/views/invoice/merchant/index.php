@@ -9,8 +9,9 @@ use Yiisoft\Html\Tag\Div;
 use Yiisoft\Html\Tag\Form;
 use Yiisoft\Html\Tag\H5;
 use Yiisoft\Html\Tag\I;
-use Yiisoft\Yii\DataView\Column\DataColumn;
+use Yiisoft\Yii\DataView\Column\ActionButton;
 use Yiisoft\Yii\DataView\Column\ActionColumn;
+use Yiisoft\Yii\DataView\Column\DataColumn;
 use Yiisoft\Yii\DataView\GridView;
 
 /**
@@ -97,38 +98,38 @@ use Yiisoft\Yii\DataView\GridView;
             header: $translator->translate('invoice.merchant.reference'),                
             content: static fn (Merchant $model): string => Html::encode($model->getReference()) 
         ),
-        new ActionColumn(
-            content: static fn(Merchant $model): string => Html::openTag('div', ['class' => 'btn-group']) .
-            Html::a()
-            ->addAttributes([
-                'class' => 'dropdown-button text-decoration-none', 
-                'title' => $translator->translate('i.view')
-            ])
-            ->content('🔎')
-            ->encode(false)
-            ->href('merchant/view/'. $model->getId())
-            ->render() .
-            Html::a()
-            ->addAttributes([
-                'class' => 'dropdown-button text-decoration-none', 
-                'title' => $translator->translate('i.edit')
-            ])
-            ->content('✎')
-            ->encode(false)
-            ->href('merchant/edit/'. $model->getId())
-            ->render() .
-            Html::a()
-            ->addAttributes([
-                'class'=>'dropdown-button text-decoration-none', 
-                'title' => $translator->translate('i.delete'),
-                'type'=>'submit', 
-                'onclick'=>"return confirm("."'".$translator->translate('i.delete_record_warning')."');"
-            ])
-            ->content('❌')
-            ->encode(false)
-            ->href('merchant/delete/'. $model->getId())
-            ->render() . Html::closeTag('div')
-        ),
+        new ActionColumn(buttons: [
+            new ActionButton(
+                content: '🔎',
+                url: static function(Merchant $model) use ($urlGenerator) : string {
+                     return $urlGenerator->generate('merchant/view', ['id' => $model->getId()]);     
+                },
+                attributes: [
+                    'data-bs-toggle' => 'tooltip',
+                    'title' => $translator->translate('i.view'),
+                ]      
+            ),
+            new ActionButton(
+                content: '✎',
+                url: static function(Merchant $model) use ($urlGenerator) : string {
+                     return $urlGenerator->generate('merchant/edit', ['id' => $model->getId()]);     
+                },
+                attributes: [
+                    'data-bs-toggle' => 'tooltip',
+                    'title' => $translator->translate('i.edit'),
+                ]      
+            ),
+            new ActionButton(
+                content: '❌',
+                url: static function(Merchant $model) use ($urlGenerator) : string {
+                     return $urlGenerator->generate('merchant/delete', ['id' => $model->getId()]);     
+                },
+                attributes: [
+                    'title' => $translator->translate('i.delete'),
+                    'onclick'=>"return confirm("."'".$translator->translate('i.delete_record_warning')."');"
+                ]      
+            ),          
+        ]),
     ];       
 ?>
 <?php

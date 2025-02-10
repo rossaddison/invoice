@@ -5,8 +5,6 @@ declare(strict_types=1);
 namespace App\Invoice\AllowanceCharge;
 
 use App\Invoice\Entity\AllowanceCharge;
-use App\Invoice\AllowanceCharge\AllowanceChargeService;
-use App\Invoice\AllowanceCharge\AllowanceChargeRepository;
 use App\Invoice\Helpers\Peppol\PeppolArrays;
 use App\Invoice\Setting\SettingRepository;
 use App\Invoice\TaxRate\TaxRateRepository;
@@ -28,7 +26,7 @@ use Exception;
 final class AllowanceChargeController
 {
     use FlashMessage;
-    
+
     private SessionInterface $session;
     private Flash $flash;
     private ViewRenderer $viewRenderer;
@@ -145,7 +143,7 @@ final class AllowanceChargeController
             'errors' => [],
             'form' => $form,
             'charges' => $charges,
-            'taxRates' => $tR->findAllPreloaded()
+            'taxRates' => $tR->findAllPreloaded(),
         ];
         /**
          * @var array $body
@@ -193,14 +191,13 @@ final class AllowanceChargeController
         return $this->viewRenderer->renderPartialAsString(
             '//invoice/layout/alert',
             [
-            'flash' => $this->flash,
-            'errors' => [],
-      ]
+                'flash' => $this->flash,
+                'errors' => [],
+            ]
         );
     }
 
     /**
-     *
      * @param AllowanceChargeRepository $allowanceChargeRepository
      * @param SettingRepository $settingRepository
      * @return Response
@@ -210,10 +207,10 @@ final class AllowanceChargeController
         $allowanceCharges = $allowanceChargeRepository->findAllPreloaded();
         $paginator = (new OffsetPaginator($allowanceCharges));
         $parameters = [
-           'canEdit' => $this->userService->hasPermission('editInv') ? true : false,
-           'allowanceCharges' => $this->allowanceCharges($allowanceChargeRepository),
-           'alert' => $this->alert(),
-           'paginator' => $paginator
+            'canEdit' => $this->userService->hasPermission('editInv') ? true : false,
+            'allowanceCharges' => $this->allowanceCharges($allowanceChargeRepository),
+            'alert' => $this->alert(),
+            'paginator' => $paginator,
         ];
         return $this->viewRenderer->render('index', $parameters);
     }
@@ -283,7 +280,7 @@ final class AllowanceChargeController
                 }
                 return $this->viewRenderer->render('_form_allowance', $parameters);
             }
-        }    
+        }
         return $this->webService->getRedirectResponse('allowancecharge/index');
     }
 
@@ -327,7 +324,7 @@ final class AllowanceChargeController
                     }
                     $parameters['form'] = $form;
                     $parameters['errors'] = $form->getValidationResult()->getErrorMessagesIndexedByProperty();
-                }    
+                }
             }
             return $this->viewRenderer->render('_form_charge', $parameters);
         }
@@ -345,8 +342,7 @@ final class AllowanceChargeController
     {
         $id = $currentRoute->getArgument('id');
         if (null !== $id) {
-            $allowanceCharge = $allowanceChargeRepository->repoAllowanceChargequery($id);
-            return $allowanceCharge;
+            return $allowanceChargeRepository->repoAllowanceChargequery($id);
         }
         return null;
     }
@@ -358,14 +354,13 @@ final class AllowanceChargeController
      */
     private function allowanceCharges(AllowanceChargeRepository $allowanceChargeRepository): \Yiisoft\Data\Cycle\Reader\EntityReader
     {
-        $allowanceCharges = $allowanceChargeRepository->findAllPreloaded();
-        return $allowanceCharges;
+        return $allowanceChargeRepository->findAllPreloaded();
     }
 
     /**
      * @param CurrentRoute $currentRoute
      * @param AllowanceChargeRepository $allowanceChargeRepository
-     * @return \Yiisoft\DataResponse\DataResponse|Response
+     * @return Response|\Yiisoft\DataResponse\DataResponse
      */
     public function view(CurrentRoute $currentRoute, AllowanceChargeRepository $allowanceChargeRepository): \Yiisoft\DataResponse\DataResponse|Response
     {

@@ -84,48 +84,48 @@ class DateHelper
      */
     public function date_formats(): array
     {
-        $array = [
+        return [
             'd/m/Y' => [
                 'setting' => 'd/m/Y',
                 'datepicker-dateFormat' => 'dd/mm/yy',
                 'datepicker-firstDay' => $this->s->getSetting('first_day_of_week'),
                 'display' => 'dd/mm/yyyy',
-                'separator' => '/'
+                'separator' => '/',
             ],
             'd-m-Y' => [
                 'setting' => 'd-m-Y',
                 'datepicker-dateFormat' => 'dd-mm-yy',
                 'datepicker-firstDay' => $this->s->getSetting('first_day_of_week'),
                 'display' => 'dd-mm-yyyy',
-                'separator' => '-'
+                'separator' => '-',
             ],
             'd-M-Y' => [
                 'setting' => 'd-M-Y',
                 'datepicker-dateFormat' => 'dd-M-yy',
                 'datepicker-firstDay' => $this->s->getSetting('first_day_of_week'),
                 'display' => 'dd-M-yyyy',
-                'separator' => '-'
+                'separator' => '-',
             ],
             'd.m.Y' => [
                 'setting' => 'd.m.Y',
                 'datepicker-dateFormat' => 'dd.mm.yy',
                 'datepicker-firstDay' => $this->s->getSetting('first_day_of_week'),
                 'display' => 'dd.mm.yyyy',
-                'separator' => '.'
+                'separator' => '.',
             ],
             'j.n.Y' => [
                 'setting' => 'j.n.Y',
                 'datepicker-dateFormat' => 'd.m.yy',
                 'datepicker-firstDay' => $this->s->getSetting('first_day_of_week'),
                 'display' => 'd.m.yyyy',
-                'separator' => '.'
+                'separator' => '.',
             ],
             'd M,Y' => [
                 'setting' => 'd M,Y',
                 'datepicker-dateFormat' => 'dd M,yy',
                 'datepicker-firstDay' => $this->s->getSetting('first_day_of_week'),
                 'display' => 'dd M,yyyy',
-                'separator' => ','
+                'separator' => ',',
             ],
             'm/d/Y' => [
                 'setting' => 'm/d/Y',
@@ -153,31 +153,30 @@ class DateHelper
                 'datepicker-dateFormat' => 'yy/mm/dd',
                 'datepicker-firstDay' => $this->s->getSetting('first_day_of_week'),
                 'display' => 'yyyy/mm/dd',
-                'separator' => '/'
+                'separator' => '/',
             ],
             'Y-m-d' => [
                 'setting' => 'Y-m-d',
                 'datepicker-dateFormat' => 'yy-mm-dd',
                 'datepicker-firstDay' => $this->s->getSetting('first_day_of_week'),
                 'display' => 'yyyy-mm-dd',
-                'separator' => '-'
+                'separator' => '-',
             ],
             'Y-m-d H:i:s' => [
                 'setting' => 'Y-m-d H:i:s',
                 'datepicker-dateFormat' => 'yy-mm-dd',
                 'datepicker-firstDay' => $this->s->getSetting('first_day_of_week'),
                 'display' => 'yyyy-mm-dd',
-                'separator' => '-'
+                'separator' => '-',
             ],
             'Y.m.d' => [
                 'setting' => 'Y.m.d',
                 'datepicker-dateFormat' => 'yy.mm.dd',
                 'datepicker-firstDay' => $this->s->getSetting('first_day_of_week'),
                 'display' => 'yyyy.mm.dd',
-                'separator' => '.'
+                'separator' => '.',
             ],
         ];
-        return $array;
     }
 
     /**
@@ -233,9 +232,9 @@ class DateHelper
      */
     public function ymd_to_immutable(string $y_m_d): \DateTimeImmutable
     {
-        $year = intval(substr($y_m_d, 0, 4));
-        $month = intval(substr($y_m_d, 6, 2));
-        $day = intval(substr($y_m_d, 9, 2));
+        $year = (int) substr($y_m_d, 0, 4);
+        $month = (int) substr($y_m_d, 6, 2);
+        $day = (int) substr($y_m_d, 9, 2);
         return (new \DateTimeImmutable())->setDate($year, $month, $day);
     }
 
@@ -292,8 +291,7 @@ class DateHelper
         $date = $this->date_to_mysql($string_date);
         // Prevent Failed to parse time string at position 0 error
         $str_replace = str_replace($this->separator(), '-', $date);
-        $finish_date = $datetime->modify($str_replace);
-        return $finish_date;
+        return $datetime->modify($str_replace);
     }
 
     /**
@@ -337,12 +335,11 @@ class DateHelper
     }
 
     /**
-     *
      * @param string $date
      * @param string $increment
      * @return \DateTime
      */
-    public function incrementDateStringToDateTime(string $date, string $increment): \DateTime
+    public function incrementDateStringToDateTime(string $date, string $increment): DateTime
     {
         $new_date = new \DateTime($date);
         $new_date->add(new DateInterval('P' . $increment));
@@ -351,17 +348,17 @@ class DateHelper
 
     /**
      * @param mixed $input
-     * @return string|false|null|DateTime
+     * @return DateTime|false|string|null
      */
     public function get_or_set_with_style(mixed $input): string|false|null|DateTime
     {
-        /** @var mixed|null|\DateTimeImmutable $date */
+        /** @var \DateTimeImmutable|mixed|null $date */
         $date = $input ?? null;
         // Get with style
         if ($date instanceof \DateTimeImmutable) {
             $return_date = $this->date_from_mysql($date);
-            // Set with style
-        } elseif (null !== ($date)) {
+        // Set with style
+        } elseif (null !== $date) {
             $return_date = $this->datetime_zone_style((string) $date);
         } else {
             $return_date = null;
@@ -388,22 +385,17 @@ class DateHelper
                 $deliveryEndDate = $delivery->getEnd_date();
                 return [
                     'StartDate' => null !== $deliveryStartDate ? $deliveryStartDate->format('Y-m-d') : '',
-                    'EndDate' => null !== $deliveryEndDate ? $deliveryEndDate->format('Y-m-d') : ''
-                ];
-            } else {
-                return [
-                    //
-                    'StartDate' => $datetime->format("Y-m-01"),
-                    'EndDate' => $datetime->format("Y-m-t")
+                    'EndDate' => null !== $deliveryEndDate ? $deliveryEndDate->format('Y-m-d') : '',
                 ];
             }
-        } else {
             return [
-                //
-                'StartDate' => $datetime->format("Y-m-01"),
-                'EndDate' => $datetime->format("Y-m-t")
+                'StartDate' => $datetime->format('Y-m-01'),
+                'EndDate' => $datetime->format('Y-m-t'),
             ];
         }
+        return [
+            'StartDate' => $datetime->format('Y-m-01'),
+            'EndDate' => $datetime->format('Y-m-t'),
+        ];
     }
-
 }

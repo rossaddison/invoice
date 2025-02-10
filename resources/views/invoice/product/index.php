@@ -13,8 +13,9 @@ use Yiisoft\Data\Paginator\OffsetPaginator;
 use Yiisoft\Data\Paginator\PageToken;
 use Yiisoft\Data\Reader\OrderHelper;
 use Yiisoft\Data\Reader\Sort;
-use Yiisoft\Yii\DataView\Column\DataColumn;
+use Yiisoft\Yii\DataView\Column\ActionButton;
 use Yiisoft\Yii\DataView\Column\ActionColumn;
+use Yiisoft\Yii\DataView\Column\DataColumn;
 use Yiisoft\Yii\DataView\GridView;
 use Yiisoft\Yii\DataView\YiiRouter\UrlCreator;
 
@@ -166,38 +167,38 @@ use Yiisoft\Yii\DataView\YiiRouter\UrlCreator;
                        $urlGenerator->generate('productproperty/add',['product_id'=>$model->getProduct_id()]),[])->render();
             },
         ),
-        new ActionColumn(
-            content: static fn(Product $model): string => !empty($productId = $model->getProduct_id()) ? 
-            Html::a()
-            ->addAttributes(['class' => 'dropdown-button text-decoration-none', 'title' => $translator->translate('i.view')])
-            ->content('🔎')
-            ->encode(false)
-            ->href('product/view/'. $productId)
-            ->render() : '',
-        ),
-        new ActionColumn(
-            content: static fn(Product $model): string => !empty($productId = $model->getProduct_id()) ?
-            Html::a()
-            ->addAttributes(['class' => 'dropdown-button text-decoration-none', 'title' => $translator->translate('i.edit')])
-            ->content('✎')
-            ->encode(false)
-            ->href('product/edit/'. $productId)
-            ->render() : '',
-        ),
-        new ActionColumn(
-            content: static fn(Product $model): string => !empty($productId = $model->getProduct_id()) ?
-            Html::a()
-            ->addAttributes([
-                'class'=>'dropdown-button text-decoration-none', 
-                'title' => $translator->translate('i.delete'),
-                'type'=>'submit', 
-                'onclick'=>"return confirm("."'".$translator->translate('i.delete_record_warning')."');"
-            ])
-            ->content('❌')
-            ->encode(false)
-            ->href('product/delete/'. $productId)
-            ->render() : '',
-        )
+        new ActionColumn(buttons: [
+            new ActionButton(
+                content: '🔎',
+                url: static function(Product $model) use ($urlGenerator) : string {
+                     return $urlGenerator->generate('product/view', ['id' => $model->getProduct_id()]);     
+                },
+                attributes: [
+                    'data-bs-toggle' => 'tooltip',
+                    'title' => $translator->translate('i.view'),
+                ]      
+            ),
+            new ActionButton(
+                content: '✎',
+                url: static function(Product $model) use ($urlGenerator) : string {
+                     return $urlGenerator->generate('product/edit', ['id' => $model->getProduct_id()]);     
+                },
+                attributes: [
+                    'data-bs-toggle' => 'tooltip',
+                    'title' => $translator->translate('i.edit'),
+                ]      
+            ),
+            new ActionButton(
+                content: '❌',
+                url: static function(Product $model) use ($urlGenerator) : string {
+                     return $urlGenerator->generate('product/delete', ['id' => $model->getProduct_id()]);     
+                },
+                attributes: [
+                    'title' => $translator->translate('i.delete'),
+                    'onclick'=>"return confirm("."'".$translator->translate('i.delete_record_warning')."');"
+                ]      
+            ),          
+        ]),
     ];       
 ?>
 <?php

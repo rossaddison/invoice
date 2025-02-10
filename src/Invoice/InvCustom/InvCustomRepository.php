@@ -58,7 +58,6 @@ final class InvCustomRepository extends Select\Repository
      * @see Reader/ReadableDataInterface|InvalidArgumentException
      * @param array|InvCustom|null $invcustom
      * @throws Throwable
-     * @return void
      */
     public function save(array|InvCustom|null $invcustom): void
     {
@@ -69,7 +68,6 @@ final class InvCustomRepository extends Select\Repository
      * @see Reader/ReadableDataInterface|InvalidArgumentException
      * @param array|InvCustom|null $invcustom
      * @throws Throwable
-     * @return void
      */
     public function delete(array|InvCustom|null $invcustom): void
     {
@@ -85,7 +83,7 @@ final class InvCustomRepository extends Select\Repository
     }
 
     /**
-     * @return null|InvCustom
+     * @return InvCustom|null
      *
      * @psalm-return TEntity|null
      */
@@ -98,7 +96,7 @@ final class InvCustomRepository extends Select\Repository
     }
 
     /**
-     * @return null|InvCustom
+     * @return InvCustom|null
      *
      * @psalm-return TEntity|null
      */

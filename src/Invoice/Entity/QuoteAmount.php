@@ -7,7 +7,6 @@ namespace App\Invoice\Entity;
 use Cycle\Annotated\Annotation\Column;
 use Cycle\Annotated\Annotation\Entity;
 use Cycle\Annotated\Annotation\Relation\BelongsTo;
-use App\Invoice\Entity\Quote;
 
 #[Entity(repository: \App\Invoice\QuoteAmount\QuoteAmountRepository::class)]
 class QuoteAmount
@@ -15,22 +14,22 @@ class QuoteAmount
     #[BelongsTo(target:Quote::class, nullable: false, fkAction:'NO ACTION')]
     private ?Quote $quote = null;
     #[Column(type: 'integer(11)', nullable:false)]
-    private ?int $quote_id =  null;
+    private ?int $quote_id = null;
 
     #[Column(type: 'primary')]
-    private ?int $id =  null;
+    private ?int $id = null;
 
     #[Column(type: 'decimal(20,2)', nullable:false, default: 0.00)]
-    private ?float $item_subtotal =  0.00;
+    private ?float $item_subtotal = 0.00;
 
     #[Column(type: 'decimal(20,2)', nullable:false, default: 0.00)]
-    private ?float $item_tax_total =  0.00;
+    private ?float $item_tax_total = 0.00;
 
     #[Column(type: 'decimal(20,2)', nullable:false, default: 0.00)]
-    private ?float $tax_total =  0.00;
+    private ?float $tax_total = 0.00;
 
     #[Column(type: 'decimal(20,2)', nullable:false, default: 0.00)]
-    private ?float $total =  0.00;
+    private ?float $total = 0.00;
 
     public function __construct(
         int $id = null,
@@ -60,7 +59,7 @@ class QuoteAmount
 
     public function setId(int $id): void
     {
-        $this->id =  $id;
+        $this->id = $id;
     }
 
     public function getQuote_id(): string
@@ -70,7 +69,7 @@ class QuoteAmount
 
     public function setQuote_id(int $quote_id): void
     {
-        $this->quote_id =  $quote_id;
+        $this->quote_id = $quote_id;
     }
 
     public function getItem_subtotal(): ?float
@@ -80,7 +79,7 @@ class QuoteAmount
 
     public function setItem_subtotal(float $item_subtotal): void
     {
-        $this->item_subtotal =  $item_subtotal;
+        $this->item_subtotal = $item_subtotal;
     }
 
     public function getItem_tax_total(): ?float
@@ -90,7 +89,7 @@ class QuoteAmount
 
     public function setItem_tax_total(float $item_tax_total): void
     {
-        $this->item_tax_total =  $item_tax_total;
+        $this->item_tax_total = $item_tax_total;
     }
 
     public function getTax_total(): ?float
@@ -100,7 +99,7 @@ class QuoteAmount
 
     public function setTax_total(float $tax_total): void
     {
-        $this->tax_total =  $tax_total;
+        $this->tax_total = $tax_total;
     }
 
     public function getTotal(): ?float
@@ -110,6 +109,6 @@ class QuoteAmount
 
     public function setTotal(float $total): void
     {
-        $this->total =  $total;
+        $this->total = $total;
     }
 }

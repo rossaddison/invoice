@@ -7,7 +7,6 @@ namespace App\Invoice\TaxRate;
 use App\Invoice\Entity\TaxRate;
 use App\Invoice\Enum\StoreCoveTaxType;
 use App\Invoice\Helpers\Peppol\PeppolArrays;
-use App\Invoice\TaxRate\TaxRateRepository;
 use App\Invoice\Setting\SettingRepository;
 use App\Invoice\Traits\FlashMessage;
 use App\Service\WebControllerService;
@@ -26,7 +25,7 @@ use Yiisoft\Yii\View\Renderer\ViewRenderer;
 final class TaxRateController
 {
     use FlashMessage;
-    
+
     private Flash $flash;
     private Session $session;
     private ViewRenderer $viewRenderer;
@@ -62,10 +61,10 @@ final class TaxRateController
     {
         $canEdit = $this->rbac();
         $parameters = [
-              'taxrates' => $this->taxRates($taxRateRepository),
-              'page' => $page > 0 ? $page : 1,
-              'canEdit' => $canEdit,
-              'alert' => $this->alert()
+            'taxrates' => $this->taxRates($taxRateRepository),
+            'page' => $page > 0 ? $page : 1,
+            'canEdit' => $canEdit,
+            'alert' => $this->alert(),
         ];
         return $this->viewRenderer->render('index', $parameters);
     }
@@ -87,7 +86,7 @@ final class TaxRateController
             'form' => $form,
             'errors' => [],
             'optionsDataPeppolTaxRateCode' => $this->optionsDataPeppolTaxRateCode($peppolArrays->getUncl5305()),
-            'optionsDataStoreCoveTaxType' => $this->optionsDataStoreCoveTaxType()
+            'optionsDataStoreCoveTaxType' => $this->optionsDataStoreCoveTaxType(),
         ];
         if ($request->getMethod() === Method::POST) {
             if ($formHydrator->populateFromPostAndValidate($form, $request)) {
@@ -129,7 +128,7 @@ final class TaxRateController
                 'form' => $form,
                 'errors' => [],
                 'optionsDataPeppolTaxRateCode' => $this->optionsDataPeppolTaxRateCode($peppolArrays->getUncl5305()),
-                'optionsDataStoreCoveTaxType' => $this->optionsDataStoreCoveTaxType()
+                'optionsDataStoreCoveTaxType' => $this->optionsDataStoreCoveTaxType(),
             ];
             if ($request->getMethod() === Method::POST) {
                 if ($formHydrator->populateFromPostAndValidate($form, $request)) {
@@ -181,12 +180,12 @@ final class TaxRateController
         if ($taxRate) {
             $form = new TaxRateForm($taxRate);
             $parameters = [
-                'title' =>  $this->translator->translate('i.view'),
+                'title' => $this->translator->translate('i.view'),
                 'actionName' => 'taxrate/view',
                 'actionArguments' => ['tax_rate_id' => $taxRate->getTaxRateId()],
                 'form' => $form,
                 'optionsDataPeppolTaxRateCode' => $this->optionsDataPeppolTaxRateCode($peppolArrays->getUncl5305()),
-                'optionsDataStoreCoveTaxType' => $this->optionsDataStoreCoveTaxType()
+                'optionsDataStoreCoveTaxType' => $this->optionsDataStoreCoveTaxType(),
             ];
             return $this->viewRenderer->render('__view', $parameters);
         }
@@ -215,8 +214,7 @@ final class TaxRateController
     {
         $tax_rate_id = $currentRoute->getArgument('tax_rate_id');
         if (null !== $tax_rate_id) {
-            $taxRate = $taxRateRepository->repoTaxRatequery($tax_rate_id);
-            return $taxRate;
+            return $taxRateRepository->repoTaxRatequery($tax_rate_id);
         }
         return null;
     }
@@ -228,8 +226,7 @@ final class TaxRateController
      */
     private function taxRates(TaxRateRepository $taxRateRepository): \Yiisoft\Data\Cycle\Reader\EntityReader
     {
-        $taxRates = $taxRateRepository->findAllPreloaded();
-        return $taxRates;
+        return $taxRateRepository->findAllPreloaded();
     }
 
     /**
@@ -240,8 +237,8 @@ final class TaxRateController
         return $this->viewRenderer->renderPartialAsString(
             '//invoice/layout/alert',
             [
-        'flash' => $this->flash
-      ]
+                'flash' => $this->flash,
+            ]
         );
     }
 
@@ -261,7 +258,7 @@ final class TaxRateController
              * @var string $value['Name']
              * @var string $value['Description']
              */
-            $optionsDataPeppolTaxRateCode[$value['Id']] = $value['Id'] . str_repeat("-", 10) . $value['Name'] . str_repeat("-", 10) . $value['Description'];
+            $optionsDataPeppolTaxRateCode[$value['Id']] = $value['Id'] . str_repeat('-', 10) . $value['Name'] . str_repeat('-', 10) . $value['Description'];
         }
         return $optionsDataPeppolTaxRateCode;
     }

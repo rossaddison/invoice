@@ -30,5 +30,4 @@ class PeppolTaxCategoryCodeNotFoundException extends \RuntimeException implement
                 Please try again
             SOLUTION;
     }
-
 }

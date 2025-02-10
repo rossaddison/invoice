@@ -54,7 +54,7 @@ final class MerchantForm extends FormModel
     public function getDate(): string|DateTimeImmutable
     {
         /**
-         * @var string|DateTimeImmutable $this->date
+         * @var DateTimeImmutable|string $this->date
          */
         return $this->date;
     }

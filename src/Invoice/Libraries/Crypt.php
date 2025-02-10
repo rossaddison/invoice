@@ -60,7 +60,7 @@ class Crypt
     {
         $new_hash = crypt($password, $hash);
 
-        return ($hash == $new_hash);
+        return $hash == $new_hash;
     }
 
     /**
@@ -70,14 +70,12 @@ class Crypt
     public function encode(string $data): mixed
     {
         $key = '';
-        if (preg_match("/^base64:(.*)$/", $this->decrypt_key, $matches)) {
+        if (preg_match('/^base64:(.*)$/', $this->decrypt_key, $matches)) {
             $key = base64_decode($matches[1]);
         }
 
         /** @var mixed $encrypted */
-        $encrypted = Cryptor::Encrypt($data, $key);
-        return $encrypted;
-
+        return Cryptor::Encrypt($data, $key);
     }
 
     /**
@@ -91,12 +89,11 @@ class Crypt
             return '';
         }
 
-        if (preg_match("/^base64:(.*)$/", $this->decrypt_key, $matches)) {
+        if (preg_match('/^base64:(.*)$/', $this->decrypt_key, $matches)) {
             $key = base64_decode($matches[1]);
         }
 
         /** @var mixed $decrypted */
-        $decrypted = Cryptor::Decrypt($data, $key);
-        return $decrypted;
+        return Cryptor::Decrypt($data, $key);
     }
 }

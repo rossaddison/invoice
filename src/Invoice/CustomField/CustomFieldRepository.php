@@ -58,7 +58,6 @@ final class CustomFieldRepository extends Select\Repository
      * @see Reader/ReadableDataInterface|InvalidArgumentException
      * @param array|CustomField|null $customfield
      * @throws Throwable
-     * @return void
      */
     public function save(array|CustomField|null $customfield): void
     {
@@ -69,7 +68,6 @@ final class CustomFieldRepository extends Select\Repository
      * @see Reader/ReadableDataInterface|InvalidArgumentException
      * @param array|CustomField|null $customfield
      * @throws Throwable
-     * @return void
      */
     public function delete(array|CustomField|null $customfield): void
     {
@@ -85,7 +83,6 @@ final class CustomFieldRepository extends Select\Repository
     }
 
     /**
-     *
      * @param string $id
      * @return CustomField|null
      */
@@ -112,18 +109,16 @@ final class CustomFieldRepository extends Select\Repository
 
     public function repoTableCountquery(string $table): int
     {
-        $count = $this->select()
+        return $this->select()
                       ->where(['table' => $table])
                       ->count();
-        return $count;
     }
 
     public function repoTableAndLabelCountquery(string $table, string $label): int
     {
-        $count = $this->select()
+        return $this->select()
                       ->where(['table' => $table])
                       ->andWhere(['label' => $label])
                       ->count();
-        return $count;
     }
 }

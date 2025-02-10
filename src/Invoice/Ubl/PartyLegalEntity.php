@@ -23,7 +23,6 @@ class PartyLegalEntity implements XmlSerializable
     }
 
     /**
-     *
      * @return string
      */
     public function getRegistrationName(): string
@@ -32,11 +31,10 @@ class PartyLegalEntity implements XmlSerializable
     }
 
     /**
-     *
      * @param string $registrationName
      * @return PartyLegalEntity
      */
-    public function setRegistrationName(string $registrationName): PartyLegalEntity
+    public function setRegistrationName(string $registrationName): self
     {
         $this->registrationName = $registrationName;
         return $this;
@@ -52,7 +50,6 @@ class PartyLegalEntity implements XmlSerializable
     }
 
     /**
-     *
      * @return string
      */
     public function getCompanyId(): string
@@ -61,24 +58,21 @@ class PartyLegalEntity implements XmlSerializable
     }
 
     /**
-     *
      * @param string $companyId
      * @param array $companyIdAttributes
      * @return PartyLegalEntity
      */
-    public function setCompanyId(string $companyId, array $companyIdAttributes = null): PartyLegalEntity
+    public function setCompanyId(string $companyId, array $companyIdAttributes = null): self
     {
         $this->companyId = $companyId;
-        if (null !== ($companyIdAttributes)) {
+        if (null !== $companyIdAttributes) {
             $this->companyIdAttributes = $companyIdAttributes;
         }
         return $this;
     }
 
     /**
-     *
      * @param Writer $writer
-     * @return void
      */
     public function xmlSerialize(Writer $writer): void
     {

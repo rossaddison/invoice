@@ -30,5 +30,4 @@ class PeppolSalesOrderPurchaseOrderNumberNotExistException extends \RuntimeExcep
                 Please try again
             SOLUTION;
     }
-
 }

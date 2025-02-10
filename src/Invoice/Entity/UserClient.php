@@ -8,25 +8,24 @@ use Cycle\Annotated\Annotation\Column;
 use Cycle\Annotated\Annotation\Entity;
 use Cycle\Annotated\Annotation\Relation\BelongsTo;
 use App\User\User;
-use App\Invoice\Entity\Client;
 
 #[Entity(repository: \App\Invoice\UserClient\UserClientRepository::class)]
 class UserClient
 {
-    #[BelongsTo(target:\App\User\User::class, nullable: false)]
+    #[BelongsTo(target:User::class, nullable: false)]
     private ?User $user = null;
 
-    #[BelongsTo(target:\App\Invoice\Entity\Client::class, nullable: false)]
+    #[BelongsTo(target:Client::class, nullable: false)]
     private ?Client $client = null;
 
     #[Column(type: 'primary')]
-    private ?int $id =  null;
+    private ?int $id = null;
 
     #[Column(type: 'integer(11)', nullable:false)]
-    private ?int $user_id =  null;
+    private ?int $user_id = null;
 
     #[Column(type: 'integer(11)', nullable:false)]
-    private ?int $client_id =  null;
+    private ?int $client_id = null;
 
     public function __construct(
         int $id = null,
@@ -55,7 +54,7 @@ class UserClient
 
     public function setId(int $id): void
     {
-        $this->id =  $id;
+        $this->id = $id;
     }
 
     public function getUser_id(): string
@@ -65,7 +64,7 @@ class UserClient
 
     public function setUser_id(int $user_id): void
     {
-        $this->user_id =  $user_id;
+        $this->user_id = $user_id;
     }
 
     public function getClient_id(): string
@@ -75,6 +74,6 @@ class UserClient
 
     public function setClient_id(int $client_id): void
     {
-        $this->client_id =  $client_id;
+        $this->client_id = $client_id;
     }
 }

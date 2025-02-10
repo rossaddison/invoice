@@ -7,7 +7,6 @@ namespace App\Invoice\Contract;
 use App\Invoice\Entity\Contract;
 use App\Invoice\Helpers\DateHelper;
 use App\Invoice\Setting\SettingRepository as SR;
-use App\Invoice\Contract\ContractRepository;
 
 final class ContractService
 {
@@ -19,11 +18,9 @@ final class ContractService
     }
 
     /**
-     *
      * @param Contract $model
      * @param array $array
      * @param SR $s
-     * @return void
      */
     public function saveContract(Contract $model, array $array, SR $s): void
     {

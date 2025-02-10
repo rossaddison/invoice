@@ -5,8 +5,6 @@ declare(strict_types=1);
 namespace App\Invoice\Group;
 
 use App\Invoice\Entity\Group;
-use App\Invoice\Group\GroupService;
-use App\Invoice\Group\GroupRepository;
 use App\Invoice\Setting\SettingRepository;
 use App\Invoice\Traits\FlashMessage;
 use App\Service\WebControllerService;
@@ -25,8 +23,8 @@ use Yiisoft\Yii\View\Renderer\ViewRenderer;
 
 final class GroupController
 {
-    use FlashMessage; 
-    
+    use FlashMessage;
+
     private Flash $flash;
     private Session $session;
     private ViewRenderer $viewRenderer;
@@ -82,7 +80,7 @@ final class GroupController
                                                     ? (int)$settingRepository->getSetting('default_list_limit') : 1,
             'paginator' => $paginator,
             'groups' => $this->groups($groupRepository),
-            'alert' => $this->alert()
+            'alert' => $this->alert(),
         ];
         return $this->viewRenderer->render('group/index', $parameters);
     }
@@ -103,7 +101,7 @@ final class GroupController
             'actionName' => 'group/add',
             'actionArguments' => [],
             'errors' => [],
-            'form' => $form
+            'form' => $form,
         ];
 
         if ($request->getMethod() === Method::POST) {
@@ -113,7 +111,7 @@ final class GroupController
                     $this->groupService->saveGroup($group, $body);
                     return $this->webService->getRedirectResponse('group/index');
                 }
-            }    
+            }
             $parameters['errors'] = $form->getValidationResult()->getErrorMessagesIndexedByProperty();
             $parameters['form'] = $form;
         }
@@ -141,7 +139,7 @@ final class GroupController
                 'actionName' => 'group/edit',
                 'actionArguments' => ['id' => $group->getId()],
                 'errors' => [],
-                'form' => $form
+                'form' => $form,
             ];
             if ($request->getMethod() === Method::POST) {
                 $body = $request->getParsedBody() ?? [];
@@ -150,7 +148,7 @@ final class GroupController
                         $this->groupService->saveGroup($group, $body);
                         return $this->webService->getRedirectResponse('group/index');
                     }
-                }    
+                }
                 $parameters['errors'] = $form->getValidationResult()->getErrorMessagesIndexedByProperty();
                 $parameters['form'] = $form;
             }
@@ -185,7 +183,7 @@ final class GroupController
     /**
      * @param CurrentRoute $currentRoute
      * @param GroupRepository $groupRepository
-     * @return \Yiisoft\DataResponse\DataResponse|Response
+     * @return Response|\Yiisoft\DataResponse\DataResponse
      */
     public function view(
         CurrentRoute $currentRoute,
@@ -229,8 +227,7 @@ final class GroupController
     {
         $id = $currentRoute->getArgument('id');
         if (null !== $id) {
-            $group = $groupRepository->repoGroupquery($id);
-            return $group;
+            return $groupRepository->repoGroupquery($id);
         }
         return null;
     }
@@ -242,8 +239,7 @@ final class GroupController
      */
     private function groups(GroupRepository $groupRepository): \Yiisoft\Data\Cycle\Reader\EntityReader
     {
-        $groups = $groupRepository->findAllPreloaded();
-        return $groups;
+        return $groupRepository->findAllPreloaded();
     }
 
     /**
@@ -254,8 +250,8 @@ final class GroupController
         return $this->viewRenderer->renderPartialAsString(
             '//invoice/layout/alert',
             [
-         'flash' => $this->flash
-       ]
+                'flash' => $this->flash,
+            ]
         );
     }
 }

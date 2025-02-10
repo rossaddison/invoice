@@ -72,7 +72,7 @@ final class CommonViewInjection implements CommonParametersInjectionInterface
                 $companyEmail = $company->getEmail();
                 $arbitrationBody = $company->getArbitrationBody();
                 $arbitrationJurisdiction = $company->getArbitrationJurisdiction();
-                
+
                 /**
                  * @var CompanyPrivate $private
                  */
@@ -92,8 +92,8 @@ final class CommonViewInjection implements CommonParametersInjectionInterface
         }
         $logoPath = (
             (isset($companyLogoFileName) && !empty($companyLogoFileName))
-                                      ? '/logo/'. $companyLogoFileName
-                                      : '/site/'. $this->settingRepository->public_logo().'.png'
+                                      ? '/logo/' . $companyLogoFileName
+                                      : '/site/' . $this->settingRepository->public_logo() . '.png'
         );
 
         return [
@@ -116,7 +116,7 @@ final class CommonViewInjection implements CommonParametersInjectionInterface
             'logoPath' => $logoPath,
             'translator' => $this->translator,
             'url' => $this->url,
-            
+
             /**
              * @see \invoice\resources\messages\en\app.php
              * @see \invoice\vendor\yiisoft\yii-view\src\ViewRenderer.php function getCommonParameters
@@ -131,8 +131,8 @@ final class CommonViewInjection implements CommonParametersInjectionInterface
                 'willing' => $this->translator->translate('site.soletrader.about.willing'),
                 'dissatisfaction' => $this->translator->translate('site.soletrader.about.dissatisfaction'),
                 'simply' => $this->translator->translate('site.soletrader.about.simply'),
-                'happy' =>  $this->translator->translate('site.soletrader.about.happy'),
-                'solved' =>  $this->translator->translate('site.soletrader.about.solved'),
+                'happy' => $this->translator->translate('site.soletrader.about.happy'),
+                'solved' => $this->translator->translate('site.soletrader.about.solved'),
                 'finished' => $this->translator->translate('site.soletrader.about.finished'),
                 'return' => $this->translator->translate('site.soletrader.about.return'),
             ],
@@ -153,7 +153,7 @@ final class CommonViewInjection implements CommonParametersInjectionInterface
                 'pro' => $this->translator->translate('site.soletrader.pricing.pro'),
                 'proPrice' => $this->translator->translate('site.soletrader.pricing.proPrice'),
                 'special' => $this->translator->translate('site.soletrader.pricing.special'),
-                'choosePlan' => $this->translator->translate('site.soletrader.pricing.choosePlan')
+                'choosePlan' => $this->translator->translate('site.soletrader.pricing.choosePlan'),
             ],
             'testimonial' => [
                 'we' => $this->translator->translate('site.soletrader.testimonial.we'),
@@ -176,28 +176,28 @@ final class CommonViewInjection implements CommonParametersInjectionInterface
             ],
             'forgotemailfailed' => [
                 'passwordResetFailed' => $this->translator->translate('i.password_reset_failed'),
-                'invoiceEmailException' => $this->translator->translate('invoice.email.exception')
+                'invoiceEmailException' => $this->translator->translate('invoice.email.exception'),
             ],
             'forgotusernotfound' => [
                 'loginAlertUserNotFound' => $this->translator->translate('i.loginalert_user_not_found'),
             ],
             'oauth2callbackresultunauthorised' => [
-                'oauth2callbackresultunauthorised' =>  $this->translator->translate('layout.page.not-authorised')
+                'oauth2callbackresultunauthorised' => $this->translator->translate('layout.page.not-authorised'),
             ],
             'resetpasswordfailed' => [
-                'resetPasswordFailed' => $this->translator->translate('i.password_reset_failed')
+                'resetPasswordFailed' => $this->translator->translate('i.password_reset_failed'),
             ],
             'resetpasswordsuccess' => [
-                'resetPasswordSuccess' => $this->translator->translate('i.password_reset')
+                'resetPasswordSuccess' => $this->translator->translate('i.password_reset'),
             ],
             'signupfailed' => [
                 'emailNotSentSuccessfully' => $this->translator->translate('invoice.invoice.email.not.sent.successfully'),
                 'invoiceEmailException' => $this->translator->translate('invoice.email.exception'),
-                'localhostUserCanLoginAfterAdminMakesActive' => $this->translator->translate('i.loginalert_user_inactive')
+                'localhostUserCanLoginAfterAdminMakesActive' => $this->translator->translate('i.loginalert_user_inactive'),
             ],
             'signupsuccess' => [
                 'emailSuccessfullySent' => $this->translator->translate('i.email_successfully_sent'),
-            ]
+            ],
         ];
     }
 }

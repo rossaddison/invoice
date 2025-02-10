@@ -121,7 +121,7 @@ final class ChangePasswordForm extends FormModel implements RulesProviderInterfa
                  * @see https://github.com/yiisoft/demo/pull/602  Password length should not be limited
                  */
             ],
-            'newPasswordVerify' => $this->NewPasswordVerifyRules()
+            'newPasswordVerify' => $this->NewPasswordVerifyRules(),
         ];
     }
 

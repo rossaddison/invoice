@@ -5,8 +5,6 @@ declare(strict_types=1);
 namespace App\Invoice\CustomValue;
 
 use App\Invoice\Entity\CustomValue;
-use App\Invoice\CustomValue\CustomValueService;
-use App\Invoice\CustomValue\CustomValueRepository;
 use App\Invoice\Setting\SettingRepository;
 use App\Invoice\CustomField\CustomFieldForm;
 use App\Invoice\CustomField\CustomFieldRepository;
@@ -26,7 +24,7 @@ use Yiisoft\Yii\View\Renderer\ViewRenderer;
 final class CustomValueController
 {
     use FlashMessage;
-    
+
     private Flash $flash;
     private ViewRenderer $viewRenderer;
     private WebControllerService $webService;
@@ -42,7 +40,6 @@ final class CustomValueController
         CustomValueService $customvalueService,
         TranslatorInterface $translator,
         SessionInterface $session
-            
     ) {
         $this->viewRenderer = $viewRenderer->withControllerName('invoice/customvalue')
                                            ->withLayout('@views/layout/invoice.php');
@@ -50,7 +47,7 @@ final class CustomValueController
         $this->userService = $userService;
         $this->customvalueService = $customvalueService;
         $this->translator = $translator;
-         $this->session = $session;
+        $this->session = $session;
         $this->flash = new Flash($session);
     }
 
@@ -66,10 +63,10 @@ final class CustomValueController
         $custom_field_id = (string)$this->session->get('custom_field_id');
         $custom_values = $customvalueRepository->repoCustomFieldquery((int)$custom_field_id);
         $parameters = [
-         'custom_field' => $customfieldRepository->repoCustomFieldquery($custom_field_id),
-         'custom_field_id' => $custom_field_id,
-         'custom_values' => $custom_values,
-         'custom_values_types' => array_merge($this->user_input_types(), $this->custom_value_fields()),
+            'custom_field' => $customfieldRepository->repoCustomFieldquery($custom_field_id),
+            'custom_field_id' => $custom_field_id,
+            'custom_values' => $custom_values,
+            'custom_values_types' => array_merge($this->user_input_types(), $this->custom_value_fields()),
         ];
         return $this->viewRenderer->render('index', $parameters);
     }
@@ -96,7 +93,7 @@ final class CustomValueController
                     'field_form' => $field_form,
                     'custom_field' => $custom_field,
                     'custom_values_types' => array_merge($this->user_input_types(), $this->custom_value_fields()),
-                    'custom_values'  => $customvalues,
+                    'custom_values' => $customvalues,
                 ];
                 return $this->viewRenderer->render('field', $parameters);
             }
@@ -130,7 +127,7 @@ final class CustomValueController
                     'errors' => [],
                     'form' => $form,
                     'custom_field' => $custom_field,
-                    'custom_fields' => $custom_fieldRepository->findAllPreloaded()
+                    'custom_fields' => $custom_fieldRepository->findAllPreloaded(),
                 ];
 
                 if ($request->getMethod() === Method::POST) {
@@ -139,7 +136,7 @@ final class CustomValueController
                         if (is_array($body)) {
                             $this->customvalueService->saveCustomValue($custom_value, $body);
                             return $this->webService->getRedirectResponse('customvalue/field', ['id' => $field_id]);
-                        }                       
+                        }
                     }
                     $parameters['form'] = $form;
                     $parameters['errors'] = $form->getValidationResult()->getErrorMessagesIndexedByProperty();
@@ -176,7 +173,7 @@ final class CustomValueController
                 'errors' => [],
                 'form' => $form,
                 'custom_field' => $custom_field,
-                'custom_fields' => $custom_fieldRepository->findAllPreloaded()
+                'custom_fields' => $custom_fieldRepository->findAllPreloaded(),
             ];
             if ($request->getMethod() === Method::POST) {
                 $body = $request->getParsedBody() ?? [];
@@ -185,7 +182,7 @@ final class CustomValueController
                         $this->customvalueService->saveCustomValue($custom_value, $body);
                         return $this->webService->getRedirectResponse('customvalue/field', ['id' => $custom_field_id]);
                     }
-                }    
+                }
                 $parameters['form'] = $form;
                 $parameters['errors'] = $form->getValidationResult()->getErrorMessagesIndexedByProperty();
             }
@@ -226,7 +223,7 @@ final class CustomValueController
                 'title' => $this->translator->translate('i.view'),
                 'actionName' => 'customvalue/view',
                 'actionArguments' => ['id' => $custom_value->getId()],
-                'form' => $form
+                'form' => $form,
             ];
             return $this->viewRenderer->render('_view', $parameters);
         }
@@ -255,8 +252,7 @@ final class CustomValueController
     {
         $id = $currentRoute->getArgument('id');
         if (null !== $id) {
-            $customvalue = $customvalueRepository->repoCustomValuequery($id);
-            return $customvalue;
+            return $customvalueRepository->repoCustomValuequery($id);
         }
         return null;
     }
@@ -268,11 +264,11 @@ final class CustomValueController
      */
     public function user_input_types(): array
     {
-        return array(
+        return [
             'TEXT',
             'DATE',
-            'BOOLEAN'
-        );
+            'BOOLEAN',
+        ];
     }
 
     /**
@@ -282,9 +278,9 @@ final class CustomValueController
      */
     public function custom_value_fields(): array
     {
-        return array(
+        return [
             'SINGLE-CHOICE',
-            'MULTIPLE-CHOICE'
-        );
+            'MULTIPLE-CHOICE',
+        ];
     }
 }

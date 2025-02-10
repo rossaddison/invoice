@@ -16,10 +16,8 @@ final class GeneratorRelationService
     }
 
     /**
-     *
      * @param GentorRelation $model
      * @param array $array
-     * @return void
      */
     public function saveGeneratorRelation(GentorRelation $model, array $array): void
     {
@@ -31,9 +29,7 @@ final class GeneratorRelationService
     }
 
     /**
-     *
      * @param GentorRelation $model
-     * @return void
      */
     public function deleteGeneratorRelation(GentorRelation $model): void
     {

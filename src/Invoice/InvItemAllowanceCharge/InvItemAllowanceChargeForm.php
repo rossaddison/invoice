@@ -61,5 +61,4 @@ final class InvItemAllowanceChargeForm extends FormModel
     {
         return '';
     }
-
 }

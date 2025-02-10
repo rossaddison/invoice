@@ -338,7 +338,6 @@ $toolbar = Div::tag();
                             $urlGenerator->generate('inv/edit', ['id' => $inv->getId()]) : '';     
                    },
                    attributes: [
-                       'style' => 'text-decoration:none',
                        'data-bs-toggle' => 'tooltip',
                        'title' => $translator->translate('i.edit'),
                    ]      
@@ -348,7 +347,6 @@ $toolbar = Div::tag();
                        return $urlGenerator->generate('inv/pdf_dashboard_exclude_cf', ['id' => $inv->getId()]);     
                    },
                    attributes: [
-                       'style' => 'text-decoration:none',
                        'data-bs-toggle' => 'tooltip',
                        'target' => '_blank',
                        'title' => $translator->translate('i.download_pdf'),
@@ -360,7 +358,6 @@ $toolbar = Div::tag();
                        return $urlGenerator->generate('inv/pdf_dashboard_include_cf', ['id' => $inv->getId()]);     
                    },
                    attributes: [
-                       'style' => 'text-decoration:none',
                        'data-bs-toggle' => 'tooltip',
                        'target' => '_blank',
                        'title' => $translator->translate('i.download_pdf').'➡️'.$translator->translate('invoice.custom.field'),
@@ -377,7 +374,6 @@ $toolbar = Div::tag();
                         return '';
                    },
                    attributes: [
-                       'style' => 'text-decoration:none',
                        'data-bs-toggle' => 'tooltip',
                        'title' => $translator->translate('i.email')
                    ],       
@@ -735,9 +731,7 @@ $toolbar = Div::tag();
     ->sortableHeaderAscPrepend('<div class="float-end fw-bold">⭡</div>')
     // the down arrow will appear if column values are descending        
     ->sortableHeaderDescPrepend('<div class="float-end fw-bold">⭣</div>') 
-    ->headerTableEnabled(true)        
     ->headerRowAttributes(['class' => 'card-header bg-info text-black'])
-    ->footerEnabled(true) 
     ->emptyCell($translator->translate('i.not_set'))
     ->emptyCellAttributes(['style' => 'color:red'])  
     //->header($gridComponents->header(' ' . $translator->translate('i.invoice')))

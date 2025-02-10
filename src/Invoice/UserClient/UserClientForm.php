@@ -39,5 +39,4 @@ final class UserClientForm extends FormModel
     {
         return '';
     }
-
 }

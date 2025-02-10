@@ -30,5 +30,4 @@ class PeppolDeliveryLocationCountryNameNotFoundException extends \RuntimeExcepti
                 Please try again
             SOLUTION;
     }
-
 }

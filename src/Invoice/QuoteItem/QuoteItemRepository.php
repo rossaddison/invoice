@@ -21,7 +21,6 @@ final class QuoteItemRepository extends Select\Repository
     private EntityWriter $entityWriter;
 
     /**
-     *
      * @param Select<TEntity> $select
      * @param EntityWriter $entityWriter
      */
@@ -61,7 +60,6 @@ final class QuoteItemRepository extends Select\Repository
      * @see Reader/ReadableDataInterface|InvalidArgumentException
      * @param array|QuoteItem|null $quoteitem
      * @throws Throwable
-     * @return void
      */
     public function save(array|QuoteItem|null $quoteitem): void
     {
@@ -72,7 +70,6 @@ final class QuoteItemRepository extends Select\Repository
      * @see Reader/ReadableDataInterface|InvalidArgumentException
      * @param array|QuoteItem|null $quoteitem
      * @throws Throwable
-     * @return void
      */
     public function delete(array|QuoteItem|null $quoteitem): void
     {
@@ -88,7 +85,7 @@ final class QuoteItemRepository extends Select\Repository
     }
 
     /**
-     * @return null|QuoteItem
+     * @return QuoteItem|null
      *
      * @psalm-return TEntity|null
      */
@@ -126,18 +123,16 @@ final class QuoteItemRepository extends Select\Repository
 
     public function repoCount(string $quote_id): int
     {
-        $count = $this->select()
+        return $this->select()
                       ->where(['quote_id' => $quote_id])
                       ->count();
-        return $count;
     }
 
     public function repoQuoteItemCount(string $id): int
     {
-        $count = $this->select()
+        return $this->select()
                       ->where(['id' => $id])
                       ->count();
-        return $count;
     }
 
     /**
@@ -146,7 +141,6 @@ final class QuoteItemRepository extends Select\Repository
      * @param array $item_ids
      * @return EntityReader
      */
-
     public function findinQuoteItems(array $item_ids): EntityReader
     {
         $query = $this->select()->where(['id' => ['in' => new Parameter($item_ids)]]);

@@ -7,8 +7,6 @@ namespace App\Invoice\SalesOrderItem;
 use App\Invoice\Entity\SalesOrderItem;
 use App\Invoice\Entity\SalesOrderItemAmount;
 use App\Invoice\Helpers\NumberHelper;
-use App\Invoice\SalesOrderItem\SalesOrderItemService;
-use App\Invoice\SalesOrderItem\SalesOrderItemForm;
 use App\Invoice\SalesOrderItemAmount\SalesOrderItemAmountService as SOIAS;
 use App\Invoice\Product\ProductRepository as PR;
 use App\Invoice\SalesOrder\SalesOrderRepository as SOR;
@@ -96,7 +94,7 @@ final class SalesOrderItemController
                 'products' => $pR->findAllPreloaded(),
                 'quotes' => $qR->findAllPreloaded(),
                 'units' => $uR->findAllPreloaded(),
-                'numberHelper' => new NumberHelper($sR)
+                'numberHelper' => new NumberHelper($sR),
             ];
             if ($request->getMethod() === Method::POST) {
                 if ($formHydrator->populateFromPostAndValidate($form, $request)) {
@@ -108,13 +106,13 @@ final class SalesOrderItemController
                         return $this->factory->createResponse($this->viewRenderer->renderPartialAsString(
                             '//invoice/setting/salesorder_successful',
                             [
-                            'heading' => $this->translator->translate('invoice.successful'),
-                            'message' => $this->translator->translate('i.record_successfully_updated'),
-                            'url' => 'salesorder/view',
-                            'id' => $so_item->getSales_order_id()
-                        ]
+                                'heading' => $this->translator->translate('invoice.successful'),
+                                'message' => $this->translator->translate('i.record_successfully_updated'),
+                                'url' => 'salesorder/view',
+                                'id' => $so_item->getSales_order_id(),
+                            ]
                         ));
-                    } // is_array    
+                    } // is_array
                 }
                 $parameters['errors'] = $form->getValidationResult()->getErrorMessagesIndexedByProperty();
                 $parameters['form'] = $form;
@@ -135,8 +133,7 @@ final class SalesOrderItemController
     {
         $id = $currentRoute->getArgument('id');
         if (null !== $id) {
-            $salesorderitem = $salesorderitemRepository->repoSalesOrderItemquery($id);
-            return $salesorderitem;
+            return $salesorderitemRepository->repoSalesOrderItemquery($id);
         }
         return null;
     }
@@ -145,14 +142,12 @@ final class SalesOrderItemController
     {
         $taxrate = $trr->repoTaxRatequery((string)$id);
         if ($taxrate) {
-            $percentage = $taxrate->getTaxRatePercent();
-            return $percentage;
+            return $taxrate->getTaxRatePercent();
         }
         return null;
     }
 
     /**
-     *
      * @param int $so_item_id
      * @param float $quantity
      * @param float $price
@@ -161,7 +156,6 @@ final class SalesOrderItemController
      * @param SOIAS $soias
      * @param SOIAR $soiar
      * @param SettingRepository $sR
-     * @return void
      */
     public function saveSalesOrderItemAmount(int $so_item_id, float $quantity, float $price, float $discount, float $tax_rate_percentage, SOIAS $soias, SOIAR $soiar, SettingRepository $sR): void
     {
@@ -173,13 +167,13 @@ final class SalesOrderItemController
             $tax_total = 0.00;
             // NO VAT
             if ($sR->getSetting('enable_vat_registration') === '0') {
-                $tax_total = (($sub_total * ($tax_rate_percentage / 100)));
+                $tax_total = ($sub_total * ($tax_rate_percentage / 100));
             }
             // VAT
             if ($sR->getSetting('enable_vat_registration') === '1') {
                 // EARLY SETTLEMENT CASH DISCOUNT MUST BE REMOVED BEFORE VAT DETERMINED
                 // @see https://informi.co.uk/finance/how-vat-affected-discounts
-                $tax_total = ((($sub_total - $discount_total) * ($tax_rate_percentage / 100)));
+                $tax_total = (($sub_total - $discount_total) * ($tax_rate_percentage / 100));
             }
             $soias_array['discount'] = $discount_total;
             $soias_array['subtotal'] = $sub_total;

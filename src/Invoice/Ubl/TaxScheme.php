@@ -26,16 +26,14 @@ class TaxScheme implements XmlSerializable
 
     /**
      * @param Writer $writer
-     * @return void
      */
     public function xmlSerialize(Writer $writer): void
     {
-
         $writer->write([
-          'name' => Schema::CAC . 'TaxScheme',
-          'value' => [
-            'name' => Schema::CBC . 'ID',
-            'value' => $this->getId()
-          ]]);
+            'name' => Schema::CAC . 'TaxScheme',
+            'value' => [
+                'name' => Schema::CBC . 'ID',
+                'value' => $this->getId(),
+            ]]);
     }
 }

@@ -5,8 +5,6 @@ declare(strict_types=1);
 namespace App\Invoice\DeliveryParty;
 
 use App\Invoice\Entity\DeliveryParty;
-use App\Invoice\DeliveryParty\DeliveryPartyService;
-use App\Invoice\DeliveryParty\DeliveryPartyRepository;
 use App\Invoice\Setting\SettingRepository;
 use App\Invoice\Traits\FlashMessage;
 use App\User\UserService;
@@ -26,7 +24,7 @@ use Exception;
 final class DeliveryPartyController
 {
     use FlashMessage;
-    
+
     private SessionInterface $session;
     private Flash $flash;
     private ViewRenderer $viewRenderer;
@@ -81,7 +79,7 @@ final class DeliveryPartyController
                     $this->deliverypartyService->saveDeliveryParty(new DeliveryParty(), $body);
                     return $this->webService->getRedirectResponse('deliveryparty/index');
                 }
-            }    
+            }
             $parameters['errors'] = $form->getValidationResult()->getErrorMessagesIndexedByProperty();
             $parameters['form'] = $form;
         }
@@ -98,10 +96,10 @@ final class DeliveryPartyController
         $deliveryparties = $this->deliveryparties($deliverypartyRepository);
         $paginator = (new OffsetPaginator($deliveryparties));
         $parameters = [
-          'canEdit' => $this->rbac(),
-          'paginator' => $paginator,
-          'deliveryparties' => $deliveryparties,
-          'alert' => $this->alert()
+            'canEdit' => $this->rbac(),
+            'paginator' => $paginator,
+            'deliveryparties' => $deliveryparties,
+            'alert' => $this->alert(),
         ];
         return $this->viewRenderer->render('index', $parameters);
     }
@@ -161,7 +159,7 @@ final class DeliveryPartyController
                         $this->deliverypartyService->saveDeliveryParty($deliveryparty, $body);
                         return $this->webService->getRedirectResponse('deliveryparty/index');
                     }
-                }    
+                }
                 $parameters['errors'] = $form->getValidationResult()->getErrorMessagesIndexedByProperty();
                 $parameters['form'] = $form;
             }
@@ -178,8 +176,8 @@ final class DeliveryPartyController
         return $this->viewRenderer->renderPartialAsString(
             '//invoice/layout/alert',
             [
-       'flash' => $this->flash
-     ]
+                'flash' => $this->flash,
+            ]
         );
     }
 
@@ -194,8 +192,7 @@ final class DeliveryPartyController
     {
         $id = $currentRoute->getArgument('id');
         if (null !== $id) {
-            $deliveryparty = $deliverypartyRepository->repoDeliveryPartyquery($id);
-            return $deliveryparty;
+            return $deliverypartyRepository->repoDeliveryPartyquery($id);
         }
         return null;
     }
@@ -207,8 +204,7 @@ final class DeliveryPartyController
      */
     private function deliveryparties(DeliveryPartyRepository $deliverypartyRepository): \Yiisoft\Data\Cycle\Reader\EntityReader
     {
-        $deliveryparties = $deliverypartyRepository->findAllPreloaded();
-        return $deliveryparties;
+        return $deliverypartyRepository->findAllPreloaded();
     }
 
     /**
@@ -227,7 +223,7 @@ final class DeliveryPartyController
     /**
      * @param CurrentRoute $currentRoute
      * @param DeliveryPartyRepository $deliverypartyRepository
-     * @return \Yiisoft\DataResponse\DataResponse|Response
+     * @return Response|\Yiisoft\DataResponse\DataResponse
      */
     public function view(CurrentRoute $currentRoute, DeliveryPartyRepository $deliverypartyRepository): \Yiisoft\DataResponse\DataResponse|Response
     {

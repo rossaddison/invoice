@@ -19,13 +19,11 @@ use App\Invoice\Project\ProjectRepository as prjctR;
 use App\Invoice\Setting\SettingRepository as sR;
 use App\Invoice\Task\TaskRepository as tR;
 use App\Invoice\TaxRate\TaxRateRepository as trR;
-use App\Invoice\Task\TaskService;
 use App\Invoice\Traits\FlashMessage;
 use App\Service\WebControllerService;
 use App\User\UserService;
 use App\Invoice\InvItem\InvItemService;
 use App\Invoice\InvItem\InvItemForm;
-use App\Invoice\Task\TaskForm;
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
 use Yiisoft\DataResponse\DataResponseFactoryInterface;
@@ -42,7 +40,7 @@ use Yiisoft\FormModel\FormHydrator;
 final class TaskController
 {
     use FlashMessage;
-    
+
     private Flash $flash;
     private Session $session;
     private ViewRenderer $viewRenderer;
@@ -119,7 +117,7 @@ final class TaskController
             'errors' => [],
             'numberhelper' => new NumberHelper($sR),
             'taxRates' => $trR->optionsDataTaxRates(),
-            'projects' => $pR->optionsDataProjects()
+            'projects' => $pR->optionsDataProjects(),
         ];
         if ($request->getMethod() === Method::POST) {
             if ($formHydrator->populateFromPostAndValidate($form, $request)) {
@@ -129,7 +127,7 @@ final class TaskController
                     $this->flashMessage('info', $this->translator->translate('i.record_successfully_created'));
                     return $this->webService->getRedirectResponse('task/index');
                 }
-            }    
+            }
             $parameters['errors'] = $form->getValidationResult()->getErrorMessagesIndexedByProperty();
             $parameters['form'] = $form;
         }
@@ -166,7 +164,7 @@ final class TaskController
                 'form' => $form,
                 'errors' => [],
                 'taxRates' => $trR->optionsDataTaxRates(),
-                'projects' => $pR->optionsDataProjects()
+                'projects' => $pR->optionsDataProjects(),
             ];
             if ($request->getMethod() === Method::POST) {
                 if ($formHydrator->populateFromPostAndValidate($form, $request)) {
@@ -176,7 +174,7 @@ final class TaskController
                         $this->flashMessage('info', $this->translator->translate('i.record_successfully_updated'));
                         return $this->webService->getRedirectResponse('task/index');
                     }
-                }    
+                }
                 $parameters['errors'] = $form->getValidationResult()->getErrorMessagesIndexedByProperty();
                 $parameters['form'] = $form;
             }
@@ -211,20 +209,20 @@ final class TaskController
         return [
             1 => [
                 'label' => $translator->translate('i.not_started'),
-                'class' => 'draft'
+                'class' => 'draft',
             ],
             2 => [
                 'label' => $translator->translate('i.in_progress'),
-                'class' => 'viewed'
+                'class' => 'viewed',
             ],
             3 => [
                 'label' => $translator->translate('i.complete'),
-                'class' => 'sent'
+                'class' => 'sent',
             ],
             4 => [
                 'label' => $translator->translate('i.invoiced'),
-                'class' => 'paid'
-            ]
+                'class' => 'paid',
+            ],
         ];
     }
 
@@ -278,7 +276,6 @@ final class TaskController
     }
 
     /**
-     *
      * @param int $order
      * @param Task $task
      * @param string $inv_id
@@ -287,26 +284,25 @@ final class TaskController
      * @param iiaR $iiaR
      * @param sR $sR
      * @param FormHydrator $formHydrator
-     * @return void
      */
     private function save_task_lookup_item_inv(int $order, Task $task, string $inv_id, tR $taskR, trR $trR, iiaR $iiaR, sR $sR, FormHydrator $formHydrator): void
     {
         $invItem = new InvItem();
         $form = new InvItemForm($invItem, (int)$inv_id);
         $ajax_content = [
-             'name' => $task->getName(),
-             'inv_id' => $inv_id,
-             'tax_rate_id' => $task->getTax_rate_id(),
-             'task_id' => $task->getId(),
-             'product_id' => null,
-             'date_added' => new \DateTimeImmutable('now'),
-             'description' => $task->getDescription(),
-             // A default quantity of 1 is used to initialize the item
-             'quantity' => floatval(1),
-             'price' => $task->getPrice(),
-             // The user will determine how much discount to give on this item later
-             'discount_amount' => floatval(0),
-             'order' => $order
+            'name' => $task->getName(),
+            'inv_id' => $inv_id,
+            'tax_rate_id' => $task->getTax_rate_id(),
+            'task_id' => $task->getId(),
+            'product_id' => null,
+            'date_added' => new \DateTimeImmutable('now'),
+            'description' => $task->getDescription(),
+            // A default quantity of 1 is used to initialize the item
+            'quantity' => (float) 1,
+            'price' => $task->getPrice(),
+            // The user will determine how much discount to give on this item later
+            'discount_amount' => (float) 0,
+            'order' => $order,
         ];
         if ($formHydrator->populateAndValidate($form, $ajax_content)) {
             $this->invitemService->addInvItem_task($invItem, $ajax_content, $inv_id, $taskR, $trR, new iiaS($iiaR), $iiaR, $sR);
@@ -318,7 +314,7 @@ final class TaskController
      * @param tR $tR
      * @param trR $trR
      * @param prjctR $pR
-     * @return \Yiisoft\DataResponse\DataResponse|Response
+     * @return Response|\Yiisoft\DataResponse\DataResponse
      */
     public function view(
         CurrentRoute $currentRoute,
@@ -330,14 +326,14 @@ final class TaskController
         if ($task) {
             $taskForm = new TaskForm($task);
             $parameters = [
-               'title' => $this->translator->translate('i.view'),
-               'actionName' => 'task/view',
-               'actionArguments' => ['id' => $task->getId()],
-               'errors' => [],
-               'form' => $taskForm,
-               'task' => $tR->repoTaskquery($task->getId()),
-               'taxRates' => $trR->optionsDataTaxRates(),
-               'projects' => $pR->optionsDataProjects()
+                'title' => $this->translator->translate('i.view'),
+                'actionName' => 'task/view',
+                'actionArguments' => ['id' => $task->getId()],
+                'errors' => [],
+                'form' => $taskForm,
+                'task' => $tR->repoTaskquery($task->getId()),
+                'taxRates' => $trR->optionsDataTaxRates(),
+                'projects' => $pR->optionsDataProjects(),
             ];
             return $this->viewRenderer->render('_view', $parameters);
         }
@@ -366,8 +362,7 @@ final class TaskController
     {
         $id = $currentRoute->getArgument('id');
         if (null !== $id) {
-            $task = $tR->repoTaskquery($id);
-            return $task;
+            return $tR->repoTaskquery($id);
         }
         return null;
     }
@@ -379,8 +374,7 @@ final class TaskController
      */
     private function tasks(tR $tR): \Yiisoft\Data\Cycle\Reader\EntityReader
     {
-        $tasks = $tR->findAllPreloaded();
-        return $tasks;
+        return $tR->findAllPreloaded();
     }
 
     /**
@@ -391,8 +385,8 @@ final class TaskController
         return $this->viewRenderer->renderPartialAsString(
             '//invoice/layout/alert',
             [
-            'flash' => $this->flash
-        ]
+                'flash' => $this->flash,
+            ]
         );
     }
 }

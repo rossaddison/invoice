@@ -20,7 +20,6 @@ final class SalesOrderTaxRateRepository extends Select\Repository
     private EntityWriter $entityWriter;
 
     /**
-     *
      * @param Select<TEntity> $select
      * @param EntityWriter $entityWriter
      */
@@ -61,7 +60,6 @@ final class SalesOrderTaxRateRepository extends Select\Repository
      * @see Reader/ReadableDataInterface|InvalidArgumentException
      * @param array|SalesOrderTaxRate|null $salesordertaxrate
      * @throws Throwable
-     * @return void
      */
     public function save(array|SalesOrderTaxRate|null $salesordertaxrate): void
     {
@@ -72,7 +70,6 @@ final class SalesOrderTaxRateRepository extends Select\Repository
      * @see Reader/ReadableDataInterface|InvalidArgumentException
      * @param array|SalesOrderTaxRate|null $salesordertaxrate
      * @throws Throwable
-     * @return void
      */
     public function delete(array|SalesOrderTaxRate|null $salesordertaxrate): void
     {
@@ -91,19 +88,18 @@ final class SalesOrderTaxRateRepository extends Select\Repository
     //used in salesorder/view to determine if a 'one-off'  salesorder tax rate acquired from tax rates is to be applied to the salesorder
     //salesorder tax rates are children of their parent tax rate and are normally used when all products use the same tax rate ie. no item tax
     /**
-     * @param null|string $salesorder_id
+     * @param string|null $salesorder_id
      */
     public function repoCount(string|null $salesorder_id): int
     {
-        $count = $this->select()
+        return $this->select()
                       ->where(['so_id' => $salesorder_id])
                       ->count();
-        return $count;
     }
 
     //find a specific salesorders tax rate, normally to delete
     /**
-     * @return null|SalesOrderTaxRate
+     * @return SalesOrderTaxRate|null
      *
      * @psalm-return TEntity|null
      */
@@ -123,7 +119,6 @@ final class SalesOrderTaxRateRepository extends Select\Repository
     // which we will use in salesorder/view
 
     /**
-     *
      * @param string $salesorder_id
      * @return EntityReader
      */
@@ -136,7 +131,7 @@ final class SalesOrderTaxRateRepository extends Select\Repository
     }
 
     /**
-     * @return null|SalesOrderTaxRate
+     * @return SalesOrderTaxRate|null
      *
      * @psalm-return TEntity|null
      */

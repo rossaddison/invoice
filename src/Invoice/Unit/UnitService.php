@@ -18,7 +18,6 @@ final class UnitService
     /**
      * @param Unit $model
      * @param array $array
-     * @return void
      */
     public function saveUnit(Unit $model, array $array): void
     {
@@ -30,7 +29,6 @@ final class UnitService
 
     /**
      * @param Unit $model
-     * @return void
      */
     public function deleteUnit(Unit $model): void
     {

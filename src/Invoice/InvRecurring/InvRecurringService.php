@@ -14,6 +14,7 @@ final class InvRecurringService
     private InvRecurringRepository $repository;
     private InvRepository $invR;
     private SettingRepository $s;
+
     /**
      * @param InvRecurringRepository $repository
      */
@@ -28,10 +29,8 @@ final class InvRecurringService
     }
 
     /**
-     *
      * @param InvRecurring $model
      * @param array $array
-     * @return void
      */
     public function saveInvRecurring(InvRecurring $model, array $array): void
     {
@@ -41,7 +40,6 @@ final class InvRecurringService
 
         $baseInvoice = $this->invR->repoInvUnloadedquery((string)$array['inv_id']);
         if (null !== $baseInvoice) {
-
             $dateHelper = new DateHelper($this->s);
 
             // Next is not null because currently running
@@ -64,7 +62,7 @@ final class InvRecurringService
             }
 
             /**
-             * @var null|string $array['end']
+             * @var string|null $array['end']
              */
             $end = isset($array['end']) ? new \DateTime($array['end']) : null;
             $end ? $model->setEnd($end) : '';
@@ -74,9 +72,7 @@ final class InvRecurringService
     }
 
     /**
-     *
      * @param InvRecurring $model
-     * @return void
      */
     public function deleteInvRecurring(InvRecurring $model): void
     {

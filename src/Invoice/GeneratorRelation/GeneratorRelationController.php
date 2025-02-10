@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace App\Invoice\GeneratorRelation;
 
 use App\Invoice\Entity\GentorRelation;
-use App\Invoice\GeneratorRelation\GeneratorRelationForm;
 use App\Invoice\Generator\GeneratorRepository;
 use App\Invoice\Traits\FlashMessage;
 use App\Service\WebControllerService;
@@ -24,7 +23,7 @@ use Psr\Http\Message\ServerRequestInterface as Request;
 final class GeneratorRelationController
 {
     use FlashMessage;
-    
+
     private Session $session;
     private Flash $flash;
     private ViewRenderer $viewRenderer;
@@ -67,7 +66,6 @@ final class GeneratorRelationController
     }
 
     /**
-     *
      * @param Request $request
      * @param GeneratorRepository $generatorRepository
      * @param FormHydrator $formHydrator
@@ -83,17 +81,17 @@ final class GeneratorRelationController
             'actionArguments' => [],
             'form' => $form,
             'errors' => [],
-            'generators' => $generatorRepository->findAllPreloaded()
+            'generators' => $generatorRepository->findAllPreloaded(),
         ];
 
         if ($request->getMethod() === Method::POST) {
             $body = $request->getParsedBody() ?? [];
             if ($formHydrator->populateFromPostAndValidate($form, $request)) {
                 if (is_array($body)) {
-                        $this->generatorrelationService->saveGeneratorRelation($generatorrelation, $body);
+                    $this->generatorrelationService->saveGeneratorRelation($generatorrelation, $body);
                     return $this->webService->getRedirectResponse('generatorrelation/index');
                 }
-            }    
+            }
             $parameters['errors'] = $form->getValidationResult()->getErrorMessagesIndexedByProperty();
             $parameters['form'] = $form;
         }
@@ -101,7 +99,6 @@ final class GeneratorRelationController
     }
 
     /**
-     *
      * @param Request $request
      * @param CurrentRoute $currentRoute
      * @param GeneratorRelationRepository $generatorrelationRepository
@@ -126,7 +123,7 @@ final class GeneratorRelationController
                 'errors' => [],
                 'form' => $form,
                 //relation generator
-                'generators' => $generatorRepository->findAllPreloaded()
+                'generators' => $generatorRepository->findAllPreloaded(),
             ];
             if ($request->getMethod() === Method::POST) {
                 $body = $request->getParsedBody() ?? [];
@@ -135,7 +132,7 @@ final class GeneratorRelationController
                         $this->generatorrelationService->saveGeneratorRelation($generatorrelation, $body);
                         return $this->webService->getRedirectResponse('generatorrelation/index');
                     }
-                }    
+                }
                 $parameters['errors'] = $form->getValidationResult()->getErrorMessagesIndexedByProperty();
                 $parameters['form'] = $form;
             }
@@ -145,7 +142,6 @@ final class GeneratorRelationController
     }
 
     /**
-     *
      * @param CurrentRoute $currentRoute
      * @param GeneratorRelationRepository $generatorrelationRepository
      * @return Response
@@ -161,11 +157,10 @@ final class GeneratorRelationController
     }
 
     /**
-     *
      * @param CurrentRoute $currentRoute
      * @param GeneratorRelationRepository $generatorrelationRepository
      * @param GeneratorRepository $generatorRepository
-     * @return \Yiisoft\DataResponse\DataResponse|Response
+     * @return Response|\Yiisoft\DataResponse\DataResponse
      */
     public function view(
         CurrentRoute $currentRoute,
@@ -208,12 +203,11 @@ final class GeneratorRelationController
      * @param GeneratorRelationRepository $generatorrelationRepository
      * @return GentorRelation|null
      */
-    private function generatorrelation(CurrentRoute $currentRoute, GeneratorRelationRepository $generatorrelationRepository): GentorRelation |null
+    private function generatorrelation(CurrentRoute $currentRoute, GeneratorRelationRepository $generatorrelationRepository): GentorRelation|null
     {
         $generatorrelation_id = $currentRoute->getArgument('id');
         if (null !== $generatorrelation_id) {
-            $generatorrelation = $generatorrelationRepository->repoGeneratorRelationquery($generatorrelation_id);
-            return $generatorrelation;
+            return $generatorrelationRepository->repoGeneratorRelationquery($generatorrelation_id);
         }
         return null;
     }
@@ -227,8 +221,7 @@ final class GeneratorRelationController
      */
     private function generatorrelations(GeneratorRelationRepository $generatorrelationRepository): \Yiisoft\Data\Cycle\Reader\EntityReader
     {
-        $generatorrelations = $generatorrelationRepository->findAllPreloaded();
-        return $generatorrelations;
+        return $generatorrelationRepository->findAllPreloaded();
     }
 
     /**
@@ -239,8 +232,8 @@ final class GeneratorRelationController
         return $this->viewRenderer->renderPartialAsString(
             '//invoice/layout/alert',
             [
-        'flash' => $this->flash
-      ]
+                'flash' => $this->flash,
+            ]
         );
     }
 }

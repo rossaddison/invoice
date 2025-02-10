@@ -6,7 +6,7 @@ namespace App\Invoice\Helpers\Peppol\Exception;
 
 use Yiisoft\FriendlyException\FriendlyExceptionInterface;
 
-class PeppolBuyerNotFoundException extends \RuntimeException implements FriendlyExceptionInterface
+class PeppolNotFoundException extends \RuntimeException implements FriendlyExceptionInterface
 {
     /**
      * @return string
@@ -26,5 +26,4 @@ class PeppolBuyerNotFoundException extends \RuntimeException implements Friendly
                 Please try again
             SOLUTION;
     }
-
 }

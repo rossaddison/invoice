@@ -20,6 +20,7 @@ final class AllowanceChargeRepository extends Select\Repository
 {
     private EntityWriter $entityWriter;
     private TranslatorInterface $translator;
+
     /**
      * @param Select<TEntity> $select
      * @param EntityWriter $entityWriter
@@ -62,10 +63,9 @@ final class AllowanceChargeRepository extends Select\Repository
 
     /**
      * @see Reader/ReadableDataInterface|InvalidArgumentException
-     * @param array|AllowanceCharge|null $allowanceCharge
+     * @param AllowanceCharge|array|null $allowanceCharge
      * @psalm-param TEntity $allowanceCharge
      * @throws Throwable
-     * @return void
      */
     public function save(array|AllowanceCharge|null $allowanceCharge): void
     {
@@ -74,10 +74,9 @@ final class AllowanceChargeRepository extends Select\Repository
 
     /**
      * @see Reader/ReadableDataInterface|InvalidArgumentException
-     * @param array|AllowanceCharge|null $allowanceCharge
+     * @param AllowanceCharge|array|null $allowanceCharge
 
      * @throws Throwable
-     * @return void
      */
     public function delete(array|AllowanceCharge|null $allowanceCharge): void
     {
@@ -131,9 +130,9 @@ final class AllowanceChargeRepository extends Select\Repository
             $key = $allowanceCharge->getId();
             $key ? ($optionsDataAllowanceCharges[$key] = ($allowanceCharge->getIdentifier()
             ? $this->translator->translate('invoice.invoice.allowance.or.charge.charge')
-            : $this->translator->translate('invoice.invoice.allowance.or.charge.allowance')).
-            '  '. $allowanceCharge->getReasonCode().
-            ' '.
+            : $this->translator->translate('invoice.invoice.allowance.or.charge.allowance')) .
+            '  ' . $allowanceCharge->getReasonCode() .
+            ' ' .
             $allowanceCharge->getReason()) : '';
         }
         return $optionsDataAllowanceCharges;

@@ -8,7 +8,6 @@ use Cycle\Annotated\Annotation\Column;
 use Cycle\Annotated\Annotation\Entity;
 use Cycle\Annotated\Annotation\Relation\BelongsTo;
 use DateTimeImmutable;
-use App\Invoice\Entity\Client;
 
 #[Entity(repository: \App\Invoice\Upload\UploadRepository::class)]
 class Upload
@@ -16,7 +15,7 @@ class Upload
     #[Column(type: 'primary')]
     private ?int $id = null;
 
-    #[BelongsTo(target: Client::class, nullable: false, fkAction: "NO ACTION")]
+    #[BelongsTo(target: Client::class, nullable: false, fkAction: 'NO ACTION')]
     private ?Client $client = null;
 
     #[Column(type: 'integer(11)', nullable: false)]
@@ -139,9 +138,8 @@ class Upload
 
     public function nullifyRelationOnChange(int $client_id): void
     {
-        if ($this->client_id <> $client_id) {
+        if ($this->client_id != $client_id) {
             $this->client = null;
         }
     }
-
 }

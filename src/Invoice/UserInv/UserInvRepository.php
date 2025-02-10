@@ -20,7 +20,6 @@ final class UserInvRepository extends Select\Repository
     private EntityWriter $entityWriter;
 
     /**
-     *
      * @param Select<TEntity> $select
      *
      * @param EntityWriter $entityWriter
@@ -60,7 +59,6 @@ final class UserInvRepository extends Select\Repository
      * @see Reader/ReadableDataInterface|InvalidArgumentException
      * @param array|UserInv|null $userinv
      * @throws Throwable
-     * @return void
      */
     public function save(array|UserInv|null $userinv): void
     {
@@ -71,7 +69,6 @@ final class UserInvRepository extends Select\Repository
      * @see Reader/ReadableDataInterface|InvalidArgumentException
      * @param array|UserInv|null $userinv
      * @throws Throwable
-     * @return void
      */
     public function delete(array|UserInv|null $userinv): void
     {
@@ -109,10 +106,9 @@ final class UserInvRepository extends Select\Repository
 
     public function repoUserInvUserIdcount(string $user_id): int
     {
-        $count = $this->select()
+        return $this->select()
                       ->where(['user_id' => $user_id])
                       ->count();
-        return $count;
     }
 
     /**
@@ -122,13 +118,12 @@ final class UserInvRepository extends Select\Repository
      */
     public function findAllWithActive(int $active): EntityReader
     {
-        if (($active) < 2) {
+        if ($active < 2) {
             $query = $this->select()
                    ->where(['active' => $active]);
             return $this->prepareDataReader($query);
-        } else {
-            return $this->findAllPreloaded();
         }
+        return $this->findAllPreloaded();
     }
 
     /**

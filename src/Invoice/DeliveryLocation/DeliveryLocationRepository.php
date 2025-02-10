@@ -18,6 +18,7 @@ use Yiisoft\Data\Cycle\Writer\EntityWriter;
 final class DeliveryLocationRepository extends Select\Repository
 {
     private EntityWriter $entityWriter;
+
     /**
      * @param Select<TEntity> $select
      * @param EntityWriter $entityWriter
@@ -89,9 +90,8 @@ final class DeliveryLocationRepository extends Select\Repository
         if ($id > 0) {
             $query = $this->select()->where(['id' => $id]);
             return  $query->fetchOne() ?: null;
-        } else {
-            return null;
         }
+        return null;
     }
 
     /**

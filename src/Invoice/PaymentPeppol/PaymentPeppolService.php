@@ -18,7 +18,6 @@ final class PaymentPeppolService
     /**
      * @param PaymentPeppol $model
      * @param array $array
-     * @return void
      */
     public function savePaymentPeppol(PaymentPeppol $model, array $array): void
     {
@@ -26,7 +25,7 @@ final class PaymentPeppolService
         isset($array['id']) ? $model->setId((int)$array['id']) : '';
         isset($array['provider']) ? $model->setProvider((string)$array['provider']) : '';
 
-        $timestamp = ((new \DateTimeImmutable())->setTimestamp((int)$array['auto_reference']))->getTimestamp();
+        $timestamp = (new \DateTimeImmutable())->setTimestamp((int)$array['auto_reference'])->getTimestamp();
         $model->setAuto_reference($timestamp);
 
         $this->repository->save($model);

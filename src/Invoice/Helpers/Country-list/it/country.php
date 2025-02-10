@@ -1,7 +1,7 @@
 <?php
 
 declare(strict_types=1);
-return array(
+return [
     'AF' => 'Afghanistan',
     'AL' => 'Albania',
     'DZ' => 'Algeria',
@@ -249,4 +249,4 @@ return array(
     'ZM' => 'Zambia',
     'ZW' => 'Zimbabwe',
     'ZZ' => 'regione non valida o sconosciuta',
-);
+];

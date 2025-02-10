@@ -22,12 +22,12 @@ final class SiteController
     {
         return $this->viewRenderer->render('about');
     }
-    
+
     public function accreditations(): \Yiisoft\DataResponse\DataResponse
     {
         return $this->viewRenderer->render('accreditations');
     }
-    
+
     public function gallery(): \Yiisoft\DataResponse\DataResponse
     {
         return $this->viewRenderer->render('gallery');
@@ -42,12 +42,12 @@ final class SiteController
     {
         return $this->viewRenderer->render('pricing');
     }
-    
+
     public function privacypolicy(): \Yiisoft\DataResponse\DataResponse
     {
         return $this->viewRenderer->render('privacypolicy');
     }
-    
+
     public function termsofservice(): \Yiisoft\DataResponse\DataResponse
     {
         return $this->viewRenderer->render('termsofservice');
@@ -57,17 +57,17 @@ final class SiteController
     {
         return $this->viewRenderer->render('testimonial');
     }
-    
+
     public function oauth2callbackresultunauthorised(): \Yiisoft\DataResponse\DataResponse
     {
         return $this->viewRenderer->render('oauth2callbackresultunauthorised');
     }
-    
+
     public function usercancelledoauth2(): \Yiisoft\DataResponse\DataResponse
     {
         return $this->viewRenderer->render('usercancelledoauth2');
     }
-    
+
     public function adminmustmakeactive(): \Yiisoft\DataResponse\DataResponse
     {
         return $this->viewRenderer->render('adminmustmakeactive');

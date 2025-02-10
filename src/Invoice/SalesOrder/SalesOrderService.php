@@ -38,11 +38,9 @@ final class SalesOrderService
     }
 
     /**
-     *
      * @param User $user
      * @param SalesOrder $model
      * @param array $array
-     * @return void
      */
     public function addSo(User $user, SalesOrder $model, array $array): void
     {
@@ -103,9 +101,7 @@ final class SalesOrderService
      * @param SoTRS $sotrS
      * @param SoAR $soaR
      * @param SoAS $soaS
-     * @return void
      */
-
     public function deleteSo(SalesOrder $model, SoCR $socR, SoCS $socS, SoIR $soiR, SoIS $soiS, SoTRR $sotrR, SoTRS $sotrS, SoAR $soaR, SoAS $soaS): void
     {
         $so_id = $model->getId();

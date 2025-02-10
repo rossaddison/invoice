@@ -56,7 +56,6 @@ final class ProductCustomRepository extends Select\Repository
 
     /**
      * @param array|ProductCustom|null $productcustom
-     * @return void
      */
     public function save(array|ProductCustom|null $productcustom): void
     {
@@ -65,7 +64,6 @@ final class ProductCustomRepository extends Select\Repository
 
     /**
      * @param array|ProductCustom|null $productcustom
-     * @return void
      */
     public function delete(array|ProductCustom|null $productcustom): void
     {
@@ -81,7 +79,6 @@ final class ProductCustomRepository extends Select\Repository
     }
 
     /**
-     *
      * @param string $id
      * @return ProductCustom|null
      */
@@ -93,9 +90,7 @@ final class ProductCustomRepository extends Select\Repository
         return  $query->fetchOne() ?: null;
     }
 
-
     /**
-     *
      * @param string $product_id
      * @param string $custom_field_id
      * @return ProductCustom|null
@@ -108,7 +103,6 @@ final class ProductCustomRepository extends Select\Repository
     }
 
     /**
-     *
      * @param string $product_id
      * @param string $custom_field_id
      * @return int
@@ -121,7 +115,6 @@ final class ProductCustomRepository extends Select\Repository
     }
 
     /**
-     *
      * @param string $product_id
      * @return int
      */

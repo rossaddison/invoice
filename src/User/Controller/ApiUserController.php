@@ -7,8 +7,6 @@ namespace App\User\Controller;
 use App\User\User;
 use App\User\UserRepository;
 use OpenApi\Annotations as OA;
-use Psr\Http\Message\ResponseInterface;
-use Yiisoft\Data\Reader\Sort;
 use Yiisoft\DataResponse\DataResponseFactoryInterface;
 use Yiisoft\Router\CurrentRoute;
 

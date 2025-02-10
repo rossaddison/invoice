@@ -24,12 +24,12 @@ class UserInv
     private ?User $user = null;
 
     #[Column(type: 'integer(11)', nullable:false)]
-    private ?int $user_id =  null;
+    private ?int $user_id = null;
 
     /**
      * @see src/Invoice/UserInv/UserInvForm 0 => Admin, 1 => Not Admin
      */
-    #[Column(type:"integer(11)", nullable:false, default:0)]
+    #[Column(type:'integer(11)', nullable:false, default:0)]
     private ?int $type = null;
 
     #[Column(type:'bool', typecast:'bool', default:false)]
@@ -41,68 +41,68 @@ class UserInv
     #[Column(type: 'datetime', nullable:false)]
     private DateTimeImmutable $date_modified;
 
-    #[Column(type:"string(191)", nullable:true, default:'system')]
-    private ?string $language =  '';
+    #[Column(type:'string(191)', nullable:true, default:'system')]
+    private ?string $language = '';
 
-    #[Column(type:"string(151)", nullable:true)]
-    private ?string $name =  '';
+    #[Column(type:'string(151)', nullable:true)]
+    private ?string $name = '';
 
-    #[Column(type:"string(50)", nullable:true)]
-    private ?string $company =  '';
+    #[Column(type:'string(50)', nullable:true)]
+    private ?string $company = '';
 
-    #[Column(type:"string(50)", nullable:true)]
-    private ?string $address_1 =  '';
+    #[Column(type:'string(50)', nullable:true)]
+    private ?string $address_1 = '';
 
-    #[Column(type:"string(50)", nullable:true)]
-    private ?string $address_2 =  '';
+    #[Column(type:'string(50)', nullable:true)]
+    private ?string $address_2 = '';
 
-    #[Column(type:"string(50)", nullable:true)]
-    private ?string $city =  '';
+    #[Column(type:'string(50)', nullable:true)]
+    private ?string $city = '';
 
-    #[Column(type:"string(50)", nullable:true)]
-    private ?string $state =  '';
+    #[Column(type:'string(50)', nullable:true)]
+    private ?string $state = '';
 
-    #[Column(type:"string(10)", nullable:true)]
-    private ?string $zip =  '';
+    #[Column(type:'string(10)', nullable:true)]
+    private ?string $zip = '';
 
-    #[Column(type:"string(50)", nullable:true)]
-    private ?string $country =  '';
+    #[Column(type:'string(50)', nullable:true)]
+    private ?string $country = '';
 
-    #[Column(type:"string(20)", nullable:true)]
-    private ?string $phone =  '';
+    #[Column(type:'string(20)', nullable:true)]
+    private ?string $phone = '';
 
-    #[Column(type:"string(20)", nullable:true)]
-    private ?string $fax =  '';
+    #[Column(type:'string(20)', nullable:true)]
+    private ?string $fax = '';
 
-    #[Column(type:"string(20)", nullable:true)]
-    private ?string $mobile =  '';
+    #[Column(type:'string(20)', nullable:true)]
+    private ?string $mobile = '';
 
-    #[Column(type:"string(100)", nullable:true)]
-    private ?string $web =  '';
+    #[Column(type:'string(100)', nullable:true)]
+    private ?string $web = '';
 
-    #[Column(type:"string(20)", nullable:true)]
-    private ?string $vat_id =  '';
+    #[Column(type:'string(20)', nullable:true)]
+    private ?string $vat_id = '';
 
-    #[Column(type:"string(15)", nullable:true)]
-    private ?string $tax_code =  '';
+    #[Column(type:'string(15)', nullable:true)]
+    private ?string $tax_code = '';
 
     #[Column(type:'bool', typecast:'bool', default:false)]
     private ?bool $all_clients = false;
 
-    #[Column(type:"string(40)", nullable:true)]
-    private ?string $subscribernumber =  '';
+    #[Column(type:'string(40)', nullable:true)]
+    private ?string $subscribernumber = '';
 
-    #[Column(type:"string(34))", nullable:true)]
-    private ?string $iban =  '';
+    #[Column(type:'string(34))', nullable:true)]
+    private ?string $iban = '';
 
-    #[Column(type:"bigInteger(20)", nullable:true)]
-    private ?int $gln =  null;
+    #[Column(type:'bigInteger(20)', nullable:true)]
+    private ?int $gln = null;
 
-    #[Column(type:"string(7)", nullable:true)]
-    private ?string $rcc =  '';
+    #[Column(type:'string(7)', nullable:true)]
+    private ?string $rcc = '';
 
     #[Column(type: 'integer(3)', nullable:true, default: 10)]
-    private ?int $listLimit =  null;
+    private ?int $listLimit = null;
 
     public function __construct(
         int $id = null,
@@ -174,7 +174,7 @@ class UserInv
     {
         $this->user = $user;
     }
-    
+
     /**
      * Use the getUser relation to retrieve the User Table email field
      * @return User|null
@@ -191,7 +191,7 @@ class UserInv
 
     public function setUser_id(int $user_id): void
     {
-        $this->user_id =  $user_id;
+        $this->user_id = $user_id;
     }
 
     public function getWeb(): ?string
@@ -216,7 +216,7 @@ class UserInv
 
     public function getActiveLabel(Translator $translator): string
     {
-        return $this->active ? '<span class="label active">'.$translator->translate('i.yes').'</span>' : '<span class="label inactive">'.$translator->translate('i.no').'</span>';
+        return $this->active ? '<span class="label active">' . $translator->translate('i.yes') . '</span>' : '<span class="label inactive">' . $translator->translate('i.no') . '</span>';
     }
 
     public function setActive(bool $active): void
@@ -353,7 +353,7 @@ class UserInv
     {
         $this->mobile = $mobile;
     }
- 
+
     public function setWeb(string $web): void
     {
         $this->web = $web;

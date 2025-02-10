@@ -45,7 +45,6 @@ final class EmailTemplateRepository extends Select\Repository
      * @see Reader/ReadableDataInterface|InvalidArgumentException
      * @param array|EmailTemplate|null $emailtemplate
      * @throws Throwable
-     * @return void
      */
     public function save(array|EmailTemplate|null $emailtemplate): void
     {
@@ -56,7 +55,6 @@ final class EmailTemplateRepository extends Select\Repository
      * @see Reader/ReadableDataInterface|InvalidArgumentException
      * @param array|EmailTemplate|null $emailtemplate
      * @throws Throwable
-     * @return void
      */
     public function delete(array|EmailTemplate|null $emailtemplate): void
     {
@@ -72,17 +70,15 @@ final class EmailTemplateRepository extends Select\Repository
     }
 
     /**
-     *
      * @param string $email_template_id
      * @return int
      */
     public function repoEmailTemplateCount(string $email_template_id): int
     {
-        $count = $this
+        return $this
             ->select()
             ->where(['id' => $email_template_id])
             ->count();
-        return  $count;
     }
 
     /**
@@ -110,7 +106,6 @@ final class EmailTemplateRepository extends Select\Repository
     }
 
     /**
-     *
      * @param SettingRepository $setting
      * @return SettingRepository
      */
@@ -122,33 +117,31 @@ final class EmailTemplateRepository extends Select\Repository
 
     // resources/views/invoice/template/public||pdf
     /**
-     *
      * @param string $pdf_or_public
      * @return array
      */
     public function get_invoice_templates(string $pdf_or_public): array
     {
-        $pdf_template_directory = dirname(dirname(dirname(__DIR__))).'/resources/views/invoice/template/invoice/pdf';
-        $public_template_directory = dirname(dirname(dirname(__DIR__))).'/resources/views/invoice/template/invoice/public';
+        $pdf_template_directory = dirname(__DIR__, 3) . '/resources/views/invoice/template/invoice/pdf';
+        $public_template_directory = dirname(__DIR__, 3) . '/resources/views/invoice/template/invoice/public';
         $templates = [];
         $php_only = (new PathMatcher())
         ->doNotCheckFilesystem()
         ->only('*.php');
         if ($pdf_or_public === 'pdf') {
             $templates = FileHelper::findFiles($pdf_template_directory, [
-                                      'filter' => $php_only,
-                                      'recursive' => false,
-                              ]);
+                'filter' => $php_only,
+                'recursive' => false,
+            ]);
         } elseif ($pdf_or_public === 'public') {
             $templates = FileHelper::findFiles($public_template_directory, [
-                                      'filter' => $php_only,
-                                      'recursive' => false,
-                              ]);
+                'filter' => $php_only,
+                'recursive' => false,
+            ]);
         }
         if (!empty($templates)) {
             $extension_remove = $this->remove_extension($templates);
-            $templates = $this->remove_path($extension_remove);
-            return $templates;
+            return $this->remove_path($extension_remove);
         }
         return $templates;
     }
@@ -158,33 +151,31 @@ final class EmailTemplateRepository extends Select\Repository
      */
     public function get_quote_templates(string $pdf_or_public): array
     {
-        $pdf_template_directory = dirname(dirname(dirname(__DIR__))).'/resources/views/invoice/template/quote/pdf';
-        $public_template_directory = dirname(dirname(dirname(__DIR__))).'/resources/views/invoice/template/quote/public';
+        $pdf_template_directory = dirname(__DIR__, 3) . '/resources/views/invoice/template/quote/pdf';
+        $public_template_directory = dirname(__DIR__, 3) . '/resources/views/invoice/template/quote/public';
         $templates = [];
         $pdf_only = (new PathMatcher())
         ->doNotCheckFilesystem()
         ->only('*.pdf');
         if ($pdf_or_public === 'pdf') {
             $templates = FileHelper::findFiles($pdf_template_directory, [
-                                        'filter' => $pdf_only,
-                                        'recursive' => false,
-                                ]);
+                'filter' => $pdf_only,
+                'recursive' => false,
+            ]);
         } elseif ($pdf_or_public === 'public') {
             $templates = FileHelper::findFiles($public_template_directory, [
-                                        'filter' => $pdf_only,
-                                        'recursive' => false,
-                                ]);
+                'filter' => $pdf_only,
+                'recursive' => false,
+            ]);
         }
         if (!empty($templates)) {
             $extension_remove = $this->remove_extension($templates);
-            $templates = $this->remove_path($extension_remove);
-            return $templates;
+            return $this->remove_path($extension_remove);
         }
         return $templates;
     }
 
     /**
-     *
      * @param array $files
      * @return array
      */
@@ -201,7 +192,6 @@ final class EmailTemplateRepository extends Select\Repository
     }
 
     /**
-     *
      * @param array $files
      * @return array
      */

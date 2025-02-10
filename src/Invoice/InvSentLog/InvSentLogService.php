@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace App\Invoice\InvSentLog;
 
 use App\Invoice\Entity\InvSentLog;
-use App\Invoice\InvSentLog\InvSentLogRepository;
 use DateTimeImmutable;
 
 final class InvSentLogService

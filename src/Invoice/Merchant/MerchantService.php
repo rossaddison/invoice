@@ -18,7 +18,6 @@ final class MerchantService
     /**
      * @param Merchant $model
      * @param array $array
-     * @return void
      */
     public function saveMerchant(Merchant $model, array $array): void
     {
@@ -39,10 +38,8 @@ final class MerchantService
     }
 
     /**
-     *
      * @param Merchant $model
      * @param array $array
-     * @return void
      */
     public function saveMerchant_via_payment_handler(Merchant $model, array $array): void
     {
@@ -63,7 +60,6 @@ final class MerchantService
 
     /**
      * @param Merchant $model
-     * @return void
      */
     public function deleteMerchant(Merchant $model): void
     {

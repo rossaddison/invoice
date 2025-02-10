@@ -62,7 +62,6 @@ final class SalesOrderAmountRepository extends Select\Repository
      * @see Reader/ReadableDataInterface|InvalidArgumentException
      * @param array|SalesOrderAmount|null $soamount
      * @throws Throwable
-     * @return void
      */
     public function save(array|SalesOrderAmount|null $soamount): void
     {
@@ -73,7 +72,6 @@ final class SalesOrderAmountRepository extends Select\Repository
      * @see Reader/ReadableDataInterface|InvalidArgumentException
      * @param array|SalesOrderAmount|null $soamount
      * @throws Throwable
-     * @return void
      */
     public function delete(array|SalesOrderAmount|null $soamount): void
     {
@@ -93,14 +91,13 @@ final class SalesOrderAmountRepository extends Select\Repository
      */
     public function repoSalesOrderAmountCount(string $so_id): int
     {
-        $count = $this->select()
+        return $this->select()
                       ->where(['so_id' => $so_id])
                       ->count();
-        return $count;
     }
 
     /**
-     * @return null|SalesOrderAmount
+     * @return SalesOrderAmount|null
      *
      * @psalm-return TEntity|null
      */
@@ -115,7 +112,7 @@ final class SalesOrderAmountRepository extends Select\Repository
     /**
      * @param string $so_id
      *
-     * @return null|SalesOrderAmount
+     * @return SalesOrderAmount|null
      *
      * @psalm-return TEntity|null
      */
@@ -130,7 +127,7 @@ final class SalesOrderAmountRepository extends Select\Repository
     /**
      * @param string $so_id
      *
-     * @return null|SalesOrderAmount
+     * @return SalesOrderAmount|null
      *
      * @psalm-return TEntity|null
      */
@@ -143,7 +140,6 @@ final class SalesOrderAmountRepository extends Select\Repository
     }
 
     /**
-     *
      * @param int $key
      * @param array $range
      * @param SR $sR
@@ -164,7 +160,6 @@ final class SalesOrderAmountRepository extends Select\Repository
     }
 
     /**
-     *
      * @param int $key
      * @param array $range
      * @param SR $sR
@@ -177,13 +172,12 @@ final class SalesOrderAmountRepository extends Select\Repository
          * @var \DateTimeImmutable $range['lower']
          * @var \DateTimeImmutable $range['upper']
          */
-        $query = $this->select()
+        return $this->select()
                       ->load('so')
                       ->where(['so.status_id' => $key])
                       ->andWhere('so.date_created', '>=', $datehelper->date_from_mysql_without_style($range['lower']))
                       ->andWhere('so.date_created', '<=', $datehelper->date_from_mysql_without_style($range['upper']))
                       ->count();
-        return $query;
     }
 
     /**
@@ -216,7 +210,7 @@ final class SalesOrderAmountRepository extends Select\Repository
                 'label' => $status['label'],
                 'href' => (string) $status['href'],
                 'sum_total' => $total,
-                'num_total' => $this->repoStatusTotals_Num_Total($key, $range, $sR) ?: 0
+                'num_total' => $this->repoStatusTotals_Num_Total($key, $range, $sR) ?: 0,
             ];
         }
         return $return;

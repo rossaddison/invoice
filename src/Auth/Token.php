@@ -8,26 +8,25 @@ use Cycle\Annotated\Annotation\Column;
 use Cycle\Annotated\Annotation\Entity;
 use Cycle\Annotated\Annotation\Relation\BelongsTo;
 use DateTimeImmutable;
-use App\Auth\Identity;
 use Yiisoft\Security\Random;
 
-#[Entity(repository: \App\Auth\TokenRepository::class)]
+#[Entity(repository: TokenRepository::class)]
 
 class Token
 {
     #[Column(type:'primary')]
-    private ?int $id =  null;
+    private ?int $id = null;
 
     #[BelongsTo(target:Identity::class, nullable: false, fkAction:'NO ACTION')]
     private ?Identity $identity = null;
     #[Column(type:'integer(11)', nullable: false)]
-    private ?int $identity_id =  null;
+    private ?int $identity_id = null;
 
     #[Column(type:'string(32)', nullable: false)]
-    private ?string $token =  null;
+    private ?string $token = null;
 
     #[Column(type:'string(50)', nullable: false)]
-    private ?string $type =  null;
+    private ?string $type = null;
 
     #[Column(type:'datetime)', nullable: false)]
     private DateTimeImmutable $created_at;
@@ -54,7 +53,7 @@ class Token
 
     public function setId(int $id): void
     {
-        $this->id =  $id;
+        $this->id = $id;
     }
 
     public function getIdentity_id(): string
@@ -64,7 +63,7 @@ class Token
 
     public function setIdentity_id(int $identity_id): void
     {
-        $this->identity_id =  $identity_id;
+        $this->identity_id = $identity_id;
     }
 
     public function getToken(): ?string
@@ -74,7 +73,7 @@ class Token
 
     public function setToken(string $token): void
     {
-        $this->token =  $token;
+        $this->token = $token;
     }
 
     public function getType(): ?string

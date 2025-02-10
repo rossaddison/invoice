@@ -33,5 +33,4 @@ class PeppolDeliveryLocationIDNotFoundException extends \RuntimeException implem
                 Please try again
             SOLUTION;
     }
-
 }

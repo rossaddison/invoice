@@ -13,8 +13,6 @@ use App\Invoice\Inv\InvRepository as IR;
 use App\Invoice\InvAllowanceCharge\InvAllowanceChargeRepository as ACIR;
 use App\Invoice\InvAmount\InvAmountRepository as IAR;
 use App\Invoice\InvItemAllowanceCharge\InvItemAllowanceChargeRepository as ACIIR;
-use App\Invoice\InvItem\InvItemService;
-use App\Invoice\InvItem\InvItemForm;
 use App\Invoice\InvItem\InvItemRepository as IIR;
 use App\Invoice\InvItemAmount\InvItemAmountRepository as IIAR;
 use App\Invoice\InvItemAmount\InvItemAmountService as IIAS;
@@ -47,7 +45,7 @@ use Yiisoft\Yii\View\Renderer\ViewRenderer;
 final class InvItemController
 {
     use FlashMessage;
-    
+
     private Flash $flash;
     private Session $session;
     private ViewRenderer $viewRenderer;
@@ -88,7 +86,7 @@ final class InvItemController
      * @param UR $uR
      * @param TRR $trR
      * @param IIAR $iiar
-     * @return \Yiisoft\DataResponse\DataResponse|\Psr\Http\Message\ResponseInterface
+     * @return \Psr\Http\Message\ResponseInterface|\Yiisoft\DataResponse\DataResponse
      */
     public function add_product(
         Request $request,
@@ -99,7 +97,7 @@ final class InvItemController
         TRR $trR,
         IRR $irR,
         IIAR $iiar,
-    ): \Yiisoft\DataResponse\DataResponse|\Psr\Http\Message\ResponseInterface {
+    ): \Yiisoft\DataResponse\DataResponse|Response {
         $inv_id = (string)$this->session->get('inv_id');
         $invitem = new InvItem();
         $is_recurring = ($irR->repoCount((string) $this->session->get('inv_id')) > 0 ? true : false);
@@ -112,9 +110,9 @@ final class InvItemController
             'inv_id' => $inv_id,
             'isRecurring' => $is_recurring,
             'taxRates' => $trR->findAllPreloaded(),
-              // Only tasks that are complete are put on the invoice
+            // Only tasks that are complete are put on the invoice
             'products' => $pR->findAllPreloaded(),
-            'units' => $uR->findAllPreloaded()
+            'units' => $uR->findAllPreloaded(),
         ];
         if ($request->getMethod() === Method::POST) {
             $body = $request->getParsedBody() ?? [];
@@ -124,7 +122,7 @@ final class InvItemController
                     $this->flashMessage('info', $this->translator->translate('i.record_successfully_created'));
                     return $this->webService->getRedirectResponse('inv/view', ['id' => $inv_id]);
                 }
-            }    
+            }
             $parameters['errors'] = $form->getValidationResult()->getErrorMessagesIndexedByProperty();
             $parameters['form'] = $form;
         }
@@ -163,9 +161,9 @@ final class InvItemController
             'inv_id' => $inv_id,
             'isRecurring' => $is_recurring,
             'taxRrates' => $trR->findAllPreloaded(),
-              // Only tasks that are complete are put on the invoice
+            // Only tasks that are complete are put on the invoice
             'tasks' => $taskR->repoTaskStatusquery(3),
-            'units' => $uR->findAllPreloaded()
+            'units' => $uR->findAllPreloaded(),
         ];
 
         if ($request->getMethod() === Method::POST) {
@@ -176,7 +174,7 @@ final class InvItemController
                     $this->flashMessage('info', $this->translator->translate('i.record_successfully_created'));
                     return $this->webService->getRedirectResponse('inv/view', ['id' => $inv_id]);
                 }
-            }    
+            }
             $parameters['errors'] = $form->getValidationResult()->getErrorMessagesIndexedByProperty();
             $parameters['form'] = $form;
         }
@@ -237,7 +235,7 @@ final class InvItemController
      * @param ITRR $itrR
      * @param ACIR $aciR
      * @param ACIIR $aciiR
-     * @return \Yiisoft\DataResponse\DataResponse|\Psr\Http\Message\ResponseInterface
+     * @return \Psr\Http\Message\ResponseInterface|\Yiisoft\DataResponse\DataResponse
      */
     public function edit_product(
         CurrentRoute $currentRoute,
@@ -257,7 +255,7 @@ final class InvItemController
         ITRR $itrR,
         ACIR $aciR,
         ACIIR $aciiR
-    ): \Yiisoft\DataResponse\DataResponse|\Psr\Http\Message\ResponseInterface {
+    ): \Yiisoft\DataResponse\DataResponse|Response {
         $inv_id = (string)$this->session->get('inv_id');
         $inv_item = $this->invitem($currentRoute, $iiR);
         $is_recurring = ($irR->repoCount((string) $this->session->get('inv_id')) > 0 ? true : false);
@@ -285,7 +283,7 @@ final class InvItemController
                 'taxRates' => $trR->findAllPreloaded(),
                 'products' => $pR->findAllPreloaded(),
                 'invs' => $iR->findAllPreloaded(),
-                'units' => $uR->findAllPreloaded()
+                'units' => $uR->findAllPreloaded(),
             ];
             if ($request->getMethod() === Method::POST) {
                 $body = $request->getParsedBody();
@@ -331,7 +329,7 @@ final class InvItemController
                             $this->flashMessage('info', $this->translator->translate('i.record_successfully_updated'));
                             return $this->webService->getRedirectResponse('inv/view', ['id' => $inv_id]);
                         }
-                    }    
+                    }
                 }
                 $parameters['errors'] = $form->getValidationResult()->getErrorMessagesIndexedByProperty();
                 $parameters['form'] = $form;
@@ -342,7 +340,6 @@ final class InvItemController
     }
 
     /**
-     *
      * @param int $id
      * @param TRR $trr
      * @return float|null
@@ -351,8 +348,7 @@ final class InvItemController
     {
         $taxrate = $trr->repoTaxRatequery((string)$id);
         if ($taxrate) {
-            $percentage = $taxrate->getTaxRatePercent();
-            return $percentage;
+            return $taxrate->getTaxRatePercent();
         }
         return null;
     }
@@ -374,7 +370,6 @@ final class InvItemController
      * @param IIAS $iias
      * @param IIAR $iiar
      * @param SR $s
-     * @return void
      */
     public function saveInvItemAmount(int $inv_item_id, float $quantity, float $price, float $discount, float $charge, float $allowance, float $tax_rate_percentage, IIAS $iias, IIAR $iiar, SR $s): void
     {
@@ -387,13 +382,13 @@ final class InvItemController
         $tax_total = 0.00;
         // NO VAT
         if ($s->getSetting('enable_vat_registration') === '0') {
-            $tax_total = ((($sub_total - $discount_total + $charge_total - $allowance_total) * ($tax_rate_percentage / 100)));
+            $tax_total = (($sub_total - $discount_total + $charge_total - $allowance_total) * ($tax_rate_percentage / 100));
         }
         // VAT
         if ($s->getSetting('enable_vat_registration') === '1') {
             // EARLY SETTLEMENT CASH DISCOUNT MUST BE REMOVED BEFORE VAT DETERMINED
             // @see https://informi.co.uk/finance/how-vat-affected-discounts
-            $tax_total = ((($sub_total - $discount_total + $charge_total) * ($tax_rate_percentage / 100)));
+            $tax_total = (($sub_total - $discount_total + $charge_total) * ($tax_rate_percentage / 100));
         }
         $iias_array['discount'] = $discount_total;
         $iias_array['charge'] = $charge_total;
@@ -431,7 +426,7 @@ final class InvItemController
      * @param IR $iR
      * @param IIAS $iias
      * @param IIAR $iiaR
-     * @return \Yiisoft\DataResponse\DataResponse|\Psr\Http\Message\ResponseInterface
+     * @return \Psr\Http\Message\ResponseInterface|\Yiisoft\DataResponse\DataResponse
      */
     public function edit_task(
         CurrentRoute $currentRoute,
@@ -451,14 +446,14 @@ final class InvItemController
         IR $iR,
         IIAS $iias,
         IIAR $iiaR
-    ): \Yiisoft\DataResponse\DataResponse|\Psr\Http\Message\ResponseInterface {
+    ): \Yiisoft\DataResponse\DataResponse|Response {
         $inv_id = (string)$this->session->get('inv_id');
         $inv_item = $this->invitem($currentRoute, $iiR);
         if ($inv_item) {
             $is_recurring = ($irR->repoCount((string) $this->session->get('inv_id')) > 0 ? true : false);
             $form = new InvItemForm($inv_item, (int)$inv_id);
             $parameters = [
-                'title' =>  $this->translator->translate('i.edit'),
+                'title' => $this->translator->translate('i.edit'),
                 'actionName' => 'invitem/edit_task',
                 'actionArguments' => ['id' => $currentRoute->getArgument('id')],
                 'errors' => [],
@@ -470,7 +465,7 @@ final class InvItemController
                 // Only tasks that are complete are put on the invoice
                 'tasks' => $taskR->repoTaskStatusquery(3),
                 'invs' => $iR->findAllPreloaded(),
-                'units' => $uR->findAllPreloaded()
+                'units' => $uR->findAllPreloaded(),
             ];
             if ($request->getMethod() === Method::POST) {
                 $body = $request->getParsedBody() ?? [];
@@ -495,8 +490,8 @@ final class InvItemController
                             $numberHelper->calculate_inv($inv_id, $aciR, $iiR, $iiaR, $itrR, $iaR, $iR, $pymR);
                             $this->flashMessage('info', $this->translator->translate('i.record_successfully_updated'));
                             return $this->webService->getRedirectResponse('inv/view', ['id' => $inv_id]);
-                        }    
-                    }    
+                        }
+                    }
                 }
                 $parameters['errors'] = $form->getValidationResult()->getErrorMessagesIndexedByProperty();
                 $parameters['form'] = $form;
@@ -537,9 +532,9 @@ final class InvItemController
         // If one item is deleted, the result is positive
         /** @var InvItem $item */
         foreach ($items as $item) {
-            ($this->invitemService->deleteInvItem($item));
+            $this->invitemService->deleteInvItem($item);
             $result = true;
         }
-        return $this->factory->createResponse(Json::encode(($result ? ['success' => 1] : ['success' => 0])));
+        return $this->factory->createResponse(Json::encode($result ? ['success' => 1] : ['success' => 0]));
     }
 }

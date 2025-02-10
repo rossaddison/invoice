@@ -5,8 +5,6 @@ declare(strict_types=1);
 namespace App\Invoice\PaymentMethod;
 
 use App\Invoice\Entity\PaymentMethod;
-use App\Invoice\PaymentMethod\PaymentMethodService;
-use App\Invoice\PaymentMethod\PaymentMethodRepository;
 use App\Invoice\Traits\FlashMessage;
 use App\User\UserService;
 use App\Service\WebControllerService;
@@ -23,7 +21,7 @@ use Yiisoft\Yii\View\Renderer\ViewRenderer;
 final class PaymentMethodController
 {
     use FlashMessage;
-    
+
     private Flash $flash;
     private Session $session;
     private ViewRenderer $viewRenderer;
@@ -58,9 +56,9 @@ final class PaymentMethodController
         return $this->viewRenderer->renderPartialAsString(
             '//invoice/layout/alert',
             [
-       'flash' => $this->flash,
-       'errors' => [],
-     ]
+                'flash' => $this->flash,
+                'errors' => [],
+            ]
         );
     }
 
@@ -75,7 +73,7 @@ final class PaymentMethodController
         $parameters = [
             'canEdit' => $canEdit,
             'payment_methods' => $this->paymentmethods($paymentmethodRepository),
-            'alert' => $this->alert()
+            'alert' => $this->alert(),
         ];
         return $this->viewRenderer->render('index', $parameters);
     }
@@ -93,7 +91,7 @@ final class PaymentMethodController
             'actionName' => 'paymentmethod/add',
             'actionArguments' => [],
             'errors' => [],
-            'form' => $form
+            'form' => $form,
         ];
 
         if ($request->getMethod() === Method::POST) {
@@ -131,7 +129,7 @@ final class PaymentMethodController
                 'actionName' => 'paymentmethod/edit',
                 'actionArguments' => ['id' => $payment_method->getId()],
                 'errors' => [],
-                'form' => $form
+                'form' => $form,
             ];
             if ($request->getMethod() === Method::POST) {
                 if ($formHydrator->populateFromPostAndValidate($form, $request)) {
@@ -175,7 +173,7 @@ final class PaymentMethodController
     /**
      * @param CurrentRoute $currentRoute
      * @param PaymentMethodRepository $paymentmethodRepository
-     * @return \Yiisoft\DataResponse\DataResponse|Response
+     * @return Response|\Yiisoft\DataResponse\DataResponse
      */
     public function view(CurrentRoute $currentRoute, PaymentMethodRepository $paymentmethodRepository): \Yiisoft\DataResponse\DataResponse|Response
     {
@@ -219,8 +217,7 @@ final class PaymentMethodController
     ): PaymentMethod|null {
         $id = $currentRoute->getArgument('id');
         if (null !== $id) {
-            $paymentmethod = $paymentmethodRepository->repoPaymentMethodquery($id);
-            return $paymentmethod;
+            return $paymentmethodRepository->repoPaymentMethodquery($id);
         }
         return null;
     }
@@ -232,7 +229,6 @@ final class PaymentMethodController
      */
     private function paymentmethods(PaymentMethodRepository $paymentmethodRepository): \Yiisoft\Data\Cycle\Reader\EntityReader
     {
-        $paymentmethods = $paymentmethodRepository->findAllPreloaded();
-        return $paymentmethods;
+        return $paymentmethodRepository->findAllPreloaded();
     }
 }

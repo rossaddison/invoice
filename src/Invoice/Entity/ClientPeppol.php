@@ -7,7 +7,6 @@ namespace App\Invoice\Entity;
 use Cycle\Annotated\Annotation\Column;
 use Cycle\Annotated\Annotation\Entity;
 use Cycle\Annotated\Annotation\Relation\BelongsTo;
-use App\Invoice\Entity\Client;
 
 #[Entity(repository: \App\Invoice\ClientPeppol\ClientPeppolRepository::class)]
 
@@ -17,44 +16,44 @@ class ClientPeppol
     private ?Client $client = null;
 
     #[Column(type: 'primary')]
-    private ?int $id =  null;
+    private ?int $id = null;
 
     #[Column(type:'integer(11)', nullable: false)]
-    private ?int $client_id =  null;
+    private ?int $client_id = null;
 
     #[Column(type:'string(100)', nullable: false)]
-    private string $endpointid =  '';
+    private string $endpointid = '';
 
     #[Column(type:'string(4)', nullable: false)]
-    private string $endpointid_schemeid =  '';
+    private string $endpointid_schemeid = '';
 
     #[Column(type:'string(100)', nullable: false)]
-    private string $identificationid =  '';
+    private string $identificationid = '';
 
     #[Column(type:'string(4)', nullable: false)]
-    private string $identificationid_schemeid =  '';
+    private string $identificationid_schemeid = '';
 
     #[Column(type:'string(100)', nullable: false)]
-    private string $taxschemecompanyid =  '';
+    private string $taxschemecompanyid = '';
 
     #[Column(type:'string(7)', nullable: false)]
-    private string $taxschemeid =  '';
+    private string $taxschemeid = '';
 
     #[Column(type:'string(100)', nullable: false)]
-    private string $legal_entity_registration_name =  '';
+    private string $legal_entity_registration_name = '';
 
     #[Column(type:'string(100)', nullable: false)]
-    private string $legal_entity_companyid =  '';
+    private string $legal_entity_companyid = '';
 
     #[Column(type:'string(5)', nullable: false)]
-    private string $legal_entity_companyid_schemeid =  '';
+    private string $legal_entity_companyid_schemeid = '';
 
     #[Column(type:'string(50)', nullable: false)]
-    private string $legal_entity_company_legal_form =  '';
+    private string $legal_entity_company_legal_form = '';
 
     // Bank Identifier code
     #[Column(type:'string(20)', nullable: false)]
-    private string $financial_institution_branchid =  '';
+    private string $financial_institution_branchid = '';
 
     // Client's Bookkeeping account code
     // @see https://docs.peppol.eu/poacc/billing/3.0/syntax/ubl-invoice/cbc-AccountingCost/
@@ -120,7 +119,7 @@ class ClientPeppol
 
     public function setId(int $id): void
     {
-        $this->id =  $id;
+        $this->id = $id;
     }
 
     public function getClient_id(): string
@@ -130,7 +129,7 @@ class ClientPeppol
 
     public function setClient_id(int $client_id): void
     {
-        $this->client_id =  $client_id;
+        $this->client_id = $client_id;
     }
 
     public function getEndpointid(): string
@@ -140,7 +139,7 @@ class ClientPeppol
 
     public function setEndpointid(string $endpointid): void
     {
-        $this->endpointid =  $endpointid;
+        $this->endpointid = $endpointid;
     }
 
     public function getEndpointid_schemeid(): string
@@ -150,7 +149,7 @@ class ClientPeppol
 
     public function setEndpointid_schemeid(string $endpointid_schemeid): void
     {
-        $this->endpointid_schemeid =  $endpointid_schemeid;
+        $this->endpointid_schemeid = $endpointid_schemeid;
     }
 
     public function getIdentificationid(): string
@@ -160,7 +159,7 @@ class ClientPeppol
 
     public function setIdentificationid(string $identificationid): void
     {
-        $this->identificationid =  $identificationid;
+        $this->identificationid = $identificationid;
     }
 
     public function getIdentificationid_schemeid(): string
@@ -170,7 +169,7 @@ class ClientPeppol
 
     public function setIdentificationid_schemeid(string $identificationid_schemeid): void
     {
-        $this->identificationid_schemeid =  $identificationid_schemeid;
+        $this->identificationid_schemeid = $identificationid_schemeid;
     }
 
     public function getTaxschemecompanyid(): string
@@ -180,7 +179,7 @@ class ClientPeppol
 
     public function setTaxschemecompanyid(string $taxschemecompanyid): void
     {
-        $this->taxschemecompanyid =  $taxschemecompanyid;
+        $this->taxschemecompanyid = $taxschemecompanyid;
     }
 
     public function getTaxschemeid(): string
@@ -190,7 +189,7 @@ class ClientPeppol
 
     public function setTaxschemeid(string $taxschemeid): void
     {
-        $this->taxschemeid =  $taxschemeid;
+        $this->taxschemeid = $taxschemeid;
     }
 
     public function getLegal_entity_registration_name(): string
@@ -200,7 +199,7 @@ class ClientPeppol
 
     public function setLegal_entity_registration_name(string $legal_entity_registration_name): void
     {
-        $this->legal_entity_registration_name =  $legal_entity_registration_name;
+        $this->legal_entity_registration_name = $legal_entity_registration_name;
     }
 
     public function getLegal_entity_companyid(): string
@@ -210,7 +209,7 @@ class ClientPeppol
 
     public function setLegal_entity_companyid(string $legal_entity_companyid): void
     {
-        $this->legal_entity_companyid =  $legal_entity_companyid;
+        $this->legal_entity_companyid = $legal_entity_companyid;
     }
 
     public function getLegal_entity_companyid_schemeid(): string
@@ -220,7 +219,7 @@ class ClientPeppol
 
     public function setLegal_entity_companyid_schemeid(string $legal_entity_companyid_schemeid): void
     {
-        $this->legal_entity_companyid_schemeid =  $legal_entity_companyid_schemeid;
+        $this->legal_entity_companyid_schemeid = $legal_entity_companyid_schemeid;
     }
 
     public function getLegal_entity_company_legal_form(): string
@@ -230,7 +229,7 @@ class ClientPeppol
 
     public function setLegal_entity_company_legal_form(string $legal_entity_company_legal_form): void
     {
-        $this->legal_entity_company_legal_form =  $legal_entity_company_legal_form;
+        $this->legal_entity_company_legal_form = $legal_entity_company_legal_form;
     }
 
     public function getFinancial_institution_branchid(): string
@@ -240,7 +239,7 @@ class ClientPeppol
 
     public function setFinancial_institution_branchid(string $financial_institution_branchid): void
     {
-        $this->financial_institution_branchid =  $financial_institution_branchid;
+        $this->financial_institution_branchid = $financial_institution_branchid;
     }
 
     public function getAccountingCost(): string
@@ -275,7 +274,7 @@ class ClientPeppol
 
     public function nullifyRelationOnChange(int $client_id): void
     {
-        if ($this->client_id <> $client_id) {
+        if ($this->client_id != $client_id) {
             $this->client = null;
         }
     }

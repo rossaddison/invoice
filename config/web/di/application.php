@@ -9,7 +9,7 @@ use Yiisoft\Middleware\Dispatcher\MiddlewareDispatcher;
 use Yiisoft\Yii\Middleware\Locale;
 use Yiisoft\Yii\Middleware\Subfolder;
 
-/** 
+/**
  * @var array $params
  * @var array $params['locale']
  * @var array $params['locale']['locales']

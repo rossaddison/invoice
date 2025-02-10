@@ -84,7 +84,6 @@ class ZugferdXml
     }
 
     /**
-     *
      * @param DOMDocument $doc
      * @return DOMElement
      */
@@ -109,7 +108,6 @@ class ZugferdXml
     }
 
     /**
-     *
      * @param DOMDocument $doc
      * @param \DateTimeImmutable $date
      * @return DOMElement
@@ -122,7 +120,6 @@ class ZugferdXml
     }
 
     /**
-     *
      * @param \DateTimeImmutable $date
      * @return string
      */
@@ -163,7 +160,6 @@ class ZugferdXml
     }
 
     /**
-     *
      * @param DOMDocument $doc
      * @return DOMElement
      */
@@ -222,7 +218,6 @@ class ZugferdXml
     }
 
     /**
-     *
      * @param DOMDocument $doc
      * @param string $schemeID
      * @param string $content
@@ -256,7 +251,6 @@ class ZugferdXml
     }
 
     /**
-     *
      * @param DOMDocument $doc
      * @return DOMElement
      */
@@ -308,7 +302,6 @@ class ZugferdXml
     }
 
     /**
-     *
      * @param DOMDocument $doc
      * @param float $percent
      * @param float $subtotal
@@ -326,7 +319,6 @@ class ZugferdXml
     }
 
     /**
-     *
      * @param DOMDocument $doc
      * @param string $name
      * @param float $amount
@@ -341,7 +333,6 @@ class ZugferdXml
     }
 
     /**
-     *
      * @param float $amount
      * @param int $nb_decimals
      * @return string
@@ -352,7 +343,6 @@ class ZugferdXml
     }
 
     /**
-     *
      * @param DOMDocument $doc
      * @return DOMElement
      */
@@ -371,7 +361,6 @@ class ZugferdXml
     }
 
     /**
-     *
      * @param DOMDocument $doc
      * @param int $lineNumber
      * @param InvItem $item
@@ -406,7 +395,6 @@ class ZugferdXml
     }
 
     /**
-     *
      * @param DOMDocument $doc
      * @param InvItem $item
      * @return DOMElement
@@ -429,7 +417,6 @@ class ZugferdXml
     }
 
     /**
-     *
      * @param DOMDocument $doc
      * @param string $name
      * @param float $quantity
@@ -443,7 +430,6 @@ class ZugferdXml
     }
 
     /**
-     *
      * @param DOMDocument $doc
      * @param InvItem $item
      * @return DOMElement

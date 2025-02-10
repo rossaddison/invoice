@@ -22,17 +22,14 @@ use App\Invoice\InvItemAmount\InvItemAmountRepository as IIAR;
 use App\Invoice\InvItem\InvItemRepository as IIR;
 use App\Invoice\InvTaxRate\InvTaxRateRepository as ITRR;
 use App\Invoice\Inv\InvRepository as IR;
-use App\Invoice\PostalAddress\PostalAddressRepository as PAR;
 use App\Invoice\Setting\SettingRepository as SR;
 // Helpers
 use App\Invoice\Helpers\DateHelper;
 // Services
-use App\Invoice\DeliveryLocation\DeliveryLocationService as DLS;
 use App\Invoice\InvAmount\InvAmountService as IAS;
 use App\Invoice\InvCustom\InvCustomService as ICS;
 use App\Invoice\InvItem\InvItemService as IIS;
 use App\Invoice\InvTaxRate\InvTaxRateService as ITRS;
-use App\Invoice\PostalAddress\PostalAddressService as PAS;
 // Ancillary
 use Yiisoft\Session\Flash\Flash;
 use Yiisoft\Session\SessionInterface;
@@ -177,9 +174,9 @@ final class InvService
     /**
      * @see https://www.gov.uk/hmrc-internal-manuals/vat-time-of-supply/vattos3600
      * @param Inv $inv
-     * @param null|DateTimeImmutable $date_supplied
-     * @param null|DateTimeImmutable $date_created
-     * @return null|DateTimeImmutable
+     * @param DateTimeImmutable|null $date_supplied
+     * @param DateTimeImmutable|null $date_created
+     * @return DateTimeImmutable|null
      */
     public function set_tax_point(Inv $inv, ?DateTimeImmutable $date_supplied, ?DateTimeImmutable $date_created): ?DateTimeImmutable
     {
@@ -190,10 +187,9 @@ final class InvService
                 if ((int)$diff > 14) {
                     // date supplied more than 14 days before invoice date
                     return $date_supplied;
-                } else {
-                    // if the issue date (created) is within 14 days after the supply (basic) date then use the issue/created date.
-                    return $date_created;
                 }
+                // if the issue date (created) is within 14 days after the supply (basic) date then use the issue/created date.
+                return $date_created;
             }
             if ($date_created < $date_supplied) {
                 // normally set the tax point to the date_created
@@ -227,7 +223,6 @@ final class InvService
      * @param ITRS $itrS
      * @param IAR $iaR
      * @param IAS $iaS
-     * @return void
      */
     public function deleteInv(
         Inv $model,
@@ -294,7 +289,6 @@ final class InvService
      * @param Inv $model
      * @param array $details
      * @param SR $s
-     * @return void
      */
     public function saveInv_from_recurring(User $user, Inv $model, array $details, SR $s): void
     {

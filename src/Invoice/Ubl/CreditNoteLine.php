@@ -28,7 +28,7 @@ class CreditNoteLine extends InvoiceLine
      * @param float $invoicedQuantity
      * @return CreditNoteLine
      */
-    public function setCreditedQuantity(float $invoicedQuantity): CreditNoteLine
+    public function setCreditedQuantity(float $invoicedQuantity): self
     {
         $this->invoicedQuantity = $invoicedQuantity;
         return $this;

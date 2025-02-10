@@ -17,6 +17,7 @@ use Yiisoft\Data\Cycle\Writer\EntityWriter;
 final class ItemLookupRepository extends Select\Repository
 {
     private EntityWriter $entityWriter;
+
     /**
      * @param Select<TEntity> $select
      * @param EntityWriter $entityWriter
@@ -55,7 +56,6 @@ final class ItemLookupRepository extends Select\Repository
     /**
      * @see Reader/ReadableDataInterface|InvalidArgumentException
      * @param array|ItemLookup|null $itemlookup
-     * @return void
      */
     public function save(array|ItemLookup|null $itemlookup): void
     {
@@ -63,9 +63,7 @@ final class ItemLookupRepository extends Select\Repository
     }
 
     /**
-     *
      * @param array|ItemLookup|null $itemlookup
-     * @return void
      */
     public function delete(array|ItemLookup|null $itemlookup): void
     {
@@ -81,7 +79,6 @@ final class ItemLookupRepository extends Select\Repository
     }
 
     /**
-     *
      * @param string $id
      * @return TEntity|null
      */

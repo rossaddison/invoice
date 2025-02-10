@@ -18,7 +18,6 @@ final class SalesOrderCustomService
     /**
      * @param SalesOrderCustom $model
      * @param array $array
-     * @return void
      */
     public function saveSoCustom(SalesOrderCustom $model, array $array): void
     {
@@ -29,9 +28,7 @@ final class SalesOrderCustomService
     }
 
     /**
-     *
      * @param array|SalesOrderCustom|null $model
-     * @return void
      */
     public function deleteSalesOrderCustom(array|SalesOrderCustom|null $model): void
     {

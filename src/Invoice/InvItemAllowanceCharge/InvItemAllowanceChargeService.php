@@ -24,7 +24,6 @@ final class InvItemAllowanceChargeService
      * @param InvItemAllowanceCharge $model
      * @param array $array
      * @param float $vat
-     * @return void
      */
     public function saveInvItemAllowanceCharge(InvItemAllowanceCharge $model, array $array, float $vat): void
     {

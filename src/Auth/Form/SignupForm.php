@@ -59,14 +59,12 @@ final class SignupForm extends FormModel implements RulesProviderInterface, Prop
     }
 
     /**
-     *
      * @return PropertyTranslatorInterface|null
      */
     public function getPropertyTranslator(): ?PropertyTranslatorInterface
     {
         return new ArrayPropertyTranslator($this->getPropertyLabels());
     }
-
 
     public function getLogin(): string
     {
@@ -93,7 +91,7 @@ final class SignupForm extends FormModel implements RulesProviderInterface, Prop
     }
 
     /**
-     * @return (Equal|Length|Email|Required|\Closure)[][]
+     * @return (\Closure|Email|Equal|Length|Required)[][]
      *
      * @psalm-return array{login: list{Required, Length, \Closure(mixed):Result}, email: list{Required, Email, \Closure(mixed):Result}, password: list{Required}, passwordVerify: list{Required, Equal}}
      */
@@ -123,7 +121,7 @@ final class SignupForm extends FormModel implements RulesProviderInterface, Prop
                 },
             ],
             'password' => [
-                new Required()
+                new Required(),
             ],
             'passwordVerify' => [
                 new Required(),

@@ -1,7 +1,7 @@
 <?php
 
 declare(strict_types=1);
-return array(
+return [
     'UG' => 'אוגנדה',
     'UZ' => 'אוזבקיסטן',
     'AT' => 'אוסטריה',
@@ -250,4 +250,4 @@ return array(
     'TH' => 'תאילנד',
     'TN' => 'תוניסיה',
     'YE' => 'תימן',
-);
+];

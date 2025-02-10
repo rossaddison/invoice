@@ -6,8 +6,6 @@ namespace App\Invoice\Profile;
 
 use App\Invoice\Company\CompanyRepository;
 use App\Invoice\Entity\Profile;
-use App\Invoice\Profile\ProfileService;
-use App\Invoice\Profile\ProfileRepository;
 use App\Invoice\Setting\SettingRepository;
 use App\Invoice\Traits\FlashMessage;
 use App\User\UserService;
@@ -26,7 +24,7 @@ use Yiisoft\Yii\View\Renderer\ViewRenderer;
 final class ProfileController
 {
     use FlashMessage;
-    
+
     private Flash $flash;
     private Session $session;
     private ViewRenderer $viewRenderer;
@@ -105,7 +103,7 @@ final class ProfileController
                     $this->profileService->saveProfile(new Profile(), $body);
                     return $this->webService->getRedirectResponse('profile/index');
                 }
-            }    
+            }
             $parameters['errors'] = $form->getValidationResult()->getErrorMessagesIndexedByProperty();
             $parameters['form'] = $form;
         }
@@ -120,8 +118,8 @@ final class ProfileController
         return $this->viewRenderer->renderPartialAsString(
             '//invoice/layout/alert',
             [
-         'flash' => $this->flash
-      ]
+                'flash' => $this->flash,
+            ]
         );
     }
 
@@ -149,7 +147,7 @@ final class ProfileController
                 'actionArguments' => ['id' => $profile->getId()],
                 'form' => $form,
                 'errors' => [],
-                'companies' => $companyRepository->findAllPreloaded()
+                'companies' => $companyRepository->findAllPreloaded(),
             ];
             if ($request->getMethod() === Method::POST) {
                 if ($formHydrator->populateFromPostAndValidate($form, $request)) {
@@ -158,7 +156,7 @@ final class ProfileController
                         $this->profileService->saveProfile($profile, $body);
                         return $this->webService->getRedirectResponse('profile/index');
                     }
-                }    
+                }
                 $parameters['errors'] = $form->getValidationResult()->getErrorMessagesIndexedByProperty();
                 $parameters['form'] = $form;
             }
@@ -239,8 +237,7 @@ final class ProfileController
     {
         $id = $currentRoute->getArgument('id');
         if (null !== $id) {
-            $profile = $profileRepository->repoProfilequery($id);
-            return $profile;
+            return $profileRepository->repoProfilequery($id);
         }
         return null;
     }
@@ -252,7 +249,6 @@ final class ProfileController
      */
     private function profiles(ProfileRepository $profileRepository): \Yiisoft\Data\Cycle\Reader\EntityReader
     {
-        $profiles = $profileRepository->findAllPreloaded();
-        return $profiles;
+        return $profileRepository->findAllPreloaded();
     }
 }

@@ -16,10 +16,8 @@ final class ProductCustomService
     }
 
     /**
-     *
      * @param ProductCustom $model
      * @param array $array
-     * @return void
      */
     public function saveProductCustom(ProductCustom $model, array $array): void
     {
@@ -30,9 +28,7 @@ final class ProductCustomService
     }
 
     /**
-     *
      * @param ProductCustom $model
-     * @return void
      */
     public function deleteProductCustom(ProductCustom $model): void
     {

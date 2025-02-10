@@ -63,27 +63,24 @@ final class ProductRepository extends Select\Repository
 
     public function withFiltering(?string $product_sku): EntityReader
     {
-        if (null !== ($product_sku)) {
+        if (null !== $product_sku) {
             return (new EntityReader($this->select))
                 ->withFilter($this->getFilter($product_sku));
-        } else {
-            return $this->prepareDataReader($this->select());
         }
+        return $this->prepareDataReader($this->select());
     }
 
     private function getFilter(string $product_sku): All
     {
-        $filter = new All(
+        return new All(
             new Like('product_sku', $product_sku)
         );
-        return $filter;
     }
 
     /**
      * @see Reader/ReadableDataInterface|InvalidArgumentException
      * @param array|Product|null $product
      * @throws Throwable
-     * @return void
      */
     public function save(array|Product|null $product): void
     {
@@ -94,7 +91,6 @@ final class ProductRepository extends Select\Repository
      * @see Reader/ReadableDataInterface|InvalidArgumentException
      * @param array|Product|null $product
      * @throws Throwable
-     * @return void
      */
     public function delete(array|Product|null $product): void
     {
@@ -106,9 +102,9 @@ final class ProductRepository extends Select\Repository
         return (new EntityReader($query))->withSort(
             Sort::only(['id', 'product_description'])
                 ->withOrder([
-                             'id' => 'desc',
-                             'product_description' => 'desc'
-                            ])
+                    'id' => 'desc',
+                    'product_description' => 'desc',
+                ])
         );
     }
 
@@ -135,9 +131,9 @@ final class ProductRepository extends Select\Repository
     }
 
     /**
-     * @param null|string $product_id
+     * @param string|null $product_id
      *
-     * @return null|Product
+     * @return Product|null
      *
      * @psalm-return TEntity|null
      */
@@ -153,7 +149,6 @@ final class ProductRepository extends Select\Repository
     }
 
     /**
-     *
      * @param string $product_name
      * @return Product|null
      */
@@ -170,7 +165,6 @@ final class ProductRepository extends Select\Repository
      *
      * @psalm-return EntityReader
      */
-
     public function repoProductwithfamilyquery(string $product_name, string $family_id): EntityReader
     {
         $query = $this
@@ -216,16 +210,14 @@ final class ProductRepository extends Select\Repository
     }
 
     /**
-     *
      * @param string $product_id
      * @return int
      */
     public function repoCount(string $product_id): int
     {
-        $count = $this->select()
+        return $this->select()
                       ->where(['id' => $product_id])
                       ->count();
-        return $count;
     }
 
     /**
@@ -233,8 +225,7 @@ final class ProductRepository extends Select\Repository
      */
     public function repoTestDataCount(): int
     {
-        $count = $this->select()
+        return $this->select()
                       ->count();
-        return $count;
     }
 }

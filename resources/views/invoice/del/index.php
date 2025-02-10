@@ -245,8 +245,7 @@ $toolbar = Div::tag();
     // the up arrow will appear if column values are ascending          
     ->sortableHeaderAscPrepend('<div class="float-end fw-bold">⭡</div>')
     // the down arrow will appear if column values are descending        
-    ->sortableHeaderDescPrepend('<div class="float-end fw-bold">⭣</div>')        
-    ->headerTableEnabled(true)        
+    ->sortableHeaderDescPrepend('<div class="float-end fw-bold">⭣</div>')  
     ->headerRowAttributes(['class' => 'card-header bg-info text-black'])
     ->header($header)
     ->id('w341-grid')

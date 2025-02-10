@@ -8,8 +8,6 @@ use App\Invoice\Entity\QuoteItem;
 use App\Invoice\Entity\QuoteItemAmount;
 use App\Invoice\Product\ProductRepository as PR;
 use App\Invoice\Quote\QuoteRepository as QR;
-use App\Invoice\QuoteItem\QuoteItemService;
-use App\Invoice\QuoteItem\QuoteItemForm;
 use App\Invoice\QuoteItem\QuoteItemRepository as QIR;
 use App\Invoice\QuoteItemAmount\QuoteItemAmountRepository as QIAR;
 use App\Invoice\QuoteItemAmount\QuoteItemAmountService as QIAS;
@@ -39,7 +37,7 @@ use Yiisoft\Yii\View\Renderer\ViewRenderer;
 final class QuoteItemController
 {
     use FlashMessage;
-    
+
     private Flash $flash;
     private Session $session;
     private ViewRenderer $viewRenderer;
@@ -106,7 +104,7 @@ final class QuoteItemController
             'taxRates' => $trR->findAllPreloaded(),
             'products' => $pR->findAllPreloaded(),
             'units' => $uR->findAllPreloaded(),
-            'numberHelper' => new NumberHelper($sR)
+            'numberHelper' => new NumberHelper($sR),
         ];
         if ($request->getMethod() === Method::POST) {
             if ($formHydrator->populateFromPostAndValidate($form, $request)) {
@@ -116,13 +114,13 @@ final class QuoteItemController
                     $this->flashMessage('success', $this->translator->translate('i.record_successfully_created'));
                     return $this->webService->getRedirectResponse('quote/view', ['id' => $quote_id]);
                 }
-            }    
+            }
             $parameters['form'] = $form;
             $parameters['errors'] = $form->getValidationResult()->getErrorMessagesIndexedByProperty();
         }
         return $this->viewRenderer->render('_item_form', $parameters);
     }
-    
+
     /**
      * @param CurrentRoute $currentRoute
      * @param Request $request
@@ -164,7 +162,7 @@ final class QuoteItemController
                 'products' => $pR->findAllPreloaded(),
                 'quotes' => $qR->findAllPreloaded(),
                 'units' => $uR->findAllPreloaded(),
-                'numberHelper' => new NumberHelper($sR)
+                'numberHelper' => new NumberHelper($sR),
             ];
             if ($request->getMethod() === Method::POST) {
                 if ($formHydrator->populateFromPostAndValidate($form, $request)) {
@@ -193,7 +191,7 @@ final class QuoteItemController
                             $this->flashMessage('success', $this->translator->translate('i.record_successfully_updated'));
                             return $this->webService->getRedirectResponse('quote/view', ['id' => $quote_id]);
                         }
-                    } // is_array    
+                    } // is_array
                 }
                 $parameters['errors'] = $form->getValidationResult()->getErrorMessagesIndexedByProperty();
                 $parameters['form'] = $form;
@@ -204,7 +202,6 @@ final class QuoteItemController
     }
 
     /**
-     *
      * @param int $id
      * @param TRR $trr
      * @return float|null
@@ -213,8 +210,7 @@ final class QuoteItemController
     {
         $taxrate = $trr->repoTaxRatequery((string)$id);
         if ($taxrate) {
-            $percentage = $taxrate->getTaxRatePercent();
-            return $percentage;
+            return $taxrate->getTaxRatePercent();
         }
         return null;
     }
@@ -228,7 +224,6 @@ final class QuoteItemController
      * @param QIAS $qias
      * @param QIAR $qiar
      * @param SR $sR
-     * @return void
      */
     public function saveQuoteItemAmount(int $quote_item_id, float $quantity, float $price, float $discount, float $tax_rate_percentage, QIAS $qias, QIAR $qiar, SR $sR): void
     {
@@ -240,13 +235,13 @@ final class QuoteItemController
             $tax_total = 0.00;
             // NO VAT
             if ($sR->getSetting('enable_vat_registration') === '0') {
-                $tax_total = (($sub_total * ($tax_rate_percentage / 100)));
+                $tax_total = ($sub_total * ($tax_rate_percentage / 100));
             }
             // VAT
             if ($sR->getSetting('enable_vat_registration') === '1') {
                 // EARLY SETTLEMENT CASH DISCOUNT MUST BE REMOVED BEFORE VAT DETERMINED
                 // @see https://informi.co.uk/finance/how-vat-affected-discounts
-                $tax_total = ((($sub_total - $discount_total) * ($tax_rate_percentage / 100)));
+                $tax_total = (($sub_total - $discount_total) * ($tax_rate_percentage / 100));
             }
             $qias_array['discount'] = $discount_total;
             $qias_array['subtotal'] = $sub_total;
@@ -294,10 +289,10 @@ final class QuoteItemController
         // If one item is deleted, the result is positive
         /** @var QuoteItem $item */
         foreach ($items as $item) {
-            ($this->quoteitemService->deleteQuoteItem($item));
+            $this->quoteitemService->deleteQuoteItem($item);
             $result = true;
         }
-        return $this->factory->createResponse(Json::encode(($result ? ['success' => 1] : ['success' => 0])));
+        return $this->factory->createResponse(Json::encode($result ? ['success' => 1] : ['success' => 0]));
     }
 
     /**
@@ -366,7 +361,6 @@ final class QuoteItemController
      */
     private function quoteitems(QIR $qiR): \Yiisoft\Data\Cycle\Reader\EntityReader
     {
-        $quoteitems = $qiR->findAllPreloaded();
-        return $quoteitems;
+        return $qiR->findAllPreloaded();
     }
 }

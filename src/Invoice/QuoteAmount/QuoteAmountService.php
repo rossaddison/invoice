@@ -16,10 +16,8 @@ final class QuoteAmountService
     }
 
     /**
-     *
      * @param QuoteAmount $model
      * @param int $quote_id
-     * @return void
      */
     public function initializeQuoteAmount(QuoteAmount $model, int $quote_id): void
     {
@@ -32,11 +30,9 @@ final class QuoteAmountService
     }
 
     /**
-     *
      * @param QuoteAmount $model
      * @param string $basis_quote_id
      * @param string|null $new_quote_id
-     * @return void
      */
     public function initializeCopyQuoteAmount(QuoteAmount $model, string $basis_quote_id, string|null $new_quote_id): void
     {
@@ -52,10 +48,8 @@ final class QuoteAmountService
     }
 
     /**
-     *
      * @param QuoteAmount $model
      * @param QuoteAmountForm $form
-     * @return void
      */
     public function saveQuoteAmount(QuoteAmount $model, QuoteAmountForm $form): void
     {
@@ -68,10 +62,8 @@ final class QuoteAmountService
     }
 
     /**
-     *
      * @param QuoteAmount $model
      * @param array $array
-     * @return void
      */
     public function saveQuoteAmountViaCalculations(QuoteAmount $model, array $array): void
     {
@@ -91,9 +83,7 @@ final class QuoteAmountService
     }
 
     /**
-     *
      * @param QuoteAmount|null $model
-     * @return void
      */
     public function deleteQuoteAmount(QuoteAmount|null $model): void
     {

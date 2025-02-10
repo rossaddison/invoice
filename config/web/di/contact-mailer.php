@@ -4,11 +4,11 @@ declare(strict_types=1);
 
 use App\Contact\ContactMailer;
 
-/** 
+/**
  * @var array $params
  * @var array $params['mailer']
  * @var string $params['mailer']['senderEmail']
- * @var string $params['mailer']['adminEmail']  
+ * @var string $params['mailer']['adminEmail']
  */
 
 return [
