@@ -125,11 +125,11 @@ use Yiisoft\Html\Tag\Form;
                 foreach ($taxRates as $taxRate) {
                     $taxRateId = $taxRate->getTaxRateId();
                     if (null!==$taxRateId) {
-                        $optionsDataTax[$taxRateId] = $taxRateId
+                        $optionsDataTax[$taxRateId] = (string)$taxRateId
                             .':  '
-                            . ($taxRate->getTaxRateName() ?? '')
+                            .(string)$taxRate->getTaxRateName()
                             . ' '
-                            . ($taxRate->getTaxRatePercent() ?? '');
+                            . (string)$taxRate->getTaxRatePercent();
                     }    
                 }
             ?>

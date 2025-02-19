@@ -47,7 +47,7 @@ final class InvForm extends FormModel
     private ?string $terms = '';
     private ?string $note = '';
     private ?string $document_description = '';
-    private bool $is_read_only;
+    private readonly bool $is_read_only;
     private mixed $time_created = '';
 
     public function __construct(Inv $inv)
@@ -264,6 +264,7 @@ final class InvForm extends FormModel
      *
      * @psalm-return ''
      */
+    #[\Override]
     public function getFormName(): string
     {
         return '';

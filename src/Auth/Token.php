@@ -19,26 +19,21 @@ class Token
 
     #[BelongsTo(target:Identity::class, nullable: false, fkAction:'NO ACTION')]
     private ?Identity $identity = null;
-    #[Column(type:'integer(11)', nullable: false)]
-    private ?int $identity_id = null;
 
     #[Column(type:'string(32)', nullable: false)]
     private ?string $token = null;
-
-    #[Column(type:'string(50)', nullable: false)]
-    private ?string $type = null;
 
     #[Column(type:'datetime)', nullable: false)]
     private DateTimeImmutable $created_at;
 
     public function __construct(
-        int $identity_id = null,
-        string $type = ''
+        #[Column(type:'integer(11)', nullable: false)]
+        private ?int $identity_id = null,
+        #[Column(type:'string(50)', nullable: false)]
+        private ?string $type = ''
     ) {
-        $this->identity_id = $identity_id;
         $this->token = Random::string(32);
         $this->created_at = new \DateTimeImmutable();
-        $this->type = $type;
     }
 
     public function getIdentity(): ?Identity

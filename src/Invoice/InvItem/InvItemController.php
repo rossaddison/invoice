@@ -47,35 +47,21 @@ final class InvItemController
     use FlashMessage;
 
     private Flash $flash;
-    private Session $session;
     private ViewRenderer $viewRenderer;
-    private WebControllerService $webService;
-    private UserService $userService;
-    private InvItemService $invitemService;
-    private DataResponseFactoryInterface $factory;
-    private UrlGenerator $urlGenerator;
-    private TranslatorInterface $translator;
 
     public function __construct(
-        Session $session,
+        private Session $session,
         ViewRenderer $viewRenderer,
-        WebControllerService $webService,
-        UserService $userService,
-        InvItemService $invitemService,
-        DataResponseFactoryInterface $factory,
-        UrlGenerator $urlGenerator,
-        TranslatorInterface $translator,
+        private WebControllerService $webService,
+        private UserService $userService,
+        private InvItemService $invitemService,
+        private DataResponseFactoryInterface $factory,
+        private UrlGenerator $urlGenerator,
+        private TranslatorInterface $translator,
     ) {
-        $this->session = $session;
-        $this->flash = new Flash($session);
+        $this->flash = new Flash($this->session);
         $this->viewRenderer = $viewRenderer->withControllerName('invoice/invitem')
                                            ->withLayout('@views/layout/invoice.php');
-        $this->webService = $webService;
-        $this->userService = $userService;
-        $this->invitemService = $invitemService;
-        $this->factory = $factory;
-        $this->urlGenerator = $urlGenerator;
-        $this->translator = $translator;
     }
 
     /**
@@ -382,13 +368,13 @@ final class InvItemController
         $tax_total = 0.00;
         // NO VAT
         if ($s->getSetting('enable_vat_registration') === '0') {
-            $tax_total = (($sub_total - $discount_total + $charge_total - $allowance_total) * ($tax_rate_percentage / 100));
+            $tax_total = (($sub_total - $discount_total + $charge_total - $allowance_total) * ($tax_rate_percentage / 100.00));
         }
         // VAT
         if ($s->getSetting('enable_vat_registration') === '1') {
             // EARLY SETTLEMENT CASH DISCOUNT MUST BE REMOVED BEFORE VAT DETERMINED
             // @see https://informi.co.uk/finance/how-vat-affected-discounts
-            $tax_total = (($sub_total - $discount_total + $charge_total) * ($tax_rate_percentage / 100));
+            $tax_total = (($sub_total - $discount_total + $charge_total) * ($tax_rate_percentage / 100.00));
         }
         $iias_array['discount'] = $discount_total;
         $iias_array['charge'] = $charge_total;

@@ -16,41 +16,17 @@ class Merchant
     #[BelongsTo(target:Inv::class, nullable: false, fkAction: 'NO ACTION')]
     private ?Inv $inv = null;
 
-    #[Column(type: 'primary')]
-    private ?int $id = null;
-
-    #[Column(type: 'integer(11)', nullable: false)]
-    private ?int $inv_id = null;
-
-    #[Column(type: 'boolean', nullable: true, default:1)]
-    private ?bool $successful = true;
-
     #[Column(type: 'date', nullable: false)]
     private mixed $date = '';
 
-    #[Column(type: 'string(35)', nullable: false)]
-    private string $driver = '';
-
-    #[Column(type: 'string(151)', nullable: false)]
-    private string $response = '';
-
-    #[Column(type: 'string(151)', nullable: false)]
-    private string $reference = '';
-
-    public function __construct(
-        int $id = null,
-        int $inv_id = null,
-        bool $successful = true,
-        string $driver = '',
-        string $response = '',
-        string $reference = ''
-    ) {
-        $this->id = $id;
-        $this->inv_id = $inv_id;
-        $this->successful = $successful;
-        $this->driver = $driver;
-        $this->response = $response;
-        $this->reference = $reference;
+    public function __construct(#[Column(type: 'primary')]
+    private ?int $id = null, #[Column(type: 'integer(11)', nullable: false)]
+    private ?int $inv_id = null, #[Column(type: 'boolean', nullable: true, default:1)]
+    private ?bool $successful = true, #[Column(type: 'string(35)', nullable: false)]
+    private string $driver = '', #[Column(type: 'string(151)', nullable: false)]
+    private string $response = '', #[Column(type: 'string(151)', nullable: false)]
+    private string $reference = '')
+    {
     }
 
     public function getInv(): ?Inv

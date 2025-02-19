@@ -11,7 +11,7 @@ use Yiisoft\Http\Status;
 use Yiisoft\Router\UrlGeneratorInterface;
 use Stringable;
 
-final class WebControllerService
+final readonly class WebControllerService
 {
     public function __construct(
         private ResponseFactoryInterface $responseFactory,

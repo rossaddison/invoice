@@ -6,13 +6,10 @@ namespace App\Invoice\Profile;
 
 use App\Invoice\Entity\Profile;
 
-final class ProfileService
+final readonly class ProfileService
 {
-    private ProfileRepository $repository;
-
-    public function __construct(ProfileRepository $repository)
+    public function __construct(private ProfileRepository $repository)
     {
-        $this->repository = $repository;
     }
 
     /**

@@ -157,7 +157,7 @@ use Yiisoft\Html\Tag\Form;
                                                        ->hideLabel()
                                                        ->required(true); ?>
                     
-                    <?= Html::tag('Label',$translator->translate('i.from_email')). str_repeat("&nbsp;", 2). ($autoTemplate['from_email'] ? $translator->translate('invoice.email.source.email.template') : $translator->translate('invoice.email.source.user.account')) ?>
+                    <?= (string)Html::tag('Label',$translator->translate('i.from_email')). str_repeat("&nbsp;", 2). ($autoTemplate['from_email'] ? $translator->translate('invoice.email.source.email.template') : $translator->translate('invoice.email.source.user.account')) ?>
                     <?= Field::email($form, 'from_email')->addInputAttributes(['value' => $autoTemplate['from_email'] ?? '' ?: Html::encode($userInv->getUser()?->getEmail())])->hideLabel()
                                                          ->addInputAttributes(['class' => 'email-template-from-email form-control'])
                                                          ->required(true); ?>                            

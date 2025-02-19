@@ -12,13 +12,10 @@ use App\Invoice\InvItemAmount\InvItemAmountRepository as IIAR;
 use App\Invoice\InvTaxRate\InvTaxRateRepository as ITRR;
 use Doctrine\Common\Collections\ArrayCollection;
 
-final class InvAmountService
+final readonly class InvAmountService
 {
-    private InvAmountRepository $repository;
-
-    public function __construct(InvAmountRepository $repository)
+    public function __construct(private InvAmountRepository $repository)
     {
-        $this->repository = $repository;
     }
 
     /**
@@ -48,12 +45,12 @@ final class InvAmountService
         $basis_invoice = $this->repository->repoInvquery($basis_inv_id);
         $new_inv_id ? $model->setInv_id((int)$new_inv_id) : '';
         $model->setSign(1);
-        null !== $basis_invoice ? $model->setItem_subtotal(($basis_invoice->getItem_subtotal() ?: 0.00) * -1) : '';
-        null !== $basis_invoice ? $model->setItem_tax_total(($basis_invoice->getItem_tax_total() ?: 0.00) * -1) : '';
-        null !== $basis_invoice ? $model->setTax_total(($basis_invoice->getTax_total() ?? 0.00) * -1) : '';
-        null !== $basis_invoice ? $model->setTotal(($basis_invoice->getTotal() ?? 0.00) * -1) : '';
+        null !== $basis_invoice ? $model->setItem_subtotal(($basis_invoice->getItem_subtotal() ?: 0.00) * -1.00) : '';
+        null !== $basis_invoice ? $model->setItem_tax_total(($basis_invoice->getItem_tax_total() ?: 0.00) * -1.00) : '';
+        null !== $basis_invoice ? $model->setTax_total(($basis_invoice->getTax_total() ?? 0.00) * -1.00) : '';
+        null !== $basis_invoice ? $model->setTotal(($basis_invoice->getTotal() ?? 0.00) * -1.00) : '';
         $model->setPaid(0.00);
-        null !== $basis_invoice ? $model->setBalance(($basis_invoice->getBalance() ?? 0.00) * -1) : '';
+        null !== $basis_invoice ? $model->setBalance(($basis_invoice->getBalance() ?? 0.00) * -1.00) : '';
         $this->repository->save($model);
     }
 

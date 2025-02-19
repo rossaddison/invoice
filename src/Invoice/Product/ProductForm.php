@@ -174,6 +174,7 @@ final class ProductForm extends FormModel
      *
      * @psalm-return 'ProductForm'
      */
+    #[\Override]
     public function getFormName(): string
     {
         // used in ProductService to identify array

@@ -30,39 +30,25 @@ final class ClientPeppolController
     use FlashMessage;
 
     private Flash $flash;
-    private SessionInterface $session;
-    private ViewRenderer $viewRenderer;
-    private WebControllerService $webService;
-    private UserService $userService;
-    private ClientPeppolService $clientpeppolService;
-    private TranslatorInterface $translator;
-    private DataResponseFactoryInterface $factory;
 
     public function __construct(
-        SessionInterface $session,
-        ViewRenderer $viewRenderer,
-        WebControllerService $webService,
-        UserService $userService,
-        ClientPeppolService $clientpeppolService,
-        TranslatorInterface $translator,
-        DataResponseFactoryInterface $factory
+        private SessionInterface $session,
+        private ViewRenderer $viewRenderer,
+        private WebControllerService $webService,
+        private UserService $userService,
+        private ClientPeppolService $clientpeppolService,
+        private TranslatorInterface $translator,
+        private DataResponseFactoryInterface $factory
     ) {
-        $this->session = $session;
-        $this->flash = new Flash($session);
-        $this->viewRenderer = $viewRenderer;
-        $this->webService = $webService;
-        $this->userService = $userService;
+        $this->flash = new Flash($this->session);
         if ($this->userService->hasPermission('viewInv') && !$this->userService->hasPermission('editInv')) {
-            $this->viewRenderer = $viewRenderer->withControllerName('invoice/clientpeppol')
+            $this->viewRenderer = $this->viewRenderer->withControllerName('invoice/clientpeppol')
               ->withLayout('@views/layout/guest.php');
         }
         if ($this->userService->hasPermission('viewInv') && $this->userService->hasPermission('editInv')) {
-            $this->viewRenderer = $viewRenderer->withControllerName('invoice/clientpeppol')
+            $this->viewRenderer = $this->viewRenderer->withControllerName('invoice/clientpeppol')
               ->withLayout('@views/layout/invoice.php');
         }
-        $this->clientpeppolService = $clientpeppolService;
-        $this->translator = $translator;
-        $this->factory = $factory;
     }
 
     /**

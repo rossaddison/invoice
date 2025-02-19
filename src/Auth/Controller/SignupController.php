@@ -47,17 +47,15 @@ final class SignupController
     use Oauth2;
 
     public const string EMAIL_VERIFICATION_TOKEN = 'email-verification';
-    private Assignment $assignment;
-    private ItemStorage $itemstorage;
     private Manager $manager;
     private Rule $rule;
 
     public function __construct(
         // load assignments and save assignments to resources/rbac/assignment.php
-        Assignment $assignment,
+        private Assignment $assignment,
 
         // add, save, remove, clear, children, parents
-        ItemStorage $itemstorage,
+        private ItemStorage $itemstorage,
         Rule $rule,
         private WebControllerService $webService,
         private SessionInterface $session,
@@ -77,11 +75,8 @@ final class SignupController
         private CurrentRoute $currentRoute,
         private LoggerInterface $logger
     ) {
-        $this->assignment = $assignment;
-        $this->itemstorage = $itemstorage;
-
         // @see yiisoft/rbac-php
-        $this->manager = new Manager($itemstorage, $assignment, $rule);
+        $this->manager = new Manager($this->itemstorage, $this->assignment, $rule);
         $this->rule = $rule;
         $this->session = $session;
         $this->viewRenderer = $viewRenderer->withControllerName('signup');

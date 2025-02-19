@@ -22,28 +22,22 @@ class User
     #[Column(type: 'primary')]
     private ?int $id = null;
 
-    #[Column(type: 'string(48)')]
-    private string $login;
-
-    #[Column(type: 'string(254)')]
-    private string $email;
-
     #[Column(type: 'string')]
     private string $passwordHash = '';
 
     #[Column(type: 'datetime')]
-    private DateTimeImmutable $created_at;
+    private readonly DateTimeImmutable $created_at;
 
     #[Column(type: 'datetime')]
-    private DateTimeImmutable $updated_at;
+    private readonly DateTimeImmutable $updated_at;
 
     #[HasOne(target: Identity::class)]
-    private Identity $identity;
+    private readonly Identity $identity;
 
-    public function __construct(string $login, string $email, string $password)
+    public function __construct(#[Column(type: 'string(48)')]
+    private string $login, #[Column(type: 'string(254)')]
+    private readonly string $email, string $password)
     {
-        $this->login = $login;
-        $this->email = $email;
         $this->created_at = new DateTimeImmutable();
         $this->updated_at = new DateTimeImmutable();
         $this->setPassword($password);

@@ -20,10 +20,10 @@ final class ContractForm extends FormModel
     private ?string $name = '';
 
     #[Required]
-    private DateTimeImmutable $period_start;
+    private readonly DateTimeImmutable $period_start;
 
     #[Required]
-    private DateTimeImmutable $period_end;
+    private readonly DateTimeImmutable $period_end;
 
     #[Required]
     private ?string $client_id = '';
@@ -72,6 +72,7 @@ final class ContractForm extends FormModel
      * @return string
      * @psalm-return ''
      */
+    #[\Override]
     public function getFormName(): string
     {
         return '';

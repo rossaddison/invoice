@@ -22,9 +22,8 @@ final class ProfileForm extends FormModel
     private ?string $description = '';
     private mixed $date_created = '';
     private mixed $date_modified = '';
-    private Translator $translator;
 
-    public function __construct(Profile $profile, Translator $translator)
+    public function __construct(Profile $profile, private readonly Translator $translator)
     {
         $this->company_id = (int)$profile->getCompany_id();
         $this->current = $profile->getCurrent();
@@ -33,7 +32,6 @@ final class ProfileForm extends FormModel
         $this->description = $profile->getDescription();
         $this->date_created = $profile->getDate_created();
         $this->date_modified = $profile->getDate_modified();
-        $this->translator = $translator;
     }
 
     public function getCompany_id(): int|null
@@ -77,6 +75,7 @@ final class ProfileForm extends FormModel
         return $this->date_modified;
     }
 
+    #[\Override]
     public function getPropertyLabels(): array
     {
         return [
@@ -87,6 +86,7 @@ final class ProfileForm extends FormModel
         ];
     }
 
+    #[\Override]
     public function getPropertyHints(): array
     {
         $required = 'invoice.hint.this.field.is.required';
@@ -104,6 +104,7 @@ final class ProfileForm extends FormModel
      *
      * @psalm-return ''
      */
+    #[\Override]
     public function getFormName(): string
     {
         return '';

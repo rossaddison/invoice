@@ -33,46 +33,29 @@ use Yiisoft\Yii\View\Renderer\ViewRenderer;
 final class InvItemAllowanceChargeController
 {
     use FlashMessage;
-
-    private SessionInterface $session;
     private Flash $flash;
-    private ViewRenderer $viewRenderer;
-    private WebControllerService $webService;
-    private UserService $userService;
-    private InvItemAllowanceChargeService $aciiService;
-    private InvAmountService $invAmountService;
-    private TranslatorInterface $translator;
     private NumberHelper $numberHelper;
-    private SettingRepository $sR;
 
     public function __construct(
-        SessionInterface $session,
-        ViewRenderer $viewRenderer,
-        WebControllerService $webService,
-        UserService $userService,
-        InvItemAllowanceChargeService $aciiService,
-        InvAmountService $invAmountService,
-        TranslatorInterface $translator,
-        SettingRepository $sR
+        private SessionInterface $session,
+        private ViewRenderer $viewRenderer,
+        private WebControllerService $webService,
+        private UserService $userService,
+        private InvItemAllowanceChargeService $aciiService,
+        private InvAmountService $invAmountService,
+        private TranslatorInterface $translator,
+        private SettingRepository $sR
     ) {
-        $this->session = $session;
-        $this->flash = new Flash($session);
-        $this->viewRenderer = $viewRenderer;
-        $this->webService = $webService;
-        $this->userService = $userService;
+        $this->flash = new Flash($this->session);
         if ($this->userService->hasPermission('viewInv') && !$this->userService->hasPermission('editInv')) {
-            $this->viewRenderer = $viewRenderer->withControllerName('invoice/invitemallowancecharge')
+            $this->viewRenderer = $this->viewRenderer->withControllerName('invoice/invitemallowancecharge')
                                                ->withLayout('@views/layout/guest.php');
         }
         if ($this->userService->hasPermission('viewInv') && $this->userService->hasPermission('editInv')) {
-            $this->viewRenderer = $viewRenderer->withControllerName('invoice/invitemallowancecharge')
+            $this->viewRenderer = $this->viewRenderer->withControllerName('invoice/invitemallowancecharge')
                                                ->withLayout('@views/layout/invoice.php');
         }
-        $this->aciiService = $aciiService;
-        $this->invAmountService = $invAmountService;
-        $this->translator = $translator;
-        $this->sR = $sR;
-        $this->numberHelper = new NumberHelper($sR);
+        $this->numberHelper = new NumberHelper($this->sR);
     }
 
     /**
@@ -125,7 +108,7 @@ final class InvItemAllowanceChargeController
                     if ($allowance_charge) {
                         $amount = (float)$body['amount'];
                         $percent = $allowance_charge->getTaxRate()?->getTaxRatePercent() ?? 0.00;
-                        $vat = $amount * $percent / 100;
+                        $vat = $amount * $percent / 100.00;
                         if ($formHydrator->populateFromPostAndValidate($form, $request)) {
                             $this->aciiService->saveInvItemAllowanceCharge($inv_item_ac, $body, $vat);
                             $all_charges = 0.00;
@@ -158,7 +141,7 @@ final class InvItemAllowanceChargeController
                                 $current_discount_item_total = $current_item_quantity * $discount_per_item;
                                 $tax_percent = $inv_item_amount->getInvItem()?->getTaxRate()?->getTaxRatePercent();
                                 $qpIncAc = $quantity_price + $all_charges - $all_allowances;
-                                $current_tax_total = ($qpIncAc - $current_discount_item_total) * ($tax_percent ?? 0.00) / 100;
+                                $current_tax_total = ($qpIncAc - $current_discount_item_total) * ($tax_percent ?? 0.00) / 100.00;
                                 $new_tax_total = $current_tax_total + ($this->sR->getSetting('enable_vat_registration') == '0' ? 0.00 : $all_vat);
                                 // include all item allowance charges in the subtotal
                                 $inv_item_amount->setSubtotal($qpIncAc);
@@ -308,7 +291,7 @@ final class InvItemAllowanceChargeController
                         $allowance_charge = $acR->repoAllowanceChargequery($allowance_charge_id);
                         if ($allowance_charge) {
                             $percent = $allowance_charge->getTaxRate()?->getTaxRatePercent() ?? 0.00;
-                            $vat = $amount * $percent / 100;
+                            $vat = $amount * $percent / 100.00;
                             if ($formHydrator->populateFromPostAndValidate($form, $request)) {
                                 $this->aciiService->saveInvItemAllowanceCharge($acii, $body, $vat);
                                 $all_charges = 0.00;
@@ -341,7 +324,7 @@ final class InvItemAllowanceChargeController
                                     $current_discount_item_total = $current_item_quantity * $discount_per_item;
                                     $tax_percent = $inv_item_amount->getInvItem()?->getTaxRate()?->getTaxRatePercent();
                                     $qpIncAc = $quantity_price + $all_charges - $all_allowances;
-                                    $current_tax_total = ($qpIncAc - $current_discount_item_total) * ($tax_percent ?? 0.00) / 100;
+                                    $current_tax_total = ($qpIncAc - $current_discount_item_total) * ($tax_percent ?? 0.00) / 100.00;
                                     $new_tax_total = $current_tax_total + ($this->sR->getSetting('enable_vat_registration') == '0' ? 0.00 : $all_vat);
                                     // include all item allowance charges in the subtotal
                                     $inv_item_amount->setSubtotal($qpIncAc);

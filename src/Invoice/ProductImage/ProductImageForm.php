@@ -11,7 +11,6 @@ use DateTimeImmutable;
 
 final class ProductImageForm extends FormModel
 {
-    private ?int $product_id = null;
     #[Required]
     private string $file_name_original = '';
     #[Required]
@@ -22,9 +21,8 @@ final class ProductImageForm extends FormModel
     #[Required]
     private mixed $uploaded_date = '';
 
-    public function __construct(ProductImage $productImage, int $product_id)
+    public function __construct(ProductImage $productImage, private readonly ?int $product_id)
     {
-        $this->product_id = $product_id;
         $this->file_name_original = $productImage->getFile_name_original();
         $this->file_name_new = $productImage->getFile_name_new();
         $this->description = $productImage->getDescription();
@@ -64,6 +62,7 @@ final class ProductImageForm extends FormModel
      *
      * @psalm-return ''
      */
+    #[\Override]
     public function getFormName(): string
     {
         return '';

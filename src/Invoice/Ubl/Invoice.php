@@ -13,90 +13,14 @@ use InvalidArgumentException;
 
 class Invoice implements XmlSerializable
 {
-    private SettingRepository $settingRepository;
     // http://www.datypic.com/sc/ubl23/t-ns53_InvoiceType.html
     private ?string $UBLVersionID = '2.1';
     private ?string $customizationID = 'urn:cen.eu:en16931:2017#compliant#urn:fdc:peppol.eu:2017:poacc:billing:3.0';
-    private ?string $profileID;
-    private ?string $id;
-    private DateTime $issueDate;
-    private ?DateTime $dueDate;
     protected ?int $invoiceTypeCode = InvoiceTypeCode::INVOICE;
-    private ?string $note;
-    private ?DateTime $taxPointDate;
     private string $documentCurrencyCode = 'EUR';
-    /* @see Settings ... View ... Peppol Electronic Invoicing ... from_currency and to_currency */
-    private ?string $accountingCostCode;
-    private ?string $buyerReference;
-    private ?InvoicePeriod $invoicePeriod;
-    private ?OrderReference $orderReference;
-    private ?AdditionalDocumentReference $additionalDocumentReference;
-    private ?ContractDocumentReference $contractDocumentReference;
-    private ?Party $accountingSupplierParty;
-    private ?Party $accountingCustomerParty;
-    private ?Delivery $delivery;
-    private ?PaymentMeans $paymentMeans;
-    private ?PaymentTerms $paymentTerms;
-    private array $allowanceCharges;
-    private array $taxAmounts;
-    private array $taxSubTotal;
-    private ?LegalMonetaryTotal $legalMonetaryTotal;
-    protected array $invoiceLines;
-    private ?bool $isCopyIndicator;
-    private ?string $supplierAssignedAccountID;
 
-    public function __construct(
-        SettingRepository $settingRepository,
-        ?string $profileID,
-        ?string $id,
-        DateTime $issueDate,
-        DateTime $dueDate,
-        ?string $note,
-        DateTime $taxPointDate,
-        ?string $accountingCostCode,
-        ?string $buyerReference,
-        ?InvoicePeriod $invoicePeriod,
-        ?OrderReference $orderReference,
-        ContractDocumentReference $contractDocumentReference,
-        AdditionalDocumentReference $additionalDocumentReference,
-        ?Party $accountingSupplierParty,
-        ?Party $accountingCustomerParty,
-        ?Delivery $delivery,
-        PaymentMeans $paymentMeans,
-        PaymentTerms $paymentTerms,
-        array $allowanceCharges,
-        array $taxAmounts,
-        array $taxSubTotal,
-        ?LegalMonetaryTotal $legalMonetaryTotal,
-        array $invoiceLines,
-        ?bool $isCopyIndicator,
-        ?string $supplierAssignedAccountID,
-    ) {
-        $this->settingRepository = $settingRepository;
-        $this->profileID = $profileID;
-        $this->id = $id;
-        $this->issueDate = $issueDate;
-        $this->dueDate = $dueDate;
-        $this->note = $note;
-        $this->taxPointDate = $taxPointDate;
-        $this->accountingCostCode = $accountingCostCode;
-        $this->buyerReference = $buyerReference;
-        $this->invoicePeriod = $invoicePeriod;
-        $this->orderReference = $orderReference;
-        $this->contractDocumentReference = $contractDocumentReference;
-        $this->additionalDocumentReference = $additionalDocumentReference;
-        $this->accountingSupplierParty = $accountingSupplierParty;
-        $this->accountingCustomerParty = $accountingCustomerParty;
-        $this->delivery = $delivery;
-        $this->paymentMeans = $paymentMeans;
-        $this->paymentTerms = $paymentTerms;
-        $this->allowanceCharges = $allowanceCharges;
-        $this->taxAmounts = $taxAmounts;
-        $this->taxSubTotal = $taxSubTotal;
-        $this->legalMonetaryTotal = $legalMonetaryTotal;
-        $this->invoiceLines = $invoiceLines;
-        $this->isCopyIndicator = $isCopyIndicator;
-        $this->supplierAssignedAccountID = $supplierAssignedAccountID;
+    public function __construct(private readonly SettingRepository $settingRepository, private readonly ?string $profileID, private readonly ?string $id, private readonly DateTime $issueDate, private readonly ?DateTime $dueDate, private readonly ?string $note, private readonly ?DateTime $taxPointDate, private readonly ?string $accountingCostCode, private readonly ?string $buyerReference, private readonly ?InvoicePeriod $invoicePeriod, private readonly ?OrderReference $orderReference, private readonly ?ContractDocumentReference $contractDocumentReference, private readonly ?AdditionalDocumentReference $additionalDocumentReference, private readonly ?Party $accountingSupplierParty, private readonly ?Party $accountingCustomerParty, private readonly ?Delivery $delivery, private readonly ?PaymentMeans $paymentMeans, private readonly ?PaymentTerms $paymentTerms, private readonly array $allowanceCharges, private readonly array $taxAmounts, private readonly array $taxSubTotal, private readonly ?LegalMonetaryTotal $legalMonetaryTotal, protected array $invoiceLines, private readonly ?bool $isCopyIndicator, private readonly ?string $supplierAssignedAccountID)
+    {
     }
 
     /**

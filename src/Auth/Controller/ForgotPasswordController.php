@@ -31,7 +31,7 @@ final class ForgotPasswordController
     public const string REQUEST_PASSWORD_RESET_TOKEN = 'request-password-reset';
 
     public function __construct(
-        private WebControllerService $webService,
+        private readonly WebControllerService $webService,
         private ViewRenderer $viewRenderer,
         private MailerInterface $mailer,
         private sR $sR,
@@ -97,10 +97,10 @@ final class ForgotPasswordController
                     } else {
                         $tokenString = $tokenRecord->getToken();
                         if (null !== $tokenString) {
-                            $timeStamp = (string)$tokenRecord->getCreated_at()->getTimestamp();
+                            $timeStamp = $tokenRecord->getCreated_at()->getTimestamp();
                             // check if token Random string is still valid by checking the timestamp
                             if ($timeStamp + 3600 >= time()) {
-                                $requestPasswordResetToken = $tokenString . '_' . $timeStamp;
+                                $requestPasswordResetToken = $tokenString . '_' . (string)$timeStamp;
                             } else {
                                 /**
                                  * This new Token will be nullified when the password is actually reset in the Token extension table i.e.

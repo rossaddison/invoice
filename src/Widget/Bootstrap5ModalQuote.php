@@ -15,32 +15,18 @@ use Yiisoft\Yii\View\Renderer\ViewRenderer;
 
 final class Bootstrap5ModalQuote
 {
-    private Translator $translator;
-    private ViewRenderer $viewRenderer;
-    private ClientRepository $cR;
-    private GroupRepository $gR;
-    private SettingRepository $sR;
-    private UserClientRepository $ucR;
-    private QuoteForm $quoteForm;
     private array $layoutParameters;
     private array $formParameters;
 
     public function __construct(
-        Translator $translator,
-        ViewRenderer $viewRenderer,
-        ClientRepository $cR,
-        GroupRepository $gR,
-        SettingRepository $sR,
-        UserClientRepository $ucR,
-        QuoteForm $quoteForm
+        private readonly Translator $translator,
+        private readonly ViewRenderer $viewRenderer,
+        private readonly ClientRepository $cR,
+        private readonly GroupRepository $gR,
+        private readonly SettingRepository $sR,
+        private readonly UserClientRepository $ucR,
+        private readonly QuoteForm $quoteForm
     ) {
-        $this->translator = $translator;
-        $this->viewRenderer = $viewRenderer;
-        $this->cR = $cR;
-        $this->gR = $gR;
-        $this->sR = $sR;
-        $this->ucR = $ucR;
-        $this->quoteForm = $quoteForm;
         $this->layoutParameters = [];
         $this->formParameters = [];
     }

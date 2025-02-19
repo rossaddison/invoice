@@ -81,59 +81,34 @@ use Exception;
 final class SalesOrderController
 {
     use FlashMessage;
-
-    private DataResponseFactoryInterface $factory;
     private Flash $flash;
-    private InvService $invService;
-    private InvCustomService $inv_custom_service;
-    private InvAmountService $invAmountService;
-    private InvItemService $invItemService;
-    private InvTaxRateService $invTaxRateService;
     private Session $session;
-    private SettingRepository $sR;
-    private ViewRenderer $viewRenderer;
-    private WebControllerService $webService;
-    private UserService $userService;
-    private SalesOrderService $salesorderService;
-    private TranslatorInterface $translator;
 
     public function __construct(
-        DataResponseFactoryInterface $factory,
-        InvService $invService,
-        InvCustomService $inv_custom_service,
-        InvAmountService $invAmountService,
-        InvItemService $invItemService,
-        InvTaxRateService $invTaxRateService,
+        private DataResponseFactoryInterface $factory,
+        private InvService $invService,
+        private InvCustomService $inv_custom_service,
+        private InvAmountService $invAmountService,
+        private InvItemService $invItemService,
+        private InvTaxRateService $invTaxRateService,
         Session $session,
-        SettingRepository $settingRepository,
-        ViewRenderer $viewRenderer,
-        WebControllerService $webService,
-        UserService $userService,
-        SalesOrderService $salesorderService,
-        TranslatorInterface $translator
+        private SettingRepository $sR,
+        private ViewRenderer $viewRenderer,
+        private WebControllerService $webService,
+        private UserService $userService,
+        private SalesOrderService $salesorderService,
+        private TranslatorInterface $translator
     ) {
-        $this->factory = $factory;
         $this->flash = new Flash($session);
-        $this->invService = $invService;
-        $this->inv_custom_service = $inv_custom_service;
-        $this->invAmountService = $invAmountService;
-        $this->invItemService = $invItemService;
-        $this->invTaxRateService = $invTaxRateService;
         $this->session = $session;
-        $this->sR = $settingRepository;
-        $this->webService = $webService;
-        $this->userService = $userService;
-        $this->viewRenderer = $viewRenderer;
         if ($this->userService->hasPermission('viewInv') && !$this->userService->hasPermission('editInv')) {
-            $this->viewRenderer = $viewRenderer->withControllerName('invoice/salesorder')
+            $this->viewRenderer = $this->viewRenderer->withControllerName('invoice/salesorder')
                                                  ->withLayout('@views/layout/guest.php');
         }
         if ($this->userService->hasPermission('viewInv') && $this->userService->hasPermission('editInv')) {
-            $this->viewRenderer = $viewRenderer->withControllerName('invoice/salesorder')
+            $this->viewRenderer = $this->viewRenderer->withControllerName('invoice/salesorder')
                                                  ->withLayout('@views/layout/invoice.php');
         }
-        $this->salesorderService = $salesorderService;
-        $this->translator = $translator;
     }
 
     /**

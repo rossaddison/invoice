@@ -6,13 +6,10 @@ namespace App\Invoice\DeliveryParty;
 
 use App\Invoice\Entity\DeliveryParty;
 
-final class DeliveryPartyService
+final readonly class DeliveryPartyService
 {
-    private DeliveryPartyRepository $repository;
-
-    public function __construct(DeliveryPartyRepository $repository)
+    public function __construct(private DeliveryPartyRepository $repository)
     {
-        $this->repository = $repository;
     }
 
     public function saveDeliveryParty(DeliveryParty $model, array $array): void

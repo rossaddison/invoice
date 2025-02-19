@@ -27,30 +27,20 @@ final class PaymentPeppolController
     use FlashMessage;
 
     private Flash $flash;
-    private SessionInterface $session;
     private ViewRenderer $viewRenderer;
-    private WebControllerService $webService;
-    private UserService $userService;
-    private PaymentPeppolService $paymentpeppolService;
-    private TranslatorInterface $translator;
 
     public function __construct(
-        SessionInterface $session,
+        private SessionInterface $session,
         ViewRenderer $viewRenderer,
-        WebControllerService $webService,
-        UserService $userService,
-        PaymentPeppolService $paymentpeppolService,
-        TranslatorInterface $translator
+        private WebControllerService $webService,
+        private UserService $userService,
+        private PaymentPeppolService $paymentpeppolService,
+        private TranslatorInterface $translator
     ) {
-        $this->session = $session;
-        $this->flash = new Flash($session);
+        $this->flash = new Flash($this->session);
         $this->viewRenderer = $viewRenderer->withControllerName('invoice/paymentpeppol')
                                            // The Controller layout dir is now redundant: replaced with an alias
                                            ->withLayout('@views/layout/invoice.php');
-        $this->webService = $webService;
-        $this->userService = $userService;
-        $this->paymentpeppolService = $paymentpeppolService;
-        $this->translator = $translator;
     }
 
     /**

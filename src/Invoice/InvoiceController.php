@@ -50,55 +50,37 @@ final class InvoiceController
     use FlashMessage;
 
     private Flash $flash;
-    private ViewRenderer $viewRenderer;
-    private WebControllerService $webService;
-    private UserService $userService;
-    private TranslatorInterface $translator;
-    private SettingService $settingService;
-    private SessionInterface $session;
-    private SettingRepository $s;
-    private Crypt $crypt;
-    private FormHydrator $formHydrator;
 
     public function __construct(
-        WebControllerService $webService,
-        UserService $userService,
-        TranslatorInterface $translator,
-        SettingService $settingService,
-        ViewRenderer $viewRenderer,
-        SessionInterface $session,
-        SettingRepository $s,
-        Crypt $crypt,
-        FormHydrator $formHydrator,
+        private WebControllerService $webService,
+        private UserService $userService,
+        private TranslatorInterface $translator,
+        private SettingService $settingService,
+        private ViewRenderer $viewRenderer,
+        private SessionInterface $session,
+        private SettingRepository $s,
+        private Crypt $crypt,
+        private FormHydrator $formHydrator,
     ) {
-        $this->webService = $webService;
-        $this->userService = $userService;
-        $this->translator = $translator;
-        $this->settingService = $settingService;
-        $this->viewRenderer = $viewRenderer;
-        $this->session = $session;
-        $this->flash = new Flash($session);
-        $this->s = $s;
-        $this->formHydrator = $formHydrator;
-        $this->crypt = $crypt;
+        $this->flash = new Flash($this->session);
 
         // Authenticated (Signed Up) and Unauthorised (No Permissions)
         if (!$this->userService->hasPermission('viewInv') && !$this->userService->hasPermission('editInv')) {
-            $this->viewRenderer = $viewRenderer->withControllerName('invoice')
+            $this->viewRenderer = $this->viewRenderer->withControllerName('invoice')
                                                ->withLayout('@views/layout/guest.php');
             $this->flashMessage('info', $this->translator->translate('invoice.permission.unauthorised'));
         }
 
         // Client: Authenticated and Authorised (Permission: viewInv)
         if ($this->userService->hasPermission('viewInv') && !$this->userService->hasPermission('editInv')) {
-            $this->viewRenderer = $viewRenderer->withControllerName('invoice')
+            $this->viewRenderer = $this->viewRenderer->withControllerName('invoice')
                                                ->withLayout('@views/layout/guest.php');
             $this->flashMessage('info', $this->translator->translate('invoice.permission.authorised.view'));
         }
 
         // Administrator: Authenticated and Authorised (Permission: editInv)
         if ($this->userService->hasPermission('editInv')) {
-            $this->viewRenderer = $viewRenderer->withControllerName('invoice')
+            $this->viewRenderer = $this->viewRenderer->withControllerName('invoice')
                                                  ->withLayout('@views/layout/invoice.php');
             $this->flashMessage('info', $this->translator->translate('invoice.permission.authorised.edit'));
         }
@@ -252,32 +234,16 @@ final class InvoiceController
 
     public function faq(#[RouteArgument('topic')] string $topic): Response
     {
-        switch ($topic) {
-            case 'ai_callback_session':
-                $view = $this->viewRenderer->renderPartialAsString('//invoice/info/ai/ai_callback_session');
-                break;
-            case 'tp':
-                $view = $this->viewRenderer->renderPartialAsString('//invoice/info/taxpoint');
-                break;
-            case 'shared':
-                $view = $this->viewRenderer->renderPartialAsString('//invoice/info/shared_hosting');
-                break;
-            case 'oauth2':
-                $view = $this->viewRenderer->renderPartialAsString('//invoice/info/oauth2');
-                break;
-            case 'paymentprovider':
-                $view = $this->viewRenderer->renderPartialAsString('//invoice/info/payment_provider');
-                break;
-            case 'consolecommands':
-                $view = $this->viewRenderer->renderPartialAsString('//invoice/info/console_commands');
-                break;
-            case 'ipaddress':
-                $view = $this->viewRenderer->renderPartialAsString('//invoice/info/ip_address');
-                break;
-            default:
-                $view = '';
-                break;
-        }
+        $view = match ($topic) {
+            'ai_callback_session' => $this->viewRenderer->renderPartialAsString('//invoice/info/ai/ai_callback_session'),
+            'tp' => $this->viewRenderer->renderPartialAsString('//invoice/info/taxpoint'),
+            'shared' => $this->viewRenderer->renderPartialAsString('//invoice/info/shared_hosting'),
+            'oauth2' => $this->viewRenderer->renderPartialAsString('//invoice/info/oauth2'),
+            'paymentprovider' => $this->viewRenderer->renderPartialAsString('//invoice/info/payment_provider'),
+            'consolecommands' => $this->viewRenderer->renderPartialAsString('//invoice/info/console_commands'),
+            'ipaddress' => $this->viewRenderer->renderPartialAsString('//invoice/info/ip_address'),
+            default => '',
+        };
         return $this->viewRenderer->render('info/view', ['topic' => $view]);
     }
 
@@ -320,8 +286,7 @@ final class InvoiceController
             $data = '{"documentTypes": ["invoice"], "network": "peppol", "metaScheme": "iso6523-actorid-upis", "scheme": "nl:kvk", "identifier":"60881119"}';
             curl_setopt($site, CURLOPT_POSTFIELDS, $data);
             curl_close($site);
-            $message = curl_error($site) ? curl_error($site) :
-            $this->translator->translate('invoice.curl.store.cove.api.setup.successful');
+            $message = curl_error($site) ?: $this->translator->translate('invoice.curl.store.cove.api.setup.successful');
             $parameters = [
                 'result' => curl_exec($site),
                 'message' => $message,
@@ -360,8 +325,7 @@ final class InvoiceController
             $data = '{"party_name": "Test Party", "line1": "Test Street 1", "city": "Test City", "zip": "Zippy", "country": "' . $country_code_identifier . '"}';
             curl_setopt($site, CURLOPT_POSTFIELDS, $data);
             curl_close($site);
-            $message = curl_error($site) ? curl_error($site) :
-            $this->translator->translate('invoice.curl.store.cove.api.get.legal.entity.id.successful');
+            $message = curl_error($site) ?: $this->translator->translate('invoice.curl.store.cove.api.get.legal.entity.id.successful');
             $parameters = [
                 'result' => curl_exec($site),
                 'message' => $message,
@@ -409,8 +373,7 @@ final class InvoiceController
             $data = '{"superscheme": "iso6523-actorid-upis", "scheme": "' . $scheme_tax_identifier . '", "identifier": "' . $combo_id . '"}';
             curl_setopt($site, CURLOPT_POSTFIELDS, $data);
             curl_close($site);
-            $message = curl_error($site) ? curl_error($site) :
-            $this->translator->translate('invoice.curl.store.cove.api.legal.entity.identifier.successful');
+            $message = curl_error($site) ?: $this->translator->translate('invoice.curl.store.cove.api.legal.entity.identifier.successful');
             $parameters = [
                 'result' => curl_exec($site),
                 'message' => $message,
@@ -448,7 +411,7 @@ final class InvoiceController
             curl_setopt($site, CURLOPT_HEADER, true);
             // World ie. GB,  to Germany a.k.a "World to DE"
             $data = '{
-                "legalEntityId": ' . $legal_entity_id_as_integer . ',
+                "legalEntityId": ' . (string)$legal_entity_id_as_integer . ',
                 "routing": {
                   "emails": [
                     "test@example.com"
@@ -517,8 +480,7 @@ final class InvoiceController
             }';
             curl_setopt($site, CURLOPT_POSTFIELDS, $data);
             curl_close($site);
-            $message = curl_error($site) ? curl_error($site) :
-            $this->translator->translate('invoice.curl.store.cove.api.send.test.json.invoice.successful');
+            $message = curl_error($site) ?: $this->translator->translate('invoice.curl.store.cove.api.send.test.json.invoice.successful');
             $parameters = [
                 'result' => curl_exec($site),
                 'message' => $message,
@@ -551,7 +513,7 @@ final class InvoiceController
             curl_setopt($site, CURLOPT_HEADER, true);
             // World ie. GB,  to Germany a.k.a "World to DE"
             $data = '{
-                "legalEntityId": ' . $legal_entity_id_as_integer . ',
+                "legalEntityId": ' . (string)$legal_entity_id_as_integer . ',
                 "routing": {
                   "emails": [
                     "test@example.com"
@@ -830,8 +792,7 @@ final class InvoiceController
 
             curl_setopt($site, CURLOPT_POSTFIELDS, $data);
             curl_close($site);
-            $message = curl_error($site) ? curl_error($site) :
-            $this->translator->translate('invoice.curl.store.cove.api.setup.legal.entity.successful');
+            $message = curl_error($site) ?: $this->translator->translate('invoice.curl.store.cove.api.setup.legal.entity.successful');
             $parameters = [
                 'result' => curl_exec($site),
                 'message' => $message,
@@ -1375,24 +1336,24 @@ final class InvoiceController
     private function test_data_delete(UnitRepository $uR, FamilyRepository $fR, ProductRepository $pR, ClientRepository $cR): void
     {
         // Products
-        $product = (null !== $pR->withName('Tuch Padd') ? $pR->withName('Tuch Padd') : null);
+        $product = ($pR->withName('Tuch Padd') ?? null);
         null !== $product ? $pR->delete($product) : null;
-        $service = (null !== $pR->withName('Cleen Screans') ? $pR->withName('Cleen Screans') : null);
+        $service = ($pR->withName('Cleen Screans') ?? null);
         null !== $service ? $pR->delete($service) : null;
         // Family
-        $family_product = (null !== $fR->withName('Product') ? $fR->withName('Product') : null);
+        $family_product = ($fR->withName('Product') ?? null);
         null !== $family_product ? $fR->delete($family_product) : null;
-        $family_service = (null !== $fR->withName('Service') ? $fR->withName('Service') : null);
+        $family_service = ($fR->withName('Service') ?? null);
         null !== $family_service ? $fR->delete($family_service) : null;
         // Unit
-        $unit = (null !== $uR->withName('unit') ? $uR->withName('unit') : null);
+        $unit = ($uR->withName('unit') ?? null);
         null !== $unit ? $uR->delete($unit) : null;
-        $unit_service = (null !== $uR->withName('service') ? $uR->withName('service') : null);
+        $unit_service = ($uR->withName('service') ?? null);
         null !== $unit_service ? $uR->delete($unit_service) : null;
         // Client
-        $client_non = (null !== $cR->withName('Non') ? $cR->withName('Non') : null);
+        $client_non = ($cR->withName('Non') ?? null);
         null !== $client_non ? $cR->delete($client_non) : null;
-        $client_foreign = (null !== $cR->withName('Foreign') ? $cR->withName('Foreign') : null);
+        $client_foreign = ($cR->withName('Foreign') ?? null);
         null !== $client_foreign ? $cR->delete($client_foreign) : null;
         // Group data is not deleted because these are defaults
     }

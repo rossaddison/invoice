@@ -6,13 +6,10 @@ namespace App\Invoice\ItemLookup;
 
 use App\Invoice\Entity\ItemLookup;
 
-final class ItemLookupService
+final readonly class ItemLookupService
 {
-    private ItemLookupRepository $repository;
-
-    public function __construct(ItemLookupRepository $repository)
+    public function __construct(private ItemLookupRepository $repository)
     {
-        $this->repository = $repository;
     }
 
     /**

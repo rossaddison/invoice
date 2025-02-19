@@ -10,11 +10,8 @@ use Yiisoft\Translator\TranslatorInterface as Translator;
 
 class ClientHelper
 {
-    private SettingRepository $s;
-
-    public function __construct(SettingRepository $s)
+    public function __construct(private readonly SettingRepository $s)
     {
-        $this->s = $s;
     }
 
     public function format_client(array|object|null $client): string

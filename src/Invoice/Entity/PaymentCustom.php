@@ -13,30 +13,16 @@ class PaymentCustom
 {
     #[BelongsTo(target:Payment::class, nullable: false, fkAction: 'NO ACTION')]
     private ?Payment $payment = null;
-    #[Column(type: 'integer(11)', nullable:true)]
-    private ?int $payment_id = null;
 
     #[BelongsTo(target:CustomField::class, nullable: false, fkAction: 'NO ACTION')]
     private ?CustomField $custom_field = null;
-    #[Column(type: 'integer(11)', nullable:true)]
-    private ?int $custom_field_id = null;
 
-    #[Column(type: 'primary')]
-    private ?int $id = null;
-
-    #[Column(type: 'text', nullable:true)]
-    private string $value = '';
-
-    public function __construct(
-        int $id = null,
-        int $payment_id = null,
-        int $custom_field_id = null,
-        string $value = ''
-    ) {
-        $this->id = $id;
-        $this->payment_id = $payment_id;
-        $this->custom_field_id = $custom_field_id;
-        $this->value = $value;
+    public function __construct(#[Column(type: 'primary')]
+    private ?int $id = null, #[Column(type: 'integer(11)', nullable:true)]
+    private ?int $payment_id = null, #[Column(type: 'integer(11)', nullable:true)]
+    private ?int $custom_field_id = null, #[Column(type: 'text', nullable:true)]
+    private string $value = '')
+    {
     }
 
     public function getPayment(): ?Payment

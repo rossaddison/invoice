@@ -7,13 +7,10 @@ namespace App\Invoice\ClientNote;
 use App\Invoice\Entity\ClientNote;
 use DateTime;
 
-final class ClientNoteService
+final readonly class ClientNoteService
 {
-    private ClientNoteRepository $repository;
-
-    public function __construct(ClientNoteRepository $repository)
+    public function __construct(private ClientNoteRepository $repository)
     {
-        $this->repository = $repository;
     }
 
     public function addClientNote(ClientNote $model, array $array): void

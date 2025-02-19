@@ -21,7 +21,7 @@ final class LoginForm extends FormModel implements RulesProviderInterface, Prope
     private string $password = '';
     private bool $rememberMe = false;
 
-    public function __construct(private AuthService $authService, private TranslatorInterface $translator)
+    public function __construct(private readonly AuthService $authService, private readonly TranslatorInterface $translator)
     {
     }
 
@@ -44,6 +44,7 @@ final class LoginForm extends FormModel implements RulesProviderInterface, Prope
      *
      * @psalm-return 'Login'
      */
+    #[\Override]
     public function getFormName(): string
     {
         return 'Login';

@@ -14,8 +14,6 @@ class PaymentPeppol
 {
     #[BelongsTo(target:Inv::class, nullable: false, fkAction: 'NO ACTION')]
     private ?Inv $inv = null;
-    #[Column(type: 'integer(11)', nullable: true)]
-    private ?int $inv_id = null;
 
     #[Column(type: 'primary')]
     private ?int $id = null;
@@ -23,17 +21,14 @@ class PaymentPeppol
     #[Column(type: 'timestamp', nullable: false)]
     private int $auto_reference;
 
-    #[Column(type: 'string(20)', nullable:false)]
-    private string $provider = '';
-
     public function __construct(
-        int $inv_id = null,
-        string $provider = '',
+        #[Column(type: 'integer(11)', nullable: true)]
+        private ?int $inv_id = null,
+        #[Column(type: 'string(20)', nullable:false)]
+        private string $provider = '',
     ) {
-        $this->inv_id = $inv_id;
         // convert the current DateTimeImmutable to a timestamp
         $this->auto_reference = (new DateTimeImmutable())->getTimestamp();
-        $this->provider = $provider;
     }
 
     public function getInv(): ?Inv

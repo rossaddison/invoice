@@ -32,18 +32,15 @@ use Yiisoft\Mailer\MailerInterface;
 
 class MailerHelper
 {
-    private SRepo $s;
-    private Session $session;
-    private TranslatorInterface $translator;
-    private PdfHelper $pdfhelper;
-    private TemplateHelper $templatehelper;
-    private InvoiceHelper $invoicehelper;
-    private Flash $flash;
+    private readonly PdfHelper $pdfhelper;
+    private readonly TemplateHelper $templatehelper;
+    private readonly InvoiceHelper $invoicehelper;
+    private readonly Flash $flash;
 
     public function __construct(
-        SRepo $s,
-        Session $session,
-        TranslatorInterface $translator,
+        private readonly SRepo $s,
+        private readonly Session $session,
+        private readonly TranslatorInterface $translator,
         private LoggerInterface $logger,
         private MailerInterface $mailer,
         CCR $ccR,
@@ -54,15 +51,12 @@ class MailerHelper
         CFR $cfR,
         CVR $cvR
     ) {
-        $this->s = $s;
-        $this->session = $session;
-        $this->translator = $translator;
-        $this->pdfhelper = new PdfHelper($s, $session);
-        $this->templatehelper = new TemplateHelper($s, $ccR, $qcR, $icR, $pcR, $socR, $cfR, $cvR);
-        $this->invoicehelper = new InvoiceHelper($s, $session);
+        $this->pdfhelper = new PdfHelper($this->s, $this->session);
+        $this->templatehelper = new TemplateHelper($this->s, $ccR, $qcR, $icR, $pcR, $socR, $cfR, $cvR);
+        $this->invoicehelper = new InvoiceHelper($this->s, $this->session);
         $this->logger = $logger;
         $this->mailer = $mailer;
-        $this->flash = new Flash($session);
+        $this->flash = new Flash($this->session);
     }
 
     public function mailer_configured(): bool

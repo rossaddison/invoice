@@ -26,29 +26,19 @@ final class ProfileController
     use FlashMessage;
 
     private Flash $flash;
-    private Session $session;
     private ViewRenderer $viewRenderer;
-    private WebControllerService $webService;
-    private UserService $userService;
-    private ProfileService $profileService;
-    private TranslatorInterface $translator;
 
     public function __construct(
-        Session $session,
+        private Session $session,
         ViewRenderer $viewRenderer,
-        WebControllerService $webService,
-        UserService $userService,
-        ProfileService $profileService,
-        TranslatorInterface $translator
+        private WebControllerService $webService,
+        private UserService $userService,
+        private ProfileService $profileService,
+        private TranslatorInterface $translator
     ) {
-        $this->session = $session;
-        $this->flash = new Flash($session);
+        $this->flash = new Flash($this->session);
         $this->viewRenderer = $viewRenderer->withControllerName('invoice/profile')
                                            ->withLayout('@views/layout/invoice.php');
-        $this->webService = $webService;
-        $this->userService = $userService;
-        $this->profileService = $profileService;
-        $this->translator = $translator;
     }
 
     /**

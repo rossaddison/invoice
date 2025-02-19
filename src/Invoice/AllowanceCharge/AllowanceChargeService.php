@@ -6,13 +6,10 @@ namespace App\Invoice\AllowanceCharge;
 
 use App\Invoice\Entity\AllowanceCharge;
 
-final class AllowanceChargeService
+final readonly class AllowanceChargeService
 {
-    private AllowanceChargeRepository $repository;
-
-    public function __construct(AllowanceChargeRepository $repository)
+    public function __construct(private AllowanceChargeRepository $repository)
     {
-        $this->repository = $repository;
     }
 
     public function saveAllowanceCharge(AllowanceCharge $model, array $array): void

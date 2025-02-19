@@ -51,6 +51,7 @@ final class SalesOrderTaxRateForm extends FormModel
      *
      * @psalm-return ''
      */
+    #[\Override]
     public function getFormName(): string
     {
         return '';

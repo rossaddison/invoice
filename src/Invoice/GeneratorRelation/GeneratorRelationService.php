@@ -6,13 +6,10 @@ namespace App\Invoice\GeneratorRelation;
 
 use App\Invoice\Entity\GentorRelation;
 
-final class GeneratorRelationService
+final readonly class GeneratorRelationService
 {
-    private GeneratorRelationRepository $repository;
-
-    public function __construct(GeneratorRelationRepository $repository)
+    public function __construct(private GeneratorRelationRepository $repository)
     {
-        $this->repository = $repository;
     }
 
     /**

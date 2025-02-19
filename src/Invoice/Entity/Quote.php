@@ -24,57 +24,33 @@ class Quote
     #[BelongsTo(target:Client::class, nullable: false, fkAction:'NO ACTION')]
     private ?Client $client = null;
 
-    #[Column(type: 'integer(11)', nullable:false)]
-    private ?int $client_id = null;
-
     // Group
     #[BelongsTo(target:Group::class, nullable: false, fkAction:'NO ACTION')]
     private ?Group $group = null;
-
-    #[Column(type: 'integer(11)', nullable:false)]
-    private ?int $group_id = null;
 
     // User
     #[BelongsTo(target:User::class, nullable: false)]
     private ?User $user = null;
 
-    #[Column(type: 'integer(11)', nullable:false)]
-    private ?int $user_id = null;
-
     // QuoteAmount
     #[HasOne(target: QuoteAmount::class)]
-    private QuoteAmount $quoteAmount;
+    private readonly QuoteAmount $quoteAmount;
 
     // QuoteItem
     /**
      * @var ArrayCollection<array-key, QuoteItem>
      */
     #[HasMany(target: QuoteItem::class)]
-    private ArrayCollection $items;
+    private readonly ArrayCollection $items;
 
     #[Column(type: 'primary')]
     private ?int $id = null;
-
-    #[Column(type: 'integer(11)', nullable:true, default:0)]
-    private ?int $so_id = null;
-
-    #[Column(type: 'integer(11)', nullable:true, default:0)]
-    private ?int $inv_id = null;
-
-    #[Column(type: 'tinyInteger(2)', nullable:false, default:1)]
-    private ?int $status_id = null;
-
-    #[Column(type: 'integer(11)', nullable: true)]
-    private ?int $delivery_location_id = null;
-
-    #[Column(type: 'integer(11)', nullable: true)]
-    private ?int $contract_id = null;
 
     #[Column(type: 'datetime', nullable:false)]
     private DateTimeImmutable $date_created;
 
     #[Column(type: 'datetime', nullable:false)]
-    private DateTimeImmutable $date_modified;
+    private readonly DateTimeImmutable $date_modified;
 
     #[Column(type: 'datetime', nullable:false)]
     private DateTimeImmutable $date_expires;
@@ -82,60 +58,42 @@ class Quote
     #[Column(type: 'datetime', nullable:false)]
     private DateTimeImmutable $date_required;
 
-    #[Column(type: 'string(100)', nullable:true)]
-    private ?string $number = '';
-
-    #[Column(type: 'decimal(20,2)', nullable: false, default: 0.00)]
-    private ?float $discount_amount = 0.00;
-
-    #[Column(type: 'decimal(20,2)', nullable: false, default: 0.00)]
-    private ?float $discount_percent = 0.00;
-
-    #[Column(type: 'string(32)', nullable:true)]
-    private string $url_key = '';
-
-    #[Column(type: 'string(90)', nullable:true)]
-    private ?string $password = '';
-
-    #[Column(type: 'longText', nullable:true)]
-    private ?string $notes = '';
-
     public function __construct(
-        int $so_id = null,
-        int $inv_id = null,
-        int $client_id = null,
-        int $user_id = null,
-        int $group_id = null,
-        int $status_id = null,
-        string $number = '',
-        float $discount_amount = 0.00,
-        float $discount_percent = 0.00,
-        string $url_key = '',
-        string $password = '',
-        string $notes = '',
-        int $delivery_location_id = null,
-        int $contract_id = null
+        #[Column(type: 'integer(11)', nullable:true, default:0)]
+        private ?int $so_id = null,
+        #[Column(type: 'integer(11)', nullable:true, default:0)]
+        private ?int $inv_id = null,
+        #[Column(type: 'integer(11)', nullable:false)]
+        private ?int $client_id = null,
+        #[Column(type: 'integer(11)', nullable:false)]
+        private ?int $user_id = null,
+        #[Column(type: 'integer(11)', nullable:false)]
+        private ?int $group_id = null,
+        #[Column(type: 'tinyInteger(2)', nullable:false, default:1)]
+        private ?int $status_id = null,
+        #[Column(type: 'string(100)', nullable:true)]
+        private ?string $number = '',
+        #[Column(type: 'decimal(20,2)', nullable: false, default: 0.00)]
+        private ?float $discount_amount = 0.00,
+        #[Column(type: 'decimal(20,2)', nullable: false, default: 0.00)]
+        private ?float $discount_percent = 0.00,
+        #[Column(type: 'string(32)', nullable:true)]
+        private string $url_key = '',
+        #[Column(type: 'string(90)', nullable:true)]
+        private ?string $password = '',
+        #[Column(type: 'longText', nullable:true)]
+        private ?string $notes = '',
+        #[Column(type: 'integer(11)', nullable: true)]
+        private ?int $delivery_location_id = null,
+        #[Column(type: 'integer(11)', nullable: true)]
+        private ?int $contract_id = null
     ) {
         $this->items = new ArrayCollection();
         $this->quoteAmount = new QuoteAmount();
-        $this->so_id = $so_id;
-        $this->inv_id = $inv_id;
-        $this->client_id = $client_id;
-        $this->group_id = $group_id;
-        $this->user_id = $user_id;
-        $this->status_id = $status_id;
-        $this->number = $number;
-        $this->discount_amount = $discount_amount;
-        $this->discount_percent = $discount_percent;
-        $this->url_key = $url_key;
-        $this->password = $password;
-        $this->notes = $notes;
         $this->date_modified = new \DateTimeImmutable();
         $this->date_created = new \DateTimeImmutable();
         $this->date_expires = new \DateTimeImmutable();
         $this->date_required = new \DateTimeImmutable();
-        $this->delivery_location_id = $delivery_location_id;
-        $this->contract_id = $contract_id;
     }
 
     public function getClient(): ?Client
@@ -270,26 +228,15 @@ class Quote
     public function getStatus(int $status_id): string
     {
         $status = '';
-        switch ($status_id) {
-            case 1:
-                $status = 'draft';
-                break;
-            case 2:
-                $status = 'sent';
-                break;
-            case 3:
-                $status = 'viewed';
-                break;
-            case 4:
-                $status = 'approved';
-                break;
-            case 5:
-                $status = 'rejected';
-                break;
-            case 6:
-                $status = 'cancelled';
-                break;
-        }
+        $status = match ($status_id) {
+            1 => 'draft',
+            2 => 'sent',
+            3 => 'viewed',
+            4 => 'approved',
+            5 => 'rejected',
+            6 => 'cancelled',
+            default => $status,
+        };
         return $status;
     }
 
@@ -324,7 +271,7 @@ class Quote
                 $days = $setting->getSetting_value() ?: 30;
             }
         }
-        $this->date_expires = (new \DateTimeImmutable('now'))->add(new \DateInterval('P' . $days . 'D'));
+        $this->date_expires = (new \DateTimeImmutable('now'))->add(new \DateInterval('P' . (string)$days . 'D'));
     }
 
     public function getDate_expires(): DateTimeImmutable

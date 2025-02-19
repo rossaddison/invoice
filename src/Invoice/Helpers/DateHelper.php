@@ -12,14 +12,11 @@ use DateInterval;
 
 class DateHelper
 {
-    private SRepo $s;
-
     /**
      * @param SRepo $s
      */
-    public function __construct(SRepo $s)
+    public function __construct(private readonly SRepo $s)
     {
-        $this->s = $s;
     }
 
     /**

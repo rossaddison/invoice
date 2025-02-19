@@ -74,6 +74,7 @@ final class UploadForm extends FormModel
      *
      * @psalm-return ''
      */
+    #[\Override]
     public function getFormName(): string
     {
         return '';

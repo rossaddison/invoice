@@ -6,13 +6,10 @@ namespace App\Invoice\Merchant;
 
 use App\Invoice\Entity\Merchant;
 
-final class MerchantService
+final readonly class MerchantService
 {
-    private MerchantRepository $repository;
-
-    public function __construct(MerchantRepository $repository)
+    public function __construct(private MerchantRepository $repository)
     {
-        $this->repository = $repository;
     }
 
     /**

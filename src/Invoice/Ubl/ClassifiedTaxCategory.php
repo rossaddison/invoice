@@ -10,25 +10,8 @@ use InvalidArgumentException;
 
 class ClassifiedTaxCategory implements XmlSerializable
 {
-    private ?string $id;
-    private ?string $name;
-    private ?float $percent;
-    private ?TaxScheme $taxScheme;
-    private string $taxExemptionReason;
-    private ?string $taxExemptionReasonCode;
-    private ?string $schemeID;
-    private ?string $schemeName;
-
-    public function __construct(?string $id, ?string $name, ?float $percent, ?TaxScheme $taxScheme, string $taxExemptionReason, ?string $taxExemptionReasonCode, ?string $schemeID, ?string $schemeName)
+    public function __construct(private readonly ?string $id, private readonly ?string $name, private readonly ?float $percent, private readonly ?TaxScheme $taxScheme, private readonly string $taxExemptionReason, private readonly ?string $taxExemptionReasonCode, private readonly ?string $schemeID, private readonly ?string $schemeName)
     {
-        $this->id = $id;
-        $this->name = $name;
-        $this->percent = $percent;
-        $this->taxScheme = $taxScheme;
-        $this->taxExemptionReason = $taxExemptionReason;
-        $this->taxExemptionReasonCode = $taxExemptionReasonCode;
-        $this->schemeID = $schemeID;
-        $this->schemeName = $schemeName;
     }
 
     public const string UNCL5305 = 'UNCL5305';

@@ -6,13 +6,10 @@ namespace App\Invoice\ProductProperty;
 
 use App\Invoice\Entity\ProductProperty;
 
-final class ProductPropertyService
+final readonly class ProductPropertyService
 {
-    private ProductPropertyRepository $repository;
-
-    public function __construct(ProductPropertyRepository $repository)
+    public function __construct(private ProductPropertyRepository $repository)
     {
-        $this->repository = $repository;
     }
 
     /**

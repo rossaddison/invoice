@@ -13,18 +13,10 @@ class Setting
     #[Column(type: 'primary')]
     private ?int $id = null;
 
-    #[Column(type: 'string(50)')]
-    private string $setting_key = '';
-
-    #[Column(type: 'string(191)')]
-    private string $setting_value = '';
-
-    public function __construct(
-        string $setting_key = '',
-        string $setting_value = '',
-    ) {
-        $this->setting_key = $setting_key;
-        $this->setting_value = $setting_value;
+    public function __construct(#[Column(type: 'string(50)')]
+    private string $setting_key = '', #[Column(type: 'string(191)')]
+    private string $setting_value = '')
+    {
     }
 
     public function getSetting_id(): ?int

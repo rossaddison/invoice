@@ -10,38 +10,8 @@ use Sabre\Xml\XmlSerializable;
 // Usage: Search 'new Address' under PeppolHelper
 class Address implements XmlSerializable
 {
-    private ?string $streetName;
-    private ?string $additionalStreetName;
-    private ?string $buildingNumber;
-    private ?string $cityName;
-    private ?string $postalZone;
-    private ?string $countrySubentity;
-    private ?Country $country;
-    private bool $ubl_cr_155;
-    private bool $ubl_cr_218;
-    private bool $ubl_cr_367;
-
-    public function __construct(?string $streetName, ?string $additionalStreetName, ?string $buildingNumber, ?string $cityName, ?string $postalZone, ?string $countrySubEntity, ?Country $country, bool $ubl_cr_155 = false, bool $ubl_cr_218 = false, bool $ubl_cr_367 = false)
+    public function __construct(private readonly ?string $streetName, private readonly ?string $additionalStreetName, private readonly ?string $buildingNumber, private readonly ?string $cityName, private readonly ?string $postalZone, private readonly ?string $countrySubentity, private readonly ?Country $country, private readonly bool $ubl_cr_155 = false, private readonly bool $ubl_cr_218 = false, private readonly bool $ubl_cr_367 = false)
     {
-        $this->streetName = $streetName;
-        $this->additionalStreetName = $additionalStreetName;
-        $this->buildingNumber = $buildingNumber;
-        $this->cityName = $cityName;
-        $this->postalZone = $postalZone;
-        $this->countrySubentity = $countrySubEntity;
-        $this->country = $country;
-
-        //https://docs.peppol.eu/poacc/billing/3.0/rules/ubl-tc434/UBL-CR-155/
-        //not(cac:AccountingSupplierParty/cac:Party/cac:PostalAddress/cbc:BuildingNumber)
-        $this->ubl_cr_155 = $ubl_cr_155;
-
-        //https://docs.peppol.eu/poacc/billing/3.0/rules/ubl-tc434/UBL-CR-218/
-        //not(cac:AccountingCustomerParty/cac:Party/cac:PostalAddress/cbc:BuildingNumber)
-        $this->ubl_cr_218 = $ubl_cr_218;
-
-        //https://docs.peppol.eu/poacc/billing/3.0/rules/ubl-tc434/UBL-CR-367/
-        //not(cac:Delivery/cac:DeliveryLocation/cac:Address/cbc:BuildingNumber)
-        $this->ubl_cr_367 = $ubl_cr_367;
     }
 
     // The getters are used in StoreCoveHelper

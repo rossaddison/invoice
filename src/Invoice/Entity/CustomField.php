@@ -10,43 +10,15 @@ use Cycle\Annotated\Annotation\Entity;
 #[Entity(repository: \App\Invoice\CustomField\CustomFieldRepository::class)]
 class CustomField
 {
-    #[Column(type: 'primary')]
-    private ?int $id = null;
-
-    #[Column(type: 'string(50)', nullable:true)]
-    private ?string $table = '';
-
-    #[Column(type: 'string(50)', nullable:true)]
-    private ?string $label = '';
-
-    #[Column(type: 'string(151)', nullable:false, default: 'TEXT')]
-    private string $type = '';
-
-    #[Column(type: 'integer(11)', nullable:true, default:0)]
-    private ?int $location = null;
-
-    #[Column(type: 'integer(11)', nullable:true, default:999)]
-    private ?int $order = null;
-
-    #[Column(type: 'bool', default: true)]
-    private bool $required = true;
-
-    public function __construct(
-        int $id = null,
-        string $table = '',
-        string $label = '',
-        string $type = '',
-        int $location = null,
-        int $order = null,
-        bool $required = false,
-    ) {
-        $this->id = $id;
-        $this->table = $table;
-        $this->label = $label;
-        $this->type = $type;
-        $this->location = $location;
-        $this->order = $order;
-        $this->required = $required;
+    public function __construct(#[Column(type: 'primary')]
+    private ?int $id = null, #[Column(type: 'string(50)', nullable:true)]
+    private ?string $table = '', #[Column(type: 'string(50)', nullable:true)]
+    private ?string $label = '', #[Column(type: 'string(151)', nullable:false, default: 'TEXT')]
+    private string $type = '', #[Column(type: 'integer(11)', nullable:true, default:0)]
+    private ?int $location = null, #[Column(type: 'integer(11)', nullable:true, default:999)]
+    private ?int $order = null, #[Column(type: 'bool', default: true)]
+    private bool $required = false)
+    {
     }
 
     public function getId(): string

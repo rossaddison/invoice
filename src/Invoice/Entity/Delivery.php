@@ -15,9 +15,6 @@ use DateTimeImmutable;
 #[Behavior\UpdatedAt(field: 'date_modified', column: 'date_modified')]
 class Delivery
 {
-    #[Column(type: 'primary')]
-    private ?int $id = null;
-
     #[Column(type: 'datetime', nullable: false)]
     private DateTimeImmutable $date_created;
 
@@ -36,33 +33,19 @@ class Delivery
     #[BelongsTo(target: DeliveryLocation::class, nullable: true, fkAction: 'NO ACTION')]
     private ?DeliveryLocation $delivery_location = null;
 
-    #[Column(type: 'integer(11)', nullable: true)]
-    private ?int $delivery_location_id = null;
-
-    #[Column(type: 'integer(11)', nullable: true)]
-    private ?int $delivery_party_id = null;
-
-    #[Column(type: 'integer(11)', nullable: false)]
-    private ?int $inv_id = null;
-
-    // This field will normally have a null value
-    // unless there is a separate delivery address for the item to the invoice delivery address
-    #[Column(type: 'integer(11)', nullable: true)]
-    private ?int $inv_item_id = null;
-
     public function __construct(
-        int $id = null,
-        int $inv_id = null,
+        #[Column(type: 'primary')]
+        private ?int $id = null,
+        #[Column(type: 'integer(11)', nullable: false)]
+        private ?int $inv_id = null,
         // nullable
-        int $inv_item_id = null,
-        int $delivery_location_id = null,
-        int $delivery_party_id = null,
+        #[Column(type: 'integer(11)', nullable: true)]
+        private ?int $inv_item_id = null,
+        #[Column(type: 'integer(11)', nullable: true)]
+        private ?int $delivery_location_id = null,
+        #[Column(type: 'integer(11)', nullable: true)]
+        private ?int $delivery_party_id = null,
     ) {
-        $this->id = $id;
-        $this->inv_id = $inv_id;
-        $this->inv_item_id = $inv_item_id;
-        $this->delivery_location_id = $delivery_location_id;
-        $this->delivery_party_id = $delivery_party_id;
         $this->actual_delivery_date = new \DateTimeImmutable();
         $this->date_created = new \DateTimeImmutable();
         $this->date_modified = new \DateTimeImmutable();

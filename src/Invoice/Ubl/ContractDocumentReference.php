@@ -9,11 +9,8 @@ use Sabre\Xml\XmlSerializable;
 
 class ContractDocumentReference implements XmlSerializable
 {
-    private ?string $id;
-
-    public function __construct(?string $id)
+    public function __construct(private readonly ?string $id)
     {
-        $this->id = $id;
     }
 
     /**

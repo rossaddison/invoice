@@ -24,24 +24,10 @@ use Yiisoft\Yii\View\Renderer\LayoutParametersInjectionInterface;
  * @see ./invoice/config/common/params.php 'yiisoft/yii-view-renderer'
  */
 
-final class LayoutViewInjection implements LayoutParametersInjectionInterface
+final readonly class LayoutViewInjection implements LayoutParametersInjectionInterface
 {
-    private CompanyRepository $companyRepository;
-    private CompanyPrivateRepository $companyPrivateRepository;
-    private SettingRepository $settingRepository;
-    private Translator $translator;
-
-    public function __construct(
-        private CurrentUser $currentUser,
-        CompanyRepository $companyRepository,
-        CompanyPrivateRepository $companyPrivateRepository,
-        SettingRepository $settingRepository,
-        Translator $translator,
-    ) {
-        $this->companyRepository = $companyRepository;
-        $this->companyPrivateRepository = $companyPrivateRepository;
-        $this->settingRepository = $settingRepository;
-        $this->translator = $translator;
+    public function __construct(private CurrentUser $currentUser, private CompanyRepository $companyRepository, private CompanyPrivateRepository $companyPrivateRepository, private SettingRepository $settingRepository, private Translator $translator)
+    {
     }
 
     /**

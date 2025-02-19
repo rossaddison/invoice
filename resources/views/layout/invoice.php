@@ -48,6 +48,7 @@ use Yiisoft\Yii\Bootstrap5\NavBarExpand;
 use Yiisoft\Yii\Bootstrap5\NavBarPlacement;
 use Yiisoft\Yii\Bootstrap5\NavLink;
 use Yiisoft\Yii\Bootstrap5\NavStyle;
+use Yiisoft\Yii\Bootstrap5\Offcanvas;
 
 /**
  * @see ...src\ViewInjection\LayoutViewInjection
@@ -219,7 +220,7 @@ $this->beginPage();
             ->post($urlGenerator->generate('auth/logout'))
             ->csrf($csrf)
             ->open()
-            . Button::submit(
+            . (string)Button::submit(
               $translator->translate('menu.logout', ['login' => Html::encode(preg_replace('/\d+/', '', $userLogin))])
             )
             ->class('btn btn-xs btn-warning')
@@ -311,12 +312,16 @@ $this->beginPage();
                                            $urlGenerator->generate('generator/google_translate_lang', ['type' => 'gateway']),  false, false),  
                         DropdownItem::link($translator->translate('invoice.generator.google.translate.ip'), 
                                            $urlGenerator->generate('generator/google_translate_lang', ['type' => 'ip']), false, false, ['data-bs-toggle' => 'tooltip', 'title' => $s->where('google_translate_json_filename'), 'hidden' => !$debugMode]),
-                        DropdownItem::link($translator->translate('invoice.generator.google.translate.latest'), 
-                                           $urlGenerator->generate('generator/google_translate_lang', ['type' => 'latest']),  false, false),
+                        DropdownItem::link($translator->translate('invoice.generator.google.translate.latest.a'), 
+                                           $urlGenerator->generate('generator/google_translate_lang', ['type' => 'a_latest']),  false, false),
+                        DropdownItem::link($translator->translate('invoice.generator.google.translate.latest.b'), 
+                                           $urlGenerator->generate('generator/google_translate_lang', ['type' => 'b_latest']),  false, false),    
                         DropdownItem::link($translator->translate('invoice.generator.google.translate.common'), 
                                            $urlGenerator->generate('generator/google_translate_lang', ['type' => 'common']),  false, false),
                         DropdownItem::link($translator->translate('invoice.generator.google.translate.any'), 
                                            $urlGenerator->generate('generator/google_translate_lang', ['type' => 'any']), false, false, ['data-bs-toggle' => 'tooltip', 'title' => 'src\Invoice\Language\English\any_lang.php', 'hidden' => !$debugMode]),   
+                        DropdownItem::link($translator->translate('invoice.generator.google.translate.diff'), 
+                                           $urlGenerator->generate('generator/google_translate_lang', ['type' => 'diff']), false, false, ['data-bs-toggle' => 'tooltip', 'title' => 'src\Invoice\Language\English\diff_lang.php', 'hidden' => !$debugMode]),   
                         DropdownItem::link($translator->translate('invoice.test.reset.setting'), 
                                            $urlGenerator->generate('invoice/setting_reset'), false, false, ['data-bs-toggle' => 'tooltip', 'title' => $translator->translate('invoice.test.reset.setting.tooltip'), 'hidden' => !$debugMode]),
                         DropdownItem::link($translator->translate('invoice.test.reset'), 

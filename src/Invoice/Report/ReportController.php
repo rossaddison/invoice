@@ -39,28 +39,19 @@ use Yiisoft\Yii\View\Renderer\ViewRenderer;
 class ReportController
 {
     use FlashMessage;
-
-    private Session $session;
     private Flash $flash;
     private ViewRenderer $viewRenderer;
-    private WebControllerService $webService;
-    private UserService $userService;
-    private TranslatorInterface $translator;
 
     public function __construct(
-        Session $session,
+        private Session $session,
         ViewRenderer $viewRenderer,
-        WebControllerService $webService,
-        UserService $userService,
-        TranslatorInterface $translator
+        private WebControllerService $webService,
+        private UserService $userService,
+        private TranslatorInterface $translator
     ) {
-        $this->session = $session;
-        $this->flash = new Flash($session);
+        $this->flash = new Flash($this->session);
         $this->viewRenderer = $viewRenderer->withControllerName('invoice/report')
                                            ->withLayout('@views/layout/invoice.php');
-        $this->webService = $webService;
-        $this->userService = $userService;
-        $this->translator = $translator;
     }
 
     /**

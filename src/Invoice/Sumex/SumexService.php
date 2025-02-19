@@ -7,13 +7,10 @@ namespace App\Invoice\Sumex;
 use App\Invoice\Entity\Sumex;
 use App\Invoice\Setting\SettingRepository;
 
-final class SumexService
+final readonly class SumexService
 {
-    private SumexRepository $repository;
-
-    public function __construct(SumexRepository $repository)
+    public function __construct(private SumexRepository $repository)
     {
-        $this->repository = $repository;
     }
 
     /**

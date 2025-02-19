@@ -6,13 +6,10 @@ namespace App\Invoice\SalesOrderItemAmount;
 
 use App\Invoice\Entity\SalesOrderItemAmount;
 
-final class SalesOrderItemAmountService
+final readonly class SalesOrderItemAmountService
 {
-    private SalesOrderItemAmountRepository $repository;
-
-    public function __construct(SalesOrderItemAmountRepository $repository)
+    public function __construct(private SalesOrderItemAmountRepository $repository)
     {
-        $this->repository = $repository;
     }
 
     /**

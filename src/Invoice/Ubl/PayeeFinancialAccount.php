@@ -9,18 +9,8 @@ use Sabre\Xml\XmlSerializable;
 
 class PayeeFinancialAccount implements XmlSerializable
 {
-    private ?string $id;
-    private ?string $name;
-    private ?FinancialInstitutionBranch $financialInstitutionBranch;
-
-    public function __construct(
-        ?FinancialInstitutionBranch $financialInstitutionBranch,
-        ?string $id,
-        ?string $name
-    ) {
-        $this->financialInstitutionBranch = $financialInstitutionBranch;
-        $this->id = $id;
-        $this->name = $name;
+    public function __construct(private readonly ?FinancialInstitutionBranch $financialInstitutionBranch, private readonly ?string $id, private readonly ?string $name)
+    {
     }
 
     public function xmlSerialize(Writer $writer): void

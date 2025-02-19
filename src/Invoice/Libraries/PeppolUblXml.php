@@ -31,39 +31,21 @@ use DateTime;
 
 class PeppolUblXml
 {
-    private Inv $invoice;
-    private ArrayCollection $items;
-    private sR $sR;
-    private string $currencyCode_to;
-    private array $company;
-    // Each InvItem entity has an extension record InvItemAmount
-    // which holds the totals of the individual InvItem
-    // Note: InvAmount => totals of Inv, and ...
-    //                    totals of items ie. item_subtotal, item_tax_total
-    // Use $iiaR in function itemsSubtotalGroupedByTaxPercent() to get the
-    // individual item's subtotal amount using the item's id.
-    private iiaR $iiaR;
-    private InvAmount $inv_amount;
-    private Translator $t;
+    private readonly ArrayCollection $items;
+    private readonly string $currencyCode_to;
+    private readonly array $company;
 
     /**
      * @param sR $sR
-     * @param Inv $inv
+     * @param Inv $invoice
      * @param iiaR $iiaR
      * @param InvAmount $inv_amount
      */
-    public function __construct(sR $sR, Translator $translator, Inv $inv, iiaR $iiaR, InvAmount $inv_amount)
+    public function __construct(private readonly sR $sR, private readonly Translator $t, private readonly Inv $invoice, private readonly iiaR $iiaR, private readonly InvAmount $inv_amount)
     {
-        $this->invoice = $inv;
-        $this->items = $inv->getItems();
-        $this->sR = $sR;
-        $this->t = $translator;
-        $this->currencyCode_to = $sR->getSetting('currency_to');
-        $this->company = $sR->get_config_company_details();
-        // Use in function itemsSubtotalGroupedByTaxPercent()
-        $this->iiaR = $iiaR;
-        // Use in function xmlSpecifiedTradeSettlementMonetarySummation()
-        $this->inv_amount = $inv_amount;
+        $this->items = $this->invoice->getItems();
+        $this->currencyCode_to = $this->sR->getSetting('currency_to');
+        $this->company = $this->sR->get_config_company_details();
     }
 
     public function xml(

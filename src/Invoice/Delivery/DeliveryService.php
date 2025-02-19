@@ -7,13 +7,10 @@ namespace App\Invoice\Delivery;
 use App\Invoice\Entity\Delivery;
 use App\Invoice\Setting\SettingRepository;
 
-final class DeliveryService
+final readonly class DeliveryService
 {
-    private DeliveryRepository $repository;
-
-    public function __construct(DeliveryRepository $repository)
+    public function __construct(private DeliveryRepository $repository)
     {
-        $this->repository = $repository;
     }
 
     public function saveDelivery(Delivery $model, array $array, SettingRepository $s): void

@@ -50,44 +50,27 @@ use Yiisoft\Yii\View\Renderer\ViewRenderer;
 final class PaymentController
 {
     use FlashMessage;
-
-    private Session $session;
     private Flash $flash;
-    private ViewRenderer $viewRenderer;
-    private WebControllerService $webService;
-    private UserService $userService;
-    private PaymentService $paymentService;
-    private PaymentCustomService $paymentCustomService;
-    private TranslatorInterface $translator;
-    private DataResponseFactoryInterface $factory;
 
     public function __construct(
-        Session $session,
-        ViewRenderer $viewRenderer,
-        WebControllerService $webService,
-        UserService $userService,
-        PaymentService $paymentService,
-        PaymentCustomService $paymentCustomService,
-        TranslatorInterface $translator,
-        DataResponseFactoryInterface $factory
+        private Session $session,
+        private ViewRenderer $viewRenderer,
+        private WebControllerService $webService,
+        private UserService $userService,
+        private PaymentService $paymentService,
+        private PaymentCustomService $paymentCustomService,
+        private TranslatorInterface $translator,
+        private DataResponseFactoryInterface $factory
     ) {
-        $this->session = $session;
-        $this->flash = new Flash($session);
-        $this->webService = $webService;
-        $this->userService = $userService;
-        $this->paymentService = $paymentService;
-        $this->paymentCustomService = $paymentCustomService;
-        $this->translator = $translator;
-        $this->factory = $factory;
-        $this->viewRenderer = $viewRenderer;
+        $this->flash = new Flash($this->session);
         if ($this->userService->hasPermission('viewPayment')
             && !$this->userService->hasPermission('editPayment')) {
-            $this->viewRenderer = $viewRenderer->withControllerName('invoice/payment')
+            $this->viewRenderer = $this->viewRenderer->withControllerName('invoice/payment')
                                                ->withLayout('@views/layout/guest.php');
         }
         if ($this->userService->hasPermission('viewPayment')
             && $this->userService->hasPermission('editPayment')) {
-            $this->viewRenderer = $viewRenderer->withControllerName('invoice/payment')
+            $this->viewRenderer = $this->viewRenderer->withControllerName('invoice/payment')
                                                ->withLayout('@views/layout/invoice.php');
         }
     }

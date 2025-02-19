@@ -17,15 +17,12 @@ use Yiisoft\Data\Cycle\Writer\EntityWriter;
  */
 final class GeneratorRepository extends Select\Repository
 {
-    private EntityWriter $entityWriter;
-
     /**
      * @param Select<TEntity> $select
      * @param EntityWriter $entityWriter
      */
-    public function __construct(Select $select, EntityWriter $entityWriter)
+    public function __construct(Select $select, private readonly EntityWriter $entityWriter)
     {
-        $this->entityWriter = $entityWriter;
         parent::__construct($select);
     }
 

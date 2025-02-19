@@ -26,36 +26,24 @@ final class InvAllowanceChargeController
     use FlashMessage;
 
     private Flash $flash;
-    private Session $session;
-    private ViewRenderer $viewRenderer;
-    private WebControllerService $webService;
-    private UserService $userService;
-    private InvAllowanceChargeService $invallowancechargeService;
-    private TranslatorInterface $translator;
 
     public function __construct(
-        Session $session,
-        ViewRenderer $viewRenderer,
-        WebControllerService $webService,
-        UserService $userService,
-        InvAllowanceChargeService $invallowancechargeService,
-        TranslatorInterface $translator
+        private Session $session,
+        private ViewRenderer $viewRenderer,
+        private WebControllerService $webService,
+        private UserService $userService,
+        private InvAllowanceChargeService $invallowancechargeService,
+        private TranslatorInterface $translator
     ) {
-        $this->session = $session;
-        $this->flash = new Flash($session);
-        $this->viewRenderer = $viewRenderer;
-        $this->userService = $userService;
+        $this->flash = new Flash($this->session);
         if ($this->userService->hasPermission('viewInv') && !$this->userService->hasPermission('editInv')) {
-            $this->viewRenderer = $viewRenderer->withControllerName('invoice/invallowancecharge')
+            $this->viewRenderer = $this->viewRenderer->withControllerName('invoice/invallowancecharge')
                                                 ->withLayout('@views/layout/guest.php');
         }
         if ($this->userService->hasPermission('viewInv') && $this->userService->hasPermission('editInv')) {
-            $this->viewRenderer = $viewRenderer->withControllerName('invoice/invallowancecharge')
+            $this->viewRenderer = $this->viewRenderer->withControllerName('invoice/invallowancecharge')
                                                ->withLayout('@views/layout/invoice.php');
         }
-        $this->webService = $webService;
-        $this->invallowancechargeService = $invallowancechargeService;
-        $this->translator = $translator;
     }
 
     /**

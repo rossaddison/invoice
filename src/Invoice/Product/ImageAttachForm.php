@@ -15,6 +15,7 @@ final class ImageAttachForm extends FormModel
      *
      * @psalm-return 'ImageAttachForm'
      */
+    #[\Override]
     public function getFormName(): string
     {
         return 'ImageAttachForm';

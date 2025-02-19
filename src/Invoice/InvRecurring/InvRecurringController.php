@@ -40,55 +40,29 @@ final class InvRecurringController
     use FlashMessage;
 
     private Flash $flash;
-    private DataResponseFactoryInterface $factory;
     private ViewRenderer $viewRenderer;
-    private WebControllerService $webService;
-    private UserService $userService;
-    private InvRecurringService $invrecurringService;
-    private InvAmountService $invAmountService;
-    private InvCustomService $invCustomService;
-    private InvItemService $invItemService;
-    private InvTaxRateService $invTaxRateService;
-    private Session $session;
-    private SR $s;
-    private IS $iS;
-    private TranslatorInterface $translator;
     private Logger $_logger;
-    private MailerInterface $mailer;
 
     public function __construct(
-        DataResponseFactoryInterface $factory,
+        private DataResponseFactoryInterface $factory,
         ViewRenderer $viewRenderer,
-        WebControllerService $webService,
-        UserService $userService,
-        InvCustomService $invcustomService,
-        InvAmountService $invamountService,
-        InvItemService $invitemService,
-        InvRecurringService $invrecurringService,
-        InvTaxRateService $invtaxrateService,
-        Session $session,
-        SR $s,
-        IS $iS,
-        TranslatorInterface $translator,
-        MailerInterface $mailer,
+        private WebControllerService $webService,
+        private UserService $userService,
+        private InvCustomService $invCustomService,
+        private InvAmountService $invAmountService,
+        private InvItemService $invItemService,
+        private InvRecurringService $invrecurringService,
+        private InvTaxRateService $invTaxRateService,
+        private Session $session,
+        private SR $s,
+        private IS $iS,
+        private TranslatorInterface $translator,
+        private MailerInterface $mailer,
     ) {
-        $this->factory = $factory;
         $this->viewRenderer = $viewRenderer->withControllerName('invoice/invrecurring')
                                            ->withLayout('@views/layout/invoice.php');
-        $this->webService = $webService;
-        $this->userService = $userService;
-        $this->invCustomService = $invcustomService;
-        $this->invAmountService = $invamountService;
-        $this->invItemService = $invitemService;
-        $this->invrecurringService = $invrecurringService;
-        $this->invTaxRateService = $invtaxrateService;
-        $this->session = $session;
-        $this->flash = new Flash($session);
-        $this->s = $s;
-        $this->iS = $iS;
-        $this->translator = $translator;
+        $this->flash = new Flash($this->session);
         $this->_logger = new Logger();
-        $this->mailer = $mailer;
     }
 
     /**

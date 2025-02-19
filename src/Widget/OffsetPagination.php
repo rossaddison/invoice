@@ -114,7 +114,7 @@ final class OffsetPagination extends Widget
         // `Previous` page
         $prevUrl = $this->paginator?->isOnFirstPage() ? null : $this->getPageLink($this->currentPage - 1);
         $result .= Html::openTag('li', ['class' => $prevUrl === null ? 'page-item disabled' : 'page-item']);
-        $result .= Html::a('Previous', $prevUrl, ['class' => 'page-link']);
+        $result .= (string)Html::a('Previous', $prevUrl, ['class' => 'page-link']);
         $result .= Html::closeTag('li');
 
         // Numeric buttons
@@ -123,9 +123,9 @@ final class OffsetPagination extends Widget
             $isDisabled = $this->currentPage === $page || $page === null;
             $result .= Html::openTag('li', ['class' => $isDisabled ? 'page-item disabled' : 'page-item']);
             if ($page === null) {
-                $result .= Html::span('…', ['class' => 'page-link']);
+                $result .= (string)Html::span('…', ['class' => 'page-link']);
             } else {
-                $result .= Html::a((string) $page, $this->getPageLink($page), ['class' => 'page-link']);
+                $result .= (string)Html::a((string) $page, $this->getPageLink($page), ['class' => 'page-link']);
             }
             $result .= Html::closeTag('li');
         }
@@ -133,7 +133,7 @@ final class OffsetPagination extends Widget
         // `Next` page
         $nextUrl = $this->paginator?->isOnLastPage() ? null : $this->getPageLink($this->currentPage + 1);
         $result .= Html::openTag('li', ['class' => $nextUrl === null ? 'page-item disabled' : 'page-item']);
-        $result .= Html::a('Next', $nextUrl, ['class' => 'page-link']);
+        $result .= (string)Html::a('Next', $nextUrl, ['class' => 'page-link']);
         $result .= Html::closeTag('li');
 
         return $result;

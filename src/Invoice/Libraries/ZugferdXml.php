@@ -16,38 +16,21 @@ use DOMElement;
 
 class ZugferdXml
 {
-    public Inv $invoice;
     public ArrayCollection $items;
-    public sR $sR;
     public string $currencyCode;
     public array $company;
-    // Each InvItem entity has an extension record InvItemAmount
-    // which holds the totals of the individual InvItem
-    // Note: InvAmount => totals of Inv, and ...
-    //                    totals of items ie. item_subtotal, item_tax_total
-
-    // Use $iiaR in function itemsSubtotalGroupedByTaxPercent() to get the
-    // individual item's subtotal amount using the item's id.
-    public iiaR $iiaR;
-    public InvAmount $inv_amount;
 
     /**
      * @param sR $sR
-     * @param Inv $inv
+     * @param Inv $invoice
      * @param iiaR $iiaR
      * @param InvAmount $inv_amount
      */
-    public function __construct(sR $sR, Inv $inv, iiaR $iiaR, InvAmount $inv_amount)
+    public function __construct(public sR $sR, public Inv $invoice, public iiaR $iiaR, public InvAmount $inv_amount)
     {
-        $this->invoice = $inv;
-        $this->items = $inv->getItems();
-        $this->sR = $sR;
-        $this->currencyCode = $sR->getSetting('currency_code');
-        $this->company = $sR->get_config_company_details();
-        // Use in function itemsSubtotalGroupedByTaxPercent()
-        $this->iiaR = $iiaR;
-        // Use in function xmlSpecifiedTradeSettlementMonetarySummation()
-        $this->inv_amount = $inv_amount;
+        $this->items = $this->invoice->getItems();
+        $this->currencyCode = $this->sR->getSetting('currency_code');
+        $this->company = $this->sR->get_config_company_details();
     }
 
     /**
@@ -290,7 +273,7 @@ class ZugferdXml
             }
             $key = (int)$item->getTaxRate()?->getTaxRatePercent();
             if (!isset($result[$key])) {
-                $result[$key] = 0;
+                $result[$key] = 0.00;
             }
             $item_id = $item->getId();
             /** @var \App\Invoice\Entity\InvItemAmount $inv_item_amount */
@@ -310,7 +293,7 @@ class ZugferdXml
     protected function xmlApplicableTradeTax(DOMDocument $doc, float $percent, float $subtotal): DOMElement
     {
         $node = $doc->createElement('ram:ApplicableTradeTax');
-        $node->appendChild($this->currencyElement($doc, 'ram:CalculatedAmount', $subtotal * $percent / 100));
+        $node->appendChild($this->currencyElement($doc, 'ram:CalculatedAmount', $subtotal * $percent / 100.00));
         $node->appendChild($doc->createElement('ram:TypeCode', 'VAT'));
         $node->appendChild($this->currencyElement($doc, 'ram:BasisAmount', $subtotal));
         $node->appendChild($doc->createElement('ram:CategoryCode', 'S'));

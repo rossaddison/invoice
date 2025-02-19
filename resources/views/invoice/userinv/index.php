@@ -330,16 +330,15 @@ echo $alert
     ->tableAttributes(['class' => 'table table-striped text-center h-75','id'=>'table-user-inv'])  
     ->columns(...$columns) 
     ->dataReader($paginator)
-    ->urlCreator(new UrlCreator($urlGenerator))        
-    ->headerRowAttributes(['class'=>'card-header bg-info text-black'])
-    ->enableMultisort(true)                
+    ->urlCreator(new UrlCreator($urlGenerator))
+    ->multiSort(true)                 
     ->header($header)
+    ->headerRowAttributes(['class'=>'card-header bg-info text-black'])        
     ->id('w5-grid')
     ->paginationWidget($gridComponents->offsetPaginationWidget($paginator))
-    ->summaryAttributes(['class' => 'mt-3 me-3 summary text-end'])
     ->summaryTemplate($pageSizeLimiter::buttons($currentRoute, $s, $translator, $urlGenerator, 'userinv').' '.$grid_summary)
-    ->emptyTextAttributes(['class' => 'card-header bg-warning text-black'])
-    ->emptyText($translator->translate('invoice.invoice.no.records'))
+    ->summaryAttributes(['class' => 'mt-3 me-3 summary text-end'])
+    ->emptyCell($translator->translate('invoice.invoice.no.records'),['class' => 'card-header bg-warning text-black'])
     ->toolbar($toolbarString);          
 ?> 
 </div>

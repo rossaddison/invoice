@@ -11,13 +11,8 @@ use InvalidArgumentException;
 
 class Attachment implements XmlSerializable
 {
-    private ?string $filePath;
-    private ?string $externalReference;
-
-    public function __construct(?string $filePath, ?string $externalReference)
+    public function __construct(private ?string $filePath, private ?string $externalReference)
     {
-        $this->filePath = $filePath;
-        $this->externalReference = $externalReference;
     }
 
     /**

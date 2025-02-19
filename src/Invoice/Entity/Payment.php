@@ -15,38 +15,20 @@ class Payment
 {
     #[BelongsTo(target:Inv::class, nullable: false, fkAction: 'NO ACTION')]
     private ?Inv $inv = null;
-    #[Column(type: 'integer(11)', nullable: true)]
-    private ?int $inv_id = null;
 
     #[BelongsTo(target:PaymentMethod::class, nullable: false, fkAction: 'NO ACTION')]
     private ?PaymentMethod $payment_method = null;
-    #[Column(type: 'integer(11)', nullable: true)]
-    private ?int $payment_method_id = null;
-
-    #[Column(type: 'primary')]
-    private ?int $id = null;
 
     #[Column(type: 'date', nullable: false)]
     private mixed $payment_date = '';
 
-    #[Column(type: 'decimal(20,2)', nullable:true, default: 0.00)]
-    private ?float $amount = 0.00;
-
-    #[Column(type: 'longText', nullable:false)]
-    private string $note = '';
-
-    public function __construct(
-        int $id = null,
-        int $inv_id = null,
-        int $payment_method_id = null,
-        float $amount = 0.00,
-        string $note = ''
-    ) {
-        $this->id = $id;
-        $this->inv_id = $inv_id;
-        $this->payment_method_id = $payment_method_id;
-        $this->amount = $amount;
-        $this->note = $note;
+    public function __construct(#[Column(type: 'primary')]
+    private ?int $id = null, #[Column(type: 'integer(11)', nullable: true)]
+    private ?int $inv_id = null, #[Column(type: 'integer(11)', nullable: true)]
+    private ?int $payment_method_id = null, #[Column(type: 'decimal(20,2)', nullable:true, default: 0.00)]
+    private ?float $amount = 0.00, #[Column(type: 'longText', nullable:false)]
+    private string $note = '')
+    {
     }
 
     public function getInv(): ?Inv

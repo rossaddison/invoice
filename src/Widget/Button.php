@@ -14,17 +14,10 @@ use Yiisoft\Html\Tag\Span;
 use Yiisoft\Router\CurrentRoute;
 use Yiisoft\Translator\TranslatorInterface as Translator;
 
-final class Button
+final readonly class Button
 {
-    private CurrentRoute $currentRoute;
-    private Translator $translator;
-    private UrlGenerator $generator;
-
-    public function __construct(CurrentRoute $currentRoute, Translator $translator, UrlGenerator $generator)
+    public function __construct(private CurrentRoute $currentRoute, private Translator $translator, private UrlGenerator $generator)
     {
-        $this->currentRoute = $currentRoute;
-        $this->translator = $translator;
-        $this->generator = $generator;
     }
 
     public static function back(): string
@@ -42,7 +35,7 @@ final class Button
                 'value' => '1',
             ],
         ];
-        $string .= Field::buttongroup()
+        $string .= (string)Field::buttongroup()
             ->buttonsData($buttonsDataArray);
         return $string .= Html::closeTag('div');
     }
@@ -71,7 +64,7 @@ final class Button
                 'value' => '1',
             ],
         ];
-        $string .= Field::buttongroup()
+        $string .= (string)Field::buttongroup()
             ->buttonsData($buttonsDataArray);
         return $string .= Html::closeTag('div');
     }

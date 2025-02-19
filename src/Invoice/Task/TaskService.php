@@ -6,13 +6,10 @@ namespace App\Invoice\Task;
 
 use App\Invoice\Entity\Task;
 
-final class TaskService
+final readonly class TaskService
 {
-    private TaskRepository $repository;
-
-    public function __construct(TaskRepository $repository)
+    public function __construct(private TaskRepository $repository)
     {
-        $this->repository = $repository;
     }
 
     /**

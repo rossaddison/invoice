@@ -7,13 +7,10 @@ namespace App\Invoice\InvSentLog;
 use App\Invoice\Entity\InvSentLog;
 use DateTimeImmutable;
 
-final class InvSentLogService
+final readonly class InvSentLogService
 {
-    private InvSentLogRepository $repository;
-
-    public function __construct(InvSentLogRepository $repository)
+    public function __construct(private InvSentLogRepository $repository)
     {
-        $this->repository = $repository;
     }
 
     public function saveInvSentLog(InvSentLog $model, array $array): void

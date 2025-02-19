@@ -28,13 +28,10 @@ use App\Invoice\QuoteTaxRate\QuoteTaxRateRepository as QTRR;
 use App\Invoice\InvTaxRate\InvTaxRateRepository as ITRR;
 use App\Invoice\Payment\PaymentRepository as PYMR;
 
-final class NumberHelper
+final readonly class NumberHelper
 {
-    private SRepo $s;
-
-    public function __construct(SRepo $s)
+    public function __construct(private SRepo $s)
     {
-        $this->s = $s;
     }
 
     /**
@@ -392,8 +389,8 @@ final class NumberHelper
     {
         $quote = $qR->repoQuoteUnloadedquery($quote_id);
         $total = $quote_total;
-        $discount_amount = 0;
-        $discount_percent = 0;
+        $discount_amount = 0.00;
+        $discount_percent = 0.00;
         if ($quote) {
             $discount_amount = (float)$quote->getDiscount_amount();
             $discount_percent = (float)$quote->getDiscount_percent();
@@ -403,7 +400,7 @@ final class NumberHelper
         // Discount amount is the user inputed amount on the quote representing a cash discount
         // Discount percent is the user inputed percentage on the quote representing a cash percentage
         $trimmed_total = $total - $discount_amount;
-        return $trimmed_total - round($trimmed_total / 100 * $discount_percent, 2);
+        return $trimmed_total - round($trimmed_total / 100.00 * $discount_percent, 2);
     }
 
     /**
@@ -415,8 +412,8 @@ final class NumberHelper
     public function inv_include_customer_discount_request(string $inv_id, float $inv_total, IR $iR): float
     {
         $inv = $iR->repoInvUnloadedquery($inv_id);
-        $discount_amount = 0;
-        $discount_percent = 0;
+        $discount_amount = 0.00;
+        $discount_percent = 0.00;
         $total = $inv_total;
         if ($inv) {
             $discount_amount = (float)$inv->getDiscount_amount();
@@ -427,7 +424,7 @@ final class NumberHelper
         // Discount amount is the user inputed amount on the invoice representing a cash discount
         // Discount percent is the user inputed percentage on the invoice representing a cash percentage
         $trimmed_total = $total - $discount_amount;
-        return $trimmed_total - round($trimmed_total / 100 * $discount_percent, 2);
+        return $trimmed_total - round($trimmed_total / 100.00 * $discount_percent, 2);
     }
 
     /**
@@ -442,8 +439,8 @@ final class NumberHelper
         // Tax_total*    =    sum of quote_tax_rate_amount*   per   quote_id.
 
         // First check to see if there are any quote taxes applied
-        $total_quote_tax_rate_amount = 0;
-        $quote_tax_rate_amount = 0;
+        $total_quote_tax_rate_amount = 0.00;
+        $quote_tax_rate_amount = 0.00;
         $quote_tax_rates = $qtrR->repoQuotequery($quote_id);
         $quote_tax_rates_count = $qtrR->repoCount($quote_id);
         // At least one quote tax rate has been set and the quote has amounts that quote tax rates can be applied to
@@ -459,10 +456,10 @@ final class NumberHelper
                         (null !== $quote_tax_rate->getInclude_item_tax() && $quote_tax_rate->getInclude_item_tax() === 1)
                         ?
                             // The quote tax rate should include the applied item tax
-                            ((($quote_amount->getItem_subtotal() ?? 0.00) + ($quote_amount->getItem_tax_total() ?? 0.00)) * (($quote_tax_rate->getTaxRate()?->getTaxRatePercent() ?? 0.00)  / 100))
+                            ((($quote_amount->getItem_subtotal() ?? 0.00) + ($quote_amount->getItem_tax_total() ?? 0.00)) * (($quote_tax_rate->getTaxRate()?->getTaxRatePercent() ?? 0.00)  / 100.00))
                         :
                             // The quote tax rate should not include the applied item tax so get the general tax rate from Tax Rate table
-                            (($quote_amount->getItem_subtotal() ?? 0.00) * (($quote_tax_rate->getTaxRate()?->getTaxRatePercent() ?? 0.00) / 100))
+                            (($quote_amount->getItem_subtotal() ?? 0.00) * (($quote_tax_rate->getTaxRate()?->getTaxRatePercent() ?? 0.00) / 100.00))
                     );
                     // Update the quote tax rate amount
                     $quote_tax_rate->setQuote_tax_rate_amount($quote_tax_rate_amount);
@@ -486,8 +483,8 @@ final class NumberHelper
         // Tax_total*    =    sum of inv_tax_rate_amount*   per   inv_id.
 
         // First check to see if there are any invoice taxes applied
-        $total_inv_tax_rate_amount = 0;
-        $inv_tax_rate_amount = 0;
+        $total_inv_tax_rate_amount = 0.00;
+        $inv_tax_rate_amount = 0.00;
         $inv_tax_rates = $itrR->repoInvquery($inv_id);
         $inv_tax_rates_count = $itrR->repoCount($inv_id);
         // At least one invoice tax rate has been set and the invoice has amounts that invoice tax rates can be applied to
@@ -503,10 +500,10 @@ final class NumberHelper
                         (null !== $inv_tax_rate->getInclude_item_tax() && $inv_tax_rate->getInclude_item_tax() === 1)
                         ?
                             // 'Apply after item tax' => The inv tax rate should include the applied item tax
-                            ((($inv_amount->getItem_subtotal() ?: 0.00) + ($inv_amount->getItem_tax_total() ?: 0.00)) * ($inv_tax_rate->getTaxRate()?->getTaxRatePercent() ?? 0.00) / 100)
+                            ((($inv_amount->getItem_subtotal() ?: 0.00) + ($inv_amount->getItem_tax_total() ?: 0.00)) * ($inv_tax_rate->getTaxRate()?->getTaxRatePercent() ?? 0.00) / 100.00)
                         :
                             // The invoice tax rate should not include the applied item tax so get the general tax rate from Tax Rate table
-                            (($inv_amount->getItem_subtotal() ?: 0.00) * (($inv_tax_rate->getTaxRate()?->getTaxRatePercent() ?? 0.00) / 100))
+                            (($inv_amount->getItem_subtotal() ?: 0.00) * (($inv_tax_rate->getTaxRate()?->getTaxRatePercent() ?? 0.00) / 100.00))
                     );
                     // Update the invoice tax rate amount
                     $inv_tax_rate->setInv_tax_rate_amount($inv_tax_rate_amount);

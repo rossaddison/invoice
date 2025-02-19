@@ -6,13 +6,10 @@ namespace App\Invoice\CustomField;
 
 use App\Invoice\Entity\CustomField;
 
-final class CustomFieldService
+final readonly class CustomFieldService
 {
-    private CustomFieldRepository $repository;
-
-    public function __construct(CustomFieldRepository $repository)
+    public function __construct(private CustomFieldRepository $repository)
     {
-        $this->repository = $repository;
     }
 
     /**

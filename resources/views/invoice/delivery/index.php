@@ -117,7 +117,7 @@ $toolbar = Div::tag();
   $pageSize = $paginator->getCurrentPageSize();
   if ($pageSize > 0) {
     echo Html::p(
-      sprintf($translator->translate('invoice.index.footer.showing').' deliveries: Max ' . $max . ' deliveries per page: Total Deliveries ' . $paginator->getTotalItems(), $pageSize, $paginator->getTotalItems()),
+      sprintf($translator->translate('invoice.index.footer.showing').' deliveries: Max ' . (string)$max . ' deliveries per page: Total Deliveries ' . (string)$paginator->getTotalItems(), $pageSize, $paginator->getTotalItems()),
       ['class' => 'text-muted']
     );
   } else {

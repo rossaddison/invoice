@@ -26,15 +26,10 @@ use Yiisoft\Security\Random;
 use Yiisoft\Session\Flash\Flash;
 use Yiisoft\Session\SessionInterface;
 
-final class SalesOrderService
+final readonly class SalesOrderService
 {
-    private SalesOrderRepository $repository;
-    private SessionInterface $session;
-
-    public function __construct(SoR $repository, SessionInterface $session)
+    public function __construct(private SalesOrderRepository $repository, private SessionInterface $session)
     {
-        $this->repository = $repository;
-        $this->session = $session;
     }
 
     /**

@@ -6,7 +6,7 @@ namespace App\Backend\Controller;
 
 use Yiisoft\Yii\View\Renderer\ViewRenderer;
 
-final class SiteController
+final readonly class SiteController
 {
     private ViewRenderer $viewRenderer;
 

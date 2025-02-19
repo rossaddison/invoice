@@ -11,7 +11,6 @@ use Yiisoft\FormModel\FormModel;
 final class InvAllowanceChargeForm extends FormModel
 {
     private ?int $id = null;
-    private ?int $inv_id = null;
 
     private ?int $allowance_charge_id = null;
 
@@ -20,9 +19,8 @@ final class InvAllowanceChargeForm extends FormModel
 
     private ?int $vat = null;
 
-    public function __construct(InvAllowanceCharge $invAllowanceCharge, int $inv_id)
+    public function __construct(InvAllowanceCharge $invAllowanceCharge, private readonly ?int $inv_id)
     {
-        $this->inv_id = $inv_id;
         $this->allowance_charge_id = (int)$invAllowanceCharge->getAllowance_charge_id();
         $this->amount = (int)$invAllowanceCharge->getAmount();
         $this->vat = (int)$invAllowanceCharge->getVat();
@@ -57,6 +55,7 @@ final class InvAllowanceChargeForm extends FormModel
      * @return string
      * @psalm-return ''
      */
+    #[\Override]
     public function getFormName(): string
     {
         return '';

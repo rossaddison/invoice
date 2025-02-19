@@ -28,34 +28,21 @@ use Yiisoft\Yii\View\Renderer\ViewRenderer;
 final class EmailTemplateController
 {
     use FlashMessage;
-
-    private SessionInterface $session;
     private Flash $flash;
     private ViewRenderer $viewRenderer;
-    private WebControllerService $webService;
-    private EmailTemplateService $emailtemplateService;
-    private UserService $userService;
-    private TranslatorInterface $translator;
-    private Factory $factory;
 
     public function __construct(
-        SessionInterface $session,
+        private SessionInterface $session,
         ViewRenderer $viewRenderer,
-        WebControllerService $webService,
-        EmailTemplateService $emailtemplateService,
-        UserService $userService,
-        TranslatorInterface $translator,
-        Factory $factory
+        private WebControllerService $webService,
+        private EmailTemplateService $emailtemplateService,
+        private UserService $userService,
+        private TranslatorInterface $translator,
+        private Factory $factory
     ) {
-        $this->session = $session;
-        $this->flash = new Flash($session);
+        $this->flash = new Flash($this->session);
         $this->viewRenderer = $viewRenderer->withControllerName('invoice/emailtemplate')
                                            ->withLayout('@views/layout/invoice.php');
-        $this->webService = $webService;
-        $this->emailtemplateService = $emailtemplateService;
-        $this->userService = $userService;
-        $this->translator = $translator;
-        $this->factory = $factory;
     }
 
     /**
@@ -114,7 +101,7 @@ final class EmailTemplateController
             // see src\Invoice\Asset\rebuild-1.13\js\mailer_ajax_email_addresses
             'admin_email' => $settingRepository->getConfigAdminEmail(),
             'sender_email' => $settingRepository->getConfigSenderEmail(),
-            'from_email' => null !== $fromR->getDefault()?->getEmail() ? $fromR->getDefault()?->getEmail() : $this->translator->translate('invoice.email.default.none.set'),
+            'from_email' => $fromR->getDefault()?->getEmail() ?? $this->translator->translate('invoice.email.default.none.set'),
         ];
 
         if ($request->getMethod() === Method::POST) {
@@ -166,7 +153,7 @@ final class EmailTemplateController
             // see src\Invoice\Asset\rebuild-1.13\js\mailer_ajax_email_addresses
             'admin_email' => $settingRepository->getConfigAdminEmail(),
             'sender_email' => $settingRepository->getConfigSenderEmail(),
-            'from_email' => null !== $fromR->getDefault()?->getEmail() ? $fromR->getDefault()?->getEmail() : $this->translator->translate('invoice.email.default.none.set'),
+            'from_email' => $fromR->getDefault()?->getEmail() ?? $this->translator->translate('invoice.email.default.none.set'),
         ];
 
         if ($request->getMethod() === Method::POST) {
@@ -240,9 +227,7 @@ final class EmailTemplateController
                 // see src\Invoice\Asset\rebuild-1.13\js\mailer_ajax_email_addresses
                 'admin_email' => $settingRepository->getConfigAdminEmail(),
                 'sender_email' => $settingRepository->getConfigSenderEmail(),
-                'from_email' => (null !== ($fromR->getDefault())?->getEmail()
-                               ? ($fromR->getDefault())?->getEmail()
-                               : $this->translator->translate('invoice.email.default.none.set')),
+                'from_email' => (($fromR->getDefault())?->getEmail() ?? $this->translator->translate('invoice.email.default.none.set')),
             ];
             if ($request->getMethod() === Method::POST) {
                 $body = $request->getParsedBody() ?? [];
@@ -304,9 +289,7 @@ final class EmailTemplateController
                 // see src\Invoice\Asset\rebuild-1.13\js\mailer_ajax_email_addresses
                 'admin_email' => $settingRepository->getConfigAdminEmail(),
                 'sender_email' => $settingRepository->getConfigSenderEmail(),
-                'from_email' => (null !== ($fromR->getDefault())?->getEmail()
-                               ? ($fromR->getDefault())?->getEmail()
-                               : $this->translator->translate('invoice.email.default.none.set')),
+                'from_email' => (($fromR->getDefault())?->getEmail() ?? $this->translator->translate('invoice.email.default.none.set')),
             ];
             if ($request->getMethod() === Method::POST) {
                 $body = $request->getParsedBody() ?? [];
@@ -362,7 +345,7 @@ final class EmailTemplateController
                 'email_template_from_email' => $email_template->getEmail_template_from_email(),
                 'email_template_cc' => $email_template->getEmail_template_cc() ?? '',
                 'email_template_bcc' => $email_template->getEmail_template_bcc() ?? '',
-                'email_template_pdf_template' => null !== $email_template->getEmail_template_pdf_template() ? $email_template->getEmail_template_pdf_template() : '',
+                'email_template_pdf_template' => $email_template->getEmail_template_pdf_template() ?? '',
             ],
                 'success' => 1]
             :

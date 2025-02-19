@@ -24,34 +24,22 @@ class Inv
     #[BelongsTo(target: User::class, nullable: false)]
     private ?User $user = null;
 
-    #[Column(type: 'integer(11)', nullable: false)]
-    private ?int $user_id = null;
-
     // Group
     #[BelongsTo(target: Group::class, nullable: false, fkAction: 'NO ACTION')]
     private ?Group $group = null;
-
-    #[Column(type: 'integer(11)', nullable: false)]
-    private ?int $group_id = null;
 
     // Client
     #[BelongsTo(target: Client::class, nullable: false, fkAction: 'NO ACTION')]
     private ?Client $client = null;
 
-    #[Column(type: 'integer(11)', nullable: false)]
-    private ?int $client_id = null;
-
-    #[Column(type: 'integer(11)', nullable: true)]
-    private ?int $delivery_id = null;
-
     #[HasOne(target: InvAmount::class)]
-    private InvAmount $invAmount;
+    private readonly InvAmount $invAmount;
 
     /**
      * @var ArrayCollection<array-key, InvItem>
      */
     #[HasMany(target: InvItem::class)]
-    private ArrayCollection $items;
+    private readonly ArrayCollection $items;
 
     /**
      * @see Used to determine how many times an email has been sent for this specific invoice to the client
@@ -71,30 +59,6 @@ class Inv
     #[Column(type: 'primary')]
     private ?int $id = null;
 
-    #[Column(type: 'tinyInteger', nullable: false, default: 1)]
-    private ?int $status_id = null;
-
-    #[Column(type: 'integer(11)', nullable: true, default: 0)]
-    private ?int $contract_id = null;
-
-    #[Column(type: 'integer(11)', nullable: true, default: 0)]
-    private ?int $delivery_location_id = null;
-
-    #[Column(type: 'integer(11)', nullable: true, default: 0)]
-    private ?int $postal_address_id = null;
-
-    #[Column(type: 'integer(11)', nullable: true)]
-    private ?int $so_id = null;
-
-    #[Column(type: 'integer(11)', nullable: true)]
-    private ?int $quote_id = null;
-
-    #[Column(type: 'boolean', nullable: false)]
-    private bool $is_read_only = false;
-
-    #[Column(type: 'string(90)', nullable: true)]
-    private ?string $password = '';
-
     #[Column(type: 'datetime')]
     private DateTimeImmutable $date_created;
 
@@ -102,18 +66,10 @@ class Inv
     private mixed $time_created;
 
     #[Column(type: 'datetime', nullable: false)]
-    private DateTimeImmutable $date_modified;
+    private readonly DateTimeImmutable $date_modified;
 
     #[Column(type: 'datetime', nullable: false)]
     private DateTimeImmutable $date_tax_point;
-
-    // Accrual Accounting: 3=>issued/created date; 35=>supply/delivery date;
-    // Cash Accounting: 432=>payment date
-    // If a date tax point cannot be determined because the VAT rate is not
-    // known, a stand in code, or officially the description code, is used instead of the tax point date
-    // https://docs.peppol.eu/poacc/billing/3.0/codelist/UNCL2005/
-    #[Column(type: 'string(3)', nullable: false)]
-    private string $stand_in_code;
 
     // Actual Delivery Date
     #[Column(type: 'datetime', nullable: false)]
@@ -122,91 +78,64 @@ class Inv
     #[Column(type: 'datetime', nullable: false)]
     private DateTimeImmutable $date_due;
 
-    #[Column(type: 'string(100)', nullable: true)]
-    private ?string $number = '';
-
-    #[Column(type: 'decimal(20,2)', nullable: false, default: 0.00)]
-    private ?float $discount_amount = 0.00;
-
-    #[Column(type: 'decimal(20,2)', nullable: false, default: 0.00)]
-    private ?float $discount_percent = 0.00;
-
-    #[Column(type: 'longText', nullable: false)]
-    private string $terms = '';
-
-    #[Column(type: 'longText', nullable: true)]
-    private ?string $note = '';
-
-    #[Column(type: 'string(32)', nullable: true)]
-    private ?string $document_description = '';
-
-    #[Column(type: 'string(32)', nullable: false)]
-    private string $url_key = '';
-
-    #[Column(type: 'integer(11)', nullable: false, default: 1)]
-    private ?int $payment_method = null;
-
-    #[Column(type: 'integer(11)', nullable: true)]
-    private ?int $creditinvoice_parent_id = null;
-
     public function __construct(
-        int $client_id = null,
-        int $user_id = null,
-        int $group_id = null,
-        int $so_id = null,
-        int $quote_id = null,
-        int $status_id = 1,
-        bool $is_read_only = false,
-        string $password = '',
-        string $number = '',
-        float $discount_amount = 0.00,
-        float $discount_percent = 0.00,
-        string $terms = '',
+        #[Column(type: 'integer(11)', nullable: false)]
+        private ?int $client_id = null,
+        #[Column(type: 'integer(11)', nullable: false)]
+        private ?int $user_id = null,
+        #[Column(type: 'integer(11)', nullable: false)]
+        private ?int $group_id = null,
+        #[Column(type: 'integer(11)', nullable: true)]
+        private ?int $so_id = null,
+        #[Column(type: 'integer(11)', nullable: true)]
+        private ?int $quote_id = null,
+        #[Column(type: 'tinyInteger', nullable: false, default: 1)]
+        private ?int $status_id = 1,
+        #[Column(type: 'boolean', nullable: false)]
+        private bool $is_read_only = false,
+        #[Column(type: 'string(90)', nullable: true)]
+        private ?string $password = '',
+        #[Column(type: 'string(100)', nullable: true)]
+        private ?string $number = '',
+        #[Column(type: 'decimal(20,2)', nullable: false, default: 0.00)]
+        private ?float $discount_amount = 0.00,
+        #[Column(type: 'decimal(20,2)', nullable: false, default: 0.00)]
+        private ?float $discount_percent = 0.00,
+        #[Column(type: 'longText', nullable: false)]
+        private string $terms = '',
         // src/Invoice/Ubl/Invoice - A UBL invoice must have a note
-        string $note = '',
+        #[Column(type: 'longText', nullable: true)]
+        private ?string $note = '',
         // src/Invoice/Ubl/Invoice - A UBL invoice must have a document description
-        string $document_description = '',
-        string $url_key = '',
-        int $payment_method = null,
-        int $creditinvoice_parent_id = null,
-        int $delivery_id = null,
-        int $delivery_location_id = null,
-        int $postal_address_id = null,
-        int $contract_id = null,
+        #[Column(type: 'string(32)', nullable: true)]
+        private ?string $document_description = '',
+        #[Column(type: 'string(32)', nullable: false)]
+        private string $url_key = '',
+        #[Column(type: 'integer(11)', nullable: false, default: 1)]
+        private ?int $payment_method = null,
+        #[Column(type: 'integer(11)', nullable: true)]
+        private ?int $creditinvoice_parent_id = null,
+        #[Column(type: 'integer(11)', nullable: true)]
+        private ?int $delivery_id = null,
+        #[Column(type: 'integer(11)', nullable: true, default: 0)]
+        private ?int $delivery_location_id = null,
+        #[Column(type: 'integer(11)', nullable: true, default: 0)]
+        private ?int $postal_address_id = null,
+        #[Column(type: 'integer(11)', nullable: true, default: 0)]
+        private ?int $contract_id = null,
         //https://docs.peppol.eu/poacc/billing/3.0/syntax/ubl-invoice/cac-InvoicePeriod/cbc-DescriptionCode/
-        string $stand_in_code = ''
+        #[Column(type: 'string(3)', nullable: false)]
+        private string $stand_in_code = ''
     ) {
         $this->items = new ArrayCollection();
         // create also the invoice amount when the invoice is created.
         $this->invAmount = new InvAmount();
-        $this->client_id = $client_id;
-        $this->group_id = $group_id;
-        $this->so_id = $so_id;
-        $this->quote_id = $quote_id;
-        $this->user_id = $user_id;
-        $this->status_id = $status_id;
-        $this->is_read_only = $is_read_only;
-        $this->password = $password;
         $this->date_created = new \DateTimeImmutable();
         $this->date_modified = new \DateTimeImmutable('now');
         $this->date_due = new \DateTimeImmutable('2024/01/01');
         $this->date_supplied = new \DateTimeImmutable('2024/01/01');
         $this->date_tax_point = new \DateTimeImmutable('2024/01/01');
         $this->time_created = new \DateTimeImmutable('now');
-        $this->stand_in_code = $stand_in_code;
-        $this->number = $number;
-        $this->discount_amount = $discount_amount;
-        $this->discount_percent = $discount_percent;
-        $this->terms = $terms;
-        $this->note = $note;
-        $this->document_description = $document_description;
-        $this->url_key = $url_key;
-        $this->payment_method = $payment_method;
-        $this->creditinvoice_parent_id = $creditinvoice_parent_id;
-        $this->delivery_id = $delivery_id;
-        $this->delivery_location_id = $delivery_location_id;
-        $this->postal_address_id = $postal_address_id;
-        $this->contract_id = $contract_id;
         $this->invsentlogs = new ArrayCollection();
         $this->invrecurring = new ArrayCollection();
     }
@@ -438,7 +367,7 @@ class Inv
             $days = $sR->getSetting('invoices_due_after');
         }
 
-        $this->date_due = $this->date_created->add(new \DateInterval('P' . $days . 'D'));
+        $this->date_due = $this->date_created->add(new \DateInterval('P' . (string)$days . 'D'));
     }
 
     public function getDate_due(): DateTimeImmutable

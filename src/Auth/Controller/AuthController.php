@@ -220,7 +220,7 @@ final class AuthController
         if (null !== $userId) {
             $token = $tR->findTokenByIdentityIdAndType($userId, $this->getTokenType($identityProvider));
             if (null !== $token) {
-                $token->setToken('already_used_token_' . time());
+                $token->setToken('already_used_token_' . (string)time());
                 $tR->save($token);
             }
         }
@@ -289,10 +289,7 @@ final class AuthController
          */
         $xId = $data['id'] ?? 0;
         if ($xId > 0) {
-            /**
-             * @var string $data['username']
-             */
-            $xLogin = $data['username'];
+            $xLogin = (string)$data['username'];
             if (strlen($xLogin) > 0) {
                 $login = 'twitter' . (string)$xId . $xLogin;
                 /**

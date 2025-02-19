@@ -9,17 +9,8 @@ use Sabre\Xml\XmlSerializable;
 
 class PartyLegalEntity implements XmlSerializable
 {
-    private string $registrationName;
-    private array $companyIdAttributes;
-    private string $companyLegalForm;
-    private string $companyId;
-
-    public function __construct(string $registrationName, string $companyId, array $companyIdAttributes, string $companyLegalForm)
+    public function __construct(private string $registrationName, private string $companyId, private array $companyIdAttributes, private readonly string $companyLegalForm)
     {
-        $this->registrationName = $registrationName;
-        $this->companyId = $companyId;
-        $this->companyIdAttributes = $companyIdAttributes;
-        $this->companyLegalForm = $companyLegalForm;
     }
 
     /**

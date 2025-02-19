@@ -14,31 +14,15 @@ class GentorRelation
     #[Column(type: 'primary')]
     private ?int $id = null;
 
-    #[Column(type: 'text', nullable: true)]
-    private ?string $lowercasename = null;
-
-    #[Column(type: 'text', nullable: true)]
-    private ?string $camelcasename = null;
-
-    #[Column(type: 'text', nullable: true)]
-    private ?string $view_field_name = null;
-
     #[BelongsTo(target: Gentor::class, nullable: false, fkAction:'NO ACTION')]
     private ?Gentor $gentor = null;
 
-    #[Column(type: 'integer(11)', nullable: true, default: null)]
-    private ?int $gentor_id = null;
-
-    public function __construct(
-        string $lowercasename = '',
-        string $camelcasename = '',
-        string $view_field_name = '',
-        int $gentor_id = null
-    ) {
-        $this->lowercasename = $lowercasename;
-        $this->camelcasename = $camelcasename;
-        $this->view_field_name = $view_field_name;
-        $this->gentor_id = $gentor_id;
+    public function __construct(#[Column(type: 'text', nullable: true)]
+    private ?string $lowercasename = '', #[Column(type: 'text', nullable: true)]
+    private ?string $camelcasename = '', #[Column(type: 'text', nullable: true)]
+    private ?string $view_field_name = '', #[Column(type: 'integer(11)', nullable: true, default: null)]
+    private ?int $gentor_id = null)
+    {
     }
 
     public function getRelation_id(): string

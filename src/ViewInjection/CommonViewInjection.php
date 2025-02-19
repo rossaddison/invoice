@@ -13,24 +13,10 @@ use App\Invoice\Company\CompanyRepository;
 use App\Invoice\CompanyPrivate\CompanyPrivateRepository;
 use App\Invoice\Setting\SettingRepository;
 
-final class CommonViewInjection implements CommonParametersInjectionInterface
+final readonly class CommonViewInjection implements CommonParametersInjectionInterface
 {
-    private CompanyRepository $companyRepository;
-    private CompanyPrivateRepository $companyPrivateRepository;
-    private SettingRepository $settingRepository;
-    private Translator $translator;
-
-    public function __construct(
-        private UrlGeneratorInterface $url,
-        CompanyRepository $companyRepository,
-        CompanyPrivateRepository $companyPrivateRepository,
-        SettingRepository $settingRepository,
-        Translator $translator
-    ) {
-        $this->companyRepository = $companyRepository;
-        $this->companyPrivateRepository = $companyPrivateRepository;
-        $this->settingRepository = $settingRepository;
-        $this->translator = $translator;
+    public function __construct(private UrlGeneratorInterface $url, private CompanyRepository $companyRepository, private CompanyPrivateRepository $companyPrivateRepository, private SettingRepository $settingRepository, private Translator $translator)
+    {
     }
 
     /**

@@ -11,46 +11,13 @@ use Sabre\Xml\XmlSerializable;
 
 class InvoiceLine implements XmlSerializable
 {
-    private string $id;
-    protected float $invoicedQuantity;
-    private float $lineExtensionAmount;
     private string $unitCode = UnitCode::UNIT;
-    private ?string $unitCodeListId;
-    private ?TaxTotal $taxTotal;
-    private ?InvoicePeriod $invoicePeriod;
-    private ?string $note;
-    private ?Item $item;
-    private ?Price $price;
-    private ?string $accountingCostCode;
-    private ?string $accountingCost;
 
     // See CreditNoteLine.php
     protected bool $isCreditNoteLine = false;
 
-    public function __construct(
-        string $id,
-        float $invoicedQuantity,
-        float $lineExtensionAmount,
-        ?string $unitCodeListId,
-        ?TaxTotal $taxTotal,
-        ?InvoicePeriod $invoicePeriod,
-        ?string $note,
-        ?Item $item,
-        ?Price $price,
-        ?string $accountingCostCode,
-        ?string $accountingCost
-    ) {
-        $this->id = $id;
-        $this->invoicedQuantity = $invoicedQuantity;
-        $this->lineExtensionAmount = $lineExtensionAmount;
-        $this->unitCodeListId = $unitCodeListId;
-        $this->taxTotal = $taxTotal;
-        $this->invoicePeriod = $invoicePeriod;
-        $this->note = $note;
-        $this->item = $item;
-        $this->price = $price;
-        $this->accountingCostCode = $accountingCostCode;
-        $this->accountingCost = $accountingCost;
+    public function __construct(private string $id, protected float $invoicedQuantity, private float $lineExtensionAmount, private ?string $unitCodeListId, private ?TaxTotal $taxTotal, private ?InvoicePeriod $invoicePeriod, private ?string $note, private ?Item $item, private ?Price $price, private ?string $accountingCostCode, private ?string $accountingCost)
+    {
     }
 
     /**

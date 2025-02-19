@@ -14,7 +14,7 @@ use Yiisoft\Yii\Bootstrap5\CarouselItem;
 <?php
     $w = 649;
     $h = 383;
-    $divHeight = 500;    
+    $divHeight = (string)500;    
 ?>
 <?= Carousel::widget()
     ->items(

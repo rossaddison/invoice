@@ -83,7 +83,6 @@ class Sumex
         'F',
         'I',
     ];
-    public Inv $invoice;
     public string $_lang = 'it';
     public string $_mode = 'production';
     public string $_copy = '0';
@@ -143,27 +142,20 @@ class Sumex
 
     public sR $s;
     public ArrayCollection $items;
-    public InvAmount $invoice_amount;
     public InvoiceHelper $invoice_helper;
-    public UserInv $user_details;
-    public EntitySumex $sumex_treatment;
     public DateHelper $date_helper;
 
     public function __construct(
-        Inv $inv,
-        InvAmount $inv_amount,
-        UserInv $user_details,
-        EntitySumex $sumex_treatment,
+        public Inv $invoice,
+        public InvAmount $invoice_amount,
+        public UserInv $user_details,
+        public EntitySumex $sumex_treatment,
         sR $s,
         Session $session,
     ) {
         $this->invoice_helper = new InvoiceHelper($s, $session);
         $this->date_helper = new DateHelper($s);
-        $this->invoice = $inv;
-        $this->invoice_amount = $inv_amount;
-        $this->user_details = $user_details;
-        $this->sumex_treatment = $sumex_treatment;
-        $this->items = $inv->getItems();
+        $this->items = $this->invoice->getItems();
 
         $this->s = $s;
         /** @var string $this->_options['storno'] */
@@ -414,7 +406,7 @@ class Sumex
         if ($strToTime != false) {
             $referenceNumber .= sprintf('%09d', date('Ymd', $strToTime));
             $refCsum = $this->invoice_helper->invoice_recMod10($referenceNumber);
-            $referenceNumber = $referenceNumber . $refCsum;
+            $referenceNumber = $referenceNumber . (string)$refCsum;
 
             if (!preg_match("/\d{27}/", $referenceNumber)) {
                 throw new Error('Invalid reference number!');
@@ -527,7 +519,7 @@ class Sumex
 
         $vatRate = $doc->createElement('invoice:vat_rate');
         /** @var InvAmount $this->inv_amount */
-        $vatRate->setAttribute('vat_rate', (string)(($this->invoice_amount->getTax_total() ?? 0.00) / (($this->inv_amount->getTotal() ?? 0.00) * 100)));
+        $vatRate->setAttribute('vat_rate', (string)(($this->invoice_amount->getTax_total() ?? 0.00) / (($this->inv_amount->getTotal() ?? 0.00) * 100.00)));
         //        $vatRate->setAttribute('amount', (string)(null!==$this->invoice_amount->getTax_total() ?: 0.00));
         $vatRate->setAttribute('vat', (string)($this->invoice_amount->getTax_total() ?? 0.00));
 

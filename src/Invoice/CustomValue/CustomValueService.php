@@ -6,13 +6,10 @@ namespace App\Invoice\CustomValue;
 
 use App\Invoice\Entity\CustomValue;
 
-final class CustomValueService
+final readonly class CustomValueService
 {
-    private CustomValueRepository $repository;
-
-    public function __construct(CustomValueRepository $repository)
+    public function __construct(private CustomValueRepository $repository)
     {
-        $this->repository = $repository;
     }
 
     /**

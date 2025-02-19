@@ -10,7 +10,7 @@ use Psr\Http\Server\RequestHandlerInterface;
 use Yiisoft\Http\Status;
 use Yiisoft\Yii\View\Renderer\ViewRenderer;
 
-final class NotFoundHandler implements RequestHandlerInterface
+final readonly class NotFoundHandler implements RequestHandlerInterface
 {
     private ViewRenderer $viewRenderer;
 

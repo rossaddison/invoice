@@ -20,15 +20,12 @@ use Yiisoft\Data\Cycle\Writer\EntityWriter;
  */
 final class InvAmountRepository extends Select\Repository
 {
-    private EntityWriter $entityWriter;
-
     /**
      * @param Select<TEntity> $select
      * @param EntityWriter $entityWriter
      */
-    public function __construct(Select $select, EntityWriter $entityWriter)
+    public function __construct(Select $select, private readonly EntityWriter $entityWriter)
     {
-        $this->entityWriter = $entityWriter;
         parent::__construct($select);
     }
 
@@ -125,9 +122,9 @@ final class InvAmountRepository extends Select\Repository
      */
     public function AgingCount(int $interval_end, int $interval_start): int
     {
-        $end = (new \DateTimeImmutable('now'))->sub(new \DateInterval('P' . $interval_end . 'D'))
+        $end = (new \DateTimeImmutable('now'))->sub(new \DateInterval('P' . (string)$interval_end . 'D'))
                                               ->format('Y-m-d');
-        $start = (new \DateTimeImmutable('now'))->sub(new \DateInterval('P' . $interval_start . 'D'))
+        $start = (new \DateTimeImmutable('now'))->sub(new \DateInterval('P' . (string)$interval_start . 'D'))
                                                 ->format('Y-m-d');
         return $this->select()
                       ->load('inv')
@@ -144,10 +141,10 @@ final class InvAmountRepository extends Select\Repository
      */
     public function Aging(int $interval_end, int $interval_start): EntityReader
     {
-        $end = (new \DateTimeImmutable('now'))->sub(new \DateInterval('P' . $interval_end . 'D'))
+        $end = (new \DateTimeImmutable('now'))->sub(new \DateInterval('P' . (string)$interval_end . 'D'))
                                               ->format('Y-m-d');
 
-        $start = (new \DateTimeImmutable('now'))->sub(new \DateInterval('P' . $interval_start . 'D'))
+        $start = (new \DateTimeImmutable('now'))->sub(new \DateInterval('P' . (string)$interval_start . 'D'))
                                                 ->format('Y-m-d');
         $query = $this->select()
                       ->load('inv')

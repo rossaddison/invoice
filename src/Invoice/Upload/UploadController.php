@@ -32,35 +32,21 @@ final class UploadController
     use FlashMessage;
 
     private Flash $flash;
-    private SessionInterface $session;
-    private SettingRepository $s;
-    private DataResponseFactoryInterface $factory;
     private ViewRenderer $viewRenderer;
-    private WebControllerService $webService;
-    private UserService $userService;
-    private UploadService $uploadService;
-    private TranslatorInterface $translator;
 
     public function __construct(
-        SettingRepository $s,
-        SessionInterface $session,
-        DataResponseFactoryInterface $factory,
+        private SettingRepository $s,
+        private SessionInterface $session,
+        private DataResponseFactoryInterface $factory,
         ViewRenderer $viewRenderer,
-        WebControllerService $webService,
-        UserService $userService,
-        UploadService $uploadService,
-        TranslatorInterface $translator,
+        private WebControllerService $webService,
+        private UserService $userService,
+        private UploadService $uploadService,
+        private TranslatorInterface $translator,
     ) {
-        $this->s = $s;
-        $this->session = $session;
-        $this->flash = new Flash($session);
-        $this->factory = $factory;
+        $this->flash = new Flash($this->session);
         $this->viewRenderer = $viewRenderer->withControllerName('invoice/upload')
              ->withLayout('@views/layout/invoice.php');
-        $this->webService = $webService;
-        $this->userService = $userService;
-        $this->uploadService = $uploadService;
-        $this->translator = $translator;
     }
 
     /** Note: An Upload can only be viewed with editInv permission

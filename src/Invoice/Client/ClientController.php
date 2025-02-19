@@ -79,41 +79,24 @@ final class ClientController
     use FlashMessage;
 
     private ViewRenderer $viewRenderer;
-    private WebControllerService $webService;
-    private ClientService $clientService;
-    private ClientCustomService $clientCustomService;
-    private UserService $userService;
-    private UserClientService $userclientService;
-    private CurrentUser $currentUser;
-    private DataResponseFactoryInterface $factory;
     private Flash $flash;
-    private SessionInterface $session;
-    private TranslatorInterface $translator;
 
     public function __construct(
         ViewRenderer $viewRenderer,
-        WebControllerService $webService,
-        ClientService $clientService,
-        ClientCustomService $clientCustomService,
-        UserService $userService,
-        UserClientService $userclientService,
-        CurrentUser $currentUser,
-        DataResponseFactoryInterface $factory,
-        SessionInterface $session,
-        TranslatorInterface $translator
+        private WebControllerService $webService,
+        private ClientService $clientService,
+        private ClientCustomService $clientCustomService,
+        private UserService $userService,
+        private UserClientService $userclientService,
+        private CurrentUser $currentUser,
+        private DataResponseFactoryInterface $factory,
+        private SessionInterface $session,
+        private TranslatorInterface $translator
     ) {
         $this->viewRenderer = $viewRenderer->withControllerName('invoice/client')
                                            ->withLayout('@views/layout/invoice.php');
-        $this->webService = $webService;
-        $this->clientService = $clientService;
-        $this->clientCustomService = $clientCustomService;
-        $this->userclientService = $userclientService;
-        $this->currentUser = $currentUser;
-        $this->factory = $factory;
-        $this->session = $session;
-        $this->flash = new Flash($session);
+        $this->flash = new Flash($this->session);
         $this->viewRenderer = $viewRenderer;
-        $this->userService = $userService;
         if ($this->userService->hasPermission('viewInv') && !$this->userService->hasPermission('editInv')) {
             $this->viewRenderer = $viewRenderer->withControllerName('invoice/client')
                                                ->withLayout('@views/layout/guest.php');
@@ -122,7 +105,6 @@ final class ClientController
             $this->viewRenderer = $viewRenderer->withControllerName('invoice/client')
                                                ->withLayout('@views/layout/invoice.php');
         }
-        $this->translator = $translator;
     }
 
     /**
@@ -193,7 +175,7 @@ final class ClientController
              * @var string $val
              */
             foreach ($client_custom_fields as $key => $val) {
-                $custom_field_form_values['custom[' . $key . ']'] = $val;
+                $custom_field_form_values['custom[' . (string)$key . ']'] = $val;
             }
         }
         return $custom_field_form_values;
@@ -310,7 +292,7 @@ final class ClientController
         CurrentRoute $currentRoute
     ): Response {
         $origin = $currentRoute->getArgument('origin');
-        $client = null !== $this->client($currentRoute, $cR) ? $this->client($currentRoute, $cR) : null;
+        $client = $this->client($currentRoute, $cR) ?? null;
         if (null !== $client) {
             $form = new ClientForm($client);
             $clientCustom = new ClientCustom();
@@ -335,8 +317,8 @@ final class ClientController
                     'optionsDataClientFrequencyDropdownFilter' => $this->optionsDataClientFrequencyDropDownFilter(),
                     'optionsDataPostalAddresses' => $this->optionsDataPostalAddress($postaladdresses),
                     'aliases' => new Aliases(['@invoice' => dirname(__DIR__), '@language' => dirname(__DIR__) . DIRECTORY_SEPARATOR . 'Language']),
-                    'selectedCountry' => null !== $selected_country ? $selected_country : $sR->getSetting('default_country'),
-                    'selectedLanguage' => null !== $selected_language ? $selected_language : $sR->getSetting('default_language'),
+                    'selectedCountry' => $selected_country ?? $sR->getSetting('default_country'),
+                    'selectedLanguage' => $selected_language ?? $sR->getSetting('default_language'),
                     'datepicker_dropdown_locale_cldr' => $currentRoute->getArgument('_language', 'en'),
                     'postal_address_count' => $paR->repoClientCount((string)$client_id),
                     /**

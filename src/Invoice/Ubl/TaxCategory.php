@@ -17,14 +17,12 @@ class TaxCategory implements XmlSerializable
     ];
     private string $name = '';
     private float $percent = 0.00;
-    private TaxScheme $taxScheme;
     private string $taxExemptionReason = '';
     private string $taxExemptionReasonCode = '';
     public const string UNCL5305 = 'UNCL5305';
 
-    public function __construct(array $array, TaxScheme $taxScheme)
+    public function __construct(array $array, private readonly TaxScheme $taxScheme)
     {
-        $this->taxScheme = $taxScheme;
         /**
          * @var string $array['TaxCategory']
          */

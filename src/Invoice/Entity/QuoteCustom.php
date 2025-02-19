@@ -17,28 +17,12 @@ class QuoteCustom
     #[BelongsTo(target:Quote::class, nullable: false)]
     private ?Quote $quote = null;
 
-    #[Column(type: 'primary')]
-    private ?int $id = null;
-
-    #[Column(type: 'integer(11)', nullable: false)]
-    private ?int $quote_id = null;
-
-    #[Column(type: 'integer(11)', nullable: false)]
-    private ?int $custom_field_id = null;
-
-    #[Column(type: 'text', nullable: true)]
-    private string $value = '';
-
-    public function __construct(
-        int $id = null,
-        int $quote_id = null,
-        int $custom_field_id = null,
-        string $value = ''
-    ) {
-        $this->id = $id;
-        $this->quote_id = $quote_id;
-        $this->custom_field_id = $custom_field_id;
-        $this->value = $value;
+    public function __construct(#[Column(type: 'primary')]
+    private ?int $id = null, #[Column(type: 'integer(11)', nullable: false)]
+    private ?int $quote_id = null, #[Column(type: 'integer(11)', nullable: false)]
+    private ?int $custom_field_id = null, #[Column(type: 'text', nullable: true)]
+    private string $value = '')
+    {
     }
 
     public function getCustomField(): ?CustomField

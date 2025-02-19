@@ -8,15 +8,10 @@ use App\Invoice\Entity\ProductImage;
 use App\Invoice\Setting\SettingRepository;
 use Yiisoft\Files\FileHelper;
 
-final class ProductImageService
+final readonly class ProductImageService
 {
-    private ProductImageRepository $repository;
-    private SettingRepository $s;
-
-    public function __construct(ProductImageRepository $repository, SettingRepository $s)
+    public function __construct(private ProductImageRepository $repository, private SettingRepository $s)
     {
-        $this->repository = $repository;
-        $this->s = $s;
     }
 
     /**
@@ -54,7 +49,7 @@ final class ProductImageService
         $realTargetPath = realpath($targetPath);
         $realFilePath = realpath($file_path);
         if (($realTargetPath != false) && ($realFilePath != false)) {
-            strpos($realTargetPath, $realFilePath) == 0 ? FileHelper::unlink($file_path) : '';
+            str_starts_with($realTargetPath, $realFilePath) ? FileHelper::unlink($file_path) : '';
             $this->repository->delete($model);
         }
     }

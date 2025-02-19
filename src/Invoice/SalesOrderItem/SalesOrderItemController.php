@@ -30,43 +30,26 @@ use Yiisoft\Yii\View\Renderer\ViewRenderer;
 
 final class SalesOrderItemController
 {
-    private SessionInterface $session;
-    private ViewRenderer $viewRenderer;
-    private WebControllerService $webService;
-    private UserService $userService;
-    private SalesOrderItemService $salesorderitemService;
-    private DataResponseFactoryInterface $factory;
-    private Flash $flash;
-    private TranslatorInterface $translator;
-
     public function __construct(
-        SessionInterface $session,
-        ViewRenderer $viewRenderer,
-        WebControllerService $webService,
-        UserService $userService,
-        SalesOrderItemService $salesorderitemService,
-        DataResponseFactoryInterface $factory,
-        Flash $flash,
-        TranslatorInterface $translator
+        private readonly SessionInterface $session,
+        private ViewRenderer $viewRenderer,
+        private readonly WebControllerService $webService,
+        private readonly UserService $userService,
+        private readonly SalesOrderItemService $salesorderitemService,
+        private readonly DataResponseFactoryInterface $factory,
+        private readonly Flash $flash,
+        private readonly TranslatorInterface $translator
     ) {
-        $this->session = $session;
-        $this->viewRenderer = $viewRenderer;
-        $this->webService = $webService;
-        $this->userService = $userService;
         if ($this->userService->hasPermission('viewInv') && !$this->userService->hasPermission('editInv')) {
-            $this->viewRenderer = $viewRenderer->withControllerName('invoice/salesorderitem')
+            $this->viewRenderer = $this->viewRenderer->withControllerName('invoice/salesorderitem')
                                                      ->withLayout('@views/invoice/layout/fullpage-loader.php')
                                                      ->withLayout('@views/layout/guest.php');
         }
         if ($this->userService->hasPermission('viewInv') && $this->userService->hasPermission('editInv')) {
-            $this->viewRenderer = $viewRenderer->withControllerName('invoice/salesorderitem')
+            $this->viewRenderer = $this->viewRenderer->withControllerName('invoice/salesorderitem')
                                                  ->withLayout('@views/invoice/layout/fullpage-loader.php')
                                                  ->withLayout('@views/layout/invoice.php');
         }
-        $this->salesorderitemService = $salesorderitemService;
-        $this->factory = $factory;
-        $this->flash = $flash;
-        $this->translator = $translator;
     }
 
     public function edit(
@@ -167,13 +150,13 @@ final class SalesOrderItemController
             $tax_total = 0.00;
             // NO VAT
             if ($sR->getSetting('enable_vat_registration') === '0') {
-                $tax_total = ($sub_total * ($tax_rate_percentage / 100));
+                $tax_total = ($sub_total * ($tax_rate_percentage / 100.00));
             }
             // VAT
             if ($sR->getSetting('enable_vat_registration') === '1') {
                 // EARLY SETTLEMENT CASH DISCOUNT MUST BE REMOVED BEFORE VAT DETERMINED
                 // @see https://informi.co.uk/finance/how-vat-affected-discounts
-                $tax_total = (($sub_total - $discount_total) * ($tax_rate_percentage / 100));
+                $tax_total = (($sub_total - $discount_total) * ($tax_rate_percentage / 100.00));
             }
             $soias_array['discount'] = $discount_total;
             $soias_array['subtotal'] = $sub_total;

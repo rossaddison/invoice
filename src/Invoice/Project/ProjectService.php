@@ -6,13 +6,10 @@ namespace App\Invoice\Project;
 
 use App\Invoice\Entity\Project;
 
-final class ProjectService
+final readonly class ProjectService
 {
-    private ProjectRepository $repository;
-
-    public function __construct(ProjectRepository $repository)
+    public function __construct(private ProjectRepository $repository)
     {
-        $this->repository = $repository;
     }
 
     /**

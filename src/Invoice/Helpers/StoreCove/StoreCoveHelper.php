@@ -80,44 +80,22 @@ use DateTimeImmutable;
 
 class StoreCoveHelper
 {
-    private SRepo $s;
-    private DelRepo $delRepo;
-    private IIAR $iiaR;
-    private InvAmount $inv_amount;
-    private DL $delivery_location;
-    private Translator $t;
-    private DateHelper $datehelper;
-    private string $from_currency;
-    private string $to_currency;
-    private string $from_to_manual_input;
-    private string $to_from_manual_input;
-    private Crypt $crypt;
+    private readonly DateHelper $datehelper;
 
     public function __construct(
-        SRepo $s,
-        DelRepo $delRepo,
-        IIAR $iiaR,
-        InvAmount $inv_amount,
-        DL $delivery_location,
-        Translator $translator,
-        string $from_currency,
-        string $to_currency,
-        string $from_to_manual_input,
-        string $to_from_manual_input,
-        Crypt $crypt
+        private readonly SRepo $s,
+        private readonly DelRepo $delRepo,
+        private readonly IIAR $iiaR,
+        private readonly InvAmount $inv_amount,
+        private readonly DL $delivery_location,
+        private readonly Translator $t,
+        private readonly string $from_currency,
+        private readonly string $to_currency,
+        private readonly string $from_to_manual_input,
+        private readonly string $to_from_manual_input,
+        private readonly Crypt $crypt
     ) {
-        $this->s = $s;
-        $this->delRepo = $delRepo;
-        $this->iiaR = $iiaR;
-        $this->inv_amount = $inv_amount;
-        $this->delivery_location = $delivery_location;
-        $this->t = $translator;
         $this->datehelper = new DateHelper($this->s);
-        $this->from_currency = $from_currency;
-        $this->to_currency = $to_currency;
-        $this->from_to_manual_input = $from_to_manual_input;
-        $this->to_from_manual_input = $to_from_manual_input;
-        $this->crypt = $crypt;
     }
 
     /**
@@ -317,7 +295,7 @@ class StoreCoveHelper
             if ($sales_order_id) {
                 $sales_order = $soR->repoSalesOrderUnLoadedquery($sales_order_id);
                 if ($sales_order) {
-                    $sales_order_number = (null !== $sales_order->getNumber() ? $sales_order->getNumber() : $this->t->translate('invoice.storecove.salesorder.number.not.exist')) ;
+                    $sales_order_number = ($sales_order->getNumber() ?? $this->t->translate('invoice.storecove.salesorder.number.not.exist')) ;
                     $inv_items = $invoice->getItems();
                     $contract_id = $invoice->getContract_id();
                     $contract = $contractRepo->repoContractquery($contract_id);
@@ -336,7 +314,7 @@ class StoreCoveHelper
                             $references[$incrementor] = [
                                 'documentType' => 'purchase_order',
                                 'documentId' => 'So_item_id/Po_item_id - ' . $so_item_id . '/' . $po_itemid,
-                                'lineId' => 'Seller Inv Line - ' . $line_number,
+                                'lineId' => 'Seller Inv Line - ' . (string)$line_number,
                                 'issueDate' => $invoice->getDate_created(),
                             ];
                             $incrementor += 1;
@@ -589,8 +567,8 @@ class StoreCoveHelper
                  * @var InvItem $item
                  */
                 foreach ($invoice->getItems() as $item) {
-                    $price = (null !== $item->getPrice() ? $item->getPrice() : 0.00);
-                    $discount = (null !== $item->getDiscount_amount() ? $item->getDiscount_amount() : 0.00);
+                    $price = ($item->getPrice() ?? 0.00);
+                    $discount = ($item->getDiscount_amount() ?? 0.00);
                     $peppol_po_itemid = $this->Peppol_po_itemid($item, $soiR);
                     $peppol_po_lineid = $this->Peppol_po_lineid($item, $soiR);
                     $item_id = $item->getId();
@@ -598,70 +576,69 @@ class StoreCoveHelper
                         // if the additionalitemproperty field has been used, use the product property name value pairs to build an array
                         $product_properties_array = $this->build_product_property_array((string) $item_id, $ppR);
                         $inv_item_amount = $this->getInvItemAmount((string)$item_id, $iiaR);
-                        if (null !== $inv_item_amount) {
+                        if (isset($inv_item_amount)) {
                             $sub_total = $inv_item_amount->getSubtotal();
-                            if (null !== $sub_total && null !== $price && null !== $discount) {
-                                // using Array Format 2
-                                // ..\vendor\sabre\xml\lib\Writer.php
-                                // https://kinsta.com/blog/php-8-2/#deprecate--string-interpolation
-                                // Note: The following string interpolation confirms with php 8.2
-                                $invoiceLines[$item_id] = [
-                                    'lineId' => $item_id,
-                                    // storecove.com/docs 5.2.50. PaymentMeans Netherlands
-                                    'amountExcludingVat' => '',
-                                    'itemPrice' => $this->currency_converter($price),
-                                    // baseQuantity: number of sub-items included in the price of the item
-                                    'baseQuantity' => $item->getProduct()?->getProduct_price_base_quantity(),
-                                    'quantity' => $item->getQuantity(),
-                                    'quantityUnitCode' => $this->UnitCode((string)$item->getProduct()?->getUnit()?->getUnit_id(), $unpR),
-                                    'tax' => [
-                                        'percentage' => $item->getProduct()?->getTaxRate()?->getTaxRatePercent(),
-                                        'country' => $item->getProduct()?->getProduct_country_of_origin_code(),
-                                        'category' => $item->getProduct()?->getTaxRate()?->getStoreCoveTaxType(),
+                            
+                            // using Array Format 2
+                            // ..\vendor\sabre\xml\lib\Writer.php
+                            // https://kinsta.com/blog/php-8-2/#deprecate--string-interpolation
+                            // Note: The following string interpolation confirms with php 8.2
+                            $invoiceLines[$item_id] = [
+                                'lineId' => $item_id,
+                                // storecove.com/docs 5.2.50. PaymentMeans Netherlands
+                                'amountExcludingVat' => '',
+                                'itemPrice' => $this->currency_converter($price),
+                                // baseQuantity: number of sub-items included in the price of the item
+                                'baseQuantity' => $item->getProduct()?->getProduct_price_base_quantity(),
+                                'quantity' => $item->getQuantity(),
+                                'quantityUnitCode' => $this->UnitCode((string)$item->getProduct()?->getUnit()?->getUnit_id(), $unpR),
+                                'tax' => [
+                                    'percentage' => $item->getProduct()?->getTaxRate()?->getTaxRatePercent(),
+                                    'country' => $item->getProduct()?->getProduct_country_of_origin_code(),
+                                    'category' => $item->getProduct()?->getTaxRate()?->getStoreCoveTaxType(),
+                                ],
+                                //https://docs.peppol.eu/poacc/billing/3.0/syntax/ubl-invoice/cac-InvoiceLine/cac-OrderLineReference/cbc-LineID/
+                                'orderLineReferenceLineId' => $peppol_po_lineid ?? $this->t->translate('invoice.client.') ,
+                                'accountingCost' => $client_peppol->getAccountingCost(),
+                                'name' => $item->getName(),
+                                'description' => $item->getDescription(),
+                                'invoicePeriod' => $invoice_period->getStartDate() . ' - ' . $invoice_period->getEndDate(),
+                                'note' => $item->getNote(),
+                                'references' => [
+                                ],
+                                //https://www.storecove.com/docs buyersItemIdentification
+                                'buyersItemIdentification' => $peppol_po_itemid,
+                                'sellersItemIdentification' => $item->getProduct()?->getProduct_sku(),
+                                'standardItemIdentification' => $item->getProduct()?->getProduct_sii_id(),
+                                'standardItemIdentificationSchemeId' => $item->getProduct()?->getProduct_sii_schemeid(),
+                                'additionalItemProperties' => [
+                                    0 => [
+                                        'name' => $item->getProduct()?->getProduct_additional_item_property_name(),
+                                        'value' => $item->getProduct()?->getProduct_additional_item_property_value(),
                                     ],
-                                    //https://docs.peppol.eu/poacc/billing/3.0/syntax/ubl-invoice/cac-InvoiceLine/cac-OrderLineReference/cbc-LineID/
-                                    'orderLineReferenceLineId' => null !== $peppol_po_lineid ? $peppol_po_lineid : $this->t->translate('invoice.client.') ,
-                                    'accountingCost' => $client_peppol->getAccountingCost(),
-                                    'name' => $item->getName(),
-                                    'description' => $item->getDescription(),
-                                    'invoicePeriod' => $invoice_period->getStartDate() . ' - ' . $invoice_period->getEndDate(),
-                                    'note' => $item->getNote(),
-                                    'references' => [
-                                    ],
-                                    //https://www.storecove.com/docs buyersItemIdentification
-                                    'buyersItemIdentification' => $peppol_po_itemid,
-                                    'sellersItemIdentification' => $item->getProduct()?->getProduct_sku(),
-                                    'standardItemIdentification' => $item->getProduct()?->getProduct_sii_id(),
-                                    'standardItemIdentificationSchemeId' => $item->getProduct()?->getProduct_sii_schemeid(),
-                                    'additionalItemProperties' => [
-                                        0 => [
-                                            'name' => $item->getProduct()?->getProduct_additional_item_property_name(),
-                                            'value' => $item->getProduct()?->getProduct_additional_item_property_value(),
-                                        ],
-                                        $product_properties_array,
-                                    ],
-                                ];
-                                $inv_item_allowance_charges = $aciiR->repoInvItemquery((string) $item_id);
+                                    $product_properties_array,
+                                ],
+                            ];
+                            $inv_item_allowance_charges = $aciiR->repoInvItemquery((string) $item_id);
+                            /**
+                             * @var InvItemAllowanceCharge $acii
+                             */
+                            foreach ($inv_item_allowance_charges as $acii) {
                                 /**
-                                 * @var InvItemAllowanceCharge $acii
+                                 * @var array $invoiceLines[$item_id]
+                                 * @var array $item_line
                                  */
-                                foreach ($inv_item_allowance_charges as $acii) {
-                                    /**
-                                     * @var array $invoiceLines[$item_id]
-                                     * @var array $item_line
-                                     */
-                                    $item_line = $invoiceLines[$item_id];
-                                    /**
-                                     * @var array $item_line['allowanceCharges']
-                                     * @var array $item_line['allowanceCharges'][]
-                                     */
-                                    $item_line['allowanceCharges'][] = [
-                                        'reason' => $acii->getAllowanceCharge()?->getReason(),
-                                        'amountExcludingTax' => $acii->getAllowanceCharge()?->getBaseAmount(),
-                                    ];
-                                } // inv item allowance charge
-                            } // null!== $sub_total
-                        } // null!== $inv_item_amount
+                                $item_line = $invoiceLines[$item_id];
+                                /**
+                                 * @var array $item_line['allowanceCharges']
+                                 * @var array $item_line['allowanceCharges'][]
+                                 */
+                                $item_line['allowanceCharges'][] = [
+                                    'reason' => $acii->getAllowanceCharge()?->getReason(),
+                                    'amountExcludingTax' => $acii->getAllowanceCharge()?->getBaseAmount(),
+                                ];
+                            } 
+                        } // isset inv_item_amount
                     } // null!== $item
                 } // foreach
                 return $invoiceLines;
@@ -1121,8 +1098,8 @@ class StoreCoveHelper
                 throw new PeppolTaxCategoryPercentNotFoundException($this->t);
             }
             if (null !== $id) {
-                $taxable_amount_total = 0;
-                $tax_amount_total = 0;
+                $taxable_amount_total = 0.00;
+                $tax_amount_total = 0.00;
                 $items = $invoice->getItems();
                 /**
                  * @var InvItem $item
@@ -1222,7 +1199,7 @@ class StoreCoveHelper
                         // convert to cents in order to use the int
                         ->getMinorAmount()
                         ->toInt();
-        return number_format($float / 100, 2);
+        return number_format($float / 100.00, 2);
     }
 
     /**
@@ -1550,7 +1527,7 @@ class StoreCoveHelper
                         'invoicePeriod' => $this->invoice_period($invoice, $this->s),
                         'references' => $references,
                         'accountingCost' => $this->AccountingCost($invoice, $cpR),
-                        'note' => null !== $invoice->getNote() ? $invoice->getNote() : $this->t->translate('invoice.storecove.advisory.to.developer.easily.missed'),
+                        'note' => $invoice->getNote() ?? $this->t->translate('invoice.storecove.advisory.to.developer.easily.missed'),
                         'accountingSupplierParty' => [
                             'party' => [
                                 'contact' => [

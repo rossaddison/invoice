@@ -13,8 +13,6 @@ final class PostalAddressForm extends FormModel
 {
     private ?int    $id = null;
     #[Required]
-    private ?int    $client_id = null;
-    #[Required]
     private ?string $street_name = '';
     #[Required]
     private ?string $additional_street_name = '';
@@ -29,15 +27,11 @@ final class PostalAddressForm extends FormModel
     #[Required]
     private ?string $country = '';
 
-    private Translator $translator;
-
-    public function __construct(Translator $translator, PostalAddress $postalAddress, int $client_id)
+    public function __construct(private readonly Translator $translator, PostalAddress $postalAddress, #[Required]
+    private readonly ?int $client_id)
     {
-        $this->translator = $translator;
-
         // two hidden fields with ->hideLabel(true) in the view
         $this->id = (int)$postalAddress->getId();
-        $this->client_id = $client_id;
 
         // not hidden fields
         $this->street_name = $postalAddress->getStreet_name();
@@ -49,6 +43,7 @@ final class PostalAddressForm extends FormModel
         $this->country = $postalAddress->getCountry();
     }
 
+    #[\Override]
     public function getPropertyLabels(): array
     {
         return [
@@ -62,6 +57,7 @@ final class PostalAddressForm extends FormModel
         ];
     }
 
+    #[\Override]
     public function getPropertyHints(): array
     {
         $required = 'invoice.hint.this.field.is.required';
@@ -126,6 +122,7 @@ final class PostalAddressForm extends FormModel
      * @return string
      * @psalm-return ''
      */
+    #[\Override]
     public function getFormName(): string
     {
         return '';

@@ -53,6 +53,7 @@ final class SignupForm extends FormModel implements RulesProviderInterface, Prop
      *
      * @psalm-return 'Signup'
      */
+    #[\Override]
     public function getFormName(): string
     {
         return 'Signup';

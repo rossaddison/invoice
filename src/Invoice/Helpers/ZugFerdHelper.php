@@ -15,20 +15,13 @@ use Yiisoft\Security\Random;
 
 class ZugFerdHelper
 {
-    private SRepo $s;
-    private IIAR $iiaR;
-    private InvAmount $inv_amount;
-
     /**
      * @param SRepo $s
      * @param IIAR $iiaR
      * @param InvAmount $inv_amount
      */
-    public function __construct(SRepo $s, IIAR $iiaR, InvAmount $inv_amount)
+    public function __construct(private readonly SRepo $s, private readonly IIAR $iiaR, private readonly InvAmount $inv_amount)
     {
-        $this->s = $s;
-        $this->iiaR = $iiaR;
-        $this->inv_amount = $inv_amount;
     }
 
     /**

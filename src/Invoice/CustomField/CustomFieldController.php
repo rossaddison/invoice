@@ -31,29 +31,19 @@ final class CustomFieldController
     use FlashMessage;
 
     private ViewRenderer $viewRenderer;
-    private WebControllerService $webService;
-    private UserService $userService;
-    private CustomFieldService $customfieldService;
-    private TranslatorInterface $translator;
-    private SessionInterface $session;
     private Flash $flash;
 
     public function __construct(
         ViewRenderer $viewRenderer,
-        WebControllerService $webService,
-        UserService $userService,
-        CustomFieldService $customfieldService,
-        TranslatorInterface $translator,
-        SessionInterface $session
+        private WebControllerService $webService,
+        private UserService $userService,
+        private CustomFieldService $customfieldService,
+        private TranslatorInterface $translator,
+        private SessionInterface $session
     ) {
         $this->viewRenderer = $viewRenderer->withControllerName('invoice/customfield')
                                            ->withLayout('@views/layout/invoice.php');
-        $this->webService = $webService;
-        $this->userService = $userService;
-        $this->customfieldService = $customfieldService;
-        $this->translator = $translator;
-        $this->session = $session;
-        $this->flash = new Flash($session);
+        $this->flash = new Flash($this->session);
     }
 
     /**
@@ -86,7 +76,7 @@ final class CustomFieldController
             'defaultPageSizeOffsetPaginator' => $settingRepository->getSetting('default_list_limit')
                                                   ? (int)$settingRepository->getSetting('default_list_limit') : 1,
             'custom_tables' => $this->custom_tables(),
-            'custom_value_fields' => $this->custom_value_fields(),
+            'custom_value_fields' => self::custom_value_fields(),
             'alert' => $this->alert(),
         ];
         return $this->viewRenderer->render('index', $parameters);

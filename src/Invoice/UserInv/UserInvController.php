@@ -41,62 +41,39 @@ use Yiisoft\Yii\View\Renderer\ViewRenderer;
 final class UserInvController
 {
     use FlashMessage;
-
-    private Assignment $assignment;
-    private ItemStorage $itemstorage;
     private Manager $manager;
     private Rule $rule;
 
     private Flash $flash;
-    private DataResponseFactoryInterface $factory;
-    private ViewRenderer $viewRenderer;
-    private WebControllerService $webService;
-    private UrlGenerator $urlGenerator;
-    private UserService $userService;
-    private UserInvService $userinvService;
-    private TranslatorInterface $translator;
-    private Session $session;
 
     public function __construct(
-        Assignment $assignment,
+        private Assignment $assignment,
 
         // add, save, remove, clear, children, parents
-        ItemStorage $itemstorage,
+        private ItemStorage $itemstorage,
         Rule $rule,
-        DataResponseFactoryInterface $factory,
-        ViewRenderer $viewRenderer,
-        WebControllerService $webService,
-        UrlGenerator $urlGenerator,
-        UserService $userService,
-        UserInvService $userinvService,
-        TranslatorInterface $translator,
-        Session $session,
+        private DataResponseFactoryInterface $factory,
+        private ViewRenderer $viewRenderer,
+        private WebControllerService $webService,
+        private UrlGenerator $urlGenerator,
+        private UserService $userService,
+        private UserInvService $userinvService,
+        private TranslatorInterface $translator,
+        private Session $session,
     ) {
-        $this->assignment = $assignment;
-        $this->itemstorage = $itemstorage;
-
         // @see yiisoft/rbac-php
-        $this->manager = new Manager($itemstorage, $assignment, $rule);
+        $this->manager = new Manager($this->itemstorage, $this->assignment, $rule);
         $this->rule = $rule;
-
-        $this->factory = $factory;
-        $this->viewRenderer = $viewRenderer;
-        $this->webService = $webService;
-        $this->urlGenerator = $urlGenerator;
-        $this->userService = $userService;
-        $this->userinvService = $userinvService;
-        $this->viewRenderer = $viewRenderer;
+        $this->viewRenderer = $this->viewRenderer;
         if ($this->userService->hasPermission('editUserInv') && !$this->userService->hasPermission('editInv')) {
-            $this->viewRenderer = $viewRenderer->withControllerName('invoice/userinv')
+            $this->viewRenderer = $this->viewRenderer->withControllerName('invoice/userinv')
                                                  ->withLayout('@views/layout/guest.php');
         }
         if ($this->userService->hasPermission('viewInv') && $this->userService->hasPermission('editInv')) {
-            $this->viewRenderer = $viewRenderer->withControllerName('invoice/userinv')
+            $this->viewRenderer = $this->viewRenderer->withControllerName('invoice/userinv')
                                                  ->withLayout('@views/layout/invoice.php');
         }
-        $this->translator = $translator;
-        $this->session = $session;
-        $this->flash = new Flash($session);
+        $this->flash = new Flash($this->session);
     }
 
     /**
@@ -562,7 +539,7 @@ final class UserInvController
                                 /**
                                  * @see https://github.com/search?q=repo%3Ayiisoft%2Fyii2-app-advanced%20already_&type=code
                                  */
-                                $tokenEntity->setToken('already_used_token_' . time());
+                                $tokenEntity->setToken('already_used_token_' . (string)time());
                                 $tR->save($tokenEntity);
                                 // $email address field in signup form and a field in the user table
                                 $email = $identity->getUser()?->getEmail();

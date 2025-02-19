@@ -8,14 +8,12 @@ use Yiisoft\Yii\View\Renderer\ViewRenderer;
 
 final class Bootstrap5ModalTranslatorMessageWithoutAction
 {
-    private ViewRenderer $viewRenderer;
     private array $layoutParameters;
-    private array $formParameters;
+    private readonly array $formParameters;
 
     public function __construct(
-        ViewRenderer $viewRenderer,
+        private readonly ViewRenderer $viewRenderer,
     ) {
-        $this->viewRenderer = $viewRenderer;
         $this->layoutParameters = [];
         $this->formParameters = [];
     }

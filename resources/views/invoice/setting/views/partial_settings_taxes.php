@@ -36,14 +36,10 @@
                                     <option value="<?= $taxRate->getTaxRateId(); ?>"
                                         <?php $s->check_select($body['settings[default_invoice_tax_rate]'], $taxRate->getTaxRateId()); ?>>
                                         <?php 
-                                           $percent = $taxRate->getTaxRatePercent();
+                                           $percent = (string)$taxRate->getTaxRatePercent();
                                            $sign =  '% - ';
-                                           $name = $taxRate->getTaxRateName();
-                                           if ((null!==$percent) && (null!==$name)) {
-                                               echo $percent.$sign.$name;
-                                           } else {
-                                               echo '';
-                                           }
+                                           $name = $taxRate->getTaxRateName() ?? 'unknown';
+                                           echo $percent.$sign.$name;
                                         ?>
                                     </option>
                                 <?php } ?>
@@ -66,14 +62,10 @@
                                     <option value="<?= $taxRate->getTaxRateId(); ?>"
                                         <?php $s->check_select($body['settings[default_item_tax_rate]'], $taxRate->getTaxRateId()); ?>>
                                         <?php 
-                                           $percent = $taxRate->getTaxRatePercent();
+                                           $percent = (string)$taxRate->getTaxRatePercent();
                                            $sign =  '% - ';
-                                           $name = $taxRate->getTaxRateName();
-                                           if ((null!==$percent) && (null!==$name)) {
-                                               echo $percent.$sign.$name;
-                                           } else {
-                                               echo '';
-                                           }
+                                           $name = $taxRate->getTaxRateName() ?? 'unknown';
+                                           echo $percent.$sign.$name;
                                         ?>
                                     </option>
                                 <?php } ?>
@@ -109,7 +101,7 @@
                                 <option value=""><?= $translator->translate('i.none'); ?></option>                                
                                 <?php
                                     $years = []; 
-                                    for ($y = 1980, $now = date('Y') + 10; $y <= $now; ++$y) {
+                                    for ($y = 1980, $now = (int)date('Y') + 10; $y <= $now; ++$y) {
                                         $years[$y] = array('name' => $y, 'value' => $y);
                                     }
                                     /**

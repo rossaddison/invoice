@@ -17,147 +17,72 @@ use Yiisoft\Translator\TranslatorInterface as Translator;
 #[Behavior\UpdatedAt(field: 'date_modified', column: 'date_modified')]
 class UserInv
 {
-    #[Column(type:'primary')]
-    private ?int $id = null;
-
     #[BelongsTo(target:User::class, nullable: false)]
     private ?User $user = null;
 
-    #[Column(type: 'integer(11)', nullable:false)]
-    private ?int $user_id = null;
-
-    /**
-     * @see src/Invoice/UserInv/UserInvForm 0 => Admin, 1 => Not Admin
-     */
-    #[Column(type:'integer(11)', nullable:false, default:0)]
-    private ?int $type = null;
-
-    #[Column(type:'bool', typecast:'bool', default:false)]
-    private ?bool $active = false;
+    #[Column(type: 'datetime', nullable:false)]
+    private readonly DateTimeImmutable $date_created;
 
     #[Column(type: 'datetime', nullable:false)]
-    private DateTimeImmutable $date_created;
-
-    #[Column(type: 'datetime', nullable:false)]
-    private DateTimeImmutable $date_modified;
-
-    #[Column(type:'string(191)', nullable:true, default:'system')]
-    private ?string $language = '';
-
-    #[Column(type:'string(151)', nullable:true)]
-    private ?string $name = '';
-
-    #[Column(type:'string(50)', nullable:true)]
-    private ?string $company = '';
-
-    #[Column(type:'string(50)', nullable:true)]
-    private ?string $address_1 = '';
-
-    #[Column(type:'string(50)', nullable:true)]
-    private ?string $address_2 = '';
-
-    #[Column(type:'string(50)', nullable:true)]
-    private ?string $city = '';
-
-    #[Column(type:'string(50)', nullable:true)]
-    private ?string $state = '';
-
-    #[Column(type:'string(10)', nullable:true)]
-    private ?string $zip = '';
-
-    #[Column(type:'string(50)', nullable:true)]
-    private ?string $country = '';
-
-    #[Column(type:'string(20)', nullable:true)]
-    private ?string $phone = '';
-
-    #[Column(type:'string(20)', nullable:true)]
-    private ?string $fax = '';
-
-    #[Column(type:'string(20)', nullable:true)]
-    private ?string $mobile = '';
-
-    #[Column(type:'string(100)', nullable:true)]
-    private ?string $web = '';
-
-    #[Column(type:'string(20)', nullable:true)]
-    private ?string $vat_id = '';
-
-    #[Column(type:'string(15)', nullable:true)]
-    private ?string $tax_code = '';
-
-    #[Column(type:'bool', typecast:'bool', default:false)]
-    private ?bool $all_clients = false;
-
-    #[Column(type:'string(40)', nullable:true)]
-    private ?string $subscribernumber = '';
-
-    #[Column(type:'string(34))', nullable:true)]
-    private ?string $iban = '';
-
-    #[Column(type:'bigInteger(20)', nullable:true)]
-    private ?int $gln = null;
-
-    #[Column(type:'string(7)', nullable:true)]
-    private ?string $rcc = '';
-
-    #[Column(type: 'integer(3)', nullable:true, default: 10)]
-    private ?int $listLimit = null;
+    private readonly DateTimeImmutable $date_modified;
 
     public function __construct(
-        int $id = null,
-        int $user_id = null,
-        int $type = null,
-        bool $active = false,
-        string $language = '',
-        string $name = '',
-        string $company = '',
-        string $address_1 = '',
-        string $address_2 = '',
-        string $city = '',
-        string $state = '',
-        string $zip = '',
-        string $country = '',
-        string $phone = '',
-        string $fax = '',
-        string $mobile = '',
-        string $web = '',
-        string $vat_id = '',
-        string $tax_code = '',
-        bool $all_clients = false,
-        string $subscribernumber = '',
-        string $iban = '',
-        int $gln = null,
-        string $rcc = '',
-        int $listLimit = 10
+        #[Column(type:'primary')]
+        private ?int $id = null,
+        #[Column(type: 'integer(11)', nullable:false)]
+        private ?int $user_id = null,
+        /**
+         * @see src/Invoice/UserInv/UserInvForm 0 => Admin, 1 => Not Admin
+         */
+        #[Column(type:'integer(11)', nullable:false, default:0)]
+        private ?int $type = null,
+        #[Column(type:'bool', typecast:'bool', default:false)]
+        private ?bool $active = false,
+        #[Column(type:'string(191)', nullable:true, default:'system')]
+        private ?string $language = '',
+        #[Column(type:'string(151)', nullable:true)]
+        private ?string $name = '',
+        #[Column(type:'string(50)', nullable:true)]
+        private ?string $company = '',
+        #[Column(type:'string(50)', nullable:true)]
+        private ?string $address_1 = '',
+        #[Column(type:'string(50)', nullable:true)]
+        private ?string $address_2 = '',
+        #[Column(type:'string(50)', nullable:true)]
+        private ?string $city = '',
+        #[Column(type:'string(50)', nullable:true)]
+        private ?string $state = '',
+        #[Column(type:'string(10)', nullable:true)]
+        private ?string $zip = '',
+        #[Column(type:'string(50)', nullable:true)]
+        private ?string $country = '',
+        #[Column(type:'string(20)', nullable:true)]
+        private ?string $phone = '',
+        #[Column(type:'string(20)', nullable:true)]
+        private ?string $fax = '',
+        #[Column(type:'string(20)', nullable:true)]
+        private ?string $mobile = '',
+        #[Column(type:'string(100)', nullable:true)]
+        private ?string $web = '',
+        #[Column(type:'string(20)', nullable:true)]
+        private ?string $vat_id = '',
+        #[Column(type:'string(15)', nullable:true)]
+        private ?string $tax_code = '',
+        #[Column(type:'bool', typecast:'bool', default:false)]
+        private ?bool $all_clients = false,
+        #[Column(type:'string(40)', nullable:true)]
+        private ?string $subscribernumber = '',
+        #[Column(type:'string(34))', nullable:true)]
+        private ?string $iban = '',
+        #[Column(type:'bigInteger(20)', nullable:true)]
+        private ?int $gln = null,
+        #[Column(type:'string(7)', nullable:true)]
+        private ?string $rcc = '',
+        #[Column(type: 'integer(3)', nullable:true, default: 10)]
+        private ?int $listLimit = 10
     ) {
-        $this->id = $id;
-        $this->user_id = $user_id;
-        $this->type = $type;
-        $this->active = $active;
         $this->date_created = new \DateTimeImmutable();
         $this->date_modified = new \DateTimeImmutable();
-        $this->language = $language;
-        $this->name = $name;
-        $this->company = $company;
-        $this->address_1 = $address_1;
-        $this->address_2 = $address_2;
-        $this->city = $city;
-        $this->state = $state;
-        $this->zip = $zip;
-        $this->country = $country;
-        $this->phone = $phone;
-        $this->fax = $fax;
-        $this->mobile = $mobile;
-        $this->web = $web;
-        $this->vat_id = $vat_id;
-        $this->tax_code = $tax_code;
-        $this->all_clients = $all_clients;
-        $this->subscribernumber = $subscribernumber;
-        $this->iban = $iban;
-        $this->gln = $gln;
-        $this->rcc = $rcc;
-        $this->listLimit = $listLimit;
     }
 
     public function getId(): int|null

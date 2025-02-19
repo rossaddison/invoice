@@ -15,48 +15,16 @@ class Sumex
     #[Column(type: 'primary')]
     private ?int $id = null;
 
-    #[Column(type: 'integer(11)', nullable: true)]
-    private ?int $invoice = null;
-
-    #[Column(type: 'integer(11)', nullable: false, default: 0)]
-    private ?int $reason = null;
-
-    #[Column(type: 'string(500)', nullable: false)]
-    private string $diagnosis = '';
-
-    #[Column(type: 'string(500)', nullable: false)]
-    private string $observations = '';
-
-    #[Column(type: 'date', nullable: true)]
-    private mixed $treatmentstart = '';
-
-    #[Column(type: 'date', nullable: true)]
-    private mixed $treatmentend = '';
-
-    #[Column(type: 'date', nullable: true)]
-    private mixed $casedate = '';
-
-    #[Column(type: 'string(35)', nullable: true)]
-    private ?string $casenumber = '';
-
-    public function __construct(
-        int $invoice = null,
-        int $reason = null,
-        string $diagnosis = '',
-        string $observations = '',
-        string $casenumber = '',
-        mixed $treatmentstart = '',
-        mixed $treatmentend = '',
-        mixed $casedate = '',
-    ) {
-        $this->invoice = $invoice;
-        $this->reason = $reason;
-        $this->diagnosis = $diagnosis;
-        $this->observations = $observations;
-        $this->casenumber = $casenumber;
-        $this->treatmentstart = $treatmentstart;
-        $this->treatmentend = $treatmentend;
-        $this->casedate = $casedate;
+    public function __construct(#[Column(type: 'integer(11)', nullable: true)]
+    private ?int $invoice = null, #[Column(type: 'integer(11)', nullable: false, default: 0)]
+    private ?int $reason = null, #[Column(type: 'string(500)', nullable: false)]
+    private string $diagnosis = '', #[Column(type: 'string(500)', nullable: false)]
+    private string $observations = '', #[Column(type: 'string(35)', nullable: true)]
+    private ?string $casenumber = '', #[Column(type: 'date', nullable: true)]
+    private mixed $treatmentstart = '', #[Column(type: 'date', nullable: true)]
+    private mixed $treatmentend = '', #[Column(type: 'date', nullable: true)]
+    private mixed $casedate = '')
+    {
     }
 
     public function getId(): string

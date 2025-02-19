@@ -222,7 +222,7 @@ echo NavBar::widget()
             'style' => 'font-size: 1rem; color: cornflowerblue;',
         ])
         ->toggleVariant(DropdownToggleVariant::INFO)
-        ->toggleContent(I::tag()->addClass('bi bi-coin').' '.$translator->translate('i.payment'))        
+        ->toggleContent((string)I::tag()->addClass('bi bi-coin').' '.$translator->translate('i.payment'))        
         ->toggleSizeLarge(true)        
         ->items(
             DropdownItem::link($translator->translate('invoice.view'), $urlGenerator->generate('payment/guest')),
@@ -237,7 +237,7 @@ echo NavBar::widget()
             'style' => 'font-size: 1rem;',
         ])
         ->toggleVariant(DropdownToggleVariant::INFO)
-        ->toggleContent(I::tag()->addClass('fa fa-cogs'). ' '. $translator->translate('i.settings'))        
+        ->toggleContent((string)I::tag()->addClass('fa fa-cogs'). ' '. $translator->translate('i.settings'))        
         ->toggleSizeLarge(true)        
         ->items(
             DropdownItem::link($translator->translate('invoice.view'), $urlGenerator->generate('userinv/guest')),
@@ -320,7 +320,7 @@ echo NavBar::widget()
         ->csrf($csrf)
         ->open()
         . '<div class="mb-1">'
-        . Button::submit(null!==$user ? (string)preg_replace('/\d+/', '', $user->getLogin().' '.$translator->translate('i.logout')) : ''. ' '.
+        . (string)Button::submit(null!==$user ? (string)preg_replace('/\d+/', '', $user->getLogin().' '.$translator->translate('i.logout')) : ''. ' '.
             $translator->translate('i.logout'))->class('btn btn-primary')
         . '</div>'
         . Form::tag()->close();

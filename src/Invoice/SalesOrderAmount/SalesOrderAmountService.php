@@ -8,13 +8,10 @@ use App\Invoice\Entity\SalesOrderAmount as SoAmount;
 use App\Invoice\QuoteAmount\QuoteAmountRepository as QAR;
 use App\Invoice\SalesOrderAmount\SalesOrderAmountRepository as SOAR;
 
-final class SalesOrderAmountService
+final readonly class SalesOrderAmountService
 {
-    private SalesOrderAmountRepository $repository;
-
-    public function __construct(SalesOrderAmountRepository $repository)
+    public function __construct(private SalesOrderAmountRepository $repository)
     {
-        $this->repository = $repository;
     }
 
     /**

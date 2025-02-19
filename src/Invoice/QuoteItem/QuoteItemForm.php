@@ -11,8 +11,6 @@ use Yiisoft\Validator\Rule\GreaterThan;
 
 final class QuoteItemForm extends FormModel
 {
-    private ?string $quote_id = '';
-
     #[Required]
     private ?string $tax_rate_id = '';
 
@@ -36,9 +34,8 @@ final class QuoteItemForm extends FormModel
     private ?string $product_unit = '';
     private ?int $product_unit_id = null;
 
-    public function __construct(QuoteItem $quoteItem, string $quote_id)
+    public function __construct(QuoteItem $quoteItem, private readonly ?string $quote_id)
     {
-        $this->quote_id = $quote_id;
         $this->tax_rate_id = $quoteItem->getTax_rate_id();
         $this->product_id = $quoteItem->getProduct_id();
         $this->name = $quoteItem->getName();
@@ -111,6 +108,7 @@ final class QuoteItemForm extends FormModel
      *
      * @psalm-return ''
      */
+    #[\Override]
     public function getFormName(): string
     {
         return '';

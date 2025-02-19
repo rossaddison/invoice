@@ -26,37 +26,23 @@ final class SumexController
     use FlashMessage;
 
     private Flash $flash;
-    private Session $session;
-    private ViewRenderer $viewRenderer;
-    private WebControllerService $webService;
-    private UserService $userService;
-    private SumexService $sumexService;
-    private TranslatorInterface $translator;
-    private DataResponseFactoryInterface $factory;
 
     public function __construct(
-        Session $session,
-        ViewRenderer $viewRenderer,
-        WebControllerService $webService,
-        UserService $userService,
-        SumexService $sumexService,
-        TranslatorInterface $translator,
-        DataResponseFactoryInterface $factory,
+        private Session $session,
+        private ViewRenderer $viewRenderer,
+        private WebControllerService $webService,
+        private UserService $userService,
+        private SumexService $sumexService,
+        private TranslatorInterface $translator,
+        private DataResponseFactoryInterface $factory,
     ) {
-        $this->session = $session;
-        $this->flash = new Flash($session);
-        $this->viewRenderer = $viewRenderer;
-        $this->webService = $webService;
-        $this->userService = $userService;
-        $this->sumexService = $sumexService;
-        $this->translator = $translator;
-        $this->factory = $factory;
+        $this->flash = new Flash($this->session);
         if ($this->userService->hasPermission('viewInv') && !$this->userService->hasPermission('editInv')) {
-            $this->viewRenderer = $viewRenderer->withControllerName('invoice/sumex')
+            $this->viewRenderer = $this->viewRenderer->withControllerName('invoice/sumex')
                                                ->withLayout('@views/layout/guest.php');
         }
         if ($this->userService->hasPermission('viewInv') && $this->userService->hasPermission('editInv')) {
-            $this->viewRenderer = $viewRenderer->withControllerName('invoice/sumex')
+            $this->viewRenderer = $this->viewRenderer->withControllerName('invoice/sumex')
                                                ->withLayout('@views/layout/invoice.php');
         }
     }

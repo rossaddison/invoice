@@ -20,11 +20,11 @@ final class ContactMailer
     public function __construct(
         private Session $session,
         private Flash $flash,
-        private LoggerInterface $logger,
+        private readonly LoggerInterface $logger,
         private MailerInterface $mailer,
         private Translator $translator,
-        private string $sender,
-        private string $to
+        private readonly string $sender,
+        private readonly string $to
     ) {
         $this->flash = new Flash($session);
         $this->session = $session;

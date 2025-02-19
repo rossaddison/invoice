@@ -16,7 +16,7 @@ use Yiisoft\Yii\Bootstrap5\CarouselItem;
     $tooltipTitle = $translator->translate('home.caption.slides.location.debug.mode');
     $w = 150;
     $h = 75;
-    $divHeight = 250;
+    $divHeight = (string)250;
 ?>
 
 <?= Html::openTag('div', ['class' => 'container mt-5']); ?>

@@ -16,23 +16,12 @@ class ProductProperty
 
     #[BelongsTo(target:Product::class, nullable: false, fkAction: 'NO ACTION')]
     private ?Product $product = null;
-    #[Column(type: 'integer(11)', nullable: true)]
-    private ?int $product_id = null;
 
-    #[Column(type: 'text', nullable: true)]
-    public ?string $name = null;
-
-    #[Column(type: 'text', nullable: true)]
-    public ?string $value = null;
-
-    public function __construct(
-        int $product_id = null,
-        string $name = '',
-        string $value = ''
-    ) {
-        $this->product_id = $product_id;
-        $this->name = $name;
-        $this->value = $value;
+    public function __construct(#[Column(type: 'integer(11)', nullable: true)]
+    private ?int $product_id = null, #[Column(type: 'text', nullable: true)]
+    public ?string $name = '', #[Column(type: 'text', nullable: true)]
+    public ?string $value = '')
+    {
     }
 
     public function getProperty_id(): ?int

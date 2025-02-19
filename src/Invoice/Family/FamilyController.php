@@ -25,29 +25,19 @@ final class FamilyController
     use FlashMessage;
 
     private ViewRenderer $viewRenderer;
-    private WebControllerService $webService;
-    private FamilyService $familyService;
-    private UserService $userService;
-    private Session $session;
     private Flash $flash;
-    private TranslatorInterface $translator;
 
     public function __construct(
         ViewRenderer $viewRenderer,
-        WebControllerService $webService,
-        FamilyService $familyService,
-        UserService $userService,
-        Session $session,
-        TranslatorInterface $translator
+        private WebControllerService $webService,
+        private FamilyService $familyService,
+        private UserService $userService,
+        private Session $session,
+        private TranslatorInterface $translator
     ) {
         $this->viewRenderer = $viewRenderer->withControllerName('invoice/family')
                                            ->withLayout('@views/layout/invoice.php');
-        $this->webService = $webService;
-        $this->familyService = $familyService;
-        $this->userService = $userService;
-        $this->session = $session;
-        $this->flash = new Flash($session);
-        $this->translator = $translator;
+        $this->flash = new Flash($this->session);
     }
 
     /**

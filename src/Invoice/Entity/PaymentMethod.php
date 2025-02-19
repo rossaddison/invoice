@@ -10,18 +10,10 @@ use Cycle\Annotated\Annotation\Entity;
 #[Entity(repository: \App\Invoice\PaymentMethod\PaymentMethodRepository::class)]
 class PaymentMethod
 {
-    #[Column(type: 'primary')]
-    private ?int $id = null;
-
-    #[Column(type: 'text', nullable: true)]
-    private ?string $name = '';
-
-    public function __construct(
-        int $id = null,
-        string $name = ''
-    ) {
-        $this->id = $id;
-        $this->name = $name;
+    public function __construct(#[Column(type: 'primary')]
+    private ?int $id = null, #[Column(type: 'text', nullable: true)]
+    private ?string $name = '')
+    {
     }
 
     public function getId(): string

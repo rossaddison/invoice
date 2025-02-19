@@ -21,13 +21,11 @@ use Yiisoft\Translator\TranslatorInterface as Translator;
 
 class CustomValuesHelper
 {
-    private SRepo $s;
-    private DHelp $d;
+    private readonly DHelp $d;
 
-    public function __construct(SRepo $s)
+    public function __construct(private readonly SRepo $s)
     {
-        $this->s = $s;
-        $this->d = new DHelp($s);
+        $this->d = new DHelp($this->s);
     }
 
     public function format_date(mixed $txt): string
@@ -99,9 +97,7 @@ class CustomValuesHelper
         array $entity_custom_values,
         array $custom_value
     ): void {
-        $fieldValue = null !== $this->form_value($entity_custom_values, $custom_field->getId())
-                        ? $this->form_value($entity_custom_values, $custom_field->getId())
-                        : gettype($this->form_value($entity_custom_values, $custom_field->getId()));
+        $fieldValue = $this->form_value($entity_custom_values, $custom_field->getId()) ?? gettype($this->form_value($entity_custom_values, $custom_field->getId()));
 
         switch ($custom_field->getType()) {
             case 'DATE':
@@ -148,7 +144,7 @@ class CustomValuesHelper
                 ->optionsData($optionsData)
                 ->multiple(false)
                 ->required($custom_field->getRequired() == 1 ? true : false)
-                ->value($fieldValue ?? '');
+                ->value($fieldValue ?: '');
                 break;
 
                 // Select more than one item from the drop-down
@@ -244,9 +240,7 @@ class CustomValuesHelper
      */
     public function print_field_for_view(CustomField $custom_field, FormModel $formModel, array $entity_custom_values, array $custom_value): void
     {
-        $fieldValue = null !== $this->form_value($entity_custom_values, $custom_field->getId())
-                      ? $this->form_value($entity_custom_values, $custom_field->getId())
-                      : '';
+        $fieldValue = $this->form_value($entity_custom_values, $custom_field->getId()) ?? '';
         switch ($custom_field->getType()) {
             case 'DATE':
                 $dateValue = $fieldValue == '' ? '' : $fieldValue;
@@ -273,7 +267,7 @@ class CustomValuesHelper
                 echo Label::tag()
                 ->forId('custom[' . $custom_field->getId() . ']')
                 ->content(Html::encode($custom_field->getLabel()));
-                if (null !== $fieldValue) {
+                if (strlen((string)$fieldValue) > 0) {
                     echo Select::tag()
                     ->addAttributes(
                         [
@@ -363,9 +357,7 @@ class CustomValuesHelper
              ->content($content)
              ->render();
 
-        $fieldValue = null !== $this->form_value($entity_custom_values, $custom_field->getId())
-                      ? $this->form_value($entity_custom_values, $custom_field->getId())
-                      : gettype($this->form_value($entity_custom_values, $custom_field->getId()));
+        $fieldValue = $this->form_value($entity_custom_values, $custom_field->getId()) ?? gettype($this->form_value($entity_custom_values, $custom_field->getId()));
 
         echo Html::openTag('div');
         switch ($custom_field->getType()) {

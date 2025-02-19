@@ -9,23 +9,13 @@ use App\Invoice\Helpers\DateHelper;
 use App\Invoice\Setting\SettingRepository;
 use App\Invoice\Inv\InvRepository;
 
-final class InvRecurringService
+final readonly class InvRecurringService
 {
-    private InvRecurringRepository $repository;
-    private InvRepository $invR;
-    private SettingRepository $s;
-
     /**
      * @param InvRecurringRepository $repository
      */
-    public function __construct(
-        InvRecurringRepository $repository,
-        InvRepository $invR,
-        SettingRepository $s
-    ) {
-        $this->repository = $repository;
-        $this->invR = $invR;
-        $this->s = $s;
+    public function __construct(private InvRecurringRepository $repository, private InvRepository $invR, private SettingRepository $s)
+    {
     }
 
     /**

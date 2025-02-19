@@ -11,18 +11,10 @@ use Cycle\Annotated\Annotation\Entity;
 
 class DeliveryParty
 {
-    #[Column(type: 'primary')]
-    private ?int $id = null;
-
-    #[Column(type: 'text', nullable: true)]
-    private ?string $party_name = '';
-
-    public function __construct(
-        int $id = null,
-        string $party_name = ''
-    ) {
-        $this->id = $id;
-        $this->party_name = $party_name;
+    public function __construct(#[Column(type: 'primary')]
+    private ?int $id = null, #[Column(type: 'text', nullable: true)]
+    private ?string $party_name = '')
+    {
     }
 
     public function getId(): int|null

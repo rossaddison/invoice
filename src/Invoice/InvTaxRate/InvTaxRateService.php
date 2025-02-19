@@ -6,13 +6,10 @@ namespace App\Invoice\InvTaxRate;
 
 use App\Invoice\Entity\InvTaxRate;
 
-final class InvTaxRateService
+final readonly class InvTaxRateService
 {
-    private InvTaxRateRepository $repository;
-
-    public function __construct(InvTaxRateRepository $repository)
+    public function __construct(private InvTaxRateRepository $repository)
     {
-        $this->repository = $repository;
     }
 
     /**
@@ -46,7 +43,7 @@ final class InvTaxRateService
             if ($basis_invoice_tax_rate->getInclude_item_tax() == 1 || ($basis_invoice_tax_rate->getInclude_item_tax() == 0)) {
                 $new_invoice_tax_rate->setInclude_item_tax($basis_invoice_tax_rate->getInclude_item_tax() ?? 0);
             }
-            $new_invoice_tax_rate->setInv_tax_rate_amount(($basis_invoice_tax_rate->getInv_tax_rate_amount() ?? 0.00) * -1);
+            $new_invoice_tax_rate->setInv_tax_rate_amount(($basis_invoice_tax_rate->getInv_tax_rate_amount() ?? 0.00) * -1.00);
             $this->repository->save($new_invoice_tax_rate);
         }
     }

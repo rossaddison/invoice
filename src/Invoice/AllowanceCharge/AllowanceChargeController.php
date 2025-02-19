@@ -26,38 +26,25 @@ use Exception;
 final class AllowanceChargeController
 {
     use FlashMessage;
-
-    private SessionInterface $session;
     private Flash $flash;
-    private ViewRenderer $viewRenderer;
-    private WebControllerService $webService;
-    private UserService $userService;
-    private AllowanceChargeService $allowanceChargeService;
-    private TranslatorInterface $translator;
 
     public function __construct(
-        SessionInterface $session,
-        ViewRenderer $viewRenderer,
-        WebControllerService $webService,
-        UserService $userService,
-        AllowanceChargeService $allowanceChargeService,
-        TranslatorInterface $translator
+        private SessionInterface $session,
+        private ViewRenderer $viewRenderer,
+        private WebControllerService $webService,
+        private UserService $userService,
+        private AllowanceChargeService $allowanceChargeService,
+        private TranslatorInterface $translator
     ) {
-        $this->session = $session;
-        $this->flash = new Flash($session);
-        $this->webService = $webService;
-        $this->userService = $userService;
-        $this->viewRenderer = $viewRenderer;
+        $this->flash = new Flash($this->session);
         if ($this->userService->hasPermission('viewInv') && !$this->userService->hasPermission('editInv')) {
-            $this->viewRenderer = $viewRenderer->withControllerName('invoice/allowancecharge')
+            $this->viewRenderer = $this->viewRenderer->withControllerName('invoice/allowancecharge')
                                                ->withLayout('@views/layout/guest.php');
         }
         if ($this->userService->hasPermission('viewInv') && $this->userService->hasPermission('editInv')) {
-            $this->viewRenderer = $viewRenderer->withControllerName('invoice/allowancecharge')
+            $this->viewRenderer = $this->viewRenderer->withControllerName('invoice/allowancecharge')
                                                ->withLayout('@views/layout/invoice.php');
         }
-        $this->allowanceChargeService = $allowanceChargeService;
-        $this->translator = $translator;
     }
 
     /**

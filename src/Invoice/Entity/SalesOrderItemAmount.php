@@ -14,43 +14,15 @@ class SalesOrderItemAmount
     #[BelongsTo(target:SalesOrderItem::class, nullable: false)]
     private ?SalesOrderItem $so_item = null;
 
-    #[Column(type: 'primary')]
-    private ?int $id = null;
-
-    #[Column(type: 'integer(11)', nullable: false)]
-    private ?int $so_item_id = null;
-
-    #[Column(type: 'decimal(20,2)', nullable: false, default: 0.00)]
-    private ?float $subtotal = 0.00;
-
-    #[Column(type: 'decimal(20,2)', nullable: false, default: 0.00)]
-    private ?float $tax_total = 0.00 ;
-
-    #[Column(type: 'decimal(20,2)', nullable: false, default: 0.00)]
-    private ?float $discount = 0.00;
-
-    #[Column(type: 'decimal(20,2)', nullable: false, default: 0.00)]
-    private ?float $charge = 0.00;
-
-    #[Column(type: 'decimal(20,2)', nullable: false, default: 0.00)]
-    private ?float $total = 0.00;
-
-    public function __construct(
-        int $id = null,
-        int $so_item_id = null,
-        float $subtotal = 0.00,
-        float $tax_total = 0.00,
-        float $discount = 0.00,
-        float $charge = 0.00,
-        float $total = 0.00
-    ) {
-        $this->id = $id;
-        $this->so_item_id = $so_item_id;
-        $this->subtotal = $subtotal;
-        $this->tax_total = $tax_total;
-        $this->discount = $discount;
-        $this->charge = $charge;
-        $this->total = $total;
+    public function __construct(#[Column(type: 'primary')]
+    private ?int $id = null, #[Column(type: 'integer(11)', nullable: false)]
+    private ?int $so_item_id = null, #[Column(type: 'decimal(20,2)', nullable: false, default: 0.00)]
+    private ?float $subtotal = 0.00, #[Column(type: 'decimal(20,2)', nullable: false, default: 0.00)]
+    private ?float $tax_total = 0.00, #[Column(type: 'decimal(20,2)', nullable: false, default: 0.00)]
+    private ?float $discount = 0.00, #[Column(type: 'decimal(20,2)', nullable: false, default: 0.00)]
+    private ?float $charge = 0.00, #[Column(type: 'decimal(20,2)', nullable: false, default: 0.00)]
+    private ?float $total = 0.00)
+    {
     }
 
     public function getSalesOrderItem(): ?SalesOrderItem

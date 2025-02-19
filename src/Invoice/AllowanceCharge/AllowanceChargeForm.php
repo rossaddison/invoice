@@ -11,7 +11,7 @@ use Yiisoft\Validator\Rule\Integer;
 
 final class AllowanceChargeForm extends FormModel
 {
-    private string $id;
+    private readonly string $id;
 
     #[Required]
     private ?bool $identifier = false;
@@ -92,6 +92,7 @@ final class AllowanceChargeForm extends FormModel
      * @return string
      * @psalm-return ''
      */
+    #[\Override]
     public function getFormName(): string
     {
         return '';

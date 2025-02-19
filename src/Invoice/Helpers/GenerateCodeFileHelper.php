@@ -41,10 +41,6 @@ class GenerateCodeFileHelper
      */
     public $path;
     /**
-     * @var string the newly generated code content
-     */
-    public $content;
-    /**
      * @var string the operation to be performed. This can be [[OP_CREATE]], [[OP_OVERWRITE]] or [[OP_SKIP]].
      */
     public $operation;
@@ -54,14 +50,12 @@ class GenerateCodeFileHelper
      * @param string $path the file path that the new code should be saved to.
      * @param string $content the newly generated code content.
      */
-    public function __construct($path, $content)
+    public function __construct($path, public $content)
     {
         $this->path = strtr($path, '/\\', DIRECTORY_SEPARATOR . DIRECTORY_SEPARATOR);
 
         // $this->basepath used in function relativepath
         $this->basepath = dirname(__DIR__, 3);
-
-        $this->content = $content;
         /**
          *  @see GeneratorController function build_and_save
          *  The MD5 hash algorithm was developed in 1991 and released in 1992.
@@ -74,7 +68,7 @@ class GenerateCodeFileHelper
          */
         $this->id = password_hash($this->path, PASSWORD_DEFAULT);
         if (is_file($path)) {
-            $this->operation = file_get_contents($path) === $content ? self::OP_SKIP : self::OP_OVERWRITE;
+            $this->operation = file_get_contents($path) === $this->content ? self::OP_SKIP : self::OP_OVERWRITE;
         } else {
             $this->operation = self::OP_CREATE;
         }
@@ -109,7 +103,7 @@ class GenerateCodeFileHelper
      */
     public function getRelativePath()
     {
-        if (strpos($this->path, $this->basepath) === 0) {
+        if (str_starts_with($this->path, $this->basepath)) {
             return substr($this->path, strlen($this->basepath) + 1);
         }
         return $this->path;

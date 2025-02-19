@@ -6,18 +6,11 @@ namespace App\Invoice\Helpers;
 
 class CurrencyHelper
 {
-    private $code;
-    private $numeric;
-    private $decimals;
-
     /**
      * Create a new Currency object
      */
-    private function __construct(mixed $code, mixed $numeric, mixed $decimals)
+    private function __construct(private readonly mixed $code, private readonly mixed $numeric, private readonly mixed $decimals)
     {
-        $this->code = $code;
-        $this->numeric = $numeric;
-        $this->decimals = $decimals;
     }
 
     /**

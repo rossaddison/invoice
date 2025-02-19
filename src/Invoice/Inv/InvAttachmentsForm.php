@@ -15,6 +15,7 @@ final class InvAttachmentsForm extends FormModel
      *
      * @psalm-return 'InvAttachmentsForm'
      */
+    #[\Override]
     public function getFormName(): string
     {
         return 'InvAttachmentsForm';

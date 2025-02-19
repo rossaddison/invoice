@@ -6,13 +6,10 @@ namespace App\Invoice\ClientCustom;
 
 use App\Invoice\Entity\ClientCustom;
 
-final class ClientCustomService
+final readonly class ClientCustomService
 {
-    private ClientCustomRepository $repository;
-
-    public function __construct(ClientCustomRepository $repository)
+    public function __construct(private ClientCustomRepository $repository)
     {
-        $this->repository = $repository;
     }
 
     /**

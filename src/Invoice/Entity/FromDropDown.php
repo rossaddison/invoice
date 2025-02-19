@@ -11,28 +11,12 @@ use Cycle\Annotated\Annotation\Entity;
 
 class FromDropDown
 {
-    #[Column(type: 'primary')]
-    private ?int $id = null;
-
-    #[Column(type:'text)', nullable: false)]
-    private string $email = '';
-
-    #[Column(type:'bool', default:false, nullable: false)]
-    private bool $include = false;
-
-    #[Column(type:'bool', default:false, nullable: false)]
-    private bool $default_email = false;
-
-    public function __construct(
-        int $id = null,
-        string $email = '',
-        bool $include = false,
-        bool $default_email = false
-    ) {
-        $this->id = $id;
-        $this->email = $email;
-        $this->include = $include;
-        $this->default_email = $default_email;
+    public function __construct(#[Column(type: 'primary')]
+    private ?int $id = null, #[Column(type:'text)', nullable: false)]
+    private string $email = '', #[Column(type:'bool', default:false, nullable: false)]
+    private bool $include = false, #[Column(type:'bool', default:false, nullable: false)]
+    private bool $default_email = false)
+    {
     }
 
     public function getId(): string

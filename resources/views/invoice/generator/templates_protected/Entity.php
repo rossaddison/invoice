@@ -134,24 +134,24 @@ class <?= $generator->getCamelcase_capital_name()."\n"; ?>
                     break;
                 //Database specific integer (usually 32 bits).    
                 case 'integer':
-                    $result = $column->getSize();
+                    $result = (string)$column->getSize();
                     $ab = '    #[Column(type:'."'".$column->getAbstractType().'('.$result.")', nullable: ".$nullable.((string)$column->hasDefaultvalue() ? ',default: '.(string)$column->getDefaultvalue().')]'  : ')]')."\n";
                     $ate_or_lic='private ';
                     break;
                 //Small/tiny integer, check your DBMS to check its size.    
                 case 'tinyInteger':
-                    $result = $column->getSize();
+                    $result = (string)$column->getSize();
                     $ab = '    #[Column(type:'."'".$column->getAbstractType().'('.$result.")', nullable: ".$nullable.((string)$column->hasDefaultvalue() ? ',default: '.(string)$column->getDefaultvalue().')]'  : ')]')."\n";
                     break;
                 //Big/long integer (usually 64 bits), check your DBMS to check its size.    
                 case 'bigInteger':
-                    $result = $column->getSize();
+                    $result = (string)$column->getSize();
                     $ab = '    #[Column(type:'."'".$column->getAbstractType().'('.$result.")', nullable: ".$nullable.((string)$column->hasDefaultvalue() ? ',default: '.(string)$column->getDefaultvalue().')]'  : ')]')."\n";
                     $ate_or_lic='private ';
                     break;
                 //length:255] String with specified length, a perfect type for emails and usernames as it can be indexed.    
                 Case 'string':
-                    $result = $column->getSize();
+                    $result = (string)$column->getSize();
                     $ab = '    #[Column(type:'."'".$column->getAbstractType().'('.$result.")', nullable: ".$nullable.((string)$column->hasDefaultvalue() ? ',default: '.(string)$column->getDefaultvalue().')]'  : ')]')."\n";
                     $ate_or_lic='private ';
                     break;
@@ -182,7 +182,7 @@ class <?= $generator->getCamelcase_capital_name()."\n"; ?>
                     break;
                 //precision, [scale:0]	Number with specified precision and scale.    
                 case 'decimal':
-                    $result = $column->getPrecision() .','. $column->getScale();
+                    $result = (string)$column->getPrecision() .','. (string)$column->getScale();
                     $ab = '    #[Column(type:'."'".$column->getAbstractType().'('.$result.")', nullable: ".$nullable.((string)$column->hasDefaultvalue() ? ',default: '.(string)$column->getDefaultvalue().')]'  : ')]')."\n";
                     $ate_or_lic='private ';
                     break;

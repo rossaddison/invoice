@@ -13,15 +13,9 @@ class PaymentMeans implements XmlSerializable
     private array $paymentMeansCodeAttributes = [
         'name' => 'Credit Transfer',
     ];
-    private ?string $paymentId;
-    private ?PayeeFinancialAccount $payeeFinancialAccount;
 
-    public function __construct(
-        ?PayeeFinancialAccount $payeeFinancialAccount,
-        string $paymentId = ''
-    ) {
-        $this->payeeFinancialAccount = $payeeFinancialAccount;
-        $this->paymentId = $paymentId;
+    public function __construct(private readonly ?PayeeFinancialAccount $payeeFinancialAccount, private readonly ?string $paymentId = '')
+    {
     }
 
     /**

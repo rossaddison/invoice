@@ -14,114 +14,54 @@ use DateTimeImmutable;
 #[Behavior\UpdatedAt(field: 'date_modified', column: 'date_modified')]
 class Company
 {
-    #[Column(type: 'primary')]
-    private ?int $id = null;
-
-    #[Column(type: 'tinyInteger(1)', nullable: false, default:0)]
-    private ?int $current = null;
-
-    #[Column(type: 'text', nullable: true)]
-    private ?string $name = '';
-
-    #[Column(type: 'text', nullable: true)]
-    private ?string $address_1 = '';
-
-    #[Column(type: 'text', nullable: true)]
-    private ?string $address_2 = '';
-
-    #[Column(type: 'text', nullable: true)]
-    private ?string $city = '';
-
-    #[Column(type: 'text', nullable: true)]
-    private ?string $state = '';
-
-    #[Column(type: 'text', nullable: true)]
-    private ?string $zip = '';
-
-    #[Column(type: 'text', nullable: true)]
-    private ?string $country = '';
-
-    #[Column(type: 'text', nullable: true)]
-    private ?string $phone = '';
-
-    #[Column(type: 'text', nullable: true)]
-    private ?string $fax = '';
-
-    #[Column(type: 'text', nullable: true)]
-    private ?string $email = '';
-
-    #[Column(type: 'text', nullable: true)]
-    private ?string $web = '';
-
-    #[Column(type: 'text', nullable: true)]
-    private ?string $slack = '';
-
-    #[Column(type: 'text', nullable: true)]
-    private ?string $facebook = '';
-
-    #[Column(type: 'text', nullable: true)]
-    private ?string $twitter = '';
-
-    #[Column(type: 'text', nullable: true)]
-    private ?string $linkedin = '';
-
-    #[Column(type: 'text', nullable: true)]
-    private ?string $whatsapp = '';
-
-    #[Column(type: 'text', nullable: true)]
-    private ?string $arbitrationBody = '';
-
-    #[Column(type: 'text', nullable: true)]
-    private ?string $arbitrationJurisdiction = '';
+    #[Column(type: 'datetime')]
+    private readonly DateTimeImmutable $date_created;
 
     #[Column(type: 'datetime')]
-    private DateTimeImmutable $date_created;
-
-    #[Column(type: 'datetime')]
-    private DateTimeImmutable $date_modified;
+    private readonly DateTimeImmutable $date_modified;
 
     public function __construct(
-        int $id = null,
-        int $current = 0,
-        string $name = '',
-        string $address_1 = '',
-        string $address_2 = '',
-        string $city = '',
-        string $state = '',
-        string $zip = '',
-        string $country = '',
-        string $phone = '',
-        string $fax = '',
-        string $email = '',
-        string $web = '',
-        string $slack = '',
-        string $facebook = '',
-        string $twitter = '',
-        string $linkedin = '',
-        string $whatsapp = '',
-        string $arbitrationBody = '',
-        string $arbitrationJurisdiction = ''
+        #[Column(type: 'primary')]
+        private ?int $id = null,
+        #[Column(type: 'tinyInteger(1)', nullable: false, default:0)]
+        private ?int $current = 0,
+        #[Column(type: 'text', nullable: true)]
+        private ?string $name = '',
+        #[Column(type: 'text', nullable: true)]
+        private ?string $address_1 = '',
+        #[Column(type: 'text', nullable: true)]
+        private ?string $address_2 = '',
+        #[Column(type: 'text', nullable: true)]
+        private ?string $city = '',
+        #[Column(type: 'text', nullable: true)]
+        private ?string $state = '',
+        #[Column(type: 'text', nullable: true)]
+        private ?string $zip = '',
+        #[Column(type: 'text', nullable: true)]
+        private ?string $country = '',
+        #[Column(type: 'text', nullable: true)]
+        private ?string $phone = '',
+        #[Column(type: 'text', nullable: true)]
+        private ?string $fax = '',
+        #[Column(type: 'text', nullable: true)]
+        private ?string $email = '',
+        #[Column(type: 'text', nullable: true)]
+        private ?string $web = '',
+        #[Column(type: 'text', nullable: true)]
+        private ?string $slack = '',
+        #[Column(type: 'text', nullable: true)]
+        private ?string $facebook = '',
+        #[Column(type: 'text', nullable: true)]
+        private ?string $twitter = '',
+        #[Column(type: 'text', nullable: true)]
+        private ?string $linkedin = '',
+        #[Column(type: 'text', nullable: true)]
+        private ?string $whatsapp = '',
+        #[Column(type: 'text', nullable: true)]
+        private ?string $arbitrationBody = '',
+        #[Column(type: 'text', nullable: true)]
+        private ?string $arbitrationJurisdiction = ''
     ) {
-        $this->id = $id;
-        $this->current = $current;
-        $this->name = $name;
-        $this->address_1 = $address_1;
-        $this->address_2 = $address_2;
-        $this->city = $city;
-        $this->state = $state;
-        $this->zip = $zip;
-        $this->country = $country;
-        $this->phone = $phone;
-        $this->fax = $fax;
-        $this->email = $email;
-        $this->web = $web;
-        $this->slack = $slack;
-        $this->facebook = $facebook;
-        $this->twitter = $twitter;
-        $this->linkedin = $linkedin;
-        $this->whatsapp = $whatsapp;
-        $this->arbitrationBody = $arbitrationBody;
-        $this->arbitrationJurisdiction = $arbitrationJurisdiction;
         $this->date_created = new \DateTimeImmutable();
         $this->date_modified = new \DateTimeImmutable();
     }

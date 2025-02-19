@@ -23,10 +23,10 @@ final class ChangePasswordForm extends FormModel implements RulesProviderInterfa
     private string $newPasswordVerify = '';
 
     public function __construct(
-        private AuthService $authService,
-        private ValidatorInterface $validator,
-        private TranslatorInterface $translator,
-        private UserRepository $userRepository,
+        private readonly AuthService $authService,
+        private readonly ValidatorInterface $validator,
+        private readonly TranslatorInterface $translator,
+        private readonly UserRepository $userRepository,
     ) {
     }
 
@@ -66,6 +66,7 @@ final class ChangePasswordForm extends FormModel implements RulesProviderInterfa
      *
      * @psalm-return 'ChangePassword'
      */
+    #[\Override]
     public function getFormName(): string
     {
         return 'ChangePassword';

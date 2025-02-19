@@ -26,7 +26,7 @@ final class ChangePasswordController
         private Flash $flash,
         private Translator $translator,
         private CurrentUser $currentUser,
-        private WebControllerService $webService,
+        private readonly WebControllerService $webService,
         private ViewRenderer $viewRenderer,
     ) {
         $this->currentUser = $currentUser;

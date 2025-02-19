@@ -32,30 +32,23 @@ namespace App\Invoice\Libraries;
 
 class Cryptor
 {
-    private string $cipher_algo;
-    private string $hash_algo;
     private int $iv_num_bytes = 0;
-    private int $format;
 
     public const int FORMAT_RAW = 0;
     public const int FORMAT_B64 = 1;
     public const int FORMAT_HEX = 2;
 
-    public function __construct(string $cipher_algo = 'aes-256-ctr', string $hash_algo = 'sha256', int $fmt = self::FORMAT_B64)
+    public function __construct(private readonly string $cipher_algo = 'aes-256-ctr', private readonly string $hash_algo = 'sha256', private readonly int $format = self::FORMAT_B64)
     {
-        $this->cipher_algo = $cipher_algo;
-        $this->hash_algo = $hash_algo;
-        $this->format = $fmt;
-
-        if (!in_array($cipher_algo, openssl_get_cipher_methods(true))) {
-            throw new \Exception("Cryptor:: - unknown cipher algo {$cipher_algo}");
+        if (!in_array($this->cipher_algo, openssl_get_cipher_methods(true))) {
+            throw new \Exception("Cryptor:: - unknown cipher algo {$this->cipher_algo}");
         }
 
-        if (!in_array($hash_algo, openssl_get_md_methods(true))) {
-            throw new \Exception("Cryptor:: - unknown hash algo {$hash_algo}");
+        if (!in_array($this->hash_algo, openssl_get_md_methods(true))) {
+            throw new \Exception("Cryptor:: - unknown hash algo {$this->hash_algo}");
         }
 
-        $openBytes = openssl_cipher_iv_length($cipher_algo);
+        $openBytes = openssl_cipher_iv_length($this->cipher_algo);
         if ($openBytes != false) {
             $this->iv_num_bytes = $openBytes;
         }
@@ -143,7 +136,7 @@ class Cryptor
         // and do an integrity check on the size.
         if (strlen($raw) < $this->iv_num_bytes) {
             throw new \Exception('Cryptor::decryptString() - ' .
-                'data length ' . strlen($raw) . " is less than iv length {$this->iv_num_bytes}");
+                'data length ' . (string)strlen($raw) . " is less than iv length {$this->iv_num_bytes}");
         }
 
         // Extract the initialisation vector and encrypted data

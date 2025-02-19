@@ -12,44 +12,26 @@ use DateTimeImmutable;
 #[Entity(repository: \App\Invoice\Upload\UploadRepository::class)]
 class Upload
 {
-    #[Column(type: 'primary')]
-    private ?int $id = null;
-
     #[BelongsTo(target: Client::class, nullable: false, fkAction: 'NO ACTION')]
     private ?Client $client = null;
-
-    #[Column(type: 'integer(11)', nullable: false)]
-    private ?int $client_id = null;
-
-    #[Column(type: 'string(32)', nullable: false)]
-    private string $url_key = '';
-
-    #[Column(type: 'longText)', nullable: false)]
-    private string $file_name_original = '';
-
-    #[Column(type: 'longText)', nullable: false)]
-    private string $file_name_new = '';
 
     #[Column(type: 'datetime)', nullable: false)]
     private DateTimeImmutable $uploaded_date;
 
-    #[Column(type: 'longText)', nullable: false)]
-    private string $description = '';
-
     public function __construct(
-        int $id = null,
-        int $client_id = null,
-        string $url_key = '',
-        string $file_name_original = '',
-        string $file_name_new = '',
-        string $description = '',
+        #[Column(type: 'primary')]
+        private ?int $id = null,
+        #[Column(type: 'integer(11)', nullable: false)]
+        private ?int $client_id = null,
+        #[Column(type: 'string(32)', nullable: false)]
+        private string $url_key = '',
+        #[Column(type: 'longText)', nullable: false)]
+        private string $file_name_original = '',
+        #[Column(type: 'longText)', nullable: false)]
+        private string $file_name_new = '',
+        #[Column(type: 'longText)', nullable: false)]
+        private string $description = '',
     ) {
-        $this->id = $id;
-        $this->client_id = $client_id;
-        $this->url_key = $url_key;
-        $this->file_name_original = $file_name_original;
-        $this->file_name_new = $file_name_new;
-        $this->description = $description;
         $this->uploaded_date = new \DateTimeImmutable();
     }
 

@@ -46,6 +46,26 @@
 <p>Introducing India's PayTm payment gateway's QR code method of payment and comparing this with Stripe's method.</p>
 <p>A General Sales Tax (GST) Tax System will have to be implemented first for this purpose.</p>
 <p>Testing Credit Notes against Invoices with refunds (if payment made) linked to each of the payment gateways.</p>
+<p><b>19th February 2025</b></p>
+<p>Google Translate version 2 functional.</p>
+<p>A new GeneratorController function rebuildLocale() compares the source resources/messages/en/app.php with an already built {locale}/app.php. 
+   A diff_lang.php file is created under src/Invoice/Language/English folder, and its keys are used to create the timestamped translated file in resources/views/invoice/generator/output_overwrite.
+   An exception is thrown if the diff_lang.php file is too large for Google to translate.
+</p>
+<p>A few additonal psalm suppress statements have been included in psalm.xml and will be tackled soon.</p>
+<p>
+<pre>
+     Implemented 16/02/2025 psalm version upgrade to 6.6.0
+     This will have to be addressed with the cycle/orm which is error-messaging classes that are being made final.
+     ClassMustBeFinal<br>
+     
+     Implemented 16/02/2025 new ActionButton(url: ...unable to psalm-suppress named parameters.
+     InvalidArgument<br>
+
+     Implemented 17/02/2025 upgrade to psalm version 6.7.1
+     MissingOverrideAttribute<br>        
+</pre>    
+</p>
 <p><b>10th February 2025</b></p>
 <p>Scrutinizer removed with the possibility of reimplementation.</p>
 <p>Branches updated with commits.</p>

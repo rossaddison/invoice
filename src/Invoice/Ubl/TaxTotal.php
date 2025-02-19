@@ -10,11 +10,8 @@ use InvalidArgumentException;
 
 class TaxTotal implements XmlSerializable
 {
-    private array $doc_and_or_supp_currency_tax = [];
-
-    public function __construct(array $doc_and_or_supp_currency_tax)
+    public function __construct(private readonly array $doc_and_or_supp_currency_tax)
     {
-        $this->doc_and_or_supp_currency_tax = $doc_and_or_supp_currency_tax;
     }
 
     /**

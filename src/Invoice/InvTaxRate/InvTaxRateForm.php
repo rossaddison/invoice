@@ -50,6 +50,7 @@ final class InvTaxRateForm extends FormModel
      *
      * @psalm-return ''
      */
+    #[\Override]
     public function getFormName(): string
     {
         return '';

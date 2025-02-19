@@ -144,7 +144,7 @@ final class TelegramController
                                                    'Start a chat with your bot and send any message to it. 2. Open your browser and enter the following URL,' .
                                                    ' replacing YOUR_BOT_TOKEN with your bot token: https://api.telegram.org/botYOUR_BOT_TOKEN/getUpdates' . Button::deleteWebhook($urlGenerator, $this->translator),
                                             409 => Button::deleteWebhook($urlGenerator, $this->translator),
-                                            default => null !== $sendMessageResult->description ? $sendMessageResult->description : '',
+                                            default => $sendMessageResult->description ?? '',
                                         };
                                         $this->flashMessage('primary', 'Fail Result: ' . (string)$sendMessageResult->errorCode . ' ' . $match);
                                     }

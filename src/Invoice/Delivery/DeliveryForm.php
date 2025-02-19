@@ -10,11 +10,11 @@ use DateTimeImmutable;
 
 final class DeliveryForm extends FormModel
 {
-    private mixed $date_created;
-    private mixed $date_modified;
-    private mixed $start_date;
-    private mixed $actual_delivery_date;
-    private mixed $end_date;
+    private readonly mixed $date_created;
+    private readonly mixed $date_modified;
+    private readonly mixed $start_date;
+    private readonly mixed $actual_delivery_date;
+    private readonly mixed $end_date;
     private ?int $id = null;
     private ?int $delivery_location_id = null;
     private ?int $delivery_party_id = null;
@@ -104,6 +104,7 @@ final class DeliveryForm extends FormModel
      * @return string
      * @psalm-return ''
      */
+    #[\Override]
     public function getFormName(): string
     {
         return '';

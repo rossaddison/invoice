@@ -11,7 +11,6 @@ use Yiisoft\Validator\Rule\Required;
 final class InvItemAllowanceChargeForm extends FormModel
 {
     private ?int $inv_id = null;
-    private ?int $inv_item_id = null;
     #[Required]
     private ?int $allowance_charge_id = null;
     #[Required]
@@ -19,10 +18,9 @@ final class InvItemAllowanceChargeForm extends FormModel
     #[Required]
     private ?float $vat = null;
 
-    public function __construct(InvItemAllowanceCharge $invItemAllowanceCharge, int $inv_item_id)
+    public function __construct(InvItemAllowanceCharge $invItemAllowanceCharge, private readonly ?int $inv_item_id)
     {
         $this->inv_id = (int)$invItemAllowanceCharge->getInv_id();
-        $this->inv_item_id = $inv_item_id;
         $this->allowance_charge_id = (int)$invItemAllowanceCharge->getAllowance_charge_id();
         $this->amount = (float)$invItemAllowanceCharge->getAmount();
         $this->vat = (float)$invItemAllowanceCharge->getVat();
@@ -57,6 +55,7 @@ final class InvItemAllowanceChargeForm extends FormModel
      * @return string
      * @psalm-return ''
      */
+    #[\Override]
     public function getFormName(): string
     {
         return '';

@@ -11,13 +11,10 @@ use App\Invoice\InvItemAmount\InvItemAmountRepository as IIAR;
 use App\Invoice\InvTaxRate\InvTaxRateRepository as ITRR;
 use App\Invoice\Setting\SettingRepository as SR;
 
-final class InvItemAllowanceChargeService
+final readonly class InvItemAllowanceChargeService
 {
-    private InvItemAllowanceChargeRepository $repository;
-
-    public function __construct(InvItemAllowanceChargeRepository $repository)
+    public function __construct(private InvItemAllowanceChargeRepository $repository)
     {
-        $this->repository = $repository;
     }
 
     /**
@@ -72,7 +69,7 @@ final class InvItemAllowanceChargeService
             $current_discount_item_total = $current_item_quantity * $discount_per_item;
             $tax_percent = $inv_item_amount->getInvItem()?->getTaxRate()?->getTaxRatePercent();
             $qpIncAc = $quantity_price + $all_charges - $all_allowances;
-            $current_tax_total = ($qpIncAc - $current_discount_item_total) * ($tax_percent ?? 0.00) / 100;
+            $current_tax_total = ($qpIncAc - $current_discount_item_total) * ($tax_percent ?? 0.00) / 100.00;
             $new_tax_total = $current_tax_total + ($sR->getSetting('enable_vat_registration') == '0' ? 0.00 : $all_vat);
             // include all item allowance charges in the subtotal
             $inv_item_amount->setSubtotal($qpIncAc);

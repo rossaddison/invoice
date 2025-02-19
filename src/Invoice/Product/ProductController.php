@@ -79,44 +79,26 @@ class ProductController
     private const string FILTER_PRODUCT = 'fp';
     private const string RESET_TRUE = 'rt';
     public ViewRenderer $viewRenderer;
-    private WebControllerService $webService;
-    private ProductService $productService;
-    private ProductCustomService $productCustomService;
-    private QuoteItemService $quoteitemService;
-    private InvItemService $invitemService;
-    private UserService $userService;
-    private DataResponseFactoryInterface $responseFactory;
     private Flash $flash;
-    private SessionInterface $session;
-    private TranslatorInterface $translator;
     private string $ffc = self::FILTER_FAMILY;
     private string $fpc = self::FILTER_PRODUCT;
     private string $rtc = self::RESET_TRUE;
 
     public function __construct(
         ViewRenderer $viewRenderer,
-        WebControllerService $webService,
-        ProductService $productService,
-        ProductCustomService $productCustomService,
-        QuoteItemService $quoteitemService,
-        InvItemService $invitemService,
-        UserService $userService,
-        DataResponseFactoryInterface $responseFactory,
-        SessionInterface $session,
-        TranslatorInterface $translator
+        private WebControllerService $webService,
+        private ProductService $productService,
+        private ProductCustomService $productCustomService,
+        private QuoteItemService $quoteitemService,
+        private InvItemService $invitemService,
+        private UserService $userService,
+        private DataResponseFactoryInterface $responseFactory,
+        private SessionInterface $session,
+        private TranslatorInterface $translator
     ) {
         $this->viewRenderer = $viewRenderer->withControllerName('invoice/product')
                                            ->withLayout('@views/layout/invoice.php');
-        $this->webService = $webService;
-        $this->productService = $productService;
-        $this->productCustomService = $productCustomService;
-        $this->quoteitemService = $quoteitemService;
-        $this->invitemService = $invitemService;
-        $this->userService = $userService;
-        $this->responseFactory = $responseFactory;
-        $this->session = $session;
-        $this->flash = new Flash($session);
-        $this->translator = $translator;
+        $this->flash = new Flash($this->session);
     }
 
     /**
@@ -746,7 +728,7 @@ class ProductController
              * @var string $val
              */
             foreach ($product_custom_fields as $key => $val) {
-                $custom_field_form_values['custom[' . $key . ']'] = $val;
+                $custom_field_form_values['custom[' . (string)$key . ']'] = $val;
             }
         }
         return $custom_field_form_values;
@@ -1042,7 +1024,7 @@ class ProductController
                         header('Cache-Control: public, must-revalidate, post-check=0, pre-check=0');
                         header("Content-Disposition: attachment; filename=\"$original_file_name\"");
                         header('Content-Type: ' . $ctype);
-                        header('Content-Length: ' . $file_size);
+                        header('Content-Length: ' . (string)$file_size);
                         echo file_get_contents($target_path_with_filename, true);
                     } // if file_size <> false
                     exit;
