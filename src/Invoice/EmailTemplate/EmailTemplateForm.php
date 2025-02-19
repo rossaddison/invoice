@@ -92,6 +92,7 @@ final class EmailTemplateForm extends FormModel
      *
      * @psalm-return ''
      */
+    #[\Override]
     public function getFormName(): string
     {
         return '';

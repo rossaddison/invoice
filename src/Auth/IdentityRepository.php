@@ -19,7 +19,7 @@ final class IdentityRepository extends Select\Repository implements IdentityRepo
      * @param EntityWriter $entityWriter
      * @param Select<TEntity> $select
      */
-    public function __construct(private EntityWriter $entityWriter, Select $select)
+    public function __construct(private readonly EntityWriter $entityWriter, Select $select)
     {
         parent::__construct($select);
     }

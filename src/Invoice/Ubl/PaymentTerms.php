@@ -9,11 +9,8 @@ use Sabre\Xml\XmlSerializable;
 
 class PaymentTerms implements XmlSerializable
 {
-    private ?string $note;
-
-    public function __construct(?string $note)
+    public function __construct(private readonly ?string $note)
     {
-        $this->note = $note;
     }
 
     /**

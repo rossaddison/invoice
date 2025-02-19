@@ -88,44 +88,21 @@ use DateTime;
 
 class PeppolHelper
 {
-    private SRepo $s;
-    private DelRepo $delRepo;
-    private IIAR $iiaR;
-    private InvAmount $inv_amount;
-    private DL $delivery_location;
-    private Translator $t;
-    private DateHelper $datehelper;
-    private string $from_currency;
-    private string $to_currency;
-    private string $from_to_manual_input;
-    private string $to_from_manual_input;
+    private readonly DateHelper $datehelper;
 
     public function __construct(
-        SRepo $s,
-        DelRepo $delRepo,
-        IIAR $iiaR,
-        InvAmount $inv_amount,
-        DL $delivery_location,
-        Translator $translator,
-        string $from_currency,
-        string $to_currency,
-        string $from_to_manual_input,
-        string $to_from_manual_input,
+        private readonly SRepo $s,
+        private readonly DelRepo $delRepo,
+        private readonly IIAR $iiaR,
+        private readonly InvAmount $inv_amount,
+        private readonly DL $delivery_location,
+        private readonly Translator $t,
+        private readonly string $from_currency,
+        private readonly string $to_currency,
+        private readonly string $from_to_manual_input,
+        private readonly string $to_from_manual_input,
     ) {
-        $this->s = $s;
-        $this->delRepo = $delRepo;
-        $this->iiaR = $iiaR;
-        $this->inv_amount = $inv_amount;
-        // client's delivery location
-        $this->delivery_location = $delivery_location;
-        $this->t = $translator;
         $this->datehelper = new DateHelper($this->s);
-        $this->from_currency = $from_currency;
-        $this->to_currency = $to_currency;
-        // today's currency value
-        $this->from_to_manual_input = $from_to_manual_input;
-        // today's currency value
-        $this->to_from_manual_input = $to_from_manual_input;
     }
 
     /**
@@ -319,7 +296,7 @@ class PeppolHelper
             // This is a fallback reference provided by the client on their login side
             $buyer_fallback_reference = $this->BuyerReference($invoice, $cpR);
             // if no client purchase order person is provided use the $buyer_fallback_reference
-            $buyerReference = (null !== $BuyerReference ? $BuyerReference : $buyer_fallback_reference);
+            $buyerReference = ($BuyerReference ?? $buyer_fallback_reference);
             // No reference can be made therefore throw an exception
             if (empty($buyerReference)) {
                 throw new PeppolBuyerReferenceNotFoundException();
@@ -329,7 +306,7 @@ class PeppolHelper
             $invoiceLines = $this->build_invoice_lines_array($invoice, $invoice_period, $iiaR, $cpR, $soiR, $aciiR, $unpR);
             $profileID = 'urn:fdc:peppol.eu:2017:poacc:billing:01:1.0';
             $supplierAssignedAccountID = $this->SupplierAssignedAccountId($invoice, $cpR);
-            $note = null !== $invoice->getNote() ? $invoice->getNote() : '';
+            $note = $invoice->getNote() ?? '';
             if (null == $note) {
                 throw new PeppolInvoiceNoteNotFoundException($this->t);
             }
@@ -470,7 +447,7 @@ class PeppolHelper
         $invoice_id = $invoice->getId();
         return new AdditionalDocumentReference(
             $this->t,
-            null !== $invoice_number ? $invoice_number : $this->t->translate('invoice.peppol.document.reference.null') . (null !== $invoice_id ? $invoice_id : 'Not Found'),
+            $invoice_number ?? $this->t->translate('invoice.peppol.document.reference.null') . ($invoice_id ?? 'Not Found'),
             '130',
             $invoice->getDocumentDescription(),
             $attachments,
@@ -858,7 +835,7 @@ class PeppolHelper
             // convert to cents in order to use the int
             ->getMinorAmount()
             ->toInt();
-        return number_format($float / 100, 2);
+        return number_format($float / 100.00, 2);
     }
 
     /**
@@ -1071,151 +1048,149 @@ class PeppolHelper
                     if (null == $listid && null !== $product) {
                         throw new PeppolProductItemClassificationCodeSchemeIdNotFoundException($this->t, $product);
                     }
-                    $price = (null !== $item->getPrice() ? $item->getPrice() : 0.00);
-                    $discount = (null !== $item->getDiscount_amount() ? $item->getDiscount_amount() : 0.00);
+                    $price = ($item->getPrice() ?? 0.00);
+                    $discount = ($item->getDiscount_amount() ?? 0.00);
 
                     $item_id = $item->getId();
                     $inv_item_amount = $this->getInvItemAmount((string) $item_id, $iiaR);
-                    if (null !== $inv_item_amount) {
+                    if (isset($inv_item_amount)) {
                         $sub_total = $inv_item_amount->getSubtotal();
-                        if (null !== $sub_total && null !== $price && null !== $discount) {
-                            $convert_sub_total = $this->currency_converter($sub_total);
-                            $unit_peppol_id = $item->getProduct()?->getUnit_peppol_id();
-                            if (null !== $unit_peppol_id) {
-                                $unit_peppol = $unpR->repoUnitPeppolLoadedquery($unit_peppol_id);
-                                if (null !== $unit_peppol) {
-                                    // using Array Format 2
-                                    // ..\vendor\sabre\xml\lib\Writer.php
-                                    // https://kinsta.com/blog/php-8-2/#deprecate--string-interpolation
-                                    // Note: The following string interpolation, ie. curly brackets within double quotes, conforms with php 8.2 requirements
-                                    $invoiceLines[(int) $item_id] = ['name' => "{$a}InvoiceLine",
-                                        'value' => [
-                                            ['name' => "{$b}ID", 'value' => (string)$item_id],
-                                            ['name' => "{$b}Note", 'value' => $item->getDescription()],
-                                            ['name' => "{$b}InvoicedQuantity",
-                                                'value' => (string) $item->getQuantity(),
-                                                'attributes' => [
-                                                    'unitCode' => $unit_peppol->getCode()]],
-                                            ['name' => "{$b}LineExtensionAmount", 'value' => $convert_sub_total, 'attributes' => ['currencyID' => $this->to_currency]],
-                                            ['name' => "{$b}AccountingCost", 'value' => $client_peppol->getAccountingCost()],
-                                            ['name' => "{$a}InvoicePeriod", 'value' => [
-                                                ['name' => "{$b}StartDate", 'value' => $invoice_period->getStartDate()],
-                                                ['name' => "{$b}EndDate", 'value' => $invoice_period->getEndDate()],
-                                            ]],
-                                            ['name' => "{$a}OrderLineReference", 'value' => [
-                                                ['name' => "{$b}LineID", 'value' => $peppol_po_lineid,],
-                                            ]],
-                                            ['name' => "{$a}DocumentReference", 'value' => [
-                                                ['name' => "{$b}ID", 'value' => $invoice->getNumber()],
-                                                ['name' => "{$b}DocumentTypeCode", 'value' => '130'],
-                                            ],
-                                            ],
-                                            ['name' => "{$a}Item", 'value' => [
-                                                ['name' => "{$b}Description", 'value' => $item->getDescription()],
-                                                ['name' => "{$b}Name", 'value' => $item->getName()],
-                                                ['name' => "{$a}BuyersItemIdentification", 'value' =>
-                                                  [
-                                                      ['name' => "{$b}ID", 'value' => $peppol_po_itemid],
-                                                  ],
-                                                ],
-                                                ['name' => "{$a}SellersItemIdentification", 'value' =>
-                                                  [
-                                                      ['name' => "{$b}ID", 'value' => $item->getProduct()?->getProduct_sku()],
-                                                  ],
-                                                ],
-                                                ['name' => "{$a}StandardItemIdentification", 'value' =>
-                                                  [
-                                                      ['name' => "{$b}ID", 'value' => $item->getProduct()?->getProduct_sii_id(),
-                                                          'attributes' => [
-                                                              'schemeID' => $item->getProduct()?->getProduct_sii_schemeid(),
-                                                          ],
-                                                      ],
-                                                  ],
-                                                ],
-                                                ['name' => "{$a}OriginCountry", 'value' => [
-                                                    ['name' => "{$b}IdentificationCode", 'value' => $item->getProduct()?->getProduct_country_of_origin_code()],
-                                                ],
-                                                ],
-                                                ['name' => "{$a}CommodityClassification", 'value' =>
-                                                  [
-                                                      ['name' => "{$b}ItemClassificationCode", 'value' => $item->getProduct()?->getProduct_icc_id(),
-                                                          'attributes' => [
-                                                              'listID' => $item->getProduct()?->getProduct_icc_listid(),
-                                                              'listVersionID' => $item->getProduct()?->getProduct_icc_listversionid(),
-                                                          ],
-                                                      ],
-                                                  ],
-                                                ],
-                                                ['name' => "{$a}ClassifiedTaxCategory", 'value' =>
-                                                  [
-                                                      ['name' => "{$b}ID", 'value' => $item->getTaxRate()?->getPeppolTaxRateCode()],
-                                                      ['name' => "{$b}Percent", 'value' => $item->getTaxRate()?->getTaxRatePercent()],
-                                                      ['name' => "{$a}TaxScheme", 'value' =>
-                                                        [
-                                                            ['name' => "{$b}ID", 'value' => 'VAT'],
-                                                        ],
-                                                      ],
-                                                  ],
-                                                ],
-                                            ],
-                                                ['name' => "{$a}AdditionalItemProperty", 'value' =>
-                                                  [
-                                                      ['name' => "{$b}Name", 'value' => $item->getProduct()?->getProduct_additional_item_property_name()],
-                                                      ['name' => "{$b}Value", 'value' => $item->getProduct()?->getProduct_additional_item_property_value()],
-                                                  ],
-                                                ],
-                                            ],
-                                            ['name' => "{$a}Price", 'value' =>
+                        $convert_sub_total = $this->currency_converter($sub_total);
+                        $unit_peppol_id = $item->getProduct()?->getUnit_peppol_id();
+                        if (null !== $unit_peppol_id) {
+                            $unit_peppol = $unpR->repoUnitPeppolLoadedquery($unit_peppol_id);
+                            if (null !== $unit_peppol) {
+                                // using Array Format 2
+                                // ..\vendor\sabre\xml\lib\Writer.php
+                                // https://kinsta.com/blog/php-8-2/#deprecate--string-interpolation
+                                // Note: The following string interpolation, ie. curly brackets within double quotes, conforms with php 8.2 requirements
+                                $invoiceLines[(int) $item_id] = ['name' => "{$a}InvoiceLine",
+                                    'value' => [
+                                        ['name' => "{$b}ID", 'value' => (string)$item_id],
+                                        ['name' => "{$b}Note", 'value' => $item->getDescription()],
+                                        ['name' => "{$b}InvoicedQuantity",
+                                            'value' => (string) $item->getQuantity(),
+                                            'attributes' => [
+                                                'unitCode' => $unit_peppol->getCode()]],
+                                        ['name' => "{$b}LineExtensionAmount", 'value' => $convert_sub_total, 'attributes' => ['currencyID' => $this->to_currency]],
+                                        ['name' => "{$b}AccountingCost", 'value' => $client_peppol->getAccountingCost()],
+                                        ['name' => "{$a}InvoicePeriod", 'value' => [
+                                            ['name' => "{$b}StartDate", 'value' => $invoice_period->getStartDate()],
+                                            ['name' => "{$b}EndDate", 'value' => $invoice_period->getEndDate()],
+                                        ]],
+                                        ['name' => "{$a}OrderLineReference", 'value' => [
+                                            ['name' => "{$b}LineID", 'value' => $peppol_po_lineid,],
+                                        ]],
+                                        ['name' => "{$a}DocumentReference", 'value' => [
+                                            ['name' => "{$b}ID", 'value' => $invoice->getNumber()],
+                                            ['name' => "{$b}DocumentTypeCode", 'value' => '130'],
+                                        ],
+                                        ],
+                                        ['name' => "{$a}Item", 'value' => [
+                                            ['name' => "{$b}Description", 'value' => $item->getDescription()],
+                                            ['name' => "{$b}Name", 'value' => $item->getName()],
+                                            ['name' => "{$a}BuyersItemIdentification", 'value' =>
                                               [
-                                                  ['name' => "{$b}PriceAmount", 'value' => $this->currency_converter($price), 'attributes' => ['currencyID' => $this->s->getSetting('currency_code_to')]],
-                                                  ['name' => "{$b}BaseQuantity", 'value' => $item->getQuantity(), 'attributes' => ['unitCode' => $unit_peppol->getCode()]],
-                                                  // This is an allowance/discount that is specific to price
-                                                  ['name' => "{$a}AllowanceCharge", 'value' =>
+                                                  ['name' => "{$b}ID", 'value' => $peppol_po_itemid],
+                                              ],
+                                            ],
+                                            ['name' => "{$a}SellersItemIdentification", 'value' =>
+                                              [
+                                                  ['name' => "{$b}ID", 'value' => $item->getProduct()?->getProduct_sku()],
+                                              ],
+                                            ],
+                                            ['name' => "{$a}StandardItemIdentification", 'value' =>
+                                              [
+                                                  ['name' => "{$b}ID", 'value' => $item->getProduct()?->getProduct_sii_id(),
+                                                      'attributes' => [
+                                                          'schemeID' => $item->getProduct()?->getProduct_sii_schemeid(),
+                                                      ],
+                                                  ],
+                                              ],
+                                            ],
+                                            ['name' => "{$a}OriginCountry", 'value' => [
+                                                ['name' => "{$b}IdentificationCode", 'value' => $item->getProduct()?->getProduct_country_of_origin_code()],
+                                            ],
+                                            ],
+                                            ['name' => "{$a}CommodityClassification", 'value' =>
+                                              [
+                                                  ['name' => "{$b}ItemClassificationCode", 'value' => $item->getProduct()?->getProduct_icc_id(),
+                                                      'attributes' => [
+                                                          'listID' => $item->getProduct()?->getProduct_icc_listid(),
+                                                          'listVersionID' => $item->getProduct()?->getProduct_icc_listversionid(),
+                                                      ],
+                                                  ],
+                                              ],
+                                            ],
+                                            ['name' => "{$a}ClassifiedTaxCategory", 'value' =>
+                                              [
+                                                  ['name' => "{$b}ID", 'value' => $item->getTaxRate()?->getPeppolTaxRateCode()],
+                                                  ['name' => "{$b}Percent", 'value' => $item->getTaxRate()?->getTaxRatePercent()],
+                                                  ['name' => "{$a}TaxScheme", 'value' =>
                                                     [
-                                                        // https://docs.peppol.eu/poacc/billing/3.0/syntax/ubl-invoice/cac-InvoiceLine/cac-Price/cac-AllowanceCharge/cbc-ChargeIndicator/
-                                                        // Mandatory false:  discount on the price => An allowance or discount => ChargeIndicator = false
-                                                        // If there is a reduction of the price, the discount must be shown here
-                                                        ['name' => "{$b}ChargeIndicator", 'value' => 'false'],
-                                                        ['name' => "{$b}Amount", 'value' => $this->currency_converter($discount), 'attributes' => ['currencyID' => $this->s->getSetting('currency_code_to')]],
-                                                        // Item gross price
-                                                        // Base Amount: The unit price, exclusive of VAT, before subtracting Item price discount, can not be negative
-                                                        ['name' => "{$b}BaseAmount", 'value' => $this->currency_converter($price), 'attributes' => ['currencyID' => $this->s->getSetting('currency_code_to')]],
+                                                        ['name' => "{$b}ID", 'value' => 'VAT'],
                                                     ],
                                                   ],
                                               ],
                                             ],
                                         ],
-                                    ];
+                                            ['name' => "{$a}AdditionalItemProperty", 'value' =>
+                                              [
+                                                  ['name' => "{$b}Name", 'value' => $item->getProduct()?->getProduct_additional_item_property_name()],
+                                                  ['name' => "{$b}Value", 'value' => $item->getProduct()?->getProduct_additional_item_property_value()],
+                                              ],
+                                            ],
+                                        ],
+                                        ['name' => "{$a}Price", 'value' =>
+                                          [
+                                              ['name' => "{$b}PriceAmount", 'value' => $this->currency_converter($price), 'attributes' => ['currencyID' => $this->s->getSetting('currency_code_to')]],
+                                              ['name' => "{$b}BaseQuantity", 'value' => $item->getQuantity(), 'attributes' => ['unitCode' => $unit_peppol->getCode()]],
+                                              // This is an allowance/discount that is specific to price
+                                              ['name' => "{$a}AllowanceCharge", 'value' =>
+                                                [
+                                                    // https://docs.peppol.eu/poacc/billing/3.0/syntax/ubl-invoice/cac-InvoiceLine/cac-Price/cac-AllowanceCharge/cbc-ChargeIndicator/
+                                                    // Mandatory false:  discount on the price => An allowance or discount => ChargeIndicator = false
+                                                    // If there is a reduction of the price, the discount must be shown here
+                                                    ['name' => "{$b}ChargeIndicator", 'value' => 'false'],
+                                                    ['name' => "{$b}Amount", 'value' => $this->currency_converter($discount), 'attributes' => ['currencyID' => $this->s->getSetting('currency_code_to')]],
+                                                    // Item gross price
+                                                    // Base Amount: The unit price, exclusive of VAT, before subtracting Item price discount, can not be negative
+                                                    ['name' => "{$b}BaseAmount", 'value' => $this->currency_converter($price), 'attributes' => ['currencyID' => $this->s->getSetting('currency_code_to')]],
+                                                ],
+                                              ],
+                                          ],
+                                        ],
+                                    ],
+                                ];
 
-                                    $inv_item_allowance_charges = $aciiR->repoInvItemquery((string) $item_id);
+                                $inv_item_allowance_charges = $aciiR->repoInvItemquery((string) $item_id);
+                                /**
+                                 * @var InvItemAllowanceCharge $acii
+                                 */
+                                foreach ($inv_item_allowance_charges as $acii) {
                                     /**
-                                     * @var InvItemAllowanceCharge $acii
+                                     * @var array $invoiceLines[$item_id]
+                                     * @var array $item_line
                                      */
-                                    foreach ($inv_item_allowance_charges as $acii) {
-                                        /**
-                                         * @var array $invoiceLines[$item_id]
-                                         * @var array $item_line
-                                         */
-                                        $item_line = $invoiceLines[$item_id];
-                                        /**
-                                         * @var array $item_line['AllowancesCharges']
-                                         * @var array $item_line['AllowancesCharges'][]
-                                         */
-                                        $item_line['AllowancesCharges'][] = [
-                                            ['name' => "{$a}AllowanceCharge", 'value' => [
-                                                ['name' => "{$b}ChargeIndicator", 'value' => $acii->getAllowanceCharge()?->getIdentifier()],
-                                                ['name' => "{$b}AllowanceChargeReasonCode", 'value' => $acii->getAllowanceCharge()?->getReasonCode()],
-                                                ['name' => "{$b}AllowanceChargeReason", 'value' => $acii->getAllowanceCharge()?->getReason()],
-                                                ['name' => "{$b}MultiplierFactorNumeric", 'value' => ''],
-                                                ['name' => "{$b}Amount", 'value' => $acii->getAllowanceCharge()?->getMultiplierFactorNumeric()],
-                                                ['name' => "{$b}BaseAmount", 'value' => $acii->getAllowanceCharge()?->getBaseAmount()],
-                                            ]],
-                                        ];
-                                    } // inv item allowance charge
-                                } // null!== $unit_peppol
-                            } // null!== $unit_peppol_id
-                        } // null !== $subtotal
-                    } // null!== $inv_item_amount
+                                    $item_line = $invoiceLines[$item_id];
+                                    /**
+                                     * @var array $item_line['AllowancesCharges']
+                                     * @var array $item_line['AllowancesCharges'][]
+                                     */
+                                    $item_line['AllowancesCharges'][] = [
+                                        ['name' => "{$a}AllowanceCharge", 'value' => [
+                                            ['name' => "{$b}ChargeIndicator", 'value' => $acii->getAllowanceCharge()?->getIdentifier()],
+                                            ['name' => "{$b}AllowanceChargeReasonCode", 'value' => $acii->getAllowanceCharge()?->getReasonCode()],
+                                            ['name' => "{$b}AllowanceChargeReason", 'value' => $acii->getAllowanceCharge()?->getReason()],
+                                            ['name' => "{$b}MultiplierFactorNumeric", 'value' => ''],
+                                            ['name' => "{$b}Amount", 'value' => $acii->getAllowanceCharge()?->getMultiplierFactorNumeric()],
+                                            ['name' => "{$b}BaseAmount", 'value' => $acii->getAllowanceCharge()?->getBaseAmount()],
+                                        ]],
+                                    ];
+                                } // foreach 
+                            } // null!== $unit_peppol
+                        } // null!== $unit_peppol_id 
+                    } // isset $inv_item_amount
                 } // foreach
                 return $invoiceLines;
             }
@@ -1629,8 +1604,8 @@ class PeppolHelper
                     throw new PeppolTaxCategoryPercentNotFoundException($this->t);
                 }
                 if (!empty($id)) {
-                    $taxable_amount_total = 0;
-                    $tax_amount_total = 0;
+                    $taxable_amount_total = 0.00;
+                    $tax_amount_total = 0.00;
                     $items = $invoice->getItems();
                     /**
                      * @var InvItem $item

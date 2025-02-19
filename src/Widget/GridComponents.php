@@ -17,17 +17,10 @@ use Yiisoft\Router\CurrentRoute;
 use Yiisoft\Translator\TranslatorInterface as Translator;
 use Yiisoft\Yii\DataView\Pagination\OffsetPagination;
 
-final class GridComponents
+final readonly class GridComponents
 {
-    private CurrentRoute $currentRoute;
-    private Translator $translator;
-    private UrlGenerator $generator;
-
-    public function __construct(CurrentRoute $currentRoute, Translator $translator, UrlGenerator $generator)
+    public function __construct(private CurrentRoute $currentRoute, private Translator $translator, private UrlGenerator $generator)
     {
-        $this->currentRoute = $currentRoute;
-        $this->translator = $translator;
-        $this->generator = $generator;
     }
 
     public function header(string $translatorString): string
@@ -113,7 +106,7 @@ final class GridComponents
                                        ($invId ?? '')) .
                                        ' ' .
                                        (null !== $invBalance
-                                             ? $invBalance
+                                             ? (string)$invBalance
                                              : '')
                     )
                     ->render() .

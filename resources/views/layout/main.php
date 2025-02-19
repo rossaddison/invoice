@@ -156,7 +156,7 @@ $this->beginPage();
                             ->csrf($csrf)
                             ->open()
                         . '<div class="mb-1">'
-                        . Button::submit(
+                        . (string)Button::submit(
                             $translator->translate('i.logout', ['login' => Html::encode(null!==$user ? preg_replace('/\d+/', '', $user->getLogin()) : '')])
                         )
                             ->class('btn btn-primary')

@@ -13,13 +13,9 @@ class Family
     #[Column(type: 'primary')]
     public ?int $id = null;
 
-    #[Column(type: 'text', nullable: true)]
-    public ?string $family_name = null;
-
-    public function __construct(
-        string $family_name = ''
-    ) {
-        $this->family_name = $family_name;
+    public function __construct(#[Column(type: 'text', nullable: true)]
+    public ?string $family_name = '')
+    {
     }
 
     public function getFamily_id(): ?int

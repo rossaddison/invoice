@@ -11,7 +11,7 @@ use Yiisoft\Yii\Bootstrap5\AlertVariant;
 
 final class FlashMessage extends Widget
 {
-    public function __construct(private FlashInterface $flash)
+    public function __construct(private readonly FlashInterface $flash)
     {
     }
 
@@ -40,6 +40,6 @@ final class FlashMessage extends Widget
                    ->render();
             }
         }
-        return implode($html);
+        return implode('', $html);
     }
 }

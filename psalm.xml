@@ -2,7 +2,8 @@
 <psalm
     errorLevel="1"
     findUnusedBaselineEntry="true"
-    findUnusedCode="false"
+    findUnusedCode="false"    
+    strictBinaryOperands="false"
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xmlns="https://getpsalm.org/schema/config"
     xsi:schemaLocation="https://getpsalm.org/schema/config vendor/vimeo/psalm/config.xsd"
@@ -21,5 +22,17 @@
     </projectFiles>
     <issueHandlers>
         <NonInvariantDocblockPropertyType errorLevel="suppress" />
+        
+        <!-- Implemented 16/02/2025 psalm version upgrade to 6.6.0. 
+             This will have to be addressed with the cycle/orm which is 
+             error-messaging classes that are being made final 
+             for performance purposes e.g all the Entity Classes. -->
+        <ClassMustBeFinal errorLevel="suppress" />
+        
+        <!-- Implemented 16/02/2025 new ActionButton(url: ...unable to psalm-suppress named parameters. -->
+        <InvalidArgument errorLevel="suppress" />
+        
+        <!-- Implemented 17/02/2025 upgrade to psalm version 6.7.1 -->
+        <MissingOverrideAttribute errorLevel="suppress"/>
     </issueHandlers>    
 </psalm>

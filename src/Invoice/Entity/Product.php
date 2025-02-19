@@ -14,128 +14,38 @@ class Product
     #[Column(type: 'primary')]
     private ?int $id = null;
 
-    #[Column(type: 'text', nullable: true)]
-    private ?string $product_sku = '';
-
-    // sii => Standard Item Identification
-    // eg. https://www.gtin.info/
-    #[Column(type: 'text', nullable: true)]
-    private ?string $product_sii_schemeid = '';
-
-    // https://docs.peppol.eu/poacc/billing/3.0/syntax/ubl-invoice/cac-InvoiceLine/cac-Item/cac-StandardItemIdentification/cbc-ID/
-    // eg. if gtin is being used specifiy the 14 digit code used for bar-codes
-    #[Column(type: 'text', nullable: true)]
-    private ?string $product_sii_id = '';
-
-    // https://docs.peppol.eu/poacc/billing/3.0/syntax/ubl-invoice/cac-InvoiceLine/cac-Item/cac-CommodityClassification/cbc-ItemClassificationCode/
-    // icc => Item Classification Code
-    // eg. 'Id' => 'SRV',
-    // 'Name' => 'GS1 Global Trade Item Number',
-    // 'Description' => 'A unique number, up to 14-digits, assigned according to the numbering structure of the GS1 system.',
-    // eg. 'SRV'
-    #[Column(type: 'text', nullable: true)]
-    private ?string $product_icc_listid = '';
-
-    #[Column(type: 'text', nullable: true)]
-    private ?string $product_icc_listversionid = '';
-
-    // https://docs.peppol.eu/poacc/billing/3.0/syntax/ubl-invoice/cac-InvoiceLine/cac-Item/cac-CommodityClassification/cbc-ItemClassificationCode/
-    // eg. 9873242
-    #[Column(type: 'text', nullable: true)]
-    private ?string $product_icc_id = '';
-
-    #[Column(type: 'string(2)', nullable: true)]
-    private ?string $product_country_of_origin_code = '';
-
-    #[Column(type: 'text', nullable: true)]
-    private ?string $product_name = '';
-
-    #[Column(type: 'longText', nullable: false)]
-    private ?string $product_description = '';
-
-    #[Column(type: 'decimal(20,2)', nullable: true)]
-    private ?float $product_price = null;
-
-    #[Column(type: 'integer(11)', nullable: false, default: 1)]
-    private float $product_price_base_quantity = 1.00;
-
-    #[Column(type: 'decimal(20,2)', nullable: true)]
-    private ?float $purchase_price = null;
-
-    #[Column(type: 'text', nullable: true)]
-    private ?string $provider_name = '';
-
-    #[Column(type: 'text', nullable: true)]
-    private ?string $product_additional_item_property_name = '';
-
-    #[Column(type: 'text', nullable: true)]
-    private ?string $product_additional_item_property_value = '';
-
     #[BelongsTo(target:Family::class, nullable: false, fkAction: 'NO ACTION')]
     private ?Family $family = null;
-    #[Column(type: 'integer(11)', nullable: true)]
-    private ?int $family_id = null;
 
     // A product has to have a tax rate before it can be created even if it is a zero tax rate
     #[BelongsTo(target:TaxRate::class, nullable: false, fkAction: 'NO ACTION')]
     private ?TaxRate $tax_rate = null;
-    #[Column(type: 'integer(11)', nullable: false)]
-    private ?int $tax_rate_id = null;
 
     #[BelongsTo(target:Unit::class, nullable: false, fkAction: 'NO ACTION')]
     private ?Unit $unit = null;
-    #[Column(type: 'integer(11)', nullable: true)]
-    private ?int $unit_id = null;
 
-    #[Column(type: 'integer(11)', nullable: true)]
-    private ?int $unit_peppol_id = null;
-
-    #[Column(type: 'decimal(20,2)', nullable: true)]
-    private ?float $product_tariff = null;
-
-    public function __construct(
-        string $product_sku = '',
-        string $product_sii_schemeid = '',
-        string $product_sii_id = '',
-        string $product_icc_listid = '',
-        string $product_icc_listversionid = '',
-        string $product_icc_id = '',
-        string $product_country_of_origin_code = '',
-        string $product_name = '',
-        string $product_description = '',
-        float $product_price = 0.00,
-        float $purchase_price = 0.00,
-        float $product_price_base_quantity = 1.00,
-        string $provider_name = '',
-        float $product_tariff = 0.00,
-        string $product_additional_item_property_name = '',
-        string $product_additional_item_property_value = '',
-        int $tax_rate_id = null,
-        int $unit_id = null,
-        int $unit_peppol_id = null,
-        int $family_id = null,
-    ) {
-        $this->product_sku = $product_sku;
-        $this->product_sii_schemeid = $product_sii_schemeid;
-        $this->product_sii_id = $product_sii_id;
-        $this->product_icc_listid = $product_icc_listid;
-        $this->product_icc_listversionid = $product_icc_listversionid;
-        $this->product_icc_id = $product_icc_id;
-        $this->product_country_of_origin_code = $product_country_of_origin_code;
-        $this->product_name = $product_name;
-        $this->product_description = $product_description;
-        $this->product_price = $product_price;
-        // how many items the selling price includes eg. 1 crate has 10 bags of cement
-        $this->product_price_base_quantity = $product_price_base_quantity;
-        $this->purchase_price = $purchase_price;
-        $this->provider_name = $provider_name;
-        $this->product_tariff = $product_tariff;
-        $this->product_additional_item_property_name = $product_additional_item_property_name;
-        $this->product_additional_item_property_value = $product_additional_item_property_value;
-        $this->tax_rate_id = $tax_rate_id;
-        $this->unit_id = $unit_id;
-        $this->unit_peppol_id = $unit_peppol_id;
-        $this->family_id = $family_id;
+    public function __construct(#[Column(type: 'text', nullable: true)]
+    private ?string $product_sku = '', #[Column(type: 'text', nullable: true)]
+    private ?string $product_sii_schemeid = '', #[Column(type: 'text', nullable: true)]
+    private ?string $product_sii_id = '', #[Column(type: 'text', nullable: true)]
+    private ?string $product_icc_listid = '', #[Column(type: 'text', nullable: true)]
+    private ?string $product_icc_listversionid = '', #[Column(type: 'text', nullable: true)]
+    private ?string $product_icc_id = '', #[Column(type: 'string(2)', nullable: true)]
+    private ?string $product_country_of_origin_code = '', #[Column(type: 'text', nullable: true)]
+    private ?string $product_name = '', #[Column(type: 'longText', nullable: false)]
+    private ?string $product_description = '', #[Column(type: 'decimal(20,2)', nullable: true)]
+    private ?float $product_price = 0.00, #[Column(type: 'decimal(20,2)', nullable: true)]
+    private ?float $purchase_price = 0.00, #[Column(type: 'integer(11)', nullable: false, default: 1)]
+    private float $product_price_base_quantity = 1.00, #[Column(type: 'text', nullable: true)]
+    private ?string $provider_name = '', #[Column(type: 'decimal(20,2)', nullable: true)]
+    private ?float $product_tariff = 0.00, #[Column(type: 'text', nullable: true)]
+    private ?string $product_additional_item_property_name = '', #[Column(type: 'text', nullable: true)]
+    private ?string $product_additional_item_property_value = '', #[Column(type: 'integer(11)', nullable: false)]
+    private ?int $tax_rate_id = null, #[Column(type: 'integer(11)', nullable: true)]
+    private ?int $unit_id = null, #[Column(type: 'integer(11)', nullable: true)]
+    private ?int $unit_peppol_id = null, #[Column(type: 'integer(11)', nullable: true)]
+    private ?int $family_id = null)
+    {
     }
 
     //get relation $family

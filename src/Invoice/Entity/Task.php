@@ -19,48 +19,16 @@ class Task
     #[BelongsTo(target:Project::class, nullable: true, fkAction: 'NO ACTION')]
     private ?Project $project = null;
 
-    #[Column(type: 'primary')]
-    private ?int $id = null;
-
-    #[Column(type:'integer(11)', nullable: true, default: null)]
-    private ?int $project_id = null;
-
-    #[Column(type:'text', nullable: true)]
-    private ?string $name = '';
-
-    #[Column(type:'longText', nullable: false)]
-    private string $description = '';
-
-    #[Column(type:'decimal(20,2)', nullable: false, default: 0.00)]
-    private ?float $price = 0.00;
-
-    #[Column(type:'date', nullable: true)]
-    private mixed $finish_date;
-
-    #[Column(type:'int', nullable: false)]
-    private ?int $status = null;
-
-    #[Column(type:'integer(11)', nullable: false)]
-    private ?int $tax_rate_id = null;
-
-    public function __construct(
-        int $id = null,
-        int $project_id = null,
-        string $name = '',
-        string $description = '',
-        float $price = null,
-        mixed $finish_date = '',
-        int $status = null,
-        int $tax_rate_id = null
-    ) {
-        $this->id = $id;
-        $this->project_id = $project_id;
-        $this->name = $name;
-        $this->description = $description;
-        $this->price = $price;
-        $this->finish_date = $finish_date;
-        $this->status = $status;
-        $this->tax_rate_id = $tax_rate_id;
+    public function __construct(#[Column(type: 'primary')]
+    private ?int $id = null, #[Column(type:'integer(11)', nullable: true, default: null)]
+    private ?int $project_id = null, #[Column(type:'text', nullable: true)]
+    private ?string $name = '', #[Column(type:'longText', nullable: false)]
+    private string $description = '', #[Column(type:'decimal(20,2)', nullable: false, default: 0.00)]
+    private ?float $price = null, #[Column(type:'date', nullable: true)]
+    private mixed $finish_date = '', #[Column(type:'int', nullable: false)]
+    private ?int $status = null, #[Column(type:'integer(11)', nullable: false)]
+    private ?int $tax_rate_id = null)
+    {
     }
 
     public function getTaxRate(): ?TaxRate

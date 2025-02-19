@@ -26,36 +26,24 @@ final class GroupController
     use FlashMessage;
 
     private Flash $flash;
-    private Session $session;
-    private ViewRenderer $viewRenderer;
-    private WebControllerService $webService;
-    private UserService $userService;
-    private GroupService $groupService;
-    private TranslatorInterface $translator;
 
     public function __construct(
-        Session $session,
-        ViewRenderer $viewRenderer,
-        WebControllerService $webService,
-        UserService $userService,
-        GroupService $groupService,
-        TranslatorInterface $translator
+        private Session $session,
+        private ViewRenderer $viewRenderer,
+        private WebControllerService $webService,
+        private UserService $userService,
+        private GroupService $groupService,
+        private TranslatorInterface $translator
     ) {
-        $this->session = $session;
-        $this->flash = new Flash($session);
-        $this->webService = $webService;
-        $this->userService = $userService;
-        $this->viewRenderer = $viewRenderer;
+        $this->flash = new Flash($this->session);
         if ($this->userService->hasPermission('viewInv') && !$this->userService->hasPermission('editInv')) {
-            $this->viewRenderer = $viewRenderer->withControllerName('invoice')
+            $this->viewRenderer = $this->viewRenderer->withControllerName('invoice')
                                                  ->withLayout('@views/layout/guest.php');
         }
         if ($this->userService->hasPermission('viewInv') && $this->userService->hasPermission('editInv')) {
-            $this->viewRenderer = $viewRenderer->withControllerName('invoice')
+            $this->viewRenderer = $this->viewRenderer->withControllerName('invoice')
                                                  ->withLayout('@views/layout/invoice.php');
         }
-        $this->groupService = $groupService;
-        $this->translator = $translator;
     }
 
     /**

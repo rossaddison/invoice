@@ -17,15 +17,12 @@ use Yiisoft\Data\Cycle\Writer\EntityWriter;
  */
 final class TaxRateRepository extends Select\Repository
 {
-    private EntityWriter $entityWriter;
-
     /**
      * @param Select<TEntity> $select
      * @param EntityWriter $entityWriter
      */
-    public function __construct(Select $select, EntityWriter $entityWriter)
+    public function __construct(Select $select, private readonly EntityWriter $entityWriter)
     {
-        $this->entityWriter = $entityWriter;
         parent::__construct($select);
     }
 
@@ -129,7 +126,7 @@ final class TaxRateRepository extends Select\Repository
         foreach ($taxRates as $taxRate) {
             $taxRateId = $taxRate->getTaxRateId();
             if (null !== $taxRateId) {
-                $optionsDataTaxRates[$taxRateId] = ($taxRate->getTaxRateName() ?? '') . '  ' . ($taxRate->getTaxRatePercent() ?? '');
+                $optionsDataTaxRates[$taxRateId] = ($taxRate->getTaxRateName() ?? '') . '  ' . (string)($taxRate->getTaxRatePercent() ?? '');
             }
         }
         return $optionsDataTaxRates;

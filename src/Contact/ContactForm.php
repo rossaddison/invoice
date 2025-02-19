@@ -28,6 +28,7 @@ final class ContactForm extends FormModel implements RulesProviderInterface, Pro
      *
      * @psalm-return array{name: 'Name', email: 'Email', subject: 'Subject', body: 'Body'}
      */
+    #[\Override]
     public function getPropertyLabels(): array
     {
         return [
@@ -43,6 +44,7 @@ final class ContactForm extends FormModel implements RulesProviderInterface, Pro
      *
      * @psalm-return 'ContactForm'
      */
+    #[\Override]
     public function getFormName(): string
     {
         return 'ContactForm';

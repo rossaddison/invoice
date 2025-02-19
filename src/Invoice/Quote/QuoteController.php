@@ -138,36 +138,11 @@ use Psr\Http\Message\ServerRequestInterface as Request;
 final class QuoteController
 {
     use FlashMessage;
-
-    private DataResponseFactoryInterface $factory;
     private Flash $flash;
     private NumberHelper $number_helper;
-    private InvAmountService $inv_amount_service;
-    private InvService $inv_service;
-    private InvCustomService $inv_custom_service;
-    private InvItemService $inv_item_service;
-    private InvItemAmountService $inv_item_amount_service;
-    private InvTaxRateService $inv_tax_rate_service;
-    private LoggerInterface $logger;
-    private MailerInterface $mailer;
     private PdfHelper $pdf_helper;
-    private soAS $so_amount_service;
-    private soCS $so_custom_service;
-    private soIS $so_item_service;
-    private soS $so_service;
-    private soTRS $so_tax_rate_service;
-    private QuoteAmountService $quote_amount_service;
-    private QuoteCustomService $quote_custom_service;
-    private QuoteItemService $quote_item_service;
-    private QuoteService $quote_service;
-    private QuoteTaxRateService $quote_tax_rate_service;
     private Session $session;
-    private Translator $translator;
     private SR $sR;
-    private UrlGenerator $url_generator;
-    private UserService $user_service;
-    private ViewRenderer $view_renderer;
-    private WebControllerService $web_service;
 
     /**
      * @param DataResponseFactoryInterface $factory
@@ -193,72 +168,48 @@ final class QuoteController
      * @param WebControllerService $web_service
      */
     public function __construct(
-        DataResponseFactoryInterface $factory,
-        InvAmountService $inv_amount_service,
-        InvService $inv_service,
-        InvCustomService $inv_custom_service,
-        InvItemService $inv_item_service,
-        InvItemAmountService $inv_item_amount_service,
-        InvTaxRateService $inv_tax_rate_service,
-        LoggerInterface $logger,
-        MailerInterface $mailer,
-        soAS $so_amount_service,
-        soCS $so_custom_service,
-        soIS $so_item_service,
-        soS $so_service,
-        soTRS $so_tax_rate_service,
-        QuoteAmountService $quote_amount_service,
-        QuoteCustomService $quote_custom_service,
-        QuoteItemService $quote_item_service,
-        QuoteService $quote_service,
-        QuoteTaxRateService $quote_tax_rate_service,
+        private DataResponseFactoryInterface $factory,
+        private InvAmountService $inv_amount_service,
+        private InvService $inv_service,
+        private InvCustomService $inv_custom_service,
+        private InvItemService $inv_item_service,
+        private InvItemAmountService $inv_item_amount_service,
+        private InvTaxRateService $inv_tax_rate_service,
+        private LoggerInterface $logger,
+        private MailerInterface $mailer,
+        private soAS $so_amount_service,
+        private soCS $so_custom_service,
+        private soIS $so_item_service,
+        private soS $so_service,
+        private soTRS $so_tax_rate_service,
+        private QuoteAmountService $quote_amount_service,
+        private QuoteCustomService $quote_custom_service,
+        private QuoteItemService $quote_item_service,
+        private QuoteService $quote_service,
+        private QuoteTaxRateService $quote_tax_rate_service,
         Session $session,
         SR $sR,
-        Translator $translator,
-        UserService $user_service,
-        UrlGenerator $url_generator,
-        ViewRenderer $view_renderer,
-        WebControllerService $web_service,
+        private Translator $translator,
+        private UserService $user_service,
+        private UrlGenerator $url_generator,
+        private ViewRenderer $view_renderer,
+        private WebControllerService $web_service,
     ) {
-        $this->factory = $factory;
         $this->flash = new Flash($session);
-        $this->inv_amount_service = $inv_amount_service;
-        $this->inv_service = $inv_service;
-        $this->inv_custom_service = $inv_custom_service;
-        $this->inv_item_service = $inv_item_service;
-        $this->inv_item_amount_service = $inv_item_amount_service;
-        $this->inv_tax_rate_service = $inv_tax_rate_service;
-        $this->logger = $logger;
-        $this->mailer = $mailer;
         $this->number_helper = new NumberHelper($sR);
-        $this->so_amount_service = $so_amount_service;
-        $this->so_custom_service = $so_custom_service;
-        $this->so_item_service = $so_item_service;
-        $this->so_service = $so_service;
-        $this->so_tax_rate_service = $so_tax_rate_service;
         $this->pdf_helper = new PdfHelper($sR, $session);
-        $this->quote_amount_service = $quote_amount_service;
-        $this->quote_custom_service = $quote_custom_service;
-        $this->quote_item_service = $quote_item_service;
-        $this->quote_service = $quote_service;
-        $this->quote_tax_rate_service = $quote_tax_rate_service;
         $this->session = $session;
         $this->sR = $sR;
-        $this->translator = $translator;
-        $this->user_service = $user_service;
-        $this->url_generator = $url_generator;
-        $this->view_renderer = $view_renderer;
         if ($this->user_service->hasPermission('viewInv') && !$this->user_service->hasPermission('editInv')) {
-            $this->view_renderer = $view_renderer->withControllerName('invoice')
+            $this->view_renderer = $this->view_renderer->withControllerName('invoice')
                                                  ->withLayout('@views/invoice/layout/fullpage-loader.php')
                                                  ->withLayout('@views/layout/guest.php');
         }
         if ($this->user_service->hasPermission('viewInv') && $this->user_service->hasPermission('editInv')) {
-            $this->view_renderer = $view_renderer->withControllerName('invoice')
+            $this->view_renderer = $this->view_renderer->withControllerName('invoice')
                                                  ->withLayout('@views/invoice/layout/fullpage-loader.php')
                                                  ->withLayout('@views/layout/invoice.php');
         }
-        $this->web_service = $web_service;
     }
 
     /**
@@ -376,11 +327,9 @@ final class QuoteController
                     if (null !== $user_client && null !== $user_client->getClient()) {
                         $client_first_name = $user_client->getClient()?->getClient_name();
                         $client_surname = $user_client->getClient()?->getClient_surname();
-                        $client_fullname = (null !== ($client_first_name)
-                                         ? $client_first_name
-                                         : '') .
+                        $client_fullname = ($client_first_name ?? '') .
                                          ' ' .
-                                         (null !== ($client_surname) ? $client_surname : '');
+                                         ($client_surname ?? '');
                     } else {
                         $this->flashMessage('danger', $clientRepository->repoClientquery($client_id)->getClient_full_name() . ': ' . $this->translator->translate('invoice.invoice.user.client.no.account'));
                     }
@@ -1166,7 +1115,7 @@ final class QuoteController
             'from_email' => $email_template->getEmail_template_from_email() ?? '',
             'cc' => $email_template->getEmail_template_cc() ?? '',
             'bcc' => $email_template->getEmail_template_bcc() ?? '',
-            'pdf_template' => null !== $email_template->getEmail_template_pdf_template() ? $email_template->getEmail_template_pdf_template() : '',
+            'pdf_template' => $email_template->getEmail_template_pdf_template() ?? '',
         ];
     }
 
@@ -1725,7 +1674,7 @@ final class QuoteController
                     $quoteitem['discount_amount'] = (float)($item['item_discount_amount'] ? $this->number_helper->standardize_amount($item['item_discount_amount']) : (float) 0);
                     $quoteitem['order'] = $order;
                     $quoteitem['product_unit'] = $unR->singular_or_plural_name((string)$item['item_product_unit_id'], (int)$item['item_quantity']);
-                    $quoteitem['product_unit_id'] = (int)($item['item_product_unit_id'] ? $item['item_product_unit_id'] : null);
+                    $quoteitem['product_unit_id'] = (int)($item['item_product_unit_id'] ?: null);
                     unset($item['item_id']);
                     ($formHydrator->populate($ajax_content, $quoteitem) && $ajax_content->isValid()) ?
                     $this->quote_item_service->saveQuoteItem($unedited, $quoteitem, $quote_id, $pR, $unR, $this->translator) : false;
@@ -1758,7 +1707,7 @@ final class QuoteController
             'client_phone' => $this->translator->translate('i.phone') . '&nbsp;' . ($client->getClient_phone() ?? ''),
             'client_mobile' => $this->translator->translate('i.mobile') . '&nbsp;' . ($client->getClient_mobile() ?? ''),
             'client_fax' => $this->translator->translate('i.fax') . '&nbsp;' . ($client->getClient_fax() ?? ''),
-            'client_email' => $this->translator->translate('i.email') . '&nbsp;' . Html::link($client->getClient_email()),
+            'client_email' => $this->translator->translate('i.email') . '&nbsp;' . (string)Html::link($client->getClient_email()),
             // Reset the a href id="after_client_change_url" link to the new client url
             'after_client_change_url' => 'client/view/' . (string)$body['client_id'],
             'after_client_change_name' => $client->getClient_name(),
@@ -2894,7 +2843,7 @@ final class QuoteController
                 $sales_order_number = '';
                 if ($quote->getSo_id()) {
                     $so = $soR->repoSalesOrderUnloadedquery($quote->getSo_id());
-                    $sales_order_number = $so ? (null !== $so->getNumber() ? $so->getNumber() : '') : '';
+                    $sales_order_number = $so ? ($so->getNumber() ?? '') : '';
                 }
                 $quote_amount = (($qaR->repoQuoteAmountCount((string)$this->session->get('quote_id')) > 0) ? $qaR->repoQuotequery((string)$this->session->get('quote_id')) : null);
                 if ($quote_amount) {

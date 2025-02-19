@@ -7,15 +7,10 @@ namespace App\Invoice\InvAllowanceCharge;
 use App\Invoice\Entity\InvAllowanceCharge;
 use App\Invoice\AllowanceCharge\AllowanceChargeRepository as ACR;
 
-final class InvAllowanceChargeService
+final readonly class InvAllowanceChargeService
 {
-    private InvAllowanceChargeRepository $repository;
-    private ACR $acR;
-
-    public function __construct(InvAllowanceChargeRepository $repository, ACR $acR)
+    public function __construct(private InvAllowanceChargeRepository $repository, private ACR $acR)
     {
-        $this->repository = $repository;
-        $this->acR = $acR;
     }
 
     /**
@@ -38,7 +33,7 @@ final class InvAllowanceChargeService
                 } else {
                     $amount = (float)$array['amount'];
                 }
-                $vat = $amount * ($allowanceChargeTaxRate->getTaxRatePercent() ?? 0.00) / 100;
+                $vat = $amount * ($allowanceChargeTaxRate->getTaxRatePercent() ?? 0.00) / 100.00;
                 $model->setVat($vat);
             }
         }

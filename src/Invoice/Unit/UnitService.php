@@ -6,13 +6,10 @@ namespace App\Invoice\Unit;
 
 use App\Invoice\Entity\Unit;
 
-final class UnitService
+final readonly class UnitService
 {
-    private UnitRepository $repository;
-
-    public function __construct(UnitRepository $repository)
+    public function __construct(private UnitRepository $repository)
     {
-        $this->repository = $repository;
     }
 
     /**

@@ -11,34 +11,8 @@ use Yiisoft\Translator\TranslatorInterface as Translator;
 
 class Party implements XmlSerializable
 {
-    private ?string $name;
-    private ?string $partyIdentificationId;
-    private ?string $partyIdentificationSchemeId;
-    private ?Address $postalAddress;
-    private ?Address $physicalLocation;
-    private ?Contact $contact;
-    private ?PartyTaxScheme $partyTaxScheme;
-    private ?PartyLegalEntity $partyLegalEntity;
-    private ?string $endpointID;
-    private Translator $translator;
-
-    /** @var int|string|null $endpointId_schemeID */
-    private mixed $endpointID_schemeID;
-
-    public function __construct(Translator $translator, ?string $name, ?string $partyIdentificationId, ?string $partyIdentificationSchemeId, ?Address $postalAddress, ?Address $physicalLocation, ?Contact $contact, ?PartyTaxScheme $partyTaxScheme, ?PartyLegalEntity $partyLegalEntity, ?string $endpointID, mixed $endpointID_schemeID)
+    public function __construct(private readonly Translator $translator, private readonly ?string $name, private readonly ?string $partyIdentificationId, private readonly ?string $partyIdentificationSchemeId, private readonly ?Address $postalAddress, private readonly ?Address $physicalLocation, private readonly ?Contact $contact, private readonly ?PartyTaxScheme $partyTaxScheme, private readonly ?PartyLegalEntity $partyLegalEntity, private readonly ?string $endpointID, private readonly mixed $endpointID_schemeID)
     {
-        $this->translator = $translator;
-        $this->name = $name;
-        $this->partyIdentificationId = $partyIdentificationId;
-        $this->partyIdentificationSchemeId = $partyIdentificationSchemeId;
-        $this->postalAddress = $postalAddress;
-        $this->physicalLocation = $physicalLocation;
-        $this->contact = $contact;
-        $this->partyTaxScheme = $partyTaxScheme;
-        $this->partyLegalEntity = $partyLegalEntity;
-        $this->endpointID = $endpointID;
-        /** @var string $this->endpointID_schemeID */
-        $this->endpointID_schemeID = $endpointID_schemeID;
     }
 
     public function getPartyName(): ?string

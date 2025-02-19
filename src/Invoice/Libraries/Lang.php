@@ -6,6 +6,7 @@ namespace App\Invoice\Libraries;
 
 use Yiisoft\Aliases\Aliases;
 use Yiisoft\Log\Logger;
+use Yiisoft\VarDumper\VarDumper;
 
 class Lang
 {
@@ -77,6 +78,7 @@ class Lang
             '@language' => dirname(__DIR__) . DIRECTORY_SEPARATOR . 'Language']);
         $path = $aliases->get('@language');
         $basepath = $path . '/' . $idiom . '/' . $langfile;
+        
         $lang = [];
         if (($found = file_exists($basepath)) === true) {
             // $lang is a full array in $basepath

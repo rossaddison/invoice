@@ -6,13 +6,10 @@ namespace App\Invoice\Generator;
 
 use App\Invoice\Entity\Gentor;
 
-final class GeneratorService
+final readonly class GeneratorService
 {
-    private GeneratorRepository $repository;
-
-    public function __construct(GeneratorRepository $repository)
+    public function __construct(private GeneratorRepository $repository)
     {
-        $this->repository = $repository;
     }
 
     /**

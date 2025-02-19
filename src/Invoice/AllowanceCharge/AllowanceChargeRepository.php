@@ -18,17 +18,12 @@ use Yiisoft\Data\Cycle\Writer\EntityWriter;
  */
 final class AllowanceChargeRepository extends Select\Repository
 {
-    private EntityWriter $entityWriter;
-    private TranslatorInterface $translator;
-
     /**
      * @param Select<TEntity> $select
      * @param EntityWriter $entityWriter
      */
-    public function __construct(Select $select, EntityWriter $entityWriter, TranslatorInterface $translator)
+    public function __construct(Select $select, private readonly EntityWriter $entityWriter, private readonly TranslatorInterface $translator)
     {
-        $this->entityWriter = $entityWriter;
-        $this->translator = $translator;
         parent::__construct($select);
     }
 

@@ -30,33 +30,22 @@ use Exception;
 final class ContractController
 {
     use FlashMessage;
-
-    private SessionInterface $session;
     private Flash $flash;
     private ViewRenderer $viewRenderer;
-    private WebControllerService $webService;
-    private UserService $userService;
-    private ContractService $contractService;
-    private const CONTRACTS_PER_PAGE = 1;
-    private TranslatorInterface $translator;
+    private const int CONTRACTS_PER_PAGE = 1;
 
     public function __construct(
-        SessionInterface $session,
+        private SessionInterface $session,
         ViewRenderer $viewRenderer,
-        WebControllerService $webService,
-        UserService $userService,
-        ContractService $contractService,
-        TranslatorInterface $translator
+        private WebControllerService $webService,
+        private UserService $userService,
+        private ContractService $contractService,
+        private TranslatorInterface $translator
     ) {
-        $this->session = $session;
-        $this->flash = new Flash($session);
+        $this->flash = new Flash($this->session);
         $this->viewRenderer = $viewRenderer->withControllerName('invoice/contract')
                                            // The Controller layout dir is now redundant: replaced with an alias
                                            ->withLayout('@views/layout/invoice.php');
-        $this->webService = $webService;
-        $this->userService = $userService;
-        $this->contractService = $contractService;
-        $this->translator = $translator;
     }
 
     /**

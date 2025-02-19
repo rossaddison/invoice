@@ -6,13 +6,10 @@ namespace App\Invoice\InvItemAmount;
 
 use App\Invoice\Entity\InvItemAmount;
 
-final class InvItemAmountService
+final readonly class InvItemAmountService
 {
-    private InvItemAmountRepository $repository;
-
-    public function __construct(InvItemAmountRepository $repository)
+    public function __construct(private InvItemAmountRepository $repository)
     {
-        $this->repository = $repository;
     }
 
     /**

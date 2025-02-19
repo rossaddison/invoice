@@ -101,7 +101,7 @@ use Yiisoft\Html\Tag\Form;
     <?= $translator->translate('g.creditcard_expiry_year'); ?>
     <?= Field::text($form, 'creditcard_expiry_year')
     ->addInputAttributes(['class'=>'input-sm form-control'])  
-    ->addInputAttributes(['min'=>date('Y'),'max'=>date('Y') + 20])    
+    ->addInputAttributes(['min'=>date('Y'),'max'=>(int)date('Y') + 20])    
     ->addInputAttributes(['value'=>$body['creditcard_expiry_year'] ?? '2030' ])
     ->hideLabel()
     ?>

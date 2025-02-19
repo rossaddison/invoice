@@ -6,13 +6,10 @@ namespace App\Invoice\UnitPeppol;
 
 use App\Invoice\Entity\UnitPeppol;
 
-final class UnitPeppolService
+final readonly class UnitPeppolService
 {
-    private UnitPeppolRepository $repository;
-
-    public function __construct(UnitPeppolRepository $repository)
+    public function __construct(private UnitPeppolRepository $repository)
     {
-        $this->repository = $repository;
     }
 
     public function saveUnitPeppol(UnitPeppol $model, array $array): void

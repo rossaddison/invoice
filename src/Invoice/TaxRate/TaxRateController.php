@@ -27,29 +27,19 @@ final class TaxRateController
     use FlashMessage;
 
     private Flash $flash;
-    private Session $session;
     private ViewRenderer $viewRenderer;
-    private WebControllerService $webService;
-    private TaxRateService $taxRateService;
-    private UserService $userService;
-    private Translator $translator;
 
     public function __construct(
-        Session $session,
+        private Session $session,
         ViewRenderer $viewRenderer,
-        WebControllerService $webService,
-        TaxRateService $taxRateService,
-        UserService $userService,
-        Translator $translator,
+        private WebControllerService $webService,
+        private TaxRateService $taxRateService,
+        private UserService $userService,
+        private Translator $translator,
     ) {
-        $this->session = $session;
-        $this->flash = new Flash($session);
+        $this->flash = new Flash($this->session);
         $this->viewRenderer = $viewRenderer->withControllerName('invoice/taxrate')
                                            ->withLayout('@views/layout/invoice.php');
-        $this->webService = $webService;
-        $this->taxRateService = $taxRateService;
-        $this->userService = $userService;
-        $this->translator = $translator;
     }
 
     /**
@@ -57,7 +47,7 @@ final class TaxRateController
      * @param TaxRateRepository $taxRateRepository
      * @param SettingRepository $settingRepository
      */
-    public function index(#[Query('page')] int $page = null, TaxRateRepository $taxRateRepository, SettingRepository $settingRepository): \Yiisoft\DataResponse\DataResponse
+    public function index(TaxRateRepository $taxRateRepository, SettingRepository $settingRepository, #[Query('page')] int $page = null): \Yiisoft\DataResponse\DataResponse
     {
         $canEdit = $this->rbac();
         $parameters = [

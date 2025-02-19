@@ -13,13 +13,10 @@ use App\Invoice\TaxRate\TaxRateRepository as TRR;
 use App\Invoice\Unit\UnitRepository as UR;
 use Yiisoft\Translator\TranslatorInterface as Translator;
 
-final class QuoteItemService
+final readonly class QuoteItemService
 {
-    private QuoteItemRepository $repository;
-
-    public function __construct(QuoteItemRepository $repository)
+    public function __construct(private QuoteItemRepository $repository)
     {
-        $this->repository = $repository;
     }
 
     /**
@@ -104,8 +101,8 @@ final class QuoteItemService
                 // If the user has changed the description on the form => override default product description
                 $description = ((isset($array['description'])) ?
                                           (string)$array['description'] :
-                                          (null !== $product->getProduct_description() ? $product->getProduct_description() : $translator->translate('invoice.not.available')));
-                $model->setDescription((string)$description);
+                                          ($product->getProduct_description() ?? $translator->translate('invoice.not.available')));
+                $model->setDescription($description);
             }
         }
         isset($array['quantity']) ? $model->setQuantity((float)$array['quantity']) : '';
@@ -154,7 +151,7 @@ final class QuoteItemService
         $qias_array['quote_item_id'] = $quote_item_id;
         $sub_total = $quantity * $price;
         if (null !== $tax_rate_percentage) {
-            $tax_total = ($sub_total * ($tax_rate_percentage / 100));
+            $tax_total = ($sub_total * ($tax_rate_percentage / 100.00));
         } else {
             $tax_total = 0.00;
         }

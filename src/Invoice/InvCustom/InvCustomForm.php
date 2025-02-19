@@ -40,6 +40,7 @@ final class InvCustomForm extends FormModel
      *
      * @psalm-return ''
      */
+    #[\Override]
     public function getFormName(): string
     {
         return '';

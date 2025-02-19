@@ -39,44 +39,24 @@ final class ImportController
     use FlashMessage;
 
     private ViewRenderer $viewRenderer;
-    private WebControllerService $webService;
-    private UserService $userService;
-    private Session $session;
     private Flash $flash;
-    private TranslatorInterface $translator;
-    private ClientRepository $cR;
-    private UnitRepository $uR;
-    private FamilyRepository $fR;
-    private ProductRepository $pR;
-    private SettingRepository $sR;
-    private TaxRateRepository $trR;
 
     public function __construct(
         ViewRenderer $viewRenderer,
-        WebControllerService $webService,
-        UserService $userService,
-        Session $session,
-        TranslatorInterface $translator,
-        ClientRepository $cR,
-        UnitRepository $uR,
-        FamilyRepository $fR,
-        ProductRepository $pR,
-        SettingRepository $sR,
-        TaxRateRepository $trR
+        private WebControllerService $webService,
+        private UserService $userService,
+        private Session $session,
+        private TranslatorInterface $translator,
+        private ClientRepository $cR,
+        private UnitRepository $uR,
+        private FamilyRepository $fR,
+        private ProductRepository $pR,
+        private SettingRepository $sR,
+        private TaxRateRepository $trR
     ) {
         $this->viewRenderer = $viewRenderer->withControllerName('invoice/import')
                                            ->withLayout('@views/layout/invoice.php');
-        $this->webService = $webService;
-        $this->userService = $userService;
-        $this->session = $session;
-        $this->flash = new Flash($session);
-        $this->translator = $translator;
-        $this->cR = $cR;
-        $this->uR = $uR;
-        $this->fR = $fR;
-        $this->pR = $pR;
-        $this->sR = $sR;
-        $this->trR = $trR;
+        $this->flash = new Flash($this->session);
     }
 
     private function invoiceplaneConnected(): Connection|null

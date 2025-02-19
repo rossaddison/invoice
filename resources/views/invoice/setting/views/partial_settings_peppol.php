@@ -98,7 +98,7 @@
                     <div class="form-group">
                         <label for="settings[currency_from_to]" <?= $s->where('currency_code_from_to'); ?>>
                             <?= $translator->translate('invoice.peppol.currency.from.to'); ?>
-                            <?= '('. Html::a('xe.com' ,'https://www.xe.com/') . ')'; ?>
+                            <?= '('. (string)Html::a('xe.com' ,'https://www.xe.com/') . ')'; ?>
                         </label>
                         <?php $body['settings[currency_from_to]'] = $s->getSetting('currency_from_to') ?: '1.00'; ?>
                         <input type="text" name="settings[currency_from_to]" id="settings[currency_from_to]"

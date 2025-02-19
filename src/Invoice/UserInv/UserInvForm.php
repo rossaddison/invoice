@@ -48,7 +48,7 @@ final class UserInvForm extends FormModel
     private ?string $rcc = '';
     private ?int $listLimit = 10;
 
-    private ?User $user;
+    private readonly ?User $user;
 
     public function __construct(UserInv $userinv)
     {
@@ -209,6 +209,7 @@ final class UserInvForm extends FormModel
      *
      * @psalm-return ''
      */
+    #[\Override]
     public function getFormName(): string
     {
         return '';

@@ -43,6 +43,7 @@ final class FromDropDownForm extends FormModel
      * @return string
      * @psalm-return ''
      */
+    #[\Override]
     public function getFormName(): string
     {
         return '';

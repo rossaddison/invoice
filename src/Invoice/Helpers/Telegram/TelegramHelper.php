@@ -4,14 +4,10 @@ declare(strict_types=1);
 
 namespace App\Invoice\Helpers\Telegram;
 
-use Http\Client\Curl\Client;
-use HttpSoft\Message\RequestFactory;
-use HttpSoft\Message\ResponseFactory;
-use HttpSoft\Message\StreamFactory;
 use Psr\Http\Message\ServerRequestInterface as Request;
 use Psr\Log\LoggerInterface as Logger;
 use Vjik\TelegramBot\Api\FailResult;
-use Vjik\TelegramBot\Api\Transport\PsrTransport;
+use Vjik\TelegramBot\Api\Transport\Curl\CurlTransport;
 use Vjik\TelegramBot\Api\LogType;
 use Vjik\TelegramBot\Api\TelegramBotApi;
 use Vjik\TelegramBot\Api\Type\Update\Update;
@@ -32,23 +28,17 @@ use Yiisoft\Router\FastRoute\UrlGenerator;
 
 final class TelegramHelper
 {
-    private TelegramBotApi $botApi;
+    private readonly TelegramBotApi $botApi;
 
     public function __construct(
-        private string $settingRepositoryTelegramToken,
+        private readonly string $settingRepositoryTelegramToken,
         private Logger $logger
     ) {
         $this->logger = $logger;
-        $responseFactory = new ResponseFactory();
-        $requestFactory = new RequestFactory();
-        $streamFactory = new StreamFactory();
         $this->botApi = new TelegramBotApi(
-            new PsrTransport(
-                $this->settingRepositoryTelegramToken,
-                $client = new Client($responseFactory, $streamFactory),
-                $requestFactory,
-                $streamFactory,
-            ),
+            $this->settingRepositoryTelegramToken,
+            'https://api.telegram.org',    
+            new CurlTransport(),
             $this->logger
         );
     }

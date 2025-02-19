@@ -26,16 +26,10 @@ use Yiisoft\Translator\TranslatorInterface as Translator;
 
 class PdfHelper
 {
-    private SR $s;
+    private readonly CountryHelper $countryhelper;
 
-    private Session $session;
-
-    private CountryHelper $countryhelper;
-
-    public function __construct(SR $s, Session $session)
+    public function __construct(private readonly SR $s, private readonly Session $session)
     {
-        $this->s = $s;
-        $this->session = $session;
         $this->countryhelper = new CountryHelper();
     }
 
@@ -61,7 +55,7 @@ class PdfHelper
         // Get the client language if set : otherwise use the locale as basis
         if ($quote_or_inv instanceof \App\Invoice\Entity\Quote ||
             $quote_or_inv instanceof \App\Invoice\Entity\Inv) {
-            $print_language = (null !== ($quote_or_inv->getClient()?->getClient_language()) ? $quote_or_inv->getClient()?->getClient_language() : $locale_lang);
+            $print_language = ($quote_or_inv->getClient()?->getClient_language() ?? $locale_lang);
             $this->session->set('print_language', $print_language);
             return  $print_language;
         }
@@ -182,7 +176,7 @@ class PdfHelper
                 // Set the print language to null for future use
                 $this->session->set('print_language', '');
                 $mpdfhelper = new MpdfHelper();
-                $filename = $this->s->getSetting('i.quote') . '_' . str_replace(['\\', '/'], '_', $quote->getNumber() ?? (string)rand(0, 10));
+                $filename = $this->s->getSetting('i.quote') . '_' . str_replace(['\\', '/'], '_', $quote->getNumber() ?? (string)random_int(0, 10));
                 return $mpdfhelper->pdf_create($html, $filename, $stream, $quote->getPassword(), $this->s, null, null, false, false, [], $quote);
             }
         }
@@ -302,7 +296,7 @@ class PdfHelper
                 // Set the print language to null for future use
                 $this->session->set('print_language', '');
                 $mpdfhelper = new MpdfHelper();
-                $filename = $translator->translate('invoice.salesorder') . '_' . str_replace(['\\', '/'], '_', $so->getNumber() ?? (string)rand(0, 10));
+                $filename = $translator->translate('invoice.salesorder') . '_' . str_replace(['\\', '/'], '_', $so->getNumber() ?? (string)random_int(0, 10));
                 return $mpdfhelper->pdf_create($html, $filename, $stream, $so->getPassword(), $this->s, null, null, false, false, [], $so);
             }
         }
@@ -490,7 +484,7 @@ class PdfHelper
                 } else {
                     $associatedFiles = [];
                 }
-                $filename = $this->s->trans('invoice') . '_' . str_replace(['\\', '/'], '_', $inv->getNumber() ?? (string)rand(0, 10));
+                $filename = $this->s->trans('invoice') . '_' . str_replace(['\\', '/'], '_', $inv->getNumber() ?? (string)random_int(0, 10));
                 //$isInvoice is assigned to true as it is an invoice
                 // If stream is true return the pdf as a string using mpdf otherwise save to local file and
                 // return the filename inclusive target_path to be used to attach to email attachments

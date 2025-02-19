@@ -23,7 +23,7 @@ if (!$updates instanceof \Vjik\TelegramBot\Api\FailResult) {
         echo Html::opentag('pre');
         $message = $update->message;
         if (null!==$message) {
-            echo Label::tag()->content('Chat Id: '.$message->chat->id)->render();
+            echo Label::tag()->content('Chat Id: '.(string)$message->chat->id)->render();
             echo Br::tag()->render();
             echo Label::tag()->content('Chat Username: '. ($message->chat->username ?? '????'))->render();
             echo Br::tag()->render();

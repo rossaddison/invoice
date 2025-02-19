@@ -6,13 +6,10 @@ namespace App\Invoice\EmailTemplate;
 
 use App\Invoice\Entity\EmailTemplate;
 
-final class EmailTemplateService
+final readonly class EmailTemplateService
 {
-    private EmailTemplateRepository $repository;
-
-    public function __construct(EmailTemplateRepository $repository)
+    public function __construct(private EmailTemplateRepository $repository)
     {
-        $this->repository = $repository;
     }
 
     /**

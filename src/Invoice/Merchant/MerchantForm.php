@@ -23,7 +23,7 @@ final class MerchantForm extends FormModel
     private ?string $response = '';
     #[Required]
     private ?string $reference = '';
-    private ?Inv $inv;
+    private readonly ?Inv $inv;
 
     public function __construct(Merchant $merchant)
     {
@@ -79,6 +79,7 @@ final class MerchantForm extends FormModel
      *
      * @psalm-return ''
      */
+    #[\Override]
     public function getFormName(): string
     {
         return '';

@@ -13,79 +13,46 @@ use DateTimeImmutable;
 #[Entity(repository: \App\Invoice\QuoteItem\QuoteItemRepository::class)]
 class QuoteItem
 {
-    #[Column(type: 'primary')]
-    public ?int $id = null;
-
     #[Column(type: 'date', nullable: false)]
     private mixed $date_added;
 
-    #[Column(type: 'text', nullable: true)]
-    private ?string $name = '';
-
-    #[Column(type: 'text', nullable: true)]
-    private ?string $description = '';
-
-    #[Column(type: 'decimal(20,2)', nullable: false, default: 1.00)]
-    private ?float $quantity = 1.00;
-
-    #[Column(type: 'decimal(20,2)', nullable: false, default: 0.00)]
-    private ?float $price = 0.00;
-
-    #[Column(type: 'decimal(20,2)', nullable: false, default: 0.00)]
-    private ?float $discount_amount = 0.00;
-
-    #[Column(type: 'integer(2)', nullable: false, default:0)]
-    private ?int $order = null;
-
-    #[Column(type: 'string(50)', nullable: true)]
-    private ?string $product_unit = '';
-
     #[BelongsTo(target:Quote::class, nullable: false, fkAction: 'NO ACTION')]
     private ?Quote $quote = null;
-    #[Column(type: 'integer(11)', nullable: false)]
-    private ?int $quote_id = null;
 
     #[BelongsTo(target:TaxRate::class, nullable: false, fkAction: 'NO ACTION')]
     private ?TaxRate $tax_rate = null;
-    #[Column(type: 'integer(11)', nullable: false)]
-    private ?int $tax_rate_id = null;
 
     // Mandatory: The item MUST have a product however psalm testing requires it to be in the constructor => nullable
     #[BelongsTo(target:Product::class, nullable: false, fkAction: 'NO ACTION')]
     private ?Product $product = null;
-    #[Column(type: 'integer(11)', nullable: true)]
-    private ?int $product_id;
-
-    #[Column(type: 'integer(11)', nullable: true)]
-    private ?int $product_unit_id;
 
     public function __construct(
-        int $id = null,
-        string $name = '',
-        string $description = '',
-        float $quantity = 1.00,
-        float $price = 0.00,
-        float $discount_amount = 0.00,
-        int $order = null,
-        string $product_unit = '',
-        int $quote_id = null,
-        int $tax_rate_id = null,
-        int $product_id = null,
-        int $product_unit_id = null
+        #[Column(type: 'primary')]
+        public ?int $id = null,
+        #[Column(type: 'text', nullable: true)]
+        private ?string $name = '',
+        #[Column(type: 'text', nullable: true)]
+        private ?string $description = '',
+        #[Column(type: 'decimal(20,2)', nullable: false, default: 1.00)]
+        private ?float $quantity = 1.00,
+        #[Column(type: 'decimal(20,2)', nullable: false, default: 0.00)]
+        private ?float $price = 0.00,
+        #[Column(type: 'decimal(20,2)', nullable: false, default: 0.00)]
+        private ?float $discount_amount = 0.00,
+        #[Column(type: 'integer(2)', nullable: false, default:0)]
+        private ?int $order = null,
+        #[Column(type: 'string(50)', nullable: true)]
+        private ?string $product_unit = '',
+        #[Column(type: 'integer(11)', nullable: false)]
+        private ?int $quote_id = null,
+        #[Column(type: 'integer(11)', nullable: false)]
+        private ?int $tax_rate_id = null,
+        #[Column(type: 'integer(11)', nullable: true)]
+        private ?int $product_id = null,
+        #[Column(type: 'integer(11)', nullable: true)]
+        private ?int $product_unit_id = null
     ) {
-        $this->id = $id;
         $this->date_added = new \DateTimeImmutable();
-        $this->name = $name;
-        $this->description = $description;
-        $this->quantity = $quantity;
-        $this->price = $price;
-        $this->discount_amount = $discount_amount;
-        $this->order = $order;
-        $this->product_unit = $product_unit;
-        $this->quote_id = $quote_id;
-        $this->tax_rate_id = $tax_rate_id;
-        $this->product_id = $product_id;
-        $this->product_unit_id = $product_unit_id;
     }
 
     //relation $tax_rate

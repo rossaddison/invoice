@@ -24,18 +24,13 @@ use Yiisoft\Data\Cycle\Writer\EntityWriter;
  */
 final class InvRepository extends Select\Repository
 {
-    private EntityWriter $entityWriter;
-    private Translator $translator;
-
     /**
      * @param Select<TEntity> $select
      * @param EntityWriter $entityWriter
      * @param Translator $translator
      */
-    public function __construct(Select $select, EntityWriter $entityWriter, Translator $translator)
+    public function __construct(Select $select, private readonly EntityWriter $entityWriter, private readonly Translator $translator)
     {
-        $this->entityWriter = $entityWriter;
-        $this->translator = $translator;
         parent::__construct($select);
     }
 

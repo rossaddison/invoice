@@ -27,29 +27,19 @@ final class ClientNoteController
     use FlashMessage;
 
     private ViewRenderer $viewRenderer;
-    private WebControllerService $webService;
-    private UserService $userService;
-    private ClientNoteService $clientnoteService;
-    private SessionInterface $session;
     private Flash $flash;
-    private TranslatorInterface $translator;
 
     public function __construct(
         ViewRenderer $viewRenderer,
-        WebControllerService $webService,
-        UserService $userService,
-        ClientNoteService $clientnoteService,
-        SessionInterface $session,
-        TranslatorInterface $translator
+        private WebControllerService $webService,
+        private UserService $userService,
+        private ClientNoteService $clientnoteService,
+        private SessionInterface $session,
+        private TranslatorInterface $translator
     ) {
         $this->viewRenderer = $viewRenderer->withControllerName('invoice/clientnote')
                                            ->withLayout('@views/layout/invoice.php');
-        $this->webService = $webService;
-        $this->userService = $userService;
-        $this->clientnoteService = $clientnoteService;
-        $this->session = $session;
-        $this->flash = new Flash($session);
-        $this->translator = $translator;
+        $this->flash = new Flash($this->session);
     }
 
     /**

@@ -15,28 +15,12 @@ class UserCustom
     #[BelongsTo(target: User::class, nullable: false)]
     private ?User $user = null;
 
-    #[Column(type: 'primary')]
-    private ?int $id = null;
-
-    #[Column(type: 'integer(11)', nullable: false)]
-    private ?int $user_id = null;
-
-    #[Column(type: 'integer(11)', nullable: false)]
-    private ?int $fieldid = null;
-
-    #[Column(type: 'text', nullable: true)]
-    private ?string $fieldvalue = '';
-
-    public function __construct(
-        int $id = null,
-        int $user_id = null,
-        int $fieldid = null,
-        string $fieldvalue = ''
-    ) {
-        $this->id = $id;
-        $this->user_id = $user_id;
-        $this->fieldid = $fieldid;
-        $this->fieldvalue = $fieldvalue;
+    public function __construct(#[Column(type: 'primary')]
+    private ?int $id = null, #[Column(type: 'integer(11)', nullable: false)]
+    private ?int $user_id = null, #[Column(type: 'integer(11)', nullable: false)]
+    private ?int $fieldid = null, #[Column(type: 'text', nullable: true)]
+    private ?string $fieldvalue = '')
+    {
     }
 
     public function getUser(): ?User

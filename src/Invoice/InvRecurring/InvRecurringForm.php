@@ -11,8 +11,6 @@ use DateTimeImmutable;
 
 final class InvRecurringForm extends FormModel
 {
-    private ?int $inv_id = null;
-
     #[Required]
     private ?string $frequency = '';
 
@@ -22,9 +20,8 @@ final class InvRecurringForm extends FormModel
 
     private mixed $end = '';
 
-    public function __construct(InvRecurring $invRecurring, int $inv_id)
+    public function __construct(InvRecurring $invRecurring, private readonly ?int $inv_id)
     {
-        $this->inv_id = $inv_id;
         $this->frequency = $invRecurring->getFrequency();
         $this->start = $invRecurring->getStart();
         $this->next = $invRecurring->getNext();
@@ -70,6 +67,7 @@ final class InvRecurringForm extends FormModel
      *
      * @psalm-return ''
      */
+    #[\Override]
     public function getFormName(): string
     {
         return '';

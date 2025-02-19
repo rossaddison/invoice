@@ -14,40 +14,18 @@ class InvItemAllowanceCharge
 {
     #[BelongsTo(target:AllowanceCharge::class, nullable: false, fkAction:'NO ACTION')]
     private ?AllowanceCharge $allowance_charge = null;
-    #[Column(type:'integer(11)', nullable: false)]
-    private ?int $allowance_charge_id = null;
 
     #[BelongsTo(target:InvItem::class, nullable: false, fkAction:'NO ACTION')]
     private ?InvItem $inv_item = null;
-    #[Column(type:'integer(11)', nullable: false)]
-    private ?int $inv_item_id = null;
 
-    #[Column(type:'primary')]
-    private ?int $id = null;
-
-    #[Column(type:'integer(11)', nullable: false)]
-    private ?int $inv_id = null;
-
-    #[Column(type:'decimal(20,2)', nullable: false, default: 0.00)]
-    private ?float $amount = null;
-
-    #[Column(type: 'decimal(20,2)', nullable: false, default: 0.00)]
-    private ?float $vat = 0.00;
-
-    public function __construct(
-        int $id = null,
-        int $inv_id = null,
-        int $inv_item_id = null,
-        int $allowance_charge_id = null,
-        float $amount = null,
-        float $vat = null
-    ) {
-        $this->id = $id;
-        $this->inv_id = $inv_id;
-        $this->inv_item_id = $inv_item_id;
-        $this->allowance_charge_id = $allowance_charge_id;
-        $this->amount = $amount;
-        $this->vat = $vat;
+    public function __construct(#[Column(type:'primary')]
+    private ?int $id = null, #[Column(type:'integer(11)', nullable: false)]
+    private ?int $inv_id = null, #[Column(type:'integer(11)', nullable: false)]
+    private ?int $inv_item_id = null, #[Column(type:'integer(11)', nullable: false)]
+    private ?int $allowance_charge_id = null, #[Column(type:'decimal(20,2)', nullable: false, default: 0.00)]
+    private ?float $amount = null, #[Column(type: 'decimal(20,2)', nullable: false, default: 0.00)]
+    private ?float $vat = null)
+    {
     }
 
     public function getAllowanceCharge(): ?AllowanceCharge

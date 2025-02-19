@@ -14,13 +14,10 @@ use Yiisoft\DataResponse\DataResponseFactoryInterface;
 /**
  * @OA\Info(title="Yii demo API", version="2.0")
  */
-final class ApiInfo implements MiddlewareInterface
+final readonly class ApiInfo implements MiddlewareInterface
 {
-    private DataResponseFactoryInterface $responseFactory;
-
-    public function __construct(DataResponseFactoryInterface $responseFactory)
+    public function __construct(private DataResponseFactoryInterface $responseFactory)
     {
-        $this->responseFactory = $responseFactory;
     }
 
     /**

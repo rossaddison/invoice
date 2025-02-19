@@ -13,28 +13,12 @@ class Group
     #[Column(type: 'primary')]
     private ?int $id = null;
 
-    #[Column(type: 'text', nullable: true)]
-    private ?string $name = '';
-
-    #[Column(type: 'string(191)', nullable: true)]
-    private ?string $identifier_format = '';
-
-    #[Column(type: 'integer', nullable: true)]
-    private ?int $next_id = null;
-
-    #[Column(type: 'integer', nullable: true, default: 0)]
-    private ?int $left_pad = null;
-
-    public function __construct(
-        string $name = '',
-        string $identifier_format = '',
-        int $next_id = null,
-        int $left_pad = null
-    ) {
-        $this->name = $name;
-        $this->identifier_format = $identifier_format;
-        $this->next_id = $next_id;
-        $this->left_pad = $left_pad;
+    public function __construct(#[Column(type: 'text', nullable: true)]
+    private ?string $name = '', #[Column(type: 'string(191)', nullable: true)]
+    private ?string $identifier_format = '', #[Column(type: 'integer', nullable: true)]
+    private ?int $next_id = null, #[Column(type: 'integer', nullable: true, default: 0)]
+    private ?int $left_pad = null)
+    {
     }
 
     public function getId(): string

@@ -15,62 +15,20 @@ use DateTimeImmutable;
 #[Entity(repository: \App\Invoice\InvItem\InvItemRepository::class)]
 class InvItem
 {
-    #[Column(type: 'primary')]
-    public ?int $id = null;
-
-    #[Column(type: 'integer(11)', nullable: false)]
-    private ?int $inv_id = null;
-
-    #[Column(type: 'integer(11)', nullable: true)]
-    private ?int $so_item_id = null;
-
     #[Column(type: 'date', nullable: false)]
     private mixed $date_added;
-
-    #[Column(type: 'text', nullable: true)]
-    private ?string $name = '';
-
-    #[Column(type: 'longText', nullable: true)]
-    private ?string $description = '';
-
-    #[Column(type: 'decimal(10,2)', nullable: false, default: 1)]
-    private ?float $quantity = null;
-
-    #[Column(type: 'decimal(20,2)', nullable: false, default: 0.00)]
-    private ?float $price = 0.00;
-
-    #[Column(type: 'decimal(20,2)', nullable: false, default: 0.00)]
-    private ?float $discount_amount = 0.00;
-
-    #[Column(type: 'integer(2)', nullable: true, default:0)]
-    private ?int $order = null;
-
-    #[Column(type: 'boolean', nullable: false)]
-    private ?bool $is_recurring = false;
-
-    #[Column(type: 'string(50)', nullable: true)]
-    private ?string $product_unit = '';
-
-    #[Column(type: 'integer(11)', nullable: true)]
-    private ?int $product_unit_id = null;
 
     #[Column(type: 'datetime', nullable: false)]
     private DateTimeImmutable $date;
 
     #[BelongsTo(target: TaxRate::class, nullable: false, fkAction: 'NO ACTION')]
     private ?TaxRate $tax_rate = null;
-    #[Column(type: 'integer(11)', nullable: false, default:0)]
-    private ?int $tax_rate_id = null;
 
     #[BelongsTo(target: Product::class, nullable: true, fkAction: 'NO ACTION')]
     private ?Product $product = null;
-    #[Column(type: 'integer(11)', nullable: true, default:null)]
-    private ?int $product_id = null;
 
     #[BelongsTo(target: Task::class, nullable: true, fkAction: 'NO ACTION')]
     private ?Task $task = null;
-    #[Column(type: 'integer(11)', nullable: true, default:null)]
-    private ?int $task_id = null;
 
     #[BelongsTo(target: Inv::class, nullable: false, fkAction: 'NO ACTION')]
     private ?Inv $inv = null;
@@ -81,55 +39,46 @@ class InvItem
     #[HasMany(target: InvItemAllowanceCharge::class)]
     private ArrayCollection $invitemallowancecharges;
 
-    #[Column(type: 'integer(2)', nullable: true, default:0)]
-    private ?int $belongs_to_vat_invoice = null;
-
-    #[Column(type: 'integer(11)', nullable: true)]
-    private ?int $delivery_id = null;
-
-    #[Column(type: 'longText', nullable: true)]
-    private ?string $note = null;
-
     public function __construct(
-        int $id = null,
-        string $name = '',
-        string $description = '',
-        float $quantity = null,
-        float $price = null,
-        float $discount_amount = null,
-        int $order = null,
-        bool $is_recurring = false,
-        string $product_unit = '',
-        int $inv_id = null,
-        int $so_item_id = null,
-        int $tax_rate_id = null,
-        int $product_id = null,
-        int $task_id = null,
-        int $product_unit_id = null,
-        int $belongs_to_vat_invoice = null,
-        int $delivery_id = null,
-        string $note = null,
+        #[Column(type: 'primary')]
+        public ?int $id = null,
+        #[Column(type: 'text', nullable: true)]
+        private ?string $name = '',
+        #[Column(type: 'longText', nullable: true)]
+        private ?string $description = '',
+        #[Column(type: 'decimal(10,2)', nullable: false, default: 1)]
+        private ?float $quantity = null,
+        #[Column(type: 'decimal(20,2)', nullable: false, default: 0.00)]
+        private ?float $price = null,
+        #[Column(type: 'decimal(20,2)', nullable: false, default: 0.00)]
+        private ?float $discount_amount = null,
+        #[Column(type: 'integer(2)', nullable: true, default:0)]
+        private ?int $order = null,
+        #[Column(type: 'boolean', nullable: false)]
+        private ?bool $is_recurring = false,
+        #[Column(type: 'string(50)', nullable: true)]
+        private ?string $product_unit = '',
+        #[Column(type: 'integer(11)', nullable: false)]
+        private ?int $inv_id = null,
+        #[Column(type: 'integer(11)', nullable: true)]
+        private ?int $so_item_id = null,
+        #[Column(type: 'integer(11)', nullable: false, default:0)]
+        private ?int $tax_rate_id = null,
+        #[Column(type: 'integer(11)', nullable: true, default:null)]
+        private ?int $product_id = null,
+        #[Column(type: 'integer(11)', nullable: true, default:null)]
+        private ?int $task_id = null,
+        #[Column(type: 'integer(11)', nullable: true)]
+        private ?int $product_unit_id = null,
+        #[Column(type: 'integer(2)', nullable: true, default:0)]
+        private ?int $belongs_to_vat_invoice = null,
+        #[Column(type: 'integer(11)', nullable: true)]
+        private ?int $delivery_id = null,
+        #[Column(type: 'longText', nullable: true)]
+        private ?string $note = null,
     ) {
-        $this->id = $id;
         $this->date_added = new \DateTimeImmutable();
-        $this->task_id = $task_id;
-        $this->name = $name;
-        $this->description = $description;
-        $this->quantity = $quantity;
-        $this->price = $price;
-        $this->discount_amount = $discount_amount;
-        $this->order = $order;
-        $this->is_recurring = $is_recurring;
-        $this->product_unit = $product_unit;
-        $this->inv_id = $inv_id;
-        $this->so_item_id = $so_item_id;
-        $this->tax_rate_id = $tax_rate_id;
-        $this->product_id = $product_id;
-        $this->product_unit_id = $product_unit_id;
         $this->date = new \DateTimeImmutable();
-        $this->belongs_to_vat_invoice = $belongs_to_vat_invoice;
-        $this->delivery_id = $delivery_id;
-        $this->note = $note;
         $this->invitemallowancecharges = new ArrayCollection();
     }
 

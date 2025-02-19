@@ -30,36 +30,24 @@ final class PostalAddressController
     use FlashMessage;
 
     private Flash $flash;
-    private SessionInterface $session;
-    private ViewRenderer $viewRenderer;
-    private WebControllerService $webService;
-    private UserService $userService;
-    private PostalAddressService $postaladdressService;
-    private TranslatorInterface $translator;
 
     public function __construct(
-        SessionInterface $session,
-        ViewRenderer $viewRenderer,
-        WebControllerService $webService,
-        UserService $userService,
-        PostalAddressService $postaladdressService,
-        TranslatorInterface $translator
+        private SessionInterface $session,
+        private ViewRenderer $viewRenderer,
+        private WebControllerService $webService,
+        private UserService $userService,
+        private PostalAddressService $postaladdressService,
+        private TranslatorInterface $translator
     ) {
-        $this->session = $session;
-        $this->flash = new Flash($session);
-        $this->userService = $userService;
-        $this->viewRenderer = $viewRenderer;
+        $this->flash = new Flash($this->session);
         if ($this->userService->hasPermission('viewInv') && !$this->userService->hasPermission('editInv')) {
-            $this->viewRenderer = $viewRenderer->withControllerName('invoice/postaladdress')
+            $this->viewRenderer = $this->viewRenderer->withControllerName('invoice/postaladdress')
                                                  ->withLayout('@views/layout/guest.php');
         }
         if ($this->userService->hasPermission('viewInv') && $this->userService->hasPermission('editInv')) {
-            $this->viewRenderer = $viewRenderer->withControllerName('invoice/postaladdress')
+            $this->viewRenderer = $this->viewRenderer->withControllerName('invoice/postaladdress')
                                                  ->withLayout('@views/layout/invoice.php');
         }
-        $this->webService = $webService;
-        $this->postaladdressService = $postaladdressService;
-        $this->translator = $translator;
     }
 
     /**

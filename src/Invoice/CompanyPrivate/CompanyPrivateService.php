@@ -8,13 +8,10 @@ use App\Invoice\Entity\CompanyPrivate;
 use App\Invoice\Helpers\DateHelper;
 use App\Invoice\Setting\SettingRepository;
 
-final class CompanyPrivateService
+final readonly class CompanyPrivateService
 {
-    private CompanyPrivateRepository $repository;
-
-    public function __construct(CompanyPrivateRepository $repository)
+    public function __construct(private CompanyPrivateRepository $repository)
     {
-        $this->repository = $repository;
     }
 
     /**

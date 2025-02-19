@@ -6,13 +6,10 @@ namespace App\Invoice\SalesOrderTaxRate;
 
 use App\Invoice\Entity\SalesOrderTaxRate;
 
-final class SalesOrderTaxRateService
+final readonly class SalesOrderTaxRateService
 {
-    private SalesOrderTaxRateRepository $repository;
-
-    public function __construct(SalesOrderTaxRateRepository $repository)
+    public function __construct(private SalesOrderTaxRateRepository $repository)
     {
-        $this->repository = $repository;
     }
 
     /**

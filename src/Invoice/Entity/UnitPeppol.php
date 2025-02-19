@@ -15,33 +15,13 @@ class UnitPeppol
     #[BelongsTo(target:Unit::class, nullable: false, fkAction:'NO ACTION')]
     private ?Unit $unit = null;
 
-    #[Column(type: 'primary')]
-    private ?int $id = null;
-
-    #[Column(type:'integer(11)', nullable: false)]
-    private ?int $unit_id = null;
-
-    #[Column(type:'string(3)', nullable: false)]
-    private string $code = '';
-
-    #[Column(type:'string(120)', nullable: false)]
-    private string $name = '';
-
-    #[Column(type:'longText', nullable: false)]
-    private string $description = '';
-
-    public function __construct(
-        int $id = null,
-        int $unit_id = null,
-        string $code = '',
-        string $name = '',
-        string $description = '',
-    ) {
-        $this->id = $id;
-        $this->unit_id = $unit_id;
-        $this->code = $code;
-        $this->name = $name;
-        $this->description = $description;
+    public function __construct(#[Column(type: 'primary')]
+    private ?int $id = null, #[Column(type:'integer(11)', nullable: false)]
+    private ?int $unit_id = null, #[Column(type:'string(3)', nullable: false)]
+    private string $code = '', #[Column(type:'string(120)', nullable: false)]
+    private string $name = '', #[Column(type:'longText', nullable: false)]
+    private string $description = '')
+    {
     }
 
     public function getUnit(): ?Unit

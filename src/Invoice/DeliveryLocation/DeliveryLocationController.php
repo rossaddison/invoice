@@ -29,44 +29,28 @@ use Exception;
 final class DeliveryLocationController
 {
     use FlashMessage;
-
-    private SessionInterface $session;
     private Flash $flash;
-    private ViewRenderer $viewRenderer;
-    private WebControllerService $webService;
-    private UserService $userService;
-    private DeliveryLocationService $delService;
 
-    private const DELS_PER_PAGE = 1;
-
-    private TranslatorInterface $translator;
-    private DataResponseFactoryInterface $factory;
+    private const int DELS_PER_PAGE = 1;
 
     public function __construct(
-        SessionInterface $session,
-        ViewRenderer $viewRenderer,
-        WebControllerService $webService,
-        UserService $userService,
-        DeliveryLocationService $delService,
-        TranslatorInterface $translator,
-        DataResponseFactoryInterface $factory
+        private SessionInterface $session,
+        private ViewRenderer $viewRenderer,
+        private WebControllerService $webService,
+        private UserService $userService,
+        private DeliveryLocationService $delService,
+        private TranslatorInterface $translator,
+        private DataResponseFactoryInterface $factory
     ) {
-        $this->session = $session;
-        $this->flash = new Flash($session);
-        $this->viewRenderer = $viewRenderer;
-        $this->webService = $webService;
-        $this->userService = $userService;
+        $this->flash = new Flash($this->session);
         if ($this->userService->hasPermission('viewInv') && !$this->userService->hasPermission('editInv')) {
-            $this->viewRenderer = $viewRenderer->withControllerName('invoice')
+            $this->viewRenderer = $this->viewRenderer->withControllerName('invoice')
               ->withLayout('@views/layout/guest.php');
         }
         if ($this->userService->hasPermission('viewInv') && $this->userService->hasPermission('editInv')) {
-            $this->viewRenderer = $viewRenderer->withControllerName('invoice')
+            $this->viewRenderer = $this->viewRenderer->withControllerName('invoice')
               ->withLayout('@views/layout/invoice.php');
         }
-        $this->delService = $delService;
-        $this->translator = $translator;
-        $this->factory = $factory;
     }
 
     /**

@@ -33,7 +33,7 @@ if ($errors) {
     foreach ($errors as $field => $error) {
         echo Alert::widget()
              ->variant(AlertVariant::DANGER)
-             ->body($field . ':' . $error, true)   
+             ->body((string)$field . ':' . $error, true)   
              ->dismissable(true)
              ->render();
     }

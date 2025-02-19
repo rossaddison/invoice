@@ -27,28 +27,18 @@ final class CustomValueController
 
     private Flash $flash;
     private ViewRenderer $viewRenderer;
-    private WebControllerService $webService;
-    private UserService $userService;
-    private CustomValueService $customvalueService;
-    private TranslatorInterface $translator;
-    private SessionInterface $session;
 
     public function __construct(
         ViewRenderer $viewRenderer,
-        WebControllerService $webService,
-        UserService $userService,
-        CustomValueService $customvalueService,
-        TranslatorInterface $translator,
-        SessionInterface $session
+        private WebControllerService $webService,
+        private UserService $userService,
+        private CustomValueService $customvalueService,
+        private TranslatorInterface $translator,
+        private SessionInterface $session
     ) {
         $this->viewRenderer = $viewRenderer->withControllerName('invoice/customvalue')
                                            ->withLayout('@views/layout/invoice.php');
-        $this->webService = $webService;
-        $this->userService = $userService;
-        $this->customvalueService = $customvalueService;
-        $this->translator = $translator;
-        $this->session = $session;
-        $this->flash = new Flash($session);
+        $this->flash = new Flash($this->session);
     }
 
     /**

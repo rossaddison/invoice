@@ -6,13 +6,10 @@ namespace App\Invoice\UserInv;
 
 use App\Invoice\Entity\UserInv;
 
-final class UserInvService
+final readonly class UserInvService
 {
-    private UserInvRepository $repository;
-
-    public function __construct(UserInvRepository $repository)
+    public function __construct(private UserInvRepository $repository)
     {
-        $this->repository = $repository;
     }
 
     /**

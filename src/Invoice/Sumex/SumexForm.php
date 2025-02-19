@@ -22,11 +22,11 @@ final class SumexForm extends FormModel
     #[Required]
     private ?string $observations = '';
 
-    private mixed $treatmentstart;
+    private readonly mixed $treatmentstart;
 
-    private mixed $treatmentend;
+    private readonly mixed $treatmentend;
 
-    private mixed $casedate;
+    private readonly mixed $casedate;
 
     #[Required]
     private ?string $casenumber = '';
@@ -97,6 +97,7 @@ final class SumexForm extends FormModel
      *
      * @psalm-return ''
      */
+    #[\Override]
     public function getFormName(): string
     {
         return '';

@@ -18,13 +18,10 @@ use App\Invoice\Task\TaskRepository as taskR;
 use App\Invoice\TaxRate\TaxRateRepository as TRR;
 use App\Invoice\Unit\UnitRepository as UNR;
 
-final class InvItemService
+final readonly class InvItemService
 {
-    private InvItemRepository $repository;
-
-    public function __construct(InvItemRepository $repository)
+    public function __construct(private InvItemRepository $repository)
     {
-        $this->repository = $repository;
     }
 
     /**
@@ -350,13 +347,13 @@ final class InvItemService
         $tax_total = 0.00;
         // NO VAT
         if ($s->getSetting('enable_vat_registration') === '0') {
-            $tax_total = (($sub_total - $discount_total + $charge_total - $allowance_total) * ($tax_rate_percentage / 100));
+            $tax_total = (($sub_total - $discount_total + $charge_total - $allowance_total) * ($tax_rate_percentage / 100.00));
         }
         // VAT
         if ($s->getSetting('enable_vat_registration') === '1') {
             // EARLY SETTLEMENT CASH DISCOUNTS MUST BE REMOVED BEFORE VAT IS DETERMINED
             // @see https://informi.co.uk/finance/how-vat-affected-discounts
-            $tax_total = (($sub_total - $discount_total + $charge_total) * ($tax_rate_percentage / 100));
+            $tax_total = (($sub_total - $discount_total + $charge_total) * ($tax_rate_percentage / 100.00));
         }
         $iias_array['discount'] = $discount_total;
         $iias_array['charge'] = $charge_total;
@@ -419,7 +416,7 @@ final class InvItemService
             $new_item->setName($item->getName() ?? '');
             $new_item->setDescription($item->getDescription() ?? '');
             $new_item->setNote($item->getNote() ?? '');
-            $new_item->setQuantity(($item->getQuantity() ?? 1) * -1);
+            $new_item->setQuantity(($item->getQuantity() ?? 1.00) * -1.00);
             $new_item->setPrice($item->getPrice() ?? 0.00);
             $new_item->setDiscount_amount($item->getDiscount_amount() ?? 0.00);
             // TODO Ordering of items
@@ -437,10 +434,10 @@ final class InvItemService
             if ($basis_item_amount) {
                 $new_item_amount = new InvItemAmount();
                 $new_item_amount->setInv_item_id((int)$new_item->getId());
-                $new_item_amount->setSubtotal(($basis_item_amount->getSubtotal() ?? 0.00) * -1);
-                $new_item_amount->setTax_total(($basis_item_amount->getTax_total() ?? 0.00) * -1);
-                $new_item_amount->setDiscount(($basis_item_amount->getDiscount() ?? 0.00) * -1);
-                $new_item_amount->setTotal(($basis_item_amount->getTotal() ?? 0.00) * -1);
+                $new_item_amount->setSubtotal(($basis_item_amount->getSubtotal() ?? 0.00) * -1.00);
+                $new_item_amount->setTax_total(($basis_item_amount->getTax_total() ?? 0.00) * -1.00);
+                $new_item_amount->setDiscount(($basis_item_amount->getDiscount() ?? 0.00) * -1.00);
+                $new_item_amount->setTotal(($basis_item_amount->getTotal() ?? 0.00) * -1.00);
                 $iiaR->save($new_item_amount);
             }
         }

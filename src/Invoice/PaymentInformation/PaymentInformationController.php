@@ -339,7 +339,7 @@ final class PaymentInformationController
                 $items_array = [];
                 /** @var InvItem $item */
                 foreach ($items as $item) {
-                    $items_array[] = ($item->getId() ?? '') . ' ' . ($item->getName() ?? '');
+                    $items_array[] = (string)$item->getId() . ' ' . ($item->getName() ?? '');
                 }
                 $invoice_amount_record = $this->iaR->repoInvquery((int)$invoice_id);
                 if (null !== $invoice_amount_record) {
@@ -407,7 +407,7 @@ final class PaymentInformationController
                                         '//invoice/client/partial_client_address',
                                         ['client' => $cR->repoClientquery($invoice->getClient_id())]
                                     ),
-                                'payment_method' => null !== $payment_method_for_this_invoice->getName() ? $payment_method_for_this_invoice->getName() : $this->translator->translate('invoice.payment.information.none'),
+                                'payment_method' => $payment_method_for_this_invoice->getName() ?? $this->translator->translate('invoice.payment.information.none'),
                                 'total' => $total,
                                 'actionName' => 'paymentinformation/make_payment_omnipay',
                                 'actionArguments' => ['url_key' => $url_key],
@@ -644,7 +644,7 @@ final class PaymentInformationController
         // Create a new Braintree customer if not existing
         try {
             $customer_gateway->find($invoice->getClient_id());
-        } catch (\Throwable $e) {
+        } catch (\Throwable) {
         } finally {
             $customer_gateway->create([
                 'id' => $invoice->getClient_id(),
@@ -873,7 +873,7 @@ final class PaymentInformationController
             // which will direct the customer to Mollie's payment site => pci Compliant ... no credit
             // card details touch our site. Once the customer makes payment on the Mollie website
             // they will be redirected to the redirectUrl above
-        } catch (MollieException $e) {
+        } catch (MollieException) {
             /**
              * Previously: echo "API call failed here in function paymentinformation/mollieApiClientCreatePayment ". htmlspecialchars($e->getMessage());
              * @see https://cwe.mitre.org/data/definitions/200.html
@@ -952,7 +952,7 @@ final class PaymentInformationController
                         $this->iaR->save($invoice_amount_record);
                         $this->record_online_payments_and_merchant_for_non_omnipay(
                             // Reference
-                            $invoiceNumber . '-' . $lastPayment->status,
+                            (string)$invoiceNumber . '-' . $lastPayment->status,
                             $invoice_amount_record->getInv_id(),
                             $balance > 0.00 ? $balance : 0.00,
                             // Card / Direct Debit - Customer Ready => 6
@@ -1102,7 +1102,7 @@ final class PaymentInformationController
             // Get the invoice data
             /** @var Inv $invoice */
             $invoice = $this->iR->repoUrl_key_guest_loaded($invoice_url_key);
-            $invoiceNumber = null !== $invoice->getNumber() ?: 'unknown';
+            $invoiceNumber = (null !== $invoice->getNumber()) ?: 'unknown';
             // Get Stripe's query param redirect_status returned in their returnUrl
             $query_params = $request->getQueryParams();
             $redirect_status_from_stripe = (string)$query_params['redirect_status'];
@@ -1139,7 +1139,7 @@ final class PaymentInformationController
                 $this->iaR->save($invoice_amount_record);
                 $this->record_online_payments_and_merchant_for_non_omnipay(
                     // Reference
-                    $invoiceNumber . '-' . $redirect_status_from_stripe,
+                    (string)$invoiceNumber . '-' . $redirect_status_from_stripe,
                     $invoice_amount_record->getInv_id(),
                     $balance ?: 0.00,
                     // Card / Direct Debit - Customer Ready => 6
@@ -1179,7 +1179,7 @@ final class PaymentInformationController
     {
         $payment_intent = \Stripe\PaymentIntent::create([
             // convert the float amount to cents
-            'amount' => ((float)$yii_invoice['balance'] ?: 0.00) * 100,
+            'amount' => ((float)$yii_invoice['balance'] ?: 0.00) * 100.00,
             'currency' => $yii_invoice['currency'],
             // include the payment methods you have chosen listed in dashboard.stripe.com eg. card, bacs direct debit,
             // googlepay etc.
@@ -1385,10 +1385,10 @@ final class PaymentInformationController
         $this->session->set($invoice_url_key . '_online_payment', $request_information);
 
         // For Merchant table inspection and testing purposes $omnipay_gateway->getApiKey() can be used here in place of '[no reference]']
-        $reference = null !== $purchase_send_response->getTransactionReference() ? $purchase_send_response->getTransactionReference() : '[no transation reference]';
+        $reference = $purchase_send_response->getTransactionReference() ?? '[no transation reference]';
         // Process the response
         return $this->record_online_payments_and_merchant_for_omnipay(
-            (string)$reference,
+            $reference,
             $invoice_id,
             $balance,
             $invoice_payment_method,
@@ -1456,7 +1456,7 @@ final class PaymentInformationController
                         $telegramToken = $this->sR->getSetting('telegram_token');
                         // send the  successful payment note via telegram bot to the settings ... view... telegram ... chat id including the client's full name and balance
                         if ((strlen($chatId) > 0) && strlen($telegramToken) > 0) {
-                            $failResultSendMessage = $telegramBotApi->sendMessage($chatId, $clientFullName . ': ' . $balance . ' : ' . $payment_note);
+                            $failResultSendMessage = $telegramBotApi->sendMessage($chatId, $clientFullName . ': ' . (string)$balance . ' : ' . $payment_note);
                             if (!$failResultSendMessage instanceof FailResult) {
                                 $this->flashMessage('success', $this->translator->translate('invoice.invoice.telegram.bot.api.payment.notification.success'));
                             }
@@ -1741,7 +1741,7 @@ final class PaymentInformationController
                         'inv_id' => $invoice->getId(),
                         'payment_date' => \DateTime::createFromImmutable(new \DateTimeImmutable('now')),
                         'payment_amount' => $balance,
-                        'payment_method_id' => ($this->sR->getSetting('gateway_' . $d . '_payment_method')) ? $this->sR->getSetting('gateway_' . $d . '_payment_method') : 0,
+                        'payment_method_id' => $this->sR->getSetting('gateway_' . $d . '_payment_method') ?: 0,
                     ];
 
                     $payment = new Payment();
@@ -1805,7 +1805,7 @@ final class PaymentInformationController
                 ];
                 $payment_success = true;
                 $response = $gateway->completePurchase($params)->send();
-                $message = null !== $response->getMessage() ? $response->getMessage() : 'No details provided';
+                $message = $response->getMessage() ?? 'No details provided';
                 $response_transaction_reference = $response->getTransactionReference();
             } else {
                 $message = 'Customer cancelled the purchase process';

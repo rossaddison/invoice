@@ -21,21 +21,14 @@ use Yiisoft\Data\Cycle\Writer\EntityWriter;
  */
 final class SalesOrderRepository extends Select\Repository
 {
-    private EntityWriter $entityWriter;
-    private Translator $translator;
-    private SR $sR;
-
     /**
      * @param Select<TEntity> $select
      * @param EntityWriter $entityWriter
      * @param Translator $translator
      * @param SR $sR
      */
-    public function __construct(Select $select, EntityWriter $entityWriter, Translator $translator, SR $sR)
+    public function __construct(Select $select, private readonly EntityWriter $entityWriter, private readonly Translator $translator, private readonly SR $sR)
     {
-        $this->entityWriter = $entityWriter;
-        $this->translator = $translator;
-        $this->sR = $sR;
         parent::__construct($select);
     }
 

@@ -29,9 +29,9 @@ final class AssignRoleCommand extends Command
     protected static $defaultName = 'user/assignRole';
 
     public function __construct(
-        private CycleDependencyProxy $promise,
-        private Manager $manager,
-        private ItemsStorageInterface $itemsStorage
+        private readonly CycleDependencyProxy $promise,
+        private readonly Manager $manager,
+        private readonly ItemsStorageInterface $itemsStorage
     ) {
         parent::__construct();
     }

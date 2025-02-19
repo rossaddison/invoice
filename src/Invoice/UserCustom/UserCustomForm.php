@@ -33,6 +33,7 @@ final class UserCustomForm extends FormModel
      *
      * @psalm-return ''
      */
+    #[\Override]
     public function getFormName(): string
     {
         return '';

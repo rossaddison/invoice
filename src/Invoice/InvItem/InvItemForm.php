@@ -48,7 +48,7 @@ final class InvItemForm extends FormModel
     private ?int $product_unit_id = null;
 
     #[Required]
-    private DateTimeImmutable $date;
+    private readonly DateTimeImmutable $date;
 
     private ?int $belongs_to_vat_invoice = null;
     private ?string $delivery_id = '';
@@ -170,6 +170,7 @@ final class InvItemForm extends FormModel
      *
      * @psalm-return ''
      */
+    #[\Override]
     public function getFormName(): string
     {
         return '';

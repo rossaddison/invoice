@@ -6,16 +6,13 @@ namespace App\Invoice\Group;
 
 use App\Invoice\Entity\Group;
 
-final class GroupService
+final readonly class GroupService
 {
-    private GroupRepository $repository;
-
     /**
      * @param GroupRepository $repository
      */
-    public function __construct(GroupRepository $repository)
+    public function __construct(private GroupRepository $repository)
     {
-        $this->repository = $repository;
     }
 
     /**

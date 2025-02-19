@@ -188,7 +188,7 @@ $vat = $s->getSetting('enable_vat_registration');
                         <b>
                             <div class="input-group">
                                 
-                        <?php echo $count.'-'.$item->getInv_id().'-'.($item->getId() ?? '#').'-'.
+                        <?php echo (string)$count.'-'.$item->getInv_id().'-'.(string)$item->getId().'-'.
                         (null!==$productId ? $productRef : '').
                         (null!==$taskId ? $taskRef : ''); ?>
                                 

@@ -138,31 +138,12 @@ use Psr\Http\Message\ServerRequestInterface as Request;
 final class InvController
 {
     use FlashMessage;
-
-    private Crypt $crypt;
     private DateHelper $date_helper;
-    private DataResponseFactoryInterface $factory;
-    private DelRepo $delRepo;
     private Flash $flash;
-    private InvAmountService $inv_amount_service;
-    private InvCustomService $inv_custom_service;
-    private InvService $inv_service;
-    private InvAllowanceChargeService $inv_allowance_charge_service;
-    private InvItemService $inv_item_service;
-    private InvItemAllowanceChargeService $aciis;
-    private IIAS $inv_item_amount_service;
-    private InvTaxRateService $inv_tax_rate_service;
-    private LoggerInterface $logger;
-    private MailerInterface $mailer;
     private NumberHelper $number_helper;
     private PdfHelper $pdf_helper;
     private SessionInterface $session;
     private SR $sR;
-    private TranslatorInterface $translator;
-    private UrlGenerator $url_generator;
-    private UserService $user_service;
-    private ViewRenderer $view_renderer;
-    private WebControllerService $web_service;
 
     /**
      * @param Crypt $crypt
@@ -186,59 +167,41 @@ final class InvController
      * @param WebControllerService $web_service
      */
     public function __construct(
-        Crypt $crypt,
-        DataResponseFactoryInterface $factory,
-        DelRepo $delRepo,
-        InvAllowanceChargeService $inv_allowance_charge_service,
-        InvAmountService $inv_amount_service,
-        InvService $inv_service,
-        InvCustomService $inv_custom_service,
-        InvItemService $inv_item_service,
-        InvItemAllowanceChargeService $aciis,
-        IIAS $inv_item_amount_service,
-        InvTaxRateService $inv_tax_rate_service,
-        LoggerInterface $logger,
-        MailerInterface $mailer,
+        private Crypt $crypt,
+        private DataResponseFactoryInterface $factory,
+        private DelRepo $delRepo,
+        private InvAllowanceChargeService $inv_allowance_charge_service,
+        private InvAmountService $inv_amount_service,
+        private InvService $inv_service,
+        private InvCustomService $inv_custom_service,
+        private InvItemService $inv_item_service,
+        private InvItemAllowanceChargeService $aciis,
+        private IIAS $inv_item_amount_service,
+        private InvTaxRateService $inv_tax_rate_service,
+        private LoggerInterface $logger,
+        private MailerInterface $mailer,
         SessionInterface $session,
         SR $sR,
-        TranslatorInterface $translator,
-        UserService $user_service,
-        UrlGenerator $url_generator,
-        ViewRenderer $view_renderer,
-        WebControllerService $web_service,
+        private TranslatorInterface $translator,
+        private UserService $user_service,
+        private UrlGenerator $url_generator,
+        private ViewRenderer $view_renderer,
+        private WebControllerService $web_service,
     ) {
-        $this->crypt = $crypt;
         $this->date_helper = new DateHelper($sR);
-        $this->delRepo = $delRepo;
-        $this->factory = $factory;
         $this->flash = new Flash($session);
-        $this->inv_allowance_charge_service = $inv_allowance_charge_service;
-        $this->inv_amount_service = $inv_amount_service;
-        $this->inv_service = $inv_service;
-        $this->inv_custom_service = $inv_custom_service;
-        $this->inv_item_service = $inv_item_service;
-        $this->aciis = $aciis;
-        $this->inv_item_amount_service = $inv_item_amount_service;
-        $this->inv_tax_rate_service = $inv_tax_rate_service;
-        $this->logger = $logger;
-        $this->mailer = $mailer;
         $this->number_helper = new NumberHelper($sR);
         $this->pdf_helper = new PdfHelper($sR, $session);
         $this->session = $session;
         $this->sR = $sR;
-        $this->translator = $translator;
-        $this->user_service = $user_service;
-        $this->url_generator = $url_generator;
-        $this->view_renderer = $view_renderer;
         if ($this->user_service->hasPermission('viewInv') && !$this->user_service->hasPermission('editInv')) {
-            $this->view_renderer = $view_renderer->withControllerName('invoice')
+            $this->view_renderer = $this->view_renderer->withControllerName('invoice')
                     ->withLayout('@views/layout/guest.php');
         }
         if ($this->user_service->hasPermission('viewInv') && $this->user_service->hasPermission('editInv')) {
-            $this->view_renderer = $view_renderer->withControllerName('invoice')
+            $this->view_renderer = $this->view_renderer->withControllerName('invoice')
                     ->withLayout('@views/layout/invoice.php');
         }
-        $this->web_service = $web_service;
     }
 
     /**
@@ -586,11 +549,9 @@ final class InvController
                     if (null !== $user_client && null !== $user_client->getClient()) {
                         $client_first_name = $user_client->getClient()?->getClient_name();
                         $client_surname = $user_client->getClient()?->getClient_surname();
-                        $client_fullname = (null !== ($client_first_name)
-                                         ? $client_first_name
-                                         : '') .
+                        $client_fullname = ($client_first_name ?? '') .
                                          ' ' .
-                                         (null !== ($client_surname) ? $client_surname : '');
+                                         ($client_surname ?? '');
                     } else {
                         $this->flashMessage('danger', $clientRepository->repoClientquery($client_id)->getClient_full_name() . ': ' . $this->translator->translate('invoice.invoice.user.client.no.account'));
                     }
@@ -730,11 +691,9 @@ final class InvController
                     if (null !== $user_client && null !== $user_client->getClient()) {
                         $client_first_name = $user_client->getClient()?->getClient_name();
                         $client_surname = $user_client->getClient()?->getClient_surname();
-                        $client_fullname = (null !== ($client_first_name)
-                                         ? $client_first_name
-                                         : '') .
+                        $client_fullname = ($client_first_name ?? '') .
                                          ' ' .
-                                         (null !== ($client_surname) ? $client_surname : '');
+                                         ($client_surname ?? '');
                     } else {
                         $this->flashMessage('warning', $this->translator->translate('invoice.invoice.user.client.no.account'));
                     }
@@ -1040,7 +999,7 @@ final class InvController
                         header('Cache-Control: public, must-revalidate, post-check=0, pre-check=0');
                         header("Content-Disposition: attachment; filename=\"$original_file_name\"");
                         header('Content-Type: ' . $ctype);
-                        header('Content-Length: ' . $file_size);
+                        header('Content-Length: ' . (string)$file_size);
                         echo file_get_contents($target_path_with_filename, true);
                     } // file size <> false
                     exit;
@@ -1570,7 +1529,7 @@ final class InvController
             'from_email' => $email_template->getEmail_template_from_email() ?? '',
             'cc' => $email_template->getEmail_template_cc() ?? '',
             'bcc' => $email_template->getEmail_template_bcc() ?? '',
-            'pdf_template' => null !== $email_template->getEmail_template_pdf_template() ? $email_template->getEmail_template_pdf_template() : '',
+            'pdf_template' => $email_template->getEmail_template_pdf_template() ?? '',
         ];
     }
 
@@ -1979,7 +1938,7 @@ final class InvController
                         // update userinv with the user's listlimit preference
                         'userInv' => $userInv,
                         'userInvListLimit' => $userInvListLimit,
-                        'defaultPageSizeOffsetPaginator' => null !== $userInv->getListLimit() ? $userInv->getListLimit() : 10,
+                        'defaultPageSizeOffsetPaginator' => $userInv->getListLimit() ?? 10,
                         // numbered tiles between the arrrows
                         'maxNavLinkCount' => 10,
                         'invStatuses' => $inv_statuses,
@@ -2436,7 +2395,7 @@ final class InvController
                                     header('Cache-Control: public, must-revalidate, post-check=0, pre-check=0');
                                     header("Content-Disposition: attachment; filename=\"$original_file_name\"");
                                     header('Content-Type: ' . $ctype);
-                                    header('Content-Length: ' . $file_size);
+                                    header('Content-Length: ' . (string)$file_size);
                                     echo file_get_contents($temp_aliase, true);
                                 }
                                 exit;
@@ -2519,7 +2478,7 @@ final class InvController
                                     header('Cache-Control: public, must-revalidate, post-check=0, pre-check=0');
                                     header("Content-Disposition: attachment; filename=\"$original_file_name\"");
                                     header('Content-Type: ' . $ctype);
-                                    header('Content-Length: ' . $file_size);
+                                    header('Content-Length: ' . (string)$file_size);
                                     echo file_get_contents($temp_aliase, true);
                                 }
                                 exit;
@@ -2706,7 +2665,7 @@ final class InvController
                  * @var string $val
                  */
                 foreach ($inv_custom_fields as $key => $val) {
-                    $custom_field_form_values['custom[' . $key . ']'] = $val;
+                    $custom_field_form_values['custom[' . (string)$key . ']'] = $val;
                 }
             }
             return $custom_field_form_values;
@@ -2991,7 +2950,7 @@ final class InvController
                     }
                 } else {
                     if (!empty($errors = $form->getValidationResult()->getErrorMessagesIndexedByProperty())) {
-                        $this->flashMessage('danger', 'You have validation errors on ' . ($inv_item->getId() ?? ''));
+                        $this->flashMessage('danger', 'You have validation errors on ' . (string)$inv_item->getId());
                     }
                 }
             } // null!==originalItemId
@@ -3824,7 +3783,7 @@ final class InvController
                 header('Cache-Control: public, must-revalidate, post-check=0, pre-check=0');
                 header("Content-Disposition: attachment; filename=\"$original_file_name\"");
                 header('Content-Type: ' . $ctype);
-                header('Content-Length: ' . $file_size);
+                header('Content-Length: ' . (string)$file_size);
                 return file_get_contents($uploads_temp_peppol_absolute_path_dot_xml, true);
             }
         }
@@ -4400,10 +4359,10 @@ final class InvController
     public function optionsDataYearMonthFilter(): array
     {
         $ym = [];
-        for ($y = 2024, $now = date('Y') + 10; $y <= $now; ++$y) {
+        for ($y = 2024, $now = (int)date('Y') + 10; $y <= $now; ++$y) {
             $months = ['01','02','03','04','05','06','07','08','09','10','11','12'];
             foreach ($months as $month) {
-                $yearMonth = $y . '-' . $month;
+                $yearMonth = (string)$y . '-' . $month;
                 $ym[$yearMonth] = $yearMonth;
             }
         }

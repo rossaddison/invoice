@@ -17,44 +17,26 @@ class Profile
     #[BelongsTo(target:Company::class, nullable: false)]
     private ?Company $company = null;
 
-    #[Column(type: 'primary')]
-    private ?int $id = null;
-
-    #[Column(type: 'integer(11)', nullable: false)]
-    private ?int $company_id = null;
-
-    #[Column(type: 'tinyInteger(11)', default:0)]
-    private ?int $current = 0;
-
-    #[Column(type: 'text', nullable: true)]
-    private ?string $mobile = '';
-
-    #[Column(type: 'text', nullable: true)]
-    private ?string $email = '';
-
-    #[Column(type: 'text', nullable: true)]
-    private ?string $description = '';
+    #[Column(type: 'datetime')]
+    private readonly DateTimeImmutable $date_created;
 
     #[Column(type: 'datetime')]
-    private DateTimeImmutable $date_created;
-
-    #[Column(type: 'datetime')]
-    private DateTimeImmutable $date_modified;
+    private readonly DateTimeImmutable $date_modified;
 
     public function __construct(
-        int $id = null,
-        int $company_id = null,
-        int $current = 0,
-        string $mobile = '',
-        string $email = '',
-        string $description = '',
+        #[Column(type: 'primary')]
+        private ?int $id = null,
+        #[Column(type: 'integer(11)', nullable: false)]
+        private ?int $company_id = null,
+        #[Column(type: 'tinyInteger(11)', default:0)]
+        private ?int $current = 0,
+        #[Column(type: 'text', nullable: true)]
+        private ?string $mobile = '',
+        #[Column(type: 'text', nullable: true)]
+        private ?string $email = '',
+        #[Column(type: 'text', nullable: true)]
+        private ?string $description = '',
     ) {
-        $this->id = $id;
-        $this->company_id = $company_id;
-        $this->current = $current;
-        $this->mobile = $mobile;
-        $this->email = $email;
-        $this->description = $description;
         $this->date_created = new \DateTimeImmutable();
         $this->date_modified = new \DateTimeImmutable();
     }

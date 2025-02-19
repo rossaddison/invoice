@@ -13,39 +13,24 @@ use DateTimeImmutable;
 
 class ProductImage
 {
-    #[Column(type: 'primary')]
-    private ?int $id = null;
-
     #[BelongsTo(target: Product::class, nullable: false, fkAction: 'NO ACTION')]
     private ?Product $product = null;
-
-    #[Column(type: 'integer(11)', nullable: false)]
-    private ?int $product_id = null;
-
-    #[Column(type: 'longText)', nullable: false)]
-    private string $file_name_original = '';
-
-    #[Column(type: 'longText)', nullable: false)]
-    private string $file_name_new = '';
 
     #[Column(type: 'datetime)', nullable: false)]
     private DateTimeImmutable $uploaded_date;
 
-    #[Column(type: 'longText)', nullable: false)]
-    private string $description = '';
-
     public function __construct(
-        int $id = null,
-        int $product_id = null,
-        string $file_name_original = '',
-        string $file_name_new = '',
-        string $description = '',
+        #[Column(type: 'primary')]
+        private ?int $id = null,
+        #[Column(type: 'integer(11)', nullable: false)]
+        private ?int $product_id = null,
+        #[Column(type: 'longText)', nullable: false)]
+        private string $file_name_original = '',
+        #[Column(type: 'longText)', nullable: false)]
+        private string $file_name_new = '',
+        #[Column(type: 'longText)', nullable: false)]
+        private string $description = '',
     ) {
-        $this->id = $id;
-        $this->product_id = $product_id;
-        $this->file_name_original = $file_name_original;
-        $this->file_name_new = $file_name_new;
-        $this->description = $description;
         $this->uploaded_date = new \DateTimeImmutable();
     }
 

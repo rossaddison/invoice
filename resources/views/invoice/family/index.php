@@ -141,7 +141,7 @@ use Yiisoft\Yii\DataView\GridView;
     ->columns(...$columns)
     ->dataReader($paginator)
     ->headerRowAttributes(['class'=>'card-header bg-info text-black'])
-    ->enableMultisort(true)
+    ->multiSort(true) 
     ->urlQueryParameters(['filter_product_sku', 'filter_product_price'])            
     ->header($header)
     ->id('w4-grid')

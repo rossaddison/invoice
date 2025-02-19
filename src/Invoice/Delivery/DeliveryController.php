@@ -30,38 +30,25 @@ use Exception;
 final class DeliveryController
 {
     use FlashMessage;
-
-    private SessionInterface $session;
     private Flash $flash;
-    private ViewRenderer $viewRenderer;
-    private WebControllerService $webService;
-    private UserService $userService;
-    private DeliveryService $deliveryService;
-    private TranslatorInterface $translator;
 
     public function __construct(
-        SessionInterface $session,
-        ViewRenderer $viewRenderer,
-        WebControllerService $webService,
-        UserService $userService,
-        DeliveryService $deliveryService,
-        TranslatorInterface $translator
+        private SessionInterface $session,
+        private ViewRenderer $viewRenderer,
+        private WebControllerService $webService,
+        private UserService $userService,
+        private DeliveryService $deliveryService,
+        private TranslatorInterface $translator
     ) {
-        $this->session = $session;
-        $this->flash = new Flash($session);
-        $this->viewRenderer = $viewRenderer;
-        $this->webService = $webService;
-        $this->userService = $userService;
+        $this->flash = new Flash($this->session);
         if ($this->userService->hasPermission('viewInv') && !$this->userService->hasPermission('editInv')) {
-            $this->viewRenderer = $viewRenderer->withControllerName('invoice')
+            $this->viewRenderer = $this->viewRenderer->withControllerName('invoice')
                     ->withLayout('@views/layout/guest.php');
         }
         if ($this->userService->hasPermission('viewInv') && $this->userService->hasPermission('editInv')) {
-            $this->viewRenderer = $viewRenderer->withControllerName('invoice')
+            $this->viewRenderer = $this->viewRenderer->withControllerName('invoice')
                     ->withLayout('@views/layout/invoice.php');
         }
-        $this->deliveryService = $deliveryService;
-        $this->translator = $translator;
     }
 
     /**

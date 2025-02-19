@@ -17,18 +17,10 @@ class Project
     #[BelongsTo(target:Client::class, nullable: false, fkAction: 'NO ACTION')]
     private ?Client $client = null;
 
-    #[Column(type: 'integer(11)', nullable:false)]
-    private ?int $client_id = null;
-
-    #[Column(type: 'text', nullable: true)]
-    private ?string $name = null;
-
-    public function __construct(
-        int $client_id = null,
-        string $name = ''
-    ) {
-        $this->client_id = $client_id;
-        $this->name = $name;
+    public function __construct(#[Column(type: 'integer(11)', nullable:false)]
+    private ?int $client_id = null, #[Column(type: 'text', nullable: true)]
+    private ?string $name = '')
+    {
     }
 
     public function getId(): string

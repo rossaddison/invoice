@@ -29,29 +29,13 @@ use App\Invoice\Helpers\NumberHelper as NHelp;
 
 class TemplateHelper
 {
-    private SRepo $s;
-    private DHelp $d;
-    private NHelp $n;
-    private ccR $ccR;
-    private qcR $qcR;
-    private icR $icR;
-    private pcR $pcR;
-    private socR $socR;
-    private cfR $cfR;
-    private cvR $cvR;
+    private readonly DHelp $d;
+    private readonly NHelp $n;
 
-    public function __construct(SRepo $s, ccR $ccR, qcR $qcR, icR $icR, pcR $pcR, socR $socR, cfR $cfR, cvR $cvR)
+    public function __construct(private readonly SRepo $s, private readonly ccR $ccR, private readonly qcR $qcR, private readonly icR $icR, private readonly pcR $pcR, private readonly socR $socR, private readonly cfR $cfR, private readonly cvR $cvR)
     {
-        $this->s = $s;
-        $this->d = new DHelp($s);
-        $this->n = new NHelp($s);
-        $this->ccR = $ccR;
-        $this->qcR = $qcR;
-        $this->icR = $icR;
-        $this->cfR = $cfR;
-        $this->cvR = $cvR;
-        $this->pcR = $pcR;
-        $this->socR = $socR;
+        $this->d = new DHelp($this->s);
+        $this->n = new NHelp($this->s);
     }
 
     /**

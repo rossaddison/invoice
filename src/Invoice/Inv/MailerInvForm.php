@@ -25,6 +25,7 @@ final class MailerInvForm extends FormModel
      *
      * @psalm-return 'MailerInvForm'
      */
+    #[\Override]
     public function getFormName(): string
     {
         return 'MailerInvForm';

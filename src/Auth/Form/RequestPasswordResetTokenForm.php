@@ -42,6 +42,7 @@ final class RequestPasswordResetTokenForm extends FormModel implements RulesProv
      *
      * @psalm-return 'RequestPasswordResetToken'
      */
+    #[\Override]
     public function getFormName(): string
     {
         return 'RequestPasswordResetToken';

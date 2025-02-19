@@ -17,28 +17,12 @@ class ClientCustom
     #[BelongsTo(target:CustomField::class, nullable: false)]
     private ?CustomField $custom_field = null;
 
-    #[Column(type: 'primary')]
-    private ?int $id = null;
-
-    #[Column(type:'integer(11)', nullable: false)]
-    private ?int $client_id = null;
-
-    #[Column(type:'integer(11)', nullable: false)]
-    private ?int $custom_field_id = null;
-
-    #[Column(type:'text', nullable: true)]
-    private ?string $value = null;
-
-    public function __construct(
-        int $id = null,
-        int $client_id = null,
-        int $custom_field_id = null,
-        string $value = null
-    ) {
-        $this->id = $id;
-        $this->client_id = $client_id;
-        $this->custom_field_id = $custom_field_id;
-        $this->value = $value;
+    public function __construct(#[Column(type: 'primary')]
+    private ?int $id = null, #[Column(type:'integer(11)', nullable: false)]
+    private ?int $client_id = null, #[Column(type:'integer(11)', nullable: false)]
+    private ?int $custom_field_id = null, #[Column(type:'text', nullable: true)]
+    private ?string $value = null)
+    {
     }
 
     public function getClient(): ?Client

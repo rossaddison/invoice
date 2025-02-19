@@ -13,7 +13,7 @@ class CaCertFileNotFoundException extends \RuntimeException implements FriendlyE
      */
     public function getName(): string
     {
-        return 'Your SSL certificate cacert.pem for this version of PHP ' . PHP_VERSION . ' from https://curl.haxx.se/ca/cacert.pem  does not exist under the server php directory  ...bin/php/' . PHP_VERSION;
+        return 'Your SSL certificate cacert.pem for this version of PHP ' . PHP_VERSION . ' from https://curl.haxx.se/ca/cacert.pem  has not been assigned to php.ini or phpApache.ini curl.cainfo or does not exist under the server php directory  ...bin/php/' . PHP_VERSION;
     }
 
     /**

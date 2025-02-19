@@ -162,7 +162,7 @@ $translator->translate('i.custom_fields');
     ->columns(...$columns)
     ->dataReader($paginator)
     ->headerRowAttributes(['class'=>'card-header bg-info text-black'])
-    ->enableMultisort(true)
+    ->multiSort(true) 
     ->header($gridComponents->header('i.custom_fields'))
     ->id('w75-grid')
     ->paginationWidget($gridComponents->offsetPaginationWidget($paginator))

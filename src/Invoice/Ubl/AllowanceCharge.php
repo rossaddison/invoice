@@ -9,33 +9,8 @@ use Sabre\Xml\XmlSerializable;
 
 class AllowanceCharge implements XmlSerializable
 {
-    private bool $chargeIndicator;
-    private ?int $allowanceChargeReasonCode;
-    private ?string $allowanceChargeReason;
-    private ?int $multiplierFactorNumeric;
-    private ?float $baseAmount;
-    private float $amount;
-    private ?TaxTotal $taxTotal;
-    private ?TaxCategory $taxCategory;
-
-    public function __construct(
-        bool $chargeIndicator,
-        ?int $allowanceChargeReasonCode,
-        ?string $allowanceChargeReason,
-        ?int $multiplierFactorNumeric,
-        ?float $baseAmount,
-        float $amount,
-        ?TaxTotal $taxTotal,
-        ?TaxCategory $taxCategory
-    ) {
-        $this->chargeIndicator = $chargeIndicator;
-        $this->allowanceChargeReasonCode = $allowanceChargeReasonCode;
-        $this->allowanceChargeReason = $allowanceChargeReason;
-        $this->multiplierFactorNumeric = $multiplierFactorNumeric;
-        $this->baseAmount = $baseAmount;
-        $this->amount = $amount;
-        $this->taxTotal = $taxTotal;
-        $this->taxCategory = $taxCategory;
+    public function __construct(private readonly bool $chargeIndicator, private readonly ?int $allowanceChargeReasonCode, private readonly ?string $allowanceChargeReason, private readonly ?int $multiplierFactorNumeric, private readonly ?float $baseAmount, private readonly float $amount, private readonly ?TaxTotal $taxTotal, private readonly ?TaxCategory $taxCategory)
+    {
     }
 
     /**

@@ -27,36 +27,24 @@ final class InvSentLogController
     use FlashMessage;
 
     private Flash $flash;
-    private Session $session;
-    private ViewRenderer $viewRenderer;
-    private WebControllerService $webService;
-    private UserService $userService;
-    private InvSentLogService $invsentlogService;
-    private TranslatorInterface $translator;
 
     public function __construct(
-        Session $session,
-        ViewRenderer $viewRenderer,
-        WebControllerService $webService,
-        UserService $userService,
-        InvSentLogService $invsentlogService,
-        TranslatorInterface $translator
+        private Session $session,
+        private ViewRenderer $viewRenderer,
+        private WebControllerService $webService,
+        private UserService $userService,
+        private InvSentLogService $invsentlogService,
+        private TranslatorInterface $translator
     ) {
-        $this->session = $session;
-        $this->flash = new Flash($session);
-        $this->userService = $userService;
-        $this->viewRenderer = $viewRenderer;
+        $this->flash = new Flash($this->session);
         if ($this->userService->hasPermission('viewInv') && !$this->userService->hasPermission('editInv')) {
-            $this->viewRenderer = $viewRenderer->withControllerName('invoice/invsentlog')
+            $this->viewRenderer = $this->viewRenderer->withControllerName('invoice/invsentlog')
                     ->withLayout('@views/layout/guest.php');
         }
         if ($this->userService->hasPermission('viewInv') && $this->userService->hasPermission('editInv')) {
-            $this->viewRenderer = $viewRenderer->withControllerName('invoice/invsentlog')
+            $this->viewRenderer = $this->viewRenderer->withControllerName('invoice/invsentlog')
                     ->withLayout('@views/layout/invoice.php');
         }
-        $this->webService = $webService;
-        $this->invsentlogService = $invsentlogService;
-        $this->translator = $translator;
     }
 
     /**
@@ -122,7 +110,7 @@ final class InvSentLogController
                     'alert' => $this->alert(),
                     'viewInv' => $this->userService->hasPermission('viewInv'),
                     'userInv' => $userinv,
-                    'defaultPageSizeOffsetPaginator' => null !== $userinv->getListLimit() ? $userinv->getListLimit() : 10,
+                    'defaultPageSizeOffsetPaginator' => $userinv->getListLimit() ?? 10,
                     'optionsDataGuestInvNumberDropDownFilter' => $this->optionsDataGuestInvNumberFilter($islR, (int)$userId),
                     // Get all the clients that have been assigned to this user
                     'optionsDataGuestClientDropDownFilter' => $this->optionsDataGuestClientsFilter($islR, $userId),

@@ -25,31 +25,20 @@ use Yiisoft\Yii\View\Renderer\ViewRenderer;
 final class CompanyPrivateController
 {
     use FlashMessage;
-
-    private SessionInterface $session;
     private Flash $flash;
     private ViewRenderer $viewRenderer;
-    private WebControllerService $webService;
-    private UserService $userService;
-    private CompanyPrivateService $companyprivateService;
-    private TranslatorInterface $translator;
 
     public function __construct(
-        SessionInterface $session,
+        private SessionInterface $session,
         ViewRenderer $viewRenderer,
-        WebControllerService $webService,
-        UserService $userService,
-        CompanyPrivateService $companyprivateService,
-        TranslatorInterface $translator
+        private WebControllerService $webService,
+        private UserService $userService,
+        private CompanyPrivateService $companyprivateService,
+        private TranslatorInterface $translator
     ) {
-        $this->session = $session;
-        $this->flash = new Flash($session);
+        $this->flash = new Flash($this->session);
         $this->viewRenderer = $viewRenderer->withControllerName('invoice/companyprivate')
                                            ->withLayout('@views/layout/invoice.php');
-        $this->webService = $webService;
-        $this->userService = $userService;
-        $this->companyprivateService = $companyprivateService;
-        $this->translator = $translator;
     }
 
     /**
@@ -102,8 +91,6 @@ final class CompanyPrivateController
             return $this->webService->getRedirectResponse('companyprivate/index');
         }
         if ($request->getMethod() === Method::POST) {
-            // echo \Yiisoft\VarDumper\VarDumper::dump($_FILES);
-            // Filename of logo in PUBLIC folder
             $tmp = $_FILES['logo_filename']['tmp_name'];
             $spaceToUnderscore = preg_replace('/\s+/', '_', $tmp);
             if (null !== $spaceToUnderscore) {
@@ -229,7 +216,6 @@ final class CompanyPrivateController
                  * @var array $_FILES['logo_filename']
                  * @var string $_FILES['logo_filename']['name']
                  * @var array $body
-                 * @var string $body['logo_filename']
                  */
                 $body['logo_filename'] = $_FILES['logo_filename']['name'];
                 if ($formHydrator->populateAndValidate($form, $body)) {

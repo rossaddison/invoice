@@ -33,14 +33,7 @@ use Yiisoft\Yii\Runner\Http\HttpApplicationRunner;
  */
 final class SettingRepository extends Select\Repository
 {
-    private EntityWriter $entityWriter;
-
     public array $settings = [];
-
-    private SessionInterface $session;
-    private TranslatorInterface $translator;
-    private compR $compR;
-    private compPR $compPR;
 
     /**
      * @param Select<TEntity> $select
@@ -49,17 +42,12 @@ final class SettingRepository extends Select\Repository
      */
     public function __construct(
         Select $select,
-        EntityWriter $entityWriter,
-        SessionInterface $session,
-        TranslatorInterface $translator,
-        compR $compR,
-        compPR $compPR
+        private readonly EntityWriter $entityWriter,
+        private readonly SessionInterface $session,
+        private readonly TranslatorInterface $translator,
+        private readonly compR $compR,
+        private readonly compPR $compPR
     ) {
-        $this->entityWriter = $entityWriter;
-        $this->session = $session;
-        $this->translator = $translator;
-        $this->compR = $compR;
-        $this->compPR = $compPR;
         parent::__construct($select);
     }
 
@@ -295,26 +283,15 @@ final class SettingRepository extends Select\Repository
             echo $value1 ? $select : '';
         }
 
-        switch ($operator) {
-            case '==':
-                $echo_selected = $value1 == $value2 ? true : false;
-                break;
-            case '!=':
-                $echo_selected = $value1 != $value2 ? true : false;
-                break;
-            case 'e':
-                // previously empty($value1) ? true : false. A strict comparison avoids RiskyTruthy behaviour
-                $echo_selected = (!isset($value1) || $value1 == false) ? true : false;
-                break;
-            case '!e':
-                // previously empty($value1) ? true : false. A strict comparison avoids RiskyTruthy behaviour
-                $echo_selected = (!isset($value1) || $value1 == false) ? true : false;
-                break;
-            default:
-
-                $echo_selected = null !== $value1 ? true : false;
-                break;
-        }
+        $echo_selected = match ($operator) {
+            '==' => $value1 == $value2 ? true : false,
+            '!=' => $value1 != $value2 ? true : false,
+            // previously empty($value1) ? true : false. A strict comparison avoids RiskyTruthy behaviour
+            'e' => (!isset($value1) || $value1 == false) ? true : false,
+            // previously empty($value1) ? true : false. A strict comparison avoids RiskyTruthy behaviour
+            '!e' => (!isset($value1) || $value1 == false) ? true : false,
+            default => null !== $value1 ? true : false,
+        };
 
         echo $echo_selected ? $select : '';
     }
@@ -584,7 +561,7 @@ final class SettingRepository extends Select\Repository
 
         $yii_cycle_array = (array)$params['yiisoft/yii-cycle'];
         $schema_providers_array = (array)$yii_cycle_array['schema-providers'];
-        $php_file_array = (array)$schema_providers_array['Cycle\\Schema\\Provider\\PhpFileSchemaProvider'];
+        $php_file_array = (array)$schema_providers_array[\Cycle\Schema\Provider\PhpFileSchemaProvider::class];
         return (int)$php_file_array['mode'];
     }
 
@@ -731,7 +708,7 @@ final class SettingRepository extends Select\Repository
     {
         return [
             'af-ZA',
-            'ar', 'az',
+            'ar-BH', 'az',
             'be', 'bg', 'bs',
             'ca', 'cs',
             'da', 'de',
@@ -1076,7 +1053,7 @@ final class SettingRepository extends Select\Repository
     public function get_invoice_archived_folder_aliases(): Aliases
     {
         return new Aliases(['@base' => dirname(__DIR__, 3),
-            '@archive_invoice' => '@base/src/Invoice/Uploads' . $this->getUploadsArchiveholderRelativeUrl() . '',
+            '@archive_invoice' => '@base/src/Invoice/Uploads' . self::getUploadsArchiveholderRelativeUrl() . '',
         ]);
     }
 
@@ -1086,7 +1063,7 @@ final class SettingRepository extends Select\Repository
     public function get_customer_files_folder_aliases(): Aliases
     {
         return new Aliases(['@base' => dirname(__DIR__, 3),
-            '@customer_files' => '@base/src/Invoice/Uploads' . $this->getUploadsCustomerFilesRelativeUrl(),
+            '@customer_files' => '@base/src/Invoice/Uploads' . self::getUploadsCustomerFilesRelativeUrl(),
             '@public' => '@base/public',
         ]);
     }
@@ -1097,7 +1074,7 @@ final class SettingRepository extends Select\Repository
     public function get_company_private_logos_folder_aliases(): Aliases
     {
         return new Aliases(['@base' => dirname(__DIR__, 3),
-            '@company_private_logos' => '@base/src/Invoice/Uploads' . $this->getCompanyPrivateLogosRelativefolderUrl(),
+            '@company_private_logos' => '@base/src/Invoice/Uploads' . self::getCompanyPrivateLogosRelativefolderUrl(),
             '@public' => '@base/public',
 
             // Web accessible external folder normally used
@@ -1111,7 +1088,7 @@ final class SettingRepository extends Select\Repository
     public function get_google_translate_json_file_aliases(): Aliases
     {
         return new Aliases(['@base' => dirname(__DIR__, 3),
-            '@google_translate_json_file_folder' => '@base/src/Invoice' . $this->getGoogleTranslateJsonFileFolder(),
+            '@google_translate_json_file_folder' => '@base/src/Invoice' . self::getGoogleTranslateJsonFileFolder(),
         ]);
     }
 
@@ -1122,7 +1099,7 @@ final class SettingRepository extends Select\Repository
     {
         return new Aliases(['@base' => dirname(__DIR__, 3),
             // Internal folder not normally used for storage
-            '@productimages_files' => '@base/src/Invoice/Uploads' . $this->getUploadsProductImagesRelativeUrl(),
+            '@productimages_files' => '@base/src/Invoice/Uploads' . self::getUploadsProductImagesRelativeUrl(),
             '@public' => '@base/public',
 
             // Web accessible external folder normally used
@@ -1151,7 +1128,7 @@ final class SettingRepository extends Select\Repository
     public function get_amazon_pem_file_folder_aliases(): Aliases
     {
         return new Aliases(['@base' => dirname(__DIR__, 3),
-            '@pem_file_unique_folder' => '@base/src/Invoice' . $this->getPemFileFolder(),
+            '@pem_file_unique_folder' => '@base/src/Invoice' . self::getPemFileFolder(),
         ]);
     }
 
@@ -1994,35 +1971,17 @@ final class SettingRepository extends Select\Repository
      */
     public function codeToMessage(int $code): string
     {
-        switch ($code) {
-            case UPLOAD_ERR_INI_SIZE:
-                $message = 'The uploaded file exceeds the upload_max_filesize directive in php.ini';
-                break;
-            case UPLOAD_ERR_FORM_SIZE:
-                $message = 'The uploaded file exceeds the MAX_FILE_SIZE directive that was specified in the HTML form';
-                break;
-            case UPLOAD_ERR_PARTIAL:
-                $message = 'The uploaded file was only partially uploaded';
-                break;
-            case UPLOAD_ERR_NO_FILE:
-                $message = 'No file was uploaded';
-                break;
-            case UPLOAD_ERR_NO_TMP_DIR:
-                $message = 'Missing a temporary folder';
-                break;
-            case UPLOAD_ERR_CANT_WRITE:
-                $message = 'Failed to write file to disk';
-                break;
-            case UPLOAD_ERR_EXTENSION:
-                $message = 'File upload stopped by extension';
-                break;
-            case UPLOAD_ERR_OK:
-                $message = 'There is no error, the file uploaded with success';
-                break;
-            default:
-                $message = 'Unknown upload error';
-                break;
-        }
+        $message = match ($code) {
+            UPLOAD_ERR_INI_SIZE => 'The uploaded file exceeds the upload_max_filesize directive in php.ini',
+            UPLOAD_ERR_FORM_SIZE => 'The uploaded file exceeds the MAX_FILE_SIZE directive that was specified in the HTML form',
+            UPLOAD_ERR_PARTIAL => 'The uploaded file was only partially uploaded',
+            UPLOAD_ERR_NO_FILE => 'No file was uploaded',
+            UPLOAD_ERR_NO_TMP_DIR => 'Missing a temporary folder',
+            UPLOAD_ERR_CANT_WRITE => 'Failed to write file to disk',
+            UPLOAD_ERR_EXTENSION => 'File upload stopped by extension',
+            UPLOAD_ERR_OK => 'There is no error, the file uploaded with success',
+            default => 'Unknown upload error',
+        };
         return $message;
     }
 
@@ -2222,18 +2181,18 @@ final class SettingRepository extends Select\Repository
     {
         $pageSize = $paginator->getCurrentPageSize();
         if ($pageSize > 0) {
-            return Html::tag(
+            return (string)Html::tag(
                 'b',
                 sprintf($translator->translate('invoice.invoice.showing.of') .
                       $translator->translate('invoice.invoice.max') .
-                      ' ' . $max . ' ' .
+                      ' ' . (string)$max . ' ' .
                       $entity_plural .
                       $translator->translate('invoice.invoice.per.page.total') .
                       $entity_plural . ': ' .
-                      $paginator->getTotalItems(), $pageSize, $paginator->getTotalItems()) . ' ',
+                      (string)$paginator->getTotalItems(), $pageSize, $paginator->getTotalItems()) . ' ',
                 ['class' => 'card-header bg-warning text-black']
             ) . (!empty($status_string) ?
-            Html::tag('b', $status_string, ['class' => 'card-header bg-info text-black']) : '');
+            (string)Html::tag('b', $status_string, ['class' => 'card-header bg-info text-black']) : '');
         }
         return '';
     }

@@ -17,28 +17,12 @@ class SalesOrderCustom
     #[BelongsTo(target:SalesOrder::class, nullable: false)]
     private ?SalesOrder $so = null;
 
-    #[Column(type: 'primary')]
-    private ?int $id = null;
-
-    #[Column(type: 'integer(11)', nullable: false)]
-    private ?int $so_id = null;
-
-    #[Column(type: 'integer(11)', nullable: false)]
-    private ?int $custom_field_id = null;
-
-    #[Column(type: 'text', nullable: true)]
-    private string $value = '';
-
-    public function __construct(
-        int $id = null,
-        int $so_id = null,
-        int $custom_field_id = null,
-        string $value = ''
-    ) {
-        $this->id = $id;
-        $this->so_id = $so_id;
-        $this->custom_field_id = $custom_field_id;
-        $this->value = $value;
+    public function __construct(#[Column(type: 'primary')]
+    private ?int $id = null, #[Column(type: 'integer(11)', nullable: false)]
+    private ?int $so_id = null, #[Column(type: 'integer(11)', nullable: false)]
+    private ?int $custom_field_id = null, #[Column(type: 'text', nullable: true)]
+    private string $value = '')
+    {
     }
 
     public function getCustomField(): ?CustomField

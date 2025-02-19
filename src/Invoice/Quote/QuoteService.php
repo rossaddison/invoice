@@ -28,15 +28,10 @@ use Yiisoft\Security\Random;
 use Yiisoft\Session\Flash\Flash;
 use Yiisoft\Session\SessionInterface;
 
-final class QuoteService
+final readonly class QuoteService
 {
-    private QuoteRepository $repository;
-    private SessionInterface $session;
-
-    public function __construct(QR $repository, SessionInterface $session)
+    public function __construct(private QuoteRepository $repository, private SessionInterface $session)
     {
-        $this->repository = $repository;
-        $this->session = $session;
     }
 
     /**

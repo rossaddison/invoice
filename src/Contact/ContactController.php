@@ -16,9 +16,9 @@ use Yiisoft\Yii\View\Renderer\ViewRenderer;
 final class ContactController
 {
     public function __construct(
-        private ContactMailer $mailer,
-        private ResponseFactoryInterface $responseFactory,
-        private UrlGeneratorInterface $url,
+        private readonly ContactMailer $mailer,
+        private readonly ResponseFactoryInterface $responseFactory,
+        private readonly UrlGeneratorInterface $url,
         private ViewRenderer $viewRenderer
     ) {
         $this->viewRenderer = $viewRenderer

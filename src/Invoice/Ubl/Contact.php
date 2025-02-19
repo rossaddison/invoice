@@ -9,21 +9,8 @@ use Sabre\Xml\XmlSerializable;
 
 class Contact implements XmlSerializable
 {
-    private ?string $name;
-    private ?string $firstname;
-    private ?string $lastname;
-    private ?string $telephone;
-    private ?string $telefax;
-    private ?string $electronicMail;
-
-    public function __construct(?string $name, ?string $firstname, ?string $lastname, ?string $telephone, ?string $telefax, ?string $electronicMail)
+    public function __construct(private readonly ?string $name, private readonly ?string $firstname, private readonly ?string $lastname, private readonly ?string $telephone, private readonly ?string $telefax, private readonly ?string $electronicMail)
     {
-        $this->name = $name;
-        $this->firstname = $firstname;
-        $this->lastname = $lastname;
-        $this->telephone = $telephone;
-        $this->telefax = $telefax;
-        $this->electronicMail = $electronicMail;
     }
 
     /**

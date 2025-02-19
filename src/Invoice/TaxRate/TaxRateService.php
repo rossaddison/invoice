@@ -6,13 +6,10 @@ namespace App\Invoice\TaxRate;
 
 use App\Invoice\Entity\TaxRate;
 
-final class TaxRateService
+final readonly class TaxRateService
 {
-    private TaxRateRepository $repository;
-
-    public function __construct(TaxRateRepository $repository)
+    public function __construct(private TaxRateRepository $repository)
     {
-        $this->repository = $repository;
     }
 
     /**

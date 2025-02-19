@@ -37,17 +37,10 @@ use Yiisoft\Security\Random;
 use Yiisoft\Translator\TranslatorInterface as Translator;
 use DateTimeImmutable;
 
-final class InvService
+final readonly class InvService
 {
-    private InvRepository $repository;
-    private SessionInterface $session;
-    private Translator $translator;
-
-    public function __construct(IR $repository, SessionInterface $session, Translator $translator)
+    public function __construct(private InvRepository $repository, private SessionInterface $session, private Translator $translator)
     {
-        $this->repository = $repository;
-        $this->session = $session;
-        $this->translator = $translator;
     }
 
     public function saveInv(User $user, Inv $model, array $array, SR $s, GR $gR): Inv
@@ -293,15 +286,15 @@ final class InvService
     public function saveInv_from_recurring(User $user, Inv $model, array $details, SR $s): void
     {
         $datehelper = new DateHelper($s);
-        $datetime = $datehelper->get_or_set_with_style(null !== $details['date_created'] ? $details['date_created'] : new \DateTime());
+        $datetime = $datehelper->get_or_set_with_style($details['date_created'] ?? new \DateTime());
         $datetimeimmutable = new \DateTimeImmutable($datetime instanceof \DateTime ? $datetime->format('Y-m-d H:i:s') : 'now');
         $model->setDate_created($datetimeimmutable->format('Y-m-d'));
 
-        $datetime_supplied = $datehelper->get_or_set_with_style(null !== $details['date_supplied'] ? $details['date_supplied'] : new \DateTime());
+        $datetime_supplied = $datehelper->get_or_set_with_style($details['date_supplied'] ?? new \DateTime());
         $datetimeimmutable_supplied = new \DateTimeImmutable($datetime_supplied instanceof \DateTime ? $datetime_supplied->format('Y-m-d H:i:s') : 'now');
         $model->setDate_supplied($datetimeimmutable_supplied);
 
-        $datetime_tax_point = $datehelper->get_or_set_with_style(null !== $details['date_tax_point'] ? $details['date_tax_point'] : new \DateTime());
+        $datetime_tax_point = $datehelper->get_or_set_with_style($details['date_tax_point'] ?? new \DateTime());
         $datetimeimmutable_tax_point = new \DateTimeImmutable($datetime_tax_point instanceof \DateTime ? $datetime_tax_point->format('Y-m-d H:i:s') : 'now');
         $model->setDate_tax_point($datetimeimmutable_tax_point);
 

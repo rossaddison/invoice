@@ -9,18 +9,10 @@ use Sabre\Xml\XmlSerializable;
 
 class Price implements XmlSerializable
 {
-    private string $priceAmount;
-    private string $baseQuantity;
     private string $unitCode = UnitCode::UNIT;
-    private string $unitCodeListId;
-    private ?AllowanceCharge $allowanceCharge;
 
-    public function __construct(?AllowanceCharge $allowanceCharge, string $priceAmount, string $baseQuantity, string $unitCodeListId)
+    public function __construct(private readonly ?AllowanceCharge $allowanceCharge, private readonly string $priceAmount, private readonly string $baseQuantity, private readonly string $unitCodeListId)
     {
-        $this->allowanceCharge = $allowanceCharge;
-        $this->baseQuantity = $baseQuantity;
-        $this->unitCodeListId = $unitCodeListId;
-        $this->priceAmount = $priceAmount;
     }
 
     /**

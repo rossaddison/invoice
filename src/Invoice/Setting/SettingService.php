@@ -6,13 +6,10 @@ namespace App\Invoice\Setting;
 
 use App\Invoice\Entity\Setting;
 
-final class SettingService
+final readonly class SettingService
 {
-    private SettingRepository $repository;
-
-    public function __construct(SettingRepository $repository)
+    public function __construct(private SettingRepository $repository)
     {
-        $this->repository = $repository;
     }
 
     /**

@@ -7,7 +7,7 @@ namespace App\User;
 use Yiisoft\Access\AccessCheckerInterface;
 use Yiisoft\User\CurrentUser;
 
-final class UserService
+final readonly class UserService
 {
     public function __construct(
         private CurrentUser $currentUser,

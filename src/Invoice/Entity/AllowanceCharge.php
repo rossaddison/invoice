@@ -12,53 +12,19 @@ use Cycle\Annotated\Annotation\Relation\BelongsTo;
 
 class AllowanceCharge
 {
-    #[Column(type:'primary')]
-    private ?int $id = null;
-
-    #[Column(type:'bool', typecast:'bool', default:false, nullable: false)]
-    private bool $identifier = false;
-
-    #[Column(type:'string(3)', nullable: false)]
-    private string $reason_code = '';
-
-    #[Column(type:'longText)', nullable: false)]
-    private string $reason = '';
-
-    #[Column(type:'integer(11)', nullable: false)]
-    private int $multiplier_factor_numeric = 0;
-
-    #[Column(type:'integer(11)', nullable: false)]
-    private int $amount = 0;
-
-    #[Column(type:'integer(11)', nullable: false)]
-    private int $base_amount = 0;
-
     #[BelongsTo(target:TaxRate::class, nullable: false, fkAction: 'NO ACTION')]
     private ?TaxRate $tax_rate = null;
-    #[Column(type:'integer(11)', nullable: false)]
-    private ?int $tax_rate_id = null;
 
-    public function __construct(
-        int $id = null,
-        bool $identifier = false,
-        string $reason_code = '',
-        string $reason = '',
-        int $multiplier_factor_numeric = 0,
-        int $amount = 0,
-        int $base_amount = 0,
-        int $tax_rate_id = null,
-    ) {
-        $this->id = $id;
-        $this->identifier = $identifier;
-        $this->reason_code = $reason_code;
-        $this->reason = $reason;
-        // 20% => 20
-        $this->multiplier_factor_numeric = $multiplier_factor_numeric;
-        // 200
-        $this->amount = $amount;
-        // 1000
-        $this->base_amount = $base_amount;
-        $this->tax_rate_id = $tax_rate_id;
+    public function __construct(#[Column(type:'primary')]
+    private ?int $id = null, #[Column(type:'bool', typecast:'bool', default:false, nullable: false)]
+    private bool $identifier = false, #[Column(type:'string(3)', nullable: false)]
+    private string $reason_code = '', #[Column(type:'longText)', nullable: false)]
+    private string $reason = '', #[Column(type:'integer(11)', nullable: false)]
+    private int $multiplier_factor_numeric = 0, #[Column(type:'integer(11)', nullable: false)]
+    private int $amount = 0, #[Column(type:'integer(11)', nullable: false)]
+    private int $base_amount = 0, #[Column(type:'integer(11)', nullable: false)]
+    private ?int $tax_rate_id = null)
+    {
     }
 
     public function getId(): string

@@ -27,6 +27,7 @@ final class MailerQuoteForm extends FormModel
      *
      * @psalm-return 'MailerQuoteForm'
      */
+    #[\Override]
     public function getFormName(): string
     {
         return 'MailerQuoteForm';

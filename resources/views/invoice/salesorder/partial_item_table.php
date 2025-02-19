@@ -97,7 +97,7 @@ $vat = $s->getSetting('enable_vat_registration');
                                         $taxRatePercent = $taxRate->getTaxRatePercent();
                                         $taxRateName = $taxRate->getTaxRateName();
                                         if (null!==$taxRatePercent && null!==$taxRateName) {
-                                            echo $numberHelper->format_amount($taxRatePercent . '% - ' . $taxRateName);
+                                            echo $numberHelper->format_amount((string)$taxRatePercent . '% - ' . $taxRateName);
                                         }; ?>
                                 </option>
                             <?php } ?>
@@ -170,7 +170,7 @@ $vat = $s->getSetting('enable_vat_registration');
                 <tr>
                     <td rowspan="2" class="td-icon" style="text-align: center; vertical-align: middle;">
                         <i class="fa fa-arrows"></i>
-                        <h5><bold><?= " ".$count; ?></bold></h5>                       
+                        <h5><bold><?= " ".(string)$count; ?></bold></h5>                       
                     </td>
                     <td class="td-text">
                         <div class="input-group">

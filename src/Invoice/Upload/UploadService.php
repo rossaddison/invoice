@@ -8,13 +8,10 @@ use App\Invoice\Entity\Upload;
 use App\Invoice\Setting\SettingRepository;
 use Yiisoft\Files\FileHelper;
 
-final class UploadService
+final readonly class UploadService
 {
-    private UploadRepository $repository;
-
-    public function __construct(UploadRepository $repository)
+    public function __construct(private UploadRepository $repository)
     {
-        $this->repository = $repository;
     }
 
     /**
@@ -50,7 +47,7 @@ final class UploadService
         $realTargetPath = realpath($targetPath);
         $realFilePath = realpath($file_path);
         if (($realTargetPath != false) && ($realFilePath != false)) {
-            strpos($realTargetPath, $realFilePath) == 0 ? FileHelper::unlink($file_path) : '';
+            str_starts_with($realTargetPath, $realFilePath) ? FileHelper::unlink($file_path) : '';
             $this->repository->delete($model);
         }
     }

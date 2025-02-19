@@ -10,11 +10,8 @@ use Yiisoft\Html\Html;
 
 class ModalHelper
 {
-    private SRepo $s;
-
-    public function __construct(SRepo $s)
+    public function __construct(private readonly SRepo $s)
     {
-        $this->s = $s;
     }
 
     // Eg.

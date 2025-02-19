@@ -6,13 +6,10 @@ namespace App\Invoice\FromDropDown;
 
 use App\Invoice\Entity\FromDropDown;
 
-final class FromDropDownService
+final readonly class FromDropDownService
 {
-    private FromDropDownRepository $repository;
-
-    public function __construct(FromDropDownRepository $repository)
+    public function __construct(private FromDropDownRepository $repository)
     {
-        $this->repository = $repository;
     }
 
     public function saveFromDropDown(FromDropDown $model, array $array): void

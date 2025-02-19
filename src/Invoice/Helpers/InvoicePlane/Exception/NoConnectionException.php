@@ -10,13 +10,8 @@ use Yiisoft\Translator\TranslatorInterface;
 
 class NoConnectionException extends \RuntimeException implements FriendlyExceptionInterface
 {
-    private TranslatorInterface $translator;
-    private Exception $e;
-
-    public function __construct(TranslatorInterface $translator, Exception $e)
+    public function __construct(private readonly TranslatorInterface $translator, private readonly Exception $e)
     {
-        $this->translator = $translator;
-        $this->e = $e;
     }
 
     public function getName(): string

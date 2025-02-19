@@ -6,13 +6,10 @@ namespace App\Invoice\PostalAddress;
 
 use App\Invoice\Entity\PostalAddress;
 
-final class PostalAddressService
+final readonly class PostalAddressService
 {
-    private PostalAddressRepository $repository;
-
-    public function __construct(PostalAddressRepository $repository)
+    public function __construct(private PostalAddressRepository $repository)
     {
-        $this->repository = $repository;
     }
 
     /**

@@ -16,7 +16,7 @@ use Yiisoft\Router\CurrentRoute;
  *     description="User"
  * )
  */
-final class ApiUserController
+final readonly class ApiUserController
 {
     public function __construct(private DataResponseFactoryInterface $responseFactory)
     {

@@ -25,34 +25,21 @@ use Yiisoft\Yii\View\Renderer\ViewRenderer;
 final class UserClientController
 {
     use FlashMessage;
-
-    private Session $session;
     private Flash $flash;
     private ViewRenderer $viewRenderer;
-    private WebControllerService $webService;
-    private UserService $userService;
-    private UserClientService $userclientService;
-    private DataResponseFactoryInterface $factory;
-    private TranslatorInterface $translator;
 
     public function __construct(
-        Session $session,
+        private Session $session,
         ViewRenderer $viewRenderer,
-        WebControllerService $webService,
-        UserService $userService,
-        UserClientService $userclientService,
-        DataResponseFactoryInterface $factory,
-        TranslatorInterface $translator,
+        private WebControllerService $webService,
+        private UserService $userService,
+        private UserClientService $userclientService,
+        private DataResponseFactoryInterface $factory,
+        private TranslatorInterface $translator,
     ) {
-        $this->session = $session;
-        $this->flash = new Flash($session);
+        $this->flash = new Flash($this->session);
         $this->viewRenderer = $viewRenderer->withControllerName('invoice/userclient')
                                            ->withLayout('@views/layout/invoice.php');
-        $this->webService = $webService;
-        $this->userService = $userService;
-        $this->userclientService = $userclientService;
-        $this->factory = $factory;
-        $this->translator = $translator;
     }
 
     /**
@@ -229,7 +216,7 @@ final class UserClientController
                             ];
                             if ($formHydrator->populateAndValidate($form, $form_array)
                                 // Check that the user client does not exist
-                                                         && !$ucR->repoUserClientqueryCount($user_id, $value) > 0) {
+                                                         && !($ucR->repoUserClientqueryCount($user_id, $value) > 0)) {
                                 $this->userclientService->saveUserClient($user_client, $form_array);
                                 $this->flashMessage('info', $this->translator->translate('i.record_successfully_updated'));
                                 return $this->webService->getRedirectResponse('userinv/index');

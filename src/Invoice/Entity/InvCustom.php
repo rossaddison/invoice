@@ -17,28 +17,12 @@ class InvCustom
     #[BelongsTo(target: CustomField::class, nullable: false)]
     private ?CustomField $custom_field = null;
 
-    #[Column(type: 'primary')]
-    private ?int $id = null;
-
-    #[Column(type: 'integer(11)', nullable: false)]
-    private ?int $inv_id = null;
-
-    #[Column(type: 'integer(11)', nullable: false)]
-    private ?int $custom_field_id = null;
-
-    #[Column(type: 'text', nullable: true)]
-    private ?string $value = '';
-
-    public function __construct(
-        int $id = null,
-        int $inv_id = null,
-        int $custom_field_id = null,
-        string $value = ''
-    ) {
-        $this->id = $id;
-        $this->inv_id = $inv_id;
-        $this->custom_field_id = $custom_field_id;
-        $this->value = $value;
+    public function __construct(#[Column(type: 'primary')]
+    private ?int $id = null, #[Column(type: 'integer(11)', nullable: false)]
+    private ?int $inv_id = null, #[Column(type: 'integer(11)', nullable: false)]
+    private ?int $custom_field_id = null, #[Column(type: 'text', nullable: true)]
+    private ?string $value = '')
+    {
     }
 
     public function getInv(): ?Inv

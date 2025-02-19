@@ -11,53 +11,17 @@ use Cycle\Annotated\Annotation\Entity;
 
 class PostalAddress
 {
-    #[Column(type: 'primary')]
-    public ?int $id = null;
-
-    #[Column(type: 'integer(11)', nullable: false)]
-    private ?int $client_id = null;
-
-    #[Column(type:'string(50)', nullable: false)]
-    private string $street_name = '';
-
-    #[Column(type:'string(50)', nullable: false)]
-    private string $additional_street_name = '';
-
-    #[Column(type:'string(4)', nullable: false)]
-    private string $building_number = '';
-
-    #[Column(type:'string(50)', nullable: false)]
-    private string $city_name = '';
-
-    #[Column(type:'string(7)', nullable: false)]
-    private string $postalzone = '';
-
-    #[Column(type:'string(50)', nullable: false)]
-    private string $countrysubentity = '';
-
-    #[Column(type:'string(50)', nullable: false)]
-    private string $country = '';
-
-    public function __construct(
-        int $id = null,
-        int $client_id = null,
-        string $street_name = '',
-        string $additional_street_name = '',
-        string $building_number = '',
-        string $city_name = '',
-        string $postalzone = '',
-        string $countrysubentity = '',
-        string $country = ''
-    ) {
-        $this->id = $id;
-        $this->client_id = $client_id;
-        $this->street_name = $street_name;
-        $this->additional_street_name = $additional_street_name;
-        $this->building_number = $building_number;
-        $this->city_name = $city_name;
-        $this->postalzone = $postalzone;
-        $this->countrysubentity = $countrysubentity;
-        $this->country = $country;
+    public function __construct(#[Column(type: 'primary')]
+    public ?int $id = null, #[Column(type: 'integer(11)', nullable: false)]
+    private ?int $client_id = null, #[Column(type:'string(50)', nullable: false)]
+    private string $street_name = '', #[Column(type:'string(50)', nullable: false)]
+    private string $additional_street_name = '', #[Column(type:'string(4)', nullable: false)]
+    private string $building_number = '', #[Column(type:'string(50)', nullable: false)]
+    private string $city_name = '', #[Column(type:'string(7)', nullable: false)]
+    private string $postalzone = '', #[Column(type:'string(50)', nullable: false)]
+    private string $countrysubentity = '', #[Column(type:'string(50)', nullable: false)]
+    private string $country = '')
+    {
     }
 
     public function getId(): string

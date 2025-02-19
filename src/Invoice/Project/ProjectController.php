@@ -24,31 +24,20 @@ use Yiisoft\Yii\View\Renderer\ViewRenderer;
 final class ProjectController
 {
     use FlashMessage;
-
-    private Session $session;
     private Flash $flash;
     private ViewRenderer $viewRenderer;
-    private WebControllerService $webService;
-    private UserService $userService;
-    private ProjectService $projectService;
-    private TranslatorInterface $translator;
 
     public function __construct(
-        Session $session,
+        private Session $session,
         ViewRenderer $viewRenderer,
-        WebControllerService $webService,
-        UserService $userService,
-        ProjectService $projectService,
-        TranslatorInterface $translator,
+        private WebControllerService $webService,
+        private UserService $userService,
+        private ProjectService $projectService,
+        private TranslatorInterface $translator,
     ) {
-        $this->session = $session;
-        $this->flash = new Flash($session);
+        $this->flash = new Flash($this->session);
         $this->viewRenderer = $viewRenderer->withControllerName('invoice/project')
                                            ->withLayout('@views/layout/invoice.php');
-        $this->webService = $webService;
-        $this->userService = $userService;
-        $this->projectService = $projectService;
-        $this->translator = $translator;
     }
 
     /**
@@ -58,7 +47,7 @@ final class ProjectController
      * @param Request $request
      * @param ProjectService $service
      */
-    public function index(#[Query('page')] int $page = null, ProjectRepository $projectRepository, SettingRepository $sR, Request $request, ProjectService $service): \Yiisoft\DataResponse\DataResponse
+    public function index(ProjectRepository $projectRepository, SettingRepository $sR, Request $request, ProjectService $service, #[Query('page')] int $page = null): \Yiisoft\DataResponse\DataResponse
     {
         $canEdit = $this->rbac();
         $parameters = [

@@ -23,31 +23,20 @@ use Yiisoft\Yii\View\Renderer\ViewRenderer;
 final class CompanyController
 {
     use FlashMessage;
-
-    private SessionInterface $session;
     private Flash $flash;
     private ViewRenderer $viewRenderer;
-    private WebControllerService $webService;
-    private UserService $userService;
-    private CompanyService $companyService;
-    private TranslatorInterface $translator;
 
     public function __construct(
-        SessionInterface $session,
+        private SessionInterface $session,
         ViewRenderer $viewRenderer,
-        WebControllerService $webService,
-        UserService $userService,
-        CompanyService $companyService,
-        TranslatorInterface $translator
+        private WebControllerService $webService,
+        private UserService $userService,
+        private CompanyService $companyService,
+        private TranslatorInterface $translator
     ) {
-        $this->session = $session;
-        $this->flash = new Flash($session);
+        $this->flash = new Flash($this->session);
         $this->viewRenderer = $viewRenderer->withControllerName('invoice/company')
                                            ->withLayout('@views/layout/invoice.php');
-        $this->webService = $webService;
-        $this->userService = $userService;
-        $this->companyService = $companyService;
-        $this->translator = $translator;
     }
 
     /**

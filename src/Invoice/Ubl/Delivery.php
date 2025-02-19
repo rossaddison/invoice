@@ -10,17 +10,8 @@ use DateTime;
 
 class Delivery implements XmlSerializable
 {
-    private ?DateTime $actualDeliveryDate;
-    private array $deliveryLocationID_scheme;
-    private ?Address $deliveryLocation;
-    private ?Party $deliveryParty;
-
-    public function __construct(?DateTime $actualDeliveryDate, array $deliveryLocationID_scheme, ?Address $deliveryLocation, ?Party $deliveryParty)
+    public function __construct(private readonly ?DateTime $actualDeliveryDate, private array $deliveryLocationID_scheme, private readonly ?Address $deliveryLocation, private readonly ?Party $deliveryParty)
     {
-        $this->actualDeliveryDate = $actualDeliveryDate;
-        $this->deliveryLocationID_scheme = $deliveryLocationID_scheme;
-        $this->deliveryLocation = $deliveryLocation;
-        $this->deliveryParty = $deliveryParty;
     }
 
     /**

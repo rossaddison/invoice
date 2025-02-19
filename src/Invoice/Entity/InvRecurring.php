@@ -14,9 +14,6 @@ use DateTimeImmutable;
 
 class InvRecurring
 {
-    #[Column(type:'primary')]
-    private ?int $id = null;
-
     /**
      * Every Recurring Invoice record belongs to one related Invoice
      * @var Inv $inv
@@ -24,35 +21,14 @@ class InvRecurring
     #[BelongsTo(target:Inv::class, nullable: false, fkAction: 'NO ACTION')]
     private ?Inv $inv = null;
 
-    #[Column(type:'integer(11)', nullable: false)]
-    private ?int $inv_id = null;
-
-    #[Column(type:'date', nullable: false)]
-    private mixed $start;
-
-    #[Column(type:'date', nullable: true)]
-    private mixed $end;
-
-    #[Column(type:'string(191)', nullable: false)]
-    private string $frequency = '';
-
-    #[Column(type:'date', nullable: true)]
-    private mixed $next;
-
-    public function __construct(
-        int $id = null,
-        int $inv_id = null,
-        mixed $start = '',
-        mixed $end = '',
-        string $frequency = '',
-        mixed $next = '',
-    ) {
-        $this->id = $id;
-        $this->inv_id = $inv_id;
-        $this->start = $start;
-        $this->end = $end;
-        $this->frequency = $frequency;
-        $this->next = $next;
+    public function __construct(#[Column(type:'primary')]
+    private ?int $id = null, #[Column(type:'integer(11)', nullable: false)]
+    private ?int $inv_id = null, #[Column(type:'date', nullable: false)]
+    private mixed $start = '', #[Column(type:'date', nullable: true)]
+    private mixed $end = '', #[Column(type:'string(191)', nullable: false)]
+    private string $frequency = '', #[Column(type:'date', nullable: true)]
+    private mixed $next = '')
+    {
     }
 
     public function getId(): string

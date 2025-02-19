@@ -27,30 +27,20 @@ final class FromDropDownController
     use FlashMessage;
 
     private Flash $flash;
-    private Session $session;
     private ViewRenderer $viewRenderer;
-    private WebControllerService $webService;
-    private UserService $userService;
-    private FromDropDownService $fromService;
-    private TranslatorInterface $translator;
 
     public function __construct(
-        Session $session,
+        private Session $session,
         ViewRenderer $viewRenderer,
-        WebControllerService $webService,
-        UserService $userService,
-        FromDropDownService $fromService,
-        TranslatorInterface $translator
+        private WebControllerService $webService,
+        private UserService $userService,
+        private FromDropDownService $fromService,
+        private TranslatorInterface $translator
     ) {
-        $this->session = $session;
-        $this->flash = new Flash($session);
+        $this->flash = new Flash($this->session);
         $this->viewRenderer = $viewRenderer->withControllerName('invoice/from')
                                            // The Controller layout dir is now redundant: replaced with an alias
                                            ->withLayout('@views/layout/invoice.php');
-        $this->webService = $webService;
-        $this->userService = $userService;
-        $this->fromService = $fromService;
-        $this->translator = $translator;
     }
 
     /**

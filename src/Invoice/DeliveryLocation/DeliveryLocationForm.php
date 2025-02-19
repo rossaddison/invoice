@@ -11,8 +11,8 @@ use DateTimeImmutable;
 
 final class DeliveryLocationForm extends FormModel
 {
-    private DateTimeImmutable $date_created;
-    private DateTimeImmutable $date_modified;
+    private readonly DateTimeImmutable $date_created;
+    private readonly DateTimeImmutable $date_modified;
     private ?string $client_id = '';
     #[Required]
     private ?string $name = '';
@@ -121,6 +121,7 @@ final class DeliveryLocationForm extends FormModel
      * @return string
      * @psalm-return ''
      */
+    #[\Override]
     public function getFormName(): string
     {
         return '';

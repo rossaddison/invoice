@@ -42,35 +42,21 @@ final class TaskController
     use FlashMessage;
 
     private Flash $flash;
-    private Session $session;
     private ViewRenderer $viewRenderer;
-    private WebControllerService $webService;
-    private UserService $userService;
-    private TaskService $taskService;
-    private TranslatorInterface $translator;
-    private DataResponseFactoryInterface $factory;
-    private InvItemService $invitemService;
 
     public function __construct(
-        Session $session,
+        private Session $session,
         ViewRenderer $viewRenderer,
-        WebControllerService $webService,
-        UserService $userService,
-        TaskService $taskService,
-        TranslatorInterface $translator,
-        DataResponseFactoryInterface $responseFactory,
-        InvItemService $invitemService
+        private WebControllerService $webService,
+        private UserService $userService,
+        private TaskService $taskService,
+        private TranslatorInterface $translator,
+        private DataResponseFactoryInterface $factory,
+        private InvItemService $invitemService
     ) {
-        $this->session = $session;
-        $this->flash = new Flash($session);
+        $this->flash = new Flash($this->session);
         $this->viewRenderer = $viewRenderer->withControllerName('invoice/task')
                                            ->withLayout('@views/layout/invoice.php');
-        $this->webService = $webService;
-        $this->userService = $userService;
-        $this->taskService = $taskService;
-        $this->translator = $translator;
-        $this->factory = $responseFactory;
-        $this->invitemService = $invitemService;
     }
 
     /**
@@ -78,7 +64,7 @@ final class TaskController
      * @param tR $tR
      * @param prjctR $prjctR
      */
-    public function index(#[Query('page')] int $page = null, tR $tR, prjctR $prjctR): \Yiisoft\DataResponse\DataResponse
+    public function index(tR $tR, prjctR $prjctR, #[Query('page')] int $page = null): \Yiisoft\DataResponse\DataResponse
     {
         $canEdit = $this->rbac();
         $parameters = [
@@ -258,7 +244,7 @@ final class TaskController
     ): \Yiisoft\DataResponse\DataResponse {
         $select_items = $request->getQueryParams();
         /** @var array $task_ids */
-        $task_ids = ($select_items['task_ids'] ? $select_items['task_ids'] : []);
+        $task_ids = ($select_items['task_ids'] ?: []);
         $inv_id = (string)$select_items['inv_id'];
         // Use Spiral||Cycle\Database\Injection\Parameter to build 'IN' array of tasks.
         $tasks = $taskR->findinTasks($task_ids);

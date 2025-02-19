@@ -19,26 +19,17 @@ class InvSentLog
     #[BelongsTo(target:Inv::class, nullable: false, fkAction:'NO ACTION')]
     private ?Inv $inv = null;
 
-    #[Column(type:'primary')]
-    private ?int $id = null;
-
-    #[Column(type:'integer(11)', nullable: false)]
-    private ?int $inv_id = null;
-
-    #[Column(type:'integer(11)', nullable: false)]
-    private ?int $client_id = null;
-
     #[Column(type:'datetime', nullable: false)]
     private DateTimeImmutable $date_sent;
 
     public function __construct(
-        int $id = null,
-        int $inv_id = null,
-        int $client_id = null
+        #[Column(type:'primary')]
+        private ?int $id = null,
+        #[Column(type:'integer(11)', nullable: false)]
+        private ?int $inv_id = null,
+        #[Column(type:'integer(11)', nullable: false)]
+        private ?int $client_id = null
     ) {
-        $this->id = $id;
-        $this->inv_id = $inv_id;
-        $this->client_id = $client_id;
         $this->date_sent = new DateTimeImmutable('now');
     }
 

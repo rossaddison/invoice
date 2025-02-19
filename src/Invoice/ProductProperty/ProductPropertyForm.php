@@ -17,15 +17,12 @@ final class ProductPropertyForm extends FormModel
     #[Required]
     private ?string $value = '';
 
-    private ?int $product_id = null;
-
     private ?Product $product = null;
 
-    public function __construct(ProductProperty $productProperty, int $product_id)
+    public function __construct(ProductProperty $productProperty, private readonly ?int $product_id)
     {
         $this->name = $productProperty->getName();
         $this->value = $productProperty->getValue();
-        $this->product_id = $product_id;
         $this->product = $productProperty->getProduct();
     }
 
@@ -53,6 +50,7 @@ final class ProductPropertyForm extends FormModel
      * @return string
      * @psalm-return ''
      */
+    #[\Override]
     public function getFormName(): string
     {
         return '';

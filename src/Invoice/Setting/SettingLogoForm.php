@@ -15,6 +15,7 @@ final class SettingLogoForm extends FormModel
      *
      * @psalm-return 'SettingLogoForm'
      */
+    #[\Override]
     public function getFormName(): string
     {
         return 'SettingLogoForm';

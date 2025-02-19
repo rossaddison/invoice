@@ -20,7 +20,7 @@ final class TranslateCommand extends Command
     protected static $defaultName = 'translator/translate';
     protected static $defaultDescription = 'Translates a message';
 
-    public function __construct(private TranslatorInterface $translator)
+    public function __construct(private readonly TranslatorInterface $translator)
     {
         parent::__construct();
     }

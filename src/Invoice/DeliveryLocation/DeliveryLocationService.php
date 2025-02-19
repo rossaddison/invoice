@@ -6,13 +6,10 @@ namespace App\Invoice\DeliveryLocation;
 
 use App\Invoice\Entity\DeliveryLocation;
 
-final class DeliveryLocationService
+final readonly class DeliveryLocationService
 {
-    private DeliveryLocationRepository $repository;
-
-    public function __construct(DeliveryLocationRepository $repository)
+    public function __construct(private DeliveryLocationRepository $repository)
     {
-        $this->repository = $repository;
     }
 
     /**

@@ -13,38 +13,14 @@ class TaxRate
     #[Column(type: 'primary')]
     private ?int $id = null;
 
-    #[Column(type: 'text', nullable: true)]
-    private ?string $tax_rate_name = null;
-
-    #[Column(type: 'string(2)', nullable: true)]
-    private ?string $tax_rate_code = null;
-
-    #[Column(type: 'string(2)', nullable: true)]
-    private ?string $peppol_tax_rate_code = null;
-
-    #[Column(type: 'string(30)', nullable: false, default: 'standard')]
-    private string $storecove_tax_type;
-
-    #[Column(type: 'decimal(5,2)', nullable: false, default_value: 0.00)]
-    private ?float $tax_rate_percent = null;
-
-    #[Column(type: 'bool', default:false)]
-    private bool $tax_rate_default = false;
-
-    public function __construct(
-        string $tax_rate_code = '',
-        string $peppol_tax_rate_code = '',
-        string $storecove_tax_type = '',
-        string $tax_rate_name = '',
-        float $tax_rate_percent = 0.00,
-        bool $tax_rate_default = false
-    ) {
-        $this->tax_rate_code = $tax_rate_code;
-        $this->peppol_tax_rate_code = $peppol_tax_rate_code;
-        $this->storecove_tax_type = $storecove_tax_type;
-        $this->tax_rate_name = $tax_rate_name;
-        $this->tax_rate_percent = $tax_rate_percent;
-        $this->tax_rate_default = $tax_rate_default;
+    public function __construct(#[Column(type: 'string(2)', nullable: true)]
+    private ?string $tax_rate_code = '', #[Column(type: 'string(2)', nullable: true)]
+    private ?string $peppol_tax_rate_code = '', #[Column(type: 'string(30)', nullable: false, default: 'standard')]
+    private string $storecove_tax_type = '', #[Column(type: 'text', nullable: true)]
+    private ?string $tax_rate_name = '', #[Column(type: 'decimal(5,2)', nullable: false, default_value: 0.00)]
+    private ?float $tax_rate_percent = 0.00, #[Column(type: 'bool', default:false)]
+    private bool $tax_rate_default = false)
+    {
     }
 
     public function setTaxRateId(int $tax_rate_id): void

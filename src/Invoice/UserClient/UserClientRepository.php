@@ -23,15 +23,12 @@ use Yiisoft\Data\Cycle\Writer\EntityWriter;
  */
 final class UserClientRepository extends Select\Repository
 {
-    private EntityWriter $entityWriter;
-
     /**
      * @param Select<TEntity> $select
      * @param EntityWriter $entityWriter
      */
-    public function __construct(Select $select, EntityWriter $entityWriter)
+    public function __construct(Select $select, private readonly EntityWriter $entityWriter)
     {
-        $this->entityWriter = $entityWriter;
         parent::__construct($select);
     }
 
@@ -208,7 +205,7 @@ final class UserClientRepository extends Select\Repository
             // Exclude clients, that already have user accounts, from the dropdown box
             // if the client id does not appear in the user client table as a client
             // => this client has not been already assigned therefore it can be made available
-            if (!$this->repoUserquerycount((string)$client_id) > 0) {
+            if (!($this->repoUserquerycount((string)$client_id) > 0)) {
                 $every_client_ids[] = $client_id;
             }
         }
@@ -235,7 +232,7 @@ final class UserClientRepository extends Select\Repository
             // Exclude clients, that already have user accounts, from the dropdown box
             // if the client id does not appear in the user client table as a client
             // => this client has not been already assigned therefore it can be made available
-            if (!$this->repoUserquerycount((string)$client_id) > 0) {
+            if (!($this->repoUserquerycount((string)$client_id) > 0)) {
                 $unassigned_client_ids[] = $client_id;
             }
         }

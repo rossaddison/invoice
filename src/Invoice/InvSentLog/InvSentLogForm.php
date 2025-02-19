@@ -51,6 +51,7 @@ final class InvSentLogForm extends FormModel
      * @return string
      * @psalm-return ''
      */
+    #[\Override]
     public function getFormName(): string
     {
         return '';

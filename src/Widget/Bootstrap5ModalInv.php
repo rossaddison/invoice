@@ -15,32 +15,18 @@ use Yiisoft\Yii\View\Renderer\ViewRenderer;
 
 final class Bootstrap5ModalInv
 {
-    private Translator $translator;
-    private ViewRenderer $viewRenderer;
-    private ClientRepository $cR;
-    private GroupRepository $gR;
-    private SettingRepository $sR;
-    private UserClientRepository $ucR;
-    private InvForm $invForm;
     private array $layoutParameters;
     private array $formParameters;
 
     public function __construct(
-        Translator $translator,
-        ViewRenderer $viewRenderer,
-        ClientRepository $cR,
-        GroupRepository $gR,
-        SettingRepository $sR,
-        UserClientRepository $ucR,
-        InvForm $invForm
+        private readonly Translator $translator,
+        private readonly ViewRenderer $viewRenderer,
+        private readonly ClientRepository $cR,
+        private readonly GroupRepository $gR,
+        private readonly SettingRepository $sR,
+        private readonly UserClientRepository $ucR,
+        private readonly InvForm $invForm
     ) {
-        $this->translator = $translator;
-        $this->viewRenderer = $viewRenderer;
-        $this->cR = $cR;
-        $this->gR = $gR;
-        $this->sR = $sR;
-        $this->ucR = $ucR;
-        $this->invForm = $invForm;
         $this->layoutParameters = [];
         $this->formParameters = [];
     }

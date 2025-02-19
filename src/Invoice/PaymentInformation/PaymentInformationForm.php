@@ -25,6 +25,7 @@ final class PaymentInformationForm extends FormModel
      *
      * @psalm-return 'PaymentInformationForm'
      */
+    #[\Override]
     public function getFormName(): string
     {
         return 'PaymentInformationForm';

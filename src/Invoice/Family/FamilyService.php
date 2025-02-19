@@ -6,13 +6,10 @@ namespace App\Invoice\Family;
 
 use App\Invoice\Entity\Family;
 
-final class FamilyService
+final readonly class FamilyService
 {
-    private FamilyRepository $repository;
-
-    public function __construct(FamilyRepository $repository)
+    public function __construct(private FamilyRepository $repository)
     {
-        $this->repository = $repository;
     }
 
     /**

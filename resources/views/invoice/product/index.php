@@ -170,8 +170,9 @@ use Yiisoft\Yii\DataView\YiiRouter\UrlCreator;
         new ActionColumn(buttons: [
             new ActionButton(
                 content: '🔎',
-                url: static function(Product $model) use ($urlGenerator) : string {
-                     return $urlGenerator->generate('product/view', ['id' => $model->getProduct_id()]);     
+                url: function(Product $model) use ($urlGenerator) : string {
+                    /** @psalm-suppress InvalidArgument */ 
+                    return $urlGenerator->generate('product/view', ['id' => $model->getProduct_id()]);     
                 },
                 attributes: [
                     'data-bs-toggle' => 'tooltip',
@@ -180,8 +181,9 @@ use Yiisoft\Yii\DataView\YiiRouter\UrlCreator;
             ),
             new ActionButton(
                 content: '✎',
-                url: static function(Product $model) use ($urlGenerator) : string {
-                     return $urlGenerator->generate('product/edit', ['id' => $model->getProduct_id()]);     
+                url: function(Product $model) use ($urlGenerator) : string {
+                    /** @psalm-suppress InvalidArgument */ 
+                    return $urlGenerator->generate('product/edit', ['id' => $model->getProduct_id()]);     
                 },
                 attributes: [
                     'data-bs-toggle' => 'tooltip',
@@ -190,8 +192,9 @@ use Yiisoft\Yii\DataView\YiiRouter\UrlCreator;
             ),
             new ActionButton(
                 content: '❌',
-                url: static function(Product $model) use ($urlGenerator) : string {
-                     return $urlGenerator->generate('product/delete', ['id' => $model->getProduct_id()]);     
+                url: function(Product $model) use ($urlGenerator) : string {
+                    /** @psalm-suppress InvalidArgument */ 
+                    return $urlGenerator->generate('product/delete', ['id' => $model->getProduct_id()]);     
                 },
                 attributes: [
                     'title' => $translator->translate('i.delete'),
@@ -228,9 +231,11 @@ use Yiisoft\Yii\DataView\YiiRouter\UrlCreator;
         Div::tag()->addClass('float-end m-3')->content($toolbarReset)->encode(false)->render() .
         Form::tag()->close();
     
+    
     echo GridView::widget()
     ->bodyRowAttributes(['class' => 'align-middle'])
     ->tableAttributes(['class' => 'table table-striped text-center h-75','id'=>'table-product'])
+    /** @psalm-suppress InvalidArgument */
     ->columns(...$columns)
     ->dataReader($sortedAndPagedPaginator)    
     ->urlCreator($urlCreator)

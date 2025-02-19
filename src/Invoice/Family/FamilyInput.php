@@ -8,10 +8,11 @@ use Yiisoft\Input\Http\Attribute\Data\FromBody;
 use Yiisoft\Input\Http\Attribute\Parameter\Body;
 
 #[FromBody(['family_name'])]
-final class FamilyInput
+final readonly class FamilyInput
 {
     public function __construct(
         #[Body('family_name')]
+        
         private string $family_name,
     ) {
     }

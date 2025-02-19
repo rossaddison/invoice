@@ -19,23 +19,11 @@ class ClientNote
     #[Column(type:'primary')]
     private ?int $id = null;
 
-    #[Column(type:'integer(11)', nullable: false)]
-    private ?int $client_id = null;
-
-    #[Column(type: 'date', nullable: false)]
-    private mixed $date_note;
-
-    #[Column(type: 'longText', nullable:false)]
-    private string $note = '';
-
-    public function __construct(
-        int $client_id = null,
-        string $note = '',
-        mixed $date_note = '',
-    ) {
-        $this->client_id = $client_id;
-        $this->note = $note;
-        $this->date_note = $date_note;
+    public function __construct(#[Column(type:'integer(11)', nullable: false)]
+    private ?int $client_id = null, #[Column(type: 'longText', nullable:false)]
+    private string $note = '', #[Column(type: 'date', nullable: false)]
+    private mixed $date_note = '')
+    {
     }
 
     public function getClient(): ?Client

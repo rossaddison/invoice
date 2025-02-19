@@ -54,35 +54,23 @@ final class SettingController
     use FlashMessage;
 
     private ViewRenderer $viewRenderer;
-    private WebControllerService $webService;
-    private SettingService $settingService;
-    private Translator $translator;
-    private UserService $userService;
-    private DataResponseFactoryInterface $factory;
     private Flash $flash;
     private Session $session;
-    private SettingRepository $s;
 
     public function __construct(
         ViewRenderer $viewRenderer,
-        WebControllerService $webService,
-        SettingService $settingService,
-        Translator $translator,
-        UserService $userService,
-        DataResponseFactoryInterface $factory,
+        private WebControllerService $webService,
+        private SettingService $settingService,
+        private Translator $translator,
+        private UserService $userService,
+        private DataResponseFactoryInterface $factory,
         Session $session,
-        SettingRepository $s,
+        private SettingRepository $s,
     ) {
         $this->viewRenderer = $viewRenderer->withControllerName('invoice/setting')
                                            ->withLayout('@views/layout/invoice.php');
-        $this->webService = $webService;
-        $this->settingService = $settingService;
-        $this->translator = $translator;
-        $this->userService = $userService;
-        $this->factory = $factory;
         $this->flash = new Flash($session);
         $this->session = $session;
-        $this->s = $s;
     }
 
     /**
@@ -264,7 +252,7 @@ final class SettingController
                     $key === 'tax_rate_decimal_places' && (int)$value !== 2 ? $this->tab_index_change_decimal_column((int)$value) : '';
                     // Deal with existing keys after first installation
                     if ($sR->repoCount($key) > 0) {
-                        if (strpos($key, 'field_is_password') !== false || strpos($key, 'field_is_amount') !== false) {
+                        if (str_contains($key, 'field_is_password') || str_contains($key, 'field_is_amount')) {
                             // Skip all meta fields
                             continue;
                         }

@@ -12,13 +12,10 @@ use App\Invoice\SalesOrderItemAmount\SalesOrderItemAmountService as SoIAS;
 use App\Invoice\TaxRate\TaxRateRepository as TRR;
 use App\Invoice\Unit\UnitRepository as UR;
 
-final class SalesOrderItemService
+final readonly class SalesOrderItemService
 {
-    private SalesOrderItemRepository $repository;
-
-    public function __construct(SalesOrderItemRepository $repository)
+    public function __construct(private SalesOrderItemRepository $repository)
     {
-        $this->repository = $repository;
     }
 
     /**
@@ -180,7 +177,7 @@ final class SalesOrderItemService
         $soias_array['so_item_id'] = $so_item_id;
         $sub_total = $quantity * $price;
         if (null !== $tax_rate_percentage) {
-            $tax_total = ($sub_total * ($tax_rate_percentage / 100));
+            $tax_total = ($sub_total * ($tax_rate_percentage / 100.00));
         } else {
             $tax_total = 0.00;
         }

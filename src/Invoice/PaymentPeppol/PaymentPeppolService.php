@@ -6,13 +6,10 @@ namespace App\Invoice\PaymentPeppol;
 
 use App\Invoice\Entity\PaymentPeppol;
 
-final class PaymentPeppolService
+final readonly class PaymentPeppolService
 {
-    private PaymentPeppolRepository $repository;
-
-    public function __construct(PaymentPeppolRepository $repository)
+    public function __construct(private PaymentPeppolRepository $repository)
     {
-        $this->repository = $repository;
     }
 
     /**

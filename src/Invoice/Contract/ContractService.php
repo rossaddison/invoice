@@ -8,13 +8,10 @@ use App\Invoice\Entity\Contract;
 use App\Invoice\Helpers\DateHelper;
 use App\Invoice\Setting\SettingRepository as SR;
 
-final class ContractService
+final readonly class ContractService
 {
-    private ContractRepository $repository;
-
-    public function __construct(ContractRepository $repository)
+    public function __construct(private ContractRepository $repository)
     {
-        $this->repository = $repository;
     }
 
     /**

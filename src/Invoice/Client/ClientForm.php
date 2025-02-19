@@ -37,7 +37,7 @@ final class ClientForm extends FormModel
     private ?string $client_avs = '';
     private ?string $client_insurednumber = '';
     private ?string $client_veka = '';
-    private mixed $client_birthdate;
+    private readonly mixed $client_birthdate;
 
     #[Required]
     #[Integer(min: 16, max:100)]
@@ -237,6 +237,7 @@ final class ClientForm extends FormModel
      *
      * @psalm-return ''
      */
+    #[\Override]
     public function getFormName(): string
     {
         return '';

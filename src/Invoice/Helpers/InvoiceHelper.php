@@ -11,13 +11,8 @@ use Yiisoft\Session\Flash\Flash;
 
 class InvoiceHelper
 {
-    private SR $s;
-    private SessionInterface $session;
-
-    public function __construct(SR $s, SessionInterface $session)
+    public function __construct(private readonly SR $s, private readonly SessionInterface $session)
     {
-        $this->s = $s;
-        $this->session = $session;
     }
 
     /**
@@ -87,7 +82,7 @@ class InvoiceHelper
             $this->flash('danger', $this->s->trans('invalid_amount'));
         }
 
-        $amountLine = sprintf('%010d', (float)$amount * 100);
+        $amountLine = sprintf('%010d', (float)$amount * 100.00);
         $checkSlAmount = $this->invoice_recMod10($slipType . $amountLine);
 
         if (!preg_match("/\d{2}-\d{1,6}-\d{1}/", (string)$subNumb)) {
@@ -98,7 +93,7 @@ class InvoiceHelper
         $fullSub = $subNumb_exploded[0] . sprintf('%06d', $subNumb_exploded[1]) . $subNumb_exploded[2];
         $rnumb_preg_replace = preg_replace('/\s+/', '', $rnumb);
 
-        return $slipType . $amountLine . $checkSlAmount . '>' . (string)$rnumb_preg_replace . '+ ' . $fullSub . '>';
+        return $slipType . $amountLine . (string)$checkSlAmount . '>' . (string)$rnumb_preg_replace . '+ ' . $fullSub . '>';
     }
 
     /**

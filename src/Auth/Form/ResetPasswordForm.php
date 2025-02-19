@@ -18,7 +18,7 @@ final class ResetPasswordForm extends FormModel implements RulesProviderInterfac
     private string $newPasswordVerify = '';
 
     public function __construct(
-        private TranslatorInterface $translator
+        private readonly TranslatorInterface $translator
     ) {
     }
 
@@ -40,6 +40,7 @@ final class ResetPasswordForm extends FormModel implements RulesProviderInterfac
      *
      * @psalm-return 'ResetPassword'
      */
+    #[\Override]
     public function getFormName(): string
     {
         return 'ResetPassword';

@@ -17,14 +17,6 @@ class Contract
 
     #[BelongsTo(target: Client::class, nullable: false, fkAction: 'NO ACTION')]
     private ?Client $client = null;
-    #[Column(type: 'integer(11)', nullable: false)]
-    private ?int $client_id = null;
-
-    #[Column(type: 'text', nullable: true)]
-    public ?string $reference = null;
-
-    #[Column(type: 'text', nullable: true)]
-    public ?string $name = null;
 
     #[Column(type: 'datetime', nullable:false)]
     private DateTimeImmutable $period_start;
@@ -33,13 +25,13 @@ class Contract
     private DateTimeImmutable $period_end;
 
     public function __construct(
-        string $name = '',
-        string $reference = '',
-        int $client_id = null,
+        #[Column(type: 'text', nullable: true)]
+        public ?string $name = '',
+        #[Column(type: 'text', nullable: true)]
+        public ?string $reference = '',
+        #[Column(type: 'integer(11)', nullable: false)]
+        private ?int $client_id = null,
     ) {
-        $this->client_id = $client_id;
-        $this->name = $name;
-        $this->reference = $reference;
         $this->period_start = new \DateTimeImmutable();
         $this->period_end = new \DateTimeImmutable();
     }

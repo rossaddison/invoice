@@ -9,7 +9,7 @@ use Throwable;
 use Yiisoft\Auth\IdentityInterface;
 use Yiisoft\User\CurrentUser;
 
-final class AuthService
+final readonly class AuthService
 {
     public function __construct(
         private CurrentUser $currentUser,
