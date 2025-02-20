@@ -1187,9 +1187,9 @@ class PeppolHelper
                                             ['name' => "{$b}BaseAmount", 'value' => $acii->getAllowanceCharge()?->getBaseAmount()],
                                         ]],
                                     ];
-                                } // foreach 
+                                } // foreach
                             } // null!== $unit_peppol
-                        } // null!== $unit_peppol_id 
+                        } // null!== $unit_peppol_id
                     } // isset $inv_item_amount
                 } // foreach
                 return $invoiceLines;

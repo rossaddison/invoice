@@ -1971,7 +1971,7 @@ final class SettingRepository extends Select\Repository
      */
     public function codeToMessage(int $code): string
     {
-        $message = match ($code) {
+        return match ($code) {
             UPLOAD_ERR_INI_SIZE => 'The uploaded file exceeds the upload_max_filesize directive in php.ini',
             UPLOAD_ERR_FORM_SIZE => 'The uploaded file exceeds the MAX_FILE_SIZE directive that was specified in the HTML form',
             UPLOAD_ERR_PARTIAL => 'The uploaded file was only partially uploaded',
@@ -1982,7 +1982,6 @@ final class SettingRepository extends Select\Repository
             UPLOAD_ERR_OK => 'There is no error, the file uploaded with success',
             default => 'Unknown upload error',
         };
-        return $message;
     }
 
     /**

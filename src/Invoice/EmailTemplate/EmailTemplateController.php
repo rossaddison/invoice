@@ -227,7 +227,7 @@ final class EmailTemplateController
                 // see src\Invoice\Asset\rebuild-1.13\js\mailer_ajax_email_addresses
                 'admin_email' => $settingRepository->getConfigAdminEmail(),
                 'sender_email' => $settingRepository->getConfigSenderEmail(),
-                'from_email' => (($fromR->getDefault())?->getEmail() ?? $this->translator->translate('invoice.email.default.none.set')),
+                'from_email' => ($fromR->getDefault()?->getEmail() ?? $this->translator->translate('invoice.email.default.none.set')),
             ];
             if ($request->getMethod() === Method::POST) {
                 $body = $request->getParsedBody() ?? [];
@@ -289,7 +289,7 @@ final class EmailTemplateController
                 // see src\Invoice\Asset\rebuild-1.13\js\mailer_ajax_email_addresses
                 'admin_email' => $settingRepository->getConfigAdminEmail(),
                 'sender_email' => $settingRepository->getConfigSenderEmail(),
-                'from_email' => (($fromR->getDefault())?->getEmail() ?? $this->translator->translate('invoice.email.default.none.set')),
+                'from_email' => ($fromR->getDefault()?->getEmail() ?? $this->translator->translate('invoice.email.default.none.set')),
             ];
             if ($request->getMethod() === Method::POST) {
                 $body = $request->getParsedBody() ?? [];

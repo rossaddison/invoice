@@ -190,8 +190,7 @@ final class TelegramController
         Request $request,
         #[RouteArgument('secret_token')] string $secret_token,
         #[RouteArgument('jsonString')] string $jsonString
-    ): \Yiisoft\DataResponse\DataResponse
-    {
+    ): \Yiisoft\DataResponse\DataResponse {
         $settingRepositoryTelegramToken = $this->sR->getSetting('telegram_token');
         $settingRepositoryTelegramSecretToken = $this->sR->getSetting('telegram_secret_token');
         try {

@@ -16,7 +16,6 @@ use App\Invoice\QuoteAmount\QuoteAmountRepository as QAR;
 use App\Invoice\QuoteCustom\QuoteCustomRepository as QCR;
 use App\Invoice\QuoteItem\QuoteItemRepository as QIR;
 use App\Invoice\QuoteTaxRate\QuoteTaxRateRepository as QTRR;
-use App\Invoice\Quote\QuoteRepository as QR;
 use App\Invoice\Setting\SettingRepository as SR;
 // Services
 use App\Invoice\QuoteAmount\QuoteAmountService as QAS;

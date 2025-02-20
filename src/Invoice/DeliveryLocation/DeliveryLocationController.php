@@ -72,8 +72,7 @@ final class DeliveryLocationController
         QR $qR,
         #[Query('page')] string $queryPage = null,
         #[Query('sort')] string $querySort = null,
-    ): Response
-    {
+    ): Response {
         /** @psalm-var positive-int $currentPageNeverZero */
         $currentPageNeverZero = (int)$queryPage > 0 ? (int)$queryPage : 1;
         $this->add_in_invoice_flash();

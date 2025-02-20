@@ -15,7 +15,6 @@ use App\Invoice\SalesOrderAmount\SalesOrderAmountRepository as SoAR;
 use App\Invoice\SalesOrderCustom\SalesOrderCustomRepository as SoCR;
 use App\Invoice\SalesOrderItem\SalesOrderItemRepository as SoIR;
 use App\Invoice\SalesOrderTaxRate\SalesOrderTaxRateRepository as SoTRR;
-use App\Invoice\SalesOrder\SalesOrderRepository as SoR;
 // Services
 use App\Invoice\SalesOrderAmount\SalesOrderAmountService as SoAS;
 use App\Invoice\SalesOrderCustom\SalesOrderCustomService as SoCS;

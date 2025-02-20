@@ -598,8 +598,7 @@ final class ClientController
         cpR $cpR,
         ucR $ucR,
         uiR $uiR
-    ): Response
-    {
+    ): Response {
         $query_params = $request->getQueryParams();
         /**
          * @var string $query_params['page']

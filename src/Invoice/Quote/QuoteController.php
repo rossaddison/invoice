@@ -1851,7 +1851,7 @@ final class QuoteController
         bool $unloaded = false
     ): Quote|null {
         if ($id) {
-            return ($unloaded ? $quoteRepo->repoQuoteUnLoadedquery((string)$id) : $quoteRepo->repoQuoteLoadedquery((string)$id));
+            return $unloaded ? $quoteRepo->repoQuoteUnLoadedquery((string)$id) : $quoteRepo->repoQuoteLoadedquery((string)$id);
         }
         return null;
     }

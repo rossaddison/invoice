@@ -24,7 +24,7 @@ class GoogleTranslateDiffEmptyException extends \RuntimeException implements Fri
     public function getSolution(): string
     {
         return <<<'SOLUTION'
-               There is no need to translate   
+               There is no need to translate
             SOLUTION;
     }
 }

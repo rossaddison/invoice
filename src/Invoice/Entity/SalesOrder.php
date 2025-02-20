@@ -196,7 +196,7 @@ class SalesOrder
     public function getStatus(int $status_id): string
     {
         $status = '';
-        $status = match ($status_id) {
+        return match ($status_id) {
             1 => 'draft',
             2 => 'sent',
             3 => 'viewed',
@@ -205,7 +205,6 @@ class SalesOrder
             6 => 'cancelled',
             default => $status,
         };
-        return $status;
     }
 
     public function setStatus_id(int $status_id): void

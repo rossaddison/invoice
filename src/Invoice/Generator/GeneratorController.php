@@ -33,7 +33,6 @@ use Yiisoft\Session\Flash\Flash;
 use Yiisoft\Session\SessionInterface as Session;
 use Yiisoft\Translator\TranslatorInterface;
 use Yiisoft\User\CurrentUser;
-use Yiisoft\VarDumper\VarDumper;
 use Yiisoft\View\View;
 use Yiisoft\Yii\View\Renderer\ViewRenderer;
 
@@ -59,18 +58,18 @@ class GeneratorController
 
     /**
      * @see Note: The working file app.php in ./resources/messages/en is too big for google to translate.
-     * 
+     *
      * @see Note these below filenames e.g. '_ip_lang.php' represent the filenames in:
-     * ./resources/views/invoice/generator/templates_protected. As strings they will be  
+     * ./resources/views/invoice/generator/templates_protected. As strings they will be
      * used to construct a filename. The translation of the specific ./src/Invoice/Language/English file
      * is placed in the templates_protected/{individual file} 'php shell template' to build a new php file.
-     * 
-     * So using a selected ...settings...view...'Google Translate Locale', 
+     *
+     * So using a selected ...settings...view...'Google Translate Locale',
      * these 'English' folder files are used to build a new php ./resources/views/invoice/generator/output_overwrite file.
-     * 
+     *
      * These individual output_overwrite files can then manually be combined into one app.php specific to a language.
      * This app.php is then placed manually in ./resources/messages/{locale}/
-     * 
+     *
      * The files located in the templates_protected folder are array 'php shells' which receive the arrays from the English folder.
      * Any changes to the ./resources/messages/en/app.php during development, requires changes to the English folder files.
      */
@@ -87,15 +86,15 @@ class GeneratorController
     public const string _A_LATEST = '_a_latest_lang.php';
 
     public const string _B_LATEST = '_b_latest_lang.php';
-    
+
     // e.g. site.soletrader.contact.address
     public const string _COMMON = '_common_lang.php';
 
     // e.g. miscellaneous
     public const string _ANY = '_any_lang.php';
-    
-    // e.g. compare resources/messages/en.php with de.php with function rebuildLocale. 
-    // The missing keys in de.php are input into an array into an overwritable file 
+
+    // e.g. compare resources/messages/en.php with de.php with function rebuildLocale.
+    // The missing keys in de.php are input into an array into an overwritable file
     // called _diff.php located at src\Invoice\Language\English
     public const string _DIFF = '_diff_lang.php';
 
@@ -113,72 +112,70 @@ class GeneratorController
                                            ->withLayout('@views/layout/invoice.php');
         $this->aliases = $this->setAliases();
     }
-    
+
     /**
      * Compare e.g \resources\messages\de\app.php to the base \resources\messages\en\app.php
      * and determine what keys are missing in the selected de\app.php  array
-     * Insert English key => value array into file ./src/Invoice/Language/English/diff_lang.php 
+     * Insert English key => value array into file ./src/Invoice/Language/English/diff_lang.php
      * @throws GoogleTranslateLocaleSettingNotFoundException
      * @psalm-suppress MixedAssignment $lang
-     * @return void
      */
-    private function rebuildLocale(SettingRepository $sR) : void
+    private function rebuildLocale(SettingRepository $sR): void
     {
         $targetLanguage = $sR->getSetting('google_translate_locale');
         if (empty($targetLanguage)) {
             throw new GoogleTranslateLocaleSettingNotFoundException();
         }
         $en = $this->aliases->get('@en');
-        $fileEnAppPath = $en. DIRECTORY_SEPARATOR. 'app.php';
-        
+        $fileEnAppPath = $en . DIRECTORY_SEPARATOR . 'app.php';
+
         $lang = [];
         if (($foundEnAppPath = file_exists($fileEnAppPath)) === true) {
             // $lang is a full array inside the file designated by $fileEnAppPath
             $lang = include($fileEnAppPath);
-        }        
-        $arrayEnAppDotPhp = $lang; 
+        }
+        $arrayEnAppDotPhp = $lang;
         $messages = $this->aliases->get('@messages');
-        $targetLangFileAppPath = $messages . 
-                       DIRECTORY_SEPARATOR . 
-                           $targetLanguage . 
-                       DIRECTORY_SEPARATOR .  'app.php';
-        
+        $targetLangFileAppPath = $messages .
+                       DIRECTORY_SEPARATOR .
+                           $targetLanguage .
+                       DIRECTORY_SEPARATOR . 'app.php';
+
         $lang = [];
         if (($foundTargetLangFileAppPath = file_exists($targetLangFileAppPath)) === true) {
             // $lang is a full array inside the file designated by $targetLangFileAppPath
             $lang = include($targetLangFileAppPath);
         }
-        
+
         $arrayTargetLocaleDotPhp = $lang ?? [];
-        
+
         $diff = [];
         /**
          * @var string $key
          * @var string $value
          */
-        foreach ($arrayEnAppDotPhp as $key => $value)
-        {
+        foreach ($arrayEnAppDotPhp as $key => $value) {
             if (!array_key_exists($key, (array)$arrayTargetLocaleDotPhp)) {
                 $diff[$key] = $value;
             }
         }
-        
+
         if (empty($diff)) {
             throw new GoogleTranslateDiffEmptyException();
         }
-            
+
         $content = '<?php declare(strict_types=1); $lang = ' . var_export($diff, true) . ';';
-        $diffFileLocation = $this->aliases->get('@English').DIRECTORY_SEPARATOR.'diff_lang.php';
+        $diffFileLocation = $this->aliases->get('@English') . DIRECTORY_SEPARATOR . 'diff_lang.php';
         file_put_contents($diffFileLocation, $content);
-        $this->flashMessage('success', $fileEnAppPath. ' minus '. $targetLangFileAppPath. ' at '.$diffFileLocation);
-    }        
-    
+        $this->flashMessage('success', $fileEnAppPath . ' minus ' . $targetLangFileAppPath . ' at ' . $diffFileLocation);
+    }
+
     /**
      * Version: 2 replacing 1.0.2 as at 13/02/2025
-     * Purpose: To translate individual files located in src/Invoice/Language/English to folder 
-     *          ./resources/views/invoice/generator/output_overwrite 
+     * Purpose: To translate individual files located in src/Invoice/Language/English to folder
+     *          ./resources/views/invoice/generator/output_overwrite
      *          These individual files can then be combinded manually into a app.php
-     * 
+     *
      * @param CurrentRoute $currentRoute
      * @param SettingRepository $sR
      * @throws CaCertFileNotFoundException
@@ -218,7 +215,7 @@ class GeneratorController
                 try {
                     $translationClient = new TranslationServiceClient([]);
                     $request = new TranslateTextRequest();
-                    $request->setParent('projects/'.$projectId);
+                    $request->setParent('projects/' . $projectId);
                     // Use the ..src/Invoice/Language/English/ip_lang.php associative array as template
                     $lang = new Lang();
                     // type eg. 'ip', 'gateway'  of ip_lang.php or gateway_lang.php respectively
@@ -231,9 +228,9 @@ class GeneratorController
                     $targetLanguage = $sR->getSetting('google_translate_locale');
                     if (empty($targetLanguage)) {
                         throw new GoogleTranslateLocaleSettingNotFoundException();
-                    } else {
-                        $request->setTargetLanguageCode($targetLanguage);
                     }
+                    $request->setTargetLanguageCode($targetLanguage);
+
                     // The request will contain the authentication token based on the default credentials file
                     $response = $translationClient->translateText($request);
                     $result_array = [];
@@ -249,7 +246,7 @@ class GeneratorController
                      * @see $response_get_translations = ['Name' => 'Naam']
                      */
                     foreach ($response_get_translations as $key => $translation) {
-                       $result_array[] = $translation->getTranslatedText();                 
+                        $result_array[] = $translation->getTranslatedText();
                     }
                     $combined_array = array_combine(array_keys($content), $result_array);
                     $templateFile = $this->google_translate_get_file_from_type($type);
@@ -261,7 +258,7 @@ class GeneratorController
                         '//invoice/generator/templates_protected/' . $templateFile,
                         $content_params
                     );
-                    $prefixToFileAsLocaleWithFileTypeAndTimeStamp = $targetLanguage.'_'.$type.'_'.(string)time();
+                    $prefixToFileAsLocaleWithFileTypeAndTimeStamp = $targetLanguage . '_' . $type . '_' . (string)time();
                     $this->flashMessage('success', $templateFile . $this->translator->translate('invoice.generator.generated') . $path . '/' . $prefixToFileAsLocaleWithFileTypeAndTimeStamp);
                     // output to //invoice/generator/output_overwrite/
                     $this->build_and_save($path, $file_content, $templateFile, $prefixToFileAsLocaleWithFileTypeAndTimeStamp);
@@ -286,7 +283,7 @@ class GeneratorController
     private function google_translate_get_file_from_type(string $type): string
     {
         $file = '';
-        switch ($type) {            
+        switch ($type) {
             case 'ip':
                 $file = self::_IP;
                 break;
@@ -296,10 +293,10 @@ class GeneratorController
             case 'app':
                 $file = self::_APP;
                 break;
-            /**
-             * @see ../resources/views/layout/invoice.php DropdownItem::link($translator->translate('invoice.generator.google.translate.latest.a'), 
-             *      $urlGenerator->generate('generator/google_translate_lang', ['type' => 'a_latest']),  false, false),
-             */
+                /**
+                 * @see ../resources/views/layout/invoice.php DropdownItem::link($translator->translate('invoice.generator.google.translate.latest.a'),
+                 *      $urlGenerator->generate('generator/google_translate_lang', ['type' => 'a_latest']),  false, false),
+                 */
             case 'a_latest':
                 $file = self::_A_LATEST;
                 break;
@@ -334,8 +331,8 @@ class GeneratorController
             '@Invoice' => dirname(__DIR__, 3) . '/src/Invoice',
             '@invoice' => dirname(__DIR__, 3) . '/resources/views/invoice',
             '@messages' => dirname(__DIR__, 3) . '/resources/messages',
-            '@en' => dirname(__DIR__, 3) . $ds .  'resources' . $ds. 'messages' . $ds. 'en',
-            '@English' => dirname(__DIR__, 3) . '/src/Invoice/Language/English'
+            '@en' => dirname(__DIR__, 3) . $ds . 'resources' . $ds . 'messages' . $ds . 'en',
+            '@English' => dirname(__DIR__, 3) . '/src/Invoice/Language/English',
         ]);
     }
 
@@ -452,7 +449,7 @@ class GeneratorController
         }
         return $this->webService->getRedirectResponse('generator/index');
     }
-    
+
     /**
      * @param CurrentRoute $currentRoute
      * @param GeneratorRepository $generatorRepository
