@@ -37,7 +37,7 @@ final class TelegramHelper
         $this->logger = $logger;
         $this->botApi = new TelegramBotApi(
             $this->settingRepositoryTelegramToken,
-            'https://api.telegram.org',    
+            'https://api.telegram.org',
             new CurlTransport(),
             $this->logger
         );

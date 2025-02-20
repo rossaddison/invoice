@@ -21,7 +21,6 @@ use App\Invoice\InvItemAllowanceCharge\InvItemAllowanceChargeRepository as ACIIR
 use App\Invoice\InvItemAmount\InvItemAmountRepository as IIAR;
 use App\Invoice\InvItem\InvItemRepository as IIR;
 use App\Invoice\InvTaxRate\InvTaxRateRepository as ITRR;
-use App\Invoice\Inv\InvRepository as IR;
 use App\Invoice\Setting\SettingRepository as SR;
 // Helpers
 use App\Invoice\Helpers\DateHelper;

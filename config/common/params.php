@@ -340,8 +340,8 @@ return [
          *     ],
          * ]
          */
-        
-        /** 
+
+        /**
          * To update a table structure and related schema use MODE_WRITE_ONLY ...then revert back to MODE_READ_AND_WRITE
          * For faster performance use MODE_READ_AND_WRITE
          * Note as at 15/06/2024: If you have adjusted any Entity file you will have to always make two adjustments to
@@ -362,7 +362,7 @@ return [
                 ],
             ],
         ],
-    /**
+        /**
      * Config for {@see \Yiisoft\Yii\Cycle\Schema\Conveyor\AnnotatedSchemaConveyor}
      * Annotated entity directories list.
      * {@see \Yiisoft\Aliases\Aliases} are also supported.
@@ -395,7 +395,7 @@ return [
     ],
     'yiisoft/mailer-symfony' => [
         'esmtpTransport' => [
-      /**
+            /**
        * enabled => true is a setting independent of vendor/yiisoft/mailer-symfony/config/params.php
        * @see SettingRepository function config_params()
        */

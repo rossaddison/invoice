@@ -578,7 +578,7 @@ class StoreCoveHelper
                         $inv_item_amount = $this->getInvItemAmount((string)$item_id, $iiaR);
                         if (isset($inv_item_amount)) {
                             $sub_total = $inv_item_amount->getSubtotal();
-                            
+
                             // using Array Format 2
                             // ..\vendor\sabre\xml\lib\Writer.php
                             // https://kinsta.com/blog/php-8-2/#deprecate--string-interpolation
@@ -637,7 +637,7 @@ class StoreCoveHelper
                                     'reason' => $acii->getAllowanceCharge()?->getReason(),
                                     'amountExcludingTax' => $acii->getAllowanceCharge()?->getBaseAmount(),
                                 ];
-                            } 
+                            }
                         } // isset inv_item_amount
                     } // null!== $item
                 } // foreach
@@ -1216,7 +1216,7 @@ class StoreCoveHelper
                 $delivery_party_id = $inv->getDelivery_party_id();
                 $delparty = $delpartyRepo->repoDeliveryPartyquery($delivery_party_id);
                 $partyName = (null !== $delparty ? $delparty->getPartyName() : null);
-                return (null !== $partyName ? new Party($this->t, $partyName, null, null, null, null, null, null, null, null, null) : null);
+                return null !== $partyName ? new Party($this->t, $partyName, null, null, null, null, null, null, null, null, null) : null;
             }
         }
         return null;

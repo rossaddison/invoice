@@ -12,7 +12,7 @@ final readonly class FamilyInput
 {
     public function __construct(
         #[Body('family_name')]
-        
+
         private string $family_name,
     ) {
     }
