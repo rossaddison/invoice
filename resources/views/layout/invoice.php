@@ -35,7 +35,6 @@ use App\Asset\AppAsset;
 use App\Widget\PerformanceMetrics;
 use Yiisoft\Html\Tag\Button;
 use Yiisoft\Html\Tag\Form;
-use Yiisoft\Html\Tag\Label;
 use Yiisoft\Html\Tag\I;
 use Yiisoft\Html\Html;
 use Yiisoft\Html\Tag\Meta;
@@ -48,7 +47,6 @@ use Yiisoft\Yii\Bootstrap5\NavBarExpand;
 use Yiisoft\Yii\Bootstrap5\NavBarPlacement;
 use Yiisoft\Yii\Bootstrap5\NavLink;
 use Yiisoft\Yii\Bootstrap5\NavStyle;
-use Yiisoft\Yii\Bootstrap5\Offcanvas;
 
 /**
  * @see ...src\ViewInjection\LayoutViewInjection
@@ -356,7 +354,10 @@ $this->beginPage();
                         DropdownItem::text('php.ini (line 1800): opcache.interned_strings_buffer (pref 8) = '. ((string)ini_get('opcache.interned_strings_buffer') ?: 'unknown'). (((string)ini_get('opcache.interned_strings_buffer')  == 8 ? '✅' : '❌'))),                        
                         DropdownItem::text('php.ini (line 1804): opcache.max_accelerated_files (pref 4000) = '. ((string)ini_get('opcache.max_accelerated_files') ?: 'unknown'). (((string)ini_get('opcache.max_accelerated_files') == 4000 ? '✅' : '❌'))),
                         DropdownItem::text('php.ini: (line 1822): opcache.revalidate_freq (pref 60) = '.  ((string)ini_get('opcache.revalidate_freq') ?: 'unknown'). (((string)ini_get('opcache.revalidate_freq') == 60 ? '✅' : '❌'))),  
-                        DropdownItem::divider(),    
+                        DropdownItem::divider(), 
+                        DropdownItem::text('CLI (Command Line Interface): Manually Edit c:\wamp64\bin\php\php8.3.16 php.ini then ... Right Click Wampserver Icon... Restart From Zero .. e.g. C:\wamp64\www\invoice>php ./vendor/bin/composer-require-checker'), 
+                        DropdownItem::text('php.ini (line 451): memory_limit (pref 1024 M) = '. ((string)ini_get('memory_limit') ?: 'unknown'). (((string)ini_get('memory_limit') == '1024M' ? '✅' : '❌'))),
+                        DropdownItem::divider(),
                         DropdownItem::text('.env: BUILD_DATABASE= (pref see nothing) = '. ($buildDatabase ? 'You have built the database using BUILD_DATABASE=true, now assign the environment varirable to nothing i.e. BUILD_DATABASE=' : '✅')),  
                         DropdownItem::text('config.params: yiisoft/yii-debug: enabled , disable for improved performance'),
                         DropdownItem::text('config.params: yiisoft/yii-debug-api: enabled, disable for improved performance'),

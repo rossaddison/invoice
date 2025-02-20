@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "7061a280426b0ec3d1e5c386531cd44f",
+    "content-hash": "7fda385ab1d31f0cd85fd2d7fdc8530e",
     "packages": [
         {
             "name": "alexkart/curl-builder",
@@ -3568,16 +3568,16 @@
         },
         {
             "name": "google/grpc-gcp",
-            "version": "v0.4.0",
+            "version": "v0.4.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/GoogleCloudPlatform/grpc-gcp-php.git",
-                "reference": "2a80dbf690922aa52bb6bb79b9a32a9637a5c2d9"
+                "reference": "e585b7721bbe806ef45b5c52ae43dfc2bff89968"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/GoogleCloudPlatform/grpc-gcp-php/zipball/2a80dbf690922aa52bb6bb79b9a32a9637a5c2d9",
-                "reference": "2a80dbf690922aa52bb6bb79b9a32a9637a5c2d9",
+                "url": "https://api.github.com/repos/GoogleCloudPlatform/grpc-gcp-php/zipball/e585b7721bbe806ef45b5c52ae43dfc2bff89968",
+                "reference": "e585b7721bbe806ef45b5c52ae43dfc2bff89968",
                 "shasum": ""
             },
             "require": {
@@ -3607,9 +3607,9 @@
             "description": "gRPC GCP library for channel management",
             "support": {
                 "issues": "https://github.com/GoogleCloudPlatform/grpc-gcp-php/issues",
-                "source": "https://github.com/GoogleCloudPlatform/grpc-gcp-php/tree/v0.4.0"
+                "source": "https://github.com/GoogleCloudPlatform/grpc-gcp-php/tree/v0.4.1"
             },
-            "time": "2024-04-03T16:37:55+00:00"
+            "time": "2025-02-19T21:53:22+00:00"
         },
         {
             "name": "google/longrunning",
@@ -12440,16 +12440,16 @@
         },
         {
             "name": "vimeo/psalm",
-            "version": "6.8.1",
+            "version": "6.8.4",
             "source": {
                 "type": "git",
                 "url": "https://github.com/vimeo/psalm.git",
-                "reference": "f12f96cde537a424fe2a9366105b5e7146d4fc23"
+                "reference": "7ee919229d510c5834af3112072f4b12cd7bb51a"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/vimeo/psalm/zipball/f12f96cde537a424fe2a9366105b5e7146d4fc23",
-                "reference": "f12f96cde537a424fe2a9366105b5e7146d4fc23",
+                "url": "https://api.github.com/repos/vimeo/psalm/zipball/7ee919229d510c5834af3112072f4b12cd7bb51a",
+                "reference": "7ee919229d510c5834af3112072f4b12cd7bb51a",
                 "shasum": ""
             },
             "require": {
@@ -12554,7 +12554,7 @@
                 "issues": "https://github.com/vimeo/psalm/issues",
                 "source": "https://github.com/vimeo/psalm"
             },
-            "time": "2025-02-19T12:09:52+00:00"
+            "time": "2025-02-20T10:00:51+00:00"
         },
         {
             "name": "vjik/telegram-bot-api",
@@ -13802,12 +13802,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/yiisoft/db.git",
-                "reference": "867c132c4fc6baebde80adde3fe6e1597e5d8b33"
+                "reference": "5ab001c597ae4ae100383ee1175dd7d6ebafd7a4"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/yiisoft/db/zipball/867c132c4fc6baebde80adde3fe6e1597e5d8b33",
-                "reference": "867c132c4fc6baebde80adde3fe6e1597e5d8b33",
+                "url": "https://api.github.com/repos/yiisoft/db/zipball/5ab001c597ae4ae100383ee1175dd7d6ebafd7a4",
+                "reference": "5ab001c597ae4ae100383ee1175dd7d6ebafd7a4",
                 "shasum": ""
             },
             "require": {
@@ -13881,7 +13881,7 @@
                     "type": "opencollective"
                 }
             ],
-            "time": "2025-02-14T09:26:05+00:00"
+            "time": "2025-02-20T17:45:09+00:00"
         },
         {
             "name": "yiisoft/db-mysql",
@@ -17126,12 +17126,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/yiisoft/yii-bootstrap5.git",
-                "reference": "a55a8a774831b6a002f5e041c31749c99d7faf74"
+                "reference": "25330bb2372a0e82985fc1d23119bc2c7819edae"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/yiisoft/yii-bootstrap5/zipball/a55a8a774831b6a002f5e041c31749c99d7faf74",
-                "reference": "a55a8a774831b6a002f5e041c31749c99d7faf74",
+                "url": "https://api.github.com/repos/yiisoft/yii-bootstrap5/zipball/25330bb2372a0e82985fc1d23119bc2c7819edae",
+                "reference": "25330bb2372a0e82985fc1d23119bc2c7819edae",
                 "shasum": ""
             },
             "require": {
@@ -17195,7 +17195,7 @@
                     "type": "open_collective"
                 }
             ],
-            "time": "2025-02-19T14:58:55+00:00"
+            "time": "2025-02-20T14:26:03+00:00"
         },
         {
             "name": "yiisoft/yii-console",
@@ -18830,16 +18830,16 @@
         },
         {
             "name": "codeception/codeception",
-            "version": "dev-main",
+            "version": "5.2.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/Codeception/Codeception.git",
-                "reference": "69b75457f49a08c7554020b6e41329232f300754"
+                "reference": "6e06224627dcd89e7d4753f44ba4df35034b6314"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/Codeception/Codeception/zipball/69b75457f49a08c7554020b6e41329232f300754",
-                "reference": "69b75457f49a08c7554020b6e41329232f300754",
+                "url": "https://api.github.com/repos/Codeception/Codeception/zipball/6e06224627dcd89e7d4753f44ba4df35034b6314",
+                "reference": "6e06224627dcd89e7d4753f44ba4df35034b6314",
                 "shasum": ""
             },
             "require": {
@@ -18896,7 +18896,6 @@
                 "symfony/phpunit-bridge": "For phpunit-bridge support",
                 "vlucas/phpdotenv": "For loading params from .env files"
             },
-            "default-branch": true,
             "bin": [
                 "codecept"
             ],
@@ -18940,7 +18939,7 @@
             ],
             "support": {
                 "issues": "https://github.com/Codeception/Codeception/issues",
-                "source": "https://github.com/Codeception/Codeception/tree/main"
+                "source": "https://github.com/Codeception/Codeception/tree/5.2.1"
             },
             "funding": [
                 {
@@ -18948,7 +18947,7 @@
                     "type": "open_collective"
                 }
             ],
-            "time": "2025-02-16T23:26:59+00:00"
+            "time": "2025-02-20T14:52:49+00:00"
         },
         {
             "name": "codeception/lib-asserts",
