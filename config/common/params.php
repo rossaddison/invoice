@@ -323,44 +323,37 @@ return [
             'safe' => false,
         ],
         /**
-     * SchemaProvider list for {@see \Yiisoft\Yii\Cycle\Schema\Provider\Support\SchemaProviderPipeline}
-     * Array of classname and {@see SchemaProviderInterface} object.
-     * You can configure providers if you pass classname as key and parameters as array:
-     * [
-     *     SimpleCacheSchemaProvider::class => [
-     *         'key' => 'my-custom-cache-key'
-     *     ],
-     *     FromFilesSchemaProvider::class => [
-     *         'files' => ['@runtime/cycle-schema.php']
-     *     ],
-     *     FromConveyorSchemaProvider::class => [
-     *         'generators' => [
-     *              Generator\SyncTables::class, // sync table changes to database
-     *          ]
-     *     ],
-     * ]
-     */
-        'schema-providers' => [
-            // Uncomment next line to enable a Schema caching in the common cache
-            // \Yiisoft\Yii\Cycle\Schema\Provider\SimpleCacheSchemaProvider::class => ['key' => 'cycle-orm-cache-key'],
-            // Store generated Schema in the file
-            PhpFileSchemaProvider::class => [
-                // >>>>>>>>>>  To update a table structure and related schema use MODE_WRITE_ONLY ...then revert back to MODE_READ_AND_WRITE
-                // For faster performance use MODE_READ_AND_WRITE
-                //'mode' => $_ENV['BUILD_DATABASE'] ? PhpFileSchemaProvider::MODE_WRITE_ONLY : PhpFileSchemaProvider::MODE_READ_AND_WRITE,
-                /**
-         * Note: Performance degrades if you insert a $_ENV into the 'false' value
-         * @see \.env.php file that contains the $_ENV['BUILD_DATABASE'] setting
+         * SchemaProvider list for {@see \Yiisoft\Yii\Cycle\Schema\Provider\Support\SchemaProviderPipeline}
+         * Array of classname and {@see SchemaProviderInterface} object.
+         * You can configure providers if you pass classname as key and parameters as array:
+         * [
+         *     SimpleCacheSchemaProvider::class => [
+         *         'key' => 'my-custom-cache-key'
+         *     ],
+         *     FromFilesSchemaProvider::class => [
+         *         'files' => ['@runtime/cycle-schema.php']
+         *     ],
+         *     FromConveyorSchemaProvider::class => [
+         *         'generators' => [
+         *              Generator\SyncTables::class, // sync table changes to database
+         *          ]
+         *     ],
+         * ]
          */
-
-                /** Note as at 15/06/2024: If you have adjusted any Entity file you will have to always make two adjustments to
+        
+        /** 
+         * To update a table structure and related schema use MODE_WRITE_ONLY ...then revert back to MODE_READ_AND_WRITE
+         * For faster performance use MODE_READ_AND_WRITE
+         * Note as at 15/06/2024: If you have adjusted any Entity file you will have to always make two adjustments to
          * ensure the database is updated with the new changes and relevent fields:
          * 1. Change the mode immediately below
          * 2. Change the BUILD_DATABASE=  in the .env file at the root to BUILD_DATABASE=true
          * 3. Once the changes have been reflected and you have checked them via e.g. phpMyAdmin revert back to the original settings
-         * Mode: PhpFileSchemaProvider::MODE_WRITE_ONLY : PhpFileSchemaProvider::MODE_READ_AND_WRITE \
+         * Mode: PhpFileSchemaProvider::MODE_WRITE_ONLY or 1 : PhpFileSchemaProvider::MODE_READ_AND_WRITE or 0 \
          */
-                'mode' => $_ENV['BUILD_DATABASE'] ? PhpFileSchemaProvider::MODE_WRITE_ONLY : PhpFileSchemaProvider::MODE_READ_AND_WRITE,
+        'schema-providers' => [
+            PhpFileSchemaProvider::class => [
+                'mode' => $_ENV['BUILD_DATABASE'] ? 1 : 0,
                 'file' => 'runtime/schema.php',
             ],
             FromConveyorSchemaProvider::class => [
@@ -369,7 +362,7 @@ return [
                 ],
             ],
         ],
-        /**
+    /**
      * Config for {@see \Yiisoft\Yii\Cycle\Schema\Conveyor\AnnotatedSchemaConveyor}
      * Annotated entity directories list.
      * {@see \Yiisoft\Aliases\Aliases} are also supported.
@@ -402,7 +395,7 @@ return [
     ],
     'yiisoft/mailer-symfony' => [
         'esmtpTransport' => [
-            /**
+      /**
        * enabled => true is a setting independent of vendor/yiisoft/mailer-symfony/config/params.php
        * @see SettingRepository function config_params()
        */
