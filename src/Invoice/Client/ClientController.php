@@ -21,7 +21,6 @@ use App\Invoice\ClientNote\ClientNoteService as cnS;
 use App\Invoice\ClientNote\ClientNoteForm;
 use App\Invoice\Quote\QuoteForm;
 use App\Invoice\Traits\FlashMessage;
-use App\Invoice\UserClient\UserClientService;
 use App\Invoice\UserClient\Exception\NoClientsAssignedToUserException;
 use App\User\UserService;
 // Repositories
@@ -64,7 +63,6 @@ use Yiisoft\Router\CurrentRoute;
 use Yiisoft\Session\SessionInterface;
 use Yiisoft\Session\Flash\Flash;
 use Yiisoft\Translator\TranslatorInterface;
-use Yiisoft\User\CurrentUser;
 use Yiisoft\FormModel\FormHydrator;
 use Yiisoft\Data\Cycle\Reader\EntityReader;
 use Yiisoft\Router\FastRoute\UrlGenerator;
