@@ -40,22 +40,27 @@ $this->setTitle($translator->translate('password.change'));
                             ?   Field::text($formModel, 'login')
                                 ->label($translator->translate('layout.login'))
                                 ->addInputAttributes([
+                                    'autocomplete' => 'username',
                                     'value' => $login ?? ''
                                 ]) 
                             :   Field::text($formModel, 'login')
                                 ->label($translator->translate('layout.login'))
                                 ->addInputAttributes([
+                                    'autocomplete' => 'username',
                                     'value' => $login ?? '', 
                                     'readonly' => 'readonly'
                                 ]); 
                     ?>
                     <?= Field::password($formModel, 'password')
+                        ->addInputAttributes(['autocomplete' => 'current-password'])    
                         ->label($translator->translate('layout.password'));        
                     ?>
                     <?= Field::password($formModel, 'newPassword') 
+                        ->addInputAttributes(['autocomplete' => 'new-password'])
                         ->label($translator->translate('layout.password.new'));    
                     ?>
                     <?= Field::password($formModel, 'newPasswordVerify')
+                        ->addInputAttributes(['autocomplete' => 'verify-password'])    
                         ->label($translator->translate('layout.password-verify.new'))    
                     ?>
                     <?= Field::submitButton()

@@ -88,10 +88,12 @@ $this->setTitle($translator->translate('i.login'));
                         ->id('loginForm')
                         ->open() ?>
                     <?= Field::text($formModel, 'login')
+                        ->addInputAttributes(['autocomplete' => 'username'])        
                         ->inputClass('form-control')
                         ->label($translator->translate('layout.login'))
                         ->autofocus() ?>
                     <?= Field::password($formModel, 'password')
+                        ->addInputAttributes(['autocomplete' => 'current-password'])    
                         ->inputClass('form-control')
                         ->label($translator->translate('layout.password'))
                     ?>

@@ -33,9 +33,11 @@ $this->setTitle($translator->translate('i.password_reset'));
                         ->id('resetPasswordForm')
                         ->open() ?>
                     <?= Field::password($formModel, 'newPassword') 
+                        ->addInputAttributes(['autocomplete' => 'new-password'])
                         ->label($translator->translate('layout.password.new'));    
                     ?>
                     <?= Field::password($formModel, 'newPasswordVerify')
+                        ->addInputAttributes(['autocomplete' => 'verify-new-password'])    
                         ->label($translator->translate('layout.password-verify.new'))    
                     ?>
                     <?= Field::submitButton()

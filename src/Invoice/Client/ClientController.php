@@ -45,7 +45,6 @@ use App\Invoice\UserInv\UserInvRepository as uiR;
 // Helpers
 use App\Invoice\Helpers\CountryHelper;
 use App\Invoice\Helpers\DateHelper;
-use App\Invoice\Helpers\GenerateCodeFileHelper;
 // Psr\\Http
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
@@ -87,8 +86,6 @@ final class ClientController
         private ClientService $clientService,
         private ClientCustomService $clientCustomService,
         private UserService $userService,
-        private UserClientService $userclientService,
-        private CurrentUser $currentUser,
         private DataResponseFactoryInterface $factory,
         private SessionInterface $session,
         private TranslatorInterface $translator
@@ -118,20 +115,6 @@ final class ClientController
                 'flash' => $this->flash,
             ]
         );
-    }
-
-    /**
-     * @param string $generated_dir_path
-     * @param string $content
-     * @param string $file
-     * @param string $name
-     * @return GenerateCodeFileHelper
-     */
-    private function build_and_save(string $generated_dir_path, string $content, string $file, string $name): GenerateCodeFileHelper
-    {
-        $build_file = new GenerateCodeFileHelper("$generated_dir_path/$name$file", $content);
-        $build_file->save();
-        return $build_file;
     }
 
     /**
