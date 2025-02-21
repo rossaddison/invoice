@@ -353,7 +353,7 @@ return [
          */
         'schema-providers' => [
             PhpFileSchemaProvider::class => [
-                'mode' => $_ENV['BUILD_DATABASE'] ? 1 : 0,
+                'mode' => $_ENV['BUILD_DATABASE'] ? PhpFileSchemaProvider::MODE_WRITE_ONLY : PhpFileSchemaProvider::MODE_READ_AND_WRITE,
                 'file' => 'runtime/schema.php',
             ],
             FromConveyorSchemaProvider::class => [
