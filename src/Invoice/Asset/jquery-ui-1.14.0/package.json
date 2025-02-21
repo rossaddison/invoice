@@ -65,7 +65,7 @@
 		"express-body-parser-error-handler": "1.0.7",
 		"grunt": "1.6.1",
 		"grunt-bowercopy": "1.2.5",
-		"grunt-cli": "1.4.3",
+		"grunt-cli": "1.5.0",
 		"grunt-compare-size": "0.4.2",
 		"grunt-contrib-concat": "2.1.0",
 		"grunt-contrib-csslint": "2.0.0",
