@@ -90,14 +90,14 @@ final class InvoiceController
     {
         $default_settings = [
             /**
-             * Remove the 'default_settings_exist' setting from the settings table by manually 
+             * Remove the 'default_settings_exist' setting from the settings table by manually
              * going into the mysql database table 'settings' and deleting it. This will remove &
              * reinstall the default settings listed below. The above index function will check
              * whether this setting exists. If not THIS function will be run.
-             * CAUTION: THIS WILL ALSO REMOVE ALL THE SETTINGS INCLUDING SECRET KEYS 
+             * CAUTION: THIS WILL ALSO REMOVE ALL THE SETTINGS INCLUDING SECRET KEYS
              */
             'default_settings_exist' => '1',
-            
+
             'bootstrap5_offcanvas_enable' => 0,
             'bootstrap5_offcanvas_placement' => 'top',
             'cron_key' => Random::string(32),
