@@ -88,7 +88,7 @@ final readonly class LayoutViewInjection implements LayoutParametersInjectionInt
                 }
             }
         }
-        $bootstrap5OffcanvasPlacement = $this->settingRepository->getSetting('bootstrap5_offcanvas_placement') ?: 'top';  
+        $bootstrap5OffcanvasPlacement = $this->settingRepository->getSetting('bootstrap5_offcanvas_placement') ?: 'top';
         $bootstrap5OffcanvasEnable = $this->settingRepository->getSetting('bootstrap5_offcanvas_enable') == '1' ? true : false;
         $stopSigningUp = $this->settingRepository->getSetting('stop_signing_up') == '1' ? true : false;
         $stopLoggingIn = $this->settingRepository->getSetting('stop_logging_in') == '1' ? true : false;

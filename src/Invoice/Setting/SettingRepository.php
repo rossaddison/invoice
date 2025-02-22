@@ -1497,8 +1497,8 @@ final class SettingRepository extends Select\Repository
             ],
             'bootstrap5_offcanvas_enable' => [
                 'why' => 'An offcanvas is useful on smaller devices such as mobile phones with the menu typically coming in from the top, bottom, left (start), or right (end).',
-                'where' => './resources/views/layout/invoice.php and src/ViewInjection/LayoutViewInjection'
-            ],            
+                'where' => './resources/views/layout/invoice.php and src/ViewInjection/LayoutViewInjection',
+            ],
             'cron_key' => [
                 'why' => 'A cron job is used on the server to automatically email recurring invoices to clients.',
                 'where' => 'This will be setup later.',
