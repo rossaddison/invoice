@@ -145,9 +145,9 @@ return [
                 'template' => '{input}{label}{hint}{error}',
                 'labelClass' => 'floatingInput h6',
                 'errorClass' => 'fw-bold fst-italic',
-                /**
-             * @see resources/views/invoice/product/_form.php and adjust the h6 below to h1 and see the effect
-             */
+               /**
+                * @see resources/views/invoice/product/_form.php and adjust the h6 below to h1 and see the effect
+                */
                 'hintClass' => 'text-danger h6',
                 'fieldConfigs' => [
                     SubmitButton::class => [

@@ -46,6 +46,9 @@
 <p>Introducing India's PayTm payment gateway's QR code method of payment and comparing this with Stripe's method.</p>
 <p>A General Sales Tax (GST) Tax System will have to be implemented first for this purpose.</p>
 <p>Testing Credit Notes against Invoices with refunds (if payment made) linked to each of the payment gateways.</p>
+<p><b>22nd February 2025</b></p>
+<p>'Bootstrap5' Setting tab introduced in tab_index.php with Offcanvas setting - start(left), end(right), top, bottom.</p>
+<p>Bootstrap5 Offcanvas functional</p>
 <p><b>19th February 2025</b></p>
 <p>Google Translate version 2 functional.</p>
 <p>A new GeneratorController function rebuildLocale() compares the source resources/messages/en/app.php with an already built {locale}/app.php. 

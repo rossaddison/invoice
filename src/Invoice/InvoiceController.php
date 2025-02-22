@@ -30,12 +30,10 @@ use App\Invoice\TaxRate\TaxRateRepository;
 use App\Invoice\Traits\FlashMessage;
 use App\Invoice\Unit\UnitRepository;
 // Services and forms
-use App\Invoice\Setting\SettingService;
 use App\Service\WebControllerService;
 use App\User\UserService;
 // Psr
 use Psr\Http\Message\ResponseInterface as Response;
-use Yiisoft\FormModel\FormHydrator;
 use Yiisoft\Router\CurrentRoute;
 use Yiisoft\Router\HydratorAttribute\RouteArgument;
 use Yiisoft\Security\Random;
@@ -55,12 +53,10 @@ final class InvoiceController
         private WebControllerService $webService,
         private UserService $userService,
         private TranslatorInterface $translator,
-        private SettingService $settingService,
         private ViewRenderer $viewRenderer,
         private SessionInterface $session,
         private SettingRepository $s,
-        private Crypt $crypt,
-        private FormHydrator $formHydrator,
+        private Crypt $crypt
     ) {
         $this->flash = new Flash($this->session);
 
@@ -93,14 +89,17 @@ final class InvoiceController
     private function install_default_settings_on_first_run(SessionInterface $session, SettingRepository $sR): void
     {
         $default_settings = [
-            //*************************************************************************************//
-            // Remove the 'default_settings_exist' setting from the settings table by manually     //
-            // going into the mysql database table 'settings' and deleting it. This will remove &  //
-            // reinstall the default settings listed below. The above index function will check    //
-            // whether this setting exists. If not THIS function will be run.                      //
-            // CAUTION: THIS WILL ALSO REMOVE ALL THE SETTINGS INCLUDING SECRET KEYS
-            //*************************************************************************************//
+            /**
+             * Remove the 'default_settings_exist' setting from the settings table by manually 
+             * going into the mysql database table 'settings' and deleting it. This will remove &
+             * reinstall the default settings listed below. The above index function will check
+             * whether this setting exists. If not THIS function will be run.
+             * CAUTION: THIS WILL ALSO REMOVE ALL THE SETTINGS INCLUDING SECRET KEYS 
+             */
             'default_settings_exist' => '1',
+            
+            'bootstrap5_offcanvas_enable' => 0,
+            'bootstrap5_offcanvas_placement' => 'top',
             'cron_key' => Random::string(32),
             'currency_symbol' => '£',
             'currency_symbol_placement' => 'before',

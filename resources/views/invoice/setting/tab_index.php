@@ -8,6 +8,7 @@ declare(strict_types=1);
  * @var \Yiisoft\Router\UrlGeneratorInterface $urlGenerator
  * @var string $alert
  * @var string $actionName
+ * @var string $bootstrap5
  * @var string $csrf
  * @var string $frontPage
  * @var string $general
@@ -29,7 +30,6 @@ declare(strict_types=1);
  * @var string $active
  * @var string $telegram
  * @psalm-var array<string, Stringable|null|scalar> $actionArguments
- * 
  */
 
 echo $alert;
@@ -96,7 +96,10 @@ echo $alert;
         <button class="<?= 'nav-link'. ($active == 'qrcode' ? ' active' : ''); ?>" data-bs-toggle="tab" data-bs-target="#settings-qrcode" style="text-decoration: none"><?= $translator->translate('invoice.invoice.qr.code'); ?></button>
     </li>
     <li class="<?= 'nav-item'. ($active == 'telegram' ? ' active' : ''); ?>" role="presentation">
-        <button class="<?= 'nav-link'. ($active == 'telegram' ? ' active' : ''); ?>" data-bs-toggle="tab" data-bs-target="#settings-telegram" style="text-decoration: none"><i class="bi bi-telegram"><?= $translator->translate('invoice.invoice.telegram'); ?></i></button>
+        <button class="<?= 'nav-link'. ($active == 'telegram' ? ' active' : ''); ?>" data-bs-toggle="tab" data-bs-target="#settings-telegram" style="text-decoration: none"><i class="bi bi-telegram"><?= ' ' . $translator->translate('invoice.invoice.telegram'); ?></i></button>
+    </li>
+    <li class="<?= 'nav-item'. ($active == 'bootstrap5' ? ' active' : ''); ?>" role="presentation">
+        <button class="<?= 'nav-link'. ($active == 'bootstrap5' ? ' active' : ''); ?>" data-bs-toggle="tab" data-bs-target="#settings-bootstrap5" style="text-decoration: none"><i class="bi bi-bootstrap"><?= ' ' . $translator->translate('invoice.invoice.bootstrap5'); ?></i></button>
     </li>
 </ul>
 
@@ -177,6 +180,10 @@ echo $alert;
             
             <div id="settings-telegram" class="<?= 'tab-pane'. ($active == 'telegram' ? ' active' : ''); ?>" role="tabpanel" aria-labelledby="settings-telegram">
                 <?= $telegram; ?>
+            </div>
+            
+            <div id="settings-bootstrap5" class="<?= 'tab-pane'. ($active == 'bootstrap5' ? ' active' : ''); ?>" role="tabpanel" aria-labelledby="settings-bootstrap5">
+                <?= $bootstrap5; ?>
             </div>
             
         </div>

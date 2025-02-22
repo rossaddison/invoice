@@ -47,6 +47,8 @@ use Yiisoft\Yii\Bootstrap5\NavBarExpand;
 use Yiisoft\Yii\Bootstrap5\NavBarPlacement;
 use Yiisoft\Yii\Bootstrap5\NavLink;
 use Yiisoft\Yii\Bootstrap5\NavStyle;
+use Yiisoft\Yii\Bootstrap5\Offcanvas;
+use Yiisoft\Yii\Bootstrap5\OffcanvasPlacement;
 
 /**
  * @see ...src\ViewInjection\LayoutViewInjection
@@ -59,9 +61,11 @@ use Yiisoft\Yii\Bootstrap5\NavStyle;
  * @var Yiisoft\Router\UrlGeneratorInterface $urlGenerator
  * @var Yiisoft\Translator\TranslatorInterface $translator
  * @var Yiisoft\View\WebView $this
+ * @var bool $bootstrap5OffcanvasEnable
  * @var bool $isGuest
  * @var bool $buildDatabase
- * @var bool $debugMode
+ * @var bool $debugMode 
+ * @var string $bootstrap5OffcanvasPlacement
  * @var string $brandLabel
  * @var string $csrf
  * @var string $companyLogoHeight 
@@ -69,7 +73,7 @@ use Yiisoft\Yii\Bootstrap5\NavStyle;
  * @var string $companyLogoWidth
  * @var string $content
  * @var string $javascriptJqueryDateHelper
- * @var string $logoPath 
+ * @var string $logoPath
  * @var string $read_write
  * @var string $scrutinizerRepository
  * 
@@ -196,6 +200,21 @@ $this->beginPage();
         
         <?php
         $this->beginBody();
+        
+        $offcanvasPlacement = match($bootstrap5OffcanvasPlacement) {
+            'bottom' => OffcanvasPlacement::BOTTOM,
+            'end' => OffcanvasPlacement::END,
+            'start' => OffcanvasPlacement::START,
+            'top' => OffcanvasPlacement::TOP,
+        };
+        
+        echo ($bootstrap5OffcanvasEnable ? Offcanvas::widget()
+                ->id('offcanvas'.ucFirst($bootstrap5OffcanvasPlacement))
+                ->placement($offcanvasPlacement)
+                ->title('Offcanvas')
+                ->togglerContent('Toggle '. strtolower($bootstrap5OffcanvasPlacement) .' offcanvas')
+                ->begin() : '');
+        
         echo NavBar::widget()
           // public folder represented by first forward slash ie. root
           ->addClass('navbar bg-body-tertiary')
@@ -206,11 +225,8 @@ $this->beginPage();
           ->brandText(str_repeat('&nbsp;', 7).$brandLabel)      
           ->brandUrl($urlGenerator->generate('invoice/index'))
           ->container(false) 
-          ->containerAttributes([])      
-          ->expand(NavBarExpand::LG)
-          ->id('navbar')      
-          //->innerContainerAttributes(['class' => 'container-md'])      
-          ->placement(NavBarPlacement::STICKY_TOP)
+          ->containerAttributes([]) 
+          ->id('navbar')
           ->begin();
         
         // Logout
@@ -445,8 +461,7 @@ $this->beginPage();
                         DropdownItem::link('🖉', 'https://emojipedia.org/lower-left-pencil', $debugMode, false, ['style' => 'background-color: #ffcccb']), 
                         DropdownItem::link('🐘', 'https://emojipedia.org/elephant', $debugMode, false, ['style' => 'background-color: #ffcccb']), 
                     ),    
-                );        
-                        
+                );      
             }
            
             echo Nav::widget()
@@ -684,6 +699,7 @@ $this->beginPage();
                  ->styles(NavStyle::NAVBAR);    
             } //null!== currentPath && !isGuest            
         echo NavBar::end();
+        echo $bootstrap5OffcanvasEnable ? Offcanvas::end() : '';
         ?>
 
         <div id="main-area">
