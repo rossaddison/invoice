@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "1f952108788747d3f90614c8f204e2be",
+    "content-hash": "c143654a4530277de8ef0e0d0051dfbe",
     "packages": [
         {
             "name": "alexkart/curl-builder",
@@ -13901,12 +13901,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/yiisoft/db-mysql.git",
-                "reference": "f36679fbaf93364e8eedac2b618456a7062fa50f"
+                "reference": "5ef8ded41eb22f9b15ad114695e6c2bf7f647835"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/yiisoft/db-mysql/zipball/f36679fbaf93364e8eedac2b618456a7062fa50f",
-                "reference": "f36679fbaf93364e8eedac2b618456a7062fa50f",
+                "url": "https://api.github.com/repos/yiisoft/db-mysql/zipball/5ef8ded41eb22f9b15ad114695e6c2bf7f647835",
+                "reference": "5ef8ded41eb22f9b15ad114695e6c2bf7f647835",
                 "shasum": ""
             },
             "require": {
@@ -13970,7 +13970,7 @@
                     "type": "opencollective"
                 }
             ],
-            "time": "2025-02-14T09:25:40+00:00"
+            "time": "2025-02-23T12:12:02+00:00"
         },
         {
             "name": "yiisoft/definitions",
@@ -17143,12 +17143,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/yiisoft/yii-bootstrap5.git",
-                "reference": "4319442e931c7db245acd325a2119b485c661295"
+                "reference": "107b3a2b856bafb176985dc9b65bcb62ade9ec50"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/yiisoft/yii-bootstrap5/zipball/4319442e931c7db245acd325a2119b485c661295",
-                "reference": "4319442e931c7db245acd325a2119b485c661295",
+                "url": "https://api.github.com/repos/yiisoft/yii-bootstrap5/zipball/107b3a2b856bafb176985dc9b65bcb62ade9ec50",
+                "reference": "107b3a2b856bafb176985dc9b65bcb62ade9ec50",
                 "shasum": ""
             },
             "require": {
@@ -17212,7 +17212,7 @@
                     "type": "open_collective"
                 }
             ],
-            "time": "2025-02-22T10:11:18+00:00"
+            "time": "2025-02-22T19:32:46+00:00"
         },
         {
             "name": "yiisoft/yii-console",
@@ -19086,30 +19086,30 @@
         },
         {
             "name": "codeception/lib-web",
-            "version": "1.0.5",
+            "version": "1.0.7",
             "source": {
                 "type": "git",
                 "url": "https://github.com/Codeception/lib-web.git",
-                "reference": "cea9d53c9cd665498632acc417c9a96bff7eb2b0"
+                "reference": "1444ccc9b1d6721f3ced8703c8f4a9041b80df93"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/Codeception/lib-web/zipball/cea9d53c9cd665498632acc417c9a96bff7eb2b0",
-                "reference": "cea9d53c9cd665498632acc417c9a96bff7eb2b0",
+                "url": "https://api.github.com/repos/Codeception/lib-web/zipball/1444ccc9b1d6721f3ced8703c8f4a9041b80df93",
+                "reference": "1444ccc9b1d6721f3ced8703c8f4a9041b80df93",
                 "shasum": ""
             },
             "require": {
                 "ext-mbstring": "*",
                 "guzzlehttp/psr7": "^2.0",
-                "php": "^8.0",
+                "php": "^8.1",
+                "phpunit/phpunit": "^9.5 | ^10.0 | ^11.0 | ^12",
                 "symfony/css-selector": ">=4.4.24 <8.0"
             },
             "conflict": {
                 "codeception/codeception": "<5.0.0-alpha3"
             },
             "require-dev": {
-                "php-webdriver/webdriver": "^1.12",
-                "phpunit/phpunit": "^9.5 | ^10.0"
+                "php-webdriver/webdriver": "^1.12"
             },
             "type": "library",
             "autoload": {
@@ -19133,9 +19133,9 @@
             ],
             "support": {
                 "issues": "https://github.com/Codeception/lib-web/issues",
-                "source": "https://github.com/Codeception/lib-web/tree/1.0.5"
+                "source": "https://github.com/Codeception/lib-web/tree/1.0.7"
             },
-            "time": "2024-01-13T11:54:18+00:00"
+            "time": "2025-02-09T12:05:55+00:00"
         },
         {
             "name": "codeception/module-asserts",
@@ -19485,16 +19485,16 @@
         },
         {
             "name": "friendsofphp/php-cs-fixer",
-            "version": "v3.69.1",
+            "version": "v3.70.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/PHP-CS-Fixer/PHP-CS-Fixer.git",
-                "reference": "13b0c0eede38c11cd674b080f2b485d0f14ffa9f"
+                "reference": "2ecd5aae0edc937f0d5aa4a22d1d705c6b2e084e"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/PHP-CS-Fixer/PHP-CS-Fixer/zipball/13b0c0eede38c11cd674b080f2b485d0f14ffa9f",
-                "reference": "13b0c0eede38c11cd674b080f2b485d0f14ffa9f",
+                "url": "https://api.github.com/repos/PHP-CS-Fixer/PHP-CS-Fixer/zipball/2ecd5aae0edc937f0d5aa4a22d1d705c6b2e084e",
+                "reference": "2ecd5aae0edc937f0d5aa4a22d1d705c6b2e084e",
                 "shasum": ""
             },
             "require": {
@@ -19576,7 +19576,7 @@
             ],
             "support": {
                 "issues": "https://github.com/PHP-CS-Fixer/PHP-CS-Fixer/issues",
-                "source": "https://github.com/PHP-CS-Fixer/PHP-CS-Fixer/tree/v3.69.1"
+                "source": "https://github.com/PHP-CS-Fixer/PHP-CS-Fixer/tree/v3.70.0"
             },
             "funding": [
                 {
@@ -19584,7 +19584,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2025-02-18T23:57:43+00:00"
+            "time": "2025-02-22T23:30:51+00:00"
         },
         {
             "name": "httpsoft/http-basis",

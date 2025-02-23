@@ -9,9 +9,10 @@ use Yiisoft\Html\Html;
 use Yiisoft\Html\Tag\Button;
 use Yiisoft\Html\Tag\Form;
 use Yiisoft\Html\Tag\Label;
+use Yiisoft\Yii\Bootstrap5\ButtonSize;
 use Yiisoft\Yii\Bootstrap5\Dropdown;
 use Yiisoft\Yii\Bootstrap5\DropdownItem;
-use Yiisoft\Yii\Bootstrap5\DropdownToggleVariant;
+use Yiisoft\Yii\Bootstrap5\DropdownTogglerVariant;
 use Yiisoft\Yii\Bootstrap5\Nav;
 use Yiisoft\Yii\Bootstrap5\NavBar;
 use Yiisoft\Yii\Bootstrap5\NavBarExpand;
@@ -122,9 +123,9 @@ $this->beginPage();
                 'title' => $translator->translate('i.language'),
                 'url' => '#'
             ])
-            ->toggleVariant(DropdownToggleVariant::INFO)
-            ->toggleContent('')        
-            ->toggleSizeSmall(true)        
+            ->togglerVariant(DropdownTogglerVariant::INFO)
+            ->togglerContent('')        
+            ->togglerSize(ButtonSize::SMALL)        
             ->items(
                 DropdownItem::link('Afrikaans South African', $urlGenerator->generateFromCurrent(['_language' => 'af-ZA'], fallbackRouteName: 'site/index')),
                 DropdownItem::link('Arabic Bahrainian/ عربي', $urlGenerator->generateFromCurrent(['_language' => 'ar-BH'], fallbackRouteName: 'site/index')),

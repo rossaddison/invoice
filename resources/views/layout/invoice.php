@@ -38,9 +38,10 @@ use Yiisoft\Html\Tag\Form;
 use Yiisoft\Html\Tag\I;
 use Yiisoft\Html\Html;
 use Yiisoft\Html\Tag\Meta;
+use Yiisoft\Yii\Bootstrap5\ButtonSize;
 use Yiisoft\Yii\Bootstrap5\Dropdown;
 use Yiisoft\Yii\Bootstrap5\DropdownItem;
-use Yiisoft\Yii\Bootstrap5\DropdownToggleVariant;
+use Yiisoft\Yii\Bootstrap5\DropdownTogglerVariant;
 use Yiisoft\Yii\Bootstrap5\Nav;
 use Yiisoft\Yii\Bootstrap5\NavBar;
 use Yiisoft\Yii\Bootstrap5\NavBarExpand;
@@ -250,9 +251,9 @@ $this->beginPage();
                 ->items(
                     Dropdown::widget()
                     ->addClass('navbar fs-4')        
-                    ->toggleVariant(DropdownToggleVariant::INFO)
-                    ->toggleContent('📋')        
-                    ->toggleSizeLarge(true)
+                    ->togglerVariant(DropdownTogglerVariant::INFO)
+                    ->togglerContent('📋')        
+                    ->togglerSize(ButtonSize::LARGE)
                     ->items(                
                         // Assets Clear    
                         DropdownItem::link($translator->translate('invoice.utility.assets.clear'), 
@@ -279,9 +280,9 @@ $this->beginPage();
                     ->addAttributes([
                         'style' => 'font-size: 2rem; color: cornflowerblue;'
                     ])
-                    ->toggleVariant(DropdownToggleVariant::INFO)
-                    ->toggleContent($translator->translate('invoice.faq'))        
-                    ->toggleSizeLarge(true)        
+                    ->togglerVariant(DropdownTogglerVariant::INFO)
+                    ->togglerContent($translator->translate('invoice.faq'))        
+                    ->togglerSize(ButtonSize::LARGE)        
                     ->items(
                         DropdownItem::link('Console Commands', $urlGenerator->generate('invoice/faq', ['topic' => 'consolecommands', 'selection' => ''])),
                         DropdownItem::link($translator->translate('invoice.faq.taxpoint'), $urlGenerator->generate('invoice/faq', ['topic' => 'tp', 'selection' => ''])), 
@@ -304,9 +305,9 @@ $this->beginPage();
                     ->attributes([
                         'style' => 'background-color: #ffcccb'
                     ])
-                    ->toggleVariant(DropdownToggleVariant::INFO)
-                    ->toggleContent($translator->translate('invoice.generator'))        
-                    ->toggleSizeLarge(true)        
+                    ->togglerVariant(DropdownTogglerVariant::INFO)
+                    ->togglerContent($translator->translate('invoice.generator'))        
+                    ->togglerSize(ButtonSize::LARGE)        
                     ->items(
                         DropdownItem::link($translator->translate('invoice.generator'), 
                                            $urlGenerator->generate('generator/index'), false, false),
@@ -354,9 +355,9 @@ $this->beginPage();
                                                : $translator->translate('invoice.performance.label.switch.off'),
                         'hidden' => !$debugMode
                     ])
-                    ->toggleVariant(DropdownToggleVariant::INFO)
-                    ->toggleContent($translator->translate('invoice.performance'))        
-                    ->toggleSizeLarge(true)        
+                    ->togglerVariant(DropdownTogglerVariant::INFO)
+                    ->togglerContent($translator->translate('invoice.performance'))        
+                    ->togglerSize(ButtonSize::LARGE)        
                     ->items(
                         DropdownItem::text($translator->translate('invoice.platform.xdebug') . ' ' . $xdebug, ['data-bs-toggle' => 'tooltip', 'title' => 'Via Wampserver Menu: Icon..Php 8.1.8-->Php extensions-->xdebug 3.1.5(click)-->Allow php command prompt to restart automatically-->(click)Restart All Services-->No typing in or editing of a php.ini file!!']),
                         DropdownItem::text('...config/common/params.php SyncTable currently not commented out and PhpFileSchemaProvider::MODE_READ_AND_WRITE...fast....MODE_WRITE_ONLY...slower'),
@@ -384,9 +385,9 @@ $this->beginPage();
                     ->addAttributes([
                         'hidden' => !$debugMode
                     ])
-                    ->toggleVariant(DropdownToggleVariant::INFO)
-                    ->toggleContent($translator->translate('invoice.platform'))        
-                    ->toggleSizeLarge(true)        
+                    ->togglerVariant(DropdownTogglerVariant::INFO)
+                    ->togglerContent($translator->translate('invoice.platform'))        
+                    ->togglerSize(ButtonSize::LARGE)        
                     ->items(
                         DropdownItem::text('WAMP'),
                         DropdownItem::text($translator->translate('invoice.platform.editor') . ': Apache Netbeans IDE 23 64 bit'),
@@ -436,9 +437,9 @@ $this->beginPage();
                         'style' => 'font-size: 1rem;',
                         'hidden' => !$debugMode
                     ])
-                    ->toggleVariant(DropdownToggleVariant::INFO)
-                    ->toggleContent('🐘')        
-                    ->toggleSizeLarge(true)        
+                    ->togglerVariant(DropdownTogglerVariant::INFO)
+                    ->togglerContent('🐘')        
+                    ->togglerSize(ButtonSize::LARGE)        
                     ->items(
                         DropdownItem::link('8.3', 'https://php.watch/versions/8.3', $debugMode, false,  ['style' => 'background-color: #ffcccb']),
                         DropdownItem::link('8.4', 'https://php.watch/versions/8.4', $debugMode, false, ['style' => 'background-color: #ffcccb']), 
@@ -450,9 +451,9 @@ $this->beginPage();
                         'style' => 'font-size: 2rem; color: cornflowerblue;',
                         'hidden' => !$debugMode
                     ])
-                    ->toggleVariant(DropdownToggleVariant::INFO)
-                    ->toggleContent('😀')        
-                    ->toggleSizeLarge(true)        
+                    ->togglerVariant(DropdownTogglerVariant::INFO)
+                    ->togglerContent('😀')        
+                    ->togglerSize(ButtonSize::LARGE)        
                     ->items(
                         DropdownItem::link('✅', 'https://emojipedia.org/check-mark-button', $debugMode, false,  ['style' => 'background-color: #ffcccb']),
                         DropdownItem::link('❌', 'https://emojipedia.org/cross-mark', $debugMode, false, ['style' => 'background-color: #ffcccb']), 
@@ -488,9 +489,9 @@ $this->beginPage();
                 ),
                 // Settings
                 Dropdown::widget()
-                ->toggleVariant(DropdownToggleVariant::INFO)
-                ->toggleContent(I::tag()->addClass('fa fa-cogs'))        
-                ->toggleSizeLarge(true)        
+                ->togglerVariant(DropdownTogglerVariant::INFO)
+                ->togglerContent(I::tag()->addClass('fa fa-cogs'))        
+                ->togglerSize(ButtonSize::LARGE)        
                 ->items(
                     DropdownItem::link($translator->translate('i.view'), $urlGenerator->generate('setting/debug_index'), false, !$debugMode, ['style' => 'background-color: #ffcccb', 'hidden' => !$debugMode]),
                     DropdownItem::link($translator->translate('invoice.setting.add'), $urlGenerator->generate('setting/add'), false, !$debugMode, ['style' => 'background-color: #ffcccb', 'hidden' => !$debugMode]),    
@@ -522,9 +523,9 @@ $this->beginPage();
                     'style' => 'font-size: 1rem; color: cornflowerblue;',
                     'url' => '#'
                 ])
-                ->toggleVariant(DropdownToggleVariant::INFO)
-                ->toggleContent($translator->translate('invoice.peppol.abbreviation'))        
-                ->toggleSizeLarge(true)        
+                ->togglerVariant(DropdownTogglerVariant::INFO)
+                ->togglerContent($translator->translate('invoice.peppol.abbreviation'))        
+                ->togglerSize(ButtonSize::LARGE)        
                 ->items(
                     DropdownItem::link($translator->translate('invoice.invoice.allowance.or.charge.add'), $urlGenerator->generate('allowancecharge/index')),
                     DropdownItem::link($translator->translate('invoice.peppol.store.cove.1.1.1'), 'https://www.storecove.com/register/'),
@@ -538,9 +539,9 @@ $this->beginPage();
                 ->addAttributes([
                     'style' => 'font-size: 1rem; color: cornflowerblue;',
                 ])
-                ->toggleVariant(DropdownToggleVariant::INFO)
-                ->toggleContent(I::tag()->addClass('bi bi-people'))        
-                ->toggleSizeLarge(true)        
+                ->togglerVariant(DropdownTogglerVariant::INFO)
+                ->togglerContent(I::tag()->addClass('bi bi-people'))        
+                ->togglerSize(ButtonSize::LARGE)        
                 ->items(
                     DropdownItem::link($translator->translate('invoice.client.add'), $urlGenerator->generate('client/add', ['origin' => 'main'])),
                     DropdownItem::link($translator->translate('invoice.client.view'), $urlGenerator->generate('client/index')),
@@ -554,9 +555,9 @@ $this->beginPage();
                 ->addAttributes([
                     'style' => 'font-size: 1rem; color: cornflowerblue;',
                 ])
-                ->toggleVariant(DropdownToggleVariant::INFO)
-                ->toggleContent($translator->translate('i.quote'))        
-                ->toggleSizeLarge(true)        
+                ->togglerVariant(DropdownTogglerVariant::INFO)
+                ->togglerContent($translator->translate('i.quote'))        
+                ->togglerSize(ButtonSize::LARGE)        
                 ->items(
                     DropdownItem::link($translator->translate('i.create_quote'), $urlGenerator->generate('quote/add', ['origin' => 'main'])),
                     DropdownItem::link($translator->translate('i.view'), $urlGenerator->generate('quote/index')),
@@ -567,9 +568,9 @@ $this->beginPage();
                 ->addAttributes([
                     'style' => 'font-size: 1rem; color: cornflowerblue;',
                 ])
-                ->toggleVariant(DropdownToggleVariant::INFO)
-                ->toggleContent($translator->translate('invoice.salesorder'))        
-                ->toggleSizeLarge(true)        
+                ->togglerVariant(DropdownTogglerVariant::INFO)
+                ->togglerContent($translator->translate('invoice.salesorder'))        
+                ->togglerSize(ButtonSize::LARGE)        
                 ->items(
                     DropdownItem::link($translator->translate('i.view'), $urlGenerator->generate('salesorder/index'))
                 ),
@@ -579,9 +580,9 @@ $this->beginPage();
                 ->addAttributes([
                     'style' => 'font-size: 1rem; color: cornflowerblue;',
                 ])
-                ->toggleVariant(DropdownToggleVariant::INFO)
-                ->toggleContent($translator->translate('i.invoice'))        
-                ->toggleSizeLarge(true)        
+                ->togglerVariant(DropdownTogglerVariant::INFO)
+                ->togglerContent($translator->translate('i.invoice'))        
+                ->togglerSize(ButtonSize::LARGE)        
                 ->items(
                     DropdownItem::link($translator->translate('i.create_invoice'), $urlGenerator->generate('inv/add', ['origin' => 'main'])),
                     DropdownItem::link($translator->translate('i.view'), $urlGenerator->generate('inv/index')),
@@ -593,9 +594,9 @@ $this->beginPage();
                 ->addAttributes([
                     'style' => 'font-size: 1rem; color: cornflowerblue;',
                 ])
-                ->toggleVariant(DropdownToggleVariant::INFO)
-                ->toggleContent(I::tag()->addClass('bi bi-coin'))        
-                ->toggleSizeLarge(true)        
+                ->togglerVariant(DropdownTogglerVariant::INFO)
+                ->togglerContent(I::tag()->addClass('bi bi-coin'))        
+                ->togglerSize(ButtonSize::LARGE)        
                 ->items(
                     DropdownItem::link($translator->translate('i.enter_payment'), $urlGenerator->generate('payment/add')),
                     DropdownItem::link($translator->translate('i.view'), $urlGenerator->generate('payment/index')),
@@ -607,9 +608,9 @@ $this->beginPage();
                 ->addAttributes([
                     'style' => 'font-size: 1rem; color: cornflowerblue;',
                 ])
-                ->toggleVariant(DropdownToggleVariant::INFO)
-                ->toggleContent($translator->translate('i.product'))        
-                ->toggleSizeLarge(true)        
+                ->togglerVariant(DropdownTogglerVariant::INFO)
+                ->togglerContent($translator->translate('i.product'))        
+                ->togglerSize(ButtonSize::LARGE)        
                 ->items(
                     DropdownItem::link($translator->translate('i.add_product'), $urlGenerator->generate('product/add')),
                     DropdownItem::link($translator->translate('i.view'), $urlGenerator->generate('product/index')),
@@ -623,9 +624,9 @@ $this->beginPage();
                 ->addAttributes([
                     'style' => 'font-size: 1rem; color: cornflowerblue;',
                 ])
-                ->toggleVariant(DropdownToggleVariant::INFO)
-                ->toggleContent($translator->translate('i.tasks'))        
-                ->toggleSizeLarge(true)        
+                ->togglerVariant(DropdownTogglerVariant::INFO)
+                ->togglerContent($translator->translate('i.tasks'))        
+                ->togglerSize(ButtonSize::LARGE)        
                 ->items(
                     DropdownItem::link($translator->translate('i.add_task'), $urlGenerator->generate('task/add')),
                     DropdownItem::link($translator->translate('i.view'), $urlGenerator->generate('task/index')),    
@@ -636,9 +637,9 @@ $this->beginPage();
                 ->addAttributes([
                     'style' => 'font-size: 1rem; color: cornflowerblue;',
                 ])
-                ->toggleVariant(DropdownToggleVariant::INFO)
-                ->toggleContent($translator->translate('i.projects'))        
-                ->toggleSizeLarge(true)        
+                ->togglerVariant(DropdownTogglerVariant::INFO)
+                ->togglerContent($translator->translate('i.projects'))        
+                ->togglerSize(ButtonSize::LARGE)        
                 ->items(
                     DropdownItem::link($translator->translate('i.create_project'), $urlGenerator->generate('project/add')),
                     DropdownItem::link($translator->translate('i.view'), $urlGenerator->generate('project/index')),    
@@ -649,9 +650,9 @@ $this->beginPage();
                 ->addAttributes([
                     'style' => 'font-size: 1rem; color: cornflowerblue;',
                 ])
-                ->toggleVariant(DropdownToggleVariant::INFO)
-                ->toggleContent($translator->translate('i.reports'))        
-                ->toggleSizeLarge(true)        
+                ->togglerVariant(DropdownTogglerVariant::INFO)
+                ->togglerContent($translator->translate('i.reports'))        
+                ->togglerSize(ButtonSize::LARGE)        
                 ->items(
                     DropdownItem::link($translator->translate('i.sales_by_client'), $urlGenerator->generate('report/sales_by_client_index')),
                     DropdownItem::link($translator->translate('invoice.report.sales.by.product'), $urlGenerator->generate('report/sales_by_product_index')),    
@@ -668,9 +669,9 @@ $this->beginPage();
                     'title' => $translator->translate('i.language'),
                     'url' => '#'
                 ])
-                ->toggleVariant(DropdownToggleVariant::INFO)
-                ->toggleContent(I::tag()->class('bi bi-translate'))        
-                ->toggleSizeLarge(true)        
+                ->togglerVariant(DropdownTogglerVariant::INFO)
+                ->togglerContent(I::tag()->class('bi bi-translate'))        
+                ->togglerSize(ButtonSize::LARGE)        
                 ->items(
                     DropdownItem::link('Afrikaans South African', $urlGenerator->generateFromCurrent(['_language' => 'af-ZA'], fallbackRouteName: 'site/index')),
                     DropdownItem::link('Arabic Bahrainian/ عربي', $urlGenerator->generateFromCurrent(['_language' => 'ar-BH'], fallbackRouteName: 'site/index')),

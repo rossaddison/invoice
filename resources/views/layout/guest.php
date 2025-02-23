@@ -41,9 +41,10 @@ use Yiisoft\Html\Tag\Form;
 use Yiisoft\Html\Tag\I;
 use Yiisoft\Html\Tag\Label;
 use Yiisoft\Html\Tag\Meta;
+use Yiisoft\Yii\Bootstrap5\ButtonSize;
 use Yiisoft\Yii\Bootstrap5\Dropdown;
 use Yiisoft\Yii\Bootstrap5\DropdownItem;
-use Yiisoft\Yii\Bootstrap5\DropdownToggleVariant;
+use Yiisoft\Yii\Bootstrap5\DropdownTogglerVariant;
 use Yiisoft\Yii\Bootstrap5\Nav;
 use Yiisoft\Yii\Bootstrap5\NavBar;
 use Yiisoft\Yii\Bootstrap5\NavBarExpand;
@@ -165,9 +166,9 @@ echo NavBar::widget()
         ->addAttributes([
             'style' => 'font-size: 1rem; color: cornflowerblue;',
         ])
-        ->toggleVariant(DropdownToggleVariant::INFO)
-        ->toggleContent($translator->translate('invoice.client'))        
-        ->toggleSizeLarge(true)        
+        ->togglerVariant(DropdownTogglerVariant::INFO)
+        ->togglerContent($translator->translate('invoice.client'))        
+        ->togglerSize(ButtonSize::SMALL)        
         ->items(
             DropdownItem::link($translator->translate('invoice.view'), $urlGenerator->generate('client/guest'))    
         )
@@ -179,9 +180,9 @@ echo NavBar::widget()
         ->addAttributes([
             'style' => 'font-size: 1rem; color: cornflowerblue;',
         ])
-        ->toggleVariant(DropdownToggleVariant::INFO)
-        ->toggleContent($translator->translate('invoice.quote'))        
-        ->toggleSizeLarge(true)        
+        ->togglerVariant(DropdownTogglerVariant::INFO)
+        ->togglerContent($translator->translate('invoice.quote'))        
+        ->togglerSize(ButtonSize::LARGE)        
         ->items(
             DropdownItem::link($translator->translate('invoice.view'), $urlGenerator->generate('quote/guest'))    
         )
@@ -193,9 +194,9 @@ echo NavBar::widget()
         ->addAttributes([
             'style' => 'font-size: 1rem; color: cornflowerblue;',
         ])
-        ->toggleVariant(DropdownToggleVariant::INFO)
-        ->toggleContent($translator->translate('invoice.salesorder'))        
-        ->toggleSizeLarge(true)        
+        ->togglerVariant(DropdownTogglerVariant::INFO)
+        ->togglerContent($translator->translate('invoice.salesorder'))        
+        ->togglerSize(ButtonSize::LARGE)        
         ->items(
             DropdownItem::link($translator->translate('invoice.view'), $urlGenerator->generate('salesorder/guest'))    
         )
@@ -207,9 +208,9 @@ echo NavBar::widget()
         ->addAttributes([
             'style' => 'font-size: 1rem; color: cornflowerblue;',
         ])
-        ->toggleVariant(DropdownToggleVariant::INFO)
-        ->toggleContent($translator->translate('i.invoice'))        
-        ->toggleSizeLarge(true)        
+        ->togglerVariant(DropdownTogglerVariant::INFO)
+        ->togglerContent($translator->translate('i.invoice'))        
+        ->togglerSize(ButtonSize::LARGE)        
         ->items(
             DropdownItem::link($translator->translate('i.view'), $urlGenerator->generate('inv/guest'))    
         )
@@ -221,9 +222,9 @@ echo NavBar::widget()
         ->addAttributes([
             'style' => 'font-size: 1rem; color: cornflowerblue;',
         ])
-        ->toggleVariant(DropdownToggleVariant::INFO)
-        ->toggleContent((string)I::tag()->addClass('bi bi-coin').' '.$translator->translate('i.payment'))        
-        ->toggleSizeLarge(true)        
+        ->togglerVariant(DropdownTogglerVariant::INFO)
+        ->togglerContent((string)I::tag()->addClass('bi bi-coin').' '.$translator->translate('i.payment'))        
+        ->togglerSize(ButtonSize::LARGE)        
         ->items(
             DropdownItem::link($translator->translate('invoice.view'), $urlGenerator->generate('payment/guest')),
             DropdownItem::link($translator->translate('invoice.online.log'), $urlGenerator->generate('payment/guest_online_log'))    
@@ -236,9 +237,9 @@ echo NavBar::widget()
         ->addAttributes([
             'style' => 'font-size: 1rem;',
         ])
-        ->toggleVariant(DropdownToggleVariant::INFO)
-        ->toggleContent((string)I::tag()->addClass('fa fa-cogs'). ' '. $translator->translate('i.settings'))        
-        ->toggleSizeLarge(true)        
+        ->togglerVariant(DropdownTogglerVariant::INFO)
+        ->togglerContent((string)I::tag()->addClass('fa fa-cogs'). ' '. $translator->translate('i.settings'))        
+        ->togglerSize(ButtonSize::LARGE)        
         ->items(
             DropdownItem::link($translator->translate('invoice.view'), $urlGenerator->generate('userinv/guest')),
             DropdownItem::link($translator->translate('password.change'), $urlGenerator->generate('auth/change')),
@@ -254,9 +255,9 @@ echo NavBar::widget()
             'title' => $translator->translate('i.language'),
             'url' => '#'
         ])
-        ->toggleVariant(DropdownToggleVariant::INFO)
-        ->toggleContent(I::tag()->addClass('bi bi-translate'))        
-        ->toggleSizeLarge(true)        
+        ->togglerVariant(DropdownTogglerVariant::INFO)
+        ->togglerContent(I::tag()->addClass('bi bi-translate'))        
+        ->togglerSize(ButtonSize::LARGE)        
         ->items(
             DropdownItem::link('Afrikaans South African', $urlGenerator->generateFromCurrent(['_language' => 'af-ZA'], fallbackRouteName: 'site/index')),
             DropdownItem::link('Arabic Bahrainian/ عربي', $urlGenerator->generateFromCurrent(['_language' => 'ar-BH'], fallbackRouteName: 'site/index')),
