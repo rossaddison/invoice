@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "c143654a4530277de8ef0e0d0051dfbe",
+    "content-hash": "fe130c9095de955d859ef425e116fc0d",
     "packages": [
         {
             "name": "alexkart/curl-builder",
@@ -9621,16 +9621,16 @@
         },
         {
             "name": "stripe/stripe-php",
-            "version": "v16.5.1",
+            "version": "v16.6.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/stripe/stripe-php.git",
-                "reference": "05c7c3a8a15b1bc396f09d17c88539c0db3d3255"
+                "reference": "d6de0a536f00b5c5c74f36b8f4d0d93b035499ff"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/stripe/stripe-php/zipball/05c7c3a8a15b1bc396f09d17c88539c0db3d3255",
-                "reference": "05c7c3a8a15b1bc396f09d17c88539c0db3d3255",
+                "url": "https://api.github.com/repos/stripe/stripe-php/zipball/d6de0a536f00b5c5c74f36b8f4d0d93b035499ff",
+                "reference": "d6de0a536f00b5c5c74f36b8f4d0d93b035499ff",
                 "shasum": ""
             },
             "require": {
@@ -9674,9 +9674,9 @@
             ],
             "support": {
                 "issues": "https://github.com/stripe/stripe-php/issues",
-                "source": "https://github.com/stripe/stripe-php/tree/v16.5.1"
+                "source": "https://github.com/stripe/stripe-php/tree/v16.6.0"
             },
-            "time": "2025-02-07T21:24:29+00:00"
+            "time": "2025-02-24T22:35:29+00:00"
         },
         {
             "name": "symfony/cache",
@@ -13814,12 +13814,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/yiisoft/db.git",
-                "reference": "5ab001c597ae4ae100383ee1175dd7d6ebafd7a4"
+                "reference": "318ec5c68cd2c35d546bf7ca4ca3f9bb2b0688c0"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/yiisoft/db/zipball/5ab001c597ae4ae100383ee1175dd7d6ebafd7a4",
-                "reference": "5ab001c597ae4ae100383ee1175dd7d6ebafd7a4",
+                "url": "https://api.github.com/repos/yiisoft/db/zipball/318ec5c68cd2c35d546bf7ca4ca3f9bb2b0688c0",
+                "reference": "318ec5c68cd2c35d546bf7ca4ca3f9bb2b0688c0",
                 "shasum": ""
             },
             "require": {
@@ -13893,7 +13893,7 @@
                     "type": "opencollective"
                 }
             ],
-            "time": "2025-02-20T17:45:09+00:00"
+            "time": "2025-02-25T06:52:13+00:00"
         },
         {
             "name": "yiisoft/db-mysql",
@@ -13901,12 +13901,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/yiisoft/db-mysql.git",
-                "reference": "5ef8ded41eb22f9b15ad114695e6c2bf7f647835"
+                "reference": "bd8e8c2ba6bb837b2a37d95cea83df80cbcdf5a8"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/yiisoft/db-mysql/zipball/5ef8ded41eb22f9b15ad114695e6c2bf7f647835",
-                "reference": "5ef8ded41eb22f9b15ad114695e6c2bf7f647835",
+                "url": "https://api.github.com/repos/yiisoft/db-mysql/zipball/bd8e8c2ba6bb837b2a37d95cea83df80cbcdf5a8",
+                "reference": "bd8e8c2ba6bb837b2a37d95cea83df80cbcdf5a8",
                 "shasum": ""
             },
             "require": {
@@ -13970,7 +13970,7 @@
                     "type": "opencollective"
                 }
             ],
-            "time": "2025-02-23T12:12:02+00:00"
+            "time": "2025-02-25T06:52:52+00:00"
         },
         {
             "name": "yiisoft/definitions",
@@ -16731,43 +16731,42 @@
         },
         {
             "name": "yiisoft/user",
-            "version": "2.2.0",
+            "version": "2.3.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/yiisoft/user.git",
-                "reference": "821d8ae3ab1ae0561aae5af33c7d5d6827284b40"
+                "reference": "c77a6d4acb6dd6012eb25c66611c343d1cd816b3"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/yiisoft/user/zipball/821d8ae3ab1ae0561aae5af33c7d5d6827284b40",
-                "reference": "821d8ae3ab1ae0561aae5af33c7d5d6827284b40",
+                "url": "https://api.github.com/repos/yiisoft/user/zipball/c77a6d4acb6dd6012eb25c66611c343d1cd816b3",
+                "reference": "c77a6d4acb6dd6012eb25c66611c343d1cd816b3",
                 "shasum": ""
             },
             "require": {
-                "ext-json": "*",
-                "php": "^8.1",
+                "php": "~8.1.0 || ~8.2.0 || ~8.3.0 || ~8.4.0",
                 "psr/event-dispatcher": "^1.0",
                 "psr/http-factory": "^1.0",
-                "psr/http-message": "^1.0|^2.0",
+                "psr/http-message": "^1.0 || ^2.0",
                 "psr/http-server-handler": "^1.0",
                 "psr/http-server-middleware": "^1.0",
-                "psr/log": "^1.1|^2.0|^3.0",
+                "psr/log": "^1.1 || ^2.0 || ^3.0",
                 "yiisoft/access": "^2.0",
-                "yiisoft/auth": "^2.0|^3.0",
+                "yiisoft/auth": "^2.0 || ^3.0",
                 "yiisoft/cookies": "^1.2",
                 "yiisoft/http": "^1.2",
-                "yiisoft/session": "^1.0|^2.0"
+                "yiisoft/session": "^1.0 || ^2.0"
             },
             "require-dev": {
-                "httpsoft/http-message": "^1.0",
-                "maglnet/composer-require-checker": "^4.2",
-                "phpunit/phpunit": "^10.5",
-                "rector/rector": "^1.0.0",
-                "roave/infection-static-analysis-plugin": "^1.16",
-                "spatie/phpunit-watcher": "^1.23",
-                "vimeo/psalm": "^5.23",
-                "yiisoft/di": "^1.0",
-                "yiisoft/test-support": "^3.0"
+                "httpsoft/http-message": "^1.1.6",
+                "maglnet/composer-require-checker": "^4.7.1",
+                "phpunit/phpunit": "^10.5.45",
+                "rector/rector": "^2.0.9",
+                "roave/infection-static-analysis-plugin": "^1.35",
+                "spatie/phpunit-watcher": "^1.24",
+                "vimeo/psalm": "^5.26.1 || ^6.8.6",
+                "yiisoft/di": "^1.3",
+                "yiisoft/test-support": "^3.0.2"
             },
             "type": "library",
             "extra": {
@@ -16812,7 +16811,7 @@
                     "type": "opencollective"
                 }
             ],
-            "time": "2024-05-07T07:31:24+00:00"
+            "time": "2025-02-25T07:03:55+00:00"
         },
         {
             "name": "yiisoft/validator",
@@ -17407,12 +17406,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/yiisoft/yii-dataview.git",
-                "reference": "bd31ad742e3ceefc090fec1212d67d6c9e6855ee"
+                "reference": "a5f93c67ed74f9feb3f5b0de5b410ea897058f4e"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/yiisoft/yii-dataview/zipball/bd31ad742e3ceefc090fec1212d67d6c9e6855ee",
-                "reference": "bd31ad742e3ceefc090fec1212d67d6c9e6855ee",
+                "url": "https://api.github.com/repos/yiisoft/yii-dataview/zipball/a5f93c67ed74f9feb3f5b0de5b410ea897058f4e",
+                "reference": "a5f93c67ed74f9feb3f5b0de5b410ea897058f4e",
                 "shasum": ""
             },
             "require": {
@@ -17435,12 +17434,12 @@
                 "rector/rector": "^2.0.9",
                 "roave/infection-static-analysis-plugin": "^1.35",
                 "spatie/phpunit-watcher": "^1.24",
-                "vimeo/psalm": "^5.26.1 || ^6.7.1",
+                "vimeo/psalm": "^5.26.1 || ^6.8.6",
                 "yiisoft/di": "^1.3",
                 "yiisoft/event-dispatcher": "^1.1",
                 "yiisoft/log": "^2.1",
                 "yiisoft/router-fastroute": "^3.1.0",
-                "yiisoft/test-support": "^3.0.1",
+                "yiisoft/test-support": "^3.0.2",
                 "yiisoft/translator-message-php": "^1.1.1"
             },
             "default-branch": true,
@@ -17495,7 +17494,7 @@
                     "type": "opencollective"
                 }
             ],
-            "time": "2025-02-19T10:28:22+00:00"
+            "time": "2025-02-24T06:57:11+00:00"
         },
         {
             "name": "yiisoft/yii-debug",
@@ -21330,16 +21329,16 @@
         },
         {
             "name": "phpunit/phpunit",
-            "version": "12.0.4",
+            "version": "12.0.5",
             "source": {
                 "type": "git",
                 "url": "https://github.com/sebastianbergmann/phpunit.git",
-                "reference": "e469daf4e173c4b7f2d6154d364f468f3713f632"
+                "reference": "0f177d7316ba155d36337c3811b11993b54dae32"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/sebastianbergmann/phpunit/zipball/e469daf4e173c4b7f2d6154d364f468f3713f632",
-                "reference": "e469daf4e173c4b7f2d6154d364f468f3713f632",
+                "url": "https://api.github.com/repos/sebastianbergmann/phpunit/zipball/0f177d7316ba155d36337c3811b11993b54dae32",
+                "reference": "0f177d7316ba155d36337c3811b11993b54dae32",
                 "shasum": ""
             },
             "require": {
@@ -21407,7 +21406,7 @@
             "support": {
                 "issues": "https://github.com/sebastianbergmann/phpunit/issues",
                 "security": "https://github.com/sebastianbergmann/phpunit/security/policy",
-                "source": "https://github.com/sebastianbergmann/phpunit/tree/12.0.4"
+                "source": "https://github.com/sebastianbergmann/phpunit/tree/12.0.5"
             },
             "funding": [
                 {
@@ -21423,7 +21422,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2025-02-21T06:10:40+00:00"
+            "time": "2025-02-25T06:13:04+00:00"
         },
         {
             "name": "psy/psysh",
@@ -22159,12 +22158,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/Roave/SecurityAdvisories.git",
-                "reference": "23b2141a1db97b4e3278510ed9e74a16361619b1"
+                "reference": "cebd36660068b236b35789228f183f296bcccaee"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/Roave/SecurityAdvisories/zipball/23b2141a1db97b4e3278510ed9e74a16361619b1",
-                "reference": "23b2141a1db97b4e3278510ed9e74a16361619b1",
+                "url": "https://api.github.com/repos/Roave/SecurityAdvisories/zipball/cebd36660068b236b35789228f183f296bcccaee",
+                "reference": "cebd36660068b236b35789228f183f296bcccaee",
                 "shasum": ""
             },
             "conflict": {
@@ -22555,7 +22554,7 @@
                 "mojo42/jirafeau": "<4.4",
                 "mongodb/mongodb": ">=1,<1.9.2",
                 "monolog/monolog": ">=1.8,<1.12",
-                "moodle/moodle": "<4.3.8|>=4.4,<4.4.4",
+                "moodle/moodle": "<4.3.10|>=4.4,<4.4.6|>=4.5.0.0-beta,<4.5.2",
                 "mos/cimage": "<0.7.19",
                 "movim/moxl": ">=0.8,<=0.10",
                 "movingbytes/social-network": "<=1.2.1",
@@ -23027,7 +23026,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2025-02-21T23:05:15+00:00"
+            "time": "2025-02-24T22:04:57+00:00"
         },
         {
             "name": "sanmai/later",
