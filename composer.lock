@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "fe130c9095de955d859ef425e116fc0d",
+    "content-hash": "158ea730ce132e5d1f0128bbc00c63a2",
     "packages": [
         {
             "name": "alexkart/curl-builder",
@@ -16366,31 +16366,31 @@
         },
         {
             "name": "yiisoft/security",
-            "version": "1.0.2",
+            "version": "1.1.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/yiisoft/security.git",
-                "reference": "f1ad5d279722f162cfb0f720a3723ad762892de3"
+                "reference": "2c2966f43d5c56f85145fb0c14130c66139488c1"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/yiisoft/security/zipball/f1ad5d279722f162cfb0f720a3723ad762892de3",
-                "reference": "f1ad5d279722f162cfb0f720a3723ad762892de3",
+                "url": "https://api.github.com/repos/yiisoft/security/zipball/2c2966f43d5c56f85145fb0c14130c66139488c1",
+                "reference": "2c2966f43d5c56f85145fb0c14130c66139488c1",
                 "shasum": ""
             },
             "require": {
                 "ext-hash": "*",
                 "ext-openssl": "*",
-                "php": "^7.4|^8.0",
+                "php": "8.1 - 8.4",
                 "yiisoft/strings": "^2.0"
             },
             "require-dev": {
-                "maglnet/composer-require-checker": "^3.8|^4.2",
-                "phpunit/phpunit": "^9.5",
-                "rector/rector": "^1.0.0",
-                "roave/infection-static-analysis-plugin": "^1.16",
-                "spatie/phpunit-watcher": "^1.23",
-                "vimeo/psalm": "^4.30|^5.23"
+                "maglnet/composer-require-checker": "^4.7.1",
+                "phpunit/phpunit": "^10.5.45",
+                "rector/rector": "^2.0.9",
+                "roave/infection-static-analysis-plugin": "^1.35",
+                "spatie/phpunit-watcher": "^1.24",
+                "vimeo/psalm": "^5.26.1 || ^6.8.8"
             },
             "type": "library",
             "autoload": {
@@ -16425,15 +16425,15 @@
             },
             "funding": [
                 {
-                    "url": "https://github.com/yiisoft",
+                    "url": "https://github.com/sponsors/yiisoft",
                     "type": "github"
                 },
                 {
                     "url": "https://opencollective.com/yiisoft",
-                    "type": "open_collective"
+                    "type": "opencollective"
                 }
             ],
-            "time": "2024-03-18T12:20:01+00:00"
+            "time": "2025-02-26T13:41:52+00:00"
         },
         {
             "name": "yiisoft/session",
