@@ -8,7 +8,6 @@
 ![Psalm Level](https://img.shields.io/static/v1?label=Psalm%20Level&message=1&color=66ff00)
 [![type-coverage](https://shepherd.dev/github/rossaddison/invoice/coverage.svg)](https://shepherd.dev/github/rossaddison/invoice)
 [![StyleCI](https://github.styleci.io/repos/708781821/shield?branch=main)](https://github.styleci.io/repos/708781821?branch=main)
-[![Total Downloads](https://poser.pugx.org/rossaddison/invoice/downloads)](https://packagist.org/packages/rossaddison/invoice)
 ![Stats](https://github-readme-stats.vercel.app/api?username=rossaddison)
 
 (place the contents of this download into yii3-i's invoice folder or run as a separate repository)
