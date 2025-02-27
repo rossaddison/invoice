@@ -34,7 +34,6 @@ use App\Invoice\Entity\Upload;
 use App\User\UserService;
 use App\User\User;
 use App\Invoice\InvItem\InvItemService;
-use App\Invoice\InvAllowanceCharge\InvAllowanceChargeService;
 use App\Invoice\InvItemAllowanceCharge\InvItemAllowanceChargeService;
 use App\Invoice\InvAmount\InvAmountService;
 use App\Invoice\InvItemAmount\InvItemAmountService as IIAS;
@@ -146,15 +145,15 @@ final class InvController
     private SR $sR;
 
     /**
+     * 
      * @param Crypt $crypt
      * @param DataResponseFactoryInterface $factory
-     * @param InvAllowanceChargeService $inv_allowance_charge_service
+     * @param DelRepo $delRepo
      * @param InvAmountService $inv_amount_service
      * @param InvService $inv_service
      * @param InvCustomService $inv_custom_service
      * @param InvItemService $inv_item_service
      * @param InvItemAllowanceChargeService $aciis
-     * @param IIAS $inv_item_amount_service
      * @param InvTaxRateService $inv_tax_rate_service
      * @param LoggerInterface $logger
      * @param MailerInterface $mailer
@@ -170,13 +169,11 @@ final class InvController
         private Crypt $crypt,
         private DataResponseFactoryInterface $factory,
         private DelRepo $delRepo,
-        private InvAllowanceChargeService $inv_allowance_charge_service,
         private InvAmountService $inv_amount_service,
         private InvService $inv_service,
         private InvCustomService $inv_custom_service,
         private InvItemService $inv_item_service,
         private InvItemAllowanceChargeService $aciis,
-        private IIAS $inv_item_amount_service,
         private InvTaxRateService $inv_tax_rate_service,
         private LoggerInterface $logger,
         private MailerInterface $mailer,
@@ -3001,9 +2998,10 @@ final class InvController
     /**
      * @param Request $request
      * @param IR $iR
+     * @param GR $gR
      * @return \Yiisoft\DataResponse\DataResponse
      */
-    public function mark_as_sent(Request $request, IR $iR): \Yiisoft\DataResponse\DataResponse
+    public function mark_as_sent(Request $request, IR $iR, GR $gR): \Yiisoft\DataResponse\DataResponse
     {
         $data = $request->getQueryParams();
         $parameters = ['success' => 0];
@@ -3023,6 +3021,9 @@ final class InvController
                 $inv = $iR->repoInvUnLoadedquery($value);
                 if (null !== $inv->getInvAmount()->getTotal() && $inv->getInvAmount()->getTotal() > 0) {
                     $inv->setStatus_id(2);
+                    if (strlen($inv->getNumber()) == 0) {
+                        $inv->setNumber((string)$gR->generate_number((int)$inv->getGroup_id(), true));
+                    }
                     /**
                      * If the invoice has been sent either by 1. checkbox and the 'sent' button in the index or by 2. 'email' then
                      * it must be made readonly so that it cannot be edited depending on what the 'read_only_toggle' status is

@@ -44,7 +44,13 @@ final readonly class InvService
 
     public function saveInv(User $user, Inv $model, array $array, SR $s, GR $gR): Inv
     {
-        if ((!$model->isNewRecord()) && ($s->getSetting('generate_invoice_number_for_draft') === '0') && (null == $model->getNumber())  && ($array['status_id'] == 2)) {
+        /**
+         * Give a legitimate invoice number to an invoice that currently:
+         * 1. Exists
+         * 2. Has no invoice number
+         * 3. Has a status of 'sent'
+         */
+        if ((!$model->isNewRecord()) && (strlen($model->getNumber()) == 0)  && ($array['status_id'] == 2)) {
             $model->setNumber((string)$gR->generate_number((int)$array['group_id'], true));
         }
 
