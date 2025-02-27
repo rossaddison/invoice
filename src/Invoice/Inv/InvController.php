@@ -145,7 +145,6 @@ final class InvController
     private SR $sR;
 
     /**
-     * 
      * @param Crypt $crypt
      * @param DataResponseFactoryInterface $factory
      * @param DelRepo $delRepo
