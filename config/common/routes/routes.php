@@ -1024,7 +1024,7 @@ return [
         ->middleware(fn(AccessChecker $checker) => $checker->withPermission('editInv'))
         ->middleware(Authentication::class)
         ->action([InvController::class, 'mark_sent_as_draft'])
-        ->name('inv/mark_sent_as_draft'),    
+        ->name('inv/mark_sent_as_draft'),
         Route::methods([Method::GET, Method::POST], '/inv/modal_change_client')
         ->middleware(fn(AccessChecker $checker) => $checker->withPermission('editInv'))
         ->middleware(Authentication::class)
