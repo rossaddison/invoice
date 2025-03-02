@@ -3044,6 +3044,58 @@ final class InvController
         }
         return $this->factory->createResponse(Json::encode($parameters));
     }
+    
+     /**
+     * @param Request $request
+     * @param IR $iR
+     * @param GR $gR
+     * @return \Yiisoft\DataResponse\DataResponse
+     */
+    public function mark_sent_as_draft(Request $request, IR $iR, GR $gR): \Yiisoft\DataResponse\DataResponse
+    {
+        $data = $request->getQueryParams();
+        $parameters = ['success' => 0];
+        /**
+         * @var array $data['keylist']
+         */
+        $keyList = $data['keylist'] ?? [];
+        if (!empty($keyList)) {
+            /**
+             * @var string $key
+             * @var string $value
+             */
+            foreach ($keyList as $key => $value) {
+                /**
+                 * @var \App\Invoice\Entity\Inv $inv
+                 */
+                $inv = $iR->repoInvUnLoadedquery($value);
+                if ($inv->getInvAmount()->getTotal() >= 0) {
+                    /**
+                     * Only invoices with a 'sent' status are targeted to be set to draft
+                     */
+                    if ($inv->getStatus_id() == 2) {
+                        $inv->setStatus_id(1);
+                    }
+                    /**
+                     * Invoices are set to 'read only' if the status is 'sent' and the ability to mark invoices as 'read only' has now been disabled
+                     */
+                    if (($this->sR->getSetting('read_only_toggle') == '2')  &&  ($this->sR->getSetting('disable_read_only') == '1')) {
+                        /**
+                         * The invoice is now a draft and so now must be editable i.e. not 'read-only'
+                         */
+                        $inv->setIs_read_only(false);
+                    }
+                    $iR->save($inv);
+                    $parameters['success'] = 1;
+                } else {
+                    $parameters['success'] = 0;
+                }
+            }
+            $this->flashMessage('info', $this->translator->translate('i.record_successfully_updated'));
+            $this->flashMessage('success', $this->translator->translate('invoice.security.disable.read.only.success'));
+        }
+        return $this->factory->createResponse(Json::encode($parameters));
+    }
 
     /**
      * @param Request $request

@@ -46,6 +46,9 @@
 <p>Introducing India's PayTm payment gateway's QR code method of payment and comparing this with Stripe's method.</p>
 <p>A General Sales Tax (GST) Tax System will have to be implemented first for this purpose.</p>
 <p>Testing Credit Notes against Invoices with refunds (if payment made) linked to each of the payment gateways.</p>
+<p>3 March 2025</p>
+<p>Modal Layouts adjusted to reflect no 'aria-hidden' usage. Refactored yi-bootstrap/Modal has coded 'aria-hidden' issues and is not being used since these have to be suppressed with an 'inert' attribute via javascript in Chrome. i.e. modal_layout_yii_bs.php</p>
+<p>Invoices that have been marked as sent so that they appear on the customer side can be reverted to draft provided the 'disable_read_only' setting is adjusted to 1.</p>
 <p><b>22nd February 2025</b></p>
 <p>'Bootstrap5' Setting tab introduced in tab_index.php with Offcanvas setting - start(left), end(right), top, bottom.</p>
 <p>Bootstrap5 Offcanvas functional</p>

@@ -78,7 +78,7 @@
                     <button class="inv_tax_submit btn btn-success" id="inv_tax_submit" type="button">
                         <i class="fa fa-check"></i><?= $translator->translate('i.submit'); ?>
                     </button>
-                    <button class="btn btn-danger" type="button" data-bs-dismiss"modal">
+                    <button class="btn btn-danger" type="button" data-bs-dismiss="modal">
                         <i class="fa fa-times"></i> <?= $translator->translate('i.cancel'); ?>
                     </button>
                 </div>

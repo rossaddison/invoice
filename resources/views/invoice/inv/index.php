@@ -74,101 +74,8 @@ use Yiisoft\Yii\DataView\YiiRouter\UrlCreator;
 
 ?>
 <?= $alert; ?>
-<?php
-/**
- * Use with the checkbox column to copy invoices according to date.
- */
-
-$copyInvoiceMultiple = A::tag()
-        ->addAttributes(['type' => 'reset', 'data-bs-toggle' => 'modal', 'title' => Html::encode($translator->translate('i.copy_invoice'))])
-        ->addClass('btn btn-success')
-        /**
-         * Purpose: Trigger modal_copy_inv_multiple.php to pop up
-         * @see id="modal-copy-inv-multiple" class="modal" on resources/views/invoice/inv/modal_copy_inv_multiple.php
-         */
-        ->href('#modal-copy-inv-multiple')
-        ->content('☑️'.$translator->translate('i.copy_invoice'))
-        ->id('btn-modal-copy-inv-multipe')
-        ->render();
-
-/**
- * Use with the checkbox column to mark invoices as sent. Note an email is not sent. The invoices appear on the client's guest index
- * NB: Only invoices marked as sent can appear on the client's side. i.e no 'draft' invoices can appear on the client guest index
- * @see \invoice\src\Invoice\Asset\rebuild\js\inv.js $(document).on('click', '#btn-mark-as-sent', function () {
- */
-$markAsSent = A::tag()
-        ->addAttributes(['type' => 'reset', 'data-bs-toggle' => 'tooltip', 'title' => Html::encode($translator->translate('i.sent'))])
-        ->addClass('btn btn-success')
-        ->content('☑️'.$translator->translate('i.sent').$iR->getSpecificStatusArrayEmoji(2))
-        ->id('btn-mark-as-sent')
-        ->render();
-
-/**
- * Used with the checkbox column to use resources/views/invoice/inv/modal_create_recurring_multiple.php
- * @see https://emojipedia.org/recycling-symbol
- */
-$markAsRecurringMultiple = A::tag()
-        ->addAttributes(['type' => 'reset', 'data-bs-toggle' => 'modal'])
-        ->addClass('btn btn-info')
-        /**
-         * Purpose: Trigger modal_create_recurring_modal.php to pop up
-         * @see id="create-recurring-multiple" class="modal" on resources/views/invoice/inv/modal_create_recurring_multiple.php
-         */
-        ->href('#create-recurring-multiple')
-        ->content('☑️'.$translator->translate('i.recurring').'♻️')        
-        ->render();
-
-$toolbarReset = A::tag()
-        ->addAttributes(['type' => 'reset'])
-        ->addClass('btn btn-primary me-1 ajax-loader')
-        ->content(I::tag()->addClass('bi bi-bootstrap-reboot'))
-        ->href($urlGenerator->generate($currentRoute->getName() ?? 'inv/index'))
-        ->id('btn-reset')
-        ->render();
-
-$allVisible = A::tag()
-        ->addAttributes(['type' => 'reset', 'data-bs-toggle' => 'tooltip', 'title' => $translator->translate('invoice.hide.or.unhide.columns')])
-        ->addClass('btn btn-warning me-1 ajax-loader')
-        ->content('↔️')
-        ->href($urlGenerator->generate('setting/visible'))
-        ->id('btn-all-visible')
-        ->render();
-
-$toggleColumnInvSentLog = A::tag()
-        ->addAttributes(['type' => 'reset', 'data-bs-toggle' => 'tooltip', 'title' => $translator->translate('invoice.hide.or.unhide.columns')])
-        ->addClass('btn btn-info me-1 ajax-loader')
-        ->content('↔️')
-        ->href($urlGenerator->generate('setting/toggleinvsentlogcolumn'))
-        ->id('btn-all-visible')
-        ->render();
-
-$enabledAddInvoiceButton = A::tag()
-        ->addAttributes([
-            'class' => 'btn btn-info', 
-            'data-bs-toggle' => 'modal', 
-            'style' => 'text-decoration:none'
-        ])
-        ->content('➕')
-        ->href('#modal-add-inv')
-        ->id('btn-enabled-invoice-add-button')
-        ->render();
-
-$disabledAddInvoiceButton = A::tag()
-        ->addAttributes([
-            'class' => 'btn btn-info', 
-            'data-bs-toggle' => 'tooltip', 
-            'title' => $translator->translate('i.add_client'),
-            'disabled' => 'disabled', 
-            'style' => 'text-decoration:none',
-        ])
-        ->content('➕')
-        ->href('#modal-add-inv')
-        ->id('btn-disabled-invoice-add-button')
-        ->render();
-
-$toolbar = Div::tag();
-
- echo Breadcrumbs::widget()
+<?php 
+    echo Breadcrumbs::widget()
      ->links(
          BreadcrumbLink::to(
                 label: $translator->translate('i.default_invoice_group'), 
@@ -235,6 +142,125 @@ $toolbar = Div::tag();
      )
      ->listId(false)
      ->render();
+?>
+<?php
+/**
+ * Use with the checkbox column to copy invoices according to date.
+ */
+
+$copyInvoiceMultiple = A::tag()
+        ->addAttributes(['type' => 'reset', 'data-bs-toggle' => 'modal', 'title' => Html::encode($translator->translate('i.copy_invoice'))])
+        ->addClass('btn btn-success')
+        /**
+         * Purpose: Trigger modal_copy_inv_multiple.php to pop up
+         * @see id="modal-copy-inv-multiple" class="modal" on resources/views/invoice/inv/modal_copy_inv_multiple.php
+         */
+        ->href('#modal-copy-inv-multiple')
+        ->content('☑️'.$translator->translate('i.copy_invoice'))
+        ->id('btn-modal-copy-inv-multipe')
+        ->render();
+
+/**
+ * Use with the checkbox column to mark invoices as sent. Note an email is not sent. The invoices appear on the client's guest index
+ * NB: Only invoices marked as sent can appear on the client's side. i.e no 'draft' invoices can appear on the client guest index
+ * @see \invoice\src\Invoice\Asset\rebuild\js\inv.js $(document).on('click', '#btn-mark-as-sent', function () {
+ */
+$markAsSent = A::tag()
+        ->addAttributes(['type' => 'reset', 'data-bs-toggle' => 'tooltip', 'title' => Html::encode($translator->translate('i.sent'))])
+        ->addClass('btn btn-success')
+        ->content('☑️'.$translator->translate('i.sent').$iR->getSpecificStatusArrayEmoji(2))
+        ->id('btn-mark-as-sent')
+        ->render();
+
+/**
+ * Use with the checkbox column to mark invoices as draft. The customer will no longer be able to view the invoice on their side. 
+ * @see \invoice\src\Invoice\Asset\rebuild\js\inv.js $(document).on('click', '#btn-mark-as-draft', function () {
+ */
+$disabledMarkSentAsDraft = A::tag()
+        ->addAttributes(['type' => 'reset', 'data-bs-toggle' => 'tooltip', 'title' => Html::encode($translator->translate('invoice.security.disable.read.only.info'))])
+        ->addAttributes([
+            'disabled' => 'disabled', 
+            'style' => 'text-decoration:none',
+        ])
+        ->addClass('btn btn-success')
+        ->content('☑️'.$translator->translate('i.draft').$iR->getSpecificStatusArrayEmoji(1))
+        ->id('btn-mark-sent-as-draft')
+        ->render();
+
+$enabledMarkSentAsDraft = A::tag()
+        ->addAttributes(['type' => 'reset', 'data-bs-toggle' => 'tooltip', 'title' => Html::encode($translator->translate('i.draft'))])
+        ->addAttributes([
+            'style' => 'text-decoration:none',
+        ])
+        ->addClass('btn btn-success')
+        ->content('☑️'.$translator->translate('i.draft').$iR->getSpecificStatusArrayEmoji(1))
+        ->id('btn-mark-sent-as-draft')
+        ->render();
+
+/**
+ * Used with the checkbox column to use resources/views/invoice/inv/modal_create_recurring_multiple.php
+ * @see https://emojipedia.org/recycling-symbol
+ */
+$markAsRecurringMultiple = A::tag()
+        ->addAttributes(['type' => 'reset', 'data-bs-toggle' => 'modal'])
+        ->addClass('btn btn-info')
+        /**
+         * Purpose: Trigger modal_create_recurring_modal.php to pop up
+         * @see id="create-recurring-multiple" class="modal" on resources/views/invoice/inv/modal_create_recurring_multiple.php
+         */
+        ->href('#create-recurring-multiple')
+        ->content('☑️'.$translator->translate('i.recurring').'♻️')        
+        ->render();
+
+$toolbarReset = A::tag()
+        ->addAttributes(['type' => 'reset'])
+        ->addClass('btn btn-primary me-1 ajax-loader')
+        ->content(I::tag()->addClass('bi bi-bootstrap-reboot'))
+        ->href($urlGenerator->generate($currentRoute->getName() ?? 'inv/index'))
+        ->id('btn-reset')
+        ->render();
+
+$allVisible = A::tag()
+        ->addAttributes(['type' => 'reset', 'data-bs-toggle' => 'tooltip', 'title' => $translator->translate('invoice.hide.or.unhide.columns')])
+        ->addClass('btn btn-warning me-1 ajax-loader')
+        ->content('↔️')
+        ->href($urlGenerator->generate('setting/visible'))
+        ->id('btn-all-visible')
+        ->render();
+
+$toggleColumnInvSentLog = A::tag()
+        ->addAttributes(['type' => 'reset', 'data-bs-toggle' => 'tooltip', 'title' => $translator->translate('invoice.hide.or.unhide.columns')])
+        ->addClass('btn btn-info me-1 ajax-loader')
+        ->content('↔️')
+        ->href($urlGenerator->generate('setting/toggleinvsentlogcolumn'))
+        ->id('btn-all-visible')
+        ->render();
+
+$enabledAddInvoiceButton = A::tag()
+        ->addAttributes([
+            'class' => 'btn btn-info', 
+            'data-bs-toggle' => 'modal', 
+            'style' => 'text-decoration:none'
+        ])
+        ->content('➕')
+        ->href('#modal-add-inv')
+        ->id('btn-enabled-invoice-add-button')
+        ->render();
+
+$disabledAddInvoiceButton = A::tag()
+        ->addAttributes([
+            'class' => 'btn btn-info', 
+            'data-bs-toggle' => 'tooltip', 
+            'title' => $translator->translate('i.add_client'),
+            'disabled' => 'disabled', 
+            'style' => 'text-decoration:none',
+        ])
+        ->content('➕')
+        ->href('#modal-add-inv')
+        ->id('btn-disabled-invoice-add-button')
+        ->render();
+
+$toolbar = Div::tag();
 ?>
 <div>
     <br>
@@ -332,15 +358,25 @@ $toolbar = Div::tag();
         ),
         new ActionColumn(buttons: [
                 new ActionButton(
-                   content: '✎',
+                   content: static function(Inv $inv) use ($s) : string {
+                        return $inv->getIs_read_only() === false && $s->getSetting('disable_read_only') === (string) 0 ? 
+                            '✎' : '🚫';     
+                   },
                    url: static function(Inv $inv) use ($s, $urlGenerator) : string {
                         return $inv->getIs_read_only() === false && $s->getSetting('disable_read_only') === (string) 0 ? 
                             $urlGenerator->generate('inv/edit', ['id' => $inv->getId()]) : '';     
                    },
-                   attributes: [
-                       'data-bs-toggle' => 'tooltip',
-                       'title' => $translator->translate('i.edit'),
-                   ]      
+                   attributes: static function(Inv $inv) use ($s, $translator) : array {
+                        return $inv->getIs_read_only() === false && $s->getSetting('disable_read_only') === (string) 0 ? 
+                            [
+                                'data-bs-toggle' => 'tooltip',
+                                'title' => $translator->translate('i.edit')
+                            ] : [
+                                'data-bs-toggle' => 'tooltip',
+                                'title' => $translator->translate('i.sent'),
+                                'disabled' => 'disabled'
+                            ];     
+                   },       
                 ), 
                 new ActionButton(
                    url: static function(Inv $inv) use ($translator, $urlGenerator) : string {
@@ -686,7 +722,12 @@ $toolbar = Div::tag();
         // use the checkboxcolumn to copy multiple invoices accrding to a new date
         Div::tag()->addClass('float-end m-3')->content($copyInvoiceMultiple)->encode(false)->render() .  
         // use the checkboxcolumn to mark invoices as sent
-        Div::tag()->addClass('float-end m-3')->content($markAsSent)->encode(false)->render() .  
+        Div::tag()->addClass('float-end m-3')->content($markAsSent)->encode(false)->render() . 
+        // use the checkboxcolumn to mark sent invoices as draft
+        ($s->getSetting('disable_read_only') === (string) 0 
+            ? Div::tag()->addClass('float-end m-3')->content($disabledMarkSentAsDraft)->encode(false)->render()
+            : Div::tag()->addClass('float-end m-3')->content($enabledMarkSentAsDraft)->encode(false)->render()   
+        ).      
         // use the checkboxcolumn to mark invoices as recurring
         Div::tag()->addClass('float-end m-3')->content($markAsRecurringMultiple)->encode(false)->render() .     
         ($clientCount == 0 
@@ -694,10 +735,10 @@ $toolbar = Div::tag();
             : Div::tag()->addClass('float-end m-3')->content($enabledAddInvoiceButton)->encode(false)->render()   
         ).
         Form::tag()->close(); 
-    
+
     $urlCreator = new UrlCreator($urlGenerator);
     $urlCreator->__invoke([], OrderHelper::stringToArray($sortString));
-    
+
     $sort = Sort::only(['id', 'status_id', 'number', 'date_created', 'date_due', 'client_id'])
                     // (@see vendor\yiisoft\data\src\Reader\Sort
                     // - => 'desc'  so -id => default descending on id

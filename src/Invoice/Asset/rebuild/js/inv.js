@@ -168,6 +168,36 @@ $(function () {
         });
     });
     
+    $(document).on('click', '#btn-mark-sent-as-draft', function () {
+        var btn = $('#btn-mark-sent-as-draft');
+        var selected = [];
+        btn.html('<h2 class="text-center"><i class="fa fa-spin fa-spinner"></i></h2>');
+        $('#table-invoice input[type="checkbox"]:checked').each(function() {
+            selected.push($(this).attr('id'));
+        });
+        var url = $(location).attr('origin') + "/invoice/inv/mark_sent_as_draft";
+        $.ajax({ type: "GET",
+            contentType: "application/json; charset=utf-8",
+            data: {
+                keylist: selected
+            },
+            url: url,
+            cache: false,
+            dataType: 'json',
+            success: function (data) {
+                var response = parsedata(data);
+                if (response.success === 1) {
+                    btn.html('<h2 class="text-center"><i class="fa fa-check"></i></h2>');
+                    window.location.reload(true);
+                }    
+                if (response.success === 0) { 
+                    btn.html('<h2 class="text-center"><i class="fa fa-times"></i></h2>');
+                    window.location.reload(true);                                                
+                }
+            }
+        });
+    });
+    
     $(document).on('click', '.modal_copy_inv_multiple_confirm', function () {
         /**
          * Purpose: To rotate the symbol on modal_copy_inv_multiple_confirm.php until below url completed

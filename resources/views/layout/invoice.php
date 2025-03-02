@@ -44,8 +44,6 @@ use Yiisoft\Yii\Bootstrap5\DropdownItem;
 use Yiisoft\Yii\Bootstrap5\DropdownTogglerVariant;
 use Yiisoft\Yii\Bootstrap5\Nav;
 use Yiisoft\Yii\Bootstrap5\NavBar;
-use Yiisoft\Yii\Bootstrap5\NavBarExpand;
-use Yiisoft\Yii\Bootstrap5\NavBarPlacement;
 use Yiisoft\Yii\Bootstrap5\NavLink;
 use Yiisoft\Yii\Bootstrap5\NavStyle;
 use Yiisoft\Yii\Bootstrap5\Offcanvas;
