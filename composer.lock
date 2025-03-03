@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "71683b77b863fd5663a7da7877cf82f0",
+    "content-hash": "dd1186ef02e761ea10fddd99413d9a47",
     "packages": [
         {
             "name": "alexkart/curl-builder",
@@ -5663,16 +5663,16 @@
         },
         {
             "name": "omnipay/common",
-            "version": "v3.3.0",
+            "version": "v3.4.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/thephpleague/omnipay-common.git",
-                "reference": "2eca3823e9069e2c36b6007a090577d5584f9518"
+                "reference": "83552de28815c5e46f66360c4d52c3a82a7d5efc"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/thephpleague/omnipay-common/zipball/2eca3823e9069e2c36b6007a090577d5584f9518",
-                "reference": "2eca3823e9069e2c36b6007a090577d5584f9518",
+                "url": "https://api.github.com/repos/thephpleague/omnipay-common/zipball/83552de28815c5e46f66360c4d52c3a82a7d5efc",
+                "reference": "83552de28815c5e46f66360c4d52c3a82a7d5efc",
                 "shasum": ""
             },
             "require": {
@@ -5745,7 +5745,7 @@
             ],
             "support": {
                 "issues": "https://github.com/thephpleague/omnipay-common/issues",
-                "source": "https://github.com/thephpleague/omnipay-common/tree/v3.3.0"
+                "source": "https://github.com/thephpleague/omnipay-common/tree/v3.4.0"
             },
             "funding": [
                 {
@@ -5753,7 +5753,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2024-03-08T11:56:40+00:00"
+            "time": "2025-03-03T09:25:00+00:00"
         },
         {
             "name": "omnipay/stripe",
