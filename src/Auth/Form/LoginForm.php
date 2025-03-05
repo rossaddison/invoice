@@ -66,13 +66,13 @@ final class LoginForm extends FormModel implements RulesProviderInterface, Prope
             'password' => $this->passwordRules(),
         ];
     }
-    
+
     /**
-     * Purpose: Use the yiisoft/validator's error messages folder      
+     * Purpose: Use the yiisoft/validator's error messages folder
      * @see config/common/di/translator.php
      * @see config/common/params.php 'yiisoft/translator' => ['validatorCategory' => 'yii-validator']
      * @see config/common/params.php 'yiisoft/aliases' => ['aliases' => ['@validatorMessages' => '@vendor/yiisoft/validator/messages']]
-     * 
+     *
      * @return array
      */
     private function loginRules(): array
@@ -87,7 +87,7 @@ final class LoginForm extends FormModel implements RulesProviderInterface, Prope
         $currentLocale = $this->translator->getLocale();
         $translatedErrorMessage = $this->translator->translate($englishErrorMessageId, [], 'yii-validator', $currentLocale);
         return [new Required(str_replace('{Property}', $login, $translatedErrorMessage))];
-    }    
+    }
 
     /**
      * @return (Callback|Required)[]

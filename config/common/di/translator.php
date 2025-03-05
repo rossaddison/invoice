@@ -17,7 +17,7 @@ use Yiisoft\Definitions\DynamicReference;
  * @var array $params
  * @var array $params['yiisoft/translator']
  * @var string $params['yiisoft/translator']['defaultCategory']
- * @see yiisoft/validator/messages e.g. '{Property} cannot be blank.' => '{Property} darf nicht leer sein.', 
+ * @see yiisoft/validator/messages e.g. '{Property} cannot be blank.' => '{Property} darf nicht leer sein.',
  * @var string $params['yiisoft/translator']['validatorCategory']
  */
 
@@ -46,7 +46,7 @@ return [
                         new IntlMessageFormatter(),
                     );
                 }),
-            ]
+            ],
         ],
         'reset' => function () use ($params) {
             /**

@@ -74,7 +74,7 @@ final class SignupForm extends FormModel implements RulesProviderInterface, Prop
     {
         return $this->password;
     }
-    
+
     public function getPasswordVerify(): string
     {
         return $this->passwordVerify;
@@ -98,9 +98,9 @@ final class SignupForm extends FormModel implements RulesProviderInterface, Prop
      * @return (\Closure|Email|Equal|Length|Required)[][]
      *
      * @psalm-return array{
-     *     login: list{Required, Length, \Closure(mixed):Result}, 
-     *     email: list{Required, Email, \Closure(mixed):Result}, 
-     *     password: list{Required}, 
+     *     login: list{Required, Length, \Closure(mixed):Result},
+     *     email: list{Required, Email, \Closure(mixed):Result},
+     *     password: list{Required},
      *     passwordVerify: list{Required, \Closure(mixed):Result}
      * }
      */
@@ -142,7 +142,6 @@ final class SignupForm extends FormModel implements RulesProviderInterface, Prop
                     return $result;
                 },
             ],
-                        
         ];
     }
 }

@@ -14,9 +14,10 @@ final class SignupAndLoginCest
         private readonly string $firstUserLogin = 'firstUserLogin',
         private readonly string $firstUserWrongLogin = 'firstUserWrongLogin',
         private readonly string $firstUserPassword = 'firstUserPassword',
-        private readonly string $firstUserWrongPassword = 'firstUserWrongPassword',          
-    ){}
-    
+        private readonly string $firstUserWrongPassword = 'firstUserWrongPassword',
+    ) {
+    }
+
     public function testSignupPage(AcceptanceTester $I): void
     {
         $I->amGoingTo('go to the register page.');
@@ -38,21 +39,20 @@ final class SignupAndLoginCest
         $I->click('Submit', '#signupForm');
 
         $I->expectTo('see register success message.');
-        
+
         /**
          * $I->see('Hello, everyone!');
-         * 
-         * The user clicks on an email verification link which is sent 
-         * to 'userinv/signup' 
+         *
+         * The user clicks on an email verification link which is sent
+         * to 'userinv/signup'
          *
          * $I->see('This user is marked as inactive. Please contact the system administrator.');
-         * 
          */
     }
-    
+
     /**
      * Note: This function depends on the above function being successful
-     * 
+     *
      * @depends Tests\Acceptance\SignupAndLoginCest:testRegisterSuccess
      */
     public function testLoginUsernameSubmitFormSuccessData(AcceptanceTester $I): void
@@ -69,7 +69,7 @@ final class SignupAndLoginCest
         $I->expectTo('see logged index page.');
         $I->dontSeeLink('login');
 
-        $I->click('Logout ('. $this->liveAdminUserLogin .')');
+        $I->click('Logout (' . $this->liveAdminUserLogin . ')');
 
         $I->expectTo('not see link logout.');
         $I->dontSeeLink('logout');
@@ -88,12 +88,12 @@ final class SignupAndLoginCest
 
         $I->expectTo('see registration register validation.');
         $I->see('Login cannot be blank.');
-        
+
         $I->see('Email cannot be blank.');
         $I->see('Email is not a valid email address.');
-        
+
         $I->see('Password cannot be blank.');
-        
+
         $I->see('PasswordVerify cannot be blank.');
         $I->seeElement('button', ['name' => 'register-button']);
     }
@@ -108,15 +108,15 @@ final class SignupAndLoginCest
         $I->fillField('#signup-passwordverify', $this->firstUserPassword);
 
         $I->click('Submit', '#signupForm');
-        
+
         /**
          * $I->expectTo('see registration register validation.');
-         * 
+         *
          * Because the User has to click on a verification email link,
-         * effectively in the tests the username entered in testRegisterSuccess will not pre-exist 
+         * effectively in the tests the username entered in testRegisterSuccess will not pre-exist
          *
          * $I->see('A User with this login already exists');
-         * $I->seeElement('button', ['name' => 'register-button']); 
+         * $I->seeElement('button', ['name' => 'register-button']);
          */
     }
 
@@ -134,7 +134,7 @@ final class SignupAndLoginCest
         $I->expectTo('see registration register validation.');
         $I->see('Passwords do not match');
     }
-    
+
     public function testLoginPage(AcceptanceTester $I): void
     {
         $I->amGoingTo('go to the log in page.');

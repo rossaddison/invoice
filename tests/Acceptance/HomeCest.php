@@ -2,7 +2,6 @@
 
 declare(strict_types=1);
 
-
 namespace Tests\Acceptance;
 
 use Tests\Support\AcceptanceTester;
