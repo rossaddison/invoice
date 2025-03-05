@@ -36,7 +36,7 @@ return [
         $collector
             ->middleware(CsrfTokenMiddleware::class)
             ->middleware(FormatDataResponse::class)
-            ->addGroup(
+            ->addRoute(
                 Group::create('/{_language}')
                     ->routes(...$routes)
             );

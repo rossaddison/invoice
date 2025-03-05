@@ -17,6 +17,8 @@ use Yiisoft\Definitions\DynamicReference;
  * @var array $params
  * @var array $params['yiisoft/translator']
  * @var string $params['yiisoft/translator']['defaultCategory']
+ * @see yiisoft/validator/messages e.g. '{Property} cannot be blank.' => '{Property} darf nicht leer sein.', 
+ * @var string $params['yiisoft/translator']['validatorCategory']
  */
 
 return [
@@ -28,15 +30,24 @@ return [
             $params['yiisoft/translator']['defaultCategory'],
             Reference::optional(EventDispatcherInterface::class),
         ],
-        'addCategorySources()' => ['categories' => [
-            DynamicReference::to(static function (Aliases $aliases) use ($params) {
-                return new CategorySource(
-                    $params['yiisoft/translator']['defaultCategory'],
-                    new MessageSource($aliases->get('@messages')),
-                    new IntlMessageFormatter(),
-                );
-            }),
-        ]],
+        'addCategorySources()' => [
+            'categories' => [
+                DynamicReference::to(static function (Aliases $aliases) use ($params) {
+                    return new CategorySource(
+                        $params['yiisoft/translator']['defaultCategory'],
+                        new MessageSource($aliases->get('@messages')),
+                        new IntlMessageFormatter(),
+                    );
+                }),
+                DynamicReference::to(static function (Aliases $aliases) use ($params) {
+                    return new CategorySource(
+                        $params['yiisoft/translator']['validatorCategory'],
+                        new MessageSource($aliases->get('@validatorMessages')),
+                        new IntlMessageFormatter(),
+                    );
+                }),
+            ]
+        ],
         'reset' => function () use ($params) {
             /**
              * @var string $params['yiisoft/translator']['locale']

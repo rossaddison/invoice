@@ -21,6 +21,7 @@ use Yiisoft\Yii\Bootstrap5\NavLink;
 use Yiisoft\Yii\Bootstrap5\NavStyle;
 
 /**
+ * @see Note: This layout is not currently being used. Refer to soletrader/main.php
  * @var Yiisoft\Assets\AssetManager $assetManager
  * @var Yiisoft\Router\CurrentRoute $currentRoute
  * @var Yiisoft\Router\UrlGeneratorInterface $urlGenerator

@@ -247,7 +247,7 @@ $this->setTitle($title);
                 NavLink::to(
                     Label::tag()
                     ->attributes(['class' => 'bi bi-person-lines-fill text-primary'])
-                    ->content(),
+                    ->content(str_repeat(' ', 1).$translator->translate('menu.contact.us')),
                     $urlGenerator->generate('site/contact'), 
                     $isGuest && !$noFrontPageContactDetails, 
                     !$isGuest && $noFrontPageContactDetails,                        
@@ -256,7 +256,7 @@ $this->setTitle($title);
                 NavLink::to(
                     Label::tag()
                     ->attributes(['class' => 'bi bi-door-open-fill text-success'])
-                    ->content(),    
+                    ->content(str_repeat(' ', 1).$translator->translate('menu.login')),    
                     $urlGenerator->generate('auth/login'), 
                     $isGuest && !$stopLoggingIn, 
                     !$isGuest && $stopLoggingIn,                        
@@ -269,29 +269,34 @@ $this->setTitle($title);
                         'data-bs-toggle' => 'tooltip',
                         'title' => str_repeat(' ',1).$translator->translate('i.setup_create_user')
                     ])
-                    ->content(), 
+                    ->content(str_repeat(' ', 1).$translator->translate('menu.signup')), 
                     $urlGenerator->generate('auth/signup'), 
                     $isGuest && !$stopSigningUp, 
                     !$isGuest && $stopSigningUp,                        
                     false        
-                )                 
-            )
-            ->styles(NavStyle::NAVBAR) : ''; 
-        ?>        
-        
-        <?=  
-            $isGuest ? '' : Form::tag()
+                ),
+                NavLink::to(
+                    /**
+                     * Only render the logout button if user is an authenticated user i.e. not guest
+                     */    
+                    $isGuest && !$stopLoggingIn
+                        ? ''
+                        : Form::tag()
                             ->post($urlGenerator->generate('auth/logout'))
                             ->csrf($csrf)
                             ->open()
-                        . '<div class="mb-1">'
-                        . (string)Button::submit(
-                            $translator->translate('i.logout', ['login' => Html::encode(null!==$user ? preg_replace('/\d+/', '', $user->getLogin()) : '')])
-                        )
+                            . '<div class="mb-1">'
+                            . Button::submit(
+                                $translator->translate('i.logout', ['login' => Html::encode(null!==$user ? $user->getLogin() : '')])
+                            )
                             ->class('btn btn-primary')
-                        . '</div>'
-                        . Form::tag()->close();
-        ?>
+                            . '</div>'
+                            . Form::tag()->close(),
+                        encodeLabel: false,
+                ),        
+            )
+            ->styles(NavStyle::NAVBAR) : ''; 
+        ?> 
         <?= NavBar::end() ?>
     </header>
 

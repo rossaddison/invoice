@@ -1,12 +1,14 @@
 <?php
 
 return [
-    1 => [
-        'user_id' => '1',
+    [
         'item_name' => 'admin',
+        'user_id' => '1',
+        'created_at' => 1733917067,
     ],
-    2 => [
-        'user_id' => '2',
+    [
         'item_name' => 'observer',
-    ],
+        'user_id' => '2',
+        'created_at' => 1733917067,
+    ]
 ];

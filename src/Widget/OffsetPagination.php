@@ -7,7 +7,7 @@ namespace App\Widget;
 use Closure;
 use Yiisoft\Data\Paginator\OffsetPaginator as Paginator;
 use Yiisoft\Html\Html;
-use Yiisoft\Yii\Bootstrap5\Widget;
+use Yiisoft\Widget\Widget;
 
 final class OffsetPagination extends Widget
 {
@@ -56,9 +56,6 @@ final class OffsetPagination extends Widget
     {
         if ($this->paginator === null) {
             return '';
-        }
-        if (!isset($this->options['id'])) {
-            $this->options['id'] = "{$this->getId()}-post-card";
         }
 
         $this->initOptions();

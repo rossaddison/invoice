@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace App\Auth\Form;
 
-use App\Auth\IdentityRepository;
 use App\User\User;
 use App\User\UserRepository;
 use Yiisoft\FormModel\FormModel;
@@ -29,7 +28,6 @@ final class SignupForm extends FormModel implements RulesProviderInterface, Prop
     public function __construct(
         private readonly TranslatorInterface $translator,
         private readonly UserRepository $userRepository,
-        private readonly IdentityRepository $identityRepository
     ) {
     }
 
@@ -76,6 +74,11 @@ final class SignupForm extends FormModel implements RulesProviderInterface, Prop
     {
         return $this->password;
     }
+    
+    public function getPasswordVerify(): string
+    {
+        return $this->passwordVerify;
+    }
 
     public function getEmail(): string
     {
@@ -94,7 +97,12 @@ final class SignupForm extends FormModel implements RulesProviderInterface, Prop
     /**
      * @return (\Closure|Email|Equal|Length|Required)[][]
      *
-     * @psalm-return array{login: list{Required, Length, \Closure(mixed):Result}, email: list{Required, Email, \Closure(mixed):Result}, password: list{Required}, passwordVerify: list{Required, Equal}}
+     * @psalm-return array{
+     *     login: list{Required, Length, \Closure(mixed):Result}, 
+     *     email: list{Required, Email, \Closure(mixed):Result}, 
+     *     password: list{Required}, 
+     *     passwordVerify: list{Required, \Closure(mixed):Result}
+     * }
      */
     public function getRules(): array
     {
@@ -126,11 +134,15 @@ final class SignupForm extends FormModel implements RulesProviderInterface, Prop
             ],
             'passwordVerify' => [
                 new Required(),
-                new Equal(
-                    targetValue: $this->password,
-                    message: $this->translator->translate('validator.password.not.match')
-                ),
+                function (mixed $value): Result {
+                    $result = new Result();
+                    if ($this->password !== $value) {
+                        $result->addError($this->translator->translate('validator.password.not.match'));
+                    }
+                    return $result;
+                },
             ],
+                        
         ];
     }
 }

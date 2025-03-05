@@ -127,6 +127,7 @@ return [
             '@resources' => '@root/resources',
             '@runtime' => '@root/runtime',
             '@src' => '@root/src',
+            '@validatorMessages' => '@vendor/yiisoft/validator/messages',
             '@vendor' => '@root/vendor',
             '@layout' => '@views/layout',
             '@views' => '@resources/views',
@@ -229,6 +230,7 @@ return [
         'locale' => 'en',
         'fallbackLocale' => 'en',
         'defaultCategory' => 'app',
+        'validatorCategory' => 'yii-validator',
     ],
     'yiisoft/view' => [
         'basePath' => '@views',
