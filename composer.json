@@ -64,9 +64,9 @@
         "psr/log": "^3.0.2",
         "rector/rector": "^2.0.10",
         "rossaddison/yii-auth-client": "dev-master",
-        "rossaddison/yii-cycle-1": ">=1",                
-        "rossaddison/yii-gii": "dev-master",
-        "rossaddison/yii-middleware": "dev-master",
+        "rossaddison/yii-cycle-1": "dev-invoice",                
+        "rossaddison/yii-gii": "dev-invoice",
+        "rossaddison/yii-middleware": "dev-invoice",
         "sabre/xml": "^4.0.6",
         "setasign/fpdf": "^1.8.6",
         "stripe/stripe-php": "^16.6.0",
@@ -119,7 +119,7 @@
         "yiisoft/strings": "^2.6",
         "yiisoft/translator": "^3.1",
         "yiisoft/translator-message-php": "^1.1.1",
-        "yiisoft/user": "^2.3",
+        "yiisoft/user": "^2.3.1",
         "yiisoft/validator": "^2.2",
         "yiisoft/var-dumper": "^1.7",
         "yiisoft/view": "^12.0",
@@ -201,7 +201,11 @@
     "repositories": [
         {
             "type": "composer",
-            "url": "https://asset-packagist.org"
+            "url": "https://asset-packagist.org",
+            "type": "vcs",
+            "url": "https://github.com/rossaddison/yii-cycle-1",
+            "url": "https://github.com/rossaddison/yii-gii",
+            "url": "https://github.com/rossaddison/yii-middleware"
         }
     ]
 }
