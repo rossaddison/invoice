@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "7e37b69e915c0a5a099d8c6e78d19f51",
+    "content-hash": "733d71962ef1fe14581719e3dd85168a",
     "packages": [
         {
             "name": "alexkart/curl-builder",
@@ -1027,29 +1027,29 @@
         },
         {
             "name": "brick/money",
-            "version": "0.10.0",
+            "version": "0.10.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/brick/money.git",
-                "reference": "08b0198a05c6eeac416486da053cbdc02ddff56c"
+                "reference": "779c1d3b708e4dd37fe8a32a189b9f241b52f194"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/brick/money/zipball/08b0198a05c6eeac416486da053cbdc02ddff56c",
-                "reference": "08b0198a05c6eeac416486da053cbdc02ddff56c",
+                "url": "https://api.github.com/repos/brick/money/zipball/779c1d3b708e4dd37fe8a32a189b9f241b52f194",
+                "reference": "779c1d3b708e4dd37fe8a32a189b9f241b52f194",
                 "shasum": ""
             },
             "require": {
-                "brick/math": "~0.12.0",
+                "brick/math": "~0.12.0|~0.13.0",
                 "php": "^8.1"
             },
             "require-dev": {
-                "brick/varexporter": "~0.4.0",
+                "brick/varexporter": "~0.5.0",
                 "ext-dom": "*",
                 "ext-pdo": "*",
                 "php-coveralls/php-coveralls": "^2.2",
                 "phpunit/phpunit": "^10.1",
-                "vimeo/psalm": "5.26.1"
+                "vimeo/psalm": "6.3.0"
             },
             "suggest": {
                 "ext-intl": "Required to format Money objects"
@@ -1072,7 +1072,7 @@
             ],
             "support": {
                 "issues": "https://github.com/brick/money/issues",
-                "source": "https://github.com/brick/money/tree/0.10.0"
+                "source": "https://github.com/brick/money/tree/0.10.1"
             },
             "funding": [
                 {
@@ -1080,7 +1080,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2024-10-12T21:33:29+00:00"
+            "time": "2025-03-05T13:00:01+00:00"
         },
         {
             "name": "cebe/markdown",
@@ -7605,16 +7605,16 @@
         },
         {
             "name": "phpstan/phpstan",
-            "version": "2.1.6",
+            "version": "2.1.7",
             "source": {
                 "type": "git",
                 "url": "https://github.com/phpstan/phpstan.git",
-                "reference": "6eaec7c6c9e90dcfe46ad1e1ffa5171e2dab641c"
+                "reference": "12567f91a74036d56ba0af6d56c8e73ac0e8d850"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/phpstan/phpstan/zipball/6eaec7c6c9e90dcfe46ad1e1ffa5171e2dab641c",
-                "reference": "6eaec7c6c9e90dcfe46ad1e1ffa5171e2dab641c",
+                "url": "https://api.github.com/repos/phpstan/phpstan/zipball/12567f91a74036d56ba0af6d56c8e73ac0e8d850",
+                "reference": "12567f91a74036d56ba0af6d56c8e73ac0e8d850",
                 "shasum": ""
             },
             "require": {
@@ -7659,7 +7659,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2025-02-19T15:46:42+00:00"
+            "time": "2025-03-05T13:43:55+00:00"
         },
         {
             "name": "psalm/plugin-symfony",
@@ -8877,12 +8877,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/rossaddison/yii-gii.git",
-                "reference": "a6f210fe4be30965f34b53bdf38d4ea8be613929"
+                "reference": "523fac01edfaf48732cc33c4bd89d1a2040b5f8c"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/rossaddison/yii-gii/zipball/a6f210fe4be30965f34b53bdf38d4ea8be613929",
-                "reference": "a6f210fe4be30965f34b53bdf38d4ea8be613929",
+                "url": "https://api.github.com/repos/rossaddison/yii-gii/zipball/523fac01edfaf48732cc33c4bd89d1a2040b5f8c",
+                "reference": "523fac01edfaf48732cc33c4bd89d1a2040b5f8c",
                 "shasum": ""
             },
             "require": {
@@ -8895,7 +8895,7 @@
                 "yiisoft/active-record": "dev-master",
                 "yiisoft/aliases": "^3.0",
                 "yiisoft/arrays": "^2.1|^3.2",
-                "yiisoft/csrf": "^2.2",
+                "yiisoft/csrf": "^2.2.1",
                 "yiisoft/data-response": "^2.1",
                 "yiisoft/db": "*",
                 "yiisoft/friendly-exception": "^1.1",
@@ -8976,7 +8976,7 @@
                     "type": "opencollective"
                 }
             ],
-            "time": "2025-03-04T18:41:42+00:00"
+            "time": "2025-03-06T01:31:58+00:00"
         },
         {
             "name": "rossaddison/yii-middleware",
@@ -14377,40 +14377,40 @@
         },
         {
             "name": "yiisoft/csrf",
-            "version": "2.2.0",
+            "version": "2.2.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/yiisoft/csrf.git",
-                "reference": "0f36e8056073ae39aa7d071df1ca2698a7b181ff"
+                "reference": "e24f8a98d0afe2ff180f5dc32b1dc4f4adf60a4e"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/yiisoft/csrf/zipball/0f36e8056073ae39aa7d071df1ca2698a7b181ff",
-                "reference": "0f36e8056073ae39aa7d071df1ca2698a7b181ff",
+                "url": "https://api.github.com/repos/yiisoft/csrf/zipball/e24f8a98d0afe2ff180f5dc32b1dc4f4adf60a4e",
+                "reference": "e24f8a98d0afe2ff180f5dc32b1dc4f4adf60a4e",
                 "shasum": ""
             },
             "require": {
                 "ext-hash": "*",
-                "php": "^7.4|^8.0",
+                "php": "~7.4.0 || ~8.0.0 || ~8.1.0 || ~8.2.0 || ~8.3.0 || ~8.4.0",
                 "psr/http-factory": "^1.0",
                 "psr/http-factory-implementation": "1.0",
-                "psr/http-message": "^1.0|^2.0",
+                "psr/http-message": "^1.0 || ^2.0",
                 "psr/http-message-implementation": "1.0",
                 "psr/http-server-handler": "^1.0",
                 "psr/http-server-middleware": "^1.0",
                 "yiisoft/http": "^1.2",
                 "yiisoft/security": "^1.0",
-                "yiisoft/session": "^1.0|^2.0",
+                "yiisoft/session": "^1.0 || ^2.0 || ^3.0",
                 "yiisoft/strings": "^2.0"
             },
             "require-dev": {
-                "maglnet/composer-require-checker": "^3.8|^4.2",
-                "nyholm/psr7": "^1.3",
-                "phpunit/phpunit": "^9.5",
-                "rector/rector": "^1.2",
-                "roave/infection-static-analysis-plugin": "^1.16",
-                "spatie/phpunit-watcher": "^1.23",
-                "vimeo/psalm": "^4.30|^5.24",
+                "maglnet/composer-require-checker": "^3.8 || ^4.2",
+                "nyholm/psr7": "^1.8.2",
+                "phpunit/phpunit": "^9.6.22",
+                "rector/rector": "^2.0.9",
+                "roave/infection-static-analysis-plugin": "^1.18",
+                "spatie/phpunit-watcher": "^1.23.6",
+                "vimeo/psalm": "^4.30 || ^5.26.1 || ^6.8.8",
                 "yiisoft/di": "^1.1"
             },
             "type": "library",
@@ -14461,7 +14461,7 @@
                     "type": "opencollective"
                 }
             ],
-            "time": "2024-11-14T17:54:45+00:00"
+            "time": "2025-03-05T13:54:38+00:00"
         },
         {
             "name": "yiisoft/data",
@@ -18699,16 +18699,16 @@
         },
         {
             "name": "zircote/swagger-php",
-            "version": "5.0.5",
+            "version": "5.0.6",
             "source": {
                 "type": "git",
                 "url": "https://github.com/zircote/swagger-php.git",
-                "reference": "2eb4005840058d8844a0bcc14403932331331068"
+                "reference": "ea60f1439aa4fefba230a4386a403eeb1ee52f08"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/zircote/swagger-php/zipball/2eb4005840058d8844a0bcc14403932331331068",
-                "reference": "2eb4005840058d8844a0bcc14403932331331068",
+                "url": "https://api.github.com/repos/zircote/swagger-php/zipball/ea60f1439aa4fefba230a4386a403eeb1ee52f08",
+                "reference": "ea60f1439aa4fefba230a4386a403eeb1ee52f08",
                 "shasum": ""
             },
             "require": {
@@ -18779,9 +18779,9 @@
             ],
             "support": {
                 "issues": "https://github.com/zircote/swagger-php/issues",
-                "source": "https://github.com/zircote/swagger-php/tree/5.0.5"
+                "source": "https://github.com/zircote/swagger-php/tree/5.0.6"
             },
-            "time": "2025-02-24T00:48:00+00:00"
+            "time": "2025-03-05T19:40:05+00:00"
         }
     ],
     "packages-dev": [
@@ -21930,12 +21930,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/Roave/SecurityAdvisories.git",
-                "reference": "e7cacb4409da236548159072e5eff2c30cd3bf9c"
+                "reference": "93d6f477df354be282736a37f732e39382ff9f95"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/Roave/SecurityAdvisories/zipball/e7cacb4409da236548159072e5eff2c30cd3bf9c",
-                "reference": "e7cacb4409da236548159072e5eff2c30cd3bf9c",
+                "url": "https://api.github.com/repos/Roave/SecurityAdvisories/zipball/93d6f477df354be282736a37f732e39382ff9f95",
+                "reference": "93d6f477df354be282736a37f732e39382ff9f95",
                 "shasum": ""
             },
             "conflict": {
@@ -22263,7 +22263,7 @@
                 "lara-zeus/artemis": ">=1,<=1.0.6",
                 "lara-zeus/dynamic-dashboard": ">=3,<=3.0.1",
                 "laravel/fortify": "<1.11.1",
-                "laravel/framework": "<6.20.45|>=7,<7.30.7|>=8,<8.83.28|>=9,<9.52.17|>=10,<10.48.23|>=11,<11.31",
+                "laravel/framework": "<11.44.1|>=12,<12.1.1",
                 "laravel/laravel": ">=5.4,<5.4.22",
                 "laravel/pulse": "<1.3.1",
                 "laravel/reverb": "<1.4",
@@ -22283,6 +22283,7 @@
                 "limesurvey/limesurvey": "<6.5.12",
                 "livehelperchat/livehelperchat": "<=3.91",
                 "livewire/livewire": "<2.12.7|>=3.0.0.0-beta1,<3.5.2",
+                "livewire/volt": "<1.7",
                 "lms/routes": "<2.1.1",
                 "localizationteam/l10nmgr": "<7.4|>=8,<8.7|>=9,<9.2",
                 "luyadev/yii-helpers": "<1.2.1",
@@ -22472,7 +22473,7 @@
                 "rap2hpoutre/laravel-log-viewer": "<0.13",
                 "react/http": ">=0.7,<1.9",
                 "really-simple-plugins/complianz-gdpr": "<6.4.2",
-                "redaxo/source": "<=5.18.1",
+                "redaxo/source": "<5.18.3",
                 "remdex/livehelperchat": "<4.29",
                 "reportico-web/reportico": "<=8.1",
                 "rhukster/dom-sanitizer": "<1.0.7",
@@ -22798,7 +22799,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2025-03-03T20:05:19+00:00"
+            "time": "2025-03-05T20:05:33+00:00"
         },
         {
             "name": "sanmai/later",

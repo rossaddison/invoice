@@ -31,7 +31,7 @@
         "amzn/amazon-pay-api-sdk-php": "^2.6.8",
         "braintree/braintree_php": "^6.24",
         "brick/math": "^0.12.3",
-        "brick/money": "^0.10",
+        "brick/money": "^0.10.1",
         "cebe/markdown": "^1.2.1@dev",
         "chillerlan/php-qrcode": "^5.0.3",
         "cycle/annotated": "^3.5||^4.2",
@@ -82,7 +82,7 @@
         "yiisoft/cache-file": "^3.2",
         "yiisoft/config": "^1.6.0",
         "yiisoft/cookies": "^1.2.2",
-        "yiisoft/csrf": "^2.2",
+        "yiisoft/csrf": "^2.2.1",
         "yiisoft/data": "dev-master",
         "yiisoft/data-cycle": "dev-master",
         "yiisoft/data-response": "^2.1",
@@ -133,7 +133,7 @@
         "yiisoft/yii-runner-http": "^3.1",
         "yiisoft/yii-sentry": "^2.0.1",
         "yiisoft/yii-view-renderer": "^7.3",
-        "zircote/swagger-php": "^4.11.1||^5.0.5"
+        "zircote/swagger-php": "^4.11.1||^5.0.6"
     },    
     "require-dev": {
         "codeception/c3": "^2.9",
