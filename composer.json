@@ -31,7 +31,7 @@
         "amzn/amazon-pay-api-sdk-php": "^2.6.8",
         "braintree/braintree_php": "^6.24",
         "brick/math": "^0.12.3",
-        "brick/money": "^0.10.1",
+        "brick/money": "^0.10",
         "cebe/markdown": "^1.2.1@dev",
         "chillerlan/php-qrcode": "^5.0.3",
         "cycle/annotated": "^3.5||^4.2",
@@ -50,7 +50,7 @@
         "mollie/mollie-api-php": "^2.78.0",
         "mpdf/mpdf": "^8.2.5",
         "nyholm/psr7": "^1.8.2",
-        "omnipay/common": "^3.4",
+        "omnipay/common": "^3.3",
         "omnipay/stripe": "^3.2",
         "php-http/curl-client": "^2.3.3",
         "php-http/guzzle7-adapter": "^1.1",
@@ -62,11 +62,9 @@
         "psr/http-server-handler": "^1.0.2",
         "psr/http-server-middleware": "^1.0.2",
         "psr/log": "^3.0.2",
-        "rector/rector": "^2.0.10",
+        "rector/rector": "^2.0.9",
         "rossaddison/yii-auth-client": "dev-master",
-        "rossaddison/yii-cycle-1": "dev-invoice",                
-        "rossaddison/yii-gii": "dev-invoice",
-        "rossaddison/yii-middleware": "dev-invoice",
+        "rossaddison/yii-cycle-1": ">=1",
         "sabre/xml": "^4.0.6",
         "setasign/fpdf": "^1.8.6",
         "stripe/stripe-php": "^16.6.0",
@@ -82,13 +80,13 @@
         "yiisoft/cache-file": "^3.2",
         "yiisoft/config": "^1.6.0",
         "yiisoft/cookies": "^1.2.2",
-        "yiisoft/csrf": "^2.2.1",
+        "yiisoft/csrf": "^2.2",
         "yiisoft/data": "dev-master",
         "yiisoft/data-cycle": "dev-master",
         "yiisoft/data-response": "^2.1",
         "yiisoft/db": "dev-master",
         "yiisoft/db-mysql": "dev-master",
-        "yiisoft/definitions": "^3.4.0",
+        "yiisoft/definitions": "^3.3.1",
         "yiisoft/di": "^1.3",
         "yiisoft/error-handler": "^4.0",
         "yiisoft/factory": "^1.3",
@@ -112,14 +110,14 @@
         "yiisoft/rbac-rules-container": "^2.1",
         "yiisoft/request-provider": "^1.2",
         "yiisoft/requirements": "dev-master",
-        "yiisoft/router": "^3.0||^4.0",
-        "yiisoft/router-fastroute": "^3.0||^4.0.1",
+        "yiisoft/router": "^3.1",
+        "yiisoft/router-fastroute": "^3.1",
         "yiisoft/security": "^1.1.0",
-        "yiisoft/session": "^2.1||^3.0",
+        "yiisoft/session": "^2.1",
         "yiisoft/strings": "^2.6",
         "yiisoft/translator": "^3.1",
         "yiisoft/translator-message-php": "^1.1.1",
-        "yiisoft/user": "^2.3.1",
+        "yiisoft/user": "^2.3",
         "yiisoft/validator": "^2.2",
         "yiisoft/var-dumper": "^1.7",
         "yiisoft/view": "^12.0",
@@ -127,13 +125,16 @@
         "yiisoft/yii-bootstrap5": "dev-master",
         "yiisoft/yii-console": "^2.3",
         "yiisoft/yii-dataview": "^3.0@dev",
+        "yiisoft/yii-debug": "dev-master", 
+        "yiisoft/yii-debug-api": "^3.0@dev",
         "yiisoft/yii-event": "^2.1",
-        "yiisoft/yii-http": "^1.0.4",
+        "yiisoft/yii-http": "^1.0.4",        
+        "yiisoft/yii-middleware": "^1.0.4",
         "yiisoft/yii-runner-console": "^2.2",
         "yiisoft/yii-runner-http": "^3.1",
         "yiisoft/yii-sentry": "^2.0.1",
         "yiisoft/yii-view-renderer": "^7.3",
-        "zircote/swagger-php": "^4.11.1||^5.0.6"
+        "zircote/swagger-php": "^4.11.1||^5.0.4"
     },    
     "require-dev": {
         "codeception/c3": "^2.9",
@@ -141,7 +142,7 @@
         "codeception/module-asserts": "^3.0",
         "codeception/module-cli": "^2.0.1",
         "codeception/module-phpbrowser": "^3.0.1",
-        "friendsofphp/php-cs-fixer": "^3.70.2",
+        "friendsofphp/php-cs-fixer": "^3.70.1",
         "phpunit/phpunit": ">=11.5.10",
         "roave/better-reflection": "^6.57",
         "roave/infection-static-analysis-plugin": ">=1.36",
@@ -149,7 +150,8 @@
         "spatie/phpunit-watcher": "^1.23.6||^1.24",
         "styleci/cli": "^1.5.1",
         "vimeo/psalm": "^6.8.8",
-        "yiisoft/translator-extractor": "^2.1.1"
+        "yiisoft/translator-extractor": "^2.1.1",
+        "yiisoft/yii-gii": "dev-master"
     },      
     "autoload": {
         "psr-4": {
@@ -201,11 +203,7 @@
     "repositories": [
         {
             "type": "composer",
-            "url": "https://asset-packagist.org",
-            "type": "vcs",
-            "url": "https://github.com/rossaddison/yii-cycle-1",
-            "url": "https://github.com/rossaddison/yii-gii",
-            "url": "https://github.com/rossaddison/yii-middleware"
+            "url": "https://asset-packagist.org"
         }
     ]
 }
