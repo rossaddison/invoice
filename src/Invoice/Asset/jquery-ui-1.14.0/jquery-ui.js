@@ -862,7 +862,7 @@ $.extend( Datepicker.prototype, {
 		}
 
 		isFixed = false;
-		$( $.find(input) ).parents().each( function() {
+		$( input ).parents().each( function() {
 			isFixed |= $( this ).css( "position" ) === "fixed";
 			return !isFixed;
 		} );
