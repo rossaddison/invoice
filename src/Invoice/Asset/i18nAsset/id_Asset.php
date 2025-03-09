@@ -7,6 +7,6 @@ namespace App\Invoice\Asset\i18nAsset;
 class id_Asset extends __Asset
 {
     public array $js = [
-        'jquery-ui-1.14.0/ui/i18n/datepicker-id.js',
+        'jquery-ui-1.14.1/ui/i18n/datepicker-id.js',
     ];
 }

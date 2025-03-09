@@ -17,10 +17,10 @@ class InvoiceAsset extends AssetBundle
     public array $css = [
         'invoice/css/style.css',
         'yii3i/yii3i.css',
-        // Upgraded from 1.13.3 to 1.14.0 on 2024/08/05
-        'jquery-ui-1.14.0/jquery-ui.min.css',
-        'jquery-ui-1.14.0/jquery-ui.structure.min.css',
-        'jquery-ui-1.14.0/jquery-ui.theme.min.css',
+        // Upgraded from 1.14.0 to 1.14.1 on 9th March 2025
+        'jquery-ui-1.14.1/jquery-ui.min.css',
+        'jquery-ui-1.14.1/jquery-ui.structure.min.css',
+        'jquery-ui-1.14.1/jquery-ui.theme.min.css',
 
         // bootstrapicons
         '//cdn.jsdelivr.net/npm/bootstrap-icons@1.7.2/font/bootstrap-icons.min.css',
@@ -35,7 +35,7 @@ class InvoiceAsset extends AssetBundle
 
     public array $js = [
         /**
-         * As of 13/08/2024:
+         * As of 9th March 2025:
          * Modals use the following file which is available in unminified form
          * @see e.g. https:\\code.jquery.com/jquery-4.0.0-beta.2.min.js
          * Modals use the following file which is available in minified form
@@ -61,8 +61,8 @@ class InvoiceAsset extends AssetBundle
         'rebuild/js/mailer_ajax_email_addresses.js',
         'rebuild/js/modal-product-lookups.js',
         'rebuild/js/modal-task-lookups-inv.js',
-        // Upgraded from 1.13.3 to 1.14.0 on 2024/08/05
-        'jquery-ui-1.14.0/jquery-ui.min.js',
+        // Upgraded from 1.14.0 to 1.14.1 on 9th March 2025 
+        'jquery-ui-1.14.1/jquery-ui.min.js',
 
         // bootstrap lightbox
         '//cdn.jsdelivr.net/npm/bs5-lightbox@1.8.3/dist/index.bundle.min.js',

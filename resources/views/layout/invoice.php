@@ -428,7 +428,7 @@ $this->beginPage();
                         DropdownItem::link('Jsonld  Playground for flattening Jsonld files', 'https://json-ld.org/playground/'),
                         DropdownItem::link('Converting flattened file to php array', 'https://wtools.io/convert-json-to-php-array'),    
                         DropdownItem::link('Jsonld  Playground for flattening Jsonld files', 'https://json-ld.org/playground/'),   
-                        DropdownItem::link('jQuery UI 1.13.2', 'https://github.com/jquery/jquery-ui'),    
+                        DropdownItem::link('jQuery UI 1.14.1 (9th March 2025) - Customize download - {Core => widget, keycode; Widgets => datepicker}', 'https://jqueryui.com/download/'),
                         DropdownItem::link('Using ngrok and Wampserver VirtualHosts', 'https://ngrok.com/docs/using-ngrok-with/virtualHosts/'),    
                         DropdownItem::link('Using ngrok and webhook testing', 'https://ngrok.com/use-cases/webhook-testing'),
                         DropdownItem::link('Google Oauth2 Playground', 'https://developers.google.com/oauthplayground'),
