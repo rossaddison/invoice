@@ -1074,14 +1074,14 @@ $.extend( Datepicker.prototype, {
 	_selectDay: function( id, month, year, td ) {
 		var inst,
 			target = $.find( id ),
-			$td = $( td );
+			$td = $( td ).find("a");
 
 		if ( $td.hasClass( this._unselectableClass ) || this._isDisabledDatepicker( target[ 0 ] ) ) {
 			return;
 		}
 
 		inst = this._getInst( target[ 0 ] );
-		inst.selectedDay = inst.currentDay = parseInt( $td.find( "a" ).attr( "data-date" ) );
+		inst.selectedDay = inst.currentDay = parseInt( $td.attr( "data-date" ) );
 		inst.selectedMonth = inst.currentMonth = month;
 		inst.selectedYear = inst.currentYear = year;
 		this._selectDate( id, this._formatDate( inst,
