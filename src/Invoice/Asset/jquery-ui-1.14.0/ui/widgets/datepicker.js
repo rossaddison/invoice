@@ -1027,7 +1027,7 @@ $.extend( Datepicker.prototype, {
 
 	/* Adjust one of the date sub-fields. */
 	_adjustDate: function( id, offset, period ) {
-		var target = $( id ),
+		var target = $.find( id ),
 			inst = this._getInst( target[ 0 ] );
 
 		if ( this._isDisabledDatepicker( target[ 0 ] ) ) {
@@ -1040,7 +1040,7 @@ $.extend( Datepicker.prototype, {
 	/* Action for current link. */
 	_gotoToday: function( id ) {
 		var date,
-			target = $( id ),
+			target = $.find( id ),
 			inst = this._getInst( target[ 0 ] );
 
 		if ( this._get( inst, "gotoCurrent" ) && inst.currentDay ) {
@@ -1059,7 +1059,7 @@ $.extend( Datepicker.prototype, {
 
 	/* Action for selecting a new month/year. */
 	_selectMonthYear: function( id, select, period ) {
-		var target = $( id ),
+		var target = $.find( id ),
 			inst = this._getInst( target[ 0 ] );
 
 		inst[ "selected" + ( period === "M" ? "Month" : "Year" ) ] =
