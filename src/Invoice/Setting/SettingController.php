@@ -240,6 +240,8 @@ final class SettingController
             'telegram' => $this->viewRenderer->renderPartialAsString('//invoice/setting/views/partial_settings_telegram', [
             ]),
             'bootstrap5' => $this->viewRenderer->renderPartialAsString('//invoice/setting/views/partial_settings_bootstrap5', [
+                'alertMessageFontSize' => '10',
+                'alertCloseButtonFontSize' => '10'                
             ]),
         ];
         if ($request->getMethod() === Method::POST) {

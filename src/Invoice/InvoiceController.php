@@ -100,6 +100,10 @@ final class InvoiceController
 
             'bootstrap5_offcanvas_enable' => 0,
             'bootstrap5_offcanvas_placement' => 'top',
+            'bootstrap5_alert_message_font_size' => '10',
+            'bootstrap5_alert_close_button_font_size' => '10',
+            'bootstrap5_layout_invoice_navbar_font' => 'Arial',
+            'bootstrap5_layout_invoice_navbar_font_size' => '10',
             'cron_key' => Random::string(32),
             'currency_symbol' => '£',
             'currency_symbol_placement' => 'before',

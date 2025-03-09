@@ -90,6 +90,8 @@ final readonly class LayoutViewInjection implements LayoutParametersInjectionInt
         }
         $bootstrap5OffcanvasPlacement = $this->settingRepository->getSetting('bootstrap5_offcanvas_placement') ?: 'top';
         $bootstrap5OffcanvasEnable = $this->settingRepository->getSetting('bootstrap5_offcanvas_enable') == '1' ? true : false;
+        $bootstrap5LayoutInvoiceNavbarFont = $this->settingRepository->getSetting('bootstrap5_layout_invoice_navbar_font') ?: 'Arial'; 
+        $bootstrap5LayoutInvoiceNavbarFontSize = $this->settingRepository->getSetting('bootstrap5_layout_invoice_navbar_font_size') ?: '10';       
         $stopSigningUp = $this->settingRepository->getSetting('stop_signing_up') == '1' ? true : false;
         $stopLoggingIn = $this->settingRepository->getSetting('stop_logging_in') == '1' ? true : false;
         $noFrontPageAbout = $this->settingRepository->getSetting('no_front_about_page') == '1' ? true : false;
@@ -132,6 +134,8 @@ final readonly class LayoutViewInjection implements LayoutParametersInjectionInt
         return [
             'bootstrap5OffcanvasEnable' => $bootstrap5OffcanvasEnable,
             'bootstrap5OffcanvasPlacement' => $bootstrap5OffcanvasPlacement,
+            'bootstrap5LayoutInvoiceNavbarFont' => $bootstrap5LayoutInvoiceNavbarFont,
+            'bootstrap5LayoutInvoiceNavbarFontSize' => $bootstrap5LayoutInvoiceNavbarFontSize,
             'title' => 'Home',
             'logoPath' => $logoPath,
             'buildDatabase' => $buildDatabase,

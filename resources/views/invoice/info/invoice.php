@@ -46,7 +46,11 @@
 <p>Introducing India's PayTm payment gateway's QR code method of payment and comparing this with Stripe's method.</p>
 <p>A General Sales Tax (GST) Tax System will have to be implemented first for this purpose.</p>
 <p>Testing Credit Notes against Invoices with refunds (if payment made) linked to each of the payment gateways.</p>
-<p>5 March 2025</p>
+<p><b>8 March 2025</b></p>
+<p>Include css for the invoice/inv/index.php breadcrumb courtesy from openCart into src\Invoice\Asset\invoice\css\style.css</p>
+<p>The flash alert message can be adjusted for font and font-size and the close button can be adjusted in terms of fontsize in bootstrap5 settings</p>
+<p>Codecov has been introduced as a separate workflow</p>
+<p><b>5 March 2025</b></p>
 <p>Apply breaking changes of latest yiisoft/router version 4 to config/common/di/router.php (https://github.com/yiisoft/router/pull/207)</p>
 <p>c:\wamp64\www\invoice>php vendor/bin/codecept  run</p>
 <p>Included a few additional forks which will be replaced later with updated composer.json's: 
@@ -56,7 +60,7 @@
 </p>
 <p>Compiled round 1 of Codeception Acceptance tests, similar to yiisoft/demo, at the command prompt.</p>
 <p>Use the error messages of yiisoft/validator in acceptance testing by including a new alias '@validatorCategory' in the config\common\di\translator.php</p>
-<p>3 March 2025</p>
+<p><b>3 March 2025</b></p>
 <p>Modal Layouts adjusted to reflect no 'aria-hidden' usage. Refactored yi-bootstrap/Modal has coded 'aria-hidden' issues and is not being used since these have to be suppressed with an 'inert' attribute via javascript in Chrome. i.e. modal_layout_yii_bs.php</p>
 <p>Invoices that have been marked as sent so that they appear on the customer side can be reverted to draft provided the 'disable_read_only' setting is adjusted to 1.</p>
 <p><b>22nd February 2025</b></p>

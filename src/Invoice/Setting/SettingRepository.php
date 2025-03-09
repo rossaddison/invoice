@@ -1497,7 +1497,23 @@ final class SettingRepository extends Select\Repository
             ],
             'bootstrap5_offcanvas_enable' => [
                 'why' => 'An offcanvas is useful on smaller devices such as mobile phones with the menu typically coming in from the top, bottom, left (start), or right (end).',
-                'where' => './resources/views/layout/invoice.php and src/ViewInjection/LayoutViewInjection',
+                'where' => './resources/views/layout/invoice.php and src/ViewInjection/LayoutViewInjection and src/Invoice/InvoiceController.php',
+            ],
+            'bootstrap5_offcanvas_placement' => [
+                'why' => 'The placement of the offcanvas defaults to coming in from the top.',
+                'where' => './resources/views/layout/invoice.php and src/ViewInjection/LayoutViewInjection and src/Invoice/InvoiceController.php ',
+            ],
+            'bootstrap5_alert_message_font' => [
+                'why' => 'Adjust the font of the alert message',
+                'where' => './resources/views/invoice/settings/views/partial_settings_general.php and src/Invoice/InvoiceController.php',
+            ],
+            'bootstrap5_alert_message_font_size' => [
+                'why' => 'Adjust the font size of the alert message',
+                'where' => './resources/views/invoice/settings/views/partial_settings_general.php and src/Invoice/InvoiceController.php',
+            ],
+            'bootstrap5_alert_close_button_font_size' => [
+                'why' => 'Adjust the font size of the close button i.e ❌',
+                'where' => './resources/views/invoice/settings/views/partial_settings_general.php and src/Invoice/InvoiceController.php',
             ],
             'cron_key' => [
                 'why' => 'A cron job is used on the server to automatically email recurring invoices to clients.',

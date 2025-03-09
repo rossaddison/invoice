@@ -235,6 +235,7 @@ final class InvController
             '//invoice/layout/alert',
             [
                 'flash' => $this->flash,
+                's' => $this->sR
             ]
         );
     }

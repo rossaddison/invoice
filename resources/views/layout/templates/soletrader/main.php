@@ -95,13 +95,16 @@ $this->setTitle($title);
         <?php $this->beginBody(); ?>        
         <?= NavBar::widget()
             ->addClass('navbar navbar-light bg-light navbar-expand-sm text-white')    
-            ->addAttributes([])
-            ->addClass('') 
-            ->addCssStyle(['color' => 'red', 'font-weight' => 'bold'])
+            ->addCssStyle([
+                'color' => 'red',
+                'font-family' => 'Garamond',
+                'font-weight' => 'bold'
+            ])
+            ->addAttributes([])       
             ->brandImage($logoPath)
-            ->brandImageAttributes(['margin' => $companyLogoMargin, 
-                                    'width' => $companyLogoWidth, 
-                                    'height' => $companyLogoHeight])    
+            ->brandImageAttributes(['margin' => $companyLogoMargin ?: '10', 
+                                    'width' => $companyLogoWidth ?: '100', 
+                                    'height' => $companyLogoHeight ?: '50'])    
             ->brandText(str_repeat('&nbsp;', 7).$brandLabel)
             ->brandUrl($urlGenerator->generate('site/index'))
             ->container(false) 
@@ -349,5 +352,7 @@ $this->setTitle($title);
     </html>
 <?php
 $this->endPage(true);
+
+echo "Logopath ".$logoPath;
 
 

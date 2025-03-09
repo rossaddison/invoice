@@ -64,7 +64,9 @@ use Yiisoft\Yii\Bootstrap5\OffcanvasPlacement;
  * @var bool $isGuest
  * @var bool $buildDatabase
  * @var bool $debugMode 
- * @var string $bootstrap5OffcanvasPlacement
+ * @var string $bootstrap5OffcanvasPlacement 
+ * @var string $bootstrap5LayoutInvoiceNavbarFont
+ * @var string $bootstrap5LayoutInvoiceNavbarFontSize
  * @var string $brandLabel
  * @var string $csrf
  * @var string $companyLogoHeight 
@@ -225,6 +227,10 @@ $this->beginPage();
           ->brandUrl($urlGenerator->generate('invoice/index'))
           ->container(false) 
           ->containerAttributes([]) 
+          ->addCssStyle([
+                'font-size' => $bootstrap5LayoutInvoiceNavbarFontSize, 
+                'font-family' => $bootstrap5LayoutInvoiceNavbarFont, 
+          ])      
           ->id('navbar')
           ->begin();
         

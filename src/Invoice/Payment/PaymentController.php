@@ -245,20 +245,12 @@ final class PaymentController
             $arrayCustom = $array['custom'];
             /**
              * @var array $custom
-             * @var string $custom['name']
              */
             foreach ($arrayCustom as $custom) {
-                if (preg_match("/^(.*)\[\]$/i", $custom['name'], $matches)) {
-                    /**
-                     * @var string $custom['value']
-                     */
-                    $values[$matches[1]][] = $custom['value'] ;
+                if (preg_match("/^(.*)\[\]$/i", (string)$custom['name'], $matches)) {
+                    $values[$matches[1]][] = (string)$custom['value'] ;
                 } else {
-                    /**
-                     * @var string $custom['value']
-                     * @var string $custom['name']
-                     */
-                    $values[$custom['name']] = $custom['value'];
+                    $values[(string)$custom['name']] = (string)$custom['value'];
                 }
             }
             /**

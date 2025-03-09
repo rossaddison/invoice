@@ -5,15 +5,19 @@ declare(strict_types=1);
 use Stringable;
 use Yiisoft\Yii\Bootstrap5\Alert;
 use Yiisoft\Yii\Bootstrap5\AlertVariant;
-use Yiisoft\Html\Tag\Body;
 
 /**
  * @var Yiisoft\Session\Flash\Flash $flash
+ * @var App\Invoice\Setting\SettingRepository $s
  */
 
 ?>
 
 <?php
+
+$alertMessageFont = $s->getSetting('bootstrap5_alert_message_font') ?: 'Arial';
+$alertMessageFontSize = $s->getSetting('bootstrap5_alert_message_font_size') ?: '16';
+$alertCloseButtonFontSize = $s->getSetting('bootstrap5_alert_close_button_font_size') ?: '10';
 
 $danger =  AlertVariant::DANGER;
 $info = AlertVariant::INFO;
@@ -48,6 +52,13 @@ foreach ($flash->getAll() as $key => $value) {
             };
             $alert = Alert::widget()
                      ->addClass('shadow')
+                     ->addCssStyle([
+                         'font-size' => $alertMessageFontSize . 'px',
+                         'font-family' =>  $alertMessageFont, 
+                     ]) 
+                     ->addClass('btn-flash-message-close')
+                     ->closeButtonTag('button')
+                     ->closeButtonAttributes(['style' => 'font-size:'. $alertCloseButtonFontSize. 'px'])
                      ->variant($matchedKey)
                      // do not html encode since not user-generted code.
                      ->body($body, false)
