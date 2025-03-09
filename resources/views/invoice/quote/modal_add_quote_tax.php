@@ -1,17 +1,17 @@
 <?php
-  declare(strict_types=1); 
-  
-  use Yiisoft\Html\Html;
-  
-  /**
-   * @see views/quote/view.php line 67: id="add-quote-tax" triggered by 
-   *      <a href="#add-quote-tax" data-bs-toggle="modal"  style="text-decoration:none">
-   * @var App\Invoice\Helpers\NumberHelper $numberHelper
-   * @var App\Invoice\Setting\SettingRepository $s
-   * @var Yiisoft\Translator\TranslatorInterface $translator
-   * @var array $taxRates
-   * @var string $csrf
-   */
+declare(strict_types=1);
+
+use Yiisoft\Html\Html;
+
+/**
+ * @see views/quote/view.php line 67: id="add-quote-tax" triggered by
+ *      <a href="#add-quote-tax" data-bs-toggle="modal"  style="text-decoration:none">
+ * @var App\Invoice\Helpers\NumberHelper $numberHelper
+ * @var App\Invoice\Setting\SettingRepository $s
+ * @var Yiisoft\Translator\TranslatorInterface $translator
+ * @var array $taxRates
+ * @var string $csrf
+ */
 ?>
 
 <div id="add-quote-tax" class="modal" tabindex="-1">
@@ -30,19 +30,19 @@
                         </label>
                         <div>
                             <select name="tax_rate_id" id="tax_rate_id" class="form-control" required>
-                                <?php 
+                                <?php
                                     /**
                                      * @var App\Invoice\Entity\TaxRate $taxRate
                                      */
                                     foreach ($taxRates as $taxRate) { ?>
                                     <option value="<?= $taxRate->getTaxRateId(); ?>">
                                         <?= $percent = $numberHelper->format_amount($taxRate->getTaxRatePercent());
-                                            $name = Html::encode($taxRate->getTaxRateName());
-                                            if ($percent >= 0.00 && null!==$percent && strlen($name) > 0) {
-                                                $percent . '% - ' . $name;
-                                            } else {
-                                                '#%';
-                                            } ?>
+                                        $name = Html::encode($taxRate->getTaxRateName());
+                                        if ($percent >= 0.00 && null !== $percent && strlen($name) > 0) {
+                                            $percent . '% - ' . $name;
+                                        } else {
+                                            '#%';
+                                        } ?>
                                     </option>
                                 <?php } ?>
                             </select>

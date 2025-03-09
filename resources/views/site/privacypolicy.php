@@ -1,15 +1,15 @@
 <?php
 
-    declare(strict_types=1);
-    
-   /**
-    * @link  Acknowledgement to free privacy policy from https://app.termsfeed.com/download/5c29cd91-10a4-411c-89d4-27645ae65632
-    * 
-    * @var string $companyEmail
-    * @var string $companyName
-    * @var string $companyState
-    * @var string $companyWeb
-    */
+declare(strict_types=1);
+
+/**
+ * @link  Acknowledgement to free privacy policy from https://app.termsfeed.com/download/5c29cd91-10a4-411c-89d4-27645ae65632
+ *
+ * @var string $companyEmail
+ * @var string $companyName
+ * @var string $companyState
+ * @var string $companyWeb
+ */
 ?>
 <h1>Privacy Policy</h1>
 <p>Last updated: December 25, 2024</p>

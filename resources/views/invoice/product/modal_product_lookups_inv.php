@@ -69,19 +69,19 @@ use Yiisoft\Html\Tag\Button;
                                 </button>            
                         </div>
                         <div id="product-lookup-table">
-                            <?php  
+                            <?php
                                echo $partial_product_table_modal
-                            ?>     
+?>     
                         </div>
                     </div>
                     <div class="modal-footer">
-                    <?php    
+                    <?php
                         echo Button::tag()
                         ->addClass('btn btn-danger')
                         ->content($translator->translate('i.close'))
                         ->addAttributes(['data-bs-dismiss' => 'modal'])
                         ->render();
-                    ?>    
+?>    
                     </div>
                 </form>    
             </div>

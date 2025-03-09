@@ -21,7 +21,7 @@ echo $alert;
             <input type="hidden" name="_csrf" value="<?= $csrf; ?>">
             <div class="input-group" hidden>
                 <label for="invoice_number"><?= $translator->translate('i.invoice_number'); ?></label>
-                <input name="invoice_number" id="invoice_number" type="text" class="form-control input-sm" value="<?php $body['invoice_number'] ?? '#'; ?>">
+                <input name="invoice_number" id="invoice_number" type="text" class="form-control" value="<?php $body['invoice_number'] ?? '#'; ?>">
                 <span class="input-group-btn">
                     <button class="btn btn-primary btn-sm" type="submit"><?= $translator->translate('i.filter_invoices'); ?></button>
                 </span>

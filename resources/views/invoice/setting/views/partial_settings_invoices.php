@@ -1,20 +1,20 @@
 <?php
-    declare(strict_types=1);
-    
-    /**
-     * @var App\Invoice\Setting\SettingRepository $s 
-     * @var Yiisoft\Translator\TranslatorInterface $translator
-     * @var array $body
-     * @var array $invoice_groups
-     * @var array $payment_methods
-     * @var array $pdf_invoice_templates
-     * @var array $public_invoice_templates
-     * @var array $public_pdf_templates
-     * @var array $email_templates_invoice
-     * @var array $roles
-     * @var array $places
-     * @var array $cantons
-     */
+declare(strict_types=1);
+
+/**
+ * @var App\Invoice\Setting\SettingRepository $s
+ * @var Yiisoft\Translator\TranslatorInterface $translator
+ * @var array $body
+ * @var array $invoice_groups
+ * @var array $payment_methods
+ * @var array $pdf_invoice_templates
+ * @var array $public_invoice_templates
+ * @var array $public_pdf_templates
+ * @var array $email_templates_invoice
+ * @var array $roles
+ * @var array $places
+ * @var array $cantons
+ */
 ?>
 <div class="row">
     <div class="col-xs-12 col-md-8 col-md-offset-2">
@@ -244,7 +244,7 @@
                             <select name="settings[pdf_invoice_template]" id="settings[pdf_invoice_template]"
                                 class="form-control">
                                 <option value=""><?= $translator->translate('i.none'); ?></option>
-                                <?php 
+                                <?php
                                     /**
                                      * @var string $invoice_template
                                      */
@@ -523,11 +523,11 @@
                                 class="form-control">
                                 <?php
                                 $slipTypes = array("esr9", "esrRed");
-                                /**
-                                 * @var string $k
-                                 * @var string $v
-                                 */
-                                foreach ($slipTypes as $k => $v): ?>
+/**
+ * @var string $k
+ * @var string $v
+ */
+foreach ($slipTypes as $k => $v): ?>
                                     <option value="<?= $k; ?>" <?php $s->check_select($body['settings[sumex_sliptype]'], $k) ?>>
                                         <?= $translator->translate('i.invoice_sumex_sliptype-' . $v); ?>
                                     </option>
@@ -545,11 +545,11 @@
                             <select name="settings[sumex_role]" id="settings[sumex_role]"
                                 class="form-control">
                                 <?php
-                                    /**
-                                     * @var string $k
-                                     * @var string $v
-                                     */
-                                    foreach ($roles as $k => $v): ?>
+    /**
+     * @var string $k
+     * @var string $v
+     */
+    foreach ($roles as $k => $v): ?>
                                     <option value="<?= $k; ?>" <?php $s->check_select($body['settings[sumex_role]'], $k) ?>>
                                         <?= $translator->translate('i.invoice_sumex_role_' . $v); ?>
                                     </option>
@@ -565,11 +565,11 @@
                             <select name="settings[sumex_place]" id="settings[sumex_place]"
                                 class="form-control">
                                 <?php
-                                    /**
-                                     * @var string $k
-                                     * @var string $v
-                                     */
-                                    foreach ($places as $k => $v): ?>
+    /**
+     * @var string $k
+     * @var string $v
+     */
+    foreach ($places as $k => $v): ?>
                                     <option value="<?= $k; ?>" <?php $s->check_select($body['settings[sumex_place]'], $k); ?>>
                                         <?= $translator->translate('i.invoice_sumex_place_' . $v); ?>
                                     </option>
@@ -585,11 +585,11 @@
                             <select name="settings[sumex_canton]" id="settings[sumex_canton]"
                                 class="form-control">
                                 <?php
-                                    /**
-                                     * @var string $k
-                                     * @var string $v
-                                     */
-                                    foreach ($cantons as $k => $v): ?>
+    /**
+     * @var string $k
+     * @var string $v
+     */
+    foreach ($cantons as $k => $v): ?>
                                     <option value="<?= $k; ?>" <?php $s->check_select($body['settings[sumex_canton]'], $k); ?>>
                                         <?= $v; ?>
                                     </option>

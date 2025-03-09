@@ -51,7 +51,7 @@ final readonly class ClientService
         isset($body['client_veka']) ? $model->setClient_veka((string)$body['client_veka']) : '';
 
         $datetime = new \DateTime();
-        isset($body['client_birthdate']) ? $model->setClient_birthdate($datetime::createFromFormat($datehelper->style(), (string)$body['client_birthdate']) ?: $datetime) : '';
+        isset($body['client_birthdate']) ? $model->setClient_birthdate($datetime::createFromFormat('Y-m-d', (string)$body['client_birthdate']) ?: $datetime) : '';
 
         isset($body['client_age']) ? $model->setClient_age((int)$body['client_age']) : '';
         isset($body['client_gender']) ? $model->setClient_gender((int)$body['client_gender']) : '';

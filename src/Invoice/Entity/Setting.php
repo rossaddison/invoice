@@ -14,8 +14,8 @@ class Setting
     private ?int $id = null;
 
     public function __construct(#[Column(type: 'string(50)')]
-    private string $setting_key = '', #[Column(type: 'string(191)')]
-    private string $setting_value = '')
+        private string $setting_key = '', #[Column(type: 'string(191)')]
+        private string $setting_value = '')
     {
     }
 

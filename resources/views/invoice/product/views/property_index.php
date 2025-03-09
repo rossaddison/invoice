@@ -27,11 +27,13 @@ use Yiisoft\Html\Html;
     /**
      * @var App\Invoice\Entity\ProductProperty $productProperty
      */
-    foreach ($all as $productProperty) { 
-            $productPropertyArguments = ['id' => $productProperty->getProperty_id(), '_language' => $language]; 
+    foreach ($all as $productProperty) {
+        $productPropertyArguments = ['id' => $productProperty->getProperty_id(), '_language' => $language];
         echo Html::openTag('td');
-        echo Html::a($productProperty->getName() ?? '#', $urlGenerator->generate('productproperty/view',
-            $productPropertyArguments));
+        echo Html::a($productProperty->getName() ?? '#', $urlGenerator->generate(
+            'productproperty/view',
+            $productPropertyArguments
+        ));
         echo Html::closeTag('td');
         echo Html::openTag('td');
         echo $productProperty->getValue();

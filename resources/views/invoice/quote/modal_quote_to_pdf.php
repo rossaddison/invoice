@@ -3,7 +3,7 @@
 declare(strict_types=1);
 
 /**
- * @see id="quote-to-pdf" triggered by <a href="#quote-to-pdf" data-bs-toggle="modal"  style="text-decoration:none">  
+ * @see id="quote-to-pdf" triggered by <a href="#quote-to-pdf" data-bs-toggle="modal"  style="text-decoration:none">
  * @see views/quote/view.php
  * @var App\Invoice\Entity\Quote $quote
  * @var Yiisoft\Translator\TranslatorInterface $translator

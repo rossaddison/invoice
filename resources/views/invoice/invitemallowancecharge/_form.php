@@ -23,12 +23,12 @@ use Yiisoft\Html\Tag\Form;
  */
 ?>
 
-<?= Html::openTag('div',['class'=>'container py-5 h-100']); ?>
-<?= Html::openTag('div',['class'=>'row d-flex justify-content-center align-items-center h-100']); ?>
-<?= Html::openTag('div',['class'=>'col-12 col-md-8 col-lg-6 col-xl-8']); ?>
-<?= Html::openTag('div',['class'=>'card border border-dark shadow-2-strong rounded-3']); ?>
-<?= Html::openTag('div',['class'=>'card-header']); ?>
-<?= Html::openTag('h1',['class'=>'fw-normal h3 text-center']); ?>
+<?= Html::openTag('div', ['class' => 'container py-5 h-100']); ?>
+<?= Html::openTag('div', ['class' => 'row d-flex justify-content-center align-items-center h-100']); ?>
+<?= Html::openTag('div', ['class' => 'col-12 col-md-8 col-lg-6 col-xl-8']); ?>
+<?= Html::openTag('div', ['class' => 'card border border-dark shadow-2-strong rounded-3']); ?>
+<?= Html::openTag('div', ['class' => 'card-header']); ?>
+<?= Html::openTag('h1', ['class' => 'fw-normal h3 text-center']); ?>
 <?= Form::tag()
     ->post($urlGenerator->generate($actionName, $actionArguments))
     ->enctypeMultipartFormData()
@@ -44,37 +44,36 @@ use Yiisoft\Html\Tag\Form;
 <?= Html::closeTag('div'); ?>
 <?= Html::openTag('div', ['id' => 'content']); ?>
     <?= Html::openTag('div', ['class' => 'input-group']); ?>
-        <?php 
+        <?php
             $optionsDataAllowanceCharge = [];
-            /**
-             * @var App\Invoice\Entity\AllowanceCharge $allowance_charge
-             */
-            foreach ($allowance_charges as $allowance_charge) 
-            {
-                $optionsDataAllowanceCharge[$allowance_charge->getId()] =
-                ($allowance_charge->getIdentifier() 
-                ? $translator->translate('invoice.invoice.allowance.or.charge.charge')
-                : $translator->translate('invoice.invoice.allowance.or.charge.allowance')) 
-                . ' ' . ($allowance_charge->getReason())
-                . ' ' . ($allowance_charge->getReasonCode())
-                . ' '. ($allowance_charge->getTaxRate()?->getTaxRateName() ?? '')
-                . ' ' . ($translator->translate('invoice.invoice.allowance.or.charge.allowance'));        
-            }
-        ?>
+/**
+ * @var App\Invoice\Entity\AllowanceCharge $allowance_charge
+ */
+foreach ($allowance_charges as $allowance_charge) {
+    $optionsDataAllowanceCharge[$allowance_charge->getId()] =
+    ($allowance_charge->getIdentifier()
+    ? $translator->translate('invoice.invoice.allowance.or.charge.charge')
+    : $translator->translate('invoice.invoice.allowance.or.charge.allowance'))
+    . ' ' . ($allowance_charge->getReason())
+    . ' ' . ($allowance_charge->getReasonCode())
+    . ' '. ($allowance_charge->getTaxRate()?->getTaxRateName() ?? '')
+    . ' ' . ($translator->translate('invoice.invoice.allowance.or.charge.allowance'));
+}
+?>
         <?= Field::select($form, 'allowance_charge_id')
-            ->label($translator->translate('invoice.invoice.allowance.or.charge.item') )    
-            ->addInputAttributes(['class' => 'form-control'])
-            ->optionsData($optionsDataAllowanceCharge)
-            ->value($form->getAllowance_charge_id())                
-            ->prompt($translator->translate('i.none'))    
-            ->hint($translator->translate('invoice.hint.this.field.is.required'));    
-        ?>
+    ->label($translator->translate('invoice.invoice.allowance.or.charge.item'))
+    ->addInputAttributes(['class' => 'form-control'])
+    ->optionsData($optionsDataAllowanceCharge)
+    ->value($form->getAllowance_charge_id())
+    ->prompt($translator->translate('i.none'))
+    ->hint($translator->translate('invoice.hint.this.field.is.required'));
+?>
         <?= Field::text($form, 'amount')
-            ->label($translator->translate('i.amount').'('.$s->getSetting('currency_symbol').')')
-            ->addInputAttributes(['class' => 'form-control'])    
-            ->value($s->format_amount($form->getAmount() ?? 0.00))    
-            ->hint($translator->translate('invoice.hint.this.field.is.required'));
-        ?>
+    ->label($translator->translate('i.amount').'('.$s->getSetting('currency_symbol').')')
+    ->addInputAttributes(['class' => 'form-control'])
+    ->value($s->format_amount($form->getAmount() ?? 0.00))
+    ->hint($translator->translate('invoice.hint.this.field.is.required'));
+?>
     <?= Html::closeTag('div'); ?>
 <?= Html::closeTag('div'); ?> 
 

@@ -14,7 +14,7 @@ class Family
     public ?int $id = null;
 
     public function __construct(#[Column(type: 'text', nullable: true)]
-    public ?string $family_name = '')
+        public ?string $family_name = '')
     {
     }
 

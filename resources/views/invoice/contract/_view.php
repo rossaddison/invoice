@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=1); 
+declare(strict_types=1);
 
 use Yiisoft\FormModel\Field;
 use Yiisoft\Html\Html;
@@ -35,10 +35,10 @@ use Yiisoft\Html\Tag\Form;
 <?= Field::text($form, 'name')->readonly(true);?>
 <?= Field::text($form, 'period_start')
     ->value(
-        Html::encode(Html::encode($form->getPeriod_start()->format($dateHelper->style())))    
+        Html::encode(Html::encode($form->getPeriod_start()->format('Y-m-d')))
     )->readonly(true);?>
 <?= Field::text($form, 'period_end')
     ->value(
-        Html::encode(Html::encode($form->getPeriod_end()->format($dateHelper->style())))    
+        Html::encode(Html::encode($form->getPeriod_end()->format('Y-m-d')))
     )->readonly(true);?>
 

@@ -12,7 +12,6 @@ use App\Invoice\Entity\CompanyPrivate;
 use App\Invoice\Company\CompanyRepository;
 use App\Invoice\Setting\SettingRepository;
 use App\Invoice\CompanyPrivate\CompanyPrivateRepository;
-use App\Invoice\Helpers\DateHelper;
 // Yiisoft
 use Yiisoft\Translator\TranslatorInterface as Translator;
 use Yiisoft\User\CurrentUser;
@@ -118,19 +117,6 @@ final readonly class LayoutViewInjection implements LayoutParametersInjectionInt
         $userLogin = (null !== $user ? $user->getLogin() : null);
         // Show the default logo if the logo applicable dates have expired under CompanyPrivate
         $logoPath = ((isset($companyLogoFileName) && !empty($companyLogoFileName)) ? '/logo/' . $companyLogoFileName : '/site/logo.png');
-        // https://api.jqueryui.com/datepicker
-        $dateHelper = new DateHelper($this->settingRepository);
-        $javascriptJqueryDateHelper = '$(function () {' .
-          '$(".form-control.input-sm.datepicker").datepicker({dateFormat:"' . $dateHelper->datepicker_dateFormat()
-          . '", firstDay:' . $dateHelper->datepicker_firstDay()
-          . ', changeMonth: true'
-          . ', changeYear: true'
-          . ', yearRange: "-110:+10"'
-          . ', clickInput: true'
-          . ', constrainInput: false'
-          . ', highlightWeek: true'
-          . ' });' .
-          '});';
         return [
             'bootstrap5OffcanvasEnable' => $bootstrap5OffcanvasEnable,
             'bootstrap5OffcanvasPlacement' => $bootstrap5OffcanvasPlacement,
@@ -171,7 +157,6 @@ final readonly class LayoutViewInjection implements LayoutParametersInjectionInt
             'companyLogoWidth' => $companyLogoWidth ?? '',
             'companyLogoHeight' => $companyLogoHeight ?? '',
             'companyLogoMargin' => $companyLogoMargin ?? '',
-            'javascriptJqueryDateHelper' => $javascriptJqueryDateHelper,
             /**
              * @see Use the repository name to build a quick link to scrutinizer php and javascript code checks
              * in invoice/layout under debug mode

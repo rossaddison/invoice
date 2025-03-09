@@ -1,4 +1,5 @@
 <?php
+
 return [
 'g.online_payment' => 'Онлайн платеж',
 'g.online_payments' => 'Онлайн-платежи',
@@ -812,7 +813,7 @@ return [
 'i.user_subscriber_number' => 'Номер абонента',
 'i.validator_fail' => 'Невозможно обработать поле %s: %s',
 'i.true' => 'Истинный',
-'i.false' => 'ЛОЖЬ',   
+'i.false' => 'ЛОЖЬ',
 'invoice.add' => 'Добавлять',
 'invoice.archive' => 'Архив счетов',
 'invoice.back' => 'Назад',
@@ -1696,7 +1697,7 @@ return [
 'site.soletrader.contact.address' => 'Адрес',
 'site.soletrader.contact.email' => 'Электронная почта',
 'site.soletrader.contact.phone' => 'Телефон',
-'site.todays.date' => 'Сегодняшняя дата',   
+'site.todays.date' => 'Сегодняшняя дата',
 'validator.invalid.login.password' => 'Неправильный логин или пароль',
 'validator.password.not.match' => 'Пароли не совпадают',
 'validator.password.not.match.new' => 'Ваши новые пароли не совпадают',
@@ -1708,7 +1709,7 @@ return [
 'view.contact.form.email' => 'Электронная почта',
 'view.contact.form.subject' => 'Предмет',
 'view.contact.form.body' => 'Тело',
-//added 17/02/2025    
+//added 17/02/2025
 'i.email_template_type' => 'Тип шаблона электронной почты',
 'gateway.online.payment' => 'Онлайн-платеж',
 'invoice.client.has.not.assigned' => 'Эти клиенты не были назначены на учетную запись пользователя. Один или несколько клиентов на учетную запись пользователя.',
@@ -1806,5 +1807,5 @@ return [
 'menu.gallery' => 'Галерея',
 'menu.privacy.policy' => 'политика конфиденциальности',
 'menu.terms.of.service' => 'Условия обслуживания',
-'password.reset.request.token' => 'Запросить токен сброса пароля',    
+'password.reset.request.token' => 'Запросить токен сброса пароля',
 ];

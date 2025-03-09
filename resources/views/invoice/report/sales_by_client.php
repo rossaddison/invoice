@@ -8,16 +8,16 @@ use Yiisoft\Html\Html;
  * @var App\Invoice\Helpers\NumberHelper $numberHelper
  * @var Yiisoft\Assets\AssetManager $assetManager
  * @var Yiisoft\Translator\TranslatorInterface $translator
- * @var Yiisoft\View\WebView $this 
+ * @var Yiisoft\View\WebView $this
  * @var string $from_date
- * @var string $to_date 
+ * @var string $to_date
  * @var array $results
  * @var array $result
  * @var string $result['sales_no_tax']
  * @var string $result['item_tax_total']
  * @var string $result['tax_total']
  * @var string $result['sales_with_tax']
- * 
+ *
  */
 
 $assetManager->register(ReportAsset::class);

@@ -367,7 +367,7 @@ final class PaymentInformationController
                     // Get additional invoice information
                     $payment_method_for_this_invoice = $pmR->repoPaymentMethodquery((string)$invoice->getPayment_method());
                     if (null !== $payment_method_for_this_invoice) {
-                        $is_overdue = ($balance > 0.00 && strtotime($invoice->getDate_due()->format($datehelper->style())) < time() ? true : false);
+                        $is_overdue = ($balance > 0.00 && strtotime($invoice->getDate_due()->format('Y-m-d')) < time() ? true : false);
                         // Omnipay versions: 1. Stripe
                         if ($this->sR->getSetting('gateway_' . $d . '_version') === '1') {
                             // Setup Stripe omnipay if enabled
@@ -445,7 +445,7 @@ final class PaymentInformationController
                         } // $balance
                     } //null!==$payment_method_for_this_invoice
                 } //null!==$invoice_amount_record
-                 //!$invoice else line 319
+                //!$invoice else line 319
             } //null!==$url_key line 312
         } //null!==$client_chosen_gateway line 310
         return $this->webService->getNotFoundResponse();

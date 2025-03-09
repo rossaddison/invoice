@@ -9,7 +9,7 @@ use Yiisoft\Yii\DataView\Field\DataField;
 
 /**
  * @see https://github.com/yiisoft/yii-dataview/blob/master/tests/DetailView/Bootstrap5Test.php
- * @var App\User\User $item  
+ * @var App\User\User $item
  * @var Yiisoft\Translator\TranslatorInterface $translator
  * @var Yiisoft\View\WebView $this
  */
@@ -26,17 +26,20 @@ $title = Html::encode($this->getTitle());
     ->header(H2::tag()->class('text-center')->content("<strong>$title</strong>")->encode(false)->render())
     ->fields(
         new DataField(
-            name: 'id', 
-            label: 'ID', 
-            value: $item->getId()),
+            name: 'id',
+            label: 'ID',
+            value: $item->getId()
+        ),
         new DataField(
-            name: 'login', 
-            label: $translator->translate('gridview.login'), 
-            value: $item->getLogin()),
+            name: 'login',
+            label: $translator->translate('gridview.login'),
+            value: $item->getLogin()
+        ),
         new DataField(
             name: 'create_at',
             label: $translator->translate('gridview.create.at'),
-            value: $item->getCreatedAt()->format('H:i:s d.m.Y')),
+            value: $item->getCreatedAt()->format('H:i:s d.m.Y')
+        ),
     )
     ->labelAttributes(['class' => 'fw-bold'])
     ->valueAttributes(['class' => 'alert alert-info']);

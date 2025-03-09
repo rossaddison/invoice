@@ -1,15 +1,15 @@
 <?php
-    declare(strict_types=1);
-    
-    /**
-     * @var App\Invoice\Setting\SettingRepository $s 
-     * @var Yiisoft\Translator\TranslatorInterface $translator
-     * @var array $body
-     * @var array $invoice_groups
-     * @var array $public_quote_templates
-     * @var array $pdf_quote_templates
-     * @var array $email_templates_quote
-     */
+declare(strict_types=1);
+
+/**
+ * @var App\Invoice\Setting\SettingRepository $s
+ * @var Yiisoft\Translator\TranslatorInterface $translator
+ * @var array $body
+ * @var array $invoice_groups
+ * @var array $public_quote_templates
+ * @var array $pdf_quote_templates
+ * @var array $email_templates_quote
+ */
 ?>
 <div class='row'>
     <div class="col-xs-12 col-md-8 col-md-offset-2">

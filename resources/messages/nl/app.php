@@ -1701,7 +1701,7 @@ return [
 'site.soletrader.contact.address' => 'Adres',
 'site.soletrader.contact.email' => 'E-mail',
 'site.soletrader.contact.phone' => 'Telefoon',
-'site.todays.date' => 'De datum van vandaag',    
+'site.todays.date' => 'De datum van vandaag',
 'validator.invalid.login.password' => 'Ongeldige login of wachtwoord',
 'validator.password.not.match' => 'Wachtwoorden komen niet overeen',
 'validator.password.not.match.new' => 'Uw nieuwe wachtwoorden komen niet overeen',
@@ -1809,5 +1809,5 @@ return [
 'menu.gallery' => 'Galerij',
 'menu.privacy.policy' => 'Privacybeleid',
 'menu.terms.of.service' => 'Servicevoorwaarden',
-'password.reset.request.token' => 'Vraag wachtwoord reset token aan'    
+'password.reset.request.token' => 'Vraag wachtwoord reset token aan'
 ];

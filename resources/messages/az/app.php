@@ -79,7 +79,7 @@ return [
 'g.online_payment_payment_failed' => 'Ödəniş alınmadı. Zəhmət olmasa bir daha cəhd edin.',
 'g.online_payment_payment_successful' => '%s faktura üçün ödəniş uğurlu oldu!',
 'g.online_payment_payment_redirect' => 'Sizi ödəniş səhifəsinə yönləndirənədək gözləyin...',
-'g.online_payment_3dauth_redirect' => 'Doğrulama üçün sizi kart emitentinizə yönləndirənədək gözləyin...',    
+'g.online_payment_3dauth_redirect' => 'Doğrulama üçün sizi kart emitentinizə yönləndirənədək gözləyin...',
 'i.account_information' => 'Hesab Məlumatı',
 'i.active' => 'Aktiv',
 'i.active_client' => 'Aktiv',
@@ -815,7 +815,7 @@ return [
 'i.user_subscriber_number' => 'Abunəçi nömrəsi',
 'i.validator_fail' => '%s sahəsini emal etmək mümkün deyil: %s',
 'i.true' => 'Doğru',
-'i.false' => 'Yalan',    
+'i.false' => 'Yalan',
 'invoice.add' => 'əlavə et',
 'invoice.archive' => 'Faktura Arxivi',
 'invoice.back' => 'Geri',
@@ -1701,7 +1701,7 @@ return [
 'site.soletrader.contact.address' => 'Ünvan',
 'site.soletrader.contact.email' => 'E-poçt',
 'site.soletrader.contact.phone' => 'Telefon',
-'site.todays.date' => 'Bugünkü tarix',    
+'site.todays.date' => 'Bugünkü tarix',
 'validator.invalid.login.password' => 'Yanlış giriş və ya parol',
 'validator.password.not.match' => 'Parollar uyğun gəlmir',
 'validator.password.not.match.new' => 'Yeni parollarınız uyğun gəlmir',
@@ -1713,7 +1713,7 @@ return [
 'view.contact.form.email' => 'E-poçt',
 'view.contact.form.subject' => 'Mövzu',
 'view.contact.form.body' => 'Bədən',
-// added 17/02/2025    
+// added 17/02/2025
 'i.email_template_type' => 'E-poçt Şablon Növü',
 'gateway.online.payment' => 'Onlayn Ödəniş',
 'invoice.client.has.not.assigned' => 'Bu müştərilər istifadəçi hesabına təyin edilməyib. Hər istifadəçi hesabı üçün bir və ya daha çox müştəri.',
@@ -1809,5 +1809,5 @@ return [
 'menu.gallery' => 'Qalereya',
 'menu.privacy.policy' => 'Məxfilik Siyasəti',
 'menu.terms.of.service' => 'Xidmət Şərtləri',
-'password.reset.request.token' => 'Parol Sıfırlama Tokenini tələb edin'    
+'password.reset.request.token' => 'Parol Sıfırlama Tokenini tələb edin'
 ];

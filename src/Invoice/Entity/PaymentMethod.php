@@ -11,8 +11,8 @@ use Cycle\Annotated\Annotation\Entity;
 class PaymentMethod
 {
     public function __construct(#[Column(type: 'primary')]
-    private ?int $id = null, #[Column(type: 'text', nullable: true)]
-    private ?string $name = '')
+        private ?int $id = null, #[Column(type: 'text', nullable: true)]
+        private ?string $name = '')
     {
     }
 

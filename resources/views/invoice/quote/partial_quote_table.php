@@ -6,7 +6,7 @@ use Yiisoft\Html\Html;
 
 /**
  * @see App\Invoice\Client\ClientController function view
- * 
+ *
  * @var App\Invoice\Helpers\DateHelper $dateHelper
  * @var App\Invoice\Helpers\ClientHelper $clientHelper
  * @var App\Invoice\Quote\QuoteRepository $qR
@@ -23,7 +23,7 @@ use Yiisoft\Html\Html;
  * @psalm-var array<string, Stringable|null|scalar> $actionPdfArguments
  * @psalm-var array<string, Stringable|null|scalar> $actionClientViewArguments
  * @psalm-var array<string, Stringable|null|scalar> $actionViewArguments
- */ 
+ */
 ?>
 
 <div class="table-responsive">
@@ -44,20 +44,20 @@ use Yiisoft\Html\Html;
         <tbody>
         <?php
         $quote_idx = 1;
-        $quote_list_split = $quote_count > 3 ? $quote_count / 2 : 9999;
+$quote_list_split = $quote_count > 3 ? $quote_count / 2 : 9999;
 
-        /**
-         * @var App\Invoice\Entity\Quote $quote
-         */
-        foreach ($quotes as $quote) {
-            // Convert the dropdown menu to a dropup if quote is after the invoice split
-            $dropup = $quote_idx > $quote_list_split ? true : false;
-            $actionDeleteArguments = ['_language' => (string)$session->get('_language'), 'id'=> $quote->getId()];
-            $actionEmailArguments = ['_language' => (string)$session->get('_language'), 'id'=> $quote->getId()];
-            $actionPdfArguments = ['_language' => (string)$session->get('_language'), 'include'=> true, 'quote_id' => $quote->getId()];
-            $actionClientViewArguments = ['_language' => (string)$session->get('_language'), 'id'=>$quote->getClient_id()];
-            $actionViewArguments = ['_language' => (string)$session->get('_language'), 'id'=>$quote->getId()];
-            ?>
+/**
+ * @var App\Invoice\Entity\Quote $quote
+ */
+foreach ($quotes as $quote) {
+    // Convert the dropdown menu to a dropup if quote is after the invoice split
+    $dropup = $quote_idx > $quote_list_split ? true : false;
+    $actionDeleteArguments = ['_language' => (string)$session->get('_language'), 'id' => $quote->getId()];
+    $actionEmailArguments = ['_language' => (string)$session->get('_language'), 'id' => $quote->getId()];
+    $actionPdfArguments = ['_language' => (string)$session->get('_language'), 'include' => true, 'quote_id' => $quote->getId()];
+    $actionClientViewArguments = ['_language' => (string)$session->get('_language'), 'id' => $quote->getClient_id()];
+    $actionViewArguments = ['_language' => (string)$session->get('_language'), 'id' => $quote->getId()];
+    ?>
             <tr>
                 <td>
                     <span class="label <?= $qR->getSpecificStatusArrayClass((string)$quote->getStatus_id()); ?>">
@@ -67,14 +67,14 @@ use Yiisoft\Html\Html;
                 <td>
                     <a href="<?= $urlGenerator->generate('quote/view', $actionViewArguments); ?>"
                        title="<?= $translator->translate('i.edit'); ?>" style="text-decoration:none">
-                        <?=(null!==($quote->getNumber()) ? $quote->getNumber() : $quote->getId()); ?>
+                        <?=(null !== ($quote->getNumber()) ? $quote->getNumber() : $quote->getId()); ?>
                     </a>
                 </td>
                 <td>
-                    <?= $quote->getDate_created()->format($dateHelper->style()); ?>
+                    <?= $quote->getDate_created()->format('Y-m-d'); ?>
                 </td>
                 <td>
-                    <?= $quote->getDate_expires()->format($dateHelper->style()); ?>
+                    <?= $quote->getDate_expires()->format('Y-m-d'); ?>
                 </td>
                 <td>
                     <a href="<?= $urlGenerator->generate('client/view', $actionClientViewArguments); ?>"
@@ -84,7 +84,7 @@ use Yiisoft\Html\Html;
                 </td>
                 <td style="text-align: right; padding-right: 25px;">
                     <?php $quote_amount = (($qaR->repoQuoteAmountCount((string)$quote->getId()) > 0) ? $qaR->repoQuotequery((string)$quote->getId()) : null) ?>
-                    <?= $s->format_currency(null!==$quote_amount ? $quote_amount->getTotal() : 0.00) ?>
+                    <?= $s->format_currency(null !== $quote_amount ? $quote_amount->getTotal() : 0.00) ?>
                 </td>
                 <td>
                     <div class="options btn-group<?= $dropup ? ' dropup' : ''; ?>">
@@ -123,8 +123,8 @@ use Yiisoft\Html\Html;
                 </td>
             </tr>
             <?php
-            $quote_idx++;
-        } ?>
+    $quote_idx++;
+} ?>
         </tbody>
     </table>
 </div>

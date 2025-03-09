@@ -1,15 +1,15 @@
 <?php
 
-    declare(strict_types=1);
+declare(strict_types=1);
 
-   /**
-    * @see GeneratorController function controller
-    * @var App\Invoice\Entity\Gentor $generator
-    * @var Cycle\Database\Table $orm_schema
-    * @var array $relations
-    */
-    
-    echo "<?php\n";             
+/**
+ * @see GeneratorController function controller
+ * @var App\Invoice\Entity\Gentor $generator
+ * @var Cycle\Database\Table $orm_schema
+ * @var array $relations
+ */
+
+echo "<?php\n";
 ?>
 
 declare(strict_types=1); 
@@ -25,10 +25,10 @@ use App\Invoice\Setting\SettingRepository;
 <?php
   /**
    * @var App\Invoice\Entity\GentorRelation $relation
-   */ 
-  foreach ($relations as $relation) { 
-    echo 'use ' . $generator->getNamespace_path() .DIRECTORY_SEPARATOR. ($relation->getCamelcase_name() ?? '#') .DIRECTORY_SEPARATOR.($relation->getCamelcase_name() ?? '#') .'Repository;'."\n"; 
-  } 
+   */
+  foreach ($relations as $relation) {
+      echo 'use ' . $generator->getNamespace_path() .DIRECTORY_SEPARATOR. ($relation->getCamelcase_name() ?? '#') .DIRECTORY_SEPARATOR.($relation->getCamelcase_name() ?? '#') .'Repository;'."\n";
+  }
 ?>
 use App\User\UserService;
 use App\Service\WebControllerService;
@@ -72,7 +72,7 @@ final class <?= $generator->getCamelcase_capital_name(); ?>Controller
         $this->flash = new Flash($session);
         $this->viewRenderer = $viewRenderer->withControllerName('<?= $generator->getRoute_prefix().'/'.$generator->getRoute_suffix(); ?>')
                                            // The Controller layout dir is now redundant: replaced with an alias 
-                                           ->withLayout('@<?= ltrim($generator->getController_layout_dir_dot_path(),'/'); ?>');
+                                           ->withLayout('@<?= ltrim($generator->getController_layout_dir_dot_path(), '/'); ?>');
         $this->webService = $webService;
         $this->userService = $userService;
         $this-><?= $generator->getSmall_singular_name(); ?>Service = $<?= $generator->getSmall_singular_name(); ?>Service;
@@ -83,15 +83,15 @@ final class <?= $generator->getCamelcase_capital_name(); ?>Controller
                         FormHydrator $formHydrator,
                         <?php
                         $rel = '';
-                        echo "\n";
-                       /**
-                        * @var App\Invoice\Entity\GentorRelation $relation
-                        */
-                        foreach ($relations as $relation) {
-                            $rel .= '                        '.($relation->getCamelcase_name() ?? '#').'Repository $'.($relation->getLowercase_name() ?? '#').'Repository,'."\n";
-                        }
-                        echo rtrim($rel,",\n")."\n";        
-                        ?>
+echo "\n";
+/**
+ * @var App\Invoice\Entity\GentorRelation $relation
+ */
+foreach ($relations as $relation) {
+    $rel .= '                        '.($relation->getCamelcase_name() ?? '#').'Repository $'.($relation->getLowercase_name() ?? '#').'Repository,'."\n";
+}
+echo rtrim($rel, ",\n")."\n";
+?>
     ) : Response
     {
         $<?= $generator->getSmall_singular_name(); ?> = new <?= $generator->getCamelcase_capital_name(); ?>();
@@ -102,14 +102,14 @@ final class <?= $generator->getCamelcase_capital_name(); ?>Controller
             'errors' => [],
             'form' => $form,
             <?php echo "\n";
-            
-           /**
-            * @var App\Invoice\Entity\GentorRelation $relation
-            */
-            foreach ($relations as $relation) {
-                echo "            '".($relation->getLowercase_name() ?? '#')."s'=>".'$'.($relation->getLowercase_name() ?? '#').'Repository->findAllPreloaded(),'."\n";
-            }
-            ?>
+
+/**
+ * @var App\Invoice\Entity\GentorRelation $relation
+ */
+foreach ($relations as $relation) {
+    echo "            '".($relation->getLowercase_name() ?? '#')."s'=>".'$'.($relation->getLowercase_name() ?? '#').'Repository->findAllPreloaded(),'."\n";
+}
+?>
         ];
         
         if ($request->getMethod() === Method::POST) {
@@ -179,21 +179,21 @@ final class <?= $generator->getCamelcase_capital_name(); ?>Controller
         
     public function edit(Request $request, 
                          FormHydrator $formHydrator,
-        <?php if ($generator->getCamelcase_capital_name()) {  
+        <?php if ($generator->getCamelcase_capital_name()) {
             echo $generator->getCamelcase_capital_name().'Repository '. '$'.$generator->getSmall_singular_name().'Repository,';
         }
-        ?> 
+?> 
         <?php
-        $rel = '';
-        echo "\n";
-        /**
-         * @var App\Invoice\Entity\GentorRelation $relation
-         */
-        foreach ($relations as $relation) {
-            $rel .= '                        '.($relation->getCamelcase_name() ?? '#').'Repository $'.($relation->getLowercase_name() ?? '#').'Repository,'."\n";
-        }
-        echo rtrim($rel,",\n").",";
-        ?>#[RouteArgument('id')] int $id): Response {
+$rel = '';
+echo "\n";
+/**
+ * @var App\Invoice\Entity\GentorRelation $relation
+ */
+foreach ($relations as $relation) {
+    $rel .= '                        '.($relation->getCamelcase_name() ?? '#').'Repository $'.($relation->getLowercase_name() ?? '#').'Repository,'."\n";
+}
+echo rtrim($rel, ",\n").",";
+?>#[RouteArgument('id')] int $id): Response {
         $<?= $generator->getSmall_singular_name(); ?> = $this-><?= $generator->getSmall_singular_name(); ?>($<?= $generator->getSmall_singular_name(); ?>Repository, $id);
         if ($<?= $generator->getSmall_singular_name(); ?>){
             $form = new <?= $generator->getCamelcase_capital_name(); ?>Form($<?= $generator->getSmall_singular_name(); ?>);
@@ -203,15 +203,15 @@ final class <?= $generator->getCamelcase_capital_name(); ?>Controller
                 'errors' => [],
                 'form' => $form,
                 <?php
-                    $rel = '';
-                    /**
-                     * @var App\Invoice\Entity\GentorRelation $relation
-                     */
-                    foreach ($relations as $relation) {
-                      $rel .= "            '".($relation->getLowercase_name() ?? '#')."s'=>".'$'.($relation->getLowercase_name() ?? '#').'Repository->findAllPreloaded(),'."\n";
-                    }
-                    echo rtrim($rel,",\n")."\n";
-                ?>
+            $rel = '';
+/**
+ * @var App\Invoice\Entity\GentorRelation $relation
+ */
+foreach ($relations as $relation) {
+    $rel .= "            '".($relation->getLowercase_name() ?? '#')."s'=>".'$'.($relation->getLowercase_name() ?? '#').'Repository->findAllPreloaded(),'."\n";
+}
+echo rtrim($rel, ",\n")."\n";
+?>
             ];
             if ($request->getMethod() === Method::POST) {
                 $body = $request->getParsedBody() ?? [];

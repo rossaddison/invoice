@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=1); 
+declare(strict_types=1);
 
 use Yiisoft\FormModel\Field;
 use Yiisoft\Html\Html;
@@ -27,7 +27,7 @@ use Yiisoft\Html\Tag\Form;
     ->open() ?>
 
     <?= Html::openTag('div', ['id' => 'headerbar']); ?>    
-        <?= Html::openTag('h1',['class' => 'headerbar-title']); ?>
+        <?= Html::openTag('h1', ['class' => 'headerbar-title']); ?>
             <?= Html::encode($title); ?>
         <?= Html::closeTag('h1'); ?>
     <?= Html::closeTag('div'); ?>
@@ -35,18 +35,18 @@ use Yiisoft\Html\Tag\Form;
         <?= Field::errorSummary($form)
             ->errors($errors)
             ->header($translator->translate('invoice.error.summary'))
-            ->onlyProperties(...['party_name'])     
+            ->onlyProperties(...['party_name'])
             ->onlyCommonErrors();
-        ?>    
-        <?= Html::openTag('div',['class' => 'row']); ?>
-        <?= Html::openTag('div',['class' => 'mb3 form-group']); ?>
+?>    
+        <?= Html::openTag('div', ['class' => 'row']); ?>
+        <?= Html::openTag('div', ['class' => 'mb3 form-group']); ?>
             <?= Field::text($form, 'party_name')
-                ->addInputAttributes([
-                    'class' => 'form-control'
-                ])
-                ->label($translator->translate('invoice.invoice.delivery.party.name')) 
-                ->value(Html::encode($form->getParty_name() ?? '')); 
-            ?>
+        ->addInputAttributes([
+            'class' => 'form-control'
+        ])
+        ->label($translator->translate('invoice.invoice.delivery.party.name'))
+        ->value(Html::encode($form->getParty_name() ?? ''));
+?>
         <?= Html::closeTag('div'); ?>
     <?= Html::closeTag('div'); ?>
 <?= $button::backSave(); ?>

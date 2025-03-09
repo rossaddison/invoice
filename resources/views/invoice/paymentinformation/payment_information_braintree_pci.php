@@ -8,19 +8,19 @@ use Yiisoft\Html\Html;
  * @see PaymentInformationController function braintreeInForm
  * @var App\Invoice\Entity\Client $client_on_invoice
  * @var App\Invoice\Entity\Inv $invoice
- * 
+ *
  * @see config\common\params 'yiisoft/view' => ['parameters' => ['clientHelper' => Reference::to(ClientHelper::class)]]
  * @var App\Invoice\Helpers\ClientHelper $clientHelper
- * 
+ *
  * @see config\common\params 'yiisoft/view' => ['parameters' => ['dateHelper' => Reference::to(DateHelper::class)]]
  * @var App\Invoice\Helpers\DateHelper $dateHelper
- * 
+ *
  * @see config\common\params 'yiisoft/view' => ['parameters' => ['numberHelper' => Reference::to(NumberHelper::class)]]
  * @var App\Invoice\Helpers\NumberHelper $numberHelper
- * 
+ *
  * @see config\common\params 'yiisoft/view' => ['parameters' => ['s' => Reference::to(SettingRepository::class)]]
- * @var App\Invoice\Setting\SettingRepository $s 
- * 
+ * @var App\Invoice\Setting\SettingRepository $s
+ *
  * @var Yiisoft\Translator\TranslatorInterface $translator
  * @var Yiisoft\Router\UrlGeneratorInterface $urlGenerator
  * @var bool $disable_form
@@ -52,8 +52,8 @@ use Yiisoft\Html\Html;
                 <div class="col-8">
                     <?= $translator->translate('g.online_payment_for_invoice'); ?> #
                     <?= ($invoice->getNumber() ?? ''). ' => '.
-                     ($invoice->getClient()?->getClient_name() ?? '' ). ' '.
-                     ($invoice->getClient()?->getClient_surname() ?? '' ). ' '.
+                     ($invoice->getClient()?->getClient_name() ?? ''). ' '.
+                     ($invoice->getClient()?->getClient_surname() ?? ''). ' '.
                      $numberHelper->format_currency($balance); ?>
                 </div>
             </div>    
@@ -65,7 +65,7 @@ use Yiisoft\Html\Html;
             <i class="fa fa-file-pdf-o"></i> <?= $translator->translate('i.download_pdf').'=>'.$translator->translate('i.no').' '.$translator->translate('i.custom_fields'); ?>
         </a>
     </div> 
-    <br><?= Html::tag('Div',Html::tag('H4', $title,['data-toggle'=>'tooltip','title'=>'Test card: 4111 1111 1111 1111 Expiry-date: 06/34'])); ?><br>
+    <br><?= Html::tag('Div', Html::tag('H4', $title, ['data-toggle' => 'tooltip','title' => 'Test card: 4111 1111 1111 1111 Expiry-date: 06/34'])); ?><br>
 <div class="card-body p-5 text-center">  
     <?= $alert; ?>
     <div id="dropin-container"></div>
@@ -83,12 +83,12 @@ use Yiisoft\Html\Html;
     <tbody>
     <tr>
         <td><?= $translator->translate('i.invoice_date'); ?></td>
-        <td class="text-right"><?= Html::encode($invoice->getDate_created()->format($dateHelper->style())); ?></td>
+        <td class="text-right"><?= Html::encode($invoice->getDate_created()->format('Y-m-d')); ?></td>
     </tr>
     <tr class="<?= ($is_overdue ? 'overdue' : '') ?>">
         <td><?= $translator->translate('i.due_date'); ?></td>
         <td class="text-right">
-            <?= Html::encode($invoice->getDate_due()->format($dateHelper->style())); ?>
+            <?= Html::encode($invoice->getDate_due()->format('Y-m-d')); ?>
         </td>
     </tr>
     <tr class="<?php echo($is_overdue ? 'overdue' : '') ?>">
@@ -120,27 +120,27 @@ use Yiisoft\Html\Html;
 </div>
 </div>
 </div>                  
-<?php } 
+<?php }
 ?>
-<?php 
-    $js22 = 'const form = document.getElementById("payment-form");'
-            . 'braintree.dropin.create('
-            . '{'
-            .       'authorization: "' .$client_token. '",'
-            .       'container: "#dropin-container"'
-            . '}, '
-            . '(error, dropinInstance) => {'
-            .  '    if (error) console.error(error);'
-            .  '    form.addEventListener("submit", event => {'
-            .  '       event.preventDefault();' 
-            .  '       dropinInstance.requestPaymentMethod((error, payload) => {'
-            .  '          if (error) console.error(error);'
-            .  '          document.getElementById("nonce").value = payload.nonce;'
-            .  '          form.submit();'
-            .  '       });'
-            .  '    });'
-            .  '}'
-            .  ');';          
-    echo Html::script($js22)->type('module')->charset('utf-8');
+<?php
+$js22 = 'const form = document.getElementById("payment-form");'
+        . 'braintree.dropin.create('
+        . '{'
+        .       'authorization: "' .$client_token. '",'
+        .       'container: "#dropin-container"'
+        . '}, '
+        . '(error, dropinInstance) => {'
+        .  '    if (error) console.error(error);'
+        .  '    form.addEventListener("submit", event => {'
+        .  '       event.preventDefault();'
+        .  '       dropinInstance.requestPaymentMethod((error, payload) => {'
+        .  '          if (error) console.error(error);'
+        .  '          document.getElementById("nonce").value = payload.nonce;'
+        .  '          form.submit();'
+        .  '       });'
+        .  '    });'
+        .  '}'
+        .  ');';
+echo Html::script($js22)->type('module')->charset('utf-8');
 ?>
 

@@ -79,7 +79,7 @@ return [
 'g.online_payment_payment_failed' => 'Toʻlov amalga oshmadi. Iltimos, yana bir bor urinib ko\'ring.',
 'g.online_payment_payment_successful' => '%s invoys uchun toʻlov muvaffaqiyatli amalga oshirildi!',
 'g.online_payment_payment_redirect' => 'Toʻlov sahifasiga yoʻnaltirilgunimizcha kuting...',
-'g.online_payment_3dauth_redirect' => 'Iltimos, autentifikatsiya qilish uchun kartangiz emitentiga yo‘naltirilgunimizcha kuting...',    
+'g.online_payment_3dauth_redirect' => 'Iltimos, autentifikatsiya qilish uchun kartangiz emitentiga yo‘naltirilgunimizcha kuting...',
 'i.account_information' => 'Hisob ma\'lumotlari',
 'i.active' => 'Faol',
 'i.active_client' => 'Faol',
@@ -1712,8 +1712,8 @@ return [
 'view.contact.form.name' => 'Ism',
 'view.contact.form.email' => 'Elektron pochta',
 'view.contact.form.subject' => 'Mavzu',
-'view.contact.form.body' => 'Tana', 
-// Added 19/02/2025    
+'view.contact.form.body' => 'Tana',
+// Added 19/02/2025
 'i.email_template_type' => 'Elektron pochta shablon turi',
 'gateway.online.payment' => 'Onlayn to&#39;lov',
 'invoice.client.has.not.assigned' => 'Ushbu mijozlar foydalanuvchi hisobiga tayinlanmagan. Har bir foydalanuvchi hisobiga bir yoki bir nechta mijoz.',
@@ -1809,5 +1809,5 @@ return [
 'menu.gallery' => 'Galereya',
 'menu.privacy.policy' => 'Maxfiylik siyosati',
 'menu.terms.of.service' => 'Xizmat shartlari',
-'password.reset.request.token' => 'Parolni tiklash tokenini so&#39;rang',    
+'password.reset.request.token' => 'Parolni tiklash tokenini so&#39;rang',
 ];

@@ -7,7 +7,7 @@ use Yiisoft\Html\Html;
 use Yiisoft\Html\Tag\Form;
 
 /**
- * @see ...src\Invoice\Product\ProductController function view_partial_product_image 
+ * @see ...src\Invoice\Product\ProductController function view_partial_product_image
  * @var App\Invoice\Product\ImageAttachForm $form
  * @var App\Invoice\Setting\SettingRepository $s
  * @var Yiisoft\Router\UrlGeneratorInterface $urlGenerator
@@ -22,10 +22,10 @@ use Yiisoft\Html\Tag\Form;
  * @psalm-var array<string, Stringable|null|scalar> $actionArguments
  */
 
- if ($invEdit && $invView) { 
+if ($invEdit && $invView) {
     $this->setTitle($translator->translate('i.add_files'));
- }
- ?>
+}
+?>
 
 <div class="panel panel-default no-margin">
     <div class="panel-heading">
@@ -42,33 +42,33 @@ use Yiisoft\Html\Tag\Form;
                     </div>
                     <div>
                         <?= Form::tag()
-                            ->post($urlGenerator->generate($actionName, $actionArguments))
-                            ->enctypeMultipartFormData()
-                            ->csrf($csrf)
-                            ->id('ImageAttachForm')
-                            ->open()
-                        ?>
+                           ->post($urlGenerator->generate($actionName, $actionArguments))
+                           ->enctypeMultipartFormData()
+                           ->csrf($csrf)
+                           ->id('ImageAttachForm')
+                           ->open()
+                ?>
                         <?= Field::file($form, 'attachFile')
-                            ->containerClass('mb-3')
-                            ->hideLabel()
-                        ?>
+                    ->containerClass('mb-3')
+                    ->hideLabel()
+                ?>
                     </div>
                     <div>
                         <?= Field::buttonGroup()
-                            ->addContainerClass('btn-group')
-                            ->buttonsData([
-                                [
-                                    $translator->translate('layout.reset'),
-                                    'type' => 'reset',
-                                    'class' => 'btn btn-sm btn-danger',
-                                ],
-                                [
-                                    $translator->translate('layout.submit'),
-                                    'type' => 'submit',
-                                    'class' => 'btn btn-sm btn-primary',
-                                    'name' => 'contact-button',
-                                ],
-                            ]) ?>
+                    ->addContainerClass('btn-group')
+                    ->buttonsData([
+                        [
+                            $translator->translate('layout.reset'),
+                            'type' => 'reset',
+                            'class' => 'btn btn-sm btn-danger',
+                        ],
+                        [
+                            $translator->translate('layout.submit'),
+                            'type' => 'submit',
+                            'class' => 'btn btn-sm btn-primary',
+                            'name' => 'contact-button',
+                        ],
+                    ]) ?>
                         <?= Form::tag()->close() ?>
                     </div>
                 </div>

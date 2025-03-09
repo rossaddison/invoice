@@ -35,9 +35,9 @@ use Yiisoft\Html\Html;
                            value="<?= $inv->getClient_id(); ?>">
 
                     <input type="hidden" name="inv_date_created" id="inv_date_created"
-                           value="<?= 
-                           $credit_date = (new DateTimeImmutable('now'))->format($dateHelper->style()); 
-                           echo $credit_date; ?>">
+                           value="<?=
+                           $credit_date = (new DateTimeImmutable('now'))->format('Y-m-d');
+echo $credit_date; ?>">
 
                     <div class="form-group">
                         <label for="inv_password"><?= $translator->translate('i.invoice_password'); ?></label>
@@ -50,18 +50,20 @@ use Yiisoft\Html\Html;
                     <?php $credit_invoice_group = ''; ?>
                         <select name="inv_group_id" id="inv_group_id" class="hidden">
                             <?php
-                                /**
-                                 * @var App\Invoice\Entity\Group $invoice_group
-                                 */
-                                foreach ($invoice_groups as $invoice_group) { ?>
+     /**
+      * @var App\Invoice\Entity\Group $invoice_group
+      */
+     foreach ($invoice_groups as $invoice_group) { ?>
                                 <option value="<?= $invoice_group->getId(); ?>"
                                     <?php if ($s->getSetting('default_invoice_group') === $invoice_group->getId()) {
                                         echo 'selected="selected"';
                                         $credit_invoice_group = Html::encode($invoice_group->getName() ?? '');
                                     } ?>>
-                                    <?php if ($s->getSetting('default_invoice_group') === $invoice_group->getId()) { 
-                                        echo $credit_invoice_group;                                
-                                    } else { echo ''; } ?>
+                                    <?php if ($s->getSetting('default_invoice_group') === $invoice_group->getId()) {
+                                        echo $credit_invoice_group;
+                                    } else {
+                                        echo '';
+                                    } ?>
                                 </option>
                             <?php } ?>
                         </select>

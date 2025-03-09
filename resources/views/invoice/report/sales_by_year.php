@@ -6,17 +6,17 @@ use Yiisoft\Html\Html;
 
 /**
  * @var App\Invoice\Helpers\NumberHelper $n
- * @var Yiisoft\Assets\AssetManager $assetManager  
+ * @var Yiisoft\Assets\AssetManager $assetManager
  * @var Yiisoft\Translator\TranslatorInterface $translator
  * @var Yiisoft\View\WebView $this
  * @var string $from_date
- * @var string $to_date 
+ * @var string $to_date
  * @var array $results
  * @var array $result['quarters']
  * @var array $result['quarters']['first']
  * @var array $result['quarters']['second']
  * @var array $result['quarters']['third']
- * @var array $result['quarters']['fourth'] 
+ * @var array $result['quarters']['fourth']
  */
 
 $assetManager->register(ReportAsset::class);
@@ -45,7 +45,7 @@ $this->beginPage();
         <th style="width:20%;text-align:center;border-bottom: 1px solid black;"> <?= Html::encode($translator->translate('i.sales_with_tax')); ?></th>
         <th style="width:20%;text-align:center;border-bottom: 1px solid black;"> <?= Html::encode($translator->translate('i.paid')); ?></th>
     </tr>
-    <?php 
+    <?php
         /**
          * @var array $result
          */

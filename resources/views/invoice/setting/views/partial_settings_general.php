@@ -1,22 +1,22 @@
 <?php
 
-    declare(strict_types=1);
-    
-    use Yiisoft\Html\Html;
-    
-    /**
-     * @var App\Invoice\Setting\SettingRepository $s 
-     * @var Yiisoft\Translator\TranslatorInterface $translator
-     * @var array $body
-     * @var array $languages
-     * @var array $time_zones
-     * @var array $first_days_of_weeks
-     * @var array $date_formats
-     * @var array $countries
-     * @var array $gateway_currency_codes
-     * @var array $number_formats
-     * @var DateTime $current_date
-     */
+declare(strict_types=1);
+
+use Yiisoft\Html\Html;
+
+/**
+ * @var App\Invoice\Setting\SettingRepository $s
+ * @var Yiisoft\Translator\TranslatorInterface $translator
+ * @var array $body
+ * @var array $languages
+ * @var array $time_zones
+ * @var array $first_days_of_weeks
+ * @var array $date_formats
+ * @var array $countries
+ * @var array $gateway_currency_codes
+ * @var array $number_formats
+ * @var DateTime $current_date
+ */
 ?>
 <div class = 'row'>
     <div class="col-xs-12 col-md-8 col-md-offset-2">
@@ -38,8 +38,8 @@
                                 </option>
                                 <option value="1" 
                                     <?php
-                                        $s->check_select($body['settings[stop_logging_in]'], '1'); 
-                                    ?>>
+                                        $s->check_select($body['settings[stop_logging_in]'], '1');
+?>>
                                     <?= $translator->translate('i.yes'); ?>
                                 </option>
                             </select>
@@ -57,8 +57,8 @@
                                 </option>
                                 <option value="1" 
                                     <?php
-                                        $s->check_select($body['settings[stop_signing_up]'], '1'); 
-                                    ?>>
+    $s->check_select($body['settings[stop_signing_up]'], '1');
+?>>
                                     <?= $translator->translate('i.yes'); ?>
                                 </option>
                             </select>
@@ -76,8 +76,8 @@
                                 </option>
                                 <option value="1" 
                                     <?php
-                                        $s->check_select($body['settings[install_test_data]'], '1'); 
-                                    ?>>
+    $s->check_select($body['settings[install_test_data]'], '1');
+?>>
                                     <?= $translator->translate('i.yes'); ?>
                                 </option>
                             </select>
@@ -95,8 +95,8 @@
                                 </option>
                                 <option value="1" 
                                     <?php
-                                        $s->check_select($body['settings[use_test_data]'], '1'); 
-                                    ?>>
+    $s->check_select($body['settings[use_test_data]'], '1');
+?>>
                                     <?= $translator->translate('i.yes'); ?>
                                 </option>
                             </select>
@@ -111,10 +111,10 @@
                             <select name="settings[default_language]" id="settings[default_language]" class="form-control">
                                 <option value="0"><?= $translator->translate('i.none'); ?></option>
                                 <?php
-                                    /**
-                                     * @var string $language
-                                     */
-                                    foreach ($languages as $language) { ?>
+/**
+ * @var string $language
+ */
+foreach ($languages as $language) { ?>
                                     <option value="<?= $language; ?>" <?php $s->check_select($body['settings[default_language]'], $language) ?>>
                                         <?= ucfirst($language); ?>
                                     </option>
@@ -131,65 +131,13 @@
                             <select name="settings[time_zone]" id="settings[time_zone]" class="form-control">
                                  <option value="0"><?= $translator->translate('i.none'); ?></option>
                                 <?php
-                                    /**
-                                     * @var string $value
-                                     */
-                                    foreach ($time_zones as $key => $value) { ?>
+/**
+ * @var string $value
+ */
+foreach ($time_zones as $key => $value) { ?>
                                     <option value="<?=  $value; ?>"
                                         <?php  $s->check_select($body['settings[time_zone]'], $value); ?>>
                                         <?= $value; ?>
-                                    </option>
-                                <?php } ?>
-                            </select>
-                        </div>
-                    </div>
-                </div>
-
-                <div class = "row">
-                    <div class="col-xs-12 col-md-6">
-                        <div class="form-group">
-                            <label for="settings[first_day_of_week]" <?= $s->where('first_day_of_week'); ?>>
-                                <?= $translator->translate('i.first_day_of_week'); ?>
-                            </label>
-                            <?php $body['settings[first_day_of_week]'] = $s->getSetting('first_day_of_week'); ?>
-                            <select name="settings[first_day_of_week]" id="settings[first_day_of_week]"
-                                class="form-control">
-                                <option value="0"><?= $translator->translate('i.none'); ?></option>
-                                <?php 
-                                    /**
-                                     * @var string $first_day_of_week_id
-                                     * @var string $first_day_of_week_name
-                                     */
-                                    foreach ($first_days_of_weeks as $first_day_of_week_id => $first_day_of_week_name) { ?>
-                                    <option value="<?= $first_day_of_week_id; ?>"
-                                        <?php
-                                            $s->check_select($body['settings[first_day_of_week]'], $first_day_of_week_id); 
-                                        ?>>
-                                        <?= $first_day_of_week_name; ?>
-                                    </option>
-                                <?php } ?>
-                            </select>
-                        </div>
-                    </div>
-                    <div class="col-xs-12 col-md-6">
-                        <div class="form-group">
-                            <label for="settings[date_format]" <?= $s->where('date_format'); ?>>
-                                <?= $translator->translate('i.date_format'); ?>
-                            </label>
-                            <?php   $body['settings[date_format]'] = $s->getSetting('date_format'); ?>
-                            <select name="settings[date_format]" id="settings[date_format]"
-                                class="form-control">
-                                <option value="0"><?= $translator->translate('i.none'); ?></option>
-                                <?php
-                                    /**
-                                     * @var array $date_format
-                                     * @var string $date_format['setting']
-                                     */
-                                    foreach ($date_formats as $date_format) { ?>
-                                    <option value="<?= $date_format['setting']; ?>"
-                                        <?php  $s->check_select($body['settings[date_format]'], $date_format['setting']); ?>>
-                                        <?= $current_date->format($date_format['setting']); ?>
-                                        (<?= $date_format['setting'] ?>)
                                     </option>
                                 <?php } ?>
                             </select>
@@ -208,15 +156,15 @@
                                 <option value="0"><?= $translator->translate('i.none'); ?></option>
                                 <option value=""><?= $translator->translate('i.none'); ?></option>
                                 <?php
-                                    /**
-                                     * @var array $countries
-                                     * @var string $cldr
-                                     * @var string $country
-                                     */
-                                    foreach ($countries as $cldr => $country) { ?>
+/**
+ * @var array $countries
+ * @var string $cldr
+ * @var string $country
+ */
+foreach ($countries as $cldr => $country) { ?>
                                     <option value="<?= $cldr; ?>" 
                                         <?php
-                                            $s->check_select($body['settings[default_country]'], $cldr); ?>>
+        $s->check_select($body['settings[default_country]'], $cldr); ?>>
                                         <?= $country ?>
                                     </option>
                                 <?php } ?>
@@ -248,8 +196,8 @@
                                 </option>
                                 <option value="1" 
                                     <?php
-                                        $s->check_select($body['settings[disable_flash_messages_quote]'], '1'); 
-                                    ?>>
+    $s->check_select($body['settings[disable_flash_messages_quote]'], '1');
+?>>
                                     <?= $translator->translate('i.yes'); ?>
                                 </option>
                             </select>    
@@ -268,8 +216,8 @@
                                 </option>
                                 <option value="1" 
                                     <?php
-                                        $s->check_select($body['settings[disable_flash_messages_inv]'], '1'); 
-                                    ?>>
+    $s->check_select($body['settings[disable_flash_messages_inv]'], '1');
+?>>
                                     <?= $translator->translate('i.yes'); ?>
                                 </option>
                             </select>    
@@ -288,8 +236,8 @@
                                 </option>
                                 <option value="1" 
                                     <?php
-                                        $s->check_select($body['settings[signup_automatically_assign_client]'], '1'); 
-                                    ?>>
+    $s->check_select($body['settings[signup_automatically_assign_client]'], '1');
+?>>
                                     <?= $translator->translate('i.yes'); ?>
                                 </option>
                             </select>    
@@ -308,8 +256,8 @@
                                 </option>
                                 <option value="1" 
                                     <?php
-                                        $s->check_select($body['settings[signup_default_age_minimum_eighteen]'], '1'); 
-                                    ?>>
+    $s->check_select($body['settings[signup_default_age_minimum_eighteen]'], '1');
+?>>
                                     <?= $translator->translate('i.yes'); ?>
                                 </option>
                             </select>    
@@ -333,9 +281,9 @@
                             <label for="settings[currency_symbol]" <?= $s->where('currency_symbol'); ?>>
                                 <?= $translator->translate('i.currency_symbol'); ?>
                             </label>
-                            <?php 
+                            <?php
                                 $body['settings[currency_symbol]'] = $s->getSetting('currency_symbol');
-                            ?>
+?>
                             <input type="text" name="settings[currency_symbol]" id="settings[currency_symbol]"
                                 class="form-control"
                                 value="<?= $body['settings[currency_symbol]']; ?>">
@@ -351,9 +299,9 @@
                             <select name="settings[currency_symbol_placement]" id="settings[currency_symbol_placement]"
                                 class="form-control" data-minimum-results-for-search="Infinity">
                                 <option value="before" 
-                                    <?php   
-                                        $s->check_select($body['settings[currency_symbol_placement]'], 'before'); 
-                                    ?>>
+                                    <?php
+            $s->check_select($body['settings[currency_symbol_placement]'], 'before');
+?>>
                                     <?= $translator->translate('i.before_amount'); ?>
                                 </option>
                                 <option value="after" <?php $s->check_select($body['settings[currency_symbol_placement]'], 'after'); ?>>
@@ -379,15 +327,15 @@
                                 class="input-sm form-control">
                                 <option value="0"><?= $translator->translate('i.none'); ?></option>
                                 <?php
-                                    /**
-                                     * @var string $key
-                                     * @var string $val
-                                     */
-                                    foreach ($gateway_currency_codes as $key => $val) { ?>
+/**
+ * @var string $key
+ * @var string $val
+ */
+foreach ($gateway_currency_codes as $key => $val) { ?>
                                     <option value="<?= $key; ?>"
                                         <?php
-                                            $s->check_select($body['settings[currency_code]'], $key); 
-                                        ?>>
+        $s->check_select($body['settings[currency_code]'], $key);
+    ?>>
                                         <?= $key; ?>
                                     </option>
                                 <?php } ?>
@@ -404,15 +352,15 @@
                             <select name="settings[tax_rate_decimal_places]" id="settings[tax_rate_decimal_places]" class="form-control">
                                 <option value="0"><?= $translator->translate('i.none'); ?></option>
                                 <option value="2" 
-                                    <?php 
-                                        $s->check_select($body['settings[tax_rate_decimal_places]'], '2'); 
-                                    ?>>
+                                    <?php
+    $s->check_select($body['settings[tax_rate_decimal_places]'], '2');
+?>>
                                     2
                                 </option>
                                 <option value="3" 
                                     <?php
-                                        $s->check_select($body['settings[tax_rate_decimal_places]'], '3');                                         
-                                    ?>>
+    $s->check_select($body['settings[tax_rate_decimal_places]'], '3');
+?>>
                                     3
                                 </option>
                             </select>
@@ -431,16 +379,16 @@
                                 class="form-control">
                                 <option value="0"><?= $translator->translate('i.none'); ?></option>
                                 <?php
-                                    /**
-                                     * @var string $key
-                                     * @var array $value
-                                     * @var string $value['label']
-                                     */
-                                    foreach ($number_formats as $key => $value) { ?>
+/**
+ * @var string $key
+ * @var array $value
+ * @var string $value['label']
+ */
+foreach ($number_formats as $key => $value) { ?>
                                     <option value="<?php print($key); ?>"
                                         <?php
-                                            $s->check_select($body['settings[number_format]'], $value['label']); 
-                                        ?>>
+        $s->check_select($body['settings[number_format]'], $value['label']);
+    ?>>
                                         <?= $translator->translate($value['label']); ?>
                                     </option>
                                 <?php } ?>
@@ -535,8 +483,8 @@
                                 </option>
                                 <option value="1" 
                                 <?php
-                                    $s->check_select($body['settings[disable_quickactions]'], '1'); 
-                                ?>>
+                                    $s->check_select($body['settings[disable_quickactions]'], '1');
+?>>
                                 <?= $translator->translate('i.yes'); ?>
                                 </option>
                             </select>
@@ -564,8 +512,8 @@
                                 </option>
                                 <option value="1" 
                                     <?php
-                                        $s->check_select($body['settings[disable_sidebar]'], '1'); 
-                                    ?>>
+        $s->check_select($body['settings[disable_sidebar]'], '1');
+?>>
                                     <?= $translator->translate('i.yes'); ?>
                                 </option>                                  
                             </select>
@@ -652,11 +600,11 @@
                                     value="<?= (string)($body['settings[cron_key]'] ?? $s->getSetting('cron_key')); ?>">
                                 <div class="input-group-text">
                                     <?php
-                                        /**
-                                         * @see ..\src\Invoice\Asset\rebuild-1.13\js\setting.js 
-                                         * @see $(document).on('click', '#btn_generate_cron_key', function ()
-                                         */
-                                    ?>
+    /**
+     * @see ..\src\Invoice\Asset\rebuild-1.13\js\setting.js
+     * @see $(document).on('click', '#btn_generate_cron_key', function ()
+     */
+?>
                                     <button id="btn_generate_cron_key" type="button" class="btn_generate_cron_key btn btn-primary btn-block">
                                         <i class="fa fa-recycle fa-margin"></i>
                                     </button>

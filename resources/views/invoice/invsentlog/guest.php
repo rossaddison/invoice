@@ -16,7 +16,7 @@ use Yiisoft\Yii\DataView\GridView;
  * @var App\Invoice\Entity\UserInv $userInv
  * @var App\Invoice\Setting\SettingRepository $s
  * @var App\Widget\GridComponents $gridComponents
- * @var App\Widget\PageSizeLimiter $pageSizeLimiter 
+ * @var App\Widget\PageSizeLimiter $pageSizeLimiter
  * @var Yiisoft\Data\Paginator\OffsetPaginator $paginator
  * @var Yiisoft\Router\CurrentRoute $currentRoute
  * @var Yiisoft\Translator\TranslatorInterface $translator
@@ -27,12 +27,12 @@ use Yiisoft\Yii\DataView\GridView;
  * @var string $csrf
  * @psalm-var array<array-key, array<array-key, string>|string> $optionsDataGuestInvNumberDropDownFilter
  */
- 
- echo $alert;
 
- /*
-  * @see https://emojipedia.org/incoming-envelope
-  */
+echo $alert;
+
+/*
+ * @see https://emojipedia.org/incoming-envelope
+ */
 ?>
 
 <h1>📨</h1>
@@ -44,78 +44,80 @@ use Yiisoft\Yii\DataView\GridView;
             H5::tag()
             ->addClass('bg-primary text-white p-3 rounded-top')
             ->content(
-            I::tag()->content('📨')
+                I::tag()->content('📨')
             )
         )
         ->render();
 
-    $toolbarReset = A::tag()
-      ->addAttributes(['type' => 'reset'])
-      ->addClass('btn btn-danger me-1 ajax-loader')
-      ->content(I::tag()->addClass('bi bi-bootstrap-reboot'))
-      ->href($urlGenerator->generate($currentRoute->getName() ?? 'invsentlog/guest'))
-      ->id('btn-reset')
-      ->render();
+$toolbarReset = A::tag()
+  ->addAttributes(['type' => 'reset'])
+  ->addClass('btn btn-danger me-1 ajax-loader')
+  ->content(I::tag()->addClass('bi bi-bootstrap-reboot'))
+  ->href($urlGenerator->generate($currentRoute->getName() ?? 'invsentlog/guest'))
+  ->id('btn-reset')
+  ->render();
 
-    $toolbar = Div::tag();
-    
-    $columns = [
-        new DataColumn(
-            'id',
-            header: $translator->translate('i.id'),
-            content: static fn(InvSentLog $model) => $model->getId()
-        ),
-        new DataColumn(
-            field: 'inv_id',
-            property: 'filterInvNumber',
-            header: $translator->translate('invoice.invoice.number'),
-            content: static function (InvSentLog $model) use ($urlGenerator): string {
-                return Html::a(($model->getInv()?->getNumber() ?? '#').' 🔍', $urlGenerator->generate('inv/view', 
-                    ['id' => $model->getId()]), ['style' => 'text-decoration:none'])->render();
-            },    
-            filter: $optionsDataGuestInvNumberDropDownFilter,
-            withSorting: false            
-        ),
-        new DataColumn(
-            'inv_id',
-            header: $translator->translate('i.setup_db_username_info'),
-            content: static fn(InvSentLog $model) => $model->getInv()?->getUser()->getLogin()
-        ),
-        new DataColumn(
-            'client_id',
-            header: $translator->translate('i.client'),
-            content: static fn(InvSentLog $model): string => $model->getClient()?->getClient_full_name() ?? ''
-        ),
-        new DataColumn(
-            'date_sent',
-            header: $translator->translate('invoice.email.date'),
-            content: static fn(InvSentLog $model): string => ($model->getDate_sent())->format('l, d-M-Y H:i:s T'),
-        ),   
-    ];
-    
-    echo '<br>';
-    $grid_summary = $s->grid_summary(
-        $paginator,
-        $translator,
-        $defaultPageSizeOffsetPaginator,
-        $translator->translate('invoice.email.logs'),
-        ''
-    );
-    $toolbarString = Form::tag()->post($urlGenerator->generate('invsentlog/guest'))->csrf($csrf)->open() .
-                     Div::tag()->addClass('float-end m-3')->content($toolbarReset)->encode(false)->render() .
-                     Form::tag()->close();
-    echo GridView::widget()
-      ->bodyRowAttributes(['class' => 'align-middle'])
-      ->tableAttributes(['class' => 'table table-striped text-center h-10463', 'id' => 'table-invsentlog'])
-      ->columns(...$columns)
-      ->dataReader($paginator)
-      ->headerRowAttributes(['class' => 'card-header bg-info text-black'])
-      ->header($header)
-      ->id('w10463-grid')
-      ->paginationWidget($gridComponents->offsetPaginationWidget($paginator))
-      ->summaryAttributes(['class' => 'mt-3 me-3 summary text-end'])
-      ->summaryTemplate(($viewInv ? 
-                           $pageSizeLimiter::buttonsGuest($userInv, $urlGenerator, $translator, 'invsentlog', $defaultPageSizeOffsetPaginator) : '').' '.
-                           $grid_summary)->emptyTextAttributes(['class' => 'card-header bg-warning text-black'])
-      ->emptyText($translator->translate('invoice.invoice.no.records'))
-      ->toolbar($toolbarString);
+$toolbar = Div::tag();
+
+$columns = [
+    new DataColumn(
+        'id',
+        header: $translator->translate('i.id'),
+        content: static fn (InvSentLog $model) => $model->getId()
+    ),
+    new DataColumn(
+        field: 'inv_id',
+        property: 'filterInvNumber',
+        header: $translator->translate('invoice.invoice.number'),
+        content: static function (InvSentLog $model) use ($urlGenerator): string {
+            return Html::a(($model->getInv()?->getNumber() ?? '#').' 🔍', $urlGenerator->generate(
+                'inv/view',
+                ['id' => $model->getId()]
+            ), ['style' => 'text-decoration:none'])->render();
+        },
+        filter: $optionsDataGuestInvNumberDropDownFilter,
+        withSorting: false
+    ),
+    new DataColumn(
+        'inv_id',
+        header: $translator->translate('i.setup_db_username_info'),
+        content: static fn (InvSentLog $model) => $model->getInv()?->getUser()->getLogin()
+    ),
+    new DataColumn(
+        'client_id',
+        header: $translator->translate('i.client'),
+        content: static fn (InvSentLog $model): string => $model->getClient()?->getClient_full_name() ?? ''
+    ),
+    new DataColumn(
+        'date_sent',
+        header: $translator->translate('invoice.email.date'),
+        content: static fn (InvSentLog $model): string => ($model->getDate_sent())->format('l, d-M-Y H:i:s T'),
+    ),
+];
+
+echo '<br>';
+$grid_summary = $s->grid_summary(
+    $paginator,
+    $translator,
+    $defaultPageSizeOffsetPaginator,
+    $translator->translate('invoice.email.logs'),
+    ''
+);
+$toolbarString = Form::tag()->post($urlGenerator->generate('invsentlog/guest'))->csrf($csrf)->open() .
+                 Div::tag()->addClass('float-end m-3')->content($toolbarReset)->encode(false)->render() .
+                 Form::tag()->close();
+echo GridView::widget()
+  ->bodyRowAttributes(['class' => 'align-middle'])
+  ->tableAttributes(['class' => 'table table-striped text-center h-10463', 'id' => 'table-invsentlog'])
+  ->columns(...$columns)
+  ->dataReader($paginator)
+  ->headerRowAttributes(['class' => 'card-header bg-info text-black'])
+  ->header($header)
+  ->id('w10463-grid')
+  ->paginationWidget($gridComponents->offsetPaginationWidget($paginator))
+  ->summaryAttributes(['class' => 'mt-3 me-3 summary text-end'])
+  ->summaryTemplate(($viewInv ?
+                       $pageSizeLimiter::buttonsGuest($userInv, $urlGenerator, $translator, 'invsentlog', $defaultPageSizeOffsetPaginator) : '').' '.
+                       $grid_summary)->emptyTextAttributes(['class' => 'card-header bg-warning text-black'])
+  ->emptyText($translator->translate('invoice.invoice.no.records'))
+  ->toolbar($toolbarString);

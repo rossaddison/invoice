@@ -17,8 +17,8 @@ use Yiisoft\Yii\DataView\GridView;
 /**
  * @var App\Widget\GridComponents $gridComponents
  * @var Yiisoft\Data\Paginator\OffsetPaginator $paginator
- * @var Yiisoft\Router\CurrentRoute $currentRoute  
- * @var Yiisoft\Router\UrlGeneratorInterface $urlGenerator 
+ * @var Yiisoft\Router\CurrentRoute $currentRoute
+ * @var Yiisoft\Router\UrlGeneratorInterface $urlGenerator
  * @var Yiisoft\Translator\TranslatorInterface $translator
  * @var Yiisoft\View\WebView $this
  * @var string $csrf
@@ -88,56 +88,58 @@ $toolbar = Div::tag();
         ),
         new DataColumn(
             'login',
-            content: static fn (User $data) => $data->getLogin(),    
+            content: static fn (User $data) => $data->getLogin(),
             header:  $translator->translate('gridview.login')
         ),
         new DataColumn(
             'create_at',
-            content: static fn (User $data) => $data->getCreatedAt()->format('r'),    
+            content: static fn (User $data) => $data->getCreatedAt()->format('r'),
             header:  $translator->translate('gridview.create.at')
         ),
         new DataColumn(
             'api',
             content: static function (User $data) use ($urlGenerator): string {
-                    return Html::a(
-                        'API User Data',
-                        $urlGenerator->generate('api/user/profile',
-                        ['login' => $data->getLogin()]),
-                        ['target' => '_blank'],
-                    )->render();
+                return Html::a(
+                    'API User Data',
+                    $urlGenerator->generate(
+                        'api/user/profile',
+                        ['login' => $data->getLogin()]
+                    ),
+                    ['target' => '_blank'],
+                )->render();
             },
             header:  $translator->translate('gridview.api')
         ),
         new DataColumn(
             'profile',
             content: static function (User $data) use ($urlGenerator): string {
-                    return Html::a(
-                        Html::tag('i', '', [
-                            'class' => 'bi bi-person-fill ms-1',
-                            'style' => 'font-size: 1.5em;',
-                        ]),
-                        $urlGenerator->generate('user/profile', ['login' => $data->getLogin()]),
-                        ['class' => 'btn btn-link'],
-                    )->render();
+                return Html::a(
+                    Html::tag('i', '', [
+                        'class' => 'bi bi-person-fill ms-1',
+                        'style' => 'font-size: 1.5em;',
+                    ]),
+                    $urlGenerator->generate('user/profile', ['login' => $data->getLogin()]),
+                    ['class' => 'btn btn-link'],
+                )->render();
             },
-            header:  $translator->translate('gridview.profile'),        
+            header:  $translator->translate('gridview.profile'),
         ),
     ];
 ?>
 <?php
-    $toolbarString = 
-        Form::tag()->post($urlGenerator->generate('user/index'))->csrf($csrf)->open() .
-        Div::tag()->addClass('float-start m-3')->content($toolbarSelect)->encode(false)->render() .
-        Div::tag()->addClass('float-end m-3')->content($toolbarApplyChange . $toolbarReset)->encode(false)->render() .
-        Form::tag()->close();
-    echo GridView::widget()
-    ->bodyRowAttributes(['class' => 'align-middle'])
-    ->tableAttributes(['class' => 'table table-hover'])
-    ->dataReader($paginator)    
-    ->columns(...$columns)
-    ->header($header)
-    ->id('w1-grid')
-    ->paginationWidget($gridComponents->offsetPaginationWidget($paginator))
-    ->summaryAttributes(['class' => 'summary text-end mb-5'])
-    ->toolbar($toolbarString);
+$toolbarString =
+    Form::tag()->post($urlGenerator->generate('user/index'))->csrf($csrf)->open() .
+    Div::tag()->addClass('float-start m-3')->content($toolbarSelect)->encode(false)->render() .
+    Div::tag()->addClass('float-end m-3')->content($toolbarApplyChange . $toolbarReset)->encode(false)->render() .
+    Form::tag()->close();
+echo GridView::widget()
+->bodyRowAttributes(['class' => 'align-middle'])
+->tableAttributes(['class' => 'table table-hover'])
+->dataReader($paginator)
+->columns(...$columns)
+->header($header)
+->id('w1-grid')
+->paginationWidget($gridComponents->offsetPaginationWidget($paginator))
+->summaryAttributes(['class' => 'summary text-end mb-5'])
+->toolbar($toolbarString);
 ?>

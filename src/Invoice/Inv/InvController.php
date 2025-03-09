@@ -1828,7 +1828,7 @@ final class InvController
                         'url' => 'inv/view',
                         'id' => $inv_id]
                 ));
-                 //$this->email_stage_1
+                //$this->email_stage_1
             } //is_array(body)
             return $this->factory->createResponse($this->view_renderer->renderPartialAsString(
                 '//invoice/setting/inv_message',

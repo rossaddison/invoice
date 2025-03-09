@@ -1,14 +1,15 @@
 <?php
+
 declare(strict_types=1);
 
-// Note this is the only file that gets adjusted during development and ultimately gets copied to 
-// the English folder located under src/Invoice/Language/English. Google Translate cannot compile this 
+// Note this is the only file that gets adjusted during development and ultimately gets copied to
+// the English folder located under src/Invoice/Language/English. Google Translate cannot compile this
 // complete file therefore it has to be broken up into relative sections located under the English folder namely
 // 1. ip_lang i.e. old invoice plane i dot underscore translations which are still used extensively
 // 2. gateway_lang i.e. old invoice plane g dot underscore translations which are also still used
 // 3. app_lang i.e. a translation of every sentence needed in the package but which will not be able to be translated because of its size.
 
-// Note this file starts with `return [` and ip_lang starts with `$lang = [` so make sure you only build a suitable 
+// Note this file starts with `return [` and ip_lang starts with `$lang = [` so make sure you only build a suitable
 // translation array by substituting between the square brackets.
 return [
 'g.online_payment' => 'Pagamento online',
@@ -1709,7 +1710,7 @@ return [
 'site.soletrader.contact.address' => 'Indirizzo',
 'site.soletrader.contact.email' => 'E-mail',
 'site.soletrader.contact.phone' => 'Telefono',
-'site.todays.date' => 'Data odierna',    
+'site.todays.date' => 'Data odierna',
 'validator.invalid.login.password' => 'Login o password non validi',
 'validator.password.not.match' => 'le passwords non corrispondono',
 'validator.password.not.match.new' => 'Le tue nuove password non corrispondono',
@@ -1720,8 +1721,8 @@ return [
 'view.contact.form.name' => 'Nome',
 'view.contact.form.email' => 'E-mail',
 'view.contact.form.subject' => 'Soggetto',
-'view.contact.form.body' => 'Corpo', 
-    
+'view.contact.form.body' => 'Corpo',
+
 // Added 19/02/2025
 'i.email_template_type' => 'Tipo di modello di posta elettronica',
 'gateway.online.payment' => 'Pagamento online',
@@ -1819,5 +1820,5 @@ return [
 'menu.privacy.policy' => 'politica sulla riservatezza',
 'menu.terms.of.service' => 'Termini di servizio',
 'password.reset.request.token' => 'Richiedi token di reimpostazione password',
-'validator.user.exist.not' => 'Non esiste un utente con questo login',    
+'validator.user.exist.not' => 'Non esiste un utente con questo login',
 ];

@@ -21,16 +21,16 @@ use Yiisoft\Yii\Bootstrap5\NavStyle;
 
 /**
  * @var Yiisoft\Assets\AssetManager $assetManager
- * @var Yiisoft\Router\CurrentRoute $currentRoute 
+ * @var Yiisoft\Router\CurrentRoute $currentRoute
  * @var Yiisoft\Router\UrlGeneratorInterface $urlGenerator
  * @var Yiisoft\Session\SessionInterface $session
  * @var Yiisoft\Translator\TranslatorInterface $translator
  * @var Yiisoft\View\WebView  $this
  *
- * @see ..\config\common\params.php 
+ * @see ..\config\common\params.php
  *         'yiisoft/yii-view' => [
  *             'viewPath' => '@views',
- *              //'layout' => '@views/layout/main.php',  
+ *              //'layout' => '@views/layout/main.php',
  *              'layout' => '@views/layout/templates/soletrader/main.php'
  *          ],
  * @var App\User\User|null $user
@@ -77,7 +77,7 @@ $session->set('_language', $currentRoute->getArgument('_language'));
 $this->beginPage();
 /**
  * @see ./src/ViewInjection/LayoutViewInjection getLayoutParameters
- *  e.g. $title, $brandLabel, $companyWeb 
+ *  e.g. $title, $brandLabel, $companyWeb
  */
 $this->setTitle($title);
 ?>
@@ -94,36 +94,36 @@ $this->setTitle($title);
     <header class="mb-auto">
         <?php $this->beginBody(); ?>        
         <?= NavBar::widget()
-            ->addClass('navbar navbar-light bg-light navbar-expand-sm text-white')    
+            ->addClass('navbar navbar-light bg-light navbar-expand-sm text-white')
             ->addCssStyle([
                 'color' => 'red',
                 'font-family' => 'Garamond',
                 'font-weight' => 'bold'
             ])
-            ->addAttributes([])       
+            ->addAttributes([])
             ->brandImage($logoPath)
-            ->brandImageAttributes(['margin' => $companyLogoMargin ?: '10', 
-                                    'width' => $companyLogoWidth ?: '100', 
-                                    'height' => $companyLogoHeight ?: '50'])    
+            ->brandImageAttributes(['margin' => $companyLogoMargin ?: '10',
+                                    'width' => $companyLogoWidth ?: '100',
+                                    'height' => $companyLogoHeight ?: '50'])
             ->brandText(str_repeat('&nbsp;', 7).$brandLabel)
             ->brandUrl($urlGenerator->generate('site/index'))
-            ->container(false) 
-            ->containerAttributes([])      
+            ->container(false)
+            ->containerAttributes([])
             ->expand(NavBarExpand::LG)
-            ->id('navbar')      
-            ->innerContainerAttributes(['class' => 'container-md'])      
+            ->id('navbar')
+            ->innerContainerAttributes(['class' => 'container-md'])
             ->placement(NavBarPlacement::STICKY_TOP)
             ->begin(); ?>
         
         <?= Dropdown::widget()
-            ->addClass('dropdown bi bi-translate')  
+            ->addClass('dropdown bi bi-translate')
             ->addAttributes([
                 'style' => 'font-size: 1rem; color: black;',
                 'url' => '#'
             ])
             ->togglerVariant(DropdownTogglerVariant::LIGHT)
-            ->togglerContent('')        
-            ->togglerSize(ButtonSize::SMALL)        
+            ->togglerContent('')
+            ->togglerSize(ButtonSize::SMALL)
             ->items(
                 DropdownItem::link('Afrikaans South African', $urlGenerator->generateFromCurrent(['_language' => 'af-ZA'], fallbackRouteName: 'site/index')),
                 DropdownItem::link('Arabic Bahrainian/ عربي', $urlGenerator->generateFromCurrent(['_language' => 'ar-BH'], fallbackRouteName: 'site/index')),
@@ -148,168 +148,168 @@ $this->setTitle($title);
                 DropdownItem::link('Vietnamese / Tiếng Việt', $urlGenerator->generateFromCurrent(['_language' => 'vi'], fallbackRouteName: 'site/index')),
                 DropdownItem::link('Zulu South African/ Zulu South African', $urlGenerator->generateFromCurrent(['_language' => 'zu-ZA'], fallbackRouteName: 'site/index')),
             )->render();
-        ?>
-        <?php 
-            $currentPath = $currentRoute->getUri()?->getPath();
-        ?> 
-        <?= null!==$currentPath ? Nav::widget()
-            ->items(
-                NavLink::to(
-                    Label::tag()
-                    ->attributes([
-                        'class' => $debugMode ? 'bi bi-info-circle' : '',
-                        'style' => 'font-size: 1rem; color: cornflowerblue;',
-                        'data-bs-toggle' => 'tooltip',
-                        'title' => $debugMode ? '..\invoice\resources\views\layout\templates\soletrader\main.php && config/common/params.php yiisoft/yii-view layouts' : ''
-                    ]),
-                    '',
-                    //active    
-                    $debugMode,
-                    //disabled    
-                    !$debugMode,
-                    //encode label    
-                    false    
-                ),
-                NavLink::to(
-                    Label::tag()
-                    ->attributes([
-                        'class' => 'bi bi-info-circle-fill text-info',
-                        'style' => 'font-size: 1rem; color: cornflowerblue;'
-                    ])
-                    ->content(str_repeat(' ', 1).$translator->translate('menu.about')), 
-                    $urlGenerator->generate('site/about'), 
-                    $isGuest && !$noFrontPageAbout, 
-                    !$isGuest && $noFrontPageAbout,
-                    false        
-                ),
-                NavLink::to(
-                    Label::tag()
-                    ->attributes([
-                        'class' => 'bi bi-patch-check'
-                    ])
-                    ->content(str_repeat(' ', 1).$translator->translate('menu.accreditations')),  
-                    $urlGenerator->generate('site/accreditations'), 
-                    $isGuest && !$noFrontPageAccreditations, 
-                    !$isGuest && $noFrontPageAccreditations,                        
-                    false        
-                ),
-                NavLink::to(
-                    Label::tag()
-                    ->attributes(['class' => 'bi bi-images'])
-                    ->content(str_repeat(' ', 1).$translator->translate('menu.gallery')),
-                    $urlGenerator->generate('site/gallery'), 
-                    $isGuest && !$noFrontPageGallery, 
-                    !$isGuest && $noFrontPageGallery,                        
-                    false        
-                ),     
-                NavLink::to(
-                    Label::tag()
-                    ->attributes(['class' => 'bi bi-people-fill'])
-                    ->content(str_repeat(' ', 1).$translator->translate('menu.team')), 
-                    $urlGenerator->generate('site/team'), 
-                    $isGuest && !$noFrontPageTeam, 
-                    !$isGuest && $noFrontPageTeam,                        
-                    false        
-                ),
-                NavLink::to(
-                    Label::tag()
-                    ->attributes(['class' => 'bi bi-tags-fill text-danger'])
-                    ->content(str_repeat(' ', 1).$translator->translate('menu.pricing')), 
-                    $urlGenerator->generate('site/pricing'), 
-                    $isGuest && !$noFrontPagePricing, 
-                    !$isGuest && $noFrontPagePricing,                        
-                    false        
-                ),
-                NavLink::to(
-                    Label::tag()
-                    ->attributes(['class' => 'bi bi-file-ruled'])    
-                    ->content(str_repeat(' ', 1).$translator->translate('menu.testimonial')), 
-                    $urlGenerator->generate('site/testimonial'), 
-                    $isGuest && !$noFrontPageTestimonial, 
-                    !$isGuest && $noFrontPageTestimonial,                        
-                    false        
-                ),
-                NavLink::to(
-                    Label::tag()
-                    ->attributes(['class' => 'bi bi-file-text'])
-                    ->content(str_repeat(' ', 1).$translator->translate('menu.privacy.policy')), 
-                    $urlGenerator->generate('site/privacypolicy'), 
-                    $isGuest && !$noFrontPagePrivacyPolicy, 
-                    !$isGuest && $noFrontPagePrivacyPolicy,                        
-                    false        
-                ),
-                NavLink::to(
-                    Label::tag()
-                    ->attributes(['class' => 'bi bi-file-text-fill'])
-                    ->content(str_repeat(' ', 1).$translator->translate('menu.terms.of.service')), 
-                    $urlGenerator->generate('site/termsofservice'), 
-                    $isGuest && !$noFrontPageTermsOfService, 
-                    !$isGuest && $noFrontPageTermsOfService,                        
-                    false        
-                ),    
-                NavLink::to(
-                    Label::tag()
-                    ->attributes(['class' => 'bi bi-person-lines-fill text-primary'])
-                    ->content(str_repeat(' ', 1).$translator->translate('menu.contact.us')),
-                    $urlGenerator->generate('site/contact'), 
-                    $isGuest && !$noFrontPageContactDetails, 
-                    !$isGuest && $noFrontPageContactDetails,                        
-                    false        
-                ),
-                NavLink::to(
-                    Label::tag()
-                    ->attributes(['class' => 'bi bi-door-open-fill text-success'])
-                    ->content(str_repeat(' ', 1).$translator->translate('menu.login')),    
-                    $urlGenerator->generate('auth/login'), 
-                    $isGuest && !$stopLoggingIn, 
-                    !$isGuest && $stopLoggingIn,                        
-                    false        
-                ),
-                NavLink::to(
-                    Label::tag()
-                    ->attributes([
-                        'class' => 'bi bi-person-plus-fill',
-                        'data-bs-toggle' => 'tooltip',
-                        'title' => str_repeat(' ',1).$translator->translate('i.setup_create_user')
-                    ])
-                    ->content(str_repeat(' ', 1).$translator->translate('menu.signup')), 
-                    $urlGenerator->generate('auth/signup'), 
-                    $isGuest && !$stopSigningUp, 
-                    !$isGuest && $stopSigningUp,                        
-                    false        
-                ),
-                NavLink::to(
-                    /**
-                     * Only render the logout button if user is an authenticated user i.e. not guest
-                     */    
-                    $isGuest && !$stopLoggingIn
-                        ? ''
-                        : Form::tag()
-                            ->post($urlGenerator->generate('auth/logout'))
-                            ->csrf($csrf)
-                            ->open()
-                            . '<div class="mb-1">'
-                            . Button::submit(
-                                $translator->translate('i.logout', ['login' => Html::encode(null!==$user ? $user->getLogin() : '')])
-                            )
-                            ->class('btn btn-primary')
-                            . '</div>'
-                            . Form::tag()->close(),
-                        encodeLabel: false,
-                ),        
-            )
-            ->styles(NavStyle::NAVBAR) : ''; 
-        ?> 
+?>
+        <?php
+    $currentPath = $currentRoute->getUri()?->getPath();
+?> 
+        <?= null !== $currentPath ? Nav::widget()
+    ->items(
+        NavLink::to(
+            Label::tag()
+            ->attributes([
+                'class' => $debugMode ? 'bi bi-info-circle' : '',
+                'style' => 'font-size: 1rem; color: cornflowerblue;',
+                'data-bs-toggle' => 'tooltip',
+                'title' => $debugMode ? '..\invoice\resources\views\layout\templates\soletrader\main.php && config/common/params.php yiisoft/yii-view layouts' : ''
+            ]),
+            '',
+            //active
+            $debugMode,
+            //disabled
+            !$debugMode,
+            //encode label
+            false
+        ),
+        NavLink::to(
+            Label::tag()
+            ->attributes([
+                'class' => 'bi bi-info-circle-fill text-info',
+                'style' => 'font-size: 1rem; color: cornflowerblue;'
+            ])
+            ->content(str_repeat(' ', 1).$translator->translate('menu.about')),
+            $urlGenerator->generate('site/about'),
+            $isGuest && !$noFrontPageAbout,
+            !$isGuest && $noFrontPageAbout,
+            false
+        ),
+        NavLink::to(
+            Label::tag()
+            ->attributes([
+                'class' => 'bi bi-patch-check'
+            ])
+            ->content(str_repeat(' ', 1).$translator->translate('menu.accreditations')),
+            $urlGenerator->generate('site/accreditations'),
+            $isGuest && !$noFrontPageAccreditations,
+            !$isGuest && $noFrontPageAccreditations,
+            false
+        ),
+        NavLink::to(
+            Label::tag()
+            ->attributes(['class' => 'bi bi-images'])
+            ->content(str_repeat(' ', 1).$translator->translate('menu.gallery')),
+            $urlGenerator->generate('site/gallery'),
+            $isGuest && !$noFrontPageGallery,
+            !$isGuest && $noFrontPageGallery,
+            false
+        ),
+        NavLink::to(
+            Label::tag()
+            ->attributes(['class' => 'bi bi-people-fill'])
+            ->content(str_repeat(' ', 1).$translator->translate('menu.team')),
+            $urlGenerator->generate('site/team'),
+            $isGuest && !$noFrontPageTeam,
+            !$isGuest && $noFrontPageTeam,
+            false
+        ),
+        NavLink::to(
+            Label::tag()
+            ->attributes(['class' => 'bi bi-tags-fill text-danger'])
+            ->content(str_repeat(' ', 1).$translator->translate('menu.pricing')),
+            $urlGenerator->generate('site/pricing'),
+            $isGuest && !$noFrontPagePricing,
+            !$isGuest && $noFrontPagePricing,
+            false
+        ),
+        NavLink::to(
+            Label::tag()
+            ->attributes(['class' => 'bi bi-file-ruled'])
+            ->content(str_repeat(' ', 1).$translator->translate('menu.testimonial')),
+            $urlGenerator->generate('site/testimonial'),
+            $isGuest && !$noFrontPageTestimonial,
+            !$isGuest && $noFrontPageTestimonial,
+            false
+        ),
+        NavLink::to(
+            Label::tag()
+            ->attributes(['class' => 'bi bi-file-text'])
+            ->content(str_repeat(' ', 1).$translator->translate('menu.privacy.policy')),
+            $urlGenerator->generate('site/privacypolicy'),
+            $isGuest && !$noFrontPagePrivacyPolicy,
+            !$isGuest && $noFrontPagePrivacyPolicy,
+            false
+        ),
+        NavLink::to(
+            Label::tag()
+            ->attributes(['class' => 'bi bi-file-text-fill'])
+            ->content(str_repeat(' ', 1).$translator->translate('menu.terms.of.service')),
+            $urlGenerator->generate('site/termsofservice'),
+            $isGuest && !$noFrontPageTermsOfService,
+            !$isGuest && $noFrontPageTermsOfService,
+            false
+        ),
+        NavLink::to(
+            Label::tag()
+            ->attributes(['class' => 'bi bi-person-lines-fill text-primary'])
+            ->content(str_repeat(' ', 1).$translator->translate('menu.contact.us')),
+            $urlGenerator->generate('site/contact'),
+            $isGuest && !$noFrontPageContactDetails,
+            !$isGuest && $noFrontPageContactDetails,
+            false
+        ),
+        NavLink::to(
+            Label::tag()
+            ->attributes(['class' => 'bi bi-door-open-fill text-success'])
+            ->content(str_repeat(' ', 1).$translator->translate('menu.login')),
+            $urlGenerator->generate('auth/login'),
+            $isGuest && !$stopLoggingIn,
+            !$isGuest && $stopLoggingIn,
+            false
+        ),
+        NavLink::to(
+            Label::tag()
+            ->attributes([
+                'class' => 'bi bi-person-plus-fill',
+                'data-bs-toggle' => 'tooltip',
+                'title' => str_repeat(' ', 1).$translator->translate('i.setup_create_user')
+            ])
+            ->content(str_repeat(' ', 1).$translator->translate('menu.signup')),
+            $urlGenerator->generate('auth/signup'),
+            $isGuest && !$stopSigningUp,
+            !$isGuest && $stopSigningUp,
+            false
+        ),
+        NavLink::to(
+            /**
+             * Only render the logout button if user is an authenticated user i.e. not guest
+             */
+            $isGuest && !$stopLoggingIn
+                ? ''
+                : Form::tag()
+                    ->post($urlGenerator->generate('auth/logout'))
+                    ->csrf($csrf)
+                    ->open()
+                    . '<div class="mb-1">'
+                    . Button::submit(
+                        $translator->translate('i.logout', ['login' => Html::encode(null !== $user ? $user->getLogin() : '')])
+                    )
+                    ->class('btn btn-primary')
+                    . '</div>'
+                    . Form::tag()->close(),
+            encodeLabel: false,
+        ),
+    )
+    ->styles(NavStyle::NAVBAR) : '';
+?> 
         <?= NavBar::end() ?>
     </header>
 
     <main class="container py-3">
-        <?= 
-            /**
-             * @see ./resources/views/site/index.php
-             */
-            $content
-        ?>
+        <?=
+    /**
+     * @see ./resources/views/site/index.php
+     */
+    $content
+?>
     </main>
 
     <footer class='mt-auto bg-dark py-3'>
@@ -354,5 +354,3 @@ $this->setTitle($title);
 $this->endPage(true);
 
 echo "Logopath ".$logoPath;
-
-

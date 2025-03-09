@@ -18,9 +18,9 @@ class ProductProperty
     private ?Product $product = null;
 
     public function __construct(#[Column(type: 'integer(11)', nullable: true)]
-    private ?int $product_id = null, #[Column(type: 'text', nullable: true)]
-    public ?string $name = '', #[Column(type: 'text', nullable: true)]
-    public ?string $value = '')
+        private ?int $product_id = null, #[Column(type: 'text', nullable: true)]
+        public ?string $name = '', #[Column(type: 'text', nullable: true)]
+        public ?string $value = '')
     {
     }
 

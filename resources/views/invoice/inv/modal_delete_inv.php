@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=1); 
+declare(strict_types=1);
 
 /**
  * @see InvController function view_modal_delete_inv
@@ -9,7 +9,7 @@ declare(strict_types=1);
  * @var Yiisoft\Translator\TranslatorInterface $translator
  * @var string $actionName
  * @var string $csrf
- * @psalm-var array<string, Stringable|null|scalar> $actionArguments 
+ * @psalm-var array<string, Stringable|null|scalar> $actionArguments
  */
 
 ?>

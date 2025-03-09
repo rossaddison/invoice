@@ -10,8 +10,8 @@ use Yiisoft\Html\Html;
  * @var Yiisoft\Translator\TranslatorInterface $translator
  * @var Yiisoft\View\WebView $this
  * @var string $from_date
- * @var string $to_date 
- * @var array $results 
+ * @var string $to_date
+ * @var array $results
  */
 
 $this->beginPage();
@@ -36,7 +36,7 @@ $assetManager->register(ReportAsset::class);
         <th class="amount"><?= $translator->translate('i.sales'); ?></th>
         <th class="amount"><?= $translator->translate('i.item_tax'); ?></th>
     </tr>
-    <?php 
+    <?php
         /**
          * @var array $result
          */

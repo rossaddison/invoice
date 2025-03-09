@@ -10,7 +10,7 @@ use Yiisoft\Data\Paginator\OffsetPaginator;
  * @var App\Widget\Button $button
  * @var App\Invoice\Entity\Setting $setting
  * @var Yiisoft\Router\UrlGeneratorInterface $urlGenerator
- * @var Yiisoft\Translator\TranslatorInterface $translator 
+ * @var Yiisoft\Translator\TranslatorInterface $translator
  * @var string $alert
  * @var OffsetPaginator $paginator
  */
@@ -34,7 +34,7 @@ $pagination = OffsetPagination::widget()
 
 <?php
   if ($pagination->isPaginationRequired()) {
-     echo $pagination;
+      echo $pagination;
   }
 ?>
                 
@@ -65,12 +65,12 @@ $pagination = OffsetPagination::widget()
           </a>
           <ul class="dropdown-menu">
               <li>
-                  <a href="<?= $urlGenerator->generate('setting/edit',['setting_id'=>$setting->getSetting_id()]); ?>"><i class="fa fa-edit fa-margin"></i>
+                  <a href="<?= $urlGenerator->generate('setting/edit', ['setting_id' => $setting->getSetting_id()]); ?>"><i class="fa fa-edit fa-margin"></i>
                        <?= $translator->translate('i.edit'); ?>
                   </a>
               </li>
               <li>
-                  <a href="<?= $urlGenerator->generate('setting/delete',['setting_id'=>$setting->getSetting_id()]); ?>" style="text-decoration:none" onclick="return confirm('<?= $translator->translate('i.delete_record_warning'); ?>');">
+                  <a href="<?= $urlGenerator->generate('setting/delete', ['setting_id' => $setting->getSetting_id()]); ?>" style="text-decoration:none" onclick="return confirm('<?= $translator->translate('i.delete_record_warning'); ?>');">
                         <i class="fa fa-trash fa-margin"></i><?= $translator->translate('i.delete'); ?>                                    
                   </a>
               </li>
@@ -86,13 +86,13 @@ $pagination = OffsetPagination::widget()
 </table>
 <?php
     $pageSize = $paginator->getCurrentPageSize();
-    if ($pageSize > 0) {
-      echo Html::p(
+if ($pageSize > 0) {
+    echo Html::p(
         sprintf($translator->translate('invoice.index.footer.showing').' settings', $pageSize, $paginator->getTotalItems()),
         ['class' => 'text-muted']
     );
-    } else {
-      echo Html::p($translator->translate('invoice.records.no'));
-    }
+} else {
+    echo Html::p($translator->translate('invoice.records.no'));
+}
 ?>
 </div>

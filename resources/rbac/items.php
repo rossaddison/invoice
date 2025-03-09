@@ -16,7 +16,7 @@ return [
             'canChangePasswordForAnyUser'
         ],
     ],
-    
+
     // Accountant with the permission to create and record payments to invoices for assigned clients
     'accountant' => [
         'name' => 'accountant',
@@ -27,9 +27,9 @@ return [
            'viewInv',
            'viewPayment',
            'editPayment'
-        ]    
+        ]
     ],
-    
+
     // Users with the right to view quotes
     'observer' => [
         'name' => 'observer',
@@ -41,58 +41,58 @@ return [
            'viewPayment',
            'editUserInv',
            'editClientPeppol'
-        ]    
+        ]
     ],
-    
-    'viewInv'=>[
+
+    'viewInv' => [
         'name' => 'viewInv',
         'type' => 'permission',
         'updatedAt' => 1599036348,
         'createdAt' => 1599036348,
     ],
-    
-    'editInv'=>[
+
+    'editInv' => [
         'name' => 'editInv',
         'type' => 'permission',
         'updatedAt' => 1599036348,
         'createdAt' => 1599036348,
     ],
-    
-    'viewPayment'=>[
+
+    'viewPayment' => [
         'name' => 'viewPayment',
         'type' => 'permission',
         'updatedAt' => 1599036348,
         'createdAt' => 1599036348,
     ],
-    
-    'editPayment'=>[
+
+    'editPayment' => [
         'name' => 'editPayment',
         'type' => 'permission',
         'updatedAt' => 1599036348,
         'createdAt' => 1599036348,
     ],
-    
-    'editUser'=>[
+
+    'editUser' => [
         'name' => 'editUser',
         'type' => 'permission',
         'updatedAt' => 1599036348,
         'createdAt' => 1599036348,
     ],
-    
-    'editUserInv'=>[
+
+    'editUserInv' => [
         'name' => 'editUserInv',
         'type' => 'permission',
         'updatedAt' => 1599036348,
         'createdAt' => 1599036348,
     ],
-    
-    'editClientPeppol'=>[
+
+    'editClientPeppol' => [
         'name' => 'editClientPeppol',
         'type' => 'permission',
         'updatedAt' => 1599036348,
         'createdAt' => 1599036348,
     ],
-    
+
     'changePasswordForAnyUser' => [
         'name' => 'changePasswordForAnyUser',
         'type' => 'permission',

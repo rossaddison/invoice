@@ -1701,7 +1701,7 @@ return [
 'site.soletrader.contact.address' => '地址',
 'site.soletrader.contact.email' => '电子邮件',
 'site.soletrader.contact.phone' => '电话',
-'site.todays.date' => '今天的日期',    
+'site.todays.date' => '今天的日期',
 'validator.invalid.login.password' => '无效的登录名或密码',
 'validator.password.not.match' => '密码不匹配',
 'validator.password.not.match.new' => '您的新密码不匹配',
@@ -1712,7 +1712,7 @@ return [
 'view.contact.form.name' => '姓名',
 'view.contact.form.email' => '电子邮件',
 'view.contact.form.subject' => '主题',
-'view.contact.form.body' => '身体', 
+'view.contact.form.body' => '身体',
 // Added 17/02/2025
 'i.email_template_type' => '电子邮件模板类型',
 'gateway.online.payment' => '网上支付',
@@ -1809,5 +1809,5 @@ return [
 'menu.gallery' => '画廊',
 'menu.privacy.policy' => '隐私政策',
 'menu.terms.of.service' => '服务条款',
-'password.reset.request.token' => '请求密码重置令牌'    
+'password.reset.request.token' => '请求密码重置令牌'
 ];

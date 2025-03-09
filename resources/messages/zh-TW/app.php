@@ -79,7 +79,7 @@ return [
 'g.online_payment_payment_failed' => '支付失敗。請再試一次。',
 'g.online_payment_payment_successful' => '發票 %s 付款成功！',
 'g.online_payment_payment_redirect' => '請稍候，我們正在將您重新導向至付款頁面...',
-'g.online_payment_3dauth_redirect' => '我們正在將您重新導向到您的發卡機構以進行身份驗證，請稍候...',    
+'g.online_payment_3dauth_redirect' => '我們正在將您重新導向到您的發卡機構以進行身份驗證，請稍候...',
 'i.account_information' => '帳戶資訊',
 'i.active' => '積極的',
 'i.active_client' => '積極的',
@@ -1778,7 +1778,7 @@ return [
 'site.soletrader.contact.address' => '地址',
 'site.soletrader.contact.email' => '電子郵件',
 'site.soletrader.contact.phone' => '電話',
-'site.todays.date' => '今天的日期',    
+'site.todays.date' => '今天的日期',
 'validator.invalid.login.password' => '無效的登入名稱或密碼',
 'validator.password.not.match' => '密碼不匹配',
 'validator.password.not.match.new' => '您的新密碼不匹配',
@@ -1789,7 +1789,7 @@ return [
 'view.contact.form.name' => '姓名',
 'view.contact.form.email' => '電子郵件',
 'view.contact.form.subject' => '主題',
-'view.contact.form.body' => '身體', 
+'view.contact.form.body' => '身體',
 // added 17/02/2025
 'i.email_template_type' => '電子郵件範本類型',
 'gateway.online.payment' => '網上支付',
@@ -1886,5 +1886,5 @@ return [
 'menu.gallery' => '畫廊',
 'menu.privacy.policy' => '隱私權政策',
 'menu.terms.of.service' => '服務條款',
-'password.reset.request.token' => '請求密碼重設令牌',    
+'password.reset.request.token' => '請求密碼重設令牌',
 ];

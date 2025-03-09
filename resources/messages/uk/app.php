@@ -1,4 +1,5 @@
-<?php 
+<?php
+
 declare (strict_types=1);
 
 return [
@@ -1700,7 +1701,7 @@ return [
 'site.soletrader.contact.address' => 'Адреса',
 'site.soletrader.contact.email' => 'Електронна пошта',
 'site.soletrader.contact.phone' => 'Телефон',
-'site.todays.date' => 'Сьогоднішня дата',    
+'site.todays.date' => 'Сьогоднішня дата',
 'validator.invalid.login.password' => 'Невірний логін або пароль',
 'validator.password.not.match' => 'Паролі не збігаються',
 'validator.password.not.match.new' => 'Ваші нові паролі не збігаються',
@@ -1808,5 +1809,5 @@ return [
 'menu.gallery' => 'Галерея',
 'menu.privacy.policy' => 'Політика конфіденційності',
 'menu.terms.of.service' => 'Умови обслуговування',
-'password.reset.request.token' => 'Запит маркера скидання пароля',    
+'password.reset.request.token' => 'Запит маркера скидання пароля',
 ];

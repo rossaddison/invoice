@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=1); 
+declare(strict_types=1);
 
 use Yiisoft\Html\Html;
 use Yiisoft\Yii\Bootstrap5\Alert;
@@ -17,8 +17,8 @@ use Yiisoft\Yii\Bootstrap5\AlertVariant;
  * @var array $body
  * @var array $errors
  * @var array $products
- * @var array $quotes   
- * @var array $tax_rates        
+ * @var array $quotes
+ * @var array $tax_rates
  * @var array $units
  * @var string $actionName
  * @var string $csrf
@@ -33,7 +33,7 @@ if ($errors) {
     foreach ($errors as $field => $error) {
         echo Alert::widget()
              ->variant(AlertVariant::DANGER)
-             ->body((string)$field . ':' . $error, true)   
+             ->body((string)$field . ':' . $error, true)
              ->dismissable(true)
              ->render();
     }
@@ -77,7 +77,7 @@ $vat = $s->getSetting('enable_vat_registration') === '1' ? true : false;
                         <span class="input-group-text"><?= $translator->translate('i.item'); ?></span>
                         <select name="product_id" id="product_id" class="form-control has-feedback" required disabled>
                             <option value="0"><?= $translator->translate('i.none'); ?></option>
-                             <?php 
+                             <?php
                              /**
                               * @var App\Invoice\Entity\Product $product
                               */
@@ -117,20 +117,20 @@ $vat = $s->getSetting('enable_vat_registration') === '1' ? true : false;
                         <?php
                             /**
                              * @var App\Invoice\Entity\TaxRate $taxRate
-                             */    
+                             */
                             foreach ($tax_rates as $taxRate) { ?>
                             <option value="<?= $taxRate->getTaxRateId(); ?>" <?php $s->check_select(Html::encode($body['tax_rate_id'] ?? ''), $taxRate->getTaxRateId()) ?>>
                                 <?php
                                     $taxRatePercent = $taxRate->getTaxRatePercent();
-                                    $taxRateName = $taxRate->getTaxRateName();
-                                    if (null!==$taxRatePercent && null!==$taxRateName) {
-                                        $formattedPercent = $numberHelper->format_amount($taxRatePercent);
-                                        if (null!==$formattedPercent) {
-                                            echo  $formattedPercent. '% - ' .$taxRateName;
-                                        }
-                                    } else {
-                                        echo '%';
-                                    }    
+                                $taxRateName = $taxRate->getTaxRateName();
+                                if (null !== $taxRatePercent && null !== $taxRateName) {
+                                    $formattedPercent = $numberHelper->format_amount($taxRatePercent);
+                                    if (null !== $formattedPercent) {
+                                        echo  $formattedPercent. '% - ' .$taxRateName;
+                                    }
+                                } else {
+                                    echo '%';
+                                }
                                 ?>
                             </option>
                         <?php } ?>

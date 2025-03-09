@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=1); 
+declare(strict_types=1);
 
 use Yiisoft\Html\Html;
 
@@ -41,15 +41,15 @@ use Yiisoft\Html\Html;
                 </td>
                 <td>
                     <b><?= Html::encode($invItem->getProduct() ? ($invItem->getProduct()?->getProduct_name() ?? '')
-                                     : ($invItem->getTask()    ? ($invItem->getTask()?->getName() ?? ''): '')); ?></b>
+                                     : ($invItem->getTask() ? ($invItem->getTask()?->getName() ?? '') : '')); ?></b>
                 </td>
                 <td>
-                    <?= nl2br(Html::encode($invItem->getProduct() ? $invItem->getProduct()?->getProduct_description() 
-                                        : ($invItem->getTask()    ? $invItem->getTask()?->getDescription() : ''))); ?>
+                    <?= nl2br(Html::encode($invItem->getProduct() ? $invItem->getProduct()?->getProduct_description()
+                                        : ($invItem->getTask() ? $invItem->getTask()?->getDescription() : ''))); ?>
                 </td>
                 <td class="text-right">
-                    <?= $numberHelper->format_currency($invItem->getProduct() ? ($invItem->getProduct()?->getProduct_price() ?? 999.99) 
-                                                    : ($invItem->getTask()    ? ($invItem->getTask()?->getPrice() ?? 999.99): '')); ?>
+                    <?= $numberHelper->format_currency($invItem->getProduct() ? ($invItem->getProduct()?->getProduct_price() ?? 999.99)
+                                                    : ($invItem->getTask() ? ($invItem->getTask()?->getPrice() ?? 999.99) : '')); ?>
                 </td>
                 <td class="text-right">
                     <?= $invItem->getQuantity(); ?>

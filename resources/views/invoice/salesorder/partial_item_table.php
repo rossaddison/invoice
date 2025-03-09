@@ -45,9 +45,9 @@ $vat = $s->getSetting('enable_vat_registration');
             
             <?php
             //**********************************************************************************************
-            // New 
+            // New
             //**********************************************************************************************
-            ?>
+?>
 
             <tbody id="new_row" style="display: none;">
             <tr>
@@ -88,17 +88,17 @@ $vat = $s->getSetting('enable_vat_registration');
                         <select name="item_tax_rate_id" class="form-control">
                             <option value="0"><?= $translator->translate('i.none'); ?></option>
                             <?php
-                                /**
-                                 * @var App\Invoice\Entity\TaxRate $taxRate
-                                 */
-                                foreach ($trR->findAllPreloaded() as $taxRate) { ?>
+                    /**
+                     * @var App\Invoice\Entity\TaxRate $taxRate
+                     */
+                    foreach ($trR->findAllPreloaded() as $taxRate) { ?>
                                 <option value="<?php echo $taxRate->getTaxRateId(); ?>">
                                     <?php
-                                        $taxRatePercent = $taxRate->getTaxRatePercent();
-                                        $taxRateName = $taxRate->getTaxRateName();
-                                        if (null!==$taxRatePercent && null!==$taxRateName) {
-                                            echo $numberHelper->format_amount((string)$taxRatePercent . '% - ' . $taxRateName);
-                                        }; ?>
+                            $taxRatePercent = $taxRate->getTaxRatePercent();
+                        $taxRateName = $taxRate->getTaxRateName();
+                        if (null !== $taxRatePercent && null !== $taxRateName) {
+                            echo $numberHelper->format_amount((string)$taxRatePercent . '% - ' . $taxRateName);
+                        }; ?>
                                 </option>
                             <?php } ?>
                         </select>
@@ -158,14 +158,14 @@ $vat = $s->getSetting('enable_vat_registration');
             
             <?php
                 //*************************************************************************************
-                // Current 
+                // Current
                 // ************************************************************************************
                 $count = 1;
-                /**
-                 * @var App\Invoice\Entity\SalesOrderItem $item
-                 */
-                
-                foreach ($soItems as $item) { ?>
+/**
+ * @var App\Invoice\Entity\SalesOrderItem $item
+ */
+
+foreach ($soItems as $item) { ?>
                 <tbody class="item">
                 <tr>
                     <td rowspan="2" class="td-icon" style="text-align: center; vertical-align: middle;">
@@ -184,10 +184,10 @@ $vat = $s->getSetting('enable_vat_registration');
                             <span class="input-group-text"><?= $translator->translate('i.item'); ?></span>
                             <select name="item_name" class="form-control" disabled>                                
                                 <?php
-                                    /**
-                                     * @var App\Invoice\Entity\Product $product
-                                     */
-                                    foreach ($pR->findAllPreloaded() as $product) { ?>
+                    /**
+                     * @var App\Invoice\Entity\Product $product
+                     */
+                    foreach ($pR->findAllPreloaded() as $product) { ?>
                                     <option value="<?php echo $product->getProduct_id(); ?>"
                                             <?php if ($item->getProduct_id() == $product->getProduct_id()) { ?>selected="selected"<?php } ?>>
                                         <?php echo $product->getProduct_name(); ?>
@@ -224,21 +224,21 @@ $vat = $s->getSetting('enable_vat_registration');
                             <span class="input-group-text"><?= $vat === '0' ? $translator->translate('i.tax_rate') : $translator->translate('invoice.invoice.vat.rate') ?></span>
                             <select disabled name="item_tax_rate_id" class="form-control" data-bs-toggle = "tooltip" title="salesorder_item->tax_rate_id">
                                 <?php
-                                    /**
-                                     * @var App\Invoice\Entity\TaxRate $taxRate
-                                     */
-                                    foreach ($trR->findAllPreloaded() as $taxRate) { ?>
+                    /**
+                     * @var App\Invoice\Entity\TaxRate $taxRate
+                     */
+                    foreach ($trR->findAllPreloaded() as $taxRate) { ?>
                                     <option value="<?php echo $taxRate->getTaxRateId(); ?>"
                                         <?php
-                                            $taxRatePercent = $taxRate->getTaxRatePercent();
-                                            $taxRatePercentNumber = $numberHelper->format_amount($taxRatePercent);
-                                            $taxRateName = $taxRate->getTaxRateName();
-                                            if ($item->getTax_rate_id() == $taxRate->getTaxRateId()) { ?>selected="selected"<?php } ?>>
+                            $taxRatePercent = $taxRate->getTaxRatePercent();
+                        $taxRatePercentNumber = $numberHelper->format_amount($taxRatePercent);
+                        $taxRateName = $taxRate->getTaxRateName();
+                        if ($item->getTax_rate_id() == $taxRate->getTaxRateId()) { ?>selected="selected"<?php } ?>>
                                         <?php
-                                            if (null!==$taxRatePercentNumber && null!==$taxRateName) {
-                                                echo  Html::encode($taxRatePercentNumber. '% - ' . $taxRateName); 
-                                            }
-                                        ?>
+                        if (null !== $taxRatePercentNumber && null !== $taxRateName) {
+                            echo  Html::encode($taxRatePercentNumber. '% - ' . $taxRateName);
+                        }
+                        ?>
                                     </option>
                                 <?php } ?>
                             </select>
@@ -246,7 +246,7 @@ $vat = $s->getSetting('enable_vat_registration');
                     </td>
                     <td class="td-icon text-right td-vert-middle">
                     <?php if ($invEdit || $invView) { ?>    
-                        <a href="<?= $urlGenerator->generate('salesorderitem/edit',['id'=>$item->getId()]) ?>" class="btn btn-md btn-link"><i class="fa fa-pencil"></i></a>
+                        <a href="<?= $urlGenerator->generate('salesorderitem/edit', ['id' => $item->getId()]) ?>" class="btn btn-md btn-link"><i class="fa fa-pencil"></i></a>
                     </td>
                     <?php } ?>
                 </tr>
@@ -289,7 +289,8 @@ $vat = $s->getSetting('enable_vat_registration');
                     </td>                   
                 </tr>
                 </tbody>
-            <?php $count = $count + 1;} ?> 
+            <?php $count = $count + 1;
+} ?> 
         </table>
     </div>
      <br>
@@ -330,7 +331,7 @@ $vat = $s->getSetting('enable_vat_registration');
                         <div class="discount-field">
                             <div class="input-group input-group-sm">
                                 <input id="quote_discount_amount" name="quote_discount_amount"
-                                       class="discount-option form-control input-sm amount" data-bs-toggle = "tooltip" title="quote->discount_amount" disabled
+                                       class="discount-option form-control amount" data-bs-toggle = "tooltip" title="quote->discount_amount" disabled
                                        value="<?= $numberHelper->format_amount($so->getDiscount_amount() != 0 ? $so->getDiscount_amount() : 0.00); ?>">
                                 <div
                                     class="input-group-text"><?= $s->getSetting('currency_symbol'); ?>
@@ -341,7 +342,7 @@ $vat = $s->getSetting('enable_vat_registration');
                             <div class="input-group input-group-sm">
                                 <input id="quote_discount_percent" name="quote_discount_percent" data-bs-toggle = "tooltip" title="quote->discount_percent" disabled
                                        value="<?= $numberHelper->format_amount($so->getDiscount_percent() != 0 ? $so->getDiscount_percent() : 0.00); ?>"
-                                       class="discount-option form-control input-sm amount">
+                                       class="discount-option form-control amount">
                                 <div class="input-group-text">&percnt;</div>
                             </div>
                         </div>

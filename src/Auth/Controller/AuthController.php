@@ -1333,7 +1333,7 @@ final class AuthController
      * @param string $state
      * @psalm-return void
      */
-    private function blockInvalidState (string $identityProvider, string $state): void
+    private function blockInvalidState(string $identityProvider, string $state): void
     {
         /**
          * @psalm-suppress MixedMethodCall,

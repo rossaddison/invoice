@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=1); 
+declare(strict_types=1);
 
 use Yiisoft\FormModel\Field;
 use Yiisoft\Html\Html;
@@ -30,13 +30,13 @@ use Yiisoft\Html\Tag\Form;
     ->id('UnitPeppolForm')
     ->open() ?>
 
-<?= Html::openTag('div',['class'=>'container py-5 h-100']); ?>
-<?= Html::openTag('div',['class'=>'row d-flex justify-content-center align-items-center h-100']); ?>
-<?= Html::openTag('div',['class'=>'col-12 col-md-8 col-lg-6 col-xl-8']); ?>
-<?= Html::openTag('div',['class'=>'card border border-dark shadow-2-strong rounded-3']); ?>
-<?= Html::openTag('div',['class'=>'card-header']); ?>
+<?= Html::openTag('div', ['class' => 'container py-5 h-100']); ?>
+<?= Html::openTag('div', ['class' => 'row d-flex justify-content-center align-items-center h-100']); ?>
+<?= Html::openTag('div', ['class' => 'col-12 col-md-8 col-lg-6 col-xl-8']); ?>
+<?= Html::openTag('div', ['class' => 'card border border-dark shadow-2-strong rounded-3']); ?>
+<?= Html::openTag('div', ['class' => 'card-header']); ?>
 
-<?= Html::openTag('h1',['class'=>'fw-normal h3 text-center']); ?>    
+<?= Html::openTag('h1', ['class' => 'fw-normal h3 text-center']); ?>    
     <?= Html::encode($title) ?>
 <?= Html::closeTag('h1'); ?>
 <?= Html::openTag('div', ['id' => 'headerbar']); ?>
@@ -47,37 +47,37 @@ use Yiisoft\Html\Tag\Form;
                 <?= Html::openTag('div', ['class' => 'mb-3 form-group']); ?>
                     <?= Field::hidden($form, 'id')
                         ->hideLabel(true)
-                    ?>
+?>
                 <?= Html::closeTag('div'); ?>
                 <?= Html::openTag('div', ['class' => 'mb-3 form-group']); ?>
                     <?= Field::select($form, 'unit_id')
-                        ->label($translator->translate('i.id'))
-                        ->optionsData($optionsDataUnits)
-                        ->value(Html::encode($form->getUnit_id() ?? ''))
-                        ->disabled(true)
-                    ?>
+    ->label($translator->translate('i.id'))
+    ->optionsData($optionsDataUnits)
+    ->value(Html::encode($form->getUnit_id() ?? ''))
+    ->disabled(true)
+?>
                 <?= Html::closeTag('div'); ?>
                 <?= Html::openTag('div', ['class' => 'mb-3 form-group']); ?>
                     <?= Field::text($form, 'name')
-                        ->label($translator->translate('i.name'))
-                        ->value(Html::encode($form->getName() ?? ''))
-                        ->disabled(true); 
-                    ?>
+    ->label($translator->translate('i.name'))
+    ->value(Html::encode($form->getName() ?? ''))
+    ->disabled(true);
+?>
                 <?= Html::closeTag('div'); ?>
                 <?= Html::openTag('div', ['class' => 'mb-3 form-group']); ?>
                     <?= Field::select($form, 'code')
-                        ->label($translator->translate('invoice.unit.peppol.code'))
-                        ->optionsData($optionsDataEneces)
-                        ->value(Html::encode($form->getCode() ?? ''))
-                        ->disabled(true); 
-                    ?>
+    ->label($translator->translate('invoice.unit.peppol.code'))
+    ->optionsData($optionsDataEneces)
+    ->value(Html::encode($form->getCode() ?? ''))
+    ->disabled(true);
+?>
                 <?= Html::closeTag('div'); ?>
                 <?= Html::openTag('div', ['class' => 'mb-3 form-group']); ?>
                     <?= Field::text($form, 'description')
-                        ->label($translator->translate('i.description'))
-                        ->value(Html::encode($form->getDescription() ?? ''))
-                        ->disabled(true);  
-                    ?>
+    ->label($translator->translate('i.description'))
+    ->value(Html::encode($form->getDescription() ?? ''))
+    ->disabled(true);
+?>
                 <?= Html::closeTag('div'); ?>
                 <?= Html::openTag('div', ['class' => 'mb-3 form-group']); ?>
                     <!-- https://dev.to/dcodeyt/creating-beautiful-html-tables-with-css-428l
@@ -99,32 +99,32 @@ use Yiisoft\Html\Tag\Form;
                         <?= Html::closeTag('thead'); ?>
                         <?= Html::openTag('tbody'); ?>
                             <?php
-                            /**
-                             * @var string $key
-                             * @var string $value
-                             */
-                            foreach ($eneces as $key => $value) {
-                                /**
-                                 * @var array $eneces[$key]
-                                 */
-                                $enece = $eneces[$key];
-                                $description = (string)(array_key_exists('Description', $enece) ? $enece['Description'] : '');
-                                echo Html::openTag('tr');
-                                    echo Html::openTag('td');
-                                        echo (string)$enece['Id'];
-                                    echo Html::closeTag('td');
-                                echo Html::closeTag('tr');
-                                echo Html::openTag('tr');
-                                    echo Html::openTag('td');
-                                        echo (string)$enece['Name'];
-                                    echo Html::closeTag('td');
-                                echo Html::closeTag('tr');
-                                echo Html::openTag('tr');
-                                    echo Html::openTag('td');
-                                        echo $description;
-                                    echo Html::closeTag('td');
-                                echo Html::closeTag('tr');
-                            } ?>
+        /**
+         * @var string $key
+         * @var string $value
+         */
+        foreach ($eneces as $key => $value) {
+            /**
+             * @var array $eneces[$key]
+             */
+            $enece = $eneces[$key];
+            $description = (string)(array_key_exists('Description', $enece) ? $enece['Description'] : '');
+            echo Html::openTag('tr');
+            echo Html::openTag('td');
+            echo (string)$enece['Id'];
+            echo Html::closeTag('td');
+            echo Html::closeTag('tr');
+            echo Html::openTag('tr');
+            echo Html::openTag('td');
+            echo (string)$enece['Name'];
+            echo Html::closeTag('td');
+            echo Html::closeTag('tr');
+            echo Html::openTag('tr');
+            echo Html::openTag('td');
+            echo $description;
+            echo Html::closeTag('td');
+            echo Html::closeTag('tr');
+        } ?>
                         <?= Html::closeTag('tbody'); ?>
                     <?= Html::closeTag('table'); ?>
                 <?= Html::closeTag('div'); ?>    

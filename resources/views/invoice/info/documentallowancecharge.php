@@ -1,5 +1,5 @@
-<?php 
-declare(strict_types=1); 
+<?php
+declare(strict_types=1);
 ?>
 
 <h6 align="center" id="taxpoint">Tax Point: (...views/invoice/info/taxpoint.php)</h6>

@@ -1,24 +1,24 @@
 <?php
 
-    declare(strict_types=1);
-    
-    use Yiisoft\Html\Html;
-    use Yiisoft\Html\Tag\A;
-    use Yiisoft\Html\Tag\H4;
-    use Yiisoft\Html\Tag\P;
-    
-    /**
-     * @see \src\ViewInjection\CommonViewInjection.php
-     * @var App\Invoice\Setting\SettingRepository $s
-     * @var array $contact
-     * @var string $companyAddress1
-     * @var string $companyAddress2
-     * @var string $companyCity
-     * @var string $companyState
-     * @var string $companyZip
-     * @var string $companyPhone
-     * @var string $companyEmail
-     */
+declare(strict_types=1);
+
+use Yiisoft\Html\Html;
+use Yiisoft\Html\Tag\A;
+use Yiisoft\Html\Tag\H4;
+use Yiisoft\Html\Tag\P;
+
+/**
+ * @see \src\ViewInjection\CommonViewInjection.php
+ * @var App\Invoice\Setting\SettingRepository $s
+ * @var array $contact
+ * @var string $companyAddress1
+ * @var string $companyAddress2
+ * @var string $companyCity
+ * @var string $companyState
+ * @var string $companyZip
+ * @var string $companyPhone
+ * @var string $companyEmail
+ */
 ?>
 
     <?= Html::openTag('section', ['id' => 'Contact', 'class' => 'py-5 py-xl-8']); ?>
@@ -26,9 +26,9 @@
             <?= Html::openTag('div', ['class' => 'row gy-3 gy-md-4 gy-lg-0 align-items-lg-center']); ?>
                 <?= Html::openTag('div', ['class' => 'col-12 col-lg-6']); ?>
                     <?= Html::tag('img', '', [
-                        'class' => 'img-fluid rounded', 
-                        'loading' => 'lazy', 
-                        'src' => '/img/soletrader/contact/contact-img-1.jpg', 
+                        'class' => 'img-fluid rounded',
+                        'loading' => 'lazy',
+                        'src' => '/img/soletrader/contact/contact-img-1.jpg',
                         'alt' => '']); ?>
             <?= Html::closeTag('div'); ?>
             <?= Html::openTag('div', ['class' => 'col-12 col-lg-6']); ?>
@@ -50,10 +50,10 @@
                             <?= Html::openTag('div'); ?>
                                 <?= H4::tag()
                                     ->addClass('mb-3')
-                                    ->content(str_repeat(' ',2) .(string)$contact['address'])
+                                    ->content(str_repeat(' ', 2) .(string)$contact['address'])
                                     ->render(); ?>
                                 <?= Html::openTag('address', ['class' => 'mb-0 text-secondary']); ?>    
-                                    <?= $companyAddress1.', '. 
+                                    <?= $companyAddress1.', '.
                                         $companyAddress2.', '.
                                         $companyCity.', '.
                                         $companyState.', '.
@@ -72,13 +72,13 @@
                                     ->content((string)$contact['phone'])
                                     ->render(); ?>
                                 <?= Html::openTag('p', ['class' => 'mb-0']); ?>
-                                    <?= 
+                                    <?=
                                         A::tag()
-                                        ->href('tel:+15057922430')  
+                                        ->href('tel:+15057922430')
                                         ->addClass('link-secondary text-decoration-none')
                                         ->content($companyPhone)
                                         ->render()
-                                    ?>
+?>
                                 <?= Html::closeTag('p'); ?>
                             <?= Html::closeTag('div'); ?>
                         <?= Html::closeTag('div'); ?>
@@ -91,16 +91,16 @@
                             <?= Html::closeTag('div'); ?>
                             <?= Html::openTag('div'); ?>
                                 <?= H4::tag()
-                                    ->addClass('mb-3')
-                                    ->content((string)$contact['email'])
-                                    ->render(); ?>
+->addClass('mb-3')
+->content((string)$contact['email'])
+->render(); ?>
                                 <?= Html::openTag('p'); ?>
                                     <?= A::tag()
-                                        ->href('mailto:demo@yourdomain.com')  
-                                        ->addClass('link-secondary text-decoration-none')
-                                        ->content($companyEmail)
-                                        ->render();  
-                                    ?>
+    ->href('mailto:demo@yourdomain.com')
+    ->addClass('link-secondary text-decoration-none')
+    ->content($companyEmail)
+    ->render();
+?>
                                 <?= Html::closeTag('p'); ?>    
                             <?= Html::closeTag('div'); ?>
                         <?= Html::closeTag('div'); ?>

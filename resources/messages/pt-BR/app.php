@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 return [
@@ -1808,5 +1809,5 @@ return [
 'menu.gallery' => 'Galeria',
 'menu.privacy.policy' => 'política de Privacidade',
 'menu.terms.of.service' => 'Termos de serviço',
-'password.reset.request.token' => 'Solicitar token de redefinição de senha',    
+'password.reset.request.token' => 'Solicitar token de redefinição de senha',
 ];

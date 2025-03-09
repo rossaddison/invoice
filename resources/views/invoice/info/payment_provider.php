@@ -1,5 +1,5 @@
-<?php 
-declare(strict_types=1); 
+<?php
+declare(strict_types=1);
 ?>
 
 <p><b>How do I setup an online payment provider eg. Mollie? (Developer: https://my.mollie.com) (Tutorial)</b>

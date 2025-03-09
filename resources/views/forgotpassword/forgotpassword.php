@@ -33,16 +33,16 @@ $this->setTitle($translator->translate('password.reset.request.token'));
                         ->csrf($csrf)
                         ->id('requestPasswordResetTokenForm')
                         ->open();
-                    ?>
+?>
                     <?= Field::email($formModel, 'email')
-                        ->label($translator->translate('i.email'))
-                        ->autofocus()
-                    ?>
+    ->label($translator->translate('i.email'))
+    ->autofocus()
+?>
                     <?= Field::submitButton()
-                        ->buttonId('password-reset-token-button')
-                        ->name('password-reset-token-button')
-                        ->content($translator->translate('layout.submit'))
-                    ?>
+    ->buttonId('password-reset-token-button')
+    ->name('password-reset-token-button')
+    ->content($translator->translate('layout.submit'))
+?>
                     <?= Form::tag()->close() ?>
                 </div>
             </div>

@@ -28,7 +28,7 @@ final class PostalAddressForm extends FormModel
     private ?string $country = '';
 
     public function __construct(private readonly Translator $translator, PostalAddress $postalAddress, #[Required]
-    private readonly ?int $client_id)
+        private readonly ?int $client_id)
     {
         // two hidden fields with ->hideLabel(true) in the view
         $this->id = (int)$postalAddress->getId();

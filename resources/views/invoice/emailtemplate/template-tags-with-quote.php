@@ -1,13 +1,13 @@
 <?php
-    
-    declare(strict_types=1);
-    
-    /**
-     * @var Yiisoft\Translator\TranslatorInterface $translator 
-     * @var array $custom_fields
-     * @var array $custom_fields['client_custom']
-     * @var string $template_tags_quote
-     */
+
+declare(strict_types=1);
+
+/**
+ * @var Yiisoft\Translator\TranslatorInterface $translator
+ * @var array $custom_fields
+ * @var array $custom_fields['client_custom']
+ * @var string $template_tags_quote
+ */
 ?>
 
 <div class="panel panel-default">

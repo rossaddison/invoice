@@ -3,7 +3,7 @@
 declare(strict_types=1);
 
 /**
- * @see delete-items triggered by #delete-items on quote\view.php 
+ * @see delete-items triggered by #delete-items on quote\view.php
  * @var Yiisoft\Translator\TranslatorInterface $translator
  * @var string $partial_item_table_modal
  */

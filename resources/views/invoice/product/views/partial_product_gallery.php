@@ -13,10 +13,10 @@ declare(strict_types=1);
  * @var bool $invView
  */
 
- if ($invEdit && $invView) { 
+if ($invEdit && $invView) {
     $this->setTitle($translator->translate('invoice.productimage.gallery'));
- }
- ?>
+}
+?>
 
 <div class="panel panel-default no-margin">
   <div class="panel-heading">
@@ -29,10 +29,10 @@ declare(strict_types=1);
         <?php if ($invView && $invEdit) { ?> 
         <div class='row'>
             <?php
-                /**
-                 * @var App\Invoice\Entity\ProductImage $productImage
-                 */
-                foreach ($productImages as $productImage) { ?>
+               /**
+                * @var App\Invoice\Entity\ProductImage $productImage
+                */
+               foreach ($productImages as $productImage) { ?>
                 <a data-bs-toggle="lightbox" data-gallery="example-gallery" class="col-sm-4">
                     <img src="<?= '/products/'. $productImage->getFile_name_original(); ?>"   class="img-fluid">
                 </a>

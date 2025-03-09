@@ -44,16 +44,16 @@ use Yiisoft\Html\Html;
                 <td>
                     <?php
                         $finishDate = $task->getFinish_date();
-                        if ($finishDate instanceof \DateTimeImmutable) {
-                            $fDate = $finishDate->format('Y-m-d');
-                        }
-                        if (is_string($finishDate)) {
-                            $fDate = $finishDate;
-                        }
-                        if (null==$finishDate) {
-                            $fDate = $finishDate;
-                        }
-                    ?>
+                if ($finishDate instanceof \DateTimeImmutable) {
+                    $fDate = $finishDate->format('Y-m-d');
+                }
+                if (is_string($finishDate)) {
+                    $fDate = $finishDate;
+                }
+                if (null == $finishDate) {
+                    $fDate = $finishDate;
+                }
+                ?>
                     <b><?= Html::encode($fDate); ?></b>
                 </td>
                 <td>

@@ -4,14 +4,24 @@ declare(strict_types=1);
 
 namespace App\Invoice\ClientCustom;
 
-use Yiisoft\FormModel\FormModel;
-use Yiisoft\Validator\Rule\Required;
 use App\Invoice\Entity\ClientCustom;
+use Yiisoft\FormModel\FormModel;
+use Yiisoft\Validator\Rule\Integer;
+use Yiisoft\Validator\Rule\Required;
+use Yiisoft\Validator\Rule\StringValue;
 
 final class ClientCustomForm extends FormModel
 {
+    #[Integer]
+    #[Required]
     private ?int $client_id = null;
+
+    #[Integer]
+    #[Required]
     private ?int $custom_field_id = null;
+
+    #[StringValue()]
+    #[Required]
     private ?string $value = '';
 
     public function __construct(ClientCustom $clientCustom)
@@ -45,18 +55,5 @@ final class ClientCustomForm extends FormModel
     public function getFormName(): string
     {
         return '';
-    }
-
-    /**
-     * @return Required[][]
-     *
-     * @psalm-return array{client_id: list{Required}, custom_field_id: list{Required}}
-     */
-    public function getRules(): array
-    {
-        return [
-            'client_id' => [new Required()],
-            'custom_field_id' => [new Required()],
-        ];
     }
 }

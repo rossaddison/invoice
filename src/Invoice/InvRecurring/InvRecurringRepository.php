@@ -138,8 +138,8 @@ final class InvRecurringRepository extends Select\Repository
     {
         $datehelper = new DateHelper($s);
         $query = $this->select()
-                      ->where('next_date', '<', date($datehelper->style()))
-                      ->orWhere('end_date', '>', date($datehelper->style()))
+                      ->where('next_date', '<', date('Y-m-d'))
+                      ->orWhere('end_date', '>', date('Y-m-d'))
                       ->orWhere('end_date', '=', '0000-00-00');
         return $this->prepareDataReader($query);
     }
@@ -148,8 +148,8 @@ final class InvRecurringRepository extends Select\Repository
     {
         $datehelper = new DateHelper($s);
         return $this->select()
-                      ->where('next_date', '<', date($datehelper->style()))
-                      ->orWhere('end_date', '>', date($datehelper->style()))
+                      ->where('next_date', '<', date('Y-m-d'))
+                      ->orWhere('end_date', '>', date('Y-m-d'))
                       ->orWhere('end_date', '=', '0000-00-00')
                       ->count();
     }

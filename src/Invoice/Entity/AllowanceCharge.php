@@ -16,14 +16,14 @@ class AllowanceCharge
     private ?TaxRate $tax_rate = null;
 
     public function __construct(#[Column(type:'primary')]
-    private ?int $id = null, #[Column(type:'bool', typecast:'bool', default:false, nullable: false)]
-    private bool $identifier = false, #[Column(type:'string(3)', nullable: false)]
-    private string $reason_code = '', #[Column(type:'longText)', nullable: false)]
-    private string $reason = '', #[Column(type:'integer(11)', nullable: false)]
-    private int $multiplier_factor_numeric = 0, #[Column(type:'integer(11)', nullable: false)]
-    private int $amount = 0, #[Column(type:'integer(11)', nullable: false)]
-    private int $base_amount = 0, #[Column(type:'integer(11)', nullable: false)]
-    private ?int $tax_rate_id = null)
+        private ?int $id = null, #[Column(type:'bool', typecast:'bool', default:false, nullable: false)]
+        private bool $identifier = false, #[Column(type:'string(3)', nullable: false)]
+        private string $reason_code = '', #[Column(type:'longText)', nullable: false)]
+        private string $reason = '', #[Column(type:'integer(11)', nullable: false)]
+        private int $multiplier_factor_numeric = 0, #[Column(type:'integer(11)', nullable: false)]
+        private int $amount = 0, #[Column(type:'integer(11)', nullable: false)]
+        private int $base_amount = 0, #[Column(type:'integer(11)', nullable: false)]
+        private ?int $tax_rate_id = null)
     {
     }
 

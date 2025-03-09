@@ -21,16 +21,16 @@ $this->setTitle($translator->translate('layout.not-found'));
     <div class="card-body text-center ">
         <h1 class="card-title display-1 fw-bold">404</h1>
         <p class="card-text">
-            <?= 
+            <?=
                 $currentPath = $currentRoute->getUri()?->getPath();
-                null!==$currentPath ?
-                    $translator->translate('layout.page.not-authorised', [
-                    'url' => Html::span(
-                        Html::encode($currentPath),
-                        ['class' => 'text-muted']
-                    ),
-                    ]) : '';
-            ?>
+null !== $currentPath ?
+    $translator->translate('layout.page.not-authorised', [
+    'url' => Html::span(
+        Html::encode($currentPath),
+        ['class' => 'text-muted']
+    ),
+    ]) : '';
+?>
         </p>
         <p>
             <?= Html::a(
@@ -38,7 +38,7 @@ $this->setTitle($translator->translate('layout.not-found'));
                 $urlGenerator->generate('site/index'),
                 ['class' => 'btn btn-outline-primary mt-5']
             );
-            ?>
+?>
         </p>
     </div>
 </div>

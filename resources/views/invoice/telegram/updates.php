@@ -22,7 +22,7 @@ if (!$updates instanceof \Vjik\TelegramBot\Api\FailResult) {
         echo $update->getRaw();
         echo Html::opentag('pre');
         $message = $update->message;
-        if (null!==$message) {
+        if (null !== $message) {
             echo Label::tag()->content('Chat Id: '.(string)$message->chat->id)->render();
             echo Br::tag()->render();
             echo Label::tag()->content('Chat Username: '. ($message->chat->username ?? '????'))->render();
@@ -32,8 +32,7 @@ if (!$updates instanceof \Vjik\TelegramBot\Api\FailResult) {
             echo Label::tag()->content('Chat Last Name: '.($message->chat->lastName ?? '????'))->render();
             echo Br::tag()->render();
             echo Label::tag()->content('Chat Message: '.($message->text ?? '????'))->render();
-        } 
+        }
         echo Html::closeTag('pre');
     }
 }
-?>

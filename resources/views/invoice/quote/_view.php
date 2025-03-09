@@ -12,10 +12,10 @@ use App\Widget\LabelSwitch;
  * @var App\Invoice\Helpers\CustomValuesHelper $cvH
  * @var App\Invoice\Helpers\DateHelper $dateHelper
  * @var App\Invoice\Setting\SettingRepository $s
- * 
+ *
  * @see $quoteForm is necessary for customValuesHelper viewing custom fields and is not used for input
  * @var App\Invoice\Quote\QuoteForm $quoteForm
- * 
+ *
  * @var Yiisoft\Translator\TranslatorInterface $translator
  * @var Yiisoft\Router\UrlGeneratorInterface $urlGenerator
  * @var Yiisoft\View\WebView $this
@@ -52,17 +52,17 @@ $vat = $s->getSetting('enable_vat_registration');
 </div>
     <?php
         echo $modal_delete_quote;
-        if ($vat === '0') {
-            echo $modal_add_quote_tax;
-        }  
-        // modal_product_lookups is performed using below $modal_choose_items
-        echo $modal_choose_items;
-        echo $modal_quote_to_invoice;
-        echo $modal_quote_to_so;
-        echo $modal_quote_to_pdf;
-        echo $modal_copy_quote;
-        echo $modal_delete_items;
-    ?>
+if ($vat === '0') {
+    echo $modal_add_quote_tax;
+}
+// modal_product_lookups is performed using below $modal_choose_items
+echo $modal_choose_items;
+echo $modal_quote_to_invoice;
+echo $modal_quote_to_so;
+echo $modal_quote_to_pdf;
+echo $modal_copy_quote;
+echo $modal_delete_items;
+?>
 <div>
 <br>
 <br>
@@ -73,21 +73,23 @@ $vat = $s->getSetting('enable_vat_registration');
         <br>
         <div class="panel-heading">
             <?= Html::openTag('div'); ?>
-                <?= Html::openTag('button', 
+                <?= Html::openTag(
+                    'button',
                     [
-                        'class' => 'btn btn-primary', 
-                        'href' => '#modal-choose-items', 
-                        'id' => 'modal-choose-items', 
-                        'data-bs-toggle' => 'modal'
-                    ]); 
-                ?>
+                                    'class' => 'btn btn-primary',
+                                    'href' => '#modal-choose-items',
+                                    'id' => 'modal-choose-items',
+                                    'data-bs-toggle' => 'modal'
+                                ]
+                );
+        ?>
                 <?= I::tag()
-                    ->addClass('fa fa-list')
-                    ->addAttributes([
-                        'data-bs-toggle' => 'tooltip', 
-                        'title' => $translator->translate('i.add_product')
-                    ]);
-                ?>
+            ->addClass('fa fa-list')
+            ->addAttributes([
+                'data-bs-toggle' => 'tooltip',
+                'title' => $translator->translate('i.add_product')
+            ]);
+        ?>
                 <?= $translator->translate('i.add_product'); ?>
                 <?= Html::closeTag('button'); ?>
             <?= Html::closeTag('div'); ?>
@@ -100,36 +102,36 @@ $vat = $s->getSetting('enable_vat_registration');
     <h1 class="headerbar-title">
     <?php
         echo $translator->translate('i.quote') . ' ';
-        $number = $quote->getNumber();
-        $id = $quote->getId();
-        if (null!==($number) && null!==$id) {
-            echo($number ? '#' . $number :  $id);
-        }
-    ?>
+$number = $quote->getNumber();
+$id = $quote->getId();
+if (null !== ($number) && null !== $id) {
+    echo($number ? '#' . $number : $id);
+}
+?>
     </h1>
         <div class="headerbar-item pull-right">
 
         <?php
-            // Purpose: To remind the user that VAT is enabled
-            $s->getSetting('display_vat_enabled_message') === '1' ?
-            LabelSwitch::checkbox(
-                    'quote-view-label-switch',
-                    $s->getSetting('enable_vat_registration'),
-                    $translator->translate('invoice.quote.label.switch.on'),
-                    $translator->translate('invoice.quote.label.switch.off'),
-                    'quote-view-label-switch-id',
-                    '16'
-            ) : '';
-        ?>    
+        // Purpose: To remind the user that VAT is enabled
+        $s->getSetting('display_vat_enabled_message') === '1' ?
+        LabelSwitch::checkbox(
+            'quote-view-label-switch',
+            $s->getSetting('enable_vat_registration'),
+            $translator->translate('invoice.quote.label.switch.on'),
+            $translator->translate('invoice.quote.label.switch.off'),
+            'quote-view-label-switch-id',
+            '16'
+        ) : '';
+?>    
         <div class="options btn-group">
             <a class="btn btn-default" data-bs-toggle="dropdown" href="#">
                 <i class="fa fa-chevron-down"></i><?= $translator->translate('i.options'); ?>
             </a>
             <ul class="dropdown-menu dropdown-menu-right">
                 <?php
-                if ($invEdit) { ?> 
+        if ($invEdit) { ?> 
                 <li>
-                    <a href="<?= $urlGenerator->generate('quote/edit',['id'=>$quote->getId()]) ?>" style="text-decoration:none">
+                    <a href="<?= $urlGenerator->generate('quote/edit', ['id' => $quote->getId()]) ?>" style="text-decoration:none">
                         <i class="fa fa-edit fa-margin"></i>
                         <?= $translator->translate('i.edit'); ?>
                     </a>
@@ -158,13 +160,13 @@ $vat = $s->getSetting('enable_vat_registration');
                 </li>
                 <?php if ($invEdit  && $quote->getStatus_id() === 1 && ($quote_amount_total > 0)) { ?>
                 <li>
-                    <a href="<?= $urlGenerator->generate('quote/email_stage_0',['id'=> $quote->getId()]); ?>" style="text-decoration:none">
+                    <a href="<?= $urlGenerator->generate('quote/email_stage_0', ['id' => $quote->getId()]); ?>" style="text-decoration:none">
                         <i class="fa fa-send fa-margin"></i>
                         <?= $translator->translate('i.send_email'); ?>
                     </a>
                 </li>
-                <?php // if quote has been approved (ie status 4) by the client without po number do not show quote to sales order again   
-                     if ($quote->getSo_id() === '0' && $quote->getStatus_id() === 4) { ?>
+                <?php // if quote has been approved (ie status 4) by the client without po number do not show quote to sales order again
+             if ($quote->getSo_id() === '0' && $quote->getStatus_id() === 4) { ?>
                 <li>
                     <a href="#quote-to-so" data-bs-toggle="modal"  style="text-decoration:none">
                         <i class="fa fa-refresh fa-margin"></i>
@@ -208,7 +210,7 @@ $vat = $s->getSetting('enable_vat_registration');
             <?= Html::openTag('div', ['class' => 'row']); ?>
                 <div class="col-xs-12 col-sm-6 col-md-5">
                     <h3>
-                        <a href="<?= $urlGenerator->generate('client/view',['id' => $quote->getClient()?->getClient_id()]); ?>">
+                        <a href="<?= $urlGenerator->generate('client/view', ['id' => $quote->getClient()?->getClient_id()]); ?>">
                             <?= Html::encode($clientHelper->format_client($quote->getClient())); ?>
                         </a>
                     </h3>
@@ -216,38 +218,38 @@ $vat = $s->getSetting('enable_vat_registration');
                     <div id="pre_save_client_id" value="<?php echo $quote->getClient()?->getClient_id(); ?>" hidden></div>
                     <div class="client-address">
                         <span class="client-address-street-line-1">
-                            <?php echo(null!==$quote->getClient()?->getClient_address_1() ? Html::encode($quote->getClient()?->getClient_address_1()) . '<br>' : ''); ?>
+                            <?php echo(null !== $quote->getClient()?->getClient_address_1() ? Html::encode($quote->getClient()?->getClient_address_1()) . '<br>' : ''); ?>
                         </span>
                         <span class="client-address-street-line-2">
-                            <?php echo(null!==$quote->getClient()?->getClient_address_2() ? Html::encode($quote->getClient()?->getClient_address_2()) . '<br>' : ''); ?>
+                            <?php echo(null !== $quote->getClient()?->getClient_address_2() ? Html::encode($quote->getClient()?->getClient_address_2()) . '<br>' : ''); ?>
                         </span>
                         <span class="client-address-town-line">
-                            <?php echo(null!==$quote->getClient()?->getClient_city() ? Html::encode($quote->getClient()?->getClient_city()) . '<br>' : ''); ?>
-                            <?php echo(null!==$quote->getClient()?->getClient_state() ? Html::encode($quote->getClient()?->getClient_state()) . '<br>' : ''); ?>
-                            <?php echo(null!==$quote->getClient()?->getClient_zip() ? Html::encode($quote->getClient()?->getClient_zip()) : ''); ?>
+                            <?php echo(null !== $quote->getClient()?->getClient_city() ? Html::encode($quote->getClient()?->getClient_city()) . '<br>' : ''); ?>
+                            <?php echo(null !== $quote->getClient()?->getClient_state() ? Html::encode($quote->getClient()?->getClient_state()) . '<br>' : ''); ?>
+                            <?php echo(null !== $quote->getClient()?->getClient_zip() ? Html::encode($quote->getClient()?->getClient_zip()) : ''); ?>
                         </span>
                         <span class="client-address-country-line">
-                            <?php 
-                                $countryName = $quote->getClient()?->getClient_country();
-                                if (null!==$countryName) {
-                                    echo '<br>' . $countryHelper->get_country_name($translator->translate('i.cldr'), $countryName); 
-                                } ?>
+                            <?php
+                        $countryName = $quote->getClient()?->getClient_country();
+if (null !== $countryName) {
+    echo '<br>' . $countryHelper->get_country_name($translator->translate('i.cldr'), $countryName);
+} ?>
                         </span>
                     </div>
                     <hr>
-                    <?php if (null!==$quote->getClient()?->getClient_phone()): ?>
+                    <?php if (null !== $quote->getClient()?->getClient_phone()): ?>
                         <div class="client-phone">
                             <?= $translator->translate('i.phone'); ?>:&nbsp;
                             <?= Html::encode($quote->getClient()?->getClient_phone()); ?>
                         </div>
                     <?php endif; ?>
-                    <?php if (null!==$quote->getClient()?->getClient_mobile()): ?>
+                    <?php if (null !== $quote->getClient()?->getClient_mobile()): ?>
                         <div class="client-mobile">
                             <?= $translator->translate('i.mobile'); ?>:&nbsp;
                             <?= Html::encode($quote->getClient()?->getClient_mobile()); ?>
                         </div>
                     <?php endif; ?>
-                    <?php if (null!==$quote->getClient()?->getClient_email()): ?>
+                    <?php if (null !== $quote->getClient()?->getClient_email()): ?>
                         <div class='client-email'>
                             <?= $translator->translate('i.email'); ?>:&nbsp;
                             <?php echo $quote->getClient()?->getClient_email(); ?>
@@ -268,8 +270,8 @@ $vat = $s->getSetting('enable_vat_registration');
                                     <label for="quote_number">
                                         <?= $translator->translate('i.quote'); ?> #
                                     </label>
-                                    <input type="text" id="quote_number" class="form-control input-sm" readonly
-                                        <?php if (null!==($quote->getNumber())) : ?> value="<?= $quote->getNumber(); ?>"
+                                    <input type="text" id="quote_number" class="form-control" readonly
+                                        <?php if (null !== ($quote->getNumber())) : ?> value="<?= $quote->getNumber(); ?>"
                                         <?php else : ?> placeholder="<?= $translator->translate('i.not_set'); ?>"
                                         <?php endif; ?>>
                                 </div>
@@ -279,8 +281,8 @@ $vat = $s->getSetting('enable_vat_registration');
                                     </label>
                                     <div class="input-group">
                                         <input name="quote_date_created" id="quote_date_created" disabled
-                                               class="form-control input-sm datepicker"
-                                               value="<?= Html::encode($quote->getDate_created()->format($dateHelper->style())); ?>"/>
+                                               class="form-control"
+                                               value="<?= Html::encode($quote->getDate_created()->format('Y-m-d')); ?>"/>
                                         <span class="input-group-text">
                                             <i class="fa fa-calendar fa-fw"></i>
                                         </span>
@@ -292,8 +294,8 @@ $vat = $s->getSetting('enable_vat_registration');
                                     </label>
                                     <div class="input-group">
                                         <input name="quote_date_expires" id="quote_date_expires" readonly
-                                               class="form-control input-sm datepicker"
-                                               value="<?= Html::encode($quote->getDate_expires()->format($dateHelper->style())); ?>">
+                                               class="form-control"
+                                               value="<?= Html::encode($quote->getDate_expires()->format('Y-m-d')); ?>">
                                         <span class="input-group-text">
                                             <i class="fa fa-calendar fa-fw"></i>
                                         </span>
@@ -301,11 +303,13 @@ $vat = $s->getSetting('enable_vat_registration');
                                 </div>
                                 <div>
                                     <?php
-                                        /**
-                                         * @var App\Invoice\Entity\CustomField $customField
-                                         */
-                                        foreach ($customFields as $customField): ?>
-                                        <?php if ($customField->getLocation() !== 1) {continue;} ?>
+        /**
+         * @var App\Invoice\Entity\CustomField $customField
+         */
+        foreach ($customFields as $customField): ?>
+                                        <?php if ($customField->getLocation() !== 1) {
+                                            continue;
+                                        } ?>
                                         <?php  $cvH->print_field_for_view($customField, $quoteForm, $quoteCustomValues, $customValues); ?>                                   
                                     <?php endforeach; ?>
                                 </div>    
@@ -325,7 +329,9 @@ $vat = $s->getSetting('enable_vat_registration');
                                              * @var string $status['label']
                                              */
                                             foreach ($quoteStatuses as $key => $status) { ?>
-                                            <option value="<?php echo $key; ?>" <?php if ($key === $body['status_id']) {  $s->check_select(Html::encode($body['status_id'] ?? ''), $key);} ?>>
+                                            <option value="<?php echo $key; ?>" <?php if ($key === $body['status_id']) {
+                                                $s->check_select(Html::encode($body['status_id'] ?? ''), $key);
+                                            } ?>>
                                                 <?= Html::encode($status['label']); ?>
                                             </option>
                                         <?php } ?>
@@ -335,7 +341,7 @@ $vat = $s->getSetting('enable_vat_registration');
                                     <label for="quote_password" hidden>
                                         <?= $translator->translate('i.quote_password'); ?>
                                     </label>
-                                    <input type="text" id="quote_password" class="form-control input-sm" disabled value="<?= Html::encode($body['password'] ?? ''); ?>" hidden>
+                                    <input type="text" id="quote_password" class="form-control" disabled value="<?= Html::encode($body['password'] ?? ''); ?>" hidden>
                                 </div>
 
                                 <?php
@@ -355,21 +361,19 @@ $vat = $s->getSetting('enable_vat_registration');
                                     </div>
                                     
                                     <?php
-                                        if (($quote->getStatus_id() === 2 || $quote->getStatus_id() === 3 || $quote->getStatus_id() === 5)  && !$invEdit && ($quote->getSo_id() === '0' || empty($quote->getSo_id()))) 
-                                    { ?>
+                                        if (($quote->getStatus_id() === 2 || $quote->getStatus_id() === 3 || $quote->getStatus_id() === 5)  && !$invEdit && ($quote->getSo_id() === '0' || empty($quote->getSo_id()))) { ?>
                                     <div>
                                         <br>
-                                        <a href="<?= $urlGenerator->generate('quote/url_key',['url_key' => $quote->getUrl_key()]); ?>" class="btn btn-success">  
+                                        <a href="<?= $urlGenerator->generate('quote/url_key', ['url_key' => $quote->getUrl_key()]); ?>" class="btn btn-success">  
                                             <?= $translator->translate('i.approve_this_quote') ; ?></i>    
                                         </a>
                                     </div>
                                     <?php } ?>
-                                    <?php                                        
-                                        if (($quote->getStatus_id() === 2 || $quote->getStatus_id() === 3 || $quote->getStatus_id() === 4 )  && !$invEdit && ($quote->getSo_id() === '0' || empty($quote->getSo_id()))) 
-                                    { ?>
+                                    <?php
+                                        if (($quote->getStatus_id() === 2 || $quote->getStatus_id() === 3 || $quote->getStatus_id() === 4)  && !$invEdit && ($quote->getSo_id() === '0' || empty($quote->getSo_id()))) { ?>
                                     <div>
                                         <br>
-                                        <a href="<?= $urlGenerator->generate('quote/url_key',['url_key' => $quote->getUrl_key()]); ?>" class="btn btn-danger">  
+                                        <a href="<?= $urlGenerator->generate('quote/url_key', ['url_key' => $quote->getUrl_key()]); ?>" class="btn btn-danger">  
                                             <?= $translator->translate('i.reject_this_quote') ; ?></i>    
                                         </a>
                                     </div>
@@ -387,7 +391,7 @@ $vat = $s->getSetting('enable_vat_registration');
                                 <div has-feedback">
                                     <label for="salesorder_to_url"><?= $translator->translate('invoice.salesorder'); ?></label>
                                     <div class="input-group">
-                                        <?= Html::a($sales_order_number, $urlGenerator->generate('salesorder/view',['id'=>$quote->getSo_id()]), ['class'=>'btn btn-success']); ?>
+                                        <?= Html::a($sales_order_number, $urlGenerator->generate('salesorder/view', ['id' => $quote->getSo_id()]), ['class' => 'btn btn-success']); ?>
                                     </div>
                                 </div>
                                 <?php } ?>
@@ -402,7 +406,7 @@ $vat = $s->getSetting('enable_vat_registration');
    <div id="partial_item_table_parameters" disabled>
     <?=
        $partial_item_table;
-    ?>     
+?>     
    </div>
     
    <?= Html::openTag('div', ['class' => 'row']); ?>
@@ -421,7 +425,7 @@ $vat = $s->getSetting('enable_vat_registration');
 
             </div>
             <div id="view_custom_fields" class="col-xs-12 col-md-6">
-                <?php //echo $dropzone_quote_html; ?>
+                <?php //echo $dropzone_quote_html;?>
                 <?php echo $view_custom_fields; ?>
             </div>
     </div>

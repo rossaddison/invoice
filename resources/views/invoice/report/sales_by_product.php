@@ -4,16 +4,15 @@ declare(strict_types=1);
 use App\Invoice\Asset\ReportAsset;
 use Yiisoft\Html\Html;
 
-
 /**
  * @var App\Invoice\Helpers\NumberHelper $numberHelper
  * @var Yiisoft\Router\UrlGeneratorInterface $urlGenerator
  * @var Yiisoft\Translator\TranslatorInterface $translator
  * @var Yiisoft\View\WebView $this
- * @var Yiisoft\Assets\AssetManager $assetManager 
+ * @var Yiisoft\Assets\AssetManager $assetManager
  * @var string $from_date
- * @var string $to_date 
- * @var array $results 
+ * @var string $to_date
+ * @var array $results
  */
 
 $assetManager->register(ReportAsset::class);

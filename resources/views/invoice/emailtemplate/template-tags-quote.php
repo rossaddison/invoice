@@ -1,11 +1,11 @@
 <?php
 
-    declare(strict_types=1);
-    
-    /**
-     * @var Yiisoft\Translator\TranslatorInterface $translator
-     * @var array $custom_fields_quote_custom
-     */
+declare(strict_types=1);
+
+/**
+ * @var Yiisoft\Translator\TranslatorInterface $translator
+ * @var array $custom_fields_quote_custom
+ */
 ?>
         <div class="form-group">
             <label for="tags_quote"><?= $translator->translate('i.quotes'); ?></label>

@@ -20,12 +20,12 @@ class Merchant
     private mixed $date = '';
 
     public function __construct(#[Column(type: 'primary')]
-    private ?int $id = null, #[Column(type: 'integer(11)', nullable: false)]
-    private ?int $inv_id = null, #[Column(type: 'boolean', nullable: true, default:1)]
-    private ?bool $successful = true, #[Column(type: 'string(35)', nullable: false)]
-    private string $driver = '', #[Column(type: 'string(151)', nullable: false)]
-    private string $response = '', #[Column(type: 'string(151)', nullable: false)]
-    private string $reference = '')
+        private ?int $id = null, #[Column(type: 'integer(11)', nullable: false)]
+        private ?int $inv_id = null, #[Column(type: 'boolean', nullable: true, default:1)]
+        private ?bool $successful = true, #[Column(type: 'string(35)', nullable: false)]
+        private string $driver = '', #[Column(type: 'string(151)', nullable: false)]
+        private string $response = '', #[Column(type: 'string(151)', nullable: false)]
+        private string $reference = '')
     {
     }
 

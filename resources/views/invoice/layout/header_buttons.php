@@ -1,12 +1,12 @@
 <?php
 
 declare(strict_types=1);
-   
+
 use Yiisoft\FormModel\Field;
 use Yiisoft\Html\Html;
-    
+
 /**
- * @var Yiisoft\Translator\TranslatorInterface $translator 
+ * @var Yiisoft\Translator\TranslatorInterface $translator
  */
 
 ?>
@@ -14,8 +14,8 @@ use Yiisoft\Html\Html;
     <?= Html::openTag('div', ['class' => 'headerbar-item pull-right']); ?>
     <?php $buttonsDataArray = [
         [
-            $translator->translate('i.back'), 
-            'type' => 'reset', 
+            $translator->translate('i.back'),
+            'type' => 'reset',
             'onclick' => 'window.history.back()',
             'class' => 'btn btn-danger',
             'id' => 'btn-cancel',
@@ -23,17 +23,17 @@ use Yiisoft\Html\Html;
             'value' => '1'
         ],
         [
-            $translator->translate('i.save'), 
-            'type' => 'submit', 
+            $translator->translate('i.save'),
+            'type' => 'submit',
             'class' => 'btn btn-success',
             'id' => 'btn-submit',
             'name' => 'btn_submit',
             'value' => '1'
         ],
     ]
-    ?>
-    <?=   
-        Field::buttongroup()
-        ->buttonsData($buttonsDataArray);
-    ?>
+?>
+    <?=
+    Field::buttongroup()
+    ->buttonsData($buttonsDataArray);
+?>
 <?= Html::closeTag('div'); ?>

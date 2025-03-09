@@ -21,22 +21,22 @@ use Yiisoft\Html\Tag\I;
  * @psalm-var array<string, Stringable|null|scalar> $actionArguments
  */
 
- if ($invEdit && $invView) { 
+if ($invEdit && $invView) {
     $title = $translator->translate('i.add_files');
- }
- ?>
+}
+?>
 
 <div class="panel panel-default no-margin">
     <div class="panel-heading">
         <b>
             <?= I::tag()
-                ->addClass('bi bi-info-circle')
-                ->addAttributes([
-                    'tooltip' => 'data-bs-toggle', 
-                    'title' => $s->isDebugMode(5)
-                ])
-                ->content(' '.$translator->translate('i.attachments')); 
-            ?>
+               ->addClass('bi bi-info-circle')
+               ->addAttributes([
+                   'tooltip' => 'data-bs-toggle',
+                   'title' => $s->isDebugMode(5)
+               ])
+               ->content(' '.$translator->translate('i.attachments'));
+?>
         </b>    
     </div>
     <div class="panel-body clearfix">
@@ -49,35 +49,35 @@ use Yiisoft\Html\Tag\I;
                     </div>
                     <div>
                         <?= Form::tag()
-                            ->post($urlGenerator->generate($actionName, $actionArguments))
-                            ->enctypeMultipartFormData()
-                            ->csrf($csrf)
-                            ->id('InvAttachmentsForm')
-                            ->open()
-                        ?>
+                ->post($urlGenerator->generate($actionName, $actionArguments))
+                ->enctypeMultipartFormData()
+                ->csrf($csrf)
+                ->id('InvAttachmentsForm')
+                ->open()
+                ?>
                         <?= Field::file($form, 'attachFile')
-                            ->containerClass('mb-3')
-                            ->hideLabel()
-                        ?>
+                    ->containerClass('mb-3')
+                    ->hideLabel()
+                ?>
                     </div>
                     <div>
                         <?= Field::buttonGroup()
-                            ->addContainerClass('btn-group')
-                            ->buttonsData([
-                                [
-                                    $translator->translate('layout.reset'),
-                                    'type' => 'reset',
-                                    'class' => 'btn btn-sm btn-danger',
-                                ],
-                                [
-                                    $translator->translate('layout.submit'),
-                                    'type' => 'submit',
-                                    'title' => 'actions: inv/view_partial_inv_attachments and inv/attachment',
-                                    'tooltip' => 'data-bs-toggle',
-                                    'class' => 'btn btn-sm btn-primary',
-                                    'name' => 'contact-button',
-                                ],
-                            ]) ?>
+                    ->addContainerClass('btn-group')
+                    ->buttonsData([
+                        [
+                            $translator->translate('layout.reset'),
+                            'type' => 'reset',
+                            'class' => 'btn btn-sm btn-danger',
+                        ],
+                        [
+                            $translator->translate('layout.submit'),
+                            'type' => 'submit',
+                            'title' => 'actions: inv/view_partial_inv_attachments and inv/attachment',
+                            'tooltip' => 'data-bs-toggle',
+                            'class' => 'btn btn-sm btn-primary',
+                            'name' => 'contact-button',
+                        ],
+                    ]) ?>
                         <?= Form::tag()->close() ?>
                     </div>
                 </div>

@@ -1701,7 +1701,7 @@ return [
 'site.soletrader.contact.address' => 'DIRECCIÓN',
 'site.soletrader.contact.email' => 'Correo electrónico',
 'site.soletrader.contact.phone' => 'Teléfono',
-'site.todays.date' => 'Fecha',    
+'site.todays.date' => 'Fecha',
 'validator.invalid.login.password' => 'Clave o usuario inválido',
 'validator.password.not.match' => 'Las contraseñas no coinciden',
 'validator.password.not.match.new' => 'Tus nuevas contraseñas no coinciden',
@@ -1809,5 +1809,5 @@ return [
 'menu.gallery' => 'Galería',
 'menu.privacy.policy' => 'política de privacidad',
 'menu.terms.of.service' => 'Condiciones de servicio',
-'password.reset.request.token' => 'Solicitar token de restablecimiento de contraseña',    
+'password.reset.request.token' => 'Solicitar token de restablecimiento de contraseña',
 ];

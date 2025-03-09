@@ -15,8 +15,8 @@ use Yiisoft\Yii\DataView\Column\DataColumn;
 
 /**
  * @var App\Invoice\Setting\SettingRepository $s
- * @var App\Widget\GridComponents $gridComponents 
- * @var App\Widget\PageSizeLimiter $pageSizeLimiter 
+ * @var App\Widget\GridComponents $gridComponents
+ * @var App\Widget\PageSizeLimiter $pageSizeLimiter
  * @var Yiisoft\Translator\TranslatorInterface $translator
  * @var Yiisoft\Router\CurrentRoute $currentRoute
  * @var Yiisoft\Router\FastRoute\UrlGenerator $urlGenerator
@@ -45,130 +45,130 @@ $translator->translate('i.custom_fields');
 
 <?php
     $gridComponents->header('i.custom_fields');
-    $columns = [
-        new DataColumn(
-            'id',
-            header: $translator->translate('i.id'),
-            content: static function (CustomField $model) : string {
-                return Html::encode($model->getId());
-            },   
-        ),
-        new DataColumn(
-            'table',
-            header: $translator->translate('i.table'),
-            content: static function (CustomField $model) use ($s, $custom_tables): string {
-                if (strlen($table = $model->getTable() ?? '') > 0) {
-                    return Html::encode(ucfirst($s->lang((string)$custom_tables[$table])));
-                }
-                return '';
-            },   
-        ),
-        new DataColumn(
-            'label',
-            header: $translator->translate('i.label'),
-            content: static function (CustomField $model) : string {
-                return Html::encode(ucfirst($model->getLabel() ?? '#'));
-            }      
-        ),
-        new DataColumn(
-            'type',
-            header: $translator->translate('i.type'),
-            content: static function (CustomField $model) use ($translator): string {
-                $alpha = str_replace("-", "_", strtolower($model->getType()));
-                return Html::encode($translator->translate('i.'.$alpha.''));
-            }      
-        ),
-        new DataColumn(
-            'order',
-            header: $translator->translate('i.order'),
-            content: static function (CustomField $model) : string {
-                return Html::encode($model->getOrder());
-            }      
-        ), 
-        new DataColumn(
-            'type',
-            header: $translator->translate('i.values'),
-            content: static function (CustomField $model) use ($custom_value_fields, $urlGenerator, $translator) :  string {
-                if (in_array($model->getType(), $custom_value_fields)) {
-                    return A::tag()
-                           ->href($urlGenerator->generate('customvalue/field', ['id' => $model->getId()]))
-                           ->addClass('btn btn-default')
-                           ->addAttributes(['style' => 'text-decoration:none'])
-                           ->content(
-                                I::tag()
-                                ->addClass('fa fa-list fa-margin')
-                                ->content(' '.$translator->translate('i.values'))
-                            ) 
-                           ->render(); 
-                }
-                return '';
+$columns = [
+    new DataColumn(
+        'id',
+        header: $translator->translate('i.id'),
+        content: static function (CustomField $model): string {
+            return Html::encode($model->getId());
+        },
+    ),
+    new DataColumn(
+        'table',
+        header: $translator->translate('i.table'),
+        content: static function (CustomField $model) use ($s, $custom_tables): string {
+            if (strlen($table = $model->getTable() ?? '') > 0) {
+                return Html::encode(ucfirst($s->lang((string)$custom_tables[$table])));
             }
+            return '';
+        },
+    ),
+    new DataColumn(
+        'label',
+        header: $translator->translate('i.label'),
+        content: static function (CustomField $model): string {
+            return Html::encode(ucfirst($model->getLabel() ?? '#'));
+        }
+    ),
+    new DataColumn(
+        'type',
+        header: $translator->translate('i.type'),
+        content: static function (CustomField $model) use ($translator): string {
+            $alpha = str_replace("-", "_", strtolower($model->getType()));
+            return Html::encode($translator->translate('i.'.$alpha.''));
+        }
+    ),
+    new DataColumn(
+        'order',
+        header: $translator->translate('i.order'),
+        content: static function (CustomField $model): string {
+            return Html::encode($model->getOrder());
+        }
+    ),
+    new DataColumn(
+        'type',
+        header: $translator->translate('i.values'),
+        content: static function (CustomField $model) use ($custom_value_fields, $urlGenerator, $translator): string {
+            if (in_array($model->getType(), $custom_value_fields)) {
+                return A::tag()
+                       ->href($urlGenerator->generate('customvalue/field', ['id' => $model->getId()]))
+                       ->addClass('btn btn-default')
+                       ->addAttributes(['style' => 'text-decoration:none'])
+                       ->content(
+                           I::tag()
+                            ->addClass('fa fa-list fa-margin')
+                            ->content(' '.$translator->translate('i.values'))
+                       )
+                       ->render();
+            }
+            return '';
+        }
+    ),
+    new ActionColumn(buttons: [
+        new ActionButton(
+            content: '🔎',
+            url: static function (CustomField $model) use ($urlGenerator): string {
+                return $urlGenerator->generate('customfield/view', ['id' => $model->getId()]);
+            },
+            attributes: [
+                'data-bs-toggle' => 'tooltip',
+                'title' => $translator->translate('i.view'),
+            ]
         ),
-        new ActionColumn(buttons: [
-            new ActionButton(
-                content: '🔎',
-                url: static function(CustomField $model) use ($urlGenerator) : string {
-                     return $urlGenerator->generate('customfield/view', ['id' => $model->getId()]);     
-                },
-                attributes: [
-                    'data-bs-toggle' => 'tooltip',
-                    'title' => $translator->translate('i.view'),
-                ]      
-            ),
-            new ActionButton(
-                content: '✎',
-                url: static function(CustomField $model) use ($urlGenerator) : string {
-                     return $urlGenerator->generate('customfield/edit', ['id' => $model->getId()]);     
-                },
-                attributes: [
-                    'data-bs-toggle' => 'tooltip',
-                    'title' => $translator->translate('i.edit'),
-                ]      
-            ),
-            new ActionButton(
-                content: '❌',
-                url: static function(CustomField $model) use ($urlGenerator) : string {
-                     return $urlGenerator->generate('customfield/delete', ['id' => $model->getId()]);     
-                },
-                attributes: [
-                    'title' => $translator->translate('i.delete'),
-                    'onclick'=>"return confirm("."'".$translator->translate('i.delete_record_warning')."');"
-                ]      
-            ),          
-        ]),
-    ];
-        
- ?>
- <?php 
-    $toolbarString = 
-        Form::tag()->post($urlGenerator->generate('customfield/index', ['page' => $page]))
-                   ->csrf($csrf)
-                   ->open() .  
-                    Div::tag()
-                        ->addClass('float-end m-3')
-                        ->content($gridComponents->toolbarReset($urlGenerator))
-                        ->encode(false)->render() .
-                    Form::tag()->close();
-        $grid_summary = $s->grid_summary(
-            $paginator, 
-            $translator, 
-            (int)$s->getSetting('default_list_limit'), 
-            $translator->translate('i.custom_fields'),
-            ''
-        );  
-    echo GridView::widget()
-    ->bodyRowAttributes(['class' => 'align-middle'])
-    ->tableAttributes(['class' => 'table table-striped text-center h-75','id' => 'table-customfield'])
-    ->columns(...$columns)
-    ->dataReader($paginator)
-    ->headerRowAttributes(['class'=>'card-header bg-info text-black'])
-    ->multiSort(true) 
-    ->header($gridComponents->header('i.custom_fields'))
-    ->id('w75-grid')
-    ->paginationWidget($gridComponents->offsetPaginationWidget($paginator))
-    ->summaryAttributes(['class' => 'mt-3 me-3 summary text-end'])
-    ->summaryTemplate($pageSizeLimiter::buttons($currentRoute, $s, $translator, $urlGenerator, 'customfield').' '.$grid_summary)
-    ->emptyTextAttributes(['class' => 'card-header bg-warning text-black'])
-    ->emptyText($translator->translate('invoice.invoice.no.records'))
-    ->toolbar($toolbarString);
+        new ActionButton(
+            content: '✎',
+            url: static function (CustomField $model) use ($urlGenerator): string {
+                return $urlGenerator->generate('customfield/edit', ['id' => $model->getId()]);
+            },
+            attributes: [
+                'data-bs-toggle' => 'tooltip',
+                'title' => $translator->translate('i.edit'),
+            ]
+        ),
+        new ActionButton(
+            content: '❌',
+            url: static function (CustomField $model) use ($urlGenerator): string {
+                return $urlGenerator->generate('customfield/delete', ['id' => $model->getId()]);
+            },
+            attributes: [
+                'title' => $translator->translate('i.delete'),
+                'onclick' => "return confirm("."'".$translator->translate('i.delete_record_warning')."');"
+            ]
+        ),
+    ]),
+];
+
+?>
+ <?php
+   $toolbarString =
+       Form::tag()->post($urlGenerator->generate('customfield/index', ['page' => $page]))
+                  ->csrf($csrf)
+                  ->open() .
+                   Div::tag()
+                       ->addClass('float-end m-3')
+                       ->content($gridComponents->toolbarReset($urlGenerator))
+                       ->encode(false)->render() .
+                   Form::tag()->close();
+$grid_summary = $s->grid_summary(
+    $paginator,
+    $translator,
+    (int)$s->getSetting('default_list_limit'),
+    $translator->translate('i.custom_fields'),
+    ''
+);
+echo GridView::widget()
+->bodyRowAttributes(['class' => 'align-middle'])
+->tableAttributes(['class' => 'table table-striped text-center h-75','id' => 'table-customfield'])
+->columns(...$columns)
+->dataReader($paginator)
+->headerRowAttributes(['class' => 'card-header bg-info text-black'])
+->multiSort(true)
+->header($gridComponents->header('i.custom_fields'))
+->id('w75-grid')
+->paginationWidget($gridComponents->offsetPaginationWidget($paginator))
+->summaryAttributes(['class' => 'mt-3 me-3 summary text-end'])
+->summaryTemplate($pageSizeLimiter::buttons($currentRoute, $s, $translator, $urlGenerator, 'customfield').' '.$grid_summary)
+->emptyTextAttributes(['class' => 'card-header bg-warning text-black'])
+->emptyText($translator->translate('invoice.invoice.no.records'))
+->toolbar($toolbarString);
 ?>

@@ -4,16 +4,16 @@ declare(strict_types=1);
 
 use Yiisoft\Html\Html;
 
-  /**
-   * @see id="quote-to-quote" triggered by <a href="#quote-to-quote" data-bs-toggle="modal"  style="text-decoration:none"> 
-   * @see views/quote/view.php 
-   * 
-   * @var App\Invoice\Entity\Quote $quote
-   * @var Yiisoft\Translator\TranslatorInterface $translator
-   * @var array $clients
-   * @var array $taxRates
-   * @var string $csrf
-   */
+/**
+ * @see id="quote-to-quote" triggered by <a href="#quote-to-quote" data-bs-toggle="modal"  style="text-decoration:none">
+ * @see views/quote/view.php
+ *
+ * @var App\Invoice\Entity\Quote $quote
+ * @var Yiisoft\Translator\TranslatorInterface $translator
+ * @var array $clients
+ * @var array $taxRates
+ * @var string $csrf
+ */
 ?>
 
 <div id="quote-to-quote" class="modal" tabindex="-1">

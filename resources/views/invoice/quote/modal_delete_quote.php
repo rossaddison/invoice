@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=1); 
+declare(strict_types=1);
 
 /**
  * @see id="delete-quote" triggered by <a href="#delete-quote" data-bs-toggle="modal"  style="text-decoration:none"> on views/quote/view.php

@@ -1,14 +1,15 @@
 <?php
+
 declare(strict_types=1);
 
-// Note this is the only file that gets adjusted during development and ultimately gets copied to 
-// the English folder located under src/Invoice/Language/English. Google Translate cannot compile this 
+// Note this is the only file that gets adjusted during development and ultimately gets copied to
+// the English folder located under src/Invoice/Language/English. Google Translate cannot compile this
 // complete file therefore it has to be broken up into relative sections located under the English folder namely
 // 1. ip_lang i.e. old invoice plane i dot underscore translations which are still used extensively
 // 2. gateway_lang i.e. old invoice plane g dot underscore translations which are also still used
 // 3. app_lang i.e. a translation of every sentence needed in the package but which will not be able to be translated because of its size.
 
-// Note this file starts with `return [` and ip_lang starts with `$lang = [` so make sure you only build a suitable 
+// Note this file starts with `return [` and ip_lang starts with `$lang = [` so make sure you only build a suitable
 // translation array by substituting between the square brackets.
 return [
 'g.online_payment' => 'Inkokhelo Ye-inthanethi',
@@ -1709,7 +1710,7 @@ return [
 'site.soletrader.contact.address' => 'Ikheli',
 'site.soletrader.contact.email' => 'I-imeyili',
 'site.soletrader.contact.phone' => 'Ucingo',
-'site.todays.date' => 'Usuku lwanamuhla',    
+'site.todays.date' => 'Usuku lwanamuhla',
 'validator.invalid.login.password' => 'Ukungena ngemvume okungavumelekile noma iphasiwedi',
 'validator.password.not.match' => 'Amagama-mfihlo awafani',
 'validator.password.not.match.new' => 'Amaphasiwedi akho amasha awafani',
@@ -1720,7 +1721,7 @@ return [
 'view.contact.form.name' => 'Igama',
 'view.contact.form.email' => 'I-imeyili',
 'view.contact.form.subject' => 'Isihloko',
-'view.contact.form.body' => 'Umzimba', 
+'view.contact.form.body' => 'Umzimba',
 'i.email_template_type' => 'Uhlobo Lwesifanekiso Se-imeyili',
 'gateway.online.payment' => 'Inkokhelo Ye-inthanethi',
 'invoice.client.has.not.assigned' => 'Lawa maklayenti awazange anikezwe i-akhawunti yomsebenzisi. Iklayenti elilodwa noma ngaphezulu nge-akhawunti ngayinye yomsebenzisi.',

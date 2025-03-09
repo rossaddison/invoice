@@ -1,11 +1,11 @@
 <?php
-    declare(strict_types=1);
-    
-    /**
-     * @var Yiisoft\Translator\TranslatorInterface $translator
-     * @var string $heading
-     * @var string $message
-     */ 
+declare(strict_types=1);
+
+/**
+ * @var Yiisoft\Translator\TranslatorInterface $translator
+ * @var string $heading
+ * @var string $message
+ */
 ?>
 
 <!doctype html>

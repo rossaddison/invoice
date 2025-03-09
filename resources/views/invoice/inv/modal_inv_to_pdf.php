@@ -3,11 +3,11 @@
 declare(strict_types=1);
 
 /**
- * @see id="inv-to-pdf" triggered by <a href="#inv-to-pdf" data-bs-toggle="modal"  style="text-decoration:none"> views/inv/view.php 
+ * @see id="inv-to-pdf" triggered by <a href="#inv-to-pdf" data-bs-toggle="modal"  style="text-decoration:none"> views/inv/view.php
  * @var App\Invoice\Entity\Inv $inv
  * @var App\Invoice\Setting\SettingRepository $s
  * @var Yiisoft\Translator\TranslatorInterface $translator
- * @var string $csrf 
+ * @var string $csrf
  */
 
 ?>

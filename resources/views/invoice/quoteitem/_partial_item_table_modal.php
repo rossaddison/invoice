@@ -1,8 +1,8 @@
 <?php
 
-declare(strict_types=1); 
+declare(strict_types=1);
 
- use Yiisoft\Html\Html;
+use Yiisoft\Html\Html;
 
 /**
  * @see QuoteController function view $parameters['model_delete_items']

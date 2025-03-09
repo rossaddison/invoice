@@ -18,8 +18,8 @@ class Project
     private ?Client $client = null;
 
     public function __construct(#[Column(type: 'integer(11)', nullable:false)]
-    private ?int $client_id = null, #[Column(type: 'text', nullable: true)]
-    private ?string $name = '')
+        private ?int $client_id = null, #[Column(type: 'text', nullable: true)]
+        private ?string $name = '')
     {
     }
 

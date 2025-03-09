@@ -9,7 +9,7 @@ use Yiisoft\Html\Tag\Form;
 /**
  * @var App\Invoice\GeneratorRelation\GeneratorRelationForm $form
  * @var App\Widget\Button $button
- * @var Yiisoft\Translator\TranslatorInterface $translator 
+ * @var Yiisoft\Translator\TranslatorInterface $translator
  * @var Yiisoft\Router\UrlGeneratorInterface $urlGenerator
  * @var array $generators
  * @var string $actionName
@@ -20,13 +20,13 @@ use Yiisoft\Html\Tag\Form;
  */
 ?>
 
-<?= Html::openTag('div',['class'=>'container py-5 h-100']); ?>
-<?= Html::openTag('div',['class'=>'row d-flex justify-content-center align-items-center h-100']); ?>
-<?= Html::openTag('div',['class'=>'col-12 col-md-8 col-lg-6 col-xl-8']); ?>
-<?= Html::openTag('div',['class'=>'card border border-dark shadow-2-strong rounded-3']); ?>
-<?= Html::openTag('div',['class'=>'card-header']); ?>
+<?= Html::openTag('div', ['class' => 'container py-5 h-100']); ?>
+<?= Html::openTag('div', ['class' => 'row d-flex justify-content-center align-items-center h-100']); ?>
+<?= Html::openTag('div', ['class' => 'col-12 col-md-8 col-lg-6 col-xl-8']); ?>
+<?= Html::openTag('div', ['class' => 'card border border-dark shadow-2-strong rounded-3']); ?>
+<?= Html::openTag('div', ['class' => 'card-header']); ?>
 
-<?= Html::openTag('h1',['class'=>'fw-normal h3 text-center']); ?>
+<?= Html::openTag('h1', ['class' => 'fw-normal h3 text-center']); ?>
     <?= $title; ?>
 <?= Html::closeTag('h1'); ?>
 
@@ -49,25 +49,24 @@ use Yiisoft\Html\Tag\Form;
 
 <?= Html::openTag('div', ['class' => 'col mb-3']); ?>
 <?php
-    $optionsDataGenerators = [];
-    /**
-     * @var App\Invoice\Entity\Gentor $generator
-     */
-    foreach ($generators as $generator)
-    {
-        $optionsDataGenerators[$generator->getGentor_id()] = $generator->getCamelcase_capital_name();
-    }
-    
-    echo Field::select($form, 'gentor_id')
-    ->label($translator->translate('invoice.generator.relation.form.entity.generator'))
-    ->addInputAttributes([
-        'class' => 'form-control',
-        'id' => 'gentor_id'
-    ])
-    ->prompt($translator->translate('i.none'))        
-    ->optionsData($optionsDataGenerators)
-    ->required(true)        
-    ->hint($translator->translate('invoice.hint.this.field.is.required')); 
+$optionsDataGenerators = [];
+/**
+ * @var App\Invoice\Entity\Gentor $generator
+ */
+foreach ($generators as $generator) {
+    $optionsDataGenerators[$generator->getGentor_id()] = $generator->getCamelcase_capital_name();
+}
+
+echo Field::select($form, 'gentor_id')
+->label($translator->translate('invoice.generator.relation.form.entity.generator'))
+->addInputAttributes([
+    'class' => 'form-control',
+    'id' => 'gentor_id'
+])
+->prompt($translator->translate('i.none'))
+->optionsData($optionsDataGenerators)
+->required(true)
+->hint($translator->translate('invoice.hint.this.field.is.required'));
 ?>
 <?= Html::closeTag('div'); ?>
 
@@ -81,7 +80,7 @@ use Yiisoft\Html\Tag\Form;
     ])
     ->value(Html::encode($form->getLowercase_name()))
     ->required(true)
-    ->hint($translator->translate('invoice.hint.this.field.is.required')); 
+    ->hint($translator->translate('invoice.hint.this.field.is.required'));
 ?>
 <?= Html::closeTag('div'); ?>
 
@@ -94,8 +93,8 @@ use Yiisoft\Html\Tag\Form;
         'id' => 'camelcasename'
     ])
     ->value(Html::encode($form->getCamelcase_name()))
-    ->required(true)    
-    ->hint($translator->translate('invoice.hint.this.field.is.required')); 
+    ->required(true)
+    ->hint($translator->translate('invoice.hint.this.field.is.required'));
 ?>
 <?= Html::closeTag('div'); ?>
 
@@ -108,8 +107,8 @@ use Yiisoft\Html\Tag\Form;
         'id' => 'view_field_name'
     ])
     ->value(Html::encode($form->getView_field_name()))
-    ->required(true)    
-    ->hint($translator->translate('invoice.hint.this.field.is.required')); 
+    ->required(true)
+    ->hint($translator->translate('invoice.hint.this.field.is.required'));
 ?>
 <?= Html::closeTag('div'); ?>
 

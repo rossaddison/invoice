@@ -16,15 +16,13 @@ use Yiisoft\VarDumper\VarDumper;
 echo $alert;
 
 if (!$webhookinfo instanceof \Vjik\TelegramBot\Api\FailResult) {
-     echo I::tag()->content('')->addClass('bi bi-info-circle')->addAttributes(['data-bs-toggle' => 'tooltip','title' => '.../resources/views/telegram/webhook.php'])->render();
-     echo Html::opentag('pre');
-     echo Label::tag()->content(empty($webhookinfo->url) 
-            ? 'Your url is an empty string which shows that you are using getUpdates which mutually excludes webhook use.' 
-            : 'Here is your currently setup webhook url: '.$webhookinfo->url)->render();
-     echo Br::tag()->render();
-     echo Label::tag()->content('Pending Update Count: '.(string)$webhookinfo->pendingUpdateCount)->render();
-     echo Br::tag()->render();
-     echo Html::closeTag('pre');
+    echo I::tag()->content('')->addClass('bi bi-info-circle')->addAttributes(['data-bs-toggle' => 'tooltip','title' => '.../resources/views/telegram/webhook.php'])->render();
+    echo Html::opentag('pre');
+    echo Label::tag()->content(empty($webhookinfo->url)
+           ? 'Your url is an empty string which shows that you are using getUpdates which mutually excludes webhook use.'
+           : 'Here is your currently setup webhook url: '.$webhookinfo->url)->render();
+    echo Br::tag()->render();
+    echo Label::tag()->content('Pending Update Count: '.(string)$webhookinfo->pendingUpdateCount)->render();
+    echo Br::tag()->render();
+    echo Html::closeTag('pre');
 }
-
-?>

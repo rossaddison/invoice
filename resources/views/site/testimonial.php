@@ -1,19 +1,19 @@
 <?php
 
-    declare(strict_types=1);
-    
-    use Yiisoft\Html\Html;
-    use Yiisoft\Html\Tag\H4;
-    use Yiisoft\Html\Tag\H5;
-    
-   /**
-    * @link  Acknowledgement to bootstrapbrain free templates wavelite for the bootstrap 5 code classes and structure 
-    * @see This wavelite template has been adjusted to accomodate 
-    * @see ..\invoice\src\ViewInjection\CommonViewInjection.php
-    * @see ..\invoice\resources\messages\en\app.php
-    * @var array $testimonial
-    */
-    
+declare(strict_types=1);
+
+use Yiisoft\Html\Html;
+use Yiisoft\Html\Tag\H4;
+use Yiisoft\Html\Tag\H5;
+
+/**
+ * @link  Acknowledgement to bootstrapbrain free templates wavelite for the bootstrap 5 code classes and structure
+ * @see This wavelite template has been adjusted to accomodate
+ * @see ..\invoice\src\ViewInjection\CommonViewInjection.php
+ * @see ..\invoice\resources\messages\en\app.php
+ * @var array $testimonial
+ */
+
 ?>
 
 <?= Html::openTag('section', ['id' => 'Testimonial', 'class' => 'py-5 py-xl-8']); ?>
@@ -33,9 +33,9 @@
                     <?= Html::openTag('div', ['class' => 'card-body p-4 p-xxl-5']); ?>
                         <?= Html::openTag('figure', ['class' => 'm-0 p-0']); ?>
                             <?= Html::tag('img', '', [
-                                'class' => 'img-fluid rounded rounded-circle mb-4 border border-5', 
-                                'loading' => 'lazy', 
-                                'src' => '/img/soletrader/testimonial/testimonial-img-1.jpg', 
+                                'class' => 'img-fluid rounded rounded-circle mb-4 border border-5',
+                                'loading' => 'lazy',
+                                'src' => '/img/soletrader/testimonial/testimonial-img-1.jpg',
                                 'alt' => 'Mama Nana']); ?>    
                             <?= Html::openTag('figcaption'); ?>
                                 <?= Html::openTag('div', [
@@ -64,9 +64,9 @@
                     <?= Html::openTag('div', ['class' => 'card-body p-4 p-xxl-5']); ?>
                         <?= Html::openTag('figure'); ?>
                             <?= Html::tag('img', '', [
-                                'class' => 'img-fluid rounded rounded-circle mb-4 border border-5', 
-                                'loading' => 'lazy', 
-                                'src' => '/img/soletrader/testimonial/testimonial-img-2.jpg', 
+                                'class' => 'img-fluid rounded rounded-circle mb-4 border border-5',
+                                'loading' => 'lazy',
+                                'src' => '/img/soletrader/testimonial/testimonial-img-2.jpg',
                                 'alt' => 'Papa Quana']); ?>    
                             <?= Html::openTag('figcaption'); ?>
                                 <?= Html::openTag('blockquote', ['class' => 'mb-4']); ?>
@@ -90,9 +90,9 @@
                     <?= Html::openTag('div', ['class' => 'card-body p-4 p-xxl-5']); ?>
                         <?= Html::openTag('figure'); ?>
                             <?= Html::tag('img', '', [
-                                'class' => 'img-fluid rounded rounded-circle mb-4 border border-5', 
-                                'loading' => 'lazy', 
-                                'src' => '/img/soletrader/testimonial/testimonial-img-3.jpg', 
+                                'class' => 'img-fluid rounded rounded-circle mb-4 border border-5',
+                                'loading' => 'lazy',
+                                'src' => '/img/soletrader/testimonial/testimonial-img-3.jpg',
                                 'alt' => 'Rara Sasa']); ?>    
                             <?= Html::openTag('figcaption'); ?>
                                 <?= Html::openTag('blockquote', ['class' => 'mb-4']); ?>

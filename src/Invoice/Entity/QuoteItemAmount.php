@@ -15,12 +15,12 @@ class QuoteItemAmount
     private ?QuoteItem $quote_item = null;
 
     public function __construct(#[Column(type: 'primary')]
-    private ?int $id = null, #[Column(type: 'integer(11)', nullable: false)]
-    private ?int $quote_item_id = null, #[Column(type: 'decimal(20,2)', nullable: false, default: 0.00)]
-    private ?float $subtotal = 0.00, #[Column(type: 'decimal(20,2)', nullable: false, default: 0.00)]
-    private ?float $tax_total = 0.00, #[Column(type: 'decimal(20,2)', nullable: false, default: 0.00)]
-    private ?float $discount = 0.00, #[Column(type: 'decimal(20,2)', nullable: false, default: 0.00)]
-    private ?float $total = 0.00)
+        private ?int $id = null, #[Column(type: 'integer(11)', nullable: false)]
+        private ?int $quote_item_id = null, #[Column(type: 'decimal(20,2)', nullable: false, default: 0.00)]
+        private ?float $subtotal = 0.00, #[Column(type: 'decimal(20,2)', nullable: false, default: 0.00)]
+        private ?float $tax_total = 0.00, #[Column(type: 'decimal(20,2)', nullable: false, default: 0.00)]
+        private ?float $discount = 0.00, #[Column(type: 'decimal(20,2)', nullable: false, default: 0.00)]
+        private ?float $total = 0.00)
     {
     }
 

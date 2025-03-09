@@ -11,23 +11,31 @@ use Yiisoft\Html\Html;
  * @var string $language
  * @var string $productpropertys
  * @psalm-var array<string, Stringable|null|scalar> $languageArgument
- * @psalm-var array<array-key, array<array-key, string>|string> $productPropertyArguments 
+ * @psalm-var array<array-key, array<array-key, string>|string> $productPropertyArguments
  */
 
-    $languageArgument = ['_language' => $language];
-    $productPropertyArguments = ['product_id' => $product->getProduct_id(), '_language' => $language];
+$languageArgument = ['_language' => $language];
+$productPropertyArguments = ['product_id' => $product->getProduct_id(), '_language' => $language];
 ?>
 <div>
 <label class="btn btn-info">
-    <?= Html::a($translator->translate('invoice.product.property.table'),
-          $urlGenerator->generate('productproperty/index',
-          $languageArgument), 
-          ['style' => 'text-decoration:none']); ?>
+    <?= Html::a(
+        $translator->translate('invoice.product.property.table'),
+        $urlGenerator->generate(
+            'productproperty/index',
+            $languageArgument
+        ),
+        ['style' => 'text-decoration:none']
+    ); ?>
 </label>
-    <?= Html::a($translator->translate('invoice.product.property'), 
-          $urlGenerator->generate('productproperty/add', 
-          $productPropertyArguments),
-           ['class' => 'btn btn-primary fa fa-plus']); ?>
+    <?= Html::a(
+        $translator->translate('invoice.product.property'),
+        $urlGenerator->generate(
+            'productproperty/add',
+            $productPropertyArguments
+        ),
+        ['class' => 'btn btn-primary fa fa-plus']
+    ); ?>
 </div>
 <br>
 <div class="table-responsive btn btn-info">

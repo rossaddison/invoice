@@ -12,9 +12,9 @@ use Yiisoft\Yii\Bootstrap5\CarouselItem;
  */
 ?>
 <?php
-    $w = 649;
-    $h = 383;
-    $divHeight = (string)500;    
+$w = 649;
+$h = 383;
+$divHeight = (string)500;
 ?>
 <?= Carousel::widget()
     ->items(
@@ -28,7 +28,7 @@ use Yiisoft\Yii\Bootstrap5\CarouselItem;
             active: true,
             caption: $translator->translate('gallery.caption.slide1'),
             encodeCaption: false,
-            captionAttributes: ['class' => ['d-none', 'd-md-block']]    
+            captionAttributes: ['class' => ['d-none', 'd-md-block']]
         ),
         CarouselItem::to(
             content:'<div class="bg-dark" style="height: '.$divHeight.'px; text-align: center"><br>'.
@@ -39,7 +39,7 @@ use Yiisoft\Yii\Bootstrap5\CarouselItem;
                     '</div>',
             caption: $translator->translate('gallery.caption.slide2'),
             encodeCaption: false,
-            captionAttributes: ['class' => ['d-none', 'd-md-block']]    
+            captionAttributes: ['class' => ['d-none', 'd-md-block']]
         ),
         CarouselItem::to(
             content:'<div class="bg-dark" style="height: '.$divHeight.'px; text-align: center"><br>'.
@@ -50,7 +50,7 @@ use Yiisoft\Yii\Bootstrap5\CarouselItem;
                     '</div>',
             caption: $translator->translate('gallery.caption.slide3'),
             encodeCaption: false,
-            captionAttributes: ['class' => ['d-none', 'd-md-block']]    
+            captionAttributes: ['class' => ['d-none', 'd-md-block']]
         ),
         CarouselItem::to(
             content:'<div class="bg-dark" style="height: '.$divHeight.'px; text-align: center"><br>'.
@@ -61,8 +61,8 @@ use Yiisoft\Yii\Bootstrap5\CarouselItem;
                     '</div>',
             caption: $translator->translate('gallery.caption.slide4'),
             encodeCaption: false,
-            captionAttributes: ['class' => ['d-none', 'd-md-block']]    
-        ),    
+            captionAttributes: ['class' => ['d-none', 'd-md-block']]
+        ),
         CarouselItem::to(
             content:'<div class="bg-dark" style="height: '.$divHeight.'px; text-align: center"><br>'.
                         Img::tag()
@@ -72,8 +72,8 @@ use Yiisoft\Yii\Bootstrap5\CarouselItem;
                     '</div>',
             caption: $translator->translate('gallery.caption.slide5'),
             encodeCaption: false,
-            captionAttributes: ['class' => ['d-none', 'd-md-block']]    
-        ),    
+            captionAttributes: ['class' => ['d-none', 'd-md-block']]
+        ),
         CarouselItem::to(
             content:'<div class="bg-dark" style="height: '.$divHeight.'px; text-align: center"><br>'.
                         Img::tag()
@@ -83,7 +83,7 @@ use Yiisoft\Yii\Bootstrap5\CarouselItem;
                     '</div>',
             caption: $translator->translate('gallery.caption.slide6'),
             encodeCaption: false,
-            captionAttributes: ['class' => ['d-none', 'd-md-block']]    
+            captionAttributes: ['class' => ['d-none', 'd-md-block']]
         ),
         CarouselItem::to(
             content:'<div class="bg-dark" style="height: '.$divHeight.'px; text-align: center"><br>'.
@@ -94,7 +94,7 @@ use Yiisoft\Yii\Bootstrap5\CarouselItem;
                     '</div>',
             caption: $translator->translate('gallery.caption.slide7'),
             encodeCaption: false,
-            captionAttributes: ['class' => ['d-none', 'd-md-block']]    
+            captionAttributes: ['class' => ['d-none', 'd-md-block']]
         ),
         CarouselItem::to(
             content:'<div class="bg-dark" style="height: '.$divHeight.'px; text-align: center"><br>'.
@@ -105,8 +105,8 @@ use Yiisoft\Yii\Bootstrap5\CarouselItem;
                     '</div>',
             caption: $translator->translate('gallery.caption.slide8'),
             encodeCaption: false,
-            captionAttributes: ['class' => ['d-none', 'd-md-block']]    
-        ),    
+            captionAttributes: ['class' => ['d-none', 'd-md-block']]
+        ),
         CarouselItem::to(
             content:'<div class="bg-dark" style="height: '.$divHeight.'px; text-align: center"><br>'.
                         Img::tag()
@@ -116,8 +116,8 @@ use Yiisoft\Yii\Bootstrap5\CarouselItem;
                     '</div>',
             caption: $translator->translate('gallery.caption.slide9'),
             encodeCaption: false,
-            captionAttributes: ['class' => ['d-none', 'd-md-block']]    
-        ),    
+            captionAttributes: ['class' => ['d-none', 'd-md-block']]
+        ),
         CarouselItem::to(
             content:'<div class="bg-dark" style="height: '.$divHeight.'px; text-align: center"><br>'.
                         Img::tag()
@@ -127,8 +127,8 @@ use Yiisoft\Yii\Bootstrap5\CarouselItem;
                     '</div>',
             caption: $translator->translate('gallery.caption.slide10'),
             encodeCaption: false,
-            captionAttributes: ['class' => ['d-none', 'd-md-block']]    
-        ),    
+            captionAttributes: ['class' => ['d-none', 'd-md-block']]
+        ),
         CarouselItem::to(
             content:'<div class="bg-dark" style="height: '.$divHeight.'px; text-align: center"><br>'.
                         Img::tag()
@@ -138,8 +138,8 @@ use Yiisoft\Yii\Bootstrap5\CarouselItem;
                     '</div>',
             caption: $translator->translate('gallery.caption.slide11'),
             encodeCaption: false,
-            captionAttributes: ['class' => ['d-none', 'd-md-block']]    
-        ),    
+            captionAttributes: ['class' => ['d-none', 'd-md-block']]
+        ),
         CarouselItem::to(
             content:'<div class="bg-dark" style="height: '.$divHeight.'px; text-align: center"><br>'.
                         Img::tag()
@@ -149,8 +149,8 @@ use Yiisoft\Yii\Bootstrap5\CarouselItem;
                     '</div>',
             caption: $translator->translate('gallery.caption.slide12'),
             encodeCaption: false,
-            captionAttributes: ['class' => ['d-none', 'd-md-block']]    
-        ),    
+            captionAttributes: ['class' => ['d-none', 'd-md-block']]
+        ),
         CarouselItem::to(
             content:'<div class="bg-dark" style="height: '.$divHeight.'px; text-align: center"><br>'.
                         Img::tag()
@@ -160,8 +160,8 @@ use Yiisoft\Yii\Bootstrap5\CarouselItem;
                     '</div>',
             caption: $translator->translate('gallery.caption.slide13'),
             encodeCaption: false,
-            captionAttributes: ['class' => ['d-none', 'd-md-block']]    
-        ),    
+            captionAttributes: ['class' => ['d-none', 'd-md-block']]
+        ),
         CarouselItem::to(
             content:'<div class="bg-dark" style="height: '.$divHeight.'px; text-align: center"><br>'.
                         Img::tag()
@@ -171,7 +171,7 @@ use Yiisoft\Yii\Bootstrap5\CarouselItem;
                     '</div>',
             caption: $translator->translate('gallery.caption.slide14'),
             encodeCaption: false,
-            captionAttributes: ['class' => ['d-none', 'd-md-block']]    
+            captionAttributes: ['class' => ['d-none', 'd-md-block']]
         ),
         CarouselItem::to(
             content:'<div class="bg-dark" style="height: '.$divHeight.'px; text-align: center"><br>'.
@@ -182,8 +182,8 @@ use Yiisoft\Yii\Bootstrap5\CarouselItem;
                     '</div>',
             caption: $translator->translate('gallery.caption.slide15'),
             encodeCaption: false,
-            captionAttributes: ['class' => ['d-none', 'd-md-block']]    
-        ),    
+            captionAttributes: ['class' => ['d-none', 'd-md-block']]
+        ),
     )
-    ->render();        
+    ->render();
 ?>

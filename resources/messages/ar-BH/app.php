@@ -1699,7 +1699,7 @@ return [
 'site.soletrader.contact.address' => 'عنوان',
 'site.soletrader.contact.email' => 'بريد إلكتروني',
 'site.soletrader.contact.phone' => 'هاتف',
-'site.todays.date' => 'تاريخ اليوم',    
+'site.todays.date' => 'تاريخ اليوم',
 'validator.invalid.login.password' => 'معلومات الدخول خاطئة او كلمة المرور خاطئة',
 'validator.password.not.match' => 'كلمة المرور غير مطابقة',
 'validator.password.not.match.new' => 'كلمات المرور الجديدة الخاصة بك غير متطابقة',
@@ -1809,5 +1809,5 @@ return [
 'menu.gallery' => 'معرض الصور',
 'menu.privacy.policy' => 'سياسة الخصوصية',
 'menu.terms.of.service' => 'شروط الخدمة',
-'password.reset.request.token' => 'طلب رمز إعادة تعيين كلمة المرور'    
+'password.reset.request.token' => 'طلب رمز إعادة تعيين كلمة المرور'
 ];

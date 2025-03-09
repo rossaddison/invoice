@@ -18,10 +18,10 @@ class PaymentCustom
     private ?CustomField $custom_field = null;
 
     public function __construct(#[Column(type: 'primary')]
-    private ?int $id = null, #[Column(type: 'integer(11)', nullable:true)]
-    private ?int $payment_id = null, #[Column(type: 'integer(11)', nullable:true)]
-    private ?int $custom_field_id = null, #[Column(type: 'text', nullable:true)]
-    private string $value = '')
+        private ?int $id = null, #[Column(type: 'integer(11)', nullable:true)]
+        private ?int $payment_id = null, #[Column(type: 'integer(11)', nullable:true)]
+        private ?int $custom_field_id = null, #[Column(type: 'text', nullable:true)]
+        private string $value = '')
     {
     }
 

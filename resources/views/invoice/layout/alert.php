@@ -37,7 +37,7 @@ foreach ($flash->getAll() as $key => $value) {
     if (is_array($value)) {
         /**
          * @var Stringable|string $body
-         */  
+         */
         foreach ($value as $key2 => $body) {
             $matchedKey = match ($key) {
                 'danger' => $danger,
@@ -54,8 +54,8 @@ foreach ($flash->getAll() as $key => $value) {
                      ->addClass('shadow')
                      ->addCssStyle([
                          'font-size' => $alertMessageFontSize . 'px',
-                         'font-family' =>  $alertMessageFont, 
-                     ]) 
+                         'font-family' =>  $alertMessageFont,
+                     ])
                      ->addClass('btn-flash-message-close')
                      ->closeButtonTag('button')
                      ->closeButtonAttributes(['style' => 'font-size:'. $alertCloseButtonFontSize. 'px'])

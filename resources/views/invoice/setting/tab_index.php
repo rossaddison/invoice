@@ -39,7 +39,7 @@ echo $alert;
     <h1 class="headerbar-title"><?= $translator->translate('i.settings'); ?></h1>
     <?php
         echo $button::backSave();
-    ?>
+?>
 </div>
 
 <ul id="settings-tabs" class="nav nav-tabs nav-tabs-noborder">

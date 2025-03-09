@@ -26,37 +26,37 @@ use Yiisoft\Yii\DataView\YiiRouter\UrlCreator;
  * @var string $alert
  * @var string $csrf
  * @var CurrentRoute $currentRoute
- * @var Yiisoft\Data\Cycle\Reader\EntityReader $taxrates 
+ * @var Yiisoft\Data\Cycle\Reader\EntityReader $taxrates
  * @var Yiisoft\Data\Paginator\OffsetPaginator $paginator
- * @var Yiisoft\Router\UrlGeneratorInterface $urlGenerator 
+ * @var Yiisoft\Router\UrlGeneratorInterface $urlGenerator
  * @var Yiisoft\Translator\TranslatorInterface $translator
  * @var WebView $this
  * @psalm-var positive-int $page
- */ 
+ */
 
- echo $alert;
+echo $alert;
 ?>
 <?php
-    $header = Div::tag()
-        ->addClass('row')
-        ->content(
-            H5::tag()
-                ->addClass('bg-primary text-white p-3 rounded-top')
-                ->content(
-                    I::tag()->addClass('bi bi-receipt')
-                            ->content(' ' . Html::encode($translator->translate('invoice.invoice.tax.rate')))
-                )
-        )
-        ->render();
+$header = Div::tag()
+    ->addClass('row')
+    ->content(
+        H5::tag()
+            ->addClass('bg-primary text-white p-3 rounded-top')
+            ->content(
+                I::tag()->addClass('bi bi-receipt')
+                        ->content(' ' . Html::encode($translator->translate('invoice.invoice.tax.rate')))
+            )
+    )
+    ->render();
 
-    $toolbarReset = A::tag()
-        ->addAttributes(['type' => 'reset'])
-        ->addClass('btn btn-danger me-1 ajax-loader')
-        ->content(I::tag()->addClass('bi bi-bootstrap-reboot'))
-        ->href($urlGenerator->generate($currentRoute->getName() ?? 'taxrate/index'))
-        ->id('btn-reset')
-        ->render();
-    $toolbar = Div::tag();
+$toolbarReset = A::tag()
+    ->addAttributes(['type' => 'reset'])
+    ->addClass('btn btn-danger me-1 ajax-loader')
+    ->content(I::tag()->addClass('bi bi-bootstrap-reboot'))
+    ->href($urlGenerator->generate($currentRoute->getName() ?? 'taxrate/index'))
+    ->id('btn-reset')
+    ->render();
+$toolbar = Div::tag();
 ?>
 <?= Html::openTag('div'); ?>
     <?= Html::openTag('h5'); ?>
@@ -69,7 +69,7 @@ use Yiisoft\Yii\DataView\YiiRouter\UrlCreator;
         <?= A::tag()
             ->addClass('btn btn-success')
             ->content(I::tag()
-                      ->addClass('fa fa-plus')) 
+                      ->addClass('fa fa-plus'))
             ->href($urlGenerator->generate('taxrate/add')); ?>
     <?= Html::closeTag('div'); ?>
 <?= Html::closeTag('div'); ?>
@@ -106,74 +106,74 @@ use Yiisoft\Yii\DataView\YiiRouter\UrlCreator;
             new DataColumn(
                 'tax_rate_default',
                 header: $translator->translate('invoice.default'),
-                content: static fn (TaxRate $model) => Html::encode($model->getTaxRateDefault() == '1' ? 
-                                                                  ($translator->translate('i.active').' '.'✔️' ) : 
+                content: static fn (TaxRate $model) => Html::encode($model->getTaxRateDefault() == '1' ?
+                                                                  ($translator->translate('i.active').' '.'✔️') :
                                                                    $translator->translate('i.inactive').' '.'❌')
             ),
             new ActionColumn(buttons: [
                 new ActionButton(
                     content: '🔎',
-                    url: static function(TaxRate $model) use ($urlGenerator) : string {
-                         return $urlGenerator->generate('taxrate/view', ['id' => $model->getTaxRateId()]);     
+                    url: static function (TaxRate $model) use ($urlGenerator): string {
+                        return $urlGenerator->generate('taxrate/view', ['id' => $model->getTaxRateId()]);
                     },
                     attributes: [
                         'data-bs-toggle' => 'tooltip',
                         'title' => $translator->translate('i.view'),
-                    ]      
+                    ]
                 ),
                 new ActionButton(
                     content: '✎',
-                    url: static function(TaxRate $model) use ($urlGenerator) : string {
-                         return $urlGenerator->generate('taxrate/edit', ['id' => $model->getTaxRateId()]);     
+                    url: static function (TaxRate $model) use ($urlGenerator): string {
+                        return $urlGenerator->generate('taxrate/edit', ['id' => $model->getTaxRateId()]);
                     },
                     attributes: [
                         'data-bs-toggle' => 'tooltip',
                         'title' => $translator->translate('i.edit'),
-                    ]      
+                    ]
                 ),
                 new ActionButton(
                     content: '❌',
-                    url: static function(TaxRate $model) use ($urlGenerator) : string {
-                         return $urlGenerator->generate('taxrate/delete', ['id' => $model->getTaxRateId()]);     
+                    url: static function (TaxRate $model) use ($urlGenerator): string {
+                        return $urlGenerator->generate('taxrate/delete', ['id' => $model->getTaxRateId()]);
                     },
                     attributes: [
                         'title' => $translator->translate('i.delete'),
-                        'onclick'=>"return confirm("."'".$translator->translate('i.delete_record_warning')."');"
-                    ]      
-                ),          
+                        'onclick' => "return confirm("."'".$translator->translate('i.delete_record_warning')."');"
+                    ]
+                ),
             ]),
         ];
-    ?>
-    <?php 
-    
-    $paginator = (new OffsetPaginator($taxrates))
-        ->withPageSize($s->positiveListLimit())
-        ->withCurrentPage($page)
-        ->withToken(PageToken::next((string)$page)); 
-    
-    $grid_summary = $s->grid_summary(
-        $paginator, 
-        $translator, 
-        (int)$s->getSetting('default_list_limit'), 
-        $translator->translate('i.tax.rates'),
-        ''
-    );           
-    $toolbarString = Form::tag()->post($urlGenerator->generate('taxrate/index'))->csrf($csrf)->open() .
-            Div::tag()->addClass('float-end m-3')->content($toolbarReset)->encode(false)->render() .
-            Form::tag()->close();
-    echo GridView::widget()    
-        ->bodyRowAttributes(['class' => 'align-middle'])
-        ->tableAttributes(['class' => 'table table-striped text-center h-75','id'=>'table-taxrate'])
-        ->columns(...$columns)
-        ->dataReader($paginator)
-        ->urlCreator(new UrlCreator($urlGenerator))    
-        ->headerRowAttributes(['class'=>'card-header bg-info text-black'])
-        ->header($header)
-        ->id('w101-grid')
-        ->paginationWidget($gridComponents->offsetPaginationWidget($paginator))
-        ->summaryAttributes(['class' => 'mt-3 me-3 summary text-end'])
-        ->summaryTemplate($grid_summary)
-        ->emptyTextAttributes(['class' => 'card-header bg-warning text-black'])
-        ->emptyText($translator->translate('invoice.invoice.no.records'))
-        ->toolbar($toolbarString);
-    ?>
+?>
+    <?php
+
+$paginator = (new OffsetPaginator($taxrates))
+    ->withPageSize($s->positiveListLimit())
+    ->withCurrentPage($page)
+    ->withToken(PageToken::next((string)$page));
+
+$grid_summary = $s->grid_summary(
+    $paginator,
+    $translator,
+    (int)$s->getSetting('default_list_limit'),
+    $translator->translate('i.tax.rates'),
+    ''
+);
+$toolbarString = Form::tag()->post($urlGenerator->generate('taxrate/index'))->csrf($csrf)->open() .
+        Div::tag()->addClass('float-end m-3')->content($toolbarReset)->encode(false)->render() .
+        Form::tag()->close();
+echo GridView::widget()
+    ->bodyRowAttributes(['class' => 'align-middle'])
+    ->tableAttributes(['class' => 'table table-striped text-center h-75','id' => 'table-taxrate'])
+    ->columns(...$columns)
+    ->dataReader($paginator)
+    ->urlCreator(new UrlCreator($urlGenerator))
+    ->headerRowAttributes(['class' => 'card-header bg-info text-black'])
+    ->header($header)
+    ->id('w101-grid')
+    ->paginationWidget($gridComponents->offsetPaginationWidget($paginator))
+    ->summaryAttributes(['class' => 'mt-3 me-3 summary text-end'])
+    ->summaryTemplate($grid_summary)
+    ->emptyTextAttributes(['class' => 'card-header bg-warning text-black'])
+    ->emptyText($translator->translate('invoice.invoice.no.records'))
+    ->toolbar($toolbarString);
+?>

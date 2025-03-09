@@ -5,7 +5,7 @@ declare(strict_types=1);
 use Yiisoft\Html\Html;
 
 /**
- * @see id="create-client" triggered by <a href="#create-client" class="btn btn-success" data-bs-toggle="modal"  style="text-decoration:none"> on 
+ * @see id="create-client" triggered by <a href="#create-client" class="btn btn-success" data-bs-toggle="modal"  style="text-decoration:none"> on
  * @see views/client/index.php
  * @var Yiisoft\Translator\TranslatorInterface $translator
  */

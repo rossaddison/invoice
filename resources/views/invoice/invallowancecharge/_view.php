@@ -28,13 +28,13 @@ echo Form::tag()
     ->id('InvAllowanceChargeForm')
     ->open() ?>
 
-<?= Html::openTag('div',['class'=>'container py-5 h-100']); ?>
-<?= Html::openTag('div',['class'=>'row d-flex justify-content-center align-items-center h-100']); ?>
-<?= Html::openTag('div',['class'=>'col-12 col-md-8 col-lg-6 col-xl-8']); ?>
-<?= Html::openTag('div',['class'=>'card border border-dark shadow-2-strong rounded-3']); ?>
-<?= Html::openTag('div',['class'=>'card-header']); ?>
+<?= Html::openTag('div', ['class' => 'container py-5 h-100']); ?>
+<?= Html::openTag('div', ['class' => 'row d-flex justify-content-center align-items-center h-100']); ?>
+<?= Html::openTag('div', ['class' => 'col-12 col-md-8 col-lg-6 col-xl-8']); ?>
+<?= Html::openTag('div', ['class' => 'card border border-dark shadow-2-strong rounded-3']); ?>
+<?= Html::openTag('div', ['class' => 'card-header']); ?>
 
-<?= Html::openTag('h1',['class'=>'fw-normal h3 text-center']); ?>    
+<?= Html::openTag('h1', ['class' => 'fw-normal h3 text-center']); ?>    
     <?= Html::encode($title) ?>
 <?= Html::closeTag('h1'); ?>
 <?= Html::openTag('div', ['id' => 'headerbar']); ?>
@@ -49,30 +49,30 @@ echo Form::tag()
                         'disabled' => 'disabled'
                     ])
                     ->optionsData($optionsDataAllowanceCharges);
-                ?>
+?>
             <?= Html::closeTag('div'); ?>
             <?= Html::openTag('div'); ?>
                 <?= Html::openTag('div', ['class' => 'mb-3 form-group']); ?>
                     <?= Field::text($form, 'amount')
-                    ->label($translator->translate('invoice.invoice.allowance.or.charge.amount'))
-                    ->addInputAttributes([
-                        'readonly' => 'readonly',
-                        'disabled' => 'disabled'
-                    ])
-                    ->value(Html::encode($form->getAmount())); 
-                ?>
+    ->label($translator->translate('invoice.invoice.allowance.or.charge.amount'))
+    ->addInputAttributes([
+        'readonly' => 'readonly',
+        'disabled' => 'disabled'
+    ])
+    ->value(Html::encode($form->getAmount()));
+?>
                 <?= Html::closeTag('div'); ?>
             <?= Html::closeTag('div'); ?>
             <?= Html::openTag('div'); ?>
                 <?= Html::openTag('div', ['class' => 'mb-3 form-group']); ?>
                     <?= Field::text($form, 'vat')
-                    ->label($translator->translate('invoice.invoice.vat.abbreviation'))
-                    ->addInputAttributes([
-                        'readonly' => 'readonly',
-                        'disabled' => 'disabled'
-                    ])
-                    ->value(Html::encode($form->getVat())); 
-                ?>
+    ->label($translator->translate('invoice.invoice.vat.abbreviation'))
+    ->addInputAttributes([
+        'readonly' => 'readonly',
+        'disabled' => 'disabled'
+    ])
+    ->value(Html::encode($form->getVat()));
+?>
                 <?= Html::closeTag('div'); ?>
             <?= Html::closeTag('div'); ?>
         <?= Html::closeTag('div'); ?>

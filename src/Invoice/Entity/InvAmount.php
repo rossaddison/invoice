@@ -15,15 +15,15 @@ class InvAmount
     private ?Inv $inv = null;
 
     public function __construct(#[Column(type: 'primary')]
-    private ?int $id = null, #[Column(type: 'integer(11)', nullable: false)]
-    private ?int $inv_id = null, #[Column(type: 'integer(1)', nullable: false, default: 1)]
-    private int $sign = 1, #[Column(type: 'decimal(20,2)', nullable: false, default: 0.00)]
-    private float $item_subtotal = 0.00, #[Column(type: 'decimal(20,2)', nullable: false, default: 0.00)]
-    private float $item_tax_total = 0.00, #[Column(type: 'decimal(20,2)', nullable: false, default: 0.00)]
-    private ?float $tax_total = 0.00, #[Column(type: 'decimal(20,2)', nullable: false, default: 0.00)]
-    private ?float $total = 0.00, #[Column(type: 'decimal(20,2)', nullable: false, default: 0.00)]
-    private ?float $paid = 0.00, #[Column(type: 'decimal(20,2)', nullable: false, default: 0.00)]
-    private ?float $balance = 0.00)
+        private ?int $id = null, #[Column(type: 'integer(11)', nullable: false)]
+        private ?int $inv_id = null, #[Column(type: 'integer(1)', nullable: false, default: 1)]
+        private int $sign = 1, #[Column(type: 'decimal(20,2)', nullable: false, default: 0.00)]
+        private float $item_subtotal = 0.00, #[Column(type: 'decimal(20,2)', nullable: false, default: 0.00)]
+        private float $item_tax_total = 0.00, #[Column(type: 'decimal(20,2)', nullable: false, default: 0.00)]
+        private ?float $tax_total = 0.00, #[Column(type: 'decimal(20,2)', nullable: false, default: 0.00)]
+        private ?float $total = 0.00, #[Column(type: 'decimal(20,2)', nullable: false, default: 0.00)]
+        private ?float $paid = 0.00, #[Column(type: 'decimal(20,2)', nullable: false, default: 0.00)]
+        private ?float $balance = 0.00)
     {
     }
 

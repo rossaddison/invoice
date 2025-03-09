@@ -1,16 +1,16 @@
 <?php
-    declare(strict_types=1);
-    
-    /**
-     * @see QuoteController view function $parameters['view_custom_fields']
-     * @var App\Invoice\Helpers\CustomValuesHelper $cvH
-     * @var App\Invoice\CustomValue\CustomValueRepository $cvR
-     * @var App\Invoice\QuoteCustom\QuoteCustomForm $quoteCustomForm
-     * @var Yiisoft\Translator\TranslatorInterface $translator
-     * @var array $custom_fields
-     * @var array $custom_values
-     * @var array $quote_custom_values     
-     */
+declare(strict_types=1);
+
+/**
+ * @see QuoteController view function $parameters['view_custom_fields']
+ * @var App\Invoice\Helpers\CustomValuesHelper $cvH
+ * @var App\Invoice\CustomValue\CustomValueRepository $cvR
+ * @var App\Invoice\QuoteCustom\QuoteCustomForm $quoteCustomForm
+ * @var Yiisoft\Translator\TranslatorInterface $translator
+ * @var array $custom_fields
+ * @var array $custom_values
+ * @var array $quote_custom_values
+ */
 ?>
 
 <?php if ($custom_fields): ?>

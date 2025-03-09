@@ -14,12 +14,12 @@ declare(strict_types=1);
 
 $alerts;
 
-if (!$isGuest ) {
-    /**     
+if (!$isGuest) {
+    /**
      * @var Cycle\Database\TableInterface $table
-     */   
+     */
     foreach ($tables as $table) {
-        echo '<div>';  
+        echo '<div>';
         echo '<br>';
         echo '<h1>'.$table->getName().'</h1>';
         echo '<table class="table">';
@@ -42,7 +42,7 @@ if (!$isGuest ) {
             echo "<td>{$column->getPrecision()}</td>";     // Decimals only
             echo "<td>{$column->getScale()}</td><td>{$column->isNullable()}</td>";
             $temp = '';
-            
+
             /**
              * @var array $enumValues
              * @var string $enum
@@ -53,14 +53,14 @@ if (!$isGuest ) {
             }
             echo '<td>'.$temp.'</td>';
             $var = '';
-            
+
             /**
              * @var array $columnConstraints
              * @var string $constraint
              */
             foreach (($columnConstraints = $column->getConstraints()) as $constraint) {
                 $var = $constraint;
-                $var.= " ".$var;
+                $var .= " ".$var;
             }
             echo '<td>'.$temp.'</td>';
             echo '</tr>';

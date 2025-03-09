@@ -22,12 +22,12 @@ class InvRecurring
     private ?Inv $inv = null;
 
     public function __construct(#[Column(type:'primary')]
-    private ?int $id = null, #[Column(type:'integer(11)', nullable: false)]
-    private ?int $inv_id = null, #[Column(type:'date', nullable: false)]
-    private mixed $start = '', #[Column(type:'date', nullable: true)]
-    private mixed $end = '', #[Column(type:'string(191)', nullable: false)]
-    private string $frequency = '', #[Column(type:'date', nullable: true)]
-    private mixed $next = '')
+        private ?int $id = null, #[Column(type:'integer(11)', nullable: false)]
+        private ?int $inv_id = null, #[Column(type:'date', nullable: false)]
+        private mixed $start = '', #[Column(type:'date', nullable: true)]
+        private mixed $end = '', #[Column(type:'string(191)', nullable: false)]
+        private string $frequency = '', #[Column(type:'date', nullable: true)]
+        private mixed $next = '')
     {
     }
 

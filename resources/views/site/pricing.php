@@ -1,21 +1,21 @@
 <?php
 
-    declare(strict_types=1);
-    
-    use Yiisoft\Html\Html;
-    use Yiisoft\Html\Tag\A;
-    use Yiisoft\Html\Tag\H2;
-    use Yiisoft\Html\Tag\H4;
-    use Yiisoft\Html\Tag\P;
-    
-   /**
-    * @link  Acknowledgement to bootstrapbrain free templates wavelite for the bootstrap 5 code classes and structure 
-    * @see This wavelite template has been adjusted to accomodate 
-    * @see ..\invoice\src\ViewInjection\CommonViewInjection.php
-    * @see ..\invoice\resources\messages\en\app.php
-    * @var App\Invoice\Setting\SettingRepository $s
-    * @var array $pricing
-    */
+declare(strict_types=1);
+
+use Yiisoft\Html\Html;
+use Yiisoft\Html\Tag\A;
+use Yiisoft\Html\Tag\H2;
+use Yiisoft\Html\Tag\H4;
+use Yiisoft\Html\Tag\P;
+
+/**
+ * @link  Acknowledgement to bootstrapbrain free templates wavelite for the bootstrap 5 code classes and structure
+ * @see This wavelite template has been adjusted to accomodate
+ * @see ..\invoice\src\ViewInjection\CommonViewInjection.php
+ * @see ..\invoice\resources\messages\en\app.php
+ * @var App\Invoice\Setting\SettingRepository $s
+ * @var array $pricing
+ */
 ?>
 
 <?= Html::openTag('section', ['id' => 'Pricing', 'class' => 'py-5 py-xl-8']); ?>
@@ -31,9 +31,9 @@
                         ->content((string)$pricing['explore'])
                         ->render(); ?>    
                 <?= A::tag()
-                        ->addClass('btn bsb-btn-2xl btn-primary rounded-pill')        
+                        ->addClass('btn bsb-btn-2xl btn-primary rounded-pill')
                         ->href('#!')
-                        ->content((string)$pricing['plans'])        
+                        ->content((string)$pricing['plans'])
                         ->render(); ?>
             <?= Html::closeTag('div'); ?>  
             <?= Html::openTag('div', ['class' => 'col-12 col-lg-8']); ?>
@@ -70,9 +70,9 @@
                                             <?= Html::closeTag('li'); ?>
                                         <?= Html::closeTag('ul'); ?>
                                         <?= A::tag()
-                                            ->addClass('btn bsb-btn-2xl btn-accent rounded-pill')        
+                                            ->addClass('btn bsb-btn-2xl btn-accent rounded-pill')
                                             ->href('#!')
-                                            ->content((string)$pricing['choosePlan'])        
+                                            ->content((string)$pricing['choosePlan'])
                                             ->render(); ?>                                
                                     <?= Html::closeTag('div'); ?>            
                                 <?= Html::closeTag('div'); ?>
@@ -106,9 +106,9 @@
                                             <?= Html::closeTag('li'); ?>
                                         <?= Html::closeTag('ul'); ?>
                                         <?= A::tag()
-                                            ->addClass('btn btn-accent rounded-pill')        
+                                            ->addClass('btn btn-accent rounded-pill')
                                             ->href('#!')
-                                            ->content((string)$pricing['choosePlan'])        
+                                            ->content((string)$pricing['choosePlan'])
                                             ->render(); ?>        
                                     <?= Html::closeTag('div'); ?>            
                                 <?= Html::closeTag('div'); ?>

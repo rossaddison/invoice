@@ -12,15 +12,15 @@ use Yiisoft\Html\Html;
  * @var App\Invoice\Setting\SettingRepository $s
  * @var App\Invoice\Client\ClientRepository $cR
  * @var App\Invoice\Helpers\ClientHelper $clientHelper
- * @var App\Invoice\UserClient\UserClientForm $form 
+ * @var App\Invoice\UserClient\UserClientForm $form
  * @var App\Widget\Button $button
- * @var Yiisoft\Translator\TranslatorInterface $translator 
+ * @var Yiisoft\Translator\TranslatorInterface $translator
  * @var Yiisoft\Router\UrlGeneratorInterface $urlGenerator
- * @var string $csrf 
+ * @var string $csrf
  * @var array $availableClientIdList
  * @var string $actionName
  * @psalm-var array<string, Stringable|null|scalar> $actionArguments
- * @psalm-var array<string, list<string>> $errors 
+ * @psalm-var array<string, list<string>> $errors
  * @psalm-var array<array-key, array<array-key, string>|string> $optionsDataClient
  */
 
@@ -47,59 +47,59 @@ use Yiisoft\Html\Html;
                             <?= Field::errorSummary($form)
                                 ->errors($errors)
                                 ->header($translator->translate('invoice.client.error.summary'))
-                                ->onlyProperties(...['client_name', 'client_surname', 'client_email', 'client_age'])    
+                                ->onlyProperties(...['client_name', 'client_surname', 'client_email', 'client_age'])
                                 ->onlyCommonErrors()
-                            ?>
+?>
                             
                             <?= Field::checkbox($form, 'user_all_clients')
-                                ->inputLabelAttributes([
-                                    'class' => 'form-check-label'
-                                ])  
-                                ->inputClass('form-check-input')
-                                ->ariaDescribedBy($translator->translate('i.user_all_clients'))
-                            ?>    
+    ->inputLabelAttributes([
+        'class' => 'form-check-label'
+    ])
+    ->inputClass('form-check-input')
+    ->ariaDescribedBy($translator->translate('i.user_all_clients'))
+?>    
                             <?= Html::openTag('div'); ?>
                                 <?= $translator->translate('i.user_all_clients_text') ?>
                             <?= Html::closeTag('div'); ?>
                         <?= Html::closeTag('div'); ?>
 
                         <?= Html::openTag('div', ['id' => 'list_client']); ?>
-                            <?php 
-                               $clients = !empty($availableClientIdList) ? $cR->repoUserClient($availableClientIdList) : []; 
-                               if ($clients) { 
-                                    $optionsDataClient = [];
-                                    /**
-                                     * @var Yiisoft\Data\Cycle\Reader\EntityReader|array $clients
-                                     * @var App\Invoice\Entity\Client $client
-                                     */
-                                    foreach ($clients as $client) { 
-                                        $clientId = $client->getClient_id();
-                                        if (null!==$clientId) {
-                                            $optionsDataClient[$clientId] = Html::encode($clientHelper->format_client($client));
-                                        }    
-                                    }
-                                    echo Field::select($form, 'client_id')
-                                    ->label($translator->translate('i.client'))
-                                    ->addInputAttributes([
-                                        'id' => 'client_id', 
-                                        'class' => 'form-control',
-                                        'autofocus' => 'autofocus',
-                                        'selected' => $s->check_select(Html::encode($body['client_id'] ?? ''), $client->getClient_id())
-                                    ])    
-                                    ->optionsData($optionsDataClient); 
-                                
-                               } else { 
-                                
-                                    $optionsDataClient[0] = $translator->translate('i.none');
-                                    echo Field::select($form, 'client_id')
-                                    ->label($translator->translate('i.client'))
-                                    ->addInputAttributes([
-                                        'id' => 'client_id', 
-                                        'class' => 'form-control',
-                                        'autofocus' => 'autofocus',
-                                    ])    
-                                    ->optionsData($optionsDataClient);
-                            } ?>
+                            <?php
+   $clients = !empty($availableClientIdList) ? $cR->repoUserClient($availableClientIdList) : [];
+if ($clients) {
+    $optionsDataClient = [];
+    /**
+     * @var Yiisoft\Data\Cycle\Reader\EntityReader|array $clients
+     * @var App\Invoice\Entity\Client $client
+     */
+    foreach ($clients as $client) {
+        $clientId = $client->getClient_id();
+        if (null !== $clientId) {
+            $optionsDataClient[$clientId] = Html::encode($clientHelper->format_client($client));
+        }
+    }
+    echo Field::select($form, 'client_id')
+    ->label($translator->translate('i.client'))
+    ->addInputAttributes([
+        'id' => 'client_id',
+        'class' => 'form-control',
+        'autofocus' => 'autofocus',
+        'selected' => $s->check_select(Html::encode($body['client_id'] ?? ''), $client->getClient_id())
+    ])
+    ->optionsData($optionsDataClient);
+
+} else {
+
+    $optionsDataClient[0] = $translator->translate('i.none');
+    echo Field::select($form, 'client_id')
+    ->label($translator->translate('i.client'))
+    ->addInputAttributes([
+        'id' => 'client_id',
+        'class' => 'form-control',
+        'autofocus' => 'autofocus',
+    ])
+    ->optionsData($optionsDataClient);
+} ?>
                         <?= Html::closeTag('div'); ?>
                     <?= Html::closeTag('div'); ?>
                 <?= Html::closeTag('div'); ?>

@@ -15,12 +15,12 @@ class SalesOrderAmount
     private ?SalesOrder $so = null;
 
     public function __construct(#[Column(type: 'primary')]
-    private ?int $id = null, #[Column(type: 'integer(11)', nullable:false)]
-    private ?int $so_id = null, #[Column(type: 'decimal(20,2)', nullable:false, default: 0.00)]
-    private ?float $item_subtotal = 0.00, #[Column(type: 'decimal(20,2)', nullable:false, default: 0.00)]
-    private ?float $item_tax_total = 0.00, #[Column(type: 'decimal(20,2)', nullable:false, default: 0.00)]
-    private ?float $tax_total = 0.00, #[Column(type: 'decimal(20,2)', nullable:false, default: 0.00)]
-    private ?float $total = 0.00)
+        private ?int $id = null, #[Column(type: 'integer(11)', nullable:false)]
+        private ?int $so_id = null, #[Column(type: 'decimal(20,2)', nullable:false, default: 0.00)]
+        private ?float $item_subtotal = 0.00, #[Column(type: 'decimal(20,2)', nullable:false, default: 0.00)]
+        private ?float $item_tax_total = 0.00, #[Column(type: 'decimal(20,2)', nullable:false, default: 0.00)]
+        private ?float $tax_total = 0.00, #[Column(type: 'decimal(20,2)', nullable:false, default: 0.00)]
+        private ?float $total = 0.00)
     {
     }
 

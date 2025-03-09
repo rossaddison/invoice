@@ -5,9 +5,9 @@ declare(strict_types=1);
 use Yiisoft\Html\Html;
 
 /**
- * @see id="modal-copy-inv-multiple" triggered by <a href="#modal-copy-inv-multiple" data-bs-toggle="modal"  style="text-decoration:none"> 
+ * @see id="modal-copy-inv-multiple" triggered by <a href="#modal-copy-inv-multiple" data-bs-toggle="modal"  style="text-decoration:none">
  * @see InvController index function
- * 
+ *
  * @var Yiisoft\Translator\TranslatorInterface $translator
  * @var string $csrf
  */

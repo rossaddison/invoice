@@ -12,7 +12,7 @@ use Yiisoft\Html\Html;
  * @var array $recur_frequencies
  * @var string $csrf
  */
-    
+
 ?>
 
 <div id="create-recurring-multiple" class="modal" tabindex="-1">
@@ -47,7 +47,7 @@ use Yiisoft\Html\Html;
                         </div>
                     </div>
                     <div class="form-group">
-                        <label for="recur_next_date" class="label-info"><?= $translator->translate('i.start'). '➕'. 
+                        <label for="recur_next_date" class="label-info"><?= $translator->translate('i.start'). '➕'.
                                                                             $translator->translate('i.every') .'🟰'.
                                                                             $translator->translate('i.next'); ?></label>
                     </div>

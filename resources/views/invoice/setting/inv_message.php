@@ -10,7 +10,7 @@
  * @var string $message
  * @var string $url
  * @psalm-var array<string, Stringable|null|scalar> $actionArguments
- */ 
+ */
 ?>
 
 <!doctype html>
@@ -72,9 +72,9 @@
     </head>
     <body>
         <h1><?php echo $heading; ?></h1>
-        <?php 
-            echo $message;            
-        ?>
+        <?php
+            echo $message;
+?>
         <form method="POST" class="form-inline" action="<?= $urlGenerator->generate($url, $actionName = ['id' => $id, '_language' => 'en']); ?>">
             <input type="hidden" name="_csrf" value="<?= $csrf ?>">
             <button type="submit" class="btn btn-xs btn-link">✅</button>

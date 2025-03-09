@@ -8,9 +8,9 @@
  * @var string $heading
  * @var string $message
  * @var string $url
- * @var string $title 
+ * @var string $title
  */
- ?>
+?>
 <html lang="en">
 <head>
     <meta charset="utf-8">

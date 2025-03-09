@@ -46,6 +46,14 @@
 <p>Introducing India's PayTm payment gateway's QR code method of payment and comparing this with Stripe's method.</p>
 <p>A General Sales Tax (GST) Tax System will have to be implemented first for this purpose.</p>
 <p>Testing Credit Notes against Invoices with refunds (if payment made) linked to each of the payment gateways.</p>
+<p><b>9 March 2025</b></p>
+<p>Replace jquery datepicker with bootstrap datepicker due to consistent security vulnerabilities with the jquery datepicker.
+
+Remove flexible date formats i.e. Field::text and replace with Field::date, or in Html
+
+Remove the flexible date format under settings ... views ... general ... date format  for the time being, with possible reintroduction later. 
+
+The js files are jquery based i.e. Basic syntax is: $(selector).action() so retain jquery.</p>
 <p><b>8 March 2025</b></p>
 <p>Include css for the invoice/inv/index.php breadcrumb courtesy from openCart into src\Invoice\Asset\invoice\css\style.css</p>
 <p>The flash alert message can be adjusted for font and font-size and the close button can be adjusted in terms of fontsize in bootstrap5 settings</p>

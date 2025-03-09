@@ -13,10 +13,10 @@ use Yiisoft\Yii\Bootstrap5\CarouselItem;
  * @var App\Invoice\Setting\SettingRepository $s
  * @var Yiisoft\Translator\TranslatorInterface $translator
  */
-    $tooltipTitle = $translator->translate('home.caption.slides.location.debug.mode');
-    $w = 150;
-    $h = 75;
-    $divHeight = (string)250;
+$tooltipTitle = $translator->translate('home.caption.slides.location.debug.mode');
+$w = 150;
+$h = 75;
+$divHeight = (string)250;
 ?>
 
 <?= Html::openTag('div', ['class' => 'container mt-5']); ?>
@@ -65,9 +65,9 @@ use Yiisoft\Yii\Bootstrap5\CarouselItem;
                         
 <?php if ($s->getSetting('no_front_site_slider_page') == '0') { ?>
     <?= Html::openTag('header'); ?>
-        <?= ($s->getSetting('debug_mode') == '1') 
-            ?   Html::openTag('a', ['data-bs-toggle' => 'tooltip', 'title' => $tooltipTitle]).
-                    Html::openTag('i', ['class' => 'bi bi-info-circle']).           
+        <?= ($s->getSetting('debug_mode') == '1')
+            ? Html::openTag('a', ['data-bs-toggle' => 'tooltip', 'title' => $tooltipTitle]).
+                    Html::openTag('i', ['class' => 'bi bi-info-circle']).
                     Html::closeTag('i').
                 Html::closeTag('a')
             : ''; ?>
@@ -91,7 +91,7 @@ use Yiisoft\Yii\Bootstrap5\CarouselItem;
                 active: true,
                 caption: $translator->translate('home.caption.slide1'),
                 encodeCaption: false,
-                captionAttributes: ['class' => ['d-none', 'd-md-block']]    
+                captionAttributes: ['class' => ['d-none', 'd-md-block']]
             ),
             CarouselItem::to(
                 content:'<div class="bg-dark" style="height: '.$divHeight.'px; text-align: center"><br>'.
@@ -102,7 +102,7 @@ use Yiisoft\Yii\Bootstrap5\CarouselItem;
                         '</div>',
                 caption: $translator->translate('home.caption.slide2'),
                 encodeCaption: true,
-                captionAttributes: ['class' => ['d-none', 'd-md-block']]    
+                captionAttributes: ['class' => ['d-none', 'd-md-block']]
             ),
             CarouselItem::to(
                 content:'<div class="bg-dark" style="height: '.$divHeight.'px; text-align: center"><br>'.
@@ -113,10 +113,10 @@ use Yiisoft\Yii\Bootstrap5\CarouselItem;
                         '</div>',
                 caption: $translator->translate('home.caption.slide3'),
                 encodeCaption: true,
-                captionAttributes: ['class' => ['d-none', 'd-md-block']]    
+                captionAttributes: ['class' => ['d-none', 'd-md-block']]
             )
         )
-        ->render();        
+        ->render();
     ?>    
 <?php } ?>
 

@@ -8,7 +8,7 @@ declare(strict_types=1);
  * @see resources\views\invoice\inv\archive.php
  * @see App\Invoice\Setting\SettingRepository function get_invoice_archived_files_with_filter($inv_number)
  * @var App\Invoice\Setting\SettingRepository $s
- * @var Yiisoft\Translator\TranslatorInterface $translator 
+ * @var Yiisoft\Translator\TranslatorInterface $translator
  * @var Yiisoft\Router\UrlGeneratorInterface $urlGenerator
  * @var array $invoices_archive
  */
@@ -24,12 +24,12 @@ declare(strict_types=1);
         </tr>
         </thead>
         <tbody>
-        <?php 
+        <?php
             /**
              * @var string $invoice
              */
             foreach ($invoices_archive as $invoice) {
-            ?>
+                ?>
             <tr>
                 <td>
                     <a href="<?= $urlGenerator->generate('inv/download', ['invoice' => basename($invoice)]); ?>"

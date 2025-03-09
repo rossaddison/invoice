@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=1); 
+declare(strict_types=1);
 
 
 use Yiisoft\FormModel\Field;
@@ -27,13 +27,13 @@ use Yiisoft\Html\Tag\Form;
     ->id('FromDropDownForm')
     ->open() ?>
 
-<?= Html::openTag('div',['class'=>'container py-5 h-100']); ?>
-<?= Html::openTag('div',['class'=>'row d-flex justify-content-center align-items-center h-100']); ?>
-<?= Html::openTag('div',['class'=>'col-12 col-md-8 col-lg-6 col-xl-8']); ?>
-<?= Html::openTag('div',['class'=>'card border border-dark shadow-2-strong rounded-3']); ?>
-<?= Html::openTag('div',['class'=>'card-header']); ?>
+<?= Html::openTag('div', ['class' => 'container py-5 h-100']); ?>
+<?= Html::openTag('div', ['class' => 'row d-flex justify-content-center align-items-center h-100']); ?>
+<?= Html::openTag('div', ['class' => 'col-12 col-md-8 col-lg-6 col-xl-8']); ?>
+<?= Html::openTag('div', ['class' => 'card border border-dark shadow-2-strong rounded-3']); ?>
+<?= Html::openTag('div', ['class' => 'card-header']); ?>
 
-<?= Html::openTag('h1',['class'=>'fw-normal h3 text-center']); ?>    
+<?= Html::openTag('h1', ['class' => 'fw-normal h3 text-center']); ?>    
     <?= Html::encode($title) ?>
 <?= Html::closeTag('h1'); ?>
 <?= Html::openTag('div', ['id' => 'headerbar']); ?>
@@ -44,36 +44,36 @@ use Yiisoft\Html\Tag\Form;
                 <?= Field::errorSummary($form)
                     ->errors($errors)
                     ->header($translator->translate('invoice.error.summary'))
-                    ->onlyProperties(...['default_email', 'include', 'email'])    
+                    ->onlyProperties(...['default_email', 'include', 'email'])
                     ->onlyCommonErrors()
-                ?>
+?>
             <?= Html::closeTag('div'); ?>
             <?= Html::openTag('div', ['class' => 'mb-3 form-group']); ?>
                 <?= Field::checkbox($form, 'include')
-                    ->inputLabelAttributes(['class' => 'form-check-label'])  
-                    ->inputClass('form-check-input')
-                    ->ariaDescribedBy($translator->translate('invoice.from.include.in.dropdown'))
-                ?>       
+    ->inputLabelAttributes(['class' => 'form-check-label'])
+    ->inputClass('form-check-input')
+    ->ariaDescribedBy($translator->translate('invoice.from.include.in.dropdown'))
+?>       
             <?= Html::closeTag('div'); ?>
             <?= Html::openTag('div'); ?>
                 <?= Html::openTag('div', ['class' => 'mb-3 form-group']); ?>
                 <?= Field::checkbox($form, 'default_email')
-                    ->inputLabelAttributes(['class' => 'form-check-label'])   
-                    ->inputClass('form-check-input')
-                    ->ariaDescribedBy($translator->translate('invoice.from.default.in.dropdown'))
-                ?>     
+    ->inputLabelAttributes(['class' => 'form-check-label'])
+    ->inputClass('form-check-input')
+    ->ariaDescribedBy($translator->translate('invoice.from.default.in.dropdown'))
+?>     
                 <?= Html::closeTag('div'); ?>
                 <?= Html::openTag('div', ['class' => 'mb-3 form-group']); ?>
                 <?= Field::email($form, 'email')
-                    ->label($translator->translate('invoice.from.email.address'))
-                    ->addInputAttributes([
-                        'placeholder' => $translator->translate('i.email'),
-                        'value' => Html::encode($form->getEmail() ?? ''),
-                        'class' => 'form-control',
-                        'id' => 'email',    
-                    ])
-                    ->hint($translator->translate('invoice.hint.this.field.is.required')); 
-                ?>
+    ->label($translator->translate('invoice.from.email.address'))
+    ->addInputAttributes([
+        'placeholder' => $translator->translate('i.email'),
+        'value' => Html::encode($form->getEmail() ?? ''),
+        'class' => 'form-control',
+        'id' => 'email',
+    ])
+    ->hint($translator->translate('invoice.hint.this.field.is.required'));
+?>
                 <?= Html::closeTag('div'); ?>
             <?= Html::closeTag('div'); ?>
         <?= Html::closeTag('div'); ?>

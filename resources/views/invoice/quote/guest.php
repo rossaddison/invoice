@@ -20,7 +20,7 @@ use Yiisoft\Yii\DataView\GridView;
  * @var App\Invoice\Setting\SettingRepository $s
  * @var App\Widget\Button $button
  * @var App\Widget\GridComponents $gridComponents
- * @var App\Widget\PageSizeLimiter $pageSizeLimiter 
+ * @var App\Widget\PageSizeLimiter $pageSizeLimiter
  * @var Yiisoft\Data\Paginator\OffsetPaginator $paginator
  * @var Yiisoft\Router\CurrentRoute $currentRoute
  * @var Yiisoft\Translator\TranslatorInterface $translator
@@ -64,27 +64,27 @@ $toolbar = Div::tag();
     <br>
     <div class="submenu-row">
             <div class="btn-group index-options">
-                <a href="<?= $urlGenerator->generate('quote/guest',['page'=>1,'status'=>0]); ?>"
+                <a href="<?= $urlGenerator->generate('quote/guest', ['page' => 1,'status' => 0]); ?>"
                    class="btn <?= $status == 0 ? 'btn-primary' : 'btn-default' ?>">
                     <?= $translator->translate('i.all'); ?>
                 </a>
-                <a href="<?= $urlGenerator->generate('quote/guest',['page'=>1,'status'=>2]); ?>" style="text-decoration:none"
+                <a href="<?= $urlGenerator->generate('quote/guest', ['page' => 1,'status' => 2]); ?>" style="text-decoration:none"
                    class="btn  <?= $status == 2 ? 'btn-primary' : 'btn-default' ?>">
                     <?= $translator->translate('i.sent'); ?>
                 </a>
-                <a href="<?= $urlGenerator->generate('quote/guest',['page'=>1,'status'=>3]); ?>" style="text-decoration:none"
+                <a href="<?= $urlGenerator->generate('quote/guest', ['page' => 1,'status' => 3]); ?>" style="text-decoration:none"
                    class="btn  <?= $status == 3 ? 'btn-primary' : 'btn-default'  ?>">
                     <?= $translator->translate('i.viewed'); ?>
                 </a>
-                <a href="<?= $urlGenerator->generate('quote/guest',['page'=>1,'status'=>4]); ?>" style="text-decoration:none"
+                <a href="<?= $urlGenerator->generate('quote/guest', ['page' => 1,'status' => 4]); ?>" style="text-decoration:none"
                    class="btn  <?= $status == 4 ? 'btn-primary' : 'btn-default' ?>">
                     <?= $translator->translate('i.approved'); ?>
                 </a>
-                <a href="<?= $urlGenerator->generate('quote/guest',['page'=>1,'status'=>5]); ?>" style="text-decoration:none"
+                <a href="<?= $urlGenerator->generate('quote/guest', ['page' => 1,'status' => 5]); ?>" style="text-decoration:none"
                    class="btn  <?= $status == 5 ? 'btn-primary' : 'btn-default'  ?>">
                     <?= $translator->translate('i.rejected'); ?>
                 </a>                
-                <a href="<?= $urlGenerator->generate('quote/guest',['page'=>1,'status'=>6]); ?>" style="text-decoration:none"
+                <a href="<?= $urlGenerator->generate('quote/guest', ['page' => 1,'status' => 6]); ?>" style="text-decoration:none"
                    class="btn  <?= $status == 6 ? 'btn-primary' : 'btn-default'  ?>">
                     <?= $translator->translate('i.canceled'); ?>
                 </a>
@@ -98,99 +98,99 @@ $toolbar = Div::tag();
             'id',
             header: $translator->translate('i.id'),
             content: static fn (Quote $model) => $model->getId(),
-            withSorting: true    
-        ),        
+            withSorting: true
+        ),
         new DataColumn(
             'status_id',
             header: $translator->translate('i.status'),
-            content: static function (Quote $model) use ($qR): Yiisoft\Html\Tag\CustomTag|string { 
-                if (null!==$model->getStatus_id()) {
+            content: static function (Quote $model) use ($qR): Yiisoft\Html\Tag\CustomTag|string {
+                if (null !== $model->getStatus_id()) {
                     $span = $qR->getSpecificStatusArrayLabel((string)$model->getStatus_id());
                     $class = $qR->getSpecificStatusArrayClass((string)$model->getStatus_id());
-                    return (string)Html::tag('span', $span, ['id'=>'#quote-guest','class'=>'label '. $class]);
+                    return (string)Html::tag('span', $span, ['id' => '#quote-guest','class' => 'label '. $class]);
                 }
                 return '';
             },
-            withSorting: true           
+            withSorting: true
         ),
         new DataColumn(
             field: 'number',
             property: 'filterQuoteNumber',
-            header: $translator->translate('invoice.quote.number'),        
+            header: $translator->translate('invoice.quote.number'),
             content: static function (Quote $model) use ($urlGenerator): string {
-               return Html::a($model->getNumber() ?? '#', $urlGenerator->generate('quote/view',['id'=>$model->getId()]),['style'=>'text-decoration:none'])->render();
-            }, 
+                return Html::a($model->getNumber() ?? '#', $urlGenerator->generate('quote/view', ['id' => $model->getId()]), ['style' => 'text-decoration:none'])->render();
+            },
             filter:\Yiisoft\Yii\DataView\Filter\Widget\TextInputFilter::widget()
-                    ->addAttributes(['style' =>'max-width: 80px']),
+                    ->addAttributes(['style' => 'max-width: 80px']),
         ),
         new DataColumn(
             'client_id',
             header: $translator->translate('i.id'),
             content: static fn (Quote $model): string|null => $model->getClient()?->getClient_name()
-        ),        
+        ),
         new DataColumn(
             'date_created',
             header: $translator->translate('i.date_created'),
-            content: static fn (Quote $model): string => ($model->getDate_created())->format($dateHelper->style()),
-            withSorting: true    
-        ),                    
+            content: static fn (Quote $model): string => ($model->getDate_created())->format('Y-m-d'),
+            withSorting: true
+        ),
         new DataColumn(
             'date_expires',
-            content: static fn (Quote $model): string => ($model->getDate_expires())->format($dateHelper->style()),            
-            withSorting: true        
+            content: static fn (Quote $model): string => ($model->getDate_expires())->format('Y-m-d'),
+            withSorting: true
         ),
         new DataColumn(
             'date_required',
-            content: static fn (Quote $model): string => ($model->getDate_required())->format($dateHelper->style())
-        ), 
+            content: static fn (Quote $model): string => ($model->getDate_required())->format('Y-m-d')
+        ),
         new DataColumn(
             'id',
             header: $translator->translate('i.total'),
-            content: static function (Quote $model) use ($s, $qaR) : string {
-               $quote_id = $model->getId();
-               if (null!==$quote_id) {
+            content: static function (Quote $model) use ($s, $qaR): string {
+                $quote_id = $model->getId();
+                if (null !== $quote_id) {
                     $quote_amount = (($qaR->repoQuoteAmountCount($quote_id) > 0) ? $qaR->repoQuotequery($quote_id) : null);
-                    return $s->format_currency(null!==$quote_amount ? $quote_amount->getTotal() : 0.00);
-               }
-               return '';
+                    return $s->format_currency(null !== $quote_amount ? $quote_amount->getTotal() : 0.00);
+                }
+                return '';
             }
         ),
-    ];                
+    ];
 ?>
-<?php 
-    $grid_summary = $s->grid_summary(
-        $paginator, 
-        $translator, 
-        (int)$s->getSetting('default_list_limit'), 
-        $translator->translate('invoice.quotes'),
-        ''
-    );
-    $toolbarString = 
-        Form::tag()->post($urlGenerator->generate('quote/guest'))->csrf($csrf)->open() .
-        Div::tag()->addClass('float-end m-3')->content($toolbarReset)->encode(false)->render() .
-        Form::tag()->close();
-    echo GridView::widget()
-    ->bodyRowAttributes(['class' => 'align-middle'])
-    ->tableAttributes(['class' => 'table table-striped text-center h-75','id'=>'table-quote-guest'])
-    ->dataReader($paginator)        
-    ->columns(...$columns)
-    ->urlCreator($urlCreator)
-    // the up and down symbol will appear at first indicating that the column can be sorted 
-    // Ir also appears in this state if another column has been sorted        
-    ->sortableHeaderPrepend('<div class="float-end text-secondary text-opacity-50">⭥</div>')
-    // the up arrow will appear if column values are ascending          
-    ->sortableHeaderAscPrepend('<div class="float-end fw-bold">⭡</div>')
-    // the down arrow will appear if column values are descending        
-    ->sortableHeaderDescPrepend('<div class="float-end fw-bold">⭣</div>')        
-    ->headerRowAttributes(['class'=>'card-header bg-info text-black']) 
-    ->emptyCell($translator->translate('i.not_set'))
-    ->emptyCellAttributes(['style' => 'color:red'])         
-    ->header($header)        
-    ->id('w7-grid')
-    ->paginationWidget($gridComponents->offsetPaginationWidget($paginator))
-    ->summaryAttributes(['class' => 'mt-3 me-3 summary text-end'])
-    ->summaryTemplate(($editInv ? $pageSizeLimiter::buttons($currentRoute, $s, $translator, $urlGenerator, 'quote') : '').' '.$grid_summary)
-    ->emptyTextAttributes(['class' => 'card-header bg-warning text-black'])
-    ->emptyText($translator->translate('invoice.invoice.no.records'))
-    ->toolbar($toolbarString);          
+<?php
+$grid_summary = $s->grid_summary(
+    $paginator,
+    $translator,
+    (int)$s->getSetting('default_list_limit'),
+    $translator->translate('invoice.quotes'),
+    ''
+);
+$toolbarString =
+    Form::tag()->post($urlGenerator->generate('quote/guest'))->csrf($csrf)->open() .
+    Div::tag()->addClass('float-end m-3')->content($toolbarReset)->encode(false)->render() .
+    Form::tag()->close();
+echo GridView::widget()
+->bodyRowAttributes(['class' => 'align-middle'])
+->tableAttributes(['class' => 'table table-striped text-center h-75','id' => 'table-quote-guest'])
+->dataReader($paginator)
+->columns(...$columns)
+->urlCreator($urlCreator)
+// the up and down symbol will appear at first indicating that the column can be sorted
+// Ir also appears in this state if another column has been sorted
+->sortableHeaderPrepend('<div class="float-end text-secondary text-opacity-50">⭥</div>')
+// the up arrow will appear if column values are ascending
+->sortableHeaderAscPrepend('<div class="float-end fw-bold">⭡</div>')
+// the down arrow will appear if column values are descending
+->sortableHeaderDescPrepend('<div class="float-end fw-bold">⭣</div>')
+->headerRowAttributes(['class' => 'card-header bg-info text-black'])
+->emptyCell($translator->translate('i.not_set'))
+->emptyCellAttributes(['style' => 'color:red'])
+->header($header)
+->id('w7-grid')
+->paginationWidget($gridComponents->offsetPaginationWidget($paginator))
+->summaryAttributes(['class' => 'mt-3 me-3 summary text-end'])
+->summaryTemplate(($editInv ? $pageSizeLimiter::buttons($currentRoute, $s, $translator, $urlGenerator, 'quote') : '').' '.$grid_summary)
+->emptyTextAttributes(['class' => 'card-header bg-warning text-black'])
+->emptyText($translator->translate('invoice.invoice.no.records'))
+->toolbar($toolbarString);
 ?>

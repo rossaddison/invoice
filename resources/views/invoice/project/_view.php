@@ -27,13 +27,13 @@ use Yiisoft\Html\Tag\Form;
     ->id('ProjectForm')
     ->open() ?>
 
-<?= Html::openTag('div',['class'=>'container py-5 h-100']); ?>
-<?= Html::openTag('div',['class'=>'row d-flex justify-content-center align-items-center h-100']); ?>
-<?= Html::openTag('div',['class'=>'col-12 col-md-8 col-lg-6 col-xl-8']); ?>
-<?= Html::openTag('div',['class'=>'card border border-dark shadow-2-strong rounded-3']); ?>
-<?= Html::openTag('div',['class'=>'card-header']); ?>
+<?= Html::openTag('div', ['class' => 'container py-5 h-100']); ?>
+<?= Html::openTag('div', ['class' => 'row d-flex justify-content-center align-items-center h-100']); ?>
+<?= Html::openTag('div', ['class' => 'col-12 col-md-8 col-lg-6 col-xl-8']); ?>
+<?= Html::openTag('div', ['class' => 'card border border-dark shadow-2-strong rounded-3']); ?>
+<?= Html::openTag('div', ['class' => 'card-header']); ?>
 
-<?= Html::openTag('h1',['class'=>'fw-normal h3 text-center']); ?>    
+<?= Html::openTag('h1', ['class' => 'fw-normal h3 text-center']); ?>    
     <?= Html::encode($title) ?>
 <?= Html::closeTag('h1'); ?>
 <?= Html::openTag('div', ['id' => 'headerbar']); ?>
@@ -43,41 +43,41 @@ use Yiisoft\Html\Tag\Form;
             <?= Html::openTag('div', ['class' => 'mb-3 form-group']); ?>
                 <?php
                     $optionsDataClient = [];
-                    /**
-                     * @var App\Invoice\Entity\Client $client
-                     */
-                    foreach ($clients as $client) { 
-                        $clientName = $client->getClient_name();
-                        $clientSurname = $client->getClient_surname() ?? '';
-                        $clientId = $client->getClient_id();
-                        // Only add to the dropdown if the following conditions are satisfied
-                        if ((strlen($clientName) > 0) && (strlen(($clientSurname)) > 0) && (null!==$clientId)) {
-                            $optionsDataClient[$clientId] = $clientName . ' '. $clientSurname;
-                        }
-                    }
-                    echo Field::select($form, 'client_id')
-                    ->label($translator->translate('i.client'))
-                    ->addInputAttributes([
-                        'id' => 'client_id', 
-                        'class' => 'form-control',
-                        'readonly' => 'readonly',
-                        'disabled' => 'disabled'
-                    ])    
-                    ->optionsData($optionsDataClient)
-                ?>
+/**
+ * @var App\Invoice\Entity\Client $client
+ */
+foreach ($clients as $client) {
+    $clientName = $client->getClient_name();
+    $clientSurname = $client->getClient_surname() ?? '';
+    $clientId = $client->getClient_id();
+    // Only add to the dropdown if the following conditions are satisfied
+    if ((strlen($clientName) > 0) && (strlen(($clientSurname)) > 0) && (null !== $clientId)) {
+        $optionsDataClient[$clientId] = $clientName . ' '. $clientSurname;
+    }
+}
+echo Field::select($form, 'client_id')
+->label($translator->translate('i.client'))
+->addInputAttributes([
+    'id' => 'client_id',
+    'class' => 'form-control',
+    'readonly' => 'readonly',
+    'disabled' => 'disabled'
+])
+->optionsData($optionsDataClient)
+?>
             <?= Html::closeTag('div'); ?>
             <?= Html::openTag('div'); ?>
                 <?= Html::openTag('div', ['class' => 'mb-3 form-group']); ?>
                 <?= Field::text($form, 'name')
-                    ->label($translator->translate('i.project_name'))
-                    ->addInputAttributes([
-                        'id' => 'name',
-                        'class' => 'form-control',
-                        'placeholder' => $translator->translate('i.project_name'),
-                        'readonly' => 'readonly',
-                        'disabled' => 'disabled'
-                    ])
-                ?>
+    ->label($translator->translate('i.project_name'))
+    ->addInputAttributes([
+        'id' => 'name',
+        'class' => 'form-control',
+        'placeholder' => $translator->translate('i.project_name'),
+        'readonly' => 'readonly',
+        'disabled' => 'disabled'
+    ])
+?>
                 <?= Html::closeTag('div'); ?>
             <?= Html::closeTag('div'); ?>
         <?= Html::closeTag('div'); ?>

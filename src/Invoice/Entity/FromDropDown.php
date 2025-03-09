@@ -12,10 +12,10 @@ use Cycle\Annotated\Annotation\Entity;
 class FromDropDown
 {
     public function __construct(#[Column(type: 'primary')]
-    private ?int $id = null, #[Column(type:'text)', nullable: false)]
-    private string $email = '', #[Column(type:'bool', default:false, nullable: false)]
-    private bool $include = false, #[Column(type:'bool', default:false, nullable: false)]
-    private bool $default_email = false)
+        private ?int $id = null, #[Column(type:'text)', nullable: false)]
+        private string $email = '', #[Column(type:'bool', default:false, nullable: false)]
+        private bool $include = false, #[Column(type:'bool', default:false, nullable: false)]
+        private bool $default_email = false)
     {
     }
 

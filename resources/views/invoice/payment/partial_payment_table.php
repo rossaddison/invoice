@@ -1,18 +1,18 @@
 <?php
 
-declare(strict_types=1); 
+declare(strict_types=1);
 
 use Yiisoft\Html\Html;
 
 /**
  * @see App\Invoice\Client\ClientController function view 'payment_table'
- * 
+ *
  * @var App\Invoice\Entity\Client $client
- * 
+ *
  * @see There is no need to declare ClientHelper in the ClientController because it is declared in:
  * @see config\common\params 'yiisoft/view' => ['parameters' => 'clientHelper' Reference::to(ClientHelper::class),
  * @var App\Invoice\Helpers\ClientHelper $clientHelper
- * 
+ *
  * @var App\Invoice\Helpers\DateHelper $dateHelper
  * @var App\Invoice\Setting\SettingRepository $s
  * @var Yiisoft\Translator\TranslatorInterface $translator
@@ -47,15 +47,15 @@ use Yiisoft\Html\Html;
             foreach ($payments as $payment) { ?>
             <?php if ($payment->getInv()?->getClient_id() === $client->getClient_id()) { ?>
             <tr>
-                <td><?= !is_string($paymentDate = $payment->getPayment_date()) ? ($paymentDate->format($dateHelper->style())) : ''; ?></td>
-                <td><?=  ($payment->getInv()?->getDate_created())->format($dateHelper->style()); ?></td>                
+                <td><?= !is_string($paymentDate = $payment->getPayment_date()) ? ($paymentDate->format('Y-m-d')) : ''; ?></td>
+                <td><?=  ($payment->getInv()?->getDate_created())->format('Y-m-d'); ?></td>                
                 <td>
-                    <a href="<?=  $urlGenerator->generate('inv/view',['id'=>$payment->getInv_id()]); ?>">
+                    <a href="<?=  $urlGenerator->generate('inv/view', ['id' => $payment->getInv_id()]); ?>">
                         <?= Html::encode($payment->getInv()?->getNumber() ?? '#'); ?>
                     </a>
                 </td>
                 <td>
-                    <a href="<?=  $urlGenerator->generate('client/view', ['id'=>$payment->getInv()?->getClient_id()]); ?>"
+                    <a href="<?=  $urlGenerator->generate('client/view', ['id' => $payment->getInv()?->getClient_id()]); ?>"
                        title="<?= $translator->translate('i.view_client'); ?>">
                        <?= Html::encode($clientHelper->format_client($payment->getInv()?->getClient())); ?>
                     </a>
@@ -70,17 +70,17 @@ use Yiisoft\Html\Html;
                         </a>
                         <ul class="dropdown-menu">
                             <li>
-                                <a href="<?=  $urlGenerator->generate('client/view',['id'=>$payment->getInv()?->getClient_id()]); ?>"
+                                <a href="<?=  $urlGenerator->generate('client/view', ['id' => $payment->getInv()?->getClient_id()]); ?>"
                                     title="<?= $translator->translate('i.view_client'); ?>">
                                     <?= Html::encode($clientHelper->format_client($payment->getInv()?->getClient())); ?>
                                 </a>
-                                <a href="<?=  $urlGenerator->generate('payment/edit',['id'=>$payment->getId()]); ?>">
+                                <a href="<?=  $urlGenerator->generate('payment/edit', ['id' => $payment->getId()]); ?>">
                                     <i class="fa fa-edit fa-margin"></i>
                                     <?= $translator->translate('i.edit'); ?>
                                 </a>
                             </li>
                             <li>
-                                <form action="<?= $urlGenerator->generate('payment/delete',['id'=> $payment->getId()]); ?>" method="POST">
+                                <form action="<?= $urlGenerator->generate('payment/delete', ['id' => $payment->getId()]); ?>" method="POST">
                                     <input type="hidden" id="_csrf" name="_csrf" value="<?= $csrf ?>"> 
                                     <button type="submit" class="dropdown-button"
                                             onclick="return confirm('<?= $translator->translate('i.delete_record_warning'); ?>');">

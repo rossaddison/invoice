@@ -12,8 +12,8 @@ use Cycle\Annotated\Annotation\Entity;
 class DeliveryParty
 {
     public function __construct(#[Column(type: 'primary')]
-    private ?int $id = null, #[Column(type: 'text', nullable: true)]
-    private ?string $party_name = '')
+        private ?int $id = null, #[Column(type: 'text', nullable: true)]
+        private ?string $party_name = '')
     {
     }
 

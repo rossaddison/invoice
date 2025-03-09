@@ -4,9 +4,9 @@ declare(strict_types=1);
 use Yiisoft\Html\Tag\A;
 
 /**
- * @var App\Invoice\Setting\SettingRepository $s 
+ * @var App\Invoice\Setting\SettingRepository $s
  * @var Yiisoft\Translator\TranslatorInterface $translator
- * @var \Yiisoft\Router\UrlGeneratorInterface $urlGenerator 
+ * @var \Yiisoft\Router\UrlGeneratorInterface $urlGenerator
  * @var string $actionTestConnectionName
  * @var string $actionImportName
  * @var array $body
@@ -54,25 +54,25 @@ use Yiisoft\Html\Tag\A;
                             ->href($urlGenerator->generate($actionTestConnectionName, $actionTestConnectionArguments))
                             ->id('btn-reset')
                             ->addAttributes(['type' => 'reset'])
-                            ->addClass('btn btn-primary me-1')                   
+                            ->addClass('btn btn-primary me-1')
                             ->content($translator->translate('invoice.invoice.invoiceplane.import'))
                             ->render();
-                        ?>
+?>
                     </div>
                     <br>
                     <br>
                     <div>
                         <?= A::tag()
-                            ->href($urlGenerator->generate($actionImportName, $actionImportArguments))
-                            ->id('btn-reset')
-                            ->addAttributes([
-                                'type' => 'submit',
-                                'onclick' => 'return confirm("'. $translator->translate('invoice.invoice.invoiceplane.import.proceed.alert'). '")',
-                            ])
-                            ->addClass('btn btn-success me-1')                   
-                            ->content($translator->translate('invoice.invoice.invoiceplane.import.proceed'))
-                            ->render();
-                        ?>
+    ->href($urlGenerator->generate($actionImportName, $actionImportArguments))
+    ->id('btn-reset')
+    ->addAttributes([
+        'type' => 'submit',
+        'onclick' => 'return confirm("'. $translator->translate('invoice.invoice.invoiceplane.import.proceed.alert'). '")',
+    ])
+    ->addClass('btn btn-success me-1')
+    ->content($translator->translate('invoice.invoice.invoiceplane.import.proceed'))
+    ->render();
+?>
                     </div>
                 </div>
             </div>

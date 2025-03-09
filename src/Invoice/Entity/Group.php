@@ -14,10 +14,10 @@ class Group
     private ?int $id = null;
 
     public function __construct(#[Column(type: 'text', nullable: true)]
-    private ?string $name = '', #[Column(type: 'string(191)', nullable: true)]
-    private ?string $identifier_format = '', #[Column(type: 'integer', nullable: true)]
-    private ?int $next_id = null, #[Column(type: 'integer', nullable: true, default: 0)]
-    private ?int $left_pad = null)
+        private ?string $name = '', #[Column(type: 'string(191)', nullable: true)]
+        private ?string $identifier_format = '', #[Column(type: 'integer', nullable: true)]
+        private ?int $next_id = null, #[Column(type: 'integer', nullable: true, default: 0)]
+        private ?int $left_pad = null)
     {
     }
 

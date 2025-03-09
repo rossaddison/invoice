@@ -1,31 +1,31 @@
 <?php
-    declare(strict_types=1);
-    
-    use Yiisoft\Html\Tag\I;
-    
-    /**
-     * @var App\Invoice\Setting\SettingRepository $s 
-     * @var Yiisoft\Translator\TranslatorInterface $translator
-     * @var array $body
-     */
-    
-    $fonts = [
-        'Arial', 
-        'Helvetica', 
-        'Times New Roman', 
-        'Courier New',
-        'Verdana',
-        'Georgia',
-        'Palatino',
-        'Garamond',
-        'Trebuchet MS',
-        'Impact',
-        'PT Sans', 
-        'PT Serif', 
-        'Roboto'
-    ];
-    $fontSizes = ['5', '6', '7', '8', '9', '10', '11', '12', '13', '14', '15', '16', '17', '18', '19', '20'];
-                                        
+declare(strict_types=1);
+
+use Yiisoft\Html\Tag\I;
+
+/**
+ * @var App\Invoice\Setting\SettingRepository $s
+ * @var Yiisoft\Translator\TranslatorInterface $translator
+ * @var array $body
+ */
+
+$fonts = [
+    'Arial',
+    'Helvetica',
+    'Times New Roman',
+    'Courier New',
+    'Verdana',
+    'Georgia',
+    'Palatino',
+    'Garamond',
+    'Trebuchet MS',
+    'Impact',
+    'PT Sans',
+    'PT Serif',
+    'Roboto'
+];
+$fontSizes = ['5', '6', '7', '8', '9', '10', '11', '12', '13', '14', '15', '16', '17', '18', '19', '20'];
+
 ?>
 <div class = 'row'>
     <div class="col-xs-12 col-md-8 col-md-offset-2">
@@ -59,10 +59,10 @@
                                     <option value="0"><?= $translator->translate('i.none'); ?></option>
                                     <?php
                                         $placements = ['top', 'bottom', 'start', 'end'];
-                                        /**
-                                         * @var string $placement
-                                         */
-                                        foreach ($placements as $placement) { ?>
+/**
+ * @var string $placement
+ */
+foreach ($placements as $placement) { ?>
                                         <option value="<?= $placement; ?>" <?php $s->check_select($body['settings[bootstrap5_offcanvas_placement]'], $placement) ?>>
                                             <?= ucfirst($placement); ?>
                                         </option>
@@ -84,10 +84,10 @@
                                 <select name="settings[bootstrap5_alert_message_font]" id="settings[bootstrap5_alert_message_font]" class="form-control">
                                     <option value="0"><?= 'Arial'; ?></option>
                                     <?php
-                                        /**
-                                         * @var string $font
-                                         */
-                                        foreach ($fonts as $font) { ?>
+/**
+ * @var string $font
+ */
+foreach ($fonts as $font) { ?>
                                         <option value="<?= $font; ?>" <?php $s->check_select($body['settings[bootstrap5_alert_message_font]'], $font); ?>>
                                             <?= $font; ?>
                                         </option>
@@ -104,10 +104,10 @@
                                 <select name="settings[bootstrap5_alert_message_font_size]" id="settings[bootstrap5_alert_message_font_size]" class="form-control">
                                     <option value="0"><?= '10'; ?></option>
                                     <?php
-                                        /**
-                                         * @var string $fontSize
-                                         */
-                                        foreach ($fontSizes as $fontSize) { ?>
+/**
+ * @var string $fontSize
+ */
+foreach ($fontSizes as $fontSize) { ?>
                                         <option value="<?= $fontSize; ?>" <?php $s->check_select($body['settings[bootstrap5_alert_message_font_size]'], $fontSize) ?>>
                                             <?= $fontSize; ?>
                                         </option>
@@ -124,10 +124,10 @@
                                 <select name="settings[bootstrap5_alert_close_button_font_size]" id="settings[bootstrap5_alert_close_button_font_size]" class="form-control">
                                     <option value="0"><?= '10'; ?></option>
                                     <?php
-                                        /**
-                                         * @var string $fontSize
-                                         */
-                                        foreach ($fontSizes as $fontSize) { ?>
+/**
+ * @var string $fontSize
+ */
+foreach ($fontSizes as $fontSize) { ?>
                                         <option value="<?= $fontSize; ?>" <?php $s->check_select($body['settings[bootstrap5_alert_close_button_font_size]'], $fontSize) ?>>
                                             <?= $fontSize; ?>
                                         </option>
@@ -149,10 +149,10 @@
                                 <select name="settings[bootstrap5_layout_invoice_navbar_font]" id="settings[bootstrap5_layout_invoice_navbar_font]" class="form-control">
                                     <option value="0"><?= 'Arial'; ?></option>
                                     <?php
-                                        /**
-                                         * @var string $font
-                                         */
-                                        foreach ($fonts as $font) { ?>
+/**
+ * @var string $font
+ */
+foreach ($fonts as $font) { ?>
                                         <option value="<?= $font; ?>" <?php $s->check_select($body['settings[bootstrap5_layout_invoice_navbar_font]'], $font); ?>>
                                             <?= $font; ?>
                                         </option>
@@ -169,10 +169,10 @@
                                 <select name="settings[bootstrap5_layout_invoice_navbar_font_size]" id="settings[bootstrap5_layout_invoice_navbar_font_size]" class="form-control">
                                     <option value="0"><?= '10'; ?></option>
                                     <?php
-                                        /**
-                                         * @var string $fontSize
-                                         */
-                                        foreach ($fontSizes as $fontSize) { ?>
+/**
+ * @var string $fontSize
+ */
+foreach ($fontSizes as $fontSize) { ?>
                                         <option value="<?= $fontSize; ?>" <?php $s->check_select($body['settings[bootstrap5_layout_invoice_navbar_font_size]'], $fontSize) ?>>
                                             <?= $fontSize; ?>
                                         </option>

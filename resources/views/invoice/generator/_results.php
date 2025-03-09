@@ -7,7 +7,7 @@ use Yiisoft\VarDumper\VarDumper;
 
 /**
  * @var App\Invoice\Helpers\GenerateCodeFileHelper $generated
- * @var Yiisoft\Translator\TranslatorInterface $translator  
+ * @var Yiisoft\Translator\TranslatorInterface $translator
  * @var bool $canEdit
  * @var bool $highlight
  * @var string $alert
@@ -18,14 +18,14 @@ echo $alert;
 
 ?>
 <?= Html::tag('h1')
-    ->content(Html::encode($translator->translate('invoice.generator'))); 
+    ->content(Html::encode($translator->translate('invoice.generator')));
 ?>
 <?= Html::openTag('div'); ?>    
     <?php
     if ($canEdit) {
         $highlight = PHP_SAPI !== 'cli';
         VarDumper::dump($generated, 40, $highlight);
-        echo $highlight ? '<br>' : PHP_EOL;          
+        echo $highlight ? '<br>' : PHP_EOL;
     }
-    ?>
+?>
 <?= Html::closeTag('div'); ?>

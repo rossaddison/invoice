@@ -1,16 +1,16 @@
 <?php
-    declare(strict_types=1);
-    
-    use Yiisoft\Html\Html;
-    
-    /**
-     * @var App\Invoice\Setting\SettingRepository $s 
-     * @var Yiisoft\Translator\TranslatorInterface $translator
-     * @var array $body
-     * @var array $stand_in_codes
-     * @var array $gateway_currency_codes
-     * @var string $config_tax_currency
-     */
+declare(strict_types=1);
+
+use Yiisoft\Html\Html;
+
+/**
+ * @var App\Invoice\Setting\SettingRepository $s
+ * @var Yiisoft\Translator\TranslatorInterface $translator
+ * @var array $body
+ * @var array $stand_in_codes
+ * @var array $gateway_currency_codes
+ * @var string $config_tax_currency
+ */
 ?>
 <div class='row'>
     <div class="col-xs-12 col-md-8 col-md-offset-2">
@@ -29,7 +29,7 @@
                                     <input type="hidden" name="settings[enable_peppol]" value="0">
                                     <input type="checkbox" name="settings[enable_peppol]" value="1"
                                         <?php $s->check_select($body['settings[enable_peppol]'], 1, '==', true) ?>>
-                                        <?= Html::a($translator->translate('invoice.peppol.enable'),'http://www.datypic.com/sc/ubl21/ss.html',['style'=>'text-decoration:none','data-bs-toggle'=>'tooltip','title'=>'']); ?>
+                                        <?= Html::a($translator->translate('invoice.peppol.enable'), 'http://www.datypic.com/sc/ubl21/ss.html', ['style' => 'text-decoration:none','data-bs-toggle' => 'tooltip','title' => '']); ?>
                                 </label>
                             </div>                            
                         </div>
@@ -64,7 +64,7 @@
                                 foreach ($gateway_currency_codes as $val => $key) { ?>
                                 <option value="<?= $val; ?>"
                                     <?php
-                                        $s->check_select($body['settings[currency_code_from]'], $val); 
+                                        $s->check_select($body['settings[currency_code_from]'], $val);
                                     ?>>
                                     <?= $val; ?>
                                 </option>
@@ -88,7 +88,7 @@
                                 foreach ($gateway_currency_codes as $val => $key) { ?>
                                 <option value="<?= $val; ?>"
                                     <?php
-                                        $s->check_select($body['settings[currency_code_to]'], $val); 
+                                        $s->check_select($body['settings[currency_code_to]'], $val);
                                     ?>>
                                     <?= $val; ?>
                                 </option>
@@ -98,7 +98,7 @@
                     <div class="form-group">
                         <label for="settings[currency_from_to]" <?= $s->where('currency_code_from_to'); ?>>
                             <?= $translator->translate('invoice.peppol.currency.from.to'); ?>
-                            <?= '('. (string)Html::a('xe.com' ,'https://www.xe.com/') . ')'; ?>
+                            <?= '('. (string)Html::a('xe.com', 'https://www.xe.com/') . ')'; ?>
                         </label>
                         <?php $body['settings[currency_from_to]'] = $s->getSetting('currency_from_to') ?: '1.00'; ?>
                         <input type="text" name="settings[currency_from_to]" id="settings[currency_from_to]"
@@ -124,15 +124,18 @@
                                     <input type="hidden" name="settings[include_delivery_period]" value="0">
                                     <input type="checkbox" name="settings[include_delivery_period]" value="1"
                                         <?php $s->check_select($body['settings[include_delivery_period]'], 1, '==', true) ?>>
-                                        <?= Html::a($translator->translate('invoice.peppol.include.delivery.period'),
-                                            'https://docs.peppol.eu/poacc/billing/3.0/syntax/ubl-invoice/cac-InvoicePeriod/',['style'=>'text-decoration:none']); ?>
+                                        <?= Html::a(
+                                            $translator->translate('invoice.peppol.include.delivery.period'),
+                                            'https://docs.peppol.eu/poacc/billing/3.0/syntax/ubl-invoice/cac-InvoicePeriod/',
+                                            ['style' => 'text-decoration:none']
+                                        ); ?>
                                 </label>
                             </div>                            
                         </div>
                     </div>
                     <div class="form-group">
                         <label for="settings[stand_in_code]" <?= $s->where('stand_in_code'); ?>>
-                            <?= Html::a($translator->translate('invoice.peppol.stand.in.code'),'https://docs.peppol.eu/poacc/billing/3.0/syntax/ubl-invoice/cac-InvoicePeriod/cbc-DescriptionCode/',['style'=>'text-decoration:none']); ?>
+                            <?= Html::a($translator->translate('invoice.peppol.stand.in.code'), 'https://docs.peppol.eu/poacc/billing/3.0/syntax/ubl-invoice/cac-InvoicePeriod/cbc-DescriptionCode/', ['style' => 'text-decoration:none']); ?>
                         </label>
                         <div class="input-group">
                             <?php $body['settings[stand_in_code]'] = $s->getSetting('stand_in_code') ?: ''; ?>
@@ -140,17 +143,17 @@
                                 id="settings[stand_in_code]"
                                 class="input-sm form-control">
                                 <?php
-                                    /**
-                                     * @var array $value
-                                     * @var string $key
-                                     * @var string $value['rdf:value']
-                                     * @var string $value['rdf:comment']
-                                     */
-                                    foreach ($stand_in_codes as $key => $value) { ?>
+                                        /**
+                                         * @var array $value
+                                         * @var string $key
+                                         * @var string $value['rdf:value']
+                                         * @var string $value['rdf:comment']
+                                         */
+                                        foreach ($stand_in_codes as $key => $value) { ?>
                                     <option value="<?= $value['rdf:value']; ?>"
                                         <?php
-                                            $s->check_select($body['settings[stand_in_code]'] ?? '', $value['rdf:value']); 
-                                        ?>>
+                                                $s->check_select($body['settings[stand_in_code]'] ?? '', $value['rdf:value']);
+                                            ?>>
                                         <?= $value['rdf:value']. ' '. (string)$value['rdfs:comment']; ?>
                                     </option>
                                 <?php } ?>
@@ -171,8 +174,8 @@
                             </option>
                             <option value="1" 
                                 <?php
-                                    $s->check_select($body['settings[peppol_xml_stream]'], '1'); 
-                                ?>>
+                                    $s->check_select($body['settings[peppol_xml_stream]'], '1');
+?>>
                                 <?= $translator->translate('i.yes'); ?>
                             </option>
                         </select>

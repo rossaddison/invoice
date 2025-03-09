@@ -1,13 +1,13 @@
-<?php 
+<?php
 
-    declare(strict_types=1);
-   
-   /**
-    * @see GeneratorController function google_translate_lang
-    * @var array $combined_array
-    */
+declare(strict_types=1);
 
-    echo "<?php\n";    
+/**
+ * @see GeneratorController function google_translate_lang
+ * @var array $combined_array
+ */
+
+echo "<?php\n";
 ?>
 
 declare(strict_types=1);

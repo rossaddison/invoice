@@ -6,10 +6,10 @@ use Yiisoft\Yii\Bootstrap5\Alert;
 use Yiisoft\Yii\Bootstrap5\AlertVariant;
 
 /**
- * 
+ *
  * @see \src\ViewInjection\CommonViewInjection.php
- * @var array $resetpasswordsuccess 
- * 
+ * @var array $resetpasswordsuccess
+ *
  * @see 'i.password_reset'
  * 'Password reset:'
  */

@@ -4,7 +4,7 @@ declare(strict_types=1);
 use Yiisoft\Html\Html;
 
 /**
- * @var App\Invoice\Setting\SettingRepository $s 
+ * @var App\Invoice\Setting\SettingRepository $s
  * @var Yiisoft\Translator\TranslatorInterface $translator
  * @var array $body
  * @var array $countries
@@ -76,7 +76,8 @@ use Yiisoft\Html\Html;
 
                                     <option value="<?= $key; ?>" <?php $s->check_select($body['settings[storecove_sender_identifier]'], $key) ?>>
                                         <?=
-                                        ucfirst($value['Region']
+                                        ucfirst(
+                                            $value['Region']
                                                 . str_repeat("&nbsp;", 2)
                                                 . str_repeat("-", 10)
                                                 . str_repeat("&nbsp;", 2) .
@@ -90,7 +91,7 @@ use Yiisoft\Html\Html;
                                                 . str_repeat("&nbsp;", 2) .
                                                 (!empty($value['Tax']) ? $value['Tax'] : $translator->translate('invoice.storecove.not.available'))
                                         );
-                                        ?>
+                                    ?>
                                     </option>
                                 <?php } ?>
                             </select>
@@ -107,7 +108,7 @@ use Yiisoft\Html\Html;
                                 <option value="Tax"
                                 <?php
                                 $s->check_select($body['settings[storecove_sender_identifier_basis]'], $translator->translate('invoice.storecove.tax'));
-                                ?>>
+?>>
                                         <?= $translator->translate('invoice.storecove.tax'); ?>
                                 </option>
                             </select>

@@ -16,14 +16,14 @@ class Sumex
     private ?int $id = null;
 
     public function __construct(#[Column(type: 'integer(11)', nullable: true)]
-    private ?int $invoice = null, #[Column(type: 'integer(11)', nullable: false, default: 0)]
-    private ?int $reason = null, #[Column(type: 'string(500)', nullable: false)]
-    private string $diagnosis = '', #[Column(type: 'string(500)', nullable: false)]
-    private string $observations = '', #[Column(type: 'string(35)', nullable: true)]
-    private ?string $casenumber = '', #[Column(type: 'date', nullable: true)]
-    private mixed $treatmentstart = '', #[Column(type: 'date', nullable: true)]
-    private mixed $treatmentend = '', #[Column(type: 'date', nullable: true)]
-    private mixed $casedate = '')
+        private ?int $invoice = null, #[Column(type: 'integer(11)', nullable: false, default: 0)]
+        private ?int $reason = null, #[Column(type: 'string(500)', nullable: false)]
+        private string $diagnosis = '', #[Column(type: 'string(500)', nullable: false)]
+        private string $observations = '', #[Column(type: 'string(35)', nullable: true)]
+        private ?string $casenumber = '', #[Column(type: 'date', nullable: true)]
+        private mixed $treatmentstart = '', #[Column(type: 'date', nullable: true)]
+        private mixed $treatmentend = '', #[Column(type: 'date', nullable: true)]
+        private mixed $casedate = '')
     {
     }
 

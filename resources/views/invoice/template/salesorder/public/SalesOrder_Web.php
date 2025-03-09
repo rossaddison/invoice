@@ -6,8 +6,8 @@ use Yiisoft\Html\Html;
 use Yiisoft\Html\Tag\Img;
 
 /**
- * @see SalesOrderController function url_key 
- * @var App\Invoice\Entity\Client $client 
+ * @see SalesOrderController function url_key
+ * @var App\Invoice\Entity\Client $client
  * @var App\Invoice\Entity\SalesOrder $salesorder
  * @var App\Invoice\Entity\SalesOrderAmount $salesorder_amount
  * @var App\Invoice\Entity\UserInv $userInv
@@ -18,20 +18,20 @@ use Yiisoft\Html\Tag\Img;
  * @var App\Invoice\Setting\SettingRepository $s
  * @var Yiisoft\Router\UrlGeneratorInterface $urlGenerator
  * @var Yiisoft\Translator\TranslatorInterface $translator
- * 
+ *
  * @var array $items
  * @var array $salesorder_tax_rates
- * 
+ *
  * @see src\ViewInjection\LayoutViewInjection
  * @var string $companyLogoFileName
  * @var string $logoPath
  * @var int $companyLogoWidth
  * @var int $companyLogoHeight
- * 
+ *
  * @var string $alert
  * @var string $salesorder_url_key
  * @var string $terms_and_conditions_file
- * 
+ *
  */
 
 $vat = $s->getSetting('enable_vat_registration');
@@ -71,13 +71,13 @@ $vat = $s->getSetting('enable_vat_registration');
                 // 3=>Client Agreed to Terms
                 // 8=>Rejected
                 if (in_array($salesorder->getStatus_id(), array(2, 8)) && $salesorder->getQuote_id() !== '0' && $salesorder->getInv_id() === '0') : ?>
-                <a href="<?= $urlGenerator->generate('salesorder/agree_to_terms', ['url_key'=>$salesorder_url_key]); ?>"
+                <a href="<?= $urlGenerator->generate('salesorder/agree_to_terms', ['url_key' => $salesorder_url_key]); ?>"
                    class="btn btn-success" data-bs-toggle = "tooltip" title="Goods and Services will now be assembled/packaged/prepared">
                     <i class="fa fa-check"></i><?= $translator->translate('invoice.salesorder.agree.to.terms'); ?>
                 </a>
             <?php endif; ?>                
             <?php if (in_array($salesorder->getStatus_id(), array(2)) && $salesorder->getQuote_id() !== '0' && $salesorder->getInv_id() === '0') :  ?>
-                <a href="<?= $urlGenerator->generate('salesorder/reject', ['url_key'=>$salesorder_url_key]); ?>"
+                <a href="<?= $urlGenerator->generate('salesorder/reject', ['url_key' => $salesorder_url_key]); ?>"
                    class="btn btn-danger">
                     <i class="fa fa-times-circle"></i><?= $translator->translate('invoice.salesorder.reject'); ?>
                 </a>
@@ -103,17 +103,17 @@ $vat = $s->getSetting('enable_vat_registration');
                 echo Img::tag()
                     ->width($companyLogoWidth)
                     ->height($companyLogoHeight)
-                    ->src($logoPath)   
-            ?>
+                    ->src($logoPath)
+?>
 
             <div class='row'>
                 <div class="col-xs-12 col-md-6 col-lg-5">
                     <h4><?= Html::encode($userInv->getName()); ?></h4>
                     <p><?php if (strlen($userInv->getVat_id() ?: '') > 0) {
-                            echo $translator->translate('i.vat_id_short') . ": " . ($userInv->getVat_id() ?: '') . '<br>';
-                        } ?>
+                        echo $translator->translate('i.vat_id_short') . ": " . ($userInv->getVat_id() ?: '') . '<br>';
+                    } ?>
                         <?php if (strlen($userInv->getTax_code() ?? '') > 0) {
-                            echo $translator->translate('i.tax_code_short') . ": " . ($userInv->getTax_code() ?? '' ) . '<br>';
+                            echo $translator->translate('i.tax_code_short') . ": " . ($userInv->getTax_code() ?? '') . '<br>';
                         } ?>
                         <?php if (strlen($userInv->getAddress_1() ?? '') > 0) {
                             echo Html::encode($userInv->getAddress_1()) . '<br>';
@@ -140,8 +140,8 @@ $vat = $s->getSetting('enable_vat_registration');
 
                     <h4><?= Html::encode($clientHelper->format_client($client)); ?></h4>
                         <p><?php if (strlen($client->getClient_vat_id()) > 0) {
-                                echo $translator->translate('i.vat_id_short') . ": " . ($client->getClient_vat_id()) . '<br>';
-                            } ?>
+                            echo $translator->translate('i.vat_id_short') . ": " . ($client->getClient_vat_id()) . '<br>';
+                        } ?>
                             <?php if (strlen($client->getClient_tax_code() ?? '') > 0) {
                                 echo $translator->translate('i.tax_code_short') . ": " . ($client->getClient_tax_code() ?? '') . '<br>';
                             } ?>
@@ -213,7 +213,7 @@ $vat = $s->getSetting('enable_vat_registration');
                                 <td class="amount"><?= $numberHelper->format_currency($item->getPrice()); ?></td>
                                 <td class="amount"><?= $numberHelper->format_currency($item->getDiscount_amount()); ?></td>
                                 <?php $query = $soiaR->repoSalesOrderItemAmountquery((string)$item->getId()); ?>
-                                <td class="amount"><?= $numberHelper->format_currency(null!==$query ? $query->getSubtotal() : 0.00); ?></td>
+                                <td class="amount"><?= $numberHelper->format_currency(null !== $query ? $query->getSubtotal() : 0.00); ?></td>
                             </tr>
                         <?php endforeach ?>
                         <tr>
@@ -228,7 +228,7 @@ $vat = $s->getSetting('enable_vat_registration');
                                 <td class="amount"><?= $numberHelper->format_currency($salesorder_amount->getItem_tax_total()); ?></td>
                             </tr>
                         <?php } ?>
-                        <?php 
+                        <?php
                             if (!empty($salesorder_tax_rates) && $vat == '0') {
                                 /**
                                  * @var App\Invoice\Entity\SalesOrderTaxRate $salesorder_tax_rate
@@ -237,18 +237,19 @@ $vat = $s->getSetting('enable_vat_registration');
                                 <tr>
                                     <td class="no-bottom-border" colspan="4"></td>
                                     <td class="text-right">
-                                        <?php 
+                                        <?php
                                             $taxRatePercent = $salesorder_tax_rate->getTaxRate()?->getTaxRatePercent();
-                                            $taxRateName = $salesorder_tax_rate->getTaxRate()?->getTaxRateName();
-                                            if (($taxRatePercent >= 0.00) && (strlen($taxRateName ?? '') > 0)) {
-                                                echo Html::encode(($taxRateName ?? '#') . ' ' . ($numberHelper->format_amount($taxRatePercent) ?? '#'));
-                                            }
-                                        ?>
+                                    $taxRateName = $salesorder_tax_rate->getTaxRate()?->getTaxRateName();
+                                    if (($taxRatePercent >= 0.00) && (strlen($taxRateName ?? '') > 0)) {
+                                        echo Html::encode(($taxRateName ?? '#') . ' ' . ($numberHelper->format_amount($taxRatePercent) ?? '#'));
+                                    }
+                                    ?>
                                         %
                                     </td>
                                     <td class="amount"><?= $numberHelper->format_currency($salesorder_tax_rate->getSo_tax_rate_amount()); ?></td>
                                 </tr>
-                            <?php endforeach; } ?>
+                            <?php endforeach;
+                            } ?>
                         <?php if ($vat === '0') { ?>          
                         <tr>
                             <td class="no-bottom-border" colspan="4"></td>
@@ -256,15 +257,15 @@ $vat = $s->getSetting('enable_vat_registration');
                             <td class="amount">
                                 <?php
                                     $percent = $salesorder->getDiscount_percent();
-                                    if ($percent >= 0.00) {
-                                        echo (string)$numberHelper->format_amount($percent) . ' %';
-                                    } else {
-                                        $discountAmount = $salesorder->getDiscount_amount();
-                                        if ($discountAmount >= 0.00) { 
-                                            echo $numberHelper->format_amount($discountAmount);
-                                        }
-                                    }
-                                ?>
+                            if ($percent >= 0.00) {
+                                echo (string)$numberHelper->format_amount($percent) . ' %';
+                            } else {
+                                $discountAmount = $salesorder->getDiscount_amount();
+                                if ($discountAmount >= 0.00) {
+                                    echo $numberHelper->format_amount($discountAmount);
+                                }
+                            }
+                            ?>
                             </td>
                         </tr>
                         <?php } ?>

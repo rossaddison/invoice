@@ -1,19 +1,19 @@
 <?php
 
- declare(strict_types=1);
- 
- /**
-  * @see PaymentController function view_custom_fields and function view
-  * @var App\Invoice\Helpers\CustomValuesHelper $cvH
-  * @var App\Invoice\PaymentCustom\PaymentCustomForm $paymentCustomForm
-  * @var App\Invoice\Setting\SettingRepository $s
-  * @var Yiisoft\Translator\TranslatorInterface $translator
-  * @var array $customFields
-  * @var array $customValues
-  * @var array $paymentCustomValues
-  */
- 
- ?>
+declare(strict_types=1);
+
+/**
+ * @see PaymentController function view_custom_fields and function view
+ * @var App\Invoice\Helpers\CustomValuesHelper $cvH
+ * @var App\Invoice\PaymentCustom\PaymentCustomForm $paymentCustomForm
+ * @var App\Invoice\Setting\SettingRepository $s
+ * @var Yiisoft\Translator\TranslatorInterface $translator
+ * @var array $customFields
+ * @var array $customValues
+ * @var array $paymentCustomValues
+ */
+
+?>
  
 <?php if ($customFields): ?>
     <div>
@@ -27,10 +27,10 @@
                         <div class="form-group">
                             <?php $i = 0; ?>
                             <?php
-                               /**
-                                * @var App\Invoice\Entity\CustomField $customField
-                                */
-                               foreach ($customFields as $customField): ?>
+                              /**
+                               * @var App\Invoice\Entity\CustomField $customField
+                               */
+                              foreach ($customFields as $customField): ?>
                                 <?php if ($customField->getLocation() != 0) {
                                     continue;
                                 } ?>

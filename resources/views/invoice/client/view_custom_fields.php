@@ -1,11 +1,11 @@
-<?php 
+<?php
 
-use Yiisoft\Html\Html; 
+use Yiisoft\Html\Html;
 
 /**
  * This form will be used when a pdf is generated for the client.
  * @var App\Invoice\Helpers\CustomValuesHelper $cvH
- * @var App\Invoice\ClientCustom\ClientCustomForm $client_custom_form 
+ * @var App\Invoice\ClientCustom\ClientCustomForm $client_custom_form
  * @var Yiisoft\Router\UrlGeneratorInterface $urlGenerator
  * @var Yiisoft\Translator\TranslatorInterface $translator
  * @var array $client_custom_values
@@ -26,7 +26,7 @@ use Yiisoft\Html\Html;
                     <?= Html::openTag('div', ['class' => 'row']); ?>
                         <div class="form-group">
                             <?php $i = 0; ?>
-                            <?php 
+                            <?php
                                /** @var App\Invoice\Entity\CustomField $custom_field */
                                foreach ($custom_fields as $custom_field): ?>
                                 <?php if ($custom_field->getLocation() != 0) {
@@ -40,7 +40,7 @@ use Yiisoft\Html\Html;
                         </div>
                         <div class="form-group">
                             <?php $i = 0; ?>
-                            <?php 
+                            <?php
                                /** @var App\Invoice\Entity\CustomField $custom_field */
                                foreach ($custom_fields as $custom_field): ?>
                                 <?php if ($custom_field->getLocation() != 0) {

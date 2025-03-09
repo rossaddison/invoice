@@ -29,13 +29,13 @@ use Yiisoft\Html\Tag\Form;
     ->id('PaymentForm')
     ->open() ?>
 
-<?= Html::openTag('div',['class'=>'container py-5 h-100']); ?>
-<?= Html::openTag('div',['class'=>'row d-flex justify-content-center align-items-center h-100']); ?>
-<?= Html::openTag('div',['class'=>'col-12 col-md-8 col-lg-6 col-xl-8']); ?>
-<?= Html::openTag('div',['class'=>'card border border-dark shadow-2-strong rounded-3']); ?>
-<?= Html::openTag('div',['class'=>'card-header']); ?>
+<?= Html::openTag('div', ['class' => 'container py-5 h-100']); ?>
+<?= Html::openTag('div', ['class' => 'row d-flex justify-content-center align-items-center h-100']); ?>
+<?= Html::openTag('div', ['class' => 'col-12 col-md-8 col-lg-6 col-xl-8']); ?>
+<?= Html::openTag('div', ['class' => 'card border border-dark shadow-2-strong rounded-3']); ?>
+<?= Html::openTag('div', ['class' => 'card-header']); ?>
 
-<?= Html::openTag('h1',['class'=>'fw-normal h3 text-center']); ?>    
+<?= Html::openTag('h1', ['class' => 'fw-normal h3 text-center']); ?>    
     <?= Html::encode($translator->translate('i.payment_form')) ?>
 <?= Html::closeTag('h1'); ?>
 <?= Html::openTag('div', ['id' => 'headerbar']); ?>
@@ -47,72 +47,72 @@ use Yiisoft\Html\Tag\Form;
                     ->errors($errors)
                     ->header($translator->translate('invoice.error.summary'))
                     ->onlyCommonErrors()
-                ?>
-                <?php 
-                    $optionsDataPaymentMethod = [];
-                    /**
-                     * @var App\Invoice\Entity\PaymentMethod $paymentMethod
-                     */
-                    foreach ($paymentMethods as $paymentMethod) {
-                        $paymentMethodId = $paymentMethod->getId();
-                        $paymentMethodName = $paymentMethod->getName();
-                        if ((strlen($paymentMethodId) > 0) 
-                            && (strlen(($paymentMethodName ?? '')) > 0) && (null!==$paymentMethodName))  {
-                            $optionsDataPaymentMethod[$paymentMethodId] = $paymentMethodName;
-                        }
-                    }
-                    echo Field::select($form, 'payment_method_id')
-                    ->label($translator->translate('i.payment_method'))
-                    ->optionsData($optionsDataPaymentMethod)
-                    ->addInputAttributes([
-                            'readonly' => 'readonly',
-                            'disabled' => 'disabled'
-                    ])        
-                ?>
+?>
+                <?php
+    $optionsDataPaymentMethod = [];
+/**
+ * @var App\Invoice\Entity\PaymentMethod $paymentMethod
+ */
+foreach ($paymentMethods as $paymentMethod) {
+    $paymentMethodId = $paymentMethod->getId();
+    $paymentMethodName = $paymentMethod->getName();
+    if ((strlen($paymentMethodId) > 0)
+        && (strlen(($paymentMethodName ?? '')) > 0) && (null !== $paymentMethodName)) {
+        $optionsDataPaymentMethod[$paymentMethodId] = $paymentMethodName;
+    }
+}
+echo Field::select($form, 'payment_method_id')
+->label($translator->translate('i.payment_method'))
+->optionsData($optionsDataPaymentMethod)
+->addInputAttributes([
+        'readonly' => 'readonly',
+        'disabled' => 'disabled'
+])
+?>
                 <?= Html::openTag('div', ['class' => 'mb-3 form-group']); ?>
-                    <?= 
-                        Field::text($form, 'inv') 
-                        ->label($translator->translate('invoice.invoice'))
-                        ->addInputAttributes([
-                            'readonly' => 'readonly',
-                            'disabled' => 'disabled'
-                        ])
-                        ->value(Html::encode($form->getInv()?->getNumber() ?? $translator->translate('invoice.invoice.number.no')))
-                    ?>
+                    <?=
+        Field::text($form, 'inv')
+        ->label($translator->translate('invoice.invoice'))
+        ->addInputAttributes([
+            'readonly' => 'readonly',
+            'disabled' => 'disabled'
+        ])
+        ->value(Html::encode($form->getInv()?->getNumber() ?? $translator->translate('invoice.invoice.number.no')))
+?>
                 <?= Html::closeTag('div'); ?>    
                 <?= Html::openTag('div', ['class' => 'mb-3 form-group']); ?>
                     <?= Field::date($form, 'payment_date')
-                        ->label($translator->translate('i.date'))
-                        ->addInputAttributes([
-                            'readonly' => 'readonly',
-                            'disabled' => 'disabled'
-                        ])        
-                        ->value(Html::encode($form->getPayment_date() instanceof DateTimeImmutable ? $form->getPayment_date()->format('Y-m-d') : ''))
-                    ?>
+    ->label($translator->translate('i.date'))
+    ->addInputAttributes([
+        'readonly' => 'readonly',
+        'disabled' => 'disabled'
+    ])
+    ->value(Html::encode($form->getPayment_date() instanceof DateTimeImmutable ? $form->getPayment_date()->format('Y-m-d') : ''))
+?>
                 <?= Html::closeTag('div'); ?>
                 <?= Html::openTag('div', ['class' => 'mb-3 form-group']); ?>
                     <?= Field::textarea($form, 'note')
-                        ->label($translator->translate('i.note'))
-                        ->addInputAttributes([
-                            'placeholder' => $translator->translate('i.note'),
-                            'value' => Html::encode($form->getNote() ?? ''),
-                            'class' => 'form-control',
-                            'id' => 'note', 
-                            'readonly' => 'readonly',
-                            'disabled' => 'disabled'
-                    ])        
-                    ?>
+    ->label($translator->translate('i.note'))
+    ->addInputAttributes([
+        'placeholder' => $translator->translate('i.note'),
+        'value' => Html::encode($form->getNote() ?? ''),
+        'class' => 'form-control',
+        'id' => 'note',
+        'readonly' => 'readonly',
+        'disabled' => 'disabled'
+])
+?>
                 <?= Html::closeTag('div'); ?>
                 <?= Html::openTag('div', ['class' => 'mb-3 form-group']); ?>
                     <?= Field::text($form, 'amount')
-                        ->label($translator->translate('i.amount'))
-                        ->placeholder($translator->translate('i.amount'))
-                        ->value(Html::encode($form->getAmount() ?? ''))
-                        ->addInputAttributes([
-                            'readonly' => 'readonly',
-                            'disabled' => 'disabled'
-                        ])        
-                    ?>
+    ->label($translator->translate('i.amount'))
+    ->placeholder($translator->translate('i.amount'))
+    ->value(Html::encode($form->getAmount() ?? ''))
+    ->addInputAttributes([
+        'readonly' => 'readonly',
+        'disabled' => 'disabled'
+    ])
+?>
                 <?= Html::closeTag('div'); ?>
             <?= Html::closeTag('div'); ?>
             <?= Html::openTag('div'); ?>

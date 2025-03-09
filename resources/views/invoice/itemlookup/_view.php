@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=1); 
+declare(strict_types=1);
 
 
 use Yiisoft\FormModel\Field;
@@ -18,7 +18,7 @@ use Yiisoft\Html\Tag\Form;
  * @var string $title
  * @psalm-var array<string, Stringable|null|scalar> $actionArguments
  * @psalm-var array<string,list<string>> $errors
- * 
+ *
  */
 ?>
 
@@ -29,13 +29,13 @@ use Yiisoft\Html\Tag\Form;
     ->id('ItemLookupForm')
     ->open() ?>
 
-<?= Html::openTag('div',['class'=>'container py-5 h-100']); ?>
-<?= Html::openTag('div',['class'=>'row d-flex justify-content-center align-items-center h-100']); ?>
-<?= Html::openTag('div',['class'=>'col-12 col-md-8 col-lg-6 col-xl-8']); ?>
-<?= Html::openTag('div',['class'=>'card border border-dark shadow-2-strong rounded-3']); ?>
-<?= Html::openTag('div',['class'=>'card-header']); ?>
+<?= Html::openTag('div', ['class' => 'container py-5 h-100']); ?>
+<?= Html::openTag('div', ['class' => 'row d-flex justify-content-center align-items-center h-100']); ?>
+<?= Html::openTag('div', ['class' => 'col-12 col-md-8 col-lg-6 col-xl-8']); ?>
+<?= Html::openTag('div', ['class' => 'card border border-dark shadow-2-strong rounded-3']); ?>
+<?= Html::openTag('div', ['class' => 'card-header']); ?>
 
-<?= Html::openTag('h1',['class'=>'fw-normal h3 text-center']); ?>    
+<?= Html::openTag('h1', ['class' => 'fw-normal h3 text-center']); ?>    
     <?= Html::encode($title) ?>
 <?= Html::closeTag('h1'); ?>
 <?= Html::openTag('div', ['id' => 'headerbar']); ?>
@@ -50,31 +50,31 @@ use Yiisoft\Html\Tag\Form;
                         'readonly' => 'readonly',
                         'disabled' => 'disabled'
                     ])
-                    ->placeholder($translator->translate('i.name'))    
-                    ->value(Html::encode($form->getName() ?? '')); 
-                ?>
+                    ->placeholder($translator->translate('i.name'))
+                    ->value(Html::encode($form->getName() ?? ''));
+?>
                 <?= Html::closeTag('div'); ?>
                 <?= Html::openTag('div', ['class' => 'mb-3 form-group']); ?>
                 <?= Field::textarea($form, 'description')
-                    ->label($translator->translate('i.description'))
-                    ->addInputAttributes([
-                        'readonly' => 'readonly',
-                        'disabled' => 'disabled'
-                    ])    
-                    ->placeholder($translator->translate('i.description'))    
-                    ->value(Html::encode($form->getDescription() ?? '')); 
-                ?>
+    ->label($translator->translate('i.description'))
+    ->addInputAttributes([
+        'readonly' => 'readonly',
+        'disabled' => 'disabled'
+    ])
+    ->placeholder($translator->translate('i.description'))
+    ->value(Html::encode($form->getDescription() ?? ''));
+?>
                 <?= Html::closeTag('div'); ?>
                 <?= Html::openTag('div', ['class' => 'mb-3 form-group']); ?>
                 <?= Field::text($form, 'price')
-                    ->label($translator->translate('i.price'))
-                    ->addInputAttributes([
-                        'readonly' => 'readonly',
-                        'disabled' => 'disabled'
-                    ])    
-                    ->placeholder($translator->translate('i.price'))    
-                    ->value(Html::encode($s->format_amount($form->getPrice() ?? 0.00))); 
-                ?>
+    ->label($translator->translate('i.price'))
+    ->addInputAttributes([
+        'readonly' => 'readonly',
+        'disabled' => 'disabled'
+    ])
+    ->placeholder($translator->translate('i.price'))
+    ->value(Html::encode($s->format_amount($form->getPrice() ?? 0.00)));
+?>
                 <?= Html::closeTag('div'); ?>
             <?= Html::closeTag('div'); ?>
         <?= Html::closeTag('div'); ?>

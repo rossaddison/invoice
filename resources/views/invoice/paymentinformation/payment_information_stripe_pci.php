@@ -8,19 +8,19 @@ use Yiisoft\Html\Html;
  * @see PaymentInformationController function stripeInForm
  * @var App\Invoice\Entity\Client $client_on_invoice
  * @var App\Invoice\Entity\Inv $invoice
- * 
+ *
  * @see config\common\params 'yiisoft/view' => ['parameters' => ['clientHelper' => Reference::to(ClientHelper::class)]]
  * @var App\Invoice\Helpers\ClientHelper $clientHelper
- * 
+ *
  * @see config\common\params 'yiisoft/view' => ['parameters' => ['dateHelper' => Reference::to(DateHelper::class)]]
  * @var App\Invoice\Helpers\DateHelper $dateHelper
- * 
+ *
  * @see config\common\params 'yiisoft/view' => ['parameters' => ['numberHelper' => Reference::to(NumberHelper::class)]]
  * @var App\Invoice\Helpers\NumberHelper $numberHelper
- * 
+ *
  * @see config\common\params 'yiisoft/view' => ['parameters' => ['s' => Reference::to(SettingRepository::class)]]
- * @var App\Invoice\Setting\SettingRepository $s 
- * 
+ * @var App\Invoice\Setting\SettingRepository $s
+ *
  * @var Yiisoft\Translator\TranslatorInterface $translator
  * @var Yiisoft\Router\UrlGeneratorInterface $urlGenerator
  * @var bool $disable_form
@@ -54,8 +54,8 @@ use Yiisoft\Html\Html;
                 <div class="col-8">
                     <?= $translator->translate('g.online_payment_for_invoice'); ?> #
                     <?= ($invoice->getNumber() ?? ''). ' => '.
-                     ($invoice->getClient()?->getClient_name() ?? '' ). ' '.
-                     ($invoice->getClient()?->getClient_surname() ?? '' ). ' '.
+                     ($invoice->getClient()?->getClient_name() ?? ''). ' '.
+                     ($invoice->getClient()?->getClient_surname() ?? ''). ' '.
                      $numberHelper->format_currency($balance); ?>
                 </div>    
             </div>     
@@ -67,18 +67,18 @@ use Yiisoft\Html\Html;
             <i class="fa fa-file-pdf-o"></i> <?= $translator->translate('i.download_pdf').'=>'.$translator->translate('i.no').' '.$translator->translate('i.custom_fields'); ?>
         </a>
     </div> 
-    <br><?= Html::tag('Div',Html::tag('H4', $title)); ?><br>
+    <br><?= Html::tag('Div', Html::tag('H4', $title)); ?><br>
 <div class="card-body p-5 text-center">    
     <?= Html::openTag('form', ['method' => 'post', 'enctype' => 'multipart/form-data', 'id' => 'payment-form']); ?>                   
     
     <?= $alert; ?>
     <?=
        // Stripe injects the payment element here
-       Html::tag('Div','',['id'=>'payment-element']); 
+       Html::tag('Div', '', ['id' => 'payment-element']);
     ?>
     <?=
        // Stripe payment message
-       Html::tag('Div','',['id'=>'payment-message', 'class'=>'hidden']); 
+       Html::tag('Div', '', ['id' => 'payment-message', 'class' => 'hidden']);
     ?>
     <button type="submit" id="submit" class="btn btn-lg btn-success fa fa-credit-card fa-margin">
         <div class="spinner hidden" id="spinner"></div>
@@ -94,12 +94,12 @@ use Yiisoft\Html\Html;
     <tbody>
     <tr>
         <td><?= $translator->translate('i.invoice_date'); ?></td>
-        <td class="text-right"><?= Html::encode($invoice->getDate_created()->format($dateHelper->style())); ?></td>
+        <td class="text-right"><?= Html::encode($invoice->getDate_created()->format('Y-m-d')); ?></td>
     </tr>
     <tr class="<?= ($is_overdue ? 'overdue' : '') ?>">
         <td><?= $translator->translate('i.due_date'); ?></td>
         <td class="text-right">
-            <?= Html::encode($invoice->getDate_due()->format($dateHelper->style())); ?>
+            <?= Html::encode($invoice->getDate_due()->format('Y-m-d')); ?>
         </td>
     </tr>
     <tr class="<?php echo($is_overdue ? 'overdue' : '') ?>">
@@ -133,68 +133,68 @@ use Yiisoft\Html\Html;
 </div>
 </div>
 </div>                  
-<?php } 
+<?php }
 // https://stripe.com/docs/payments/quickstart
 ?>
 <?php // This is your test publishable API key.
-    $js18 = 
-    'const stripe = Stripe("' .$pci_client_publishable_key.'");' 
-    . 'let elements;'
-    . 'const items = ['. $json_encoded_items.'];'
-    . 'initialize();'
-    . 'checkStatus();'
-    . 'document.querySelector("#payment-form").addEventListener("submit", handleSubmit);'
-    . 'async function initialize() {'
-        // To avoid Error 422 Unprocessible entity 
-        // const { clientSecret } = await fetch("/create.php", {
-        // method: "POST",
-        // headers: { "Content-Type": "application/json" },
-        // body: JSON.stringify({ items }),
-        // }).then((r) => r.json());    
-        . 'const { clientSecret } = {"clientSecret": "'. $client_secret .'"};'
-        . 'elements = stripe.elements({ clientSecret });'
-        . 'const paymentElementOptions = {'
-            . 'layout: "tabs"'
-        . '};'
-        . 'const paymentElement = elements.create("payment", paymentElementOptions);'
-        . 'paymentElement.mount("#payment-element");'
+$js18 =
+'const stripe = Stripe("' .$pci_client_publishable_key.'");'
+. 'let elements;'
+. 'const items = ['. $json_encoded_items.'];'
+. 'initialize();'
+. 'checkStatus();'
+. 'document.querySelector("#payment-form").addEventListener("submit", handleSubmit);'
+. 'async function initialize() {'
+    // To avoid Error 422 Unprocessible entity
+    // const { clientSecret } = await fetch("/create.php", {
+    // method: "POST",
+    // headers: { "Content-Type": "application/json" },
+    // body: JSON.stringify({ items }),
+    // }).then((r) => r.json());
+    . 'const { clientSecret } = {"clientSecret": "'. $client_secret .'"};'
+    . 'elements = stripe.elements({ clientSecret });'
+    . 'const paymentElementOptions = {'
+        . 'layout: "tabs"'
+    . '};'
+    . 'const paymentElement = elements.create("payment", paymentElementOptions);'
+    . 'paymentElement.mount("#payment-element");'
+. '}'
+. 'async function handleSubmit(e) {'
+    . 'e.preventDefault();'
+    . 'setLoading(true);'
+    . 'const { error } = await stripe.confirmPayment({'
+        . 'elements,'
+        . 'confirmParams: {'
+            . 'return_url: "'.$urlGenerator->generateAbsolute('paymentinformation/stripe_complete', ['url_key' => $inv_url_key]).'"'
+        . '},'
+    . '});'
+    . 'if (error.type === "card_error" || error.type === "validation_error") {'
+        . 'showMessage(error.message);'
+    . '} else {'
+        . 'showMessage("An unexpected error occurred.");'
     . '}'
-    . 'async function handleSubmit(e) {'
-        . 'e.preventDefault();'
-        . 'setLoading(true);'
-        . 'const { error } = await stripe.confirmPayment({'
-            . 'elements,'
-            . 'confirmParams: {'
-                . 'return_url: "'.$urlGenerator->generateAbsolute('paymentinformation/stripe_complete',['url_key'=>$inv_url_key]).'"'
-            . '},'
-        . '});'
-        . 'if (error.type === "card_error" || error.type === "validation_error") {'
-            . 'showMessage(error.message);'
-        . '} else {'
-            . 'showMessage("An unexpected error occurred.");'
-        . '}'
-        . 'setLoading(false);'
-    . '}' 
-    . 'async function checkStatus() {'
-    .   'const clientSecret = new URLSearchParams(window.location.search).get("payment_intent_client_secret");'
-    .   'if (!clientSecret) {'
-        .   'return;'
-    .   '}'
-    .   'const { paymentIntent } = await stripe.retrievePaymentIntent(clientSecret);'
-    .   'switch (paymentIntent.status) {'
-        .   '  case "succeeded":'
-        .   '    showMessage("Payment succeeded!");'
-        .   '    break;'
-        .   '  case "processing":'
-        .   '    showMessage("Your payment is processing.");'
-        .   '    break;'
-        .   '  case "requires_payment_method":'
-        .   '    showMessage("Your payment was not successful, please try again.");'
-        .   '    break;'
-        .   '  default:'
-        .   '    showMessage("Something went wrong.");'
-        .   '    break;'
-    .  '}'
+    . 'setLoading(false);'
+. '}'
+. 'async function checkStatus() {'
+.   'const clientSecret = new URLSearchParams(window.location.search).get("payment_intent_client_secret");'
+.   'if (!clientSecret) {'
+    .   'return;'
+.   '}'
+.   'const { paymentIntent } = await stripe.retrievePaymentIntent(clientSecret);'
+.   'switch (paymentIntent.status) {'
+    .   '  case "succeeded":'
+    .   '    showMessage("Payment succeeded!");'
+    .   '    break;'
+    .   '  case "processing":'
+    .   '    showMessage("Your payment is processing.");'
+    .   '    break;'
+    .   '  case "requires_payment_method":'
+    .   '    showMessage("Your payment was not successful, please try again.");'
+    .   '    break;'
+    .   '  default:'
+    .   '    showMessage("Something went wrong.");'
+    .   '    break;'
+.  '}'
 .    '}'
 .   'function showMessage(messageText) {'
 .     'const messageContainer = document.querySelector("#payment-message");'
@@ -204,7 +204,7 @@ use Yiisoft\Html\Html;
 .       'messageContainer.classList.add("hidden");'
 .       'messageText.textContent = "";'
 .     '}, 4000);'
-.   '}' 
+.   '}'
 .   'function setLoading(isLoading) {'
 .     'if (isLoading) {'
 .       'document.querySelector("#submit").disabled = true;'
@@ -215,7 +215,7 @@ use Yiisoft\Html\Html;
 .       'document.querySelector("#spinner").classList.add("hidden");'
 .       'document.querySelector("#button-text").classList.remove("hidden");'
 .     '}'
-.   '};';          
+.   '};';
 echo Html::script($js18)->type('module');
 ?>
 

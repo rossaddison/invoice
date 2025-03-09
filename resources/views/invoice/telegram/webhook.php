@@ -12,4 +12,3 @@ use Yiisoft\Html\Tag\I;
  */
 
 echo $alert;
-?>

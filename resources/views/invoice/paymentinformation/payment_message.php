@@ -1,21 +1,21 @@
 <?php
 
-    declare(strict_types=1);
-    
-   /**
-    * @var App\Invoice\Setting\SettingRepository $s
-    * @var Yiisoft\Translator\TranslatorInterface $translator
-    * @var Yiisoft\Router\UrlGeneratorInterface $urlGenerator
-    * @var string $csrf
-    * @var string $gateway
-    * @var string $heading
-    * @var string $message
-    * @var string $sandbox_url
-    * @var string $url
-    * @var string $url_key
-    */
-    
- ?> 
+declare(strict_types=1);
+
+/**
+ * @var App\Invoice\Setting\SettingRepository $s
+ * @var Yiisoft\Translator\TranslatorInterface $translator
+ * @var Yiisoft\Router\UrlGeneratorInterface $urlGenerator
+ * @var string $csrf
+ * @var string $gateway
+ * @var string $heading
+ * @var string $message
+ * @var string $sandbox_url
+ * @var string $url
+ * @var string $url_key
+ */
+
+?> 
 
 <!doctype html>
 <html lang="en">
@@ -73,7 +73,7 @@
 <body  
 <h1><?php echo $heading; ?></h1>
 <?php echo $message; ?>
-<form method="POST" class="form-inline" action="<?= $urlGenerator->generate($url, ['url_key'=> $url_key, 'gateway' => $gateway]); ?>">
+<form method="POST" class="form-inline" action="<?= $urlGenerator->generate($url, ['url_key' => $url_key, 'gateway' => $gateway]); ?>">
        <input type="hidden" name="_csrf" value="<?= $csrf ?>">
        <button type="submit" class="btn btn-lg btn-link"><i class="fa fa-arrow-left"></i></button>
        <?php if ($s->getSetting('gateway_'.lcfirst($gateway).'_sandbox') === '1') { ?>

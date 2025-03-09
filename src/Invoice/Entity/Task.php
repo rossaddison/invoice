@@ -20,14 +20,14 @@ class Task
     private ?Project $project = null;
 
     public function __construct(#[Column(type: 'primary')]
-    private ?int $id = null, #[Column(type:'integer(11)', nullable: true, default: null)]
-    private ?int $project_id = null, #[Column(type:'text', nullable: true)]
-    private ?string $name = '', #[Column(type:'longText', nullable: false)]
-    private string $description = '', #[Column(type:'decimal(20,2)', nullable: false, default: 0.00)]
-    private ?float $price = null, #[Column(type:'date', nullable: true)]
-    private mixed $finish_date = '', #[Column(type:'int', nullable: false)]
-    private ?int $status = null, #[Column(type:'integer(11)', nullable: false)]
-    private ?int $tax_rate_id = null)
+        private ?int $id = null, #[Column(type:'integer(11)', nullable: true, default: null)]
+        private ?int $project_id = null, #[Column(type:'text', nullable: true)]
+        private ?string $name = '', #[Column(type:'longText', nullable: false)]
+        private string $description = '', #[Column(type:'decimal(20,2)', nullable: false, default: 0.00)]
+        private ?float $price = null, #[Column(type:'date', nullable: true)]
+        private mixed $finish_date = '', #[Column(type:'int', nullable: false)]
+        private ?int $status = null, #[Column(type:'integer(11)', nullable: false)]
+        private ?int $tax_rate_id = null)
     {
     }
 

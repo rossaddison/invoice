@@ -1701,7 +1701,7 @@ return [
 'site.soletrader.contact.address' => 'Adresse',
 'site.soletrader.contact.email' => 'Email',
 'site.soletrader.contact.phone' => 'Telefon',
-'site.todays.date' => 'Heutiges Datum',    
+'site.todays.date' => 'Heutiges Datum',
 'validator.invalid.login.password' => 'Ungültiger Anmeldename oder Passwort',
 'validator.password.not.match' => 'Passwörter stimmen nicht überein',
 'validator.password.not.match.new' => 'Ihre neuen Passwörter stimmen nicht überein',
@@ -1808,5 +1808,5 @@ return [
 'menu.gallery' => 'Galerie',
 'menu.privacy.policy' => 'Datenschutzrichtlinie',
 'menu.terms.of.service' => 'Servicebedingungen',
-'password.reset.request.token' => 'Token zum Zurücksetzen des Passworts anfordern'    
+'password.reset.request.token' => 'Token zum Zurücksetzen des Passworts anfordern'
 ];

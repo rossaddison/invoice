@@ -7,7 +7,7 @@ use Yiisoft\Html\Tag\Img;
 
 /**
  * @see App\Invoice\Helpers\PdfHelper generate_inv_html
- * @see InvController function url_key 
+ * @see InvController function url_key
  * @var App\Invoice\Entity\Client $client
  * @var App\Invoice\Entity\Inv $inv
  * @var App\Invoice\Entity\InvAmount $inv_amount
@@ -23,24 +23,24 @@ use Yiisoft\Html\Tag\Img;
  * @var Yiisoft\Translator\TranslatorInterface $translator
  * @var array $custom_fields
  * @var array $inv_tax_rates
- * @var array $items 
+ * @var array $items
  * @var array $paymentTermsArray
  * @var bool $is_overdue
  * @var float $balance
- * 
+ *
  * @see src\ViewInjection\LayoutViewInjection
  * @var string $companyLogoFileName
  * @var string $logoPath
  * @var int $companyLogoWidth
  * @var int $companyLogoHeight
- * 
+ *
  * @var string $_language
  * @var string $alert
  * @var string $attachments
  * @var string $client_chosen_gateway
  * @var string $inv_url_key
  * @var string $downloadPdfNonSumexActionName
- * @var string $downloadPdfSumexActionName 
+ * @var string $downloadPdfSumexActionName
  * @psalm-var array<string, Stringable|null|scalar> $downloadPdfNonSumexActionArguments
  * @psalm-var array<string, Stringable|null|scalar> $downloadPdfSumexActionArguments
  */
@@ -69,7 +69,7 @@ $vat = $s->getSetting('enable_vat_registration');
                 <div class="btn-group">
                     <!-- Include custom fields -->
 
-                    <?php if (null!==$sumex) : ?>
+                    <?php if (null !== $sumex) : ?>
                         <a href="<?= $urlGenerator->generate('inv/key_download_pdf_non_sumex', ['url_key' => $inv_url_key]); ?>" class="btn btn-primary" style="text-decoration:none">
                             <i class="fa fa-file-pdf-o"></i> <?= $translator->translate('i.download_pdf').'=>'.$translator->translate('i.yes').' '.$translator->translate('i.custom_fields'); ?>
                         </a>
@@ -80,7 +80,7 @@ $vat = $s->getSetting('enable_vat_registration');
                     <?php endif; ?>
 
                     <!-- Exclude custom fields -->         
-                    <?php if (null!==$sumex) : ?>
+                    <?php if (null !== $sumex) : ?>
                         <a href="<?= $urlGenerator->generate('inv/key_download_pdf_non_sumex', ['url_key' => $inv_url_key]); ?>" class="btn btn-danger" style="text-decoration:none">
                             <i class="fa fa-file-pdf-o"></i> <?= $translator->translate('i.download_pdf').'=>'.$translator->translate('i.no').' '.$translator->translate('i.custom_fields'); ?>    
                         </a>    
@@ -91,10 +91,12 @@ $vat = $s->getSetting('enable_vat_registration');
                     <?php endif; ?>
 
                     <?php if ($s->getSetting('enable_online_payments') == 1 && $inv_amount->getBalance() > 0) { ?>
-                        <a href="<?= $urlGenerator->generate('paymentinformation/inform', 
-                                ['url_key' => $inv_url_key, 
-                                 'gateway' => $client_chosen_gateway]); ?>" class="btn btn-success">
-                            <i class="fa fa-credit-card"></i><?= $translator->translate('i.pay_now').' '. str_replace('_',' ',$client_chosen_gateway); ?>
+                        <a href="<?= $urlGenerator->generate(
+                            'paymentinformation/inform',
+                            ['url_key' => $inv_url_key,
+                                                         'gateway' => $client_chosen_gateway]
+                        ); ?>" class="btn btn-success">
+                            <i class="fa fa-credit-card"></i><?= $translator->translate('i.pay_now').' '. str_replace('_', ' ', $client_chosen_gateway); ?>
                         </a>
                     <?php } ?>
                     <?php if ($s->getSetting('enable_online_payments') == 1 && $inv_amount->getBalance() == 0) { ?>
@@ -106,14 +108,14 @@ $vat = $s->getSetting('enable_vat_registration');
 
             <div class="invoice">
                 <?php
-                    /**
-                     * @see src\ViewInjection\LayoutViewInjection.php
-                     */
-                    echo Img::tag()
-                         ->width($companyLogoWidth)
-                         ->height($companyLogoHeight)
-                         ->src($logoPath);   
-                ?>
+                                            /**
+                                             * @see src\ViewInjection\LayoutViewInjection.php
+                                             */
+                                            echo Img::tag()
+                                                 ->width($companyLogoWidth)
+                                                 ->height($companyLogoHeight)
+                                                 ->src($logoPath);
+?>
                 
                 <br>
                 <br>
@@ -122,10 +124,10 @@ $vat = $s->getSetting('enable_vat_registration');
 
                         <h4><?= Html::encode($userInv->getName()); ?></h4>
                         <p><?php if (strlen($userInv->getVat_id() ?: '') > 0) {
-                                echo $translator->translate('i.vat_id_short') . ": " . ($userInv->getVat_id() ?: '') . '<br>';
-                            } ?>
+                            echo $translator->translate('i.vat_id_short') . ": " . ($userInv->getVat_id() ?: '') . '<br>';
+                        } ?>
                             <?php if (strlen($userInv->getTax_code() ?? '') > 0) {
-                                echo $translator->translate('i.tax_code_short') . ": " . ($userInv->getTax_code() ?? '' ) . '<br>';
+                                echo $translator->translate('i.tax_code_short') . ": " . ($userInv->getTax_code() ?? '') . '<br>';
                             } ?>
                             <?php if (strlen($userInv->getAddress_1() ?? '') > 0) {
                                 echo Html::encode($userInv->getAddress_1()) . '<br>';
@@ -153,8 +155,8 @@ $vat = $s->getSetting('enable_vat_registration');
 
                         <h4><?= Html::encode($clientHelper->format_client($client)); ?></h4>
                         <p><?php if (strlen($client->getClient_vat_id()) > 0) {
-                                echo $translator->translate('i.vat_id_short') . ": " . ($client->getClient_vat_id()) . '<br>';
-                            } ?>
+                            echo $translator->translate('i.vat_id_short') . ": " . ($client->getClient_vat_id()) . '<br>';
+                        } ?>
                             <?php if (strlen($client->getClient_tax_code() ?? '') > 0) {
                                 echo $translator->translate('i.tax_code_short') . ": " . ($client->getClient_tax_code() ?? '') . '<br>';
                             } ?>
@@ -185,12 +187,12 @@ $vat = $s->getSetting('enable_vat_registration');
                             <tbody>
                             <tr>
                                 <td><?= $translator->translate('i.invoice_date'); ?></td>
-                                <td style="text-align:right;"><?= $inv->getDate_created()->format($dateHelper->style()); ?></td>
+                                <td style="text-align:right;"><?= $inv->getDate_created()->format('Y-m-d'); ?></td>
                             </tr>
                             <tr class="<?=($is_overdue ? 'overdue' : '') ?>">
                                 <td><?= $translator->translate('i.due_date'); ?></td>
                                 <td class="text-right">
-                                    <?= $inv->getDate_due()->format($dateHelper->style()); ?>
+                                    <?= $inv->getDate_due()->format('Y-m-d'); ?>
                                 </td>
                             </tr>
                             <tr class="<?=($is_overdue ? 'overdue' : '') ?>">
@@ -226,7 +228,7 @@ $vat = $s->getSetting('enable_vat_registration');
                             </thead>
                             <tbody>
                             <?php
-                            
+
                             /**
                              * @var App\Invoice\Entity\InvItem $item
                              */
@@ -244,7 +246,7 @@ $vat = $s->getSetting('enable_vat_registration');
                                 <td class="amount"><?= $numberHelper->format_currency($item->getPrice()); ?></td>
                                 <td class="amount"><?= $numberHelper->format_currency($item->getDiscount_amount()); ?></td>
                                 <?php $query = $iiaR->repoInvItemAmountquery((string)$item->getId()); ?>
-                                <td class="amount"><?= $numberHelper->format_currency(null!==$query ? $query->getSubtotal() : 0.00); ?></td>                                   
+                                <td class="amount"><?= $numberHelper->format_currency(null !== $query ? $query->getSubtotal() : 0.00); ?></td>                                   
                             </tr>  
                             <?php } ?>
 
@@ -261,15 +263,15 @@ $vat = $s->getSetting('enable_vat_registration');
                                 <td class="amount">
                                     <?php
                                         $invAmountItemTaxTotal = $inv_amount->getItem_tax_total();
-                                        echo ($invAmountItemTaxTotal >= 0.00 ? $numberHelper->format_currency($invAmountItemTaxTotal) : '');
-                                    ?>
+                                echo($invAmountItemTaxTotal >= 0.00 ? $numberHelper->format_currency($invAmountItemTaxTotal) : '');
+                                ?>
                                 </td>
                             </tr>
                             <?php } ?>
 
                             <?php if ($vat  === '0') { ?>
-                            <?php 
-                                
+                            <?php
+
                             /**
                              * @var App\Invoice\Entity\InvTaxRate $inv_tax_rate
                              */
@@ -277,21 +279,21 @@ $vat = $s->getSetting('enable_vat_registration');
                             <tr>
                                 <td class="no-bottom-border" colspan="4"></td>
                                 <td class="text-right">
-                                    <?php 
-                                        $taxRatePercent = $inv_tax_rate->getTaxRate()?->getTaxRatePercent();
-                                        $taxRateName = $inv_tax_rate->getTaxRate()?->getTaxRateName();
-                                        if (($taxRatePercent >= 0.00) && (strlen($taxRateName ?? '') > 0)) {
-                                            echo Html::encode(($taxRateName ?? '#') . ' ' . ($numberHelper->format_amount($taxRatePercent) ?? '#'));
-                                        }
-                                    ?>
+                                    <?php
+                                    $taxRatePercent = $inv_tax_rate->getTaxRate()?->getTaxRatePercent();
+                                $taxRateName = $inv_tax_rate->getTaxRate()?->getTaxRateName();
+                                if (($taxRatePercent >= 0.00) && (strlen($taxRateName ?? '') > 0)) {
+                                    echo Html::encode(($taxRateName ?? '#') . ' ' . ($numberHelper->format_amount($taxRatePercent) ?? '#'));
+                                }
+                                ?>
                                     %
                                 </td>
                                 <td class="amount">
-                                    <?php 
-                                        $invTaxRate = $inv_tax_rate->getInv_tax_rate_amount();
-                                        if ($invTaxRate >= 0.00) {
-                                            echo $numberHelper->format_currency($invTaxRate);
-                                        } ?>
+                                    <?php
+                                    $invTaxRate = $inv_tax_rate->getInv_tax_rate_amount();
+                                if ($invTaxRate >= 0.00) {
+                                    echo $numberHelper->format_currency($invTaxRate);
+                                } ?>
                                 </td>
                             </tr>
                             <?php   endforeach; ?>
@@ -303,15 +305,15 @@ $vat = $s->getSetting('enable_vat_registration');
                                 <td class="amount">
                                     <?php
                                     $percent = $inv->getDiscount_percent();
-                                    if ($percent >= 0.00) {
-                                        echo (string)$numberHelper->format_amount($percent) . ' %';
-                                    } else {
-                                        $discountAmount = $inv->getDiscount_amount();
-                                        if ($discountAmount >= 0.00) { 
-                                            echo $numberHelper->format_amount($discountAmount);
-                                        }
+                                if ($percent >= 0.00) {
+                                    echo (string)$numberHelper->format_amount($percent) . ' %';
+                                } else {
+                                    $discountAmount = $inv->getDiscount_amount();
+                                    if ($discountAmount >= 0.00) {
+                                        echo $numberHelper->format_amount($discountAmount);
                                     }
-                                    ?>
+                                }
+                                ?>
                                 </td>
                             </tr>
                             <?php } ?>
@@ -338,14 +340,14 @@ $vat = $s->getSetting('enable_vat_registration');
                         </table>
                     </div>
 
-                    <?php                
+                    <?php
                         // img folder located in public folder
                         if ($inv_amount->getBalance() == 0) {
                             echo '<img src="/img/paid.png" class="paid-stamp">';
-                        } 
-                        if ($is_overdue) {
-                            echo '<img src="/img/overdue.png" class="overdue-stamp">';
-                        } ?>
+                        }
+if ($is_overdue) {
+    echo '<img src="/img/overdue.png" class="overdue-stamp">';
+} ?>
 
                 </div><!-- .invoice-items -->
 

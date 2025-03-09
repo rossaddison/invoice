@@ -15,9 +15,9 @@ class CustomValue
     private ?CustomField $custom_field = null;
 
     public function __construct(#[Column(type: 'primary')]
-    private ?int $id = null, #[Column(type: 'integer(11)', nullable: false)]
-    private ?int $custom_field_id = null, #[Column(type: 'text', nullable: false)]
-    private string $value = '')
+        private ?int $id = null, #[Column(type: 'integer(11)', nullable: false)]
+        private ?int $custom_field_id = null, #[Column(type: 'text', nullable: false)]
+        private string $value = '')
     {
     }
 

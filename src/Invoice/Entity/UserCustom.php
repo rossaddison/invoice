@@ -16,10 +16,10 @@ class UserCustom
     private ?User $user = null;
 
     public function __construct(#[Column(type: 'primary')]
-    private ?int $id = null, #[Column(type: 'integer(11)', nullable: false)]
-    private ?int $user_id = null, #[Column(type: 'integer(11)', nullable: false)]
-    private ?int $fieldid = null, #[Column(type: 'text', nullable: true)]
-    private ?string $fieldvalue = '')
+        private ?int $id = null, #[Column(type: 'integer(11)', nullable: false)]
+        private ?int $user_id = null, #[Column(type: 'integer(11)', nullable: false)]
+        private ?int $fieldid = null, #[Column(type: 'text', nullable: true)]
+        private ?string $fieldvalue = '')
     {
     }
 

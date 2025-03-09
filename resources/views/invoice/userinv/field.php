@@ -6,7 +6,7 @@ use App\Invoice\Helpers\ClientHelper;
 use Yiisoft\Html\Html;
 
 /**
- * @var App\Invoice\Entity\UserClient $userClient 
+ * @var App\Invoice\Entity\UserClient $userClient
  * @var App\Invoice\Entity\UserInv $userInv
  * @var App\Invoice\Client\ClientRepository $cR
  * @var App\Invoice\Setting\SettingRepository $s
@@ -68,8 +68,8 @@ $client_helper = new ClientHelper($s);
                                         <a href="<?= $urlGenerator->generate('client/view', ['id' => $userClient->getClient_id()]); ?>" style="text-decoration:none">
                                             <?php
                                                 $client = $cR->repoClientquery($userClient->getClient_id());
-                                                echo $client_helper->format_client($client); 
-                                            ?>
+                                    echo $client_helper->format_client($client);
+                                    ?>
                                         </a>
                                     </td>
                                     <td>

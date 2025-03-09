@@ -1,14 +1,15 @@
 <?php
+
 declare(strict_types=1);
 
-// Note this is the only file that gets adjusted during development and ultimately gets copied to 
-// the English folder located under src/Invoice/Language/English. Google Translate cannot compile this 
+// Note this is the only file that gets adjusted during development and ultimately gets copied to
+// the English folder located under src/Invoice/Language/English. Google Translate cannot compile this
 // complete file therefore it has to be broken up into relative sections located under the English folder namely
 // 1. ip_lang i.e. old invoice plane i dot underscore translations which are still used extensively
 // 2. gateway_lang i.e. old invoice plane g dot underscore translations which are also still used
 // 3. app_lang i.e. a translation of every sentence needed in the package but which will not be able to be translated because of its size.
 
-// Note this file starts with `return [` and ip_lang starts with `$lang = [` so make sure you only build a suitable 
+// Note this file starts with `return [` and ip_lang starts with `$lang = [` so make sure you only build a suitable
 // translation array by substituting between the square brackets.
 return [
     'g.online_payment' => 'Płatność online',
@@ -1709,7 +1710,7 @@ return [
 'site.soletrader.contact.address' => 'Adres',
 'site.soletrader.contact.email' => 'E-mail',
 'site.soletrader.contact.phone' => 'Telefon',
-'site.todays.date' => 'Dzisiejsza data',    
+'site.todays.date' => 'Dzisiejsza data',
 'validator.invalid.login.password' => 'niepoprawny login lub hasło',
 'validator.password.not.match' => 'Hasła nie pasują do siebie',
 'validator.password.not.match.new' => 'Twoje nowe hasła nie pasują',
@@ -1816,5 +1817,5 @@ return [
 'menu.gallery' => 'Galeria',
 'menu.privacy.policy' => 'Polityka prywatności',
 'menu.terms.of.service' => 'Warunki korzystania z usługi',
-'password.reset.request.token' => 'Poproś o token resetujący hasło',    
+'password.reset.request.token' => 'Poproś o token resetujący hasło',
 ];

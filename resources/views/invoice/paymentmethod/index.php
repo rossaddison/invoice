@@ -11,7 +11,7 @@ use Yiisoft\Html\Html;
  * @var array $payment_methods
  * @var bool $canEdit
  * @var string $alert
- * @var string $id 
+ * @var string $id
  */
 
 echo $alert;
@@ -20,7 +20,7 @@ echo $alert;
 <div id="headerbar">
     <h1 class="headerbar-title"><?= $translator->translate('i.payment_methods'); ?></h1>
     <div class="headerbar-item pull-right">
-        <?= Html::a($translator->translate('i.new'),$urlGenerator->generate('paymentmethod/add'),['class' => 'btn btn-outline-secondary btn-md-12 mb-3']); ?>
+        <?= Html::a($translator->translate('i.new'), $urlGenerator->generate('paymentmethod/add'), ['class' => 'btn btn-outline-secondary btn-md-12 mb-3']); ?>
     </div>
 </div>
 
@@ -49,17 +49,17 @@ echo $alert;
                         </a>
                         <ul class="dropdown-menu">
                             <li>
-                                <a href="<?= $urlGenerator->generate('paymentmethod/view',['id'=>$payment_method->getId()]); ?>" style="text-decoration:none"><i class="fa fa-eye fa-margin"></i>
+                                <a href="<?= $urlGenerator->generate('paymentmethod/view', ['id' => $payment_method->getId()]); ?>" style="text-decoration:none"><i class="fa fa-eye fa-margin"></i>
                                      <?= $translator->translate('i.view'); ?>
                                 </a>
                             </li>
                             <li>
-                                <a href="<?= $urlGenerator->generate('paymentmethod/edit',['id'=>$payment_method->getId()]); ?>" style="text-decoration:none"><i class="fa fa-edit fa-margin"></i>
+                                <a href="<?= $urlGenerator->generate('paymentmethod/edit', ['id' => $payment_method->getId()]); ?>" style="text-decoration:none"><i class="fa fa-edit fa-margin"></i>
                                      <?= $translator->translate('i.edit'); ?>
                                 </a>
                             </li>
                             <li>
-                                <a href="<?= $urlGenerator->generate('paymentmethod/delete',['id'=>$payment_method->getId()]); ?>" style="text-decoration:none" onclick="return confirm('<?= $translator->translate('i.delete_record_warning'); ?>');">
+                                <a href="<?= $urlGenerator->generate('paymentmethod/delete', ['id' => $payment_method->getId()]); ?>" style="text-decoration:none" onclick="return confirm('<?= $translator->translate('i.delete_record_warning'); ?>');">
                                      <i class="fa fa-trash fa-margin"></i><?= $translator->translate('i.delete'); ?>                                    
                                 </a>
                             </li>

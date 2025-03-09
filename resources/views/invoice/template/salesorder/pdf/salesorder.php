@@ -6,7 +6,7 @@ use Yiisoft\Html\Html;
 
 /**
  * @see App\Invoice\Helpers\PdfHelper function generate_salesorder_pdf
- * 
+ *
  * @var App\Invoice\Entity\SalesOrderAmount $so_amount
  * @var App\Invoice\Entity\SalesOrder $salesorder
  * @var App\Invoice\Entity\SalesOrderTaxRate $salesorder_tax_rate
@@ -42,41 +42,41 @@ $vat = $s->getSetting('enable_vat_registration');
             <b><?= Html::encode($salesorder->getClient()?->getClient_name()); ?></b>
         </div>
         <?php if (strlen($clientVatId = $salesorder->getClient()?->getClient_vat_id() ?? '') > 0) {
-            echo '<div>' .$translator->translate('invoice.invoice.vat.reg.no') 
-                         .': ' 
-                         . $clientVatId 
+            echo '<div>' .$translator->translate('invoice.invoice.vat.reg.no')
+                         .': '
+                         . $clientVatId
                          . '</div>';
         }
-        if (strlen($clientTaxCode = $salesorder->getClient()?->getClient_tax_code() ?? '') > 0) {
-            echo '<div>' .$translator->translate('i.tax_code_short') . ': ' . $clientTaxCode . '</div>';
-        }
-        echo '<div>' . Html::encode(strlen($salesorder->getClient()?->getClient_address_1() ?? '') > 0 ?: $translator->translate('i.street_address')) . '</div>';        
-        echo '<div>' . Html::encode(strlen($salesorder->getClient()?->getClient_address_2() ?? '') > 0 ?: $translator->translate('i.street_address_2')) . '</div>';        
-        if (strlen($salesorder->getClient()?->getClient_city() ?? '') > 0 || strlen($salesorder->getClient()?->getClient_state() ?? '') > 0 || strlen($salesorder->getClient()?->getClient_zip() ?? '') > 0) {
-            echo '<div>';
-            if (strlen($salesorder->getClient()?->getClient_city() ?? '') > 0) {
-                echo Html::encode($salesorder->getClient()?->getClient_city()) . ' ';
-            }
-            if (strlen($salesorder->getClient()?->getClient_state() ?? '') > 0) {
-                echo Html::encode($salesorder->getClient()?->getClient_state()) . ' ';
-            }
-            if (strlen($salesorder->getClient()?->getClient_zip() ?? '') > 0) {
-                echo Html::encode($salesorder->getClient()?->getClient_zip());
-            }
-            echo '</div>';
-        }
-        if (strlen($salesorder->getClient()?->getClient_state() ?? '') > 0) {
-            echo '<div>' . Html::encode($salesorder->getClient()?->getClient_state()) . '</div>';
-        }
-        if (strlen($clientCountry = $salesorder->getClient()?->getClient_country() ?? '') > 0) {
-            echo '<div>' . $countryHelper->get_country_name($translator->translate('i.cldr'), $clientCountry) . '</div>';
-        }
+if (strlen($clientTaxCode = $salesorder->getClient()?->getClient_tax_code() ?? '') > 0) {
+    echo '<div>' .$translator->translate('i.tax_code_short') . ': ' . $clientTaxCode . '</div>';
+}
+echo '<div>' . Html::encode(strlen($salesorder->getClient()?->getClient_address_1() ?? '') > 0 ?: $translator->translate('i.street_address')) . '</div>';
+echo '<div>' . Html::encode(strlen($salesorder->getClient()?->getClient_address_2() ?? '') > 0 ?: $translator->translate('i.street_address_2')) . '</div>';
+if (strlen($salesorder->getClient()?->getClient_city() ?? '') > 0 || strlen($salesorder->getClient()?->getClient_state() ?? '') > 0 || strlen($salesorder->getClient()?->getClient_zip() ?? '') > 0) {
+    echo '<div>';
+    if (strlen($salesorder->getClient()?->getClient_city() ?? '') > 0) {
+        echo Html::encode($salesorder->getClient()?->getClient_city()) . ' ';
+    }
+    if (strlen($salesorder->getClient()?->getClient_state() ?? '') > 0) {
+        echo Html::encode($salesorder->getClient()?->getClient_state()) . ' ';
+    }
+    if (strlen($salesorder->getClient()?->getClient_zip() ?? '') > 0) {
+        echo Html::encode($salesorder->getClient()?->getClient_zip());
+    }
+    echo '</div>';
+}
+if (strlen($salesorder->getClient()?->getClient_state() ?? '') > 0) {
+    echo '<div>' . Html::encode($salesorder->getClient()?->getClient_state()) . '</div>';
+}
+if (strlen($clientCountry = $salesorder->getClient()?->getClient_country() ?? '') > 0) {
+    echo '<div>' . $countryHelper->get_country_name($translator->translate('i.cldr'), $clientCountry) . '</div>';
+}
 
-        echo '<br/>';
+echo '<br/>';
 
-        if (strlen($clientPhone = $salesorder->getClient()?->getClient_phone() ?? '') > 0) {
-            echo '<div>' .$translator->translate('i.phone_abbr') . ': ' . Html::encode($clientPhone) . '</div>';
-        } ?>
+if (strlen($clientPhone = $salesorder->getClient()?->getClient_phone() ?? '') > 0) {
+    echo '<div>' .$translator->translate('i.phone_abbr') . ': ' . Html::encode($clientPhone) . '</div>';
+} ?>
 
     </div>
 </header>
@@ -86,13 +86,13 @@ $vat = $s->getSetting('enable_vat_registration');
             <tr>
                 <!-- date issued -->
                 <td><?php echo $translator->translate('invoice.invoice.date.issued') . ':'; ?></td>
-                <td><?php echo Html::encode(!is_string($dateCreated = $salesorder->getDate_created()) ? 
-                                                       $dateCreated->format($dateHelper->style()) : ''); ?></td>
+                <td><?php echo Html::encode(!is_string($dateCreated = $salesorder->getDate_created()) ?
+                                               $dateCreated->format('Y-m-d') : ''); ?></td>
             </tr>
             <tr>
                 <td><?php echo $translator->translate('i.expires') . ': '; ?></td>
                 <td>
-                    <?= $salesorder->getDate_expires()->format($dateHelper->style()); ?>
+                    <?= $salesorder->getDate_expires()->format('Y-m-d'); ?>
                 </td>
             </tr>
             <tr><?= $show_custom_fields ? $top_custom_fields : ''; ?></tr>    
@@ -123,13 +123,13 @@ $vat = $s->getSetting('enable_vat_registration');
         <tbody>
 
         <?php
-        if ($items) {
-        /**
-         * @var App\Invoice\Entity\InvItem $item
-         */    
-        foreach ($items as $item) { 
-            $salesorder_item_amount = $soiaR->repoSalesOrderItemAmountquery((string)$item->getId());
-            ?>
+if ($items) {
+    /**
+     * @var App\Invoice\Entity\InvItem $item
+     */
+    foreach ($items as $item) {
+        $salesorder_item_amount = $soiaR->repoSalesOrderItemAmountquery((string)$item->getId());
+        ?>
             <tr>
                 <td><?= Html::encode($item->getName()); ?></td>
                 <td><?php echo nl2br(Html::encode($item->getDescription())); ?></td>
@@ -149,18 +149,18 @@ $vat = $s->getSetting('enable_vat_registration');
                     </td>
                 <?php endif; ?>
                 <td class="text-right">
-                    <?php  
-                        echo Html::encode($s->format_currency($salesorder_item_amount?->getTax_total())); 
-                    ?>
+                    <?php
+                    echo Html::encode($s->format_currency($salesorder_item_amount?->getTax_total()));
+        ?>
                 </td>
                 <td class="text-right">
-                    <?php  
-                        echo Html::encode($s->format_currency($salesorder_item_amount?->getTotal())); 
-                    ?>
+                    <?php
+            echo Html::encode($s->format_currency($salesorder_item_amount?->getTotal()));
+        ?>
                 </td>
             </tr>
-        <?php } 
-        }?>
+        <?php }
+    }?>
 
         </tbody>
         <tbody class="invoice-sums">
@@ -169,11 +169,13 @@ $vat = $s->getSetting('enable_vat_registration');
             <?php if ($vat === '0') { ?>
             <td <?php echo($show_item_discounts ? 'colspan="6"' : 'colspan="5"'); ?>
                     class="text-right"><?= Html::encode(
-                            $translator->translate('i.subtotal'))." (".Html::encode($translator->translate('i.price'))."-".Html::encode($translator->translate('i.discount')).") x ".Html::encode($translator->translate('i.qty')); ?></td>
+                        $translator->translate('i.subtotal')
+                    )." (".Html::encode($translator->translate('i.price'))."-".Html::encode($translator->translate('i.discount')).") x ".Html::encode($translator->translate('i.qty')); ?></td>
             <?php } else { ?>
             <td <?php echo($show_item_discounts ? 'colspan="6"' : 'colspan="5"'); ?>
                     class="text-right"><?= Html::encode(
-                            $translator->translate('i.subtotal')); ?></td> 
+                        $translator->translate('i.subtotal')
+                    ); ?></td> 
             <?php } ?> 
             <td class="text-right"><?php echo Html::encode($s->format_currency($so_amount->getItem_subtotal())); ?></td>
         </tr>
@@ -181,7 +183,7 @@ $vat = $s->getSetting('enable_vat_registration');
         <?php if ($so_amount->getItem_tax_total() > 0) { ?>
             <tr>
                 <td <?php echo($show_item_discounts ? 'colspan="6"' : 'colspan="5"'); ?> class="text-right">
-                    <?= Html::encode( $vat === '1' ? $translator->translate('invoice.invoice.vat.break.down') : $translator->translate('i.item_tax')); ?>
+                    <?= Html::encode($vat === '1' ? $translator->translate('invoice.invoice.vat.break.down') : $translator->translate('i.item_tax')); ?>
                 </td>
                 <td class="text-right">
                     <?php echo Html::encode($s->format_currency($so_amount->getItem_tax_total())); ?>
@@ -193,12 +195,12 @@ $vat = $s->getSetting('enable_vat_registration');
         <?php if (!empty($so_tax_rates) && ($vat === '0')) { ?>
             
         <?php
-            /**
-             * @var App\Invoice\Entity\SalesOrderTaxRate $salesorder_tax_rate
-             */
-            foreach ($so_tax_rates as $salesorder_tax_rate) : ?>
+                        /**
+                         * @var App\Invoice\Entity\SalesOrderTaxRate $salesorder_tax_rate
+                         */
+                        foreach ($so_tax_rates as $salesorder_tax_rate) : ?>
             <tr>
-                <td <?php echo ($show_item_discounts ? 'colspan="6"' : 'colspan="5"'); ?> class="text-right">
+                <td <?php echo($show_item_discounts ? 'colspan="6"' : 'colspan="5"'); ?> class="text-right">
                     <?php echo Html::encode($salesorder_tax_rate->getTaxRate()?->getTaxRateName()) . ' (' . Html::encode($s->format_amount($salesorder_tax_rate->getTaxRate()?->getTaxRatePercent())) . '%)'; ?>
                 </td>
                 <td class="text-right">
@@ -252,7 +254,7 @@ $vat = $s->getSetting('enable_vat_registration');
     <?php if ($show_custom_fields) {
         echo $view_custom_fields;
     }
-    ?>   
+?>   
 </footer>
 </body>
 </html>

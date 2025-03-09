@@ -1,18 +1,18 @@
 <?php
-    declare(strict_types=1);
-    
-    use Yiisoft\Html\Html;
-    
-    /**
-     * @var App\Invoice\Libraries\Crypt $crypt
-     * @var App\Invoice\Setting\SettingRepository $s 
-     * @var Yiisoft\Translator\TranslatorInterface $translator
-     * @var array $body
-     * @var array $gateway_drivers
-     * @var array $gateway_currency_codes
-     * @var array $gateway_regions
-     * @var array $payment_methods
-     */
+declare(strict_types=1);
+
+use Yiisoft\Html\Html;
+
+/**
+ * @var App\Invoice\Libraries\Crypt $crypt
+ * @var App\Invoice\Setting\SettingRepository $s
+ * @var Yiisoft\Translator\TranslatorInterface $translator
+ * @var array $body
+ * @var array $gateway_drivers
+ * @var array $gateway_currency_codes
+ * @var array $gateway_regions
+ * @var array $payment_methods
+ */
 ?>
 <?= Html::openTag('div', ['class' => 'row']); ?>
 <div class="col-xs-12 col-md-8 col-md-offset-2">
@@ -45,8 +45,8 @@
                      * @var array $fields
                      */
                     foreach ($gateway_drivers as $driver => $fields) {
-                    $d = strtolower($driver);
-                    ?>
+                        $d = strtolower($driver);
+                        ?>
                     <option value="<?= $d; ?>">
                         <?= ucwords(str_replace('_', ' ', $driver)); ?>
                     </option>
@@ -57,7 +57,7 @@
     </div>
 </div>
 
-<?php 
+<?php
 
 /**
  * @var string $driver
@@ -87,14 +87,14 @@ foreach ($gateway_drivers as $driver => $fields) :
         
         <div class="panel-body small">
           
-                <?php 
+                <?php
                     /**
                      * @var string $key
                      * @var array $setting
                      * @var string $setting['label']
                      * @var string $setting['password']
                      * @var string $setting['type']
-                     */    
+                     */
                     foreach ($fields as $key => $setting) { ?>
                 <?php $body['settings[gateway_' . $d . '_'.$key.']'] = $s->getSetting('gateway_' . $d . '_' . $key);?>
                 <?php if ($setting['type'] == 'checkbox') : ?>
@@ -120,8 +120,8 @@ foreach ($gateway_drivers as $driver => $fields) :
                             id="settings[gateway_<?= $d; ?>_<?= $key ?>]" 
                                     <?php
                                         if ($setting['type'] == 'password') : ?>
-                                        value="<?= (string)(strlen((string)$body['settings[gateway_' . $d . '_'.$key.']']) > 0 
-                                                ? $crypt->decode((string)$body['settings[gateway_' . $d . '_'.$key.']']) 
+                                        value="<?= (string)(strlen((string)$body['settings[gateway_' . $d . '_'.$key.']']) > 0
+                                                ? $crypt->decode((string)$body['settings[gateway_' . $d . '_'.$key.']'])
                                                 : ''); ?>"
                                     <?php else : ?>
                                         value="<?= (string)$body['settings[gateway_' . $d . '_'.$key.']']; ?>"
@@ -140,8 +140,7 @@ foreach ($gateway_drivers as $driver => $fields) :
             
             <?php
             // regions are specific to Amazon Pay
-            if ($d == 'amazon_pay') 
-            { ?>
+            if ($d == 'amazon_pay') { ?>
             <div class="form-group">
                 <label for="settings[gateway_<?= $d; ?>_region]">
                     <?= $translator->translate('g.online_payment_region'); ?>
@@ -196,14 +195,14 @@ foreach ($gateway_drivers as $driver => $fields) :
                 <select name="settings[gateway_<?= $d; ?>_locale]"
                     id="settings[gateway_<?= $d; ?>_locale]"
                     class="input-sm form-control">
-                    <?php 
+                    <?php
                         $locales = $s->mollieSupportedLocaleArray();
-                        /**
-                         * @var array $locales
-                         * @var string $key
-                         * @var string $value
-                         */
-                        foreach ($locales as $key => $value) { ?>
+                /**
+                 * @var array $locales
+                 * @var string $key
+                 * @var string $value
+                 */
+                foreach ($locales as $key => $value) { ?>
                         <option value="<?= $value; ?>"
                             <?php $s->check_select($body['settings[gateway_mollie_locale]'], $value); ?>>
                             <?= $value; ?>
@@ -222,10 +221,10 @@ foreach ($gateway_drivers as $driver => $fields) :
                     id="settings[gateway_<?= $d; ?>_payment_method]"
                     class="input-sm form-control">
                     <?php
-                        /**
-                         * @var App\Invoice\Entity\PaymentMethod $payment_method
-                         */
-                        foreach ($payment_methods as $payment_method) { ?>
+                /**
+                 * @var App\Invoice\Entity\PaymentMethod $payment_method
+                 */
+                foreach ($payment_methods as $payment_method) { ?>
                         <option value="<?= $payment_method->getId(); ?>"
                             <?php $s->check_select($body['settings[gateway_' . $d . '_payment_method]'], $payment_method->getId()) ?>>
                             <?= $payment_method->getName(); ?>

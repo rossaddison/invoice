@@ -32,14 +32,14 @@ use Yiisoft\Yii\DataView\YiiRouter\UrlCreator;
  * @var App\Invoice\Setting\SettingRepository $s
  * @var App\Widget\Button $button
  * @var App\Widget\GridComponents $gridComponents
- * @var App\Widget\PageSizeLimiter $pageSizeLimiter  
+ * @var App\Widget\PageSizeLimiter $pageSizeLimiter
  * @var Yiisoft\Data\Paginator\OffsetPaginator $sortedAndPagedPaginator
  * @var Yiisoft\Data\Reader\Sort $sort
  * @var Yiisoft\Router\CurrentRoute $currentRoute
  * @var Yiisoft\Translator\TranslatorInterface $translator
  * @var Yiisoft\Router\FastRoute\UrlGenerator $urlGenerator
  * @var Yiisoft\Yii\DataView\YiiRouter\UrlCreator $urlCreator
- * @var Yiisoft\Data\Cycle\Reader\EntityReader $invs 
+ * @var Yiisoft\Data\Cycle\Reader\EntityReader $invs
  * @var bool $viewInv
  * @var int $decimalPlaces
  * @var int $defaultPageSizeOffsetPaginator
@@ -49,8 +49,8 @@ use Yiisoft\Yii\DataView\YiiRouter\UrlCreator;
  * @var string $label
  * @var string $modal_add_quote
  * @var string $sortString
- * @var string $status 
- * @psalm-var positive-int $page 
+ * @var string $status
+ * @psalm-var positive-int $page
  * @psalm-var array<array-key, array<array-key, string>|string> $optionsDataInvNumberDropDownFilter
  */
 
@@ -76,7 +76,7 @@ echo $alert;
                    <?= $iR->getSpecificStatusArrayEmoji(0).' '.$translator->translate('i.all'); ?>
                 </a>
                 
-                <?php // Guests are never sent draft invoices i.e. status = '1' ?>
+                <?php // Guests are never sent draft invoices i.e. status = '1'?>
                 
                 <a href="<?= $urlGenerator->generate('inv/guest', ['page' => 1, 'status' => 2]); ?>" style="text-decoration:none"
                    class="btn btn-<?= $status == 2 ? $iR->getSpecificStatusArrayClass(2) : 'btn-default' ?>">
@@ -141,31 +141,32 @@ echo $alert;
             content: static fn (Inv $model) => $model->getId(),
             withSorting: true
         ),
-        new ActionColumn(buttons: [
+        new ActionColumn(
+            buttons: [
                 new ActionButton(
-                   url: static function(Inv $model) use ($translator, $urlGenerator) : string {
-                       return $urlGenerator->generate('inv/pdf', ['include' => 0]);     
-                   },
-                   attributes: [
+                    url: static function (Inv $model) use ($translator, $urlGenerator): string {
+                        return $urlGenerator->generate('inv/pdf', ['include' => 0]);
+                    },
+                    attributes: [
                        'style' => 'text-decoration:none',
                        'data-bs-toggle' => 'tooltip',
                        'title' => $translator->translate('i.download_pdf'),
                        'class' => 'bi bi-file-pdf'
-                   ]        
+                   ]
                 ),
                 new ActionButton(
-                   url: static function(Inv $model) use ($translator, $urlGenerator) : string {
-                       return $urlGenerator->generate('inv/pdf', ['include' => 1]);     
-                   },
-                   attributes: [
+                    url: static function (Inv $model) use ($translator, $urlGenerator): string {
+                        return $urlGenerator->generate('inv/pdf', ['include' => 1]);
+                    },
+                    attributes: [
                        'style' => 'text-decoration:none',
                        'data-bs-toggle' => 'tooltip',
                        'title' => $translator->translate('i.download_pdf').'➡️'.$translator->translate('invoice.custom.field'),
-                       'class' => 'bi bi-file-pdf-fill'    
-                   ],        
-                ),                    
+                       'class' => 'bi bi-file-pdf-fill'
+                   ],
+                ),
             ]
-        ),  
+        ),
         new DataColumn(
             'status_id',
             header: $translator->translate('i.status'),
@@ -183,156 +184,163 @@ echo $alert;
         ),
         new DataColumn(
             field: 'number',
-            property: 'filterInvNumber',       
-            header: $translator->translate('invoice.invoice.number'),    
+            property: 'filterInvNumber',
+            header: $translator->translate('invoice.invoice.number'),
             content: static function (Inv $model) use ($urlGenerator, $iR): string {
                 $creditInvoiceUrl = '';
                 $creditInvoiceParentId = $model->getCreditinvoice_parent_id();
-                if ($creditInvoiceParentId > 0)  {
+                if ($creditInvoiceParentId > 0) {
                     // include a path to the parent invoice as well as the credit note/invoice
                     $inv = $iR->repoInvUnLoadedquery($creditInvoiceParentId);
-                    if (null!==$inv) {
-                    $creditInvoiceUrl = '⬅️'.Html::a($inv->getNumber() ?? '#', $urlGenerator->generate('inv/view', 
-                            ['id' => $creditInvoiceParentId]
-                         ),
-                         [
-                            'style' => 'text-decoration:none'
-                         ])->render();
+                    if (null !== $inv) {
+                        $creditInvoiceUrl = '⬅️'.Html::a(
+                            $inv->getNumber() ?? '#',
+                            $urlGenerator->generate(
+                                'inv/view',
+                                ['id' => $creditInvoiceParentId]
+                            ),
+                            [
+                                'style' => 'text-decoration:none'
+                             ]
+                        )->render();
                     }
                 }
-                return  Html::a($model->getNumber() ?? '#', $urlGenerator->generate('inv/view', ['id' => $model->getId()]),
-                        [
+                return  Html::a(
+                    $model->getNumber() ?? '#',
+                    $urlGenerator->generate('inv/view', ['id' => $model->getId()]),
+                    [
                            'style' => 'text-decoration:none'
-                        ])->render() . 
+                        ]
+                )->render() .
                         $creditInvoiceUrl;
             },
             filter: $optionsDataInvNumberDropDownFilter,
-            withSorting: false        
-        ),  
+            withSorting: false
+        ),
         new DataColumn(
             'client_id',
-            header: $translator->translate('i.client'),    
+            header: $translator->translate('i.client'),
             content: static fn (Inv $model): string => $model->getClient()?->getClient_name() ?? '',
-            withSorting: false    
+            withSorting: false
         ),
-        new DataColumn(                
+        new DataColumn(
             'date_created',
-            header: $translator->translate('i.date_created'),    
-            content: static fn (Inv $model): string => (!is_string($dateCreated = $model->getDate_created()) ? $dateCreated->format($dateHelper->style()) : ''),
-            withSorting: false    
+            header: $translator->translate('i.date_created'),
+            content: static fn (Inv $model): string => (!is_string($dateCreated = $model->getDate_created()) ? $dateCreated->format('Y-m-d') : ''),
+            withSorting: false
         ),
         new DataColumn(
             'date_due',
-            header: $translator->translate('i.due_date'),           
-            content: static function(Inv $model) use ($dateHelper) : string {
+            header: $translator->translate('i.due_date'),
+            content: static function (Inv $model) use ($dateHelper): string {
                 $now = new \DateTimeImmutable('now');
                 return Label::tag()
                         ->attributes(['class' => $model->getDate_due() > $now ? 'label label-success' : 'label label-warning'])
-                        ->content(Html::encode(!is_string($dateDue = $model->getDate_due())? $dateDue->format($dateHelper->style()) : ''))
+                        ->content(Html::encode(!is_string($dateDue = $model->getDate_due()) ? $dateDue->format('Y-m-d') : ''))
                         ->render();
             },
-            withSorting: true        
-        ),        
+            withSorting: true
+        ),
         new DataColumn(
             field: 'id',
             property: 'filterInvAmountTotal',
             header: $translator->translate('i.total') . ' ( '. $s->getSetting('currency_symbol'). ' ) ',
-            content: static function (Inv $model) use ($decimalPlaces) : string {
+            content: static function (Inv $model) use ($decimalPlaces): string {
                 $invAmountTotal = $model->getInvAmount()->getTotal();
                 return
                     Label::tag()
                         ->attributes(['class' => $invAmountTotal > 0.00 ? 'label label-success' : 'label label-warning'])
-                        ->content(Html::encode(null!==$invAmountTotal 
-                                ? number_format($invAmountTotal , $decimalPlaces) 
+                        ->content(Html::encode(null !== $invAmountTotal
+                                ? number_format($invAmountTotal, $decimalPlaces)
                                 : number_format(0, $decimalPlaces)))
                         ->render();
             },
             filter: \Yiisoft\Yii\DataView\Filter\Widget\TextInputFilter::widget()
-                    ->addAttributes(['style' =>'max-width: 50px']),
-            withSorting: false        
-        ),        
+                    ->addAttributes(['style' => 'max-width: 50px']),
+            withSorting: false
+        ),
         new DataColumn(
             'id',
             header: $translator->translate('i.paid') . ' ( '. $s->getSetting('currency_symbol'). ' ) ',
-            content: static function (Inv $model) use ($decimalPlaces) : string {
+            content: static function (Inv $model) use ($decimalPlaces): string {
                 $invAmountPaid = $model->getInvAmount()->getPaid();
                 return Label::tag()
                         ->attributes(['class' => $model->getInvAmount()->getPaid() < $model->getInvAmount()->getTotal() ? 'label label-danger' : 'label label-success'])
-                        ->content(Html::encode(null!==$invAmountPaid 
-                                ? number_format($invAmountPaid > 0.00 ? $invAmountPaid : 0.00, $decimalPlaces) 
+                        ->content(Html::encode(null !== $invAmountPaid
+                                ? number_format($invAmountPaid > 0.00 ? $invAmountPaid : 0.00, $decimalPlaces)
                                 : number_format(0, $decimalPlaces)))
                         ->render();
             },
-            withSorting: false           
-        ),        
+            withSorting: false
+        ),
         new DataColumn(
             'id',
             header: $translator->translate('i.balance')  . ' ( '. $s->getSetting('currency_symbol'). ' ) ',
-            content: static function (Inv $model) use ($decimalPlaces) : string {
-                $invAmountBalance = $model->getInvAmount()->getBalance(); 
+            content: static function (Inv $model) use ($decimalPlaces): string {
+                $invAmountBalance = $model->getInvAmount()->getBalance();
                 return  Label::tag()
                         ->attributes(['class' => $invAmountBalance > 0.00 ? 'label label-success' : 'label label-warning'])
-                        ->content(Html::encode(null!==$invAmountBalance 
-                                ? number_format($invAmountBalance > 0.00 ? $invAmountBalance : 0.00, $decimalPlaces) 
+                        ->content(Html::encode(null !== $invAmountBalance
+                                ? number_format($invAmountBalance > 0.00 ? $invAmountBalance : 0.00, $decimalPlaces)
                                 : number_format(0, $decimalPlaces)))
                         ->render();
             },
-            withSorting: false     
+            withSorting: false
         ),
-    ]            
+    ]
 ?>
 <?php
-    $sort = Sort::only(['status_id', 'number', 'date_created', 'date_due', 'id', 'client_id'])
-            ->withOrderString($sortString);
-    
-    $sortedAndPagedPaginator = (new OffsetPaginator($invs))
-                        ->withPageSize($userInvListLimit > 0 ? $userInvListLimit : 10)
-                        ->withCurrentPage($page)
-                        ->withSort($sort)  
-                        ->withToken(PageToken::next((string)$page));   
-    
-          
-    $toolbarString = Form::tag()->post($urlGenerator->generate('inv/guest'))->csrf($csrf)->open() .
-            Div::tag()->addClass('float-end m-3')->content($toolbarReset)->encode(false)->render() .
-            Div::tag()->addClass('float-end m-3')->content(Button::ascDesc($urlGenerator, 'client_id', 'warning', $translator->translate('i.client'), true))->encode(false)->render().    
-            Form::tag()->close();
-    
-    $grid_summary = $s->grid_summary(
-        $sortedAndPagedPaginator,
-        $translator,
-        !empty($userInvListLimit) ? $userInvListLimit : 10,
-        $translator->translate('invoice.invoice.invoices'),
-        $label
-    );
-    
-    $urlCreator = new UrlCreator($urlGenerator);
-    $order =  OrderHelper::stringToArray($sortString);
-    $urlCreator->__invoke([], $order); 
-    
-    echo GridView::widget()
-        ->bodyRowAttributes(['class' => 'align-middle'])
-        ->tableAttributes(['class' => 'table table-striped text-center h-75','id'=>'table-invoice-guest'])
-        ->columns(...$columns)        
-        ->dataReader($sortedAndPagedPaginator)
-        ->urlCreator($urlCreator)
-        // the up and down symbol will appear at first indicating that the column can be sorted 
-        // Ir also appears in this state if another column has been sorted        
-        ->sortableHeaderPrepend('<div class="float-end text-secondary text-opacity-50">⭥</div>')
-        // the up arrow will appear if column values are ascending          
-        ->sortableHeaderAscPrepend('<div class="float-end fw-bold">⭡</div>')
-        // the down arrow will appear if column values are descending        
-        ->sortableHeaderDescPrepend('<div class="float-end fw-bold">⭣</div>')
-        ->headerRowAttributes(['class'=>'card-header bg-info text-black'])
-        ->emptyCell($translator->translate('i.not_set'))
-        ->emptyCellAttributes(['style' => 'color:red'])  
-        ->header($gridComponents->header(' ' . $translator->translate('i.invoice')))
-        ->id('w9-grid')
-        ->paginationWidget($gridComponents->offsetPaginationWidget($sortedAndPagedPaginator))
-        ->summaryAttributes(['class' => 'mt-3 me-3 summary text-end'])
-        ->summaryTemplate(($viewInv ? 
-                           $pageSizeLimiter::buttonsGuest($userInv, $urlGenerator, $translator, 'inv', $defaultPageSizeOffsetPaginator) : '').' '.
-                           $grid_summary)
-        ->emptyTextAttributes(['class' => 'card-header bg-warning text-black'])
-        ->emptyText($translator->translate('invoice.invoice.no.records')) 
-        ->toolbar($toolbarString);
+$sort = Sort::only(['status_id', 'number', 'date_created', 'date_due', 'id', 'client_id'])
+        ->withOrderString($sortString);
+
+$sortedAndPagedPaginator = (new OffsetPaginator($invs))
+                    ->withPageSize($userInvListLimit > 0 ? $userInvListLimit : 10)
+                    ->withCurrentPage($page)
+                    ->withSort($sort)
+                    ->withToken(PageToken::next((string)$page));
+
+
+$toolbarString = Form::tag()->post($urlGenerator->generate('inv/guest'))->csrf($csrf)->open() .
+        Div::tag()->addClass('float-end m-3')->content($toolbarReset)->encode(false)->render() .
+        Div::tag()->addClass('float-end m-3')->content(Button::ascDesc($urlGenerator, 'client_id', 'warning', $translator->translate('i.client'), true))->encode(false)->render().
+        Form::tag()->close();
+
+$grid_summary = $s->grid_summary(
+    $sortedAndPagedPaginator,
+    $translator,
+    !empty($userInvListLimit) ? $userInvListLimit : 10,
+    $translator->translate('invoice.invoice.invoices'),
+    $label
+);
+
+$urlCreator = new UrlCreator($urlGenerator);
+$order =  OrderHelper::stringToArray($sortString);
+$urlCreator->__invoke([], $order);
+
+echo GridView::widget()
+    ->bodyRowAttributes(['class' => 'align-middle'])
+    ->tableAttributes(['class' => 'table table-striped text-center h-75','id' => 'table-invoice-guest'])
+    ->columns(...$columns)
+    ->dataReader($sortedAndPagedPaginator)
+    ->urlCreator($urlCreator)
+    // the up and down symbol will appear at first indicating that the column can be sorted
+    // Ir also appears in this state if another column has been sorted
+    ->sortableHeaderPrepend('<div class="float-end text-secondary text-opacity-50">⭥</div>')
+    // the up arrow will appear if column values are ascending
+    ->sortableHeaderAscPrepend('<div class="float-end fw-bold">⭡</div>')
+    // the down arrow will appear if column values are descending
+    ->sortableHeaderDescPrepend('<div class="float-end fw-bold">⭣</div>')
+    ->headerRowAttributes(['class' => 'card-header bg-info text-black'])
+    ->emptyCell($translator->translate('i.not_set'))
+    ->emptyCellAttributes(['style' => 'color:red'])
+    ->header($gridComponents->header(' ' . $translator->translate('i.invoice')))
+    ->id('w9-grid')
+    ->paginationWidget($gridComponents->offsetPaginationWidget($sortedAndPagedPaginator))
+    ->summaryAttributes(['class' => 'mt-3 me-3 summary text-end'])
+    ->summaryTemplate(($viewInv ?
+                       $pageSizeLimiter::buttonsGuest($userInv, $urlGenerator, $translator, 'inv', $defaultPageSizeOffsetPaginator) : '').' '.
+                       $grid_summary)
+    ->emptyTextAttributes(['class' => 'card-header bg-warning text-black'])
+    ->emptyText($translator->translate('invoice.invoice.no.records'))
+    ->toolbar($toolbarString);
 ?>

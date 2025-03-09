@@ -11,8 +11,8 @@ use Yiisoft\Html\Html;
  * @var Yiisoft\Translator\TranslatorInterface $translator
  * @var Yiisoft\View\WebView $this
  * @var string $from_date
- * @var string $to_date 
- * @var array $results 
+ * @var string $to_date
+ * @var array $results
  */
 
 $assetManager->register(ReportAsset::class);
@@ -42,17 +42,17 @@ $this->beginPage();
     </tr>
     <?php
     $sum = 0.00;
-    /**
-     * @var DateTimeImmutable $result['payment_date']
-     * @var string $result['payment_invoice']
-     * @var string $result['payment_client']
-     * @var string $result['payment_method'
-     * @var string $result['payment_note']
-     * @var float $result['payment_amount']
-     * @var array $result
-     */
-    foreach ($results as $result) {
-        ?>
+/**
+ * @var DateTimeImmutable $result['payment_date']
+ * @var string $result['payment_invoice']
+ * @var string $result['payment_client']
+ * @var string $result['payment_method'
+ * @var string $result['payment_note']
+ * @var float $result['payment_amount']
+ * @var array $result
+ */
+foreach ($results as $result) {
+    ?>
         <tr>
             <td style="width:15%;"><?= ($result['payment_date'])->format('Y-m-d'); ?></td>
             <td style="width:15%;"><?= $result['payment_invoice']; ?></td>
@@ -60,13 +60,13 @@ $this->beginPage();
             <td style="width:15%;"><?= Html::encode($result['payment_method']); ?></td>
             <td style="width:15%;"><?= nl2br(Html::encode($result['payment_note'])); ?></td>
             <td style="width:15%;text-align:right;border-bottom: 0px solid black;"><?= $numberHelper->format_currency($result['payment_amount']);
-                $sum = $sum + $result['payment_amount']; ?></td>
+    $sum = $sum + $result['payment_amount']; ?></td>
         </tr>
         <?php
-    }
+}
 
-    if (!empty($results)) {
-        ?>
+if (!empty($results)) {
+    ?>
         <tr>
             <td colspan=5><?= $translator->translate('i.total'); ?></td>
             <td style="width:15%;text-align:right;border-bottom: 0px solid black;"><?= $numberHelper->format_currency($sum); ?></td>

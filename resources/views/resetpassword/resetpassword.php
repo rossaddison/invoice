@@ -8,8 +8,8 @@ use Yiisoft\Html\Tag\Form;
 
 /**
  * @see App\Auth\Controller\ResetPasswordController function resetpassword
- * 
- * @var App\Auth\Form\ResetPasswordForm $formModel 
+ *
+ * @var App\Auth\Form\ResetPasswordForm $formModel
  * @var Yiisoft\Router\UrlGeneratorInterface $urlGenerator
  * @var Yiisoft\Translator\TranslatorInterface $translator
  * @var Yiisoft\View\WebView $this
@@ -32,19 +32,19 @@ $this->setTitle($translator->translate('i.password_reset'));
                         ->csrf($csrf)
                         ->id('resetPasswordForm')
                         ->open() ?>
-                    <?= Field::password($formModel, 'newPassword') 
+                    <?= Field::password($formModel, 'newPassword')
                         ->addInputAttributes(['autocomplete' => 'new-password'])
-                        ->label($translator->translate('layout.password.new'));    
-                    ?>
+                        ->label($translator->translate('layout.password.new'));
+?>
                     <?= Field::password($formModel, 'newPasswordVerify')
-                        ->addInputAttributes(['autocomplete' => 'verify-new-password'])    
-                        ->label($translator->translate('layout.password-verify.new'))    
-                    ?>
+    ->addInputAttributes(['autocomplete' => 'verify-new-password'])
+    ->label($translator->translate('layout.password-verify.new'))
+?>
                     <?= Field::submitButton()
-                        ->buttonId('resetpassword-button')
-                        ->name('resetpassword-button')
-                        ->content($translator->translate('layout.submit'))
-                    ?>
+    ->buttonId('resetpassword-button')
+    ->name('resetpassword-button')
+    ->content($translator->translate('layout.submit'))
+?>
                     <?= Form::tag()->close() ?>
                 </div>
             </div>

@@ -16,16 +16,16 @@ use Yiisoft\Yii\DataView\GridView;
  * @var App\Invoice\Helpers\NumberHelper $numberHelper
  * @var App\Invoice\Setting\SettingRepository $s
  * @var App\Widget\GridComponents $gridComponents
- * @var Yiisoft\Router\CurrentRoute $currentRoute 
+ * @var Yiisoft\Router\CurrentRoute $currentRoute
  * @var Yiisoft\Data\Paginator\OffsetPaginator $paginator
- * @var Yiisoft\Router\UrlGeneratorInterface $urlGenerator 
+ * @var Yiisoft\Router\UrlGeneratorInterface $urlGenerator
  * @var Yiisoft\Translator\TranslatorInterface $translator
  * @var string $alert
- * @var string $csrf 
+ * @var string $csrf
  * @var string $inv_item_id
  */
 
-  echo $alert;
+echo $alert;
 ?>
 <?php
 $header = Div::tag()
@@ -49,11 +49,11 @@ $toolbarReset = A::tag()
 
 $backButton = A::tag()
     ->addAttributes([
-        'type' => 'reset', 
+        'type' => 'reset',
         'onclick' => 'window.history.back()',
         'class' => 'btn btn-primary me-1',
         'id' => 'btn-cancel',
-    ])    
+    ])
     ->content('⬅ ️'.$translator->translate('i.back'))
     ->render();
 
@@ -69,13 +69,13 @@ $toolbar = Div::tag();
 <div>
 <br>    
 </div>
-<?php 
+<?php
     $add = $translator->translate('invoice.invoice.allowance.or.charge.item.add');
-    $url = $urlGenerator->generate('invitemallowancecharge/add',['inv_item_id' => $inv_item_id]);
+$url = $urlGenerator->generate('invitemallowancecharge/add', ['inv_item_id' => $inv_item_id]);
 ?>
 
-<?= Html::i(Html::a('  '.$add, $url,['class'=>'btn btn-primary',
-'style'=>'font-family:Arial']),['class'=>'btn btn-primary fa fa-item']); ?>
+<?= Html::i(Html::a('  '.$add, $url, ['class' => 'btn btn-primary',
+'style' => 'font-family:Arial']), ['class' => 'btn btn-primary fa fa-item']); ?>
 <br>
 <br>
 <?php
@@ -84,28 +84,27 @@ $toolbar = Div::tag();
             'id',
             header:  $translator->translate('i.id'),
             content: static fn (InvItemAllowanceCharge $model) => $model->getId()
-        ),        
+        ),
         new DataColumn(
             header:  $translator->translate('invoice.invoice.allowance.or.charge.reason.code'),
             content: static fn (InvItemAllowanceCharge $model) => $model->getAllowanceCharge()?->getReasonCode() ?? ''
         ),
         new DataColumn(
-            content: static function (InvItemAllowanceCharge $model) use ($translator) : string 
-            {
+            content: static function (InvItemAllowanceCharge $model) use ($translator): string {
                 if ($model->getAllowanceCharge()?->getIdentifier() == 1) {
                     return  $translator->translate('invoice.invoice.allowance.or.charge.charge');
                 } else {
-                   return $translator->translate('invoice.invoice.allowance.or.charge.allowance');  
-                } 
+                    return $translator->translate('invoice.invoice.allowance.or.charge.allowance');
+                }
             },
-        ),    
+        ),
         new DataColumn(
             header:  $translator->translate('invoice.invoice.allowance.or.charge.reason'),
             content: static fn (InvItemAllowanceCharge $model) => $model->getAllowanceCharge()?->getReason() ?? ''
-        ),        
+        ),
         new DataColumn(
             header:  $translator->translate('invoice.invoice.allowance.or.charge.amount'),
-            content: static function (InvItemAllowanceCharge $model) use ($numberHelper) : string {
+            content: static function (InvItemAllowanceCharge $model) use ($numberHelper): string {
                 // show the charge in brackets
                 if ($model->getAllowanceCharge()?->getIdentifier() == 0) {
                     return '('.$numberHelper->format_currency($model->getAmount()).')';
@@ -113,63 +112,68 @@ $toolbar = Div::tag();
                     return $numberHelper->format_currency($model->getAmount());
                 }
             }
-        ),        
+        ),
         new DataColumn(
             header:  $translator->translate('invoice.invoice.vat'),
             content: static fn (InvItemAllowanceCharge $model) => $numberHelper->format_currency($model->getVat())
-        ),        
-        new DataColumn(
-            header:  $translator->translate('i.edit'), 
-            content: static function (InvItemAllowanceCharge $model) use ($urlGenerator): string {
-               return Html::a(Html::tag('i','',['class'=>'fa fa-pencil fa-margin']), $urlGenerator->generate('invitemallowancecharge/edit',['id'=>$model->getId()]),[])->render();
-            }                        
         ),
         new DataColumn(
-            header:  $translator->translate('i.view'), 
+            header:  $translator->translate('i.edit'),
             content: static function (InvItemAllowanceCharge $model) use ($urlGenerator): string {
-               return Html::a(Html::tag('i','',['class'=>'fa fa-eye fa-margin']), $urlGenerator->generate('invitemallowancecharge/view',['id'=>$model->getId()]),[])->render();
-            }                           
+                return Html::a(Html::tag('i', '', ['class' => 'fa fa-pencil fa-margin']), $urlGenerator->generate('invitemallowancecharge/edit', ['id' => $model->getId()]), [])->render();
+            }
         ),
         new DataColumn(
-            header:  $translator->translate('i.delete'), 
+            header:  $translator->translate('i.view'),
+            content: static function (InvItemAllowanceCharge $model) use ($urlGenerator): string {
+                return Html::a(Html::tag('i', '', ['class' => 'fa fa-eye fa-margin']), $urlGenerator->generate('invitemallowancecharge/view', ['id' => $model->getId()]), [])->render();
+            }
+        ),
+        new DataColumn(
+            header:  $translator->translate('i.delete'),
             content: static function (InvItemAllowanceCharge $model) use ($translator, $urlGenerator): string {
-                return Html::a( Html::tag('button',
-                    Html::tag('i','',['class'=>'fa fa-trash fa-margin']),
-                    [
-                        'type'=>'submit', 
-                        'class'=>'dropdown-button',
-                        'onclick'=>"return confirm("."'".$translator->translate('i.delete_record_warning')."');"
+                return Html::a(
+                    Html::tag(
+                        'button',
+                        Html::tag('i', '', ['class' => 'fa fa-trash fa-margin']),
+                        [
+                        'type' => 'submit',
+                        'class' => 'dropdown-button',
+                        'onclick' => "return confirm("."'".$translator->translate('i.delete_record_warning')."');"
                     ]
                     ),
-                    $urlGenerator->generate('invitemallowancecharge/delete',['id'=>$model->getId()]),[]                                         
+                    $urlGenerator->generate('invitemallowancecharge/delete', ['id' => $model->getId()]),
+                    []
                 )->render();
-            }                        
+            }
         ),
     ];
 ?>
 <?php
-    $grid_summary =  $s->grid_summary(
-        $paginator, $translator, 
-        (int)$s->getSetting('default_list_limit'), 
-        $translator->translate('invoice.invoice.allowance.or.charge.item'), 
-    '');
-    $toolbarString = 
-            Form::tag()->post($urlGenerator->generate('invitemallowancecharge/index'))->csrf($csrf)->open() .
-            Div::tag()->addClass('float-end m-3')->content($toolbarReset)->encode(false)->render() .
-            Div::tag()->addClass('float-end m-3')->content($backButton)->encode(false)->render() .
-            Form::tag()->close();
-    echo GridView::widget()
-        ->bodyRowAttributes(['class' => 'align-middle'])
-        ->tableAttributes(['class' => 'table table-striped text-center h-75','id'=>'table-invitemallowancecharge'])
-        ->columns(...$columns)        
-        ->dataReader($paginator)    
-        ->headerRowAttributes(['class'=>'card-header bg-info text-black'])
-        ->header($header)
-        ->id('w18-grid')
-        ->paginationWidget($gridComponents->offsetPaginationWidget($paginator))
-        ->summaryAttributes(['class' => 'mt-3 me-3 summary text-end'])
-        ->summaryTemplate($grid_summary)
-        ->emptyTextAttributes(['class' => 'card-header bg-warning text-black'])
-        ->emptyText($translator->translate('invoice.invoice.no.records'))            
-        ->toolbar($toolbarString);
+$grid_summary =  $s->grid_summary(
+    $paginator,
+    $translator,
+    (int)$s->getSetting('default_list_limit'),
+    $translator->translate('invoice.invoice.allowance.or.charge.item'),
+    ''
+);
+$toolbarString =
+        Form::tag()->post($urlGenerator->generate('invitemallowancecharge/index'))->csrf($csrf)->open() .
+        Div::tag()->addClass('float-end m-3')->content($toolbarReset)->encode(false)->render() .
+        Div::tag()->addClass('float-end m-3')->content($backButton)->encode(false)->render() .
+        Form::tag()->close();
+echo GridView::widget()
+    ->bodyRowAttributes(['class' => 'align-middle'])
+    ->tableAttributes(['class' => 'table table-striped text-center h-75','id' => 'table-invitemallowancecharge'])
+    ->columns(...$columns)
+    ->dataReader($paginator)
+    ->headerRowAttributes(['class' => 'card-header bg-info text-black'])
+    ->header($header)
+    ->id('w18-grid')
+    ->paginationWidget($gridComponents->offsetPaginationWidget($paginator))
+    ->summaryAttributes(['class' => 'mt-3 me-3 summary text-end'])
+    ->summaryTemplate($grid_summary)
+    ->emptyTextAttributes(['class' => 'card-header bg-warning text-black'])
+    ->emptyText($translator->translate('invoice.invoice.no.records'))
+    ->toolbar($toolbarString);
 ?>

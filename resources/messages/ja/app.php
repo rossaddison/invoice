@@ -816,7 +816,7 @@ return [
 'i.user_subscriber_number' => '加入者番号',
 'i.validator_fail' => 'フィールド %s を処理できません: %s',
 'i.true' => '真実',
-'i.false' => '間違い',    
+'i.false' => '間違い',
 'invoice.add' => '追加',
 'invoice.archive' => '請求書アーカイブ',
 'invoice.back' => '戻る',
@@ -1702,7 +1702,7 @@ return [
 'site.soletrader.contact.address' => '住所',
 'site.soletrader.contact.email' => 'Eメール',
 'site.soletrader.contact.phone' => '電話',
-'site.todays.date' => '今日の日付',    
+'site.todays.date' => '今日の日付',
 'validator.invalid.login.password' => '無効なログインまたはパスワード',
 'validator.password.not.match' => 'パスワードが一致していません',
 'validator.password.not.match.new' => '新しいパスワードが一致しません',
@@ -1713,7 +1713,7 @@ return [
 'view.contact.form.name' => '名前',
 'view.contact.form.email' => 'Eメール',
 'view.contact.form.subject' => '主題',
-'view.contact.form.body' => '体', 
+'view.contact.form.body' => '体',
 // Added 19/02/2025
 'i.email_template_type' => 'メールテンプレートの種類',
 'gateway.online.payment' => 'オンライン決済',
@@ -1810,5 +1810,5 @@ return [
 'menu.gallery' => 'ギャラリー',
 'menu.privacy.policy' => 'プライバシーポリシー',
 'menu.terms.of.service' => '利用規約',
-'password.reset.request.token' => 'パスワードリセットトークンのリクエスト',    
+'password.reset.request.token' => 'パスワードリセットトークンのリクエスト',
 ];

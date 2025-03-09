@@ -23,8 +23,8 @@ if (!empty($errors)) {
      */
     foreach ($errors as $field => $error) {
         echo Alert::widget()
-             ->addClass('shadow')                    
-             ->variant(AlertVariant::DANGER)   
+             ->addClass('shadow')
+             ->variant(AlertVariant::DANGER)
              ->body($field . ':' . $error, true)
              ->dismissable(true)
              ->render();

@@ -1,13 +1,13 @@
 <?php
-    declare(strict_types=1);
-    
-    use Yiisoft\Html\Html;
+declare(strict_types=1);
 
-    /**
-     * @var Yiisoft\Translator\TranslatorInterface $translator
-     * @var string $heading
-     * @var string $message
-     */ 
+use Yiisoft\Html\Html;
+
+/**
+ * @var Yiisoft\Translator\TranslatorInterface $translator
+ * @var string $heading
+ * @var string $message
+ */
 ?>
 
 <!doctype html>
@@ -70,7 +70,7 @@
 <body>
 <h1><?php echo $heading; ?></h1>
 <?php echo $message; ?>
-<?= Html::button($translator->translate('invoice.back'),['onclick'=>'history.back()']); ?>
+<?= Html::button($translator->translate('invoice.back'), ['onclick' => 'history.back()']); ?>
 </body>
 </html>
 

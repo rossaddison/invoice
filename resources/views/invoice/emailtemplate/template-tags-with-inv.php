@@ -1,13 +1,13 @@
 <?php
-    
-    declare(strict_types=1);
-    
-    /**
-     * @var Yiisoft\Translator\TranslatorInterface $translator 
-     * @var array $custom_fields
-     * @var array $custom_fields['client_custom']
-     * @var string $template_tags_inv
-     */
+
+declare(strict_types=1);
+
+/**
+ * @var Yiisoft\Translator\TranslatorInterface $translator
+ * @var array $custom_fields
+ * @var array $custom_fields['client_custom']
+ * @var string $template_tags_inv
+ */
 ?>
 
 <div class="panel panel-default">
@@ -84,7 +84,7 @@
                         */
                         foreach ($custom_fields['client_custom'] as $custom) { ?>
                         <option value="{{{<?= 'cf_' . $custom->getId(); ?>}}}">
-                            <?= ($custom->getLabel() ?? '#' ). ' (ID ' . $custom->getId() . ')'; ?>
+                            <?= ($custom->getLabel() ?? '#'). ' (ID ' . $custom->getId() . ')'; ?>
                         </option>
                     <?php } ?>
                 </optgroup>

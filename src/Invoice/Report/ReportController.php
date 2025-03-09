@@ -267,7 +267,7 @@ class ReportController
             'actionName' => 'report/payment_history_index',
             'actionArguments' => [],
             'dateHelper' => $dateHelper,
-            'startTaxYear' => $dateHelper->tax_year_to_immutable()->format($dateHelper->style()),
+            'startTaxYear' => $dateHelper->tax_year_to_immutable()->format('Y-m-d'),
         ];
         if ($request->getMethod() === Method::POST) {
             $body = $request->getParsedBody();
@@ -374,7 +374,7 @@ class ReportController
             'actionName' => 'report/sales_by_client_index',
             'actionArguments' => [],
             'dateHelper' => $dateHelper,
-            'startTaxYear' => $dateHelper->tax_year_to_immutable()->format($dateHelper->style()),
+            'startTaxYear' => $dateHelper->tax_year_to_immutable()->format('Y-m-d'),
         ];
         if ($request->getMethod() === Method::POST) {
             $body = $request->getParsedBody();
@@ -503,7 +503,7 @@ class ReportController
             'actionName' => 'report/sales_by_product_index',
             'actionArguments' => [],
             'dateHelper' => $dateHelper,
-            'startTaxYear' => $dateHelper->tax_year_to_immutable()->format($dateHelper->style()),
+            'startTaxYear' => $dateHelper->tax_year_to_immutable()->format('Y-m-d'),
         ];
         if ($request->getMethod() === Method::POST) {
             $body = $request->getParsedBody();
@@ -618,7 +618,7 @@ class ReportController
             'actionName' => 'report/sales_by_task_index',
             'actionArguments' => [],
             'dateHelper' => $dateHelper,
-            'startTaxYear' => $dateHelper->tax_year_to_immutable()->format($dateHelper->style()),
+            'startTaxYear' => $dateHelper->tax_year_to_immutable()->format('Y-m-d'),
         ];
         if ($request->getMethod() === Method::POST) {
             $body = $request->getParsedBody();
@@ -728,7 +728,7 @@ class ReportController
             'actionName' => 'report/sales_by_year_index',
             'actionArguments' => [],
             'dateHelper' => $dateHelper,
-            'startTaxYear' => $dateHelper->tax_year_to_immutable()->format($dateHelper->style()),
+            'startTaxYear' => $dateHelper->tax_year_to_immutable()->format('Y-m-d'),
         ];
         if ($request->getMethod() === Method::POST) {
             $body = $request->getParsedBody();

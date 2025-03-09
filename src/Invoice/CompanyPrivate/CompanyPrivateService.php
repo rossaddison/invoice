@@ -37,10 +37,10 @@ final readonly class CompanyPrivateService
         $datehelper = new DateHelper($s);
 
         $datetime_start_date = new \DateTime();
-        isset($array['start_date']) ? $model->setStart_date($datetime_start_date::createFromFormat($datehelper->style(), (string)$array['start_date'])) : '';
+        isset($array['start_date']) ? $model->setStart_date($datetime_start_date::createFromFormat('Y-m-d', (string)$array['start_date'])) : '';
 
         $datetime_end_date = new \DateTime();
-        isset($array['end_date']) ? $model->setEnd_date($datetime_end_date::createFromFormat($datehelper->style(), (string)$array['end_date'])) : '';
+        isset($array['end_date']) ? $model->setEnd_date($datetime_end_date::createFromFormat('Y-m-d', (string)$array['end_date'])) : '';
 
         $this->repository->save($model);
     }

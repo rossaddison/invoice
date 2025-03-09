@@ -1,17 +1,17 @@
 <?php
 
-    declare(strict_types=1);
+declare(strict_types=1);
 
-    /**
-     * @var Yiisoft\Translator\TranslatorInterface $translator
-     * @var Yiisoft\Router\UrlGeneratorInterface $urlGenerator
-     * @var string $csrf
-     * @var string $heading
-     * @var string $id
-     * @var string $message
-     * @var string $url
-     * @psalm-var array<string, Stringable|null|scalar> $actionArguments
-     */ 
+/**
+ * @var Yiisoft\Translator\TranslatorInterface $translator
+ * @var Yiisoft\Router\UrlGeneratorInterface $urlGenerator
+ * @var string $csrf
+ * @var string $heading
+ * @var string $id
+ * @var string $message
+ * @var string $url
+ * @psalm-var array<string, Stringable|null|scalar> $actionArguments
+ */
 ?>
 <!doctype html>
 <html lang="en">

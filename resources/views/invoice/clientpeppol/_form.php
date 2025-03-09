@@ -7,7 +7,7 @@ use App\Widget\LabelSwitch;
 
 /**
  * @see App\Invoice\ClientPeppol\ClientPeppolController.php function add and function edit
- * 
+ *
  * @var App\Invoice\ClientPeppol\ClientPeppolForm $form
  * @var App\Invoice\Setting\SettingRepository $s
  * @var App\Widget\Button $button
@@ -36,7 +36,7 @@ use App\Widget\LabelSwitch;
  * @var string $actionName
  * @var string $csrf
  * @var string $setting
- * @var string $title 
+ * @var string $title
  * @psalm-var array<string, Stringable|null|scalar> $actionArguments
  * @psalm-var array<string,list<string>> $errors
  */
@@ -51,14 +51,14 @@ use App\Widget\LabelSwitch;
         <?= $button::backSave(); ?><div id="content">
         <?php
         LabelSwitch::checkbox(
-          'client-peppol-label-switch',
-          $setting,
-          $translator->translate('invoice.peppol.label.switch.on'),
-          $translator->translate('invoice.peppol.label.switch.off'),
-          'client-peppol-label-switch-id',
-          '16'
+            'client-peppol-label-switch',
+            $setting,
+            $translator->translate('invoice.peppol.label.switch.on'),
+            $translator->translate('invoice.peppol.label.switch.off'),
+            'client-peppol-label-switch-id',
+            '16'
         );
-        ?>
+?>
             <?= Html::openTag('div', ['class' => 'row']); ?>
                 <div class="mb3 form-group">
                     <input type="text" name="client_id" id="client_id" class="form-control" hidden
@@ -77,17 +77,17 @@ use App\Widget\LabelSwitch;
                     <label for="endpointid_schemeid"><?= $translator->translate('invoice.client.peppol.endpointid_schemeid') . $translator->translate('invoice.peppol.optional'); ?></label>
                     <select name="endpointid_schemeid" id="endpointid_schemeid" class="form-control" required>
                         <?php
-                        /**
-                         * Search $customer_endpointID_schemeID = $party['EndPointID']['schemeID'] ?? ''; in PeppolHelper.php
-                         * @see src/Invoice/Helpers/Peppol/PeppolArrays.php function electronic_address_scheme
-                         * @see https://docs.peppol.eu/poacc/billing/3.0/syntax/ubl-invoice/cac-AccountingCustomerParty/cac-Party/cbc-EndpointID/schemeID/
-                         * @var int $key
-                         * @var array $value
-                         * @var string $value['code']
-                         * @var string $value['description']
-                         */
-                        foreach ($electronic_address_scheme as $key => $value) {
-                          ?>
+                /**
+                 * Search $customer_endpointID_schemeID = $party['EndPointID']['schemeID'] ?? ''; in PeppolHelper.php
+                 * @see src/Invoice/Helpers/Peppol/PeppolArrays.php function electronic_address_scheme
+                 * @see https://docs.peppol.eu/poacc/billing/3.0/syntax/ubl-invoice/cac-AccountingCustomerParty/cac-Party/cbc-EndpointID/schemeID/
+                 * @var int $key
+                 * @var array $value
+                 * @var string $value['code']
+                 * @var string $value['description']
+                 */
+                foreach ($electronic_address_scheme as $key => $value) {
+                    ?>
                           <option value="<?= $value['code']; ?>" <?php $s->check_select($form->getEndpointid_schemeid() ?? ($defaults ? $pep['endpointid_schemeid']['eg'] : '0088'), $value['code']); ?>>
                               <?= $value['code'] . str_repeat("-", 10) . $value['description'] ?>
                           </option>
@@ -122,11 +122,12 @@ use App\Widget\LabelSwitch;
                          * @var string $value['tax']
                          */
                         foreach ($receiver_identifier_array as $key => $value) {
-                          ?>
+                            ?>
 
                           <option value="<?= $key; ?>" <?php $s->check_select($form->getTaxschemeid() ?? ($defaults ? $pep['taxschemeid']['eg'] : ''), $key) ?>>
                               <?=
-                              ucfirst($value['region']
+                                ucfirst(
+                                    $value['region']
                                 . str_repeat("&nbsp;", 2)
                                 . str_repeat("-", 10)
                                 . str_repeat("&nbsp;", 2) .
@@ -135,8 +136,8 @@ use App\Widget\LabelSwitch;
                                 . str_repeat("-", 10)
                                 . str_repeat("&nbsp;", 2) .
                                 (!empty($value['tax']) ? $value['tax'] : $translator->translate('invoice.storecove.not.available'))
-                              );
-                              ?>
+                                );
+                            ?>
                           </option>
                         <?php } ?>
                     </select>
@@ -158,10 +159,11 @@ use App\Widget\LabelSwitch;
                          * @var string $value['Description']
                          */
                         foreach ($iso_6523_array as $key => $value) {
-                          ?>
+                            ?>
                           <option value="<?= $value['Id']; ?>" <?php $s->check_select($form->getLegal_entity_companyid() ?? '', $value['Id']) ?>>
                               <?=
-                              ucfirst($value['Id']
+                                ucfirst(
+                                    $value['Id']
                                 . str_repeat("&nbsp;", 2)
                                 . str_repeat("-", 10)
                                 . str_repeat("&nbsp;", 2) .
@@ -170,8 +172,8 @@ use App\Widget\LabelSwitch;
                                 . str_repeat("-", 10)
                                 . str_repeat("&nbsp;", 2) .
                                 $value['Description']
-                              );
-                              ?>
+                                );
+                            ?>
                           </option>
                         <?php } ?>
                     </select>
@@ -188,10 +190,11 @@ use App\Widget\LabelSwitch;
                          * @var string $value['Description']
                          */
                         foreach ($iso_6523_array as $key => $value) {
-                          ?>
+                            ?>
                           <option value="<?= $value['Id']; ?>" <?php $s->check_select($form->getLegal_entity_companyid_schemeid() ?? '', $value['Id']) ?>>
                               <?=
-                              ucfirst($value['Id']
+                                ucfirst(
+                                    $value['Id']
                                 . str_repeat("&nbsp;", 2)
                                 . str_repeat("-", 10)
                                 . str_repeat("&nbsp;", 2) .
@@ -200,8 +203,8 @@ use App\Widget\LabelSwitch;
                                 . str_repeat("-", 10)
                                 . str_repeat("&nbsp;", 2) .
                                 $value['Description']
-                              );
-                              ?>
+                                );
+                            ?>
                           </option>
                         <?php } ?>
                     </select>

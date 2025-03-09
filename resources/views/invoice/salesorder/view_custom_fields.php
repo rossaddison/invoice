@@ -43,7 +43,7 @@ declare(strict_types=1);
                                 <?php
                                     /**
                                      * @var App\Invoice\Entity\CustomField
-                                     */ 
+                                     */
                                     foreach ($customFields as $customField): ?>
                                     <?php if ($customField->getLocation() !== 0) {
                                         continue;

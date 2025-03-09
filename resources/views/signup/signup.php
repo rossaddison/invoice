@@ -13,7 +13,7 @@ use Yiisoft\View\WebView;
 
 /**
  * @var SignupForm                              $formModel
- * @var Yiisoft\Router\CurrentRoute             $currentRoute  
+ * @var Yiisoft\Router\CurrentRoute             $currentRoute
  * @var WebView                                 $this
  * @var TranslatorInterface                     $translator
  * @var UrlGeneratorInterface                   $urlGenerator
@@ -86,26 +86,26 @@ $this->setTitle($translator->translate('menu.signup'));
                         ->csrf($csrf)
                         ->id('signupForm')
                         ->open();
-                    ?>
+?>
                     <?= Field::text($formModel, 'login')
-                        ->label($translator->translate('layout.login'))
-                        ->autofocus()
-                    ?>
+    ->label($translator->translate('layout.login'))
+    ->autofocus()
+?>
                     <?= Field::email($formModel, 'email')
-                        ->label($translator->translate('i.email'))
-                        ->autofocus()
-                    ?>
+    ->label($translator->translate('i.email'))
+    ->autofocus()
+?>
                     <?= Field::password($formModel, 'password')
-                        ->label($translator->translate('layout.password'))
-                    ?>
+    ->label($translator->translate('layout.password'))
+?>
                     <?= Field::password($formModel, 'passwordVerify')
-                        ->label($translator->translate('layout.password-verify.new'))
-                    ?>
+    ->label($translator->translate('layout.password-verify.new'))
+?>
                     <?= Field::submitButton()
-                        ->buttonId('register-button')
-                        ->name('register-button')
-                        ->content($translator->translate('layout.submit'))
-                    ?>
+    ->buttonId('register-button')
+    ->name('register-button')
+    ->content($translator->translate('layout.submit'))
+?>
                     <?= Form::tag()->close() ?>
                 </div>
             </div>

@@ -83,7 +83,8 @@ final class QuoteItemController
         $form = new QuoteItemForm($quoteItem, $quote_id);
         $parameters = [
             'title' => $this->translator->translate('invoice.add'),
-            'action' => ['quoteitem/add'],
+            'actionName' => 'quoteitem/add',
+            'actionArguments' => [],
             'errors' => [],
             'form' => $form,
             'quote_id' => $quote_id,

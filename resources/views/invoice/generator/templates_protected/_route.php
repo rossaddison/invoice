@@ -1,14 +1,14 @@
-<?php 
+<?php
 
-    declare(strict_types=1);
+declare(strict_types=1);
 
-    /**
-     * @see GeneratorController function _route
-     * @var App\Invoice\Entity\Gentor $generator
-     * 
-     */    
-        
-     echo "<?php\n";             
+/**
+ * @see GeneratorController function _route
+ * @var App\Invoice\Entity\Gentor $generator
+ *
+ */
+
+echo "<?php\n";
 ?>
 
 use App\Invoice\<?= $generator->getCamelcase_capital_name(); ?>\<?= $generator->getCamelcase_capital_name().'Controller;'; ?>
@@ -40,6 +40,6 @@ use App\Invoice\<?= $generator->getCamelcase_capital_name(); ?>\<?= $generator->
     ->middleware(Authentication::class)
     ->action([<?= $generator->getCamelcase_capital_name(); ?>Controller::class, 'view'])
     ->name('<?= $generator->getRoute_suffix(); ?>/view'),    
-<?php  
-     echo "?>";             
+<?php
+     echo "?>";
 ?>        

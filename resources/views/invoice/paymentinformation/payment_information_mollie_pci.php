@@ -9,21 +9,21 @@ use Yiisoft\Html\Tag\A;
  * @see PaymentInformationController function mollieInForm
  * @var App\Invoice\Entity\Client $client_on_invoice
  * @var App\Invoice\Entity\Inv $invoice
- * 
+ *
  * @see config\common\params 'yiisoft/view' => ['parameters' => ['clientHelper' => Reference::to(ClientHelper::class)]]
  * @var App\Invoice\Helpers\ClientHelper $clientHelper
- * 
+ *
  * @see config\common\params 'yiisoft/view' => ['parameters' => ['dateHelper' => Reference::to(DateHelper::class)]]
  * @var App\Invoice\Helpers\DateHelper $dateHelper
- * 
+ *
  * @see config\common\params 'yiisoft/view' => ['parameters' => ['numberHelper' => Reference::to(NumberHelper::class)]]
  * @var App\Invoice\Helpers\NumberHelper $numberHelper
- * 
+ *
  * @see config\common\params 'yiisoft/view' => ['parameters' => ['s' => Reference::to(SettingRepository::class)]]
- * @var App\Invoice\Setting\SettingRepository $s 
- * 
- * @var Mollie\Api\Resources\Payment $payment 
- * 
+ * @var App\Invoice\Setting\SettingRepository $s
+ *
+ * @var Mollie\Api\Resources\Payment $payment
+ *
  * @var Yiisoft\Translator\TranslatorInterface $translator
  * @var Yiisoft\Router\UrlGeneratorInterface $urlGenerator
  * @var bool $disable_form
@@ -46,11 +46,12 @@ use Yiisoft\Html\Tag\A;
 <div class="card border border-dark shadow-2-strong rounded-3">
     <div class="card-header bg-dark text-white">
         <h2 class="fw-normal h3 text-center">
-            <?php echo Html::tag('br'); echo $companyLogo; ?><?= $translator->translate('g.online_payment_for_invoice'); ?> #
+            <?php echo Html::tag('br');
+    echo $companyLogo; ?><?= $translator->translate('g.online_payment_for_invoice'); ?> #
                 <?= ($invoice->getNumber() ?? ''). ' => '.
-                     ($invoice->getClient()?->getClient_name() ?? '' ). ' '.
-                     ($invoice->getClient()?->getClient_surname() ?? '' ). ' '.
-                     $numberHelper->format_currency($balance); ?>
+             ($invoice->getClient()?->getClient_name() ?? ''). ' '.
+             ($invoice->getClient()?->getClient_surname() ?? ''). ' '.
+             $numberHelper->format_currency($balance); ?>
             
         </h2>
         <a href="<?= $urlGenerator->generate('inv/pdf_download_include_cf', ['url_key' => $inv_url_key]); ?>" class="btn btn-sm btn-primary fw-normal h3 text-center" style="text-decoration:none">
@@ -60,30 +61,30 @@ use Yiisoft\Html\Tag\A;
             <i class="fa fa-file-pdf-o"></i> <?= $translator->translate('i.download_pdf').'=>'.$translator->translate('i.no').' '.$translator->translate('i.custom_fields'); ?>
         </a>
     </div> 
-    <br><?= Html::tag('Div',Html::tag('H4', $title)); ?><br>
+    <br><?= Html::tag('Div', Html::tag('H4', $title)); ?><br>
 <div class="card-body p-5 text-center">    
     <?= $alert; ?>
     <?= A::tag()
         ->href('https://www.mollie.com/gb/security')
         // open in a separate window
-        ->target('_blank')    
-        ->addClass('btn btn-lg btn-primary bi bi-info-circle')    
+        ->target('_blank')
+        ->addClass('btn btn-lg btn-primary bi bi-info-circle')
         ->content(' '.$translator->translate('invoice.read.this.please'))
-        ->render();    
+        ->render();
     ?>        
     <?php
         /**
-         * @var string|null $paymentCheckoutUrl 
+         * @var string|null $paymentCheckoutUrl
          */
         $paymentCheckoutUrl = $payment->getCheckOutUrl();
-        if (!empty($paymentCheckOutUrl)) {
-            A::tag()
-            ->href($paymentCheckoutUrl)
-            ->target('_blank')
-            ->addClass('btn btn-lg btn-success fa fa-credit-card fa-margin')    
-            ->content(' '. $translator->translate('i.pay_now') . ': ' . $numberHelper->format_currency($balance))
-            ->render();
-        }    
+    if (!empty($paymentCheckOutUrl)) {
+        A::tag()
+        ->href($paymentCheckoutUrl)
+        ->target('_blank')
+        ->addClass('btn btn-lg btn-success fa fa-credit-card fa-margin')
+        ->content(' '. $translator->translate('i.pay_now') . ': ' . $numberHelper->format_currency($balance))
+        ->render();
+    }
     ?>
     <br>
 
@@ -98,12 +99,12 @@ use Yiisoft\Html\Tag\A;
     <tbody>
     <tr>
         <td><?= $translator->translate('i.invoice_date'); ?></td>
-        <td class="text-right"><?= Html::encode($invoice->getDate_created()->format($dateHelper->style())); ?></td>
+        <td class="text-right"><?= Html::encode($invoice->getDate_created()->format('Y-m-d')); ?></td>
     </tr>
     <tr class="<?= ($is_overdue ? 'overdue' : '') ?>">
         <td><?= $translator->translate('i.due_date'); ?></td>
         <td class="text-right">
-            <?= Html::encode($invoice->getDate_due()->format($dateHelper->style())); ?>
+            <?= Html::encode($invoice->getDate_due()->format('Y-m-d')); ?>
         </td>
     </tr>
     <tr class="<?php echo($is_overdue ? 'overdue' : '') ?>">

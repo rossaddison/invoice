@@ -11,9 +11,9 @@ use Cycle\Annotated\Annotation\Entity;
 class Unit
 {
     public function __construct(#[Column(type: 'primary')]
-    public ?int $id = null, #[Column(type: 'string(50)')]
-    private string $unit_name = '', #[Column(type: 'string(50)')]
-    private string $unit_name_plrl = '')
+        public ?int $id = null, #[Column(type: 'string(50)')]
+        private string $unit_name = '', #[Column(type: 'string(50)')]
+        private string $unit_name_plrl = '')
     {
     }
 

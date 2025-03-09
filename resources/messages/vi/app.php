@@ -1,4 +1,5 @@
-<?php 
+<?php
+
 declare (strict_types=1);
 
 return [
@@ -1700,7 +1701,7 @@ return [
 'site.soletrader.contact.address' => 'Địa chỉ',
 'site.soletrader.contact.email' => 'E-mail',
 'site.soletrader.contact.phone' => 'Điện thoại',
-'site.todays.date' => 'Ngày hôm nay',    
+'site.todays.date' => 'Ngày hôm nay',
 'validator.invalid.login.password' => 'Đăng nhập hoặc mật khẩu không hợp lệ',
 'validator.password.not.match' => 'Mật khẩu không phù hợp',
 'validator.password.not.match.new' => 'Mật khẩu mới của bạn không khớp',
@@ -1711,7 +1712,7 @@ return [
 'view.contact.form.name' => 'Tên',
 'view.contact.form.email' => 'E-mail',
 'view.contact.form.subject' => 'Chủ thể',
-'view.contact.form.body' => 'Thân hình',   
+'view.contact.form.body' => 'Thân hình',
 // Added 19/02/2025
 'i.email_template_type' => 'Loại mẫu email',
 'gateway.online.payment' => 'Thanh toán trực tuyến',
@@ -1808,5 +1809,5 @@ return [
 'menu.gallery' => 'Phòng trưng bày',
 'menu.privacy.policy' => 'Chính sách bảo mật',
 'menu.terms.of.service' => 'Điều khoản dịch vụ',
-'password.reset.request.token' => 'Yêu cầu mã thông báo đặt lại mật khẩu',    
+'password.reset.request.token' => 'Yêu cầu mã thông báo đặt lại mật khẩu',
 ];

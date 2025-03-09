@@ -11,14 +11,14 @@ use Yiisoft\Html\Tag\Form;
 /**
  * @var App\Auth\Form\LoginForm                 $formModel
  * @var App\Invoice\Setting\SettingRepository   $s
- * @var Yiisoft\Router\CurrentRoute             $currentRoute 
+ * @var Yiisoft\Router\CurrentRoute             $currentRoute
  * @var Yiisoft\Router\UrlGeneratorInterface    $urlGenerator
  * @var Yiisoft\Translator\TranslatorInterface  $translator
  * @var Yiisoft\View\WebView                    $this
  * @var string                                  $facebookAuthUrl
  * @var string                                  $githubAuthUrl
  * @var string                                  $googleAuthUrl
- * @var string                                  $linkedInAuthUrl 
+ * @var string                                  $linkedInAuthUrl
  * @var string                                  $microsoftOnlineAuthUrl
  * @var string                                  $vkontakteAuthUrl
  * @var string                                  $xAuthUrl
@@ -88,34 +88,34 @@ $this->setTitle($translator->translate('i.login'));
                         ->id('loginForm')
                         ->open() ?>
                     <?= Field::text($formModel, 'login')
-                        ->addInputAttributes(['autocomplete' => 'username'])        
+                        ->addInputAttributes(['autocomplete' => 'username'])
                         ->inputClass('form-control')
                         ->label($translator->translate('layout.login'))
                         ->autofocus() ?>
                     <?= Field::password($formModel, 'password')
-                        ->addInputAttributes(['autocomplete' => 'current-password'])    
+                        ->addInputAttributes(['autocomplete' => 'current-password'])
                         ->inputClass('form-control')
                         ->label($translator->translate('layout.password'))
-                    ?>
+?>
                     <?= Field::checkbox($formModel, 'rememberMe')
-                        ->containerClass('form-check form-switch text-start mt-2')
-                        ->inputClass('form-check-input form-control')
-                        ->label($translator->translate('layout.remember'))
-                        ->inputLabelClass('form-check-label') ?>
+    ->containerClass('form-check form-switch text-start mt-2')
+    ->inputClass('form-check-input form-control')
+    ->label($translator->translate('layout.remember'))
+    ->inputLabelClass('form-check-label') ?>
                     <?= Field::submitButton()
-                        ->buttonId('login-button')
-                        ->buttonClass('btn btn-primary')
-                        ->name('login-button')
-                        ->content($translator->translate('layout.submit')) ?>
+    ->buttonId('login-button')
+    ->buttonClass('btn btn-primary')
+    ->name('login-button')
+    ->content($translator->translate('layout.submit')) ?>
                     <?= Form::tag()->close() ?>
                     <?= Html::br(); ?>
                     <?= A::tag()
-                        ->attribute('style', 'color:#999;text-decoration:none')
-                        ->addClass('my-1 mx-0')    
-                        ->href($urlGenerator->generate('auth/forgotpassword'))
-                        ->content($translator->translate('i.forgot_your_password'))
-                        ->render();
-                    ?>
+    ->attribute('style', 'color:#999;text-decoration:none')
+    ->addClass('my-1 mx-0')
+    ->href($urlGenerator->generate('auth/forgotpassword'))
+    ->content($translator->translate('i.forgot_your_password'))
+    ->render();
+?>
                 </div>
             </div>
         </div>

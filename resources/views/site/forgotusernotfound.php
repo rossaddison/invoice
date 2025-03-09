@@ -8,7 +8,7 @@ use Yiisoft\Yii\Bootstrap5\AlertVariant;
 /**
  * @see \src\ViewInjection\CommonViewInjection.php
  * @var array $forgotusernotfound
- * 
+ *
  * @see 'i.loginalert_user_not_found' .....
  * 'There is no account registered with this Email address.'
  */

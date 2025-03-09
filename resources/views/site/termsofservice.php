@@ -1,30 +1,30 @@
 <?php
 
 declare(strict_types=1);
-    
-   /**
-    * @link  Acknowledgement to chatgpt.com 
-    * @link  Acknowledgement to https://text-html.com/ convert chatgpt text to html
-    *
-    * Existing url's for a 'terms of service' page, and a 'privacy policy' page, 
-    * are necessary to develop many of the Oauth2.0 clients
-    * 
-    * @see ViewInjection\CommonViewInjection
-    * 
-    * @var string $arbitrationBody
-    * @var string $arbitrationJurisdiction 
-    * @var string $companyAddress1
-    * @var string $companyAddress2
-    * @var string $companyCity
-    * @var string $companyEmail
-    * @var string $companyName
-    * @var string $companyPhone 
-    * @var string $companyStartDate
-    * @var string $companyState
-    * @var string $companyCountry
-    * @var string $companyWeb
-    * @var string $companyZip
-    */
+
+/**
+ * @link  Acknowledgement to chatgpt.com
+ * @link  Acknowledgement to https://text-html.com/ convert chatgpt text to html
+ *
+ * Existing url's for a 'terms of service' page, and a 'privacy policy' page,
+ * are necessary to develop many of the Oauth2.0 clients
+ *
+ * @see ViewInjection\CommonViewInjection
+ *
+ * @var string $arbitrationBody
+ * @var string $arbitrationJurisdiction
+ * @var string $companyAddress1
+ * @var string $companyAddress2
+ * @var string $companyCity
+ * @var string $companyEmail
+ * @var string $companyName
+ * @var string $companyPhone
+ * @var string $companyStartDate
+ * @var string $companyState
+ * @var string $companyCountry
+ * @var string $companyWeb
+ * @var string $companyZip
+ */
 ?>
 <p><strong>Terms of Service</strong></p>
 <p><strong>Effective Date:</strong> <?= $companyStartDate; ?></p>

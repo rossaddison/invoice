@@ -23,27 +23,27 @@ use Yiisoft\Html\Tag\Button;
                     <input type="hidden" name="_csrf" value="<?= $csrf ?>">
                     <div class="modal-body">                       
                         <div id="task-lookup-table">
-                            <?php  
+                            <?php
                                echo $partial_task_table_modal
-                            ?>     
+?>     
                         </div>
                     </div>
                     <div class="modal-footer">
-                        <?php    
-                            echo Button::tag()
-                            ->id('task-modal-submit')        
-                            ->addClass('select-items-confirm-task btn-success')
-                            ->content($translator->translate('i.submit'))
-                            ->disabled(true)        
-                            ->render();
-                        ?>        
-                        <?php    
-                            echo Button::tag()
-                            ->addClass('btn btn-danger')
-                            ->content($translator->translate('i.close'))
-                            ->addAttributes(['data-bs-dismiss' => 'modal'])
-                            ->render();
-                        ?>    
+                        <?php
+echo Button::tag()
+->id('task-modal-submit')
+->addClass('select-items-confirm-task btn-success')
+->content($translator->translate('i.submit'))
+->disabled(true)
+->render();
+?>        
+                        <?php
+    echo Button::tag()
+    ->addClass('btn btn-danger')
+    ->content($translator->translate('i.close'))
+    ->addAttributes(['data-bs-dismiss' => 'modal'])
+    ->render();
+?>    
                     </div>
                 </form>    
             </div>

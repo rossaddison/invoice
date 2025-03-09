@@ -6,7 +6,7 @@ use Yiisoft\FormModel\Field;
 use Yiisoft\Html\Html;
 use Yiisoft\Html\Tag\Form;
 
-/** 
+/**
  * @var App\Invoice\Setting\SettingForm $form
  * @var App\Widget\Button $button
  * @var Yiisoft\Translator\TranslatorInterface $translator
@@ -22,12 +22,12 @@ use Yiisoft\Html\Tag\Form;
 ?>
 
 <?= Html::openTag('h1'); ?><?= Html::encode($title) ?><?= Html::closeTag('h1'); ?>
-<?= Html::openTag('div',['class'=>'container py-5 h-100']); ?>
-<?= Html::openTag('div',['class'=>'row d-flex justify-content-center align-items-center h-100']); ?>
-<?= Html::openTag('div',['class'=>'col-12 col-md-8 col-lg-6 col-xl-8']); ?>
-<?= Html::openTag('div',['class'=>'card border border-dark shadow-2-strong rounded-3']); ?>
-<?= Html::openTag('div',['class'=>'card-header']); ?>
-<?= Html::openTag('h1',['class'=>'fw-normal h3 text-center']); ?>
+<?= Html::openTag('div', ['class' => 'container py-5 h-100']); ?>
+<?= Html::openTag('div', ['class' => 'row d-flex justify-content-center align-items-center h-100']); ?>
+<?= Html::openTag('div', ['class' => 'col-12 col-md-8 col-lg-6 col-xl-8']); ?>
+<?= Html::openTag('div', ['class' => 'card border border-dark shadow-2-strong rounded-3']); ?>
+<?= Html::openTag('div', ['class' => 'card-header']); ?>
+<?= Html::openTag('h1', ['class' => 'fw-normal h3 text-center']); ?>
 <?= $translator->translate('invoice.setting.form'); ?>
 <?= Html::closeTag('h1'); ?>
 <?=
@@ -39,14 +39,14 @@ use Yiisoft\Html\Tag\Form;
     ->open()
 ?>
 <?= $button::backSave(); ?>
-<?= 
-    $alert; 
+<?=
+    $alert;
 ?>
-<?= Html::openTag('div', ['class'=> 'card']); ?>
+<?= Html::openTag('div', ['class' => 'card']); ?>
 <?= Field::errorSummary($form)
     ->errors($errors)
     ->header($translator->translate('invoice.setting.error.summary'))
-    ->onlyProperties(...['setting_key', 'setting_value'])    
+    ->onlyProperties(...['setting_key', 'setting_value'])
     ->onlyCommonErrors()
 ?>
 
@@ -59,7 +59,7 @@ use Yiisoft\Html\Tag\Form;
         'id' => 'setting_key'
     ])
     ->required(true)
-    ->hint($translator->translate('invoice.hint.this.field.is.required')); 
+    ->hint($translator->translate('invoice.hint.this.field.is.required'));
 ?>
 <?= Field::text($form, 'setting_value')
     ->label($translator->translate('invoice.setting.value'))
@@ -70,7 +70,7 @@ use Yiisoft\Html\Tag\Form;
         'id' => 'setting_value'
     ])
     ->required(true)
-    ->hint($translator->translate('invoice.hint.this.field.is.required')); 
+    ->hint($translator->translate('invoice.hint.this.field.is.required'));
 ?>
 <?= Html::closeTag('div'); ?>
 <?= Form::tag()->close(); ?>

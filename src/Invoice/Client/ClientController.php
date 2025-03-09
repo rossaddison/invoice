@@ -342,7 +342,7 @@ final class ClientController
                                         ) {
                                             $this->clientCustomService->saveClientCustom($client_custom, $client_custom_input);
                                         }
-                                        $parameters['errorsCustom'] = $clientCustomForm->getValidationResult()->getErrorMessagesIndexedByProperty();
+                                        //$parameters['errorsCustom'] = $clientCustomForm->getValidationResult()->getErrorMessagesIndexedByProperty();
                                         $parameters['clientCustomForm'] = $clientCustomForm;
                                     }
                                 } //foreach
@@ -746,7 +746,7 @@ final class ClientController
         $note = $body['client_note'];
         $data = [
             'client_id' => $client_id,
-            'date' => $date->format($datehelper->style()),
+            'date' => $date->format('Y-m-d'),
             'note' => $note,
         ];
         $form = new ClientNoteForm(new ClientNote());

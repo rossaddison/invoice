@@ -1,19 +1,19 @@
 <?php
 
-  declare(strict_types=1); 
- 
-  /**
-   * @see InvController function view, search modal_add_inv_tax
-   * @see id="add-inv-tax" triggered by <a href="#add-inv-tax" data-bs-toggle="modal"  style="text-decoration:none"> on views/inv/view.php line 67
-   * @see Invoice/Asset/rebuild-1.13/js/inv.js/$(document).on('click', '#inv_tax_submit', function () {
-   * @see InvController/save_inv_tax_rate
-   * @var App\Invoice\Helpers\NumberHelper $numberHelper
-   * @var App\Invoice\Setting\SettingRepository $s
-   * @var Yiisoft\Translator\TranslatorInterface $translator 
-   * @var array $taxRates
-   * @var string $csrf
-   */
-  
+declare(strict_types=1);
+
+/**
+ * @see InvController function view, search modal_add_inv_tax
+ * @see id="add-inv-tax" triggered by <a href="#add-inv-tax" data-bs-toggle="modal"  style="text-decoration:none"> on views/inv/view.php line 67
+ * @see Invoice/Asset/rebuild-1.13/js/inv.js/$(document).on('click', '#inv_tax_submit', function () {
+ * @see InvController/save_inv_tax_rate
+ * @var App\Invoice\Helpers\NumberHelper $numberHelper
+ * @var App\Invoice\Setting\SettingRepository $s
+ * @var Yiisoft\Translator\TranslatorInterface $translator
+ * @var array $taxRates
+ * @var string $csrf
+ */
+
 ?>
 
 <div id="add-inv-tax" class="modal" tabindex="-1">
@@ -39,12 +39,12 @@
                                      */
                                     foreach ($taxRates as $taxRate) { ?>
                                     <option value="<?= $taxRate->getTaxRateId(); ?>">
-                                        <?php 
+                                        <?php
                                                 $taxRatePercent = $numberHelper->format_amount($taxRate->getTaxRatePercent());
-                                                $taxRateName = $taxRate->getTaxRateName();
-                                                if ($taxRatePercent >= 0.00 && null!==$taxRatePercent && null!==$taxRateName) {
-                                                    echo $taxRatePercent . '% - ' . ($taxRateName); 
-                                                }
+                                        $taxRateName = $taxRate->getTaxRateName();
+                                        if ($taxRatePercent >= 0.00 && null !== $taxRatePercent && null !== $taxRateName) {
+                                            echo $taxRatePercent . '% - ' . ($taxRateName);
+                                        }
                                         ?>s
                                     </option>
                                 <?php } ?>

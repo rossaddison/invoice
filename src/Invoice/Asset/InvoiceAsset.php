@@ -36,6 +36,9 @@ class InvoiceAsset extends AssetBundle
     public array $js = [
         /**
          * As of 9th March 2025:
+         *
+         * The .js files are jquery based i.e Basic syntax is: $(selector).action()
+         *
          * Modals use the following file which is available in unminified form
          * @see e.g. https:\\code.jquery.com/jquery-4.0.0-beta.2.min.js
          * Modals use the following file which is available in minified form

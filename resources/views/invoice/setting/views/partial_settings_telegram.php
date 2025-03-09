@@ -1,16 +1,16 @@
 <?php
 
-    declare(strict_types=1);
-    
-    use Yiisoft\Html\Html;
-    
-    /**
-     * @see src\Invoice\Helpers\Telegram\TelegramHelper;
-     * @var App\Invoice\Setting\SettingRepository $s 
-     * @var Yiisoft\Translator\TranslatorInterface $translator
-     * @var Yiisoft\Router\FastRoute\UrlGenerator $urlGenerator
-     * @var array $body
-     */
+declare(strict_types=1);
+
+use Yiisoft\Html\Html;
+
+/**
+ * @see src\Invoice\Helpers\Telegram\TelegramHelper;
+ * @var App\Invoice\Setting\SettingRepository $s
+ * @var Yiisoft\Translator\TranslatorInterface $translator
+ * @var Yiisoft\Router\FastRoute\UrlGenerator $urlGenerator
+ * @var array $body
+ */
 ?>
 <div class='row'>
     <div class="col-xs-12 col-md-8 col-md-offset-2">
@@ -28,9 +28,12 @@
                                     <input type="hidden" name="settings[enable_telegram]" value="0">
                                     <input type="checkbox" name="settings[enable_telegram]" value="1"
                                         <?php $s->check_select($body['settings[enable_telegram]'], 1, '==', true); ?>>
-                                        <?= Html::a($translator->translate('invoice.invoice.telegram.bot.api.enable'),'https://core.telegram.org/bots/api',
-                                                ['style'=>'text-decoration:none','data-bs-toggle'=>'tooltip','title'=>'']); 
-                                        ?>
+                                        <?= Html::a(
+                                            $translator->translate('invoice.invoice.telegram.bot.api.enable'),
+                                            'https://core.telegram.org/bots/api',
+                                            ['style' => 'text-decoration:none','data-bs-toggle' => 'tooltip','title' => '']
+                                        );
+?>
                                 </label>
                             </div>                            
                         </div>
@@ -47,9 +50,9 @@
                                 <label for="settings[telegram_token]" >
                                     <?= $translator->translate('invoice.invoice.telegram.bot.api.token'); ?>
                                 </label>
-                                <?php 
+                                <?php
                                     $body['settings[telegram_token]'] = $s->getSetting('telegram_token');
-                                ?>
+?>
                                 <input type="password" name="settings[telegram_token]" id="settings[telegram_token]"
                                     class="form-control" value="<?= Html::encode($body['settings[telegram_token]']); ?>">
                             </p>
@@ -60,9 +63,9 @@
                                 <label for="settings[telegram_chat_id]" >
                                     <?= $translator->translate('invoice.invoice.telegram.bot.api.chat.id'); ?>
                                 </label>
-                                <?php 
-                                    $body['settings[telegram_chat_id]'] = $s->getSetting('telegram_chat_id');
-                                ?>
+                                <?php
+    $body['settings[telegram_chat_id]'] = $s->getSetting('telegram_chat_id');
+?>
                                 <input type="password" name="settings[telegram_chat_id]" id="settings[telegram_chat_id]"
                                     class="form-control" value="<?= Html::encode($body['settings[telegram_chat_id]']); ?>">
                             </p>
@@ -76,8 +79,8 @@
                                 </option>
                                 <option value="1" 
                                     <?php
-                                        $s->check_select($body['settings[telegram_test_message_use]'], '1'); 
-                                    ?>>
+        $s->check_select($body['settings[telegram_test_message_use]'], '1');
+?>>
                                     <?= $translator->translate('i.yes'); ?>
                                 </option>
                             </select>
@@ -93,8 +96,8 @@
                                 </option>
                                 <option value="1" 
                                     <?php
-                                        $s->check_select($body['settings[telegram_payment_notifications]'], '1'); 
-                                    ?>>
+    $s->check_select($body['settings[telegram_payment_notifications]'], '1');
+?>>
                                     <?= $translator->translate('i.yes'); ?>
                                 </option>
                             </select>
@@ -114,9 +117,9 @@
                             <label for="settings[telegram_webhook_secret_token]" >
                                 <?= $translator->translate('invoice.invoice.telegram.bot.api.webhook.secret.token'); ?>
                             </label>
-                            <?php 
+                            <?php
                                 $body['settings[telegram_webhook_secret_token]'] = $s->getSetting('telegram_webhook_secret_token');
-                            ?>
+?>
                             <input type="password" name="settings[telegram_webhook_secret_token]" id="settings[telegram_webhook_secret_token]"
                                  class="form-control" value="<?= Html::encode($body['settings[telegram_webhook_secret_token]']); ?>">
                         </div>

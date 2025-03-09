@@ -17,13 +17,13 @@ use Yiisoft\Router\CurrentRoute;
 /**
  * @var App\Invoice\Setting\SettingRepository $s
  * @var App\Widget\GridComponents $gridComponents
- * @var CurrentRoute $currentRoute 
+ * @var CurrentRoute $currentRoute
  * @var Yiisoft\Data\Paginator\OffsetPaginator $paginator
- * @var Yiisoft\Translator\TranslatorInterface $translator 
+ * @var Yiisoft\Translator\TranslatorInterface $translator
  * @var Yiisoft\Router\UrlGeneratorInterface $urlGenerator
  * @var string $alert
- * @var string $csrf 
- */ 
+ * @var string $csrf
+ */
 
 echo $alert;
 ?>
@@ -68,23 +68,23 @@ $toolbar = Div::tag();
         ),
         new DataColumn(
             'inv_id',
-            header: $translator->translate('i.invoice'),    
+            header: $translator->translate('i.invoice'),
             content: static function (InvAllowanceCharge $model) use ($urlGenerator): string {
-                return Html::a($model->getInv()?->getNumber() ?? '#', $urlGenerator->generate('inv/view', ['id'=>$model->getInv_id()]),[])->render();
+                return Html::a($model->getInv()?->getNumber() ?? '#', $urlGenerator->generate('inv/view', ['id' => $model->getInv_id()]), [])->render();
             }
-        ),       
+        ),
         new DataColumn(
             header:  $translator->translate('invoice.invoice.allowance.or.charge.reason.code'),
             content: static fn (InvAllowanceCharge $model) => $model->getAllowanceCharge()?->getReasonCode()
-        ),        
+        ),
         new DataColumn(
             header:  $translator->translate('invoice.invoice.allowance.or.charge.reason'),
             content: static fn (InvAllowanceCharge $model) => $model->getAllowanceCharge()?->getReason()
-        ),        
+        ),
         new DataColumn(
             header:  $translator->translate('invoice.invoice.allowance.or.charge.amount'),
             content: static fn (InvAllowanceCharge $model) => $model->getAmount()
-        ),        
+        ),
         new DataColumn(
             header:  $translator->translate('invoice.invoice.vat'),
             content: static fn (InvAllowanceCharge $model) => $model->getVat()
@@ -92,59 +92,60 @@ $toolbar = Div::tag();
         new ActionColumn(buttons: [
             new ActionButton(
                 content: '🔎',
-                url: static function(InvAllowanceCharge $model) use ($urlGenerator) : string {
-                     return $urlGenerator->generate('invallowancecharge/view', ['id' => $model->getId()]);     
+                url: static function (InvAllowanceCharge $model) use ($urlGenerator): string {
+                    return $urlGenerator->generate('invallowancecharge/view', ['id' => $model->getId()]);
                 },
                 attributes: [
                     'data-bs-toggle' => 'tooltip',
                     'title' => $translator->translate('i.view'),
-                ]      
+                ]
             ),
             new ActionButton(
                 content: '✎',
-                url: static function(InvAllowanceCharge $model) use ($urlGenerator) : string {
-                     return $urlGenerator->generate('invallowancecharge/edit', ['id' => $model->getId()]);     
+                url: static function (InvAllowanceCharge $model) use ($urlGenerator): string {
+                    return $urlGenerator->generate('invallowancecharge/edit', ['id' => $model->getId()]);
                 },
                 attributes: [
                     'data-bs-toggle' => 'tooltip',
                     'title' => $translator->translate('i.edit'),
-                ]      
+                ]
             ),
             new ActionButton(
                 content: '❌',
-                url: static function(InvAllowanceCharge $model) use ($urlGenerator) : string {
-                     return $urlGenerator->generate('invallowancecharage/delete', ['id' => $model->getId()]);     
+                url: static function (InvAllowanceCharge $model) use ($urlGenerator): string {
+                    return $urlGenerator->generate('invallowancecharage/delete', ['id' => $model->getId()]);
                 },
                 attributes: [
                     'title' => $translator->translate('i.delete'),
-                    'onclick'=>"return confirm("."'".$translator->translate('i.delete_record_warning')."');"
-                ]      
-            ),          
-        ]),        
-    ];            
+                    'onclick' => "return confirm("."'".$translator->translate('i.delete_record_warning')."');"
+                ]
+            ),
+        ]),
+    ];
 ?>
 <?php
-    $grid_summary = $s->grid_summary(
-        $paginator, $translator, 
-        (int)$s->getSetting('default_list_limit'), 
-        $translator->translate('invoice.invoice.allowance.or.charge'),
-        ''
-    );   
-    $toolbarString = Form::tag()->post($urlGenerator->generate('invallowancecharge/index'))->csrf($csrf)->open() .
-        Div::tag()->addClass('float-end m-3')->content($toolbarReset)->encode(false)->render() .
-        Form::tag()->close();
-    echo GridView::widget()
-    ->bodyRowAttributes(['class' => 'align-middle'])
-    ->tableAttributes(['class' => 'table table-striped text-center h-75','id'=>'table-allowancecharge'])
-    ->columns(...$columns)
-    ->headerRowAttributes(['class'=>'card-header bg-info text-black'])
-    ->header($header)
-    ->id('w3-grid')
-    ->dataReader($paginator)
-    ->paginationWidget($gridComponents->offsetPaginationWidget($paginator))
-    ->summaryAttributes(['class' => 'mt-3 me-3 summary text-end'])
-    ->summaryTemplate($grid_summary)
-    ->emptyTextAttributes(['class' => 'card-header bg-warning text-black'])
-    ->emptyText($translator->translate('invoice.invoice.no.records'))            
-    ->toolbar($toolbarString);
+$grid_summary = $s->grid_summary(
+    $paginator,
+    $translator,
+    (int)$s->getSetting('default_list_limit'),
+    $translator->translate('invoice.invoice.allowance.or.charge'),
+    ''
+);
+$toolbarString = Form::tag()->post($urlGenerator->generate('invallowancecharge/index'))->csrf($csrf)->open() .
+    Div::tag()->addClass('float-end m-3')->content($toolbarReset)->encode(false)->render() .
+    Form::tag()->close();
+echo GridView::widget()
+->bodyRowAttributes(['class' => 'align-middle'])
+->tableAttributes(['class' => 'table table-striped text-center h-75','id' => 'table-allowancecharge'])
+->columns(...$columns)
+->headerRowAttributes(['class' => 'card-header bg-info text-black'])
+->header($header)
+->id('w3-grid')
+->dataReader($paginator)
+->paginationWidget($gridComponents->offsetPaginationWidget($paginator))
+->summaryAttributes(['class' => 'mt-3 me-3 summary text-end'])
+->summaryTemplate($grid_summary)
+->emptyTextAttributes(['class' => 'card-header bg-warning text-black'])
+->emptyText($translator->translate('invoice.invoice.no.records'))
+->toolbar($toolbarString);
 ?>

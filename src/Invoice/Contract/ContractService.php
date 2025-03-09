@@ -27,7 +27,7 @@ final readonly class ContractService
 
         $datetime_immutable_period_start = new \DateTimeImmutable();
         $period_start = $datetime_immutable_period_start::createFromFormat(
-            $datehelper->style(),
+            'Y-m-d',
             (string)$array['period_start']
         );
 
@@ -35,7 +35,7 @@ final readonly class ContractService
 
         $datetime_immutable_period_end = new \DateTimeImmutable();
         $period_end = $datetime_immutable_period_end::createFromFormat(
-            $datehelper->style(),
+            'Y-m-d',
             (string)$array['period_end']
         );
 

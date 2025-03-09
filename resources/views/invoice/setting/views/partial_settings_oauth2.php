@@ -2,12 +2,12 @@
 
 declare(strict_types=1);
 
-use  Yiisoft\Html\Tag\I;
+use Yiisoft\Html\Tag\I;
 
 /**
  * @var App\Invoice\Setting\SettingRepository $s
  * @var Yiisoft\Translator\TranslatorInterface $translator
- * @var Yiisoft\Router\UrlGeneratorInterface $urlGenerator 
+ * @var Yiisoft\Router\UrlGeneratorInterface $urlGenerator
  * @var array $body
  */
 ?>

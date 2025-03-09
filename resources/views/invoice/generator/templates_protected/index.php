@@ -1,15 +1,15 @@
-<?php 
-   
-    declare(strict_types=1);
-    
-    use Yiisoft\Strings\Inflector;
-   
-    /**
-     * @var App\Invoice\Entity\Gentor $generator
-     */
-    
-    echo "<?php\n";
-    $random = 99999999999999999;
+<?php
+
+declare(strict_types=1);
+
+use Yiisoft\Strings\Inflector;
+
+/**
+ * @var App\Invoice\Entity\Gentor $generator
+ */
+
+echo "<?php\n";
+$random = 99999999999999999;
 ?>
 
 declare(strict_types=1);
@@ -41,10 +41,10 @@ use Yiisoft\Yii\DataView\Pagination\OffsetPagination;
  echo $alert;
 
 ?>
-<?php 
+<?php
         $inf = new Inflector();
-        echo '<h1>'.$inf->toSentence($generator->getPre_entity_table(), false).'</h1>'."\n"; 
-        echo "<?= Html::a(Html::tag('"."i','',['class'=>'fa fa-plus btn btn-primary fa-margin']),".'$urlGenerator->generate('."'". $generator->getSmall_singular_name()."/add'),[]); ?>";
+echo '<h1>'.$inf->toSentence($generator->getPre_entity_table(), false).'</h1>'."\n";
+echo "<?= Html::a(Html::tag('"."i','',['class'=>'fa fa-plus btn btn-primary fa-margin']),".'$urlGenerator->generate('."'". $generator->getSmall_singular_name()."/add'),[]); ?>";
 ?>
 
 <?php   echo "<?php\n"; ?>

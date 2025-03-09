@@ -1,20 +1,20 @@
 <?php
-    declare(strict_types=1); 
-    
-    use Yiisoft\Html\Html;
-    
-    /**
-     * @var App\Invoice\Helpers\DateHelper $dateHelper
-     * @var App\Invoice\Setting\SettingRepository $s 
-     * @var Yiisoft\Router\UrlGeneratorInterface $urlGenerator
-     * @var Yiisoft\Translator\TranslatorInterface $translator
-     * @var string $actionName
-     * @var string $alert
-     * @var array $body
-     * @var string $csrf
-     * @var string $startTaxYear
-     * @psalm-var array<string, Stringable|null|scalar> $actionArguments
-     */
+declare(strict_types=1);
+
+use Yiisoft\Html\Html;
+
+/**
+ * @var App\Invoice\Helpers\DateHelper $dateHelper
+ * @var App\Invoice\Setting\SettingRepository $s
+ * @var Yiisoft\Router\UrlGeneratorInterface $urlGenerator
+ * @var Yiisoft\Translator\TranslatorInterface $translator
+ * @var string $actionName
+ * @var string $alert
+ * @var array $body
+ * @var string $csrf
+ * @var string $startTaxYear
+ * @psalm-var array<string, Stringable|null|scalar> $actionArguments
+ */
 ?>
 
 <div id="headerbar">
@@ -37,7 +37,7 @@
 
                 <div class="panel-body">
                     <form method="POST" action="<?= $urlGenerator->generate($actionName, $actionArguments); ?>"  enctype="multipart/form-data"
-                       <?php echo ($s->getSetting('open_reports_in_new_tab') === '1' ? 'target="_blank"' : ''); ?>>
+                       <?php echo($s->getSetting('open_reports_in_new_tab') === '1' ? 'target="_blank"' : ''); ?>>
 
                         <input type="hidden" id="_csrf" name="_csrf" value="<?= $csrf ?>">   
 
@@ -45,7 +45,7 @@
                             <label for="from_date"><?= $translator->translate('i.from_date') .' ('.$dateHelper->display().')'; ?></label>
                             <div class="input-group">
                                 <input type="text" name="from_date" id="from_date" placeholder="<?= ' ('.$dateHelper->display().')';?>"
-                                       class="form-control input-sm datepicker" readonly                   
+                                       class="form-control" readonly                   
                                        value="<?= $body['from_date'] = $startTaxYear; ?>" role="presentation" autocomplete="off">
                                 <span class="input-group-text">
                                 <i class="fa fa-calendar fa-fw"></i>
@@ -57,8 +57,8 @@
                             <label for="to_date"><?= $translator->translate('i.to_date') .' ('.$dateHelper->display().')'; ?></label>
                             <div class="input-group">
                                 <input type="text" name="to_date" id="to_date" placeholder="<?= ' ('.$dateHelper->display().')';?>"
-                                       class="form-control input-sm datepicker" readonly                   
-                                       value="<?= $body['to_date'] = (new \DateTimeImmutable('now'))->format($dateHelper->style()); ?>" role="presentation" autocomplete="off">
+                                       class="form-control" readonly                   
+                                       value="<?= $body['to_date'] = (new \DateTimeImmutable('now'))->format('Y-m-d'); ?>" role="presentation" autocomplete="off">
                                 <span class="input-group-text">
                                 <i class="fa fa-calendar fa-fw"></i>
                             </span>

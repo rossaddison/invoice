@@ -1,72 +1,72 @@
 <?php
 
-    declare(strict_types=1);
-    
-    use App\Invoice\ClientCustom\ClientCustomForm;
-    use App\Invoice\Entity\ClientCustom;
-    use Yiisoft\Html\Html;
-    
-    /**
-     * @var App\Invoice\ClientPeppol\ClientPeppolRepository $cpR
-     * @var App\Invoice\ClientCustom\ClientCustomForm $clientCustomForm
-     * @var App\Invoice\Entity\Client $client
-     * @var App\Invoice\Helpers\ClientHelper $clientHelper
-     * @var App\Invoice\Helpers\CustomValuesHelper $cvH
-     * @var App\Invoice\Helpers\DateHelper $dateHelper 
-     * @var App\Invoice\Inv\InvRepository $iR
-     * @var App\Invoice\InvAmount\InvAmountRepository $iaR
-     * @var App\Invoice\Setting\SettingRepository $s
-     * @var Yiisoft\Translator\TranslatorInterface $translator
-     * @var Yiisoft\Router\UrlGeneratorInterface $urlGenerator
-     * @var array $clientCustomValues
-     * @var array $customValues
-     * @var array $custom_fields
-     * @var string $alert
-     * @var string $partial_client_address
-     * @var string $client_modal_layout_inv
-     * @var string $client_modal_layout_quote
-     * @var string $delivery_locations
-     * @var string $quote_table
-     * @var string $quote_draft_table
-     * @var string $quote_sent_table
-     * @var string $quote_viewed_table
-     * @var string $quote_approved_table
-     * @var string $quote_rejected_table
-     * @var string $quote_cancelled_table
-     * @var string $invoice_table
-     * @var string $invoice_draft_table
-     * @var string $invoice_sent_table
-     * @var string $invoice_viewed_table
-     * @var string $invoice_paid_table
-     * @var string $invoice_overdue_table
-     * @var string $invoice_unpaid_table
-     * @var string $invoice_reminder_sent_table
-     * @var string $invoice_seven_day_table
-     * @var string $invoice_legal_claim_table
-     * @var string $invoice_judgement_table
-     * @var string $invoice_officer_table
-     * @var string $invoice_credit_table
-     * @var string $invoice_written_off_table 
-     * @var string $payment_table   
-     * @var string $partial_notes
-     * @var string $title
-     */
+declare(strict_types=1);
 
-    $locations = [];
-    
-    /**
-     * @var App\Invoice\Entity\CustomField $custom_field
-     */    
-    foreach ($custom_fields as $custom_field) {
-        $customFieldLocation = $custom_field->getLocation();
-        if (null!==$customFieldLocation) {
-            if (array_key_exists($customFieldLocation, $locations)) {
-                $locations[$customFieldLocation] += 1;
-            } else {
-                $locations[$customFieldLocation] = 1;
-            }
+use App\Invoice\ClientCustom\ClientCustomForm;
+use App\Invoice\Entity\ClientCustom;
+use Yiisoft\Html\Html;
+
+/**
+ * @var App\Invoice\ClientPeppol\ClientPeppolRepository $cpR
+ * @var App\Invoice\ClientCustom\ClientCustomForm $clientCustomForm
+ * @var App\Invoice\Entity\Client $client
+ * @var App\Invoice\Helpers\ClientHelper $clientHelper
+ * @var App\Invoice\Helpers\CustomValuesHelper $cvH
+ * @var App\Invoice\Helpers\DateHelper $dateHelper
+ * @var App\Invoice\Inv\InvRepository $iR
+ * @var App\Invoice\InvAmount\InvAmountRepository $iaR
+ * @var App\Invoice\Setting\SettingRepository $s
+ * @var Yiisoft\Translator\TranslatorInterface $translator
+ * @var Yiisoft\Router\UrlGeneratorInterface $urlGenerator
+ * @var array $clientCustomValues
+ * @var array $customValues
+ * @var array $custom_fields
+ * @var string $alert
+ * @var string $partial_client_address
+ * @var string $client_modal_layout_inv
+ * @var string $client_modal_layout_quote
+ * @var string $delivery_locations
+ * @var string $quote_table
+ * @var string $quote_draft_table
+ * @var string $quote_sent_table
+ * @var string $quote_viewed_table
+ * @var string $quote_approved_table
+ * @var string $quote_rejected_table
+ * @var string $quote_cancelled_table
+ * @var string $invoice_table
+ * @var string $invoice_draft_table
+ * @var string $invoice_sent_table
+ * @var string $invoice_viewed_table
+ * @var string $invoice_paid_table
+ * @var string $invoice_overdue_table
+ * @var string $invoice_unpaid_table
+ * @var string $invoice_reminder_sent_table
+ * @var string $invoice_seven_day_table
+ * @var string $invoice_legal_claim_table
+ * @var string $invoice_judgement_table
+ * @var string $invoice_officer_table
+ * @var string $invoice_credit_table
+ * @var string $invoice_written_off_table
+ * @var string $payment_table
+ * @var string $partial_notes
+ * @var string $title
+ */
+
+$locations = [];
+
+/**
+ * @var App\Invoice\Entity\CustomField $custom_field
+ */
+foreach ($custom_fields as $custom_field) {
+    $customFieldLocation = $custom_field->getLocation();
+    if (null !== $customFieldLocation) {
+        if (array_key_exists($customFieldLocation, $locations)) {
+            $locations[$customFieldLocation] += 1;
+        } else {
+            $locations[$customFieldLocation] = 1;
         }
     }
+}
 ?>
 
 <h1><?= Html::encode($title)?></h1>
@@ -94,37 +94,41 @@
                      <i class="fa fa-edit"></i> <?= $translator->translate('invoice.client.peppol.edit'); ?>
                 </a>
                 <?php } ?>
-                <a href="<?= null!==($clientIdEdit = $client->getClient_id()) ? $urlGenerator->generate('client/edit', ['id' => $clientIdEdit, 'origin' => 'edit']) : ''; ?>"
+                <a href="<?= null !== ($clientIdEdit = $client->getClient_id()) ? $urlGenerator->generate('client/edit', ['id' => $clientIdEdit, 'origin' => 'edit']) : ''; ?>"
                    class="btn btn-danger" style="text-decoration:none">
                     <i class="fa fa-edit"></i><?= $translator->translate('i.edit'); ?>
                 </a>
-                <a href="<?= null!==($clientIdPostalAdd = $client->getClient_id()) ? 
-                            $urlGenerator->generate('postaladdress/add',
-                            // Argument parameters        
-                            ['client_id' => $clientIdPostalAdd],
-                            // Query parameters used to generate return url        
-                            [
-                                /**
-                                 * @see Yiisoft\Router\UrlGeneratorInterface function generate $queryParameters
-                                 * Purpose: Use origin and origin_id to generate return url to client view after user has 
-                                 * created the new postal address for the client 
-                                 * e.g  {origin}/view, ['client_id' => {origin_id}],
-                                 */
-                                'origin' => 'client',
-                                'origin_id' => $clientIdPostalAdd,
-                                
-                                'action' => 'add']) : ''; ?>"
+                <a href="<?= null !== ($clientIdPostalAdd = $client->getClient_id()) ?
+                            $urlGenerator->generate(
+                                'postaladdress/add',
+                                // Argument parameters
+                                ['client_id' => $clientIdPostalAdd],
+                                // Query parameters used to generate return url
+                                [
+                                    /**
+                                     * @see Yiisoft\Router\UrlGeneratorInterface function generate $queryParameters
+                                     * Purpose: Use origin and origin_id to generate return url to client view after user has
+                                     * created the new postal address for the client
+                                     * e.g  {origin}/view, ['client_id' => {origin_id}],
+                                     */
+                                    'origin' => 'client',
+                                    'origin_id' => $clientIdPostalAdd,
+
+                                    'action' => 'add']
+                            ) : ''; ?>"
                    class="btn btn-primary" style="text-decoration:none">
                     <i class="fa fa-plus"></i><?= $translator->translate('invoice.client.postaladdress.add'); ?>
                 </a>
-                <a href="<?= null!==($clientIdDelAdd = $client->getClient_id()) ? $urlGenerator->generate('del/add',
-                            ['client_id' => $clientIdDelAdd], 
-                            ['origin' => 'client', 'origin_id' => $clientIdDelAdd, 'action' => 'view']) : ''; ?>"
+                <a href="<?= null !== ($clientIdDelAdd = $client->getClient_id()) ? $urlGenerator->generate(
+                    'del/add',
+                    ['client_id' => $clientIdDelAdd],
+                    ['origin' => 'client', 'origin_id' => $clientIdDelAdd, 'action' => 'view']
+                ) : ''; ?>"
                    class="btn btn-success" style="text-decoration:none">
                    <i class="fa fa-plus fa-margin"></i><?= $translator->translate('invoice.invoice.delivery.location.add'); ?>
                 </a>
                 <a class="btn btn-danger"
-                   href="<?= $urlGenerator->generate('client/delete', ['id'=>$client->getClient_id()]); ?>"
+                   href="<?= $urlGenerator->generate('client/delete', ['id' => $client->getClient_id()]); ?>"
                    onclick="return confirm('<?= $translator->translate('i.delete_client_warning'); ?>');" style="text-decoration:none">
                    <i class="fa fa-trash-o fa-margin"></i> <?= $translator->translate('i.delete'); ?>
                 </a>
@@ -192,7 +196,7 @@
                                 <?= $translator->translate('i.total_billed'); ?>
                             </th>
                             <td class="td-amount">
-                                <?= null!==($clientIdTotal = $client->getClient_id()) ? $s->format_currency($iR->with_total($clientIdTotal, $iaR)) : ''; ?>
+                                <?= null !== ($clientIdTotal = $client->getClient_id()) ? $s->format_currency($iR->with_total($clientIdTotal, $iaR)) : ''; ?>
                             </td>
                         </tr>
                         <tr>
@@ -200,7 +204,7 @@
                                 <?= $translator->translate('i.total_paid'); ?>
                             </th>
                             <th class="td-amount">
-                                <?= null!==($clientIdPaid = $client->getClient_id()) ? $s->format_currency($iR->with_total_paid($clientIdPaid, $iaR)) : ''; ?>
+                                <?= null !== ($clientIdPaid = $client->getClient_id()) ? $s->format_currency($iR->with_total_paid($clientIdPaid, $iaR)) : ''; ?>
                             </th>
                         </tr>
                         <tr>
@@ -208,7 +212,7 @@
                                 <?= $translator->translate('i.total_balance'); ?>
                             </th>
                             <td class="td-amount">
-                                <?= null!==($clientIdBalance = $client->getClient_id()) ? $s->format_currency($iR->with_total_balance($clientIdBalance, $iaR)) : ''; ?>
+                                <?= null !== ($clientIdBalance = $client->getClient_id()) ? $s->format_currency($iR->with_total_balance($clientIdBalance, $iaR)) : ''; ?>
                             </td>
                         </tr>
                     </table>
@@ -268,18 +272,18 @@
                                     </tr>
                                 <?php endif; ?>
                                 <?php
-                                    /**
-                                     * @var App\Invoice\Entity\CustomField $custom_field
-                                     */ 
-                                    foreach ($custom_fields as $custom_field) : ?>
-                                    <?php if ($custom_field->getLocation() !==2) {
+                        /**
+                         * @var App\Invoice\Entity\CustomField $custom_field
+                         */
+                        foreach ($custom_fields as $custom_field) : ?>
+                                    <?php if ($custom_field->getLocation() !== 2) {
                                         continue;
                                     } ?>
                                     <tr>
                                         <?php
-                                            $clientCustomForm = new App\Invoice\ClientCustom\ClientCustomForm(new App\Invoice\Entity\ClientCustom);
-                                            $cvH->print_field_for_view($custom_field, $clientCustomForm, $clientCustomValues, $customValues);
-                                        ?>
+                                            $clientCustomForm = new App\Invoice\ClientCustom\ClientCustomForm(new App\Invoice\Entity\ClientCustom());
+                            $cvH->print_field_for_view($custom_field, $clientCustomForm, $clientCustomValues, $customValues);
+                            ?>
                                     </tr>
                                 <?php endforeach; ?>
                             </table>
@@ -306,7 +310,7 @@
                                     </tr>
                                 <?php endif; ?>
 
-                                <?php 
+                                <?php
                                     /**
                                      * @var App\Invoice\Entity\CustomField $custom_field
                                      */
@@ -316,8 +320,8 @@
                                     } ?>
                                     <tr>
                                         <?php
-                                            $column = $custom_field->getLabel();                                        
-                                            $value = $cvH->form_value($clientCustomValues, $custom_field->getId())
+                                            $column = $custom_field->getLabel();
+                                        $value = $cvH->form_value($clientCustomValues, $custom_field->getId())
                                         ?>
                                         <th><?= Html::encode($column); ?></th>
                                         <td><?= Html::encode($value); ?></td>
@@ -346,21 +350,21 @@
                                     <tr>
                                         <th><?= $translator->translate('i.birthdate'); ?></th>
                                         
-                                        <td><?= 
-                                              !is_string($clientBirthdate = $client->getClient_birthdate()) 
-                                               && null!==$clientBirthdate ? 
-                                                         $clientBirthdate->format($dateHelper->style()) : '';
-                                            ?></td>
+                                        <td><?=
+                                              !is_string($clientBirthdate = $client->getClient_birthdate())
+                                               && null !== $clientBirthdate ?
+                                                         $clientBirthdate->format('Y-m-d') : '';
+                ?></td>
                                     </tr>
                                     <tr>
                                         <th><?= $translator->translate('i.gender'); ?></th>
-                                        <td><?= null!==($clientGender = $client->getClient_gender()) ? 
-                                                $clientHelper->format_gender($clientGender, $translator) : ''; ?></td>
+                                        <td><?= null !== ($clientGender = $client->getClient_gender()) ?
+                    $clientHelper->format_gender($clientGender, $translator) : ''; ?></td>
                                     </tr>
                                     <?php if ($s->getSetting('sumex') == '1'): ?>
                                         <tr>
                                             <th><?= $translator->translate('i.sumex_ssn'); ?></th>
-                                            <td><?= null!==($clientAvs = $client->getClient_avs()) ? $cvH->format_avs($clientAvs) : ''; ?></td>
+                                            <td><?= null !== ($clientAvs = $client->getClient_avs()) ? $cvH->format_avs($clientAvs) : ''; ?></td>
                                         </tr>
                                         <tr>
                                             <th><?= $translator->translate('i.sumex_insurednumber'); ?></th>
@@ -383,7 +387,7 @@
                                         <tr>
                                             <?php
                                                 $column = $custom_field->getLabel();
-                                                $value = $cvH->form_value($clientCustomValues, $custom_field->getId())
+                                            $value = $cvH->form_value($clientCustomValues, $custom_field->getId())
                                             ?>
                                             <th><?= Html::encode($column); ?></th>
                                             <td><?= Html::encode($value); ?></td>
@@ -420,8 +424,8 @@
                                         } ?>
                                         <tr>
                                             <?php
-                                            $clientCustomForm = new ClientCustomForm(new ClientCustom);
-                                            $cvH->print_field_for_view($custom_field, $clientCustomForm, $clientCustomValues, $customValues);?>
+                                            $clientCustomForm = new ClientCustomForm(new ClientCustom());
+                                           $cvH->print_field_for_view($custom_field, $clientCustomForm, $clientCustomValues, $customValues);?>
                                         </tr>
                                     <?php endforeach; ?>
                                 </table>
@@ -557,10 +561,10 @@
      * Note: The quote modal is used in 3 places
      * Note: {origin} is set in QuoteController/index function ...
      *      'action' => ['quote/add', ['origin' => 'quote']],
-     * Note: {origin} is set in resources/views/layout/invoice.php  ... 
-     *      $urlGenerator->generate('quote/add',['origin' => 'main'])], 
-     * Note: {origin} is set in ClientController/index function ... 
-     *      'action' => ['quote/add', ['origin' => $client_id]], 
+     * Note: {origin} is set in resources/views/layout/invoice.php  ...
+     *      $urlGenerator->generate('quote/add',['origin' => 'main'])],
+     * Note: {origin} is set in ClientController/index function ...
+     *      'action' => ['quote/add', ['origin' => $client_id]],
      * @see config/common/routes quote/add/{origin}
      * @see ClientController/view function 'client_modal_layout_quote' => [ .... ]
      * @see views\invoice\quote\modal_layout.php
@@ -571,5 +575,5 @@
      * Note: If origin is 'main', quote/add/{origin} route will return to url invoice/
      */
     echo $client_modal_layout_quote;
-    echo $client_modal_layout_inv;
+echo $client_modal_layout_inv;
 ?>
