@@ -989,7 +989,7 @@ $.extend( Datepicker.prototype, {
 			obj = obj[ isRTL ? "previousSibling" : "nextSibling" ];
 		}
 
-		position = $( obj ).offset();
+		position = $.find( obj ).offset();
 		return [ position.left, position.top ];
 	},
 
