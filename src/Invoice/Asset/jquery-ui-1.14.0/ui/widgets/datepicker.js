@@ -1073,7 +1073,7 @@ $.extend( Datepicker.prototype, {
 	/* Action for selecting a day. */
 	_selectDay: function( id, month, year, td ) {
 		var inst,
-			target = $( id );
+			target = $.find( id );
 
 		if ( $( td ).hasClass( this._unselectableClass ) || this._isDisabledDatepicker( target[ 0 ] ) ) {
 			return;
@@ -1089,14 +1089,14 @@ $.extend( Datepicker.prototype, {
 
 	/* Erase the input field and hide the date picker. */
 	_clearDate: function( id ) {
-		var target = $( id );
+		var target = $.find( id );
 		this._selectDate( target, "" );
 	},
 
 	/* Update the input field with the selected date. */
 	_selectDate: function( id, dateStr ) {
 		var onSelect,
-			target = $( id ),
+			target = $.find( id ),
 			inst = this._getInst( target[ 0 ] );
 
 		dateStr = ( dateStr != null ? dateStr : this._formatDate( inst ) );
