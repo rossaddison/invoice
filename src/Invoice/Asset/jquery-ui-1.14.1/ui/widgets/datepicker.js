@@ -782,7 +782,7 @@ $.extend( Datepicker.prototype, {
 	_showDatepicker: function( input ) {
 		input = input.target || input;
 		if ( input.nodeName.toLowerCase() !== "input" ) { // find from button/image trigger
-			input = $( input.parentNode ).find("input")[0];
+			input = $( input ).closest("input")[0];
 		}
 
 		if ( $.datepicker._isDisabledDatepicker( input ) || $.datepicker._lastInput === input ) { // already here
