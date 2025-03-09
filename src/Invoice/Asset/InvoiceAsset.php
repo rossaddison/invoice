@@ -61,7 +61,7 @@ class InvoiceAsset extends AssetBundle
         'rebuild/js/mailer_ajax_email_addresses.js',
         'rebuild/js/modal-product-lookups.js',
         'rebuild/js/modal-task-lookups-inv.js',
-        // Upgraded from 1.14.0 to 1.14.1 on 9th March 2025 
+        // Upgraded from 1.14.0 to 1.14.1 on 9th March 2025
         'jquery-ui-1.14.1/jquery-ui.min.js',
 
         // bootstrap lightbox
