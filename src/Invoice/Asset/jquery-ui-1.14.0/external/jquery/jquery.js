@@ -1275,10 +1275,21 @@ function setDocument( node ) {
 
 		var input;
 
-		documentElement.appendChild( el ).innerHTML =
-			"<a id='" + expando + "' href='' disabled='disabled'></a>" +
-			"<select id='" + expando + "-\r\\' disabled='disabled'>" +
-			"<option selected=''></option></select>";
+		var anchor = document.createElement('a');
+		anchor.id = expando;
+		anchor.href = '';
+		anchor.setAttribute('disabled', 'disabled');
+		el.appendChild(anchor);
+
+		var select = document.createElement('select');
+		select.id = expando + "-\r\\";
+		select.setAttribute('disabled', 'disabled');
+
+		var option = document.createElement('option');
+		option.setAttribute('selected', '');
+		select.appendChild(option);
+
+		el.appendChild(select);
 
 		// Support: iOS <=7 - 8 only
 		// Boolean attributes and "value" are not treated correctly in some XML documents
