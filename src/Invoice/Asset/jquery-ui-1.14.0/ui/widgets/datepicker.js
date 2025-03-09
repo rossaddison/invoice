@@ -1076,7 +1076,8 @@ $.extend( Datepicker.prototype, {
 			target = $.find( id ),
 			$td = $( td ).find("a");
 
-		if ( $td.hasClass( this._unselectableClass ) || this._isDisabledDatepicker( target[ 0 ] ) ) {
+		// Validate the td element
+		if ( !$td.length || $td.hasClass( this._unselectableClass ) || this._isDisabledDatepicker( target[ 0 ] ) ) {
 			return;
 		}
 
