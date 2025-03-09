@@ -15,7 +15,7 @@ class InvoiceAsset extends AssetBundle
     public ?string $sourcePath = '@src/Invoice/Asset';
 
     public array $css = [
-        'invoice/css/style.css',                
+        'invoice/css/style.css',
         'yii3i/yii3i.css',
         // Upgraded from 1.13.3 to 1.14.0 on 2024/08/05
         'jquery-ui-1.14.0/jquery-ui.min.css',
