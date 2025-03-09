@@ -63,7 +63,7 @@ class TaxTotal implements XmlSerializable
                 ],
             );
 
-            // The suppliers currency is different to the document's currency
+        // The suppliers currency is different to the document's currency
         } else {
             // https://docs.peppol.eu/poacc/billing/3.0/syntax/ubl-invoice/cac-TaxTotal/
             // Suppliers Tax Amount in Suppliers Currency without subtotal breakdown

@@ -354,7 +354,7 @@ class DateHelper
         // Get with style
         if ($date instanceof \DateTimeImmutable) {
             $return_date = $this->date_from_mysql($date);
-            // Set with style
+        // Set with style
         } elseif (null !== $date) {
             $return_date = $this->datetime_zone_style((string) $date);
         } else {
