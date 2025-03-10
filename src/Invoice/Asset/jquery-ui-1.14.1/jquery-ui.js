@@ -2264,6 +2264,7 @@ $.fn.datepicker = function( options ) {
 			$.datepicker[ "_" + options + "Datepicker" ]
 				.apply( $.datepicker, [ this ].concat( otherArgs ) );
 		} else {
+			options = $.extend({}, options); // Sanitize options
 			$.datepicker._attachDatepicker( this, options );
 		}
 	} );
