@@ -7605,16 +7605,16 @@
         },
         {
             "name": "phpstan/phpstan",
-            "version": "2.1.7",
+            "version": "2.1.8",
             "source": {
                 "type": "git",
                 "url": "https://github.com/phpstan/phpstan.git",
-                "reference": "12567f91a74036d56ba0af6d56c8e73ac0e8d850"
+                "reference": "f9adff3b87c03b12cc7e46a30a524648e497758f"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/phpstan/phpstan/zipball/12567f91a74036d56ba0af6d56c8e73ac0e8d850",
-                "reference": "12567f91a74036d56ba0af6d56c8e73ac0e8d850",
+                "url": "https://api.github.com/repos/phpstan/phpstan/zipball/f9adff3b87c03b12cc7e46a30a524648e497758f",
+                "reference": "f9adff3b87c03b12cc7e46a30a524648e497758f",
                 "shasum": ""
             },
             "require": {
@@ -7659,7 +7659,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2025-03-05T13:43:55+00:00"
+            "time": "2025-03-09T09:30:48+00:00"
         },
         {
             "name": "psalm/plugin-symfony",
@@ -18046,12 +18046,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/yiisoft/yii-dataview.git",
-                "reference": "21ee22f6506296c363c231b516500d2b24758fac"
+                "reference": "5a09ab1003aa4d5d41aebae9a49a80dff3a5091b"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/yiisoft/yii-dataview/zipball/21ee22f6506296c363c231b516500d2b24758fac",
-                "reference": "21ee22f6506296c363c231b516500d2b24758fac",
+                "url": "https://api.github.com/repos/yiisoft/yii-dataview/zipball/5a09ab1003aa4d5d41aebae9a49a80dff3a5091b",
+                "reference": "5a09ab1003aa4d5d41aebae9a49a80dff3a5091b",
                 "shasum": ""
             },
             "require": {
@@ -18134,7 +18134,7 @@
                     "type": "opencollective"
                 }
             ],
-            "time": "2025-03-06T07:35:49+00:00"
+            "time": "2025-03-09T22:00:45+00:00"
         },
         {
             "name": "yiisoft/yii-event",
