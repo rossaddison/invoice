@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "efccea5b4efef3a9ace68bae83ff8b67",
+    "content-hash": "6eb70e4f398aa1ec4a99907a6b5b3058",
     "packages": [
         {
             "name": "alexkart/curl-builder",
@@ -5213,16 +5213,16 @@
         },
         {
             "name": "mollie/mollie-api-php",
-            "version": "v2.78.0",
+            "version": "v2.79.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/mollie/mollie-api-php.git",
-                "reference": "2a8dcd26d45e3486a8240f2d8473b7ddd8fe8103"
+                "reference": "ad078c1b07da16c6571b16401a286143a5da188c"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/mollie/mollie-api-php/zipball/2a8dcd26d45e3486a8240f2d8473b7ddd8fe8103",
-                "reference": "2a8dcd26d45e3486a8240f2d8473b7ddd8fe8103",
+                "url": "https://api.github.com/repos/mollie/mollie-api-php/zipball/ad078c1b07da16c6571b16401a286143a5da188c",
+                "reference": "ad078c1b07da16c6571b16401a286143a5da188c",
                 "shasum": ""
             },
             "require": {
@@ -5299,9 +5299,9 @@
             ],
             "support": {
                 "issues": "https://github.com/mollie/mollie-api-php/issues",
-                "source": "https://github.com/mollie/mollie-api-php/tree/v2.78.0"
+                "source": "https://github.com/mollie/mollie-api-php/tree/v2.79.0"
             },
-            "time": "2025-02-13T12:27:56+00:00"
+            "time": "2025-03-11T09:51:00+00:00"
         },
         {
             "name": "moneyphp/money",
