@@ -65,7 +65,7 @@
         "rector/rector": "^2.0.10",
         "rossaddison/yii-auth-client": "dev-master",
         "rossaddison/yii-cycle-1": "dev-invoice",                
-        "rossaddison/yii-gii": "dev-psalm-suppression",
+        "rossaddison/yii-gii": "dev-phpspec-diff",
         "rossaddison/yii-middleware": "dev-invoice",
         "sabre/xml": "^4.0.6",
         "setasign/fpdf": "^1.8.6",
