@@ -9,9 +9,9 @@ use Yiisoft\Html\Tag\Button;
 use Yiisoft\Html\Tag\Form;
 use Yiisoft\Html\Tag\Label;
 use Yiisoft\Yii\Bootstrap5\ButtonSize;
+use Yiisoft\Yii\Bootstrap5\ButtonVariant;
 use Yiisoft\Yii\Bootstrap5\Dropdown;
 use Yiisoft\Yii\Bootstrap5\DropdownItem;
-use Yiisoft\Yii\Bootstrap5\DropdownTogglerVariant;
 use Yiisoft\Yii\Bootstrap5\Nav;
 use Yiisoft\Yii\Bootstrap5\NavBarExpand;
 use Yiisoft\Yii\Bootstrap5\NavBarPlacement;
@@ -121,7 +121,7 @@ $this->setTitle($title);
                 'style' => 'font-size: 1rem; color: black;',
                 'url' => '#'
             ])
-            ->togglerVariant(DropdownTogglerVariant::LIGHT)
+            ->togglerVariant(ButtonVariant::LIGHT)
             ->togglerContent('')
             ->togglerSize(ButtonSize::SMALL)
             ->items(

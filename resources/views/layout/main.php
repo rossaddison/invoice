@@ -12,7 +12,7 @@ use Yiisoft\Html\Tag\Label;
 use Yiisoft\Yii\Bootstrap5\ButtonSize;
 use Yiisoft\Yii\Bootstrap5\Dropdown;
 use Yiisoft\Yii\Bootstrap5\DropdownItem;
-use Yiisoft\Yii\Bootstrap5\DropdownTogglerVariant;
+use Yiisoft\Yii\Bootstrap5\ButtonVariant;
 use Yiisoft\Yii\Bootstrap5\Nav;
 use Yiisoft\Yii\Bootstrap5\NavBar;
 use Yiisoft\Yii\Bootstrap5\NavBarExpand;
@@ -124,7 +124,7 @@ $this->beginPage();
         'title' => $translator->translate('i.language'),
         'url' => '#'
     ])
-    ->togglerVariant(DropdownTogglerVariant::INFO)
+    ->togglerVariant(ButtonVariant::INFO)
     ->togglerContent('')
     ->togglerSize(ButtonSize::SMALL)
     ->items(

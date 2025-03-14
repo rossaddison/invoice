@@ -18,7 +18,7 @@ use Yiisoft\Html\Tag\Meta;
 use Yiisoft\Yii\Bootstrap5\ButtonSize;
 use Yiisoft\Yii\Bootstrap5\Dropdown;
 use Yiisoft\Yii\Bootstrap5\DropdownItem;
-use Yiisoft\Yii\Bootstrap5\DropdownTogglerVariant;
+use Yiisoft\Yii\Bootstrap5\ButtonVariant;
 use Yiisoft\Yii\Bootstrap5\Nav;
 use Yiisoft\Yii\Bootstrap5\NavBar;
 use Yiisoft\Yii\Bootstrap5\NavLink;
@@ -186,7 +186,7 @@ if ((null !== $currentPath) && !$isGuest) {
         ->items(
             Dropdown::widget()
             ->addClass('navbar fs-4')
-            ->togglerVariant(DropdownTogglerVariant::INFO)
+            ->togglerVariant(ButtonVariant::INFO)
             ->togglerContent('📋')
             ->togglerSize(ButtonSize::LARGE)
             ->items(
@@ -220,7 +220,7 @@ if ((null !== $currentPath) && !$isGuest) {
             ->addAttributes([
                 'style' => 'font-size: 2rem; color: cornflowerblue;'
             ])
-            ->togglerVariant(DropdownTogglerVariant::INFO)
+            ->togglerVariant(ButtonVariant::INFO)
             ->togglerContent($translator->translate('invoice.faq'))
             ->togglerSize(ButtonSize::LARGE)
             ->items(
@@ -245,7 +245,7 @@ if ((null !== $currentPath) && !$isGuest) {
             ->attributes([
                 'style' => 'background-color: #ffcccb'
             ])
-            ->togglerVariant(DropdownTogglerVariant::INFO)
+            ->togglerVariant(ButtonVariant::INFO)
             ->togglerContent($translator->translate('invoice.generator'))
             ->togglerSize(ButtonSize::LARGE)
             ->items(
@@ -361,7 +361,7 @@ if ((null !== $currentPath) && !$isGuest) {
                                        : $translator->translate('invoice.performance.label.switch.off'),
                 'hidden' => !$debugMode
             ])
-            ->togglerVariant(DropdownTogglerVariant::INFO)
+            ->togglerVariant(ButtonVariant::INFO)
             ->togglerContent($translator->translate('invoice.performance'))
             ->togglerSize(ButtonSize::LARGE)
             ->items(
@@ -391,7 +391,7 @@ if ((null !== $currentPath) && !$isGuest) {
             ->addAttributes([
                 'hidden' => !$debugMode
             ])
-            ->togglerVariant(DropdownTogglerVariant::INFO)
+            ->togglerVariant(ButtonVariant::INFO)
             ->togglerContent($translator->translate('invoice.platform'))
             ->togglerSize(ButtonSize::LARGE)
             ->items(
@@ -443,7 +443,7 @@ if ((null !== $currentPath) && !$isGuest) {
                 'style' => 'font-size: 1rem;',
                 'hidden' => !$debugMode
             ])
-            ->togglerVariant(DropdownTogglerVariant::INFO)
+            ->togglerVariant(ButtonVariant::INFO)
             ->togglerContent('🐘')
             ->togglerSize(ButtonSize::LARGE)
             ->items(
@@ -457,7 +457,7 @@ if ((null !== $currentPath) && !$isGuest) {
                 'style' => 'font-size: 2rem; color: cornflowerblue;',
                 'hidden' => !$debugMode
             ])
-            ->togglerVariant(DropdownTogglerVariant::INFO)
+            ->togglerVariant(ButtonVariant::INFO)
             ->togglerContent('😀')
             ->togglerSize(ButtonSize::LARGE)
             ->items(
@@ -495,7 +495,7 @@ if ((null !== $currentPath) && !$isGuest) {
         ),
         // Settings
         Dropdown::widget()
-        ->togglerVariant(DropdownTogglerVariant::INFO)
+        ->togglerVariant(ButtonVariant::INFO)
         ->togglerContent(I::tag()->addClass('fa fa-cogs'))
         ->togglerSize(ButtonSize::LARGE)
         ->items(
@@ -529,7 +529,7 @@ if ((null !== $currentPath) && !$isGuest) {
             'style' => 'font-size: 1rem; color: cornflowerblue;',
             'url' => '#'
         ])
-        ->togglerVariant(DropdownTogglerVariant::INFO)
+        ->togglerVariant(ButtonVariant::INFO)
         ->togglerContent($translator->translate('invoice.peppol.abbreviation'))
         ->togglerSize(ButtonSize::LARGE)
         ->items(
@@ -545,7 +545,7 @@ if ((null !== $currentPath) && !$isGuest) {
         ->addAttributes([
             'style' => 'font-size: 1rem; color: cornflowerblue;',
         ])
-        ->togglerVariant(DropdownTogglerVariant::INFO)
+        ->togglerVariant(ButtonVariant::INFO)
         ->togglerContent(I::tag()->addClass('bi bi-people'))
         ->togglerSize(ButtonSize::LARGE)
         ->items(
@@ -561,7 +561,7 @@ if ((null !== $currentPath) && !$isGuest) {
         ->addAttributes([
             'style' => 'font-size: 1rem; color: cornflowerblue;',
         ])
-        ->togglerVariant(DropdownTogglerVariant::INFO)
+        ->togglerVariant(ButtonVariant::INFO)
         ->togglerContent($translator->translate('i.quote'))
         ->togglerSize(ButtonSize::LARGE)
         ->items(
@@ -574,7 +574,7 @@ if ((null !== $currentPath) && !$isGuest) {
         ->addAttributes([
             'style' => 'font-size: 1rem; color: cornflowerblue;',
         ])
-        ->togglerVariant(DropdownTogglerVariant::INFO)
+        ->togglerVariant(ButtonVariant::INFO)
         ->togglerContent($translator->translate('invoice.salesorder'))
         ->togglerSize(ButtonSize::LARGE)
         ->items(
@@ -586,7 +586,7 @@ if ((null !== $currentPath) && !$isGuest) {
         ->addAttributes([
             'style' => 'font-size: 1rem; color: cornflowerblue;',
         ])
-        ->togglerVariant(DropdownTogglerVariant::INFO)
+        ->togglerVariant(ButtonVariant::INFO)
         ->togglerContent($translator->translate('i.invoice'))
         ->togglerSize(ButtonSize::LARGE)
         ->items(
@@ -600,7 +600,7 @@ if ((null !== $currentPath) && !$isGuest) {
         ->addAttributes([
             'style' => 'font-size: 1rem; color: cornflowerblue;',
         ])
-        ->togglerVariant(DropdownTogglerVariant::INFO)
+        ->togglerVariant(ButtonVariant::INFO)
         ->togglerContent(I::tag()->addClass('bi bi-coin'))
         ->togglerSize(ButtonSize::LARGE)
         ->items(
@@ -614,7 +614,7 @@ if ((null !== $currentPath) && !$isGuest) {
         ->addAttributes([
             'style' => 'font-size: 1rem; color: cornflowerblue;',
         ])
-        ->togglerVariant(DropdownTogglerVariant::INFO)
+        ->togglerVariant(ButtonVariant::INFO)
         ->togglerContent($translator->translate('i.product'))
         ->togglerSize(ButtonSize::LARGE)
         ->items(
@@ -630,7 +630,7 @@ if ((null !== $currentPath) && !$isGuest) {
         ->addAttributes([
             'style' => 'font-size: 1rem; color: cornflowerblue;',
         ])
-        ->togglerVariant(DropdownTogglerVariant::INFO)
+        ->togglerVariant(ButtonVariant::INFO)
         ->togglerContent($translator->translate('i.tasks'))
         ->togglerSize(ButtonSize::LARGE)
         ->items(
@@ -643,7 +643,7 @@ if ((null !== $currentPath) && !$isGuest) {
         ->addAttributes([
             'style' => 'font-size: 1rem; color: cornflowerblue;',
         ])
-        ->togglerVariant(DropdownTogglerVariant::INFO)
+        ->togglerVariant(ButtonVariant::INFO)
         ->togglerContent($translator->translate('i.projects'))
         ->togglerSize(ButtonSize::LARGE)
         ->items(
@@ -656,7 +656,7 @@ if ((null !== $currentPath) && !$isGuest) {
         ->addAttributes([
             'style' => 'font-size: 1rem; color: cornflowerblue;',
         ])
-        ->togglerVariant(DropdownTogglerVariant::INFO)
+        ->togglerVariant(ButtonVariant::INFO)
         ->togglerContent($translator->translate('i.reports'))
         ->togglerSize(ButtonSize::LARGE)
         ->items(
@@ -675,7 +675,7 @@ if ((null !== $currentPath) && !$isGuest) {
             'title' => $translator->translate('i.language'),
             'url' => '#'
         ])
-        ->togglerVariant(DropdownTogglerVariant::INFO)
+        ->togglerVariant(ButtonVariant::INFO)
         ->togglerContent(I::tag()->class('bi bi-translate'))
         ->togglerSize(ButtonSize::LARGE)
         ->items(
