@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "a6cffde51dcf2677493bba4179b96556",
+    "content-hash": "644544e7ef174aa04009252e4b3644b7",
     "packages": [
         {
             "name": "alexkart/curl-builder",
@@ -1937,16 +1937,16 @@
         },
         {
             "name": "cycle/orm",
-            "version": "v2.9.3",
+            "version": "v2.10.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/cycle/orm.git",
-                "reference": "a366d017c5b8a8c5ea6ef54478ba6809c73dbffd"
+                "reference": "44eaeb017532201d0a417ba3a09c49a67d942202"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/cycle/orm/zipball/a366d017c5b8a8c5ea6ef54478ba6809c73dbffd",
-                "reference": "a366d017c5b8a8c5ea6ef54478ba6809c73dbffd",
+                "url": "https://api.github.com/repos/cycle/orm/zipball/44eaeb017532201d0a417ba3a09c49a67d942202",
+                "reference": "44eaeb017532201d0a417ba3a09c49a67d942202",
                 "shasum": ""
             },
             "require": {
@@ -1966,7 +1966,7 @@
                 "spiral/code-style": "~2.2.0",
                 "spiral/tokenizer": "^2.8 || ^3.0",
                 "symfony/var-dumper": "^5.2 || ^6.0 || ^7.0",
-                "vimeo/psalm": "5.21"
+                "vimeo/psalm": "5.21 || ^6.8"
             },
             "type": "library",
             "autoload": {
@@ -2020,7 +2020,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2025-01-14T11:17:33+00:00"
+            "time": "2025-03-02T22:15:34+00:00"
         },
         {
             "name": "cycle/schema-builder",
