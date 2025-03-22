@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "a6cffde51dcf2677493bba4179b96556",
+    "content-hash": "c85b65aa31fd44a013e2dcf13061accc",
     "packages": [
         {
             "name": "alexkart/curl-builder",
@@ -24056,16 +24056,16 @@
         },
         {
             "name": "styleci/cli",
-            "version": "v1.5.1",
+            "version": "v1.6.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/StyleCI/CLI.git",
-                "reference": "4c7a7145674a626c95296f146e08becfdf383c2f"
+                "reference": "67bbf2169e40d07b6d5964e897d0ce548addd051"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/StyleCI/CLI/zipball/4c7a7145674a626c95296f146e08becfdf383c2f",
-                "reference": "4c7a7145674a626c95296f146e08becfdf383c2f",
+                "url": "https://api.github.com/repos/StyleCI/CLI/zipball/67bbf2169e40d07b6d5964e897d0ce548addd051",
+                "reference": "67bbf2169e40d07b6d5964e897d0ce548addd051",
                 "shasum": ""
             },
             "require": {
@@ -24095,9 +24095,9 @@
             ],
             "description": "The CLI tool for StyleCI",
             "support": {
-                "source": "https://github.com/StyleCI/CLI/tree/v1.5.1"
+                "source": "https://github.com/StyleCI/CLI/tree/v1.6.0"
             },
-            "time": "2023-06-11T22:22:31+00:00"
+            "time": "2025-03-22T22:13:08+00:00"
         },
         {
             "name": "symfony/browser-kit",
