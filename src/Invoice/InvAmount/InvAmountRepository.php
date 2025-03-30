@@ -63,7 +63,7 @@ final class InvAmountRepository extends Select\Repository
     /**
      * @param array|InvAmount|null $invamount
      */
-    public function delete(array|Invamount|null $invamount): void
+    public function delete(array|InvAmount|null $invamount): void
     {
         $this->entityWriter->delete([$invamount]);
     }

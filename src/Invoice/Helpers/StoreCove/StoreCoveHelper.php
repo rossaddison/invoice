@@ -556,7 +556,7 @@ class StoreCoveHelper
      * @throws PeppolClientNotFoundException
      * @return array
      */
-    private function build_invoice_lines_array(Inv $invoice, InvoicePeriod $invoice_period, iiaR $iiaR, cpR $cpR, SOIR $soiR, ACIIR $aciiR, unpR $unpR, ppR $ppR): array
+    private function build_invoice_lines_array(Inv $invoice, InvoicePeriod $invoice_period, IIAR $iiaR, cpR $cpR, SOIR $soiR, ACIIR $aciiR, unpR $unpR, ppR $ppR): array
     {
         $client = $invoice->getClient();
         if ($client) {
@@ -1076,7 +1076,7 @@ class StoreCoveHelper
      * @throws PeppolTaxCategoryPercentNotFoundException
      * @return array
      */
-    private function build_TaxSubtotal_array(Inv $invoice, iiaR $iiaR, TRR $trR): array
+    private function build_TaxSubtotal_array(Inv $invoice, IIAR $iiaR, TRR $trR): array
     {
         $array = [];
         // For each tax rate, build the taxable amount array

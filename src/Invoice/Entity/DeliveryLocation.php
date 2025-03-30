@@ -50,8 +50,8 @@ class DeliveryLocation
         #[Column(type: 'string(4)', nullable: true)]
         private ?string $electronic_address_scheme = ''
     ) {
-        $this->date_created = new \DateTimeImmutable();
-        $this->date_modified = new \DateTimeImmutable();
+        $this->date_created = new DateTimeImmutable();
+        $this->date_modified = new DateTimeImmutable();
     }
 
     public function getId(): int|null

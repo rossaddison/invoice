@@ -17,7 +17,7 @@ final class GeneratorTruncateCommand extends Command
 {
     protected static $defaultName = 'invoice/generator/truncate';
 
-    public function __construct(  
+    public function __construct(
         private CycleDependencyProxy $promise,
     ) {
         parent::__construct();
@@ -29,15 +29,15 @@ final class GeneratorTruncateCommand extends Command
             ->setDescription('Truncates, i.e removes all records, in the tables related to generating code through the Generator.')
             ->setHelp('The specific tables Gentor and GentorRelation are truncated.');
     }
-    
+
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
-        /** Note tables must be truncated in this sequence in order to avoid integrity constraint violations **/ 
-        
+        /** Note tables must be truncated in this sequence in order to avoid integrity constraint violations **/
+
         $io = new SymfonyStyle($input, $output);
-        
+
         $tables = ['gentor_relation', 'gentor'];
-        
+
         foreach ($tables as $table) {
             $this->promise
                 ->getDatabaseProvider()
@@ -45,20 +45,18 @@ final class GeneratorTruncateCommand extends Command
                 ->delete($table)
                 ->run();
         }
-        
-        if (0 === count(($this->promise
+
+        if (0 === count($this->promise
                 ->getORM()
-                ->getRepository(GentorRelation::class))->findAll()) +
-            count(($this->promise
+                ->getRepository(GentorRelation::class)->findAll()) +
+            count($this->promise
                 ->getORM()
-                ->getRepository(Gentor::class))->findAll())    
-        )
-        {
+                ->getRepository(Gentor::class)->findAll())
+        ) {
             $io->success('Done');
             return ExitCode::OK;
-        } else {
-            $io->error('Unspecified error');
-            return ExitCode::UNSPECIFIED_ERROR;
-        } 
+        }
+        $io->error('Unspecified error');
+        return ExitCode::UNSPECIFIED_ERROR;
     }
 }

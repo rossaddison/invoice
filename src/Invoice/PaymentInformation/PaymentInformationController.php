@@ -132,7 +132,7 @@ final class PaymentInformationController
      * @param currentRoute $currentRoute
      * @return Response|\Yiisoft\DataResponse\DataResponse
      */
-    public function amazon_complete(Request $request, currentRoute $currentRoute): \Yiisoft\DataResponse\DataResponse|Response
+    public function amazon_complete(Request $request, CurrentRoute $currentRoute): \Yiisoft\DataResponse\DataResponse|Response
     {
         // Redirect to the invoice using the url key
         $invoice_url_key = $currentRoute->getArgument('url_key');

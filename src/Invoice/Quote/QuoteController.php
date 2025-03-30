@@ -777,7 +777,7 @@ final class QuoteController
      */
     public function delete(
         #[RouteArgument('id')] int $id,
-        QuoteRepository $quoteRepo,
+        QR $quoteRepo,
         QCR $qcR,
         QuoteCustomService $qcS,
         QIR $qiR,
@@ -1505,7 +1505,7 @@ final class QuoteController
         CR $clientRepo,
         GR $groupRepo,
         SOR $soR,
-        sR $sR,
+        SR $sR,
         UCR $ucR,
         #[RouteArgument('_language')] string $_language,
         #[RouteArgument('page')] string $page = '1',
@@ -1847,7 +1847,7 @@ final class QuoteController
      */
     private function quote(
         int $id,
-        QuoteRepository $quoteRepo,
+        QR $quoteRepo,
         bool $unloaded = false
     ): Quote|null {
         if ($id) {
@@ -1861,7 +1861,7 @@ final class QuoteController
      *
      * @psalm-return \Yiisoft\Data\Cycle\Reader\EntityReader
      */
-    private function quotes(QuoteRepository $quoteRepo, int $status): \Yiisoft\Data\Cycle\Reader\EntityReader
+    private function quotes(QR $quoteRepo, int $status): \Yiisoft\Data\Cycle\Reader\EntityReader
     {
         return $quoteRepo->findAllWithStatus($status);
     }
@@ -1872,7 +1872,7 @@ final class QuoteController
      * @param Sort $sort
      * @return \Yiisoft\Data\Reader\SortableDataInterface
      */
-    private function quotes_status_with_sort(QuoteRepository $quoteRepo, int $status, Sort $sort): \Yiisoft\Data\Reader\SortableDataInterface
+    private function quotes_status_with_sort(QR $quoteRepo, int $status, Sort $sort): \Yiisoft\Data\Reader\SortableDataInterface
     {
         return $quoteRepo->findAllWithStatus($status)
                             ->withSort($sort);
@@ -1896,7 +1896,7 @@ final class QuoteController
      * @param qcR $qcR
      * @return array
      */
-    public function quote_custom_values(string $quote_id, qcR $qcR): array
+    public function quote_custom_values(string $quote_id, QCR $qcR): array
     {
         // Get all the custom fields that have been registered with this quote on creation, retrieve existing values via repo, and populate
         // custom_field_form_values array
@@ -1960,7 +1960,7 @@ final class QuoteController
         CFR $cfR,
         GR $gR,
         IIAR $iiaR,
-        InvItemAmountservice $iiaS,
+        InvItemAmountService $iiaS,
         PR $pR,
         QAR $qaR,
         QCR $qcR,

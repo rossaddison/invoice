@@ -52,7 +52,7 @@ class TemplateHelper
      * @param uiR $uiR
      * @return string
      */
-    public function parse_template(string $pk, bool $isInvoice, string $body, CR $cR, CVR $cvR, IR $iR, IAR $iaR, QR $qR, QAR $qaR, SOR $soR, uiR $uiR)
+    public function parse_template(string $pk, bool $isInvoice, string $body, CR $cR, cvR $cvR, IR $iR, IAR $iaR, QR $qR, QAR $qaR, SOR $soR, uiR $uiR)
     {
         $template_vars = [];
         $var = '';

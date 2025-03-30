@@ -172,7 +172,7 @@ class MpdfHelper
         string $filename,
         bool $stream,
         null|string $password,
-        sR $sR,
+        SR $sR,
         // ZugferdXml is not created for a quote => null
         // but iiaR is necessary for the invoice item amounts
         // along with the entity InvAmount
@@ -258,7 +258,7 @@ class MpdfHelper
      * @param array $associated_files
      * @return \Mpdf\Mpdf
      */
-    private function initialize_pdf(string|null $password, SR $sR, string $title, object|null $quote_or_invoice, IIAR|null $iiaR, InvAmount|null $inv_amount, Aliases $aliases, bool $zugferd_invoice, array $associated_files = []): \Mpdf\Mpdf
+    private function initialize_pdf(string|null $password, SR $sR, string $title, object|null $quote_or_invoice, iiaR|null $iiaR, InvAmount|null $inv_amount, Aliases $aliases, bool $zugferd_invoice, array $associated_files = []): \Mpdf\Mpdf
     {
         $mpdf = new \Mpdf\Mpdf($this->options);
         // mPDF configuration

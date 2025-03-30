@@ -111,7 +111,7 @@ final class TelegramController
                         $secretToken
                     );
                     if (strlen($chatId) > 1) {
-                        if (!$failResult instanceof \Vjik\TelegramBot\Api\FailResult) {
+                        if (!$failResult instanceof FailResult) {
                             $user = $this->telegramBotApi->getMe();
                             if (($user instanceof \Vjik\TelegramBot\Api\Type\User) &&
                                 ($this->sR->getSetting('telegram_test_message_use') == '1')) {
@@ -278,7 +278,7 @@ final class TelegramController
                         $secretToken = null
                     );
                     $failResultWebhookInfo = $telegramHelper->getWebhookInfo();
-                    if (!$failResultSetWebhook instanceof \Vjik\TelegramBot\Api\FailResult) {
+                    if (!$failResultSetWebhook instanceof FailResult) {
                         $this->flashMessage('success', $this->translator->translate('invoice.invoice.telegram.bot.api.webhook.setup'));
                     } else {
                         $this->flashMessage('success', $this->translator->translate('invoice.invoice.telegram.bot.api.webhook.setup.already'));
@@ -328,7 +328,7 @@ final class TelegramController
                     // ensure any existing Webhook is deleted so that can receive updates e.g.
                     // messages sent from telegram users so that we can build up a database of chat_id's that we can send a test message to
                     $failResult = $telegramHelper->deleteWebhook();
-                    if (!$failResult instanceof \Vjik\TelegramBot\Api\FailResult) {
+                    if (!$failResult instanceof FailResult) {
                         $this->flashMessage('success', $this->translator->translate('invoice.invoice.telegram.bot.api.webhook.deleted'));
                     } else {
                         if (null !== $failResult->description) {
@@ -379,7 +379,7 @@ final class TelegramController
                     );
                     $this->telegramBotApi = $telegramHelper->getBotApi();
                     $failResult = $telegramHelper->deleteWebhook();
-                    if (!$failResult instanceof \Vjik\TelegramBot\Api\FailResult) {
+                    if (!$failResult instanceof FailResult) {
                         $this->flashMessage('success', $this->translator->translate('invoice.invoice.telegram.bot.api.webhook.deleted'));
                     } else {
                         if (null !== $failResult->description) {
@@ -390,7 +390,7 @@ final class TelegramController
                         }
                     }
                     $failResultUpdates = $this->telegramBotApi->getUpdates($offset, $limit, $timeout, $allowedUpdates);
-                    if (!$failResultUpdates instanceof \Vjik\TelegramBot\Api\FailResult) {
+                    if (!$failResultUpdates instanceof FailResult) {
                         $this->flashMessage('success', $this->translator->translate('invoice.invoice.telegram.bot.api.get.updates.success'));
                     } else {
                         $this->flashMessage('danger', $this->translator->translate('invoice.invoice.telegram.bot.api.get.updates.danger'));

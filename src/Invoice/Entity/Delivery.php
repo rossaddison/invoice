@@ -46,11 +46,11 @@ class Delivery
         #[Column(type: 'integer(11)', nullable: true)]
         private ?int $delivery_party_id = null,
     ) {
-        $this->actual_delivery_date = new \DateTimeImmutable();
-        $this->date_created = new \DateTimeImmutable();
-        $this->date_modified = new \DateTimeImmutable();
-        $this->start_date = new \DateTimeImmutable(date('Y-m-01'));
-        $this->end_date = new \DateTimeImmutable(date('Y-m-t'));
+        $this->actual_delivery_date = new DateTimeImmutable();
+        $this->date_created = new DateTimeImmutable();
+        $this->date_modified = new DateTimeImmutable();
+        $this->start_date = new DateTimeImmutable(date('Y-m-01'));
+        $this->end_date = new DateTimeImmutable(date('Y-m-t'));
     }
 
     public function getId(): int|null

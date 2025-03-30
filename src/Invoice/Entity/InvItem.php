@@ -77,8 +77,8 @@ class InvItem
         #[Column(type: 'longText', nullable: true)]
         private ?string $note = null,
     ) {
-        $this->date_added = new \DateTimeImmutable();
-        $this->date = new \DateTimeImmutable();
+        $this->date_added = new DateTimeImmutable();
+        $this->date = new DateTimeImmutable();
         $this->invitemallowancecharges = new ArrayCollection();
     }
 

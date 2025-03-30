@@ -20,7 +20,7 @@ final class SalesOrderTruncate3Command extends Command
 {
     protected static $defaultName = 'invoice/salesorder/truncate3';
 
-    public function __construct(  
+    public function __construct(
         private CycleDependencyProxy $promise,
     ) {
         parent::__construct();
@@ -32,15 +32,15 @@ final class SalesOrderTruncate3Command extends Command
             ->setDescription('Truncates, i.e removes all records, in the tables related to salesorders.')
             ->setHelp('sales_order_item_amount, sales_order_amount, sales_order_item, sales_order_tax_rate, sales_order tables will be truncated until there are no records left in them.');
     }
-    
+
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
-        /** Note tables must be truncated in this sequence in order to avoid integrity constraint violations **/ 
-        
+        /** Note tables must be truncated in this sequence in order to avoid integrity constraint violations **/
+
         $io = new SymfonyStyle($input, $output);
-        
+
         $tables = ['sales_order_item_amount', 'sales_order_amount', 'sales_order_item', 'sales_order_tax_rate', 'sales_order'];
-        
+
         foreach ($tables as $table) {
             $this->promise
                 ->getDatabaseProvider()
@@ -48,29 +48,27 @@ final class SalesOrderTruncate3Command extends Command
                 ->delete($table)
                 ->run();
         }
-        
-        if (0 === count(($this->promise
+
+        if (0 === count($this->promise
                 ->getORM()
-                ->getRepository(SalesOrderItemAmount::class))->findAll()) +
-            count(($this->promise
+                ->getRepository(SalesOrderItemAmount::class)->findAll()) +
+            count($this->promise
                 ->getORM()
-                ->getRepository(SalesOrderAmount::class))->findAll()) +
-            count(($this->promise
+                ->getRepository(SalesOrderAmount::class)->findAll()) +
+            count($this->promise
                 ->getORM()
-                ->getRepository(SalesOrderItem::class))->findAll()) +
-            count(($this->promise
+                ->getRepository(SalesOrderItem::class)->findAll()) +
+            count($this->promise
                 ->getORM()
-                ->getRepository(SalesOrderTaxRate::class))->findAll()) +
-            count(($this->promise
+                ->getRepository(SalesOrderTaxRate::class)->findAll()) +
+            count($this->promise
                 ->getORM()
-                ->getRepository(SalesOrder::class))->findAll())    
-        )
-        {
+                ->getRepository(SalesOrder::class)->findAll())
+        ) {
             $io->success('Done');
             return ExitCode::OK;
-        } else {
-            $io->error('Unspecified error');
-            return ExitCode::UNSPECIFIED_ERROR;
-        } 
+        }
+        $io->error('Unspecified error');
+        return ExitCode::UNSPECIFIED_ERROR;
     }
 }

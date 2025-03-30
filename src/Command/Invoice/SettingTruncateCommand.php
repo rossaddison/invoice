@@ -16,7 +16,7 @@ final class SettingTruncateCommand extends Command
 {
     protected static $defaultName = 'invoice/setting/truncate';
 
-    public function __construct(  
+    public function __construct(
         private CycleDependencyProxy $promise,
     ) {
         parent::__construct();
@@ -28,15 +28,15 @@ final class SettingTruncateCommand extends Command
             ->setDescription('Truncates, i.e removes all records, in the setting table.')
             ->setHelp('The setting table is truncated.');
     }
-    
+
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
-        /** Note tables must be truncated in this sequence in order to avoid integrity constraint violations **/ 
-        
+        /** Note tables must be truncated in this sequence in order to avoid integrity constraint violations **/
+
         $io = new SymfonyStyle($input, $output);
-        
+
         $tables = ['setting'];
-        
+
         foreach ($tables as $table) {
             $this->promise
                 ->getDatabaseProvider()
@@ -44,20 +44,18 @@ final class SettingTruncateCommand extends Command
                 ->delete($table)
                 ->run();
         }
-        
-        /** 
-         * The SettingRepository includes session 
+
+        /**
+         * The SettingRepository includes session
          */
-        if (0 === count(($this->promise
+        if (0 === count($this->promise
                 ->getORM()
-                ->getRepository(Setting::class))->findAll())   
-        )
-        {
+                ->getRepository(Setting::class)->findAll())
+        ) {
             $io->success('Done');
             return ExitCode::OK;
-        } else {
-            $io->error('Unspecified error');
-            return ExitCode::UNSPECIFIED_ERROR;
-        } 
+        }
+        $io->error('Unspecified error');
+        return ExitCode::UNSPECIFIED_ERROR;
     }
 }

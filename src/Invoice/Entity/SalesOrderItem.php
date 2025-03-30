@@ -59,7 +59,7 @@ class SalesOrderItem
         #[Column(type: 'integer(11)', nullable: true)]
         private ?int $product_unit_id = null
     ) {
-        $this->date_added = new \DateTimeImmutable();
+        $this->date_added = new DateTimeImmutable();
     }
 
     //relation $tax_rate

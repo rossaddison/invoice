@@ -81,8 +81,8 @@ class UserInv
         #[Column(type: 'integer(3)', nullable:true, default: 10)]
         private ?int $listLimit = 10
     ) {
-        $this->date_created = new \DateTimeImmutable();
-        $this->date_modified = new \DateTimeImmutable();
+        $this->date_created = new DateTimeImmutable();
+        $this->date_modified = new DateTimeImmutable();
     }
 
     public function getId(): int|null

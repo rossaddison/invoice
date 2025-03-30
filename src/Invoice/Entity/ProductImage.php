@@ -31,7 +31,7 @@ class ProductImage
         #[Column(type: 'longText)', nullable: false)]
         private string $description = '',
     ) {
-        $this->uploaded_date = new \DateTimeImmutable();
+        $this->uploaded_date = new DateTimeImmutable();
     }
 
     //get relation $product

@@ -103,8 +103,8 @@ class Client
         private ?int $postaladdress_id = null
     ) {
         $this->client_full_name = ltrim(rtrim($this->client_name . ' ' . ($this->client_surname ?? 'surname_unknown')));
-        $this->client_date_created = new \DateTimeImmutable();
-        $this->client_date_modified = new \DateTimeImmutable();
+        $this->client_date_created = new DateTimeImmutable();
+        $this->client_date_modified = new DateTimeImmutable();
         $this->delivery_locations = new ArrayCollection();
         $this->invs = new ArrayCollection();
     }
@@ -139,7 +139,7 @@ class Client
         /**
          * @see ImportController insertClients function
          */
-        $this->client_date_created = (new \DateTimeImmutable())->createFromFormat('Y-m-d h:i:s', $client_date_created) ?: new \DateTimeImmutable('now');
+        $this->client_date_created = (new DateTimeImmutable())->createFromFormat('Y-m-d h:i:s', $client_date_created) ?: new DateTimeImmutable('now');
     }
 
     public function getClient_date_created(): DateTimeImmutable
@@ -157,7 +157,7 @@ class Client
     // Used in ImportController to import Invoiceplane $client_date_modified
     public function setClient_date_modified(string $client_date_modified): void
     {
-        $this->client_date_modified = (new \DateTimeImmutable())->createFromFormat('Y-m-d h:i:s', $client_date_modified) ?: new \DateTimeImmutable('now');
+        $this->client_date_modified = (new DateTimeImmutable())->createFromFormat('Y-m-d h:i:s', $client_date_modified) ?: new DateTimeImmutable('now');
     }
 
     public function getClient_title(): ?string

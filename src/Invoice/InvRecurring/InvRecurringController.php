@@ -115,7 +115,7 @@ final class InvRecurringController
         Request $request,
         CurrentRoute $currentRoute,
         FormHydrator $formHydrator,
-        iR $iR
+        IR $iR
     ): Response {
         $inv_id = $currentRoute->getArgument('inv_id');
         $invRecurring = new InvRecurring();

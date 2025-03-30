@@ -306,14 +306,14 @@ return [
                 //    )
                 //),
                 // yii-invoice
-                'mysql' => new \Cycle\Database\Config\MySQLDriverConfig(
+                'mysql' => new Cycle\Database\Config\MySQLDriverConfig(
                     connection:
-                    new \Cycle\Database\Config\MySQL\DsnConnectionConfig(
+                    new Cycle\Database\Config\MySQL\DsnConnectionConfig(
                         'mysql:host=localhost;dbname=yii3-i',
                         'root',
                         null
                     ),
-                    driver: \Cycle\Database\Driver\MySQL\MySQLDriver::class,
+                    driver: Cycle\Database\Driver\MySQL\MySQLDriver::class,
                 ),
             ],
         ],
@@ -356,7 +356,7 @@ return [
         'schema-providers' => [
             PhpFileSchemaProvider::class => [
                 /**
-                 * @psalm-suppress RiskyTruthyFalsyComparison 
+                 * @psalm-suppress RiskyTruthyFalsyComparison
                  */
                 'mode' => $_ENV['BUILD_DATABASE'] ?? '' ? PhpFileSchemaProvider::MODE_WRITE_ONLY : PhpFileSchemaProvider::MODE_READ_AND_WRITE,
                 'file' => 'runtime/schema.php',
@@ -367,7 +367,7 @@ return [
                 ],
             ],
         ],
-    /**
+        /**
      * Config for {@see \Yiisoft\Yii\Cycle\Schema\Conveyor\AnnotatedSchemaConveyor}
      * Annotated entity directories list.
      * {@see \Yiisoft\Aliases\Aliases} are also supported.

@@ -24,7 +24,6 @@ use App\Service\WebControllerService;
 use App\User\UserService;
 // Yii
 use Yiisoft\Aliases\Aliases;
-use Yiisoft\Arrays\ArrayHelper;
 use Yiisoft\Cache\ArrayCache;
 use Yiisoft\Data\Paginator\OffsetPaginator;
 use Yiisoft\DataResponse\DataResponseFactoryInterface;
