@@ -115,7 +115,8 @@ $toolbar = Div::tag();
                 }
                 return '';
             },
-            withSorting: true
+            withSorting: true,
+            encodeContent: false        
         ),
         new DataColumn(
             'id',
@@ -154,21 +155,16 @@ $toolbar = Div::tag();
                 }
                 return '';
             },
-            withSorting: true
+            withSorting: true,
+            encodeContent: false
         ),
         new DataColumn(
             'global_location_number',
             header:  $translator->translate('invoice.delivery.location.global.location.number'),
             content: static function (DeliveryLocation $model): string {
-                return (string) $model->getGlobal_location_number();
-            }
-        ),
-        new DataColumn(
-            'global_location_number',
-            header:  $translator->translate('invoice.delivery.location.global.location.number'),
-            content: static function (DeliveryLocation $model): string {
-                return (string) $model->getGlobal_location_number();
-            }
+                return $model->getGlobal_location_number() ?? '';
+            },
+            encodeContent: true        
         ),
         new DataColumn(
             'date_created',

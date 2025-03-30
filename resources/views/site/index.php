@@ -6,8 +6,8 @@ use Yiisoft\Html\Html;
 use Yiisoft\Html\Tag\A;
 use Yiisoft\Html\Tag\Br;
 use Yiisoft\Html\Tag\Img;
-use Yiisoft\Yii\Bootstrap5\Carousel;
-use Yiisoft\Yii\Bootstrap5\CarouselItem;
+use Yiisoft\Bootstrap5\Carousel;
+use Yiisoft\Bootstrap5\CarouselItem;
 
 /**
  * @var App\Invoice\Setting\SettingRepository $s

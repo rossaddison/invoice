@@ -9,16 +9,16 @@ use Yiisoft\Html\Html;
 use Yiisoft\Html\Tag\Button;
 use Yiisoft\Html\Tag\Form;
 use Yiisoft\Html\Tag\Label;
-use Yiisoft\Yii\Bootstrap5\ButtonSize;
-use Yiisoft\Yii\Bootstrap5\Dropdown;
-use Yiisoft\Yii\Bootstrap5\DropdownItem;
-use Yiisoft\Yii\Bootstrap5\ButtonVariant;
-use Yiisoft\Yii\Bootstrap5\Nav;
-use Yiisoft\Yii\Bootstrap5\NavBar;
-use Yiisoft\Yii\Bootstrap5\NavBarExpand;
-use Yiisoft\Yii\Bootstrap5\NavBarPlacement;
-use Yiisoft\Yii\Bootstrap5\NavLink;
-use Yiisoft\Yii\Bootstrap5\NavStyle;
+use Yiisoft\Bootstrap5\ButtonSize;
+use Yiisoft\Bootstrap5\Dropdown;
+use Yiisoft\Bootstrap5\DropdownItem;
+use Yiisoft\Bootstrap5\ButtonVariant;
+use Yiisoft\Bootstrap5\Nav;
+use Yiisoft\Bootstrap5\NavBar;
+use Yiisoft\Bootstrap5\NavBarExpand;
+use Yiisoft\Bootstrap5\NavBarPlacement;
+use Yiisoft\Bootstrap5\NavLink;
+use Yiisoft\Bootstrap5\NavStyle;
 
 /**
  * @see Note: This layout is not currently being used. Refer to soletrader/main.php

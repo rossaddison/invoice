@@ -190,7 +190,7 @@ foreach ($quoteItems as $item) { ?>
                     foreach ($products as $product) { ?>
                                     <option value="<?php echo $product->getProduct_id(); ?>"
                                             <?php if ($item->getProduct_id() == $product->getProduct_id()) { ?>selected="selected"<?php } ?>>
-                                        <?php echo $product->getProduct_name(); ?>
+                                        <?php echo Html::encode($product->getProduct_name()); ?>
                                     </option>
                                 <?php } ?>
                             </select>

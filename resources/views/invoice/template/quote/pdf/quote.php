@@ -19,6 +19,7 @@ use Yiisoft\Html\Html;
  * @var array $items
  * @var bool $show_custom_fields            show both top_custom_fields and view_custom_fields
  * @var bool $show_item_discounts
+ * @var string $cldr
  * @var string $company_logo_and_address    setting/company_logo_and_address.php
  *
  * @var string $top_custom_fields           appear at the top of quote.pdf
@@ -29,7 +30,11 @@ $vat = $s->getSetting('enable_vat_registration');
 ?>
 
 <!DOCTYPE html>
-<html class="h-100" lang="<?= $translator->translate('i.cldr'); ?>">
+<html class="h-100" lang="<?= $cldr; ?>">
+<?php
+    /** Set the locale when the view is being rendered partially i.e. without a layout */
+    $translator->setLocale($cldr); 
+?>
 <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">

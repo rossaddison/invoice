@@ -67,21 +67,22 @@ $toolbar = Div::tag();
         new DataColumn(
             'id',
             header: $translator->translate('i.id'),
-            content: static fn (Gentor $model) => Html::encode($model->getGentor_id(). '->'.$model->getCamelcase_capital_name())
+            content: static fn (Gentor $model) => Html::encode($model->getGentor_id(). '➡️'.$model->getCamelcase_capital_name()),
+            encodeContent: false    
         ),
         new DataColumn(
             'id',
             header: $translator->translate('invoice.generator.relations'),
             content: static function (Gentor $model) use ($urlGenerator, $translator, $grR): string {
-                $div_open_tag = Html::openTag('div', ['class' => 'btn-group']);
+            $div_open_tag = Html::openTag('div', ['class' => 'btn-group']);
 
                 $entity_name_render = Html::a(
-                    $model->getCamelcase_capital_name(),
+                    Html::encode($model->getCamelcase_capital_name()),
                     $urlGenerator->generate(
                         'generator/view',
                         ['id' => $model->getGentor_id()]
                     ),
-                    ['class' => 'btn btn-primary btn-sm active','aria-current' => 'page']
+                            ['class' => 'btn btn-primary btn-sm active','aria-current' => 'page']
                 )->render();
 
                 $relations = $grR->repoGeneratorquery($model->getGentor_id());
@@ -89,16 +90,16 @@ $toolbar = Div::tag();
                 /**
                  * @var App\Invoice\Entity\GentorRelation $relation
                  */
-                foreach ($relations as $relation) {
-                    $relations_content_render .= Html::a(
-                        $relation->getLowercase_name() ?? '#',
-                        $urlGenerator->generate(
-                            'generatorrelation/edit',
-                            ['id' => $relation->getRelation_id()]
-                        ),
-                        ['class' => 'btn btn-primary btn-sm']
+        foreach ($relations as $relation) {
+                $relations_content_render .= Html::a(
+                $relation->getLowercase_name() ?? '#',
+                $urlGenerator->generate(
+                    'generatorrelation/edit',
+                    ['id' => $relation->getRelation_id()]
+                ),
+                ['class' => 'btn btn-primary btn-sm']
                     )->render();
-                }
+        }
 
                 //modal delete button
                 $div_close_tag = Html::closeTag('div');
@@ -109,7 +110,8 @@ $toolbar = Div::tag();
                     $entity_name_render.
                     $relations_content_render.
                 $div_close_tag;
-            }
+            },
+            encodeContent: false
         ),
         new ActionColumn(buttons: [
             new ActionButton(
@@ -146,117 +148,117 @@ $toolbar = Div::tag();
         new DataColumn(
             'id',
             header : 'Entity',
-            content: static function (Gentor $model) use ($urlGenerator): string {
+            content: static function (Gentor $model) use ($urlGenerator): A {
                 return
 
                 Html::a(
                     'Entity'.DIRECTORY_SEPARATOR.$model->getCamelcase_capital_name(),
                     $urlGenerator->generate('generator/entity', ['id' => $model->getGentor_id()]),
                     ['class' => 'btn btn-secondary btn-sm ms-2']
-                )->render();
+                );
             }
         ),
         new DataColumn(
             'id',
             header: 'Controller',
-            content: static function (Gentor $model) use ($urlGenerator): string {
+            content: static function (Gentor $model) use ($urlGenerator): A {
                 return
 
                 Html::a(
                     $model->getCamelcase_capital_name().'Controller',
                     $urlGenerator->generate('generator/controller', ['id' => $model->getGentor_id()]),
                     ['class' => 'btn btn-secondary btn-sm ms-2']
-                )->render();
-            }
+                );
+            }     
         ),
         new DataColumn(
             'id',
             header: 'Form',
-            content: static function (Gentor $model) use ($urlGenerator): string {
+            content: static function (Gentor $model) use ($urlGenerator): A {
                 return
 
                 Html::a(
                     $model->getCamelcase_capital_name().'Form',
                     $urlGenerator->generate('generator/form', ['id' => $model->getGentor_id()]),
                     ['class' => 'btn btn-secondary btn-sm ms-2']
-                )->render();
+                );
             }
         ),
         new DataColumn(
             'id',
             header: 'Repository',
-            content: static function (Gentor $model) use ($urlGenerator): string {
+            content: static function (Gentor $model) use ($urlGenerator): A {
                 return
 
                 Html::a(
                     $model->getCamelcase_capital_name().'Repository',
                     $urlGenerator->generate('generator/repo', ['id' => $model->getGentor_id()]),
                     ['class' => 'btn btn-secondary btn-sm ms-2']
-                )->render();
+                );
             }
         ),
         new DataColumn(
             'id',
             header: 'Service',
-            content: static function (Gentor $model) use ($urlGenerator): string {
+            content: static function (Gentor $model) use ($urlGenerator): A {
                 return
 
                 Html::a(
                     $model->getCamelcase_capital_name().'Service',
                     $urlGenerator->generate('generator/service', ['id' => $model->getGentor_id()]),
                     ['class' => 'btn btn-secondary btn-sm ms-2']
-                )->render();
+                );
             }
         ),
         new DataColumn(
             'id',
             header: 'index',
-            content: static function (Gentor $model) use ($urlGenerator): string {
+            content: static function (Gentor $model) use ($urlGenerator): A {
                 return
 
                 Html::a(
                     'index',
                     $urlGenerator->generate('generator/_index', ['id' => $model->getGentor_id()]),
                     ['class' => 'btn btn-secondary btn-sm ms-2']
-                )->render();
+                );
             }
         ),
         new DataColumn(
             'id',
             header: '_view',
-            content: static function (Gentor $model) use ($urlGenerator): string {
+            content: static function (Gentor $model) use ($urlGenerator): A {
                 return
                 Html::a(
                     '_view',
                     $urlGenerator->generate('generator/_view', ['id' => $model->getGentor_id()]),
                     ['class' => 'btn btn-secondary btn-sm ms-2']
-                )->render();
+                );
             }
         ),
         new DataColumn(
             'id',
             header: '_form',
-            content: static function (Gentor $model) use ($urlGenerator): string {
+            content: static function (Gentor $model) use ($urlGenerator): A {
                 return
 
                 Html::a(
                     '_form',
                     $urlGenerator->generate('generator/_form', ['id' => $model->getGentor_id()]),
                     ['class' => 'btn btn-secondary btn-sm ms-2']
-                )->render();
+                );
             }
         ),
         new DataColumn(
             'id',
             header: '_route',
-            content: static function (Gentor $model) use ($urlGenerator): string {
+            content: static function (Gentor $model) use ($urlGenerator): A {
                 return
 
                 Html::a(
                     '_route',
                     $urlGenerator->generate('generator/_route', ['id' => $model->getGentor_id()]),
                     ['class' => 'btn btn-secondary btn-sm ms-2']
-                )->render();
+                );
             }
         ),
     ];

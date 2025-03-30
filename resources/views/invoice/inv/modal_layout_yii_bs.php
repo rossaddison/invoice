@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 use Yiisoft\Html\Html;
 use Yiisoft\Html\Tag\Button;
-use Yiisoft\Yii\Bootstrap5\Modal;
-use Yiisoft\Yii\Bootstrap5\Utility\Responsive;
-use Yiisoft\Yii\Bootstrap5\ModalDialogFullScreenSize;
+use Yiisoft\Bootstrap5\Modal;
+use Yiisoft\Bootstrap5\Utility\Responsive;
+use Yiisoft\Bootstrap5\ModalDialogFullScreenSize;
 
 /**
  * @see The usage of the refactored Modal has been put on hold

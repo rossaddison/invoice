@@ -82,8 +82,7 @@ final class SalesOrderController
 {
     use FlashMessage;
     private Flash $flash;
-    private Session $session;
-
+    
     public function __construct(
         private DataResponseFactoryInterface $factory,
         private InvService $invService,
@@ -91,7 +90,7 @@ final class SalesOrderController
         private InvAmountService $invAmountService,
         private InvItemService $invItemService,
         private InvTaxRateService $invTaxRateService,
-        Session $session,
+        private Session $session,
         private SettingRepository $sR,
         private ViewRenderer $viewRenderer,
         private WebControllerService $webService,

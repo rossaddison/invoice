@@ -36,19 +36,19 @@ echo $alert;
         ),
         new DataColumn(
             header:  $translator->translate('i.view'),
-            content: static function (PaymentPeppol $model) use ($urlGenerator): string {
-                return Html::a(Html::tag('i', '', ['class' => 'fa fa-eye fa-margin']), $urlGenerator->generate('paymentpeppol/view', ['id' => $model->getId()]), [])->render();
+            content: static function (PaymentPeppol $model) use ($urlGenerator): A {
+                return Html::a(Html::tag('i', '', ['class' => 'fa fa-eye fa-margin']), $urlGenerator->generate('paymentpeppol/view', ['id' => $model->getId()]), []);
             }
         ),
         new DataColumn(
             header:  $translator->translate('i.edit'),
-            content: static function (PaymentPeppol $model) use ($urlGenerator): string {
-                return Html::a(Html::tag('i', '', ['class' => 'fa fa-pencil fa-margin']), $urlGenerator->generate('paymentpeppol/edit', ['id' => $model->getId()]), [])->render();
+            content: static function (PaymentPeppol $model) use ($urlGenerator): A {
+                return Html::a(Html::tag('i', '', ['class' => 'fa fa-pencil fa-margin']), $urlGenerator->generate('paymentpeppol/edit', ['id' => $model->getId()]), []);
             }
         ),
         new DataColumn(
             header:  $translator->translate('i.delete'),
-            content: static function (PaymentPeppol $model) use ($translator, $urlGenerator): string {
+            content: static function (PaymentPeppol $model) use ($translator, $urlGenerator): A {
                 return Html::a(
                     Html::tag(
                         'button',
@@ -61,7 +61,7 @@ echo $alert;
                     ),
                     $urlGenerator->generate('paymentpeppol/delete', ['id' => $model->getId()]),
                     []
-                )->render();
+                );
             }
         ),
     ];

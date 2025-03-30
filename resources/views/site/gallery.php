@@ -3,8 +3,8 @@
 declare(strict_types=1);
 
 use Yiisoft\Html\Tag\Img;
-use Yiisoft\Yii\Bootstrap5\Carousel;
-use Yiisoft\Yii\Bootstrap5\CarouselItem;
+use Yiisoft\Bootstrap5\Carousel;
+use Yiisoft\Bootstrap5\CarouselItem;
 
 /**
  * @var App\Invoice\Setting\SettingRepository $s

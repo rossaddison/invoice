@@ -8,16 +8,16 @@ use Yiisoft\Html\Html;
 use Yiisoft\Html\Tag\Button;
 use Yiisoft\Html\Tag\Form;
 use Yiisoft\Html\Tag\Label;
-use Yiisoft\Yii\Bootstrap5\ButtonSize;
-use Yiisoft\Yii\Bootstrap5\ButtonVariant;
-use Yiisoft\Yii\Bootstrap5\Dropdown;
-use Yiisoft\Yii\Bootstrap5\DropdownItem;
-use Yiisoft\Yii\Bootstrap5\Nav;
-use Yiisoft\Yii\Bootstrap5\NavBarExpand;
-use Yiisoft\Yii\Bootstrap5\NavBarPlacement;
-use Yiisoft\Yii\Bootstrap5\NavLink;
-use Yiisoft\Yii\Bootstrap5\NavBar;
-use Yiisoft\Yii\Bootstrap5\NavStyle;
+use Yiisoft\Bootstrap5\ButtonSize;
+use Yiisoft\Bootstrap5\ButtonVariant;
+use Yiisoft\Bootstrap5\Dropdown;
+use Yiisoft\Bootstrap5\DropdownItem;
+use Yiisoft\Bootstrap5\Nav;
+use Yiisoft\Bootstrap5\NavBarExpand;
+use Yiisoft\Bootstrap5\NavBarPlacement;
+use Yiisoft\Bootstrap5\NavLink;
+use Yiisoft\Bootstrap5\NavBar;
+use Yiisoft\Bootstrap5\NavStyle;
 
 /**
  * @var Yiisoft\Assets\AssetManager $assetManager
@@ -129,7 +129,7 @@ $this->setTitle($title);
                 DropdownItem::link('Arabic Bahrainian/ عربي', $urlGenerator->generateFromCurrent(['_language' => 'ar-BH'], fallbackRouteName: 'site/index')),
                 DropdownItem::link('Azerbaijani / Azərbaycan', $urlGenerator->generateFromCurrent(['_language' => 'az'], fallbackRouteName: 'site/index')),
                 DropdownItem::link('Chinese Simplified / 简体中文', $urlGenerator->generateFromCurrent(['_language' => 'zh-CN'], fallbackRouteName: 'site/index')),
-                DropdownItem::link('Tiawanese Mandarin / 简体中文', $urlGenerator->generateFromCurrent(['_language' => 'zh-TW'], fallbackRouteName: 'site/index')),
+                DropdownItem::link('Taiwanese Mandarin / 简体中文', $urlGenerator->generateFromCurrent(['_language' => 'zh-TW'], fallbackRouteName: 'site/index')),
                 DropdownItem::link('English', $urlGenerator->generateFromCurrent(['_language' => 'en'], fallbackRouteName: 'site/index')),
                 DropdownItem::link('Filipino / Filipino', $urlGenerator->generateFromCurrent(['_language' => 'fil'], fallbackRouteName: 'site/index')),
                 DropdownItem::link('French / Français', $urlGenerator->generateFromCurrent(['_language' => 'fr'], fallbackRouteName: 'site/index')),
@@ -352,5 +352,3 @@ $this->setTitle($title);
     </html>
 <?php
 $this->endPage(true);
-
-echo "Logopath ".$logoPath;

@@ -71,7 +71,7 @@ foreach ($charges as $key => $value) {
         'class' => 'form-control',
         'id' => 'reason'
     ])
-    ->value($form->getReason() ?? '')
+    ->value(Html::encode($form->getReason() ?? ''))
     ->optionsData($optionsDataReason, true)
     ->prompt($translator->translate('i.none'))
     ->hint($translator->translate('invoice.hint.this.field.is.required'));

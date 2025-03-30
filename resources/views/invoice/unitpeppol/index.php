@@ -98,19 +98,19 @@ $toolbar = Div::tag();
             ),
             new DataColumn(
                 header:  $translator->translate('i.view'),
-                content: static function (UnitPeppol $model) use ($urlGenerator): string {
-                    return Html::a(Html::tag('i', '', ['class' => 'fa fa-eye fa-margin']), $urlGenerator->generate('unitpeppol/view', ['id' => $model->getId()]), [])->render();
+                content: static function (UnitPeppol $model) use ($urlGenerator): A {
+                    return Html::a(Html::tag('i', '', ['class' => 'fa fa-eye fa-margin']), $urlGenerator->generate('unitpeppol/view', ['id' => $model->getId()]), []);
                 }
             ),
             new DataColumn(
                 header:  $translator->translate('i.edit'),
-                content: static function (UnitPeppol $model) use ($urlGenerator): string {
-                    return Html::a(Html::tag('i', '', ['class' => 'fa fa-edit fa-margin']), $urlGenerator->generate('unitpeppol/edit', ['id' => $model->getId()]), [])->render();
+                content: static function (UnitPeppol $model) use ($urlGenerator): A {
+                    return Html::a(Html::tag('i', '', ['class' => 'fa fa-edit fa-margin']), $urlGenerator->generate('unitpeppol/edit', ['id' => $model->getId()]), []);
                 }
             ),
             new DataColumn(
                 header:  $translator->translate('i.delete'),
-                content: static function (UnitPeppol $model) use ($translator, $urlGenerator): string {
+                content: static function (UnitPeppol $model) use ($translator, $urlGenerator): A {
                     return Html::a(
                         Html::tag(
                             'button',
@@ -123,7 +123,7 @@ $toolbar = Div::tag();
                         ),
                         $urlGenerator->generate('unitpeppol/delete', ['id' => $model->getId()]),
                         []
-                    )->render();
+                    );
                 }
             ),
         ];

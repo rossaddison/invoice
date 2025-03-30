@@ -6,7 +6,6 @@ use Yiisoft\Html\Html;
 use Yiisoft\Html\Tag\Label;
 use Yiisoft\Html\Tag\Br;
 use Yiisoft\Html\Tag\I;
-use Yiisoft\VarDumper\VarDumper;
 
 /**
  * @var string $alert

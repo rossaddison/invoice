@@ -56,7 +56,6 @@ class PdfHelper
         if ($quote_or_inv instanceof \App\Invoice\Entity\Quote ||
             $quote_or_inv instanceof \App\Invoice\Entity\Inv) {
             $print_language = ($quote_or_inv->getClient()?->getClient_language() ?? $locale_lang);
-            $this->session->set('print_language', $print_language);
             return  $print_language;
         }
         return '';
@@ -166,7 +165,7 @@ class PdfHelper
                     'client' => $cR->repoClientquery((string)$quote->getClient()?->getClient_id()),
                     'quote_amount' => $quote_amount,
                     // Use the temporary print language to define cldr
-                    'cldr' => array_keys($this->s->locale_language_array(), $this->get_print_language($quote)),
+                    'cldr' => array_search($this->get_print_language($quote), $this->s->locale_language_array()),
                 ];
                 // Quote Template will be either 'quote' or a custom designed quote in the folder.
                 $html = $viewrenderer->renderPartialAsString('//invoice/template/quote/pdf/' . $quote_template, $data);
@@ -286,7 +285,7 @@ class PdfHelper
                     'client' => $cR->repoClientquery((string)$so->getClient()?->getClient_id()),
                     'so_amount' => $so_amount,
                     // Use the temporary print language to define cldr
-                    'cldr' => array_keys($this->s->locale_language_array(), $this->get_print_language($so)),
+                    'cldr' => array_search($this->get_print_language($so), $this->s->locale_language_array()),
                 ];
                 // Sales Order Template will be either 'salesorder' or a custom designed salesorder in the folder.
                 $html = $viewrenderer->renderPartialAsString('//invoice/template/salesorder/pdf/' . $salesorder_template, $data);
@@ -414,8 +413,7 @@ class PdfHelper
                 ),
                 'client' => $cR->repoClientquery((string)$inv->getClient()?->getClient_id()),
                 'inv_amount' => $inv_amount,
-                // Use the temporary print language to define cldr
-                'cldr' => array_keys($this->s->locale_language_array(), $this->get_print_language($inv)),
+                'cldr' => array_search($this->get_print_language($inv), $this->s->locale_language_array()),
             ];
             // Inv Template will be either 'inv' or a custom designed inv in the folder.
             return $viewrenderer->renderPartialAsString('//invoice/template/invoice/pdf/' . $inv_template, $data);

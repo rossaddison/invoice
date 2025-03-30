@@ -306,7 +306,7 @@ class MpdfHelper
 
         if (($quote_or_invoice instanceof Quote) || ($quote_or_invoice instanceof Inv)) {
             if (null !== $quote_or_invoice->getClient()?->getClient_language()) {
-                if (($sR->get_folder_language() === 'Arabic') || $quote_or_invoice->getClient()?->getClient_language() === 'Arabic') {
+                if ($quote_or_invoice->getClient()?->getClient_language() === 'Arabic') {
                     $mpdf->SetDirectionality('rtl');
                 }
             }

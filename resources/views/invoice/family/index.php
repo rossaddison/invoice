@@ -87,7 +87,7 @@ $toolbar = Div::tag();
         new DataColumn(
             'id',
             header: $translator->translate('i.family'),
-            content: static fn (Family $model): string => Html::encode($model->getFamily_name() ?? '')
+            content: static fn (Family $model) => Html::encode($model->getFamily_name() ?? '')
         ),
         new ActionColumn(buttons: [
             new ActionButton(

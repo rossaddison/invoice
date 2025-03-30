@@ -119,7 +119,7 @@ final class InvoiceController
             'default_quote_group' => 2,
             'default_invoice_terms' => '',
             'default_sales_order_group' => 3,
-            'default_language' => $sR->get_folder_language() ?: 'English',
+            'default_language' => 'English',
             //paginator list limit
             'default_list_limit' => 120,
             'disable_flash_messages_inv' => 0,

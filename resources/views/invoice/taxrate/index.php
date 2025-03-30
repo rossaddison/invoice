@@ -114,7 +114,7 @@ $toolbar = Div::tag();
                 new ActionButton(
                     content: '🔎',
                     url: static function (TaxRate $model) use ($urlGenerator): string {
-                        return $urlGenerator->generate('taxrate/view', ['id' => $model->getTaxRateId()]);
+                        return $urlGenerator->generate('taxrate/view', ['tax_rate_id' => $model->getTaxRateId()]);
                     },
                     attributes: [
                         'data-bs-toggle' => 'tooltip',
@@ -124,7 +124,7 @@ $toolbar = Div::tag();
                 new ActionButton(
                     content: '✎',
                     url: static function (TaxRate $model) use ($urlGenerator): string {
-                        return $urlGenerator->generate('taxrate/edit', ['id' => $model->getTaxRateId()]);
+                        return $urlGenerator->generate('taxrate/edit', ['tax_rate_id' => $model->getTaxRateId()]);
                     },
                     attributes: [
                         'data-bs-toggle' => 'tooltip',
@@ -134,7 +134,7 @@ $toolbar = Div::tag();
                 new ActionButton(
                     content: '❌',
                     url: static function (TaxRate $model) use ($urlGenerator): string {
-                        return $urlGenerator->generate('taxrate/delete', ['id' => $model->getTaxRateId()]);
+                        return $urlGenerator->generate('taxrate/delete', ['tax_rate_id' => $model->getTaxRateId()]);
                     },
                     attributes: [
                         'title' => $translator->translate('i.delete'),

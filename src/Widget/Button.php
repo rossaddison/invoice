@@ -88,23 +88,21 @@ final readonly class Button
         echo Html::closeTag('div');
     }
 
-    public static function activeLabel(Translator $translator): string
+    public static function activeLabel(Translator $translator): Span
     {
         return Span::tag()
                 ->addClass('label active')
-                ->content(Html::encode($translator->translate('i.yes')))
-                ->render();
+                ->content(Html::encode($translator->translate('i.yes')));
     }
 
-    public static function inactiveLabel(Translator $translator): string
+    public static function inactiveLabel(Translator $translator): Span
     {
         return Span::tag()
                 ->addClass('label inactive')
-                ->content(Html::encode($translator->translate('i.no')))
-                ->render();
+                ->content(Html::encode($translator->translate('i.no')));
     }
 
-    public static function inactiveWithAddUserAccount(UrlGenerator $generator, Translator $translator): string
+    public static function inactiveWithAddUserAccount(UrlGenerator $generator, Translator $translator): Span
     {
         return Span::tag()
                 ->content(
@@ -118,8 +116,7 @@ final readonly class Button
                             'title' => $translator->translate('invoice.client.has.not.user.account'),
                         ]
                     )
-                )
-                ->render();
+                );
     }
 
     public static function ascDesc(UrlGenerator $generator, string $field, string $class, string $translated, bool $guest = false): string

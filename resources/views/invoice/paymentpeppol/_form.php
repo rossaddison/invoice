@@ -3,8 +3,8 @@
 declare(strict_types=1);
 
 use Yiisoft\Html\Html;
-use Yiisoft\Yii\Bootstrap5\Alert;
-use Yiisoft\Yii\Bootstrap5\AlertVariant;
+use Yiisoft\Bootstrap5\Alert;
+use Yiisoft\Bootstrap5\AlertVariant;
 
 /**
  * @var Yiisoft\DataResponse\DataResponse $response

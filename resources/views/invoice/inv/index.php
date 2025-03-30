@@ -16,8 +16,8 @@ use Yiisoft\Html\Tag\I;
 use Yiisoft\Html\Tag\Input;
 use Yiisoft\Html\Tag\Input\Checkbox;
 use Yiisoft\Html\Tag\Label;
-use Yiisoft\Yii\Bootstrap5\Breadcrumbs;
-use Yiisoft\Yii\Bootstrap5\BreadcrumbLink;
+use Yiisoft\Bootstrap5\Breadcrumbs;
+use Yiisoft\Bootstrap5\BreadcrumbLink;
 use Yiisoft\Yii\DataView\Column\ActionButton;
 use Yiisoft\Yii\DataView\Column\ActionColumn;
 use Yiisoft\Yii\DataView\Column\Base\DataContext;
@@ -82,8 +82,8 @@ echo Breadcrumbs::widget()
          url: $urlGenerator->generate(
              'setting/tab_index',
              [],
-             ['active' => 'invoices']
-         ).'#settings[default_invoice_group]',
+             ['active' => 'invoices'],
+             'settings[default_invoice_group]'),
          active: true,
          attributes: [
                 'data-bs-toggle' => 'tooltip',
@@ -96,8 +96,8 @@ echo Breadcrumbs::widget()
          url: $urlGenerator->generate(
              'setting/tab_index',
              [],
-             ['active' => 'invoices']
-         ).'#settings[default_invoice_terms]',
+             ['active' => 'invoices'],
+             'settings[default_invoice_terms]'),
          active: false,
          attributes: [
                 'data-bs-toggle' => 'tooltip',
@@ -110,8 +110,8 @@ echo Breadcrumbs::widget()
          url: $urlGenerator->generate(
              'setting/tab_index',
              [],
-             ['active' => 'invoices']
-         ).'#settings[default_invoice_payment_method]',
+             ['active' => 'invoices'],
+             'settings[default_invoice_payment_method]'),
          active: false,
          attributes: [
                 'data-bs-toggle' => 'tooltip',
@@ -124,8 +124,8 @@ echo Breadcrumbs::widget()
          url: $urlGenerator->generate(
              'setting/tab_index',
              [],
-             ['active' => 'invoices']
-         ).'#settings[invoices_due_after]',
+             ['active' => 'invoices'],
+            'settings[invoices_due_after]'),
          active: false,
          attributes: [
                 'data-bs-toggle' => 'tooltip',
@@ -138,8 +138,8 @@ echo Breadcrumbs::widget()
          url: $urlGenerator->generate(
              'setting/tab_index',
              [],
-             ['active' => 'invoices']
-         ).'#settings[generate_invoice_number_for_draft]',
+             ['active' => 'invoices'],
+              'settings[generate_invoice_number_for_draft]'),
          active: false,
          attributes: [
                 'data-bs-toggle' => 'tooltip',
@@ -156,8 +156,8 @@ echo Breadcrumbs::widget()
          url:  $urlGenerator->generate(
              'setting/tab_index',
              [],
-             ['active' => 'invoices']
-         ).'#settings[read_only_toggle]'
+             ['active' => 'invoices'],
+             'settings[read_only_toggle]')
      ),
  )
  ->listId(false)
@@ -432,7 +432,7 @@ $toolbar = Div::tag();
                     },
                     attributes: [
                        'data-bs-toggle' => 'tooltip',
-                       'title' => $translator->translate('i.email')
+                       'title' => $translator->translate('invoice.email.warning.draft')
                    ],
                 ),
             ]
@@ -447,41 +447,32 @@ $toolbar = Div::tag();
             property: 'filterInvNumber',
             field: 'number',
             header: $translator->translate('invoice.invoice.number'),
-            content: static function (Inv $model) use ($urlGenerator, $iR): string {
-                $creditInvoiceUrl = '';
-                if ((int)$model->getCreditinvoice_parent_id() > 0) {
-                    // include a path to the parent invoice as well as the credit note/invoice
-                    $inv = $iR->repoInvUnLoadedquery($model->getCreditinvoice_parent_id());
-                    if ($inv) {
-                        $creditInvoiceUrl = '⬅️'.Html::a(
-                            $inv->getNumber() ?? '#',
-                            $urlGenerator->generate(
-                                'inv/view',
-                                ['id' => $model->getCreditinvoice_parent_id()]
-                            ),
-                            [
-                                                   'style' => 'text-decoration:none'
-                                                ]
-                        )->render();
-                    }
-                    $creditInvoiceUrl = '';
-                }
-                return  Html::a(
-                    ($model->getNumber() ?? '#'). ' 🔍',
-                    $urlGenerator->generate('inv/view', ['id' => $model->getId()]),
-                    [
-                           'style' => 'text-decoration:none'
-                        ]
-                )->render() .
-                        $creditInvoiceUrl;
+            content: static function (Inv $model) use ($urlGenerator): A {
+                return  A::tag()
+                        ->addAttributes(['style' => 'text-decoration:none'])
+                        ->content(($model->getNumber() ?? '#'). ' 🔍')
+                        ->href($urlGenerator->generate('inv/view', ['id' => $model->getId()]));
             },
             filter: $optionsDataInvNumberDropDownFilter,
             withSorting: false
         ),
-        new DataColumn(
+        new DataColumn( 
+            header: '💳',    
+            field: 'creditinvoice_parent_id',
+            content: static function (Inv $model) use ($urlGenerator, $iR): A {
+                $visible = $iR->repoInvUnLoadedquery($model->getCreditinvoice_parent_id());
+                $url = ($model->getNumber() ?? '#'). '💳';
+                return  A::tag()
+                        ->addAttributes(['style' => 'text-decoration:none'])
+                        ->content($visible ? $url : '')
+                        ->href($urlGenerator->generate('inv/view', ['id' => $model->getCreditinvoice_parent_id()]));
+            },
+            withSorting: false
+        ),
+         new DataColumn(
             'invsentlogs',
             header: $translator->translate('invoice.email.logs.with.filter'),
-            content: static function (Inv $model) use ($islR, $toggleColumnInvSentLog, $urlGenerator, $translator): string {
+            content: static function (Inv $model) use ($islR, $toggleColumnInvSentLog, $urlGenerator, $translator): string|A {
                 $modelId = $model->getId();
                 if (null !== $modelId) {
                     $count = $islR->repoInvSentLogEmailedCountForEachInvoice($modelId);
@@ -500,10 +491,8 @@ $toolbar = Div::tag();
                 }
                 return '';
             }
-        ),
+        ), 
         new DataColumn(
-            'invsentlogs',
-            header: '',
             content: static function (Inv $model) use ($islR, $urlGenerator, $gridComponents): string {
                 $modelId = $model->getId();
                 if (null !== $modelId) {
@@ -525,8 +514,9 @@ $toolbar = Div::tag();
                     );
                 }
                 return '';
-            },
+            },   
             visible: $visibleToggleInvSentLogColumn,
+            encodeContent: false        
         ),
         new DataColumn(
             'status_id',
@@ -550,9 +540,10 @@ $toolbar = Div::tag();
             property: 'filterClient',
             field: 'client_id',
             header: $translator->translate('i.client'),
-            content: static fn (Inv $model): string => (string)$model->getClient()?->getClient_full_name(),
+            content: static fn (Inv $model): string => Html::encode($model->getClient()?->getClient_full_name()),
             filter: $optionsDataClientsDropdownFilter,
-            withSorting: false
+            withSorting: false,
+            encodeContent: false    
         ),
         new DataColumn(
             property: 'filterClientGroup',
@@ -579,29 +570,26 @@ $toolbar = Div::tag();
         new DataColumn(
             'date_modified',
             header: $translator->translate('invoice.datetime.immutable.date.modified'),
-            content: static function (Inv $model) use ($dateHelper): string {
+            content: static function (Inv $model) use ($dateHelper): Label {
                 if ($model->getDate_modified() <> $model->getDate_created()) {
                     return Label::tag()
                            ->attributes(['class' => 'label label-danger'])
-                           ->content(Html::encode($model->getDate_modified()->format('Y-m-d')))
-                           ->render();
+                           ->content(Html::encode($model->getDate_modified()->format('Y-m-d')));
                 } else {
                     return Label::tag()
                            ->attributes(['class' => 'label label-success'])
-                           ->content(Html::encode($model->getDate_modified()->format('Y-m-d')))
-                           ->render();
+                           ->content(Html::encode($model->getDate_modified()->format('Y-m-d')));
                 }
             }
         ),
         new DataColumn(
             'date_due',
             header: $translator->translate('i.due_date'),
-            content: static function (Inv $model) use ($dateHelper): string {
+            content: static function (Inv $model) use ($dateHelper): Label {
                 $now = new \DateTimeImmutable('now');
                 return Label::tag()
                         ->attributes(['class' => $model->getDate_due() > $now ? 'label label-success' : 'label label-warning'])
-                        ->content(Html::encode(!is_string($dateDue = $model->getDate_due()) ? $dateDue->format('Y-m-d') : ''))
-                        ->render();
+                        ->content(Html::encode(!is_string($dateDue = $model->getDate_due()) ? $dateDue->format('Y-m-d') : ''));
             },
             withSorting: true
         ),
@@ -609,15 +597,14 @@ $toolbar = Div::tag();
             property: 'filterInvAmountTotal',
             field: 'id',
             header: $translator->translate('i.total') . '➡️'. $s->getSetting('currency_symbol'),
-            content: static function (Inv $model) use ($decimalPlaces): string {
+            content: static function (Inv $model) use ($decimalPlaces): Label {
                 $invAmountTotal = $model->getInvAmount()->getTotal();
                 return
                     Label::tag()
                         ->attributes(['class' => $invAmountTotal > 0.00 ? 'label label-success' : 'label label-warning'])
                         ->content(Html::encode(null !== $invAmountTotal
                                 ? number_format($invAmountTotal, $decimalPlaces)
-                                : number_format(0, $decimalPlaces)))
-                        ->render();
+                                : number_format(0, $decimalPlaces)));
             },
             filter: \Yiisoft\Yii\DataView\Filter\Widget\TextInputFilter::widget()
                     ->addAttributes(['style' => 'max-width: 50px']),
@@ -626,34 +613,32 @@ $toolbar = Div::tag();
         new DataColumn(
             'id',
             header: $translator->translate('i.paid') . '➡️'. $s->getSetting('currency_symbol'),
-            content: static function (Inv $model) use ($decimalPlaces): string {
+            content: static function (Inv $model) use ($decimalPlaces): Label {
                 $invAmountPaid = $model->getInvAmount()->getPaid();
                 return Label::tag()
                         ->attributes(['class' => $model->getInvAmount()->getPaid() < $model->getInvAmount()->getTotal() ? 'label label-danger' : 'label label-success'])
                         ->content(Html::encode(null !== $invAmountPaid
                                 ? number_format($invAmountPaid > 0.00 ? $invAmountPaid : 0.00, $decimalPlaces)
-                                : number_format(0, $decimalPlaces)))
-                        ->render();
+                                : number_format(0, $decimalPlaces)));
             },
             withSorting: false
         ),
          new DataColumn(
              'id',
              header: $translator->translate('i.balance')  . '➡️'. $s->getSetting('currency_symbol'),
-             content: static function (Inv $model) use ($decimalPlaces): string {
+             content: static function (Inv $model) use ($decimalPlaces): Label {
                  $invAmountBalance = $model->getInvAmount()->getBalance();
                  return  Label::tag()
                          ->attributes(['class' => $invAmountBalance > 0.00 ? 'label label-success' : 'label label-warning'])
                          ->content(Html::encode(null !== $invAmountBalance
                                  ? number_format($invAmountBalance > 0.00 ? $invAmountBalance : 0.00, $decimalPlaces)
-                                 : number_format(0, $decimalPlaces)))
-                         ->render();
+                                 : number_format(0, $decimalPlaces)));
              },
              withSorting: false
          ),
         new DataColumn(
             header: '🚚',
-            content: static function (Inv $model) use ($urlGenerator): string {
+            content: static function (Inv $model) use ($urlGenerator): A {
                 return Html::a(Html::tag('i', '', ['class' => 'fa fa-plus fa-margin']), $urlGenerator->generate(
                     'del/add',
                     [
@@ -669,7 +654,7 @@ $toolbar = Div::tag();
                     'origin_id' => $model->getId(),
                     'action' => 'index'
                 ]
-                ))->render();
+                ));
             },
             visible: $visible,
             withSorting: false
@@ -677,13 +662,13 @@ $toolbar = Div::tag();
         new DataColumn(
             'quote_id',
             header: $translator->translate('invoice.quote.number.status'),
-            content: static function (Inv $model) use ($urlGenerator, $qR): string {
+            content: static function (Inv $model) use ($urlGenerator, $qR): string|A {
                 $quote_id = $model->getQuote_id();
                 $quote = $qR->repoQuoteUnloadedquery($quote_id);
                 if (null !== $quote) {
                     $statusId = $quote->getStatus_id();
                     if (null !== $statusId) {
-                        return (string) Html::a(
+                        return Html::a(
                             ($quote->getNumber() ?? '#') . ' ' . $qR->getSpecificStatusArrayLabel((string)$statusId),
                             $urlGenerator->generate('quote/view', ['id' => $quote_id]),
                             [
@@ -723,15 +708,16 @@ $toolbar = Div::tag();
             content: static function (Inv $model) use ($dlR): string|null {
                 $delivery_location_id = $model->getDelivery_location_id();
                 $delivery_location = (($dlR->repoCount($delivery_location_id) > 0) ? $dlR->repoDeliveryLocationquery($delivery_location_id) : null);
-                return null !== $delivery_location ? $delivery_location->getGlobal_location_number() : '';
+                return null !== $delivery_location ? Html::encode($delivery_location->getGlobal_location_number()) : null;
             },
             visible: $visible,
             withSorting: false
         ),
         new DataColumn(
             header: $translator->translate('i.delete'),
-            content: static function (Inv $model) use ($s, $translator, $urlGenerator): string {
-                return $model->getIs_read_only() === false && $s->getSetting('disable_read_only') === (string) 0 && $model->getSo_id() === '0' && $model->getQuote_id() === '0' ? Html::a(
+            content: static function (Inv $model) use ($s, $translator, $urlGenerator): A|Label {
+                return $model->getIs_read_only() === false && $s->getSetting('disable_read_only') === (string) 0 && $model->getSo_id() === '0' && $model->getQuote_id() === '0' ? 
+                        A::tag()->content(
                     Html::tag(
                         'button',
                         Html::tag('i', '', ['class' => 'fa fa-trash fa-margin']),
@@ -743,7 +729,7 @@ $toolbar = Div::tag();
                     ),
                     $urlGenerator->generate('inv/delete', ['id' => $model->getId()]),
                     []
-                )->render() : '';
+                ) : Label::tag();
             },
             visible: $visible,
             withSorting: false

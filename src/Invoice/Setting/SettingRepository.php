@@ -21,7 +21,6 @@ use Yiisoft\Data\Reader\Sort;
 use Yiisoft\Files\FileHelper;
 use Yiisoft\Files\PathMatcher\PathMatcher;
 use Yiisoft\Html\Html;
-use Yiisoft\Session\SessionInterface;
 use Yiisoft\Translator\TranslatorInterface;
 use Yiisoft\Data\Cycle\Reader\EntityReader;
 use Yiisoft\Data\Cycle\Writer\EntityWriter;
@@ -38,12 +37,10 @@ final class SettingRepository extends Select\Repository
     /**
      * @param Select<TEntity> $select
      * @param EntityWriter $entityWriter
-     * @param SessionInterface $session
      */
     public function __construct(
         Select $select,
         private readonly EntityWriter $entityWriter,
-        private readonly SessionInterface $session,
         private readonly TranslatorInterface $translator,
         private readonly compR $compR,
         private readonly compPR $compPR
@@ -81,9 +78,6 @@ final class SettingRepository extends Select\Repository
     public function save(Setting|null $setting): void
     {
         if (null !== $setting) {
-            if ($setting->getSetting_key() === 'default_language') {
-                $this->session->set('_language', $setting->getSetting_value());
-            }
             $this->entityWriter->write([$setting]);
         }
     }
@@ -674,27 +668,25 @@ final class SettingRepository extends Select\Repository
     {
         // locale => src/Invoice/Language/{language folder name}
         return [
-            'af' => 'AfrikaansSouthAfrican',
-            'ar' => 'Arabic',
+            'af-ZA' => 'AfrikaansSouthAfrican',
+            'ar-BH' => 'ArabicBahrainian',
             'az' => 'Azerbaijani',
-            'fr' => 'French',
             'de' => 'German',
             'en' => 'English',
-            'es' => 'Spanish',
             'fil' => 'Filipino',
+            'fr' => 'French',
             'id' => 'Indonesian',
             'it' => 'Italian',
             'ja' => 'Japanese',
+            'pl-PL' => 'Polish',
+            'pt-BR' => 'PortugeseBrazil',
             'nl' => 'Dutch',
-            'pl' => 'Polish',
-            'pt-Br' => 'PortugeseBrazilian',
             'ru' => 'Russian',
             'sk' => 'Slovakian',
+            'es' => 'Spanish',
             'uk' => 'Ukrainian',
             'uz' => 'Uzbek',
             'vi' => 'Vietnamese',
-            // Use camelcase here => remove the space between Chinese and Simplified and in the original folder otherwise it will not be
-            // retrieved
             'zh-CN' => 'ChineseSimplified',
             'zh-TW' => 'TaiwaneseMandarin',
             'zu-ZA' => 'ZuluSouthAfrican',
@@ -732,40 +724,14 @@ final class SettingRepository extends Select\Repository
         ];
     }
 
-    // The default_language setting is a setting of last resort and should be set infrequently
-    // If the locale is set, and it exists in the above language array, then use it in preference to the default_language
-    // Return: string eg. "English"
-
-    /**
-     * @return string
-     */
-    public function get_folder_language(): string
-    {
-        // Prioritise the use of the locale dropdown since it will always be set. config/params/locales
-        $sess_lang = (string)$this->session->get('_language');
-        // The print language is set under the get_print_language function in pdfHelper which uses the clients language as priority
-        $print_lang = (string)$this->session->get('print_language');
-        // Use the print language if it is not empty over the locale language
-        if (empty($print_lang)) {
-            return (!empty($sess_lang) && array_key_exists($sess_lang, $this->locale_language_array()))
-                             ? (string)$this->locale_language_array()[$sess_lang]
-            : ($this->getSetting('default_language') ?: 'English');
-        }
-        return $print_lang;
-    }
-
     /**
      * @return array
      */
     public function load_language_folder(): array
     {
-        $folder_language = $this->get_folder_language();
+        $folder_language = 'English';
         $lang = new Lang();
-        //$lang->load('ip',$folder_language);
         $lang->load('gateway', $folder_language);
-        //$lang->load('custom',$folder_language);
-        //$lang->load('merchant',$folder_language);
-        //$lang->load('form_validation',$folder_language);
         return $lang->_language;
     }
 
@@ -1566,8 +1532,8 @@ final class SettingRepository extends Select\Repository
                 'where' => 'InvController function default_tax_inv and QuoteController function default_tax_quote and NumberHelper calculate_quote_taxes calculate_inv_taxes',
             ],
             'default_language' => [
-                'why' => 'This is the language used if the session print language or the locale dropdown language are not set',
-                'where' => 'setting/get_folder_language',
+                'why' => 'This is the default language assigned to new clients, and is used for printing documents.',
+                'where' => 'client/_form and pdfHelper/get_print_language. To override this setting: The client will receive their documents in their language provided their language is set in the client form.',
             ],
             'default_list_limit' => [
                 'why' => 'This value is used with the Paginator to limit the number of records viewed',
@@ -1800,7 +1766,7 @@ final class SettingRepository extends Select\Repository
             'time_zone' => [
                 'why' => 'This is used in the DateHelper function datetime_zone_style which is used in TaskForm to get an accurate Finish Date for a Task.' . '/n'
                      . 'It is also used in paymentinformation/amazon_signature to get a region from a time zone.' ,
-                'where' => 'setting/get_folder_language',
+                'where' => '',
             ],
         ];
     }

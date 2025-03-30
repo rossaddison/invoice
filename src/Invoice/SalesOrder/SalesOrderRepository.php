@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace App\Invoice\SalesOrder;
 
 use App\Invoice\Entity\SalesOrder;
-use App\Invoice\Setting\SettingRepository as SR;
 use App\Invoice\Group\GroupRepository as GR;
 use Cycle\ORM\Select;
 use Throwable;
@@ -25,9 +24,8 @@ final class SalesOrderRepository extends Select\Repository
      * @param Select<TEntity> $select
      * @param EntityWriter $entityWriter
      * @param Translator $translator
-     * @param SR $sR
      */
-    public function __construct(Select $select, private readonly EntityWriter $entityWriter, private readonly Translator $translator, private readonly SR $sR)
+    public function __construct(Select $select, private readonly EntityWriter $entityWriter, private readonly Translator $translator)
     {
         parent::__construct($select);
     }
@@ -413,7 +411,7 @@ final class SalesOrderRepository extends Select\Repository
     public function repoCountAll(): int
     {
         return $this->select()
-                      ->count();
+                    ->count();
     }
 
     /**

@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 use App\Invoice\Entity\Merchant;
@@ -51,10 +52,10 @@ $columns = [
         field: 'inv_id',
         property: 'filterInvNumber',
         header:  $translator->translate('i.invoice'),
-        content: static function (Merchant $model) use ($urlGenerator): string {
+        content: static function (Merchant $model) use ($urlGenerator): string|A {
             $return = '';
             if (null !== $model->getInv()) {
-                $return = Html::a($model->getInv()?->getNumber() ?? '#', $urlGenerator->generate('inv/view', ['id' => $model->getInv_id()]), ['style' => 'text-decoration:none'])->render();
+                $return = Html::a($model->getInv()?->getNumber() ?? '#', $urlGenerator->generate('inv/view', ['id' => $model->getInv_id()]), ['style' => 'text-decoration:none']);
             }
             return $return;
         },
@@ -77,18 +78,18 @@ $columns = [
         field: 'driver',
         property: 'filterPaymentProvider',
         header:  $translator->translate('g.payment_provider'),
-        content: static fn (Merchant $model): string => ($model->getDriver()),
+        content: static fn (Merchant $model): string => Html::encode($model->getDriver()),
         filter: true
     ),
     new DataColumn(
         'response',
         header:  $translator->translate('g.provider_response'),
-        content: static fn (Merchant $model): string => ($model->getResponse())
+        content: static fn (Merchant $model): string => Html::encode($model->getResponse())
     ),
     new DataColumn(
         'reference',
         header:  $translator->translate('g.transaction_reference'),
-        content: static fn (Merchant $model): string => ($model->getReference())
+        content: static fn (Merchant $model): string => Html::encode($model->getReference())
     ),
 ];
 ?>

@@ -103,7 +103,7 @@ use Yiisoft\Html\Html;
                         </div>
                     </div>   
                     <div class="col-xs-12 col-md-6">
-                        <div class="form-group">
+                         <div class="form-group">
                             <label for="settings[default_language]" <?= $s->where('default_language'); ?> >
                                 <?= $translator->translate('i.language'); ?>
                             </label>

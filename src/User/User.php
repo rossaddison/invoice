@@ -34,9 +34,10 @@ class User
     #[HasOne(target: Identity::class)]
     private readonly Identity $identity;
 
-    public function __construct(#[Column(type: 'string(48)')]
-        private string $login, #[Column(type: 'string(254)')]
-        private readonly string $email, string $password)
+    public function __construct
+            (#[Column(type: 'string(48)')] private string $login, 
+            #[Column(type: 'string(254)')] private readonly string $email, 
+            string $password)
     {
         $this->created_at = new DateTimeImmutable();
         $this->updated_at = new DateTimeImmutable();

@@ -96,7 +96,8 @@ $toolbar = Div::tag();
                     } else {
                         return '';
                     }
-                }
+                },
+                encodeContent: false        
             ),
             new DataColumn(
                 'client_id',

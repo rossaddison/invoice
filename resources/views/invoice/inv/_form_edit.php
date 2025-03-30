@@ -198,10 +198,11 @@ if ($vat) {
                             ?>
                             <?= Html::closeTag('div'); ?>         
                             <?php
-                        } else {
-                            echo Html::a($translator->translate('invoice.invoice.contract.add'), $urlGenerator->generate('contract/add', ['client_id' => $inv->getClient_id()]), ['class' => 'btn btn-info btn-lg mt-3']);
-                        }
-?>                        
+                        } ?>
+                        <?php echo Html::a($translator->translate('invoice.invoice.contract.add'), 
+                                $urlGenerator->generate('contract/add', 
+                                ['client_id' => $inv->getClient_id()]), 
+                                ['class' => 'btn btn-info btn-lg mt-3']); ?>                        
                         <?php if ($postalAddressCount > 0) { ?>
                                 <?= Html::openTag('div'); ?>
                                     <?= Field::select($form, 'postal_address_id')
@@ -345,7 +346,7 @@ if ($vat) {
                             <?= Field::select($form, 'terms')
                             ->label($translator->translate('i.terms'))
                             ->addInputAttributes(['class' => 'form-control'])
-                            ->value($form->getTerms())
+                            ->value(Html::encode($form->getTerms()))
                             ->prompt($translator->translate('i.none'))
                             ->optionsData($optionsData['paymentTerm'])
                             ->hint($translator->translate('invoice.hint.this.field.is.not.required'));

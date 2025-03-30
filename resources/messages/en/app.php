@@ -1011,6 +1011,7 @@ return [
                                                        ' inserted as an editable value on the mailer form. '.
                                                        ' eg. An accountant\'s server email address.' .
                                                        ' Preferably use a server related email address here.',
+    'invoice.email.warning.draft' => 'Draft invoices must first be marked sent so they appear on the client\'s side and then they can be emailed.',
     'invoice.enter' => 'Enter',
     'invoice.errors' => 'Errors',
     'invoice.family' => 'Family',

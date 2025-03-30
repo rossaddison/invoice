@@ -161,12 +161,12 @@ $toolbar = Div::tag();
         ),
         new DataColumn(
             header: $translator->translate('invoice.product.property.add'),
-            content: static function (Product $model) use ($urlGenerator): string {
+            content: static function (Product $model) use ($urlGenerator): A {
                 return Html::a(
                     Html::tag('i', '', ['class' => 'fa fa-plus fa-margin dropdown-button text-decoration-none']),
                     $urlGenerator->generate('productproperty/add', ['product_id' => $model->getProduct_id()]),
                     []
-                )->render();
+                );
             },
         ),
         new ActionColumn(buttons: [

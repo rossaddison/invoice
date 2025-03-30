@@ -7,6 +7,7 @@ use Yiisoft\Html\Html;
 use Yiisoft\Html\Tag\A;
 use Yiisoft\Html\Tag\Div;
 use Yiisoft\Html\Tag\Form;
+use Yiisoft\Html\Tag\Span;
 use Yiisoft\Yii\DataView\GridView;
 use Yiisoft\Yii\DataView\Column\DataColumn;
 
@@ -55,14 +56,14 @@ $columns = [
     new DataColumn(
         'client_active',
         header: $translator->translate('i.active'),
-        content: static function (Client $model) use ($button, $translator): string {
+        content: static function (Client $model) use ($button, $translator): Span {
             return $model->getClient_active() ? $button::activeLabel($translator) : $button::inactiveLabel($translator);
         }
     ),
     new DataColumn(
         'id',
         header: 'Peppol',
-        content: static function (Client $model) use ($cpR, $button, $translator): string {
+        content: static function (Client $model) use ($cpR, $button, $translator): Span {
             return ($cpR->repoClientCount((string)$model->getClient_id()) !== 0)
                     ? $button::activeLabel($translator)
                     : $button::inactiveLabel($translator);
@@ -72,7 +73,7 @@ $columns = [
     new DataColumn(
         'id',
         header: $translator->translate('invoice.client.has.user.account'),
-        content: static function (Client $model) use ($canEdit, $ucR, $button, $translator, $urlGenerator): string {
+        content: static function (Client $model) use ($canEdit, $ucR, $button, $translator, $urlGenerator): Span {
             return ($ucR->repoUserqueryCount((string)$model->getClient_id()) !== 0  && $canEdit)
                    ? $button::activeLabel($translator)
                    : $button::inactiveWithAddUserAccount($urlGenerator, $translator);
@@ -99,12 +100,11 @@ $columns = [
         field: 'client_name',
         property: 'filter_client_name',
         header: $translator->translate('i.client_name'),
-        content: static function (Client $model) use ($urlGenerator): string {
+        content: static function (Client $model) use ($urlGenerator): A {
             return  A::tag()
                     ->content(Html::encode($model->getClient_name()))
                     ->href($urlGenerator->generate('client/view', ['id' => $model->getClient_id()]))
-                    ->addClass('btn btn-warning ms-2')
-                    ->render();
+                    ->addClass('btn btn-warning ms-2');
         },
         filter: $optionsDataClientNameDropdownFilter,
         withSorting: false
@@ -113,12 +113,11 @@ $columns = [
         field:  'client_surname',
         property: 'filter_client_surname',
         header: $translator->translate('i.client_surname'),
-        content: static function (Client $model) use ($urlGenerator): string {
+        content: static function (Client $model) use ($urlGenerator): A {
             return  A::tag()
                     ->content(Html::encode($model->getClient_surname() ?? ''))
                     ->href($urlGenerator->generate('client/view', ['id' => $model->getClient_id()]))
-                    ->addClass('btn btn-warning ms-2')
-                    ->render();
+                    ->addClass('btn btn-warning ms-2');
         },
         filter: $optionsDataClientSurnameDropdownFilter,
         withSorting: false
@@ -203,7 +202,8 @@ $columns = [
             } else {
                 return '';
             }
-        }
+        },
+        encodeContent: false        
     ),
     new DataColumn(
         'client_id',
@@ -217,29 +217,29 @@ $columns = [
         }
     ),
     new DataColumn(
-        content: static function (Client $model) use ($urlGenerator, $translator, $cpR): string {
+        content: static function (Client $model) use ($urlGenerator, $translator, $cpR): A {
             $addUrl = $urlGenerator->generate('clientpeppol/add', ['client_id' => $model->getClient_id()]);
             $editUrl = $urlGenerator->generate('clientpeppol/edit', ['client_id' => $model->getClient_id(), 'origin' => 'edit']);
             $equal = ($cpR->repoClientCount((string)$model->getClient_id()) === 0 ? true : false);
             $heading = ($equal ? $translator->translate('invoice.client.peppol.add') : $translator->translate('invoice.client.peppol.edit'));
-            return Html::a(Html::tag('i', $heading, ['class' => 'fa fa-'. ($equal ? 'plus' : 'edit') .'fa-margin']), ($equal ? $addUrl : $editUrl), [])->render();
+            return Html::a(Html::tag('i', $heading, ['class' => 'fa fa-'. ($equal ? 'plus' : 'edit') .'fa-margin']), ($equal ? $addUrl : $editUrl), []);
         }
     ),
     new DataColumn(
         header: $translator->translate('i.view'),
-        content: static function (Client $model) use ($urlGenerator): string {
-            return Html::a(Html::tag('i', '', ['class' => 'fa fa-eye fa-margin']), $urlGenerator->generate('client/view', ['id' => $model->getClient_id()]), [])->render();
+        content: static function (Client $model) use ($urlGenerator): A {
+            return Html::a(Html::tag('i', '', ['class' => 'fa fa-eye fa-margin']), $urlGenerator->generate('client/view', ['id' => $model->getClient_id()]), []);
         }
     ),
     new DataColumn(
         header: $translator->translate('i.edit'),
-        content: static function (Client $model) use ($urlGenerator): string {
-            return Html::a(Html::tag('i', '', ['class' => 'fa fa-edit fa-margin']), $urlGenerator->generate('client/edit', ['id' => $model->getClient_id(), 'origin' => 'edit']), [])->render();
+        content: static function (Client $model) use ($urlGenerator): A {
+            return Html::a(Html::tag('i', '', ['class' => 'fa fa-edit fa-margin']), $urlGenerator->generate('client/edit', ['id' => $model->getClient_id(), 'origin' => 'edit']), []);
         }
     ),
     new DataColumn(
         header: $translator->translate('i.delete'),
-        content: static function (Client $model) use ($translator, $urlGenerator): string {
+        content: static function (Client $model) use ($translator, $urlGenerator): A {
             return Html::a(
                 Html::tag(
                     'button',
@@ -252,7 +252,7 @@ $columns = [
                 ),
                 $urlGenerator->generate('client/delete', ['id' => $model->getClient_id()]),
                 []
-            )->render();
+            );
         }
     )
 ];

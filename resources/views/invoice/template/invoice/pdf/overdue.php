@@ -20,6 +20,7 @@ use Yiisoft\Html\Html;
  * @var bool $show_custom_fields
  * @var bool $show_item_discounts
  * @var bool $show_top_fields
+ * @var string $cldr
  * @var string $company_logo_and_address
  * @var string $top_custom_fields
  * @var string $view_custom_fields
@@ -29,7 +30,11 @@ $vat = $s->getSetting('enable_vat_registration');
 ?>
 
 <!DOCTYPE html>
-<html class="h-100" lang="<?= $translator->translate('i.cldr'); ?>">
+<html class="h-100" lang="<?= $cldr; ?>">
+<?php
+    /** Set the locale when the view is being rendered partially i.e. without a layout */
+    $translator->setLocale($cldr); 
+?>
 <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">

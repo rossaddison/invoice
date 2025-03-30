@@ -10,8 +10,8 @@ use Yiisoft\Html\Tag\Form;
 use Yiisoft\Html\Tag\H5;
 use Yiisoft\Html\Tag\I;
 use Yiisoft\Html\Tag\Label;
-use Yiisoft\Yii\Bootstrap5\Breadcrumbs;
-use Yiisoft\Yii\Bootstrap5\BreadcrumbLink;
+use Yiisoft\Bootstrap5\Breadcrumbs;
+use Yiisoft\Bootstrap5\BreadcrumbLink;
 use Yiisoft\Yii\DataView\Column\ActionButton;
 use Yiisoft\Yii\DataView\Column\ActionColumn;
 use Yiisoft\Yii\DataView\Column\DataColumn;
@@ -100,8 +100,8 @@ echo Breadcrumbs::widget()
              url: $urlGenerator->generate(
                  'setting/tab_index',
                  [],
-                 ['active' => 'quotes']
-             ).'#settings[default_quote_group]',
+                 ['active' => 'quotes'],
+                 'settings[default_quote_group]'),
              active: true,
              attributes: [
                    'data-bs-toggle' => 'tooltip',
@@ -114,8 +114,8 @@ echo Breadcrumbs::widget()
              url: $urlGenerator->generate(
                  'setting/tab_index',
                  [],
-                 ['active' => 'quotes']
-             ).'#settings[default_quote_notes]',
+                 ['active' => 'quotes'],
+                 'settings[default_quote_notes]'),
              active: false,
              attributes: [
                    'data-bs-toggle' => 'tooltip',
@@ -128,8 +128,8 @@ echo Breadcrumbs::widget()
              url: $urlGenerator->generate(
                  'setting/tab_index',
                  [],
-                 ['active' => 'quotes']
-             ).'#settings[quotes_expire_after]',
+                 ['active' => 'quotes'],
+                 'settings[quotes_expire_after]'),
              active: false,
              attributes: [
                    'data-bs-toggle' => 'tooltip',
@@ -142,8 +142,8 @@ echo Breadcrumbs::widget()
              url:  $urlGenerator->generate(
                  'setting/tab_index',
                  [],
-                 ['active' => 'quotes']
-             ).'#settings[generate_quote_number_for_draft]',
+                 ['active' => 'quotes'],
+                 'settings[generate_quote_number_for_draft]'),
              active: false,
              attributes: [
                    'data-bs-toggle' => 'tooltip',
@@ -156,8 +156,8 @@ echo Breadcrumbs::widget()
              url:  $urlGenerator->generate(
                  'setting/tab_index',
                  [],
-                 ['active' => 'quotes']
-             ).'#settings[email_quote_template]',
+                 ['active' => 'quotes'],
+                 'settings[email_quote_template]'),
              active: false,
              attributes: [
                    'data-bs-toggle' => 'tooltip',
@@ -170,8 +170,8 @@ echo Breadcrumbs::widget()
              url: $urlGenerator->generate(
                  'setting/tab_index',
                  [],
-                 ['active' => 'quotes']
-             ).'#settings[pdf_quote_footer]',
+                 ['active' => 'quotes'],
+                 'settings[pdf_quote_footer]'),
              active: false,
              attributes: [
                    'data-bs-toggle' => 'tooltip',
@@ -265,13 +265,13 @@ echo Breadcrumbs::widget()
         new DataColumn(
             'status_id',
             header: $translator->translate('i.status'),
-            content: static function (Quote $model) use ($qR): Yiisoft\Html\Tag\CustomTag|string {
+            content: static function (Quote $model) use ($qR): Yiisoft\Html\Tag\CustomTag {
                 if (null !== $model->getStatus_id()) {
                     $span = $qR->getSpecificStatusArrayLabel((string)$model->getStatus_id());
                     $class = $qR->getSpecificStatusArrayClass((string)$model->getStatus_id());
-                    return (string)Html::tag('span', $span, ['id' => '#quote-index','class' => 'label '. $class]);
+                    return Html::tag('span', $span, ['id' => '#quote-index','class' => 'label '. $class]);
                 }
-                return '';
+                return Html::tag('span');
             },
             withSorting: true
         ),
@@ -307,8 +307,8 @@ echo Breadcrumbs::widget()
             field: 'number',
             property: 'filterQuoteNumber',
             header: $translator->translate('invoice.quote.number'),
-            content: static function (Quote $model) use ($urlGenerator): string {
-                return Html::a($model->getNumber() ?? '#', $urlGenerator->generate('quote/view', ['id' => $model->getId()]), ['style' => 'text-decoration:none'])->render();
+            content: static function (Quote $model) use ($urlGenerator): A {
+                return Html::a($model->getNumber() ?? '#', $urlGenerator->generate('quote/view', ['id' => $model->getId()]), ['style' => 'text-decoration:none']);
             },
             filter:\Yiisoft\Yii\DataView\Filter\Widget\TextInputFilter::widget()
                     ->addAttributes(['style' => 'max-width: 80px']),
@@ -336,7 +336,7 @@ echo Breadcrumbs::widget()
                 $clientName = $model->getClient()?->getClient_name();
                 $clientSurname = $model->getClient()?->getClient_surname();
                 if (null !== $clientName && null !== $clientSurname) {
-                    return $clientName . str_repeat(' ', 2). $clientSurname;
+                    return Html::encode($clientName . str_repeat(' ', 2). $clientSurname);
                 }
                 return '';
             },
@@ -347,14 +347,13 @@ echo Breadcrumbs::widget()
             field: 'id',
             property: 'filterQuoteAmountTotal',
             header: $translator->translate('i.total') . ' ( '. $s->getSetting('currency_symbol'). ' ) ',
-            content: static function (Quote $model) use ($decimalPlaces): string {
+            content: static function (Quote $model) use ($decimalPlaces): Label {
                 $quoteTotal = $model->getQuoteAmount()->getTotal();
                 return
                     Label::tag()
                         ->attributes(['class' => $model->getQuoteAmount()->getTotal() > 0.00 ? 'label label-success' : 'label label-warning'])
-                        ->content(Html::encode(null !== $quoteTotal ? number_format($quoteTotal, $decimalPlaces) : number_format(0, $decimalPlaces)))
-                        ->render();
-            },
+                        ->content(Html::encode(null !== $quoteTotal ? number_format($quoteTotal, $decimalPlaces) : number_format(0, $decimalPlaces)));
+            },    
             filter: \Yiisoft\Yii\DataView\Filter\Widget\TextInputFilter::widget()
                     ->addAttributes(['style' => 'max-width: 50px']),
             withSorting: false

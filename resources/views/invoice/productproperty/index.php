@@ -58,28 +58,28 @@ $columns = [
     new DataColumn(
         'name',
         header:  $translator->translate('invoice.product.property.name'),
-        content: static fn (ProductProperty $model) => $model->getName()
+        content: static fn (ProductProperty $model) => Html::encode($model->getName())
     ),
     new DataColumn(
         'value',
         header:  $translator->translate('invoice.product.property.value'),
-        content: static fn (ProductProperty $model) => $model->getValue()
+        content: static fn (ProductProperty $model) => Html::encode($model->getValue())
     ),
     new DataColumn(
         header:  $translator->translate('i.view'),
-        content: static function (ProductProperty $model) use ($urlGenerator): string {
-            return Html::a(Html::tag('i', '', ['class' => 'fa fa-eye fa-margin']), $urlGenerator->generate('productproperty/view', ['id' => $model->getProperty_id()]), [])->render();
+        content: static function (ProductProperty $model) use ($urlGenerator): A {
+            return Html::a(Html::tag('i', '', ['class' => 'fa fa-eye fa-margin']), $urlGenerator->generate('productproperty/view', ['id' => $model->getProperty_id()]), []);
         }
     ),
     new DataColumn(
         header:  $translator->translate('i.edit'),
-        content: static function (ProductProperty $model) use ($urlGenerator): string {
-            return Html::a(Html::tag('i', '', ['class' => 'fa fa-pencil fa-margin']), $urlGenerator->generate('productproperty/edit', ['id' => $model->getProperty_id()]), [])->render();
+        content: static function (ProductProperty $model) use ($urlGenerator): A {
+            return Html::a(Html::tag('i', '', ['class' => 'fa fa-pencil fa-margin']), $urlGenerator->generate('productproperty/edit', ['id' => $model->getProperty_id()]), []);
         }
     ),
     new DataColumn(
         header:  $translator->translate('i.delete'),
-        content: static function (ProductProperty $model) use ($translator, $urlGenerator): string {
+        content: static function (ProductProperty $model) use ($translator, $urlGenerator): A {
             return Html::a(
                 Html::tag(
                     'button',
@@ -92,7 +92,7 @@ $columns = [
                 ),
                 $urlGenerator->generate('productproperty/delete', ['id' => $model->getProperty_id()]),
                 []
-            )->render();
+            );
         }
     ),
 ];

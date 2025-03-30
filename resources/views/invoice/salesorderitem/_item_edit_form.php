@@ -3,8 +3,8 @@
 declare(strict_types=1);
 
 use Yiisoft\Html\Html;
-use Yiisoft\Yii\Bootstrap5\Alert;
-use Yiisoft\Yii\Bootstrap5\AlertVariant;
+use Yiisoft\Bootstrap5\Alert;
+use Yiisoft\Bootstrap5\AlertVariant;
 
 /**
  * @see App\Invoice\SalesOrderItem\SalesOrderItemController
@@ -84,7 +84,7 @@ $vat = $s->getSetting('enable_vat_registration') === '1' ? true : false;
                              foreach ($products as $product) { ?>
                               <option value="<?= $product->getProduct_id() ?: ''; ?>"
                                <?php $s->check_select(Html::encode($body['product_id'] ?? ''), $product->getProduct_id()) ?>
-                               ><?= $product->getProduct_name(); ?></option>
+                               ><?= Html::encode($product->getProduct_name()); ?></option>
                              <?php } ?>
                         </select>
                 </div>

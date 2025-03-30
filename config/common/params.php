@@ -149,7 +149,7 @@ return [
                 /**
                 * @see resources/views/invoice/product/_form.php and adjust the h6 below to h1 and see the effect
                 */
-                'hintClass' => 'text-danger h6',
+                'hintClass' => 'text-danger h4',
                 'fieldConfigs' => [
                     SubmitButton::class => [
                         'buttonClass()' => ['btn btn-primary btn-sm mt-3'],
@@ -355,7 +355,10 @@ return [
          */
         'schema-providers' => [
             PhpFileSchemaProvider::class => [
-                'mode' => $_ENV['BUILD_DATABASE'] ? PhpFileSchemaProvider::MODE_WRITE_ONLY : PhpFileSchemaProvider::MODE_READ_AND_WRITE,
+                /**
+                 * @psalm-suppress RiskyTruthyFalsyComparison 
+                 */
+                'mode' => $_ENV['BUILD_DATABASE'] ?? '' ? PhpFileSchemaProvider::MODE_WRITE_ONLY : PhpFileSchemaProvider::MODE_READ_AND_WRITE,
                 'file' => 'runtime/schema.php',
             ],
             FromConveyorSchemaProvider::class => [
@@ -364,7 +367,7 @@ return [
                 ],
             ],
         ],
-        /**
+    /**
      * Config for {@see \Yiisoft\Yii\Cycle\Schema\Conveyor\AnnotatedSchemaConveyor}
      * Annotated entity directories list.
      * {@see \Yiisoft\Aliases\Aliases} are also supported.

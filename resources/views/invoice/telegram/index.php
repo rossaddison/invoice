@@ -2,8 +2,8 @@
 
 declare(strict_types=1);
 
-use Yiisoft\Yii\Bootstrap5\Breadcrumbs;
-use Yiisoft\Yii\Bootstrap5\BreadcrumbLink;
+use Yiisoft\Bootstrap5\Breadcrumbs;
+use Yiisoft\Bootstrap5\BreadcrumbLink;
 
 /**
  * @var App\Invoice\Setting\SettingRepository $s

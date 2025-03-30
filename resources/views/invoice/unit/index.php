@@ -92,7 +92,7 @@ $toolbar = Div::tag();
                 new ActionButton(
                     content: '🔎',
                     url: static function (Unit $model) use ($urlGenerator): string {
-                        return $urlGenerator->generate('unit/view', ['id' => $model->getUnit_id()]);
+                        return $urlGenerator->generate('unit/view', ['unit_id' => $model->getUnit_id()]);
                     },
                     attributes: [
                         'data-bs-toggle' => 'tooltip',
@@ -102,7 +102,7 @@ $toolbar = Div::tag();
                 new ActionButton(
                     content: '✎',
                     url: static function (Unit $model) use ($urlGenerator): string {
-                        return $urlGenerator->generate('unit/edit', ['id' => $model->getUnit_id()]);
+                        return $urlGenerator->generate('unit/edit', ['unit_id' => $model->getUnit_id()]);
                     },
                     attributes: [
                         'data-bs-toggle' => 'tooltip',
@@ -112,7 +112,7 @@ $toolbar = Div::tag();
                 new ActionButton(
                     content: '❌',
                     url: static function (Unit $model) use ($urlGenerator): string {
-                        return $urlGenerator->generate('unit/delete', ['id' => $model->getUnit_id()]);
+                        return $urlGenerator->generate('unit/delete', ['unit_id' => $model->getUnit_id()]);
                     },
                     attributes: [
                         'title' => $translator->translate('i.delete'),

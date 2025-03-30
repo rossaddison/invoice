@@ -77,7 +77,7 @@ $columns = [
     ),
     new DataColumn(
         header:  $translator->translate('i.delete'),
-        content: static function (FromDropDown $model) use ($translator, $urlGenerator): string {
+        content: static function (FromDropDown $model) use ($translator, $urlGenerator): A {
             return Html::a(
                 Html::tag(
                     'button',
@@ -90,7 +90,7 @@ $columns = [
                 ),
                 $urlGenerator->generate('from/delete', ['id' => $model->getId()]),
                 []
-            )->render();
+            );
         }
     ),
 ];

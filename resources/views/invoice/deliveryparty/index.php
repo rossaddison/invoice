@@ -73,31 +73,29 @@ $columns = [
     new DataColumn(
         'id',
         header: $translator->translate('i.id'),
-        content:static fn (DeliveryParty $model) => $model->getId()
+        content:static fn (DeliveryParty $model) => Html::encode($model->getId())
     ),
     new DataColumn(
         'party_name',
         header: $translator->translate('i.name'),
-        content:static function (DeliveryParty $model): string {
-            return Html::encode($model->getPartyName());
-        }
+        content: static fn (DeliveryParty $model) => Html::encode($model->getPartyName())
     ),
     new DataColumn(
         header: $translator->translate('i.view'),
-        content: static function (DeliveryParty $model) use ($urlGenerator): string {
-            return Html::a(Html::tag('i', '', ['class' => 'fa fa-eye fa-margin']), $urlGenerator->generate('deliveryparty/view', ['id' => $model->getId()]), [])->render();
+        content: static function (DeliveryParty $model) use ($urlGenerator): A {
+            return Html::a(Html::tag('i', '', ['class' => 'fa fa-eye fa-margin']), $urlGenerator->generate('deliveryparty/view', ['id' => $model->getId()]), []);
         }
     ),
     new DataColumn(
         'id',
         header: $translator->translate('invoice.invoice.delivery.party.edit'),
-        content:static function (DeliveryParty $model) use ($urlGenerator): string {
-            return Html::a(Html::tag('i', '', ['class' => 'fa fa-edit fa-margin']), $urlGenerator->generate('deliveryparty/edit', ['id' => $model->getId()]), [])->render();
+        content:static function (DeliveryParty $model) use ($urlGenerator): A {
+            return Html::a(Html::tag('i', '', ['class' => 'fa fa-edit fa-margin']), $urlGenerator->generate('deliveryparty/edit', ['id' => $model->getId()]), []);
         }
     ),
     new DataColumn(
         header: $translator->translate('i.delete'),
-        content:static function (DeliveryParty $model) use ($translator, $urlGenerator): string {
+        content:static function (DeliveryParty $model) use ($translator, $urlGenerator): A {
             return Html::a(
                 Html::tag(
                     'button',
@@ -110,7 +108,7 @@ $columns = [
                 ),
                 $urlGenerator->generate('deliveryparty/delete', ['id' => $model->getId()]),
                 []
-            )->render();
+            );
         }
     ),
 ]

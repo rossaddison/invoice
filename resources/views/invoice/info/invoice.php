@@ -46,6 +46,106 @@
 <p>Introducing India's PayTm payment gateway's QR code method of payment and comparing this with Stripe's method.</p>
 <p>A General Sales Tax (GST) Tax System will have to be implemented first for this purpose.</p>
 <p>Testing Credit Notes against Invoices with refunds (if payment made) linked to each of the payment gateways.</p>
+<p><b>30 March 2025</b></p>
+<p>html encode check of views</p>
+
+<p><b>26 March 2025</b></p>
+<p>Removed the session interface from SettingRepository because console commands that use the SettingRepository do not use Session.</p>
+<p>Only the Required red reminder hints are on the client forms. 'Not Required have been removed on the client forms. This will speed up the signing up of clients.</p>
+<p>Client form's number of Required fields has been reduced to reduce input.</p>
+<p>The following commands (config/console/commands.php and src/Command/Invoice) can be used at the console: </p>
+<p>yii invoice/items -- creates a list of random invoice items with a Summary Table for the Item tax and two Invoice specific Taxes of 15% and 20%.</p>
+<p>yii invoice/setting/truncate -- removes all the settings in the setting table -- An array in future can be passed to the InvoiceController which can be tweaked from within the config/common/params.</p>
+<p>yii invoice/generator/truncate -- removes all the records in the gentor and gentor relation tables -- Reuse the generator to build CRUD for another something else.</p>
+<p>yii invoice/inv/truncate1 -- removes all invoices and invoice related tables -- for development testing</p>
+<p>yii invoice/quote/truncate2 -- removes all quotes and quote related tables -- for development testing</p>
+<p>yii invoice/salesorder/truncate3 -- removes all salesorder and salesorder related tables for development testing</p>
+<p>yii invoice/nonuserrelated/truncate4 -- removes all subsequent tables besides tables responsible for logging in</p>
+<p>Console commands with a number after truncate  indicates the general sequence in order to avoid integrity constraint violations</p>
+<p>General Rule of Thumb to avoid integrity constraint violations: If a table contains a foreign key e.g. tax_rate_id, then the TaxRate Table will be truncated later</p>
+<p>Apply https://github.com/yiisoft/router/pull/262/files Hashing to urls in breadcrumbs for quick access to settings.</p>
+<p>Bugfix printing of pdf documents in a client\'s language. The default language setting will be used to print documents unless the client has a different language.</p>
+<p>Set the locale when the view is being rendered partially i.e. without a layout using <pre>$translator->setLocale($cldr);</pre></p>
+<p>Include some functional tests with <pre>php vendor/bin/codecept run</pre></p>
+<p><b>23 March 2025</b></p>
+
+<p><pre>
+
+c:\wamp128\www\invoice>yii invoice/items
+
++------------+-----------------+----------+------------+-----------------+------------+------------+----------------+------------+------------+------------+
+| Name       | Description     | Quantity | Price/unit | (Discount/unit) | Subtotal   | (Discount) | After Discount | Tax(%)     | Tax        | Total      |
++------------+-----------------+----------+------------+-----------------+------------+------------+----------------+------------+------------+------------+
+| Mouse      | 3-button        | 4        |       1.00 |       1.00      |       4.00 |       4.00 |       0.00     |      20.00 |       0.00 |       0.00 |
++------------+-----------------+----------+------------+-----------------+------------+------------+----------------+------------+------------+------------+
+| Keyboard   | US              | 2        |       4.00 |       1.00      |       8.00 |       2.00 |       6.00     |      20.00 |       1.20 |       7.20 |
++------------+-----------------+----------+------------+-----------------+------------+------------+----------------+------------+------------+------------+
+| Screen     | 24inch x 16inch | 1        |       3.00 |       1.00      |       3.00 |       1.00 |       2.00     |      15.00 |       0.30 |       2.30 |
++------------+-----------------+----------+------------+-----------------+------------+------------+----------------+------------+------------+------------+
+| Hard drive | 1 TB            | 2        |       3.00 |       1.00      |       6.00 |       2.00 |       4.00     |      15.00 |       0.60 |       4.60 |
++------------+-----------------+----------+------------+-----------------+------------+------------+----------------+------------+------------+------------+
+| Box        | Standard        | 1        |       3.00 |       1.00      |       3.00 |       1.00 |       2.00     |      15.00 |       0.30 |       2.30 |
++------------+-----------------+----------+------------+-----------------+------------+------------+----------------+------------+------------+------------+
+|            |                 |          |            |                 |            |            |      14.00     |            |       2.40 |      16.40 |
++------------+-----------------+----------+------------+-----------------+------------+------------+----------------+------------+------------+------------+
++----------------------------------------------------+------------+
+| After Item Discount                                |      14.00 |
+| Add: Item Tax Total                                |       2.40 |
++----------------------------------------------------+------------+
+| With Item Tax                                      |      16.40 |
+| Invoice Taxes (15%       2.46, 20%       3.28)     |       5.74 |
++----------------------------------------------------+------------+
+| Before Invoice Discount Total                      |      22.14 |
+| (Invoice Discount as 10% of Before Discount Total) |       2.21 |
++----------------------------------------------------+------------+
+| Total                                              |      19.93 |
++----------------------------------------------------+------------+
+</pre></p>
+<p><pre>
+  C:\wamp128\www\invoice>php vendor/bin/codecept run
+Codeception 5.2.1
+
+Usage:
+  command [options] [arguments]
+
+Options:
+  -h, --help             Display help for the given command. When no command is given display help for the list command
+  -q, --quiet            Do not output any message
+  -V, --version          Display this application version
+      --ansi|--no-ansi   Force (or disable --no-ansi) ANSI output
+  -n, --no-interaction   Do not ask any interactive question
+  -c, --config[=CONFIG]  Use custom path for config
+  -v|vv|vvv, --verbose   Increase the verbosity of messages: 1 for normal output, 2 for more verbose output and 3 for debug
+
+Available commands:
+  bootstrap             Creates default test suites and generates all required files
+  build                 Generates base classes for all suites
+  clean                 Recursively cleans log and generated code
+  completion            Dump the shell completion script
+  console               Launches interactive test console
+  dry-run               Prints step-by-step scenario-driven test or a feature
+  help                  Display help for a command
+  init                  Creates test suites by a template
+  list                  List commands
+  run                   Runs the test suites
+ config
+  config:validate       Validates and prints config to screen
+ generate
+  generate:cest         Generates empty Cest file in suite
+  generate:environment  Generates empty environment config
+  generate:feature      Generates empty feature file in suite
+  generate:groupobject  Generates Group subscriber
+  generate:helper       Generates a new helper
+  generate:pageobject   Generates empty PageObject class
+  generate:scenarios    Generates text representation for all scenarios
+  generate:snapshot     Generates empty Snapshot class
+  generate:stepobject   Generates empty StepObject class
+  generate:suite        Generates new test suite
+  generate:test         Generates empty unit test file in suite
+ gherkin
+  gherkin:snippets      Fetches empty steps from feature files of suite and prints code snippets for them
+  gherkin:steps         Prints all defined feature steps  
+</pre></p>
 <p><b>9 March 2025</b></p>
 <p>Replace jquery datepicker with bootstrap datepicker due to consistent security vulnerabilities with the jquery datepicker.
 
@@ -327,7 +427,7 @@ GET https://api.github.com/user</pre><p>
 <p>1. yiisoft/mailer backward compatibility corrections. pull requests 104 - 109</p>
 <p>2. MessageBodyTemplate(s) removed.</p>
 <p>3. ->withCharSet('UTF-8') added to messages</p>
-<p>4. yiisoft/bootstrap5 dev-master used in an attempt to remove  composer-dependency-checker Yiisoft\Yii\Bootstrap5\AlertType unknown sybmol error https://github.com/rossaddison/invoice/actions/runs/11365127873/job/31612623182</p>
+<p>4. yiisoft/bootstrap5 dev-master used in an attempt to remove  composer-dependency-checker Yiisoft\Bootstrap5\AlertType unknown sybmol error https://github.com/rossaddison/invoice/actions/runs/11365127873/job/31612623182</p>
 <p>5. Previous MessageBodyTemplates moved into ->withTextBody</p>
 <p>6. Slight adjustment/improvement to resources/views/layout/alert with AlertVariants assigned to variables outside the match statement.</p>
 <p>7. mailert->withAttached changed to withAttachments</p>

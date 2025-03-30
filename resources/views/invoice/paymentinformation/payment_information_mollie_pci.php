@@ -48,9 +48,9 @@ use Yiisoft\Html\Tag\A;
         <h2 class="fw-normal h3 text-center">
             <?php echo Html::tag('br');
     echo $companyLogo; ?><?= $translator->translate('g.online_payment_for_invoice'); ?> #
-                <?= ($invoice->getNumber() ?? ''). ' => '.
-             ($invoice->getClient()?->getClient_name() ?? ''). ' '.
-             ($invoice->getClient()?->getClient_surname() ?? ''). ' '.
+                <?= Html::encode($invoice->getNumber() ?? ''). ' => '.
+             Html::encode($invoice->getClient()?->getClient_name() ?? ''). ' '.
+             Html::encode($invoice->getClient()?->getClient_surname() ?? ''). ' '.
              $numberHelper->format_currency($balance); ?>
             
         </h2>

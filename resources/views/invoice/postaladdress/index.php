@@ -66,17 +66,17 @@ $toolbar = Div::tag();
             'client_id',
             header:  $translator->translate('i.client_name'),
             content: static function (PostalAddress $model) use ($cR): string {
-                $clientName = ($cR->repoClientCount($model->getClient_id()) > 0 ? ($cR->repoClientquery($model->getClient_id()))->getClient_name() : '');
+                $clientName = ($cR->repoClientCount($model->getClient_id()) > 0 ? Html::encode(($cR->repoClientquery($model->getClient_id()))->getClient_name()) : '');
                 return $clientName;
             }
         ),
         new DataColumn(
             'client_id',
             header:  $translator->translate('i.client_surname'),
-            content: static function (PostalAddress $model) use ($cR): null|string {
+            content: static function (PostalAddress $model) use ($cR): string {
                 $clientId = $model->getClient_id();
                 if ($clientId) {
-                    $clientSurname = ($cR->repoClientCount($clientId) > 0 ? ($cR->repoClientquery($clientId))->getClient_surname() : '');
+                    $clientSurname = ($cR->repoClientCount($clientId) > 0 ? Html::encode(($cR->repoClientquery($clientId))->getClient_surname()) : '');
                     return $clientSurname;
                 }
                 return '';
@@ -97,19 +97,19 @@ $toolbar = Div::tag();
         ),
         new DataColumn(
             header:  $translator->translate('i.view'),
-            content: static function (PostalAddress $model) use ($urlGenerator): string {
-                return Html::a(Html::tag('i', '', ['class' => 'fa fa-eye fa-margin']), $urlGenerator->generate('postaladdress/view', ['id' => $model->getId()]), [])->render();
+            content: static function (PostalAddress $model) use ($urlGenerator): A {
+                return Html::a(Html::tag('i', '', ['class' => 'fa fa-eye fa-margin']), $urlGenerator->generate('postaladdress/view', ['id' => $model->getId()]), []);
             }
         ),
         new DataColumn(
             header:  $translator->translate('i.edit'),
-            content: static function (PostalAddress $model) use ($urlGenerator): string {
-                return Html::a(Html::tag('i', '', ['class' => 'fa fa-eye fa-margin']), $urlGenerator->generate('postaladdress/edit', ['id' => $model->getId()]), [])->render();
+            content: static function (PostalAddress $model) use ($urlGenerator): A {
+                return Html::a(Html::tag('i', '', ['class' => 'fa fa-eye fa-margin']), $urlGenerator->generate('postaladdress/edit', ['id' => $model->getId()]), []);
             }
         ),
         new DataColumn(
             header:  $translator->translate('i.delete'),
-            content: static function (PostalAddress $model) use ($translator, $urlGenerator): string {
+            content: static function (PostalAddress $model) use ($translator, $urlGenerator): A {
                 return Html::a(
                     Html::tag(
                         'button',
@@ -122,7 +122,7 @@ $toolbar = Div::tag();
                     ),
                     $urlGenerator->generate('postaladdress/delete', ['id' => $model->getId()]),
                     []
-                )->render();
+                );
             }
         ),
     ];

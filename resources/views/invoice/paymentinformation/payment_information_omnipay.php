@@ -53,9 +53,9 @@ use Yiisoft\Html\Tag\Form;
         <h2 class="fw-normal h3 text-center"><?= $translator->translate('g.online_payment_for_invoice'); ?> #
             <?php echo Html::tag('br');
     echo $companyLogo; ?><?= $translator->translate('g.online_payment_for_invoice'); ?> #
-            <?= ($invoice->getNumber() ?? ''). ' => '.
-        ($invoice->getClient()?->getClient_name() ?? ''). ' '.
-        ($invoice->getClient()?->getClient_surname() ?? ''). ' '.
+            <?= Html::encode($invoice->getNumber() ?? ''). ' => '.
+        Html::encode($invoice->getClient()?->getClient_name() ?? ''). ' '.
+        Html::encode($invoice->getClient()?->getClient_surname() ?? ''). ' '.
          $numberHelper->format_currency($balance); ?>
         </h2>
         <a href="<?= $urlGenerator->generate('inv/pdf_download_include_cf', ['url_key' => $inv_url_key]); ?>" class="btn btn-sm btn-primary fw-normal h3 text-center" style="text-decoration:none">

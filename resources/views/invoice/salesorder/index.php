@@ -123,35 +123,35 @@ $toolbar = Div::tag();
         new DataColumn(
             'status_id',
             header: $translator->translate('i.status'),
-            content: static function (SalesOrder $model) use ($soR): Yiisoft\Html\Tag\CustomTag|string {
+            content: static function (SalesOrder $model) use ($soR): Yiisoft\Html\Tag\CustomTag {
                 $statusId = $model->getStatus_id();
                 if (null !== $statusId) {
                     $span = $soR->getSpecificStatusArrayLabel((string)$statusId);
                     $class = $soR->getSpecificStatusArrayClass($statusId);
-                    return (string)Html::tag('span', $span, ['id' => '#so-to-invoice','class' => 'label '. $class]);
+                    return Html::tag('span', $span, ['id' => '#so-to-invoice','class' => 'label '. $class]);
                 }
-                return '';
+                return Html::tag('span');
             }
         ),
         new DataColumn(
             'number',
-            content: static function (SalesOrder $model) use ($urlGenerator): string {
-                return Html::a($model->getNumber() ?? '#', $urlGenerator->generate('salesorder/view', ['id' => $model->getId()]), ['style' => 'text-decoration:none'])->render();
+            content: static function (SalesOrder $model) use ($urlGenerator): A {
+                return Html::a($model->getNumber() ?? '#', $urlGenerator->generate('salesorder/view', ['id' => $model->getId()]), ['style' => 'text-decoration:none']);
             }
         ),
         new DataColumn(
             'quote_id',
-            content: static function (SalesOrder $model) use ($urlGenerator): string {
+            content: static function (SalesOrder $model) use ($urlGenerator): string|A {
                 return ($model->getQuote_id() ?
-                Html::a($model->getQuote_id(), $urlGenerator->generate('quote/view', ['id' => $model->getQuote_id()]), ['style' => 'text-decoration:none'])->render() : '');
+                Html::a($model->getQuote_id(), $urlGenerator->generate('quote/view', ['id' => $model->getQuote_id()]), ['style' => 'text-decoration:none']) : '');
             }
         ),
         new DataColumn(
             'inv_id',
-            content: static function (SalesOrder $model) use ($urlGenerator): string {
+            content: static function (SalesOrder $model) use ($urlGenerator): string|A {
                 $invId = $model->getInv_id();
                 return (null !== $invId ?
-                Html::a($invId, $urlGenerator->generate('inv/view', ['id' => $invId]), ['style' => 'text-decoration:none'])->render() : '');
+                Html::a($invId, $urlGenerator->generate('inv/view', ['id' => $invId]), ['style' => 'text-decoration:none']) : '');
             }
         ),
         new DataColumn(
@@ -161,12 +161,11 @@ $toolbar = Div::tag();
                 /**
                  * @psalm-suppress PossiblyInvalidMethodCall $model->getDate_created()->format('Y-m-d')
                  */
-                return Html::encode(
-                    $model->getDate_created() instanceof \DateTimeImmutable ?
+                return $model->getDate_created() instanceof \DateTimeImmutable ?
                         $model->getDate_created()->format('Y-m-d')
-                        : ''
-                );
-            }
+                        : '';
+            },
+            encodeContent: true        
         ),
         new DataColumn(
             'client_id',
@@ -191,8 +190,8 @@ $toolbar = Div::tag();
         ),
         new DataColumn(
             header: $translator->translate('i.view'),
-            content: static function (SalesOrder $model) use ($urlGenerator): string {
-                return Html::a(Html::tag('i', '', ['class' => 'fa fa-eye fa-margin']), $urlGenerator->generate('salesorder/view', ['id' => $model->getId()]), [])->render();
+            content: static function (SalesOrder $model) use ($urlGenerator): A {
+                return Html::a(Html::tag('i', '', ['class' => 'fa fa-eye fa-margin']), $urlGenerator->generate('salesorder/view', ['id' => $model->getId()]), []);
             }
         )
     ];

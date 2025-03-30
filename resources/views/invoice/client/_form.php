@@ -5,7 +5,6 @@ declare(strict_types=1);
 use Yiisoft\FormModel\Field;
 use Yiisoft\Html\Html;
 use Yiisoft\Html\Tag\Form;
-use Yiisoft\Arrays\ArrayHelper;
 
 /**
  * @var App\Invoice\Client\ClientForm $form
@@ -96,8 +95,7 @@ Html::closeTag('div')
         $translator->translate('invoice.client.title.doctor'),
         $translator->translate('invoice.client.title.professor'),
     ])
-    ->required(false)
-    ->hint($translator->translate('invoice.hint.this.field.is.not.required'));
+    ->required(false);
 ?>
     
 <?= Field::text($form, 'client_name')
@@ -117,8 +115,7 @@ Html::closeTag('div')
         'placeholder' => $translator->translate('i.client_surname'),
         'class' => 'form-control'
     ])
-    ->required(true)
-    ->hint($translator->translate('invoice.hint.this.field.is.required'));
+    ->required(false);
 ?>
 
 
@@ -130,8 +127,7 @@ Html::closeTag('div')
         'class' => 'form-control',
         'id' => 'client_email'
     ])
-    ->required(true)
-    ->hint($translator->translate('invoice.hint.this.field.is.required'));
+    ->required(false);
 ?>
 
 <?= Field::telephone($form, 'client_mobile')
@@ -142,8 +138,7 @@ Html::closeTag('div')
         'class' => 'form-control',
         'id' => 'client_mobile'
     ])
-    ->required(true)
-    ->hint($translator->translate('invoice.hint.this.field.is.required'));
+    ->required(false);
 ?>
 
 <?= Field::text($form, 'client_group')
@@ -153,8 +148,7 @@ Html::closeTag('div')
         'placeholder' => $translator->translate('invoice.client.group'),
         'class' => 'form-control'
     ])
-    ->required(false)
-    ->hint($translator->translate('invoice.hint.this.field.is.not.required'));
+    ->required(false);
 ?>
 
 <?= Field::select($form, 'client_frequency')
@@ -165,8 +159,7 @@ Html::closeTag('div')
         'class' => 'form-control'
     ])
     ->optionsData($optionsDataClientFrequencyDropdownFilter)
-    ->required(false)
-    ->hint($translator->translate('invoice.hint.this.field.is.not.required'));
+    ->required(false);
 ?>
 
 <?= Field::text($form, 'client_number')
@@ -176,27 +169,25 @@ Html::closeTag('div')
         'placeholder' => $translator->translate('i.client_number'),
         'class' => 'form-control'
     ])
-    ->required(false)
-    ->hint($translator->translate('invoice.hint.this.field.is.not.required'));
+    ->required(false);
 ?>  
     
 <?php
     $options = [];
-/** @var string $language */
-foreach (ArrayHelper::map($s->expandDirectoriesMatrix($aliases->get('@language'), 0), 'name', 'name') as $language) {
-    $options[$language] = ucfirst($language);
-}
-echo Field::select($form, 'client_language')
-->label($translator->translate('i.language'))
-->addInputAttributes([
-    'value' => '0',
-    'class' => 'form-control',
-    'id' => 'client_language'
-])
-->addInputAttributes(['selected' => $s->check_select(Html::encode($form->getClient_language() ?? ''), $selectedLanguage)])
-->optionsData($options)
-->required(true)
-->hint($translator->translate('invoice.hint.this.field.is.required'));
+    /** @var string $language */
+    foreach ($s->locale_language_array() as $language) {
+        $options[$language] = ucfirst($language);
+    }
+    echo Field::select($form, 'client_language')
+        ->label($translator->translate('i.language'))
+        ->addInputAttributes([
+            'class' => 'form-control',
+            'id' => 'client_language'
+    ])
+    ->value(strlen($form->getClient_language()) > 0 ? $form->getClient_language() : $selectedLanguage)    
+    ->optionsData($options)
+    ->required(true)
+    ->hint($translator->translate('invoice.hint.this.field.is.required'));
 ?>  
 
 <?= Html::Tag('br'); ?>
@@ -228,8 +219,7 @@ echo Field::select($form, 'client_language')
         'class' => 'form-control',
         'id' => 'client_address_2'
     ])
-    ->required(true)
-    ->hint($translator->translate('invoice.hint.this.field.is.required'));
+    ->required(false);
 ?>
         <?= Html::closeTag('div'); ?>
         <?= Html::openTag('div', ['class' => 'mb-3 form-group']); ?>
@@ -241,8 +231,7 @@ echo Field::select($form, 'client_language')
         'class' => 'form-control',
         'id' => 'client_building_number',
     ])
-    ->required(false)
-    ->hint($translator->translate('invoice.hint.this.field.is.not.required'));
+    ->required(false);
 ?>
         <?= Html::closeTag('div'); ?>
         <?= Html::openTag('div', ['class' => 'mb-3 form-group']); ?>
@@ -280,8 +269,7 @@ echo Field::select($form, 'client_language')
         'class' => 'form-control',
         'id' => 'client_zip',
     ])
-    ->required(true)
-    ->hint($translator->translate('invoice.hint.this.field.is.required'));
+    ->required(false);
 ?>
         <?= Html::closeTag('div'); ?>
         <?= Html::openTag('div', ['class' => 'mb-3 form-group']); ?>
@@ -333,8 +321,7 @@ echo Field::select($form, 'client_country')
             'class' => 'form-control',
             'id' => 'client_phone'
         ])
-        ->required(false)
-        ->hint($translator->translate('invoice.hint.this.field.is.not.required'));
+        ->required(false);
 ?>
             <?= Field::telephone($form, 'client_fax')
     ->label($translator->translate('i.fax'))
@@ -344,8 +331,7 @@ echo Field::select($form, 'client_country')
         'class' => 'form-control',
         'id' => 'client_fax',
     ])
-    ->required(false)
-    ->hint($translator->translate('invoice.hint.this.field.is.not.required'));
+    ->required(false);
 ?>            
             <?= Field::text($form, 'client_web')
     ->label($translator->translate('i.web'))
@@ -355,8 +341,7 @@ echo Field::select($form, 'client_country')
         'class' => 'form-control',
         'id' => 'client_web',
     ])
-    ->required(false)
-    ->hint($translator->translate('invoice.hint.this.field.is.not.required'));
+    ->required(false);
 ?>
         <?= Html::closeTag('div'); ?>
         <?= Html::openTag('div', ['class' => 'mb-3 form-group']); ?>
@@ -433,14 +418,13 @@ echo Field::date($form, 'client_birthdate')
 ])
 ->value(Html::encode(!is_string($form->getClient_birthdate()) && null !== $form->getClient_birthdate() ?
                                 $form->getClient_birthdate()->format('Y-m-d') : ''))
-->required(false)
-->hint($translator->translate('invoice.hint.this.field.is.not.required'));
+->required(false);
 ?>    
             <?= Field::number($form, 'client_age')
     ->label($translator->translate('invoice.client.age'))
     ->addInputAttributes([
         'placeholder' => $translator->translate('invoice.client.age'),
-        'value' => Html::encode($form->getClient_age() ?? ''),
+        'value' => Html::encode($form->getClient_age() ?? '18'),
         'class' => 'form-control',
         'id' => 'client_age'
     ])
@@ -460,8 +444,7 @@ echo Field::date($form, 'client_birthdate')
         'class' => 'form-control',
         'id' => 'client_avs'
     ])
-    ->required(true)
-    ->hint($translator->translate('invoice.hint.this.field.is.required'));
+    ->required(false);
 ?>
             <?= Field::text($form, 'client_insurednumber')
     ->label($translator->translate('i.sumex_insurednumber'))
@@ -471,8 +454,7 @@ echo Field::date($form, 'client_birthdate')
         'class' => 'form-control',
         'id' => 'client_insurednumber'
     ])
-    ->required(false)
-    ->hint($translator->translate('invoice.hint.this.field.is.not.required'));
+    ->required(false);
 ?>
             <?= Field::text($form, 'client_veka')
     ->label($translator->translate('i.sumex_veka'))
@@ -482,8 +464,7 @@ echo Field::date($form, 'client_birthdate')
         'class' => 'form-control',
         'id' => 'client_veka'
     ])
-    ->required(false)
-    ->hint($translator->translate('invoice.hint.this.field.is.not.required'));
+    ->required(false);
 ?>
             <?= Html::closeTag('div'); ?>    
             <?= Html::openTag('div', ['class' => 'mb-3 form-group']); ?>
@@ -517,8 +498,7 @@ echo Field::date($form, 'client_birthdate')
                 'class' => 'form-control',
                 'id' => 'client_vat_id'
             ])
-            ->required(false)
-            ->hint($translator->translate('invoice.hint.this.field.is.not.required'));
+            ->required(false);
 ?>
         <?= Field::text($form, 'client_tax_code')
     ->label($translator->translate('i.tax_code'))
@@ -528,8 +508,7 @@ echo Field::date($form, 'client_birthdate')
         'class' => 'form-control',
         'id' => 'client_tax_code'
     ])
-    ->required(true)
-    ->hint($translator->translate('invoice.hint.this.field.is.required'));
+    ->required(false);
 ?>
         <?= Html::openTag('div', ['class' => 'mb-3 form-group']); ?>
             <?php

@@ -89,13 +89,13 @@ $toolbar = Div::tag();
         new DataColumn(
             'note',
             header:  $translator->translate('i.note'),
-            content: static fn (Payment $model): string => $model->getNote()
+            content: static fn (Payment $model): string => Html::encode($model->getNote())
         ),
         new DataColumn(
             'inv_id',
             header:  $translator->translate('i.invoice'),
-            content: static function (Payment $model) use ($urlGenerator): string {
-                return Html::a($model->getInv()?->getNumber() ?? '', $urlGenerator->generate('inv/view', ['id' => $model->getInv_id()]), ['style' => 'text-decoration:none'])->render();
+            content: static function (Payment $model) use ($urlGenerator): A {
+                return Html::a($model->getInv()?->getNumber() ?? '', $urlGenerator->generate('inv/view', ['id' => $model->getInv_id()]), ['style' => 'text-decoration:none']);
             }
         ),
         new DataColumn(
@@ -131,7 +131,7 @@ $toolbar = Div::tag();
         new DataColumn(
             header:  $translator->translate('i.view'),
             visible: $canView,
-            content: static function (Payment $model) use ($urlGenerator): string {
+            content: static function (Payment $model) use ($urlGenerator): A {
                 return Html::a(
                     Html::tag('i', '', ['class' => 'fa fa-eye fa-margin']),
                     $urlGenerator->generate(
@@ -139,13 +139,13 @@ $toolbar = Div::tag();
                         ['id' => $model->getId()]
                     ),
                     []
-                )->render();
+                );
             }
         ),
         new DataColumn(
             header:  $translator->translate('i.edit'),
             visible: $canEdit,
-            content: static function (Payment $model) use ($s, $urlGenerator): string {
+            content: static function (Payment $model) use ($s, $urlGenerator): A|string {
                 return $model->getInv()?->getIs_read_only() === false
                        && $s->getSetting('disable_read_only') === (string)0
                        ? Html::a(
@@ -159,13 +159,14 @@ $toolbar = Div::tag();
                                ['id' => $model->getId()]
                            ),
                            []
-                       )->render() : '';
-            }
+                       ) : '';
+            },
+            encodeContent: false
         ),
         new DataColumn(
             header:  $translator->translate('i.delete'),
             visible: $canEdit,
-            content: static function (Payment $model) use ($translator, $s, $urlGenerator): string {
+            content: static function (Payment $model) use ($translator, $s, $urlGenerator): string|A {
                 return $model->getInv()?->getIs_read_only() === false && $s->getSetting('disable_read_only') === (string)0 ? Html::a(
                     Html::tag(
                         'button',
@@ -178,7 +179,7 @@ $toolbar = Div::tag();
                     ),
                     $urlGenerator->generate('payment/delete', ['id' => $model->getId()]),
                     []
-                )->render() : '';
+                ) : '';
             }
         ),
     ]

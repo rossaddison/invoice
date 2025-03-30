@@ -7,6 +7,7 @@ use Yiisoft\Html\Html;
 use Yiisoft\Html\Tag\A;
 use Yiisoft\Html\Tag\Div;
 use Yiisoft\Html\Tag\Form;
+use Yiisoft\Html\Tag\Span;
 use Yiisoft\Yii\DataView\GridView;
 use Yiisoft\Yii\DataView\Column\DataColumn;
 
@@ -55,7 +56,7 @@ $columns = [
     new DataColumn(
         'client_active',
         header: $translator->translate('i.active'),
-        content: static function (Client $model) use ($button, $translator): string {
+        content: static function (Client $model) use ($button, $translator): Span {
             return $model->getClient_active() ? $button::activeLabel($translator) : $button::inactiveLabel($translator);
         }
     ),
@@ -63,39 +64,39 @@ $columns = [
         'client_email',
         header: $translator->translate('i.email'),
         content: static function (Client $model): string {
-            return Html::encode($model->getClient_email() ?: '');
+            return $model->getClient_email() ?: '';
         },
+        encodeContent: true,        
         withSorting: false
     ),
     new DataColumn(
         'client_mobile',
         header: $translator->translate('i.mobile_number'),
         content: static function (Client $model): string {
-            return Html::encode($model->getClient_mobile() ?? '');
+            return $model->getClient_mobile() ?? '';
         },
+        encodeContent: true,        
         withSorting: true
     ),
     new DataColumn(
         field: 'client_name',
         header: $translator->translate('i.client_name'),
-        content: static function (Client $model) use ($urlGenerator): string {
+        content: static function (Client $model) use ($urlGenerator): A {
             return  A::tag()
                     ->content(Html::encode($model->getClient_name()))
                     ->href($urlGenerator->generate('client/view', ['id' => $model->getClient_id()]))
-                    ->addClass('btn btn-warning ms-2')
-                    ->render();
+                    ->addClass('btn btn-warning ms-2');
         },
         withSorting: false
     ),
     new DataColumn(
         field:  'client_surname',
         header: $translator->translate('i.client_surname'),
-        content: static function (Client $model) use ($urlGenerator): string {
+        content: static function (Client $model) use ($urlGenerator): A {
             return  A::tag()
                     ->content(Html::encode($model->getClient_surname() ?? ''))
                     ->href($urlGenerator->generate('client/view', ['id' => $model->getClient_id()]))
-                    ->addClass('btn btn-warning ms-2')
-                    ->render();
+                    ->addClass('btn btn-warning ms-2');
         },
         withSorting: false
     ),
@@ -103,8 +104,9 @@ $columns = [
         'client_phone',
         header: $translator->translate('i.phone'),
         content: static function (Client $model): string {
-            return Html::encode($model->getClient_phone() ?? '');
+            return $model->getClient_phone() ?? '';
         },
+        encodeContent: true,        
         withSorting: true
     ),
     new DataColumn(
@@ -135,7 +137,8 @@ $columns = [
                 return $model->getInvs()->count();
             }
             return 0;
-        }
+        },
+        encodeContent: false
     ),
     new DataColumn(
         'invs',
@@ -164,7 +167,8 @@ $columns = [
             } else {
                 return '';
             }
-        }
+        },
+        encodeContent: false        
     ),
     new DataColumn(
         'client_id',

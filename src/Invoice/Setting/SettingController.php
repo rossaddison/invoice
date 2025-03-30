@@ -140,14 +140,9 @@ final class SettingController
         $countries = new CountryHelper();
         $crypt = new Crypt();
         $peppol_arrays = new PeppolArrays();
-        $matrix = $this->s->expandDirectoriesMatrix($aliases->get('@language'), 0);
-        /**
-         * @psalm-suppress PossiblyInvalidArgument $matrix
-         */
-        $languages = ArrayHelper::map($matrix, 'name', 'name');
+        $languages = $sR->locale_language_array();
         $body = $request->getParsedBody();
         $parameters = [
-            'defat' => $sR->withKey('default_language'),
             'actionName' => 'setting/tab_index',
             'actionArguments' => [],
             /**

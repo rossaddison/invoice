@@ -88,7 +88,7 @@ $columns = [
     new DataColumn(
         'type',
         header: $translator->translate('i.values'),
-        content: static function (CustomField $model) use ($custom_value_fields, $urlGenerator, $translator): string {
+        content: static function (CustomField $model) use ($custom_value_fields, $urlGenerator, $translator): string|A {
             if (in_array($model->getType(), $custom_value_fields)) {
                 return A::tag()
                        ->href($urlGenerator->generate('customvalue/field', ['id' => $model->getId()]))
@@ -98,8 +98,7 @@ $columns = [
                            I::tag()
                             ->addClass('fa fa-list fa-margin')
                             ->content(' '.$translator->translate('i.values'))
-                       )
-                       ->render();
+                       );
             }
             return '';
         }

@@ -69,9 +69,10 @@ $toolbar = Div::tag();
         new DataColumn(
             'inv_id',
             header: $translator->translate('i.invoice'),
-            content: static function (InvAllowanceCharge $model) use ($urlGenerator): string {
-                return Html::a($model->getInv()?->getNumber() ?? '#', $urlGenerator->generate('inv/view', ['id' => $model->getInv_id()]), [])->render();
-            }
+            content: static function (InvAllowanceCharge $model) use ($urlGenerator): A {
+                return Html::a($model->getInv()?->getNumber() ?? '#', $urlGenerator->generate('inv/view', ['id' => $model->getInv_id()]), []);
+            },
+            encodeContent: false
         ),
         new DataColumn(
             header:  $translator->translate('invoice.invoice.allowance.or.charge.reason.code'),

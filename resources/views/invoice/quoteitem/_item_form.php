@@ -148,7 +148,7 @@ foreach ($taxRates as $taxRate) {
                         <?= Html::openTag('td', ['class' => 'td-textarea']); ?>
                             <?= Html::openTag('div', ['class' => 'input-group']); ?>
                                 <?= Field::textarea($form, 'description')
-    ->value($form->getDescription() ?? ''); ?>
+    ->value(Html::encode($form->getDescription() ?? '')); ?>
                             <?= Html::closeTag('div'); ?>
                             <?= Html::openTag('div', ['class' => 'input-group']); ?>
                                 <?= Field::text($form, 'order')

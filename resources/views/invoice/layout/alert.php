@@ -3,8 +3,8 @@
 declare(strict_types=1);
 
 use Stringable;
-use Yiisoft\Yii\Bootstrap5\Alert;
-use Yiisoft\Yii\Bootstrap5\AlertVariant;
+use Yiisoft\Bootstrap5\Alert;
+use Yiisoft\Bootstrap5\AlertVariant;
 
 /**
  * @var Yiisoft\Session\Flash\Flash $flash

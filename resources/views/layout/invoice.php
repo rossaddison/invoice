@@ -15,16 +15,16 @@ use Yiisoft\Html\Tag\Form;
 use Yiisoft\Html\Tag\I;
 use Yiisoft\Html\Html;
 use Yiisoft\Html\Tag\Meta;
-use Yiisoft\Yii\Bootstrap5\ButtonSize;
-use Yiisoft\Yii\Bootstrap5\Dropdown;
-use Yiisoft\Yii\Bootstrap5\DropdownItem;
-use Yiisoft\Yii\Bootstrap5\ButtonVariant;
-use Yiisoft\Yii\Bootstrap5\Nav;
-use Yiisoft\Yii\Bootstrap5\NavBar;
-use Yiisoft\Yii\Bootstrap5\NavLink;
-use Yiisoft\Yii\Bootstrap5\NavStyle;
-use Yiisoft\Yii\Bootstrap5\Offcanvas;
-use Yiisoft\Yii\Bootstrap5\OffcanvasPlacement;
+use Yiisoft\Bootstrap5\ButtonSize;
+use Yiisoft\Bootstrap5\Dropdown;
+use Yiisoft\Bootstrap5\DropdownItem;
+use Yiisoft\Bootstrap5\ButtonVariant;
+use Yiisoft\Bootstrap5\Nav;
+use Yiisoft\Bootstrap5\NavBar;
+use Yiisoft\Bootstrap5\NavLink;
+use Yiisoft\Bootstrap5\NavStyle;
+use Yiisoft\Bootstrap5\Offcanvas;
+use Yiisoft\Bootstrap5\OffcanvasPlacement;
 
 /**
  * @see ...src\ViewInjection\LayoutViewInjection
@@ -62,7 +62,7 @@ use Yiisoft\Yii\Bootstrap5\OffcanvasPlacement;
  */
 $assetManager->register(AppAsset::class);
 $assetManager->register(InvoiceAsset::class);
-$assetManager->register(Yiisoft\Yii\Bootstrap5\Assets\BootstrapAsset::class);
+$assetManager->register(Yiisoft\Bootstrap5\Assets\BootstrapAsset::class);
 $s->getSetting('monospace_amounts') == 1 ? $assetManager->register(MonospaceAsset::class) : '';
 // '0' => PCI Compliant version
 $s->getSetting('gateway_stripe_version') == '0' ? $assetManager->register(stripe_v10_Asset::class) : '';

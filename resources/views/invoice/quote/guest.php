@@ -107,7 +107,7 @@ $toolbar = Div::tag();
                 if (null !== $model->getStatus_id()) {
                     $span = $qR->getSpecificStatusArrayLabel((string)$model->getStatus_id());
                     $class = $qR->getSpecificStatusArrayClass((string)$model->getStatus_id());
-                    return (string)Html::tag('span', $span, ['id' => '#quote-guest','class' => 'label '. $class]);
+                    return Html::tag('span', $span, ['id' => '#quote-guest','class' => 'label '. $class]);
                 }
                 return '';
             },
@@ -117,8 +117,8 @@ $toolbar = Div::tag();
             field: 'number',
             property: 'filterQuoteNumber',
             header: $translator->translate('invoice.quote.number'),
-            content: static function (Quote $model) use ($urlGenerator): string {
-                return Html::a($model->getNumber() ?? '#', $urlGenerator->generate('quote/view', ['id' => $model->getId()]), ['style' => 'text-decoration:none'])->render();
+            content: static function (Quote $model) use ($urlGenerator): A {
+                return Html::a($model->getNumber() ?? '#', $urlGenerator->generate('quote/view', ['id' => $model->getId()]), ['style' => 'text-decoration:none']);
             },
             filter:\Yiisoft\Yii\DataView\Filter\Widget\TextInputFilter::widget()
                     ->addAttributes(['style' => 'max-width: 80px']),
@@ -126,7 +126,7 @@ $toolbar = Div::tag();
         new DataColumn(
             'client_id',
             header: $translator->translate('i.id'),
-            content: static fn (Quote $model): string|null => $model->getClient()?->getClient_name()
+            content: static fn (Quote $model): string => Html::encode($model->getClient()?->getClient_name() ?? '')
         ),
         new DataColumn(
             'date_created',

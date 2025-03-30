@@ -114,21 +114,22 @@ $toolbar = Div::tag();
         new DataColumn(
             'status_id',
             header: $translator->translate('i.status'),
-            content: static function (SalesOrder $model) use ($soR): Yiisoft\Html\Tag\CustomTag|string {
+            content: static function (SalesOrder $model) use ($soR): Yiisoft\Html\Tag\CustomTag {
                 if (null !== $model->getStatus_id()) {
                     $span = $soR->getSpecificStatusArrayLabel((string)$model->getStatus_id());
                     $class = $soR->getSpecificStatusArrayClass((int)$model->getStatus_id());
-                    return (string)Html::tag('span', $span, ['id' => '#so-to-invoice','class' => 'label '. $class]);
+                    return Html::tag('span', $span, ['id' => '#so-to-invoice','class' => 'label '. $class]);
                 }
-                return '';
+                return Html::tag('span');
             }
         ),
         new DataColumn(
             'quote_id',
             header: $translator->translate('invoice.quote.number'),
-            content:static function (SalesOrder $model) use ($urlGenerator): string {
-                return Html::a($model->getNumber() ?? '#', $urlGenerator->generate('quote/view', ['id' => $model->getQuote_id()]), ['style' => 'text-decoration:none'])->render();
-            }
+            content:static function (SalesOrder $model) use ($urlGenerator): A {
+                return Html::a($model->getNumber() ?? '#', $urlGenerator->generate('quote/view', ['id' => $model->getQuote_id()]), ['style' => 'text-decoration:none']);
+            },
+            encodeContent: true        
         ),
         new DataColumn(
             'date_created',
@@ -137,8 +138,9 @@ $toolbar = Div::tag();
                 /**
                  * @psalm-suppress PossiblyInvalidMethodCall $model->getDate_created()->format('Y-m-d')
                  */
-                return Html::encode($model->getDate_created() instanceof \DateTimeImmutable ? $model->getDate_created()->format('Y-m-d') : '');
-            }
+                return $model->getDate_created() instanceof \DateTimeImmutable ? $model->getDate_created()->format('Y-m-d') : '';
+            },
+            encodeContent: true
         ),
         new DataColumn(
             'client_id',
@@ -146,7 +148,7 @@ $toolbar = Div::tag();
             content:static function (SalesOrder $model): string {
                 $clientName = $model->getClient()?->getClient_name();
                 if (null !== $clientName) {
-                    return $clientName;
+                    return Html::encode($clientName);
                 } else {
                     return '';
                 }
@@ -163,8 +165,8 @@ $toolbar = Div::tag();
         ),
         new DataColumn(
             header: $translator->translate('i.view'),
-            content:static function (SalesOrder $model) use ($urlGenerator): string {
-                return Html::a(Html::tag('i', '', ['class' => 'fa fa-eye fa-margin']), $urlGenerator->generate('salesorder/view', ['id' => $model->getId()]), [])->render();
+            content:static function (SalesOrder $model) use ($urlGenerator): A {
+                return Html::a(Html::tag('i', '', ['class' => 'fa fa-eye fa-margin']), $urlGenerator->generate('salesorder/view', ['id' => $model->getId()]), []);
             }
         ),
 ];

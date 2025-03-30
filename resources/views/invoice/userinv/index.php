@@ -146,11 +146,11 @@ new DataColumn(
     field: 'user_id',
     header: $translator->translate('gridview.login'),
     property: 'filterUser',
-    content: static function (UserInv $model) use ($urlGenerator): string {
+    content: static function (UserInv $model) use ($urlGenerator): string|A {
         $user = $model->getUser();
         if (null !== $user) {
             if (!empty($user->getLogin())) {
-                return (string)Html::a($user->getLogin(), $urlGenerator->generate('user/profile', ['login' => $user->getLogin()]), []);
+                return Html::a($user->getLogin(), $urlGenerator->generate('user/profile', ['login' => $user->getLogin()]), []);
             }
         }
         return '';
@@ -179,10 +179,10 @@ new DataColumn(
 new DataColumn(
     'user_id',
     header:  $translator->translate('invoice.user.inv.role.observer'),
-    content: static function (UserInv $model) use ($manager, $translator, $urlGenerator): string {
+    content: static function (UserInv $model) use ($manager, $translator, $urlGenerator): string|Yiisoft\Html\Tag\CustomTag|A {
         if ($manager->getPermissionsByUserId($model->getUser_id())
           === $manager->getPermissionsByRoleName('observer')) {
-            return Html::tag('span', $translator->translate('invoice.general.yes'), ['class' => 'label active'])->render();
+            return Html::tag('span', $translator->translate('invoice.general.yes'), ['class' => 'label active']);
         } else {
             return $model->getUser_id() !== '1' ? Html::a(
                 Html::tag(
@@ -195,14 +195,14 @@ new DataColumn(
                 ]
                 ),
                 $urlGenerator->generate('userinv/observer', ['user_id' => $model->getUser_id()], []),
-            )->render() : '';
+            ) : '';
         }
     },
 ),
 new DataColumn(
     'user_id',
     header:  $translator->translate('invoice.user.inv.role.accountant'),
-    content: static function (UserInv $model) use ($manager, $translator, $urlGenerator): string {
+    content: static function (UserInv $model) use ($manager, $translator, $urlGenerator): Yiisoft\Html\Tag\CustomTag|A|string {
         if ($manager->getPermissionsByUserId($model->getUser_id())
           === $manager->getPermissionsByRoleName('accountant')) {
             return Html::tag('span', $translator->translate('invoice.general.yes'), ['class' => 'label active'])->render();
@@ -218,17 +218,17 @@ new DataColumn(
                 ]
                 ),
                 $urlGenerator->generate('userinv/accountant', ['user_id' => $model->getUser_id()], []),
-            )->render() : '';
+            ) : '';
         }
     }
 ),
 new DataColumn(
     'user_id',
     header:  $translator->translate('invoice.user.inv.role.administrator'),
-    content: static function (UserInv $model) use ($manager, $translator, $urlGenerator): string {
+    content: static function (UserInv $model) use ($manager, $translator, $urlGenerator): Yiisoft\Html\Tag\CustomTag|A|string {
         if ($manager->getPermissionsByUserId($model->getUser_id())
           === $manager->getPermissionsByRoleName('admin')) {
-            return  Html::tag('span', $translator->translate('invoice.general.yes'), ['class' => 'label active'])->render();
+            return Html::tag('span', $translator->translate('invoice.general.yes'), ['class' => 'label active']);
         } else {
             if (!$model->getUser_id() == '1') {
                 return Html::a(
@@ -242,7 +242,7 @@ new DataColumn(
                   ]
                     ),
                     $urlGenerator->generate('userinv/admin', ['user_id' => $model->getUser_id()], []),
-                )->render();
+                );
             } // not id == 1 => use AssignRole console command to assign the admin role
             return '';
         } // else
@@ -252,7 +252,7 @@ new DataColumn(
 new DataColumn(
     'user_id',
     header:  $translator->translate('invoice.user.inv.role.revoke.all'),
-    content: static function (UserInv $model) use ($manager, $translator, $urlGenerator): string {
+    content: static function (UserInv $model) use ($manager, $translator, $urlGenerator): A|string {
         if (!empty($manager->getPermissionsByUserId($model->getUser_id())) && $model->getUser_id() !== '1') {
             return Html::a(
                 Html::tag(
@@ -265,7 +265,7 @@ new DataColumn(
                     ]
                 ),
                 $urlGenerator->generate('userinv/revoke', ['user_id' => $model->getUser_id()], []),
-            )->render();
+            );
         } else {
             return '';
         }
@@ -280,7 +280,7 @@ new DataColumn(
 new DataColumn(
     'type',
     header:  $translator->translate('i.assigned_clients'),
-    content: static function (UserInv $model) use ($ucR, $urlGenerator): string {
+    content: static function (UserInv $model) use ($ucR, $urlGenerator): A {
         return Html::a(
             Html::tag(
                 'i',
@@ -291,24 +291,24 @@ new DataColumn(
             ['class' => count($ucR->get_assigned_to_user($model->getUser_id())) > 0
                     ? 'btn btn-success'
                     : 'btn btn-danger']
-        )->render();
+        );
     }
 ),
 new DataColumn(
     'type',
     header:  '🖉',
-    content: static function (UserInv $model) use ($urlGenerator, $canEdit): string {
+    content: static function (UserInv $model) use ($urlGenerator, $canEdit): string|A {
         return $canEdit ? Html::a(
             '🖉',
             $urlGenerator->generate('userinv/edit', ['id' => $model->getId()]),
             ['style' => 'text-decoration:none']
-        )->render() : '';
+        ) : '';
     }
 ),
 new DataColumn(
     'type',
     header:  '❌',
-    content: static function (UserInv $model) use ($translator, $urlGenerator): string {
+    content: static function (UserInv $model) use ($translator, $urlGenerator): string|A {
         return $model->getType() == 1 ? Html::a(
             Html::tag(
                 'button',
@@ -321,9 +321,7 @@ new DataColumn(
             ),
             $urlGenerator->generate('userinv/delete', ['id' => $model->getId()]),
             ['style' => 'text-decoration:none']
-        )->render() : '';
-
-
+        ) : '';
     }
 ),
     ];

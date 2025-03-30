@@ -183,38 +183,29 @@ echo $alert;
             withSorting: true
         ),
         new DataColumn(
-            field: 'number',
             property: 'filterInvNumber',
+            field: 'number',
             header: $translator->translate('invoice.invoice.number'),
-            content: static function (Inv $model) use ($urlGenerator, $iR): string {
-                $creditInvoiceUrl = '';
-                $creditInvoiceParentId = $model->getCreditinvoice_parent_id();
-                if ($creditInvoiceParentId > 0) {
-                    // include a path to the parent invoice as well as the credit note/invoice
-                    $inv = $iR->repoInvUnLoadedquery($creditInvoiceParentId);
-                    if (null !== $inv) {
-                        $creditInvoiceUrl = '⬅️'.Html::a(
-                            $inv->getNumber() ?? '#',
-                            $urlGenerator->generate(
-                                'inv/view',
-                                ['id' => $creditInvoiceParentId]
-                            ),
-                            [
-                                'style' => 'text-decoration:none'
-                             ]
-                        )->render();
-                    }
-                }
-                return  Html::a(
-                    $model->getNumber() ?? '#',
-                    $urlGenerator->generate('inv/view', ['id' => $model->getId()]),
-                    [
-                           'style' => 'text-decoration:none'
-                        ]
-                )->render() .
-                        $creditInvoiceUrl;
+            content: static function (Inv $model) use ($urlGenerator): A {
+                return  A::tag()
+                        ->addAttributes(['style' => 'text-decoration:none'])
+                        ->content(($model->getNumber() ?? '#'). ' 🔍')
+                        ->href($urlGenerator->generate('inv/view', ['id' => $model->getId()]));
             },
             filter: $optionsDataInvNumberDropDownFilter,
+            withSorting: false
+        ),
+        new DataColumn( 
+            header: '💳',    
+            field: 'creditinvoice_parent_id',
+            content: static function (Inv $model) use ($urlGenerator, $iR): A {
+                $visible = $iR->repoInvUnLoadedquery($model->getCreditinvoice_parent_id());
+                $url = ($model->getNumber() ?? '#'). '💳';
+                return  A::tag()
+                        ->addAttributes(['style' => 'text-decoration:none'])
+                        ->content($visible ? $url : '')
+                        ->href($urlGenerator->generate('inv/view', ['id' => $model->getCreditinvoice_parent_id()]));
+            },
             withSorting: false
         ),
         new DataColumn(
@@ -232,28 +223,26 @@ echo $alert;
         new DataColumn(
             'date_due',
             header: $translator->translate('i.due_date'),
-            content: static function (Inv $model) use ($dateHelper): string {
+            content: static function (Inv $model) use ($dateHelper): Yiisoft\Html\Tag\CustomTag {
                 $now = new \DateTimeImmutable('now');
-                return Label::tag()
+                return Html::tag('label')
                         ->attributes(['class' => $model->getDate_due() > $now ? 'label label-success' : 'label label-warning'])
-                        ->content(Html::encode(!is_string($dateDue = $model->getDate_due()) ? $dateDue->format('Y-m-d') : ''))
-                        ->render();
-            },
+                        ->content(!is_string($dateDue = $model->getDate_due()) ? $dateDue->format('Y-m-d') : '');                        
+            },   
             withSorting: true
         ),
         new DataColumn(
             field: 'id',
             property: 'filterInvAmountTotal',
             header: $translator->translate('i.total') . ' ( '. $s->getSetting('currency_symbol'). ' ) ',
-            content: static function (Inv $model) use ($decimalPlaces): string {
+            content: static function (Inv $model) use ($decimalPlaces): Label {
                 $invAmountTotal = $model->getInvAmount()->getTotal();
                 return
                     Label::tag()
                         ->attributes(['class' => $invAmountTotal > 0.00 ? 'label label-success' : 'label label-warning'])
                         ->content(Html::encode(null !== $invAmountTotal
                                 ? number_format($invAmountTotal, $decimalPlaces)
-                                : number_format(0, $decimalPlaces)))
-                        ->render();
+                                : number_format(0, $decimalPlaces)));
             },
             filter: \Yiisoft\Yii\DataView\Filter\Widget\TextInputFilter::widget()
                     ->addAttributes(['style' => 'max-width: 50px']),
@@ -262,28 +251,26 @@ echo $alert;
         new DataColumn(
             'id',
             header: $translator->translate('i.paid') . ' ( '. $s->getSetting('currency_symbol'). ' ) ',
-            content: static function (Inv $model) use ($decimalPlaces): string {
+            content: static function (Inv $model) use ($decimalPlaces): Label {
                 $invAmountPaid = $model->getInvAmount()->getPaid();
                 return Label::tag()
                         ->attributes(['class' => $model->getInvAmount()->getPaid() < $model->getInvAmount()->getTotal() ? 'label label-danger' : 'label label-success'])
                         ->content(Html::encode(null !== $invAmountPaid
                                 ? number_format($invAmountPaid > 0.00 ? $invAmountPaid : 0.00, $decimalPlaces)
-                                : number_format(0, $decimalPlaces)))
-                        ->render();
+                                : number_format(0, $decimalPlaces)));
             },
             withSorting: false
         ),
         new DataColumn(
             'id',
             header: $translator->translate('i.balance')  . ' ( '. $s->getSetting('currency_symbol'). ' ) ',
-            content: static function (Inv $model) use ($decimalPlaces): string {
+            content: static function (Inv $model) use ($decimalPlaces): Label {
                 $invAmountBalance = $model->getInvAmount()->getBalance();
                 return  Label::tag()
                         ->attributes(['class' => $invAmountBalance > 0.00 ? 'label label-success' : 'label label-warning'])
                         ->content(Html::encode(null !== $invAmountBalance
                                 ? number_format($invAmountBalance > 0.00 ? $invAmountBalance : 0.00, $decimalPlaces)
-                                : number_format(0, $decimalPlaces)))
-                        ->render();
+                                : number_format(0, $decimalPlaces)));
             },
             withSorting: false
         ),

@@ -52,9 +52,9 @@ use Yiisoft\Html\Html;
                 </div>    
                 <div class="col-8">
                     <?= $translator->translate('g.online_payment_for_invoice'); ?> #                    
-                    <?= ($invoice->getNumber() ?? ''). ' => '.
-                     ($invoice->getClient()?->getClient_name() ?? ''). ' '.
-                     ($invoice->getClient()?->getClient_surname() ?? ''). ' '.
+                    <?= (Html::encode($invoice->getNumber() ?? '')). ' => '.
+                     (Html::encode($invoice->getClient()?->getClient_name() ?? '')). ' '.
+                     (Html::encode($invoice->getClient()?->getClient_surname() ?? '')). ' '.
                      $numberHelper->format_currency($balance); ?>
                 </div>
             </div>

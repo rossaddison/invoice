@@ -2,6 +2,7 @@
 declare(strict_types=1);
 
 use App\Invoice\Entity\ProductImage;
+use Yiisoft\Html\Tag\A;
 use Yiisoft\Html\Html;
 use Yiisoft\Yii\DataView\GridView;
 use Yiisoft\Yii\DataView\Column\DataColumn;
@@ -25,7 +26,7 @@ use Yiisoft\Yii\DataView\Column\DataColumn;
             new DataColumn(
                 'file_name_original',
                 header:  $translator->translate('i.name'),
-                content: static fn (ProductImage $model): string => ($model->getFile_name_original())
+                content: static fn (ProductImage $model): string => Html::encode($model->getFile_name_original())
             ),
             new DataColumn(
                 'uploaded_date',
@@ -54,7 +55,7 @@ use Yiisoft\Yii\DataView\Column\DataColumn;
             new DataColumn(
                 visible: $invEdit,
                 header:  $translator->translate('i.edit'),
-                content: static function (ProductImage $model) use ($urlGenerator): string {
+                content: static function (ProductImage $model) use ($urlGenerator): A {
                     return Html::a(
                         Html::tag(
                             'button',
@@ -66,13 +67,13 @@ use Yiisoft\Yii\DataView\Column\DataColumn;
                         ),
                         $urlGenerator->generate('productimage/edit', ['id' => $model->getId(), '_language' => 'en']),
                         []
-                    )->render();
+                    );
                 }
             ),
             new DataColumn(
                 visible: $invEdit,
                 header:  $translator->translate('i.delete'),
-                content: static function (ProductImage $model) use ($translator, $urlGenerator): string {
+                content: static function (ProductImage $model) use ($translator, $urlGenerator): A {
                     return Html::a(
                         Html::tag(
                             'button',
@@ -85,7 +86,7 @@ use Yiisoft\Yii\DataView\Column\DataColumn;
                         ),
                         $urlGenerator->generate('productimage/delete', ['id' => $model->getId(), '_language' => 'en']),
                         []
-                    )->render();
+                    );
                 }
             ),
         ]

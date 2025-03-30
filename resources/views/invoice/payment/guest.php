@@ -46,7 +46,7 @@ $toolbar = Div::tag();
         new DataColumn(
             'id',
             header:  $translator->translate('i.id'),
-            content: static fn (Payment $model): string => $model->getId()
+            content: static fn (Payment $model): string => Html::encode($model->getId())
         ),
         new DataColumn(
             field: 'payment_date',
@@ -69,13 +69,13 @@ $toolbar = Div::tag();
         new DataColumn(
             'note',
             header:  $translator->translate('i.note'),
-            content: static fn (Payment $model): string => $model->getNote()
+            content: static fn (Payment $model): string => Html::encode($model->getNote())
         ),
         new DataColumn(
             'inv_id',
             header:  $translator->translate('i.invoice'),
-            content: static function (Payment $model) use ($urlGenerator): string {
-                return Html::a($model->getInv()?->getNumber() ?? '', $urlGenerator->generate('inv/view', ['id' => $model->getInv_id()]), ['style' => 'text-decoration:none'])->render();
+            content: static function (Payment $model) use ($urlGenerator): A {
+                return Html::a($model->getInv()?->getNumber() ?? '', $urlGenerator->generate('inv/view', ['id' => $model->getInv_id()]), ['style' => 'text-decoration:none']);
             }
         ),
         new DataColumn(

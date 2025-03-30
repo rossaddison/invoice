@@ -69,11 +69,11 @@ $columns = [
         field: 'inv_id',
         property: 'filterInvNumber',
         header: $translator->translate('invoice.invoice.number'),
-        content: static function (InvSentLog $model) use ($urlGenerator): string {
+        content: static function (InvSentLog $model) use ($urlGenerator): A {
             return Html::a(($model->getInv()?->getNumber() ?? '#').' 🔍', $urlGenerator->generate(
                 'inv/view',
                 ['id' => $model->getId()]
-            ), ['style' => 'text-decoration:none'])->render();
+            ), ['style' => 'text-decoration:none']);
         },
         filter: $optionsDataGuestInvNumberDropDownFilter,
         withSorting: false
@@ -86,7 +86,7 @@ $columns = [
     new DataColumn(
         'client_id',
         header: $translator->translate('i.client'),
-        content: static fn (InvSentLog $model): string => $model->getClient()?->getClient_full_name() ?? ''
+        content: static fn (InvSentLog $model): string => Html::encode($model->getClient()?->getClient_full_name() ?? '')
     ),
     new DataColumn(
         'date_sent',

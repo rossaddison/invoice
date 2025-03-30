@@ -91,7 +91,7 @@ $columns = [
     ),
     new DataColumn(
         header:  $translator->translate('i.delete'),
-        content: static function (ProductImage $model) use ($translator, $urlGenerator): string {
+        content: static function (ProductImage $model) use ($translator, $urlGenerator): A {
             return Html::a(
                 Html::tag(
                     'button',
@@ -104,7 +104,7 @@ $columns = [
                 ),
                 $urlGenerator->generate('productimage/delete', ['id' => $model->getId()]),
                 []
-            )->render();
+            );
         }
     ),
 ];
